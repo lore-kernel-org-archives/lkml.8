@@ -2,130 +2,143 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25451C33CB7
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 21:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B348EC32771
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 21:58:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE7C52469D
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 21:57:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 860A92469D
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 21:58:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="sWCNj0ZQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Payn8D+Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727060AbgARV5P (ORCPT
+        id S1727138AbgARV6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 16:57:15 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:43846 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726910AbgARV5O (ORCPT
+        Sat, 18 Jan 2020 16:58:40 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41373 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727104AbgARV6k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 16:57:14 -0500
-Received: by mail-ed1-f68.google.com with SMTP id dc19so25865846edb.10;
-        Sat, 18 Jan 2020 13:57:13 -0800 (PST)
+        Sat, 18 Jan 2020 16:58:40 -0500
+Received: by mail-wr1-f67.google.com with SMTP id c9so25915788wrw.8
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jan 2020 13:58:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xhEeNJG6Xe03fAdCWoX8L2PNC8Ts9rcXxVowinyH7Jk=;
-        b=sWCNj0ZQnbgArqLuw0XgK3tLKDpG6In0kiTRu4lFsb3+62AuuZEdDNrhrHEkXU2ZjV
-         +NrFKwt20CkDMRpye3isHNQcsRe4mFxsOjdn7Gp4QbGCaPHjbubuf4xMV4m850btYfaU
-         TH81GKDtQnnthH05MnOsT+EYtj9H+Mq8IYH5JvMpfk5DC5lpx1gJUk04CLiNe0kou6CR
-         CxjhEulvlHdjr/a8LTvPVSqxb22EoK7D09WKmiSuVPsSpOEI306HLTEK9GmVQdhZeXrk
-         nqo7nRAKokRDqaXotijdhTP9Q8nwucOa4JcN2DR+I55VtM5D4dpSNez7Cw7SNzYTZsas
-         v3Ng==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UaeYX/Ff/wQaMg6DYHILaGZDP7ER1icKxMDfq0TG0SI=;
+        b=Payn8D+YqNMfkeO9DcSIuSyDncQC1hM2updNTA6l0CYGWvp9Dr5WjIH/mhBQFtU9iC
+         ZJOw3RNITzEv8F2+lGVYKnsBCL1akhilV0x3qIIzfXY1L9VkamZkevNL5lrHs72PP7Yx
+         firrtV8bCmQSmW81/BLHtMoBRqfMn+eC6i0qlfpiaOdUMeqS7Wkjfbpcu2v2wo4qSHyv
+         1kKOILEslyGbaQtic/myMt8moK0+GQEplz/SvwjxG8QvjM5ZZs0vh6Ju3OfN65jY5Kbm
+         EEBnbwVdmNqKNlcK7k534qqNa8eeUIRMJKiAQeJh+SFo/HYw0O3WdaCP4/d1mP3dX2Wx
+         bMsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xhEeNJG6Xe03fAdCWoX8L2PNC8Ts9rcXxVowinyH7Jk=;
-        b=m5qydpr/y7Z/kyd//Xmhcem7usvxMcm3DRA7gmoLFTEL6S5sHduAbCou/UAXm067vA
-         9EZUtROY/SPU9uRCxoLFJkgbF609+yvaiT39sqXz+MhSuCzAcOIrVo06/ofRQhWv/NVe
-         21ydFh7wPHMfWkLMo77zNqxerkw0+7gvoZdfWbkGFb/oih8sgSSPX0sIA/tpJVgY91m4
-         jU1kw6VUgi0KyH5kUGJwKbf2FzYDLz7jdlRt5Y6dt0B9TT1mXI34ykDbOQW6WAlNT9Zo
-         GxcBzGA8E75mAGF7OmSTA6OjyodUMshdGRPvzgzrKeWH5zKaiNHVxDzCrxSiaOuXzcUL
-         wiaw==
-X-Gm-Message-State: APjAAAU8gG7ewlrFuepsXt7BS0o9q6f2ajuqUIojQm6djp/OO0NoOIj/
-        SeWAntXdgUoYI6+axvaOsBYS4kygkZh+RjzFjxMwACcq
-X-Google-Smtp-Source: APXvYqyjnAk8oubKYhxKxWzUPog0rE1nkqWdTWkbrvxjIY8nWbYmSn4gzUFbwFiw03cl5ZtTyqcd01lYsxkaQM35M+Q=
-X-Received: by 2002:a05:6402:2037:: with SMTP id ay23mr10507644edb.146.1579384632180;
- Sat, 18 Jan 2020 13:57:12 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UaeYX/Ff/wQaMg6DYHILaGZDP7ER1icKxMDfq0TG0SI=;
+        b=qx00GUdLTc2ihwOStycXKOpRgFYOh40hMwDxmjDxFg+0bS6oUHoQPzen5r+vl5tP5x
+         yFL3r929SlQuO1OOVoBIEdTNKJwNbvd6WAnzsZeF6FDaFWfSSOHp2EDut4AezL8mauV2
+         b3YWxD84JTEFTrGDVM7FyilhCvMOWYcSO6m4wtAhFqzdcVyikKonlj1qWkVs3wNycr9Z
+         yZGFxB4KE+DrnBOlJmv3rMOMyEzBE9orS6p04ant4eENzGHKxc1vIiwXUmE5aB6U7TsS
+         ruZvnqsEvxB8jqZoouvNXAR+200MlYKCM75Dm6bbKehHCQXLGtYsPyEH79JU3/S3Rwv7
+         fVdg==
+X-Gm-Message-State: APjAAAV894AeCs2FKCgi+gS7vEkjO2HcXh+zN+KpbKy23/aQv9SgbaRu
+        we3Zily8J1eHSahqaEd8826ScJ35kNwP9Q==
+X-Google-Smtp-Source: APXvYqzYQJ4sX823Ax3W4uleInvrwTF9nfvn7+Zy4bKN5H1yMR44iRaLer6iCruNAywTII38vzNanA==
+X-Received: by 2002:adf:ea8a:: with SMTP id s10mr9800867wrm.278.1579384717335;
+        Sat, 18 Jan 2020 13:58:37 -0800 (PST)
+Received: from localhost.localdomain (ip-213-220-200-127.net.upcbroadband.cz. [213.220.200.127])
+        by smtp.gmail.com with ESMTPSA id z8sm39789567wrq.22.2020.01.18.13.58.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Jan 2020 13:58:36 -0800 (PST)
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Andrea Parri <parri.andrea@gmail.com>
+Subject: [PATCH] workqueue: Document (some) memory-ordering properties of {queue,schedule}_work()
+Date:   Sat, 18 Jan 2020 22:58:20 +0100
+Message-Id: <20200118215820.7646-1-parri.andrea@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-References: <20200116080440.118679-1-jian.hu@amlogic.com> <20200116080440.118679-3-jian.hu@amlogic.com>
-In-Reply-To: <20200116080440.118679-3-jian.hu@amlogic.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Sat, 18 Jan 2020 22:57:01 +0100
-Message-ID: <CAFBinCCkmUzNBeUz0k7na2FgR1SPKda81j+RnhEp9Jj84HEzmg@mail.gmail.com>
-Subject: Re: [PATCH v6 2/5] clk: meson: add support for A1 PLL clock ops
-To:     Jian Hu <jian.hu@amlogic.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Rob Herring <robh@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Chandle Zou <chandle.zou@amlogic.com>,
-        linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jian,
+It's desirable to be able to rely on the following property:  All stores
+preceding (in program order) a call to a successful queue_work() will be
+visible from the CPU which will execute the queued work by the time such
+work executes, e.g.,
 
-thank you for the update!
+  { x is initially 0 }
 
-On Thu, Jan 16, 2020 at 9:04 AM Jian Hu <jian.hu@amlogic.com> wrote:
->
-> Compared with the previous SoCs, self-adaption current module
-> is newly added for A1, and there is no reset parm except the
-> fixed pll. In A1 PLL, the PLL enable sequence is different, using
-> the new power-on sequence to enable the PLL.
->
-> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
-Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+    CPU0                              CPU1
 
-[...]
-> @@ -323,13 +330,34 @@ static int meson_clk_pll_enable(struct clk_hw *hw)
->                 return 0;
->
->         /* Make sure the pll is in reset */
-> -       meson_parm_write(clk->map, &pll->rst, 1);
-> +       if (MESON_PARM_APPLICABLE(&pll->rst))
-> +               meson_parm_write(clk->map, &pll->rst, 1);
->
->         /* Enable the pll */
->         meson_parm_write(clk->map, &pll->en, 1);
->
->         /* Take the pll out reset */
-> -       meson_parm_write(clk->map, &pll->rst, 0);
-> +       if (MESON_PARM_APPLICABLE(&pll->rst))
-> +               meson_parm_write(clk->map, &pll->rst, 0);
-> +
-> +       /*
-> +        * Compared with the previous SoCs, self-adaption current module
-> +        * is newly added for A1, keep the new power-on sequence to enable the
-> +        * PLL. The sequence is:
-> +        * 1. enable the pll, delay for 10us
-> +        * 2. enable the pll self-adaption current module, delay for 40us
-> +        * 3. enable the lock detect module
-> +        */
-> +       if (MESON_PARM_APPLICABLE(&pll->current_en)) {
-> +               udelay(10);
-> +               meson_parm_write(clk->map, &pll->current_en, 1);
-> +               udelay(40);
-note to myself: first I thought that these have to be converted to ulseep_range
-BUT: clk_enable can be called from atomic context, so the atomic
-versions (udelay instead of usleep/usleep_range) are perfectly fine in
-Jian's patch
+    WRITE_ONCE(x, 1);                 [ "work" is being executed ]
+    r0 = queue_work(wq, work);          r1 = READ_ONCE(x);
 
+  Forbids: r0 == true && r1 == 0
 
-Martin
+The current implementation of queue_work() provides such memory-ordering
+property:
+
+  - In __queue_work(), the ->lock spinlock is acquired.
+
+  - On the other side, in worker_thread(), this same ->lock is held
+    when dequeueing work.
+
+So the locking ordering makes things work out.
+
+Add this property to the DocBook headers of {queue,schedule}_work().
+
+Suggested-by: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
+---
+ include/linux/workqueue.h | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/include/linux/workqueue.h b/include/linux/workqueue.h
+index 4261d1c6e87b1..4fef6c38b0536 100644
+--- a/include/linux/workqueue.h
++++ b/include/linux/workqueue.h
+@@ -487,6 +487,19 @@ extern void wq_worker_comm(char *buf, size_t size, struct task_struct *task);
+  *
+  * We queue the work to the CPU on which it was submitted, but if the CPU dies
+  * it can be processed by another CPU.
++ *
++ * Memory-ordering properties:  If it returns %true, guarantees that all stores
++ * preceding the call to queue_work() in the program order will be visible from
++ * the CPU which will execute @work by the time such work executes, e.g.,
++ *
++ * { x is initially 0 }
++ *
++ *   CPU0				CPU1
++ *
++ *   WRITE_ONCE(x, 1);			[ @work is being executed ]
++ *   r0 = queue_work(wq, work);		  r1 = READ_ONCE(x);
++ *
++ * Forbids: r0 == true && r1 == 0
+  */
+ static inline bool queue_work(struct workqueue_struct *wq,
+ 			      struct work_struct *work)
+@@ -546,6 +559,9 @@ static inline bool schedule_work_on(int cpu, struct work_struct *work)
+  * This puts a job in the kernel-global workqueue if it was not already
+  * queued and leaves it in the same position on the kernel-global
+  * workqueue otherwise.
++ *
++ * Shares the same memory-ordering properties of queue_work(), c.f., the
++ * DocBook header of queue_work().
+  */
+ static inline bool schedule_work(struct work_struct *work)
+ {
+-- 
+2.24.0
+
