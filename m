@@ -2,108 +2,247 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9720C33CB7
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 14:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85595C33CB7
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 14:41:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B01892469A
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 14:34:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6552424696
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 14:41:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbgAROe1 (ORCPT
+        id S1726579AbgAROlT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 09:34:27 -0500
-Received: from mx2.freebsd.org ([96.47.72.81]:52717 "EHLO mx2.freebsd.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726592AbgAROe0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 09:34:26 -0500
-Received: from mx1.freebsd.org (mx1.freebsd.org [96.47.72.80])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client CN "mx1.freebsd.org", Issuer "Let's Encrypt Authority X3" (verified OK))
-        by mx2.freebsd.org (Postfix) with ESMTPS id 11D6974046;
-        Sat, 18 Jan 2020 14:34:25 +0000 (UTC)
-        (envelope-from manu@freebsd.org)
-Received: from smtp.freebsd.org (smtp.freebsd.org [IPv6:2610:1c1:1:606c::24b:4])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         server-signature RSA-PSS (4096 bits)
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "smtp.freebsd.org", Issuer "Let's Encrypt Authority X3" (verified OK))
-        by mx1.freebsd.org (Postfix) with ESMTPS id 480L6S5f0Rz42MZ;
-        Sat, 18 Jan 2020 14:34:24 +0000 (UTC)
-        (envelope-from manu@freebsd.org)
-Received: from localhost.localdomain (lfbn-idf2-1-1164-130.w90-92.abo.wanadoo.fr [90.92.223.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: manu)
-        by smtp.freebsd.org (Postfix) with ESMTPSA id BD8D1179A1;
-        Sat, 18 Jan 2020 14:34:23 +0000 (UTC)
-        (envelope-from manu@freebsd.org)
-From:   Emmanuel Vadot <manu@freebsd.org>
-To:     mripard@kernel.org, wens@csie.org, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Emmanuel Vadot <manu@freebsd.org>
-Subject: [PATCH v2] arm64: dts: allwinner: a64: Add gpio bank supply for A64-Olinuxino
-Date:   Sat, 18 Jan 2020 15:34:08 +0100
-Message-Id: <20200118143408.15574-1-manu@freebsd.org>
-X-Mailer: git-send-email 2.24.1
+        Sat, 18 Jan 2020 09:41:19 -0500
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:35120 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726359AbgAROlT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jan 2020 09:41:19 -0500
+Received: by mail-yb1-f194.google.com with SMTP id q190so7574642ybq.2;
+        Sat, 18 Jan 2020 06:41:18 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uZ9iq/bu+yq+FuI7V62nZkVFQemM11DhL70hTsJlYjw=;
+        b=VPYjjiT+JkyyhtlQlh0wc7a7izSbvYLq8owaGT9iwzAr4cEPrFRcxo3xnaSaPvZoQN
+         erJqNtqVepuxQX2HjKZopOo2xPEyNLC6HyOp46TWnic+qvyMdKP6CuMbKBCQvQ/aVsMO
+         /z9MPjFgen4EXnPJS3+f1KzMaApC+KBsjLO8EQlEExsaXjfFZ08X5v/kqbTGGQsI3ee1
+         m4mpvV24Y4L9B0GqwmziMJwOfQAHJlk73D1i9w+HIa7JNzz++HSoMV1dsK4TvQNzawvj
+         OyIdvSFTJaKKITi9yi1u2l8lbOXLjE8dHUFIVh3jSxaDB08ZXn1US67uHdC3Gm90fQ69
+         XI7g==
+X-Gm-Message-State: APjAAAW67NM1WGMu9nyU0947UvCzDuznmjBWftKHxk3i+FK5Dmg58LPU
+        O4LbgrXr6TDdnNfBh32pwYkLyYPInAyreUxlJOPvl5l2
+X-Google-Smtp-Source: APXvYqxKgQUdNvtWlKdZzdvS2aewjVMJbQuA/mzykriUn5BS06w8fhsTDJhVBVNh4kw6BRZ8iEBexF5VMbLxiJYOP7M=
+X-Received: by 2002:a25:5555:: with SMTP id j82mr35927628ybb.376.1579358478273;
+ Sat, 18 Jan 2020 06:41:18 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200114122343.163685-1-jiaxun.yang@flygoat.com>
+In-Reply-To: <20200114122343.163685-1-jiaxun.yang@flygoat.com>
+From:   =?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <f4bug@amsat.org>
+Date:   Sat, 18 Jan 2020 15:41:07 +0100
+Message-ID: <CAAdtpL4a8GJOKT5uqGpd=zPRCOZHcQBOW18frkww0L8e04nC8A@mail.gmail.com>
+Subject: Re: [PATCH] MIPS: Introduce aligned IO memory operations
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        Huacai Chen <chenhc@lemote.com>,
+        Paul Burton <paul.burton@mips.com>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the regulators for each bank on this boards.
-For VCC-PL only add a comment on what regulator is used. We cannot add
-the property without causing a circular dependency as the PL pins are
-used to talk to the PMIC.
+Hi Jiaxun,
 
-Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
----
-v2:
- - Remove vcc-pl-supply in r_pio as it cause a circular dependency.
+On Tue, Jan 14, 2020 at 1:24 PM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
+>
+> Some platforms, such as Loongson64 or QEMU/KVM, don't support unaligned
+> instructions like lwl or lwr in IO memory access. However, our current
+> IO memcpy/memset is wired to the generic implementation, which leads
+> to a fatal result.
 
- .../boot/dts/allwinner/sun50i-a64-olinuxino.dts | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+Do you have a handy reproducer to try with QEMU/KVM?
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-index 01a9a52edae4..7e71b5b12f98 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-@@ -163,6 +163,17 @@ &ohci1 {
- 	status = "okay";
- };
- 
-+&pio {
-+	vcc-pa-supply = <&reg_dcdc1>;
-+	vcc-pb-supply = <&reg_dcdc1>;
-+	vcc-pc-supply = <&reg_dcdc1>;
-+	vcc-pd-supply = <&reg_dcdc1>;
-+	vcc-pe-supply = <&reg_aldo1>;
-+	vcc-pf-supply = <&reg_dcdc1>;
-+	vcc-pg-supply = <&reg_dldo4>;
-+	vcc-ph-supply = <&reg_dcdc1>;
-+};
-+
- &r_rsb {
- 	status = "okay";
- 
-@@ -175,6 +186,12 @@ axp803: pmic@3a3 {
- 	};
- };
- 
-+/* VCC-PL is powered by aldo2 but we cannot add it as the RSB */
-+/* interface used to talk to the PMIC in on the PL pins */
-+/* &r_pio { */
-+/*	vcc-pl-supply = <&reg_aldo2>; */
-+/* }; */
-+
- #include "axp803.dtsi"
- 
- &ac_power_supply {
--- 
-2.24.1
-
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> ---
+>  arch/mips/Kconfig          |  4 ++
+>  arch/mips/include/asm/io.h | 10 ++++
+>  arch/mips/kernel/Makefile  |  2 +-
+>  arch/mips/kernel/io.c      | 98 ++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 113 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/mips/kernel/io.c
+>
+> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+> index 8b0cd692a43f..15a331aa23a2 100644
+> --- a/arch/mips/Kconfig
+> +++ b/arch/mips/Kconfig
+> @@ -1450,6 +1450,7 @@ config CPU_LOONGSON64
+>         select CPU_SUPPORTS_HIGHMEM
+>         select CPU_SUPPORTS_HUGEPAGES
+>         select CPU_SUPPORTS_MSA
+> +       select CPU_NEEDS_ALIGNED_IO
+>         select CPU_HAS_LOAD_STORE_LR
+>         select CPU_DIEI_BROKEN if !LOONGSON3_ENHANCEMENT
+>         select CPU_MIPSR2_IRQ_VI
+> @@ -2598,6 +2599,9 @@ config CPU_HAS_LOAD_STORE_LR
+>           LWL, LWR, SWL, SWR (Load/store word left/right).
+>           LDL, LDR, SDL, SDR (Load/store doubleword left/right, for 64bit systems).
+>
+> +config CPU_NEEDS_ALIGNED_IO
+> +       bool
+> +
+>  #
+>  # Vectored interrupt mode is an R2 feature
+>  #
+> diff --git a/arch/mips/include/asm/io.h b/arch/mips/include/asm/io.h
+> index 3f6ce74335b4..3b0eb4941f23 100644
+> --- a/arch/mips/include/asm/io.h
+> +++ b/arch/mips/include/asm/io.h
+> @@ -577,6 +577,15 @@ BUILDSTRING(l, u32)
+>  BUILDSTRING(q, u64)
+>  #endif
+>
+> +#if defined(CONFIG_CPU_NEEDS_ALIGNED_IO)
+> +extern void __memcpy_fromio(void *, const volatile void __iomem *, size_t);
+> +extern void __memcpy_toio(volatile void __iomem *, const void *, size_t);
+> +extern void __memset_io(volatile void __iomem *, int, size_t);
+> +
+> +#define memset_io(c, v, l)     __memset_io((c), (v), (l))
+> +#define memcpy_fromio(a, c, l) __memcpy_fromio((a), (c), (l))
+> +#define memcpy_toio(c, a, l)   __memcpy_toio((c), (a), (l))
+> +#else
+>  static inline void memset_io(volatile void __iomem *addr, unsigned char val, int count)
+>  {
+>         memset((void __force *) addr, val, count);
+> @@ -589,6 +598,7 @@ static inline void memcpy_toio(volatile void __iomem *dst, const void *src, int
+>  {
+>         memcpy((void __force *) dst, src, count);
+>  }
+> +#endif
+>
+>  /*
+>   * The caches on some architectures aren't dma-coherent and have need to
+> diff --git a/arch/mips/kernel/Makefile b/arch/mips/kernel/Makefile
+> index d6e97df51cfb..b07b97b9385e 100644
+> --- a/arch/mips/kernel/Makefile
+> +++ b/arch/mips/kernel/Makefile
+> @@ -8,7 +8,7 @@ extra-y         := head.o vmlinux.lds
+>  obj-y          += cmpxchg.o cpu-probe.o branch.o elf.o entry.o genex.o idle.o irq.o \
+>                    process.o prom.o ptrace.o reset.o setup.o signal.o \
+>                    syscall.o time.o topology.o traps.o unaligned.o watch.o \
+> -                  vdso.o cacheinfo.o
+> +                  vdso.o cacheinfo.o io.o
+>
+>  ifdef CONFIG_FUNCTION_TRACER
+>  CFLAGS_REMOVE_ftrace.o = -pg
+> diff --git a/arch/mips/kernel/io.c b/arch/mips/kernel/io.c
+> new file mode 100644
+> index 000000000000..ca105aa76d4d
+> --- /dev/null
+> +++ b/arch/mips/kernel/io.c
+> @@ -0,0 +1,98 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +
+> +#include <linux/export.h>
+> +#include <linux/types.h>
+> +#include <linux/io.h>
+> +
+> +#if defined(CONFIG_CPU_NEEDS_ALIGNED_IO)
+> +
+> +#if defined(CONFIG_64BIT)
+> +#define IO_LONG_READ   __raw_readq
+> +#define IO_LONG_WRITE  __raw_writeq
+> +#define IO_LONG_SIZE   8
+> +#else
+> +#define IO_LONG_READ   __raw_readl
+> +#define IO_LONG_WRITE  __raw_writel
+> +#define IO_LONG_SIZE   4
+> +#endif
+> +
+> +void __memcpy_fromio(void *to, const volatile void __iomem *from, size_t count)
+> +{
+> +       while (count && !IS_ALIGNED((unsigned long)from, IO_LONG_SIZE) &&
+> +               !IS_ALIGNED((unsigned long)to, IO_LONG_SIZE)) {
+> +               *(u8 *)to = __raw_readb(from);
+> +               from++;
+> +               to++;
+> +               count--;
+> +       }
+> +
+> +       while (count >= IO_LONG_SIZE) {
+> +               *(unsigned long *)to = IO_LONG_READ(from);
+> +               from += IO_LONG_SIZE;
+> +               to += IO_LONG_SIZE;
+> +               count -= IO_LONG_SIZE;
+> +       }
+> +
+> +       while (count) {
+> +               *(u8 *)to = __raw_readb(from);
+> +               from++;
+> +               to++;
+> +               count--;
+> +       }
+> +}
+> +EXPORT_SYMBOL(__memcpy_fromio);
+> +
+> +void __memcpy_toio(volatile void __iomem *to, const void *from, size_t count)
+> +{
+> +       while (count && !IS_ALIGNED((unsigned long)from, IO_LONG_SIZE) &&
+> +               !IS_ALIGNED((unsigned long)to, IO_LONG_SIZE)) {
+> +               __raw_writeb(*(u8 *)from, to);
+> +               from++;
+> +               to++;
+> +               count--;
+> +       }
+> +
+> +       while (count >= IO_LONG_SIZE) {
+> +               IO_LONG_WRITE(*(unsigned long *)from, to);
+> +               from += IO_LONG_SIZE;
+> +               to += IO_LONG_SIZE;
+> +               count -= IO_LONG_SIZE;
+> +       }
+> +
+> +       while (count) {
+> +               __raw_writeb(*(u8 *)from, to);
+> +               from++;
+> +               to++;
+> +               count--;
+> +       }
+> +}
+> +EXPORT_SYMBOL(__memcpy_toio);
+> +
+> +void __memset_io(volatile void __iomem *dst, int c, size_t count)
+> +{
+> +       unsigned long lc = (u8)c;
+> +       int i;
+> +
+> +       for (i = 1; i < IO_LONG_SIZE; i++)
+> +               lc |= (u8)c << (i * BITS_PER_BYTE);
+> +
+> +       while (count && !IS_ALIGNED((unsigned long)dst, IO_LONG_SIZE)) {
+> +               __raw_writeb((u8)c, dst);
+> +               dst++;
+> +               count--;
+> +       }
+> +
+> +       while (count >= IO_LONG_SIZE) {
+> +               IO_LONG_WRITE(lc, dst);
+> +               dst += IO_LONG_SIZE;
+> +               count -= IO_LONG_SIZE;
+> +       }
+> +
+> +       while (count) {
+> +               __raw_writeb(c, dst);
+> +               dst++;
+> +               count--;
+> +       }
+> +}
+> +EXPORT_SYMBOL(__memset_io);
+> +#endif
+> --
+> 2.24.1
+>
