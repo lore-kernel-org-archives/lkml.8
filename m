@@ -2,181 +2,236 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 719D6C33CB3
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 03:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D365EC33CB6
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 04:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51CE6208CD
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 03:14:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB0E424684
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 04:02:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oJRPpWc8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730691AbgARDOK (ORCPT
+        id S1727029AbgARECQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 22:14:10 -0500
-Received: from mail-il1-f197.google.com ([209.85.166.197]:41540 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727033AbgARDOK (ORCPT
+        Fri, 17 Jan 2020 23:02:16 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34547 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726744AbgARECQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 22:14:10 -0500
-Received: by mail-il1-f197.google.com with SMTP id k9so20166523ili.8
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 19:14:09 -0800 (PST)
+        Fri, 17 Jan 2020 23:02:16 -0500
+Received: by mail-ot1-f65.google.com with SMTP id a15so24357376otf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 20:02:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Vb5cyWLJV5ZR0F5iDmlf/8PvEYOZeZfUNSdNGtLvZJI=;
+        b=oJRPpWc86aW8ElClMpbeSmGps0a3/zd+opvvpOkEBC8hVNCtjdLp5PzynS4G4c56BU
+         3VSWjMLxP2DgfZAY4Ynqq28PxgwynoAx/Ega1iY5vHADe1nx28Ss+oVjWt9i17loT/Tn
+         /hJnGFOj25AP5GZ9CftweA9mgLEHxvhOGHMWu4SjXw7OsNretKxT+LYInNxlwjS8R8tX
+         Kvx6LsE4imBsm/FB7RCiHcxLA7Gd4WNxHPzi9y/zW+G3PDYWzBmvAJI8YG+Bi4dU8j07
+         3cRGWMsJ6Qcd04JnH4bRW0YK5AQHQQcVmjuz3NgVrXoa9eJdOhYIIChJqAExfXq0gD00
+         gpLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=gs5Wd+FFalWgZdPnWojgNbueaMF9ZL5bd05HzA7/eYw=;
-        b=VcT2bVuFe2ouO2f7Xo3bkh+GSRM/Jst//9qoEpG0gWjtvC2tyhlBNW+3okvfd251iM
-         z5jJIcj5dKSSzXyxjtF//YbicxpU4JPFlwgBZpB1lJOJLActqI46ACYFfGsStfsYc2Ws
-         ibXDTx9HCyfFGH3nAOHG1L+t0nAR94hoInVqnWBwxr6IdNxSQy4ytPT9cm9UU5NMxfcD
-         cuwI0evE5t5kLztlhjfFwvIPzb8bqD0OULtN0E6fahAAttEJ7qUikqrgU/dUfBERfFHU
-         mUWs9vVsxRP/RygdP2rhsP+R0vFf6f157JvK6vNgLeA/jSdJyjTWMU3y3UZEdOsUMLoq
-         2Qng==
-X-Gm-Message-State: APjAAAVyjdDnDwasZq9DJMTMqL69xLAqS9XYNJTt7dyn7Plcn6E8hpsw
-        +j9bVU8/VRqqNhNMVZWq7eREmnyD317cHavwHlkPJ75Kv0Br
-X-Google-Smtp-Source: APXvYqxz5LJq4LWDmNV9szwNsmBqBsVUxJpxFb+i+hQ4QJCPu9V5Fvqj0Rx+8t9CpL4J3NjHXRUS5yqjl/DTlRs32SRRu4E+dR29
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Vb5cyWLJV5ZR0F5iDmlf/8PvEYOZeZfUNSdNGtLvZJI=;
+        b=Uuo825C52W2Nc1QMIP9eXTxG6QVfSqBRz5e1r9ZKxiAgJrqRYIYEeEFz3WjHDnU9hQ
+         HCkj9yV268cocQniLoFAihkFjGWC0RuBn4cqXYuvt5DQwzTeYPoailzhDSVURfCnoFxF
+         RKB8VSarNWo8qyZGQLjwJVYaCcggy66ufg09HY8gTd9kTTgqf19PmNx1w812ZRTNg+t0
+         vgke/ceekzjUSopuDDQ/YWZMCT4Wi9HKG28IJkzaiL3L7hGBXzS2x1Qu6cQEaJ7yfCHd
+         7l15+uYswBrvV9RCkIEd0HS+Si9aJHz9ZY9keQ9yosV7oOfpaMNWdhyVlcTWfZmdBMKA
+         piuQ==
+X-Gm-Message-State: APjAAAXgYeeYx0ufDuiJWY/v7uHwz72zdv6wnXKzx0f7ouoZ9gqSQXQj
+        l2xvI3qCOajA/VAm3VE+iPYTd5j0E/Tawhobzqb6Aw==
+X-Google-Smtp-Source: APXvYqxzZjCff57xw2STewj8hvzXGMNapCy6Befwm57vvCLoE09f+Ii81TVHsJjBeSvPmeIU9AkG5ERsKsyGqT2FA8Q=
+X-Received: by 2002:a9d:66ca:: with SMTP id t10mr8495244otm.352.1579320135542;
+ Fri, 17 Jan 2020 20:02:15 -0800 (PST)
 MIME-Version: 1.0
-X-Received: by 2002:a6b:8e47:: with SMTP id q68mr32469522iod.274.1579317249297;
- Fri, 17 Jan 2020 19:14:09 -0800 (PST)
-Date:   Fri, 17 Jan 2020 19:14:09 -0800
-In-Reply-To: <000000000000486474059c19f4d7@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a1d91b059c6173c6@google.com>
-Subject: Re: inconsistent lock state in ima_process_queued_keys
-From:   syzbot <syzbot+a4a503d7f37292ae1664@syzkaller.appspotmail.com>
-To:     dmitry.kasatkin@gmail.com, dvyukov@google.com, jmorris@namei.org,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, nramas@linux.microsoft.com,
-        serge@hallyn.com, syzkaller-bugs@googlegroups.com,
-        zohar@linux.ibm.com
+References: <cover.1569493933.git.shengjiu.wang@nxp.com> <d728f65194e9978cbec4132b522d4fed420d704a.1569493933.git.shengjiu.wang@nxp.com>
+ <CANcMJZBy=yH+4YgZWwphiE-PO6d4hzhFK3XFtpN677ZAv_N4WQ@mail.gmail.com>
+ <CANcMJZCuU_-Xii=YT5Rp5DAyxboptJCrpp51jForuYUpeMuhmQ@mail.gmail.com> <CAA+D8AP39bo6EsHvWhVXvAYAho_xMnWmePPAK6dBsOh5wsz48Q@mail.gmail.com>
+In-Reply-To: <CAA+D8AP39bo6EsHvWhVXvAYAho_xMnWmePPAK6dBsOh5wsz48Q@mail.gmail.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Fri, 17 Jan 2020 20:02:04 -0800
+Message-ID: <CALAqxLVapiMC-qPX4fza9cPCKFqvoi2KWhZkJa42DiHwOqGe8Q@mail.gmail.com>
+Subject: Re: [alsa-devel] [PATCH V6 3/4] ASoC: pcm_dmaengine: Extract snd_dmaengine_pcm_refine_runtime_hwparams
+To:     Shengjiu Wang <shengjiu.wang@gmail.com>
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+On Thu, Jan 16, 2020 at 11:11 PM Shengjiu Wang <shengjiu.wang@gmail.com> wrote:
+>
+> Hi
+>
+> On Thu, Jan 16, 2020 at 1:56 PM John Stultz <john.stultz@linaro.org> wrote:
+> >
+> > On Wed, Jan 8, 2020 at 8:58 PM John Stultz <john.stultz@linaro.org> wrote:
+> > > On Thu, Sep 26, 2019 at 6:50 PM Shengjiu Wang <shengjiu.wang@nxp.com> wrote:
+> > > >
+> > > > When set the runtime hardware parameters, we may need to query
+> > > > the capability of DMA to complete the parameters.
+> > > >
+> > > > This patch is to Extract this operation from
+> > > > dmaengine_pcm_set_runtime_hwparams function to a separate function
+> > > > snd_dmaengine_pcm_refine_runtime_hwparams, that other components
+> > > > which need this feature can call this function.
+> > > >
+> > > > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> > > > Reviewed-by: Nicolin Chen <nicoleotsuka@gmail.com>
+> > >
+> > > As a heads up, this patch seems to be causing a regression on the HiKey board.
+> > >
+> > > On boot up I'm seeing:
+> > > [   17.721424] hi6210_i2s f7118000.i2s: ASoC: can't open component
+> > > f7118000.i2s: -6
+> > >
+> > > And HDMI audio isn't working. With this patch reverted, audio works again.
+> > >
+> > >
+> > > > diff --git a/sound/core/pcm_dmaengine.c b/sound/core/pcm_dmaengine.c
+> > > > index 89a05926ac73..5749a8a49784 100644
+> > > > --- a/sound/core/pcm_dmaengine.c
+> > > > +++ b/sound/core/pcm_dmaengine.c
+> > > > @@ -369,4 +369,87 @@ int snd_dmaengine_pcm_close_release_chan(struct snd_pcm_substream *substream)
+> > > ...
+> > > > +       ret = dma_get_slave_caps(chan, &dma_caps);
+> > > > +       if (ret == 0) {
+> > > > +               if (dma_caps.cmd_pause && dma_caps.cmd_resume)
+> > > > +                       hw->info |= SNDRV_PCM_INFO_PAUSE | SNDRV_PCM_INFO_RESUME;
+> > > > +               if (dma_caps.residue_granularity <= DMA_RESIDUE_GRANULARITY_SEGMENT)
+> > > > +                       hw->info |= SNDRV_PCM_INFO_BATCH;
+> > > > +
+> > > > +               if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+> > > > +                       addr_widths = dma_caps.dst_addr_widths;
+> > > > +               else
+> > > > +                       addr_widths = dma_caps.src_addr_widths;
+> > > > +       }
+> > >
+> > > It seems a failing ret from dma_get_slave_caps() here is being returned...
+> > >
+> > > > +
+> > > > +       /*
+> > > > +        * If SND_DMAENGINE_PCM_DAI_FLAG_PACK is set keep
+> > > > +        * hw.formats set to 0, meaning no restrictions are in place.
+> > > > +        * In this case it's the responsibility of the DAI driver to
+> > > > +        * provide the supported format information.
+> > > > +        */
+> > > > +       if (!(dma_data->flags & SND_DMAENGINE_PCM_DAI_FLAG_PACK))
+> > > > +               /*
+> > > > +                * Prepare formats mask for valid/allowed sample types. If the
+> > > > +                * dma does not have support for the given physical word size,
+> > > > +                * it needs to be masked out so user space can not use the
+> > > > +                * format which produces corrupted audio.
+> > > > +                * In case the dma driver does not implement the slave_caps the
+> > > > +                * default assumption is that it supports 1, 2 and 4 bytes
+> > > > +                * widths.
+> > > > +                */
+> > > > +               for (i = SNDRV_PCM_FORMAT_FIRST; i <= SNDRV_PCM_FORMAT_LAST; i++) {
+> > > > +                       int bits = snd_pcm_format_physical_width(i);
+> > > > +
+> > > > +                       /*
+> > > > +                        * Enable only samples with DMA supported physical
+> > > > +                        * widths
+> > > > +                        */
+> > > > +                       switch (bits) {
+> > > > +                       case 8:
+> > > > +                       case 16:
+> > > > +                       case 24:
+> > > > +                       case 32:
+> > > > +                       case 64:
+> > > > +                               if (addr_widths & (1 << (bits / 8)))
+> > > > +                                       hw->formats |= pcm_format_to_bits(i);
+> > > > +                               break;
+> > > > +                       default:
+> > > > +                               /* Unsupported types */
+> > > > +                               break;
+> > > > +                       }
+> > > > +               }
+> > > > +
+> > > > +       return ret;
+> > >
+> > > ... down here.
+> > >
+> > > Where as in the old code...
+> > >
+> > > > diff --git a/sound/soc/soc-generic-dmaengine-pcm.c b/sound/soc/soc-generic-dmaengine-pcm.c
+> > > > index 748f5f641002..b9f147eaf7c4 100644
+> > > > --- a/sound/soc/soc-generic-dmaengine-pcm.c
+> > > > +++ b/sound/soc/soc-generic-dmaengine-pcm.c
+> > >
+> > > > @@ -145,56 +140,12 @@ static int dmaengine_pcm_set_runtime_hwparams(struct snd_pcm_substream *substrea
+> > > >         if (pcm->flags & SND_DMAENGINE_PCM_FLAG_NO_RESIDUE)
+> > > >                 hw.info |= SNDRV_PCM_INFO_BATCH;
+> > > >
+> > > > -       ret = dma_get_slave_caps(chan, &dma_caps);
+> > > > -       if (ret == 0) {
+> > > > -               if (dma_caps.cmd_pause && dma_caps.cmd_resume)
+> > > > -                       hw.info |= SNDRV_PCM_INFO_PAUSE | SNDRV_PCM_INFO_RESUME;
+> > > > -               if (dma_caps.residue_granularity <= DMA_RESIDUE_GRANULARITY_SEGMENT)
+> > > > -                       hw.info |= SNDRV_PCM_INFO_BATCH;
+> > > > -
+> > > > -               if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+> > > > -                       addr_widths = dma_caps.dst_addr_widths;
+> > > > -               else
+> > > > -                       addr_widths = dma_caps.src_addr_widths;
+> > > > -       }
+> > >
+> > > ...the ret from dma_get_slave_caps()  checked above, but is not
+> > > actually returned.
+> > >
+> > > Suggestions on how to sort this out?
+> >
+> > Just wanted to check in on this, as I'm still seeing this regression with -rc6.
+> >
+> Compare with the old code. it seems that we shouldn't check the return value.
+>
+> Could you help to test below changes?
+>
+> --- a/sound/soc/soc-generic-dmaengine-pcm.c
+> +++ b/sound/soc/soc-generic-dmaengine-pcm.c
+> @@ -138,12 +138,10 @@ dmaengine_pcm_set_runtime_hwparams(struct
+> snd_soc_component *component,
+>         if (pcm->flags & SND_DMAENGINE_PCM_FLAG_NO_RESIDUE)
+>                 hw.info |= SNDRV_PCM_INFO_BATCH;
+>
+> -       ret = snd_dmaengine_pcm_refine_runtime_hwparams(substream,
+> +       snd_dmaengine_pcm_refine_runtime_hwparams(substream,
+>                                                         dma_data,
+>                                                         &hw,
+>                                                         chan);
+> -       if (ret)
+> -               return ret;
+>
+>         return snd_soc_set_runtime_hwparams(substream, &hw);
+>  }
 
-HEAD commit:    2747d5fd Add linux-next specific files for 20200116
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=14ee1cc9e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=22f506e7a3a37fe2
-dashboard link: https://syzkaller.appspot.com/bug?extid=a4a503d7f37292ae1664
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=128b4495e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12b673b9e00000
+Yes, thanks for taking a look at this! Your patch does appear to avoid
+the regression.
+(Though you'll want to drop the ret declaration to avoid "warning:
+unused variable 'ret'" compiler warnings.)
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+a4a503d7f37292ae1664@syzkaller.appspotmail.com
-
-================================
-WARNING: inconsistent lock state
-5.5.0-rc6-next-20200116-syzkaller #0 Not tainted
---------------------------------
-inconsistent {SOFTIRQ-ON-W} -> {IN-SOFTIRQ-W} usage.
-kworker/u4:3/125 [HC0[0]:SC1[1]:HE1:SE0] takes:
-ffffffff8a03ce58 (ima_keys_lock){+.?.}, at: spin_lock include/linux/spinlock.h:338 [inline]
-ffffffff8a03ce58 (ima_keys_lock){+.?.}, at: ima_process_queued_keys+0x4f/0x320 security/integrity/ima/ima_asymmetric_keys.c:144
-{SOFTIRQ-ON-W} state was registered at:
-  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
-  __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-  _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
-  spin_lock include/linux/spinlock.h:338 [inline]
-  ima_queue_key security/integrity/ima/ima_asymmetric_keys.c:111 [inline]
-  ima_post_key_create_or_update+0x234/0x470 security/integrity/ima/ima_asymmetric_keys.c:194
-  key_create_or_update+0x6b8/0xcb0 security/keys/key.c:944
-  load_system_certificate_list+0x1ba/0x25e certs/system_keyring.c:161
-  do_one_initcall+0x120/0x820 init/main.c:1109
-  do_initcall_level init/main.c:1182 [inline]
-  do_initcalls init/main.c:1198 [inline]
-  do_basic_setup init/main.c:1218 [inline]
-  kernel_init_freeable+0x522/0x5d0 init/main.c:1402
-  kernel_init+0x12/0x1bf init/main.c:1309
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-irq event stamp: 15703140
-hardirqs last  enabled at (15703140): [<ffffffff87ee0813>] __raw_spin_unlock_irq include/linux/spinlock_api_smp.h:168 [inline]
-hardirqs last  enabled at (15703140): [<ffffffff87ee0813>] _raw_spin_unlock_irq+0x23/0x80 kernel/locking/spinlock.c:199
-hardirqs last disabled at (15703139): [<ffffffff87ee09fa>] __raw_spin_lock_irq include/linux/spinlock_api_smp.h:126 [inline]
-hardirqs last disabled at (15703139): [<ffffffff87ee09fa>] _raw_spin_lock_irq+0x3a/0x80 kernel/locking/spinlock.c:167
-softirqs last  enabled at (15702640): [<ffffffff87cf9855>] spin_unlock_bh include/linux/spinlock.h:383 [inline]
-softirqs last  enabled at (15702640): [<ffffffff87cf9855>] batadv_nc_purge_paths+0x265/0x370 net/batman-adv/network-coding.c:470
-softirqs last disabled at (15702651): [<ffffffff8147a05b>] invoke_softirq kernel/softirq.c:373 [inline]
-softirqs last disabled at (15702651): [<ffffffff8147a05b>] irq_exit+0x19b/0x1e0 kernel/softirq.c:413
-
-other info that might help us debug this:
- Possible unsafe locking scenario:
-
-       CPU0
-       ----
-  lock(ima_keys_lock);
-  <Interrupt>
-    lock(ima_keys_lock);
-
- *** DEADLOCK ***
-
-4 locks held by kworker/u4:3/125:
- #0: ffff88821512a928 ((wq_completion)bat_events){+.+.}, at: __write_once_size include/linux/compiler.h:250 [inline]
- #0: ffff88821512a928 ((wq_completion)bat_events){+.+.}, at: arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
- #0: ffff88821512a928 ((wq_completion)bat_events){+.+.}, at: atomic64_set include/asm-generic/atomic-instrumented.h:869 [inline]
- #0: ffff88821512a928 ((wq_completion)bat_events){+.+.}, at: atomic_long_set include/asm-generic/atomic-long.h:41 [inline]
- #0: ffff88821512a928 ((wq_completion)bat_events){+.+.}, at: set_work_data kernel/workqueue.c:615 [inline]
- #0: ffff88821512a928 ((wq_completion)bat_events){+.+.}, at: set_work_pool_and_clear_pending kernel/workqueue.c:642 [inline]
- #0: ffff88821512a928 ((wq_completion)bat_events){+.+.}, at: process_one_work+0x8dd/0x17a0 kernel/workqueue.c:2235
- #1: ffffc90001397dc0 ((work_completion)(&(&bat_priv->nc.work)->work)){+.+.}, at: process_one_work+0x917/0x17a0 kernel/workqueue.c:2239
- #2: ffffffff89bb0400 (rcu_read_lock){....}, at: batadv_nc_purge_orig_hash net/batman-adv/network-coding.c:405 [inline]
- #2: ffffffff89bb0400 (rcu_read_lock){....}, at: batadv_nc_worker+0xe3/0x760 net/batman-adv/network-coding.c:718
- #3: ffffc90000d98d50 ((&ima_key_queue_timer)){+.-.}, at: lockdep_copy_map include/linux/lockdep.h:172 [inline]
- #3: ffffc90000d98d50 ((&ima_key_queue_timer)){+.-.}, at: call_timer_fn+0xe0/0x780 kernel/time/timer.c:1394
-
-stack backtrace:
-CPU: 1 PID: 125 Comm: kworker/u4:3 Not tainted 5.5.0-rc6-next-20200116-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: bat_events batadv_nc_worker
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x197/0x210 lib/dump_stack.c:118
- print_usage_bug.cold+0x327/0x378 kernel/locking/lockdep.c:3100
- valid_state kernel/locking/lockdep.c:3111 [inline]
- mark_lock_irq kernel/locking/lockdep.c:3308 [inline]
- mark_lock+0xbb4/0x1220 kernel/locking/lockdep.c:3665
- mark_usage kernel/locking/lockdep.c:3565 [inline]
- __lock_acquire+0x1e8e/0x4a00 kernel/locking/lockdep.c:3908
- lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
- __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
- _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
- spin_lock include/linux/spinlock.h:338 [inline]
- ima_process_queued_keys+0x4f/0x320 security/integrity/ima/ima_asymmetric_keys.c:144
- ima_timer_handler+0x15/0x20 security/integrity/ima/ima_asymmetric_keys.c:46
- call_timer_fn+0x1ac/0x780 kernel/time/timer.c:1404
- expire_timers kernel/time/timer.c:1449 [inline]
- __run_timers kernel/time/timer.c:1773 [inline]
- __run_timers kernel/time/timer.c:1740 [inline]
- run_timer_softirq+0x6c3/0x1790 kernel/time/timer.c:1786
- __do_softirq+0x262/0x98c kernel/softirq.c:292
- invoke_softirq kernel/softirq.c:373 [inline]
- irq_exit+0x19b/0x1e0 kernel/softirq.c:413
- exiting_irq arch/x86/include/asm/apic.h:536 [inline]
- smp_apic_timer_interrupt+0x1a3/0x610 arch/x86/kernel/apic/apic.c:1137
- apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
- </IRQ>
-RIP: 0010:arch_local_irq_restore arch/x86/include/asm/paravirt.h:752 [inline]
-RIP: 0010:lock_acquire+0x20b/0x410 kernel/locking/lockdep.c:4487
-Code: 9c 08 00 00 00 00 00 00 48 c1 e8 03 80 3c 10 00 0f 85 d3 01 00 00 48 83 3d 49 7d 58 08 00 0f 84 53 01 00 00 48 8b 7d c8 57 9d <0f> 1f 44 00 00 48 8d 65 d8 5b 41 5c 41 5d 41 5e 41 5f 5d c3 65 8b
-RSP: 0018:ffffc90001397c70 EFLAGS: 00000286 ORIG_RAX: ffffffffffffff13
-RAX: 1ffffffff136774f RBX: ffff8880a922c600 RCX: ffffffff815ae240
-RDX: dffffc0000000000 RSI: 0000000000000008 RDI: 0000000000000286
-RBP: ffffc90001397cb8 R08: 1ffffffff16a51a4 R09: fffffbfff16a51a5
-R10: ffff8880a922cef0 R11: ffff8880a922c600 R12: ffffffff89bb0400
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000002
- rcu_lock_acquire include/linux/rcupdate.h:208 [inline]
- rcu_read_lock include/linux/rcupdate.h:601 [inline]
- batadv_nc_purge_orig_hash net/batman-adv/network-coding.c:407 [inline]
- batadv_nc_worker+0x117/0x760 net/batman-adv/network-coding.c:718
- process_one_work+0xa05/0x17a0 kernel/workqueue.c:2264
- worker_thread+0x98/0xe40 kernel/workqueue.c:2410
- kthread+0x361/0x430 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
+thanks
+-john
