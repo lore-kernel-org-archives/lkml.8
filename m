@@ -2,131 +2,193 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A7E2C33CB1
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 10:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD89EC33CB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 11:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E36C24695
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 10:58:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7643724698
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 11:01:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="ZejS7K6b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbgARK6k (ORCPT
+        id S1727116AbgARLBO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 05:58:40 -0500
-Received: from mx2.suse.de ([195.135.220.15]:43144 "EHLO mx2.suse.de"
+        Sat, 18 Jan 2020 06:01:14 -0500
+Received: from ozlabs.org ([203.11.71.1]:47663 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726961AbgARK6j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 05:58:39 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 0B9F0ACA5;
-        Sat, 18 Jan 2020 10:58:37 +0000 (UTC)
-Subject: Re: [patch v2] mm, thp: fix defrag setting if newline is not used
-To:     David Rientjes <rientjes@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Mel Gorman <mgorman@techsingularity.net>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <alpine.DEB.2.21.2001141757490.108121@chino.kir.corp.google.com>
- <20200116191609.3972fd5301cf364a27381923@linux-foundation.org>
- <025511aa-4721-2edb-d658-78d6368a9101@suse.cz>
- <alpine.DEB.2.21.2001170136280.20618@chino.kir.corp.google.com>
- <a3c269a7-ff41-ee7c-9041-ee06e50c5a10@suse.cz>
- <alpine.DEB.2.21.2001171411020.56385@chino.kir.corp.google.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <dc911eac-f843-31a3-f74c-53b0bbcc8817@suse.cz>
-Date:   Sat, 18 Jan 2020 11:54:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        id S1726961AbgARLBN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jan 2020 06:01:13 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 480FNQ3hbqz9sP6;
+        Sat, 18 Jan 2020 22:01:10 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1579345271;
+        bh=+ulljLUKb6YQwXPEHo6wjTNIvD2BQufBLyDbxBLm/nk=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=ZejS7K6bqRlR8103U9Yudfz6yhHjDi95+BKMxQYP7P6OQX3errdxmtKNxl9vRuLX1
+         lmF9rG/xIrDDcQpE0z5bekpwIapcR0tAR3dU+HOfAqSQg6eGfrRMbzzA6Zb+QpBHKm
+         gkuJnS2G47MSiourShu92BIaGFOClEW8DOgx97i1RKAoW3sYxQIYLSVrIRX/TNP6JS
+         YLXQmMdIhNTAEJEQmU+KYiH9DCZwIRDY8LdfN5yedg4M0HUFlrxebt9zSRBfLzcSVi
+         Es4hhap2p6oWvarpWe9gN4NXRzDkvxJEtjW2YQuoMqy06lNZcWLjqy3Ej6xeiJLhZv
+         Z2CxB66OwaTAw==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        akpm@linux-foundation.org, peterz@infradead.org, will@kernel.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v4 1/9] powerpc/mmu_gather: Enable RCU_TABLE_FREE even for !SMP case
+In-Reply-To: <20200116064531.483522-2-aneesh.kumar@linux.ibm.com>
+References: <20200116064531.483522-1-aneesh.kumar@linux.ibm.com> <20200116064531.483522-2-aneesh.kumar@linux.ibm.com>
+Date:   Sat, 18 Jan 2020 21:01:14 +1000
+Message-ID: <875zh981vp.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.2001171411020.56385@chino.kir.corp.google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/17/20 11:11 PM, David Rientjes wrote:
-> If thp defrag setting "defer" is used and a newline is *not* used when
-> writing to the sysfs file, this is interpreted as the "defer+madvise"
-> option.
-> 
-> This is because we do prefix matching and if five characters are written
-> without a newline, the current code ends up comparing to the first five
-> bytes of the "defer+madvise" option and using that instead.
-> 
-> Use the more appropriate sysfs_streq() that handles the trailing newline
-> for us.  Since this doubles as a nice cleanup, do it in enabled_store()
-> as well.
-> 
-> Fixes: 21440d7eb904 ("mm, thp: add new defer+madvise defrag option")
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Mel Gorman <mgorman@techsingularity.net>
-> Suggested-by: Andrew Morton <akpm@linux-foundation.org>
-> Signed-off-by: David Rientjes <rientjes@google.com>
+"Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com> writes:
+> A follow up patch is going to make sure we correctly invalidate page walk cache
+> before we free page table pages. In order to keep things simple enable
+> RCU_TABLE_FREE even for !SMP so that we don't have to fixup the !SMP case
+> differently in the followup patch
+>
+> !SMP case is right now broken for radix translation w.r.t page walk cache flush.
+> We can get interrupted in between page table free and that would imply we
+> have page walk cache entries pointing to tables which got freed already.
 
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Thanks.
+For the archives, both our platforms that run on Power9 force SMP on in
+Kconfig, so the !SMP case is unlikely to be a problem for anyone in
+practice, unless they've hacked their kernel to build it !SMP.
+
+> Cc: <stable@vger.kernel.org>
+> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+> ---
+>  arch/powerpc/Kconfig                         | 2 +-
+>  arch/powerpc/include/asm/book3s/32/pgalloc.h | 8 --------
+>  arch/powerpc/include/asm/book3s/64/pgalloc.h | 2 --
+>  arch/powerpc/include/asm/nohash/pgalloc.h    | 8 --------
+>  arch/powerpc/mm/book3s64/pgtable.c           | 7 -------
+>  5 files changed, 1 insertion(+), 26 deletions(-)
+
+Acked-by: Michael Ellerman <mpe@ellerman.id.au>
+
+cheers
+
+> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> index 1ec34e16ed65..04240205f38c 100644
+> --- a/arch/powerpc/Kconfig
+> +++ b/arch/powerpc/Kconfig
+> @@ -222,7 +222,7 @@ config PPC
+>  	select HAVE_HARDLOCKUP_DETECTOR_PERF	if PERF_EVENTS && HAVE_PERF_EVENTS_NMI && !HAVE_HARDLOCKUP_DETECTOR_ARCH
+>  	select HAVE_PERF_REGS
+>  	select HAVE_PERF_USER_STACK_DUMP
+> -	select HAVE_RCU_TABLE_FREE		if SMP
+> +	select HAVE_RCU_TABLE_FREE
+>  	select HAVE_RCU_TABLE_NO_INVALIDATE	if HAVE_RCU_TABLE_FREE
+>  	select HAVE_MMU_GATHER_PAGE_SIZE
+>  	select HAVE_REGS_AND_STACK_ACCESS_API
+> diff --git a/arch/powerpc/include/asm/book3s/32/pgalloc.h b/arch/powerpc/include/asm/book3s/32/pgalloc.h
+> index 998317702630..dc5c039eb28e 100644
+> --- a/arch/powerpc/include/asm/book3s/32/pgalloc.h
+> +++ b/arch/powerpc/include/asm/book3s/32/pgalloc.h
+> @@ -49,7 +49,6 @@ static inline void pgtable_free(void *table, unsigned index_size)
+>  
+>  #define get_hugepd_cache_index(x)  (x)
+>  
+> -#ifdef CONFIG_SMP
+>  static inline void pgtable_free_tlb(struct mmu_gather *tlb,
+>  				    void *table, int shift)
+>  {
+> @@ -66,13 +65,6 @@ static inline void __tlb_remove_table(void *_table)
+>  
+>  	pgtable_free(table, shift);
+>  }
+> -#else
+> -static inline void pgtable_free_tlb(struct mmu_gather *tlb,
+> -				    void *table, int shift)
+> -{
+> -	pgtable_free(table, shift);
+> -}
+> -#endif
+>  
+>  static inline void __pte_free_tlb(struct mmu_gather *tlb, pgtable_t table,
+>  				  unsigned long address)
+> diff --git a/arch/powerpc/include/asm/book3s/64/pgalloc.h b/arch/powerpc/include/asm/book3s/64/pgalloc.h
+> index f6968c811026..a41e91bd0580 100644
+> --- a/arch/powerpc/include/asm/book3s/64/pgalloc.h
+> +++ b/arch/powerpc/include/asm/book3s/64/pgalloc.h
+> @@ -19,9 +19,7 @@ extern struct vmemmap_backing *vmemmap_list;
+>  extern pmd_t *pmd_fragment_alloc(struct mm_struct *, unsigned long);
+>  extern void pmd_fragment_free(unsigned long *);
+>  extern void pgtable_free_tlb(struct mmu_gather *tlb, void *table, int shift);
+> -#ifdef CONFIG_SMP
+>  extern void __tlb_remove_table(void *_table);
+> -#endif
+>  void pte_frag_destroy(void *pte_frag);
+>  
+>  static inline pgd_t *radix__pgd_alloc(struct mm_struct *mm)
+> diff --git a/arch/powerpc/include/asm/nohash/pgalloc.h b/arch/powerpc/include/asm/nohash/pgalloc.h
+> index 332b13b4ecdb..29c43665a753 100644
+> --- a/arch/powerpc/include/asm/nohash/pgalloc.h
+> +++ b/arch/powerpc/include/asm/nohash/pgalloc.h
+> @@ -46,7 +46,6 @@ static inline void pgtable_free(void *table, int shift)
+>  
+>  #define get_hugepd_cache_index(x)	(x)
+>  
+> -#ifdef CONFIG_SMP
+>  static inline void pgtable_free_tlb(struct mmu_gather *tlb, void *table, int shift)
+>  {
+>  	unsigned long pgf = (unsigned long)table;
+> @@ -64,13 +63,6 @@ static inline void __tlb_remove_table(void *_table)
+>  	pgtable_free(table, shift);
+>  }
+>  
+> -#else
+> -static inline void pgtable_free_tlb(struct mmu_gather *tlb, void *table, int shift)
+> -{
+> -	pgtable_free(table, shift);
+> -}
+> -#endif
+> -
+>  static inline void __pte_free_tlb(struct mmu_gather *tlb, pgtable_t table,
+>  				  unsigned long address)
+>  {
+> diff --git a/arch/powerpc/mm/book3s64/pgtable.c b/arch/powerpc/mm/book3s64/pgtable.c
+> index 75483b40fcb1..2bf7e1b4fd82 100644
+> --- a/arch/powerpc/mm/book3s64/pgtable.c
+> +++ b/arch/powerpc/mm/book3s64/pgtable.c
+> @@ -378,7 +378,6 @@ static inline void pgtable_free(void *table, int index)
+>  	}
+>  }
+>  
+> -#ifdef CONFIG_SMP
+>  void pgtable_free_tlb(struct mmu_gather *tlb, void *table, int index)
+>  {
+>  	unsigned long pgf = (unsigned long)table;
+> @@ -395,12 +394,6 @@ void __tlb_remove_table(void *_table)
+>  
+>  	return pgtable_free(table, index);
+>  }
+> -#else
+> -void pgtable_free_tlb(struct mmu_gather *tlb, void *table, int index)
+> -{
+> -	return pgtable_free(table, index);
+> -}
+> -#endif
+>  
+>  #ifdef CONFIG_PROC_FS
+>  atomic_long_t direct_pages_count[MMU_PAGE_COUNT];
+> -- 
+> 2.24.1
