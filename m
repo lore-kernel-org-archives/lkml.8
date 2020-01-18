@@ -2,60 +2,45 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B5EC33CB7
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 14:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3651CC3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 14:34:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 526692469D
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 14:32:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579357962;
-	bh=2gpBuuvhYqy8RvrcBZ6bAFOgb2g6EP4XMMQ95aGZvKA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=iQY1WRIfKjSOMT6vUVHohIZHbbyA57+bVm6xr/4ePcZt76yzi1aZXjc7CD5OGrKXe
-	 TN+Le9ShzU17DKbDl0bLmLu6zr39MUEXNDOifFird/rQaaW8pWrXRP5Rl8rqdujM24
-	 3lH3mI9BEmDM8Qzpsgk4szmMI6WNWM6UonuiEqps=
+	by mail.kernel.org (Postfix) with ESMTP id 185C42469C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 14:34:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbgAROcl (ORCPT
+        id S1726642AbgAROeV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 09:32:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54398 "EHLO mail.kernel.org"
+        Sat, 18 Jan 2020 09:34:21 -0500
+Received: from mx.blih.net ([212.83.155.74]:46898 "EHLO mx.blih.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726208AbgAROcl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 09:32:41 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 046A72469A;
-        Sat, 18 Jan 2020 14:32:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579357961;
-        bh=2gpBuuvhYqy8RvrcBZ6bAFOgb2g6EP4XMMQ95aGZvKA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=0GL8Sn03Xa52kpQ5+KYaDSu2O5damtoCfh914pmIzR1RJ0uoqJTGmjBL+smWd3DhC
-         eofUbsfz99ZMPKpe1VakxqNVaBnlJwftR+9Mi5ZBF17402M3timem9g35dIx+p+klp
-         tIEQP2CwbuYIrNghF2HSrfDv+U2VJ72qZUaMGB2U=
-Date:   Sat, 18 Jan 2020 14:32:35 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <olivier.moysan@st.com>,
-        <linux-iio@vger.kernel.org>, <lars@metafoo.de>, <knaack.h@gmx.de>,
-        <pmeerw@pmeerw.net>, <linux-stm32@st-md-mailman.stormreply.com>,
-        <etienne.carriere@st.com>
-Subject: Re: [PATCH 2/2] iio: dac: stm32-dac: better handle reset controller
- failures
-Message-ID: <20200118143235.71a67b76@archlinux>
-In-Reply-To: <1578921266-6025-3-git-send-email-fabrice.gasnier@st.com>
-References: <1578921266-6025-1-git-send-email-fabrice.gasnier@st.com>
-        <1578921266-6025-3-git-send-email-fabrice.gasnier@st.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
+        id S1726208AbgAROeV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jan 2020 09:34:21 -0500
+X-Greylist: delayed 397 seconds by postgrey-1.27 at vger.kernel.org; Sat, 18 Jan 2020 09:34:19 EST
+Received: from skull.home.blih.net (lfbn-idf2-1-1164-130.w90-92.abo.wanadoo.fr [90.92.223.130])
+        by mx.blih.net (OpenSMTPD) with ESMTPSA id cd584d1b (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+        Sat, 18 Jan 2020 14:27:38 +0000 (UTC)
+Date:   Sat, 18 Jan 2020 15:27:32 +0100
+From:   Emmanuel Vadot <manu@bidouilliste.com>
+To:     Chen-Yu Tsai <wens@csie.org>
+Cc:     Emmanuel Vadot <manu@freebsd.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] arm64: dts: allwinner: a64: Add gpio bank supply for
+ A64-Olinuxino
+Message-Id: <20200118152732.0c9e7426074f4141dd09b586@bidouilliste.com>
+In-Reply-To: <CAGb2v67U6qjNf0PPMOm191UZDQvJTGZNNREc22ZsDW61KqaUEA@mail.gmail.com>
+References: <20200116194658.78893-1-manu@freebsd.org>
+        <CAGb2v67U6qjNf0PPMOm191UZDQvJTGZNNREc22ZsDW61KqaUEA@mail.gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; amd64-portbld-freebsd13.0)
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -63,52 +48,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Jan 2020 14:14:26 +0100
-Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
+On Fri, 17 Jan 2020 11:20:21 +0800
+Chen-Yu Tsai <wens@csie.org> wrote:
 
-> From: Etienne Carriere <etienne.carriere@st.com>
+> On Fri, Jan 17, 2020 at 3:47 AM Emmanuel Vadot <manu@freebsd.org> wrote:
+> >
+> > Add the regulators for each bank on this boards.
+> >
+> > Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
+> > ---
+> >  .../boot/dts/allwinner/sun50i-a64-olinuxino.dts   | 15 +++++++++++++++
+> >  1 file changed, 15 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
+> > index 01a9a52edae4..1a25abf6065c 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
+> > @@ -163,6 +163,17 @@ &ohci1 {
+> >         status = "okay";
+> >  };
+> >
+> > +&pio {
+> > +       vcc-pa-supply = <&reg_dcdc1>;
+> > +       vcc-pb-supply = <&reg_dcdc1>;
+> > +       vcc-pc-supply = <&reg_dcdc1>;
+> > +       vcc-pd-supply = <&reg_dcdc1>;
+> > +       vcc-pe-supply = <&reg_aldo1>;
+> > +       vcc-pf-supply = <&reg_dcdc1>;
+> > +       vcc-pg-supply = <&reg_dldo4>;
+> > +       vcc-ph-supply = <&reg_dcdc1>;
+> > +};
+> > +
+> >  &r_rsb {
+> >         status = "okay";
+> >
+> > @@ -175,6 +186,10 @@ axp803: pmic@3a3 {
+> >         };
+> >  };
+> >
+> > +&r_pio {
+> > +       vcc-pl-supply = <&reg_aldo2>;
 > 
-> Use devm_reset_control_get_optional_exclusive() instead of
-> devm_reset_control_get_exclusive() as reset controller is optional.
+> This is likely going to cause a circular dependency, because the RSB
+> interface that is used to talk to the PMIC is also on the PL pins.
+
+ Indeed that cause a Linux kernel to not boot at all.
+
+> (How does FreeBSD deal with this?)
+
+ We don't deal with vcc-X-supply until later in the boot, this is not
+ideal but better than not dealing with them.
+
+> Instead, just add a comment describing what is really used, and set
+> the regulator to always-on, which should already be the case.
+
+ Ok will do,
+
+Thanks.
+
+> ChenYu
 > 
-> Nevertheless if reset controller is expected but reports an
-> error, propagate the error code to the caller. In such case
-> a nice error trace is emitted unless we're deferring the probe
-> operation.
+> > +};
+> > +
+> >  #include "axp803.dtsi"
+> >
+> >  &ac_power_supply {
+> > --
+> > 2.24.1
+> >
+> >
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 > 
-> Signed-off-by: Etienne Carriere <etienne.carriere@st.com>
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Applied to the togreg branch of iio.git and pushed out as testing.
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-Thanks,
 
-Jonathan
-
-> ---
->  drivers/iio/dac/stm32-dac-core.c | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/iio/dac/stm32-dac-core.c b/drivers/iio/dac/stm32-dac-core.c
-> index 4d93446..7e5809b 100644
-> --- a/drivers/iio/dac/stm32-dac-core.c
-> +++ b/drivers/iio/dac/stm32-dac-core.c
-> @@ -147,8 +147,16 @@ static int stm32_dac_probe(struct platform_device *pdev)
->  	priv->common.vref_mv = ret / 1000;
->  	dev_dbg(dev, "vref+=%dmV\n", priv->common.vref_mv);
->  
-> -	rst = devm_reset_control_get_exclusive(dev, NULL);
-> -	if (!IS_ERR(rst)) {
-> +	rst = devm_reset_control_get_optional_exclusive(dev, NULL);
-> +	if (rst) {
-> +		if (IS_ERR(rst)) {
-> +			ret = PTR_ERR(rst);
-> +			if (ret != -EPROBE_DEFER)
-> +				dev_err(dev, "reset get failed, %d\n", ret);
-> +
-> +			goto err_hw_stop;
-> +		}
-> +
->  		reset_control_assert(rst);
->  		udelay(2);
->  		reset_control_deassert(rst);
-
+-- 
+Emmanuel Vadot <manu@bidouilliste.com> <manu@freebsd.org>
