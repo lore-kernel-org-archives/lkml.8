@@ -6,61 +6,62 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59ECEC32771
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 20:20:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF9C3C32771
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 20:20:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F17D246A2
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 20:20:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93A662469D
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 20:20:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579378812;
-	bh=XPZtxr4dzWMQXKp7e5UgSnlVnbcpw83HtxfxB94j8aQ=;
+	s=default; t=1579378813;
+	bh=e0X0dZ+XoYgoAzup3hBksKQHzomqscFqr+DmTJaCguQ=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Edureu6j48E7F8qfrjj2M5ZDhuAkhWgTKzctxNFfN9WzcF3ox6//ys0lVRQS/8IaK
-	 gC1iX9mTNglYC46h3FcrMMQR2YOq1IrPbrE3XonOLvcvIWuxJiQfvzLWoUZA85Atxh
-	 KHs0aJi/0zcABAKnq6QesrZ2UgZyPR/eVVP6hbVo=
+	b=azQ+p48Xv6hQiXS/0qy+mnbJjZSXk8u1KXMQYHIL7dXB0Qe/ipHaWIXQmjwSDCFlQ
+	 z5nMqqSkl36GmHa46eVN/7XkTKvOvSpl1p0f7S5GbY/DGxvU9LWvbe+pu+le1E8AHq
+	 zhWOU7FoBN7vsJZpGHNC0GOoF/tXPIZpBqnM3iiY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728792AbgARUUE (ORCPT
+        id S1729047AbgARUUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 15:20:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42274 "EHLO mail.kernel.org"
+        Sat, 18 Jan 2020 15:20:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726846AbgARUUD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 15:20:03 -0500
-Subject: Re: [GIT PULL] USB fixes for 5.5-rc7
+        id S1728779AbgARUUE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jan 2020 15:20:04 -0500
+Subject: Re: [GIT PULL] more SCSI fixes for 5.5-rc6
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579378803;
-        bh=XPZtxr4dzWMQXKp7e5UgSnlVnbcpw83HtxfxB94j8aQ=;
+        s=default; t=1579378804;
+        bh=e0X0dZ+XoYgoAzup3hBksKQHzomqscFqr+DmTJaCguQ=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=0zRrG7tpiVOYTJMWq+RHON0+2IwMh7L8BoLcOXkVLFxOcMpZCmBkgVGcnDw1AFVAu
-         Lb2KaL+sr9anRzfgtYodU1MfFLEbfVUip8j9MXancr1zEOX4gscKATJtZv9bWt9BTf
-         8OIkPDnsGe9DS63TGLfPf46rrZmzvzNE+HK0rU7Y=
+        b=hOIeE/9D/N/P2C8F9KR5IiNie6yqegCXKTOjL1UP+g2G3nZMU9XUXlAkQW+oneHfy
+         zikXxty3ev0NFgGf3gdrh3TuYQppaLp+awF9aJiXeHZonfRyiGYsmLGKVxdtG+cM98
+         76p6PkNwpV7xj9ltM4kNI6y4Lpup5d4CxaT3gcUo=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200118142250.GA80066@kroah.com>
-References: <20200118142250.GA80066@kroah.com>
+In-Reply-To: <1579372445.3421.26.camel@HansenPartnership.com>
+References: <1579372445.3421.26.camel@HansenPartnership.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200118142250.GA80066@kroah.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-5.5-rc7
-X-PR-Tracked-Commit-Id: 453495d4e791664e42be2254a6a8acb84b991417
+X-PR-Tracked-Message-Id: <1579372445.3421.26.camel@HansenPartnership.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
+X-PR-Tracked-Commit-Id: 28d76df18f0ad5bcf5fa48510b225f0ed262a99b
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: c5fd2c5b8bcd274718c3370b39913f68587fb9cc
-Message-Id: <157937880293.12197.10775468140896729151.pr-tracker-bot@kernel.org>
-Date:   Sat, 18 Jan 2020 20:20:02 +0000
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+X-PR-Merge-Commit-Id: 8965de70cbafec673417eed423bd5e0e9c244079
+Message-Id: <157937880416.12197.13080896970388822007.pr-tracker-bot@kernel.org>
+Date:   Sat, 18 Jan 2020 20:20:04 +0000
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sat, 18 Jan 2020 15:22:50 +0100:
+The pull request you sent on Sat, 18 Jan 2020 10:34:05 -0800:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-5.5-rc7
+> git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/c5fd2c5b8bcd274718c3370b39913f68587fb9cc
+https://git.kernel.org/torvalds/c/8965de70cbafec673417eed423bd5e0e9c244079
 
 Thank you!
 
