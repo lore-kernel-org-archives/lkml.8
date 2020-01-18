@@ -2,209 +2,88 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92AF8C33CB7
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 17:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F9CC33CB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 17:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FDA7246A5
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 17:16:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579367799;
-	bh=lVAL6/td+RDSjoc+zfgE4j3U9b1ln3hhXLIsjf01364=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=0EwJ93TRnmky7yZwckwZew154KZRE2CLf2FIREDs4kTFFtOlRBEwIExRQbpdFlsAg
-	 erhrwGBaVf/Fr/wWkuZeJsgw0UycjaNm/1RFFdqIp8Nowz0ouRKXH5fIs9Mc87PG2z
-	 ts127DD5D7dSXKfAc9sE6g3cg22xzs7jPu+FzM2c=
+	by mail.kernel.org (Postfix) with ESMTP id B9F44246A8
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 17:17:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S4XH4Tzt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbgARRQi (ORCPT
+        id S1726957AbgARRRP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 12:16:38 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44707 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726413AbgARRQi (ORCPT
+        Sat, 18 Jan 2020 12:17:15 -0500
+Received: from mail-lf1-f46.google.com ([209.85.167.46]:46244 "EHLO
+        mail-lf1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726413AbgARRRO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 12:16:38 -0500
-Received: by mail-wr1-f65.google.com with SMTP id q10so25552368wrm.11;
-        Sat, 18 Jan 2020 09:16:36 -0800 (PST)
+        Sat, 18 Jan 2020 12:17:14 -0500
+Received: by mail-lf1-f46.google.com with SMTP id z26so100186lfg.13
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jan 2020 09:17:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=t96K9yqyVEX3WlNB6mY1iEHeBKue1nFom+5GUOh9QI8=;
-        b=S/iiXl+UPMKSKq3gJsNswV337GSpEV6mH/fvuOpe6td2ZhOUtvDCQM2X64Q5D+TfKi
-         WlIdE5c4QF4p3fPJo0nAFWmbpCx3oC2pVt/Y+ebEb5OaHEo70hNVBQ2og46RuUohQHcS
-         4iRxfJ0vS1UJQbjitduNenql8//BJpMyrgTRUMBhJshzEUGVhxiQUgGXi7xQ0ZqIsqzC
-         TQB3Xm7vq/cW3o1ji64BHnr0zDIn9cTipzDv/x8Gfq9Odp4GSLPWbCkdzYP0/3DtEx6j
-         9YCUxYi+SKy8GkKZoi2JS9OnOeqHKS5hH8IPZtEdMQLyfBQCeaRkA949Ocgb+J+ewtNJ
-         a2lw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/TfM+yjsSV6EWSEIB9bivQEZTFqDC0eQ4tARU7du8Iw=;
+        b=S4XH4TztfDlx0PcgUb9TVFLr47mdXeBEIFQuA1I4OaCWP564rhGaqk75ccIRgwXvFZ
+         bVcVuLpwUjJvGAzQKLi+tGcaTED7OVeiHQ7fwzsmjxufW1OnUb8K4x8vu1F/nnD9essp
+         GoJ0mYol94JZY+1g0c7xl5ydn4gEgWXLzlhKger7eLbMqr/hDr2ymbYXat7XTAx5ZedG
+         yBQOMFB/xBxvaUfV8vmGUz6LoG91/aEQ0+ABQXx7Ox9FL3/fB4WLRBAGkQQSOZqUDQtj
+         BGZACQzkHj0dWWon3cCXRhkd795BFG1zKvThMmk1SH6PrPbQS/2VQW4ePwieNEiVzqcS
+         XfQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=t96K9yqyVEX3WlNB6mY1iEHeBKue1nFom+5GUOh9QI8=;
-        b=cqdz8nLPmsJlSR5ZIJ6riIrSa9EVhoR5dFBgDgiYlw4NffA3oGNKqHFEVjTSjep2P1
-         Agrq1V9tFLL61FZISGw4wH6CVDq34vzq8dGzRgfUBcPk6dpcYm7VthWlOWBHANeI8vKz
-         LnXhsAc+Wo85/4yJUdRd2LE3Z8KiauZfvjJWYE1Mg2kX65NGHNIiEJaCrspfZm32xJQ4
-         o2zpRivpFtl2Fg7+0vI9qIxQrYxcWi3LiqsVYXiqXWZnyvH/QT1Azhwps1VRjSeiLlIB
-         Kl6uE0xnBAycI7LykEMDRhdDPr97yLWIySpFs/E3V4Q6vgufgNDqnfqLE6H55s3OX4Kd
-         3EYw==
-X-Gm-Message-State: APjAAAWGvTwpCFKk+B5v3YmTeASlLK6oIe41shhsHJMrecRguFfnS7SZ
-        VPid9/KTID6hB1OzMrLUDJ5/DBYP
-X-Google-Smtp-Source: APXvYqwVfrJHywbiiBsXPRQekZT4HB5Qe9Ib/vlHDLTcN5E8oA9fcc5hc8DDrvTisNhl8QSOrAplaw==
-X-Received: by 2002:a5d:528e:: with SMTP id c14mr9540897wrv.308.1579367795770;
-        Sat, 18 Jan 2020 09:16:35 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id a184sm5458070wmf.29.2020.01.18.09.16.34
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/TfM+yjsSV6EWSEIB9bivQEZTFqDC0eQ4tARU7du8Iw=;
+        b=JFtNokK18Ze6nVsPRt3NqI537i15qq1F55y2LWdF8rX23tIQCxHAVJhnXDa2JGxeAN
+         y9BNC8jHx3i9rXLIC5j4X6ANInr+gkeF1mbi+YgE4NDFB4/Jaextvd5NpuYgpuLdDKrX
+         j1NuZff1y80E1teilkaScOFTOgzPxKt7H6G/R4EfFC0fnoDObl3hLeUWxjtuFwX/12TO
+         0EEG4cRZG53WQuavnVzY+k0vnXj/7E6hLnl3EaT7fp89GGWrGnCpVVZC+m0MEuBgX8M0
+         mbyPFyQme1PqkimDH9/9D2v36WiAQyU5/4IEDe5E7GCvBvw1GJTGtMBSpRK2As5CRSdT
+         CTLg==
+X-Gm-Message-State: APjAAAW+xZ8GaGLWozHJXZmIGZ63LWW1O0EeEd3hZZ/9YgMtrtntUDXt
+        PQC7cfJ+cCUQdGgqWulOpK8=
+X-Google-Smtp-Source: APXvYqxDnIq4CCujiAo2Wx1/I3okHK3AXG2vjysGcu6Pq0RY7shBizwZius7MDgymGciHzFw24IY5w==
+X-Received: by 2002:ac2:50da:: with SMTP id h26mr8738520lfm.80.1579367832422;
+        Sat, 18 Jan 2020 09:17:12 -0800 (PST)
+Received: from uranus.localdomain ([5.18.171.94])
+        by smtp.gmail.com with ESMTPSA id r21sm14278729ljn.64.2020.01.18.09.17.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Jan 2020 09:16:35 -0800 (PST)
-Date:   Sat, 18 Jan 2020 18:16:33 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-efi@vger.kernel.org
-Subject: [GIT PULL] EFI fixes
-Message-ID: <20200118171633.GA28490@gmail.com>
+        Sat, 18 Jan 2020 09:17:11 -0800 (PST)
+Received: by uranus.localdomain (Postfix, from userid 1000)
+        id 00643461790; Sat, 18 Jan 2020 20:17:10 +0300 (MSK)
+Date:   Sat, 18 Jan 2020 20:17:10 +0300
+From:   Cyrill Gorcunov <gorcunov@gmail.com>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: getrusage(RUSAGE_BOTH)
+Message-ID: <20200118171710.GA2437@uranus>
+References: <ca7a02ad-2408-0cd8-e54e-d7dbecf9f0ba@rasmusvillemoes.dk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <ca7a02ad-2408-0cd8-e54e-d7dbecf9f0ba@rasmusvillemoes.dk>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On Sat, Jan 18, 2020 at 05:48:20PM +0100, Rasmus Villemoes wrote:
+...
+> 
+> If RUSAGE_BOTH is not supposed to be used, perhaps it should be removed
+> from the uapi header?
 
-Please pull the latest efi-urgent-for-linus git tree from:
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git efi-urgent-for-linus
-
-   # HEAD: 4911ee401b7ceff8f38e0ac597cbf503d71e690c x86/efistub: Disable paging at mixed mode entry
-
-Three EFI fixes:
-
- - Fix a slow-boot-scrolling regression but making sure we use WC for EFI 
-   earlycon framebuffer mappings on x86
-
- - Fix a mixed EFI mode boot crash
-
- - Disable paging explicitly before entering startup_32() in mixed mode 
-   bootup
-
- Thanks,
-
-	Ingo
-
------------------->
-Ard Biesheuvel (1):
-      x86/efistub: Disable paging at mixed mode entry
-
-Arvind Sankar (1):
-      efi/earlycon: Fix write-combine mapping on x86
-
-Hans de Goede (1):
-      efi/libstub/random: Initialize pointer variables to zero for mixed mode
-
-
- arch/x86/boot/compressed/head_64.S    |  5 +++++
- drivers/firmware/efi/earlycon.c       | 16 +++++++---------
- drivers/firmware/efi/libstub/random.c |  6 +++---
- 3 files changed, 15 insertions(+), 12 deletions(-)
-
-diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
-index 58a512e33d8d..ee60b81944a7 100644
---- a/arch/x86/boot/compressed/head_64.S
-+++ b/arch/x86/boot/compressed/head_64.S
-@@ -244,6 +244,11 @@ SYM_FUNC_START(efi32_stub_entry)
- 	leal	efi32_config(%ebp), %eax
- 	movl	%eax, efi_config(%ebp)
- 
-+	/* Disable paging */
-+	movl	%cr0, %eax
-+	btrl	$X86_CR0_PG_BIT, %eax
-+	movl	%eax, %cr0
-+
- 	jmp	startup_32
- SYM_FUNC_END(efi32_stub_entry)
- #endif
-diff --git a/drivers/firmware/efi/earlycon.c b/drivers/firmware/efi/earlycon.c
-index d4077db6dc97..5d4f84781aa0 100644
---- a/drivers/firmware/efi/earlycon.c
-+++ b/drivers/firmware/efi/earlycon.c
-@@ -17,7 +17,7 @@ static const struct console *earlycon_console __initdata;
- static const struct font_desc *font;
- static u32 efi_x, efi_y;
- static u64 fb_base;
--static pgprot_t fb_prot;
-+static bool fb_wb;
- static void *efi_fb;
- 
- /*
-@@ -33,10 +33,8 @@ static int __init efi_earlycon_remap_fb(void)
- 	if (!earlycon_console || !(earlycon_console->flags & CON_ENABLED))
- 		return 0;
- 
--	if (pgprot_val(fb_prot) == pgprot_val(PAGE_KERNEL))
--		efi_fb = memremap(fb_base, screen_info.lfb_size, MEMREMAP_WB);
--	else
--		efi_fb = memremap(fb_base, screen_info.lfb_size, MEMREMAP_WC);
-+	efi_fb = memremap(fb_base, screen_info.lfb_size,
-+			  fb_wb ? MEMREMAP_WB : MEMREMAP_WC);
- 
- 	return efi_fb ? 0 : -ENOMEM;
- }
-@@ -53,9 +51,12 @@ late_initcall(efi_earlycon_unmap_fb);
- 
- static __ref void *efi_earlycon_map(unsigned long start, unsigned long len)
- {
-+	pgprot_t fb_prot;
-+
- 	if (efi_fb)
- 		return efi_fb + start;
- 
-+	fb_prot = fb_wb ? PAGE_KERNEL : pgprot_writecombine(PAGE_KERNEL);
- 	return early_memremap_prot(fb_base + start, len, pgprot_val(fb_prot));
- }
- 
-@@ -215,10 +216,7 @@ static int __init efi_earlycon_setup(struct earlycon_device *device,
- 	if (screen_info.capabilities & VIDEO_CAPABILITY_64BIT_BASE)
- 		fb_base |= (u64)screen_info.ext_lfb_base << 32;
- 
--	if (opt && !strcmp(opt, "ram"))
--		fb_prot = PAGE_KERNEL;
--	else
--		fb_prot = pgprot_writecombine(PAGE_KERNEL);
-+	fb_wb = opt && !strcmp(opt, "ram");
- 
- 	si = &screen_info;
- 	xres = si->lfb_width;
-diff --git a/drivers/firmware/efi/libstub/random.c b/drivers/firmware/efi/libstub/random.c
-index 35edd7cfb6a1..97378cf96a2e 100644
---- a/drivers/firmware/efi/libstub/random.c
-+++ b/drivers/firmware/efi/libstub/random.c
-@@ -33,7 +33,7 @@ efi_status_t efi_get_random_bytes(efi_system_table_t *sys_table_arg,
- {
- 	efi_guid_t rng_proto = EFI_RNG_PROTOCOL_GUID;
- 	efi_status_t status;
--	struct efi_rng_protocol *rng;
-+	struct efi_rng_protocol *rng = NULL;
- 
- 	status = efi_call_early(locate_protocol, &rng_proto, NULL,
- 				(void **)&rng);
-@@ -162,8 +162,8 @@ efi_status_t efi_random_get_seed(efi_system_table_t *sys_table_arg)
- 	efi_guid_t rng_proto = EFI_RNG_PROTOCOL_GUID;
- 	efi_guid_t rng_algo_raw = EFI_RNG_ALGORITHM_RAW;
- 	efi_guid_t rng_table_guid = LINUX_EFI_RANDOM_SEED_TABLE_GUID;
--	struct efi_rng_protocol *rng;
--	struct linux_efi_random_seed *seed;
-+	struct efi_rng_protocol *rng = NULL;
-+	struct linux_efi_random_seed *seed = NULL;
- 	efi_status_t status;
- 
- 	status = efi_call_early(locate_protocol, &rng_proto, NULL,
+Hi Rasmus! I don't remember from scratch the RUSAGE_BOTH context
+(out of sources right now), but dropping it from uapi is definitely
+a wrong way -- since it is used inside kernel we should consider
+it as reserved value thus it should better live in uapi.
