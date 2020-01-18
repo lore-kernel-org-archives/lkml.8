@@ -2,99 +2,131 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83BDCC33CB1
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 10:53:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A7E2C33CB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 10:58:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 567752468D
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 10:53:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NGORnijw"
+	by mail.kernel.org (Postfix) with ESMTP id 3E36C24695
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 10:58:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728680AbgARKxd (ORCPT
+        id S1727109AbgARK6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 05:53:33 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36523 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727011AbgARKxb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 05:53:31 -0500
-Received: by mail-pg1-f194.google.com with SMTP id k3so12972623pgc.3;
-        Sat, 18 Jan 2020 02:53:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Cvf9Z00ABjd5lUk64l+9yaVPvJO8yX8K2hg04kUeIGY=;
-        b=NGORnijwqclwE0DljZwE2ahbwmtqS7aYEzuFsWrGjpUrBEKbZcj6FTSRPSkXIPA4jh
-         3Puppftqo46UXJRtkEQhgKdTb354zSAOObwe5SqVqmTx9B7CPN5zW7o3MgoMBa6fQ3g6
-         n29lP9el05iXfEUeOiS4RjjyCkv5in8wnYDp20d2zI8uberTGD7kA0tMLpjbUaQdemG5
-         0sQmr7aStdBa3MBhyl9htanFcLeAUX0s50OEpIu1/svS9ohUOZDlT/LKEt/TQ3+TBn+Q
-         RhFLtHtzLlKJ1aGzpdmE/JgaNJ50f3Rly6cX8Qs/tqRQxoWoyQ2L0raqHFAW1X7fQpxb
-         JBFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Cvf9Z00ABjd5lUk64l+9yaVPvJO8yX8K2hg04kUeIGY=;
-        b=rHbXwOwm51/c4HbpnlNyumnZRrr+IKD3l1UCcYU3LFZ3NCrg6dKDlQjO6JTK8QFve0
-         PKVlkHPXMqznSSqVPZdR1Y/9L0CUM/Ah6YOzzha+9UDtnRGFnGiauLYVrIxUH9dIISGP
-         W8Ko5yGxVY9k+LzNGpL/VEEdlfieRXZPqkmozRG2PfW4FlSSGOYTSWrccHs5Z/En8VfI
-         RnkJv29qO1aU83Q/u8OgjXNRfYc5sETbj4WUZY/03Ss7AL0gH5lBQObKIRJGLnUYnQAC
-         xF7q9HEEwzGtbLwwETPrbUYZfV/i9ztSIY0fqVb65/7Op8x+ZzDwkrVtqO/AQm+aVVNi
-         3RLg==
-X-Gm-Message-State: APjAAAUWO409drdywisJCFOMV0k0Hl9DeANozoAhb9c1XMLFIWy4Wxh4
-        dLpB5g6O9pO2w8K6ICZAL7s+ThXJl+0ukA==
-X-Google-Smtp-Source: APXvYqzbBQTgciy+UHgzE3b/iQQrxrptWHgt5ehrszyhzNh3vmEzB1NqUG0LrGUITXflSceHK/JMiA==
-X-Received: by 2002:aa7:9edd:: with SMTP id r29mr7458632pfq.14.1579344810316;
-        Sat, 18 Jan 2020 02:53:30 -0800 (PST)
-Received: from localhost.localdomain ([183.82.121.105])
-        by smtp.gmail.com with ESMTPSA id a1sm32043258pfo.68.2020.01.18.02.53.27
-        (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Sat, 18 Jan 2020 02:53:29 -0800 (PST)
-From:   sachin agarwal <asachin591@gmail.com>
-X-Google-Original-From: sachin agarwal <sachinagarwal@sachins-MacBook-2.local>
-To:     linus.walleij@linaro.org
-Cc:     bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, asachin591@gmail.com
-Subject: [PATCH 2/4] GPIO: aspeed-sgpio: fixed a typo
-Date:   Sat, 18 Jan 2020 16:23:19 +0530
-Message-Id: <20200118105319.68637-1-sachinagarwal@sachins-MacBook-2.local>
-X-Mailer: git-send-email 2.24.1
+        Sat, 18 Jan 2020 05:58:40 -0500
+Received: from mx2.suse.de ([195.135.220.15]:43144 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726961AbgARK6j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jan 2020 05:58:39 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 0B9F0ACA5;
+        Sat, 18 Jan 2020 10:58:37 +0000 (UTC)
+Subject: Re: [patch v2] mm, thp: fix defrag setting if newline is not used
+To:     David Rientjes <rientjes@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Mel Gorman <mgorman@techsingularity.net>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <alpine.DEB.2.21.2001141757490.108121@chino.kir.corp.google.com>
+ <20200116191609.3972fd5301cf364a27381923@linux-foundation.org>
+ <025511aa-4721-2edb-d658-78d6368a9101@suse.cz>
+ <alpine.DEB.2.21.2001170136280.20618@chino.kir.corp.google.com>
+ <a3c269a7-ff41-ee7c-9041-ee06e50c5a10@suse.cz>
+ <alpine.DEB.2.21.2001171411020.56385@chino.kir.corp.google.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <dc911eac-f843-31a3-f74c-53b0bbcc8817@suse.cz>
+Date:   Sat, 18 Jan 2020 11:54:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <alpine.DEB.2.21.2001171411020.56385@chino.kir.corp.google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sachin agarwal <asachin591@gmail.com>
+On 1/17/20 11:11 PM, David Rientjes wrote:
+> If thp defrag setting "defer" is used and a newline is *not* used when
+> writing to the sysfs file, this is interpreted as the "defer+madvise"
+> option.
+> 
+> This is because we do prefix matching and if five characters are written
+> without a newline, the current code ends up comparing to the first five
+> bytes of the "defer+madvise" option and using that instead.
+> 
+> Use the more appropriate sysfs_streq() that handles the trailing newline
+> for us.  Since this doubles as a nice cleanup, do it in enabled_store()
+> as well.
+> 
+> Fixes: 21440d7eb904 ("mm, thp: add new defer+madvise defrag option")
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Mel Gorman <mgorman@techsingularity.net>
+> Suggested-by: Andrew Morton <akpm@linux-foundation.org>
+> Signed-off-by: David Rientjes <rientjes@google.com>
 
-we had written "SPGIO" rather than "SGPIO".
-
-Signed-off-by: Sachin Agarwal <asachin591@gmail.com>
----
- drivers/gpio/gpio-aspeed-sgpio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/gpio-aspeed-sgpio.c b/drivers/gpio/gpio-aspeed-sgpio.c
-index 8319812593e3..d16645c1d8d9 100644
---- a/drivers/gpio/gpio-aspeed-sgpio.c
-+++ b/drivers/gpio/gpio-aspeed-sgpio.c
-@@ -391,7 +391,7 @@ static int aspeed_sgpio_setup_irqs(struct aspeed_sgpio *gpio,
- 
- 	gpio->irq = rc;
- 
--	/* Disable IRQ and clear Interrupt status registers for all SPGIO Pins. */
-+	/* Disable IRQ and clear Interrupt status registers for all SGPIO Pins. */
- 	for (i = 0; i < ARRAY_SIZE(aspeed_sgpio_banks); i++) {
- 		bank =  &aspeed_sgpio_banks[i];
- 		/* disable irq enable bits */
--- 
-2.24.1
-
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Thanks.
