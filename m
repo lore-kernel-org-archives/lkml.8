@@ -2,257 +2,114 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E372C32771
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 20:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 246B0C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 20:02:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69EA424695
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 20:01:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mnj2Vjfm"
+	by mail.kernel.org (Postfix) with ESMTP id 00593246A5
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 20:02:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727043AbgARUBN (ORCPT
+        id S1727092AbgARUCL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 15:01:13 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36046 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726896AbgARUBN (ORCPT
+        Sat, 18 Jan 2020 15:02:11 -0500
+Received: from mail-io1-f69.google.com ([209.85.166.69]:33112 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726910AbgARUCL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 15:01:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579377668;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=GhV5VFuQrQc9r/3XEQ6PGMYgwgxMdO2z2+l/Tu57i24=;
-        b=Mnj2VjfmL7la61UlLl2iUJ5X6QCFoUmWD07K62sGrCEuBQC9nJWLm4PmUU5tzBteojtDrT
-        +RdBhW/wg3xDmB+Vqbh4L6k/wFYBnegQn3vrs7rBdSeYaxALVkjja+aBvb2Cn7IUcq4N2w
-        teIxmvOdVlmYIqA1Tv1Y8RQnYNwEsO8=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-419-0MSgvM5CPCWlp0gHvMIq0g-1; Sat, 18 Jan 2020 15:01:07 -0500
-X-MC-Unique: 0MSgvM5CPCWlp0gHvMIq0g-1
-Received: by mail-wm1-f69.google.com with SMTP id 18so2963415wmp.0
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jan 2020 12:01:07 -0800 (PST)
+        Sat, 18 Jan 2020 15:02:11 -0500
+Received: by mail-io1-f69.google.com with SMTP id i8so17425476ioi.0
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jan 2020 12:02:11 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GhV5VFuQrQc9r/3XEQ6PGMYgwgxMdO2z2+l/Tu57i24=;
-        b=dDWhoRm4h4F42b0KnE+3uYOHB44CdZUJOvJ/ntWMASb3XYHpW9M7g77hA0sNKmm6Qa
-         h4X8Fs5xSaOe9j+V8zhFByBrWdbAkNJNBbeAP0HhnxLzy0J4uubpFuhxAVBVpHd7iXpv
-         AUducgAHbGfmR7d4YhocggGaBlt/ULCr1eHiDDAnfg1g1cYRilVkZC54W90Cx1zIstzf
-         NyaB852npmvaG3KkootLRk/KHG0BNDbnbGpstjtPJEwNuiG1Cl25v5AMfIi7cfRaA83l
-         JchlDIem3w+Hhit/mSLlWFcJEBY2PuadOu7QOOD8RQeXL58vVtbIzKnU1tdv1vg15gO5
-         k/7Q==
-X-Gm-Message-State: APjAAAV3b7L0+WXu8PPaRzhAo+vrieGsMZ0DtJbDQx+F4xUrah7oc9TW
-        b/z16aH7HVapIoRCO9Fz59oNzUTr+3OW429QmYdVyutGweMPIviOWIYl5jyOhC3Lw8Fadd85e1X
-        nM60BsR+PX3arww/oy9Q0z9re
-X-Received: by 2002:adf:b60f:: with SMTP id f15mr10168422wre.372.1579377666356;
-        Sat, 18 Jan 2020 12:01:06 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyiRC3IqnoQxBsM17Oy6gnYbiWwmQOp2vlMdwOkISyap6ZIXyi3L1uJMx7IGcuKnNuVMBYAvQ==
-X-Received: by 2002:adf:b60f:: with SMTP id f15mr10168402wre.372.1579377666048;
-        Sat, 18 Jan 2020 12:01:06 -0800 (PST)
-Received: from [192.168.10.150] ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id v8sm38452671wrw.2.2020.01.18.12.01.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 18 Jan 2020 12:01:05 -0800 (PST)
-Subject: Re: [PATCH v2 00/45] KVM: Refactor vCPU creation
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Marc Zyngier <maz@kernel.org>, James Hogan <jhogan@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>
-Cc:     James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Greg Kurz <groug@kaod.org>,
-        David Gibson <david@gibson.dropbear.id.au>
-References: <20191218215530.2280-1-sean.j.christopherson@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <3be0000b-3da9-3321-6e56-7dbb434ba764@redhat.com>
-Date:   Sat, 18 Jan 2020 21:01:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=j5TaLbhFNmTyarqgc7hZ5VnIztWIpdTA2QbSaPuHXxw=;
+        b=gFA0aBDVaHeH0yJFr+R+PbbASPZFi9C9SNglEnp5k5eYIxMD2q2BpFKT6d5Akiw7A/
+         723ZtyiN06IS5zGhQnu1ipxQaiME3r3yLzjU2GyHeQllKRipihZso/r0O54i7qqD6LpZ
+         IOez8xfS44AAbI/YneaA54Zdp6gUBNSZrfGly5rY5BI/p+rKNEc8jMOjLHZKB977jw3c
+         ryp8Qp6iqARmAtY0CDfSiyx2RD8RM/XsqRK3lVhGX7lfsN0n8xWPcf89/f1orPwzYXQQ
+         QRioCpgc9Ez3cQYdL7Gu0er3AIYWrrBszsYDbSH6StZ2o/3F6qFDTLwz5Ou1PbcyZRoe
+         R7og==
+X-Gm-Message-State: APjAAAUyiZfRwbWoj6tGr9Ks+YXCcStD0WdGt66BUIT70+ItpJe8bEQj
+        0N8UA7xJFxdoq4WFjEiiQcdsROHh7jQSM0N37GznmNPEZX53
+X-Google-Smtp-Source: APXvYqydb2YTWMAH19wg8slSUp3oKFBlkKwyBElLzVi7VDY8c8oQXEZ34ULpQBpRtRjW9H3dTeXAzH1BjGeOzealIAnTDQX91Bvb
 MIME-Version: 1.0
-In-Reply-To: <20191218215530.2280-1-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a92:498d:: with SMTP id k13mr4253302ilg.254.1579377730974;
+ Sat, 18 Jan 2020 12:02:10 -0800 (PST)
+Date:   Sat, 18 Jan 2020 12:02:10 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000009ef919059c6f88e7@google.com>
+Subject: KASAN: vmalloc-out-of-bounds Write in tpg_fill_plane_buffer
+From:   syzbot <syzbot+698def9813b5d6596933@syzkaller.appspotmail.com>
+To:     hverkuil-cisco@xs4all.nl, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, mchehab@kernel.org,
+        syzkaller-bugs@googlegroups.com, vivek.kasireddy@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Queued.  Paul, David, please test kvm/next in a couple days.
+Hello,
 
-Paolo
+syzbot found the following crash on:
 
-On 18/12/19 22:54, Sean Christopherson wrote:
-> The end goal of this series is to strip down the interface between common
-> KVM code and arch specific code so that there is precisely one arch hook
-> for creating a vCPU and one hook for destroying a vCPU.  In addition to
-> cleaning up the code base, simplifying the interface gives architectures
-> more freedom to organize their vCPU creation code.  Details below.
-> 
-> v2:
->   - Rebase to commit e41a90be9659 ("KVM: x86/mmu: WARN if root_hpa is
->     invalid when handling a page fault").  A few minor x86 (VMX) conflicts,
->     and one straightforward arm conflict with commit 8564d6372a7d ("KVM:
->     arm64: Support stolen time reporting via shared structure") in patch
->     "KVM: ARM: Move all vcpu init code into kvm_arch_vcpu_create()".
->   - Collect Reviews and Acks [Christoffer, Greg].
->   - Fix a warning in "KVM: arm64: Free sve_state via arm specific hook"
->     by using a "void" return type [Christoffer].
->   - Fix a bug in "KVM: PPC: Move kvm_vcpu_init() invocation to common code"
->     where the call in kvmppc_core_vcpu_create_e500mc() was inadvertantly
->     left behind.
-> 
-> 
-> KVM's vCPU creation code is comically messy.  kvm_vm_ioctl_create_vcpu()
-> calls three separate arch hooks: init(), create() and setup().  The init()
-> call is especially nasty as it's hidden away in a common KVM function,
-> kvm_init_vcpu(), that for all intents and purposes must be immediately
-> invoked after the vcpu object is allocated.
-> 
-> Not to be outdone, vCPU destruction also has three arch hooks: uninit(),
-> destroy() and free(), the latter of which isn't actually invoked by common
-> KVM code, but the hook declaration still exists because architectures are
-> relying on its forward declaration.
-> 
-> Eliminating the extra arch hooks is relatively straightforward, just
-> tedious.  For the most part, there is no fundamental constraint that
-> necessitated the proliferation of arch hooks, rather they crept in over
-> time, usually when x86-centric code was moved out of generic KVM and into
-> x86 code.
-> 
-> E.g. kvm_arch_vcpu_setup() was added to allow x86 to do vcpu_load(), which
-> can only be done after preempt_notifier initialization, but adding setup()
-> overlooked the fact that the preempt_notifier was only initialized after
-> kvm_arch_vcpu_create() because preemption support was added when x86's MMU
-> setup (the vcpu_load() user) was called from common KVM code.
-> 
-> For all intents and purposes, there is no true functional change in this
-> series.  The order of some allocations will change, and a few memory leaks
-> are fixed, but the actual functionality of a guest should be unaffected.
-> 
-> Patches 01-03 are bug fixes in error handling paths that were found by
-> inspection when refactoring the associated code.
-> 
-> Patches 04-43 refactor each arch implementation so that the unwanted arch
-> hooks can be dropped without a functional change, e.g. move code out of
-> kvm_arch_vcpu_setup() so that all implementations are empty, then drop the
-> functions and caller.
-> 
-> Patches 44-45 are minor clean up to eliminate kvm_vcpu_uninit().
-> 
-> The net result is to go from this:
-> 
->         vcpu = kvm_arch_vcpu_create(kvm, id);
->                |
->                |-> kvm_vcpu_init()
->                    |
->                    |-> kvm_arch_vcpu_init()
-> 
->         if (IS_ERR(vcpu)) {
->                 r = PTR_ERR(vcpu);
->                 goto vcpu_decrement;
->         }
-> 
->         preempt_notifier_init(&vcpu->preempt_notifier, &kvm_preempt_ops);
-> 
->         r = kvm_arch_vcpu_setup(vcpu);
->         if (r)
->                 goto vcpu_destroy;
-> 
-> 
-> Sean Christopherson (45):
->   KVM: PPC: Book3S HV: Uninit vCPU if vcore creation fails
->   KVM: PPC: Book3S PR: Free shared page if mmu initialization fails
->   KVM: x86: Free wbinvd_dirty_mask if vCPU creation fails
->   KVM: VMX: Allocate VPID after initializing VCPU
->   KVM: VMX: Use direct vcpu pointer during vCPU create/free
->   KVM: SVM: Use direct vcpu pointer during vCPU create/free
->   KVM: x86: Allocate vcpu struct in common x86 code
->   KVM: x86: Move FPU allocation to common x86 code
->   KVM: x86: Move allocation of pio_data page down a few lines
->   KVM: x86: Move kvm_vcpu_init() invocation to common code
->   KVM: PPC: e500mc: Add build-time assert that vcpu is at offset 0
->   KVM: PPC: Allocate vcpu struct in common PPC code
->   KVM: PPC: Book3S PR: Allocate book3s and shadow vcpu after common init
->   KVM: PPC: e500mc: Move reset of oldpir below call to kvm_vcpu_init()
->   KVM: PPC: Move kvm_vcpu_init() invocation to common code
->   KVM: MIPS: Use kvm_vcpu_cache to allocate vCPUs
->   KVM: MIPS: Drop kvm_arch_vcpu_free()
->   KVM: PPC: Drop kvm_arch_vcpu_free()
->   KVM: arm: Drop kvm_arch_vcpu_free()
->   KVM: x86: Remove spurious kvm_mmu_unload() from vcpu destruction path
->   KVM: x86: Remove spurious clearing of async #PF MSR
->   KVM: x86: Drop kvm_arch_vcpu_free()
->   KVM: Remove kvm_arch_vcpu_free() declaration
->   KVM: Add kvm_arch_vcpu_precreate() to handle pre-allocation issues
->   KVM: s390: Move guts of kvm_arch_vcpu_init() into
->     kvm_arch_vcpu_create()
->   KVM: s390: Invoke kvm_vcpu_init() before allocating sie_page
->   KVM: MIPS: Invoke kvm_vcpu_uninit() immediately prior to freeing vcpu
->   KVM: x86: Invoke kvm_vcpu_uninit() immediately prior to freeing vcpu
->   KVM: Introduce kvm_vcpu_destroy()
->   KVM: Move vcpu alloc and init invocation to common code
->   KVM: Unexport kvm_vcpu_cache and kvm_vcpu_{un}init()
->   KVM: Move initialization of preempt notifier to kvm_vcpu_init()
->   KVM: x86: Move guts of kvm_arch_vcpu_setup() into
->     kvm_arch_vcpu_create()
->   KVM: MIPS: Move .vcpu_setup() call to kvm_arch_vcpu_create()
->   KVM: s390: Manually invoke vcpu setup during kvm_arch_vcpu_create()
->   KVM: PPC: BookE: Setup vcpu during kvmppc_core_vcpu_create()
->   KVM: Drop kvm_arch_vcpu_setup()
->   KVM: x86: Move all vcpu init code into kvm_arch_vcpu_create()
->   KVM: MIPS: Move all vcpu init code into kvm_arch_vcpu_create()
->   KVM: ARM: Move all vcpu init code into kvm_arch_vcpu_create()
->   KVM: PPC: Move all vcpu init code into kvm_arch_vcpu_create()
->   KVM: arm64: Free sve_state via arm specific hook
->   KVM: Drop kvm_arch_vcpu_init() and kvm_arch_vcpu_uninit()
->   KVM: Move putting of vcpu->pid to kvm_vcpu_destroy()
->   KVM: Move vcpu->run page allocation out of kvm_vcpu_init()
-> 
->  arch/arm/include/asm/kvm_host.h    |   2 +-
->  arch/arm/kvm/guest.c               |   5 -
->  arch/arm64/include/asm/kvm_host.h  |   2 +-
->  arch/arm64/kvm/guest.c             |   5 -
->  arch/arm64/kvm/reset.c             |   2 +-
->  arch/mips/kvm/mips.c               |  84 ++++-------
->  arch/powerpc/include/asm/kvm_ppc.h |   6 +-
->  arch/powerpc/kvm/book3s.c          |   9 +-
->  arch/powerpc/kvm/book3s_hv.c       |  27 +---
->  arch/powerpc/kvm/book3s_pr.c       |  33 ++---
->  arch/powerpc/kvm/booke.c           |  65 ++++----
->  arch/powerpc/kvm/e500.c            |  34 +----
->  arch/powerpc/kvm/e500mc.c          |  28 +---
->  arch/powerpc/kvm/powerpc.c         |  70 ++++-----
->  arch/s390/include/asm/kvm_host.h   |   1 -
->  arch/s390/kvm/kvm-s390.c           | 110 +++++++-------
->  arch/x86/include/asm/kvm_host.h    |   2 +-
->  arch/x86/kvm/svm.c                 |  52 +------
->  arch/x86/kvm/vmx/vmx.c             |  72 +++------
->  arch/x86/kvm/x86.c                 | 230 ++++++++++++++---------------
->  include/linux/kvm_host.h           |  13 +-
->  virt/kvm/arm/arm.c                 |  80 ++++------
->  virt/kvm/kvm_main.c                |  71 +++++----
->  23 files changed, 385 insertions(+), 618 deletions(-)
-> 
+HEAD commit:    25e73aad Merge tag 'io_uring-5.5-2020-01-16' of git://git...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1684f959e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d9290aeb7e6cf1c4
+dashboard link: https://syzkaller.appspot.com/bug?extid=698def9813b5d6596933
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+698def9813b5d6596933@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: vmalloc-out-of-bounds in memcpy include/linux/string.h:380 [inline]
+BUG: KASAN: vmalloc-out-of-bounds in tpg_fill_plane_pattern drivers/media/common/v4l2-tpg/v4l2-tpg-core.c:2512 [inline]
+BUG: KASAN: vmalloc-out-of-bounds in tpg_fill_plane_buffer+0x10de/0x2f00 drivers/media/common/v4l2-tpg/v4l2-tpg-core.c:2600
+Write of size 360 at addr ffffc90004e52ea0 by task vivid-000-vid-c/28265
+
+CPU: 1 PID: 28265 Comm: vivid-000-vid-c Not tainted 5.5.0-rc6-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x197/0x210 lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0x5/0x30b mm/kasan/report.c:374
+ __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
+ kasan_report+0x12/0x20 mm/kasan/common.c:639
+ check_memory_region_inline mm/kasan/generic.c:185 [inline]
+ check_memory_region+0x134/0x1a0 mm/kasan/generic.c:192
+ memcpy+0x38/0x50 mm/kasan/common.c:126
+ memcpy include/linux/string.h:380 [inline]
+ tpg_fill_plane_pattern drivers/media/common/v4l2-tpg/v4l2-tpg-core.c:2512 [inline]
+ tpg_fill_plane_buffer+0x10de/0x2f00 drivers/media/common/v4l2-tpg/v4l2-tpg-core.c:2600
+ vivid_fillbuff+0x1861/0x3af0 drivers/media/platform/vivid/vivid-kthread-cap.c:468
+ vivid_thread_vid_cap_tick+0x8cf/0x2210 drivers/media/platform/vivid/vivid-kthread-cap.c:727
+ vivid_thread_vid_cap+0x5d8/0xa60 drivers/media/platform/vivid/vivid-kthread-cap.c:866
+ kthread+0x361/0x430 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+
+Memory state around the buggy address:
+ ffffc90004e52f00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ ffffc90004e52f80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>ffffc90004e53000: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+                   ^
+ ffffc90004e53080: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+ ffffc90004e53100: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
