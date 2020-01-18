@@ -2,163 +2,137 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 278F8C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 02:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8142C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 02:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB7AB2192A
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 02:03:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3E1321D7D
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 02:06:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730591AbgARCDb (ORCPT
+        id S1730623AbgARCGX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 21:03:31 -0500
-Received: from mga14.intel.com ([192.55.52.115]:54008 "EHLO mga14.intel.com"
+        Fri, 17 Jan 2020 21:06:23 -0500
+Received: from mga11.intel.com ([192.55.52.93]:57680 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727033AbgARCDa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 21:03:30 -0500
+        id S1727033AbgARCGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 21:06:22 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jan 2020 18:03:29 -0800
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jan 2020 18:06:21 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,332,1574150400"; 
-   d="scan'208";a="226536004"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 17 Jan 2020 18:03:28 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1isdSS-0005rp-1j; Sat, 18 Jan 2020 10:03:28 +0800
-Date:   Sat, 18 Jan 2020 10:02:36 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:x86/cache] BUILD SUCCESS
- 536a0d8e79fb928f2735db37dda95682b6754f9a
-Message-ID: <5e22673c.axe52NlWUpLc4hXH%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+   d="scan'208";a="214684983"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.138]) ([10.239.159.138])
+  by orsmga007.jf.intel.com with ESMTP; 17 Jan 2020 18:06:19 -0800
+Cc:     baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        ashok.raj@intel.com, jacob.jun.pan@intel.com, kevin.tian@intel.com,
+        Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 2/4] PCI: Add "pci=iommu_passthrough=" parameter for
+ iommu passthrough
+To:     Bjorn Helgaas <helgaas@kernel.org>
+References: <20200117232403.GA142078@google.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <bce2cf6c-d030-3265-d8b7-0faa895e3d5a@linux.intel.com>
+Date:   Sat, 18 Jan 2020 10:04:55 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20200117232403.GA142078@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/cache
-branch HEAD: 536a0d8e79fb928f2735db37dda95682b6754f9a  x86/resctrl: Check monitoring static key in the MBM overflow handler
+Hi Bjorn,
 
-elapsed time: 385m
+On 1/18/20 8:18 AM, Bjorn Helgaas wrote:
+> On Wed, Jan 01, 2020 at 01:26:46PM +0800, Lu Baolu wrote:
+>> The new parameter takes a list of devices separated by a semicolon.
+>> Each device specified will have its iommu_passthrough bit in struct
+>> device set. This is very similar to the existing 'disable_acs_redir'
+>> parameter.
+>>
+>> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+>> ---
+>>   .../admin-guide/kernel-parameters.txt         |  5 +++
+>>   drivers/pci/pci.c                             | 34 +++++++++++++++++++
+>>   drivers/pci/pci.h                             |  1 +
+>>   drivers/pci/probe.c                           |  2 ++
+>>   4 files changed, 42 insertions(+)
+>>
+>> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+>> index ade4e6ec23e0..d3edc2cb6696 100644
+>> --- a/Documentation/admin-guide/kernel-parameters.txt
+>> +++ b/Documentation/admin-guide/kernel-parameters.txt
+>> @@ -3583,6 +3583,11 @@
+>>   				may put more devices in an IOMMU group.
+>>   		force_floating	[S390] Force usage of floating interrupts.
+>>   		nomio		[S390] Do not use MIO instructions.
+>> +		iommu_passthrough=<pci_dev>[; ...]
+>> +				Specify one or more PCI devices (in the format
+>> +				specified above) separated by semicolons.
+>> +				Each device specified will bypass IOMMU DMA
+>> +				translation.
+>>   
+>>   	pcie_aspm=	[PCIE] Forcibly enable or disable PCIe Active State Power
+>>   			Management.
+>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+>> index 90dbd7c70371..05bf3f4acc36 100644
+>> --- a/drivers/pci/pci.c
+>> +++ b/drivers/pci/pci.c
+>> @@ -6401,6 +6401,37 @@ void __weak pci_fixup_cardbus(struct pci_bus *bus)
+>>   }
+>>   EXPORT_SYMBOL(pci_fixup_cardbus);
+>>   
+>> +static const char *iommu_passthrough_param;
+>> +bool pci_iommu_passthrough_match(struct pci_dev *dev)
+>> +{
+>> +	int ret = 0;
+>> +	const char *p = iommu_passthrough_param;
+>> +
+>> +	if (!p)
+>> +		return false;
+>> +
+>> +	while (*p) {
+>> +		ret = pci_dev_str_match(dev, p, &p);
+>> +		if (ret < 0) {
+>> +			pr_info_once("PCI: Can't parse iommu_passthrough parameter: %s\n",
+>> +				     iommu_passthrough_param);
+>> +
+>> +			break;
+>> +		} else if (ret == 1) {
+>> +			pci_info(dev, "PCI: IOMMU passthrough\n");
+>> +			return true;
+>> +		}
+>> +
+>> +		if (*p != ';' && *p != ',') {
+>> +			/* End of param or invalid format */
+>> +			break;
+>> +		}
+>> +		p++;
+>> +	}
+>> +
+>> +	return false;
+>> +}
+> 
+> This duplicates a lot of the code in pci_disable_acs_redir().  That
+> needs to be factored out somehow so we don't duplicate it.
+> 
 
-configs tested: 100
-configs skipped: 89
+Sure. I will try to refactor the code in the next version.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> Bjorn
+> 
 
-alpha                               defconfig
-csky                                defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-arc                  randconfig-a001-20200118
-arm                  randconfig-a001-20200118
-arm64                randconfig-a001-20200118
-ia64                 randconfig-a001-20200118
-powerpc              randconfig-a001-20200118
-sparc                randconfig-a001-20200118
-x86_64               randconfig-e001-20200118
-x86_64               randconfig-e002-20200118
-x86_64               randconfig-e003-20200118
-i386                 randconfig-e001-20200118
-i386                 randconfig-e002-20200118
-i386                 randconfig-e003-20200118
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-c6x                  randconfig-a001-20200118
-h8300                randconfig-a001-20200118
-microblaze           randconfig-a001-20200118
-nios2                randconfig-a001-20200118
-sparc64              randconfig-a001-20200118
-alpha                randconfig-a001-20200118
-m68k                 randconfig-a001-20200118
-mips                 randconfig-a001-20200118
-nds32                randconfig-a001-20200118
-parisc               randconfig-a001-20200118
-riscv                randconfig-a001-20200118
-um                                  defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64               randconfig-b001-20200118
-x86_64               randconfig-b002-20200118
-x86_64               randconfig-b003-20200118
-i386                 randconfig-b001-20200118
-i386                 randconfig-b002-20200118
-i386                 randconfig-b003-20200118
-h8300                     edosk2674_defconfig
-h8300                    h8300h-sim_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-m68k                       m5475evb_defconfig
-m68k                          multi_defconfig
-m68k                           sun3_defconfig
-csky                 randconfig-a001-20200118
-openrisc             randconfig-a001-20200118
-s390                 randconfig-a001-20200118
-sh                   randconfig-a001-20200118
-xtensa               randconfig-a001-20200118
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64               randconfig-g001-20200118
-x86_64               randconfig-g002-20200118
-x86_64               randconfig-g003-20200118
-i386                 randconfig-g001-20200118
-i386                 randconfig-g002-20200118
-i386                 randconfig-g003-20200118
-i386                             alldefconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-parisc                            allnoconfig
-parisc                            allyesonfig
-parisc                         b180_defconfig
-parisc                        c3000_defconfig
-parisc                              defconfig
-arc                              allyesconfig
-arc                                 defconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-x86_64               randconfig-h001-20200118
-x86_64               randconfig-h002-20200118
-x86_64               randconfig-h003-20200118
-i386                 randconfig-h001-20200118
-i386                 randconfig-h002-20200118
-i386                 randconfig-h003-20200118
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                                defconfig
-
----
-0-DAY kernel test infrastructure                 Open Source Technology Center
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+Best regards,
+baolu
