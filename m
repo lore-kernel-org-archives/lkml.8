@@ -2,104 +2,126 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA579C33CB7
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 20:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C5A5C32771
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 20:10:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 948D924690
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 20:06:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 279F72073D
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 20:10:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R5DfwbEW"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="alkj7wx0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbgARUGU (ORCPT
+        id S1727008AbgARUKp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 15:06:20 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:45997 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726674AbgARUGT (ORCPT
+        Sat, 18 Jan 2020 15:10:45 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:52737 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726822AbgARUKp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 15:06:19 -0500
-Received: by mail-pg1-f196.google.com with SMTP id b9so13370225pgk.12;
-        Sat, 18 Jan 2020 12:06:19 -0800 (PST)
+        Sat, 18 Jan 2020 15:10:45 -0500
+Received: by mail-pj1-f65.google.com with SMTP id a6so4784222pjh.2
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jan 2020 12:10:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=b8CWaeLDuJaWq3REpOKMxi5bJ9XNrVq6CSFIuVtDH3A=;
-        b=R5DfwbEW3C93Yjtoi+w0EeqUDRNHZ4l2CTluImw4w3+4C3e7QVBteXi/7HmfAlIkH9
-         smIB4peZ96uNzyt3vgOX4CDCaiABpen1VK/p08B4oIMn9XlA+Hkw4I2OU2uLL+3LsjLX
-         Vdgpi19XIrRFh5v3mz0aMAynKmaXQGq3vqdt+p3DfPChEkicIbEts84QDHpTCIWks27l
-         5f/jexM6e0Vjg4hzJGcWanRV28cWSwuYSoeiH4t8IQFeyvGOeyIoj7Twp2O1gw/gEyVg
-         OPV7FfGfPz6TUzgW0rnsGz5++vYL5H6VTJknob6hvjXWcBXPwDaBy7UiWyNmo45QyGZq
-         iIxg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=pTlazCNxUY2WnhqQUJW93zmqTNOLYC2EDHPWpa9mxbA=;
+        b=alkj7wx06eVo+EteRZwj3oj8Dns2P52ChrKCK9d3GEd7UDNcf5dqbktNFIXEYlxhMM
+         /CyZ4Z1u3J/QHRRxNAk48xF1D8NecB2e2Ojs4bF5nh6ERDsd9lrp8CCKLQgDqOmQ73ny
+         IASABNUu4TllCxQGZl00hG3PRC7fm2QUGtwysN6h6vqmRR+nydIERhs4bPcNRSox/ts+
+         vmvs118o8cKMsq7aTKYjpfFilnIt+IhtZ5qPmXacGM+odgdI+yqT7HofFBJ3ZDOR8WPQ
+         NbBRJAkMd9tsCe83BgSOpUo5pfpgzzt06m89Zo5Mupn+TPU3Nrrk9GYXGro008oEOz2A
+         IDng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=b8CWaeLDuJaWq3REpOKMxi5bJ9XNrVq6CSFIuVtDH3A=;
-        b=KSUwbYdy7tNxSNuvVht9PWQtW2Pbuug0g2JdScQ4EdiaKPAlp3pnUfP2WQY4cAizRj
-         zfaKBX5P+k8hYTxNXWzx3ItSg1ygTk4pDIiewIAT75Te1xaFjFbJkw4Kbqcb3V7f3cH4
-         JghjhcwmaM1EwpNbF0PrAdrn+urvdwoRoxwK6+OoCfpqqIfYKlT/DDaHAoMXskR/gs0u
-         m+F4s81V/sFf/X/u2VNdyQAcNIAPNreA0ZVFmtaDJtERAatBdlaqAyCXkngf4b0XDNS/
-         1dqjUipj4IgSK6fuFNCqOcEN/Cl4Yl3VPyPxJoj7F8Glh3yFQYnzaLfXpjXgztBhQ955
-         IzWA==
-X-Gm-Message-State: APjAAAXFFk9lE+6zvNfRc/nhxM8XDyVvbvLIYs2pbMZUgN3kBTOGEivr
-        k6tpiJSoUiLgsTFCZz+f9Wo=
-X-Google-Smtp-Source: APXvYqwIjYmkUsNGLFzJm2cZUpe1ADOKkBEzcWqtdFs8dOfB1TZnfWX0dPSDryWKztYRppJfW6pb0A==
-X-Received: by 2002:a63:1210:: with SMTP id h16mr51586662pgl.171.1579377979025;
-        Sat, 18 Jan 2020 12:06:19 -0800 (PST)
-Received: from localhost.localdomain ([103.110.147.194])
-        by smtp.gmail.com with ESMTPSA id w5sm31883394pgb.78.2020.01.18.12.06.15
-        (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Sat, 18 Jan 2020 12:06:18 -0800 (PST)
-From:   sachin agarwal <asachin591@gmail.com>
-X-Google-Original-From: sachin agarwal <sachinagarwal@sachins-MacBook-2.local>
-To:     Eugeniy.Paltsev@synopsys.com
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        asachin591@gmail.com,
-        sachin agarwal <sachinagarwal@sachins-MacBook-2.local>
-Subject: [PATCH 4/4] GPIO: creg-snps: fixed a typo
-Date:   Sun, 19 Jan 2020 01:36:07 +0530
-Message-Id: <20200118200607.68830-1-sachinagarwal@sachins-MacBook-2.local>
-X-Mailer: git-send-email 2.24.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pTlazCNxUY2WnhqQUJW93zmqTNOLYC2EDHPWpa9mxbA=;
+        b=HZ0GUHFl7eTXvL1RF96pgwR130Ddt6/7M0qugl3OsKYOjWBoLgF45kStrae297vx80
+         tsbK7DuVmKNN1SQrAIu+8q8YcuNNwJwLufkRf3bSBM/49QcwZZcRtDHYB4hqVtA4yTK2
+         Oqps98M3QkM/46NbOWjbmN41h1rCJ/yIf80JEL+pkpuZ6RFRkzvUN0ZMBCVGzMs2QD1L
+         pW43Cb6B4MYNm9XczmIFX7NFy2t/YbqvzF9rzUTwsJeWwaiJP/pyUuAQfY0ladtKzC9M
+         HbaRRT0hIrfHN2bUHbYrmEs81VKw73U2ScseBf17YRBENm03X1pOHokurH2mP/F9nmX2
+         DUtw==
+X-Gm-Message-State: APjAAAUbGdTXrL/lfpUQSR34jYKitzrb3CJ99ASzDUaicSBfuKUHHpGZ
+        zdvVBcfkAZNdgRY04oOPqjJB+Q==
+X-Google-Smtp-Source: APXvYqwlqj9Dde4TU8hw6QRRZNwWNiqOrg/Jc8GxPylIlJqtwOqTYzwv4YKAYF1KyhX6b9Drx1qZ1A==
+X-Received: by 2002:a17:902:bc85:: with SMTP id bb5mr6396764plb.208.1579378244210;
+        Sat, 18 Jan 2020 12:10:44 -0800 (PST)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id i3sm33490574pfg.94.2020.01.18.12.10.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Jan 2020 12:10:43 -0800 (PST)
+Date:   Sat, 18 Jan 2020 12:10:40 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Jari Ruusu <jari.ruusu@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Fenghua Yu <fenghua.yu@intel.com>, johannes.berg@intel.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        linux-remoteproc@vger.kernel.org
+Subject: Re: Fix built-in early-load Intel microcode alignment
+Message-ID: <20200118201040.GH1511@yoga>
+References: <CACMCwJK-2DHZDA_F5Z3wsEUEKJSc3uOwwPD4HRoYGW7A+kA75w@mail.gmail.com>
+ <20200113154739.GB11244@42.do-not-panic.com>
+ <CAHk-=wja2GChi_JBu0xBkQ96mqXC3TMKUp=YvRhgPy0+1m5YNw@mail.gmail.com>
+ <20200115022705.GE11244@42.do-not-panic.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200115022705.GE11244@42.do-not-panic.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-we had written "valiue" rather than "value" and "it's" rather than "its".
+On Tue 14 Jan 18:27 PST 2020, Luis Chamberlain wrote:
 
-Signed-off-by: Sachin Agarwal <asachin591@gmail.com>
----
- drivers/gpio/gpio-creg-snps.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> On Mon, Jan 13, 2020 at 11:44:25AM -0800, Linus Torvalds wrote:
+> > On Mon, Jan 13, 2020 at 7:47 AM Luis Chamberlain <mcgrof@kernel.org> wrote:
+> > >
+> > > So I'd like to determine first if we really need this. Then if so,
+> > > either add a new global config option, and worst comes to worst
+> > > figure out a way to do it per driver. I don't think we'd need it
+> > > per driver.
+> > 
+> > I really don't think we need to have a config option for some small
+> > alignment. Increasing the alignment unconditionally to 16 bytes won't
+> > hurt anybody.
+> 
+> Since you are confident in that, then simply bumping it to 16 bytes
+> seems fine by me.
+> 
+> > Now, whether there might be other firmware loaders that need even more
+> > alignment, that might be an interesting question, and if such an
+> > alignment would be _huge_ we might want to worry about actual memory
+> > waste.
+> 
+> I can only envision waste being considered due to alignent for remote
+> proc folks, who I *doubt* use the built-in stuff given the large size of
+> their blobs... but since you never know, better poke. So I've CC'd them.
+> 
 
-diff --git a/drivers/gpio/gpio-creg-snps.c b/drivers/gpio/gpio-creg-snps.c
-index ff19a8ad5663..1d0827e79703 100644
---- a/drivers/gpio/gpio-creg-snps.c
-+++ b/drivers/gpio/gpio-creg-snps.c
-@@ -64,11 +64,11 @@ static int creg_gpio_validate_pg(struct device *dev, struct creg_gpio *hcg,
- 	if (layout->bit_per_gpio[i] < 1 || layout->bit_per_gpio[i] > 8)
- 		return -EINVAL;
- 
--	/* Check that on valiue fits it's placeholder */
-+	/* Check that on value fits its placeholder */
- 	if (GENMASK(31, layout->bit_per_gpio[i]) & layout->on[i])
- 		return -EINVAL;
- 
--	/* Check that off valiue fits it's placeholder */
-+	/* Check that off value fits its placeholder */
- 	if (GENMASK(31, layout->bit_per_gpio[i]) & layout->off[i])
- 		return -EINVAL;
- 
--- 
-2.24.1
+I've not heard of anyone using built-in firmware with remoteproc, but as
+you say firmware used with remoteproc is large. So I can't see there
+being a problem of potentially wasting 8 bytes...
 
+> > But 16-byte alignment for a fw blob? That's nothing.
+> 
+> Fine by me if we are sure it won't break anything and we hear no
+> complaints by remote proc folks.
+> 
+
+Go for it.
+
+Regards,
+Bjorn
