@@ -2,223 +2,110 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DD10C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 19:29:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 177E5C32771
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 19:55:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E36C324679
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 19:29:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA9C62468B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 19:55:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="df0GpXq7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IwKVDQ8J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbgART3c (ORCPT
+        id S1726944AbgARTzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 14:29:32 -0500
-Received: from mail-dm6nam10on2138.outbound.protection.outlook.com ([40.107.93.138]:63962
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726806AbgART3b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 14:29:31 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lBtBvB1lD7GOgPkfSbGIJFBj5e6//AT3fZPXmVioVvMhhtfMKv1rbV1pj8mr+ELg9vTd2KbxOOFOl6DKCNLXuXq6VYjyIdX4/eUfTLrb+3Py/xSX/Zi7hLe99sGBBnHII2DfX3GnmQwh9Tm7b7vZaGme82YHyewfRfrs6lbSA96B90BDB67vivLuaE+RDQPL14ybR1KzLO36Axpfn4GrpLyJZZF1G5wadKhlV0fL68v68mWpISMePngcQdnMMDJaaS4r3i3FT8SSmeonfl1ZIAjaVr6W6famtLGLLRhc2jGQxRzN21TWbOUI60I5y4kXcMuw+ogvv8oieJaBDiTjEw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qvQXSTONABnpWNd33pVwgZD/aMU5i0BZrnt5B+W9FCw=;
- b=nF4AkD3SRC70Had1kTQvhdXjtIf2bwBD0LLkbUQ7IQNBjcd1iulc0E/WzyS0WYk01BAfqV5ZMCwPYT8Z7c8JAzONtIc8oSdplhlyYVXYP1YdE5R4YiWcPxXyISrmcma7n72gwSv+VQ5ElUTRMmOBrOjtOoUwPz4ttcWA1x3TAR0h4KGz6aQCf4mcjMiFq3rLYYlORFOgYWM6yFvOp8/+p8CdiWVSiV69ZSB9RiMbQiSrMM6SXDojVS+2gRFsmuC6md8lANs48DmD8FqaZ+MAoZJOho/4WzF+9OszNbTsuBBYVO+/+XXl0xl6oR7oVLpdVuI94fj4GAZoGnSL9DTJtQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qvQXSTONABnpWNd33pVwgZD/aMU5i0BZrnt5B+W9FCw=;
- b=df0GpXq7x22PRzlY86x3HeFghI2r1Y2eUS+jFCAAjLn5/u0arD6+l2o20a61jFg8Ul4Y6P4itFnzJ2fGPLZ9Mq0JsvmNXAT6XSWABAhqc7ZLe+KokPyHUTckren38xGVUE4h7Jd9sN4IRuZuFSxjtDnRVnGh0oys7tn14QzmjdM=
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (52.132.149.16) by
- MW2PR2101MB0940.namprd21.prod.outlook.com (52.132.146.13) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.4; Sat, 18 Jan 2020 19:29:27 +0000
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::f1bb:c094:cb30:ba1f]) by MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::f1bb:c094:cb30:ba1f%6]) with mapi id 15.20.2644.015; Sat, 18 Jan 2020
- 19:29:27 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     "lantianyu1986@gmail.com" <lantianyu1986@gmail.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>
-CC:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        vkuznets <vkuznets@redhat.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH V2] x86/Hyper-V: Balloon up according to request page
- number
-Thread-Topic: [PATCH V2] x86/Hyper-V: Balloon up according to request page
- number
-Thread-Index: AQHVzHeBeCcAgW5Bc0OpEv2JOO+xBKfwzQOg
-Date:   Sat, 18 Jan 2020 19:29:27 +0000
-Message-ID: <MW2PR2101MB10520A27DC77E3B2F15EC75FD7300@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <20200116141600.23391-1-Tianyu.Lan@microsoft.com>
-In-Reply-To: <20200116141600.23391-1-Tianyu.Lan@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-01-18T19:29:24.8895054Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=20eeef19-b79d-4e67-97db-f5edc5648f20;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 51104d43-e1ba-40a9-29aa-08d79c4cbbbe
-x-ms-traffictypediagnostic: MW2PR2101MB0940:|MW2PR2101MB0940:|MW2PR2101MB0940:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <MW2PR2101MB0940F7C5C844E4F6F9786B82D7300@MW2PR2101MB0940.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 0286D7B531
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(346002)(366004)(136003)(39860400002)(376002)(189003)(199004)(81166006)(33656002)(5660300002)(81156014)(10290500003)(186003)(52536014)(478600001)(9686003)(6506007)(26005)(8990500004)(316002)(8676002)(71200400001)(66556008)(76116006)(7696005)(66446008)(4326008)(86362001)(2906002)(54906003)(8936002)(66946007)(66476007)(110136005)(64756008)(55016002);DIR:OUT;SFP:1102;SCL:1;SRVR:MW2PR2101MB0940;H:MW2PR2101MB1052.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 7CZ2t0jBEpyJyKOm1Rx5QKa8cC3aSBPV1vm2EmHguw+M6ZMV164Y1HguLe/VkNF9WRDw+xCw5G8cbTnSFR9RogJp8rD5aO0o4+2F3H6C4eGd6LIIXAygPbMVSNCEZJXLJqR+CnYJpolhGnN1RfP1iHYFbaBoE9XawA5SH3MWwqN3NRcInocKmo2gOReUipobEIR8NogPUgz6deAx78XdxgffRCKFt298gEh1pw9T16vSWlOd4CpJjkcDPpYSUScIDEZDqbCVbnKYz61kacO2L+05TgtlKqQEksF1Cr0FuGepnSc2EGcbEgrC+hvf+5CIigy0LNYB9vHZL9w9qK+M69mnOeGqHHzo1zUOSgY/ANuNTx9QTGiyziBcz8HfAWyNzdWZb/nYSYqPdUy7NyLcHEpnMoaG3XJMSB9SKiaNmFQzIrtXXKSDrON4Vz+DvRzK
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sat, 18 Jan 2020 14:55:12 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55300 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726674AbgARTzM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jan 2020 14:55:12 -0500
+Received: by mail-wm1-f66.google.com with SMTP id q9so10593248wmj.5
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jan 2020 11:55:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eM0XrNuGjQFOSpo+CZClXSAP8gXCw6sp9uQ5zawRgtI=;
+        b=IwKVDQ8JkIHm1b7AigJDfK4SmLviI6HnzRsLfL5aA2kxFduiJpmQgW0Jg5lImk5zVZ
+         6hHF962TrC54WZNuTwgrzKvkOqtyYxptb7VBNouO/yMe0Lmja8L5F5Y8Ha0//mmGtsbN
+         uOftkFPjGH+OVkhr0DUkwqxrKfrBCdZK19rPUVRXWjSHLoKrW3WKvbhwMAhLEv2oZz7I
+         jeUw/0ZVdCX7HFcmCgpH+wzZEZqhVauYOBBlK6b8IbkTizoaX5Qtg6bOiO5BlD+NAO8E
+         HLxgPLP1gsKpccJ1AjDhcAKFw//kcEvSD6zdrY99LCZrTnCpXJmi1GCcnc63YeIf7RRQ
+         5u3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eM0XrNuGjQFOSpo+CZClXSAP8gXCw6sp9uQ5zawRgtI=;
+        b=fqWFuBFAsBdRaAOU7eUr0PjdyUfw5q6MBGfqtqpVKwmDqm/alqKgQ9484vcYnbBy88
+         L0E8PNDsESiG5cO5mEqMYxfBAGE+p43xQX9iuXeTEoPwG3YBbCrY7/m6jdRLbHx0iodX
+         pKAl6Iej1GQk8IHVhqIMviz1gZTR84DcHxdSQrbQ8PSCddfGWwsHrztEEMoEtYxJqdol
+         zg8UiJ1oBvdu84Q2LFiYjveCKDQGjVQDJxq4jG5aTfu+bfG+xDmjpPWiX2flvuc0RIRf
+         EfXDL1jqPIeYqmqMUxshZuX1GFLPY1OaRQBUS6JkNCJBQP+AkNY8pZ1OHv6O2uIX8lES
+         lkzQ==
+X-Gm-Message-State: APjAAAWLqBILscBwVT81Yo4iGhEs6JW6Hs9jJbuhXYu6N0aIqe4GxBgX
+        XG5ZZ+Sv5vqGIl/V5jIWYiQ=
+X-Google-Smtp-Source: APXvYqwMBqLoaxtd7GUtIPi9YaNzM/dA1ehyBk5DdKCzfkfHtgLcs8qbzHDs6Qe396P9B4fJ1rm34g==
+X-Received: by 2002:a1c:44d5:: with SMTP id r204mr10884223wma.122.1579377311339;
+        Sat, 18 Jan 2020 11:55:11 -0800 (PST)
+Received: from localhost.localdomain (dslb-002-204-143-199.002.204.pools.vodafone-ip.de. [2.204.143.199])
+        by smtp.gmail.com with ESMTPSA id z3sm39877523wrs.94.2020.01.18.11.55.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Jan 2020 11:55:10 -0800 (PST)
+From:   Michael Straube <straube.linux@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     Larry.Finger@lwfinger.net, florian.c.schilhabel@googlemail.com,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Michael Straube <straube.linux@gmail.com>
+Subject: [PATCH 1/3] staging: rtl8192e: simplify rtl92e_evm_db_to_percent()
+Date:   Sat, 18 Jan 2020 20:53:03 +0100
+Message-Id: <20200118195305.16685-1-straube.linux@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 51104d43-e1ba-40a9-29aa-08d79c4cbbbe
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jan 2020 19:29:27.5934
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: K6EjvkPm4Ld31anXM4jo0mm2Rs6VUUjb+PBcfV2Xh2zBqam/brD4ovDo6etJ8LyOg3+zjdTFYVevlLOfCpE71LZMA7Dw/SEmK6xojctgt2E=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0940
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tianyu Lan <Tianyu.Lan@microsoft.com> Sent: Thursday, January 16, 202=
-0 6:16 AM
->=20
-> Current code has assumption that balloon request memory size aligns
-> with 2MB. But actually Hyper-V doesn't guarantee such alignment. When
-> balloon driver receives non-aligned balloon request, it produces warning
-> and balloon up more memory than requested in order to keep 2MB alignment.
-> Remove the warning and balloon up memory according to actual requested
-> memory size.
->=20
-> Fixes: f6712238471a ("hv: hv_balloon: avoid memory leak on alloc_error of=
- 2MB memory
-> block")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> ---
-> Change since v2:
->     - Change logic of switching alloc_unit from 2MB to 4KB
->     in the balloon_up() to avoid redundant iteration when
->     handle non-aligned page request.
->     - Remove 2MB alignment operation and comment in balloon_up()
-> ---
->  drivers/hv/hv_balloon.c | 12 ++++--------
->  1 file changed, 4 insertions(+), 8 deletions(-)
->=20
-> diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
-> index 7f3e7ab22d5d..536807efbc35 100644
-> --- a/drivers/hv/hv_balloon.c
-> +++ b/drivers/hv/hv_balloon.c
-> @@ -1684,7 +1684,7 @@ static unsigned int alloc_balloon_pages(struct
-> hv_dynmem_device *dm,
->  	if (num_pages < alloc_unit)
->  		return 0;
+Use clamp() to simplify function rtl92e_evm_db_to_percent() and reduce
+object file size.
 
-The above test is no longer necessary.  The num_pages < alloc_unit
-case is handled implicitly by your new 'for' loop condition.
+Signed-off-by: Michael Straube <straube.linux@gmail.com>
+---
+ drivers/staging/rtl8192e/rtl8192e/rtl_core.c | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
 
->=20
-> -	for (i =3D 0; (i * alloc_unit) < num_pages; i++) {
-> +	for (i =3D 0; i < num_pages / alloc_unit; i++) {
->  		if (bl_resp->hdr.size + sizeof(union dm_mem_page_range) >
->  			HV_HYP_PAGE_SIZE)
->  			return i * alloc_unit;
-> @@ -1722,7 +1722,7 @@ static unsigned int alloc_balloon_pages(struct
-> hv_dynmem_device *dm,
->=20
->  	}
->=20
-> -	return num_pages;
-> +	return i * alloc_unit;
->  }
->=20
->  static void balloon_up(union dm_msg_info *msg_info)
-> @@ -1737,9 +1737,6 @@ static void balloon_up(union dm_msg_info *msg_info)
->  	long avail_pages;
->  	unsigned long floor;
->=20
-> -	/* The host balloons pages in 2M granularity. */
-> -	WARN_ON_ONCE(num_pages % PAGES_IN_2M !=3D 0);
-> -
->  	/*
->  	 * We will attempt 2M allocations. However, if we fail to
->  	 * allocate 2M chunks, we will go back to PAGE_SIZE allocations.
-> @@ -1749,14 +1746,13 @@ static void balloon_up(union dm_msg_info *msg_inf=
-o)
->  	avail_pages =3D si_mem_available();
->  	floor =3D compute_balloon_floor();
->=20
-> -	/* Refuse to balloon below the floor, keep the 2M granularity. */
-> +	/* Refuse to balloon below the floor. */
->  	if (avail_pages < num_pages || avail_pages - num_pages < floor) {
->  		pr_warn("Balloon request will be partially fulfilled. %s\n",
->  			avail_pages < num_pages ? "Not enough memory." :
->  			"Balloon floor reached.");
->=20
->  		num_pages =3D avail_pages > floor ? (avail_pages - floor) : 0;
-> -		num_pages -=3D num_pages % PAGES_IN_2M;
->  	}
->=20
->  	while (!done) {
-> @@ -1770,7 +1766,7 @@ static void balloon_up(union dm_msg_info *msg_info)
->  		num_ballooned =3D alloc_balloon_pages(&dm_device, num_pages,
->  						    bl_resp, alloc_unit);
->=20
-> -		if (alloc_unit !=3D 1 && num_ballooned =3D=3D 0) {
-> +		if (alloc_unit !=3D 1 && num_ballooned !=3D num_pages) {
-
-Maybe I'm missing something, but I don't think Vitaly's optimization works.=
-  If
-alloc_unit specifies 2 Mbytes, and num_pages specifies 3 Mbytes, then num_b=
-allooned
-will come back as 2 Mbytes, which is correct.  But if we revert alloc_unit =
-to 1 page and
-"continue" in that case, we will lose the 2 Mbytes of memory (it's not free=
-d), and the
-next time through the loop will try to allocate only 1 Mbyte (because num_p=
-ages
-will be decremented by num_ballooned).  I think the original code does the =
-right thing.
-
-Michael
-
->  			alloc_unit =3D 1;
->  			continue;
->  		}
-> --
-> 2.14.5
+diff --git a/drivers/staging/rtl8192e/rtl8192e/rtl_core.c b/drivers/staging/rtl8192e/rtl8192e/rtl_core.c
+index dace81a7d1ba..caf36b6bf0dc 100644
+--- a/drivers/staging/rtl8192e/rtl8192e/rtl_core.c
++++ b/drivers/staging/rtl8192e/rtl8192e/rtl_core.c
+@@ -1973,18 +1973,11 @@ u8 rtl92e_rx_db_to_percent(s8 antpower)
+ 
+ u8 rtl92e_evm_db_to_percent(s8 value)
+ {
+-	s8 ret_val;
++	s8 ret_val = clamp(-value, 0, 33) * 3;
+ 
+-	ret_val = value;
+-
+-	if (ret_val >= 0)
+-		ret_val = 0;
+-	if (ret_val <= -33)
+-		ret_val = -33;
+-	ret_val = 0 - ret_val;
+-	ret_val *= 3;
+ 	if (ret_val == 99)
+ 		ret_val = 100;
++
+ 	return ret_val;
+ }
+ 
+-- 
+2.24.1
 
