@@ -2,81 +2,129 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 307DAC33CB1
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 08:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74DE3C33CB7
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 08:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0676520663
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 08:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ACC02468F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 08:18:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Bc47QU+g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbgARIQC (ORCPT
+        id S1726673AbgARIS2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 03:16:02 -0500
-Received: from [175.24.100.79] ([175.24.100.79]:54148 "EHLO mail.kaowomen.cn"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1726416AbgARIQB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 03:16:01 -0500
-X-Greylist: delayed 571 seconds by postgrey-1.27 at vger.kernel.org; Sat, 18 Jan 2020 03:16:00 EST
-Received: by mail.kaowomen.cn (Postfix, from userid 5002)
-        id 2ECB1E0F18; Sat, 18 Jan 2020 16:06:28 +0800 (CST)
-Date:   Sat, 18 Jan 2020 16:06:28 +0800
-From:   Bo YU <tsu.yubo@gmail.com>
-To:     maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        irlied@linux.ie, daniel@ffwll.ch, airlied@redhat.com,
-        tprevite@gmail.com
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH -next] drm/drm_dp_mst:remove set but not used variable
- 'origlen'
-Message-ID: <20200118080628.mxcx7bfwdas5m7un@kaowomen.cn>
+        Sat, 18 Jan 2020 03:18:28 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:33560 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726425AbgARIS2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jan 2020 03:18:28 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00I8I4aL127645;
+        Sat, 18 Jan 2020 08:18:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=igDgR4Dxyg/HWSyrKho0QnTzigEnDILlIedKQO8SL+Y=;
+ b=Bc47QU+gi3lHki5WpQzcJi6pwRlGFlPaMr5VA++FKKk7TSKPalkjLP+eYrd/ZR+wTJu2
+ kbQ7k0zfoChdNpB+ynEvI0dWHyBT4IDO98FsXRg4DYC7vMA/TidQES16iv67eHhKRy4G
+ jKc9qYtntAe2mPvVlBnDGc7exL3uEp+7f+UvbhplCYDgo90V9zI4C8c7IXbgzPkAgOwj
+ vdnV2EPGMOMMJIVllAbfoznQUjQl2tIRNOL7bM8ZahHcYenioTrcFYdzit+mlFzMKply
+ gdChmhP+GsTxL1Qz6RSVU0rZvtPZLHKRL/VGSLo00X//rej68InVy0R3fDFjA5puqkIK bA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2xksyprfw1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 18 Jan 2020 08:18:18 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00I8E7Es077825;
+        Sat, 18 Jan 2020 08:16:18 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2xkq5nbg4t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 18 Jan 2020 08:16:17 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00I8GFne011743;
+        Sat, 18 Jan 2020 08:16:15 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sat, 18 Jan 2020 00:16:14 -0800
+Date:   Sat, 18 Jan 2020 11:18:45 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Greg KH <greg@kroah.com>
+Cc:     Steven Price <steven.price@arm.com>,
+        Sasha Levin <sashal@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH AUTOSEL 5.4 002/205] drm/panfrost: Add missing check for
+ pfdev->regulator
+Message-ID: <20200118081845.GF19765@kadam>
+References: <20200116164300.6705-1-sashal@kernel.org>
+ <20200116164300.6705-2-sashal@kernel.org>
+ <20200117161226.GA8472@arm.com>
+ <20200117165909.GA1949937@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: NeoMutt/20171215
+In-Reply-To: <20200117165909.GA1949937@kroah.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9503 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001180064
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9503 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1031
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001180065
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+On Fri, Jan 17, 2020 at 05:59:09PM +0100, Greg KH wrote:
+> On Fri, Jan 17, 2020 at 04:12:27PM +0000, Steven Price wrote:
+> > On Thu, Jan 16, 2020 at 04:39:37PM +0000, Sasha Levin wrote:
+> > > From: Steven Price <steven.price@arm.com>
+> > > 
+> > > [ Upstream commit 52282163dfa651849e905886845bcf6850dd83c2 ]
+> > 
+> > This commit is effectively already in 5.4. Confusingly there were two
+> > versions of this upstream:
+> > 
+> > 52282163dfa6 ("drm/panfrost: Add missing check for pfdev->regulator")
+> > c90f30812a79 ("drm/panfrost: Add missing check for pfdev->regulator")
+> > 
+> > It got merged both through a -fixes branch and through the normal merge
+> > window. The two copies caused a bad merge in mainline and this was
+> > effectively reverted in commit 603e398a3db2 ("drm/panfrost: Remove NULL
+> > check for regulator").
+> > 
+> > c90f30812a79 is included in v5.4 so should already be in any v5.4.y
+> > release.
+> 
+> Have I mentioned this month just how much I hate the way the DRM tree
+> handles stable patches like this?  This kind of fallout is a pain for
+> stable maintainers, I dred every time I see a drm patch tagged for
+> stable.
+> 
+> But we've been over this all before :(
 
-drivers/gpu/drm/drm_dp_mst_topology.c:3693:16: warning: variable
-‘origlen’ set but not used [-Wunused-but-set-variable]
-  int replylen, origlen, curreply;
+Another example is:
 
-It looks like never use variable origlen after assign value to it.
+29cd13cfd762 ("drm/v3d: Fix memory leak in v3d_submit_cl_ioctl")
+0d352a3a8a1f ("drm/v3d: don't leak bin job if v3d_job_init fails.")
 
-Fixes: ad7f8a1f9ced7 (drm/helper: add Displayport multi-stream helper (v0.6))
-Signed-off-by: Bo YU <tsu.yubo@gmail.com>
----
- drivers/gpu/drm/drm_dp_mst_topology.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Two fixes for a memory leak were merged so now it's a double free.  I
+sent a patch on Jan 10 but no one responded.
 
-diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-index 4b74193b89ce..4c76e673206b 100644
---- a/drivers/gpu/drm/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -3690,7 +3690,7 @@ static bool drm_dp_get_one_sb_msg(struct drm_dp_mst_topology_mgr *mgr, bool up)
- {
- 	int len;
- 	u8 replyblock[32];
--	int replylen, origlen, curreply;
-+	int replylen, curreply;
- 	int ret;
- 	struct drm_dp_sideband_msg_rx *msg;
- 	int basereg = up ? DP_SIDEBAND_MSG_UP_REQ_BASE : DP_SIDEBAND_MSG_DOWN_REP_BASE;
-@@ -3710,7 +3710,6 @@ static bool drm_dp_get_one_sb_msg(struct drm_dp_mst_topology_mgr *mgr, bool up)
- 	}
- 	replylen = msg->curchunk_len + msg->curchunk_hdrlen;
- 
--	origlen = replylen;
- 	replylen -= len;
- 	curreply = len;
- 	while (replylen > 0) {
--- 
-2.11.0
+regards,
+dan carpenter
 
