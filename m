@@ -2,136 +2,120 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE2BC33CB7
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 05:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9EE3C33CB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 05:57:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82BDB24681
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 05:32:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DgH3J6aq"
+	by mail.kernel.org (Postfix) with ESMTP id B65962467C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 05:57:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726388AbgARFcs (ORCPT
+        id S1726308AbgARF5M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 00:32:48 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:43983 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725385AbgARFcs (ORCPT
+        Sat, 18 Jan 2020 00:57:12 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52768 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725468AbgARF5L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 00:32:48 -0500
-Received: by mail-ed1-f66.google.com with SMTP id dc19so24315275edb.10
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 21:32:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iGO7As1ACatxG0Km9ZDObq/5CWcC4DDbVgvTHZSZ69o=;
-        b=DgH3J6aqNr0SkIyXXTWbwvdqt0OSx9ziGjcKa8VB0bSCWxoOhFl1CG5Bu2Mrxa/OMZ
-         Qphe7I5cjOrzlZHUChYTKg+aExR0QSq6bRJgALzZomhzCXGQzbaIMECerEYW+UL/zLha
-         79nEXY0MWSUF09nC7pAXctcZW4MqcsaUqdPOYJ/BkcF1G1OElMNWOPy9FmkUJMdvkETe
-         GmNnPw7OpbLd+wS93b5Qrw7m2e38Gu6kRnu8nFb436xSs3PVm0CLd8tncBLhRR6Nczcz
-         ePiyC7PeYJan7JagiXZB7fR8qoe0orag9C2iaxrS/NQamL8vWtBOWRBXQ1X0Ui29BDEa
-         wMYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iGO7As1ACatxG0Km9ZDObq/5CWcC4DDbVgvTHZSZ69o=;
-        b=fj0/PC12XhtrozvfZoyz3d6Y7sbdNvbCmDpO0ldDnMjZDjf+qBFzfNkTLJsimNhCJh
-         mmyuVCMtHUZK+RpRmeh+1xLckUK3SNVK25MxnEo0v6M+4VC87O0ZhrCbYbolYJySndMy
-         asFzw61l+/9oTviyfDpRvtGBDTiYsSC9FKucN87BNIOI84+AmlpcixocURf6ckSl+vPL
-         iP5L0sNLc3tHjxN7Q9LE/iASHtZiRLYhcxRufn1AG85tQBewe+lcfnTlffLPNGxd9Mal
-         mgM4usYlDVuGep82ZfGenA7Sp6LLwtJugYHB2Y9kjtooI/EicmGc/ThAzNrA/J3rkDz7
-         kDHA==
-X-Gm-Message-State: APjAAAULdP5hLLGdxY8xDaW+18kocHtdKRKUx7dNIIiIvmKm0qQ7MBPK
-        6QBKMmyiXqSJno5uOvsqWdR724y5MLFT8oUF0Ek=
-X-Google-Smtp-Source: APXvYqzjMlhU6tPuIqThx7vP/9qBNYifikvYJ+ycVTF4/jxz3XJWZSdykWesD0CMM/78tWPC5NflAQSvZDBTwcstrVI=
-X-Received: by 2002:a50:ba83:: with SMTP id x3mr7442375ede.206.1579325566598;
- Fri, 17 Jan 2020 21:32:46 -0800 (PST)
+        Sat, 18 Jan 2020 00:57:11 -0500
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00I5qNaF003823;
+        Sat, 18 Jan 2020 00:56:47 -0500
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2xk0qsh08g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 18 Jan 2020 00:56:47 -0500
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 00I5tsZL004365;
+        Sat, 18 Jan 2020 05:56:47 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma03dal.us.ibm.com with ESMTP id 2xksn5h4rk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 18 Jan 2020 05:56:47 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00I5ukgb52166920
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 18 Jan 2020 05:56:46 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2BC2FAC05B;
+        Sat, 18 Jan 2020 05:56:46 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E95A1AC059;
+        Sat, 18 Jan 2020 05:56:42 +0000 (GMT)
+Received: from skywalker.linux.ibm.com (unknown [9.102.2.52])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
+        Sat, 18 Jan 2020 05:56:42 +0000 (GMT)
+X-Mailer: emacs 27.0.60 (via feedmail 11-beta-1 I)
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+To:     akpm@linux-foundation.org, peterz@infradead.org, will@kernel.org,
+        mpe@ellerman.id.au, davem@davemloft.net
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v4 6/9] asm-generic/tlb: Rename HAVE_RCU_TABLE_FREE
+In-Reply-To: <20200116064531.483522-7-aneesh.kumar@linux.ibm.com>
+References: <20200116064531.483522-1-aneesh.kumar@linux.ibm.com>
+ <20200116064531.483522-7-aneesh.kumar@linux.ibm.com>
+Date:   Sat, 18 Jan 2020 11:26:40 +0530
+Message-ID: <87v9p9mhnr.fsf@linux.ibm.com>
 MIME-Version: 1.0
-References: <20200117074534.25324-1-richardw.yang@linux.intel.com>
- <20200117222740.GB29229@richard> <CAHbLzkoYH1_JHH99pnopj_v=Wb=UEGMS9dJs1J6GZn0=6F4SJw@mail.gmail.com>
-In-Reply-To: <CAHbLzkoYH1_JHH99pnopj_v=Wb=UEGMS9dJs1J6GZn0=6F4SJw@mail.gmail.com>
-From:   Yang Shi <shy828301@gmail.com>
-Date:   Fri, 17 Jan 2020 21:32:32 -0800
-Message-ID: <CAHbLzkpWcyUtKC_kpMPxvgbo2OA06Yfb1zRcux4-d4zgMCUZbQ@mail.gmail.com>
-Subject: Re: [PATCH] mm/migrate.c: also overwrite error when it is bigger than zero
-To:     Wei Yang <richardw.yang@linux.intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-18_01:2020-01-16,2020-01-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=2 mlxscore=0
+ spamscore=0 malwarescore=0 adultscore=0 priorityscore=1501 phishscore=0
+ bulkscore=0 clxscore=1015 impostorscore=0 mlxlogscore=913
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001180043
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 3:30 PM Yang Shi <shy828301@gmail.com> wrote:
->
-> On Fri, Jan 17, 2020 at 2:27 PM Wei Yang <richardw.yang@linux.intel.com> wrote:
-> >
-> > On Fri, Jan 17, 2020 at 03:45:34PM +0800, Wei Yang wrote:
-> > >If we get here after successfully adding page to list, err would be
-> > >the number of pages in the list.
-> > >
-> > >Current code has two problems:
-> > >
-> > >  * on success, 0 is not returned
-> > >  * on error, the real error code is not returned
-> > >
-> >
-> > Well, this breaks the user interface. User would receive 1 even the migration
-> > succeed.
-> >
-> > The change is introduced by e0153fc2c760 ("mm: move_pages: return valid node
-> > id in status if the page is already on the target node").
->
-> Yes, it may return a value which is > 0. But, it seems do_pages_move()
-> could return > 0 value even before this commit.
->
-> For example, if I read the code correctly, it would do:
->
-> If we already have some pages on the queue then
-> add_page_for_migration() return error, then do_move_pages_to_node() is
-> called, but it may return > 0 value (the number of pages that were
-> *not* migrated by migrate_pages()), then the code flow would just jump
-> to "out" and return the value. And, it may happen to be 1.
+"Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com> writes:
 
-Just figured out this is another regression introduced by a49bd4d71637
-("mm, numa: rework do_pages_move"). Already posted a patch to fix it.
+> From: Peter Zijlstra <peterz@infradead.org>
+>
+> Towards a more consistent naming scheme.
+>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
->
-> I'm not sure if it breaks the user interface since the behavior has
-> been existed for years, and it looks nobody complains about it. Maybe
-> glibc helps hide it or people just care if it is 0 and the status.
->
-> >
-> > >Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
-> > >---
-> > > mm/migrate.c | 2 +-
-> > > 1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > >diff --git a/mm/migrate.c b/mm/migrate.c
-> > >index 557da996b936..c3ef70de5876 100644
-> > >--- a/mm/migrate.c
-> > >+++ b/mm/migrate.c
-> > >@@ -1677,7 +1677,7 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
-> > >       err1 = do_move_pages_to_node(mm, &pagelist, current_node);
-> > >       if (!err1)
-> > >               err1 = store_status(status, start, current_node, i - start);
-> > >-      if (!err)
-> > >+      if (err >= 0)
-> > >               err = err1;
-> > > out:
-> > >       return err;
-> > >--
-> > >2.17.1
-> >
-> > --
-> > Wei Yang
-> > Help you, Help me
-> >
+...
+
+> diff --git a/arch/sparc/Kconfig b/arch/sparc/Kconfig
+> index 18e9fb6fcf1b..c703eb6b7461 100644
+> --- a/arch/sparc/Kconfig
+> +++ b/arch/sparc/Kconfig
+> @@ -64,7 +64,7 @@ config SPARC64
+>  	select HAVE_FUNCTION_GRAPH_TRACER
+>  	select HAVE_KRETPROBES
+>  	select HAVE_KPROBES
+> -	select HAVE_RCU_TABLE_FREE if SMP
+> +	select MMU_GATHER_RCU_TABLE_FREE
+>  	select HAVE_MEMBLOCK_NODE_MAP
+>  	select HAVE_ARCH_TRANSPARENT_HUGEPAGE
+>  	select HAVE_DYNAMIC_FTRACE
+
+This resulted in build failure reported by kbuild test robot. Can we
+fold the below change
+
+diff --git a/arch/sparc/Kconfig b/arch/sparc/Kconfig
+index c703eb6b7461..02907584be2d 100644
+--- a/arch/sparc/Kconfig
++++ b/arch/sparc/Kconfig
+@@ -64,7 +64,7 @@ config SPARC64
+ 	select HAVE_FUNCTION_GRAPH_TRACER
+ 	select HAVE_KRETPROBES
+ 	select HAVE_KPROBES
+-	select MMU_GATHER_RCU_TABLE_FREE
++	select MMU_GATHER_RCU_TABLE_FREE if SMP
+ 	select HAVE_MEMBLOCK_NODE_MAP
+ 	select HAVE_ARCH_TRANSPARENT_HUGEPAGE
+ 	select HAVE_DYNAMIC_FTRACE
+
+We should handle that drop of SMP in a separate patch if needed.
+
+-aneesh
