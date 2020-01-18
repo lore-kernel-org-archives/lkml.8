@@ -2,104 +2,88 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3675AC33CB3
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 03:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11738C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 03:07:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B79A24656
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 03:06:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D36E024673
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 03:07:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cT7tAvPz"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Wd/Zd7AS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730665AbgARDG1 (ORCPT
+        id S1730690AbgARDH6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 22:06:27 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35384 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727033AbgARDG0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 22:06:26 -0500
-Received: by mail-pg1-f194.google.com with SMTP id l24so12571753pgk.2;
-        Fri, 17 Jan 2020 19:06:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=ZOS/QKfJuYHMcS4p5y33x0lWJFFfhgPkwQi+6BWE0/s=;
-        b=cT7tAvPzEQGvP8FwNaSz5sJQJr16JuwCeKy76J7+0CXYibIXw5W9H3ImH/XF6Y1y2f
-         l/CB6PhveH0EW7bldI3GYIsM5xB7dibtyGiLFyCwniQtWvLc2j6mQiNMs7Lhb29WT1Sc
-         RzPCEeOd1QeCvdbDZAPv2glcGElX7NvwYG697Z5z6HvhQ9OFctcDGI0Dx/JP8HoP6A8b
-         plDGQGF++TK5lj8ih3gcGHlBKGppcyMtH11TRDVoQMaUM23xvtRizceMkNmDqTXzi3f7
-         GQEFvEcCdDNv2CdQXITNzLcOIW4sYIOx83eNe7O/IQ/e5LNsP4HCuNTjvS8Vz1WjVx2U
-         UIbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=ZOS/QKfJuYHMcS4p5y33x0lWJFFfhgPkwQi+6BWE0/s=;
-        b=iBWbwqQM6/5MCi/J+khlV4tMVJvhF9C4J9TNb1UvhszWHNt4Ir7cSvMRho68qVSGed
-         Q/Po2Yjqs4Gra4SfbHPcSbTny7k87v8QcnYpmZBlISVbvEzE7aqdkz7zINx6bixOqw8s
-         5GIzYZiNqdpL6z4HCnjLI34Ivwqc9VmZf5udBYTKdpeqlpXGFUncnkmM26FKTw7XWh/a
-         fPtgxe+Hovs8A4dSlsh3KLU2JdCE+mzKLKBjFhdpXj2Xt3gQmT48SsVJi3NP1qW1eqCo
-         NlFF7YvARSdI2LwXQlSF89c/OaoBUmXw4SW9h8vIf6wF69ihZI2JCxy/W1WlbZSu4I2L
-         j7Hg==
-X-Gm-Message-State: APjAAAUqr/7MVO4jBU7jKdR7Qd7+1gOnYjAxcqDWN8kN3NjIwmTWfinR
-        2/2/KVzsIgZt6FWlGT9d+g==
-X-Google-Smtp-Source: APXvYqynSuHb7zqQFO6TPM9eaLCNeLc6NMrMJ4WBFqPMvpJD0F/OdoY3zjM/mK1N3r4FVktNXKFNbg==
-X-Received: by 2002:a63:1c13:: with SMTP id c19mr49126467pgc.450.1579316786303;
-        Fri, 17 Jan 2020 19:06:26 -0800 (PST)
-Received: from madhuparna-HP-Notebook ([2402:3a80:1ee0:feca:7477:122a:17db:72ef])
-        by smtp.gmail.com with ESMTPSA id s22sm184620pji.30.2020.01.17.19.06.21
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 17 Jan 2020 19:06:25 -0800 (PST)
-Date:   Sat, 18 Jan 2020 08:36:18 +0530
-From:   Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-To:     peterz@infradead.org, --@madhuparna-HP-Notebook, mingo@redhat.com,
-        -c@madhuparna-HP-Notebook, jolsa@redhat.com,
-        linux-kernel@vger.kernel.org, joel@joelfernandes.org,
-        rcu@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org, frextrite@gmail.com
-Subject: [PATCH] events:core.c: Use built-in RCU list checking
-Message-ID: <20200118030618.GA28502@madhuparna-HP-Notebook>
+        Fri, 17 Jan 2020 22:07:58 -0500
+Received: from m12-11.163.com ([220.181.12.11]:57785 "EHLO m12-11.163.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727033AbgARDH5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 22:07:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=Date:From:Subject:Message-ID:MIME-Version; bh=yoURl
+        r+iXRZmV29G1EPstRBDQ8HNCEnr1ZMOsXdCGr8=; b=Wd/Zd7ASRA9F5iAa2S47t
+        aQwBd//JKwmUB9xliocQgpP3ThsRWS6MI0w7mka9LPHi3Ihnm4oOtofSBDU9ZP8o
+        QsioiuA0yzqgCvVrbyBV6m81yGZ9UWwqaFMl4560DPTofan5gzTkLUt4yf0hF0IX
+        NaqgHfSHWKMfxG013mPkoA=
+Received: from localhost (unknown [39.155.185.116])
+        by smtp7 (Coremail) with SMTP id C8CowACnnZpbdiJesvSiHg--.65366S3;
+        Sat, 18 Jan 2020 11:07:35 +0800 (CST)
+Date:   Sat, 18 Jan 2020 11:09:17 +0800
+From:   Tao Zhou <t1zhou@163.com>
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched/cputime: remove irqtime_account_idle_ticks
+Message-ID: <20200118030917.GA5351@geo.homenetwork>
+References: <1579144650-161327-1-git-send-email-alex.shi@linux.alibaba.com>
+ <5c95e93d-c44c-b19e-62c0-b7c45c60e9e0@linux.alibaba.com>
+ <20200118003207.GA4067@geo.homenetwork>
+ <a9c6fa27-e0e3-7559-949d-93fcc1c0a1bb@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a9c6fa27-e0e3-7559-949d-93fcc1c0a1bb@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CM-TRANSID: C8CowACnnZpbdiJesvSiHg--.65366S3
+X-Coremail-Antispam: 1Uf129KBjvdXoW7Xr47Aw45Gw4xuFykCF43Awb_yoWfGFb_Zr
+        n8CF1DWr1kJrs7Awn7trW0qF4qga1jyryFqwn0qF9xt3saka4fC3Z8twn5ZFs5JF48AFW5
+        Xws5Aa9IvwnFyjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUYLqXPUUUUU==
+X-Originating-IP: [39.155.185.116]
+X-CM-SenderInfo: vwr2x0rx6rljoofrz/xtbBdgOullUMMAMdxAAAs+
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-list_for_each_entry_rcu has built-in RCU and lock checking.
+On Sat, Jan 18, 2020 at 10:04:12AM +0800, Alex Shi wrote:
+> 
+> 
+> 在 2020/1/18 上午8:32, Tao Zhou 写道:
+> > On Thu, Jan 16, 2020 at 11:44:28AM +0800, Alex Shi wrote:
+> >>
+> >>
+> >> 在 2020/1/16 上午11:17, Alex Shi 写道:
+> >>> irqtime_account_idle_ticks just add longer call path w/o enough meaning.
+> >>> We don't bother remove this function to simply code and reduce a
+> >>> bit object size of kernel.
+> >>
+> >> Sorry, above commit log need to revise as following:
+> >>
+> >> irqtime_account_idle_ticks just add longer call path w/o enough meaning.
+> >> We'd better to remove this function to simply code and reduce a bit object
+> >> size of kernel.
+> > 
+> > Looks good and better to me.
+> 
+> Thanks! 
+> 
+> Why not reply to lkml openly? :)
 
-Pass cond argument to list_for_each_entry_rcu() to silence
-false lockdep warning when CONFIG_PROVE_RCU_LIST is enabled
-by default.
-
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
----
- kernel/events/core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 4ff86d57f9e5..04d28f3eb8df 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -3760,7 +3760,8 @@ static void perf_adjust_freq_unthr_context(struct perf_event_context *ctx,
- 	raw_spin_lock(&ctx->lock);
- 	perf_pmu_disable(ctx->pmu);
- 
--	list_for_each_entry_rcu(event, &ctx->event_list, event_entry) {
-+	list_for_each_entry_rcu(event, &ctx->event_list, event_entry,
-+				lockdep_is_held(&ctx->lock)) {
- 		if (event->state != PERF_EVENT_STATE_ACTIVE)
- 			continue;
- 
--- 
-2.17.1
+Sorry, I want to.
+The mail can not send if dest/cc include 'linux-kernel@vger.kernel.org'
+No VPN from me. I will try another mail address. Any advice?
 
