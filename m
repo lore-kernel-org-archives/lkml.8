@@ -2,97 +2,408 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B08CC33CB1
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 13:41:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D75F8C33CB7
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 13:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2404A2469C
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 13:41:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nFG8dNHB"
+	by mail.kernel.org (Postfix) with ESMTP id A5109246A6
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 13:54:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579355687;
+	bh=7XNdcbwfjeRihm+QA1o7rD4VogL/ycoJajCXjWxW+uc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=JvSFj86H/RoXX48cB84A4Mfc6/22i4c1TE3w4rVlVEZAtr/IuFNwRYx4JLmyy7avQ
+	 qHRBzj30fhBzcv9/mgfSC6Yc7tkjUJyAhEmpndy3GAjC4ojCFF1t15e9DTSxMyBngm
+	 yW7Lfcaxe8KKbq2wSkoVGhc/6K72Nx+rR/eY6eZ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728896AbgARNlW (ORCPT
+        id S1726465AbgARNyq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 08:41:22 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46278 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727012AbgARNlV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 08:41:21 -0500
-Received: by mail-wr1-f65.google.com with SMTP id z7so25191745wrl.13
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jan 2020 05:41:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wFe6n4FQHA1VOWCd6CGPk+kxacT5cKq8IuN+p1i7TQU=;
-        b=nFG8dNHBdZVhq3lvwz+Ep/QRxaLzhWkpPsocSLSZtiWyPnHgy4DxZAO/r0wabt48hY
-         m+c0Pk3kfEXm2iSHTYvTojcKPmm4P37by8jfTxv3lNUZWF8NnX+67zdHqd4YflzbSdoW
-         n8Af3utWqYpeR/zY9UIDnxiQfKZffkduDaswsivVMbqUiwMcAdwo1qGaLeoA/tGLbhcQ
-         WpR04wcFwqexpVNpBcaVmmd7agjQ1ldiELpyoFazZIm2KVzyOjXyHDvLg5ARcwweBo9t
-         ed8v6jByNQhZWYR9xaof4u4stupgr1Uj0ySvV9MsNp5ukKo1dra3itOyaqMtH4hBFked
-         uL6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wFe6n4FQHA1VOWCd6CGPk+kxacT5cKq8IuN+p1i7TQU=;
-        b=Drs1q2WlGPX8H4V1DBVirRchBihBTi3LIsBx+UWCzH0obS3cO0XJef2ZBxs0HXwo9D
-         Rp2tR8+4Cmekh+xD+5axWDRmDcCln0Uxlei1QSOCFy19CMf1V3p8b37oWfKbOiPISsot
-         Dnnpjy0dz6ahNDlIVfonwqwiMxs5e97S9tTWruHMm0ipsoQnzOv4XkwgZtjMW5WZdNnm
-         /3rpbMPb/FfxdMSV212xWSI07ZZnDJdXvVi5RgYitXMA/+5QuJoGpQs9/pfgTLgEkC38
-         mn30LT1KRosgZf8d+eOpFNaFtgIoVB6ITrw33jK1SdR92owt6CjXxQufciVbOCJNs4dd
-         9gbA==
-X-Gm-Message-State: APjAAAUHiwjzCzrxFFH5quGjzdMikBmQo5ubd+3C1m52DTJ1G90n8yTh
-        JdncxBQF7bzSu9jyW8bWL9uI9nZuRUQg6DpV9HpP7g==
-X-Google-Smtp-Source: APXvYqxh1828BCmBT0NKPlZZ7fa0OWfuI0uRzSzAhQFvZ9LtyMpJok6v1/E18UYrR8Ik4eSL1Q8JSwyC6XAMbbsKA08=
-X-Received: by 2002:adf:fe86:: with SMTP id l6mr8723881wrr.252.1579354880364;
- Sat, 18 Jan 2020 05:41:20 -0800 (PST)
+        Sat, 18 Jan 2020 08:54:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56270 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726208AbgARNyq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jan 2020 08:54:46 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D69C32468D;
+        Sat, 18 Jan 2020 13:54:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579355684;
+        bh=7XNdcbwfjeRihm+QA1o7rD4VogL/ycoJajCXjWxW+uc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=XTatsBsuWHiTEm+WgmbWpRUy8XOt0Xt7Q+UJobt6xNnKjINLrGZy/EJ17a6soqLHo
+         qdf/OSljAPWF1pj7cZtmJHjN+o0xIv62S6HgYXr0P57GEYRlxQ1TS+SpYaq3GR2foD
+         npyZki2ew7Pu/R9rCmV1X0IQ45E6jg7tZGWRe30I=
+Date:   Sat, 18 Jan 2020 13:54:39 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Beniamin Bia <beniamin.bia@analog.com>
+Cc:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
+        <pmeerw@pmeerw.net>, <linux-iio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <biabeniamin@outlook.com>,
+        <knaack.h@gmx.de>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: Re: [PATCH 1/3] iio: amplifiers: hmc425a: Add support for HMC425A
+ step attenuator with gpio interface
+Message-ID: <20200118135439.4a6b3ddf@archlinux>
+In-Reply-To: <20200113141555.16117-1-beniamin.bia@analog.com>
+References: <20200113141555.16117-1-beniamin.bia@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <CAKv+Gu8WBSsG2e8bVpARcwNBrGtMLzUA+bbikHymrZsNQE6wvw@mail.gmail.com>
- <934E6F23-96FE-4C59-9387-9ABA2959DBBB@lca.pw> <CAKv+Gu9PfAHP4_Xaj3_PHFGQCsZRk2oXGbh8oTt22y3aCJBFTg@mail.gmail.com>
- <CACT4Y+bKhgRdCM1v8wTht=pEcX6u-J_Rq6=zA5yfMuBUcj169w@mail.gmail.com>
-In-Reply-To: <CACT4Y+bKhgRdCM1v8wTht=pEcX6u-J_Rq6=zA5yfMuBUcj169w@mail.gmail.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Sat, 18 Jan 2020 14:41:09 +0100
-Message-ID: <CAKv+Gu8X1dPBk-_o66V81o_uXLReFYZhHgt7CfBGN_MhXXFTmg@mail.gmail.com>
-Subject: Re: [PATCH -next] x86/efi_64: fix a user-memory-access in runtime
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Qian Cai <cai@lca.pw>, Ard Biesheuvel <ardb@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 18 Jan 2020 at 14:37, Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> On Sat, Jan 18, 2020 at 2:35 PM Ard Biesheuvel
-> <ard.biesheuvel@linaro.org> wrote:
-> > > > On Jan 18, 2020, at 3:00 AM, Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
-> > > >
-> > > > Can't we just use READ_ONCE_NOCHECK() instead?
-> > >
-> > > My understanding is that KASAN actually want to make sure there is a no dereference of user memory because it has security implications. Does that make no sense here?
-> >
-> > Not really. This code runs extremely early in the boot, with a
-> > temporary 1:1 memory mapping installed so that the EFI firmware can
-> > transition into virtually remapped mode.
-> >
-> > Furthermore, the same issue exists for mixed mode, so we'll need to
-> > fix that as well. I'll spin a patch and credit you as the reporter.
->
-> If this code runs extremely early and uses even completely different
-> mapping, it may make sense to disable KASAN instrumentation of this
-> file in Makefile.
+On Mon, 13 Jan 2020 16:15:53 +0200
+Beniamin Bia <beniamin.bia@analog.com> wrote:
 
-The routine in question runs extremely early, but the other code in
-the file may be called at any time, so this is probably not the right
-choice in this case.
+> From: Michael Hennerich <michael.hennerich@analog.com>
+> 
+> This patch adds support for the HMC425A 0.5 dB LSB GaAs MMIC 6-BIT
+> DIGITAL POSITIVE CONTROL ATTENUATOR, 2.2 - 8.0 GHz.
+> 
+> Datasheet:
+> https://www.analog.com/media/en/technical-documentation/data-sheets/hmc425A.pdf
+> 
+> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
+
+I'll try and avoid replicate comments already made!
+
+> ---
+>  drivers/iio/amplifiers/Kconfig   |  10 ++
+>  drivers/iio/amplifiers/Makefile  |   1 +
+>  drivers/iio/amplifiers/hmc425a.c | 247 +++++++++++++++++++++++++++++++
+>  3 files changed, 258 insertions(+)
+>  create mode 100644 drivers/iio/amplifiers/hmc425a.c
+> 
+> diff --git a/drivers/iio/amplifiers/Kconfig b/drivers/iio/amplifiers/Kconfig
+> index da7f126d197b..9b02c9a2bc8a 100644
+> --- a/drivers/iio/amplifiers/Kconfig
+> +++ b/drivers/iio/amplifiers/Kconfig
+> @@ -22,4 +22,14 @@ config AD8366
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called ad8366.
+>  
+> +config HMC425
+> +	tristate "Analog Devices HMC425A and similar GPIO Gain Amplifiers"
+> +	depends on GPIOLIB
+> +	help
+> +	  Say yes here to build support for Analog Devices HMC425A and similar
+> +	  gain amplifiers or step attenuators.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called hmc425a.
+> +
+>  endmenu
+> diff --git a/drivers/iio/amplifiers/Makefile b/drivers/iio/amplifiers/Makefile
+> index 9abef2ebe9bc..19a89db1d9b1 100644
+> --- a/drivers/iio/amplifiers/Makefile
+> +++ b/drivers/iio/amplifiers/Makefile
+> @@ -5,3 +5,4 @@
+>  
+>  # When adding new entries keep the list in alphabetical order
+>  obj-$(CONFIG_AD8366) += ad8366.o
+> +obj-$(CONFIG_HMC425) += hmc425a.o
+> \ No newline at end of file
+> diff --git a/drivers/iio/amplifiers/hmc425a.c b/drivers/iio/amplifiers/hmc425a.c
+> new file mode 100644
+> index 000000000000..525ebadaf1e8
+> --- /dev/null
+> +++ b/drivers/iio/amplifiers/hmc425a.c
+> @@ -0,0 +1,247 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * HMC425A and similar Gain Amplifiers
+> + *
+> + * Copyright 2020 Analog Devices Inc.
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/sysfs.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/sysfs.h>
+> +
+> +enum hmc425a_type {
+> +	ID_HMC425A,
+> +};
+> +
+> +struct hmc425a_chip_info {
+> +	const struct iio_chan_spec	*channels;
+> +	unsigned int			num_channels;
+> +	unsigned int			num_gpios;
+> +	int				gain_min;
+> +	int				gain_max;
+> +	int				default_gain;
+> +};
+> +
+> +struct hmc425a_state {
+> +	struct	regulator *reg;
+> +	struct	mutex lock; /* protect sensor state */
+> +	struct	hmc425a_chip_info *chip_info;
+> +	struct	gpio_descs *gpios;
+> +	enum	hmc425a_type type;
+> +	u32	gain;
+> +};
+> +
+> +static int hmc425a_write(struct iio_dev *indio_dev, u32 value)
+> +{
+> +	struct hmc425a_state *st = iio_priv(indio_dev);
+> +	int i, *values;
+> +
+> +	values = kmalloc_array(st->chip_info->num_gpios, sizeof(int),
+> +			       GFP_KERNEL);
+> +	if (!values)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < st->chip_info->num_gpios; i++)
+> +		values[i] = (value >> i) & 1;
+> +
+> +	gpiod_set_array_value_cansleep(st->gpios->ndescs, st->gpios->desc,
+> +				       values);
+> +	kfree(values);
+> +	return 0;
+> +}
+> +
+> +static int hmc425a_read_raw(struct iio_dev *indio_dev,
+> +			    struct iio_chan_spec const *chan, int *val,
+> +			    int *val2, long m)
+> +{
+> +	struct hmc425a_state *st = iio_priv(indio_dev);
+> +	int code, gain = 0;
+> +	int ret;
+> +
+> +	mutex_lock(&st->lock);
+> +	switch (m) {
+> +	case IIO_CHAN_INFO_HARDWAREGAIN:
+> +		code = st->gain;
+> +
+> +		switch (st->type) {
+> +		case ID_HMC425A:
+> +			gain = ~code * -500;
+> +			break;
+> +		}
+> +
+> +		/* Values in dB */
+> +		*val = gain / 1000;
+> +		*val2 = (gain % 1000) * 1000;
+> +
+> +		ret = IIO_VAL_INT_PLUS_MICRO_DB;
+> +		break;
+> +	default:
+> +		ret = -EINVAL;
+> +	}
+> +	mutex_unlock(&st->lock);
+> +
+> +	return ret;
+> +};
+> +
+> +static int hmc425a_write_raw(struct iio_dev *indio_dev,
+> +			     struct iio_chan_spec const *chan, int val,
+> +			     int val2, long mask)
+> +{
+> +	struct hmc425a_state *st = iio_priv(indio_dev);
+> +	struct hmc425a_chip_info *inf = st->chip_info;
+> +	int code = 0, gain;
+> +	int ret;
+> +
+> +	/* Values in dB */
+
+Are they?.  For output values we have the IIO_VAL_INT_PLUS_MICRO_DB
+formatting option, but I don't think we yet have any code in the
+core to read in values in DB.  I think all it would need to do is check
+that dB occured after the number and provide a write_raw_get_fmt
+callback to ensure the core knows to enforce this.
+
+We may have an issue with other drivers around this though...
+Possibly need some fuzzy logic to let them work but perhaps
+print a warning once that they should postfix with dB.
+What do people think?
+ 
+> +	if (val < 0)
+> +		gain = (val * 1000) - (val2 / 1000);
+> +	else
+> +		gain = (val * 1000) + (val2 / 1000);
+> +
+> +	if (gain > inf->gain_max || gain < inf->gain_min)
+> +		return -EINVAL;
+> +
+> +	switch (st->type) {
+> +	case ID_HMC425A:
+> +		code = ~((abs(gain) / 500) & 0x3F);
+> +		break;
+> +	}
+> +
+> +	mutex_lock(&st->lock);
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_HARDWAREGAIN:
+> +		st->gain = code;
+> +
+> +		ret = hmc425a_write(indio_dev, st->gain);
+> +		break;
+> +	default:
+> +		ret = -EINVAL;
+> +	}
+> +	mutex_unlock(&st->lock);
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct iio_info hmc425a_info = {
+> +	.read_raw = &hmc425a_read_raw,
+> +	.write_raw = &hmc425a_write_raw,
+> +};
+> +
+> +#define HMC425A_CHAN(_channel)                                          \
+> +{                                                                      \
+> +	.type = IIO_VOLTAGE, .output = 1, .indexed = 1,                \
+> +	.channel = _channel,                                           \
+> +	.info_mask_separate = BIT(IIO_CHAN_INFO_HARDWAREGAIN),         \
+> +}
+> +
+> +static const struct iio_chan_spec hmc425a_channels[] = {
+> +	HMC425A_CHAN(0),
+> +};
+> +
+> +/* Match table for of_platform binding */
+> +static const struct of_device_id hmc425a_of_match[] = {
+> +	{ .compatible = "adi,hmc425a", .data = (void *)ID_HMC425A },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, hmc425a_of_match);
+> +
+> +static void hmc425a_remove(void *data)
+> +{
+> +	struct hmc425a_state *st = data;
+> +
+> +	regulator_disable(st->reg);
+> +}
+> +
+> +static struct hmc425a_chip_info hmc425a_chip_info_tbl[] = {
+> +	[ID_HMC425A] = {
+> +		.channels = hmc425a_channels,
+> +		.num_channels = ARRAY_SIZE(hmc425a_channels),
+> +		.num_gpios = 6,
+> +		.gain_min = -31500,
+> +		.gain_max = 0,
+> +		.default_gain = -0x40, /* set default gain -31.5db*/
+> +	},
+> +};
+> +
+> +static int hmc425a_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +	const struct of_device_id *id;
+> +	struct iio_dev *indio_dev;
+> +	struct hmc425a_state *st;
+> +	int ret;
+> +
+> +	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*st));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	st = iio_priv(indio_dev);
+> +	id = of_match_device(hmc425a_of_match, &pdev->dev);
+> +	if (!id)
+> +		ret = -ENODEV;
+> +
+> +	st->type = (enum hmc425a_type)id->data;
+> +
+> +	st->chip_info = &hmc425a_chip_info_tbl[st->type];
+> +	indio_dev->num_channels = st->chip_info->num_channels;
+> +	indio_dev->channels = st->chip_info->channels;
+> +	st->gain = st->chip_info->default_gain;
+> +
+> +	st->gpios = devm_gpiod_get_array(&pdev->dev, "ctrl", GPIOD_OUT_LOW);
+> +	if (IS_ERR(st->gpios)) {
+> +		ret = PTR_ERR(st->gpios);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(&pdev->dev, "failed to get gpios\n");
+> +		return ret;
+> +	}
+> +
+> +	if (st->gpios->ndescs != st->chip_info->num_gpios) {
+> +		dev_err(&pdev->dev, "%d GPIOs needed to operate\n",
+> +			st->chip_info->num_gpios);
+> +		return -ENODEV;
+> +	}
+> +
+> +	st->reg = devm_regulator_get(&pdev->dev, "vcc");
+
+> +	if (!IS_ERR(st->reg)) {
+
+Ideally handle deferred probing.   We might have a retlator
+specified but not have it yet.
+
+Don't paper over not finding it.  options are:
+1) regulator framework not built.  Stubs won't return errors so fine.
+2) regulator info not supplied.  A fake 'stub' regulator will be
+return which will work fine (just not do anything).  This is often
+desirable when the power line isn't controllable.
+3) actual regulator but driver not loaded yet.  For those we need to
+   ensure we return with -EDEFER. That will be returned by devm_regulator_get
+   if that happens.
+4) regulator there and it all works perfectly.
+
+For none of the above is skipping over this section the right thing to do.
+ 
+> +		ret = regulator_enable(st->reg);
+> +		if (ret)
+> +			return ret;
+> +		ret = devm_add_action_or_reset(&pdev->dev, hmc425a_remove, st);
+
+Given this just disables the regulator rather than being a conventional
+driver remove, give it a different name.
+
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, indio_dev);
+> +	mutex_init(&st->lock);
+> +
+> +	indio_dev->dev.parent = &pdev->dev;
+> +	indio_dev->name = np->name;
+> +	indio_dev->info = &hmc425a_info;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +
+> +	return devm_iio_device_register(&pdev->dev, indio_dev);
+> +}
+> +
+> +static struct platform_driver hmc425a_driver = {
+> +	.driver = {
+> +		.name = KBUILD_MODNAME,
+> +		.of_match_table = hmc425a_of_match,
+> +	},
+> +	.probe = hmc425a_probe,
+> +};
+> +module_platform_driver(hmc425a_driver);
+> +
+> +MODULE_AUTHOR("Michael Hennerich <michael.hennerich@analog.com>");
+> +MODULE_DESCRIPTION(
+> +	"Analog Devices HMC425A and similar GPIO control Gain Amplifiers");
+
+Just leave that on one line and don't worry about 80 chars limit.
+Its more 'advise' than a hard rule ;)
+
+
+> +MODULE_LICENSE("GPL v2");
+
