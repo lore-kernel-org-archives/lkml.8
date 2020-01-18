@@ -2,187 +2,140 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 604D4C33CB7
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 18:05:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C31C32771
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 18:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 304A42176D
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 18:05:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579370735;
-	bh=GuQ61elappNAn1GvnEWX7wH+6K14forLKbeq8thY62A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cwvW4Nfjfmp8mxDvHP+kyv4p+G1gEurVpvCch3JSGht7V5bzkvMXQobhMwL99Uz6l
-	 x2WHIHvGG6Fbnt4crc3Oty4K0E4AMeCBRv7ovQYhyA3eq9WgMpgTXy6v9SgqPPI1zD
-	 M/VQoKLwPoFk09jp6KqP0ZSt6zic+vtGUv34Jsbg=
+	by mail.kernel.org (Postfix) with ESMTP id 14A2120748
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 18:07:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="P4/pJzfh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbgARSFe (ORCPT
+        id S1726935AbgARSHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 13:05:34 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:50843 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726490AbgARSFe (ORCPT
+        Sat, 18 Jan 2020 13:07:01 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:39730 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726490AbgARSHA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 13:05:34 -0500
-Received: by mail-wm1-f65.google.com with SMTP id a5so10471436wmb.0;
-        Sat, 18 Jan 2020 10:05:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jd8LOECtGgkjQMzMELux70cWFLm7vLIXL4uMj5c+Mc4=;
-        b=ppRY61cluOh/i7kCa+pc0aMlJG19WXrLn2uCj6i+5EZVSAF6ZLoXNZcXUrDyjKOGFz
-         166xcAlAeR7kqtUslev2cUmUa8m8JUYidG1OMCEPi23dhmWMKSJW1kneupbMv0xSiwk3
-         fULR8JHaIuedXStAENnQ06JcCrsSf+mDPfNpYsIVuB32EmJkQQ6AHJLsQRKXiwLWd09Z
-         8Bu0Piw3OS5xZ0ZflhV2d1syR8QMmHlu8JxW+zIeTRJZ9amLpzouiABWf9oMCaO8zP6c
-         s9hqOSkf9MCFRIuOkJNDfHvJ11gTdin0JifzToRmOOaEWIFeDPH/fucm0uhHP/M7Peb2
-         Xo6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jd8LOECtGgkjQMzMELux70cWFLm7vLIXL4uMj5c+Mc4=;
-        b=fFQRCXFTDs3e4Y1MxvOSDgdS7bYpv5+lgfiwmsUWJu7YWycP353b2ysBJ/F0PKiGlJ
-         WDIZA/hXw8SkkfC/CnHzWfUYFR8nAMxgPU446bwphjrS/r8+2dslROFmODaZXvxo4SGt
-         hGLanWsZYw0IjPg8nsyD1VLYXfh/35+NPDwdnEv12dnYHyHznJUlNQllsNPecCGbZldY
-         g1YE6lm44RNE0h7cFf+33FgRfWwZ6NnLxXZjNrGb5U6dcuhcujgorKNwBnnJ3ulz4FHf
-         n02cuOWzy/OUZBgmpJz4Cd9BOeuGJGJRUB+AAV8QMra0ON/nVFG4LRyDUPRuC8GDIhba
-         eXAA==
-X-Gm-Message-State: APjAAAVsg5jbLChs1ELvXpHdTQ1gf92fzV4ENHOp87IeLEr+mF8FB0cB
-        fMmN5iOjRBwaTtxwS12b+9Q=
-X-Google-Smtp-Source: APXvYqzfI4zJxPwtRvelSofy/IzZhjx9TxcmrGiih2eflAykds6fE9KLWGTshxHOAke+7NS3pGL7rQ==
-X-Received: by 2002:a7b:c389:: with SMTP id s9mr10277060wmj.7.1579370731944;
-        Sat, 18 Jan 2020 10:05:31 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id m10sm39740892wrx.19.2020.01.18.10.05.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Jan 2020 10:05:31 -0800 (PST)
-Date:   Sat, 18 Jan 2020 19:05:29 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Vince Weaver <vincent.weaver@maine.edu>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable kernel team <stable@vger.kernel.org>
-Subject: [PATCH, v5.4] perf: Correctly handle failed perf_get_aux_event()
-Message-ID: <20200118180529.GA70028@gmail.com>
-References: <alpine.DEB.2.21.2001021349390.11372@macbook-air>
- <alpine.DEB.2.21.2001021418590.11372@macbook-air>
- <20200106120338.GC9630@lakrids.cambridge.arm.com>
- <alpine.DEB.2.21.2001061307460.24675@macbook-air>
- <alpine.DEB.2.21.2001161144590.29041@macbook-air>
+        Sat, 18 Jan 2020 13:07:00 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00II3IWl131777;
+        Sat, 18 Jan 2020 18:06:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=RUMWuHIuYnvZA0LwP+zxBuE0/DCOWdUGFyUQQD5rKQA=;
+ b=P4/pJzfhEdJDU7JJZOE10GaVmE6eLwEi8LK1DG8FjjJVxysF8jrUWnQ7L1faMJnXpQYu
+ QdVKcKqZdYVG1+zt/xo1sv2OYXwNzwcR/c605UNRaoD8VCq5rrHE4K33hvgpKE84o5yT
+ x1IefSONdkDUiREXVYEvQsRMXYawt7sxXDTkbgUEsJ58fdjlg4vH7XgVuzogbJfOsXuf
+ w7bEJ3wauliuLHHX7JSobJ21oGHcGFGPmZBBEyJEZex/SXv528ptBIiAesi7F6/rHnlX
+ LiYEX/ZkFBL/DvEuaHTmY5azWGkIXJwRw8BbhPC12Vr4lE8u2mWoAjlIQwcPV978OtwZ FQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2xkseu1qv8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 18 Jan 2020 18:06:36 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00II3u0D024002;
+        Sat, 18 Jan 2020 18:06:36 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2xksc41da6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 18 Jan 2020 18:06:36 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00II6W91026232;
+        Sat, 18 Jan 2020 18:06:32 GMT
+Received: from [192.168.86.20] (/69.181.241.203)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sat, 18 Jan 2020 10:06:32 -0800
+Subject: Re: [PATCH v2] drivers: soc: ti: knav_qmss_queue: Pass lockdep
+ expression to RCU lists
+To:     Amol Grover <frextrite@gmail.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Olof Johansson <olof@lixom.net>
+Cc:     arm@kernel.org, soc@kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>
+References: <20200118042433.4968-1-frextrite@gmail.com>
+From:   santosh.shilimkar@oracle.com
+Organization: Oracle Corporation
+Message-ID: <c58b6751-7502-fad4-e087-9f0bb744ebb9@oracle.com>
+Date:   Sat, 18 Jan 2020 10:06:30 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.2001161144590.29041@macbook-air>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200118042433.4968-1-frextrite@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9504 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001180149
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9504 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001180149
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-* Vince Weaver <vincent.weaver@maine.edu> wrote:
-
-> On Mon, 6 Jan 2020, Vince Weaver wrote:
+On 1/17/20 8:24 PM, Amol Grover wrote:
+> inst->handles is traversed using list_for_each_entry_rcu
+> outside an RCU read-side critical section but under the protection
+> of knav_dev_lock.
 > 
-> > On Mon, 6 Jan 2020, Mark Rutland wrote:
-> > 
-> > > On Thu, Jan 02, 2020 at 02:22:47PM -0500, Vince Weaver wrote:
-> > > > On Thu, 2 Jan 2020, Vince Weaver wrote:
-> > > > 
-> > > Vince, does the below (untested) patch work for you?
-> > 
-> > 
-> > yes, this patch fixes things for me.
-> > 
-> > Tested-by: Vince Weaver <vincent.weaver@maine.edu>
-> > 
+> Hence, add corresponding lockdep expression to silence false-positive
+> lockdep warnings, and harden RCU lists.
 > 
-> is this patch going to make it upstream?  It's a fairly major correctness 
-> bug with perf_event_open().
+> Add macro for the corresponding lockdep expression.
+> 
+> Signed-off-by: Amol Grover <frextrite@gmail.com>
+> ---
+> v2:
+> - Remove rcu_read_lock_held() from lockdep expression since it is
+>    implicitly checked for.
+>
+Thanks.
+Acked-by: Santosh Shilimkar <ssantosh@kernel.org>
 
-I just sent it to Linus.
-
-In hindsight this should have been marked Cc: stable for v5.4 - we should 
-forward it to Greg once Linus has pulled it:
-
-   da9ec3d3dd0f: ("perf: Correctly handle failed perf_get_aux_event()")
-
-
-Note that in the v5.4 cherry-pick there's a conflict due to interaction 
-with another recent commit - I've attached the ported fix against v5.4, 
-but have only test built it.
-
-Thanks,
-
-	Ingo
-
-==============>
-From 703595681c934d2a88a91e8a41f7f63eeb1573e0 Mon Sep 17 00:00:00 2001
-From: Ingo Molnar <mingo@kernel.org>
-Date: Sat, 18 Jan 2020 19:03:55 +0100
-Subject: [PATCH] perf: Correctly handle failed perf_get_aux_event()
-
-Vince reports a worrying issue:
-
-| so I was tracking down some odd behavior in the perf_fuzzer which turns
-| out to be because perf_even_open() sometimes returns 0 (indicating a file
-| descriptor of 0) even though as far as I can tell stdin is still open.
-
-... and further the cause:
-
-| error is triggered if aux_sample_size has non-zero value.
-|
-| seems to be this line in kernel/events/core.c:
-|
-| if (perf_need_aux_event(event) && !perf_get_aux_event(event, group_leader))
-|                goto err_locked;
-|
-| (note, err is never set)
-
-This seems to be a thinko in commit:
-
-  ab43762ef010967e ("perf: Allow normal events to output AUX data")
-
-... and we should probably return -EINVAL here, as this should only
-happen when the new event is mis-configured or does not have a
-compatible aux_event group leader.
-
-Fixes: ab43762ef010967e ("perf: Allow normal events to output AUX data")
-Reported-by: Vince Weaver <vincent.weaver@maine.edu>
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Tested-by: Vince Weaver <vincent.weaver@maine.edu>
-(cherry picked from commit da9ec3d3dd0f1240a48920be063448a2242dbd90)
----
- kernel/events/core.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 00a014670ed0..291fe3e2165f 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -11184,8 +11184,10 @@ SYSCALL_DEFINE5(perf_event_open,
- 		}
- 	}
- 
--	if (event->attr.aux_output && !perf_get_aux_event(event, group_leader))
-+	if (event->attr.aux_output && !perf_get_aux_event(event, group_leader)) {
-+		err = -EINVAL;
- 		goto err_locked;
-+	}
- 
- 	/*
- 	 * Must be under the same ctx::mutex as perf_install_in_context(),
+>   drivers/soc/ti/knav_qmss_queue.c | 7 +++++--
+>   1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/soc/ti/knav_qmss_queue.c b/drivers/soc/ti/knav_qmss_queue.c
+> index 1ccc9064e1eb..37f3db6c041c 100644
+> --- a/drivers/soc/ti/knav_qmss_queue.c
+> +++ b/drivers/soc/ti/knav_qmss_queue.c
+> @@ -25,6 +25,8 @@
+>   
+>   static struct knav_device *kdev;
+>   static DEFINE_MUTEX(knav_dev_lock);
+> +#define knav_dev_lock_held() \
+> +	lockdep_is_held(&knav_dev_lock)
+>   
+>   /* Queue manager register indices in DTS */
+>   #define KNAV_QUEUE_PEEK_REG_INDEX	0
+> @@ -52,8 +54,9 @@ static DEFINE_MUTEX(knav_dev_lock);
+>   #define knav_queue_idx_to_inst(kdev, idx)			\
+>   	(kdev->instances + (idx << kdev->inst_shift))
+>   
+> -#define for_each_handle_rcu(qh, inst)			\
+> -	list_for_each_entry_rcu(qh, &inst->handles, list)
+> +#define for_each_handle_rcu(qh, inst)				\
+> +	list_for_each_entry_rcu(qh, &inst->handles, list,	\
+> +				knav_dev_lock_held())
+>   
+>   #define for_each_instance(idx, inst, kdev)		\
+>   	for (idx = 0, inst = kdev->instances;		\
+> 
