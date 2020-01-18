@@ -2,244 +2,150 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A261FC33CB1
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 11:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8903EC33CB7
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 11:29:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C5B024690
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 11:23:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="LhZ/51kN"
+	by mail.kernel.org (Postfix) with ESMTP id 6020324694
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 11:29:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579346952;
+	bh=D8x+g+unQ8xBuwJgPT/oCsHR7+dsGc9bZHovonk0mNo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=MxoIwJNBBi7FxEytH39LperzLjCK7UyQojLBgSQHhRW07EFX0CcX/lFDaEuJBohnm
+	 vJ7QZxg3V6Rehm7zb0l/0JCkX3knHZW3QyDZDE5Yt63s+Ic3USfa/zdPyMfmXDKFj0
+	 Wrg64DKtPug5uIo/OBF1e07IvOyMVor+bxb/oReE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728760AbgARLXR (ORCPT
+        id S1727123AbgARL3L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 06:23:17 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:58728 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727071AbgARLXR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 06:23:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=gHOn1x5kWgpscXIClSnxXt3MgjXYwlXWukmSRM8KTug=; b=LhZ/51kNSVRqZWWGaNO7KdPj2
-        HKOKHcBcrHc5pLnkmfOH9JhOuKPaRL9fmD489WvBF/Rg0j4LZl3tcUevj9yXyD9EM76R4zvGuZ0A6
-        hyAwcCIxdXqKfFiaNDoFxahygFLv5bY5wcu5Vb+3rnFoJwKmJJa/KpwEeAAxPyAXW0Uu+ZMmf3Ud5
-        NYX1UnWvFY/3d+gJZ9+7FVgr1AugVE8UP8zfqJh699nDOGkbSMp4eiWj3emImJE6PHB4jfG+84Pjo
-        IdGAHbl9jhpGxdO1OU3tsrFO9Q4tJUfOL9slkDGepc1RSIpsuy0Xz2+m80jjS8bF66a4kfVLfW2MS
-        Q+dCR7Rog==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:39958)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1ismC4-0002GV-Dx; Sat, 18 Jan 2020 11:23:08 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1ismBv-0000px-2P; Sat, 18 Jan 2020 11:22:59 +0000
-Date:   Sat, 18 Jan 2020 11:22:59 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Andre Przywara <andre.przywara@arm.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-kernel@vger.kernel.org,
-        Robert Hancock <hancock@sedsystems.ca>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 07/14] net: axienet: Fix SGMII support
-Message-ID: <20200118112258.GT25745@shell.armlinux.org.uk>
-References: <20200110115415.75683-1-andre.przywara@arm.com>
- <20200110115415.75683-8-andre.przywara@arm.com>
- <20200110140415.GE19739@lunn.ch>
- <20200110142038.2ed094ba@donnerap.cambridge.arm.com>
- <20200110150409.GD25745@shell.armlinux.org.uk>
- <20200110152215.GF25745@shell.armlinux.org.uk>
- <20200110170457.GH25745@shell.armlinux.org.uk>
+        Sat, 18 Jan 2020 06:29:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45556 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727033AbgARL3L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jan 2020 06:29:11 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37B0F24690;
+        Sat, 18 Jan 2020 11:29:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579346950;
+        bh=D8x+g+unQ8xBuwJgPT/oCsHR7+dsGc9bZHovonk0mNo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Jxc4Izx3rLBVGIqHKSFZ/VaLeRokaFHkHuFG+PFLz/cfYs0Jk3jSnvMjYq2HgFCl2
+         4eFvcvqlfcrCavpKfr6mecy55lyYOH6WD+KIPq+VcG4YLCZ5wMujGOIzszeZTTFDM8
+         WLhaabbzboOtLcluufTtvS7Ah11zkYr3TZaNdvdM=
+Date:   Sat, 18 Jan 2020 11:29:06 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     "Hennerich, Michael" <Michael.Hennerich@analog.com>
+Cc:     "Bia, Beniamin" <Beniamin.Bia@analog.com>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "biabeniamin@outlook.com" <biabeniamin@outlook.com>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>
+Subject: Re: [PATCH] iio: frequency: adf4371: Fix divide by zero exception
+ bug
+Message-ID: <20200118112906.0ad6dd6b@archlinux>
+In-Reply-To: <BN6PR03MB25966D74469371C11AFC4E4C8E340@BN6PR03MB2596.namprd03.prod.outlook.com>
+References: <20200107131559.17772-1-beniamin.bia@analog.com>
+        <20200111110848.7c45a4f3@archlinux>
+        <BN6PR03MB25966D74469371C11AFC4E4C8E340@BN6PR03MB2596.namprd03.prod.outlook.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200110170457.GH25745@shell.armlinux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 05:04:57PM +0000, Russell King - ARM Linux admin wrote:
-> Maybe something like the below will help?
-> 
-> Basically, use phylink_mii_pcs_get_state() instead of
-> axienet_mac_pcs_get_state(), and setup lp->phylink_config.pcs_mii
-> to point at the MII bus, and lp->phylink_config.pcs_mii_addr to
-> access the internal PHY (as per C_PHYADDR parameter.)
-> 
-> You may have some fuzz (with gnu patch) while trying to apply this,
-> as you won't have the context for the first and last hunks in this
-> patch.
-> 
-> This will probably not be the final version of the patch anyway;
-> there's some possibility to pull some of the functionality out of
-> phylib into a more general library which would avoid some of the
-> functional duplication.
+On Tue, 14 Jan 2020 16:19:28 +0000
+"Hennerich, Michael" <Michael.Hennerich@analog.com> wrote:
 
-Hi Andre,
+> > -----Original Message-----
+> > From: Jonathan Cameron <jic23@kernel.org>
+> > Sent: Samstag, 11. Januar 2020 12:09
+> > To: Bia, Beniamin <Beniamin.Bia@analog.com>
+> > Cc: lars@metafoo.de; Hennerich, Michael <Michael.Hennerich@analog.com>;
+> > pmeerw@pmeerw.net; linux-iio@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; biabeniamin@outlook.com; knaack.h@gmx.de
+> > Subject: Re: [PATCH] iio: frequency: adf4371: Fix divide by zero exception bug
+> > 
+> > On Tue, 7 Jan 2020 15:15:59 +0200
+> > Beniamin Bia <beniamin.bia@analog.com> wrote:
+> >   
+> > > From: Michael Hennerich <michael.hennerich@analog.com>
+> > >
+> > > During initialization adf4371_pll_fract_n_get_rate() is called on all
+> > > output channels to determine if the device was setup. In this case
+> > > mod2 is zero which can cause a divide by zero exception.
+> > > Return before that can happen.  
+> > I'm confused by this description vs the code.
+> > 
+> > As far as I can see fract_n_get_rate is only called on a sysfs read of the
+> > frequency.  
+> 
+> That's not the case. The failure mechanism comes via adf4371_channel_config().
+> It calls adf4371_pll_fract_n_get_rate() prior adf4371_set_freq() which initializes 
+> st->mod2 via adf4371_pll_fract_n_compute(). This only happens the first time 
+> during probe and setup. So the solution was to return 0 if st->mod2 == 0.
 
-Did you have a chance to see whether this helps?
+Not in mainline it doesn't.   I took a look at the ADI git hub and I see it does
+there.  I think we are missing a precursor patch.
 
-Russell.
+Probably this one from blame...
+
+https://github.com/analogdevicesinc/linux/commit/c8e6b341abf749f78e00326cb92b365d90d9de1f
+
+Jonathan
 
 > 
-> diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
-> index 75a74a16dc3d..44198fdb3c01 100644
-> --- a/drivers/net/phy/phylink.c
-> +++ b/drivers/net/phy/phylink.c
-> @@ -2073,4 +2073,105 @@ phy_interface_t phylink_select_serdes_interface(unsigned long *interfaces,
->  }
->  EXPORT_SYMBOL_GPL(phylink_select_serdes_interface);
->  
-> +static void phylink_decode_advertisement(struct phylink_link_state *state)
-> +{
-> +	__ETHTOOL_DECLARE_LINK_MODE_MASK(u);
-> +
-> +	linkmode_and(u, state->lp_advertising, state->advertising);
-> +
-> +	if (linkmode_test_bit(ETHTOOL_LINK_MODE_Pause_BIT, u)) {
-> +		state->pause = MLO_PAUSE_RX | MLO_PAUSE_TX;
-> +	} else if (linkmode_test_bit(ETHTOOL_LINK_MODE_Asym_Pause_BIT, u)) {
-> +		if (linkmode_test_bit(ETHTOOL_LINK_MODE_Pause_BIT,
-> +				      state->lp_advertising))
-> +			state->pause |= MLO_PAUSE_TX;
-> +		if (linkmode_test_bit(ETHTOOL_LINK_MODE_Pause_BIT,
-> +				      state->advertising))
-> +			state->pause |= MLO_PAUSE_RX;
-> +	}
-> +
-> +	if (linkmode_test_bit(ETHTOOL_LINK_MODE_2500baseX_Full_BIT, u)) {
-> +		state->speed = SPEED_2500;
-> +		state->duplex = DUPLEX_FULL;
-> +	} else if (linkmode_test_bit(ETHTOOL_LINK_MODE_1000baseX_Full_BIT, u)) {
-> +		state->pause = SPEED_1000;
-> +		state->duplex = DUPLEX_FULL;
-> +	} else {
-> +		state->link = false;
-> +	}
-> +}
-> +
-> +void phylink_mii_pcs_get_state(struct phylink_config *config,
-> +			       struct phylink_link_state *state)
-> +{
-> +	struct mii_bus *bus = config->pcs_mii;
-> +	int addr = config->pcs_mii_addr;
-> +	int bmsr, lpa;
-> +
-> +	bmsr = mdiobus_read(bus, addr, MII_BMSR);
-> +	lpa = mdiobus_read(bus, addr, MII_LPA);
-> +	if (bmsr < 0 || lpa < 0) {
-> +		state->link = false;
-> +		return;
-> +	}
-> +
-> +	state->link = !!(bmsr & BMSR_LSTATUS);
-> +	state->an_complete = !!(bmsr & BMSR_ANEGCOMPLETE);
-> +
-> +	switch (state->interface) {
-> +	case PHY_INTERFACE_MODE_1000BASEX:
-> +		if (lpa & LPA_1000XFULL)
-> +			linkmode_set_bit(ETHTOOL_LINK_MODE_1000baseX_Full_BIT,
-> +					 state->lp_advertising);
-> +		goto lpa_8023z;
-> +
-> +	case PHY_INTERFACE_MODE_2500BASEX:
-> +		if (lpa & LPA_1000XFULL)
-> +			linkmode_set_bit(ETHTOOL_LINK_MODE_2500baseX_Full_BIT,
-> +					 state->lp_advertising);
-> +	lpa_8023z:
-> +		if (lpa & LPA_1000XPAUSE)
-> +			linkmode_set_bit(ETHTOOL_LINK_MODE_Pause_BIT,
-> +					 state->lp_advertising);
-> +		if (lpa & LPA_1000XPAUSE_ASYM)
-> +			linkmode_set_bit(ETHTOOL_LINK_MODE_Asym_Pause_BIT,
-> +					 state->lp_advertising);
-> +		if (lpa & LPA_LPACK)
-> +			linkmode_set_bit(ETHTOOL_LINK_MODE_Autoneg_BIT,
-> +					 state->lp_advertising);
-> +		phylink_decode_advertisement(state);
-> +		break;
-> +
-> +	case PHY_INTERFACE_MODE_SGMII:
-> +		switch (lpa & 0x8c00) {
-> +		case 0x8000:
-> +			state->speed = SPEED_10;
-> +			break;
-> +		case 0x8400:
-> +			state->speed = SPEED_100;
-> +			break;
-> +		case 0x8800:
-> +			state->speed = SPEED_1000;
-> +			break;
-> +		default:
-> +			state->link = false;
-> +			break;
-> +		}
-> +		switch (lpa & 0x9000) {
-> +		case 0x9000:
-> +			state->duplex = DUPLEX_FULL;
-> +			break;
-> +		case 0x8000:
-> +			state->duplex = DUPLEX_HALF;
-> +			break;
-> +		}
-> +		break;
-> +
-> +	default:
-> +		state->link = false;
-> +		break;
-> +	}
-> +}
-> +EXPORT_SYMBOL_GPL(phylink_mii_pcs_get_state);
-> +
->  MODULE_LICENSE("GPL v2");
-> diff --git a/include/linux/phylink.h b/include/linux/phylink.h
-> index 4ea76e083847..cf0fa39b4b21 100644
-> --- a/include/linux/phylink.h
-> +++ b/include/linux/phylink.h
-> @@ -65,6 +65,9 @@ enum phylink_op_type {
->  struct phylink_config {
->  	struct device *dev;
->  	enum phylink_op_type type;
-> +
-> +	struct mii_bus *pcs_mii;
-> +	int pcs_mii_addr;
->  };
->  
->  /**
-> @@ -292,4 +295,7 @@ phy_interface_t phylink_select_serdes_interface(unsigned long *interfaces,
->  						const phy_interface_t *pref,
->  						size_t nprefs);
->  
-> +void phylink_mii_pcs_get_state(struct phylink_config *config,
-> +			       struct phylink_link_state *state);
-> +
->  #endif
+> -Michael
 > 
-> -- 
-> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-> According to speedtest.net: 11.9Mbps down 500kbps up
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> > 
+> > mod2 is set when fract_n_compute is called in the relevant set_freq calls.
+> > This seems to occur on a sysfs set frequency call.
+> > 
+> > So the issue here is that a sysfs read before a write of the frequency will cause a
+> > div zero?  If so, is there a sane set of initial values we can put in mod2 and
+> > friends before exposing them via the device register?
+> > 
+> > If mod2==0 is a valid value and indicates for example that the channel is turned
+> > off, then the description should make that clear.
+> > 
+> > Jonathan
+> >   
+> > >
+> > > Fixes: 7f699bd149134 ("iio: frequency: adf4371: Add support for
+> > > ADF4371 PLL")
+> > > Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+> > > Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
+> > > ---
+> > >  drivers/iio/frequency/adf4371.c | 3 +++
+> > >  1 file changed, 3 insertions(+)
+> > >
+> > > diff --git a/drivers/iio/frequency/adf4371.c
+> > > b/drivers/iio/frequency/adf4371.c index e2a599b912e5..c21462238314
+> > > 100644
+> > > --- a/drivers/iio/frequency/adf4371.c
+> > > +++ b/drivers/iio/frequency/adf4371.c
+> > > @@ -191,6 +191,9 @@ static unsigned long long  
+> > adf4371_pll_fract_n_get_rate(struct adf4371_state *st,  
+> > >  	unsigned long long val, tmp;
+> > >  	unsigned int ref_div_sel;
+> > >
+> > > +	if (st->mod2 == 0)
+> > > +		return 0;
+> > > +
+> > >  	val = (((u64)st->integer * ADF4371_MODULUS1) + st->fract1) * st-
+> > >fpfd;
+> > >  	tmp = (u64)st->fract2 * st->fpfd;
+> > >  	do_div(tmp, st->mod2);  
 > 
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
