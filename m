@@ -2,147 +2,131 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 212F3C33CB7
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 09:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA6AC33CB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 09:28:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB6282468C
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 09:19:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r5Osyi+5"
+	by mail.kernel.org (Postfix) with ESMTP id 6B82E24693
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 09:28:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbgARJT1 (ORCPT
+        id S1726999AbgARJ2r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 04:19:27 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:32973 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726602AbgARJT0 (ORCPT
+        Sat, 18 Jan 2020 04:28:47 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:47614 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726811AbgARJ2r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 04:19:26 -0500
-Received: by mail-qt1-f196.google.com with SMTP id d5so23784845qto.0
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jan 2020 01:19:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=z7V6E0TDaKraOo9dTt7jhc6TLdoMlUlp/uyIAC+ZTcI=;
-        b=r5Osyi+5S7I7ieJbRoinobkAaTllvHQz6AIaLQiYADUQlxAhGTpSFct10Rbv/qtQPE
-         XeQcvA/TRKGpFLwD5gVeUdVLPE5SFwnaYYXJ09z9LSlZ97mXMTSlaIdv3kesQ6zD7o+C
-         Iqilhd9nvoenPTM0cdlDK9qXTOP7vvglydomTJkikqduytMLU706Obi4jiFowybtbViF
-         93GtIc0xCZ7BAhaBAOlOKgSo77ZOJ/h/4ntx0g05wHFtFKwmmVfV8Rw7DmZrwumRApv6
-         2JN3gsKiuVf1UXzL0PyPH/jOaFC4nlRGCFG5rOk/4sjfNUfOFYWVYrG8VrH/xB4a1Yc6
-         0VkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=z7V6E0TDaKraOo9dTt7jhc6TLdoMlUlp/uyIAC+ZTcI=;
-        b=qgr0cYbmEBmgLmtkuWZcbHkHUFbMOrxyjeJHN8TCXuDPJzQu94gnMw832DuR0m1rnY
-         ICjIzrjou/V2B+0UbLEMjOurTuu1XAeaEwZ5bua8iUJuDLNARC4HUF/qDfmh0+DMeIjq
-         k5nvrxaev9cf7npc6bo+Wy0EYVN1256cfoNUWR1HNNWtWfq9o0yHWFkqUKfQAUQZfOJZ
-         7URKLIoPEqwcfXVfkqsPXNiz3+E8fKXQUcR8yj2/oA9u+tPWpJhxhp4AcWZ4GdeUQT2H
-         kgLNneTb/284U3ePET3EN7o8kBIhx7ct4wd0xyPlW+t5EDs0pj7ogHc1fwb9TZzcvvbB
-         +jFw==
-X-Gm-Message-State: APjAAAWgSVvO2jp9kAFEBYGZKYDfx5OsxlNOSwYZcjSOpWGlejKzn/5i
-        9EAKj/W1/9rWGAr74mHpWld/JyeBOKPbDXVRIxYegQ==
-X-Google-Smtp-Source: APXvYqySu7QSqXqUmm7G/+6P0CGxNfV2qDMzuVTo/0NaUw5yglIxMT0d3on5SEunQ2/Vpk1yqcdlYTa4b1UTbvflla4=
-X-Received: by 2002:aed:3b6e:: with SMTP id q43mr11061878qte.57.1579339163936;
- Sat, 18 Jan 2020 01:19:23 -0800 (PST)
+        Sat, 18 Jan 2020 04:28:47 -0500
+Received: from dread.disaster.area (pa49-181-172-170.pa.nsw.optusnet.com.au [49.181.172.170])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 96D4543FD14;
+        Sat, 18 Jan 2020 20:28:39 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1iskPG-0003Oh-RX; Sat, 18 Jan 2020 20:28:38 +1100
+Date:   Sat, 18 Jan 2020 20:28:38 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Waiman Long <longman@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-ext4@vger.kernel.org, cluster-devel@redhat.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: RFC: hold i_rwsem until aio completes
+Message-ID: <20200118092838.GB9407@dread.disaster.area>
+References: <20200114161225.309792-1-hch@lst.de>
 MIME-Version: 1.0
-References: <20200116012321.26254-1-keescook@chromium.org> <20200116012321.26254-6-keescook@chromium.org>
- <CACT4Y+batRaj_PaDnfzLjpLDOCChhpiayKeab-rNLx5LAj1sSQ@mail.gmail.com>
- <202001161548.9E126B774F@keescook> <CACT4Y+Z9o4B37-sNU2582FBv_2+evgyKVbVo-OAufLrsney=wA@mail.gmail.com>
- <202001171317.5E3C106F@keescook>
-In-Reply-To: <202001171317.5E3C106F@keescook>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Sat, 18 Jan 2020 10:19:12 +0100
-Message-ID: <CACT4Y+ansnGK3woNmiZurj1eGfygbz7anxRqYe_VPs-_HE2u6g@mail.gmail.com>
-Subject: Re: [PATCH v3 5/6] kasan: Unset panic_on_warn before calling panic()
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Elena Petrova <lenaptr@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-hardening@lists.openwall.com,
-        syzkaller <syzkaller@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200114161225.309792-1-hch@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
+        a=IIEU8dkfCNxGYurWsojP/w==:117 a=IIEU8dkfCNxGYurWsojP/w==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=Jdjhy38mL1oA:10
+        a=7-415B0cAAAA:8 a=ITVTHrnrj4Og1yiqg0wA:9 a=CjuIK1q_8ugA:10
+        a=igBNqPyMv6gA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 10:20 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Fri, Jan 17, 2020 at 10:54:36AM +0100, Dmitry Vyukov wrote:
-> > On Fri, Jan 17, 2020 at 12:49 AM Kees Cook <keescook@chromium.org> wrote:
-> > >
-> > > On Thu, Jan 16, 2020 at 06:23:01AM +0100, Dmitry Vyukov wrote:
-> > > > On Thu, Jan 16, 2020 at 2:24 AM Kees Cook <keescook@chromium.org> wrote:
-> > > > >
-> > > > > As done in the full WARN() handler, panic_on_warn needs to be cleared
-> > > > > before calling panic() to avoid recursive panics.
-> > > > >
-> > > > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > > > > ---
-> > > > >  mm/kasan/report.c | 10 +++++++++-
-> > > > >  1 file changed, 9 insertions(+), 1 deletion(-)
-> > > > >
-> > > > > diff --git a/mm/kasan/report.c b/mm/kasan/report.c
-> > > > > index 621782100eaa..844554e78893 100644
-> > > > > --- a/mm/kasan/report.c
-> > > > > +++ b/mm/kasan/report.c
-> > > > > @@ -92,8 +92,16 @@ static void end_report(unsigned long *flags)
-> > > > >         pr_err("==================================================================\n");
-> > > > >         add_taint(TAINT_BAD_PAGE, LOCKDEP_NOW_UNRELIABLE);
-> > > > >         spin_unlock_irqrestore(&report_lock, *flags);
-> > > > > -       if (panic_on_warn)
-> > > > > +       if (panic_on_warn) {
-> > > > > +               /*
-> > > > > +                * This thread may hit another WARN() in the panic path.
-> > > > > +                * Resetting this prevents additional WARN() from panicking the
-> > > > > +                * system on this thread.  Other threads are blocked by the
-> > > > > +                * panic_mutex in panic().
-> > > >
-> > > > I don't understand part about other threads.
-> > > > Other threads are not necessary inside of panic(). And in fact since
-> > > > we reset panic_on_warn, they will not get there even if they should.
-> > > > If I am reading this correctly, once one thread prints a warning and
-> > > > is going to panic, other threads may now print infinite amounts of
-> > > > warning and proceed past them freely. Why is this the behavior we
-> > > > want?
-> > >
-> > > AIUI, the issue is the current thread hitting another WARN and blocking
-> > > on trying to call panic again. WARNs encountered during the execution of
-> > > panic() need to not attempt to call panic() again.
-> >
-> > Yes, but the variable is global and affects other threads and the
-> > comment talks about other threads, and that's the part I am confused
-> > about (for both comment wording and the actual behavior). For the
-> > "same thread hitting another warning" case we need a per-task flag or
-> > something.
->
-> This is duplicating the common panic-on-warn logic (see the generic bug
-> code), so I'd like to just have the same behavior between the three
-> implementations of panic-on-warn (generic bug, kasan, ubsan), and then
-> work to merge them into a common handler, and then perhaps fix the
-> details of the behavior. I think it's more correct to allow the panicing
-> thread to complete than to care about what the other threads are doing.
-> Right now, a WARN within the panic code will either a) hang the machine,
-> or b) not panic, allowing the rest of the threads to continue, maybe
-> then hitting other WARNs and hanging. The generic bug code does not
-> suffer from this.
+On Tue, Jan 14, 2020 at 05:12:13PM +0100, Christoph Hellwig wrote:
+> Hi all,
+> 
+> Asynchronous read/write operations currently use a rather magic locking
+> scheme, were access to file data is normally protected using a rw_semaphore,
+> but if we are doing aio where the syscall returns to userspace before the
+> I/O has completed we also use an atomic_t to track the outstanding aio
+> ops.  This scheme has lead to lots of subtle bugs in file systems where
+> didn't wait to the count to reach zero, and due to its adhoc nature also
+> means we have to serialize direct I/O writes that are smaller than the
+> file system block size.
+> 
+> All this is solved by releasing i_rwsem only when the I/O has actually
+> completed, but doings so is against to mantras of Linux locking primites:
+> 
+>  (1) no unlocking by another process than the one that acquired it
+>  (2) no return to userspace with locks held
+> 
+> It actually happens we have various places that work around this.  A few
+> callers do non-owner unlocks of rwsems, which are pretty nasty for
+> PREEMPT_RT as the owner tracking doesn't work.  OTOH the file system
+> freeze code has both problems and works around them a little better,
+> although in a somewhat awkward way, in that it releases the lockdep
+> object when returning to userspace, and reacquires it when done, and
+> also clears the rwsem owner when returning to userspace, and then sets
+> the new onwer before unlocking.
+> 
+> This series tries to follow that scheme, also it doesn't fully work.  The
+> first issue is that the rwsem code has a bug where it doesn't properly
+> handle clearing the owner.  This series has a patch to fix that, but it
+> is ugly and might not be correct so some help is needed.  Second I/O
+> completions often come from interrupt context, which means the re-acquire
+> is recorded as from irq context, leading to warnings about incorrect
+> contexts.  I wonder if we could just have a bit in lockdep that says
+> returning to userspace is ok for this particular lock?  That would also
+> clean up the fsfreeze situation a lot.
+> 
+> Let me know what you think of all this.  While I converted all the iomap
+> using file systems only XFS is actually tested.
 
-I see. Then:
+I think it's pretty gross, actually. It  makes the same mistake made
+with locking in the old direct IO code - it encodes specific lock
+operations via flags into random locations in the DIO path. This is
+a very slippery slope, and IMO it is an layering violation to encode
+specific filesystem locking smeantics into a layer that is supposed
+to be generic and completely filesystem agnostic. i.e.  this
+mechanism breaks if a filesystem moves to a different type of lock
+(e.g. range locks), and history teaches us that we'll end up making
+a horrible, unmaintainable mess to support different locking
+mechanisms and contexts.
 
-Acked-by: Dmitry Vyukov <dvyukov@google.com>
+I think that we should be moving to a model where the filesystem
+provides an unlock method in the iomap operations structure, and if
+the method is present in iomap_dio_complete() it gets called for the
+filesystem to unlock the inode at the appropriate point. This also
+allows the filesystem to provide a different method for read or
+write unlock, depending on what type of lock it held at submission.
+This gets rid of the need for the iomap code to know what type of
+lock the caller holds, too.
+
+This way we always have a consistent point in the AIO/DIO completion
+model where the inode gets unlocked, it only gets called for the IO
+contexts where the filesystem wants/needs unlock on IO competion
+semantics, and it's completely filesystem IO-lock implementation
+agnostic. And for filesystems that use the inode i_rwsem, we can
+just provide simple helper functions for their read/write unlock
+methods.
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
