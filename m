@@ -5,65 +5,69 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 043F8C33CB7
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 16:27:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDE8C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 16:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEF192469C
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 16:27:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D88E62469E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 16:32:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N1x6Nbh3"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ex9jv8/J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbgARQ1y (ORCPT
+        id S1726765AbgARQcI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 11:27:54 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33847 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726377AbgARQ1x (ORCPT
+        Sat, 18 Jan 2020 11:32:08 -0500
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:38800 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726413AbgARQcH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 11:27:53 -0500
-Received: by mail-wr1-f68.google.com with SMTP id t2so25489941wrr.1;
-        Sat, 18 Jan 2020 08:27:52 -0800 (PST)
+        Sat, 18 Jan 2020 11:32:07 -0500
+Received: by mail-yw1-f65.google.com with SMTP id 10so15841033ywv.5;
+        Sat, 18 Jan 2020 08:32:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=xvyJZhjuEWk4u+yzEdqQAWT6LP9lOv1PQ2DraIeccKk=;
-        b=N1x6Nbh3OhmkDZXDXDeime7JMrIjFiEOFhRN15H8BCZ0Vq4ZOL01bCuDdPlFMQboDc
-         wNJsbTRdaohlpWnJ5k7ukKpaNhbQY18oYqEesbN5KTPYWfjUPOR3CCWY0IsweJbHkVvt
-         lBL11LT94IOYcX76nVwxcvC1BG4kOm8hAUQULoo9X8V+MHx3uXDnwvuez8xbKms61Sc4
-         NyGCL26FCPAGygatFekP9QMn0LxvOC0iIozpEzqYTNjXu05RlWV2LHmSdcrethI/wJYH
-         aM3KzF4p4qck8SDM3un/adaFufGklDqygn8BUZISaLvGZqRLFMtUotvUWh0J0f9qTSuD
-         DWcw==
+        bh=0hwMyrYJwbFmWaPuS3q0otAF1/PqypL0XBe4hF/vqqA=;
+        b=Ex9jv8/JkhJ5IqB4oiK0VaYO3Tmwm47pdvWv1yW9yhyReoaz8hnHKOvDvZT9/ZnOLF
+         +ToEJaAaQ8pgRjUZVfcNhpim0acBuQKuhrEV2e0UZhA9w6juzVNxZAbqmDaz/dl7VnkB
+         0qz6v60Ajh9JK6vRv1PCiUGfsCfzZ1mzc0DSIY4acrQI/GeSoqnzjSIwNyzAQgTBKIe4
+         nIoaCSeHMt2A3EnKIZKuBls+ZNZ/TIaQhWOx1kQPTxez4c3dJ0ZDmjrYUUWEDLd0A31J
+         CS0HnJYsBowE8Be4lD6HshM6pzBP52eswqpi6nEH/czNhTwElQpETLxqwZ4opcp7d/I6
+         y9Nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=xvyJZhjuEWk4u+yzEdqQAWT6LP9lOv1PQ2DraIeccKk=;
-        b=DLSOhWqb53tdjepz/PfbZqxZA8G1mbz/A3VTnEz7uQLfIJmF9IJ0A+o1kOdqipqQhV
-         874I2bj8LP21PmvGvDwRjla3PdHpyQ5AMDfvLsDhIvsdz/8rh2ImgBJY35zPa4C8tYeh
-         56QP38RI2XHHmjCiayQ9QSWmZYl6nAF8D9xYYWA4JWzRpOqsppA75BEyNJPfojCfXfUx
-         01lOWVFoiviOE3G4bOb8Ov7xXM1qYW6IbJGxxaYR8gteJ/t/vusX78y4IfQ2gMC5dHWq
-         HQaLCmLMrNfBC8pFlzEVQ7ahKcsdFYTG2o1GWG6JsS0MjmeBUYJfE+1iW4WuMMSoxtor
-         nxgg==
-X-Gm-Message-State: APjAAAVuNEAFJ5vMvFzE/F+p67VkuW4SJMuaYHtnKLRdrnxlMp+GqQ6H
-        z97H9ShvAPVHg+TkcoVQFuLNj/3pyxw=
-X-Google-Smtp-Source: APXvYqz3DT77tuB0Y8CR0Y/go8fzOV5YjVFGqP+cMmn+tU0j1sdTtph1GauXmRFjqTm3XX1HhR5ESQ==
-X-Received: by 2002:a5d:50cf:: with SMTP id f15mr8761158wrt.381.1579364871435;
-        Sat, 18 Jan 2020 08:27:51 -0800 (PST)
-Received: from localhost.localdomain (bzq-109-66-195-69.red.bezeqint.net. [109.66.195.69])
-        by smtp.googlemail.com with ESMTPSA id c4sm14509849wml.7.2020.01.18.08.27.50
+        bh=0hwMyrYJwbFmWaPuS3q0otAF1/PqypL0XBe4hF/vqqA=;
+        b=riA1z/Nt8zMQ29oOUaMefkVFjn4y8WD/YHvO5nFC0omX+6q6GyiSns8pF1ZQHmBuww
+         6AOwXmim6A5SVHD5piTM1B6rphMmGaRkkHBuc9TH/Msi7TAu62m3U6V+O0BkkgJQd9YQ
+         EM9dP4GXb8EmRmCD061J7vLgzf8+8mbw5A+KaexzbQC/F1dfFvQMuKTIs3fXqOKHBceB
+         GuVEoUcYAA4w89FAv/oKLGnQJU/XjxkEN7TmrA26i9PCeQJyBDBk4SM2vcvsyhiAOsos
+         qHhjCJWHr+r1G4mxmmNBzPFKo3NiwpW45cKk0jhG0ikQ5VTNYiKGO6+kzEb+8T7lR/C7
+         DtWQ==
+X-Gm-Message-State: APjAAAXcseYuuNpvWJEpzduUMD2MN3lhoXk/eOTRf2R9JWNDnV8gtL3N
+        gWb7Tk5pUeghhBu3iXYZL7c=
+X-Google-Smtp-Source: APXvYqxq1WnW2Zpt2zxGvKiCv4IauzETlp7PrE/Dg60vUeUsbAYO4tUDHRgwJzuQo9Q/fo16HkNhyw==
+X-Received: by 2002:a81:1ac6:: with SMTP id a189mr32727599ywa.85.1579365126643;
+        Sat, 18 Jan 2020 08:32:06 -0800 (PST)
+Received: from newpc-fedora.timestop.xyz (cpe-74-132-3-215.kya.res.rr.com. [74.132.3.215])
+        by smtp.gmail.com with ESMTPSA id a23sm13277949ywa.32.2020.01.18.08.32.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Jan 2020 08:27:50 -0800 (PST)
-From:   Carmeli Tamir <carmeli.tamir@gmail.com>
-Cc:     carmeli.tamir@gmail.com, Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] fs/binfmt_script: Use existing functions to clarify the code
-Date:   Sat, 18 Jan 2020 11:27:22 -0500
-Message-Id: <20200118162723.21463-1-carmeli.tamir@gmail.com>
-X-Mailer: git-send-email 2.19.1
+        Sat, 18 Jan 2020 08:32:06 -0800 (PST)
+From:   Dillon Brock <dab9861@gmail.com>
+Cc:     Dillon Brock <dab9861@gmail.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Niranjana Vishwanathapura <niranjana.vishwanathapura@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] IB/opa_vnic: Spelling correction of 'erorr' to 'error'
+Date:   Sat, 18 Jan 2020 11:25:42 -0500
+Message-Id: <20200118162542.15188-1-dab9861@gmail.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 To:     unlisted-recipients:; (no To-header on input)
@@ -72,43 +76,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch applies the  recently defined 'spacetab', 'next_non_spacetab'
-and 'next_terminator' functions to more places in the code, improving 
-its readability and reducing code duplication.
+Correcting a minor spelling mistake in the comments.
 
-Signed-off-by: Carmeli Tamir <carmeli.tamir@gmail.com>
+Signed-off-by: Dillon Brock <dab9861@gmail.com>
 ---
- fs/binfmt_script.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/infiniband/ulp/opa_vnic/opa_vnic_encap.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/binfmt_script.c b/fs/binfmt_script.c
-index e9e6a6f4a35f..fc1c4a214690 100644
---- a/fs/binfmt_script.c
-+++ b/fs/binfmt_script.c
-@@ -88,19 +88,18 @@ static int load_script(struct linux_binprm *bprm)
- 	*cp = '\0';
- 	while (cp > bprm->buf) {
- 		cp--;
--		if ((*cp == ' ') || (*cp == '\t'))
-+		if (spacetab(*cp))
- 			*cp = '\0';
- 		else
- 			break;
- 	}
--	for (cp = bprm->buf+2; (*cp == ' ') || (*cp == '\t'); cp++);
-+	cp = next_non_spacetab(bprm->buf+2, buf_end);
- 	if (*cp == '\0')
- 		return -ENOEXEC; /* No interpreter name found */
- 	i_name = cp;
- 	i_arg = NULL;
--	for ( ; *cp && (*cp != ' ') && (*cp != '\t'); cp++)
--		/* nothing */ ;
--	while ((*cp == ' ') || (*cp == '\t'))
-+	cp = next_terminator(cp, buf_end);
-+	while (spacetab(*cp))
- 		*cp++ = '\0';
- 	if (*cp)
- 		i_arg = cp;
+diff --git a/drivers/infiniband/ulp/opa_vnic/opa_vnic_encap.h b/drivers/infiniband/ulp/opa_vnic/opa_vnic_encap.h
+index e4c9bf2ef7e2..4480092c68e0 100644
+--- a/drivers/infiniband/ulp/opa_vnic/opa_vnic_encap.h
++++ b/drivers/infiniband/ulp/opa_vnic/opa_vnic_encap.h
+@@ -358,7 +358,7 @@ struct opa_veswport_summary_counters {
+  * @rx_drop_state: received packets in non-forwarding port state
+  * @rx_logic: other receive errors
+  *
+- * All the above are counters of corresponding erorr conditions.
++ * All the above are counters of corresponding error conditions.
+  */
+ struct opa_veswport_error_counters {
+ 	__be16  vp_instance;
 -- 
-2.19.1
+2.21.1
 
