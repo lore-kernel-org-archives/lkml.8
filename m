@@ -2,247 +2,129 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-13.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85595C33CB7
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 14:41:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D1C6C33CB7
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 14:49:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6552424696
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 14:41:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AECA2469E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 14:49:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbgAROlT (ORCPT
+        id S1726442AbgAROtd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 09:41:19 -0500
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:35120 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726359AbgAROlT (ORCPT
+        Sat, 18 Jan 2020 09:49:33 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:44893 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726208AbgAROtd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 09:41:19 -0500
-Received: by mail-yb1-f194.google.com with SMTP id q190so7574642ybq.2;
-        Sat, 18 Jan 2020 06:41:18 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uZ9iq/bu+yq+FuI7V62nZkVFQemM11DhL70hTsJlYjw=;
-        b=VPYjjiT+JkyyhtlQlh0wc7a7izSbvYLq8owaGT9iwzAr4cEPrFRcxo3xnaSaPvZoQN
-         erJqNtqVepuxQX2HjKZopOo2xPEyNLC6HyOp46TWnic+qvyMdKP6CuMbKBCQvQ/aVsMO
-         /z9MPjFgen4EXnPJS3+f1KzMaApC+KBsjLO8EQlEExsaXjfFZ08X5v/kqbTGGQsI3ee1
-         m4mpvV24Y4L9B0GqwmziMJwOfQAHJlk73D1i9w+HIa7JNzz++HSoMV1dsK4TvQNzawvj
-         OyIdvSFTJaKKITi9yi1u2l8lbOXLjE8dHUFIVh3jSxaDB08ZXn1US67uHdC3Gm90fQ69
-         XI7g==
-X-Gm-Message-State: APjAAAW67NM1WGMu9nyU0947UvCzDuznmjBWftKHxk3i+FK5Dmg58LPU
-        O4LbgrXr6TDdnNfBh32pwYkLyYPInAyreUxlJOPvl5l2
-X-Google-Smtp-Source: APXvYqxKgQUdNvtWlKdZzdvS2aewjVMJbQuA/mzykriUn5BS06w8fhsTDJhVBVNh4kw6BRZ8iEBexF5VMbLxiJYOP7M=
-X-Received: by 2002:a25:5555:: with SMTP id j82mr35927628ybb.376.1579358478273;
- Sat, 18 Jan 2020 06:41:18 -0800 (PST)
+        Sat, 18 Jan 2020 09:49:33 -0500
+Received: from ip5f5bf7da.dynamic.kabel-deutschland.de ([95.91.247.218] helo=localhost.localdomain)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1ispPm-0000RI-OH; Sat, 18 Jan 2020 14:49:30 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>,
+        Serge Hallyn <serge@hallyn.com>, stable@vger.kernel.org
+Subject: [GIT PULL] thread fixes v5.5-rc7
+Date:   Sat, 18 Jan 2020 15:49:14 +0100
+Message-Id: <20200118144914.25322-1-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-References: <20200114122343.163685-1-jiaxun.yang@flygoat.com>
-In-Reply-To: <20200114122343.163685-1-jiaxun.yang@flygoat.com>
-From:   =?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <f4bug@amsat.org>
-Date:   Sat, 18 Jan 2020 15:41:07 +0100
-Message-ID: <CAAdtpL4a8GJOKT5uqGpd=zPRCOZHcQBOW18frkww0L8e04nC8A@mail.gmail.com>
-Subject: Re: [PATCH] MIPS: Introduce aligned IO memory operations
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        Huacai Chen <chenhc@lemote.com>,
-        Paul Burton <paul.burton@mips.com>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jiaxun,
+Hey Linus,
 
-On Tue, Jan 14, 2020 at 1:24 PM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
->
-> Some platforms, such as Loongson64 or QEMU/KVM, don't support unaligned
-> instructions like lwl or lwr in IO memory access. However, our current
-> IO memcpy/memset is wired to the generic implementation, which leads
-> to a fatal result.
+/* Summary */
+Here is an urgent fix for ptrace_may_access() permission checking.
 
-Do you have a handy reproducer to try with QEMU/KVM?
+Commit 69f594a38967 ("ptrace: do not audit capability check when outputing
+/proc/pid/stat") introduced the ability to opt out of audit
+messages for accesses to various proc files since they are not violations of
+policy. While doing so it switched the check from ns_capable() to
+has_ns_capability{_noaudit}(). That means it switched from checking the
+subjective credentials (ktask->cred) of the task to using the objective
+credentials (ktask->real_cred). This is appears to be wrong. ptrace_has_cap()
+is currently only used in ptrace_may_access() And is used to check whether the
+calling task (subject) has the CAP_SYS_PTRACE capability in the provided user
+namespace to operate on the target task (object).  According to the cred.h
+comments this means the subjective credentials of the calling task need to be
+used.
 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> ---
->  arch/mips/Kconfig          |  4 ++
->  arch/mips/include/asm/io.h | 10 ++++
->  arch/mips/kernel/Makefile  |  2 +-
->  arch/mips/kernel/io.c      | 98 ++++++++++++++++++++++++++++++++++++++
->  4 files changed, 113 insertions(+), 1 deletion(-)
->  create mode 100644 arch/mips/kernel/io.c
->
-> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-> index 8b0cd692a43f..15a331aa23a2 100644
-> --- a/arch/mips/Kconfig
-> +++ b/arch/mips/Kconfig
-> @@ -1450,6 +1450,7 @@ config CPU_LOONGSON64
->         select CPU_SUPPORTS_HIGHMEM
->         select CPU_SUPPORTS_HUGEPAGES
->         select CPU_SUPPORTS_MSA
-> +       select CPU_NEEDS_ALIGNED_IO
->         select CPU_HAS_LOAD_STORE_LR
->         select CPU_DIEI_BROKEN if !LOONGSON3_ENHANCEMENT
->         select CPU_MIPSR2_IRQ_VI
-> @@ -2598,6 +2599,9 @@ config CPU_HAS_LOAD_STORE_LR
->           LWL, LWR, SWL, SWR (Load/store word left/right).
->           LDL, LDR, SDL, SDR (Load/store doubleword left/right, for 64bit systems).
->
-> +config CPU_NEEDS_ALIGNED_IO
-> +       bool
-> +
->  #
->  # Vectored interrupt mode is an R2 feature
->  #
-> diff --git a/arch/mips/include/asm/io.h b/arch/mips/include/asm/io.h
-> index 3f6ce74335b4..3b0eb4941f23 100644
-> --- a/arch/mips/include/asm/io.h
-> +++ b/arch/mips/include/asm/io.h
-> @@ -577,6 +577,15 @@ BUILDSTRING(l, u32)
->  BUILDSTRING(q, u64)
->  #endif
->
-> +#if defined(CONFIG_CPU_NEEDS_ALIGNED_IO)
-> +extern void __memcpy_fromio(void *, const volatile void __iomem *, size_t);
-> +extern void __memcpy_toio(volatile void __iomem *, const void *, size_t);
-> +extern void __memset_io(volatile void __iomem *, int, size_t);
-> +
-> +#define memset_io(c, v, l)     __memset_io((c), (v), (l))
-> +#define memcpy_fromio(a, c, l) __memcpy_fromio((a), (c), (l))
-> +#define memcpy_toio(c, a, l)   __memcpy_toio((c), (a), (l))
-> +#else
->  static inline void memset_io(volatile void __iomem *addr, unsigned char val, int count)
->  {
->         memset((void __force *) addr, val, count);
-> @@ -589,6 +598,7 @@ static inline void memcpy_toio(volatile void __iomem *dst, const void *src, int
->  {
->         memcpy((void __force *) dst, src, count);
->  }
-> +#endif
->
->  /*
->   * The caches on some architectures aren't dma-coherent and have need to
-> diff --git a/arch/mips/kernel/Makefile b/arch/mips/kernel/Makefile
-> index d6e97df51cfb..b07b97b9385e 100644
-> --- a/arch/mips/kernel/Makefile
-> +++ b/arch/mips/kernel/Makefile
-> @@ -8,7 +8,7 @@ extra-y         := head.o vmlinux.lds
->  obj-y          += cmpxchg.o cpu-probe.o branch.o elf.o entry.o genex.o idle.o irq.o \
->                    process.o prom.o ptrace.o reset.o setup.o signal.o \
->                    syscall.o time.o topology.o traps.o unaligned.o watch.o \
-> -                  vdso.o cacheinfo.o
-> +                  vdso.o cacheinfo.o io.o
->
->  ifdef CONFIG_FUNCTION_TRACER
->  CFLAGS_REMOVE_ftrace.o = -pg
-> diff --git a/arch/mips/kernel/io.c b/arch/mips/kernel/io.c
-> new file mode 100644
-> index 000000000000..ca105aa76d4d
-> --- /dev/null
-> +++ b/arch/mips/kernel/io.c
-> @@ -0,0 +1,98 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +
-> +#include <linux/export.h>
-> +#include <linux/types.h>
-> +#include <linux/io.h>
-> +
-> +#if defined(CONFIG_CPU_NEEDS_ALIGNED_IO)
-> +
-> +#if defined(CONFIG_64BIT)
-> +#define IO_LONG_READ   __raw_readq
-> +#define IO_LONG_WRITE  __raw_writeq
-> +#define IO_LONG_SIZE   8
-> +#else
-> +#define IO_LONG_READ   __raw_readl
-> +#define IO_LONG_WRITE  __raw_writel
-> +#define IO_LONG_SIZE   4
-> +#endif
-> +
-> +void __memcpy_fromio(void *to, const volatile void __iomem *from, size_t count)
-> +{
-> +       while (count && !IS_ALIGNED((unsigned long)from, IO_LONG_SIZE) &&
-> +               !IS_ALIGNED((unsigned long)to, IO_LONG_SIZE)) {
-> +               *(u8 *)to = __raw_readb(from);
-> +               from++;
-> +               to++;
-> +               count--;
-> +       }
-> +
-> +       while (count >= IO_LONG_SIZE) {
-> +               *(unsigned long *)to = IO_LONG_READ(from);
-> +               from += IO_LONG_SIZE;
-> +               to += IO_LONG_SIZE;
-> +               count -= IO_LONG_SIZE;
-> +       }
-> +
-> +       while (count) {
-> +               *(u8 *)to = __raw_readb(from);
-> +               from++;
-> +               to++;
-> +               count--;
-> +       }
-> +}
-> +EXPORT_SYMBOL(__memcpy_fromio);
-> +
-> +void __memcpy_toio(volatile void __iomem *to, const void *from, size_t count)
-> +{
-> +       while (count && !IS_ALIGNED((unsigned long)from, IO_LONG_SIZE) &&
-> +               !IS_ALIGNED((unsigned long)to, IO_LONG_SIZE)) {
-> +               __raw_writeb(*(u8 *)from, to);
-> +               from++;
-> +               to++;
-> +               count--;
-> +       }
-> +
-> +       while (count >= IO_LONG_SIZE) {
-> +               IO_LONG_WRITE(*(unsigned long *)from, to);
-> +               from += IO_LONG_SIZE;
-> +               to += IO_LONG_SIZE;
-> +               count -= IO_LONG_SIZE;
-> +       }
-> +
-> +       while (count) {
-> +               __raw_writeb(*(u8 *)from, to);
-> +               from++;
-> +               to++;
-> +               count--;
-> +       }
-> +}
-> +EXPORT_SYMBOL(__memcpy_toio);
-> +
-> +void __memset_io(volatile void __iomem *dst, int c, size_t count)
-> +{
-> +       unsigned long lc = (u8)c;
-> +       int i;
-> +
-> +       for (i = 1; i < IO_LONG_SIZE; i++)
-> +               lc |= (u8)c << (i * BITS_PER_BYTE);
-> +
-> +       while (count && !IS_ALIGNED((unsigned long)dst, IO_LONG_SIZE)) {
-> +               __raw_writeb((u8)c, dst);
-> +               dst++;
-> +               count--;
-> +       }
-> +
-> +       while (count >= IO_LONG_SIZE) {
-> +               IO_LONG_WRITE(lc, dst);
-> +               dst += IO_LONG_SIZE;
-> +               count -= IO_LONG_SIZE;
-> +       }
-> +
-> +       while (count) {
-> +               __raw_writeb(c, dst);
-> +               dst++;
-> +               count--;
-> +       }
-> +}
-> +EXPORT_SYMBOL(__memset_io);
-> +#endif
-> --
-> 2.24.1
->
+With this pr we switch ptrace_has_cap() to use security_capable() and thus back
+to using the subjective credentials.
+
+As one example where this might be particularly problematic, Jann pointed out
+that in combination with the upcoming IORING_OP_OPENAT{2} feature, this bug
+might allow unprivileged users to bypass the capability checks while
+asynchronously opening files like /proc/*/mem, because the capability checks
+for this would be performed against kernel credentials.
+
+To illustrate on the former point about this being exploitable: When io_uring
+creates a new context it records the subjective credentials of the caller.
+Later on, when it starts to do work it creates a kernel thread and registers a
+callback. The callback runs with kernel creds for ktask->real_cred and
+ktask->cred. To prevent this from becoming a full-blown 0-day io_uring will
+call override_cred() and override ktask->cred with the subjective credentials
+of the creator of the io_uring instance. With ptrace_has_cap() currently
+looking at ktask->real_cred this override will be ineffective and the caller
+will be able to open arbitray proc files as mentioned above.
+Luckily, this is currently not exploitable but will turn into a 0-day once
+IORING_OP_OPENAT{2} land in v5.6. Let's fix it now.
+
+To minimize potential regressions I successfully ran the criu testsuite. criu
+makes heavy use of ptrace() and extensively hits ptrace_may_access() codepaths
+and has a good change of detecting any regressions.
+Additionally, I succesfully ran the ptrace and seccomp kernel tests.
+
+/* Testing */
+All patches have seen exposure in linux-next and are based on v5.5-rc6.
+As mentioned above, the criu test-suite which is one of the test-suits make
+massive use of ptrace and hitting ptrace_may_access() codepaths successfully
+passed on a kernel with this fix:
+################## ALL TEST(S) PASSED (TOTAL 178/SKIPPED 16) ###################
+I've posted the full test-log at:
+https://gitlab.com/snippets/1931214
+Additionally, I succesfully ran the ptrace and seccomp kernel tests.
+We also will add a regression test once IO_URING_OPENAT{2} has landed for v5.6
+since this gives us a really easy test.
+
+/* Conflicts */
+At the time of creating this PR no merge conflicts were reported from
+linux-next.
+
+The following changes since commit b3a987b0264d3ddbb24293ebff10eddfc472f653:
+
+  Linux 5.5-rc6 (2020-01-12 16:55:08 -0800)
+
+are available in the Git repository at:
+
+  git@gitolite.kernel.org:pub/scm/linux/kernel/git/brauner/linux tags/for-linus-2020-01-18
+
+for you to fetch changes up to 6b3ad6649a4c75504edeba242d3fd36b3096a57f:
+
+  ptrace: reintroduce usage of subjective credentials in ptrace_has_cap() (2020-01-18 13:51:39 +0100)
+
+Please consider pulling these changes from the signed for-linus-2020-01-18 tag.
+
+Thanks!
+Christian
+
+----------------------------------------------------------------
+for-linus-2020-01-18
+
+----------------------------------------------------------------
+Christian Brauner (1):
+      ptrace: reintroduce usage of subjective credentials in ptrace_has_cap()
+
+ kernel/ptrace.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
