@@ -2,71 +2,90 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
+X-Spam-Status: No, score=-12.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0953C32771
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 22:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE52CC32771
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 22:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AA4C2469D
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 22:05:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579385105;
-	bh=Ki1bVuApY32Y91Oiad9vnAjok3ZarWryih/b+RfdvzY=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=mN1IpJsq3RGuF6rR7CeCVFaAiktreSUi4J5xgVlGhDuhREDv7S3zephDnHU+D71UT
-	 SCFdRdn+wHrRn4Fskwa0bEtz3mPcJ4PuHMniBheyvVBhHf3i/wYi/YHRaKTVGGzpe1
-	 Dpoxk5bz8oc6LP1Fn4ks383f7EoWrqojtIkDHXqU=
+	by mail.kernel.org (Postfix) with ESMTP id B5D0D246A5
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 22:14:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbgARWFE (ORCPT
+        id S1727051AbgARWNQ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 17:05:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39102 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726997AbgARWFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 17:05:04 -0500
-Subject: Re: [git pull] drm fixes for 5.5-rc7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579385103;
-        bh=Ki1bVuApY32Y91Oiad9vnAjok3ZarWryih/b+RfdvzY=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=FBD8dPWfIZKJI5AWG+/xvRsyqq2wSKf+kZ8K1BtDmY+ggM8byC0/7uko0qTZKVKyc
-         8Ls+1r0NOQwTk0ZOs5jDlcVQBL7TDI6cZk4Og6wo77n4Tj21U69sbYZsU4HxW7YTwv
-         BAQ81dIxum90q5L6rAfn5Rd4cI0bzgeLQ2olEis8=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAPM=9tyCmZM2Nzy397APbb9-EcNyC-Bgz4Q_7hTcjaQpX6E1Pw@mail.gmail.com>
-References: <CAPM=9tyCmZM2Nzy397APbb9-EcNyC-Bgz4Q_7hTcjaQpX6E1Pw@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAPM=9tyCmZM2Nzy397APbb9-EcNyC-Bgz4Q_7hTcjaQpX6E1Pw@mail.gmail.com>
-X-PR-Tracked-Remote: git://anongit.freedesktop.org/drm/drm
- tags/drm-fixes-2020-01-19
-X-PR-Tracked-Commit-Id: f66d84c8b4db9a4f77f29e2d8fd521196c879582
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 244dc2689085d7ff478f7b61841e62e59bea4557
-Message-Id: <157938510363.7168.18142518179667876755.pr-tracker-bot@kernel.org>
-Date:   Sat, 18 Jan 2020 22:05:03 +0000
-To:     Dave Airlie <airlied@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        Sat, 18 Jan 2020 17:13:16 -0500
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:59575 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726997AbgARWNP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jan 2020 17:13:15 -0500
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 26821C0002;
+        Sat, 18 Jan 2020 22:13:11 +0000 (UTC)
+Date:   Sat, 18 Jan 2020 23:13:07 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-mtd@lists.infradead.org, Richard Weinberger <richard@nod.at>,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Frieder Schrempf <frieder.schrempf@kontron.de>,
+        linux-kernel@vger.kernel.org
+Subject: [GIT PULL] mtd: Fixes for 5.5-rc7 or final
+Message-ID: <20200118231006.6776f277@xps13>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 19 Jan 2020 07:21:35 +1000:
+Hello Linus,
 
-> git://anongit.freedesktop.org/drm/drm tags/drm-fixes-2020-01-19
+This is hopefully the last 4 MTD fixes that we would like to have in
+v5.5.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/244dc2689085d7ff478f7b61841e62e59bea4557
+Thanks,
+Miquèl
 
-Thank you!
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+The following changes since commit b3a987b0264d3ddbb24293ebff10eddfc472f653:
+
+  Linux 5.5-rc6 (2020-01-12 16:55:08 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git tags/mtd/fixes-for-5.5-rc7
+
+for you to fetch changes up to d70486668cdf51b14a50425ab45fc18677a167b2:
+
+  mtd: rawnand: gpmi: Restore nfc timing setup after suspend/resume (2020-01-17 22:45:09 +0100)
+
+----------------------------------------------------------------
+Raw NAND:
+* GPMI: Fix the suspend/resume
+
+SPI-NOR:
+* Fix quad enable on Spansion like flashes
+* Fix selection of 4-byte addressing opcodes on Spansion
+
+----------------------------------------------------------------
+Esben Haabendal (2):
+      mtd: rawnand: gpmi: Fix suspend/resume problem
+      mtd: rawnand: gpmi: Restore nfc timing setup after suspend/resume
+
+Michael Walle (1):
+      mtd: spi-nor: Fix quad enable for Spansion like flashes
+
+Vignesh Raghavendra (1):
+      mtd: spi-nor: Fix selection of 4-byte addressing opcodes on Spansion
+
+ drivers/mtd/nand/raw/gpmi-nand/gpmi-nand.c | 11 ++++++++++-
+ drivers/mtd/spi-nor/spi-nor.c              |  6 +++---
+ 2 files changed, 13 insertions(+), 4 deletions(-)
