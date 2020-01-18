@@ -2,111 +2,87 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF5BC33CB7
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 15:25:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E60BC33CB7
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 15:28:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F36E0246AB
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 15:25:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0499A2469C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 15:28:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbgARPZK (ORCPT
+        id S1726650AbgARP2q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 10:25:10 -0500
-Received: from mx2.freebsd.org ([96.47.72.81]:23582 "EHLO mx2.freebsd.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726359AbgARPZK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 10:25:10 -0500
-Received: from mx1.freebsd.org (mx1.freebsd.org [IPv6:2610:1c1:1:606c::19:1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client CN "mx1.freebsd.org", Issuer "Let's Encrypt Authority X3" (verified OK))
-        by mx2.freebsd.org (Postfix) with ESMTPS id 9773B7B638;
-        Sat, 18 Jan 2020 15:25:08 +0000 (UTC)
-        (envelope-from manu@FreeBSD.Org)
-Received: from smtp.freebsd.org (smtp.freebsd.org [IPv6:2610:1c1:1:606c::24b:4])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         server-signature RSA-PSS (4096 bits)
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "smtp.freebsd.org", Issuer "Let's Encrypt Authority X3" (verified OK))
-        by mx1.freebsd.org (Postfix) with ESMTPS id 480MF01jhmz44FZ;
-        Sat, 18 Jan 2020 15:25:08 +0000 (UTC)
-        (envelope-from manu@FreeBSD.Org)
-Received: from localhost.localdomain (lfbn-idf2-1-1164-130.w90-92.abo.wanadoo.fr [90.92.223.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: manu)
-        by smtp.freebsd.org (Postfix) with ESMTPSA id 3942E17F81;
-        Sat, 18 Jan 2020 15:25:07 +0000 (UTC)
-        (envelope-from manu@FreeBSD.Org)
-From:   Emmanuel Vadot <manu@FreeBSD.Org>
-To:     mripard@kernel.org, wens@csie.org, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Emmanuel Vadot <manu@freebsd.org>
-Subject: [PATCH v2] arm64: dts: allwinner: a64: Add gpio bank supply for A64-Olinuxino
-Date:   Sat, 18 Jan 2020 16:24:59 +0100
-Message-Id: <20200118152459.17199-1-manu@FreeBSD.Org>
-X-Mailer: git-send-email 2.25.0
+        Sat, 18 Jan 2020 10:28:46 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:49760 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726334AbgARP2q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jan 2020 10:28:46 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1isq1Z-00AxdN-Np; Sat, 18 Jan 2020 15:28:33 +0000
+Date:   Sat, 18 Jan 2020 15:28:33 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        David Laight <david.laight@aculab.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        quae@daurnimator.com, dev@opencontainers.org,
+        containers@lists.linux-foundation.org, libc-alpha@sourceware.org,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] openat2: minor uapi cleanups
+Message-ID: <20200118152833.GS8904@ZenIV.linux.org.uk>
+References: <20200115144831.GJ8904@ZenIV.linux.org.uk>
+ <20200118120800.16358-1-cyphar@cyphar.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200118120800.16358-1-cyphar@cyphar.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Emmanuel Vadot <manu@freebsd.org>
+On Sat, Jan 18, 2020 at 11:07:58PM +1100, Aleksa Sarai wrote:
+> Patch changelog:
+>   v3:
+>    * Merge changes into the original patches to make Al's life easier.
+>      [Al Viro]
+>   v2:
+>    * Add include <linux/types.h> to openat2.h. [Florian Weimer]
+>    * Move OPEN_HOW_SIZE_* constants out of UAPI. [Florian Weimer]
+>    * Switch from __aligned_u64 to __u64 since it isn't necessary.
+>      [David Laight]
+>   v1: <https://lore.kernel.org/lkml/20191219105533.12508-1-cyphar@cyphar.com/>
+> 
+> While openat2(2) is still not yet in Linus's tree, we can take this
+> opportunity to iron out some small warts that weren't noticed earlier:
+> 
+>   * A fix was suggested by Florian Weimer, to separate the openat2
+>     definitions so glibc can use the header directly. I've put the
+>     maintainership under VFS but let me know if you'd prefer it belong
+>     ot the fcntl folks.
+> 
+>   * Having heterogenous field sizes in an extensible struct results in
+>     "padding hole" problems when adding new fields (in addition the
+>     correct error to use for non-zero padding isn't entirely clear ).
+>     The simplest solution is to just copy clone(3)'s model -- always use
+>     u64s. It will waste a little more space in the struct, but it
+>     removes a possible future headache.
+> 
+> This patch is intended to replace the corresponding patches in Al's
+> #work.openat2 tree (and *will not* apply on Linus' tree).
+> 
+> @Al: I will send some additional patches later, but they will require
+>      proper design review since they're ABI-related features (namely,
+> 	 adding a way to check what features a syscall supports as I
+> 	 outlined in my talk here[1]).
 
-Add the regulators for each bank on this boards.
-For VCC-PL only add a comment on what regulator is used. We cannot add
-the property without causing a circular dependency as the PL pins are
-used to talk to the PMIC.
-
-Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
----
-v2:
- - Remove vcc-pl-supply in r_pio as it cause a circular dependency.
-
- .../boot/dts/allwinner/sun50i-a64-olinuxino.dts | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-index 01a9a52edae4..7e71b5b12f98 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-@@ -163,6 +163,17 @@ &ohci1 {
- 	status = "okay";
- };
- 
-+&pio {
-+	vcc-pa-supply = <&reg_dcdc1>;
-+	vcc-pb-supply = <&reg_dcdc1>;
-+	vcc-pc-supply = <&reg_dcdc1>;
-+	vcc-pd-supply = <&reg_dcdc1>;
-+	vcc-pe-supply = <&reg_aldo1>;
-+	vcc-pf-supply = <&reg_dcdc1>;
-+	vcc-pg-supply = <&reg_dldo4>;
-+	vcc-ph-supply = <&reg_dcdc1>;
-+};
-+
- &r_rsb {
- 	status = "okay";
- 
-@@ -175,6 +186,12 @@ axp803: pmic@3a3 {
- 	};
- };
- 
-+/* VCC-PL is powered by aldo2 but we cannot add it as the RSB */
-+/* interface used to talk to the PMIC in on the PL pins */
-+/* &r_pio { */
-+/*	vcc-pl-supply = <&reg_aldo2>; */
-+/* }; */
-+
- #include "axp803.dtsi"
- 
- &ac_power_supply {
--- 
-2.24.1
-
+#work.openat2 updated, #for-next rebuilt and force-pushed.  There's
+a massive update of #work.namei as well, also pushed out; not in
+#for-next yet, will post the patch series for review later today.
