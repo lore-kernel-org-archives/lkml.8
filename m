@@ -2,224 +2,132 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65242C33CB6
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 16:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96263C33CB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 16:38:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D0112469A
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 16:37:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67FE62469A
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 16:38:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e44DH7xc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbgARQhL (ORCPT
+        id S1727061AbgARQib (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 11:37:11 -0500
-Received: from mail-il1-f199.google.com ([209.85.166.199]:36883 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726621AbgARQhL (ORCPT
+        Sat, 18 Jan 2020 11:38:31 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:47040 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726502AbgARQib (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 11:37:11 -0500
-Received: by mail-il1-f199.google.com with SMTP id l13so21557750ilj.4
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jan 2020 08:37:10 -0800 (PST)
+        Sat, 18 Jan 2020 11:38:31 -0500
+Received: by mail-lj1-f196.google.com with SMTP id m26so29567137ljc.13
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jan 2020 08:38:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding;
+        bh=Mnad9Y4HwGYjF8IJLmhlphkK0pEoM05Nxw8nOsHO/Tg=;
+        b=e44DH7xca/38ohHk/5qlbfioHuIIBpjoStmDOqvVefalxjKrHggNWdfKsttz0jO40K
+         z+0sntmbldFzlFgShkicBHEVJIW5Gp30fYg1Qk7rEASmpWWi22IbDvb6YxVk0FDUbFrp
+         h6ZMCfHhz4y65+V2efAPxeJ8GKLoOdGEve5jGRNQqeompkM4fpCHUt+koH1SJgNztXL2
+         CQsgy827zTqKINikGCdObqYgsUpSSwWsUAygUz7i2RY4W4anTx+qu8lQvWthhpEwslud
+         /IbWKRWDQ/csZY+9N7n4O8E3oEt2qGqDKod6n9t6x/8U1pX6gHIbHvURMGiCmJzwN6PB
+         nFtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=mRI7zVK1vmfqHTyGy66NRP+806bcNFmvUGPkslAvTcw=;
-        b=OhkEZtGBw6A6Rjy0IKdn5eEgKrToKKcaiUb2BAcaEa3ea03IPNvdfDSOe3Cx9PnTFy
-         6EFPbKEUO+QoRCjnQQM9QcQA2mQ5MCs5t4RDKYAPzrsBpHcrALpDqTCJFM1jZA/Q9m4k
-         2s7T0JVActIk3ry1hubmycxko2v5c/U71wA+5JTjZQsxoKLQGl41Dtf2Mm0jSKjpqW55
-         OX3QXT8dRO4iOEHgH16WAOzNYb0y/tT6acaaOgLLJxrfP0twPQ9hTyQytOxqcHI4YVG9
-         qxvRZGyJZ4TiYfZuXYy8KluSmJrxp9iPuynSdRzkQ/ZG0VQur9VabZKb3XAOla1epAwt
-         bGMQ==
-X-Gm-Message-State: APjAAAW6RRXh6aYIxP+gNAHtZpr2ZiKR7H+Jar+8A7fICkgh/wonB+P5
-        jWejXfWcXbEwCmaiQuz8qVCJbrHaknO0ifT27LC1avqdFIOE
-X-Google-Smtp-Source: APXvYqxrg1ZfnvKENQ/CVF8gSsJr59ZHo5oF/k5bmdRpEt8E+ufHK1673YpEEEdzd9YjdJWRVAapIu5+BhneDFqCcSmYiirLoSVH
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+        bh=Mnad9Y4HwGYjF8IJLmhlphkK0pEoM05Nxw8nOsHO/Tg=;
+        b=dmcnGKvFkAGIwR7fcwUULTZJ5vWu05aCGn2UvliUCViuzjzA5Lg0InLZnft8V9hpts
+         AmCzqEHJnPk/tT4PhkVA5pSmgYuAzwdxMxLXvFIQ0Af1KC1DzzPZpsAegRjadkUcvxCU
+         8jCF/dWvmTkNyWKQXt0a9N5RTzQ9OnYi1hqdJvz7QYQjc4dk5X4EWqvhCzi6kspbmxFN
+         WazRjR9umE4fBZzuM9QRkU0AyR6+JdtnOvWG1i8C8Ded7AzW6ppqiWjr9qEJNF6tynYy
+         5lYhZknja3gHY5EDB7C+BPz+PwPeDVzLBgzN9SzaYikgvLsKGamOu5P+TKnIkFGHOCeR
+         opvg==
+X-Gm-Message-State: APjAAAU5eox7eJZXIVtYmht3m0dIr5vsvEwrm8aYkgsGTh/7JPS2e+jo
+        uLGp96AlLIO2BA6ulzPmhxhGosMR
+X-Google-Smtp-Source: APXvYqz8Qb7wOprJhJtPJfLGL1HWAnd/h9ic6sr3R1sfH5Ss5H34zRLiKc0Lj4MtPfzfP6Rk+H1pRg==
+X-Received: by 2002:a2e:3a0c:: with SMTP id h12mr8957424lja.200.1579365509032;
+        Sat, 18 Jan 2020 08:38:29 -0800 (PST)
+Received: from [192.168.1.36] (88-114-211-119.elisa-laajakaista.fi. [88.114.211.119])
+        by smtp.gmail.com with ESMTPSA id b17sm14082243ljd.5.2020.01.18.08.38.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 18 Jan 2020 08:38:28 -0800 (PST)
+Subject: Re: [PATCH] firmware_loader: load files from the mount namespace of
+ init
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <bb46ebae-4746-90d9-ec5b-fce4c9328c86@gmail.com>
+ <20200117211419.GA2042215@kroah.com>
+From:   Topi Miettinen <toiwoton@gmail.com>
+Message-ID: <c1a325f1-ad85-11ee-091a-aa179c124eaa@gmail.com>
+Date:   Sat, 18 Jan 2020 18:38:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-Received: by 2002:a6b:6118:: with SMTP id v24mr36068556iob.73.1579365430292;
- Sat, 18 Jan 2020 08:37:10 -0800 (PST)
-Date:   Sat, 18 Jan 2020 08:37:10 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000717523059c6cabc9@google.com>
-Subject: KASAN: slab-out-of-bounds Read in bitmap_ip_gc
-From:   syzbot <syzbot+df0d0f5895ef1f41a65b@syzkaller.appspotmail.com>
-To:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
-        info@metux.net, jeremy@azazel.net, kadlec@netfilter.org,
-        kstewart@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        pablo@netfilter.org, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200117211419.GA2042215@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 17.1.2020 23.14, Greg Kroah-Hartman wrote:
+> On Fri, Jan 17, 2020 at 08:36:13PM +0200, Topi Miettinen wrote:
+>> Hi,
+>>
+>> I have an experimental setup where almost every possible system service
+>> (even early startup ones) runs in separate namespace, using a dedicated,
+>> minimal file system. In process of minimizing the contents of the file
+>> systems with regards to modules and firmware files, I noticed that in my
+>> system, the firmware files are loaded from three different mount namespaces,
+>> those of systemd-udevd, init and systemd-networkd. The logic of the source
+>> namespace is not very clear, it seems to depend on the driver, but the
+>> namespace of the current process is used.
+>>
+>> So, this patch tries to make things a bit clearer and changes the loading of
+>> firmware files only from the mount namespace of init. This may also improve
+>> security, though I think that using firmware files as attack vector could be
+>> too impractical anyway.
+> 
+> I like this, but:
+> 
+>> Later, it might make sense to make the mount namespace configurable, for
+>> example with a new file in
+>> /proc/sys/kernel/firmware_config/. That would allow a dedicated file system
+>> only for firmware files and those need not be present anywhere else. This
+>> configurability would make more sense if made also for kernel modules and
+>> /sbin/modprobe. Modules are already loaded from init namespace
+>> (usermodehelper uses kthreadd namespace) except when directly loaded by
+>> systemd-udevd.
+> 
+> I think you answered your question of why firmware is loaded from the
+> namespace of systemd-udevd at times, it happens due to a module being
+> asked to be loaded which then called out and asked for firmware as part
+> of its probe process.
 
-syzbot found the following crash on:
+r8169 requests firmware only when opening the device, so the firmware is 
+loaded from systemd-networkd namespace.
 
-HEAD commit:    56f200c7 netns: Constify exported functions
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=178b74c9e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=66d8660c57ff3c98
-dashboard link: https://syzkaller.appspot.com/bug?extid=df0d0f5895ef1f41a65b
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17d78966e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1375b1d1e00000
+> Now saying that the firmware load namespace is going to be tied always
+> to the modprobe namespace is problematic, as we can't guarantee that
+> will always happen for all bus and driver types.
+> 
+> So resetting this all back to the init namespace seems to make sense to
+> me, and odds are it will not break anything.
+> 
+> But, as you are adding a new firmware feature, any chance you can write
+> an additional test to the firmware self-tests so that we can verify that
+> this really is working the way you are saying it does, so we can trust
+> it and verify it doesn't break in the future?
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+df0d0f5895ef1f41a65b@syzkaller.appspotmail.com
+OK, sent v2 of the patch with the tests. They assume a writable 
+/lib/firmware, is that OK? Maybe I should change that to overmount it 
+temporarily with a writable tmpfs instead.
 
-==================================================================
-BUG: KASAN: slab-out-of-bounds in test_bit include/asm-generic/bitops/instrumented-non-atomic.h:110 [inline]
-BUG: KASAN: slab-out-of-bounds in bitmap_ip_gc_test net/netfilter/ipset/ip_set_bitmap_ip.c:76 [inline]
-BUG: KASAN: slab-out-of-bounds in bitmap_ip_gc+0x100/0x4f0 net/netfilter/ipset/ip_set_bitmap_gen.h:277
-Read of size 8 at addr ffff8880987e3280 by task syz-executor158/9973
-
-CPU: 1 PID: 9973 Comm: syz-executor158 Not tainted 5.5.0-rc5-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x197/0x210 lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
- __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
- kasan_report+0x12/0x20 mm/kasan/common.c:639
- check_memory_region_inline mm/kasan/generic.c:185 [inline]
- check_memory_region+0x134/0x1a0 mm/kasan/generic.c:192
- __kasan_check_read+0x11/0x20 mm/kasan/common.c:95
- test_bit include/asm-generic/bitops/instrumented-non-atomic.h:110 [inline]
- bitmap_ip_gc_test net/netfilter/ipset/ip_set_bitmap_ip.c:76 [inline]
- bitmap_ip_gc+0x100/0x4f0 net/netfilter/ipset/ip_set_bitmap_gen.h:277
- call_timer_fn+0x1ac/0x780 kernel/time/timer.c:1404
- expire_timers kernel/time/timer.c:1449 [inline]
- __run_timers kernel/time/timer.c:1773 [inline]
- __run_timers kernel/time/timer.c:1740 [inline]
- run_timer_softirq+0x6c3/0x1790 kernel/time/timer.c:1786
- __do_softirq+0x262/0x98c kernel/softirq.c:292
- invoke_softirq kernel/softirq.c:373 [inline]
- irq_exit+0x19b/0x1e0 kernel/softirq.c:413
- exiting_irq arch/x86/include/asm/apic.h:536 [inline]
- smp_apic_timer_interrupt+0x1a3/0x610 arch/x86/kernel/apic/apic.c:1137
- apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
- </IRQ>
-RIP: 0010:get_lock_parent_ip include/linux/ftrace.h:796 [inline]
-RIP: 0010:preempt_latency_start kernel/sched/core.c:3765 [inline]
-RIP: 0010:preempt_latency_start kernel/sched/core.c:3762 [inline]
-RIP: 0010:preempt_count_add+0x7a/0x160 kernel/sched/core.c:3790
-Code: b6 c0 3d f4 00 00 00 7f 7f 65 8b 05 a8 73 b1 7e 25 ff ff ff 7f 39 c3 74 05 5b 41 5c 5d c3 48 8b 5d 08 48 89 df e8 36 ba 0a 00 <85> c0 75 39 65 4c 8b 24 25 c0 1e 02 00 49 8d bc 24 58 12 00 00 48
-RSP: 0000:ffffc900036b7b50 EFLAGS: 00000293 ORIG_RAX: ffffffffffffff13
-RAX: 0000000000000000 RBX: ffffffff81a1bea3 RCX: 1ffffffff16cec9c
-RDX: 0000000000000000 RSI: ffffffff81a1be96 RDI: ffffffff81a1bea3
-RBP: ffffc900036b7b60 R08: ffff888093e3c440 R09: ffffed1015d2703d
-R10: ffffed1015d2703c R11: ffff8880ae9381e3 R12: 0000000000004d00
-R13: 0000000000000134 R14: 0000000000000000 R15: 0000000000000000
- kmap_atomic include/linux/highmem.h:93 [inline]
- clear_user_highpage include/linux/highmem.h:160 [inline]
- clear_subpage+0x23/0x110 mm/memory.c:4673
- process_huge_page mm/memory.c:4627 [inline]
- clear_huge_page+0xb5/0x3e0 mm/memory.c:4687
- __do_huge_pmd_anonymous_page mm/huge_memory.c:596 [inline]
- do_huge_pmd_anonymous_page+0x6a6/0x1a50 mm/huge_memory.c:764
- create_huge_pmd mm/memory.c:3888 [inline]
- __handle_mm_fault+0x3145/0x3cc0 mm/memory.c:4098
- handle_mm_fault+0x3b2/0xa50 mm/memory.c:4164
- do_user_addr_fault arch/x86/mm/fault.c:1441 [inline]
- __do_page_fault+0x536/0xd80 arch/x86/mm/fault.c:1506
- do_page_fault+0x38/0x590 arch/x86/mm/fault.c:1530
- page_fault+0x39/0x40 arch/x86/entry/entry_64.S:1203
-RIP: 0033:0x400713
-Code: 03 00 00 00 be 10 00 00 00 bf 29 00 00 00 e8 24 0d 04 00 48 83 f8 ff 74 07 48 89 05 87 a9 2c 00 48 b8 62 69 74 6d 61 70 3a 69 <48> c7 04 25 00 03 00 20 00 00 00 00 c7 04 25 08 03 00 20 00 00 00
-RSP: 002b:00007ffee78cceb0 EFLAGS: 00010213
-RAX: 693a70616d746962 RBX: 0000000000000000 RCX: 0000000000441439
-RDX: 000000000000000c RSI: 0000000000000003 RDI: 0000000000000010
-RBP: 000000000001ba88 R08: 0000000000000004 R09: 00000000004002c8
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402260
-R13: 00000000004022f0 R14: 0000000000000000 R15: 0000000000000000
-
-Allocated by task 9616:
- save_stack+0x23/0x90 mm/kasan/common.c:72
- set_track mm/kasan/common.c:80 [inline]
- __kasan_kmalloc mm/kasan/common.c:513 [inline]
- __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:486
- kasan_kmalloc+0x9/0x10 mm/kasan/common.c:527
- __do_kmalloc mm/slab.c:3656 [inline]
- __kmalloc+0x163/0x770 mm/slab.c:3665
- kmalloc include/linux/slab.h:561 [inline]
- kzalloc include/linux/slab.h:670 [inline]
- ip_set_alloc+0x38/0x5e net/netfilter/ipset/ip_set_core.c:255
- init_map_ip net/netfilter/ipset/ip_set_bitmap_ip.c:223 [inline]
- bitmap_ip_create+0x6ec/0xc20 net/netfilter/ipset/ip_set_bitmap_ip.c:327
- ip_set_create+0x6f1/0x1500 net/netfilter/ipset/ip_set_core.c:1111
- nfnetlink_rcv_msg+0xcf2/0xfb0 net/netfilter/nfnetlink.c:229
- netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
- nfnetlink_rcv+0x1ba/0x460 net/netfilter/nfnetlink.c:563
- netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
- netlink_unicast+0x59e/0x7e0 net/netlink/af_netlink.c:1328
- netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xd7/0x130 net/socket.c:672
- ____sys_sendmsg+0x753/0x880 net/socket.c:2343
- ___sys_sendmsg+0x100/0x170 net/socket.c:2397
- __sys_sendmsg+0x105/0x1d0 net/socket.c:2430
- __do_sys_sendmsg net/socket.c:2439 [inline]
- __se_sys_sendmsg net/socket.c:2437 [inline]
- __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2437
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 9337:
- save_stack+0x23/0x90 mm/kasan/common.c:72
- set_track mm/kasan/common.c:80 [inline]
- kasan_set_free_info mm/kasan/common.c:335 [inline]
- __kasan_slab_free+0x102/0x150 mm/kasan/common.c:474
- kasan_slab_free+0xe/0x10 mm/kasan/common.c:483
- __cache_free mm/slab.c:3426 [inline]
- kfree+0x10a/0x2c0 mm/slab.c:3757
- tomoyo_check_open_permission+0x19e/0x3e0 security/tomoyo/file.c:786
- tomoyo_file_open security/tomoyo/tomoyo.c:319 [inline]
- tomoyo_file_open+0xa9/0xd0 security/tomoyo/tomoyo.c:314
- security_file_open+0x71/0x300 security/security.c:1497
- do_dentry_open+0x37a/0x1380 fs/open.c:784
- vfs_open+0xa0/0xd0 fs/open.c:914
- do_last fs/namei.c:3420 [inline]
- path_openat+0x10df/0x4500 fs/namei.c:3537
- do_filp_open+0x1a1/0x280 fs/namei.c:3567
- do_sys_open+0x3fe/0x5d0 fs/open.c:1097
- __do_sys_open fs/open.c:1115 [inline]
- __se_sys_open fs/open.c:1110 [inline]
- __x64_sys_open+0x7e/0xc0 fs/open.c:1110
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The buggy address belongs to the object at ffff8880987e3280
- which belongs to the cache kmalloc-32 of size 32
-The buggy address is located 0 bytes inside of
- 32-byte region [ffff8880987e3280, ffff8880987e32a0)
-The buggy address belongs to the page:
-page:ffffea000261f8c0 refcount:1 mapcount:0 mapping:ffff8880aa4001c0 index:0xffff8880987e3fc1
-raw: 00fffe0000000200 ffffea000287c788 ffffea00029a0648 ffff8880aa4001c0
-raw: ffff8880987e3fc1 ffff8880987e3000 000000010000003f 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8880987e3180: 00 00 00 00 fc fc fc fc 00 00 00 00 fc fc fc fc
- ffff8880987e3200: 00 03 fc fc fc fc fc fc fb fb fb fb fc fc fc fc
->ffff8880987e3280: 04 fc fc fc fc fc fc fc fb fb fb fb fc fc fc fc
-                   ^
- ffff8880987e3300: 00 03 fc fc fc fc fc fc fb fb fb fb fc fc fc fc
- ffff8880987e3380: fb fb fb fb fc fc fc fc fb fb fb fb fc fc fc fc
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+-Topi
