@@ -2,120 +2,135 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E40F5C33CB1
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 07:13:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4270EC33CB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 07:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B00FC2468B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 07:13:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579331583;
-	bh=8kYNVmCF+TfrVkxC52xPjvOoyGTuOnOi1x6LfPS1HMs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1bQJlcCmCOUD/QDwRBuoetmUWTkrZLL5znGrj3k2WosD3OgNnhxxNO++hRJlKz0He
-	 J0ZDtYi95NeXRFDSQ59vfF+FodXi8aLlVP0NGOyL9H+a7ITIhGiFatrKRVcNE3nZSY
-	 aIlVQCrelEJlJSGJ9Cf//AT+929y5GkofLzccxu0=
+	by mail.kernel.org (Postfix) with ESMTP id 168CF2468A
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 07:47:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbgARHNC (ORCPT
+        id S1726597AbgARHrM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 02:13:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46096 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725980AbgARHNC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 02:13:02 -0500
-Received: from localhost (unknown [171.61.88.108])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC61F24687;
-        Sat, 18 Jan 2020 07:13:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579331581;
-        bh=8kYNVmCF+TfrVkxC52xPjvOoyGTuOnOi1x6LfPS1HMs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bxcKFA5dIk8hiFgSgSIkxdEqrhb4Xp8HVp2zECd7nhlwSBhIVih4XBzbCSzbcMCfS
-         SSPwDKZ+7rMv+n3/QGbrQo0/sm7WB7a/8cMVgKRioeleQyh+FZ+K0Zt+MKE3/ymRPX
-         pF726Ici8UpopGXeOuXhnMej6lXe4RPzYIz68X6U=
-Date:   Sat, 18 Jan 2020 12:42:57 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: Re: [alsa-devel] [PATCH v5 09/17] soundwire: intel: remove platform
- devices and use 'Master Devices' instead
-Message-ID: <20200118071257.GY2818@vkoul-mobl>
-References: <20200114060959.GA2818@vkoul-mobl>
- <6635bf0b-c20a-7561-bcbf-4a480a077ae4@linux.intel.com>
+        Sat, 18 Jan 2020 02:47:12 -0500
+Received: from mail-il1-f198.google.com ([209.85.166.198]:35134 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726416AbgARHrM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jan 2020 02:47:12 -0500
+Received: by mail-il1-f198.google.com with SMTP id h18so20671852ilc.2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 23:47:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=rACzx1KS5lzpKZSs02VIS9cY8o5PBuG1ezgSd659A74=;
+        b=ShJGjqMtpW9hrrwLy7WgIVvFM1Dcym6OdHen756RwIE7m9h259nwPxGraRxbkd3X+0
+         8EiBXnR6AMQXT0qutGZK3kCQQkDVz6p1UYQTvwWFG5JUyvnCFbw+xtpSdl1sgzEPFbsO
+         Ev++vB/1sLZNKZQIl9YKneclt/m+1CHN9iXnge2wzIuPGSaaw66y0H+ur8BeqNQQTocY
+         O2x+FmQLB2RQCdAszRsdzQoH2eGRy/ukL4QYUKanbJWbsP9q7aeUlZ5HnTkGgVlx2sR6
+         qEXuR+d7FSbK6DortzZRO8bkxGrSWKPkpxqVDRGF1X5myYpjyWGqpDAflpTFPYdEtTcX
+         cXrQ==
+X-Gm-Message-State: APjAAAX8OjFV16hGtGw2i0yVrMLTOkGSIPzfIQ4louZ4MaAQgYeHwB2H
+        blZ4A84bTtM+U1iTt23Q22FxLQtigQp+edl2AIq3mRNRi45j
+X-Google-Smtp-Source: APXvYqzvQXzrhIK9hc/iUMcXsD8cK73nG9tFAbAt9xFxmyGlNX5o0/+hcRCBgDlrSkcc5Y8oho7Xoo4Oh6BT0uJTL9sgL4192ERQ
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6635bf0b-c20a-7561-bcbf-4a480a077ae4@linux.intel.com>
+X-Received: by 2002:a92:8307:: with SMTP id f7mr2198310ild.73.1579333631387;
+ Fri, 17 Jan 2020 23:47:11 -0800 (PST)
+Date:   Fri, 17 Jan 2020 23:47:11 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000014b040059c654481@google.com>
+Subject: WARNING in nf_tables_table_destroy
+From:   syzbot <syzbot+2a3b1b28cad90c608e20@syzkaller.appspotmail.com>
+To:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
+        kadlec@netfilter.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        pablo@netfilter.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14-01-20, 10:01, Pierre-Louis Bossart wrote:
-> 
-> > I am quoting the code in patch, which i pointed in my first reply!
-> > 
-> > On 17-12-19, 15:03, Pierre-Louis Bossart wrote:
-> > 
-> > > diff --git a/drivers/soundwire/intel_init.c b/drivers/soundwire/intel_init.c
-> > > index 4b769409f6f8..42f7ae034bea 100644
-> > > --- a/drivers/soundwire/intel_init.c
-> > 
-> > This is intel specific file...
-> > 
-> > > +++ b/drivers/soundwire/intel_init.c
-> > 
-> > snip ...
-> > 
-> > > +static struct sdw_intel_ctx
-> > > +*sdw_intel_probe_controller(struct sdw_intel_res *res)
-> > 
-> > this is intel driver, intel function!
-> > 
-> > > -
-> > > -		link->pdev = pdev;
-> > > -		link++;
-> > > +		/* let the SoundWire master driver to its probe */
-> > > +		md->driver->probe(md, link);
-> >                              ^^^^^^
-> > which does this... calls a probe()!
-> > 
-> > And my first reply was:
-> > 
-> > > > +             /* let the SoundWire master driver to its probe */
-> > > > +             md->driver->probe(md, link);
-> > > 
-> > > So you are invoking driver probe here.. That is typically role of driver
-> > > core to do that.. If we need that, make driver core do that for you!
-> > 
-> > I rest my case!
-> 
-> I think you are too focused on the probe case and not realizing the
-> extensions suggested by this patchset. A "driver" is not limited to 'probe'
-> and 'remove' cases.
-> 
-> As mentioned since mid-September, there is a need for an initialization of
-> software/kernel structures (which I called probe but should have been called
-> init really), and a second step where the hardware is actually configured -
+Hello,
 
-I find it amusing that a person whom i admired for strict use of terms
-can get this differently!
+syzbot found the following crash on:
 
-A rename away from probe will certainly be very helpful as
-you would also agree that terms 'probe' and 'remove' have a very
-special meaning in kernel, so let us avoid these
+HEAD commit:    5a9ef194 net: systemport: Fixed queue mapping in internal ..
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=1549ccc9e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7e89bd00623fe71e
+dashboard link: https://syzkaller.appspot.com/bug?extid=2a3b1b28cad90c608e20
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15338966e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1667d8d6e00000
 
--- 
-~Vinod
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+2a3b1b28cad90c608e20@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 9693 at net/netfilter/nf_tables_api.c:1155 nf_tables_table_destroy.isra.0+0x100/0x150 net/netfilter/nf_tables_api.c:1155
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 9693 Comm: syz-executor142 Not tainted 5.5.0-rc5-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x197/0x210 lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:221
+ __warn.cold+0x2f/0x3e kernel/panic.c:582
+ report_bug+0x289/0x300 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:174 [inline]
+ fixup_bug arch/x86/kernel/traps.c:169 [inline]
+ do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
+ do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:nf_tables_table_destroy.isra.0+0x100/0x150 net/netfilter/nf_tables_api.c:1155
+Code: 00 00 00 00 fc ff df 48 c1 ea 03 80 3c 02 00 75 52 48 8b 3b e8 b1 8c 4d fb e8 9c 1c 10 fb 5b 41 5c 41 5d 5d c3 e8 90 1c 10 fb <0f> 0b e8 89 1c 10 fb 5b 41 5c 41 5d 5d c3 e8 dd db 4d fb e9 40 ff
+RSP: 0018:ffffc900022b7478 EFLAGS: 00010293
+RAX: ffff8880a936a580 RBX: ffff8880a2c9e1a0 RCX: ffffffff8664d86a
+RDX: 0000000000000000 RSI: ffffffff8664d900 RDI: 0000000000000005
+RBP: ffffc900022b7490 R08: ffff8880a936a580 R09: ffffc900022b73c0
+R10: fffffbfff165e7b2 R11: ffffffff8b2f3d97 R12: ffff8880a729f400
+R13: 0000000000000001 R14: 0000000000000000 R15: ffff8880a72f7380
+ nf_tables_abort_release net/netfilter/nf_tables_api.c:7216 [inline]
+ __nf_tables_abort+0x1bad/0x2a50 net/netfilter/nf_tables_api.c:7360
+ nf_tables_abort+0x17/0x30 net/netfilter/nf_tables_api.c:7373
+ nfnetlink_rcv_batch+0xa5d/0x17a0 net/netfilter/nfnetlink.c:494
+ nfnetlink_rcv_skb_batch net/netfilter/nfnetlink.c:543 [inline]
+ nfnetlink_rcv+0x3e7/0x460 net/netfilter/nfnetlink.c:561
+ netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+ netlink_unicast+0x58c/0x7d0 net/netlink/af_netlink.c:1328
+ netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
+ sock_sendmsg_nosec net/socket.c:639 [inline]
+ sock_sendmsg+0xd7/0x130 net/socket.c:659
+ ____sys_sendmsg+0x753/0x880 net/socket.c:2330
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2384
+ __sys_sendmsg+0x105/0x1d0 net/socket.c:2417
+ __do_sys_sendmsg net/socket.c:2426 [inline]
+ __se_sys_sendmsg net/socket.c:2424 [inline]
+ __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2424
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x446c39
+Code: e8 8c e7 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 07 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f39f091ad98 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00000000006dbc28 RCX: 0000000000446c39
+RDX: 0000000000000000 RSI: 0000000020000280 RDI: 0000000000000004
+RBP: 00000000006dbc20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc2c
+R13: 00000000200002c0 R14: 00000000004aec20 R15: 0000000000000000
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
