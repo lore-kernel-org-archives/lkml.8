@@ -2,184 +2,207 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE4E4C33CB7
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 16:34:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 638CEC33CB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 16:37:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A465F2469C
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 16:34:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="ZGIE2CXj"
+	by mail.kernel.org (Postfix) with ESMTP id 376192469A
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 16:37:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbgARQel (ORCPT
+        id S1727131AbgARQhM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 11:34:41 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46043 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726597AbgARQel (ORCPT
+        Sat, 18 Jan 2020 11:37:12 -0500
+Received: from mail-io1-f72.google.com ([209.85.166.72]:51762 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726661AbgARQhL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 11:34:41 -0500
-Received: by mail-pl1-f196.google.com with SMTP id b22so11202117pls.12
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jan 2020 08:34:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=xMFDEvWRj8MaBdHNVYJXJ8QUKiSOTRU80rGI0rv4uJs=;
-        b=ZGIE2CXjajj/msR/dYQWp91xDlgC57BMTSfQXO1QFTzOJ/68miqK3qzkv0KwkakU6N
-         /TfAEtLk1222VjQdALyeieiIRIJrcIATsUEim4n0jhXutbanUsAZqCuSor3g/7XBi4nG
-         RV64K8oZwOOEKX4p4yjW7BqLw4MhrpgwUTM7aoOf0jUs7cfLG6lb2sRWyLcmZnM7yGGz
-         1Ud7lcACM3/+fUcZEriZPrQlyhldJRsex+rVABZcq9TohblyQT1eZKt44Dsf+kj9IwIg
-         ZPDX1iPUl4J42Aw3pHQEZSbz6GpbGIs/RkpewQfeTkCeZZzxq1ttS0awASuGvQUchNVX
-         TB7Q==
+        Sat, 18 Jan 2020 11:37:11 -0500
+Received: by mail-io1-f72.google.com with SMTP id t18so17075490iob.18
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jan 2020 08:37:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xMFDEvWRj8MaBdHNVYJXJ8QUKiSOTRU80rGI0rv4uJs=;
-        b=Z3arzjIjFa0biH6rO2Dgkc0ndGr5gWv3bF/zAr47Nfnv8EOMLlTAj5gAN1pI1Tqumb
-         JymvtIZlZ+0osADX3TkBb5dzhBxULY+TQ1qE06JGLS8TwSNTWghTtiISywioY+e5Lyfh
-         aLTrHiYu/j0s5NTJKqSWvnhA4kDwfw8B4ZQd8T72VI+BXFYF7pR/k1mtNE9Bw/4esyyL
-         fZNSW32Sbm1Vf7CJAium+sraD5l3po1hRcZGEJisf7D4t9VHYWKV6Y6LicLSDbauY/hc
-         Y7xTKvK3WwxGNhmU7lI82c9hlwaJMU6miuQ6sM9O3h4wOKHyFXIU2Lzo1lfNjza5w2JA
-         iM+g==
-X-Gm-Message-State: APjAAAVIyUYBWGHpwDwLbofgukmzCdkMF+msPuGHgjG0MAE4mrx+k6AU
-        2ISoTt+GI85vEJDLQhoYo/JlGMn9LI8=
-X-Google-Smtp-Source: APXvYqxGaAAFii+9SovIezKp4nEQIrJGNIXs2ajW0kq9V+zST4DNJfKagj+qQNdZj3lDRLr9QQqjTA==
-X-Received: by 2002:a17:902:16a:: with SMTP id 97mr5583527plb.163.1579365280551;
-        Sat, 18 Jan 2020 08:34:40 -0800 (PST)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id k44sm3194803pjb.20.2020.01.18.08.34.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 18 Jan 2020 08:34:40 -0800 (PST)
-Subject: Re: [PATCH v2] io_uring: optimise sqe-to-req flags translation
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <b507d39e-ec2b-5c9f-0fd0-6ab1b0491cad@kernel.dk>
- <06bcf64774c4730b33d1ef65e4fcb67f381cae08.1579340590.git.asml.silence@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <b773df2f-8873-77f3-d25d-b59c66f3a04b@kernel.dk>
-Date:   Sat, 18 Jan 2020 09:34:38 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=oHMk30k/8GxhsmxZEdWC76nXuYoxUYefnJNRsWX1wVw=;
+        b=hJKml5ykFRZibyniMHdpr7Ivr7/npRpPFA5Ea0RkzDeeb+lEGBF4kzKygnI4P8FuhJ
+         uYP84kQbGxy4pUau31BxkqXCx58ZK3fA/6vWrEJWQQK6d27KqJU+tQJhWfv0G9WV/Wkh
+         Iwq4G0EaaIvjuKaMjudm1Qa00D3mhOcNzfOrfI9HZxUp7ylHc9pwE0CefOcIFxMp/OVt
+         xqY0MsJ/WOL+1zzl0iGMoeKg0TYTjWh6XejKI4eIwUzn9m6L22wd1WsWCfcUJ/3wvxrC
+         zlxBEQud1sisMF/g3pyEpmnyea6+SOS8QOPqERSGC7tce17Xk1RzKnWQlzceHGR6OW9g
+         RHOg==
+X-Gm-Message-State: APjAAAUkWDhtMhOYxaB6PxWV3ZjTGZmWJEvYPnXR4C/FBQnbje9bY/lQ
+        QwykJR7SitkTWn6ECg1dFofRQl4fpERrV3ws0akiCTwxIvTm
+X-Google-Smtp-Source: APXvYqwahZGeDjKh9Sl6STLzcBNrVDg8T4A+SxAK868Hid35FULGj7t6aW4bpRshbsgWWAKULERBhRLd5kUGl74PRbDRbnBVj/5C
 MIME-Version: 1.0
-In-Reply-To: <06bcf64774c4730b33d1ef65e4fcb67f381cae08.1579340590.git.asml.silence@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a5e:8e4b:: with SMTP id r11mr36581069ioo.167.1579365430567;
+ Sat, 18 Jan 2020 08:37:10 -0800 (PST)
+Date:   Sat, 18 Jan 2020 08:37:10 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000075aa7d059c6cab3c@google.com>
+Subject: KASAN: use-after-free Read in bitmap_port_destroy
+From:   syzbot <syzbot+8ccfc03b082d0ab9b84b@syzkaller.appspotmail.com>
+To:     coreteam@netfilter.org, davem@davemloft.net,
+        florent.fourcot@wifirst.fr, fw@strlen.de, jeremy@azazel.net,
+        johannes.berg@intel.com, kadlec@netfilter.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, pablo@netfilter.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/18/20 3:24 AM, Pavel Begunkov wrote:
-> For each IOSQE_* flag there is a corresponding REQ_F_* flag. And there
-> is a repetitive pattern of their translation:
-> e.g. if (sqe->flags & SQE_FLAG*) req->flags |= REQ_F_FLAG*
-> 
-> Use the same numerical values/bits for them, and copy them instead of
-> manual handling.
-> 
-> Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
-> ---
-> 
-> v2: enum to generate bits (Jens Axboe)
->     Comments cross 80 chars, but IMHO more visually appealing
-> 
-> Crosses 
-> 
->  fs/io_uring.c                 | 75 +++++++++++++++++++++--------------
->  include/uapi/linux/io_uring.h | 26 +++++++++---
->  2 files changed, 67 insertions(+), 34 deletions(-)
-> 
-> diff --git a/fs/io_uring.c b/fs/io_uring.c
-> index ed1adeda370e..e3e2438a7480 100644
-> --- a/fs/io_uring.c
-> +++ b/fs/io_uring.c
-> @@ -452,6 +452,49 @@ struct io_async_ctx {
->  	};
->  };
->  
-> +enum {
-> +	REQ_F_FIXED_FILE_BIT	= IOSQE_FIXED_FILE_BIT,
-> +	REQ_F_IO_DRAIN_BIT	= IOSQE_IO_DRAIN_BIT,
-> +	REQ_F_LINK_BIT		= IOSQE_IO_LINK_BIT,
-> +	REQ_F_HARDLINK_BIT	= IOSQE_IO_HARDLINK_BIT,
-> +	REQ_F_FORCE_ASYNC_BIT	= IOSQE_ASYNC_BIT,
-> +
-> +	REQ_F_LINK_NEXT_BIT,
-> +	REQ_F_FAIL_LINK_BIT,
-> +	REQ_F_INFLIGHT_BIT,
-> +	REQ_F_CUR_POS_BIT,
-> +	REQ_F_NOWAIT_BIT,
-> +	REQ_F_IOPOLL_COMPLETED_BIT,
-> +	REQ_F_LINK_TIMEOUT_BIT,
-> +	REQ_F_TIMEOUT_BIT,
-> +	REQ_F_ISREG_BIT,
-> +	REQ_F_MUST_PUNT_BIT,
-> +	REQ_F_TIMEOUT_NOSEQ_BIT,
-> +	REQ_F_COMP_LOCKED_BIT,
-> +};
+Hello,
 
-Perfect
+syzbot found the following crash on:
 
-> +enum {
-> +	/* correspond one-to-one to IOSQE_IO_* flags*/
-> +	REQ_F_FIXED_FILE	= BIT(REQ_F_FIXED_FILE_BIT),	/* ctx owns file */
+HEAD commit:    25e73aad Merge tag 'io_uring-5.5-2020-01-16' of git://git...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1295c8bee00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=cfbb8fa33f49f9f3
+dashboard link: https://syzkaller.appspot.com/bug?extid=8ccfc03b082d0ab9b84b
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=128db1d1e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=152b74c9e00000
 
-I'd put the comment on top of the line instead, these lines are way too
-long.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+8ccfc03b082d0ab9b84b@syzkaller.appspotmail.com
 
-> diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
-> index 955fd477e530..cee59996b23a 100644
-> --- a/include/uapi/linux/io_uring.h
-> +++ b/include/uapi/linux/io_uring.h
-> @@ -10,6 +10,7 @@
->  
->  #include <linux/fs.h>
->  #include <linux/types.h>
-> +#include <linux/bits.h>
->  
->  /*
->   * IO submission data structure (Submission Queue Entry)
-> @@ -45,14 +46,29 @@ struct io_uring_sqe {
->  	};
->  };
->  
-> +enum {
-> +	IOSQE_FIXED_FILE_BIT,
-> +	IOSQE_IO_DRAIN_BIT,
-> +	IOSQE_IO_LINK_BIT,
-> +	IOSQE_IO_HARDLINK_BIT,
-> +	IOSQE_ASYNC_BIT,
-> +};
-> +
->  /*
->   * sqe->flags
->   */
-> -#define IOSQE_FIXED_FILE	(1U << 0)	/* use fixed fileset */
-> -#define IOSQE_IO_DRAIN		(1U << 1)	/* issue after inflight IO */
-> -#define IOSQE_IO_LINK		(1U << 2)	/* links next sqe */
-> -#define IOSQE_IO_HARDLINK	(1U << 3)	/* like LINK, but stronger */
-> -#define IOSQE_ASYNC		(1U << 4)	/* always go async */
-> +enum {
-> +	/* use fixed fileset */
-> +	IOSQE_FIXED_FILE	= BIT(IOSQE_FIXED_FILE_BIT),
+==================================================================
+BUG: KASAN: use-after-free in test_bit include/asm-generic/bitops/instrumented-non-atomic.h:110 [inline]
+BUG: KASAN: use-after-free in bitmap_port_ext_cleanup net/netfilter/ipset/ip_set_bitmap_gen.h:51 [inline]
+BUG: KASAN: use-after-free in bitmap_port_destroy+0x1f2/0x3c0 net/netfilter/ipset/ip_set_bitmap_gen.h:65
+Read of size 8 at addr ffff8880a5048a40 by task syz-executor419/8736
 
-Let's please not use BIT() for the user visible part, though. And I'd
-leave these as defines, sometimes apps do things ala:
+CPU: 1 PID: 8736 Comm: syz-executor419 Not tainted 5.5.0-rc6-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1fb/0x318 lib/dump_stack.c:118
+ print_address_description+0x74/0x5c0 mm/kasan/report.c:374
+ __kasan_report+0x149/0x1c0 mm/kasan/report.c:506
+ kasan_report+0x26/0x50 mm/kasan/common.c:639
+ check_memory_region_inline mm/kasan/generic.c:182 [inline]
+ check_memory_region+0x2b6/0x2f0 mm/kasan/generic.c:192
+ __kasan_check_read+0x11/0x20 mm/kasan/common.c:95
+ test_bit include/asm-generic/bitops/instrumented-non-atomic.h:110 [inline]
+ bitmap_port_ext_cleanup net/netfilter/ipset/ip_set_bitmap_gen.h:51 [inline]
+ bitmap_port_destroy+0x1f2/0x3c0 net/netfilter/ipset/ip_set_bitmap_gen.h:65
+ ip_set_create+0xae0/0xfd0 net/netfilter/ipset/ip_set_core.c:1165
+ nfnetlink_rcv_msg+0x9ae/0xcd0 net/netfilter/nfnetlink.c:229
+ netlink_rcv_skb+0x19e/0x3e0 net/netlink/af_netlink.c:2477
+ nfnetlink_rcv+0x1e0/0x1e50 net/netfilter/nfnetlink.c:563
+ netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+ netlink_unicast+0x767/0x920 net/netlink/af_netlink.c:1328
+ netlink_sendmsg+0xa2c/0xd50 net/netlink/af_netlink.c:1917
+ sock_sendmsg_nosec net/socket.c:639 [inline]
+ sock_sendmsg net/socket.c:659 [inline]
+ ____sys_sendmsg+0x4f7/0x7f0 net/socket.c:2330
+ ___sys_sendmsg net/socket.c:2384 [inline]
+ __sys_sendmsg+0x1ed/0x290 net/socket.c:2417
+ __do_sys_sendmsg net/socket.c:2426 [inline]
+ __se_sys_sendmsg net/socket.c:2424 [inline]
+ __x64_sys_sendmsg+0x7f/0x90 net/socket.c:2424
+ do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x441399
+Code: e8 fc ab 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 9b 09 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffc467ccc78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441399
+RDX: 0000000000000000 RSI: 0000000020001080 RDI: 0000000000000003
+RBP: 0000000000013851 R08: 00000000004002c8 R09: 00000000004002c8
+R10: 0000000000000004 R11: 0000000000000246 R12: 00000000004021c0
+R13: 0000000000402250 R14: 0000000000000000 R15: 0000000000000000
 
-#ifndef IOSQE_IO_LINK
-#define IOSQE_IO_LINK ...
-#endif
+Allocated by task 8736:
+ save_stack mm/kasan/common.c:72 [inline]
+ set_track mm/kasan/common.c:80 [inline]
+ __kasan_kmalloc+0x118/0x1c0 mm/kasan/common.c:513
+ kasan_kmalloc+0x9/0x10 mm/kasan/common.c:527
+ __do_kmalloc mm/slab.c:3656 [inline]
+ __kmalloc+0x254/0x340 mm/slab.c:3665
+ kmalloc include/linux/slab.h:561 [inline]
+ kzalloc+0x21/0x40 include/linux/slab.h:670
+ ip_set_alloc+0x32/0x60 net/netfilter/ipset/ip_set_core.c:255
+ init_map_port net/netfilter/ipset/ip_set_bitmap_port.c:234 [inline]
+ bitmap_port_create+0x32c/0x790 net/netfilter/ipset/ip_set_bitmap_port.c:276
+ ip_set_create+0x421/0xfd0 net/netfilter/ipset/ip_set_core.c:1111
+ nfnetlink_rcv_msg+0x9ae/0xcd0 net/netfilter/nfnetlink.c:229
+ netlink_rcv_skb+0x19e/0x3e0 net/netlink/af_netlink.c:2477
+ nfnetlink_rcv+0x1e0/0x1e50 net/netfilter/nfnetlink.c:563
+ netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+ netlink_unicast+0x767/0x920 net/netlink/af_netlink.c:1328
+ netlink_sendmsg+0xa2c/0xd50 net/netlink/af_netlink.c:1917
+ sock_sendmsg_nosec net/socket.c:639 [inline]
+ sock_sendmsg net/socket.c:659 [inline]
+ ____sys_sendmsg+0x4f7/0x7f0 net/socket.c:2330
+ ___sys_sendmsg net/socket.c:2384 [inline]
+ __sys_sendmsg+0x1ed/0x290 net/socket.c:2417
+ __do_sys_sendmsg net/socket.c:2426 [inline]
+ __se_sys_sendmsg net/socket.c:2424 [inline]
+ __x64_sys_sendmsg+0x7f/0x90 net/socket.c:2424
+ do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-to make it easier to co-exist with old and new headers.
+Freed by task 8736:
+ save_stack mm/kasan/common.c:72 [inline]
+ set_track mm/kasan/common.c:80 [inline]
+ kasan_set_free_info mm/kasan/common.c:335 [inline]
+ __kasan_slab_free+0x12e/0x1e0 mm/kasan/common.c:474
+ kasan_slab_free+0xe/0x10 mm/kasan/common.c:483
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x10d/0x220 mm/slab.c:3757
+ kvfree+0x46/0x50 mm/util.c:603
+ ip_set_free+0x15/0x20 net/netfilter/ipset/ip_set_core.c:276
+ bitmap_port_destroy+0xb6/0x3c0 net/netfilter/ipset/ip_set_bitmap_gen.h:63
+ ip_set_create+0xae0/0xfd0 net/netfilter/ipset/ip_set_core.c:1165
+ nfnetlink_rcv_msg+0x9ae/0xcd0 net/netfilter/nfnetlink.c:229
+ netlink_rcv_skb+0x19e/0x3e0 net/netlink/af_netlink.c:2477
+ nfnetlink_rcv+0x1e0/0x1e50 net/netfilter/nfnetlink.c:563
+ netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+ netlink_unicast+0x767/0x920 net/netlink/af_netlink.c:1328
+ netlink_sendmsg+0xa2c/0xd50 net/netlink/af_netlink.c:1917
+ sock_sendmsg_nosec net/socket.c:639 [inline]
+ sock_sendmsg net/socket.c:659 [inline]
+ ____sys_sendmsg+0x4f7/0x7f0 net/socket.c:2330
+ ___sys_sendmsg net/socket.c:2384 [inline]
+ __sys_sendmsg+0x1ed/0x290 net/socket.c:2417
+ __do_sys_sendmsg net/socket.c:2426 [inline]
+ __se_sys_sendmsg net/socket.c:2424 [inline]
+ __x64_sys_sendmsg+0x7f/0x90 net/socket.c:2424
+ do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
--- 
-Jens Axboe
+The buggy address belongs to the object at ffff8880a5048a40
+ which belongs to the cache kmalloc-32 of size 32
+The buggy address is located 0 bytes inside of
+ 32-byte region [ffff8880a5048a40, ffff8880a5048a60)
+The buggy address belongs to the page:
+page:ffffea0002941200 refcount:1 mapcount:0 mapping:ffff8880aa8001c0 index:0xffff8880a5048fc1
+raw: 00fffe0000000200 ffffea0002a257c8 ffffea00029a6b88 ffff8880aa8001c0
+raw: ffff8880a5048fc1 ffff8880a5048000 000000010000003f 0000000000000000
+page dumped because: kasan: bad access detected
 
+Memory state around the buggy address:
+ ffff8880a5048900: 05 fc fc fc fc fc fc fc 05 fc fc fc fc fc fc fc
+ ffff8880a5048980: 05 fc fc fc fc fc fc fc 00 00 01 fc fc fc fc fc
+>ffff8880a5048a00: 00 00 01 fc fc fc fc fc fb fb fb fb fc fc fc fc
+                                           ^
+ ffff8880a5048a80: 06 fc fc fc fc fc fc fc fb fb fb fb fc fc fc fc
+ ffff8880a5048b00: 00 00 01 fc fc fc fc fc fb fb fb fb fc fc fc fc
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
