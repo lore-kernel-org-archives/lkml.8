@@ -2,206 +2,187 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9290AC33CB8
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 11:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B03EC33CB7
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 12:01:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4257324696
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 11:58:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4139A2072E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 12:01:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=studiofuga.com header.i=@studiofuga.com header.b="Q0DFtLn9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pqq9MNpc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729017AbgARL6s (ORCPT
+        id S1729028AbgARMBA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 06:58:48 -0500
-Received: from egyptian.birch.relay.mailchannels.net ([23.83.209.56]:51905
-        "EHLO egyptian.birch.relay.mailchannels.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727118AbgARL6r (ORCPT
+        Sat, 18 Jan 2020 07:01:00 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45658 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727118AbgARMBA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 06:58:47 -0500
-X-Sender-Id: dreamhost|x-authsender|fuga@studiofuga.com
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 1B3275A0C3F;
-        Sat, 18 Jan 2020 11:58:46 +0000 (UTC)
-Received: from pdx1-sub0-mail-a52.g.dreamhost.com (100-96-15-240.trex.outbound.svc.cluster.local [100.96.15.240])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 6CEF65A0F4F;
-        Sat, 18 Jan 2020 11:58:45 +0000 (UTC)
-X-Sender-Id: dreamhost|x-authsender|fuga@studiofuga.com
-Received: from pdx1-sub0-mail-a52.g.dreamhost.com ([TEMPUNAVAIL].
- [64.90.62.162])
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384)
-        by 0.0.0.0:2500 (trex/5.18.5);
-        Sat, 18 Jan 2020 11:58:46 +0000
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|fuga@studiofuga.com
-X-MailChannels-Auth-Id: dreamhost
-X-Trouble-Unite: 177e267b4dcf2b01_1579348725877_4092681736
-X-MC-Loop-Signature: 1579348725877:3218048286
-X-MC-Ingress-Time: 1579348725876
-Received: from pdx1-sub0-mail-a52.g.dreamhost.com (localhost [127.0.0.1])
-        by pdx1-sub0-mail-a52.g.dreamhost.com (Postfix) with ESMTP id 8CB51B0C3F;
-        Sat, 18 Jan 2020 03:58:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=studiofuga.com; h=from:to
-        :cc:subject:date:message-id; s=studiofuga.com; bh=oZe21OIXYOv92t
-        t3O1BKTEcmdmY=; b=Q0DFtLn9LXzov6Ud+CxQoLRa1NOJ8Y0DysmQF/ACwhtXsx
-        U9aTzIWTPNngSsvmkGZp8ptkN2pYsymRDlncmUFIB4YNmFR0bEoH2Sc9TmPRaFXO
-        I7fyAB325Zffp3uZj0SiFd73TJeio7KX0yZut42wHL0kiUaT3/ADXOB7OeKXU=
-Received: from MintPad.studiofuga.local (unknown [5.102.6.226])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: fuga@studiofuga.com)
-        by pdx1-sub0-mail-a52.g.dreamhost.com (Postfix) with ESMTPSA id C2796B0C42;
-        Sat, 18 Jan 2020 03:58:40 -0800 (PST)
-X-DH-BACKEND: pdx1-sub0-mail-a52
-From:   Federico Fuga <fuga@studiofuga.com>
-Cc:     Federico Fuga <fuga@studiofuga.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] i2c: mv64xxx: Implement I2C_M_RECV_LEN and I2C_FUNC_SMBUS_READ_BLOCK_DATA
-Date:   Sat, 18 Jan 2020 12:58:20 +0100
-Message-Id: <20200118115820.9080-1-fuga@studiofuga.com>
-X-Mailer: git-send-email 2.17.1
-X-VR-OUT-STATUS: OK
-X-VR-OUT-SCORE: -55
-X-VR-OUT-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedugedruddtgdeffecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucggtfgfnhhsuhgsshgtrhhisggvpdfftffgtefojffquffvnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenmhhishhsihhnghcuvffquchfihgvlhguucdlfedtmdenogetfedtuddqtdduucdludehmdenucfjughrpefhvffufffkofestddtredtredttdenucfhrhhomhephfgvuggvrhhitghoucfhuhhgrgcuoehfuhhgrgesshhtuhguihhofhhughgrrdgtohhmqeenucfkphephedruddtvddriedrvddvieenucfrrghrrghmpehmohguvgepshhmthhppdhhvghlohepofhinhhtrfgrugdrshhtuhguihhofhhughgrrdhlohgtrghlpdhinhgvthephedruddtvddriedrvddviedprhgvthhurhhnqdhprghthhephfgvuggvrhhitghoucfhuhhgrgcuoehfuhhgrgesshhtuhguihhofhhughgrrdgtohhmqedpmhgrihhlfhhrohhmpehfuhhgrgesshhtuhguihhofhhughgrrdgtohhmpdhnrhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedt
-To:     unlisted-recipients:; (no To-header on input)
+        Sat, 18 Jan 2020 07:01:00 -0500
+Received: by mail-lj1-f195.google.com with SMTP id j26so29150474ljc.12;
+        Sat, 18 Jan 2020 04:00:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VZj/+gTBYwih9w8p4CHvebReTfIMgw1NYGMhYLwgkjY=;
+        b=Pqq9MNpc0mluCwwOKD2lqGkoDdsfpynn/xg1au7LAGAye67z/NsqeDuVDGrcgalaI+
+         1OJYIYI/gtNkMK0cXvjAbF0QIEZgRsp6QxGRh6ZCTYAEvW2TFkFump0n2TCHIBrXfr/k
+         EMfOxTDDaI0UZJHqQ1S+ONMQzww2ZXeLjJ0tnG5a9e2X7DJohIM1DcaF9jM6hgpBfwIl
+         ROzG7rWE9ooOijOZ6yY0FnRajbAP0mt90NVoNkoD0LlBj2Gj8aA/AF2fYNTziMnVcrHH
+         Li6pdXZr8DtBv4szeYINZobelo9rvUS7ac/qCHLI+VcilZnOh3LtdxxX2EmqJExrgQVz
+         UrQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VZj/+gTBYwih9w8p4CHvebReTfIMgw1NYGMhYLwgkjY=;
+        b=LlAVNZ/+wSNPesJEakXNRg9RImGfYrjE3ffpt4aiJFkb+SbyXc6PQLzdxIVONiqs2l
+         cncj7okWAu7nLfxIokkipRlKmNpsonOsv8Rl711Va+kJLjPJUXYk1gECRgcCNZ0oPtEw
+         ZGni8xZOdPUJeRU8yV4QNiSN7yhZO8KvORMXEVJfKP1wtfV8Tt0QQ0yHm6NgZYQ7cqZR
+         1unlB+EBmmwK71UQqUBAB6ZyQ0FRpo7728NG+ipnHdJVLzpJ6+PcUat2esFqPotdSpgl
+         53O6oC7BrGRVAPiPZ3ghs706bHFcQ7hV8SP0z+fjsGKF4zDkEmUD30iY5lAsOpYL89IJ
+         9RnQ==
+X-Gm-Message-State: APjAAAU6uG3QGx7pSksSQ8YaE7JvhKVE0wz3LIXNjJt8kWF2qfgxnmid
+        db5ptKylS4tzrHuVR1nQQurWSITMZ3E6bw==
+X-Google-Smtp-Source: APXvYqwosEdFwVQMSXRQKZbO5XfS6GRjYRqsw50BWyzXGZLANGfEw3N0Lwq9GnaTiEvN3WzmbZvk+g==
+X-Received: by 2002:a2e:8053:: with SMTP id p19mr7936544ljg.263.1579348857779;
+        Sat, 18 Jan 2020 04:00:57 -0800 (PST)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id m8sm13500659lfp.4.2020.01.18.04.00.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Jan 2020 04:00:57 -0800 (PST)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Sat, 18 Jan 2020 13:00:49 +0100
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, urezki@gmail.com,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>, rcu@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH 1/2] rcuperf: Add support to vary the slab object sizes
+Message-ID: <20200118120049.GA10134@pc636>
+References: <20200115224225.246061-1-joel@joelfernandes.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200115224225.246061-1-joel@joelfernandes.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The i2c_mv64xxx driver doesn't implement the I2C_M_REC_LEN function
-essential to allow blocks with variable length to be read from an i2c
- slave.
-This is needed to implement the SMBus Read Block Data function.
+Hello, Joel.
 
-This patch implements the function by changing the bytes_left and
-msg len on the fly if the flag is specified.
+> This patch varies the allocated size of objects to be more realistic in
+> comparison to production workloads.
+> 
+> Cc: urezki@gmail.com
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> 
+> ---
+>  kernel/rcu/rcuperf.c | 48 +++++++++++++++++++++++++++++++++++++-------
+>  1 file changed, 41 insertions(+), 7 deletions(-)
+> 
+> diff --git a/kernel/rcu/rcuperf.c b/kernel/rcu/rcuperf.c
+> index da94b89cd531..1fd0cc72022e 100644
+> --- a/kernel/rcu/rcuperf.c
+> +++ b/kernel/rcu/rcuperf.c
+> @@ -87,6 +87,7 @@ torture_param(bool, shutdown, RCUPERF_SHUTDOWN,
+>  torture_param(int, verbose, 1, "Enable verbose debugging printk()s");
+>  torture_param(int, writer_holdoff, 0, "Holdoff (us) between GPs, zero to disable");
+>  torture_param(int, kfree_rcu_test, 0, "Do we run a kfree_rcu() perf test?");
+> +torture_param(bool, kfree_vary_obj_size, 0, "Vary the kfree_rcu object size");
+>  
+>  static char *perf_type = "rcu";
+>  module_param(perf_type, charp, 0444);
+> @@ -599,17 +600,29 @@ static int kfree_nrealthreads;
+>  static atomic_t n_kfree_perf_thread_started;
+>  static atomic_t n_kfree_perf_thread_ended;
+>  
+> -struct kfree_obj {
+> -	char kfree_obj[8];
+> -	struct rcu_head rh;
+> -};
+> +/*
+> + * Define a kfree_obj with size as the @size parameter + the size of rcu_head
+> + * (rcu_head is 16 bytes on 64-bit arch).
+> + */
+> +#define DEFINE_KFREE_OBJ(size)	\
+> +struct kfree_obj_ ## size {	\
+> +	char kfree_obj[size];	\
+> +	struct rcu_head rh;	\
+> +}
+> +
+> +/* This should goto the right sized slabs on both 32-bit and 64-bit arch */
+> +DEFINE_KFREE_OBJ(16); // goes on kmalloc-32 slab
+> +DEFINE_KFREE_OBJ(32); // goes on kmalloc-64 slab
+> +DEFINE_KFREE_OBJ(64); // goes on kmalloc-96 slab
+> +DEFINE_KFREE_OBJ(96); // goes on kmalloc-128 slab
+>  
+>  static int
+>  kfree_perf_thread(void *arg)
+>  {
+>  	int i, loop = 0;
+>  	long me = (long)arg;
+> -	struct kfree_obj *alloc_ptr;
+> +	void *alloc_ptr;
+> +
+>  	u64 start_time, end_time;
+>  
+>  	VERBOSE_PERFOUT_STRING("kfree_perf_thread task started");
+> @@ -627,11 +640,32 @@ kfree_perf_thread(void *arg)
+>  
+>  	do {
+>  		for (i = 0; i < kfree_alloc_num; i++) {
+> -			alloc_ptr = kmalloc(sizeof(struct kfree_obj), GFP_KERNEL);
+> +			int kfree_type = i % 4;
+> +
+> +			// Allocate only kfree_obj_16 if rcuperf.kfree_vary_obj_size not passed.
+> +			if (!kfree_vary_obj_size)
+> +				kfree_type = 0;
+> +
+> +			if (kfree_type == 0)
+> +				alloc_ptr = kmalloc(sizeof(struct kfree_obj_16), GFP_KERNEL);
+> +			else if (kfree_type == 1)
+> +				alloc_ptr = kmalloc(sizeof(struct kfree_obj_32), GFP_KERNEL);
+> +			else if (kfree_type == 2)
+> +				alloc_ptr = kmalloc(sizeof(struct kfree_obj_64), GFP_KERNEL);
+> +			else
+> +				alloc_ptr = kmalloc(sizeof(struct kfree_obj_96),  GFP_KERNEL);
+> +
+>  			if (!alloc_ptr)
+>  				return -ENOMEM;
+>  
+> -			kfree_rcu(alloc_ptr, rh);
+> +			if (kfree_type == 0)
+> +				kfree_rcu((struct kfree_obj_16 *)alloc_ptr, rh);
+> +			else if (kfree_type == 1)
+> +				kfree_rcu((struct kfree_obj_32 *)alloc_ptr, rh);
+> +			else if (kfree_type == 2)
+> +				kfree_rcu((struct kfree_obj_64 *)alloc_ptr, rh);
+> +			else
+> +				kfree_rcu((struct kfree_obj_96 *)alloc_ptr, rh);
+>  		}
+>  
+>  		cond_resched();
+> -- 
+> 2.25.0.rc1.283.g88dfdc4193-goog
+> 
 
-It has been successfully tested on Allwinner A33 with a special
-i2c chip that returns variable length blocks on reading.
+Good point and patch!
 
-Signed-off-by: Federico Fuga <fuga@studiofuga.com>
----
- drivers/i2c/busses/i2c-mv64xxx.c | 67 +++++++++++++++++++++++++-------
- 1 file changed, 53 insertions(+), 14 deletions(-)
+Tested-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
 
-diff --git a/drivers/i2c/busses/i2c-mv64xxx.c b/drivers/i2c/busses/i2c-mv64xxx.c
-index a5a95ea5b81a..cff9cb20bcc9 100644
---- a/drivers/i2c/busses/i2c-mv64xxx.c
-+++ b/drivers/i2c/busses/i2c-mv64xxx.c
-@@ -128,6 +128,7 @@ struct mv64xxx_i2c_data {
- 	u32			addr1;
- 	u32			addr2;
- 	u32			bytes_left;
-+	u32         effective_length;
- 	u32			byte_posn;
- 	u32			send_stop;
- 	u32			block;
-@@ -333,7 +334,18 @@ static void mv64xxx_i2c_send_start(struct mv64xxx_i2c_data *drv_data)
- {
- 	drv_data->msg = drv_data->msgs;
- 	drv_data->byte_posn = 0;
--	drv_data->bytes_left = drv_data->msg->len;
-+
-+    /* If we should retrieve the length from the buffer, make sure */
-+	/* to read enough bytes to avoid sending the */
-+	/* STOP bit after the read if the first byte */
-+	if (drv_data->msg->flags & I2C_M_RECV_LEN) {
-+		drv_data->effective_length = -1;
-+		drv_data->bytes_left = 3;
-+	} else {
-+		drv_data->effective_length = drv_data->msg->len;
-+		drv_data->bytes_left = drv_data->msg->len;
-+	}
-+
- 	drv_data->aborting = 0;
- 	drv_data->rc = 0;
- 
-@@ -342,6 +354,42 @@ static void mv64xxx_i2c_send_start(struct mv64xxx_i2c_data *drv_data)
- 	       drv_data->reg_base + drv_data->reg_offsets.control);
- }
- 
-+static void
-+mv64xxx_i2c_do_send_stop(struct mv64xxx_i2c_data *drv_data)
-+{
-+	drv_data->cntl_bits &= ~MV64XXX_I2C_REG_CONTROL_INTEN;
-+	writel(drv_data->cntl_bits | MV64XXX_I2C_REG_CONTROL_STOP,
-+		drv_data->reg_base + drv_data->reg_offsets.control);
-+	drv_data->block = 0;
-+	if (drv_data->errata_delay)
-+		udelay(5);
-+
-+	wake_up(&drv_data->waitq);
-+}
-+
-+static void
-+mv64xxx_i2c_do_read_data(struct mv64xxx_i2c_data *drv_data)
-+{
-+	u8 data;
-+
-+	data = readl(drv_data->reg_base + drv_data->reg_offsets.data);
-+	drv_data->msg->buf[drv_data->byte_posn++] = data;
-+
-+	if (drv_data->effective_length == -1) {
-+		/* length=0 should not be allowed, but is indeed possible.
-+		 * To avoid locking the chip, we keep reading at least 2 bytes
-+		 */
-+		if (data < 1)
-+			data = 1;
-+		drv_data->effective_length = data+1;
-+		drv_data->bytes_left = data+1;
-+		drv_data->msg->len = data+1;
-+	}
-+
-+	writel(drv_data->cntl_bits,
-+		drv_data->reg_base + drv_data->reg_offsets.control);
-+}
-+
- static void
- mv64xxx_i2c_do_action(struct mv64xxx_i2c_data *drv_data)
- {
-@@ -392,23 +440,13 @@ mv64xxx_i2c_do_action(struct mv64xxx_i2c_data *drv_data)
- 		break;
- 
- 	case MV64XXX_I2C_ACTION_RCV_DATA:
--		drv_data->msg->buf[drv_data->byte_posn++] =
--			readl(drv_data->reg_base + drv_data->reg_offsets.data);
--		writel(drv_data->cntl_bits,
--			drv_data->reg_base + drv_data->reg_offsets.control);
-+	    mv64xxx_i2c_do_read_data(drv_data);
- 		break;
- 
- 	case MV64XXX_I2C_ACTION_RCV_DATA_STOP:
- 		drv_data->msg->buf[drv_data->byte_posn++] =
- 			readl(drv_data->reg_base + drv_data->reg_offsets.data);
--		drv_data->cntl_bits &= ~MV64XXX_I2C_REG_CONTROL_INTEN;
--		writel(drv_data->cntl_bits | MV64XXX_I2C_REG_CONTROL_STOP,
--			drv_data->reg_base + drv_data->reg_offsets.control);
--		drv_data->block = 0;
--		if (drv_data->errata_delay)
--			udelay(5);
--
--		wake_up(&drv_data->waitq);
-+	    mv64xxx_i2c_do_send_stop(drv_data);
- 		break;
- 
- 	case MV64XXX_I2C_ACTION_INVALID:
-@@ -706,7 +744,8 @@ mv64xxx_i2c_can_offload(struct mv64xxx_i2c_data *drv_data)
- static u32
- mv64xxx_i2c_functionality(struct i2c_adapter *adap)
- {
--	return I2C_FUNC_I2C | I2C_FUNC_10BIT_ADDR | I2C_FUNC_SMBUS_EMUL;
-+	return I2C_FUNC_I2C | I2C_FUNC_10BIT_ADDR |
-+		I2C_FUNC_SMBUS_READ_BLOCK_DATA | I2C_FUNC_SMBUS_EMUL;
- }
- 
- static int
--- 
-2.17.1
+--
+Vlad Rezki
 
