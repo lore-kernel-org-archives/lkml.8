@@ -2,1375 +2,397 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA82C33CB7
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 12:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F27F5C33CB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 12:33:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A60724697
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 12:08:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B22AB2468D
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 12:33:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729028AbgARMIu (ORCPT
+        id S1728852AbgARMdI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 07:08:50 -0500
-Received: from mout-p-102.mailbox.org ([80.241.56.152]:10872 "EHLO
-        mout-p-102.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727118AbgARMIt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 07:08:49 -0500
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-102.mailbox.org (Postfix) with ESMTPS id 480GtL5lgxzKmS9;
-        Sat, 18 Jan 2020 13:08:42 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by gerste.heinlein-support.de (gerste.heinlein-support.de [91.198.250.173]) (amavisd-new, port 10030)
-        with ESMTP id Bri6fwQSH8k7; Sat, 18 Jan 2020 13:08:34 +0100 (CET)
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Shuah Khan <shuah@kernel.org>
-Cc:     Aleksa Sarai <cyphar@cyphar.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        David Laight <david.laight@aculab.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        quae@daurnimator.com, dev@opencontainers.org,
-        containers@lists.linux-foundation.org, libc-alpha@sourceware.org,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: [PATCH v3 2/2] selftests: add openat2(2) selftests
-Date:   Sat, 18 Jan 2020 23:08:00 +1100
-Message-Id: <20200118120800.16358-3-cyphar@cyphar.com>
-In-Reply-To: <20200118120800.16358-1-cyphar@cyphar.com>
-References: <20200115144831.GJ8904@ZenIV.linux.org.uk>
- <20200118120800.16358-1-cyphar@cyphar.com>
+        Sat, 18 Jan 2020 07:33:08 -0500
+Received: from mga14.intel.com ([192.55.52.115]:40780 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727143AbgARMdI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jan 2020 07:33:08 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jan 2020 04:33:00 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,334,1574150400"; 
+   d="gz'50?scan'50,208,50";a="266478304"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga001.fm.intel.com with ESMTP; 18 Jan 2020 04:32:58 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1isnHe-0007kb-3r; Sat, 18 Jan 2020 20:32:58 +0800
+Date:   Sat, 18 Jan 2020 20:32:06 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Topi Miettinen <toiwoton@gmail.com>
+Cc:     kbuild-all@lists.01.org, Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] firmware_loader: load files from the mount namespace of
+ init
+Message-ID: <202001182016.rgrkjcja%lkp@intel.com>
+References: <bb46ebae-4746-90d9-ec5b-fce4c9328c86@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="cayhmx6s2p526wnv"
+Content-Disposition: inline
+In-Reply-To: <bb46ebae-4746-90d9-ec5b-fce4c9328c86@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Test all of the various openat2(2) flags. A small stress-test of a
-symlink-rename attack is included to show that the protections against
-".."-based attacks are sufficient.
 
-The main things these self-tests are enforcing are:
+--cayhmx6s2p526wnv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-  * The struct+usize ABI for openat2(2) and copy_struct_from_user() to
-    ensure that upgrades will be handled gracefully (in addition,
-    ensuring that misaligned structures are also handled correctly).
+Hi Topi,
 
-  * The -EINVAL checks for openat2(2) are all correctly handled to avoid
-    userspace passing unknown or conflicting flag sets (most
-    importantly, ensuring that invalid flag combinations are checked).
+Thank you for the patch! Yet something to improve:
 
-  * All of the RESOLVE_* semantics (including errno values) are
-    correctly handled with various combinations of paths and flags.
+[auto build test ERROR on driver-core/driver-core-testing]
+[also build test ERROR on linux/master linus/master v5.5-rc6]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
 
-  * RESOLVE_IN_ROOT correctly protects against the symlink rename(2)
-    attack that has been responsible for several CVEs (and likely will
-    be responsible for several more).
+url:    https://github.com/0day-ci/linux/commits/Topi-Miettinen/firmware_loader-load-files-from-the-mount-namespace-of-init/20200118-100042
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git a37f4958f7b63d2b3cd17a76151fdfc29ce1da5f
+config: mips-markeins_defconfig (attached as .config)
+compiler: mips-linux-gcc (GCC) 7.5.0
+reproduce:
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # save the attached .config to linux build tree
+        GCC_VERSION=7.5.0 make.cross ARCH=mips 
 
-Cc: Shuah Khan <shuah@kernel.org>
-Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>):
+
+>> ERROR: "kernel_read_file_from_path_initns" [drivers/base/firmware_loader/firmware_class.ko] undefined!
+
 ---
- tools/testing/selftests/Makefile              |   1 +
- tools/testing/selftests/openat2/.gitignore    |   1 +
- tools/testing/selftests/openat2/Makefile      |   8 +
- tools/testing/selftests/openat2/helpers.c     | 109 ++++
- tools/testing/selftests/openat2/helpers.h     | 106 ++++
- .../testing/selftests/openat2/openat2_test.c  | 312 +++++++++++
- .../selftests/openat2/rename_attack_test.c    | 160 ++++++
- .../testing/selftests/openat2/resolve_test.c  | 523 ++++++++++++++++++
- 8 files changed, 1220 insertions(+)
- create mode 100644 tools/testing/selftests/openat2/.gitignore
- create mode 100644 tools/testing/selftests/openat2/Makefile
- create mode 100644 tools/testing/selftests/openat2/helpers.c
- create mode 100644 tools/testing/selftests/openat2/helpers.h
- create mode 100644 tools/testing/selftests/openat2/openat2_test.c
- create mode 100644 tools/testing/selftests/openat2/rename_attack_test.c
- create mode 100644 tools/testing/selftests/openat2/resolve_test.c
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
 
-diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-index b001c602414b..4f502448dc7e 100644
---- a/tools/testing/selftests/Makefile
-+++ b/tools/testing/selftests/Makefile
-@@ -40,6 +40,7 @@ TARGETS += powerpc
- TARGETS += proc
- TARGETS += pstore
- TARGETS += ptrace
-+TARGETS += openat2
- TARGETS += rseq
- TARGETS += rtc
- TARGETS += seccomp
-diff --git a/tools/testing/selftests/openat2/.gitignore b/tools/testing/selftests/openat2/.gitignore
-new file mode 100644
-index 000000000000..bd68f6c3fd07
---- /dev/null
-+++ b/tools/testing/selftests/openat2/.gitignore
-@@ -0,0 +1 @@
-+/*_test
-diff --git a/tools/testing/selftests/openat2/Makefile b/tools/testing/selftests/openat2/Makefile
-new file mode 100644
-index 000000000000..4b93b1417b86
---- /dev/null
-+++ b/tools/testing/selftests/openat2/Makefile
-@@ -0,0 +1,8 @@
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+
-+CFLAGS += -Wall -O2 -g -fsanitize=address -fsanitize=undefined
-+TEST_GEN_PROGS := openat2_test resolve_test rename_attack_test
-+
-+include ../lib.mk
-+
-+$(TEST_GEN_PROGS): helpers.c
-diff --git a/tools/testing/selftests/openat2/helpers.c b/tools/testing/selftests/openat2/helpers.c
-new file mode 100644
-index 000000000000..e9a6557ab16f
---- /dev/null
-+++ b/tools/testing/selftests/openat2/helpers.c
-@@ -0,0 +1,109 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Author: Aleksa Sarai <cyphar@cyphar.com>
-+ * Copyright (C) 2018-2019 SUSE LLC.
-+ */
-+
-+#define _GNU_SOURCE
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <stdbool.h>
-+#include <string.h>
-+#include <syscall.h>
-+#include <limits.h>
-+
-+#include "helpers.h"
-+
-+bool needs_openat2(const struct open_how *how)
-+{
-+	return how->resolve != 0;
-+}
-+
-+int raw_openat2(int dfd, const char *path, void *how, size_t size)
-+{
-+	int ret = syscall(__NR_openat2, dfd, path, how, size);
-+	return ret >= 0 ? ret : -errno;
-+}
-+
-+int sys_openat2(int dfd, const char *path, struct open_how *how)
-+{
-+	return raw_openat2(dfd, path, how, sizeof(*how));
-+}
-+
-+int sys_openat(int dfd, const char *path, struct open_how *how)
-+{
-+	int ret = openat(dfd, path, how->flags, how->mode);
-+	return ret >= 0 ? ret : -errno;
-+}
-+
-+int sys_renameat2(int olddirfd, const char *oldpath,
-+		  int newdirfd, const char *newpath, unsigned int flags)
-+{
-+	int ret = syscall(__NR_renameat2, olddirfd, oldpath,
-+					  newdirfd, newpath, flags);
-+	return ret >= 0 ? ret : -errno;
-+}
-+
-+int touchat(int dfd, const char *path)
-+{
-+	int fd = openat(dfd, path, O_CREAT);
-+	if (fd >= 0)
-+		close(fd);
-+	return fd;
-+}
-+
-+char *fdreadlink(int fd)
-+{
-+	char *target, *tmp;
-+
-+	E_asprintf(&tmp, "/proc/self/fd/%d", fd);
-+
-+	target = malloc(PATH_MAX);
-+	if (!target)
-+		ksft_exit_fail_msg("fdreadlink: malloc failed\n");
-+	memset(target, 0, PATH_MAX);
-+
-+	E_readlink(tmp, target, PATH_MAX);
-+	free(tmp);
-+	return target;
-+}
-+
-+bool fdequal(int fd, int dfd, const char *path)
-+{
-+	char *fdpath, *dfdpath, *other;
-+	bool cmp;
-+
-+	fdpath = fdreadlink(fd);
-+	dfdpath = fdreadlink(dfd);
-+
-+	if (!path)
-+		E_asprintf(&other, "%s", dfdpath);
-+	else if (*path == '/')
-+		E_asprintf(&other, "%s", path);
-+	else
-+		E_asprintf(&other, "%s/%s", dfdpath, path);
-+
-+	cmp = !strcmp(fdpath, other);
-+
-+	free(fdpath);
-+	free(dfdpath);
-+	free(other);
-+	return cmp;
-+}
-+
-+bool openat2_supported = false;
-+
-+void __attribute__((constructor)) init(void)
-+{
-+	struct open_how how = {};
-+	int fd;
-+
-+	BUILD_BUG_ON(sizeof(struct open_how) != OPEN_HOW_SIZE_VER0);
-+
-+	/* Check openat2(2) support. */
-+	fd = sys_openat2(AT_FDCWD, ".", &how);
-+	openat2_supported = (fd >= 0);
-+
-+	if (fd >= 0)
-+		close(fd);
-+}
-diff --git a/tools/testing/selftests/openat2/helpers.h b/tools/testing/selftests/openat2/helpers.h
-new file mode 100644
-index 000000000000..a6ea27344db2
---- /dev/null
-+++ b/tools/testing/selftests/openat2/helpers.h
-@@ -0,0 +1,106 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Author: Aleksa Sarai <cyphar@cyphar.com>
-+ * Copyright (C) 2018-2019 SUSE LLC.
-+ */
-+
-+#ifndef __RESOLVEAT_H__
-+#define __RESOLVEAT_H__
-+
-+#define _GNU_SOURCE
-+#include <stdint.h>
-+#include <errno.h>
-+#include <linux/types.h>
-+#include "../kselftest.h"
-+
-+#define ARRAY_LEN(X) (sizeof (X) / sizeof (*(X)))
-+#define BUILD_BUG_ON(e) ((void)(sizeof(struct { int:(-!!(e)); })))
-+
-+#ifndef SYS_openat2
-+#ifndef __NR_openat2
-+#define __NR_openat2 437
-+#endif /* __NR_openat2 */
-+#define SYS_openat2 __NR_openat2
-+#endif /* SYS_openat2 */
-+
-+/*
-+ * Arguments for how openat2(2) should open the target path. If @resolve is
-+ * zero, then openat2(2) operates very similarly to openat(2).
-+ *
-+ * However, unlike openat(2), unknown bits in @flags result in -EINVAL rather
-+ * than being silently ignored. @mode must be zero unless one of {O_CREAT,
-+ * O_TMPFILE} are set.
-+ *
-+ * @flags: O_* flags.
-+ * @mode: O_CREAT/O_TMPFILE file mode.
-+ * @resolve: RESOLVE_* flags.
-+ */
-+struct open_how {
-+	__u64 flags;
-+	__u64 mode;
-+	__u64 resolve;
-+};
-+
-+#define OPEN_HOW_SIZE_VER0	24 /* sizeof first published struct */
-+#define OPEN_HOW_SIZE_LATEST	OPEN_HOW_SIZE_VER0
-+
-+bool needs_openat2(const struct open_how *how);
-+
-+#ifndef RESOLVE_IN_ROOT
-+/* how->resolve flags for openat2(2). */
-+#define RESOLVE_NO_XDEV		0x01 /* Block mount-point crossings
-+					(includes bind-mounts). */
-+#define RESOLVE_NO_MAGICLINKS	0x02 /* Block traversal through procfs-style
-+					"magic-links". */
-+#define RESOLVE_NO_SYMLINKS	0x04 /* Block traversal through all symlinks
-+					(implies OEXT_NO_MAGICLINKS) */
-+#define RESOLVE_BENEATH		0x08 /* Block "lexical" trickery like
-+					"..", symlinks, and absolute
-+					paths which escape the dirfd. */
-+#define RESOLVE_IN_ROOT		0x10 /* Make all jumps to "/" and ".."
-+					be scoped inside the dirfd
-+					(similar to chroot(2)). */
-+#endif /* RESOLVE_IN_ROOT */
-+
-+#define E_func(func, ...)						\
-+	do {								\
-+		if (func(__VA_ARGS__) < 0)				\
-+			ksft_exit_fail_msg("%s:%d %s failed\n", \
-+					   __FILE__, __LINE__, #func);\
-+	} while (0)
-+
-+#define E_asprintf(...)		E_func(asprintf,	__VA_ARGS__)
-+#define E_chmod(...)		E_func(chmod,		__VA_ARGS__)
-+#define E_dup2(...)		E_func(dup2,		__VA_ARGS__)
-+#define E_fchdir(...)		E_func(fchdir,		__VA_ARGS__)
-+#define E_fstatat(...)		E_func(fstatat,		__VA_ARGS__)
-+#define E_kill(...)		E_func(kill,		__VA_ARGS__)
-+#define E_mkdirat(...)		E_func(mkdirat,		__VA_ARGS__)
-+#define E_mount(...)		E_func(mount,		__VA_ARGS__)
-+#define E_prctl(...)		E_func(prctl,		__VA_ARGS__)
-+#define E_readlink(...)		E_func(readlink,	__VA_ARGS__)
-+#define E_setresuid(...)	E_func(setresuid,	__VA_ARGS__)
-+#define E_symlinkat(...)	E_func(symlinkat,	__VA_ARGS__)
-+#define E_touchat(...)		E_func(touchat,		__VA_ARGS__)
-+#define E_unshare(...)		E_func(unshare,		__VA_ARGS__)
-+
-+#define E_assert(expr, msg, ...)					\
-+	do {								\
-+		if (!(expr))						\
-+			ksft_exit_fail_msg("ASSERT(%s:%d) failed (%s): " msg "\n", \
-+					   __FILE__, __LINE__, #expr, ##__VA_ARGS__); \
-+	} while (0)
-+
-+int raw_openat2(int dfd, const char *path, void *how, size_t size);
-+int sys_openat2(int dfd, const char *path, struct open_how *how);
-+int sys_openat(int dfd, const char *path, struct open_how *how);
-+int sys_renameat2(int olddirfd, const char *oldpath,
-+		  int newdirfd, const char *newpath, unsigned int flags);
-+
-+int touchat(int dfd, const char *path);
-+char *fdreadlink(int fd);
-+bool fdequal(int fd, int dfd, const char *path);
-+
-+extern bool openat2_supported;
-+
-+#endif /* __RESOLVEAT_H__ */
-diff --git a/tools/testing/selftests/openat2/openat2_test.c b/tools/testing/selftests/openat2/openat2_test.c
-new file mode 100644
-index 000000000000..b386367c606b
---- /dev/null
-+++ b/tools/testing/selftests/openat2/openat2_test.c
-@@ -0,0 +1,312 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Author: Aleksa Sarai <cyphar@cyphar.com>
-+ * Copyright (C) 2018-2019 SUSE LLC.
-+ */
-+
-+#define _GNU_SOURCE
-+#include <fcntl.h>
-+#include <sched.h>
-+#include <sys/stat.h>
-+#include <sys/types.h>
-+#include <sys/mount.h>
-+#include <stdlib.h>
-+#include <stdbool.h>
-+#include <string.h>
-+
-+#include "../kselftest.h"
-+#include "helpers.h"
-+
-+/*
-+ * O_LARGEFILE is set to 0 by glibc.
-+ * XXX: This is wrong on {mips, parisc, powerpc, sparc}.
-+ */
-+#undef	O_LARGEFILE
-+#define	O_LARGEFILE 0x8000
-+
-+struct open_how_ext {
-+	struct open_how inner;
-+	uint32_t extra1;
-+	char pad1[128];
-+	uint32_t extra2;
-+	char pad2[128];
-+	uint32_t extra3;
-+};
-+
-+struct struct_test {
-+	const char *name;
-+	struct open_how_ext arg;
-+	size_t size;
-+	int err;
-+};
-+
-+#define NUM_OPENAT2_STRUCT_TESTS 7
-+#define NUM_OPENAT2_STRUCT_VARIATIONS 13
-+
-+void test_openat2_struct(void)
-+{
-+	int misalignments[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 17, 87 };
-+
-+	struct struct_test tests[] = {
-+		/* Normal struct. */
-+		{ .name = "normal struct",
-+		  .arg.inner.flags = O_RDONLY,
-+		  .size = sizeof(struct open_how) },
-+		/* Bigger struct, with zeroed out end. */
-+		{ .name = "bigger struct (zeroed out)",
-+		  .arg.inner.flags = O_RDONLY,
-+		  .size = sizeof(struct open_how_ext) },
-+
-+		/* TODO: Once expanded, check zero-padding. */
-+
-+		/* Smaller than version-0 struct. */
-+		{ .name = "zero-sized 'struct'",
-+		  .arg.inner.flags = O_RDONLY, .size = 0, .err = -EINVAL },
-+		{ .name = "smaller-than-v0 struct",
-+		  .arg.inner.flags = O_RDONLY,
-+		  .size = OPEN_HOW_SIZE_VER0 - 1, .err = -EINVAL },
-+
-+		/* Bigger struct, with non-zero trailing bytes. */
-+		{ .name = "bigger struct (non-zero data in first 'future field')",
-+		  .arg.inner.flags = O_RDONLY, .arg.extra1 = 0xdeadbeef,
-+		  .size = sizeof(struct open_how_ext), .err = -E2BIG },
-+		{ .name = "bigger struct (non-zero data in middle of 'future fields')",
-+		  .arg.inner.flags = O_RDONLY, .arg.extra2 = 0xfeedcafe,
-+		  .size = sizeof(struct open_how_ext), .err = -E2BIG },
-+		{ .name = "bigger struct (non-zero data at end of 'future fields')",
-+		  .arg.inner.flags = O_RDONLY, .arg.extra3 = 0xabad1dea,
-+		  .size = sizeof(struct open_how_ext), .err = -E2BIG },
-+	};
-+
-+	BUILD_BUG_ON(ARRAY_LEN(misalignments) != NUM_OPENAT2_STRUCT_VARIATIONS);
-+	BUILD_BUG_ON(ARRAY_LEN(tests) != NUM_OPENAT2_STRUCT_TESTS);
-+
-+	for (int i = 0; i < ARRAY_LEN(tests); i++) {
-+		struct struct_test *test = &tests[i];
-+		struct open_how_ext how_ext = test->arg;
-+
-+		for (int j = 0; j < ARRAY_LEN(misalignments); j++) {
-+			int fd, misalign = misalignments[j];
-+			char *fdpath = NULL;
-+			bool failed;
-+			void (*resultfn)(const char *msg, ...) = ksft_test_result_pass;
-+
-+			void *copy = NULL, *how_copy = &how_ext;
-+
-+			if (!openat2_supported) {
-+				ksft_print_msg("openat2(2) unsupported\n");
-+				resultfn = ksft_test_result_skip;
-+				goto skip;
-+			}
-+
-+			if (misalign) {
-+				/*
-+				 * Explicitly misalign the structure copying it with the given
-+				 * (mis)alignment offset. The other data is set to be non-zero to
-+				 * make sure that non-zero bytes outside the struct aren't checked
-+				 *
-+				 * This is effectively to check that is_zeroed_user() works.
-+				 */
-+				copy = malloc(misalign + sizeof(how_ext));
-+				how_copy = copy + misalign;
-+				memset(copy, 0xff, misalign);
-+				memcpy(how_copy, &how_ext, sizeof(how_ext));
-+			}
-+
-+			fd = raw_openat2(AT_FDCWD, ".", how_copy, test->size);
-+			if (test->err >= 0)
-+				failed = (fd < 0);
-+			else
-+				failed = (fd != test->err);
-+			if (fd >= 0) {
-+				fdpath = fdreadlink(fd);
-+				close(fd);
-+			}
-+
-+			if (failed) {
-+				resultfn = ksft_test_result_fail;
-+
-+				ksft_print_msg("openat2 unexpectedly returned ");
-+				if (fdpath)
-+					ksft_print_msg("%d['%s']\n", fd, fdpath);
-+				else
-+					ksft_print_msg("%d (%s)\n", fd, strerror(-fd));
-+			}
-+
-+skip:
-+			if (test->err >= 0)
-+				resultfn("openat2 with %s argument [misalign=%d] succeeds\n",
-+					 test->name, misalign);
-+			else
-+				resultfn("openat2 with %s argument [misalign=%d] fails with %d (%s)\n",
-+					 test->name, misalign, test->err,
-+					 strerror(-test->err));
-+
-+			free(copy);
-+			free(fdpath);
-+			fflush(stdout);
-+		}
-+	}
-+}
-+
-+struct flag_test {
-+	const char *name;
-+	struct open_how how;
-+	int err;
-+};
-+
-+#define NUM_OPENAT2_FLAG_TESTS 23
-+
-+void test_openat2_flags(void)
-+{
-+	struct flag_test tests[] = {
-+		/* O_TMPFILE is incompatible with O_PATH and O_CREAT. */
-+		{ .name = "incompatible flags (O_TMPFILE | O_PATH)",
-+		  .how.flags = O_TMPFILE | O_PATH | O_RDWR, .err = -EINVAL },
-+		{ .name = "incompatible flags (O_TMPFILE | O_CREAT)",
-+		  .how.flags = O_TMPFILE | O_CREAT | O_RDWR, .err = -EINVAL },
-+
-+		/* O_PATH only permits certain other flags to be set ... */
-+		{ .name = "compatible flags (O_PATH | O_CLOEXEC)",
-+		  .how.flags = O_PATH | O_CLOEXEC },
-+		{ .name = "compatible flags (O_PATH | O_DIRECTORY)",
-+		  .how.flags = O_PATH | O_DIRECTORY },
-+		{ .name = "compatible flags (O_PATH | O_NOFOLLOW)",
-+		  .how.flags = O_PATH | O_NOFOLLOW },
-+		/* ... and others are absolutely not permitted. */
-+		{ .name = "incompatible flags (O_PATH | O_RDWR)",
-+		  .how.flags = O_PATH | O_RDWR, .err = -EINVAL },
-+		{ .name = "incompatible flags (O_PATH | O_CREAT)",
-+		  .how.flags = O_PATH | O_CREAT, .err = -EINVAL },
-+		{ .name = "incompatible flags (O_PATH | O_EXCL)",
-+		  .how.flags = O_PATH | O_EXCL, .err = -EINVAL },
-+		{ .name = "incompatible flags (O_PATH | O_NOCTTY)",
-+		  .how.flags = O_PATH | O_NOCTTY, .err = -EINVAL },
-+		{ .name = "incompatible flags (O_PATH | O_DIRECT)",
-+		  .how.flags = O_PATH | O_DIRECT, .err = -EINVAL },
-+		{ .name = "incompatible flags (O_PATH | O_LARGEFILE)",
-+		  .how.flags = O_PATH | O_LARGEFILE, .err = -EINVAL },
-+
-+		/* ->mode must only be set with O_{CREAT,TMPFILE}. */
-+		{ .name = "non-zero how.mode and O_RDONLY",
-+		  .how.flags = O_RDONLY, .how.mode = 0600, .err = -EINVAL },
-+		{ .name = "non-zero how.mode and O_PATH",
-+		  .how.flags = O_PATH,   .how.mode = 0600, .err = -EINVAL },
-+		{ .name = "valid how.mode and O_CREAT",
-+		  .how.flags = O_CREAT,  .how.mode = 0600 },
-+		{ .name = "valid how.mode and O_TMPFILE",
-+		  .how.flags = O_TMPFILE | O_RDWR, .how.mode = 0600 },
-+		/* ->mode must only contain 0777 bits. */
-+		{ .name = "invalid how.mode and O_CREAT",
-+		  .how.flags = O_CREAT,
-+		  .how.mode = 0xFFFF, .err = -EINVAL },
-+		{ .name = "invalid (very large) how.mode and O_CREAT",
-+		  .how.flags = O_CREAT,
-+		  .how.mode = 0xC000000000000000ULL, .err = -EINVAL },
-+		{ .name = "invalid how.mode and O_TMPFILE",
-+		  .how.flags = O_TMPFILE | O_RDWR,
-+		  .how.mode = 0x1337, .err = -EINVAL },
-+		{ .name = "invalid (very large) how.mode and O_TMPFILE",
-+		  .how.flags = O_TMPFILE | O_RDWR,
-+		  .how.mode = 0x0000A00000000000ULL, .err = -EINVAL },
-+
-+		/* ->resolve must only contain RESOLVE_* flags. */
-+		{ .name = "invalid how.resolve and O_RDONLY",
-+		  .how.flags = O_RDONLY,
-+		  .how.resolve = 0x1337, .err = -EINVAL },
-+		{ .name = "invalid how.resolve and O_CREAT",
-+		  .how.flags = O_CREAT,
-+		  .how.resolve = 0x1337, .err = -EINVAL },
-+		{ .name = "invalid how.resolve and O_TMPFILE",
-+		  .how.flags = O_TMPFILE | O_RDWR,
-+		  .how.resolve = 0x1337, .err = -EINVAL },
-+		{ .name = "invalid how.resolve and O_PATH",
-+		  .how.flags = O_PATH,
-+		  .how.resolve = 0x1337, .err = -EINVAL },
-+	};
-+
-+	BUILD_BUG_ON(ARRAY_LEN(tests) != NUM_OPENAT2_FLAG_TESTS);
-+
-+	for (int i = 0; i < ARRAY_LEN(tests); i++) {
-+		int fd, fdflags = -1;
-+		char *path, *fdpath = NULL;
-+		bool failed = false;
-+		struct flag_test *test = &tests[i];
-+		void (*resultfn)(const char *msg, ...) = ksft_test_result_pass;
-+
-+		if (!openat2_supported) {
-+			ksft_print_msg("openat2(2) unsupported\n");
-+			resultfn = ksft_test_result_skip;
-+			goto skip;
-+		}
-+
-+		path = (test->how.flags & O_CREAT) ? "/tmp/ksft.openat2_tmpfile" : ".";
-+		unlink(path);
-+
-+		fd = sys_openat2(AT_FDCWD, path, &test->how);
-+		if (test->err >= 0)
-+			failed = (fd < 0);
-+		else
-+			failed = (fd != test->err);
-+		if (fd >= 0) {
-+			int otherflags;
-+
-+			fdpath = fdreadlink(fd);
-+			fdflags = fcntl(fd, F_GETFL);
-+			otherflags = fcntl(fd, F_GETFD);
-+			close(fd);
-+
-+			E_assert(fdflags >= 0, "fcntl F_GETFL of new fd");
-+			E_assert(otherflags >= 0, "fcntl F_GETFD of new fd");
-+
-+			/* O_CLOEXEC isn't shown in F_GETFL. */
-+			if (otherflags & FD_CLOEXEC)
-+				fdflags |= O_CLOEXEC;
-+			/* O_CREAT is hidden from F_GETFL. */
-+			if (test->how.flags & O_CREAT)
-+				fdflags |= O_CREAT;
-+			if (!(test->how.flags & O_LARGEFILE))
-+				fdflags &= ~O_LARGEFILE;
-+			failed |= (fdflags != test->how.flags);
-+		}
-+
-+		if (failed) {
-+			resultfn = ksft_test_result_fail;
-+
-+			ksft_print_msg("openat2 unexpectedly returned ");
-+			if (fdpath)
-+				ksft_print_msg("%d['%s'] with %X (!= %X)\n",
-+					       fd, fdpath, fdflags,
-+					       test->how.flags);
-+			else
-+				ksft_print_msg("%d (%s)\n", fd, strerror(-fd));
-+		}
-+
-+skip:
-+		if (test->err >= 0)
-+			resultfn("openat2 with %s succeeds\n", test->name);
-+		else
-+			resultfn("openat2 with %s fails with %d (%s)\n",
-+				 test->name, test->err, strerror(-test->err));
-+
-+		free(fdpath);
-+		fflush(stdout);
-+	}
-+}
-+
-+#define NUM_TESTS (NUM_OPENAT2_STRUCT_VARIATIONS * NUM_OPENAT2_STRUCT_TESTS + \
-+		   NUM_OPENAT2_FLAG_TESTS)
-+
-+int main(int argc, char **argv)
-+{
-+	ksft_print_header();
-+	ksft_set_plan(NUM_TESTS);
-+
-+	test_openat2_struct();
-+	test_openat2_flags();
-+
-+	if (ksft_get_fail_cnt() + ksft_get_error_cnt() > 0)
-+		ksft_exit_fail();
-+	else
-+		ksft_exit_pass();
-+}
-diff --git a/tools/testing/selftests/openat2/rename_attack_test.c b/tools/testing/selftests/openat2/rename_attack_test.c
-new file mode 100644
-index 000000000000..0a770728b436
---- /dev/null
-+++ b/tools/testing/selftests/openat2/rename_attack_test.c
-@@ -0,0 +1,160 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Author: Aleksa Sarai <cyphar@cyphar.com>
-+ * Copyright (C) 2018-2019 SUSE LLC.
-+ */
-+
-+#define _GNU_SOURCE
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <sched.h>
-+#include <sys/stat.h>
-+#include <sys/types.h>
-+#include <sys/mount.h>
-+#include <sys/mman.h>
-+#include <sys/prctl.h>
-+#include <signal.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <stdbool.h>
-+#include <string.h>
-+#include <syscall.h>
-+#include <limits.h>
-+#include <unistd.h>
-+
-+#include "../kselftest.h"
-+#include "helpers.h"
-+
-+/* Construct a test directory with the following structure:
-+ *
-+ * root/
-+ * |-- a/
-+ * |   `-- c/
-+ * `-- b/
-+ */
-+int setup_testdir(void)
-+{
-+	int dfd;
-+	char dirname[] = "/tmp/ksft-openat2-rename-attack.XXXXXX";
-+
-+	/* Make the top-level directory. */
-+	if (!mkdtemp(dirname))
-+		ksft_exit_fail_msg("setup_testdir: failed to create tmpdir\n");
-+	dfd = open(dirname, O_PATH | O_DIRECTORY);
-+	if (dfd < 0)
-+		ksft_exit_fail_msg("setup_testdir: failed to open tmpdir\n");
-+
-+	E_mkdirat(dfd, "a", 0755);
-+	E_mkdirat(dfd, "b", 0755);
-+	E_mkdirat(dfd, "a/c", 0755);
-+
-+	return dfd;
-+}
-+
-+/* Swap @dirfd/@a and @dirfd/@b constantly. Parent must kill this process. */
-+pid_t spawn_attack(int dirfd, char *a, char *b)
-+{
-+	pid_t child = fork();
-+	if (child != 0)
-+		return child;
-+
-+	/* If the parent (the test process) dies, kill ourselves too. */
-+	E_prctl(PR_SET_PDEATHSIG, SIGKILL);
-+
-+	/* Swap @a and @b. */
-+	for (;;)
-+		renameat2(dirfd, a, dirfd, b, RENAME_EXCHANGE);
-+	exit(1);
-+}
-+
-+#define NUM_RENAME_TESTS 2
-+#define ROUNDS 400000
-+
-+const char *flagname(int resolve)
-+{
-+	switch (resolve) {
-+	case RESOLVE_IN_ROOT:
-+		return "RESOLVE_IN_ROOT";
-+	case RESOLVE_BENEATH:
-+		return "RESOLVE_BENEATH";
-+	}
-+	return "(unknown)";
-+}
-+
-+void test_rename_attack(int resolve)
-+{
-+	int dfd, afd;
-+	pid_t child;
-+	void (*resultfn)(const char *msg, ...) = ksft_test_result_pass;
-+	int escapes = 0, other_errs = 0, exdevs = 0, eagains = 0, successes = 0;
-+
-+	struct open_how how = {
-+		.flags = O_PATH,
-+		.resolve = resolve,
-+	};
-+
-+	if (!openat2_supported) {
-+		how.resolve = 0;
-+		ksft_print_msg("openat2(2) unsupported -- using openat(2) instead\n");
-+	}
-+
-+	dfd = setup_testdir();
-+	afd = openat(dfd, "a", O_PATH);
-+	if (afd < 0)
-+		ksft_exit_fail_msg("test_rename_attack: failed to open 'a'\n");
-+
-+	child = spawn_attack(dfd, "a/c", "b");
-+
-+	for (int i = 0; i < ROUNDS; i++) {
-+		int fd;
-+		char *victim_path = "c/../../c/../../c/../../c/../../c/../../c/../../c/../../c/../../c/../../c/../../c/../../c/../../c/../../c/../../c/../../c/../../c/../../c/../../c/../..";
-+
-+		if (openat2_supported)
-+			fd = sys_openat2(afd, victim_path, &how);
-+		else
-+			fd = sys_openat(afd, victim_path, &how);
-+
-+		if (fd < 0) {
-+			if (fd == -EAGAIN)
-+				eagains++;
-+			else if (fd == -EXDEV)
-+				exdevs++;
-+			else if (fd == -ENOENT)
-+				escapes++; /* escaped outside and got ENOENT... */
-+			else
-+				other_errs++; /* unexpected error */
-+		} else {
-+			if (fdequal(fd, afd, NULL))
-+				successes++;
-+			else
-+				escapes++; /* we got an unexpected fd */
-+		}
-+		close(fd);
-+	}
-+
-+	if (escapes > 0)
-+		resultfn = ksft_test_result_fail;
-+	ksft_print_msg("non-escapes: EAGAIN=%d EXDEV=%d E<other>=%d success=%d\n",
-+		       eagains, exdevs, other_errs, successes);
-+	resultfn("rename attack with %s (%d runs, got %d escapes)\n",
-+		 flagname(resolve), ROUNDS, escapes);
-+
-+	/* Should be killed anyway, but might as well make sure. */
-+	E_kill(child, SIGKILL);
-+}
-+
-+#define NUM_TESTS NUM_RENAME_TESTS
-+
-+int main(int argc, char **argv)
-+{
-+	ksft_print_header();
-+	ksft_set_plan(NUM_TESTS);
-+
-+	test_rename_attack(RESOLVE_BENEATH);
-+	test_rename_attack(RESOLVE_IN_ROOT);
-+
-+	if (ksft_get_fail_cnt() + ksft_get_error_cnt() > 0)
-+		ksft_exit_fail();
-+	else
-+		ksft_exit_pass();
-+}
-diff --git a/tools/testing/selftests/openat2/resolve_test.c b/tools/testing/selftests/openat2/resolve_test.c
-new file mode 100644
-index 000000000000..7a94b1da8e7b
---- /dev/null
-+++ b/tools/testing/selftests/openat2/resolve_test.c
-@@ -0,0 +1,523 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Author: Aleksa Sarai <cyphar@cyphar.com>
-+ * Copyright (C) 2018-2019 SUSE LLC.
-+ */
-+
-+#define _GNU_SOURCE
-+#include <fcntl.h>
-+#include <sched.h>
-+#include <sys/stat.h>
-+#include <sys/types.h>
-+#include <sys/mount.h>
-+#include <stdlib.h>
-+#include <stdbool.h>
-+#include <string.h>
-+
-+#include "../kselftest.h"
-+#include "helpers.h"
-+
-+/*
-+ * Construct a test directory with the following structure:
-+ *
-+ * root/
-+ * |-- procexe -> /proc/self/exe
-+ * |-- procroot -> /proc/self/root
-+ * |-- root/
-+ * |-- mnt/ [mountpoint]
-+ * |   |-- self -> ../mnt/
-+ * |   `-- absself -> /mnt/
-+ * |-- etc/
-+ * |   `-- passwd
-+ * |-- creatlink -> /newfile3
-+ * |-- reletc -> etc/
-+ * |-- relsym -> etc/passwd
-+ * |-- absetc -> /etc/
-+ * |-- abssym -> /etc/passwd
-+ * |-- abscheeky -> /cheeky
-+ * `-- cheeky/
-+ *     |-- absself -> /
-+ *     |-- self -> ../../root/
-+ *     |-- garbageself -> /../../root/
-+ *     |-- passwd -> ../cheeky/../cheeky/../etc/../etc/passwd
-+ *     |-- abspasswd -> /../cheeky/../cheeky/../etc/../etc/passwd
-+ *     |-- dotdotlink -> ../../../../../../../../../../../../../../etc/passwd
-+ *     `-- garbagelink -> /../../../../../../../../../../../../../../etc/passwd
-+ */
-+int setup_testdir(void)
-+{
-+	int dfd, tmpfd;
-+	char dirname[] = "/tmp/ksft-openat2-testdir.XXXXXX";
-+
-+	/* Unshare and make /tmp a new directory. */
-+	E_unshare(CLONE_NEWNS);
-+	E_mount("", "/tmp", "", MS_PRIVATE, "");
-+
-+	/* Make the top-level directory. */
-+	if (!mkdtemp(dirname))
-+		ksft_exit_fail_msg("setup_testdir: failed to create tmpdir\n");
-+	dfd = open(dirname, O_PATH | O_DIRECTORY);
-+	if (dfd < 0)
-+		ksft_exit_fail_msg("setup_testdir: failed to open tmpdir\n");
-+
-+	/* A sub-directory which is actually used for tests. */
-+	E_mkdirat(dfd, "root", 0755);
-+	tmpfd = openat(dfd, "root", O_PATH | O_DIRECTORY);
-+	if (tmpfd < 0)
-+		ksft_exit_fail_msg("setup_testdir: failed to open tmpdir\n");
-+	close(dfd);
-+	dfd = tmpfd;
-+
-+	E_symlinkat("/proc/self/exe", dfd, "procexe");
-+	E_symlinkat("/proc/self/root", dfd, "procroot");
-+	E_mkdirat(dfd, "root", 0755);
-+
-+	/* There is no mountat(2), so use chdir. */
-+	E_mkdirat(dfd, "mnt", 0755);
-+	E_fchdir(dfd);
-+	E_mount("tmpfs", "./mnt", "tmpfs", MS_NOSUID | MS_NODEV, "");
-+	E_symlinkat("../mnt/", dfd, "mnt/self");
-+	E_symlinkat("/mnt/", dfd, "mnt/absself");
-+
-+	E_mkdirat(dfd, "etc", 0755);
-+	E_touchat(dfd, "etc/passwd");
-+
-+	E_symlinkat("/newfile3", dfd, "creatlink");
-+	E_symlinkat("etc/", dfd, "reletc");
-+	E_symlinkat("etc/passwd", dfd, "relsym");
-+	E_symlinkat("/etc/", dfd, "absetc");
-+	E_symlinkat("/etc/passwd", dfd, "abssym");
-+	E_symlinkat("/cheeky", dfd, "abscheeky");
-+
-+	E_mkdirat(dfd, "cheeky", 0755);
-+
-+	E_symlinkat("/", dfd, "cheeky/absself");
-+	E_symlinkat("../../root/", dfd, "cheeky/self");
-+	E_symlinkat("/../../root/", dfd, "cheeky/garbageself");
-+
-+	E_symlinkat("../cheeky/../etc/../etc/passwd", dfd, "cheeky/passwd");
-+	E_symlinkat("/../cheeky/../etc/../etc/passwd", dfd, "cheeky/abspasswd");
-+
-+	E_symlinkat("../../../../../../../../../../../../../../etc/passwd",
-+		    dfd, "cheeky/dotdotlink");
-+	E_symlinkat("/../../../../../../../../../../../../../../etc/passwd",
-+		    dfd, "cheeky/garbagelink");
-+
-+	return dfd;
-+}
-+
-+struct basic_test {
-+	const char *name;
-+	const char *dir;
-+	const char *path;
-+	struct open_how how;
-+	bool pass;
-+	union {
-+		int err;
-+		const char *path;
-+	} out;
-+};
-+
-+#define NUM_OPENAT2_OPATH_TESTS 88
-+
-+void test_openat2_opath_tests(void)
-+{
-+	int rootfd, hardcoded_fd;
-+	char *procselfexe, *hardcoded_fdpath;
-+
-+	E_asprintf(&procselfexe, "/proc/%d/exe", getpid());
-+	rootfd = setup_testdir();
-+
-+	hardcoded_fd = open("/dev/null", O_RDONLY);
-+	E_assert(hardcoded_fd >= 0, "open fd to hardcode");
-+	E_asprintf(&hardcoded_fdpath, "self/fd/%d", hardcoded_fd);
-+
-+	struct basic_test tests[] = {
-+		/** RESOLVE_BENEATH **/
-+		/* Attempts to cross dirfd should be blocked. */
-+		{ .name = "[beneath] jump to /",
-+		  .path = "/",			.how.resolve = RESOLVE_BENEATH,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .name = "[beneath] absolute link to $root",
-+		  .path = "cheeky/absself",	.how.resolve = RESOLVE_BENEATH,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .name = "[beneath] chained absolute links to $root",
-+		  .path = "abscheeky/absself",	.how.resolve = RESOLVE_BENEATH,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .name = "[beneath] jump outside $root",
-+		  .path = "..",			.how.resolve = RESOLVE_BENEATH,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .name = "[beneath] temporary jump outside $root",
-+		  .path = "../root/",		.how.resolve = RESOLVE_BENEATH,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .name = "[beneath] symlink temporary jump outside $root",
-+		  .path = "cheeky/self",	.how.resolve = RESOLVE_BENEATH,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .name = "[beneath] chained symlink temporary jump outside $root",
-+		  .path = "abscheeky/self",	.how.resolve = RESOLVE_BENEATH,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .name = "[beneath] garbage links to $root",
-+		  .path = "cheeky/garbageself",	.how.resolve = RESOLVE_BENEATH,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .name = "[beneath] chained garbage links to $root",
-+		  .path = "abscheeky/garbageself", .how.resolve = RESOLVE_BENEATH,
-+		  .out.err = -EXDEV,		.pass = false },
-+		/* Only relative paths that stay inside dirfd should work. */
-+		{ .name = "[beneath] ordinary path to 'root'",
-+		  .path = "root",		.how.resolve = RESOLVE_BENEATH,
-+		  .out.path = "root",		.pass = true },
-+		{ .name = "[beneath] ordinary path to 'etc'",
-+		  .path = "etc",		.how.resolve = RESOLVE_BENEATH,
-+		  .out.path = "etc",		.pass = true },
-+		{ .name = "[beneath] ordinary path to 'etc/passwd'",
-+		  .path = "etc/passwd",		.how.resolve = RESOLVE_BENEATH,
-+		  .out.path = "etc/passwd",	.pass = true },
-+		{ .name = "[beneath] relative symlink inside $root",
-+		  .path = "relsym",		.how.resolve = RESOLVE_BENEATH,
-+		  .out.path = "etc/passwd",	.pass = true },
-+		{ .name = "[beneath] chained-'..' relative symlink inside $root",
-+		  .path = "cheeky/passwd",	.how.resolve = RESOLVE_BENEATH,
-+		  .out.path = "etc/passwd",	.pass = true },
-+		{ .name = "[beneath] absolute symlink component outside $root",
-+		  .path = "abscheeky/passwd",	.how.resolve = RESOLVE_BENEATH,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .name = "[beneath] absolute symlink target outside $root",
-+		  .path = "abssym",		.how.resolve = RESOLVE_BENEATH,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .name = "[beneath] absolute path outside $root",
-+		  .path = "/etc/passwd",	.how.resolve = RESOLVE_BENEATH,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .name = "[beneath] cheeky absolute path outside $root",
-+		  .path = "cheeky/abspasswd",	.how.resolve = RESOLVE_BENEATH,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .name = "[beneath] chained cheeky absolute path outside $root",
-+		  .path = "abscheeky/abspasswd", .how.resolve = RESOLVE_BENEATH,
-+		  .out.err = -EXDEV,		.pass = false },
-+		/* Tricky paths should fail. */
-+		{ .name = "[beneath] tricky '..'-chained symlink outside $root",
-+		  .path = "cheeky/dotdotlink",	.how.resolve = RESOLVE_BENEATH,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .name = "[beneath] tricky absolute + '..'-chained symlink outside $root",
-+		  .path = "abscheeky/dotdotlink", .how.resolve = RESOLVE_BENEATH,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .name = "[beneath] tricky garbage link outside $root",
-+		  .path = "cheeky/garbagelink",	.how.resolve = RESOLVE_BENEATH,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .name = "[beneath] tricky absolute + garbage link outside $root",
-+		  .path = "abscheeky/garbagelink", .how.resolve = RESOLVE_BENEATH,
-+		  .out.err = -EXDEV,		.pass = false },
-+
-+		/** RESOLVE_IN_ROOT **/
-+		/* All attempts to cross the dirfd will be scoped-to-root. */
-+		{ .name = "[in_root] jump to /",
-+		  .path = "/",			.how.resolve = RESOLVE_IN_ROOT,
-+		  .out.path = NULL,		.pass = true },
-+		{ .name = "[in_root] absolute symlink to /root",
-+		  .path = "cheeky/absself",	.how.resolve = RESOLVE_IN_ROOT,
-+		  .out.path = NULL,		.pass = true },
-+		{ .name = "[in_root] chained absolute symlinks to /root",
-+		  .path = "abscheeky/absself",	.how.resolve = RESOLVE_IN_ROOT,
-+		  .out.path = NULL,		.pass = true },
-+		{ .name = "[in_root] '..' at root",
-+		  .path = "..",			.how.resolve = RESOLVE_IN_ROOT,
-+		  .out.path = NULL,		.pass = true },
-+		{ .name = "[in_root] '../root' at root",
-+		  .path = "../root/",		.how.resolve = RESOLVE_IN_ROOT,
-+		  .out.path = "root",		.pass = true },
-+		{ .name = "[in_root] relative symlink containing '..' above root",
-+		  .path = "cheeky/self",	.how.resolve = RESOLVE_IN_ROOT,
-+		  .out.path = "root",		.pass = true },
-+		{ .name = "[in_root] garbage link to /root",
-+		  .path = "cheeky/garbageself",	.how.resolve = RESOLVE_IN_ROOT,
-+		  .out.path = "root",		.pass = true },
-+		{ .name = "[in_root] chainged garbage links to /root",
-+		  .path = "abscheeky/garbageself", .how.resolve = RESOLVE_IN_ROOT,
-+		  .out.path = "root",		.pass = true },
-+		{ .name = "[in_root] relative path to 'root'",
-+		  .path = "root",		.how.resolve = RESOLVE_IN_ROOT,
-+		  .out.path = "root",		.pass = true },
-+		{ .name = "[in_root] relative path to 'etc'",
-+		  .path = "etc",		.how.resolve = RESOLVE_IN_ROOT,
-+		  .out.path = "etc",		.pass = true },
-+		{ .name = "[in_root] relative path to 'etc/passwd'",
-+		  .path = "etc/passwd",		.how.resolve = RESOLVE_IN_ROOT,
-+		  .out.path = "etc/passwd",	.pass = true },
-+		{ .name = "[in_root] relative symlink to 'etc/passwd'",
-+		  .path = "relsym",		.how.resolve = RESOLVE_IN_ROOT,
-+		  .out.path = "etc/passwd",	.pass = true },
-+		{ .name = "[in_root] chained-'..' relative symlink to 'etc/passwd'",
-+		  .path = "cheeky/passwd",	.how.resolve = RESOLVE_IN_ROOT,
-+		  .out.path = "etc/passwd",	.pass = true },
-+		{ .name = "[in_root] chained-'..' absolute + relative symlink to 'etc/passwd'",
-+		  .path = "abscheeky/passwd",	.how.resolve = RESOLVE_IN_ROOT,
-+		  .out.path = "etc/passwd",	.pass = true },
-+		{ .name = "[in_root] absolute symlink to 'etc/passwd'",
-+		  .path = "abssym",		.how.resolve = RESOLVE_IN_ROOT,
-+		  .out.path = "etc/passwd",	.pass = true },
-+		{ .name = "[in_root] absolute path 'etc/passwd'",
-+		  .path = "/etc/passwd",	.how.resolve = RESOLVE_IN_ROOT,
-+		  .out.path = "etc/passwd",	.pass = true },
-+		{ .name = "[in_root] cheeky absolute path 'etc/passwd'",
-+		  .path = "cheeky/abspasswd",	.how.resolve = RESOLVE_IN_ROOT,
-+		  .out.path = "etc/passwd",	.pass = true },
-+		{ .name = "[in_root] chained cheeky absolute path 'etc/passwd'",
-+		  .path = "abscheeky/abspasswd", .how.resolve = RESOLVE_IN_ROOT,
-+		  .out.path = "etc/passwd",	.pass = true },
-+		{ .name = "[in_root] tricky '..'-chained symlink outside $root",
-+		  .path = "cheeky/dotdotlink",	.how.resolve = RESOLVE_IN_ROOT,
-+		  .out.path = "etc/passwd",	.pass = true },
-+		{ .name = "[in_root] tricky absolute + '..'-chained symlink outside $root",
-+		  .path = "abscheeky/dotdotlink", .how.resolve = RESOLVE_IN_ROOT,
-+		  .out.path = "etc/passwd",	.pass = true },
-+		{ .name = "[in_root] tricky absolute path + absolute + '..'-chained symlink outside $root",
-+		  .path = "/../../../../abscheeky/dotdotlink", .how.resolve = RESOLVE_IN_ROOT,
-+		  .out.path = "etc/passwd",	.pass = true },
-+		{ .name = "[in_root] tricky garbage link outside $root",
-+		  .path = "cheeky/garbagelink",	.how.resolve = RESOLVE_IN_ROOT,
-+		  .out.path = "etc/passwd",	.pass = true },
-+		{ .name = "[in_root] tricky absolute + garbage link outside $root",
-+		  .path = "abscheeky/garbagelink", .how.resolve = RESOLVE_IN_ROOT,
-+		  .out.path = "etc/passwd",	.pass = true },
-+		{ .name = "[in_root] tricky absolute path + absolute + garbage link outside $root",
-+		  .path = "/../../../../abscheeky/garbagelink", .how.resolve = RESOLVE_IN_ROOT,
-+		  .out.path = "etc/passwd",	.pass = true },
-+		/* O_CREAT should handle trailing symlinks correctly. */
-+		{ .name = "[in_root] O_CREAT of relative path inside $root",
-+		  .path = "newfile1",		.how.flags = O_CREAT,
-+						.how.mode = 0700,
-+						.how.resolve = RESOLVE_IN_ROOT,
-+		  .out.path = "newfile1",	.pass = true },
-+		{ .name = "[in_root] O_CREAT of absolute path",
-+		  .path = "/newfile2",		.how.flags = O_CREAT,
-+						.how.mode = 0700,
-+						.how.resolve = RESOLVE_IN_ROOT,
-+		  .out.path = "newfile2",	.pass = true },
-+		{ .name = "[in_root] O_CREAT of tricky symlink outside root",
-+		  .path = "/creatlink",		.how.flags = O_CREAT,
-+						.how.mode = 0700,
-+						.how.resolve = RESOLVE_IN_ROOT,
-+		  .out.path = "newfile3",	.pass = true },
-+
-+		/** RESOLVE_NO_XDEV **/
-+		/* Crossing *down* into a mountpoint is disallowed. */
-+		{ .name = "[no_xdev] cross into $mnt",
-+		  .path = "mnt",		.how.resolve = RESOLVE_NO_XDEV,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .name = "[no_xdev] cross into $mnt/",
-+		  .path = "mnt/",		.how.resolve = RESOLVE_NO_XDEV,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .name = "[no_xdev] cross into $mnt/.",
-+		  .path = "mnt/.",		.how.resolve = RESOLVE_NO_XDEV,
-+		  .out.err = -EXDEV,		.pass = false },
-+		/* Crossing *up* out of a mountpoint is disallowed. */
-+		{ .name = "[no_xdev] goto mountpoint root",
-+		  .dir = "mnt", .path = ".",	.how.resolve = RESOLVE_NO_XDEV,
-+		  .out.path = "mnt",		.pass = true },
-+		{ .name = "[no_xdev] cross up through '..'",
-+		  .dir = "mnt", .path = "..",	.how.resolve = RESOLVE_NO_XDEV,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .name = "[no_xdev] temporary cross up through '..'",
-+		  .dir = "mnt", .path = "../mnt", .how.resolve = RESOLVE_NO_XDEV,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .name = "[no_xdev] temporary relative symlink cross up",
-+		  .dir = "mnt", .path = "self",	.how.resolve = RESOLVE_NO_XDEV,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .name = "[no_xdev] temporary absolute symlink cross up",
-+		  .dir = "mnt", .path = "absself", .how.resolve = RESOLVE_NO_XDEV,
-+		  .out.err = -EXDEV,		.pass = false },
-+		/* Jumping to "/" is ok, but later components cannot cross. */
-+		{ .name = "[no_xdev] jump to / directly",
-+		  .dir = "mnt", .path = "/",	.how.resolve = RESOLVE_NO_XDEV,
-+		  .out.path = "/",		.pass = true },
-+		{ .name = "[no_xdev] jump to / (from /) directly",
-+		  .dir = "/", .path = "/",	.how.resolve = RESOLVE_NO_XDEV,
-+		  .out.path = "/",		.pass = true },
-+		{ .name = "[no_xdev] jump to / then proc",
-+		  .path = "/proc/1",		.how.resolve = RESOLVE_NO_XDEV,
-+		  .out.err = -EXDEV,		.pass = false },
-+		{ .name = "[no_xdev] jump to / then tmp",
-+		  .path = "/tmp",		.how.resolve = RESOLVE_NO_XDEV,
-+		  .out.err = -EXDEV,		.pass = false },
-+		/* Magic-links are blocked since they can switch vfsmounts. */
-+		{ .name = "[no_xdev] cross through magic-link to self/root",
-+		  .dir = "/proc", .path = "self/root", 	.how.resolve = RESOLVE_NO_XDEV,
-+		  .out.err = -EXDEV,			.pass = false },
-+		{ .name = "[no_xdev] cross through magic-link to self/cwd",
-+		  .dir = "/proc", .path = "self/cwd",	.how.resolve = RESOLVE_NO_XDEV,
-+		  .out.err = -EXDEV,			.pass = false },
-+		/* Except magic-link jumps inside the same vfsmount. */
-+		{ .name = "[no_xdev] jump through magic-link to same procfs",
-+		  .dir = "/proc", .path = hardcoded_fdpath, .how.resolve = RESOLVE_NO_XDEV,
-+		  .out.path = "/proc",			    .pass = true, },
-+
-+		/** RESOLVE_NO_MAGICLINKS **/
-+		/* Regular symlinks should work. */
-+		{ .name = "[no_magiclinks] ordinary relative symlink",
-+		  .path = "relsym",		.how.resolve = RESOLVE_NO_MAGICLINKS,
-+		  .out.path = "etc/passwd",	.pass = true },
-+		/* Magic-links should not work. */
-+		{ .name = "[no_magiclinks] symlink to magic-link",
-+		  .path = "procexe",		.how.resolve = RESOLVE_NO_MAGICLINKS,
-+		  .out.err = -ELOOP,		.pass = false },
-+		{ .name = "[no_magiclinks] normal path to magic-link",
-+		  .path = "/proc/self/exe",	.how.resolve = RESOLVE_NO_MAGICLINKS,
-+		  .out.err = -ELOOP,		.pass = false },
-+		{ .name = "[no_magiclinks] normal path to magic-link with O_NOFOLLOW",
-+		  .path = "/proc/self/exe",	.how.flags = O_NOFOLLOW,
-+						.how.resolve = RESOLVE_NO_MAGICLINKS,
-+		  .out.path = procselfexe,	.pass = true },
-+		{ .name = "[no_magiclinks] symlink to magic-link path component",
-+		  .path = "procroot/etc",	.how.resolve = RESOLVE_NO_MAGICLINKS,
-+		  .out.err = -ELOOP,		.pass = false },
-+		{ .name = "[no_magiclinks] magic-link path component",
-+		  .path = "/proc/self/root/etc", .how.resolve = RESOLVE_NO_MAGICLINKS,
-+		  .out.err = -ELOOP,		.pass = false },
-+		{ .name = "[no_magiclinks] magic-link path component with O_NOFOLLOW",
-+		  .path = "/proc/self/root/etc", .how.flags = O_NOFOLLOW,
-+						 .how.resolve = RESOLVE_NO_MAGICLINKS,
-+		  .out.err = -ELOOP,		.pass = false },
-+
-+		/** RESOLVE_NO_SYMLINKS **/
-+		/* Normal paths should work. */
-+		{ .name = "[no_symlinks] ordinary path to '.'",
-+		  .path = ".",			.how.resolve = RESOLVE_NO_SYMLINKS,
-+		  .out.path = NULL,		.pass = true },
-+		{ .name = "[no_symlinks] ordinary path to 'root'",
-+		  .path = "root",		.how.resolve = RESOLVE_NO_SYMLINKS,
-+		  .out.path = "root",		.pass = true },
-+		{ .name = "[no_symlinks] ordinary path to 'etc'",
-+		  .path = "etc",		.how.resolve = RESOLVE_NO_SYMLINKS,
-+		  .out.path = "etc",		.pass = true },
-+		{ .name = "[no_symlinks] ordinary path to 'etc/passwd'",
-+		  .path = "etc/passwd",		.how.resolve = RESOLVE_NO_SYMLINKS,
-+		  .out.path = "etc/passwd",	.pass = true },
-+		/* Regular symlinks are blocked. */
-+		{ .name = "[no_symlinks] relative symlink target",
-+		  .path = "relsym",		.how.resolve = RESOLVE_NO_SYMLINKS,
-+		  .out.err = -ELOOP,		.pass = false },
-+		{ .name = "[no_symlinks] relative symlink component",
-+		  .path = "reletc/passwd",	.how.resolve = RESOLVE_NO_SYMLINKS,
-+		  .out.err = -ELOOP,		.pass = false },
-+		{ .name = "[no_symlinks] absolute symlink target",
-+		  .path = "abssym",		.how.resolve = RESOLVE_NO_SYMLINKS,
-+		  .out.err = -ELOOP,		.pass = false },
-+		{ .name = "[no_symlinks] absolute symlink component",
-+		  .path = "absetc/passwd",	.how.resolve = RESOLVE_NO_SYMLINKS,
-+		  .out.err = -ELOOP,		.pass = false },
-+		{ .name = "[no_symlinks] cheeky garbage link",
-+		  .path = "cheeky/garbagelink",	.how.resolve = RESOLVE_NO_SYMLINKS,
-+		  .out.err = -ELOOP,		.pass = false },
-+		{ .name = "[no_symlinks] cheeky absolute + garbage link",
-+		  .path = "abscheeky/garbagelink", .how.resolve = RESOLVE_NO_SYMLINKS,
-+		  .out.err = -ELOOP,		.pass = false },
-+		{ .name = "[no_symlinks] cheeky absolute + absolute symlink",
-+		  .path = "abscheeky/absself",	.how.resolve = RESOLVE_NO_SYMLINKS,
-+		  .out.err = -ELOOP,		.pass = false },
-+		/* Trailing symlinks with NO_FOLLOW. */
-+		{ .name = "[no_symlinks] relative symlink with O_NOFOLLOW",
-+		  .path = "relsym",		.how.flags = O_NOFOLLOW,
-+						.how.resolve = RESOLVE_NO_SYMLINKS,
-+		  .out.path = "relsym",		.pass = true },
-+		{ .name = "[no_symlinks] absolute symlink with O_NOFOLLOW",
-+		  .path = "abssym",		.how.flags = O_NOFOLLOW,
-+						.how.resolve = RESOLVE_NO_SYMLINKS,
-+		  .out.path = "abssym",		.pass = true },
-+		{ .name = "[no_symlinks] trailing symlink with O_NOFOLLOW",
-+		  .path = "cheeky/garbagelink",	.how.flags = O_NOFOLLOW,
-+						.how.resolve = RESOLVE_NO_SYMLINKS,
-+		  .out.path = "cheeky/garbagelink", .pass = true },
-+		{ .name = "[no_symlinks] multiple symlink components with O_NOFOLLOW",
-+		  .path = "abscheeky/absself",	.how.flags = O_NOFOLLOW,
-+						.how.resolve = RESOLVE_NO_SYMLINKS,
-+		  .out.err = -ELOOP,		.pass = false },
-+		{ .name = "[no_symlinks] multiple symlink (and garbage link) components with O_NOFOLLOW",
-+		  .path = "abscheeky/garbagelink", .how.flags = O_NOFOLLOW,
-+						   .how.resolve = RESOLVE_NO_SYMLINKS,
-+		  .out.err = -ELOOP,		.pass = false },
-+	};
-+
-+	BUILD_BUG_ON(ARRAY_LEN(tests) != NUM_OPENAT2_OPATH_TESTS);
-+
-+	for (int i = 0; i < ARRAY_LEN(tests); i++) {
-+		int dfd, fd;
-+		char *fdpath = NULL;
-+		bool failed;
-+		void (*resultfn)(const char *msg, ...) = ksft_test_result_pass;
-+		struct basic_test *test = &tests[i];
-+
-+		if (!openat2_supported) {
-+			ksft_print_msg("openat2(2) unsupported\n");
-+			resultfn = ksft_test_result_skip;
-+			goto skip;
-+		}
-+
-+		/* Auto-set O_PATH. */
-+		if (!(test->how.flags & O_CREAT))
-+			test->how.flags |= O_PATH;
-+
-+		if (test->dir)
-+			dfd = openat(rootfd, test->dir, O_PATH | O_DIRECTORY);
-+		else
-+			dfd = dup(rootfd);
-+		E_assert(dfd, "failed to openat root '%s': %m", test->dir);
-+
-+		E_dup2(dfd, hardcoded_fd);
-+
-+		fd = sys_openat2(dfd, test->path, &test->how);
-+		if (test->pass)
-+			failed = (fd < 0 || !fdequal(fd, rootfd, test->out.path));
-+		else
-+			failed = (fd != test->out.err);
-+		if (fd >= 0) {
-+			fdpath = fdreadlink(fd);
-+			close(fd);
-+		}
-+		close(dfd);
-+
-+		if (failed) {
-+			resultfn = ksft_test_result_fail;
-+
-+			ksft_print_msg("openat2 unexpectedly returned ");
-+			if (fdpath)
-+				ksft_print_msg("%d['%s']\n", fd, fdpath);
-+			else
-+				ksft_print_msg("%d (%s)\n", fd, strerror(-fd));
-+		}
-+
-+skip:
-+		if (test->pass)
-+			resultfn("%s gives path '%s'\n", test->name,
-+				 test->out.path ?: ".");
-+		else
-+			resultfn("%s fails with %d (%s)\n", test->name,
-+				 test->out.err, strerror(-test->out.err));
-+
-+		fflush(stdout);
-+		free(fdpath);
-+	}
-+
-+	free(procselfexe);
-+	close(rootfd);
-+
-+	free(hardcoded_fdpath);
-+	close(hardcoded_fd);
-+}
-+
-+#define NUM_TESTS NUM_OPENAT2_OPATH_TESTS
-+
-+int main(int argc, char **argv)
-+{
-+	ksft_print_header();
-+	ksft_set_plan(NUM_TESTS);
-+
-+	/* NOTE: We should be checking for CAP_SYS_ADMIN here... */
-+	if (geteuid() != 0)
-+		ksft_exit_skip("all tests require euid == 0\n");
-+
-+	test_openat2_opath_tests();
-+
-+	if (ksft_get_fail_cnt() + ksft_get_error_cnt() > 0)
-+		ksft_exit_fail();
-+	else
-+		ksft_exit_pass();
-+}
--- 
-2.24.1
+--cayhmx6s2p526wnv
+Content-Type: application/gzip
+Content-Disposition: attachment; filename=".config.gz"
+Content-Transfer-Encoding: base64
 
+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
 
+--cayhmx6s2p526wnv--
