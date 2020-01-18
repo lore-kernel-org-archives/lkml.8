@@ -2,142 +2,99 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B652C32771
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 23:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A70C32771
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 23:09:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECCBD24656
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 23:03:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D575A2469C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 23:08:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YDM/9zRP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbgARXDd (ORCPT
+        id S1727120AbgARXI7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 18:03:33 -0500
-Received: from mout-p-201.mailbox.org ([80.241.56.171]:9604 "EHLO
-        mout-p-201.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727008AbgARXDc (ORCPT
+        Sat, 18 Jan 2020 18:08:59 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43851 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727012AbgARXI6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 18:03:32 -0500
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 480YPs1J52zQl9T;
-        Sun, 19 Jan 2020 00:03:29 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
-        with ESMTP id SD3IzuuiLenX; Sun, 19 Jan 2020 00:03:24 +0100 (CET)
-Date:   Sun, 19 Jan 2020 10:03:13 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        David Laight <david.laight@aculab.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        quae@daurnimator.com, dev@opencontainers.org,
-        containers@lists.linux-foundation.org, libc-alpha@sourceware.org,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] openat2: minor uapi cleanups
-Message-ID: <20200118230313.y4a3s7elierw4wzw@yavin>
-References: <20200115144831.GJ8904@ZenIV.linux.org.uk>
- <20200118120800.16358-1-cyphar@cyphar.com>
- <20200118152833.GS8904@ZenIV.linux.org.uk>
- <20200118180941.GT8904@ZenIV.linux.org.uk>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="5riwsuz4dgr3e2jm"
-Content-Disposition: inline
-In-Reply-To: <20200118180941.GT8904@ZenIV.linux.org.uk>
+        Sat, 18 Jan 2020 18:08:58 -0500
+Received: by mail-wr1-f66.google.com with SMTP id d16so25992733wre.10;
+        Sat, 18 Jan 2020 15:08:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=tOn8mq9NdKT/KRhPIH0AzeKwIeYeoG77AtMkfuKA4Gk=;
+        b=YDM/9zRP0Z0heJRTGk5w0BRB3T3JljkBY+Vn8MM05T5goIwGJ3B7QM77rfOdkLagPT
+         3kxmbC4ea6Uq5dNYFl0PjEa9AlqWVN4uPP2bDdahCwocVBLWBErKVzIPiH7aDM2edf88
+         IYxRQj274L1siKaNVt9kDkM7KCVTw29mfdNQrSqqczUDeL1/u1pk2nAOd/aaR03iHzv1
+         ol7cSFcGmMIRkZ/b7ldOjm2B/I1IX/4baIsH6nufFbEdLDvtw8T+hy7Vw/iyBMtUCFhS
+         uEvlq5AWpnrcH6HgUYT7RY0dWkvdjSfUC4gMXEogpkHvHZW/ByqmEKVasBvA9jRJpZtY
+         hbug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=tOn8mq9NdKT/KRhPIH0AzeKwIeYeoG77AtMkfuKA4Gk=;
+        b=KJ8ngvEysh2CuJKEHqBtuRUWvrGQPM51yXe46Ptp2CbE515Jb9G8FhoAMO5ynY/x7N
+         A+Uy5QbvThJQ8iUHMGCj2olmYmkO4WYw4sImML1Kzj98qr0Nw1pT0iR/9gjVXc4aQhSv
+         wcRtG6wWPYLBTKruzq3lIC3w8TmvuTJNDQeI7b0wj0ssvHlTfLl8oT7KYH0LnicbBGxt
+         8B+u9Hfb+gWPe7Z2FihktTvgh2UyEsXJE3IF/kuuGsElhmwnjoQJeIl/5/xP1foGg44G
+         7y/YWSOFet4I6Z4dUkX0TLQGNXssd8pGg1LW6wLPVZXWtF0r/XQ94IIW7mlbmomt0wKr
+         mUDA==
+X-Gm-Message-State: APjAAAX7YWWy5bRA5JRfX9fI2utLyTlqNG1rPWYj3CWrNbVQFpnngjjt
+        dNPJCem+SBIk1H/VODXwKY8=
+X-Google-Smtp-Source: APXvYqz8Jn89LtX623GRYGQbqvDjF4Jme+gXm0owhz3njGWJrRgQY103W3rliYxx+qDV/A1GfvaE/Q==
+X-Received: by 2002:adf:a41c:: with SMTP id d28mr10910809wra.410.1579388936444;
+        Sat, 18 Jan 2020 15:08:56 -0800 (PST)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id x16sm5746408wmk.35.2020.01.18.15.08.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 18 Jan 2020 15:08:56 -0800 (PST)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     broonie@kernel.org
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de,
+        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH v1 2/3] dt-bindings: spi: spi-rockchip: add description for rk3308
+Date:   Sun, 19 Jan 2020 00:08:47 +0100
+Message-Id: <20200118230848.15326-2-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200118230848.15326-1-jbx6244@gmail.com>
+References: <20200118230848.15326-1-jbx6244@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The description below is already in use for rk3308.dtsi,
+but was somehow never added to a document, so add
+"rockchip,rk3308-spi", "rockchip,rk3066-spi"
+for spi nodes on a rk3308 platform to spi-rockchip.yaml.
 
---5riwsuz4dgr3e2jm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ Documentation/devicetree/bindings/spi/spi-rockchip.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-On 2020-01-18, Al Viro <viro@zeniv.linux.org.uk> wrote:
-> On Sat, Jan 18, 2020 at 03:28:33PM +0000, Al Viro wrote:
->=20
-> > #work.openat2 updated, #for-next rebuilt and force-pushed.  There's
-> > a massive update of #work.namei as well, also pushed out; not in
-> > #for-next yet, will post the patch series for review later today.
->=20
-> BTW, looking through that code again, how could this
-> static bool legitimize_root(struct nameidata *nd)
-> {
->         /*
->          * For scoped-lookups (where nd->root has been zeroed), we need to
->          * restart the whole lookup from scratch -- because set_root() is=
- wrong
->          * for these lookups (nd->dfd is the root, not the filesystem roo=
-t).
->          */
->         if (!nd->root.mnt && (nd->flags & LOOKUP_IS_SCOPED))
->                 return false;
->=20
-> possibly trigger?  The only things that ever clean ->root.mnt are
+diff --git a/Documentation/devicetree/bindings/spi/spi-rockchip.yaml b/Documentation/devicetree/bindings/spi/spi-rockchip.yaml
+index 80c56c583..24d9567a6 100644
+--- a/Documentation/devicetree/bindings/spi/spi-rockchip.yaml
++++ b/Documentation/devicetree/bindings/spi/spi-rockchip.yaml
+@@ -29,6 +29,7 @@ properties:
+             - rockchip,px30-spi    #for px30 SoCs.
+             - rockchip,rk3188-spi  #for rk3188 SoCs.
+             - rockchip,rk3288-spi  #for rk3288 SoCs.
++            - rockchip,rk3308-spi  #for rk3308 SoCs.
+             - rockchip,rk3368-spi  #for rk3368 SoCs.
+             - rockchip,rk3399-spi  #for rk3399 SoCs.
+           - const: rockchip,rk3066-spi
+-- 
+2.11.0
 
-You're quite right -- the codepath I was worried about was pick_link()
-failing (which *does* clear nd->path.mnt, and I must've misread it at
-the time as nd->root.mnt).
-
-We can drop this check, though now complete_walk()'s main defence
-against a NULL nd->root.mnt is that path_is_under() will fail and
-trigger -EXDEV (or set_root() will fail at some point in the future).
-However, as you pointed out, a NULL nd->root.mnt won't happen with
-things as they stand today -- I might be a little too paranoid. :P
-
-> 	This is really, really fundamental for understanding the whole
-> thing - a failure of unlazy_walk/unlazy_child means that we are through
-> with that attempt.
-
-Yup -- see above, the worry was about pick_link() not about how the
-RCU-walk and REF-walk dances operate.
-
-> The same, BTW, goes for the check you've added in the beginning of
-> set_root() - set_root() is called only with NULL nd->root.mnt (trivial to
-> prove) and that is incompatible with LOOKUP_IS_SCOPED.  I'm kinda-sorta
-> OK with having WARN_ON() there for a while, but IMO the check in the
-> beginning of legitimize_root() should go away -
-
-You're quite right about dropping the legitimize_root() check, but I'd
-like to keep the WARN_ON() in set_root(). The main reason being that it
-makes us very damn sure that a future change won't accidentally break
-the nd->root contract which all of the LOOKUP_IS_SCOPED changes rely on.
-Then again, this might be my paranoia popping up again.
-
-> this kind of defensive programming only makes harder to reason about
-> the behaviour of the entire thing.  And fs/namei.c is too convoluted
-> as it is...
-
-If you feel that dropping some of these more defensive checks is better
-for the codebase as a whole, then I defer to your judgement. I
-completely agree that namei is a pretty complicated chunk of code.
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---5riwsuz4dgr3e2jm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXiOOrAAKCRCdlLljIbnQ
-El4EAQC1WR0K38GbwA/LlO6nw8sVI9MtczS357o6yXejishSYQD9H/zbEGqHpnbO
-bKqcDRhHuTYEVzPTGWr9RjeaAa07Jw8=
-=LNP0
------END PGP SIGNATURE-----
-
---5riwsuz4dgr3e2jm--
