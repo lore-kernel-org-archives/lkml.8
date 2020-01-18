@@ -2,127 +2,159 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE339C33CB3
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 00:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 151B8C33CB6
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 00:25:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8564022464
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 00:19:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEEC222525
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 00:25:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K9Y7Jt9v"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="keR5G9ua"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730583AbgARATH (ORCPT
+        id S1730481AbgARAZr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 19:19:07 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23073 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730260AbgARATH (ORCPT
+        Fri, 17 Jan 2020 19:25:47 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:39859 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730358AbgARAZq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 19:19:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579306746;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=nkMRlosfOBwcGR259WMKcKORYoc0cAsdlRRPRABPESI=;
-        b=K9Y7Jt9vuCs+F6Ok/bmD/N/bO//L5wDJc9m90LngXyRxXe+BEH7VYiOCootC1uqxD3USYy
-        DylD9zdPv1y8NtfVj0CI43vBUCDPWWFv5+6XEigaoeb4Ofq2bJkyVu6SpaGmZBPqFW1VF1
-        REX5Zjf3uWc2x2sOqyd8rOEcbPI72TQ=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-424-UMyKouTgNsWTrvzQyS1uHA-1; Fri, 17 Jan 2020 19:19:02 -0500
-X-MC-Unique: UMyKouTgNsWTrvzQyS1uHA-1
-Received: by mail-qt1-f198.google.com with SMTP id m8so17025821qta.20
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 16:19:02 -0800 (PST)
+        Fri, 17 Jan 2020 19:25:46 -0500
+Received: by mail-pj1-f68.google.com with SMTP id e11so4075442pjt.4
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 16:25:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vWxirRR7Wfy2+PcTI0hB09FZtOC8LZoqLVZIg5Rnm1w=;
+        b=keR5G9uaZyDKFwyyJfHkvYRIfOR1MoqFTmzm6I/pcaGvIGLBRhvXtIXXMyq0QV+9ft
+         mG3A66ewUhY6vWPdVRIY6lgW1+993WgUmn1NtpThipmkWt7gNeF4qtTABYABLNHYHsnG
+         w/broOmqKVddFYyItFNPg/8rRgL28SYNRX6U8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:organization:user-agent:mime-version
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=nkMRlosfOBwcGR259WMKcKORYoc0cAsdlRRPRABPESI=;
-        b=dNDY0PzEAq6RX4QsBMom0ilq8JWmf1ZapwLKugkIiP0rzEE/GnBioZj/lhtQWkV4OG
-         30RrIsT9EE6xlGzZfdGZE2P9YfCaglr2/mzjAwEsFjsGagNELArd1qkbhx2jilOTBUJy
-         xnRQsK0GAnP8wWUnsdTRMZvP4LqavC2L8u7+y6le0leUvvcrzBb/XPP8ZDQlqCUGSKKZ
-         i9jeZtsoU1ZckVsYpyxLG5jPrMzR6wm6JzBGs2Bxmuz0o0RQgpfxghRq7tNSWUPw5BrF
-         8fX07FWXL/Lt2p+TbaKNiCWQE4XuvNTtNATo31JUC5Pe1nfTlZAHYhg1/Z9E0x8L/axL
-         x7Jw==
-X-Gm-Message-State: APjAAAUbtBP1aWOWP/bRYVEpEJhqxM0QX/AklTU+n3oQnU2M62gE9AU9
-        uKebA6d3a11ysYvszSeehhqsWJ4yin+QKwq23QYfUljoO1BjokMe04TVN/Fo/NQzqqCcalCyq+k
-        PgD4cbRbxNl+GeJoPh3RlrGrV
-X-Received: by 2002:a0c:e58e:: with SMTP id t14mr10162444qvm.131.1579306742079;
-        Fri, 17 Jan 2020 16:19:02 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxNTy3Zp7IZPvd77D4uDVi5088sphWrG/dsjizjp3pS33LcWWWKx4ZUjCa0TdoqrXJ1spKRQQ==
-X-Received: by 2002:a0c:e58e:: with SMTP id t14mr10162421qvm.131.1579306741879;
-        Fri, 17 Jan 2020 16:19:01 -0800 (PST)
-Received: from dhcp-10-20-1-90.bss.redhat.com ([144.121.20.162])
-        by smtp.gmail.com with ESMTPSA id r28sm14155261qtr.3.2020.01.17.16.19.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 16:19:01 -0800 (PST)
-Message-ID: <c99174eefb65688c3db3fc25ddec819a58dccc6a.camel@redhat.com>
-Subject: Re: [PATCH -next] drm/nouveau/kms/nv50: remove set but not unused
- variable 'nv_connector'
-From:   Lyude Paul <lyude@redhat.com>
-To:     YueHaibing <yuehaibing@huawei.com>, bskeggs@redhat.com,
-        airlied@linux.ie, daniel@ffwll.ch, alexander.deucher@amd.com,
-        sam@ravnborg.org
-Cc:     dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+        bh=vWxirRR7Wfy2+PcTI0hB09FZtOC8LZoqLVZIg5Rnm1w=;
+        b=d7bNaRQee/+BS9tnmJfp/Phzqm13bM7nw9gpJwPrRefQyNjaQOr8nEDslsDIl6ruE8
+         9bgMEYxbxiZfwzFkAhIF62+AaoiRa43/WeziSHI56UPfSNfujjjXf9Xx8SzXYvuuFTXM
+         subsQ4y031fLbm3nBNty2PGRFdlUN570DMFA3zCCZKEkldZhGJMYh0BEA+3+0lWrjPBR
+         Zqy3i/gl9f156fL++rYv3n912N3qR0qPD+fiK1I3Ny1OSmWJ3GPZ6pMNEjd+DapPabMm
+         SgTw3OVTHTcm/Xoeep1SX/FET8aOfP0/7tSZCmeDxsMr3KHGCqJszcxvAwM9XYkILf20
+         RR6g==
+X-Gm-Message-State: APjAAAV8V1P1ruUwBfkVPV/shLC5ByXiBbhWF9g0KQf0dA3aQuDePOVj
+        euk85dM41mzRuIiiI6VeVlPm3Q==
+X-Google-Smtp-Source: APXvYqyAHHhOtcjeWVJpTuOw/QAHVhoZa9cf71t5ukErCzSzAwsv3H8gj+cnIHOhw9jc312u5c2ubQ==
+X-Received: by 2002:a17:90a:8b82:: with SMTP id z2mr9302343pjn.59.1579307146062;
+        Fri, 17 Jan 2020 16:25:46 -0800 (PST)
+Received: from evgreen2.mtv.corp.google.com ([2620:15c:202:201:ffda:7716:9afc:1301])
+        by smtp.gmail.com with ESMTPSA id 199sm32194947pfv.81.2020.01.17.16.25.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 17 Jan 2020 16:25:45 -0800 (PST)
+From:   Evan Green <evgreen@chromium.org>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Evan Green <evgreen@chromium.org>, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Date:   Fri, 17 Jan 2020 19:19:00 -0500
-In-Reply-To: <20200117033642.50656-1-yuehaibing@huawei.com>
-References: <20200117033642.50656-1-yuehaibing@huawei.com>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+Subject: [PATCH v2] PCI/MSI: Avoid torn updates to MSI pairs
+Date:   Fri, 17 Jan 2020 16:25:30 -0800
+Message-Id: <20200117162444.v2.1.I9c7e72144ef639cc135ea33ef332852a6b33730f@changeid>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reviewed-by: Lyude Paul <lyude@redhat.com>
+__pci_write_msi_msg() updates three registers in the device: address
+high, address low, and data. On x86 systems, address low contains
+CPU targeting info, and data contains the vector. The order of writes
+is address, then data.
 
-On Fri, 2020-01-17 at 11:36 +0800, YueHaibing wrote:
-> drivers/gpu/drm/nouveau/dispnv50/disp.c: In function nv50_pior_enable:
-> drivers/gpu/drm/nouveau/dispnv50/disp.c:1672:28: warning:
->  variable nv_connector set but not used [-Wunused-but-set-variable]
-> 
-> commit ac2d9275f371 ("drm/nouveau/kms/nv50-: Store the
-> bpc we're using in nv50_head_atom") left behind this.
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/gpu/drm/nouveau/dispnv50/disp.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c
-> b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-> index 5fabe2b..a82b354 100644
-> --- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
-> +++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-> @@ -1669,7 +1669,6 @@ nv50_pior_enable(struct drm_encoder *encoder)
->  {
->  	struct nouveau_encoder *nv_encoder = nouveau_encoder(encoder);
->  	struct nouveau_crtc *nv_crtc = nouveau_crtc(encoder->crtc);
-> -	struct nouveau_connector *nv_connector;
->  	struct nv50_head_atom *asyh = nv50_head_atom(nv_crtc->base.state);
->  	struct nv50_core *core = nv50_disp(encoder->dev)->core;
->  	u8 owner = 1 << nv_crtc->index;
-> @@ -1677,7 +1676,6 @@ nv50_pior_enable(struct drm_encoder *encoder)
->  
->  	nv50_outp_acquire(nv_encoder);
->  
-> -	nv_connector = nouveau_encoder_connector_get(nv_encoder);
->  	switch (asyh->or.bpc) {
->  	case 10: asyh->or.depth = 0x6; break;
->  	case  8: asyh->or.depth = 0x5; break;
+This is problematic if an interrupt comes in after address has
+been written, but before data is updated, and both the SMP affinity
+and target vector are being changed. In this case, the interrupt targets
+the wrong vector on the new CPU.
+
+This case is pretty easy to stumble into using xhci and CPU hotplugging.
+Create a script that repeatedly targets interrupts at a set of cores and
+then offlines those cores. Put some stress on USB, and then watch xhci
+lose an interrupt and die.
+
+Avoid this by disabling MSIs during the update.
+
+Signed-off-by: Evan Green <evgreen@chromium.org>
+---
+
+Changes in v2:
+- Also mask msi-x interrupts during the update
+- Restore the enable/mask bit to its previous value, rather than
+unconditionally enabling interrupts
+
+
+Bjorn,
+I was unsure whether disabling MSIs temporarily is actually an okay
+thing to do. I considered using the mask bit, but got the impression
+that not all devices support the mask bit. Let me know if this going to
+cause problems or there's a better way. I can include the repro
+script I used to cause mayhem if needed.
+
+---
+ drivers/pci/msi.c | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+index 6b43a5455c7af..bb21a7739fa2c 100644
+--- a/drivers/pci/msi.c
++++ b/drivers/pci/msi.c
+@@ -311,6 +311,7 @@ void __pci_read_msi_msg(struct msi_desc *entry, struct msi_msg *msg)
+ void __pci_write_msi_msg(struct msi_desc *entry, struct msi_msg *msg)
+ {
+ 	struct pci_dev *dev = msi_desc_to_pci_dev(entry);
++	u16 msgctl;
+ 
+ 	if (dev->current_state != PCI_D0 || pci_dev_is_disconnected(dev)) {
+ 		/* Don't touch the hardware now */
+@@ -320,15 +321,25 @@ void __pci_write_msi_msg(struct msi_desc *entry, struct msi_msg *msg)
+ 		if (!base)
+ 			goto skip;
+ 
++		pci_read_config_word(dev, dev->msix_cap + PCI_MSIX_FLAGS,
++				     &msgctl);
++
++		pci_write_config_word(dev, dev->msix_cap + PCI_MSIX_FLAGS,
++				      msgctl | PCI_MSIX_FLAGS_MASKALL);
++
+ 		writel(msg->address_lo, base + PCI_MSIX_ENTRY_LOWER_ADDR);
+ 		writel(msg->address_hi, base + PCI_MSIX_ENTRY_UPPER_ADDR);
+ 		writel(msg->data, base + PCI_MSIX_ENTRY_DATA);
++		pci_write_config_word(dev, dev->msix_cap + PCI_MSIX_FLAGS,
++				      msgctl);
++
+ 	} else {
+ 		int pos = dev->msi_cap;
+-		u16 msgctl;
++		u16 enabled;
+ 
+ 		pci_read_config_word(dev, pos + PCI_MSI_FLAGS, &msgctl);
+-		msgctl &= ~PCI_MSI_FLAGS_QSIZE;
++		enabled = msgctl & PCI_MSI_FLAGS_ENABLE;
++		msgctl &= ~(PCI_MSI_FLAGS_QSIZE | PCI_MSI_FLAGS_ENABLE);
+ 		msgctl |= entry->msi_attrib.multiple << 4;
+ 		pci_write_config_word(dev, pos + PCI_MSI_FLAGS, msgctl);
+ 
+@@ -343,6 +354,9 @@ void __pci_write_msi_msg(struct msi_desc *entry, struct msi_msg *msg)
+ 			pci_write_config_word(dev, pos + PCI_MSI_DATA_32,
+ 					      msg->data);
+ 		}
++
++		msgctl |= enabled;
++		pci_write_config_word(dev, pos + PCI_MSI_FLAGS, msgctl);
+ 	}
+ 
+ skip:
 -- 
-Cheers,
-	Lyude Paul
+2.24.1
 
