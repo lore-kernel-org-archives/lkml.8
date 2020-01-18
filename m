@@ -2,94 +2,107 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7167AC33CB7
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 12:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C17C33CB7
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 12:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 527CD21D7D
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 12:46:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78C7F24698
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 12:49:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GAFpoYuz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729052AbgARMq6 (ORCPT
+        id S1729014AbgARMtI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 07:46:58 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:43618 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728760AbgARMq6 (ORCPT
+        Sat, 18 Jan 2020 07:49:08 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43426 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728688AbgARMtI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 07:46:58 -0500
-Received: from ip5f5bf7da.dynamic.kabel-deutschland.de ([95.91.247.218] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1isnV9-0000mc-9p; Sat, 18 Jan 2020 12:46:55 +0000
-Date:   Sat, 18 Jan 2020 13:46:54 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Andrei Vagin <avagin@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Serge Hallyn <shallyn@cisco.com>, Jann Horn <jannh@google.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Eric Paris <eparis@redhat.com>, stable@vger.kernel.org,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Adrian Reber <adrian@lisas.de>
-Subject: Re: [PATCH] ptrace: reintroduce usage of subjective credentials in
- ptrace_has_cap()
-Message-ID: <20200118124653.k7exqcu4fyojd63e@wittgenstein>
-References: <20200115171736.16994-1-christian.brauner@ubuntu.com>
- <CANaxB-wOJCc_Z3YXiokMeTLi2=rPf0-=7-bwAJnEjX-bDvTPEg@mail.gmail.com>
- <20200118011701.ciqiuutgyyvtk5a4@wittgenstein>
+        Sat, 18 Jan 2020 07:49:08 -0500
+Received: by mail-pg1-f195.google.com with SMTP id k197so13056385pga.10;
+        Sat, 18 Jan 2020 04:49:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=JHmtsXex5qIKbDtJ3Fw3qCcLL6Lf1FbLj7MwTYPydhc=;
+        b=GAFpoYuzsgIz34hnlAIcM5SL0XhVBy4AeIoJwVM+59zo+BbXQAr+Cx3MqF12UuX+u5
+         LYQHQWTJCt62j226CfI6phuSFjY6VRDkybRt7Sti+6lX9A1ebWbu9y0N+8e3TtOZ7kyC
+         l0h+hjkxYR4TNBkAyJ50tOuu9tkohCGrlUfgqvWSqe27tqmt/4WZ83CWFauPYtizrJ/5
+         heCpYLBl7uNF5ZTgbrdOftR3k5AnXiutHrzjm8nBQU/wGOVVCHe7vjN4BYVbCxL5Zxcl
+         PpKQH7B9XvBI+kA/1L556fwZtg/nkcajuqPJDWYIw36yhb1QHShtlI3N7hfaK2fQ4WY+
+         oatQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=JHmtsXex5qIKbDtJ3Fw3qCcLL6Lf1FbLj7MwTYPydhc=;
+        b=VhLeftcVgAAbyrEskjeZYlAvBmQr/ljGxTYyxJ3US6P2S/0NnIH4YIu88XCyKnHkM+
+         0n4XNTN9GScGO/XSPhuU2g72PAAMaNgSNKxXfQG9qQ3D0/cI/c60iqHiGQ4jV2ZKe9KL
+         5j4ya7BYA/7kDL4G1uKEKTFRRLzjgALMrCDzbfWBCHtmId7FOML27W2qxwHESTQHRDR+
+         4lLckmSpXG44/QnvUfoO28TL3TqDaRiIstXL+dkf65X0IXLl/BFOCk0BWEPqKvlJ9MeA
+         67B7pri0+9/in+NF2Tx//KVJgdYZv0cRH0pnn/1blC3Zs8g4CGE5YVBb5j5o40gxF0bi
+         cFhg==
+X-Gm-Message-State: APjAAAVWq/94XWNd2JIy1q7oYuEpA+35kzkzOdyM3V3JgXvqYKudUAjB
+        yysSgflOvzeZ5Tf/B2JCpMg=
+X-Google-Smtp-Source: APXvYqwEkLv+vkCoCPQQQ+vlbrAaE6HdohlAvpKYWqBIKpcY4hRqkenfisvSMr+j09xbaNB5q4qqRQ==
+X-Received: by 2002:a62:6407:: with SMTP id y7mr8228738pfb.49.1579351747767;
+        Sat, 18 Jan 2020 04:49:07 -0800 (PST)
+Received: from nishad ([106.51.232.103])
+        by smtp.gmail.com with ESMTPSA id s18sm32848011pfh.179.2020.01.18.04.49.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 18 Jan 2020 04:49:07 -0800 (PST)
+Date:   Sat, 18 Jan 2020 18:19:00 +0530
+From:   Nishad Kamdar <nishadkamdar@gmail.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joe Perches <joe@perches.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] soc: renesas: rcar-sysc: Use the correct style for SPDX
+ License Identifier
+Message-ID: <20200118124856.GA3421@nishad>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200118011701.ciqiuutgyyvtk5a4@wittgenstein>
-User-Agent: NeoMutt/20180716
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 18, 2020 at 02:17:01AM +0100, Christian Brauner wrote:
-> On Fri, Jan 17, 2020 at 05:08:14PM -0800, Andrei Vagin wrote:
-> > On Wed, Jan 15, 2020 at 9:18 AM Christian Brauner
-> > <christian.brauner@ubuntu.com> wrote:
-> > >
-> > > Commit 69f594a38967 ("ptrace: do not audit capability check when outputing /proc/pid/stat")
-> > > introduced the ability to opt out of audit messages for accesses to
-> > > various proc files since they are not violations of policy.
-> > > While doing so it somehow switched the check from ns_capable() to
-> > > has_ns_capability{_noaudit}(). That means it switched from checking the
-> > > subjective credentials of the task to using the objective credentials. I
-> > > couldn't find the original lkml thread and so I don't know why this switch
-> > > was done. But it seems wrong since ptrace_has_cap() is currently only used
-> > > in ptrace_may_access(). And it's used to check whether the calling task
-> > > (subject) has the CAP_SYS_PTRACE capability in the provided user namespace
-> > > to operate on the target task (object). According to the cred.h comments
-> > > this would mean the subjective credentials of the calling task need to be
-> > > used.
-> > > This switches it to use security_capable() because we only call
-> > > ptrace_has_cap() in ptrace_may_access() and in there we already have a
-> > > stable reference to the calling tasks creds under cred_guard_mutex so
-> > > there's no need to go through another series of dereferences and rcu
-> > > locking done in ns_capable{_noaudit}().
-> > 
-> > 
-> > The criu process is started with all capabilities in the root user namespace.
-> > 
-> > I don't have time to investigate this issue right now, will provide
-> > more details next Tuesday.
-> 
-> Yeah, we've detected the issue. security_capable() indicates success by
-> returning 0 for whatever reason whereas has_ns_capability() returns 1.
-> So the logic was inverted. This is fixed in the new version. Sorry for
-> the noise!
+This patch corrects the SPDX License Identifier style in
+header file related to Renesas Soc driver support.
+It assigns explicit block comment to the SPDX License Identifier.
 
-So, I just finished compiling criu and running the test suite on the
-criu-dev branch. The test-suite passes fine after the security_capable()
-braino in my original patch was corrected to security_capable() == 0:
+Changes made by using a script provided by Joe Perches here:
+https://lkml.org/lkml/2019/2/7/46.
 
-################## ALL TEST(S) PASSED (TOTAL 178/SKIPPED 16) ###################
+Suggested-by: Joe Perches <joe@perches.com>
+Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+---
+ drivers/soc/renesas/rcar-sysc.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Thanks!
-Christian
+diff --git a/drivers/soc/renesas/rcar-sysc.h b/drivers/soc/renesas/rcar-sysc.h
+index 8d074489fba9..0fc3b119930a 100644
+--- a/drivers/soc/renesas/rcar-sysc.h
++++ b/drivers/soc/renesas/rcar-sysc.h
+@@ -1,5 +1,5 @@
+-/* SPDX-License-Identifier: GPL-2.0
+- *
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
+  * Renesas R-Car System Controller
+  *
+  * Copyright (C) 2016 Glider bvba
+-- 
+2.17.1
+
