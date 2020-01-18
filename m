@@ -2,88 +2,105 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11738C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 03:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E3F9C33CB6
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 03:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D36E024673
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 03:07:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E3FF24679
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 03:11:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Wd/Zd7AS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kFFMSn6G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730690AbgARDH6 (ORCPT
+        id S1730679AbgARDLL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 22:07:58 -0500
-Received: from m12-11.163.com ([220.181.12.11]:57785 "EHLO m12-11.163.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727033AbgARDH5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 22:07:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=Date:From:Subject:Message-ID:MIME-Version; bh=yoURl
-        r+iXRZmV29G1EPstRBDQ8HNCEnr1ZMOsXdCGr8=; b=Wd/Zd7ASRA9F5iAa2S47t
-        aQwBd//JKwmUB9xliocQgpP3ThsRWS6MI0w7mka9LPHi3Ihnm4oOtofSBDU9ZP8o
-        QsioiuA0yzqgCvVrbyBV6m81yGZ9UWwqaFMl4560DPTofan5gzTkLUt4yf0hF0IX
-        NaqgHfSHWKMfxG013mPkoA=
-Received: from localhost (unknown [39.155.185.116])
-        by smtp7 (Coremail) with SMTP id C8CowACnnZpbdiJesvSiHg--.65366S3;
-        Sat, 18 Jan 2020 11:07:35 +0800 (CST)
-Date:   Sat, 18 Jan 2020 11:09:17 +0800
-From:   Tao Zhou <t1zhou@163.com>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched/cputime: remove irqtime_account_idle_ticks
-Message-ID: <20200118030917.GA5351@geo.homenetwork>
-References: <1579144650-161327-1-git-send-email-alex.shi@linux.alibaba.com>
- <5c95e93d-c44c-b19e-62c0-b7c45c60e9e0@linux.alibaba.com>
- <20200118003207.GA4067@geo.homenetwork>
- <a9c6fa27-e0e3-7559-949d-93fcc1c0a1bb@linux.alibaba.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a9c6fa27-e0e3-7559-949d-93fcc1c0a1bb@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CM-TRANSID: C8CowACnnZpbdiJesvSiHg--.65366S3
-X-Coremail-Antispam: 1Uf129KBjvdXoW7Xr47Aw45Gw4xuFykCF43Awb_yoWfGFb_Zr
-        n8CF1DWr1kJrs7Awn7trW0qF4qga1jyryFqwn0qF9xt3saka4fC3Z8twn5ZFs5JF48AFW5
-        Xws5Aa9IvwnFyjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUYLqXPUUUUU==
-X-Originating-IP: [39.155.185.116]
-X-CM-SenderInfo: vwr2x0rx6rljoofrz/xtbBdgOullUMMAMdxAAAs+
+        Fri, 17 Jan 2020 22:11:11 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:33585 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727033AbgARDLL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 22:11:11 -0500
+Received: by mail-pl1-f193.google.com with SMTP id ay11so10642966plb.0;
+        Fri, 17 Jan 2020 19:11:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=kCkFnYkawO75Slclr1NGNbFjc/K/Z8ax1mgdyxXyluc=;
+        b=kFFMSn6GQbVrsB7xcz6GHNYsvWVsZtZLtyarkvcW4Qjn8R2Vlklx5fkrNTwwRZulTD
+         Jjnj/FKMP1+IzHx8ruolwTiB6z+Z3Y8NZWo1QTXIis3LaKm2v0/NYOdnner2pO9hrV3U
+         Ock9seKbMjAL63Xn7eeqrCFS6F4e3bYHJIFHESFv0x7zzpG5oh2xf5aR0alR+kcSYnxC
+         LG9Aeugqhvwf/kv2MkGt9FH7Y2RXdgoKAowTagWQUeVtagogRbE2cDQ/xhduU5oOB2Hz
+         CMgcvKpqoCE6iquWtUM+Fqj57BHjyIdrVoGA6eEf5Rud/K6I9FFqrL1asp7kDWRlW57+
+         0S7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=kCkFnYkawO75Slclr1NGNbFjc/K/Z8ax1mgdyxXyluc=;
+        b=tNriiQ+07mMGuSyUF0fx0w37zTSkJkcm1GrJHzD+Y6zxRRSPiioxQuyqBinszD9Zas
+         OLwL8ZN1aVVWpYHkYx0xhVaJ3Yl9NdOiHTNj0EVhemEfQgdoc013qhyj8q2a6nAkilzg
+         XXf2NUWktlYFbGhPnqpDMSKQv8keTLvg7R7DKmxS1HPFELRGA4jj7g0kdt1QKCFbm62O
+         Fi2XPA8SYXAwYvTgMSPgoagl6BWLNIiwHQq3nUWWETvYpn7PLx2aFPoYkn33UGmkmm8W
+         1HfgndZDieQQrRdC1nzHazsj97lDZzMKmMdQqKhLUqSMGsfh4yeQiZK2LUShwN5zOMkW
+         12iQ==
+X-Gm-Message-State: APjAAAWKhmhYkbBH2DSXObZCZoGFZPsHvXXkNN8eAj9qf68SHO2ieJc6
+        rGRGMk4ks7oDxlwroW0HMg==
+X-Google-Smtp-Source: APXvYqzrX/dzjceNK2YxPQDFBmGY7ox/l+PSYdFJ8XUj9ddhcLLJUTQk19QT+CBkmgvu/QeymGKONg==
+X-Received: by 2002:a17:902:848f:: with SMTP id c15mr2751205plo.182.1579317070565;
+        Fri, 17 Jan 2020 19:11:10 -0800 (PST)
+Received: from madhuparna-HP-Notebook.nitk.ac.in ([2402:3a80:1ee0:feca:40cf:944c:98dd:69a3])
+        by smtp.gmail.com with ESMTPSA id g8sm30478701pfh.43.2020.01.17.19.11.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jan 2020 19:11:10 -0800 (PST)
+From:   madhuparnabhowmik10@gmail.com
+To:     tj@kernel.org, lizefan@huawei.com
+Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        joel@joelfernandes.org, rcu@vger.kernel.org, frextrite@gmail.com,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Subject: [PATCH] cgroup.c: Use built-in RCU list checking
+Date:   Sat, 18 Jan 2020 08:40:51 +0530
+Message-Id: <20200118031051.28776-1-madhuparnabhowmik10@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 18, 2020 at 10:04:12AM +0800, Alex Shi wrote:
-> 
-> 
-> 在 2020/1/18 上午8:32, Tao Zhou 写道:
-> > On Thu, Jan 16, 2020 at 11:44:28AM +0800, Alex Shi wrote:
-> >>
-> >>
-> >> 在 2020/1/16 上午11:17, Alex Shi 写道:
-> >>> irqtime_account_idle_ticks just add longer call path w/o enough meaning.
-> >>> We don't bother remove this function to simply code and reduce a
-> >>> bit object size of kernel.
-> >>
-> >> Sorry, above commit log need to revise as following:
-> >>
-> >> irqtime_account_idle_ticks just add longer call path w/o enough meaning.
-> >> We'd better to remove this function to simply code and reduce a bit object
-> >> size of kernel.
-> > 
-> > Looks good and better to me.
-> 
-> Thanks! 
-> 
-> Why not reply to lkml openly? :)
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-Sorry, I want to.
-The mail can not send if dest/cc include 'linux-kernel@vger.kernel.org'
-No VPN from me. I will try another mail address. Any advice?
+list_for_each_entry_rcu has built-in RCU and lock checking.
+Pass cond argument to list_for_each_entry_rcu() to silence
+false lockdep warning when  CONFIG_PROVE_RCU_LIST is enabled
+by default.
+
+Even though the function css_next_child() already checks if
+cgroup_mutex or rcu_read_lock() is held using
+cgroup_assert_mutex_or_rcu_locked(), there is a need to pass
+cond to list_for_each_entry_rcu() to avoid false positive
+lockdep warning.
+
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+---
+ kernel/cgroup/cgroup.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index 735af8f15f95..c2959764ad95 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -4152,7 +4152,8 @@ struct cgroup_subsys_state *css_next_child(struct cgroup_subsys_state *pos,
+ 	} else if (likely(!(pos->flags & CSS_RELEASED))) {
+ 		next = list_entry_rcu(pos->sibling.next, struct cgroup_subsys_state, sibling);
+ 	} else {
+-		list_for_each_entry_rcu(next, &parent->children, sibling)
++		list_for_each_entry_rcu(next, &parent->children, sibling,
++					lockdep_is_held(&cgroup_mutex))
+ 			if (next->serial_nr > pos->serial_nr)
+ 				break;
+ 	}
+-- 
+2.17.1
 
