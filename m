@@ -2,87 +2,112 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E60BC33CB7
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 15:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 128C7C33CB7
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 15:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0499A2469C
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 15:28:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDE2A2469D
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 15:36:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ssBOBaPm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbgARP2q (ORCPT
+        id S1726627AbgARPgd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 10:28:46 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:49760 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726334AbgARP2q (ORCPT
+        Sat, 18 Jan 2020 10:36:33 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:34288 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726407AbgARPgc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 10:28:46 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1isq1Z-00AxdN-Np; Sat, 18 Jan 2020 15:28:33 +0000
-Date:   Sat, 18 Jan 2020 15:28:33 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        David Laight <david.laight@aculab.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        quae@daurnimator.com, dev@opencontainers.org,
-        containers@lists.linux-foundation.org, libc-alpha@sourceware.org,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] openat2: minor uapi cleanups
-Message-ID: <20200118152833.GS8904@ZenIV.linux.org.uk>
-References: <20200115144831.GJ8904@ZenIV.linux.org.uk>
- <20200118120800.16358-1-cyphar@cyphar.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200118120800.16358-1-cyphar@cyphar.com>
+        Sat, 18 Jan 2020 10:36:32 -0500
+Received: by mail-ed1-f66.google.com with SMTP id l8so25235903edw.1;
+        Sat, 18 Jan 2020 07:36:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=7B2mjVQ1dHIRCu4RANo+v8JmGtXc7z+57XvhPDJ4C8o=;
+        b=ssBOBaPmTeDGD4ZIImlaJsywyi7HoBboXfJnH6PZmrJ8Z78Qk3FcqIakY1iEL5Igi2
+         6zUSo4eKq7Al9yNNY3VfU44iJQzbeVBrFBjSKnSxKiZ1hBcLxFHFS27wbTNoapnN7IoJ
+         COCdcjhVRVAPXmDFC2JRYTduMzXw6RXU/Y8JYqS97640WGon7CWDXPfEpjlMTdvSSOmi
+         1ZR6TP4O8fHl/IYgf+Yu5r8dsqH90O9cHpI3vHV1KoPx6PB1r6Mk4xt9+4kzsp4PZ3hL
+         epHJee0KHpdEk56ilBzacSlbz7KahTIIub/QrBHoTkwI9PoC8SFjcChxbEPuArLG0zyr
+         nZTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=7B2mjVQ1dHIRCu4RANo+v8JmGtXc7z+57XvhPDJ4C8o=;
+        b=paV9X58sOtoTyhT6eCmL4gDfzvRn7r2K0yX0UqLM1So8uwNr4f4nZGvbxrQjK7t5/X
+         +r+lFr9nHvsR7v6kATCID0qcwjSmP/DaBSx+kiQB8ZicE23tV/VPSAF3iTMPwNWpwS4z
+         uJstJ6b9NTjCCoYlpoQZPXW0h5KkoQSadhZJxF2bM/rHOB1TZr4t5J/X1GydivSU2K/a
+         CgQAw2WkOkxy8tu24n5bnQ4slUYYc6B2zdN0u0pSUgijqSZ3Io8A/9hfnkfcnMjpYX4b
+         /7ffi4gyMGYJgob5yLKTPxGDxtGhFrOgTVhGi+iee6Tisl+cLYz7VPMMPWTfXXP7CZrc
+         HSaw==
+X-Gm-Message-State: APjAAAWzjXPtX+smxc5KeQjxWZdO+1WEn4pn1x3KG1y73nRHbEfaWj6k
+        pw49uZT2HnjXD+VwSJXZGVqau+4Ojak=
+X-Google-Smtp-Source: APXvYqze67soLzbb1oH4PfOADDQs/2Cm4yhLXbeLL4XJS9qKqw7OvnfTl/HDwnOvhpx7iC/uiILpjg==
+X-Received: by 2002:a05:6402:30b7:: with SMTP id df23mr9418518edb.325.1579361790897;
+        Sat, 18 Jan 2020 07:36:30 -0800 (PST)
+Received: from felia.fritz.box ([2001:16b8:2db9:c700:ed1f:3ff2:64cf:36f2])
+        by smtp.gmail.com with ESMTPSA id d8sm1099623edn.52.2020.01.18.07.36.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Jan 2020 07:36:30 -0800 (PST)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH] docs: nvdimm: use ReST notation for subsection
+Date:   Sat, 18 Jan 2020 16:36:20 +0100
+Message-Id: <20200118153620.8276-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 18, 2020 at 11:07:58PM +1100, Aleksa Sarai wrote:
-> Patch changelog:
->   v3:
->    * Merge changes into the original patches to make Al's life easier.
->      [Al Viro]
->   v2:
->    * Add include <linux/types.h> to openat2.h. [Florian Weimer]
->    * Move OPEN_HOW_SIZE_* constants out of UAPI. [Florian Weimer]
->    * Switch from __aligned_u64 to __u64 since it isn't necessary.
->      [David Laight]
->   v1: <https://lore.kernel.org/lkml/20191219105533.12508-1-cyphar@cyphar.com/>
-> 
-> While openat2(2) is still not yet in Linus's tree, we can take this
-> opportunity to iron out some small warts that weren't noticed earlier:
-> 
->   * A fix was suggested by Florian Weimer, to separate the openat2
->     definitions so glibc can use the header directly. I've put the
->     maintainership under VFS but let me know if you'd prefer it belong
->     ot the fcntl folks.
-> 
->   * Having heterogenous field sizes in an extensible struct results in
->     "padding hole" problems when adding new fields (in addition the
->     correct error to use for non-zero padding isn't entirely clear ).
->     The simplest solution is to just copy clone(3)'s model -- always use
->     u64s. It will waste a little more space in the struct, but it
->     removes a possible future headache.
-> 
-> This patch is intended to replace the corresponding patches in Al's
-> #work.openat2 tree (and *will not* apply on Linus' tree).
-> 
-> @Al: I will send some additional patches later, but they will require
->      proper design review since they're ABI-related features (namely,
-> 	 adding a way to check what features a syscall supports as I
-> 	 outlined in my talk here[1]).
+The ACPI Device Specific Methods (_DSM) paragraph is intended to be a
+subsection of the Submit Checklist Addendum section. Dan Williams however
+used Markdown notation for this subsection, which does not parse as
+intended in a ReST documentation.
 
-#work.openat2 updated, #for-next rebuilt and force-pushed.  There's
-a massive update of #work.namei as well, also pushed out; not in
-#for-next yet, will post the patch series for review later today.
+Change the markup to ReST notation, as described in the Specific
+guidelines for the kernel documentation section in
+Documentation/doc-guide/sphinx.rst.
+
+Fixes: 47843401e3a0 ("libnvdimm, MAINTAINERS: Maintainer Entry Profile")
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+---
+Jonathan, please pick this small doc fixup.
+
+applies cleanly on v5.5-rc6, the current master (25e73aadf297)
+and next-20200117. I ran make htmldocs and checked the html output.
+
+The subsection was added in v3, but unfortunately, nobody noticed this
+issue during the last review.
+Thanks for the first maintainer entry profile, I look forward to read
+more of them.
+
+ Documentation/nvdimm/maintainer-entry-profile.rst | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/nvdimm/maintainer-entry-profile.rst b/Documentation/nvdimm/maintainer-entry-profile.rst
+index 77081fd9be95..efe37adadcea 100644
+--- a/Documentation/nvdimm/maintainer-entry-profile.rst
++++ b/Documentation/nvdimm/maintainer-entry-profile.rst
+@@ -33,7 +33,8 @@ Those tests need to be passed before the patches go upstream, but not
+ necessarily before initial posting. Contact the list if you need help
+ getting the test environment set up.
+ 
+-### ACPI Device Specific Methods (_DSM)
++ACPI Device Specific Methods (_DSM)
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ Before patches enabling for a new _DSM family will be considered it must
+ be assigned a format-interface-code from the NVDIMM Sub-team of the ACPI
+ Specification Working Group. In general, the stance of the subsystem is
+-- 
+2.17.1
+
