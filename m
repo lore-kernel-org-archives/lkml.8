@@ -2,128 +2,191 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE88C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 13:18:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF6AC33CB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 13:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D6FC24698
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 13:18:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 454CC24699
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 13:31:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="ZwOTVUgj";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Se8pfQuf"
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="igvr2dE4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729148AbgARNSj (ORCPT
+        id S1729028AbgARNb1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 08:18:39 -0500
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:51797 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728688AbgARNSj (ORCPT
+        Sat, 18 Jan 2020 08:31:27 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:46685 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726933AbgARNb1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 08:18:39 -0500
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.nyi.internal (Postfix) with ESMTP id 9A6B221C08;
-        Sat, 18 Jan 2020 08:18:37 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Sat, 18 Jan 2020 08:18:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=DRHAHJguT0zUvuL+HVAIgaDuT2H
-        2OklHFj7eOTL2buQ=; b=ZwOTVUgjw+v6z8Bwo66ELXgACYkpuH5IXBOnnR+EXIF
-        MhVc9hgm/YTxCyyB6ax/p0J02hl7Pg5tAH+8co+df5iEtLSMLjD0fLdV4UaL2V5G
-        GRIjLqJ5SlkjXrTtc0a0VGPAhfpPdr+xZVutRe7irHPnNSIwr5bz1LVK+NwgrtgJ
-        bgEKT9bfu4m5TFWAc9KP8rPU0/jXpaypRyoUX/UyKOeINOucyhv73u+nP2kW3zLD
-        VJrC2VUA3Fo8ny0jBaO5lwig3P86bQBV/MaPS60GhAE81CERkRsRv09J7XRuseys
-        i1Zrsuxp1dxopbv3HrfCMvbXNsq2UzZSjAyXI/ZFL3Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=DRHAHJ
-        guT0zUvuL+HVAIgaDuT2H2OklHFj7eOTL2buQ=; b=Se8pfQufQYd6K+LP1Jmq3v
-        DszalQzijDvVM0b4lB06ljsdV2kXyA8NCtj1Ts/vfKKzn4qE7bmNmBy3TXwLCMiU
-        45+Lzt+jjJhF9NZjDo1f8EDDvdf7G2A5GP+bwhhyc+dQZ7alSADiEqGlAmEQLcPO
-        U8VwB0qhOElvK1++AzmXwPQirijmYCiL4BQg82cAUGITgvB50BR2/Fi4gPtZcba9
-        sgeLtP9APAalHE3QwbIPpHzO5f9Zspk1r8QXBHANLz69o3wSO06pRYFiccvMkg3Z
-        42BZXp9uz9Dd3UoTuxrKIaSkVlo0h7Isb8PDUpURuujrKsHX8ywBSh1lFqvqG76Q
-        ==
-X-ME-Sender: <xms:rQUjXlhoLj1-gN48oh7dIKCyLRVZShngX3ZfUDEgiYs1W4BBjHx0LA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedruddtgdehtdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghgucfm
-    jfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppeefjedrjedurddugeefrdduje
-    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
-    lhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:rQUjXuBtNILX2KHo6wEaYS6dMVIkAAlENYv7FAwsNf05GvLDSl9ULg>
-    <xmx:rQUjXls9OulPIDmb3T9l-CVnHXOd1SonAsP5oAo7Hr6yEJjS7v8f1w>
-    <xmx:rQUjXqIv06_7RDiQL7nDwgiUmAJGb5dBCOfu1JXVawvn2sUye0SFtQ>
-    <xmx:rQUjXjXFU5ZqHBT-cohQoAaQOwMRw-27NeDTdPTP3chZMM4x3bcfpg>
-Received: from localhost (170.143.71.37.rev.sfr.net [37.71.143.170])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 080A430608AD;
-        Sat, 18 Jan 2020 08:18:36 -0500 (EST)
-Date:   Sat, 18 Jan 2020 14:18:35 +0100
-From:   Greg KH <greg@kroah.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Steven Price <steven.price@arm.com>,
-        Sasha Levin <sashal@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH AUTOSEL 5.4 002/205] drm/panfrost: Add missing check for
- pfdev->regulator
-Message-ID: <20200118131835.GA4734@kroah.com>
-References: <20200116164300.6705-1-sashal@kernel.org>
- <20200116164300.6705-2-sashal@kernel.org>
- <20200117161226.GA8472@arm.com>
- <20200117165909.GA1949937@kroah.com>
- <20200118081845.GF19765@kadam>
+        Sat, 18 Jan 2020 08:31:27 -0500
+Received: by mail-qt1-f195.google.com with SMTP id e25so12728181qtr.13
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jan 2020 05:31:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=5YxsjwffX9TUC1iOdqN5ynD4NWa9IcR8dkHqJbAF8kc=;
+        b=igvr2dE4tFGDDSG9IfuJJTa+LQ6gBHOYZVtwcTa1EVk2pXDWghwaMukEFiuBAsiJxC
+         awiw39lFSOUZugA6CZd72hN2o1zIYLC6BP2HqZeB0WvUgnIbqvZjVPDc5lRUPxFR0N9o
+         1R9SczDarkvhm5iC0ZJu4CN1nCCrDClmOmzr8+4oNVX8V8KM0h1PVVeDVl0n1lZ0yqJP
+         GRqCHLHhufl3/HN2f38fJ+f5dAOxoctwm7/E5cMuAwb9k2dOGLdNhtBPr59UvvHtGtVf
+         lRV+lxcSBNf4Sp85dAT04HnH8At+8I7m1Bihm0R0aq6esLfZhlBnI2hQwfoEdsk66OQa
+         wBbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=5YxsjwffX9TUC1iOdqN5ynD4NWa9IcR8dkHqJbAF8kc=;
+        b=fYtiQ81dQHdxvXPCTGBU9U/bcjRaYJ7RsmF/hoAqcpyU0TFo1DiCf3khvnunnNwJOU
+         kMLd1reDfCk1boWuTCJWNd+9fPDEJfE45O29W46pASbiBoOcUEXPxvrJElCbDitMPXmO
+         RKKBizgtujFtqLDZpV5Y9pj4IJG2UyRSbODJum0n/G4QafKZ5AgJ7pDHJ//zFT9DdCWk
+         rmn8+2i1oSU5LAXp8o2NddGIZCIc1HvsHttnKcEh3D2arqrSs/Vm4WXMnOZ8WSNJUDIg
+         pXc5vNRerJGWSTi15RoQiBmk2SQW543vRPXZ2Qkns6nMVeEJK/JYTDP+5p1mezmPuQYl
+         N5tg==
+X-Gm-Message-State: APjAAAUM/77fN8kaqUYtnI0E5BzFH7uWhq+f/yDFhV6Dqy//7K2qBcEl
+        kvsIxAvarw7iRAUaWKawseATwg==
+X-Google-Smtp-Source: APXvYqyvWy2BCgLFuugmUzP2XR9m0gX8NeEj+EG8BQTvuGNbWU/DVrIHfL8tymbnGFBbc6yADiKuiQ==
+X-Received: by 2002:ac8:31f0:: with SMTP id i45mr12324308qte.327.1579354285798;
+        Sat, 18 Jan 2020 05:31:25 -0800 (PST)
+Received: from nicolas-tpx395 ([192.222.193.21])
+        by smtp.gmail.com with ESMTPSA id e3sm14434223qtj.30.2020.01.18.05.31.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Jan 2020 05:31:25 -0800 (PST)
+Message-ID: <8b10414a1c198a6e3bd5e131a72bd6f68466bea5.camel@ndufresne.ca>
+Subject: Re: [PATCH] media: hantro: Support H264 profile control
+From:   Nicolas Dufresne <nicolas@ndufresne.ca>
+To:     Hans Verkuil <hverkuil@xs4all.nl>, Tomasz Figa <tfiga@chromium.org>
+Cc:     Hirokazu Honda <hiroh@chromium.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        devel@driverdev.osuosl.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Sat, 18 Jan 2020 08:31:22 -0500
+In-Reply-To: <c88b2822-0dd2-8ea3-eb0b-262df5a30830@xs4all.nl>
+References: <20191122051608.128717-1-hiroh@chromium.org>
+         <767528be59275265072896e5c679e97575615fdd.camel@ndufresne.ca>
+         <CAAFQd5D3OpAAtX7_0ktz4-aAgWN_G4YBQMR=Vwp7JPopjvRkRA@mail.gmail.com>
+         <f5341ed837529bd38d466d4b655e261d64065912.camel@ndufresne.ca>
+         <CAAFQd5Cpk8qG+VgE6+aznBmXu11YG0gNQyCRanZghds-TPKvyg@mail.gmail.com>
+         <c88b2822-0dd2-8ea3-eb0b-262df5a30830@xs4all.nl>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200118081845.GF19765@kadam>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 18, 2020 at 11:18:45AM +0300, Dan Carpenter wrote:
-> On Fri, Jan 17, 2020 at 05:59:09PM +0100, Greg KH wrote:
-> > On Fri, Jan 17, 2020 at 04:12:27PM +0000, Steven Price wrote:
-> > > On Thu, Jan 16, 2020 at 04:39:37PM +0000, Sasha Levin wrote:
-> > > > From: Steven Price <steven.price@arm.com>
+Le vendredi 10 janvier 2020 à 13:31 +0100, Hans Verkuil a écrit :
+> On 11/29/19 1:16 AM, Tomasz Figa wrote:
+> > On Sat, Nov 23, 2019 at 1:52 AM Nicolas Dufresne <nicolas@ndufresne.ca>
+> > wrote:
+> > > Le samedi 23 novembre 2019 à 01:00 +0900, Tomasz Figa a écrit :
+> > > > On Sat, Nov 23, 2019 at 12:09 AM Nicolas Dufresne <nicolas@ndufresne.ca>
+> > > > wrote:
+> > > > > Le vendredi 22 novembre 2019 à 14:16 +0900, Hirokazu Honda a écrit :
+> > > > > > The Hantro G1 decoder supports H.264 profiles from Baseline to High,
+> > > > > > with
+> > > > > > the exception of the Extended profile.
+> > > > > > 
+> > > > > > Expose the V4L2_CID_MPEG_VIDEO_H264_PROFILE control, so that the
+> > > > > > applications can query the driver for the list of supported
+> > > > > > profiles.
+> > > > > 
+> > > > > Thanks for this patch. Do you think we could also add the LEVEL
+> > > > > control
+> > > > > so the profile/level enumeration becomes complete ?
+> > > > > 
+> > > > > I'm thinking it would be nice if the v4l2 compliance test make sure
+> > > > > that codecs do implement these controls (both stateful and stateless),
+> > > > > it's essential for stack with software fallback, or multiple capable
+> > > > > codec hardware but with different capabilities.
+> > > > > 
 > > > > 
-> > > > [ Upstream commit 52282163dfa651849e905886845bcf6850dd83c2 ]
+> > > > Level is a difficult story, because it also specifies the number of
+> > > > macroblocks per second, but for decoders like this the number of
+> > > > macroblocks per second it can handle depends on things the driver
+> > > > might be not aware of - clock frequencies, DDR throughput, system
+> > > > load, etc.
+> > > > 
+> > > > My take on this is that the decoder driver should advertise the
+> > > > highest resolution the decoder can handle due to hardware constraints.
+> > > > Performance related things depend on the integration details and
+> > > > should be managed elsewhere. For example Android and Chrome OS manage
+> > > > expected decoding performance in per-board configuration files.
 > > > 
-> > > This commit is effectively already in 5.4. Confusingly there were two
-> > > versions of this upstream:
+> > > When you read datasheet, the HW is always rated to maximum level (and
+> > > it's a range) with the assumption of a single stream. It seems much
+> > > easier to expose this as-is, statically then to start doing some math
+> > > with data that isn't fully exposed to the user. This is about filtering
+> > > of multiple CODEC instances, it does not need to be rocket science,
+> > > specially that the amount of missing data is important (e.g. usage of
+> > > tiles, compression, IPP all have an impact on the final performance).
+> > > All we want to know in userspace is if this HW is even possibly capable
+> > > of LEVEL X, and if not, we'll look for another one.
 > > > 
-> > > 52282163dfa6 ("drm/panfrost: Add missing check for pfdev->regulator")
-> > > c90f30812a79 ("drm/panfrost: Add missing check for pfdev->regulator")
-> > > 
-> > > It got merged both through a -fixes branch and through the normal merge
-> > > window. The two copies caused a bad merge in mainline and this was
-> > > effectively reverted in commit 603e398a3db2 ("drm/panfrost: Remove NULL
-> > > check for regulator").
-> > > 
-> > > c90f30812a79 is included in v5.4 so should already be in any v5.4.y
-> > > release.
 > > 
-> > Have I mentioned this month just how much I hate the way the DRM tree
-> > handles stable patches like this?  This kind of fallout is a pain for
-> > stable maintainers, I dred every time I see a drm patch tagged for
-> > stable.
+> > Agreed, one could potentially define it this way, but would it be
+> > really useful for the userspace and the users? I guess it could enable
+> > slightly faster fallback to software decoding in the extreme case of
+> > the hardware not supporting the level at all, but I suspect that the
+> > majority of cases would be the hardware just being unusably slow.
 > > 
-> > But we've been over this all before :(
+> > Also, as I mentioned before, we already return the range of supported
+> > resolutions, which in practice should map to the part of the level
+> > that may depend on hardware capabilities rather than performance, so
+> > exposing levels as well would add redundancy to the information
+> > exposed.
 > 
-> Another example is:
+> There is a lot of discussion here, but it all revolves around a potential
+> LEVEL control.
 > 
-> 29cd13cfd762 ("drm/v3d: Fix memory leak in v3d_submit_cl_ioctl")
-> 0d352a3a8a1f ("drm/v3d: don't leak bin job if v3d_job_init fails.")
-> 
-> Two fixes for a memory leak were merged so now it's a double free.  I
-> sent a patch on Jan 10 but no one responded.
+> So I gather everyone is OK with merging this patch?
 
-Have a link to the patch?  I can't seem to find it :(
+I'm ok with this. For me, the level reflects the real time performance
+capability as define in the spec, while the width/height constraints usually
+represent an addressing capabicity, which may or may not operate real-time.
+
+> 
+> If not, let me know asap.
+> 
+> Regards,
+> 
+> 	Hans
+> 
+> > > > > > Signed-off-by: Hirokazu Honda <hiroh@chromium.org>
+> > > > > > ---
+> > > > > >  drivers/staging/media/hantro/hantro_drv.c | 10 ++++++++++
+> > > > > >  1 file changed, 10 insertions(+)
+> > > > > > 
+> > > > > > diff --git a/drivers/staging/media/hantro/hantro_drv.c
+> > > > > > b/drivers/staging/media/hantro/hantro_drv.c
+> > > > > > index 6d9d41170832..9387619235d8 100644
+> > > > > > --- a/drivers/staging/media/hantro/hantro_drv.c
+> > > > > > +++ b/drivers/staging/media/hantro/hantro_drv.c
+> > > > > > @@ -355,6 +355,16 @@ static const struct hantro_ctrl controls[] = {
+> > > > > >                       .def =
+> > > > > > V4L2_MPEG_VIDEO_H264_START_CODE_ANNEX_B,
+> > > > > >                       .max =
+> > > > > > V4L2_MPEG_VIDEO_H264_START_CODE_ANNEX_B,
+> > > > > >               },
+> > > > > > +     }, {
+> > > > > > +             .codec = HANTRO_H264_DECODER,
+> > > > > > +             .cfg = {
+> > > > > > +                     .id = V4L2_CID_MPEG_VIDEO_H264_PROFILE,
+> > > > > > +                     .min = V4L2_MPEG_VIDEO_H264_PROFILE_BASELINE,
+> > > > > > +                     .max = V4L2_MPEG_VIDEO_H264_PROFILE_HIGH,
+> > > > > > +                     .menu_skip_mask =
+> > > > > > +                     BIT(V4L2_MPEG_VIDEO_H264_PROFILE_EXTENDED),
+> > > > > > +                     .def = V4L2_MPEG_VIDEO_H264_PROFILE_MAIN,
+> > > > > > +             }
+> > > > > >       }, {
+> > > > > >       },
+> > > > > >  };
+
