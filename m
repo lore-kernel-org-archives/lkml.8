@@ -2,127 +2,204 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBA3C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 00:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08596C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 01:07:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C74AF24689
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 00:58:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C96E62464B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 01:07:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730412AbgARA6A (ORCPT
+        id S1730422AbgARBHh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 19:58:00 -0500
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:58802 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727033AbgARA57 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 19:57:59 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0To-chkr_1579309064;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0To-chkr_1579309064)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 18 Jan 2020 08:57:54 +0800
-Subject: Re: [Patch v4] mm: thp: remove the defer list related code since this
- will not happen
-To:     Wei Yang <richardw.yang@linux.intel.com>, hannes@cmpxchg.org,
-        mhocko@kernel.org, vdavydov.dev@gmail.com,
-        akpm@linux-foundation.org, ktkhai@virtuozzo.com,
-        kirill.shutemov@linux.intel.com
-Cc:     cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, alexander.duyck@gmail.com,
-        rientjes@google.com, stable@vger.kernel.org
-References: <20200117233836.3434-1-richardw.yang@linux.intel.com>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <e73272a8-87e9-5e22-4f78-588b640f4fc4@linux.alibaba.com>
-Date:   Fri, 17 Jan 2020 16:57:41 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Fri, 17 Jan 2020 20:07:37 -0500
+Received: from mga17.intel.com ([192.55.52.151]:52872 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728778AbgARBHg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 20:07:36 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jan 2020 17:07:35 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,332,1574150400"; 
+   d="scan'208";a="264378530"
+Received: from gao-cwp.sh.intel.com (HELO gao-cwp) ([10.239.159.154])
+  by fmsmga001.fm.intel.com with ESMTP; 17 Jan 2020 17:07:33 -0800
+Date:   Sat, 18 Jan 2020 09:13:39 +0800
+From:   Chao Gao <chao.gao@intel.com>
+To:     Rich Persaud <persaur@gmail.com>
+Cc:     Pasi =?iso-8859-1?Q?K=E4rkk=E4inen?= <pasik@iki.fi>,
+        "Spassov, Stanislav" <stanspas@amazon.de>,
+        "jgross@suse.com" <jgross@suse.com>,
+        "sstabellini@kernel.org" <sstabellini@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "baijiaju1990@gmail.com" <baijiaju1990@gmail.com>,
+        "jbeulich@suse.com" <jbeulich@suse.com>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
+        "roger.pau@citrix.com" <roger.pau@citrix.com>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        Marek =?iso-8859-1?Q?Marczykowski-G=F3recki?= 
+        <marmarek@invisiblethingslab.com>,
+        Jason Andryuk <jandryuk@gmail.com>
+Subject: Re: [Xen-devel] [PATCH] xen: xen-pciback: Reset MSI-X state when
+ exposing a device
+Message-ID: <20200118011338.GA29391@gao-cwp>
+References: <20190926101347.GD28704@reaktio.net>
+ <C77735B9-0801-4136-B7E5-AFF02290F54D@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200117233836.3434-1-richardw.yang@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <C77735B9-0801-4136-B7E5-AFF02290F54D@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jan 17, 2020 at 01:57:43PM -0500, Rich Persaud wrote:
+>On Sep 26, 2019, at 06:17, Pasi Kärkkäinen <pasik@iki.fi> wrote:
+>> 
+>> ﻿Hello Stanislav,
+>> 
+>>> On Fri, Sep 13, 2019 at 11:28:20PM +0800, Chao Gao wrote:
+>>>> On Fri, Sep 13, 2019 at 10:02:24AM +0000, Spassov, Stanislav wrote:
+>>>> On Thu, Dec 13, 2018 at 07:54, Chao Gao wrote:
+>>>>> On Thu, Dec 13, 2018 at 12:54:52AM -0700, Jan Beulich wrote:
+>>>>>>>>> On 13.12.18 at 04:46, <chao.gao@intel.com> wrote:
+>>>>>>> On Wed, Dec 12, 2018 at 08:21:39AM -0700, Jan Beulich wrote:
+>>>>>>>>>>> On 12.12.18 at 16:18, <chao.gao@intel.com> wrote:
+>>>>>>>>> On Wed, Dec 12, 2018 at 01:51:01AM -0700, Jan Beulich wrote:
+>>>>>>>>>>>>> On 12.12.18 at 08:06, <chao.gao@intel.com> wrote:
+>>>>>>>>>>> On Wed, Dec 05, 2018 at 09:01:33AM -0500, Boris Ostrovsky wrote:
+>>>>>>>>>>>> On 12/5/18 4:32 AM, Roger Pau Monné wrote:
+>>>>>>>>>>>>> On Wed, Dec 05, 2018 at 10:19:17AM +0800, Chao Gao wrote:
+>>>>>>>>>>>>>> I find some pass-thru devices don't work any more across guest reboot.
+>>>>>>>>>>>>>> Assigning it to another guest also meets the same issue. And the only
+>>>>>>>>>>>>>> way to make it work again is un-binding and binding it to pciback.
+>>>>>>>>>>>>>> Someone reported this issue one year ago [1]. More detail also can be
+>>>>>>>>>>>>>> found in [2].
+>>>>>>>>>>>>>> 
+>>>>>>>>>>>>>> The root-cause is Xen's internal MSI-X state isn't reset properly
+>>>>>>>>>>>>>> during reboot or re-assignment. In the above case, Xen set maskall bit
+>>>>>>>>>>>>>> to mask all MSI interrupts after it detected a potential security
+>>>>>>>>>>>>>> issue. Even after device reset, Xen didn't reset its internal maskall
+>>>>>>>>>>>>>> bit. As a result, maskall bit would be set again in next write to
+>>>>>>>>>>>>>> MSI-X message control register.
+>>>>>>>>>>>>>> 
+>>>>>>>>>>>>>> Given that PHYSDEVOPS_prepare_msix() also triggers Xen resetting MSI-X
+>>>>>>>>>>>>>> internal state of a device, we employ it to fix this issue rather than
+>>>>>>>>>>>>>> introducing another dedicated sub-hypercall.
+>>>>>>>>>>>>>> 
+>>>>>>>>>>>>>> Note that PHYSDEVOPS_release_msix() will fail if the mapping between
+>>>>>>>>>>>>>> the device's msix and pirq has been created. This limitation prevents
+>>>>>>>>>>>>>> us calling this function when detaching a device from a guest during
+>>>>>>>>>>>>>> guest shutdown. Thus it is called right before calling
+>>>>>>>>>>>>>> PHYSDEVOPS_prepare_msix().
+>>>>>>>>>>>>> s/PHYSDEVOPS/PHYSDEVOP/ (no final S). And then I would also drop the
+>>>>>>>>>>>>> () at the end of the hypercall name since it's not a function.
+>>>>>>>>>>>>> 
+>>>>>>>>>>>>> I'm also wondering why the release can't be done when the device is
+>>>>>>>>>>>>> detached from the guest (or the guest has been shut down). This makes
+>>>>>>>>>>>>> me worry about the raciness of the attach/detach procedure: if there's
+>>>>>>>>>>>>> a state where pciback assumes the device has been detached from the
+>>>>>>>>>>>>> guest, but there are still pirqs bound, an attempt to attach to
+>>>>>>>>>>>>> another guest in such state will fail.
+>>>>>>>>>>>> 
+>>>>>>>>>>>> I wonder whether this additional reset functionality could be done out
+>>>>>>>>>>>> of xen_pcibk_xenbus_remove(). We first do a (best effort) device reset
+>>>>>>>>>>>> and then do the extra things that are not properly done there.
+>>>>>>>>>>> 
+>>>>>>>>>>> No. It cannot be done in xen_pcibk_xenbus_remove() without modifying
+>>>>>>>>>>> the handler of PHYSDEVOP_release_msix. To do a successful Xen internal
+>>>>>>>>>>> MSI-X state reset, PHYSDEVOP_{release, prepare}_msix should be finished
+>>>>>>>>>>> without error. But ATM, xen expects that no msi is bound to pirq when
+>>>>>>>>>>> doing PHYSDEVOP_release_msix. Otherwise it fails with error code -EBUSY.
+>>>>>>>>>>> However, the expectation isn't guaranteed in xen_pcibk_xenbus_remove().
+>>>>>>>>>>> In some cases, if qemu fails to unmap MSIs, MSIs are unmapped by Xen
+>>>>>>>>>>> at last minute, which happens after device reset in 
+>>>>>>>>>>> xen_pcibk_xenbus_remove().
+>>>>>>>>>> 
+>>>>>>>>>> But that may need taking care of: I don't think it is a good idea to have
+>>>>>>>>>> anything left from the prior owning domain when the device gets reset.
+>>>>>>>>>> I.e. left over IRQ bindings should perhaps be forcibly cleared before
+>>>>>>>>>> invoking the reset;
+>>>>>>>>> 
+>>>>>>>>> Agree. How about pciback to track the established IRQ bindings? Then
+>>>>>>>>> pciback can clear irq binding before invoking the reset.
+>>>>>>>> 
+>>>>>>>> How would pciback even know of those mappings, when it's qemu
+>>>>>>>> who establishes (and manages) them?
+>>>>>>> 
+>>>>>>> I meant to expose some interfaces from pciback. And pciback serves
+>>>>>>> as the proxy of IRQ (un)binding APIs.
+>>>>>> 
+>>>>>> If at all possible we should avoid having to change more parties (qemu,
+>>>>>> libxc, kernel, hypervisor) than really necessary. Remember that such
+>>>>>> a bug fix may want backporting, and making sure affected people have
+>>>>>> all relevant components updated is increasingly difficult with their
+>>>>>> number growing.
+>>>>>> 
+>>>>>>>>>> in fact I'd expect this to happen in the course of
+>>>>>>>>>> domain destruction, and I'd expect the device reset to come after the
+>>>>>>>>>> domain was cleaned up. Perhaps simply an ordering issue in the tool
+>>>>>>>>>> stack?
+>>>>>>>>> 
+>>>>>>>>> I don't think reversing the sequences of device reset and domain
+>>>>>>>>> destruction would be simple. Furthermore, during device hot-unplug,
+>>>>>>>>> device reset is done when the owner is alive. So if we use domain
+>>>>>>>>> destruction to enforce all irq binding cleared, in theory, it won't be
+>>>>>>>>> applicable to hot-unplug case (if qemu's hot-unplug logic is
+>>>>>>>>> compromised).
+>>>>>>>> 
+>>>>>>>> Even in the hot-unplug case the tool stack could issue unbind
+>>>>>>>> requests, behind the back of the possibly compromised qemu,
+>>>>>>>> once neither the guest nor qemu have access to the device
+>>>>>>>> anymore.
+>>>>>>> 
+>>>>>>> But currently, tool stack doesn't know the remaining IRQ bindings.
+>>>>>>> If tool stack can maintaine IRQ binding information of a pass-thru
+>>>>>>> device (stored in Xenstore?), we can come up with a clean solution
+>>>>>>> without modifying linux kernel and Xen.
+>>>>>> 
+>>>>>> If there's no way for the tool stack to either find out the bindings
+>>>>>> or "blindly" issue unbind requests (accepting them to fail), then a
+>>>>>> "wildcard" unbind operation may want adding. Or, perhaps even
+>>>>>> better, XEN_DOMCTL_deassign_device could unbind anything left
+>>>>>> in place for the specified device.
+>>>>> 
+>>>>> Good idea. I will take this advice.
+>>>>> 
+>>>>> Thanks
+>>>>> Chao
+>>>> 
+>>>> I am having the same issue, and cannot find a fix in either xen-pciback or the Xen codebase.
+>>>> Was a solution ever pushed as a result of this thread?
+>>>> 
+>>> 
+>>> I submitted patches [1] to Xen community. But I didn't get it merged.
+>>> We made a change in device driver to disable MSI-X during guest OS
+>>> shutdown to mitigate the issue. But when guest or qemu was crashed, we
+>>> encountered this issue again. I have no plan to get back to these
+>>> patches. But if you want to fix the issue completely along what the
+>>> patches below did, please go ahead.
+>>> 
+>>> [1]: https://lists.xenproject.org/archives/html/xen-devel/2019-01/msg01227.html
+>>> 
+>>> Thanks
+>>> Chao
+>>> 
+>> 
+>> Stanislav: Are you able to continue the work with these patches, to get them merged? 
+>
+>What further work is needed for these patches?  Are they only needed for Intel i210 NIC PCI passthrough, or are other devices affected?
 
+All MSI-X capable devices were affected. This issue is fixed in Xen by Roger's patch
+(https://xenbits.xen.org/gitweb/?p=xen.git;a=commit;h=575e18d54d19eda787f6477a4acd3c50f72751a9).
 
-On 1/17/20 3:38 PM, Wei Yang wrote:
-> If compound is true, this means it is a PMD mapped THP. Which implies
-> the page is not linked to any defer list. So the first code chunk will
-> not be executed.
->
-> Also with this reason, it would not be proper to add this page to a
-> defer list. So the second code chunk is not correct.
->
-> Based on this, we should remove the defer list related code.
->
-> Fixes: 87eaceb3faa5 ("mm: thp: make deferred split shrinker memcg aware")
->
-> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
-> Suggested-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Cc: <stable@vger.kernel.org>    [5.4+]
->
-> ---
-> v4:
->    * finally we identified the related code is not necessary and not
->      correct, just remove it
->    * thanks to Kirill T first spot some problem
-
-Thanks for debugging and figuring this out. Acked-by: Yang Shi 
-<yang.shi@linux.alibaba.com>
-
-> v3:
->    * remove all review/ack tag since rewrite the changelog
->    * use deferred_split_huge_page as the example of race
->    * add cc stable 5.4+ tag as suggested by David Rientjes
->
-> v2:
->    * move check on compound outside suggested by Alexander
->    * an example of the race condition, suggested by Michal
-> ---
->   mm/memcontrol.c | 18 ------------------
->   1 file changed, 18 deletions(-)
->
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index 6c83cf4ed970..27c231bf4565 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -5340,14 +5340,6 @@ static int mem_cgroup_move_account(struct page *page,
->   		__mod_lruvec_state(to_vec, NR_WRITEBACK, nr_pages);
->   	}
->   
-> -#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> -	if (compound && !list_empty(page_deferred_list(page))) {
-> -		spin_lock(&from->deferred_split_queue.split_queue_lock);
-> -		list_del_init(page_deferred_list(page));
-> -		from->deferred_split_queue.split_queue_len--;
-> -		spin_unlock(&from->deferred_split_queue.split_queue_lock);
-> -	}
-> -#endif
->   	/*
->   	 * It is safe to change page->mem_cgroup here because the page
->   	 * is referenced, charged, and isolated - we can't race with
-> @@ -5357,16 +5349,6 @@ static int mem_cgroup_move_account(struct page *page,
->   	/* caller should have done css_get */
->   	page->mem_cgroup = to;
->   
-> -#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> -	if (compound && list_empty(page_deferred_list(page))) {
-> -		spin_lock(&to->deferred_split_queue.split_queue_lock);
-> -		list_add_tail(page_deferred_list(page),
-> -			      &to->deferred_split_queue.split_queue);
-> -		to->deferred_split_queue.split_queue_len++;
-> -		spin_unlock(&to->deferred_split_queue.split_queue_lock);
-> -	}
-> -#endif
-> -
->   	spin_unlock_irqrestore(&from->move_lock, flags);
->   
->   	ret = 0;
-
+Thanks
+Chao
