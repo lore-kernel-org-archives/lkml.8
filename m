@@ -2,193 +2,156 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63B78C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 01:46:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFDE5C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 01:46:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39C9C21D56
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 01:46:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GfopNkep"
+	by mail.kernel.org (Postfix) with ESMTP id AFD6022522
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 01:46:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730599AbgARBq3 (ORCPT
+        id S1730633AbgARBqs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 20:46:29 -0500
-Received: from mail-lf1-f53.google.com ([209.85.167.53]:44116 "EHLO
-        mail-lf1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729930AbgARBq2 (ORCPT
+        Fri, 17 Jan 2020 20:46:48 -0500
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:48487 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729930AbgARBqr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 20:46:28 -0500
-Received: by mail-lf1-f53.google.com with SMTP id v201so19741949lfa.11;
-        Fri, 17 Jan 2020 17:46:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=j0RnDFf/PVmW4Ga4m/dd9N09svtLYcA6sWjuuwvc1Ww=;
-        b=GfopNkepXtafHF4BQIAscJUvBBsyeF7z0Zf+nVhiQAEBiMHlg3uKrZI2km/WSoIOXW
-         5dmXtgu390ePTXCirTDQtDIGFS/Pau5todk0MhE+B0J/jKkzzq004XKZcbz663ww0CAf
-         Isag/YaWpx3azNVW1qhtB8BIlJie1AJjh8HSAtIkP3Gp7wkPPrLYPhsHIj2vfCB0mB0X
-         H6t08PsIFkuBbC2zoDYFUOoGKB2Cq07FAv67cP4hZr/UlRSU57vWNGWkBvrvZkAm8sVG
-         3VxTU+2UxYhso1yOJcHufCrKbtcsA/dFzmkDxIoHWh03dM/tvAK5UfCQaB94SU1zmtKX
-         cTGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=j0RnDFf/PVmW4Ga4m/dd9N09svtLYcA6sWjuuwvc1Ww=;
-        b=t5I10qoh+OOp7bem0kKKSVDJ/gGVp/z3G6Cuzysr8O5cBVBgZyTqbFhnfAYMPjsp0a
-         tPCLY2a/Mces1EGe9IAZpV50pT3VNlz3aZiQ4j0wKxcZTJrRW82Xd13yC/O1uh3pZIcE
-         pBkFKqIx+aGrMDzOmXLHhZGOP/J4JkC7y5WKs2AzRIqFRs271aFGNIcXJI44iTPnhmlf
-         SB2LnPZRd9jufbffodIPjBns7NyqnJaDW8ocImNkKDlJxOTuchJklpzLpSuTfWZuSo4d
-         Rj0UXG7YMDCvU22BCnaciJKkUI3lCI30BAqtOpDJv+kyusCUIU7N83xrL879NFijjkbm
-         BS1Q==
-X-Gm-Message-State: APjAAAXRraXPBvQGF6TfnGalas/oDuK09toCdxHZ/15Evg+HfnEK+qJN
-        zSFoLM1OnZZStriHGz4cSqmECg49UaqiVpZp3GqmvIsY
-X-Google-Smtp-Source: APXvYqyYerCHr8LTN1SDYg0mkyjL2AG28H23saiidGzyFMj1SIa4l3h/fVzjbc7zckNdW6LBCY6T2qh+aFki/pZYkNE=
-X-Received: by 2002:ac2:5216:: with SMTP id a22mr6884580lfl.18.1579311986489;
- Fri, 17 Jan 2020 17:46:26 -0800 (PST)
+        Fri, 17 Jan 2020 20:46:47 -0500
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id DF0793C04C1;
+        Sat, 18 Jan 2020 02:46:43 +0100 (CET)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id pzu7defiLZdF; Sat, 18 Jan 2020 02:46:37 +0100 (CET)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id B524B3C04C0;
+        Sat, 18 Jan 2020 02:46:37 +0100 (CET)
+Received: from lxhi-065.adit-jv.com (10.72.93.66) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Sat, 18 Jan
+ 2020 02:46:37 +0100
+Date:   Sat, 18 Jan 2020 02:46:32 +0100
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        <linux-gpio@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <qemu-devel@nongnu.org>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: Re: [PATCH v3 0/7] gpio: Add GPIO Aggregator/Repeater
+Message-ID: <20200118014632.GA14644@lxhi-065.adit-jv.com>
+References: <20191127084253.16356-1-geert+renesas@glider.be>
 MIME-Version: 1.0
-References: <CAHhAz+iy9b8Cyc6O=tjzjjixUQqKpTchrQWc+Y4JicAxB_HY5A@mail.gmail.com>
- <20200109043505.GA223446@google.com>
-In-Reply-To: <20200109043505.GA223446@google.com>
-From:   Muni Sekhar <munisekharrms@gmail.com>
-Date:   Sat, 18 Jan 2020 07:16:14 +0530
-Message-ID: <CAHhAz+jddRTi++jTXgPMMm8H0LQC=nz7kRLOodQGD0SRki7g=A@mail.gmail.com>
-Subject: Re: pcie: xilinx: kernel hang - ISR readl()
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20191127084253.16356-1-geert+renesas@glider.be>
+X-Originating-IP: [10.72.93.66]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 9, 2020 at 10:05 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Thu, Jan 09, 2020 at 08:47:51AM +0530, Muni Sekhar wrote:
-> > On Thu, Jan 9, 2020 at 1:45 AM Bjorn Helgaas <helgaas@kernel.org> wrote=
-:
-> > > On Tue, Jan 07, 2020 at 09:45:13PM +0530, Muni Sekhar wrote:
-> > > > Hi,
-> > > >
-> > > > I have module with Xilinx FPGA. It implements UART(s), SPI(s),
-> > > > parallel I/O and interfaces them to the Host CPU via PCI Express bu=
-s.
-> > > > I see that my system freezes without capturing the crash dump for
-> > > > certain tests. I debugged this issue and it was tracked down to the
-> > > > below mentioned interrupt handler code.
-> > > >
-> > > >
-> > > > In ISR, first reads the Interrupt Status register using =E2=80=98re=
-adl()=E2=80=99 as
-> > > > given below.
-> > > >     status =3D readl(ctrl->reg + INT_STATUS);
-> > > >
-> > > >
-> > > > And then clears the pending interrupts using =E2=80=98writel()=E2=
-=80=99 as given blow.
-> > > >         writel(status, ctrl->reg + INT_STATUS);
-> > > >
-> > > >
-> > > > I've noticed a kernel hang if INT_STATUS register read again after
-> > > > clearing the pending interrupts.
-> > > >
-> > > > Can someone clarify me why the kernel hangs without crash dump inca=
-se
-> > > > if I read the INT_STATUS register using readl() after clearing the
-> > > > pending bits?
-> > > >
-> > > > Can readl() block?
-> > >
-> > > readl() should not block in software.  Obviously at the hardware CPU
-> > > instruction level, the read instruction has to wait for the result of
-> > > the read.  Since that data is provided by the device, i.e., your FPGA=
-,
-> > > it's possible there's a problem there.
-> >
-> > Thank you very much for your reply.
-> > Where can I find the details about what is protocol for reading the
-> > =E2=80=98memory mapped IO=E2=80=99? Can you point me to any useful link=
-s..
-> > I tried locate the exact point of the kernel code where CPU waits for
-> > read instruction as given below.
-> > readl() -> __raw_readl() -> return *(const volatile u32 __force *)add
-> > Do I need to check for the assembly instructions, here?
->
-> The C pointer dereference, e.g., "*address", will be some sort of a
-> "load" instruction in assembly.  The CPU wait isn't explicit; it's
-> just that when you load a value, the CPU waits for the value.
->
-> > > Can you tell whether the FPGA has received the Memory Read for
-> > > INT_STATUS and sent the completion?
-I have not seen any =E2=80=98missing=E2=80=99 completions on the logic anal=
-yser. Is
-there any other ways to debug this one?
+Hi Geert,
 
-> >
-> > Is there a way to know this with the help of software debugging(either
-> > enabling dynamic debugging or adding new debug prints)? Can you please
-> > point some tools\hw needed to find this?
->
-> You could learn this either via a PCIe analyzer (expensive piece of
-> hardware) or possibly some logic in the FPGA that would log PCIe
-> transactions in a buffer and make them accessible via some other
-> interface (you mentioned it had parallel and other interfaces).
->
-> > > On the architectures I'm familiar with, if a device doesn't respond,
-> > > something would eventually time out so the CPU doesn't wait forever.
-> >
-> > What is timeout here? I mean how long CPU waits for completion? Since
-> > this code runs from interrupt context, does it causes the system to
-> > freeze if timeout is more?
->
-> The Root Port should have a Completion Timeout.  This is required by
-> the PCIe spec.  The *reporting* of the timeout is somewhat
-> implementation-specific since the reporting is outside the PCIe
-> domain.  I don't know the duration of the timeout, but it certainly
-> shouldn't be long enough to look like a "system freeze".
->
-> > lspci output:
-> > $ lspci
-> > 00:00.0 Host bridge: Intel Corporation Atom Processor Z36xxx/Z37xxx
-> > Series SoC Transaction Register (rev 11)
-> > 00:02.0 VGA compatible controller: Intel Corporation Atom Processor
-> > Z36xxx/Z37xxx Series Graphics & Display (rev 11)
-> > 00:13.0 SATA controller: Intel Corporation Atom Processor E3800 Series
-> > SATA AHCI Controller (rev 11)
-> > 00:14.0 USB controller: Intel Corporation Atom Processor
-> > Z36xxx/Z37xxx, Celeron N2000 Series USB xHCI (rev 11)
-> > 00:1a.0 Encryption controller: Intel Corporation Atom Processor
-> > Z36xxx/Z37xxx Series Trusted Execution Engine (rev 11)
-> > 00:1b.0 Audio device: Intel Corporation Atom Processor Z36xxx/Z37xxx
-> > Series High Definition Audio Controller (rev 11)
-> > 00:1c.0 PCI bridge: Intel Corporation Atom Processor E3800 Series PCI
-> > Express Root Port 1 (rev 11)
-> > 00:1c.2 PCI bridge: Intel Corporation Atom Processor E3800 Series PCI
-> > Express Root Port 3 (rev 11)
-> > 00:1c.3 PCI bridge: Intel Corporation Atom Processor E3800 Series PCI
-> > Express Root Port 4 (rev 11)
-> > 00:1d.0 USB controller: Intel Corporation Atom Processor Z36xxx/Z37xxx
-> > Series USB EHCI (rev 11)
-> > 00:1f.0 ISA bridge: Intel Corporation Atom Processor Z36xxx/Z37xxx
-> > Series Power Control Unit (rev 11)
-> > 00:1f.3 SMBus: Intel Corporation Atom Processor E3800 Series SMBus
-> > Controller (rev 11)
-> > 01:00.0 RAM memory: PLDA Device 5555
->
-> Is this 01:00.0 device the FPGA?
->
-> > 03:00.0 Ethernet controller: Intel Corporation I210 Gigabit Network
-> > Connection (rev 03)
+On Wed, Nov 27, 2019 at 09:42:46AM +0100, Geert Uytterhoeven wrote:
+>   - Create aggregators:
+> 
+>     $ echo e6052000.gpio 19,20 \
+>         > /sys/bus/platform/drivers/gpio-aggregator/new_device
+> 
+>     gpio-aggregator gpio-aggregator.0: gpio 0 => gpio-953 (gpio-aggregator.0)
+>     gpio-aggregator gpio-aggregator.0: gpio 1 => gpio-954 (gpio-aggregator.0)
+>     gpiochip_find_base: found new base at 778
+>     gpio gpiochip8: (gpio-aggregator.0): added GPIO chardev (254:8)
+>     gpiochip_setup_dev: registered GPIOs 778 to 779 on device: gpiochip8 (gpio-aggregator.0)
+> 
+>     $ echo e6052000.gpio 21 e6050000.gpio 20-22 \
+>         > /sys/bus/platform/drivers/gpio-aggregator/new_device
+> 
+>     gpio-aggregator gpio-aggregator.1: gpio 0 => gpio-955 (gpio-aggregator.1)
+>     gpio-aggregator gpio-aggregator.1: gpio 1 => gpio-1012 (gpio-aggregator.1)
+>     gpio-aggregator gpio-aggregator.1: gpio 2 => gpio-1013 (gpio-aggregator.1)
+>     gpio-aggregator gpio-aggregator.1: gpio 3 => gpio-1014 (gpio-aggregator.1)
+>     gpiochip_find_base: found new base at 774
+>     gpio gpiochip9: (gpio-aggregator.1): added GPIO chardev (254:9)
+>     gpiochip_setup_dev: registered GPIOs 774 to 777 on device: gpiochip9 (gpio-aggregator.1)
+> 
+>   - Adjust permissions on /dev/gpiochip[89] (optional)
+> 
+>   - Control LEDs:
+> 
+>     $ gpioset gpiochip8 0=0 1=1 # LED6 OFF, LED7 ON
+>     $ gpioset gpiochip8 0=1 1=0 # LED6 ON, LED7 OFF
+>     $ gpioset gpiochip9 0=0     # LED8 OFF
+>     $ gpioset gpiochip9 0=1     # LED8 ON
+> 
+>   - Destroy aggregators:
+> 
+>     $ echo gpio-aggregator.0 \
+>             > /sys/bus/platform/drivers/gpio-aggregator/delete_device
+>     $ echo gpio-aggregator.1 \
+>             > /sys/bus/platform/drivers/gpio-aggregator/delete_device
 
+Thanks for describing the test procedure in detail. It helps a lot.
 
+Using similar commands on H3ULCB, I could successfully trigger the
+gpiochip6-{12,13} leds on and off. 
 
---=20
-Thanks,
-Sekhar
+The only unexpected thing is seeing below messages (where gpiochip99 and
+gpiochip22 are inexisting gpiochip names, mistakenly provided on command
+line prior to passing the correct name):
+
+root@rcar-gen3:~# echo gpiochip6 12-13 > /sys/bus/platform/drivers/gpio-aggregator/new_device                                                                                                                                                                                                                                                                 
+[  915.572905] gpio-aggregator gpio-aggregator.0: cannot find GPIO chip gpiochip99, deferring
+[  915.584224] gpio-aggregator gpio-aggregator.2: cannot find GPIO chip gpiochip99, deferring
+[  915.865281] gpio-aggregator gpio-aggregator.29: cannot find GPIO chip gpiochip22, deferring
+
+Obviously, in the above case, due to a typo in the names, the gpio
+chips will never be found, no matter how long gpio-aggregator defers
+their probing. Unfortunately, the driver will continuously emit those
+messages, upon each successfully created/aggregated gpiochip. I built
+gpio-aggregator as a loadable module, if that's relevant.
+
+Another comment is that, while the series _does_ allow specifying
+gpio lines in the DTS (this would require a common compatible string
+in gpio_aggregator_dt_ids[] and in the DTS node) and while those lines
+are indeed exposed to userspace, based on my testing, these same gpio
+lines are marked as "used/reserved" by the kernel. This means that
+operating on those gpio pins from userspace will not be possible.
+For instance, gpioget/gpioset return "Device or resource busy":
+
+gpioget: error reading GPIO values: Device or resource busy
+gpioset: error setting the GPIO line values: Device or resource busy
+
+I guess Harish will be unhappy about that, as his expectation was that
+upon merging gpio-aggregator with gpio-inverter, he will be able to
+describe GPIO polarity and names in DTS without "hogging" the pins.
+Perhaps this can be supplemented via an add-on patch later on?
+
+For the whole series (leaving the above findings to your discretion):
+
+Reviewed-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+
+Thanks!
+
+-- 
+Best Regards,
+Eugeniu
