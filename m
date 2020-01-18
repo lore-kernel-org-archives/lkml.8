@@ -2,187 +2,142 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B03EC33CB7
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 12:01:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DCC1C33CB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 12:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4139A2072E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 12:01:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pqq9MNpc"
+	by mail.kernel.org (Postfix) with ESMTP id 2295224656
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 12:08:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729028AbgARMBA (ORCPT
+        id S1728803AbgARMIY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 07:01:00 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:45658 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727118AbgARMBA (ORCPT
+        Sat, 18 Jan 2020 07:08:24 -0500
+Received: from mout-p-202.mailbox.org ([80.241.56.172]:8772 "EHLO
+        mout-p-202.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727118AbgARMIY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 07:01:00 -0500
-Received: by mail-lj1-f195.google.com with SMTP id j26so29150474ljc.12;
-        Sat, 18 Jan 2020 04:00:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VZj/+gTBYwih9w8p4CHvebReTfIMgw1NYGMhYLwgkjY=;
-        b=Pqq9MNpc0mluCwwOKD2lqGkoDdsfpynn/xg1au7LAGAye67z/NsqeDuVDGrcgalaI+
-         1OJYIYI/gtNkMK0cXvjAbF0QIEZgRsp6QxGRh6ZCTYAEvW2TFkFump0n2TCHIBrXfr/k
-         EMfOxTDDaI0UZJHqQ1S+ONMQzww2ZXeLjJ0tnG5a9e2X7DJohIM1DcaF9jM6hgpBfwIl
-         ROzG7rWE9ooOijOZ6yY0FnRajbAP0mt90NVoNkoD0LlBj2Gj8aA/AF2fYNTziMnVcrHH
-         Li6pdXZr8DtBv4szeYINZobelo9rvUS7ac/qCHLI+VcilZnOh3LtdxxX2EmqJExrgQVz
-         UrQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VZj/+gTBYwih9w8p4CHvebReTfIMgw1NYGMhYLwgkjY=;
-        b=LlAVNZ/+wSNPesJEakXNRg9RImGfYrjE3ffpt4aiJFkb+SbyXc6PQLzdxIVONiqs2l
-         cncj7okWAu7nLfxIokkipRlKmNpsonOsv8Rl711Va+kJLjPJUXYk1gECRgcCNZ0oPtEw
-         ZGni8xZOdPUJeRU8yV4QNiSN7yhZO8KvORMXEVJfKP1wtfV8Tt0QQ0yHm6NgZYQ7cqZR
-         1unlB+EBmmwK71UQqUBAB6ZyQ0FRpo7728NG+ipnHdJVLzpJ6+PcUat2esFqPotdSpgl
-         53O6oC7BrGRVAPiPZ3ghs706bHFcQ7hV8SP0z+fjsGKF4zDkEmUD30iY5lAsOpYL89IJ
-         9RnQ==
-X-Gm-Message-State: APjAAAU6uG3QGx7pSksSQ8YaE7JvhKVE0wz3LIXNjJt8kWF2qfgxnmid
-        db5ptKylS4tzrHuVR1nQQurWSITMZ3E6bw==
-X-Google-Smtp-Source: APXvYqwosEdFwVQMSXRQKZbO5XfS6GRjYRqsw50BWyzXGZLANGfEw3N0Lwq9GnaTiEvN3WzmbZvk+g==
-X-Received: by 2002:a2e:8053:: with SMTP id p19mr7936544ljg.263.1579348857779;
-        Sat, 18 Jan 2020 04:00:57 -0800 (PST)
-Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id m8sm13500659lfp.4.2020.01.18.04.00.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Jan 2020 04:00:57 -0800 (PST)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Sat, 18 Jan 2020 13:00:49 +0100
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, urezki@gmail.com,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>, rcu@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH 1/2] rcuperf: Add support to vary the slab object sizes
-Message-ID: <20200118120049.GA10134@pc636>
-References: <20200115224225.246061-1-joel@joelfernandes.org>
+        Sat, 18 Jan 2020 07:08:24 -0500
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 480Gsx0gfnzQlC0;
+        Sat, 18 Jan 2020 13:08:21 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter02.heinlein-hosting.de (spamfilter02.heinlein-hosting.de [80.241.56.116]) (amavisd-new, port 10030)
+        with ESMTP id nGUXfNiBnQgK; Sat, 18 Jan 2020 13:08:17 +0100 (CET)
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Shuah Khan <shuah@kernel.org>
+Cc:     Aleksa Sarai <cyphar@cyphar.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        David Laight <david.laight@aculab.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        quae@daurnimator.com, dev@opencontainers.org,
+        containers@lists.linux-foundation.org, libc-alpha@sourceware.org,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: [PATCH v3 0/2] openat2: minor uapi cleanups
+Date:   Sat, 18 Jan 2020 23:07:58 +1100
+Message-Id: <20200118120800.16358-1-cyphar@cyphar.com>
+In-Reply-To: <20200115144831.GJ8904@ZenIV.linux.org.uk>
+References: <20200115144831.GJ8904@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200115224225.246061-1-joel@joelfernandes.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Joel.
+Patch changelog:
+  v3:
+   * Merge changes into the original patches to make Al's life easier.
+     [Al Viro]
+  v2:
+   * Add include <linux/types.h> to openat2.h. [Florian Weimer]
+   * Move OPEN_HOW_SIZE_* constants out of UAPI. [Florian Weimer]
+   * Switch from __aligned_u64 to __u64 since it isn't necessary.
+     [David Laight]
+  v1: <https://lore.kernel.org/lkml/20191219105533.12508-1-cyphar@cyphar.com/>
 
-> This patch varies the allocated size of objects to be more realistic in
-> comparison to production workloads.
-> 
-> Cc: urezki@gmail.com
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> 
-> ---
->  kernel/rcu/rcuperf.c | 48 +++++++++++++++++++++++++++++++++++++-------
->  1 file changed, 41 insertions(+), 7 deletions(-)
-> 
-> diff --git a/kernel/rcu/rcuperf.c b/kernel/rcu/rcuperf.c
-> index da94b89cd531..1fd0cc72022e 100644
-> --- a/kernel/rcu/rcuperf.c
-> +++ b/kernel/rcu/rcuperf.c
-> @@ -87,6 +87,7 @@ torture_param(bool, shutdown, RCUPERF_SHUTDOWN,
->  torture_param(int, verbose, 1, "Enable verbose debugging printk()s");
->  torture_param(int, writer_holdoff, 0, "Holdoff (us) between GPs, zero to disable");
->  torture_param(int, kfree_rcu_test, 0, "Do we run a kfree_rcu() perf test?");
-> +torture_param(bool, kfree_vary_obj_size, 0, "Vary the kfree_rcu object size");
->  
->  static char *perf_type = "rcu";
->  module_param(perf_type, charp, 0444);
-> @@ -599,17 +600,29 @@ static int kfree_nrealthreads;
->  static atomic_t n_kfree_perf_thread_started;
->  static atomic_t n_kfree_perf_thread_ended;
->  
-> -struct kfree_obj {
-> -	char kfree_obj[8];
-> -	struct rcu_head rh;
-> -};
-> +/*
-> + * Define a kfree_obj with size as the @size parameter + the size of rcu_head
-> + * (rcu_head is 16 bytes on 64-bit arch).
-> + */
-> +#define DEFINE_KFREE_OBJ(size)	\
-> +struct kfree_obj_ ## size {	\
-> +	char kfree_obj[size];	\
-> +	struct rcu_head rh;	\
-> +}
-> +
-> +/* This should goto the right sized slabs on both 32-bit and 64-bit arch */
-> +DEFINE_KFREE_OBJ(16); // goes on kmalloc-32 slab
-> +DEFINE_KFREE_OBJ(32); // goes on kmalloc-64 slab
-> +DEFINE_KFREE_OBJ(64); // goes on kmalloc-96 slab
-> +DEFINE_KFREE_OBJ(96); // goes on kmalloc-128 slab
->  
->  static int
->  kfree_perf_thread(void *arg)
->  {
->  	int i, loop = 0;
->  	long me = (long)arg;
-> -	struct kfree_obj *alloc_ptr;
-> +	void *alloc_ptr;
-> +
->  	u64 start_time, end_time;
->  
->  	VERBOSE_PERFOUT_STRING("kfree_perf_thread task started");
-> @@ -627,11 +640,32 @@ kfree_perf_thread(void *arg)
->  
->  	do {
->  		for (i = 0; i < kfree_alloc_num; i++) {
-> -			alloc_ptr = kmalloc(sizeof(struct kfree_obj), GFP_KERNEL);
-> +			int kfree_type = i % 4;
-> +
-> +			// Allocate only kfree_obj_16 if rcuperf.kfree_vary_obj_size not passed.
-> +			if (!kfree_vary_obj_size)
-> +				kfree_type = 0;
-> +
-> +			if (kfree_type == 0)
-> +				alloc_ptr = kmalloc(sizeof(struct kfree_obj_16), GFP_KERNEL);
-> +			else if (kfree_type == 1)
-> +				alloc_ptr = kmalloc(sizeof(struct kfree_obj_32), GFP_KERNEL);
-> +			else if (kfree_type == 2)
-> +				alloc_ptr = kmalloc(sizeof(struct kfree_obj_64), GFP_KERNEL);
-> +			else
-> +				alloc_ptr = kmalloc(sizeof(struct kfree_obj_96),  GFP_KERNEL);
-> +
->  			if (!alloc_ptr)
->  				return -ENOMEM;
->  
-> -			kfree_rcu(alloc_ptr, rh);
-> +			if (kfree_type == 0)
-> +				kfree_rcu((struct kfree_obj_16 *)alloc_ptr, rh);
-> +			else if (kfree_type == 1)
-> +				kfree_rcu((struct kfree_obj_32 *)alloc_ptr, rh);
-> +			else if (kfree_type == 2)
-> +				kfree_rcu((struct kfree_obj_64 *)alloc_ptr, rh);
-> +			else
-> +				kfree_rcu((struct kfree_obj_96 *)alloc_ptr, rh);
->  		}
->  
->  		cond_resched();
-> -- 
-> 2.25.0.rc1.283.g88dfdc4193-goog
-> 
+While openat2(2) is still not yet in Linus's tree, we can take this
+opportunity to iron out some small warts that weren't noticed earlier:
 
-Good point and patch!
+  * A fix was suggested by Florian Weimer, to separate the openat2
+    definitions so glibc can use the header directly. I've put the
+    maintainership under VFS but let me know if you'd prefer it belong
+    ot the fcntl folks.
 
-Tested-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+  * Having heterogenous field sizes in an extensible struct results in
+    "padding hole" problems when adding new fields (in addition the
+    correct error to use for non-zero padding isn't entirely clear ).
+    The simplest solution is to just copy clone(3)'s model -- always use
+    u64s. It will waste a little more space in the struct, but it
+    removes a possible future headache.
 
---
-Vlad Rezki
+This patch is intended to replace the corresponding patches in Al's
+#work.openat2 tree (and *will not* apply on Linus' tree).
+
+@Al: I will send some additional patches later, but they will require
+     proper design review since they're ABI-related features (namely,
+	 adding a way to check what features a syscall supports as I
+	 outlined in my talk here[1]).
+
+[1]: https://youtu.be/ggD-eb3yPVs
+
+Aleksa Sarai (2):
+  open: introduce openat2(2) syscall
+  selftests: add openat2(2) selftests
+
+ CREDITS                                       |   4 +-
+ MAINTAINERS                                   |   1 +
+ arch/alpha/kernel/syscalls/syscall.tbl        |   1 +
+ arch/arm/tools/syscall.tbl                    |   1 +
+ arch/arm64/include/asm/unistd.h               |   2 +-
+ arch/arm64/include/asm/unistd32.h             |   2 +
+ arch/ia64/kernel/syscalls/syscall.tbl         |   1 +
+ arch/m68k/kernel/syscalls/syscall.tbl         |   1 +
+ arch/microblaze/kernel/syscalls/syscall.tbl   |   1 +
+ arch/mips/kernel/syscalls/syscall_n32.tbl     |   1 +
+ arch/mips/kernel/syscalls/syscall_n64.tbl     |   1 +
+ arch/mips/kernel/syscalls/syscall_o32.tbl     |   1 +
+ arch/parisc/kernel/syscalls/syscall.tbl       |   1 +
+ arch/powerpc/kernel/syscalls/syscall.tbl      |   1 +
+ arch/s390/kernel/syscalls/syscall.tbl         |   1 +
+ arch/sh/kernel/syscalls/syscall.tbl           |   1 +
+ arch/sparc/kernel/syscalls/syscall.tbl        |   1 +
+ arch/x86/entry/syscalls/syscall_32.tbl        |   1 +
+ arch/x86/entry/syscalls/syscall_64.tbl        |   1 +
+ arch/xtensa/kernel/syscalls/syscall.tbl       |   1 +
+ fs/open.c                                     | 147 +++--
+ include/linux/fcntl.h                         |  16 +-
+ include/linux/syscalls.h                      |   3 +
+ include/uapi/asm-generic/unistd.h             |   5 +-
+ include/uapi/linux/fcntl.h                    |   2 +-
+ include/uapi/linux/openat2.h                  |  39 ++
+ tools/testing/selftests/Makefile              |   1 +
+ tools/testing/selftests/openat2/.gitignore    |   1 +
+ tools/testing/selftests/openat2/Makefile      |   8 +
+ tools/testing/selftests/openat2/helpers.c     | 109 ++++
+ tools/testing/selftests/openat2/helpers.h     | 106 ++++
+ .../testing/selftests/openat2/openat2_test.c  | 312 +++++++++++
+ .../selftests/openat2/rename_attack_test.c    | 160 ++++++
+ .../testing/selftests/openat2/resolve_test.c  | 523 ++++++++++++++++++
+ 34 files changed, 1418 insertions(+), 39 deletions(-)
+ create mode 100644 include/uapi/linux/openat2.h
+ create mode 100644 tools/testing/selftests/openat2/.gitignore
+ create mode 100644 tools/testing/selftests/openat2/Makefile
+ create mode 100644 tools/testing/selftests/openat2/helpers.c
+ create mode 100644 tools/testing/selftests/openat2/helpers.h
+ create mode 100644 tools/testing/selftests/openat2/openat2_test.c
+ create mode 100644 tools/testing/selftests/openat2/rename_attack_test.c
+ create mode 100644 tools/testing/selftests/openat2/resolve_test.c
+
+-- 
+2.24.1
 
