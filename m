@@ -2,94 +2,209 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 183C8C33CB7
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 17:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92AF8C33CB7
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 17:16:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E11EB246A5
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 17:14:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j0hEMFvs"
+	by mail.kernel.org (Postfix) with ESMTP id 5FDA7246A5
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 17:16:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579367799;
+	bh=lVAL6/td+RDSjoc+zfgE4j3U9b1ln3hhXLIsjf01364=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=0EwJ93TRnmky7yZwckwZew154KZRE2CLf2FIREDs4kTFFtOlRBEwIExRQbpdFlsAg
+	 erhrwGBaVf/Fr/wWkuZeJsgw0UycjaNm/1RFFdqIp8Nowz0ouRKXH5fIs9Mc87PG2z
+	 ts127DD5D7dSXKfAc9sE6g3cg22xzs7jPu+FzM2c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726740AbgARROf (ORCPT
+        id S1726822AbgARRQi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 12:14:35 -0500
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:41344 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726413AbgARROe (ORCPT
+        Sat, 18 Jan 2020 12:16:38 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44707 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726413AbgARRQi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 12:14:34 -0500
-Received: by mail-yb1-f194.google.com with SMTP id z15so7702606ybm.8;
-        Sat, 18 Jan 2020 09:14:34 -0800 (PST)
+        Sat, 18 Jan 2020 12:16:38 -0500
+Received: by mail-wr1-f65.google.com with SMTP id q10so25552368wrm.11;
+        Sat, 18 Jan 2020 09:16:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0T9fqAMxiYB3y9OzNxfO/MyT5XpU+aTojyxESTZY5zc=;
-        b=j0hEMFvssafuwd0NXovApcEKy74ha1Sr+GUnybLUYUbK2JEGX4K7qvneiLcPU60Rir
-         68DqOhcjmreKfZbNgU4DXM8KubsvlXRx9VUWABrWos2AusaEUyNmAbTk2gxdKWdh0+FX
-         2tKJ1Y6uB0ziFJN+8iwZcx0oiTJorviUSWLrhV7yQGB/y0wqXO3qBFsLEsVrxZNftS0H
-         o0EKRculfPAVeRLsqtgIcpFr6g0Qouto4RYBDVB7bLeaO0PkY1xhzyTzV1Pu2NCipOYA
-         IX0eEmMi+/nPW0KN8pp+9zBUjgo5LvoqbQ+5hSLFpb7LeHe/yw5DEDy7YY5k47es2HAe
-         WKDA==
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=t96K9yqyVEX3WlNB6mY1iEHeBKue1nFom+5GUOh9QI8=;
+        b=S/iiXl+UPMKSKq3gJsNswV337GSpEV6mH/fvuOpe6td2ZhOUtvDCQM2X64Q5D+TfKi
+         WlIdE5c4QF4p3fPJo0nAFWmbpCx3oC2pVt/Y+ebEb5OaHEo70hNVBQ2og46RuUohQHcS
+         4iRxfJ0vS1UJQbjitduNenql8//BJpMyrgTRUMBhJshzEUGVhxiQUgGXi7xQ0ZqIsqzC
+         TQB3Xm7vq/cW3o1ji64BHnr0zDIn9cTipzDv/x8Gfq9Odp4GSLPWbCkdzYP0/3DtEx6j
+         9YCUxYi+SKy8GkKZoi2JS9OnOeqHKS5hH8IPZtEdMQLyfBQCeaRkA949Ocgb+J+ewtNJ
+         a2lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0T9fqAMxiYB3y9OzNxfO/MyT5XpU+aTojyxESTZY5zc=;
-        b=fV/Pcx/Zszc6X92QxN3TlCR3slhwldhrssP+Mgg/efhswsqOif+kNhFsaWxVzc95lI
-         0m9l7HKI2PGGOas1CtQFKHTk3c+SRevmRwqsqpN98qtzZU9VeORTm33AzZB8O/Vkl7FH
-         MrOEAXrDOCQ7e4gzM061ymGpulcEMsc2DuVOl6tIrbNQFSTaxCa3W1cHHrcPLwtkf1UT
-         rypq9VgFlXrR2efFiAFU2NsEy0ROW6IKwkoCa3PRP01xQc0bo5YWPuTeFHbJBGjIT9oA
-         mICm+r5LiYaqPB1kxEi37Cbs+OmCeXe9SO92pKEaZ+xDtOyI5tFs+nRd0jYzv8oTXB0w
-         6gbw==
-X-Gm-Message-State: APjAAAU7Skh2AYRYT+Pz6zUsVuU+oSixjCpoUmM6FrWctoZdNnZNplJI
-        Zw3ctcw6TzNcLrHdyQuccWmIacBU
-X-Google-Smtp-Source: APXvYqwSdA56F8lye8mkBOfmoCv2Q4mKT4N7qoF9l9N0X0FU9y1RJXJ8WbYEGA74HcuehUr1HxghmA==
-X-Received: by 2002:a5b:60d:: with SMTP id d13mr30236289ybq.300.1579367673610;
-        Sat, 18 Jan 2020 09:14:33 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id g29sm13421291ywk.31.2020.01.18.09.14.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 18 Jan 2020 09:14:33 -0800 (PST)
-Subject: Re: [RFT PATCH 0/4] hwmon: k10temp driver improvements
-To:     Brad Campbell <lists2009@fnarfbargle.com>,
-        linux-hwmon@vger.kernel.org
-Cc:     Clemens Ladisch <clemens@ladisch.de>,
-        Jean Delvare <jdelvare@suse.com>, linux-kernel@vger.kernel.org
-References: <20200116141800.9828-1-linux@roeck-us.net>
- <492345ed-f82e-e4d9-20ac-924b4a00df90@fnarfbargle.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <6bb6770d-cfb0-1209-6c8f-f89c5dc4fa7f@roeck-us.net>
-Date:   Sat, 18 Jan 2020 09:14:22 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=t96K9yqyVEX3WlNB6mY1iEHeBKue1nFom+5GUOh9QI8=;
+        b=cqdz8nLPmsJlSR5ZIJ6riIrSa9EVhoR5dFBgDgiYlw4NffA3oGNKqHFEVjTSjep2P1
+         Agrq1V9tFLL61FZISGw4wH6CVDq34vzq8dGzRgfUBcPk6dpcYm7VthWlOWBHANeI8vKz
+         LnXhsAc+Wo85/4yJUdRd2LE3Z8KiauZfvjJWYE1Mg2kX65NGHNIiEJaCrspfZm32xJQ4
+         o2zpRivpFtl2Fg7+0vI9qIxQrYxcWi3LiqsVYXiqXWZnyvH/QT1Azhwps1VRjSeiLlIB
+         Kl6uE0xnBAycI7LykEMDRhdDPr97yLWIySpFs/E3V4Q6vgufgNDqnfqLE6H55s3OX4Kd
+         3EYw==
+X-Gm-Message-State: APjAAAWGvTwpCFKk+B5v3YmTeASlLK6oIe41shhsHJMrecRguFfnS7SZ
+        VPid9/KTID6hB1OzMrLUDJ5/DBYP
+X-Google-Smtp-Source: APXvYqwVfrJHywbiiBsXPRQekZT4HB5Qe9Ib/vlHDLTcN5E8oA9fcc5hc8DDrvTisNhl8QSOrAplaw==
+X-Received: by 2002:a5d:528e:: with SMTP id c14mr9540897wrv.308.1579367795770;
+        Sat, 18 Jan 2020 09:16:35 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id a184sm5458070wmf.29.2020.01.18.09.16.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Jan 2020 09:16:35 -0800 (PST)
+Date:   Sat, 18 Jan 2020 18:16:33 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-efi@vger.kernel.org
+Subject: [GIT PULL] EFI fixes
+Message-ID: <20200118171633.GA28490@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <492345ed-f82e-e4d9-20ac-924b4a00df90@fnarfbargle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/18/20 12:52 AM, Brad Campbell wrote:
-> On 16/1/20 10:17 pm, Guenter Roeck wrote:
->> This patch series implements various improvements for the k10temp driver.
->>
-> 
-> Looks good here. Identical motherboards (ASUS x370 Prime-Pro), different CPUs.
-> 
-> 3950x
-> 
-Interesting. I thought the 3950X needs a newer motherboard. Is that CPU as amazing
-as everyone says it is ? And does it really need liquid cooling ?
+Linus,
 
-Anyway, thanks a lot for testing!
+Please pull the latest efi-urgent-for-linus git tree from:
 
-Guenter
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git efi-urgent-for-linus
+
+   # HEAD: 4911ee401b7ceff8f38e0ac597cbf503d71e690c x86/efistub: Disable paging at mixed mode entry
+
+Three EFI fixes:
+
+ - Fix a slow-boot-scrolling regression but making sure we use WC for EFI 
+   earlycon framebuffer mappings on x86
+
+ - Fix a mixed EFI mode boot crash
+
+ - Disable paging explicitly before entering startup_32() in mixed mode 
+   bootup
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Ard Biesheuvel (1):
+      x86/efistub: Disable paging at mixed mode entry
+
+Arvind Sankar (1):
+      efi/earlycon: Fix write-combine mapping on x86
+
+Hans de Goede (1):
+      efi/libstub/random: Initialize pointer variables to zero for mixed mode
+
+
+ arch/x86/boot/compressed/head_64.S    |  5 +++++
+ drivers/firmware/efi/earlycon.c       | 16 +++++++---------
+ drivers/firmware/efi/libstub/random.c |  6 +++---
+ 3 files changed, 15 insertions(+), 12 deletions(-)
+
+diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
+index 58a512e33d8d..ee60b81944a7 100644
+--- a/arch/x86/boot/compressed/head_64.S
++++ b/arch/x86/boot/compressed/head_64.S
+@@ -244,6 +244,11 @@ SYM_FUNC_START(efi32_stub_entry)
+ 	leal	efi32_config(%ebp), %eax
+ 	movl	%eax, efi_config(%ebp)
+ 
++	/* Disable paging */
++	movl	%cr0, %eax
++	btrl	$X86_CR0_PG_BIT, %eax
++	movl	%eax, %cr0
++
+ 	jmp	startup_32
+ SYM_FUNC_END(efi32_stub_entry)
+ #endif
+diff --git a/drivers/firmware/efi/earlycon.c b/drivers/firmware/efi/earlycon.c
+index d4077db6dc97..5d4f84781aa0 100644
+--- a/drivers/firmware/efi/earlycon.c
++++ b/drivers/firmware/efi/earlycon.c
+@@ -17,7 +17,7 @@ static const struct console *earlycon_console __initdata;
+ static const struct font_desc *font;
+ static u32 efi_x, efi_y;
+ static u64 fb_base;
+-static pgprot_t fb_prot;
++static bool fb_wb;
+ static void *efi_fb;
+ 
+ /*
+@@ -33,10 +33,8 @@ static int __init efi_earlycon_remap_fb(void)
+ 	if (!earlycon_console || !(earlycon_console->flags & CON_ENABLED))
+ 		return 0;
+ 
+-	if (pgprot_val(fb_prot) == pgprot_val(PAGE_KERNEL))
+-		efi_fb = memremap(fb_base, screen_info.lfb_size, MEMREMAP_WB);
+-	else
+-		efi_fb = memremap(fb_base, screen_info.lfb_size, MEMREMAP_WC);
++	efi_fb = memremap(fb_base, screen_info.lfb_size,
++			  fb_wb ? MEMREMAP_WB : MEMREMAP_WC);
+ 
+ 	return efi_fb ? 0 : -ENOMEM;
+ }
+@@ -53,9 +51,12 @@ late_initcall(efi_earlycon_unmap_fb);
+ 
+ static __ref void *efi_earlycon_map(unsigned long start, unsigned long len)
+ {
++	pgprot_t fb_prot;
++
+ 	if (efi_fb)
+ 		return efi_fb + start;
+ 
++	fb_prot = fb_wb ? PAGE_KERNEL : pgprot_writecombine(PAGE_KERNEL);
+ 	return early_memremap_prot(fb_base + start, len, pgprot_val(fb_prot));
+ }
+ 
+@@ -215,10 +216,7 @@ static int __init efi_earlycon_setup(struct earlycon_device *device,
+ 	if (screen_info.capabilities & VIDEO_CAPABILITY_64BIT_BASE)
+ 		fb_base |= (u64)screen_info.ext_lfb_base << 32;
+ 
+-	if (opt && !strcmp(opt, "ram"))
+-		fb_prot = PAGE_KERNEL;
+-	else
+-		fb_prot = pgprot_writecombine(PAGE_KERNEL);
++	fb_wb = opt && !strcmp(opt, "ram");
+ 
+ 	si = &screen_info;
+ 	xres = si->lfb_width;
+diff --git a/drivers/firmware/efi/libstub/random.c b/drivers/firmware/efi/libstub/random.c
+index 35edd7cfb6a1..97378cf96a2e 100644
+--- a/drivers/firmware/efi/libstub/random.c
++++ b/drivers/firmware/efi/libstub/random.c
+@@ -33,7 +33,7 @@ efi_status_t efi_get_random_bytes(efi_system_table_t *sys_table_arg,
+ {
+ 	efi_guid_t rng_proto = EFI_RNG_PROTOCOL_GUID;
+ 	efi_status_t status;
+-	struct efi_rng_protocol *rng;
++	struct efi_rng_protocol *rng = NULL;
+ 
+ 	status = efi_call_early(locate_protocol, &rng_proto, NULL,
+ 				(void **)&rng);
+@@ -162,8 +162,8 @@ efi_status_t efi_random_get_seed(efi_system_table_t *sys_table_arg)
+ 	efi_guid_t rng_proto = EFI_RNG_PROTOCOL_GUID;
+ 	efi_guid_t rng_algo_raw = EFI_RNG_ALGORITHM_RAW;
+ 	efi_guid_t rng_table_guid = LINUX_EFI_RANDOM_SEED_TABLE_GUID;
+-	struct efi_rng_protocol *rng;
+-	struct linux_efi_random_seed *seed;
++	struct efi_rng_protocol *rng = NULL;
++	struct linux_efi_random_seed *seed = NULL;
+ 	efi_status_t status;
+ 
+ 	status = efi_call_early(locate_protocol, &rng_proto, NULL,
