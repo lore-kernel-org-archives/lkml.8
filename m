@@ -2,121 +2,87 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A31C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 13:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC1BFC33CB6
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 13:35:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4A8D2469B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 13:32:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579354340;
-	bh=+cFn0PMGaLPuNGL5qQ0ZQI56qAlfqxs08j8ybTZesCA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=kXKQ5vMs2Z1r3baFvEiIC6c90tpVZsNRmCPoIkJswvGkXdl63NHFhsUDwjjYOtMXr
-	 gS/iLl1IP0wlw76zeJYKtShlNfkHNmchC4kQnR5Z+xHyzVr7OVdvPpuHs5yYS0FrRH
-	 hm1IAeWlaMUE58Cixpvebwe9RX/rRzF7Z8qOoibs=
+	by mail.kernel.org (Postfix) with ESMTP id 9837524699
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 13:35:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WgOpWoDs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729123AbgARNcU (ORCPT
+        id S1728894AbgARNfJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 08:32:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49378 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726933AbgARNcT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 08:32:19 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA93724699;
-        Sat, 18 Jan 2020 13:32:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579354338;
-        bh=+cFn0PMGaLPuNGL5qQ0ZQI56qAlfqxs08j8ybTZesCA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=O4W7g82w8iM6xU1Jh9uOHIwvw+8Hgn6Ap0Z/x4CJVVkz9kxJBXtbFP//MWbqc53+/
-         E4SZ3a2KaQKFTDDGkVDlIfOcAOS/f/dhONwb9HrGyvx2k4mcPwwlKy1Pw9wnNxoevJ
-         SX1O5ngOk1p1K0NwxF5jWRaELGAETPSVVud0wy8c=
-Date:   Sat, 18 Jan 2020 13:32:14 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] iio: imu/mpu6050: support dual-edge IRQ
-Message-ID: <20200118133214.58142508@archlinux>
-In-Reply-To: <8934b8d01f823f71b0fd66b16c832dbb47317cca.1578755864.git.mirq-linux@rere.qmqm.pl>
-References: <8934b8d01f823f71b0fd66b16c832dbb47317cca.1578755864.git.mirq-linux@rere.qmqm.pl>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 18 Jan 2020 08:35:09 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36126 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727032AbgARNfJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jan 2020 08:35:09 -0500
+Received: by mail-wm1-f68.google.com with SMTP id p17so10321223wma.1
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jan 2020 05:35:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=v4hcChVlh2NTB+J9TajvHQFod1mYK/8qvcaZx/KVPww=;
+        b=WgOpWoDsUFi+t6oIKOLerTjgdRcFzr0CSjp1eXnLilPlzS3hlcoFW6mmln/ZzjmiZM
+         dsVcR7pQ8lnefiCk44p2s24wEfme3C+0dXmTWel4GV83DFjB3Df+ancuXUz/GR09XvDy
+         fPZ2JVY0d9b1f0HCYudCPZjMGi2kVsAPTcI+UqUX3fHnODCcokUvDUJd24j8suA8bgTq
+         /aymsnnkbtfTFhrTOFgnXusv2GxORzhZDCB5HvKDFPJ9nmN1Fi76bKwgAjKfRqIP8m59
+         isrj25fEjee+I9OwhLCCut/AS0krpp9zdYfBEjoE98SDzP5J0Xh0CmQJJLpLYs2OJfNg
+         XxzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v4hcChVlh2NTB+J9TajvHQFod1mYK/8qvcaZx/KVPww=;
+        b=cwtxOMuRb0NhbVQjnHoqSTmuPadXQHt2RyxoZfmbOh5hlczpJkyR+umVocOhX+GhOX
+         KIkWXOpUysAXoNCMYblqKRVTy1kYmFXks7MIh1ht/RiUu3bYtaOvWyXafvps+9KR2We2
+         ADVe/MuXlkwTmc1DkqSXy8WoRmaCw4UgLlXeKap5rsBaFd7rU058N6jd6TjiITLv1Yo0
+         H8BL8MqtapglmzYNb+20n9SJLV/blAT4mIxp/+fiF4LtfDYesn69qGhAMYOZ4afm2oYU
+         Dm3tI4M2VPCfuoT6y/0ytGdEMlMm/urDvWyz5jhUWJgm1OGlxnFyzRr/2qZJY+cpzrPo
+         ACTA==
+X-Gm-Message-State: APjAAAXjgVkshSNOEcKAAY9ZCr2Z5p4KJBkaOYtEA/wL045mGE6il6oL
+        jRxZlOT5EOb6fiCTQfrGCP3YBDyuIWtPmjyJLe36XQ==
+X-Google-Smtp-Source: APXvYqyaoy2vU3Qze84uWGDV1JxToGEVTuxW8nks5DiBJxtsMUOnFnAPiE5XvI3fBz+4/RH6sm4kz+HQlWa4We4ckhQ=
+X-Received: by 2002:a1c:b603:: with SMTP id g3mr10152522wmf.133.1579354507256;
+ Sat, 18 Jan 2020 05:35:07 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+References: <CAKv+Gu8WBSsG2e8bVpARcwNBrGtMLzUA+bbikHymrZsNQE6wvw@mail.gmail.com>
+ <934E6F23-96FE-4C59-9387-9ABA2959DBBB@lca.pw>
+In-Reply-To: <934E6F23-96FE-4C59-9387-9ABA2959DBBB@lca.pw>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Sat, 18 Jan 2020 14:34:55 +0100
+Message-ID: <CAKv+Gu9PfAHP4_Xaj3_PHFGQCsZRk2oXGbh8oTt22y3aCJBFTg@mail.gmail.com>
+Subject: Re: [PATCH -next] x86/efi_64: fix a user-memory-access in runtime
+To:     Qian Cai <cai@lca.pw>
+Cc:     Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 11 Jan 2020 16:19:11 +0100
-Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl> wrote:
+On Sat, 18 Jan 2020 at 12:04, Qian Cai <cai@lca.pw> wrote:
+>
+>
+>
+> > On Jan 18, 2020, at 3:00 AM, Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
+> >
+> > Can't we just use READ_ONCE_NOCHECK() instead?
+>
+> My understanding is that KASAN actually want to make sure there is a no dereference of user memory because it has security implications. Does that make no sense here?
 
-> Make mpu6050 usable on platforms which provide only any-edge interrupts.
-> One example of this kind of platform is AT91SAM9G45
->=20
-> Signed-off-by: Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl>
-> Acked-by: Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to see if they can break anything.
+Not really. This code runs extremely early in the boot, with a
+temporary 1:1 memory mapping installed so that the EFI firmware can
+transition into virtually remapped mode.
 
-Thanks,
-
-Jonathan
-
->=20
-> ---
-> v3: reword commit message
-> v2: just remove the dev_warn() message
->=20
-> Signed-off-by: Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl>
-> ---
->  drivers/iio/imu/inv_mpu6050/inv_mpu_core.c | 2 +-
->  drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c | 5 +----
->  2 files changed, 2 insertions(+), 5 deletions(-)
->=20
-> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c b/drivers/iio/imu=
-/inv_mpu6050/inv_mpu_core.c
-> index 2261c6c4ac65..4cfdd19ee4fc 100644
-> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-> @@ -1118,7 +1118,7 @@ int inv_mpu_core_probe(struct regmap *regmap, int i=
-rq, const char *name,
->  	irq_type =3D irqd_get_trigger_type(desc);
->  	if (!irq_type)
->  		irq_type =3D IRQF_TRIGGER_RISING;
-> -	if (irq_type =3D=3D IRQF_TRIGGER_RISING)
-> +	if (irq_type & IRQF_TRIGGER_RISING)	// rising or both-edge
->  		st->irq_mask =3D INV_MPU6050_ACTIVE_HIGH;
->  	else if (irq_type =3D=3D IRQF_TRIGGER_FALLING)
->  		st->irq_mask =3D INV_MPU6050_ACTIVE_LOW;
-> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c b/drivers/iio/imu=
-/inv_mpu6050/inv_mpu_ring.c
-> index 72d8c5790076..a8a833f8b99b 100644
-> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c
-> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c
-> @@ -180,11 +180,8 @@ irqreturn_t inv_mpu6050_read_fifo(int irq, void *p)
->  			"failed to ack interrupt\n");
->  		goto flush_fifo;
->  	}
-> -	if (!(int_status & INV_MPU6050_BIT_RAW_DATA_RDY_INT)) {
-> -		dev_warn(regmap_get_device(st->map),
-> -			"spurious interrupt with status 0x%x\n", int_status);
-> +	if (!(int_status & INV_MPU6050_BIT_RAW_DATA_RDY_INT))
->  		goto end_session;
-> -	}
-> =20
->  	if (!(st->chip_config.accl_fifo_enable |
->  		st->chip_config.gyro_fifo_enable))
-
+Furthermore, the same issue exists for mixed mode, so we'll need to
+fix that as well. I'll spin a patch and credit you as the reporter.
