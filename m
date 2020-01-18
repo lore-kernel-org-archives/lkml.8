@@ -2,120 +2,141 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9EE3C33CB1
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 05:57:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D72C33CB7
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 06:30:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B65962467C
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 05:57:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7997A24683
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 06:30:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="eUVvGMBg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726308AbgARF5M (ORCPT
+        id S1726359AbgARGaw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 00:57:12 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52768 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725468AbgARF5L (ORCPT
+        Sat, 18 Jan 2020 01:30:52 -0500
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:35112 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725468AbgARGav (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 00:57:11 -0500
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00I5qNaF003823;
-        Sat, 18 Jan 2020 00:56:47 -0500
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2xk0qsh08g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 18 Jan 2020 00:56:47 -0500
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 00I5tsZL004365;
-        Sat, 18 Jan 2020 05:56:47 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma03dal.us.ibm.com with ESMTP id 2xksn5h4rk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 18 Jan 2020 05:56:47 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00I5ukgb52166920
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 18 Jan 2020 05:56:46 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2BC2FAC05B;
-        Sat, 18 Jan 2020 05:56:46 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E95A1AC059;
-        Sat, 18 Jan 2020 05:56:42 +0000 (GMT)
-Received: from skywalker.linux.ibm.com (unknown [9.102.2.52])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
-        Sat, 18 Jan 2020 05:56:42 +0000 (GMT)
-X-Mailer: emacs 27.0.60 (via feedmail 11-beta-1 I)
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-To:     akpm@linux-foundation.org, peterz@infradead.org, will@kernel.org,
-        mpe@ellerman.id.au, davem@davemloft.net
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v4 6/9] asm-generic/tlb: Rename HAVE_RCU_TABLE_FREE
-In-Reply-To: <20200116064531.483522-7-aneesh.kumar@linux.ibm.com>
-References: <20200116064531.483522-1-aneesh.kumar@linux.ibm.com>
- <20200116064531.483522-7-aneesh.kumar@linux.ibm.com>
-Date:   Sat, 18 Jan 2020 11:26:40 +0530
-Message-ID: <87v9p9mhnr.fsf@linux.ibm.com>
+        Sat, 18 Jan 2020 01:30:51 -0500
+Received: by mail-qv1-f67.google.com with SMTP id u10so11768371qvi.2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 22:30:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rS4UKrLn3wFLir64JOAKmcnkWFvXo9oMWz1xNRyZqa0=;
+        b=eUVvGMBgNG2WezfPIJ1ccDmNM3UaJoZwBsbIm/Ki9yMpPQy6NV7WJJhLbvBPQNjSQ3
+         ggeNc6ZaiM2MJ/Vke9Qy7r5/J56CeKxXiTkRD1P1on2O4HNJV2DR1MsnzCQArVW67b4X
+         GRHi4sw5un0fhmqzIWs9JLrvHF9HR6Q1zbDFY16N2A1JbijP9GgRJtchhukzUGrvRV+n
+         9u/vLtHHBH7S21eTB5Eq02DOpz7NxtbJPOQQNm/uh5ZnR6j1cmF6Jv14ar31cjx8lJrp
+         c78WDrseoY1eLEqNkp3CJdOrioyoIr2Le51RJG9obtDFK1nnZ12YLkpwUywf3pwuTOYA
+         kIMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rS4UKrLn3wFLir64JOAKmcnkWFvXo9oMWz1xNRyZqa0=;
+        b=X0nzi6yxkqKCZSSQ2e9hMUUtyVhjfEiZ7KsplRscNPNWMsL+yQnMn5SznZpGK0ypY6
+         yTyHUsRfBu0g6ABewteCChxVkM1k4/lgfQkM54/KfdRxYs8WBWbY+x6s8e3g74ex9Sbp
+         WXY8BMaV+7fiIUL7NDSf83YXvdCyi8nf7iWermyrECr8s+qmEjP7EbV6wPk/aK8Jx3sm
+         7S5lLdh4oh920sYdrK8YER7YkiVVvk7Ygdq8Nd4cKlgE048zRNMz8FanTvR58H5z+e48
+         +9GCMQQTdAzTLMdfeP3KdC6WCnOqcYg85W/30R4fStmU0gEpZF6NU05/zQoprMaBha7D
+         8Brg==
+X-Gm-Message-State: APjAAAUePCUdWKpq99sgdRynk2XoAW47uRa3kMXg+D2dCgGoOuzbJsCb
+        RZ8cr6krfKzE4P7JxbIJGlzSUQ==
+X-Google-Smtp-Source: APXvYqwFtyLPY35Rjn8MlhEuM8fKyPTWbIggJ/o3RgaUDrwdDQPhT7VsTctTG0u+82iwEy222pk2DA==
+X-Received: by 2002:a05:6214:287:: with SMTP id l7mr11513554qvv.142.1579329050165;
+        Fri, 17 Jan 2020 22:30:50 -0800 (PST)
+Received: from ovpn-120-112.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id u55sm14693498qtc.28.2020.01.17.22.30.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 17 Jan 2020 22:30:49 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+To:     ardb@kernel.org
+Cc:     mingo@redhat.com, kasan-dev@googlegroups.com,
+        linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH -next] x86/efi_64: fix a user-memory-access in runtime
+Date:   Sat, 18 Jan 2020 01:30:22 -0500
+Message-Id: <20200118063022.21743-1-cai@lca.pw>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-18_01:2020-01-16,2020-01-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=2 mlxscore=0
- spamscore=0 malwarescore=0 adultscore=0 priorityscore=1501 phishscore=0
- bulkscore=0 clxscore=1015 impostorscore=0 mlxlogscore=913
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001180043
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com> writes:
+The commit 698294704573 ("efi/x86: Split SetVirtualAddresMap() wrappers
+into 32 and 64 bit versions") introduced a KASAN error during boot,
 
-> From: Peter Zijlstra <peterz@infradead.org>
->
-> Towards a more consistent naming scheme.
->
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+ BUG: KASAN: user-memory-access in efi_set_virtual_address_map+0x4d3/0x574
+ Read of size 8 at addr 00000000788fee50 by task swapper/0/0
 
-...
+ Hardware name: HP ProLiant XL450 Gen9 Server/ProLiant XL450 Gen9
+ Server, BIOS U21 05/05/2016
+ Call Trace:
+  dump_stack+0xa0/0xea
+  __kasan_report.cold.8+0xb0/0xc0
+  kasan_report+0x12/0x20
+  __asan_load8+0x71/0xa0
+  efi_set_virtual_address_map+0x4d3/0x574
+  efi_enter_virtual_mode+0x5f3/0x64e
+  start_kernel+0x53a/0x5dc
+  x86_64_start_reservations+0x24/0x26
+  x86_64_start_kernel+0xf4/0xfb
+  secondary_startup_64+0xb6/0xc0
 
-> diff --git a/arch/sparc/Kconfig b/arch/sparc/Kconfig
-> index 18e9fb6fcf1b..c703eb6b7461 100644
-> --- a/arch/sparc/Kconfig
-> +++ b/arch/sparc/Kconfig
-> @@ -64,7 +64,7 @@ config SPARC64
->  	select HAVE_FUNCTION_GRAPH_TRACER
->  	select HAVE_KRETPROBES
->  	select HAVE_KPROBES
-> -	select HAVE_RCU_TABLE_FREE if SMP
-> +	select MMU_GATHER_RCU_TABLE_FREE
->  	select HAVE_MEMBLOCK_NODE_MAP
->  	select HAVE_ARCH_TRANSPARENT_HUGEPAGE
->  	select HAVE_DYNAMIC_FTRACE
+It points to this line,
 
-This resulted in build failure reported by kbuild test robot. Can we
-fold the below change
+status = efi_call(efi.systab->runtime->set_virtual_address_map,
 
-diff --git a/arch/sparc/Kconfig b/arch/sparc/Kconfig
-index c703eb6b7461..02907584be2d 100644
---- a/arch/sparc/Kconfig
-+++ b/arch/sparc/Kconfig
-@@ -64,7 +64,7 @@ config SPARC64
- 	select HAVE_FUNCTION_GRAPH_TRACER
- 	select HAVE_KRETPROBES
- 	select HAVE_KPROBES
--	select MMU_GATHER_RCU_TABLE_FREE
-+	select MMU_GATHER_RCU_TABLE_FREE if SMP
- 	select HAVE_MEMBLOCK_NODE_MAP
- 	select HAVE_ARCH_TRANSPARENT_HUGEPAGE
- 	select HAVE_DYNAMIC_FTRACE
+efi.systab->runtime's address is 00000000788fee18 which is an address in
+EFI runtime service and does not have a KASAN shadow page. Fix it by
+doing a copy_from_user() first instead.
 
-We should handle that drop of SMP in a separate patch if needed.
+Fixes: 698294704573 ("efi/x86: Split SetVirtualAddresMap() wrappers into 32 and 64 bit versions")
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ arch/x86/platform/efi/efi_64.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
--aneesh
+diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
+index 515eab388b56..d6712c9cb9d8 100644
+--- a/arch/x86/platform/efi/efi_64.c
++++ b/arch/x86/platform/efi/efi_64.c
+@@ -1023,6 +1023,7 @@ efi_status_t __init efi_set_virtual_address_map(unsigned long memory_map_size,
+ 						u32 descriptor_version,
+ 						efi_memory_desc_t *virtual_map)
+ {
++	efi_runtime_services_t runtime;
+ 	efi_status_t status;
+ 	unsigned long flags;
+ 	pgd_t *save_pgd = NULL;
+@@ -1041,13 +1042,15 @@ efi_status_t __init efi_set_virtual_address_map(unsigned long memory_map_size,
+ 		efi_switch_mm(&efi_mm);
+ 	}
+ 
++	if (copy_from_user(&runtime, efi.systab->runtime, sizeof(runtime)))
++		return EFI_ABORTED;
++
+ 	kernel_fpu_begin();
+ 
+ 	/* Disable interrupts around EFI calls: */
+ 	local_irq_save(flags);
+-	status = efi_call(efi.systab->runtime->set_virtual_address_map,
+-			  memory_map_size, descriptor_size,
+-			  descriptor_version, virtual_map);
++	status = efi_call(runtime.set_virtual_address_map, memory_map_size,
++			  descriptor_size, descriptor_version, virtual_map);
+ 	local_irq_restore(flags);
+ 
+ 	kernel_fpu_end();
+-- 
+2.21.0 (Apple Git-122.2)
+
