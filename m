@@ -6,76 +6,70 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74854C33CB6
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 00:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 986C8C33CB6
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 00:17:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B62C206D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 00:14:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EADD21D7D
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 00:17:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="h//ca95y"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="piNWalyr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730390AbgARAOr (ORCPT
+        id S1730434AbgARARA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 19:14:47 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:46510 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730260AbgARAOr (ORCPT
+        Fri, 17 Jan 2020 19:17:00 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36561 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730260AbgARARA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 19:14:47 -0500
-Received: by mail-pg1-f193.google.com with SMTP id z124so12402305pgb.13
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 16:14:47 -0800 (PST)
+        Fri, 17 Jan 2020 19:17:00 -0500
+Received: by mail-pf1-f193.google.com with SMTP id x184so12691341pfb.3
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 16:17:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=rIiAvm32XEnWHnoC4eW2jcWJDNVynX17TBKUA2iGuwU=;
-        b=h//ca95yCGwVF9dI2j1jcWYQ3VZ1utPcu2hpXdMAljPJikwZ+YeoRbIu/cb4F9MY33
-         buwUXxrKw7om1mxwS7xy/X0RbUFF/mvwSDWBWMxKvHlgs24mzRa1FOr0+NBJCWOnyOV2
-         Y2JTJSoa0R2OXH1t9Ojg6tz24053YnBAxATcXc/qFryKO1TwLq1O+pavaHReZjpUrHuG
-         CQddxSduiFQNij++HQCaE3RORcZhaIKxq9vAqQc75QGtzQOJrwGvU5+OPp0a5uaoq9lK
-         0qUodEAYPJhFB7hQLwiMjZEzv0NCCrM2U2yIHCCimSZfP1NYRe2fO2DD7/SMXM3QdXNi
-         VITQ==
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=Y6hFtlGWNj2335ptBmTRWPobE2rmTBdw86gaZCZvr98=;
+        b=piNWalyrCazeaNdOIEIExKlexZTPIGOgNqDRrIJZk+6RywU5zIJ4q2GRfg7Y6teOQy
+         uwZfYEHYU5cpPTAaQIV9LDwHWphc7CB3f3Yb7ai8TvKyN5WRnoTsv3uXBPmYDHZKpTdU
+         2B+slw2na/O0P2Px0ooBbVj75eH3Yw6VPZqBxZsIWRs1uhtFArdeBxnuUc0GOlUVIVtl
+         CQLsS0rwfaIjcA025vDbKYVrkkKckA06w4uad7Kotj9QSVEzFZcf8cyF9lryN+IOl73j
+         ZSbTUyadOq4ClJBO0/gw4dbjk2DdPf2gWX/6DuQIMAHvvcHsfquav4FpPjBNBShRaI8g
+         5gkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+        h=x-gm-message-state:subject:to:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=rIiAvm32XEnWHnoC4eW2jcWJDNVynX17TBKUA2iGuwU=;
-        b=DsYjWD9gwYnlENJ0vraac1ovaI7KN2pPg2uipqu5bVv1jeLm8QF4ZfCxduzPrCEtzB
-         ghQIUANZvtiLFFysprNTr6xgaEuE10NJx2YzNEge6uWczdyForvOUyAcNiW3rDAQ8BRP
-         4ntYIXxdGtAddqTw93erAxO3draPjbedsOqO2zyeoqx88d9aAEk71/f8l6eQp078c6zE
-         gSIZE8vht+Eu0nzZoqtpaXWJNOiZCGsEYyBmhjwEaJWGFmnJnMgjEmYQWzMnEDE0cCWM
-         wzIfbylLRvEuXJsy5D5rXLACrOFDpti7huU2Z+pJfZzjY77+d/1+FRF44hJzHNLoNijt
-         MDYw==
-X-Gm-Message-State: APjAAAWNUvGQleeG5ySXv9V4yvCln90j1ZOU8YLhP5nvK9VkPx1EbC1z
-        qjE5C8b9RJP2aosaqULGw6o92g==
-X-Google-Smtp-Source: APXvYqzqWBYrMw1HB+Gk+5row/Uyjq+Gu6i/XptFJ1/s9DZ0JyZM4VsGKwPDgo+z8F1YNamjT0Ippg==
-X-Received: by 2002:aa7:971d:: with SMTP id a29mr5700501pfg.29.1579306486813;
-        Fri, 17 Jan 2020 16:14:46 -0800 (PST)
+        bh=Y6hFtlGWNj2335ptBmTRWPobE2rmTBdw86gaZCZvr98=;
+        b=kV3FwVob00qfShuJB3+V/D6ReLYbb2C560Sl2Oke9mmiLLIDXuWjx7Cf9qhC7+CTIh
+         txESq6Vj6NzZTYKWGeLPfitB2gK3sMX80WcbsEEbMFgvWQsXbNI85g01WylLB0GPzhSh
+         xuJFFBb9mAXLpsCpskQTfUa+76ugDhi83siykEMnzaI+DYpcTZl+OshnXLgbuzIfk1pH
+         odmD1jXXWJIAsiG6DaXtyeRzEBsw4AvIVbus34UyKm1qFIYS189eX/7b2tTv5vJh9Abh
+         giC6EO/YQUJgvbdZd+SFs0TM3aDLJshlKr8OvsVNRTdBGim1sK5zRT/gz/E2em2Di5ML
+         UbyQ==
+X-Gm-Message-State: APjAAAX9iNB/TmA/1PNGzl/0QajaVdth4Rfd4gA07L3lYRm9uNHrxU3t
+        tRXurOG5GeNp1dNBMt2LMSDTU9XFizY=
+X-Google-Smtp-Source: APXvYqwnnCKaqiVUSOFPsMT/FPdjbdkheYjE0PvYbNDZcoQqGmEcUuiWNJKlENaWcds9yIQqVrHV+A==
+X-Received: by 2002:a65:4381:: with SMTP id m1mr49118391pgp.68.1579306619174;
+        Fri, 17 Jan 2020 16:16:59 -0800 (PST)
 Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id j2sm30294998pfi.22.2020.01.17.16.14.45
+        by smtp.gmail.com with ESMTPSA id n26sm31102181pgd.46.2020.01.17.16.16.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jan 2020 16:14:46 -0800 (PST)
-Subject: Re: [PATCH v4 0/2] ata: ahci_brcm: Follow-up changes for BCM7216
-To:     Florian Fainelli <f.fainelli@gmail.com>,
+        Fri, 17 Jan 2020 16:16:58 -0800 (PST)
+Subject: Re: [PATCH 0/2] optimise sqe-to-req flags
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Tejun Heo <tj@kernel.org>, Jaedon Shin <jaedon.shin@gmail.com>,
-        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
-        <linux-ide@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, bcm-kernel-feedback-list@broadcom.com
-References: <20200117235313.14202-1-f.fainelli@gmail.com>
+References: <37a04c11e980f49cb17a4fd071d2d71a291a8fd5.1579299684.git.asml.silence@gmail.com>
+ <cover.1579300317.git.asml.silence@gmail.com>
+ <cf0b8769-0365-2fd1-c87e-fe2e44052b51@kernel.dk>
+ <fa7b4b9a-b0a4-7c1f-d3e9-c5bfa8fff74b@gmail.com>
 From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <d171e5fa-7fcd-2176-12d4-5c2286bee46e@kernel.dk>
-Date:   Fri, 17 Jan 2020 17:14:44 -0700
+Message-ID: <b507d39e-ec2b-5c9f-0fd0-6ab1b0491cad@kernel.dk>
+Date:   Fri, 17 Jan 2020 17:16:57 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200117235313.14202-1-f.fainelli@gmail.com>
+In-Reply-To: <fa7b4b9a-b0a4-7c1f-d3e9-c5bfa8fff74b@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -84,21 +78,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/17/20 4:53 PM, Florian Fainelli wrote:
-> Hi Jens,
+On 1/17/20 4:14 PM, Pavel Begunkov wrote:
+> On 18/01/2020 01:49, Jens Axboe wrote:
+>> On 1/17/20 3:41 PM, Pavel Begunkov wrote:
+>>> *lost the cover-letter, but here we go*
+>>>
+>>> The main idea is to optimise code like the following by directly
+>>> copying sqe flags:
+>>>
+>>> if (sqe_flags & IOSQE_IO_HARDLINK)
+>>> 	req->flags |= REQ_F_HARDLINK;
+>>>
+>>> The first patch is a minor cleanup, and the second one do the
+>>> trick. No functional changes.
+>>>
+>>> The other thing to consider is whether to use such flags as 
+>>> REQ_F_LINK = IOSQE_IO_LINK, or directly use IOSQE_IO_LINK instead.
+>>
+>> I think we should keep the names separate. I think it looks fine, though
+>> I do wish that we could just have both in an enum and not have to do
+>> weird naming. We sometimes do:
+>>
+>> enum {
+>> 	__REQ_F_FOO
+>> };
+>>
+>> #define REQ_F_FOO	(1U << __REQ_F_FOO)
+>>
 > 
-> These three patches are a follow-up to my previous series titled: ata:
-> ahci_brcm: Fixes and new device support.
-> 
-> After submitting the BCM7216 RESCAL reset driver, Philipp the reset
-> controller maintained indicated that the reset line should be self
-> de-asserting and so reset_control_reset() should be used instead.
-> 
-> These three patches update the driver in that regard. It would be great if
-> you could apply those and get them queued up for 5.6 since they are
-> directly related to the previous series.
+> I thought it will be too bulky as it needs retyping the same name many
+> times.  Though, it solves numbering problem and is less error-prone
+> indeed. Let me to play with it a bit.
 
-Thanks, applied.
+It's less error prone once the change is done, though the change will be
+bigger. I think that's the right tradeoff.
+
+> BTW, there is another issue from development perspective -- it's
+> harder to find from where a flag is came. E.g. search for REQ_F_FOO
+> won't give you a place, where it was set. SQE_INHERITED_FLAGS is close
+> in the code to its usage exactly
+> for this reason.
+
+Since it's just that one spot, add a comment with the flag names or get
+rid of the SQE_INHERITED_FLAGS define. That'll make it easy to find.
+
+>> and with that we could have things Just Work in terms of numbering, if
+>> we keep the overlapped values at the start. Would need IOSQE_* to also
+>> use an enum, ala:
+>>
+>> enum {
+>> 	__IOSQE_FIXED_FILE,
+>> 	__IOSQE_IO_DRAIN,
+>> 	...
+>> };
+>>
+> 
+> I tried to not modify the userspace header. Wouldn't it be better to
+> add _BIT postfix instead of the underscores?
+
+No strong preference, I usually do the underscores, but not a big deal
+to me. There's also BIT_* helpers to make the masks, we should use
+those.
 
 -- 
 Jens Axboe
