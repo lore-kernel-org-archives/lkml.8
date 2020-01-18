@@ -2,144 +2,158 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D0D6C33CB1
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 14:23:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79492C33CB7
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 14:24:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A7022469A
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 14:23:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F7F32469C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 14:24:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579357468;
+	bh=wDsN0K978TdKFwZa5i1iSgaPl/wlDU8LtJU3YYcoGis=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Qt9YutWp9eofqQ2cjP274sTY+Logt/tingqpVHPLppumtirdk/L0rqfl1BK8c0/jG
+	 K3tJSdN/Li4mz/yUSZsHKohr8R+qYcsOiaSHooerOzGyFmDKXwogcRIIhdzikeHPc2
+	 iuwy9nU2LadsWuM5Kzr30ZUT6QtdKgIK7q3d9Zn0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726999AbgAROXu convert rfc822-to-8bit (ORCPT
+        id S1727012AbgAROY1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 09:23:50 -0500
-Received: from mga03.intel.com ([134.134.136.65]:65194 "EHLO mga03.intel.com"
+        Sat, 18 Jan 2020 09:24:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726208AbgAROXu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 09:23:50 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jan 2020 06:23:49 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,334,1574150400"; 
-   d="scan'208";a="219207823"
-Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
-  by orsmga008.jf.intel.com with ESMTP; 18 Jan 2020 06:23:48 -0800
-Received: from FMSMSX109.amr.corp.intel.com (10.18.116.9) by
- FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sat, 18 Jan 2020 06:23:48 -0800
-Received: from shsmsx102.ccr.corp.intel.com (10.239.4.154) by
- fmsmsx109.amr.corp.intel.com (10.18.116.9) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sat, 18 Jan 2020 06:23:47 -0800
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.197]) by
- shsmsx102.ccr.corp.intel.com ([169.254.2.202]) with mapi id 14.03.0439.000;
- Sat, 18 Jan 2020 22:23:46 +0800
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-CC:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: RE: [PATCH v4 11/12] samples: add vfio-mdev-pci driver
-Thread-Topic: [PATCH v4 11/12] samples: add vfio-mdev-pci driver
-Thread-Index: AQHVxVUACBwDAx59j0yR27cHCInk46frLluAgAIeFUD//8rdgIADcc5w
-Date:   Sat, 18 Jan 2020 14:23:45 +0000
-Message-ID: <A2975661238FB949B60364EF0F2C25743A18878E@SHSMSX104.ccr.corp.intel.com>
-References: <1578398509-26453-1-git-send-email-yi.l.liu@intel.com>
-        <1578398509-26453-12-git-send-email-yi.l.liu@intel.com>
-        <20200115133027.228452fd.cohuck@redhat.com>
-        <A2975661238FB949B60364EF0F2C25743A184041@SHSMSX104.ccr.corp.intel.com>
- <20200116184027.2954c3f5.cohuck@redhat.com>
-In-Reply-To: <20200116184027.2954c3f5.cohuck@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiODBhMTNiNTctNmQ0Ny00NzMyLTlkOWItZDAxYjE1M2NhNzgwIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiOHhteGJnb25Ub1FFbTZyU29hVllzQThESTdGVXcxMUZaYlY3M0V4bWJ6SHI1TU1XMGxcL1pJd0hWdUphWDN3Q04ifQ==
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S1726302AbgAROY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jan 2020 09:24:27 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDFAA2469A;
+        Sat, 18 Jan 2020 14:24:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579357467;
+        bh=wDsN0K978TdKFwZa5i1iSgaPl/wlDU8LtJU3YYcoGis=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=cNpFpWnwm3SE1saL2qCitCURvABtEQuMyJOcx9zXuxwmuA8lmuVn63/YQoW/qfgZP
+         nkDeRMYaq62skmbKizrD68ZsavpqxVXC+SSRYA/N02w5l+pxYkzPYw9xm1Yu3v98nl
+         trDa1TYskzQqysOYBtkd8sWsOaBy5PU5xcHl7jUw=
+Date:   Sat, 18 Jan 2020 14:24:22 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Martin Kepplinger <martin.kepplinger@puri.sm>
+Cc:     lorenzo.bianconi83@gmail.com, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] iio: imu: st_lsm6dsx: add mount matrix support
+Message-ID: <20200118142422.2ec12023@archlinux>
+In-Reply-To: <20200113101140.24305-1-martin.kepplinger@puri.sm>
+References: <20200113101140.24305-1-martin.kepplinger@puri.sm>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Cornelia Huck [mailto:cohuck@redhat.com]
-> Sent: Friday, January 17, 2020 1:40 AM
-> To: Liu, Yi L <yi.l.liu@intel.com>
-> Subject: Re: [PATCH v4 11/12] samples: add vfio-mdev-pci driver
-> 
-> On Thu, 16 Jan 2020 13:23:28 +0000
-> "Liu, Yi L" <yi.l.liu@intel.com> wrote:
-> 
-> > > From: Cornelia Huck [mailto:cohuck@redhat.com]
-> > > Sent: Wednesday, January 15, 2020 8:30 PM
-> > > To: Liu, Yi L <yi.l.liu@intel.com>
-> > > Subject: Re: [PATCH v4 11/12] samples: add vfio-mdev-pci driver
-> > >
-> > > On Tue,  7 Jan 2020 20:01:48 +0800
-> > > Liu Yi L <yi.l.liu@intel.com> wrote:
-> 
-> > > > diff --git a/samples/Kconfig b/samples/Kconfig index
-> > > > 9d236c3..50d207c 100644
-> > > > --- a/samples/Kconfig
-> > > > +++ b/samples/Kconfig
-> > > > @@ -190,5 +190,15 @@ config SAMPLE_INTEL_MEI
-> > > >  	help
-> > > >  	  Build a sample program to work with mei device.
-> > > >
-> > > > +config SAMPLE_VFIO_MDEV_PCI
-> > > > +	tristate "Sample driver for wrapping PCI device as a mdev"
-> > > > +	select VFIO_PCI_COMMON
-> > > > +	select VFIO_PCI
-> > >
-> > > Why does this still need to select VFIO_PCI? Shouldn't all needed
-> > > infrastructure rather be covered by VFIO_PCI_COMMON already?
-> >
-> > VFIO_PCI_COMMON is supposed to be the dependency of both VFIO_PCI and
-> > SAMPLE_VFIO_MDEV_PCI. However, the source code of VFIO_PCI_COMMON are
-> > under drivers/vfio/pci which is compiled per the configuration of VFIO_PCI.
-> > Besides of letting SAMPLE_VFIO_MDEV_PCI select VFIO_PCI, I can also
-> > add a line in drivers/vfio/Makefile to make the source code under
-> > drivers/vfio/pci to be compiled when either VFIO_PCI or
-> > VFIO_PCI_COMMON are configed. But I'm afraid it is a bit ugly. So I
-> > choose to let SAMPLE_VFIO_MDEV_PCI select VFIO_PCI. If you have other
-> > idea, I would be pleased to know it. :-)
-> 
-> Shouldn't building drivers/vfio/pci/ for CONFIG_VFIO_PCI_COMMON already be
-> enough (the Makefile changes look fine to me)? Or am I missing something obvious?
+On Mon, 13 Jan 2020 11:11:40 +0100
+Martin Kepplinger <martin.kepplinger@puri.sm> wrote:
 
-The problem is in the drivers/vfio/Makefile. If CONFIG_VFIO_PCI is not
-selected then the pci/ directory is not compiled. Even CONFIG_VFIO_PCI=M,
-it will throw error if SAMPLE_VFIO_MDEV_PCI=y. So I let SAMPLE_VFIO_MDEV_PCI
-select CONFIG_VFIO_PCI all the same. I'm not sure if this is good. Or maybe
-there is better way to ensure pci/ is compiled.
+> Allow to read the mount-matrix device tree property and provide the
+> mount_matrix file for userspace to read.
+> 
+> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
 
-# SPDX-License-Identifier: GPL-2.0
-vfio_virqfd-y := virqfd.o
-
-obj-$(CONFIG_VFIO) += vfio.o
-obj-$(CONFIG_VFIO_VIRQFD) += vfio_virqfd.o
-obj-$(CONFIG_VFIO_IOMMU_TYPE1) += vfio_iommu_type1.o
-obj-$(CONFIG_VFIO_IOMMU_SPAPR_TCE) += vfio_iommu_spapr_tce.o
-obj-$(CONFIG_VFIO_SPAPR_EEH) += vfio_spapr_eeh.o
-obj-$(CONFIG_VFIO_PCI) += pci/
-obj-$(CONFIG_VFIO_PLATFORM) += platform/
-obj-$(CONFIG_VFIO_MDEV) += mdev/
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
 
 Thanks,
-Yi Liu
+
+Jonathan
+
+> ---
+> 
+> tested using the lsm9ds1 on the librem5-devkit (and userspace tools like
+> iio-sensor-proxy) where this will be needed.
+> 
+> thanks,
+> 
+>                                        martin
+> 
+> revision history
+> ----------------
+> v3: fix race condition during probe(). thanks Jonathan
+> v2: additions and simplifications according to Lorenzo's review. thanks.
+> 
+> 
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h      | 19 +++++++++++++++++++
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c |  4 ++++
+>  2 files changed, 23 insertions(+)
+> 
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+> index a763ff46f596..7076fc8c4c3b 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+> @@ -76,6 +76,7 @@ enum st_lsm6dsx_hw_id {
+>  		.endianness = IIO_LE,					\
+>  	},								\
+>  	.event_spec = &st_lsm6dsx_event,				\
+> +	.ext_info = st_lsm6dsx_accel_ext_info,				\
+>  	.num_event_specs = 1,						\
+>  }
+>  
+> @@ -380,6 +381,7 @@ struct st_lsm6dsx_sensor {
+>   * @enable_event: enabled event bitmask.
+>   * @iio_devs: Pointers to acc/gyro iio_dev instances.
+>   * @settings: Pointer to the specific sensor settings in use.
+> + * @orientation: sensor chip orientation relative to main hardware.
+>   */
+>  struct st_lsm6dsx_hw {
+>  	struct device *dev;
+> @@ -406,6 +408,8 @@ struct st_lsm6dsx_hw {
+>  	struct iio_dev *iio_devs[ST_LSM6DSX_ID_MAX];
+>  
+>  	const struct st_lsm6dsx_settings *settings;
+> +
+> +	struct iio_mount_matrix orientation;
+>  };
+>  
+>  static __maybe_unused const struct iio_event_spec st_lsm6dsx_event = {
+> @@ -479,4 +483,19 @@ st_lsm6dsx_write_locked(struct st_lsm6dsx_hw *hw, unsigned int addr,
+>  	return err;
+>  }
+>  
+> +static const inline struct iio_mount_matrix *
+> +st_lsm6dsx_get_mount_matrix(const struct iio_dev *iio_dev,
+> +			    const struct iio_chan_spec *chan)
+> +{
+> +	struct st_lsm6dsx_sensor *sensor = iio_priv(iio_dev);
+> +	struct st_lsm6dsx_hw *hw = sensor->hw;
+> +
+> +	return &hw->orientation;
+> +}
+> +
+> +static const struct iio_chan_spec_ext_info st_lsm6dsx_accel_ext_info[] = {
+> +	IIO_MOUNT_MATRIX(IIO_SHARED_BY_ALL, st_lsm6dsx_get_mount_matrix),
+> +	{ }
+> +};
+> +
+>  #endif /* ST_LSM6DSX_H */
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> index 0c64e35c7599..6e4d0a03c8b5 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> @@ -2312,6 +2312,10 @@ int st_lsm6dsx_probe(struct device *dev, int irq, int hw_id,
+>  			return err;
+>  	}
+>  
+> +	err = iio_read_mount_matrix(hw->dev, "mount-matrix", &hw->orientation);
+> +	if (err)
+> +		return err;
+> +
+>  	for (i = 0; i < ST_LSM6DSX_ID_MAX; i++) {
+>  		if (!hw->iio_devs[i])
+>  			continue;
 
