@@ -2,413 +2,260 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACC02C33CB7
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 14:53:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9300C33CB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 15:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 845922469E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 14:53:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579359211;
-	bh=7qVTQmj7HudhQozFcE5xGcQvEa5yuatkNE0YuOTrG4g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=0qqD8UfGMnoKOWuO3OShGD3N5916rPOzBQ7FVjMfuyLJp1CMmIUjzKZ6Mv4j1LMCA
-	 Oqq3ymmP7ifrBheOcuDMNpKzV1bUZx0AdEuerCqhCFXldsY6vnQkJJhMbke6g/5BnK
-	 QkzAjeJ+ZxXt1QmG3m7s++NHtTE+2lqpvQuVCmp4=
+	by mail.kernel.org (Postfix) with ESMTP id B253B24699
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 15:04:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UpsNHObH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726455AbgAROxY (ORCPT
+        id S1726607AbgARPEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 09:53:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54918 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726208AbgAROxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 09:53:24 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 754B824699;
-        Sat, 18 Jan 2020 14:53:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579359203;
-        bh=7qVTQmj7HudhQozFcE5xGcQvEa5yuatkNE0YuOTrG4g=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=lM34agx8gBgNYK9LbwASmGK1joa/ArTbTyWDksae5tvrDUDHls4xGrEV0Cifu55UB
-         hHVbng5+f8i+6GMVVktXUmk05fu3EtdUqzecCuMpPyCZiZLALhmBf/GpaNH5kFVyoC
-         aiceDfcZQZxx8jsUrXbKSGfhpoD/QJJSVWbOE3MU=
-Date:   Sat, 18 Jan 2020 14:53:18 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        lee.jones@linaro.org, b.galvani@gmail.com,
-        linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, phh@phh.me, stefan@agner.ch,
-        letux-kernel@openphoenux.org
-Subject: Re: [PATCH 3/5] iio: adc: rn5t618: Add ADC driver for
- RN5T618/RC5T619
-Message-ID: <20200118145318.399e8318@archlinux>
-In-Reply-To: <20200117215926.15194-4-andreas@kemnade.info>
-References: <20200117215926.15194-1-andreas@kemnade.info>
-        <20200117215926.15194-4-andreas@kemnade.info>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sat, 18 Jan 2020 10:04:09 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:37044 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726334AbgARPEJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jan 2020 10:04:09 -0500
+Received: by mail-pf1-f193.google.com with SMTP id p14so13448814pfn.4;
+        Sat, 18 Jan 2020 07:04:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=dKIlMdPz90WBKervlmLu+EPWdbxwd774qmk/W0ADa10=;
+        b=UpsNHObHBAILGEi0dsIeFo37xdZVNCVr3HfFTdppJ9Zu8jT33owkjx9+bGRzdQjXYR
+         mt1q4i/tshg786ZvOFxdRVwEkge9m/NtkViqDaIkFy0pLRJcCoLo8h6FXEYh48aWkO1M
+         X98Sp/mA7FkT6fkeOWup+mO7ATyLzBFJ1vmy/vHAUyXENZZsbDmc59TL0Bzju/V34K3C
+         OJNkHQgUcsb0obk5sX4lmQnYGgQVAinQdzMJve1Od91q35N+/hH1WHbBiQjapD0wg05n
+         2Y/6wcTmKnaA1dvDPszbuzb184YK/RNfbYnw3bNJrUPtODNe+eyVjEQtXxmHWPOHJQ6k
+         u0ZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=dKIlMdPz90WBKervlmLu+EPWdbxwd774qmk/W0ADa10=;
+        b=mR8WkdBEvonrzqVkp04FsPo6qnQpkqn7b/dglqUBdYKy6oLy4Da8SE+fTrVPBEHk+G
+         Joah0hQm7PlF26p3wTq2++QailRciDLyFPIhvgQYT05Y/Y7rWV2SgIICerEPf4+Piq5Y
+         jM2XEJoGev1AZZaAfurWCymT3nUaBcsocihKuw+AsH3vbHghYxQer6SpaHS600ecWNWc
+         8pth1rWrkcuBt1w+TeK3P2TiSc9yu1/Vy86IC91VDNfjRJ/4QfOLuTSyf4wtA6Xgt/Di
+         O93tbz3raLOE+zIGhe1YtvQPmvH9Xj/2THX9IOHmk61MVJRJ8ZGSJ8Af6uVu0koqzy7M
+         DpBg==
+X-Gm-Message-State: APjAAAU0FJiwilG5PFcysbqEepxWExXpIAVtOHUw8xMXZirL+wP/FT1l
+        0gU1MK9NUoMOsLLsX6+tRosxKFJy
+X-Google-Smtp-Source: APXvYqweDHcwD7iPNENSPEhBIx97lgU+E5YjR6watM4u/IIIbTllxyJw5kxiT0l5DMerMK5rwFiwEA==
+X-Received: by 2002:a63:551a:: with SMTP id j26mr50556885pgb.370.1579359848241;
+        Sat, 18 Jan 2020 07:04:08 -0800 (PST)
+Received: from localhost.localdomain ([221.146.116.86])
+        by smtp.gmail.com with ESMTPSA id v10sm32072078pgk.24.2020.01.18.07.04.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Jan 2020 07:04:07 -0800 (PST)
+From:   Namjae Jeon <linkinjeon@gmail.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
+        sj1557.seo@samsung.com, pali.rohar@gmail.com, arnd@arndb.de,
+        namjae.jeon@samsung.com, Namjae Jeon <linkinjeon@gmail.com>
+Subject: [PATCH v11 00/14] add the latest exfat driver
+Date:   Sun, 19 Jan 2020 00:03:34 +0900
+Message-Id: <20200118150348.9972-1-linkinjeon@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Jan 2020 22:59:24 +0100
-Andreas Kemnade <andreas@kemnade.info> wrote:
+From: Namjae Jeon <namjae.jeon@samsung.com>
 
-> Both chips have an A/D converter capable of measuring
-> things like VBAT, VUSB and analog inputs.
-> 
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-A few comments inline, but looks pretty good on the whole.
+This adds the latest Samsung exfat driver to fs/exfat. This is an
+implementation of the Microsoft exFAT specification. Previous versions
+of this shipped with millions of Android phones, and a random previous
+snaphot has been merged in drivers/staging/.
 
-Jonathan
+Compared to the sdfat driver shipped on the phones the following changes
+have been made:
 
-> ---
->  drivers/iio/adc/Kconfig       |  10 ++
->  drivers/iio/adc/Makefile      |   1 +
->  drivers/iio/adc/rn5t618-adc.c | 266 ++++++++++++++++++++++++++++++++++
->  3 files changed, 277 insertions(+)
->  create mode 100644 drivers/iio/adc/rn5t618-adc.c
-> 
-> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> index f0af3a42f53c..9ea9489e3f0a 100644
-> --- a/drivers/iio/adc/Kconfig
-> +++ b/drivers/iio/adc/Kconfig
-> @@ -735,6 +735,16 @@ config RCAR_GYRO_ADC
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called rcar-gyroadc.
->  
-> +config RN5T618_ADC
-> +	tristate "ADC for the RN5T618/RC5T619 family of chips"
-> +	depends on MFD_RN5T618
-> +	help
-> +	  Say yes here to build support for the integrated ADC inside the
-> +	  RN5T618/619 series PMICs:
-> +
-> +	  This driver can also be built as a module. If so, the module
-> +	  will be called rn5t618-adc.
-> +
->  config ROCKCHIP_SARADC
->  	tristate "Rockchip SARADC driver"
->  	depends on ARCH_ROCKCHIP || (ARM && COMPILE_TEST)
-> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-> index ef9cc485fb67..2aea70556ed0 100644
-> --- a/drivers/iio/adc/Makefile
-> +++ b/drivers/iio/adc/Makefile
-> @@ -69,6 +69,7 @@ obj-$(CONFIG_QCOM_VADC_COMMON) += qcom-vadc-common.o
->  obj-$(CONFIG_QCOM_SPMI_VADC) += qcom-spmi-vadc.o
->  obj-$(CONFIG_QCOM_PM8XXX_XOADC) += qcom-pm8xxx-xoadc.o
->  obj-$(CONFIG_RCAR_GYRO_ADC) += rcar-gyroadc.o
-> +obj-$(CONFIG_RN5T618_ADC) += rn5t618-adc.o
->  obj-$(CONFIG_ROCKCHIP_SARADC) += rockchip_saradc.o
->  obj-$(CONFIG_SC27XX_ADC) += sc27xx_adc.o
->  obj-$(CONFIG_SPEAR_ADC) += spear_adc.o
-> diff --git a/drivers/iio/adc/rn5t618-adc.c b/drivers/iio/adc/rn5t618-adc.c
-> new file mode 100644
-> index 000000000000..81f872a7ad7f
-> --- /dev/null
-> +++ b/drivers/iio/adc/rn5t618-adc.c
-> @@ -0,0 +1,266 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * ADC driver for the RICOH RN5T618 power management chip family
-> + *
-> + * Copyright (C) 2019 Andreas Kemnade
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/device.h>
-> +#include <linux/errno.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/init.h>
-> +#include <linux/module.h>
-> +#include <linux/mfd/rn5t618.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/completion.h>
-> +#include <linux/regmap.h>
-> +#include <linux/iio/iio.h>
-> +#include <linux/slab.h>
-> +#include <linux/irqdomain.h>
-> +
-> +#define RN5T618_ADC_CONVERSION_TIMEOUT   (msecs_to_jiffies(500))
-> +#define REFERENCE_VOLT 2500
-> +
-> +/* mask for selecting channels for single conversion */
-> +#define ADCCNT3_CHANNEL_MASK 0x7
-> +/* average 4-time conversion mode */
-> +#define ADCCNT3_AVG BIT(3)
-> +/* set for starting a single conversion, gets cleared by hw when done */
-> +#define ADCCNT3_GODONE BIT(4)
-> +/* automatic conversion, period is in ADCCNT2, selected channels are
-> + * in ADCCNT1
-> + */
-> +#define ADCCNT3_AUTO BIT(5)
-> +#define ADCEND_IRQ BIT(0)
-> +
-> +struct rn5t618_adc_data {
-> +	struct device *dev;
-> +	struct rn5t618 *rn5t618;
-> +	struct completion conv_completion;
-> +	int irq;
-> +};
-> +
-> +struct rn5t618_channel_ratios {
-> +	u16 numerator;
-> +	u16 denominator;
-> +};
-> +
-> +static const struct rn5t618_channel_ratios rn5t618_ratios[8] = {
-> +	{50, 32}, /* LIMMON measured across 20mOhm, amplified by 32 */
-Define an enum for the channel.  Then you can use explicit element
-setting to make this code self docuemnting.
+ - the support for vfat has been removed as that is already supported
+   by fs/fat
+ - driver has been renamed to exfat
+ - the code has been refactored and clean up to fully integrate into
+   the upstream Linux version and follow the Linux coding style
+ - metadata operations like create, lookup and readdir have been further
+   optimized
+ - various major and minor bugs have been fixed
 
-[LIMMON] = {50, 32},
-[VBAT] = {2, 1}, etc.
+We plan to treat this version as the future upstream for the code base
+once merged, and all new features and bug fixes will go upstream first.
 
-Use the enum to fill in the channel numbers below as well and
-it all becomes 'obviously' correct rather than having to check the
-two things are in the same order.
+v11:
+ - Use current_time instead of ktime_get_real_ts64.
+ - Add i_crtime in exfat inode.
+ - Drop the clamping min/max timestamp.
+ - Merge exfat_init_file_entry into exfat_init_dir_entry.
+ - Initialize the msec fields in exfat_init_dir_entry.
+ - Change timestamps written to disk always get stored in UTC instead of
+   active timezone.
+ - Update EXFAT_DEFAULT_IOCHARSET description in Kconfig.
+ - exfat_get/set_entry_time() take a time_ms argument.
 
-> +	{2, 1}, /* VBAT */
-> +	{3, 1}, /* VADP */
-> +	{3, 1}, /* VUSB */
-> +	{3, 1}, /* VSYS */
-> +	{1, 1}, /* VTHM */
-> +	{1, 1}, /* AIN1 */
-> +	{1, 1}, /* AIN0 */
-> +};
-> +
-> +static int rn5t618_read_adc_reg(struct rn5t618 *rn5t618, int reg, u16 *val)
-> +{
-> +	unsigned int h;
-> +	unsigned int l;
-> +	int ret;
-> +
-> +	ret = regmap_read(rn5t618->regmap, reg, &h);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = regmap_read(rn5t618->regmap, reg + 1, &l);
-> +	if (ret < 0)
-> +		return ret;
+v10:
+ - Make PBR structures as packed structure.
+ - Fix build error on 32 bit system.
+ - Change L suffix of UNIX_SECS_2108 macro with LL suffix to work
+   on both 32/64bit system.
+ - Rework exfat time handling.
+ - Don't warp exfat specification URLs.
+ - Add _FS suffix to config name.
+ - Remove case_sensitive mount option.
+ - iocharset=utf8 mount option work as utf8 option.
+ - Rename the misleading nls names to corresponding ones.
+ - Fix wrong header guard name of exfat_fs.h.
+ - Remove the unneeded braces of macros in exfat_fs.h.
+ - Move the ondisk values to exfat_raw.h
+ - Put the operators at the previous line in exfat_cluster_to_sector().
+ - Braces of EXFAT_DELETE macro would outside the ~.
+ - Directly use exfat dentry field name.
+ - Add EXFAT_CLUSTERS_UNTRACKED macro.
+ - Remove both sets of inner braces in exfat_set_vol_flags().
+ - Replace is_reserved_cluster() with an explicit check
+   for EXFAT_EOF_CLUSTER.
+ - Initialize superblock s_time_gran/max/min.
+ - Clean-up exfat_bmap and exfat_get_block().
+ - Fix wrong boundlen to avoid potential buffer overflow
+   in exfat_convert_char_to_ucs2().
+ - Process length value as 1 when conversion is failed.
+ - Replace union exfat_timezone with masking the valid bit.
+ - Change exfat_cmp_uniname() with exfat_uniname_ncmp().
+ - Remove struct exfat_timestamp.
+ - Add atime update support.
+ - Add time_offset mount option.
+ - Remove unneeded CLUSTER_32 macro.
+ - Process utf16 surrogage pair as one character.
+ - Rename MUST_ZERO_LEN to PBR64_RESERVED_LEN.
+ - Simplify is_exfat function by just using memchr_inv().
+ - Remove __exfat_init_name_hash.
+ - Remove exfat_striptail_len.
+ - Split dentry ops for the utf8 vs non-utf8 cases.
 
-regmap_bulk_read perhaps? 
+v9:
+ - Add support time zone.
+ - Fix data past EOF resulting from fsx testsuite.
+ - Remove obsolete comments in __exfat_resolve_path().
+ - Remove unused file attributes macros.
+ - Remove unneeded #if BITS_PER_LONG.
 
-> +
-> +	h <<= 4;
-> +	h |= (l & 0xF);
-> +	h &= 0xFFF;
+v8:
+ - Rearrange the function grouping in exfat_fs.h
+   (exfat_count_dir_entries, exfat_get_dentry, exfat_get_dentry_set,
+    exfat_find_location).
+ - Mark exfat_extract_uni_name(), exfat_get_uniname_from_ext_entry() and
+   exfat_mirror_bh() as static.
 
-I'd mask h before the shift.  More readable I think than
-masking the l part twice.
+v7:
+ - Add the helpers macros for bitmap and fat entry to improve readability.
+ - Rename exfat_test_bitmap to exfat_find_free_bitmap.
+ - Merge exfat_get_num_entries into exfat_calc_num_entries.
+ - Add EXFAT_DATA_CLUSTERS and EXFAT_RESERVED_CLUSTERS macro.
+ - Add the macros for EXFAT BIOS block(JUMP_BOOT_LEN, OEM_NAME_LEN,
+   MUST_BE_ZERO_LEN).
+ - Add the macros for EXFAT entry type (IS_EXFAT_CRITICAL_PRI,
+   IS_EXFAT_BENIGN_PRI, IS_EXFAT_CRITICAL_SEC).
+ - Add EXFAT_FILE_NAME_LEN macro.
+ - Change the data type of is_dir with bool in __exfat_write_inode().
+ - Change the data type of sync with bool in exfat_set_vol_flags().
+ - Merge __exfat_set_vol_flags into exfat_set_vol_flags.
+ - Fix wrong statfs->f_namelen.
 
-> +	*val = h;
-> +
-> +	return 0;
-> +}
-> +
-> +static irqreturn_t rn5t618_adc_irq(int irq, void *data)
-> +{
-> +	struct rn5t618_adc_data *adc = data;
-> +	unsigned int r = 0;
-> +	int ret;
-> +
-> +	/* clear low & high threshold irqs */
-> +	regmap_write(adc->rn5t618->regmap, RN5T618_IR_ADC1, 0);
-> +	regmap_write(adc->rn5t618->regmap, RN5T618_IR_ADC2, 0);
-> +
-> +	ret = regmap_read(adc->rn5t618->regmap, RN5T618_IR_ADC3, &r);
-> +	if (ret < 0)
-> +		dev_err(adc->dev, "failed to read IRQ status: %d\n", ret);
-> +
-> +	regmap_write(adc->rn5t618->regmap, RN5T618_IR_ADC3, 0);
-> +
-> +	if (r & ADCEND_IRQ)
-> +		complete(&adc->conv_completion);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int rn5t618_adc_read(struct iio_dev *iio_dev,
-> +			    const struct iio_chan_spec *chan,
-> +			    int *val, int *val2, long mask)
-> +{
-> +	struct rn5t618_adc_data *adc = iio_priv(iio_dev);
-> +	u16 raw;
-> +	int ret;
-> +
-> +	/* select channel */
-> +	ret = regmap_update_bits(adc->rn5t618->regmap, RN5T618_ADCCNT3,
-> +				 ADCCNT3_CHANNEL_MASK,
-> +				 chan->channel);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = regmap_write(adc->rn5t618->regmap, RN5T618_EN_ADCIR3, ADCEND_IRQ);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = regmap_update_bits(adc->rn5t618->regmap, RN5T618_ADCCNT3,
-> +				 ADCCNT3_AVG,
-> +				 mask == IIO_CHAN_INFO_AVERAGE_RAW ?
-> +				 ADCCNT3_AVG : 0);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	init_completion(&adc->conv_completion);
-> +	/* single conversion */
-> +	ret = regmap_update_bits(adc->rn5t618->regmap, RN5T618_ADCCNT3,
-> +				 ADCCNT3_GODONE, ADCCNT3_GODONE);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = wait_for_completion_timeout(&adc->conv_completion,
-> +					  RN5T618_ADC_CONVERSION_TIMEOUT);
-> +	if (ret == 0) {
-> +		dev_warn(adc->dev, "timeout waiting for adc result\n");
-> +		return -ETIMEDOUT;
-> +	}
-> +
-> +	ret = rn5t618_read_adc_reg(adc->rn5t618,
-> +				   RN5T618_ILIMDATAH + 2 * chan->channel,
-> +				   &raw);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	*val = raw;
-> +	if (mask == IIO_CHAN_INFO_PROCESSED)
-> +		*val = *val * REFERENCE_VOLT *
-> +		       rn5t618_ratios[chan->channel].numerator /
-> +		       rn5t618_ratios[chan->channel].denominator / 4095;
-> +
-> +	return IIO_VAL_INT;
-> +}
-> +
-> +static const struct iio_info rn5t618_adc_iio_info = {
-> +	.read_raw = &rn5t618_adc_read,
-> +};
-> +
-> +#define RN5T618_ADC_CHANNEL(_channel, _type, _name) { \
-> +	.type = _type, \
-> +	.channel = _channel, \
-> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) | \
-> +			      BIT(IIO_CHAN_INFO_AVERAGE_RAW) | \
-> +			      BIT(IIO_CHAN_INFO_PROCESSED), \
-> +	.datasheet_name = _name, \
-> +	.indexed = 1. \
-> +}
-> +
-> +static const struct iio_chan_spec rn5t618_adc_iio_channels[] = {
-> +	RN5T618_ADC_CHANNEL(0, IIO_CURRENT, "LIMMON"),
-> +	RN5T618_ADC_CHANNEL(1, IIO_VOLTAGE, "VBAT"),
-> +	RN5T618_ADC_CHANNEL(2, IIO_VOLTAGE, "VADP"),
-> +	RN5T618_ADC_CHANNEL(3, IIO_VOLTAGE, "VUSB"),
-> +	RN5T618_ADC_CHANNEL(4, IIO_VOLTAGE, "VSYS"),
-> +	RN5T618_ADC_CHANNEL(5, IIO_VOLTAGE, "VTHM"),
-> +	RN5T618_ADC_CHANNEL(6, IIO_VOLTAGE, "AIN1"),
-> +	RN5T618_ADC_CHANNEL(7, IIO_VOLTAGE, "AIN0")
-> +};
-> +
-> +static int rn5t618_adc_probe(struct platform_device *pdev)
-> +{
-> +	int ret;
-> +	struct iio_dev *iio_dev;
-> +	struct rn5t618_adc_data *adc;
-> +	struct rn5t618 *rn5t618 = dev_get_drvdata(pdev->dev.parent);
-> +
-> +	iio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*adc));
-> +	if (!iio_dev) {
-> +		dev_err(&pdev->dev, "failed allocating iio device\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	adc = iio_priv(iio_dev);
-> +	adc->dev = &pdev->dev;
-> +	adc->rn5t618 = rn5t618;
-> +	adc->irq = -ENOENT;
-> +
-> +	if (rn5t618->irq_data)
-> +		adc->irq = regmap_irq_get_virq(rn5t618->irq_data,
-> +					       RN5T618_IRQ_ADC);
-> +
-> +	if (adc->irq  < 0) {
+v6:
+ - Fix always false comparison due to limited range of allow_utime's data
+   type.
+ - Move bh into loop in exfat_find_dir_entry().
+ - Move entry_uniname and unichar variables into
+   an if "entry_type == TYPE_EXTEND" branch.
 
-Extra space before the <
-For an irq 0 usually counts as 'no irq'.  Can that particular
-path ever give that?
+v5:
+ - Remove a blank line between the message and the error code in
+   exfat_load_upcase_table.
+ - Move brelse to the end of the while loop and rename release_bh label
+   to free_table in exfat_load_upcase_table.
+ - Move an error code assignment after a failed function call.
+ - Rename labels and directly return instead of goto.
+ - Improve the exception handling in exfat_get_dentry_set().
+ - Remove ->d_time leftover.
+ - fix boolreturn.cocci warnings.
 
-> +		dev_err(&pdev->dev, "get virq failed\n");
-> +		return adc->irq;
-> +	}
-> +
-> +	init_completion(&adc->conv_completion);
-> +
-> +	iio_dev->name = dev_name(&pdev->dev);
-> +	iio_dev->dev.parent = &pdev->dev;
-> +	iio_dev->info = &rn5t618_adc_iio_info;
-> +	iio_dev->modes = INDIO_DIRECT_MODE;
-> +	iio_dev->channels = rn5t618_adc_iio_channels;
-> +	iio_dev->num_channels = ARRAY_SIZE(rn5t618_adc_iio_channels);
-> +
-> +	/* stop any auto-conversion */
-> +	ret = regmap_write(rn5t618->regmap, RN5T618_ADCCNT3, 0);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	platform_set_drvdata(pdev, iio_dev);
-> +
-> +	ret = request_threaded_irq(adc->irq, NULL,
-> +				   rn5t618_adc_irq,
-> +				   IRQF_ONESHOT, dev_name(adc->dev),
-> +				   adc);
-> +	if (ret < 0) {
-> +		dev_err(adc->dev, "request irq %d failed: %d\n", adc->irq, ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = iio_device_register(iio_dev);
-> +	if (ret < 0)
-> +		free_irq(adc->irq, adc);
-> +
-> +	return ret;
-> +}
-> +
-> +static int rn5t618_adc_remove(struct platform_device *pdev)
-> +{
-> +	struct iio_dev *iio_dev = platform_get_drvdata(pdev);
-> +	struct rn5t618_adc_data *adc = iio_priv(iio_dev);
-> +
-> +	iio_device_unregister(iio_dev);
-> +	free_irq(adc->irq, adc);
+v4:
+ - Declare ALLOC_FAT_CHAIN and ALLOC_NO_FAT_CHAIN macros.
+ - Rename labels with proper name.
+ - Remove blank lines.
+ - Remove pointer check for bh.
+ - Move ep into loop in exfat_load_bitmap().
+ - Replace READ/WRITE_ONCE() with test_and_clear_bit() and set_bit().
+ - Change exfat_allow_set_time return type with bool.
 
-If this is all we are going to have in remove, why not just use
-the device managed form to do it for us and get rid of remove.
+v3:
+ - fix wrong sbi->s_dirt set.
 
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver rn5t618_adc_driver = {
-> +	.driver = {
-> +		.name   = "rn5t618-adc",
-> +	},
-> +	.probe = rn5t618_adc_probe,
-> +	.remove = rn5t618_adc_remove,
-> +};
-> +
-> +module_platform_driver(rn5t618_adc_driver);
-> +MODULE_ALIAS("platform:rn5t618-adc");
-> +MODULE_DESCRIPTION("RICOH RN5T618 ADC driver");
-> +MODULE_LICENSE("GPL");
-> +
+v2:
+ - Check the bitmap count up to the total clusters.
+ - Rename goto labels in several places.
+ - Change time mode type with enumeration.
+ - Directly return error instead of goto at first error check.
+ - Combine seq_printf calls into a single one.
+
+Namjae Jeon (14):
+  exfat: add in-memory and on-disk structures and headers
+  exfat: add super block operations
+  exfat: add inode operations
+  exfat: add directory operations
+  exfat: add file operations
+  exfat: add fat entry operations
+  exfat: add bitmap operations
+  exfat: add exfat cache
+  exfat: add misc operations
+  exfat: add nls operations
+  exfat: add Kconfig and Makefile
+  exfat: add exfat in fs/Kconfig and fs/Makefile
+  MAINTAINERS: add exfat filesystem
+  staging: exfat: make staging/exfat and fs/exfat mutually exclusive
+
+ MAINTAINERS                   |    7 +
+ drivers/staging/exfat/Kconfig |    2 +-
+ fs/Kconfig                    |    3 +-
+ fs/Makefile                   |    1 +
+ fs/exfat/Kconfig              |   21 +
+ fs/exfat/Makefile             |    8 +
+ fs/exfat/balloc.c             |  282 +++++++
+ fs/exfat/cache.c              |  325 ++++++++
+ fs/exfat/dir.c                | 1238 ++++++++++++++++++++++++++++
+ fs/exfat/exfat_fs.h           |  522 ++++++++++++
+ fs/exfat/exfat_raw.h          |  184 +++++
+ fs/exfat/fatent.c             |  463 +++++++++++
+ fs/exfat/file.c               |  360 ++++++++
+ fs/exfat/inode.c              |  671 +++++++++++++++
+ fs/exfat/misc.c               |  163 ++++
+ fs/exfat/namei.c              | 1448 +++++++++++++++++++++++++++++++++
+ fs/exfat/nls.c                |  834 +++++++++++++++++++
+ fs/exfat/super.c              |  725 +++++++++++++++++
+ 18 files changed, 7255 insertions(+), 2 deletions(-)
+ create mode 100644 fs/exfat/Kconfig
+ create mode 100644 fs/exfat/Makefile
+ create mode 100644 fs/exfat/balloc.c
+ create mode 100644 fs/exfat/cache.c
+ create mode 100644 fs/exfat/dir.c
+ create mode 100644 fs/exfat/exfat_fs.h
+ create mode 100644 fs/exfat/exfat_raw.h
+ create mode 100644 fs/exfat/fatent.c
+ create mode 100644 fs/exfat/file.c
+ create mode 100644 fs/exfat/inode.c
+ create mode 100644 fs/exfat/misc.c
+ create mode 100644 fs/exfat/namei.c
+ create mode 100644 fs/exfat/nls.c
+ create mode 100644 fs/exfat/super.c
+
+-- 
+2.17.1
 
