@@ -2,139 +2,136 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 935B7C33CB1
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 05:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE2BC33CB7
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 05:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DE4C2073A
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 05:31:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82BDB24681
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 05:32:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DgH3J6aq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726345AbgARFbF (ORCPT
+        id S1726388AbgARFcs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 00:31:05 -0500
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:60911 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725385AbgARFbF (ORCPT
+        Sat, 18 Jan 2020 00:32:48 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:43983 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725385AbgARFcs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 00:31:05 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0To.f-S7_1579325449;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0To.f-S7_1579325449)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 18 Jan 2020 13:31:00 +0800
-Subject: Re: [Patch v4] mm: thp: remove the defer list related code since this
- will not happen
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-To:     Wei Yang <richardw.yang@linux.intel.com>, hannes@cmpxchg.org,
-        mhocko@kernel.org, vdavydov.dev@gmail.com,
-        akpm@linux-foundation.org, ktkhai@virtuozzo.com,
-        kirill.shutemov@linux.intel.com
-Cc:     cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, alexander.duyck@gmail.com,
-        rientjes@google.com, stable@vger.kernel.org
-References: <20200117233836.3434-1-richardw.yang@linux.intel.com>
- <e73272a8-87e9-5e22-4f78-588b640f4fc4@linux.alibaba.com>
-Message-ID: <25e1226a-9cce-6a75-f0e9-b42f5afa22da@linux.alibaba.com>
-Date:   Fri, 17 Jan 2020 21:30:45 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Sat, 18 Jan 2020 00:32:48 -0500
+Received: by mail-ed1-f66.google.com with SMTP id dc19so24315275edb.10
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 21:32:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iGO7As1ACatxG0Km9ZDObq/5CWcC4DDbVgvTHZSZ69o=;
+        b=DgH3J6aqNr0SkIyXXTWbwvdqt0OSx9ziGjcKa8VB0bSCWxoOhFl1CG5Bu2Mrxa/OMZ
+         Qphe7I5cjOrzlZHUChYTKg+aExR0QSq6bRJgALzZomhzCXGQzbaIMECerEYW+UL/zLha
+         79nEXY0MWSUF09nC7pAXctcZW4MqcsaUqdPOYJ/BkcF1G1OElMNWOPy9FmkUJMdvkETe
+         GmNnPw7OpbLd+wS93b5Qrw7m2e38Gu6kRnu8nFb436xSs3PVm0CLd8tncBLhRR6Nczcz
+         ePiyC7PeYJan7JagiXZB7fR8qoe0orag9C2iaxrS/NQamL8vWtBOWRBXQ1X0Ui29BDEa
+         wMYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iGO7As1ACatxG0Km9ZDObq/5CWcC4DDbVgvTHZSZ69o=;
+        b=fj0/PC12XhtrozvfZoyz3d6Y7sbdNvbCmDpO0ldDnMjZDjf+qBFzfNkTLJsimNhCJh
+         mmyuVCMtHUZK+RpRmeh+1xLckUK3SNVK25MxnEo0v6M+4VC87O0ZhrCbYbolYJySndMy
+         asFzw61l+/9oTviyfDpRvtGBDTiYsSC9FKucN87BNIOI84+AmlpcixocURf6ckSl+vPL
+         iP5L0sNLc3tHjxN7Q9LE/iASHtZiRLYhcxRufn1AG85tQBewe+lcfnTlffLPNGxd9Mal
+         mgM4usYlDVuGep82ZfGenA7Sp6LLwtJugYHB2Y9kjtooI/EicmGc/ThAzNrA/J3rkDz7
+         kDHA==
+X-Gm-Message-State: APjAAAULdP5hLLGdxY8xDaW+18kocHtdKRKUx7dNIIiIvmKm0qQ7MBPK
+        6QBKMmyiXqSJno5uOvsqWdR724y5MLFT8oUF0Ek=
+X-Google-Smtp-Source: APXvYqzjMlhU6tPuIqThx7vP/9qBNYifikvYJ+ycVTF4/jxz3XJWZSdykWesD0CMM/78tWPC5NflAQSvZDBTwcstrVI=
+X-Received: by 2002:a50:ba83:: with SMTP id x3mr7442375ede.206.1579325566598;
+ Fri, 17 Jan 2020 21:32:46 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <e73272a8-87e9-5e22-4f78-588b640f4fc4@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20200117074534.25324-1-richardw.yang@linux.intel.com>
+ <20200117222740.GB29229@richard> <CAHbLzkoYH1_JHH99pnopj_v=Wb=UEGMS9dJs1J6GZn0=6F4SJw@mail.gmail.com>
+In-Reply-To: <CAHbLzkoYH1_JHH99pnopj_v=Wb=UEGMS9dJs1J6GZn0=6F4SJw@mail.gmail.com>
+From:   Yang Shi <shy828301@gmail.com>
+Date:   Fri, 17 Jan 2020 21:32:32 -0800
+Message-ID: <CAHbLzkpWcyUtKC_kpMPxvgbo2OA06Yfb1zRcux4-d4zgMCUZbQ@mail.gmail.com>
+Subject: Re: [PATCH] mm/migrate.c: also overwrite error when it is bigger than zero
+To:     Wei Yang <richardw.yang@linux.intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 1/17/20 4:57 PM, Yang Shi wrote:
+On Fri, Jan 17, 2020 at 3:30 PM Yang Shi <shy828301@gmail.com> wrote:
 >
+> On Fri, Jan 17, 2020 at 2:27 PM Wei Yang <richardw.yang@linux.intel.com> wrote:
+> >
+> > On Fri, Jan 17, 2020 at 03:45:34PM +0800, Wei Yang wrote:
+> > >If we get here after successfully adding page to list, err would be
+> > >the number of pages in the list.
+> > >
+> > >Current code has two problems:
+> > >
+> > >  * on success, 0 is not returned
+> > >  * on error, the real error code is not returned
+> > >
+> >
+> > Well, this breaks the user interface. User would receive 1 even the migration
+> > succeed.
+> >
+> > The change is introduced by e0153fc2c760 ("mm: move_pages: return valid node
+> > id in status if the page is already on the target node").
 >
-> On 1/17/20 3:38 PM, Wei Yang wrote:
->> If compound is true, this means it is a PMD mapped THP. Which implies
->> the page is not linked to any defer list. So the first code chunk will
->> not be executed.
->>
->> Also with this reason, it would not be proper to add this page to a
->> defer list. So the second code chunk is not correct.
->>
->> Based on this, we should remove the defer list related code.
->>
->> Fixes: 87eaceb3faa5 ("mm: thp: make deferred split shrinker memcg 
->> aware")
->>
->> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
->> Suggested-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
->> Cc: <stable@vger.kernel.org>    [5.4+]
->>
->> ---
->> v4:
->>    * finally we identified the related code is not necessary and not
->>      correct, just remove it
->>    * thanks to Kirill T first spot some problem
+> Yes, it may return a value which is > 0. But, it seems do_pages_move()
+> could return > 0 value even before this commit.
 >
-> Thanks for debugging and figuring this out. Acked-by: Yang Shi 
-> <yang.shi@linux.alibaba.com>
+> For example, if I read the code correctly, it would do:
+>
+> If we already have some pages on the queue then
+> add_page_for_migration() return error, then do_move_pages_to_node() is
+> called, but it may return > 0 value (the number of pages that were
+> *not* migrated by migrate_pages()), then the code flow would just jump
+> to "out" and return the value. And, it may happen to be 1.
 
-BTW, the patch itself is fine, but the subject looks really confusing. 
-It sounds like we would remove all deferred list code. I'd suggest 
-rephrase it to:
-
-mm: thp: don't need care deferred split queue in memcg charge move path
+Just figured out this is another regression introduced by a49bd4d71637
+("mm, numa: rework do_pages_move"). Already posted a patch to fix it.
 
 >
->> v3:
->>    * remove all review/ack tag since rewrite the changelog
->>    * use deferred_split_huge_page as the example of race
->>    * add cc stable 5.4+ tag as suggested by David Rientjes
->>
->> v2:
->>    * move check on compound outside suggested by Alexander
->>    * an example of the race condition, suggested by Michal
->> ---
->>   mm/memcontrol.c | 18 ------------------
->>   1 file changed, 18 deletions(-)
->>
->> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
->> index 6c83cf4ed970..27c231bf4565 100644
->> --- a/mm/memcontrol.c
->> +++ b/mm/memcontrol.c
->> @@ -5340,14 +5340,6 @@ static int mem_cgroup_move_account(struct page 
->> *page,
->>           __mod_lruvec_state(to_vec, NR_WRITEBACK, nr_pages);
->>       }
->>   -#ifdef CONFIG_TRANSPARENT_HUGEPAGE
->> -    if (compound && !list_empty(page_deferred_list(page))) {
->> - spin_lock(&from->deferred_split_queue.split_queue_lock);
->> -        list_del_init(page_deferred_list(page));
->> -        from->deferred_split_queue.split_queue_len--;
->> - spin_unlock(&from->deferred_split_queue.split_queue_lock);
->> -    }
->> -#endif
->>       /*
->>        * It is safe to change page->mem_cgroup here because the page
->>        * is referenced, charged, and isolated - we can't race with
->> @@ -5357,16 +5349,6 @@ static int mem_cgroup_move_account(struct page 
->> *page,
->>       /* caller should have done css_get */
->>       page->mem_cgroup = to;
->>   -#ifdef CONFIG_TRANSPARENT_HUGEPAGE
->> -    if (compound && list_empty(page_deferred_list(page))) {
->> - spin_lock(&to->deferred_split_queue.split_queue_lock);
->> -        list_add_tail(page_deferred_list(page),
->> - &to->deferred_split_queue.split_queue);
->> -        to->deferred_split_queue.split_queue_len++;
->> - spin_unlock(&to->deferred_split_queue.split_queue_lock);
->> -    }
->> -#endif
->> -
->>       spin_unlock_irqrestore(&from->move_lock, flags);
->>         ret = 0;
+> I'm not sure if it breaks the user interface since the behavior has
+> been existed for years, and it looks nobody complains about it. Maybe
+> glibc helps hide it or people just care if it is 0 and the status.
 >
-
+> >
+> > >Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+> > >---
+> > > mm/migrate.c | 2 +-
+> > > 1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > >diff --git a/mm/migrate.c b/mm/migrate.c
+> > >index 557da996b936..c3ef70de5876 100644
+> > >--- a/mm/migrate.c
+> > >+++ b/mm/migrate.c
+> > >@@ -1677,7 +1677,7 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
+> > >       err1 = do_move_pages_to_node(mm, &pagelist, current_node);
+> > >       if (!err1)
+> > >               err1 = store_status(status, start, current_node, i - start);
+> > >-      if (!err)
+> > >+      if (err >= 0)
+> > >               err = err1;
+> > > out:
+> > >       return err;
+> > >--
+> > >2.17.1
+> >
+> > --
+> > Wei Yang
+> > Help you, Help me
+> >
