@@ -2,261 +2,68 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 125A3C33CB7
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 15:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21BC1C33CB7
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 15:16:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D336B246A3
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 15:13:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="o6cGJB2a"
+	by mail.kernel.org (Postfix) with ESMTP id E9F5E24695
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 15:16:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579360561;
+	bh=9aVTZNrOxL5uerEBx8NH1RMZX7XT3l/reo54BDaSk+w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=LQB9kcd11sr/nEotUUY+BqFJNGzYgMD3sfhQbyo3qF7fTtSX725bNuV0B5U1fhTt+
+	 n0ogW+rdCFZzZXQSZAimDSO/X2YLsieyW04slS0AvWGV98x+PD0QOj1cerZ97jJwvw
+	 D8DFo9ZRGM1PkG8Dt2KJ4Mi2z0FN9uN5bALfEH0c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726740AbgARPNo (ORCPT
+        id S1727403AbgARPQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 10:13:44 -0500
-Received: from forward500j.mail.yandex.net ([5.45.198.250]:44754 "EHLO
-        forward500j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726579AbgARPNn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 10:13:43 -0500
-Received: from mxback15g.mail.yandex.net (mxback15g.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:94])
-        by forward500j.mail.yandex.net (Yandex) with ESMTP id 7EC8B11C20D6;
-        Sat, 18 Jan 2020 18:13:39 +0300 (MSK)
-Received: from localhost (localhost [::1])
-        by mxback15g.mail.yandex.net (mxback/Yandex) with ESMTP id m90U1rFpu7-Dc0GCiUb;
-        Sat, 18 Jan 2020 18:13:38 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1579360418;
-        bh=ZoXC1DLL7WylrhdCfNxl3JfKrRId2po347YFBtlU9GM=;
-        h=Message-Id:Cc:Subject:In-Reply-To:Date:References:To:From;
-        b=o6cGJB2aQzULdf9J+rMTHXDWGft4ekM+YqWY3TzTUyagrSnHPI/GTGlY4uRe+267c
-         QGDjviFuPJefPF4NHe382gqaomFjGPHyjpPdPy250+reyvg0GoEtChzaLiYbAl17jP
-         Bo/UxgDYDDxyFw1xloxF1RAivokT1ZlD3vxYEZV8=
-Authentication-Results: mxback15g.mail.yandex.net; dkim=pass header.i=@flygoat.com
-Received: by sas1-ac0cb6954dcf.qloud-c.yandex.net with HTTP;
-        Sat, 18 Jan 2020 18:13:38 +0300
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Envelope-From: yjx@flygoat.com
-To:     =?utf-8?B?UGhpbGlwcGUgTWF0aGlldS1EYXVkw6k=?= <f4bug@amsat.org>
-Cc:     "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        Huacai Chen <chenhc@lemote.com>,
-        Paul Burton <paul.burton@mips.com>,
-        open list <linux-kernel@vger.kernel.org>
-In-Reply-To: <CAAdtpL4a8GJOKT5uqGpd=zPRCOZHcQBOW18frkww0L8e04nC8A@mail.gmail.com>
-References: <20200114122343.163685-1-jiaxun.yang@flygoat.com> <CAAdtpL4a8GJOKT5uqGpd=zPRCOZHcQBOW18frkww0L8e04nC8A@mail.gmail.com>
-Subject: Re: [PATCH] MIPS: Introduce aligned IO memory operations
+        Sat, 18 Jan 2020 10:16:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48666 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726579AbgARPP7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jan 2020 10:15:59 -0500
+Received: from localhost (237.sub-174-231-6.myvzw.com [174.231.6.237])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07CD72468D;
+        Sat, 18 Jan 2020 15:15:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579360559;
+        bh=9aVTZNrOxL5uerEBx8NH1RMZX7XT3l/reo54BDaSk+w=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=bQAR9RQN1l0PZUnqYqckhbQyU/K1TLV1XyU6su/J88WYh3kzZRg5h+844Uv/FHqjj
+         mOjtMNcNlSZQTFRZb30PynXs365DTmja5RXunJHMk1w/RqLZxbkAts79OSg0yRgYxZ
+         I+xnF/CheA6aOJPF6AvF9i8ixavx8lExO7Fm6aHg=
+Date:   Sat, 18 Jan 2020 09:15:57 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com
+Subject: Re: [PATCH v12 0/8] Add Error Disconnect Recover (EDR) support
+Message-ID: <20200118151557.GA146679@google.com>
 MIME-Version: 1.0
-X-Mailer: Yamail [ http://yandex.ru ] 5.0
-Date:   Sat, 18 Jan 2020 23:13:38 +0800
-Message-Id: <7302971579360418@sas1-ac0cb6954dcf.qloud-c.yandex.net>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d1571702-b1bb-b956-c1ad-7eb917eae82e@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jan 17, 2020 at 05:10:00PM -0800, Kuppuswamy Sathyanarayanan wrote:
+> On 1/17/20 4:18 PM, Bjorn Helgaas wrote:
 
-
-18.01.2020, 22:41, "Philippe Mathieu-Daudé" <f4bug@amsat.org>:
-> Hi Jiaxun,
+> > -	obj = acpi_evaluate_dsm(handle, &pci_acpi_dsm_guid, 5,
+> > -				EDR_PORT_LOCATE_DSM, NULL);
+> > +	obj = acpi_evaluate_dsm(handle, &pci_acpi_dsm_guid, 5, EDR_PORT_LOCATE_DSM, NULL);
 >
-> On Tue, Jan 14, 2020 at 1:24 PM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
->>  Some platforms, such as Loongson64 or QEMU/KVM, don't support unaligned
->>  instructions like lwl or lwr in IO memory access. However, our current
->>  IO memcpy/memset is wired to the generic implementation, which leads
->>  to a fatal result.
->
-> Do you have a handy reproducer to try with QEMU/KVM?
+> This line goes over 80 chars, do you still want to keep them in same line ?
 
-It was triggered by QXL DRM driver when I was working on KVM for Loongson
-with Huacai.
-
-See arch/mips/kvm/emulate.c, we didn't have unaligned instructions trap
-emulation for MMIO. You can construct a simple unaligned memcpy_fromio
-case to reproduce it.
-
-Thanks.
-
->
->>  Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
->>  ---
->>   arch/mips/Kconfig | 4 ++
->>   arch/mips/include/asm/io.h | 10 ++++
->>   arch/mips/kernel/Makefile | 2 +-
->>   arch/mips/kernel/io.c | 98 ++++++++++++++++++++++++++++++++++++++
->>   4 files changed, 113 insertions(+), 1 deletion(-)
->>   create mode 100644 arch/mips/kernel/io.c
->>
->>  diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
->>  index 8b0cd692a43f..15a331aa23a2 100644
->>  --- a/arch/mips/Kconfig
->>  +++ b/arch/mips/Kconfig
->>  @@ -1450,6 +1450,7 @@ config CPU_LOONGSON64
->>          select CPU_SUPPORTS_HIGHMEM
->>          select CPU_SUPPORTS_HUGEPAGES
->>          select CPU_SUPPORTS_MSA
->>  + select CPU_NEEDS_ALIGNED_IO
->>          select CPU_HAS_LOAD_STORE_LR
->>          select CPU_DIEI_BROKEN if !LOONGSON3_ENHANCEMENT
->>          select CPU_MIPSR2_IRQ_VI
->>  @@ -2598,6 +2599,9 @@ config CPU_HAS_LOAD_STORE_LR
->>            LWL, LWR, SWL, SWR (Load/store word left/right).
->>            LDL, LDR, SDL, SDR (Load/store doubleword left/right, for 64bit systems).
->>
->>  +config CPU_NEEDS_ALIGNED_IO
->>  + bool
->>  +
->>   #
->>   # Vectored interrupt mode is an R2 feature
->>   #
->>  diff --git a/arch/mips/include/asm/io.h b/arch/mips/include/asm/io.h
->>  index 3f6ce74335b4..3b0eb4941f23 100644
->>  --- a/arch/mips/include/asm/io.h
->>  +++ b/arch/mips/include/asm/io.h
->>  @@ -577,6 +577,15 @@ BUILDSTRING(l, u32)
->>   BUILDSTRING(q, u64)
->>   #endif
->>
->>  +#if defined(CONFIG_CPU_NEEDS_ALIGNED_IO)
->>  +extern void __memcpy_fromio(void *, const volatile void __iomem *, size_t);
->>  +extern void __memcpy_toio(volatile void __iomem *, const void *, size_t);
->>  +extern void __memset_io(volatile void __iomem *, int, size_t);
->>  +
->>  +#define memset_io(c, v, l) __memset_io((c), (v), (l))
->>  +#define memcpy_fromio(a, c, l) __memcpy_fromio((a), (c), (l))
->>  +#define memcpy_toio(c, a, l) __memcpy_toio((c), (a), (l))
->>  +#else
->>   static inline void memset_io(volatile void __iomem *addr, unsigned char val, int count)
->>   {
->>          memset((void __force *) addr, val, count);
->>  @@ -589,6 +598,7 @@ static inline void memcpy_toio(volatile void __iomem *dst, const void *src, int
->>   {
->>          memcpy((void __force *) dst, src, count);
->>   }
->>  +#endif
->>
->>   /*
->>    * The caches on some architectures aren't dma-coherent and have need to
->>  diff --git a/arch/mips/kernel/Makefile b/arch/mips/kernel/Makefile
->>  index d6e97df51cfb..b07b97b9385e 100644
->>  --- a/arch/mips/kernel/Makefile
->>  +++ b/arch/mips/kernel/Makefile
->>  @@ -8,7 +8,7 @@ extra-y := head.o vmlinux.lds
->>   obj-y += cmpxchg.o cpu-probe.o branch.o elf.o entry.o genex.o idle.o irq.o \
->>                     process.o prom.o ptrace.o reset.o setup.o signal.o \
->>                     syscall.o time.o topology.o traps.o unaligned.o watch.o \
->>  - vdso.o cacheinfo.o
->>  + vdso.o cacheinfo.o io.o
->>
->>   ifdef CONFIG_FUNCTION_TRACER
->>   CFLAGS_REMOVE_ftrace.o = -pg
->>  diff --git a/arch/mips/kernel/io.c b/arch/mips/kernel/io.c
->>  new file mode 100644
->>  index 000000000000..ca105aa76d4d
->>  --- /dev/null
->>  +++ b/arch/mips/kernel/io.c
->>  @@ -0,0 +1,98 @@
->>  +// SPDX-License-Identifier: GPL-2.0-or-later
->>  +
->>  +#include <linux/export.h>
->>  +#include <linux/types.h>
->>  +#include <linux/io.h>
->>  +
->>  +#if defined(CONFIG_CPU_NEEDS_ALIGNED_IO)
->>  +
->>  +#if defined(CONFIG_64BIT)
->>  +#define IO_LONG_READ __raw_readq
->>  +#define IO_LONG_WRITE __raw_writeq
->>  +#define IO_LONG_SIZE 8
->>  +#else
->>  +#define IO_LONG_READ __raw_readl
->>  +#define IO_LONG_WRITE __raw_writel
->>  +#define IO_LONG_SIZE 4
->>  +#endif
->>  +
->>  +void __memcpy_fromio(void *to, const volatile void __iomem *from, size_t count)
->>  +{
->>  + while (count && !IS_ALIGNED((unsigned long)from, IO_LONG_SIZE) &&
->>  + !IS_ALIGNED((unsigned long)to, IO_LONG_SIZE)) {
->>  + *(u8 *)to = __raw_readb(from);
->>  + from++;
->>  + to++;
->>  + count--;
->>  + }
->>  +
->>  + while (count >= IO_LONG_SIZE) {
->>  + *(unsigned long *)to = IO_LONG_READ(from);
->>  + from += IO_LONG_SIZE;
->>  + to += IO_LONG_SIZE;
->>  + count -= IO_LONG_SIZE;
->>  + }
->>  +
->>  + while (count) {
->>  + *(u8 *)to = __raw_readb(from);
->>  + from++;
->>  + to++;
->>  + count--;
->>  + }
->>  +}
->>  +EXPORT_SYMBOL(__memcpy_fromio);
->>  +
->>  +void __memcpy_toio(volatile void __iomem *to, const void *from, size_t count)
->>  +{
->>  + while (count && !IS_ALIGNED((unsigned long)from, IO_LONG_SIZE) &&
->>  + !IS_ALIGNED((unsigned long)to, IO_LONG_SIZE)) {
->>  + __raw_writeb(*(u8 *)from, to);
->>  + from++;
->>  + to++;
->>  + count--;
->>  + }
->>  +
->>  + while (count >= IO_LONG_SIZE) {
->>  + IO_LONG_WRITE(*(unsigned long *)from, to);
->>  + from += IO_LONG_SIZE;
->>  + to += IO_LONG_SIZE;
->>  + count -= IO_LONG_SIZE;
->>  + }
->>  +
->>  + while (count) {
->>  + __raw_writeb(*(u8 *)from, to);
->>  + from++;
->>  + to++;
->>  + count--;
->>  + }
->>  +}
->>  +EXPORT_SYMBOL(__memcpy_toio);
->>  +
->>  +void __memset_io(volatile void __iomem *dst, int c, size_t count)
->>  +{
->>  + unsigned long lc = (u8)c;
->>  + int i;
->>  +
->>  + for (i = 1; i < IO_LONG_SIZE; i++)
->>  + lc |= (u8)c << (i * BITS_PER_BYTE);
->>  +
->>  + while (count && !IS_ALIGNED((unsigned long)dst, IO_LONG_SIZE)) {
->>  + __raw_writeb((u8)c, dst);
->>  + dst++;
->>  + count--;
->>  + }
->>  +
->>  + while (count >= IO_LONG_SIZE) {
->>  + IO_LONG_WRITE(lc, dst);
->>  + dst += IO_LONG_SIZE;
->>  + count -= IO_LONG_SIZE;
->>  + }
->>  +
->>  + while (count) {
->>  + __raw_writeb(c, dst);
->>  + dst++;
->>  + count--;
->>  + }
->>  +}
->>  +EXPORT_SYMBOL(__memset_io);
->>  +#endif
->>  --
->>  2.24.1
+Nope, sorry, I must have accidentally widened my window.  Make it so
+it fits in 80 columns.
