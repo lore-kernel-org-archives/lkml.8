@@ -2,132 +2,142 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48AD5C33CB1
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 08:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC82C33CB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 08:27:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AFA924673
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 08:26:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="smXbxu60"
+	by mail.kernel.org (Postfix) with ESMTP id 4A91B2468B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 08:27:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbgARI0E (ORCPT
+        id S1726843AbgARI1M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 03:26:04 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:35332 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726416AbgARI0D (ORCPT
+        Sat, 18 Jan 2020 03:27:12 -0500
+Received: from mail-il1-f200.google.com ([209.85.166.200]:38592 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726476AbgARI1L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 03:26:03 -0500
-Received: by mail-ed1-f65.google.com with SMTP id f8so24552794edv.2
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jan 2020 00:26:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=WPf1TKOeIof3ZCntE6oJKJZguEEyWXsiQTtgtGkEzMM=;
-        b=smXbxu60jgmDcmpPhk5Hz270NiIv4E/fUlphH/pz2oUmikPZ7qgBrST86QYHpjKPF7
-         hdZmR5cRyI/d2uEkbrhoReP5it5vBDFFkkXvGmCx3Z8p08Grmc5SJbT7FbYKkd2+lSRM
-         R6zw1hGgfM1KezAZTLg6pUvjKTSlK4AyZ3huQKXpE5Ge/xMvVvM6IB94txSxiDq8T32B
-         6x2VzxF1vSPMBFVOg0Fn4f37jbdIfPvavl1REXn72/rhKNSyDGZPZEkNa6ckQ26iAbyV
-         //3r2VRBveB5Bm18WH6PDZ+ygMk6qzpJ7kcoThsjrT6/fZYDpg1raKefLdUcsg44A5un
-         CSuA==
+        Sat, 18 Jan 2020 03:27:11 -0500
+Received: by mail-il1-f200.google.com with SMTP id i67so20750000ilf.5
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jan 2020 00:27:11 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=WPf1TKOeIof3ZCntE6oJKJZguEEyWXsiQTtgtGkEzMM=;
-        b=OnT/k93My1GlNuCcAMrIPHFWOjdcU+P4hS4JUo/NDJf9D5xyeh2fQfAeUMlJqpYjAE
-         jMwRgEmaoxX91gtO8r77mzzC72aEVSP3t/q//lk4Xj5yagldPn7YNUpLIF5kBXEsMNJh
-         S3iKAHxAXrB9uBU2ZeG4M7BXxnY3GtK3fm3Ih6mtvR6bRpWhMSwCcNxC+Vo7l4iE9SNq
-         PVQmxprrW/4+vMk4+NeY86sTBHNK/YH8El4Jl/tnFFq/wEaw8mdp9D5NMEk7JwU5nn43
-         g0/EkJs0CB2/2J45fWW2awi7BBnd6LUhdvBqGNFoqitkJpO8Dk48JoyiuyHt3GZuIwFe
-         dpZQ==
-X-Gm-Message-State: APjAAAW9q47O9ZpTcw60KRo/kPH5qsIxCX030O+IOVq5pDTG72WVeOj+
-        5MtgSygZcEyJAYrLnNMIN2g=
-X-Google-Smtp-Source: APXvYqwpnS1rTQfCeWUo2+YczSaKkeGrzT1fv4/t6Ckjt0frUMivsRc8FXzbe97o4QFpqx/qy4E3bg==
-X-Received: by 2002:aa7:d1d1:: with SMTP id g17mr8244460edp.185.1579335961919;
-        Sat, 18 Jan 2020 00:26:01 -0800 (PST)
-Received: from felia.fritz.box ([2001:16b8:2db9:c700:3cc3:417f:c7f9:1bb2])
-        by smtp.gmail.com with ESMTPSA id x3sm1046479edr.72.2020.01.18.00.26.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Jan 2020 00:26:01 -0800 (PST)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Len Brown <len.brown@intel.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH SECOND-RESEND] MAINTAINERS: mark simple firmware interface (SFI) obsolete
-Date:   Sat, 18 Jan 2020 09:25:45 +0100
-Message-Id: <20200118082545.23464-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=R1FC2VQFkGKJMrNldgUHX6oyCmcJr7euyd2+3MRfUF8=;
+        b=ncnGw2+jj0z6IDHACXPSvm4GpiTyzW2MZrjpsJw3oretFqp5f8fqskzk/yTaZy7OD3
+         +uQtS5583on0yXbt02AiEA1uJSxY7z9jB3vujypS3SEOmwrGfKPALiOaLRQvIgiZ/yVW
+         MIv2nGSWs19OPjk73bzkCzRjgyFwBxrOjWJeeIUBMg4VGaWRYvcLmscp3MwsVeUL833N
+         cyL6usUp9x73J5ihyVif0aChjXUzJv505c07RvaiHJf1ECwkM3pLWS7pCWQ6LCrzXr36
+         21LWhcATaoLN0VI+0+6dXGFqEOpki51pcT9WAIF2RPMsjoMWB/RuS9/25yoVxtPEDMhN
+         DOGQ==
+X-Gm-Message-State: APjAAAVnEeLUfhViYUGcO+9ugu7ui7JWN+BNwqhES7tJZIrFYYp97RJs
+        AGFwv4zv4oqTkzm2gdj5cJVQ2UW9ENBi3xmnA1mZMk8/sgfI
+X-Google-Smtp-Source: APXvYqzR7Ph3Vmx77KY8Q2s+ShM3ergqG8VPNNJGf9TAHYTW5nHGem5MBy+6j967MVy1kjhnYEuyz30U04xqhoUeFwVZk0ldhr8V
+MIME-Version: 1.0
+X-Received: by 2002:a05:6e02:f0f:: with SMTP id x15mr2205856ilj.298.1579336030985;
+ Sat, 18 Jan 2020 00:27:10 -0800 (PST)
+Date:   Sat, 18 Jan 2020 00:27:10 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000001ba488059c65d352@google.com>
+Subject: BUG: corrupted list in __nf_tables_abort
+From:   syzbot <syzbot+437bf61d165c87bd40fb@syzkaller.appspotmail.com>
+To:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
+        kadlec@netfilter.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        pablo@netfilter.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Len Brown has not been active in this part since around 2010 and
-confirmed that he is not maintaining this part of the kernel sources
-anymore and the git log suggests that nobody is actively maintaining it.
+Hello,
 
-The referenced git tree does not exist. Instead, I found an sfi branch
-in Len's kernel git repository, but that has not been updated since 2014;
-so that is not worth to be mentioned in MAINTAINERS now anymore either.
+syzbot found the following crash on:
 
-Len Brown expects no further systems to be shipped with SFI, so we can
-mark it obsolete and schedule it for deletion.
+HEAD commit:    5a9ef194 net: systemport: Fixed queue mapping in internal ..
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=15efd8d6e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7e89bd00623fe71e
+dashboard link: https://syzkaller.appspot.com/bug?extid=437bf61d165c87bd40fb
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1285ccc9e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1424c135e00000
 
-This change was motivated after I found that I could not send any mails
-to the sfi-devel mailing list, and that the mailing list does not exist
-anymore.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+437bf61d165c87bd40fb@syzkaller.appspotmail.com
 
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+netlink: 20 bytes leftover after parsing attributes in process `syz-executor790'.
+list_del corruption, ffff8880a302a400->prev is LIST_POISON2 (dead000000000122)
+------------[ cut here ]------------
+kernel BUG at lib/list_debug.c:48!
+invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 10047 Comm: syz-executor790 Not tainted 5.5.0-rc5-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:__list_del_entry_valid.cold+0x37/0x4f lib/list_debug.c:48
+Code: be fd 0f 0b 4c 89 ea 4c 89 f6 48 c7 c7 a0 65 71 88 e8 a0 ba be fd 0f 0b 4c 89 e2 4c 89 f6 48 c7 c7 00 66 71 88 e8 8c ba be fd <0f> 0b 4c 89 f6 48 c7 c7 c0 66 71 88 e8 7b ba be fd 0f 0b cc cc cc
+RSP: 0018:ffffc900021c7478 EFLAGS: 00010282
+RAX: 000000000000004e RBX: ffff8880a302a400 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815e53a6 RDI: fffff52000438e81
+RBP: ffffc900021c7490 R08: 000000000000004e R09: ffffed1015d06621
+R10: ffffed1015d06620 R11: ffff8880ae833107 R12: dead000000000122
+R13: ffff8880921d92f0 R14: ffff8880a302a400 R15: ffff8880936a7c80
+FS:  00007fd3a288c700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ffde1b0aeb0 CR3: 000000009f715000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ __list_del_entry include/linux/list.h:131 [inline]
+ list_del_rcu include/linux/rculist.h:148 [inline]
+ __nf_tables_abort+0x1e53/0x2a50 net/netfilter/nf_tables_api.c:7258
+ nf_tables_abort+0x17/0x30 net/netfilter/nf_tables_api.c:7373
+ nfnetlink_rcv_batch+0xa5d/0x17a0 net/netfilter/nfnetlink.c:494
+ nfnetlink_rcv_skb_batch net/netfilter/nfnetlink.c:543 [inline]
+ nfnetlink_rcv+0x3e7/0x460 net/netfilter/nfnetlink.c:561
+ netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+ netlink_unicast+0x58c/0x7d0 net/netlink/af_netlink.c:1328
+ netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
+ sock_sendmsg_nosec net/socket.c:639 [inline]
+ sock_sendmsg+0xd7/0x130 net/socket.c:659
+ ____sys_sendmsg+0x753/0x880 net/socket.c:2330
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2384
+ __sys_sendmsg+0x105/0x1d0 net/socket.c:2417
+ __do_sys_sendmsg net/socket.c:2426 [inline]
+ __se_sys_sendmsg net/socket.c:2424 [inline]
+ __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2424
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x446b19
+Code: e8 8c e7 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 07 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fd3a288bd98 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00000000006dbc28 RCX: 0000000000446b19
+RDX: 0000000000000000 RSI: 0000000020000280 RDI: 0000000000000003
+RBP: 00000000006dbc20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc2c
+R13: 00000000200002c0 R14: 00000000004aeb00 R15: 0000000000000000
+Modules linked in:
+---[ end trace c2ab85444d78ba35 ]---
+RIP: 0010:__list_del_entry_valid.cold+0x37/0x4f lib/list_debug.c:48
+Code: be fd 0f 0b 4c 89 ea 4c 89 f6 48 c7 c7 a0 65 71 88 e8 a0 ba be fd 0f 0b 4c 89 e2 4c 89 f6 48 c7 c7 00 66 71 88 e8 8c ba be fd <0f> 0b 4c 89 f6 48 c7 c7 c0 66 71 88 e8 7b ba be fd 0f 0b cc cc cc
+RSP: 0018:ffffc900021c7478 EFLAGS: 00010282
+RAX: 000000000000004e RBX: ffff8880a302a400 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815e53a6 RDI: fffff52000438e81
+RBP: ffffc900021c7490 R08: 000000000000004e R09: ffffed1015d06621
+R10: ffffed1015d06620 R11: ffff8880ae833107 R12: dead000000000122
+R13: ffff8880921d92f0 R14: ffff8880a302a400 R15: ffff8880936a7c80
+FS:  00007fd3a288c700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+
+
 ---
-Thomas, please pick this _reworked_ patch now. thanks.
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-v1: https://lore.kernel.org/patchwork/patch/1033696/
-  - got Acked-by: Len Brown <len.brown@intel.com>
- 
-v2:
-  - also change status to Obsolete
-
-v2-resend:
-  - applies cleanly to v5.3-rc5 and next-20190823
-
-v3:
-  - simply remove Len Brown and do not try to find a possible
-    replacement, as Thomas requested.
-
-v3-resend:
-  - applies cleanly on v5.5-rc1, current master (e31736d9fae8) and
-    next-20191213
-
-v3-second-resend:
-  - applies cleanly on v5.5-rc6 and next-20200117 
-
- MAINTAINERS | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 4017e6b760be..fe82a0deb8cc 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15044,11 +15044,8 @@ F:	drivers/video/fbdev/sm712*
- F:	Documentation/fb/sm712fb.rst
- 
- SIMPLE FIRMWARE INTERFACE (SFI)
--M:	Len Brown <lenb@kernel.org>
--L:	sfi-devel@simplefirmware.org
- W:	http://simplefirmware.org/
--T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lenb/linux-sfi-2.6.git
--S:	Supported
-+S:	Obsolete
- F:	arch/x86/platform/sfi/
- F:	drivers/sfi/
- F:	include/linux/sfi*.h
--- 
-2.17.1
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
