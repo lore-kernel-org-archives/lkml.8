@@ -2,69 +2,78 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C5D6C32771
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 20:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1427CC3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 20:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FF4C2469D
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 20:20:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579378818;
-	bh=zdUuFfwPjw56piFdlZ0Rx7UoMad348euLk8S62p3gCk=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=OSaXhoGWOK4XyLp4sZYdVOCk6cRUYAwT3pPiz881viswqcSSHIoCkVy2KxY5F2w0n
-	 kllMDu1OBFhoZ7ocDfPUWB1jY3I2beyd2CqXtOOP5TclJE/1NZOuIXX4TudMGM4itj
-	 RIKQ7KzSB/3VjfhN8gnbKZhLwCXJuNT+sGsDuYSg=
+	by mail.kernel.org (Postfix) with ESMTP id DC3D72469D
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 20:41:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="TP6xNLqc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729073AbgARUUR (ORCPT
+        id S1727070AbgARUl2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 15:20:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42324 "EHLO mail.kernel.org"
+        Sat, 18 Jan 2020 15:41:28 -0500
+Received: from onstation.org ([52.200.56.107]:39842 "EHLO onstation.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727573AbgARUUE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 15:20:04 -0500
-Subject: Re: [GIT PULL] Char/Misc driver fixes for 5.5-rc7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579378803;
-        bh=zdUuFfwPjw56piFdlZ0Rx7UoMad348euLk8S62p3gCk=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=sm3qqZxN4+GtYh4yRFbOfnVJd5eztHSmRsitM3SIANc3rSSpyGBS0vwWOs+5eEDOi
-         0h7cl3J5ZDLtUtVzZtvdhqShKm5kFMl3wVxr5VRWchw4B80bMPb+Gk79mA9td+iXdk
-         sOnbIrND8+o1uZ0HTXY54wG7xQFL198lZoNXiC7U=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200118142326.GA80220@kroah.com>
-References: <20200118142326.GA80220@kroah.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200118142326.GA80220@kroah.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git
- tags/char-misc-5.5-rc7
-X-PR-Tracked-Commit-Id: fb85145c04447035c07cd609302d6996eb217a1d
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: f04dba64d667419493d1f9aadd50b19860312b6c
-Message-Id: <157937880375.12197.6844839879598223384.pr-tracker-bot@kernel.org>
-Date:   Sat, 18 Jan 2020 20:20:03 +0000
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
+        id S1726933AbgARUl1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jan 2020 15:41:27 -0500
+Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 3EA7F3E8F8;
+        Sat, 18 Jan 2020 20:41:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1579380087;
+        bh=w70lZdIZVmnTV+8m8BSpRyKKax6Xt6F/OwKbi0BD6AY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=TP6xNLqcK1YGG4IdG1i2ZyZb3gJiaPGkeYG1cLqQROIGxEm56OjiZq0suJHn2B66J
+         f9AodHxoM5cVVn0wWUt3ZMxb9EpsrrF4zir3O0MmmG6XkWWrI+C4U6Um0gVSuSEbRH
+         4nT6PkREzMFQfsttyxWvMGm/R006lWERbNCLkwGk=
+From:   Brian Masney <masneyb@onstation.org>
+To:     robdclark@gmail.com
+Cc:     sean@poorly.run, airlied@linux.ie, daniel@ffwll.ch,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/msm/mdp5: rate limit pp done timeout warnings
+Date:   Sat, 18 Jan 2020 15:41:20 -0500
+Message-Id: <20200118204120.1039774-1-masneyb@onstation.org>
+X-Mailer: git-send-email 2.24.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sat, 18 Jan 2020 15:23:26 +0100:
+Add rate limiting of the 'pp done time out' warnings since these
+warnings can quickly fill the dmesg buffer.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git tags/char-misc-5.5-rc7
+Signed-off-by: Brian Masney <masneyb@onstation.org>
+---
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/f04dba64d667419493d1f9aadd50b19860312b6c
-
-Thank you!
-
+diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
+index 05cc04f729d6..e1cc541e0ef2 100644
+--- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
++++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
+@@ -1109,8 +1109,8 @@ static void mdp5_crtc_wait_for_pp_done(struct drm_crtc *crtc)
+ 	ret = wait_for_completion_timeout(&mdp5_crtc->pp_completion,
+ 						msecs_to_jiffies(50));
+ 	if (ret == 0)
+-		dev_warn(dev->dev, "pp done time out, lm=%d\n",
+-			 mdp5_cstate->pipeline.mixer->lm);
++		dev_warn_ratelimited(dev->dev, "pp done time out, lm=%d\n",
++				     mdp5_cstate->pipeline.mixer->lm);
+ }
+ 
+ static void mdp5_crtc_wait_for_flush_done(struct drm_crtc *crtc)
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.24.1
+
