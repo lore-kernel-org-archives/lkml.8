@@ -2,150 +2,200 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8903EC33CB7
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 11:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF8AC33CB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 11:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6020324694
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 11:29:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579346952;
-	bh=D8x+g+unQ8xBuwJgPT/oCsHR7+dsGc9bZHovonk0mNo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=MxoIwJNBBi7FxEytH39LperzLjCK7UyQojLBgSQHhRW07EFX0CcX/lFDaEuJBohnm
-	 vJ7QZxg3V6Rehm7zb0l/0JCkX3knHZW3QyDZDE5Yt63s+Ic3USfa/zdPyMfmXDKFj0
-	 Wrg64DKtPug5uIo/OBF1e07IvOyMVor+bxb/oReE=
+	by mail.kernel.org (Postfix) with ESMTP id B38812468D
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 11:37:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GDWdJquZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbgARL3L (ORCPT
+        id S1728596AbgARLhP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 06:29:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45556 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727033AbgARL3L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 06:29:11 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37B0F24690;
-        Sat, 18 Jan 2020 11:29:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579346950;
-        bh=D8x+g+unQ8xBuwJgPT/oCsHR7+dsGc9bZHovonk0mNo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Jxc4Izx3rLBVGIqHKSFZ/VaLeRokaFHkHuFG+PFLz/cfYs0Jk3jSnvMjYq2HgFCl2
-         4eFvcvqlfcrCavpKfr6mecy55lyYOH6WD+KIPq+VcG4YLCZ5wMujGOIzszeZTTFDM8
-         WLhaabbzboOtLcluufTtvS7Ah11zkYr3TZaNdvdM=
-Date:   Sat, 18 Jan 2020 11:29:06 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     "Hennerich, Michael" <Michael.Hennerich@analog.com>
-Cc:     "Bia, Beniamin" <Beniamin.Bia@analog.com>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "biabeniamin@outlook.com" <biabeniamin@outlook.com>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>
-Subject: Re: [PATCH] iio: frequency: adf4371: Fix divide by zero exception
- bug
-Message-ID: <20200118112906.0ad6dd6b@archlinux>
-In-Reply-To: <BN6PR03MB25966D74469371C11AFC4E4C8E340@BN6PR03MB2596.namprd03.prod.outlook.com>
-References: <20200107131559.17772-1-beniamin.bia@analog.com>
-        <20200111110848.7c45a4f3@archlinux>
-        <BN6PR03MB25966D74469371C11AFC4E4C8E340@BN6PR03MB2596.namprd03.prod.outlook.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 18 Jan 2020 06:37:15 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:46634 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727109AbgARLhO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jan 2020 06:37:14 -0500
+Received: by mail-pg1-f195.google.com with SMTP id z124so12988432pgb.13
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jan 2020 03:37:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=dJFpZmbL29Nhk/m0uumLjQe295W+Tqyiu0Y2F3ZrsGE=;
+        b=GDWdJquZYzJ4XJLd81poGT62R1JdfDpVM7N50F5H28SfDpaLO+gfT9wj/O7F6qEFgo
+         EL4ppOvEn3mVFrxS+C7ZtsO83I+xhOfm76eVVGANa9vzVZ5ySQPQJY6qKQ9GeaaMn4Uk
+         sLoTkDGy3wQtjEWRAe6auUi/9286Zb5SBilcw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=dJFpZmbL29Nhk/m0uumLjQe295W+Tqyiu0Y2F3ZrsGE=;
+        b=riSIWMaQMtfMd3hIxk1iJ1/e/m7TJQPA8WoIUuNpu3w0I1gETMtcO5Bw+xQCCONsIy
+         eLzdVBRySmOeDa2kASrKurmmEfPEeUFT+S8KWF9TIx0fUrpoKljv4+nOy5Ry3yWYYrc6
+         DG7h9CVvZNRyHqYezpwc+idTdvbDZ0zPH0uTHnv/CFWE1Ir/8f1gGEHLGnLkzbBzuoGU
+         Ssnzxy0ymsFG0+6sU8ubMZeE4avFuSjv9lb2dnlUEgqlQkrdS/uhp3oURc2hwvqvmSUo
+         Ple6DLM4qm+CIWi91diGg9TFVzxeF6G1KF8lgRuB0bK7RNJP58Mfvfnqg5X/A+sCRe50
+         1q6g==
+X-Gm-Message-State: APjAAAU1zdpoo3p9/pxhRC3OZ8DaiQL8d2DctKDR2cl+VdBSIPbdRd1c
+        hppUQM57BlOouXjUfvw5WAqgDg==
+X-Google-Smtp-Source: APXvYqzyAgaGpOPjRh7J3jDSXt9buI4zmXy/wdMRydYeKUGftRpELJHQlYHek1AST36dVgajTSV1sA==
+X-Received: by 2002:a63:234f:: with SMTP id u15mr49598701pgm.88.1579347433758;
+        Sat, 18 Jan 2020 03:37:13 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id a17sm5902264pjv.6.2020.01.18.03.37.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Jan 2020 03:37:12 -0800 (PST)
+Date:   Sat, 18 Jan 2020 03:37:11 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     linux-kernel@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Oleg Nesterov <oleg@redhat.com>, stable@vger.kernel.org,
+        Serge Hallyn <serge@hallyn.com>, avagin@gmail.com,
+        Eric Paris <eparis@redhat.com>
+Subject: Re: [PATCH v4] ptrace: reintroduce usage of subjective credentials
+ in ptrace_has_cap()
+Message-ID: <202001180336.F000E9337@keescook>
+References: <20200118011908.23582-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200118011908.23582-1-christian.brauner@ubuntu.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Jan 2020 16:19:28 +0000
-"Hennerich, Michael" <Michael.Hennerich@analog.com> wrote:
-
-> > -----Original Message-----
-> > From: Jonathan Cameron <jic23@kernel.org>
-> > Sent: Samstag, 11. Januar 2020 12:09
-> > To: Bia, Beniamin <Beniamin.Bia@analog.com>
-> > Cc: lars@metafoo.de; Hennerich, Michael <Michael.Hennerich@analog.com>;
-> > pmeerw@pmeerw.net; linux-iio@vger.kernel.org; linux-
-> > kernel@vger.kernel.org; biabeniamin@outlook.com; knaack.h@gmx.de
-> > Subject: Re: [PATCH] iio: frequency: adf4371: Fix divide by zero exception bug
-> > 
-> > On Tue, 7 Jan 2020 15:15:59 +0200
-> > Beniamin Bia <beniamin.bia@analog.com> wrote:
-> >   
-> > > From: Michael Hennerich <michael.hennerich@analog.com>
-> > >
-> > > During initialization adf4371_pll_fract_n_get_rate() is called on all
-> > > output channels to determine if the device was setup. In this case
-> > > mod2 is zero which can cause a divide by zero exception.
-> > > Return before that can happen.  
-> > I'm confused by this description vs the code.
-> > 
-> > As far as I can see fract_n_get_rate is only called on a sysfs read of the
-> > frequency.  
+On Sat, Jan 18, 2020 at 02:19:08AM +0100, Christian Brauner wrote:
+> Commit 69f594a38967 ("ptrace: do not audit capability check when outputing /proc/pid/stat")
+> introduced the ability to opt out of audit messages for accesses to various
+> proc files since they are not violations of policy.  While doing so it
+> somehow switched the check from ns_capable() to
+> has_ns_capability{_noaudit}(). That means it switched from checking the
+> subjective credentials of the task to using the objective credentials. This
+> is wrong since. ptrace_has_cap() is currently only used in
+> ptrace_may_access() And is used to check whether the calling task (subject)
+> has the CAP_SYS_PTRACE capability in the provided user namespace to operate
+> on the target task (object). According to the cred.h comments this would
+> mean the subjective credentials of the calling task need to be used.
+> This switches ptrace_has_cap() to use security_capable(). Because we only
+> call ptrace_has_cap() in ptrace_may_access() and in there we already have a
+> stable reference to the calling task's creds under rcu_read_lock() there's
+> no need to go through another series of dereferences and rcu locking done
+> in ns_capable{_noaudit}().
 > 
-> That's not the case. The failure mechanism comes via adf4371_channel_config().
-> It calls adf4371_pll_fract_n_get_rate() prior adf4371_set_freq() which initializes 
-> st->mod2 via adf4371_pll_fract_n_compute(). This only happens the first time 
-> during probe and setup. So the solution was to return 0 if st->mod2 == 0.
-
-Not in mainline it doesn't.   I took a look at the ADI git hub and I see it does
-there.  I think we are missing a precursor patch.
-
-Probably this one from blame...
-
-https://github.com/analogdevicesinc/linux/commit/c8e6b341abf749f78e00326cb92b365d90d9de1f
-
-Jonathan
-
+> As one example where this might be particularly problematic, Jann pointed
+> out that in combination with the upcoming IORING_OP_OPENAT feature, this
+> bug might allow unprivileged users to bypass the capability checks while
+> asynchronously opening files like /proc/*/mem, because the capability
+> checks for this would be performed against kernel credentials.
 > 
-> -Michael
+> To illustrate on the former point about this being exploitable: When
+> io_uring creates a new context it records the subjective credentials of the
+> caller. Later on, when it starts to do work it creates a kernel thread and
+> registers a callback. The callback runs with kernel creds for
+> ktask->real_cred and ktask->cred. To prevent this from becoming a
+> full-blown 0-day io_uring will call override_cred() and override
+> ktask->cred with the subjective credentials of the creator of the io_uring
+> instance. With ptrace_has_cap() currently looking at ktask->real_cred this
+> override will be ineffective and the caller will be able to open arbitray
+> proc files as mentioned above.
+> Luckily, this is currently not exploitable but will turn into a 0-day once
+> IORING_OP_OPENAT{2} land in v5.6. Fix it now!
 > 
-> > 
-> > mod2 is set when fract_n_compute is called in the relevant set_freq calls.
-> > This seems to occur on a sysfs set frequency call.
-> > 
-> > So the issue here is that a sysfs read before a write of the frequency will cause a
-> > div zero?  If so, is there a sane set of initial values we can put in mod2 and
-> > friends before exposing them via the device register?
-> > 
-> > If mod2==0 is a valid value and indicates for example that the channel is turned
-> > off, then the description should make that clear.
-> > 
-> > Jonathan
-> >   
-> > >
-> > > Fixes: 7f699bd149134 ("iio: frequency: adf4371: Add support for
-> > > ADF4371 PLL")
-> > > Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
-> > > Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
-> > > ---
-> > >  drivers/iio/frequency/adf4371.c | 3 +++
-> > >  1 file changed, 3 insertions(+)
-> > >
-> > > diff --git a/drivers/iio/frequency/adf4371.c
-> > > b/drivers/iio/frequency/adf4371.c index e2a599b912e5..c21462238314
-> > > 100644
-> > > --- a/drivers/iio/frequency/adf4371.c
-> > > +++ b/drivers/iio/frequency/adf4371.c
-> > > @@ -191,6 +191,9 @@ static unsigned long long  
-> > adf4371_pll_fract_n_get_rate(struct adf4371_state *st,  
-> > >  	unsigned long long val, tmp;
-> > >  	unsigned int ref_div_sel;
-> > >
-> > > +	if (st->mod2 == 0)
-> > > +		return 0;
-> > > +
-> > >  	val = (((u64)st->integer * ADF4371_MODULUS1) + st->fract1) * st-
-> > >fpfd;
-> > >  	tmp = (u64)st->fract2 * st->fpfd;
-> > >  	do_div(tmp, st->mod2);  
+> Cc: Oleg Nesterov <oleg@redhat.com>
+> Cc: Eric Paris <eparis@redhat.com>
+> Cc: stable@vger.kernel.org
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+
+Looks good! Just to close the loop, yes, my Reviewed-by can stand. :)
+
+-Kees
+
+> Reviewed-by: Serge Hallyn <serge@hallyn.com>
+> Reviewed-by: Jann Horn <jannh@google.com>
+> Fixes: 69f594a38967 ("ptrace: do not audit capability check when outputing /proc/pid/stat")
+> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+> ---
+> /* v1 */
+> Link: https://lore.kernel.org/r/20200115171736.16994-1-christian.brauner@ubuntu.com
+> 
+> /* v2 */
+> Link: https://lore.kernel.org/r/20200116224518.30598-1-christian.brauner@ubuntu.com
+> - Christian Brauner <christian.brauner@ubuntu.com>:
+>   - fix incorrect CAP_OPT_NOAUDIT, CAPT_OPT_NONE order
+> 
+> /* v3 */
+> Link: https://lore.kernel.org/r/20200117105717.29803-1-christian.brauner@ubuntu.com
+> - Kees Cook <keescook@chromium.org>:
+>   - remove misleading reference to cread guard mutex from commit message
+>   - replace if-branches with ternary ?: operator
+> 
+> /* v4 */
+> - Kees Cook <keescook@chromium.org>:
+>   - use security_capable() == 0 on return
+> - Christian Brauner <christian.brauner@ubuntu.com>:
+>   - replace ?: operator with if-branches since we need to check against 0.
+>     This makes it more legible.
+> ---
+>  kernel/ptrace.c | 15 ++++++++++-----
+>  1 file changed, 10 insertions(+), 5 deletions(-)
+> 
+> diff --git a/kernel/ptrace.c b/kernel/ptrace.c
+> index cb9ddcc08119..43d6179508d6 100644
+> --- a/kernel/ptrace.c
+> +++ b/kernel/ptrace.c
+> @@ -264,12 +264,17 @@ static int ptrace_check_attach(struct task_struct *child, bool ignore_state)
+>  	return ret;
+>  }
+>  
+> -static int ptrace_has_cap(struct user_namespace *ns, unsigned int mode)
+> +static bool ptrace_has_cap(const struct cred *cred, struct user_namespace *ns,
+> +			   unsigned int mode)
+>  {
+> +	int ret;
+> +
+>  	if (mode & PTRACE_MODE_NOAUDIT)
+> -		return has_ns_capability_noaudit(current, ns, CAP_SYS_PTRACE);
+> +		ret = security_capable(cred, ns, CAP_SYS_PTRACE, CAP_OPT_NOAUDIT);
+>  	else
+> -		return has_ns_capability(current, ns, CAP_SYS_PTRACE);
+> +		ret = security_capable(cred, ns, CAP_SYS_PTRACE, CAP_OPT_NONE);
+> +
+> +	return ret == 0;
+>  }
+>  
+>  /* Returns 0 on success, -errno on denial. */
+> @@ -321,7 +326,7 @@ static int __ptrace_may_access(struct task_struct *task, unsigned int mode)
+>  	    gid_eq(caller_gid, tcred->sgid) &&
+>  	    gid_eq(caller_gid, tcred->gid))
+>  		goto ok;
+> -	if (ptrace_has_cap(tcred->user_ns, mode))
+> +	if (ptrace_has_cap(cred, tcred->user_ns, mode))
+>  		goto ok;
+>  	rcu_read_unlock();
+>  	return -EPERM;
+> @@ -340,7 +345,7 @@ static int __ptrace_may_access(struct task_struct *task, unsigned int mode)
+>  	mm = task->mm;
+>  	if (mm &&
+>  	    ((get_dumpable(mm) != SUID_DUMP_USER) &&
+> -	     !ptrace_has_cap(mm->user_ns, mode)))
+> +	     !ptrace_has_cap(cred, mm->user_ns, mode)))
+>  	    return -EPERM;
+>  
+>  	return security_ptrace_access_check(task, mode);
+> 
+> base-commit: b3a987b0264d3ddbb24293ebff10eddfc472f653
+> -- 
+> 2.25.0
 > 
 
+-- 
+Kees Cook
