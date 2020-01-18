@@ -2,76 +2,74 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A216C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 05:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22583C33CB7
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 05:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3534F24686
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 05:22:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="MyLM9F6Y"
+	by mail.kernel.org (Postfix) with ESMTP id 0066324683
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 05:26:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726302AbgARFWK (ORCPT
+        id S1726386AbgARF0y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 00:22:10 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:58510 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725385AbgARFWJ (ORCPT
+        Sat, 18 Jan 2020 00:26:54 -0500
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:44113 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725385AbgARF0y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 00:22:09 -0500
-Received: from [10.137.112.111] (unknown [131.107.147.111])
-        by linux.microsoft.com (Postfix) with ESMTPSA id B73E12007679;
-        Fri, 17 Jan 2020 21:22:08 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B73E12007679
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1579324928;
-        bh=seoXjZcBeW0pCKLw2Hln122p4fZMRx+skIRLz3V2mOE=;
-        h=Subject:To:References:From:Date:In-Reply-To:From;
-        b=MyLM9F6YXQS87v5ppBsTJmH3gubmH8mPbuTpZWYFerF5DGubYPlTV3XZDDXhVw+VN
-         Xq8TiAXdcU8crTs76NO2dTcaiVkc6BnIQHXTTpNC1E8dt7nlh27uGPV2LENaL7zjm+
-         55EyjrT3/VEPRr6Qk4JDrAbg4zsTTF6PL3EDxtxc=
-Subject: Re: inconsistent lock state in ima_process_queued_keys
-To:     syzbot <syzbot+a4a503d7f37292ae1664@syzkaller.appspotmail.com>,
-        dmitry.kasatkin@gmail.com, dvyukov@google.com, jmorris@namei.org,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, serge@hallyn.com,
-        syzkaller-bugs@googlegroups.com, zohar@linux.ibm.com
-References: <000000000000a1d91b059c6173c6@google.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <5264952c-6dae-47d8-9ee8-c837e69330be@linux.microsoft.com>
-Date:   Fri, 17 Jan 2020 21:22:23 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
-MIME-Version: 1.0
-In-Reply-To: <000000000000a1d91b059c6173c6@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Sat, 18 Jan 2020 00:26:54 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04455;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0To.bGaW_1579325203;
+Received: from localhost(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0To.bGaW_1579325203)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sat, 18 Jan 2020 13:26:51 +0800
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+To:     mhocko@suse.com, richardw.yang@linux.intel.com,
+        akpm@linux-foundation.org
+Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: [PATCH] mm: move_pages: fix the return value if there are not-migrated pages
+Date:   Sat, 18 Jan 2020 13:26:43 +0800
+Message-Id: <1579325203-16405-1-git-send-email-yang.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/17/2020 7:14 PM, syzbot wrote:
+The do_move_pages_to_node() might return > 0 value, the number of pages
+that are not migrated, then the value will be returned to userspace
+directly.  But, move_pages() syscall would just return 0 or errno.  So,
+we need reset the return value to 0 for such case as what pre-v4.17 did.
 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+a4a503d7f37292ae1664@syzkaller.appspotmail.com
-> 
-> ================================
-> WARNING: inconsistent lock state
-> 5.5.0-rc6-next-20200116-syzkaller #0 Not tainted
-> --------------------------------
-> inconsistent {SOFTIRQ-ON-W} -> {IN-SOFTIRQ-W} usage.
-> kworker/u4:3/125 [HC0[0]:SC1[1]:HE1:SE0] takes:
-> ffffffff8a03ce58 (ima_keys_lock){+.?.}, at: spin_lock include/linux/spinlock.h:338 [inline]
-> ffffffff8a03ce58 (ima_keys_lock){+.?.}, at: ima_process_queued_keys+0x4f/0x320 security/integrity/ima/ima_asymmetric_keys.c:144
-> {SOFTIRQ-ON-W} state was registered at:
+Fixes: a49bd4d71637 ("mm, numa: rework do_pages_move")
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Wei Yang <richardw.yang@linux.intel.com>
+Cc: <stable@vger.kernel.org>    [4.17+]
+Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+---
+ mm/migrate.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-The fix for this issue is in next-integrity branch. Should be merged to 
-linux-next shortly.
+diff --git a/mm/migrate.c b/mm/migrate.c
+index 86873b6..3e75432 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -1659,8 +1659,11 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
+ 			goto out_flush;
+ 
+ 		err = do_move_pages_to_node(mm, &pagelist, current_node);
+-		if (err)
++		if (err) {
++			if (err > 0)
++				err = 0;
+ 			goto out;
++		}
+ 		if (i > start) {
+ 			err = store_status(status, start, current_node, i - start);
+ 			if (err)
+-- 
+1.8.3.1
 
-  -lakshmi
