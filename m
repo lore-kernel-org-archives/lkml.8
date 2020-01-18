@@ -2,227 +2,179 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD644C33CB1
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 06:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC871C33CB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 06:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9343224683
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 06:47:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88BC724689
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 06:59:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579330794;
+	bh=iem9dpbUJv5W79Ig20Qtuu/JUjWJvQ+ft+3dxHYuXKY=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=tzRkv37gPmEl+HlY9JyXkpd6aZQPI9phVOn7j++ZbPxJ//XOaNyjjSBE8d+3By0cZ
+	 ziOsUwTFv4dI4+wcxGZqk0/VjrnkvHKFqDPBk1tYx/3KtU+efETkMaVJDFvPs/rHDf
+	 5EZJA/gLLQVLrjFPmrrvD/8GbgTmOLXiWMoPyvkk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbgARGrX (ORCPT
+        id S1726425AbgARG7x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 01:47:23 -0500
-Received: from mga09.intel.com ([134.134.136.24]:44547 "EHLO mga09.intel.com"
+        Sat, 18 Jan 2020 01:59:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725468AbgARGrW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 01:47:22 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jan 2020 22:47:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,333,1574150400"; 
-   d="scan'208";a="219139221"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 17 Jan 2020 22:47:20 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1ishtA-000BXI-FW; Sat, 18 Jan 2020 14:47:20 +0800
-Date:   Sat, 18 Jan 2020 14:46:29 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:core/debugobjects] BUILD SUCCESS
- 35fd7a637c42bb54ba4608f4d40ae6e55fc88781
-Message-ID: <5e22a9c5.wc3D9t3fETLTOg4F%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1725980AbgARG7x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jan 2020 01:59:53 -0500
+Received: from localhost (unknown [171.61.88.108])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6378B24687;
+        Sat, 18 Jan 2020 06:59:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579330792;
+        bh=iem9dpbUJv5W79Ig20Qtuu/JUjWJvQ+ft+3dxHYuXKY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=H5hsh+bsAfYkgHoBqpzGXvn1ch4FR4aOzOcJPRoII9Lxfm8njD/FHALu+FULDmBV/
+         j4pF/DJ032Lm83mcOTDGLDJwqzxIpbm+e6vbmpTa3kSNqoi49EPojXbGgYxn5uHKhk
+         kMRQtv3CK0/PBF2HhZnRLXNKDpMXfsVsP8N/oJ50=
+Date:   Sat, 18 Jan 2020 12:29:48 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     alsa-devel@alsa-project.org, LKML <linux-kernel@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>
+Subject: [GIT PULL]: soundwire updates for v5.6-rc1
+Message-ID: <20200118065948.GX2818@vkoul-mobl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="O5XBE6gyVG5Rl6Rj"
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  core/debugobjects
-branch HEAD: 35fd7a637c42bb54ba4608f4d40ae6e55fc88781  debugobjects: Fix various data races
 
-elapsed time: 669m
+--O5XBE6gyVG5Rl6Rj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-configs tested: 164
-configs skipped: 0
+Hello Greg,
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Here are the updates for soundwire for v5.6-rc1. I have also shared tag
+'sdw_interfaces_2_5.6' to ASoC folks, they might be merging that for
+cross tree dependency of ASoC drivers (soundwire slaves)
 
-um                                  defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-csky                 randconfig-a001-20200118
-openrisc             randconfig-a001-20200118
-s390                 randconfig-a001-20200118
-sh                   randconfig-a001-20200118
-xtensa               randconfig-a001-20200118
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-alpha                               defconfig
-csky                                defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-arc                              allyesconfig
-arc                                 defconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-x86_64               randconfig-h001-20200118
-x86_64               randconfig-h002-20200118
-x86_64               randconfig-h003-20200118
-i386                 randconfig-h001-20200118
-i386                 randconfig-h002-20200118
-i386                 randconfig-h003-20200118
-arc                  randconfig-a001-20200118
-arm                  randconfig-a001-20200118
-arm64                randconfig-a001-20200118
-ia64                 randconfig-a001-20200118
-powerpc              randconfig-a001-20200118
-sparc                randconfig-a001-20200118
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-x86_64               randconfig-d001-20200118
-x86_64               randconfig-d002-20200118
-x86_64               randconfig-d003-20200118
-i386                 randconfig-d001-20200118
-i386                 randconfig-d002-20200118
-i386                 randconfig-d003-20200118
-x86_64               randconfig-g001-20200118
-x86_64               randconfig-g002-20200118
-x86_64               randconfig-g003-20200118
-i386                 randconfig-g001-20200118
-i386                 randconfig-g002-20200118
-i386                 randconfig-g003-20200118
-x86_64               randconfig-e001-20200118
-x86_64               randconfig-e002-20200118
-x86_64               randconfig-e003-20200118
-i386                 randconfig-e001-20200118
-i386                 randconfig-e002-20200118
-i386                 randconfig-e003-20200118
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-x86_64               randconfig-f001-20200118
-x86_64               randconfig-f002-20200118
-x86_64               randconfig-f003-20200118
-i386                 randconfig-f001-20200118
-i386                 randconfig-f002-20200118
-i386                 randconfig-f003-20200118
-c6x                  randconfig-a001-20200118
-h8300                randconfig-a001-20200118
-microblaze           randconfig-a001-20200118
-nios2                randconfig-a001-20200118
-sparc64              randconfig-a001-20200118
-parisc                            allnoconfig
-parisc                            allyesonfig
-parisc                         b180_defconfig
-parisc                        c3000_defconfig
-parisc                              defconfig
-x86_64               randconfig-c001-20200118
-x86_64               randconfig-c002-20200118
-x86_64               randconfig-c003-20200118
-i386                 randconfig-c001-20200118
-i386                 randconfig-c002-20200118
-i386                 randconfig-c003-20200118
-alpha                randconfig-a001-20200118
-m68k                 randconfig-a001-20200118
-mips                 randconfig-a001-20200118
-nds32                randconfig-a001-20200118
-parisc               randconfig-a001-20200118
-riscv                randconfig-a001-20200118
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-i386                             alldefconfig
-i386                              allnoconfig
-i386                                defconfig
-x86_64               randconfig-b001-20200118
-x86_64               randconfig-b002-20200118
-x86_64               randconfig-b003-20200118
-i386                 randconfig-b001-20200118
-i386                 randconfig-b002-20200118
-i386                 randconfig-b003-20200118
-h8300                     edosk2674_defconfig
-h8300                    h8300h-sim_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-m68k                       m5475evb_defconfig
-m68k                          multi_defconfig
-m68k                           sun3_defconfig
-s390                             alldefconfig
-s390                             allmodconfig
-s390                              allnoconfig
-s390                             allyesconfig
-s390                          debug_defconfig
-s390                                defconfig
-s390                       zfcpdump_defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                               rhel-7.6
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                                defconfig
-x86_64               randconfig-a001-20200118
-x86_64               randconfig-a002-20200118
-x86_64               randconfig-a003-20200118
-i386                 randconfig-a001-20200118
-i386                 randconfig-a002-20200118
-i386                 randconfig-a003-20200118
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
+The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
 
----
-0-DAY kernel test infrastructure                 Open Source Technology Center
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/soundwire.git tags/so=
+undwire-5.6-rc1
+
+for you to fetch changes up to 5098cae1f79cc0580dc2741ce250307a60451eca:
+
+  dt-bindings: soundwire: fix example (2020-01-16 17:36:40 +0530)
+
+----------------------------------------------------------------
+soundwire updates for v5.6-rc1
+
+This round we have bunch of updates to interfaces for ASoC (audio)
+subsystem by Intel and a new Qualcomm controller driver
+
+Details
+ - Updates for sdw_slave interfaces for ASoC
+ - Updates to cadence library and intel driver
+ - New Soundwire controller for Qualcomm masters
+ - Rework of device number assignment
+
+----------------------------------------------------------------
+Bard Liao (4):
+      soundwire: intel: update headers for interrupts
+      soundwire: intel: add link_list to handle interrupts with a single th=
+read
+      soundwire: intel: fix factor of two in MCLK handling
+      soundwire: intel: report slave_ids for each link to SOF driver
+
+Pierre-Louis Bossart (16):
+      soundwire: sdw_slave: add probe_complete structure and new fields
+      soundwire: sdw_slave: add enumeration_complete structure
+      soundwire: sdw_slave: add initialization_complete definition
+      soundwire: sdw_slave: track unattach_request to handle all init seque=
+nces
+      soundwire: intel: update interfaces between ASoC and SoundWire
+      soundwire: intel: add mutex for shared SHIM register access
+      soundwire: intel: add clock stop quirks
+      soundwire: stream: remove redundant pr_err traces
+      soundwire: cadence_master: filter out bad interrupts
+      soundwire: cadence_master: log more useful information during timeouts
+      soundwire: cadence_master: handle multiple status reports per Slave
+      soundwire: bus: check first if Slaves become UNATTACHED
+      soundwire: cadence: update kernel-doc parameter descriptions
+      soundwire: cadence: remove useless variable incrementation
+      soundwire: bus: fix device number leak on errors
+      soundwire: cadence: fix kernel-doc parameter descriptions
+
+Rander Wang (4):
+      soundwire: intel: update stream callbacks for hwparams/free stream op=
+erations
+      soundwire: intel: add prototype for WAKEEN interrupt processing
+      soundwire: cadence_master: clear interrupt status before enabling int=
+errupt
+      soundwire: cadence_master: remove config update for interrupt setting
+
+Srinivas Kandagatla (3):
+      dt-bindings: soundwire: add bindings for Qcom controller
+      soundwire: qcom: add support for SoundWire controller
+      dt-bindings: soundwire: fix example
+
+Vinod Koul (1):
+      Merge branch 'topic/sdw_intel' into next
+
+ .../devicetree/bindings/soundwire/qcom,sdw.txt     | 167 ++++
+ .../bindings/soundwire/soundwire-controller.yaml   |   2 +
+ drivers/soundwire/Kconfig                          |   9 +
+ drivers/soundwire/Makefile                         |   4 +
+ drivers/soundwire/bus.c                            |  55 +-
+ drivers/soundwire/cadence_master.c                 |  66 +-
+ drivers/soundwire/intel.c                          |  23 +-
+ drivers/soundwire/intel.h                          |  13 +-
+ drivers/soundwire/intel_init.c                     |  32 +-
+ drivers/soundwire/qcom.c                           | 861 +++++++++++++++++=
+++++
+ drivers/soundwire/stream.c                         |   8 -
+ include/linux/soundwire/sdw.h                      |  23 +-
+ include/linux/soundwire/sdw_intel.h                | 167 +++-
+ 13 files changed, 1351 insertions(+), 79 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/soundwire/qcom,sdw.txt
+ create mode 100644 drivers/soundwire/qcom.c
+
+Thanks
+--=20
+~Vinod
+
+--O5XBE6gyVG5Rl6Rj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE+vs47OPLdNbVcHzyfBQHDyUjg0cFAl4irOMACgkQfBQHDyUj
+g0fy3hAAvem9d5zAqveSbm2n9ZOjJWwAVKw/wzrsldIAU7n/ovvJPza6evV3Bw7H
+2+y/kSa5Qyn5ZhrBYoqoIUD3Em/G8vCwkvLaOQeDsAv0zVLQ5yjn0iVB6gLia2eO
+Bd1w9ZogPGrtFLqBa/BFljeUmnEox+HdJ7efvzLlQTzD24krU5NlAB8y985ltdpU
+wc3RQEU/r4cyVGszuZrt2mzWPRtTydo/2SPBL5VnGvOuGCjOMnaBRkNGedAVv/rF
+f4exH0ojKuRXFHa/pmhMebI2bfrNTzkTFMPgcLcfOhGdbh+vyDO0+1ONJKZ/P1jx
+cBswTbl7hj838QJTKWNrT/VL+KX94mmPUu7U3IPy/bsDQ517MSiSPBnC2MfCm5w/
+CJwC3gRJPJkGlX9HKNflkDjMiurqR2F0dOpJedhRj97Qb0r8IXoJP/C4olpLWp8I
+jFuZjCPReaiNsPQ0itRToVajOla83STr3udWBjz/2n+UGPefsv5fDKy4HHRjLQGc
+PIVu424+YZiOX27xQ4j/pcMtNnbU/yBi5b0uPaiuUVbgRZHR5itjG9Br2UnxaXmh
+jPqZ1l5HFAQytNumcihQPzb/fXxqMj0nnYhTV18VpYzf4KVvB+8RwQVNYAgvrDh6
+yeVA8byq4x+Dj8r2wZbxOhyi/Dt8KUhVEW6R17mqQ1Uppr4juLc=
+=S1GA
+-----END PGP SIGNATURE-----
+
+--O5XBE6gyVG5Rl6Rj--
