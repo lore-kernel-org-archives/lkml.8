@@ -2,162 +2,115 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE65DC33CB7
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 16:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD499C33CB7
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 16:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1D0B246A2
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 16:51:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9377321D7D
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 16:56:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Ccaj6t0v"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cuzk/v2r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbgARQvb (ORCPT
+        id S1726740AbgARQz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 11:51:31 -0500
-Received: from mail-bn8nam11on2102.outbound.protection.outlook.com ([40.107.236.102]:12257
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726386AbgARQva (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 11:51:30 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=I/4AjXso95ahFT1dAJgFbRDZoZ4GFaFY5wzB153vFEsi37bwfM/DzbXnDn0kjffDvPJznS54UwzeTHjoSmFuXQKiNbAZfN3b+L8Q8I7Pfebv43BcSlWbIxdi4WV3KCgL1Y02iA2dvhYFmJhrvazkjozW0e+GOQrogcd0dOl59oBTAGOCVwSRvRxDY6xabeXbl2eLq7riiEeq3EXZkqnwLxwURnateh7RmRR83ovjzpcV6LpaMNXTJOoYJ2ZQA/SBQeAUR3PHDBsdca+rMf1T8I1pAhySKoXhnxxG+pnm1m3ewIXMQZeNCfUH3ZZXKHWBfV8RjNHlze5DEVW+l1dijA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w2HFcMYlQhyWZISisF/dn3FVQ9aw9KjGDw13OE1vcdk=;
- b=LSJXn0O6oVsIB7LcJH9EmB5eVQeftCfXfL0KRJTVyuJ18QSRwPuwNQ4rDdZXeuLtnfsG8Ndty0Fe7j4XDKlEML0/ezlvp/HszsqOulKI4p3kD9rSBUS7NMrKmwfTTBzHRS/3Dp17tqyF5Th/5eO40iGfkjLEiGSKWc6fVr6BNY3F79WkV4ajjMBxvwnjuka4YMWcG9bkeoPvt+fMWa9OWu5AVSGayB7W/8lYvUpcF9Hp2yi2FA8/RGfGOHrOOTLOaNdSytJ5+ExPVaMa8o42dO+E5jC9Ht0lNUXT6uUusxv08JE+xB/Y7B8bxReSHQsFMs+s2GT1BkQ0MMEQBNfd/w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w2HFcMYlQhyWZISisF/dn3FVQ9aw9KjGDw13OE1vcdk=;
- b=Ccaj6t0v870nJ8vbvHV1tYzNZ8ns6VwxTPhz0j/dZG2RjQkIXsXLviPlKNiwwb4TY4FNkKbjdadHv/7avpX/HC2aBjAdlykKxcocvc2qLMroGLbfIHXmkwn/oEaP1j0C9wWY5apoCUINl+TRoQTpeHYjrCsLQKjTF6zim9u2EUw=
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (52.132.149.16) by
- MW2PR2101MB1065.namprd21.prod.outlook.com (52.132.149.18) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.6; Sat, 18 Jan 2020 16:51:24 +0000
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::f1bb:c094:cb30:ba1f]) by MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::f1bb:c094:cb30:ba1f%6]) with mapi id 15.20.2644.015; Sat, 18 Jan 2020
- 16:51:24 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Dexuan Cui <decui@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sasha Levin <Alexander.Levin@microsoft.com>
-Subject: RE: [PATCH] PCI: hv: Use kfree(hbus) in hv_pci_probe()'s error
- handling path
-Thread-Topic: [PATCH] PCI: hv: Use kfree(hbus) in hv_pci_probe()'s error
- handling path
-Thread-Index: AQHVxOIsTpTzSTXTe0egmmosRzmUC6fwtCBw
-Date:   Sat, 18 Jan 2020 16:51:24 +0000
-Message-ID: <MW2PR2101MB1052343716F0992958B2EF1BD7300@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <1578350351-129783-1-git-send-email-decui@microsoft.com>
-In-Reply-To: <1578350351-129783-1-git-send-email-decui@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-01-18T16:51:22.6364215Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=f1df0b67-a398-414f-a564-045017e6311e;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: ba3393d5-4a76-4f35-7b3c-08d79c36a72a
-x-ms-traffictypediagnostic: MW2PR2101MB1065:|MW2PR2101MB1065:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MW2PR2101MB106537D72F1B5D8B16FD43D1D7300@MW2PR2101MB1065.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0286D7B531
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(136003)(346002)(366004)(39860400002)(376002)(199004)(189003)(6506007)(8676002)(81156014)(8990500004)(86362001)(52536014)(81166006)(64756008)(6636002)(76116006)(5660300002)(7696005)(66556008)(316002)(66476007)(26005)(186003)(33656002)(55016002)(66446008)(9686003)(478600001)(8936002)(71200400001)(110136005)(10290500003)(2906002)(66946007)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:MW2PR2101MB1065;H:MW2PR2101MB1052.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Xn+aRjT79ycs2mwYgbsbElI3hLQMWm+1zxpdMaR1ZtsKzjdL8G5alhi3nH2LKIMrQs496ZxP4nLphDaxhDSshAHjfolXcaypSZz3UlQ1nN87zCCt0B6M/4VTmCozQGPGlZVlA232U6jn0OIFXNVnDFWvl1UHaXs0N9/ItJE8N94bFFAJNhjAktsPuvBO5T5IUWwi6wfLo9E7lKQnCFYhk805naYTAftnxpU3F9wdA7/JVcSv0hi24UWRXMVD39X/227skO9azoKp+q9CYN6PJ/dsZUEXMJWkE28TXmXzegbS/7UpSgR1jvP3jRrUsFR2CFjl7LEpWt7Qi2rHRqnUloIhU5ySlrxyyc3jGYvQg54ZNRRiMWvzfA3WifFHUo91YHkjRyO7MrUH/HkPYky9A2boPsUMJMoFV0A842e4S3IhcwNUQ/GT76SjLc/+afLYu8rKEdxAxc3pMzaa8z9l53Lw9IytKopPJPlcCtMMoBeU+HxwzxTbjvxF4A69UGak
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sat, 18 Jan 2020 11:55:59 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:41750 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726413AbgARQz7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jan 2020 11:55:59 -0500
+Received: by mail-pg1-f195.google.com with SMTP id x8so13254295pgk.8;
+        Sat, 18 Jan 2020 08:55:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pHjwyacvYMGoFpBb1ji3Ywgw20nYhNtNHuaRMfwxOs0=;
+        b=Cuzk/v2rmZxlFbH1iwUh1jcfOyH4GZH0PoB4rDQhzMC2VZ2cGsxXT9sS8GasXDNIrs
+         AlkuBGsxK98YSd2RFM9FbmvQRmcTlP7ka5xpTSFIeeSrSSB66mfDh23S31ELk/vz4em7
+         Xihf1bM4Akxd0ppex6SP3ivSR/QIiC4evnsYdRjidZDmg3g13H2z9RfxAFCd3QM8WZIS
+         Cq7lun7KzCXChlt7+hGEnCInXMEwtm4YUQ6DjASR/NR4W+yeyH/xYjuSlbzcM6aCIsHe
+         XpqFLy0aLpOkeieWgjx5Pgg1S5JSnNp1SuLaCeskvY7Kiw2ZYUptTRgjfjWB331VY5Ki
+         eluA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pHjwyacvYMGoFpBb1ji3Ywgw20nYhNtNHuaRMfwxOs0=;
+        b=bvbU63ask1hhNH0MQbOPyHbs8fhhvkCXR6kqVp4dSUo81kS+g2MIsD9QKOQuQKX3n1
+         2w/uQU9pdawuFX2Dqcbex5/YV9PxRy1sdF12gUCEubInmyl4fYu5X9KBjeIkdtGE0RMJ
+         CQv/to1HRQxC92FjBa+9dZn1uA1VLIG34bQ/ZrAmeKigg6kvddKlGny9RJMjE04n5lCu
+         +8LbJReRiR+MCSwtgkk0oT0vG4XeLdOwuvSeLhVJRo4or7AgjdP3CHZtf3CtrSAfMx/x
+         YCi6oRRWkohDMjvdPJA5OKhVaQo+vv9hWBidkycxfr7gKP/jqYWkiUzRd4sIETkNSxh3
+         TSRQ==
+X-Gm-Message-State: APjAAAUt+4RpRfrcuAX/3LfGljpk6u///z55l/HXmoO7xKycSB254scc
+        +tFnmr3/MAGqJRl+gOz9jt6FaxD8
+X-Google-Smtp-Source: APXvYqzL3uU0K97mb0rwv+HwRhmmpc3cE2p0938r2jZsWjKwjG8pFWjesMBAZ1rEpZFisR48RYDyNA==
+X-Received: by 2002:aa7:80c5:: with SMTP id a5mr8989492pfn.53.1579366558488;
+        Sat, 18 Jan 2020 08:55:58 -0800 (PST)
+Received: from localhost.localdomain ([146.196.37.181])
+        by smtp.googlemail.com with ESMTPSA id s7sm12389009pjk.22.2020.01.18.08.55.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Jan 2020 08:55:58 -0800 (PST)
+From:   Amol Grover <frextrite@gmail.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>
+Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
+        Amol Grover <frextrite@gmail.com>
+Subject: [PATCH] rculist: Add brackets around cond argument in __list_check_rcu macro
+Date:   Sat, 18 Jan 2020 22:24:18 +0530
+Message-Id: <20200118165417.12325-1-frextrite@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ba3393d5-4a76-4f35-7b3c-08d79c36a72a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jan 2020 16:51:24.2111
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: SThfetogd1rd3L7u1mjC85sLtjVnqigB4mUDPUxyIYwh4LIduSL2vA6ZHrTXD90dL3IuBgaS7AcKQ1m/9XgM0i/Hb0m2tHliiHw31TQNIFQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1065
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com> Sent: Monday, January 6, 2020 2:39 P=
-M
->=20
-> Now that we use kzalloc() to allocate the hbus buffer, we should use
-> kfree() in the error path as well.
->=20
-> Also remove the type casting, since it's unnecessary in C.
->=20
-> Fixes: 877b911a5ba0 ("PCI: hv: Avoid a kmemleak false positive caused by =
-the hbus buffer")
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> ---
->=20
-> Sorry for missing the error handling path.
->=20
->  drivers/pci/controller/pci-hyperv.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller=
-/pci-hyperv.c
-> index 9977abff92fc..15011a349520 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -2922,7 +2922,7 @@ static int hv_pci_probe(struct hv_device *hdev,
->  	 * positive by using kmemleak_alloc() and kmemleak_free() to ask
->  	 * kmemleak to track and scan the hbus buffer.
->  	 */
-> -	hbus =3D (struct hv_pcibus_device *)kzalloc(HV_HYP_PAGE_SIZE, GFP_KERNE=
-L);
-> +	hbus =3D kzalloc(HV_HYP_PAGE_SIZE, GFP_KERNEL);
->  	if (!hbus)
->  		return -ENOMEM;
->  	hbus->state =3D hv_pcibus_init;
-> @@ -3058,7 +3058,7 @@ static int hv_pci_probe(struct hv_device *hdev,
->  free_dom:
->  	hv_put_dom_num(hbus->sysdata.domain);
->  free_bus:
-> -	free_page((unsigned long)hbus);
-> +	kfree(hbus);
->  	return ret;
->  }
->=20
-> --
-> 2.19.1
+Passing a complex lockdep condition to __list_check_rcu results
+in false positive lockdep splat due to incorrect expression
+evaluation.
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+For example, a lockdep check condition `cond1 || cond2` is
+evaluated as `!cond1 || cond2 && !rcu_read_lock_any_held()`
+which, according to operator precedence, evaluates to
+`!cond1 || (cond2 && !rcu_read_lock_any_held())`.
+This would result in a lockdep splat when cond1 is false
+and cond2 is true which is logically incorrect.
+
+Signed-off-by: Amol Grover <frextrite@gmail.com>
+---
+ include/linux/rculist.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/rculist.h b/include/linux/rculist.h
+index 4158b7212936..dce491f0b354 100644
+--- a/include/linux/rculist.h
++++ b/include/linux/rculist.h
+@@ -50,9 +50,9 @@ static inline void INIT_LIST_HEAD_RCU(struct list_head *list)
+ #define __list_check_rcu(dummy, cond, extra...)				\
+ 	({								\
+ 	check_arg_count_one(extra);					\
+-	RCU_LOCKDEP_WARN(!cond && !rcu_read_lock_any_held(),		\
++	RCU_LOCKDEP_WARN(!(cond) && !rcu_read_lock_any_held(),		\
+ 			 "RCU-list traversed in non-reader section!");	\
+-	 })
++	})
+ #else
+ #define __list_check_rcu(dummy, cond, extra...)				\
+ 	({ check_arg_count_one(extra); })
+-- 
+2.24.1
 
