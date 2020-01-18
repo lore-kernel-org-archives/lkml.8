@@ -2,178 +2,115 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69FE0C32771
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 21:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 551B9C33CB6
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 21:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 365D024683
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 21:23:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2902524683
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 21:27:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L0CEMd7r"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ddAmTOPc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbgARVVt (ORCPT
+        id S1727121AbgARV1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 16:21:49 -0500
-Received: from mail-lf1-f43.google.com ([209.85.167.43]:44057 "EHLO
-        mail-lf1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726910AbgARVVs (ORCPT
+        Sat, 18 Jan 2020 16:27:03 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:46254 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726957AbgARV1D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 16:21:48 -0500
-Received: by mail-lf1-f43.google.com with SMTP id v201so20997096lfa.11
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jan 2020 13:21:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=Yj4XEU5EtFjO2WH0v0wMntHUc/4ZhJ63I+DRrWgRx2k=;
-        b=L0CEMd7rNoyM0obhUqEZjLfQ2GjoJAxSCDLdmjvj9PgFZVii77XcfGbLOLH4zo+32N
-         ag/9cfUqabNsBW+VqC0Z9fEXtj+WKsHfTgyW7qcZYL8sOWNvmyU01L+wrN8RM61x47fT
-         K+8qzVkZCkhArx+8GICw6av5/4AazfYYmeTiOm8KqYUO8/eOStIKMDjbpklga/Nk7UdM
-         cQ0/RmufWaYoHgSwYd5M+JlkgQBwO5+bwiAGhgtrKiZkCOCniz3gDQrwAa9wm69fcPwN
-         NpYzrJCmODb/BMTON7EbNdmTXp/b4yq2T4zWcCjnJScyYdBAdvjboxJ94myC82Zig6Cq
-         AVJg==
+        Sat, 18 Jan 2020 16:27:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579382821;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8SoUZ6kA7er6ACVnsGobCaUYtb3x9ncX9KA1N8TyDd4=;
+        b=ddAmTOPceqt1ldzgV3G1BOJKoD+Wv89uHqQDCPGWnadwCV6yk/59wEnoDmqZhG0bR1Ny6z
+        DTigJOCEJKhwsXQM0TidIdroBIrf4FzQPZn0akzAUPUomzeuWC5MxTl9bHFvdMWkkw7T3x
+        haA4WU2frZNudgeCIhTjWXDULnuX4kk=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-317-DFtnpMOpP0yqiKcEQHP6Hw-1; Sat, 18 Jan 2020 16:26:58 -0500
+X-MC-Unique: DFtnpMOpP0yqiKcEQHP6Hw-1
+Received: by mail-wr1-f72.google.com with SMTP id c17so12053169wrp.10
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jan 2020 13:26:57 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=Yj4XEU5EtFjO2WH0v0wMntHUc/4ZhJ63I+DRrWgRx2k=;
-        b=SsVYMxdcfe6T6URcb2RA4jW/XwFeKpkRseRMa8FS1ShifbDvH5eQmI9LV8pvtdEKuG
-         0E+Dx2TSBfETGgZbhgSrCZrs65p31kBmCl6YFcBJafsAxoPxqKTJn5UfcY6uMMat4Pdt
-         XVB6IUYFY9bGqrE/Q/aay1uZ/4Wd8m0Vcs25k/Ju166jk0BSiHIiNTPytAgmWudqia8M
-         yUsVhhLkFu8CYzFLg8z3Jg92rXXk7xFOPkohQuX2vp7vIIAQlKc57evwu+g86xRCIZFw
-         CBpM91sVV7Mq18eHGj0HIN+rse2YBlSDIRM6tL4fdu1B3ONjJ6DoL1UL8zdeA2sR2j4C
-         X+3g==
-X-Gm-Message-State: APjAAAWHoAANj03hWIYgFSm0ivYQcI8qL87BP9nU89ZShjptERfh/OYo
-        WGRnZVZdHAx6h0MXdTyVWtT0/Y4Th6B9M/xcinA=
-X-Google-Smtp-Source: APXvYqyEuDOQooArqH3BmeO+9lfGOyrHBpQ1fXlFn2FSuGxgv7BSw3F0XEtYtUXUN/DefRd5nTZPXKOb5rH0swqRkj0=
-X-Received: by 2002:a19:e30b:: with SMTP id a11mr9148830lfh.48.1579382506307;
- Sat, 18 Jan 2020 13:21:46 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8SoUZ6kA7er6ACVnsGobCaUYtb3x9ncX9KA1N8TyDd4=;
+        b=t4woexb0gggSaosvqOq2yBnpZyOIqlUdYY1kwG8UGrs8AhESCt7O6RDTnvfGi+Lsjx
+         b/BuD/9ndllEIoYRbqW+vjB1nY8FQh+9Dsy3QxsYtDG90jCpeuTor7dOmanMHAeo1V+C
+         k9OM+bPIml/qqwYLqDW3m5fMmPpGk6HddgO18Ti7IokRR8E1Y+ko2eW8JeuJEgIHgRef
+         /WcTW6pFsl3I997rO53kLNbd5Kgns/6Tk4bdte70Y9+fycmYCtCQYYfuQf7Hne7i0CBo
+         d0LnxKzcfoZSZNlMu4Bo716Tpbijkb0rImmYaepIvWCToXo4PX/koOKOuyaIz4oUSXee
+         d/SA==
+X-Gm-Message-State: APjAAAVeol3dUs+KJbP0wupkD43fFnJfmOoL09LxVvO3O3E5lCBU3B+b
+        gmycvDA7kZus8tcpArZtdhhaPuSoP0bF8DzoGCB0PGWdp64fB/Vm72+N7IlYmQbET1op1yGjpyG
+        pyvpsHN8CFrOoZQW3W/ijS4v6
+X-Received: by 2002:adf:f1cb:: with SMTP id z11mr9782324wro.375.1579382816990;
+        Sat, 18 Jan 2020 13:26:56 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzKbULLGgSbmncb6Oa5ppPsxM+7ljn9oiaQFYP3SIq9dnDvmwsvpMGT53d5nrj7vu0BV4hrNw==
+X-Received: by 2002:adf:f1cb:: with SMTP id z11mr9782315wro.375.1579382816773;
+        Sat, 18 Jan 2020 13:26:56 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:e0d6:d2cd:810b:30a9? ([2001:b07:6468:f312:e0d6:d2cd:810b:30a9])
+        by smtp.gmail.com with ESMTPSA id i8sm41644376wro.47.2020.01.18.13.26.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 18 Jan 2020 13:26:55 -0800 (PST)
+Subject: Re: [PATCH] KVM: x86: avoid clearing pending exception event twice
+To:     linmiaohe <linmiaohe@huawei.com>, rkrcmar@redhat.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org
+References: <1579315315-6444-1-git-send-email-linmiaohe@huawei.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <58e9932a-99e7-33c3-d615-ee5f2ad766e8@redhat.com>
+Date:   Sat, 18 Jan 2020 22:26:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-From:   Dave Airlie <airlied@gmail.com>
-Date:   Sun, 19 Jan 2020 07:21:35 +1000
-Message-ID: <CAPM=9tyCmZM2Nzy397APbb9-EcNyC-Bgz4Q_7hTcjaQpX6E1Pw@mail.gmail.com>
-Subject: [git pull] drm fixes for 5.5-rc7
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1579315315-6444-1-git-send-email-linmiaohe@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Linus,
+On 18/01/20 03:41, linmiaohe wrote:
+> From: Miaohe Lin <linmiaohe@huawei.com>
+> 
+> The exception pending event is cleared by kvm_clear_exception_queue(). We
+> shouldn't clear it again.
+> 
+> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+> ---
+>  arch/x86/kvm/x86.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 93bbbce67a03..10fa42f627d9 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -9180,7 +9180,6 @@ void kvm_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
+>  	vcpu->arch.nmi_injected = false;
+>  	kvm_clear_interrupt_queue(vcpu);
+>  	kvm_clear_exception_queue(vcpu);
+> -	vcpu->arch.exception.pending = false;
+>  
+>  	memset(vcpu->arch.db, 0, sizeof(vcpu->arch.db));
+>  	kvm_update_dr0123(vcpu);
+> 
 
-Back from LCA2020, fixes wasn't too busy last week, seems to have
-quieten down appropriately, some amdgpu, i915, then a core mst fix and
-one fix for virtio-gpu and one for rockchip.
+Queued, thanks.
 
-Dave.
+Paolo
 
-
-drm-fixes-2020-01-19:
-drm fixes for 5.5-rc7
-
-core mst:
-- serialize down messages and clear timeslots are on unplug
-
-amdgpu:
-- Update golden settings for renoir
-- eDP fix
-
-i915:
-- uAPI fix: Remove dash and colon from PMU names to comply with tools/perf
-- Fix for include file that was indirectly included
-- Two fixes to make sure VMA are marked active for error capture
-
-virtio:
-- maintain obj reservation lock when submitting cmds
-
-rockchip:
-- increase link rate var size to accommodate rates
-The following changes since commit b3a987b0264d3ddbb24293ebff10eddfc472f653:
-
-  Linux 5.5-rc6 (2020-01-12 16:55:08 -0800)
-
-are available in the Git repository at:
-
-  git://anongit.freedesktop.org/drm/drm tags/drm-fixes-2020-01-19
-
-for you to fetch changes up to f66d84c8b4db9a4f77f29e2d8fd521196c879582:
-
-  Merge tag 'drm-misc-fixes-2020-01-16' of
-git://anongit.freedesktop.org/drm/drm-misc into drm-fixes (2020-01-18
-12:54:37 +1000)
-
-----------------------------------------------------------------
-drm fixes for 5.5-rc7
-
-core mst:
-- serialize down messages and clear timeslots are on unplug
-
-amdgpu:
-- Update golden settings for renoir
-- eDP fix
-
-i915:
-- uAPI fix: Remove dash and colon from PMU names to comply with tools/perf
-- Fix for include file that was indirectly included
-- Two fixes to make sure VMA are marked active for error capture
-
-virtio:
-- maintain obj reservation lock when submitting cmds
-
-rockchip:
-- increase link rate var size to accommodate rates
-
-----------------------------------------------------------------
-Aaron Liu (1):
-      drm/amdgpu: update goldensetting for renoir
-
-Chris Wilson (3):
-      drm/i915/gt: Skip trying to unbind in restore_ggtt_mappings
-      drm/i915/gt: Mark context->state vma as active while pinned
-      drm/i915/gt: Mark ring->vma as active while pinned
-
-Dave Airlie (3):
-      Merge tag 'amd-drm-fixes-5.5-2020-01-15' of
-git://people.freedesktop.org/~agd5f/linux into drm-fixes
-      Merge tag 'drm-intel-fixes-2020-01-16' of
-git://anongit.freedesktop.org/drm/drm-intel into drm-fixes
-      Merge tag 'drm-misc-fixes-2020-01-16' of
-git://anongit.freedesktop.org/drm/drm-misc into drm-fixes
-
-Gerd Hoffmann (1):
-      drm/virtio: add missing virtio_gpu_array_lock_resv call
-
-Mario Kleiner (1):
-      drm/amd/display: Reorder detect_edp_sink_caps before link settings read.
-
-Tobias Schramm (1):
-      drm/rockchip: fix integer type used for storing dp data rate
-
-Tvrtko Ursulin (1):
-      drm/i915/pmu: Do not use colons or dashes in PMU names
-
-Wayne Lin (2):
-      drm/dp_mst: clear time slots for ports invalid
-      drm/dp_mst: Have DP_Tx send one msg at a time
-
-YueHaibing (1):
-      drm/i915: Add missing include file <linux/math64.h>
-
- drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c        |  2 +-
- drivers/gpu/drm/amd/display/dc/core/dc_link.c |  2 +-
- drivers/gpu/drm/drm_dp_mst_topology.c         | 39 ++++++++++++++++++++++++--
- drivers/gpu/drm/i915/gt/intel_context.c       | 40 +++++++++++++++++++++++++--
- drivers/gpu/drm/i915/i915_gem_gtt.c           |  7 ++---
- drivers/gpu/drm/i915/i915_pmu.c               | 11 ++++++--
- drivers/gpu/drm/i915/selftests/i915_random.h  |  1 +
- drivers/gpu/drm/rockchip/cdn-dp-core.h        |  2 +-
- drivers/gpu/drm/virtio/virtgpu_plane.c        |  1 +
- include/drm/drm_dp_mst_helper.h               |  6 ++++
- 10 files changed, 94 insertions(+), 17 deletions(-)
