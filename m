@@ -2,87 +2,135 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC1BFC33CB6
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 13:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D6CC33CB6
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 13:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9837524699
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 13:35:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WgOpWoDs"
+	by mail.kernel.org (Postfix) with ESMTP id E37A42469A
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 13:36:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579354583;
+	bh=4X9blPnzHEqLk4oKpT+uWyPAfAqv5L65CDGHgzJ1JWA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=OD7WwF0K9ZxcH2v5VlkNhWXtFwndu/MAqpM8DHLHlK/vMaaWHop4nbfoNoDfA+sTe
+	 tainUr0oqE3IHLPqZ9vAh0Y1koeuOXNeyeVasYVmqMkEOndkMu1Ofcx5jNrr7K/NsC
+	 9OamZq6p10xJ2dZIIX5vPH1dTMAecvUCJNjgDt9g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728894AbgARNfJ (ORCPT
+        id S1728932AbgARNgW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 08:35:09 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36126 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727032AbgARNfJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 08:35:09 -0500
-Received: by mail-wm1-f68.google.com with SMTP id p17so10321223wma.1
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jan 2020 05:35:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=v4hcChVlh2NTB+J9TajvHQFod1mYK/8qvcaZx/KVPww=;
-        b=WgOpWoDsUFi+t6oIKOLerTjgdRcFzr0CSjp1eXnLilPlzS3hlcoFW6mmln/ZzjmiZM
-         dsVcR7pQ8lnefiCk44p2s24wEfme3C+0dXmTWel4GV83DFjB3Df+ancuXUz/GR09XvDy
-         fPZ2JVY0d9b1f0HCYudCPZjMGi2kVsAPTcI+UqUX3fHnODCcokUvDUJd24j8suA8bgTq
-         /aymsnnkbtfTFhrTOFgnXusv2GxORzhZDCB5HvKDFPJ9nmN1Fi76bKwgAjKfRqIP8m59
-         isrj25fEjee+I9OwhLCCut/AS0krpp9zdYfBEjoE98SDzP5J0Xh0CmQJJLpLYs2OJfNg
-         XxzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v4hcChVlh2NTB+J9TajvHQFod1mYK/8qvcaZx/KVPww=;
-        b=cwtxOMuRb0NhbVQjnHoqSTmuPadXQHt2RyxoZfmbOh5hlczpJkyR+umVocOhX+GhOX
-         KIkWXOpUysAXoNCMYblqKRVTy1kYmFXks7MIh1ht/RiUu3bYtaOvWyXafvps+9KR2We2
-         ADVe/MuXlkwTmc1DkqSXy8WoRmaCw4UgLlXeKap5rsBaFd7rU058N6jd6TjiITLv1Yo0
-         H8BL8MqtapglmzYNb+20n9SJLV/blAT4mIxp/+fiF4LtfDYesn69qGhAMYOZ4afm2oYU
-         Dm3tI4M2VPCfuoT6y/0ytGdEMlMm/urDvWyz5jhUWJgm1OGlxnFyzRr/2qZJY+cpzrPo
-         ACTA==
-X-Gm-Message-State: APjAAAXjgVkshSNOEcKAAY9ZCr2Z5p4KJBkaOYtEA/wL045mGE6il6oL
-        jRxZlOT5EOb6fiCTQfrGCP3YBDyuIWtPmjyJLe36XQ==
-X-Google-Smtp-Source: APXvYqyaoy2vU3Qze84uWGDV1JxToGEVTuxW8nks5DiBJxtsMUOnFnAPiE5XvI3fBz+4/RH6sm4kz+HQlWa4We4ckhQ=
-X-Received: by 2002:a1c:b603:: with SMTP id g3mr10152522wmf.133.1579354507256;
- Sat, 18 Jan 2020 05:35:07 -0800 (PST)
+        Sat, 18 Jan 2020 08:36:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50484 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727012AbgARNgV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jan 2020 08:36:21 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30C7224699;
+        Sat, 18 Jan 2020 13:36:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579354581;
+        bh=4X9blPnzHEqLk4oKpT+uWyPAfAqv5L65CDGHgzJ1JWA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=VZ9xCY0tUs8fns2Ke5c9jWUlebSrtqqAhKws/bTWTF3OgDGjcsdEHm7a+4vWHlUJy
+         ud4DmOBNnTHghJLyYqxyKgdYpP9gDbJIetmQILreQZPdimR3aBB1r+RhQEo3lrvTY4
+         ArFAosacrQIN7VQiwDBsG9DAn3qnVncJ/zMw+BvU=
+Date:   Sat, 18 Jan 2020 13:36:17 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Stefan Popa <stefan.popa@analog.com>
+Subject: Re: [PATCH 1/2] iio: imu: adis16480: Add support for ADIS16490
+Message-ID: <20200118133617.3e14429a@archlinux>
+In-Reply-To: <20200116131148.18149-1-alexandru.ardelean@analog.com>
+References: <20200116131148.18149-1-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <CAKv+Gu8WBSsG2e8bVpARcwNBrGtMLzUA+bbikHymrZsNQE6wvw@mail.gmail.com>
- <934E6F23-96FE-4C59-9387-9ABA2959DBBB@lca.pw>
-In-Reply-To: <934E6F23-96FE-4C59-9387-9ABA2959DBBB@lca.pw>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Sat, 18 Jan 2020 14:34:55 +0100
-Message-ID: <CAKv+Gu9PfAHP4_Xaj3_PHFGQCsZRk2oXGbh8oTt22y3aCJBFTg@mail.gmail.com>
-Subject: Re: [PATCH -next] x86/efi_64: fix a user-memory-access in runtime
-To:     Qian Cai <cai@lca.pw>
-Cc:     Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 18 Jan 2020 at 12:04, Qian Cai <cai@lca.pw> wrote:
->
->
->
-> > On Jan 18, 2020, at 3:00 AM, Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
-> >
-> > Can't we just use READ_ONCE_NOCHECK() instead?
->
-> My understanding is that KASAN actually want to make sure there is a no dereference of user memory because it has security implications. Does that make no sense here?
+On Thu, 16 Jan 2020 15:11:47 +0200
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
-Not really. This code runs extremely early in the boot, with a
-temporary 1:1 memory mapping installed so that the EFI firmware can
-transition into virtually remapped mode.
+> From: Stefan Popa <stefan.popa@analog.com>
+> 
+> The ADIS16490 is part of the same family with ADIS16495 and ADIS16497,
+> the main difference is the temperature, accelerometer and gyroscope
+> scales.
+> 
+> Datasheet:
+> Link: https://www.analog.com/media/en/technical-documentation/data-sheets/adis16490.pdf
+> 
+> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-Furthermore, the same issue exists for mixed mode, so we'll need to
-fix that as well. I'll spin a patch and credit you as the reporter.
+Applied to the togreg branch of iio.git. Initially pushed out as testing
+to let the autobuilders have a quick poke at it.
+
+Thanks,
+
+Jonathan
+
+> ---
+>  drivers/iio/imu/adis16480.c | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+> 
+> diff --git a/drivers/iio/imu/adis16480.c b/drivers/iio/imu/adis16480.c
+> index f0ad7ce64861..dac87f1001fd 100644
+> --- a/drivers/iio/imu/adis16480.c
+> +++ b/drivers/iio/imu/adis16480.c
+> @@ -787,6 +787,7 @@ enum adis16480_variant {
+>  	ADIS16480,
+>  	ADIS16485,
+>  	ADIS16488,
+> +	ADIS16490,
+>  	ADIS16495_1,
+>  	ADIS16495_2,
+>  	ADIS16495_3,
+> @@ -878,6 +879,20 @@ static const struct adis16480_chip_info adis16480_chip_info[] = {
+>  		.filter_freqs = adis16480_def_filter_freqs,
+>  		.timeouts = &adis16485_timeouts,
+>  	},
+> +	[ADIS16490] = {
+> +		.channels = adis16485_channels,
+> +		.num_channels = ARRAY_SIZE(adis16485_channels),
+> +		.gyro_max_val = 20000 << 16,
+> +		.gyro_max_scale = IIO_DEGREE_TO_RAD(100),
+> +		.accel_max_val = IIO_M_S_2_TO_G(16000 << 16),
+> +		.accel_max_scale = 8,
+> +		.temp_scale = 14285, /* 14.285 milli degree Celsius */
+> +		.int_clk = 4250000,
+> +		.max_dec_rate = 4250,
+> +		.filter_freqs = adis16495_def_filter_freqs,
+> +		.has_pps_clk_mode = true,
+> +		.timeouts = &adis16495_timeouts,
+> +	},
+>  	[ADIS16495_1] = {
+>  		.channels = adis16485_channels,
+>  		.num_channels = ARRAY_SIZE(adis16485_channels),
+> @@ -1341,6 +1356,7 @@ static const struct spi_device_id adis16480_ids[] = {
+>  	{ "adis16480", ADIS16480 },
+>  	{ "adis16485", ADIS16485 },
+>  	{ "adis16488", ADIS16488 },
+> +	{ "adis16490", ADIS16490 },
+>  	{ "adis16495-1", ADIS16495_1 },
+>  	{ "adis16495-2", ADIS16495_2 },
+>  	{ "adis16495-3", ADIS16495_3 },
+> @@ -1356,6 +1372,7 @@ static const struct of_device_id adis16480_of_match[] = {
+>  	{ .compatible = "adi,adis16480" },
+>  	{ .compatible = "adi,adis16485" },
+>  	{ .compatible = "adi,adis16488" },
+> +	{ .compatible = "adi,adis16490" },
+>  	{ .compatible = "adi,adis16495-1" },
+>  	{ .compatible = "adi,adis16495-2" },
+>  	{ .compatible = "adi,adis16495-3" },
+
