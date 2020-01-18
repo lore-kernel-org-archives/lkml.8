@@ -2,121 +2,115 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E370C33CB1
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 09:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F740C33CB7
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 09:16:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 195292468B
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 09:16:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05FE42468B
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 09:16:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fnarfbargle.com header.i=@fnarfbargle.com header.b="nSA1ClJP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbgARJQA (ORCPT
+        id S1727047AbgARJQi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 04:16:00 -0500
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:45567 "EHLO mx1.molgen.mpg.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726602AbgARJP7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 04:15:59 -0500
-Received: from [192.168.0.4] (ip5f5af7c3.dynamic.kabel-deutschland.de [95.90.247.195])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pmenzel)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id A08B1206446A1;
-        Sat, 18 Jan 2020 10:15:55 +0100 (CET)
-Subject: Re: USB devices on Dell TB16 dock stop working after resuming
-To:     Mario Limonciello <mario.limonciello@dell.com>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     andreas.noever@gmail.com, michael.jamet@intel.com,
-        YehezkelShB@gmail.com, ck@xatom.net, linux-kernel@vger.kernel.org,
-        Anthony Wong <anthony.wong@canonical.com>
-References: <20191104154446.GH2552@lahna.fi.intel.com>
- <ea829adedf0445c0845e25d6e4b47905@AUSX13MPC105.AMER.DELL.COM>
- <d8cb6bc6-8145-eaed-5ba4-d7291478bdd7@molgen.mpg.de>
- <20191104162103.GI2552@lahna.fi.intel.com>
- <f0257624-920e-eec4-a2ec-7adf8ecbcc9d@molgen.mpg.de>
- <20191120105048.GY11621@lahna.fi.intel.com>
- <20191122105012.GD11621@lahna.fi.intel.com>
- <edfe1e3c-779b-61e4-8551-f2e13d46d733@molgen.mpg.de>
- <20191122112921.GF11621@lahna.fi.intel.com>
- <ae67c377-4763-4648-a91c-b9351e3b1cf1@molgen.mpg.de>
- <20191122114108.GG11621@lahna.fi.intel.com>
- <cf4140c8-5b92-f1e5-c9e4-e362ab06d6f8@linux.intel.com>
- <e5e3df06-4ddd-aadb-f1ad-6dd24fa2a5c2@molgen.mpg.de>
- <4b25e707-d2b5-11d1-4b16-48122828fde7@linux.intel.com>
- <a9e12353-6f88-edeb-0d78-15c1ac75666b@molgen.mpg.de>
- <87670037-8af5-c209-cbf8-70042e0a8fc5@linux.intel.com>
- <44d8eb12-9af5-7b9a-fa24-be8e8ec3cd48@molgen.mpg.de>
- <789c7db3bafa4bf9a9348123492196b0@AUSX13MPC105.AMER.DELL.COM>
-From:   Paul Menzel <pmenzel@molgen.mpg.de>
-Message-ID: <ba9b732f-a969-1840-abfc-829d21395f83@molgen.mpg.de>
-Date:   Sat, 18 Jan 2020 10:15:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sat, 18 Jan 2020 04:16:38 -0500
+Received: from ns3.fnarfbargle.com ([103.4.19.87]:41220 "EHLO
+        ns3.fnarfbargle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726602AbgARJQh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jan 2020 04:16:37 -0500
+X-Greylist: delayed 1411 seconds by postgrey-1.27 at vger.kernel.org; Sat, 18 Jan 2020 04:16:36 EST
+Received: from [10.8.0.1] (helo=srv.home ident=heh3905)
+        by ns3.fnarfbargle.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.84_2)
+        (envelope-from <lists2009@fnarfbargle.com>)
+        id 1isjqY-00014F-U9; Sat, 18 Jan 2020 16:52:47 +0800
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=fnarfbargle.com; s=mail;
+        h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject; bh=9Zt73YMWrB9fRw/Y7euwqnit6NOkGlC6M3h5APuHqbI=;
+        b=nSA1ClJPIEdna7thwoj4c2T7DDvavIE62hsQzLiwRvUMX+kMO3t4IHudVvZpsKt996LIrB3OqqSruIN+iQ6fwh+8Ygfgp1JS/2durHvkFD0/S3vo+h1vo0Nhilbx46ocdoq+yMRBtHBg8BSr2RzubePvJlb30pJc9eoC+eziJTc=;
+Subject: Re: [RFT PATCH 0/4] hwmon: k10temp driver improvements
+To:     Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org
+Cc:     Clemens Ladisch <clemens@ladisch.de>,
+        Jean Delvare <jdelvare@suse.com>, linux-kernel@vger.kernel.org
+References: <20200116141800.9828-1-linux@roeck-us.net>
+From:   Brad Campbell <lists2009@fnarfbargle.com>
+Message-ID: <492345ed-f82e-e4d9-20ac-924b4a00df90@fnarfbargle.com>
+Date:   Sat, 18 Jan 2020 16:52:46 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <789c7db3bafa4bf9a9348123492196b0@AUSX13MPC105.AMER.DELL.COM>
+In-Reply-To: <20200116141800.9828-1-linux@roeck-us.net>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Language: en-AU
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Mario,
-
-
-Am 17.01.20 um 19:33 schrieb Mario.Limonciello@dell.com:
->>> I was able to reproduce the issue with an external HS hub as well, so  this issue
->>> appears to be more related to ASMedia host than the built in HS hub in TB16
->>
->> I contacted the (German) Dell support, and they asked me to update the laptop
->> firmware to 1.9.1 claiming that these issues might be fixed there (despite the
->> change-log not containing that). Anyway, after the update, the user is still
->> able to reproduce the issue.
->>
->> Mario, what can I do, so the issue is escalated to your team, so you can work
->> with ASMedia to solve this?
-
-> From this thread it does sound to me like an ASMedia firmware problem,
-> not a Linux kernel problem.
+On 16/1/20 10:17 pm, Guenter Roeck wrote:
+> This patch series implements various improvements for the k10temp driver.
 > 
-> I do know there is an updated ASMedia firmware binary available.  Right now
-> however there is unfortunately not a way to update ASMedia hub firmware using
-> free software. 
 
-The fwupd issue *Dell TB16: ASMedia USB controller can't be updated* [1] 
-was closed by the “stale robot”.
+Looks good here. Identical motherboards (ASUS x370 Prime-Pro), different 
+CPUs.
 
-> If possible, I would recommend that you try to update the
-> firmware using a Windows machine and see if it helps the problem.
+3950x
 
-Thank you. I’ll try to do that on Monday.
+k10temp-pci-00c3
+Adapter: PCI adapter
+Vcore:        +1.38 V
+Vsoc:         +1.08 V
+Tdie:         +69.1°C  (high = +70.0°C)
+Tctl:         +69.1°C
+Tccd1:        +54.2°C
+Tccd2:        +57.0°C
+Icore:       +27.67 A
+Isoc:        +14.13 A
 
-> I'm sorry and I don't intend to "pass the buck" but if that doesn't help this needs
-> to be prioritized and escalated with Dell support.
-> 
-> They will then work with the appropriate engineering team who owns the relationship
-> to ASMedia to resolve it.
+it8665-isa-0290
+Adapter: ISA adapter
+Vcore:        +1.41 V  (min =  +0.83 V, max =  +1.65 V)
+in1:          +2.51 V  (min =  +1.98 V, max =  +2.73 V)
++12V:        +11.98 V  (min = +11.20 V, max = +12.40 V)
++5V:          +5.01 V  (min =  +4.74 V, max =  +5.61 V)
+3VSB:         +6.67 V  (min =  +2.83 V, max =  +3.40 V)
+Vbat:         +6.58 V
++3.3V:        +3.33 V
+CPU Fan:     3409 RPM  (min = 1500 RPM)
+Back Fan:       0 RPM  (min =    0 RPM)
+MB CPU Temp:  +56.0°C  (low  = +13.0°C, high = +88.0°C)
+Ambient:      +35.0°C  (low  = +13.0°C, high = +43.0°C)  sensor = thermistor
+PCH:          +46.0°C  (low  = +18.0°C, high = +61.0°C)  sensor = thermistor
 
-That’s how it should work theoretically, but have you ever dealt with 
-Dell’s first level support? They have little experience with Ubuntu, and 
-if you are unlucky, they say that Ubuntu support is not done by Dell but 
-“by the Linux community”. If you are lucky to not get this answer, they 
-do (Google) searches, telling you, your problem is solved by referencing 
-only similar sounding problems from the Ubuntu *user* forums. If the 
-firmware has a bug (in the UI!), they ask you to install Microsoft 
-Windows to see if that solves the issue. If you tell them, the Linux 
-developers analyzed the problem, and they say the following solution 
-have to be found, they do not know what that means. It’s very annoying 
-and time consuming often for naught.
+1800x
 
+k10temp-pci-00c3
+Adapter: PCI adapter
+Vcore:        +1.26 V
+Vsoc:         +0.91 V
+Tdie:         +36.0°C  (high = +70.0°C)
+Tctl:         +56.0°C
+Icore:       +15.59 A
+Isoc:         +7.94 A
 
-Kind regards,
+it8665-isa-0290
+Adapter: ISA adapter
+Vcore:        +1.25 V  (min =  +0.83 V, max =  +1.65 V)
+in1:          +2.48 V  (min =  +1.98 V, max =  +2.73 V)
++12V:        +11.98 V  (min = +11.20 V, max = +12.40 V)
++5V:          +4.96 V  (min =  +4.74 V, max =  +5.61 V)
+3VSB:         +6.54 V  (min =  +2.83 V, max =  +3.40 V)
+Vbat:         +6.37 V
++3.3V:        +3.31 V
+CPU Fan:     1171 RPM  (min = 1500 RPM)  ALARM
+Back Fan:       0 RPM  (min =    0 RPM)
+MB CPU Temp:  +36.0°C  (low  = +13.0°C, high = +88.0°C)
+Ambient:      +44.0°C  (low  = +13.0°C, high = +43.0°C)  sensor = thermistor
+PCH:          +38.0°C  (low  = +18.0°C, high = +61.0°C)  sensor = thermistor
 
-Paul
-
-
-[1]: https://github.com/fwupd/fwupd/issues/1351
+Regards,
+Brad
