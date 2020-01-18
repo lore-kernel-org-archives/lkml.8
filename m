@@ -2,131 +2,85 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA6AC33CB1
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 09:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55F1FC33CB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 09:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B82E24693
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 09:28:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2065B24689
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 09:36:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726999AbgARJ2r (ORCPT
+        id S1726961AbgARJgc convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 04:28:47 -0500
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:47614 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726811AbgARJ2r (ORCPT
+        Sat, 18 Jan 2020 04:36:32 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:41487 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726602AbgARJgb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 04:28:47 -0500
-Received: from dread.disaster.area (pa49-181-172-170.pa.nsw.optusnet.com.au [49.181.172.170])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 96D4543FD14;
-        Sat, 18 Jan 2020 20:28:39 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1iskPG-0003Oh-RX; Sat, 18 Jan 2020 20:28:38 +1100
-Date:   Sat, 18 Jan 2020 20:28:38 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Waiman Long <longman@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-ext4@vger.kernel.org, cluster-devel@redhat.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: RFC: hold i_rwsem until aio completes
-Message-ID: <20200118092838.GB9407@dread.disaster.area>
-References: <20200114161225.309792-1-hch@lst.de>
+        Sat, 18 Jan 2020 04:36:31 -0500
+Received: by mail-oi1-f194.google.com with SMTP id i1so24456462oie.8;
+        Sat, 18 Jan 2020 01:36:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=nIAP5cG6K/C2mCPjVg0E+T86a04ru5M9t7rhH6PyWlM=;
+        b=ZxKQbqMhHlD5AyZl3tOtIQaUaQffq21bJ8XoCgzUylybTQ7R4xRcKS5DusHx1wmPNZ
+         J6IZqJ4aDlXEbXHB5S6UO/xK52Rnl6WeObsEzFWNYAyYJxCXZG2OPIbBVSQJaM2SoJD0
+         wZ/RcvyUJFs9aj7cj/sfz4aNgn7aIJxOwwGM+hEFmc2rpXUkE3wRpHTh81bOGj8tkNtB
+         CUviALAKxzC4jnYPJpdDHSyYP+1Vd1W6wVCDowZHo2SKqcdvMkpk3/Vex7lYjFxvsmjF
+         RSpG6723TaznP4xcoxzFqP0N6+hw5QM4HbIseCgXYwcyygUXti7U9tVEYL7FDGQU6dZF
+         8hCw==
+X-Gm-Message-State: APjAAAXctmwC8yugBA8fp/DF149ESGexF0tD13+FR0BhEyqI1j1oKYai
+        WZJnT4Pdw1GvZagpq4IIPI8tPNUAFjH2fojrlyw=
+X-Google-Smtp-Source: APXvYqxF+VrrePZ2atzzLogO5TIEFetNA0fD2qRqEjpTJE6Tki/uYIIRcD71LLw38+H+wtjqoVVnBKmMWBRYrlt/8XQ=
+X-Received: by 2002:aca:1a06:: with SMTP id a6mr6308768oia.148.1579340190993;
+ Sat, 18 Jan 2020 01:36:30 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200114161225.309792-1-hch@lst.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
-        a=IIEU8dkfCNxGYurWsojP/w==:117 a=IIEU8dkfCNxGYurWsojP/w==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=Jdjhy38mL1oA:10
-        a=7-415B0cAAAA:8 a=ITVTHrnrj4Og1yiqg0wA:9 a=CjuIK1q_8ugA:10
-        a=igBNqPyMv6gA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+References: <20200118081356.22167-1-krzk@kernel.org>
+In-Reply-To: <20200118081356.22167-1-krzk@kernel.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Sat, 18 Jan 2020 10:36:17 +0100
+Message-ID: <CAMuHMdVTg+Amw6Epuqhd60pdUDeCbTzJ=7TNDLE0BQRgCLQHPQ@mail.gmail.com>
+Subject: Re: [PATCH v2] sh: sh4a: Bring back tmu3_device early device
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 05:12:13PM +0100, Christoph Hellwig wrote:
-> Hi all,
-> 
-> Asynchronous read/write operations currently use a rather magic locking
-> scheme, were access to file data is normally protected using a rw_semaphore,
-> but if we are doing aio where the syscall returns to userspace before the
-> I/O has completed we also use an atomic_t to track the outstanding aio
-> ops.  This scheme has lead to lots of subtle bugs in file systems where
-> didn't wait to the count to reach zero, and due to its adhoc nature also
-> means we have to serialize direct I/O writes that are smaller than the
-> file system block size.
-> 
-> All this is solved by releasing i_rwsem only when the I/O has actually
-> completed, but doings so is against to mantras of Linux locking primites:
-> 
->  (1) no unlocking by another process than the one that acquired it
->  (2) no return to userspace with locks held
-> 
-> It actually happens we have various places that work around this.  A few
-> callers do non-owner unlocks of rwsems, which are pretty nasty for
-> PREEMPT_RT as the owner tracking doesn't work.  OTOH the file system
-> freeze code has both problems and works around them a little better,
-> although in a somewhat awkward way, in that it releases the lockdep
-> object when returning to userspace, and reacquires it when done, and
-> also clears the rwsem owner when returning to userspace, and then sets
-> the new onwer before unlocking.
-> 
-> This series tries to follow that scheme, also it doesn't fully work.  The
-> first issue is that the rwsem code has a bug where it doesn't properly
-> handle clearing the owner.  This series has a patch to fix that, but it
-> is ugly and might not be correct so some help is needed.  Second I/O
-> completions often come from interrupt context, which means the re-acquire
-> is recorded as from irq context, leading to warnings about incorrect
-> contexts.  I wonder if we could just have a bit in lockdep that says
-> returning to userspace is ok for this particular lock?  That would also
-> clean up the fsfreeze situation a lot.
-> 
-> Let me know what you think of all this.  While I converted all the iomap
-> using file systems only XFS is actually tested.
+On Sat, Jan 18, 2020 at 9:14 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> Commit 1399c195ef50 ("sh: Switch to new style TMU device") converted
+> tmu3_device platform device to new style of platform data but removed it
+> from sh7786_early_devices array effectively removing last three timers
+> and causing a warning:
+>
+>     arch/sh/kernel/cpu/sh4a/setup-sh7786.c:243:31:
+>         warning: ‘tmu3_device’ defined but not used [-Wunused-variable]
+>
+> Fixes: 1399c195ef50 ("sh: Switch to new style TMU device")
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-I think it's pretty gross, actually. It  makes the same mistake made
-with locking in the old direct IO code - it encodes specific lock
-operations via flags into random locations in the DIO path. This is
-a very slippery slope, and IMO it is an layering violation to encode
-specific filesystem locking smeantics into a layer that is supposed
-to be generic and completely filesystem agnostic. i.e.  this
-mechanism breaks if a filesystem moves to a different type of lock
-(e.g. range locks), and history teaches us that we'll end up making
-a horrible, unmaintainable mess to support different locking
-mechanisms and contexts.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-I think that we should be moving to a model where the filesystem
-provides an unlock method in the iomap operations structure, and if
-the method is present in iomap_dio_complete() it gets called for the
-filesystem to unlock the inode at the appropriate point. This also
-allows the filesystem to provide a different method for read or
-write unlock, depending on what type of lock it held at submission.
-This gets rid of the need for the iomap code to know what type of
-lock the caller holds, too.
+Gr{oetje,eeting}s,
 
-This way we always have a consistent point in the AIO/DIO completion
-model where the inode gets unlocked, it only gets called for the IO
-contexts where the filesystem wants/needs unlock on IO competion
-semantics, and it's completely filesystem IO-lock implementation
-agnostic. And for filesystems that use the inode i_rwsem, we can
-just provide simple helper functions for their read/write unlock
-methods.
+                        Geert
 
-Cheers,
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
