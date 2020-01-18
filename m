@@ -2,85 +2,125 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55F1FC33CB1
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 09:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3746DC3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 09:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2065B24689
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 09:36:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 144B92468F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 09:39:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbgARJgc convert rfc822-to-8bit (ORCPT
+        id S1727033AbgARJjE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 04:36:32 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:41487 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726602AbgARJgb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 04:36:31 -0500
-Received: by mail-oi1-f194.google.com with SMTP id i1so24456462oie.8;
-        Sat, 18 Jan 2020 01:36:31 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=nIAP5cG6K/C2mCPjVg0E+T86a04ru5M9t7rhH6PyWlM=;
-        b=ZxKQbqMhHlD5AyZl3tOtIQaUaQffq21bJ8XoCgzUylybTQ7R4xRcKS5DusHx1wmPNZ
-         J6IZqJ4aDlXEbXHB5S6UO/xK52Rnl6WeObsEzFWNYAyYJxCXZG2OPIbBVSQJaM2SoJD0
-         wZ/RcvyUJFs9aj7cj/sfz4aNgn7aIJxOwwGM+hEFmc2rpXUkE3wRpHTh81bOGj8tkNtB
-         CUviALAKxzC4jnYPJpdDHSyYP+1Vd1W6wVCDowZHo2SKqcdvMkpk3/Vex7lYjFxvsmjF
-         RSpG6723TaznP4xcoxzFqP0N6+hw5QM4HbIseCgXYwcyygUXti7U9tVEYL7FDGQU6dZF
-         8hCw==
-X-Gm-Message-State: APjAAAXctmwC8yugBA8fp/DF149ESGexF0tD13+FR0BhEyqI1j1oKYai
-        WZJnT4Pdw1GvZagpq4IIPI8tPNUAFjH2fojrlyw=
-X-Google-Smtp-Source: APXvYqxF+VrrePZ2atzzLogO5TIEFetNA0fD2qRqEjpTJE6Tki/uYIIRcD71LLw38+H+wtjqoVVnBKmMWBRYrlt/8XQ=
-X-Received: by 2002:aca:1a06:: with SMTP id a6mr6308768oia.148.1579340190993;
- Sat, 18 Jan 2020 01:36:30 -0800 (PST)
+        Sat, 18 Jan 2020 04:39:04 -0500
+Received: from [167.172.186.51] ([167.172.186.51]:39088 "EHLO shell.v3.sk"
+        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726602AbgARJjE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jan 2020 04:39:04 -0500
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 98184DFE50;
+        Sat, 18 Jan 2020 09:39:11 +0000 (UTC)
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id kxu7qTFbk0fu; Sat, 18 Jan 2020 09:39:10 +0000 (UTC)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 61058DFE68;
+        Sat, 18 Jan 2020 09:39:10 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at zimbra.v3.sk
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 6CHdSDrZ5C6U; Sat, 18 Jan 2020 09:39:10 +0000 (UTC)
+Received: from furthur.lan (unknown [109.183.109.54])
+        by zimbra.v3.sk (Postfix) with ESMTPSA id F1D9CDFDB5;
+        Sat, 18 Jan 2020 09:39:09 +0000 (UTC)
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Olof Johansson <olof@lixom.net>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH 1/2] ARM: dts: mmp3: Fix the TWSI ranges
+Date:   Sat, 18 Jan 2020 10:38:57 +0100
+Message-Id: <20200118093858.326659-2-lkundrak@v3.sk>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200118093858.326659-1-lkundrak@v3.sk>
+References: <20200118093858.326659-1-lkundrak@v3.sk>
 MIME-Version: 1.0
-References: <20200118081356.22167-1-krzk@kernel.org>
-In-Reply-To: <20200118081356.22167-1-krzk@kernel.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Sat, 18 Jan 2020 10:36:17 +0100
-Message-ID: <CAMuHMdVTg+Amw6Epuqhd60pdUDeCbTzJ=7TNDLE0BQRgCLQHPQ@mail.gmail.com>
-Subject: Re: [PATCH v2] sh: sh4a: Bring back tmu3_device early device
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 18, 2020 at 9:14 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> Commit 1399c195ef50 ("sh: Switch to new style TMU device") converted
-> tmu3_device platform device to new style of platform data but removed it
-> from sh7786_early_devices array effectively removing last three timers
-> and causing a warning:
->
->     arch/sh/kernel/cpu/sh4a/setup-sh7786.c:243:31:
->         warning: ‘tmu3_device’ defined but not used [-Wunused-variable]
->
-> Fixes: 1399c195ef50 ("sh: Switch to new style TMU device")
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+The register blocks don't occupy 4K. In fact, some blocks are packed
+close to others and assuming they're 4K causes overlaps:
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+  pxa2xx-i2c d4033800.i2c: can't request region for resource
+    [mem 0xd4033800-0xd40347ff]
 
-Gr{oetje,eeting}s,
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+---
+ arch/arm/boot/dts/mmp3.dtsi | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-                        Geert
+diff --git a/arch/arm/boot/dts/mmp3.dtsi b/arch/arm/boot/dts/mmp3.dtsi
+index 1eba7fb6629b5..59a108e49b41e 100644
+--- a/arch/arm/boot/dts/mmp3.dtsi
++++ b/arch/arm/boot/dts/mmp3.dtsi
+@@ -400,7 +400,7 @@ gcb5: gpio@d4019108 {
+=20
+ 			twsi1: i2c@d4011000 {
+ 				compatible =3D "mrvl,mmp-twsi";
+-				reg =3D <0xd4011000 0x1000>;
++				reg =3D <0xd4011000 0x70>;
+ 				interrupts =3D <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks =3D <&soc_clocks MMP2_CLK_TWSI0>;
+ 				resets =3D <&soc_clocks MMP2_CLK_TWSI0>;
+@@ -412,7 +412,7 @@ twsi1: i2c@d4011000 {
+=20
+ 			twsi2: i2c@d4031000 {
+ 				compatible =3D "mrvl,mmp-twsi";
+-				reg =3D <0xd4031000 0x1000>;
++				reg =3D <0xd4031000 0x70>;
+ 				interrupt-parent =3D <&twsi_mux>;
+ 				interrupts =3D <0>;
+ 				clocks =3D <&soc_clocks MMP2_CLK_TWSI1>;
+@@ -424,7 +424,7 @@ twsi2: i2c@d4031000 {
+=20
+ 			twsi3: i2c@d4032000 {
+ 				compatible =3D "mrvl,mmp-twsi";
+-				reg =3D <0xd4032000 0x1000>;
++				reg =3D <0xd4032000 0x70>;
+ 				interrupt-parent =3D <&twsi_mux>;
+ 				interrupts =3D <1>;
+ 				clocks =3D <&soc_clocks MMP2_CLK_TWSI2>;
+@@ -436,7 +436,7 @@ twsi3: i2c@d4032000 {
+=20
+ 			twsi4: i2c@d4033000 {
+ 				compatible =3D "mrvl,mmp-twsi";
+-				reg =3D <0xd4033000 0x1000>;
++				reg =3D <0xd4033000 0x70>;
+ 				interrupt-parent =3D <&twsi_mux>;
+ 				interrupts =3D <2>;
+ 				clocks =3D <&soc_clocks MMP2_CLK_TWSI3>;
+@@ -449,7 +449,7 @@ twsi4: i2c@d4033000 {
+=20
+ 			twsi5: i2c@d4033800 {
+ 				compatible =3D "mrvl,mmp-twsi";
+-				reg =3D <0xd4033800 0x1000>;
++				reg =3D <0xd4033800 0x70>;
+ 				interrupt-parent =3D <&twsi_mux>;
+ 				interrupts =3D <3>;
+ 				clocks =3D <&soc_clocks MMP2_CLK_TWSI4>;
+@@ -461,7 +461,7 @@ twsi5: i2c@d4033800 {
+=20
+ 			twsi6: i2c@d4034000 {
+ 				compatible =3D "mrvl,mmp-twsi";
+-				reg =3D <0xd4034000 0x1000>;
++				reg =3D <0xd4034000 0x70>;
+ 				interrupt-parent =3D <&twsi_mux>;
+ 				interrupts =3D <4>;
+ 				clocks =3D <&soc_clocks MMP2_CLK_TWSI5>;
+--=20
+2.24.1
 
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
