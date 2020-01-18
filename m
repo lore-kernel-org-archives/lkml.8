@@ -2,99 +2,81 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92CC9C32771
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 23:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD7BFC33CB7
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 23:09:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 629E62469C
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 23:09:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85D442469C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 23:09:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WcOPjCFx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rPdI1c6S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728680AbgARXJC (ORCPT
+        id S1728826AbgARXJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 18:09:02 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:47033 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727028AbgARXI7 (ORCPT
+        Sat, 18 Jan 2020 18:09:08 -0500
+Received: from [198.137.202.133] ([198.137.202.133]:40440 "EHLO
+        bombadil.infradead.org" rhost-flags-FAIL-FAIL-OK-OK)
+        by vger.kernel.org with ESMTP id S1727028AbgARXJF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 18:08:59 -0500
-Received: by mail-wr1-f65.google.com with SMTP id z7so25940278wrl.13;
-        Sat, 18 Jan 2020 15:08:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=zieK1rZ40R+8dR9w9wxIfPfmZcLHznAHvHJSGV+7afI=;
-        b=WcOPjCFxbQWN8I82H5+ql2IT5LtNNZEE54Ef1UQEznrAlFFQXvjOAAp7l95UefDFNS
-         sM8rfr3puhtQih9QwjB8lgLbpQW+1pl84qKR1dtOyHoj80fgXj14bSdwyBPtD4nCBgAu
-         r4JKfQzwqy/2UdJotQ4fW8GH+X3hrxLYIAmUk8XmbYO67tu4LW/XAwM3qUfWN6L4jWVi
-         uLNlfl1Bqm7jOCu8h76EFoIQkUw8VSsfYlFjJ8qj0gZ+6vmWVgbnVEB+ZG5tk2ovR5AQ
-         VWv4+iOzUpx7qNTcWQhFq02mgr0DZvKT89oxZ7tRKJ8XbA8m5m/BtpgAU6aHzrPrFkiy
-         Lmgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=zieK1rZ40R+8dR9w9wxIfPfmZcLHznAHvHJSGV+7afI=;
-        b=k9d05YY1R+Oldzoj5eAqKOugxY398vK0rMbavKOAOFs8lpfQQNpbIPNmFcQFDzSJ7V
-         rQ+yQxoX2BEqmbnmDnTSJYbmB/sNeq27Wgbq3h6A6M/iFSafVXGdC0eneZVgHhudhUkh
-         MYFKhsmhI/WPIaqNBS8Pw6i1bS8bldAz2i+Gd67G2r49+CU+EvYHYR1B6AjQSRw/7R+z
-         41ziMIvxpqQ/Ziwo3EeylGUszVYDknaNNoLzdt7AlqVTmcth0tRU5lyDA1JHoYCJ4EGS
-         f4iLkqn0qnDCiBlVqi2eLxuCq4Nsvy13qCEK9LE4o05bm/73DH/jeoO6iG9AxaKTpMeG
-         y2og==
-X-Gm-Message-State: APjAAAWoTNxOuD18BenqFzpJCmzu1R9A6NoyqaFpHA6L639QcjTb8sfV
-        +IJtCfpnQP/Ord4mzYba5mM=
-X-Google-Smtp-Source: APXvYqwUVkfqKTEe+IdcTJGpN/Oh1StsZugRXWPB63ViZ0Prt/rRHknvczy59Jrcs1kniRrGyk/cBw==
-X-Received: by 2002:a5d:46c7:: with SMTP id g7mr10351910wrs.11.1579388937355;
-        Sat, 18 Jan 2020 15:08:57 -0800 (PST)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id x16sm5746408wmk.35.2020.01.18.15.08.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 18 Jan 2020 15:08:56 -0800 (PST)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     broonie@kernel.org
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v1 3/3] dt-bindings: spi: spi-rockchip: add description for rk3328
-Date:   Sun, 19 Jan 2020 00:08:48 +0100
-Message-Id: <20200118230848.15326-3-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200118230848.15326-1-jbx6244@gmail.com>
-References: <20200118230848.15326-1-jbx6244@gmail.com>
+        Sat, 18 Jan 2020 18:09:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=m5EpDMuociEO+dhOx0dLjYTpW5oUxRxlXa1xRujJ5N4=; b=rPdI1c6SL+Uxr55wj8QlFXdD0
+        5VxOSFTTxYx1dTuBaLrJ1VWZFVk6MhTP4sR/r8SB+2V3sMYJmEaeQOMDEUYSnrUNlvBA2WNtz09wM
+        BGIXPhlfnD+zNDCTAZW7L9g4kQaXIjAK4y1sS5vv2ejWVzsfSniTki8dEt3W7bYdaEvynRAa7gIeq
+        i3X7q2KZFEKQWIrcP1U5LoYXLjdLk+e2xj62Cix+HwO7a+GxrzQKPuoFrWePUtXcmKirGFWDjkYgM
+        NqofqK1uzM4tU57IwJDNuk0G4DTLhatMoyGpiveFj6I7QHiZCigsmk+TIiNSGECqhciwnycSNMPXv
+        j8F5XtwMQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1isxCc-0002oc-MH; Sat, 18 Jan 2020 23:08:26 +0000
+Date:   Sat, 18 Jan 2020 15:08:26 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     yu kuai <yukuai3@huawei.com>
+Cc:     hch@infradead.org, darrick.wong@oracle.com,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, houtao1@huawei.com,
+        zhengbin13@huawei.com, yi.zhang@huawei.com
+Subject: Re: [RFC] iomap: fix race between readahead and direct write
+Message-ID: <20200118230826.GA5583@bombadil.infradead.org>
+References: <20200116063601.39201-1-yukuai3@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200116063601.39201-1-yukuai3@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The description below is already in use for rk3328.dtsi,
-but was somehow never added to a document, so add
-"rockchip,rk3328-spi", "rockchip,rk3066-spi"
-for spi nodes on a rk3328 platform to spi-rockchip.yaml.
+On Thu, Jan 16, 2020 at 02:36:01PM +0800, yu kuai wrote:
+> I noticed that generic/418 test may fail with small probability. And with
+> futher investiation, it can be reproduced with:
+> 
+> ./src/dio-invalidate-cache -wp -b 4096 -n 8 -i 1 -f filename
+> ./src/dio-invalidate-cache -wt -b 4096-n 8 -i 1 -f filename
+> 
+> The failure is because direct write wrote none-zero but buffer read got
+> zero.
+> 
+> In the process of buffer read, if the page do not exist, readahead will
+> be triggered.  __do_page_cache_readahead() will allocate page first. Next,
+> if the file block is unwritten(or hole), iomap_begin() will set iomap->type
+> to IOMAP_UNWRITTEN(or IOMAP_HOLE). Then, iomap_readpages_actor() will add
+> page to page cache. Finally, iomap_readpage_actor() will zero the page.
+> 
+> However, there is no lock or serialization between initializing iomap and
+> adding page to page cache against direct write. If direct write happen to
+> fininsh between them, the type of iomap should be IOMAP_MAPPED instead of
+> IOMAP_UNWRITTEN or IOMAP_HOLE. And the page will end up zeroed out in page
+> cache, while on-disk page hold the data of direct write.
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- Documentation/devicetree/bindings/spi/spi-rockchip.yaml | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/spi/spi-rockchip.yaml b/Documentation/devicetree/bindings/spi/spi-rockchip.yaml
-index 24d9567a6..27b2d1df9 100644
---- a/Documentation/devicetree/bindings/spi/spi-rockchip.yaml
-+++ b/Documentation/devicetree/bindings/spi/spi-rockchip.yaml
-@@ -30,6 +30,7 @@ properties:
-             - rockchip,rk3188-spi  #for rk3188 SoCs.
-             - rockchip,rk3288-spi  #for rk3288 SoCs.
-             - rockchip,rk3308-spi  #for rk3308 SoCs.
-+            - rockchip,rk3328-spi  #for rk3328 SoCs.
-             - rockchip,rk3368-spi  #for rk3368 SoCs.
-             - rockchip,rk3399-spi  #for rk3399 SoCs.
-           - const: rockchip,rk3066-spi
--- 
-2.11.0
-
+It's worth noting that my patch series from earlier this week to
+redesign the readahead API will fix this problem.  Direct write will block
+on the locked pages in the page cache.
