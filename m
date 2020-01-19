@@ -2,104 +2,107 @@ Return-Path: <SRS0=pPEE=3I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC92DC33CB7
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 02:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE032C33CB7
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 02:57:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83DCF246A0
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 02:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82B36246AE
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 02:57:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728783AbgASCvx (ORCPT
+        id S1728792AbgASC5Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 21:51:53 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:60552 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727573AbgASCvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 21:51:53 -0500
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 2D13A706A1201A9528AE;
-        Sun, 19 Jan 2020 10:51:48 +0800 (CST)
-Received: from [127.0.0.1] (10.173.220.96) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Sun, 19 Jan 2020
- 10:51:38 +0800
-Subject: Re: [RFC] iomap: fix race between readahead and direct write
-To:     Matthew Wilcox <willy@infradead.org>
-CC:     <hch@infradead.org>, <darrick.wong@oracle.com>,
-        <linux-xfs@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <houtao1@huawei.com>,
-        <zhengbin13@huawei.com>, <yi.zhang@huawei.com>
-References: <20200116063601.39201-1-yukuai3@huawei.com>
- <20200118230826.GA5583@bombadil.infradead.org>
- <f5328338-1a2d-38b4-283f-3fb97ad37133@huawei.com>
- <20200119014213.GA16943@bombadil.infradead.org>
-From:   "yukuai (C)" <yukuai3@huawei.com>
-Message-ID: <64d617cc-e7fe-6848-03bb-aab3498c9a07@huawei.com>
-Date:   Sun, 19 Jan 2020 10:51:37 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sat, 18 Jan 2020 21:57:25 -0500
+Received: from mga01.intel.com ([192.55.52.88]:62025 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727403AbgASC5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jan 2020 21:57:25 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jan 2020 18:57:24 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,336,1574150400"; 
+   d="scan'208";a="219309692"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by orsmga008.jf.intel.com with ESMTP; 18 Jan 2020 18:57:22 -0800
+Date:   Sun, 19 Jan 2020 10:57:33 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     Wei Yang <richardw.yang@linux.intel.com>
+Cc:     Yang Shi <yang.shi@linux.alibaba.com>, mhocko@suse.com,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] mm: move_pages: fix the return value if there are
+ not-migrated pages
+Message-ID: <20200119025733.GG9745@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <1579325203-16405-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20200119023720.GD9745@richard>
 MIME-Version: 1.0
-In-Reply-To: <20200119014213.GA16943@bombadil.infradead.org>
-Content-Type: text/plain; charset="gbk"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.220.96]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200119023720.GD9745@richard>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Jan 19, 2020 at 10:37:20AM +0800, Wei Yang wrote:
+>On Sat, Jan 18, 2020 at 01:26:43PM +0800, Yang Shi wrote:
+>>The do_move_pages_to_node() might return > 0 value, the number of pages
+>>that are not migrated, then the value will be returned to userspace
+>>directly.  But, move_pages() syscall would just return 0 or errno.  So,
+>>we need reset the return value to 0 for such case as what pre-v4.17 did.
+>>
+>>Fixes: a49bd4d71637 ("mm, numa: rework do_pages_move")
+>>Cc: Michal Hocko <mhocko@suse.com>
+>>Cc: Wei Yang <richardw.yang@linux.intel.com>
+>>Cc: <stable@vger.kernel.org>    [4.17+]
+>>Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+>>---
+>> mm/migrate.c | 5 ++++-
+>> 1 file changed, 4 insertions(+), 1 deletion(-)
+>>
+>>diff --git a/mm/migrate.c b/mm/migrate.c
+>>index 86873b6..3e75432 100644
+>>--- a/mm/migrate.c
+>>+++ b/mm/migrate.c
+>>@@ -1659,8 +1659,11 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
+>> 			goto out_flush;
+>> 
+>> 		err = do_move_pages_to_node(mm, &pagelist, current_node);
+>>-		if (err)
+>>+		if (err) {
+>>+			if (err > 0)
+>>+				err = 0;
+>> 			goto out;
+>>+		}
+>> 		if (i > start) {
+>> 			err = store_status(status, start, current_node, i - start);
+>> 			if (err)
+>>-- 
+>>1.8.3.1
+>
+>
+>Hey, I am afraid you missed something. There are three calls of
+>do_move_pages_to_node() in do_pages_move(). Why you just handle one return
+>value? How about the other two?
+>
 
+Well, current logic in do_pages_move() is a little complicated to read.
 
-On 2020/1/19 9:42, Matthew Wilcox wrote:
-> Did you read my patch series?  The current code allocates pages,
-> but does not put them in the page cache until after iomap is called.
-> My patch series changes that to put the pages in the page cache as soon
-> as they're allocated, and before iomap is called.
+I did a cleanup to make it easy to read and also friendly to do this fix.
 
-I just read you patch series again.
+If they look good to you, you could rebase your fix on top of them.
 
-At first, if you try to add all pages to pagecache and lock them before
-iomap_begin. I thought aboult it before, but I throw away the idea
-becacuse all other operation that will lock the page will need to wait
-for readahead to finish. And it might cause problem for performance
-overhead. And if you try to add each page to page cache and call iomap
-before adding the next page. Then, we are facing the same CPU overhead
-issure.
+>-- 
+>Wei Yang
+>Help you, Help me
 
-Then, there might be a problem in your implementation.
-if 'use_list' is set to true here:
-+	bool use_list = mapping->a_ops->readpages;
-
-Your code do not call add_to_page_cache_lru for the page.
-+		if (use_list) {
-+			page->index = page_offset;
-+			list_add(&page->lru, &page_pool);
-+		} else if (!add_to_page_cache_lru(page, mapping, page_offset,
-+					gfp_mask)) {
-+			if (nr_pages)
-+				read_pages(mapping, filp, &page_pool,
-+						page_offset - nr_pages,
-+						nr_pages);
-+			nr_pages = 0;
-+			continue;
-+		}
-
-And later, you replace 'iomap_next_page' with 'readahead_page'
-+static inline
-+struct page *readahead_page(struct address_space *mapping, loff_t pos)
-+{
-+	struct page *page = xa_load(&mapping->i_pages, pos / PAGE_SIZE);
-+	VM_BUG_ON_PAGE(!PageLocked(page), page);
-+
-+	return page;
-+}
-+
-
-It seems that the page will never add to page cache.
-
-Thanks!
-Yu Kuai
-
+-- 
+Wei Yang
+Help you, Help me
