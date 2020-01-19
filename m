@@ -4,108 +4,143 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB55CC33CAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 23:17:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50653C33CB6
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 23:17:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8916D20714
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 23:17:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 315A5206ED
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 23:17:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729240AbgASXQx (ORCPT
+        id S1729195AbgASXQs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 18:16:53 -0500
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:49832 "EHLO
+        Sun, 19 Jan 2020 18:16:48 -0500
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:49808 "EHLO
         kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729052AbgASXQd (ORCPT
+        with ESMTP id S1729011AbgASXQd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 19 Jan 2020 18:16:33 -0500
 Received: by kvm5.telegraphics.com.au (Postfix, from userid 502)
-        id 6794529984; Sun, 19 Jan 2020 18:16:31 -0500 (EST)
+        id 588212997B; Sun, 19 Jan 2020 18:16:31 -0500 (EST)
 To:     "David S. Miller" <davem@davemloft.net>
 Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Chris Zankel <chris@zankel.net>,
         Laurent Vivier <laurent@vivier.eu>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Message-Id: <8bb5d688c698c99c0d354db6f5009f9580786631.1579474569.git.fthain@telegraphics.com.au>
+Message-Id: <ece0dc6905145e9e76f1d538ef233f57675c450e.1579474569.git.fthain@telegraphics.com.au>
 In-Reply-To: <cover.1579474569.git.fthain@telegraphics.com.au>
 References: <cover.1579474569.git.fthain@telegraphics.com.au>
 From:   Finn Thain <fthain@telegraphics.com.au>
-Subject: [PATCH net 14/19] net/sonic: Improve receive descriptor status flag
- check
+Subject: [PATCH net 12/19] net/sonic: Fix receive buffer handling
 Date:   Mon, 20 Jan 2020 09:56:09 +1100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After sonic_tx_timeout() calls sonic_init(), it can happen that
-sonic_rx() will subsequently encounter a receive descriptor with no
-flags set. Remove the comment that says that this can't happen.
+The SONIC can sometimes advance its rx buffer pointer (RRP register)
+without advancing its rx descriptor pointer (CRDA register). As a result
+the index of the current rx descriptor may not equal that of the current
+rx buffer. The driver mistakenly assumes that they are always equal.
+This assumption leads to incorrect packet lengths and possible packet
+duplication. Avoid this by calling a new function to locate the buffer
+corresponding to a given descriptor.
 
-When giving a receive descriptor to the SONIC, clear the descriptor
-status field. That way, any rx descriptor with flags set can only be
-a newly received packet.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Fixes: efcce839360f ("[PATCH] macsonic/jazzsonic network drivers update")
 Tested-by: Stan Johnson <userm57@yahoo.com>
 Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
 ---
- drivers/net/ethernet/natsemi/sonic.c | 16 ++++++----------
- 1 file changed, 6 insertions(+), 10 deletions(-)
+ drivers/net/ethernet/natsemi/sonic.c | 36 ++++++++++++++++++++++++----
+ drivers/net/ethernet/natsemi/sonic.h |  5 ++--
+ 2 files changed, 34 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/net/ethernet/natsemi/sonic.c b/drivers/net/ethernet/natsemi/sonic.c
-index 56098557a579..5db107b8c6ee 100644
+index ea74c3c2c501..23740fde6c02 100644
 --- a/drivers/net/ethernet/natsemi/sonic.c
 +++ b/drivers/net/ethernet/natsemi/sonic.c
-@@ -465,7 +465,6 @@ static inline int index_from_addr(struct sonic_local *lp, dma_addr_t addr,
- static void sonic_rx(struct net_device *dev)
- {
- 	struct sonic_local *lp = netdev_priv(dev);
--	int status;
- 	int entry = lp->cur_rx;
- 	int prev_entry = lp->eol_rx;
+@@ -443,6 +443,22 @@ static irqreturn_t sonic_interrupt(int irq, void *dev_id)
+ 	return IRQ_HANDLED;
+ }
  
-@@ -476,9 +475,11 @@ static void sonic_rx(struct net_device *dev)
- 		u16 bufadr_l;
- 		u16 bufadr_h;
- 		int pkt_len;
-+		u16 status = sonic_rda_get(dev, entry, SONIC_RD_STATUS);
++/* Return the array index corresponding to a given Receive Buffer pointer. */
 +
-+		/* If the RD has LPKT set, the chip has finished with the RB */
++static inline int index_from_addr(struct sonic_local *lp, dma_addr_t addr,
++				  unsigned int last)
++{
++	unsigned int i = last;
++
++	do {
++		i = (i + 1) & SONIC_RRS_MASK;
++		if (addr == lp->rx_laddr[i])
++			return i;
++	} while (i != last);
++
++	return -ENOENT;
++}
++
+ /*
+  * We have a good packet(s), pass it/them up the network stack.
+  */
+@@ -462,6 +478,16 @@ static void sonic_rx(struct net_device *dev)
  
--		status = sonic_rda_get(dev, entry, SONIC_RD_STATUS);
--		if (status & SONIC_RCR_PRX) {
-+		if ((status & SONIC_RCR_PRX) && (status & SONIC_RCR_LPKT)) {
- 			u32 addr = (sonic_rda_get(dev, entry,
- 						  SONIC_RD_PKTPTR_H) << 16) |
- 				   sonic_rda_get(dev, entry, SONIC_RD_PKTPTR_L);
-@@ -526,10 +527,6 @@ static void sonic_rx(struct net_device *dev)
+ 		status = sonic_rda_get(dev, entry, SONIC_RD_STATUS);
+ 		if (status & SONIC_RCR_PRX) {
++			u32 addr = (sonic_rda_get(dev, entry,
++						  SONIC_RD_PKTPTR_H) << 16) |
++				   sonic_rda_get(dev, entry, SONIC_RD_PKTPTR_L);
++			int i = index_from_addr(lp, addr, entry);
++
++			if (i < 0) {
++				WARN_ONCE(1, "failed to find buffer!\n");
++				break;
++			}
++
+ 			/* Malloc up new buffer. */
+ 			new_skb = netdev_alloc_skb(dev, SONIC_RBSIZE + 2);
+ 			if (new_skb == NULL) {
+@@ -483,7 +509,7 @@ static void sonic_rx(struct net_device *dev)
+ 
+ 			/* now we have a new skb to replace it, pass the used one up the stack */
+ 			dma_unmap_single(lp->device, lp->rx_laddr[entry], SONIC_RBSIZE, DMA_FROM_DEVICE);
+-			used_skb = lp->rx_skb[entry];
++			used_skb = lp->rx_skb[i];
+ 			pkt_len = sonic_rda_get(dev, entry, SONIC_RD_PKTLEN);
+ 			skb_trim(used_skb, pkt_len);
+ 			used_skb->protocol = eth_type_trans(used_skb, dev);
+@@ -492,13 +518,13 @@ static void sonic_rx(struct net_device *dev)
+ 			lp->stats.rx_bytes += pkt_len;
+ 
+ 			/* and insert the new skb */
+-			lp->rx_laddr[entry] = new_laddr;
+-			lp->rx_skb[entry] = new_skb;
++			lp->rx_laddr[i] = new_laddr;
++			lp->rx_skb[i] = new_skb;
+ 
+ 			bufadr_l = (unsigned long)new_laddr & 0xffff;
  			bufadr_h = (unsigned long)new_laddr >> 16;
- 			sonic_rra_put(dev, i, SONIC_RR_BUFADR_L, bufadr_l);
- 			sonic_rra_put(dev, i, SONIC_RR_BUFADR_H, bufadr_h);
--		} else {
--			/* This should only happen, if we enable accepting broken packets. */
--		}
--		if (status & SONIC_RCR_LPKT) {
- 			/*
- 			 * this was the last packet out of the current receive buffer
- 			 * give the buffer back to the SONIC
-@@ -542,12 +539,11 @@ static void sonic_rx(struct net_device *dev)
- 					  __func__);
- 				SONIC_WRITE(SONIC_ISR, SONIC_INT_RBE); /* clear the flag */
- 			}
--		} else
--			printk(KERN_ERR "%s: rx desc without RCR_LPKT. Shouldn't happen !?\n",
--			     dev->name);
-+		}
- 		/*
- 		 * give back the descriptor
- 		 */
-+		sonic_rda_put(dev, entry, SONIC_RD_STATUS, 0);
- 		sonic_rda_put(dev, entry, SONIC_RD_IN_USE, 1);
+-			sonic_rra_put(dev, entry, SONIC_RR_BUFADR_L, bufadr_l);
+-			sonic_rra_put(dev, entry, SONIC_RR_BUFADR_H, bufadr_h);
++			sonic_rra_put(dev, i, SONIC_RR_BUFADR_L, bufadr_l);
++			sonic_rra_put(dev, i, SONIC_RR_BUFADR_H, bufadr_h);
+ 		} else {
+ 			/* This should only happen, if we enable accepting broken packets. */
+ 		}
+diff --git a/drivers/net/ethernet/natsemi/sonic.h b/drivers/net/ethernet/natsemi/sonic.h
+index 227975eb4cb8..46052a0cfe22 100644
+--- a/drivers/net/ethernet/natsemi/sonic.h
++++ b/drivers/net/ethernet/natsemi/sonic.h
+@@ -275,8 +275,9 @@
+ #define SONIC_NUM_RDS   SONIC_NUM_RRS /* number of receive descriptors */
+ #define SONIC_NUM_TDS   16            /* number of transmit descriptors */
  
- 		prev_entry = entry;
+-#define SONIC_RDS_MASK  (SONIC_NUM_RDS-1)
+-#define SONIC_TDS_MASK  (SONIC_NUM_TDS-1)
++#define SONIC_RRS_MASK  (SONIC_NUM_RRS - 1)
++#define SONIC_RDS_MASK  (SONIC_NUM_RDS - 1)
++#define SONIC_TDS_MASK  (SONIC_NUM_TDS - 1)
+ 
+ #define SONIC_RBSIZE	1520          /* size of one resource buffer */
+ 
 -- 
 2.24.1
 
