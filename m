@@ -2,80 +2,85 @@ Return-Path: <SRS0=pPEE=3I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1E1C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 11:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5BE2C33CB1
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 12:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9522620679
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 11:34:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CF1220679
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 12:18:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbgASLex (ORCPT
+        id S1727005AbgASMS3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 06:34:53 -0500
-Received: from stcim.de ([78.46.90.227]:48544 "EHLO stcim.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726744AbgASLex (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 06:34:53 -0500
-Received: from 2001-4dd4-d47c-0-a288-b4ff-fee5-f5cc.ipv6dyn.netcologne.de ([2001:4dd4:d47c:0:a288:b4ff:fee5:f5cc] helo=porty)
-        by stcim with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <contact@stefanchrist.eu>)
-        id 1it8qu-0001Qw-7U; Sun, 19 Jan 2020 12:34:48 +0100
-Date:   Sun, 19 Jan 2020 12:34:47 +0100
-From:   Stefan Lengfeld <contact@stefanchrist.eu>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     support.opensource@diasemi.com, linux@roeck-us.net,
-        Adam.Thomson.Opensource@diasemi.com,
-        linux-watchdog@vger.kernel.org, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org,
-        Stefan Riedmueller <s.riedmueller@phytec.de>
-Subject: Re: [PATCH v2] watchdog: da9062: make restart handler atomic safe
-Message-ID: <20200119113447.qizbk4waxk7c3enr@porty>
-References: <20200115162307.7336-1-m.felsch@pengutronix.de>
- <20200116072320.f7ia3e76hx7yknqb@porty>
+        Sun, 19 Jan 2020 07:18:29 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:9197 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726744AbgASMS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jan 2020 07:18:28 -0500
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 9D748BB7BBD5755883CC;
+        Sun, 19 Jan 2020 20:18:26 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Sun, 19 Jan 2020
+ 20:18:17 +0800
+From:   yu kuai <yukuai3@huawei.com>
+To:     <benh@kernel.crashing.org>, <b.zolnierkie@samsung.com>
+CC:     <linux-fbdev@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <linux-kernel@vger.kernel.org>, <yukuai3@huawei.com>,
+        <zhengbin13@huawei.com>, <yi.zhang@huawei.com>
+Subject: [PATCH 1/4] video: fbdev: remove set but not used variable 'hSyncPol'
+Date:   Sun, 19 Jan 2020 20:17:27 +0800
+Message-ID: <20200119121730.10701-2-yukuai3@huawei.com>
+X-Mailer: git-send-email 2.17.2
+In-Reply-To: <20200119121730.10701-1-yukuai3@huawei.com>
+References: <20200119121730.10701-1-yukuai3@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200116072320.f7ia3e76hx7yknqb@porty>
-X-PGP-Key: https://stefanchrist.eu/personal/Stefan_Lengfeld_0xE44A23B289092311.asc
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marco,
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-On Thu, Jan 16, 2020 at 08:23:20AM +0100, Stefan Lengfeld wrote:
-> On Wed, Jan 15, 2020 at 05:23:07PM +0100, Marco Felsch wrote:
-> > The restart handler is executed during the shutdown phase which is
-> > atomic/irq-less. The i2c framework supports atomic transfers since
-> > commit 63b96983a5dd ("i2c: core: introduce callbacks for atomic
-> > transfers") to address this use case. Using regmap within an atomic
-> > context is allowed only if the regmap type is MMIO and the cache type
-> > 'flat' or no cache is used. Using the i2c_smbus_write_byte_data()
-> > function can be done without additional tests because:
-> >  1) the DA9062 is an i2c-only device and
-> >  2) the i2c framework emulates the smbus protocol if the host adapter
-> >     does not support smbus_xfer by using the master_xfer.
-> > 
-> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> 
-> Reviewed-by: Stefan Lengfeld <contact@stefanchrist.eu>
+drivers/video/fbdev/aty/radeon_base.c: In function
+‘radeonfb_set_par’:
+drivers/video/fbdev/aty/radeon_base.c:1653:6: warning: variable
+‘hSyncPol’ set but not used [-Wunused-but-set-variable]
 
-Now also 
+It is never used, and so can be removed.
 
-Tested-by: Stefan Lengfeld <contact@stefanchrist.eu>
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+---
+ drivers/video/fbdev/aty/radeon_base.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-on a phyCORE-i.MX6 Quad with baseboard phyBOARD-Mira.
+diff --git a/drivers/video/fbdev/aty/radeon_base.c b/drivers/video/fbdev/aty/radeon_base.c
+index 3af00e3b965e..d2e68ec580c2 100644
+--- a/drivers/video/fbdev/aty/radeon_base.c
++++ b/drivers/video/fbdev/aty/radeon_base.c
+@@ -1650,7 +1650,7 @@ static int radeonfb_set_par(struct fb_info *info)
+ 	struct fb_var_screeninfo *mode = &info->var;
+ 	struct radeon_regs *newmode;
+ 	int hTotal, vTotal, hSyncStart, hSyncEnd,
+-	    hSyncPol, vSyncStart, vSyncEnd, vSyncPol, cSync;
++	    vSyncStart, vSyncEnd, vSyncPol, cSync;
+ 	u8 hsync_adj_tab[] = {0, 0x12, 9, 9, 6, 5};
+ 	u8 hsync_fudge_fp[] = {2, 2, 0, 0, 5, 5};
+ 	u32 sync, h_sync_pol, v_sync_pol, dotClock, pixClock;
+@@ -1730,7 +1730,6 @@ static int radeonfb_set_par(struct fb_info *info)
+ 	else if (vsync_wid > 0x1f)	/* max */
+ 		vsync_wid = 0x1f;
+ 
+-	hSyncPol = mode->sync & FB_SYNC_HOR_HIGH_ACT ? 0 : 1;
+ 	vSyncPol = mode->sync & FB_SYNC_VERT_HIGH_ACT ? 0 : 1;
+ 
+ 	cSync = mode->sync & FB_SYNC_COMP_HIGH_ACT ? (1 << 4) : 0;
+-- 
+2.17.2
 
-I'm also cc'ing Stefan from phytec, since he is also interested in the
-thread/patch [1].
-
-Kind regards,
-    Stefan
-
-[1]: https://www.spinics.net/lists/linux-watchdog/msg17203.html
