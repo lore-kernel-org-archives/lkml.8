@@ -2,130 +2,194 @@ Return-Path: <SRS0=pPEE=3I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0209EC32771
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 01:47:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EAFBC33CB7
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 01:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5A1F24673
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 01:47:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CA4F246AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 01:47:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CWXTz14M"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BBph0UEF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728978AbgASBrq (ORCPT
+        id S1729080AbgASBry (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 20:47:46 -0500
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:41454 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728779AbgASBrp (ORCPT
+        Sat, 18 Jan 2020 20:47:54 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:34678 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728779AbgASBrx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 20:47:45 -0500
-Received: by mail-ua1-f67.google.com with SMTP id f7so10312444uaa.8;
-        Sat, 18 Jan 2020 17:47:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3v0B8Le5lxMadkMRa3e2JgX6hIzD2hcV6YftiYMITR8=;
-        b=CWXTz14MldaQ8NFRuPUDqtUwKNQEeAOc2ejaQcpc53fJW++zwkB2samiCA9ICBASEh
-         XS8IeiYwSOxpmGFI6r77dezGAGgCdbdWujJZH4rQid80ZFdJbN3H49+lxC1eymoJ8J7O
-         jnClshx2OdBSDvp+m1P0tnKOemgYDDJSlDQ93lUKbpAfUIIoH2A7bMeexQXzH2LkgZl+
-         B9KBE4AIglQhynZZgCAQEgJODjTFR2Lm6PHeslefFoGYJB45ODaqogzF0tlCwQnritdG
-         oYWCYD8X4yctaHUW9kHH8tUZM+Zajd0E0lzDMWDj6H+xWSZkCgLSmsXuQ1tp71pnO+4b
-         Y6fA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3v0B8Le5lxMadkMRa3e2JgX6hIzD2hcV6YftiYMITR8=;
-        b=jtTcGUMD7BBwHElcAil5aBsY6wkFgUNdcNcgpI/d2FbtWV3sjNENZGmCbxrWG8Qv/G
-         vA8EK9BriW/b/A/VK5qRC6Ti7ib+U19zoiWxazd3ldzkvZ6zKynQ7UV1OBVc+KZQW9zV
-         tkUyHn4d4vpcUAeqL0Vj7yR9hdL05z4oGcpvL1PIyiIwcl5v1E0mC8/S29tUmsrOXx4C
-         qn172C2RepmwkSnXELsalkxaSQIjVYd7MC2DLfaLx1rZbFMVHVnL53dyoFVXTHweq0Wf
-         rUIbpZtFpWkClcbChzxX8slILUJ1MWjYIw47fRUR/SwBK8yu7yCou88rOeKZ/aih1e3R
-         C6bw==
-X-Gm-Message-State: APjAAAUGe5JVxnNxIwLAegoBk4RbZHpgg8KWD/cwAHQ3e2CpJJwxuVfS
-        qJEuSfo0CsNrTKhSSoXBfwDOK4rkAs0yrRtRgMQ=
-X-Google-Smtp-Source: APXvYqz8Y6RDVFKTH8+87vk5uh1ux/7QB+HMPJ4pxp13es61+35X7Ern3WIU70Yx54M4Lfo1BR/hxLAkveUJyqf1RVY=
-X-Received: by 2002:ab0:7049:: with SMTP id v9mr6173663ual.95.1579398463653;
- Sat, 18 Jan 2020 17:47:43 -0800 (PST)
+        Sat, 18 Jan 2020 20:47:53 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00J1iCUw177678;
+        Sun, 19 Jan 2020 01:47:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=VD8E+v/6K89dpk+5pvqo8X9az9h0A/hX8rT0o8KnhtE=;
+ b=BBph0UEF5XqSu6x3H6h7dfj9DjC9kOu0EbC/5QdouLBghCmK6j+h4svabydkRSM0F6r5
+ OBgXsvWc6K43emomYYaqd6lThWvxb797o2wZmm8EW9IAXt4tFttllEDL0hWPOSGLGk3E
+ 8XnvuqvyexgD/lezdPG46XSX2uhgaIDx5fv1eKSIJcSLjZuYynJIRpBJuvPGqVOIT1HK
+ xdDsbxtDP30iSLae0gG+PakZ0AdU+lZH7RO3yD2ykWYO2EuK9ne8c+jjPJ3v6tj6qOrm
+ 8CXtluoseR4EmLyl2JCUWOUAABBaEi0Y5WiAaWMKr3g6Ol/sWxh1agFykCsqlJ/9V2j/ sQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2xktnqt44f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 19 Jan 2020 01:47:21 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00J1iAkn073220;
+        Sun, 19 Jan 2020 01:47:20 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2xmbhqpwww-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 19 Jan 2020 01:47:20 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00J1l9eS003461;
+        Sun, 19 Jan 2020 01:47:09 GMT
+Received: from [192.168.1.14] (/114.88.246.185)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sat, 18 Jan 2020 17:47:09 -0800
+Subject: Re: [PATCH block v2 1/3] block: Add @flags argument to
+ bdev_write_zeroes_sectors()
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, martin.petersen@oracle.com,
+        axboe@kernel.dk, tytso@mit.edu, adilger.kernel@dilger.ca,
+        Chaitanya.Kulkarni@wdc.com, darrick.wong@oracle.com,
+        ming.lei@redhat.com, osandov@fb.com, jthumshirn@suse.de,
+        minwoo.im.dev@gmail.com, damien.lemoal@wdc.com,
+        andrea.parri@amarulasolutions.com, hare@suse.com, tj@kernel.org,
+        ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
+        bvanassche@acm.org, dhowells@redhat.com, asml.silence@gmail.com
+References: <157917805422.88675.6477661554332322975.stgit@localhost.localdomain>
+ <157917815798.88675.11900718803129164489.stgit@localhost.localdomain>
+From:   Bob Liu <bob.liu@oracle.com>
+Message-ID: <a8c5c5fd-d6b1-950e-0493-b5020e5ca87d@oracle.com>
+Date:   Sun, 19 Jan 2020 09:46:55 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <20200119001327.29155-1-huobean@gmail.com> <20200119001327.29155-5-huobean@gmail.com>
-In-Reply-To: <20200119001327.29155-5-huobean@gmail.com>
-From:   Alim Akhtar <alim.akhtar@gmail.com>
-Date:   Sun, 19 Jan 2020 07:17:07 +0530
-Message-ID: <CAGOxZ53F8mE-b2X5FS792ZFWtZE-V=RECf82EvR6_iDh8qFKZw@mail.gmail.com>
-Subject: Re: [PATCH v3 4/8] scsi: ufs: move ufshcd_get_max_pwr_mode() to ufs_init_params()
-To:     Bean Huo <huobean@gmail.com>
-Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>, asutoshd@codeaurora.org,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        "Bean Huo (beanhuo)" <beanhuo@micron.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Can Guo <cang@codeaurora.org>, linux-scsi@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <157917815798.88675.11900718803129164489.stgit@localhost.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9504 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001190011
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9504 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001190011
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 19, 2020 at 5:44 AM Bean Huo <huobean@gmail.com> wrote:
->
-> From: Bean Huo <beanhuo@micron.com>
->
-> ufshcd_get_max_pwr_mode() only need to be called once while booting,
-> take it out from ufshcd_probe_hba() and inline into ufshcd_init_params().
->
-This can be safely squash with the previous patch which introduce
-ufshcd_init_params.
-
-> Signed-off-by: Bean Huo <beanhuo@micron.com>
+On 1/16/20 8:35 PM, Kirill Tkhai wrote:
+> This is a preparation for next patch, which introduces
+> a new flag BLKDEV_ZERO_ALLOCATE for calls, which need
+> only allocation of blocks and don't need actual blocks
+> zeroing.
+> 
+> CC: Martin K. Petersen <martin.petersen@oracle.com>
+> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
 > ---
->  drivers/scsi/ufs/ufshcd.c | 12 +++++++-----
->  1 file changed, 7 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> index 54c127ef360b..925b31dc3110 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -6959,6 +6959,11 @@ static int ufshcd_init_params(struct ufs_hba *hba)
->                         QUERY_FLAG_IDN_PWR_ON_WPE, &flag))
->                 hba->dev_info.f_power_on_wp_en = flag;
->
-> +       /* Probe maximum power mode co-supported by both UFS host and device */
-> +       if (ufshcd_get_max_pwr_mode(hba))
-> +               dev_err(hba->dev,
-> +                       "%s: Failed getting max supported power mode\n",
-> +                       __func__);
->  out:
->         return ret;
+>  block/blk-lib.c                     |    6 +++---
+>  drivers/md/dm-kcopyd.c              |    2 +-
+>  drivers/target/target_core_iblock.c |    4 ++--
+>  include/linux/blkdev.h              |    3 ++-
+>  4 files changed, 8 insertions(+), 7 deletions(-)
+> 
+
+Looks good to me.
+Reviewed-by: Bob Liu <bob.liu@oracle.com>
+
+> diff --git a/block/blk-lib.c b/block/blk-lib.c
+> index 5f2c429d4378..3e38c93cfc53 100644
+> --- a/block/blk-lib.c
+> +++ b/block/blk-lib.c
+> @@ -224,7 +224,7 @@ static int __blkdev_issue_write_zeroes(struct block_device *bdev,
+>  		return -EPERM;
+>  
+>  	/* Ensure that max_write_zeroes_sectors doesn't overflow bi_size */
+> -	max_write_zeroes_sectors = bdev_write_zeroes_sectors(bdev);
+> +	max_write_zeroes_sectors = bdev_write_zeroes_sectors(bdev, 0);
+>  
+>  	if (max_write_zeroes_sectors == 0)
+>  		return -EOPNOTSUPP;
+> @@ -362,7 +362,7 @@ int blkdev_issue_zeroout(struct block_device *bdev, sector_t sector,
+>  	sector_t bs_mask;
+>  	struct bio *bio;
+>  	struct blk_plug plug;
+> -	bool try_write_zeroes = !!bdev_write_zeroes_sectors(bdev);
+> +	bool try_write_zeroes = !!bdev_write_zeroes_sectors(bdev, 0);
+>  
+>  	bs_mask = (bdev_logical_block_size(bdev) >> 9) - 1;
+>  	if ((sector | nr_sects) & bs_mask)
+> @@ -391,7 +391,7 @@ int blkdev_issue_zeroout(struct block_device *bdev, sector_t sector,
+>  			try_write_zeroes = false;
+>  			goto retry;
+>  		}
+> -		if (!bdev_write_zeroes_sectors(bdev)) {
+> +		if (!bdev_write_zeroes_sectors(bdev, 0)) {
+>  			/*
+>  			 * Zeroing offload support was indicated, but the
+>  			 * device reported ILLEGAL REQUEST (for some devices
+> diff --git a/drivers/md/dm-kcopyd.c b/drivers/md/dm-kcopyd.c
+> index 1bbe4a34ef4c..f1b8e7926dd4 100644
+> --- a/drivers/md/dm-kcopyd.c
+> +++ b/drivers/md/dm-kcopyd.c
+> @@ -831,7 +831,7 @@ void dm_kcopyd_copy(struct dm_kcopyd_client *kc, struct dm_io_region *from,
+>  		 */
+>  		job->rw = REQ_OP_WRITE_ZEROES;
+>  		for (i = 0; i < job->num_dests; i++)
+> -			if (!bdev_write_zeroes_sectors(job->dests[i].bdev)) {
+> +			if (!bdev_write_zeroes_sectors(job->dests[i].bdev, 0)) {
+>  				job->rw = WRITE;
+>  				break;
+>  			}
+> diff --git a/drivers/target/target_core_iblock.c b/drivers/target/target_core_iblock.c
+> index 51ffd5c002de..73a63e197bf5 100644
+> --- a/drivers/target/target_core_iblock.c
+> +++ b/drivers/target/target_core_iblock.c
+> @@ -117,7 +117,7 @@ static int iblock_configure_device(struct se_device *dev)
+>  	 * Enable write same emulation for IBLOCK and use 0xFFFF as
+>  	 * the smaller WRITE_SAME(10) only has a two-byte block count.
+>  	 */
+> -	max_write_zeroes_sectors = bdev_write_zeroes_sectors(bd);
+> +	max_write_zeroes_sectors = bdev_write_zeroes_sectors(bd, 0);
+>  	if (max_write_zeroes_sectors)
+>  		dev->dev_attrib.max_write_same_len = max_write_zeroes_sectors;
+>  	else
+> @@ -468,7 +468,7 @@ iblock_execute_write_same(struct se_cmd *cmd)
+>  		return TCM_INVALID_CDB_FIELD;
+>  	}
+>  
+> -	if (bdev_write_zeroes_sectors(bdev)) {
+> +	if (bdev_write_zeroes_sectors(bdev, 0)) {
+>  		if (!iblock_execute_zero_out(bdev, cmd))
+>  			return 0;
+>  	}
+> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+> index c45779f00cbd..4cd69552df9a 100644
+> --- a/include/linux/blkdev.h
+> +++ b/include/linux/blkdev.h
+> @@ -1418,7 +1418,8 @@ static inline unsigned int bdev_write_same(struct block_device *bdev)
+>  	return 0;
 >  }
-> @@ -7057,11 +7062,8 @@ static int ufshcd_probe_hba(struct ufs_hba *hba, bool async)
->         ufshcd_force_reset_auto_bkops(hba);
->         hba->wlun_dev_clr_ua = true;
->
-> -       if (ufshcd_get_max_pwr_mode(hba)) {
-> -               dev_err(hba->dev,
-> -                       "%s: Failed getting max supported power mode\n",
-> -                       __func__);
-> -       } else {
-> +       /* Gear up to HS gear if supported */
-> +       if (hba->max_pwr_info.is_valid) {
->                 /*
->                  * Set the right value to bRefClkFreq before attempting to
->                  * switch to HS gears.
-> --
-> 2.17.1
->
+>  
+> -static inline unsigned int bdev_write_zeroes_sectors(struct block_device *bdev)
+> +static inline unsigned int bdev_write_zeroes_sectors(struct block_device *bdev,
+> +						     unsigned int flags)
+>  {
+>  	struct request_queue *q = bdev_get_queue(bdev);
+>  
+> 
+> 
 
-
--- 
-Regards,
-Alim
