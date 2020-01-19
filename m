@@ -2,401 +2,264 @@ Return-Path: <SRS0=pPEE=3I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E518C33CB7
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 13:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECE9C33CB1
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 13:38:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3092220730
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 13:36:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579440989;
-	bh=SU11H1UmSR3TB45hrBy9iIiOWcaXljmQ3ldAW+zGMvA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=y44LTmss9ZrEWB1oVuJOnhOqmLOBZ0/fls8lUPvM++k9KnkhxGTOGz34vh30UEAch
-	 fwQ7dgmsqlj5Bs5jEYWilj9Fktn5sjgxkTWyQnHFpI8osp5GYC169/QmOg6+PrAcu3
-	 03Czw2JfStahLEwyEkSXbZxcYGOCOxGc/mhWoXNc=
+	by mail.kernel.org (Postfix) with ESMTP id 696E420663
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 13:38:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727243AbgASNg2 (ORCPT
+        id S1727048AbgASNix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 08:36:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54026 "EHLO mail.kernel.org"
+        Sun, 19 Jan 2020 08:38:53 -0500
+Received: from ofcsgdbm.dwd.de ([141.38.3.245]:60363 "EHLO ofcsgdbm.dwd.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726903AbgASNg2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 08:36:28 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D984320663;
-        Sun, 19 Jan 2020 13:36:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579440986;
-        bh=SU11H1UmSR3TB45hrBy9iIiOWcaXljmQ3ldAW+zGMvA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=fGgq1Wa32ISLwK7SovTBzxsCeHBQRpgDCwwdM9WN2/6c7BBAPL/Q5U+mJzFd/67Hd
-         ZRInT39DUOKoIUkwM7MHDjI+a9PQoySLCpTgAn/lVuAae/dhi/8GI64AQF4ZE1V6/e
-         MToGP2bE4dQlxObW8AyLqgc9L0jTfGxd0P6klDgk=
-Date:   Sun, 19 Jan 2020 22:36:20 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Tim Bird <Tim.Bird@sony.com>, Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 09/22] Documentation: bootconfig: Add a doc for
- extended boot config
-Message-Id: <20200119223620.059338427abadec036adc3fa@kernel.org>
-In-Reply-To: <7823298a-88e6-4625-ff10-94b00f7963cb@infradead.org>
-References: <157867220019.17873.13377985653744804396.stgit@devnote2>
-        <157867230658.17873.9309879174829924324.stgit@devnote2>
-        <7823298a-88e6-4625-ff10-94b00f7963cb@infradead.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1726778AbgASNix (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jan 2020 08:38:53 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by ofcsg2dn3.dwd.de (Postfix) with ESMTP id 480wqs4t4Qz11WT
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jan 2020 13:38:49 +0000 (UTC)
+X-Virus-Scanned: by amavisd-new at csg.dwd.de
+Received: from ofcsg2dn3.dwd.de ([127.0.0.1])
+        by localhost (ofcsg2dn3.dwd.de [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id bHyVGkZuEber for <linux-kernel@vger.kernel.org>;
+        Sun, 19 Jan 2020 13:38:49 +0000 (UTC)
+Received: from ofmailhub.dwd.de (oflxs446.dwd.de [141.38.40.78])
+        by ofcsg2dn3.dwd.de (Postfix) with ESMTP id 480wqs1pRzz10m6;
+        Sun, 19 Jan 2020 13:38:49 +0000 (UTC)
+Received: from diagnostix.dwd.de (diagnostix.dwd.de [141.38.42.141])
+        by ofmailhub.dwd.de (Postfix) with ESMTP id 23E5C318AB;
+        Sun, 19 Jan 2020 13:38:48 +0000 (UTC)
+Date:   Sun, 19 Jan 2020 13:38:48 +0000 (UTC)
+From:   Holger Kiehl <Holger.Kiehl@dwd.de>
+X-X-Sender: kiehl@diagnostix.dwd.de
+To:     Guenter Roeck <linux@roeck-us.net>
+cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Jean Delvare <jdelvare@suse.com>,
+        Darren Salt <devspam@moreofthesa.me.uk>,
+        Bernhard Gebetsberger <bernhard.gebetsberger@gmx.at>,
+        Ken Moffat <zarniwhoop73@googlemail.com>,
+        =?ISO-8859-2?Q?Ondrej_=C8erman?= <ocerman@sda1.eu>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Brad Campbell <lists2009@fnarfbargle.com>
+Subject: Re: [PATCH v2 0/5] hwmon: k10temp driver improvements
+In-Reply-To: <20200118172615.26329-1-linux@roeck-us.net>
+Message-ID: <alpine.LRH.2.21.2001191054490.328@diagnostix.dwd.de>
+References: <20200118172615.26329-1-linux@roeck-us.net>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: multipart/mixed; BOUNDARY="646810922-1566648493-1579431360=:328"
+Content-ID: <alpine.LRH.2.21.2001191327310.2827@diagnostix.dwd.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Randy,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On Sat, 18 Jan 2020 10:28:40 -0800
-Randy Dunlap <rdunlap@infradead.org> wrote:
+--646810922-1566648493-1579431360=:328
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: 8BIT
+Content-ID: <alpine.LRH.2.21.2001191327311.2827@diagnostix.dwd.de>
 
-> Hi,
+On Sat, 18 Jan 2020, Guenter Roeck wrote:
+
+> This patch series implements various improvements for the k10temp driver.
 > 
-> Editorial comments/corrections below...
-
-Thank you for your comments! This is very helpful for me.
-
+> Patch 1/5 introduces the use of bit operations.
 > 
-> On 1/10/20 8:05 AM, Masami Hiramatsu wrote:
-> > Add a documentation for extended boot config under
-> > admin-guide, since it is including the syntax of boot config.
-> > 
-> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> > ---
-> >  Changes in v6:
-> >   - Add a note about comment after value.
-> >  Changes in v5:
-> >   - Fix to insert bootconfig to TOC list alphabetically.
-> >   - Add notes about avaliable characters in values.
-> >   - Fix to use correct quotes (``) for .rst.
-> >  Changes in v4:
-> >   - Rename suppremental kernel command line to boot config.
+> Patch 2/5 converts the driver to use the devm_hwmon_device_register_with_info
+> API. This not only simplifies the code and reduces its size, it also
+> makes the code easier to maintain and enhance. 
 > 
->              supplemental
+> Patch 3/5 adds support for reporting Core Complex Die (CCD) temperatures
+> on Ryzen 3 (Zen2) CPUs.
 > 
-> >   - Update document according to the recent changes.
-> >   - Add How to load it on boot.
-> >   - Style bugfix.
-> > ---
-> >  Documentation/admin-guide/bootconfig.rst |  184 ++++++++++++++++++++++++++++++
-> >  Documentation/admin-guide/index.rst      |    1 
-> >  MAINTAINERS                              |    1 
-> >  3 files changed, 186 insertions(+)
-> >  create mode 100644 Documentation/admin-guide/bootconfig.rst
-> > 
+> Patch 4/5 adds support for reporting core and SoC current and voltage
+> information on Ryzen CPUs.
 > 
-> > diff --git a/Documentation/admin-guide/bootconfig.rst b/Documentation/admin-guide/bootconfig.rst
-> > new file mode 100644
-> > index 000000000000..f7475df2a718
-> > --- /dev/null
-> > +++ b/Documentation/admin-guide/bootconfig.rst
-> > @@ -0,0 +1,184 @@
-> > +.. SPDX-License-Identifier: GPL-2.0
-> > +
-> > +==================
-> > +Boot Configuration
-> > +==================
-> > +
-> > +:Author: Masami Hiramatsu <mhiramat@kernel.org>
-> > +
-> > +Overview
-> > +========
-> > +
-> > +The boot configuration is expanding current kernel cmdline to support
+> Patch 5/5 removes the maximum temperature from Tdie for Ryzen CPUs.
+> It is inaccurate, misleading, and it just doesn't make sense to report
+> wrong information.
 > 
->                           expands the current kernel command line to support
-
-OK.
-
+> With all patches in place, output on Ryzen 3900X CPUs looks as follows
+> (with the system under load).
 > 
-> > +additional key-value data when boot the kernel in an efficient way.
+> k10temp-pci-00c3
+> Adapter: PCI adapter
+> Vcore:        +1.36 V
+> Vsoc:         +1.18 V
+> Tdie:         +86.8°C
+> Tctl:         +86.8°C
+> Tccd1:        +80.0°C
+> Tccd2:        +81.8°C
+> Icore:       +44.14 A
+> Isoc:        +13.83 A
 > 
->                                   booting
-
-OK.
-
+> The voltage and current information is limited to Ryzen CPUs. Voltage
+> and current reporting on Threadripper and EPYC CPUs is different, and the
+> reported information is either incomplete or wrong. Exclude it for the time
+> being; it can always be added if/when more information becomes available.
 > 
-> > +This allows adoministrators to pass a structured-Key config file.
+> Tested with the following Ryzen CPUs:
+>     1300X A user with this CPU in the system reported somewhat unexpected
+>           values for Vcore; it isn't entirely if at all clear why that is
+>           the case. Overall this does not warrant holding up the series.
+>     1600
+>     1800X
+>     2200G
+>     2400G
+>     3800X
+>     3900X
+>     3950X
 > 
->                administrators
-
-Oops. OK.
-
+> v2: Added tested-by: tags as received.
+>     Don't display voltage and current information for Threadripper and EPYC.
+>     Stop displaying the fixed (and wrong) maximum temperature of 70 degrees C
+>     for Tdie on model 17h/18h CPUs.
 > 
-> > +
-> > +Config File Syntax
-> > +==================
-> > +
-> > +The boot config syntax is a simple structured key-value. Each key consists
-> > +of dot-connected-words, and key and value are connected by "=". The value
-> > +has to be terminated by semi-colon (``;``) or newline (``\n``).
-> > +For array value, array entries are separated by comma (``,``). ::
-> > +
-> > +KEY[.WORD[...]] = VALUE[, VALUE2[...]][;]
-> 
-> (just a note: spaces are OK here, unlike in kernel command line syntax [unless quoted].)
+Just tested this on a 2400G. Here idle values:
 
-Yes.
+   k10temp-pci-00c3
+   Adapter: PCI adapter
+   Vcore:        +0.77 V
+   Vsoc:         +1.11 V
+   Tdie:         +45.0°C
+   Tctl:         +45.0°C
+   Icore:       +10.39 A
+   Isoc:         +2.89 A
 
-> > +
-> > +Each key word must contain only alphabets, numbers, dash (``-``) or underscore
-> > +(``_``). And each value only contains printable characters or spaces except
-> > +for delimiters such as semi-colon (``;``), new-line (``\n``), comma (``,``),
-> > +hash (``#``) and closing brace (``}``).
-> 
-> what about opening brace '{'?
+   nvme-pci-0100
+   Adapter: PCI adapter
+   Composite:    +43.9°C  (low  = -273.1°C, high = +80.8°C)
+                          (crit = +80.8°C)
+   Sensor 1:     +43.9°C  (low  = -273.1°C, high = +65261.8°C)
+   Sensor 2:     +48.9°C  (low  = -273.1°C, high = +65261.8°C)
 
-Good question! Since the bootconfig doesn't support anonymous key-word block,
-opening brace doesn't become a delimiter. (So, the above explanation might better
-use "except for *some* delimiters"...)
+   nct6793-isa-0290
+   Adapter: ISA adapter
+   in0:                    +0.35 V  (min =  +0.00 V, max =  +1.74 V)
+   in1:                    +1.85 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   in2:                    +3.41 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   in3:                    +3.39 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   in4:                    +0.26 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   in5:                    +0.14 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   in6:                    +0.66 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   in7:                    +3.39 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   in8:                    +3.26 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   in9:                    +1.83 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   in10:                   +0.19 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   in11:                   +0.14 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   in12:                   +1.84 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   in13:                   +1.72 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   in14:                   +0.21 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   fan1:                     0 RPM  (min =    0 RPM)
+   fan2:                   323 RPM  (min =    0 RPM)
+   fan3:                     0 RPM  (min =    0 RPM)
+   fan4:                     0 RPM  (min =    0 RPM)
+   fan5:                     0 RPM  (min =    0 RPM)
+   SYSTIN:                +112.0°C  (high =  +0.0°C, hyst =  +0.0°C)  sensor = thermistor
+   CPUTIN:                 +60.0°C  (high = +80.0°C, hyst = +75.0°C)  sensor = thermistor
+   AUXTIN0:                +46.0°C  (high =  +0.0°C, hyst =  +0.0°C)  ALARM  sensor = thermistor
+   AUXTIN1:               +106.0°C    sensor = thermistor
+   AUXTIN2:               +105.0°C    sensor = thermistor
+   AUXTIN3:               +102.0°C    sensor = thermistor
+   SMBUSMASTER 0:          +45.0°C
+   PCH_CHIP_CPU_MAX_TEMP:   +0.0°C
+   PCH_CHIP_TEMP:           +0.0°C
+   PCH_CPU_TEMP:            +0.0°C
+   intrusion0:            OK
+   intrusion1:            ALARM
+   beep_enable:           disabled
 
-For example, following data should be wrong.
+   amdgpu-pci-0300
+   Adapter: PCI adapter
+   vddgfx:           N/A
+   vddnb:            N/A
+   edge:         +45.0°C  (crit = +80.0°C, hyst =  +0.0°C)
 
-key = value { key2 = value }
+And here with some high load:
 
+   k10temp-pci-00c3
+   Adapter: PCI adapter
+   Vcore:        +1.32 V
+   Vsoc:         +1.11 V
+   Tdie:         +77.1°C
+   Tctl:         +77.1°C
+   Icore:       +85.22 A
+   Isoc:         +3.61 A
 
-> 
-> > +
-> > +If you want to use those delimiters in a value, you can use either double-
-> > +quotes (``"VALUE"``) or single-quotes (``'VALUE'``) to quote it. Note that
-> > +you can not escape these quotes.
-> > +
-> > +There can be a key which doesn't have value or has an empty value. Those keys
-> > +are used for checking the key exists or not (like a boolean).
-> 
-> I would say:    checking if the key exists or not
+   nvme-pci-0100
+   Adapter: PCI adapter
+   Composite:    +42.9°C  (low  = -273.1°C, high = +80.8°C)
+                          (crit = +80.8°C)
+   Sensor 1:     +42.9°C  (low  = -273.1°C, high = +65261.8°C)
+   Sensor 2:     +45.9°C  (low  = -273.1°C, high = +65261.8°C)
 
-OK.
+   nct6793-isa-0290
+   Adapter: ISA adapter
+   in0:                    +0.68 V  (min =  +0.00 V, max =  +1.74 V)
+   in1:                    +1.84 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   in2:                    +3.39 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   in3:                    +3.39 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   in4:                    +0.26 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   in5:                    +0.14 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   in6:                    +0.66 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   in7:                    +3.39 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   in8:                    +3.26 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   in9:                    +1.83 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   in10:                   +0.19 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   in11:                   +0.14 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   in12:                   +1.84 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   in13:                   +1.72 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   in14:                   +0.20 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   fan1:                     0 RPM  (min =    0 RPM)
+   fan2:                  1931 RPM  (min =    0 RPM)
+   fan3:                     0 RPM  (min =    0 RPM)
+   fan4:                     0 RPM  (min =    0 RPM)
+   fan5:                     0 RPM  (min =    0 RPM)
+   SYSTIN:                +113.0°C  (high =  +0.0°C, hyst =  +0.0°C)  sensor = thermistor
+   CPUTIN:                 +64.5°C  (high = +80.0°C, hyst = +75.0°C)  sensor = thermistor
+   AUXTIN0:                +45.0°C  (high =  +0.0°C, hyst =  +0.0°C)  ALARM  sensor = thermistor
+   AUXTIN1:               +107.0°C    sensor = thermistor
+   AUXTIN2:               +105.0°C    sensor = thermistor
+   AUXTIN3:               +102.0°C    sensor = thermistor
+   SMBUSMASTER 0:          +77.0°C
+   PCH_CHIP_CPU_MAX_TEMP:   +0.0°C
+   PCH_CHIP_TEMP:           +0.0°C
+   PCH_CPU_TEMP:            +0.0°C
+   intrusion0:            OK
+   intrusion1:            ALARM
+   beep_enable:           disabled
 
-> 
-> > +
-> > +Key-Value Syntax
-> > +----------------
-> > +
-> > +The boot config file syntax allows user to merge partially same word keys
-> > +by brace. For example::
-> > +
-> > + foo.bar.baz = value1
-> > + foo.bar.qux.quux = value2
-> > +
-> > +These can be written also in::
-> > +
-> > + foo.bar {
-> > +    baz = value1
-> > +    qux.quux = value2
-> > + }
-> > +
-> > +Or more shorter, written as following::
-> > +
-> > + foo.bar { baz = value1; qux.quux = value2 }
-> > +
-> > +In both styles, same key words are automatically merged when parsing it
-> > +at boot time. So you can append similar trees or key-values.
-> > +
-> > +Comments
-> > +--------
-> > +
-> > +The config syntax accepts shell-script style comments. The comments start
-> 
-> s/start/starting/
+   amdgpu-pci-0300
+   Adapter: PCI adapter
+   vddgfx:           N/A
+   vddnb:            N/A
+   edge:         +77.0°C  (crit = +80.0°C, hyst =  +0.0°C)
 
-OK.
+Have also tried this on a EPYC 7302. Before the patch:
 
-> 
-> > +with hash ("#") until newline ("\n") will be ignored.
-> > +
-> > +::
-> > +
-> > + # comment line
-> > + foo = value # value is set to foo.
-> > + bar = 1, # 1st element
-> > +       2, # 2nd element
-> > +       3  # 3rd element
-> > +
-> > +This is parsed as below::
-> > +
-> > + foo = value
-> > + bar = 1, 2, 3
-> > +
-> > +Note that you can not put a comment between value and delimiter(``,`` or
-> > +``;``). This means following config has a syntax error ::
-> > +
-> > + key = 1 # comment
-> > +       ,2
-> > +
-> > +
-> > +/proc/bootconfig
-> > +================
-> > +
-> > +/proc/bootconfig is a user-space interface of the boot config.
-> > +Unlike /proc/cmdline, this file shows the key-value style list.
-> > +Each key-value pair is shown in each line with following style::
-> > +
-> > + KEY[.WORDS...] = "[VALUE]"[,"VALUE2"...]
-> > +
-> > +
-> > +Boot Kernel With a Boot Config
-> > +==============================
-> > +
-> > +Since the boot configuration file is loaded with initrd, it will be added
-> > +to the end of the initrd (initramfs) image file. The Linux kernel decodes
-> > +the last part of the initrd image in memory to get the boot configuration
-> > +data.
-> > +Because of this "piggyback" method, there is no need to change or
-> > +update the boot loader and the kernel image itself.
-> > +
-> > +To do this operation, Linux kernel provides "bootconfig" command under
-> > +tools/bootconfig, which allows admin to apply or delete the config file
-> > +to/from initrd image. You can build it by follwoing command::
-> 
->                                           by the following
+   k10temp-pci-00c3
+   Adapter: PCI adapter
+   Tdie:         +28.1°C  (high = +70.0°C)
+   Tctl:         +28.1°C 
 
-Oops, a typo...
+and after:
 
-> 
-> > +
-> > + # make -C tools/bootconfig
-> > +
-> > +To add your boot config file to initrd image, run bootconfig as below
-> > +(Old data is removed automatically if exists)::
-> > +
-> > + # tools/bootconfig/bootconfig -a your-config /boot/initrd.img-X.Y.Z
-> > +
-> > +To remove the config from the image, you can use -d option as below::
-> > +
-> > + # tools/bootconfig/bootconfig -d /boot/initrd.img-X.Y.Z
-> > +
-> > +
-> > +C onfig File Limitation
-> 
->    Config
+   k10temp-pci-00c3
+   Adapter: PCI adapter
+   Tdie:         +28.2°C  
+   Tctl:         +28.2°C
 
-Oops
+No extra values shown, but I think this is expected.
 
-> 
-> > +======================
-> > +
-> > +Currently the maximum config size size is 32KB and the total key-words (not
-> > +key-value entries) must be under 1024 nodes.
-> > +Note: this is not the number of entries but nodes, an entry must consume
-> > +more than 2 nodes (a key-word and a value). So theoretically, it will be
-> > +up to 512 key-value pairs. If keys contains 3 words in average, it can
-> > +contain 256 key-value pairs. In most cases, the number of config items
-> > +will be under 100 entries and smaller than 8KB, so it would be enough.
-> > +If the node number exceeds 1024, parser returns an error even if the file
-> > +size is smaller than 32KB.
-> > +Anyway, since bootconfig command verifies it when appending a boot config
-> > +to initrd image, user can notice it before boot.
-> > +
-> > +
-> > +Bootconfig APIs
-> > +===============
-> > +
-> > +User can query or loop on key-value pairs, also it is possible to find
-> > +a root (prefix) key node and find key-values under that node.
-> > +
-> > +If you have a key string, you can query the value directly with the key
-> > +using xbc_find_value(). If you want to know what keys exist in the SKC
-> > +tree, you can use xbc_for_each_key_value() to iterate key-value pairs.
-> > +Note that you need to use xbc_array_for_each_value() for accessing
-> > +each arraies value, e.g.::
-> 
->         array's
-> (I think)
+Tested-by Holger Kiehl <holger.kiehl@dwd.de>
 
-Yes, OK. 
-
-> 
-> > +
-> > + vnode = NULL;
-> > + xbc_find_value("key.word", &vnode);
-> > + if (vnode && xbc_node_is_array(vnode))
-> > +    xbc_array_for_each_value(vnode, value) {
-> > +      printk("%s ", value);
-> > +    }
-> > +
-> > +If you want to focus on keys which has a prefix string, you can use
-> 
->                                       have
-
-OK.
-
-> 
-> > +xbc_find_node() to find a node which prefix key words, and iterate
-> 
-> [confusing above]
-
-Ah, it should be "to find a node by the prefix string,"
-
-
-> 
-> > +keys under the prefix node with xbc_node_for_each_key_value().
-> > +
-> > +But the most typical usage is to get the named value under prefix
-> > +or get the named array under prefix as below::
-> > +
-> > + root = xbc_find_node("key.prefix");
-> > + value = xbc_node_find_value(root, "option", &vnode);
-> > + ...
-> > + xbc_node_for_each_array_value(root, "array-option", value, anode) {
-> > +    ...
-> > + }
-> > +
-> > +This accesses a value of "key.prefix.option" and an array of
-> > +"key.prefix.array-option".
-> > +
-> > +Locking is not needed, since after initialized, the config becomes readonly.
-> 
->                                 after initialization,
-
-OK.
-
-> 
-> > +All data and keys must be copied if you need to modify it.
-> > +
-> > +
-> > +Functions and structures
-> > +========================
-> > +
-> > +.. kernel-doc:: include/linux/bootconfig.h
-> > +.. kernel-doc:: lib/bootconfig.c
-> > +
-> 
-> HTH.
-
-Thank you very much!
-
-> -- 
-> ~Randy
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Holger
+--646810922-1566648493-1579431360=:328--
