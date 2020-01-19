@@ -2,152 +2,145 @@ Return-Path: <SRS0=pPEE=3I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92DC0C33CB7
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 19:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD03AC3F68F
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 20:12:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BB1C20679
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 19:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5354206D7
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 20:12:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QlOdTQSL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uq+q6Cs0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728853AbgASTk6 (ORCPT
+        id S1728811AbgASUMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 14:40:58 -0500
-Received: from mail-pj1-f73.google.com ([209.85.216.73]:37140 "EHLO
-        mail-pj1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727144AbgASTk6 (ORCPT
+        Sun, 19 Jan 2020 15:12:46 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:41098 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727138AbgASUMp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 14:40:58 -0500
-Received: by mail-pj1-f73.google.com with SMTP id dw15so9121355pjb.2
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jan 2020 11:40:58 -0800 (PST)
+        Sun, 19 Jan 2020 15:12:45 -0500
+Received: by mail-ot1-f68.google.com with SMTP id r27so26880232otc.8;
+        Sun, 19 Jan 2020 12:12:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=GYu7/zxMNd86d8ZFJUTXCcQyLaKeKY/49TH/Y+j6Gqg=;
-        b=QlOdTQSL0z+vkc6smWiyAQv9TSrlVmSbT/+AQt+zaKA98cZi+qyrt0DbZ0Xs7MFC20
-         5aamMs9qMUFIv4nItetzHFmLGTOon1t7k/NHKm/1WDKitaeMEIBoRwXp/gbkCHU/iqrr
-         GQRhGd+/iL+Rj4LFLSMeHGRb6GINCcrUFdWgfK2CJgIZk8C2B8kWld7dCCpbzHjeJRD5
-         +Z/Hz23oeNBgx79zWK2FGFUjAj4Jue7OPGOw8u7g4AHGoHZxvk+YO2X9LQAbGhqtOK+F
-         Wv4BH83ZnfubP878cLqqML9UPDyyFiXnac8MW1chjhuLxiIgB4Y+BWtjdr798IKXSmGq
-         vppQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=N1QlW5+ESSHKmdKwLymeXI/WjMGPsFxu1rPdBv2tr08=;
+        b=uq+q6Cs0lEcX75ocY472Zgm9rPfPQxXPLVnbxbPzCSq9ENg5x+G4rj0kJg+TBjp1tu
+         29np9UO55CBZJCbrMVeNrL/EMjreQUMwCkUI84HZJJ8upJtruJBlLtRIn7gl3+mpeRdw
+         QlYg418ZBWEyvQC77N2W58TILhCiPvfdbvJrPeX/1/Wd8YReKYRHPhvRNmsLmQHQWcEF
+         n9HfCLfLr612qrAswv6+r5ZRkGjIRyRR8GleT8w4ZVF1Icm97bmx9MQesCXu5MUkpqtB
+         CwMh21pG8zQL6mSaxlmZ2Qm1BS91TukroFSNKxQRokc7jvT26b7uVzVDqjVBRQ7mt/ta
+         rE3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=GYu7/zxMNd86d8ZFJUTXCcQyLaKeKY/49TH/Y+j6Gqg=;
-        b=MKH9zc4nY3ofHPyYM2npVRGIuoOsLpvP3RYgm9I+Kn/zf2TgnfDDNsUsbQl3ouUeP/
-         xM5JCxp5kj4retytKNrIN1/vbbbAG3e73aMn9awYfuYm8uK6k3NUSuIfMXiY04glpKgb
-         cnr4b8LAMJjrwBx20adcZVuAYBgzrAKe73dvlwNG5dDnrBHCft+WxMEMf1sfFGeA7GF+
-         7wT7jVuPYDB6M3aIdLDHdmEE0fP+4YQExaWL4hdHa2O2keA+omSboykUoWd08ArS6Z0a
-         DpBL18KWA2O8XKZGpyhVpy6YJ+lnMM4zm4cGzjmR9U8hZZWLSykY2D2zWjJPI/7aItJ7
-         EV4g==
-X-Gm-Message-State: APjAAAWBAxY0MgvjFlWYXC4sKHRJ+W5xoJVGrHRJG+MUzZaGfjJx4+8D
-        BM4Es7XQfbh4KDewcNWH6gU+pH/51P6O
-X-Google-Smtp-Source: APXvYqxuXDpCo3mn2kxa6NMICU35MJWDGVxXH9/az/hajnPP/dt1PwbFij25BEGseYexTQgSbHlar3gYhHgz
-X-Received: by 2002:a63:7311:: with SMTP id o17mr53720220pgc.29.1579462857433;
- Sun, 19 Jan 2020 11:40:57 -0800 (PST)
-Date:   Sun, 19 Jan 2020 11:40:40 -0800
-Message-Id: <20200119194040.128369-1-brianvv@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
-Subject: [PATCH v2 bpf-next] bpf: Fix memory leaks in generic update/delete
- batch ops
-From:   Brian Vazquez <brianvv@google.com>
-To:     Brian Vazquez <brianvv.kernel@gmail.com>,
-        Brian Vazquez <brianvv@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Yonghong Song <yhs@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=N1QlW5+ESSHKmdKwLymeXI/WjMGPsFxu1rPdBv2tr08=;
+        b=hTwClxxExMdR2YQN1+P1l+OK9RgvtUb/HSlI6HQoP7aDzNBwT/wMjZD3xzW0BtWTdh
+         /eTOVvmQpDiT2VEdYKHnqm6nPXGX4NFMK+AwmEEBhUbaX6ohWj47J/+r0p7yatAbFg1m
+         HQWgf/r97Y+zZACJHdaYcneHS/UFkcZZMf/8B2ZmmbTq28iRqYf4rNGiQ/l4wA5zxinN
+         +y5+mYtJecXS3VbvjsJmqfLcRml8I8c0wV9gaAkAuKCN8DS7jMgT97bqVWvqg10mcTLX
+         P/+bDkOwf0f6pZZ23/0edLsqgMrYbmQAN3a7f86eyZVHm8GBSYolA5z3fhh6RE1VYoGV
+         WgGw==
+X-Gm-Message-State: APjAAAVq3vsBklO1UEfWcfP068fKojH6IpzCNt0K4Z4PN7PzmgeSYppZ
+        KM0iAd0nqgK6Xo0jOFNxFb4=
+X-Google-Smtp-Source: APXvYqwv5AvJUHDWpNU31FO2Kz6kxgn5L5SyDnjDPQndmx4yysajcL24OTKkORdM9fCjre/k76psPw==
+X-Received: by 2002:a05:6830:2361:: with SMTP id r1mr13031284oth.88.1579464764967;
+        Sun, 19 Jan 2020 12:12:44 -0800 (PST)
+Received: from ubuntu-x2-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id 97sm11652456otx.29.2020.01.19.12.12.44
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 19 Jan 2020 12:12:44 -0800 (PST)
+Date:   Sun, 19 Jan 2020 13:12:43 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Chunyan Zhang <zhang.lyra@gmail.com>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-mmc@vger.kernel.org, Faiz Abbas <faiz_abbas@ti.com>,
+        Chunyan Zhang <zhang.chunyan@linaro.org>,
+        linux-kernel@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] mmc: sdhci: fix an issue of mixing different types
+Message-ID: <20200119201243.GA15269@ubuntu-x2-xlarge-x86>
+References: <20200119034902.20688-1-zhang.chunyan@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200119034902.20688-1-zhang.chunyan@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-generic update/delete batch ops functions were using __bpf_copy_key
-without properly freeing the memory. Handle the memory allocation and
-copy_from_user separately.
+On Sun, Jan 19, 2020 at 11:49:02AM +0800, Chunyan Zhang wrote:
+> Fix an issue reported by sparse, since different type of parameter is
+> used on calling dmaengine_prep_slave_sg().
+> 
+> Fixes: 36e1da441fec (mmc: sdhci: add support for using external DMA devices)
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
+> ---
+>  drivers/mmc/host/sdhci.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> index 30b5a624b50e..4503009f993b 100644
+> --- a/drivers/mmc/host/sdhci.c
+> +++ b/drivers/mmc/host/sdhci.c
+> @@ -1235,8 +1235,8 @@ static int sdhci_external_dma_setup(struct sdhci_host *host,
+>  		return -EINVAL;
+>  
+>  	desc = dmaengine_prep_slave_sg(chan, data->sg, data->sg_len,
+> -				       mmc_get_dma_dir(data),
+> -				       DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
+> +			(enum dma_transfer_direction) mmc_get_dma_dir(data),
+> +			DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
+>  	if (!desc)
+>  		return -EINVAL;
+>  
+> -- 
+> 2.20.1
+> 
 
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Fixes: aa2e93b8e58e ("bpf: Add generic support for update and delete batch ops")
-Signed-off-by: Brian Vazquez <brianvv@google.com>
-Acked-by: Yonghong Song <yhs@fb.com>
----
-v1->v2:
- - Put Fixes subject in a single line (Yonghong Song)
----
- kernel/bpf/syscall.c | 30 +++++++++++++++++++-----------
- 1 file changed, 19 insertions(+), 11 deletions(-)
+Clang also noticed this through its -Wenum-conversion. I don't really
+like implicit conversions as I think it defeats the point of using the
+enum. I had an explicit conversion locally which I attached below.
+Regardless, this should resolve this issue (although I am not sure I
+like the indentation shift.
 
-diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-index c26a71460f02f..9a840c57f6df7 100644
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -1239,12 +1239,15 @@ int generic_map_delete_batch(struct bpf_map *map,
- 	if (!max_count)
- 		return 0;
- 
-+	key = kmalloc(map->key_size, GFP_USER | __GFP_NOWARN);
-+	if (!key)
-+		return -ENOMEM;
-+
- 	for (cp = 0; cp < max_count; cp++) {
--		key = __bpf_copy_key(keys + cp * map->key_size, map->key_size);
--		if (IS_ERR(key)) {
--			err = PTR_ERR(key);
-+		err = -EFAULT;
-+		if (copy_from_user(key, keys + cp * map->key_size,
-+				   map->key_size))
- 			break;
--		}
- 
- 		if (bpf_map_is_dev_bound(map)) {
- 			err = bpf_map_offload_delete_elem(map, key);
-@@ -1264,6 +1267,8 @@ int generic_map_delete_batch(struct bpf_map *map,
- 	}
- 	if (copy_to_user(&uattr->batch.count, &cp, sizeof(cp)))
- 		err = -EFAULT;
-+
-+	kfree(key);
- 	return err;
- }
- 
-@@ -1294,18 +1299,21 @@ int generic_map_update_batch(struct bpf_map *map,
- 	if (!max_count)
- 		return 0;
- 
-+	key = kmalloc(map->key_size, GFP_USER | __GFP_NOWARN);
-+	if (!key)
-+		return -ENOMEM;
-+
- 	value = kmalloc(value_size, GFP_USER | __GFP_NOWARN);
--	if (!value)
-+	if (!value) {
-+		kfree(key);
- 		return -ENOMEM;
-+	}
- 
- 	for (cp = 0; cp < max_count; cp++) {
--		key = __bpf_copy_key(keys + cp * map->key_size, map->key_size);
--		if (IS_ERR(key)) {
--			err = PTR_ERR(key);
--			break;
--		}
- 		err = -EFAULT;
--		if (copy_from_user(value, values + cp * value_size, value_size))
-+		if (copy_from_user(key, keys + cp * map->key_size,
-+		    map->key_size) ||
-+		    copy_from_user(value, values + cp * value_size, value_size))
- 			break;
- 
- 		err = bpf_map_update_value(map, f, key, value,
--- 
-2.25.0.341.g760bfbb309-goog
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
 
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+7index 30b5a624b50e..98fa25ba3756 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -1201,6 +1201,7 @@ static int sdhci_external_dma_setup(struct sdhci_host *host,
+ 				    struct mmc_command *cmd)
+ {
+ 	int ret, i;
++	enum dma_transfer_direction dir;
+ 	struct dma_async_tx_descriptor *desc;
+ 	struct mmc_data *data = cmd->data;
+ 	struct dma_chan *chan;
+@@ -1234,8 +1235,12 @@ static int sdhci_external_dma_setup(struct sdhci_host *host,
+ 	if (sg_cnt <= 0)
+ 		return -EINVAL;
+ 
+-	desc = dmaengine_prep_slave_sg(chan, data->sg, data->sg_len,
+-				       mmc_get_dma_dir(data),
++	if (mmc_get_dma_dir(data) == DMA_TO_DEVICE)
++		dir = DMA_MEM_TO_DEV;
++	else
++		dir = DMA_DEV_TO_MEM;
++
++	desc = dmaengine_prep_slave_sg(chan, data->sg, data->sg_len, dir,
+ 				       DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
+ 	if (!desc)
+ 		return -EINVAL;
