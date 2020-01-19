@@ -2,127 +2,90 @@ Return-Path: <SRS0=pPEE=3I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB325C33CB1
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 09:12:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E28C33CB1
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 09:33:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADF962073A
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 09:12:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C30602073A
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 09:33:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YJ/WQJA8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OaJK03Yd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbgASJMJ (ORCPT
+        id S1726775AbgASJ07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 04:12:09 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:58283 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726538AbgASJMJ (ORCPT
+        Sun, 19 Jan 2020 04:26:59 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41495 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725860AbgASJ07 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 04:12:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579425128;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7/GLOX3neXRhFSwxzt6JYeaD8ZcLgraDA4/DOVM77Ms=;
-        b=YJ/WQJA8U5N1UpFojAfN9U7VJ5uR4xhGnqQ+KxYvbcCmzrF/Hhxc9X4VohrO+Pru6G3ErJ
-        2cSnpWPpvlPzHElpiShAlF2DHnp8OFCORDQ0fLb20MR+ZibBcwVEOGsEo6QAigvSyJ/1Xk
-        JxsiWs2Ycba1CabZvboJ/AMkXK3A43E=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-183-RXuIfLqkPAilIFFjk5zWIg-1; Sun, 19 Jan 2020 04:12:07 -0500
-X-MC-Unique: RXuIfLqkPAilIFFjk5zWIg-1
-Received: by mail-wr1-f70.google.com with SMTP id f15so12719092wrr.2
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jan 2020 01:12:07 -0800 (PST)
+        Sun, 19 Jan 2020 04:26:59 -0500
+Received: by mail-wr1-f67.google.com with SMTP id c9so26488270wrw.8
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jan 2020 01:26:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=U3SRtIVUFf1wvhswIJpjjxOJSs67OuTrUXH2Ak0AKwg=;
+        b=OaJK03Yd0UMqCnEKR9cR5QGcUJM1kaw0UR2QJdLuxZbKSd1N0CxdDGfFhQInbUoN8t
+         2Q2eLVZzv2/WJQoY7jmbMV4Z2npedPvc7te4FL0rsOYyOaB0oQv2uU3r9U04PsQq3ziM
+         pUSrpt8IBQEqTYSR8uU3mBuxoeMQS8prnFOMZ5v/47dlZNN6xOLvWDAqGssRZL/7nmzD
+         rZC3uhUeKbxy64w9IhXDUfb9KUkenQfICa+CUYD6xm/NObH5kdl7cdTrogxcMY6G4BFy
+         o4rtEwCRKbuOAwo82MacQ9qw9I8V2vYaQOS181OmJOtzDRN5KtMrBYnvaivnEjzamf5V
+         tLog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7/GLOX3neXRhFSwxzt6JYeaD8ZcLgraDA4/DOVM77Ms=;
-        b=TaZwcHEpCggNK/RGeRbgKJmwF/i1bUSB6fWaGA2o2FlL/1JmOIQWjKBHRmcGhEMjbw
-         lSCZ5wTq54FoW83Wc/IWQPkt8ZzlBf7jPeNcz1d3it/dGdDF9dcIRA8HuGd7KAUaCTzt
-         Iwf4Nn67+LOnPFhbQQDoWtm/QmHO34rOKuxp4LNPq7vw0q61ko16NqGnBxbcKYnNzgUu
-         tUBpzxIDoKas5L4DhP6bqkb2SS4Tmmmp9r4wCpsSY+oz3QG+bDddE3f6AWGHkahCLeov
-         Crz2ApMsx5272MImCHYl2EtzjGS4x/TUT/Lp2cb8hQJ9UKzziodn/NXiJM1Wh0Yuqusf
-         cplw==
-X-Gm-Message-State: APjAAAU9b6NQqjpdqdkUcGKS+rEdnQ3qifBbzJEslKQVD12Iq0fNuF1W
-        MNL9/jyC0BswtlhZMmGgvzxqvD1utIZQX734HQqF9sNwWdWlBLv0MmyuRa6lFrsOjNpIuOmJwO7
-        V4F3Oxim8AiCDND5BovUJkJDQ
-X-Received: by 2002:a1c:5ac2:: with SMTP id o185mr13532817wmb.179.1579425126171;
-        Sun, 19 Jan 2020 01:12:06 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwDwkC7dDZDjZEuiAgMzY8U3Y7N4W29ndw4GTn8oT5UQWoJL5yEnU8cWXD25NJP2K9dsagQQA==
-X-Received: by 2002:a1c:5ac2:: with SMTP id o185mr13532803wmb.179.1579425126002;
-        Sun, 19 Jan 2020 01:12:06 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:e0d6:d2cd:810b:30a9? ([2001:b07:6468:f312:e0d6:d2cd:810b:30a9])
-        by smtp.gmail.com with ESMTPSA id i8sm43773037wro.47.2020.01.19.01.12.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 19 Jan 2020 01:12:05 -0800 (PST)
-Subject: Re: [PATCH] KVM: remove unused guest_enter
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        linux-kernel@vger.kernel.org
-References: <1579145559-168038-1-git-send-email-alex.shi@linux.alibaba.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <19d27860-c2d1-455e-9690-9e381f255130@redhat.com>
-Date:   Sun, 19 Jan 2020 10:12:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=U3SRtIVUFf1wvhswIJpjjxOJSs67OuTrUXH2Ak0AKwg=;
+        b=DMRTzHVrc6Y5lGtPWqZ2uCLcy2DkCZVzFaiavLqQHb9KSp6V2UFVAOrn5iLpUv3JcK
+         P1rrthOMXuxYA/mvoAd0u/dcl75B6TLwBvjas+kyfxSNWiXVDDemPhGMQzdbEvTCBVmh
+         Sg/zP+w5tpMBqdqoS+PMEIj9Z9kKUNdLwn4COnMNrFDI66DPNrjnwsA3/QJMvctnaWJR
+         HYQU8sZKI+2Q2bKncEXK/r3Fo0yCfyXDMlM9q3PtAcU4wnVTM6SYeXFNKy1qciFZ7ezx
+         1NArWmoWY5cXrtqIxSiJEzgmJKqK3AcvxbnkDzyGMJ+HcMscY+GQkLfJL1cLSlqz6Ne8
+         1qUA==
+X-Gm-Message-State: APjAAAWOYQ6w0erFR/ryfQjE7b82y8yOvQdkBOMSEjNis/sKLjgvCRHo
+        tL2FN2BREb2IoD0OJk/DA8lx4Idwkfbw2QYHHvIYOE9y
+X-Google-Smtp-Source: APXvYqzX09F2R/BA+aOMieLnrLOJbeXZ8KNMjM7elIY3/u38tsLzvNzbB+EKAFqcMiqYk2pubTxNWR+viwVzztcYKcI=
+X-Received: by 2002:adf:fe4d:: with SMTP id m13mr13117016wrs.179.1579426016765;
+ Sun, 19 Jan 2020 01:26:56 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1579145559-168038-1-git-send-email-alex.shi@linux.alibaba.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CAAJw_ZsrUP54N5Ko2PrZm2BnKbxv44pXL3Ycw1Ux2onAFqrOVQ@mail.gmail.com>
+ <CAAJw_ZsQkjdPo7McQoEb9LqBb0hzrzFRE4K_CR5dVApoT2_zmQ@mail.gmail.com>
+In-Reply-To: <CAAJw_ZsQkjdPo7McQoEb9LqBb0hzrzFRE4K_CR5dVApoT2_zmQ@mail.gmail.com>
+From:   Jeff Chua <jeff.chua.linux@gmail.com>
+Date:   Sun, 19 Jan 2020 17:26:45 +0800
+Message-ID: <CAAJw_ZuLTxxNyuYeAjhTY+ENQNiOMuQD2p2y2M9J0Urk2MNzKA@mail.gmail.com>
+Subject: Re: No realtime clock (/dev/rtc) on new ThinkPad X1
+To:     lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/01/20 04:32, Alex Shi wrote:
-> After commit 61bd0f66ff92 ("KVM: PPC: Book3S HV: Fix guest time accounting
-> with VIRT_CPU_ACCOUNTING_GEN"), no one use this function anymore, So better
-> to remove it.
-> 
-> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Ingo Molnar <mingo@kernel.org>
-> Cc: Frederic Weisbecker <frederic@kernel.org>
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  include/linux/context_tracking.h | 9 ---------
->  1 file changed, 9 deletions(-)
-> 
-> diff --git a/include/linux/context_tracking.h b/include/linux/context_tracking.h
-> index 64ec82851aa3..8150f5ac176c 100644
-> --- a/include/linux/context_tracking.h
-> +++ b/include/linux/context_tracking.h
-> @@ -154,15 +154,6 @@ static inline void guest_exit_irqoff(void)
->  }
->  #endif /* CONFIG_VIRT_CPU_ACCOUNTING_GEN */
->  
-> -static inline void guest_enter(void)
-> -{
-> -	unsigned long flags;
-> -
-> -	local_irq_save(flags);
-> -	guest_enter_irqoff();
-> -	local_irq_restore(flags);
-> -}
-> -
->  static inline void guest_exit(void)
->  {
->  	unsigned long flags;
-> 
+Fixed. Upgraded Lenovo firmware to N2QET18W (1.12 ).
 
-Queued, thanks.
+Now /dev/rtc0 shows up!
 
-Paolo
+My best.,
+Jeff
 
+On Fri, Jan 17, 2020 at 12:16 PM Jeff Chua <jeff.chua.linux@gmail.com> wrote:
+>
+> On Fri, Jan 17, 2020 at 11:46 AM Jeff Chua <jeff.chua.linux@gmail.com> wrote:
+> >
+> > Got installed Linux 5.5.0-rc6 on ThinkPad X1. CPU is i7-10510U (Comet
+> > Lake) ... and /dev/rtc is missing.
+> >
+> > Linux is latest git pull (f4353c3e2aaf7f7d3c5a18271b368bf5292854c3)
+> > CPU model name      : Intel(R) Core(TM) i7-10510U CPU @ 1.80GHz
+> >
+> > Am I missing something?
+>
+> I can confirm that the same kernel works on another ThinkPad (tried on
+> P53 with i7-9750H) but not on X1.
+>
+> Jeff.
