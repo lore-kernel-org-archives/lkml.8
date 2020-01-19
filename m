@@ -2,116 +2,101 @@ Return-Path: <SRS0=pPEE=3I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED452C33CB7
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 13:03:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC763C33CB1
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 13:11:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C338D20679
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 13:03:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80B78206D7
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 13:11:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NZV9m+A2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GMm9H4kh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbgASNDh (ORCPT
+        id S1726970AbgASNLC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 08:03:37 -0500
-Received: from mail-lj1-f181.google.com ([209.85.208.181]:46204 "EHLO
-        mail-lj1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726816AbgASNDg (ORCPT
+        Sun, 19 Jan 2020 08:11:02 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:45929 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726798AbgASNLB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 08:03:36 -0500
-Received: by mail-lj1-f181.google.com with SMTP id m26so31012895ljc.13;
-        Sun, 19 Jan 2020 05:03:35 -0800 (PST)
+        Sun, 19 Jan 2020 08:11:01 -0500
+Received: by mail-lj1-f196.google.com with SMTP id j26so31057858ljc.12
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jan 2020 05:11:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=N8EhJiBcFuLZDUwvKpZnAEaua94hgtTfgVZg/vOy6qU=;
-        b=NZV9m+A2j/a1GYhCmFf/mu91SmgSMIboTRJbm35HNNjVOAq0ymHpcidVZmtdGIlkSa
-         1hhOohdHg/+mKk4IOnQ9EJlLXE0ZYA56wneExjy5mavoODtPBVbM33Qanl9p8jYV2P57
-         OX0wxN9SZnYwe1OUUJvrt2DDGv1phmS7hJeb6l02Jt+pPrGmOyPvUAJ58G1CjI1QcZhS
-         UL1JlOqTgJJJj3fRwytLzrMT4QM5eSQsCQ9+I3/5nfwSivgUc5zyPKRhnTs+/NsbPg+v
-         Wl6SmDi4XdAjrbuxOwcoP19JDL2tQInyoyzXYdD+uhP705IADdDAU7YVLPLyU3iM7V89
-         X5YA==
+        h=from:to:cc:subject:date:message-id;
+        bh=xHIA7vcBxHwMAkwoOr5MVH09q2ANfVq6MDnOPA46wKA=;
+        b=GMm9H4kh6lICMwcXLi3pCPmxoUAsI6XBUQGFk6hVmXJRjOUyeiol1Tl4cCOYOm+U/6
+         Zz4hqRPBTXFqY8S9M7upFCsXnZZinp3pETKUIyqUJBWJ1pV9rQ/8iM0uqsifZDB9sbGV
+         m6qeHNGv2xcFU27f1eqEkDfMH7gSHx328u/meYtzEXknRbGuY133xRl90BO5onPiNcLA
+         BFgkKpJN8W8gJ2kbgW4VQvXjoy+IvvXyUKLobvOH9g6OZ4Up4ECMo7bAXHPCg2uqc/QH
+         heuh3xuOqb30HD3TLU5hF0j9nDkao9jMEzuXu/zG3Jcep77vmsxNxlKUyZOTcrAv8uPy
+         +vdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=N8EhJiBcFuLZDUwvKpZnAEaua94hgtTfgVZg/vOy6qU=;
-        b=GeDaQS+nY2BPGBbj8Yyp9TarEPPhYrZbxXP7DNd37YYrFP071ozEuwOyS1IU3kTDTZ
-         LoVReTkc4Ikn1e3MByBR6a98Zarg5NWY9DM1jkc2N1qCWD14iWQ0U1nCVSKJccmyqSSS
-         9cmnTJHdjZIbGcwN3mCp4JZS7DZk7pSCHrs9y9S0Bic/g1KC26K16OVha5/35SluFkHa
-         iVuP2QxjJfofg+ebsc1iufcQPM9yvsXDqQ7OCjom4v7fD1jx7nmQ9RXBMi8hnM5m9M24
-         w/VypGw5kJYbl3Fv0Mh5iXDBgUj6XTIlY2NvyR08697dDHoG0OVtoUa0L4LCmm2UGtmq
-         DL9g==
-X-Gm-Message-State: APjAAAUoYcip2uQvBWEAxsbpCRij3fqSTwXeFbjqj9DZiFSiOnnUo7c/
-        kKsFptYnVh1VETzTWFQ63VTBMtWaG/V6hQ==
-X-Google-Smtp-Source: APXvYqyPYddV/dUs+sH6lrIfbAvzUg63NwgidemQjzrKv7R0fLgN/dpXUA5GymREXBp0wf9XPmAkkg==
-X-Received: by 2002:a2e:2201:: with SMTP id i1mr10789111lji.110.1579439014461;
-        Sun, 19 Jan 2020 05:03:34 -0800 (PST)
-Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id h81sm15105987lfd.83.2020.01.19.05.03.33
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=xHIA7vcBxHwMAkwoOr5MVH09q2ANfVq6MDnOPA46wKA=;
+        b=Ixwa4KF10jQXPtUXN0MvW0mHELwvxH3GLNRtLUv7ERiDwrrG4lRHY6U2KdEB1CWaHr
+         wPfo45M43lJ/EAPebLm0Ei0Ph6oa60JT2BdHMm+nCAHswKfRKj3smcBSdmUj/HD7amym
+         s2QgpmqMQ5604kokxQdcR09Vo8+pzO1cL7jUvnKY95fqHcDGhxDjcFNmyXnZdPMTT/3a
+         VYLUo5OGMKTkQn+JsaIJOBD0ypibj8C2w1u4U8KUbtKeuwQelZPePFGoS9e3CGKUkmd9
+         4NC9fFEBmchmQyquUQeYohopaaXN4yyi/8LpLox4jR7OJ1YDWIERfHjROgT/ckMCY6/x
+         YHnA==
+X-Gm-Message-State: APjAAAVkTwCzBbNHpbhpunypIW3LUsGI3TS8JJE/XphP6xHGliejnI5J
+        kwm92JtgQB5231kUUK2Y955s7H7/OL8=
+X-Google-Smtp-Source: APXvYqwZd4iDk6qeRz2ilmfbpzga5Cj7PJwS9TfHJLMB1Izkz+Ly4erVN4We8T/nhxG0zPpLk3vQxA==
+X-Received: by 2002:a2e:9e43:: with SMTP id g3mr11135376ljk.37.1579439459387;
+        Sun, 19 Jan 2020 05:10:59 -0800 (PST)
+Received: from localhost.localdomain (188.146.98.213.nat.umts.dynamic.t-mobile.pl. [188.146.98.213])
+        by smtp.gmail.com with ESMTPSA id d11sm15217413lfj.3.2020.01.19.05.10.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Jan 2020 05:03:33 -0800 (PST)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Sun, 19 Jan 2020 14:03:26 +0100
-To:     Joel Fernandes <joel@joelfernandes.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [PATCH 1/1] rcu/tree: support kfree_bulk() interface in
- kfree_rcu()
-Message-ID: <20200119130326.GA19252@pc636>
-References: <20191231122241.5702-1-urezki@gmail.com>
- <20200113190315.GA12543@paulmck-ThinkPad-P72>
- <20200114164937.GA50403@google.com>
- <20200115131446.GA18417@pc636>
- <20200115225350.GA246464@google.com>
- <20200117175217.GA23622@pc636>
- <20200117185732.GH246464@google.com>
- <20200117213721.GN2935@paulmck-ThinkPad-P72>
- <20200117215910.GC206250@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200117215910.GC206250@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sun, 19 Jan 2020 05:10:58 -0800 (PST)
+From:   mateusznosek0@gmail.com
+To:     linux-kernel@vger.kernel.org
+Cc:     Mateusz Nosek <mateusznosek0@gmail.com>,
+        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org
+Subject: [PATCH] arch/x86/mm/mpx.c: Clean up code by removing unnecessary assignment
+Date:   Sun, 19 Jan 2020 14:09:33 +0100
+Message-Id: <20200119130933.12228-1-mateusznosek0@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Paul, Joel.
+From: Mateusz Nosek <mateusznosek0@gmail.com>
 
-> > 
-> > Thank you both!
-> > 
-> > Then I should be looking for an updated version of the patch with an upgraded
-> > commit log?  Or is there more investigation/testing/review in process?
-> > 
-> 
-> From my side the review is complete. I believe he will repost with
-> debugobjects fix and we should be good.
->
-I have put the V2 on the test over the weekend, so i will post it next week.
-Yes, V2 will contain the debugobjects fix. Also i need to add tracing probe,
-something like:
+Previously variable 'ret' is assigned just before return instruction.
+The variable is local so this assignment is useless
+and therefore can be removed.
 
-..
-trace_rcu_invoke_kfree_bulk_callback();
-kfree_bulk(bhead->nr_records, bhead->records);
-..
+Signed-off-by: Mateusz Nosek <mateusznosek0@gmail.com>
+---
+ arch/x86/mm/mpx.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-probably it can be done as separate patch.
+diff --git a/arch/x86/mm/mpx.c b/arch/x86/mm/mpx.c
+index 895fb7a9294d..30ab444301f5 100644
+--- a/arch/x86/mm/mpx.c
++++ b/arch/x86/mm/mpx.c
+@@ -827,10 +827,8 @@ static int try_unmap_single_bt(struct mm_struct *mm,
+ 	/*
+ 	 * No bounds table there, so nothing to unmap.
+ 	 */
+-	if (ret == -ENOENT) {
+-		ret = 0;
++	if (ret == -ENOENT)
+ 		return 0;
+-	}
+ 	if (ret)
+ 		return ret;
+ 	/*
+-- 
+2.17.1
 
-Thank you.
-
---
-Vlad Rezki
