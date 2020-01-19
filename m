@@ -2,145 +2,342 @@ Return-Path: <SRS0=pPEE=3I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD03AC3F68F
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 20:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2F94C33CB6
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 20:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5354206D7
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 20:12:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uq+q6Cs0"
+	by mail.kernel.org (Postfix) with ESMTP id B38BF2071C
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 20:18:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728811AbgASUMq (ORCPT
+        id S1728890AbgASUSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 15:12:46 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:41098 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727138AbgASUMp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 15:12:45 -0500
-Received: by mail-ot1-f68.google.com with SMTP id r27so26880232otc.8;
-        Sun, 19 Jan 2020 12:12:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=N1QlW5+ESSHKmdKwLymeXI/WjMGPsFxu1rPdBv2tr08=;
-        b=uq+q6Cs0lEcX75ocY472Zgm9rPfPQxXPLVnbxbPzCSq9ENg5x+G4rj0kJg+TBjp1tu
-         29np9UO55CBZJCbrMVeNrL/EMjreQUMwCkUI84HZJJ8upJtruJBlLtRIn7gl3+mpeRdw
-         QlYg418ZBWEyvQC77N2W58TILhCiPvfdbvJrPeX/1/Wd8YReKYRHPhvRNmsLmQHQWcEF
-         n9HfCLfLr612qrAswv6+r5ZRkGjIRyRR8GleT8w4ZVF1Icm97bmx9MQesCXu5MUkpqtB
-         CwMh21pG8zQL6mSaxlmZ2Qm1BS91TukroFSNKxQRokc7jvT26b7uVzVDqjVBRQ7mt/ta
-         rE3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=N1QlW5+ESSHKmdKwLymeXI/WjMGPsFxu1rPdBv2tr08=;
-        b=hTwClxxExMdR2YQN1+P1l+OK9RgvtUb/HSlI6HQoP7aDzNBwT/wMjZD3xzW0BtWTdh
-         /eTOVvmQpDiT2VEdYKHnqm6nPXGX4NFMK+AwmEEBhUbaX6ohWj47J/+r0p7yatAbFg1m
-         HQWgf/r97Y+zZACJHdaYcneHS/UFkcZZMf/8B2ZmmbTq28iRqYf4rNGiQ/l4wA5zxinN
-         +y5+mYtJecXS3VbvjsJmqfLcRml8I8c0wV9gaAkAuKCN8DS7jMgT97bqVWvqg10mcTLX
-         P/+bDkOwf0f6pZZ23/0edLsqgMrYbmQAN3a7f86eyZVHm8GBSYolA5z3fhh6RE1VYoGV
-         WgGw==
-X-Gm-Message-State: APjAAAVq3vsBklO1UEfWcfP068fKojH6IpzCNt0K4Z4PN7PzmgeSYppZ
-        KM0iAd0nqgK6Xo0jOFNxFb4=
-X-Google-Smtp-Source: APXvYqwv5AvJUHDWpNU31FO2Kz6kxgn5L5SyDnjDPQndmx4yysajcL24OTKkORdM9fCjre/k76psPw==
-X-Received: by 2002:a05:6830:2361:: with SMTP id r1mr13031284oth.88.1579464764967;
-        Sun, 19 Jan 2020 12:12:44 -0800 (PST)
-Received: from ubuntu-x2-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id 97sm11652456otx.29.2020.01.19.12.12.44
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 19 Jan 2020 12:12:44 -0800 (PST)
-Date:   Sun, 19 Jan 2020 13:12:43 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Chunyan Zhang <zhang.lyra@gmail.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-mmc@vger.kernel.org, Faiz Abbas <faiz_abbas@ti.com>,
-        Chunyan Zhang <zhang.chunyan@linaro.org>,
-        linux-kernel@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] mmc: sdhci: fix an issue of mixing different types
-Message-ID: <20200119201243.GA15269@ubuntu-x2-xlarge-x86>
-References: <20200119034902.20688-1-zhang.chunyan@linaro.org>
+        Sun, 19 Jan 2020 15:18:14 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:45850 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728783AbgASUSO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jan 2020 15:18:14 -0500
+Received: from ip5f5a5d2f.dynamic.kabel-deutschland.de ([95.90.93.47] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1itH0z-0002ec-GB; Sun, 19 Jan 2020 21:17:46 +0100
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Emmanuel Vadot <manu@freebsd.org>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, dianders@chromium.org,
+        andy.yan@rock-chips.com, robin.murphy@arm.com, mka@chromium.org,
+        jagan@amarulasolutions.com, nick@khadas.com,
+        kever.yang@rock-chips.com, m.reichl@fivetechno.de,
+        aballier@gentoo.org, pbrobinson@gmail.com, vicencb@gmail.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] arm64: dts: rockchip: Add initial support for Pinebook Pro
+Date:   Sun, 19 Jan 2020 21:17:39 +0100
+Message-ID: <2816238.fSnfubHXRg@diego>
+In-Reply-To: <20200116225617.6318-2-manu@freebsd.org>
+References: <20200116225617.6318-1-manu@freebsd.org> <20200116225617.6318-2-manu@freebsd.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200119034902.20688-1-zhang.chunyan@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 19, 2020 at 11:49:02AM +0800, Chunyan Zhang wrote:
-> Fix an issue reported by sparse, since different type of parameter is
-> used on calling dmaengine_prep_slave_sg().
+Hi,
+
+overall looks good, but some small things below
+
+Am Donnerstag, 16. Januar 2020, 23:56:17 CET schrieb Emmanuel Vadot:
+> From: Peter Robinson <pbrobinson@gmail.com>
 > 
-> Fixes: 36e1da441fec (mmc: sdhci: add support for using external DMA devices)
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
+> Pinebook Pro is a RK3399 based laptop produced by Pine64.
+> 
+> Add a basic DTS for it.
+> 
+> Signed-off-by: Peter Robinson <pbrobinson@gmail.com>
+> Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
 > ---
->  drivers/mmc/host/sdhci.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+>  .../boot/dts/rockchip/rk3399-pinebook-pro.dts | 626 ++++++++++++++++++
+>  2 files changed, 627 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts
 > 
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index 30b5a624b50e..4503009f993b 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -1235,8 +1235,8 @@ static int sdhci_external_dma_setup(struct sdhci_host *host,
->  		return -EINVAL;
->  
->  	desc = dmaengine_prep_slave_sg(chan, data->sg, data->sg_len,
-> -				       mmc_get_dma_dir(data),
-> -				       DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
-> +			(enum dma_transfer_direction) mmc_get_dma_dir(data),
-> +			DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
->  	if (!desc)
->  		return -EINVAL;
->  
-> -- 
-> 2.20.1
-> 
+> diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+> index 48fb631d5451..9099fb7e2073 100644
+> --- a/arch/arm64/boot/dts/rockchip/Makefile
+> +++ b/arch/arm64/boot/dts/rockchip/Makefile
+> @@ -28,6 +28,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopc-t4.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopi-m4.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopi-neo4.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-orangepi.dtb
+> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-pinebook-pro.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-puma-haikou.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-roc-pc.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-roc-pc-mezzanine.dtb
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts b/arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts
+> new file mode 100644
+> index 000000000000..d2e3d7b35cc6
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts
+> @@ -0,0 +1,626 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (c) 2017 Fuzhou Rockchip Electronics Co., Ltd.
 
-Clang also noticed this through its -Wenum-conversion. I don't really
-like implicit conversions as I think it defeats the point of using the
-enum. I had an explicit conversion locally which I attached below.
-Regardless, this should resolve this issue (although I am not sure I
-like the indentation shift.
+You might want to clarify the copyright ... 2020 and Pine64-something?
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+> + */
+> +
+> +/dts-v1/;
+> +#include <dt-bindings/input/linux-event-codes.h>
+> +#include <dt-bindings/pwm/pwm.h>
+> +#include <dt-bindings/pinctrl/rockchip.h>
+> +#include "rk3399.dtsi"
+> +#include "rk3399-opp.dtsi"
+> +
+> +/ {
+> +	model = "Pine64 Pinebook Pro";
+> +	compatible = "pine64,pinebook-pro", "rockchip,rk3399";
+> +
+> +	chosen {
+> +		stdout-path = "serial2:115200n8";
+> +	};
+> +
+> +	aliases {
+> +		spi0 = &spi1;
 
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-7index 30b5a624b50e..98fa25ba3756 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -1201,6 +1201,7 @@ static int sdhci_external_dma_setup(struct sdhci_host *host,
- 				    struct mmc_command *cmd)
- {
- 	int ret, i;
-+	enum dma_transfer_direction dir;
- 	struct dma_async_tx_descriptor *desc;
- 	struct mmc_data *data = cmd->data;
- 	struct dma_chan *chan;
-@@ -1234,8 +1235,12 @@ static int sdhci_external_dma_setup(struct sdhci_host *host,
- 	if (sg_cnt <= 0)
- 		return -EINVAL;
- 
--	desc = dmaengine_prep_slave_sg(chan, data->sg, data->sg_len,
--				       mmc_get_dma_dir(data),
-+	if (mmc_get_dma_dir(data) == DMA_TO_DEVICE)
-+		dir = DMA_MEM_TO_DEV;
-+	else
-+		dir = DMA_DEV_TO_MEM;
-+
-+	desc = dmaengine_prep_slave_sg(chan, data->sg, data->sg_len, dir,
- 				       DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
- 	if (!desc)
- 		return -EINVAL;
+why is this needed ... I'd think spi can just enumerate itself?
+
+> +	};
+> +
+> +	backlight: backlight {
+> +		compatible = "pwm-backlight";
+> +		enable-gpios = <&gpio1 RK_PA0 GPIO_ACTIVE_HIGH>;
+> +		pwms = <&pwm0 0 740740 0>;
+> +	};
+> +
+> +	gpio-keys {
+> +		compatible = "gpio-keys";
+> +		autorepeat;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pwrbtn>;
+> +
+> +		power {
+> +			debounce-interval = <100>;
+> +			gpios = <&gpio0 RK_PA5 GPIO_ACTIVE_LOW>;
+> +			label = "GPIO Key Power";
+> +			linux,code = <KEY_POWER>;
+> +			wakeup-source;
+> +		};
+> +	};
+> +
+> +	leds {
+> +		status = "okay";
+
+new board-specific nodes don't need a status property
+
+> +		compatible = "gpio-leds";
+> +
+> +		work-led {
+> +			label = "work";
+> +			gpios = <&gpio0 RK_PB3 GPIO_ACTIVE_HIGH>;
+> +		};
+> +
+> +		standby-led {
+> +			label = "standby";
+> +			gpios = <&gpio0 RK_PA2 GPIO_ACTIVE_HIGH>;
+> +		};
+> +	};
+> +
+> +	vcc1v8_s3: vcca1v8_s3: vcc1v8-s3 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc1v8_s3";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <1800000>;
+> +		vin-supply = <&vcc_1v8>;
+> +	};
+> +
+> +	dc_12v: dc-12v {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "dc_12v";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <12000000>;
+> +		regulator-max-microvolt = <12000000>;
+> +	};
+> +
+> +	vcc3v3_sys: vcc3v3-sys {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc3v3_sys";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		vin-supply = <&vcc_sys>;
+> +	};
+> +
+> +	vcc5v0_host: vcc5v0-host-regulator {
+> +		compatible = "regulator-fixed";
+> +		gpio = <&gpio4 RK_PD2 GPIO_ACTIVE_HIGH>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&host_vbus_drv>;
+> +		regulator-name = "vcc5v0_host";
+> +	};
+> +
+> +	vcc5v0_usb3_host: vcc5v0-usb3-host-regulator {
+> +		compatible = "regulator-fixed";
+> +		enable-active-high;
+> +		gpio = <&gpio1 RK_PB5 GPIO_ACTIVE_HIGH>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&host_usb3_drv>;
+> +		regulator-name = "vcc5v0_usb3_host";
+> +		regulator-always-on;
+> +	};
+> +
+> +	vcc3v3_s0: vcc3v3-s0-regulator {
+> +		compatible = "regulator-fixed";
+> +		enable-active-high;
+> +		gpio = <&gpio1 RK_PC6 GPIO_ACTIVE_HIGH>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&lcdvcc_en>;
+> +		regulator-name = "vcc3v3_s0";
+> +		regulator-always-on;
+> +	};
+> +
+> +	vcc_sys: vcc-sys {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc_sys";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		vin-supply = <&dc_12v>;
+> +	};
+> +
+> +	vdd_log: vdd-log {
+> +		compatible = "pwm-regulator";
+> +		pwms = <&pwm2 0 25000 1>;
+> +		pwm-supply = <&vcc_sys>;
+> +		regulator-name = "vdd_log";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-init-microvolt = <950000>;
+
+There is no init-microvolt property in mainline, I'd think bootloader should
+already setup the pwm to a suitable setting?
+
+Not
+
+> +		regulator-min-microvolt = <800000>;
+> +		regulator-max-microvolt = <1400000>;
+> +	};
+> +};
+> +
+> +&cpu_l0 {
+> +	cpu-supply = <&vdd_cpu_l>;
+> +};
+> +
+> +&cpu_l1 {
+> +	cpu-supply = <&vdd_cpu_l>;
+> +};
+> +
+> +&cpu_l2 {
+> +	cpu-supply = <&vdd_cpu_l>;
+> +};
+> +
+> +&cpu_l3 {
+> +	cpu-supply = <&vdd_cpu_l>;
+> +};
+
+what happened to cpu_b0 and cpu_b1 supplies?
+Should probably reference the cpu_b regulator below?
+
+> +
+> +&emmc_phy {
+> +	status = "okay";
+> +};
+> +
+> +&i2c0 {
+> +	clock-frequency = <400000>;
+> +	i2c-scl-rising-time-ns = <168>;
+> +	i2c-scl-falling-time-ns = <4>;
+> +	status = "okay";
+
+[...]
+
+> +	vdd_cpu_b: regulator@40 {
+> +		compatible = "silergy,syr827";
+> +		reg = <0x40>;
+> +		fcs,suspend-voltage-selector = <1>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&vsel1_gpio>;
+> +		vsel-gpios = <&gpio1 RK_PC1 GPIO_ACTIVE_HIGH>;
+
+This is not yet specified in the syr82x (fan5355) bindings and
+also unknown to the driver
+
+> +		regulator-compatible = "fan53555-reg";
+> +		regulator-name = "vdd_cpu_b";
+> +		regulator-min-microvolt = <712500>;
+> +		regulator-max-microvolt = <1500000>;
+> +		regulator-ramp-delay = <1000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		vin-supply = <&vcc_sys>;
+> +
+> +		regulator-state-mem {
+> +			regulator-off-in-suspend;
+> +		};
+> +	};
+> +
+> +	vdd_gpu: regulator@41 {
+> +		compatible = "silergy,syr828";
+> +		reg = <0x41>;
+> +		fcs,suspend-voltage-selector = <1>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&vsel2_gpio>;
+> +		vsel-gpios = <&gpio1 RK_PB6 GPIO_ACTIVE_HIGH>;
+
+same
+
+> +		regulator-compatible = "fan53555-reg";
+> +		regulator-name = "vdd_gpu";
+> +		regulator-min-microvolt = <712500>;
+> +		regulator-max-microvolt = <1500000>;
+> +		regulator-ramp-delay = <1000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		vin-supply = <&vcc_sys>;
+> +
+> +		regulator-state-mem {
+> +			regulator-off-in-suspend;
+> +		};
+> +	};
+> +
+> +};
+
+[...]
+
+> +&saradc {
+> +	status = "okay";
+
+needs a vref-supply
+
+> +};
+> +
+> +&sdmmc {
+> +	bus-width = <4>;
+> +	status = "okay";
+> +	max-frequency = <20000000>;
+
+vmmc / vqmmc supplies?
+Especially if one wants to achieve higher speeds on uhs cards.
+
+Heiko
+
+
