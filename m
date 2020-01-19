@@ -2,76 +2,95 @@ Return-Path: <SRS0=pPEE=3I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C91FAC33CAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 05:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C64C33CB7
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 05:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 863152071C
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 05:43:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F3FC20730
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 05:44:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726465AbgASFdI (ORCPT
+        id S1726586AbgASFo1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 00:33:08 -0500
-Received: from smtprelay0229.hostedemail.com ([216.40.44.229]:47155 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725792AbgASFdH (ORCPT
+        Sun, 19 Jan 2020 00:44:27 -0500
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:39530 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725809AbgASFo0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 00:33:07 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 43A46182251C0;
-        Sun, 19 Jan 2020 05:33:06 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: wheel05_8f543acaa5616
-X-Filterd-Recvd-Size: 1631
-Received: from XPS-9350.home (unknown [47.151.135.224])
-        (Authenticated sender: joe@perches.com)
-        by omf02.hostedemail.com (Postfix) with ESMTPA;
-        Sun, 19 Jan 2020 05:33:04 +0000 (UTC)
-Message-ID: <b1437d2f1543e73a20250342a764185772167658.camel@perches.com>
-Subject: Re: [PATCH 3/3] Staging: comedi: usbdux: cleanup long line and
- align it
-From:   Joe Perches <joe@perches.com>
-To:     Simon Fong <simon.fongnt@gmail.com>, abbotti@mev.co.uk
-Cc:     hsweeten@visionengravers.com, gregkh@linuxfoundation.org,
-        colin.king@canonical.com, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Date:   Sat, 18 Jan 2020 21:32:06 -0800
-In-Reply-To: <20200119035243.7819-1-simon.fongnt@gmail.com>
-References: <20200119035243.7819-1-simon.fongnt@gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Sun, 19 Jan 2020 00:44:26 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R731e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0To4.P5C_1579412660;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0To4.P5C_1579412660)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sun, 19 Jan 2020 13:44:23 +0800
+Subject: Re: [PATCH] mm: move_pages: fix the return value if there are
+ not-migrated pages
+To:     Wei Yang <richardw.yang@linux.intel.com>
+Cc:     mhocko@suse.com, akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <1579325203-16405-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20200119023720.GD9745@richard>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <6b4bda26-10c1-3631-3b49-293935975bae@linux.alibaba.com>
+Date:   Sat, 18 Jan 2020 21:44:15 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
+In-Reply-To: <20200119023720.GD9745@richard>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2020-01-19 at 11:52 +0800, Simon Fong wrote:
-> Clean up long line and align it
-[]
-> diff --git a/drivers/staging/comedi/drivers/usbdux.c b/drivers/staging/comedi/drivers/usbdux.c
-[]
-> @@ -204,7 +204,8 @@ struct usbdux_private {
->  	struct mutex mut;
->  };
->  
-> -static void usbdux_unlink_urbs(struct urb **urbs, int num_urbs)
 
-Why do you believe this to be a long line?
-It's only 63 characters.
 
-         1         2         3         4         5         6         7
-1234567890123456789012345678901234567890123456789012345678901234567890
+On 1/18/20 6:37 PM, Wei Yang wrote:
+> On Sat, Jan 18, 2020 at 01:26:43PM +0800, Yang Shi wrote:
+>> The do_move_pages_to_node() might return > 0 value, the number of pages
+>> that are not migrated, then the value will be returned to userspace
+>> directly.  But, move_pages() syscall would just return 0 or errno.  So,
+>> we need reset the return value to 0 for such case as what pre-v4.17 did.
+>>
+>> Fixes: a49bd4d71637 ("mm, numa: rework do_pages_move")
+>> Cc: Michal Hocko <mhocko@suse.com>
+>> Cc: Wei Yang <richardw.yang@linux.intel.com>
+>> Cc: <stable@vger.kernel.org>    [4.17+]
+>> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+>> ---
+>> mm/migrate.c | 5 ++++-
+>> 1 file changed, 4 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/mm/migrate.c b/mm/migrate.c
+>> index 86873b6..3e75432 100644
+>> --- a/mm/migrate.c
+>> +++ b/mm/migrate.c
+>> @@ -1659,8 +1659,11 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
+>> 			goto out_flush;
+>>
+>> 		err = do_move_pages_to_node(mm, &pagelist, current_node);
+>> -		if (err)
+>> +		if (err) {
+>> +			if (err > 0)
+>> +				err = 0;
+>> 			goto out;
+>> +		}
+>> 		if (i > start) {
+>> 			err = store_status(status, start, current_node, i - start);
+>> 			if (err)
+>> -- 
+>> 1.8.3.1
+>
+> Hey, I am afraid you missed something. There are three calls of
+> do_move_pages_to_node() in do_pages_move(). Why you just handle one return
+> value? How about the other two?
 
-static void usbdux_unlink_urbs(struct urb **urbs, int num_urbs)
+A late night patch... I just simply missed those two. Thanks for 
+catching it, will resolve in v2.
 
-> +static void usbdux_unlink_urbs(struct urb **urbs,
-> +			       int num_urbs)
->  {
->  	int i;
->   
+>
 
