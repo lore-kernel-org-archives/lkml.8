@@ -2,86 +2,200 @@ Return-Path: <SRS0=pPEE=3I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E337C33CB7
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 01:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63858C32771
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 02:07:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A629206B7
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 01:59:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fnarfbargle.com header.i=@fnarfbargle.com header.b="yXXRc9zh"
+	by mail.kernel.org (Postfix) with ESMTP id 31C7F2468C
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 02:07:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727573AbgASB7V (ORCPT
+        id S1728709AbgASCHK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 20:59:21 -0500
-Received: from ns3.fnarfbargle.com ([103.4.19.87]:35646 "EHLO
-        ns3.fnarfbargle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727083AbgASB7V (ORCPT
+        Sat, 18 Jan 2020 21:07:10 -0500
+Received: from mail-il1-f200.google.com ([209.85.166.200]:47064 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727122AbgASCHK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 20:59:21 -0500
-Received: from [10.8.0.1] (helo=srv.home ident=heh27698)
-        by ns3.fnarfbargle.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.84_2)
-        (envelope-from <lists2009@fnarfbargle.com>)
-        id 1iszri-0001Dx-Ni; Sun, 19 Jan 2020 09:59:02 +0800
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=fnarfbargle.com; s=mail;
-        h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject; bh=IcoeF8ZKL8q7zcbyW8LQy/2+4jjbmV9Gw23mNx+sFLc=;
-        b=yXXRc9zhAd80mR37sYLqbLcYyHF+k0MwgvB+aYykw+1rFlrJML8J2rq35QCInTFxofgRoCc/cLtqUPlLfMabLrX7f6X0I+WHDa0p5ke9vpI2mAs3lDxmjczs63nWDvtbL2+x96+u7eTDKDLZw0EutkIOl7MFGnskLOECvU/iGoU=;
-Subject: Re: [RFT PATCH 0/4] hwmon: k10temp driver improvements
-To:     Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org
-Cc:     Clemens Ladisch <clemens@ladisch.de>,
-        Jean Delvare <jdelvare@suse.com>, linux-kernel@vger.kernel.org
-References: <20200116141800.9828-1-linux@roeck-us.net>
- <492345ed-f82e-e4d9-20ac-924b4a00df90@fnarfbargle.com>
- <6bb6770d-cfb0-1209-6c8f-f89c5dc4fa7f@roeck-us.net>
-From:   Brad Campbell <lists2009@fnarfbargle.com>
-Message-ID: <3a6068a1-3504-26e0-d1e6-947eae287a29@fnarfbargle.com>
-Date:   Sun, 19 Jan 2020 09:59:01 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sat, 18 Jan 2020 21:07:10 -0500
+Received: by mail-il1-f200.google.com with SMTP id a2so22222164ill.13
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jan 2020 18:07:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=idsr0Fm5f2RMNf3/YGiIsq96TQVNJAV84Aq5F0xBCjA=;
+        b=flAobAtPRpHGbdaHqEfQ301CocoqPpQDZXhdYqbLB4Pk5imjIf/Lg2XZz3rj18Ra12
+         7ciGebaeB2KHoze/lPx5vOokCuNfCdhiz9Uw8R5X8+6DbA+5fmtDWnTK0pf5sEK0kBfL
+         CFESoLF83yCQ/l6dFBPOqAxRERebHZiZlT6BQ1S22r2ASmCJ6IcvpVKG7AFvqbozC/XT
+         MIK1RYUhDkjdIJaFW1BU9s/5EWvRlzQ0+shUsAihT1YxBvuwz6BCUsbquQjEJ/qOeHpc
+         DvgFWn11xU/gwpzuYoccuMbJ+7kDrNM27SZmmqDEnDFwsHtNyd2rJBMS7iktlyNp3jyD
+         3xcA==
+X-Gm-Message-State: APjAAAWT1yWDDLa41b963hEOhhNnLn6wqww37Tvp8i0jLTWxvgMjL9yC
+        0Mef1Y+W+lRzuoN2sOL94ngSTHsnt1lkVl1dF14qRhoz8+zx
+X-Google-Smtp-Source: APXvYqwzRWFEe+gCQEo31KXgnazGw4tk4pVAQXLm6cuznlf6z5VFTkb/DpHNBAqtM5vbIWwtYg/X+IRfqyAE0SO/m6qrrC1bkZBQ
 MIME-Version: 1.0
-In-Reply-To: <6bb6770d-cfb0-1209-6c8f-f89c5dc4fa7f@roeck-us.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-AU
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a92:5cda:: with SMTP id d87mr5409106ilg.100.1579399629333;
+ Sat, 18 Jan 2020 18:07:09 -0800 (PST)
+Date:   Sat, 18 Jan 2020 18:07:09 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000dd68d0059c74a1db@google.com>
+Subject: KASAN: slab-out-of-bounds Read in bitmap_ip_add
+From:   syzbot <syzbot+f3e96783d74ee8ea9aa3@syzkaller.appspotmail.com>
+To:     allison@lohutok.net, coreteam@netfilter.org, davem@davemloft.net,
+        fw@strlen.de, jeremy@azazel.net, kadlec@netfilter.org,
+        kstewart@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        pablo@netfilter.org, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/1/20 1:14 am, Guenter Roeck wrote:
-> On 1/18/20 12:52 AM, Brad Campbell wrote:
->> On 16/1/20 10:17 pm, Guenter Roeck wrote:
->>> This patch series implements various improvements for the k10temp 
->>> driver.
->>>
->>
->> Looks good here. Identical motherboards (ASUS x370 Prime-Pro), 
->> different CPUs.
->>
->> 3950x
->>
-> Interesting. I thought the 3950X needs a newer motherboard. 
+Hello,
 
-This board has the 3950x listed on the compatibility matrix, so I took 
-the punt. I am running a beta BIOS with the 1.0.0.4 AGESA but it's 
-running in a stock production environment and has been stable. I don't 
-overclock or game, it's predominantly a VM host.
+syzbot found the following crash on:
 
-> Is that CPU as amazing as everyone says it is ? 
+HEAD commit:    244dc268 Merge tag 'drm-fixes-2020-01-19' of git://anongit..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=10edfa85e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=cfbb8fa33f49f9f3
+dashboard link: https://syzkaller.appspot.com/bug?extid=f3e96783d74ee8ea9aa3
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=159e60f1e00000
 
-It is fairly impressive and a significant update over the 1800x it 
-replaced. Kernel compiles are pretty quick :)
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+f3e96783d74ee8ea9aa3@syzkaller.appspotmail.com
 
-> And does it really need liquid cooling ?
+==================================================================
+BUG: KASAN: slab-out-of-bounds in test_bit include/asm-generic/bitops/instrumented-non-atomic.h:110 [inline]
+BUG: KASAN: slab-out-of-bounds in bitmap_ip_do_add net/netfilter/ipset/ip_set_bitmap_ip.c:83 [inline]
+BUG: KASAN: slab-out-of-bounds in bitmap_ip_add+0xdf/0x870 net/netfilter/ipset/ip_set_bitmap_gen.h:136
+Read of size 8 at addr ffff888094088c80 by task syz-executor.4/9490
 
-No. I'm using a stock AMD Wraith Prism cooler in a 4U rack case.
+CPU: 1 PID: 9490 Comm: syz-executor.4 Not tainted 5.5.0-rc6-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1fb/0x318 lib/dump_stack.c:118
+ print_address_description+0x74/0x5c0 mm/kasan/report.c:374
+ __kasan_report+0x149/0x1c0 mm/kasan/report.c:506
+ kasan_report+0x26/0x50 mm/kasan/common.c:639
+ check_memory_region_inline mm/kasan/generic.c:182 [inline]
+ check_memory_region+0x2b6/0x2f0 mm/kasan/generic.c:192
+ __kasan_check_read+0x11/0x20 mm/kasan/common.c:95
+ test_bit include/asm-generic/bitops/instrumented-non-atomic.h:110 [inline]
+ bitmap_ip_do_add net/netfilter/ipset/ip_set_bitmap_ip.c:83 [inline]
+ bitmap_ip_add+0xdf/0x870 net/netfilter/ipset/ip_set_bitmap_gen.h:136
+ bitmap_ip_uadt+0x6bf/0xa60 net/netfilter/ipset/ip_set_bitmap_ip.c:186
+ call_ad+0x10a/0x5b0 net/netfilter/ipset/ip_set_core.c:1716
+ ip_set_ad+0x6a9/0x860 net/netfilter/ipset/ip_set_core.c:1804
+ ip_set_uadd+0x37/0x50 net/netfilter/ipset/ip_set_core.c:1829
+ nfnetlink_rcv_msg+0x9ae/0xcd0 net/netfilter/nfnetlink.c:229
+ netlink_rcv_skb+0x19e/0x3e0 net/netlink/af_netlink.c:2477
+ nfnetlink_rcv+0x1e0/0x1e50 net/netfilter/nfnetlink.c:563
+ netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+ netlink_unicast+0x767/0x920 net/netlink/af_netlink.c:1328
+ netlink_sendmsg+0xa2c/0xd50 net/netlink/af_netlink.c:1917
+ sock_sendmsg_nosec net/socket.c:639 [inline]
+ sock_sendmsg net/socket.c:659 [inline]
+ ____sys_sendmsg+0x4f7/0x7f0 net/socket.c:2330
+ ___sys_sendmsg net/socket.c:2384 [inline]
+ __sys_sendmsg+0x1ed/0x290 net/socket.c:2417
+ __do_sys_sendmsg net/socket.c:2426 [inline]
+ __se_sys_sendmsg net/socket.c:2424 [inline]
+ __x64_sys_sendmsg+0x7f/0x90 net/socket.c:2424
+ do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45b159
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fddd7876c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00007fddd78776d4 RCX: 000000000045b159
+RDX: 0000000000000000 RSI: 0000000020000300 RDI: 0000000000000003
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 00000000000008dc R14: 00000000004ca08f R15: 000000000075bf2c
 
-It might reach higher boost clocks with better cooling, but under an 
-all-core load I still see > 4.1GHz across all cores.
+Allocated by task 8928:
+ save_stack mm/kasan/common.c:72 [inline]
+ set_track mm/kasan/common.c:80 [inline]
+ __kasan_kmalloc+0x118/0x1c0 mm/kasan/common.c:513
+ kasan_kmalloc+0x9/0x10 mm/kasan/common.c:527
+ __do_kmalloc mm/slab.c:3656 [inline]
+ __kmalloc+0x254/0x340 mm/slab.c:3665
+ kmalloc include/linux/slab.h:561 [inline]
+ kzalloc+0x21/0x40 include/linux/slab.h:670
+ ip_set_alloc+0x32/0x60 net/netfilter/ipset/ip_set_core.c:255
+ init_map_ip net/netfilter/ipset/ip_set_bitmap_ip.c:223 [inline]
+ bitmap_ip_create+0x48b/0xac0 net/netfilter/ipset/ip_set_bitmap_ip.c:327
+ ip_set_create+0x421/0xfd0 net/netfilter/ipset/ip_set_core.c:1111
+ nfnetlink_rcv_msg+0x9ae/0xcd0 net/netfilter/nfnetlink.c:229
+ netlink_rcv_skb+0x19e/0x3e0 net/netlink/af_netlink.c:2477
+ nfnetlink_rcv+0x1e0/0x1e50 net/netfilter/nfnetlink.c:563
+ netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+ netlink_unicast+0x767/0x920 net/netlink/af_netlink.c:1328
+ netlink_sendmsg+0xa2c/0xd50 net/netlink/af_netlink.c:1917
+ sock_sendmsg_nosec net/socket.c:639 [inline]
+ sock_sendmsg net/socket.c:659 [inline]
+ ____sys_sendmsg+0x4f7/0x7f0 net/socket.c:2330
+ ___sys_sendmsg net/socket.c:2384 [inline]
+ __sys_sendmsg+0x1ed/0x290 net/socket.c:2417
+ __do_sys_sendmsg net/socket.c:2426 [inline]
+ __se_sys_sendmsg net/socket.c:2424 [inline]
+ __x64_sys_sendmsg+0x7f/0x90 net/socket.c:2424
+ do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Regards,
-Brad
+Freed by task 8538:
+ save_stack mm/kasan/common.c:72 [inline]
+ set_track mm/kasan/common.c:80 [inline]
+ kasan_set_free_info mm/kasan/common.c:335 [inline]
+ __kasan_slab_free+0x12e/0x1e0 mm/kasan/common.c:474
+ kasan_slab_free+0xe/0x10 mm/kasan/common.c:483
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x10d/0x220 mm/slab.c:3757
+ tomoyo_path_perm+0x6ae/0x850 security/tomoyo/file.c:842
+ tomoyo_inode_getattr+0x1c/0x20 security/tomoyo/tomoyo.c:129
+ security_inode_getattr+0xc0/0x140 security/security.c:1222
+ vfs_getattr+0x2a/0x6d0 fs/stat.c:115
+ vfs_statx fs/stat.c:191 [inline]
+ vfs_stat include/linux/fs.h:3249 [inline]
+ __do_sys_newstat fs/stat.c:341 [inline]
+ __se_sys_newstat+0x95/0x150 fs/stat.c:337
+ __x64_sys_newstat+0x5b/0x70 fs/stat.c:337
+ do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff888094088c80
+ which belongs to the cache kmalloc-32 of size 32
+The buggy address is located 0 bytes inside of
+ 32-byte region [ffff888094088c80, ffff888094088ca0)
+The buggy address belongs to the page:
+page:ffffea0002502200 refcount:1 mapcount:0 mapping:ffff8880aa8001c0 index:0xffff888094088fc1
+raw: 00fffe0000000200 ffffea00028f8048 ffffea00029d9b88 ffff8880aa8001c0
+raw: ffff888094088fc1 ffff888094088000 000000010000003f 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff888094088b80: fb fb fb fb fc fc fc fc fb fb fb fb fc fc fc fc
+ ffff888094088c00: 00 05 fc fc fc fc fc fc fb fb fb fb fc fc fc fc
+>ffff888094088c80: 04 fc fc fc fc fc fc fc 00 00 01 fc fc fc fc fc
+                   ^
+ ffff888094088d00: 00 00 03 fc fc fc fc fc fb fb fb fb fc fc fc fc
+ ffff888094088d80: fb fb fb fb fc fc fc fc 00 00 00 fc fc fc fc fc
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
