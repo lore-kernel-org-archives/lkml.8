@@ -2,110 +2,339 @@ Return-Path: <SRS0=pPEE=3I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EDC8C33CB1
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 14:14:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E68C33CB7
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 14:15:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 532D52072B
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 14:14:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2E892072B
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 14:15:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579443349;
+	bh=g6W+x/faFHqWNP96zz8T9b7ZL6BY5dXLLnKV7Hf3XO8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=2h2VXI1fUsf+v9EwS8ckdkgp2bmz2xDJ9n9c7aYOXrS7uX1H4BLk5CLrMtHN6E5f9
+	 N+evejwdpPxk8ZnHh2RZ94owlxcFr6uChl9Uwnt0wWtQmQ1JuAaHVl8P9pgV2hz9JM
+	 i2S/JHP+yry8q56dv4F4BTKrMSHJ4Coe/S4QhD2A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbgASOOR (ORCPT
+        id S1727076AbgASOPs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 09:14:17 -0500
-Received: from sauhun.de ([88.99.104.3]:35136 "EHLO pokefinder.org"
+        Sun, 19 Jan 2020 09:15:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726860AbgASOOR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 09:14:17 -0500
-Received: from localhost (p54B335BB.dip0.t-ipconnect.de [84.179.53.187])
-        by pokefinder.org (Postfix) with ESMTPSA id 459CD2C018B;
-        Sun, 19 Jan 2020 15:14:12 +0100 (CET)
-Date:   Sun, 19 Jan 2020 15:14:09 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Rosin <peda@axentia.se>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PULL REQUEST] i2c for 5.5
-Message-ID: <20200119141343.GA1191@ninjato>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="azLHFNyN32YCQGCU"
-Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        id S1726816AbgASOPr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jan 2020 09:15:47 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 321B9206D7;
+        Sun, 19 Jan 2020 14:15:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579443345;
+        bh=g6W+x/faFHqWNP96zz8T9b7ZL6BY5dXLLnKV7Hf3XO8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=HY1pepszUjHeQ7PAcS8Jl2iWG1LldgGGs0i5pq/mkN2LUjpK1pk4uq4KHR3O1btxo
+         Vta+93TAlQtTDnHppuZ4qoNbFTa+a2g/nH/Lr2Ud+U2TLuX721CnHa4sj0JqjEKwB+
+         k8LRmsrQ06qjSRtoR7kl6aJFvLaDAVM8oSRGsfD0=
+Date:   Sun, 19 Jan 2020 23:15:40 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Tim Bird <Tim.Bird@sony.com>, Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 22/22] Documentation: tracing: Add boot-time tracing
+ document
+Message-Id: <20200119231540.eaebef64f8a69bc97f4abf25@kernel.org>
+In-Reply-To: <da3c941a-f7a2-537e-9201-862450cb69d9@infradead.org>
+References: <157867220019.17873.13377985653744804396.stgit@devnote2>
+        <157867246028.17873.8047384554383977870.stgit@devnote2>
+        <da3c941a-f7a2-537e-9201-862450cb69d9@infradead.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Randy,
 
---azLHFNyN32YCQGCU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thank you for your comments!
 
-Linus,
+On Sat, 18 Jan 2020 10:14:08 -0800
+Randy Dunlap <rdunlap@infradead.org> wrote:
 
-I2C has some more driver bugfixes for 5.5, two RPM fixes and one leak fix.
+> Hi,
+> 
+> Here are a few editorial comments for you...
+> 
+> 
+> On 1/10/20 8:07 AM, Masami Hiramatsu wrote:
+> > Add a documentation about boot-time tracing options in
+> > boot config.
+> > 
+> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> > ---
+> >  Documentation/admin-guide/bootconfig.rst |    2 
+> >  Documentation/trace/boottime-trace.rst   |  184 ++++++++++++++++++++++++++++++
+> >  Documentation/trace/index.rst            |    1 
+> >  3 files changed, 187 insertions(+)
+> >  create mode 100644 Documentation/trace/boottime-trace.rst
+> > 
+> 
+> > diff --git a/Documentation/trace/boottime-trace.rst b/Documentation/trace/boottime-trace.rst
+> > new file mode 100644
+> > index 000000000000..1d10fdebf1b2
+> > --- /dev/null
+> > +++ b/Documentation/trace/boottime-trace.rst
+> > @@ -0,0 +1,184 @@
+> > +.. SPDX-License-Identifier: GPL-2.0
+> > +
+> > +=================
+> > +Boot-time tracing
+> > +=================
+> > +
+> > +:Author: Masami Hiramatsu <mhiramat@kernel.org>
+> > +
+> > +Overview
+> > +========
+> > +
+> > +Boot-time tracing allows users to trace boot-time process including
+> > +device initialization with full features of ftrace including per-event
+> > +filter and actions, histograms, kprobe-events and synthetic-events,
+> > +and trace instances.
+> > +Since kernel cmdline is not enough to control these complex features,
+> > +this uses bootconfig file to describe tracing feature programming.
+> > +
+> > +Options in the Boot Config
+> > +==========================
+> > +
+> > +Here is the list of available options list for boot time tracing in
+> > +boot config file [1]_. All options are under "ftrace." or "kernel."
+> > +refix. See kernel parameters for the options which starts
+> 
+>    prefix.
 
-Please pull.
+Oops, OK.
 
-Thanks,
+> 
+> > +with "kernel." prefix [2]_.
+> > +
+> > +.. [1] See :ref:`Documentation/admin-guide/bootconfig.rst <bootconfig>`
+> > +.. [2] See :ref:`Documentation/admin-guide/kernel-parameters.rst <kernelparameters>`
+> > +
+> > +Ftrace Global Options
+> > +---------------------
+> > +
+> > +Ftrace global options have "kernel." prefix in boot config, which means
+> > +these options are passed as a part of kernel legacy command line.
+> > +
+> > +kernel.tp_printk
+> > +   Output trace-event data on printk buffer too.
+> > +
+> > +kernel.dump_on_oops [= MODE]
+> > +   Dump ftrace on Oops. If MODE = 1 or omitted, dump trace buffer
+> > +   on all CPUs. If MODE = 2, dump a buffer on a CPU which kicks Oops.
+> > +
+> > +kernel.traceoff_on_warning
+> > +   Stop tracing if WARN_ON() occurs.
+> > +
+> > +kernel.fgraph_max_depth = MAX_DEPTH
+> > +   Set MAX_DEPTH to maximum depth of fgraph tracer.
+> > +
+> > +kernel.fgraph_filters = FILTER[, FILTER2...]
+> > +   Add fgraph tracing function filters.
+> > +
+> > +kernel.fgraph_notraces = FILTER[, FILTER2...]
+> > +   Add fgraph non tracing function filters.
+> 
+>                  non-tracing
 
-   Wolfram
+OK.
+
+> 
+> > +
+> > +
+> > +Ftrace Per-instance Options
+> > +---------------------------
+> > +
+> > +These options can be used for each instance including global ftrace node.
+> > +
+> > +ftrace.[instance.INSTANCE.]options = OPT1[, OPT2[...]]
+> > +   Enable given ftrace options.
+> > +
+> > +ftrace.[instance.INSTANCE.]trace_clock = CLOCK
+> > +   Set given CLOCK to ftrace's trace_clock.
+> > +
+> > +ftrace.[instance.INSTANCE.]buffer_size = SIZE
+> > +   Configure ftrace buffer size to SIZE. You can use "KB" or "MB"
+> > +   for that SIZE.
+> > +
+> > +ftrace.[instance.INSTANCE.]alloc_snapshot
+> > +   Allocate snapshot buffer.
+> > +
+> > +ftrace.[instance.INSTANCE.]cpumask = CPUMASK
+> > +   Set CPUMASK as trace cpu-mask.
+> > +
+> > +ftrace.[instance.INSTANCE.]events = EVENT[, EVENT2[...]]
+> > +   Enable given events on boot. You can use a wild card in EVENT.
+> > +
+> > +ftrace.[instance.INSTANCE.]tracer = TRACER
+> > +   Set TRACER to current tracer on boot. (e.g. function)
+> > +
+> > +ftrace.[instance.INSTANCE.]ftrace.filters
+> > +   This will take an array of tracing function filter rules
+> 
+> end with '.' as above descriptions.
+
+Yes, I missed it.
+
+> 
+> > +
+> > +ftrace.[instance.INSTANCE.]ftrace.notraces
+> > +   This will take an array of NON-tracing function filter rules
+> 
+> ditto
+
+OK.
+
+> 
+> > +
+> > +
+> > +Ftrace Per-Event Options
+> > +------------------------
+> > +
+> > +These options are setting per-event options.
+> > +
+> > +ftrace.[instance.INSTANCE.]event.GROUP.EVENT.enable
+> > +   Enables GROUP:EVENT tracing.
+> 
+>       Enable
+
+OK.
+
+> 
+> > +
+> > +ftrace.[instance.INSTANCE.]event.GROUP.EVENT.filter = FILTER
+> > +   Set FILTER rule to the GROUP:EVENT.
+> > +
+> > +ftrace.[instance.INSTANCE.]event.GROUP.EVENT.actions = ACTION[, ACTION2[...]]
+> > +   Set ACTIONs to the GROUP:EVENT.
+> > +
+> > +ftrace.[instance.INSTANCE.]event.kprobes.EVENT.probes = PROBE[, PROBE2[...]]
+> > +   Defines new kprobe event based on PROBEs. It is able to define
+> > +   multiple probes on one event, but those must have same type of
+> > +   arguments. This option is available only for the event which
+> > +   group name is "kprobes".
+> > +
+> > +ftrace.[instance.INSTANCE.]event.synthetic.EVENT.fields = FIELD[, FIELD2[...]]
+> > +   Defines new synthetic event with FIELDs. Each field should be
+> > +   "type varname".
+> > +
+> > +Note that kprobe and synthetic event definitions can be written under
+> > +instance node, but those are also visible from other instances. So please
+> > +take care for event name conflict.
+> > +
+> > +
+> > +Examples
+> > +========
+> > +
+> > +For example, to add filter and actions for each event, define kprobe
+> > +events, and synthetic events with histogram, write a boot config like
+> > +below::
+> > +
+> > +  ftrace.event {
+> > +        task.task_newtask {
+> > +                filter = "pid < 128"
+> > +                enable
+> > +        }
+> > +        kprobes.vfs_read {
+> > +                probes = "vfs_read $arg1 $arg2"
+> > +                filter = "common_pid < 200"
+> > +                enable
+> > +        }
+> > +        synthetic.initcall_latency {
+> > +                fields = "unsigned long func", "u64 lat"
+> > +                actions = "hist:keys=func.sym,lat:vals=lat:sort=lat"
+> > +        }
+> > +        initcall.initcall_start {
+> > +                actions = "hist:keys=func:ts0=common_timestamp.usecs"
+> > +        }
+> > +        initcall.initcall_finish {
+> > +                actions = "hist:keys=func:lat=common_timestamp.usecs-$ts0:onmatch(initcall.initcall_start).initcall_latency(func,$lat)"
+> > +        }
+> > +  }
+> > +
+> > +Also, boottime tracing supports "instance" node, which allows us to run
+> 
+>          boot-time  [for consistency]
+
+OK.
+
+> 
+> > +several tracers for different purpose at once. For example, one tracer
+> > +is for tracing functions start with "user\_", and others tracing "kernel\_"
+> 
+>                             starting
+
+OK.
+
+> 
+> > +functions, you can write boot config as below::
+> > +
+> > +  ftrace.instance {
+> > +        foo {
+> > +                tracer = "function"
+> > +                ftrace.filters = "user_*"
+> > +        }
+> > +        bar {
+> > +                tracer = "function"
+> > +                ftrace.filters = "kernel_*"
+> > +        }
+> > +  }
+> > +
+> > +The instance node also accepts event nodes so that each instance
+> > +can customize its event tracing.
+> > +
+> > +This boot-time tracing also supports ftrace kernel parameters via boot
+> > +config.
+> > +For example, following kernel parameters::
+> > +
+> > + trace_options=sym-addr trace_event=initcall:* tp_printk trace_buf_size=1M ftrace=function ftrace_filter="vfs*"
+> > +
+> > +This can be written in boot config like below::
+> > +
+> > +  kernel {
+> > +        trace_options = sym-addr
+> > +        trace_event = "initcall:*"
+> > +        tp_printk
+> > +        trace_buf_size = 1M
+> > +        ftrace = function
+> > +        ftrace_filter = "vfs*"
+> > +  }
+> > +
+> > +Note that parameters start with "kernel" prefix instead of "ftrace".
+> 
+> HTH.
+
+Very helpful. Thanks!
 
 
-The following changes since commit b3a987b0264d3ddbb24293ebff10eddfc472f653:
-
-  Linux 5.5-rc6 (2020-01-12 16:55:08 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-current
-
-for you to fetch changes up to e64175776d06a8ceebbfd349d7e66a4a46ca39ef:
-
-  i2c: iop3xx: Fix memory leak in probe error path (2020-01-15 20:31:27 +0100)
-
-----------------------------------------------------------------
-Dmitry Osipenko (2):
-      i2c: tegra: Fix suspending in active runtime PM state
-      i2c: tegra: Properly disable runtime PM on driver's probe error
-
-Krzysztof Kozlowski (1):
-      i2c: iop3xx: Fix memory leak in probe error path
-
-
-with much appreciated quality assurance from
-----------------------------------------------------------------
-Thierry Reding (2):
-      (Test) i2c: tegra: Properly disable runtime PM on driver's probe error
-      (Test) i2c: tegra: Fix suspending in active runtime PM state
-
- drivers/i2c/busses/i2c-iop3xx.c | 12 ++++++++----
- drivers/i2c/busses/i2c-tegra.c  | 38 ++++++++++++++++++++++++++++----------
- 2 files changed, 36 insertions(+), 14 deletions(-)
-
---azLHFNyN32YCQGCU
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl4kZBMACgkQFA3kzBSg
-KbbfcA//cPVBfn1Z/EkmqobVXOhclIarujUbV2dFcSEYB4J7Q2j4r0nXr0M7YX9y
-Ok1dtO7WvlY1Yvf8NvXQTTvJfffPGbe3ikEWc+HyWYOfOQYEa4Jhficp4BXNE8Dr
-MFxCUeH5iPgeq1SCt/jf829E4TpC8N4pObuhpmAUXBuD2PdPxZUQEsTkgV8QH9/W
-ZxDM7SMg6vl97Y17ETAV678rmLjnqbfT5MXUwrJ8u6TMbBYqkbwBQq5CVFJnwCxV
-gS1lmCr0vwuCeDeNUkToBoUw2HAN9P71B1GJeQZLFZ7KOcbolNe5tlEV6j89UWIy
-bVhhuOjeAT3nDBJu9GTg9rJ0whkkPjDHOznvEjHwPBO1dB55FG0nImG/zmVLbHfg
-JWel19CDFse2YzgsNSta7YlQKHtSIGPF4eG9j89UsMF0LwrYJiq3SXyJdaXDvcIW
-SDRttdaaSP2wD9/3y8kTu80Ed6qeqpFP+SvgsOp5Kfcd9oR15fVLnDpCX0PrGMr8
-y4hB75JOlUIUTYeFZ78xM4e/afd4f7BJuC/WRvaPXJ8hjnslsm2PpOmjscStXVmc
-vC4mfdEa2CX4TSpR6T35CXUoL7ZVCOhc3SvZO3gVK8EdtloyNFxiPwiifxrMbjFp
-Rex4jwa7plOoUUrGSVhBVo/Art2tMWo49LuddGpqSzx9JGGSnZc=
-=Gcrl
------END PGP SIGNATURE-----
-
---azLHFNyN32YCQGCU--
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
