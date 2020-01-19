@@ -2,130 +2,288 @@ Return-Path: <SRS0=pPEE=3I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFBEDC33CB1
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 10:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 484A5C33CB1
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 10:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3A4520730
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 10:12:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HzGSL2YW"
+	by mail.kernel.org (Postfix) with ESMTP id 15B0D20730
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 10:15:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727011AbgASKMx (ORCPT
+        id S1726889AbgASKPw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 05:12:53 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:38359 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726744AbgASKMt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 05:12:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579428768;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=jRdC5C9SszzHrx5URtnzUXOg+cpaWM91XUEJs3Q6WUQ=;
-        b=HzGSL2YWHWOflty+9mNCmWyFMcOJNFZOsWM5YsgYoU1AOjhnjmurmrDmkJUJ4txEdDoZUv
-        j3E3Snk29DejO4DQ7Wj2YLMf4Cuxyc/lGDiLypCGXy1gGP1EiQDhy6LVviw1GVVa426osV
-        GKZGCXokcUz+M4oRusWu4RtxgY5Sptg=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-224-HexgPQatMXOzJWRK0k3PwA-1; Sun, 19 Jan 2020 05:12:43 -0500
-X-MC-Unique: HexgPQatMXOzJWRK0k3PwA-1
-Received: by mail-qk1-f197.google.com with SMTP id 65so18592756qkl.23
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jan 2020 02:12:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=jRdC5C9SszzHrx5URtnzUXOg+cpaWM91XUEJs3Q6WUQ=;
-        b=RES5agqlxFivMMRMrVHR/4xbNCLQDDF4wxxh7Nj99bfeLW/fMElUaspzUFSMuWwngf
-         BXAv4KO3y1S+cmBDj9VI/C3Ke8yLphed+/yZIuUXwb+ytIDd9RoWpt6mb2GEgcaKppGS
-         kISQ4g2i6M15s3avwca4Cn95clqpPp0IwmDQE8Yc2xFBlRVp9EZHav/eAU3AHtP9bidu
-         vLLMHjq4+dngiy9+rpeA5DlzVnqgcRi9V9eNlKJlbN+s81amJuUhdvgmbuSbUh/3xZ9c
-         XFVnExR2rbD8UXMhrWwiUmJ4PIcfjIJzEJmHrmRjxJ9/s62KvFNAvWNgV3fNpa7dfMmQ
-         e4RA==
-X-Gm-Message-State: APjAAAVfNpvLRFHlciDWn8YjJgTUCULee5p8ukmvWe9Hjy0ogtmwjJH1
-        Dk5Vx/m1Yjh39piHFVVUKAkyqeDiqCWlMLj4NoMQmGFLxAE7thcNPyS3QzQrdscOwyfMMYxhIUm
-        Hg3hTWbB7VGUIabFCRRQHAsId
-X-Received: by 2002:a05:6214:1103:: with SMTP id e3mr15879988qvs.159.1579428762705;
-        Sun, 19 Jan 2020 02:12:42 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxlPeGl3vOoGh87qeXcfrEvupqg6iDr2WU7KLpGIgdBVXimjeVKIOsMBPWxHRjhIbTCSqQDqQ==
-X-Received: by 2002:a05:6214:1103:: with SMTP id e3mr15879976qvs.159.1579428762519;
-        Sun, 19 Jan 2020 02:12:42 -0800 (PST)
-Received: from redhat.com (bzq-79-179-85-180.red.bezeqint.net. [79.179.85.180])
-        by smtp.gmail.com with ESMTPSA id h32sm16168861qth.2.2020.01.19.02.12.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Jan 2020 02:12:41 -0800 (PST)
-Date:   Sun, 19 Jan 2020 05:12:35 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Peter Xu <peterx@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Yan Zhao <yan.y.zhao@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Kevin Kevin <kevin.tian@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Lei Cao <lei.cao@stratus.com>
-Subject: Re: [PATCH v3 12/21] KVM: X86: Implement ring-based dirty memory
- tracking
-Message-ID: <20200119051145-mutt-send-email-mst@kernel.org>
-References: <20200109145729.32898-1-peterx@redhat.com>
- <20200109145729.32898-13-peterx@redhat.com>
- <20200109110110-mutt-send-email-mst@kernel.org>
- <20200109191514.GD36997@xz-x1>
- <22bcd5fc-338c-6b72-2bda-47ba38d7e8ef@redhat.com>
+        Sun, 19 Jan 2020 05:15:52 -0500
+Received: from mga04.intel.com ([192.55.52.120]:56813 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726673AbgASKPv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jan 2020 05:15:51 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jan 2020 02:15:50 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,337,1574150400"; 
+   d="scan'208";a="399104727"
+Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.16])
+  by orsmga005.jf.intel.com with ESMTP; 19 Jan 2020 02:15:49 -0800
+Date:   Sun, 19 Jan 2020 05:06:37 -0500
+From:   Yan Zhao <yan.y.zhao@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "peterx@redhat.com" <peterx@redhat.com>
+Subject: Re: [PATCH v2 2/2] drm/i915/gvt: subsitute kvm_read/write_guest with
+ vfio_dma_rw
+Message-ID: <20200119100637.GD1759@joy-OptiPlex-7040>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <20200115034132.2753-1-yan.y.zhao@intel.com>
+ <20200115035455.12417-1-yan.y.zhao@intel.com>
+ <20200115130651.29d7e9e0@w520.home>
+ <20200116054941.GB1759@joy-OptiPlex-7040>
+ <20200116083729.40983f38@w520.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <22bcd5fc-338c-6b72-2bda-47ba38d7e8ef@redhat.com>
+In-Reply-To: <20200116083729.40983f38@w520.home>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 19, 2020 at 10:09:53AM +0100, Paolo Bonzini wrote:
-> On 09/01/20 20:15, Peter Xu wrote:
-> > Regarding dropping the indices: I feel like it can be done, though we
-> > probably need two extra bits for each GFN entry, for example:
-> > 
-> >   - Bit 0 of the GFN address to show whether this is a valid publish
-> >     of dirty gfn
-> > 
-> >   - Bit 1 of the GFN address to show whether this is collected by the
-> >     user
+On Thu, Jan 16, 2020 at 11:37:29PM +0800, Alex Williamson wrote:
+> On Thu, 16 Jan 2020 00:49:41 -0500
+> Yan Zhao <yan.y.zhao@intel.com> wrote:
 > 
-> We can use bit 62 and 63 of the GFN.
+> > On Thu, Jan 16, 2020 at 04:06:51AM +0800, Alex Williamson wrote:
+> > > On Tue, 14 Jan 2020 22:54:55 -0500
+> > > Yan Zhao <yan.y.zhao@intel.com> wrote:
+> > >   
+> > > > As a device model, it is better to read/write guest memory using vfio
+> > > > interface, so that vfio is able to maintain dirty info of device IOVAs.
+> > > > 
+> > > > Compared to kvm interfaces kvm_read/write_guest(), vfio_dma_rw() has ~600
+> > > > cycles more overhead on average.
+> > > > 
+> > > > -------------------------------------
+> > > > |    interface     | avg cpu cycles |
+> > > > |-----------------------------------|
+> > > > | kvm_write_guest  |     1554       |
+> > > > | ----------------------------------|
+> > > > | kvm_read_guest   |     707        |
+> > > > |-----------------------------------|
+> > > > | vfio_dma_rw(w)   |     2274       |
+> > > > |-----------------------------------|
+> > > > | vfio_dma_rw(r)   |     1378       |
+> > > > -------------------------------------  
+> > > 
+> > > In v1 you had:
+> > > 
+> > > -------------------------------------
+> > > |    interface     | avg cpu cycles |
+> > > |-----------------------------------|
+> > > | kvm_write_guest  |     1546       |
+> > > | ----------------------------------|
+> > > | kvm_read_guest   |     686        |
+> > > |-----------------------------------|
+> > > | vfio_iova_rw(w)  |     2233       |
+> > > |-----------------------------------|
+> > > | vfio_iova_rw(r)  |     1262       |
+> > > -------------------------------------
+> > > 
+> > > So the kvm numbers remained within +0.5-3% while the vfio numbers are
+> > > now +1.8-9.2%.  I would have expected the algorithm change to at least
+> > > not be worse for small accesses and be better for accesses crossing
+> > > page boundaries.  Do you know what happened?
+> > >  
+> > I only tested the 4 interfaces in GVT's environment, where most of the
+> > guest memory accesses are less than one page.
+> > And the different fluctuations should be caused by the locks.
+> > vfio_dma_rw contends locks with other vfio accesses which are assumed to
+> > be abundant in the case of GVT.
+> 
+> Hmm, so maybe it's time to convert vfio_iommu.lock from a mutex to a
+> rwsem?  Thanks,
+> 
 
-If we are short on bits we can just use 1 bit. E.g. set if
-userspace has collected the GFN.
+hi Alex
+I tested your rwsem patches at (https://lkml.org/lkml/2020/1/16/1869).
+They works without any runtime error at my side. :) 
+However, I found out that the previous fluctuation may be because I didn't
+take read/write counts in to account.
+For example. though the two tests have different avg read/write cycles,
+their average cycles are almost the same.
+ ______________________________________________________________________
+|        | avg read |            | avg write |            |            |
+|        | cycles   | read cnt   | cycles    | write cnt  | avg cycles |
+|----------------------------------------------------------------------|
+| test 1 |   1339   | 29,587,120 |  2258     | 17,098,364 |    1676    |
+| test 2 |   1340   | 28,454,262 |  2238     | 16,501,788 |    1670    |
+ ----------------------------------------------------------------------
 
-> I think this can be done in a secure way.  Later in the thread you say:
+After measuring the exact read/write cnt and cycles of a specific workload,
+I get below findings:
+
+(1) with single VM running glmark2 inside.
+glmark2: 40M+ read+write cnt, among which 63% is read.
+among reads, 48% is of PAGE_SIZE, the rest is less than a page.
+among writes, 100% is less than a page.
+
+ __________________________________________________
+|       cycles         | read | write |  avg | inc |
+|--------------------------------------------------|
+| kvm_read/write_page  |  694 |  1506 |  993 |  /  |
+|--------------------------------------------------|
+|  vfio_dma_rw(mutex)  | 1340 |  2248 | 1673 | 680 |
+|--------------------------------------------------|
+| vfio_dma_rw(rwsem r) | 1323 |  2198 | 1645 | 653 |
+ ---------------------------------------------------
+
+so vfio_dma_rw generally has 650+ more cycles per each read/write.
+While kvm->srcu is of 160 cycles on average with one vm is running, the
+cycles spending on locks for vfio_dma_rw spread like this:
+ ___________________________
+|        cycles       | avg |
+|---------------------------|
+|     iommu->lock     | 117 |
+|---------------------------|
+|   vfio.group_lock   | 108 |
+|---------------------------|
+| group->unbound_lock | 114 |
+|---------------------------|
+|  group->device_lock | 115 |
+|---------------------------|
+|     group->mutex    | 113 |
+ ---------------------------
+
+I measured the cycles for a mutex without any contention is 104 cycles
+on average (including time for get_cycles() and measured in the same way
+as other locks). So the contention of a single lock in a single vm
+environment is light. probably because there's a vgpu lock hold in GVT already.
+
+(2) with two VMs each running glmark2 inside.
+The contention increases a little.
+
+ ___________________________________________________
+|       cycles         | read | write |  avg | inc  |
+|---------------------------------------------------|
+| kvm_read/write_page  | 1035 |  1832 | 1325 |  /   |
+|---------------------------------------------------|
+|  vfio_dma_rw(mutex)  | 2104 |  2886 | 2390 | 1065 |
+|---------------------------------------------------|
+| vfio_dma_rw(rwsem r) | 1965 |  2778 | 2260 | 935  |
+ ---------------------------------------------------
+
+
+ -----------------------------------------------
+|     avg cycles       |   one VM   |  two VMs  |
+|-----------------------------------------------|
+|  iommu lock (mutex)  |     117    |   150     |
+|-----------------------------------|-----------|
+| iommu lock (rwsem r) |     117    |   156     |
+|-----------------------------------|-----------|
+|   kvm->srcu          |     160    |   213     |
+ -----------------------------------------------
+
+In the kvm case, avg cycles increased 332 cycles, while kvm->srcu only costed
+213 cycles. The rest 109 cycles may be spent on atomic operations.
+But I didn't measure them, as get_cycles() operation itself would influence final
+cycles by ~20 cycles.
+
+
+Thanks
+Yan
+
+
+
+
 > 
-> > We simply check fetch_index (sorry I
-> > meant this when I said reset_index, anyway it's the only index that we
-> > expose to userspace) to make sure:
+> > > > Comparison of benchmarks scores are as blow:
+> > > > ------------------------------------------------------
+> > > > |  avg score  | kvm_read/write_guest  | vfio_dma_rw  |
+> > > > |----------------------------------------------------|
+> > > > |   Glmark2   |         1284          |    1296      |
+> > > > |----------------------------------------------------|
+> > > > |  Lightsmark |         61.24         |    61.27     |
+> > > > |----------------------------------------------------|
+> > > > |  OpenArena  |         140.9         |    137.4     |
+> > > > |----------------------------------------------------|
+> > > > |   Heaven    |          671          |     670      |
+> > > > ------------------------------------------------------
+> > > > No obvious performance downgrade found.
+> > > > 
+> > > > Cc: Kevin Tian <kevin.tian@intel.com>
+> > > > Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+> > > > ---
+> > > >  drivers/gpu/drm/i915/gvt/kvmgt.c | 26 +++++++-------------------
+> > > >  1 file changed, 7 insertions(+), 19 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/gpu/drm/i915/gvt/kvmgt.c b/drivers/gpu/drm/i915/gvt/kvmgt.c
+> > > > index bd79a9718cc7..17edc9a7ff05 100644
+> > > > --- a/drivers/gpu/drm/i915/gvt/kvmgt.c
+> > > > +++ b/drivers/gpu/drm/i915/gvt/kvmgt.c
+> > > > @@ -1966,31 +1966,19 @@ static int kvmgt_rw_gpa(unsigned long handle, unsigned long gpa,
+> > > >  			void *buf, unsigned long len, bool write)
+> > > >  {
+> > > >  	struct kvmgt_guest_info *info;
+> > > > -	struct kvm *kvm;
+> > > > -	int idx, ret;
+> > > > -	bool kthread = current->mm == NULL;
+> > > > +	int ret;
+> > > > +	struct intel_vgpu *vgpu;
+> > > > +	struct device *dev;
+> > > >  
+> > > >  	if (!handle_valid(handle))
+> > > >  		return -ESRCH;
+> > > >  
+> > > >  	info = (struct kvmgt_guest_info *)handle;
+> > > > -	kvm = info->kvm;
+> > > > -
+> > > > -	if (kthread) {
+> > > > -		if (!mmget_not_zero(kvm->mm))
+> > > > -			return -EFAULT;
+> > > > -		use_mm(kvm->mm);
+> > > > -	}
+> > > > -
+> > > > -	idx = srcu_read_lock(&kvm->srcu);
+> > > > -	ret = write ? kvm_write_guest(kvm, gpa, buf, len) :
+> > > > -		      kvm_read_guest(kvm, gpa, buf, len);
+> > > > -	srcu_read_unlock(&kvm->srcu, idx);
+> > > > +	vgpu = info->vgpu;
+> > > > +	dev = mdev_dev(vgpu->vdev.mdev);
+> > > >  
+> > > > -	if (kthread) {
+> > > > -		unuse_mm(kvm->mm);
+> > > > -		mmput(kvm->mm);
+> > > > -	}
+> > > > +	ret = write ? vfio_dma_rw(dev, gpa, buf, len, true) :
+> > > > +			vfio_dma_rw(dev, gpa, buf, len, false);  
+> > > 
+> > > As Paolo suggested previously, this can be simplified:
+> > > 
+> > > ret = vfio_dma_rw(dev, gpa, buf, len, write);
+> > >  
+> > > >  
+> > > >  	return ret;  
+> > > 
+> > > Or even more simple, remove the ret variable:
+> > > 
+> > > return vfio_dma_rw(dev, gpa, buf, len, write);
+> > >   
+> > oh, it seems that I missed Paolo's mail. will change it. thank you!
 > > 
-> >   reset_index <= fetch_index <= dirty_index
+> > Thanks
+> > Yan
+> > >   
+> > > >  }  
+> > >   
+> > 
 > 
-> So this means that KVM_RESET_DIRTY_RINGS should only test the "collected
-> by user" flag on dirty ring entries between reset_index and dirty_index.
-> 
-> Also I would make it
-> 
->    00b (invalid GFN) ->
->      01b (valid gfn published by kernel, which is dirty) ->
->        1*b (gfn dirty page collected by userspace) ->
->          00b (gfn reset by kernel, so goes back to invalid gfn)
-> That is 10b and 11b are equivalent.  The kernel doesn't read that bit if
-> userspace has collected the page.
-> 
-> Paolo
-
