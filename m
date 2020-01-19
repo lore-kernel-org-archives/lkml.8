@@ -2,87 +2,116 @@ Return-Path: <SRS0=pPEE=3I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F2C8C33CB7
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 06:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC676C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 07:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75DED2073A
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 06:58:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 966D52073D
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 07:09:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qPhDIkwP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbgASG6r (ORCPT
+        id S1726605AbgASHJQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 01:58:47 -0500
-Received: from mga04.intel.com ([192.55.52.120]:45648 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726060AbgASG6r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 01:58:47 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jan 2020 22:58:46 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,337,1574150400"; 
-   d="scan'208";a="399073104"
-Received: from twinkler-lnx.jer.intel.com ([10.12.91.155])
-  by orsmga005.jf.intel.com with ESMTP; 18 Jan 2020 22:58:44 -0800
-From:   Tomas Winkler <tomas.winkler@intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Alexander Usyskin <alexander.usyskin@intel.com>,
-        linux-kernel@vger.kernel.org,
-        Tomas Winkler <tomas.winkler@intel.com>, stable@vger.kernel.org
-Subject: [char-misc] mei: me: add comet point (lake) H device ids
-Date:   Sun, 19 Jan 2020 11:42:29 +0200
-Message-Id: <20200119094229.20116-1-tomas.winkler@intel.com>
-X-Mailer: git-send-email 2.21.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sun, 19 Jan 2020 02:09:16 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:53292 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726421AbgASHJQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jan 2020 02:09:16 -0500
+Received: by mail-pj1-f65.google.com with SMTP id n96so5201094pjc.3;
+        Sat, 18 Jan 2020 23:09:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=sbvECZSSaHMAVDSY442RQUtEQVv5nwhO7gX5LMPOXE8=;
+        b=qPhDIkwPUi53pqaoMKRqIfieeqj1ieqrpyJEMQPUUMScs48YcTxa7ImvmRv3k7/AMi
+         doIoxyETRKZEkj6NCki5WqfOCBvcRRzaBP3ysRi29m8PlKmdNY5hfO/afpv/uQKyYaWu
+         QW8Mm8XJjO8WYObFpBZwFUpXm+8Pnf2Jp1kdRZCdFWch7kFbe2hZDa0yfZIgcvYZelWW
+         LRj7jwDUQi4ryg/+zDUrpKhX2dGGMkejfsU4SqMGMxiLrBBJppdmanqIHHC2Bgbp/J/+
+         52MDikL4ufrTNtXDq3iZY2MsHGBDwKnbRAxoFRY6gf2uMW8OSev4BW00KWiPDsQ+NZqm
+         Vbtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=sbvECZSSaHMAVDSY442RQUtEQVv5nwhO7gX5LMPOXE8=;
+        b=FWaRwqRRf5/yUgTuncqRbyPALls7fntQqLXxU4jcf+jWQdKrXI8w54dA4OY+U1rDpl
+         wmD3iVzayIV742rynsR3+umrWTvj+SHmI1NjqA8+IN44cxAwXU00P08V9UcH8IBLzogw
+         osJ8iELTgz6LIUDs6G4DR9iYYuTsP50sP6KqdHndtxMAkmTg6Bd87zgCAYtzAPfNqpx+
+         ieAWNlmb/DSiA9opv1vzuipq8mU1Niwq6zUolIL8k1hz7Emn/aQ7ryg1hOvVndlPKoZ3
+         DfvBHLQ1VX+vTLohpgliZCd9MxUEXNFNCk3ngnPN/0SHujrzEt+l4H4RWqYlwBvoK8Lh
+         ufTQ==
+X-Gm-Message-State: APjAAAWNs4tjP6ugTQ2uwtWGgGTZl3uYqJa6iTrHJxP96miTUdX3FPAK
+        sFZithDbt3E/T+xpERVi9y4=
+X-Google-Smtp-Source: APXvYqylvUE9U5kKGJKKCtFF5R4wOSj4PgYC36wH2joJSvO8f1bw+0REf9K1UBn1pMFr84tkV4BQrA==
+X-Received: by 2002:a17:902:6805:: with SMTP id h5mr8058684plk.275.1579417755652;
+        Sat, 18 Jan 2020 23:09:15 -0800 (PST)
+Received: from localhost ([43.224.245.179])
+        by smtp.gmail.com with ESMTPSA id c184sm34015130pfa.39.2020.01.18.23.09.14
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Sat, 18 Jan 2020 23:09:15 -0800 (PST)
+From:   qiwuchen55@gmail.com
+To:     mmayer@broadcom.com, rjw@rjwysocki.net, viresh.kumar@linaro.org,
+        f.fainelli@gmail.com
+Cc:     bcm-kernel-feedback-list@broadcom.com, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        chenqiwu <chenqiwu@xiaomi.com>
+Subject: [PATCH v3] cpufreq: brcmstb-avs: fix imbalance of cpufreq policy refcount
+Date:   Sun, 19 Jan 2020 15:09:10 +0800
+Message-Id: <1579417750-21984-1-git-send-email-qiwuchen55@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add Comet Point device IDs for Comet Lake H platforms.
+From: chenqiwu <chenqiwu@xiaomi.com>
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+brcm_avs_cpufreq_get() calls cpufreq_cpu_get() to get the cpufreq policy,
+meanwhile, it also increments the kobject reference count to mark it busy.
+However, a corresponding call of cpufreq_cpu_put() is ignored to decrement
+the kobject reference count back, which may lead to a potential stuck risk
+that the cpuhp thread deadly waits for dropping of kobject refcount when
+cpufreq policy free.
+
+For fixing this bug, cpufreq_get_policy() is referenced to do a proper
+cpufreq_cpu_get()/cpufreq_cpu_put() and fill a policy copy for the user.
+If the policy return NULL, we just return 0 to hit the code path of
+cpufreq_driver->get.
+
+Signed-off-by: chenqiwu <chenqiwu@xiaomi.com>
 ---
- drivers/misc/mei/hw-me-regs.h | 4 ++++
- drivers/misc/mei/pci-me.c     | 2 ++
- 2 files changed, 6 insertions(+)
+ drivers/cpufreq/brcmstb-avs-cpufreq.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/misc/mei/hw-me-regs.h b/drivers/misc/mei/hw-me-regs.h
-index 7cd67fb2365d..9d24db38e8bc 100644
---- a/drivers/misc/mei/hw-me-regs.h
-+++ b/drivers/misc/mei/hw-me-regs.h
-@@ -81,8 +81,12 @@
+diff --git a/drivers/cpufreq/brcmstb-avs-cpufreq.c b/drivers/cpufreq/brcmstb-avs-cpufreq.c
+index 77b0e5d..ee0d404 100644
+--- a/drivers/cpufreq/brcmstb-avs-cpufreq.c
++++ b/drivers/cpufreq/brcmstb-avs-cpufreq.c
+@@ -452,8 +452,16 @@ static bool brcm_avs_is_firmware_loaded(struct private_data *priv)
  
- #define MEI_DEV_ID_CMP_LP     0x02e0  /* Comet Point LP */
- #define MEI_DEV_ID_CMP_LP_3   0x02e4  /* Comet Point LP 3 (iTouch) */
+ static unsigned int brcm_avs_cpufreq_get(unsigned int cpu)
+ {
+-	struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
+-	struct private_data *priv = policy->driver_data;
++	struct cpufreq_policy policy;
++	struct private_data *priv;
 +
- #define MEI_DEV_ID_CMP_V      0xA3BA  /* Comet Point Lake V */
- 
-+#define MEI_DEV_ID_CMP_H      0x06e0  /* Comet Lake H */
-+#define MEI_DEV_ID_CMP_H_3    0x06e4  /* Comet Lake H 3 (iTouch) */
++	/*
++	 * In case cpufreq policy has been released, just return 0.
++	 */
++	if (cpufreq_get_policy(&policy, cpu))
++		return 0;
 +
- #define MEI_DEV_ID_ICP_LP     0x34E0  /* Ice Lake Point LP */
++	priv = policy.driver_data;
  
- #define MEI_DEV_ID_TGP_LP     0xA0E0  /* Tiger Lake Point LP */
-diff --git a/drivers/misc/mei/pci-me.c b/drivers/misc/mei/pci-me.c
-index c845b7e40f26..c14261d735db 100644
---- a/drivers/misc/mei/pci-me.c
-+++ b/drivers/misc/mei/pci-me.c
-@@ -99,6 +99,8 @@ static const struct pci_device_id mei_me_pci_tbl[] = {
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_LP, MEI_ME_PCH12_CFG)},
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_LP_3, MEI_ME_PCH8_CFG)},
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_V, MEI_ME_PCH12_CFG)},
-+	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_H, MEI_ME_PCH12_CFG)},
-+	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_H_3, MEI_ME_PCH8_CFG)},
- 
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_ICP_LP, MEI_ME_PCH12_CFG)},
- 
+ 	return brcm_avs_get_frequency(priv->base);
+ }
 -- 
-2.21.1
+1.9.1
 
