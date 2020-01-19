@@ -2,96 +2,208 @@ Return-Path: <SRS0=pPEE=3I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D74E6C33CB7
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 16:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0861C33CB1
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 16:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A34D82073D
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 16:12:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E99020678
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 16:14:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="qvg++hls"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fkp3ivs9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727254AbgASQME (ORCPT
+        id S1727586AbgASQOi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 11:12:04 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:48936 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726778AbgASQMD (ORCPT
+        Sun, 19 Jan 2020 11:14:38 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36338 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726860AbgASQOi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 11:12:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=fRhVE+n3fiZRq32sfNcWunu4Khyv3fuEfdmwn7WA6eE=; b=qvg++hlsYmq56viW2v1JPeFD+
-        zpfD70RxJHW7pvj7toj510463MosVbdIF4GtGQSXr7ns6xFyByXN7vNrwklQbwjEcuiBCtZO3OOMB
-        8xKizwuhWsBlOEWRly1r9DxRAqakPcZAR9g54nzTovKe3fbgGvY+WRmUeN8ACxhbEeUbHr0oFh2PU
-        LzMSO4V8jGhOBsMWd/8Z03Bs1fm3Hm+uqoPop7ojBjJDK1CAyPK/LXhi6v/28VYNBoJWoe3HjdlZ7
-        LgKGrKFd04Pzmt1I0W4a39A2dqRgpLs2GV05W2Mw+qNEhFgP4DXNKMHV8x5ywvA2lsP0pGmLBIJDG
-        RDU4bmxKw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:40468)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1itDB8-0000mn-14; Sun, 19 Jan 2020 16:11:58 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1itDB5-0001yP-KR; Sun, 19 Jan 2020 16:11:55 +0000
-Date:   Sun, 19 Jan 2020 16:11:55 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alex Sverdlin <alexander.sverdlin@nokia.com>
-Subject: Re: linux-next: Fixes tag needs some work in the arm-current tree
-Message-ID: <20200119161155.GV25745@shell.armlinux.org.uk>
-References: <20200119120321.43e69cdf@canb.auug.org.au>
+        Sun, 19 Jan 2020 11:14:38 -0500
+Received: by mail-pg1-f195.google.com with SMTP id k3so14242654pgc.3
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jan 2020 08:14:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=eTPL0qIft+PAJRKYhuZgerS2zPZNoYqzBPJ/hUNnofk=;
+        b=fkp3ivs9BWu7f2qbRlFnK1Y2IKQewczE/s6Nfs50yHayGYxq851zFjxTBFbFGJj2FR
+         HQf8ve2IM3luGjDGZ7DGUsaP+sfYmRPeA8hiMaYvmcqQgJlCoSKhlZg1ZJEweK1DAQJ8
+         GAhIyx1FSlk9i4tBIFVrzqgOEJ1JSD+nmRsY2XoValMX5zOQQNyeM7yGEZM/kuLFrNgN
+         VGpnUbaZItCAwZ/jGuXfRx/upOAn30vaA3v2PQWnxCVCKMQjWMzFnW92uQajW/Gv/0cV
+         NyrmZp63Ui5u6X5xAGiSw1qkUbhIABQQd5nqWOjgpNs6xMHwm7ntBfQ4fxfz0SOEjT1i
+         alhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=eTPL0qIft+PAJRKYhuZgerS2zPZNoYqzBPJ/hUNnofk=;
+        b=LeE6pEjBB3AcB/e/vTxkF3ZAn9Awphu+ZALFuSw2HdAwuh7+yFEFWlwHcwHBzloSVR
+         c7ghvkGsG4dyV90TMkWVFjzIv/frSysMbGUwTTmdGFoxO2D7iE/TvaRGk6nI5U9MeL7E
+         28G3JdtXHaa6N4tdqTFWbCznIXGd7nfQ83gKabrGl6/QwKorBx16xBrQ69BXjj7ld0iv
+         ed6CxTexxYusp1HhhBoR9/kKa+Tje/QVRKJrGr97mLjC4u4Ow6qzeeYmG/PGGbpdWfwd
+         167l8kwXjEyUPsP6q8AzLDV0iU/U0egiszEYLRp5/uSdNhCcrg2LJsvAFGjPyKVbyJUq
+         FI+Q==
+X-Gm-Message-State: APjAAAWWRS4ZaT+mJqRAXhVtdtX29cAHPfwtcQnwkVRll4gvpGvv9S6a
+        i6s4aEImBFbDguelXYN2fCelOg==
+X-Google-Smtp-Source: APXvYqxiqCVKAw7n8mlcVT4SM73UEmqS8HKyvw+g+QV8PPCiNbHAECRa+6baAKip0NfyEPz+wJGTrw==
+X-Received: by 2002:a63:4d4c:: with SMTP id n12mr57301291pgl.212.1579450476748;
+        Sun, 19 Jan 2020 08:14:36 -0800 (PST)
+Received: from sspatil-glaptop2.roam.corp.google.com ([66.167.121.235])
+        by smtp.gmail.com with ESMTPSA id l2sm14371111pjt.31.2020.01.19.08.14.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 19 Jan 2020 08:14:35 -0800 (PST)
+Date:   Sun, 19 Jan 2020 08:14:31 -0800
+From:   sspatil@google.com
+To:     kirill@shutemov.name, minchan@kernel.org, mhocko@kernel.org,
+        akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-api@vger.kernel.org,
+        oleksandr@redhat.com, surenb@google.com, timmurray@google.com,
+        dancol@google.com, sonnyrao@google.com, bgeffon@google.com,
+        hannes@cmpxchg.org, shakeelb@google.com, joaodias@google.com,
+        ktkhai@virtuozzo.com, christian.brauner@ubuntu.com,
+        sjpark@amazon.de
+Cc:     Minchan Kim <minchan@kernel.org>, Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
+        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>, ktkhai@virtuozzo.com,
+        christian.brauner@ubuntu.com, sjpark@amazon.de
+Subject: Re: [PATCH v2 2/5] mm: introduce external memory hinting API
+Message-ID: <20200119161431.GA94410@google.com>
+References: <20200116235953.163318-1-minchan@kernel.org>
+ <20200116235953.163318-3-minchan@kernel.org>
+ <20200117115225.GV19428@dhcp22.suse.cz>
+ <20200117155837.bowyjpndfiym6cgs@box>
+ <20200117173239.GB140922@google.com>
+ <20200117212653.7uftw3lk35oykkmb@box>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200119120321.43e69cdf@canb.auug.org.au>
+In-Reply-To: <20200117212653.7uftw3lk35oykkmb@box>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+On Sat, Jan 18, 2020 at 12:26:53AM +0300, Kirill A. Shutemov wrote:
+> On Fri, Jan 17, 2020 at 09:32:39AM -0800, Minchan Kim wrote:
+> > On Fri, Jan 17, 2020 at 06:58:37PM +0300, Kirill A. Shutemov wrote:
+> > > On Fri, Jan 17, 2020 at 12:52:25PM +0100, Michal Hocko wrote:
+> > > > On Thu 16-01-20 15:59:50, Minchan Kim wrote:
+> > > > > There is usecase that System Management Software(SMS) want to give
+> > > > > a memory hint like MADV_[COLD|PAGEEOUT] to other processes and
+> > > > > in the case of Android, it is the ActivityManagerService.
+> > > > > 
+> > > > > It's similar in spirit to madvise(MADV_WONTNEED), but the information
+> > > > > required to make the reclaim decision is not known to the app. Instead,
+> > > > > it is known to the centralized userspace daemon(ActivityManagerService),
+> > > > > and that daemon must be able to initiate reclaim on its own without
+> > > > > any app involvement.
+> > > > > 
+> > > > > To solve the issue, this patch introduces new syscall process_madvise(2).
+> > > > > It uses pidfd of an external processs to give the hint.
+> > > > > 
+> > > > >  int process_madvise(int pidfd, void *addr, size_t length, int advise,
+> > > > > 			unsigned long flag);
+> > > > > 
+> > > > > Since it could affect other process's address range, only privileged
+> > > > > process(CAP_SYS_PTRACE) or something else(e.g., being the same UID)
+> > > > > gives it the right to ptrace the process could use it successfully.
+> > > > > The flag argument is reserved for future use if we need to extend the
+> > > > > API.
+> > > > > 
+> > > > > I think supporting all hints madvise has/will supported/support to
+> > > > > process_madvise is rather risky. Because we are not sure all hints make
+> > > > > sense from external process and implementation for the hint may rely on
+> > > > > the caller being in the current context so it could be error-prone.
+> > > > > Thus, I just limited hints as MADV_[COLD|PAGEOUT] in this patch.
+> > > > > 
+> > > > > If someone want to add other hints, we could hear hear the usecase and
+> > > > > review it for each hint. It's more safe for maintainace rather than
+> > > > > introducing a buggy syscall but hard to fix it later.
+> > > > 
+> > > > I have brought this up when we discussed this in the past but there is
+> > > > no reflection on that here so let me bring that up again. 
+> > > > 
+> > > > I believe that the interface has an inherent problem that it is racy.
+> > > > The external entity needs to know the address space layout of the target
+> > > > process to do anyhing useful on it. The address space is however under
+> > > > the full control of the target process though and the external entity
+> > > > has no means to find out that the layout has changed. So
+> > > > time-to-check-time-to-act is an inherent problem.
+> > > > 
+> > > > This is a serious design flaw and it should be explained why it doesn't
+> > > > matter or how to use the interface properly to prevent that problem.
+> > > 
+> > > I agree, it looks flawed.
+> > > 
+> > > Also I don't see what System Management Software can generically do on
+> > > sub-process level. I mean how can it decide which part of address space is
+> > > less important than other.
+> > > 
+> > > I see how a manager can indicate that this process (or a group of
+> > > processes) is less important than other, but on per-addres-range basis?
+> > 
+> > For example, memory ranges shared by several processes or critical for the
+> > latency, we could avoid those ranges to be cold/pageout to prevent
+> > unncecessary CPU burning/paging.
+> 
+> Hmm.. I still don't see why any external entity has a better (or any)
+> knowledge about the matter. The process has to do this, no?
 
-Fixed, thanks for noticing.  I've updated the patch system to spot
-this as well now.
+FWIW, I totally agree with the time-to-check-time-to-react problem. However,
+I'd like to clarify the ActivityManager/SystemServer case (I'll call it
+SystemServer from now on)
 
-Russell.
+For Android, every application (including the special SystemServer) are forked
+from Zygote. The reason ofcourse is to share as many libraries and classes between
+the two as possible to benefit from the preloading during boot.
 
-On Sun, Jan 19, 2020 at 12:03:21PM +1100, Stephen Rothwell wrote:
-> Hi all,
+After applications start, (almost) all of the APIs  end up calling into this
+SystemServer process over IPC (binder) and back to the application.
+
+In a fully running system, the SystemServer monitors every single process
+periodically to calculate their PSS / RSS and also decides which process is
+"important" to the user for interactivity.
+
+So, because of how these processes start _and_ the fact that the SystemServer
+is looping to monitor each process, it does tend to *know* which address
+range of the application is not used / useful.
+
+Besides, we can never rely on applications to clean things up themselves.
+We've had the "hey app1, the system is low on memory, please trim your
+memory usage down" notifications for a long time[1]. They rely on
+applications honoring the broadcasts and very few do.
+
+So, if we want to avoid the inevitable killing of the application and
+restarting it, some way to be able to tell the OS about unimportant memory in
+these applications will be useful.
+
+
+- ssp
+
+1. https://developer.android.com/topic/performance/memory
+
+
 > 
-> In commit
+> > I also think people don't want to give an KSM hint to non-mergeable area.
 > 
->   76540facd203 ("ARM: 8950/1: ftrace/recordmcount: filter relocation types")
+> And how the manager knows which data is mergable?
 > 
-> Fixes tag
-> 
->   Fixes: ed60453fa8 ("ARM: 6511/1: ftrace: add ARM support for C version of recordmcount")
-> 
-> has these problem(s):
-> 
->   - SHA1 should be at least 12 digits long
->     Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
->     or later) just making sure it is not set (or set to "auto").
+> If you are intimate enough with the process' internal state feel free to
+> inject syscall into the process with ptrace. Why bother with half-measures?
 > 
 > -- 
-> Cheers,
-> Stephen Rothwell
-
-
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+>  Kirill A. Shutemov
