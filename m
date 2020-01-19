@@ -2,139 +2,232 @@ Return-Path: <SRS0=pPEE=3I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7136BC33CB1
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 17:20:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC51C33CB1
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 17:32:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 449B820674
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 17:20:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2597320679
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 17:32:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728721AbgASRTK (ORCPT
+        id S1727580AbgASRcA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 12:19:10 -0500
-Received: from mail-il1-f200.google.com ([209.85.166.200]:41804 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727138AbgASRTK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 12:19:10 -0500
-Received: by mail-il1-f200.google.com with SMTP id k9so23237100ili.8
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jan 2020 09:19:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=jRp9vc5oqYGc0xBFqUae1fHqkh5dl4kljEMRgo4dMw0=;
-        b=OkNAU5AhiwxhifwSwhV4qGKxs4ZYIoh09QqIiif7W7aSvYGJufVSh3v+ZPQcuyrX2w
-         oF9Ozoz8Pt9Mux4Og9KqyaVmX119stqJivmiUY3Gur6CraWrcVsDqJ/CMjQ4aaVtgcUy
-         Ou8j20WWgU1omEnFsU6n2FIEtwIA0GPqO2FgQu9LUkZcaeEUiAknZJW5pZHr1BkdZ6fJ
-         wQek/DS7ZQmzde6V0H6pfI0M605b2a9E+VmB+68hcTs8RSS+EwCnAuudDGvMC4OPjss9
-         RIcATS87wL1eeHbZD5MIpiL59/ka7Ogx25Bp7t+5JAz3RN/N2hLXcSvUQCl/IKl+NfMk
-         3PaA==
-X-Gm-Message-State: APjAAAUFYUk4NdrRijphosNM2fXoEfTXt5pXFn4+DsN1j9eEPYXPbN+C
-        81GqP5mKeX3vAO/C0BYCutfm8b5/qHnbhucT1bdOFQ3gSTIo
-X-Google-Smtp-Source: APXvYqwKkTt8yRulq1166eajloC48wId38Am6j/Fl57rx03RnmYDk1PKfbySra7z4hbVwjzw6v8ckNwdFkXqPSGy6s0z/swvGZ3x
+        Sun, 19 Jan 2020 12:32:00 -0500
+Received: from mga05.intel.com ([192.55.52.43]:11699 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726956AbgASRcA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jan 2020 12:32:00 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jan 2020 09:31:59 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,338,1574150400"; 
+   d="scan'208";a="220497970"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga007.fm.intel.com with ESMTP; 19 Jan 2020 09:31:58 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1itEQY-000Ilp-CU; Mon, 20 Jan 2020 01:31:58 +0800
+Date:   Mon, 20 Jan 2020 01:30:57 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:core/documentation] BUILD SUCCESS
+ b2aa09178d1132bc6731af609a079dde83feddc1
+Message-ID: <5e249251.kzaxxDN1OLmDB85w%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-X-Received: by 2002:a02:cd31:: with SMTP id h17mr39404547jaq.94.1579454349645;
- Sun, 19 Jan 2020 09:19:09 -0800 (PST)
-Date:   Sun, 19 Jan 2020 09:19:09 -0800
-In-Reply-To: <00000000000005d2bf059c3b86ac@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000731be4059c815f94@google.com>
-Subject: Re: BUG: unable to handle kernel paging request in do_con_write
-From:   syzbot <syzbot+d8cbeb7028cd2950172e@syzkaller.appspotmail.com>
-To:     b.zolnierkie@samsung.com, daniel.vetter@ffwll.ch,
-        ghalat@redhat.com, gregkh@linuxfoundation.org, jslaby@suse.com,
-        linux-kernel@vger.kernel.org, nico@fluxnic.net,
-        okash.khawaja@gmail.com, sam@ravnborg.org,
-        syzkaller-bugs@googlegroups.com, textshell@uchuujin.de
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  core/documentation
+branch HEAD: b2aa09178d1132bc6731af609a079dde83feddc1  MAINTAINERS: Mark simple firmware interface (SFI) obsolete
 
-HEAD commit:    8f8972a3 Merge tag 'mtd/fixes-for-5.5-rc7' of git://git.ke..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=130b73b9e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=cfbb8fa33f49f9f3
-dashboard link: https://syzkaller.appspot.com/bug?extid=d8cbeb7028cd2950172e
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15ec4966e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16b148d6e00000
+elapsed time: 1710m
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+d8cbeb7028cd2950172e@syzkaller.appspotmail.com
+configs tested: 169
+configs skipped: 13
 
-BUG: unable to handle page fault for address: 000000010000000e
-#PF: supervisor write access in kernel mode
-#PF: error_code(0x0002) - not-present page
-PGD a98de067 P4D a98de067 PUD 0 
-Oops: 0002 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 8686 Comm: syz-executor679 Not tainted 5.5.0-rc6-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:memset16 arch/x86/include/asm/string_64.h:25 [inline]
-RIP: 0010:scr_memsetw include/linux/vt_buffer.h:36 [inline]
-RIP: 0010:csi_K drivers/tty/vt/vt.c:1558 [inline]
-RIP: 0010:do_con_trol drivers/tty/vt/vt.c:2370 [inline]
-RIP: 0010:do_con_write+0x9f72/0xf360 drivers/tty/vt/vt.c:2797
-Code: 00 00 00 00 00 fc ff df 8a 04 08 84 c0 0f 85 10 44 00 00 48 8b 84 24 a0 00 00 00 0f b7 00 44 89 f9 81 e1 ff ff ff 7f 4c 89 f7 <f3> 66 ab 48 b8 00 00 00 00 00 fc ff df 48 8b 4c 24 50 8a 04 01 84
-RSP: 0018:ffffc900021f7880 EFLAGS: 00010202
-RAX: 0000000000000720 RBX: 0000000000000000 RCX: 0000000000000001
-RDX: 0000000000000000 RSI: ffffffff89239ed0 RDI: 000000010000000e
-RBP: ffffc900021f7b68 R08: 0000000000000005 R09: ffffffff83fa1e48
-R10: ffff8880a274c1c0 R11: 0000000000000003 R12: 0000000000000000
-R13: dffffc0000000000 R14: 000000010000000e R15: 0000000000000001
-FS:  0000000001545880(0000) GS:ffff8880aec00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000010000000e CR3: 0000000097629000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- con_write+0x25/0x40 drivers/tty/vt/vt.c:3135
- process_output_block drivers/tty/n_tty.c:595 [inline]
- n_tty_write+0xd0c/0x1200 drivers/tty/n_tty.c:2333
- do_tty_write drivers/tty/tty_io.c:962 [inline]
- tty_write+0x5a1/0x950 drivers/tty/tty_io.c:1046
- __vfs_write+0xb8/0x740 fs/read_write.c:494
- vfs_write+0x270/0x580 fs/read_write.c:558
- ksys_write+0x117/0x220 fs/read_write.c:611
- __do_sys_write fs/read_write.c:623 [inline]
- __se_sys_write fs/read_write.c:620 [inline]
- __x64_sys_write+0x7b/0x90 fs/read_write.c:620
- do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4404f9
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 5b 14 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffcc98f9338 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004404f9
-RDX: 0000000000000078 RSI: 0000000020000000 RDI: 0000000000000004
-RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401de0
-R13: 0000000000401e70 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
-CR2: 000000010000000e
----[ end trace f08a62f87bf81d1c ]---
-RIP: 0010:memset16 arch/x86/include/asm/string_64.h:25 [inline]
-RIP: 0010:scr_memsetw include/linux/vt_buffer.h:36 [inline]
-RIP: 0010:csi_K drivers/tty/vt/vt.c:1558 [inline]
-RIP: 0010:do_con_trol drivers/tty/vt/vt.c:2370 [inline]
-RIP: 0010:do_con_write+0x9f72/0xf360 drivers/tty/vt/vt.c:2797
-Code: 00 00 00 00 00 fc ff df 8a 04 08 84 c0 0f 85 10 44 00 00 48 8b 84 24 a0 00 00 00 0f b7 00 44 89 f9 81 e1 ff ff ff 7f 4c 89 f7 <f3> 66 ab 48 b8 00 00 00 00 00 fc ff df 48 8b 4c 24 50 8a 04 01 84
-RSP: 0018:ffffc900021f7880 EFLAGS: 00010202
-RAX: 0000000000000720 RBX: 0000000000000000 RCX: 0000000000000001
-RDX: 0000000000000000 RSI: ffffffff89239ed0 RDI: 000000010000000e
-RBP: ffffc900021f7b68 R08: 0000000000000005 R09: ffffffff83fa1e48
-R10: ffff8880a274c1c0 R11: 0000000000000003 R12: 0000000000000000
-R13: dffffc0000000000 R14: 000000010000000e R15: 0000000000000001
-FS:  0000000001545880(0000) GS:ffff8880aec00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000010000000e CR3: 0000000097629000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
+x86_64               randconfig-g001-20200119
+x86_64               randconfig-g002-20200119
+x86_64               randconfig-g003-20200119
+i386                 randconfig-g001-20200119
+i386                 randconfig-g002-20200119
+i386                 randconfig-g003-20200119
+x86_64               randconfig-c001-20200119
+x86_64               randconfig-c002-20200119
+x86_64               randconfig-c003-20200119
+i386                 randconfig-c001-20200119
+i386                 randconfig-c002-20200119
+i386                 randconfig-c003-20200119
+alpha                               defconfig
+csky                                defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+x86_64               randconfig-f001-20200119
+x86_64               randconfig-f002-20200119
+x86_64               randconfig-f003-20200119
+i386                 randconfig-f001-20200119
+i386                 randconfig-f002-20200119
+i386                 randconfig-f003-20200119
+microblaze                      mmu_defconfig
+um                             i386_defconfig
+x86_64               randconfig-e001-20200119
+x86_64               randconfig-e002-20200119
+x86_64               randconfig-e003-20200119
+i386                 randconfig-e001-20200119
+i386                 randconfig-e002-20200119
+i386                 randconfig-e003-20200119
+arm                              allmodconfig
+arm64                            allmodconfig
+parisc                            allnoconfig
+parisc                            allyesonfig
+parisc                         b180_defconfig
+parisc                        c3000_defconfig
+parisc                              defconfig
+x86_64               randconfig-h001-20200119
+x86_64               randconfig-h002-20200119
+x86_64               randconfig-h003-20200119
+i386                 randconfig-h001-20200119
+i386                 randconfig-h002-20200119
+i386                 randconfig-h003-20200119
+i386                             alldefconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+arc                  randconfig-a001-20200119
+arm                  randconfig-a001-20200119
+arm64                randconfig-a001-20200119
+ia64                 randconfig-a001-20200119
+powerpc              randconfig-a001-20200119
+sparc                randconfig-a001-20200119
+arc                              allyesconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+arc                                 defconfig
+microblaze                    nommu_defconfig
+sparc                            allyesconfig
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                              allnoconfig
+mips                             allyesconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+c6x                              allyesconfig
+c6x                        evmc6678_defconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                       common_defconfig
+xtensa                          iss_defconfig
+sparc                               defconfig
+sparc64                          allmodconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                             defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                               rhel-7.6
+h8300                     edosk2674_defconfig
+h8300                    h8300h-sim_defconfig
+h8300                       h8s-sim_defconfig
+m68k                             allmodconfig
+m68k                       m5475evb_defconfig
+m68k                          multi_defconfig
+m68k                           sun3_defconfig
+ia64                             alldefconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+ia64                                defconfig
+csky                 randconfig-a001-20200119
+openrisc             randconfig-a001-20200119
+s390                 randconfig-a001-20200119
+sh                   randconfig-a001-20200119
+xtensa               randconfig-a001-20200119
+x86_64               randconfig-d001-20200119
+x86_64               randconfig-d002-20200119
+x86_64               randconfig-d003-20200119
+i386                 randconfig-d001-20200119
+i386                 randconfig-d002-20200119
+i386                 randconfig-d003-20200119
+sh                  sh7785lcr_32bit_defconfig
+x86_64               randconfig-a001-20200119
+x86_64               randconfig-a002-20200119
+x86_64               randconfig-a003-20200119
+i386                 randconfig-a001-20200119
+i386                 randconfig-a002-20200119
+i386                 randconfig-a003-20200119
+arm                               allnoconfig
+arm                              allyesconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+alpha                randconfig-a001-20200119
+m68k                 randconfig-a001-20200119
+mips                 randconfig-a001-20200119
+nds32                randconfig-a001-20200119
+parisc               randconfig-a001-20200119
+riscv                randconfig-a001-20200119
+um                           x86_64_defconfig
+riscv                            allmodconfig
+riscv                             allnoconfig
+riscv                            allyesconfig
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+um                                  defconfig
+c6x                  randconfig-a001-20200119
+h8300                randconfig-a001-20200119
+microblaze           randconfig-a001-20200119
+nios2                randconfig-a001-20200119
+sparc64              randconfig-a001-20200119
+s390                             alldefconfig
+s390                             allmodconfig
+s390                              allnoconfig
+s390                             allyesconfig
+s390                          debug_defconfig
+s390                                defconfig
+s390                       zfcpdump_defconfig
+x86_64               randconfig-b001-20200119
+x86_64               randconfig-b002-20200119
+x86_64               randconfig-b003-20200119
+i386                 randconfig-b001-20200119
+i386                 randconfig-b002-20200119
+i386                 randconfig-b003-20200119
+sh                               allmodconfig
+sh                                allnoconfig
+sh                          rsk7269_defconfig
+sh                            titan_defconfig
+c6x                  randconfig-a001-20200120
+h8300                randconfig-a001-20200120
+microblaze           randconfig-a001-20200120
+nios2                randconfig-a001-20200120
+sparc64              randconfig-a001-20200120
+
+---
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
