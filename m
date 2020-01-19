@@ -2,105 +2,401 @@ Return-Path: <SRS0=pPEE=3I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F996C33CB7
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 13:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E518C33CB7
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 13:36:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B3AD20730
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 13:28:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3092220730
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 13:36:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579440497;
-	bh=nvAre70wOdY3sLAD40GwTa3vY5f50vzWLmhparXnoi4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CnicnfP+qKfFylATu6JSE4Z6hZMZB5ogMb7kflJDB0ECI5uOylwfGA1tKp9D+oURx
-	 Zvc1xk5JvSldqSu5FBTbXkH+TBMREkONFb1kH9SsjNVZpG7DVIEnxtfI5uZtq0HLV5
-	 woWYQyPLKYBLCoNxVRMJj6huL2MdZQwORXmVkvdM=
+	s=default; t=1579440989;
+	bh=SU11H1UmSR3TB45hrBy9iIiOWcaXljmQ3ldAW+zGMvA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=y44LTmss9ZrEWB1oVuJOnhOqmLOBZ0/fls8lUPvM++k9KnkhxGTOGz34vh30UEAch
+	 fwQ7dgmsqlj5Bs5jEYWilj9Fktn5sjgxkTWyQnHFpI8osp5GYC169/QmOg6+PrAcu3
+	 03Czw2JfStahLEwyEkSXbZxcYGOCOxGc/mhWoXNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727060AbgASN2Q (ORCPT
+        id S1727243AbgASNg2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 08:28:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49196 "EHLO mail.kernel.org"
+        Sun, 19 Jan 2020 08:36:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726798AbgASN2Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 08:28:16 -0500
-Received: from localhost (unknown [84.241.197.67])
+        id S1726903AbgASNg2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jan 2020 08:36:28 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89F272053B;
-        Sun, 19 Jan 2020 13:28:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D984320663;
+        Sun, 19 Jan 2020 13:36:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579440495;
-        bh=nvAre70wOdY3sLAD40GwTa3vY5f50vzWLmhparXnoi4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RilBkiyAZe8b9059GqCS8KVCrB+pNMzdX1/8yq09SNsgzNcZiPc+j5KsvxEhJk1VL
-         YpXLBKLgEb75/LRNg52PCjYbofqK+vahIrfBJe79s6eaCNHOfNjphhBhK7W7VMyGT4
-         uqfVm52fAsjFGDTaRz6lB0KP6/5REaNkDu0KAN/M=
-Date:   Sun, 19 Jan 2020 14:28:11 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Vince Weaver <vincent.weaver@maine.edu>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
+        s=default; t=1579440986;
+        bh=SU11H1UmSR3TB45hrBy9iIiOWcaXljmQ3ldAW+zGMvA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=fGgq1Wa32ISLwK7SovTBzxsCeHBQRpgDCwwdM9WN2/6c7BBAPL/Q5U+mJzFd/67Hd
+         ZRInT39DUOKoIUkwM7MHDjI+a9PQoySLCpTgAn/lVuAae/dhi/8GI64AQF4ZE1V6/e
+         MToGP2bE4dQlxObW8AyLqgc9L0jTfGxd0P6klDgk=
+Date:   Sun, 19 Jan 2020 22:36:20 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Frank Rowand <frowand.list@gmail.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        stable kernel team <stable@vger.kernel.org>
-Subject: Re: [PATCH, v5.4] perf: Correctly handle failed perf_get_aux_event()
-Message-ID: <20200119132811.GA159416@kroah.com>
-References: <alpine.DEB.2.21.2001021349390.11372@macbook-air>
- <alpine.DEB.2.21.2001021418590.11372@macbook-air>
- <20200106120338.GC9630@lakrids.cambridge.arm.com>
- <alpine.DEB.2.21.2001061307460.24675@macbook-air>
- <alpine.DEB.2.21.2001161144590.29041@macbook-air>
- <20200118180529.GA70028@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200118180529.GA70028@gmail.com>
+        Tim Bird <Tim.Bird@sony.com>, Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 09/22] Documentation: bootconfig: Add a doc for
+ extended boot config
+Message-Id: <20200119223620.059338427abadec036adc3fa@kernel.org>
+In-Reply-To: <7823298a-88e6-4625-ff10-94b00f7963cb@infradead.org>
+References: <157867220019.17873.13377985653744804396.stgit@devnote2>
+        <157867230658.17873.9309879174829924324.stgit@devnote2>
+        <7823298a-88e6-4625-ff10-94b00f7963cb@infradead.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 18, 2020 at 07:05:29PM +0100, Ingo Molnar wrote:
-> 
-> * Vince Weaver <vincent.weaver@maine.edu> wrote:
-> 
-> > On Mon, 6 Jan 2020, Vince Weaver wrote:
-> > 
-> > > On Mon, 6 Jan 2020, Mark Rutland wrote:
-> > > 
-> > > > On Thu, Jan 02, 2020 at 02:22:47PM -0500, Vince Weaver wrote:
-> > > > > On Thu, 2 Jan 2020, Vince Weaver wrote:
-> > > > > 
-> > > > Vince, does the below (untested) patch work for you?
-> > > 
-> > > 
-> > > yes, this patch fixes things for me.
-> > > 
-> > > Tested-by: Vince Weaver <vincent.weaver@maine.edu>
-> > > 
-> > 
-> > is this patch going to make it upstream?  It's a fairly major correctness 
-> > bug with perf_event_open().
-> 
-> I just sent it to Linus.
-> 
-> In hindsight this should have been marked Cc: stable for v5.4 - we should 
-> forward it to Greg once Linus has pulled it:
-> 
->    da9ec3d3dd0f: ("perf: Correctly handle failed perf_get_aux_event()")
-> 
-> 
-> Note that in the v5.4 cherry-pick there's a conflict due to interaction 
-> with another recent commit - I've attached the ported fix against v5.4, 
-> but have only test built it.
+Hi Randy,
 
-Thanks for the backport, now queued up.
+On Sat, 18 Jan 2020 10:28:40 -0800
+Randy Dunlap <rdunlap@infradead.org> wrote:
 
-greg k-h
+> Hi,
+> 
+> Editorial comments/corrections below...
+
+Thank you for your comments! This is very helpful for me.
+
+> 
+> On 1/10/20 8:05 AM, Masami Hiramatsu wrote:
+> > Add a documentation for extended boot config under
+> > admin-guide, since it is including the syntax of boot config.
+> > 
+> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> > ---
+> >  Changes in v6:
+> >   - Add a note about comment after value.
+> >  Changes in v5:
+> >   - Fix to insert bootconfig to TOC list alphabetically.
+> >   - Add notes about avaliable characters in values.
+> >   - Fix to use correct quotes (``) for .rst.
+> >  Changes in v4:
+> >   - Rename suppremental kernel command line to boot config.
+> 
+>              supplemental
+> 
+> >   - Update document according to the recent changes.
+> >   - Add How to load it on boot.
+> >   - Style bugfix.
+> > ---
+> >  Documentation/admin-guide/bootconfig.rst |  184 ++++++++++++++++++++++++++++++
+> >  Documentation/admin-guide/index.rst      |    1 
+> >  MAINTAINERS                              |    1 
+> >  3 files changed, 186 insertions(+)
+> >  create mode 100644 Documentation/admin-guide/bootconfig.rst
+> > 
+> 
+> > diff --git a/Documentation/admin-guide/bootconfig.rst b/Documentation/admin-guide/bootconfig.rst
+> > new file mode 100644
+> > index 000000000000..f7475df2a718
+> > --- /dev/null
+> > +++ b/Documentation/admin-guide/bootconfig.rst
+> > @@ -0,0 +1,184 @@
+> > +.. SPDX-License-Identifier: GPL-2.0
+> > +
+> > +==================
+> > +Boot Configuration
+> > +==================
+> > +
+> > +:Author: Masami Hiramatsu <mhiramat@kernel.org>
+> > +
+> > +Overview
+> > +========
+> > +
+> > +The boot configuration is expanding current kernel cmdline to support
+> 
+>                           expands the current kernel command line to support
+
+OK.
+
+> 
+> > +additional key-value data when boot the kernel in an efficient way.
+> 
+>                                   booting
+
+OK.
+
+> 
+> > +This allows adoministrators to pass a structured-Key config file.
+> 
+>                administrators
+
+Oops. OK.
+
+> 
+> > +
+> > +Config File Syntax
+> > +==================
+> > +
+> > +The boot config syntax is a simple structured key-value. Each key consists
+> > +of dot-connected-words, and key and value are connected by "=". The value
+> > +has to be terminated by semi-colon (``;``) or newline (``\n``).
+> > +For array value, array entries are separated by comma (``,``). ::
+> > +
+> > +KEY[.WORD[...]] = VALUE[, VALUE2[...]][;]
+> 
+> (just a note: spaces are OK here, unlike in kernel command line syntax [unless quoted].)
+
+Yes.
+
+> > +
+> > +Each key word must contain only alphabets, numbers, dash (``-``) or underscore
+> > +(``_``). And each value only contains printable characters or spaces except
+> > +for delimiters such as semi-colon (``;``), new-line (``\n``), comma (``,``),
+> > +hash (``#``) and closing brace (``}``).
+> 
+> what about opening brace '{'?
+
+Good question! Since the bootconfig doesn't support anonymous key-word block,
+opening brace doesn't become a delimiter. (So, the above explanation might better
+use "except for *some* delimiters"...)
+
+For example, following data should be wrong.
+
+key = value { key2 = value }
+
+
+> 
+> > +
+> > +If you want to use those delimiters in a value, you can use either double-
+> > +quotes (``"VALUE"``) or single-quotes (``'VALUE'``) to quote it. Note that
+> > +you can not escape these quotes.
+> > +
+> > +There can be a key which doesn't have value or has an empty value. Those keys
+> > +are used for checking the key exists or not (like a boolean).
+> 
+> I would say:    checking if the key exists or not
+
+OK.
+
+> 
+> > +
+> > +Key-Value Syntax
+> > +----------------
+> > +
+> > +The boot config file syntax allows user to merge partially same word keys
+> > +by brace. For example::
+> > +
+> > + foo.bar.baz = value1
+> > + foo.bar.qux.quux = value2
+> > +
+> > +These can be written also in::
+> > +
+> > + foo.bar {
+> > +    baz = value1
+> > +    qux.quux = value2
+> > + }
+> > +
+> > +Or more shorter, written as following::
+> > +
+> > + foo.bar { baz = value1; qux.quux = value2 }
+> > +
+> > +In both styles, same key words are automatically merged when parsing it
+> > +at boot time. So you can append similar trees or key-values.
+> > +
+> > +Comments
+> > +--------
+> > +
+> > +The config syntax accepts shell-script style comments. The comments start
+> 
+> s/start/starting/
+
+OK.
+
+> 
+> > +with hash ("#") until newline ("\n") will be ignored.
+> > +
+> > +::
+> > +
+> > + # comment line
+> > + foo = value # value is set to foo.
+> > + bar = 1, # 1st element
+> > +       2, # 2nd element
+> > +       3  # 3rd element
+> > +
+> > +This is parsed as below::
+> > +
+> > + foo = value
+> > + bar = 1, 2, 3
+> > +
+> > +Note that you can not put a comment between value and delimiter(``,`` or
+> > +``;``). This means following config has a syntax error ::
+> > +
+> > + key = 1 # comment
+> > +       ,2
+> > +
+> > +
+> > +/proc/bootconfig
+> > +================
+> > +
+> > +/proc/bootconfig is a user-space interface of the boot config.
+> > +Unlike /proc/cmdline, this file shows the key-value style list.
+> > +Each key-value pair is shown in each line with following style::
+> > +
+> > + KEY[.WORDS...] = "[VALUE]"[,"VALUE2"...]
+> > +
+> > +
+> > +Boot Kernel With a Boot Config
+> > +==============================
+> > +
+> > +Since the boot configuration file is loaded with initrd, it will be added
+> > +to the end of the initrd (initramfs) image file. The Linux kernel decodes
+> > +the last part of the initrd image in memory to get the boot configuration
+> > +data.
+> > +Because of this "piggyback" method, there is no need to change or
+> > +update the boot loader and the kernel image itself.
+> > +
+> > +To do this operation, Linux kernel provides "bootconfig" command under
+> > +tools/bootconfig, which allows admin to apply or delete the config file
+> > +to/from initrd image. You can build it by follwoing command::
+> 
+>                                           by the following
+
+Oops, a typo...
+
+> 
+> > +
+> > + # make -C tools/bootconfig
+> > +
+> > +To add your boot config file to initrd image, run bootconfig as below
+> > +(Old data is removed automatically if exists)::
+> > +
+> > + # tools/bootconfig/bootconfig -a your-config /boot/initrd.img-X.Y.Z
+> > +
+> > +To remove the config from the image, you can use -d option as below::
+> > +
+> > + # tools/bootconfig/bootconfig -d /boot/initrd.img-X.Y.Z
+> > +
+> > +
+> > +C onfig File Limitation
+> 
+>    Config
+
+Oops
+
+> 
+> > +======================
+> > +
+> > +Currently the maximum config size size is 32KB and the total key-words (not
+> > +key-value entries) must be under 1024 nodes.
+> > +Note: this is not the number of entries but nodes, an entry must consume
+> > +more than 2 nodes (a key-word and a value). So theoretically, it will be
+> > +up to 512 key-value pairs. If keys contains 3 words in average, it can
+> > +contain 256 key-value pairs. In most cases, the number of config items
+> > +will be under 100 entries and smaller than 8KB, so it would be enough.
+> > +If the node number exceeds 1024, parser returns an error even if the file
+> > +size is smaller than 32KB.
+> > +Anyway, since bootconfig command verifies it when appending a boot config
+> > +to initrd image, user can notice it before boot.
+> > +
+> > +
+> > +Bootconfig APIs
+> > +===============
+> > +
+> > +User can query or loop on key-value pairs, also it is possible to find
+> > +a root (prefix) key node and find key-values under that node.
+> > +
+> > +If you have a key string, you can query the value directly with the key
+> > +using xbc_find_value(). If you want to know what keys exist in the SKC
+> > +tree, you can use xbc_for_each_key_value() to iterate key-value pairs.
+> > +Note that you need to use xbc_array_for_each_value() for accessing
+> > +each arraies value, e.g.::
+> 
+>         array's
+> (I think)
+
+Yes, OK. 
+
+> 
+> > +
+> > + vnode = NULL;
+> > + xbc_find_value("key.word", &vnode);
+> > + if (vnode && xbc_node_is_array(vnode))
+> > +    xbc_array_for_each_value(vnode, value) {
+> > +      printk("%s ", value);
+> > +    }
+> > +
+> > +If you want to focus on keys which has a prefix string, you can use
+> 
+>                                       have
+
+OK.
+
+> 
+> > +xbc_find_node() to find a node which prefix key words, and iterate
+> 
+> [confusing above]
+
+Ah, it should be "to find a node by the prefix string,"
+
+
+> 
+> > +keys under the prefix node with xbc_node_for_each_key_value().
+> > +
+> > +But the most typical usage is to get the named value under prefix
+> > +or get the named array under prefix as below::
+> > +
+> > + root = xbc_find_node("key.prefix");
+> > + value = xbc_node_find_value(root, "option", &vnode);
+> > + ...
+> > + xbc_node_for_each_array_value(root, "array-option", value, anode) {
+> > +    ...
+> > + }
+> > +
+> > +This accesses a value of "key.prefix.option" and an array of
+> > +"key.prefix.array-option".
+> > +
+> > +Locking is not needed, since after initialized, the config becomes readonly.
+> 
+>                                 after initialization,
+
+OK.
+
+> 
+> > +All data and keys must be copied if you need to modify it.
+> > +
+> > +
+> > +Functions and structures
+> > +========================
+> > +
+> > +.. kernel-doc:: include/linux/bootconfig.h
+> > +.. kernel-doc:: lib/bootconfig.c
+> > +
+> 
+> HTH.
+
+Thank you very much!
+
+> -- 
+> ~Randy
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
