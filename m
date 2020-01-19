@@ -2,84 +2,79 @@ Return-Path: <SRS0=pPEE=3I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B90C33CB1
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 09:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5046C33CB1
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 09:56:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B17E206D7
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 09:42:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 412902072B
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 09:56:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="d6fMpTiZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbgASJmW (ORCPT
+        id S1726780AbgASJ4J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 04:42:22 -0500
-Received: from mail-pf1-f198.google.com ([209.85.210.198]:45324 "EHLO
-        mail-pf1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725860AbgASJmW (ORCPT
+        Sun, 19 Jan 2020 04:56:09 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:49223 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725860AbgASJ4I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 04:42:22 -0500
-Received: by mail-pf1-f198.google.com with SMTP id x21so18392500pfp.12
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jan 2020 01:42:22 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=BRczTDviaeDTYez7KOKQz91MPq0sq1Vv8zv+kc9CGFY=;
-        b=egTgxmi7ZPxOqGbvuEChODmuLkwOG4ln/3y5G82DvoQ8yvhtInMa/YC+bIf1iN0MZf
-         MclfkxsgXHGKPW85Evlu1/5ScyzBTfQtrhWzZ60QvDNPxGMY2qgOT+DBZ6pj7MDkPoik
-         Il/JRmQRkAYUQO/KtuJa/5RjoBYZCYTp8n3gCCsn/jGvzMoWPfmCpL+sEFwUhKqHdBzO
-         foHYh5klum4QPbYKfP905F9i1fUpbC5HT2eRSLuim2na3og1yKTUYxWGS6reOwHk5Fzz
-         UnwKSJXEvhxK24inNOZ+khL/dZ/RkJIdRqTT8ILeDrv1rhEtbuR33o5+PtXBR/2T/5pv
-         Wb1A==
-X-Gm-Message-State: APjAAAVvSULV8ggpbmJROAdA64h8dYSozFfN34S21AJ6ImmHn2T6E6Xv
-        t9k0yW/WHLLLI/Cm3aPAL0RHxO3mqz1d76rhmvuictqqa4nI
-X-Google-Smtp-Source: APXvYqxRJpvjM5JY3HPtw4SSeYYGyt3BTK2lm+dpjQSdSGFX2T4NMrq384OFBw8/ldl/wdX6vviEk7HiCqq+7oDPg/j/rBdVYNKH
-MIME-Version: 1.0
-X-Received: by 2002:a6b:731a:: with SMTP id e26mr36446343ioh.254.1579426501752;
- Sun, 19 Jan 2020 01:35:01 -0800 (PST)
-Date:   Sun, 19 Jan 2020 01:35:01 -0800
-In-Reply-To: <000000000000e0ab4c059c79f014@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000095fe43059c7ae3f9@google.com>
-Subject: Re: KASAN: slab-out-of-bounds Read in bitmap_port_ext_cleanup
-From:   syzbot <syzbot+7b6206fb525c1f5ec3f8@syzkaller.appspotmail.com>
-To:     a@unstable.cc, andrew@lunn.ch, b.a.t.m.a.n@lists.open-mesh.org,
-        coreteam@netfilter.org, davem@davemloft.net,
-        florent.fourcot@wifirst.fr, fw@strlen.de, grygorii.strashko@ti.com,
-        j-keerthy@ti.com, jeremy@azazel.net, johannes.berg@intel.com,
-        kadlec@netfilter.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, mareklindner@neomailbox.ch,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        pablo@netfilter.org, sw@simonwunderlich.de,
-        syzkaller-bugs@googlegroups.com
+        Sun, 19 Jan 2020 04:56:08 -0500
+X-UUID: d65eb91d3b354ac09368b928fbe266b7-20200119
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=BdVcsiB+e41P2FSuzgzn4eQrqW2tVlQ1igW0BX1Y+e4=;
+        b=d6fMpTiZ4phCJrxRzF0Oejw0laoQC1KwuM1xd3/nmnkn+cXVgYWD/WrPgoYLPTB10f7U6T4L2R+FkMJNrL9trGLrzE87DTtY6wuMxwELDKIlp/ghf1H5uMc2SyfGEhhGpBoB9NAYHqZl6E4DodbPFkTSenEEjH37YgUZ+wX9iaM=;
+X-UUID: d65eb91d3b354ac09368b928fbe266b7-20200119
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 292205510; Sun, 19 Jan 2020 17:55:58 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Sun, 19 Jan 2020 17:54:48 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by mtkcas08.mediatek.inc
+ (172.21.101.126) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Sun, 19 Jan
+ 2020 17:55:46 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Sun, 19 Jan 2020 17:54:52 +0800
+Message-ID: <1579427757.19362.11.camel@mtksdccf07>
+Subject: Re: [PATCH v3 1/8] scsi: ufs: Fix ufshcd_probe_hba() reture value
+ in case ufshcd_scsi_add_wlus() fails
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     Bean Huo <huobean@gmail.com>
+CC:     <alim.akhtar@samsung.com>, <avri.altman@wdc.com>,
+        <asutoshd@codeaurora.org>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>, <beanhuo@micron.com>,
+        <bvanassche@acm.org>, <tomas.winkler@intel.com>,
+        <cang@codeaurora.org>, <linux-scsi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Date:   Sun, 19 Jan 2020 17:55:57 +0800
+In-Reply-To: <20200119001327.29155-2-huobean@gmail.com>
+References: <20200119001327.29155-1-huobean@gmail.com>
+         <20200119001327.29155-2-huobean@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+T24gU3VuLCAyMDIwLTAxLTE5IGF0IDAxOjEzICswMTAwLCBCZWFuIEh1byB3cm90ZToNCj4gRnJv
+bTogQmVhbiBIdW8gPGJlYW5odW9AbWljcm9uLmNvbT4NCj4gDQo+IEEgbm9uLXplcm8gZXJyb3Ig
+dmFsdWUgbGlrZWx5IGJlaW5nIHJldHVybmVkIGJ5IHVmc2hjZF9zY3NpX2FkZF93bHVzKCkNCj4g
+aW4gY2FzZSBvZiBmYWlsdXJlIG9mIGFkZGluZyB0aGUgV0xzLCBidXQgdWZzaGNkX3Byb2JlX2hi
+YSgpIGRvZXNuJ3QNCj4gdXNlIHRoaXMgdmFsdWUsIGFuZCBkb2Vzbid0IHJlcG9ydCB0aGlzIGZh
+aWx1cmUgdG8gdXBwZXIgY2FsbGVyLg0KPiBUaGlzIHBhdGNoIGlzIHRvIGZpeCB0aGlzIGlzc3Vl
+Lg0KPiANCj4gRml4ZXM6IDJhOGZhNjAwNDQ1YyAoInVmczogbWFudWFsbHkgYWRkIHdlbGwga25v
+d24gbG9naWNhbCB1bml0cyIpDQo+IFJldmlld2VkLWJ5OiBBc3V0b3NoIERhcyA8YXN1dG9zaGRA
+Y29kZWF1cm9yYS5vcmc+DQo+IFNpZ25lZC1vZmYtYnk6IEJlYW4gSHVvIDxiZWFuaHVvQG1pY3Jv
+bi5jb20+DQoNClJldmlld2VkLWJ5OiBTdGFubGV5IENodSA8c3RhbmxleS5jaHVAbWVkaWF0ZWsu
+Y29tPg0KDQoNCg==
 
-commit 2f9b0d93a9d3ec64558537ab5d7cff820886afa4
-Author: Keerthy <j-keerthy@ti.com>
-Date:   Mon Jun 24 05:16:19 2019 +0000
-
-    net: ethernet: ti: cpsw: Fix suspend/resume break
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17fcf959e00000
-start commit:   e02d9c4c Merge branch 'bnxt_en-fixes'
-git tree:       net
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=1402f959e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1002f959e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7e89bd00623fe71e
-dashboard link: https://syzkaller.appspot.com/bug?extid=7b6206fb525c1f5ec3f8
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16551cc9e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14a04966e00000
-
-Reported-by: syzbot+7b6206fb525c1f5ec3f8@syzkaller.appspotmail.com
-Fixes: 2f9b0d93a9d3 ("net: ethernet: ti: cpsw: Fix suspend/resume break")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
