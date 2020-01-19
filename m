@@ -2,148 +2,113 @@ Return-Path: <SRS0=pPEE=3I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E810C33CB1
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 16:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 870BDC3F68F
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 17:16:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB88220684
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 16:57:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 697FC206B7
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 17:16:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727586AbgASQ5K (ORCPT
+        id S1727580AbgASRQD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 11:57:10 -0500
-Received: from mail-io1-f72.google.com ([209.85.166.72]:39822 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726956AbgASQ5J (ORCPT
+        Sun, 19 Jan 2020 12:16:03 -0500
+Received: from asavdk3.altibox.net ([109.247.116.14]:54588 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726956AbgASRQD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 11:57:09 -0500
-Received: by mail-io1-f72.google.com with SMTP id w22so13614622ior.6
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jan 2020 08:57:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=bNseSmDTrA51braKCNj/lz4EvnVrSQC47Ii4IWwahNM=;
-        b=dUKRZDk5V6rs/RITOo34P05DCvfjJJwZREOL65MRp5w/wfIMXNeg4ykLwKskcsFhbD
-         iOrUfoU09ytjBP8KEIKXybrHKWsIxtwMSl6OwVd4FHkqZinu1nzGnZdvCpHVN4nhb3o5
-         209oe63Sft0ssuWaU0+568IZlp9+DH+6BPvWhQt6hg2DoslTvNpx+RE3tR9R85NsroiJ
-         kZryT6ZSvWU4FYDuEzL1VpGYPzR+02LNXvfVS8/7ZxBynAkTAlrxEMlRnO3fL7Vys9jR
-         bg2qoVYFDWbZb/TAfIoUvXzb55rIYEUpSssmsTFdo8JomjHubrE3p+RDWFPY7NgNKtIT
-         nkBQ==
-X-Gm-Message-State: APjAAAXz/9GkAcKYGO2ZBd3lg+C+vMrACXNNvlFXmRudWMZqPn+YC0yd
-        a1rzc327Da0exWeR7Hp4Y6PCIoMnzkGzNWBOcZrwbQWx/mJ4
-X-Google-Smtp-Source: APXvYqxtY1uF2i55A7gZpgNMxOtW4x67itM8KH16bEC/5RG58vOV3mD7hMCXY16SO+/4dgwzcRHUgxN9JvTO3yqcH2EcO5KclOcY
+        Sun, 19 Jan 2020 12:16:03 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id D241520020;
+        Sun, 19 Jan 2020 18:15:56 +0100 (CET)
+Date:   Sun, 19 Jan 2020 18:15:55 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
+        David Lechner <david@lechnology.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/5] drm: Add support for Okaya RH128128T
+Message-ID: <20200119171555.GA31055@ravnborg.org>
+References: <20200115124548.3951-1-geert+renesas@glider.be>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:10d1:: with SMTP id s17mr7555983ilj.198.1579453028684;
- Sun, 19 Jan 2020 08:57:08 -0800 (PST)
-Date:   Sun, 19 Jan 2020 08:57:08 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b6da7b059c8110c4@google.com>
-Subject: general protection fault in nf_flow_table_offload_setup
-From:   syzbot <syzbot+e93c1d9ae19a0236289c@syzkaller.appspotmail.com>
-To:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
-        kadlec@netfilter.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        pablo@netfilter.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200115124548.3951-1-geert+renesas@glider.be>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=I7rRU4mLAAAA:8
+        a=VwQbUJbxAAAA:8 a=7xOLcxuHRxORoo7z8OsA:9 a=CjuIK1q_8ugA:10
+        a=zVIc4Sw0WK5ZSny7osSx:22 a=AjGcO6oz07-iQ99wixmX:22
+        a=Z5ABNNGmrOfJ6cZ5bIyy:22 a=jd6J4Gguk5HxikPWLKER:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Geert.
 
-syzbot found the following crash on:
+On Wed, Jan 15, 2020 at 01:45:43PM +0100, Geert Uytterhoeven wrote:
+> 	Hi all,
+> 
+> This patch series adds support for the Okaya RH128128T LCD to the
+> existing ST7735R driver.  This is a 128x128 1.4" TFT display driven by a
+> Sitronix ST7715R TFT Controller/Driver.  It is used on e.g. the Renesas
+> YRSK-LCD-PMOD extension board, which is shipped with Renesas RSK+RZA1
+> development boards[1], and with several other Renesas starter kits, for
+> RX, Synergy, and RZ/T1 MCUs and SoCs.
+> 
+> Changes compared to v1[2]:
+>   - Convert DT bindings to DT schema,
+>   - Add YRSK-LCD-PMOD reference and links,
+>   - Add Reviewed-by,
+>   - Split driver preparation and adding actual support in two separate
+>     patches,
+>   - Replace st7735r_priv.rgb by a pointer to struct st7735r_cfg,
+>   - Change prefix of jd_t18003_t01_pipe_enable() and
+>     jd_t18003_t01_pipe_funcs(),
+>   - Update Kconfig help text,
+>   - Improve file comment header.
+> 
+> This has been tested using the r7s72100-rskrza1-pmod-spi.dtso and
+> r7s72100-rskrza1-pmod2-lcd.dtso DT overlays[3].
+> Note that for using this on RSK+RZA1, there is a dependency on RSPI
+> cs-gpios support (now in linux-next).
+> With DT overlays, this also depends on DT overlays[4] and gpio-hog
+> overlay support[5].
+> 
+> Thanks!
+> 
+> [1] https://renesasrulz.com/the_vault/f/archive-forum/4981/upgrading-to-the-renesas-rz-a1h
+> [1] https://lore.kernel.org/dri-devel/20200102141246.370-1-geert+renesas@glider.be/
+> [2] https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git/log/?h=topic/renesas-overlays
+> [4] https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git/log/?h=topic/overlays
+> [5] "[PATCH/RFC 0/2] gpio: of: Add DT overlay support for GPIO hogs"
+>     https://lore.kernel.org/lkml/20191230133852.5890-1-geert+renesas@glider.be/
+> 
+> Geert Uytterhoeven (5):
+>   dt-bindings: display: sitronix,st7735r: Convert to DT schema
+>   dt-bindings: display: sitronix,st7735r: Add Okaya RH128128T
+>   drm/mipi_dbi: Add support for display offsets
+>   drm: tiny: st7735r: Prepare for adding support for more displays
+>   drm: tiny: st7735r: Add support for Okaya RH128128T
 
-HEAD commit:    7f013ede Merge git://git.kernel.org/pub/scm/linux/kernel/g..
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=133bfa85e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=66d8660c57ff3c98
-dashboard link: https://syzkaller.appspot.com/bug?extid=e93c1d9ae19a0236289c
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=166d8faee00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11aec135e00000
+Thanks, it ended up with a nice small patch adding support for
+another controller/panel combo to this driver.
+All 5 patches applied to drm-misc-next.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+e93c1d9ae19a0236289c@syzkaller.appspotmail.com
-
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 9684 Comm: syz-executor080 Not tainted 5.5.0-rc5-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:__list_splice include/linux/list.h:408 [inline]
-RIP: 0010:list_splice include/linux/list.h:424 [inline]
-RIP: 0010:nf_flow_table_block_setup net/netfilter/nf_flow_table_offload.c:825 [inline]
-RIP: 0010:nf_flow_table_offload_setup+0x4dc/0x6d0 net/netfilter/nf_flow_table_offload.c:882
-Code: bc 24 50 ff ff ff 48 ba 00 00 00 00 00 fc ff df 4d 8b ae 00 02 00 00 4d 8b a4 24 58 ff ff ff 49 8d 7f 08 48 89 f9 48 c1 e9 03 <80> 3c 11 00 0f 85 cd 01 00 00 4c 89 e2 49 89 47 08 48 b8 00 00 00
-RSP: 0018:ffffc90002007228 EFLAGS: 00010202
-RAX: ffff888091272a50 RBX: 1ffff92000400e49 RCX: 0000000000000001
-RDX: dffffc0000000000 RSI: ffffffff8673172e RDI: 0000000000000008
-RBP: ffffc90002007370 R08: ffff888097816580 R09: fffff52000400e54
-R10: fffff52000400e53 R11: ffffc9000200729e R12: ffffffff894a1188
-R13: ffff888091272a50 R14: ffff888091272850 R15: 0000000000000000
-FS:  0000000000ca3880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000104 CR3: 0000000092cc9000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- nft_register_flowtable_net_hooks net/netfilter/nf_tables_api.c:6025 [inline]
- nf_tables_newflowtable+0x1352/0x1e20 net/netfilter/nf_tables_api.c:6142
- nfnetlink_rcv_batch+0xf42/0x17a0 net/netfilter/nfnetlink.c:433
- nfnetlink_rcv_skb_batch net/netfilter/nfnetlink.c:543 [inline]
- nfnetlink_rcv+0x3e7/0x460 net/netfilter/nfnetlink.c:561
- netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
- netlink_unicast+0x59e/0x7e0 net/netlink/af_netlink.c:1328
- netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xd7/0x130 net/socket.c:672
- ____sys_sendmsg+0x753/0x880 net/socket.c:2343
- ___sys_sendmsg+0x100/0x170 net/socket.c:2397
- __sys_sendmsg+0x105/0x1d0 net/socket.c:2430
- __do_sys_sendmsg net/socket.c:2439 [inline]
- __se_sys_sendmsg net/socket.c:2437 [inline]
- __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2437
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x440519
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffd2c0117d8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440519
-RDX: 0000000000000000 RSI: 0000000020003e00 RDI: 0000000000000003
-RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
-R10: 0000000000000003 R11: 0000000000000246 R12: 0000000000401da0
-R13: 0000000000401e30 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
----[ end trace 536c0ff4bab32d1b ]---
-RIP: 0010:__list_splice include/linux/list.h:408 [inline]
-RIP: 0010:list_splice include/linux/list.h:424 [inline]
-RIP: 0010:nf_flow_table_block_setup net/netfilter/nf_flow_table_offload.c:825 [inline]
-RIP: 0010:nf_flow_table_offload_setup+0x4dc/0x6d0 net/netfilter/nf_flow_table_offload.c:882
-Code: bc 24 50 ff ff ff 48 ba 00 00 00 00 00 fc ff df 4d 8b ae 00 02 00 00 4d 8b a4 24 58 ff ff ff 49 8d 7f 08 48 89 f9 48 c1 e9 03 <80> 3c 11 00 0f 85 cd 01 00 00 4c 89 e2 49 89 47 08 48 b8 00 00 00
-RSP: 0018:ffffc90002007228 EFLAGS: 00010202
-RAX: ffff888091272a50 RBX: 1ffff92000400e49 RCX: 0000000000000001
-RDX: dffffc0000000000 RSI: ffffffff8673172e RDI: 0000000000000008
-RBP: ffffc90002007370 R08: ffff888097816580 R09: fffff52000400e54
-R10: fffff52000400e53 R11: ffffc9000200729e R12: ffffffff894a1188
-R13: ffff888091272a50 R14: ffff888091272850 R15: 0000000000000000
-FS:  0000000000ca3880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000104 CR3: 0000000092cc9000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+	Sam
