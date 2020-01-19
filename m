@@ -2,120 +2,151 @@ Return-Path: <SRS0=pPEE=3I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C4C3C32771
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 01:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40142C32771
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 01:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB20F206E6
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 01:30:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VoYQA00n"
+	by mail.kernel.org (Postfix) with ESMTP id 11DE32073A
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 01:34:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727403AbgASBar (ORCPT
+        id S1727162AbgASBeR convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 20:30:47 -0500
-Received: from mail-vk1-f194.google.com ([209.85.221.194]:33696 "EHLO
-        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727070AbgASBaq (ORCPT
+        Sat, 18 Jan 2020 20:34:17 -0500
+Received: from sci-ig2.spreadtrum.com ([222.66.158.135]:39633 "EHLO
+        SHSQR01.spreadtrum.com" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727070AbgASBeR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 20:30:46 -0500
-Received: by mail-vk1-f194.google.com with SMTP id i78so7679139vke.0;
-        Sat, 18 Jan 2020 17:30:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EKad1adTTU4LVcn/Blwx2NeGsTOd9VlC38Ni39+5y5g=;
-        b=VoYQA00nMU6iafBZElAvTk7u4kdsK3nkqBTFpeEWQA3G0CRzU/Fo50Z4s44+xQw/6Q
-         bY/vtKy/ThWinD+crPf2g8zipZ0I28j7P6189VxAFaRa5u73KaLT4tH0BHMpyUyemwXb
-         bEkt6Cg1U9pCEmKNlMBZnZBY8dbsOL3Zmy0FehfE95esgmk9D044ZZKDZkXUDqWaEWlo
-         qzS1AbEj2dr2QHxIT8h4Xqh39mN1FHjomVH0/FXGythuoaD779OpoF8xEVSJcI7rioe8
-         6t+nWL+PgJMyOYxH0crI51qUNQBgj/an3VQZBmnSQ3VdwTapy7bjc11L4gx15YXMU365
-         F4og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EKad1adTTU4LVcn/Blwx2NeGsTOd9VlC38Ni39+5y5g=;
-        b=EfcgHK4m2r1iX9pt34ekiA3BAsEe+lLxWpiX/5Kfmqq04GgXouRv2NqyxICA/cdxco
-         tMGaixQ+cHp5WfzmCSfjHW4Med15kRQXfAqkGYBF4lOITeDuzsVTqsq4QrPqZHDQ7eIr
-         eMsBpixGv5Rr0MErrsAXBHdELhJEDZwWsli+7oM5D8GMMTyc9N/ut/U9lkuEfD9Z2tPw
-         AqITqjj/v8Yphqg4CFotSXz+ULsCgRx5O6ZNSZ3S2pXhXdJKftuF+lcQ/UU3N8/iUrS0
-         T1DYjk6ZJeNTyIvOQf9MlIeGCDGmDq9mMg7+JW+J3RrD3L+SOelgA5rpNKiQEeMBz7hJ
-         KLYg==
-X-Gm-Message-State: APjAAAWJ8iSPaNvmWFNxyF6nsS/+JDZx6IatlFmgPzJ732K9nmv4LOA+
-        U277YzHdwiwhl7S94WAt+BeclWJlg2CXheLeKCM=
-X-Google-Smtp-Source: APXvYqwhEGUz+GdZpwKSakwZaVqcrDLa+iMqVqkgjm8E2FCXw/k/lY+872TsN+c6kIJGmQRH7Ex2ef3BVz0VsHLxUe4=
-X-Received: by 2002:a1f:4541:: with SMTP id s62mr13717538vka.59.1579397445597;
- Sat, 18 Jan 2020 17:30:45 -0800 (PST)
+        Sat, 18 Jan 2020 20:34:17 -0500
+Received: from ig2.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
+        by SHSQR01.spreadtrum.com with ESMTPS id 00J1XA13006696
+        (version=TLSv1 cipher=AES256-SHA bits=256 verify=NO);
+        Sun, 19 Jan 2020 09:33:11 +0800 (CST)
+        (envelope-from Orson.Zhai@unisoc.com)
+Received: from localhost (10.0.74.130) by BJMBX01.spreadtrum.com (10.0.64.7)
+ with Microsoft SMTP Server (TLS) id 15.0.847.32; Sun, 19 Jan 2020 09:33:52
+ +0800
+From:   Orson Zhai <orson.zhai@unisoc.com>
+To:     Lee Jones <lee.jones@linaro.org>, Arnd Bergmann <arnd@arndb.de>
+CC:     <linux-kernel@vger.kernel.org>, <baolin.wang@unisoc.com>,
+        <chunyan.zhang@unisoc.com>, Orson Zhai <orson.zhai@unisoc.com>
+Subject: [PATCH v4] mfd: syscon: Add arguments support for syscon reference
+Date:   Sun, 19 Jan 2020 09:33:39 +0800
+Message-ID: <1579397619-28547-1-git-send-email-orson.zhai@unisoc.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <20200119001327.29155-1-huobean@gmail.com> <20200119001327.29155-2-huobean@gmail.com>
-In-Reply-To: <20200119001327.29155-2-huobean@gmail.com>
-From:   Alim Akhtar <alim.akhtar@gmail.com>
-Date:   Sun, 19 Jan 2020 07:00:09 +0530
-Message-ID: <CAGOxZ52QU-W-MKd05cqXVRO82QMpG1Y9+AzPx4zHsZsioGS1Og@mail.gmail.com>
-Subject: Re: [PATCH v3 1/8] scsi: ufs: Fix ufshcd_probe_hba() reture value in
- case ufshcd_scsi_add_wlus() fails
-To:     Bean Huo <huobean@gmail.com>
-Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>, asutoshd@codeaurora.org,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        "Bean Huo (beanhuo)" <beanhuo@micron.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Can Guo <cang@codeaurora.org>, linux-scsi@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+X-Originating-IP: [10.0.74.130]
+X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
+ BJMBX01.spreadtrum.com (10.0.64.7)
+Content-Transfer-Encoding: 8BIT
+X-MAIL: SHSQR01.spreadtrum.com 00J1XA13006696
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bean
+There are a lot of similar global registers being used across multiple SoCs
+from Unisoc. But most of these registers are assigned with different offset
+for different SoCs. It is hard to handle all of them in an all-in-one
+kernel image.
 
-On Sun, Jan 19, 2020 at 5:44 AM Bean Huo <huobean@gmail.com> wrote:
->
-> From: Bean Huo <beanhuo@micron.com>
->
-> A non-zero error value likely being returned by ufshcd_scsi_add_wlus()
-> in case of failure of adding the WLs, but ufshcd_probe_hba() doesn't
-> use this value, and doesn't report this failure to upper caller.
-> This patch is to fix this issue.
->
-> Fixes: 2a8fa600445c ("ufs: manually add well known logical units")
-> Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
-> Signed-off-by: Bean Huo <beanhuo@micron.com>
-> ---
-Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+Add a helper function to get regmap with arguments where we could put some
+extra information such as the offset value.
 
->  drivers/scsi/ufs/ufshcd.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> index bea036ab189a..9a9085a7bcc5 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -7032,7 +7032,8 @@ static int ufshcd_probe_hba(struct ufs_hba *hba)
->                         ufshcd_init_icc_levels(hba);
->
->                 /* Add required well known logical units to scsi mid layer */
-> -               if (ufshcd_scsi_add_wlus(hba))
-> +               ret = ufshcd_scsi_add_wlus(hba);
-> +               if (ret)
->                         goto out;
->
->                 /* Initialize devfreq after UFS device is detected */
-> --
-> 2.17.1
->
+Signed-off-by: Orson Zhai <orson.zhai@unisoc.com>
+Tested-by: Baolin Wang <baolin.wang@unisoc.com>
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Lee Jones <lee.jones@linaro.org>
+---
 
+V3 Change:
+ Rebase on latest kernel v5.5-rc6 for Lee.
 
--- 
-Regards,
-Alim
+V4 Change:
+ Remove trailing spaces according to checkpatch.
+
+ drivers/mfd/syscon.c       | 29 +++++++++++++++++++++++++++++
+ include/linux/mfd/syscon.h | 14 ++++++++++++++
+ 2 files changed, 43 insertions(+)
+
+diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+index e22197c..2918b05 100644
+--- a/drivers/mfd/syscon.c
++++ b/drivers/mfd/syscon.c
+@@ -224,6 +224,35 @@ struct regmap *syscon_regmap_lookup_by_phandle(struct device_node *np,
+ }
+ EXPORT_SYMBOL_GPL(syscon_regmap_lookup_by_phandle);
+
++struct regmap *syscon_regmap_lookup_by_phandle_args(struct device_node *np,
++                                       const char *property,
++                                       int arg_count,
++                                       unsigned int *out_args)
++{
++       struct device_node *syscon_np;
++       struct of_phandle_args args;
++       struct regmap *regmap;
++       unsigned int index;
++       int rc;
++
++       rc = of_parse_phandle_with_fixed_args(np, property, arg_count,
++                       0, &args);
++       if (rc)
++               return ERR_PTR(rc);
++
++       syscon_np = args.np;
++       if (!syscon_np)
++               return ERR_PTR(-ENODEV);
++
++       regmap = syscon_node_to_regmap(syscon_np);
++       for (index = 0; index < arg_count; index++)
++               out_args[index] = args.args[index];
++       of_node_put(syscon_np);
++
++       return regmap;
++}
++EXPORT_SYMBOL_GPL(syscon_regmap_lookup_by_phandle_args);
++
+ static int syscon_probe(struct platform_device *pdev)
+ {
+        struct device *dev = &pdev->dev;
+diff --git a/include/linux/mfd/syscon.h b/include/linux/mfd/syscon.h
+index 112dc66..714cab1 100644
+--- a/include/linux/mfd/syscon.h
++++ b/include/linux/mfd/syscon.h
+@@ -23,6 +23,11 @@ extern struct regmap *syscon_regmap_lookup_by_compatible(const char *s);
+ extern struct regmap *syscon_regmap_lookup_by_phandle(
+                                        struct device_node *np,
+                                        const char *property);
++extern struct regmap *syscon_regmap_lookup_by_phandle_args(
++                                       struct device_node *np,
++                                       const char *property,
++                                       int arg_count,
++                                       unsigned int *out_args);
+ #else
+ static inline struct regmap *device_node_to_regmap(struct device_node *np)
+ {
+@@ -45,6 +50,15 @@ static inline struct regmap *syscon_regmap_lookup_by_phandle(
+ {
+        return ERR_PTR(-ENOTSUPP);
+ }
++
++static struct regmap *syscon_regmap_lookup_by_phandle_args(
++                                       struct device_node *np,
++                                       const char *property,
++                                       int arg_count,
++                                       unsigned int *out_args)
++{
++       return ERR_PTR(-ENOTSUPP);
++}
+ #endif
+
+ #endif /* __LINUX_MFD_SYSCON_H__ */
+--
+2.7.4
+
+________________________________
+ This email (including its attachments) is intended only for the person or entity to which it is addressed and may contain information that is privileged, confidential or otherwise protected from disclosure. Unauthorized use, dissemination, distribution or copying of this email or the information herein or taking any action in reliance on the contents of this email or the information herein, by anyone other than the intended recipient, or an employee or agent responsible for delivering the message to the intended recipient, is strictly prohibited. If you are not the intended recipient, please do not read, copy, use or disclose any part of this e-mail to others. Please notify the sender immediately and permanently delete this e-mail and any attachments if you received it in error. Internet communications cannot be guaranteed to be timely, secure, error-free or virus-free. The sender does not accept liability for any errors or omissions.
+本邮件及其附件具有保密性质，受法律保护不得泄露，仅发送给本邮件所指特定收件人。严禁非经授权使用、宣传、发布或复制本邮件或其内容。若非该特定收件人，请勿阅读、复制、 使用或披露本邮件的任何内容。若误收本邮件，请从系统中永久性删除本邮件及所有附件，并以回复邮件的方式即刻告知发件人。无法保证互联网通信及时、安全、无误或防毒。发件人对任何错漏均不承担责任。
