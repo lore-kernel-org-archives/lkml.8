@@ -2,186 +2,148 @@ Return-Path: <SRS0=pPEE=3I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8998AC33CB1
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 16:50:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E810C33CB1
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 16:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6197E20679
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 16:50:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB88220684
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 16:57:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727195AbgASQu0 (ORCPT
+        id S1727586AbgASQ5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 11:50:26 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:60227 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726778AbgASQu0 (ORCPT
+        Sun, 19 Jan 2020 11:57:10 -0500
+Received: from mail-io1-f72.google.com ([209.85.166.72]:39822 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726956AbgASQ5J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 11:50:26 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1itDmF-00043F-E1; Sun, 19 Jan 2020 17:50:19 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id E1CB4105BE3; Sun, 19 Jan 2020 17:50:17 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Ming Lei <ming.lei@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     Ming Lei <ming.lei@redhat.com>, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Peter Xu <peterx@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>
-Subject: Re: [PATCH V3] sched/isolation: isolate from handling managed interrupt
-In-Reply-To: <20200118125354.15796-1-ming.lei@redhat.com>
-References: <20200118125354.15796-1-ming.lei@redhat.com>
-Date:   Sun, 19 Jan 2020 17:50:17 +0100
-Message-ID: <87ftgb4chi.fsf@nanos.tec.linutronix.de>
+        Sun, 19 Jan 2020 11:57:09 -0500
+Received: by mail-io1-f72.google.com with SMTP id w22so13614622ior.6
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jan 2020 08:57:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=bNseSmDTrA51braKCNj/lz4EvnVrSQC47Ii4IWwahNM=;
+        b=dUKRZDk5V6rs/RITOo34P05DCvfjJJwZREOL65MRp5w/wfIMXNeg4ykLwKskcsFhbD
+         iOrUfoU09ytjBP8KEIKXybrHKWsIxtwMSl6OwVd4FHkqZinu1nzGnZdvCpHVN4nhb3o5
+         209oe63Sft0ssuWaU0+568IZlp9+DH+6BPvWhQt6hg2DoslTvNpx+RE3tR9R85NsroiJ
+         kZryT6ZSvWU4FYDuEzL1VpGYPzR+02LNXvfVS8/7ZxBynAkTAlrxEMlRnO3fL7Vys9jR
+         bg2qoVYFDWbZb/TAfIoUvXzb55rIYEUpSssmsTFdo8JomjHubrE3p+RDWFPY7NgNKtIT
+         nkBQ==
+X-Gm-Message-State: APjAAAXz/9GkAcKYGO2ZBd3lg+C+vMrACXNNvlFXmRudWMZqPn+YC0yd
+        a1rzc327Da0exWeR7Hp4Y6PCIoMnzkGzNWBOcZrwbQWx/mJ4
+X-Google-Smtp-Source: APXvYqxtY1uF2i55A7gZpgNMxOtW4x67itM8KH16bEC/5RG58vOV3mD7hMCXY16SO+/4dgwzcRHUgxN9JvTO3yqcH2EcO5KclOcY
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-Received: by 2002:a05:6e02:10d1:: with SMTP id s17mr7555983ilj.198.1579453028684;
+ Sun, 19 Jan 2020 08:57:08 -0800 (PST)
+Date:   Sun, 19 Jan 2020 08:57:08 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000b6da7b059c8110c4@google.com>
+Subject: general protection fault in nf_flow_table_offload_setup
+From:   syzbot <syzbot+e93c1d9ae19a0236289c@syzkaller.appspotmail.com>
+To:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
+        kadlec@netfilter.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        pablo@netfilter.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ming,
+Hello,
 
-Ming Lei <ming.lei@redhat.com> writes:
->  
-> +static bool hk_should_isolate(struct irq_data *data,
-> +		const struct cpumask *affinity, unsigned int cpu)
+syzbot found the following crash on:
 
-Please align the first argument on the second line with the first
-argument on the first line.
+HEAD commit:    7f013ede Merge git://git.kernel.org/pub/scm/linux/kernel/g..
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=133bfa85e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=66d8660c57ff3c98
+dashboard link: https://syzkaller.appspot.com/bug?extid=e93c1d9ae19a0236289c
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=166d8faee00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11aec135e00000
 
-> +{
-> +	const struct cpumask *hk_mask;
-> +
-> +	if (!housekeeping_enabled(HK_FLAG_MANAGED_IRQ))
-> +		return false;
-> +
-> +	if (!irqd_affinity_is_managed(data))
-> +		return false;
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+e93c1d9ae19a0236289c@syzkaller.appspotmail.com
 
-Pointless. That's already checked at the begin of the calling function.
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 9684 Comm: syz-executor080 Not tainted 5.5.0-rc5-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:__list_splice include/linux/list.h:408 [inline]
+RIP: 0010:list_splice include/linux/list.h:424 [inline]
+RIP: 0010:nf_flow_table_block_setup net/netfilter/nf_flow_table_offload.c:825 [inline]
+RIP: 0010:nf_flow_table_offload_setup+0x4dc/0x6d0 net/netfilter/nf_flow_table_offload.c:882
+Code: bc 24 50 ff ff ff 48 ba 00 00 00 00 00 fc ff df 4d 8b ae 00 02 00 00 4d 8b a4 24 58 ff ff ff 49 8d 7f 08 48 89 f9 48 c1 e9 03 <80> 3c 11 00 0f 85 cd 01 00 00 4c 89 e2 49 89 47 08 48 b8 00 00 00
+RSP: 0018:ffffc90002007228 EFLAGS: 00010202
+RAX: ffff888091272a50 RBX: 1ffff92000400e49 RCX: 0000000000000001
+RDX: dffffc0000000000 RSI: ffffffff8673172e RDI: 0000000000000008
+RBP: ffffc90002007370 R08: ffff888097816580 R09: fffff52000400e54
+R10: fffff52000400e53 R11: ffffc9000200729e R12: ffffffff894a1188
+R13: ffff888091272a50 R14: ffff888091272850 R15: 0000000000000000
+FS:  0000000000ca3880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000104 CR3: 0000000092cc9000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ nft_register_flowtable_net_hooks net/netfilter/nf_tables_api.c:6025 [inline]
+ nf_tables_newflowtable+0x1352/0x1e20 net/netfilter/nf_tables_api.c:6142
+ nfnetlink_rcv_batch+0xf42/0x17a0 net/netfilter/nfnetlink.c:433
+ nfnetlink_rcv_skb_batch net/netfilter/nfnetlink.c:543 [inline]
+ nfnetlink_rcv+0x3e7/0x460 net/netfilter/nfnetlink.c:561
+ netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+ netlink_unicast+0x59e/0x7e0 net/netlink/af_netlink.c:1328
+ netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xd7/0x130 net/socket.c:672
+ ____sys_sendmsg+0x753/0x880 net/socket.c:2343
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2397
+ __sys_sendmsg+0x105/0x1d0 net/socket.c:2430
+ __do_sys_sendmsg net/socket.c:2439 [inline]
+ __se_sys_sendmsg net/socket.c:2437 [inline]
+ __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2437
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x440519
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffd2c0117d8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440519
+RDX: 0000000000000000 RSI: 0000000020003e00 RDI: 0000000000000003
+RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
+R10: 0000000000000003 R11: 0000000000000246 R12: 0000000000401da0
+R13: 0000000000401e30 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+---[ end trace 536c0ff4bab32d1b ]---
+RIP: 0010:__list_splice include/linux/list.h:408 [inline]
+RIP: 0010:list_splice include/linux/list.h:424 [inline]
+RIP: 0010:nf_flow_table_block_setup net/netfilter/nf_flow_table_offload.c:825 [inline]
+RIP: 0010:nf_flow_table_offload_setup+0x4dc/0x6d0 net/netfilter/nf_flow_table_offload.c:882
+Code: bc 24 50 ff ff ff 48 ba 00 00 00 00 00 fc ff df 4d 8b ae 00 02 00 00 4d 8b a4 24 58 ff ff ff 49 8d 7f 08 48 89 f9 48 c1 e9 03 <80> 3c 11 00 0f 85 cd 01 00 00 4c 89 e2 49 89 47 08 48 b8 00 00 00
+RSP: 0018:ffffc90002007228 EFLAGS: 00010202
+RAX: ffff888091272a50 RBX: 1ffff92000400e49 RCX: 0000000000000001
+RDX: dffffc0000000000 RSI: ffffffff8673172e RDI: 0000000000000008
+RBP: ffffc90002007370 R08: ffff888097816580 R09: fffff52000400e54
+R10: fffff52000400e53 R11: ffffc9000200729e R12: ffffffff894a1188
+R13: ffff888091272a50 R14: ffff888091272850 R15: 0000000000000000
+FS:  0000000000ca3880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000104 CR3: 0000000092cc9000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
-> +
-> +	if (!cpumask_test_cpu(cpu, affinity))
-> +		return false;
 
-Ditto.
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-> +	hk_mask = housekeeping_cpumask(HK_FLAG_MANAGED_IRQ);
-> +	if (cpumask_subset(affinity, hk_mask))
-> +		return false;
-> +
-> +	if (cpumask_intersects(irq_data_get_effective_affinity_mask(data),
-> +				hk_mask))
-
-I really had to think twice why this is correct. The example I gave you
-is far more intuitive. It's just missing the check below.
-
-> +		return false;
-> +
-> +	return cpumask_test_cpu(cpu, hk_mask);
-> +}
-> +
->  static void irq_restore_affinity_of_irq(struct irq_desc *desc, unsigned int cpu)
->  {
->  	struct irq_data *data = irq_desc_get_irq_data(desc);
-> @@ -190,7 +216,8 @@ static void irq_restore_affinity_of_irq(struct irq_desc *desc, unsigned int cpu)
->  	 * CPU then it is already assigned to a CPU in the affinity
->  	 * mask. No point in trying to move it around.
->  	 */
-> -	if (!irqd_is_single_target(data))
-> +	if (!irqd_is_single_target(data) ||
-> +			hk_should_isolate(data, affinity, cpu))
-
-	if (!irqd_is_single_target(data) ||
-	    hk_should_isolate(data, affinity, cpu))
-
-Please.
-
->  		irq_set_affinity_locked(data, affinity, false);
->  }
->  
-> diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-> index 1753486b440c..a8af2ca806e2 100644
-> --- a/kernel/irq/manage.c
-> +++ b/kernel/irq/manage.c
-> @@ -18,6 +18,7 @@
->  #include <linux/sched.h>
->  #include <linux/sched/rt.h>
->  #include <linux/sched/task.h>
-> +#include <linux/sched/isolation.h>
->  #include <uapi/linux/sched/types.h>
->  #include <linux/task_work.h>
->  
-> @@ -217,7 +218,40 @@ int irq_do_set_affinity(struct irq_data *data, const struct cpumask *mask,
->  	if (!chip || !chip->irq_set_affinity)
->  		return -EINVAL;
->  
-> -	ret = chip->irq_set_affinity(data, mask, force);
-> +	/*
-> +	 * If this is a managed interrupt and housekeeping is enabled on
-> +	 * it check whether the requested affinity mask intersects with
-> +	 * a housekeeping CPU. If so, then remove the isolated CPUs from
-> +	 * the mask and just keep the housekeeping CPU(s). This prevents
-> +	 * the affinity setter from routing the interrupt to an isolated
-> +	 * CPU to avoid that I/O submitted from a housekeeping CPU causes
-> +	 * interrupts on an isolated one.
-> +	 *
-> +	 * If the masks do not intersect or include online CPU(s) then
-> +	 * keep the requested mask. The isolated target CPUs are only
-> +	 * receiving interrupts when the I/O operation was submitted
-> +	 * directly from them.
-> +	 *
-> +	 * If all housekeeping CPUs in the affinity mask are offline,
-> +	 * we will migrate the irq from isolate CPU when any housekeeping
-> +	 * CPU in the mask becomes online.
-> +	 */
-> +	if (irqd_affinity_is_managed(data) &&
-> +			housekeeping_enabled(HK_FLAG_MANAGED_IRQ)) {
-
-Same here.
-
-> +		static DEFINE_RAW_SPINLOCK(prog_mask_lock);
-> +		static struct cpumask prog_mask;
-> +		const struct cpumask *hk_mask =
-> +			housekeeping_cpumask(HK_FLAG_MANAGED_IRQ);
-> +
-
-What's wrong with writing:
-
-		const struct cpumask *hk_mask;
-
-		hk_mask = housekeeping_cpumask(HK_FLAG_MANAGED_IRQ);
-
-Hmm?
-
-> +		raw_spin_lock(&prog_mask_lock);
-> +		cpumask_and(&prog_mask, mask, hk_mask);
-> +		if (!cpumask_intersects(&prog_mask, cpu_online_mask))
-> +			cpumask_copy(&prog_mask, mask);
-
-Why copy?
-
-		static struct cpumask tmp_mask;
-		const struct cpumask *hk_mask, *mp;
-
-		raw_spin_lock(&mask_lock);
-		cpumask_and(&tmp_mask, mask, hk_mask);
-		if (cpumask_intersects(&prog_mask, cpu_online_mask))
-                	mp = &tmp_mask;
-                else
-                	mp = mask;
-                ....
-Hmm?
-
-Thanks,
-
-        tglx
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
