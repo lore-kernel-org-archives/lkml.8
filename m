@@ -2,115 +2,274 @@ Return-Path: <SRS0=pPEE=3I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 206BBC33CB7
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 19:38:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D28C33CAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 19:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED996206D7
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 19:38:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25E7920679
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 19:40:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=earth.li header.i=@earth.li header.b="xc1aDSVC"
+	dkim=pass (1024-bit key) header.d=kalray.eu header.i=@kalray.eu header.b="qvp1ZBtH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728750AbgASTiU (ORCPT
+        id S1728803AbgASTki (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 14:38:20 -0500
-Received: from the.earth.li ([46.43.34.31]:37740 "EHLO the.earth.li"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727138AbgASTiT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 14:38:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
-         s=the; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=Ppj9LMtNCeV2J3j303cgKBSHum8gMjnB9xEbdvnn2/8=; b=xc1aDSVCgywFQ4hFGNEm9nOsQe
-        Xn85YtEyufN7RDXzN5wyMnm77JDbwKocEdBXC2oRhbUGr+JIdU9iTT4rkqVhCIYbY3BjqjHOIRJaU
-        81eHYUOPmlj6UgwlL21BZpb3Su7y2sL36d2oK3lpRqG8d+U/1jlKprbjELrjjrJNburJ0G4lVB4lF
-        nBxkpgwH41dyntQFd1AGUqQl3n8QOMAy9ttBUyV1TtExoid7z5R6sizHXhSn6z6KagtaCmfJbiMvE
-        3cE76pUA0j2NdGWjb5SOBlgoLfWy2ToXW9rcE5eQD6sVBRg5SwVcu24A3JiUZWZeO52xGPjx2qcAS
-        WqYTHFRg==;
-Received: from noodles by the.earth.li with local (Exim 4.92)
-        (envelope-from <noodles@earth.li>)
-        id 1itGOn-0005Ah-I1; Sun, 19 Jan 2020 19:38:17 +0000
-Date:   Sun, 19 Jan 2020 19:38:17 +0000
-From:   Jonathan McDowell <noodles@earth.li>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ken Moffat <zarniwhoop73@googlemail.com>
-Subject: Re: [PATCH v2 0/5] hwmon: k10temp driver improvements
-Message-ID: <20200119193817.GM15976@earth.li>
-References: <20200119101855.GA15446@earth.li>
- <f9bb13a7-60ba-37f1-9e22-3237e35cf4e5@roeck-us.net>
+        Sun, 19 Jan 2020 14:40:38 -0500
+Received: from zimbra2.kalray.eu ([92.103.151.219]:49162 "EHLO
+        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727138AbgASTki (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jan 2020 14:40:38 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id 91C0A27E035B;
+        Sun, 19 Jan 2020 20:40:36 +0100 (CET)
+Received: from zimbra2.kalray.eu ([127.0.0.1])
+        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id GyLYaULQNz-p; Sun, 19 Jan 2020 20:40:35 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id A8A0927E042C;
+        Sun, 19 Jan 2020 20:40:35 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu A8A0927E042C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
+        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1579462835;
+        bh=+Dw4xA8XmHbVQGDb8Mm1lLiccd7uTZJOTM5WDY6aBls=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=qvp1ZBtHXDm6McP6/UhrIbtFBirp3Dt5xwo49BIEXXUu5o8osyrOhfnIEXd8YpT2M
+         q6Hrry3Y96cn+YsPtWjKQWqGjwvWp2/MXxWMxVUW/SpRjEOeG59+BiuwkbWwawsGr3
+         3Pjg6GRt308ZlW6CmyLkSq5LANQJw02TfiZrTZsg=
+X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
+Received: from zimbra2.kalray.eu ([127.0.0.1])
+        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id m0jOuxyfYuI2; Sun, 19 Jan 2020 20:40:35 +0100 (CET)
+Received: from zimbra2.kalray.eu (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id 88DB627E035B;
+        Sun, 19 Jan 2020 20:40:35 +0100 (CET)
+Date:   Sun, 19 Jan 2020 20:40:34 +0100 (CET)
+From:   =?utf-8?Q?Cl=C3=A9ment?= Leger <cleger@kalray.eu>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Message-ID: <377421261.12898679.1579462834671.JavaMail.zimbra@kalray.eu>
+In-Reply-To: <20200117225217.GA27535@xps15>
+References: <20200115102142.11229-1-cleger@kalray.eu> <088ceab9-f135-6e70-dcf6-f75ec46110b1@st.com> <79048597.12371594.1579098506802.JavaMail.zimbra@kalray.eu> <a1116656-cf2e-c1a1-7cc3-0fe2a79f076e@st.com> <612100872.12377996.1579101063237.JavaMail.zimbra@kalray.eu> <20200117225217.GA27535@xps15>
+Subject: Re: [PATCH] remoteproc: Add support for predefined notifyids
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f9bb13a7-60ba-37f1-9e22-3237e35cf4e5@roeck-us.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Originating-IP: [192.168.40.202]
+X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - GC79 (Linux)/8.8.12_GA_3794)
+Thread-Topic: remoteproc: Add support for predefined notifyids
+Thread-Index: XQPBHwr8ohCZhap5WEAs2EU5X1XMwA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 19, 2020 at 07:46:11AM -0800, Guenter Roeck wrote:
-> On 1/19/20 2:18 AM, Jonathan McDowell wrote:
-> > 
-> > In article <20200118172615.26329-1-linux@roeck-us.net> (earth.lists.linux-kernel) you wrote:
-> > > This patch series implements various improvements for the k10temp driver.
-> > ...
-> > > The voltage and current information is limited to Ryzen CPUs. Voltage
-> > > and current reporting on Threadripper and EPYC CPUs is different, and the
-> > > reported information is either incomplete or wrong. Exclude it for the time
-> > > being; it can always be added if/when more information becomes available.
-> > 
-> > > Tested with the following Ryzen CPUs:
-> > 
-> > Tested-By: Jonathan McDowell <noodles@earth.li>
-> > 
-> Thanks!
-> 
-> > Tested on a Ryzen 7 2700 (patched on top of 5.4.13):
-> > 
-> > | k10temp-pci-00c3
-> > | Adapter: PCI adapter
-> > | Vcore:        +0.80 V
-> > | Vsoc:         +0.81 V
-> > | Tdie:         +37.0°C
-> > | Tctl:         +37.0°C
-> > | Icore:        +8.31 A
-> > | Isoc:         +6.86 A
-> > 
-> > Like the 1300X case I see a discrepancy compared to what the nct6779
-> > driver says Vcore is:
-> > 
-> > | nct6779-isa-0290
-> > | Adapter: ISA adapter
-> > | Vcore:                  +0.33 V  (min =  +0.00 V, max =  +1.74 V)
-> 
-> I see that on all of my boards as well (3900X, different boards and board vendors),
-> with temperatures reported by the Super-IO chip sometimes as low as 0.18V (!).
-> Yet, there is a clear correlation of that voltage with CPU load.
-> I suspect the measurement by the Super-IO chip is a different voltage.
-> 
-> I don't think there is anything we can do about that without access to more
-> information.
-...
-> The problem with Ken's board is that idle current and voltage are very high.
-> The idle voltage claims to be higher than the voltage under load, which
-> doesn't really make sense. This is only reflected in the voltage and current
-> reported by the CPU, but not by the voltage reported by the Super-IO chip.
+Hi Mathieu,
 
-I see clear correlation between load/Vcore/Icore/Tdie from your patched
-k10temp driver which leads me to believe these numbers are valid for the
-2700. Vsoc is fairly consistent and Isoc doesn't vary much either
-(6.3-8.1A range over the past 8 hours).
+----- On 17 Jan, 2020, at 23:52, Mathieu Poirier mathieu.poirier@linaro.org=
+ wrote:
 
-J.
+> Hey guys,
+>=20
+> On Wed, Jan 15, 2020 at 04:11:03PM +0100, Cl=C3=A9ment Leger wrote:
+>>=20
+>>=20
+>> ----- On 15 Jan, 2020, at 16:09, Arnaud Pouliquen arnaud.pouliquen@st.co=
+m wrote:
+>>=20
+>> > On 1/15/20 3:28 PM, Cl=C3=A9ment Leger wrote:
+>> >> Hi Arnaud,
+>> >>=20
+>> >> ----- On 15 Jan, 2020, at 15:06, Arnaud Pouliquen arnaud.pouliquen@st=
+.com wrote:
+>> >>=20
+>> >>> Hi Cl=C3=A9ment,
+>> >>>
+>> >>> On 1/15/20 11:21 AM, Clement Leger wrote:
+>> >>>> In order to support preallocated notify ids, if their value is
+>> >>>> equal to FW_RSC_NOTIFY_ID_ANY, then do no allocate a notify id
+>> >>>> dynamically but try to allocate the requested one. This is useful w=
+hen
+>> >>>> using custom ids to bind them to custom vendor resources. For insta=
+nce,
+>> >>>> it allow to assign a group of queues to a specific interrupti in or=
+der
+>> >>>> to dispatch notifications.
+>> >>>>
+>> >>>> Signed-off-by: Clement Leger <cleger@kalray.eu>
+>> >>>> ---
+>> >>>>  drivers/remoteproc/remoteproc_core.c | 27 +++++++++++++++++++-----=
+---
+>> >>>>  include/linux/remoteproc.h           |  1 +
+>> >>>>  2 files changed, 20 insertions(+), 8 deletions(-)
+>> >>>>
+>> >>>> diff --git a/drivers/remoteproc/remoteproc_core.c
+>> >>>> b/drivers/remoteproc/remoteproc_core.c
+>> >>>> index 307df98347ba..b1485fcd0f11 100644
+>> >>>> --- a/drivers/remoteproc/remoteproc_core.c
+>> >>>> +++ b/drivers/remoteproc/remoteproc_core.c
+>> >>>> @@ -351,14 +351,27 @@ int rproc_alloc_vring(struct rproc_vdev *rvde=
+v, int i)
+>> >>>>  =09/*
+>> >>>>  =09 * Assign an rproc-wide unique index for this vring
+>> >>>>  =09 * TODO: assign a notifyid for rvdev updates as well
+>> >>>> -=09 * TODO: support predefined notifyids (via resource table)
+>> >>>>  =09 */
+>> >>>> -=09ret =3D idr_alloc(&rproc->notifyids, rvring, 0, 0, GFP_KERNEL);
+>> >>>> -=09if (ret < 0) {
+>> >>>> -=09=09dev_err(dev, "idr_alloc failed: %d\n", ret);
+>> >>>> -=09=09return ret;
+>> >>>> +=09if (rsc->vring[i].notifyid =3D=3D FW_RSC_NOTIFY_ID_ANY) {
+>> >>>> +=09=09ret =3D idr_alloc(&rproc->notifyids, rvring, 0, 0, GFP_KERNE=
+L);
+>> >>>> +=09=09if (ret < 0) {
+>> >>>> +=09=09=09dev_err(dev, "idr_alloc failed: %d\n", ret);
+>> >>>> +=09=09=09return ret;
+>> >>>> +=09=09}
+>> >>>> +=09=09notifyid =3D ret;
+>> >>>> +
+>> >>>> +=09=09/* Let the rproc know the notifyid of this vring.*/
+>> >>>> +=09=09rsc->vring[i].notifyid =3D notifyid;
+>> >>>> +=09} else {
+>> >>>> +=09=09/* Reserve requested notify_id */
+>> >>>> +=09=09notifyid =3D rsc->vring[i].notifyid;
+>> >>>> +=09=09ret =3D idr_alloc(&rproc->notifyids, rvring, notifyid,
+>> >>>> +=09=09=09=09notifyid + 1, GFP_KERNEL);
+>> >>>> +=09=09if (ret < 0) {
+>> >>>> +=09=09=09dev_err(dev, "idr_alloc failed: %d\n", ret);
+>> >>>> +=09=09=09return ret;
+>> >>>> +=09=09}
+>> >>>>  =09}
+>> >>>> -=09notifyid =3D ret;
+>> >>>> =20
+>> >>>>  =09/* Potentially bump max_notifyid */
+>> >>>>  =09if (notifyid > rproc->max_notifyid)
+>> >>>> @@ -366,8 +379,6 @@ int rproc_alloc_vring(struct rproc_vdev *rvdev,=
+ int i)
+>> >>>> =20
+>> >>>>  =09rvring->notifyid =3D notifyid;
+>> >>>> =20
+>> >>>> -=09/* Let the rproc know the notifyid of this vring.*/
+>> >>>> -=09rsc->vring[i].notifyid =3D notifyid;
+>> >>>>  =09return 0;
+>> >>>>  }
+>> >>> The rproc_free_vring function resets the notifyid to -1 on free.
+>> >>> This could generate a side effect if the resource table is not reloa=
+ded.
+>> >>=20
+>> >> Oh indeed, I did not thought of that. What would you recommend ?
+>> >> If using -1 in free vring, notify ids will be reallocated at next
+>> >> round.
+>> > Regarding the code i'm not sure that it is useful to reset the notifyI=
+D to -1 on
+>> > free.
+>=20
+> I'm not sure setting notifyid to -1 in rproc_free_vring() is such a big p=
+roblem.
+> No matter the code path I look at, if rproc_free_vring() is called someth=
+ing
+> serious has happened and the resource table will be reloaded if another a=
+ttempt
+> at booting the remote processor is done.  It can also be that a graceful
+> shutdown is underway, in which case the resource table will be reloaded a=
+nyway
+> if/when the slave is brought back in service.
+>=20
+> Let me know if I'm missing a scenario.
 
--- 
-... "f u cn rd ths, u cn gt a gd jb n cmptr prgrmmng." -- Simon Cozens,
-    ox.os.linux
+No, you are actually right
+
+>=20
+> To me the real problem is if a FW image has set the notifyids in the reso=
+urce
+> table to 0xffffffff, thinking they will be overwritten.  In that case thi=
+ngs
+> will really south.
+
+Hum, if set to 0xFFFFFFFF, then they will be assigned dynamically and updat=
+ed
+in the resource table (with this patch). But your probably mean existing co=
+de,
+right ?
+
+>=20
+>> > In current version, on alloc, the notifyID is overwriten without check=
+.
+>> > And as vdev status is updated, vring struct in resource table should b=
+e
+>> > considered as invalid
+>> > Except if i missed a usecase/race condition...
+>> >=20
+>> >>=20
+>> >> I was also worried that it would break some existing user application=
+s
+>> >> which uses "0" as a notify id in vring but expect the id to be
+>> >> allocated dynamically. With my modification, it means it will try to
+>> >> use "0" as a predefined id, leading to allocation failure.
+>=20
+> From my point of view they will have been lucky for all this time.  Even =
+with
+> a new version of the resource table (which I think is the right way go)
+> cases like this will break.
+
+Agreed, and actually, I may have missread some code. I can't find were I re=
+ad
+that. By the way, is there any documentation which state the allowed values=
+ of
+notify ids ?
+
+>=20
+> Thanks,
+> Mathieu
+>=20
+>> >>=20
+>> > Yes this could introduce regression for firmware that sets 0 as defaul=
+t value.
+>> > Probably better to introduce this patch with a new version of the reso=
+urce table
+>> > :)
+>>=20
+>> Understood ;)
+>>=20
+>> Regards,
+>>=20
+>> Cl=C3=A9ment
+>>=20
+>> >=20
+>> > Regards
+>> > Arnaud
+>> >>>
+>> >>>> =20
+>> >>>> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.=
+h
+>> >>>> index 16ad66683ad0..dcae3394243e 100644
+>> >>>> --- a/include/linux/remoteproc.h
+>> >>>> +++ b/include/linux/remoteproc.h
+>> >>>> @@ -123,6 +123,7 @@ enum fw_resource_type {
+>> >>>>  };
+>> >>>> =20
+>> >>>>  #define FW_RSC_ADDR_ANY (-1)
+>> >>>> +#define FW_RSC_NOTIFY_ID_ANY (-1)This define can also be used in
+>> >>>> rproc_free_vring
+>> >>=20
+>> >> Indeed.
+>> >>=20
+>> >> Thanks for your review.
+>> >>=20
+>> >> Regards,
+>> >>=20
+>> >> Cl=C3=A9ment
+>> >>=20
+>> >>>
+>> >>> Regards,
+>> >>> Arnaud
+>> >>>> =20
+>> >>>>  /**
+> > > >>>   * struct fw_rsc_carveout - physically contiguous memory request
