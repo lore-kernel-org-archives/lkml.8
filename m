@@ -2,98 +2,92 @@ Return-Path: <SRS0=pPEE=3I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E5FEC33CB7
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 01:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC06C32771
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 01:13:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46F41246B0
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 01:13:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="f2tyhy1m"
+	by mail.kernel.org (Postfix) with ESMTP id E0189246AE
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 01:13:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727465AbgASBNw (ORCPT
+        id S1728748AbgASBN4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 20:13:52 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:43411 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727070AbgASBNw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 20:13:52 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 480cJF4XMCz9sNF;
-        Sun, 19 Jan 2020 12:13:49 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1579396430;
-        bh=LDAvg3g4XF4jb8yqToBBuvSRYfwbc6qcUob5orNpPOg=;
-        h=Date:From:To:Cc:Subject:From;
-        b=f2tyhy1mTu3jKfkMKxVdEDTOuX0Ol1v3IFkYq+s+y5AtGtlsbUxGgi4lFPGBlQV9a
-         TaZ0jNauhHxaIJ1yD+0EveG6drf+78hvuLFudV/6Ak8bhUP6hnI+b34UnigcfM4Lqy
-         NLovd0SdXv1jxFS3iIzGR33PQgzyno+hJNFAUSWZNs29h3UqV5lgud3v75XGg4cF2n
-         EfOIGUnYA/HlwX7cLtt28qv/EHBU0pKyk4cEcA9D0vTKCY0NQnlfF3ifLr14OCtc4d
-         b0SyO9BVGf6YkKhSRg2IRbwX7LlQ1BTO7FotZQvD5f1xBVu46i9inOf26xje9H9+nl
-         2hzKyD9ZGsodQ==
-Date:   Sun, 19 Jan 2020 12:13:48 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Cezary Rojewski <cezary.rojewski@intel.com>
-Subject: linux-next: Fixes tag needs some work in the sound-asoc-fixes tree
-Message-ID: <20200119121348.1f0ba618@canb.auug.org.au>
+        Sat, 18 Jan 2020 20:13:56 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:55418 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727070AbgASBNz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jan 2020 20:13:55 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1isz8j-00BC8q-D7; Sun, 19 Jan 2020 01:12:43 +0000
+Date:   Sun, 19 Jan 2020 01:12:33 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        David Laight <david.laight@aculab.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        quae@daurnimator.com, dev@opencontainers.org,
+        containers@lists.linux-foundation.org, libc-alpha@sourceware.org,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] openat2: minor uapi cleanups
+Message-ID: <20200119011233.GU8904@ZenIV.linux.org.uk>
+References: <20200115144831.GJ8904@ZenIV.linux.org.uk>
+ <20200118120800.16358-1-cyphar@cyphar.com>
+ <20200118152833.GS8904@ZenIV.linux.org.uk>
+ <20200118180941.GT8904@ZenIV.linux.org.uk>
+ <20200118230313.y4a3s7elierw4wzw@yavin>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/hqZzsq4maTpjuBzys4DYYWP";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200118230313.y4a3s7elierw4wzw@yavin>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/hqZzsq4maTpjuBzys4DYYWP
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sun, Jan 19, 2020 at 10:03:13AM +1100, Aleksa Sarai wrote:
 
-Hi all,
+> > possibly trigger?  The only things that ever clean ->root.mnt are
+> 
+> You're quite right -- the codepath I was worried about was pick_link()
+> failing (which *does* clear nd->path.mnt, and I must've misread it at
+> the time as nd->root.mnt).
 
-In commit
+pick_link() (allocation failure of external stack in RCU case, followed
+by failure to legitimize the link) is, unfortunately, subtle and nasty.
+We *must* path_put() the link; if we'd managed to legitimize the mount
+and failed on dentry, the mount needs to be dropped.  No way around it.
+And while everything else there can be left for soon-to-be-reached
+terminate_walk(), this cannot.  We have no good way to pass what
+we need to drop to the place where that eventual terminate_walk()
+drops rcu_read_lock().  So we end up having to do what terminate_walk()
+would've done and do it right there, so we could do that path_put(link)
+before we bugger off.
 
-  a6947c9d86bc ("ASoC: SOF: Intel: hda: Fix SKL dai count")
+I'm not happy about that, but I don't see cleaner solutions, more's the
+pity.  However, it doesn't mess with ->root - nor should it, since
+we don't have LOOKUP_ROOT_GRABBED (not in RCU mode), so it can and
+should be left alone.
+ 
+> We can drop this check, though now complete_walk()'s main defence
+> against a NULL nd->root.mnt is that path_is_under() will fail and
+> trigger -EXDEV (or set_root() will fail at some point in the future).
+> However, as you pointed out, a NULL nd->root.mnt won't happen with
+> things as they stand today -- I might be a little too paranoid. :P
 
-Fixes tag
+The only reason why complete_walk() zeroes nd->root in some cases is
+microoptimization - we *know* we won't be using it later, so we don't
+care whether it's stale or not and can spare unlazy_walk() a bit of
+work.  All there is to that one.
 
-  Fixes: ac42b142cd76 ("ASoC: SOF: Intel: hda: Add iDisp4 DAI")
-
-has these problem(s):
-
-  - Target SHA1 does not exist
-
-Maybe you meant
-
-Fixes: dd96daca6c83 ("ASoC: SOF: Intel: Add APL/CNL HW DSP support")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/hqZzsq4maTpjuBzys4DYYWP
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4jrUwACgkQAVBC80lX
-0GySjQf/SIm/0pvuydMvMrGT8dBW8AM5QzySzDqm/dzqCMIAkzG0xdxUhSX8KqTq
-9L063pUnNPUWWqHfbhfSy7HeTC+NJRIfg1WTVBZEUP9/13m6S6l4RsMoICdyf311
-KxOJx15jI2O5UJGyySvnDnaBogynwKEiRN6leE/kLjQ3CYmE2MfGAy6rexu6YZzW
-vqu9sYNU4Fv++E2gixdZ/2bsK6Gp5kBwpNs5hYuzEJJiGgWPx+roqXXeeqt/gqq6
-CuQgavxqKG6w7ADWGhrxewylImWcfZtgkMqkP8cwu1ZS7rowulkFhZlxOF6WkBFR
-v58vTfW9S9k7Q0EDShHX+kcwFRBX6A==
-=iDEB
------END PGP SIGNATURE-----
-
---Sig_/hqZzsq4maTpjuBzys4DYYWP--
+I don't see any reason for adding code that would clear nd->root in later
+work; if such thing does get added (again, I don't see what purpose
+could that possibly serve), we'll need to watch out for a lot of things.
+Starting with LOOKUP_ROOT case...  It's not something likely to slip
+in unnoticed.
