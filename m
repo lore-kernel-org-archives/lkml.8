@@ -2,93 +2,106 @@ Return-Path: <SRS0=pPEE=3I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_RHS_DOB autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54BA1C33CB7
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 23:40:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20689C33CAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 23:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B81D2072B
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 23:40:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FLBf9zgo"
+	by mail.kernel.org (Postfix) with ESMTP id EC05B206B7
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 23:47:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728946AbgASXkc (ORCPT
+        id S1728946AbgASXrK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 18:40:32 -0500
-Received: from ozlabs.org ([203.11.71.1]:56767 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728841AbgASXkb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 18:40:31 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 481BB34ywzz9sP3;
-        Mon, 20 Jan 2020 10:40:26 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1579477229;
-        bh=FZC+RtbJVHLsTocEizkcrcvUHUxlK1trtKfogEUIXQA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=FLBf9zgoNPEXEJlk7gYkDSOAx+b0B6Z+2fqoxFiSD64F5dHmhF6BuAEGz6hwtao3j
-         t0Qx02LjIjbiva95XFLvBZd3OQQaQRdDvNajo62GjioLJpex2XIOdBH22tvn0oslK+
-         wkr+zUyJ9V+QKeRD8l82UZ0FZXPLMC2X2tO9/Ln96LiaNaL8E0P4Xzb0XsHwvlnWa3
-         dzpz22PM0Gh7p90ARCFLW0SbObNWUHme9N7shQb3jwIfFEe7j54q/J7UCmc3ewmzFg
-         nSv3M3Y0ppbDuJ8+9joE3P8utpe790HqxqmTED+A4pNN+xNipS83GsU8hzDebY4Fm5
-         N5E/FSEwir6+g==
-Date:   Mon, 20 Jan 2020 10:40:20 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        yu kuai <yukuai3@huawei.com>
-Subject: linux-next: build warning after merge of the pm tree
-Message-ID: <20200120104020.385b2aa0@canb.auug.org.au>
+        Sun, 19 Jan 2020 18:47:10 -0500
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:46325 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728841AbgASXrK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jan 2020 18:47:10 -0500
+X-Originating-IP: 90.65.92.102
+Received: from localhost (lfbn-lyo-1-1913-102.w90-65.abo.wanadoo.fr [90.65.92.102])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id D95D41C0004;
+        Sun, 19 Jan 2020 23:47:07 +0000 (UTC)
+Date:   Mon, 20 Jan 2020 00:47:07 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        arm@kernel.org, soc@kernel.org
+Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] ARM: at91: DT for 5.6 #2
+Message-ID: <20200119234707.GA90094@piout.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/4EXXwej5D3lRE2Bv3uJ3yNw";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/4EXXwej5D3lRE2Bv3uJ3yNw
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Arnd, Olof,
 
-Hi all,
+Here is the second DT pull request for AT91 with mostly DT compatible
+documentation and the sam9x60 SoC dtsi and evaluation kit dts. This
+builds fine and is very unlikely to cause any issue.
 
-After merging the pm tree, today's linux-next build (x86_64 allmodconfig)
-produced this warning:
+The following changes since commit a7e0f3fc01df4b1b7077df777c37feae8c9e8b6d:
 
-drivers/pnp/isapnp/core.c:752:29: warning: 'isapnp_checksum' defined but no=
-t used [-Wunused-function]
-  752 | static unsigned char __init isapnp_checksum(unsigned char *data)
-      |                             ^~~~~~~~~~~~~~~
+  ARM: dts: at91: sama5d3: define clock rate range for tcb1 (2020-01-10 18:25:14 +0100)
 
-Introduced by commit
+are available in the Git repository at:
 
-  04c589f35bc5 ("PNP: isapnp: remove set but not used variable 'checksum'")
+  git://git.kernel.org/pub/scm/linux/kernel/git/at91/linux tags/at91-5.6-dt-2
 
---=20
-Cheers,
-Stephen Rothwell
+for you to fetch changes up to 1e5f532c273714abf4275df930b2c77aa1b63b51:
 
---Sig_/4EXXwej5D3lRE2Bv3uJ3yNw
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+  ARM: dts: at91: sam9x60: add device tree for soc and board (2020-01-16 14:51:40 +0100)
 
------BEGIN PGP SIGNATURE-----
+----------------------------------------------------------------
+AT91 DT for 5.6 #2
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4k6OQACgkQAVBC80lX
-0GzTpAf/RClCPPEY3OUR/JNIiYppFz+Crgqz4NTHwR2rf2bIlM4XTuB9+sSESSPu
-KJJpn7mlcA5bCmJ7BV3wUqzICceZYF54wweAS1MW8g7o0jAqn46zgMXYTUlkyiGv
-ogUPiMZXIuQMm4wvRTGmh2x5zUkU8vpqQLGG+7VeKS1WKAdavtDIED7f0ojCuayd
-QRFwKlENY2sPbHC8TXko0Hth62gaXyzhxC8IuoY805Z41Jad1HDDpChlrkJrnJb+
-0ZdCDMijflHIXXgRpS7mpYZoTp6xucK1r7+wLY4/Gns1sBbSaFcuYtp8CUUgVbAk
-TNyEe6Ipt24oaoNbt9PDokLthDuYWQ==
-=leQL
------END PGP SIGNATURE-----
+ - Add sam9x60 dtsi
+ - New board sam9x60 Evaluation Kit
 
---Sig_/4EXXwej5D3lRE2Bv3uJ3yNw--
+----------------------------------------------------------------
+Claudiu Beznea (11):
+      dt-bindings: at_xdmac: remove wildcard
+      dt-bindings: at_xdmac: add microchip,sam9x60-dma
+      dt-bindings: atmel-can: add microchip,sam9x60-can
+      dt-bindings: atmel-isi: add microchip,sam9x60-isi
+      dt-bindings: at91-sama5d2_adc: add microchip,sam9x60-adc
+      dt-bindings: atmel-matrix: add microchip,sam9x60-matrix
+      dt-bindings: atmel-nand: add microchip,sam9x60-pmecc
+      dt-bindings: atmel-sysreg: add microchip,sam9x60-ddramc
+      dt-bindings: atmel-smc: add microchip,sam9x60-smc
+      dt-bindings: atmel-gpbr: add microchip,sam9x60-gpbr
+      dt-bindings: arm: add sam9x60-ek board
+
+Sandeep Sheriker Mallikarjun (1):
+      ARM: dts: at91: sam9x60: add device tree for soc and board
+
+ .../devicetree/bindings/arm/atmel-at91.yaml        |   6 +
+ .../devicetree/bindings/arm/atmel-sysregs.txt      |   1 +
+ .../devicetree/bindings/dma/atmel-xdma.txt         |   4 +-
+ .../bindings/iio/adc/at91-sama5d2_adc.txt          |   2 +-
+ .../devicetree/bindings/media/atmel-isi.txt        |   2 +-
+ .../devicetree/bindings/mfd/atmel-gpbr.txt         |   4 +-
+ .../devicetree/bindings/mfd/atmel-matrix.txt       |   1 +
+ .../devicetree/bindings/mfd/atmel-smc.txt          |   1 +
+ .../devicetree/bindings/mtd/atmel-nand.txt         |   1 +
+ .../devicetree/bindings/net/can/atmel-can.txt      |   3 +-
+ arch/arm/boot/dts/Makefile                         |   2 +
+ arch/arm/boot/dts/at91-sam9x60ek.dts               | 647 +++++++++++++++++++
+ arch/arm/boot/dts/sam9x60.dtsi                     | 691 +++++++++++++++++++++
+ 13 files changed, 1358 insertions(+), 7 deletions(-)
+ create mode 100644 arch/arm/boot/dts/at91-sam9x60ek.dts
+ create mode 100644 arch/arm/boot/dts/sam9x60.dtsi
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
