@@ -2,67 +2,88 @@ Return-Path: <SRS0=pPEE=3I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 686E1C33CB7
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 01:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1821C33CB7
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 01:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4997E246AE
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 01:17:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEF4E246AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 01:18:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="hWaCrnwB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727231AbgASBRM (ORCPT
+        id S1727573AbgASBSw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 20:17:12 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:51814 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727070AbgASBRM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 20:17:12 -0500
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id EC87ACED00AE71D06D4D;
-        Sun, 19 Jan 2020 09:17:07 +0800 (CST)
-Received: from [127.0.0.1] (10.173.220.96) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Sun, 19 Jan 2020
- 09:17:01 +0800
-Subject: Re: [RFC] iomap: fix race between readahead and direct write
-To:     Jan Kara <jack@suse.cz>
-CC:     <hch@infradead.org>, <darrick.wong@oracle.com>,
-        <linux-xfs@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <houtao1@huawei.com>,
-        <zhengbin13@huawei.com>, <yi.zhang@huawei.com>
-References: <20200116063601.39201-1-yukuai3@huawei.com>
- <20200116153206.GF8446@quack2.suse.cz>
- <ce4bc2f3-a23e-f6ba-0ef1-66231cd1057d@huawei.com>
- <20200117110536.GE17141@quack2.suse.cz>
-From:   "yukuai (C)" <yukuai3@huawei.com>
-Message-ID: <976d09e1-e3b5-a6a6-d159-9bdac3a7dc84@huawei.com>
-Date:   Sun, 19 Jan 2020 09:17:00 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sat, 18 Jan 2020 20:18:52 -0500
+Received: from ozlabs.org ([203.11.71.1]:49069 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727070AbgASBSv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jan 2020 20:18:51 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 480cQ11qMrz9sNF;
+        Sun, 19 Jan 2020 12:18:49 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1579396729;
+        bh=7cKMEJhuftd7azdyXSQFLM1vp/JoxploZpkc8FD1fS4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=hWaCrnwB388EZn38wP3zbS5bAB0tHhJEmnFiB4jk83ma50MXFB4Tt2c66Aysw/vNU
+         sniAYeocxwcYbBRlYXHzDpId/IXWSyTw+bi1/iQ2ld4t/N1fysjSc2Fu5h0Rl27Bt+
+         3HMgMuAbjO2GynUVT2IQoU0loM01SASo1+pvjqLwNIQw3E2zZi3Scxuup8/O2nnbXU
+         Qq9lVFJltXdZqu2oi/Rh/Ym+fh1JhF+8K/JJKiQ/hoz5Jwg/KhUVL4sx/4sjevG8OT
+         zDiQE4ENmLk//wYJ/CH6nPcfpshk4ZHn6XCsowf3cBc4e+w84kCIuHrgcGkObL7cZj
+         WSG0hdj/awc+w==
+Date:   Sun, 19 Jan 2020 12:18:48 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Russell King <linux@armlinux.org.uk>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Doug Anderson <armlinux@m.disordat.com>
+Subject: linux-next: Signed-off-by missing for commit in the arm tree
+Message-ID: <20200119121848.4a398a10@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200117110536.GE17141@quack2.suse.cz>
-Content-Type: text/plain; charset="gbk"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.220.96]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; boundary="Sig_/q+K7b/_kVdnV4E+w=JjHRqM";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/q+K7b/_kVdnV4E+w=JjHRqM
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 2020/1/17 19:05, Jan Kara wrote:
-> provide
-> allocation for each page separately
+Commit
 
-Thank you for your response!
+  116375be0461 ("ARM: 8944/1: hw_breakpoint: Handle inexact watchpoint addr=
+esses")
 
-I do understand there will be additional CPU overhead. But page is 
-allocated in __do_page_cache_readahead(), which is called before
-iomap_begin(). And I did not change that.
+is missing a Signed-off-by from its author.
 
-Thanks!
-Yu Kuai
+--=20
+Cheers,
+Stephen Rothwell
 
+--Sig_/q+K7b/_kVdnV4E+w=JjHRqM
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4jrngACgkQAVBC80lX
+0Gzz5ggAmtcwa2Zy4TwtJEFMgfpM8b6NKDKcQbMOza3oska9s4kC4t5ha5zRHoEl
+oiqGDBLv7lMsogtNQTn4e0UzQWX86hEs22ob/gc8h9ZrKSkVgOI2GRkGcUghGq5G
+WLpyDzBYu91BOAFCZzCUedUjsCxUZ/DhylLIVIh+6Gp+HmCGm5FtYntfNFMwox2O
+9Eg9lyUvvgxZ637YOPYH6GKaAxgDB7AlBkAr8qOLhjXMphdmOYwrtbVX6eMiV48L
+Pu80GLv5oBQGosbQgngIyr6Ahr9miHq7GS+r775rdxSDs7fFXiUVq4WftlOYV9nm
+NO7WVf08iCMQ4B9r+oHNzrnoPEaIDw==
+=/dPL
+-----END PGP SIGNATURE-----
+
+--Sig_/q+K7b/_kVdnV4E+w=JjHRqM--
