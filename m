@@ -2,264 +2,112 @@ Return-Path: <SRS0=pPEE=3I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECE9C33CB1
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 13:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 778E2C33CB1
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 14:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 696E420663
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 13:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FE9520684
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 14:04:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XojgUu3q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbgASNix (ORCPT
+        id S1727048AbgASOEE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 08:38:53 -0500
-Received: from ofcsgdbm.dwd.de ([141.38.3.245]:60363 "EHLO ofcsgdbm.dwd.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726778AbgASNix (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 08:38:53 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by ofcsg2dn3.dwd.de (Postfix) with ESMTP id 480wqs4t4Qz11WT
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jan 2020 13:38:49 +0000 (UTC)
-X-Virus-Scanned: by amavisd-new at csg.dwd.de
-Received: from ofcsg2dn3.dwd.de ([127.0.0.1])
-        by localhost (ofcsg2dn3.dwd.de [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id bHyVGkZuEber for <linux-kernel@vger.kernel.org>;
-        Sun, 19 Jan 2020 13:38:49 +0000 (UTC)
-Received: from ofmailhub.dwd.de (oflxs446.dwd.de [141.38.40.78])
-        by ofcsg2dn3.dwd.de (Postfix) with ESMTP id 480wqs1pRzz10m6;
-        Sun, 19 Jan 2020 13:38:49 +0000 (UTC)
-Received: from diagnostix.dwd.de (diagnostix.dwd.de [141.38.42.141])
-        by ofmailhub.dwd.de (Postfix) with ESMTP id 23E5C318AB;
-        Sun, 19 Jan 2020 13:38:48 +0000 (UTC)
-Date:   Sun, 19 Jan 2020 13:38:48 +0000 (UTC)
-From:   Holger Kiehl <Holger.Kiehl@dwd.de>
-X-X-Sender: kiehl@diagnostix.dwd.de
-To:     Guenter Roeck <linux@roeck-us.net>
-cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Jean Delvare <jdelvare@suse.com>,
-        Darren Salt <devspam@moreofthesa.me.uk>,
-        Bernhard Gebetsberger <bernhard.gebetsberger@gmx.at>,
-        Ken Moffat <zarniwhoop73@googlemail.com>,
-        =?ISO-8859-2?Q?Ondrej_=C8erman?= <ocerman@sda1.eu>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Brad Campbell <lists2009@fnarfbargle.com>
-Subject: Re: [PATCH v2 0/5] hwmon: k10temp driver improvements
-In-Reply-To: <20200118172615.26329-1-linux@roeck-us.net>
-Message-ID: <alpine.LRH.2.21.2001191054490.328@diagnostix.dwd.de>
-References: <20200118172615.26329-1-linux@roeck-us.net>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        Sun, 19 Jan 2020 09:04:04 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33083 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726778AbgASOED (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jan 2020 09:04:03 -0500
+Received: by mail-wr1-f67.google.com with SMTP id b6so26910444wrq.0;
+        Sun, 19 Jan 2020 06:04:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=Ocb2zugiLO+xET//21zhNLSukAYLvW1HhjzJze0PZFY=;
+        b=XojgUu3qJDckuKraJoIHxKxWu+Q3CYMRjOdwV+B7NCNwAlwnrGuCMJDkTJlJxQpWpy
+         tKi/1apRW/xl2lAsgjQO5i7y4OdT12sYiVT06ASHAy6YraMMmRm2qoY+KyZW+QDVNnwM
+         EDmX4RtkVrdEm0OgAhUNenu8n8ALvSZHd4HHtOHHNfOz6+pjNei9E9UqVcbCSzHYinhW
+         Qn/eBBNYpCc1GI1E5MdSWZMAGpeQKscYotaaJqKDV/+ybgvv7erslI5KHEB/dBgbLvcM
+         mY4YU3v47Z5TxcBn29Gq++bPB27+Ce34Ov692BRIKk0cwRwT5RrLeZqcUDz0nQ4W3Q5T
+         vLIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=Ocb2zugiLO+xET//21zhNLSukAYLvW1HhjzJze0PZFY=;
+        b=bj41Qvveyox9R0o22iJfwtKQsabHbCPPOPCzLPtv4E10WBAKYOlB9hM5V6JnZaNenF
+         YHAfnKqp+v72ELcj038mSBOFnZFv8NJb9Y5aOD8fOS6P93i4gy2UbBxERU0p7ZtYarxO
+         J1UyjIW4vYbUu0tjjAgWTMdEbzEW+MRMTLsdvK9QNFpytln0zS04vDCkPMDbdrDtyvdA
+         e5r5QL5op7MJu0S70+C85uwqkYKhOml7qIVG1Dd9/cWlraLKmd0jozZhVVEyyxA5BQii
+         O8qyrd9OUYWOGGU4yUkHBSKSAWvcWKCAjtKcmBjkiwFHTdJSgV7u945TX6CrHqSowDcd
+         PeZQ==
+X-Gm-Message-State: APjAAAV1Q2p/Uj3GllIzLB7Wk6ZpocoN65x2unCSWCDE1RHwWC9IzGh4
+        j8f8jGZMOBkv5r0YmQl9N0M=
+X-Google-Smtp-Source: APXvYqyyqUUrY5OFgXLSFWeA7vOuLAz1xsvXt998I/Af2oxYL/hTVOxA+CtxjWqOqaeZnx7Fb+7zsg==
+X-Received: by 2002:a5d:4687:: with SMTP id u7mr13127453wrq.176.1579442642464;
+        Sun, 19 Jan 2020 06:04:02 -0800 (PST)
+Received: from home ([141.226.244.232])
+        by smtp.gmail.com with ESMTPSA id b67sm3649809wmc.38.2020.01.19.06.04.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 19 Jan 2020 06:04:01 -0800 (PST)
+Date:   Sun, 19 Jan 2020 16:03:59 +0200
+From:   Valery Ivanov <ivalery111@gmail.com>
+To:     manishc@marvell.com, GR-Linux-NIC-Dev@marvell.com
+Cc:     gregkh@linuxfoundation.org, netdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: qlge: fix missing a blank line after declaration
+Message-ID: <20200119140359.GA8668@home>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="646810922-1566648493-1579431360=:328"
-Content-ID: <alpine.LRH.2.21.2001191327310.2827@diagnostix.dwd.de>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+This patch fixes "WARNING: Missing a blank lin after declarations"
+Issue found by checkpatch.pl
 
---646810922-1566648493-1579431360=:328
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
-Content-ID: <alpine.LRH.2.21.2001191327311.2827@diagnostix.dwd.de>
+Signed-off-by: Valery Ivanov <ivalery111@gmail.com>
+---
+ drivers/staging/qlge/qlge_ethtool.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-On Sat, 18 Jan 2020, Guenter Roeck wrote:
+diff --git a/drivers/staging/qlge/qlge_ethtool.c b/drivers/staging/qlge/qlge_ethtool.c
+index 56d116d79e56..2872b7120e36 100644
+--- a/drivers/staging/qlge/qlge_ethtool.c
++++ b/drivers/staging/qlge/qlge_ethtool.c
+@@ -412,6 +412,7 @@ static void ql_get_drvinfo(struct net_device *ndev,
+ 			   struct ethtool_drvinfo *drvinfo)
+ {
+ 	struct ql_adapter *qdev = netdev_priv(ndev);
++
+ 	strlcpy(drvinfo->driver, qlge_driver_name, sizeof(drvinfo->driver));
+ 	strlcpy(drvinfo->version, qlge_driver_version,
+ 		sizeof(drvinfo->version));
+@@ -703,12 +704,14 @@ static int ql_set_pauseparam(struct net_device *netdev,
+ static u32 ql_get_msglevel(struct net_device *ndev)
+ {
+ 	struct ql_adapter *qdev = netdev_priv(ndev);
++
+ 	return qdev->msg_enable;
+ }
+ 
+ static void ql_set_msglevel(struct net_device *ndev, u32 value)
+ {
+ 	struct ql_adapter *qdev = netdev_priv(ndev);
++
+ 	qdev->msg_enable = value;
+ }
+ 
+-- 
+2.17.1
 
-> This patch series implements various improvements for the k10temp driver.
-> 
-> Patch 1/5 introduces the use of bit operations.
-> 
-> Patch 2/5 converts the driver to use the devm_hwmon_device_register_with_info
-> API. This not only simplifies the code and reduces its size, it also
-> makes the code easier to maintain and enhance. 
-> 
-> Patch 3/5 adds support for reporting Core Complex Die (CCD) temperatures
-> on Ryzen 3 (Zen2) CPUs.
-> 
-> Patch 4/5 adds support for reporting core and SoC current and voltage
-> information on Ryzen CPUs.
-> 
-> Patch 5/5 removes the maximum temperature from Tdie for Ryzen CPUs.
-> It is inaccurate, misleading, and it just doesn't make sense to report
-> wrong information.
-> 
-> With all patches in place, output on Ryzen 3900X CPUs looks as follows
-> (with the system under load).
-> 
-> k10temp-pci-00c3
-> Adapter: PCI adapter
-> Vcore:        +1.36 V
-> Vsoc:         +1.18 V
-> Tdie:         +86.8°C
-> Tctl:         +86.8°C
-> Tccd1:        +80.0°C
-> Tccd2:        +81.8°C
-> Icore:       +44.14 A
-> Isoc:        +13.83 A
-> 
-> The voltage and current information is limited to Ryzen CPUs. Voltage
-> and current reporting on Threadripper and EPYC CPUs is different, and the
-> reported information is either incomplete or wrong. Exclude it for the time
-> being; it can always be added if/when more information becomes available.
-> 
-> Tested with the following Ryzen CPUs:
->     1300X A user with this CPU in the system reported somewhat unexpected
->           values for Vcore; it isn't entirely if at all clear why that is
->           the case. Overall this does not warrant holding up the series.
->     1600
->     1800X
->     2200G
->     2400G
->     3800X
->     3900X
->     3950X
-> 
-> v2: Added tested-by: tags as received.
->     Don't display voltage and current information for Threadripper and EPYC.
->     Stop displaying the fixed (and wrong) maximum temperature of 70 degrees C
->     for Tdie on model 17h/18h CPUs.
-> 
-Just tested this on a 2400G. Here idle values:
-
-   k10temp-pci-00c3
-   Adapter: PCI adapter
-   Vcore:        +0.77 V
-   Vsoc:         +1.11 V
-   Tdie:         +45.0°C
-   Tctl:         +45.0°C
-   Icore:       +10.39 A
-   Isoc:         +2.89 A
-
-   nvme-pci-0100
-   Adapter: PCI adapter
-   Composite:    +43.9°C  (low  = -273.1°C, high = +80.8°C)
-                          (crit = +80.8°C)
-   Sensor 1:     +43.9°C  (low  = -273.1°C, high = +65261.8°C)
-   Sensor 2:     +48.9°C  (low  = -273.1°C, high = +65261.8°C)
-
-   nct6793-isa-0290
-   Adapter: ISA adapter
-   in0:                    +0.35 V  (min =  +0.00 V, max =  +1.74 V)
-   in1:                    +1.85 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
-   in2:                    +3.41 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
-   in3:                    +3.39 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
-   in4:                    +0.26 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
-   in5:                    +0.14 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
-   in6:                    +0.66 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
-   in7:                    +3.39 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
-   in8:                    +3.26 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
-   in9:                    +1.83 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
-   in10:                   +0.19 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
-   in11:                   +0.14 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
-   in12:                   +1.84 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
-   in13:                   +1.72 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
-   in14:                   +0.21 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
-   fan1:                     0 RPM  (min =    0 RPM)
-   fan2:                   323 RPM  (min =    0 RPM)
-   fan3:                     0 RPM  (min =    0 RPM)
-   fan4:                     0 RPM  (min =    0 RPM)
-   fan5:                     0 RPM  (min =    0 RPM)
-   SYSTIN:                +112.0°C  (high =  +0.0°C, hyst =  +0.0°C)  sensor = thermistor
-   CPUTIN:                 +60.0°C  (high = +80.0°C, hyst = +75.0°C)  sensor = thermistor
-   AUXTIN0:                +46.0°C  (high =  +0.0°C, hyst =  +0.0°C)  ALARM  sensor = thermistor
-   AUXTIN1:               +106.0°C    sensor = thermistor
-   AUXTIN2:               +105.0°C    sensor = thermistor
-   AUXTIN3:               +102.0°C    sensor = thermistor
-   SMBUSMASTER 0:          +45.0°C
-   PCH_CHIP_CPU_MAX_TEMP:   +0.0°C
-   PCH_CHIP_TEMP:           +0.0°C
-   PCH_CPU_TEMP:            +0.0°C
-   intrusion0:            OK
-   intrusion1:            ALARM
-   beep_enable:           disabled
-
-   amdgpu-pci-0300
-   Adapter: PCI adapter
-   vddgfx:           N/A
-   vddnb:            N/A
-   edge:         +45.0°C  (crit = +80.0°C, hyst =  +0.0°C)
-
-And here with some high load:
-
-   k10temp-pci-00c3
-   Adapter: PCI adapter
-   Vcore:        +1.32 V
-   Vsoc:         +1.11 V
-   Tdie:         +77.1°C
-   Tctl:         +77.1°C
-   Icore:       +85.22 A
-   Isoc:         +3.61 A
-
-   nvme-pci-0100
-   Adapter: PCI adapter
-   Composite:    +42.9°C  (low  = -273.1°C, high = +80.8°C)
-                          (crit = +80.8°C)
-   Sensor 1:     +42.9°C  (low  = -273.1°C, high = +65261.8°C)
-   Sensor 2:     +45.9°C  (low  = -273.1°C, high = +65261.8°C)
-
-   nct6793-isa-0290
-   Adapter: ISA adapter
-   in0:                    +0.68 V  (min =  +0.00 V, max =  +1.74 V)
-   in1:                    +1.84 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
-   in2:                    +3.39 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
-   in3:                    +3.39 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
-   in4:                    +0.26 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
-   in5:                    +0.14 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
-   in6:                    +0.66 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
-   in7:                    +3.39 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
-   in8:                    +3.26 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
-   in9:                    +1.83 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
-   in10:                   +0.19 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
-   in11:                   +0.14 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
-   in12:                   +1.84 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
-   in13:                   +1.72 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
-   in14:                   +0.20 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
-   fan1:                     0 RPM  (min =    0 RPM)
-   fan2:                  1931 RPM  (min =    0 RPM)
-   fan3:                     0 RPM  (min =    0 RPM)
-   fan4:                     0 RPM  (min =    0 RPM)
-   fan5:                     0 RPM  (min =    0 RPM)
-   SYSTIN:                +113.0°C  (high =  +0.0°C, hyst =  +0.0°C)  sensor = thermistor
-   CPUTIN:                 +64.5°C  (high = +80.0°C, hyst = +75.0°C)  sensor = thermistor
-   AUXTIN0:                +45.0°C  (high =  +0.0°C, hyst =  +0.0°C)  ALARM  sensor = thermistor
-   AUXTIN1:               +107.0°C    sensor = thermistor
-   AUXTIN2:               +105.0°C    sensor = thermistor
-   AUXTIN3:               +102.0°C    sensor = thermistor
-   SMBUSMASTER 0:          +77.0°C
-   PCH_CHIP_CPU_MAX_TEMP:   +0.0°C
-   PCH_CHIP_TEMP:           +0.0°C
-   PCH_CPU_TEMP:            +0.0°C
-   intrusion0:            OK
-   intrusion1:            ALARM
-   beep_enable:           disabled
-
-   amdgpu-pci-0300
-   Adapter: PCI adapter
-   vddgfx:           N/A
-   vddnb:            N/A
-   edge:         +77.0°C  (crit = +80.0°C, hyst =  +0.0°C)
-
-Have also tried this on a EPYC 7302. Before the patch:
-
-   k10temp-pci-00c3
-   Adapter: PCI adapter
-   Tdie:         +28.1°C  (high = +70.0°C)
-   Tctl:         +28.1°C 
-
-and after:
-
-   k10temp-pci-00c3
-   Adapter: PCI adapter
-   Tdie:         +28.2°C  
-   Tctl:         +28.2°C
-
-No extra values shown, but I think this is expected.
-
-Tested-by Holger Kiehl <holger.kiehl@dwd.de>
-
-Holger
---646810922-1566648493-1579431360=:328--
