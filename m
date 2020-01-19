@@ -2,254 +2,201 @@ Return-Path: <SRS0=pPEE=3I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 879F7C33CAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 23:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A39C33CB7
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 23:29:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 572BB206B7
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 23:18:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65E652051A
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 23:29:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="CCUuTYF0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729603AbgASXS1 (ORCPT
+        id S1728977AbgASX35 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 18:18:27 -0500
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:49726 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728895AbgASXQc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 18:16:32 -0500
-Received: by kvm5.telegraphics.com.au (Postfix, from userid 502)
-        id D252E2991B; Sun, 19 Jan 2020 18:16:30 -0500 (EST)
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Chris Zankel <chris@zankel.net>,
-        Laurent Vivier <laurent@vivier.eu>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Message-Id: <00e21a8e23e5da256ae0088403975447fe7bbffe.1579474569.git.fthain@telegraphics.com.au>
-In-Reply-To: <cover.1579474569.git.fthain@telegraphics.com.au>
-References: <cover.1579474569.git.fthain@telegraphics.com.au>
-From:   Finn Thain <fthain@telegraphics.com.au>
-Subject: [PATCH net 03/19] net/sonic: Refactor duplicated code
-Date:   Mon, 20 Jan 2020 09:56:09 +1100
+        Sun, 19 Jan 2020 18:29:57 -0500
+Received: from mail-dm6nam12on2092.outbound.protection.outlook.com ([40.107.243.92]:19425
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728886AbgASX35 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jan 2020 18:29:57 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RY9anz3ReA5vStzdyn7+Z/jN6vrVpI9gB+JSiZLycdrpdbTToYi8aWWeyvdfpN6hdJxpH1RlUEPEDLe+mHRg0ZsbCKj8ar7Lq3FRa9XroEsNcN2Oy3T3dgSPAeY6neou5Dv9swCDjNNyZBoVf1swxoriz+XMhfyJPeOfq80xbfwE9dq3FCOTeBUWGQ8eYg6rH5PtSdsWhHlu0rnktZBnqjdsUJ/A2c0YqdEOCHAUYkHh1fIxo1z2n7yJVelQVW3SyGhrJ20myvEY0p/q4d9BxjggdsTd99TmooiFisHqEG/uhu7gGTl0tJXtVKDp3KQ4ZuYrRwz2/vCAEoPL1BqpDw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=El6qEesUZ02ULdUNMQW/zW482zv8eKBU/6d3uHZX8gc=;
+ b=d2qi1Ee8sfN+SZ6CZzmfwxpfcfR7b89J488noST5m2iBld1ATe/i7J+lqU+vEKSDnlE10WVAj9Ld6Ag3asyawhkRHNJ9Eosegri1GuikqbpKQYLrFQ/4WOM6cA3frnwQLpXE1gZFKGnOCWIMYqAhCRswjcE6mM1wD0HnwN4s8g9Tyq2GqSfIbd8+FDstHL42+iWEEKyzn06PGN6mvcmbau75nn6/Rw3RjtpJzkzJaxxKCw+EQeXeIvOZpfXr5MCSs+QcAOTs5XNFiqqtJiAi153SRSIqVxThtXrrHri0xM6DQjoYkAktflUNZColo52S0Y/TsntLRd28cAIqwpGMVA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=El6qEesUZ02ULdUNMQW/zW482zv8eKBU/6d3uHZX8gc=;
+ b=CCUuTYF0hJ0gjq1lvGNb+NzDkNkAnLtLLEuhLedYh8IK+ht/lMD6wBjRBKU2STalQ5bZMjpDR+QzzNtf0RXpUf8xReRjCel/VMUqvGtQtX1eTeYc+Wjzg4GeA3mpNln6tf+H7xnQFS3f/hmnEAs3jqcFpFSkEBw1Tq0itg/Ny20=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+Received: from CY4PR21MB0775.namprd21.prod.outlook.com (10.173.192.21) by
+ CY4PR21MB0502.namprd21.prod.outlook.com (10.172.122.12) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2686.3; Sun, 19 Jan 2020 23:29:54 +0000
+Received: from CY4PR21MB0775.namprd21.prod.outlook.com
+ ([fe80::6155:bc1d:1d39:977b]) by CY4PR21MB0775.namprd21.prod.outlook.com
+ ([fe80::6155:bc1d:1d39:977b%8]) with mapi id 15.20.2644.024; Sun, 19 Jan 2020
+ 23:29:53 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        sashal@kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
+        Alexander.Levin@microsoft.com
+Cc:     sunilmut@microsoft.com, Andrea.Parri@microsoft.com,
+        weh@microsoft.com, Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH v2] Drivers: hv: vmbus: Ignore CHANNELMSG_TL_CONNECT_RESULT(23)
+Date:   Sun, 19 Jan 2020 15:29:22 -0800
+Message-Id: <1579476562-125673-1-git-send-email-decui@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Reply-To: decui@microsoft.com
+Content-Type: text/plain
+X-ClientProxiedBy: MWHPR11CA0046.namprd11.prod.outlook.com
+ (2603:10b6:300:115::32) To CY4PR21MB0775.namprd21.prod.outlook.com
+ (2603:10b6:903:b8::21)
+MIME-Version: 1.0
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by MWHPR11CA0046.namprd11.prod.outlook.com (2603:10b6:300:115::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.18 via Frontend Transport; Sun, 19 Jan 2020 23:29:53 +0000
+X-Mailer: git-send-email 1.8.3.1
+X-Originating-IP: [13.77.154.182]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: b93688e8-f67f-42a5-9ac6-08d79d377cb2
+X-MS-TrafficTypeDiagnostic: CY4PR21MB0502:|CY4PR21MB0502:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <CY4PR21MB0502BAE4EA90D4CE9B2F24D8BF330@CY4PR21MB0502.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 0287BBA78D
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(346002)(396003)(366004)(136003)(376002)(189003)(199004)(316002)(6486002)(86362001)(186003)(26005)(10290500003)(66946007)(52116002)(478600001)(6506007)(6666004)(66476007)(66556008)(6512007)(5660300002)(2906002)(16526019)(107886003)(3450700001)(81166006)(8676002)(8936002)(81156014)(2616005)(36756003)(4326008)(6636002)(956004);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR21MB0502;H:CY4PR21MB0775.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ZZrrviadH03D3DwWr7S52uEp7QVSiyBXiC6mC1Sfgm8LHx7fMdnxWdDXdYEWx3jFLlDaU3bXuWTZvkfa6Z0ldgdf5ZhIrpiuP2mQB4+GPl9yTpZG73ysdKdUezJKeWFWVSXv5/n6hC4sdQdUhKFQmbBTpJIB3dyWt/78F6Jwreb/nGdykvkL8q1+dKKVBFPMHqSqpKMVNr5nUXvsGBMJ01vE2iJtyXdyPHCBE7NrBgi0JbUgKlbWssqK2l1DXcgU0LGGW/Htq0fsmBkwv32ETK7xno18jSimv+gZjaQG2FNGzow6H/5wEWCqaXMH7Dz9YOuRfja6VP8hle+GXdA/5CCuGM3O/GF6e/uHjSIFk+hqoG21PynbS61PLTExIK76/vfo1Wz4NmseTL66H368HxyAgSUe9i3ZdX4Wc6FC7dO00c6cTnDeJKmmiJvdMtOi
+X-MS-Exchange-AntiSpam-MessageData: DZEwSShZslJsVOLWvdBlgYe1eNs4zyH5lJqEjoWUJxFQ9nlDs3O3gLiCz0KHe64dPLo4PrXmVJfAzNfzLCi/7naW+FXRSD9hZMmStrXy1oxED5bUsXtHbtuM08lwCOEm17y5PsZ04LOBd140HmCaaQ==
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b93688e8-f67f-42a5-9ac6-08d79d377cb2
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2020 23:29:53.8785
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: s9oliTmAc3iTzyQ5Njtltr4fJUlUUMsPkj6C1XGjgMbPnvGTafME/SZw6ToI2JvJmnw+/+Xyfb5wIAVxtP8aXQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR21MB0502
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No functional change.
+When a Linux hv_sock app tries to connect to a Service GUID on which no
+host app is listening, a recent host (RS3+) sends a
+CHANNELMSG_TL_CONNECT_RESULT (23) message to Linux and this triggers such
+a warning:
 
-Tested-by: Stan Johnson <userm57@yahoo.com>
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+unknown msgtype=23
+WARNING: CPU: 2 PID: 0 at drivers/hv/vmbus_drv.c:1031 vmbus_on_msg_dpc
+
+Actually Linux can safely ignore the message because the Linux app's
+connect() will time out in 2 seconds: see VSOCK_DEFAULT_CONNECT_TIMEOUT
+and vsock_stream_connect(). We don't bother to make use of the message
+because: 1) it's only supported on recent hosts; 2) a non-trivial effort
+is required to use the message in Linux, but the benefit is small.
+
+So, let's not see the warning by silently ignoring the message.
+
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
 ---
- drivers/net/ethernet/natsemi/jazzsonic.c | 31 ++----------------
- drivers/net/ethernet/natsemi/macsonic.c  | 29 ++---------------
- drivers/net/ethernet/natsemi/sonic.c     | 36 +++++++++++++++++++++
- drivers/net/ethernet/natsemi/sonic.h     |  1 +
- drivers/net/ethernet/natsemi/xtsonic.c   | 40 ++----------------------
- 5 files changed, 44 insertions(+), 93 deletions(-)
 
-diff --git a/drivers/net/ethernet/natsemi/jazzsonic.c b/drivers/net/ethernet/natsemi/jazzsonic.c
-index 51fa82b429a3..bfa0c0d39600 100644
---- a/drivers/net/ethernet/natsemi/jazzsonic.c
-+++ b/drivers/net/ethernet/natsemi/jazzsonic.c
-@@ -147,39 +147,12 @@ static int sonic_probe1(struct net_device *dev)
- 		dev->dev_addr[i*2+1] = val >> 8;
- 	}
+In v2 (followed Michael Kelley's suggestions):
+    Removed the redundant code in vmbus_onmessage()
+    Added the new enries into channel_message_table[].
+
+ drivers/hv/channel_mgmt.c | 21 +++++++--------------
+ drivers/hv/vmbus_drv.c    |  4 ++++
+ include/linux/hyperv.h    |  2 ++
+ 3 files changed, 13 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
+index 8eb167540b4f..0370364169c4 100644
+--- a/drivers/hv/channel_mgmt.c
++++ b/drivers/hv/channel_mgmt.c
+@@ -1351,6 +1351,8 @@ channel_message_table[CHANNELMSG_COUNT] = {
+ 	{ CHANNELMSG_19,			0, NULL },
+ 	{ CHANNELMSG_20,			0, NULL },
+ 	{ CHANNELMSG_TL_CONNECT_REQUEST,	0, NULL },
++	{ CHANNELMSG_22,			0, NULL },
++	{ CHANNELMSG_TL_CONNECT_RESULT,		0, NULL },
+ };
  
--	err = -ENOMEM;
--
--	/* Initialize the device structure. */
--
- 	lp->dma_bitmode = SONIC_BITMODE32;
- 
--	/* Allocate the entire chunk of memory for the descriptors.
--           Note that this cannot cross a 64K boundary. */
--	lp->descriptors = dma_alloc_coherent(lp->device,
--					     SIZEOF_SONIC_DESC *
--					     SONIC_BUS_SCALE(lp->dma_bitmode),
--					     &lp->descriptors_laddr,
--					     GFP_KERNEL);
--	if (lp->descriptors == NULL)
-+	err = sonic_alloc_descriptors(dev);
-+	if (err)
- 		goto out;
- 
--	/* Now set up the pointers to point to the appropriate places */
--	lp->cda = lp->descriptors;
--	lp->tda = lp->cda + (SIZEOF_SONIC_CDA
--	                     * SONIC_BUS_SCALE(lp->dma_bitmode));
--	lp->rda = lp->tda + (SIZEOF_SONIC_TD * SONIC_NUM_TDS
--	                     * SONIC_BUS_SCALE(lp->dma_bitmode));
--	lp->rra = lp->rda + (SIZEOF_SONIC_RD * SONIC_NUM_RDS
--	                     * SONIC_BUS_SCALE(lp->dma_bitmode));
--
--	lp->cda_laddr = lp->descriptors_laddr;
--	lp->tda_laddr = lp->cda_laddr + (SIZEOF_SONIC_CDA
--	                     * SONIC_BUS_SCALE(lp->dma_bitmode));
--	lp->rda_laddr = lp->tda_laddr + (SIZEOF_SONIC_TD * SONIC_NUM_TDS
--	                     * SONIC_BUS_SCALE(lp->dma_bitmode));
--	lp->rra_laddr = lp->rda_laddr + (SIZEOF_SONIC_RD * SONIC_NUM_RDS
--	                     * SONIC_BUS_SCALE(lp->dma_bitmode));
--
- 	dev->netdev_ops = &sonic_netdev_ops;
- 	dev->watchdog_timeo = TX_TIMEOUT;
- 
-diff --git a/drivers/net/ethernet/natsemi/macsonic.c b/drivers/net/ethernet/natsemi/macsonic.c
-index 0937fc2a928e..0f4d0c25d626 100644
---- a/drivers/net/ethernet/natsemi/macsonic.c
-+++ b/drivers/net/ethernet/natsemi/macsonic.c
-@@ -186,33 +186,10 @@ static const struct net_device_ops macsonic_netdev_ops = {
- static int macsonic_init(struct net_device *dev)
- {
- 	struct sonic_local* lp = netdev_priv(dev);
-+	int err = sonic_alloc_descriptors(dev);
- 
--	/* Allocate the entire chunk of memory for the descriptors.
--           Note that this cannot cross a 64K boundary. */
--	lp->descriptors = dma_alloc_coherent(lp->device,
--					     SIZEOF_SONIC_DESC *
--					     SONIC_BUS_SCALE(lp->dma_bitmode),
--					     &lp->descriptors_laddr,
--					     GFP_KERNEL);
--	if (lp->descriptors == NULL)
--		return -ENOMEM;
--
--	/* Now set up the pointers to point to the appropriate places */
--	lp->cda = lp->descriptors;
--	lp->tda = lp->cda + (SIZEOF_SONIC_CDA
--	                     * SONIC_BUS_SCALE(lp->dma_bitmode));
--	lp->rda = lp->tda + (SIZEOF_SONIC_TD * SONIC_NUM_TDS
--	                     * SONIC_BUS_SCALE(lp->dma_bitmode));
--	lp->rra = lp->rda + (SIZEOF_SONIC_RD * SONIC_NUM_RDS
--	                     * SONIC_BUS_SCALE(lp->dma_bitmode));
--
--	lp->cda_laddr = lp->descriptors_laddr;
--	lp->tda_laddr = lp->cda_laddr + (SIZEOF_SONIC_CDA
--	                     * SONIC_BUS_SCALE(lp->dma_bitmode));
--	lp->rda_laddr = lp->tda_laddr + (SIZEOF_SONIC_TD * SONIC_NUM_TDS
--	                     * SONIC_BUS_SCALE(lp->dma_bitmode));
--	lp->rra_laddr = lp->rda_laddr + (SIZEOF_SONIC_RD * SONIC_NUM_RDS
--	                     * SONIC_BUS_SCALE(lp->dma_bitmode));
-+	if (err)
-+		return err;
- 
- 	dev->netdev_ops = &macsonic_netdev_ops;
- 	dev->watchdog_timeo = TX_TIMEOUT;
-diff --git a/drivers/net/ethernet/natsemi/sonic.c b/drivers/net/ethernet/natsemi/sonic.c
-index f31cb19ded50..3cf84de8ad8e 100644
---- a/drivers/net/ethernet/natsemi/sonic.c
-+++ b/drivers/net/ethernet/natsemi/sonic.c
-@@ -50,6 +50,42 @@ static void sonic_msg_init(struct net_device *dev)
- 		netif_dbg(lp, drv, dev, "%s", version);
- }
- 
-+static int sonic_alloc_descriptors(struct net_device *dev)
-+{
-+	struct sonic_local *lp = netdev_priv(dev);
-+
-+	/* Allocate a chunk of memory for the descriptors. Note that this
-+	 * must not cross a 64K boundary. It is smaller than one page which
-+	 * means that page alignment is a sufficient condition.
-+	 */
-+	lp->descriptors =
-+		dma_alloc_coherent(lp->device,
-+				   SIZEOF_SONIC_DESC *
-+				   SONIC_BUS_SCALE(lp->dma_bitmode),
-+				   &lp->descriptors_laddr, GFP_KERNEL);
-+
-+	if (!lp->descriptors)
-+		return -ENOMEM;
-+
-+	lp->cda = lp->descriptors;
-+	lp->tda = lp->cda + SIZEOF_SONIC_CDA *
-+			    SONIC_BUS_SCALE(lp->dma_bitmode);
-+	lp->rda = lp->tda + SIZEOF_SONIC_TD * SONIC_NUM_TDS *
-+			    SONIC_BUS_SCALE(lp->dma_bitmode);
-+	lp->rra = lp->rda + SIZEOF_SONIC_RD * SONIC_NUM_RDS *
-+			    SONIC_BUS_SCALE(lp->dma_bitmode);
-+
-+	lp->cda_laddr = lp->descriptors_laddr;
-+	lp->tda_laddr = lp->cda_laddr + SIZEOF_SONIC_CDA *
-+					SONIC_BUS_SCALE(lp->dma_bitmode);
-+	lp->rda_laddr = lp->tda_laddr + SIZEOF_SONIC_TD * SONIC_NUM_TDS *
-+					SONIC_BUS_SCALE(lp->dma_bitmode);
-+	lp->rra_laddr = lp->rda_laddr + SIZEOF_SONIC_RD * SONIC_NUM_RDS *
-+					SONIC_BUS_SCALE(lp->dma_bitmode);
-+
-+	return 0;
-+}
-+
  /*
-  * Open/initialize the SONIC controller.
-  *
-diff --git a/drivers/net/ethernet/natsemi/sonic.h b/drivers/net/ethernet/natsemi/sonic.h
-index e402dc29d2aa..f919835a9353 100644
---- a/drivers/net/ethernet/natsemi/sonic.h
-+++ b/drivers/net/ethernet/natsemi/sonic.h
-@@ -337,6 +337,7 @@ static void sonic_multicast_list(struct net_device *dev);
- static int sonic_init(struct net_device *dev);
- static void sonic_tx_timeout(struct net_device *dev);
- static void sonic_msg_init(struct net_device *dev);
-+static int sonic_alloc_descriptors(struct net_device *dev);
+@@ -1362,25 +1364,16 @@ void vmbus_onmessage(void *context)
+ {
+ 	struct hv_message *msg = context;
+ 	struct vmbus_channel_message_header *hdr;
+-	int size;
  
- /* Internal inlines for reading/writing DMA buffers.  Note that bus
-    size and endianness matter here, whereas they don't for registers,
-diff --git a/drivers/net/ethernet/natsemi/xtsonic.c b/drivers/net/ethernet/natsemi/xtsonic.c
-index e1b886e87a76..dda9ec7d9cee 100644
---- a/drivers/net/ethernet/natsemi/xtsonic.c
-+++ b/drivers/net/ethernet/natsemi/xtsonic.c
-@@ -167,47 +167,11 @@ static int __init sonic_probe1(struct net_device *dev)
- 		dev->dev_addr[i*2+1] = val >> 8;
- 	}
+ 	hdr = (struct vmbus_channel_message_header *)msg->u.payload;
+-	size = msg->header.payload_size;
  
--	/* Initialize the device structure. */
--
- 	lp->dma_bitmode = SONIC_BITMODE32;
+ 	trace_vmbus_on_message(hdr);
  
--	/*
--	 *  Allocate local private descriptor areas in uncached space.
--	 *  The entire structure must be located within the same 64kb segment.
--	 *  A simple way to ensure this is to allocate twice the
--	 *  size of the structure -- given that the structure is
--	 *  much less than 64 kB, at least one of the halves of
--	 *  the allocated area will be contained entirely in 64 kB.
--	 *  We also allocate extra space for a pointer to allow freeing
--	 *  this structure later on (in xtsonic_cleanup_module()).
--	 */
--	lp->descriptors = dma_alloc_coherent(lp->device,
--					     SIZEOF_SONIC_DESC *
--					     SONIC_BUS_SCALE(lp->dma_bitmode),
--					     &lp->descriptors_laddr,
--					     GFP_KERNEL);
--	if (lp->descriptors == NULL) {
--		err = -ENOMEM;
-+	err = sonic_alloc_descriptors(dev);
-+	if (err)
- 		goto out;
+-	if (hdr->msgtype >= CHANNELMSG_COUNT) {
+-		pr_err("Received invalid channel message type %d size %d\n",
+-			   hdr->msgtype, size);
+-		print_hex_dump_bytes("", DUMP_PREFIX_NONE,
+-				     (unsigned char *)msg->u.payload, size);
+-		return;
 -	}
 -
--	lp->cda = lp->descriptors;
--	lp->tda = lp->cda + (SIZEOF_SONIC_CDA
--			     * SONIC_BUS_SCALE(lp->dma_bitmode));
--	lp->rda = lp->tda + (SIZEOF_SONIC_TD * SONIC_NUM_TDS
--			     * SONIC_BUS_SCALE(lp->dma_bitmode));
--	lp->rra = lp->rda + (SIZEOF_SONIC_RD * SONIC_NUM_RDS
--			     * SONIC_BUS_SCALE(lp->dma_bitmode));
--
--	/* get the virtual dma address */
--
--	lp->cda_laddr = lp->descriptors_laddr;
--	lp->tda_laddr = lp->cda_laddr + (SIZEOF_SONIC_CDA
--				         * SONIC_BUS_SCALE(lp->dma_bitmode));
--	lp->rda_laddr = lp->tda_laddr + (SIZEOF_SONIC_TD * SONIC_NUM_TDS
--					 * SONIC_BUS_SCALE(lp->dma_bitmode));
--	lp->rra_laddr = lp->rda_laddr + (SIZEOF_SONIC_RD * SONIC_NUM_RDS
--					 * SONIC_BUS_SCALE(lp->dma_bitmode));
+-	if (channel_message_table[hdr->msgtype].message_handler)
+-		channel_message_table[hdr->msgtype].message_handler(hdr);
+-	else
+-		pr_err("Unhandled channel message type %d\n", hdr->msgtype);
++	/*
++	 * vmbus_on_msg_dpc() makes sure the hdr->msgtype here can not go
++	 * out of bound and the message_handler pointer can not be NULL.
++	 */
++	channel_message_table[hdr->msgtype].message_handler(hdr);
+ }
  
- 	dev->netdev_ops		= &xtsonic_netdev_ops;
- 	dev->watchdog_timeo	= TX_TIMEOUT;
+ /*
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 4ef5a66df680..029378c27421 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -1033,6 +1033,10 @@ void vmbus_on_msg_dpc(unsigned long data)
+ 	}
+ 
+ 	entry = &channel_message_table[hdr->msgtype];
++
++	if (!entry->message_handler)
++		goto msg_handled;
++
+ 	if (entry->handler_type	== VMHT_BLOCKING) {
+ 		ctx = kmalloc(sizeof(*ctx), GFP_ATOMIC);
+ 		if (ctx == NULL)
+diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+index 8fa0938f9aee..692c89ccf5df 100644
+--- a/include/linux/hyperv.h
++++ b/include/linux/hyperv.h
+@@ -425,6 +425,8 @@ enum vmbus_channel_message_type {
+ 	CHANNELMSG_19				= 19,
+ 	CHANNELMSG_20				= 20,
+ 	CHANNELMSG_TL_CONNECT_REQUEST		= 21,
++	CHANNELMSG_22				= 22,
++	CHANNELMSG_TL_CONNECT_RESULT		= 23,
+ 	CHANNELMSG_COUNT
+ };
+ 
 -- 
-2.24.1
+2.19.1
 
