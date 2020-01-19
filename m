@@ -2,133 +2,207 @@ Return-Path: <SRS0=pPEE=3I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4859EC33CAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 23:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE28C33CAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 23:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14A752068F
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 23:54:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="J7H6nIis"
+	by mail.kernel.org (Postfix) with ESMTP id 3B0A42068F
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 23:57:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728982AbgASXyd (ORCPT
+        id S1729021AbgASX5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 18:54:33 -0500
-Received: from mailout1.samsung.com ([203.254.224.24]:49157 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728841AbgASXyc (ORCPT
+        Sun, 19 Jan 2020 18:57:10 -0500
+Received: from mail-io1-f71.google.com ([209.85.166.71]:54902 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728886AbgASX5K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 18:54:32 -0500
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200119235430epoutp01340e8414170cb99b8e7c098305539878~rbu_5UvXc2452324523epoutp01V
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jan 2020 23:54:30 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200119235430epoutp01340e8414170cb99b8e7c098305539878~rbu_5UvXc2452324523epoutp01V
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1579478070;
-        bh=6JSnqzl0EvdTU31qaFR96V0SipqLwPhqMod9gJdOwkY=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=J7H6nIisdfpkKMorURU2XZLHQvAkvPvqZMRI/i2ZV5fHohftgHvp0Kvwc5kVZISlN
-         7o4FR3kBAWhzd/2GVOWy9OQkIokI5loonv7nHKGyz7fEeqPV8cDeVp1YuMfwzFPrAb
-         5GadEsqkru8x5gw9yn2KQrSwhYUtyQddTY4R4VF4=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20200119235429epcas1p4974acc4d054d1003f7327108f4c8f8ce~rbu_gDzry0198301983epcas1p4G;
-        Sun, 19 Jan 2020 23:54:29 +0000 (GMT)
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.160]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 481BVD57b3zMqYkV; Sun, 19 Jan
-        2020 23:54:28 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        74.94.48019.43CE42E5; Mon, 20 Jan 2020 08:54:28 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200119235428epcas1p39533727823a84621968a6ceae337c67e~rbu9DBAdv2284122841epcas1p35;
-        Sun, 19 Jan 2020 23:54:28 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200119235428epsmtrp29ba7048776effc36a4283c7961c77612~rbu9CDgft0811308113epsmtrp2R;
-        Sun, 19 Jan 2020 23:54:28 +0000 (GMT)
-X-AuditID: b6c32a38-23fff7000001bb93-a8-5e24ec3496f1
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        31.25.06569.43CE42E5; Mon, 20 Jan 2020 08:54:28 +0900 (KST)
-Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200119235428epsmtip2a86b257f32fa53f44737cf1572d13baa~rbu82_ass0720507205epsmtip2K;
-        Sun, 19 Jan 2020 23:54:28 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     "'Christoph Hellwig'" <hch@lst.de>
-Cc:     <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <gregkh@linuxfoundation.org>, <valdis.kletnieks@vt.edu>,
-        <sj1557.seo@samsung.com>, <pali.rohar@gmail.com>, <arnd@arndb.de>,
-        "'Namjae Jeon'" <linkinjeon@gmail.com>
-In-Reply-To: <20200119223436.GF4890@lst.de>
-Subject: RE: [PATCH v11 12/14] exfat: add exfat in fs/Kconfig and
- fs/Makefile
-Date:   Mon, 20 Jan 2020 08:54:27 +0900
-Message-ID: <001901d5cf23$c9054b30$5b0fe190$@samsung.com>
+        Sun, 19 Jan 2020 18:57:10 -0500
+Received: by mail-io1-f71.google.com with SMTP id u6so18867619iog.21
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jan 2020 15:57:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=bLPqWS4gmEOy+ebIjShF5FIOX/9QRtrFBn3FMxw6QXs=;
+        b=nqZ+aetY2sB6lRoggP5QwES79nkUuQ3zutPaaXXmsZtM3J6+zkQEk+d/BzdvK5mZ3T
+         j2/+0XCjRJQwxoAEtsoPoYtX9laK8LVh05PNDg2+zLuN3NbgPnXekmyFeCbGSoJ8yGvl
+         +AD0y3kOK53ZPYTtJuYB3+Ms5XbGFiNikrxHxE4BURKFeeLUb6S6/+BCX7mj2xAnziPE
+         ZzAaUE/7yqyxCiCUhS2Sx5IPdLV1RxLwypznN54CSQrmIauJs0Fg/YTCWQg6HxJ625J1
+         7uKRXJgCg0PodP9/65zpEHwykwuKCMRa7Fjw9dLTUTgP0tHThllnB4e1IljItB9zWCRW
+         EsCQ==
+X-Gm-Message-State: APjAAAVPMlSba3rOY6XZZTEZOQQ341ZV/IAqZqcxTTspVOm1ns4kmrg2
+        iHuVslpyU2d99wHRwo+u9RgTf2sYtA0zcKK4jf1i2kS61xUf
+X-Google-Smtp-Source: APXvYqwPpL0xTTd1D48oUxavZRVDVk5XcOR8lZt7YI4FSZl5VF8NRmyQXbwLbZ9viUPjFYhUcIuZdXo6v49UUHX22lIzmPMhYFoj
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQE6+DxIhpF/kFPHCFxKjfJup9sXPQH+Y74vAmvezKUBN9/7cqj7RYaQ
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Te0hTYRjG+3a2sxlNTvPSm0HNQwZms61terosCq0GGUlWUJB20A9n7sbO
-        tBuUrHJmZWmZtBKNwsiK1FZeyozZ/aJm90ACKdDKbqJimrXtLNh/P773fb73eb6LhJC1kFGS
-        HLMd28yskSYnC2+0xyoVmq+z05UV/THMn7L7Ymbfuaskc/HSPQHzpuc9wdxqfSRkXrScIZnS
-        J2MCxj1xV8R0f/8hXBaiH/tdhvTNrh6xvq3yslh/810BqS9x1yL9YMNMvafxK5kq3mxcYsBs
-        FrbJsTnTkpVjztbRq9MykjK0CUqVQrWQSaTlZtaEdXRySqpiZY7Ra42W57PGPO9SKstx9Pyl
-        S2yWPDuWGyycXUdja5bRqlJa4znWxOWZs+MzLaZFKqVygdbbudVo6DhwibR2CXc0PW1EBei4
-        sBiFSIDSgPthl6AYTZbIqCYEjqFhka8go34hGD66jC8MIzj9qpj4rxh/OUHwhVYEz91uklf0
-        I+joXu5jklLAxHibfz2cmgNPRwvFPgFBDSB4/Kwa+QohVBxUDZUKfBxGrYWTwyP+CUIqBl73
-        Ofw2pNRCuH7eFeCp8OjUR79vgoqHt+UnSJ7joObsl4A7OYx+qhHxg1fCsxq3iO8Jh9MHC/2u
-        gXKK4WD9EzEvSAaHpzzAYfD5gTvAUTD4rdU7QOLl3fCzLbB/EYK+ER3Panh3tU7EczQ0j1Ui
-        flYofBs6LOKlUigqlPEtMVDS3S7geQYUO3+IjyHaFZTMFZTMFZTMFZSgGglrUSS2cqZszKms
-        muDbbkD+dzuXaUK3OlI8iJIgeoq0mpudLhOx+dxOkweBhKDDpT1HotNl0ix25y5ss2TY8oyY
-        8yCt9+RLiaiITIv3F5jtGSrtArVazWgSEhO0anqatCJZni6jslk7zsXYim3/dQJJSFQBepgU
-        sc4R6tj/oWzWrPaGKc47Ixuq8s+duVBeOdF7WzldcPj++kXXkgxkV+4WW82qvaL2eQOd5vEr
-        EYcWd/7t7dkzpHemaZ4P7nNeu4LRxtBJmu3V2wY8K74UycMNe89PI3pr1+Sqf8pbLm/E9Ttm
-        blo8Gqk71ZlcOBJ5t05apfgeu5UWcgZWNZewcew/6jz5Nc0DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrKIsWRmVeSWpSXmKPExsWy7bCSvK7JG5U4g4/b2C3+TjrGbtG8eD2b
-        xcrVR5ksrt+9xWyxZ+9JFovLu+awWUw8/ZvJYsu/I6wWl95/YHHg9Pj9axKjx85Zd9k99s9d
-        w+6x+2YDm0ffllWMHp83yXkc2v6GLYA9issmJTUnsyy1SN8ugStj/ez9bAWfmSs+XehkamCc
-        zdzFyMkhIWAi8efKPyCbi0NIYDejxOHGl4wQCWmJYyfOACU4gGxhicOHiyFqnjNKfNrdxw5S
-        wyagK/Hvz342EFtEQE3izM82dpAiZoGvjBKN27pZIDquM0ps2zgLrINTQFti/teJTCC2sICv
-        xPlfvWBxFgFViWsvmlhBbF4BS4mtS2ZB2YISJ2c+YQGxmQUMJO4f6mCFsLUlli18DfWCgsTP
-        p8tYIa5wkzi7bAtUjYjE7M425gmMwrOQjJqFZNQsJKNmIWlZwMiyilEytaA4Nz232LDAKC+1
-        XK84Mbe4NC9dLzk/dxMjOPK0tHYwnjgRf4hRgINRiYd3QbFKnBBrYllxZe4hRgkOZiUR3ru9
-        inFCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeeXzj0UKCaQnlqRmp6YWpBbBZJk4OKUaGKcnR/GF
-        Luk+7Csnvfn4c7ZohVsnOiS2y/zY/4mrb9b/+l8OJnXs3G5VP3g2X362U2L7gYZih0kzru9d
-        JLMxdq6E+S5xTt+SQimmWbYMyQWdyYkxc/feX/Xz6d9vSr9invxPmaZXl812velRkKye7AOJ
-        I/E/JIzLuGyX874tDfXOWPrxa5buSyWW4oxEQy3mouJEAL5A1Ha4AgAA
-X-CMS-MailID: 20200119235428epcas1p39533727823a84621968a6ceae337c67e
-X-Msg-Generator: CA
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200119223441epcas1p46dff31055998493dba781f21dd6e9039
-References: <20200118150348.9972-1-linkinjeon@gmail.com>
-        <20200118150348.9972-13-linkinjeon@gmail.com>
-        <CGME20200119223441epcas1p46dff31055998493dba781f21dd6e9039@epcas1p4.samsung.com>
-        <20200119223436.GF4890@lst.de>
+X-Received: by 2002:a92:9f1a:: with SMTP id u26mr8825182ili.72.1579478229160;
+ Sun, 19 Jan 2020 15:57:09 -0800 (PST)
+Date:   Sun, 19 Jan 2020 15:57:09 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c7999e059c86eebe@google.com>
+Subject: KASAN: use-after-free Read in bitmap_ipmac_ext_cleanup
+From:   syzbot <syzbot+33fc3ad6fa11675e1a7e@syzkaller.appspotmail.com>
+To:     coreteam@netfilter.org, davem@davemloft.net,
+        florent.fourcot@wifirst.fr, fw@strlen.de, jeremy@azazel.net,
+        johannes.berg@intel.com, kadlec@netfilter.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, pablo@netfilter.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Sun, Jan 19, 2020 at 12:03:46AM +0900, Namjae Jeon wrote:
-> > From: Namjae Jeon <namjae.jeon=40samsung.com>
-> >
-> > Add exfat in fs/Kconfig and fs/Makefile.
-> >
-> > Signed-off-by: Namjae Jeon <namjae.jeon=40samsung.com>
-> > Signed-off-by: Sungjong Seo <sj1557.seo=40samsung.com>
-> > Reviewed-by: Pali Roh=E1r=20<pali.rohar=40gmail.com>=0D=0A>=20=0D=0A>=
-=20I=20would=20have=20merged=20this=20into=20the=20previous=20one,=20but=20=
-otherwise:=0D=0AOkay:)=0D=0A>=20=0D=0A>=20Reviewed-by:=20Christoph=20Hellwi=
-g=20<hch=40lst.de>=0D=0AThanks=20for=20your=20review=21=0D=0A=0D=0A
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    7f013ede Merge git://git.kernel.org/pub/scm/linux/kernel/g..
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=11c41495e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=66d8660c57ff3c98
+dashboard link: https://syzkaller.appspot.com/bug?extid=33fc3ad6fa11675e1a7e
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15102cc9e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17e38faee00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+33fc3ad6fa11675e1a7e@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: use-after-free in test_bit include/asm-generic/bitops/instrumented-non-atomic.h:110 [inline]
+BUG: KASAN: use-after-free in bitmap_ipmac_ext_cleanup+0xd8/0x290 net/netfilter/ipset/ip_set_bitmap_gen.h:51
+Read of size 8 at addr ffff8880a2ac3a40 by task syz-executor324/9651
+
+CPU: 0 PID: 9651 Comm: syz-executor324 Not tainted 5.5.0-rc5-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x197/0x210 lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
+ __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
+ kasan_report+0x12/0x20 mm/kasan/common.c:639
+ check_memory_region_inline mm/kasan/generic.c:185 [inline]
+ check_memory_region+0x134/0x1a0 mm/kasan/generic.c:192
+ __kasan_check_read+0x11/0x20 mm/kasan/common.c:95
+ test_bit include/asm-generic/bitops/instrumented-non-atomic.h:110 [inline]
+ bitmap_ipmac_ext_cleanup+0xd8/0x290 net/netfilter/ipset/ip_set_bitmap_gen.h:51
+ bitmap_ipmac_destroy+0x17c/0x1d0 net/netfilter/ipset/ip_set_bitmap_gen.h:65
+ ip_set_create+0xe47/0x1500 net/netfilter/ipset/ip_set_core.c:1165
+ nfnetlink_rcv_msg+0xcf2/0xfb0 net/netfilter/nfnetlink.c:229
+ netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
+ nfnetlink_rcv+0x1ba/0x460 net/netfilter/nfnetlink.c:563
+ netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+ netlink_unicast+0x59e/0x7e0 net/netlink/af_netlink.c:1328
+ netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xd7/0x130 net/socket.c:672
+ ____sys_sendmsg+0x753/0x880 net/socket.c:2343
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2397
+ __sys_sendmsg+0x105/0x1d0 net/socket.c:2430
+ __do_sys_sendmsg net/socket.c:2439 [inline]
+ __se_sys_sendmsg net/socket.c:2437 [inline]
+ __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2437
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x442239
+Code: e8 6c aa 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 9b 09 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffc7958b8c8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000442239
+RDX: 0000000000000000 RSI: 0000000020000300 RDI: 0000000000000003
+RBP: 0000000000016edc R08: 00000000004030f0 R09: 00000000004030f0
+R10: 0000000000000004 R11: 0000000000000246 R12: 0000000000403060
+R13: 00000000004030f0 R14: 0000000000000000 R15: 0000000000000000
+
+Allocated by task 9651:
+ save_stack+0x23/0x90 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ __kasan_kmalloc mm/kasan/common.c:513 [inline]
+ __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:486
+ kasan_kmalloc+0x9/0x10 mm/kasan/common.c:527
+ __do_kmalloc mm/slab.c:3656 [inline]
+ __kmalloc+0x163/0x770 mm/slab.c:3665
+ kmalloc include/linux/slab.h:561 [inline]
+ kzalloc include/linux/slab.h:670 [inline]
+ ip_set_alloc+0x38/0x5e net/netfilter/ipset/ip_set_core.c:255
+ init_map_ipmac net/netfilter/ipset/ip_set_bitmap_ipmac.c:302 [inline]
+ bitmap_ipmac_create+0x4e8/0xa00 net/netfilter/ipset/ip_set_bitmap_ipmac.c:365
+ ip_set_create+0x6f1/0x1500 net/netfilter/ipset/ip_set_core.c:1111
+ nfnetlink_rcv_msg+0xcf2/0xfb0 net/netfilter/nfnetlink.c:229
+ netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
+ nfnetlink_rcv+0x1ba/0x460 net/netfilter/nfnetlink.c:563
+ netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+ netlink_unicast+0x59e/0x7e0 net/netlink/af_netlink.c:1328
+ netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xd7/0x130 net/socket.c:672
+ ____sys_sendmsg+0x753/0x880 net/socket.c:2343
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2397
+ __sys_sendmsg+0x105/0x1d0 net/socket.c:2430
+ __do_sys_sendmsg net/socket.c:2439 [inline]
+ __se_sys_sendmsg net/socket.c:2437 [inline]
+ __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2437
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 9651:
+ save_stack+0x23/0x90 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ kasan_set_free_info mm/kasan/common.c:335 [inline]
+ __kasan_slab_free+0x102/0x150 mm/kasan/common.c:474
+ kasan_slab_free+0xe/0x10 mm/kasan/common.c:483
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x10a/0x2c0 mm/slab.c:3757
+ kvfree+0x61/0x70 mm/util.c:603
+ ip_set_free+0x16/0x20 net/netfilter/ipset/ip_set_core.c:276
+ bitmap_ipmac_destroy+0xae/0x1d0 net/netfilter/ipset/ip_set_bitmap_gen.h:63
+ ip_set_create+0xe47/0x1500 net/netfilter/ipset/ip_set_core.c:1165
+ nfnetlink_rcv_msg+0xcf2/0xfb0 net/netfilter/nfnetlink.c:229
+ netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
+ nfnetlink_rcv+0x1ba/0x460 net/netfilter/nfnetlink.c:563
+ netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+ netlink_unicast+0x59e/0x7e0 net/netlink/af_netlink.c:1328
+ netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xd7/0x130 net/socket.c:672
+ ____sys_sendmsg+0x753/0x880 net/socket.c:2343
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2397
+ __sys_sendmsg+0x105/0x1d0 net/socket.c:2430
+ __do_sys_sendmsg net/socket.c:2439 [inline]
+ __se_sys_sendmsg net/socket.c:2437 [inline]
+ __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2437
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff8880a2ac3a40
+ which belongs to the cache kmalloc-32 of size 32
+The buggy address is located 0 bytes inside of
+ 32-byte region [ffff8880a2ac3a40, ffff8880a2ac3a60)
+The buggy address belongs to the page:
+page:ffffea00028ab0c0 refcount:1 mapcount:0 mapping:ffff8880aa4001c0 index:0xffff8880a2ac3fc1
+raw: 00fffe0000000200 ffffea000293f948 ffffea00025764c8 ffff8880aa4001c0
+raw: ffff8880a2ac3fc1 ffff8880a2ac3000 000000010000003f 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff8880a2ac3900: fb fb fb fb fc fc fc fc fb fb fb fb fc fc fc fc
+ ffff8880a2ac3980: fb fb fb fb fc fc fc fc fb fb fb fb fc fc fc fc
+>ffff8880a2ac3a00: fb fb fb fb fc fc fc fc fb fb fb fb fc fc fc fc
+                                           ^
+ ffff8880a2ac3a80: fb fb fb fb fc fc fc fc 00 00 fc fc fc fc fc fc
+ ffff8880a2ac3b00: fb fb fb fb fc fc fc fc 00 03 fc fc fc fc fc fc
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
