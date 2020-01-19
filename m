@@ -6,78 +6,64 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 699E0C33CB7
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 06:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44614C33CB1
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 06:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 400F42073A
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 06:55:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21772206ED
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 06:57:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726619AbgASGzY (ORCPT
+        id S1726798AbgASG45 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 01:55:24 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:52042 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726396AbgASGzY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 01:55:24 -0500
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 8D746BB766B624487531;
-        Sun, 19 Jan 2020 14:55:21 +0800 (CST)
-Received: from [127.0.0.1] (10.173.220.96) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Sun, 19 Jan 2020
- 14:55:15 +0800
-Subject: Re: [RFC] iomap: fix race between readahead and direct write
-To:     Matthew Wilcox <willy@infradead.org>
-CC:     <hch@infradead.org>, <darrick.wong@oracle.com>,
-        <linux-xfs@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <houtao1@huawei.com>,
-        <zhengbin13@huawei.com>, <yi.zhang@huawei.com>
-References: <20200116063601.39201-1-yukuai3@huawei.com>
- <20200118230826.GA5583@bombadil.infradead.org>
- <f5328338-1a2d-38b4-283f-3fb97ad37133@huawei.com>
- <20200119014213.GA16943@bombadil.infradead.org>
- <64d617cc-e7fe-6848-03bb-aab3498c9a07@huawei.com>
- <20200119061402.GA7301@bombadil.infradead.org>
-From:   "yukuai (C)" <yukuai3@huawei.com>
-Message-ID: <fafa0550-184c-e59c-9b79-bd5d716a20cc@huawei.com>
-Date:   Sun, 19 Jan 2020 14:55:14 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sun, 19 Jan 2020 01:56:57 -0500
+Received: from asavdk3.altibox.net ([109.247.116.14]:40582 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726396AbgASG45 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jan 2020 01:56:57 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id B9F0A20023;
+        Sun, 19 Jan 2020 07:56:50 +0100 (CET)
+Date:   Sun, 19 Jan 2020 07:56:49 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
+        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
+        cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com,
+        ck.hu@mediatek.com, stonea168@163.com
+Subject: Re: [PATCH v10 0/5] add driver for "boe, tv101wum-nl6", "boe,
+ tv101wum-n53", "auo, kd101n80-45na" and "auo, b101uan08.3" panels
+Message-ID: <20200119065649.GA1391@ravnborg.org>
+References: <20200119014541.64273-1-jitao.shi@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <20200119061402.GA7301@bombadil.infradead.org>
-Content-Type: text/plain; charset="gbk"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.220.96]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200119014541.64273-1-jitao.shi@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
+        a=oHMhZ3l30UxMmAFbuhYA:9 a=CjuIK1q_8ugA:10 a=pHzHmUro8NiASowvMSCR:22
+        a=xoEH_sTeL_Rfw54TyV31:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Jitao.
 
+On Sun, Jan 19, 2020 at 09:45:36AM +0800, Jitao Shi wrote:
+> Changes since v9:
+>  - remove Rob from maintainers in boe,tv101wum-nl6.yaml
 
-On 2020/1/19 14:14, Matthew Wilcox wrote:
-> I don't understand your reasoning here.  If another process wants to
-> access a page of the file which isn't currently in cache, it would have
-> to first read the page in from storage.  If it's under readahead, it
-> has to wait for the read to finish.  Why is the second case worse than
-> the second?  It seems better to me.
+This series is already applied to drm-misc-next.
+I removed Rob from Maintainers while applying.
 
-Thanks for your response! My worries is that, for example:
-
-We read page 0, and trigger readahead to read n pages(0 - n-1). While in 
-another thread, we read page n-1.
-
-In the current implementation, if readahead is in the process of reading
-page 0 - n-2,  later operation doesn't need to wait the former one to 
-finish. However, later operation will have to wait if we add all pages
-to page cache first. And that is why I said it might cause problem for
-performance overhead.
-
-> At the same time, the iomap code is switched from ->readpages to
-> ->readahead, so yes, the pages are added to the page cache.
-
-Yes, it's not a problem in your implementation.
-
-Thanks!
-Yu Kuai
-
+	Sam
