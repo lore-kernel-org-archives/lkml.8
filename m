@@ -2,180 +2,255 @@ Return-Path: <SRS0=pPEE=3I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DAE4C33CB7
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 03:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E575C32771
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 03:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35AB02087E
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 03:23:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="FkHOHZ/E"
+	by mail.kernel.org (Postfix) with ESMTP id 61D8C20842
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 03:23:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbgASDXA (ORCPT
+        id S1727066AbgASDXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 22:23:00 -0500
-Received: from mailgw02.mediatek.com ([1.203.163.81]:42200 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725497AbgASDXA (ORCPT
+        Sat, 18 Jan 2020 22:23:07 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:56874 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725497AbgASDXH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 22:23:00 -0500
-X-UUID: cbf1c8442ccc4d1eb8a13a21161e6f20-20200119
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=hm6lnO5QlH7ot9sHtfmnJSN7OgWXnD6EkGNxaWdllRs=;
-        b=FkHOHZ/EcjJX2+j4NzjxK2Lt9lkpdVjYoA2xmw3wdB2Uy54cRQgc/bL0BVOLaejNmhPccquQVxnvplIUbRqo0KAdowGUnuBwYfw/YBLlbARvdlGapiJ2rjNUAX+fpHS/aJFeKYHmQBGwrgsQF6xbpWd3tkCHfBq80LU83QavIyQ=;
-X-UUID: cbf1c8442ccc4d1eb8a13a21161e6f20-20200119
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <yong.liang@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1018494963; Sun, 19 Jan 2020 11:22:45 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N2.mediatek.inc
- (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Sun, 19 Jan
- 2020 11:21:28 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Sun, 19 Jan 2020 11:22:51 +0800
-Message-ID: <1579404156.27500.1.camel@mhfsdcap03>
-Subject: Re: [PATCH v12 3/4] watchdog: mtk_wdt: mt8183: Add reset controller
-From:   Yong Liang <yong.liang@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-CC:     "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Chang-An Chen =?UTF-8?Q?=28=E9=99=B3=E6=98=B6=E5=AE=89=29?= 
-        <Chang-An.Chen@mediatek.com>,
-        Freddy Hsin =?UTF-8?Q?=28=E8=BE=9B=E6=81=92=E8=B1=90=29?= 
-        <Freddy.Hsin@mediatek.com>,
-        Jiaxin Yu =?UTF-8?Q?=28=E4=BF=9E=E5=AE=B6=E9=91=AB=29?= 
-        <Jiaxin.Yu@mediatek.com>,
-        Yingjoe Chen =?UTF-8?Q?=28=E9=99=B3=E8=8B=B1=E6=B4=B2=29?= 
-        <Yingjoe.Chen@mediatek.com>, "sboyd@kernel.org" <sboyd@kernel.org>
-Date:   Sun, 19 Jan 2020 11:22:36 +0800
-In-Reply-To: <372a4c8e-2ff1-3424-069c-7d359e1f16f1@gmail.com>
-References: <20200115085828.27791-1-yong.liang@mediatek.com>
-         <20200115085828.27791-4-yong.liang@mediatek.com>
-         <372a4c8e-2ff1-3424-069c-7d359e1f16f1@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Sat, 18 Jan 2020 22:23:07 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1it1AN-00BFcz-7i; Sun, 19 Jan 2020 03:22:29 +0000
+From:   Al Viro <viro@ZenIV.linux.org.uk>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        David Howells <dhowells@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: [PATCH 16/17] LOOKUP_MOUNTPOINT: fold path_mountpointat() into path_lookupat()
+Date:   Sun, 19 Jan 2020 03:17:28 +0000
+Message-Id: <20200119031738.2681033-16-viro@ZenIV.linux.org.uk>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200119031738.2681033-1-viro@ZenIV.linux.org.uk>
+References: <20200119031423.GV8904@ZenIV.linux.org.uk>
+ <20200119031738.2681033-1-viro@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 9A9910F4F12A5AE0331104063D22AC4683A93A64C642237FABC1506255239E8F2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTAxLTE2IGF0IDAwOjE4ICswODAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3Rl
-Og0KPiANCj4gT24gMTUvMDEvMjAyMCAwOTo1OCwgWW9uZyBMaWFuZyB3cm90ZToNCj4gPiBGcm9t
-OiAieW9uZy5saWFuZyIgPHlvbmcubGlhbmdAbWVkaWF0ZWsuY29tPg0KPiA+IA0KPiA+IEFkZCBy
-ZXNldCBjb250cm9sbGVyIEFQSSBpbiB3YXRjaGRvZyBkcml2ZXIuDQo+ID4gQmVzaWRlcyB3YXRj
-aGRvZywgTVRLIHRvcHJndSBtb2R1bGUgYWxzYSBwcm92aWRlIHN1Yi1zeXN0ZW0gKGVnLCBhdWRp
-bywNCj4gPiBjYW1lcmEsIGNvZGVjIGFuZCBjb25uZWN0aXZpdHkpIHNvZnR3YXJlIHJlc2V0IGZ1
-bmN0aW9uYWxpdHkuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogeW9uZy5saWFuZyA8eW9uZy5s
-aWFuZ0BtZWRpYXRlay5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogSmlheGluIFl1IDxqaWF4aW4u
-eXVAbWVkaWF0ZWsuY29tPg0KPiA+IFJldmlld2VkLWJ5OiBZaW5nam9lIENoZW4gPHlpbmdqb2Uu
-Y2hlbkBtZWRpYXRlay5jb20+DQo+ID4gUmV2aWV3ZWQtYnk6IFBoaWxpcHAgWmFiZWwgPHAuemFi
-ZWxAcGVuZ3V0cm9uaXguZGU+DQo+IA0KPiBBY2tlZC1ieTogTWF0dGhpYXMgQnJ1Z2dlciA8bWF0
-dGhpYXMuYmdnQGdtYWlsLmNvbT4NCg0KICBNYXkgSSBuZWVkIHNlbmQgYSBuZXcgcGF0Y2ggd2hp
-dGggdGhpcyB0YWc/DQo+IA0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3dhdGNoZG9nL210a193ZHQu
-YyB8IDk5ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystDQo+ID4gIDEgZmls
-ZSBjaGFuZ2VkLCA5OCBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+ID4gDQo+ID4gZGlm
-ZiAtLWdpdCBhL2RyaXZlcnMvd2F0Y2hkb2cvbXRrX3dkdC5jIGIvZHJpdmVycy93YXRjaGRvZy9t
-dGtfd2R0LmMNCj4gPiBpbmRleCA5YzNkMDAzMzI2MGQuLmU4OGFhY2IwNDA0ZCAxMDA2NDQNCj4g
-PiAtLS0gYS9kcml2ZXJzL3dhdGNoZG9nL210a193ZHQuYw0KPiA+ICsrKyBiL2RyaXZlcnMvd2F0
-Y2hkb2cvbXRrX3dkdC5jDQo+ID4gQEAgLTksNiArOSw4IEBADQo+ID4gICAqIEJhc2VkIG9uIHN1
-bnhpX3dkdC5jDQo+ID4gICAqLw0KPiA+ICANCj4gPiArI2luY2x1ZGUgPGR0LWJpbmRpbmdzL3Jl
-c2V0LWNvbnRyb2xsZXIvbXQ4MTgzLXJlc2V0cy5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvZGVs
-YXkuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L2Vyci5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgv
-aW5pdC5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvaW8uaD4NCj4gPiBAQCAtMTYsMTAgKzE4LDEx
-IEBADQo+ID4gICNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4
-L21vZHVsZXBhcmFtLmg+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9vZi5oPg0KPiA+ICsjaW5jbHVk
-ZSA8bGludXgvb2ZfZGV2aWNlLmg+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZp
-Y2UuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L3Jlc2V0LWNvbnRyb2xsZXIuaD4NCj4gPiAgI2lu
-Y2x1ZGUgPGxpbnV4L3R5cGVzLmg+DQo+ID4gICNpbmNsdWRlIDxsaW51eC93YXRjaGRvZy5oPg0K
-PiA+IC0jaW5jbHVkZSA8bGludXgvZGVsYXkuaD4NCj4gPiAgDQo+ID4gICNkZWZpbmUgV0RUX01B
-WF9USU1FT1VUCQkzMQ0KPiA+ICAjZGVmaW5lIFdEVF9NSU5fVElNRU9VVAkJMQ0KPiA+IEBAIC00
-NCw2ICs0Nyw5IEBADQo+ID4gICNkZWZpbmUgV0RUX1NXUlNUCQkweDE0DQo+ID4gICNkZWZpbmUg
-V0RUX1NXUlNUX0tFWQkJMHgxMjA5DQo+ID4gIA0KPiA+ICsjZGVmaW5lIFdEVF9TV1NZU1JTVAkJ
-MHgxOFUNCj4gPiArI2RlZmluZSBXRFRfU1dTWVNfUlNUX0tFWQkweDg4MDAwMDAwDQo+ID4gKw0K
-PiA+ICAjZGVmaW5lIERSVl9OQU1FCQkibXRrLXdkdCINCj4gPiAgI2RlZmluZSBEUlZfVkVSU0lP
-TgkJIjEuMCINCj4gPiAgDQo+ID4gQEAgLTUzLDggKzU5LDkwIEBAIHN0YXRpYyB1bnNpZ25lZCBp
-bnQgdGltZW91dDsNCj4gPiAgc3RydWN0IG10a193ZHRfZGV2IHsNCj4gPiAgCXN0cnVjdCB3YXRj
-aGRvZ19kZXZpY2Ugd2R0X2RldjsNCj4gPiAgCXZvaWQgX19pb21lbSAqd2R0X2Jhc2U7DQo+ID4g
-KwlzcGlubG9ja190IGxvY2s7IC8qIHByb3RlY3RzIFdEVF9TV1NZU1JTVCByZWcgKi8NCj4gPiAr
-CXN0cnVjdCByZXNldF9jb250cm9sbGVyX2RldiByY2RldjsNCj4gPiArfTsNCj4gPiArDQo+ID4g
-K3N0cnVjdCBtdGtfd2R0X2RhdGEgew0KPiA+ICsJaW50IHRvcHJndV9zd19yc3RfbnVtOw0KPiA+
-ICB9Ow0KPiA+ICANCj4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfd2R0X2RhdGEgbXQ4MTgz
-X2RhdGEgPSB7DQo+ID4gKwkudG9wcmd1X3N3X3JzdF9udW0gPSBNVDgxODNfVE9QUkdVX1NXX1JT
-VF9OVU0sDQo+ID4gK307DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50IHRvcHJndV9yZXNldF91cGRh
-dGUoc3RydWN0IHJlc2V0X2NvbnRyb2xsZXJfZGV2ICpyY2RldiwNCj4gPiArCQkJICAgICAgIHVu
-c2lnbmVkIGxvbmcgaWQsIGJvb2wgYXNzZXJ0KQ0KPiA+ICt7DQo+ID4gKwl1bnNpZ25lZCBpbnQg
-dG1wOw0KPiA+ICsJdW5zaWduZWQgbG9uZyBmbGFnczsNCj4gPiArCXN0cnVjdCBtdGtfd2R0X2Rl
-diAqZGF0YSA9DQo+ID4gKwkJIGNvbnRhaW5lcl9vZihyY2Rldiwgc3RydWN0IG10a193ZHRfZGV2
-LCByY2Rldik7DQo+ID4gKw0KPiA+ICsJc3Bpbl9sb2NrX2lycXNhdmUoJmRhdGEtPmxvY2ssIGZs
-YWdzKTsNCj4gPiArDQo+ID4gKwl0bXAgPSByZWFkbChkYXRhLT53ZHRfYmFzZSArIFdEVF9TV1NZ
-U1JTVCk7DQo+ID4gKwlpZiAoYXNzZXJ0KQ0KPiA+ICsJCXRtcCB8PSBCSVQoaWQpOw0KPiA+ICsJ
-ZWxzZQ0KPiA+ICsJCXRtcCAmPSB+QklUKGlkKTsNCj4gPiArCXRtcCB8PSBXRFRfU1dTWVNfUlNU
-X0tFWTsNCj4gPiArCXdyaXRlbCh0bXAsIGRhdGEtPndkdF9iYXNlICsgV0RUX1NXU1lTUlNUKTsN
-Cj4gPiArDQo+ID4gKwlzcGluX3VubG9ja19pcnFyZXN0b3JlKCZkYXRhLT5sb2NrLCBmbGFncyk7
-DQo+ID4gKw0KPiA+ICsJcmV0dXJuIDA7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBpbnQg
-dG9wcmd1X3Jlc2V0X2Fzc2VydChzdHJ1Y3QgcmVzZXRfY29udHJvbGxlcl9kZXYgKnJjZGV2LA0K
-PiA+ICsJCQkgICAgICAgdW5zaWduZWQgbG9uZyBpZCkNCj4gPiArew0KPiA+ICsJcmV0dXJuIHRv
-cHJndV9yZXNldF91cGRhdGUocmNkZXYsIGlkLCB0cnVlKTsNCj4gPiArfQ0KPiA+ICsNCj4gPiAr
-c3RhdGljIGludCB0b3ByZ3VfcmVzZXRfZGVhc3NlcnQoc3RydWN0IHJlc2V0X2NvbnRyb2xsZXJf
-ZGV2ICpyY2RldiwNCj4gPiArCQkJCSB1bnNpZ25lZCBsb25nIGlkKQ0KPiA+ICt7DQo+ID4gKwly
-ZXR1cm4gdG9wcmd1X3Jlc2V0X3VwZGF0ZShyY2RldiwgaWQsIGZhbHNlKTsNCj4gPiArfQ0KPiA+
-ICsNCj4gPiArc3RhdGljIGludCB0b3ByZ3VfcmVzZXQoc3RydWN0IHJlc2V0X2NvbnRyb2xsZXJf
-ZGV2ICpyY2RldiwNCj4gPiArCQkJdW5zaWduZWQgbG9uZyBpZCkNCj4gPiArew0KPiA+ICsJaW50
-IHJldDsNCj4gPiArDQo+ID4gKwlyZXQgPSB0b3ByZ3VfcmVzZXRfYXNzZXJ0KHJjZGV2LCBpZCk7
-DQo+ID4gKwlpZiAocmV0KQ0KPiA+ICsJCXJldHVybiByZXQ7DQo+ID4gKw0KPiA+ICsJcmV0dXJu
-IHRvcHJndV9yZXNldF9kZWFzc2VydChyY2RldiwgaWQpOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtz
-dGF0aWMgY29uc3Qgc3RydWN0IHJlc2V0X2NvbnRyb2xfb3BzIHRvcHJndV9yZXNldF9vcHMgPSB7
-DQo+ID4gKwkuYXNzZXJ0ID0gdG9wcmd1X3Jlc2V0X2Fzc2VydCwNCj4gPiArCS5kZWFzc2VydCA9
-IHRvcHJndV9yZXNldF9kZWFzc2VydCwNCj4gPiArCS5yZXNldCA9IHRvcHJndV9yZXNldCwNCj4g
-PiArfTsNCj4gPiArDQo+ID4gK3N0YXRpYyBpbnQgdG9wcmd1X3JlZ2lzdGVyX3Jlc2V0X2NvbnRy
-b2xsZXIoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiwNCj4gPiArCQkJCQkgICAgaW50IHJz
-dF9udW0pDQo+ID4gK3sNCj4gPiArCWludCByZXQ7DQo+ID4gKwlzdHJ1Y3QgbXRrX3dkdF9kZXYg
-Km10a193ZHQgPSBwbGF0Zm9ybV9nZXRfZHJ2ZGF0YShwZGV2KTsNCj4gPiArDQo+ID4gKwlzcGlu
-X2xvY2tfaW5pdCgmbXRrX3dkdC0+bG9jayk7DQo+ID4gKw0KPiA+ICsJbXRrX3dkdC0+cmNkZXYu
-b3duZXIgPSBUSElTX01PRFVMRTsNCj4gPiArCW10a193ZHQtPnJjZGV2Lm5yX3Jlc2V0cyA9IHJz
-dF9udW07DQo+ID4gKwltdGtfd2R0LT5yY2Rldi5vcHMgPSAmdG9wcmd1X3Jlc2V0X29wczsNCj4g
-PiArCW10a193ZHQtPnJjZGV2Lm9mX25vZGUgPSBwZGV2LT5kZXYub2Zfbm9kZTsNCj4gPiArCXJl
-dCA9IGRldm1fcmVzZXRfY29udHJvbGxlcl9yZWdpc3RlcigmcGRldi0+ZGV2LCAmbXRrX3dkdC0+
-cmNkZXYpOw0KPiA+ICsJaWYgKHJldCAhPSAwKQ0KPiA+ICsJCWRldl9lcnIoJnBkZXYtPmRldiwN
-Cj4gPiArCQkJImNvdWxkbid0IHJlZ2lzdGVyIHdkdCByZXNldCBjb250cm9sbGVyOiAlZFxuIiwg
-cmV0KTsNCj4gPiArCXJldHVybiByZXQ7DQo+ID4gK30NCj4gPiArDQo+ID4gIHN0YXRpYyBpbnQg
-bXRrX3dkdF9yZXN0YXJ0KHN0cnVjdCB3YXRjaGRvZ19kZXZpY2UgKndkdF9kZXYsDQo+ID4gIAkJ
-CSAgIHVuc2lnbmVkIGxvbmcgYWN0aW9uLCB2b2lkICpkYXRhKQ0KPiA+ICB7DQo+ID4gQEAgLTE1
-NSw2ICsyNDMsNyBAQCBzdGF0aWMgaW50IG10a193ZHRfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2Rl
-dmljZSAqcGRldikNCj4gPiAgew0KPiA+ICAJc3RydWN0IGRldmljZSAqZGV2ID0gJnBkZXYtPmRl
-djsNCj4gPiAgCXN0cnVjdCBtdGtfd2R0X2RldiAqbXRrX3dkdDsNCj4gPiArCWNvbnN0IHN0cnVj
-dCBtdGtfd2R0X2RhdGEgKndkdF9kYXRhOw0KPiA+ICAJaW50IGVycjsNCj4gPiAgDQo+ID4gIAlt
-dGtfd2R0ID0gZGV2bV9remFsbG9jKGRldiwgc2l6ZW9mKCptdGtfd2R0KSwgR0ZQX0tFUk5FTCk7
-DQo+ID4gQEAgLTE5MCw2ICsyNzksMTMgQEAgc3RhdGljIGludCBtdGtfd2R0X3Byb2JlKHN0cnVj
-dCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ID4gIAlkZXZfaW5mbyhkZXYsICJXYXRjaGRvZyBl
-bmFibGVkICh0aW1lb3V0PSVkIHNlYywgbm93YXlvdXQ9JWQpXG4iLA0KPiA+ICAJCSBtdGtfd2R0
-LT53ZHRfZGV2LnRpbWVvdXQsIG5vd2F5b3V0KTsNCj4gPiAgDQo+ID4gKwl3ZHRfZGF0YSA9IG9m
-X2RldmljZV9nZXRfbWF0Y2hfZGF0YShkZXYpOw0KPiA+ICsJaWYgKHdkdF9kYXRhKSB7DQo+ID4g
-KwkJZXJyID0gdG9wcmd1X3JlZ2lzdGVyX3Jlc2V0X2NvbnRyb2xsZXIocGRldiwNCj4gPiArCQkJ
-CQkJICAgICAgIHdkdF9kYXRhLT50b3ByZ3Vfc3dfcnN0X251bSk7DQo+ID4gKwkJaWYgKGVycikN
-Cj4gPiArCQkJcmV0dXJuIGVycjsNCj4gPiArCX0NCj4gPiAgCXJldHVybiAwOw0KPiA+ICB9DQo+
-ID4gIA0KPiA+IEBAIC0yMTksNiArMzE1LDcgQEAgc3RhdGljIGludCBtdGtfd2R0X3Jlc3VtZShz
-dHJ1Y3QgZGV2aWNlICpkZXYpDQo+ID4gIA0KPiA+ICBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2Rl
-dmljZV9pZCBtdGtfd2R0X2R0X2lkc1tdID0gew0KPiA+ICAJeyAuY29tcGF0aWJsZSA9ICJtZWRp
-YXRlayxtdDY1ODktd2R0IiB9LA0KPiA+ICsJeyAuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDgx
-ODMtd2R0IiwgLmRhdGEgPSAmbXQ4MTgzX2RhdGEgfSwNCj4gPiAgCXsgLyogc2VudGluZWwgKi8g
-fQ0KPiA+ICB9Ow0KPiA+ICBNT0RVTEVfREVWSUNFX1RBQkxFKG9mLCBtdGtfd2R0X2R0X2lkcyk7
-DQo+ID4gDQoNCg==
+From: Al Viro <viro@zeniv.linux.org.uk>
+
+New LOOKUP flag, telling path_lookupat() to act as path_mountpointat().
+IOW, traverse mounts at the final point and skip revalidation of the
+location where it ends up.
+
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+---
+ fs/autofs/dev-ioctl.c |  6 +--
+ fs/internal.h         |  1 -
+ fs/namei.c            | 89 +++----------------------------------------
+ fs/namespace.c        |  4 +-
+ include/linux/namei.h |  2 +-
+ 5 files changed, 12 insertions(+), 90 deletions(-)
+
+diff --git a/fs/autofs/dev-ioctl.c b/fs/autofs/dev-ioctl.c
+index a3cdb0036c5d..f3a0f412b43b 100644
+--- a/fs/autofs/dev-ioctl.c
++++ b/fs/autofs/dev-ioctl.c
+@@ -186,7 +186,7 @@ static int find_autofs_mount(const char *pathname,
+ 	struct path path;
+ 	int err;
+ 
+-	err = kern_path_mountpoint(AT_FDCWD, pathname, &path, 0);
++	err = kern_path(pathname, LOOKUP_MOUNTPOINT, &path);
+ 	if (err)
+ 		return err;
+ 	err = -ENOENT;
+@@ -519,8 +519,8 @@ static int autofs_dev_ioctl_ismountpoint(struct file *fp,
+ 
+ 	if (!fp || param->ioctlfd == -1) {
+ 		if (autofs_type_any(type))
+-			err = kern_path_mountpoint(AT_FDCWD,
+-						   name, &path, LOOKUP_FOLLOW);
++			err = kern_path(name, LOOKUP_FOLLOW | LOOKUP_MOUNTPOINT,
++					&path);
+ 		else
+ 			err = find_autofs_mount(name, &path,
+ 						test_by_type, &type);
+diff --git a/fs/internal.h b/fs/internal.h
+index 4a7da1df573d..07695e0f56fe 100644
+--- a/fs/internal.h
++++ b/fs/internal.h
+@@ -61,7 +61,6 @@ extern int finish_clean_context(struct fs_context *fc);
+  */
+ extern int filename_lookup(int dfd, struct filename *name, unsigned flags,
+ 			   struct path *path, struct path *root);
+-extern int user_path_mountpoint_at(int, const char __user *, unsigned int, struct path *);
+ extern int vfs_path_lookup(struct dentry *, struct vfsmount *,
+ 			   const char *, unsigned int, struct path *);
+ long do_mknodat(int dfd, const char __user *filename, umode_t mode,
+diff --git a/fs/namei.c b/fs/namei.c
+index 6c28b969f4d1..6852a0dcb25d 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -2250,6 +2250,10 @@ static int path_lookupat(struct nameidata *nd, unsigned flags, struct path *path
+ 	if (!err && nd->flags & LOOKUP_DIRECTORY)
+ 		if (!d_can_lookup(nd->path.dentry))
+ 			err = -ENOTDIR;
++	if (!err && unlikely(nd->flags & LOOKUP_MOUNTPOINT)) {
++		err = handle_lookup_down(nd);
++		nd->flags &= ~LOOKUP_JUMPED; // no d_weak_revalidate(), please...
++	}
+ 	if (!err) {
+ 		*path = nd->path;
+ 		nd->path.mnt = NULL;
+@@ -2278,7 +2282,8 @@ int filename_lookup(int dfd, struct filename *name, unsigned flags,
+ 		retval = path_lookupat(&nd, flags | LOOKUP_REVAL, path);
+ 
+ 	if (likely(!retval))
+-		audit_inode(name, path->dentry, 0);
++		audit_inode(name, path->dentry,
++			    flags & LOOKUP_MOUNTPOINT ? AUDIT_INODE_NOEVAL : 0);
+ 	restore_nameidata();
+ 	putname(name);
+ 	return retval;
+@@ -2556,88 +2561,6 @@ int user_path_at_empty(int dfd, const char __user *name, unsigned flags,
+ }
+ EXPORT_SYMBOL(user_path_at_empty);
+ 
+-/**
+- * path_mountpoint - look up a path to be umounted
+- * @nd:		lookup context
+- * @flags:	lookup flags
+- * @path:	pointer to container for result
+- *
+- * Look up the given name, but don't attempt to revalidate the last component.
+- * Returns 0 and "path" will be valid on success; Returns error otherwise.
+- */
+-static int
+-path_mountpoint(struct nameidata *nd, unsigned flags, struct path *path)
+-{
+-	const char *s = path_init(nd, flags);
+-	int err;
+-
+-	while (!(err = link_path_walk(s, nd)) &&
+-		(err = lookup_last(nd)) > 0) {
+-		s = trailing_symlink(nd);
+-	}
+-	if (!err && (nd->flags & LOOKUP_RCU))
+-		err = unlazy_walk(nd);
+-	if (!err)
+-		err = handle_lookup_down(nd);
+-	if (!err) {
+-		*path = nd->path;
+-		nd->path.mnt = NULL;
+-		nd->path.dentry = NULL;
+-	}
+-	terminate_walk(nd);
+-	return err;
+-}
+-
+-static int
+-filename_mountpoint(int dfd, struct filename *name, struct path *path,
+-			unsigned int flags)
+-{
+-	struct nameidata nd;
+-	int error;
+-	if (IS_ERR(name))
+-		return PTR_ERR(name);
+-	set_nameidata(&nd, dfd, name);
+-	error = path_mountpoint(&nd, flags | LOOKUP_RCU, path);
+-	if (unlikely(error == -ECHILD))
+-		error = path_mountpoint(&nd, flags, path);
+-	if (unlikely(error == -ESTALE))
+-		error = path_mountpoint(&nd, flags | LOOKUP_REVAL, path);
+-	if (likely(!error))
+-		audit_inode(name, path->dentry, AUDIT_INODE_NOEVAL);
+-	restore_nameidata();
+-	putname(name);
+-	return error;
+-}
+-
+-/**
+- * user_path_mountpoint_at - lookup a path from userland in order to umount it
+- * @dfd:	directory file descriptor
+- * @name:	pathname from userland
+- * @flags:	lookup flags
+- * @path:	pointer to container to hold result
+- *
+- * A umount is a special case for path walking. We're not actually interested
+- * in the inode in this situation, and ESTALE errors can be a problem. We
+- * simply want track down the dentry and vfsmount attached at the mountpoint
+- * and avoid revalidating the last component.
+- *
+- * Returns 0 and populates "path" on success.
+- */
+-int
+-user_path_mountpoint_at(int dfd, const char __user *name, unsigned int flags,
+-			struct path *path)
+-{
+-	return filename_mountpoint(dfd, getname(name), path, flags);
+-}
+-
+-int
+-kern_path_mountpoint(int dfd, const char *name, struct path *path,
+-			unsigned int flags)
+-{
+-	return filename_mountpoint(dfd, getname_kernel(name), path, flags);
+-}
+-EXPORT_SYMBOL(kern_path_mountpoint);
+-
+ int __check_sticky(struct inode *dir, struct inode *inode)
+ {
+ 	kuid_t fsuid = current_fsuid();
+diff --git a/fs/namespace.c b/fs/namespace.c
+index b37dc59bfa05..b31a75782a59 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -1669,7 +1669,7 @@ int ksys_umount(char __user *name, int flags)
+ 	struct path path;
+ 	struct mount *mnt;
+ 	int retval;
+-	int lookup_flags = 0;
++	int lookup_flags = LOOKUP_MOUNTPOINT;
+ 
+ 	if (flags & ~(MNT_FORCE | MNT_DETACH | MNT_EXPIRE | UMOUNT_NOFOLLOW))
+ 		return -EINVAL;
+@@ -1680,7 +1680,7 @@ int ksys_umount(char __user *name, int flags)
+ 	if (!(flags & UMOUNT_NOFOLLOW))
+ 		lookup_flags |= LOOKUP_FOLLOW;
+ 
+-	retval = user_path_mountpoint_at(AT_FDCWD, name, lookup_flags, &path);
++	retval = user_path_at(AT_FDCWD, name, lookup_flags, &path);
+ 	if (retval)
+ 		goto out;
+ 	mnt = real_mount(path.mnt);
+diff --git a/include/linux/namei.h b/include/linux/namei.h
+index 07bfb0874033..df3549de1cd1 100644
+--- a/include/linux/namei.h
++++ b/include/linux/namei.h
+@@ -22,6 +22,7 @@ enum {LAST_NORM, LAST_ROOT, LAST_DOT, LAST_DOTDOT, LAST_BIND};
+ #define LOOKUP_AUTOMOUNT	0x0004  /* force terminal automount */
+ #define LOOKUP_EMPTY		0x4000	/* accept empty path [user_... only] */
+ #define LOOKUP_DOWN		0x8000	/* follow mounts in the starting point */
++#define LOOKUP_MOUNTPOINT	0x0080	/* follow mounts in the end */
+ 
+ #define LOOKUP_REVAL		0x0020	/* tell ->d_revalidate() to trust no cache */
+ #define LOOKUP_RCU		0x0040	/* RCU pathwalk mode; semi-internal */
+@@ -54,7 +55,6 @@ extern struct dentry *kern_path_create(int, const char *, struct path *, unsigne
+ extern struct dentry *user_path_create(int, const char __user *, struct path *, unsigned int);
+ extern void done_path_create(struct path *, struct dentry *);
+ extern struct dentry *kern_path_locked(const char *, struct path *);
+-extern int kern_path_mountpoint(int, const char *, struct path *, unsigned int);
+ 
+ extern struct dentry *try_lookup_one_len(const char *, struct dentry *, int);
+ extern struct dentry *lookup_one_len(const char *, struct dentry *, int);
+-- 
+2.20.1
 
