@@ -2,317 +2,243 @@ Return-Path: <SRS0=pPEE=3I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B646EC32771
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 03:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67106C33CAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 03:45:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 892772072E
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 03:26:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3814720714
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 03:45:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="YZcpiFLR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbgASD0e (ORCPT
+        id S1726425AbgASDp1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 22:26:34 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:57042 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725497AbgASD0e (ORCPT
+        Sat, 18 Jan 2020 22:45:27 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:39855 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725980AbgASDp1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 22:26:34 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1it1Dt-00BFmu-T8; Sun, 19 Jan 2020 03:26:10 +0000
-From:   Al Viro <viro@ZenIV.linux.org.uk>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        David Howells <dhowells@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH 9/9] new helper: traverse_mounts()
-Date:   Sun, 19 Jan 2020 03:17:38 +0000
-Message-Id: <20200119031738.2681033-26-viro@ZenIV.linux.org.uk>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200119031738.2681033-1-viro@ZenIV.linux.org.uk>
-References: <20200119031423.GV8904@ZenIV.linux.org.uk>
- <20200119031738.2681033-1-viro@ZenIV.linux.org.uk>
+        Sat, 18 Jan 2020 22:45:27 -0500
+Received: by mail-io1-f66.google.com with SMTP id c16so30155378ioh.6
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jan 2020 19:45:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=iN+0dT0AtvYpl1GzQb+Z68gF7cClxoyVzgffCez1D2Q=;
+        b=YZcpiFLRB7Y42w1n9UVzr+1Jn8efyHe8VI/Pfvh9uZbMkPiw/n5iTr6YaY9GdeJFtT
+         lJJKCTw0gmzayyNRwEuZSHqH8hPN5OsIpL8r90vipqb7n6FPR8gNZYzkXfli+nJ0aLDy
+         Q/Fmj4KhgxI7Au6SSwzf/waYI+JamnXVDVxObdDW14l2dZUnyT9ykDsvv4sfRG6XmJXp
+         983wlMGkvUcBXNTl+nBQMxorOnSn99hToTRKxdTdyl3WUaItMAD380170I3WndZvszsS
+         +gtXmFsqy11Cs2ihXRc+JRxhMRPktpPg41/gXUTeqNrmKNkcQ80LxfsRXURuuBg0zc5X
+         WwoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=iN+0dT0AtvYpl1GzQb+Z68gF7cClxoyVzgffCez1D2Q=;
+        b=tUnT8z4xRD4VDzmXA4uJE3i/pCTgVjEhh9m9hd9YLcZREJAMrWRukTXEfz6fgiuhLx
+         IW5pREynFxKHWKdmhW3bwBu7WVOqIUJkkvyCjpHFhCcxvOD0zhRjxc3/SEixNvmGtygU
+         sFjGlusMConKCCcONnxN4hQWptlPE0isz7QWTmzkyI2p9LrVkLvHdk+dZV5md+aKhOGN
+         fwr4m7clWodcLf0hxMqfjAX+ffErei5VTrGpkaqg8Z4Ke/RaIxXqADZgcZgJbs+05TNT
+         5A5cka/elWoNUWu4zUnQtctwbJwvh/zaWF9bwxNaZ8rdXHwuzVq1Qy4Oiy7cTyWChFaR
+         jUqA==
+X-Gm-Message-State: APjAAAURVAmWZ9+x/TzGZRNIXxmOmf4q/lDflshWIoYaWxw9xoNpcF/L
+        F5XkrZCuOcQHKCSny68CoMkRUA==
+X-Google-Smtp-Source: APXvYqwkddTdFbxzbi0eKTIRo8TYya7y6TPAY/oNziITaaaN9DAFDnvKd9TXrwdgag9dV8ihyHaldA==
+X-Received: by 2002:a5e:8f41:: with SMTP id x1mr38308114iop.113.1579405525812;
+        Sat, 18 Jan 2020 19:45:25 -0800 (PST)
+Received: from localhost ([64.62.168.194])
+        by smtp.gmail.com with ESMTPSA id g62sm9797127ile.39.2020.01.18.19.45.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Jan 2020 19:45:25 -0800 (PST)
+Date:   Sat, 18 Jan 2020 19:45:22 -0800 (PST)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Olof Johansson <olof@lixom.net>
+cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] riscv: Less inefficient gcc tishift helpers (and export
+ their symbols)
+In-Reply-To: <20191217040631.91886-1-olof@lixom.net>
+Message-ID: <alpine.DEB.2.21.9999.2001181938470.55560@viisi.sifive.com>
+References: <20191217003057.39300-1-olof@lixom.net> <20191217040631.91886-1-olof@lixom.net>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+On Mon, 16 Dec 2019, Olof Johansson wrote:
 
-common guts of follow_down() and follow_managed() taken to a new
-helper - traverse_mounts().  The remnants of follow_managed()
-are folded into its sole remaining caller (handle_mounts()).
-Calling conventions of handle_mounts() slightly sanitized -
-instead of the weird "1 for success, -E... for failure" that used
-to be imposed by the calling conventions of walk_component() et.al.
-we can use the normal "0 for success, -E... for failure".
+> The existing __lshrti3 was really inefficient, and the other two helpers
+> are also needed to compile some modules.
+> 
+> Add the missing versions, and export all of the symbols like arm64
+> already does.
+> 
+> This fixes a build break triggered by ubsan:
+> 
+> riscv64-unknown-linux-gnu-ld: lib/ubsan.o: in function `.L2':
+> ubsan.c:(.text.unlikely+0x38): undefined reference to `__ashlti3'
+> riscv64-unknown-linux-gnu-ld: ubsan.c:(.text.unlikely+0x42): undefined reference to `__ashrti3'
+> 
+> Signed-off-by: Olof Johansson <olof@lixom.net>
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Thanks Olof.  I modified the patch description to note that the code is 
+based on libgcc per our off-list discussion, and to use 
+SYM_PROC_ENTRY/EXIT per commit ffedeeb780dc5 ("linkage: Introduce new 
+macros for assembler symbols"), and have queued the following patch.
+
+
+- Paul
+
+
+From: Olof Johansson <olof@lixom.net>
+Date: Mon, 16 Dec 2019 20:06:31 -0800
+Subject: [PATCH] riscv: Less inefficient gcc tishift helpers (and export their
+ symbols)
+
+The existing __lshrti3 was really inefficient, and the other two helpers
+are also needed to compile some modules.
+
+Add the missing versions, and export all of the symbols like arm64
+already does.
+
+This code is based on the assembly generated by libgcc builds.
+
+This fixes a build break triggered by ubsan:
+
+riscv64-unknown-linux-gnu-ld: lib/ubsan.o: in function `.L2':
+ubsan.c:(.text.unlikely+0x38): undefined reference to `__ashlti3'
+riscv64-unknown-linux-gnu-ld: ubsan.c:(.text.unlikely+0x42): undefined reference to `__ashrti3'
+
+Signed-off-by: Olof Johansson <olof@lixom.net>
+[paul.walmsley@sifive.com: use SYM_FUNC_{START,END} instead of ENTRY/ENDPROC; note
+ libgcc origin]
+Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
 ---
- fs/namei.c | 177 ++++++++++++++++++++++-------------------------------
- 1 file changed, 72 insertions(+), 105 deletions(-)
+ arch/riscv/include/asm/asm-prototypes.h |  4 ++
+ arch/riscv/lib/tishift.S                | 75 +++++++++++++++++++------
+ 2 files changed, 61 insertions(+), 18 deletions(-)
 
-diff --git a/fs/namei.c b/fs/namei.c
-index 310c5ccddf42..d3172e2c7f7f 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -1167,91 +1167,79 @@ static int follow_automount(struct path *path, int *count, unsigned lookup_flags
- }
+diff --git a/arch/riscv/include/asm/asm-prototypes.h b/arch/riscv/include/asm/asm-prototypes.h
+index dd62b691c443..27e005fca584 100644
+--- a/arch/riscv/include/asm/asm-prototypes.h
++++ b/arch/riscv/include/asm/asm-prototypes.h
+@@ -5,4 +5,8 @@
+ #include <linux/ftrace.h>
+ #include <asm-generic/asm-prototypes.h>
  
- /*
-- * Handle a dentry that is managed in some way.
-- * - Flagged for transit management (autofs)
-- * - Flagged as mountpoint
-- * - Flagged as automount point
-- *
-- * This may only be called in refwalk mode.
-- * On success path->dentry is known positive.
-- *
-- * Serialization is taken care of in namespace.c
-+ * mount traversal - out-of-line part.  One note on ->d_flags accesses -
-+ * dentries are pinned but not locked here, so negative dentry can go
-+ * positive right under us.  Use of smp_load_acquire() provides a barrier
-+ * sufficient for ->d_inode and ->d_flags consistency.
++long long __lshrti3(long long a, int b);
++long long __ashrti3(long long a, int b);
++long long __ashlti3(long long a, int b);
++
+ #endif /* _ASM_RISCV_PROTOTYPES_H */
+diff --git a/arch/riscv/lib/tishift.S b/arch/riscv/lib/tishift.S
+index 15f9d54c7db6..ef90075c4b0a 100644
+--- a/arch/riscv/lib/tishift.S
++++ b/arch/riscv/lib/tishift.S
+@@ -4,34 +4,73 @@
   */
--static int follow_managed(struct path *path, struct nameidata *nd)
-+static int __traverse_mounts(struct path *path, unsigned flags, bool *jumped,
-+			     int *count, unsigned lookup_flags)
- {
--	struct vfsmount *mnt = path->mnt; /* held by caller, must be left alone */
--	unsigned flags;
-+	struct vfsmount *mnt = path->mnt;
- 	bool need_mntput = false;
- 	int ret = 0;
  
--	/* Given that we're not holding a lock here, we retain the value in a
--	 * local variable for each dentry as we look at it so that we don't see
--	 * the components of that value change under us */
--	while (flags = smp_load_acquire(&path->dentry->d_flags),
--	       unlikely(flags & DCACHE_MANAGED_DENTRY)) {
-+	while (flags & DCACHE_MANAGED_DENTRY) {
- 		/* Allow the filesystem to manage the transit without i_mutex
- 		 * being held. */
- 		if (flags & DCACHE_MANAGE_TRANSIT) {
--			BUG_ON(!path->dentry->d_op);
--			BUG_ON(!path->dentry->d_op->d_manage);
- 			ret = path->dentry->d_op->d_manage(path, false);
- 			flags = smp_load_acquire(&path->dentry->d_flags);
- 			if (ret < 0)
- 				break;
- 		}
+ #include <linux/linkage.h>
++#include <asm-generic/export.h>
  
--		/* Transit to a mounted filesystem. */
--		if (flags & DCACHE_MOUNTED) {
-+		if (flags & DCACHE_MOUNTED) {	// something's mounted on it..
- 			struct vfsmount *mounted = lookup_mnt(path);
--			if (mounted) {
-+			if (mounted) {		// ... in our namespace
- 				dput(path->dentry);
- 				if (need_mntput)
- 					mntput(path->mnt);
- 				path->mnt = mounted;
- 				path->dentry = dget(mounted->mnt_root);
-+				// here we know it's positive
-+				flags = path->dentry->d_flags;
- 				need_mntput = true;
- 				continue;
- 			}
--
--			/* Something is mounted on this dentry in another
--			 * namespace and/or whatever was mounted there in this
--			 * namespace got unmounted before lookup_mnt() could
--			 * get it */
- 		}
- 
--		/* Handle an automount point */
--		if (flags & DCACHE_NEED_AUTOMOUNT) {
--			ret = follow_automount(path, &nd->total_link_count,
--						nd->flags);
--			if (ret < 0)
--				break;
--			continue;
--		}
-+		if (!(flags & DCACHE_NEED_AUTOMOUNT))
-+			break;
- 
--		/* We didn't change the current path point */
--		break;
-+		// uncovered automount point
-+		ret = follow_automount(path, count, lookup_flags);
-+		flags = smp_load_acquire(&path->dentry->d_flags);
-+		if (ret < 0)
-+			break;
- 	}
- 
--	if (need_mntput) {
--		if (path->mnt == mnt)
--			mntput(path->mnt);
--		if (unlikely(nd->flags & LOOKUP_NO_XDEV))
--			ret = -EXDEV;
--		else
--			nd->flags |= LOOKUP_JUMPED;
--	}
--	if (ret == -EISDIR || !ret)
--		ret = 1;
--	if (ret > 0 && unlikely(d_flags_negative(flags)))
-+	if (ret == -EISDIR)
-+		ret = 0;
-+	// possible if you race with several mount --move
-+	if (need_mntput && path->mnt == mnt)
-+		mntput(path->mnt);
-+	if (!ret && unlikely(d_flags_negative(flags)))
- 		ret = -ENOENT;
--	if (unlikely(ret < 0)) {
--		dput(path->dentry);
--		if (path->mnt != nd->path.mnt)
--			mntput(path->mnt);
--	}
-+	*jumped = need_mntput;
- 	return ret;
- }
- 
-+static inline int traverse_mounts(struct path *path, bool *jumped,
-+				  int *count, unsigned lookup_flags)
-+{
-+	unsigned flags = smp_load_acquire(&path->dentry->d_flags);
+-ENTRY(__lshrti3)
++SYM_FUNC_START(__lshrti3)
+ 	beqz	a2, .L1
+ 	li	a5,64
+ 	sub	a5,a5,a2
+-	addi	sp,sp,-16
+ 	sext.w	a4,a5
+ 	blez	a5, .L2
+ 	sext.w	a2,a2
+-	sll	a4,a1,a4
+ 	srl	a0,a0,a2
+-	srl	a1,a1,a2
++	sll	a4,a1,a4
++	srl	a2,a1,a2
+ 	or	a0,a0,a4
+-	sd	a1,8(sp)
+-	sd	a0,0(sp)
+-	ld	a0,0(sp)
+-	ld	a1,8(sp)
+-	addi	sp,sp,16
+-	ret
++	mv	a1,a2
+ .L1:
+ 	ret
+ .L2:
+-	negw	a4,a4
+-	srl	a1,a1,a4
+-	sd	a1,0(sp)
+-	sd	zero,8(sp)
+-	ld	a0,0(sp)
+-	ld	a1,8(sp)
+-	addi	sp,sp,16
++	negw	a0,a4
++	li	a2,0
++	srl	a0,a1,a0
++	mv	a1,a2
++	ret
++SYM_FUNC_END(__lshrti3)
++EXPORT_SYMBOL(__lshrti3)
 +
-+	/* fastpath */
-+	if (likely(!(flags & DCACHE_MANAGED_DENTRY))) {
-+		*jumped = false;
-+		if (unlikely(d_flags_negative(flags)))
-+			return -ENOENT;
-+		return 0;
-+	}
-+	return __traverse_mounts(path, flags, jumped, count, lookup_flags);
-+}
++SYM_FUNC_START(__ashrti3)
++	beqz	a2, .L3
++	li	a5,64
++	sub	a5,a5,a2
++	sext.w	a4,a5
++	blez	a5, .L4
++	sext.w	a2,a2
++	srl	a0,a0,a2
++	sll	a4,a1,a4
++	sra	a2,a1,a2
++	or	a0,a0,a4
++	mv	a1,a2
++.L3:
++	ret
++.L4:
++	negw	a0,a4
++	srai	a2,a1,0x3f
++	sra	a0,a1,a0
++	mv	a1,a2
++	ret
++SYM_FUNC_END(__ashrti3)
++EXPORT_SYMBOL(__ashrti3)
 +
- int follow_down_one(struct path *path)
- {
- 	struct vfsmount *mounted;
-@@ -1268,6 +1256,23 @@ int follow_down_one(struct path *path)
- }
- EXPORT_SYMBOL(follow_down_one);
- 
-+/*
-+ * Follow down to the covering mount currently visible to userspace.  At each
-+ * point, the filesystem owning that dentry may be queried as to whether the
-+ * caller is permitted to proceed or not.
-+ */
-+int follow_down(struct path *path)
-+{
-+	struct vfsmount *mnt = path->mnt;
-+	bool jumped;
-+	int ret = traverse_mounts(path, &jumped, NULL, 0);
-+
-+	if (path->mnt != mnt)
-+		mntput(mnt);
-+	return ret;
-+}
-+EXPORT_SYMBOL(follow_down);
-+
- /*
-  * Try to skip to top of mountpoint pile in rcuwalk mode.  Fail if
-  * we meet a managed dentry that would need blocking.
-@@ -1324,6 +1329,7 @@ static inline int handle_mounts(struct nameidata *nd, struct dentry *dentry,
- 			  struct path *path, struct inode **inode,
- 			  unsigned int *seqp)
- {
-+	bool jumped;
- 	int ret;
- 
- 	path->mnt = nd->path.mnt;
-@@ -1333,15 +1339,25 @@ static inline int handle_mounts(struct nameidata *nd, struct dentry *dentry,
- 		if (unlikely(!*inode))
- 			return -ENOENT;
- 		if (likely(__follow_mount_rcu(nd, path, inode, seqp)))
--			return 1;
-+			return 0;
- 		if (unlazy_child(nd, dentry, seq))
- 			return -ECHILD;
- 		// *path might've been clobbered by __follow_mount_rcu()
- 		path->mnt = nd->path.mnt;
- 		path->dentry = dentry;
- 	}
--	ret = follow_managed(path, nd);
--	if (likely(ret >= 0)) {
-+	ret = traverse_mounts(path, &jumped, &nd->total_link_count, nd->flags);
-+	if (jumped) {
-+		if (unlikely(nd->flags & LOOKUP_NO_XDEV))
-+			ret = -EXDEV;
-+		else
-+			nd->flags |= LOOKUP_JUMPED;
-+	}
-+	if (unlikely(ret)) {
-+		dput(path->dentry);
-+		if (path->mnt != nd->path.mnt)
-+			mntput(path->mnt);
-+	} else {
- 		*inode = d_backing_inode(path->dentry);
- 		*seqp = 0; /* out of RCU mode, so the value doesn't matter */
- 	}
-@@ -1409,55 +1425,6 @@ static int follow_dotdot_rcu(struct nameidata *nd)
- 	return 0;
- }
- 
--/*
-- * Follow down to the covering mount currently visible to userspace.  At each
-- * point, the filesystem owning that dentry may be queried as to whether the
-- * caller is permitted to proceed or not.
-- */
--int follow_down(struct path *path)
--{
--	unsigned managed;
--	int ret;
--
--	while (managed = READ_ONCE(path->dentry->d_flags),
--	       unlikely(managed & DCACHE_MANAGED_DENTRY)) {
--		/* Allow the filesystem to manage the transit without i_mutex
--		 * being held.
--		 *
--		 * We indicate to the filesystem if someone is trying to mount
--		 * something here.  This gives autofs the chance to deny anyone
--		 * other than its daemon the right to mount on its
--		 * superstructure.
--		 *
--		 * The filesystem may sleep at this point.
--		 */
--		if (managed & DCACHE_MANAGE_TRANSIT) {
--			BUG_ON(!path->dentry->d_op);
--			BUG_ON(!path->dentry->d_op->d_manage);
--			ret = path->dentry->d_op->d_manage(path, false);
--			if (ret < 0)
--				return ret == -EISDIR ? 0 : ret;
--		}
--
--		/* Transit to a mounted filesystem. */
--		if (managed & DCACHE_MOUNTED) {
--			struct vfsmount *mounted = lookup_mnt(path);
--			if (!mounted)
--				break;
--			dput(path->dentry);
--			mntput(path->mnt);
--			path->mnt = mounted;
--			path->dentry = dget(mounted->mnt_root);
--			continue;
--		}
--
--		/* Don't handle automount points here */
--		break;
--	}
--	return 0;
--}
--EXPORT_SYMBOL(follow_down);
--
- /*
-  * Skip to top of mountpoint pile in refwalk mode for follow_dotdot()
-  */
++SYM_FUNC_START(__ashlti3)
++	beqz	a2, .L5
++	li	a5,64
++	sub	a5,a5,a2
++	sext.w	a4,a5
++	blez	a5, .L6
++	sext.w	a2,a2
++	sll	a1,a1,a2
++	srl	a4,a0,a4
++	sll	a2,a0,a2
++	or	a1,a1,a4
++	mv	a0,a2
++.L5:
++	ret
++.L6:
++	negw	a1,a4
++	li	a2,0
++	sll	a1,a0,a1
++	mv	a0,a2
+ 	ret
+-ENDPROC(__lshrti3)
++SYM_FUNC_END(__ashlti3)
++EXPORT_SYMBOL(__ashlti3)
 -- 
-2.20.1
+2.25.0.rc2
+
 
