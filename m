@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C24C33CB1
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 13:24:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF02DC33CB1
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 13:26:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E2222072B
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 13:24:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6B012053B
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 13:26:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbgASNYW (ORCPT
+        id S1727048AbgASN0f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 08:24:22 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:9201 "EHLO huawei.com"
+        Sun, 19 Jan 2020 08:26:35 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:44306 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726798AbgASNYW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 08:24:22 -0500
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 99D58B2497FB201F79CB;
-        Sun, 19 Jan 2020 21:24:19 +0800 (CST)
+        id S1726798AbgASN0f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jan 2020 08:26:35 -0500
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id DDBCC9ECDC1DC337FF24;
+        Sun, 19 Jan 2020 21:26:33 +0800 (CST)
 Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.439.0; Sun, 19 Jan 2020 21:24:08 +0800
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.439.0; Sun, 19 Jan 2020 21:26:24 +0800
 From:   Chen Zhou <chenzhou10@huawei.com>
-To:     <bskeggs@redhat.com>, <airlied@linux.ie>, <daniel@ffwll.ch>
-CC:     <dri-devel@lists.freedesktop.org>, <nouveau@lists.freedesktop.org>,
+To:     <jeffrey.t.kirsher@intel.com>, <davem@davemloft.net>
+CC:     <intel-wired-lan@lists.osuosl.org>, <netdev@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <chenzhou10@huawei.com>
-Subject: [PATCH -next] drm/ttm: remove unnecessary conversion to bool
-Date:   Sun, 19 Jan 2020 21:19:19 +0800
-Message-ID: <20200119131919.36490-1-chenzhou10@huawei.com>
+Subject: [PATCH -next] i40e: remove unnecessary conversions to bool
+Date:   Sun, 19 Jan 2020 21:21:38 +0800
+Message-ID: <20200119132138.37781-1-chenzhou10@huawei.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
@@ -43,26 +43,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The conversion to bool is not needed, remove it.
+The conversions to bool are not needed, remove these.
 
 Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
 ---
- drivers/gpu/drm/nouveau/nouveau_ttm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/intel/i40e/i40e_main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_ttm.c b/drivers/gpu/drm/nouveau/nouveau_ttm.c
-index 7ca0a24..0cbcbe1 100644
---- a/drivers/gpu/drm/nouveau/nouveau_ttm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_ttm.c
-@@ -233,7 +233,7 @@ nouveau_ttm_init(struct nouveau_drm *drm)
- 				  &nouveau_bo_driver,
- 				  dev->anon_inode->i_mapping,
- 				  dev->vma_offset_manager,
--				  drm->client.mmu.dmabits <= 32 ? true : false);
-+				  drm->client.mmu.dmabits <= 32);
- 	if (ret) {
- 		NV_ERROR(drm, "error initialising bo driver, %d\n", ret);
- 		return ret;
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
+index 33912cf..24cacfa 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_main.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
+@@ -1630,7 +1630,7 @@ static int i40e_config_rss_aq(struct i40e_vsi *vsi, const u8 *seed,
+ 		}
+ 	}
+ 	if (lut) {
+-		bool pf_lut = vsi->type == I40E_VSI_MAIN ? true : false;
++		bool pf_lut = vsi->type == I40E_VSI_MAIN;
+ 
+ 		ret = i40e_aq_set_rss_lut(hw, vsi->id, pf_lut, lut, lut_size);
+ 		if (ret) {
+@@ -11455,7 +11455,7 @@ static int i40e_get_rss_aq(struct i40e_vsi *vsi, const u8 *seed,
+ 	}
+ 
+ 	if (lut) {
+-		bool pf_lut = vsi->type == I40E_VSI_MAIN ? true : false;
++		bool pf_lut = vsi->type == I40E_VSI_MAIN;
+ 
+ 		ret = i40e_aq_get_rss_lut(hw, vsi->id, pf_lut, lut, lut_size);
+ 		if (ret) {
 -- 
 2.7.4
 
