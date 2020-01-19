@@ -6,152 +6,250 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9DC5C33CAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 23:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 879F7C33CAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 23:18:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA0B8206B7
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 23:18:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 572BB206B7
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 23:18:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729587AbgASXSS (ORCPT
+        id S1729603AbgASXS1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 18:18:18 -0500
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:49754 "EHLO
+        Sun, 19 Jan 2020 18:18:27 -0500
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:49726 "EHLO
         kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728896AbgASXQc (ORCPT
+        with ESMTP id S1728895AbgASXQc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 19 Jan 2020 18:16:32 -0500
 Received: by kvm5.telegraphics.com.au (Postfix, from userid 502)
-        id E112D2991F; Sun, 19 Jan 2020 18:16:30 -0500 (EST)
+        id D252E2991B; Sun, 19 Jan 2020 18:16:30 -0500 (EST)
 To:     "David S. Miller" <davem@davemloft.net>
 Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Chris Zankel <chris@zankel.net>,
         Laurent Vivier <laurent@vivier.eu>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Message-Id: <b47662493a776811d4d457e5a75e18a7169aed23.1579474569.git.fthain@telegraphics.com.au>
+Message-Id: <00e21a8e23e5da256ae0088403975447fe7bbffe.1579474569.git.fthain@telegraphics.com.au>
 In-Reply-To: <cover.1579474569.git.fthain@telegraphics.com.au>
 References: <cover.1579474569.git.fthain@telegraphics.com.au>
 From:   Finn Thain <fthain@telegraphics.com.au>
-Subject: [PATCH net 04/19] net/sonic: Add mutual exclusion for accessing
- shared state
+Subject: [PATCH net 03/19] net/sonic: Refactor duplicated code
 Date:   Mon, 20 Jan 2020 09:56:09 +1100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The netif_stop_queue() call in sonic_send_packet() races with the
-netif_wake_queue() call in sonic_interrupt(). This causes issues
-like "NETDEV WATCHDOG: eth0 (macsonic): transmit queue 0 timed out".
-Fix this by disabling interrupts when accessing tx_skb[] and next_tx.
-Update a comment to clarify the synchronization properties.
+No functional change.
 
-Fixes: efcce839360f ("[PATCH] macsonic/jazzsonic network drivers update")
 Tested-by: Stan Johnson <userm57@yahoo.com>
 Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
 ---
- drivers/net/ethernet/natsemi/sonic.c | 38 +++++++++++++++++++---------
- 1 file changed, 26 insertions(+), 12 deletions(-)
+ drivers/net/ethernet/natsemi/jazzsonic.c | 31 ++----------------
+ drivers/net/ethernet/natsemi/macsonic.c  | 29 ++---------------
+ drivers/net/ethernet/natsemi/sonic.c     | 36 +++++++++++++++++++++
+ drivers/net/ethernet/natsemi/sonic.h     |  1 +
+ drivers/net/ethernet/natsemi/xtsonic.c   | 40 ++----------------------
+ 5 files changed, 44 insertions(+), 93 deletions(-)
 
-diff --git a/drivers/net/ethernet/natsemi/sonic.c b/drivers/net/ethernet/natsemi/sonic.c
-index 3cf84de8ad8e..dbbbc8bc72ff 100644
---- a/drivers/net/ethernet/natsemi/sonic.c
-+++ b/drivers/net/ethernet/natsemi/sonic.c
-@@ -242,7 +242,7 @@ static void sonic_tx_timeout(struct net_device *dev)
-  *   wake the tx queue
-  * Concurrently with all of this, the SONIC is potentially writing to
-  * the status flags of the TDs.
-- * Until some mutual exclusion is added, this code will not work with SMP. However,
-+ * A spin lock is needed to make this work on SMP platforms. However,
-  * MIPS Jazz machines and m68k Macs were all uni-processor machines.
-  */
- 
-@@ -252,6 +252,7 @@ static int sonic_send_packet(struct sk_buff *skb, struct net_device *dev)
- 	dma_addr_t laddr;
- 	int length;
- 	int entry;
-+	unsigned long flags;
- 
- 	netif_dbg(lp, tx_queued, dev, "%s: skb=%p\n", __func__, skb);
- 
-@@ -273,6 +274,8 @@ static int sonic_send_packet(struct sk_buff *skb, struct net_device *dev)
- 		return NETDEV_TX_OK;
+diff --git a/drivers/net/ethernet/natsemi/jazzsonic.c b/drivers/net/ethernet/natsemi/jazzsonic.c
+index 51fa82b429a3..bfa0c0d39600 100644
+--- a/drivers/net/ethernet/natsemi/jazzsonic.c
++++ b/drivers/net/ethernet/natsemi/jazzsonic.c
+@@ -147,39 +147,12 @@ static int sonic_probe1(struct net_device *dev)
+ 		dev->dev_addr[i*2+1] = val >> 8;
  	}
  
-+	local_irq_save(flags);
-+
- 	entry = (lp->eol_tx + 1) & SONIC_TDS_MASK;
+-	err = -ENOMEM;
+-
+-	/* Initialize the device structure. */
+-
+ 	lp->dma_bitmode = SONIC_BITMODE32;
  
- 	sonic_tda_put(dev, entry, SONIC_TD_STATUS, 0);       /* clear status */
-@@ -284,10 +287,6 @@ static int sonic_send_packet(struct sk_buff *skb, struct net_device *dev)
- 	sonic_tda_put(dev, entry, SONIC_TD_LINK,
- 		sonic_tda_get(dev, entry, SONIC_TD_LINK) | SONIC_EOL);
+-	/* Allocate the entire chunk of memory for the descriptors.
+-           Note that this cannot cross a 64K boundary. */
+-	lp->descriptors = dma_alloc_coherent(lp->device,
+-					     SIZEOF_SONIC_DESC *
+-					     SONIC_BUS_SCALE(lp->dma_bitmode),
+-					     &lp->descriptors_laddr,
+-					     GFP_KERNEL);
+-	if (lp->descriptors == NULL)
++	err = sonic_alloc_descriptors(dev);
++	if (err)
+ 		goto out;
+ 
+-	/* Now set up the pointers to point to the appropriate places */
+-	lp->cda = lp->descriptors;
+-	lp->tda = lp->cda + (SIZEOF_SONIC_CDA
+-	                     * SONIC_BUS_SCALE(lp->dma_bitmode));
+-	lp->rda = lp->tda + (SIZEOF_SONIC_TD * SONIC_NUM_TDS
+-	                     * SONIC_BUS_SCALE(lp->dma_bitmode));
+-	lp->rra = lp->rda + (SIZEOF_SONIC_RD * SONIC_NUM_RDS
+-	                     * SONIC_BUS_SCALE(lp->dma_bitmode));
+-
+-	lp->cda_laddr = lp->descriptors_laddr;
+-	lp->tda_laddr = lp->cda_laddr + (SIZEOF_SONIC_CDA
+-	                     * SONIC_BUS_SCALE(lp->dma_bitmode));
+-	lp->rda_laddr = lp->tda_laddr + (SIZEOF_SONIC_TD * SONIC_NUM_TDS
+-	                     * SONIC_BUS_SCALE(lp->dma_bitmode));
+-	lp->rra_laddr = lp->rda_laddr + (SIZEOF_SONIC_RD * SONIC_NUM_RDS
+-	                     * SONIC_BUS_SCALE(lp->dma_bitmode));
+-
+ 	dev->netdev_ops = &sonic_netdev_ops;
+ 	dev->watchdog_timeo = TX_TIMEOUT;
+ 
+diff --git a/drivers/net/ethernet/natsemi/macsonic.c b/drivers/net/ethernet/natsemi/macsonic.c
+index 0937fc2a928e..0f4d0c25d626 100644
+--- a/drivers/net/ethernet/natsemi/macsonic.c
++++ b/drivers/net/ethernet/natsemi/macsonic.c
+@@ -186,33 +186,10 @@ static const struct net_device_ops macsonic_netdev_ops = {
+ static int macsonic_init(struct net_device *dev)
+ {
+ 	struct sonic_local* lp = netdev_priv(dev);
++	int err = sonic_alloc_descriptors(dev);
+ 
+-	/* Allocate the entire chunk of memory for the descriptors.
+-           Note that this cannot cross a 64K boundary. */
+-	lp->descriptors = dma_alloc_coherent(lp->device,
+-					     SIZEOF_SONIC_DESC *
+-					     SONIC_BUS_SCALE(lp->dma_bitmode),
+-					     &lp->descriptors_laddr,
+-					     GFP_KERNEL);
+-	if (lp->descriptors == NULL)
+-		return -ENOMEM;
+-
+-	/* Now set up the pointers to point to the appropriate places */
+-	lp->cda = lp->descriptors;
+-	lp->tda = lp->cda + (SIZEOF_SONIC_CDA
+-	                     * SONIC_BUS_SCALE(lp->dma_bitmode));
+-	lp->rda = lp->tda + (SIZEOF_SONIC_TD * SONIC_NUM_TDS
+-	                     * SONIC_BUS_SCALE(lp->dma_bitmode));
+-	lp->rra = lp->rda + (SIZEOF_SONIC_RD * SONIC_NUM_RDS
+-	                     * SONIC_BUS_SCALE(lp->dma_bitmode));
+-
+-	lp->cda_laddr = lp->descriptors_laddr;
+-	lp->tda_laddr = lp->cda_laddr + (SIZEOF_SONIC_CDA
+-	                     * SONIC_BUS_SCALE(lp->dma_bitmode));
+-	lp->rda_laddr = lp->tda_laddr + (SIZEOF_SONIC_TD * SONIC_NUM_TDS
+-	                     * SONIC_BUS_SCALE(lp->dma_bitmode));
+-	lp->rra_laddr = lp->rda_laddr + (SIZEOF_SONIC_RD * SONIC_NUM_RDS
+-	                     * SONIC_BUS_SCALE(lp->dma_bitmode));
++	if (err)
++		return err;
+ 
+ 	dev->netdev_ops = &macsonic_netdev_ops;
+ 	dev->watchdog_timeo = TX_TIMEOUT;
+diff --git a/drivers/net/ethernet/natsemi/sonic.c b/drivers/net/ethernet/natsemi/sonic.c
+index f31cb19ded50..3cf84de8ad8e 100644
+--- a/drivers/net/ethernet/natsemi/sonic.c
++++ b/drivers/net/ethernet/natsemi/sonic.c
+@@ -50,6 +50,42 @@ static void sonic_msg_init(struct net_device *dev)
+ 		netif_dbg(lp, drv, dev, "%s", version);
+ }
+ 
++static int sonic_alloc_descriptors(struct net_device *dev)
++{
++	struct sonic_local *lp = netdev_priv(dev);
++
++	/* Allocate a chunk of memory for the descriptors. Note that this
++	 * must not cross a 64K boundary. It is smaller than one page which
++	 * means that page alignment is a sufficient condition.
++	 */
++	lp->descriptors =
++		dma_alloc_coherent(lp->device,
++				   SIZEOF_SONIC_DESC *
++				   SONIC_BUS_SCALE(lp->dma_bitmode),
++				   &lp->descriptors_laddr, GFP_KERNEL);
++
++	if (!lp->descriptors)
++		return -ENOMEM;
++
++	lp->cda = lp->descriptors;
++	lp->tda = lp->cda + SIZEOF_SONIC_CDA *
++			    SONIC_BUS_SCALE(lp->dma_bitmode);
++	lp->rda = lp->tda + SIZEOF_SONIC_TD * SONIC_NUM_TDS *
++			    SONIC_BUS_SCALE(lp->dma_bitmode);
++	lp->rra = lp->rda + SIZEOF_SONIC_RD * SONIC_NUM_RDS *
++			    SONIC_BUS_SCALE(lp->dma_bitmode);
++
++	lp->cda_laddr = lp->descriptors_laddr;
++	lp->tda_laddr = lp->cda_laddr + SIZEOF_SONIC_CDA *
++					SONIC_BUS_SCALE(lp->dma_bitmode);
++	lp->rda_laddr = lp->tda_laddr + SIZEOF_SONIC_TD * SONIC_NUM_TDS *
++					SONIC_BUS_SCALE(lp->dma_bitmode);
++	lp->rra_laddr = lp->rda_laddr + SIZEOF_SONIC_RD * SONIC_NUM_RDS *
++					SONIC_BUS_SCALE(lp->dma_bitmode);
++
++	return 0;
++}
++
+ /*
+  * Open/initialize the SONIC controller.
+  *
+diff --git a/drivers/net/ethernet/natsemi/sonic.h b/drivers/net/ethernet/natsemi/sonic.h
+index e402dc29d2aa..f919835a9353 100644
+--- a/drivers/net/ethernet/natsemi/sonic.h
++++ b/drivers/net/ethernet/natsemi/sonic.h
+@@ -337,6 +337,7 @@ static void sonic_multicast_list(struct net_device *dev);
+ static int sonic_init(struct net_device *dev);
+ static void sonic_tx_timeout(struct net_device *dev);
+ static void sonic_msg_init(struct net_device *dev);
++static int sonic_alloc_descriptors(struct net_device *dev);
+ 
+ /* Internal inlines for reading/writing DMA buffers.  Note that bus
+    size and endianness matter here, whereas they don't for registers,
+diff --git a/drivers/net/ethernet/natsemi/xtsonic.c b/drivers/net/ethernet/natsemi/xtsonic.c
+index e1b886e87a76..dda9ec7d9cee 100644
+--- a/drivers/net/ethernet/natsemi/xtsonic.c
++++ b/drivers/net/ethernet/natsemi/xtsonic.c
+@@ -167,47 +167,11 @@ static int __init sonic_probe1(struct net_device *dev)
+ 		dev->dev_addr[i*2+1] = val >> 8;
+ 	}
+ 
+-	/* Initialize the device structure. */
+-
+ 	lp->dma_bitmode = SONIC_BITMODE32;
  
 -	/*
--	 * Must set tx_skb[entry] only after clearing status, and
--	 * before clearing EOL and before stopping queue
+-	 *  Allocate local private descriptor areas in uncached space.
+-	 *  The entire structure must be located within the same 64kb segment.
+-	 *  A simple way to ensure this is to allocate twice the
+-	 *  size of the structure -- given that the structure is
+-	 *  much less than 64 kB, at least one of the halves of
+-	 *  the allocated area will be contained entirely in 64 kB.
+-	 *  We also allocate extra space for a pointer to allow freeing
+-	 *  this structure later on (in xtsonic_cleanup_module()).
 -	 */
- 	wmb();
- 	lp->tx_len[entry] = length;
- 	lp->tx_laddr[entry] = laddr;
-@@ -310,6 +309,8 @@ static int sonic_send_packet(struct sk_buff *skb, struct net_device *dev)
+-	lp->descriptors = dma_alloc_coherent(lp->device,
+-					     SIZEOF_SONIC_DESC *
+-					     SONIC_BUS_SCALE(lp->dma_bitmode),
+-					     &lp->descriptors_laddr,
+-					     GFP_KERNEL);
+-	if (lp->descriptors == NULL) {
+-		err = -ENOMEM;
++	err = sonic_alloc_descriptors(dev);
++	if (err)
+ 		goto out;
+-	}
+-
+-	lp->cda = lp->descriptors;
+-	lp->tda = lp->cda + (SIZEOF_SONIC_CDA
+-			     * SONIC_BUS_SCALE(lp->dma_bitmode));
+-	lp->rda = lp->tda + (SIZEOF_SONIC_TD * SONIC_NUM_TDS
+-			     * SONIC_BUS_SCALE(lp->dma_bitmode));
+-	lp->rra = lp->rda + (SIZEOF_SONIC_RD * SONIC_NUM_RDS
+-			     * SONIC_BUS_SCALE(lp->dma_bitmode));
+-
+-	/* get the virtual dma address */
+-
+-	lp->cda_laddr = lp->descriptors_laddr;
+-	lp->tda_laddr = lp->cda_laddr + (SIZEOF_SONIC_CDA
+-				         * SONIC_BUS_SCALE(lp->dma_bitmode));
+-	lp->rda_laddr = lp->tda_laddr + (SIZEOF_SONIC_TD * SONIC_NUM_TDS
+-					 * SONIC_BUS_SCALE(lp->dma_bitmode));
+-	lp->rra_laddr = lp->rda_laddr + (SIZEOF_SONIC_RD * SONIC_NUM_RDS
+-					 * SONIC_BUS_SCALE(lp->dma_bitmode));
  
- 	SONIC_WRITE(SONIC_CMD, SONIC_CR_TXP);
- 
-+	local_irq_restore(flags);
-+
- 	return NETDEV_TX_OK;
- }
- 
-@@ -322,9 +323,16 @@ static irqreturn_t sonic_interrupt(int irq, void *dev_id)
- 	struct net_device *dev = dev_id;
- 	struct sonic_local *lp = netdev_priv(dev);
- 	int status;
-+	unsigned long flags;
-+
-+	local_irq_save(flags);
-+
-+	status = SONIC_READ(SONIC_ISR) & SONIC_IMR_DEFAULT;
-+	if (!status) {
-+		local_irq_restore(flags);
- 
--	if (!(status = SONIC_READ(SONIC_ISR) & SONIC_IMR_DEFAULT))
- 		return IRQ_NONE;
-+	}
- 
- 	do {
- 		if (status & SONIC_INT_PKTRX) {
-@@ -338,11 +346,12 @@ static irqreturn_t sonic_interrupt(int irq, void *dev_id)
- 			int td_status;
- 			int freed_some = 0;
- 
--			/* At this point, cur_tx is the index of a TD that is one of:
--			 *   unallocated/freed                          (status set   & tx_skb[entry] clear)
--			 *   allocated and sent                         (status set   & tx_skb[entry] set  )
--			 *   allocated and not yet sent                 (status clear & tx_skb[entry] set  )
--			 *   still being allocated by sonic_send_packet (status clear & tx_skb[entry] clear)
-+			/* The state of a Transmit Descriptor may be inferred
-+			 * from { tx_skb[entry], td_status } as follows.
-+			 * { clear, clear } => the TD has never been used
-+			 * { set,   clear } => the TD was handed to SONIC
-+			 * { set,   set   } => the TD was handed back
-+			 * { clear, set   } => the TD is available for re-use
- 			 */
- 
- 			netif_dbg(lp, intr, dev, "%s: tx done\n", __func__);
-@@ -444,7 +453,12 @@ static irqreturn_t sonic_interrupt(int irq, void *dev_id)
- 		/* load CAM done */
- 		if (status & SONIC_INT_LCD)
- 			SONIC_WRITE(SONIC_ISR, SONIC_INT_LCD); /* clear the interrupt */
--	} while((status = SONIC_READ(SONIC_ISR) & SONIC_IMR_DEFAULT));
-+
-+		status = SONIC_READ(SONIC_ISR) & SONIC_IMR_DEFAULT;
-+	} while (status);
-+
-+	local_irq_restore(flags);
-+
- 	return IRQ_HANDLED;
- }
- 
+ 	dev->netdev_ops		= &xtsonic_netdev_ops;
+ 	dev->watchdog_timeo	= TX_TIMEOUT;
 -- 
 2.24.1
 
