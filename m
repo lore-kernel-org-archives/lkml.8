@@ -2,112 +2,157 @@ Return-Path: <SRS0=pPEE=3I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 778E2C33CB1
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 14:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 331E7C33CB1
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 14:05:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FE9520684
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 14:04:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 038F920684
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 14:05:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XojgUu3q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D4HYewrw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbgASOEE (ORCPT
+        id S1727107AbgASOFv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 09:04:04 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33083 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726778AbgASOED (ORCPT
+        Sun, 19 Jan 2020 09:05:51 -0500
+Received: from mail-vk1-f194.google.com ([209.85.221.194]:40474 "EHLO
+        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726778AbgASOFu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 09:04:03 -0500
-Received: by mail-wr1-f67.google.com with SMTP id b6so26910444wrq.0;
-        Sun, 19 Jan 2020 06:04:03 -0800 (PST)
+        Sun, 19 Jan 2020 09:05:50 -0500
+Received: by mail-vk1-f194.google.com with SMTP id c129so7874428vkh.7;
+        Sun, 19 Jan 2020 06:05:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=Ocb2zugiLO+xET//21zhNLSukAYLvW1HhjzJze0PZFY=;
-        b=XojgUu3qJDckuKraJoIHxKxWu+Q3CYMRjOdwV+B7NCNwAlwnrGuCMJDkTJlJxQpWpy
-         tKi/1apRW/xl2lAsgjQO5i7y4OdT12sYiVT06ASHAy6YraMMmRm2qoY+KyZW+QDVNnwM
-         EDmX4RtkVrdEm0OgAhUNenu8n8ALvSZHd4HHtOHHNfOz6+pjNei9E9UqVcbCSzHYinhW
-         Qn/eBBNYpCc1GI1E5MdSWZMAGpeQKscYotaaJqKDV/+ybgvv7erslI5KHEB/dBgbLvcM
-         mY4YU3v47Z5TxcBn29Gq++bPB27+Ce34Ov692BRIKk0cwRwT5RrLeZqcUDz0nQ4W3Q5T
-         vLIg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zQ9s6aXRXnoAgbGD22gB4cMgUN7RxJiXOnF2aQocl4w=;
+        b=D4HYewrwAwcrLYakl62CNJiFBQ21pi4ZSSvdtblf5pnIkzSU7vQ+QY6eS6wSb8soGu
+         tWXzPn5F/se0Rt6m2pey0k3xdLx/CPVJvnLKhitOq7+owIV1+R5iZeE5z4pSsJNCkf8w
+         9cApU/2Bw8FkyDzMqpEWX1fm7IyJ5SQEn57J5Qk85uadJEJsl5oX8erdX/F+tAUnEiLI
+         ooIHwdS/TjwcABk0pNszo9xzH0Tfl3ocK7J89gLrm95DRPpMbOH2bo5WXnN2Ez8myrue
+         G2GYZx1QKuIkjbZyo+WNcvLRqhBtqXcAVgmIJZ18tFRm1rwxDn2FtSvje/bPn2pnzNAZ
+         L/JA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=Ocb2zugiLO+xET//21zhNLSukAYLvW1HhjzJze0PZFY=;
-        b=bj41Qvveyox9R0o22iJfwtKQsabHbCPPOPCzLPtv4E10WBAKYOlB9hM5V6JnZaNenF
-         YHAfnKqp+v72ELcj038mSBOFnZFv8NJb9Y5aOD8fOS6P93i4gy2UbBxERU0p7ZtYarxO
-         J1UyjIW4vYbUu0tjjAgWTMdEbzEW+MRMTLsdvK9QNFpytln0zS04vDCkPMDbdrDtyvdA
-         e5r5QL5op7MJu0S70+C85uwqkYKhOml7qIVG1Dd9/cWlraLKmd0jozZhVVEyyxA5BQii
-         O8qyrd9OUYWOGGU4yUkHBSKSAWvcWKCAjtKcmBjkiwFHTdJSgV7u945TX6CrHqSowDcd
-         PeZQ==
-X-Gm-Message-State: APjAAAV1Q2p/Uj3GllIzLB7Wk6ZpocoN65x2unCSWCDE1RHwWC9IzGh4
-        j8f8jGZMOBkv5r0YmQl9N0M=
-X-Google-Smtp-Source: APXvYqyyqUUrY5OFgXLSFWeA7vOuLAz1xsvXt998I/Af2oxYL/hTVOxA+CtxjWqOqaeZnx7Fb+7zsg==
-X-Received: by 2002:a5d:4687:: with SMTP id u7mr13127453wrq.176.1579442642464;
-        Sun, 19 Jan 2020 06:04:02 -0800 (PST)
-Received: from home ([141.226.244.232])
-        by smtp.gmail.com with ESMTPSA id b67sm3649809wmc.38.2020.01.19.06.04.01
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 19 Jan 2020 06:04:01 -0800 (PST)
-Date:   Sun, 19 Jan 2020 16:03:59 +0200
-From:   Valery Ivanov <ivalery111@gmail.com>
-To:     manishc@marvell.com, GR-Linux-NIC-Dev@marvell.com
-Cc:     gregkh@linuxfoundation.org, netdev@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: qlge: fix missing a blank line after declaration
-Message-ID: <20200119140359.GA8668@home>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zQ9s6aXRXnoAgbGD22gB4cMgUN7RxJiXOnF2aQocl4w=;
+        b=dpeMcGSimXEUIxpd9g7u21AwwwOEdegYzuJYXRYeHwtf/eUguYuzFhU0lliujKpceM
+         7ZPsmhrSw4dXtTxWjXwVVF8pVGfQRWw/2JrzO+21MRN+//KNKgyt/InRFQTE3fKcjw3u
+         Mtjs/221ZD8gTYgH23wCLWXSzCjMeQ9O1IR5C06YUQtyGrT0Htn7JFDwfOy8b3BpQbHA
+         2qJ51/QeKilwhcmZl5t/0tNR7OCxt13vtdavnOTkBT2dxb13uOTlxiRYrQ0J7uIv0PMw
+         2oxglKmUOrHvx4373AzxnbCKKKE42HJ8+bnhw9wGtV43Cu7sz4jOu1wNV57zPVTXTEe3
+         V2sg==
+X-Gm-Message-State: APjAAAUb9RyanqRz2zUW6XEWW0yfkAvx7mAEnUz4rrQXJnesvF8CJE05
+        LwTcD5keTT0Gkfg8I+ibYYaCvbuBkuncWvcDwHI=
+X-Google-Smtp-Source: APXvYqw9nG6xAj+S2gKKCAQ+BbMHU9VAljMkDzXB0Wf9p2t4X/nPF33r/AvPVp0cjllf4FH2e95K5MuKmSvD66pWLFI=
+X-Received: by 2002:a1f:8f44:: with SMTP id r65mr7356012vkd.8.1579442749175;
+ Sun, 19 Jan 2020 06:05:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200117035108.19699-1-stanley.chu@mediatek.com> <20200117035108.19699-2-stanley.chu@mediatek.com>
+In-Reply-To: <20200117035108.19699-2-stanley.chu@mediatek.com>
+From:   Alim Akhtar <alim.akhtar@gmail.com>
+Date:   Sun, 19 Jan 2020 19:35:12 +0530
+Message-ID: <CAGOxZ51ju5sKxtVzXQAFBKz_4Pc9YEZ0i4o4iHkutGx2d+H2QQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/3] scsi: ufs-mediatek: add dbg_register_dump implementation
+To:     Stanley Chu <stanley.chu@mediatek.com>
+Cc:     linux-scsi@vger.kernel.org,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Bean Huo (beanhuo)" <beanhuo@micron.com>, asutoshd@codeaurora.org,
+        Can Guo <cang@codeaurora.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        open list <linux-kernel@vger.kernel.org>,
+        Kuohong Wang <kuohong.wang@mediatek.com>,
+        peter.wang@mediatek.com, chun-hung.wu@mediatek.com,
+        andy.teng@mediatek.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes "WARNING: Missing a blank lin after declarations"
-Issue found by checkpatch.pl
+Hi Stanley
 
-Signed-off-by: Valery Ivanov <ivalery111@gmail.com>
----
- drivers/staging/qlge/qlge_ethtool.c | 3 +++
- 1 file changed, 3 insertions(+)
+On Fri, Jan 17, 2020 at 9:44 AM Stanley Chu <stanley.chu@mediatek.com> wrote:
+>
+> Add dbg_register_dump variant vendor implementation in MediaTek
+> UFS driver.
+>
+> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+> ---
 
-diff --git a/drivers/staging/qlge/qlge_ethtool.c b/drivers/staging/qlge/qlge_ethtool.c
-index 56d116d79e56..2872b7120e36 100644
---- a/drivers/staging/qlge/qlge_ethtool.c
-+++ b/drivers/staging/qlge/qlge_ethtool.c
-@@ -412,6 +412,7 @@ static void ql_get_drvinfo(struct net_device *ndev,
- 			   struct ethtool_drvinfo *drvinfo)
- {
- 	struct ql_adapter *qdev = netdev_priv(ndev);
-+
- 	strlcpy(drvinfo->driver, qlge_driver_name, sizeof(drvinfo->driver));
- 	strlcpy(drvinfo->version, qlge_driver_version,
- 		sizeof(drvinfo->version));
-@@ -703,12 +704,14 @@ static int ql_set_pauseparam(struct net_device *netdev,
- static u32 ql_get_msglevel(struct net_device *ndev)
- {
- 	struct ql_adapter *qdev = netdev_priv(ndev);
-+
- 	return qdev->msg_enable;
- }
- 
- static void ql_set_msglevel(struct net_device *ndev, u32 value)
- {
- 	struct ql_adapter *qdev = netdev_priv(ndev);
-+
- 	qdev->msg_enable = value;
- }
- 
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+
+>  drivers/scsi/ufs/ufs-mediatek.c | 16 ++++++++++++++++
+>  drivers/scsi/ufs/ufs-mediatek.h |  5 +++++
+>  2 files changed, 21 insertions(+)
+>
+> diff --git a/drivers/scsi/ufs/ufs-mediatek.c b/drivers/scsi/ufs/ufs-mediatek.c
+> index 8d999c0e60fe..d5194d0c4ef5 100644
+> --- a/drivers/scsi/ufs/ufs-mediatek.c
+> +++ b/drivers/scsi/ufs/ufs-mediatek.c
+> @@ -406,6 +406,21 @@ static int ufs_mtk_resume(struct ufs_hba *hba, enum ufs_pm_op pm_op)
+>         return 0;
+>  }
+>
+> +static void ufs_mtk_dbg_register_dump(struct ufs_hba *hba)
+> +{
+> +       ufshcd_dump_regs(hba, REG_UFS_REFCLK_CTRL, 0x4, "Ref-Clk Ctrl ");
+> +
+> +       ufshcd_dump_regs(hba, REG_UFS_EXTREG, 0x4, "Ext Reg ");
+> +
+> +       ufshcd_dump_regs(hba, REG_UFS_MPHYCTRL,
+> +                        REG_UFS_REJECT_MON - REG_UFS_MPHYCTRL + 4,
+> +                        "MPHY Ctrl ");
+> +
+> +       /* Direct debugging information to REG_MTK_PROBE */
+> +       ufshcd_writel(hba, 0x20, REG_UFS_DEBUG_SEL);
+> +       ufshcd_dump_regs(hba, REG_UFS_PROBE, 0x4, "Debug Probe ");
+> +}
+> +
+>  static int ufs_mtk_apply_dev_quirks(struct ufs_hba *hba,
+>                                     struct ufs_dev_desc *card)
+>  {
+> @@ -430,6 +445,7 @@ static struct ufs_hba_variant_ops ufs_hba_mtk_vops = {
+>         .apply_dev_quirks    = ufs_mtk_apply_dev_quirks,
+>         .suspend             = ufs_mtk_suspend,
+>         .resume              = ufs_mtk_resume,
+> +       .dbg_register_dump   = ufs_mtk_dbg_register_dump,
+>         .device_reset        = ufs_mtk_device_reset,
+>  };
+>
+> diff --git a/drivers/scsi/ufs/ufs-mediatek.h b/drivers/scsi/ufs/ufs-mediatek.h
+> index 31b7fead19eb..fccdd979d6fb 100644
+> --- a/drivers/scsi/ufs/ufs-mediatek.h
+> +++ b/drivers/scsi/ufs/ufs-mediatek.h
+> @@ -13,6 +13,11 @@
+>   * Vendor specific UFSHCI Registers
+>   */
+>  #define REG_UFS_REFCLK_CTRL         0x144
+> +#define REG_UFS_EXTREG              0x2100
+> +#define REG_UFS_MPHYCTRL            0x2200
+> +#define REG_UFS_REJECT_MON          0x22AC
+> +#define REG_UFS_DEBUG_SEL           0x22C0
+> +#define REG_UFS_PROBE               0x22C8
+>
+>  /*
+>   * Ref-clk control
+> --
+> 2.18.0
+
+
+
 -- 
-2.17.1
-
+Regards,
+Alim
