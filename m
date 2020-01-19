@@ -2,90 +2,84 @@ Return-Path: <SRS0=pPEE=3I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E28C33CB1
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 09:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B90C33CB1
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 09:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C30602073A
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 09:33:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OaJK03Yd"
+	by mail.kernel.org (Postfix) with ESMTP id 7B17E206D7
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 09:42:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbgASJ07 (ORCPT
+        id S1726798AbgASJmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 04:26:59 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41495 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725860AbgASJ07 (ORCPT
+        Sun, 19 Jan 2020 04:42:22 -0500
+Received: from mail-pf1-f198.google.com ([209.85.210.198]:45324 "EHLO
+        mail-pf1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725860AbgASJmW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 04:26:59 -0500
-Received: by mail-wr1-f67.google.com with SMTP id c9so26488270wrw.8
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jan 2020 01:26:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=U3SRtIVUFf1wvhswIJpjjxOJSs67OuTrUXH2Ak0AKwg=;
-        b=OaJK03Yd0UMqCnEKR9cR5QGcUJM1kaw0UR2QJdLuxZbKSd1N0CxdDGfFhQInbUoN8t
-         2Q2eLVZzv2/WJQoY7jmbMV4Z2npedPvc7te4FL0rsOYyOaB0oQv2uU3r9U04PsQq3ziM
-         pUSrpt8IBQEqTYSR8uU3mBuxoeMQS8prnFOMZ5v/47dlZNN6xOLvWDAqGssRZL/7nmzD
-         rZC3uhUeKbxy64w9IhXDUfb9KUkenQfICa+CUYD6xm/NObH5kdl7cdTrogxcMY6G4BFy
-         o4rtEwCRKbuOAwo82MacQ9qw9I8V2vYaQOS181OmJOtzDRN5KtMrBYnvaivnEjzamf5V
-         tLog==
+        Sun, 19 Jan 2020 04:42:22 -0500
+Received: by mail-pf1-f198.google.com with SMTP id x21so18392500pfp.12
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jan 2020 01:42:22 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=U3SRtIVUFf1wvhswIJpjjxOJSs67OuTrUXH2Ak0AKwg=;
-        b=DMRTzHVrc6Y5lGtPWqZ2uCLcy2DkCZVzFaiavLqQHb9KSp6V2UFVAOrn5iLpUv3JcK
-         P1rrthOMXuxYA/mvoAd0u/dcl75B6TLwBvjas+kyfxSNWiXVDDemPhGMQzdbEvTCBVmh
-         Sg/zP+w5tpMBqdqoS+PMEIj9Z9kKUNdLwn4COnMNrFDI66DPNrjnwsA3/QJMvctnaWJR
-         HYQU8sZKI+2Q2bKncEXK/r3Fo0yCfyXDMlM9q3PtAcU4wnVTM6SYeXFNKy1qciFZ7ezx
-         1NArWmoWY5cXrtqIxSiJEzgmJKqK3AcvxbnkDzyGMJ+HcMscY+GQkLfJL1cLSlqz6Ne8
-         1qUA==
-X-Gm-Message-State: APjAAAWOYQ6w0erFR/ryfQjE7b82y8yOvQdkBOMSEjNis/sKLjgvCRHo
-        tL2FN2BREb2IoD0OJk/DA8lx4Idwkfbw2QYHHvIYOE9y
-X-Google-Smtp-Source: APXvYqzX09F2R/BA+aOMieLnrLOJbeXZ8KNMjM7elIY3/u38tsLzvNzbB+EKAFqcMiqYk2pubTxNWR+viwVzztcYKcI=
-X-Received: by 2002:adf:fe4d:: with SMTP id m13mr13117016wrs.179.1579426016765;
- Sun, 19 Jan 2020 01:26:56 -0800 (PST)
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=BRczTDviaeDTYez7KOKQz91MPq0sq1Vv8zv+kc9CGFY=;
+        b=egTgxmi7ZPxOqGbvuEChODmuLkwOG4ln/3y5G82DvoQ8yvhtInMa/YC+bIf1iN0MZf
+         MclfkxsgXHGKPW85Evlu1/5ScyzBTfQtrhWzZ60QvDNPxGMY2qgOT+DBZ6pj7MDkPoik
+         Il/JRmQRkAYUQO/KtuJa/5RjoBYZCYTp8n3gCCsn/jGvzMoWPfmCpL+sEFwUhKqHdBzO
+         foHYh5klum4QPbYKfP905F9i1fUpbC5HT2eRSLuim2na3og1yKTUYxWGS6reOwHk5Fzz
+         UnwKSJXEvhxK24inNOZ+khL/dZ/RkJIdRqTT8ILeDrv1rhEtbuR33o5+PtXBR/2T/5pv
+         Wb1A==
+X-Gm-Message-State: APjAAAVvSULV8ggpbmJROAdA64h8dYSozFfN34S21AJ6ImmHn2T6E6Xv
+        t9k0yW/WHLLLI/Cm3aPAL0RHxO3mqz1d76rhmvuictqqa4nI
+X-Google-Smtp-Source: APXvYqxRJpvjM5JY3HPtw4SSeYYGyt3BTK2lm+dpjQSdSGFX2T4NMrq384OFBw8/ldl/wdX6vviEk7HiCqq+7oDPg/j/rBdVYNKH
 MIME-Version: 1.0
-References: <CAAJw_ZsrUP54N5Ko2PrZm2BnKbxv44pXL3Ycw1Ux2onAFqrOVQ@mail.gmail.com>
- <CAAJw_ZsQkjdPo7McQoEb9LqBb0hzrzFRE4K_CR5dVApoT2_zmQ@mail.gmail.com>
-In-Reply-To: <CAAJw_ZsQkjdPo7McQoEb9LqBb0hzrzFRE4K_CR5dVApoT2_zmQ@mail.gmail.com>
-From:   Jeff Chua <jeff.chua.linux@gmail.com>
-Date:   Sun, 19 Jan 2020 17:26:45 +0800
-Message-ID: <CAAJw_ZuLTxxNyuYeAjhTY+ENQNiOMuQD2p2y2M9J0Urk2MNzKA@mail.gmail.com>
-Subject: Re: No realtime clock (/dev/rtc) on new ThinkPad X1
-To:     lkml <linux-kernel@vger.kernel.org>
+X-Received: by 2002:a6b:731a:: with SMTP id e26mr36446343ioh.254.1579426501752;
+ Sun, 19 Jan 2020 01:35:01 -0800 (PST)
+Date:   Sun, 19 Jan 2020 01:35:01 -0800
+In-Reply-To: <000000000000e0ab4c059c79f014@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000095fe43059c7ae3f9@google.com>
+Subject: Re: KASAN: slab-out-of-bounds Read in bitmap_port_ext_cleanup
+From:   syzbot <syzbot+7b6206fb525c1f5ec3f8@syzkaller.appspotmail.com>
+To:     a@unstable.cc, andrew@lunn.ch, b.a.t.m.a.n@lists.open-mesh.org,
+        coreteam@netfilter.org, davem@davemloft.net,
+        florent.fourcot@wifirst.fr, fw@strlen.de, grygorii.strashko@ti.com,
+        j-keerthy@ti.com, jeremy@azazel.net, johannes.berg@intel.com,
+        kadlec@netfilter.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, mareklindner@neomailbox.ch,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        pablo@netfilter.org, sw@simonwunderlich.de,
+        syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixed. Upgraded Lenovo firmware to N2QET18W (1.12 ).
+syzbot has bisected this bug to:
 
-Now /dev/rtc0 shows up!
+commit 2f9b0d93a9d3ec64558537ab5d7cff820886afa4
+Author: Keerthy <j-keerthy@ti.com>
+Date:   Mon Jun 24 05:16:19 2019 +0000
 
-My best.,
-Jeff
+    net: ethernet: ti: cpsw: Fix suspend/resume break
 
-On Fri, Jan 17, 2020 at 12:16 PM Jeff Chua <jeff.chua.linux@gmail.com> wrote:
->
-> On Fri, Jan 17, 2020 at 11:46 AM Jeff Chua <jeff.chua.linux@gmail.com> wrote:
-> >
-> > Got installed Linux 5.5.0-rc6 on ThinkPad X1. CPU is i7-10510U (Comet
-> > Lake) ... and /dev/rtc is missing.
-> >
-> > Linux is latest git pull (f4353c3e2aaf7f7d3c5a18271b368bf5292854c3)
-> > CPU model name      : Intel(R) Core(TM) i7-10510U CPU @ 1.80GHz
-> >
-> > Am I missing something?
->
-> I can confirm that the same kernel works on another ThinkPad (tried on
-> P53 with i7-9750H) but not on X1.
->
-> Jeff.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17fcf959e00000
+start commit:   e02d9c4c Merge branch 'bnxt_en-fixes'
+git tree:       net
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=1402f959e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1002f959e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7e89bd00623fe71e
+dashboard link: https://syzkaller.appspot.com/bug?extid=7b6206fb525c1f5ec3f8
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16551cc9e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14a04966e00000
+
+Reported-by: syzbot+7b6206fb525c1f5ec3f8@syzkaller.appspotmail.com
+Fixes: 2f9b0d93a9d3 ("net: ethernet: ti: cpsw: Fix suspend/resume break")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
