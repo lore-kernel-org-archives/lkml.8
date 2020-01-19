@@ -6,116 +6,90 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA4EC33CAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 23:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 849BFC33CAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 23:17:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A77FD206D7
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 23:17:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5836E206ED
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 23:17:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729378AbgASXRX (ORCPT
+        id S1729410AbgASXR3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 18:17:23 -0500
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:49836 "EHLO
+        Sun, 19 Jan 2020 18:17:29 -0500
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:49838 "EHLO
         kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729058AbgASXQd (ORCPT
+        with ESMTP id S1729061AbgASXQd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 19 Jan 2020 18:16:33 -0500
 Received: by kvm5.telegraphics.com.au (Postfix, from userid 502)
-        id 9464C299A6; Sun, 19 Jan 2020 18:16:31 -0500 (EST)
+        id A5644299A7; Sun, 19 Jan 2020 18:16:31 -0500 (EST)
 To:     "David S. Miller" <davem@davemloft.net>
 Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Chris Zankel <chris@zankel.net>,
         Laurent Vivier <laurent@vivier.eu>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Message-Id: <076fb31c15434eca5d73ed81bbee447e50646c18.1579474569.git.fthain@telegraphics.com.au>
+Message-Id: <43f9cf226bd227cfdbcc94512d6f9dc02e84ccf7.1579474569.git.fthain@telegraphics.com.au>
 In-Reply-To: <cover.1579474569.git.fthain@telegraphics.com.au>
 References: <cover.1579474569.git.fthain@telegraphics.com.au>
 From:   Finn Thain <fthain@telegraphics.com.au>
-Subject: [PATCH net 17/19] net/sonic: Fix command register usage
+Subject: [PATCH net 19/19] net/sonic: Prevent tx watchdog timeout
 Date:   Mon, 20 Jan 2020 09:56:09 +1100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are several issues relating to command register usage during
-chip initialization.
+Section 5.5.3.2 of the datasheet says,
 
-Firstly, the SONIC sometimes comes out of software reset with the
-Start Timer bit set. This gets logged as,
+    If FIFO Underrun, Byte Count Mismatch, Excessive Collision, or
+    Excessive Deferral (if enabled) errors occur, transmission ceases.
 
-    macsonic macsonic eth0: sonic_init: status=24, i=101
+In this situation, the chip asserts a TXER interrupt rather than TXDN.
+But the handler for the TXDN is the only way that the transmit queue
+gets restarted. Hence, an aborted transmission can result in a watchdog
+timeout.
 
-Avoid this by giving the Stop Timer command earlier than later.
+This problem can be reproduced on congested link, as that can result in
+excessive transmitter collisions. Another way to reproduce this is with
+a FIFO Underrun, which may be caused by DMA latency.
 
-Secondly, the loop that waits for the Read RRA command to complete has
-the break condition inverted. That's why the for loop iterates until
-its termination condition. Call the helper for this instead.
-
-Finally, give the Receiver Enable command after clearing interrupts,
-not before, to avoid the possibility of losing an interrupt.
+In event of a TXER interrupt, prevent a watchdog timeout by restarting
+transmission.
 
 Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
 Tested-by: Stan Johnson <userm57@yahoo.com>
 Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
 ---
- drivers/net/ethernet/natsemi/sonic.c | 18 +++---------------
- 1 file changed, 3 insertions(+), 15 deletions(-)
+ drivers/net/ethernet/natsemi/sonic.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/net/ethernet/natsemi/sonic.c b/drivers/net/ethernet/natsemi/sonic.c
-index b70470ce9c9c..01055a53517d 100644
+index 1a569df63fde..bebdbb00a595 100644
 --- a/drivers/net/ethernet/natsemi/sonic.c
 +++ b/drivers/net/ethernet/natsemi/sonic.c
-@@ -691,7 +691,6 @@ static void sonic_multicast_list(struct net_device *dev)
-  */
- static int sonic_init(struct net_device *dev)
- {
--	unsigned int cmd;
- 	struct sonic_local *lp = netdev_priv(dev);
- 	int i;
+@@ -446,10 +446,19 @@ static irqreturn_t sonic_interrupt(int irq, void *dev_id)
+ 			lp->stats.rx_missed_errors += 65536;
  
-@@ -708,7 +707,7 @@ static int sonic_init(struct net_device *dev)
- 	 * enable interrupts, then completely initialize the SONIC
- 	 */
- 	SONIC_WRITE(SONIC_CMD, 0);
--	SONIC_WRITE(SONIC_CMD, SONIC_CR_RXDIS);
-+	SONIC_WRITE(SONIC_CMD, SONIC_CR_RXDIS | SONIC_CR_STP);
- 	sonic_quiesce(dev, SONIC_CR_ALL);
+ 		/* transmit error */
+-		if (status & SONIC_INT_TXER)
+-			if (SONIC_READ(SONIC_TCR) & SONIC_TCR_FU)
+-				netif_dbg(lp, tx_err, dev, "%s: tx fifo underrun\n",
+-					  __func__);
++		if (status & SONIC_INT_TXER) {
++			u16 tcr = SONIC_READ(SONIC_TCR);
++
++			netif_dbg(lp, tx_err, dev, "%s: TXER intr, TCR %04x\n",
++				  __func__, tcr);
++
++			if (tcr & (SONIC_TCR_EXD | SONIC_TCR_EXC |
++				   SONIC_TCR_FU | SONIC_TCR_BCM)) {
++				/* Aborted transmission. Try again. */
++				netif_stop_queue(dev);
++				SONIC_WRITE(SONIC_CMD, SONIC_CR_TXP);
++			}
++		}
  
- 	/*
-@@ -738,14 +737,7 @@ static int sonic_init(struct net_device *dev)
- 	netif_dbg(lp, ifup, dev, "%s: issuing RRRA command\n", __func__);
- 
- 	SONIC_WRITE(SONIC_CMD, SONIC_CR_RRRA);
--	i = 0;
--	while (i++ < 100) {
--		if (SONIC_READ(SONIC_CMD) & SONIC_CR_RRRA)
--			break;
--	}
--
--	netif_dbg(lp, ifup, dev, "%s: status=%x, i=%d\n", __func__,
--		  SONIC_READ(SONIC_CMD), i);
-+	sonic_quiesce(dev, SONIC_CR_RRRA);
- 
- 	/*
- 	 * Initialize the receive descriptors so that they
-@@ -833,15 +825,11 @@ static int sonic_init(struct net_device *dev)
- 	 * enable receiver, disable loopback
- 	 * and enable all interrupts
- 	 */
--	SONIC_WRITE(SONIC_CMD, SONIC_CR_RXEN | SONIC_CR_STP);
- 	SONIC_WRITE(SONIC_RCR, SONIC_RCR_DEFAULT);
- 	SONIC_WRITE(SONIC_TCR, SONIC_TCR_DEFAULT);
- 	SONIC_WRITE(SONIC_ISR, 0x7fff);
- 	SONIC_WRITE(SONIC_IMR, SONIC_IMR_DEFAULT);
--
--	cmd = SONIC_READ(SONIC_CMD);
--	if ((cmd & SONIC_CR_RXEN) == 0 || (cmd & SONIC_CR_STP) == 0)
--		printk(KERN_ERR "sonic_init: failed, status=%x\n", cmd);
-+	SONIC_WRITE(SONIC_CMD, SONIC_CR_RXEN);
- 
- 	netif_dbg(lp, ifup, dev, "%s: new status=%x\n", __func__,
- 		  SONIC_READ(SONIC_CMD));
+ 		/* bus retry */
+ 		if (status & SONIC_INT_BR) {
 -- 
 2.24.1
 
