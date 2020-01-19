@@ -2,114 +2,153 @@ Return-Path: <SRS0=pPEE=3I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3360BC33CB7
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 07:58:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17EADC33CB1
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 08:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08BAB2073A
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 07:58:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE85D20730
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 08:03:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cnpOgTxq"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gwUy1gyj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726816AbgASH6i (ORCPT
+        id S1726798AbgASIDd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 02:58:38 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:33792 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726421AbgASH6h (ORCPT
+        Sun, 19 Jan 2020 03:03:33 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51934 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726396AbgASIDd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 02:58:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=N+YdFKhWavAVlRXTIVt/VMOYgs6+bw78jRCCgHPX49U=; b=cnpOgTxq6/Xz/M9FKSsXmVlV9
-        9zFCg83sM54zdtEz2Y58AHRa35UmzHkHnhBqaPr8CXR/O5hjWKMlGzLxG8RU1YbtTGQZ+udBVj6JO
-        0PJ6n64TQIyp2NpZ3duUtFWMQW10V9B51+EJCQw6D832tbnv9TUoXgAdWOYvvvMuPlfK1pl55OGcT
-        Bs4ODrDJ8hmz6Fltuc3w/xO9+cTUmtIGp1aqqmh1gawiikfXhU4IZK+4DpuB3nCzf+dOXcIVImvM2
-        BxHjTDdDk22xQKeFg1xqTlqhaIki3RTnsILGLSxvKZHof1cHGoe2C7bzlLZmzd84OMtjfSfMfF/DM
-        PMzpnfhBg==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1it5TY-0007CL-Hv; Sun, 19 Jan 2020 07:58:28 +0000
-Date:   Sat, 18 Jan 2020 23:58:28 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     "yukuai (C)" <yukuai3@huawei.com>
-Cc:     hch@infradead.org, darrick.wong@oracle.com,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, houtao1@huawei.com,
-        zhengbin13@huawei.com, yi.zhang@huawei.com
-Subject: Re: [RFC] iomap: fix race between readahead and direct write
-Message-ID: <20200119075828.GA4147@bombadil.infradead.org>
-References: <20200116063601.39201-1-yukuai3@huawei.com>
- <20200118230826.GA5583@bombadil.infradead.org>
- <f5328338-1a2d-38b4-283f-3fb97ad37133@huawei.com>
- <20200119014213.GA16943@bombadil.infradead.org>
- <64d617cc-e7fe-6848-03bb-aab3498c9a07@huawei.com>
- <20200119061402.GA7301@bombadil.infradead.org>
- <fafa0550-184c-e59c-9b79-bd5d716a20cc@huawei.com>
+        Sun, 19 Jan 2020 03:03:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579421012;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=HGHTf/nk3zvoglwNRormVJrMOvgLpS2fcUW5xWc/kuk=;
+        b=gwUy1gyjM33967fv7ZnxeN/9/iK+LayZQQFi0YEVksBCtunLNYFc1zSIZSJMzSS7uztF6k
+        aMs4ztkWF0D2hmKUbH0K21+Nq7ydg+NKA/02Rm3LR0mqeVLUUYBIGtK6cns7Cox+0a67m+
+        Rm3FU+gizp5CjlS42pnSx66qUQ4ABOY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-421-ZaRJnskUMByj1AIuqOz8gA-1; Sun, 19 Jan 2020 03:03:28 -0500
+X-MC-Unique: ZaRJnskUMByj1AIuqOz8gA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2B79110054E3;
+        Sun, 19 Jan 2020 08:03:26 +0000 (UTC)
+Received: from ovpn-120-231.rdu2.redhat.com (ovpn-120-231.rdu2.redhat.com [10.10.120.231])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 706977C35A;
+        Sun, 19 Jan 2020 08:03:24 +0000 (UTC)
+Message-ID: <f19f0181e819989b13dc3605c25b110aa2677189.camel@redhat.com>
+Subject: Re: [PATCH RT] Revert "cpumask: Disable CONFIG_CPUMASK_OFFSTACK for
+ RT"
+From:   Scott Wood <swood@redhat.com>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Date:   Sun, 19 Jan 2020 02:03:23 -0600
+In-Reply-To: <20191218174159.ndcvzgqxavpcb37c@linutronix.de>
+References: <20191218174159.ndcvzgqxavpcb37c@linutronix.de>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fafa0550-184c-e59c-9b79-bd5d716a20cc@huawei.com>
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 19, 2020 at 02:55:14PM +0800, yukuai (C) wrote:
-> On 2020/1/19 14:14, Matthew Wilcox wrote:
-> > I don't understand your reasoning here.  If another process wants to
-> > access a page of the file which isn't currently in cache, it would have
-> > to first read the page in from storage.  If it's under readahead, it
-> > has to wait for the read to finish.  Why is the second case worse than
-> > the second?  It seems better to me.
+On Wed, 2019-12-18 at 18:41 +0100, Sebastian Andrzej Siewior wrote:
+> The one x86 case we had was fixed in commit
+> 	832df3d47badc ("x86/smp: Enhance native_send_call_func_ipi()")
 > 
-> Thanks for your response! My worries is that, for example:
+> I didn't find another in-IRQ user. Most callers use GFP_KERNEL and the
+> ATOMIC users are allocating the mask while holding a spinlock_t.
 > 
-> We read page 0, and trigger readahead to read n pages(0 - n-1). While in
-> another thread, we read page n-1.
+> Allow to use CPUMASK_OFFSTACK becauase it no longer is a problem on RT.
 > 
-> In the current implementation, if readahead is in the process of reading
-> page 0 - n-2,  later operation doesn't need to wait the former one to
-> finish. However, later operation will have to wait if we add all pages
-> to page cache first. And that is why I said it might cause problem for
-> performance overhead.
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> ---
+>  arch/x86/Kconfig | 2 +-
+>  lib/Kconfig      | 1 -
+>  2 files changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index 7f359aacf8148..4b77b3273051e 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -967,7 +967,7 @@ config CALGARY_IOMMU_ENABLED_BY_DEFAULT
+>  config MAXSMP
+>  	bool "Enable Maximum number of SMP Processors and NUMA Nodes"
+>  	depends on X86_64 && SMP && DEBUG_KERNEL
+> -	select CPUMASK_OFFSTACK if !PREEMPT_RT
+> +	select CPUMASK_OFFSTACK
 
-OK, but let's put some numbers on that.  Imagine that we're using high
-performance spinning rust so we have an access latency of 5ms (200
-IOPS), we're accessing 20 consecutive pages which happen to have their
-data contiguous on disk.  Our CPU is running at 2GHz and takes about
-100,000 cycles to submit an I/O, plus 1,000 cycles to add an extra page
-to the I/O.
+I get splats with this due to zalloc_cpumask_var() with preemption disabled
+(from the get_cpu() in x86 flush_tlb_mm_range()):
 
-Current implementation: Allocate 20 pages, place 19 of them in the cache,
-fail to place the last one in the cache.  The later thread actually gets
-to jump the queue and submit its bio first.  Its latency will be 100,000
-cycles (20us) plus the 5ms access time.  But it only has 20,000 cycles
-(4us) to hit this race, or it will end up behaving the same way as below.
 
-New implementation: Allocate 20 pages, place them all in the cache,
-then takes 120,000 cycles to build & submit the I/O, and wait 5ms for
-the I/O to complete.
+[   26.576878] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 1, name: systemd
+[   26.576879] 3 locks held by systemd/1:
+[   26.576881]  #0: ffff8897d66a1258 (&mm->mmap_sem#2){++++}, at: __do_munmap+0x430/0x470
+[   26.576891]  #1: ffffffff824be3a0 (rcu_read_lock){....}, at: rt_spin_lock+0x5/0xd0
+[   26.576899]  #2: ffff8897e04e42e0 ((pa_lock).lock){+.+.}, at: get_page_from_freelist+0x2eb/0x1860
+[   26.576906] Preemption disabled at:
+[   26.576906] [<ffffffff81068b5d>] flush_tlb_mm_range+0x2d/0x1b0
+[   26.576911] CPU: 11 PID: 1 Comm: systemd Tainted: G            E     5.4.10-rt5.dbg+ #224
+[   26.576913] Hardware name: Intel Corporation S2600BT/S2600BT, BIOS SE5C620.86B.01.00.0763.022420181017 02/24/2018
+[   26.576914] Call Trace:
+[   26.576916]  dump_stack+0x68/0x9b
+[   26.576921]  ___might_sleep+0x191/0x1f0
+[   26.576929]  rt_spin_lock+0x93/0xd0
+[   26.576931]  ? get_page_from_freelist+0x2eb/0x1860
+[   26.576933]  get_page_from_freelist+0x2eb/0x1860
+[   26.576939]  ? lockdep_hardirqs_on+0xf0/0x1a0
+[   26.576944]  ? _raw_spin_unlock_irqrestore+0x3e/0x90
+[   26.576945]  ? find_held_lock+0x2d/0x90
+[   26.576954]  __alloc_pages_nodemask+0x186/0x440
+[   26.576960]  new_slab+0x357/0xc20
+[   26.576971]  ___slab_alloc+0x52f/0x7a0
+[   26.576977]  ? alloc_cpumask_var_node+0x1f/0x30
+[   26.576981]  ? __lock_acquire+0x24b/0x1080
+[   26.576985]  ? alloc_cpumask_var_node+0x1f/0x30
+[   26.576987]  __slab_alloc.isra.89+0x6a/0xb4
+[   26.576992]  ? alloc_cpumask_var_node+0x1f/0x30
+[   26.576993]  __kmalloc_node+0xd9/0x410
+[   26.576997]  ? x86_configure_nx+0x50/0x50
+[   26.576998]  ? flush_tlb_func_common.isra.8+0x530/0x530
+[   26.576999]  alloc_cpumask_var_node+0x1f/0x30
+[   26.577001]  on_each_cpu_cond_mask+0x55/0x1e0
+[   26.577006]  ? rcu_read_lock_sched_held+0x52/0x80
+[   26.577013]  flush_tlb_mm_range+0x13b/0x1b0
+[   26.577018]  tlb_flush_mmu+0x89/0x170
+[   26.577020]  tlb_finish_mmu+0x3d/0x70
+[   26.577022]  unmap_region+0xd9/0x120
+[   26.577028]  ? rt_mutex_slowunlock+0x65/0x70
+[   26.577034]  __do_munmap+0x26c/0x470
+[   26.577039]  __vm_munmap+0x72/0xc0
+[   26.577044]  __x64_sys_munmap+0x27/0x30
+[   26.577046]  do_syscall_64+0x6c/0x280
+[   26.577050]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[   26.577053] RIP: 0033:0x7f33a23243f7
+[   26.577054] Code: 64 89 02 48 83 c8 ff eb 9c 48 8b 15 93 da 2c 00 f7 d8 64 89 02 e9 6a ff ff ff 66 0f 1f 84 00 00 00 00 00 b8 0b 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 69 da 2c 00 f7 d8 64 89 01 48
+[   26.577056] RSP: 002b:00007fffc45a8228 EFLAGS: 00000206 ORIG_RAX: 000000000000000b
+[   26.577056] RAX: ffffffffffffffda RBX: 000055bce7ca7790 RCX: 00007f33a23243f7
+[   26.577057] RDX: 0000000000000000 RSI: 0000000000001000 RDI: 00007f33a3b0f000
+[   26.577058] RBP: 0000000000000000 R08: 000055bce7ca7870 R09: 00007f33a3afc940
+[   26.577058] R10: 0000000000000006 R11: 0000000000000206 R12: 0000000000000000
+[   26.577059] R13: 0000000000000000 R14: 000055bce7ca6e70 R15: 000055bce7c9cea0
 
-But look how much more likely it is that it'll hit during the window
-where we're waiting for the I/O to complete -- 5ms is 1250 times longer
-than 4us.
+-Scott
 
-If it _does_ get the latency benefit of jumping the queue, the readahead
-will create one or two I/Os.  If it hit page 18 instead of page 19, we'd
-end up doing three I/Os; the first for page 18, then one for pages 0-17,
-and one for page 19.  And that means the disk is going to be busy for
-15ms, delaying the next I/O for up to 10ms.  It's actually beneficial in
-the long term for the second thread to wait for the readahead to finish.
 
-Oh, and the current ->readpages code has a race where if the page tagged
-with PageReadahead ends up not being inserted, we'll lose that bit,
-which means the readahead will just stop and have to restart (because
-it will look to the readahead code like it's not being effective).
-That's a far worse performance problem.
