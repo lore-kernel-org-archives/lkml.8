@@ -2,90 +2,216 @@ Return-Path: <SRS0=pPEE=3I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB27C33CB1
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 06:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DCDFC33CB1
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 06:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E635220663
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 06:30:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF72E20714
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 06:41:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gibson.dropbear.id.au header.i=@gibson.dropbear.id.au header.b="Wnz/GsAW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbgASGaq (ORCPT
+        id S1726635AbgASGlO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 01:30:46 -0500
-Received: from mga17.intel.com ([192.55.52.151]:6092 "EHLO mga17.intel.com"
+        Sun, 19 Jan 2020 01:41:14 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:43193 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725809AbgASGaq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 01:30:46 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jan 2020 22:30:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,337,1574150400"; 
-   d="scan'208";a="214929065"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.138]) ([10.239.159.138])
-  by orsmga007.jf.intel.com with ESMTP; 18 Jan 2020 22:30:43 -0800
-Cc:     baolu.lu@linux.intel.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, ashok.raj@intel.com,
-        jacob.jun.pan@intel.com, kevin.tian@intel.com,
-        Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 3/4] iommu: Preallocate iommu group when probing
- devices
-To:     Joerg Roedel <joro@8bytes.org>
-References: <20200101052648.14295-1-baolu.lu@linux.intel.com>
- <20200101052648.14295-4-baolu.lu@linux.intel.com>
- <20200117102151.GF15760@8bytes.org>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <25e2e7fa-487c-f951-4b2c-27bac5e30815@linux.intel.com>
-Date:   Sun, 19 Jan 2020 14:29:17 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1725895AbgASGlN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jan 2020 01:41:13 -0500
+Received: by ozlabs.org (Postfix, from userid 1007)
+        id 480lYz1Lbfz9sRs; Sun, 19 Jan 2020 17:41:11 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+        d=gibson.dropbear.id.au; s=201602; t=1579416071;
+        bh=bXW8TlAw5ljP1KuFXsqAjJMreM+vJSvzWkAfts/6mZM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Wnz/GsAWtQSYcwLb3Z7NJJqVC3Keme+Ea2hmR44IG+OMyLS9wkNSlGmdTC4tMO0TM
+         apqU8SzLFyQmDdTiDK2QawcnrbPq5dRpPWU306VwkPZ+ZWLbN9FrH+CCJmzBYI/KFS
+         RYSNBemmnHK/sn2ATMVLXLO0WzFjqpNnKTNUHTKM=
+Date:   Sun, 19 Jan 2020 16:40:45 +1000
+From:   David Gibson <david@gibson.dropbear.id.au>
+To:     Alexandre Torgue <alexandre.torgue@st.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Simon Glass <sjg@chromium.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Devicetree Compiler <devicetree-compiler@vger.kernel.org>,
+        Steve McIntyre <steve.mcintyre@linaro.org>
+Subject: Re: [RFC PATCH 1/3] dtc: Add dtb build information option
+Message-ID: <20200119064045.GE54439@umbus>
+References: <20200113181625.3130-1-alexandre.torgue@st.com>
+ <20200113181625.3130-2-alexandre.torgue@st.com>
+ <20200116005741.GB54439@umbus>
+ <d2594b79-a45d-dcac-3642-90016a1408b8@st.com>
+ <20200117090937.GU54439@umbus>
+ <CAL_JsqKTsX9efYDMjGahFDxj0cEfzozeNrY1Nq1bECzgOZGqdQ@mail.gmail.com>
+ <c78545d9-cd91-9b18-2b85-07ce5f87ca04@st.com>
 MIME-Version: 1.0
-In-Reply-To: <20200117102151.GF15760@8bytes.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="YCGSkTKVt49j0xAo"
+Content-Disposition: inline
+In-Reply-To: <c78545d9-cd91-9b18-2b85-07ce5f87ca04@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joerg,
 
-On 1/17/20 6:21 PM, Joerg Roedel wrote:
-> On Wed, Jan 01, 2020 at 01:26:47PM +0800, Lu Baolu wrote:
->> This splits iommu group allocation from adding devices. This makes
->> it possible to determine the default domain type for each group as
->> all devices belonging to the group have been determined.
-> 
-> I think its better to keep group allocation as it is and just defer
-> default domain allocation after each device is in its group. But take
+--YCGSkTKVt49j0xAo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I tried defering default domain allocation, but it seems not possible.
+On Fri, Jan 17, 2020 at 04:11:19PM +0100, Alexandre Torgue wrote:
+> David, Rob,
+>=20
+> On 1/17/20 3:43 PM, Rob Herring wrote:
+> > On Fri, Jan 17, 2020 at 6:26 AM David Gibson
+> > <david@gibson.dropbear.id.au> wrote:
+> > >=20
+> > > On Thu, Jan 16, 2020 at 09:58:23AM +0100, Alexandre Torgue wrote:
+> > > > Hi David
+> > > >=20
+> > > > On 1/16/20 1:57 AM, David Gibson wrote:
+> > > > > On Mon, Jan 13, 2020 at 07:16:23PM +0100, Alexandre Torgue wrote:
+> > > > > > This commit adds the possibility to add build information for a=
+ DTB.
+> > > > > > Build information can be: build date, DTS version, "who built t=
+he DTB"
+> > > > > > (same kind of information that we get in Linux with the Linux b=
+anner).
+> > > > > >=20
+> > > > > > To do this, an extra option "-B" using an information file as a=
+rgument
+> > > > > > has been added. If this option is used, input device tree is ap=
+pended with
+> > > > > > a new string property "Build-info". This property is built with=
+ information
+> > > > > > found in information file given as argument. This file has to b=
+e generated
+> > > > > > by user and shouldn't exceed 256 bytes.
+> > > > > >=20
+> > > > > > Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+> > > > >=20
+> > > > > At the very least, this patch of the series will need to be sent =
+to
+> > > > > upstream dtc first.
+> > > >=20
+> > > > Ok sorry. I thought that sending all the series would give more
+> > > > information.
+> > >=20
+> > > That's fair enough, but in order to merge, you'll need to post against
+> > > upstream dtc.
+>=20
+> ok
+>=20
+> > >=20
+> > > > > I'm also not terribly clear on what you're trying to accomplish h=
+ere,
+> > > > > and why it's useful.
+> > > >=20
+> > > > Let's take Kernel boot at example (but could be extend to other DTB=
+ "users"
+> > > > like U-Boot). When Linux kernel booting we get a log that gives use=
+ful
+> > > > information about kernel image: source version, build date, people =
+who built
+> > > > the kernel image, compiler version. This information is useful for =
+debug and
+> > > > support. The aim is to get same kind of information but for the DTB.
+> > > >=20
+> > > > > Since you're doing this specifically for use with dtbs built in t=
+he
+> > > > > kernel build, could you just use a:
+> > > > >      Build-info =3D /incbin/ "build-info.txt";
+> > > > > in each of the in-kernel .dts files?
+> > > >=20
+> > > > My first idea was to not modify all existing .dts files. Adding an =
+extra
+> > > > option in dtc is (for me) the softer way to do it. I mean, compile
+> > > > information should come through compiler without modify .dts files =
+outside
+> > > > from dtc. In this way it will be easy to everybody using dtc (insid=
+e our
+> > > > outside Linux tree) to add dtb build info (even if they don't how t=
+o write a
+> > > > dts file).
+> > >=20
+> > > But you're not really having this information coming from the
+> > > compiler.  Instead you're adding a compiler option that just force
+> > > includes another file into the generated tree, and it's up to your
+> > > build scripts to put something useful into that file.
+> > >=20
+> > > I don't really see that as preferable to modifying the .dts files.
+>=20
+> I agree. I took example on kernel version info. It doesn't come from gcc =
+but
+> from auto-generated file. I thought it was the easier way to process. But=
+ I
+> understand your concerns. As it is not generated by dtc itself, dtc should
+> not be modified.
+>=20
+> > >=20
+> > > I also dislike the fact that the option as proposed is much more
+> > > general than the name suggests, but also very similar too, but much
+> > > more specific than the existing /incbin/ option.
+> > >=20
+> > > What might be better would be to have a dtc option which force appends
+> > > an extra .dts to the mail .dts compiled.  You can then put an overlay
+> > > template in that file, something like:
+> > >=20
+> > > &{/} {
+> > >          linux,build-info =3D /incbin/ "build-info.txt;
+> > > }
+> >=20
+> > I like this suggestion either as an include another dts file or an
+> > overlay. The latter could be useful as a way to maintain current dtb
+> > files while splitting the source files into base and overlay dts
+> > files.
+>=20
+> First suggestion will imply to modify an huge part of dts file (not a big
+> modification but a lot :)).
 
-The call path of adding devices into their groups:
+I'm not exactly sure what you're meaning by the "first suggestion" here.
 
-iommu_probe_device
--> ops->add_device(dev)
-    -> (iommu vendor driver) iommu_group_get_for_dev(dev)
+> Second one (dtbo) sounds good. In this case this dtso will be created from
+> build-info.txt and applied when dtb is built. So no impacts on current dts
+> file. I'm right ?
 
-After doing this, the vendor driver will get the default domain and
-apply dma_ops according to the domain type. If we defer the domain
-allocation, they will get a NULL default domain and cause panic in
-the vendor driver.
+This is not a dtbo, it's using the compile time overlaying syntax.
 
-Any suggestions?
+=2Edtbo would be useless for this purpose, since the build information
+would be detached from the built dtb.
 
-Best regards,
-baolu
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
 
-> care about the device hotplug path which might add new devices to groups
-> which already have a default domain, or add new groups that might need a
-> default domain too.
+--YCGSkTKVt49j0xAo
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAl4j+ewACgkQbDjKyiDZ
+s5KsdQ/9E6rrP0hYsD5nX8o7IW6qgB6v2bR/F4ld0SIbu4JS/qY7CcSXcsX6GrCH
+vU35wpmiII5j6u2bLp6gvO7ualE7A/2xxxX1HAv2ilam4WlfD61jQB2PooSdO0z1
+16Dk5yBzQfgPHB/uws4l1vTZFTUmBAHMGYxYLH98vhGBvo0jm3pglSKKSqQtIEjn
+UOktQWvRHigFDSfCMnVU1M2ZDHPiuYKAt+TnaAoY6Jabq8TuZLyRqHcXY4EVGgMT
+eZfNDDuOQxzx6sr+3S8o9BkGTF/OSgOxAX/czmSC9VT+mF6jf+/mg+Rk0PefirPs
+p+iwyvcSTHfq6YDjdrZaJ1h7dRO3qJyjjaBq185mc16QCx/BQo5/gHsoO3/9vnnP
+NbMGN0ArIIIvPLqJq7lPWyvg+h72D3zfJfaz286H78gd325EbnqnqXXeWVTQEik3
+imhp0ttc+3+724MXPwq+kfca9s/ytjtC2usMLSLe50vVsyCqJmhBuoTaLpmJwpHU
+ZASML/WdL/EYYh0Ab9snx7orL8LtVjHjAzgkZAc3P9rFZHkqUctxpkBEzx6j7UTr
+GwJkha4clJhCdxmscW8PeaGWZp0WNhDkgg9KJnZ8o3Atvbhb+auVuLHJCEfGKQ1v
+qT400xmw5w1Dn5WRVs4KC+4oVvtsyoN3SWgWEuq0wF1OEvwezPY=
+=JnME
+-----END PGP SIGNATURE-----
+
+--YCGSkTKVt49j0xAo--
