@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11DE0C32771
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 00:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADCF8C33CB7
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 00:14:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D928F24683
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 00:14:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F7762467C
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 00:14:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fb/I1AUO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rBW0+V0t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729044AbgASAOS (ORCPT
+        id S1729076AbgASAOV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 19:14:18 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51410 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728901AbgASAOO (ORCPT
+        Sat, 18 Jan 2020 19:14:21 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39197 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729014AbgASAOR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 19:14:14 -0500
-Received: by mail-wm1-f67.google.com with SMTP id d73so10892868wmd.1;
-        Sat, 18 Jan 2020 16:14:13 -0800 (PST)
+        Sat, 18 Jan 2020 19:14:17 -0500
+Received: by mail-wm1-f65.google.com with SMTP id 20so11160769wmj.4;
+        Sat, 18 Jan 2020 16:14:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ugnjhMRTmnK+PtKom+FYsDk92nymRWFHwav/7Qa5gLg=;
-        b=fb/I1AUO9WZ+sdrn1r9HSCuC3R4I3ezam0h3JleUYJACLuGWZ1tdZfA5gAfKviiP0Z
-         HS8qM1r6zT+B/jWR5VJYIPCSi493opNtjZRuGDg4hwxi5fcuMLYJnXyHYOFTE5ViFK0Q
-         QHybKJJc45aVFTdfBhE+yAtK8I9mKrl2hLeDif+Ae5nhKiBMSfZE+SwdjaeA5+eoIXja
-         K4UxFp4ULvpgy+4bHNElNTZ70lQdDdfsNEHASiuLdTRXBid1awWV0DVYIXl3F41mlH2L
-         NQQOsRl2623Udvzc2iAXa7hkI+IlLxG+t2pFLAaQzwaKBifseUBUiIT2BmOVkJ9PmlN5
-         JzGw==
+        bh=9q6DalID/6nJXKb+L/ud3IZ3fY2HNeLSUvnbsc/zVY4=;
+        b=rBW0+V0t5FCD1BIk7j5dGm5ZUkGljoiF5+I7ac+RYDBAlOtKZIN5QPUD1BfDMcQzFP
+         4Xumgkg6qbzFIk8gLGyzMG62wQSfcoU+viB9ciztzbq10/OV81h64q7Cz+UVdoAtXC5w
+         pBPdeV633bRnhdmv6B88DAp0lk/S0GwR/l31BkW7V0Qt2gc9DhhiVsYo1Mf8gLMyXvak
+         FA1tVtR+E/OY1iDuVqBhW99RvfFYRFvtH1rxXneaAwlEugQ2b2YdxM+gIdv04om/eHHj
+         TkmlE8Ide0lmZ/J83K7tYlT5EPrNm400ssJxlHFqi6LuGtiA2CuQU3cbqO9Wu/Vd5KDM
+         TtpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=ugnjhMRTmnK+PtKom+FYsDk92nymRWFHwav/7Qa5gLg=;
-        b=laJH/2SHm6GE2GmArH948iXWn28kBe26ghRIPR5nyA9VfU0wlBHloWmYdey/tqp2Ly
-         ENRAlL5p3r2yG5SWQjXeTL3D6RGMZPjAWeifayJMALtBHJI2zA4ODCmeZalofCHE0GFi
-         Y+ApOEGWenElEAt4GhN/SmSyPfAWEVTkXwbSlvdGqL6D2jez3hj6HpWyqrNMb22ApTGe
-         VZWEdow8Q/5ufuGzJuVe00wRLcLnCCF9YeCBzLPr1PfY0iOdmzxaxQvm2S6XGV6q1VGF
-         AhESTfgvgBSlhklTlgWbgo5djEcVYzfmbFWmtFF8ytyOImHJfzpAprDUNQSRAhG/uq+Z
-         X5og==
-X-Gm-Message-State: APjAAAVSp+8IMDPhH2WpXGPFGvz1yzimSEq2FyxTuCsismStPIwH4sfj
-        +IPtxEQuB+pfJ9qL+RtmH8o=
-X-Google-Smtp-Source: APXvYqxUpkePkh24N2/Hepls/OnjrInhFI2HLhcjkT7bkk7t+M+FK7ghnFSMXJwvThrcwbOtpCntIA==
-X-Received: by 2002:a1c:3187:: with SMTP id x129mr12358687wmx.91.1579392852886;
-        Sat, 18 Jan 2020 16:14:12 -0800 (PST)
+        bh=9q6DalID/6nJXKb+L/ud3IZ3fY2HNeLSUvnbsc/zVY4=;
+        b=tuDP/eNyO1b2qSR5BXeXBn2iw+J64UNBX2JhixgvKkYxLgb3CftSN+joZ5DfV2oq7B
+         /uFT6MbW3cRAyiftHAvGS2FJqAtzzxqqZo3XJSCpGvR3DkuaC8c4y/q1L6CeGXd7ezsg
+         P2lV0Ta/zfQbeVn5V80NqwY+I5ebQ6MOIh7UIb9SpSFYE3l77DF+nAwUomxCQR6uU0b6
+         2zwZx7HSDoY3OdUACTLr4uHnRpRST/OoyhWjyqYALkZFE4pt155fKWgsZbhnop76iugy
+         6jSIbmcu+LwYsP6USPn52ZIt2kwiLzVogbiWFHwE6Bm2E/aqL5y3gx4JOFGeCfRk28+s
+         mh4g==
+X-Gm-Message-State: APjAAAU6/BplXzG4HhuLs2UpR48i4qPfYBa2SgxeJpkHITWH6wcLwdWa
+        KrB5steL1IW9OmOCac7OHeI=
+X-Google-Smtp-Source: APXvYqy9BKWJ1epovLCQLXGM0AHNn5Pby7OpTpwIW/BY+A6+38viCy+Yyd9irIE0xi1/iiudcL9rsg==
+X-Received: by 2002:a1c:6a07:: with SMTP id f7mr11651706wmc.171.1579392855132;
+        Sat, 18 Jan 2020 16:14:15 -0800 (PST)
 Received: from localhost.localdomain (ip5f5bee3c.dynamic.kabel-deutschland.de. [95.91.238.60])
-        by smtp.gmail.com with ESMTPSA id i8sm42177432wro.47.2020.01.18.16.14.11
+        by smtp.gmail.com with ESMTPSA id i8sm42177432wro.47.2020.01.18.16.14.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Jan 2020 16:14:12 -0800 (PST)
+        Sat, 18 Jan 2020 16:14:14 -0800 (PST)
 From:   Bean Huo <huobean@gmail.com>
 To:     alim.akhtar@samsung.com, avri.altman@wdc.com,
         asutoshd@codeaurora.org, jejb@linux.ibm.com,
@@ -63,9 +63,9 @@ To:     alim.akhtar@samsung.com, avri.altman@wdc.com,
         beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
         cang@codeaurora.org
 Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 6/8] scsi: ufs: Delete is_init_prefetch from struct ufs_hba
-Date:   Sun, 19 Jan 2020 01:13:25 +0100
-Message-Id: <20200119001327.29155-7-huobean@gmail.com>
+Subject: [PATCH v3 7/8] scsi: ufs: Add max_lu_supported in struct ufs_dev_info
+Date:   Sun, 19 Jan 2020 01:13:26 +0100
+Message-Id: <20200119001327.29155-8-huobean@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200119001327.29155-1-huobean@gmail.com>
 References: <20200119001327.29155-1-huobean@gmail.com>
@@ -76,58 +76,101 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bean Huo <beanhuo@micron.com>
 
-Without variable is_init_prefetch, the current logic can guarantee
-ufshcd_init_icc_levels() will execute only once, delete it now.
+Add one new parameter max_lu_supported in struct ufs_dev_info,
+which will be used to express exactly how many general LUs being
+supported by UFS device, and initialize it during booting stage.
+This patch also adds a new function ufshcd_init_device_geo_params()
+for initialization of UFS device geometry descriptor related parameters.
 
+Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
 Signed-off-by: Bean Huo <beanhuo@micron.com>
 ---
- drivers/scsi/ufs/ufshcd.c | 5 +----
- drivers/scsi/ufs/ufshcd.h | 2 --
- 2 files changed, 1 insertion(+), 6 deletions(-)
+ drivers/scsi/ufs/ufs.h    |  2 ++
+ drivers/scsi/ufs/ufshcd.c | 41 +++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 41 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h
+index fcc9b4d4e56f..c982bcc94662 100644
+--- a/drivers/scsi/ufs/ufs.h
++++ b/drivers/scsi/ufs/ufs.h
+@@ -530,6 +530,8 @@ struct ufs_dev_info {
+ 	bool f_power_on_wp_en;
+ 	/* Keeps information if any of the LU is power on write protected */
+ 	bool is_lu_power_on_wp;
++	/* Maximum number of general LU supported by the UFS device */
++	u8 max_lu_supported;
+ 	u16 wmanufacturerid;
+ 	/*UFS device Product Name */
+ 	u8 *model;
 diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 5f3b0ad5135a..4f8fcbb5f92e 100644
+index 4f8fcbb5f92e..dd10558f4d01 100644
 --- a/drivers/scsi/ufs/ufshcd.c
 +++ b/drivers/scsi/ufs/ufshcd.c
-@@ -6967,8 +6967,7 @@ static int ufshcd_add_lus(struct ufs_hba *hba)
- {
+@@ -6858,6 +6858,37 @@ static void ufshcd_init_desc_sizes(struct ufs_hba *hba)
+ 		hba->desc_size.hlth_desc = QUERY_DESC_HEALTH_DEF_SIZE;
+ }
+ 
++static int ufshcd_init_device_geo_params(struct ufs_hba *hba)
++{
++	int err;
++	size_t buff_len;
++	u8 *desc_buf;
++
++	buff_len = hba->desc_size.geom_desc;
++	desc_buf = kmalloc(buff_len, GFP_KERNEL);
++	if (!desc_buf) {
++		err = -ENOMEM;
++		goto out;
++	}
++
++	err = ufshcd_read_desc(hba, QUERY_DESC_IDN_GEOMETRY, 0,
++			desc_buf, buff_len);
++	if (err) {
++		dev_err(hba->dev, "%s: Failed reading Geometry Desc. err = %d\n",
++				__func__, err);
++		goto out;
++	}
++
++	if (desc_buf[GEOMETRY_DESC_PARAM_MAX_NUM_LUN] == 1)
++		hba->dev_info.max_lu_supported = 32;
++	else if (desc_buf[GEOMETRY_DESC_PARAM_MAX_NUM_LUN] == 0)
++		hba->dev_info.max_lu_supported = 8;
++
++out:
++	kfree(desc_buf);
++	return err;
++}
++
+ static struct ufs_ref_clk ufs_ref_clk_freqs[] = {
+ 	{19200000, REF_CLK_FREQ_19_2_MHZ},
+ 	{26000000, REF_CLK_FREQ_26_MHZ},
+@@ -6931,9 +6962,17 @@ static int ufshcd_init_params(struct ufs_hba *hba)
+ 	bool flag;
  	int ret;
  
--	if (!hba->is_init_prefetch)
--		ufshcd_init_icc_levels(hba);
-+	ufshcd_init_icc_levels(hba);
++	/* Clear any previous UFS device information */
++	memset(&hba->dev_info, 0, sizeof(hba->dev_info));
++
+ 	/* Init check for device descriptor sizes */
+ 	ufshcd_init_desc_sizes(hba);
  
- 	/* Add required well known logical units to scsi mid layer */
- 	ret = ufshcd_scsi_add_wlus(hba);
-@@ -6994,8 +6993,6 @@ static int ufshcd_add_lus(struct ufs_hba *hba)
- 	scsi_scan_host(hba->host);
- 	pm_runtime_put_sync(hba->dev);
++	/* Init UFS geometry descriptor related parameters */
++	ret = ufshcd_init_device_geo_params(hba);
++	if (ret)
++		goto out;
++
+ 	/* Check and apply UFS device quirks */
+ 	ret = ufs_get_device_desc(hba);
+ 	if (ret) {
+@@ -6944,8 +6983,6 @@ static int ufshcd_init_params(struct ufs_hba *hba)
  
--	if (!hba->is_init_prefetch)
--		hba->is_init_prefetch = true;
- out:
- 	return ret;
- }
-diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-index 32b6714f25a5..5c65d9fdeb14 100644
---- a/drivers/scsi/ufs/ufshcd.h
-+++ b/drivers/scsi/ufs/ufshcd.h
-@@ -501,7 +501,6 @@ struct ufs_stats {
-  * @intr_mask: Interrupt Mask Bits
-  * @ee_ctrl_mask: Exception event control mask
-  * @is_powered: flag to check if HBA is powered
-- * @is_init_prefetch: flag to check if data was pre-fetched in initialization
-  * @init_prefetch_data: data pre-fetched during initialization
-  * @eh_work: Worker to handle UFS errors that require s/w attention
-  * @eeh_work: Worker to handle exception events
-@@ -652,7 +651,6 @@ struct ufs_hba {
- 	u32 intr_mask;
- 	u16 ee_ctrl_mask;
- 	bool is_powered;
--	bool is_init_prefetch;
- 	struct ufs_init_prefetch init_prefetch_data;
+ 	ufs_fixup_device_setup(hba);
  
- 	/* Work Queues */
+-	/* Clear any previous UFS device information */
+-	memset(&hba->dev_info, 0, sizeof(hba->dev_info));
+ 	if (!ufshcd_query_flag_retry(hba, UPIU_QUERY_OPCODE_READ_FLAG,
+ 			QUERY_FLAG_IDN_PWR_ON_WPE, &flag))
+ 		hba->dev_info.f_power_on_wp_en = flag;
 -- 
 2.17.1
 
