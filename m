@@ -2,339 +2,104 @@ Return-Path: <SRS0=pPEE=3I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E68C33CB7
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 14:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F77C33CB1
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 14:19:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2E892072B
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 14:15:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579443349;
-	bh=g6W+x/faFHqWNP96zz8T9b7ZL6BY5dXLLnKV7Hf3XO8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=2h2VXI1fUsf+v9EwS8ckdkgp2bmz2xDJ9n9c7aYOXrS7uX1H4BLk5CLrMtHN6E5f9
-	 N+evejwdpPxk8ZnHh2RZ94owlxcFr6uChl9Uwnt0wWtQmQ1JuAaHVl8P9pgV2hz9JM
-	 i2S/JHP+yry8q56dv4F4BTKrMSHJ4Coe/S4QhD2A=
+	by mail.kernel.org (Postfix) with ESMTP id 0CBD6206D7
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 14:19:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="oEbadlBr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbgASOPs (ORCPT
+        id S1727041AbgASOTj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 09:15:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45704 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726816AbgASOPr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 09:15:47 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 321B9206D7;
-        Sun, 19 Jan 2020 14:15:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579443345;
-        bh=g6W+x/faFHqWNP96zz8T9b7ZL6BY5dXLLnKV7Hf3XO8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=HY1pepszUjHeQ7PAcS8Jl2iWG1LldgGGs0i5pq/mkN2LUjpK1pk4uq4KHR3O1btxo
-         Vta+93TAlQtTDnHppuZ4qoNbFTa+a2g/nH/Lr2Ud+U2TLuX721CnHa4sj0JqjEKwB+
-         k8LRmsrQ06qjSRtoR7kl6aJFvLaDAVM8oSRGsfD0=
-Date:   Sun, 19 Jan 2020 23:15:40 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Tim Bird <Tim.Bird@sony.com>, Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 22/22] Documentation: tracing: Add boot-time tracing
- document
-Message-Id: <20200119231540.eaebef64f8a69bc97f4abf25@kernel.org>
-In-Reply-To: <da3c941a-f7a2-537e-9201-862450cb69d9@infradead.org>
-References: <157867220019.17873.13377985653744804396.stgit@devnote2>
-        <157867246028.17873.8047384554383977870.stgit@devnote2>
-        <da3c941a-f7a2-537e-9201-862450cb69d9@infradead.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sun, 19 Jan 2020 09:19:39 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:2721 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726890AbgASOTi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jan 2020 09:19:38 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e2465690000>; Sun, 19 Jan 2020 06:19:23 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sun, 19 Jan 2020 06:19:38 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sun, 19 Jan 2020 06:19:38 -0800
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 19 Jan
+ 2020 14:19:35 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Sun, 19 Jan 2020 14:19:35 +0000
+Received: from audio.nvidia.com (Not Verified[10.24.34.185]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e2465750003>; Sun, 19 Jan 2020 06:19:35 -0800
+From:   Sameer Pujar <spujar@nvidia.com>
+To:     <tiwai@suse.com>, <perex@perex.cz>
+CC:     <broonie@kernel.org>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>, Sameer Pujar <spujar@nvidia.com>
+Subject: [RFC] ASoC: soc-pcm: crash in snd_soc_dapm_new_dai
+Date:   Sun, 19 Jan 2020 19:49:23 +0530
+Message-ID: <1579443563-12287-1-git-send-email-spujar@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1579443563; bh=rFEFNNnjn/oFYBOvROmovtPy+XEjEPcolgI3hKuqxZc=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:Content-Type;
+        b=oEbadlBrApqADc6KOru0g7hQMweDuKGV5p6vnJcQBoYPz7HWZ0KmxehJkZrwcplk3
+         lf4eP4FsFzZjikZc1bJDq5SPDF06GHAsHVCh1kH2IMIiLjVv747W8g8dueW9vTHAkz
+         OGODQixeG+WcR4rtsNsNQ5oJxJOfOitpM7ztFP/8d/ckBRpeMx3GaBiDepeMWDF0Ev
+         UbBBXhwioxobwN01uItg9XBtoftLT3zh6Xzrml33t02VXusaBXlF5BXdtMQrU/z8it
+         Ac39PFowcO9ASFphoi5XDJWc+3gwGoSAJymE2AOlDsi8SB5mUAgRiYSny50GplDmQK
+         lCvg37/W9FKvw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Randy,
+Crash happens in snd_soc_dapm_new_dai() when substream->private_data
+access is made and substream is NULL here. This is seen for DAIs where
+only playback or capture stream is defined. This seems to be happening
+for codec2codec DAI link.
 
-Thank you for your comments!
+Both playback and capture are 0 during soc_new_pcm(). This is probably
+happening because cpu_dai and codec_dai are both validated either for
+SNDRV_PCM_STREAM_PLAYBACK or SNDRV_PCM_STREAM_CAPTURE.
 
-On Sat, 18 Jan 2020 10:14:08 -0800
-Randy Dunlap <rdunlap@infradead.org> wrote:
+Shouldn't be playback = 1 when,
+ - playback stream is available for codec_dai AND
+ - capture stream is available for cpu_dai
 
-> Hi,
-> 
-> Here are a few editorial comments for you...
-> 
-> 
-> On 1/10/20 8:07 AM, Masami Hiramatsu wrote:
-> > Add a documentation about boot-time tracing options in
-> > boot config.
-> > 
-> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> > ---
-> >  Documentation/admin-guide/bootconfig.rst |    2 
-> >  Documentation/trace/boottime-trace.rst   |  184 ++++++++++++++++++++++++++++++
-> >  Documentation/trace/index.rst            |    1 
-> >  3 files changed, 187 insertions(+)
-> >  create mode 100644 Documentation/trace/boottime-trace.rst
-> > 
-> 
-> > diff --git a/Documentation/trace/boottime-trace.rst b/Documentation/trace/boottime-trace.rst
-> > new file mode 100644
-> > index 000000000000..1d10fdebf1b2
-> > --- /dev/null
-> > +++ b/Documentation/trace/boottime-trace.rst
-> > @@ -0,0 +1,184 @@
-> > +.. SPDX-License-Identifier: GPL-2.0
-> > +
-> > +=================
-> > +Boot-time tracing
-> > +=================
-> > +
-> > +:Author: Masami Hiramatsu <mhiramat@kernel.org>
-> > +
-> > +Overview
-> > +========
-> > +
-> > +Boot-time tracing allows users to trace boot-time process including
-> > +device initialization with full features of ftrace including per-event
-> > +filter and actions, histograms, kprobe-events and synthetic-events,
-> > +and trace instances.
-> > +Since kernel cmdline is not enough to control these complex features,
-> > +this uses bootconfig file to describe tracing feature programming.
-> > +
-> > +Options in the Boot Config
-> > +==========================
-> > +
-> > +Here is the list of available options list for boot time tracing in
-> > +boot config file [1]_. All options are under "ftrace." or "kernel."
-> > +refix. See kernel parameters for the options which starts
-> 
->    prefix.
+and vice-versa for capture = 1?
 
-Oops, OK.
+Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+---
+ sound/soc/soc-pcm.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> 
-> > +with "kernel." prefix [2]_.
-> > +
-> > +.. [1] See :ref:`Documentation/admin-guide/bootconfig.rst <bootconfig>`
-> > +.. [2] See :ref:`Documentation/admin-guide/kernel-parameters.rst <kernelparameters>`
-> > +
-> > +Ftrace Global Options
-> > +---------------------
-> > +
-> > +Ftrace global options have "kernel." prefix in boot config, which means
-> > +these options are passed as a part of kernel legacy command line.
-> > +
-> > +kernel.tp_printk
-> > +   Output trace-event data on printk buffer too.
-> > +
-> > +kernel.dump_on_oops [= MODE]
-> > +   Dump ftrace on Oops. If MODE = 1 or omitted, dump trace buffer
-> > +   on all CPUs. If MODE = 2, dump a buffer on a CPU which kicks Oops.
-> > +
-> > +kernel.traceoff_on_warning
-> > +   Stop tracing if WARN_ON() occurs.
-> > +
-> > +kernel.fgraph_max_depth = MAX_DEPTH
-> > +   Set MAX_DEPTH to maximum depth of fgraph tracer.
-> > +
-> > +kernel.fgraph_filters = FILTER[, FILTER2...]
-> > +   Add fgraph tracing function filters.
-> > +
-> > +kernel.fgraph_notraces = FILTER[, FILTER2...]
-> > +   Add fgraph non tracing function filters.
-> 
->                  non-tracing
-
-OK.
-
-> 
-> > +
-> > +
-> > +Ftrace Per-instance Options
-> > +---------------------------
-> > +
-> > +These options can be used for each instance including global ftrace node.
-> > +
-> > +ftrace.[instance.INSTANCE.]options = OPT1[, OPT2[...]]
-> > +   Enable given ftrace options.
-> > +
-> > +ftrace.[instance.INSTANCE.]trace_clock = CLOCK
-> > +   Set given CLOCK to ftrace's trace_clock.
-> > +
-> > +ftrace.[instance.INSTANCE.]buffer_size = SIZE
-> > +   Configure ftrace buffer size to SIZE. You can use "KB" or "MB"
-> > +   for that SIZE.
-> > +
-> > +ftrace.[instance.INSTANCE.]alloc_snapshot
-> > +   Allocate snapshot buffer.
-> > +
-> > +ftrace.[instance.INSTANCE.]cpumask = CPUMASK
-> > +   Set CPUMASK as trace cpu-mask.
-> > +
-> > +ftrace.[instance.INSTANCE.]events = EVENT[, EVENT2[...]]
-> > +   Enable given events on boot. You can use a wild card in EVENT.
-> > +
-> > +ftrace.[instance.INSTANCE.]tracer = TRACER
-> > +   Set TRACER to current tracer on boot. (e.g. function)
-> > +
-> > +ftrace.[instance.INSTANCE.]ftrace.filters
-> > +   This will take an array of tracing function filter rules
-> 
-> end with '.' as above descriptions.
-
-Yes, I missed it.
-
-> 
-> > +
-> > +ftrace.[instance.INSTANCE.]ftrace.notraces
-> > +   This will take an array of NON-tracing function filter rules
-> 
-> ditto
-
-OK.
-
-> 
-> > +
-> > +
-> > +Ftrace Per-Event Options
-> > +------------------------
-> > +
-> > +These options are setting per-event options.
-> > +
-> > +ftrace.[instance.INSTANCE.]event.GROUP.EVENT.enable
-> > +   Enables GROUP:EVENT tracing.
-> 
->       Enable
-
-OK.
-
-> 
-> > +
-> > +ftrace.[instance.INSTANCE.]event.GROUP.EVENT.filter = FILTER
-> > +   Set FILTER rule to the GROUP:EVENT.
-> > +
-> > +ftrace.[instance.INSTANCE.]event.GROUP.EVENT.actions = ACTION[, ACTION2[...]]
-> > +   Set ACTIONs to the GROUP:EVENT.
-> > +
-> > +ftrace.[instance.INSTANCE.]event.kprobes.EVENT.probes = PROBE[, PROBE2[...]]
-> > +   Defines new kprobe event based on PROBEs. It is able to define
-> > +   multiple probes on one event, but those must have same type of
-> > +   arguments. This option is available only for the event which
-> > +   group name is "kprobes".
-> > +
-> > +ftrace.[instance.INSTANCE.]event.synthetic.EVENT.fields = FIELD[, FIELD2[...]]
-> > +   Defines new synthetic event with FIELDs. Each field should be
-> > +   "type varname".
-> > +
-> > +Note that kprobe and synthetic event definitions can be written under
-> > +instance node, but those are also visible from other instances. So please
-> > +take care for event name conflict.
-> > +
-> > +
-> > +Examples
-> > +========
-> > +
-> > +For example, to add filter and actions for each event, define kprobe
-> > +events, and synthetic events with histogram, write a boot config like
-> > +below::
-> > +
-> > +  ftrace.event {
-> > +        task.task_newtask {
-> > +                filter = "pid < 128"
-> > +                enable
-> > +        }
-> > +        kprobes.vfs_read {
-> > +                probes = "vfs_read $arg1 $arg2"
-> > +                filter = "common_pid < 200"
-> > +                enable
-> > +        }
-> > +        synthetic.initcall_latency {
-> > +                fields = "unsigned long func", "u64 lat"
-> > +                actions = "hist:keys=func.sym,lat:vals=lat:sort=lat"
-> > +        }
-> > +        initcall.initcall_start {
-> > +                actions = "hist:keys=func:ts0=common_timestamp.usecs"
-> > +        }
-> > +        initcall.initcall_finish {
-> > +                actions = "hist:keys=func:lat=common_timestamp.usecs-$ts0:onmatch(initcall.initcall_start).initcall_latency(func,$lat)"
-> > +        }
-> > +  }
-> > +
-> > +Also, boottime tracing supports "instance" node, which allows us to run
-> 
->          boot-time  [for consistency]
-
-OK.
-
-> 
-> > +several tracers for different purpose at once. For example, one tracer
-> > +is for tracing functions start with "user\_", and others tracing "kernel\_"
-> 
->                             starting
-
-OK.
-
-> 
-> > +functions, you can write boot config as below::
-> > +
-> > +  ftrace.instance {
-> > +        foo {
-> > +                tracer = "function"
-> > +                ftrace.filters = "user_*"
-> > +        }
-> > +        bar {
-> > +                tracer = "function"
-> > +                ftrace.filters = "kernel_*"
-> > +        }
-> > +  }
-> > +
-> > +The instance node also accepts event nodes so that each instance
-> > +can customize its event tracing.
-> > +
-> > +This boot-time tracing also supports ftrace kernel parameters via boot
-> > +config.
-> > +For example, following kernel parameters::
-> > +
-> > + trace_options=sym-addr trace_event=initcall:* tp_printk trace_buf_size=1M ftrace=function ftrace_filter="vfs*"
-> > +
-> > +This can be written in boot config like below::
-> > +
-> > +  kernel {
-> > +        trace_options = sym-addr
-> > +        trace_event = "initcall:*"
-> > +        tp_printk
-> > +        trace_buf_size = 1M
-> > +        ftrace = function
-> > +        ftrace_filter = "vfs*"
-> > +  }
-> > +
-> > +Note that parameters start with "kernel" prefix instead of "ftrace".
-> 
-> HTH.
-
-Very helpful. Thanks!
-
-
+diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
+index 74d340d..5aa9c0b 100644
+--- a/sound/soc/soc-pcm.c
++++ b/sound/soc/soc-pcm.c
+@@ -2855,10 +2855,10 @@ int soc_new_pcm(struct snd_soc_pcm_runtime *rtd, int num)
+ 
+ 		for_each_rtd_codec_dai(rtd, i, codec_dai) {
+ 			if (snd_soc_dai_stream_valid(codec_dai, SNDRV_PCM_STREAM_PLAYBACK) &&
+-			    snd_soc_dai_stream_valid(cpu_dai,   SNDRV_PCM_STREAM_PLAYBACK))
++			    snd_soc_dai_stream_valid(cpu_dai,   SNDRV_PCM_STREAM_CAPTURE))
+ 				playback = 1;
+ 			if (snd_soc_dai_stream_valid(codec_dai, SNDRV_PCM_STREAM_CAPTURE) &&
+-			    snd_soc_dai_stream_valid(cpu_dai,   SNDRV_PCM_STREAM_CAPTURE))
++			    snd_soc_dai_stream_valid(cpu_dai,   SNDRV_PCM_STREAM_PLAYBACK))
+ 				capture = 1;
+ 		}
+ 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.7.4
+
