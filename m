@@ -2,84 +2,183 @@ Return-Path: <SRS0=pPEE=3I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF89EC33CB1
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 14:24:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F50C33CB1
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 14:28:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABE67206B7
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 14:24:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 773BC206B7
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 14:28:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rYQjOwK7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbgASOY6 convert rfc822-to-8bit (ORCPT
+        id S1727066AbgASO2Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 09:24:58 -0500
-Received: from mout.kundenserver.de ([217.72.192.74]:55743 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726778AbgASOY6 (ORCPT
+        Sun, 19 Jan 2020 09:28:24 -0500
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:33647 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726778AbgASO2Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 09:24:58 -0500
-Received: from mail-qt1-f178.google.com ([209.85.160.178]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1Mlvmv-1jKVdT32JP-00j5hM; Sun, 19 Jan 2020 15:24:56 +0100
-Received: by mail-qt1-f178.google.com with SMTP id e25so14335062qtr.13;
-        Sun, 19 Jan 2020 06:24:56 -0800 (PST)
-X-Gm-Message-State: APjAAAWXQxVXgBbdTogQkNgx/9pYq9a9Go2hC+sOa9VKOAo40ElHSwFs
-        GkEt/Ml8Nz6RG31pXLBij7bbmwXUyTJWhQJpMaM=
-X-Google-Smtp-Source: APXvYqxrafmnxNuzCwK3/36buZK4R4f8MDQ4Tt6/l87rNbHptsH4UaocIHxOaaZ4qwJSuQSOfdxLmevczkRbYXLFrrM=
-X-Received: by 2002:ac8:3a27:: with SMTP id w36mr16102286qte.204.1579443895598;
- Sun, 19 Jan 2020 06:24:55 -0800 (PST)
+        Sun, 19 Jan 2020 09:28:24 -0500
+Received: by mail-vs1-f67.google.com with SMTP id n27so17517896vsa.0;
+        Sun, 19 Jan 2020 06:28:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hXWYeX6AjtCDD1kv6pJLbNztbwW499IxeNUMgb5p23o=;
+        b=rYQjOwK7eKiea9ZzsLJpVr/fXJw6Odp4y9oVfXjpZ5Ypqm1TDdcsTmyDgkF57qzaM3
+         53Fh+Opzf06Zj7t1IOM3DK3rTYv90QhGYbmx6pPAwUP040ziVECm/V3YfHOFFy4DOd/4
+         qE7Tbmq1b17DI1RiJ4bHccmrRBUIeGj9SxyczYA2s7+lAGcKi+CoS0iqHiwBbr6otv/w
+         YAm7LuJDbwNjDxqdx/zCp3cfc4QdE1vwREHwUhvdoS+56RYx07QOtlwEKrdKRYdQvgSi
+         8p1OGceTrELl9lJSaLNZzzPImLJu6d9xW2BoEAjSyh6yU1TivUsROh9Lz/Ck48TAEOox
+         CNEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hXWYeX6AjtCDD1kv6pJLbNztbwW499IxeNUMgb5p23o=;
+        b=LxFKA01iMmwRBqTP+gx19Y/bOanDfJ0VBHRpFabFbeNok1eWELGpDw1lLeOCuNSfNT
+         UXa74HAPcp+q/egP06kTksg3Mg7y2Giu5pQfGh+UOPgwE1UjeVbdp2pbQuhtpH8fuKaW
+         OKXcSja5tB8tEIfPJ2rXdNbyVnuOcgCdm6jKcFn8UUWz9MLILeuSULktLg8hrhcPGIE3
+         ZJk+OufdfHSSJadsEYsRT0TXgyzPCrd2LdZPY7WCnCvqNVe5FmA47USlMF7OhxIz1Lnb
+         rNB2FsLosPbvA7OcMWry/TAXBeM+/1HoDfev85qy+8c8gDmWmwfEFP+DH2cgKu2NkQpl
+         /7eQ==
+X-Gm-Message-State: APjAAAVt0dZ8pbwgwaxl7XsvYovoxvYPwtfwYtz3CMVWCvQFaq+KpAWf
+        3B0eI4jADI9WQKsFaC4vp8SI/2RKlxy1k/LpxyM=
+X-Google-Smtp-Source: APXvYqzDPJ2ye9YaeF3DaCU8q4S+yDkAYV36sI64ueyCEDAUkMAT1qlcYKkyjVH8mMpwuJiwXy9m1uyuXVfhdKfKCds=
+X-Received: by 2002:a05:6102:3102:: with SMTP id e2mr10235569vsh.179.1579444103046;
+ Sun, 19 Jan 2020 06:28:23 -0800 (PST)
 MIME-Version: 1.0
-References: <20200118150348.9972-1-linkinjeon@gmail.com> <20200118150348.9972-3-linkinjeon@gmail.com>
-In-Reply-To: <20200118150348.9972-3-linkinjeon@gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Sun, 19 Jan 2020 15:24:39 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a15cMvfNe248CCePJ=zq1n7Ssdao5O2SVP2Aj+EBwSqnQ@mail.gmail.com>
-Message-ID: <CAK8P3a15cMvfNe248CCePJ=zq1n7Ssdao5O2SVP2Aj+EBwSqnQ@mail.gmail.com>
-Subject: Re: [PATCH v11 02/14] exfat: add super block operations
-To:     Namjae Jeon <linkinjeon@gmail.com>
-Cc:     Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        gregkh <gregkh@linuxfoundation.org>,
-        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        Christoph Hellwig <hch@lst.de>, sj1557.seo@samsung.com,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>,
-        Namjae Jeon <namjae.jeon@samsung.com>
+References: <20200117035108.19699-1-stanley.chu@mediatek.com> <20200117035108.19699-4-stanley.chu@mediatek.com>
+In-Reply-To: <20200117035108.19699-4-stanley.chu@mediatek.com>
+From:   Alim Akhtar <alim.akhtar@gmail.com>
+Date:   Sun, 19 Jan 2020 19:57:47 +0530
+Message-ID: <CAGOxZ51V6XmAuu4ki_X7kEkCoUHZguM1=peEHSktsuu1obyDFw@mail.gmail.com>
+Subject: Re: [PATCH v1 3/3] scsi: ufs-mediatek: enable low-power mode for
+ hibern8 state
+To:     Stanley Chu <stanley.chu@mediatek.com>
+Cc:     linux-scsi@vger.kernel.org,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Bean Huo (beanhuo)" <beanhuo@micron.com>, asutoshd@codeaurora.org,
+        Can Guo <cang@codeaurora.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        open list <linux-kernel@vger.kernel.org>,
+        Kuohong Wang <kuohong.wang@mediatek.com>,
+        peter.wang@mediatek.com, chun-hung.wu@mediatek.com,
+        andy.teng@mediatek.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Provags-ID: V03:K1:gfLNI3SdZ3NTejtkozKCmnWyuRcKkx7Dy1qXTeypL8mJNrMeKPW
- ZMokDGhmVdef7SfQaGAdnehun8zqA1IF99R/tDms5U9UP45hfOFVwAkLfu8TmpaQLKA7NHB
- zuRlzdm9ZMjhGJYpAsIKxocNzdYzQanzqP3L2Rm0e3NP80Y7axlTk4EMLcyzqg2Zt0vvQnH
- PMS9gL15rs65+oFZmXU8Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:rkAf1KRpzrI=:EUYADzAl3ivqSflyYS8j5S
- xqO85sAMrEzH3PNTXLCcIOMvTzqoQ0//IBQBj86H1D1FcQDXJAwVaM3n8ruMWtfP/NJAaRhhA
- QoPpfLqvskapq1+6Q3gRoF/wIVafYpOKO12FoBozKyaVSCNd/YMk44QA18Ij32P6CHkkLEg3e
- jmZv9sLT8dyzvCEVLDLcm2TeZ6J9DD8AEXvq0zgvcPQF0UhNbBwnPG3ko8w4YipsSf5SGrFq+
- WBKrzu7dGskeNzuvJaI3pR2fKBB5XU4w6b8uc2T/9ZwguSZHer8yJ0v2zC36bxqTD3gtVcsSR
- YoKvnR6MufwkTh8pkiWg5qGmt6VwSyAMJzdUqb634OIvq5PgqvJvnUE6lhJOMPwfE/uaKvAOo
- NM+espKfYl7gp5D7qS+vaggBrYbH86j2WyrDfwSEjdSmlxiZLsKEcDTudzSW5xKIB73kCDpQ8
- 4znHnuMa6eVqndKxppLlSex2RD3Agyn2X+evy0+CxIz0ToEscf5yL76mENBfgbKZuYBXJQBjb
- dDq6feB/f0GY7QF+dLu9mEMFk/9jyxZmKoHp9fSnjNO8S4hCQDrCefQrK4lzsu903lGWdRksm
- ioq+zkjmwvnjS8ywX6VeE8OgFz4jsFCa1EZL1CE3QqwsB1+lniraUNoMbnIIZ/n5GdNFi1sNE
- kG3rGp2WLzrsju6BdYjzFHbAweHLjuE2qrvypGc/Hmqv1f9n9KNBnFdIGaIEDPuibOAwQ2cEJ
- TNITNeP8vQXQ+Q8GA0ZaZvb3Xe9HeqituquEsAy2gNzeJLNeILV5jZOsK1iiA1ozbD6XFt83H
- OGGE7MohvDWBwPCZOzJFc6OU1+hQ6qvXgB1prtKAMBYsmoNjLS1bTw0OjZqfMjtyUNJEYX46h
- V79d1TCQDMRwDhBF4rGg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 18, 2020 at 4:04 PM Namjae Jeon <linkinjeon@gmail.com> wrote:
+On Fri, Jan 17, 2020 at 9:44 AM Stanley Chu <stanley.chu@mediatek.com> wrote:
 >
-> From: Namjae Jeon <namjae.jeon@samsung.com>
+> In MediaTek Chipsets, UniPro link and ufshci can enter proprietary
+> low-power mode while link is in hibern8 state.
 >
-> This adds the implementation of superblock operations for exfat.
->
-> Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
-> Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
+> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+> ---
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
 
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+>  drivers/scsi/ufs/ufs-mediatek.c | 53 +++++++++++++++++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+>
+> diff --git a/drivers/scsi/ufs/ufs-mediatek.c b/drivers/scsi/ufs/ufs-mediatek.c
+> index d5194d0c4ef5..f32f3f34f6d0 100644
+> --- a/drivers/scsi/ufs/ufs-mediatek.c
+> +++ b/drivers/scsi/ufs/ufs-mediatek.c
+> @@ -382,11 +382,60 @@ static void ufs_mtk_device_reset(struct ufs_hba *hba)
+>         dev_info(hba->dev, "device reset done\n");
+>  }
+>
+> +static int ufs_mtk_link_set_hpm(struct ufs_hba *hba)
+> +{
+> +       int err;
+> +
+> +       err = ufshcd_hba_enable(hba);
+> +       if (err)
+> +               return err;
+> +
+> +       err = ufshcd_dme_set(hba,
+> +                            UIC_ARG_MIB_SEL(VS_UNIPROPOWERDOWNCONTROL, 0),
+> +                            0);
+> +       if (err)
+> +               return err;
+> +
+> +       err = ufshcd_uic_hibern8_exit(hba);
+> +       if (!err)
+> +               ufshcd_set_link_active(hba);
+> +       else
+> +               return err;
+> +
+> +       err = ufshcd_make_hba_operational(hba);
+> +       if (err)
+> +               return err;
+> +
+> +       return 0;
+> +}
+> +
+> +static int ufs_mtk_link_set_lpm(struct ufs_hba *hba)
+> +{
+> +       int err;
+> +
+> +       err = ufshcd_dme_set(hba,
+> +                            UIC_ARG_MIB_SEL(VS_UNIPROPOWERDOWNCONTROL, 0),
+> +                            1);
+> +       if (err) {
+> +               /* Resume UniPro state for following error recovery */
+> +               ufshcd_dme_set(hba,
+> +                              UIC_ARG_MIB_SEL(VS_UNIPROPOWERDOWNCONTROL, 0),
+> +                              0);
+> +               return err;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+>  static int ufs_mtk_suspend(struct ufs_hba *hba, enum ufs_pm_op pm_op)
+>  {
+> +       int err;
+>         struct ufs_mtk_host *host = ufshcd_get_variant(hba);
+>
+>         if (ufshcd_is_link_hibern8(hba)) {
+> +               err = ufs_mtk_link_set_lpm(hba);
+> +               if (err)
+> +                       return -EAGAIN;
+>                 phy_power_off(host->mphy);
+>                 ufs_mtk_setup_ref_clk(hba, false);
+>         }
+> @@ -397,10 +446,14 @@ static int ufs_mtk_suspend(struct ufs_hba *hba, enum ufs_pm_op pm_op)
+>  static int ufs_mtk_resume(struct ufs_hba *hba, enum ufs_pm_op pm_op)
+>  {
+>         struct ufs_mtk_host *host = ufshcd_get_variant(hba);
+> +       int err;
+>
+>         if (ufshcd_is_link_hibern8(hba)) {
+>                 ufs_mtk_setup_ref_clk(hba, true);
+>                 phy_power_on(host->mphy);
+> +               err = ufs_mtk_link_set_hpm(hba);
+> +               if (err)
+> +                       return err;
+>         }
+>
+>         return 0;
+> --
+> 2.18.0
+
+
+
+-- 
+Regards,
+Alim
