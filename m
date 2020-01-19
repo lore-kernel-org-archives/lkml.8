@@ -2,193 +2,103 @@ Return-Path: <SRS0=pPEE=3I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A23C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 22:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F72C33CAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 22:48:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85A3D20730
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 22:47:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74D59206ED
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 22:48:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N8nEzMf7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728909AbgASWrW (ORCPT
+        id S1728949AbgASWsI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 17:47:22 -0500
-Received: from asavdk3.altibox.net ([109.247.116.14]:47106 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728819AbgASWrW (ORCPT
+        Sun, 19 Jan 2020 17:48:08 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60589 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728831AbgASWsI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 17:47:22 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Sun, 19 Jan 2020 17:48:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579474087;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Q8gG+1cgJTMe7mIrJCeKPohDJq4KgvzUnmCCGFTyYv0=;
+        b=N8nEzMf7tOyvBMDn7lvEt1GdK6A3C3iFhNIOAUGKaBxG3gL5w8Csbi8tckZXtTlQondZqa
+        bjT0bHTh0kxhA5pppiatlYuXPkatwi21o02XOaUrMqowqYrssWez+3GRZ7/LGT7rr/nEKZ
+        1RmS2cHm1UFLRi6rIr7E5H2DnfZg7Xw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-192-yW7lfmG9NhS_66Jh5-G9Qg-1; Sun, 19 Jan 2020 17:48:03 -0500
+X-MC-Unique: yW7lfmG9NhS_66Jh5-G9Qg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id A1DB72001E;
-        Sun, 19 Jan 2020 23:47:17 +0100 (CET)
-Date:   Sun, 19 Jan 2020 23:47:16 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Marcel Ziswiler <marcel@ziswiler.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>, info@logictechno.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        j.bauer@endrich.com, Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>
-Subject: Re: [PATCH v3 2/3] drm/panel: simple: add display timings for logic
- technologies displays
-Message-ID: <20200119224716.GA4703@ravnborg.org>
-References: <20200119220204.208751-1-marcel@ziswiler.com>
- <20200119220204.208751-2-marcel@ziswiler.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6F96E10054E3;
+        Sun, 19 Jan 2020 22:48:02 +0000 (UTC)
+Received: from localhost.localdomain (vpn2-54-61.bne.redhat.com [10.64.54.61])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E612960BE2;
+        Sun, 19 Jan 2020 22:47:59 +0000 (UTC)
+Reply-To: Gavin Shan <gshan@redhat.com>
+Subject: Re: [PATCH] KVM: arm/arm64: vgic: Drop the
+ kvm_vgic_register_mmio_region()
+To:     Zenghui Yu <yuzenghui@huawei.com>, maz@kernel.org
+Cc:     Haibin Wang <wanghaibin.wang@huawei.com>,
+        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20200119090604.398-1-yuzenghui@huawei.com>
+From:   Gavin Shan <gshan@redhat.com>
+Message-ID: <479f2e5f-80c4-37e1-8f3a-2f1197fddd51@redhat.com>
+Date:   Mon, 20 Jan 2020 09:47:57 +1100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200119220204.208751-2-marcel@ziswiler.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=m8ToADvmAAAA:8
-        a=k76NmfXvAAAA:8 a=Wn22GMglRkWWUr5S2SgA:9 a=zCx_ZXCi2UNGHBA6:21
-        a=zq0-TRRFe72ZQw1h:21 a=CjuIK1q_8ugA:10 a=kCrBFHLFDAq2jDEeoMj9:22
-        a=xklTzJp5TIrWR6y8xC-k:22 a=pHzHmUro8NiASowvMSCR:22
-        a=6VlIyEUom7LUIeUMNQJH:22
+In-Reply-To: <20200119090604.398-1-yuzenghui@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marcel.
-
-On Sun, Jan 19, 2020 at 11:02:03PM +0100, Marcel Ziswiler wrote:
-> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+On 1/19/20 8:06 PM, Zenghui Yu wrote:
+> kvm_vgic_register_mmio_region() was introduced in commit 4493b1c4866a
+> ("KVM: arm/arm64: vgic-new: Add MMIO handling framework") but never
+> used, and even never implemented. Remove it to avoid confusing readers.
 > 
-> Add display timings for the following 3 display panels manufactured by
-> Logic Technologies Limited:
-> 
-> - LT161010-2NHC e.g. as found in the Toradex Capacitive Touch Display
->   7" Parallel [1]
-> - LT161010-2NHR e.g. as found in the Toradex Resistive Touch Display 7"
->   Parallel [2]
-> - LT170410-2WHC e.g. as found in the Toradex Capacitive Touch Display
->   10.1" LVDS [3]
-> 
-> Those panels may also be distributed by Endrich Bauelemente Vertriebs
-> GmbH [4].
-> 
-> [1] https://docs.toradex.com/104497-7-inch-parallel-capacitive-touch-display-800x480-datasheet.pdf
-> [2] https://docs.toradex.com/104498-7-inch-parallel-resistive-touch-display-800x480.pdf
-> [3] https://docs.toradex.com/105952-10-1-inch-lvds-capacitive-touch-display-1280x800-datasheet.pdf
-> [4] https://www.endrich.com/isi50_isi30_tft-displays/lt170410-1whc_isi30
-> 
-> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-> Reviewed-by: Philippe Schenker <philippe.schenker@toradex.com>
-> 
+> Reported-by: Haibin Wang <wanghaibin.wang@huawei.com>
+> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
 > ---
-> 
-> Changes in v3:
-> - Fix typo in pixelclock frequency for lt170410_2whc as recently
->   discovered by Philippe.
-> 
-> Changes in v2:
-> - Added Philippe's reviewed-by.
-> 
->  drivers/gpu/drm/panel/panel-simple.c | 65 ++++++++++++++++++++++++++++
->  1 file changed, 65 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-> index d6f77bc494c7..4140e0faff06 100644
-> --- a/drivers/gpu/drm/panel/panel-simple.c
-> +++ b/drivers/gpu/drm/panel/panel-simple.c
-> @@ -2107,6 +2107,62 @@ static const struct panel_desc lg_lp129qe = {
->  	},
->  };
->  
-> +static const struct display_timing logictechno_lt161010_2nh_timing = {
-> +	.pixelclock = { 26400000, 33300000, 46800000 },
-> +	.hactive = { 800, 800, 800 },
-> +	.hfront_porch = { 16, 210, 354 },
-> +	.hback_porch = { 46, 46, 46 },
-> +	.hsync_len = { 1, 20, 40 },
-> +	.vactive = { 480, 480, 480 },
-> +	.vfront_porch = { 7, 22, 147 },
-> +	.vback_porch = { 23, 23, 23 },
-> +	.vsync_len = { 1, 10, 20 },
-> +	.flags = DISPLAY_FLAGS_HSYNC_LOW | DISPLAY_FLAGS_VSYNC_LOW |
-> +		 DISPLAY_FLAGS_DE_HIGH | DISPLAY_FLAGS_PIXDATA_POSEDGE |
-> +		 DISPLAY_FLAGS_SYNC_POSEDGE,
-> +};
-> +
-> +static const struct panel_desc logictechno_lt161010_2nh = {
-> +	.timings = &logictechno_lt161010_2nh_timing,
-> +	.num_timings = 1,
-> +	.size = {
-> +		.width = 154,
-> +		.height = 86,
-> +	},
-> +	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
-> +	.bus_flags = DRM_BUS_FLAG_DE_HIGH |
-> +		     DRM_BUS_FLAG_PIXDATA_SAMPLE_NEGEDGE |
-> +		     DRM_BUS_FLAG_SYNC_SAMPLE_NEGEDGE,
-> +};
-connector_type needs to be specified for all panels.
-This is something we have added recently and is today mandatory
-for new panel-simple panels.
 
-Also please re-order so we add bindings before we driver support for the panels.
-This makes checkpatch (and me) more happy.
+Reviewed-by: Gavin Shan <gshan@redhat.com>
 
-Ohh, and bonus points for using display_timing and specifying min,typ,max values.
+>   virt/kvm/arm/vgic/vgic-mmio.h | 5 -----
+>   1 file changed, 5 deletions(-)
+> 
+> diff --git a/virt/kvm/arm/vgic/vgic-mmio.h b/virt/kvm/arm/vgic/vgic-mmio.h
+> index 836f418f1ee8..5af2aefad435 100644
+> --- a/virt/kvm/arm/vgic/vgic-mmio.h
+> +++ b/virt/kvm/arm/vgic/vgic-mmio.h
+> @@ -98,11 +98,6 @@ extern struct kvm_io_device_ops kvm_io_gic_ops;
+>   		.uaccess_write = uwr,					\
+>   	}
+>   
+> -int kvm_vgic_register_mmio_region(struct kvm *kvm, struct kvm_vcpu *vcpu,
+> -				  struct vgic_register_region *reg_desc,
+> -				  struct vgic_io_device *region,
+> -				  int nr_irqs, bool offset_private);
+> -
+>   unsigned long vgic_data_mmio_bus_to_host(const void *val, unsigned int len);
+>   
+>   void vgic_data_host_to_mmio_bus(void *buf, unsigned int len,
+> 
 
-	Sam
-
-> +
-> +static const struct display_timing logictechno_lt170410_2whc_timing = {
-> +	.pixelclock = { 68900000, 71100000, 73400000 },
-> +	.hactive = { 1280, 1280, 1280 },
-> +	.hfront_porch = { 23, 60, 71 },
-> +	.hback_porch = { 23, 60, 71 },
-> +	.hsync_len = { 15, 40, 47 },
-> +	.vactive = { 800, 800, 800 },
-> +	.vfront_porch = { 5, 7, 10 },
-> +	.vback_porch = { 5, 7, 10 },
-> +	.vsync_len = { 6, 9, 12 },
-> +	.flags = DISPLAY_FLAGS_HSYNC_LOW | DISPLAY_FLAGS_VSYNC_LOW |
-> +		 DISPLAY_FLAGS_DE_HIGH | DISPLAY_FLAGS_PIXDATA_POSEDGE |
-> +		 DISPLAY_FLAGS_SYNC_POSEDGE,
-> +};
-> +
-> +static const struct panel_desc logictechno_lt170410_2whc = {
-> +	.timings = &logictechno_lt170410_2whc_timing,
-> +	.num_timings = 1,
-> +	.size = {
-> +		.width = 217,
-> +		.height = 136,
-> +	},
-> +	.bus_format = MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
-> +	.bus_flags = DRM_BUS_FLAG_DE_HIGH |
-> +		     DRM_BUS_FLAG_PIXDATA_SAMPLE_NEGEDGE |
-> +		     DRM_BUS_FLAG_SYNC_SAMPLE_NEGEDGE,
-> +};
-> +
->  static const struct drm_display_mode mitsubishi_aa070mc01_mode = {
->  	.clock = 30400,
->  	.hdisplay = 800,
-> @@ -3417,6 +3473,15 @@ static const struct of_device_id platform_of_match[] = {
->  	}, {
->  		.compatible = "logicpd,type28",
->  		.data = &logicpd_type_28,
-> +	}, {
-> +		.compatible = "logictechno,lt161010-2nhc",
-> +		.data = &logictechno_lt161010_2nh,
-> +	}, {
-> +		.compatible = "logictechno,lt161010-2nhr",
-> +		.data = &logictechno_lt161010_2nh,
-> +	}, {
-> +		.compatible = "logictechno,lt170410-2whc",
-> +		.data = &logictechno_lt170410_2whc,
->  	}, {
->  		.compatible = "mitsubishi,aa070mc01-ca1",
->  		.data = &mitsubishi_aa070mc01,
-> -- 
-> 2.24.1
