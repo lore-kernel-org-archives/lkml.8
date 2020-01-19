@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D345EC33CB1
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 13:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EECD6C33CB7
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 13:13:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99D97206D7
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 13:13:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4CE9206D7
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 13:13:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="olc9rjW3"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kGJSwti9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727254AbgASNNp (ORCPT
+        id S1728680AbgASNN4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 08:13:45 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:58430 "EHLO
+        Sun, 19 Jan 2020 08:13:56 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:38758 "EHLO
         mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726798AbgASNNp (ORCPT
+        by vger.kernel.org with ESMTP id S1727586AbgASNNy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 08:13:45 -0500
+        Sun, 19 Jan 2020 08:13:54 -0500
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1579439624; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1579439633; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=ro86RcBfIaBDPMo4NWO2zpbUAsnPV6ZrA2OGnbFDSs8=; b=olc9rjW3DRzUvszz1gAbxwwIre/uKwiYyDDKxQYdgwlML0y1e9UkKkDuXmLluXQ10E9zLcWa
- pe3aj37Tpl+szfxZLIwtrr6A4KADI0OGD/LvTBvGmdADr8XXMI9oUSTe2122Xhj0AW2sd/WB
- qY894TtzvCMDLt4sMERlm3/R3UE=
+ bh=5+GZjw2TCHeQIbwTltRSDntorXWcIHggVUbgZKjVq54=; b=kGJSwti9CC9WOGUKh638/HDmu37CVRxYq3ggN5w5Sz/VlUMhQVs0bLvDpjyuGEzg0wbJrA/3
+ 3TZ74Ep2TGTnCxtTdE28tY7Cs8yP9DMhD0xuLMn66aTOvIpWurkjtr1iehLdkoVLl2jz2lSk
+ LApNfCeWkFgLA6DzfkRFy6zR7CY=
 X-Mailgun-Sending-Ip: 104.130.122.25
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e245607.7f1e375ebed8-smtp-out-n03;
- Sun, 19 Jan 2020 13:13:43 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e24560f.7f3802f673e8-smtp-out-n02;
+ Sun, 19 Jan 2020 13:13:51 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 55314C4479C; Sun, 19 Jan 2020 13:13:42 +0000 (UTC)
+        id AD2A7C447A6; Sun, 19 Jan 2020 13:13:50 +0000 (UTC)
 Received: from srichara1-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: sricharan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 98BDFC433A2;
-        Sun, 19 Jan 2020 13:13:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 98BDFC433A2
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2F2A7C4479C;
+        Sun, 19 Jan 2020 13:13:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2F2A7C4479C
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
 From:   Sricharan R <sricharan@codeaurora.org>
@@ -52,11 +52,10 @@ To:     agross@kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org,
         robh+dt@kernel.org, sivaprak@codeaurora.org,
         sricharan@codeaurora.org
-Cc:     Rajkumar Ayyasamy <arajkuma@codeaurora.org>,
-        Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
-Subject: [PATCH V6 1/5] dt-bindings: pinctrl: qcom: Add ipq6018 pinctrl bindings
-Date:   Sun, 19 Jan 2020 18:43:17 +0530
-Message-Id: <1579439601-14810-2-git-send-email-sricharan@codeaurora.org>
+Cc:     Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+Subject: [PATCH V6 3/5] dt-bindings: qcom: Add ipq6018 bindings
+Date:   Sun, 19 Jan 2020 18:43:19 +0530
+Message-Id: <1579439601-14810-4-git-send-email-sricharan@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1579439601-14810-1-git-send-email-sricharan@codeaurora.org>
 References: <1579439601-14810-1-git-send-email-sricharan@codeaurora.org>
@@ -65,182 +64,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add device tree binding Documentation details for ipq6018
-pinctrl driver.
+Document the new ipq6018 SOC/board device tree bindings.
 
-Co-developed-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
-Signed-off-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
 Co-developed-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
 Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
 Co-developed-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
 Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
 ---
-[V6] 
-  * Addressed review comments form Rob.
- .../bindings/pinctrl/qcom,ipq6018-pinctrl.yaml     | 153 +++++++++++++++++++++
- 1 file changed, 153 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
+ Documentation/devicetree/bindings/arm/qcom.yaml | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
-new file mode 100644
-index 0000000..63d1cfe
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
-@@ -0,0 +1,153 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/qcom,ipq6018-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
+index 529d924..164177e 100644
+--- a/Documentation/devicetree/bindings/arm/qcom.yaml
++++ b/Documentation/devicetree/bindings/arm/qcom.yaml
+@@ -28,6 +28,7 @@ description: |
+         apq8074
+         apq8084
+         apq8096
++        ipq6018
+         ipq8074
+         mdm9615
+         msm8916
+@@ -41,6 +42,7 @@ description: |
+   The 'board' element must be one of the following strings:
+ 
+         cdp
++        cp01-c1
+         dragonboard
+         hk01
+         idp
+@@ -150,4 +152,10 @@ properties:
+           - enum:
+               - qcom,sc7180-idp
+           - const: qcom,sc7180
 +
-+title: Qualcomm Technologies, Inc. IPQ6018 TLMM block
++      - items:
++          - enum:
++              - qcom,ipq6018-cp01-c1
++          - const: qcom,ipq6018
 +
-+maintainers:
-+  - Sricharan R <sricharan@codeaurora.org>
-+
-+description: |
-+  This binding describes the Top Level Mode Multiplexer block found in the
-+  IPQ6018 platform.
-+
-+properties:
-+  compatible:
-+    const: qcom,ipq6018-pinctrl
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    description: Specifies the TLMM summary IRQ
-+    maxItems: 1
-+
-+  interrupt-controller: true
-+
-+  '#interrupt-cells':
-+    description:
-+      Specifies the PIN numbers and Flags, as defined in defined in
-+      include/dt-bindings/interrupt-controller/irq.h
-+    const: 2
-+
-+  gpio-controller: true
-+
-+  '#gpio-cells':
-+    description: Specifying the pin number and flags, as defined in
-+      include/dt-bindings/gpio/gpio.h
-+    const: 2
-+
-+  gpio-ranges:
-+    maxItems: 1
-+
-+#PIN CONFIGURATION NODES
-+patternProperties:
-+  '-pinmux$':
-+    type: object
-+    description:
-+      Pinctrl node's client devices use subnodes for desired pin configuration.
-+      Client device subnodes use below standard properties.
-+    allOf:
-+      - $ref: "/schemas/pinctrl/pincfg-node.yaml"
-+
-+    properties:
-+      pins:
-+        description:
-+          List of gpio pins affected by the properties specified in this
-+          subnode.
-+        items:
-+          oneOf:
-+            - pattern: "^gpio([1-9]|[1-7][0-9]|80)$"
-+            - enum: [ sdc1_clk, sdc1_cmd, sdc1_data, sdc2_clk, sdc2_cmd,
-+              sdc2_data, qdsd_cmd, qdsd_data0, qdsd_data1, qdsd_data2,
-+              qdsd_data3 ]
-+        minItems: 1
-+        maxItems: 4
-+
-+      function:
-+        description:
-+          Specify the alternative function to be configured for the specified
-+          pins.
-+        enum: [ adsp_ext, alsp_int, atest_bbrx0, atest_bbrx1, atest_char,
-+          atest_char0, atest_char1, atest_char2, atest_char3, atest_combodac,
-+          atest_gpsadc0, atest_gpsadc1, atest_tsens, atest_wlan0,
-+          atest_wlan1, backlight_en, bimc_dte0, bimc_dte1, blsp1_i2c,
-+          blsp2_i2c, blsp3_i2c, blsp4_i2c, blsp5_i2c, blsp6_i2c,  blsp1_spi,
-+          blsp1_spi_cs1, blsp1_spi_cs2, blsp1_spi_cs3, blsp2_spi,
-+          blsp2_spi_cs1, blsp2_spi_cs2, blsp2_spi_cs3, blsp3_spi,
-+          blsp3_spi_cs1, blsp3_spi_cs2, blsp3_spi_cs3, blsp4_spi, blsp5_spi,
-+          blsp6_spi, blsp1_uart, blsp2_uart, blsp1_uim, blsp2_uim, cam1_rst,
-+          cam1_standby, cam_mclk0, cam_mclk1, cci_async, cci_i2c, cci_timer0,
-+          cci_timer1, cci_timer2, cdc_pdm0, codec_mad, dbg_out, display_5v,
-+          dmic0_clk, dmic0_data, dsi_rst, ebi0_wrcdc, euro_us, ext_lpass,
-+          flash_strobe, gcc_gp1_clk_a, gcc_gp1_clk_b, gcc_gp2_clk_a,
-+          gcc_gp2_clk_b, gcc_gp3_clk_a, gcc_gp3_clk_b, gpio, gsm0_tx0,
-+          gsm0_tx1, gsm1_tx0, gsm1_tx1, gyro_accl, kpsns0, kpsns1, kpsns2,
-+          ldo_en, ldo_update, mag_int, mdp_vsync, modem_tsync, m_voc,
-+          nav_pps, nav_tsync, pa_indicator, pbs0, pbs1, pbs2, pri_mi2s,
-+          pri_mi2s_ws, prng_rosc, pwr_crypto_enabled_a, pwr_crypto_enabled_b,
-+          pwr_modem_enabled_a,  pwr_modem_enabled_b, pwr_nav_enabled_a,
-+          pwr_nav_enabled_b, qdss_ctitrig_in_a0, qdss_ctitrig_in_a1,
-+          qdss_ctitrig_in_b0, qdss_ctitrig_in_b1, qdss_ctitrig_out_a0,
-+          qdss_ctitrig_out_a1, qdss_ctitrig_out_b0, qdss_ctitrig_out_b1,
-+          qdss_traceclk_a, qdss_traceclk_b, qdss_tracectl_a, qdss_tracectl_b,
-+          qdss_tracedata_a, qdss_tracedata_b, reset_n, sd_card, sd_write,
-+          sec_mi2s, smb_int, ssbi_wtr0, ssbi_wtr1, uim1, uim2, uim3,
-+          uim_batt, wcss_bt, wcss_fm, wcss_wlan, webcam1_rst ]
-+
-+      drive-strength:
-+        enum: [2, 4, 6, 8, 10, 12, 14, 16]
-+        default: 2
-+        description:
-+          Selects the drive strength for the specified pins, in mA.
-+
-+      bias-pull-down: true
-+
-+      bias-pull-up: true
-+
-+      bias-disable: true
-+
-+      output-high: true
-+
-+      output-low: true
-+
-+    required:
-+      - pins
-+      - function
-+
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - interrupt-controller
-+  - '#interrupt-cells'
-+  - gpio-controller
-+  - '#gpio-cells'
-+  - gpio-ranges
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+        #include <dt-bindings/interrupt-controller/arm-gic.h>
-+        tlmm: pinctrl@1000000 {
-+              compatible = "qcom,ipq6018-pinctrl";
-+              reg = <0x01000000 0x300000>;
-+              interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
-+              interrupt-controller;
-+              #interrupt-cells = <2>;
-+              gpio-controller;
-+              #gpio-cells = <2>;
-+              gpio-ranges = <&tlmm 0 80>;
-+
-+              serial3-pinmux {
-+                      pins = "gpio44", "gpio45";
-+                      function = "blsp2_uart";
-+                      drive-strength = <8>;
-+                      bias-pull-down;
-+              };
-+        };
+ ...
 -- 
 2.7.4
