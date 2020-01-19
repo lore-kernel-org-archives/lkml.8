@@ -2,37 +2,37 @@ Return-Path: <SRS0=pPEE=3I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B6A9C33CB1
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 12:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B239C33CB1
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 12:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65DAB20679
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 12:18:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 213B220679
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 12:20:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727254AbgASMSl (ORCPT
+        id S1727465AbgASMUl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 07:18:41 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:9194 "EHLO huawei.com"
+        Sun, 19 Jan 2020 07:20:41 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:40718 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726765AbgASMS3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 07:18:29 -0500
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id AB1364C57EF4A5898D05;
-        Sun, 19 Jan 2020 20:18:26 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Sun, 19 Jan 2020
- 20:18:16 +0800
+        id S1726744AbgASMUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jan 2020 07:20:41 -0500
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 8EE9479CA32EEF2EE3A0;
+        Sun, 19 Jan 2020 20:20:39 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Sun, 19 Jan 2020
+ 20:20:31 +0800
 From:   yu kuai <yukuai3@huawei.com>
-To:     <benh@kernel.crashing.org>, <b.zolnierkie@samsung.com>
-CC:     <linux-fbdev@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+To:     <b.zolnierkie@samsung.com>
+CC:     <dri-devel@lists.freedesktop.org>, <linux-fbdev@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <yukuai3@huawei.com>,
         <zhengbin13@huawei.com>, <yi.zhang@huawei.com>
-Subject: [PATCH 0/4] cleanup patches for unused variables
-Date:   Sun, 19 Jan 2020 20:17:26 +0800
-Message-ID: <20200119121730.10701-1-yukuai3@huawei.com>
+Subject: [PATCH] video: remove set but not used variable 'ulScaleRight'
+Date:   Sun, 19 Jan 2020 20:19:45 +0800
+Message-ID: <20200119121945.12517-1-yukuai3@huawei.com>
 X-Mailer: git-send-email 2.17.2
 MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -44,15 +44,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-yu kuai (4):
-  video: fbdev: remove set but not used variable 'hSyncPol'
-  video: fbdev: remove set but not used variable 'vSyncPol'
-  video: fbdev: remove set but not used variable 'vSyncPol'
-  video: fbdev: remove set but not used variable 'bytpp'
+Fixes gcc '-Wunused-but-set-variable' warning:
 
- drivers/video/fbdev/aty/radeon_base.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+drivers/video/fbdev/kyro/STG4000OverlayDevice.c: In function
+‘SetOverlayViewPort’:
+drivers/video/fbdev/kyro/STG4000OverlayDevice.c:334:19: warning:
+variable ‘ulScaleRight’ set but not used [-Wunused-but-set-variable]
 
+It is never used, and so can be removed.
+
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+---
+ drivers/video/fbdev/kyro/STG4000OverlayDevice.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/video/fbdev/kyro/STG4000OverlayDevice.c b/drivers/video/fbdev/kyro/STG4000OverlayDevice.c
+index 0aeeaa10708b..9fde0e3b69ec 100644
+--- a/drivers/video/fbdev/kyro/STG4000OverlayDevice.c
++++ b/drivers/video/fbdev/kyro/STG4000OverlayDevice.c
+@@ -331,7 +331,7 @@ int SetOverlayViewPort(volatile STG4000REG __iomem *pSTGReg,
+ 	u32 ulScale;
+ 	u32 ulLeft, ulRight;
+ 	u32 ulSrcLeft, ulSrcRight;
+-	u32 ulScaleLeft, ulScaleRight;
++	u32 ulScaleLeft;
+ 	u32 ulhDecim;
+ 	u32 ulsVal;
+ 	u32 ulVertDecFactor;
+@@ -470,7 +470,6 @@ int SetOverlayViewPort(volatile STG4000REG __iomem *pSTGReg,
+ 		 * round down the pixel pos to the nearest 8 pixels.
+ 		 */
+ 		ulScaleLeft = ulSrcLeft;
+-		ulScaleRight = ulSrcRight;
+ 
+ 		/* shift fxscale until it is in the range of the scaler */
+ 		ulhDecim = 0;
 -- 
 2.17.2
 
