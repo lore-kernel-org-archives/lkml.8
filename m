@@ -2,156 +2,524 @@ Return-Path: <SRS0=pPEE=3I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A736C33CB1
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 07:19:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D300FC33CB6
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 07:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 240E620684
-	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 07:19:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3F8B206ED
+	for <linux-kernel@archiver.kernel.org>; Sun, 19 Jan 2020 07:37:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="P4cJEAqq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h1cn4v3V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbgASHTZ (ORCPT
+        id S1726796AbgASHhk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 02:19:25 -0500
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:12472 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726396AbgASHTY (ORCPT
+        Sun, 19 Jan 2020 02:37:40 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:34644 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726444AbgASHhk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 02:19:24 -0500
-Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
-  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="Tudor.Ambarus@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa2.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa2.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: COE6Pz76tcR5+oe/AEYOuwMxkDzlSltO0DG8jwFztjXZTBuxCAU20H6RbaXGmtsIObtDdIRYtn
- fAk6hAeOSHdMvsWcVaghVOVyibh+LfghEOUab4wBWskyZHCXfmi3I5KC0HAALSxQ1ibAyFwLgG
- dU40I274ECzHn7ZBlbIiKXw3qwg7hsTTTZccivg3eQuRM4vSkxTOkx0MI52kwYwkC+YAf/1ZAn
- gYLijHdrRxMpa5uJnAr+UX5bV7qOiaERv1X6o9Z8YoKT9O1DLm547jjKSePB9s7rKvH5dMKZqT
- bYs=
-X-IronPort-AV: E=Sophos;i="5.70,337,1574146800"; 
-   d="scan'208";a="63076813"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 19 Jan 2020 00:19:22 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Sun, 19 Jan 2020 00:19:15 -0700
-Received: from NAM02-BL2-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Sun, 19 Jan 2020 00:19:15 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RDdJ6mqfWCAjuSLpjz3J+Qha2d5J2EUELdRDcsMgpR+/7f8hrCjiUMUdjxsB9z9HOdwUMb1p7h7KuLayjrh6fcKkcm5RFfE9NGKEBZRkc7XHD5QIgOh9DAraVBmCc+llEV70E8S5dY7bdk4OH7bNAZea2/bD95/ijjBYX0yD/VTct+WOzqW9MmdJNtPYH3L2r0IPNOAdIUVIJKsdUZXMZ8fypJNLSK4jkhU6wQeqyLgTghWjNyperCBIsS3u0FyieiKSMtqTgZ4CSte0fNHMy0IJ/8y1m+2A6qjawZjxv1/H1Ky5RiWREDS/iAmLIe+tZMVSYfJ3UGnoLz+c6EK33A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=i2P2qqWM7HbefkQNFwhVZXZPeHNVg+Xcbx8DAn5zNgA=;
- b=aCmru7ncksy2Ct468yVm/kjxnwpAhi755tJeKQVCceg8ic9BJS/BTLvo5GTEYCqy4PKhfCR8NY/KrZKOptb1fC/4wst/MbAwaz18VwrDZxCXqzD/y9sehCzazp8/f9WbBdEC8OJ20D4vV4QQocI4CPvsQ7dLgoMnWNQ6A1AQY05ttqjiixU4g+HRossYw0x6AeTJU09eyAGCW1+g9L4u5o+dIDmAgxCrQ5LpjRpYcxxlS7jRlQ5L+XNznNHklRBRTA5gJV7yXBLl5QaDyTTifKkylJWoKzeofIaSw258mK2HDeGyufw5bNQULVJA7DCyjLIdcyfI81j3Di9yr9BGEQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+        Sun, 19 Jan 2020 02:37:40 -0500
+Received: by mail-qk1-f193.google.com with SMTP id j9so27165291qkk.1;
+        Sat, 18 Jan 2020 23:37:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=i2P2qqWM7HbefkQNFwhVZXZPeHNVg+Xcbx8DAn5zNgA=;
- b=P4cJEAqq3WnBV7UhourGtNmXocVw3haX9gZUhupmxRLPwHF1EY8KwqHQcizVNqLJ6ZXOSHAdyOn4o71LA69Z3Drhf5ePQIu5+e5o32JHkMc8uaLURFZuWcT/zxICJU7vcTpAO/8xpD5r5FOV2p4XgW4oS2viEsE3JspU9CkYp/Y=
-Received: from MN2PR11MB4448.namprd11.prod.outlook.com (52.135.39.157) by
- MN2PR11MB3984.namprd11.prod.outlook.com (10.255.181.10) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.23; Sun, 19 Jan 2020 07:19:09 +0000
-Received: from MN2PR11MB4448.namprd11.prod.outlook.com
- ([fe80::3c8f:7a55:cbd:adfb]) by MN2PR11MB4448.namprd11.prod.outlook.com
- ([fe80::3c8f:7a55:cbd:adfb%5]) with mapi id 15.20.2644.023; Sun, 19 Jan 2020
- 07:19:09 +0000
-From:   <Tudor.Ambarus@microchip.com>
-To:     <linux-mtd@lists.infradead.org>
-CC:     <michael@walle.cc>, <linux-kernel@vger.kernel.org>,
-        <richard@nod.at>, <miquel.raynal@bootlin.com>, <vigneshr@ti.com>
-Subject: Re: [PATCH v2] mtd: spi-nor: Add support for w25q32jwm
-Thread-Topic: [PATCH v2] mtd: spi-nor: Add support for w25q32jwm
-Thread-Index: AQHVzpi9ZN5ysq9Q4ki2+7vO9nN1Ig==
-Date:   Sun, 19 Jan 2020 07:19:09 +0000
-Message-ID: <5149002.dABgk2UiNj@192.168.0.113>
-References: <20200116154209.32654-1-michael@walle.cc>
-In-Reply-To: <20200116154209.32654-1-michael@walle.cc>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [94.177.32.156]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5e8dd277-8b56-425d-bdbd-08d79cafe092
-x-ms-traffictypediagnostic: MN2PR11MB3984:
-x-microsoft-antispam-prvs: <MN2PR11MB3984368C08346667DF4932D2F0330@MN2PR11MB3984.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:989;
-x-forefront-prvs: 0287BBA78D
-x-forefront-antispam-report: SFV:SPM;SFS:(10009020)(39850400004)(396003)(366004)(346002)(376002)(136003)(199004)(189003)(6916009)(71200400001)(2906002)(86362001)(316002)(54906003)(8676002)(66476007)(81156014)(81166006)(5660300002)(64756008)(66446008)(66556008)(66946007)(186003)(91956017)(76116006)(26005)(966005)(8936002)(53546011)(6506007)(14286002)(478600001)(4744005)(9686003)(6512007)(6486002)(4326008)(39026012)(138113003);DIR:OUT;SFP:1501;SCL:5;SRVR:MN2PR11MB3984;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: O4zwPYgl8K2ZO5HbJno5N5tDL3WZi8EJWgQYEKlduT37SPW9H7Hjn0uGip24YuOP8x9/POMjjQGd/VeLIDZDPrGnrjqG4DwHei7MOubjZ8HU/QTYIgR/zmD36YYnXh2EtccqVArmdKGLstdB3QYsLzROzW032SQYG18l3KYylLIUjHCzVJQo9lDsvu7PP+MtZeBumYCMEJGvLBskx1fZhB4JMlYOnCy2ijM/eldpC9T1FmFya/NbujcHFXAgBamv1/miwbMVehRcuWKmrTahPwjQGQ01FKPlSo4tPTllePbh/caHfiBqkErurpH1QgIzOzq/lFqsDNR7Tk/gRKRtiHEZ5yp2VtfFjHtyYncYiGIzdvDvY+AwbqcOMwFLVFT+5qWK4ymrPv6keXyXgFtAdnQp2tbzN1O0VtngufzD7yuetRrZGIflmIzP1973zKDSOsS+v/zD/1qVwZCs3CU7gFDpJ7E3uKSjOamiTnCve7Aw5al98C6qE40BnMdaaxh5gkMV43g9l2AGEDBxjCtk/6XBRR18o+UvSS8tY7rkdgiZFRrntfqcPZzyQ5GIFI4gfWOsyBzcsQCv+M3jdP2SW7n26cC6kVFCPoVV3LkCA2XhpCvSB9mrqet8yAW1uw9X1skJUZuw/qGNBXSbP3hqXoCrhl8pQXZ7VcfrO8rKisI5cJZrfw7vGxnZvqTACR/PwFJJnvoJspRxtaxZM9OHWquaBw7FfOnqCnlc9HLInQ+XLvCscFXU/f12tj6/w3bkMjHt8qFjaVro5x06p7Q4NDLUrK+eI9YR4OovZEIefT5xuQjAvz5/fO2gjSezEHWD3mqsmgjSOkh2GoHJyvd18uND2G21FkX9I7oJ7WtFbZBQrkxEzm0bGd8m3zOksOo9
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <243073F4C772694CB138224B1727BC0E@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/sQlkgm79WGoIWETmPQFCd9M6iRMmjRgwgIkAakW/+c=;
+        b=h1cn4v3VVndWVOkwr+/WfQHckHgOClCe0TFEuCNrEn0Me4pdBT+BMa2oDc+PNhCNqu
+         iYAVZ9gLmXjCMgg0gtE/xgMrYXv2N8JdqkZ0IhEAN7nasKILmc/TrYekYAbxRuQORZNR
+         4I7jGB/lqZYJOL+EgrxPx3vLMomyU6Q0kuyXG2HU11BzTBl166omNkC7sStsquzDwAfy
+         U7suNKbF2fmYV2XbE4UelnXaCFmAk4MI8dmIN4b6j31s9UGhLrTOYXCUEBgMI74UzKy8
+         RvncQ/jeAmLZ2UDN3fBgaASQK/LHdJUrWvV+TJClvDrzB5jkGTJK85ciXFYqSsdXFSR6
+         mrcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/sQlkgm79WGoIWETmPQFCd9M6iRMmjRgwgIkAakW/+c=;
+        b=CC51qyEL76g6gP4jftciXUt0Yt/vBzJ+sTZ0r8AoHJcDiPH8qdaH2Ve3T/9itu8+3z
+         TEFJ1LogR4VjvGaeJyZywSUpQ8C3fSnrY6H7h7DRBkn1819+ViNC1kSvmAM7FonDvEyj
+         SWIPHvWclLHVDL5OfqnXQ+Xix71gskIH43KMwCqnj0U/WktQmlQsp50T83RdEWZEBiVO
+         aDZDGzhSg0ga9bgi57LYj/L4Y92l7l5a586vj7Z5ZBnc8AbRveI1UcRpPkidtzTLrNBX
+         m1Clj8nAo7EZjqOOddATCducnDMH2G7I5OCNXpY4+hvyzTW1u+vR/glRmXI2gNyxfNGu
+         4REQ==
+X-Gm-Message-State: APjAAAVbBXaQvAq8sASPoeB9xXeeSp7ogNjO2Mj6wbKGVdd12BA22RD+
+        tG5VVJg6187a3nkK2glxSBENAFAhi/f92HuIa3A=
+X-Google-Smtp-Source: APXvYqzyh/qFVp9njLbzx0sFowOdZZeFjHQN6WIAlqdEsGSEp8/Hr19ghP+ad3tyBEd7OwhHO6ar27Q99WeyAsKk0PY=
+X-Received: by 2002:a05:620a:1298:: with SMTP id w24mr45415455qki.170.1579419458776;
+ Sat, 18 Jan 2020 23:37:38 -0800 (PST)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5e8dd277-8b56-425d-bdbd-08d79cafe092
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jan 2020 07:19:09.5268
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: wmIP395GQzPiSG4JO5NQXs00dzSADk1DU5bqS/hn/FxUy4Qjl2wRl0a9gunorv5BR98g3/fCxuOeZt0cLJpKOXDqw6LJcPhLO+v+ARvaDmg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3984
+References: <8d5358a67746b2aff5f6995cabd11d0d7c9e579e.1575978484.git.baolin.wang7@gmail.com>
+ <dd3303a956e7dd5c065ac2b92b1dea7ee5d1df17.1575978484.git.baolin.wang7@gmail.com>
+ <b653521a-0296-786c-072d-7f1962f3021a@linaro.org>
+In-Reply-To: <b653521a-0296-786c-072d-7f1962f3021a@linaro.org>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Sun, 19 Jan 2020 15:37:26 +0800
+Message-ID: <CADBw62pz7bYO7scSnO35QX2x7NPZ69o6=_zX-rSHAKprbZMbvg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] thermal: sprd: Add Spreadtrum thermal driver support
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     rui.zhang@intel.com, edubezval@gmail.com,
+        amit.kucheria@verdurent.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linaro.org>, freeman.liu@unisoc.com,
+        Chunyan Zhang <zhang.lyra@gmail.com>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday, January 16, 2020 5:42:09 PM EET Michael Walle wrote:
-> Add support for the Winbond W25Q32JW-xM flashes. These have a
-> programmable QE bit. There is also the W25Q32JW-xQ variant which shares
-> the ID with the W25Q32DW and W25Q32FW parts. The W25Q32JW-xQ has the QE
-> bit hard strapped to 1, thus don't support the /HOLD and /WP pins.
->=20
-> This was tested in single, dual and quad mode on a custom board with the
-> NXP FlexSPI controller. Also the BP bits as well as the TB bit were
-> tested.
->=20
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> ---
-> This patch superseeds the following patch:
->   https://lore.kernel.org/linux-mtd/20200103223423.14025-1-michael@walle.=
-cc/
->=20
-> changes since v1:
->  - renamed flash to w25q32jwm
->  - removed untested flashes
->  - reworded the commit message
->=20
->  drivers/mtd/spi-nor/spi-nor.c | 5 +++++
->  1 file changed, 5 insertions(+)
+Hi Daniel,
 
-Applied to spi-nor/next. Thanks.
-ta
+On Fri, Jan 17, 2020 at 7:52 PM Daniel Lezcano
+<daniel.lezcano@linaro.org> wrote:
+>
+> On 10/12/2019 13:07, Baolin Wang wrote:
+> > From: Freeman Liu <freeman.liu@unisoc.com>
+> >
+> > This patch adds the support for Spreadtrum thermal sensor controller,
+> > which can support maximum 8 sensors.
+> >
+> > Signed-off-by: Freeman Liu <freeman.liu@unisoc.com>
+> > Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+> > ---
+> > Changes from v1:
+> >  - None.
+> > ---
 
+> > +
+> > +struct sprd_thermal_sensor {
+> > +     struct thermal_zone_device *thmzone_dev;
+> > +     struct sprd_thermal_data *data;
+> > +     struct device *dev;
+> > +     bool ready;
+> > +     int cal_slope;
+> > +     int cal_offset;
+> > +     int last_temp;
+> > +     int id;
+> > +};
+> > +
+> > +struct sprd_thermal_data {
+> > +     const struct sprd_thm_variant_data *var_data;
+> > +     struct sprd_thermal_sensor *sensor[SPRD_THM_MAX_SENSOR];
+> > +     struct clk *clk;
+> > +     void __iomem *base;
+> > +     u32 ratio_off;
+> > +     u32 ratio_sign;
+> > +     int nr_sensors;
+> > +};
+> > +
+> > +/*
+> > + * The conversion between ADC and temperature is based on linear relationship,
+> > + * and use idea_k to specify the slope and ideal_b to specify the offset.
+> > + *
+> > + * Since different Spreadtrum SoCs have different ideal_k and ideal_b,
+> > + * we should save ideal_k and ideal_b in the device data structure.
+> > + */
+> > +struct sprd_thm_variant_data {
+> > +     u32 ideal_k;
+> > +     u32 ideal_b;
+> > +};
+> > +
+> > +static const struct sprd_thm_variant_data ums512_data = {
+> > +     .ideal_k = 262,
+> > +     .ideal_b = 66400,
+> > +};
+> > +
+> > +static inline void sprd_thm_update_bits(void __iomem *reg, u32 mask, u32 val)
+> > +{
+> > +     u32 tmp, orig;
+> > +
+> > +     orig = readl(reg);
+> > +     tmp = orig & ~mask;
+> > +     tmp |= val & mask;
+> > +     writel(tmp, reg);
+>
+> Please have a look at linux/bitops.h and check if a macro does not fit
+> your need (eg. set_mask_bits and set_bit). AFAICT, most of the operation
+> are clear/set bits.
+
+We are updating a register here, not updating a vriable. So I think it
+is not helpful with using set_mask_bits or set_bit.
+
+>
+> > +}
+> > +
+> > +static int sprd_thm_cal_read(struct device_node *np, const char *cell_id,
+> > +                          u32 *val)
+> > +{
+> > +     struct nvmem_cell *cell;
+> > +     void *buf;
+> > +     size_t len;
+> > +
+> > +     cell = of_nvmem_cell_get(np, cell_id);
+> > +     if (IS_ERR(cell))
+> > +             return PTR_ERR(cell);
+> > +
+> > +     buf = nvmem_cell_read(cell, &len);
+> > +     nvmem_cell_put(cell);
+> > +     if (IS_ERR(buf))
+> > +             return PTR_ERR(buf);
+> > +
+> > +     memcpy(val, buf, min(len, sizeof(u32)));
+>
+> I'm probably nitpicking but what if the len is different from the u32,
+> the result will be inconsistent. If that can happen, wouldn't make sense
+> to bail out before with an error ?
+
+OK. Will change to give some error.
+
+>
+> > +     kfree(buf);
+> > +     return 0;
+> > +}
+> > +
+> > +static int sprd_thm_senor_calibration(struct device_node *np,
+> > +                                   struct sprd_thermal_data *thm,
+> > +                                   struct sprd_thermal_sensor *sen)
+>
+> "senor_calibration" or "sensor_calibration" ?
+
+Sure.
+
+>
+> > +{
+> > +     int ret;
+> > +     /*
+> > +      * According to thermal datasheet, the default calibration offset is 64,
+> > +      * and the default ratio is 1000.
+> > +      */
+> > +     int dt_offset = 64, ratio = 1000;
+> > +
+> > +     ret = sprd_thm_cal_read(np, "sen_delta_cal", &dt_offset);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     if (thm->ratio_sign == 1)
+> > +             ratio = 1000 - thm->ratio_off;
+> > +     else
+> > +             ratio = 1000 + thm->ratio_off;
+>
+> Store ratio_sign = -1 | 1 at init time, then :
+>
+>   ratio += ratio_sign * thm->ratio_off
+
+OK.
+
+>
+> > +     /*
+> > +      * According to the ideal slope K and ideal offset B, combined with
+> > +      * calibration value of thermal from efuse, then calibrate the real
+> > +      * slope k and offset b:
+> > +      * k_cal = (k * ratio) / 1000.
+> > +      * b_cal = b + (dt_offset - 64) * 500.
+> > +      */
+> > +     sen->cal_slope = (thm->var_data->ideal_k * ratio) / 1000;
+> > +     sen->cal_offset = thm->var_data->ideal_b + (dt_offset - 128) * 250;
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int sprd_thm_rawdata_to_temp(struct sprd_thermal_sensor *sen,
+> > +                                 u32 rawdata)
+> > +{
+> > +     if (rawdata < SPRD_THM_RAW_DATA_LOW)
+> > +             rawdata = SPRD_THM_RAW_DATA_LOW;
+> > +     else if (rawdata > SPRD_THM_RAW_DATA_HIGH)
+> > +             rawdata = SPRD_THM_RAW_DATA_HIGH;
+>
+> check clamp() macro in kernel.h
+
+Yes, will do.
+
+>
+> > +     /*
+> > +      * According to the thermal datasheet, the formula of converting
+> > +      * adc value to the temperature value should be:
+> > +      * T_final = k_cal * x - b_cal.
+> > +      */
+> > +     return sen->cal_slope * rawdata - sen->cal_offset;
+> > +}
+> > +
+> > +static int sprd_thm_temp_to_rawdata(int temp, struct sprd_thermal_sensor *sen)
+> > +{
+> > +     u32 val;
+> > +
+> > +     if (temp < SPRD_THM_TEMP_LOW)
+> > +             temp = SPRD_THM_TEMP_LOW;
+> > +     else if (temp > SPRD_THM_TEMP_HIGH)
+> > +             temp = SPRD_THM_TEMP_HIGH;
+>
+> check clamp() macro in kernel.h
+
+OK.
+
+>
+> > +     /*
+> > +      * According to the thermal datasheet, the formula of converting
+> > +      * adc value to the temperature value should be:
+> > +      * T_final = k_cal * x - b_cal.
+> > +      */
+> > +     val = (temp + sen->cal_offset) / sen->cal_slope;
+> > +
+> > +     return val >= SPRD_THM_RAW_DATA_HIGH ? (SPRD_THM_RAW_DATA_HIGH - 1) : val;
+>
+> check clamp() macro in kernel.h
+
+OK.
+
+>
+> > +}
+> > +
+> > +static int sprd_thm_read_temp(void *devdata, int *temp)
+> > +{
+> > +     struct sprd_thermal_sensor *sen = devdata;
+> > +     int sensor_temp;
+> > +     u32 data;
+> > +
+> > +     data = readl(sen->data->base + SPRD_THM_TEMP(sen->id)) &
+> > +             SPRD_THM_RAW_READ_MSK;
+> > +
+> > +     if (sen->ready) {
+> > +             sensor_temp = sprd_thm_rawdata_to_temp(sen, data);
+> > +             sen->last_temp = sensor_temp;
+> > +             *temp = sensor_temp;
+>
+> If the initialization is done in the right order and using the
+> THERMAL_DEVICE_DISABLED, this test should not be needed. And de facto,
+> neither the last_temp.
+>
+> As a side note, if the sensor is not ready it should return an error
+> like -EBUSY instead of the previous value.
+
+OK. Will use THERMAL_DEVICE_DISABLED and remove 'last_temp'.
+
+>
+> > +     } else {
+> > +             /*
+> > +              * If the sensor is not ready, then just return last
+> > +              * temperature value.
+> > +              */
+> > +             *temp = sen->last_temp;
+> > +     }
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static const struct thermal_zone_of_device_ops sprd_thm_ops = {
+> > +     .get_temp = sprd_thm_read_temp,
+> > +};
+> > +
+> > +static int sprd_thm_poll_ready_status(struct sprd_thermal_data *thm)
+> > +{
+> > +     u32 val;
+> > +     int ret;
+> > +
+> > +     /*
+> > +      * Wait for thermal ready status before configuring thermal parameters.
+> > +      */
+> > +     ret = readl_poll_timeout(thm->base + SPRD_THM_CTL, val,
+> > +                              !(val & SPRD_THM_SET_RDY_ST),
+> > +                              SPRD_THM_RDYST_POLLING_TIME,
+> > +                              SPRD_THM_RDYST_TIMEOUT);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     sprd_thm_update_bits(thm->base + SPRD_THM_CTL, SPRD_THM_MON_EN,
+> > +                          SPRD_THM_MON_EN);
+> > +     sprd_thm_update_bits(thm->base + SPRD_THM_CTL, SPRD_THM_SET_RDY,
+> > +                          SPRD_THM_SET_RDY);
+> > +     return 0;
+> > +}
+> > +
+> > +static int sprd_thm_wait_temp_ready(struct sprd_thermal_data *thm)
+> > +{
+> > +     u32 val;
+> > +
+> > +     /* Wait for first temperature data ready before reading temperature */
+> > +     return readl_poll_timeout(thm->base + SPRD_THM_INTERNAL_STS1, val,
+> > +                               !(val & SPRD_THM_TEMPER_RDY),
+> > +                               SPRD_THM_TEMP_READY_POLL_TIME,
+> > +                               SPRD_THM_TEMP_READY_TIMEOUT);
+> > +}
+> > +
+> > +static int sprd_thm_set_ready(struct sprd_thermal_data *thm)
+> > +{
+> > +     int ret;
+> > +
+> > +     ret = sprd_thm_poll_ready_status(thm);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     /*
+> > +      * Clear interrupt status, enable thermal interrupt and enable thermal.
+> > +      */
+> > +     writel(SPRD_THM_INT_CLR_MASK, thm->base + SPRD_THM_INT_CLR);
+> > +     sprd_thm_update_bits(thm->base + SPRD_THM_INT_EN,
+> > +                          SPRD_THM_BIT_INT_EN, SPRD_THM_BIT_INT_EN);
+> > +     sprd_thm_update_bits(thm->base + SPRD_THM_CTL,
+> > +                          SPRD_THM_EN, SPRD_THM_EN);
+>
+> Why enabling the interrupt while there is no handler for it?
+
+Our thermal controller integrates a hardware interrupt signal, which
+means if the temperature is overheat, it will generate an interrupt
+and notify the event to PMIC automatically to shutdown the system. So
+we should enable the interrupt bits, but no need to register handler.
+
+I will add some comments to explain this in next verison.
+
+>
+> > +     return 0;
+> > +}
+> > +
+> > +static void sprd_thm_sensor_init(struct sprd_thermal_data *thm,
+> > +                              struct sprd_thermal_sensor *sen)
+> > +{
+> > +     u32 otp_rawdata, hot_rawdata;
+> > +
+> > +     otp_rawdata = sprd_thm_temp_to_rawdata(SPRD_THM_OTP_TEMP, sen);
+> > +     hot_rawdata = sprd_thm_temp_to_rawdata(SPRD_THM_HOT_TEMP, sen);
+> > +
+> > +     /* Enable the sensor' overheat temperature protection interrupt */
+> > +     sprd_thm_update_bits(thm->base + SPRD_THM_INT_EN,
+> > +                          SPRD_THM_SEN_OVERHEAT_ALARM_EN(sen->id),
+> > +                          SPRD_THM_SEN_OVERHEAT_ALARM_EN(sen->id));
+> > +
+> > +     /* Set the sensor' overheat and hot threshold temperature */
+> > +     sprd_thm_update_bits(thm->base + SPRD_THM_THRES(sen->id),
+> > +                          SPRD_THM_THRES_MASK,
+> > +                          (otp_rawdata << SPRD_THM_OTP_TRIP_SHIFT) |
+> > +                          hot_rawdata);
+> > +
+> > +     /* Enable the corresponding sensor */
+> > +     sprd_thm_update_bits(thm->base + SPRD_THM_CTL, SPRD_THM_SEN(sen->id),
+> > +                          SPRD_THM_SEN(sen->id));
+> > +}
+> > +
+> > +static void sprd_thm_para_config(struct sprd_thermal_data *thm)
+> > +{
+> > +     /* Set the period of two valid temperature detection action */
+> > +     sprd_thm_update_bits(thm->base + SPRD_THM_DET_PERIOD,
+> > +                          SPRD_THM_DET_PERIOD_MASK, SPRD_THM_DET_PERIOD);
+> > +
+> > +     /* Set the sensors' monitor mode */
+> > +     sprd_thm_update_bits(thm->base + SPRD_THM_MON_CTL,
+> > +                          SPRD_THM_MON_MODE_MASK, SPRD_THM_MON_MODE);
+> > +
+> > +     /* Set the sensors' monitor period */
+> > +     sprd_thm_update_bits(thm->base + SPRD_THM_MON_PERIOD,
+> > +                          SPRD_THM_MON_PERIOD_MASK, SPRD_THM_MON_PERIOD);
+> > +}
+> > +
+> > +static int sprd_thm_probe(struct platform_device *pdev)
+> > +{
+> > +     struct device_node *np = pdev->dev.of_node;
+> > +     struct device_node *sen_child;
+> > +     struct sprd_thermal_data *thm;
+> > +     struct sprd_thermal_sensor *sen;
+> > +     const struct sprd_thm_variant_data *pdata;
+> > +     int ret, i;
+> > +
+> > +     pdata = of_device_get_match_data(&pdev->dev);
+> > +     if (!pdata) {
+> > +             dev_err(&pdev->dev, "No matching driver data found\n");
+> > +             return -EINVAL;
+> > +     }
+> > +
+> > +     thm = devm_kzalloc(&pdev->dev, sizeof(*thm), GFP_KERNEL);
+> > +     if (!thm)
+> > +             return -ENOMEM;
+> > +
+> > +     thm->var_data = pdata;
+> > +     thm->base = devm_platform_ioremap_resource(pdev, 0);
+> > +     if (!thm->base)
+> > +             return -ENOMEM;
+> > +
+> > +     thm->nr_sensors = of_get_child_count(np);
+> > +     if (thm->nr_sensors == 0 || thm->nr_sensors > SPRD_THM_MAX_SENSOR) {
+> > +             dev_err(&pdev->dev, "incorrect sensor count\n");
+> > +             return -EINVAL;
+> > +     }
+> > +
+> > +     thm->clk = devm_clk_get(&pdev->dev, "enable");
+> > +     if (IS_ERR(thm->clk)) {
+> > +             dev_err(&pdev->dev, "failed to get enable clock\n");
+> > +             return PTR_ERR(thm->clk);
+> > +     }
+> > +
+> > +     ret = clk_prepare_enable(thm->clk);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     sprd_thm_para_config(thm);
+> > +
+> > +     ret = sprd_thm_cal_read(np, "thm_sign_cal", &thm->ratio_sign);
+> > +     if (ret)
+> > +             goto disable_clk;
+> > +
+> > +     ret = sprd_thm_cal_read(np, "thm_ratio_cal", &thm->ratio_off);
+> > +     if (ret)
+> > +             goto disable_clk;
+> > +
+> > +     for_each_child_of_node(np, sen_child) {
+> > +             sen = devm_kzalloc(&pdev->dev, sizeof(*sen), GFP_KERNEL);
+> > +             if (!sen) {
+> > +                     ret = -ENOMEM;
+> > +                     goto disable_clk;
+> > +             }
+> > +
+> > +             sen->ready = false;
+> > +             sen->data = thm;
+> > +             sen->dev = &pdev->dev;
+> > +
+> > +             ret = of_property_read_u32(sen_child, "reg", &sen->id);
+> > +             if (ret) {
+> > +                     dev_err(&pdev->dev, "get sensor reg failed");
+> > +                     goto disable_clk;
+> > +             }
+> > +
+> > +             ret = sprd_thm_senor_calibration(sen_child, thm, sen);
+> > +             if (ret) {
+> > +                     dev_err(&pdev->dev, "efuse cal analysis failed");
+> > +                     goto disable_clk;
+> > +             }
+> > +
+> > +             sprd_thm_sensor_init(thm, sen);
+> > +
+> > +             sen->thmzone_dev =
+> > +                     devm_thermal_zone_of_sensor_register(sen->dev, sen->id,
+> > +                                                          sen, &sprd_thm_ops);
+> > +             if (IS_ERR(sen->thmzone_dev)) {
+> > +                     dev_err(&pdev->dev, "register thermal zone failed %d\n",
+> > +                             sen->id);
+> > +                     ret = PTR_ERR(sen->thmzone_dev);
+> > +                     goto disable_clk;
+> > +             }
+> > +
+> > +             thm->sensor[sen->id] = sen;
+> > +     }
+> > +
+> > +     ret = sprd_thm_set_ready(thm);
+> > +     if (ret)
+> > +             goto disable_clk;
+> > +
+> > +     ret = sprd_thm_wait_temp_ready(thm);
+> > +     if (ret)
+> > +             goto disable_clk;
+> > +
+> > +     for (i = 0; i < thm->nr_sensors; i++)
+> > +             thm->sensor[i]->ready = true;
+>
+> You should replace 'ready' by the THERMAL_DEVICE_ENABLED/DISABLED (grep
+> it on the other drivers for reference) and/or call
+> devm_thermal_zone_of_sensor_register() here.
+
+Sure. I think we missed THERMAL_DEVICE_ENABLED/DISABLED flag.
+
+Thanks for your comments.
