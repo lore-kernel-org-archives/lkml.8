@@ -2,149 +2,106 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D056C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:30:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC2DC33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:30:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A0C42073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:30:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8F492073D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:30:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a4KwANnE"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="RU7uxv5p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726388AbgATGaI (ORCPT
+        id S1726476AbgATGa2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 01:30:08 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:42124 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbgATGaI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 01:30:08 -0500
-Received: by mail-pg1-f196.google.com with SMTP id s64so15009918pgb.9
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jan 2020 22:30:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xf1QiuMf0hHigZRu4/cbzAY/tfWYTII9JMzw/Trme34=;
-        b=a4KwANnE2EZL0qHoQ+SpxO0bZOErxLwdUS0tR0s7vjU16+pCr7d4tI9/7tAX0OGxeR
-         3Ujo0XFEL87E+PdvBn2VRM+jsvPd2lMNk8IRvMi4wKEtsaUefWlemKt1vgyXmV/khhne
-         K/u694w8gbMQGifnS1TPubDWXRqBFmXyP0iFa8VZc7u6r/pTclt0FYbOSuJzsuzWmQjX
-         mO8hh8Qiy7JFvaE/M8uOtRoHwFt2PaVWVg3QOIP4XQjFZd9AwxSvxo6IRFm7rDzXbTrV
-         JZl4NXasmhTp9ep6O0CWO2J2Lakjya3kwlqcOy/eJZfLYJiUkb3R3rE3xLq87vazhNi7
-         wANA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xf1QiuMf0hHigZRu4/cbzAY/tfWYTII9JMzw/Trme34=;
-        b=oprBPqWIARbviElVZXkmjnp/yYHfS/4bvIzIGR8g0FTj4Zm8jfNvPEAVHVRtNoBare
-         5T7cvDT6vem0/46kNh73nd5gdNY8Pg4fgFdSH+fJgJyaVLmt9WuWZqUy8QFz+W20mO1S
-         aYv92ddXmxrD2f8esSvos9h7NcTZFji1znhZYo03o+Lk7q62Dnu903Rwu+MGIV2sWe76
-         hrCrCynYGafBTBAoxt6iTIFRRJtV2DIniVv5+cX0Qj9s0KByWXNknnyL886vo1cAAOL6
-         ZLxw0uyzYVzX2CAj20VpnyVij5vpuQgpJhxXO0mPtJ+AZ76x+PIoquUoZ7+/Zwq58ebj
-         5ENg==
-X-Gm-Message-State: APjAAAV5EsJhJqU6ZGwqHRYMovHTfVPDIIHoxjynC/n4pD20/vJt5wnq
-        1FPqST/YVUBe4VfumfIdz62ZFA==
-X-Google-Smtp-Source: APXvYqyLGxswmFQFbRVpKv/a3s/IpKKD3P/z1gJ/ntpqumpKG02JtHNzqYLPbIeBS1DTzCykmYynuw==
-X-Received: by 2002:a62:1889:: with SMTP id 131mr15707948pfy.250.1579501807380;
-        Sun, 19 Jan 2020 22:30:07 -0800 (PST)
-Received: from localhost ([122.172.71.156])
-        by smtp.gmail.com with ESMTPSA id g9sm38268658pfm.150.2020.01.19.22.30.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 19 Jan 2020 22:30:06 -0800 (PST)
-Date:   Mon, 20 Jan 2020 12:00:04 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     chenqiwu <qiwuchen55@gmail.com>
-Cc:     mmayer@broadcom.com, rjw@rjwysocki.net, f.fainelli@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        chenqiwu <chenqiwu@xiaomi.com>
-Subject: Re: [PATCH v3] cpufreq: brcmstb-avs: fix imbalance of cpufreq policy
- refcount
-Message-ID: <20200120063004.zzhep35vfl3urndd@vireshk-i7>
-References: <1579417750-21984-1-git-send-email-qiwuchen55@gmail.com>
- <20200120053250.igkwofqfzvmqb3c3@vireshk-i7>
- <20200120055822.GB5185@cqw-OptiPlex-7050>
- <20200120060134.izotrbzjvzk327zx@vireshk-i7>
- <20200120061356.GA5605@cqw-OptiPlex-7050>
- <20200120062126.nmxaqhcpqcojuihr@vireshk-i7>
- <20200120062756.GA5802@cqw-OptiPlex-7050>
+        Mon, 20 Jan 2020 01:30:28 -0500
+Received: from ozlabs.org ([203.11.71.1]:34939 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725837AbgATGa2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 01:30:28 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 481MH43wr9z9sRf;
+        Mon, 20 Jan 2020 17:30:24 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1579501825;
+        bh=ULh8c+M+Meu7IrxmRr9gXX7nZrh656kZljxewgU6B8w=;
+        h=Date:From:To:Cc:Subject:From;
+        b=RU7uxv5p7zIF8Mxd5NfmpsoCcX/IHBTs+Fn/UYnsk514xEKhQfJjE7egErxDfgYvQ
+         uF2V4U9J80LEmYCroS+tFVFPLBVqo8ftlVHMOb2m3JZrbj+koTUfM0mev1e/Oiktcn
+         LzHgaGuX9WQD5frBeUarFPmwOt+sD4EdCiYFK1C8S1ASB4ngf7dp5FEk6glmCq9kNg
+         RbO+MJSsmDMpoDNlMIrgE1+9T+OVCfd2ilAY8VQIhU8P5Lk5U8aj2ItgbAMRdEcz3+
+         Q9kuKwl2mYlmxov4OT9uBT7lPbPtFJzFWguznwU3LFnpoBTxTZU1cXuNgr4/ai8ufW
+         QFgkjx7SYgiSw==
+Date:   Mon, 20 Jan 2020 17:30:16 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Alexey Dobriyan <adobriyan@gmail.com>
+Subject: linux-next: manual merge of the akpm-current tree with the tip tree
+Message-ID: <20200120173016.077dfda0@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200120062756.GA5802@cqw-OptiPlex-7050>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Type: multipart/signed; boundary="Sig_/gjXME8QNH4.L5b1_MOJCvQu";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-01-20, 14:27, chenqiwu wrote:
-> On Mon, Jan 20, 2020 at 11:51:26AM +0530, Viresh Kumar wrote:
-> > On 20-01-20, 14:13, chenqiwu wrote:
-> > > On Mon, Jan 20, 2020 at 11:31:34AM +0530, Viresh Kumar wrote:
-> > > > On 20-01-20, 13:58, chenqiwu wrote:
-> > > > > On Mon, Jan 20, 2020 at 11:02:50AM +0530, Viresh Kumar wrote:
-> > > > > > On 19-01-20, 15:09, qiwuchen55@gmail.com wrote:
-> > > > > > > From: chenqiwu <chenqiwu@xiaomi.com>
-> > > > > > > 
-> > > > > > > brcm_avs_cpufreq_get() calls cpufreq_cpu_get() to get the cpufreq policy,
-> > > > > > > meanwhile, it also increments the kobject reference count to mark it busy.
-> > > > > > > However, a corresponding call of cpufreq_cpu_put() is ignored to decrement
-> > > > > > > the kobject reference count back, which may lead to a potential stuck risk
-> > > > > > > that the cpuhp thread deadly waits for dropping of kobject refcount when
-> > > > > > > cpufreq policy free.
-> > > > > > > 
-> > > > > > > For fixing this bug, cpufreq_get_policy() is referenced to do a proper
-> > > > > > > cpufreq_cpu_get()/cpufreq_cpu_put() and fill a policy copy for the user.
-> > > > > > > If the policy return NULL, we just return 0 to hit the code path of
-> > > > > > > cpufreq_driver->get.
-> > > > > > > 
-> > > > > > > Signed-off-by: chenqiwu <chenqiwu@xiaomi.com>
-> > > > > > > ---
-> > > > > > >  drivers/cpufreq/brcmstb-avs-cpufreq.c | 12 ++++++++++--
-> > > > > > >  1 file changed, 10 insertions(+), 2 deletions(-)
-> > > > > > > 
-> > > > > > > diff --git a/drivers/cpufreq/brcmstb-avs-cpufreq.c b/drivers/cpufreq/brcmstb-avs-cpufreq.c
-> > > > > > > index 77b0e5d..ee0d404 100644
-> > > > > > > --- a/drivers/cpufreq/brcmstb-avs-cpufreq.c
-> > > > > > > +++ b/drivers/cpufreq/brcmstb-avs-cpufreq.c
-> > > > > > > @@ -452,8 +452,16 @@ static bool brcm_avs_is_firmware_loaded(struct private_data *priv)
-> > > > > > >  
-> > > > > > >  static unsigned int brcm_avs_cpufreq_get(unsigned int cpu)
-> > > > > > >  {
-> > > > > > > -	struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
-> > > > > > 
-> > > > > > Why can't we just add a corresponding cpufreq_cpu_put() instead of all this ?
-> > > > > > 
-> > > > > 
-> > > > > cpufreq_get_policy() does a proper cpufreq_cpu_get()/cpufreq_cpu_put(),
-> > > > > meanwhile fills a policy copy for the user. It equals to using
-> > > > > cpufreq_cpu_get() and a corresponding cpufreq_cpu_put() around access
-> > > > > to the policy pointer. I think both methods are fine here.
-> > > > > What do you think?
-> > > > 
-> > > > cpufreq_get_policy() does an extra memcpy as well, which isn't required at all
-> > > > in your case.
-> > > > 
-> > > > -- 
-> > > > viresh
-> > > 
-> > > Huha..Do you worry about the race conditon with cpufreq policy free path?
-> > 
-> > No. I just worry about an unnecessary memcpy, nothing else.
-> >
-> Is there any question about this extra memcpy?
+--Sig_/gjXME8QNH4.L5b1_MOJCvQu
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-What do you mean by that?
+Hi all,
 
-The whole point I am trying to make is that for your specific case, doing an
-explicit cpufreq_cpu_get() and cpufreq_cpu_put() is far more efficient than
-calling cpufreq_get_policy() which has a different purpose and usecase.
+Today's linux-next merge of the akpm-current tree got a conflict in:
 
--- 
-viresh
+  arch/x86/kernel/apic/x2apic_uv_x.c
+
+between commit:
+
+  d0b778880448 ("x86/apic/uv: Avoid unused variable warning")
+
+from the tip tree and patch:
+
+  "proc: convert everything to "struct proc_ops""
+
+from the akpm-current tree.
+
+I fixed it up (I just used the tip tree version) and can carry the fix
+as necessary. This is now fixed as far as linux-next is concerned, but
+any non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/gjXME8QNH4.L5b1_MOJCvQu
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4lSPgACgkQAVBC80lX
+0GzJwAf/bTjvrM3WnHJzcH/Zak2FR1Si7p2E/hQnIqE/gAF/OjphmSgTjxggsgXU
+C56a69ZqPx9Uvtp4pHakKSv8RTvjmhreFpj/ecMTMyfKD97y4wyoXLl42IBZP25n
+GNlpJq4M3XrskdOk3DPD1Y4vuaHtMflJ50cTADBGbLSUs7PQ4TIdlsB5lIuNu6ls
+tP1Ygxr2sqfixTrSFNgfkTa4d9u8Gy9qu/vakjKjWKSXIMcCKelVyeLY09FzU37c
+p6io8R68vAkBWQ8WaeSnthyaunNU9jEjpadCf7xRQ48VrFbDqAJnLXn2vqpSeD/a
+H4vfwxZMYrBmlCVJaJ6VTxN5Tf5WnQ==
+=DkMj
+-----END PGP SIGNATURE-----
+
+--Sig_/gjXME8QNH4.L5b1_MOJCvQu--
