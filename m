@@ -2,107 +2,103 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 063AEC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:34:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA570C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:37:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD43B21D7E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:34:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B22AC22464
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:37:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728596AbgATPeB (ORCPT
+        id S1728712AbgATPhA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 10:34:01 -0500
-Received: from foss.arm.com ([217.140.110.172]:33770 "EHLO foss.arm.com"
+        Mon, 20 Jan 2020 10:37:00 -0500
+Received: from foss.arm.com ([217.140.110.172]:33812 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726642AbgATPeA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 10:34:00 -0500
+        id S1726876AbgATPg7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 10:36:59 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1D06630E;
-        Mon, 20 Jan 2020 07:34:00 -0800 (PST)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5DBB83F52E;
-        Mon, 20 Jan 2020 07:33:58 -0800 (PST)
-Date:   Mon, 20 Jan 2020 15:33:56 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     James Clark <James.Clark@arm.com>, Will Deacon <will@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>, nd <nd@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Tan Xiaojun <tanxiaojun@huawei.com>,
-        Al Grant <Al.Grant@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/1] Return EINVAL when precise_ip perf events are
- requested on Arm
-Message-ID: <20200120153355.GC43842@lakrids.cambridge.arm.com>
-References: <20200115105855.13395-1-james.clark@arm.com>
- <20200115105855.13395-2-james.clark@arm.com>
- <20200117123920.GB8199@willie-the-truck>
- <20200117140143.GD14879@hirez.programming.kicks-ass.net>
- <1231fd60-79cd-fcdf-8b99-a3be746bf2d1@arm.com>
- <20200117151658.GH14879@hirez.programming.kicks-ass.net>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BBC2830E;
+        Mon, 20 Jan 2020 07:36:58 -0800 (PST)
+Received: from [10.37.12.169] (unknown [10.37.12.169])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 024BF3F52E;
+        Mon, 20 Jan 2020 07:36:48 -0800 (PST)
+Subject: Re: [PATCH 1/4] PM / EM: and devices to Energy Model
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-imx@nxp.com
+Cc:     Morten.Rasmussen@arm.com, Chris.Redpath@arm.com,
+        ionela.voinescu@arm.com, javi.merino@arm.com,
+        cw00.choi@samsung.com, b.zolnierkie@samsung.com, rjw@rjwysocki.net,
+        sudeep.holla@arm.com, viresh.kumar@linaro.org, nm@ti.com,
+        sboyd@kernel.org, rui.zhang@intel.com, amit.kucheria@verdurent.com,
+        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        rostedt@goodmis.org, qperret@google.com, bsegall@google.com,
+        mgorman@suse.de, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        festevam@gmail.com, kernel@pengutronix.de, khilman@kernel.org,
+        agross@kernel.org, bjorn.andersson@linaro.org, robh@kernel.org,
+        matthias.bgg@gmail.com, steven.price@arm.com,
+        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
+        airlied@linux.ie, daniel@ffwll.ch, patrick.bellasi@matbug.net
+References: <20200116152032.11301-1-lukasz.luba@arm.com>
+ <20200116152032.11301-2-lukasz.luba@arm.com>
+ <17b77e0c-9455-0479-d37b-c57717c784c7@arm.com>
+ <d0b90b97-3604-d4f4-b873-3879a9221532@arm.com>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <38307e88-f7ff-bc2a-bbce-5e508e275526@arm.com>
+Date:   Mon, 20 Jan 2020 15:36:46 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200117151658.GH14879@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <d0b90b97-3604-d4f4-b873-3879a9221532@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 04:16:58PM +0100, Peter Zijlstra wrote:
-> On Fri, Jan 17, 2020 at 03:00:37PM +0000, James Clark wrote:
-> > Hi Peter,
-> > 
-> > Do you mean something like this?
+
+
+On 1/20/20 3:11 PM, Dietmar Eggemann wrote:
+> On 20/01/2020 15:53, Dietmar Eggemann wrote:
+>> On 16/01/2020 16:20, lukasz.luba@arm.com wrote:
+>>> From: Lukasz Luba <lukasz.luba@arm.com>
 > 
-> Yes.
+> [...]
 > 
-> > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> > index 43d1d4945433..f74acd085bea 100644
-> > --- a/kernel/events/core.c
-> > +++ b/kernel/events/core.c
-> > @@ -10812,6 +10812,12 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
-> >                 goto err_pmu;
-> >         }
-> >  
-> > +       if (event->attr.precise_ip &&
-> > +               !(pmu->capabilities & PERF_PMU_CAP_PRECISE_IP)) {
-> > +               err = -EOPNOTSUPP;
-> > +               goto err_pmu;
-> > +       }
-> > +
-> >         err = exclusive_event_init(event);
-> >         if (err)
-> >                 goto err_pmu;
-> > 
-> > 
-> > Or should it only be done via sysfs to not break userspace?
+>>> +enum em_type {
+>>> +	EM_SIMPLE,
+>>> +	EM_CPU,
+>>> +};
+>>
+>> s/EM_SIMPLE/EM_DEV ?
+>>
+>> Right now I only see energy models and _one_ specific type (the CPU EM).
+>> So a tag 'is a CPU EM' would suffice. No need for EM_SIMPE ...
 > 
-> So we've added checks like this in the past and gotten away with it. Do
-> you already know of some userspace that will break due to it?
+> Wait, you even have
 > 
-> An alternative approach is adding a sysctl like kernel.perf_nostrict
-> which would disable this or something, that way 'old' userspace has a
-> chicken bit.
+> struct em_device {
+>          struct em_perf_domain *em_pd;
+>          struct device *dev;
+>          ...
+> }
+> 
+> static bool _is_cpu_device(struct device *dev)
+> 
+> Shouldn't this be enough to distinguish between EM and special CPU EM
+> under the API? Even when required to use container_of() to get from
+> em_perf_domain to device.
+> 
 
-Could we allocate a "strict" bit from perf_event_attr::__reserved_1, and
-update drivers to expose a whitelist of fields they support?
+Agree, I will remove this em_type related code.
 
-Then the core could do something like:
-
-	if (attr->strict && !pmu_check_whitelist(pmu, attr))
-		return -EOPNOTSUPP;
-
-... and we could also expose the whitelist somewhere in sysfs.
-
-Thanks,
-Mark,
+Lukasz
