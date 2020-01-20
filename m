@@ -2,122 +2,231 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2820C33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 18:11:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E35C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 18:12:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDFCD2253D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 18:11:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="J7JuvkDQ"
+	by mail.kernel.org (Postfix) with ESMTP id 6CBA12465A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 18:12:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728668AbgATSLy (ORCPT
+        id S1728760AbgATSMA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 13:11:54 -0500
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:58057 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728093AbgATSLx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 13:11:53 -0500
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
-        by mailout.nyi.internal (Postfix) with ESMTP id 0A4A521D25;
-        Mon, 20 Jan 2020 13:11:52 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute7.internal (MEProxy); Mon, 20 Jan 2020 13:11:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=3eLX0e
-        f+TjguMEDNQ4OqQg1MbtOe1MZnC7yyN6gjokc=; b=J7JuvkDQay6+NBdblOPewo
-        RfJhDS3JUf0TWtuMcX/K5jGwDS+DYQXZbSyfL7aLx3XJVHJc86kle0a0PQoWy0zb
-        uRrXXyN+/XIX2kMU68B40hIjoq0pIjb3qUD6wBPFjfPgyYbgk+24BnVniW4cXVwk
-        cM5+3hKCLbGB2R0Q/szbK95h6NXXBihjkAlaF6sDuSQHFkW7fIVcCyGS9wDW/ArG
-        M80xbcpEbNLO81Wla/bfKr59DUUfKx36SudmTR/bX4Awzg9zi4losnWMUlxfgobV
-        8v/9sSkmkqu4hGGegfoz2YYGFPSViNbJZGWRVI7OdYeNvCMBx34gHEHGIMnBT/LQ
-        ==
-X-ME-Sender: <xms:Zu0lXslUU6-MGtXpdNaemRY51oWdb94kEKtoBTL76xtyU7Pg50dm1A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudeigdegiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtjeenucfhrhhomhepofgrrhgvkhcu
-    ofgrrhgtiiihkhhofihskhhiqdfikphrvggtkhhiuceomhgrrhhmrghrvghksehinhhvih
-    hsihgslhgvthhhihhnghhslhgrsgdrtghomheqnecuffhomhgrihhnpehlihhnuhigfhho
-    uhhnuggrthhiohhnrdhorhhgnecukfhppeeluddrieehrdefgedrfeefnecuvehluhhsth
-    gvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrrhhmrghrvghksehi
-    nhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomh
-X-ME-Proxy: <xmx:Zu0lXnoaJbkd_uCCkRJHVs_Qtq_KtTQ5GoLG4AUtHooRQGdGxzAetg>
-    <xmx:Zu0lXmAbXycj-ZHg1cCg2yo_pH2uZnhA0aA3LsppuUu2sjMbEawh8g>
-    <xmx:Zu0lXiElReVvpHFvWUg6rn9c3T1GOB1MGEp5OFSvKmPuSKe37bD3Ow>
-    <xmx:aO0lXkT8fumM0nUUeav2lWoz3rCOwjsGNqmDoUQFvyuhGJvG4rGAGg>
-Received: from mail-itl (ip5b412221.dynamic.kabel-deutschland.de [91.65.34.33])
-        by mail.messagingengine.com (Postfix) with ESMTPA id A7280306099E;
-        Mon, 20 Jan 2020 13:11:49 -0500 (EST)
-Date:   Mon, 20 Jan 2020 19:11:46 +0100
-From:   Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= 
-        <marmarek@invisiblethingslab.com>
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org,
-        "open list:FRAMEBUFFER LAYER" <linux-fbdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] fbdev: wait for references go away
-Message-ID: <20200120181146.GL1314@mail-itl>
-References: <CGME20200120100025eucas1p21f5e2da0fd7c1fcb33cb47a97e9e645c@eucas1p2.samsung.com>
- <20200120100014.23488-1-kraxel@redhat.com>
- <d143e43b-8a38-940e-3ae5-e7b830a74bb3@samsung.com>
+        Mon, 20 Jan 2020 13:12:00 -0500
+Received: from mga18.intel.com ([134.134.136.126]:39080 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728680AbgATSMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 13:12:00 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 10:11:59 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,342,1574150400"; 
+   d="scan'208";a="227116426"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga003.jf.intel.com with ESMTP; 20 Jan 2020 10:11:58 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1itbWn-0005mw-Ld; Tue, 21 Jan 2020 02:11:57 +0800
+Date:   Tue, 21 Jan 2020 02:11:24 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:locking/kcsan] BUILD SUCCESS
+ 837171fe77d700222bb75ef5fe26f4785fcd9e99
+Message-ID: <5e25ed4c.5MLv9atpH+rOEEHC%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="p0HNO2YbtFeVXwJ3"
-Content-Disposition: inline
-In-Reply-To: <d143e43b-8a38-940e-3ae5-e7b830a74bb3@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  locking/kcsan
+branch HEAD: 837171fe77d700222bb75ef5fe26f4785fcd9e99  Merge tag 'v5.5-rc7' into locking/kcsan, to refresh the tree
 
---p0HNO2YbtFeVXwJ3
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] fbdev: wait for references go away
+elapsed time: 390m
 
-On Mon, Jan 20, 2020 at 06:51:17PM +0100, Bartlomiej Zolnierkiewicz wrote:
-> I guess that a problem is happening during DRM driver load while fbdev
-> driver is loaded? I assume do_unregister_framebuffer() is called inside
-> do_remove_conflicting_framebuffers()?
+configs tested: 168
+configs skipped: 0
 
-Yes, exactly. More details here:
-https://lists.linuxfoundation.org/pipermail/virtualization/2020-January/045=
-026.html
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> At first glance it seems to be an user-space issue as it should not be
-> holding references on /dev/fb0 while DRM driver is being loaded.
+parisc                            allnoconfig
+parisc                            allyesonfig
+parisc                         b180_defconfig
+parisc                        c3000_defconfig
+parisc                              defconfig
+x86_64               randconfig-e001-20200120
+x86_64               randconfig-e002-20200120
+x86_64               randconfig-e003-20200120
+i386                 randconfig-e001-20200120
+i386                 randconfig-e002-20200120
+i386                 randconfig-e003-20200120
+i386                             alldefconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+arc                              allyesconfig
+arc                                 defconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+csky                 randconfig-a001-20200120
+openrisc             randconfig-a001-20200120
+s390                 randconfig-a001-20200120
+sh                   randconfig-a001-20200120
+xtensa               randconfig-a001-20200120
+s390                             alldefconfig
+s390                             allmodconfig
+s390                              allnoconfig
+s390                             allyesconfig
+s390                          debug_defconfig
+s390                                defconfig
+s390                       zfcpdump_defconfig
+x86_64               randconfig-g001-20200120
+x86_64               randconfig-g002-20200120
+x86_64               randconfig-g003-20200120
+i386                 randconfig-g001-20200120
+i386                 randconfig-g002-20200120
+i386                 randconfig-g003-20200120
+h8300                     edosk2674_defconfig
+h8300                    h8300h-sim_defconfig
+h8300                       h8s-sim_defconfig
+m68k                             allmodconfig
+m68k                       m5475evb_defconfig
+m68k                          multi_defconfig
+m68k                           sun3_defconfig
+alpha                               defconfig
+csky                                defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+x86_64               randconfig-d001-20200120
+x86_64               randconfig-d002-20200120
+x86_64               randconfig-d003-20200120
+i386                 randconfig-d001-20200120
+i386                 randconfig-d002-20200120
+i386                 randconfig-d003-20200120
+c6x                              allyesconfig
+c6x                        evmc6678_defconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                       common_defconfig
+xtensa                          iss_defconfig
+ia64                                defconfig
+um                                  defconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                               rhel-7.6
+csky                 randconfig-a001-20200121
+openrisc             randconfig-a001-20200121
+s390                 randconfig-a001-20200121
+sh                   randconfig-a001-20200121
+xtensa               randconfig-a001-20200121
+x86_64               randconfig-c001-20200120
+x86_64               randconfig-c002-20200120
+x86_64               randconfig-c003-20200120
+i386                 randconfig-c001-20200120
+i386                 randconfig-c002-20200120
+i386                 randconfig-c003-20200120
+x86_64               randconfig-f001-20200120
+x86_64               randconfig-f002-20200120
+x86_64               randconfig-f003-20200120
+i386                 randconfig-f001-20200120
+i386                 randconfig-f002-20200120
+i386                 randconfig-f003-20200120
+sh                               allmodconfig
+sh                                allnoconfig
+sh                          rsk7269_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                            titan_defconfig
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                              allnoconfig
+mips                             allyesconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                          allmodconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                             defconfig
+c6x                  randconfig-a001-20200120
+h8300                randconfig-a001-20200120
+microblaze           randconfig-a001-20200120
+nios2                randconfig-a001-20200120
+sparc64              randconfig-a001-20200120
+x86_64               randconfig-a001-20200120
+x86_64               randconfig-a002-20200120
+x86_64               randconfig-a003-20200120
+i386                 randconfig-a001-20200120
+i386                 randconfig-a002-20200120
+i386                 randconfig-a003-20200120
+riscv                            allmodconfig
+riscv                             allnoconfig
+riscv                            allyesconfig
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+ia64                             alldefconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+arc                  randconfig-a001-20200120
+arm                  randconfig-a001-20200120
+arm64                randconfig-a001-20200120
+ia64                 randconfig-a001-20200120
+powerpc              randconfig-a001-20200120
+sparc                randconfig-a001-20200120
+x86_64               randconfig-b001-20200120
+x86_64               randconfig-b002-20200120
+x86_64               randconfig-b003-20200120
+i386                 randconfig-b001-20200120
+i386                 randconfig-b002-20200120
+i386                 randconfig-b003-20200120
+x86_64               randconfig-h001-20200120
+x86_64               randconfig-h002-20200120
+x86_64               randconfig-h003-20200120
+i386                 randconfig-h001-20200120
+i386                 randconfig-h002-20200120
+i386                 randconfig-h003-20200120
+c6x                  randconfig-a001-20200121
+h8300                randconfig-a001-20200121
+microblaze           randconfig-a001-20200121
+nios2                randconfig-a001-20200121
+sparc64              randconfig-a001-20200121
 
-How plymouth would know when exactly it needs to release /dev/fb0?
-
---=20
-Best Regards,
-Marek Marczykowski-G=C3=B3recki
-Invisible Things Lab
-A: Because it messes up the order in which people normally read text.
-Q: Why is top-posting such a bad thing?
-
---p0HNO2YbtFeVXwJ3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAl4l7WIACgkQ24/THMrX
-1ywYwQgAimDeFDny3c/ar866L78Bc5TRyJynEGGbFlnb9BR/gCc9gpS1tNCyemPC
-keqTV3PxXHMFaTPnrJi2ebuUP+Lmj/YOK+tCXB8+ipwMs3Z1HZv1DR7D4s3gDDzk
-To8b4e0RnxpCdQJ4xpOoWL+XcueHy+RB8FtEXqXyVJTW/bJWGYGnuyQVSubBKQxL
-TyEp6ASDocGLFX0QsSrdVEkuVF/PMdfbyu6Th9MwQMtMmd0s2BuepAfJhDP3js1f
-JlMnL3N1wscxFOWn1TSAGywTMbAjwRctGwrCcULMDME2STVryuH0VNWpapKIMQpj
-PUlDFH5CMVOKGjXo2OkywONz4gP7kQ==
-=2hqv
------END PGP SIGNATURE-----
-
---p0HNO2YbtFeVXwJ3--
+---
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
