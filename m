@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16ABBC33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 01:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B08C33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 01:04:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2826206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 01:04:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38AC720714
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 01:04:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729164AbgATBEN (ORCPT
+        id S1729121AbgATBEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 20:04:13 -0500
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:59689 "EHLO
+        Sun, 19 Jan 2020 20:04:09 -0500
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:45752 "EHLO
         smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729117AbgATBEL (ORCPT
+        by vger.kernel.org with ESMTP id S1728934AbgATBEI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 20:04:11 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.06712966|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.295461-0.0239955-0.680544;DS=CONTINUE|ham_system_inform|0.132419-0.000329682-0.867252;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03303;MF=liaoweixiong@allwinnertech.com;NM=1;PH=DS;RN=17;RT=17;SR=0;TI=SMTPD_---.Gf.OYKf_1579482234;
+        Sun, 19 Jan 2020 20:04:08 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.06712966|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.36261-0.0247078-0.612682;DS=CONTINUE|ham_system_inform|0.119932-0.00125537-0.878812;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03267;MF=liaoweixiong@allwinnertech.com;NM=1;PH=DS;RN=17;RT=17;SR=0;TI=SMTPD_---.Gf.OYKf_1579482234;
 Received: from PC-liaoweixiong.allwinnertech.com(mailfrom:liaoweixiong@allwinnertech.com fp:SMTPD_---.Gf.OYKf_1579482234)
           by smtp.aliyun-inc.com(10.147.42.16);
-          Mon, 20 Jan 2020 09:04:04 +0800
+          Mon, 20 Jan 2020 09:04:02 +0800
 From:   WeiXiong Liao <liaoweixiong@allwinnertech.com>
 To:     Kees Cook <keescook@chromium.org>,
         Anton Vorontsov <anton@enomsg.org>,
@@ -42,9 +42,9 @@ To:     Kees Cook <keescook@chromium.org>,
         WeiXiong Liao <liaoweixiong@allwinnertech.com>
 Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-mtd@lists.infradead.org
-Subject: [PATCH v1 05/11] pstore/blk: blkoops: support ftrace recorder
-Date:   Mon, 20 Jan 2020 09:03:47 +0800
-Message-Id: <1579482233-2672-6-git-send-email-liaoweixiong@allwinnertech.com>
+Subject: [PATCH v1 03/11] pstore/blk: support pmsg recorder
+Date:   Mon, 20 Jan 2020 09:03:45 +0800
+Message-Id: <1579482233-2672-4-git-send-email-liaoweixiong@allwinnertech.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1579482233-2672-1-git-send-email-liaoweixiong@allwinnertech.com>
 References: <1579482233-2672-1-git-send-email-liaoweixiong@allwinnertech.com>
@@ -53,33 +53,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Support recorder for ftrace. To enable ftrace recorder, just make
-ftrace_size be greater than 0 and a multiple of 4096.
+pmsg support recorder for userspace. To enable pmsg, just make pmsg_size
+be greater than 0 and a multiple of 4096.
 
 Signed-off-by: WeiXiong Liao <liaoweixiong@allwinnertech.com>
 ---
- fs/pstore/Kconfig          | 12 ++++++++
- fs/pstore/blkoops.c        | 11 +++++++
- fs/pstore/blkzone.c        | 75 ++++++++++++++++++++++++++++++++++++++++++++--
- include/linux/pstore_blk.h |  4 +++
- 4 files changed, 99 insertions(+), 3 deletions(-)
+ fs/pstore/Kconfig          |  12 +++
+ fs/pstore/blkoops.c        |  11 +++
+ fs/pstore/blkzone.c        | 229 +++++++++++++++++++++++++++++++++++++++++++--
+ include/linux/pstore_blk.h |   4 +
+ 4 files changed, 246 insertions(+), 10 deletions(-)
 
 diff --git a/fs/pstore/Kconfig b/fs/pstore/Kconfig
-index af83ae59f31a..5649218d2821 100644
+index cd15f9322acd..656d63dc3f01 100644
 --- a/fs/pstore/Kconfig
 +++ b/fs/pstore/Kconfig
-@@ -210,6 +210,18 @@ config PSTORE_BLKOOPS_CONSOLE_SIZE
+@@ -186,6 +186,18 @@ config PSTORE_BLKOOPS_DMESG_SIZE
  	  NOTE that, both kconfig and module parameters can configure blkoops,
  	  but module parameters have priority over kconfig.
  
-+config PSTORE_BLKOOPS_FTRACE_SIZE
-+	int "ftrace size in kbytes for blkoops"
++config PSTORE_BLKOOPS_PMSG_SIZE
++	int "pmsg size in kbytes for blkoops"
 +	depends on PSTORE_BLKOOPS
-+	depends on PSTORE_FTRACE
++	depends on PSTORE_PMSG
 +	default 64
 +	help
-+	  This just sets size of ftrace (ftrace_size) for pstore/blk. The
-+	  value must be a multiple of 4096.
++	  This just sets size of pmsg (pmsg_size) for pstore/blk. The value must
++	  be a multiple of 4096.
 +
 +	  NOTE that, both kconfig and module parameters can configure blkoops,
 +	  but module parameters have priority over kconfig.
@@ -88,247 +88,470 @@ index af83ae59f31a..5649218d2821 100644
  	string "block device for blkoops"
  	depends on PSTORE_BLKOOPS
 diff --git a/fs/pstore/blkoops.c b/fs/pstore/blkoops.c
-index 91754795d612..3f28e61c8ecf 100644
+index 9e3fc3a46e0f..b3bd004fad1a 100644
 --- a/fs/pstore/blkoops.c
 +++ b/fs/pstore/blkoops.c
-@@ -39,6 +39,10 @@
- module_param(console_size, long, 0400);
- MODULE_PARM_DESC(console_size, "console size in kbytes");
+@@ -31,6 +31,10 @@
+ module_param(dmesg_size, long, 0400);
+ MODULE_PARM_DESC(dmesg_size, "demsg size in kbytes");
  
-+static long ftrace_size = -1;
-+module_param(ftrace_size, long, 0400);
-+MODULE_PARM_DESC(ftrace_size, "ftrace size in kbytes");
++static long pmsg_size = -1;
++module_param(pmsg_size, long, 0400);
++MODULE_PARM_DESC(pmsg_size, "pmsg size in kbytes");
 +
  static int dump_oops = -1;
  module_param(dump_oops, int, 0400);
  MODULE_PARM_DESC(total_size, "whether dump oops");
-@@ -95,6 +99,12 @@
- #define DEFAULT_CONSOLE_SIZE 0
+@@ -75,6 +79,12 @@
+ #define DEFAULT_DMESG_SIZE 0
  #endif
  
-+#ifdef CONFIG_PSTORE_BLKOOPS_FTRACE_SIZE
-+#define DEFAULT_FTRACE_SIZE CONFIG_PSTORE_BLKOOPS_FTRACE_SIZE
++#ifdef CONFIG_PSTORE_BLKOOPS_PMSG_SIZE
++#define DEFAULT_PMSG_SIZE CONFIG_PSTORE_BLKOOPS_PMSG_SIZE
 +#else
-+#define DEFAULT_FTRACE_SIZE 0
++#define DEFAULT_PMSG_SIZE 0
 +#endif
 +
  #ifdef CONFIG_PSTORE_BLKOOPS_DUMP_OOPS
  #define DEFAULT_DUMP_OOPS CONFIG_PSTORE_BLKOOPS_DUMP_OOPS
  #else
-@@ -150,6 +160,7 @@ int blkoops_register_device(struct blkoops_device *bo_dev)
+@@ -128,6 +138,7 @@ int blkoops_register_device(struct blkoops_device *bo_dev)
+ 	}
+ 
  	verify_size(dmesg_size, DEFAULT_DMESG_SIZE, 4096);
- 	verify_size(pmsg_size, DEFAULT_PMSG_SIZE, 4096);
- 	verify_size(console_size, DEFAULT_CONSOLE_SIZE, 4096);
-+	verify_size(ftrace_size, DEFAULT_FTRACE_SIZE, 4096);
++	verify_size(pmsg_size, DEFAULT_PMSG_SIZE, 4096);
  #undef verify_size
  	dump_oops = !!(dump_oops < 0 ? DEFAULT_DUMP_OOPS : dump_oops);
  
 diff --git a/fs/pstore/blkzone.c b/fs/pstore/blkzone.c
-index 1bb914a2622a..66ae8e2a924b 100644
+index 89ad07cdde85..1c9a75c21e39 100644
 --- a/fs/pstore/blkzone.c
 +++ b/fs/pstore/blkzone.c
-@@ -105,10 +105,13 @@ struct blkz_context {
+@@ -40,12 +40,14 @@
+  *
+  * @sig: signature to indicate header (BLK_SIG xor BLKZONE-type value)
+  * @datalen: length of data in @data
++ * @start: offset into @data where the beginning of the stored bytes begin
+  * @data: zone data.
+  */
+ struct blkz_buffer {
+ #define BLK_SIG (0x43474244) /* DBGC */
+ 	uint32_t sig;
+ 	atomic_t datalen;
++	atomic_t start;
+ 	uint8_t data[];
+ };
+ 
+@@ -101,8 +103,10 @@ struct blkz_zone {
+ 
+ struct blkz_context {
  	struct blkz_zone **dbzs;	/* dmesg block zones */
- 	struct blkz_zone *pbz;		/* Pmsg block zone */
- 	struct blkz_zone *cbz;		/* console block zone */
-+	struct blkz_zone **fbzs;	/* Ftrace zones */
++	struct blkz_zone *pbz;		/* Pmsg block zone */
  	unsigned int dmesg_max_cnt;
  	unsigned int dmesg_read_cnt;
- 	unsigned int pmsg_read_cnt;
- 	unsigned int console_read_cnt;
-+	unsigned int ftrace_max_cnt;
-+	unsigned int ftrace_read_cnt;
++	unsigned int pmsg_read_cnt;
  	unsigned int dmesg_write_cnt;
  	/*
  	 * the counter should be recovered when recover.
-@@ -297,6 +300,7 @@ static void blkz_flush_all_dirty_zones(struct work_struct *work)
- 	blkz_flush_dirty_zone(cxt->pbz);
- 	blkz_flush_dirty_zone(cxt->cbz);
- 	blkz_flush_dirty_zones(cxt->dbzs, cxt->dmesg_max_cnt);
-+	blkz_flush_dirty_zones(cxt->fbzs, cxt->ftrace_max_cnt);
+@@ -135,6 +139,11 @@ static inline int buffer_datalen(struct blkz_zone *zone)
+ 	return atomic_read(&zone->buffer->datalen);
  }
  
- static int blkz_recover_dmesg_data(struct blkz_context *cxt)
-@@ -513,6 +517,31 @@ static int blkz_recover_zone(struct blkz_context *cxt, struct blkz_zone *zone)
++static inline int buffer_start(struct blkz_zone *zone)
++{
++	return atomic_read(&zone->buffer->start);
++}
++
+ static inline bool is_on_panic(void)
+ {
+ 	struct blkz_context *cxt = &blkz_cxt;
+@@ -426,6 +435,69 @@ static int blkz_recover_dmesg(struct blkz_context *cxt)
  	return ret;
  }
  
-+static int blkz_recover_zones(struct blkz_context *cxt,
-+		struct blkz_zone **zones, unsigned int cnt)
++static int blkz_recover_pmsg(struct blkz_context *cxt)
 +{
-+	int ret;
-+	unsigned int i;
-+	struct blkz_zone *zone;
++	struct blkz_info *info = cxt->bzinfo;
++	struct blkz_buffer *oldbuf;
++	struct blkz_zone *zone = NULL;
++	int ret = 0;
++	ssize_t rcnt, len;
 +
-+	if (!zones)
++	zone = cxt->pbz;
++	if (!zone || zone->oldbuf)
 +		return 0;
 +
-+	for (i = 0; i < cnt; i++) {
-+		zone = zones[i];
-+		if (unlikely(!zone))
-+			continue;
-+		ret = blkz_recover_zone(cxt, zone);
-+		if (ret)
-+			goto recover_fail;
++	if (is_on_panic())
++		goto out;
++
++	if (unlikely(!info->read))
++		return -EINVAL;
++
++	len = zone->buffer_size + sizeof(*oldbuf);
++	oldbuf = kzalloc(len, GFP_KERNEL);
++	if (!oldbuf)
++		return -ENOMEM;
++
++	rcnt = info->read((char *)oldbuf, len, zone->off);
++	if (rcnt != len) {
++		pr_debug("recover pmsg failed\n");
++		ret = (int)rcnt < 0 ? (int)rcnt : -EIO;
++		goto free_oldbuf;
 +	}
 +
++	if (oldbuf->sig != zone->buffer->sig) {
++		pr_debug("no valid data in zone %s\n", zone->name);
++		goto free_oldbuf;
++	}
++
++	if (zone->buffer_size < atomic_read(&oldbuf->datalen) ||
++		zone->buffer_size < atomic_read(&oldbuf->start)) {
++		pr_info("found overtop zone: %s: off %lu, size %zu\n",
++				zone->name, zone->off, zone->buffer_size);
++		goto free_oldbuf;
++	}
++
++	if (!atomic_read(&oldbuf->datalen)) {
++		pr_debug("found erased zone: %s: id 0, off %lu, size %zu, datalen %d\n",
++				zone->name, zone->off, zone->buffer_size,
++				atomic_read(&oldbuf->datalen));
++		kfree(oldbuf);
++		goto out;
++	}
++
++	pr_debug("found nice zone: %s: id 0, off %lu, size %zu, datalen %d\n",
++			zone->name, zone->off, zone->buffer_size,
++			atomic_read(&oldbuf->datalen));
++	zone->oldbuf = oldbuf;
++out:
++	blkz_flush_dirty_zone(zone);
 +	return 0;
-+recover_fail:
-+	pr_debug("recover %s[%u] failed\n", zone->name, i);
++
++free_oldbuf:
++	kfree(oldbuf);
 +	return ret;
 +}
 +
  static inline int blkz_recovery(struct blkz_context *cxt)
  {
  	int ret = -EBUSY;
-@@ -532,6 +561,10 @@ static inline int blkz_recovery(struct blkz_context *cxt)
+@@ -437,6 +509,10 @@ static inline int blkz_recovery(struct blkz_context *cxt)
  	if (ret)
  		goto recover_fail;
  
-+	ret = blkz_recover_zones(cxt, cxt->fbzs, cxt->ftrace_max_cnt);
++	ret = blkz_recover_pmsg(cxt);
 +	if (ret)
 +		goto recover_fail;
 +
  	pr_debug("recover end!\n");
  	atomic_set(&cxt->recovered, 1);
  	return 0;
-@@ -548,6 +581,7 @@ static int blkz_pstore_open(struct pstore_info *psi)
+@@ -451,9 +527,17 @@ static int blkz_pstore_open(struct pstore_info *psi)
+ 	struct blkz_context *cxt = psi->data;
+ 
  	cxt->dmesg_read_cnt = 0;
- 	cxt->pmsg_read_cnt = 0;
- 	cxt->console_read_cnt = 0;
-+	cxt->ftrace_read_cnt = 0;
++	cxt->pmsg_read_cnt = 0;
  	return 0;
  }
  
-@@ -605,6 +639,8 @@ static int blkz_pstore_erase(struct pstore_record *record)
- 		return blkz_record_erase(cxt, cxt->pbz);
- 	case PSTORE_TYPE_CONSOLE:
- 		return blkz_record_erase(cxt, cxt->cbz);
-+	case PSTORE_TYPE_FTRACE:
-+		return blkz_record_erase(cxt, cxt->fbzs[record->id]);
- 	default: return -EINVAL;
- 	}
- }
-@@ -759,6 +795,13 @@ static int notrace blkz_pstore_write(struct pstore_record *record)
- 		return blkz_record_write(cxt, cxt->cbz, record);
- 	case PSTORE_TYPE_PMSG:
- 		return blkz_record_write(cxt, cxt->pbz, record);
-+	case PSTORE_TYPE_FTRACE: {
-+		int zonenum = smp_processor_id();
++static inline bool blkz_old_ok(struct blkz_zone *zone)
++{
++	if (zone && zone->oldbuf && atomic_read(&zone->oldbuf->datalen))
++		return true;
++	return false;
++}
 +
-+		if (!cxt->fbzs)
-+			return -ENOSPC;
-+		return blkz_record_write(cxt, cxt->fbzs[zonenum], record);
-+	}
+ static inline bool blkz_ok(struct blkz_zone *zone)
+ {
+ 	if (zone && zone->buffer && buffer_datalen(zone))
+@@ -471,6 +555,25 @@ static inline int blkz_dmesg_erase(struct blkz_context *cxt,
+ 	return blkz_zone_write(zone, FLUSH_META, NULL, 0, 0);
+ }
+ 
++static inline int blkz_pmsg_erase(struct blkz_context *cxt,
++		struct blkz_zone *zone)
++{
++	if (unlikely(!blkz_old_ok(zone)))
++		return 0;
++
++	kfree(zone->oldbuf);
++	zone->oldbuf = NULL;
++	/*
++	 * if there are new data in zone buffer, that means the old data
++	 * are already invalid. It is no need to flush 0 (erase) to
++	 * block device.
++	 */
++	if (!buffer_datalen(zone))
++		return blkz_zone_write(zone, FLUSH_META, NULL, 0, 0);
++	blkz_flush_dirty_zone(zone);
++	return 0;
++}
++
+ static int blkz_pstore_erase(struct pstore_record *record)
+ {
+ 	struct blkz_context *cxt = record->psi->data;
+@@ -478,6 +581,8 @@ static int blkz_pstore_erase(struct pstore_record *record)
+ 	switch (record->type) {
+ 	case PSTORE_TYPE_DMESG:
+ 		return blkz_dmesg_erase(cxt, cxt->dbzs[record->id]);
++	case PSTORE_TYPE_PMSG:
++		return blkz_pmsg_erase(cxt, cxt->pbz);
  	default:
  		return -EINVAL;
  	}
-@@ -775,6 +818,12 @@ static struct blkz_zone *blkz_read_next_zone(struct blkz_context *cxt)
+@@ -498,8 +603,10 @@ static void blkz_write_kmsg_hdr(struct blkz_zone *zone,
+ 	hdr->reason = record->reason;
+ 	if (hdr->reason == KMSG_DUMP_OOPS)
+ 		hdr->counter = ++cxt->oops_counter;
+-	else
++	else if (hdr->reason == KMSG_DUMP_PANIC)
+ 		hdr->counter = ++cxt->panic_counter;
++	else
++		hdr->counter = 0;
+ }
+ 
+ static inline int notrace blkz_dmesg_write_do(struct blkz_context *cxt,
+@@ -562,6 +669,55 @@ static int notrace blkz_dmesg_write(struct blkz_context *cxt,
+ 	return 0;
+ }
+ 
++static int notrace blkz_pmsg_write(struct blkz_context *cxt,
++		struct pstore_record *record)
++{
++	struct blkz_zone *zone;
++	size_t start, rem;
++	int cnt = record->size;
++	bool is_full_data = false;
++	char *buf = record->buf;
++
++	zone = cxt->pbz;
++	if (!zone)
++		return -ENOSPC;
++
++	if (atomic_read(&zone->buffer->datalen) >= zone->buffer_size)
++		is_full_data = true;
++
++	if (unlikely(cnt > zone->buffer_size)) {
++		buf += cnt - zone->buffer_size;
++		cnt = zone->buffer_size;
++	}
++
++	start = buffer_start(zone);
++	rem = zone->buffer_size - start;
++	if (unlikely(rem < cnt)) {
++		blkz_zone_write(zone, FLUSH_PART, buf, rem, start);
++		buf += rem;
++		cnt -= rem;
++		start = 0;
++		is_full_data = true;
++	}
++
++	atomic_set(&zone->buffer->start, cnt + start);
++	blkz_zone_write(zone, FLUSH_PART, buf, cnt, start);
++
++	/**
++	 * blkz_zone_write will set datalen as start + cnt.
++	 * It work if actual data length lesser than buffer size.
++	 * If data length greater than buffer size, pmsg will rewrite to
++	 * beginning of zone, which make buffer->datalen wrongly.
++	 * So we should reset datalen as buffer size once actual data length
++	 * greater than buffer size.
++	 */
++	if (is_full_data) {
++		atomic_set(&zone->buffer->datalen, zone->buffer_size);
++		blkz_zone_write(zone, FLUSH_META, NULL, 0, 0);
++	}
++	return 0;
++}
++
+ static int notrace blkz_pstore_write(struct pstore_record *record)
+ {
+ 	struct blkz_context *cxt = record->psi->data;
+@@ -573,6 +729,8 @@ static int notrace blkz_pstore_write(struct pstore_record *record)
+ 	switch (record->type) {
+ 	case PSTORE_TYPE_DMESG:
+ 		return blkz_dmesg_write(cxt, record);
++	case PSTORE_TYPE_PMSG:
++		return blkz_pmsg_write(cxt, record);
+ 	default:
+ 		return -EINVAL;
+ 	}
+@@ -589,6 +747,13 @@ static struct blkz_zone *blkz_read_next_zone(struct blkz_context *cxt)
  			return zone;
  	}
  
-+	while (cxt->ftrace_read_cnt < cxt->ftrace_max_cnt) {
-+		zone = cxt->fbzs[cxt->ftrace_read_cnt++];
++	if (cxt->pmsg_read_cnt == 0) {
++		cxt->pmsg_read_cnt++;
++		zone = cxt->pbz;
 +		if (blkz_old_ok(zone))
 +			return zone;
 +	}
 +
- 	if (cxt->pmsg_read_cnt == 0) {
- 		cxt->pmsg_read_cnt++;
- 		zone = cxt->pbz;
-@@ -897,6 +946,9 @@ static ssize_t blkz_pstore_read(struct pstore_record *record)
- 		readop = blkz_dmesg_read;
+ 	return NULL;
+ }
+ 
+@@ -627,7 +792,8 @@ static ssize_t blkz_dmesg_read(struct blkz_zone *zone,
+ 		char *buf = kasprintf(GFP_KERNEL,
+ 				"%s: Total %d times\n",
+ 				record->reason == KMSG_DUMP_OOPS ? "Oops" :
+-				"Panic", record->count);
++				record->reason == KMSG_DUMP_PANIC ? "Panic" :
++				"Unknown", record->count);
+ 		hlen = strlen(buf);
+ 		record->buf = krealloc(buf, hlen + size, GFP_KERNEL);
+ 		if (!record->buf) {
+@@ -649,6 +815,29 @@ static ssize_t blkz_dmesg_read(struct blkz_zone *zone,
+ 	return size + hlen;
+ }
+ 
++static ssize_t blkz_pmsg_read(struct blkz_zone *zone,
++		struct pstore_record *record)
++{
++	size_t size, start;
++	struct blkz_buffer *buf;
++
++	buf = (struct blkz_buffer *)zone->oldbuf;
++	if (!buf)
++		return READ_NEXT_ZONE;
++
++	size = atomic_read(&buf->datalen);
++	start = atomic_read(&buf->start);
++
++	record->buf = kmalloc(size, GFP_KERNEL);
++	if (!record->buf)
++		return -ENOMEM;
++
++	memcpy(record->buf, buf->data + start, size - start);
++	memcpy(record->buf + size - start, buf->data, start);
++
++	return size;
++}
++
+ static ssize_t blkz_pstore_read(struct pstore_record *record)
+ {
+ 	struct blkz_context *cxt = record->psi->data;
+@@ -673,6 +862,9 @@ static ssize_t blkz_pstore_read(struct pstore_record *record)
+ 		blkz_read = blkz_dmesg_read;
  		record->id = cxt->dmesg_read_cnt - 1;
  		break;
-+	case PSTORE_TYPE_FTRACE:
-+		record->id = cxt->ftrace_read_cnt - 1;
-+		/* fallthrough */
- 	case PSTORE_TYPE_CONSOLE:
- 		/* fallthrough */
- 	case PSTORE_TYPE_PMSG:
-@@ -1062,15 +1114,27 @@ static int blkz_cut_zones(struct blkz_context *cxt)
- 		goto free_pmsg;
++	case PSTORE_TYPE_PMSG:
++		blkz_read = blkz_pmsg_read;
++		break;
+ 	default:
+ 		goto next_zone;
  	}
+@@ -728,8 +920,10 @@ static struct blkz_zone *blkz_init_zone(enum pstore_type_id type,
+ 	zone->type = type;
+ 	zone->buffer_size = size - sizeof(struct blkz_buffer);
+ 	zone->buffer->sig = type ^ BLK_SIG;
++	zone->oldbuf = NULL;
+ 	atomic_set(&zone->dirty, 0);
+ 	atomic_set(&zone->buffer->datalen, 0);
++	atomic_set(&zone->buffer->start, 0);
  
-+	off_size += info->ftrace_size;
-+	cxt->fbzs = blkz_init_zones(PSTORE_TYPE_FTRACE, &off,
-+			info->ftrace_size,
-+			info->ftrace_size / nr_cpu_ids,
-+			&cxt->ftrace_max_cnt);
-+	if (IS_ERR(cxt->fbzs)) {
-+		err = PTR_ERR(cxt->fbzs);
-+		goto free_console;
+ 	*off += size;
+ 
+@@ -814,17 +1008,26 @@ static int blkz_cut_zones(struct blkz_context *cxt)
+ 	struct blkz_info *info = cxt->bzinfo;
+ 	unsigned long off = 0;
+ 	int err;
+-	size_t size;
++	size_t off_size = 0;
+ 
+-	size = info->total_size;
+-	cxt->dbzs = blkz_init_zones(PSTORE_TYPE_DMESG, &off, size,
++	off_size += info->pmsg_size;
++	cxt->pbz = blkz_init_zone(PSTORE_TYPE_PMSG, &off, info->pmsg_size);
++	if (IS_ERR(cxt->pbz)) {
++		err = PTR_ERR(cxt->pbz);
++		goto fail_out;
 +	}
 +
- 	cxt->dbzs = blkz_init_zones(PSTORE_TYPE_DMESG, &off,
- 			info->total_size - off_size,
++	cxt->dbzs = blkz_init_zones(PSTORE_TYPE_DMESG, &off,
++			info->total_size - off_size,
  			info->dmesg_size, &cxt->dmesg_max_cnt);
  	if (IS_ERR(cxt->dbzs)) {
  		err = PTR_ERR(cxt->dbzs);
--		goto free_console;
-+		goto free_ftrace;
+-		goto fail_out;
++		goto free_pmsg;
  	}
  
  	return 0;
-+free_ftrace:
-+	blkz_free_zones(&cxt->fbzs, &cxt->ftrace_max_cnt);
- free_console:
- 	blkz_free_zone(&cxt->cbz);
- free_pmsg:
-@@ -1119,6 +1183,7 @@ int blkz_register(struct blkz_info *info)
++free_pmsg:
++	blkz_free_zone(&cxt->pbz);
+ fail_out:
+ 	return err;
+ }
+@@ -840,7 +1043,7 @@ int blkz_register(struct blkz_info *info)
+ 		return -EINVAL;
+ 	}
+ 
+-	if (!info->dmesg_size) {
++	if (!info->dmesg_size && !info->pmsg_size) {
+ 		pr_warn("at least one of the records be non-zero\n");
+ 		return -EINVAL;
+ 	}
+@@ -867,6 +1070,7 @@ int blkz_register(struct blkz_info *info)
+ 
+ 	check_size(total_size, 4096);
  	check_size(dmesg_size, SECTOR_SIZE);
- 	check_size(pmsg_size, SECTOR_SIZE);
- 	check_size(console_size, SECTOR_SIZE);
-+	check_size(ftrace_size, SECTOR_SIZE);
++	check_size(pmsg_size, SECTOR_SIZE);
  
  #undef check_size
  
-@@ -1152,6 +1217,7 @@ int blkz_register(struct blkz_info *info)
+@@ -898,6 +1102,7 @@ int blkz_register(struct blkz_info *info)
+ 	pr_debug("register %s with properties:\n", info->name);
+ 	pr_debug("\ttotal size : %ld Bytes\n", info->total_size);
  	pr_debug("\tdmesg size : %ld Bytes\n", info->dmesg_size);
- 	pr_debug("\tpmsg size : %ld Bytes\n", info->pmsg_size);
- 	pr_debug("\tconsole size : %ld Bytes\n", info->console_size);
-+	pr_debug("\tftrace size : %ld Bytes\n", info->ftrace_size);
++	pr_debug("\tpmsg size : %ld Bytes\n", info->pmsg_size);
  
  	err = blkz_cut_zones(cxt);
  	if (err) {
-@@ -1175,13 +1241,16 @@ int blkz_register(struct blkz_info *info)
- 		cxt->pstore.flags |= PSTORE_FLAGS_PMSG;
- 	if (info->console_size)
- 		cxt->pstore.flags |= PSTORE_FLAGS_CONSOLE;
-+	if (info->ftrace_size)
-+		cxt->pstore.flags |= PSTORE_FLAGS_FTRACE;
+@@ -916,11 +1121,14 @@ int blkz_register(struct blkz_info *info)
+ 	}
+ 	cxt->pstore.data = cxt;
+ 	if (info->dmesg_size)
+-		cxt->pstore.flags = PSTORE_FLAGS_DMESG;
++		cxt->pstore.flags |= PSTORE_FLAGS_DMESG;
++	if (info->pmsg_size)
++		cxt->pstore.flags |= PSTORE_FLAGS_PMSG;
  
--	pr_info("Registered %s as blkzone backend for %s%s%s%s\n",
-+	pr_info("Registered %s as blkzone backend for %s%s%s%s%s\n",
- 			info->name,
+-	pr_info("Registered %s as blkzone backend for %s%s\n", info->name,
++	pr_info("Registered %s as blkzone backend for %s%s%s\n", info->name,
  			cxt->dbzs && cxt->bzinfo->dump_oops ? "Oops " : "",
- 			cxt->dbzs && cxt->bzinfo->panic_write ? "Panic " : "",
- 			cxt->pbz ? "Pmsg " : "",
--			cxt->cbz ? "Console" : "");
-+			cxt->cbz ? "Console " : "",
-+			cxt->fbzs ? "Ftrace" : "");
+-			cxt->dbzs && cxt->bzinfo->panic_write ? "Panic " : "");
++			cxt->dbzs && cxt->bzinfo->panic_write ? "Panic " : "",
++			cxt->pbz ? "Pmsg" : "");
  
  	err = pstore_register(&cxt->pstore);
  	if (err) {
+@@ -956,6 +1164,7 @@ void blkz_unregister(struct blkz_info *info)
+ 	spin_unlock(&cxt->bzinfo_lock);
+ 
+ 	blkz_free_zones(&cxt->dbzs, &cxt->dmesg_max_cnt);
++	blkz_free_zone(&cxt->pbz);
+ }
+ EXPORT_SYMBOL_GPL(blkz_unregister);
+ 
 diff --git a/include/linux/pstore_blk.h b/include/linux/pstore_blk.h
-index 546375e04419..77704c1b404a 100644
+index 589d276fa4e4..af06be25bd01 100644
 --- a/include/linux/pstore_blk.h
 +++ b/include/linux/pstore_blk.h
-@@ -25,6 +25,9 @@
-  * @console_size:
-  *	The size of zone for console. Zero means disabled, othewise, it must
-  *	be multiple of SECTOR_SIZE(512).
-+ * @ftrace_size:
-+ *	The size of zone for ftrace. Zero means disabled, othewise, it must
-+ *	be multiple of SECTOR_SIZE(512).
+@@ -19,6 +19,9 @@
+  * @dmesg_size:
+  *	The size of each zones for dmesg (oops & panic). Zero means disabled,
+  *	otherwise, it must be multiple of SECTOR_SIZE(512 Bytes).
++ * @pmsg_size:
++ *	The size of zone for pmsg. Zero means disabled, othewise, it must be
++ *	multiple of SECTOR_SIZE(512).
   * @dump_oops:
   *	Dump oops and panic log or only panic.
   * @read, @write:
-@@ -60,6 +63,7 @@ struct blkz_info {
+@@ -50,6 +53,7 @@ struct blkz_info {
+ 
+ 	unsigned long total_size;
  	unsigned long dmesg_size;
- 	unsigned long pmsg_size;
- 	unsigned long console_size;
-+	unsigned long ftrace_size;
++	unsigned long pmsg_size;
  	int dump_oops;
  	blkz_read_op read;
  	blkz_write_op write;
