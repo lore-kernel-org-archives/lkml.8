@@ -2,138 +2,81 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 132B3C33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 17:08:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B0FC33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 17:09:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE4ED22464
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 17:08:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="mcD/ZnPp"
+	by mail.kernel.org (Postfix) with ESMTP id 3539622314
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 17:09:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729159AbgATRI2 (ORCPT
+        id S1729285AbgATRJN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 12:08:28 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:40130 "EHLO pegase1.c-s.fr"
+        Mon, 20 Jan 2020 12:09:13 -0500
+Received: from foss.arm.com ([217.140.110.172]:34844 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726642AbgATRI1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 12:08:27 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 481dR74f1Jz9txwZ;
-        Mon, 20 Jan 2020 18:08:19 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=mcD/ZnPp; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id PB6Od9Chvw6v; Mon, 20 Jan 2020 18:08:19 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 481dR73Lf3z9txwY;
-        Mon, 20 Jan 2020 18:08:19 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1579540099; bh=yzfJ9FjkQyCVlK+cgsOTuMQ4XbfRfoKvMNM6nb5r3UI=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=mcD/ZnPpMb3Gvs1Fu8ShcsW/tjiI8vxX1spQWPagvARRgwMyLCX57drTZw4IIlWTT
-         7Eth0yTjCJCPdeskFUImvSrga71e/3E6dNmtljCIVLukdQbR9DnwBYxaBmMNs9f2yF
-         MQDPuMtMbdR8t0a+nujkuIfoduw1FWTj9Hb24lhc=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id AEDC08B7D2;
-        Mon, 20 Jan 2020 18:08:24 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id nJxXjRrAsRPz; Mon, 20 Jan 2020 18:08:24 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 85F838B7CC;
-        Mon, 20 Jan 2020 18:08:23 +0100 (CET)
-Subject: Re: [RFC PATCH v4 00/11] powerpc: switch VDSO to C implementation.
-To:     Segher Boessenkool <segher@kernel.crashing.org>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, nathanl@linux.ibm.com,
-        arnd@arndb.de, tglx@linutronix.de, vincenzo.frascino@arm.com,
-        luto@kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org
-References: <cover.1579196675.git.christophe.leroy@c-s.fr>
- <20200117085851.GS3191@gate.crashing.org>
- <3027b6d2-47a9-a871-7c52-050a5f9c6ab7@c-s.fr>
- <20200120151936.GB3191@gate.crashing.org>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <4b0e5941-c37e-3c85-3809-45f33ce35657@c-s.fr>
-Date:   Mon, 20 Jan 2020 18:08:23 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        id S1726642AbgATRJN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 12:09:13 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 78A5531B;
+        Mon, 20 Jan 2020 09:09:12 -0800 (PST)
+Received: from [10.1.194.52] (e112269-lin.cambridge.arm.com [10.1.194.52])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3FCC83F68E;
+        Mon, 20 Jan 2020 09:09:10 -0800 (PST)
+Subject: Re: [PATCH v3 4/7] drm/panfrost: Add support for multiple regulators
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-mediatek@lists.infradead.org,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        hsinyi@chromium.org, Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <20200114071602.47627-1-drinkcat@chromium.org>
+ <20200114071602.47627-5-drinkcat@chromium.org>
+ <7e82cac2-efbf-806b-8c2e-04dbd0482b50@arm.com>
+ <20200120170343.GE6852@sirena.org.uk>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <aed32f5e-34d9-966b-98d2-2af3d311894a@arm.com>
+Date:   Mon, 20 Jan 2020 17:09:08 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <20200120151936.GB3191@gate.crashing.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200120170343.GE6852@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 20/01/2020 à 16:19, Segher Boessenkool a écrit :
-> On Mon, Jan 20, 2020 at 02:56:00PM +0000, Christophe Leroy wrote:
->>> Nice!  Much better.
->>>
->>> It should be tested on more representative hardware, too, but this looks
->>> promising alright :-)
->>
->> mpc832x (e300c2 core) at 333 MHz:
->>
->> Before:
->>
->> gettimeofday:    vdso: 235 nsec/call
->> clock-gettime-realtime:    vdso: 244 nsec/call
->>
->> With the series:
->>
->> gettimeofday:    vdso: 271 nsec/call
->> clock-gettime-realtime:    vdso: 281 nsec/call
+On 20/01/2020 17:03, Mark Brown wrote:
+> On Mon, Jan 20, 2020 at 02:43:10PM +0000, Steven Price wrote:
 > 
-> Those are important, and degrade ~15%.  That is acceptable IMO, but do
-> you see a way to optimise this (later)?
+>> From discussions offline, I think I've come round to the view that
+>> having a "soft PDC" in device tree isn't the right solution. Device tree
+>> should be describing the hardware and that isn't actually a hardware
+>> component.
+> 
+> You can use an implementation like that separately to it being in the
+> device tree, it is perfectly possible to instantiate devices that have
+> no representation at all in device tree based on other things that are
+> there like board or SoC information, or as subdevices of things that are
+> there.
 
-Not easy I think.
+Yes - and I may yet implement a "soft PDC" device if this turns out to
+be more than a 'quirk' for a very small number of device. But like you
+say - it doesn't need to be (and shouldn't be) in the actual device tree.
 
-First we have the unavoidable ASM entry function that can't be dropped 
-because of the CR[SO] bit the set on error or clear on no error and that 
-can't be done in C.
+For now though I think the code Nicolas has written works well enough
+and it's only really worth 'fixing' if we end up with too many 'quirky'
+devices.
 
-In our ASM VDSO, fixed shifts are used, while in generic C VDSO, shifts 
-are generic and read from the VDSO data.
-
-And there is still some funny code generated by GCC (8.1), like:
-
-  620:	7d 29 3c 30 	srw     r9,r9,r7
-  624:	21 87 00 20 	subfic  r12,r7,32
-  628:	7d 07 3c 31 	srw.    r7,r8,r7
-  62c:	7d 08 60 30 	slw     r8,r8,r12
-  630:	7d 0b 4b 78 	or      r11,r8,r9
-  634:	39 40 00 00 	li      r10,0
-  638:	40 82 00 84 	bne     6bc <__c_kernel_clock_gettime+0x114>
-  63c:	81 23 00 24 	lwz     r9,36(r3)
-  640:	81 05 00 00 	lwz     r8,0(r5)
-...
-  6bc:	7d 69 5b 78 	mr      r9,r11
-  6c0:	7c ea 3b 78 	mr      r10,r7
-  6c4:	7d 2b 4b 78 	mr      r11,r9
-  6c8:	4b ff ff 74 	b       63c <__c_kernel_clock_gettime+0x94>
-
-This branch to 6bc is totally useless:
-- copying r11 into r9 is pointless as r9 is overwritten in 63c
-- copying back r9 into r11 is pointless as r11 has not been modified 
-inbetween.
-- loading r10 with 0 then overwritting r10 with r7 when r7 is not 0 is 
-pointless as well, could have directly put the result of srw. in r10.
-
-Christophe
+Steve
