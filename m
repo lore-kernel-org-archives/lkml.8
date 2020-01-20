@@ -2,133 +2,170 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 453EDC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:39:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 439EEC33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18FBE217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:39:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="wXFZ2BgD"
+	by mail.kernel.org (Postfix) with ESMTP id 24DFA217F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:40:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729153AbgATOj2 (ORCPT
+        id S1729165AbgATOkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 09:39:28 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:40773 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726738AbgATOj1 (ORCPT
+        Mon, 20 Jan 2020 09:40:04 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40841 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729096AbgATOkE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 09:39:27 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1579531166; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=BzDRV7ulYCXM+3B574lgGPBya371clGZvJ4IdiMMJzI=; b=wXFZ2BgDbIOB1+geVHEeBSj2Iatx9JgFalOhkjdUVOncFsMQh8ckFsa3+f80uXfvLJPD5a67
- B/QNsYDoZjFCV4te4pDri+Qz2e7zNP5NXyAteL32oBVWJ/hYaaJk2bSHXoN4W85uDHcz2CX8
- YHTskPmcmPTtSY+jwqp8kjEhfFQ=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e25bb9a.7fd55fd684c8-smtp-out-n01;
- Mon, 20 Jan 2020 14:39:22 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 39AA4C4479C; Mon, 20 Jan 2020 14:39:22 +0000 (UTC)
-Received: from vbadigan-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vbadigan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 28D8AC433CB;
-        Mon, 20 Jan 2020 14:39:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 28D8AC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-To:     ulf.hansson@linaro.org, adrian.hunter@intel.com
-Cc:     asutoshd@codeaurora.org, stummala@codeaurora.org,
-        sayalil@codeaurora.org, cang@codeaurora.org,
-        rampraka@codeaurora.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Subject: [PATCH V3] mmc: sdhci: Let a vendor driver supply and update ADMA descriptor size
-Date:   Mon, 20 Jan 2020 20:08:38 +0530
-Message-Id: <1579531122-28341-1-git-send-email-vbadigan@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1579519045-26467-1-git-send-email-vbadigan@codeaurora.org>
-References: <1579519045-26467-1-git-send-email-vbadigan@codeaurora.org>
+        Mon, 20 Jan 2020 09:40:04 -0500
+Received: by mail-ot1-f65.google.com with SMTP id w21so28825706otj.7
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 06:40:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EtTbB0yL/QxXyUG3sjoG7/1Jm2iP9JtCaU4sRh9uy0E=;
+        b=Ae41o/pVJ/lkwMbrWQiKYHvqWG3UAhZDWdS03dSUt3Jmuffg9dMTZ15H4iI1VzYPEi
+         URjiys+/wS0KByAonqOka/901DHTUErWWHgvK6Cl9eiQjlkHnqJGIZq8FNkXDcs8UMNi
+         eAnnLPy1TRjdnLRgw/bRJUFPPJwNKRRp1zItnASZqgVJgUL5XBS6gJyIXZg1i40aJymI
+         VmAcb7XkB/e0bgWOAHQuwQYmkFmnxe52N6k9w0t9ww3OUMnkIZMVk1sYXKwIVRdBAOnk
+         xOfhiAD5wOO2YEEJ6GqAlAcfs+Ih7I9V107ZSy2Z2EDhCKCgjA1N9P9v3QTvuuXl7J+u
+         fnpQ==
+X-Gm-Message-State: APjAAAXWTisktLMXvuftJYao11XKk93anHJnBRf18QRbnk20pikgvseQ
+        JZLKkp+ZxsMh9HHp8iNUZZRj56LR4+0l5uAszWJpTRhU
+X-Google-Smtp-Source: APXvYqwv2q8tQHiLSkICoi5yx7bAUTS6D03HEjKzC60Uvr0dE38NOdUgO9TD4QqbBVPhPVnqaE7zenZ3zAhsuIw4PFQ=
+X-Received: by 2002:a9d:8f1:: with SMTP id 104mr15274004otf.107.1579531202876;
+ Mon, 20 Jan 2020 06:40:02 -0800 (PST)
+MIME-Version: 1.0
+References: <20200110215429.30360-1-dave@stgolabs.net>
+In-Reply-To: <20200110215429.30360-1-dave@stgolabs.net>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 20 Jan 2020 15:39:51 +0100
+Message-ID: <CAMuHMdXeZvJ0X6Ah2CpLRoQJm+YhxAWBt-rUpxoyfOLTcHp+0g@mail.gmail.com>
+Subject: Re: [PATCH] lib/rbtree: avoid pointless rb_node alignment
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Davidlohr Bueso <dbueso@suse.de>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let a vendor driver supply the maximum descriptor size that it
-can operate on. ADMA descriptor table would be allocated using this
-supplied size.
-If any SD Host controller is of version prior to v4.10 spec
-but supports 16byte descriptor, this change allows them to supply
-correct descriptor size for ADMA table allocation.
+Hi David,
 
-Also let a vendor driver update the descriptor size by overriding
-sdhc_host->desc_size if it has to operates on a different descriptor
-sizes in different conditions.
+On Fri, Jan 10, 2020 at 11:02 PM Davidlohr Bueso <dave@stgolabs.net> wrote:
+> Now that Linux no longer supports the CRIS architecture,
+> we can drop this fishy alignment. Apparently this was
+> need to prevent misalignments in struct address_space.
+>
+> Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
 
-Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Thanks for your patch!
+
+> --- a/include/linux/rbtree.h
+> +++ b/include/linux/rbtree.h
+> @@ -25,8 +25,7 @@ struct rb_node {
+>         unsigned long  __rb_parent_color;
+>         struct rb_node *rb_right;
+>         struct rb_node *rb_left;
+> -} __attribute__((aligned(sizeof(long))));
+> -    /* The alignment might seem pointless, but allegedly CRIS needs it */
+> +};
+
+Unfortunately this is also needed on m68k.
+
+This is now commit 2d39da80d43693a2 ("include/linux/rbtree.h: avoid
+pointless rb_node alignment") in linux-next, where Jason Donenfeld
+reported the following crash:
+
+> [    3.200000] Unable to handle kernel access at virtual address 6b7cdccf
+> [    3.200000] Oops: 00000000
+> [    3.200000] PC: [<00237454>] rb_erase+0x1c/0x346
+> [    3.200000] SR: 2710  SP: c48c162a  a2: 0fcc5280
+> [    3.200000] d0: 00000001    d1: 0fe6a000    d2: 0fd82000    d3: 00000000
+> [    3.200000] d4: 00000000    d5: 00000377    a0: 002b28f6    a1: 002b28f6
+> [    3.200000] Process ping (pid: 73, task=1e7eecd7)
+> [    3.200000] Frame format=7 eff addr=46e60008 ssw=0505 faddr=46e60008
+> [    3.200000] wb 1 stat/addr/data: 0000 00000000 00000000
+> [    3.200000] wb 2 stat/addr/data: 0000 00000000 00000000
+> [    3.200000] wb 3 stat/addr/data: 0000 46e60008 00000000
+> [    3.200000] push data: 00000000 00000000 00000000 00000000
+> [    3.200000] Stack from 0fe6bf00:
+> [    3.200000]         0fd82000 00000000 0fd846e6 002b290a 002b28d0 0fe6bfb0 0023f77c 0fd846e6
+> [    3.200000]         002b290a 0fd846e6 002b28f6 00045058 002b290a 0fd846e6 0fd82000 00000000
+> [    3.200000]         0fd846e6 0fe6a000 0000fd00 00045956 0fd846e6 002b28f6 00000000 00000001
+> [    3.200000]         0fd846e6 000458f4 00045972 0fd846e6 000000ff 0fcc5280 00015e76 0fd846e6
+> [    3.200000]         00000000 00000000 00000000 00000377 c49ba615 00000000 80001510 00000000
+> [    3.200000]         0000fd00 00000002 00000000 00000000 80009ff8 0001675a 00000000 8000b6c5
+> [    3.200000] Call Trace: [<0023f77c>] timerqueue_del+0x20/0x8a
+> [    3.200000]  [<00045058>] __remove_hrtimer+0x30/0xaa
+> [    3.200000]  [<0000fd00>] unf_e1_exc+0x20/0x48
+> [    3.200000]  [<00045956>] hrtimer_try_to_cancel+0x62/0x6c
+> [    3.200000]  [<000458f4>] hrtimer_try_to_cancel+0x0/0x6c
+> [    3.200000]  [<00045972>] hrtimer_cancel+0x12/0x20
+> [    3.200000]  [<00015e76>] do_exit+0x8c/0x91e
+> [    3.200000]  [<0000fd00>] unf_e1_exc+0x20/0x48
+> [    3.200000]  [<0001675a>] do_group_exit+0x24/0x9c
+> [    3.200000]  [<000167e6>] __wake_up_parent+0x0/0x20
+> [    3.200000]  [<00002774>] syscall+0x8/0xc
+> [    3.200000]  [<0004c002>] timecounter_read+0x16/0xcc
+> [    3.200000] Code: 2a6c 0008 4a8d 6700 0202 4a8b 6700 0244 <206b>
+> 0008 200b 4a88 6700 0166 224b 2028 0008 670a 2248 2040 2028 0008 66f6 2c68
+> [    3.200000] Disabling lock debugging due to kernel taint
+> [    3.200000] Fixing recursive fault but reboot is needed!
+>
+> Seems to happen if a process exits with an hrtimer?
+
+I could easily reproduce it by just booting next-2020120 on ARAnyM:
+
+Unable to handle kernel access at virtual address 7c05a009
+Oops: 00000000
+Modules linked in:
+PC: [<002eb772>] rb_erase+0x1c8/0x25a
+SR: 2704  SP: c286c837  a2: 10aab020
+d0: 10a7ae67    d1: 00000000    d2: 00000000    d3: 00024000
+d4: 00000008    d5: 270011de    a0: fab01081    a1: 00000000
+Process sh (pid: 428, task=09f84a54)
+Frame format=7 eff addr=fab01084 ssw=0525 faddr=fab01084
+wb 1 stat/addr/data: 0000 00000000 00000000
+wb 2 stat/addr/data: 0000 00000000 00000000
+wb 3 stat/addr/data: 0000 fab01084 00000001
+push data: 00000000 00000000 00000000 00000000
+Stack from 10ab3ca0:
+        00000000 1081bab0 003eb88a 003eb876 003eb876 002f1cc6 1081bab0 003eb88a
+        003eb850 1081bab0 0004b0f2 003eb88a 1081bab0 00000000 00024000 1081bab0
+        003eb880 003eb870 0004b4d0 1081bab0 003eb876 00000000 00000000 00002700
+        0000000d 00000008 270011de 00043c1c 00000001 10803140 003e6408 10ab3dc4
+        00024000 003eb88a 003eb874 0004b6dc 00000008 270011de 00002700 0000000f
+        00000000 00000005 0004454a 0004ab1c 0004ab4e 10aab020 00000000 00002604
+Call Trace: [<002f1cc6>] timerqueue_del+0x58/0x6a
+ [<0004b0f2>] __remove_hrtimer+0x2a/0x9c
+
+timerqueue_del() uses rbtree, and
+
+    #define rb_parent(r)   ((struct rb_node *)((r)->__rb_parent_color & ~3))
+
+relies on all objects being 4-byte aligned.  But your patch broke that
+assumption on m68k, where the default alignment is 2-byte.
+
+Andrew: please drop this patch.
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+
 --
-Thanks Adrian.
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Hi Ulf,
-Can you pick this patch instead of earlier one? This is more clean
-change, sorry for the multiple interations.
-Otherwise let me know, I will make these changes as seperate patch.
----
- drivers/mmc/host/sdhci.c | 16 +++++++---------
- drivers/mmc/host/sdhci.h |  3 ++-
- 2 files changed, 9 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index 3140fe2..7a7a18e 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -3821,15 +3821,13 @@ int sdhci_setup_host(struct sdhci_host *host)
- 		dma_addr_t dma;
- 		void *buf;
- 
--		if (host->flags & SDHCI_USE_64_BIT_DMA) {
--			host->adma_table_sz = host->adma_table_cnt *
--					      SDHCI_ADMA2_64_DESC_SZ(host);
--			host->desc_sz = SDHCI_ADMA2_64_DESC_SZ(host);
--		} else {
--			host->adma_table_sz = host->adma_table_cnt *
--					      SDHCI_ADMA2_32_DESC_SZ;
--			host->desc_sz = SDHCI_ADMA2_32_DESC_SZ;
--		}
-+		if (!(host->flags & SDHCI_USE_64_BIT_DMA))
-+			host->alloc_desc_sz = SDHCI_ADMA2_32_DESC_SZ;
-+		else if (!host->alloc_desc_sz)
-+			host->alloc_desc_sz = SDHCI_ADMA2_64_DESC_SZ(host);
-+
-+		host->desc_sz = host->alloc_desc_sz;
-+		host->adma_table_sz = host->adma_table_cnt * host->desc_sz;
- 
- 		host->align_buffer_sz = SDHCI_MAX_SEGS * SDHCI_ADMA2_ALIGN;
- 		/*
-diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-index 0ed3e0e..10bda3a 100644
---- a/drivers/mmc/host/sdhci.h
-+++ b/drivers/mmc/host/sdhci.h
-@@ -554,7 +554,8 @@ struct sdhci_host {
- 	dma_addr_t adma_addr;	/* Mapped ADMA descr. table */
- 	dma_addr_t align_addr;	/* Mapped bounce buffer */
- 
--	unsigned int desc_sz;	/* ADMA descriptor size */
-+	unsigned int desc_sz;	/* ADMA current descriptor size */
-+	unsigned int alloc_desc_sz;	/* ADMA descr. max size host supports */
- 
- 	struct workqueue_struct *complete_wq;	/* Request completion wq */
- 	struct work_struct	complete_work;	/* Request completion work */
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
