@@ -2,88 +2,199 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A61B0C33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0714DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:56:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C49921D7E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:55:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB7F921D7E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:56:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="coBTIYDt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ROjySfoO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729100AbgATQzx (ORCPT
+        id S1729305AbgATQ4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 11:55:53 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:45269 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726876AbgATQzx (ORCPT
+        Mon, 20 Jan 2020 11:56:18 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40002 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729121AbgATQ4S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 11:55:53 -0500
-Received: by mail-lj1-f195.google.com with SMTP id j26so34494506ljc.12
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 08:55:52 -0800 (PST)
+        Mon, 20 Jan 2020 11:56:18 -0500
+Received: by mail-wm1-f68.google.com with SMTP id t14so27117wmi.5;
+        Mon, 20 Jan 2020 08:56:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=4VxE8v5dH+QpdIZbYSbZopov06646USn27k3epy+Wdg=;
-        b=coBTIYDt1doh8KwTjQ/LrQPzlHL/KqyHV+iOe8tFqs2rkm3AdXRv0oYpAL4/w6j0UD
-         JskKUR3tiw2dUXjOLKEVj93VQKqlG9q59G+vAq5bQ0xgIcKXA6IKmQDzGBbXssGxwVf0
-         OfSh7b9NPR47TSBOL5h0cWvl6yjgD6nh5mnAsmvadQLomfsqFTmhrNiTCVojNx6mePx2
-         y3yIWwUWU9aKrgkA9/gARzvUhl0exvfwqgg2cmRbGYdCvcoq5EXALjWKYKp324r0P+TF
-         BI1fkvJL08rSTHsvnRsDTvbK2ckjmRC3xYWKmjFqV6pYVWsmSpDz3euXeIp8MXnS4Bw3
-         AbxA==
+         :content-disposition:in-reply-to:user-agent;
+        bh=l03WTNrKTQC5MGvzPNBY30UTO75BWr5Rgkv2u4ayoro=;
+        b=ROjySfoOvPa8OYjeITdb0qF+NXnHnNrwRo5wLjbwgErHa9tN1hls2IF7eIwmncLX09
+         fHL6mig8O69Inof4dLV7O0hDeFFbzpzuoCgnlV/yv5feWmxeIHo1JTJbTqtnsc9ZCdHm
+         40hwczJ9GX+mrI9J7AaYqpHVf+ue/h+iWK7QjC9pWTzMagowjnlm62maunfJ6GJmRuoc
+         ObFMyX64VnPUxuuvyNd4Ym+m7Dmd1bptNC76FDkPFyFwqUnh6sM5JsFhBj7+dfAJIM0m
+         iiJwu5dMw8neXQ5w9roxCREwTRhhOfKGL8MNTvr3ckpHfYCRcH//DZlrr/q4iGkYT8u8
+         h/Eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4VxE8v5dH+QpdIZbYSbZopov06646USn27k3epy+Wdg=;
-        b=nO+Qmkktb1oy82aKszk5hdyIJ6H8lxn5EUfCn2qroPgKl2bUBrB8+ksFio64HjISsG
-         D0seYMZSlWrgRilLHKE9G0adhirZ7ZSpCeEqPyrlsaE08y8WhTEwpiz9OfcOshFvrVfb
-         m58xc6ZYPJbM8046L0yGK2ujhRfhABCCtz/vmIkRCFOs0FBDWTq5YOP9x1wgbqqhpzq8
-         6tTan6utDYo+BvOgWmAN15FVqppTkwvarf6h/Y5e7OPeIsdvzS+mEz6vZw67FEoYEGeL
-         hTak30bQboEI5FtUjwg+cccUnDwoz30RMKjNEyJI0CxGR3uaWmGYyoO+nlRI5T6gAy7Q
-         FQTA==
-X-Gm-Message-State: APjAAAWSoZ1OgM293uxcZQ16GuQmG6nPDFQzTj08aXWythAQMFJGiuTX
-        /26q0j9wwH5QNSvpEfADyuxfUw==
-X-Google-Smtp-Source: APXvYqz8+d8e8/ZKTOPzWyN5EtzNhFN+4Vbr9CW0QzOcMtDjDg3K7YXAP35itBVxIkjfThj9Hh9lwQ==
-X-Received: by 2002:a2e:7e05:: with SMTP id z5mr13061141ljc.99.1579539351341;
-        Mon, 20 Jan 2020 08:55:51 -0800 (PST)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id r12sm16971664ljh.105.2020.01.20.08.55.50
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=l03WTNrKTQC5MGvzPNBY30UTO75BWr5Rgkv2u4ayoro=;
+        b=Q8ldlPdc1L5u/+y41q7FxQzV4waNRAMKg9hYHIJwWSz4UsOIBey5Ye/oGaEraVpdJD
+         kYAVEi2bbO+bZgoFA/dyvsIN056GgwHkeuQWwa575dmxXDUXQY2CA26EXniXYIueOb9D
+         BAVr9OzNzZf1cVPLVrDAh5tWQa98nDVvFHnOJaUFUkUcTvSWloaFvpKyQBl4Mbkb8nOd
+         Y9L5P+SJ9LFDkuH+Ou2rRywl/tBnp6DwVp3Cf7ayZWEeLJ2RS2StfL+Sqe4YbqXN+Hfm
+         8d++cKcpsrkDKoHKs+Q5CHqK9iiVfW0PV04nQfJOaTOutyE3FoiIVEgm+Vh4oTn0RB0p
+         Wfag==
+X-Gm-Message-State: APjAAAWNgPC92u18gz11q4huG8VKIAwHrsPx7AqVYp52dQzMcCbIwCAi
+        2GWFkUTDHyTIX+QpNXvpJcM=
+X-Google-Smtp-Source: APXvYqxVTGZ/hNNKU9GlL6hTSquhGMZWUbQgRUTLQdxRwE+BwRTJSFRBSKoRb9HfcB6IVux2m+T7Fg==
+X-Received: by 2002:a7b:cb97:: with SMTP id m23mr238030wmi.37.1579539375549;
+        Mon, 20 Jan 2020 08:56:15 -0800 (PST)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id x16sm305227wmk.35.2020.01.20.08.56.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 08:55:50 -0800 (PST)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id AFEAA10028A; Mon, 20 Jan 2020 19:55:51 +0300 (+03)
-Date:   Mon, 20 Jan 2020 19:55:51 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     SeongJae Park <sjpark@amazon.com>
-Cc:     akpm@linux-foundation.org, SeongJae Park <sjpark@amazon.de>,
-        acme@kernel.org, brendan.d.gregg@gmail.com, corbet@lwn.net,
-        mgorman@suse.de, dwmw@amazon.com, amit@kernel.org,
-        rostedt@goodmis.org, sj38.park@gmail.com, linux-mm@kvack.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/8] Introduce Data Access MONitor (DAMON)
-Message-ID: <20200120165551.codmosqc2pkcunpa@box>
-References: <20200120162757.32375-1-sjpark@amazon.com>
+        Mon, 20 Jan 2020 08:56:14 -0800 (PST)
+Date:   Mon, 20 Jan 2020 17:56:14 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Namjae Jeon <linkinjeon@gmail.com>,
+        Gabriel Krisman Bertazi <krisman@collabora.com>
+Subject: Re: vfat: Broken case-insensitive support for UTF-8
+Message-ID: <20200120165614.yp3pukpj3ilq6nxp@pali>
+References: <20200119221455.bac7dc55g56q2l4r@pali>
+ <87sgkan57p.fsf@mail.parknet.co.jp>
+ <20200120110438.ak7jpyy66clx5v6x@pali>
+ <89eba9906011446f8441090f496278d2@AcuMS.aculab.com>
+ <20200120152009.5vbemgmvhke4qupq@pali>
+ <1a4c545dc7f14e33b7e59321a0aab868@AcuMS.aculab.com>
+ <20200120162701.guxcrmqysejaqw6y@pali>
+ <b42888a01c8847e48116873ebbbbb261@AcuMS.aculab.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="7vl3wb4i55lghd6k"
 Content-Disposition: inline
-In-Reply-To: <20200120162757.32375-1-sjpark@amazon.com>
+In-Reply-To: <b42888a01c8847e48116873ebbbbb261@AcuMS.aculab.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 05:27:49PM +0100, SeongJae Park wrote:
-> This patchset introduces a new kernel module for practical monitoring of
-> data accesses, namely DAMON.
 
-Looks like it's not integrated with perf at all right? Why?
-Correlating measurements from different domains would help to see the
-bigger picture.
+--7vl3wb4i55lghd6k
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
- Kirill A. Shutemov
+On Monday 20 January 2020 16:43:21 David Laight wrote:
+> From: Pali Roh=C3=A1r
+> > Sent: 20 January 2020 16:27
+> ...
+> > > Unfortunately there is neither a 1:1 mapping of all possible byte seq=
+uences
+> > > to wchar_t (or unicode code points),
+> >=20
+> > I was talking about valid UTF-8 sequence (invalid, illformed is out of
+> > game and for sure would always cause problems).
+>=20
+> Except that they are always likely to happen.
+
+As wrote before, Linux kernel does not allow such sequences. So
+userspace get error when is trying to store garbage.
+
+> I've been pissed off by programs crashing because they assume that
+> a input string (eg an email) is UTF-8 but happens to contain a single
+> 0xa3 byte in the otherwise 7-bit data.
+>=20
+> The standard ought to have defined a translation for such sequences
+> and just a 'warning' from the function(s) that unexpected bytes were
+> processed.
+
+There is informative part, how to replace invalid part of sequence to
+Unicode code point U+FFFD. So if your need to to "process any byte
+sequence as UTF-8" there is standardized way to convert it into one
+exact sequence of Unicode code points. This is what email programs
+should do and non-broken are already doing it.
+
+> > > nor a 1:1 mapping of all possible wchar_t values to UTF-8.
+> >=20
+> > This is not truth. There is exactly only one way how to convert sequence
+> > of Unicode code points to UTF-8. UTF is Unicode Transformation Format
+> > and has exact definition how is Unicode Transformed.
+>=20
+> But a wchar_t can hold lots of values that aren't Unicode code points.
+> Prior to the 2003 changes half of the 2^32 values could be converted.
+> Afterwards only a small fraction.
+
+wchar_t in kernel can hold only subset of Unicode code points, up to
+the U+FFFF (2^16-1).
+
+Halves of surrogate pairs are not valid Unicode code points but as
+stated they are used in MS FAT.
+
+So anything which can be put into kernel's wchar_t is valid for FAT.
+
+>=20
+> > If you have valid UTF-8 sequence then it describe one exact sequence of
+> > Unicode code points. And if you have sequence (ordinals) of Unicode code
+> > points there is exactly one and only one its representation in UTF-8.
+> >=20
+> > I would suggest you to read Unicode standard, section 2.5 Encoding Form=
+s.
+>=20
+> That all assumes everyone is playing the correct game
+
+And why should we not play correct game? On input we have UTF and
+internally we works with Unicode. Unicode codepoints does not leak from
+kernel, so we can play correct game and assume that our code in kernel
+is correct (and if not, we can fix it). Plus when communicating with
+outside word, just check that input data are valid (which we already do
+for UTF-8 user input).
+
+So I do not see any problem there.
+
+> > > Really both need to be defined - even for otherwise 'invalid' sequenc=
+es.
+> > >
+> > > Even the 16-bit values above 0xd000 can appear on their own in
+> > > windows filesystems (according to wikipedia).
+> >=20
+> > If you are talking about UTF-16 (which is _not_ 16-bit as you wrote),
+> > look at my previous email:
+>=20
+> UFT-16 is a sequence of 16-bit values....
+
+No, this is not truth. UTF-16 is sequence either of 16-bit values or of
+32-bit values with other restrictions. UTF-16 is variable length enc.
+
+> It can contain 0xd000 to 0xffff (usually in pairs) but they aren't UTF-8 =
+codepoints.
+>=20
+> 	David
+>=20
+> -
+> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1=
+ 1PT, UK
+> Registration No: 1397386 (Wales)
+
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--7vl3wb4i55lghd6k
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EARECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXiXbrAAKCRCL8Mk9A+RD
+UgSWAJ4ktl8RuEWLboJtM53qzi+wvlI2UwCfWQmIzJHZ//yydpo769G/FVDYQSo=
+=9ZkE
+-----END PGP SIGNATURE-----
+
+--7vl3wb4i55lghd6k--
