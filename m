@@ -2,162 +2,97 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC3FC33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 21:00:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6854C32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 21:01:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E765B22522
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 21:00:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NBc2Q5ad"
+	by mail.kernel.org (Postfix) with ESMTP id A0A9B22522
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 21:01:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbgATVA1 (ORCPT
+        id S1727289AbgATVBH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 16:00:27 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:44424 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726586AbgATVA0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 16:00:26 -0500
-Received: by mail-qt1-f193.google.com with SMTP id w8so871577qts.11;
-        Mon, 20 Jan 2020 13:00:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=VQ+GdhZxzN9nLfpgX9IxRVtlqBky78upQxgIvlUTRO0=;
-        b=NBc2Q5ad06i24N8mOKCL845ZVy+ujPfi9RBGUNzQtEEFG4/8bmSi/donUXXwJ1N71Y
-         LSDgtkx9hwumwnpljKgb+ryOssu7jsEhbyzZ8dxOSIGX8OiMU0alsdMwwwbbaRGeB1PT
-         ZlfiaNNOWttrRlCCxv/CjE0xSWiXc1l7pN4MUasYxr9lxApRSX55uhFau6n6HCjLUj0u
-         w+feAqSwILqzzIbBe8zBU7cFT7oJMg646KFtVfkiVp3v7cSpoWI3KY35FZ4/bwWlOrGF
-         u3TBLRFw0Xx56HWxcvQuJcWGYkH6TCy73cgjT1Q694EzAciA+c6SVPAgahCtVU2PXSSU
-         45fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=VQ+GdhZxzN9nLfpgX9IxRVtlqBky78upQxgIvlUTRO0=;
-        b=hG9pzMKuq5WZUjZOcX3WF4ytlizSzyZXHH66ABHyrZ/O5UfP2D1/1vYia72RXsbpIO
-         fsc01Xei1QtdCzCzS0JrNSOArqSkWiFgcBNfZjd7g1uS8/UJ+ue0RQB5H0sthfq7jc4A
-         mSARnQ07mlMovK8+0RXSADs/EDoqI8vmKnSHx3sqQMDC3KKdxnLAT7MWIoCLIHEGJqNT
-         P1S8cup7weIhoDDtBwrTQHm05Mt1s1uWI7hNp9o3fYNsTT25+ptKRyoZj8dbJMZPZGfX
-         /ZYACqoYuE4aQ2yBaaKPF7CSBFFJL6A52bF83fxrDoT04UdQYHGn0UNVbTwVYqRay0Od
-         Sktg==
-X-Gm-Message-State: APjAAAVre1+dyo6tKIkVkf88TJ1+xl9M9adaCIT4k4/9ZZNzMPYTzNTc
-        b8AS4osokOoJgRBdTe4pr3QIHuNM0IyICWgK640=
-X-Google-Smtp-Source: APXvYqwEPU4xurzWUVBVkjOCNXZiOSX0Z04FaiBCkpyvjBsziwOuEFBAX0ydhhSkW4AJoK7PvMHYKvVMg4OLoukxoR4=
-X-Received: by 2002:ac8:1385:: with SMTP id h5mr1257133qtj.59.1579554025526;
- Mon, 20 Jan 2020 13:00:25 -0800 (PST)
+        Mon, 20 Jan 2020 16:01:07 -0500
+Received: from mga17.intel.com ([192.55.52.151]:40594 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726586AbgATVBH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 16:01:07 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 13:01:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,343,1574150400"; 
+   d="scan'208";a="425286924"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga005.fm.intel.com with ESMTP; 20 Jan 2020 13:01:06 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1iteAT-0004n2-Pa; Tue, 21 Jan 2020 05:01:05 +0800
+Date:   Tue, 21 Jan 2020 05:00:19 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:x86/urgent] BUILD SUCCESS
+ 32ada3b9e04c6f6d4916967bd8bbe2450ad5bc5e
+Message-ID: <5e2614e3.L/+3pq1FgwlFn6NZ%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <157926819690.1555735.10756593211671752826.stgit@toke.dk>
- <157926820131.1555735.1177228853838027248.stgit@toke.dk> <CAEf4BzbAV0TmEUL=62jz+RD6SPmu927z-dhGL9JHepcAOGMSJA@mail.gmail.com>
- <875zh6p9pg.fsf@toke.dk> <CAEf4BzZ7x4F_-bjGg7TdzXcin6c1BAT6OKe53ujh1tx-GB6-ZQ@mail.gmail.com>
-In-Reply-To: <CAEf4BzZ7x4F_-bjGg7TdzXcin6c1BAT6OKe53ujh1tx-GB6-ZQ@mail.gmail.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Mon, 20 Jan 2020 13:00:14 -0800
-Message-ID: <CAEf4BzYN3Gx2dsAoHZLxhv=oVVUgoKacZ3eoWYuwB4tW5t6W1w@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v4 04/10] tools/runqslower: Use consistent
- include paths for libbpf
-To:     =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-rdma@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 10:35 AM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Mon, Jan 20, 2020 at 4:57 AM Toke H=C3=B8iland-J=C3=B8rgensen <toke@re=
-dhat.com> wrote:
-> >
-> > Andrii Nakryiko <andrii.nakryiko@gmail.com> writes:
-> >
-> > > On Fri, Jan 17, 2020 at 5:37 AM Toke H=C3=B8iland-J=C3=B8rgensen <tok=
-e@redhat.com> wrote:
-> > >>
-> > >> From: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
-> > >>
-> > >> Fix the runqslower tool to include libbpf header files with the bpf/
-> > >> prefix, to be consistent with external users of the library. Also en=
-sure
-> > >> that all includes of exported libbpf header files (those that are ex=
-ported
-> > >> on 'make install' of the library) use bracketed includes instead of =
-quoted.
-> > >>
-> > >> To not break the build, keep the old include path until everything h=
-as been
-> > >> changed to the new one; a subsequent patch will remove that.
-> > >>
-> > >> Fixes: 6910d7d3867a ("selftests/bpf: Ensure bpf_helper_defs.h are ta=
-ken from selftests dir")
-> > >> Acked-by: Andrii Nakryiko <andriin@fb.com>
-> > >> Signed-off-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
-> > >> ---
-> > >>  tools/bpf/runqslower/Makefile         |    5 +++--
-> > >>  tools/bpf/runqslower/runqslower.bpf.c |    2 +-
-> > >>  tools/bpf/runqslower/runqslower.c     |    4 ++--
-> > >>  3 files changed, 6 insertions(+), 5 deletions(-)
-> > >>
-> > >> diff --git a/tools/bpf/runqslower/Makefile b/tools/bpf/runqslower/Ma=
-kefile
-> > >> index b62fc9646c39..9f022f7f2593 100644
-> > >> --- a/tools/bpf/runqslower/Makefile
-> > >> +++ b/tools/bpf/runqslower/Makefile
-> > >> @@ -5,6 +5,7 @@ LLC :=3D llc
-> > >>  LLVM_STRIP :=3D llvm-strip
-> > >>  DEFAULT_BPFTOOL :=3D $(OUTPUT)/sbin/bpftool
-> > >>  BPFTOOL ?=3D $(DEFAULT_BPFTOOL)
-> > >> +INCLUDES :=3D -I$(OUTPUT) -I$(abspath ../../lib) -I$(abspath ../../=
-lib/bpf)
-> > >>  LIBBPF_SRC :=3D $(abspath ../../lib/bpf)
-> > >
-> > > drop LIBBPF_SRC, it's not used anymore
-> >
-> > It is: in the rule for building libbpf there's a '-C $(LIBBPF_SRC)'
-> >
->
-> Ah, right, missed that one. Looked a bit weird to have $(abspath
-> ../../lib/bpf) used in INCLUDES and then separate LIBBPF_SRC
-> definition there, maybe
->
-> LIBBPF_SRC :=3D $(abspath ../../lib/bpf)
-> INCLUDES :=3D -I$(OUTPUT) -I$(abspath ../../lib) -I$(LIBBPF_SRC)
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/urgent
+branch HEAD: 32ada3b9e04c6f6d4916967bd8bbe2450ad5bc5e  x86/resctrl: Clean up unused function parameter in mkdir path
 
-Never mind, you delete it in later patch anyway.
+elapsed time: 208m
 
->
-> > -Toke
-> >
+configs tested: 34
+configs skipped: 99
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+ia64                                defconfig
+powerpc                             defconfig
+alpha                               defconfig
+csky                                defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                               rhel-7.6
+um                                  defconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+c6x                              allyesconfig
+c6x                        evmc6678_defconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                       common_defconfig
+xtensa                          iss_defconfig
+arc                              allyesconfig
+arc                                 defconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+arm                        shmobile_defconfig
+i386                             alldefconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+
+---
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
