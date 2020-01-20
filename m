@@ -2,83 +2,75 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C9EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA660C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:52:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6365D217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:48:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B7F72070C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:52:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FQ24aoVG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728843AbgATPst (ORCPT
+        id S1728900AbgATPw0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 10:48:49 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:34437 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726626AbgATPst (ORCPT
+        Mon, 20 Jan 2020 10:52:26 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38470 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726626AbgATPw0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 10:48:49 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-14-pqMPwcNKP2ew_zdGmZYihw-1; Mon, 20 Jan 2020 15:48:46 +0000
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 20 Jan 2020 15:47:22 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 20 Jan 2020 15:47:22 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     =?utf-8?B?J1BhbGkgUm9ow6FyJw==?= <pali.rohar@gmail.com>
-CC:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Namjae Jeon <linkinjeon@gmail.com>,
-        "Gabriel Krisman Bertazi" <krisman@collabora.com>
-Subject: RE: vfat: Broken case-insensitive support for UTF-8
-Thread-Topic: vfat: Broken case-insensitive support for UTF-8
-Thread-Index: AQHVz4FsiOVqsS4Qp0SucuDN4afIhKfzph4wgAAFE4CAAADOMA==
-Date:   Mon, 20 Jan 2020 15:47:22 +0000
-Message-ID: <1a4c545dc7f14e33b7e59321a0aab868@AcuMS.aculab.com>
-References: <20200119221455.bac7dc55g56q2l4r@pali>
- <87sgkan57p.fsf@mail.parknet.co.jp> <20200120110438.ak7jpyy66clx5v6x@pali>
- <89eba9906011446f8441090f496278d2@AcuMS.aculab.com>
- <20200120152009.5vbemgmvhke4qupq@pali>
-In-Reply-To: <20200120152009.5vbemgmvhke4qupq@pali>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 20 Jan 2020 10:52:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579535545;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=siJ2sfjzWDacIjNlyKFxd2oMlncO7B3hkvb0Wjp0h7Y=;
+        b=FQ24aoVGO9HsbCugVtdA2VHlrBatHrL/OmxWvjz2BOEK5U9s6MxgME5ONxqMTi/Zk+HWq/
+        FRfQboND5Wr4P+q2pQMbvtkPE/KjJXH/9SLeaC9SyS1Ll/JFcrdvGbA2vFZTD2nMspL6yk
+        MKaqMRWGmUWaZLS0eizAhGDB7COW9Cg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-197-wXNF9myXPlCSEOjSfBcqig-1; Mon, 20 Jan 2020 10:52:22 -0500
+X-MC-Unique: wXNF9myXPlCSEOjSfBcqig-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 27FAB800D41;
+        Mon, 20 Jan 2020 15:52:21 +0000 (UTC)
+Received: from treble (ovpn-125-19.rdu2.redhat.com [10.10.125.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1C87360BF7;
+        Mon, 20 Jan 2020 15:52:20 +0000 (UTC)
+Date:   Mon, 20 Jan 2020 09:52:17 -0600
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Tree for Dec 6 (objtool, lots in btrfs)
+Message-ID: <20200120155217.ikvlphvlaswh3twt@treble>
+References: <20191206135406.563336e7@canb.auug.org.au>
+ <cd4091e4-1c04-a880-f239-00bc053f46a2@infradead.org>
 MIME-Version: 1.0
-X-MC-Unique: pqMPwcNKP2ew_zdGmZYihw-1
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <cd4091e4-1c04-a880-f239-00bc053f46a2@infradead.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogUGFsaSBSb2jDoXINCj4gU2VudDogMjAgSmFudWFyeSAyMDIwIDE1OjIwDQouLi4NCj4g
-VGhpcyBpcyBub3QgcG9zc2libGUuIFRoZXJlIGlzIDE6MSBtYXBwaW5nIGJldHdlZW4gVVRGLTgg
-c2VxdWVuY2UgYW5kDQo+IFVuaWNvZGUgY29kZSBwb2ludC4gd2NoYXJfdCBpbiBrZXJuZWwgcmVw
-cmVzZW50IGVpdGhlciBvbmUgVW5pY29kZSBjb2RlDQo+IHBvaW50IChsaW1pdGVkIHVwIHRvIFUr
-RkZGRiBpbiBOTFMgZnJhbWV3b3JrIGZ1bmN0aW9ucykgb3IgMmJ5dGVzIGluDQo+IFVURi0xNiBz
-ZXF1ZW5jZSAob25seSBpbiB1dGY4c190b191dGYxNnMoKSBhbmQgdXRmMTZzX3RvX3V0ZjhzKCkN
-Cj4gZnVuY3Rpb25zKS4NCg0KVW5mb3J0dW5hdGVseSB0aGVyZSBpcyBuZWl0aGVyIGEgMToxIG1h
-cHBpbmcgb2YgYWxsIHBvc3NpYmxlIGJ5dGUgc2VxdWVuY2VzDQp0byB3Y2hhcl90IChvciB1bmlj
-b2RlIGNvZGUgcG9pbnRzKSwgbm9yIGEgMToxIG1hcHBpbmcgb2YgYWxsIHBvc3NpYmxlDQp3Y2hh
-cl90IHZhbHVlcyB0byBVVEYtOC4NClJlYWxseSBib3RoIG5lZWQgdG8gYmUgZGVmaW5lZCAtIGV2
-ZW4gZm9yIG90aGVyd2lzZSAnaW52YWxpZCcgc2VxdWVuY2VzLg0KDQpFdmVuIHRoZSAxNi1iaXQg
-dmFsdWVzIGFib3ZlIDB4ZDAwMCBjYW4gYXBwZWFyIG9uIHRoZWlyIG93biBpbg0Kd2luZG93cyBm
-aWxlc3lzdGVtcyAoYWNjb3JkaW5nIHRvIHdpa2lwZWRpYSkuDQoNCkl0IGlzIGFsbCB0byBlYXN5
-IHRvIGdldCBzZXF1ZW5jZXMgb2YgdmFsdWVzIHRoYXQgY2Fubm90IGJlIGNvbnZlcnRlZA0KdG8v
-ZnJvbSBVVEYtOC4NCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwg
-QnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVn
-aXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
+On Fri, Dec 06, 2019 at 08:17:30AM -0800, Randy Dunlap wrote:
+> On 12/5/19 6:54 PM, Stephen Rothwell wrote:
+> 
+> kernel/cred.o: warning: objtool: prepare_creds()+0x2c3: unreachable instruction
+
+Here's another one I haven't recreated yet - if you can share the .o and
+the config that would be helpful.
+
+-- 
+Josh
 
