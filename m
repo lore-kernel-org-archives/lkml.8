@@ -2,139 +2,108 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC2A2C33CB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C64BBC33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:02:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2276207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:02:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jN6OaO3L"
+	by mail.kernel.org (Postfix) with ESMTP id A72BF207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:02:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727018AbgATICI (ORCPT
+        id S1727066AbgATICP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 03:02:08 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45859 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726621AbgATICI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 03:02:08 -0500
-Received: by mail-wr1-f67.google.com with SMTP id j42so28376161wrj.12
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 00:02:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=e6dkf7g0PlBYzajwREklnNmjXK94Sc+HZYUhtk+5LdM=;
-        b=jN6OaO3LImWPZHkie+o9NYbPcksaQwt6VefqX5klIn/3qVibfBq4ZSEimQWad5KD+6
-         L0xrCWnJoG/MuPnZsGfzr3bRE8XHIIM+vG0z47GvgrzqTDe482Jya/1aN0fr8MXvzsfO
-         OMt4ZrLpJH5Aex8tX99XrKSqUlXB8vtEyX4armTD5fYVwYEDuuyDE6cC31BSsDiVpRx0
-         HFTAplyQVE8ZvEYKS256eR3a15jU3780jrVE9yTXKAIcDSt4x2w5mcmTEX0Oed7S78No
-         mjPQ9/Zflrzc4wIpTuWX3ckETiSe6kHu6B3SPHw8Uy37A6oJCAy3mNL9IqadAXQ+A69u
-         BbOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=e6dkf7g0PlBYzajwREklnNmjXK94Sc+HZYUhtk+5LdM=;
-        b=J0BB8uIuyhckuaZye4FMWLe0Gcho7+SvtakjIGNZVXHPXp2PfqA7bcmErPHjQ/9D3c
-         EWfyahY/CSmkivkITIu/K3pfXm7z/AoWrpaf5qOjbgay5f3z+5XPpIRdMoxl5NQZYz8L
-         a3XbhwlGcf8LDHuWpDmmh/n71eCLFeRBcD25N25HBuCk2hCaX1Xi0Rd4Nck0R4CB3ir8
-         2xaZcTIfsjveAcJP04XnU/D0sS098czeNVdKHqWhB8iQnDg41MEAqqOeQiLRlGV1WkQJ
-         s07sqIQfaT0aspw6bJrFkn8YKicsar0BRs+Yb4AnfpaWf+LVnjp5za7e4IwlD6YTJV45
-         Jm5Q==
-X-Gm-Message-State: APjAAAWj1csAkTBFPwyOct9R8rhPnfkre/9yCXwWQpjGaab0uwVaUCZB
-        8Wk1FjcOZU6tpPRI3hBXvZ+PjQ==
-X-Google-Smtp-Source: APXvYqzcaJJackorcPd9DC4Xa5AIzUt/tljBZ9+GLzsPMBa1EJ3AAs42EkOtT5IjuvRGZDmfO5jhmQ==
-X-Received: by 2002:a5d:4692:: with SMTP id u18mr16874910wrq.206.1579507326451;
-        Mon, 20 Jan 2020 00:02:06 -0800 (PST)
-Received: from dell ([2.27.35.227])
-        by smtp.gmail.com with ESMTPSA id f16sm46604581wrm.65.2020.01.20.00.02.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 00:02:05 -0800 (PST)
-Date:   Mon, 20 Jan 2020 08:02:20 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "broonie@kernel.org" <broonie@kernel.org>
-Subject: Re: [PATCH v10 11/13] gpio: bd71828: Initial support for ROHM
- BD71828 PMIC GPIOs
-Message-ID: <20200120080220.GQ15507@dell>
-References: <cover.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
- <c8ed62a1efa0c6fde93a8a08fe6bc74a450a34f3.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
- <20200117102127.GD15507@dell>
- <9f405dfc4c7e56e32f4eb2f9cb6e87c05aea1ac9.camel@fi.rohmeurope.com>
+        Mon, 20 Jan 2020 03:02:15 -0500
+Received: from mout.perfora.net ([74.208.4.194]:56535 "EHLO mout.perfora.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726951AbgATICO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 03:02:14 -0500
+Received: from marcel-nb-toradex-int.toradex.int ([31.10.206.124]) by
+ mrelay.perfora.net (mreueus001 [74.208.5.2]) with ESMTPSA (Nemesis) id
+ 0M5O2r-1jq3lT27Bf-00zXV3; Mon, 20 Jan 2020 09:01:08 +0100
+From:   Marcel Ziswiler <marcel@ziswiler.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, info@logictechno.com,
+        j.bauer@endrich.com, Sam Ravnborg <sam@ravnborg.org>,
+        dri-devel@lists.freedesktop.org,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Rob Herring <robh@kernel.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: [PATCH v4 1/3] dt-bindings: add vendor prefix for logic technologies limited
+Date:   Mon, 20 Jan 2020 09:00:58 +0100
+Message-Id: <20200120080100.170294-1-marcel@ziswiler.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <9f405dfc4c7e56e32f4eb2f9cb6e87c05aea1ac9.camel@fi.rohmeurope.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Provags-ID: V03:K1:cz02pypmXVVY9XStb0HoEZkx90vTXXjTAnxUxTCC/wEc/muxf/f
+ AJAG1HLkGWz4YsSAlYrIu4ElEUR7z6r56s8TmO19+3b292a/Pvewx3QCaEwdvzQc0CLRHe4
+ OqTco8zERosmNtc6+SbmNbaZkLKw6XbpvXA0JyizMUYY/nDnwx2XRR+m+uDdshsF9ZECjyU
+ BxGjZgn7K+Nc5XiuUk6pg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:lpKVWY8NVCU=:A8i+IMii7mHWnzZPyIhoTq
+ 60gLU+m3boGJcEechrLIBb6UWPHspULkn7x1DyF0jIIcxKMnH31oINGHoP5kKk4F3c1Pklk8Q
+ LoKGfl4XRa6lQDpPS2yEy1cI77IGIXxyYERX8yWGGoxKKgEXHgcrdjPPzhEZJs0IQIh9mVx0L
+ IRNII7qpfWA1IlZqWv+TFRAzZY2rCzbIC3UJbRh7AyxGCSTJnIPAivMQ35GDtroj4BoOBTWxP
+ LwvmHp47lcMsIIXMD15ERoqZ8w7Zc8vNkfYYg7g5A8s6Dwsm3k5+ckSTZvxCSNZPK7KafdQrr
+ OjeK8Ex5WxGAoozdtY6ClPSgnmPVhfaPxFSPAX3dR6ULUW80sF/vfj6AwR/ARSO5pYSHv6utJ
+ 2PBIqOg5m2kg7xzquw+onkTgX/mAEZ0J4ho8SNmKz6yNh4vh8m0gcbRw2rvjVXnjhSJVq0FOo
+ 2nKj9fdEEwqrQWQiqFriDcnzwoKCt6uKqmPcvjiQCm4rbp278N6DjOcV6Sfrk76d0HKwYUgP4
+ LjQD7u2ohhTHTcSTUcP7wXy/NVm4xAzcG9LttYD2u5Go+t2cmXOeAIyS01kDdHj0s+WhVNeAd
+ yx0e3dH4uTplhsJElQob3FFNhjuOkB28K7AjhmUP6jXHa64NyvTNDyhBeOtZrUuo3LfwOViPc
+ og00QIEt7EDT/g34nQFqCVBsgyO2bMbeP1g4LaW59D3qZdgPOAOazg4WXtRKxAVROPs5oWxKw
+ x1JD/EAxyqoO/SvT59u7OcXM/FiBJu0DrgtX3LmusJ6IoYFcbysaRzgr2X5+GdoR/BVJ+5pku
+ 6Ziny4Kvc3Vg4AS4NXk35tHbCu12jxW/GkucotLLK/DC/uDCVx7tRkFs/rE5dWLSyqtk9Xtt9
+ lXvFVLCWTNMUtElXqFjA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jan 2020, Vaittinen, Matti wrote:
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 
-> Hello,
-> 
-> On Fri, 2020-01-17 at 10:21 +0000, Lee Jones wrote:
-> > On Fri, 17 Jan 2020, Matti Vaittinen wrote:
-> > 
-> > > ROHM BD71828 PMIC contains 4 pins which can be configured by OTP
-> > > to be used for general purposes. First 3 can be used as outputs
-> > > and 4.th pin can be used as input. Allow them to be controlled
-> > > via GPIO framework.
-> > > 
-> > > The driver assumes all of the pins are configured as GPIOs and
-> > > trusts that the reserved pins in other OTP configurations are
-> > > excluded from control using "gpio-reserved-ranges" device tree
-> > > property (or left untouched by GPIO users).
-> > > 
-> > > Typical use for 4.th pin (input) is to use it as HALL sensor
-> > > input so that this pin state is toggled when HALL sensor detects
-> > > LID position change (from close to open or open to close). PMIC
-> > > HW implements some extra logic which allows PMIC to power-up the
-> > > system when this pin is toggled. Please see the data sheet for
-> > > details of GPIO options which can be selected by OTP settings.
-> > > 
-> > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> > > Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> > 
-> > Linus, Is that an Ack?
-> I have always thought that reviewed-by implies that reviewer is Ok with
-> the patch (imples Ack). Maybe I have mistaken?
+Add vendor prefix for Logic Technologies Limited [1] which is a Chinese
+display manufacturer e.g. distributed by German Endrich Bauelemente
+Vertriebs GmbH [2].
 
-I would rather not assume.
+[1] https://logictechno.com/contact-us/
+[2] https://www.endrich.com/isi50_isi30_tft-displays/lt170410-1whc_isi30
 
+Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Reviewed-by: Philippe Schenker <philippe.schenker@toradex.com>
+Acked-by: Rob Herring <robh@kernel.org>
+
+---
+
+Changes in v4: None
+Changes in v3: None
+Changes in v2:
+- Added Philippe's reviewed-by.
+- Added Rob's acked-by.
+
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index f9b84f24a382..ac4804d0a991 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -549,6 +549,8 @@ patternProperties:
+     description: Linear Technology Corporation
+   "^logicpd,.*":
+     description: Logic PD, Inc.
++  "^logictechno,.*":
++    description: Logic Technologies Limited
+   "^longcheer,.*":
+     description: Longcheer Technology (Shanghai) Co., Ltd.
+   "^lsi,.*":
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.24.1
+
