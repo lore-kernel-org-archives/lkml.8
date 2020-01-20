@@ -2,84 +2,95 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C1C5C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 04:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38FBBC32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 04:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FBB72070C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 04:33:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 037DE20684
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 04:45:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=brennan.io header.i=stephen@brennan.io header.b="ABZX5Wmd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kgvrbGR1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729108AbgATEdg (ORCPT
+        id S1729121AbgATEpI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 23:33:36 -0500
-Received: from sender4-of-o51.zoho.com ([136.143.188.51]:21115 "EHLO
-        sender4-of-o51.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729043AbgATEdg (ORCPT
+        Sun, 19 Jan 2020 23:45:08 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:32871 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729043AbgATEpI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 23:33:36 -0500
-X-Greylist: delayed 904 seconds by postgrey-1.27 at vger.kernel.org; Sun, 19 Jan 2020 23:33:35 EST
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1579493901;
-        s=selector01; d=brennan.io; i=stephen@brennan.io;
-        h=From:To:Cc:Message-ID:Subject:Date:MIME-Version:Content-Transfer-Encoding:Content-Type;
-        bh=stViw/vZBTTKFHulxgqF7UGf9elupV/iKpDOvA31W08=;
-        b=ABZX5WmdD1rtnsD7ma5/aoYcPqlJTkoaH6ppekhzsVYQNDnr9Opn+O+SL61R1iRr
-        eZh/7q+1MNG9vDcIIPycmU+XcPTY5DsoN0CIEb4uoctxYw3FyM5z2YzBF1sW3NHQ+c7
-        iv0LOkzXPNRYqx5Yx1pr2xTY8KdEpy1JyxkR7zN0=
-Received: from localhost (195.173.24.136.in-addr.arpa [136.24.173.195]) by mx.zohomail.com
-        with SMTPS id 1579493895817813.4788828872422; Sun, 19 Jan 2020 20:18:15 -0800 (PST)
-From:   Stephen Brennan <stephen@brennan.io>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Stephen Brennan <stephen@brennan.io>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Message-ID: <20200120041740.193485-1-stephen@brennan.io>
-Subject: [PATCH] ARM: dts: bcm2711: Use bcm2711 compatible for sdhci
-Date:   Sun, 19 Jan 2020 20:17:40 -0800
-X-Mailer: git-send-email 2.24.0
+        Sun, 19 Jan 2020 23:45:08 -0500
+Received: by mail-lf1-f65.google.com with SMTP id n25so22942381lfl.0;
+        Sun, 19 Jan 2020 20:45:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=v4gNUzx14wi5Q2LGqxGckShRs7K+FGBFyHDqioJzbu8=;
+        b=kgvrbGR1TUzou0oyefZ/ZcSEKByOLic6u1/cL11Fsc+t6eVsyHyfzVSgRk1Jtw9xTF
+         41gdc+Q8Eug+UpY9hY4Yi9NO8qIDT5yFWFk7YwsaC3g5KWV9tdF+1ZGYl4lFzsch7C6r
+         zItDsoDiVguX+nRP23Bvjsr3xwLhGf6yDjea1pgGoarfLA0xLeyU3APZMSb8OzdADhQ1
+         p2k+Q6b7FJ4+OaMTwz8gq8rzDauLSafXUDgn87jXwVLZbEgbm7dLTKchwIyiSw7PsXQl
+         2ERieycrccayKPn6RFTAEGK81HPdotwjDXFVNTVjVzetRZFe/ndJ1HfQvVidbU+YCnLf
+         MKXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v4gNUzx14wi5Q2LGqxGckShRs7K+FGBFyHDqioJzbu8=;
+        b=gmJYAdoNMlfW38ROR7arodwGHjwvK3rTaQtavbb1zUCvuPEDdAfiybIh+RfHZqWzCX
+         Q95MpHegapVj6bq9EGSPsCesEquHFCoPlJvmc1NcVHlIeI2jg8rak0kErebhiq1k4XYZ
+         6fLzDDb2G2JoygxZnEd1J5ypdBDcQS/rAYLzz4bxaIyRMhe3Gc1uC33kW73Qd5XQDbJl
+         g1KmyZp5ARsxdEOId28BaH9yb4DHr1y4dnsy7sjIotm/iMnlJKq/ysmdBZkqDu/jg+Af
+         kEgr+/NravCU3aGzoESIg3tSJ/J4mKnnN65Tc9n1HLC7FJvbhoZK9ZUgQakegNi+9kdl
+         GkNA==
+X-Gm-Message-State: APjAAAUC+hyuV2RV1+LeRFN8aGoe72OX0VQ4fgM22p8QgFAK/F3NcVOj
+        rjyanawnFRFRMSVon2qvGSeToQoTlSQYD2ohfBGJDF7q
+X-Google-Smtp-Source: APXvYqw2yRksWZ+WJFnHMGInLgk7eBdsHBiSS9/DcGZk4AWnUQgqGdvhA8tOYHcJPcS/cFwuMq4OsOg4bWLsZ+qY6E8=
+X-Received: by 2002:a19:6d13:: with SMTP id i19mr12034062lfc.6.1579495505859;
+ Sun, 19 Jan 2020 20:45:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-ZohoMailClient: External
-Content-Type: text/plain; charset=utf8
+References: <20200120032639.2963-1-xiaofeng.yan2012@gmail.com>
+In-Reply-To: <20200120032639.2963-1-xiaofeng.yan2012@gmail.com>
+From:   Taehee Yoo <ap420073@gmail.com>
+Date:   Mon, 20 Jan 2020 13:44:56 +0900
+Message-ID: <CAMArcTW6YXKjDnxq4bgqQM6aL=ZZ2u+SNVs+NXoA-HSLxaq16g@mail.gmail.com>
+Subject: Re: [PATCH] hsr: Fix a compilation error
+To:     "xiaofeng.yan" <xiaofeng.yan2012@gmail.com>
+Cc:     arvid.brodin@alten.se, David Miller <davem@davemloft.net>,
+        Netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, yanxiaofeng7@jd.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When booting Raspberry Pi 4B using a micro SDHC UHS class 1 card, the SD
-card partitions never appear in /dev.  According to the device tree
-bindings for Broadcom IPROC SDHCI controller, we should use
-"brcm,bcm2711-emmc2" compatible string on BCM2711. Set this compatible
-string, which allows these cards to be mounted.
+On Mon, 20 Jan 2020 at 12:26, xiaofeng.yan <xiaofeng.yan2012@gmail.com> wrote:
+>
+> From: "xiaofeng.yan" <yanxiaofeng7@jd.com>
+>
 
-Signed-off-by: Stephen Brennan <stephen@brennan.io>
----
- arch/arm/boot/dts/bcm2711.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+Hi Xiaofeng,
 
-diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711.dts=
-i
-index b64865ad5a41..48e3b0162bda 100644
---- a/arch/arm/boot/dts/bcm2711.dtsi
-+++ b/arch/arm/boot/dts/bcm2711.dtsi
-@@ -853,6 +853,7 @@ &mailbox {
- };
-=20
- &sdhci {
-+=09compatible =3D "brcm,bcm2711-emmc2";
- =09interrupts =3D <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>;
- };
-=20
---=20
-2.24.0
+> A compliation error happen when building branch 5.5-rc7
+>
+> In file included from net/hsr/hsr_main.c:12:0:
+> net/hsr/hsr_main.h:194:20: error: two or more data types in declaration specifiers
+>  static inline void void hsr_debugfs_rename(struct net_device *dev)
+>
+> So Removed one void.
+>
+> Signed-off-by: xiaofeng.yan <yanxiaofeng7@jd.com>
 
+Acked-by: Taehee Yoo <ap420073@gmail.com>
 
+I think the Fixes tag is needed.
+You might have to send a v2 patch, which includes this Fixes tag.
+Fixes: 4c2d5e33dcd3 ("hsr: rename debugfs file when interface name is changed")
 
+Thank you!
+Taehee Yoo
