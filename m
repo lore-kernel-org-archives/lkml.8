@@ -2,122 +2,139 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6FD2C33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC2A2C33CB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:02:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89A342073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:02:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2276207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:02:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jN6OaO3L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbgATICB (ORCPT
+        id S1727018AbgATICI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 03:02:01 -0500
-Received: from mout.perfora.net ([74.208.4.196]:41067 "EHLO mout.perfora.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726874AbgATICB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 03:02:01 -0500
-Received: from marcel-nb-toradex-int.toradex.int ([31.10.206.124]) by
- mrelay.perfora.net (mreueus001 [74.208.5.2]) with ESMTPSA (Nemesis) id
- 0MIxBv-1ivMsA0LBB-002VEd; Mon, 20 Jan 2020 09:01:11 +0100
-From:   Marcel Ziswiler <marcel@ziswiler.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, info@logictechno.com,
-        j.bauer@endrich.com, Sam Ravnborg <sam@ravnborg.org>,
-        dri-devel@lists.freedesktop.org,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH v4 2/3] dt-bindings: panel-simple: add bindings for logic technologies displays
-Date:   Mon, 20 Jan 2020 09:00:59 +0100
-Message-Id: <20200120080100.170294-2-marcel@ziswiler.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200120080100.170294-1-marcel@ziswiler.com>
-References: <20200120080100.170294-1-marcel@ziswiler.com>
+        Mon, 20 Jan 2020 03:02:08 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45859 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726621AbgATICI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 03:02:08 -0500
+Received: by mail-wr1-f67.google.com with SMTP id j42so28376161wrj.12
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 00:02:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=e6dkf7g0PlBYzajwREklnNmjXK94Sc+HZYUhtk+5LdM=;
+        b=jN6OaO3LImWPZHkie+o9NYbPcksaQwt6VefqX5klIn/3qVibfBq4ZSEimQWad5KD+6
+         L0xrCWnJoG/MuPnZsGfzr3bRE8XHIIM+vG0z47GvgrzqTDe482Jya/1aN0fr8MXvzsfO
+         OMt4ZrLpJH5Aex8tX99XrKSqUlXB8vtEyX4armTD5fYVwYEDuuyDE6cC31BSsDiVpRx0
+         HFTAplyQVE8ZvEYKS256eR3a15jU3780jrVE9yTXKAIcDSt4x2w5mcmTEX0Oed7S78No
+         mjPQ9/Zflrzc4wIpTuWX3ckETiSe6kHu6B3SPHw8Uy37A6oJCAy3mNL9IqadAXQ+A69u
+         BbOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=e6dkf7g0PlBYzajwREklnNmjXK94Sc+HZYUhtk+5LdM=;
+        b=J0BB8uIuyhckuaZye4FMWLe0Gcho7+SvtakjIGNZVXHPXp2PfqA7bcmErPHjQ/9D3c
+         EWfyahY/CSmkivkITIu/K3pfXm7z/AoWrpaf5qOjbgay5f3z+5XPpIRdMoxl5NQZYz8L
+         a3XbhwlGcf8LDHuWpDmmh/n71eCLFeRBcD25N25HBuCk2hCaX1Xi0Rd4Nck0R4CB3ir8
+         2xaZcTIfsjveAcJP04XnU/D0sS098czeNVdKHqWhB8iQnDg41MEAqqOeQiLRlGV1WkQJ
+         s07sqIQfaT0aspw6bJrFkn8YKicsar0BRs+Yb4AnfpaWf+LVnjp5za7e4IwlD6YTJV45
+         Jm5Q==
+X-Gm-Message-State: APjAAAWj1csAkTBFPwyOct9R8rhPnfkre/9yCXwWQpjGaab0uwVaUCZB
+        8Wk1FjcOZU6tpPRI3hBXvZ+PjQ==
+X-Google-Smtp-Source: APXvYqzcaJJackorcPd9DC4Xa5AIzUt/tljBZ9+GLzsPMBa1EJ3AAs42EkOtT5IjuvRGZDmfO5jhmQ==
+X-Received: by 2002:a5d:4692:: with SMTP id u18mr16874910wrq.206.1579507326451;
+        Mon, 20 Jan 2020 00:02:06 -0800 (PST)
+Received: from dell ([2.27.35.227])
+        by smtp.gmail.com with ESMTPSA id f16sm46604581wrm.65.2020.01.20.00.02.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jan 2020 00:02:05 -0800 (PST)
+Date:   Mon, 20 Jan 2020 08:02:20 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "broonie@kernel.org" <broonie@kernel.org>
+Subject: Re: [PATCH v10 11/13] gpio: bd71828: Initial support for ROHM
+ BD71828 PMIC GPIOs
+Message-ID: <20200120080220.GQ15507@dell>
+References: <cover.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
+ <c8ed62a1efa0c6fde93a8a08fe6bc74a450a34f3.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
+ <20200117102127.GD15507@dell>
+ <9f405dfc4c7e56e32f4eb2f9cb6e87c05aea1ac9.camel@fi.rohmeurope.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:s1YhVdw4eX8lnWxPXPUdwEDdSpyhr/cTaEUmZmnSuORfJ+RTbAz
- ZHoAsjJ2plmBFvYddfoQ8KOAu3OTokhtE9UsIW3H6kGpY8YzRO1SqaYzKTvs9CmqcZ+GhTh
- uE4ZY5T3SnfCn9WpsB/4HmH8grkCf58MB15hzUz82rIZSCCAs1EG5xOGc5ZYNvbwmgbqCrj
- 24uPLf/+PaEuqouwR4CMQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:z8rtjWTZ5I0=:8HwvfDcwTFzzPj/I7nHmXc
- GXqgYk+64Dm/Zy5mRLKzPSvlM+j2iTJ4GjYwRROrpvqiuOeaGdVNB0RXIr28rsh5i9YGhCr75
- DjT2st3H3XYE899Fs8uHc0CoTQ8jqmC6wp5L7ruDTyb0LhOP4Elldx3gq2DhfVaur/C3Jj1Ku
- K6My9rNJQ0xfO+bG/i9ZT73hU4pg1fEhULQEHEcP446I5WEMAfywraN5kYAeMPh44mCWvYXTk
- 0mjUl97GDixde3gP7sbrut1L+EJ1Jn1I0ntwvEwD/E0plgxlvdbbgkNX55hN89qujEkJStHMM
- nwhwINulgjp9giFzBkyqGC+Y+rcGrTrIJUCZ4RgSTVZURTbSlVHu/njYCzzG/Zbf6C+jwxQa6
- TBJhXG1745hYVBJLC2NBq8Egc2kq8SDohh/3h72/dy5YHgIwO82quzm8rqerwAf6eYooL7U/x
- PsxQEVrrBbw6nU8NiwfhEh5013GoIyUu6NygXHaC1rQPxCgV9MCFs+cmiVVbh9YwVksGcctGK
- 0NeMA//VtzWG7SYnsI1HTpZSRyCuOs/ClogaoGOkIgjdoyWO+2AnvJU8rO2/L0X+tZWYfl8Qm
- y/jxNJmctMG9S0PjhTrORC2w6qsOpiR3Ku/aDRIN4tPENmh633vVLThwSj5Dwmpe1DmBZI3GN
- UFcQtK1V3dD0EImRORcZGUoyH5jRspiDfJ2zZZCCop3nMQPeAX9UQPftjpzaviO3cKkYTnw1R
- YWjOYoWh4vMFd0sYR63sxLmArSUyeorNEeIl0eplK1KWgJlIHCl95D/c6W6YszKmtFtILEah6
- 59yqiGg5DuY2aPSOyUFmy4AYHXUTDtEeCdbvvSCFQnRwCPiKBmxoyBD8i3Hx96PZwQIPUCfny
- xSSKh0v9+shMRaPcQEqw==
+In-Reply-To: <9f405dfc4c7e56e32f4eb2f9cb6e87c05aea1ac9.camel@fi.rohmeurope.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+On Mon, 20 Jan 2020, Vaittinen, Matti wrote:
 
-Add bindings for the following 3 to be added display panels manufactured
-by Logic Technologies Limited:
+> Hello,
+> 
+> On Fri, 2020-01-17 at 10:21 +0000, Lee Jones wrote:
+> > On Fri, 17 Jan 2020, Matti Vaittinen wrote:
+> > 
+> > > ROHM BD71828 PMIC contains 4 pins which can be configured by OTP
+> > > to be used for general purposes. First 3 can be used as outputs
+> > > and 4.th pin can be used as input. Allow them to be controlled
+> > > via GPIO framework.
+> > > 
+> > > The driver assumes all of the pins are configured as GPIOs and
+> > > trusts that the reserved pins in other OTP configurations are
+> > > excluded from control using "gpio-reserved-ranges" device tree
+> > > property (or left untouched by GPIO users).
+> > > 
+> > > Typical use for 4.th pin (input) is to use it as HALL sensor
+> > > input so that this pin state is toggled when HALL sensor detects
+> > > LID position change (from close to open or open to close). PMIC
+> > > HW implements some extra logic which allows PMIC to power-up the
+> > > system when this pin is toggled. Please see the data sheet for
+> > > details of GPIO options which can be selected by OTP settings.
+> > > 
+> > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> > > Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> > 
+> > Linus, Is that an Ack?
+> I have always thought that reviewed-by implies that reviewer is Ok with
+> the patch (imples Ack). Maybe I have mistaken?
 
-- LT161010-2NHC e.g. as found in the Toradex Capacitive Touch Display
-7" Parallel [1]
-- LT161010-2NHR e.g. as found in the Toradex Resistive Touch Display 7"
-Parallel [2]
-- LT170410-2WHC e.g. as found in the Toradex Capacitive Touch Display
-10.1" LVDS [3]
+I would rather not assume.
 
-Those panels may also be distributed by Endrich Bauelemente Vertriebs
-GmbH [4].
-
-[1] https://docs.toradex.com/104497-7-inch-parallel-capacitive-touch-display-800x480-datasheet.pdf
-[2] https://docs.toradex.com/104498-7-inch-parallel-resistive-touch-display-800x480.pdf
-[3] https://docs.toradex.com/105952-10-1-inch-lvds-capacitive-touch-display-1280x800-datasheet.pdf
-[4] https://www.endrich.com/isi50_isi30_tft-displays/lt170410-1whc_isi30
-
-Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-
----
-
-Changes in v4:
-- Re-ordered commits as suggested by Sam and re-worded commit message.
-
-Changes in v3:
-- Add it to recently introduced panel-simple.yaml instead as suggested
-  by Sam.
-
-Changes in v2:
-- New patch adding display panel bindings as well as suggested by Rob.
-
- .../devicetree/bindings/display/panel/panel-simple.yaml     | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-index 4a8064e31793..f33c5d979f96 100644
---- a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-+++ b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-@@ -41,6 +41,12 @@ properties:
-       - frida,frd350h54004
-         # GiantPlus GPM940B0 3.0" QVGA TFT LCD panel
-       - giantplus,gpm940b0
-+        # Logic Technologies LT161010-2NHC 7" WVGA TFT Cap Touch Module
-+      - logictechno,lt161010-2nhc
-+        # Logic Technologies LT161010-2NHR 7" WVGA TFT Resistive Touch Module
-+      - logictechno,lt161010-2nhr
-+        # Logic Technologies LT170410-2WHC 10.1" 1280x800 IPS TFT Cap Touch Mod.
-+      - logictechno,lt170410-2whc
-         # Satoz SAT050AT40H12R2 5.0" WVGA TFT LCD panel
-       - satoz,sat050at40h12r2
-         # Sharp LS020B1DD01D 2.0" HQVGA TFT LCD panel
 -- 
-2.24.1
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
