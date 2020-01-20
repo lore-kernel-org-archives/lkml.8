@@ -2,149 +2,97 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B31E8C33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:10:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE8BC32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:13:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E98722527
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:10:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579558222;
-	bh=aIfcrgdNwEPZNsAQByGxzIGHjX2yQUgR/4PQujAolNY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RMg7bUQbk2vRwmHVe0uVLcAKLe/yEfKCx90txW7N5UDZoU82TDt7UOSHEmcACGL9w
-	 zykDcg+TwKi5rRPqVo5n3NJEO3FI+hZ8wAGo/OX31JQ+AHPK9GBGQsH7SgoeP7/QRT
-	 jkQbUnP8gWOgGL+MS6UlvOjZwM+P9fx4to13jxoM=
+	by mail.kernel.org (Postfix) with ESMTP id D8508217F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:13:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728680AbgATWKV (ORCPT
+        id S1727531AbgATWNx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 17:10:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43798 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726607AbgATWKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 17:10:20 -0500
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1067217F4;
-        Mon, 20 Jan 2020 22:10:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579558219;
-        bh=aIfcrgdNwEPZNsAQByGxzIGHjX2yQUgR/4PQujAolNY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=w/Lnu/wx2pyhYNwA3Gm7pqtfSqG4B315J5B9m8INLk118BgahIqEXXAjkbMod06CZ
-         u9gilV8dmwEswRs1xmikPda6Gcu0tt5vryDcPfuXyvxFrE+gzhruGgqZBZ2RgV0yK4
-         l9BNDJan44RYXmJSnDXIQS5zEUyb4GREmwv02jao=
-Date:   Mon, 20 Jan 2020 14:10:17 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Daniel Rosenberg <drosen@google.com>
-Cc:     Theodore Ts'o <tytso@mit.edu>, linux-ext4@vger.kernel.org,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-fscrypt@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Gabriel Krisman Bertazi <krisman@collabora.com>,
-        kernel-team@android.com
-Subject: Re: [PATCH v3 0/9] Support for Casefolding and Encryption
-Message-ID: <20200120221017.GA29203@sol.localdomain>
-References: <20200117214246.235591-1-drosen@google.com>
- <20200120045216.GB913@sol.localdomain>
+        Mon, 20 Jan 2020 17:13:53 -0500
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:43360 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726607AbgATWNw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 17:13:52 -0500
+Received: from callcc.thunk.org ([38.98.37.142])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 00KMDPGJ012247
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jan 2020 17:13:43 -0500
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 31643420057; Mon, 20 Jan 2020 17:13:23 -0500 (EST)
+Date:   Mon, 20 Jan 2020 17:13:23 -0500
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Zhenzhong Duan <zhenzhong.duan@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: Question about dynamic minor number of misc device
+Message-ID: <20200120221323.GJ15860@mit.edu>
+References: <CAFH1YnOad7aVjoX_PR6mLqT=pXQjpBW9ZDHkKYzNkeistFkA4A@mail.gmail.com>
+ <CAK8P3a3DwaZnRff7CCrJoSxP_MeVUn1S6nRd+hb5rHnv9dBgLQ@mail.gmail.com>
+ <CAFH1YnMDL1gBNT4vr+C=eGGoCYJvkVDnoXUVN8OL9Xs3668Z+Q@mail.gmail.com>
+ <CAK8P3a0aFr546fF+=LDm3rwZ-sK-xC8VLYTZjOEn+o6fVixRHg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200120045216.GB913@sol.localdomain>
+In-Reply-To: <CAK8P3a0aFr546fF+=LDm3rwZ-sK-xC8VLYTZjOEn+o6fVixRHg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 19, 2020 at 08:52:16PM -0800, Eric Biggers wrote:
-> On Fri, Jan 17, 2020 at 01:42:37PM -0800, Daniel Rosenberg wrote:
-> > These patches are all on top of fscrypt's developement branch
-> > 
-> > Ext4 and F2FS currently both support casefolding and encryption, but not at
-> > the same time. These patches aim to rectify that.
-> > 
-> > Since directory names are stored case preserved, we cannot just take the hash
-> > of the ciphertext. Instead we use the siphash of the casefolded name. With this
-> > we no longer have a direct path from an encrypted name to the hash without the
-> > key. To deal with this, fscrypt now always includes the hash in the name it
-> > presents when the key is not present. There is a pre-existing bug where you can
-> > change parts of the hash and still match the name so long as the disruption to
-> > the hash does not happen to affect lookup on that filesystem. I'm not sure how
-> > to fix that without making ext4 lookups slower in the more common case.
-> > 
-> > I moved the identical dcache operations for ext4 and f2fs into the VFS, as any
-> > filesystem that uses casefolding will need the same code. This will also allow
-> > further optimizations to that path, although my current changes don't take
-> > advantage of that yet.
-> > 
-> > For Ext4, this also means that we need to store the hash on disk. We only do so
-> > for encrypted and casefolded directories to avoid on disk format changes.
-> > Previously encryption and casefolding could not live on the same filesystem,
-> > and we're relaxing that requirement. F2fs is a bit more straightforward since
-> > it already stores hashes on disk.
-> > 
-> > I've updated the related tools with just enough to enable the feature. I still
-> > need to adjust ext4's fsck's, although without access to the keys,
-> > neither fsck will be able to verify the hashes of casefolded and encrypted names.
-> > 
-> > v3 changes:
-> > fscrypt patch only creates hash key if it will be needed.
-> > Rebased on top of fscrypt branch, reconstified match functions in ext4/f2fs
-> > 
-> > v2 changes:
-> > fscrypt moved to separate thread to rebase on fscrypt dev branch
-> > addressed feedback, plus some minor fixes
-> > 
-> > 
-> > Daniel Rosenberg (9):
-> >   fscrypt: Add siphash and hash key for policy v2
-> >   fscrypt: Don't allow v1 policies with casefolding
-> >   fscrypt: Change format of no-key token
-> >   fscrypt: Only create hash key when needed
-> >   vfs: Fold casefolding into vfs
-> >   f2fs: Handle casefolding with Encryption
-> >   ext4: Use struct super_blocks' casefold data
-> >   ext4: Hande casefolding with encryption
-> >   ext4: Optimize match for casefolded encrypted dirs
+On Mon, Jan 20, 2020 at 11:59:32AM +0100, Arnd Bergmann wrote:
+> On Mon, Jan 20, 2020 at 11:26 AM Zhenzhong Duan
+> <zhenzhong.duan@gmail.com> wrote:
+> > On Mon, Jan 20, 2020 at 6:03 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > > On Mon, Jan 20, 2020 at 9:33 AM Zhenzhong Duan <zhenzhong.duan@gmail.com> wrote:
+> > > On a  related note, I checked for drivers that call misc_register()
+> > > with a minor number that is not defined in include/linux/misc.h
+> > > and found a bunch, including some that have conflicting numbers,
+> > > conflicting names  or numbers from the dynamic range:
+> > >
+> > > drivers/staging/speakup/devsynth.c:#define SYNTH_MINOR 25
+> > > drivers/staging/speakup/speakup_soft.c:#define SOFTSYNTH_MINOR 26 /*
+> > > drivers/staging/speakup/speakup_soft.c:#define SOFTSYNTHU_MINOR 27 /*
+> > > drivers/macintosh/via-pmu.c:#define PMU_MINOR           154
+> > > drivers/macintosh/ans-lcd.h:#define ANSLCD_MINOR                156
+> > > drivers/auxdisplay/charlcd.c:#define LCD_MINOR          156
+> > > drivers/char/applicom.c:#define AC_MINOR 157
+> > > drivers/char/nwbutton.h:#define BUTTON_MINOR 158
+> > > arch/arm/include/asm/nwflash.h:#define FLASH_MINOR               160
+> > > drivers/sbus/char/envctrl.c:#define ENVCTRL_MINOR       162
+> > > drivers/sbus/char/flash.c:#define FLASH_MINOR   152
+> > > drivers/sbus/char/uctrl.c:#define UCTRL_MINOR   174
+> > > drivers/char/toshiba.c:#define TOSH_MINOR_DEV 181
+> > > arch/um/drivers/random.c:#define RNG_MISCDEV_MINOR
+> > > drivers/auxdisplay/panel.c:#define KEYPAD_MINOR         185
+> > > drivers/video/fbdev/pxa3xx-gcu.c:#define MISCDEV_MINOR  197
+> > > kernel/power/user.c:#define SNAPSHOT_MINOR      231
+> > > drivers/parisc/eisa_eeprom.c:#define    EISA_EEPROM_MINOR 241
+> > >
+> > > If you would like to help clean that up, you are definitely welcome
+> > > to send patches.
+> >
+> > Ok, should that be a patch for all drivers or seperate patch for each driver?
 > 
-> Thanks for the new version of this patchset, Daniel!
+> I think one patch to move the ones with unique names would be fine,
+> but then separate patches for
 > 
-> I'd like to apply the first four patches (the fs/crypto/ part, to prepare for
-> the new dirhash method) for 5.6, to get ready for the actual
-> encrypted+casefolded support in filesystems later.
-> 
-> But we don't have much time left before the merge window, the more I look at the
-> patches I'm still not very happy with them.  E.g., some comments I made haven't
-> been addressed, it's missing updates to the documentation, and some of the code
-> comments and commit messages are still confusing.  For one, there's still some
-> ambiguity between the dirhash and the SHA-256 hash, and it's not really
-> explained why the patch introduces the SHA-256 stuff, which actually has nothing
-> to do with encrypted+casefold (other than it was a good opportunity to do it as
-> the nokey name format had to be changed for encrypted+casefold anyway).
-> 
-> I also found a bug where the return value of base64_decode() isn't being checked
-> properly.  We should also keep fscrypt_match_name() simpler by setting disk_name
-> for short names, like we were before.  There are also some places that count the
-> padding in struct fscrypt_nokey_name and some that don't, which is confusing.
-> We also no longer need to call fscrypt_get_policy() during setflags, as we call
-> fscrypt_require_key() now anyway.  And there's now some ambiguity about what's
-> meant by a "per-file key", since now there will be 2 types of per-file keys.
-> 
-> So I hope you don't mind, but to move things along I've had a go at cleaning up
-> the fscrypt patches, and I've sent out an updated version of them.  Can you
-> please take a look when you have a chance?:
-> https://lkml.kernel.org/linux-fscrypt/20200120044401.325453-1-ebiggers@kernel.org/T/#u
-> 
+> - FLASH_MINOR move and rename to avoid conflict
+> - change speakup to dynamic minors
+> - support for high dynamic minor numbers if you are really motivated
+>   (probably nobody needs these)
 
-The new fscrypt no-key name format also breaks UBIFS encryption.  So we'll need
-a couple UBIFS fixes too.  I'll send out a new series that includes them.
+Are we sure that reassigning minor device number conflits isn't going
+to break systems?  Especially those on random, older, architectures
+they might not be using udev.
 
-- Eric
+						- Ted
