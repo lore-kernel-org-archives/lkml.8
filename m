@@ -2,116 +2,170 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44991C33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0440FC33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:50:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21A2420684
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:48:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB469207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:50:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fx2UTjU+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgATGsc (ORCPT
+        id S1726444AbgATGui (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 01:48:32 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:55856 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbgATGs3 (ORCPT
+        Mon, 20 Jan 2020 01:50:38 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:45566 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725851AbgATGuh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 01:48:29 -0500
-X-AuditID: c0a8fbf4-199ff70000001fa6-71-5e254d3a9540
-Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 25.A8.08102.A3D452E5; Mon, 20 Jan 2020 07:48:27 +0100 (CET)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
- 14.03.0439.000; Mon, 20 Jan 2020 07:48:16 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "lee.jones@linaro.org" <lee.jones@linaro.org>
-CC:     "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "broonie@kernel.org" <broonie@kernel.org>
-Subject: Re: [PATCH v10 11/13] gpio: bd71828: Initial support for ROHM
- BD71828 PMIC GPIOs
-Thread-Topic: [PATCH v10 11/13] gpio: bd71828: Initial support for ROHM
- BD71828 PMIC GPIOs
-Thread-Index: AQHVzRqEzUhPKa3zcECjmnaGmPw9eafulMiAgAR7eYA=
-Date:   Mon, 20 Jan 2020 06:48:15 +0000
-Message-ID: <9f405dfc4c7e56e32f4eb2f9cb6e87c05aea1ac9.camel@fi.rohmeurope.com>
-References: <cover.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
-         <c8ed62a1efa0c6fde93a8a08fe6bc74a450a34f3.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
-         <20200117102127.GD15507@dell>
-In-Reply-To: <20200117102127.GD15507@dell>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <705A642178A6094F8C12E603197A316A@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Mon, 20 Jan 2020 01:50:37 -0500
+Received: by mail-pl1-f193.google.com with SMTP id b22so12750290pls.12;
+        Sun, 19 Jan 2020 22:50:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=19G2hJ0Y5Y+ICc9F9ypBwJspYPvqMAzXv9gjpu0d/Sc=;
+        b=Fx2UTjU+CwLoqzW58fI13zN3UMdwrn+NM8Fj244+1by5FD9Yh9NI3xHonpZ4iIQtTT
+         8ysJDVphxwpTZCjQoIj8Bpx8j/hnPl7elDBV6FhzG6xOuB8oXF8GxNoszpkDYiUoU3pe
+         Z0VfRUlpi60j246MjaoIO3wkWcppjMAJwmXSgIZQqZ27lBXpx9AN9PGU1tVB8ByBMbjN
+         Q/9MQgURiZt3Au/0hzpD46uaUuntuUPsPilSqybRs8epxL7FgRiIzAZiT0J5rO9Ilm7K
+         Oor0DWcrU95Zg2RoKBbSuvk3vWNvToIclrcdJXGMCWHv9oE6A/btmDd12xjWKek4/Tf2
+         NP0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=19G2hJ0Y5Y+ICc9F9ypBwJspYPvqMAzXv9gjpu0d/Sc=;
+        b=X6dUqJXbIQldSG5LhstvfQEwxRKRpgAPGk+4ZKnzSUVDLOxDzUAKjFnUS+n+FzVFwi
+         KbsjmOWnt5y0Dc7yaR20FQErRzf9is3eHDy/Q5R8fFtHoqiDgIjwCroigSG67tePYsyH
+         T4F2uByT9pT1t6Hl0OVMlA66aWm1embNrd/gjHaJ263dXLzFKIbFWgRvCG1NipBvUkAZ
+         PX4d366Nho5mOmapX/kPBlja75koMstLvcz71vnyWWESwzsDwAlYQBEH+p7AlEYbeZKt
+         z7VPLzUlMMtHu3SCKitJ5twAi/9EoSJYmSY5fVUBFsrCtQZ8O9Thb6ENGrU/G8gxV+2V
+         UJfQ==
+X-Gm-Message-State: APjAAAWejlkSjaCdtH5eQ5yA3LPnjZstL2XfVjMHhdcpfusf3YgjpUce
+        QGb3VV7InpEChN4sIyJxWT0=
+X-Google-Smtp-Source: APXvYqw+UGLalaEbXYz82H3Vf+GtPUDO8dZIGgFGrasGSS6G+eK+XcLZIajq4hcjdpDOn5PhI/Q1Aw==
+X-Received: by 2002:a17:902:ab91:: with SMTP id f17mr13549978plr.172.1579503036952;
+        Sun, 19 Jan 2020 22:50:36 -0800 (PST)
+Received: from localhost ([43.224.245.179])
+        by smtp.gmail.com with ESMTPSA id q21sm36278849pff.105.2020.01.19.22.50.36
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Sun, 19 Jan 2020 22:50:36 -0800 (PST)
+Date:   Mon, 20 Jan 2020 14:50:34 +0800
+From:   chenqiwu <qiwuchen55@gmail.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     mmayer@broadcom.com, rjw@rjwysocki.net, f.fainelli@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        chenqiwu <chenqiwu@xiaomi.com>
+Subject: Re: [PATCH v3] cpufreq: brcmstb-avs: fix imbalance of cpufreq policy
+ refcount
+Message-ID: <20200120065034.GA5874@cqw-OptiPlex-7050>
+References: <1579417750-21984-1-git-send-email-qiwuchen55@gmail.com>
+ <20200120053250.igkwofqfzvmqb3c3@vireshk-i7>
+ <20200120055822.GB5185@cqw-OptiPlex-7050>
+ <20200120060134.izotrbzjvzk327zx@vireshk-i7>
+ <20200120061356.GA5605@cqw-OptiPlex-7050>
+ <20200120062126.nmxaqhcpqcojuihr@vireshk-i7>
+ <20200120062756.GA5802@cqw-OptiPlex-7050>
+ <20200120063004.zzhep35vfl3urndd@vireshk-i7>
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Te0wTSRx2drfb4bE4VrAjPhJW8SIGtPHBhDPGXIJZjacmRr07TnCVlaK0
-        xW1RUWPIGeUsmqCi5qqAktYz0vio+EKMSKrWau6CUHyCEkUeGozii6Dcdbsq/DXf/L5XJvkN
-        pHVP2ViYbbZJslnM4dlwpvZ4nyfxx5/j06d0uwFx1ge0pLD7mJa8K/UzZH/rc5aUe//RkKLb
-        VRry6Nxphjx5fx2QD41/UqTk898UebOrRUPOln8GpKH6MEvOvToJyI3KRpa47tVT5LDLx5B6
-        fypp9l9nyfYrXi3pbzrDzI4R3GVuILy+v10rlLk3C5cczVrBc2InKzxuqmGFm/cvUMLBsl5K
-        OF75USv0eMYuCv8tYuZK0bZ+cXaWefKsFRHG8os7mNwPURsbegtBAfBG2QGEGE3DlU1T7SAc
-        6lAA4LM+J6NefAB/aX8EFBGLZmL7A60dhMFoZMBOX1tIQyMnxPv8LUAhhqM0XLg3wKii3/Gp
-        2qcaFafgLz13QnMGxeP6835WyeTQAlzTF6l2eQE+HailFU0YSsCdlyooBQM0Bu8s6A5hGumx
-        58XHUCZGCDtr/qVVHIM7n/V/nfP4Sm8ro+TTaCI+VT1Ztc7GHe03GRXH4ZKi1tBbODQM3/rr
-        OVMMRjgGNTgG3I5Bbscgt2OQ+wjQnADYJGbnZIk2yZAkS3lJssVoCh6rLCYPUDfm3UXwX93c
-        OkBBUAdGQoqP4bRr+HRd1EpLZr5RtBoz5LwcyVoHMKT5aK55d1y6jssU8zdJsuUbNQoyvJ77
-        oXXPch1SutZKUq4kf2NHQ8hjbvP8+HTdMFnKkjauzs6xDdAUDFPCw2OjrZI5U5LFPJsxQ1mP
-        DGtwPxQqMthrVuycNVc0Baeq1Q8mweLO0goaektdFbSOMVvMUqyeIylBKVKkxjzz96IuoIeA
-        H85tVYIig9/me05XsIIKVgSSeaXCJg5QsQVgzhZ5Wqp+bH8cpiYYtmwQfFmuX0hK8Yxbf6Q0
-        RoxvqaaWNS2dUZKQNnJcT8m8hVVDIo7YO+c2+Do63rfBq5+OHlpwcv7Vt11LLh946QbbMn/1
-        JiYXiPbRI366G5WWXLxjnElTVJW4tL1vesKT/lTD7VVtZa4bSfm5W9ftfrgs42jktaE8YzWK
-        hgRator/A1AMV27zAwAA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200120063004.zzhep35vfl3urndd@vireshk-i7>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8sDQoNCk9uIEZyaSwgMjAyMC0wMS0xNyBhdCAxMDoyMSArMDAwMCwgTGVlIEpvbmVzIHdy
-b3RlOg0KPiBPbiBGcmksIDE3IEphbiAyMDIwLCBNYXR0aSBWYWl0dGluZW4gd3JvdGU6DQo+IA0K
-PiA+IFJPSE0gQkQ3MTgyOCBQTUlDIGNvbnRhaW5zIDQgcGlucyB3aGljaCBjYW4gYmUgY29uZmln
-dXJlZCBieSBPVFANCj4gPiB0byBiZSB1c2VkIGZvciBnZW5lcmFsIHB1cnBvc2VzLiBGaXJzdCAz
-IGNhbiBiZSB1c2VkIGFzIG91dHB1dHMNCj4gPiBhbmQgNC50aCBwaW4gY2FuIGJlIHVzZWQgYXMg
-aW5wdXQuIEFsbG93IHRoZW0gdG8gYmUgY29udHJvbGxlZA0KPiA+IHZpYSBHUElPIGZyYW1ld29y
-ay4NCj4gPiANCj4gPiBUaGUgZHJpdmVyIGFzc3VtZXMgYWxsIG9mIHRoZSBwaW5zIGFyZSBjb25m
-aWd1cmVkIGFzIEdQSU9zIGFuZA0KPiA+IHRydXN0cyB0aGF0IHRoZSByZXNlcnZlZCBwaW5zIGlu
-IG90aGVyIE9UUCBjb25maWd1cmF0aW9ucyBhcmUNCj4gPiBleGNsdWRlZCBmcm9tIGNvbnRyb2wg
-dXNpbmcgImdwaW8tcmVzZXJ2ZWQtcmFuZ2VzIiBkZXZpY2UgdHJlZQ0KPiA+IHByb3BlcnR5IChv
-ciBsZWZ0IHVudG91Y2hlZCBieSBHUElPIHVzZXJzKS4NCj4gPiANCj4gPiBUeXBpY2FsIHVzZSBm
-b3IgNC50aCBwaW4gKGlucHV0KSBpcyB0byB1c2UgaXQgYXMgSEFMTCBzZW5zb3INCj4gPiBpbnB1
-dCBzbyB0aGF0IHRoaXMgcGluIHN0YXRlIGlzIHRvZ2dsZWQgd2hlbiBIQUxMIHNlbnNvciBkZXRl
-Y3RzDQo+ID4gTElEIHBvc2l0aW9uIGNoYW5nZSAoZnJvbSBjbG9zZSB0byBvcGVuIG9yIG9wZW4g
-dG8gY2xvc2UpLiBQTUlDDQo+ID4gSFcgaW1wbGVtZW50cyBzb21lIGV4dHJhIGxvZ2ljIHdoaWNo
-IGFsbG93cyBQTUlDIHRvIHBvd2VyLXVwIHRoZQ0KPiA+IHN5c3RlbSB3aGVuIHRoaXMgcGluIGlz
-IHRvZ2dsZWQuIFBsZWFzZSBzZWUgdGhlIGRhdGEgc2hlZXQgZm9yDQo+ID4gZGV0YWlscyBvZiBH
-UElPIG9wdGlvbnMgd2hpY2ggY2FuIGJlIHNlbGVjdGVkIGJ5IE9UUCBzZXR0aW5ncy4NCj4gPiAN
-Cj4gPiBTaWduZWQtb2ZmLWJ5OiBNYXR0aSBWYWl0dGluZW4gPG1hdHRpLnZhaXR0aW5lbkBmaS5y
-b2htZXVyb3BlLmNvbT4NCj4gPiBSZXZpZXdlZC1ieTogQmFydG9zeiBHb2xhc3pld3NraSA8Ymdv
-bGFzemV3c2tpQGJheWxpYnJlLmNvbT4NCj4gPiBSZXZpZXdlZC1ieTogTGludXMgV2FsbGVpaiA8
-bGludXMud2FsbGVpakBsaW5hcm8ub3JnPg0KPiANCj4gTGludXMsIElzIHRoYXQgYW4gQWNrPw0K
-SSBoYXZlIGFsd2F5cyB0aG91Z2h0IHRoYXQgcmV2aWV3ZWQtYnkgaW1wbGllcyB0aGF0IHJldmll
-d2VyIGlzIE9rIHdpdGgNCnRoZSBwYXRjaCAoaW1wbGVzIEFjaykuIE1heWJlIEkgaGF2ZSBtaXN0
-YWtlbj8NCg0KQnIsDQogICAgLS1NYXR0aQ0K
+On Mon, Jan 20, 2020 at 12:00:04PM +0530, Viresh Kumar wrote:
+> On 20-01-20, 14:27, chenqiwu wrote:
+> > On Mon, Jan 20, 2020 at 11:51:26AM +0530, Viresh Kumar wrote:
+> > > On 20-01-20, 14:13, chenqiwu wrote:
+> > > > On Mon, Jan 20, 2020 at 11:31:34AM +0530, Viresh Kumar wrote:
+> > > > > On 20-01-20, 13:58, chenqiwu wrote:
+> > > > > > On Mon, Jan 20, 2020 at 11:02:50AM +0530, Viresh Kumar wrote:
+> > > > > > > On 19-01-20, 15:09, qiwuchen55@gmail.com wrote:
+> > > > > > > > From: chenqiwu <chenqiwu@xiaomi.com>
+> > > > > > > > 
+> > > > > > > > brcm_avs_cpufreq_get() calls cpufreq_cpu_get() to get the cpufreq policy,
+> > > > > > > > meanwhile, it also increments the kobject reference count to mark it busy.
+> > > > > > > > However, a corresponding call of cpufreq_cpu_put() is ignored to decrement
+> > > > > > > > the kobject reference count back, which may lead to a potential stuck risk
+> > > > > > > > that the cpuhp thread deadly waits for dropping of kobject refcount when
+> > > > > > > > cpufreq policy free.
+> > > > > > > > 
+> > > > > > > > For fixing this bug, cpufreq_get_policy() is referenced to do a proper
+> > > > > > > > cpufreq_cpu_get()/cpufreq_cpu_put() and fill a policy copy for the user.
+> > > > > > > > If the policy return NULL, we just return 0 to hit the code path of
+> > > > > > > > cpufreq_driver->get.
+> > > > > > > > 
+> > > > > > > > Signed-off-by: chenqiwu <chenqiwu@xiaomi.com>
+> > > > > > > > ---
+> > > > > > > >  drivers/cpufreq/brcmstb-avs-cpufreq.c | 12 ++++++++++--
+> > > > > > > >  1 file changed, 10 insertions(+), 2 deletions(-)
+> > > > > > > > 
+> > > > > > > > diff --git a/drivers/cpufreq/brcmstb-avs-cpufreq.c b/drivers/cpufreq/brcmstb-avs-cpufreq.c
+> > > > > > > > index 77b0e5d..ee0d404 100644
+> > > > > > > > --- a/drivers/cpufreq/brcmstb-avs-cpufreq.c
+> > > > > > > > +++ b/drivers/cpufreq/brcmstb-avs-cpufreq.c
+> > > > > > > > @@ -452,8 +452,16 @@ static bool brcm_avs_is_firmware_loaded(struct private_data *priv)
+> > > > > > > >  
+> > > > > > > >  static unsigned int brcm_avs_cpufreq_get(unsigned int cpu)
+> > > > > > > >  {
+> > > > > > > > -	struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
+> > > > > > > 
+> > > > > > > Why can't we just add a corresponding cpufreq_cpu_put() instead of all this ?
+> > > > > > > 
+> > > > > > 
+> > > > > > cpufreq_get_policy() does a proper cpufreq_cpu_get()/cpufreq_cpu_put(),
+> > > > > > meanwhile fills a policy copy for the user. It equals to using
+> > > > > > cpufreq_cpu_get() and a corresponding cpufreq_cpu_put() around access
+> > > > > > to the policy pointer. I think both methods are fine here.
+> > > > > > What do you think?
+> > > > > 
+> > > > > cpufreq_get_policy() does an extra memcpy as well, which isn't required at all
+> > > > > in your case.
+> > > > > 
+> > > > > -- 
+> > > > > viresh
+> > > > 
+> > > > Huha..Do you worry about the race conditon with cpufreq policy free path?
+> > > 
+> > > No. I just worry about an unnecessary memcpy, nothing else.
+> > >
+> > Is there any question about this extra memcpy?
+> 
+> What do you mean by that?
+> 
+> The whole point I am trying to make is that for your specific case, doing an
+> explicit cpufreq_cpu_get() and cpufreq_cpu_put() is far more efficient than
+> calling cpufreq_get_policy() which has a different purpose and usecase.
+>
+
+For efficiency, I agree your idea.
+So we have change as follows:
+diff --git a/drivers/cpufreq/brcmstb-avs-cpufreq.c b/drivers/cpufreq/brcmstb-avs-cpufreq.c
+index 77b0e5d..b2ddde3 100644
+--- a/drivers/cpufreq/brcmstb-avs-cpufreq.c
++++ b/drivers/cpufreq/brcmstb-avs-cpufreq.c
+@@ -455,6 +455,11 @@ static unsigned int brcm_avs_cpufreq_get(unsigned int cpu)
+        struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
+        struct private_data *priv = policy->driver_data;
+
++       if (!policy)
++               return 0;
++
++       cpufreq_cpu_put(policy);
++
+        return brcm_avs_get_frequency(priv->base);
+ }
+
+Qiwu
