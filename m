@@ -2,122 +2,255 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F41C33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34151C33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC85B2077C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:08:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579507738;
-	bh=YDEovj2cYhnf/FKg78G2sdgiBvpBIIy7DcSgA489aJ8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=LflBJRJ5VTOH6gYfM2xTf0iTjPPTOXs79cg49JkDyYTDsFwfpajVgBQW/Fuy/fJX5
-	 D+iISJab3IaMnJmw8r5vBFSGiB5Nx3DobKmjib/m2ywKoGZp/lXnycJelnV6l32TBw
-	 kInOKUwvuWoINlR4d0QqoPRZegkgktXKuMDPpiFA=
+	by mail.kernel.org (Postfix) with ESMTP id 05C7020684
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:09:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726626AbgATII6 (ORCPT
+        id S1726738AbgATIJr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 03:08:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52708 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726421AbgATII5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 03:08:57 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C492720684;
-        Mon, 20 Jan 2020 08:08:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579507736;
-        bh=YDEovj2cYhnf/FKg78G2sdgiBvpBIIy7DcSgA489aJ8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ko9cei3ZkD4EgsgvmkeI3g06C+BOeL5X/5LOAykUd4Q04Y6f46P/QxseZSo1k81aC
-         kKiW+obogUPlWPMbi58LapZ7sJQCHG6isr8Nh7nxxO1j9uPu398CtV4Z9Dulhcgmc3
-         l9ur72HQYijEQK9rFVM0H1eEzdk1vxklU2nd5Byg=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1itS7D-000CoA-1l; Mon, 20 Jan 2020 08:08:55 +0000
-Date:   Mon, 20 Jan 2020 08:08:53 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Kevin Hao <haokexin@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        David Daney <david.daney@cavium.com>
-Subject: Re: [PATCH] irqdomain: Fix a memory leak in irq_domain_push_irq()
-Message-ID: <20200120080853.31f23c98@why>
-In-Reply-To: <20200120043547.22271-1-haokexin@gmail.com>
-References: <20200120043547.22271-1-haokexin@gmail.com>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 20 Jan 2020 03:09:47 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45798 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726075AbgATIJr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 03:09:47 -0500
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00K87X6E092802
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 03:09:46 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xkye9mwt5-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 03:09:46 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <srikar@linux.vnet.ibm.com>;
+        Mon, 20 Jan 2020 08:09:44 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 20 Jan 2020 08:09:39 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00K89c5w57737244
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Jan 2020 08:09:38 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 356F4A4040;
+        Mon, 20 Jan 2020 08:09:38 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E54EDA4055;
+        Mon, 20 Jan 2020 08:09:35 +0000 (GMT)
+Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Mon, 20 Jan 2020 08:09:35 +0000 (GMT)
+Date:   Mon, 20 Jan 2020 13:39:35 +0530
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Phil Auld <pauld@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <Morten.Rasmussen@arm.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Parth Shah <parth@linux.ibm.com>,
+        Rik van Riel <riel@surriel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] sched, fair: Allow a small load imbalance between low
+ utilisation SD_NUMA domains v4
+Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+References: <20200114101319.GO3466@techsingularity.net>
+ <20200117175631.GC20112@linux.vnet.ibm.com>
+ <20200117215853.GS3466@techsingularity.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: haokexin@gmail.com, linux-kernel@vger.kernel.org, tglx@linutronix.de, david.daney@cavium.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <20200117215853.GS3466@techsingularity.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+x-cbid: 20012008-0008-0000-0000-0000034AFB1F
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20012008-0009-0000-0000-00004A6B5CE9
+Message-Id: <20200120080935.GD20112@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-19_08:2020-01-16,2020-01-19 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
+ mlxlogscore=999 spamscore=0 adultscore=0 lowpriorityscore=0
+ priorityscore=1501 malwarescore=0 suspectscore=0 bulkscore=0 clxscore=1015
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001200072
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jan 2020 12:35:47 +0800
-Kevin Hao <haokexin@gmail.com> wrote:
+* Mel Gorman <mgorman@techsingularity.net> [2020-01-17 21:58:53]:
 
-> Fix a memory leak reported by kmemleak:
-> unreferenced object 0xffff000bc6f50e80 (size 128):
->   comm "kworker/23:2", pid 201, jiffies 4294894947 (age 942.132s)
->   hex dump (first 32 bytes):
->     00 00 00 00 41 00 00 00 86 c0 03 00 00 00 00 00  ....A...........
->     00 a0 b2 c6 0b 00 ff ff 40 51 fd 10 00 80 ff ff  ........@Q......
->   backtrace:
->     [<00000000e62d2240>] kmem_cache_alloc_trace+0x1a4/0x320
->     [<00000000279143c9>] irq_domain_push_irq+0x7c/0x188
->     [<00000000d9f4c154>] thunderx_gpio_probe+0x3ac/0x438
->     [<00000000fd09ec22>] pci_device_probe+0xe4/0x198
->     [<00000000d43eca75>] really_probe+0xdc/0x320
->     [<00000000d3ebab09>] driver_probe_device+0x5c/0xf0
->     [<000000005b3ecaa0>] __device_attach_driver+0x88/0xc0
->     [<000000004e5915f5>] bus_for_each_drv+0x7c/0xc8
->     [<0000000079d4db41>] __device_attach+0xe4/0x140
->     [<00000000883bbda9>] device_initial_probe+0x18/0x20
->     [<000000003be59ef6>] bus_probe_device+0x98/0xa0
->     [<0000000039b03d3f>] deferred_probe_work_func+0x74/0xa8
->     [<00000000870934ce>] process_one_work+0x1c8/0x470
->     [<00000000e3cce570>] worker_thread+0x1f8/0x428
->     [<000000005d64975e>] kthread+0xfc/0x128
->     [<00000000f0eaa764>] ret_from_fork+0x10/0x18
+> On Fri, Jan 17, 2020 at 11:26:31PM +0530, Srikar Dronamraju wrote:
+> > * Mel Gorman <mgorman@techsingularity.net> [2020-01-14 10:13:20]:
+> > 
+> > We certainly are seeing better results than v1.
+> > However numa02, numa03, numa05, numa09 and numa10 still seem to regressing, while
+> > the others are improving.
+> > 
+> > While numa04 improves by 14%, numa02 regress by around 12%.
+> > 
+
+> Ok, so it's both a win and a loss. This is a curiousity that this patch
+> may be the primary factor given that the logic only triggers when the
+> local group has spare capacity and the busiest group is nearly idle. The
+> test cases you describe should have fairly busy local groups.
 > 
-> Fixes: 495c38d3001f ("irqdomain: Add irq_domain_{push,pop}_irq() functions")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Kevin Hao <haokexin@gmail.com>
-> ---
->  kernel/irq/irqdomain.c | 1 +
->  1 file changed, 1 insertion(+)
+
+Right, your code only seems to affect when the local group has spare
+capacity and the busiest->sum_nr_running <=2 
+
+> > 
+> > numa01 is a set of 2 process each running 128 threads;
+> > each thread doing 50 loops on 3GB process shared memory operations.
 > 
-> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-> index dd822fd8a7d5..480df3659720 100644
-> --- a/kernel/irq/irqdomain.c
-> +++ b/kernel/irq/irqdomain.c
-> @@ -1459,6 +1459,7 @@ int irq_domain_push_irq(struct irq_domain *domain, int virq, void *arg)
->  	if (rv) {
->  		/* Restore the original irq_data. */
->  		*root_irq_data = *child_irq_data;
-> +		kfree(child_irq_data);
->  		goto error;
->  	}
->  
+> Are the shared operations shared between the 2 processes? 256 threads
+> in total would more than exceed the capacity of a local group, even 128
+> threads per process would exceed the capacity of the local group. In such
+> a situation, much would depend on the locality of the accesses as well
+> as any shared accesses.
 
-Nice catch. I'll queue this for 5.6.
+Except for numa02 and numa07, (both handle local memory operations) all
+shared operations are within the process. i.e per process sharing.
 
-Thanks,
+> 
+> > numa02 is a single process with 256 threads;
+> > each thread doing 800 loops on 32MB thread local memory operations.
+> > 
+> 
+> This one is more interesting. False sharing shouldn't be an issue so the
+> threads should be independent.
+> 
+> > numa03 is a single process with 256 threads;
+> > each thread doing 50 loops on 3GB process shared memory operations.
+> > 
+> 
+> Similar.
 
-	M.
+This is similar to numa01. Except now all threads belong to just one
+process.
+
+> 
+> > numa04 is a set of 8 process (as many nodes) each running 32 threads;
+> > each thread doing 50 loops on 3GB process shared memory operations.
+> > 
+> 
+> Less clear as you don't say what is sharing the memory operations.
+
+all sharing is within the process. In Numa04/numa09, I try to spawn as many
+process as the number of nodes, other than that its same as Numa02.
+
+> 
+> > numa05 is a set of 16 process (twice as many nodes) each running 16 threads;
+> > each thread doing 50 loops on 3GB process shared memory operations.
+> > 
+> 
+> > Details below:
+> 
+> How many iterations for each test? 
+
+I run 5 iterations. Want me to run with more iterations?
+
+> 
+> 
+> > ./numa02.sh      Real:  78.87      82.31      80.59      1.72     -12.7187%
+> > ./numa02.sh      Sys:   81.18      85.07      83.12      1.94     -35.0337%
+> > ./numa02.sh      User:  16303.70   17122.14   16712.92   409.22   -12.5182%
+> 
+> Before range: 58 to 72
+> After range: 78 to 82
+> 
+> This one is more interesting in general. Can you add trace_printks to
+> the check for SD_NUMA the patch introduces and dump the sum_nr_running
+> for both local and busiest when the imbalance is ignored please? That
+> might give some hint as to the improper conditions where imbalance is
+> ignored.
+
+Can be done. Will get back with the results. But do let me know if you want
+to run with more iterations or rerun the tests.
+
+> 
+> However, knowing the number of iterations would be helpful. Can you also
+> tell me if this is consistent between boots or is it always roughly 12%
+> regression regardless of the number of iterations?
+> 
+
+I have only measured for 5 iterations and I haven't repeated to see if the
+numbers are consistent.
+
+> > ./numa03.sh      Real:  477.20     528.12     502.66     25.46    -4.85219%
+> > ./numa03.sh      Sys:   88.93      115.36     102.15     13.21    -25.629%
+> > ./numa03.sh      User:  119120.73  129829.89  124475.31  5354.58  -3.8219%
+> 
+> Range before: 471 to 485
+> Range after: 477 to 528
+> 
+> > ./numa04.sh      Real:  374.70     414.76     394.73     20.03    14.6708%
+> > ./numa04.sh      Sys:   357.14     379.20     368.17     11.03    3.27294%
+> > ./numa04.sh      User:  87830.73   88547.21   88188.97   358.24   5.7113%
+> 
+> Range before: 450 -> 454
+> Range after:  374 -> 414
+> 
+> Big gain there but the fact the range changed so much is a concern and
+> makes me wonder if this case is stable from boot to boot. 
+> 
+> > ./numa05.sh      Real:  369.50     401.56     385.53     16.03    -5.64937%
+> > ./numa05.sh      Sys:   718.99     741.02     730.00     11.01    -3.76438%
+> > ./numa05.sh      User:  84989.07   85271.75   85130.41   141.34   -1.48142%
+> > 
+> 
+> Big range changes again but the shared memory operations complicate
+> matters. I think it's best to focus on numa02 for and identify if there
+> is an improper condition where the patch has an impact, the local group
+> has high utilisation but spare capacity while the busiest group is
+> almost completely idle.
+> 
+> > vmstat for numa01
+> 
+> I'm not going to comment in detail on these other than noting that NUMA
+> balancing is heavily active in all cases which may be masking any effect
+> of the patch and may have unstable results in general.
+> 
+> > <SNIP vmstat>
+> > <SNIP description of loads that showed gains>
+> >
+> > numa09 is a set of 8 process (as many nodes) each running 4 threads;
+> > each thread doing 50 loops on 3GB process shared memory operations.
+> > 
+> 
+> No description of shared operations but NUMA balancing is very active so
+> sharing is probably between processes.
+> 
+> > numa10 is a set of 16 process (twice as many nodes) each running 2 threads;
+> > each thread doing 50 loops on 3GB process shared memory operations.
+> > 
+> 
+> Again, shared accesses without description and heavy NUMA balancing
+> activity.
+> 
+> So bottom line, a lot of these cases have shared operations where NUMA
+> balancing decisions should dominate and make it hard to detect any impact
+> from the patch. The exception is numa02 so please add tracing and dump
+> out local and busiest sum_nr_running when the imbalance is ignored. I
+> want to see if it's as simple as the local group is very busy but has
+> capacity where the busiest group is almost idle. I also want to see how
+> many times over the course of the numa02 workload that the conditions
+> for the patch are even met.
+> 
+
 -- 
-Jazz is not dead. It just smells funny...
+Thanks and Regards
+Srikar Dronamraju
+
