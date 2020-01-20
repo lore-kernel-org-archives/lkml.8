@@ -2,97 +2,339 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MIME_QP_LONG_LINE,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1618C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 20:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2059C33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 20:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCC86217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 20:35:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7503022527
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 20:35:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Azm74f9b"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rAoHDQQA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbgATUfM (ORCPT
+        id S1727045AbgATUf2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 15:35:12 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:45696 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726607AbgATUfM (ORCPT
+        Mon, 20 Jan 2020 15:35:28 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:25042 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726607AbgATUf2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 15:35:12 -0500
-Received: by mail-qt1-f195.google.com with SMTP id w30so816091qtd.12
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 12:35:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=uWbG+L0o14IZj3qiM7C/tN6Cfd1CRzUg46OsGAWkndI=;
-        b=Azm74f9bLpx0RHMqOE+4JZ1YVuAOBmv5fTDmuOnBktuhIl/n5ySiWJx355ifEM0p0M
-         nesCts8lRvdjWFIXNGR72742cx7auysZkjqtv4dfLmme4DLNAnlmy7BXJzV0tEU95EKA
-         oW36ey7Ka+nFv346R9uOn9mOiQubvO3QWw6VPPohbdNu1P36NycIsbjO3dtvOnxaPb3U
-         ualVbcu97G8ajskRjJC0Y0zoc9TcCokzJdntEHqrxOUEeRAwRn75eRbUsYvgRbXrqaJ6
-         uY3eEsX3wJA1+G2DE3g4vex6V5A8dBvXO1Rla8MJO5tMe7NkEhxlU4cNsa8FzB/Z7hue
-         MyFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=uWbG+L0o14IZj3qiM7C/tN6Cfd1CRzUg46OsGAWkndI=;
-        b=nwnMn+BMrt0NDpZc+l6NrZnowC6pq3kI0lRvs4e+Hc8rleb+i3qZTFafx10wrCm4xW
-         WvZz0q3akKV4Z/N6MBxGVzFOHjf4q3YuI+mXVHYwnjd7YxQ0nFVrUl6+br+9ne2BVrhl
-         H4IjaPvVfvEjeZM6RrEg7ojjGcEDChXlvT5cDbjLeYJiL0nhvO4f/cIBCYfysoGK31lM
-         iWLw1fOtSq/hCTmLe5NrLRajx/Jfgr2ov2gkUw31wVKpb155tyx7eRhD71fUnUR7WZrH
-         +UhRj3vMmeMZfszm45r1QI2D+AlKR4u6f3xOc4uBXPeoug9ufQFA9+TWkyadzn0S8Hlk
-         ZUlw==
-X-Gm-Message-State: APjAAAXvy3XbbYjZfu/qbLKB1fqd9W2rFs5c9mAuCzankWr/efS1bzOR
-        VmPrYSLNZKVq07thRE8DWaRB9w==
-X-Google-Smtp-Source: APXvYqyZVqvs5gkBK+6X6ozDe5OxP4ZKixI6zB9Lbc9sGgREZyxpFufx/qut0WqF8jvyNaZpIwoMcw==
-X-Received: by 2002:ac8:12c8:: with SMTP id b8mr1190499qtj.111.1579552511371;
-        Mon, 20 Jan 2020 12:35:11 -0800 (PST)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id 68sm16537846qkj.102.2020.01.20.12.35.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Jan 2020 12:35:10 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v2] sched/core: fix illegal RCU from offline CPUs
-Date:   Mon, 20 Jan 2020 15:35:09 -0500
-Message-Id: <F96BF662-BB11-4AFB-BF05-CB1720441A92@lca.pw>
-References: <20200120101652.GM14879@hirez.programming.kicks-ass.net>
-Cc:     mingo@redhat.com, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        paulmck@kernel.org, tglx@linutronix.de, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20200120101652.GM14879@hirez.programming.kicks-ass.net>
-To:     Peter Zijlstra <peterz@infradead.org>
-X-Mailer: iPhone Mail (17C54)
+        Mon, 20 Jan 2020 15:35:28 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1579552527; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=ITGsaWRq6kT12b0wK5OIahMiS6u7/l6wH2mfNvHVTIY=; b=rAoHDQQAH8hT1PM3SrofuFp5vmF7nsSYYmOuZxh4PksEbVuBAW29tT/qIPr6tniNRslYgAAd
+ NYcD9t71x4oC2VI7tjGkVU5ndE9MfrrjqQUC+WplYLvVZ/JR7GoywjA6yHrPQVa/hI5smVIv
+ Lo7SMsfu5KddTi657b6/y2DX90Q=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e260f08.7f8eb8f66b90-smtp-out-n03;
+ Mon, 20 Jan 2020 20:35:20 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 5E55EC447A9; Mon, 20 Jan 2020 20:35:20 +0000 (UTC)
+Received: from [10.46.161.159] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: asutoshd)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1A081C4479C;
+        Mon, 20 Jan 2020 20:35:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1A081C4479C
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=asutoshd@codeaurora.org
+Subject: Re: [PATCH v4 3/8] scsi: ufs: Split ufshcd_probe_hba() based on its
+ called flow
+To:     Bean Huo <huobean@gmail.com>, alim.akhtar@samsung.com,
+        avri.altman@wdc.com, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, stanley.chu@mediatek.com,
+        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
+        cang@codeaurora.org
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200120130820.1737-1-huobean@gmail.com>
+ <20200120130820.1737-4-huobean@gmail.com>
+From:   "Asutosh Das (asd)" <asutoshd@codeaurora.org>
+Message-ID: <d4b28bfb-9d60-5a27-2997-73f7a11d30ed@codeaurora.org>
+Date:   Mon, 20 Jan 2020 12:35:17 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200120130820.1737-4-huobean@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 1/20/2020 5:08 AM, Bean Huo wrote:
+> From: Bean Huo <beanhuo@micron.com>
+> 
+> This patch has two major non-functionality changes:
+> 
+> 1. Take scanning host if-statement out from ufshcd_probe_hba(), and
+> move into a new added function ufshcd_add_lus().
+> In this new function ufshcd_add_lus(), the main functionalitis include:
+> ICC initialization, add well-known LUs, devfreq initialization, UFS
+> bsg probe and scsi host scan. The reason for this change is that these
+> functionalities only being called during booting stage flow
+> ufshcd_init()->ufshcd_async_scan(). In the processes of error handling
+> and power management ufshcd_suspend(), ufshcd_resume(), ufshcd_probe_hba()
+> being called, but these functionalitis above metioned are not hit.
+> 
+> 2. Move context of initialization of parameters associated with the UFS
+> device to a new added function ufshcd_device_params_init().
+> The reason of this change is that all of these parameters are used by
+> driver, but only need to be initialized once when booting. Combine them
+> into an integral function, make them easier maintain.
+> 
+> Signed-off-by: Bean Huo <beanhuo@micron.com>
+> ---
+
+LGTM.
+
+Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
+
+>   drivers/scsi/ufs/ufshcd.c | 167 +++++++++++++++++++++++---------------
+>   1 file changed, 101 insertions(+), 66 deletions(-)
+> 
+> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> index 58ef45b80cb0..935b50861864 100644
+> --- a/drivers/scsi/ufs/ufshcd.c
+> +++ b/drivers/scsi/ufs/ufshcd.c
+> @@ -246,7 +246,7 @@ static int ufshcd_reset_and_restore(struct ufs_hba *hba);
+>   static int ufshcd_eh_host_reset_handler(struct scsi_cmnd *cmd);
+>   static int ufshcd_clear_tm_cmd(struct ufs_hba *hba, int tag);
+>   static void ufshcd_hba_exit(struct ufs_hba *hba);
+> -static int ufshcd_probe_hba(struct ufs_hba *hba);
+> +static int ufshcd_probe_hba(struct ufs_hba *hba, bool async);
+>   static int __ufshcd_setup_clocks(struct ufs_hba *hba, bool on,
+>   				 bool skip_ref_clk);
+>   static int ufshcd_setup_clocks(struct ufs_hba *hba, bool on);
+> @@ -6307,7 +6307,7 @@ static int ufshcd_host_reset_and_restore(struct ufs_hba *hba)
+>   		goto out;
+>   
+>   	/* Establish the link again and restore the device */
+> -	err = ufshcd_probe_hba(hba);
+> +	err = ufshcd_probe_hba(hba, false);
+>   
+>   	if (!err && (hba->ufshcd_state != UFSHCD_STATE_OPERATIONAL))
+>   		err = -EIO;
+> @@ -6935,13 +6935,83 @@ static int ufshcd_set_dev_ref_clk(struct ufs_hba *hba)
+>   	return err;
+>   }
+>   
+> +static int ufshcd_device_params_init(struct ufs_hba *hba)
+> +{
+> +	bool flag;
+> +	int ret;
+> +
+> +	/* Init check for device descriptor sizes */
+> +	ufshcd_init_desc_sizes(hba);
+> +
+> +	/* Check and apply UFS device quirks */
+> +	ret = ufs_get_device_desc(hba);
+> +	if (ret) {
+> +		dev_err(hba->dev, "%s: Failed getting device info. err = %d\n",
+> +			__func__, ret);
+> +		goto out;
+> +	}
+> +
+> +	ufs_fixup_device_setup(hba);
+> +
+> +	/* Clear any previous UFS device information */
+> +	memset(&hba->dev_info, 0, sizeof(hba->dev_info));
+> +	if (!ufshcd_query_flag_retry(hba, UPIU_QUERY_OPCODE_READ_FLAG,
+> +			QUERY_FLAG_IDN_PWR_ON_WPE, &flag))
+> +		hba->dev_info.f_power_on_wp_en = flag;
+> +
+> +out:
+> +	return ret;
+> +}
+> +
+> +/**
+> + * ufshcd_add_lus - probe and add UFS logical units
+> + * @hba: per-adapter instance
+> + */
+> +static int ufshcd_add_lus(struct ufs_hba *hba)
+> +{
+> +	int ret;
+> +
+> +	if (!hba->is_init_prefetch)
+> +		ufshcd_init_icc_levels(hba);
+> +
+> +	/* Add required well known logical units to scsi mid layer */
+> +	ret = ufshcd_scsi_add_wlus(hba);
+> +	if (ret)
+> +		goto out;
+> +
+> +	/* Initialize devfreq after UFS device is detected */
+> +	if (ufshcd_is_clkscaling_supported(hba)) {
+> +		memcpy(&hba->clk_scaling.saved_pwr_info.info,
+> +			&hba->pwr_info,
+> +			sizeof(struct ufs_pa_layer_attr));
+> +		hba->clk_scaling.saved_pwr_info.is_valid = true;
+> +		if (!hba->devfreq) {
+> +			ret = ufshcd_devfreq_init(hba);
+> +			if (ret)
+> +				goto out;
+> +		}
+> +
+> +		hba->clk_scaling.is_allowed = true;
+> +	}
+> +
+> +	ufs_bsg_probe(hba);
+> +	scsi_scan_host(hba->host);
+> +	pm_runtime_put_sync(hba->dev);
+> +
+> +	if (!hba->is_init_prefetch)
+> +		hba->is_init_prefetch = true;
+> +out:
+> +	return ret;
+> +}
+> +
+>   /**
+>    * ufshcd_probe_hba - probe hba to detect device and initialize
+>    * @hba: per-adapter instance
+> + * @async: asynchronous execution or not
+>    *
+>    * Execute link-startup and verify device initialization
+>    */
+> -static int ufshcd_probe_hba(struct ufs_hba *hba)
+> +static int ufshcd_probe_hba(struct ufs_hba *hba, bool async)
+>   {
+>   	int ret;
+>   	ktime_t start = ktime_get();
+> @@ -6960,25 +7030,26 @@ static int ufshcd_probe_hba(struct ufs_hba *hba)
+>   	/* UniPro link is active now */
+>   	ufshcd_set_link_active(hba);
+>   
+> +	/* Verify device initialization by sending NOP OUT UPIU */
+>   	ret = ufshcd_verify_dev_init(hba);
+>   	if (ret)
+>   		goto out;
+>   
+> +	/* Initiate UFS initialization, and waiting until completion */
+>   	ret = ufshcd_complete_dev_init(hba);
+>   	if (ret)
+>   		goto out;
+>   
+> -	/* Init check for device descriptor sizes */
+> -	ufshcd_init_desc_sizes(hba);
+> -
+> -	ret = ufs_get_device_desc(hba);
+> -	if (ret) {
+> -		dev_err(hba->dev, "%s: Failed getting device info. err = %d\n",
+> -			__func__, ret);
+> -		goto out;
+> +	/*
+> +	 * Initialize UFS device parameters used by driver, these
+> +	 * parameters are associated with UFS descriptors.
+> +	 */
+> +	if (async) {
+> +		ret = ufshcd_device_params_init(hba);
+> +		if (ret)
+> +			goto out;
+>   	}
+>   
+> -	ufs_fixup_device_setup(hba);
+>   	ufshcd_tune_unipro_params(hba);
+>   
+>   	/* UFS device is also active now */
+> @@ -7011,60 +7082,7 @@ static int ufshcd_probe_hba(struct ufs_hba *hba)
+>   	/* Enable Auto-Hibernate if configured */
+>   	ufshcd_auto_hibern8_enable(hba);
+>   
+> -	/*
+> -	 * If we are in error handling context or in power management callbacks
+> -	 * context, no need to scan the host
+> -	 */
+> -	if (!ufshcd_eh_in_progress(hba) && !hba->pm_op_in_progress) {
+> -		bool flag;
+> -
+> -		/* clear any previous UFS device information */
+> -		memset(&hba->dev_info, 0, sizeof(hba->dev_info));
+> -		if (!ufshcd_query_flag_retry(hba, UPIU_QUERY_OPCODE_READ_FLAG,
+> -				QUERY_FLAG_IDN_PWR_ON_WPE, &flag))
+> -			hba->dev_info.f_power_on_wp_en = flag;
+> -
+> -		if (!hba->is_init_prefetch)
+> -			ufshcd_init_icc_levels(hba);
+> -
+> -		/* Add required well known logical units to scsi mid layer */
+> -		ret = ufshcd_scsi_add_wlus(hba);
+> -		if (ret)
+> -			goto out;
+> -
+> -		/* Initialize devfreq after UFS device is detected */
+> -		if (ufshcd_is_clkscaling_supported(hba)) {
+> -			memcpy(&hba->clk_scaling.saved_pwr_info.info,
+> -				&hba->pwr_info,
+> -				sizeof(struct ufs_pa_layer_attr));
+> -			hba->clk_scaling.saved_pwr_info.is_valid = true;
+> -			if (!hba->devfreq) {
+> -				ret = ufshcd_devfreq_init(hba);
+> -				if (ret)
+> -					goto out;
+> -			}
+> -			hba->clk_scaling.is_allowed = true;
+> -		}
+> -
+> -		ufs_bsg_probe(hba);
+> -
+> -		scsi_scan_host(hba->host);
+> -		pm_runtime_put_sync(hba->dev);
+> -	}
+> -
+> -	if (!hba->is_init_prefetch)
+> -		hba->is_init_prefetch = true;
+> -
+>   out:
+> -	/*
+> -	 * If we failed to initialize the device or the device is not
+> -	 * present, turn off the power/clocks etc.
+> -	 */
+> -	if (ret && !ufshcd_eh_in_progress(hba) && !hba->pm_op_in_progress) {
+> -		pm_runtime_put_sync(hba->dev);
+> -		ufshcd_exit_clk_scaling(hba);
+> -		ufshcd_hba_exit(hba);
+> -	}
+>   
+>   	trace_ufshcd_init(dev_name(hba->dev), ret,
+>   		ktime_to_us(ktime_sub(ktime_get(), start)),
+> @@ -7080,8 +7098,25 @@ static int ufshcd_probe_hba(struct ufs_hba *hba)
+>   static void ufshcd_async_scan(void *data, async_cookie_t cookie)
+>   {
+>   	struct ufs_hba *hba = (struct ufs_hba *)data;
+> +	int ret;
+>   
+> -	ufshcd_probe_hba(hba);
+> +	/* Initialize hba, detect and initialize UFS device */
+> +	ret = ufshcd_probe_hba(hba, true);
+> +	if (ret)
+> +		goto out;
+> +
+> +	/* Probe and add UFS logical units  */
+> +	ret = ufshcd_add_lus(hba);
+> +out:
+> +	/*
+> +	 * If we failed to initialize the device or the device is not
+> +	 * present, turn off the power/clocks etc.
+> +	 */
+> +	if (ret) {
+> +		pm_runtime_put_sync(hba->dev);
+> +		ufshcd_exit_clk_scaling(hba);
+> +		ufshcd_hba_exit(hba);
+> +	}
+>   }
+>   
+>   static const struct attribute_group *ufshcd_driver_groups[] = {
+> 
 
 
-> On Jan 20, 2020, at 5:17 AM, Peter Zijlstra <peterz@infradead.org> wrote:
->=20
-> Bah.. that's horrible. Surely we can find a better place to do this in
-> the whole hotplug machinery.
->=20
-> Perhaps you can have takedown_cpu() do the mmdrop()?
-
-The problem is that no all arch_cpu_idle_dead() will call idle_task_exit(). =
-For example, alpha and parisc are not, so it needs to deal with some kind of=
- ifdef dance in takedown_cpu() to conditionally call mmdrop() which sounds e=
-ven more horrible?
-
-If you really prefer it anyway, maybe something like touching every arch=E2=80=
-=99s __cpu_die() to also call mmdrop() depends on arches?
-
-BTW, how to obtain the other CPU=E2=80=99s current task mm? Is that cpu_rq(c=
-pu)->curr->active_mm?=
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+Linux Foundation Collaborative Project
