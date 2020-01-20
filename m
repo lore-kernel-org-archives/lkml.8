@@ -2,60 +2,118 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B973C33CB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A35C33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F10982077C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:59:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72B2C21569
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:59:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728640AbgATI7d (ORCPT
+        id S1728708AbgATI7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 03:59:33 -0500
-Received: from mga18.intel.com ([134.134.136.126]:6919 "EHLO mga18.intel.com"
+        Mon, 20 Jan 2020 03:59:46 -0500
+Received: from mx2.suse.de ([195.135.220.15]:53210 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726125AbgATI7d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 03:59:33 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 00:59:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,341,1574150400"; 
-   d="scan'208";a="258634541"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
-  by fmsmga002.fm.intel.com with ESMTP; 20 Jan 2020 00:59:25 -0800
-Subject: Re: [PATCH V2 2/2] mmc: sdhci-msm: Add CQHCI support for sdhci-msm
-To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        ulf.hansson@linaro.org
-Cc:     asutoshd@codeaurora.org, stummala@codeaurora.org,
-        sayalil@codeaurora.org, cang@codeaurora.org,
-        rampraka@codeaurora.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Ritesh Harjani <riteshh@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        BOUGH CHEN <haibo.chen@nxp.com>,
-        Takao Orito <orito.takao@socionext.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-References: <1579194192-7942-1-git-send-email-vbadigan@codeaurora.org>
- <1579194192-7942-3-git-send-email-vbadigan@codeaurora.org>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <2d6be21b-deb3-9048-f44a-8a8d637f06e6@intel.com>
-Date:   Mon, 20 Jan 2020 10:58:30 +0200
+        id S1726125AbgATI7q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 03:59:46 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 57E98AF93;
+        Mon, 20 Jan 2020 08:59:43 +0000 (UTC)
+Subject: Re: [PATCH] ARM: dts: bcm2711: Use bcm2711 compatible for sdhci
+To:     Stephen Brennan <stephen@brennan.io>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org
+References: <20200120041740.193485-1-stephen@brennan.io>
+From:   Matthias Brugger <mbrugger@suse.com>
+Autocrypt: addr=mbrugger@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+ HxUCQ9Y1Y/Ct
+Message-ID: <895fbad5-8a14-36a5-dc80-21b3c2a7b97a@suse.com>
+Date:   Mon, 20 Jan 2020 09:59:41 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <1579194192-7942-3-git-send-email-vbadigan@codeaurora.org>
+In-Reply-To: <20200120041740.193485-1-stephen@brennan.io>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -64,211 +122,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/01/20 7:03 pm, Veerabhadrarao Badiganti wrote:
-> From: Ritesh Harjani <riteshh@codeaurora.org>
-> 
-> This adds CQHCI support for sdhci-msm platforms.
-> 
-> Signed-off-by: Ritesh Harjani <riteshh@codeaurora.org>
-> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
 
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
+On 20/01/2020 05:17, Stephen Brennan wrote:
+> When booting Raspberry Pi 4B using a micro SDHC UHS class 1 card, the SD
+> card partitions never appear in /dev.  According to the device tree
+> bindings for Broadcom IPROC SDHCI controller, we should use
+> "brcm,bcm2711-emmc2" compatible string on BCM2711. Set this compatible
+> string, which allows these cards to be mounted.
+> 
+> Signed-off-by: Stephen Brennan <stephen@brennan.io>
 > ---
->  drivers/mmc/host/Kconfig     |   1 +
->  drivers/mmc/host/sdhci-msm.c | 133 ++++++++++++++++++++++++++++++++++++++++++-
->  2 files changed, 133 insertions(+), 1 deletion(-)
+>  arch/arm/boot/dts/bcm2711.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-> index d06b2df..7f2ae59 100644
-> --- a/drivers/mmc/host/Kconfig
-> +++ b/drivers/mmc/host/Kconfig
-> @@ -501,6 +501,7 @@ config MMC_SDHCI_MSM
->  	depends on ARCH_QCOM || (ARM && COMPILE_TEST)
->  	depends on MMC_SDHCI_PLTFM
->  	select MMC_SDHCI_IO_ACCESSORS
-> +	select MMC_CQHCI
->  	help
->  	  This selects the Secure Digital Host Controller Interface (SDHCI)
->  	  support present in Qualcomm SOCs. The controller supports
-> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-> index 3d0bb5e..0b4d01f 100644
-> --- a/drivers/mmc/host/sdhci-msm.c
-> +++ b/drivers/mmc/host/sdhci-msm.c
-> @@ -15,6 +15,7 @@
->  #include <linux/regulator/consumer.h>
->  
->  #include "sdhci-pltfm.h"
-> +#include "cqhci.h"
->  
->  #define CORE_MCI_VERSION		0x50
->  #define CORE_VERSION_MAJOR_SHIFT	28
-> @@ -122,6 +123,10 @@
->  #define msm_host_writel(msm_host, val, host, offset) \
->  	msm_host->var_ops->msm_writel_relaxed(val, host, offset)
->  
-> +/* CQHCI vendor specific registers */
-> +#define CQHCI_VENDOR_CFG1	0xA00
-> +#define CQHCI_VENDOR_DIS_RST_ON_CQ_EN	(0x3 << 13)
-> +
->  struct sdhci_msm_offset {
->  	u32 core_hc_mode;
->  	u32 core_mci_data_cnt;
-> @@ -1567,6 +1572,127 @@ static void sdhci_msm_set_clock(struct sdhci_host *host, unsigned int clock)
->  	__sdhci_msm_set_clock(host, clock);
->  }
->  
-> +/*****************************************************************************\
-> + *                                                                           *
-> + * MSM Command Queue Engine (CQE)                                            *
-> + *                                                                           *
-> +\*****************************************************************************/
-> +
-> +static u32 sdhci_msm_cqe_irq(struct sdhci_host *host, u32 intmask)
-> +{
-> +	int cmd_error = 0;
-> +	int data_error = 0;
-> +
-> +	if (!sdhci_cqe_irq(host, intmask, &cmd_error, &data_error))
-> +		return intmask;
-> +
-> +	cqhci_irq(host->mmc, intmask, cmd_error, data_error);
-> +	return 0;
-> +}
-> +
-> +void sdhci_msm_cqe_disable(struct mmc_host *mmc, bool recovery)
-> +{
-> +	struct sdhci_host *host = mmc_priv(mmc);
-> +	unsigned long flags;
-> +	u32 ctrl;
-> +
-> +	/*
-> +	 * When CQE is halted, the legacy SDHCI path operates only
-> +	 * on 16-byte descriptors in 64bit mode.
-> +	 */
-> +	if (host->flags & SDHCI_USE_64_BIT_DMA)
-> +		host->desc_sz = 16;
-> +
-> +	spin_lock_irqsave(&host->lock, flags);
-> +
-> +	/*
-> +	 * During CQE command transfers, command complete bit gets latched.
-> +	 * So s/w should clear command complete interrupt status when CQE is
-> +	 * either halted or disabled. Otherwise unexpected SDCHI legacy
-> +	 * interrupt gets triggered when CQE is halted/disabled.
-> +	 */
-> +	ctrl = sdhci_readl(host, SDHCI_INT_ENABLE);
-> +	ctrl |= SDHCI_INT_RESPONSE;
-> +	sdhci_writel(host,  ctrl, SDHCI_INT_ENABLE);
-> +	sdhci_writel(host, SDHCI_INT_RESPONSE, SDHCI_INT_STATUS);
-> +
-> +	spin_unlock_irqrestore(&host->lock, flags);
-> +
-> +	sdhci_cqe_disable(mmc, recovery);
-> +}
-> +
-> +static const struct cqhci_host_ops sdhci_msm_cqhci_ops = {
-> +	.enable		= sdhci_cqe_enable,
-> +	.disable	= sdhci_msm_cqe_disable,
-> +};
-> +
-> +static int sdhci_msm_cqe_add_host(struct sdhci_host *host,
-> +				struct platform_device *pdev)
-> +{
-> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
-> +	struct cqhci_host *cq_host;
-> +	bool dma64;
-> +	u32 cqcfg;
-> +	int ret;
-> +
-> +	/*
-> +	 * When CQE is halted, SDHC operates only on 16byte ADMA descriptors.
-> +	 * So ensure ADMA table is allocated for 16byte descriptors.
-> +	 */
-> +	if (host->caps & SDHCI_CAN_64BIT)
-> +		host->alloc_desc_sz = 16;
-> +
-> +	ret = sdhci_setup_host(host);
-> +	if (ret)
-> +		return ret;
-> +
-> +	cq_host = cqhci_pltfm_init(pdev);
-> +	if (IS_ERR(cq_host)) {
-> +		ret = PTR_ERR(cq_host);
-> +		dev_err(&pdev->dev, "cqhci-pltfm init: failed: %d\n", ret);
-> +		goto cleanup;
-> +	}
-> +
-> +	msm_host->mmc->caps2 |= MMC_CAP2_CQE | MMC_CAP2_CQE_DCMD;
-> +	cq_host->ops = &sdhci_msm_cqhci_ops;
-> +
-> +	dma64 = host->flags & SDHCI_USE_64_BIT_DMA;
-> +
-> +	ret = cqhci_init(cq_host, host->mmc, dma64);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "%s: CQE init: failed (%d)\n",
-> +				mmc_hostname(host->mmc), ret);
-> +		goto cleanup;
-> +	}
-> +
-> +	/* Disable cqe reset due to cqe enable signal */
-> +	cqcfg = cqhci_readl(cq_host, CQHCI_VENDOR_CFG1);
-> +	cqcfg |= CQHCI_VENDOR_DIS_RST_ON_CQ_EN;
-> +	cqhci_writel(cq_host, cqcfg, CQHCI_VENDOR_CFG1);
-> +
-> +	/*
-> +	 * SDHC expects 12byte ADMA descriptors till CQE is enabled.
-> +	 * So limit desc_sz to 12 so that the data commands that are sent
-> +	 * during card initialization (before CQE gets enabled) would
-> +	 * get executed without any issues.
-> +	 */
-> +	if (host->flags & SDHCI_USE_64_BIT_DMA)
-> +		host->desc_sz = 12;
-> +
-> +	ret = __sdhci_add_host(host);
-> +	if (ret)
-> +		goto cleanup;
-> +
-> +	dev_info(&pdev->dev, "%s: CQE init: success\n",
-> +			mmc_hostname(host->mmc));
-> +	return ret;
-> +
-> +cleanup:
-> +	sdhci_cleanup_host(host);
-> +	return ret;
-> +}
-> +
->  /*
->   * Platform specific register write functions. This is so that, if any
->   * register write needs to be followed up by platform specific actions,
-> @@ -1731,6 +1857,7 @@ static void sdhci_msm_set_regulator_caps(struct sdhci_msm_host *msm_host)
->  	.set_uhs_signaling = sdhci_msm_set_uhs_signaling,
->  	.write_w = sdhci_msm_writew,
->  	.write_b = sdhci_msm_writeb,
-> +	.irq	= sdhci_msm_cqe_irq,
+> diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711.dtsi
+> index b64865ad5a41..48e3b0162bda 100644
+> --- a/arch/arm/boot/dts/bcm2711.dtsi
+> +++ b/arch/arm/boot/dts/bcm2711.dtsi
+> @@ -853,6 +853,7 @@ &mailbox {
 >  };
 >  
->  static const struct sdhci_pltfm_data sdhci_msm_pdata = {
-> @@ -1754,6 +1881,7 @@ static int sdhci_msm_probe(struct platform_device *pdev)
->  	u8 core_major;
->  	const struct sdhci_msm_offset *msm_offset;
->  	const struct sdhci_msm_variant_info *var_info;
-> +	struct device_node *node = pdev->dev.of_node;
+>  &sdhci {
+> +	compatible = "brcm,bcm2711-emmc2";
+>  	interrupts = <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>;
+>  };
 >  
->  	host = sdhci_pltfm_init(pdev, &sdhci_msm_pdata, sizeof(*msm_host));
->  	if (IS_ERR(host))
-> @@ -1952,7 +2080,10 @@ static int sdhci_msm_probe(struct platform_device *pdev)
->  	pm_runtime_use_autosuspend(&pdev->dev);
->  
->  	host->mmc_host_ops.execute_tuning = sdhci_msm_execute_tuning;
-> -	ret = sdhci_add_host(host);
-> +	if (of_property_read_bool(node, "supports-cqe"))
-> +		ret = sdhci_msm_cqe_add_host(host, pdev);
-> +	else
-> +		ret = sdhci_add_host(host);
->  	if (ret)
->  		goto pm_runtime_disable;
->  	sdhci_msm_set_regulator_caps(msm_host);
 > 
 
+hm, sdhci is used to drive the wifi chip:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/bcm2711-rpi-4-b.dts?h=v5.5-rc7#n79
+
+Are you sure you use the upstream devicetree?
+
+Regards,
+Matthias
