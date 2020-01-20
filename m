@@ -2,162 +2,93 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97678C33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE98EC33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B75E24650
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:11:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="MlG60/Pj"
+	by mail.kernel.org (Postfix) with ESMTP id A6C1822314
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:11:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729078AbgATPLV (ORCPT
+        id S1729130AbgATPLa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 10:11:21 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40998 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727285AbgATPLU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 10:11:20 -0500
-Received: by mail-wr1-f68.google.com with SMTP id c9so29956758wrw.8
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 07:11:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=fpFQ1fEPd0yd6/Fy18DraiEyPGTTtIbb9sRJOIkGs+o=;
-        b=MlG60/Pjxo9rE2vXGmlDoYw5RKWpmvGa+soqFJ7dW2eRzq+T9rENvcZmWbcZl6uzwh
-         z41+vpmQZ3IvNUtv0zeGZ1Beb9xhC7Hlphqnrho0nhPivDtyewP1yOx/zDB2UjoMUl5U
-         LT68YwyROGqrbxDvcCE7zmcicSS1FZ193iqTQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=fpFQ1fEPd0yd6/Fy18DraiEyPGTTtIbb9sRJOIkGs+o=;
-        b=pQDJfkCYzTGa+9lBEgtjl3kPWF4DcXifrDGV2bj/3qWNPPzZmhFW5AJYCwjA08TabM
-         ldrgII12O7xhH7h7LV1t5R9nLK94PPyfBNd0N/4WvCdt1eAYHwJec2e+YGv0UgQlQ7qK
-         VJjyFdg+D7d0ExsQxvaQ8VsXWEVnwQIsfOk5VwC/FVvP1MVtl3vG4XurdJRH13iBB/YP
-         ZIS9Ok5ZshHEwSZSBRdVSBTYuyZ2uzbWM+AILYIwQK4MmwgvYzTqr0C5MdHo+Uv16iu3
-         Ihe7fsshIAQQu6Jwd0J/d9T19HHmbS0LqaUwatIddWt/iwuPEeWzomGwjSEtjjoCPmmv
-         T1tw==
-X-Gm-Message-State: APjAAAXGAF5D5jVauM7iStn4Qoyg2/NPhVluSgojT1yBn7TKR5IY51Fw
-        gvYdE3lywyFG9hMAwrxKUfIFLA==
-X-Google-Smtp-Source: APXvYqyWKGmCoy+9bvGRA2RniQZCgf4tZzcO38mWdEPr54brhtY82T71lmAyTZO6n140BPQ4R1vXQw==
-X-Received: by 2002:adf:ea05:: with SMTP id q5mr15043wrm.48.1579533079122;
-        Mon, 20 Jan 2020 07:11:19 -0800 (PST)
-Received: from localhost ([2620:10d:c092:180::1:251f])
-        by smtp.gmail.com with ESMTPSA id q15sm47977328wrr.11.2020.01.20.07.11.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 07:11:18 -0800 (PST)
-Date:   Mon, 20 Jan 2020 15:11:17 +0000
-From:   Chris Down <chris@chrisdown.name>
-To:     Hugh Dickins <hughd@google.com>
-Cc:     Dave Chinner <david@fromorbit.com>, Chris Mason <clm@fb.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Linux MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>,
-        Mikael Magnusson <mikachu@gmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>
-Subject: Re: [PATCH v5 2/2] tmpfs: Support 64-bit inums per-sb
-Message-ID: <20200120151117.GA81113@chrisdown.name>
-References: <20200107001643.GA485121@chrisdown.name>
- <20200107003944.GN23195@dread.disaster.area>
- <CAOQ4uxjvH=UagqjHP_71_p9_dW9wKqiaWujzY1xKe7yZVFPoTA@mail.gmail.com>
- <alpine.LSU.2.11.2001070002040.1496@eggly.anvils>
- <CAOQ4uxiMQ3Oz4M0wKo5FA_uamkMpM1zg7ydD8FXv+sR9AH_eFA@mail.gmail.com>
- <20200107210715.GQ23195@dread.disaster.area>
- <4E9DF932-C46C-4331-B88D-6928D63B8267@fb.com>
- <alpine.LSU.2.11.2001080259350.1884@eggly.anvils>
- <20200110164503.GA1697@chrisdown.name>
- <alpine.LSU.2.11.2001122259120.3471@eggly.anvils>
+        Mon, 20 Jan 2020 10:11:30 -0500
+Received: from foss.arm.com ([217.140.110.172]:33464 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726642AbgATPL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 10:11:29 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B3B7330E;
+        Mon, 20 Jan 2020 07:11:28 -0800 (PST)
+Received: from [192.168.0.7] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 49CBA3F52E;
+        Mon, 20 Jan 2020 07:11:22 -0800 (PST)
+Subject: Re: [PATCH 1/4] PM / EM: and devices to Energy Model
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+To:     lukasz.luba@arm.com, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-imx@nxp.com
+Cc:     Morten.Rasmussen@arm.com, Chris.Redpath@arm.com,
+        ionela.voinescu@arm.com, javi.merino@arm.com,
+        cw00.choi@samsung.com, b.zolnierkie@samsung.com, rjw@rjwysocki.net,
+        sudeep.holla@arm.com, viresh.kumar@linaro.org, nm@ti.com,
+        sboyd@kernel.org, rui.zhang@intel.com, amit.kucheria@verdurent.com,
+        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        rostedt@goodmis.org, qperret@google.com, bsegall@google.com,
+        mgorman@suse.de, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        festevam@gmail.com, kernel@pengutronix.de, khilman@kernel.org,
+        agross@kernel.org, bjorn.andersson@linaro.org, robh@kernel.org,
+        matthias.bgg@gmail.com, steven.price@arm.com,
+        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
+        airlied@linux.ie, daniel@ffwll.ch, patrick.bellasi@matbug.net
+References: <20200116152032.11301-1-lukasz.luba@arm.com>
+ <20200116152032.11301-2-lukasz.luba@arm.com>
+ <17b77e0c-9455-0479-d37b-c57717c784c7@arm.com>
+Message-ID: <d0b90b97-3604-d4f4-b873-3879a9221532@arm.com>
+Date:   Mon, 20 Jan 2020 16:11:21 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <alpine.LSU.2.11.2001122259120.3471@eggly.anvils>
+In-Reply-To: <17b77e0c-9455-0479-d37b-c57717c784c7@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hugh,
+On 20/01/2020 15:53, Dietmar Eggemann wrote:
+> On 16/01/2020 16:20, lukasz.luba@arm.com wrote:
+>> From: Lukasz Luba <lukasz.luba@arm.com>
 
-Sorry this response took so long, I had some non-work issues that took a lot of 
-time last week.
+[...]
 
-Hugh Dickins writes:
->On Fri, 10 Jan 2020, Chris Down wrote:
->> Hugh Dickins writes:
->> > Dave, Amir, Chris, many thanks for the info you've filled in -
->> > and absolutely no need to run any scan on your fleet for this,
->> > I think we can be confident that even if fb had some 15-year-old tool
->> > in use on its fleet of 2GB-file filesystems, it would not be the one
->> > to insist on a kernel revert of 64-bit tmpfs inos.
->> >
->> > The picture looks clear now: while ChrisD does need to hold on to his
->> > config option and inode32/inode64 mount option patch, it is much better
->> > left out of the kernel until (very unlikely) proved necessary.
->>
->> Based on Mikael's comment above about Steam binaries, and the lack of
->> likelihood that they can be rebuilt, I'm inclined to still keep inode{64,32},
->> but make legacy behaviour require explicit opt-in. That is:
->>
->> - Default it to inode64
->> - Remove the Kconfig option
->> - Only print it as an option if tmpfs was explicitly mounted with inode32
->>
->> The reason I suggest keeping this is that I'm mildly concerned that the kind
->> of users who might be impacted by this change due to 32-bit _FILE_OFFSET_BITS
->> -- like the not-too-uncommon case that Mikael brings up -- seem unlikely to
->> be the kind of people that would find it in an rc.
->
->Okay.  None of us are thrilled with it, but I agree that
->Mikael's observation should override our developer's preference.
->
->So the "inode64" option will be accepted but redundant on mounting,
->but exists for use as a remount option after mounting or remounting
->with "inode32": allowing the admin to switch temporarily to mask off
->the high ino bits with "inode32" when needing to run a limited binary.
->
->Documentation and commit message to alert Andrew and Linus and distros
->that we are risking some breakage with this, but supplying the antidote
->(not breakage of any distros themselves, no doubt they're all good;
->but breakage of what some users might run on them).
+>> +enum em_type {
+>> +	EM_SIMPLE,
+>> +	EM_CPU,
+>> +};
+> 
+> s/EM_SIMPLE/EM_DEV ?
+> 
+> Right now I only see energy models and _one_ specific type (the CPU EM).
+> So a tag 'is a CPU EM' would suffice. No need for EM_SIMPE ...
 
-Sounds good.
+Wait, you even have
 
->>
->> Other than that, the first patch could be similar to how it is now,
->> incorporating Hugh's improvements to the first patch to put everything under
->> the same stat_lock in shmem_reserve_inode.
->
->So, I persuaded Amir to the other aspects my version, but did not
->persuade you?  Well, I can live with that (or if not, can send mods
->on top of yours): but please read again why I was uncomfortable with
->yours, to check that you still prefer it (I agree that your patch is
->simpler, and none of my discomfort decisive).
+struct em_device {
+        struct em_perf_domain *em_pd;
+        struct device *dev;
+        ...
+}
 
-Hmm, which bit were you thinking of? The lack of batching, shmem_encode_fh(), 
-or the fact that nr_inodes can now be 0 on non-internal mounts?
+static bool _is_cpu_device(struct device *dev)
 
-For batching, I'm neutral. I'm happy to use the approach from your patch and 
-integrate it (and credit you, of course).
-
-For shmem_encode_fh, I'm not totally sure I understand the concern, if that's 
-what you mean.
-
-For nr_inodes, I agree that intentional or unintentional, we should at least 
-handle this case for now and can adjust later if the behaviour changes.
-
-Thanks again,
-
-Chris
+Shouldn't this be enough to distinguish between EM and special CPU EM
+under the API? Even when required to use container_of() to get from
+em_perf_domain to device.
