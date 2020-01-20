@@ -2,46 +2,49 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64877C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF40C33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 416F422314
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:08:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EA9A22314
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:08:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729073AbgATQIR (ORCPT
+        id S1729370AbgATQIk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 11:08:17 -0500
-Received: from mga02.intel.com ([134.134.136.20]:61699 "EHLO mga02.intel.com"
+        Mon, 20 Jan 2020 11:08:40 -0500
+Received: from mga09.intel.com ([134.134.136.24]:19096 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726626AbgATQIQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 11:08:16 -0500
+        id S1726626AbgATQIR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 11:08:17 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 08:08:15 -0800
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 08:08:16 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,342,1574150400"; 
-   d="scan'208";a="275072726"
+   d="scan'208";a="374357098"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by FMSMGA003.fm.intel.com with ESMTP; 20 Jan 2020 08:08:13 -0800
+  by orsmga004.jf.intel.com with ESMTP; 20 Jan 2020 08:08:13 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id E2B4529D; Mon, 20 Jan 2020 18:08:12 +0200 (EET)
+        id CC470107; Mon, 20 Jan 2020 18:08:12 +0200 (EET)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
         Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2 2/9] x86/quirks: Add missed include to satisfy static checker
-Date:   Mon, 20 Jan 2020 18:07:54 +0200
-Message-Id: <20200120160801.53089-3-andriy.shevchenko@linux.intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH v2 0/9] x86: Easy way of detecting MS Surface 3
+Date:   Mon, 20 Jan 2020 18:07:52 +0200
+Message-Id: <20200120160801.53089-1-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200120160801.53089-1-andriy.shevchenko@linux.intel.com>
-References: <20200120160801.53089-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -49,29 +52,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Static checker is not happy with
+While working on RTC regression, I noticed that we are using the same DMI check
+over and over in the drivers for MS Surface 3 platform. This series dedicated
+for making it easier in the same way how it's done for Apple machines.
 
-.../kernel/quirks.c:666:6: warning: symbol 'x86_apple_machine' was not declared. Should it be static?
+Changelog v2:
+- removed RTC patches for now
+- added couple more clean ups to arch/x86/kernel/quirks.c
+- redone DMI quirk to use driver_data instead of callback
+- simplified check in soc-acpi-intel-cht-match.c to be oneliner
+- added a new patch to cover rt5645 codec driver
 
-This is due to missed inclusion. Add it to satisfy the static checker.
+Cc: Cezary Rojewski <cezary.rojewski@intel.com>
+Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc: Liam Girdwood <liam.r.girdwood@linux.intel.com>
+Cc: Jie Yang <yang.jie@linux.intel.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: alsa-devel@alsa-project.org
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- arch/x86/kernel/quirks.c | 1 +
- 1 file changed, 1 insertion(+)
+Andy Shevchenko (9):
+  x86/platform: Rename x86/apple.h -> x86/machine.h
+  x86/quirks: Add missed include to satisfy static checker
+  x86/quirks: Introduce hpet_dev_print_force_hpet_address() helper
+  x86/quirks: Join string literals back
+  x86/quirks: Convert DMI matching to use a table
+  x86/quirks: Add a DMI quirk for Microsoft Surface 3
+  platform/x86: surface3_wmi: Switch DMI table match to a test of
+    variable
+  ASoC: rt5645: Switch DMI table match to a test of variable
+  ASoC: Intel: Switch DMI table match to a test of variable
 
-diff --git a/arch/x86/kernel/quirks.c b/arch/x86/kernel/quirks.c
-index 1daf8f2aa21f..5b96654aacc0 100644
---- a/arch/x86/kernel/quirks.c
-+++ b/arch/x86/kernel/quirks.c
-@@ -4,6 +4,7 @@
-  */
- #include <linux/dmi.h>
- #include <linux/pci.h>
-+#include <linux/platform_data/x86/machine.h>
- #include <linux/irq.h>
- 
- #include <asm/hpet.h>
+ arch/x86/kernel/quirks.c                      | 91 +++++++++++++------
+ drivers/platform/x86/surface3-wmi.c           | 16 +---
+ include/linux/platform_data/x86/apple.h       | 14 +--
+ include/linux/platform_data/x86/machine.h     | 20 ++++
+ sound/soc/codecs/rt5645.c                     | 14 ++-
+ .../intel/common/soc-acpi-intel-cht-match.c   | 33 +------
+ 6 files changed, 93 insertions(+), 95 deletions(-)
+ create mode 100644 include/linux/platform_data/x86/machine.h
+
 -- 
 2.24.1
 
