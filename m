@@ -4,104 +4,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33CE4C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 05:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D7E3C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 05:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0DDF2073D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 05:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7C422087F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 05:27:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WQj7dS3c"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jkX5sQ+i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727893AbgATFGT (ORCPT
+        id S1726282AbgATF1x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 00:06:19 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:34444 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgATFGT (ORCPT
+        Mon, 20 Jan 2020 00:27:53 -0500
+Received: from mail-pg1-f171.google.com ([209.85.215.171]:38543 "EHLO
+        mail-pg1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbgATF1w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 00:06:19 -0500
-Received: by mail-io1-f67.google.com with SMTP id z193so32296036iof.1;
-        Sun, 19 Jan 2020 21:06:18 -0800 (PST)
+        Mon, 20 Jan 2020 00:27:52 -0500
+Received: by mail-pg1-f171.google.com with SMTP id a33so14946893pgm.5;
+        Sun, 19 Jan 2020 21:27:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:message-id:in-reply-to:references:subject
-         :mime-version:content-transfer-encoding;
-        bh=pVj9NDJx2/7PFFi3/u/5FAFIHJCLf3D58a8+o9p3tPU=;
-        b=WQj7dS3crFyqCVPYcu7BdZsUrcxw0MC6mUXHuP+18Eq/HzrX6w0W50Mzsuh+o+tWUf
-         twHn1yIoJERi7kGf9keO/dbYy5dMX+yCoGTNfnVzVj4v2SRaYgAil9JX/1X7DBB2TPpX
-         F8B4Qf4PmwnFYxHH2c4gTv6OzmVUHH02Vkaz5R2yKWNp3pGtez2xOJWCiL2uYvPcD76W
-         up/jJWZhBTa6q2WA0Xs5NkgO0t/ssUiBARmtfh+fWsRS0/D9sEOBRPCtgqlLBf294PlN
-         50B6y5pb5sMMPHEWjEpwHv/npSnMRxjGMoYSQ1HOjhIcKuyYj60micNGJnPkrTUAmxuf
-         gkBQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=x42fojAYJQarwF0l5248oCT+sZ1y4ZvDDvJdzwlnTzk=;
+        b=jkX5sQ+idw0y+MSZMvIWDVMnItMiYSWVIQ0vJr+bwiTvMlVANP6lwA/46BkfSa0A5m
+         +SHTd+KrS4z2mZLyFf2vdHJ6FRJyYHrBU7NL1E9PwBmRWAzKujnbcaBmv2QSJ6LRW1nL
+         Xv5RslxdNQCbfI3x/Wgx5AGQGOpig/YXnKNVjk2tSTYXOMPhfrpFIHr87JnnMK/SYkUS
+         rJWBx255NObtNOCbDtmduSH6rjj88lMd3hDb5re94rP3haPazDAFR/2Q9qGaVSHmatFE
+         PyyjkECHTp2MEqNOW11favTiZUsV4rPlLhQ61Qq9qK00fvusMcefNSIlEO7bLbo4z2OG
+         YYsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
-         :references:subject:mime-version:content-transfer-encoding;
-        bh=pVj9NDJx2/7PFFi3/u/5FAFIHJCLf3D58a8+o9p3tPU=;
-        b=X+rmP0vM9DVz+r09fySPGUPMYiKy9q7eQ8Ow/30t8tqBRcK5Pd1+bJTKuZOKOO3F45
-         3DNsxg/OEkIVixFLufYBRxr1eQAomxkQ5TVTFX+WokkuhcY8pS21wjfLaJQ2C6gSjxB7
-         mTKwb7M+XZwBMgWV+UdSQ2JESbsGQn/KKAY+bc3L/dW5WNPYYuSH1ZxterGZkSlxJteU
-         JFK2EAI/qdV77xf/nqQPhynk0RdZCP+r7kZs5UUmcfb1rf/frxTmuAEUU1pacD/ZbMqf
-         KuqJo45sW3oCUXpxOIbSaH90paouAY0gel48AcG9Bd0oNYC9TdHLI21PaYlwfpjvUKrl
-         1vzA==
-X-Gm-Message-State: APjAAAXu7TdafSYAs5zAUMoNFyfj6NZCgJrcCZmgJUVS1Gpxf5UBBZlL
-        9LEzvW42kcCTOieZ6sTuHXI=
-X-Google-Smtp-Source: APXvYqzhiB2KwqCXj4v9UXq2FBSph0My9rg5TvEMHFE4N4fVykpEPoz/JjYnicXOOgzFIWNqfFr5bw==
-X-Received: by 2002:a5e:8813:: with SMTP id l19mr41499039ioj.261.1579496778554;
-        Sun, 19 Jan 2020 21:06:18 -0800 (PST)
-Received: from localhost ([184.63.162.180])
-        by smtp.gmail.com with ESMTPSA id u20sm7051639iom.27.2020.01.19.21.06.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Jan 2020 21:06:18 -0800 (PST)
-Date:   Sun, 19 Jan 2020 21:06:11 -0800
-From:   John Fastabend <john.fastabend@gmail.com>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        =?UTF-8?B?RGFuaWVsIETDrWF6?= <daniel.diaz@linaro.org>
-Cc:     Shuah Khan <shuah@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        "open list:BPF (Safe dynamic programs and tools)" 
-        <netdev@vger.kernel.org>,
-        "open list:BPF (Safe dynamic programs and tools)" 
-        <bpf@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Message-ID: <5e25354342d65_3d922aba572005bc34@john-XPS-13-9370.notmuch>
-In-Reply-To: <CAEf4BzbKMJOGGv19jCakZusQ-R5pstPo0bSpns5k-mFm9b0W_Q@mail.gmail.com>
-References: <20200117165330.17015-1-daniel.diaz@linaro.org>
- <20200117165330.17015-3-daniel.diaz@linaro.org>
- <CAEf4BzbKMJOGGv19jCakZusQ-R5pstPo0bSpns5k-mFm9b0W_Q@mail.gmail.com>
-Subject: Re: [PATCH 3/3] selftests/bpf: Build urandom_read with LDFLAGS and
- LDLIBS
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=x42fojAYJQarwF0l5248oCT+sZ1y4ZvDDvJdzwlnTzk=;
+        b=ZWsCWW0shlX1+bhKdORbp4nrnVYy9tChyUti0WIbZCY37l3QG9DaOWmLsGBtBBy9rE
+         aHL1jzEKnE0ylV4wwzwue6a8IXkhofCXw6qXppAzSopmrRDzcU/NfliNGgbaCK0zhDkr
+         KDfGnhfrOud3UCg/TRJeTc+UwF6KyPbYE7Px3gJIu+3FhqzPhgoKMFVNi9GZiJF2wR9z
+         Z8zJALSVaeerU1YP3Zk8AudSf7YIQ6jlRdhA8k95yG5P5rhZWZs3PiMZE5xlzelrhTRu
+         n481n9+FZMqaj+aaPuyG18GopBkNj4XsY6GLbuZFrMBPFhcGSm9HOMe73C4/YBzLx/mS
+         SO6A==
+X-Gm-Message-State: APjAAAWp6Mtmgji3oO/SCjKysT65AWBWXPl2XgmYhSzjt20ouYgGrg9B
+        Ixj2lmuzFuan5PTRp3uUXDg=
+X-Google-Smtp-Source: APXvYqztlxFbDGgPO43lBGJT7gS5Ty9+wE6B8U+uT1Ia8p9s3h/HbtGfmBcIEvsAHiS4WYFv8ZKgAw==
+X-Received: by 2002:a62:c583:: with SMTP id j125mr16218405pfg.27.1579498071643;
+        Sun, 19 Jan 2020 21:27:51 -0800 (PST)
+Received: from localhost.localdomain ([106.51.19.95])
+        by smtp.gmail.com with ESMTPSA id e16sm35069395pgk.77.2020.01.19.21.27.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 19 Jan 2020 21:27:51 -0800 (PST)
+From:   Rishi Gupta <gupt21@gmail.com>
+To:     jikos@kernel.org, benjamin.tissoires@redhat.com,
+        wsa+renesas@sang-engineering.com
+Cc:     gregkh@linuxfoundation.org, linux-i2c@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rishi Gupta <gupt21@gmail.com>
+Subject: [PATCH v1 0/1] HID: mcp2221: add usb to i2c-smbus host bridge driver
+Date:   Mon, 20 Jan 2020 10:57:37 +0530
+Message-Id: <cover.1579497275.git.gupt21@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrii Nakryiko wrote:
-> On Fri, Jan 17, 2020 at 8:55 AM Daniel D=C3=ADaz <daniel.diaz@linaro.or=
-g> wrote:
-> >
-> > During cross-compilation, it was discovered that LDFLAGS and
-> > LDLIBS were not being used while building binaries, leading
-> > to defaults which were not necessarily correct.
-> >
-> > OpenEmbedded reported this kind of problem:
-> >   ERROR: QA Issue: No GNU_HASH in the ELF binary [...], didn't pass L=
-DFLAGS?
-> >
-> > Signed-off-by: Daniel D=C3=ADaz <daniel.diaz@linaro.org>
-> > ---
-> =
+MCP2221 is a USB HID to I2C/SMbus host bridge device. This
+commit implements i2c and smbus host adapter support. 7-bit
+address and i2c multi-message transaction is also supported.
 
-> Acked-by: Andrii Nakryiko <andriin@fb.com>
-Acked-by: John Fastabend <john.fastabend@gmail.com>=
+Different transactions have been tested with various common
+hardwares, linux driver and user space tools.
+
+Host PC communicates with mcp2221a over usb using raw hid protocol.
+Reports are exchanged using interrupt end points. Command and responses
+are mcp2221a specific and documented in datasheet:
+http://ww1.microchip.com/downloads/en/DeviceDoc/20005565B.pdf
+
+There is only 1 patch in this driver submission.
+
+Rishi Gupta (1):
+  HID: mcp2221: add usb to i2c-smbus host bridge driver
+
+ drivers/hid/Kconfig       |  10 +
+ drivers/hid/Makefile      |   1 +
+ drivers/hid/hid-ids.h     |   1 +
+ drivers/hid/hid-mcp2221.c | 773 ++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/hid/hid-quirks.c  |   3 +
+ 5 files changed, 788 insertions(+)
+ create mode 100644 drivers/hid/hid-mcp2221.c
+
+-- 
+2.7.4
+
