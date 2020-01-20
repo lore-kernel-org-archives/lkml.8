@@ -2,133 +2,130 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8143BC33CBA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:54:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50345C33CB8
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:54:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56B4D207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:54:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579510445;
-	bh=7658EiAaUp7PZdEgintuX/ZlhBgoO6/vEgyIccALm9A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ebj0vFU1hct03SEObBi1AB4bgxz++pCVxRGMdQtFHtzfs6uWJKoLzu5MVjv4szMnP
-	 oK/QmT3v8OQb4e8f0y7PEBReVq8fctMUwUeium8Yasw/Coe5Qup1vWoa43Lv/PYMgH
-	 RESEPaAOOVKHnFJAFmCVM0DStBQH+zlkurU0Pfqc=
+	by mail.kernel.org (Postfix) with ESMTP id 260D92077C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:54:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="we/6y6ed"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbgATIyE (ORCPT
+        id S1726982AbgATIyX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 03:54:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49964 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725872AbgATIyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 03:54:04 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4ADD22077C;
-        Mon, 20 Jan 2020 08:54:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579510443;
-        bh=7658EiAaUp7PZdEgintuX/ZlhBgoO6/vEgyIccALm9A=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=iqssyyfSMZovWsn4zGGw2eWcWEy4oBVZI40yYEm6haUwX+7L+0ERyopt5aoWZjpiV
-         aL2fAboolvdnOIv7YES1actzjAuNStq7dJxxynuGZJvYD5/gEhE/qIdeKCp5xi1KxL
-         O3L4u76IVni+YXqLngVLArqY7RYXyTcqfQQ/OojY=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1itSor-000DOa-Jh; Mon, 20 Jan 2020 08:54:01 +0000
+        Mon, 20 Jan 2020 03:54:23 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36279 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbgATIyW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 03:54:22 -0500
+Received: by mail-wr1-f67.google.com with SMTP id z3so28604197wru.3
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 00:54:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=kioLvgS74f9sJjCTsbx/ZLFmZG4mkGnzw8r1w1WYA/4=;
+        b=we/6y6edkk3YpKlsBXl/AgdVTKspovJ98gF9DwytZxXRdKu2lf0yHGZ9cqG+OHNl43
+         1D3wAY7FLKrkB72RdPqnamX5YdLo51GRCa74KmSY6GD35joffcxpIlx05IcZqarzXOP6
+         +x+WZdL8Gs45yw6pNJWCoKrxJUIpW0Icot9uVJGDAki8AJAjxn9VczF5OAkFpdczph4B
+         RkCNnyR+3vU+CuNo9xNEbZOrEsQFIuCf9xPQu0wKKvvAO/Bx0ch6NjL4QHxAd+wfp2yG
+         0v3gxZaqF1zpen8HTiUQZ68tg3+k1M5szuubctad3xbmDv0AW6NzZw39zcETHvk5c+cj
+         kz9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=kioLvgS74f9sJjCTsbx/ZLFmZG4mkGnzw8r1w1WYA/4=;
+        b=qfc9D0o/9Dt0EGtALz+Hkila54tQklDf83XDPeg3K/dnTklg7X013Od12HKIB2bdTF
+         v//MXF//0pARME7vWBW98yFHhfeWAYfTSgSiRMV2gEOmLBSS93U6DUMaN1W21zVaDTYI
+         1QQNNpHiCG7We7Tp7ZTN/1+danUGu+F+/PtPLYUAPJHp01D/ypzGNXLhKkAyZ9K4oXzz
+         dCBwjM5ezocdHv3hhZvio8hZA97WPD7lVHpSAxYwWu9m4kA0x6nWkI4OHAW36gDS/P2r
+         f2sbMqxtm6ClLlRf2+toMyYYxs9Yl6d3gJy64BxYLt9XPkbyLymgWblvnynqPj2USuCR
+         GzMA==
+X-Gm-Message-State: APjAAAU5Khw47PxQtgAALoZIUmFhYnHVogupjLL0lwdJ/eMkVPdcYzS6
+        by3ioJRBC/kiuDhPJfymM4TMKw==
+X-Google-Smtp-Source: APXvYqxCEa3WXWluxoJWVXwFldWEGwXwSD1xXL7D/5WNmT4sWEkYFaFe3u9dMJfoNyljA8GfrAY9CA==
+X-Received: by 2002:a5d:5304:: with SMTP id e4mr17084301wrv.426.1579510460638;
+        Mon, 20 Jan 2020 00:54:20 -0800 (PST)
+Received: from dell ([2.27.35.227])
+        by smtp.gmail.com with ESMTPSA id b21sm11998wmd.37.2020.01.20.00.54.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jan 2020 00:54:20 -0800 (PST)
+Date:   Mon, 20 Jan 2020 08:54:35 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v11 03/13] mfd: rohm PMICs - use platform_device_id to
+ match MFD sub-devices
+Message-ID: <20200120085435.GA15507@dell>
+References: <cover.1579501711.git.matti.vaittinen@fi.rohmeurope.com>
+ <13994480cab6d5d6376c8f5228572e55ca06e479.1579501711.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 20 Jan 2020 09:54:01 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Eddie James <eajames@linux.ibm.com>
-Cc:     linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, mark.rutland@arm.com,
-        jason@lakedaemon.net, robh+dt@kernel.org, tglx@linutronix.de,
-        joel@jms.id.au, andrew@aj.id.au
-Subject: Re: [PATCH v6 00/12] aspeed: Add SCU interrupt controller and XDMA
- engine drivers
-In-Reply-To: <1579123790-6894-1-git-send-email-eajames@linux.ibm.com>
-References: <1579123790-6894-1-git-send-email-eajames@linux.ibm.com>
-Message-ID: <1c0315d197ae5b8b01ea5beaaf32fa21@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.8
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: eajames@linux.ibm.com, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, jason@lakedaemon.net, robh+dt@kernel.org, tglx@linutronix.de, joel@jms.id.au, andrew@aj.id.au
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <13994480cab6d5d6376c8f5228572e55ca06e479.1579501711.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-15 22:29, Eddie James wrote:
-> This series first adds a driver to control the interrupt controller 
-> provided by
-> the System Control Unit (SCU) on the AST2500 and AST2600 SOCs. The 
-> interrupts
-> made available are necessary for the control of the XDMA engine 
-> embedded in the
-> same Aspeed SOCs.
-> This series then adds a driver to control the XDMA engine. This driver 
-> was
-> previously sent to the list without support for the AST2600, and has 
-> been
-> refactored significantly to enable that support. The XDMA engine 
-> performs
-> automatic DMA operations between the Aspeed SOC (acting as a BMC) and a 
-> host
-> processor.
-> 
-> Changes since v5:
->  - Rework the XDMA locking completely; thanks Andrew Jeffrey for the 
-> help.
-> 
-> Changes since v4:
->  - Fix dts documentation example for XDMA
->  - Add errno in warning for SCU failure in XDMA PCIe config
->  - Add a check for in_reset before proceeding in O_NONBLOCK case
->  - Add comments to memory sizes in the witherspoon/tacoma XDMA dts 
-> entries
-> 
-> Changes since v3:
->  - See individual patches; just clean-up items
-> 
-> Changes since v2:
->  - See individual patches
->  - Drop rainier dts patch
->  - In summary, remove references to VGA memory as the XDMA driver 
-> doesn't care
->    where it is. Remove SDRAM controller reference. Move user reset
->    functionality to a separate patch and make it an ioctl.
-> 
-> Changes since v1:
->  - See individual patches
->  - In summary, first the irqchip driver switched to use the parent SCU 
-> regmap
->    rather than iomapping it's register. Secondly, the XDMA 
-> initialization
->    switched to use properties from the device tree rather than 
-> dynamically
->    calculate memory spaces, and system config.
-> 
-> Eddie James (12):
->   dt-bindings: interrupt-controller: Add Aspeed SCU interrupt 
-> controller
->   irqchip: Add Aspeed SCU interrupt controller
+On Mon, 20 Jan 2020, Matti Vaittinen wrote:
 
-I've now queued these two patches in the irqchip tree.
+> Thanks to Stephen Boyd I today learned we can use platform_device_id
+> to do device and module matching for MFD sub-devices!
+> 
+> Do device matching using the platform_device_id instead of using
+> explicit module_aliases to load modules and custom parent-data field
+> to do module loading and sub-device matching.
+> 
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+> ---
+> No changes since v10
+> 
+>  drivers/clk/clk-bd718x7.c             | 12 ++++++++-
+>  drivers/mfd/rohm-bd70528.c            |  3 +--
+>  drivers/mfd/rohm-bd718x7.c            | 39 ++++++++++++++++++++++-----
+>  drivers/regulator/bd718x7-regulator.c | 17 +++++++++---
+>  include/linux/mfd/rohm-generic.h      |  3 +--
+>  5 files changed, 58 insertions(+), 16 deletions(-)
 
-Thanks,
+Still needs Clk and Regulator Acks.
 
-          M.
 -- 
-Jazz is not dead. It just smells funny...
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
