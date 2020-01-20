@@ -2,199 +2,126 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0714DC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:56:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59ACDC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 17:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB7F921D7E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:56:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2722420882
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 17:01:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ROjySfoO"
+	dkim=pass (2048-bit key) header.d=mvista-com.20150623.gappssmtp.com header.i=@mvista-com.20150623.gappssmtp.com header.b="FxbANqXV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729305AbgATQ4S (ORCPT
+        id S1729009AbgATRBi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 11:56:18 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40002 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729121AbgATQ4S (ORCPT
+        Mon, 20 Jan 2020 12:01:38 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:42996 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726642AbgATRBi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 11:56:18 -0500
-Received: by mail-wm1-f68.google.com with SMTP id t14so27117wmi.5;
-        Mon, 20 Jan 2020 08:56:16 -0800 (PST)
+        Mon, 20 Jan 2020 12:01:38 -0500
+Received: by mail-ot1-f65.google.com with SMTP id 66so339649otd.9
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 09:01:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
+        d=mvista-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=l03WTNrKTQC5MGvzPNBY30UTO75BWr5Rgkv2u4ayoro=;
-        b=ROjySfoOvPa8OYjeITdb0qF+NXnHnNrwRo5wLjbwgErHa9tN1hls2IF7eIwmncLX09
-         fHL6mig8O69Inof4dLV7O0hDeFFbzpzuoCgnlV/yv5feWmxeIHo1JTJbTqtnsc9ZCdHm
-         40hwczJ9GX+mrI9J7AaYqpHVf+ue/h+iWK7QjC9pWTzMagowjnlm62maunfJ6GJmRuoc
-         ObFMyX64VnPUxuuvyNd4Ym+m7Dmd1bptNC76FDkPFyFwqUnh6sM5JsFhBj7+dfAJIM0m
-         iiJwu5dMw8neXQ5w9roxCREwTRhhOfKGL8MNTvr3ckpHfYCRcH//DZlrr/q4iGkYT8u8
-         h/Eg==
+        bh=l7rXrWc9zdyZC8ngED66aztSeYAIdSfuXFbxTohqXwo=;
+        b=FxbANqXV7CZGzzBj+hbAItH/ABPzjboPJBwcqWNsAjJuV6ZzuMFWZt//n7SNS2Wayf
+         k0mrNKGCC8fY1WKehL7UEw5/dAFcFbpnJ/yv7FzE7CJKao/3UlEqXPMm3xJWLCuI7yxT
+         O8CzgQT7Sxix0lNBYH6ezfmW/UAVM6lry0pzHCbb/L/F8f7HrR6LqIO98R9zi/w7rFMh
+         /R/x8fEZNw4g3KbH+LUN3P47dkLHjf+1R/ZqTzZmIB4759TViL/KZQFiUrZS7byD/O7L
+         cNXrebX0KFx5LoQJ63cYPxa7yQ7gvN1nrLoRIQrl5djAPy9p+FVedKPFK1VZTmRlT0R7
+         6xUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=l03WTNrKTQC5MGvzPNBY30UTO75BWr5Rgkv2u4ayoro=;
-        b=Q8ldlPdc1L5u/+y41q7FxQzV4waNRAMKg9hYHIJwWSz4UsOIBey5Ye/oGaEraVpdJD
-         kYAVEi2bbO+bZgoFA/dyvsIN056GgwHkeuQWwa575dmxXDUXQY2CA26EXniXYIueOb9D
-         BAVr9OzNzZf1cVPLVrDAh5tWQa98nDVvFHnOJaUFUkUcTvSWloaFvpKyQBl4Mbkb8nOd
-         Y9L5P+SJ9LFDkuH+Ou2rRywl/tBnp6DwVp3Cf7ayZWEeLJ2RS2StfL+Sqe4YbqXN+Hfm
-         8d++cKcpsrkDKoHKs+Q5CHqK9iiVfW0PV04nQfJOaTOutyE3FoiIVEgm+Vh4oTn0RB0p
-         Wfag==
-X-Gm-Message-State: APjAAAWNgPC92u18gz11q4huG8VKIAwHrsPx7AqVYp52dQzMcCbIwCAi
-        2GWFkUTDHyTIX+QpNXvpJcM=
-X-Google-Smtp-Source: APXvYqxVTGZ/hNNKU9GlL6hTSquhGMZWUbQgRUTLQdxRwE+BwRTJSFRBSKoRb9HfcB6IVux2m+T7Fg==
-X-Received: by 2002:a7b:cb97:: with SMTP id m23mr238030wmi.37.1579539375549;
-        Mon, 20 Jan 2020 08:56:15 -0800 (PST)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id x16sm305227wmk.35.2020.01.20.08.56.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 08:56:14 -0800 (PST)
-Date:   Mon, 20 Jan 2020 17:56:14 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Namjae Jeon <linkinjeon@gmail.com>,
-        Gabriel Krisman Bertazi <krisman@collabora.com>
-Subject: Re: vfat: Broken case-insensitive support for UTF-8
-Message-ID: <20200120165614.yp3pukpj3ilq6nxp@pali>
-References: <20200119221455.bac7dc55g56q2l4r@pali>
- <87sgkan57p.fsf@mail.parknet.co.jp>
- <20200120110438.ak7jpyy66clx5v6x@pali>
- <89eba9906011446f8441090f496278d2@AcuMS.aculab.com>
- <20200120152009.5vbemgmvhke4qupq@pali>
- <1a4c545dc7f14e33b7e59321a0aab868@AcuMS.aculab.com>
- <20200120162701.guxcrmqysejaqw6y@pali>
- <b42888a01c8847e48116873ebbbbb261@AcuMS.aculab.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=l7rXrWc9zdyZC8ngED66aztSeYAIdSfuXFbxTohqXwo=;
+        b=EIQO39P/BILOpAFv14GasHPG4ZoymkzKSqksQ8F29KTdFgd04sqN71nlNVTuFZrXKw
+         +ycGjVGj+LwkXsLP5SZ5fYHoGDjWBCyWaVFZ6PyCIWReu9ukt7bj6qVhnXC2XpVwIGj+
+         7nxpvQIeGPgi7BPSterOeOBUmtyjMSRorU61n2wTA3znS17vx0Fts3BJ7DiCyxZaOkcO
+         4LR4Ja+aYgqeDFYSCi7qXah/JAxjoJc7ll2075QIfh/YQMf60i2RROl3k+xT+ZRdmcwd
+         ij6hU8EGJk873ew/Meh4Jb3aSh0DdTNaL0HP6AxyIzrVTRcyS1Bve+Y1MxczMNQuGB6K
+         i7/Q==
+X-Gm-Message-State: APjAAAW+pkiq5om7+RfSuOeekl+6yLJqkXsJbAcATs1GJN96xAANJRI1
+        ayaP/vW/VYOn2pegmln4YYotYO9Vkpo=
+X-Google-Smtp-Source: APXvYqxQlqgtwctnFJkk3FTNJcvt4oudhWgrQUyGHRg/Lus5T12Up6Sc2lVZkysElds60n0QZ1910Q==
+X-Received: by 2002:a9d:5885:: with SMTP id x5mr311761otg.132.1579539695269;
+        Mon, 20 Jan 2020 09:01:35 -0800 (PST)
+Received: from minyard.net ([2001:470:b8f6:1b:9c9c:d583:ce3d:f87a])
+        by smtp.gmail.com with ESMTPSA id n16sm12479084otk.25.2020.01.20.09.01.33
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 20 Jan 2020 09:01:34 -0800 (PST)
+Date:   Mon, 20 Jan 2020 11:01:32 -0600
+From:   Corey Minyard <cminyard@mvista.com>
+To:     Asmaa Mnebhi <Asmaa@mellanox.com>
+Cc:     Colin King <colin.king@canonical.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Vadim Pasternak <vadimp@mellanox.com>,
+        "openipmi-developer@lists.sourceforge.net" 
+        <openipmi-developer@lists.sourceforge.net>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH][next] drivers: ipmi: fix off-by-one bounds check that
+ leads to a out-of-bounds write
+Message-ID: <20200120170132.GT2886@minyard.net>
+Reply-To: cminyard@mvista.com
+References: <20200114144031.358003-1-colin.king@canonical.com>
+ <DB6PR0501MB2712BEBCF959566EAB063769DA340@DB6PR0501MB2712.eurprd05.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="7vl3wb4i55lghd6k"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b42888a01c8847e48116873ebbbbb261@AcuMS.aculab.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <DB6PR0501MB2712BEBCF959566EAB063769DA340@DB6PR0501MB2712.eurprd05.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jan 14, 2020 at 03:50:22PM +0000, Asmaa Mnebhi wrote:
+> Reviewed-by: Asmaa Mnebhi <asmaa@mellanox.com>
 
---7vl3wb4i55lghd6k
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks, I've picked this up in my next tree.
 
-On Monday 20 January 2020 16:43:21 David Laight wrote:
-> From: Pali Roh=C3=A1r
-> > Sent: 20 January 2020 16:27
-> ...
-> > > Unfortunately there is neither a 1:1 mapping of all possible byte seq=
-uences
-> > > to wchar_t (or unicode code points),
-> >=20
-> > I was talking about valid UTF-8 sequence (invalid, illformed is out of
-> > game and for sure would always cause problems).
->=20
-> Except that they are always likely to happen.
+-corey
 
-As wrote before, Linux kernel does not allow such sequences. So
-userspace get error when is trying to store garbage.
-
-> I've been pissed off by programs crashing because they assume that
-> a input string (eg an email) is UTF-8 but happens to contain a single
-> 0xa3 byte in the otherwise 7-bit data.
->=20
-> The standard ought to have defined a translation for such sequences
-> and just a 'warning' from the function(s) that unexpected bytes were
-> processed.
-
-There is informative part, how to replace invalid part of sequence to
-Unicode code point U+FFFD. So if your need to to "process any byte
-sequence as UTF-8" there is standardized way to convert it into one
-exact sequence of Unicode code points. This is what email programs
-should do and non-broken are already doing it.
-
-> > > nor a 1:1 mapping of all possible wchar_t values to UTF-8.
-> >=20
-> > This is not truth. There is exactly only one way how to convert sequence
-> > of Unicode code points to UTF-8. UTF is Unicode Transformation Format
-> > and has exact definition how is Unicode Transformed.
->=20
-> But a wchar_t can hold lots of values that aren't Unicode code points.
-> Prior to the 2003 changes half of the 2^32 values could be converted.
-> Afterwards only a small fraction.
-
-wchar_t in kernel can hold only subset of Unicode code points, up to
-the U+FFFF (2^16-1).
-
-Halves of surrogate pairs are not valid Unicode code points but as
-stated they are used in MS FAT.
-
-So anything which can be put into kernel's wchar_t is valid for FAT.
-
->=20
-> > If you have valid UTF-8 sequence then it describe one exact sequence of
-> > Unicode code points. And if you have sequence (ordinals) of Unicode code
-> > points there is exactly one and only one its representation in UTF-8.
-> >=20
-> > I would suggest you to read Unicode standard, section 2.5 Encoding Form=
-s.
->=20
-> That all assumes everyone is playing the correct game
-
-And why should we not play correct game? On input we have UTF and
-internally we works with Unicode. Unicode codepoints does not leak from
-kernel, so we can play correct game and assume that our code in kernel
-is correct (and if not, we can fix it). Plus when communicating with
-outside word, just check that input data are valid (which we already do
-for UTF-8 user input).
-
-So I do not see any problem there.
-
-> > > Really both need to be defined - even for otherwise 'invalid' sequenc=
-es.
-> > >
-> > > Even the 16-bit values above 0xd000 can appear on their own in
-> > > windows filesystems (according to wikipedia).
-> >=20
-> > If you are talking about UTF-16 (which is _not_ 16-bit as you wrote),
-> > look at my previous email:
->=20
-> UFT-16 is a sequence of 16-bit values....
-
-No, this is not truth. UTF-16 is sequence either of 16-bit values or of
-32-bit values with other restrictions. UTF-16 is variable length enc.
-
-> It can contain 0xd000 to 0xffff (usually in pairs) but they aren't UTF-8 =
-codepoints.
->=20
-> 	David
->=20
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1=
- 1PT, UK
-> Registration No: 1397386 (Wales)
-
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---7vl3wb4i55lghd6k
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EARECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXiXbrAAKCRCL8Mk9A+RD
-UgSWAJ4ktl8RuEWLboJtM53qzi+wvlI2UwCfWQmIzJHZ//yydpo769G/FVDYQSo=
-=9ZkE
------END PGP SIGNATURE-----
-
---7vl3wb4i55lghd6k--
+> 
+> -----Original Message-----
+> From: Colin King <colin.king@canonical.com> 
+> Sent: Tuesday, January 14, 2020 9:41 AM
+> To: Corey Minyard <cminyard@mvista.com>; Arnd Bergmann <arnd@arndb.de>; Greg Kroah-Hartman <gregkh@linuxfoundation.org>; Vadim Pasternak <vadimp@mellanox.com>; Asmaa Mnebhi <Asmaa@mellanox.com>; openipmi-developer@lists.sourceforge.net
+> Cc: kernel-janitors@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: [PATCH][next] drivers: ipmi: fix off-by-one bounds check that leads to a out-of-bounds write
+> 
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> The end of buffer check is off-by-one since the check is against an index that is pre-incremented before a store to buf[]. Fix this adjusting the bounds check appropriately.
+> 
+> Addresses-Coverity: ("Out-of-bounds write")
+> Fixes: 51bd6f291583 ("Add support for IPMB driver")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/char/ipmi/ipmb_dev_int.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/char/ipmi/ipmb_dev_int.c b/drivers/char/ipmi/ipmb_dev_int.c
+> index 9fdae83e59e0..382b28f1cf2f 100644
+> --- a/drivers/char/ipmi/ipmb_dev_int.c
+> +++ b/drivers/char/ipmi/ipmb_dev_int.c
+> @@ -279,7 +279,7 @@ static int ipmb_slave_cb(struct i2c_client *client,
+>  		break;
+>  
+>  	case I2C_SLAVE_WRITE_RECEIVED:
+> -		if (ipmb_dev->msg_idx >= sizeof(struct ipmb_msg))
+> +		if (ipmb_dev->msg_idx >= sizeof(struct ipmb_msg) - 1)
+>  			break;
+>  
+>  		buf[++ipmb_dev->msg_idx] = *val;
+> --
+> 2.24.0
+> 
