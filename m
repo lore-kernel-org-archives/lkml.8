@@ -2,42 +2,43 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C06C33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 03:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A99C0C33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 03:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 871462073D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 03:22:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FC702073D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 03:23:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579490576;
-	bh=rwxJYZiONyiJT5R2boSa6GTk5OHlF/u2kz/yrQUtZ10=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=qRlhQ0Kj9aDvw+BCQskJ//tJgRO/oudOkXwiewH0gvVw8epyWgdL36OV0qVTRDbJc
-	 gWM/O0vT7F47rCknRAw+HNtr+i0LJmgNYIYCWcp0ZGu+VaoplLbC++DslEPp7ijzh4
-	 xsnMH2arwc2R0C47ZXpZHGni440JBp39Q+14PvXo=
+	s=default; t=1579490588;
+	bh=K7xZMmjWVKCT25PyjZdyGvQdXmOSlwcrsLU8kIcTW70=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=JLf4BhxAel3YW5l7eegbOF3jGDaKF/obTHjcsjv4Eoxi8M8VY0roohlLRqPjXNjFf
+	 9ACCppzTEjV+EQy2CUkhLYFALgttrhh3vlW05HsFGTzqPj+EB8mOu0ZiZPg2q4cxoB
+	 kumzwwJ9522pzQFyPxRiOsPS5Hr0VNSVovOF6Z2Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729081AbgATDW4 (ORCPT
+        id S1729112AbgATDXI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 22:22:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50702 "EHLO mail.kernel.org"
+        Sun, 19 Jan 2020 22:23:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728949AbgATDWz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 22:22:55 -0500
+        id S1728949AbgATDXH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jan 2020 22:23:07 -0500
 Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 169FE20678;
-        Mon, 20 Jan 2020 03:22:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 119BF2073A;
+        Mon, 20 Jan 2020 03:23:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579490574;
-        bh=rwxJYZiONyiJT5R2boSa6GTk5OHlF/u2kz/yrQUtZ10=;
-        h=From:To:Cc:Subject:Date:From;
-        b=PIa5pvw9AK9Vdk/st8sssUVHH69dz6Mr5WD4j+G6MtXc2yHl8aHdYvBRN0QPzJyZx
-         2lA6KO2tT+DFmCGG55T732OG9cy5A1/DV8r27o17QFNJHu2PBY7kzvtn7uhaUFvWeH
-         i5z5Wmo27JfakP7qAIYwTWG9sjynEZBgwGv/SQC4=
+        s=default; t=1579490586;
+        bh=K7xZMmjWVKCT25PyjZdyGvQdXmOSlwcrsLU8kIcTW70=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=nQfbeMNtQSCiuows61nUsvrS3a5EztfhYbHVK+L3clubDXRJTeiPMGRaiAZxlI8a1
+         BR/stCU+1lL3Rgxzjb2c9GevFOheshReJkxlO5HCBda7XQl9BxwoSMOhP2danWU2tY
+         WVRDUGxrjORfUaR/ZmAlGsbY7noIwoZBa/0BL4E0=
 From:   Masami Hiramatsu <mhiramat@kernel.org>
 To:     Steven Rostedt <rostedt@goodmis.org>
 Cc:     Ingo Molnar <mingo@redhat.com>,
@@ -56,10 +57,12 @@ Cc:     Ingo Molnar <mingo@redhat.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 0/3] bootconfig: tracing: Fix documentations of bootconfig and boot-time tracing
-Date:   Mon, 20 Jan 2020 12:22:48 +0900
-Message-Id: <157949056842.25888.12912764773767908046.stgit@devnote2>
+Subject: [PATCH 1/3] bootconfig: Fix Kconfig help message for BOOT_CONFIG
+Date:   Mon, 20 Jan 2020 12:23:00 +0900
+Message-Id: <157949058031.25888.18399447161895787505.stgit@devnote2>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <157949056842.25888.12912764773767908046.stgit@devnote2>
+References: <157949056842.25888.12912764773767908046.stgit@devnote2>
 User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -69,27 +72,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Fix Kconfig help message since the bootconfig file is
+only available to be appended to initramfs. And also
+add a reference to the documentation.
 
-Here is the bootconfig and boot-time tracing documentation fix
-and updates. These can be applied on the latest tracing tree.
-
-Thanks for Randy about reporting and suggesting these fixes!
-
-Thank you,
-
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
+ init/Kconfig |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Masami Hiramatsu (3):
-      bootconfig: Fix Kconfig help message for BOOT_CONFIG
-      Documentation: bootconfig: Fix typos in bootconfig documentation
-      Documentation: tracing: Fix typos in boot-time tracing documentation
+diff --git a/init/Kconfig b/init/Kconfig
+index ffd240fb88c3..9506299a53e3 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -1223,7 +1223,9 @@ config BOOT_CONFIG
+ 	help
+ 	  Extra boot config allows system admin to pass a config file as
+ 	  complemental extension of kernel cmdline when booting.
+-	  The boot config file is usually attached at the end of initramfs.
++	  The boot config file must be attached at the end of initramfs
++	  with checksum and size.
++	  See <file:Documentation/admin-guide/bootconfig.rst> for details.
+ 
+ 	  If unsure, say Y.
+ 
 
-
- Documentation/admin-guide/bootconfig.rst |   32 ++++++++++++++++--------------
- Documentation/trace/boottime-trace.rst   |   18 ++++++++---------
- init/Kconfig                             |    4 +++-
- 3 files changed, 29 insertions(+), 25 deletions(-)
-
---
-Masami Hiramatsu <mhiramat@kernel.org>
