@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AFD8C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 20:41:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B3AC33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 20:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 289AC22525
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 20:41:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BA5322525
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 20:43:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="i/BoDtdF"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ao+DwidX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbgATUlV (ORCPT
+        id S1727011AbgATUnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 15:41:21 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:26808 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726586AbgATUlU (ORCPT
+        Mon, 20 Jan 2020 15:43:20 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:39366 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726752AbgATUnT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 15:41:20 -0500
+        Mon, 20 Jan 2020 15:43:19 -0500
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1579552880; h=Content-Transfer-Encoding: Content-Type:
+ s=smtp; t=1579552999; h=Content-Transfer-Encoding: Content-Type:
  In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=IYEikF8EGuCx8OwTVwuaWLgMWhiZl2nJ8jeeoNcZUDE=; b=i/BoDtdFFBSA9e5m9b8KpmtMCNH/y2zoOi1vF367pY2lDripkgd7vvzFlBh3jBSWVDMzEIDV
- v1GaEcszL8pnxvJJ7pN6TmMsKpG6zmPybyO9+OXty6ptY1+YvSveOYR+Xql3Oqj4S3aeWjVx
- CP7sVbFEtbTG5qkL3+lSXZ+LmO4=
-X-Mailgun-Sending-Ip: 104.130.122.25
+ Subject: Sender; bh=iOzImZJtvhbDuREZ0Gj4mOqNfSlQTYSZX6TMEEe9hBk=; b=ao+DwidXljCW9n3BdfCS7NsnwNufEngU5rQ4Qj3n4YFmzKRKLFXfZi5Or5On+lLUbxc3soEG
+ 8fZdLExvvYVewgpy6wyp7h/P/SRRQaK6p11XtQCINXqFPf954YEWKku3VWwBdb/Q+rGGuNH1
+ bxWkU4zsQCC8OLpZ9YoP0OKRN6c=
+X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e261066.7f4ec985cfb8-smtp-out-n02;
- Mon, 20 Jan 2020 20:41:10 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e2610df.7f0ae65c36f8-smtp-out-n01;
+ Mon, 20 Jan 2020 20:43:11 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 544A1C447A6; Mon, 20 Jan 2020 20:41:08 +0000 (UTC)
+        id 682CFC447A2; Mon, 20 Jan 2020 20:43:11 +0000 (UTC)
 Received: from [10.46.161.159] (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: asutoshd)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 744C7C433CB;
-        Mon, 20 Jan 2020 20:41:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 744C7C433CB
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 09266C433CB;
+        Mon, 20 Jan 2020 20:43:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 09266C433CB
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=asutoshd@codeaurora.org
-Subject: Re: [PATCH v4 5/8] scsi: ufs: Inline two functions into their callers
+Subject: Re: [PATCH v4 6/8] scsi: ufs: Delete is_init_prefetch from struct
+ ufs_hba
 To:     Bean Huo <huobean@gmail.com>, alim.akhtar@samsung.com,
         avri.altman@wdc.com, jejb@linux.ibm.com,
         martin.petersen@oracle.com, stanley.chu@mediatek.com,
@@ -53,14 +54,14 @@ To:     Bean Huo <huobean@gmail.com>, alim.akhtar@samsung.com,
         cang@codeaurora.org
 Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20200120130820.1737-1-huobean@gmail.com>
- <20200120130820.1737-6-huobean@gmail.com>
+ <20200120130820.1737-7-huobean@gmail.com>
 From:   "Asutosh Das (asd)" <asutoshd@codeaurora.org>
-Message-ID: <44e68000-a5b3-b368-d76f-416d412e1a87@codeaurora.org>
-Date:   Mon, 20 Jan 2020 12:41:05 -0800
+Message-ID: <34128bac-3811-16c1-ea6a-57c52cd70982@codeaurora.org>
+Date:   Mon, 20 Jan 2020 12:43:09 -0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200120130820.1737-6-huobean@gmail.com>
+In-Reply-To: <20200120130820.1737-7-huobean@gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -72,61 +73,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 On 1/20/2020 5:08 AM, Bean Huo wrote:
 > From: Bean Huo <beanhuo@micron.com>
 > 
-> Delete ufshcd_read_power_desc() and ufshcd_read_device_desc(), directly
-> inline ufshcd_read_desc() into its callers.
+> Without variable is_init_prefetch, the current logic can guarantee
+> ufshcd_init_icc_levels() will execute only once, delete it now.
 > 
-> Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
 > Signed-off-by: Bean Huo <beanhuo@micron.com>
 > ---
 
-LGTM.
 Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
 
->   drivers/scsi/ufs/ufshcd.c | 17 ++++-------------
->   1 file changed, 4 insertions(+), 13 deletions(-)
+>   drivers/scsi/ufs/ufshcd.c | 5 +----
+>   drivers/scsi/ufs/ufshcd.h | 2 --
+>   2 files changed, 1 insertion(+), 6 deletions(-)
 > 
 > diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> index 5dfe760f2786..3d3289bb3cad 100644
+> index 3d3289bb3cad..0c859f239d1c 100644
 > --- a/drivers/scsi/ufs/ufshcd.c
 > +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -3146,17 +3146,6 @@ static inline int ufshcd_read_desc(struct ufs_hba *hba,
->   	return ufshcd_read_desc_param(hba, desc_id, desc_index, 0, buf, size);
+> @@ -6967,8 +6967,7 @@ static int ufshcd_add_lus(struct ufs_hba *hba)
+>   {
+>   	int ret;
+>   
+> -	if (!hba->is_init_prefetch)
+> -		ufshcd_init_icc_levels(hba);
+> +	ufshcd_init_icc_levels(hba);
+>   
+>   	/* Add required well known logical units to scsi mid layer */
+>   	ret = ufshcd_scsi_add_wlus(hba);
+> @@ -6994,8 +6993,6 @@ static int ufshcd_add_lus(struct ufs_hba *hba)
+>   	scsi_scan_host(hba->host);
+>   	pm_runtime_put_sync(hba->dev);
+>   
+> -	if (!hba->is_init_prefetch)
+> -		hba->is_init_prefetch = true;
+>   out:
+>   	return ret;
 >   }
+> diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+> index 32b6714f25a5..5c65d9fdeb14 100644
+> --- a/drivers/scsi/ufs/ufshcd.h
+> +++ b/drivers/scsi/ufs/ufshcd.h
+> @@ -501,7 +501,6 @@ struct ufs_stats {
+>    * @intr_mask: Interrupt Mask Bits
+>    * @ee_ctrl_mask: Exception event control mask
+>    * @is_powered: flag to check if HBA is powered
+> - * @is_init_prefetch: flag to check if data was pre-fetched in initialization
+>    * @init_prefetch_data: data pre-fetched during initialization
+>    * @eh_work: Worker to handle UFS errors that require s/w attention
+>    * @eeh_work: Worker to handle exception events
+> @@ -652,7 +651,6 @@ struct ufs_hba {
+>   	u32 intr_mask;
+>   	u16 ee_ctrl_mask;
+>   	bool is_powered;
+> -	bool is_init_prefetch;
+>   	struct ufs_init_prefetch init_prefetch_data;
 >   
-> -static inline int ufshcd_read_power_desc(struct ufs_hba *hba,
-> -					 u8 *buf,
-> -					 u32 size)
-> -{
-> -	return ufshcd_read_desc(hba, QUERY_DESC_IDN_POWER, 0, buf, size);
-> -}
-> -
-> -static int ufshcd_read_device_desc(struct ufs_hba *hba, u8 *buf, u32 size)
-> -{
-> -	return ufshcd_read_desc(hba, QUERY_DESC_IDN_DEVICE, 0, buf, size);
-> -}
->   
->   /**
->    * struct uc_string_id - unicode string
-> @@ -6493,7 +6482,8 @@ static void ufshcd_init_icc_levels(struct ufs_hba *hba)
->   	if (!desc_buf)
->   		return;
->   
-> -	ret = ufshcd_read_power_desc(hba, desc_buf, buff_len);
-> +	ret = ufshcd_read_desc(hba, QUERY_DESC_IDN_POWER, 0,
-> +			desc_buf, buff_len);
->   	if (ret) {
->   		dev_err(hba->dev,
->   			"%s: Failed reading power descriptor.len = %d ret = %d",
-> @@ -6599,7 +6589,8 @@ static int ufs_get_device_desc(struct ufs_hba *hba)
->   		goto out;
->   	}
->   
-> -	err = ufshcd_read_device_desc(hba, desc_buf, hba->desc_size.dev_desc);
-> +	err = ufshcd_read_desc(hba, QUERY_DESC_IDN_DEVICE, 0, desc_buf,
-> +			hba->desc_size.dev_desc);
->   	if (err) {
->   		dev_err(hba->dev, "%s: Failed reading Device Desc. err = %d\n",
->   			__func__, err);
+>   	/* Work Queues */
 > 
 
 
