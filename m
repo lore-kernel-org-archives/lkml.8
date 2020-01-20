@@ -2,65 +2,56 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E26C33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 195FAC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:39:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54D6522314
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:38:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EACB722314
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:39:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727990AbgATNiz (ORCPT
+        id S1728516AbgATNjS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 08:38:55 -0500
-Received: from mx2.suse.de ([195.135.220.15]:35478 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726819AbgATNiz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 08:38:55 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 93E83AAB0;
-        Mon, 20 Jan 2020 13:38:53 +0000 (UTC)
-Date:   Mon, 20 Jan 2020 14:38:52 +0100
-From:   Jean Delvare <jdelvare@suse.de>
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     linux-doc@vger.kernel.org, linux-i2c@vger.kernel.org,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 09/26] docs: i2c: i2c-protocol: remove unneeded colons
- from table
-Message-ID: <20200120143852.02b2c185@endymion>
-In-Reply-To: <20200105225012.11701-9-luca@lucaceresoli.net>
-References: <20200105224006.10321-1-luca@lucaceresoli.net>
-        <20200105225012.11701-1-luca@lucaceresoli.net>
-        <20200105225012.11701-9-luca@lucaceresoli.net>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Mon, 20 Jan 2020 08:39:18 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:56790 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726738AbgATNjR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 08:39:17 -0500
+Received: from localhost (82-95-191-104.ip.xs4all.nl [82.95.191.104])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 3631C14EAD04B;
+        Mon, 20 Jan 2020 05:39:16 -0800 (PST)
+Date:   Mon, 20 Jan 2020 14:39:07 +0100 (CET)
+Message-Id: <20200120.143907.404082019388749442.davem@davemloft.net>
+To:     christophe.jaillet@wanadoo.fr
+Cc:     linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] ide: tx4939ide: Fix the name used in a
+ 'devm_request_mem_region()' call
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190724220145.17282-1-christophe.jaillet@wanadoo.fr>
+References: <20190724220145.17282-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 20 Jan 2020 05:39:17 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun,  5 Jan 2020 23:49:55 +0100, Luca Ceresoli wrote:
-> These colons are not needed: the columns already nicely separate the
-> symbold from their description. They are also inconsistently preceded by
-> whitespace.
-> 
-> Remove the colons completely to simplify and clean up.
-> 
-> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
-> ---
->  Documentation/i2c/i2c-protocol.rst | 18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
-> (...)
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Date: Thu, 25 Jul 2019 00:01:45 +0200
 
-Reviewed-by: Jean Delvare <jdelvare@suse.de>
+> This should be "tx4939ide" instead of "tx4938ide", but here MODNAME is even
+> better.
+> 
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
--- 
-Jean Delvare
-SUSE L3 Support
+Applied.
