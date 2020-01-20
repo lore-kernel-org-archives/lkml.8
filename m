@@ -2,147 +2,263 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0962BC3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4BDDC33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:44:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5053207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:43:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAFD921835
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:44:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="K+MZCW31"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PmrwJHmV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727011AbgATMnB (ORCPT
+        id S1727041AbgATMol (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 07:43:01 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:56758 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726589AbgATMnA (ORCPT
+        Mon, 20 Jan 2020 07:44:41 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38925 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726589AbgATMok (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 07:43:00 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00KCgtS7064086;
-        Mon, 20 Jan 2020 06:42:55 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579524175;
-        bh=tC/peLSq3Bzc5cp8eak6KuGrswkAUS1ZeB9UTQGw9qc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=K+MZCW31nyLyHm/xSmdpCfKqSObEAkO0imiCQVrto9wt82nkavGOqzB7oZ0sHspi7
-         e8QNt0c7mVZXFT3axr4anRYBQ2/g6ztu355laZSmL/bGG0aa+ZmMk0YMmfLFlQyZIu
-         gbNghl+wPkPhvlrI4EER75ltGfxCKQxeUGuMf0dY=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00KCgtl1057276
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 20 Jan 2020 06:42:55 -0600
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 20
- Jan 2020 06:42:54 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 20 Jan 2020 06:42:54 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00KCgqNv125311;
-        Mon, 20 Jan 2020 06:42:53 -0600
-Subject: Re: [PATCH] media: rcar_drif: Use dma_request_chan() instead
- dma_request_slave_channel()
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Ramesh Shanmugasundaram <rashanmu@gmail.com>,
-        Vinod <vkoul@kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-References: <20191217104025.23318-1-peter.ujfalusi@ti.com>
- <CAMuHMdUPhabZrXJ3UqSVTdy2aWf6VG27q287MizKJ5q5tyRnwA@mail.gmail.com>
- <c7eedf72-aa00-8ffe-8c8f-4946a4f54fa7@ti.com>
- <CAMuHMdXU9_WY54iU5DY6UHZHmyaR06pW7X0nnyCWHA=R3GtcJA@mail.gmail.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <f2bc1bea-c844-8627-4480-8174259be0a4@ti.com>
-Date:   Mon, 20 Jan 2020 14:43:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <CAMuHMdXU9_WY54iU5DY6UHZHmyaR06pW7X0nnyCWHA=R3GtcJA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Mon, 20 Jan 2020 07:44:40 -0500
+Received: by mail-pl1-f193.google.com with SMTP id g6so13155120plp.6;
+        Mon, 20 Jan 2020 04:44:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=WuuVkrsLf6rBA3fflWLb/+t8EB56sl0kP7tPPgkFMGE=;
+        b=PmrwJHmVHdUdY3/Aki06ylAktigbLuAS+rV1QWmMK6Rgr/ejD8y9XoH6qn/Jo6wWil
+         679ucLE8Nx0OUoD+72VNv5Jvv9AeCGL22KQWqU6tZxZDcKbzdwNMKVcDPbuW7NsvelG8
+         avpyJwBYByZFBidsjMOkxgo95H9Nj+5YtHGRyuZuuh3LGz/oaSNsBuLLPMDsWIcZydiv
+         3FFT0dspfvrML8DRxBKeEcDR7ZmEIXj5LeorKqwaZwb1MDtUt2jViCMoNr2iwnTTBwGH
+         oYhUJ/iUbkEnsVpwB0eBOa+cg/wrxOkR5E+zLdz81yS3GJtP22RUVwJ1Y1Du3eu6cez2
+         JN1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=WuuVkrsLf6rBA3fflWLb/+t8EB56sl0kP7tPPgkFMGE=;
+        b=Zuf4PWTdf+yQPIksNz4TiKy15gdbgi5PD82ZHoTjvaoe0XpW5+r7zhxV9gAK9hoyfG
+         KuZkFZuFeeeKM+lBghKbQG82wAVIczs7kn9uxL/bzFVtPFEgW/rxYGsc0s5QZX9JY5NQ
+         /bkqkYEy9Aw3iNRGnq/vf1MZnTZfMwTMTZCwuDzyRrBQyi7br6DOD16eg1oSFloI9xIs
+         pP7Qgy9BhgE+08L6aqc8GjyK5T/kRxWAAG2KQgm/BignPqrhXHE/R98kcrQJHoPmaQaE
+         1vGzfwo3n0tDO/lfM5TApuUfMjHryrstcWigItByVa4F6VLdXfsmZZuxTf7BE7LmXe7I
+         Pamg==
+X-Gm-Message-State: APjAAAWqilmuRnBBMeFcCvNFOCv2/4abBJjIpq3tgtPa/1BPvXkhQ6lk
+        z7UHMYzg+V4Paw89w81dTR21RrVG
+X-Google-Smtp-Source: APXvYqwTilCRm7CPi73iKEeppW/onBgR6gKx+IHT4rX0cw0dC74UaV2Lq8ZvQ67A8xcZmCjLpVJdBg==
+X-Received: by 2002:a17:902:bb8d:: with SMTP id m13mr14579933pls.157.1579524279659;
+        Mon, 20 Jan 2020 04:44:39 -0800 (PST)
+Received: from localhost.localdomain ([221.146.116.86])
+        by smtp.gmail.com with ESMTPSA id h3sm39184590pfo.132.2020.01.20.04.44.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jan 2020 04:44:38 -0800 (PST)
+From:   Namjae Jeon <linkinjeon@gmail.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
+        sj1557.seo@samsung.com, pali.rohar@gmail.com, arnd@arndb.de,
+        namjae.jeon@samsung.com, Namjae Jeon <linkinjeon@gmail.com>
+Subject: [PATCH v12 00/13] add the latest exfat driver
+Date:   Mon, 20 Jan 2020 21:44:15 +0900
+Message-Id: <20200120124428.17863-1-linkinjeon@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Namjae Jeon <namjae.jeon@samsung.com>
 
+This adds the latest Samsung exfat driver to fs/exfat. This is an
+implementation of the Microsoft exFAT specification. Previous versions
+of this shipped with millions of Android phones, and a random previous
+snaphot has been merged in drivers/staging/.
 
-On 20/01/2020 14.36, Geert Uytterhoeven wrote:
-> Hi Peter,
-> 
-> On Mon, Jan 20, 2020 at 1:09 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
->> On 20/01/2020 14.05, Geert Uytterhoeven wrote:
->>> On Tue, Dec 17, 2019 at 11:41 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
->>>> dma_request_slave_channel() is a wrapper on top of dma_request_chan()
->>>> eating up the error code.
->>>>
->>>> By using dma_request_chan() directly the driver can support deferred
->>>> probing against DMA.
->>>>
->>>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->>>
->>> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
->>>
->>> One comment below.
->>>
->>>> --- a/drivers/media/platform/rcar_drif.c
->>>> +++ b/drivers/media/platform/rcar_drif.c
->>>> @@ -275,10 +275,10 @@ static int rcar_drif_alloc_dmachannels(struct rcar_drif_sdr *sdr)
->>>>         for_each_rcar_drif_channel(i, &sdr->cur_ch_mask) {
->>>>                 struct rcar_drif *ch = sdr->ch[i];
->>>>
->>>> -               ch->dmach = dma_request_slave_channel(&ch->pdev->dev, "rx");
->>>> -               if (!ch->dmach) {
->>>> +               ch->dmach = dma_request_chan(&ch->pdev->dev, "rx");
->>>> +               if (IS_ERR(ch->dmach)) {
->>>>                         rdrif_err(sdr, "ch%u: dma channel req failed\n", i);
->>>
->>> Now there is an error code, you might (1) want to print it, and (2) only
->>> do so when it is not due to probe deferral:
->>>
->>>         if (PTR_ERR(ch->dmach) != -EPROBE_DEFER)
->>>                 rdrif_err(sdr, "ch%u: dma channel req failed %pe\n",
->>> i, ch->dmach);
->>
->> Yes, this is true.
->>
->>>
->>>> -                       ret = -ENODEV;
->>>> +                       ret = PTR_ERR(ch->dmach);
->>
->> if (ret != -EPROBE_DEFER)
->>         rdrif_err(sdr, "ch%u: dma channel req failed (%d)\n", i, ret);
->>
->> might be simpler.
-> 
-> Sure, checking ret is simpler.
-> But printing ch->dmach means you can use the new %pe format specifier
-> to pretty-print the error code.
+Compared to the sdfat driver shipped on the phones the following changes
+have been made:
 
-Ah, I was not aware of this, but there is another issue with the patch:
-I need to set the ch->dmach to NULL before jumping to dmach_error..
+ - the support for vfat has been removed as that is already supported
+   by fs/fat
+ - driver has been renamed to exfat
+ - the code has been refactored and clean up to fully integrate into
+   the upstream Linux version and follow the Linux coding style
+ - metadata operations like create, lookup and readdir have been further
+   optimized
+ - various major and minor bugs have been fixed
 
-I'll send v3 in a minute.
+We plan to treat this version as the future upstream for the code base
+once merged, and all new features and bug fixes will go upstream first.
 
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
+v12:
+ - Merge the #12 patch into the #11 patch.
+ - Remove an incorrect comment about time_offset mount option.
 
-- Péter
+v11:
+ - Use current_time instead of ktime_get_real_ts64.
+ - Add i_crtime in exfat inode.
+ - Drop the clamping min/max timestamp.
+ - Merge exfat_init_file_entry into exfat_init_dir_entry.
+ - Initialize the msec fields in exfat_init_dir_entry.
+ - Change timestamps written to disk always get stored in UTC instead of
+   active timezone.
+ - Update EXFAT_DEFAULT_IOCHARSET description in Kconfig.
+ - exfat_get/set_entry_time() take a time_ms argument.
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+v10:
+ - Make PBR structures as packed structure.
+ - Fix build error on 32 bit system.
+ - Change L suffix of UNIX_SECS_2108 macro with LL suffix to work
+   on both 32/64bit system.
+ - Rework exfat time handling.
+ - Don't warp exfat specification URLs.
+ - Add _FS suffix to config name.
+ - Remove case_sensitive mount option.
+ - iocharset=utf8 mount option work as utf8 option.
+ - Rename the misleading nls names to corresponding ones.
+ - Fix wrong header guard name of exfat_fs.h.
+ - Remove the unneeded braces of macros in exfat_fs.h.
+ - Move the ondisk values to exfat_raw.h
+ - Put the operators at the previous line in exfat_cluster_to_sector().
+ - Braces of EXFAT_DELETE macro would outside the ~.
+ - Directly use exfat dentry field name.
+ - Add EXFAT_CLUSTERS_UNTRACKED macro.
+ - Remove both sets of inner braces in exfat_set_vol_flags().
+ - Replace is_reserved_cluster() with an explicit check
+   for EXFAT_EOF_CLUSTER.
+ - Initialize superblock s_time_gran/max/min.
+ - Clean-up exfat_bmap and exfat_get_block().
+ - Fix wrong boundlen to avoid potential buffer overflow
+   in exfat_convert_char_to_ucs2().
+ - Process length value as 1 when conversion is failed.
+ - Replace union exfat_timezone with masking the valid bit.
+ - Change exfat_cmp_uniname() with exfat_uniname_ncmp().
+ - Remove struct exfat_timestamp.
+ - Add atime update support.
+ - Add time_offset mount option.
+ - Remove unneeded CLUSTER_32 macro.
+ - Process utf16 surrogage pair as one character.
+ - Rename MUST_ZERO_LEN to PBR64_RESERVED_LEN.
+ - Simplify is_exfat function by just using memchr_inv().
+ - Remove __exfat_init_name_hash.
+ - Remove exfat_striptail_len.
+ - Split dentry ops for the utf8 vs non-utf8 cases.
+
+v9:
+ - Add support time zone.
+ - Fix data past EOF resulting from fsx testsuite.
+ - Remove obsolete comments in __exfat_resolve_path().
+ - Remove unused file attributes macros.
+ - Remove unneeded #if BITS_PER_LONG.
+
+v8:
+ - Rearrange the function grouping in exfat_fs.h
+   (exfat_count_dir_entries, exfat_get_dentry, exfat_get_dentry_set,
+    exfat_find_location).
+ - Mark exfat_extract_uni_name(), exfat_get_uniname_from_ext_entry() and
+   exfat_mirror_bh() as static.
+
+v7:
+ - Add the helpers macros for bitmap and fat entry to improve readability.
+ - Rename exfat_test_bitmap to exfat_find_free_bitmap.
+ - Merge exfat_get_num_entries into exfat_calc_num_entries.
+ - Add EXFAT_DATA_CLUSTERS and EXFAT_RESERVED_CLUSTERS macro.
+ - Add the macros for EXFAT BIOS block(JUMP_BOOT_LEN, OEM_NAME_LEN,
+   MUST_BE_ZERO_LEN).
+ - Add the macros for EXFAT entry type (IS_EXFAT_CRITICAL_PRI,
+   IS_EXFAT_BENIGN_PRI, IS_EXFAT_CRITICAL_SEC).
+ - Add EXFAT_FILE_NAME_LEN macro.
+ - Change the data type of is_dir with bool in __exfat_write_inode().
+ - Change the data type of sync with bool in exfat_set_vol_flags().
+ - Merge __exfat_set_vol_flags into exfat_set_vol_flags.
+ - Fix wrong statfs->f_namelen.
+
+v6:
+ - Fix always false comparison due to limited range of allow_utime's data
+   type.
+ - Move bh into loop in exfat_find_dir_entry().
+ - Move entry_uniname and unichar variables into
+   an if "entry_type == TYPE_EXTEND" branch.
+
+v5:
+ - Remove a blank line between the message and the error code in
+   exfat_load_upcase_table.
+ - Move brelse to the end of the while loop and rename release_bh label
+   to free_table in exfat_load_upcase_table.
+ - Move an error code assignment after a failed function call.
+ - Rename labels and directly return instead of goto.
+ - Improve the exception handling in exfat_get_dentry_set().
+ - Remove ->d_time leftover.
+ - fix boolreturn.cocci warnings.
+
+v4:
+ - Declare ALLOC_FAT_CHAIN and ALLOC_NO_FAT_CHAIN macros.
+ - Rename labels with proper name.
+ - Remove blank lines.
+ - Remove pointer check for bh.
+ - Move ep into loop in exfat_load_bitmap().
+ - Replace READ/WRITE_ONCE() with test_and_clear_bit() and set_bit().
+ - Change exfat_allow_set_time return type with bool.
+
+v3:
+ - fix wrong sbi->s_dirt set.
+
+v2:
+ - Check the bitmap count up to the total clusters.
+ - Rename goto labels in several places.
+ - Change time mode type with enumeration.
+ - Directly return error instead of goto at first error check.
+ - Combine seq_printf calls into a single one.
+
+Namjae Jeon (13):
+  exfat: add in-memory and on-disk structures and headers
+  exfat: add super block operations
+  exfat: add inode operations
+  exfat: add directory operations
+  exfat: add file operations
+  exfat: add fat entry operations
+  exfat: add bitmap operations
+  exfat: add exfat cache
+  exfat: add misc operations
+  exfat: add nls operations
+  exfat: add Kconfig and Makefile
+  MAINTAINERS: add exfat filesystem
+  staging: exfat: make staging/exfat and fs/exfat mutually exclusive
+
+ MAINTAINERS                   |    7 +
+ drivers/staging/exfat/Kconfig |    2 +-
+ fs/Kconfig                    |    3 +-
+ fs/Makefile                   |    1 +
+ fs/exfat/Kconfig              |   21 +
+ fs/exfat/Makefile             |    8 +
+ fs/exfat/balloc.c             |  282 +++++++
+ fs/exfat/cache.c              |  325 ++++++++
+ fs/exfat/dir.c                | 1238 ++++++++++++++++++++++++++++
+ fs/exfat/exfat_fs.h           |  522 ++++++++++++
+ fs/exfat/exfat_raw.h          |  184 +++++
+ fs/exfat/fatent.c             |  463 +++++++++++
+ fs/exfat/file.c               |  360 ++++++++
+ fs/exfat/inode.c              |  671 +++++++++++++++
+ fs/exfat/misc.c               |  163 ++++
+ fs/exfat/namei.c              | 1448 +++++++++++++++++++++++++++++++++
+ fs/exfat/nls.c                |  834 +++++++++++++++++++
+ fs/exfat/super.c              |  724 +++++++++++++++++
+ 18 files changed, 7254 insertions(+), 2 deletions(-)
+ create mode 100644 fs/exfat/Kconfig
+ create mode 100644 fs/exfat/Makefile
+ create mode 100644 fs/exfat/balloc.c
+ create mode 100644 fs/exfat/cache.c
+ create mode 100644 fs/exfat/dir.c
+ create mode 100644 fs/exfat/exfat_fs.h
+ create mode 100644 fs/exfat/exfat_raw.h
+ create mode 100644 fs/exfat/fatent.c
+ create mode 100644 fs/exfat/file.c
+ create mode 100644 fs/exfat/inode.c
+ create mode 100644 fs/exfat/misc.c
+ create mode 100644 fs/exfat/namei.c
+ create mode 100644 fs/exfat/nls.c
+ create mode 100644 fs/exfat/super.c
+
+-- 
+2.17.1
+
