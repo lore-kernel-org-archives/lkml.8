@@ -2,141 +2,107 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E21EBC33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F28E7C33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:19:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF783207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:17:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6D632077C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:19:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="K242n6o0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbgATIRD (ORCPT
+        id S1726650AbgATITX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 03:17:03 -0500
-Received: from mga01.intel.com ([192.55.52.88]:38466 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726039AbgATIRC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 03:17:02 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 00:17:01 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,341,1574150400"; 
-   d="scan'208";a="258624482"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga002.fm.intel.com with ESMTP; 20 Jan 2020 00:17:00 -0800
-Date:   Mon, 20 Jan 2020 16:17:10 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     David Rientjes <rientjes@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Wei Yang <richardw.yang@linux.intel.com>, hannes@cmpxchg.org,
-        vdavydov.dev@gmail.com, ktkhai@virtuozzo.com,
-        kirill.shutemov@linux.intel.com, yang.shi@linux.alibaba.com,
-        cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, alexander.duyck@gmail.com,
-        stable@vger.kernel.org
-Subject: Re: [Patch v4] mm: thp: remove the defer list related code since
- this will not happen
-Message-ID: <20200120081710.GA18028@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20200117233836.3434-1-richardw.yang@linux.intel.com>
- <20200118145421.0ab96d5d9bea21a3339d52fe@linux-foundation.org>
- <alpine.DEB.2.21.2001181525250.27051@chino.kir.corp.google.com>
- <20200120072237.GA18451@dhcp22.suse.cz>
+        Mon, 20 Jan 2020 03:19:23 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:41770 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726039AbgATITW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 03:19:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=lv6mWV+LyBEpHARixm1MrWLqdXwoOkowEDIcmQHZnc0=; b=K242n6o0jAV2chrAfUWM2qOEKD
+        pFQAkqMOBGF2gB/c3h630UEUAffnHDCcvHqDGASyUzUxxwxVonblqWWaxvJLxo1i9mWVjyV6EXhPA
+        uuJ0WhRJF9qk1mpJr29Wc4Hc7MCk/5Uxiz1/8/RLWNPGOLGa84F+8ITD4QwvLQHFht++tuq1qgIfr
+        yOEGRW5/dfMp3nr6gLe+9Tv9boTVIcYaMzjQnaqslvThV91NI7g2SBBLCgUJAjDk/fM5+GL75tcq6
+        Q8yJi9r7l33dJnKA0zy1gFENHyr2RK4WUdiRw0qik1sGeWRnA24SD9DAWA1GuBMR1jEg+V/hi3mFc
+        kUDCsnVQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1itSH2-0007Y6-TP; Mon, 20 Jan 2020 08:19:05 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 634EC3035D4;
+        Mon, 20 Jan 2020 09:17:20 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 936C820983E34; Mon, 20 Jan 2020 09:18:58 +0100 (CET)
+Date:   Mon, 20 Jan 2020 09:18:58 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Shaokun Zhang <zhangshaokun@hisilicon.com>,
+        David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jinyuqi@huawei.com,
+        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org, edumazet@google.com,
+        guoyang2@huawei.com, Will Deacon <will@kernel.org>
+Subject: Re: [PATCH] net: optimize cmpxchg in ip_idents_reserve
+Message-ID: <20200120081858.GI14879@hirez.programming.kicks-ass.net>
+References: <20200116.042722.153124126288244814.davem@davemloft.net>
+ <930faaff-4d18-452d-2e44-ef05b65dc858@gmail.com>
+ <1b3aaddf-22f5-1846-90f1-42e68583c1e4@gmail.com>
+ <430496fc-9f26-8cb4-91d8-505fda9af230@hisilicon.com>
+ <20200117123253.GC14879@hirez.programming.kicks-ass.net>
+ <7e6c6202-24bb-a532-adde-d53dd6fb14c3@gmail.com>
+ <20200117180324.GA2623847@rani.riverdale.lan>
+ <94573cea-a833-9b48-6581-8cc5cdd19b89@gmail.com>
+ <20200117183800.GA2649345@rani.riverdale.lan>
+ <45224c36-9941-aae5-aca4-e2c8e3723355@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200120072237.GA18451@dhcp22.suse.cz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <45224c36-9941-aae5-aca4-e2c8e3723355@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 08:22:37AM +0100, Michal Hocko wrote:
->On Sat 18-01-20 15:36:06, David Rientjes wrote:
->> On Sat, 18 Jan 2020, Andrew Morton wrote:
->> 
->> > On Sat, 18 Jan 2020 07:38:36 +0800 Wei Yang <richardw.yang@linux.intel.com> wrote:
->> > 
->> > > If compound is true, this means it is a PMD mapped THP. Which implies
->> > > the page is not linked to any defer list. So the first code chunk will
->> > > not be executed.
->> > > 
->> > > Also with this reason, it would not be proper to add this page to a
->> > > defer list. So the second code chunk is not correct.
->> > > 
->> > > Based on this, we should remove the defer list related code.
->> > > 
->> > > Fixes: 87eaceb3faa5 ("mm: thp: make deferred split shrinker memcg aware")
->> > > 
->> > > Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
->> > > Suggested-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
->> > > Cc: <stable@vger.kernel.org>    [5.4+]
->> > 
->> > This patch is identical to "mm: thp: grab the lock before manipulating
->> > defer list", which is rather confusing.  Please let people know when
->> > this sort of thing is done.
->> > 
->> > The earlier changelog mentioned a possible race condition.  This
->> > changelog does not.  In fact this changelog fails to provide any
->> > description of any userspace-visible runtime effects of the bug. 
->> > Please send along such a description for inclusion, as always.
->> > 
->> 
->> The locking concern that Wei was originally looking at is no longer an 
->> issue because we determined that the code in question could simply be 
->> removed.
->> 
->> I think the following can be added to the changelog:
->> 
->> ----->o-----
->> 
->> When migrating memcg charges of thp memory, there are two possibilities:
->> 
->>  (1) The underlying compound page is mapped by a pmd and thus does is not 
->>      on a deferred split queue (it's mapped), or
->> 
->>  (2) The compound page is not mapped by a pmd and is awaiting split on a
->>      deferred split queue.
->> 
->> The current charge migration implementation does *not* migrate charges for 
->> thp memory on the deferred split queue, it only migrates charges for pages 
->> that are mapped by a pmd.
->> 
->> Thus, to migrate charges, the underlying compound page cannot be on a 
->> deferred split queue; no list manipulation needs to be done in 
->> mem_cgroup_move_account().
->> 
->> With the current code, the underlying compound page is moved to the 
->> deferred split queue of the memcg its memory is not charged to, so 
->> susbequent reclaim will consider these pages for the wrong memcg.  Remove 
->> the deferred split queue handling in mem_cgroup_move_account() entirely.
->
->I believe this still doesn't describe the underlying problem to the full
->extent. What happens with the page on the deferred list when it
->shouldn't be there in fact? Unless I am missing something deferred_split_scan
->will simply split that huge page. Which is a bit unfortunate but nothing
->really critical. This should be mentioned in the changelog.
->
+On Fri, Jan 17, 2020 at 10:48:19AM -0800, Eric Dumazet wrote:
+> 
+> 
+> On 1/17/20 10:38 AM, Arvind Sankar wrote:
+> > On Fri, Jan 17, 2020 at 10:16:45AM -0800, Eric Dumazet wrote:
+> >> Wasńt it the case back in 2016 already for linux-4.8 ?
+> >>
+> >> What will prevent someone to send another report to netdev/lkml ?
+> >>
+> >>  -fno-strict-overflow support is not a prereq for CONFIG_UBSAN.
+> >>
+> >> Fact that we kept in lib/ubsan.c and lib/test_ubsan.c code for 
+> >> test_ubsan_add_overflow() and test_ubsan_sub_overflow() is disturbing.
+> >>
+> > 
+> > No, it was bumped in 2018 in commit cafa0010cd51 ("Raise the minimum
+> > required gcc version to 4.6"). That raised it from 3.2 -> 4.6.
+> > 
+> 
+> This seems good to me, for gcc at least.
+> 
+> Maybe it is time to enfore -fno-strict-overflow in KBUILD_CFLAGS 
+> instead of making it conditional.
 
-Per my understanding, if we do the split when it is not necessary, we
-probably have a lower performance due to tlb miss. For others, I don't see the
-impact.
+IIRC there was a bug in UBSAN vs -fwrapv/-fno-strict-overflow that was
+only fixed in gcc-8 or 9 or so.
 
->With that clarified, feel free to add
->
->Acked-by: Michal Hocko <mhocko@suse.com>
->
->-- 
->Michal Hocko
->SUSE Labs
-
--- 
-Wei Yang
-Help you, Help me
+So while the -fwrapv/-fno-strict-overflow flag has been correctly
+supported since like forever, UBSAN was buggy until quite recent when
+used in conjustion with that flag.
