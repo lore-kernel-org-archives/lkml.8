@@ -3,83 +3,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 194DFC32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 21:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE2CC33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 21:39:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E827324653
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 21:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3904722522
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 21:39:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbgATVjK (ORCPT
+        id S1727683AbgATVj2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 16:39:10 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:44702 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726752AbgATVjK (ORCPT
+        Mon, 20 Jan 2020 16:39:28 -0500
+Received: from www62.your-server.de ([213.133.104.62]:50446 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726752AbgATVj2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 16:39:10 -0500
-Received: from [154.119.55.246] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1itelG-0001cJ-AZ; Mon, 20 Jan 2020 21:39:06 +0000
-Date:   Mon, 20 Jan 2020 22:38:56 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tejun Heo <tj@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Li Zefan <lizefan@huawei.com>,
-        Peter Zijlstra <peterz@infradead.org>, cgroups@vger.kernel.org
-Subject: Re: [PATCH v4 5/6] clone3: allow spawning processes into cgroups
-Message-ID: <20200120213854.32mzzo6ifh76fs5q@wittgenstein>
-References: <20200117181219.14542-1-christian.brauner@ubuntu.com>
- <20200117181219.14542-6-christian.brauner@ubuntu.com>
- <20200120153930.GE30403@redhat.com>
+        Mon, 20 Jan 2020 16:39:28 -0500
+Received: from sslproxy01.your-server.de ([88.198.220.130])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1itelX-0006K0-5E; Mon, 20 Jan 2020 22:39:23 +0100
+Received: from [178.197.248.27] (helo=pc-9.home)
+        by sslproxy01.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1itelW-0001HR-LT; Mon, 20 Jan 2020 22:39:22 +0100
+Subject: Re: [PATCH v2 bpf-next] bpf: Fix memory leaks in generic
+ update/delete batch ops
+To:     Brian Vazquez <brianvv@google.com>,
+        Brian Vazquez <brianvv.kernel@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Yonghong Song <yhs@fb.com>
+References: <20200119194040.128369-1-brianvv@google.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <39e16779-39e8-3dd3-455e-949b6bd04de9@iogearbox.net>
+Date:   Mon, 20 Jan 2020 22:39:21 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200120153930.GE30403@redhat.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200119194040.128369-1-brianvv@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.101.4/25701/Mon Jan 20 12:41:43 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 04:39:30PM +0100, Oleg Nesterov wrote:
-> On 01/17, Christian Brauner wrote:
-> >
-> > +static int cgroup_css_set_fork(struct task_struct *parent,
-> > +			       struct kernel_clone_args *kargs)
-> ...
-> > +	kargs->cset = find_css_set(cset, dst_cgrp);
-> > +	if (!kargs->cset) {
-> > +		ret = -ENOMEM;
-> > +		goto err;
-> > +	}
-> > +
-> > +	if (cgroup_is_dead(dst_cgrp)) {
-> > +		ret = -ENODEV;
-> > +		goto err;
->                 ^^^^^^^^
+On 1/19/20 8:40 PM, Brian Vazquez wrote:
+> generic update/delete batch ops functions were using __bpf_copy_key
+> without properly freeing the memory. Handle the memory allocation and
+> copy_from_user separately.
 > 
-> this looks wrong... don't we need put_css_set(kargs->cset) before "goto err" ?
+> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> Fixes: aa2e93b8e58e ("bpf: Add generic support for update and delete batch ops")
+> Signed-off-by: Brian Vazquez <brianvv@google.com>
+> Acked-by: Yonghong Song <yhs@fb.com>
 
-Yeah, but we should rather do:
-
-diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-index 4d36255ef25f..482055d1e64a 100644
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -5994,6 +5994,8 @@ static int cgroup_css_set_fork(struct kernel_clone_args *kargs)
-        if (dst_cgrp)
-                cgroup_put(dst_cgrp);
-        put_css_set(cset);
-+       if (kargs->cset)
-+               put_css_set(kargs->cset);
-        return ret;
- }
-
-Christian
+Applied, thanks!
