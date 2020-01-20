@@ -2,167 +2,227 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08975C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:36:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 563E8C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9E1221835
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:36:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D44022464
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:38:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Yc8FBZqT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbgATNgE (ORCPT
+        id S1727047AbgATNiP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 08:36:04 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:24082 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726728AbgATNgD (ORCPT
+        Mon, 20 Jan 2020 08:38:15 -0500
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:41157 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726626AbgATNiP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 08:36:03 -0500
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00KDIelB113894
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 08:20:23 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xmfyxsmq7-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 08:20:22 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <tmricht@linux.ibm.com>;
-        Mon, 20 Jan 2020 13:20:20 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 20 Jan 2020 13:20:18 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00KDKHlq60293158
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Jan 2020 13:20:17 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2C92BA405F;
-        Mon, 20 Jan 2020 13:20:17 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DF0A0A4054;
-        Mon, 20 Jan 2020 13:20:16 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 20 Jan 2020 13:20:16 +0000 (GMT)
-From:   Thomas Richter <tmricht@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
-Cc:     gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH v2] perf test: Fix test case Merge cpu map
-Date:   Mon, 20 Jan 2020 14:20:09 +0100
-X-Mailer: git-send-email 2.17.1
-X-TM-AS-GCONF: 00
-x-cbid: 20012013-0012-0000-0000-0000037F0F8E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20012013-0013-0000-0000-000021BB4C7D
-Message-Id: <20200120132011.64698-1-tmricht@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-20_02:2020-01-20,2020-01-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- bulkscore=0 impostorscore=0 lowpriorityscore=0 suspectscore=2
- mlxlogscore=999 clxscore=1015 mlxscore=0 spamscore=0 phishscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001200115
+        Mon, 20 Jan 2020 08:38:15 -0500
+Received: by mail-qv1-f65.google.com with SMTP id x1so13964104qvr.8
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 05:38:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=VsoGp109ufXvJlVZJZ7+0lYM452uESSHevplYutSYdo=;
+        b=Yc8FBZqTZ49PR5XXHmSJg+sa0E2yA2SnM6T59xCyidB4uZeLSzVy3UCVN/qMge68b1
+         fjqdT3489T5Z9hCB68ih4OOwJ7kCdrHvSclJqdiHN0Y/83q6BhWQUHxOOR2JZQKib/ol
+         IVT97/PKh0h37qHZrTsQV6nsAf4i2OqGL+rlxPdD/ODZU2JSFurICYGDHrm0NPhB4qo0
+         XOmN1zU5d3ygI6eneSowmjWlfPkWWHuEdhIc/aOG/ldQrdJZwuJ1zRX+h7e+jW3Bcb4I
+         szkVtjbdL6RtZQ/rzLdjS30XlWuEzg99yvFOAs9wPiGEQMnL+ioVC2Korl/zK2n8Pkdu
+         OyFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=VsoGp109ufXvJlVZJZ7+0lYM452uESSHevplYutSYdo=;
+        b=KAZwjkZPn3tfRS102yX39n2bFXQho4zuskUeu9eIrZ1J48NzBef8sE+oUyIOl+iRuh
+         o/5IiwuuV7WOToddxUPlrkTpz1idW2hjBEgcsQONRgQ8Xc6YPUtkvFhUtg3MMSfFQv9Z
+         9Sl2jOxXig5DhKv089oi2Iie//aI5RI+69rNDLxZ0KsiIos+NLeXwSbCLesUMomv6SCF
+         u5iis7Vo1Vfj6mbQauCNkF3H2B5SCDFY62Sw5HkFKLv6tZqTbSHpuJbzR3KWAv24gg79
+         HHboFLQya/tK8/uRmIAme+VmI+8UL2TGDjY47jIWxCuXofF+XDOTCYjcscBhHcZazhI5
+         GXPg==
+X-Gm-Message-State: APjAAAUBbCkMJQSAJW57NM6Ycl793BZ3kYkRbLb07S1EHGmjrR8RI32R
+        Dj3hY+ZENWHzb/Nvfr2wVujPrA==
+X-Google-Smtp-Source: APXvYqzJWHkLYwbnfPaTEh8dSNBmbk2tJ+IQclnyI2T+yocRWe19nO7fmcyCO3qWekozAS8DWPvdzQ==
+X-Received: by 2002:a0c:a145:: with SMTP id d63mr21206033qva.120.1579527493658;
+        Mon, 20 Jan 2020 05:38:13 -0800 (PST)
+Received: from qians-mbp.fios-router.home (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id i90sm17560198qtd.49.2020.01.20.05.38.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 Jan 2020 05:38:13 -0800 (PST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
+Subject: Re: [PATCH -mm v2] mm/page_isolation: fix potential warning from user
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <8c56268d-9b8a-f62e-eca9-7707852a2aaf@redhat.com>
+Date:   Mon, 20 Jan 2020 08:38:12 -0500
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <28542D23-FCB7-4342-B77C-65C7B1F162FC@lca.pw>
+References: <20200120131909.813-1-cai@lca.pw>
+ <8c56268d-9b8a-f62e-eca9-7707852a2aaf@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+X-Mailer: Apple Mail (2.3608.40.2.2.4)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-V2: Added Reviewed-by statement
 
-Commit a2408a70368a ("perf evlist: Maintain evlist->all_cpus")
-introduces a test case for cpumap merge operation, see functions
-perf_cpu_map__merge() and test__cpu_map_merge().
 
-The test case fails on s390 with this error message:
- [root@m35lp76 perf]# ./perf test -Fvvvvv 52
- 52: Merge cpu map                                         :
- --- start ---
- cpumask list: 1-2,4-5,7
- perf: /root/linux/tools/include/linux/refcount.h:131:\
-          refcount_sub_and_test: Assertion `!(new > val)' failed.
- Aborted (core dumped)
- [root@m35lp76 perf]#
+> On Jan 20, 2020, at 8:30 AM, David Hildenbrand <david@redhat.com> =
+wrote:
+>=20
+> On 20.01.20 14:19, Qian Cai wrote:
+>> It makes sense to call the WARN_ON_ONCE(zone_idx(zone) =3D=3D =
+ZONE_MOVABLE)
+>> from start_isolate_page_range(), but should avoid triggering it from
+>> userspace, i.e, from is_mem_section_removable() because it could be a
+>> DoS if warn_on_panic is set.
+>>=20
+>> While at it, simplify the code a bit by removing an unnecessary jump
+>> label and a local variable, so set_migratetype_isolate() could really
+>> return a bool.
+>>=20
+>> Suggested-by: Michal Hocko <mhocko@kernel.org>
+>> Signed-off-by: Qian Cai <cai@lca.pw>
+>> ---
+>>=20
+>> v2: Improve the commit log.
+>>    Warn for all start_isolate_page_range() users not just offlining.
+>>=20
+>> mm/page_alloc.c     | 11 ++++-------
+>> mm/page_isolation.c | 30 +++++++++++++++++-------------
+>> 2 files changed, 21 insertions(+), 20 deletions(-)
+>>=20
+>> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+>> index 621716a25639..3c4eb750a199 100644
+>> --- a/mm/page_alloc.c
+>> +++ b/mm/page_alloc.c
+>> @@ -8231,7 +8231,7 @@ struct page *has_unmovable_pages(struct zone =
+*zone, struct page *page,
+>> 		if (is_migrate_cma(migratetype))
+>> 			return NULL;
+>>=20
+>> -		goto unmovable;
+>> +		return page;
+>> 	}
+>>=20
+>> 	for (; iter < pageblock_nr_pages; iter++) {
+>> @@ -8241,7 +8241,7 @@ struct page *has_unmovable_pages(struct zone =
+*zone, struct page *page,
+>> 		page =3D pfn_to_page(pfn + iter);
+>>=20
+>> 		if (PageReserved(page))
+>> -			goto unmovable;
+>> +			return page;
+>>=20
+>> 		/*
+>> 		 * If the zone is movable and we have ruled out all =
+reserved
+>> @@ -8261,7 +8261,7 @@ struct page *has_unmovable_pages(struct zone =
+*zone, struct page *page,
+>> 			unsigned int skip_pages;
+>>=20
+>> 			if =
+(!hugepage_migration_supported(page_hstate(head)))
+>> -				goto unmovable;
+>> +				return page;
+>>=20
+>> 			skip_pages =3D compound_nr(head) - (page - =
+head);
+>> 			iter +=3D skip_pages - 1;
+>> @@ -8303,12 +8303,9 @@ struct page *has_unmovable_pages(struct zone =
+*zone, struct page *page,
+>> 		 * is set to both of a memory hole page and a _used_ =
+kernel
+>> 		 * page at boot.
+>> 		 */
+>> -		goto unmovable;
+>> +		return page;
+>> 	}
+>> 	return NULL;
+>> -unmovable:
+>> -	WARN_ON_ONCE(zone_idx(zone) =3D=3D ZONE_MOVABLE);
+>> -	return pfn_to_page(pfn + iter);
+>> }
+>>=20
+>> #ifdef CONFIG_CONTIG_ALLOC
+>> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+>> index e70586523ca3..31f5516f5d54 100644
+>> --- a/mm/page_isolation.c
+>> +++ b/mm/page_isolation.c
+>> @@ -15,12 +15,12 @@
+>> #define CREATE_TRACE_POINTS
+>> #include <trace/events/page_isolation.h>
+>>=20
+>> -static int set_migratetype_isolate(struct page *page, int =
+migratetype, int isol_flags)
+>> +static bool set_migratetype_isolate(struct page *page, int =
+migratetype,
+>> +				    int isol_flags)
+>=20
+> Why this change?
+>=20
+>> {
+>> -	struct page *unmovable =3D NULL;
+>> +	struct page *unmovable =3D ERR_PTR(-EBUSY);
+>=20
+> Also, why this change?
+>=20
+>> 	struct zone *zone;
+>> 	unsigned long flags;
+>> -	int ret =3D -EBUSY;
+>>=20
+>> 	zone =3D page_zone(page);
+>>=20
+>> @@ -49,21 +49,25 @@ static int set_migratetype_isolate(struct page =
+*page, int migratetype, int isol_
+>> 									=
+NULL);
+>>=20
+>> 		__mod_zone_freepage_state(zone, -nr_pages, mt);
+>> -		ret =3D 0;
+>> 	}
+>>=20
+>> out:
+>> 	spin_unlock_irqrestore(&zone->lock, flags);
+>> -	if (!ret)
+>> +
+>> +	if (!unmovable) {
+>> 		drain_all_pages(zone);
+>> -	else if ((isol_flags & REPORT_FAILURE) && unmovable)
+>> -		/*
+>> -		 * printk() with zone->lock held will guarantee to =
+trigger a
+>> -		 * lockdep splat, so defer it here.
+>> -		 */
+>> -		dump_page(unmovable, "unmovable page");
+>> -
+>> -	return ret;
+>> +	} else {
+>> +		WARN_ON_ONCE(zone_idx(zone) =3D=3D ZONE_MOVABLE);
+>> +
+>> +		if ((isol_flags & REPORT_FAILURE) && !IS_ERR(unmovable))
+>> +			/*
+>=20
+> Why this change? (!IS_ERR)
+>=20
+>=20
+> Some things here look unrelated - or I am missing something :)
 
-The root cause is in the function test__cpu_map_merge():
-It creates two cpu_maps named 'a' and 'b':
-
-  struct perf_cpu_map *a = perf_cpu_map__new("4,2,1");
-  struct perf_cpu_map *b = perf_cpu_map__new("4,5,7");
-
-and creates a third map named 'c' which is the result of
-the merge of maps a and b:
-
-  struct perf_cpu_map *c = perf_cpu_map__merge(a, b);
-
-After some verifaction of the merged cpu_map all three
-of them are have their reference count reduced and are
-freed:
-
-   perf_cpu_map__put(a); (1)
-   perf_cpu_map__put(b);
-   perf_cpu_map__put(c);
-
-The release of perf_cpu_map__put(a) is wrong. The map
-is already released and free'ed as part of the function
-
-  perf_cpu_map__merge(struct perf_cpu_map *orig,
-  |	              struct perf_cpu_map *other)
-  +--> perf_cpu_map__put(orig);
-       |
-       +--> cpu_map__delete(orig)
-
-At the end perf_cpu_map_put() is called for map 'orig'
-alias 'a' and since the reference count is 1, the map
-is deleted, as can be seen by the following gdb trace:
-
- (gdb) where
- #0  tcache_put (tc_idx=0, chunk=0x156cc30) at malloc.c:2940
- #1  _int_free (av=0x3fffd49ee80 <main_arena>, p=0x156cc30,
-		     have_lock=<optimized out>) at malloc.c:4222
- #2  0x00000000012d5e78 in cpu_map__delete (map=0x156cc40) at cpumap.c:31
- #3  0x00000000012d5f7a in perf_cpu_map__put (map=0x156cc40) at cpumap.c:45
- #4  0x00000000012d723a in perf_cpu_map__merge (orig=0x156cc40,
-     other=0x156cc60) at cpumap.c:343
- #5  0x000000000110cdd0 in test__cpu_map_merge (
-     test=0x14ea6c8 <generic_tests+2856>, subtest=-1) at tests/cpumap.c:128
-
-Thus the perf_cpu_map__put(a) (see (1) above) frees map 'a'
-a second time and causes the failure. Fix this be removing that
-function call.
-
-Output after:
-  [root@m35lp76 perf]# ./perf test -Fvvvvv 52
-  52: Merge cpu map                                         :
-  --- start ---
-  cpumask list: 1-2,4-5,7
-  ---- end ----
-  Merge cpu map: Ok
-  [root@m35lp76 perf]#
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
----
- tools/perf/tests/cpumap.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/tools/perf/tests/cpumap.c b/tools/perf/tests/cpumap.c
-index 4ac56741ac5f..29c793ac7d10 100644
---- a/tools/perf/tests/cpumap.c
-+++ b/tools/perf/tests/cpumap.c
-@@ -131,7 +131,6 @@ int test__cpu_map_merge(struct test *test __maybe_unused, int subtest __maybe_un
- 	TEST_ASSERT_VAL("failed to merge map: bad nr", c->nr == 5);
- 	cpu_map__snprint(c, buf, sizeof(buf));
- 	TEST_ASSERT_VAL("failed to merge map: bad result", !strcmp(buf, "1-2,4-5,7"));
--	perf_cpu_map__put(a);
- 	perf_cpu_map__put(b);
- 	perf_cpu_map__put(c);
- 	return 0;
--- 
-2.21.0
-
+The original =E2=80=9Cret=E2=80=9D variable looks ugly to me, so I just =
+removed that and consolidated with
+the =E2=80=9Cunmovable=E2=80=9D pointer to always be able to report an =
+error. Since this cleanup is really
+small, I did not bother send a separate patch for it.=
