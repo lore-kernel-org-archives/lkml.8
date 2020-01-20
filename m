@@ -2,170 +2,102 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 439EEC33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1BFAC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24DFA217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:40:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE76920882
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:40:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729165AbgATOkE (ORCPT
+        id S1727688AbgATOko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 09:40:04 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40841 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729096AbgATOkE (ORCPT
+        Mon, 20 Jan 2020 09:40:44 -0500
+Received: from mout.kundenserver.de ([212.227.126.130]:48971 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726860AbgATOkn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 09:40:04 -0500
-Received: by mail-ot1-f65.google.com with SMTP id w21so28825706otj.7
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 06:40:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EtTbB0yL/QxXyUG3sjoG7/1Jm2iP9JtCaU4sRh9uy0E=;
-        b=Ae41o/pVJ/lkwMbrWQiKYHvqWG3UAhZDWdS03dSUt3Jmuffg9dMTZ15H4iI1VzYPEi
-         URjiys+/wS0KByAonqOka/901DHTUErWWHgvK6Cl9eiQjlkHnqJGIZq8FNkXDcs8UMNi
-         eAnnLPy1TRjdnLRgw/bRJUFPPJwNKRRp1zItnASZqgVJgUL5XBS6gJyIXZg1i40aJymI
-         VmAcb7XkB/e0bgWOAHQuwQYmkFmnxe52N6k9w0t9ww3OUMnkIZMVk1sYXKwIVRdBAOnk
-         xOfhiAD5wOO2YEEJ6GqAlAcfs+Ih7I9V107ZSy2Z2EDhCKCgjA1N9P9v3QTvuuXl7J+u
-         fnpQ==
-X-Gm-Message-State: APjAAAXWTisktLMXvuftJYao11XKk93anHJnBRf18QRbnk20pikgvseQ
-        JZLKkp+ZxsMh9HHp8iNUZZRj56LR4+0l5uAszWJpTRhU
-X-Google-Smtp-Source: APXvYqwv2q8tQHiLSkICoi5yx7bAUTS6D03HEjKzC60Uvr0dE38NOdUgO9TD4QqbBVPhPVnqaE7zenZ3zAhsuIw4PFQ=
-X-Received: by 2002:a9d:8f1:: with SMTP id 104mr15274004otf.107.1579531202876;
- Mon, 20 Jan 2020 06:40:02 -0800 (PST)
+        Mon, 20 Jan 2020 09:40:43 -0500
+Received: from mail-qt1-f169.google.com ([209.85.160.169]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MtwIW-1jlNEj1lTI-00uJVG; Mon, 20 Jan 2020 15:40:41 +0100
+Received: by mail-qt1-f169.google.com with SMTP id j5so27789296qtq.9;
+        Mon, 20 Jan 2020 06:40:41 -0800 (PST)
+X-Gm-Message-State: APjAAAWWUVkvHT5TfZgy52jq18mGWJidgpkgXO8XYKDc1PwZsNlzwDuU
+        18tTSXq324HgXJIBJotCKHCSk4/WZQHuBN8OX1o=
+X-Google-Smtp-Source: APXvYqwlJD70ajHpB5Hah/6j7f+OlCjqmONfTPtRbJ4dpF1nsMv085cDc0EQwsp/ZRY/JU1VKqkOA190gl56WM/HXj0=
+X-Received: by 2002:ac8:709a:: with SMTP id y26mr20880033qto.304.1579531240224;
+ Mon, 20 Jan 2020 06:40:40 -0800 (PST)
 MIME-Version: 1.0
-References: <20200110215429.30360-1-dave@stgolabs.net>
-In-Reply-To: <20200110215429.30360-1-dave@stgolabs.net>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 20 Jan 2020 15:39:51 +0100
-Message-ID: <CAMuHMdXeZvJ0X6Ah2CpLRoQJm+YhxAWBt-rUpxoyfOLTcHp+0g@mail.gmail.com>
-Subject: Re: [PATCH] lib/rbtree: avoid pointless rb_node alignment
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Davidlohr Bueso <dbueso@suse.de>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>
+References: <20200115165749.145649-1-elver@google.com> <CAK8P3a3b=SviUkQw7ZXZF85gS1JO8kzh2HOns5zXoEJGz-+JiQ@mail.gmail.com>
+ <CANpmjNOpTYnF3ssqrE_s+=UA-2MpfzzdrXoyaifb3A55_mc0uA@mail.gmail.com>
+ <CAK8P3a3WywSsahH2vtZ_EOYTWE44YdN+Pj6G8nt_zrL3sckdwQ@mail.gmail.com>
+ <CANpmjNMk2HbuvmN1RaZ=8OV+tx9qZwKyRySONDRQar6RCGM1SA@mail.gmail.com>
+ <CAK8P3a066Knr-KC2v4M8Dr1phr0Gbb2KeZZLQ7Ana0fkrgPDPg@mail.gmail.com>
+ <CANpmjNO395-atZXu_yEArZqAQ+ib3Ack-miEhA9msJ6_eJsh4g@mail.gmail.com> <CANpmjNOH1h=txXnd1aCXTN8THStLTaREcQpzd5QvoXz_3r=8+A@mail.gmail.com>
+In-Reply-To: <CANpmjNOH1h=txXnd1aCXTN8THStLTaREcQpzd5QvoXz_3r=8+A@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 20 Jan 2020 15:40:24 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a0p9Y8080T-RR2pp-p2_A0FBae7zB-kSq09sMZ_X7AOhw@mail.gmail.com>
+Message-ID: <CAK8P3a0p9Y8080T-RR2pp-p2_A0FBae7zB-kSq09sMZ_X7AOhw@mail.gmail.com>
+Subject: Re: [PATCH -rcu] asm-generic, kcsan: Add KCSAN instrumentation for bitops
+To:     Marco Elver <elver@google.com>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        christophe leroy <christophe.leroy@c-s.fr>,
+        Daniel Axtens <dja@axtens.net>,
+        linux-arch <linux-arch@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:PtJv3kaT6WeF8q47kRkJGHyTOmhr/ZA6iNqmXick9+yEcmYcF6o
+ 1K5RtCoZ1qawiPjEgEKA8Pj28VueEwQp/mWQRT1hd/fgBS55lJkdu6hRN17llosEwVYd5Qh
+ ncOQAQXQ+BZDg5ehmF5RTm5k5vVB9XkmVYlI18yFv/5IToCHTcTQ8k4EAVQaEXJZOo/mbac
+ i0AMsiTFj6Edx8/bw1gtg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:X7jY2ZKncM8=:eWcXadgB+KBESQgs1iA7Ja
+ 0Po822eZ56ugoG1YILUf1MCwkdWT3rTqwM9wvolRj2R2G6b7AeibEZ7GTZvaGpj1daqkbouad
+ mToZozQE+Qy7IzjsH7bvBPjHHZWIaG915AIFcgr5Mnz5XVEG0SafLJgLCIwBCLfKeKZHZj/jn
+ S+1xzjNgr/wmWqoemMemTW2e0ObuG2jyRW3cUQQ+0hEgVQyfezftpauWsypJ3cqftRA3TZGbX
+ od4vmTDrtMkHFGwek881jnrc1vXUY7B3nVy/+VeKvXbJ0xHc+ebpJ8m1yt+dwJeAd0WgcTVi0
+ jBu7Gp9ZS2aIg1W9hs7q9a/cjt81T8GGbJDx0tj5E83O7W/VbAuGXYSlC0XQUrrDwfII+kwgI
+ Mh4X0U7D8O4ZzLgFPDqws9tp5R2lNAqdjmaVeuVfaArFxJXMXqCcElRXHIIl7XazxJr/Y4wmz
+ zpEWKMfcrAYB7HNIonb6vqegzQn+FWTJBsxOF9ug0SUPMkf5U+4gg6fef26XoIyimCUvxLPw8
+ mmyiPOGsSi/karTyXbTwc9woz6pFvE6upBp6X3v1iOZLFAUVz/HdXo9I6alN3lBWZz26Gh1A/
+ bQagIwaxUj79gIVXTommcmGMon/hWYAMHfTYQCCF1Bl5IwmHiu0814k+UIwgj4+NrxKCoAtFY
+ brTM9Qx2tI6vVKKaR81wmr7LwjjISdhHkdDe1gMrlshEyZjwAo8wESJyHJ+JXMgiuoZ9Cf/mq
+ ub0pmb6V6zGJUwmh9IW3KrWBevwm9gTLSB9sDmjCoPZ0+6NjlUJxk315I3Sk3RViCdtLxXOBl
+ zfbOuqy6n8IL0Y55ygvLeGZe5irRsboHSDuw/MbPQpZwPnSDt46w/z6xKJOhILbmxv97RCwrw
+ Oh906AwY6p5DF6xJdAVA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
+On Mon, Jan 20, 2020 at 3:23 PM Marco Elver <elver@google.com> wrote:
+> On Fri, 17 Jan 2020 at 14:14, Marco Elver <elver@google.com> wrote:
+> > On Fri, 17 Jan 2020 at 13:25, Arnd Bergmann <arnd@arndb.de> wrote:
+> > > On Wed, Jan 15, 2020 at 9:50 PM Marco Elver <elver@google.com> wrote:
 
-On Fri, Jan 10, 2020 at 11:02 PM Davidlohr Bueso <dave@stgolabs.net> wrote:
-> Now that Linux no longer supports the CRIS architecture,
-> we can drop this fishy alignment. Apparently this was
-> need to prevent misalignments in struct address_space.
+> > > If you can't find any, I would prefer having the simpler interface
+> > > with just one set of annotations.
+> >
+> > That's fair enough. I'll prepare a v2 series that first introduces the
+> > new header, and then applies it to the locations that seem obvious
+> > candidates for having both checks.
 >
-> Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
+> I've sent a new patch series which introduces instrumented.h:
+>    http://lkml.kernel.org/r/20200120141927.114373-1-elver@google.com
 
-Thanks for your patch!
+Looks good to me, feel free to add
 
-> --- a/include/linux/rbtree.h
-> +++ b/include/linux/rbtree.h
-> @@ -25,8 +25,7 @@ struct rb_node {
->         unsigned long  __rb_parent_color;
->         struct rb_node *rb_right;
->         struct rb_node *rb_left;
-> -} __attribute__((aligned(sizeof(long))));
-> -    /* The alignment might seem pointless, but allegedly CRIS needs it */
-> +};
+Acked-by: Arnd Bergmann <arnd@arndb.de>
 
-Unfortunately this is also needed on m68k.
+if you are merging this through your own tree or someone else's,
+or let me know if I should put it into the asm-generic git tree.
 
-This is now commit 2d39da80d43693a2 ("include/linux/rbtree.h: avoid
-pointless rb_node alignment") in linux-next, where Jason Donenfeld
-reported the following crash:
-
-> [    3.200000] Unable to handle kernel access at virtual address 6b7cdccf
-> [    3.200000] Oops: 00000000
-> [    3.200000] PC: [<00237454>] rb_erase+0x1c/0x346
-> [    3.200000] SR: 2710  SP: c48c162a  a2: 0fcc5280
-> [    3.200000] d0: 00000001    d1: 0fe6a000    d2: 0fd82000    d3: 00000000
-> [    3.200000] d4: 00000000    d5: 00000377    a0: 002b28f6    a1: 002b28f6
-> [    3.200000] Process ping (pid: 73, task=1e7eecd7)
-> [    3.200000] Frame format=7 eff addr=46e60008 ssw=0505 faddr=46e60008
-> [    3.200000] wb 1 stat/addr/data: 0000 00000000 00000000
-> [    3.200000] wb 2 stat/addr/data: 0000 00000000 00000000
-> [    3.200000] wb 3 stat/addr/data: 0000 46e60008 00000000
-> [    3.200000] push data: 00000000 00000000 00000000 00000000
-> [    3.200000] Stack from 0fe6bf00:
-> [    3.200000]         0fd82000 00000000 0fd846e6 002b290a 002b28d0 0fe6bfb0 0023f77c 0fd846e6
-> [    3.200000]         002b290a 0fd846e6 002b28f6 00045058 002b290a 0fd846e6 0fd82000 00000000
-> [    3.200000]         0fd846e6 0fe6a000 0000fd00 00045956 0fd846e6 002b28f6 00000000 00000001
-> [    3.200000]         0fd846e6 000458f4 00045972 0fd846e6 000000ff 0fcc5280 00015e76 0fd846e6
-> [    3.200000]         00000000 00000000 00000000 00000377 c49ba615 00000000 80001510 00000000
-> [    3.200000]         0000fd00 00000002 00000000 00000000 80009ff8 0001675a 00000000 8000b6c5
-> [    3.200000] Call Trace: [<0023f77c>] timerqueue_del+0x20/0x8a
-> [    3.200000]  [<00045058>] __remove_hrtimer+0x30/0xaa
-> [    3.200000]  [<0000fd00>] unf_e1_exc+0x20/0x48
-> [    3.200000]  [<00045956>] hrtimer_try_to_cancel+0x62/0x6c
-> [    3.200000]  [<000458f4>] hrtimer_try_to_cancel+0x0/0x6c
-> [    3.200000]  [<00045972>] hrtimer_cancel+0x12/0x20
-> [    3.200000]  [<00015e76>] do_exit+0x8c/0x91e
-> [    3.200000]  [<0000fd00>] unf_e1_exc+0x20/0x48
-> [    3.200000]  [<0001675a>] do_group_exit+0x24/0x9c
-> [    3.200000]  [<000167e6>] __wake_up_parent+0x0/0x20
-> [    3.200000]  [<00002774>] syscall+0x8/0xc
-> [    3.200000]  [<0004c002>] timecounter_read+0x16/0xcc
-> [    3.200000] Code: 2a6c 0008 4a8d 6700 0202 4a8b 6700 0244 <206b>
-> 0008 200b 4a88 6700 0166 224b 2028 0008 670a 2248 2040 2028 0008 66f6 2c68
-> [    3.200000] Disabling lock debugging due to kernel taint
-> [    3.200000] Fixing recursive fault but reboot is needed!
->
-> Seems to happen if a process exits with an hrtimer?
-
-I could easily reproduce it by just booting next-2020120 on ARAnyM:
-
-Unable to handle kernel access at virtual address 7c05a009
-Oops: 00000000
-Modules linked in:
-PC: [<002eb772>] rb_erase+0x1c8/0x25a
-SR: 2704  SP: c286c837  a2: 10aab020
-d0: 10a7ae67    d1: 00000000    d2: 00000000    d3: 00024000
-d4: 00000008    d5: 270011de    a0: fab01081    a1: 00000000
-Process sh (pid: 428, task=09f84a54)
-Frame format=7 eff addr=fab01084 ssw=0525 faddr=fab01084
-wb 1 stat/addr/data: 0000 00000000 00000000
-wb 2 stat/addr/data: 0000 00000000 00000000
-wb 3 stat/addr/data: 0000 fab01084 00000001
-push data: 00000000 00000000 00000000 00000000
-Stack from 10ab3ca0:
-        00000000 1081bab0 003eb88a 003eb876 003eb876 002f1cc6 1081bab0 003eb88a
-        003eb850 1081bab0 0004b0f2 003eb88a 1081bab0 00000000 00024000 1081bab0
-        003eb880 003eb870 0004b4d0 1081bab0 003eb876 00000000 00000000 00002700
-        0000000d 00000008 270011de 00043c1c 00000001 10803140 003e6408 10ab3dc4
-        00024000 003eb88a 003eb874 0004b6dc 00000008 270011de 00002700 0000000f
-        00000000 00000005 0004454a 0004ab1c 0004ab4e 10aab020 00000000 00002604
-Call Trace: [<002f1cc6>] timerqueue_del+0x58/0x6a
- [<0004b0f2>] __remove_hrtimer+0x2a/0x9c
-
-timerqueue_del() uses rbtree, and
-
-    #define rb_parent(r)   ((struct rb_node *)((r)->__rb_parent_color & ~3))
-
-relies on all objects being 4-byte aligned.  But your patch broke that
-assumption on m68k, where the default alignment is 2-byte.
-
-Andrew: please drop this patch.
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+     Arnd
