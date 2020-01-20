@@ -2,43 +2,49 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3292FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0746EC33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:08:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14ADC217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:08:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D92BE217F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:08:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729240AbgATQIT (ORCPT
+        id S1729339AbgATQIa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 11:08:19 -0500
-Received: from mga17.intel.com ([192.55.52.151]:23180 "EHLO mga17.intel.com"
+        Mon, 20 Jan 2020 11:08:30 -0500
+Received: from mga04.intel.com ([192.55.52.120]:42875 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729080AbgATQIR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 11:08:17 -0500
+        id S1729252AbgATQIU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 11:08:20 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 08:08:16 -0800
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 08:08:19 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,342,1574150400"; 
-   d="scan'208";a="215269714"
+   d="scan'208";a="220704899"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga007.jf.intel.com with ESMTP; 20 Jan 2020 08:08:13 -0800
+  by fmsmga007.fm.intel.com with ESMTP; 20 Jan 2020 08:08:16 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 020C929B; Mon, 20 Jan 2020 18:08:13 +0200 (EET)
+        id 3F952525; Mon, 20 Jan 2020 18:08:13 +0200 (EET)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
         Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2 4/9] x86/quirks: Join string literals back
-Date:   Mon, 20 Jan 2020 18:07:56 +0200
-Message-Id: <20200120160801.53089-5-andriy.shevchenko@linux.intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH v2 9/9] ASoC: Intel: Switch DMI table match to a test of variable
+Date:   Mon, 20 Jan 2020 18:08:01 +0200
+Message-Id: <20200120160801.53089-10-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200120160801.53089-1-andriy.shevchenko@linux.intel.com>
 References: <20200120160801.53089-1-andriy.shevchenko@linux.intel.com>
@@ -49,70 +55,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no need to split string literals. Moreover, it would be simpler
-to grep for an actual code line, when debugging, by using almost any
-part of the string literal in question.
+Since we have a common x86 quirk that provides an exported variable,
+use it instead of local DMI table match.
 
-No functional change intended.
-
+Cc: Cezary Rojewski <cezary.rojewski@intel.com>
+Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc: Liam Girdwood <liam.r.girdwood@linux.intel.com>
+Cc: Jie Yang <yang.jie@linux.intel.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: alsa-devel@alsa-project.org
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- arch/x86/kernel/quirks.c | 15 +++++----------
- 1 file changed, 5 insertions(+), 10 deletions(-)
+ .../intel/common/soc-acpi-intel-cht-match.c   | 33 ++-----------------
+ 1 file changed, 3 insertions(+), 30 deletions(-)
 
-diff --git a/arch/x86/kernel/quirks.c b/arch/x86/kernel/quirks.c
-index ce8fc9bec43b..6c122f35508a 100644
---- a/arch/x86/kernel/quirks.c
-+++ b/arch/x86/kernel/quirks.c
-@@ -36,8 +36,7 @@ static void quirk_intel_irqbalance(struct pci_dev *dev)
- 	pci_bus_read_config_word(dev->bus, PCI_DEVFN(8, 0), 0x4c, &word);
+diff --git a/sound/soc/intel/common/soc-acpi-intel-cht-match.c b/sound/soc/intel/common/soc-acpi-intel-cht-match.c
+index d0fb43c2b9f6..c35766125d5e 100644
+--- a/sound/soc/intel/common/soc-acpi-intel-cht-match.c
++++ b/sound/soc/intel/common/soc-acpi-intel-cht-match.c
+@@ -5,31 +5,11 @@
+  * Copyright (c) 2017, Intel Corporation.
+  */
  
- 	if (!(word & (1 << 13))) {
--		dev_info(&dev->dev, "Intel E7520/7320/7525 detected; "
--			"disabling irq balancing and affinity\n");
-+		dev_info(&dev->dev, "Intel E7520/7320/7525 detected; disabling irq balancing and affinity\n");
- 		noirqdebug_setup("");
- #ifdef CONFIG_PROC_FS
- 		no_irq_affinity = 1;
-@@ -110,16 +109,14 @@ static void ich_force_enable_hpet(struct pci_dev *dev)
- 	pci_read_config_dword(dev, 0xF0, &rcba);
- 	rcba &= 0xFFFFC000;
- 	if (rcba == 0) {
--		dev_printk(KERN_DEBUG, &dev->dev, "RCBA disabled; "
--			"cannot force enable HPET\n");
-+		dev_printk(KERN_DEBUG, &dev->dev, "RCBA disabled; cannot force enable HPET\n");
- 		return;
- 	}
+-#include <linux/dmi.h>
++#include <linux/platform_data/x86/machine.h>
++
+ #include <sound/soc-acpi.h>
+ #include <sound/soc-acpi-intel-match.h>
  
- 	/* use bits 31:14, 16 kB aligned */
- 	rcba_base = ioremap_nocache(rcba, 0x4000);
- 	if (rcba_base == NULL) {
--		dev_printk(KERN_DEBUG, &dev->dev, "ioremap failed; "
--			"cannot force enable HPET\n");
-+		dev_printk(KERN_DEBUG, &dev->dev, "ioremap failed; cannot force enable HPET\n");
- 		return;
- 	}
+-static unsigned long cht_machine_id;
+-
+-#define CHT_SURFACE_MACH 1
+-
+-static int cht_surface_quirk_cb(const struct dmi_system_id *id)
+-{
+-	cht_machine_id = CHT_SURFACE_MACH;
+-	return 1;
+-}
+-
+-static const struct dmi_system_id cht_table[] = {
+-	{
+-		.callback = cht_surface_quirk_cb,
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "Surface 3"),
+-		},
+-	},
+-	{ }
+-};
+-
+ static struct snd_soc_acpi_mach cht_surface_mach = {
+ 	.id = "10EC5640",
+ 	.drv_name = "cht-bsw-rt5645",
+@@ -41,14 +21,7 @@ static struct snd_soc_acpi_mach cht_surface_mach = {
  
-@@ -149,8 +146,7 @@ static void ich_force_enable_hpet(struct pci_dev *dev)
- 	if (err) {
- 		force_hpet_address = 0;
- 		iounmap(rcba_base);
--		dev_printk(KERN_DEBUG, &dev->dev,
--			"Failed to force enable HPET\n");
-+		dev_printk(KERN_DEBUG, &dev->dev, "Failed to force enable HPET\n");
- 	} else {
- 		force_hpet_resume_type = ICH_FORCE_HPET_RESUME;
- 		hpet_dev_print_force_hpet_address(&dev->dev);
-@@ -182,8 +178,7 @@ static struct pci_dev *cached_dev;
- 
- static void hpet_print_force_info(void)
+ static struct snd_soc_acpi_mach *cht_quirk(void *arg)
  {
--	printk(KERN_INFO "HPET not enabled in BIOS. "
--	       "You might try hpet=force boot option\n");
-+	printk(KERN_INFO "HPET not enabled in BIOS. You might try hpet=force boot option\n");
+-	struct snd_soc_acpi_mach *mach = arg;
+-
+-	dmi_check_system(cht_table);
+-
+-	if (cht_machine_id == CHT_SURFACE_MACH)
+-		return &cht_surface_mach;
+-	else
+-		return mach;
++	return x86_microsoft_surface_3_machine ? &cht_surface_mach : arg;
  }
  
- static void old_ich_force_hpet_resume(void)
+ /* Cherryview-based platforms: CherryTrail and Braswell */
 -- 
 2.24.1
 
