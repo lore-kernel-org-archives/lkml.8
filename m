@@ -2,105 +2,276 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5FCDC33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:41:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE29C33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:42:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9E1522525
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:41:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F07624677
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:42:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V/ONJGbm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W91Jb56Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbgATWli (ORCPT
+        id S1727047AbgATWmD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 17:41:38 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45107 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726752AbgATWlh (ORCPT
+        Mon, 20 Jan 2020 17:42:03 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:42317 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726752AbgATWmD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 17:41:37 -0500
-Received: by mail-wr1-f66.google.com with SMTP id j42so1141679wrj.12;
-        Mon, 20 Jan 2020 14:41:36 -0800 (PST)
+        Mon, 20 Jan 2020 17:42:03 -0500
+Received: by mail-ot1-f66.google.com with SMTP id 66so1192089otd.9
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 14:42:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tDWSSJBZQa8HlVV6FvLApvQT2M9iuui0osv97v1mf5U=;
-        b=V/ONJGbmkMt7TfgtnTxNyEu3qil+wkpPlU9kw0sy23a33hrFcxzNdVVENcucOE4gXo
-         BGI1oIN56w8H6TbXahObOuHtyK5zt63UmJ6EFq72Suu/S7ReGPfnRRfYbLZFDrR8+9D0
-         fS3AYyYGc+00zuFnt5gGRE7GVRR+2/D9g7G33n9CW92KPVYsurgOvvRy68CWkehRM56g
-         sxPpa9bZ44pPzJoA7eRAz+kwDXSO8wrNesZelz5iMElEPXmPZypYRX9Ttn92rJD+M8+4
-         AKcPEy5qMWIGNEwHrCLfcDIZF3RgMcs6nztVNzm3DDwuKKGZHMjiNvEP4fvaWpYFB7kb
-         PyfA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bDBT8e3/VOCF86JPNe3DzwS263QsPYorQ1EeG5o7o0k=;
+        b=W91Jb56QLb90legkT8de6fI2jfNA7ZhM84PbT+BE8kmaFpna41TuIuI0OjVhOlMWLI
+         W5wgGEYp2pIkiceyVnrvuT3alD4qdso3BtghCoa2iVR0KXBJ2eG7gnYyXrkv9QiyD0qK
+         uBJFNBjyVzbWuvOCNfjQ+zeowWb4R12Dl4WYWBp2JD8+FjjuPWv8jOlmuM7u/g2YVG2x
+         6PrK6bnSvfFSXXpp/AlowvKprOtCEIibvjsKrwlNnhu+z7P+pNOu1ruKOSf20OCl+dzm
+         BnyO23zZz3uM4Pb3AYSSy8ARVncvoXbBvHZEGB6T2j7Yk+FJQu7NWvnpGh+HbhNUTbhR
+         QRpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tDWSSJBZQa8HlVV6FvLApvQT2M9iuui0osv97v1mf5U=;
-        b=CXv0wsLUsVKEg/va87UYdgF1hhaVCIz9A/U2ywbFS9vk3hNNR83eAYFxH6TW4nJYuY
-         etkO3A0QgyiFgGlbu4DRtXZxbhj+cwRpYiiK+Hz3w08yH3UwggTEIxY4urGTE6slt9Yf
-         cJhPYxmpIC7FLPqv/XAW4C+X/y5JkZU1US5yarAZ48cr28Aby0cTEjydlJ1K/UbhO2hf
-         mrfhdqgVcwqR8mfCw5m9eWtwgekc+gbl1bkoJ2BFQjjp29LLpF2uv55TPk6UbXrZ38Tj
-         CwOT9IGh3pb2nHxVoWwYndNmNT2HvkkTV1Gg/Pu2CyqnUk+9CD6k/2RgkHJVJ+toNitO
-         vnEA==
-X-Gm-Message-State: APjAAAV+b1O4fQ1KnjUyGo7fPRCdKaWwrhSJhLo71nEX4fNqDFVs6JLL
-        kcVCOqX6NwIbSNOTRPWGyg==
-X-Google-Smtp-Source: APXvYqy8LPxDnidMN0QFhJIAgk1t7ivmtN5M+EQstEV0Yqap5i2TLkbjFws42RlQWPPZnY/UpEUAyg==
-X-Received: by 2002:a5d:6a02:: with SMTP id m2mr1652174wru.52.1579560095301;
-        Mon, 20 Jan 2020 14:41:35 -0800 (PST)
-Received: from ninjahost.lan (host-92-15-170-165.as43234.net. [92.15.170.165])
-        by smtp.googlemail.com with ESMTPSA id q15sm49438371wrr.11.2020.01.20.14.41.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 14:41:34 -0800 (PST)
-From:   Jules Irenge <jbi.octave@gmail.com>
-To:     paulmck@kernel.org
-Cc:     rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
-        joel@joelfernandes.org, rcu@vger.kernel.org, iangshanlai@gmail.com,
-        boqun.feng@gmail.com, linux-kernel@vger.kernel.org,
-        Jules Irenge <jbi.octave@gmail.com>
-Subject: [PATCH 2/5] rcu: Add missing annotation for exit_tasks_rcu_start()
-Date:   Mon, 20 Jan 2020 22:41:26 +0000
-Message-Id: <20200120224126.51615-1-jbi.octave@gmail.com>
-X-Mailer: git-send-email 2.24.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bDBT8e3/VOCF86JPNe3DzwS263QsPYorQ1EeG5o7o0k=;
+        b=N/SDhY92uSUnCxkZcPqajuXOPwYQd6ZEg74X/5QAYJ1xGxNDhswvVF9AG+OyXXjAn7
+         +D9BKVYPjWutCKXwRHb1ApByp/89xTmbcCoYvW6ZDjj6GHAg8mpqMfQduZTA/UZeuO5p
+         6SvNZuYhkArm80YNOL+RtiYeNfISPeWPDZGZQrXwhfJ/6iEypCvU0acy6W+Qv2RepriC
+         dWprz5JOWZyYxVcXN85klE0UXL9vLpoA35SAz84+HftWkixa7oQn7AoI2doNlr8jIm8V
+         5ZhZkHJ9gzA2Ds8yLMVcbVei/YgeJkDCG0q5FFodoAXnqPT3Wsr6X3N0onsTHFUKq4xP
+         JBEw==
+X-Gm-Message-State: APjAAAWc98qunfaUhHPZih2uqX4r6qIKunFK90JOwylfHIy5cykWF69i
+        B+iXyCbWPpbU72pR5MQHnK4P9SMuQQeS+OafEg0=
+X-Google-Smtp-Source: APXvYqyjKaHfhlheqxy6wOxHg10RUbPvc8Zfz1F2HoULI6sebcwGmKxhXFH2eMEiGV8P4kYAXl5R6+4NoSYpqdf5xog=
+X-Received: by 2002:a9d:da2:: with SMTP id 31mr1246109ots.319.1579560121841;
+ Mon, 20 Jan 2020 14:42:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200109225646.22983-1-xiyou.wangcong@gmail.com> <20200110092256.GN3466@techsingularity.net>
+In-Reply-To: <20200110092256.GN3466@techsingularity.net>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Mon, 20 Jan 2020 14:41:50 -0800
+Message-ID: <CAM_iQpWfnFD9YUetACbYf0u-be6u3m3Y62iAcbWSc1Ykrf4XCA@mail.gmail.com>
+Subject: Re: [PATCH] mm: avoid blocking lock_page() in kcompactd
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>, linux-mm <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse reports a warning at exit_tasks_rcu_start(void)
+On Fri, Jan 10, 2020 at 1:22 AM Mel Gorman <mgorman@techsingularity.net> wrote:
+>
+> On Thu, Jan 09, 2020 at 02:56:46PM -0800, Cong Wang wrote:
+> > We observed kcompactd hung at __lock_page():
+> >
+> >  INFO: task kcompactd0:57 blocked for more than 120 seconds.
+> >        Not tainted 4.19.56.x86_64 #1
+> >  "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> >  kcompactd0      D    0    57      2 0x80000000
+> >  Call Trace:
+> >   ? __schedule+0x236/0x860
+> >   schedule+0x28/0x80
+> >   io_schedule+0x12/0x40
+> >   __lock_page+0xf9/0x120
+> >   ? page_cache_tree_insert+0xb0/0xb0
+> >   ? update_pageblock_skip+0xb0/0xb0
+> >   migrate_pages+0x88c/0xb90
+> >   ? isolate_freepages_block+0x3b0/0x3b0
+> >   compact_zone+0x5f1/0x870
+> >   kcompactd_do_work+0x130/0x2c0
+> >   ? __switch_to_asm+0x35/0x70
+> >   ? __switch_to_asm+0x41/0x70
+> >   ? kcompactd_do_work+0x2c0/0x2c0
+> >   ? kcompactd+0x73/0x180
+> >   kcompactd+0x73/0x180
+> >   ? finish_wait+0x80/0x80
+> >   kthread+0x113/0x130
+> >   ? kthread_create_worker_on_cpu+0x50/0x50
+> >   ret_from_fork+0x35/0x40
+> >
+> > which faddr2line maps to:
+> >
+> >   migrate_pages+0x88c/0xb90:
+> >   lock_page at include/linux/pagemap.h:483
+> >   (inlined by) __unmap_and_move at mm/migrate.c:1024
+> >   (inlined by) unmap_and_move at mm/migrate.c:1189
+> >   (inlined by) migrate_pages at mm/migrate.c:1419
+> >
+> > Sometimes kcompactd eventually got out of this situation, sometimes not.
+> >
+> > I think for memory compaction, it is a best effort to migrate the pages,
+> > so it doesn't have to wait for I/O to complete. It is fine to call
+> > trylock_page() here, which is pretty much similar to
+> > buffer_migrate_lock_buffers().
+> >
+> > Given MIGRATE_SYNC_LIGHT is used on compaction path, just relax the
+> > check for it.
+> >
+>
+> Is this a single page being locked for a long time or multiple pages
+> being locked without reaching a reschedule point?
 
-|warning: context imbalance in exit_tasks_rcu_start() - wrong count at exit
+Not sure whether it is single page or multiple pages, but I successfully
+located the process locking the page (or pages), and I used perf to
+capture its stack trace:
 
-To fix this, an __acquires(&tasks_rcu_exit_srcu) is added.
-Given that exit_tasks_rcu_start() does actually call __srcu_read_lock().
-This not only fixes the warning
-but also improves on the readability of the code.
 
-Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
----
- kernel/rcu/update.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ ffffffffa722aa06 shrink_inactive_list
+ ffffffffa722b3d7 shrink_node_memcg
+ ffffffffa722b85f shrink_node
+ ffffffffa722bc89 do_try_to_free_pages
+ ffffffffa722c179 try_to_free_mem_cgroup_pages
+ ffffffffa7298703 try_charge
+ ffffffffa729a886 mem_cgroup_try_charge
+ ffffffffa720ec03 __add_to_page_cache_locked
+ ffffffffa720ee3a add_to_page_cache_lru
+ ffffffffa7312ddb iomap_readpages_actor
+ ffffffffa73133f7 iomap_apply
+ ffffffffa73135da iomap_readpages
+ ffffffffa722062e read_pages
+ ffffffffa7220b3f __do_page_cache_readahead
+ ffffffffa7210554 filemap_fault
+ ffffffffc039e41f __xfs_filemap_fault
+ ffffffffa724f5e7 __do_fault
+ ffffffffa724c5f2 __handle_mm_fault
+ ffffffffa724cbc6 handle_mm_fault
+ ffffffffa70a313e __do_page_fault
+ ffffffffa7a00dfe page_fault
 
-diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
-index 1861103662db..99f4e617116b 100644
---- a/kernel/rcu/update.c
-+++ b/kernel/rcu/update.c
-@@ -801,7 +801,7 @@ static int __init rcu_spawn_tasks_kthread(void)
- core_initcall(rcu_spawn_tasks_kthread);
- 
- /* Do the srcu_read_lock() for the above synchronize_srcu().  */
--void exit_tasks_rcu_start(void)
-+void exit_tasks_rcu_start(void) __acquires(&tasks_rcu_exit_srcu)
- {
- 	preempt_disable();
- 	current->rcu_tasks_idx = __srcu_read_lock(&tasks_rcu_exit_srcu);
--- 
-2.24.1
+This process got stuck in this situation for a long time (since I sent out
+this patch) without making any progress. It behaves like stuck in an infinite
+loop, although the EIP still moves around within mem_cgroup_try_charge().
 
+I also enabled trace event mm_vmscan_lru_shrink_inactive(), here is what
+I collected:
+
+           <...>-455459 [003] .... 2691911.664706:
+mm_vmscan_lru_shrink_inactive: nid=0 nr_scanned=1 nr_reclaimed=0
+nr_dirty=0 nr_writeback=0 nr_congested=0 nr_immediate=0 nr_activat
+e=0 nr_ref_keep=0 nr_unmap_fail=0 priority=0
+flags=RECLAIM_WB_FILE|RECLAIM_WB_ASYNC
+           <...>-455459 [003] .... 2691911.664711:
+mm_vmscan_lru_shrink_inactive: nid=0 nr_scanned=1 nr_reclaimed=0
+nr_dirty=0 nr_writeback=0 nr_congested=0 nr_immediate=0 nr_activat
+e=0 nr_ref_keep=0 nr_unmap_fail=0 priority=4
+flags=RECLAIM_WB_FILE|RECLAIM_WB_ASYNC
+           <...>-455459 [003] .... 2691911.664714:
+mm_vmscan_lru_shrink_inactive: nid=0 nr_scanned=2 nr_reclaimed=0
+nr_dirty=0 nr_writeback=0 nr_congested=0 nr_immediate=0 nr_activat
+e=0 nr_ref_keep=0 nr_unmap_fail=0 priority=3
+flags=RECLAIM_WB_FILE|RECLAIM_WB_ASYNC
+           <...>-455459 [003] .... 2691911.664717:
+mm_vmscan_lru_shrink_inactive: nid=0 nr_scanned=5 nr_reclaimed=0
+nr_dirty=0 nr_writeback=0 nr_congested=0 nr_immediate=0 nr_activat
+e=0 nr_ref_keep=0 nr_unmap_fail=0 priority=2
+flags=RECLAIM_WB_FILE|RECLAIM_WB_ASYNC
+           <...>-455459 [003] .... 2691911.664720:
+mm_vmscan_lru_shrink_inactive: nid=0 nr_scanned=5 nr_reclaimed=0
+nr_dirty=0 nr_writeback=0 nr_congested=0 nr_immediate=0 nr_activat
+e=0 nr_ref_keep=0 nr_unmap_fail=0 priority=1
+flags=RECLAIM_WB_FILE|RECLAIM_WB_ASYNC
+           <...>-455459 [003] .... 2691911.664725:
+mm_vmscan_lru_shrink_inactive: nid=0 nr_scanned=7 nr_reclaimed=0
+nr_dirty=0 nr_writeback=0 nr_congested=0 nr_immediate=0 nr_activat
+e=0 nr_ref_keep=0 nr_unmap_fail=0 priority=0
+flags=RECLAIM_WB_FILE|RECLAIM_WB_ASYNC
+           <...>-455459 [003] .... 2691911.664730:
+mm_vmscan_lru_shrink_inactive: nid=0 nr_scanned=1 nr_reclaimed=0
+nr_dirty=0 nr_writeback=0 nr_congested=0 nr_immediate=0 nr_activat
+e=0 nr_ref_keep=0 nr_unmap_fail=0 priority=2
+flags=RECLAIM_WB_FILE|RECLAIM_WB_ASYNC
+           <...>-455459 [003] .... 2691911.664732:
+mm_vmscan_lru_shrink_inactive: nid=0 nr_scanned=1 nr_reclaimed=0
+nr_dirty=0 nr_writeback=0 nr_congested=0 nr_immediate=0 nr_activat
+e=0 nr_ref_keep=0 nr_unmap_fail=0 priority=0
+flags=RECLAIM_WB_FILE|RECLAIM_WB_ASYNC
+           <...>-455459 [003] .... 2691911.664736:
+mm_vmscan_lru_shrink_inactive: nid=0 nr_scanned=1 nr_reclaimed=0
+nr_dirty=0 nr_writeback=0 nr_congested=0 nr_immediate=0 nr_activat
+e=0 nr_ref_keep=0 nr_unmap_fail=0 priority=4
+flags=RECLAIM_WB_FILE|RECLAIM_WB_ASYNC
+           <...>-455459 [003] .... 2691911.664739:
+mm_vmscan_lru_shrink_inactive: nid=0 nr_scanned=2 nr_reclaimed=0
+nr_dirty=0 nr_writeback=0 nr_congested=0 nr_immediate=0 nr_activat
+e=0 nr_ref_keep=0 nr_unmap_fail=0 priority=3
+flags=RECLAIM_WB_FILE|RECLAIM_WB_ASYNC
+           <...>-455459 [003] .... 2691911.664744:
+mm_vmscan_lru_shrink_inactive: nid=0 nr_scanned=5 nr_reclaimed=0
+nr_dirty=0 nr_writeback=0 nr_congested=0 nr_immediate=0 nr_activat
+e=0 nr_ref_keep=0 nr_unmap_fail=0 priority=2
+flags=RECLAIM_WB_FILE|RECLAIM_WB_ASYNC
+           <...>-455459 [003] .... 2691911.664747:
+mm_vmscan_lru_shrink_inactive: nid=0 nr_scanned=4 nr_reclaimed=0
+nr_dirty=0 nr_writeback=0 nr_congested=0 nr_immediate=0 nr_activat
+e=0 nr_ref_keep=0 nr_unmap_fail=0 priority=1
+flags=RECLAIM_WB_FILE|RECLAIM_WB_ASYNC
+           <...>-455459 [003] .... 2691911.664752:
+mm_vmscan_lru_shrink_inactive: nid=0 nr_scanned=12 nr_reclaimed=0
+nr_dirty=0 nr_writeback=0 nr_congested=0 nr_immediate=0 nr_activa
+te=0 nr_ref_keep=0 nr_unmap_fail=0 priority=0
+flags=RECLAIM_WB_FILE|RECLAIM_WB_ASYNC
+           <...>-455459 [003] .... 2691911.664755:
+mm_vmscan_lru_shrink_inactive: nid=0 nr_scanned=1 nr_reclaimed=0
+nr_dirty=0 nr_writeback=0 nr_congested=0 nr_immediate=0 nr_activat
+e=0 nr_ref_keep=0 nr_unmap_fail=0 priority=4
+flags=RECLAIM_WB_FILE|RECLAIM_WB_ASYNC
+           <...>-455459 [003] .... 2691911.664761:
+mm_vmscan_lru_shrink_inactive: nid=0 nr_scanned=1 nr_reclaimed=0
+nr_dirty=0 nr_writeback=0 nr_congested=0 nr_immediate=0 nr_activat
+e=0 nr_ref_keep=0 nr_unmap_fail=0 priority=2
+flags=RECLAIM_WB_FILE|RECLAIM_WB_ASYNC
+           <...>-455459 [003] .... 2691911.664762:
+mm_vmscan_lru_shrink_inactive: nid=0 nr_scanned=1 nr_reclaimed=0
+nr_dirty=0 nr_writeback=0 nr_congested=0 nr_immediate=0 nr_activat
+e=0 nr_ref_keep=0 nr_unmap_fail=0 priority=1
+flags=RECLAIM_WB_FILE|RECLAIM_WB_ASYNC
+           <...>-455459 [003] .... 2691911.664764:
+mm_vmscan_lru_shrink_inactive: nid=0 nr_scanned=1 nr_reclaimed=0
+nr_dirty=0 nr_writeback=0 nr_congested=0 nr_immediate=0 nr_activat
+e=0 nr_ref_keep=0 nr_unmap_fail=0 priority=0
+flags=RECLAIM_WB_FILE|RECLAIM_WB_ASYNC
+           <...>-455459 [003] .... 2691911.664770:
+mm_vmscan_lru_shrink_inactive: nid=0 nr_scanned=4 nr_reclaimed=0
+nr_dirty=0 nr_writeback=0 nr_congested=0 nr_immediate=0 nr_activat
+e=0 nr_ref_keep=0 nr_unmap_fail=0 priority=1
+flags=RECLAIM_WB_FILE|RECLAIM_WB_ASYNC
+           <...>-455459 [003] .... 2691911.664777:
+mm_vmscan_lru_shrink_inactive: nid=0 nr_scanned=21 nr_reclaimed=0
+nr_dirty=0 nr_writeback=0 nr_congested=0 nr_immediate=0 nr_activa
+te=0 nr_ref_keep=0 nr_unmap_fail=0 priority=0
+flags=RECLAIM_WB_FILE|RECLAIM_WB_ASYNC
+           <...>-455459 [003] .... 2691911.664780:
+mm_vmscan_lru_shrink_inactive: nid=0 nr_scanned=1 nr_reclaimed=0
+nr_dirty=0 nr_writeback=0 nr_congested=0 nr_immediate=0 nr_activat
+e=0 nr_ref_keep=0 nr_unmap_fail=0 priority=4
+flags=RECLAIM_WB_FILE|RECLAIM_WB_ASYNC
+           <...>-455459 [003] .... 2691911.664783:
+mm_vmscan_lru_shrink_inactive: nid=0 nr_scanned=2 nr_reclaimed=0
+nr_dirty=0 nr_writeback=0 nr_congested=0 nr_immediate=0 nr_activat
+e=0 nr_ref_keep=0 nr_unmap_fail=0 priority=3
+flags=RECLAIM_WB_FILE|RECLAIM_WB_ASYNC
+
+
+>
+> If it's a single page being locked, it's important to identify what held
+> page lock for 2 minutes because that is potentially a missing
+> unlock_page. The kernel in question is old -- 4.19.56. Are there any
+> other modifications to that kernel?
+
+We only backported some networking and hardware driver patches,
+not any MM change.
+
+Please let me know if I can collect any other information you need,
+before it gets rebooted.
+
+Thanks.
