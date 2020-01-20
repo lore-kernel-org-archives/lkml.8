@@ -2,83 +2,85 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E5B8C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 23:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 171E4C32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 23:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2FA4208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 23:11:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y7HdRjx/"
+	by mail.kernel.org (Postfix) with ESMTP id DEECC208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 23:16:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbgATXLK (ORCPT
+        id S1727075AbgATXQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 18:11:10 -0500
-Received: from mail-ot1-f47.google.com ([209.85.210.47]:43725 "EHLO
-        mail-ot1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726816AbgATXLJ (ORCPT
+        Mon, 20 Jan 2020 18:16:01 -0500
+Received: from mail-io1-f72.google.com ([209.85.166.72]:55142 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726816AbgATXQB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 18:11:09 -0500
-Received: by mail-ot1-f47.google.com with SMTP id p8so1249484oth.10
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 15:11:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SKP8yEJvIPRamm38nq6sQHvFo27I9jjAhAnyLSp8Eqk=;
-        b=Y7HdRjx/0l6IwR2zYR/jo0+1FnpycOhLEVpMVNTtZkLwJUCKY6np7xTsU+u6u8IP9X
-         P0Q9lyDZ8MNaE6lAPyw2S2GMfYSBxUG4U5aQJeW6mjlopDYDiKvnjsKC//2++5jBo4Lh
-         5cBvbbhmCLO71b6SPdHmQsNgPfQHfanCnji+xABCuJdiPWk9glXGjiXPR5SmorQPAWQi
-         PFdJ8VY2/jFlrqhLgsuhGYuUYbKZlsvT9xXVIYvrRw1QsD0Cx1INkCRAmVgYC/4+nXm1
-         OGqRp8TIZ/jeNLfUxmp5R4xXJfrjoSrykSYH9MKHGnHLj2DhTa5BTHJkin7iczp03Cpp
-         TnJQ==
+        Mon, 20 Jan 2020 18:16:01 -0500
+Received: by mail-io1-f72.google.com with SMTP id u6so571200iog.21
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 15:16:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SKP8yEJvIPRamm38nq6sQHvFo27I9jjAhAnyLSp8Eqk=;
-        b=TOEPsNou1NU0ryVlw8mgiewLdQ0M3FC72ElFiwwoPhHkLvBLfvqu83V9J6Vr1Gh3/X
-         GUonO+5PgZCJbUiQ5UpX9ekTc8bOjMvf1SqqTyQEl7Ru+5SNmW/OllSJ7PqKZVUL20W3
-         tLEFssC3CnXJybmyarnoDUye/4pZwjqKctRiqusE2Px1Hf1rIPl3UQWv0iyMq5OOF/26
-         VrVBCn65T/2da3xgp2bFZ3sjwxNku7SEl0RGT3XiHAybKYrPhZAHUycEz7zIIf2e35bs
-         +0UpmXDGqgIC6WJghj8eW1/vVYW9vGHQ9ITYwWMfcXTAo+Y4HcmWwqi7DmOLIEG3TBJk
-         rZFw==
-X-Gm-Message-State: APjAAAWdjJikV4ppgTYcUrJXYEqyczL/F0Gx9VeJQ6yzoIiqqRYb8mDJ
-        BmGXAZ/zEThiER9QoGLsok5DmuhozkkoPpzJc2vrk6JH2W8=
-X-Google-Smtp-Source: APXvYqxxBZWfhkjN4YVm5NI7lG9BUUPEcKfenADjWPC3pOFkvl0dIBsvoXwj1dFzaaYrU70ZrtlGQ7wrF28XJJq66AQ=
-X-Received: by 2002:a9d:da2:: with SMTP id 31mr1326815ots.319.1579561868762;
- Mon, 20 Jan 2020 15:11:08 -0800 (PST)
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=y3GTXWLuk9NLOUo9vngxj+QH9Vmo0/vEpcLHw8rmxOE=;
+        b=uRN1ARuXVzdbSqzosmf9H9Y1c9VGbKTWCAObadMHnLYUhvHIGsD378TMirpxZpsHlJ
+         5Z5tyzvZzpvTPxLti44+0Av0yV6H/hCr7om2mIF+gKQQ402df8xM/2WOUnj0c9+jUyR0
+         UUtodS+xjgBc8MBVFDNH3W7QoZwbz4AZQ99CiI/t3DFPlHCIfIkwdZ77nNPTWj6z3sGc
+         thEixC5invFXPWW1/3qTN3cBpFndFJEIJoFtaqw6/TSs7lcdJgaScf2NDti0/G2sUFEv
+         5oqggU1v4gppoodt5eBC374/M/gjJ2Ahje9T6DI5iYind608M5hmvWV4Pp6he6Na6WMJ
+         pAsg==
+X-Gm-Message-State: APjAAAXj3/HaEgiPNLIQboboZG3Asdp8Gl3Uf1eel1tMOMt4X/xOOu2K
+        jv3Lsk/JokYk790tJIsXFvuu6FB6t+HC7rGQRSfjiOBPYznX
+X-Google-Smtp-Source: APXvYqwTQzxbm8PYHQsYDQTufEheVPhobojoxo91G/kDDsKtigITdXJIOhyQnk0UJj6rRXnzx2pnx/MUqigsEvuGYyTl0a8JeDIb
 MIME-Version: 1.0
-References: <20191218043951.10534-1-xiyou.wangcong@gmail.com>
-In-Reply-To: <20191218043951.10534-1-xiyou.wangcong@gmail.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Mon, 20 Jan 2020 15:10:57 -0800
-Message-ID: <CAM_iQpWw9udHY5A2Gaq7+2WN__SEY2+U12D78=fiJ2xig1HJBA@mail.gmail.com>
-Subject: Re: [Patch v3 0/3] iommu: reduce spinlock contention on fast path
-To:     iommu@lists.linux-foundation.org
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>
+X-Received: by 2002:a05:6e02:f0f:: with SMTP id x15mr1213167ilj.298.1579562160891;
+ Mon, 20 Jan 2020 15:16:00 -0800 (PST)
+Date:   Mon, 20 Jan 2020 15:16:00 -0800
+In-Reply-To: <000000000000c7999e059c86eebe@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000802f87059c9a7984@google.com>
+Subject: Re: KASAN: use-after-free Read in bitmap_ipmac_ext_cleanup
+From:   syzbot <syzbot+33fc3ad6fa11675e1a7e@syzkaller.appspotmail.com>
+To:     a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
+        coreteam@netfilter.org, davem@davemloft.net,
+        florent.fourcot@wifirst.fr, fw@strlen.de, jeremy@azazel.net,
+        johannes.berg@intel.com, kadlec@netfilter.org,
+        linux-kernel@vger.kernel.org, mareklindner@neomailbox.ch,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        pablo@netfilter.org, po-hsu.lin@canonical.com,
+        skhan@linuxfoundation.org, sw@simonwunderlich.de,
+        syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 8:40 PM Cong Wang <xiyou.wangcong@gmail.com> wrote:
->
-> This patchset contains three small optimizations for the global spinlock
-> contention in IOVA cache. Our memcache perf test shows this reduced its
-> p999 latency down by 45% on AMD when IOMMU is enabled.
->
-> (Resending v3 on Joerg's request.)
+syzbot has bisected this bug to:
 
-Hi, Joerg
+commit ff95bf28c23490584b9d75913a520bb7bb1f2ecb
+Author: Po-Hsu Lin <po-hsu.lin@canonical.com>
+Date:   Mon Jul 1 04:40:31 2019 +0000
 
-Can you take these patches?
+    selftests/net: skip psock_tpacket test if KALLSYMS was not enabled
 
-Thanks!
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17e2e966e00000
+start commit:   8f8972a3 Merge tag 'mtd/fixes-for-5.5-rc7' of git://git.ke..
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=1412e966e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1012e966e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d9290aeb7e6cf1c4
+dashboard link: https://syzkaller.appspot.com/bug?extid=33fc3ad6fa11675e1a7e
+userspace arch: i386
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15982cc9e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11be38d6e00000
+
+Reported-by: syzbot+33fc3ad6fa11675e1a7e@syzkaller.appspotmail.com
+Fixes: ff95bf28c234 ("selftests/net: skip psock_tpacket test if KALLSYMS was not enabled")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
