@@ -2,105 +2,77 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70099C33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB6C4C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:17:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46D9E22314
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:14:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579529678;
-	bh=s+B1Zj2tP63CcGWhhEWSPDbKXf7ZgnCb1d+/R8JiMro=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0aZEsH3fovpUqmUEupsMBK/heVsMi0WVQiV8BWtbwIrYviGvCA4XKZfo9i9sRMv70
-	 aa27qu0HuouqdQPbqPp0XYYqORPdFlbXeRAMEqfQAe1W5JPIgjbnKxymRghpDsk5fA
-	 oKkPY9zB50fLu5Y9O99C6khjKDAGg6F7RkAulCSw=
+	by mail.kernel.org (Postfix) with ESMTP id 8A94D20678
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:17:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728093AbgATOOh (ORCPT
+        id S1727683AbgATORA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 09:14:37 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33573 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726885AbgATOOh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 09:14:37 -0500
-Received: by mail-wr1-f68.google.com with SMTP id b6so29780839wrq.0;
-        Mon, 20 Jan 2020 06:14:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lkDkkMY1TWgj8+gYQdlaFHI7hmmwbXGQtowlL27ZgDI=;
-        b=Nrwv0yvJTzzbJuT58voYmYgzfFlF6wgNA1P1HpK4Wa7NYjd99eYag5WD5bIe42UT7k
-         5bOvEdiYDUe7VPyjlItS0Vuj/bwNhmuJL1knyX6Y+TuL+2wug5MhpQC03u7mNyjIsgSn
-         uc11evw/04AG/X1tXK3b9QR9SIbLt40YGzM9Q6gPsRxSO3GvcGuU/hvWZfZwSTYuFEx/
-         xcemiqpoEWtsPWdGRqKulOHzW6cEYZOsdz4e2rCq1ViBYOSenHztVtTNjDhuSG/M/cWJ
-         sz25dAGte6G1pTCpp6UVm86i3a2LW/FBuORepe0wxn98hxQRdNAtkp+980kHo25L9RTl
-         Rk7g==
-X-Gm-Message-State: APjAAAUmjeigQJ9k1+uwiOo0NPzOj6+GSGNzTsJfRbKAOYfkCosTbdDA
-        edoeL3HOXRLgY9M3j+uEr2Y=
-X-Google-Smtp-Source: APXvYqz5/OtwpB21BRTDCwjNdY9uy8qzHGGRso8Ycl1SAhw43eAeI0AzOpJL6n5gnGShrtZ2EdKgaA==
-X-Received: by 2002:adf:fd43:: with SMTP id h3mr18440651wrs.169.1579529675281;
-        Mon, 20 Jan 2020 06:14:35 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id i11sm49089379wrs.10.2020.01.20.06.14.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 06:14:34 -0800 (PST)
-Date:   Mon, 20 Jan 2020 15:14:33 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Tianyu Lan <Tianyu.Lan@microsoft.com>
-Cc:     David Hildenbrand <david@redhat.com>,
-        "lantianyu1986@gmail.com" <lantianyu1986@gmail.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        vkuznets <vkuznets@redhat.com>,
-        "eric.devolder@oracle.com" <eric.devolder@oracle.com>,
-        "vbabka@suse.cz" <vbabka@suse.cz>,
-        "osalvador@suse.de" <osalvador@suse.de>,
-        Pasha Tatashin <Pavel.Tatashin@microsoft.com>,
-        "rppt@linux.ibm.com" <rppt@linux.ibm.com>
-Subject: Re: [EXTERNAL] Re: [RFC PATCH V2 2/10] mm: expose
- is_mem_section_removable() symbol
-Message-ID: <20200120141433.GI18451@dhcp22.suse.cz>
-References: <20200107130950.2983-1-Tianyu.Lan@microsoft.com>
- <20200107130950.2983-3-Tianyu.Lan@microsoft.com>
- <20200107133623.GJ32178@dhcp22.suse.cz>
- <99a6db0c-6d73-d982-58b3-7a0172748ae4@redhat.com>
- <SG2P153MB0349F85FB0C1C02F55391F6D92350@SG2P153MB0349.APCP153.PROD.OUTLOOK.COM>
- <20200114095057.GK19428@dhcp22.suse.cz>
- <PS1P15301MB034764C1FFA3D2711DAED14C92360@PS1P15301MB0347.APCP153.PROD.OUTLOOK.COM>
+        Mon, 20 Jan 2020 09:17:00 -0500
+Received: from mx2.suse.de ([195.135.220.15]:53248 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726982AbgATORA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 09:17:00 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 9F57EACD7;
+        Mon, 20 Jan 2020 14:16:58 +0000 (UTC)
+Date:   Mon, 20 Jan 2020 15:16:57 +0100
+From:   Jean Delvare <jdelvare@suse.de>
+To:     Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     linux-doc@vger.kernel.org, linux-i2c@vger.kernel.org,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 12/26] docs: i2c: smbus-protocol: properly name start
+ and stop conditions
+Message-ID: <20200120151657.50725d9e@endymion>
+In-Reply-To: <20200105225012.11701-12-luca@lucaceresoli.net>
+References: <20200105224006.10321-1-luca@lucaceresoli.net>
+        <20200105225012.11701-1-luca@lucaceresoli.net>
+        <20200105225012.11701-12-luca@lucaceresoli.net>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PS1P15301MB034764C1FFA3D2711DAED14C92360@PS1P15301MB0347.APCP153.PROD.OUTLOOK.COM>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 17-01-20 16:35:03, Tianyu Lan wrote:
-[...]
-> > Could you describe your usecase in more details please?
+On Sun,  5 Jan 2020 23:49:58 +0100, Luca Ceresoli wrote:
+> In I2C there is no such thing as a "start bit" or a "stop bit". Use the
+> proper naming: "start condition" and "stop condition".
 > 
-> Hyper-V sends hot-remove request message which just contains requested
-> page number but not provide detail range. So Hyper-V driver needs to search
-> suitable memory block in system memory to return back to host if there is no
-> memory hot-add before. So I used the is_mem_section_removable() do such check.
+> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+> ---
+>  Documentation/i2c/smbus-protocol.rst | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/i2c/smbus-protocol.rst b/Documentation/i2c/smbus-protocol.rst
+> index 1600b09ec0be..8510eeda1dd0 100644
+> --- a/Documentation/i2c/smbus-protocol.rst
+> +++ b/Documentation/i2c/smbus-protocol.rst
+> @@ -35,8 +35,8 @@ Key to symbols
+>  ==============
+>  
+>  =============== =============================================================
+> -S     (1 bit) : Start bit
+> -P     (1 bit) : Stop bit
+> +S             : Start condition
+> +P             : Stop condition
+>  Rd/Wr (1 bit) : Read/Write bit. Rd equals 1, Wr equals 0.
+>  A, NA (1 bit) : Accept and reverse accept bit.
+>  Addr  (7 bits): I2C 7 bit address. Note that this can be expanded as usual to
 
-As David described, you would be much better of by using
-alloc_contig_range to find a memory that would be suitable for
-hotremoving without any races.
+Reviewed-by: Jean Delvare <jdelvare@suse.de>
+
 -- 
-Michal Hocko
-SUSE Labs
+Jean Delvare
+SUSE L3 Support
