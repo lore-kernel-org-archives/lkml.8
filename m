@@ -2,176 +2,128 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BFE4C33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 20:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 510DCC32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 20:51:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D32EB22525
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 20:49:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EDDC22525
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 20:51:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="JdY1j6tK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TzQWKRSy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbgATUtU (ORCPT
+        id S1727005AbgATUvH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 15:49:20 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:50605 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726752AbgATUtT (ORCPT
+        Mon, 20 Jan 2020 15:51:07 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37529 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726586AbgATUvG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 15:49:19 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1579553359; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=kcD4cIT6TO+GhmHS0MBwC7/uH5JRJvAdsZCjW78zRow=; b=JdY1j6tKq24IxKKZbzo+JTZK/Vn3YR96Cb0XuWbqUDEspml374oG3ZvqRfawVIAS5jfb8HWX
- ewmCpzP1Oa0MIDxTDmZJYSgyp1cCLVBXScTVkYjH+NZPhKbThAqpYUPFKgPynNVyKn3Vrdct
- g+gMk3IrS27et5yx4qmxpPnbw/E=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e26124c.7f522c449378-smtp-out-n02;
- Mon, 20 Jan 2020 20:49:16 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8D3E3C4479F; Mon, 20 Jan 2020 20:49:15 +0000 (UTC)
-Received: from [10.46.161.159] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: asutoshd)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 92D2AC43383;
-        Mon, 20 Jan 2020 20:49:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 92D2AC43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=asutoshd@codeaurora.org
-Subject: Re: [PATCH v1 2/3] scsi: ufs: export some functions for vendor usage
-To:     Stanley Chu <stanley.chu@mediatek.com>, linux-scsi@vger.kernel.org,
-        martin.petersen@oracle.com, avri.altman@wdc.com,
-        alim.akhtar@samsung.com, jejb@linux.ibm.com
-Cc:     beanhuo@micron.com, cang@codeaurora.org, matthias.bgg@gmail.com,
-        bvanassche@acm.org, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
-        chun-hung.wu@mediatek.com, andy.teng@mediatek.com
-References: <20200117035108.19699-1-stanley.chu@mediatek.com>
- <20200117035108.19699-3-stanley.chu@mediatek.com>
-From:   "Asutosh Das (asd)" <asutoshd@codeaurora.org>
-Message-ID: <4dc0cb58-13f6-0678-dcf2-6b0394200157@codeaurora.org>
-Date:   Mon, 20 Jan 2020 12:49:13 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 20 Jan 2020 15:51:06 -0500
+Received: by mail-wr1-f66.google.com with SMTP id w15so936079wru.4;
+        Mon, 20 Jan 2020 12:51:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=i01IMAk+P2q7SvWiDx3PdS1EE3a64YeasEvWKGdKL1w=;
+        b=TzQWKRSyVsxrIwMZNWdMr6MJBcxe3ZsJiu2gbVDHwCpZjAA4F1/jPdhfy/M2lEr3+D
+         jKbfhS+Rc6ysIY3y/Q7bQ5TP7dcojMbBdRVK2BWfBFRiLJKjEwyoNrGKRM4udQ/0MIsH
+         FW/QtcreChkB5fQO2CiDHLWdem7aH+uIWNt223/YZdjyic+WwrM+vO1KEtt+STLYa5YP
+         nm49mpSN6XDe2BcAfX/CYNjBA6lgtLlx9nciHcjx6z/FlBd+Cx98eGDh9Ydmjg4yMBrQ
+         IKrPPCkWXTQFUyZUBa6Zb2qXT1KnNtOK5px4a2tZogx/rK14lqAkKYg+o9uPv7ih/wo/
+         77aA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=i01IMAk+P2q7SvWiDx3PdS1EE3a64YeasEvWKGdKL1w=;
+        b=FEqDP2dqZbvzkjmeJ6pNffd9w+8OyluYRdz2DRPMAWZcQnw02Eqzba5grJmRQ7R6EE
+         JApLMudi73ukdiL49XX4wSjMqVEYhq96jlmRozUP1ROW9m6sPEaYwalDvHTjoVqSoSaT
+         KVM6SAhW3tUtf3B2Y2QXonpVolTq7eZ956nZ+FTN3GK8jsDeHuDCdQNk2UeaN7GvpDNc
+         zl6sZqjdQWGCia1B9qlrFLt+6+YN+OPlXMm9fmfX7cIx0RU+IIE+0yveTCPvz6bLjEET
+         IQY4DwjrZjGXnFWJu2v4blAVPJQ40zxsMKTwV9KPji1qNejUBv3XJblQKLdRXefenmN9
+         hD0A==
+X-Gm-Message-State: APjAAAWm+iVabhrENhBr+K/BVdromnuhcYAUf3VAENy3MVV64MjFKnV/
+        VsTwb9R0c1yRsnyUvPfZYef7ASqn
+X-Google-Smtp-Source: APXvYqz0IHYH6HCD0/MIWo8ETFdvbDo9RpsboH2TPyu6qjcSVlXnvSD5LVUoIizkv9Py/PcxuzWx9Q==
+X-Received: by 2002:adf:d183:: with SMTP id v3mr1373052wrc.180.1579553464249;
+        Mon, 20 Jan 2020 12:51:04 -0800 (PST)
+Received: from localhost.localdomain ([109.126.145.157])
+        by smtp.gmail.com with ESMTPSA id r15sm771757wmh.21.2020.01.20.12.51.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jan 2020 12:51:03 -0800 (PST)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] splice: direct call for default_file_splice*()
+Date:   Mon, 20 Jan 2020 23:49:46 +0300
+Message-Id: <12375b7baa741f0596d54eafc6b1cfd2489dd65a.1579553271.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <20200117035108.19699-3-stanley.chu@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/16/2020 7:51 PM, Stanley Chu wrote:
-> Export below functions for vendor usage,
-> 
-> int ufshcd_hba_enable(struct ufs_hba *hba);
-> int ufshcd_make_hba_operational(struct ufs_hba *hba);
-> int ufshcd_uic_hibern8_exit(struct ufs_hba *hba);
-> 
-> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-> ---
+Indirect calls could be very expensive nowadays, so try to use direct calls
+whenever possible.
 
-LGTM.
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+---
+ fs/splice.c | 17 ++++-------------
+ 1 file changed, 4 insertions(+), 13 deletions(-)
 
-Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
-
->   drivers/scsi/ufs/ufshcd.c | 11 +++++++----
->   drivers/scsi/ufs/ufshcd.h |  3 +++
->   2 files changed, 10 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> index bea036ab189a..1168baf358ea 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -250,7 +250,6 @@ static int ufshcd_probe_hba(struct ufs_hba *hba);
->   static int __ufshcd_setup_clocks(struct ufs_hba *hba, bool on,
->   				 bool skip_ref_clk);
->   static int ufshcd_setup_clocks(struct ufs_hba *hba, bool on);
-> -static int ufshcd_uic_hibern8_exit(struct ufs_hba *hba);
->   static int ufshcd_uic_hibern8_enter(struct ufs_hba *hba);
->   static inline void ufshcd_add_delay_before_dme_cmd(struct ufs_hba *hba);
->   static int ufshcd_host_reset_and_restore(struct ufs_hba *hba);
-> @@ -3865,7 +3864,7 @@ static int ufshcd_uic_hibern8_enter(struct ufs_hba *hba)
->   	return ret;
->   }
->   
-> -static int ufshcd_uic_hibern8_exit(struct ufs_hba *hba)
-> +int ufshcd_uic_hibern8_exit(struct ufs_hba *hba)
->   {
->   	struct uic_command uic_cmd = {0};
->   	int ret;
-> @@ -3891,6 +3890,7 @@ static int ufshcd_uic_hibern8_exit(struct ufs_hba *hba)
->   
->   	return ret;
->   }
-> +EXPORT_SYMBOL_GPL(ufshcd_uic_hibern8_exit);
->   
->   void ufshcd_auto_hibern8_update(struct ufs_hba *hba, u32 ahit)
->   {
-> @@ -4162,7 +4162,7 @@ static int ufshcd_complete_dev_init(struct ufs_hba *hba)
->    *
->    * Returns 0 on success, non-zero value on failure
->    */
-> -static int ufshcd_make_hba_operational(struct ufs_hba *hba)
-> +int ufshcd_make_hba_operational(struct ufs_hba *hba)
->   {
->   	int err = 0;
->   	u32 reg;
-> @@ -4208,6 +4208,7 @@ static int ufshcd_make_hba_operational(struct ufs_hba *hba)
->   out:
->   	return err;
->   }
-> +EXPORT_SYMBOL_GPL(ufshcd_make_hba_operational);
->   
->   /**
->    * ufshcd_hba_stop - Send controller to reset state
-> @@ -4285,7 +4286,7 @@ static int ufshcd_hba_execute_hce(struct ufs_hba *hba)
->   	return 0;
->   }
->   
-> -static int ufshcd_hba_enable(struct ufs_hba *hba)
-> +int ufshcd_hba_enable(struct ufs_hba *hba)
->   {
->   	int ret;
->   
-> @@ -4310,6 +4311,8 @@ static int ufshcd_hba_enable(struct ufs_hba *hba)
->   
->   	return ret;
->   }
-> +EXPORT_SYMBOL_GPL(ufshcd_hba_enable);
-> +
->   static int ufshcd_disable_tx_lcc(struct ufs_hba *hba, bool peer)
->   {
->   	int tx_lanes, i, err = 0;
-> diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-> index b1a1c65be8b1..fca372d98495 100644
-> --- a/drivers/scsi/ufs/ufshcd.h
-> +++ b/drivers/scsi/ufs/ufshcd.h
-> @@ -799,8 +799,11 @@ static inline void ufshcd_rmwl(struct ufs_hba *hba, u32 mask, u32 val, u32 reg)
->   
->   int ufshcd_alloc_host(struct device *, struct ufs_hba **);
->   void ufshcd_dealloc_host(struct ufs_hba *);
-> +int ufshcd_hba_enable(struct ufs_hba *hba);
->   int ufshcd_init(struct ufs_hba * , void __iomem * , unsigned int);
-> +int ufshcd_make_hba_operational(struct ufs_hba *hba);
->   void ufshcd_remove(struct ufs_hba *);
-> +int ufshcd_uic_hibern8_exit(struct ufs_hba *hba);
->   int ufshcd_wait_for_register(struct ufs_hba *hba, u32 reg, u32 mask,
->   				u32 val, unsigned long interval_us,
->   				unsigned long timeout_ms, bool can_sleep);
-> 
-
-
+diff --git a/fs/splice.c b/fs/splice.c
+index 6a6f30432688..91448d855ff0 100644
+--- a/fs/splice.c
++++ b/fs/splice.c
+@@ -852,15 +852,10 @@ EXPORT_SYMBOL(generic_splice_sendpage);
+ static long do_splice_from(struct pipe_inode_info *pipe, struct file *out,
+ 			   loff_t *ppos, size_t len, unsigned int flags)
+ {
+-	ssize_t (*splice_write)(struct pipe_inode_info *, struct file *,
+-				loff_t *, size_t, unsigned int);
+-
+ 	if (out->f_op->splice_write)
+-		splice_write = out->f_op->splice_write;
++		return out->f_op->splice_write(pipe, out, ppos, len, flags);
+ 	else
+-		splice_write = default_file_splice_write;
+-
+-	return splice_write(pipe, out, ppos, len, flags);
++		return default_file_splice_write(pipe, out, ppos, len, flags);
+ }
+ 
+ /*
+@@ -870,8 +865,6 @@ static long do_splice_to(struct file *in, loff_t *ppos,
+ 			 struct pipe_inode_info *pipe, size_t len,
+ 			 unsigned int flags)
+ {
+-	ssize_t (*splice_read)(struct file *, loff_t *,
+-			       struct pipe_inode_info *, size_t, unsigned int);
+ 	int ret;
+ 
+ 	if (unlikely(!(in->f_mode & FMODE_READ)))
+@@ -885,11 +878,9 @@ static long do_splice_to(struct file *in, loff_t *ppos,
+ 		len = MAX_RW_COUNT;
+ 
+ 	if (in->f_op->splice_read)
+-		splice_read = in->f_op->splice_read;
++		return in->f_op->splice_read(in, ppos, pipe, len, flags);
+ 	else
+-		splice_read = default_file_splice_read;
+-
+-	return splice_read(in, ppos, pipe, len, flags);
++		return default_file_splice_read(in, ppos, pipe, len, flags);
+ }
+ 
+ /**
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-Linux Foundation Collaborative Project
+2.24.0
+
