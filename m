@@ -2,126 +2,148 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB28C33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B5A2C32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CA972077C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:01:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EtUWO1zU"
+	by mail.kernel.org (Postfix) with ESMTP id 559302073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:11:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbgATGBh (ORCPT
+        id S1726125AbgATGLK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 01:01:37 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:33543 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbgATGBg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 01:01:36 -0500
-Received: by mail-pj1-f66.google.com with SMTP id u63so5899012pjb.0
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jan 2020 22:01:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=UjIP4NQICdFcbtsqro77Dl66gHMc15rDrDG54aElo8Q=;
-        b=EtUWO1zUEShMQdEWiJeuBDXhGHZUXY15Uxej2fzFPDM89pMVi1z6TMPeHbX/4Mdqld
-         x+JU6UizODXuHLcCh+umrIk9kTW/QspQIwGcRNYU3UNZ/9h+63Cf0S8LUcVhz533YPXn
-         os3IRfMljjI4WAykqUNNmUCCOYQcXkramKBDydDlqGKrovx6m9T7AbO0utbZ0xzN4khn
-         fp3OUz3ZB4uAKyBZzJOZQll0mCg+ayBQQKuljU8UBJlNxTTaIMNyHZOEAw1CqEqvZ+1L
-         w3fu/e88vIoLkRLX92wvB4z6KA8DB1zZrpbHzGyEmjE0ZpVhDLSJKv1fea9BgqHGBjft
-         dLsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UjIP4NQICdFcbtsqro77Dl66gHMc15rDrDG54aElo8Q=;
-        b=P7bVvZszn1r1rlp4uHHnMMwjgBqtWSkNeyXymXXUnYBG5p180l1VDvm/1PB7CcLsR6
-         FX7LDlM8I5KFXxHNJo7w0SfEC+b66FgSmEae3tnlHy8GgQZdSjcZYnL5ZxRCnCyR+XRS
-         yuGz/KJzBxG1sDOs7OhpcYmlt2ajvQw7YlooXc6eu2hxySMp5vDcm+i+1rt8b4UO9tLC
-         tSjHniJLYgwh4kUhhlCyFf/XFgTd3gGuDGj+lndeYusiMFPvyn7r4bXOprun/HD7xj02
-         QeiKigWp4So/w8LQnCr1pyTDFSShQaolsA4VJ8XaXb/XJsq+SAhI3AQ2LjE/nKA+3ONw
-         LP7Q==
-X-Gm-Message-State: APjAAAXYaBPh6YCI10lSzdku5brPxzFugQtV+5RHyBeas4AwXXuclBNi
-        43yKD9YEkG3Ca0Uk41nk0Cpvlg==
-X-Google-Smtp-Source: APXvYqzLP4aRq3CUThjZNYisaaB4VHdDdDEbNPmabr5sam3Oc5gm8d3NVjewGh5QPIsMmhCFol4zRA==
-X-Received: by 2002:a17:902:d70a:: with SMTP id w10mr13564913ply.125.1579500096261;
-        Sun, 19 Jan 2020 22:01:36 -0800 (PST)
-Received: from localhost ([122.172.71.156])
-        by smtp.gmail.com with ESMTPSA id x132sm37407277pfc.148.2020.01.19.22.01.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 19 Jan 2020 22:01:35 -0800 (PST)
-Date:   Mon, 20 Jan 2020 11:31:34 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     chenqiwu <qiwuchen55@gmail.com>
-Cc:     mmayer@broadcom.com, rjw@rjwysocki.net, f.fainelli@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        chenqiwu <chenqiwu@xiaomi.com>
-Subject: Re: [PATCH v3] cpufreq: brcmstb-avs: fix imbalance of cpufreq policy
- refcount
-Message-ID: <20200120060134.izotrbzjvzk327zx@vireshk-i7>
-References: <1579417750-21984-1-git-send-email-qiwuchen55@gmail.com>
- <20200120053250.igkwofqfzvmqb3c3@vireshk-i7>
- <20200120055822.GB5185@cqw-OptiPlex-7050>
+        Mon, 20 Jan 2020 01:11:10 -0500
+Received: from foss.arm.com ([217.140.110.172]:56094 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725783AbgATGLK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 01:11:10 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ABE5C31B;
+        Sun, 19 Jan 2020 22:11:09 -0800 (PST)
+Received: from [10.162.16.78] (p8cg001049571a15.blr.arm.com [10.162.16.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 234B83F52E;
+        Sun, 19 Jan 2020 22:14:40 -0800 (PST)
+Subject: Re: [Patch v2 1/4] mm: enable dump several reasons for __dump_page()
+To:     Wei Yang <richardw.yang@linux.intel.com>, akpm@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        rientjes@google.com
+References: <20200120030415.15925-1-richardw.yang@linux.intel.com>
+ <20200120030415.15925-2-richardw.yang@linux.intel.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <8426f31b-606e-deca-acbe-dd59b193e113@arm.com>
+Date:   Mon, 20 Jan 2020 11:42:30 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200120055822.GB5185@cqw-OptiPlex-7050>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20200120030415.15925-2-richardw.yang@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-01-20, 13:58, chenqiwu wrote:
-> On Mon, Jan 20, 2020 at 11:02:50AM +0530, Viresh Kumar wrote:
-> > On 19-01-20, 15:09, qiwuchen55@gmail.com wrote:
-> > > From: chenqiwu <chenqiwu@xiaomi.com>
-> > > 
-> > > brcm_avs_cpufreq_get() calls cpufreq_cpu_get() to get the cpufreq policy,
-> > > meanwhile, it also increments the kobject reference count to mark it busy.
-> > > However, a corresponding call of cpufreq_cpu_put() is ignored to decrement
-> > > the kobject reference count back, which may lead to a potential stuck risk
-> > > that the cpuhp thread deadly waits for dropping of kobject refcount when
-> > > cpufreq policy free.
-> > > 
-> > > For fixing this bug, cpufreq_get_policy() is referenced to do a proper
-> > > cpufreq_cpu_get()/cpufreq_cpu_put() and fill a policy copy for the user.
-> > > If the policy return NULL, we just return 0 to hit the code path of
-> > > cpufreq_driver->get.
-> > > 
-> > > Signed-off-by: chenqiwu <chenqiwu@xiaomi.com>
-> > > ---
-> > >  drivers/cpufreq/brcmstb-avs-cpufreq.c | 12 ++++++++++--
-> > >  1 file changed, 10 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/drivers/cpufreq/brcmstb-avs-cpufreq.c b/drivers/cpufreq/brcmstb-avs-cpufreq.c
-> > > index 77b0e5d..ee0d404 100644
-> > > --- a/drivers/cpufreq/brcmstb-avs-cpufreq.c
-> > > +++ b/drivers/cpufreq/brcmstb-avs-cpufreq.c
-> > > @@ -452,8 +452,16 @@ static bool brcm_avs_is_firmware_loaded(struct private_data *priv)
-> > >  
-> > >  static unsigned int brcm_avs_cpufreq_get(unsigned int cpu)
-> > >  {
-> > > -	struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
-> > 
-> > Why can't we just add a corresponding cpufreq_cpu_put() instead of all this ?
-> > 
+
+
+On 01/20/2020 08:34 AM, Wei Yang wrote:
+> This is a preparation to dump all reasons during check page.
+
+This really makes sense rather then just picking the reason from
+the last "if" statement.
+
 > 
-> cpufreq_get_policy() does a proper cpufreq_cpu_get()/cpufreq_cpu_put(),
-> meanwhile fills a policy copy for the user. It equals to using
-> cpufreq_cpu_get() and a corresponding cpufreq_cpu_put() around access
-> to the policy pointer. I think both methods are fine here.
-> What do you think?
+> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+> ---
+>  include/linux/mmdebug.h |  2 +-
+>  mm/debug.c              | 11 ++++++-----
+>  mm/page_alloc.c         |  2 +-
+>  3 files changed, 8 insertions(+), 7 deletions(-)
+> 
+> diff --git a/include/linux/mmdebug.h b/include/linux/mmdebug.h
+> index 2ad72d2c8cc5..f0a612db8bae 100644
+> --- a/include/linux/mmdebug.h
+> +++ b/include/linux/mmdebug.h
+> @@ -10,7 +10,7 @@ struct vm_area_struct;
+>  struct mm_struct;
+>  
+>  extern void dump_page(struct page *page, const char *reason);
+> -extern void __dump_page(struct page *page, const char *reason);
+> +extern void __dump_page(struct page *page, int num, const char **reason);
+>  void dump_vma(const struct vm_area_struct *vma);
+>  void dump_mm(const struct mm_struct *mm);
+>  
+> diff --git a/mm/debug.c b/mm/debug.c
+> index 0461df1207cb..a8ac6f951f9f 100644
+> --- a/mm/debug.c
+> +++ b/mm/debug.c
+> @@ -42,11 +42,11 @@ const struct trace_print_flags vmaflag_names[] = {
+>  	{0, NULL}
+>  };
+>  
+> -void __dump_page(struct page *page, const char *reason)
+> +void __dump_page(struct page *page, int num, const char **reason)
+>  {
+>  	struct address_space *mapping;
+>  	bool page_poisoned = PagePoisoned(page);
+> -	int mapcount;
+> +	int mapcount, i;
+>  
+>  	/*
+>  	 * If struct page is poisoned don't access Page*() functions as that
+> @@ -97,8 +97,9 @@ void __dump_page(struct page *page, const char *reason)
+>  			sizeof(unsigned long), page,
+>  			sizeof(struct page), false);
+>  
+> -	if (reason)
+> -		pr_warn("page dumped because: %s\n", reason);
+> +	pr_warn("page dumped because:\n");
+> +	for (i = 0; i < num; i++)
+> +		pr_warn("\t%s\n", reason[i]);
 
-cpufreq_get_policy() does an extra memcpy as well, which isn't required at all
-in your case.
+We should have a NR_BAD_PAGE_REASONS or something to cap this iteration
+and also check reason[i] for non-NULL before trying to print the array.
+There might be call sites like the following which will be problematic
+otherwise.
 
--- 
-viresh
+split_huge_page_to_list() -> dump_page(head, NULL)
+
+>  
+>  #ifdef CONFIG_MEMCG
+>  	if (!page_poisoned && page->mem_cgroup)
+
+While here, will it be better to move the above debug print block after
+mem_cgroup block instead ?
+
+> @@ -108,7 +109,7 @@ void __dump_page(struct page *page, const char *reason)
+>  
+>  void dump_page(struct page *page, const char *reason)
+>  {
+> -	__dump_page(page, reason);
+> +	__dump_page(page, 1, &reason);
+>  	dump_page_owner(page);
+>  }
+>  EXPORT_SYMBOL(dump_page);
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index d047bf7d8fd4..0cf6218aaba7 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -638,7 +638,7 @@ static void bad_page(struct page *page, const char *reason,
+>  
+>  	pr_alert("BUG: Bad page state in process %s  pfn:%05lx\n",
+>  		current->comm, page_to_pfn(page));
+> -	__dump_page(page, reason);
+> +	__dump_page(page, 1, &reason);
+>  	bad_flags &= page->flags;
+>  	if (bad_flags)
+>  		pr_alert("bad because of flags: %#lx(%pGp)\n",
+> 
+
+Do we still need to have bad_flags ? After consolidating all reasons making
+a page bad should not we just print page->flags unconditionally each time and
+let the user decipher it instead. __dump_page() will print page->flags for
+each case (atleast after the new patch from Vlastimil). AFAICS, the only
+place currently consuming bad_flags is bad_page() which seems redundant after
+first calling __dump_page().
