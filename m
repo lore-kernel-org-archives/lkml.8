@@ -2,227 +2,246 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 563E8C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0568DC33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D44022464
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:38:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C612F22314
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:38:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Yc8FBZqT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iL6PVpZH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbgATNiP (ORCPT
+        id S1727243AbgATNir (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 08:38:15 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:41157 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726626AbgATNiP (ORCPT
+        Mon, 20 Jan 2020 08:38:47 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28096 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726738AbgATNiq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 08:38:15 -0500
-Received: by mail-qv1-f65.google.com with SMTP id x1so13964104qvr.8
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 05:38:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=VsoGp109ufXvJlVZJZ7+0lYM452uESSHevplYutSYdo=;
-        b=Yc8FBZqTZ49PR5XXHmSJg+sa0E2yA2SnM6T59xCyidB4uZeLSzVy3UCVN/qMge68b1
-         fjqdT3489T5Z9hCB68ih4OOwJ7kCdrHvSclJqdiHN0Y/83q6BhWQUHxOOR2JZQKib/ol
-         IVT97/PKh0h37qHZrTsQV6nsAf4i2OqGL+rlxPdD/ODZU2JSFurICYGDHrm0NPhB4qo0
-         XOmN1zU5d3ygI6eneSowmjWlfPkWWHuEdhIc/aOG/ldQrdJZwuJ1zRX+h7e+jW3Bcb4I
-         szkVtjbdL6RtZQ/rzLdjS30XlWuEzg99yvFOAs9wPiGEQMnL+ioVC2Korl/zK2n8Pkdu
-         OyFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=VsoGp109ufXvJlVZJZ7+0lYM452uESSHevplYutSYdo=;
-        b=KAZwjkZPn3tfRS102yX39n2bFXQho4zuskUeu9eIrZ1J48NzBef8sE+oUyIOl+iRuh
-         o/5IiwuuV7WOToddxUPlrkTpz1idW2hjBEgcsQONRgQ8Xc6YPUtkvFhUtg3MMSfFQv9Z
-         9Sl2jOxXig5DhKv089oi2Iie//aI5RI+69rNDLxZ0KsiIos+NLeXwSbCLesUMomv6SCF
-         u5iis7Vo1Vfj6mbQauCNkF3H2B5SCDFY62Sw5HkFKLv6tZqTbSHpuJbzR3KWAv24gg79
-         HHboFLQya/tK8/uRmIAme+VmI+8UL2TGDjY47jIWxCuXofF+XDOTCYjcscBhHcZazhI5
-         GXPg==
-X-Gm-Message-State: APjAAAUBbCkMJQSAJW57NM6Ycl793BZ3kYkRbLb07S1EHGmjrR8RI32R
-        Dj3hY+ZENWHzb/Nvfr2wVujPrA==
-X-Google-Smtp-Source: APXvYqzJWHkLYwbnfPaTEh8dSNBmbk2tJ+IQclnyI2T+yocRWe19nO7fmcyCO3qWekozAS8DWPvdzQ==
-X-Received: by 2002:a0c:a145:: with SMTP id d63mr21206033qva.120.1579527493658;
-        Mon, 20 Jan 2020 05:38:13 -0800 (PST)
-Received: from qians-mbp.fios-router.home (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id i90sm17560198qtd.49.2020.01.20.05.38.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 Jan 2020 05:38:13 -0800 (PST)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
+        Mon, 20 Jan 2020 08:38:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579527524;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=bN/kMaWhTOvlq8mhYaDqVTWYcMETNAZjxmGjlZTIWpY=;
+        b=iL6PVpZHNG3Ds5mZ3252J+qY4z2U0vNM7uzijk36kBh0rlFlq40vUhWcq5VEu38Y39F7z8
+        2XTsAGKwxS4GJYdSvb4NrWg3tCxs0f8qxt23ugm62N4blvFOzrEHGWqe4xy6VJhkP/tTxM
+        htTsNx92FFR+9NENd67h0KuIg06+rFE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-238-UZt0fmEkOv6v3QxnsKUGwQ-1; Mon, 20 Jan 2020 08:38:41 -0500
+X-MC-Unique: UZt0fmEkOv6v3QxnsKUGwQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 42C08107ACC5;
+        Mon, 20 Jan 2020 13:38:40 +0000 (UTC)
+Received: from [10.36.118.34] (unknown [10.36.118.34])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EC42F60C05;
+        Mon, 20 Jan 2020 13:38:38 +0000 (UTC)
 Subject: Re: [PATCH -mm v2] mm/page_isolation: fix potential warning from user
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <8c56268d-9b8a-f62e-eca9-7707852a2aaf@redhat.com>
-Date:   Mon, 20 Jan 2020 08:38:12 -0500
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <28542D23-FCB7-4342-B77C-65C7B1F162FC@lca.pw>
+From:   David Hildenbrand <david@redhat.com>
+To:     Qian Cai <cai@lca.pw>, akpm@linux-foundation.org
+Cc:     mhocko@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
 References: <20200120131909.813-1-cai@lca.pw>
  <8c56268d-9b8a-f62e-eca9-7707852a2aaf@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-X-Mailer: Apple Mail (2.3608.40.2.2.4)
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <ba3215a2-d616-c636-e70d-99bb8f504292@redhat.com>
+Date:   Mon, 20 Jan 2020 14:38:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
+MIME-Version: 1.0
+In-Reply-To: <8c56268d-9b8a-f62e-eca9-7707852a2aaf@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> On Jan 20, 2020, at 8:30 AM, David Hildenbrand <david@redhat.com> =
-wrote:
->=20
+On 20.01.20 14:30, David Hildenbrand wrote:
 > On 20.01.20 14:19, Qian Cai wrote:
->> It makes sense to call the WARN_ON_ONCE(zone_idx(zone) =3D=3D =
-ZONE_MOVABLE)
+>> It makes sense to call the WARN_ON_ONCE(zone_idx(zone) == ZONE_MOVABLE)
 >> from start_isolate_page_range(), but should avoid triggering it from
 >> userspace, i.e, from is_mem_section_removable() because it could be a
 >> DoS if warn_on_panic is set.
->>=20
+>>
 >> While at it, simplify the code a bit by removing an unnecessary jump
 >> label and a local variable, so set_migratetype_isolate() could really
 >> return a bool.
->>=20
+>>
 >> Suggested-by: Michal Hocko <mhocko@kernel.org>
 >> Signed-off-by: Qian Cai <cai@lca.pw>
 >> ---
->>=20
+>>
 >> v2: Improve the commit log.
->>    Warn for all start_isolate_page_range() users not just offlining.
->>=20
->> mm/page_alloc.c     | 11 ++++-------
->> mm/page_isolation.c | 30 +++++++++++++++++-------------
->> 2 files changed, 21 insertions(+), 20 deletions(-)
->>=20
+>>     Warn for all start_isolate_page_range() users not just offlining.
+>>
+>>  mm/page_alloc.c     | 11 ++++-------
+>>  mm/page_isolation.c | 30 +++++++++++++++++-------------
+>>  2 files changed, 21 insertions(+), 20 deletions(-)
+>>
 >> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
 >> index 621716a25639..3c4eb750a199 100644
 >> --- a/mm/page_alloc.c
 >> +++ b/mm/page_alloc.c
->> @@ -8231,7 +8231,7 @@ struct page *has_unmovable_pages(struct zone =
-*zone, struct page *page,
->> 		if (is_migrate_cma(migratetype))
->> 			return NULL;
->>=20
+>> @@ -8231,7 +8231,7 @@ struct page *has_unmovable_pages(struct zone *zone, struct page *page,
+>>  		if (is_migrate_cma(migratetype))
+>>  			return NULL;
+>>  
 >> -		goto unmovable;
 >> +		return page;
->> 	}
->>=20
->> 	for (; iter < pageblock_nr_pages; iter++) {
->> @@ -8241,7 +8241,7 @@ struct page *has_unmovable_pages(struct zone =
-*zone, struct page *page,
->> 		page =3D pfn_to_page(pfn + iter);
->>=20
->> 		if (PageReserved(page))
+>>  	}
+>>  
+>>  	for (; iter < pageblock_nr_pages; iter++) {
+>> @@ -8241,7 +8241,7 @@ struct page *has_unmovable_pages(struct zone *zone, struct page *page,
+>>  		page = pfn_to_page(pfn + iter);
+>>  
+>>  		if (PageReserved(page))
 >> -			goto unmovable;
 >> +			return page;
->>=20
->> 		/*
->> 		 * If the zone is movable and we have ruled out all =
-reserved
->> @@ -8261,7 +8261,7 @@ struct page *has_unmovable_pages(struct zone =
-*zone, struct page *page,
->> 			unsigned int skip_pages;
->>=20
->> 			if =
-(!hugepage_migration_supported(page_hstate(head)))
+>>  
+>>  		/*
+>>  		 * If the zone is movable and we have ruled out all reserved
+>> @@ -8261,7 +8261,7 @@ struct page *has_unmovable_pages(struct zone *zone, struct page *page,
+>>  			unsigned int skip_pages;
+>>  
+>>  			if (!hugepage_migration_supported(page_hstate(head)))
 >> -				goto unmovable;
 >> +				return page;
->>=20
->> 			skip_pages =3D compound_nr(head) - (page - =
-head);
->> 			iter +=3D skip_pages - 1;
->> @@ -8303,12 +8303,9 @@ struct page *has_unmovable_pages(struct zone =
-*zone, struct page *page,
->> 		 * is set to both of a memory hole page and a _used_ =
-kernel
->> 		 * page at boot.
->> 		 */
+>>  
+>>  			skip_pages = compound_nr(head) - (page - head);
+>>  			iter += skip_pages - 1;
+>> @@ -8303,12 +8303,9 @@ struct page *has_unmovable_pages(struct zone *zone, struct page *page,
+>>  		 * is set to both of a memory hole page and a _used_ kernel
+>>  		 * page at boot.
+>>  		 */
 >> -		goto unmovable;
 >> +		return page;
->> 	}
->> 	return NULL;
+>>  	}
+>>  	return NULL;
 >> -unmovable:
->> -	WARN_ON_ONCE(zone_idx(zone) =3D=3D ZONE_MOVABLE);
+>> -	WARN_ON_ONCE(zone_idx(zone) == ZONE_MOVABLE);
 >> -	return pfn_to_page(pfn + iter);
->> }
->>=20
->> #ifdef CONFIG_CONTIG_ALLOC
+>>  }
+>>  
+>>  #ifdef CONFIG_CONTIG_ALLOC
 >> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
 >> index e70586523ca3..31f5516f5d54 100644
 >> --- a/mm/page_isolation.c
 >> +++ b/mm/page_isolation.c
 >> @@ -15,12 +15,12 @@
->> #define CREATE_TRACE_POINTS
->> #include <trace/events/page_isolation.h>
->>=20
->> -static int set_migratetype_isolate(struct page *page, int =
-migratetype, int isol_flags)
->> +static bool set_migratetype_isolate(struct page *page, int =
-migratetype,
+>>  #define CREATE_TRACE_POINTS
+>>  #include <trace/events/page_isolation.h>
+>>  
+>> -static int set_migratetype_isolate(struct page *page, int migratetype, int isol_flags)
+>> +static bool set_migratetype_isolate(struct page *page, int migratetype,
 >> +				    int isol_flags)
->=20
+> 
 > Why this change?
->=20
->> {
->> -	struct page *unmovable =3D NULL;
->> +	struct page *unmovable =3D ERR_PTR(-EBUSY);
->=20
+> 
+>>  {
+>> -	struct page *unmovable = NULL;
+>> +	struct page *unmovable = ERR_PTR(-EBUSY);
+> 
 > Also, why this change?
->=20
->> 	struct zone *zone;
->> 	unsigned long flags;
->> -	int ret =3D -EBUSY;
->>=20
->> 	zone =3D page_zone(page);
->>=20
->> @@ -49,21 +49,25 @@ static int set_migratetype_isolate(struct page =
-*page, int migratetype, int isol_
->> 									=
-NULL);
->>=20
->> 		__mod_zone_freepage_state(zone, -nr_pages, mt);
->> -		ret =3D 0;
->> 	}
->>=20
->> out:
->> 	spin_unlock_irqrestore(&zone->lock, flags);
+> 
+>>  	struct zone *zone;
+>>  	unsigned long flags;
+>> -	int ret = -EBUSY;
+>>  
+>>  	zone = page_zone(page);
+>>  
+>> @@ -49,21 +49,25 @@ static int set_migratetype_isolate(struct page *page, int migratetype, int isol_
+>>  									NULL);
+>>  
+>>  		__mod_zone_freepage_state(zone, -nr_pages, mt);
+>> -		ret = 0;
+>>  	}
+>>  
+>>  out:
+>>  	spin_unlock_irqrestore(&zone->lock, flags);
 >> -	if (!ret)
 >> +
 >> +	if (!unmovable) {
->> 		drain_all_pages(zone);
+>>  		drain_all_pages(zone);
 >> -	else if ((isol_flags & REPORT_FAILURE) && unmovable)
 >> -		/*
->> -		 * printk() with zone->lock held will guarantee to =
-trigger a
+>> -		 * printk() with zone->lock held will guarantee to trigger a
 >> -		 * lockdep splat, so defer it here.
 >> -		 */
 >> -		dump_page(unmovable, "unmovable page");
 >> -
 >> -	return ret;
 >> +	} else {
->> +		WARN_ON_ONCE(zone_idx(zone) =3D=3D ZONE_MOVABLE);
+>> +		WARN_ON_ONCE(zone_idx(zone) == ZONE_MOVABLE);
 >> +
 >> +		if ((isol_flags & REPORT_FAILURE) && !IS_ERR(unmovable))
 >> +			/*
->=20
+> 
 > Why this change? (!IS_ERR)
->=20
->=20
+> 
+> 
 > Some things here look unrelated - or I am missing something :)
+> 
 
-The original =E2=80=9Cret=E2=80=9D variable looks ugly to me, so I just =
-removed that and consolidated with
-the =E2=80=9Cunmovable=E2=80=9D pointer to always be able to report an =
-error. Since this cleanup is really
-small, I did not bother send a separate patch for it.=
+FWIW, I'd prefer this change without any such cleanups (e.g., I don't
+like returning a bool from this function and the IS_ERR handling, makes
+the function harder to read than before)
+
+-- 
+Thanks,
+
+David / dhildenb
+
