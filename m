@@ -2,97 +2,138 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC259C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 17:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 132B3C33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 17:08:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 978EC22522
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 17:06:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE4ED22464
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 17:08:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="mcD/ZnPp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729410AbgATRGe (ORCPT
+        id S1729159AbgATRI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 12:06:34 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:38224 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727285AbgATRGd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 12:06:33 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 5C007291329
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Sandy Huang <hjc@rock-chips.com>,
-        =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com, Ezequiel Garcia <ezequiel@collabora.com>
-Subject: [PATCH 5/5] drm/rockchip: rk3066_hdmi: Cleanup component unbind
-Date:   Mon, 20 Jan 2020 14:06:02 -0300
-Message-Id: <20200120170602.3832-6-ezequiel@collabora.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200120170602.3832-1-ezequiel@collabora.com>
-References: <20200120170602.3832-1-ezequiel@collabora.com>
+        Mon, 20 Jan 2020 12:08:28 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:40130 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726642AbgATRI1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 12:08:27 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 481dR74f1Jz9txwZ;
+        Mon, 20 Jan 2020 18:08:19 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=mcD/ZnPp; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id PB6Od9Chvw6v; Mon, 20 Jan 2020 18:08:19 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 481dR73Lf3z9txwY;
+        Mon, 20 Jan 2020 18:08:19 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1579540099; bh=yzfJ9FjkQyCVlK+cgsOTuMQ4XbfRfoKvMNM6nb5r3UI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=mcD/ZnPpMb3Gvs1Fu8ShcsW/tjiI8vxX1spQWPagvARRgwMyLCX57drTZw4IIlWTT
+         7Eth0yTjCJCPdeskFUImvSrga71e/3E6dNmtljCIVLukdQbR9DnwBYxaBmMNs9f2yF
+         MQDPuMtMbdR8t0a+nujkuIfoduw1FWTj9Hb24lhc=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id AEDC08B7D2;
+        Mon, 20 Jan 2020 18:08:24 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id nJxXjRrAsRPz; Mon, 20 Jan 2020 18:08:24 +0100 (CET)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 85F838B7CC;
+        Mon, 20 Jan 2020 18:08:23 +0100 (CET)
+Subject: Re: [RFC PATCH v4 00/11] powerpc: switch VDSO to C implementation.
+To:     Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, nathanl@linux.ibm.com,
+        arnd@arndb.de, tglx@linutronix.de, vincenzo.frascino@arm.com,
+        luto@kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mips@vger.kernel.org
+References: <cover.1579196675.git.christophe.leroy@c-s.fr>
+ <20200117085851.GS3191@gate.crashing.org>
+ <3027b6d2-47a9-a871-7c52-050a5f9c6ab7@c-s.fr>
+ <20200120151936.GB3191@gate.crashing.org>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <4b0e5941-c37e-3c85-3809-45f33ce35657@c-s.fr>
+Date:   Mon, 20 Jan 2020 18:08:23 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
+In-Reply-To: <20200120151936.GB3191@gate.crashing.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove drm_connector_unregister() since it should be
-used only by drivers that call drm_dev_register
-explicitly.
 
-Also, call the DRM cleanups directly, instead of
-(ab)using the destroy hooks, for readability reasons.
 
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
----
- drivers/gpu/drm/rockchip/rk3066_hdmi.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+Le 20/01/2020 à 16:19, Segher Boessenkool a écrit :
+> On Mon, Jan 20, 2020 at 02:56:00PM +0000, Christophe Leroy wrote:
+>>> Nice!  Much better.
+>>>
+>>> It should be tested on more representative hardware, too, but this looks
+>>> promising alright :-)
+>>
+>> mpc832x (e300c2 core) at 333 MHz:
+>>
+>> Before:
+>>
+>> gettimeofday:    vdso: 235 nsec/call
+>> clock-gettime-realtime:    vdso: 244 nsec/call
+>>
+>> With the series:
+>>
+>> gettimeofday:    vdso: 271 nsec/call
+>> clock-gettime-realtime:    vdso: 281 nsec/call
+> 
+> Those are important, and degrade ~15%.  That is acceptable IMO, but do
+> you see a way to optimise this (later)?
 
-diff --git a/drivers/gpu/drm/rockchip/rk3066_hdmi.c b/drivers/gpu/drm/rockchip/rk3066_hdmi.c
-index fe203d38664e..5a2d62a2cf50 100644
---- a/drivers/gpu/drm/rockchip/rk3066_hdmi.c
-+++ b/drivers/gpu/drm/rockchip/rk3066_hdmi.c
-@@ -518,7 +518,6 @@ rk3066_hdmi_probe_single_connector_modes(struct drm_connector *connector,
- 
- static void rk3066_hdmi_connector_destroy(struct drm_connector *connector)
- {
--	drm_connector_unregister(connector);
- 	drm_connector_cleanup(connector);
- }
- 
-@@ -819,8 +818,8 @@ static int rk3066_hdmi_bind(struct device *dev, struct device *master,
- 	return 0;
- 
- err_cleanup_hdmi:
--	hdmi->connector.funcs->destroy(&hdmi->connector);
--	hdmi->encoder.funcs->destroy(&hdmi->encoder);
-+	drm_connector_cleanup(&hdmi->connector);
-+	drm_encoder_cleanup(&hdmi->encoder);
- err_disable_i2c:
- 	i2c_put_adapter(hdmi->ddc);
- err_disable_hclk:
-@@ -834,9 +833,6 @@ static void rk3066_hdmi_unbind(struct device *dev, struct device *master,
- {
- 	struct rk3066_hdmi *hdmi = dev_get_drvdata(dev);
- 
--	hdmi->connector.funcs->destroy(&hdmi->connector);
--	hdmi->encoder.funcs->destroy(&hdmi->encoder);
--
- 	i2c_put_adapter(hdmi->ddc);
- 	clk_disable_unprepare(hdmi->hclk);
- }
--- 
-2.25.0
+Not easy I think.
 
+First we have the unavoidable ASM entry function that can't be dropped 
+because of the CR[SO] bit the set on error or clear on no error and that 
+can't be done in C.
+
+In our ASM VDSO, fixed shifts are used, while in generic C VDSO, shifts 
+are generic and read from the VDSO data.
+
+And there is still some funny code generated by GCC (8.1), like:
+
+  620:	7d 29 3c 30 	srw     r9,r9,r7
+  624:	21 87 00 20 	subfic  r12,r7,32
+  628:	7d 07 3c 31 	srw.    r7,r8,r7
+  62c:	7d 08 60 30 	slw     r8,r8,r12
+  630:	7d 0b 4b 78 	or      r11,r8,r9
+  634:	39 40 00 00 	li      r10,0
+  638:	40 82 00 84 	bne     6bc <__c_kernel_clock_gettime+0x114>
+  63c:	81 23 00 24 	lwz     r9,36(r3)
+  640:	81 05 00 00 	lwz     r8,0(r5)
+...
+  6bc:	7d 69 5b 78 	mr      r9,r11
+  6c0:	7c ea 3b 78 	mr      r10,r7
+  6c4:	7d 2b 4b 78 	mr      r11,r9
+  6c8:	4b ff ff 74 	b       63c <__c_kernel_clock_gettime+0x94>
+
+This branch to 6bc is totally useless:
+- copying r11 into r9 is pointless as r9 is overwritten in 63c
+- copying back r9 into r11 is pointless as r11 has not been modified 
+inbetween.
+- loading r10 with 0 then overwritting r10 with r7 when r7 is not 0 is 
+pointless as well, could have directly put the result of srw. in r10.
+
+Christophe
