@@ -2,135 +2,100 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EEA1C33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC23C32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:14:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0443520882
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:14:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rHrnilph"
+	by mail.kernel.org (Postfix) with ESMTP id 39E4A2073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:14:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726136AbgATGOA (ORCPT
+        id S1726573AbgATGO2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 01:14:00 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:34316 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgATGN7 (ORCPT
+        Mon, 20 Jan 2020 01:14:28 -0500
+Received: from host-88-217-225-28.customer.m-online.net ([88.217.225.28]:22570
+        "EHLO mail.dev.tdt.de" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725783AbgATGO1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 01:13:59 -0500
-Received: by mail-pl1-f194.google.com with SMTP id c9so7432663plo.1;
-        Sun, 19 Jan 2020 22:13:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HEnK5zOWrM4EtjOOUObaQ50k2YuQm6+zLeTAwK5KuFw=;
-        b=rHrnilphdbZXls873AYNAy/Pyu163ib9A5hLLJVruxIy8qlPn78vsdw6+F36xjOgce
-         XjdI2PGOVTosulcFr+I0I5kswvr43SJZMn35UnIJTas0+ticPMhCqLCULN2KicOVEwfn
-         qXAvCc5CQyI7g4xLpCZ9xC2j8R84/hke00FsZCqQsdXYz31l/7k3F4xLnT74wmJKZg5I
-         hy1WemXy5OyVXEZq2zrqKLxzuzGubxV+kdR3gdcoJef86dBgSeHCgXS1cpveLgr6SUW8
-         5iTXwX6/ZPItEwg6Z7uBF+4kanfO77E94NKSbqeL9wTWdW1qc2EvtdLE3TvJmMvhKg7S
-         pH1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HEnK5zOWrM4EtjOOUObaQ50k2YuQm6+zLeTAwK5KuFw=;
-        b=BNyztggntpaf99SXwGVptgf3KzqHcyWCf/jZrOkw8Y+ilToURnzknt/tm0K7bEhX46
-         BWVMlqzbBUdtzptXtBd6bfrHPAP0nFwkAhPZAw86Z8KGgNhg60hFhQDgc3JcjuSx8bdH
-         RUN3RtJJWs0tQCsKGcC/bHSu02yiu4eXMi6wnSIHi1iwZ5UfKjVoBpzcbyDJP8tkLwoG
-         EgvEcqYA2mqcpELuNGIadIPXqUka5hnYxeDFQr32TKCYbj3ZlePYhk/pWsVLehFu3Wak
-         +bBSUCtiqccdKjJkEaUTbPs/Mdwl/JNyTpYJi9nXHcvVIgBxXo1hLMVkUH/tLHyn0uIN
-         HWEA==
-X-Gm-Message-State: APjAAAUcGsI80EOxq5JOJvTCEc9BmNy5lnm6NLAak2uhgsLRQmuWHiB2
-        ZBDwT4183EdIPu9s/FbK1nA=
-X-Google-Smtp-Source: APXvYqy5vJY131Lor3YeVDhjCpeI3gktCtJOpO+P6J1mFr58LYnjO2gN5V2DNmNZVLK3YEshLDX/sA==
-X-Received: by 2002:a17:902:b617:: with SMTP id b23mr13530550pls.285.1579500839281;
-        Sun, 19 Jan 2020 22:13:59 -0800 (PST)
-Received: from localhost ([43.224.245.179])
-        by smtp.gmail.com with ESMTPSA id y14sm37008006pfe.147.2020.01.19.22.13.58
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Sun, 19 Jan 2020 22:13:58 -0800 (PST)
-Date:   Mon, 20 Jan 2020 14:13:56 +0800
-From:   chenqiwu <qiwuchen55@gmail.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     mmayer@broadcom.com, rjw@rjwysocki.net, f.fainelli@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        chenqiwu <chenqiwu@xiaomi.com>
-Subject: Re: [PATCH v3] cpufreq: brcmstb-avs: fix imbalance of cpufreq policy
- refcount
-Message-ID: <20200120061356.GA5605@cqw-OptiPlex-7050>
-References: <1579417750-21984-1-git-send-email-qiwuchen55@gmail.com>
- <20200120053250.igkwofqfzvmqb3c3@vireshk-i7>
- <20200120055822.GB5185@cqw-OptiPlex-7050>
- <20200120060134.izotrbzjvzk327zx@vireshk-i7>
+        Mon, 20 Jan 2020 01:14:27 -0500
+Received: from mschiller01.dev.tdt.de (unknown [10.2.3.20])
+        by mail.dev.tdt.de (Postfix) with ESMTPSA id 98061210C5;
+        Mon, 20 Jan 2020 06:14:25 +0000 (UTC)
+From:   Martin Schiller <ms@dev.tdt.de>
+To:     kubakici@wp.pl, khc@pm.waw.pl, davem@davemloft.net
+Cc:     linux-x25@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Martin Schiller <ms@dev.tdt.de>
+Subject: [PATCH v3 2/2] wan/hdlc_x25: fix skb handling
+Date:   Mon, 20 Jan 2020 07:14:16 +0100
+Message-Id: <20200120061416.27714-2-ms@dev.tdt.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200120061416.27714-1-ms@dev.tdt.de>
+References: <20200120061416.27714-1-ms@dev.tdt.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200120060134.izotrbzjvzk327zx@vireshk-i7>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 11:31:34AM +0530, Viresh Kumar wrote:
-> On 20-01-20, 13:58, chenqiwu wrote:
-> > On Mon, Jan 20, 2020 at 11:02:50AM +0530, Viresh Kumar wrote:
-> > > On 19-01-20, 15:09, qiwuchen55@gmail.com wrote:
-> > > > From: chenqiwu <chenqiwu@xiaomi.com>
-> > > > 
-> > > > brcm_avs_cpufreq_get() calls cpufreq_cpu_get() to get the cpufreq policy,
-> > > > meanwhile, it also increments the kobject reference count to mark it busy.
-> > > > However, a corresponding call of cpufreq_cpu_put() is ignored to decrement
-> > > > the kobject reference count back, which may lead to a potential stuck risk
-> > > > that the cpuhp thread deadly waits for dropping of kobject refcount when
-> > > > cpufreq policy free.
-> > > > 
-> > > > For fixing this bug, cpufreq_get_policy() is referenced to do a proper
-> > > > cpufreq_cpu_get()/cpufreq_cpu_put() and fill a policy copy for the user.
-> > > > If the policy return NULL, we just return 0 to hit the code path of
-> > > > cpufreq_driver->get.
-> > > > 
-> > > > Signed-off-by: chenqiwu <chenqiwu@xiaomi.com>
-> > > > ---
-> > > >  drivers/cpufreq/brcmstb-avs-cpufreq.c | 12 ++++++++++--
-> > > >  1 file changed, 10 insertions(+), 2 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/cpufreq/brcmstb-avs-cpufreq.c b/drivers/cpufreq/brcmstb-avs-cpufreq.c
-> > > > index 77b0e5d..ee0d404 100644
-> > > > --- a/drivers/cpufreq/brcmstb-avs-cpufreq.c
-> > > > +++ b/drivers/cpufreq/brcmstb-avs-cpufreq.c
-> > > > @@ -452,8 +452,16 @@ static bool brcm_avs_is_firmware_loaded(struct private_data *priv)
-> > > >  
-> > > >  static unsigned int brcm_avs_cpufreq_get(unsigned int cpu)
-> > > >  {
-> > > > -	struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
-> > > 
-> > > Why can't we just add a corresponding cpufreq_cpu_put() instead of all this ?
-> > > 
-> > 
-> > cpufreq_get_policy() does a proper cpufreq_cpu_get()/cpufreq_cpu_put(),
-> > meanwhile fills a policy copy for the user. It equals to using
-> > cpufreq_cpu_get() and a corresponding cpufreq_cpu_put() around access
-> > to the policy pointer. I think both methods are fine here.
-> > What do you think?
-> 
-> cpufreq_get_policy() does an extra memcpy as well, which isn't required at all
-> in your case.
-> 
-> -- 
-> viresh
+ o call skb_reset_network_header() before hdlc->xmit()
+ o change skb proto to HDLC (0x0019) before hdlc->xmit()
+ o call dev_queue_xmit_nit() before hdlc->xmit()
 
-Huha..Do you worry about the race conditon with cpufreq policy free path?
-If the policy has been released, cpufreq_get_policy() will return -EINVAL,
-it won't do an extra memcpy.
+This changes make it possible to trace (tcpdump) outgoing layer2
+(ETH_P_HDLC) packets
 
-Qiwu
+Additionally call skb_reset_network_header() after each skb_push() /
+skb_pull().
+
+Signed-off-by: Martin Schiller <ms@dev.tdt.de>
+---
+ drivers/net/wan/hdlc_x25.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/wan/hdlc_x25.c b/drivers/net/wan/hdlc_x25.c
+index b0252b600ae2..5d047011ab0e 100644
+--- a/drivers/net/wan/hdlc_x25.c
++++ b/drivers/net/wan/hdlc_x25.c
+@@ -71,11 +71,12 @@ static int x25_data_indication(struct net_device *dev, struct sk_buff *skb)
+ {
+ 	unsigned char *ptr;
+ 
+-	skb_push(skb, 1);
+-
+ 	if (skb_cow(skb, 1))
+ 		return NET_RX_DROP;
+ 
++	skb_push(skb, 1);
++	skb_reset_network_header(skb);
++
+ 	ptr  = skb->data;
+ 	*ptr = X25_IFACE_DATA;
+ 
+@@ -88,6 +89,13 @@ static int x25_data_indication(struct net_device *dev, struct sk_buff *skb)
+ static void x25_data_transmit(struct net_device *dev, struct sk_buff *skb)
+ {
+ 	hdlc_device *hdlc = dev_to_hdlc(dev);
++
++	skb_reset_network_header(skb);
++	skb->protocol = hdlc_type_trans(skb, dev);
++
++	if (dev_nit_active(dev))
++		dev_queue_xmit_nit(skb, dev);
++
+ 	hdlc->xmit(skb, dev); /* Ignore return value :-( */
+ }
+ 
+@@ -102,6 +110,7 @@ static netdev_tx_t x25_xmit(struct sk_buff *skb, struct net_device *dev)
+ 	switch (skb->data[0]) {
+ 	case X25_IFACE_DATA:	/* Data to be transmitted */
+ 		skb_pull(skb, 1);
++		skb_reset_network_header(skb);
+ 		if ((result = lapb_data_request(dev, skb)) != LAPB_OK)
+ 			dev_kfree_skb(skb);
+ 		return NETDEV_TX_OK;
+-- 
+2.20.1
+
