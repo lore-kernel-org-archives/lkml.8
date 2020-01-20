@@ -2,121 +2,99 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D2F0C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B1A9C33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7829A21D7E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:36:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A25922464
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:36:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbgATMgW (ORCPT
+        id S1727691AbgATMgX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 20 Jan 2020 07:36:23 -0500
+Received: from mga05.intel.com ([192.55.52.43]:63518 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727114AbgATMgW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 Jan 2020 07:36:22 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:32844 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726589AbgATMgW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 07:36:22 -0500
-Received: by mail-oi1-f193.google.com with SMTP id q81so13536099oig.0;
-        Mon, 20 Jan 2020 04:36:22 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h5LLv85IHqiD9bJHkYVPOat4WjpKlymYmibbM8KDiHI=;
-        b=bfTWbcMSbQdMNztDIHcYD4spp9FUSu9zPcH9ic7I8birk0tW/1CasmhDHemrbrf/hV
-         XGlWPPvj7xyX4G1rIMB5u3O2XNekZxuLNPphvctxffT3wUkgjCX3LzTBaJB93WYiH9Wq
-         jdutMFEpSzeEp11EwI2FmrEzAtpSV6nY4a4qqZngFS6BuK+uWBi9njb13dYnQLddJBzt
-         df/TCo2UP+SF1vMdm7eFLkBq4Iy8fl2LjL94qYQ64Zw9zbiG+xsXiRhysuGlaDzAZKAZ
-         W6kGACSrunTYhT/qO7djJE1VsChBVkStNVuzRQnxoUdtGTaV9I0208Ms9zUzJOgCo7f0
-         7Cdw==
-X-Gm-Message-State: APjAAAVK9WlikJyH7gCLrZ9vLVk39kQ+YTLOK0Oiiob8l+NNoRobJpfF
-        BDEirwaeVaR27h/Jk18hPnY59bIH+aFlscNlE9X/NTyJ
-X-Google-Smtp-Source: APXvYqw6I8qtOuyHTu5+mS/goZMEOclkdUxdtam6G+pmDKAAIhr9OjUJ+zVr5mfvRHGw5EzeX0ZkHm40aSRoXimn9Bg=
-X-Received: by 2002:a05:6808:292:: with SMTP id z18mr12124841oic.131.1579523781652;
- Mon, 20 Jan 2020 04:36:21 -0800 (PST)
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 04:36:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,342,1574150400"; 
+   d="scan'208";a="228378979"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by orsmga006.jf.intel.com with ESMTP; 20 Jan 2020 04:36:10 -0800
+Date:   Mon, 20 Jan 2020 20:36:21 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, rientjes@google.com
+Subject: Re: [Patch v2 4/4] mm/page_alloc.c: extract commom part to check page
+Message-ID: <20200120123621.GE18028@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20200120030415.15925-1-richardw.yang@linux.intel.com>
+ <20200120030415.15925-5-richardw.yang@linux.intel.com>
+ <3987ae0f-cbfc-1066-c78f-c5c6efc570ed@arm.com>
 MIME-Version: 1.0
-References: <20191217104025.23318-1-peter.ujfalusi@ti.com> <CAMuHMdUPhabZrXJ3UqSVTdy2aWf6VG27q287MizKJ5q5tyRnwA@mail.gmail.com>
- <c7eedf72-aa00-8ffe-8c8f-4946a4f54fa7@ti.com>
-In-Reply-To: <c7eedf72-aa00-8ffe-8c8f-4946a4f54fa7@ti.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 20 Jan 2020 13:36:10 +0100
-Message-ID: <CAMuHMdXU9_WY54iU5DY6UHZHmyaR06pW7X0nnyCWHA=R3GtcJA@mail.gmail.com>
-Subject: Re: [PATCH] media: rcar_drif: Use dma_request_chan() instead dma_request_slave_channel()
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Ramesh Shanmugasundaram <rashanmu@gmail.com>,
-        Vinod <vkoul@kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3987ae0f-cbfc-1066-c78f-c5c6efc570ed@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
-
-On Mon, Jan 20, 2020 at 1:09 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
-> On 20/01/2020 14.05, Geert Uytterhoeven wrote:
-> > On Tue, Dec 17, 2019 at 11:41 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
-> >> dma_request_slave_channel() is a wrapper on top of dma_request_chan()
-> >> eating up the error code.
-> >>
-> >> By using dma_request_chan() directly the driver can support deferred
-> >> probing against DMA.
-> >>
-> >> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> >
-> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> >
-> > One comment below.
-> >
-> >> --- a/drivers/media/platform/rcar_drif.c
-> >> +++ b/drivers/media/platform/rcar_drif.c
-> >> @@ -275,10 +275,10 @@ static int rcar_drif_alloc_dmachannels(struct rcar_drif_sdr *sdr)
-> >>         for_each_rcar_drif_channel(i, &sdr->cur_ch_mask) {
-> >>                 struct rcar_drif *ch = sdr->ch[i];
-> >>
-> >> -               ch->dmach = dma_request_slave_channel(&ch->pdev->dev, "rx");
-> >> -               if (!ch->dmach) {
-> >> +               ch->dmach = dma_request_chan(&ch->pdev->dev, "rx");
-> >> +               if (IS_ERR(ch->dmach)) {
-> >>                         rdrif_err(sdr, "ch%u: dma channel req failed\n", i);
-> >
-> > Now there is an error code, you might (1) want to print it, and (2) only
-> > do so when it is not due to probe deferral:
-> >
-> >         if (PTR_ERR(ch->dmach) != -EPROBE_DEFER)
-> >                 rdrif_err(sdr, "ch%u: dma channel req failed %pe\n",
-> > i, ch->dmach);
+On Mon, Jan 20, 2020 at 12:13:38PM +0530, Anshuman Khandual wrote:
 >
-> Yes, this is true.
 >
-> >
-> >> -                       ret = -ENODEV;
-> >> +                       ret = PTR_ERR(ch->dmach);
+>On 01/20/2020 08:34 AM, Wei Yang wrote:
+>> During free and new page, we did some check on the status of page
+>> struct. There is some common part, just extract them.
 >
-> if (ret != -EPROBE_DEFER)
->         rdrif_err(sdr, "ch%u: dma channel req failed (%d)\n", i, ret);
+>Makes sense.
 >
-> might be simpler.
+>> 
+>> Besides this, this patch also rename two functions to keep the name
+>> convention, since free_pages_check_bad/free_pages_check are counterparts
+>> of check_new_page_bad/check_new_page.
+>
+>This probably should be in a different patch.
+>
 
-Sure, checking ret is simpler.
-But printing ch->dmach means you can use the new %pe format specifier
-to pretty-print the error code.
+In v1, they are in two separate patches. While David Suggest to merge it.
 
-Gr{oetje,eeting}s,
+I am not sure whether my understanding is correct.
 
-                        Geert
+>> 
+>> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+>> ---
+>>  mm/page_alloc.c | 49 ++++++++++++++++++++++++-------------------------
+>>  1 file changed, 24 insertions(+), 25 deletions(-)
+>> 
+>> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+>> index a7b793c739fc..7f23cc836f90 100644
+>> --- a/mm/page_alloc.c
+>> +++ b/mm/page_alloc.c
+>> @@ -1025,36 +1025,44 @@ static inline bool page_expected_state(struct page *page,
+>>  	return true;
+>>  }
+>>  
+>> -static void free_pages_check_bad(struct page *page)
+>> +static inline int __check_page(struct page *page, int nr,
+>> +				const char **bad_reason)
+>
+>free and new page checks are in and out of the buddy allocator, hence
+>this common factored function should have a more relevant name.
+
+Hmm... naming is really difficult. Do you have any suggestion?
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Wei Yang
+Help you, Help me
