@@ -2,882 +2,161 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E22B6C33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 17:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C3B8C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 17:49:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FAAD2253D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 17:48:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65FC022525
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 17:49:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=cyberus-technology.de header.i=@cyberus-technology.de header.b="k5Ut8opl"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Yk9RZ+qV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728587AbgATRsZ (ORCPT
+        id S1728680AbgATRtp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 12:48:25 -0500
-Received: from www413.your-server.de ([88.198.28.140]:42800 "EHLO
-        www413.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726642AbgATRsZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 12:48:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=cyberus-technology.de; s=default1911; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=wM+WMx5GZe3Z8Q3hi+JoMsNWtzyRkvlLkOKoDdwnhsY=; b=k5Ut8oplwIbE+HyZs6CRCDE1nt
-        WY95NoFhDLK//UWdvsMFxhpv2WbjOVCkFP10qBx+X0COUp58/4LQe9BEvgVRXbLoPBUBdl8y1nMkX
-        jxpj+t9y0E7mWNlLQ8IcLhtg+/FxIfEtSj4A6zzCEp1/O7oNRjhnGpdTzhu25Oq41G5/fMJSKHUZq
-        vpaKy5GuMYSV9XLrnJZnD38djGK42OmmQeE2SwKO+tA4ybDqu3pBeY+9nxfCW2VpoWL1kY9U29cq6
-        DntuUSncpJjQhl56yeRCQwSfLoISUKIutCc45M5aPfRLn3h6nsz1hongjWeRqrYQ09tDphKIqr1Du
-        OH+Z/ASQ==;
-Received: from sslproxy06.your-server.de ([78.46.172.3])
-        by www413.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <julian.stecklina@cyberus-technology.de>)
-        id 1itaoS-00075h-Pq; Mon, 20 Jan 2020 18:26:08 +0100
-Received: from [2001:16b8:5700:3700:f1da:99e3:e2a2:9568] (helo=linux.fritz.box)
-        by sslproxy06.your-server.de with esmtpsa (TLSv1:DHE-RSA-AES256-SHA:256)
-        (Exim 4.89)
-        (envelope-from <julian.stecklina@cyberus-technology.de>)
-        id 1itaoS-0004Df-F4; Mon, 20 Jan 2020 18:26:08 +0100
-From:   Julian Stecklina <julian.stecklina@cyberus-technology.de>
-To:     intel-gvt-dev@lists.freedesktop.org
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        zhiyuan.lv@intel.com, hang.yuan@intel.com,
-        Julian Stecklina <julian.stecklina@cyberus-technology.de>,
-        Zhenyu Wang <zhenyuw@linux.intel.com>
-Subject: [PATCH] drm/i915/gvt: make gvt oblivious of kvmgt data structures
-Date:   Mon, 20 Jan 2020 18:25:23 +0100
-Message-Id: <20200120172523.13642-1-julian.stecklina@cyberus-technology.de>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200120063318.GC14597@zhen-hp.sh.intel.com>
-References: <20200120063318.GC14597@zhen-hp.sh.intel.com>
+        Mon, 20 Jan 2020 12:49:45 -0500
+Received: from mail-eopbgr80050.outbound.protection.outlook.com ([40.107.8.50]:18660
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726642AbgATRtp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 12:49:45 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kErpxvD0g6ou4wZmwUGdimDeeXxqn8Yx5hqvY6nkBbF2rR+qUKaxKPiJB0QHUBTUBIFVNVdsvllHf6S8o1vV/h0Tzk0+bCE0rkaO9XxWL8h43CNRDhHYQDPE30itfF+H6HxG76MCGyChvCVJiv2FTneBsvbILgynu718aFL8FBSO0S3Y/QdvpfPpAgdZ4+eKnJtZdIc4CLBUiNciORcQbrgvh0spsRWq/dP44oqkXyfGXJfPWs0SmXEOgfMWxKQXam2o6ZylhSAFx7BhTswNRY7Ac/zrVVFkbdVjHdFAklDpcnPQtvmUGxNRMkB8ogRi5eF0HIIQXaP4F20unBxQmA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Z2yLUhjgddNodTMi+kzecKXqRwdT5XVOpS3BBx9zbUk=;
+ b=SVAxzvFGMpmki9iN9EmYFZWD8NbKVFBLAyaj+jKERESMfqLZaF3iFalm5Yjw12nVaN417JaZD3qk0+qvF7Hr0MppS3gPiARAAFvpdq1H+rfgTaRtMhM72IY8XiVKWVEbqFXI1xhaZx3BtoJxn20eRpfKxMgou1MJHEbUljIzTzqxntLZFjqQBKB0E/oldshbuncREkfg4qMkPH3RSrASpSXPLFBvMS1QylQkmoMKpl+mG0QHQpdw+7y/5WCUSurQAASffj7ImT3sloWS8TaPGd/rTc5gtzH/0R3Hbx+Q+s7JNOasOPTkUCDP/E3unueFsVnLE1GZYLXX8hOSNwWvwQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Z2yLUhjgddNodTMi+kzecKXqRwdT5XVOpS3BBx9zbUk=;
+ b=Yk9RZ+qVaIospGrAcJ6b2Kc+COp4l649NUNF3b/foXUckKjVkCcsFjXaRSixE6bjRZBfuMLy/GKq2KEcZsyDC8ZvY9ShWviUUrlh0kV1/wsYNSjwIdpeDSDGE5gpYXxtH9bJVNBbkbY1XRxCPdpCkG+TzOJb/e6/s93mqhzQxK4=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
+ VI1PR05MB5741.eurprd05.prod.outlook.com (20.178.122.141) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.20; Mon, 20 Jan 2020 17:49:39 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1c00:7925:d5c6:d60d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1c00:7925:d5c6:d60d%7]) with mapi id 15.20.2644.024; Mon, 20 Jan 2020
+ 17:49:39 +0000
+Received: from mlx.ziepe.ca (208.176.44.194) by SN4PR0401CA0044.namprd04.prod.outlook.com (2603:10b6:803:2a::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.20 via Frontend Transport; Mon, 20 Jan 2020 17:49:38 +0000
+Received: from jgg by jggl.ziepe.ca with local (Exim 4.90_1)    (envelope-from <jgg@mellanox.com>)      id 1itbB7-0001Iy-Uo; Mon, 20 Jan 2020 13:49:33 -0400
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Jason Wang <jasowang@redhat.com>
+CC:     Shahaf Shuler <shahafs@mellanox.com>,
+        Rob Miller <rob.miller@broadcom.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Netdev <netdev@vger.kernel.org>,
+        "Bie, Tiwei" <tiwei.bie@intel.com>,
+        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
+        "Liang, Cunming" <cunming.liang@intel.com>,
+        "Wang, Zhihong" <zhihong.wang@intel.com>,
+        "Wang, Xiao W" <xiao.w.wang@intel.com>,
+        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
+        "Zhu, Lingshan" <lingshan.zhu@intel.com>,
+        "eperezma@redhat.com" <eperezma@redhat.com>,
+        "lulu@redhat.com" <lulu@redhat.com>,
+        Parav Pandit <parav@mellanox.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "stefanha@redhat.com" <stefanha@redhat.com>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "hch@infradead.org" <hch@infradead.org>,
+        Ariel Adam <aadam@redhat.com>,
+        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "hanand@xilinx.com" <hanand@xilinx.com>,
+        "mhabets@solarflare.com" <mhabets@solarflare.com>
+Subject: Re: [PATCH 3/5] vDPA: introduce vDPA bus
+Thread-Topic: [PATCH 3/5] vDPA: introduce vDPA bus
+Thread-Index: AQHVzGqUgTlkW8H4N0+zRVK4Lh0XAKfuxkEAgAAbnwCAAAWygIACz0CAgAGL1YCAAJh1gA==
+Date:   Mon, 20 Jan 2020 17:49:39 +0000
+Message-ID: <20200120174933.GB3891@mellanox.com>
+References: <20200116124231.20253-1-jasowang@redhat.com>
+ <20200116124231.20253-4-jasowang@redhat.com>
+ <20200117070324-mutt-send-email-mst@kernel.org>
+ <239b042c-2d9e-0eec-a1ef-b03b7e2c5419@redhat.com>
+ <CAJPjb1+fG9L3=iKbV4Vn13VwaeDZZdcfBPvarogF_Nzhk+FnKg@mail.gmail.com>
+ <AM0PR0502MB379553984D0D55FDE25426F6C3330@AM0PR0502MB3795.eurprd05.prod.outlook.com>
+ <d69918ca-8af4-44b2-9652-633530d4c113@redhat.com>
+In-Reply-To: <d69918ca-8af4-44b2-9652-633530d4c113@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SN4PR0401CA0044.namprd04.prod.outlook.com
+ (2603:10b6:803:2a::30) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [208.176.44.194]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 2174ad8d-8dab-4fa1-7172-08d79dd11ed6
+x-ms-traffictypediagnostic: VI1PR05MB5741:|VI1PR05MB5741:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR05MB574136C4341C05536C1D3509CF320@VI1PR05MB5741.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0288CD37D9
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(136003)(366004)(376002)(346002)(199004)(189003)(66946007)(2906002)(6916009)(66446008)(64756008)(33656002)(478600001)(66476007)(66556008)(316002)(2616005)(7416002)(4326008)(81156014)(8676002)(81166006)(26005)(5660300002)(1076003)(71200400001)(8936002)(52116002)(9786002)(4744005)(9746002)(36756003)(86362001)(186003)(54906003)(24400500001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5741;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: snGUpjDYZrm/eUAeYDemX9Ua1Qlza/G4mgGTLencteJRuz6W/VY+bDQYf592ZOmYBtdKUr2S1/D5YfpBjSf0k/NBldSsfOq4QSZ01nSjWz5f+/E57GDB1z5C923AvHhRoA1HDhayYTBFMGif4FGWvGEpBC84iTtB4v7tcexwykRa54pD2SU2Ww15IIuinBcPqlK0wjMBKOxp7VVC+ckVNe0+AADEORCvUxKY5sBYJQ31bPigJ2Ql4UoV4oI1yN+JayiqJHE+BK2zLVzX0N85XeqiXZqoR4XXN8bP8AnsGVcTvX/m79+tED9N6I1p0mQVOqNcyj+CIO1ruqi+sg3xh8BZyPyXtfcyaIp5FWHXxCoGsD5LOIvy901rJAROQLskDPJ7XjCrApRU7yPqDl9fe/mH/dt/jvm8XDFHdKqHboQ52a5L5J4vG2tI0mVne4jeYslQ2RLrK5rxgH9BWBBVEKW3X9OK1eLVO/2CeHCUcInDl2HnQ4aBPKBGEzscNzMu
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <AAA356A2330DEF40A2E3E29B75A5874E@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: julian.stecklina@cyberus-technology.de
-X-Virus-Scanned: Clear (ClamAV 0.101.4/25701/Mon Jan 20 12:41:43 2020)
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2174ad8d-8dab-4fa1-7172-08d79dd11ed6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jan 2020 17:49:39.0958
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: OY2YfhTHoiJbJJstF3GsY6GcaES8MqBw2znUf8scA6WytO3hDIEhnhl8Xmnv352mUN2U4OWGfIf9pNvmp42LWA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5741
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of defining KVMGT per-device state in struct intel_vgpu
-directly, add an indirection. This makes the GVT code oblivious of
-what state KVMGT needs to keep.
+On Mon, Jan 20, 2020 at 04:43:53PM +0800, Jason Wang wrote:
+> This is similar to the design of platform IOMMU part of vhost-vdpa. We
+> decide to send diffs to platform IOMMU there. If it's ok to do that in
+> driver, we can replace set_map with incremental API like map()/unmap().
+>=20
+> Then driver need to maintain rbtree itself.
 
-The intention here is to eventually make it possible to build
-hypervisor backends for the mediator, without having to touch the
-mediator itself. This is a first step.
+I think we really need to see two modes, one where there is a fixed
+translation without dynamic vIOMMU driven changes and one that
+supports vIOMMU.
 
-v2:
-- rebased onto gvt-staging (no conflicts)
+There are different optimization goals in the drivers for these two
+configurations.
 
-Signed-off-by: Julian Stecklina <julian.stecklina@cyberus-technology.de>
-Acked-by: Zhenyu Wang <zhenyuw@linux.intel.com>
----
- drivers/gpu/drm/i915/gvt/gvt.h   |  32 +---
- drivers/gpu/drm/i915/gvt/kvmgt.c | 287 +++++++++++++++++++------------
- 2 files changed, 184 insertions(+), 135 deletions(-)
+> > If the first one, then I think memory hotplug is a heavy flow
+> > regardless. Do you think the extra cycles for the tree traverse
+> > will be visible in any way?
+>=20
+> I think if the driver can pause the DMA during the time for setting up ne=
+w
+> mapping, it should be fine.
 
-diff --git a/drivers/gpu/drm/i915/gvt/gvt.h b/drivers/gpu/drm/i915/gvt/gvt.h
-index 9fe9decc0d86..8cf292a8d6bd 100644
---- a/drivers/gpu/drm/i915/gvt/gvt.h
-+++ b/drivers/gpu/drm/i915/gvt/gvt.h
-@@ -196,31 +196,8 @@ struct intel_vgpu {
- 
- 	struct dentry *debugfs;
- 
--#if IS_ENABLED(CONFIG_DRM_I915_GVT_KVMGT)
--	struct {
--		struct mdev_device *mdev;
--		struct vfio_region *region;
--		int num_regions;
--		struct eventfd_ctx *intx_trigger;
--		struct eventfd_ctx *msi_trigger;
--
--		/*
--		 * Two caches are used to avoid mapping duplicated pages (eg.
--		 * scratch pages). This help to reduce dma setup overhead.
--		 */
--		struct rb_root gfn_cache;
--		struct rb_root dma_addr_cache;
--		unsigned long nr_cache_entries;
--		struct mutex cache_lock;
--
--		struct notifier_block iommu_notifier;
--		struct notifier_block group_notifier;
--		struct kvm *kvm;
--		struct work_struct release_work;
--		atomic_t released;
--		struct vfio_device *vfio_device;
--	} vdev;
--#endif
-+	/* Hypervisor-specific device state. */
-+	void *vdev;
- 
- 	struct list_head dmabuf_obj_list_head;
- 	struct mutex dmabuf_lock;
-@@ -229,6 +206,11 @@ struct intel_vgpu {
- 	u32 scan_nonprivbb;
- };
- 
-+static inline void *intel_vgpu_vdev(struct intel_vgpu *vgpu)
-+{
-+	return vgpu->vdev;
-+}
-+
- /* validating GM healthy status*/
- #define vgpu_is_vm_unhealthy(ret_val) \
- 	(((ret_val) == -EBADRQC) || ((ret_val) == -EFAULT))
-diff --git a/drivers/gpu/drm/i915/gvt/kvmgt.c b/drivers/gpu/drm/i915/gvt/kvmgt.c
-index 85e59c502ab5..9a435bc1a2f0 100644
---- a/drivers/gpu/drm/i915/gvt/kvmgt.c
-+++ b/drivers/gpu/drm/i915/gvt/kvmgt.c
-@@ -108,6 +108,36 @@ struct gvt_dma {
- 	struct kref ref;
- };
- 
-+struct kvmgt_vdev {
-+	struct intel_vgpu *vgpu;
-+	struct mdev_device *mdev;
-+	struct vfio_region *region;
-+	int num_regions;
-+	struct eventfd_ctx *intx_trigger;
-+	struct eventfd_ctx *msi_trigger;
-+
-+	/*
-+	 * Two caches are used to avoid mapping duplicated pages (eg.
-+	 * scratch pages). This help to reduce dma setup overhead.
-+	 */
-+	struct rb_root gfn_cache;
-+	struct rb_root dma_addr_cache;
-+	unsigned long nr_cache_entries;
-+	struct mutex cache_lock;
-+
-+	struct notifier_block iommu_notifier;
-+	struct notifier_block group_notifier;
-+	struct kvm *kvm;
-+	struct work_struct release_work;
-+	atomic_t released;
-+	struct vfio_device *vfio_device;
-+};
-+
-+static inline struct kvmgt_vdev *kvmgt_vdev(struct intel_vgpu *vgpu)
-+{
-+	return intel_vgpu_vdev(vgpu);
-+}
-+
- static inline bool handle_valid(unsigned long handle)
- {
- 	return !!(handle & ~0xff);
-@@ -129,7 +159,7 @@ static void gvt_unpin_guest_page(struct intel_vgpu *vgpu, unsigned long gfn,
- 	for (npage = 0; npage < total_pages; npage++) {
- 		unsigned long cur_gfn = gfn + npage;
- 
--		ret = vfio_unpin_pages(mdev_dev(vgpu->vdev.mdev), &cur_gfn, 1);
-+		ret = vfio_unpin_pages(mdev_dev(kvmgt_vdev(vgpu)->mdev), &cur_gfn, 1);
- 		WARN_ON(ret != 1);
- 	}
- }
-@@ -152,7 +182,7 @@ static int gvt_pin_guest_page(struct intel_vgpu *vgpu, unsigned long gfn,
- 		unsigned long cur_gfn = gfn + npage;
- 		unsigned long pfn;
- 
--		ret = vfio_pin_pages(mdev_dev(vgpu->vdev.mdev), &cur_gfn, 1,
-+		ret = vfio_pin_pages(mdev_dev(kvmgt_vdev(vgpu)->mdev), &cur_gfn, 1,
- 				     IOMMU_READ | IOMMU_WRITE, &pfn);
- 		if (ret != 1) {
- 			gvt_vgpu_err("vfio_pin_pages failed for gfn 0x%lx, ret %d\n",
-@@ -219,7 +249,7 @@ static void gvt_dma_unmap_page(struct intel_vgpu *vgpu, unsigned long gfn,
- static struct gvt_dma *__gvt_cache_find_dma_addr(struct intel_vgpu *vgpu,
- 		dma_addr_t dma_addr)
- {
--	struct rb_node *node = vgpu->vdev.dma_addr_cache.rb_node;
-+	struct rb_node *node = kvmgt_vdev(vgpu)->dma_addr_cache.rb_node;
- 	struct gvt_dma *itr;
- 
- 	while (node) {
-@@ -237,7 +267,7 @@ static struct gvt_dma *__gvt_cache_find_dma_addr(struct intel_vgpu *vgpu,
- 
- static struct gvt_dma *__gvt_cache_find_gfn(struct intel_vgpu *vgpu, gfn_t gfn)
- {
--	struct rb_node *node = vgpu->vdev.gfn_cache.rb_node;
-+	struct rb_node *node = kvmgt_vdev(vgpu)->gfn_cache.rb_node;
- 	struct gvt_dma *itr;
- 
- 	while (node) {
-@@ -258,6 +288,7 @@ static int __gvt_cache_add(struct intel_vgpu *vgpu, gfn_t gfn,
- {
- 	struct gvt_dma *new, *itr;
- 	struct rb_node **link, *parent = NULL;
-+	struct kvmgt_vdev *vdev = kvmgt_vdev(vgpu);
- 
- 	new = kzalloc(sizeof(struct gvt_dma), GFP_KERNEL);
- 	if (!new)
-@@ -270,7 +301,7 @@ static int __gvt_cache_add(struct intel_vgpu *vgpu, gfn_t gfn,
- 	kref_init(&new->ref);
- 
- 	/* gfn_cache maps gfn to struct gvt_dma. */
--	link = &vgpu->vdev.gfn_cache.rb_node;
-+	link = &vdev->gfn_cache.rb_node;
- 	while (*link) {
- 		parent = *link;
- 		itr = rb_entry(parent, struct gvt_dma, gfn_node);
-@@ -281,11 +312,11 @@ static int __gvt_cache_add(struct intel_vgpu *vgpu, gfn_t gfn,
- 			link = &parent->rb_right;
- 	}
- 	rb_link_node(&new->gfn_node, parent, link);
--	rb_insert_color(&new->gfn_node, &vgpu->vdev.gfn_cache);
-+	rb_insert_color(&new->gfn_node, &vdev->gfn_cache);
- 
- 	/* dma_addr_cache maps dma addr to struct gvt_dma. */
- 	parent = NULL;
--	link = &vgpu->vdev.dma_addr_cache.rb_node;
-+	link = &vdev->dma_addr_cache.rb_node;
- 	while (*link) {
- 		parent = *link;
- 		itr = rb_entry(parent, struct gvt_dma, dma_addr_node);
-@@ -296,46 +327,51 @@ static int __gvt_cache_add(struct intel_vgpu *vgpu, gfn_t gfn,
- 			link = &parent->rb_right;
- 	}
- 	rb_link_node(&new->dma_addr_node, parent, link);
--	rb_insert_color(&new->dma_addr_node, &vgpu->vdev.dma_addr_cache);
-+	rb_insert_color(&new->dma_addr_node, &vdev->dma_addr_cache);
- 
--	vgpu->vdev.nr_cache_entries++;
-+	vdev->nr_cache_entries++;
- 	return 0;
- }
- 
- static void __gvt_cache_remove_entry(struct intel_vgpu *vgpu,
- 				struct gvt_dma *entry)
- {
--	rb_erase(&entry->gfn_node, &vgpu->vdev.gfn_cache);
--	rb_erase(&entry->dma_addr_node, &vgpu->vdev.dma_addr_cache);
-+	struct kvmgt_vdev *vdev = kvmgt_vdev(vgpu);
-+
-+	rb_erase(&entry->gfn_node, &vdev->gfn_cache);
-+	rb_erase(&entry->dma_addr_node, &vdev->dma_addr_cache);
- 	kfree(entry);
--	vgpu->vdev.nr_cache_entries--;
-+	vdev->nr_cache_entries--;
- }
- 
- static void gvt_cache_destroy(struct intel_vgpu *vgpu)
- {
- 	struct gvt_dma *dma;
- 	struct rb_node *node = NULL;
-+	struct kvmgt_vdev *vdev = kvmgt_vdev(vgpu);
- 
- 	for (;;) {
--		mutex_lock(&vgpu->vdev.cache_lock);
--		node = rb_first(&vgpu->vdev.gfn_cache);
-+		mutex_lock(&vdev->cache_lock);
-+		node = rb_first(&vdev->gfn_cache);
- 		if (!node) {
--			mutex_unlock(&vgpu->vdev.cache_lock);
-+			mutex_unlock(&vdev->cache_lock);
- 			break;
- 		}
- 		dma = rb_entry(node, struct gvt_dma, gfn_node);
- 		gvt_dma_unmap_page(vgpu, dma->gfn, dma->dma_addr, dma->size);
- 		__gvt_cache_remove_entry(vgpu, dma);
--		mutex_unlock(&vgpu->vdev.cache_lock);
-+		mutex_unlock(&vdev->cache_lock);
- 	}
- }
- 
- static void gvt_cache_init(struct intel_vgpu *vgpu)
- {
--	vgpu->vdev.gfn_cache = RB_ROOT;
--	vgpu->vdev.dma_addr_cache = RB_ROOT;
--	vgpu->vdev.nr_cache_entries = 0;
--	mutex_init(&vgpu->vdev.cache_lock);
-+	struct kvmgt_vdev *vdev = kvmgt_vdev(vgpu);
-+
-+	vdev->gfn_cache = RB_ROOT;
-+	vdev->dma_addr_cache = RB_ROOT;
-+	vdev->nr_cache_entries = 0;
-+	mutex_init(&vdev->cache_lock);
- }
- 
- static void kvmgt_protect_table_init(struct kvmgt_guest_info *info)
-@@ -409,16 +445,18 @@ static void kvmgt_protect_table_del(struct kvmgt_guest_info *info,
- static size_t intel_vgpu_reg_rw_opregion(struct intel_vgpu *vgpu, char *buf,
- 		size_t count, loff_t *ppos, bool iswrite)
- {
-+	struct kvmgt_vdev *vdev = kvmgt_vdev(vgpu);
- 	unsigned int i = VFIO_PCI_OFFSET_TO_INDEX(*ppos) -
- 			VFIO_PCI_NUM_REGIONS;
--	void *base = vgpu->vdev.region[i].data;
-+	void *base = vdev->region[i].data;
- 	loff_t pos = *ppos & VFIO_PCI_OFFSET_MASK;
- 
--	if (pos >= vgpu->vdev.region[i].size || iswrite) {
-+
-+	if (pos >= vdev->region[i].size || iswrite) {
- 		gvt_vgpu_err("invalid op or offset for Intel vgpu OpRegion\n");
- 		return -EINVAL;
- 	}
--	count = min(count, (size_t)(vgpu->vdev.region[i].size - pos));
-+	count = min(count, (size_t)(vdev->region[i].size - pos));
- 	memcpy(buf, base + pos, count);
- 
- 	return count;
-@@ -512,7 +550,7 @@ static size_t intel_vgpu_reg_rw_edid(struct intel_vgpu *vgpu, char *buf,
- 	unsigned int i = VFIO_PCI_OFFSET_TO_INDEX(*ppos) -
- 			VFIO_PCI_NUM_REGIONS;
- 	struct vfio_edid_region *region =
--		(struct vfio_edid_region *)vgpu->vdev.region[i].data;
-+		(struct vfio_edid_region *)kvmgt_vdev(vgpu)->region[i].data;
- 	loff_t pos = *ppos & VFIO_PCI_OFFSET_MASK;
- 
- 	if (pos < region->vfio_edid_regs.edid_offset) {
-@@ -544,32 +582,34 @@ static int intel_vgpu_register_reg(struct intel_vgpu *vgpu,
- 		const struct intel_vgpu_regops *ops,
- 		size_t size, u32 flags, void *data)
- {
-+	struct kvmgt_vdev *vdev = kvmgt_vdev(vgpu);
- 	struct vfio_region *region;
- 
--	region = krealloc(vgpu->vdev.region,
--			(vgpu->vdev.num_regions + 1) * sizeof(*region),
-+	region = krealloc(vdev->region,
-+			(vdev->num_regions + 1) * sizeof(*region),
- 			GFP_KERNEL);
- 	if (!region)
- 		return -ENOMEM;
- 
--	vgpu->vdev.region = region;
--	vgpu->vdev.region[vgpu->vdev.num_regions].type = type;
--	vgpu->vdev.region[vgpu->vdev.num_regions].subtype = subtype;
--	vgpu->vdev.region[vgpu->vdev.num_regions].ops = ops;
--	vgpu->vdev.region[vgpu->vdev.num_regions].size = size;
--	vgpu->vdev.region[vgpu->vdev.num_regions].flags = flags;
--	vgpu->vdev.region[vgpu->vdev.num_regions].data = data;
--	vgpu->vdev.num_regions++;
-+	vdev->region = region;
-+	vdev->region[vdev->num_regions].type = type;
-+	vdev->region[vdev->num_regions].subtype = subtype;
-+	vdev->region[vdev->num_regions].ops = ops;
-+	vdev->region[vdev->num_regions].size = size;
-+	vdev->region[vdev->num_regions].flags = flags;
-+	vdev->region[vdev->num_regions].data = data;
-+	vdev->num_regions++;
- 	return 0;
- }
- 
- static int kvmgt_get_vfio_device(void *p_vgpu)
- {
- 	struct intel_vgpu *vgpu = (struct intel_vgpu *)p_vgpu;
-+	struct kvmgt_vdev *vdev = kvmgt_vdev(vgpu);
- 
--	vgpu->vdev.vfio_device = vfio_device_get_from_dev(
--		mdev_dev(vgpu->vdev.mdev));
--	if (!vgpu->vdev.vfio_device) {
-+	vdev->vfio_device = vfio_device_get_from_dev(
-+		mdev_dev(vdev->mdev));
-+	if (!vdev->vfio_device) {
- 		gvt_vgpu_err("failed to get vfio device\n");
- 		return -ENODEV;
- 	}
-@@ -637,10 +677,12 @@ static int kvmgt_set_edid(void *p_vgpu, int port_num)
- 
- static void kvmgt_put_vfio_device(void *vgpu)
- {
--	if (WARN_ON(!((struct intel_vgpu *)vgpu)->vdev.vfio_device))
-+	struct kvmgt_vdev *vdev = kvmgt_vdev((struct intel_vgpu *)vgpu);
-+
-+	if (WARN_ON(!vdev->vfio_device))
- 		return;
- 
--	vfio_device_put(((struct intel_vgpu *)vgpu)->vdev.vfio_device);
-+	vfio_device_put(vdev->vfio_device);
- }
- 
- static int intel_vgpu_create(struct kobject *kobj, struct mdev_device *mdev)
-@@ -669,9 +711,9 @@ static int intel_vgpu_create(struct kobject *kobj, struct mdev_device *mdev)
- 		goto out;
- 	}
- 
--	INIT_WORK(&vgpu->vdev.release_work, intel_vgpu_release_work);
-+	INIT_WORK(&kvmgt_vdev(vgpu)->release_work, intel_vgpu_release_work);
- 
--	vgpu->vdev.mdev = mdev;
-+	kvmgt_vdev(vgpu)->mdev = mdev;
- 	mdev_set_drvdata(mdev, vgpu);
- 
- 	gvt_dbg_core("intel_vgpu_create succeeded for mdev: %s\n",
-@@ -696,9 +738,10 @@ static int intel_vgpu_remove(struct mdev_device *mdev)
- static int intel_vgpu_iommu_notifier(struct notifier_block *nb,
- 				     unsigned long action, void *data)
- {
--	struct intel_vgpu *vgpu = container_of(nb,
--					struct intel_vgpu,
--					vdev.iommu_notifier);
-+	struct kvmgt_vdev *vdev = container_of(nb,
-+					       struct kvmgt_vdev,
-+					       iommu_notifier);
-+	struct intel_vgpu *vgpu = vdev->vgpu;
- 
- 	if (action == VFIO_IOMMU_NOTIFY_DMA_UNMAP) {
- 		struct vfio_iommu_type1_dma_unmap *unmap = data;
-@@ -708,7 +751,7 @@ static int intel_vgpu_iommu_notifier(struct notifier_block *nb,
- 		iov_pfn = unmap->iova >> PAGE_SHIFT;
- 		end_iov_pfn = iov_pfn + unmap->size / PAGE_SIZE;
- 
--		mutex_lock(&vgpu->vdev.cache_lock);
-+		mutex_lock(&vdev->cache_lock);
- 		for (; iov_pfn < end_iov_pfn; iov_pfn++) {
- 			entry = __gvt_cache_find_gfn(vgpu, iov_pfn);
- 			if (!entry)
-@@ -718,7 +761,7 @@ static int intel_vgpu_iommu_notifier(struct notifier_block *nb,
- 					   entry->size);
- 			__gvt_cache_remove_entry(vgpu, entry);
- 		}
--		mutex_unlock(&vgpu->vdev.cache_lock);
-+		mutex_unlock(&vdev->cache_lock);
- 	}
- 
- 	return NOTIFY_OK;
-@@ -727,16 +770,16 @@ static int intel_vgpu_iommu_notifier(struct notifier_block *nb,
- static int intel_vgpu_group_notifier(struct notifier_block *nb,
- 				     unsigned long action, void *data)
- {
--	struct intel_vgpu *vgpu = container_of(nb,
--					struct intel_vgpu,
--					vdev.group_notifier);
-+	struct kvmgt_vdev *vdev = container_of(nb,
-+					       struct kvmgt_vdev,
-+					       group_notifier);
- 
- 	/* the only action we care about */
- 	if (action == VFIO_GROUP_NOTIFY_SET_KVM) {
--		vgpu->vdev.kvm = data;
-+		vdev->kvm = data;
- 
- 		if (!data)
--			schedule_work(&vgpu->vdev.release_work);
-+			schedule_work(&vdev->release_work);
- 	}
- 
- 	return NOTIFY_OK;
-@@ -745,15 +788,16 @@ static int intel_vgpu_group_notifier(struct notifier_block *nb,
- static int intel_vgpu_open(struct mdev_device *mdev)
- {
- 	struct intel_vgpu *vgpu = mdev_get_drvdata(mdev);
-+	struct kvmgt_vdev *vdev = kvmgt_vdev(vgpu);
- 	unsigned long events;
- 	int ret;
- 
--	vgpu->vdev.iommu_notifier.notifier_call = intel_vgpu_iommu_notifier;
--	vgpu->vdev.group_notifier.notifier_call = intel_vgpu_group_notifier;
-+	vdev->iommu_notifier.notifier_call = intel_vgpu_iommu_notifier;
-+	vdev->group_notifier.notifier_call = intel_vgpu_group_notifier;
- 
- 	events = VFIO_IOMMU_NOTIFY_DMA_UNMAP;
- 	ret = vfio_register_notifier(mdev_dev(mdev), VFIO_IOMMU_NOTIFY, &events,
--				&vgpu->vdev.iommu_notifier);
-+				&vdev->iommu_notifier);
- 	if (ret != 0) {
- 		gvt_vgpu_err("vfio_register_notifier for iommu failed: %d\n",
- 			ret);
-@@ -762,7 +806,7 @@ static int intel_vgpu_open(struct mdev_device *mdev)
- 
- 	events = VFIO_GROUP_NOTIFY_SET_KVM;
- 	ret = vfio_register_notifier(mdev_dev(mdev), VFIO_GROUP_NOTIFY, &events,
--				&vgpu->vdev.group_notifier);
-+				&vdev->group_notifier);
- 	if (ret != 0) {
- 		gvt_vgpu_err("vfio_register_notifier for group failed: %d\n",
- 			ret);
-@@ -781,50 +825,52 @@ static int intel_vgpu_open(struct mdev_device *mdev)
- 
- 	intel_gvt_ops->vgpu_activate(vgpu);
- 
--	atomic_set(&vgpu->vdev.released, 0);
-+	atomic_set(&vdev->released, 0);
- 	return ret;
- 
- undo_group:
- 	vfio_unregister_notifier(mdev_dev(mdev), VFIO_GROUP_NOTIFY,
--					&vgpu->vdev.group_notifier);
-+					&vdev->group_notifier);
- 
- undo_iommu:
- 	vfio_unregister_notifier(mdev_dev(mdev), VFIO_IOMMU_NOTIFY,
--					&vgpu->vdev.iommu_notifier);
-+					&vdev->iommu_notifier);
- out:
- 	return ret;
- }
- 
- static void intel_vgpu_release_msi_eventfd_ctx(struct intel_vgpu *vgpu)
- {
-+	struct kvmgt_vdev *vdev = kvmgt_vdev(vgpu);
- 	struct eventfd_ctx *trigger;
- 
--	trigger = vgpu->vdev.msi_trigger;
-+	trigger = vdev->msi_trigger;
- 	if (trigger) {
- 		eventfd_ctx_put(trigger);
--		vgpu->vdev.msi_trigger = NULL;
-+		vdev->msi_trigger = NULL;
- 	}
- }
- 
- static void __intel_vgpu_release(struct intel_vgpu *vgpu)
- {
-+	struct kvmgt_vdev *vdev = kvmgt_vdev(vgpu);
- 	struct kvmgt_guest_info *info;
- 	int ret;
- 
- 	if (!handle_valid(vgpu->handle))
- 		return;
- 
--	if (atomic_cmpxchg(&vgpu->vdev.released, 0, 1))
-+	if (atomic_cmpxchg(&vdev->released, 0, 1))
- 		return;
- 
- 	intel_gvt_ops->vgpu_release(vgpu);
- 
--	ret = vfio_unregister_notifier(mdev_dev(vgpu->vdev.mdev), VFIO_IOMMU_NOTIFY,
--					&vgpu->vdev.iommu_notifier);
-+	ret = vfio_unregister_notifier(mdev_dev(vdev->mdev), VFIO_IOMMU_NOTIFY,
-+					&vdev->iommu_notifier);
- 	WARN(ret, "vfio_unregister_notifier for iommu failed: %d\n", ret);
- 
--	ret = vfio_unregister_notifier(mdev_dev(vgpu->vdev.mdev), VFIO_GROUP_NOTIFY,
--					&vgpu->vdev.group_notifier);
-+	ret = vfio_unregister_notifier(mdev_dev(vdev->mdev), VFIO_GROUP_NOTIFY,
-+					&vdev->group_notifier);
- 	WARN(ret, "vfio_unregister_notifier for group failed: %d\n", ret);
- 
- 	/* dereference module reference taken at open */
-@@ -835,7 +881,7 @@ static void __intel_vgpu_release(struct intel_vgpu *vgpu)
- 
- 	intel_vgpu_release_msi_eventfd_ctx(vgpu);
- 
--	vgpu->vdev.kvm = NULL;
-+	vdev->kvm = NULL;
- 	vgpu->handle = 0;
- }
- 
-@@ -848,10 +894,10 @@ static void intel_vgpu_release(struct mdev_device *mdev)
- 
- static void intel_vgpu_release_work(struct work_struct *work)
- {
--	struct intel_vgpu *vgpu = container_of(work, struct intel_vgpu,
--					vdev.release_work);
-+	struct kvmgt_vdev *vdev = container_of(work, struct kvmgt_vdev,
-+					       release_work);
- 
--	__intel_vgpu_release(vgpu);
-+	__intel_vgpu_release(vdev->vgpu);
- }
- 
- static u64 intel_vgpu_get_bar_addr(struct intel_vgpu *vgpu, int bar)
-@@ -933,12 +979,13 @@ static ssize_t intel_vgpu_rw(struct mdev_device *mdev, char *buf,
- 			size_t count, loff_t *ppos, bool is_write)
- {
- 	struct intel_vgpu *vgpu = mdev_get_drvdata(mdev);
-+	struct kvmgt_vdev *vdev = kvmgt_vdev(vgpu);
- 	unsigned int index = VFIO_PCI_OFFSET_TO_INDEX(*ppos);
- 	u64 pos = *ppos & VFIO_PCI_OFFSET_MASK;
- 	int ret = -EINVAL;
- 
- 
--	if (index >= VFIO_PCI_NUM_REGIONS + vgpu->vdev.num_regions) {
-+	if (index >= VFIO_PCI_NUM_REGIONS + vdev->num_regions) {
- 		gvt_vgpu_err("invalid index: %u\n", index);
- 		return -EINVAL;
- 	}
-@@ -967,11 +1014,11 @@ static ssize_t intel_vgpu_rw(struct mdev_device *mdev, char *buf,
- 	case VFIO_PCI_ROM_REGION_INDEX:
- 		break;
- 	default:
--		if (index >= VFIO_PCI_NUM_REGIONS + vgpu->vdev.num_regions)
-+		if (index >= VFIO_PCI_NUM_REGIONS + vdev->num_regions)
- 			return -EINVAL;
- 
- 		index -= VFIO_PCI_NUM_REGIONS;
--		return vgpu->vdev.region[index].ops->rw(vgpu, buf, count,
-+		return vdev->region[index].ops->rw(vgpu, buf, count,
- 				ppos, is_write);
- 	}
- 
-@@ -1224,7 +1271,7 @@ static int intel_vgpu_set_msi_trigger(struct intel_vgpu *vgpu,
- 			gvt_vgpu_err("eventfd_ctx_fdget failed\n");
- 			return PTR_ERR(trigger);
- 		}
--		vgpu->vdev.msi_trigger = trigger;
-+		kvmgt_vdev(vgpu)->msi_trigger = trigger;
- 	} else if ((flags & VFIO_IRQ_SET_DATA_NONE) && !count)
- 		intel_vgpu_release_msi_eventfd_ctx(vgpu);
- 
-@@ -1276,6 +1323,7 @@ static long intel_vgpu_ioctl(struct mdev_device *mdev, unsigned int cmd,
- 			     unsigned long arg)
- {
- 	struct intel_vgpu *vgpu = mdev_get_drvdata(mdev);
-+	struct kvmgt_vdev *vdev = kvmgt_vdev(vgpu);
- 	unsigned long minsz;
- 
- 	gvt_dbg_core("vgpu%d ioctl, cmd: %d\n", vgpu->id, cmd);
-@@ -1294,7 +1342,7 @@ static long intel_vgpu_ioctl(struct mdev_device *mdev, unsigned int cmd,
- 		info.flags = VFIO_DEVICE_FLAGS_PCI;
- 		info.flags |= VFIO_DEVICE_FLAGS_RESET;
- 		info.num_regions = VFIO_PCI_NUM_REGIONS +
--				vgpu->vdev.num_regions;
-+				vdev->num_regions;
- 		info.num_irqs = VFIO_PCI_NUM_IRQS;
- 
- 		return copy_to_user((void __user *)arg, &info, minsz) ?
-@@ -1385,22 +1433,22 @@ static long intel_vgpu_ioctl(struct mdev_device *mdev, unsigned int cmd,
- 					.header.version = 1 };
- 
- 				if (info.index >= VFIO_PCI_NUM_REGIONS +
--						vgpu->vdev.num_regions)
-+						vdev->num_regions)
- 					return -EINVAL;
- 				info.index =
- 					array_index_nospec(info.index,
- 							VFIO_PCI_NUM_REGIONS +
--							vgpu->vdev.num_regions);
-+							vdev->num_regions);
- 
- 				i = info.index - VFIO_PCI_NUM_REGIONS;
- 
- 				info.offset =
- 					VFIO_PCI_INDEX_TO_OFFSET(info.index);
--				info.size = vgpu->vdev.region[i].size;
--				info.flags = vgpu->vdev.region[i].flags;
-+				info.size = vdev->region[i].size;
-+				info.flags = vdev->region[i].flags;
- 
--				cap_type.type = vgpu->vdev.region[i].type;
--				cap_type.subtype = vgpu->vdev.region[i].subtype;
-+				cap_type.type = vdev->region[i].type;
-+				cap_type.subtype = vdev->region[i].subtype;
- 
- 				ret = vfio_info_add_capability(&caps,
- 							&cap_type.header,
-@@ -1740,13 +1788,15 @@ static int kvmgt_guest_init(struct mdev_device *mdev)
- {
- 	struct kvmgt_guest_info *info;
- 	struct intel_vgpu *vgpu;
-+	struct kvmgt_vdev *vdev;
- 	struct kvm *kvm;
- 
- 	vgpu = mdev_get_drvdata(mdev);
- 	if (handle_valid(vgpu->handle))
- 		return -EEXIST;
- 
--	kvm = vgpu->vdev.kvm;
-+	vdev = kvmgt_vdev(vgpu);
-+	kvm = vdev->kvm;
- 	if (!kvm || kvm->mm != current->mm) {
- 		gvt_vgpu_err("KVM is required to use Intel vGPU\n");
- 		return -ESRCH;
-@@ -1774,7 +1824,7 @@ static int kvmgt_guest_init(struct mdev_device *mdev)
- 	info->debugfs_cache_entries = debugfs_create_ulong(
- 						"kvmgt_nr_cache_entries",
- 						0444, vgpu->debugfs,
--						&vgpu->vdev.nr_cache_entries);
-+						&vdev->nr_cache_entries);
- 	return 0;
- }
- 
-@@ -1791,9 +1841,17 @@ static bool kvmgt_guest_exit(struct kvmgt_guest_info *info)
- 	return true;
- }
- 
--static int kvmgt_attach_vgpu(void *vgpu, unsigned long *handle)
-+static int kvmgt_attach_vgpu(void *p_vgpu, unsigned long *handle)
- {
--	/* nothing to do here */
-+	struct intel_vgpu *vgpu = (struct intel_vgpu *)p_vgpu;
-+
-+	vgpu->vdev = kzalloc(sizeof(struct kvmgt_vdev), GFP_KERNEL);
-+
-+	if (!vgpu->vdev)
-+		return -ENOMEM;
-+
-+	kvmgt_vdev(vgpu)->vgpu = vgpu;
-+
- 	return 0;
- }
- 
-@@ -1801,29 +1859,34 @@ static void kvmgt_detach_vgpu(void *p_vgpu)
- {
- 	int i;
- 	struct intel_vgpu *vgpu = (struct intel_vgpu *)p_vgpu;
-+	struct kvmgt_vdev *vdev = kvmgt_vdev(vgpu);
- 
--	if (!vgpu->vdev.region)
-+	if (!vdev->region)
- 		return;
- 
--	for (i = 0; i < vgpu->vdev.num_regions; i++)
--		if (vgpu->vdev.region[i].ops->release)
--			vgpu->vdev.region[i].ops->release(vgpu,
--					&vgpu->vdev.region[i]);
--	vgpu->vdev.num_regions = 0;
--	kfree(vgpu->vdev.region);
--	vgpu->vdev.region = NULL;
-+	for (i = 0; i < vdev->num_regions; i++)
-+		if (vdev->region[i].ops->release)
-+			vdev->region[i].ops->release(vgpu,
-+					&vdev->region[i]);
-+	vdev->num_regions = 0;
-+	kfree(vdev->region);
-+	vdev->region = NULL;
-+
-+	kfree(vdev);
- }
- 
- static int kvmgt_inject_msi(unsigned long handle, u32 addr, u16 data)
- {
- 	struct kvmgt_guest_info *info;
- 	struct intel_vgpu *vgpu;
-+	struct kvmgt_vdev *vdev;
- 
- 	if (!handle_valid(handle))
- 		return -ESRCH;
- 
- 	info = (struct kvmgt_guest_info *)handle;
- 	vgpu = info->vgpu;
-+	vdev = kvmgt_vdev(vgpu);
- 
- 	/*
- 	 * When guest is poweroff, msi_trigger is set to NULL, but vgpu's
-@@ -1834,10 +1897,10 @@ static int kvmgt_inject_msi(unsigned long handle, u32 addr, u16 data)
- 	 * enabled by guest. so if msi_trigger is null, success is still
- 	 * returned and don't inject interrupt into guest.
- 	 */
--	if (vgpu->vdev.msi_trigger == NULL)
-+	if (vdev->msi_trigger == NULL)
- 		return 0;
- 
--	if (eventfd_signal(vgpu->vdev.msi_trigger, 1) == 1)
-+	if (eventfd_signal(vdev->msi_trigger, 1) == 1)
- 		return 0;
- 
- 	return -EFAULT;
-@@ -1863,26 +1926,26 @@ static unsigned long kvmgt_gfn_to_pfn(unsigned long handle, unsigned long gfn)
- static int kvmgt_dma_map_guest_page(unsigned long handle, unsigned long gfn,
- 		unsigned long size, dma_addr_t *dma_addr)
- {
--	struct kvmgt_guest_info *info;
- 	struct intel_vgpu *vgpu;
-+	struct kvmgt_vdev *vdev;
- 	struct gvt_dma *entry;
- 	int ret;
- 
- 	if (!handle_valid(handle))
- 		return -EINVAL;
- 
--	info = (struct kvmgt_guest_info *)handle;
--	vgpu = info->vgpu;
-+	vgpu = ((struct kvmgt_guest_info *)handle)->vgpu;
-+	vdev = kvmgt_vdev(vgpu);
- 
--	mutex_lock(&info->vgpu->vdev.cache_lock);
-+	mutex_lock(&vdev->cache_lock);
- 
--	entry = __gvt_cache_find_gfn(info->vgpu, gfn);
-+	entry = __gvt_cache_find_gfn(vgpu, gfn);
- 	if (!entry) {
- 		ret = gvt_dma_map_page(vgpu, gfn, dma_addr, size);
- 		if (ret)
- 			goto err_unlock;
- 
--		ret = __gvt_cache_add(info->vgpu, gfn, *dma_addr, size);
-+		ret = __gvt_cache_add(vgpu, gfn, *dma_addr, size);
- 		if (ret)
- 			goto err_unmap;
- 	} else if (entry->size != size) {
-@@ -1894,7 +1957,7 @@ static int kvmgt_dma_map_guest_page(unsigned long handle, unsigned long gfn,
- 		if (ret)
- 			goto err_unlock;
- 
--		ret = __gvt_cache_add(info->vgpu, gfn, *dma_addr, size);
-+		ret = __gvt_cache_add(vgpu, gfn, *dma_addr, size);
- 		if (ret)
- 			goto err_unmap;
- 	} else {
-@@ -1902,19 +1965,20 @@ static int kvmgt_dma_map_guest_page(unsigned long handle, unsigned long gfn,
- 		*dma_addr = entry->dma_addr;
- 	}
- 
--	mutex_unlock(&info->vgpu->vdev.cache_lock);
-+	mutex_unlock(&vdev->cache_lock);
- 	return 0;
- 
- err_unmap:
- 	gvt_dma_unmap_page(vgpu, gfn, *dma_addr, size);
- err_unlock:
--	mutex_unlock(&info->vgpu->vdev.cache_lock);
-+	mutex_unlock(&vdev->cache_lock);
- 	return ret;
- }
- 
- static int kvmgt_dma_pin_guest_page(unsigned long handle, dma_addr_t dma_addr)
- {
- 	struct kvmgt_guest_info *info;
-+	struct kvmgt_vdev *vdev;
- 	struct gvt_dma *entry;
- 	int ret = 0;
- 
-@@ -1922,14 +1986,15 @@ static int kvmgt_dma_pin_guest_page(unsigned long handle, dma_addr_t dma_addr)
- 		return -ENODEV;
- 
- 	info = (struct kvmgt_guest_info *)handle;
-+	vdev = kvmgt_vdev(info->vgpu);
- 
--	mutex_lock(&info->vgpu->vdev.cache_lock);
-+	mutex_lock(&vdev->cache_lock);
- 	entry = __gvt_cache_find_dma_addr(info->vgpu, dma_addr);
- 	if (entry)
- 		kref_get(&entry->ref);
- 	else
- 		ret = -ENOMEM;
--	mutex_unlock(&info->vgpu->vdev.cache_lock);
-+	mutex_unlock(&vdev->cache_lock);
- 
- 	return ret;
- }
-@@ -1945,19 +2010,21 @@ static void __gvt_dma_release(struct kref *ref)
- 
- static void kvmgt_dma_unmap_guest_page(unsigned long handle, dma_addr_t dma_addr)
- {
--	struct kvmgt_guest_info *info;
-+	struct intel_vgpu *vgpu;
-+	struct kvmgt_vdev *vdev;
- 	struct gvt_dma *entry;
- 
- 	if (!handle_valid(handle))
- 		return;
- 
--	info = (struct kvmgt_guest_info *)handle;
-+	vgpu = ((struct kvmgt_guest_info *)handle)->vgpu;
-+	vdev = kvmgt_vdev(vgpu);
- 
--	mutex_lock(&info->vgpu->vdev.cache_lock);
--	entry = __gvt_cache_find_dma_addr(info->vgpu, dma_addr);
-+	mutex_lock(&vdev->cache_lock);
-+	entry = __gvt_cache_find_dma_addr(vgpu, dma_addr);
- 	if (entry)
- 		kref_put(&entry->ref, __gvt_dma_release);
--	mutex_unlock(&info->vgpu->vdev.cache_lock);
-+	mutex_unlock(&vdev->cache_lock);
- }
- 
- static int kvmgt_rw_gpa(unsigned long handle, unsigned long gpa,
--- 
-2.24.1
+This is very tricky for any driver if the mapping change hits the
+virtio rings. :(
 
+Even a IOMMU using driver is going to have problems with that..
+
+Jason
