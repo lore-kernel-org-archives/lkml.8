@@ -2,90 +2,114 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A6AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDBE0C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:39:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC1FB22522
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:39:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AvFF6f0p"
+	by mail.kernel.org (Postfix) with ESMTP id BEF8C21D7E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:39:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728900AbgATPjk (ORCPT
+        id S1729096AbgATPjo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 10:39:40 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:41749 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726942AbgATPjk (ORCPT
+        Mon, 20 Jan 2020 10:39:44 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:33525 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726942AbgATPjn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 10:39:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579534779;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=PlTLiw4VTkftWvjolml/QIq+8aGtfq5D8y4S3zLmz20=;
-        b=AvFF6f0puOM1GFlpluPvNNDWJCxdtT9s1Aj64zU2CMm+NT7LoMF9VU+FmjFH5aqxOMkyrA
-        ak4Cvo5D3k7tmDV/z600rz320g+iUUhtYOwN/hyx9tGbZygWTQmEqqJutpZot8FpdYD1vT
-        h1DmOgPm/UtEoJfuIahPQfVyGs2v4ic=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-7-2D3ksJljMAut7XwYC7qowg-1; Mon, 20 Jan 2020 10:39:36 -0500
-X-MC-Unique: 2D3ksJljMAut7XwYC7qowg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0C3F4107ACC5;
-        Mon, 20 Jan 2020 15:39:34 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.70])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 733BD5C290;
-        Mon, 20 Jan 2020 15:39:31 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Mon, 20 Jan 2020 16:39:33 +0100 (CET)
-Date:   Mon, 20 Jan 2020 16:39:30 +0100
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tejun Heo <tj@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Li Zefan <lizefan@huawei.com>,
-        Peter Zijlstra <peterz@infradead.org>, cgroups@vger.kernel.org
-Subject: Re: [PATCH v4 5/6] clone3: allow spawning processes into cgroups
-Message-ID: <20200120153930.GE30403@redhat.com>
-References: <20200117181219.14542-1-christian.brauner@ubuntu.com>
- <20200117181219.14542-6-christian.brauner@ubuntu.com>
+        Mon, 20 Jan 2020 10:39:43 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1itZ9I-0002jr-Mg; Mon, 20 Jan 2020 16:39:32 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 555BE1C1A41;
+        Mon, 20 Jan 2020 16:39:32 +0100 (CET)
+Date:   Mon, 20 Jan 2020 15:39:32 -0000
+From:   "tip-bot2 for Tony W Wang-oc" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cpu] x86/cpu: Remove redundant cpu_detect_cache_sizes() call
+Cc:     "Tony W Wang-oc" <TonyWWang-oc@zhaoxin.com>,
+        Borislav Petkov <bp@suse.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <1579075257-6985-1-git-send-email-TonyWWang-oc@zhaoxin.com>
+References: <1579075257-6985-1-git-send-email-TonyWWang-oc@zhaoxin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200117181219.14542-6-christian.brauner@ubuntu.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Message-ID: <157953477207.396.16207362713509361883.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/17, Christian Brauner wrote:
->
-> +static int cgroup_css_set_fork(struct task_struct *parent,
-> +			       struct kernel_clone_args *kargs)
-...
-> +	kargs->cset = find_css_set(cset, dst_cgrp);
-> +	if (!kargs->cset) {
-> +		ret = -ENOMEM;
-> +		goto err;
-> +	}
-> +
-> +	if (cgroup_is_dead(dst_cgrp)) {
-> +		ret = -ENODEV;
-> +		goto err;
-                ^^^^^^^^
+The following commit has been merged into the x86/cpu branch of tip:
 
-this looks wrong... don't we need put_css_set(kargs->cset) before "goto err" ?
+Commit-ID:     283bab9809786cf41798512f5c1e97f4b679ba96
+Gitweb:        https://git.kernel.org/tip/283bab9809786cf41798512f5c1e97f4b679ba96
+Author:        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+AuthorDate:    Wed, 15 Jan 2020 16:00:57 +08:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Mon, 20 Jan 2020 16:32:35 +01:00
 
-Oleg.
+x86/cpu: Remove redundant cpu_detect_cache_sizes() call
 
+Both functions call init_intel_cacheinfo() which computes L2 and L3 cache
+sizes from CPUID(4). But then they also call cpu_detect_cache_sizes() a
+bit later which computes ->x86_tlbsize and L2 size from CPUID(80000006).
+
+However, the latter call is not needed because
+
+ - on these CPUs, CPUID(80000006).EBX for ->x86_tlbsize is reserved
+
+ - CPUID(80000006).ECX for the L2 size has the same result as CPUID(4)
+
+Therefore, remove the latter call to simplify the code.
+
+ [ bp: Rewrite commit message. ]
+
+Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/1579075257-6985-1-git-send-email-TonyWWang-oc@zhaoxin.com
+---
+ arch/x86/kernel/cpu/centaur.c | 2 --
+ arch/x86/kernel/cpu/zhaoxin.c | 2 --
+ 2 files changed, 4 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/centaur.c b/arch/x86/kernel/cpu/centaur.c
+index 02d99fe..4267925 100644
+--- a/arch/x86/kernel/cpu/centaur.c
++++ b/arch/x86/kernel/cpu/centaur.c
+@@ -64,8 +64,6 @@ static void init_c3(struct cpuinfo_x86 *c)
+ 		c->x86_cache_alignment = c->x86_clflush_size * 2;
+ 		set_cpu_cap(c, X86_FEATURE_REP_GOOD);
+ 	}
+-
+-	cpu_detect_cache_sizes(c);
+ }
+ 
+ enum {
+diff --git a/arch/x86/kernel/cpu/zhaoxin.c b/arch/x86/kernel/cpu/zhaoxin.c
+index 6b2d3b0..df1358b 100644
+--- a/arch/x86/kernel/cpu/zhaoxin.c
++++ b/arch/x86/kernel/cpu/zhaoxin.c
+@@ -51,8 +51,6 @@ static void init_zhaoxin_cap(struct cpuinfo_x86 *c)
+ 
+ 	if (c->x86 >= 0x6)
+ 		set_cpu_cap(c, X86_FEATURE_REP_GOOD);
+-
+-	cpu_detect_cache_sizes(c);
+ }
+ 
+ static void early_init_zhaoxin(struct cpuinfo_x86 *c)
