@@ -2,149 +2,109 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D1D2C33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:42:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 760B6C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:42:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7ED322522
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:42:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49D982253D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:42:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SY1AKRnk"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DgjA4IL3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729214AbgATOmn (ORCPT
+        id S1729225AbgATOmy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 09:42:43 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:37143 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726860AbgATOmj (ORCPT
+        Mon, 20 Jan 2020 09:42:54 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36406 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726860AbgATOmx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 09:42:39 -0500
-Received: by mail-lj1-f194.google.com with SMTP id o13so34062790ljg.4;
-        Mon, 20 Jan 2020 06:42:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=THmrsHnqHz9ZxmfCi3sqszMX8qWql+dzWxbMha10mnY=;
-        b=SY1AKRnkZCHr3Q1gVt/6qb9A/x79hFaJ28/gUupHZJu0MvJtZeAD4VM1UwWtnsdSwR
-         QN9lLg9URSvBZM7li9ffQz6WxXd/ToIDaiw1iAgMBSu35uJ6fH4wI+XhZz27CmpMlBw2
-         lJQJuBsDZX62AOIlrK/QDDGq5IHDK8vJDFp5OGjC3EbG0EO1j2TKdQfgJwpwI8zz6cCk
-         8M/JB19I3TilhgHLYFCQlf7UxwClR8IwjlPX4Vpc35eqWhVC/m45WNjIBB0XET/HQA73
-         tLvwZ1xYu41pDbBjnt98N7109S8nGZecfvBUX+ZFM+c4u7UDlzYlh2w4Vv3aLdx21L2o
-         sEFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=THmrsHnqHz9ZxmfCi3sqszMX8qWql+dzWxbMha10mnY=;
-        b=k4UUTrvTY5Op/WnHaJv6TzIpPcmGX+JoKs33qKdLQ6yidzh7smTAc77IcrN4ehGwky
-         eDTsLlwiG4G+zLUlI/G+gKfgAkdfMQRwCwarsQ6goD2uZ4M+/KFc2KLc425M+NF3IU/R
-         OAxhxyTZ1edmgLpO+iwrpbP5IJKqfUZlfwooApMEthF5WwaaJQ5GTNHj58EMILhd/0gd
-         UXVAJU6XC463twLK+BY9xffy/nFW9fS9umQ2Hn5V8dx+zYCSKb3mL9VI2RaEcAKRZ5TS
-         fFVZxquKDqdT+oIz5PdglQAH/XPaWPRtvRCZLQPhUdAFZnP5XetBfB17b0RUREdZPui7
-         Lzwg==
-X-Gm-Message-State: APjAAAUHFvrNdkbJL1ub4PcgNjKBp8u7YuEqgaU783TobZgh6S38OCcg
-        uMpodw0257Jb32oldwWJMuadZAHQ8kxM0A==
-X-Google-Smtp-Source: APXvYqzkWY673VBP15Hp2khEOd9gBBjFkQSrWPtxNgdEaQYEm5t5HxKF9uAC778z5Q62JOnNBynZKg==
-X-Received: by 2002:a2e:9b05:: with SMTP id u5mr13782064lji.59.1579531356887;
-        Mon, 20 Jan 2020 06:42:36 -0800 (PST)
-Received: from pc636.semobile.internal ([37.139.158.167])
-        by smtp.gmail.com with ESMTPSA id 21sm16945432ljv.19.2020.01.20.06.42.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 06:42:34 -0800 (PST)
-From:   "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>
-Cc:     RCU <rcu@vger.kernel.org>, Uladzislau Rezki <urezki@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: [v2 PATCH 2/2] rcu/tree: add a trace invoke event of the kfree_bulk()
-Date:   Mon, 20 Jan 2020 15:42:26 +0100
-Message-Id: <20200120144226.27538-3-urezki@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200120144226.27538-1-urezki@gmail.com>
-References: <20200120144226.27538-1-urezki@gmail.com>
+        Mon, 20 Jan 2020 09:42:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579531373;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=BQYougp4+VHH4evwtllbxoi9axAUvWpVMA1ll1rXksg=;
+        b=DgjA4IL3mTHXE0odCXNx/qcOmrNjBYdU5va5IShreWXJdwB20VTGRBTo0UtHs62dHaGHNy
+        mBe/+Vk6Gnlsjd5IbOkUnKLB8V4By316s+T6FrtD3qxpN5Kw7CvbvThAU2tp6vZfl8A2Mz
+        vlp/tG5ymaKrZr0IH5iIGlCR1jw0aAA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-377-akDV5IjlMuqHo6s4pqNGKg-1; Mon, 20 Jan 2020 09:42:49 -0500
+X-MC-Unique: akDV5IjlMuqHo6s4pqNGKg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AEC7A107ACC9;
+        Mon, 20 Jan 2020 14:42:47 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.70])
+        by smtp.corp.redhat.com (Postfix) with SMTP id D980C7C34A;
+        Mon, 20 Jan 2020 14:42:45 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Mon, 20 Jan 2020 15:42:47 +0100 (CET)
+Date:   Mon, 20 Jan 2020 15:42:45 +0100
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org
+Subject: Re: [PATCH v4 1/6] cgroup: unify attach permission checking
+Message-ID: <20200120144244.GD30403@redhat.com>
+References: <20200117181219.14542-1-christian.brauner@ubuntu.com>
+ <20200117181219.14542-2-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200117181219.14542-2-christian.brauner@ubuntu.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The event is given three parameters, first one is the name
-of RCU flavour, second one is the number of elements in array
-for free and last one is an address of the array holding
-pointers to be freed by the kfree_bulk() function.
+I guess I am totally confused, but...
 
-To enable the trace event your kernel has to be build with
-CONFIG_RCU_TRACE=y, after that it is possible to track the
-events using ftrace subsystem.
+On 01/17, Christian Brauner wrote:
+>
+> +static inline bool cgroup_same_domain(const struct cgroup *src_cgrp,
+> +				      const struct cgroup *dst_cgrp)
+> +{
+> +	return src_cgrp->dom_cgrp == dst_cgrp->dom_cgrp;
+> +}
+> +
+> +static int cgroup_attach_permissions(struct cgroup *src_cgrp,
+> +				     struct cgroup *dst_cgrp,
+> +				     struct super_block *sb, bool thread)
+> +{
+> +	int ret = 0;
+> +
+> +	ret = cgroup_procs_write_permission(src_cgrp, dst_cgrp, sb);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = cgroup_migrate_vet_dst(dst_cgrp);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (thread &&
+> +	    !cgroup_same_domain(src_cgrp->dom_cgrp, dst_cgrp->dom_cgrp))
+                                        ^^^^^^^^^^          ^^^^^^^^^^
 
-Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
----
- include/trace/events/rcu.h | 28 ++++++++++++++++++++++++++++
- kernel/rcu/tree.c          |  3 +++
- 2 files changed, 31 insertions(+)
+             cgroup_same_domain(src_cgrp, dst_cgrp)
 
-diff --git a/include/trace/events/rcu.h b/include/trace/events/rcu.h
-index 5e49b06e8104..49a49e68b916 100644
---- a/include/trace/events/rcu.h
-+++ b/include/trace/events/rcu.h
-@@ -623,6 +623,34 @@ TRACE_EVENT_RCU(rcu_invoke_kfree_callback,
- 		  __entry->rcuname, __entry->rhp, __entry->offset)
- );
- 
-+/*
-+ * Tracepoint for the invocation of a single RCU callback of the special
-+ * kfree_bulk() form. The first argument is the RCU flavor, the second
-+ * argument is a number of elements in array to free, the third is an
-+ * address of the array holding nr_records entries.
-+ */
-+TRACE_EVENT_RCU(rcu_invoke_kfree_bulk_callback,
-+
-+	TP_PROTO(const char *rcuname, unsigned long nr_records, void **p),
-+
-+	TP_ARGS(rcuname, nr_records, p),
-+
-+	TP_STRUCT__entry(
-+		__field(const char *, rcuname)
-+		__field(unsigned long, nr_records)
-+		__field(void **, p)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->rcuname = rcuname;
-+		__entry->nr_records = nr_records;
-+		__entry->p = p;
-+	),
-+
-+	TP_printk("%s bulk=0x%p nr_records=%lu",
-+		__entry->rcuname, __entry->p, __entry->nr_records)
-+);
-+
- /*
-  * Tracepoint for exiting rcu_do_batch after RCU callbacks have been
-  * invoked.  The first argument is the name of the RCU flavor,
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 27cb536d25bb..98cc13c44511 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -2858,6 +2858,9 @@ static void kfree_rcu_work(struct work_struct *work)
- 		debug_rcu_head_unqueue_bulk(bhead->head_free_debug);
- 
- 		rcu_lock_acquire(&rcu_callback_map);
-+		trace_rcu_invoke_kfree_bulk_callback(rcu_state.name,
-+			bhead->nr_records, bhead->records);
-+
- 		kfree_bulk(bhead->nr_records, bhead->records);
- 		rcu_lock_release(&rcu_callback_map);
- 
--- 
-2.20.1
+no?
+
+And given that cgroup_same_domain() has no other users, perhaps it can
+simply check
+
+	     src_cgrp->dom_cgrp != dst_cgrp->dom_cgrp
+
+?
+
+Oleg.
 
