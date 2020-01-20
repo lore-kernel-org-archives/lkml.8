@@ -2,232 +2,155 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44609C33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 18:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8BCBC33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 18:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1585622525
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 18:34:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B155922314
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 18:36:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="LoRXBMwe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n6OHQmi2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727586AbgATSeF (ORCPT
+        id S1728042AbgATSgJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 13:34:05 -0500
-Received: from mail-bn7nam10on2100.outbound.protection.outlook.com ([40.107.92.100]:39265
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726642AbgATSeF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 13:34:05 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CyAt2IrrqKT5i8Q9DLvnC+x2HxCYy2Rxd6ltIW/W6fAr7eJBgw6y4ujVkOlY/F+7OHuldsQgPzPwpZJtgfeqZiCnKXDfoB+jnkFnXn2EAKR9ceK42fpQVEXiCWTJEvW1V+3oPjyBjIzf6CfDYVKYC+qGL56gkZ8caAQB3nOJeulnc2S1g+YaV7HNK+p25XFBsBaWLkWgENnIszWXwMjxLi8FsgBbzBqauyBQ0Pt9Ltt+fd6mJSC+HJf5E7tLCOyOHjKDSdDqFb4slJ8JPFXTlzwwNxXhCbxnNkNe1AKYwzvONz7hOvQLO7SIJDTMVgo+4rZIcp0uvt9B3PcL3gNHfQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uhHLWaPXPDXMVi9aN425whSPWOmcTxEZnnX2H+wvum4=;
- b=Qo8lXRQ/HsW5JP8LNPcJJxrOL8yVfMpsg7gZ1ShqGX4V5b0ja/wZKkXs23GrPTYlCwX7xSBi/5oMgdKSUp75okB2jY5FPwgUH5GjwD73b6n0UzZEFvlnQw+4V3ECi2ZEvyO0FwfKosOF9zSWwcpvMKBB7SDDC2qp6CvO4JJxtmRc4tPo85zWkgH9lotgK8ypJ8qdnTI3XOeQiXBGS5BKjljGoOrR8MVLcEKnZSEVSuvblWr9srxIiBAldrfPWub7mvTndk3YKyhJygk+1sjznGqob0K/NtvE5YCOLTYz8wvV7Em/8CMQPQ/k7kGPoUJQaqn2Hxyb+WuUO25cb2kYfA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uhHLWaPXPDXMVi9aN425whSPWOmcTxEZnnX2H+wvum4=;
- b=LoRXBMweoVhuo1Qs05rSBDAWcy4CUftmE042NTS2CJO4EaRcZ2zh5A2K+an7zr0l46V/7mghBgb8Kda6uZNQ/DXZLRLumfJuDaS2rE3jPvDJ1bJtuVLQIRyiZcE0oSfde9mPPseEwfNDkKYrgK54ZDaxfEma/ZQfdkmmef67qfA=
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (52.132.149.16) by
- MW2PR2101MB0940.namprd21.prod.outlook.com (52.132.146.13) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2686.6; Mon, 20 Jan 2020 18:34:01 +0000
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::f1bb:c094:cb30:ba1f]) by MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::f1bb:c094:cb30:ba1f%6]) with mapi id 15.20.2644.015; Mon, 20 Jan 2020
- 18:34:01 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     "lantianyu1986@gmail.com" <lantianyu1986@gmail.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "jgg@ziepe.ca" <jgg@ziepe.ca>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "richardw.yang@linux.intel.com" <richardw.yang@linux.intel.com>,
-        "namit@vmware.com" <namit@vmware.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "david@redhat.com" <david@redhat.com>,
-        "christophe.leroy@c-s.fr" <christophe.leroy@c-s.fr>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        vkuznets <vkuznets@redhat.com>,
-        "eric.devolder@oracle.com" <eric.devolder@oracle.com>
-Subject: RE: [RFC PATCH V2 1/10] mm/resource: Move child to new resource when
- release mem region.
-Thread-Topic: [RFC PATCH V2 1/10] mm/resource: Move child to new resource when
- release mem region.
-Thread-Index: AQHVxVvKIEcG+CpTJkitsskMuv0x06fz8zSA
-Date:   Mon, 20 Jan 2020 18:34:00 +0000
-Message-ID: <MW2PR2101MB1052322016F0B5CF91AFD3B1D7320@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <20200107130950.2983-1-Tianyu.Lan@microsoft.com>
- <20200107130950.2983-2-Tianyu.Lan@microsoft.com>
-In-Reply-To: <20200107130950.2983-2-Tianyu.Lan@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-01-20T18:33:58.8724560Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=b8500966-b3db-4344-8270-1a70d94c770c;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c8d6a88e-ec8e-435b-e12e-08d79dd751b2
-x-ms-traffictypediagnostic: MW2PR2101MB0940:|MW2PR2101MB0940:|MW2PR2101MB0940:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <MW2PR2101MB09405D0CF06114401E9A6EA2D7320@MW2PR2101MB0940.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0288CD37D9
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(346002)(396003)(366004)(136003)(376002)(189003)(199004)(316002)(4326008)(8990500004)(7696005)(6506007)(26005)(478600001)(71200400001)(10290500003)(8936002)(7416002)(186003)(54906003)(110136005)(2906002)(55016002)(86362001)(81156014)(81166006)(8676002)(9686003)(66446008)(52536014)(5660300002)(64756008)(66476007)(66556008)(33656002)(76116006)(66946007)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:MW2PR2101MB0940;H:MW2PR2101MB1052.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: +c0gUz4nZC4KjzuHTtNaCq9fVt5QBFzqNJZG8I96THCNYkBPAydGm2exQJU+TTz4mwG2Zly2vyLt8qfowxP4C+Ay87iO43i8i6nC3kO36AwDuDqRzip+xHeJacarE5FRA4LGsuVIuz1qNmsH8a+FAjm03oALAjcUA1veH4mu4nL4OsS2yTLqHKTeU7nZ+k24HpwwUQfaUn/pvBGPmT8GVdLKlQh4ZySvXfJMjMjf/zAl3C9zucOSKC5x5ghEnRHEWa5VcbTnJ5crtRMOpA5dbMNO6JMyjt4iMfi0icCalUYt6xY90aTVzVQ4sNOodCX2I81rRaqMWkiH3M3PNj5UHC9DYWfcnyJAvDEANlCP343uoDafJgPdBB0+vy55nq38VpVAOER4grHmwatjIYTOmnXgBuXEzBB5gn1POOA2DIfc5+1KcsJjY358E2Vg2ZH8MzHakrkaqj+T2/zCAgWnb25aGSSNGRxl98+ZJDEpIjeFb1WSS5fwkXxamUejgbIn
-x-ms-exchange-antispam-messagedata: HLZsGufKc8QWGB9oy1VWaoDduf3iN72UKpwjpoGGdUO76XwJCyxXe8j2tjGxBn+MJYOLXm1liFFCvRuQkWqS4C28ysv4jSEBSA4c2gFqczpQheCLeXIU21EbK4CUbwLBcdbz6vXISMcMv8LCLd3OWQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 20 Jan 2020 13:36:09 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:33601 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726642AbgATSgI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 13:36:08 -0500
+Received: by mail-qk1-f194.google.com with SMTP id d71so219404qkc.0;
+        Mon, 20 Jan 2020 10:36:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=nypa0fmcU1qrcDA/69y5vVyGSxEYCTlbnT0MYvisCOY=;
+        b=n6OHQmi2Lqnt+u56UyfOnq36LdLY/90AjbbbAuc8Yi+Sexy1YUz2TZnz29vuv8c1GA
+         AFxN+hfJx4ikYoOkGw7RUtlqRcJLAU/8edx7OLCcMNGYFxMzSoJpUXhWzcN0YthgGkTT
+         qEG84m7Cz0WHjv1u3YwE01A4d+lgJveFYMf0YXHdOnienwPstAziOMIilVGV9PtJIHIX
+         MWbMRgb1+F9w+EbiEoulZtnb+bSp/exAEqak/Jojul1Q2WjNv/tuHtTTmGFgrRZyJ2RA
+         GeHNnfD1qa4l6Jnpoh8S515/p62ljovXd7MmiSVhmFRm0EnrBj4naN92dsKCe9y0YJ/9
+         bxeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=nypa0fmcU1qrcDA/69y5vVyGSxEYCTlbnT0MYvisCOY=;
+        b=AvFxy3JI4ndXddh7C+xS/Ort3iUVKd4c4uyCrMdlzI5NixWe24+LCFzTgfPNBh3H0v
+         SBj1w4QV7K768V4sX+gDOHfZyft9vcyiHrUKBiiUNrKYvvjqdHM0HGZKIdotrkx6RRSZ
+         xScC/v9cDO4kILvr4220z/Wt71CM2x2LSHle2mWvYx+PYcSNgnOvfIiwGaXwoCrxWxRH
+         oLDMUY2s1jsJMn7ZEqswtG/9gMmpb8WgjAEPp6qXVBq0sMguinP03ywXCxFe9ZmBXpp5
+         PdmTRqj266vPr1Nkcry2fWquDS4VrxURcJUHWQGA1HwstboKGgnI9SHIuAk0/xgNptwR
+         TT9w==
+X-Gm-Message-State: APjAAAWj6lBVlV5b4J1XCK/dEfr++Y6hAVW/n16lJuWMky2ggSvygR4I
+        SwecOcl818WSEgeBPrZg80n3DyLI/h2Y+On1HN0=
+X-Google-Smtp-Source: APXvYqyGHYkSXOZiJvAONUelyvaLJfv9/CZYkyPdYsL0xeUScApGmNT8/JruIuZcQj5K1GGwsZvg7mP2yjaYIUQCMas=
+X-Received: by 2002:a05:620a:5ae:: with SMTP id q14mr871914qkq.437.1579545367408;
+ Mon, 20 Jan 2020 10:36:07 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c8d6a88e-ec8e-435b-e12e-08d79dd751b2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jan 2020 18:34:00.8742
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: UeZXdiE5DccVttGWtDGIs5qVsQxE861TqqJBff7MXiz0J2O0bmz0lxGXAwQ/q5RXNuYw3MVy0Vc/DA+cazJoFB0nb4FmsEklrlOJn8IWcVE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0940
+References: <157926819690.1555735.10756593211671752826.stgit@toke.dk>
+ <157926820131.1555735.1177228853838027248.stgit@toke.dk> <CAEf4BzbAV0TmEUL=62jz+RD6SPmu927z-dhGL9JHepcAOGMSJA@mail.gmail.com>
+ <875zh6p9pg.fsf@toke.dk>
+In-Reply-To: <875zh6p9pg.fsf@toke.dk>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Mon, 20 Jan 2020 10:35:56 -0800
+Message-ID: <CAEf4BzZ7x4F_-bjGg7TdzXcin6c1BAT6OKe53ujh1tx-GB6-ZQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v4 04/10] tools/runqslower: Use consistent
+ include paths for libbpf
+To:     =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-rdma@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tianyu Lan <Tianyu.Lan@microsoft.com> Sent: Tuesday, January 7, 2020 =
-5:10 AM
->=20
-> When release mem region, old mem region may be splited to
-> two regions. Current allocate new struct resource for high
-> end mem region but not move child resources whose ranges are
-> in the high end range to new resource. When adjust old mem
-> region's range, adjust_resource() detects child region's range
-> is out of new range and return error. Move child resources to
-> high end resource before adjusting old mem range.
->=20
-> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> ---
->  kernel/resource.c | 38 ++++++++++++++++++++++++++++++++++----
->  1 file changed, 34 insertions(+), 4 deletions(-)
->=20
-> diff --git a/kernel/resource.c b/kernel/resource.c
-> index 76036a41143b..1c7362825134 100644
-> --- a/kernel/resource.c
-> +++ b/kernel/resource.c
-> @@ -181,6 +181,38 @@ static struct resource *alloc_resource(gfp_t flags)
->  	return res;
->  }
->=20
-> +static void move_child_to_newresource(struct resource *old,
-> +				      struct resource *new)
-> +{
-> +	struct resource *tmp, **p, **np;
-> +
-> +	if (!old->child)
-> +		return;
+On Mon, Jan 20, 2020 at 4:57 AM Toke H=C3=B8iland-J=C3=B8rgensen <toke@redh=
+at.com> wrote:
+>
+> Andrii Nakryiko <andrii.nakryiko@gmail.com> writes:
+>
+> > On Fri, Jan 17, 2020 at 5:37 AM Toke H=C3=B8iland-J=C3=B8rgensen <toke@=
+redhat.com> wrote:
+> >>
+> >> From: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
+> >>
+> >> Fix the runqslower tool to include libbpf header files with the bpf/
+> >> prefix, to be consistent with external users of the library. Also ensu=
+re
+> >> that all includes of exported libbpf header files (those that are expo=
+rted
+> >> on 'make install' of the library) use bracketed includes instead of qu=
+oted.
+> >>
+> >> To not break the build, keep the old include path until everything has=
+ been
+> >> changed to the new one; a subsequent patch will remove that.
+> >>
+> >> Fixes: 6910d7d3867a ("selftests/bpf: Ensure bpf_helper_defs.h are take=
+n from selftests dir")
+> >> Acked-by: Andrii Nakryiko <andriin@fb.com>
+> >> Signed-off-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
+> >> ---
+> >>  tools/bpf/runqslower/Makefile         |    5 +++--
+> >>  tools/bpf/runqslower/runqslower.bpf.c |    2 +-
+> >>  tools/bpf/runqslower/runqslower.c     |    4 ++--
+> >>  3 files changed, 6 insertions(+), 5 deletions(-)
+> >>
+> >> diff --git a/tools/bpf/runqslower/Makefile b/tools/bpf/runqslower/Make=
+file
+> >> index b62fc9646c39..9f022f7f2593 100644
+> >> --- a/tools/bpf/runqslower/Makefile
+> >> +++ b/tools/bpf/runqslower/Makefile
+> >> @@ -5,6 +5,7 @@ LLC :=3D llc
+> >>  LLVM_STRIP :=3D llvm-strip
+> >>  DEFAULT_BPFTOOL :=3D $(OUTPUT)/sbin/bpftool
+> >>  BPFTOOL ?=3D $(DEFAULT_BPFTOOL)
+> >> +INCLUDES :=3D -I$(OUTPUT) -I$(abspath ../../lib) -I$(abspath ../../li=
+b/bpf)
+> >>  LIBBPF_SRC :=3D $(abspath ../../lib/bpf)
+> >
+> > drop LIBBPF_SRC, it's not used anymore
+>
+> It is: in the rule for building libbpf there's a '-C $(LIBBPF_SRC)'
+>
 
-I don't think the above test is needed.  This case is handled by the first
-three lines of the "for" loop.
+Ah, right, missed that one. Looked a bit weird to have $(abspath
+../../lib/bpf) used in INCLUDES and then separate LIBBPF_SRC
+definition there, maybe
 
-> +
-> +	p =3D &old->child;
-> +	np =3D &new->child;
-> +
-> +	for (;;) {
-> +		tmp =3D *p;
-> +		if (!tmp)
-> +			break;
-> +
-> +		if (tmp->start >=3D new->start && tmp->end <=3D new->end) {
-> +			tmp->parent =3D new;
-> +			*np =3D tmp;
-> +			np =3D &tmp->sibling;
-> +			*p =3D tmp->sibling;
-> +
-> +			if (!tmp->sibling)
-> +				*np =3D NULL;
+LIBBPF_SRC :=3D $(abspath ../../lib/bpf)
+INCLUDES :=3D -I$(OUTPUT) -I$(abspath ../../lib) -I$(LIBBPF_SRC)
 
-I don't think the above two lines are right.  They seem tautological.  If t=
-he ! were
-removed it would be clearing the sibling link for the child as it exists un=
-der its new
-parent, which should be done.  But the child that is moved to the new paren=
-t always
-becomes the last entry in the new parent's child list.  So could you just u=
-nconditionally
-do tmp->sibling =3D NULL?   That link will get fixed up if another child is=
- moved.
-
-Michael
-
-> +			continue;
-> +		}
-> +
-> +		p =3D &tmp->sibling;
-> +	}
-> +}
-> +
-> +
->  /* Return the conflict entry if you can't request it */
->  static struct resource * __request_resource(struct resource *root, struc=
-t resource *new)
->  {
-> @@ -1246,9 +1278,6 @@ EXPORT_SYMBOL(__release_region);
->   * Note:
->   * - Additional release conditions, such as overlapping region, can be
->   *   supported after they are confirmed as valid cases.
-> - * - When a busy memory resource gets split into two entries, the code
-> - *   assumes that all children remain in the lower address entry for
-> - *   simplicity.  Enhance this logic when necessary.
->   */
->  int release_mem_region_adjustable(struct resource *parent,
->  				  resource_size_t start, resource_size_t size)
-> @@ -1331,11 +1360,12 @@ int release_mem_region_adjustable(struct resource=
- *parent,
->  			new_res->sibling =3D res->sibling;
->  			new_res->child =3D NULL;
->=20
-> +			move_child_to_newresource(res, new_res);
-> +			res->sibling =3D new_res;
->  			ret =3D __adjust_resource(res, res->start,
->  						start - res->start);
->  			if (ret)
->  				break;
-> -			res->sibling =3D new_res;
->  			new_res =3D NULL;
->  		}
->=20
-> --
-> 2.14.5
-
+> -Toke
+>
