@@ -2,99 +2,106 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42F45C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 18:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB2CC33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 18:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EE9024655
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 18:14:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C621A22527
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 18:14:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bD4T/EpY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="diyU7YTU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728682AbgATSOc (ORCPT
+        id S1728855AbgATSOx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 13:14:32 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:22869 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726942AbgATSO3 (ORCPT
+        Mon, 20 Jan 2020 13:14:53 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42145 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727465AbgATSOx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 13:14:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579544067;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MQMUqUHJYS04Smnn75usLp5F19GbW9z9n9b5RBM0XBA=;
-        b=bD4T/EpY4Nhk4Qh3gTYBD+akb9Ds3CNlEF13tcelaPr7vaOUHNMF/dB8AhnM1sPVgy2nOT
-        GuLcvgwMNOq88dMQ/qtUXTiFmuCBAn2O6P60bRF4i6epAHRZqZS5B1ZW62UvJsfehwJx7e
-        Bz6jZG3kmIQTRDwBc6hpjwocqv6xKuw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-346-i7eAo9-DNauzCbtId7qEuw-1; Mon, 20 Jan 2020 13:14:23 -0500
-X-MC-Unique: i7eAo9-DNauzCbtId7qEuw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0B4C418A8C82;
-        Mon, 20 Jan 2020 18:14:22 +0000 (UTC)
-Received: from treble.redhat.com (ovpn-125-19.rdu2.redhat.com [10.10.125.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 60D151001B30;
-        Mon, 20 Jan 2020 18:14:21 +0000 (UTC)
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Olof Johansson <olof@lixom.net>
-Subject: [PATCH 1/3] objtool: Silence build output
-Date:   Mon, 20 Jan 2020 12:14:07 -0600
-Message-Id: <cb002857fafa8186cfb9c3e43fb62e4108a1bab9.1579543924.git.jpoimboe@redhat.com>
-In-Reply-To: <cover.1579543924.git.jpoimboe@redhat.com>
-References: <cover.1579543924.git.jpoimboe@redhat.com>
-MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+        Mon, 20 Jan 2020 13:14:53 -0500
+Received: by mail-wr1-f65.google.com with SMTP id q6so428051wro.9;
+        Mon, 20 Jan 2020 10:14:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to;
+        bh=pASj3PHz7/BmhyyPZk63EWRxJck53vekxxxhyP+qu28=;
+        b=diyU7YTUUl14k4utEaRKx3JvG1pR3pE4U0+CX9/4He9byqa5qUL+aEJV5fD2CE8y3R
+         nNjLWEUGgaa29WzFcAbk/sMRzl86c+xYJOk59m6pBUE75tGUO5iND1R+Ff05MwXZ5hmL
+         KnbAwJ1bL2w9zxa8hNiU/Svw8I3a3DCKgjTTQNOmt5acuI6+gGS/8EBFEeQfLnzceGvQ
+         B80gOcf4rczJJiutM5cdhZ0KtE1cxfoNBowqQy+2Q1TclujmU4VYiefdVOL5YdLQ93X+
+         CmfBQIlyTFPbMlnNJtJ+ZSOx7qiCUW6neqtmDmqyujNJhX3Ls6dP+z4O5ZAdWesHGBx7
+         2uqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to;
+        bh=pASj3PHz7/BmhyyPZk63EWRxJck53vekxxxhyP+qu28=;
+        b=uMPGqEDGyZosI49+PelveMDuHKY6WZpl02kQk11LvaziT+JzHXg90FQfLyMjxCNGHW
+         L4ergjEVL/q0nmiyab/lxqY3yx35eACOv1Gk9z8gUjCVKcJH/lIvUKavcZ45gN0le4SV
+         WlAk3np1ujANugCp5bmd1Hg1SvTILUqzcGY8GuyCL1EmLkkrKhVe+LndD8VJJkL2u8cE
+         glf0HIpJGdB+h3vWixhAC2lUKvARMwWmUlCXym7Q0JtonBWnTAA1M8rv4jmrDAfLSEcL
+         5iGoqxKe5dFGoG8dq4GZXq6Wws8BkQiUEOjZ2PPOU0zohObBJw+Q4Ixt7K35M3whl35B
+         JLNg==
+X-Gm-Message-State: APjAAAWxMCQp2o0g4tpQyvjohZehkdgSGDqHwwDdR1hTgJ5oyiwwONVF
+        04HliHCWm1qa9c1DMMdzcHA=
+X-Google-Smtp-Source: APXvYqxEY2tx0CadRCPP17+yiUQwhYPkpud6UyNjhfjqJyCHb075vcZRf7OytV34VyJ1xdnLa2zAag==
+X-Received: by 2002:adf:dd46:: with SMTP id u6mr733279wrm.13.1579544090544;
+        Mon, 20 Jan 2020 10:14:50 -0800 (PST)
+Received: from localhost.localdomain ([2a02:2450:10d2:194d:ec67:901a:8ee9:665d])
+        by smtp.gmail.com with ESMTPSA id d14sm51909528wru.9.2020.01.20.10.14.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jan 2020 10:14:49 -0800 (PST)
+From:   SeongJae Park <sj38.park@gmail.com>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     SeongJae Park <sjpark@amazon.com>, akpm@linux-foundation.org,
+        SeongJae Park <sjpark@amazon.de>, acme@kernel.org,
+        brendan.d.gregg@gmail.com, corbet@lwn.net, mgorman@suse.de,
+        dwmw@amazon.com, amit@kernel.org, rostedt@goodmis.org,
+        sj38.park@gmail.com, linux-mm@kvack.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Re: [PATCH 0/8] Introduce Data Access MONitor (DAMON)
+Date:   Mon, 20 Jan 2020 19:14:40 +0100
+Message-Id: <20200120181440.7826-1-sj38.park@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200120165551.codmosqc2pkcunpa@box> (raw)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olof Johansson <olof@lixom.net>
+On Mon, 20 Jan 2020 19:55:51 +0300 "Kirill A. Shutemov" <kirill@shutemov.name> wrote:
 
-The sync-check.sh script prints out the path due to a "cd -" at the end
-of the script, even on silent builds. This isn't even needed, since the
-script is executed in our build instead of sourced (so it won't change
-the working directory of the surrounding build anyway).
+> On Mon, Jan 20, 2020 at 05:27:49PM +0100, SeongJae Park wrote:
+> > This patchset introduces a new kernel module for practical monitoring of
+> > data accesses, namely DAMON.
+> 
+> Looks like it's not integrated with perf at all right? Why?
+> Correlating measurements from different domains would help to see the
+> bigger picture.
 
-Just remove the cd to make the build silent.
+Right, it's not integrated with perf.  DAMON provides only its debugfs
+interface.  Also I agree that correlating measurments will be helpful.  I do
+not integrate DAMON with perf with this patchset for following reasons.
 
-Fixes: 2ffd84ae973b ("objtool: Update sync-check.sh from perf's check-hea=
-ders.sh")
-Signed-off-by: Olof Johansson <olof@lixom.net>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
----
- tools/objtool/sync-check.sh | 2 --
- 1 file changed, 2 deletions(-)
+First of all, I think I have no deep understanding of perf, yet.  Partly for
+the reason, I couldn't figure out the best way to integrate DAMON with perf.
+Especially, I couldn't straightforwardly classify DAMON providing information
+into one of the categories of the perf events I know.
 
-diff --git a/tools/objtool/sync-check.sh b/tools/objtool/sync-check.sh
-index 9bd04bbed01e..2a1261bfbb62 100755
---- a/tools/objtool/sync-check.sh
-+++ b/tools/objtool/sync-check.sh
-@@ -48,5 +48,3 @@ check arch/x86/include/asm/inat.h     '-I "^#include [\=
-"<]\(asm/\)*inat_types.h[
- check arch/x86/include/asm/insn.h     '-I "^#include [\"<]\(asm/\)*inat.=
-h[\">]"'
- check arch/x86/lib/inat.c             '-I "^#include [\"<]\(../include/\=
-)*asm/insn.h[\">]"'
- check arch/x86/lib/insn.c             '-I "^#include [\"<]\(../include/\=
-)*asm/in\(at\|sn\).h[\">]" -I "^#include [\"<]\(../include/\)*asm/emulate=
-_prefix.h[\">]"'
--
--cd -
---=20
-2.21.1
+Therefore, rather than integrating DAMON with perf in my arguable way and
+increasing the complexity of the code, I decided to keep the interface as
+simple and flexible as it can be for the first stage.  That said, I believe it
+would be not too hard to integrate DAMON with perf in a future.
 
+
+Thanks,
+SeongJae Park
+
+> 
+> -- 
+>  Kirill A. Shutemov
+> 
+> 
