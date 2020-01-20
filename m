@@ -2,157 +2,107 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A01C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 18:21:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D5BDC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 18:21:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FA6822525
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 18:21:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E684622525
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 18:21:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727465AbgATSVH (ORCPT
+        id S1728042AbgATSVK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 20 Jan 2020 13:21:10 -0500
+Received: from outbound-smtp01.blacknight.com ([81.17.249.7]:52101 "EHLO
+        outbound-smtp01.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726982AbgATSVH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 Jan 2020 13:21:07 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2287 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726942AbgATSVG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 13:21:06 -0500
-Received: from LHREML710-CAH.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id AC278672C0F077319EE7;
-        Mon, 20 Jan 2020 18:21:03 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- LHREML710-CAH.china.huawei.com (10.201.108.33) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 20 Jan 2020 18:21:03 +0000
-Received: from [127.0.0.1] (10.202.226.43) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 20 Jan
- 2020 18:21:03 +0000
-Subject: Re: [PATCH] irqchip/gic-v3-its: Balance initial LPI affinity across
- CPUs
-To:     Marc Zyngier <maz@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Ming Lei <ming.lei@redhat.com>,
-        "chenxiang (M)" <chenxiang66@hisilicon.com>
-References: <20200119190554.1002-1-maz@kernel.org>
- <5d04d904-d7ea-04ea-ac3b-8cdc90074a92@huawei.com>
- <afb60c5f9a176470449a83126db326a9@kernel.org>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <83eb55b0-2f2d-3335-85cf-6d7ed379b3c7@huawei.com>
-Date:   Mon, 20 Jan 2020 18:21:02 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+Received: from mail.blacknight.com (pemlinmail05.blacknight.ie [81.17.254.26])
+        by outbound-smtp01.blacknight.com (Postfix) with ESMTPS id 9C66C98BCC
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 18:21:02 +0000 (GMT)
+Received: (qmail 15094 invoked from network); 20 Jan 2020 18:21:02 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 20 Jan 2020 18:21:02 -0000
+Date:   Mon, 20 Jan 2020 18:21:00 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Phil Auld <pauld@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <Morten.Rasmussen@arm.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Parth Shah <parth@linux.ibm.com>,
+        Rik van Riel <riel@surriel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] sched, fair: Allow a small load imbalance between low
+ utilisation SD_NUMA domains v4
+Message-ID: <20200120182100.GU3466@techsingularity.net>
+References: <20200114101319.GO3466@techsingularity.net>
+ <20200117175631.GC20112@linux.vnet.ibm.com>
+ <20200117215853.GS3466@techsingularity.net>
+ <20200120080935.GD20112@linux.vnet.ibm.com>
+ <20200120083354.GT3466@techsingularity.net>
+ <20200120172706.GE20112@linux.vnet.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <afb60c5f9a176470449a83126db326a9@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.43]
-X-ClientProxiedBy: lhreml718-chm.china.huawei.com (10.201.108.69) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <20200120172706.GE20112@linux.vnet.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/01/2020 17:42, Marc Zyngier wrote:
-
-Hi Marc,
-
->>>      static u64 its_irq_get_msi_base(struct its_device *its_dev)
->>> @@ -2773,28 +2829,34 @@ static int its_irq_domain_activate(struct
->>> irq_domain *domain,
->>>    {
->>>    	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
->>>    	u32 event = its_get_event_id(d);
->>> -	const struct cpumask *cpu_mask = cpu_online_mask;
->>> -	int cpu;
->>> +	int ret = 0, cpu = nr_cpu_ids;
->>> +	const struct cpumask *reqmask;
->>> +	cpumask_var_t mask;
->>>    -	/* get the cpu_mask of local node */
->>> -	if (its_dev->its->numa_node >= 0)
->>> -		cpu_mask = cpumask_of_node(its_dev->its->numa_node);
->>> +	if (irqd_affinity_is_managed(d))
->>> +		reqmask = irq_data_get_affinity_mask(d);
->>> +	else
->>> +		reqmask = cpu_online_mask;
->>>    -	/* Bind the LPI to the first possible CPU */
->>> -	cpu = cpumask_first_and(cpu_mask, cpu_online_mask);
->>> -	if (cpu >= nr_cpu_ids) {
->>> -		if (its_dev->its->flags & ITS_FLAGS_WORKAROUND_CAVIUM_23144)
->>> -			return -EINVAL;
->>> +	if (!alloc_cpumask_var(&mask, GFP_KERNEL))
->>> +		return -ENOMEM;
->>>    -		cpu = cpumask_first(cpu_online_mask);
->>> +	its_compute_affinity(d, reqmask, mask);
->>> +	cpu = its_pick_target_cpu(mask);
->>> +	if (cpu >= nr_cpu_ids) {
->>> +		ret = -EINVAL;
->>> +		goto out;
->>>    	}
->>>    +	atomic_inc(per_cpu_ptr(&cpu_lpi_count, cpu));
->>
->> I wonder if we should only consider managed interrupts in this
->> accounting?
->>
->> So cpu0 is effectively going to be excluded from the balancing, as it
->> will have so many lpis targeted.
+On Mon, Jan 20, 2020 at 10:57:06PM +0530, Srikar Dronamraju wrote:
+> > And this is why I'm curious as to why your workload is affected at all
+> > because it uses many tasks.  I stopped allowing an imbalance for higher
+> > task counts partially on the basis of your previous report.
+> > 
 > 
-> Maybe, but only if the provided managed affinity gives you the
-> opportunity of placing the LPI somewhere else. 
-
-Of course, if there's no other cpu in the mask then so be it.
-
-If the managed
-> affinity says CPU0 only, then that's where you end up.
+> With this hunk on top of your patch and 5 runs of numa02, there were 0
+> traces.
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index ade7a8dca5e4..7506cf67bde8 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -8714,8 +8714,10 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
+>  			 * the risk that lower domains have to be rebalanced.
+>  			 */
+>  			imbalance_min = 2;
+> -			if (busiest->sum_nr_running <= imbalance_min)
+> +			if (busiest->sum_nr_running <= imbalance_min) {
+> +				trace_printk("Reseting imbalance: busiest->sum_nr_running=%d, local->sum_nr_running=%d\n", busiest->sum_nr_irunning, local->sum_nr_running);
+>  				env->imbalance = 0;
+> +			}
+>  		}
+>  
+>  		return;
 > 
 
-If my debug code is correct (with the above fix), cpu0 had 763 
-interrupts targeted on my D06 initially :)
-
-But it's not just cpu0. I find initial non-managed interrupt affinity 
-masks are set generally on cpu cluster/numa node masks, so the first 
-cpus in those masks are bit over-subscribed, so then we may be spreading 
-the managed interrupts over less cpus in the mask.
-
-This is a taste of lpi distribution on my 96 core system:
-cpu0 763
-cpu1 2
-cpu3 1
-cpu4 2
-cpu5 2
-cpu6 0
-cpu7 0
-cpu8 2
-cpu9 1
-cpu10 0
-...
-cpu16 2
-...
-cpu24 8
-...
-cpu48 10 (numa node boundary)
-...
-
-
->> And, for the others, even if we balance all the LPIs, won't irqbalance
->> (if running, obviously) can come along and fiddle with these
->> non-managed interrupt affinities anyway?
-> 
-> Of course, irqbalance will move things around. But that should be to
-> CPUs that do not have too many screaming interrupts.
-> 
-> Thanks,
-> 
->           M.
-
-Cheers,
-John
+Ok, thanks. No traces indicates that the patch should have no effect at
+all and any difference in performance is a coincidence. What about the
+other test programs?
 
 > 
+> perf stat for the 5 iterations this time shows: 
+> 77.817 +- 0.995 seconds time elapsed  ( +-  1.28% )
+> which I think is significantly less than last time around.
+> 
+> So I think it may be some other noise that could have contributed to the
+> jump last time. Also since the time consumption of numa02 is very small, a
+> small disturbance can show up as a big number from a percentage perspective.
 
+Understood. At the moment, I'm going to assume that the patch has zero
+impact on your workload but confirmation that the other test programs
+trigger no traces would be appreciated.
+
+-- 
+Mel Gorman
+SUSE Labs
