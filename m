@@ -2,173 +2,101 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58473C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:26:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE335C32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26DD3217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:26:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eyvVr/Vd"
+	by mail.kernel.org (Postfix) with ESMTP id BB6B42253D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:27:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbgATW0n (ORCPT
+        id S1728776AbgATW1B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 17:26:43 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:43464 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726752AbgATW0n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 17:26:43 -0500
-Received: by mail-pl1-f193.google.com with SMTP id p27so412510pli.10;
-        Mon, 20 Jan 2020 14:26:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qPHXmfgTKX2jhDKGAsUFE7QXN74mgD0rsNUEzaus+QA=;
-        b=eyvVr/VdB9Sz4J21uRBIcJ/5PKkVVxf60DWhKnlCnPhPGDGEsZRAdZa/foPHOd/LDW
-         DnHWi7p+dz4hNMKO8ENxFHk7Obmjz0VTKrzS/WIomKaU/faRTVbxIUI/V0PRc2BnWSk9
-         AS85dphzxlt+/SpdU9yuJgdiO9TnlyqnY0aV5luHNYTJ+WqI1lLIdGjmn2l5P2pCXwou
-         dcRqRo8EPn3rgRylp1P8JCL3BkfAGVuGPoEwOG5+6rdNhKr4h1qr80Ek2OQWzFrqg7y+
-         XXFziPy2lUUg/4pQ/tScV4DwIgSkibaAPUNS7Lh1PNQXQPt1p3WENcsUJBGajqIAyw2w
-         LRRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qPHXmfgTKX2jhDKGAsUFE7QXN74mgD0rsNUEzaus+QA=;
-        b=Ffs8xIM/BC/ujqpojqDiVby1qHU8AhOgUvojkRSko7dRBdZfROLlAa8/rHXpHXxTcB
-         T2sFxaEvmPUnnrcfTmfTzxp2IOWf9fjduYpoaerizp9auI5US/oEFChauwfICxoS8T8O
-         xCgRj/1sKxK0yY2jk/IDOyH4lX+dA8IGIv8f5qfrJZZiU9myrtxKNr0YVPKGLPInS31M
-         JxLByDVloAcshnY6YJwZlcfFnSkxbTgVm91YWi59oO4PIB3zn2E+Pa3bjqM1aNEfbGab
-         uCX3lBuwVrslpOl+AEHfpI31bMScaSHZqN8shQV0XLDNB/I9ArbkQILO4KdUnEJ/ATg6
-         EtAQ==
-X-Gm-Message-State: APjAAAV+eAW3be+n/ioZQQwjpW6lzkhb1Nqy0R5MBbBrdLZUaIH1kZ7z
-        hf4v+IMU3stb1qM3A+8A5TzJpx5iwy0=
-X-Google-Smtp-Source: APXvYqxX5GDDR8FP/ent9qARAT8WgUzuWm6S9rRLHQlTncdNJ1guWbbpNwN91TAN74LpsKQl+niJvg==
-X-Received: by 2002:a17:902:7596:: with SMTP id j22mr2024446pll.335.1579559201782;
-        Mon, 20 Jan 2020 14:26:41 -0800 (PST)
-Received: from tw-172-25-31-76.office.twttr.net ([8.25.197.24])
-        by smtp.gmail.com with ESMTPSA id o16sm38649873pgl.58.2020.01.20.14.26.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 14:26:41 -0800 (PST)
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-block@vger.kernel.org, Cong Wang <xiyou.wangcong@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: [Patch v2] block: introduce block_rq_error tracepoint
-Date:   Mon, 20 Jan 2020 14:26:18 -0800
-Message-Id: <20200120222618.1456-1-xiyou.wangcong@gmail.com>
-X-Mailer: git-send-email 2.21.1
+        Mon, 20 Jan 2020 17:27:01 -0500
+Received: from mga12.intel.com ([192.55.52.136]:21432 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726752AbgATW1A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 17:27:00 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 14:27:00 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,343,1574150400"; 
+   d="scan'208";a="426870272"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga006.fm.intel.com with ESMTP; 20 Jan 2020 14:26:59 -0800
+Date:   Tue, 21 Jan 2020 06:27:10 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, yang.shi@linux.alibaba.com
+Subject: Re: [PATCH 3/8] mm/migrate.c: reform the last call on
+ do_move_pages_to_node()
+Message-ID: <20200120222710.GB32314@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20200119030636.11899-1-richardw.yang@linux.intel.com>
+ <20200119030636.11899-4-richardw.yang@linux.intel.com>
+ <20200120094608.GN18451@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200120094608.GN18451@dhcp22.suse.cz>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, rasdaemon uses the existing tracepoint block_rq_complete
-and filters out non-error cases in order to capture block disk errors.
+On Mon, Jan 20, 2020 at 10:46:08AM +0100, Michal Hocko wrote:
+>On Sun 19-01-20 11:06:31, Wei Yang wrote:
+>> No functional change, just reform it to make it as the same shape as
+>> other calls on do_move_pages_to_node().
+>> 
+>> This is a preparation for further cleanup.
+>> 
+>> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+>> ---
+>>  mm/migrate.c | 8 ++++++--
+>>  1 file changed, 6 insertions(+), 2 deletions(-)
+>> 
+>> diff --git a/mm/migrate.c b/mm/migrate.c
+>> index c3ef70de5876..4a63fb8fbb6d 100644
+>> --- a/mm/migrate.c
+>> +++ b/mm/migrate.c
+>> @@ -1675,8 +1675,12 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
+>>  
+>>  	/* Make sure we do not overwrite the existing error */
+>>  	err1 = do_move_pages_to_node(mm, &pagelist, current_node);
+>> -	if (!err1)
+>> -		err1 = store_status(status, start, current_node, i - start);
+>> +	if (err1) {
+>> +		if (err >= 0)
+>> +			err = err1;
+>> +		goto out;
+>> +	}
+>> +	err1 = store_status(status, start, current_node, i - start);
+>
+>Please don't. This just makes the code harder to follow. The current err
+>and err1 is already quite ugly so do not make it more so.
+>
 
-But there are a few problems with this approach:
+Yes, I struggled a little on doing this change. Sounds we can merge this one
+with the following consolidation.
 
-1. Even kernel trace filter could do the filtering work, there is
-   still some overhead after we enable this tracepoint.
+>>  	if (err >= 0)
+>>  		err = err1;
+>>  out:
+>> -- 
+>> 2.17.1
+>
+>-- 
+>Michal Hocko
+>SUSE Labs
 
-2. The filter is merely based on errno, which does not align with kernel
-   logic to check the errors for print_req_error().
-
-3. block_rq_complete only provides dev major and minor to identify
-   the block device, it is not convenient to use in user-space.
-
-So introduce a new tracepoint block_rq_error just for the error case
-and provides the device name for convenience too. With this patch,
-rasdaemon could switch to block_rq_error.
-
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
----
- block/blk-core.c             |  4 +++-
- include/trace/events/block.h | 43 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 46 insertions(+), 1 deletion(-)
-
-diff --git a/block/blk-core.c b/block/blk-core.c
-index 089e890ab208..0c7ad70d06be 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -1450,8 +1450,10 @@ bool blk_update_request(struct request *req, blk_status_t error,
- #endif
- 
- 	if (unlikely(error && !blk_rq_is_passthrough(req) &&
--		     !(req->rq_flags & RQF_QUIET)))
-+		     !(req->rq_flags & RQF_QUIET))) {
-+		trace_block_rq_error(req, blk_status_to_errno(error), nr_bytes);
- 		print_req_error(req, error, __func__);
-+	}
- 
- 	blk_account_io_completion(req, nr_bytes);
- 
-diff --git a/include/trace/events/block.h b/include/trace/events/block.h
-index 81b43f5bdf23..37e99be19536 100644
---- a/include/trace/events/block.h
-+++ b/include/trace/events/block.h
-@@ -145,6 +145,49 @@ TRACE_EVENT(block_rq_complete,
- 		  __entry->nr_sector, __entry->error)
- );
- 
-+/**
-+ * block_rq_error - block IO operation error reported by device driver
-+ * @rq: block operations request
-+ * @error: status code
-+ * @nr_bytes: number of completed bytes
-+ *
-+ * The block_rq_error tracepoint event indicates that some portion
-+ * of operation request has failed as reported by the device driver.
-+ */
-+TRACE_EVENT(block_rq_error,
-+
-+	TP_PROTO(struct request *rq, int error, unsigned int nr_bytes),
-+
-+	TP_ARGS(rq, error, nr_bytes),
-+
-+	TP_STRUCT__entry(
-+		__field(  dev_t,	dev			)
-+		__dynamic_array( char,  name,	DISK_NAME_LEN	)
-+		__field(  sector_t,	sector			)
-+		__field(  unsigned int,	nr_sector		)
-+		__field(  int,		error			)
-+		__array(  char,		rwbs,	RWBS_LEN	)
-+		__dynamic_array( char,	cmd,	1		)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->dev	   = rq->rq_disk ? disk_devt(rq->rq_disk) : 0;
-+		__assign_str(name,   rq->rq_disk ? rq->rq_disk->disk_name : "?");
-+		__entry->sector    = blk_rq_pos(rq);
-+		__entry->nr_sector = nr_bytes >> 9;
-+		__entry->error     = error;
-+
-+		blk_fill_rwbs(__entry->rwbs, rq->cmd_flags, nr_bytes);
-+		__get_str(cmd)[0] = '\0';
-+	),
-+
-+	TP_printk("%d,%d %s %s (%s) %llu + %u [%d]",
-+		  MAJOR(__entry->dev), MINOR(__entry->dev),
-+		  __get_str(name), __entry->rwbs, __get_str(cmd),
-+		  (unsigned long long)__entry->sector,
-+		  __entry->nr_sector, __entry->error)
-+);
-+
- DECLARE_EVENT_CLASS(block_rq,
- 
- 	TP_PROTO(struct request_queue *q, struct request *rq),
 -- 
-2.21.1
-
+Wei Yang
+Help you, Help me
