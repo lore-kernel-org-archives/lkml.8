@@ -2,131 +2,298 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2407BC33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CAEC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 048A422527
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:53:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AABD24125
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:53:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728928AbgATOxo (ORCPT
+        id S1729030AbgATOxt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 09:53:44 -0500
-Received: from foss.arm.com ([217.140.110.172]:33146 "EHLO foss.arm.com"
+        Mon, 20 Jan 2020 09:53:49 -0500
+Received: from foss.arm.com ([217.140.110.172]:33194 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727289AbgATOxn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 09:53:43 -0500
+        id S1726876AbgATOxt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 09:53:49 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BAFF530E;
-        Mon, 20 Jan 2020 06:53:42 -0800 (PST)
-Received: from [192.168.0.7] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5FF8C3F52E;
-        Mon, 20 Jan 2020 06:53:36 -0800 (PST)
-Subject: Re: [PATCH 1/4] PM / EM: and devices to Energy Model
-To:     lukasz.luba@arm.com, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com
-Cc:     Morten.Rasmussen@arm.com, Chris.Redpath@arm.com,
-        ionela.voinescu@arm.com, javi.merino@arm.com,
-        cw00.choi@samsung.com, b.zolnierkie@samsung.com, rjw@rjwysocki.net,
-        sudeep.holla@arm.com, viresh.kumar@linaro.org, nm@ti.com,
-        sboyd@kernel.org, rui.zhang@intel.com, amit.kucheria@verdurent.com,
-        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        rostedt@goodmis.org, qperret@google.com, bsegall@google.com,
-        mgorman@suse.de, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        festevam@gmail.com, kernel@pengutronix.de, khilman@kernel.org,
-        agross@kernel.org, bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, patrick.bellasi@matbug.net
-References: <20200116152032.11301-1-lukasz.luba@arm.com>
- <20200116152032.11301-2-lukasz.luba@arm.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <17b77e0c-9455-0479-d37b-c57717c784c7@arm.com>
-Date:   Mon, 20 Jan 2020 15:53:35 +0100
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 55DBCFEC;
+        Mon, 20 Jan 2020 06:53:48 -0800 (PST)
+Received: from [10.1.194.52] (e112269-lin.cambridge.arm.com [10.1.194.52])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4CEDB3F52E;
+        Mon, 20 Jan 2020 06:53:46 -0800 (PST)
+Subject: Re: [PATCH v3 5/7] drm/panfrost: Add support for multiple power
+ domains
+To:     Nicolas Boichat <drinkcat@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        dri-devel@lists.freedesktop.org, Mark Brown <broonie@kernel.org>,
+        linux-mediatek@lists.infradead.org,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        hsinyi@chromium.org, Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <20200114071602.47627-1-drinkcat@chromium.org>
+ <20200114071602.47627-6-drinkcat@chromium.org>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <8b300f30-aa6d-89ee-77e3-271e3fa013f8@arm.com>
+Date:   Mon, 20 Jan 2020 14:53:45 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <20200116152032.11301-2-lukasz.luba@arm.com>
+In-Reply-To: <20200114071602.47627-6-drinkcat@chromium.org>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/01/2020 16:20, lukasz.luba@arm.com wrote:
-> From: Lukasz Luba <lukasz.luba@arm.com>
+On 14/01/2020 07:16, Nicolas Boichat wrote:
+> When there is a single power domain per device, the core will
+> ensure the power domain is switched on (so it is technically
+> equivalent to having not power domain specified at all).
 > 
-> Add support of other devices into the Energy Model framework not only the
-> CPUs. Change the interface to be more unified which can handle other
-> devices as well.
+> However, when there are multiple domains, as in MT8183 Bifrost
+> GPU, we need to handle them in driver code.
+> 
+> Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+> 
+> ---
+> 
+> The downstream driver we use on chromeos-4.19 currently uses 2
+> additional devices in device tree to accomodate for this [1], but
+> I believe this solution is cleaner.
+> 
+> [1] https://chromium.googlesource.com/chromiumos/third_party/kernel/+/refs/heads/chromeos-4.19/drivers/gpu/arm/midgard/platform/mediatek/mali_kbase_runtime_pm.c#31
+> 
+> v3:
+>  - Use the compatible matching data to specify the number of power
+>    domains. Note that setting 0 or 1 in num_pm_domains is equivalent
+>    as the core will handle these 2 cases in the exact same way
+>    (automatically, without driver intervention), and there should
+>    be no adverse consequence in this case (the concern is about
+>    switching on only some power domains and not others).
+> 
+>  drivers/gpu/drm/panfrost/panfrost_device.c | 95 ++++++++++++++++++++--
+>  drivers/gpu/drm/panfrost/panfrost_device.h |  9 ++
+>  drivers/gpu/drm/panfrost/panfrost_drv.c    |  1 +
+>  3 files changed, 97 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_device.c b/drivers/gpu/drm/panfrost/panfrost_device.c
+> index c30e0a3772a4f57..7c9766f76cc7689 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_device.c
+> +++ b/drivers/gpu/drm/panfrost/panfrost_device.c
+> @@ -5,6 +5,7 @@
+>  #include <linux/clk.h>
+>  #include <linux/reset.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/pm_domain.h>
+>  #include <linux/regulator/consumer.h>
+>  
+>  #include "panfrost_device.h"
+> @@ -119,6 +120,75 @@ static void panfrost_regulator_fini(struct panfrost_device *pfdev)
+>  			pfdev->regulators);
+>  }
+>  
+> +static void panfrost_pm_domain_fini(struct panfrost_device *pfdev)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(pfdev->pm_domain_devs); i++) {
+> +		if (!pfdev->pm_domain_devs[i])
+> +			break;
+> +
+> +		if (pfdev->pm_domain_links[i])
+> +			device_link_del(pfdev->pm_domain_links[i]);
+> +
+> +		dev_pm_domain_detach(pfdev->pm_domain_devs[i], true);
+> +	}
+> +}
+> +
+> +static int panfrost_pm_domain_init(struct panfrost_device *pfdev)
+> +{
+> +	int err;
+> +	int i, num_domains;
+> +
+> +	num_domains = of_count_phandle_with_args(pfdev->dev->of_node,
+> +						 "power-domains",
+> +						 "#power-domain-cells");
+> +
+> +	/*
+> +	 * Single domain is handled by the core, and, if only a single power
+> +	 * the power domain is requested, the property is optional.
+> +	 */
+> +	if (num_domains < 2 && pfdev->comp->num_pm_domains < 2)
+> +		return 0;
+> +
+> +	if (num_domains != pfdev->comp->num_pm_domains) {
+> +		dev_err(pfdev->dev,
+> +			"Incorrect number of power domains: %d provided, %d needed\n",
+> +			num_domains, pfdev->comp->num_pm_domains);
+> +		return -EINVAL;
+> +	}
+> +
+> +	BUG_ON(num_domains > ARRAY_SIZE(pfdev->pm_domain_devs));
+> +
+> +	for (i = 0; i < num_domains; i++) {
+> +		pfdev->pm_domain_devs[i] =
+> +			dev_pm_domain_attach_by_id(pfdev->dev, i);
+> +		if (IS_ERR(pfdev->pm_domain_devs[i])) {
+> +			err = PTR_ERR(pfdev->pm_domain_devs[i]);
+> +			pfdev->pm_domain_devs[i] = NULL;
+> +			dev_err(pfdev->dev,
+> +				"failed to get pm-domain %d: %d\n", i, err);
+> +			goto err;
+> +		}
+> +
+> +		pfdev->pm_domain_links[i] = device_link_add(pfdev->dev,
+> +				pfdev->pm_domain_devs[i], DL_FLAG_PM_RUNTIME |
+> +				DL_FLAG_STATELESS | DL_FLAG_RPM_ACTIVE);
+> +		if (!pfdev->pm_domain_links[i]) {
+> +			dev_err(pfdev->pm_domain_devs[i],
+> +				"adding device link failed!\n");
+> +			err = -ENODEV;
+> +			goto err;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +
+> +err:
+> +	panfrost_pm_domain_fini(pfdev);
+> +	return err;
+> +}
+> +
+>  int panfrost_device_init(struct panfrost_device *pfdev)
+>  {
+>  	int err;
+> @@ -149,37 +219,45 @@ int panfrost_device_init(struct panfrost_device *pfdev)
+>  		goto err_out1;
+>  	}
+>  
+> +	err = panfrost_pm_domain_init(pfdev);
+> +	if (err) {
+> +		dev_err(pfdev->dev, "pm_domain init failed %d\n", err);
 
-[...]
+No need for this print - panfrost_pm_domain_init() will output a (more
+appropriate) error message on failure.
 
-> -The source of the information about the power consumed by CPUs can vary greatly
-> +The source of the information about the power consumed by devices can vary greatly
->  from one platform to another. These power costs can be estimated using
->  devicetree data in some cases. In others, the firmware will know better.
->  Alternatively, userspace might be best positioned. And so on. In order to avoid
-> @@ -26,7 +28,7 @@ framework, and interested clients reading the data from it::
->         | Thermal (IPA) |  | Scheduler (EAS) |  |     Other     |
->         +---------------+  +-----------------+  +---------------+
->                 |                   | em_pd_energy()    |
-> -               |                   | em_cpu_get()      |
-> +               |  em_dev_get()     | em_cpu_get()      |
+> +		goto err_out2;
+> +	}
+> +
+>  	res = platform_get_resource(pfdev->pdev, IORESOURCE_MEM, 0);
+>  	pfdev->iomem = devm_ioremap_resource(pfdev->dev, res);
+>  	if (IS_ERR(pfdev->iomem)) {
+>  		dev_err(pfdev->dev, "failed to ioremap iomem\n");
+>  		err = PTR_ERR(pfdev->iomem);
+> -		goto err_out2;
+> +		goto err_out3;
+>  	}
+>  
+>  	err = panfrost_gpu_init(pfdev);
+>  	if (err)
+> -		goto err_out2;
+> +		goto err_out3;
+>  
+>  	err = panfrost_mmu_init(pfdev);
+>  	if (err)
+> -		goto err_out3;
+> +		goto err_out4;
+>  
+>  	err = panfrost_job_init(pfdev);
+>  	if (err)
+> -		goto err_out4;
+> +		goto err_out5;
+>  
+>  	err = panfrost_perfcnt_init(pfdev);
+>  	if (err)
+> -		goto err_out5;
+> +		goto err_out6;
+>  
+>  	return 0;
+> -err_out5:
+> +err_out6:
+>  	panfrost_job_fini(pfdev);
+> -err_out4:
+> +err_out5:
+>  	panfrost_mmu_fini(pfdev);
+> -err_out3:
+> +err_out4:
+>  	panfrost_gpu_fini(pfdev);
+> +err_out3:
+> +	panfrost_pm_domain_fini(pfdev);
+>  err_out2:
+>  	panfrost_reset_fini(pfdev);
+>  err_out1:
+> @@ -196,6 +274,7 @@ void panfrost_device_fini(struct panfrost_device *pfdev)
+>  	panfrost_mmu_fini(pfdev);
+>  	panfrost_gpu_fini(pfdev);
+>  	panfrost_reset_fini(pfdev);
+> +	panfrost_pm_domain_fini(pfdev);
 
-Looked really hard but can't find a em_dev_get() in the code? You mean
-em_get_pd() ? And why em_get_pd() and not em_pd_get()?
+NIT: The reverse of the construction order would be to do this before
+panfrost_reset_fini().
 
->                 +---------+         |         +---------+
->                           |         |         |
->                           v         v         v
-> @@ -47,12 +49,12 @@ framework, and interested clients reading the data from it::
->          | Device Tree  |   |   Firmware    |  |      ?       |
->          +--------------+   +---------------+  +--------------+
+Otherwise this LGTM.
 
-[...]
+Thanks,
+Steve
 
-> +There is two API functions which provide the access to the energy model:
-> +em_cpu_get() which takes CPU id as an argument and em_dev_get() with device
-> +pointer as an argument. It depends on the subsystem which interface it is
-> +going to use.
+>  	panfrost_regulator_fini(pfdev);
+>  	panfrost_clk_fini(pfdev);
+>  }
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/drm/panfrost/panfrost_device.h
+> index 021f063ffb3747f..143eab57180a2e1 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_device.h
+> +++ b/drivers/gpu/drm/panfrost/panfrost_device.h
+> @@ -21,6 +21,7 @@ struct panfrost_perfcnt;
+>  
+>  #define NUM_JOB_SLOTS 3
+>  #define MAX_REGULATORS 2
+> +#define MAX_PM_DOMAINS 3
+>  
+>  struct panfrost_features {
+>  	u16 id;
+> @@ -61,6 +62,11 @@ struct panfrost_compatible {
+>  	/* Supplies count and names. */
+>  	int num_supplies;
+>  	const char * const *supply_names;
+> +	/*
+> +	 * Number of power domains required, note that values 0 and 1 are
+> +	 * handled identically, as only values > 1 need special handling.
+> +	 */
+> +	int num_pm_domains;
+>  };
+>  
+>  struct panfrost_device {
+> @@ -73,6 +79,9 @@ struct panfrost_device {
+>  	struct clk *bus_clock;
+>  	struct regulator_bulk_data regulators[MAX_REGULATORS];
+>  	struct reset_control *rstc;
+> +	/* pm_domains for devices with more than one. */
+> +	struct device *pm_domain_devs[MAX_PM_DOMAINS];
+> +	struct device_link *pm_domain_links[MAX_PM_DOMAINS];
+>  
+>  	struct panfrost_features features;
+>  	const struct panfrost_compatible* comp;
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_drv.c b/drivers/gpu/drm/panfrost/panfrost_drv.c
+> index db3563b80150c9d..42b87e29e605149 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_drv.c
+> +++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
+> @@ -589,6 +589,7 @@ const char * const default_supplies[] = { "mali" };
+>  static const struct panfrost_compatible default_data = {
+>  	.num_supplies = ARRAY_SIZE(default_supplies),
+>  	.supply_names = default_supplies,
+> +	.num_pm_domains = 1, /* optional */
+>  };
+>  
+>  static const struct of_device_id dt_match[] = {
+> 
 
-Would be really nice if this wouldn't be required. We should really aim
-for 1 framework == 1 set of interfaces.
-
-What happens if someone calls em_get_pd() on a CPU EM?
-
-E.g:
-
- static struct perf_domain *pd_init(int cpu)
- {
--       struct em_perf_domain *obj = em_cpu_get(cpu);
-+       struct device *dev = get_cpu_device(cpu);
-+       struct em_perf_domain *obj = em_pd_get(dev);
-        struct perf_domain *pd;
-
-Two versions of one functionality will confuse API user from the
-beginning ...
-
-[...]
-
-> +enum em_type {
-> +	EM_SIMPLE,
-> +	EM_CPU,
-> +};
-
-s/EM_SIMPLE/EM_DEV ?
-
-Right now I only see energy models and _one_ specific type (the CPU EM).
-So a tag 'is a CPU EM' would suffice. No need for EM_SIMPE ...
-
-[...]
