@@ -2,211 +2,197 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9471CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98404C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:26:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DFF82087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:25:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A1XqDsGu"
+	by mail.kernel.org (Postfix) with ESMTP id 6C7BC2087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:26:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbgATQZo (ORCPT
+        id S1729240AbgATQ0C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 11:25:44 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40252 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726885AbgATQZn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 11:25:43 -0500
-Received: by mail-ot1-f65.google.com with SMTP id w21so243627otj.7
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 08:25:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7cSDWZohrZmB4Lsh7kYAZSQYpOg12wvWZ6eMxNAuFio=;
-        b=A1XqDsGutwFYPrzCqsKq2d73/8yvcyJB2N6mF7qLKpxGRtCDQBJhJNDfiIp0E4b04M
-         jLdXD9eC1j56EauzFYnsgq6TAZRDs8Q7vxfxbCgD3Df/4Mv8pkNU4Ui73qOxG1dpFTKO
-         ozGG9ypd8Lpbp9MkJApJbOseJQtLs9MMNFzddPXErWHa3zc8xtbpQ779xaPZspAF4FMe
-         zEbYXgFSUilSpJpyfogMDbnBuhrG++MGfxtDebXb7B2/TNzO6rxxEk8RLXt1q8XP46U/
-         DYkBHnWfaOb+D0mPBibSXr10JIhJCq7R+8JGaBx3F6a0T6ij3tm//YzNE76wAOpTrj05
-         zTXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7cSDWZohrZmB4Lsh7kYAZSQYpOg12wvWZ6eMxNAuFio=;
-        b=KPXsAbRQi8T0V3L2+XVm0B8zKnOErYzPZBqPsR1dd4LsM539REUt+ajkI2i2NNKdmC
-         3B2HKX/GBCDpvltPisQY9i9ls26XXMMC6V6DpKIPI/vw5ZcNVcE5TDdjFv95w7deC+3S
-         6Rojn6+jr42O+eZAcEJ9GIxVkvdxBjVg6wJ70hOMcOOA/220rjFJ+sJTwu0PFw6FG1zN
-         FFK08HeGdFJuzswbnW/a5OdiEu5eMxvKAcF30NQ01dx5TG8dXv240bPxDl7/pNwKR+FQ
-         wT21AuSd1ye9GkQXuS01GQDG6upBJX7Zn7LxXedFVHKcG06EdBhQsBqjRDn89LiAXaTb
-         GSZw==
-X-Gm-Message-State: APjAAAUvzJpe1wjkLxrYVWb7IMdPQffyicEZvgnczyfdUEZ0uwnLFjW6
-        IJIHjEgx2dB/yx7hxHBSEUhHJn9facIbPdD2jv76mQ==
-X-Google-Smtp-Source: APXvYqx80QzaPWpNwaBjtr4lRxleoT9Gpjc00N18ryoIv2GI2DE3IQCFsyL079bZbygHNdnGpGbmw+e6WM5ylFg7V3w=
-X-Received: by 2002:a05:6830:1d7b:: with SMTP id l27mr136144oti.251.1579537542903;
- Mon, 20 Jan 2020 08:25:42 -0800 (PST)
+        Mon, 20 Jan 2020 11:26:02 -0500
+Received: from mga01.intel.com ([192.55.52.88]:5400 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726897AbgATQ0B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 11:26:01 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 08:26:00 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,342,1574150400"; 
+   d="scan'208";a="425234062"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga005.fm.intel.com with ESMTP; 20 Jan 2020 08:25:59 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1itZsF-000EpB-5f; Tue, 21 Jan 2020 00:25:59 +0800
+Date:   Tue, 21 Jan 2020 00:24:58 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:x86/boot] BUILD SUCCESS
+ dacc9092336be20b01642afe1a51720b31f60369
+Message-ID: <5e25d45a.JA5PtaysUcqHjtCi%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <20200120141927.114373-1-elver@google.com> <CACT4Y+bnRoKinPopVqyxj4av6_xa_OUN0wwnidpO3dX3iYq_gg@mail.gmail.com>
- <CACT4Y+YuTT6kZ-AkgU0c1o09qmQdFWr4_Sds4jaDg-Va6g6jkA@mail.gmail.com>
- <CACT4Y+acrXkA-ixjQXqNf1EC=fpgTWf3Rcevxxon0DfrPdD-UQ@mail.gmail.com>
- <CANpmjNNcXUF-=Y-hmry9-xEoNpJd0WH+fOcJJM6kv2eRm5v-kg@mail.gmail.com> <CACT4Y+bD3cNxfaWOuhHz338MoVoaHpw-E8+b7v6mo_ir2KD46Q@mail.gmail.com>
-In-Reply-To: <CACT4Y+bD3cNxfaWOuhHz338MoVoaHpw-E8+b7v6mo_ir2KD46Q@mail.gmail.com>
-From:   Marco Elver <elver@google.com>
-Date:   Mon, 20 Jan 2020 17:25:31 +0100
-Message-ID: <CANpmjNN-8CLN9v7MehNUXy=iEXOfFHwpAUEPivGM573EQqmCZw@mail.gmail.com>
-Subject: Re: [PATCH 1/5] include/linux: Add instrumented.h infrastructure
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Daniel Axtens <dja@axtens.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Daniel Borkmann <daniel@iogearbox.net>, cyphar@cyphar.com,
-        Kees Cook <keescook@chromium.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jan 2020 at 17:06, Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> On Mon, Jan 20, 2020 at 4:40 PM Marco Elver <elver@google.com> wrote:
-> > > > > > This adds instrumented.h, which provides generic wrappers for memory
-> > > > > > access instrumentation that the compiler cannot emit for various
-> > > > > > sanitizers. Currently this unifies KASAN and KCSAN instrumentation. In
-> > > > > > future this will also include KMSAN instrumentation.
-> > > > > >
-> > > > > > Note that, copy_{to,from}_user require special instrumentation,
-> > > > > > providing hooks before and after the access, since we may need to know
-> > > > > > the actual bytes accessed (currently this is relevant for KCSAN, and is
-> > > > > > also relevant in future for KMSAN).
-> > > > > >
-> > > > > > Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> > > > > > Signed-off-by: Marco Elver <elver@google.com>
-> > > > > > ---
-> > > > > >  include/linux/instrumented.h | 153 +++++++++++++++++++++++++++++++++++
-> > > > > >  1 file changed, 153 insertions(+)
-> > > > > >  create mode 100644 include/linux/instrumented.h
-> > > > > >
-> > > > > > diff --git a/include/linux/instrumented.h b/include/linux/instrumented.h
-> > > > > > new file mode 100644
-> > > > > > index 000000000000..9f83c8520223
-> > > > > > --- /dev/null
-> > > > > > +++ b/include/linux/instrumented.h
-> > > > > > @@ -0,0 +1,153 @@
-> > > > > > +/* SPDX-License-Identifier: GPL-2.0 */
-> > > > > > +
-> > > > > > +/*
-> > > > > > + * This header provides generic wrappers for memory access instrumentation that
-> > > > > > + * the compiler cannot emit for: KASAN, KCSAN.
-> > > > > > + */
-> > > > > > +#ifndef _LINUX_INSTRUMENTED_H
-> > > > > > +#define _LINUX_INSTRUMENTED_H
-> > > > > > +
-> > > > > > +#include <linux/compiler.h>
-> > > > > > +#include <linux/kasan-checks.h>
-> > > > > > +#include <linux/kcsan-checks.h>
-> > > > > > +#include <linux/types.h>
-> > > > > > +
-> > > > > > +/**
-> > > > > > + * instrument_read - instrument regular read access
-> > > > > > + *
-> > > > > > + * Instrument a regular read access. The instrumentation should be inserted
-> > > > > > + * before the actual read happens.
-> > > > > > + *
-> > > > > > + * @ptr address of access
-> > > > > > + * @size size of access
-> > > > > > + */
-> > > > >
-> > > > > Based on offline discussion, that's what we add for KMSAN:
-> > > > >
-> > > > > > +static __always_inline void instrument_read(const volatile void *v, size_t size)
-> > > > > > +{
-> > > > > > +       kasan_check_read(v, size);
-> > > > > > +       kcsan_check_read(v, size);
-> > > > >
-> > > > > KMSAN: nothing
-> > > >
-> > > > KMSAN also has instrumentation in
-> > > > copy_to_user_page/copy_from_user_page. Do we need to do anything for
-> > > > KASAN/KCSAN for these functions?
-> >
-> > copy_to_user_page/copy_from_user_page can be instrumented with
-> > instrument_copy_{to,from}_user_. I prefer keeping this series with no
-> > functional change intended for KASAN at least.
-> >
-> > > There is also copy_user_highpage.
-> > >
-> > > And ioread/write8/16/32_rep: do we need any instrumentation there. It
-> > > seems we want both KSAN and KCSAN too. One may argue that KCSAN
-> > > instrumentation there is to super critical at this point, but KASAN
-> > > instrumentation is important, if anything to prevent silent memory
-> > > corruptions. How do we instrument there? I don't see how it maps to
-> > > any of the existing instrumentation functions.
-> >
-> > These should be able to use the regular instrument_{read,write}. I
-> > prefer keeping this series with no functional change intended for
-> > KASAN at least.
->
-> instrument_{read,write} will not contain any KMSAN instrumentation,
-> which means we will effectively remove KMSAN instrumentation, which is
-> weird because we instrumented these functions because of KMSAN in the
-> first place...
->
-> > > There is also kmsan_check_skb/kmsan_handle_dma/kmsan_handle_urb that
-> > > does not seem to map to any of the instrumentation functions.
-> >
-> > For now, I would rather that there are some one-off special
-> > instrumentation, like for KMSAN. Coming up with a unified interface
-> > here that, without the use-cases even settled, seems hard to justify.
-> > Once instrumentation for these have settled, unifying the interface
-> > would have better justification.
->
-> I would assume they may also require an annotation that checks the
-> memory region under all 3 tools and we don't have such annotation
-> (same as the previous case and effectively copy_to_user). I would
-> expect such annotation will be used in more places once we start
-> looking for more opportunities.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/boot
+branch HEAD: dacc9092336be20b01642afe1a51720b31f60369  x86/sysfb: Fix check for bad VRAM size
 
-Agreed, I'm certainly not against adding these. We may need to
-introduce 'instrument_dma_' etc. However, would it be reasonable to do
-this in a separate follow-up patch-series, to avoid stalling bitops
-instrumentation?  Assuming that the 8 hooks in instrumented.h right
-now are reasonable, and such future changes add new hooks, I think
-that would be the more pragmatic approach.
+elapsed time: 283m
 
-Thanks,
--- Marco
+configs tested: 134
+configs skipped: 34
 
->
-> > This patch series is merely supposed to introduce instrumented.h and
-> > replace the kasan_checks (also implicitly introducing kcsan_checks
-> > there), however, with no further functional change intended.
-> >
-> > I propose that adding entirely new instrumentation for both KASAN and
-> > KCSAN, we should send a separate patch-series.
-> >
-> > Thanks,
-> > -- Marco
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+parisc                            allnoconfig
+parisc                            allyesonfig
+parisc                         b180_defconfig
+parisc                        c3000_defconfig
+parisc                              defconfig
+arc                              allyesconfig
+arc                                 defconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+h8300                     edosk2674_defconfig
+h8300                    h8300h-sim_defconfig
+h8300                       h8s-sim_defconfig
+m68k                             allmodconfig
+m68k                       m5475evb_defconfig
+m68k                          multi_defconfig
+m68k                           sun3_defconfig
+alpha                               defconfig
+csky                                defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+x86_64               randconfig-d001-20200120
+x86_64               randconfig-d002-20200120
+x86_64               randconfig-d003-20200120
+i386                 randconfig-d001-20200120
+i386                 randconfig-d002-20200120
+i386                 randconfig-d003-20200120
+c6x                              allyesconfig
+c6x                        evmc6678_defconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                       common_defconfig
+xtensa                          iss_defconfig
+ia64                                defconfig
+s390                             alldefconfig
+s390                             allmodconfig
+s390                              allnoconfig
+s390                             allyesconfig
+s390                          debug_defconfig
+s390                                defconfig
+s390                       zfcpdump_defconfig
+um                                  defconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64               randconfig-g001-20200120
+x86_64               randconfig-g002-20200120
+x86_64               randconfig-g003-20200120
+i386                 randconfig-g001-20200120
+i386                 randconfig-g002-20200120
+i386                 randconfig-g003-20200120
+x86_64               randconfig-c001-20200120
+x86_64               randconfig-c002-20200120
+x86_64               randconfig-c003-20200120
+i386                 randconfig-c001-20200120
+i386                 randconfig-c002-20200120
+i386                 randconfig-c003-20200120
+x86_64               randconfig-f001-20200120
+x86_64               randconfig-f002-20200120
+x86_64               randconfig-f003-20200120
+i386                 randconfig-f001-20200120
+i386                 randconfig-f002-20200120
+i386                 randconfig-f003-20200120
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                              allnoconfig
+mips                             allyesconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+c6x                  randconfig-a001-20200120
+h8300                randconfig-a001-20200120
+microblaze           randconfig-a001-20200120
+nios2                randconfig-a001-20200120
+sparc64              randconfig-a001-20200120
+sh                               allmodconfig
+sh                                allnoconfig
+sh                          rsk7269_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                            titan_defconfig
+ia64                             alldefconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+csky                 randconfig-a001-20200120
+openrisc             randconfig-a001-20200120
+s390                 randconfig-a001-20200120
+sh                   randconfig-a001-20200120
+xtensa               randconfig-a001-20200120
+i386                             alldefconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arc                  randconfig-a001-20200120
+arm                  randconfig-a001-20200120
+arm64                randconfig-a001-20200120
+ia64                 randconfig-a001-20200120
+powerpc              randconfig-a001-20200120
+sparc                randconfig-a001-20200120
+x86_64               randconfig-b001-20200120
+x86_64               randconfig-b002-20200120
+x86_64               randconfig-b003-20200120
+i386                 randconfig-b001-20200120
+i386                 randconfig-b002-20200120
+i386                 randconfig-b003-20200120
+x86_64               randconfig-h001-20200120
+x86_64               randconfig-h002-20200120
+x86_64               randconfig-h003-20200120
+i386                 randconfig-h001-20200120
+i386                 randconfig-h002-20200120
+i386                 randconfig-h003-20200120
+
+---
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
