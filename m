@@ -2,161 +2,144 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3392BC33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B05C33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:43:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 114852073D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:39:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 159022087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:43:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N9vZMDp5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbgATJjb (ORCPT
+        id S1726752AbgATJm7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 04:39:31 -0500
-Received: from foss.arm.com ([217.140.110.172]:57640 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726451AbgATJja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 04:39:30 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2A61C30E;
-        Mon, 20 Jan 2020 01:39:30 -0800 (PST)
-Received: from [192.168.0.7] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A27B63F68E;
-        Mon, 20 Jan 2020 01:39:28 -0800 (PST)
-Subject: Re: sched/fair: scheduler not running high priority process on idle
- cpu
-To:     David Laight <David.Laight@ACULAB.COM>,
-        'Steven Rostedt' <rostedt@goodmis.org>
-Cc:     'Vincent Guittot' <vincent.guittot@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <212fabd759b0486aa8df588477acf6d0@AcuMS.aculab.com>
- <20200114115906.22f952ff@gandalf.local.home>
- <5ba2ae2d426c4058b314c20c25a9b1d0@AcuMS.aculab.com>
- <20200114124812.4d5355ae@gandalf.local.home>
- <878a35a6642d482aa0770a055506bd5e@AcuMS.aculab.com>
- <20200115081830.036ade4e@gandalf.local.home>
- <9f98b2dd807941a3b85d217815a4d9aa@AcuMS.aculab.com>
- <20200115103049.06600f6e@gandalf.local.home>
- <ab54668ad13d48da8aa43f955631ef9e@AcuMS.aculab.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <26b2f8f7-b11f-0df0-5260-a232e1d5bf1a@arm.com>
-Date:   Mon, 20 Jan 2020 10:39:27 +0100
+        Mon, 20 Jan 2020 04:42:59 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36910 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726075AbgATJm6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 04:42:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579513377;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=0IlvUbWrudXW1uI7eHpM/6RKrclAR1au6ptokdXJGU8=;
+        b=N9vZMDp5kORZNjkfsOYuKekmIuORz4j49fhb+jGypntJ4FIk5Ffoz0OnQDv3ukdg+2Iohz
+        d2siQShswq/Q5jwOV5xVUFAhtiXD2bryXikt+QFX7Ke04FHITjeWLLnwCigyHt/08GJ7UM
+        kDpC0EjfsIsZlyKHLupuI1ukMOf9XOo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-109-20VUjkthNeaW8X1aYLCFPw-1; Mon, 20 Jan 2020 04:42:56 -0500
+X-MC-Unique: 20VUjkthNeaW8X1aYLCFPw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 160FB18B5FA1;
+        Mon, 20 Jan 2020 09:42:55 +0000 (UTC)
+Received: from [10.36.118.34] (unknown [10.36.118.34])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8C90F5D9E2;
+        Mon, 20 Jan 2020 09:42:53 +0000 (UTC)
+Subject: Re: [PATCH -mm] mm/page_isolation: fix potential warning from user
+To:     Michal Hocko <mhocko@kernel.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     Qian Cai <cai@lca.pw>, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20200120034252.1558-1-cai@lca.pw>
+ <91ba5997-b227-7ae2-8459-310e18b9bb87@arm.com>
+ <20200120074222.GF18451@dhcp22.suse.cz>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <c1a1e398-7f5b-3cb5-1c1b-41cf7d56486c@redhat.com>
+Date:   Mon, 20 Jan 2020 10:42:52 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <ab54668ad13d48da8aa43f955631ef9e@AcuMS.aculab.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200120074222.GF18451@dhcp22.suse.cz>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/01/2020 18:07, David Laight wrote:
-> From Steven Rostedt
->> Sent: 15 January 2020 15:31
-> ...
->>> For this case an idle cpu doing a unlocked check for a processes that has
->>> been waiting 'ages' to preempt the running process may not be too
->>> expensive.
+>>> +	} else {
+>>> +		if (isol_flags & MEMORY_OFFLINE)
+>>> +			WARN_ON_ONCE(zone_idx(zone) == ZONE_MOVABLE);> +
+>>> +		if ((isol_flags & REPORT_FAILURE) && !IS_ERR(unmovable))
+>>> +			/*
+>>> +			 * printk() with zone->lock held will likely trigger a
+>>> +			 * lockdep splat, so defer it here.
+>>> +			 */
+>>> +			dump_page(unmovable, "unmovable page");
+>>> +	}
+>>> +
+>>> +	return !!unmovable;
+>>>  }
+>>>  
+>>>  static void unset_migratetype_isolate(struct page *page, unsigned migratetype)
 >>
->> How do you measure a process waiting for ages on another CPU? And then
->> by the time you get the information to pull it, there's always the race
->> that the process will get the chance to run. And if you think about it,
->> by looking for a process waiting for a long time, it is likely it will
->> start to run because "ages" means it's probably close to being released.
+>> set_migratetype_isolate() gets called from CMA as well as HugeTLB
+>> allocation paths, so its not only during offline. Hence the commit
+>> message should be changed to reflect this.
 > 
-> Without a CBU (Crystal Ball Unit) you can always be unlucky.
-> But once you get over the 'normal' delays for a system call you probably
-> get an exponential (or is it logarithmic) distribution and the additional
-> delay is likely to be at least some fraction of the time it has already waited.
+> We should just report for all those cases I believe.
 > 
-> While not entirely the same, but something I still need to look at further.
-> This is a histogram of time taken (in ns) to send on a raw IPv4 socket.
-> 0k: 1874462617
-> 96k: 260350
-> 160k: 30771
-> 224k: 14812
-> 288k: 770
-> 352k: 593
-> 416k: 489
-> 480k: 368
-> 544k: 185
-> 608k: 63
-> 672k: 27
-> 736k: 6
-> 800k: 1
-> 864k: 2
-> 928k: 3
-> 992k: 4
-> 1056k: 1
-> 1120k: 0
-> 1184k: 1
-> 1248k: 1
-> 1312k: 2
-> 1376k: 3
-> 1440k: 1
-> 1504k: 1
-> 1568k: 1
-> 1632k: 4
-> 1696k: 0 (5 times)
-> 2016k: 1
-> 2080k: 0
-> 2144k: 1
-> total: 1874771078, average 32k
-> 
-> I've improved it no end by using per-thread sockets and setting
-> the socket write queue size large.
-> But there are still some places where it takes > 600us.
-> The top end is rather more linear than one might expect.
-> 
->>> I presume the locks are in place for the migrate itself.
->>
->> Note, by grabbing locks on another CPU will incur overhead on that
->> other CPU. I've seen huge latency caused by doing just this.
-> 
-> I'd have thought this would only be significant if the cache line
-> ends up being used by both cpus?
-> 
->>> The only downside is that the process's data is likely to be in the wrong cache,
->>> but unless the original cpu becomes available just after the migrate it is
->>> probably still a win.
->>
->> If you are doing this with just tasks that are waiting for the CPU to
->> be preemptable, then it is most likely not a win at all.
-> 
-> You'd need a good guess that the wait would be long.
-> 
->> Now, the RT tasks do have an aggressive push / pull logic, that keeps
->> track of which CPUs are running lower priority tasks and will work hard
->> to keep all RT tasks running (and aggressively migrate them). But this
->> logic still only takes place at preemption points (cond_resched(), etc).
-> 
-> I guess this only 'gives away' extra RT processes.
-> Rather than 'stealing' them - which is what I need.
 
-Isn't part of the problem that RT doesn't maintain
-cp->pri_to_cpu[CPUPRI_IDLE] (CPUPRI_IDLE = 0).
++1
 
-So push/pull (find_lowest_rq()) never returns a mask of idle CPUs.
+-- 
+Thanks,
 
-There was
-https://lore.kernel.org/r/1415260327-30465-2-git-send-email-pang.xunlei@linaro.org
-in 2014 but it didn't go mainline.
-
-There was a similar question in Nov last year:
-
-https://lore.kernel.org/r/CH2PR19MB3896AFE1D13AD88A17160860FC700@CH2PR19MB3896.namprd19.prod.outlook.com
-
-
-
-
+David / dhildenb
 
