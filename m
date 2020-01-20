@@ -2,73 +2,162 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B51C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B1EC33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 079A922314
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:23:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BD9422464
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:27:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728665AbgATPXN (ORCPT
+        id S1727285AbgATP1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 10:23:13 -0500
-Received: from netrider.rowland.org ([192.131.102.5]:46005 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726819AbgATPXM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 10:23:12 -0500
-Received: (qmail 18294 invoked by uid 500); 20 Jan 2020 10:23:11 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 20 Jan 2020 10:23:11 -0500
-Date:   Mon, 20 Jan 2020 10:23:11 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     Paul Zimmerman <pauldzim@gmail.com>
-cc:     David Heinzelmann <heinzelmann.david@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>
-Subject: Re: [REGRESSION][BISECTED] 5.5-rc suspend/resume failure caused by
- patch a4f55d8b8c14 ("usb: hub: Check device descriptor before resusciation")
-In-Reply-To: <20200119211145.7dcc86ec@EliteBook>
-Message-ID: <Pine.LNX.4.44L0.2001201016300.16814-100000@netrider.rowland.org>
+        Mon, 20 Jan 2020 10:27:43 -0500
+Received: from foss.arm.com ([217.140.110.172]:33662 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726642AbgATP1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 10:27:43 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 154E130E;
+        Mon, 20 Jan 2020 07:27:42 -0800 (PST)
+Received: from [10.37.12.169] (unknown [10.37.12.169])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5FF413F52E;
+        Mon, 20 Jan 2020 07:27:32 -0800 (PST)
+Subject: Re: [PATCH 1/4] PM / EM: and devices to Energy Model
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-imx@nxp.com
+Cc:     Morten.Rasmussen@arm.com, Chris.Redpath@arm.com,
+        ionela.voinescu@arm.com, javi.merino@arm.com,
+        cw00.choi@samsung.com, b.zolnierkie@samsung.com, rjw@rjwysocki.net,
+        sudeep.holla@arm.com, viresh.kumar@linaro.org, nm@ti.com,
+        sboyd@kernel.org, rui.zhang@intel.com, amit.kucheria@verdurent.com,
+        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        rostedt@goodmis.org, qperret@google.com, bsegall@google.com,
+        mgorman@suse.de, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        festevam@gmail.com, kernel@pengutronix.de, khilman@kernel.org,
+        agross@kernel.org, bjorn.andersson@linaro.org, robh@kernel.org,
+        matthias.bgg@gmail.com, steven.price@arm.com,
+        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
+        airlied@linux.ie, daniel@ffwll.ch, patrick.bellasi@matbug.net
+References: <20200116152032.11301-1-lukasz.luba@arm.com>
+ <20200116152032.11301-2-lukasz.luba@arm.com>
+ <17b77e0c-9455-0479-d37b-c57717c784c7@arm.com>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <7d620ad0-9baa-7c0b-d596-a534bccaad64@arm.com>
+Date:   Mon, 20 Jan 2020 15:27:30 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+In-Reply-To: <17b77e0c-9455-0479-d37b-c57717c784c7@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 19 Jan 2020, Paul Zimmerman wrote:
+Hi Dietmar,
 
-> I reported this regression last week (see
-> https://lore.kernel.org/linux-usb/20200115153714.03d5b3aa@EliteBook/T/#u)
-> but I got no response to my email. Today I have retested with 5.5-rc7
-> and verified that the problem still exists. So I am resending with a
-> different subject line to see if anyone responds.
+On 1/20/20 2:53 PM, Dietmar Eggemann wrote:
+> On 16/01/2020 16:20, lukasz.luba@arm.com wrote:
+>> From: Lukasz Luba <lukasz.luba@arm.com>
+>>
+>> Add support of other devices into the Energy Model framework not only the
+>> CPUs. Change the interface to be more unified which can handle other
+>> devices as well.
 > 
-> The $subject patch causes a regression on my HP EliteBook laptop with a
-> built-in USB bluetooth adapter. About 50% of the time, a suspend/resume
-> cycle will cause the bluetooth adapter to stop working.
+> [...]
 > 
-> The dmesg log below shows two suspend/resume cycles. At time 63.928 you can
-> see the bluetooth adapter being successfully resumed, and at time 140.969
-> you can see it fail. After reverting the patch, the bluetooth adapter
-> resumes 100% of the time.
+>> -The source of the information about the power consumed by CPUs can vary greatly
+>> +The source of the information about the power consumed by devices can vary greatly
+>>   from one platform to another. These power costs can be estimated using
+>>   devicetree data in some cases. In others, the firmware will know better.
+>>   Alternatively, userspace might be best positioned. And so on. In order to avoid
+>> @@ -26,7 +28,7 @@ framework, and interested clients reading the data from it::
+>>          | Thermal (IPA) |  | Scheduler (EAS) |  |     Other     |
+>>          +---------------+  +-----------------+  +---------------+
+>>                  |                   | em_pd_energy()    |
+>> -               |                   | em_cpu_get()      |
+>> +               |  em_dev_get()     | em_cpu_get()      |
 > 
-> I also included below a lsusb -v of the bluetooth adapter. Is there any
-> other debugging info you'd like me to send?
+> Looked really hard but can't find a em_dev_get() in the code? You mean
+> em_get_pd() ? And why em_get_pd() and not em_pd_get()?
 
-It looks like your dmesg log was made without enabling debugging 
-messages in usbcore.  Can you collect another log with debugging 
-messages turned on?
+It was it the old implementation, I will remove 'em_dev_get()' from
+the doc. The em_pd_get() is OK for me, I can change it.
 
-	echo 'module usbcore =p' >/sys/kernel/debug/dynamic_debug/control
+> 
+>>                  +---------+         |         +---------+
+>>                            |         |         |
+>>                            v         v         v
+>> @@ -47,12 +49,12 @@ framework, and interested clients reading the data from it::
+>>           | Device Tree  |   |   Firmware    |  |      ?       |
+>>           +--------------+   +---------------+  +--------------+
+> 
+> [...]
+> 
+>> +There is two API functions which provide the access to the energy model:
+>> +em_cpu_get() which takes CPU id as an argument and em_dev_get() with device
+>> +pointer as an argument. It depends on the subsystem which interface it is
+>> +going to use.
+> 
+> Would be really nice if this wouldn't be required. We should really aim
+> for 1 framework == 1 set of interfaces.
+> 
+> What happens if someone calls em_get_pd() on a CPU EM?
+> 
+> E.g:
+> 
+>   static struct perf_domain *pd_init(int cpu)
+>   {
+> -       struct em_perf_domain *obj = em_cpu_get(cpu);
+> +       struct device *dev = get_cpu_device(cpu);
+> +       struct em_perf_domain *obj = em_pd_get(dev);
+>          struct perf_domain *pd;
+> 
+> Two versions of one functionality will confuse API user from the
+> beginning ...
 
-Also, it might not hurt to collect and post a usbmon trace for a bad
-suspend-resume cycle.
+Right, I could modify the pd_init code to use one 'em_get_pd' API
+and remove the 'em_cpu_get'.
 
-Alan Stern
+> 
+> [...]
+> 
+>> +enum em_type {
+>> +	EM_SIMPLE,
+>> +	EM_CPU,
+>> +};
+> 
+> s/EM_SIMPLE/EM_DEV ?
+> 
+> Right now I only see energy models and _one_ specific type (the CPU EM).
+> So a tag 'is a CPU EM' would suffice. No need for EM_SIMPE ...
 
+The EM_SIMPLE is set in the em_register_perf_domain() to distinguish
+CPU device which has populated 'priv' pointer and set EM_CPU.
+We can just rely on 'priv == NULL' to check if we are dealing with a
+CPU EM. Do you prefer this approach and get rid of em_type?
+
+Then the code would look like:
+
+if (em_pd->priv)
+	seq_puts(s, "EM_CPU\n");
+else
+	seq_puts(s, "EM_SIMPLE\n");
+
+
+Regards,
+Lukasz
+
+> 
+> [...]
+> 
