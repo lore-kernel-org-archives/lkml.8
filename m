@@ -2,125 +2,197 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C0E4C33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:05:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC179C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:06:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 342772070C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:05:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579536306;
-	bh=snj6kBC+qwauXm+Cg4x1ZKCg9igIOoAgEOwVP0KDbaQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rJRVk9tzPJjQ5YTW9sirm1ohAPAqvoWKee4kmtfGiQzh7qU2km9Na0E8HOaiNNXZf
-	 DrUH8ZAcrZRWbgf5rTV7Ll528Przgrbyccmi3n1sZEkM/y28FeshhIpHZiXOdSk18h
-	 JKKit1uP2yXZ+ZeFGXkPuyS+KyFAzBVQJbMvoPx8=
+	by mail.kernel.org (Postfix) with ESMTP id 82F38217F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:06:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Baf6RJnN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729251AbgATQFF (ORCPT
+        id S1729145AbgATQG3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 11:05:05 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34302 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726876AbgATQFF (ORCPT
+        Mon, 20 Jan 2020 11:06:29 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:42127 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729045AbgATQG3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 11:05:05 -0500
-Received: by mail-wr1-f68.google.com with SMTP id t2so34910wrr.1
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 08:05:03 -0800 (PST)
+        Mon, 20 Jan 2020 11:06:29 -0500
+Received: by mail-qk1-f196.google.com with SMTP id z14so30548920qkg.9
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 08:06:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rKBXxvKIRJE9r95Oq/vyPWMrKks8UEDi+Qo4dUocXJw=;
+        b=Baf6RJnN+FgpGw0uph9xwLD0Y+xAcJSaSvv3RdARcDa7LNpveANlU1k6FDswjvy2Xc
+         LObElRWDHMKUj3ZjRSNTBeO/htrBIYiKHweFN5P4tGQq8ToBhQbvCWcvJrSKxEPS3cBd
+         oHUw3dHvbBeOVXV8JvEvvJHoJixZ5NHOGHvztKvlXrnUFBej3ua1JqsCjxG+qkttVE8F
+         iRT1A16DFSmFPRw9dEtVOy/TAHOtJc7+TtiB8sAHFVcUtWX/WqYyo/TcgEJcEDcmRV2R
+         Rz0lHHDuPohMF0E/czlHX+sLN/V8zBqp2azUpf0GHBEpP5dOVwAoA58Zmf9LD/Oro79O
+         wE2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pchtgtPl7QsNhnLKqQnFHxUQcOqFwM/PSkX6RSgnDKM=;
-        b=pJEWgg9BoaUJFzHJGCRFrY23wQSQB+DL8BNjP9zRvE1tL6Rhdyso9DJ5L0ClPz8oQR
-         i1T3gC7PQfqDwTrWwAxgL0BaRq4g5VvrYlW2Ho9+esksU1kdJ1Iy6Fci2Oeo4ZWjshqZ
-         QRCT1uwVF18D/3F/bZhfh5UH+ZGp/VRikEpHVhqQL4i/e0GG6mRiGTAGseRMRUsY21vn
-         CZ8j40Enhvtbt2CGbmyzdWwp4c8kTnWFKi3PIH+hYkiO9BIEyNICFmhMmVsnE5rS0zN6
-         p7rgqqQiVEisvC4Q4Kbfq5gkuCsEO8vqPr2iKYAOtlCTK32KyyCE2bGHFvYLB3lKEGTv
-         cZ7w==
-X-Gm-Message-State: APjAAAXiJ4Eh4z6gQRxriZvR97PAw4n73NdMX2ifQ55foc0/h2ZNX7pm
-        NqDLjVq/6U2qgNBG79yzxhM=
-X-Google-Smtp-Source: APXvYqyMf+pGJvZD7BFKyy1zUboNw4H+hWUL04RoWn8vOUeeecst1TBK1XWG1ZIz+dYtdajL5OPYjw==
-X-Received: by 2002:a05:6000:11c3:: with SMTP id i3mr228393wrx.244.1579536302938;
-        Mon, 20 Jan 2020 08:05:02 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id d8sm49235291wre.13.2020.01.20.08.05.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 08:05:01 -0800 (PST)
-Date:   Mon, 20 Jan 2020 17:05:00 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Li Xinhai <lixinhai.lxh@gmail.com>
-Cc:     "anshuman.khandual" <anshuman.khandual@arm.com>,
-        n-horiguchi <n-horiguchi@ah.jp.nec.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        akpm <akpm@linux-foundation.org>,
-        torvalds <torvalds@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-Subject: Re: [PATCH v4] mm/mempolicy,hugetlb: Checking hstate for hugetlbfs
- page in vma_migratable
-Message-ID: <20200120160500.GM18451@dhcp22.suse.cz>
-References: <1579147885-23511-1-git-send-email-lixinhai.lxh@gmail.com>
- <20200116095614.GO19428@dhcp22.suse.cz>
- <20200116215032206994102@gmail.com>
- <20200116151803.GV19428@dhcp22.suse.cz>
- <20200116233817972969139@gmail.com>
- <20200117111629898234212@gmail.com>
- <20200118111121432688303@gmail.com>
- <20200120101202.GU18451@dhcp22.suse.cz>
- <20200120233723466954346@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rKBXxvKIRJE9r95Oq/vyPWMrKks8UEDi+Qo4dUocXJw=;
+        b=WfjsoDdL5V3I775MGHc8pSyNbjVtjXXBt9X+B4WVPYBPm2DiRckM2Ji7I7NEAaNPDv
+         DVR49rSLx8sufjy+nirP61mQWePkLtwHgdqPkPA38v5mOAEw1wZT5ce72sAS+Zx7QnT2
+         CoRZ3npAwOe34IYAbzqx2AXE0a27r3q4ymUy6rPuF19quHrXH8F9kMPvIYm/0E+SJFPw
+         MI444kVSkICYpm7u+xoO+hp9FgL9EdyYRLbxbZQqpUvjTiAYjtTAOi6sbON8SN2mFHaU
+         HhZSax1blHXfqte/qehPBw5khRWesTtnnlJH07qy7QgDdbMxjajC5znPS/3TkahCiZb5
+         9lfg==
+X-Gm-Message-State: APjAAAXqnWtBNhctR1UARIJrE0Q77/m6iOGSg0IG3zhNpKlQ5varDx30
+        RnEVxCwwZLOju3/Lwj90Vf71CWz4xC7ErkJgynkeUw==
+X-Google-Smtp-Source: APXvYqwT5+NGklKeJW9N17LjaUMueBSxha4MJyQJj2jm+eal1mEy4e4CAbkxKeRN2PB93VKB3+yirSo4Y26EHFlBDZ8=
+X-Received: by 2002:a05:620a:1136:: with SMTP id p22mr240817qkk.8.1579536388045;
+ Mon, 20 Jan 2020 08:06:28 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200120233723466954346@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20200120141927.114373-1-elver@google.com> <CACT4Y+bnRoKinPopVqyxj4av6_xa_OUN0wwnidpO3dX3iYq_gg@mail.gmail.com>
+ <CACT4Y+YuTT6kZ-AkgU0c1o09qmQdFWr4_Sds4jaDg-Va6g6jkA@mail.gmail.com>
+ <CACT4Y+acrXkA-ixjQXqNf1EC=fpgTWf3Rcevxxon0DfrPdD-UQ@mail.gmail.com> <CANpmjNNcXUF-=Y-hmry9-xEoNpJd0WH+fOcJJM6kv2eRm5v-kg@mail.gmail.com>
+In-Reply-To: <CANpmjNNcXUF-=Y-hmry9-xEoNpJd0WH+fOcJJM6kv2eRm5v-kg@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Mon, 20 Jan 2020 17:06:16 +0100
+Message-ID: <CACT4Y+bD3cNxfaWOuhHz338MoVoaHpw-E8+b7v6mo_ir2KD46Q@mail.gmail.com>
+Subject: Re: [PATCH 1/5] include/linux: Add instrumented.h infrastructure
+To:     Marco Elver <elver@google.com>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Daniel Axtens <dja@axtens.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Daniel Borkmann <daniel@iogearbox.net>, cyphar@cyphar.com,
+        Kees Cook <keescook@chromium.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 20-01-20 23:37:25, Li Xinhai wrote:
-[...]
-> Changelog is updated as below, thanks for comments:
-> ---
-> mm/mempolicy: Checking hugepage migration is supported by arch in vma_migratable
-> 
-> vma_migratable() is called to check if pages in vma can be migrated
-> before go ahead to further actions. Currently it is used in below code
-> path:
-> - task_numa_work
-> - mbind
-> - move_pages
-> 
-> For hugetlb mapping, whether vma is migratable or not is determined by:
-> - CONFIG_ARCH_ENABLE_HUGEPAGE_MIGRATION
-> - arch_hugetlb_migration_supported
-> 
-> Issue: current code only checks for CONFIG_ARCH_ENABLE_HUGEPAGE_MIGRATION,
-> which express less accurate semantics of vma_migratable(). (note that
-> current code in vma_migratable don't cause failure or bug because
-> unmap_and_move_huge_page() will catch unsupported hugepage and handle it
-> properly)
-> 
-> This patch checks the two factors for impoveing code logic and
-> robustness. It will enable early bail out of hugepage migration procedure,
-> but because currently all architecture supporting hugepage migration is able
-> to support all page size, we would not see performance gain with this patch
-> applied.
+On Mon, Jan 20, 2020 at 4:40 PM Marco Elver <elver@google.com> wrote:
+> > > > > This adds instrumented.h, which provides generic wrappers for memory
+> > > > > access instrumentation that the compiler cannot emit for various
+> > > > > sanitizers. Currently this unifies KASAN and KCSAN instrumentation. In
+> > > > > future this will also include KMSAN instrumentation.
+> > > > >
+> > > > > Note that, copy_{to,from}_user require special instrumentation,
+> > > > > providing hooks before and after the access, since we may need to know
+> > > > > the actual bytes accessed (currently this is relevant for KCSAN, and is
+> > > > > also relevant in future for KMSAN).
+> > > > >
+> > > > > Suggested-by: Arnd Bergmann <arnd@arndb.de>
+> > > > > Signed-off-by: Marco Elver <elver@google.com>
+> > > > > ---
+> > > > >  include/linux/instrumented.h | 153 +++++++++++++++++++++++++++++++++++
+> > > > >  1 file changed, 153 insertions(+)
+> > > > >  create mode 100644 include/linux/instrumented.h
+> > > > >
+> > > > > diff --git a/include/linux/instrumented.h b/include/linux/instrumented.h
+> > > > > new file mode 100644
+> > > > > index 000000000000..9f83c8520223
+> > > > > --- /dev/null
+> > > > > +++ b/include/linux/instrumented.h
+> > > > > @@ -0,0 +1,153 @@
+> > > > > +/* SPDX-License-Identifier: GPL-2.0 */
+> > > > > +
+> > > > > +/*
+> > > > > + * This header provides generic wrappers for memory access instrumentation that
+> > > > > + * the compiler cannot emit for: KASAN, KCSAN.
+> > > > > + */
+> > > > > +#ifndef _LINUX_INSTRUMENTED_H
+> > > > > +#define _LINUX_INSTRUMENTED_H
+> > > > > +
+> > > > > +#include <linux/compiler.h>
+> > > > > +#include <linux/kasan-checks.h>
+> > > > > +#include <linux/kcsan-checks.h>
+> > > > > +#include <linux/types.h>
+> > > > > +
+> > > > > +/**
+> > > > > + * instrument_read - instrument regular read access
+> > > > > + *
+> > > > > + * Instrument a regular read access. The instrumentation should be inserted
+> > > > > + * before the actual read happens.
+> > > > > + *
+> > > > > + * @ptr address of access
+> > > > > + * @size size of access
+> > > > > + */
+> > > >
+> > > > Based on offline discussion, that's what we add for KMSAN:
+> > > >
+> > > > > +static __always_inline void instrument_read(const volatile void *v, size_t size)
+> > > > > +{
+> > > > > +       kasan_check_read(v, size);
+> > > > > +       kcsan_check_read(v, size);
+> > > >
+> > > > KMSAN: nothing
+> > >
+> > > KMSAN also has instrumentation in
+> > > copy_to_user_page/copy_from_user_page. Do we need to do anything for
+> > > KASAN/KCSAN for these functions?
+>
+> copy_to_user_page/copy_from_user_page can be instrumented with
+> instrument_copy_{to,from}_user_. I prefer keeping this series with no
+> functional change intended for KASAN at least.
+>
+> > There is also copy_user_highpage.
+> >
+> > And ioread/write8/16/32_rep: do we need any instrumentation there. It
+> > seems we want both KSAN and KCSAN too. One may argue that KCSAN
+> > instrumentation there is to super critical at this point, but KASAN
+> > instrumentation is important, if anything to prevent silent memory
+> > corruptions. How do we instrument there? I don't see how it maps to
+> > any of the existing instrumentation functions.
+>
+> These should be able to use the regular instrument_{read,write}. I
+> prefer keeping this series with no functional change intended for
+> KASAN at least.
 
-This looks definitely better than the original one. I hope it is more
-clear to you what I meant by a better description for the justification.
-I would just add that the no code should use
-CONFIG_ARCH_ENABLE_HUGEPAGE_MIGRATION directly and use
-arch_hugetlb_migration_supported instead. This will be the case after
-this patch.
+instrument_{read,write} will not contain any KMSAN instrumentation,
+which means we will effectively remove KMSAN instrumentation, which is
+weird because we instrumented these functions because of KMSAN in the
+first place...
 
-Please keep in mind that changelogs are really important and growing in
-importance as the code gets more complicated over time. It is much more
-easier to see what the patch does because reading diffs and the code is
-easy but the lack of motivation is what people usually fighting with.
--- 
-Michal Hocko
-SUSE Labs
+> > There is also kmsan_check_skb/kmsan_handle_dma/kmsan_handle_urb that
+> > does not seem to map to any of the instrumentation functions.
+>
+> For now, I would rather that there are some one-off special
+> instrumentation, like for KMSAN. Coming up with a unified interface
+> here that, without the use-cases even settled, seems hard to justify.
+> Once instrumentation for these have settled, unifying the interface
+> would have better justification.
+
+I would assume they may also require an annotation that checks the
+memory region under all 3 tools and we don't have such annotation
+(same as the previous case and effectively copy_to_user). I would
+expect such annotation will be used in more places once we start
+looking for more opportunities.
+
+> This patch series is merely supposed to introduce instrumented.h and
+> replace the kasan_checks (also implicitly introducing kcsan_checks
+> there), however, with no further functional change intended.
+>
+> I propose that adding entirely new instrumentation for both KASAN and
+> KCSAN, we should send a separate patch-series.
+>
+> Thanks,
+> -- Marco
