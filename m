@@ -2,106 +2,137 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE35C33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 903F4C33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:39:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B46992087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:33:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6707E2073D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:39:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iwxR5gT8"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="o+gZWM5c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729320AbgATQdd (ORCPT
+        id S1729147AbgATQjL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 11:33:33 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:26119 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727573AbgATQdc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 11:33:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579538011;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=K1zcq54gP0pXiBRG1fF2BRNY1nGBgHmf0naqBgZVYZA=;
-        b=iwxR5gT83uFT4qHL3bgMpZLjEgc/NmQMjbwfWnZ8B2Gx8l9RuiG/6aOCPTTRzzqGXy7Et9
-        qBdwKHcuQtr3xkpCUK2O5FJdxHV3EInYYvIr5vBIRFisvuQbIIsHTlUXgvHnXwX/o9NaWt
-        L3AVuZ8xJQu9QprMbtJCw7oMBsdvhdI=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-80-61nwOdH4Ny-fYnobaSQlXA-1; Mon, 20 Jan 2020 11:33:29 -0500
-X-MC-Unique: 61nwOdH4Ny-fYnobaSQlXA-1
-Received: by mail-wr1-f72.google.com with SMTP id z14so42670wrs.4
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 08:33:29 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=K1zcq54gP0pXiBRG1fF2BRNY1nGBgHmf0naqBgZVYZA=;
-        b=XjBVc981wUl3zilrYKTqxwrQyillIi+WA03cYXsj8bmkmHeSbW6PKFHBvG1EWN/9YF
-         OpwtdPGSCfoM5Zl6v2itT7SBh57gFOwm3N0xHkoY9E4QBVpBy5INeNiYRTOt+tvndF16
-         jF8AoofMGzvWIpNgb5cJ3+2Os0nJ41+MG5H+IxkNIfAE/BpSKUUDmP9zPRgSIIU94d82
-         KFVfzcADWXWEKoRo7GMKRT5PsL9Q1rwCgzM7g+WxWeyDlnd3BqpQH/+FgrplRflQfvaT
-         ilRsQEgyyViBJgANUXsmQm472EqcTe+FuE4ORRzkVBZASawQ91dzjDql+zIeMlBr8Wjr
-         Qquw==
-X-Gm-Message-State: APjAAAXQX9CLhJgUp2I7LArf9nxPvGz8+tuDXPt+ZfqhyZdJvxQHCw2A
-        4dwMg3zu5ZS8QoSyMR2YjODODDvT9g/oDVMlwnYOHWMgZW9xxqY5K0skYM/4+dxceuxIQMI1fkK
-        d+saUdFJGCmc7o14Hn1Hr8Y/G
-X-Received: by 2002:a5d:45c4:: with SMTP id b4mr298150wrs.303.1579538008685;
-        Mon, 20 Jan 2020 08:33:28 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyH1y6QHBvoU2MiBx+BCIkxLVbqTXcXlc6sAqVsfOSnE//yyWWeKTqmGdEFekqNwtFNoZ6hIw==
-X-Received: by 2002:a5d:45c4:: with SMTP id b4mr298137wrs.303.1579538008452;
-        Mon, 20 Jan 2020 08:33:28 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id v22sm22281449wml.11.2020.01.20.08.33.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 08:33:27 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Jim Mattson <jmattson@google.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Liran Alon <liran.alon@oracle.com>
-Subject: Re: [RFC] Revert "kvm: nVMX: Restrict VMX capability MSR changes"
-In-Reply-To: <30525d58-10de-abb4-8dad-228da766ff82@redhat.com>
-References: <20200120151141.227254-1-vkuznets@redhat.com> <30525d58-10de-abb4-8dad-228da766ff82@redhat.com>
-Date:   Mon, 20 Jan 2020 17:33:26 +0100
-Message-ID: <87k15mf5pl.fsf@vitty.brq.redhat.com>
+        Mon, 20 Jan 2020 11:39:11 -0500
+Received: from mail-eopbgr140074.outbound.protection.outlook.com ([40.107.14.74]:8568
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726897AbgATQjL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 11:39:11 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oJF4dQpnv52ZW3WnzinY73eSKOQ0e6PAN+Uf33dokJ7zoWQ4n5lQiLKZQB3lttagAcToHD5WjR/clC64JyiiRsCsJFEUCSIQLVSAvJhTUHNxDW8vZtqE/EH5i08yV+d69hEUlSnv7xJyaKNE2pPLe++kco7hExhqY79X+5z1ZK2fLIym/9nZHNlDQsnJriDPPDcPO0pq37N3nCmNDVgD1lPL/y0lyihbkF+UmEG8hW19Ou9mYWWZKpdLCnbBwCbMdPhQZUqzDnARwdZUTeQKVhdF4n6o4BPm2x7UEkm+eVyhORil+/4COjDRNjsCQy8e3iLDBL38929+M6UprrHl2Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yraLZ+mAckyeAxXv/M8mZC6WbiXgaTZCQKEsykbHTlU=;
+ b=NLDKUMRzYkoNiHzB5YQYsyj1o+5A7E2yPr6llsnGbl1OatstYc8yE18WppkNCZTTM2Wa4k56aClJDXt0z7DwOiM8gYHC3CidmiH6433I2XgddJn4VkxSlFHR8L92JMdo5fmyyhlq+nV3ZNhQvjzmJlV2kbH1LjJfddqRXbfiQGpN5TDRsur87GrToQhf6a+Rhna51vMCAnyioqcUBNmw/OZ5SJ36rDB4Ohxjv8M2MlMNFGRNUZo1VxP9e7F2s+lpbyDpbByJYvJC+1NSQv28C8kVvALL/z3MwojmMvlwtfwBQzVomqnKhuHaBQjuv1nd11jezKuDozo5Zr10mZAQhg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yraLZ+mAckyeAxXv/M8mZC6WbiXgaTZCQKEsykbHTlU=;
+ b=o+gZWM5c2IKr8LmuVUl4+5gpkoidSSpblek2wJ/du8IbPaBUGNVI+qhReZ+LyWfIYjgLw6g6ThCxfx/kkBCQGhJ8814ZUAQklXzUdj7ydZrXlDeNeYto5DV2hvhREr8Adj7O7GOOzDvbvSw8iyCS7aRdQJ4xL43FI7jemiHqmjw=
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
+ VI1PR0402MB3744.eurprd04.prod.outlook.com (52.134.11.25) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.18; Mon, 20 Jan 2020 16:38:46 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::85e9:f844:f8b0:27d]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::85e9:f844:f8b0:27d%7]) with mapi id 15.20.2644.024; Mon, 20 Jan 2020
+ 16:38:46 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
+CC:     Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH v6 6/7] crypto: caam - enable prediction resistance in
+ HRWNG
+Thread-Topic: [PATCH v6 6/7] crypto: caam - enable prediction resistance in
+ HRWNG
+Thread-Index: AQHVxjouh/c8xz5csUKnQ9CkhtEExg==
+Date:   Mon, 20 Jan 2020 16:38:46 +0000
+Message-ID: <VI1PR0402MB3485F1AF6DC4B74FF373B16998320@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <20200108154047.12526-1-andrew.smirnov@gmail.com>
+ <20200108154047.12526-7-andrew.smirnov@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 524a99e6-2144-4815-9f8c-08d79dc7386e
+x-ms-traffictypediagnostic: VI1PR0402MB3744:|VI1PR0402MB3744:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0402MB374490590F40C5CA2D504D4798320@VI1PR0402MB3744.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0288CD37D9
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(376002)(39860400002)(136003)(366004)(189003)(199004)(2906002)(71200400001)(54906003)(9686003)(55016002)(478600001)(110136005)(7696005)(53546011)(186003)(6506007)(26005)(316002)(66556008)(44832011)(66446008)(66946007)(64756008)(66476007)(8936002)(81166006)(91956017)(81156014)(8676002)(86362001)(76116006)(4326008)(52536014)(33656002)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3744;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: VYoxBKDk1tiz6PlPYflLUQtzpD+kdg0mgnGhBi5AkTIiIwbF8r1vf91dnaJoItvbGmObXJAiww88ebHSpm+T4YokFKfjOcgVWjOKa4IGlksXlYQGcPWrTNidfzdJOPLdOS9eQCQXCPvgRHNdCiyS3E9IV/Kwi5Uy4OAOnNcVC21Xf+2zrJkEsT0joh8jBXElle/XFwi64oY9rRc3OWtViRTbfTH+Jm4CgAnWOLh49RJhGLJ8d3b5EAvSCPQ9I43nF+DylAAXiEaXodEihjJ+LZkB+0XnZa+p9xQTDcFBB84OT6Uk+XXwZOPdIY3LmlLCFATV/ZbX12cTJr2Jfdkra0BTUGUqlkUOjMiQWz5DpTzAGpJZ+CdDBf/mUf/8dPEHegqZlyyiTjfP6UpHvFm0x6JnjEGgRjwnAs+iDAT+uU8aus2DPvCnojUmRsvEkhcZ
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 524a99e6-2144-4815-9f8c-08d79dc7386e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jan 2020 16:38:46.6067
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: SSxL6SarabtX332n4e66BY9j/hIcUR8nYCOrVb4IO6HyGc2Hb2oG9lmTNBUjroB//34HkRwSyfr+vv/QI8COTw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3744
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Paolo Bonzini <pbonzini@redhat.com> writes:
-
-> On 20/01/20 16:11, Vitaly Kuznetsov wrote:
->> 
->> RFC. I think the check for vmx->nested.vmxon is legitimate for everything
->> but restore so removing it (what I do with the revert) is likely a no-go.
->> I'd like to gather opinions on the proper fix: should we somehow check
->> that the vCPU is in 'restore' start (has never being run) and make
->> KVM_SET_MSRS pass or should we actually mandate that KVM_SET_NESTED_STATE
->> is run after KVM_SET_MSRS by userspace?
->> 
->> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
->
-> I think this should be fixed in QEMU, by doing KVM_SET_MSRS for feature
-> MSRs way earlier.  I'll do it since I'm currently working on a patch to
-> add a KVM_SET_MSR for the microcode revision.
-
-Works for me, thanks)
-
-The bigger issue is that the vCPU setup sequence (like QEMU's
-kvm_arch_put_registers()) effectively becomes an API convention and as
-it gets more complex it would be great to document it for KVM.
-
--- 
-Vitaly
-
+On 1/8/2020 5:42 PM, Andrey Smirnov wrote:=0A=
+> @@ -275,12 +276,25 @@ static int instantiate_rng(struct device *ctrldev, =
+int state_handle_mask,=0A=
+>  		return -ENOMEM;=0A=
+>  =0A=
+>  	for (sh_idx =3D 0; sh_idx < RNG4_MAX_HANDLES; sh_idx++) {=0A=
+> +		const u32 rdsta_if =3D RDSTA_IF0 << sh_idx;=0A=
+> +		const u32 rdsta_pr =3D RDSTA_PR0 << sh_idx;=0A=
+> +		const u32 rdsta_mask =3D rdsta_if | rdsta_pr;=0A=
+>  		/*=0A=
+>  		 * If the corresponding bit is set, this state handle=0A=
+>  		 * was initialized by somebody else, so it's left alone.=0A=
+>  		 */=0A=
+> -		if ((1 << sh_idx) & state_handle_mask)=0A=
+> -			continue;=0A=
+> +		if (rdsta_if & state_handle_mask) {=0A=
+> +			if (rdsta_pr & state_handle_mask)=0A=
+> +				continue;=0A=
+> +=0A=
+> +			dev_info(ctrldev,=0A=
+> +				 "RNG4 SH%d was previously instantiated without prediction resistanc=
+e. Tearing it down\n",=0A=
+> +				 sh_idx);=0A=
+> +=0A=
+> +			ret =3D deinstantiate_rng(ctrldev, rdsta_if);=0A=
+> +			if (ret)=0A=
+> +				break;=0A=
+In case state handle 0 is deinstantiated, its reinstantiation with PR suppo=
+rt=0A=
+will have the side effect of re-generating JDKEK, TDKEK, TDSK.=0A=
+This needs to be avoided, since other SW components (like OP-TEE f/w)=0A=
+could have black keys in use. Overwriting the KEK registers would no longer=
+=0A=
+allow CAAM to decrypt them.=0A=
+=0A=
+Horia=0A=
