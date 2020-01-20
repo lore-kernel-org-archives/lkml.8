@@ -2,118 +2,93 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0125C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD81C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:31:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95B9922527
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:28:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9768521D7E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:31:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WM3/QuTj"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rnKYb6Yg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728842AbgATP2K (ORCPT
+        id S1727048AbgATPbc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 10:28:10 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:56193 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727289AbgATP2K (ORCPT
+        Mon, 20 Jan 2020 10:31:32 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:36362 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726642AbgATPbc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 10:28:10 -0500
-Received: by mail-wm1-f68.google.com with SMTP id q9so14896700wmj.5
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 07:28:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=w+9WBX8T8487sYdaCRBOXdftKEOOIGARUU12ptPCXoI=;
-        b=WM3/QuTjf8YHugRgHr0CAc4EPmW7lL5TBdACtz7cIwWejTZRMsjvhvpYDk1vBCv8x/
-         mwSEMBD6BloK3XpD4M9pIYUXdWrL2+620dZ1+sv7VzGqnDERmsL63ChlF8tg20oIUyHN
-         52ASdnLuNO3Sz8qauPMfDhgnCWpxUMumc6RftxuofGduJ6V4Ri+m9/ezp6kMCpjP0Cag
-         AtFqAedbPek8I2J21QlxubzVd67+p4k75DZEBCr6gQdRH2dUKnHDTWK3kJyHePYYwXMd
-         8gKlHjdsZ26gCY4wieLh8B5FzXN/qNQg1wHFrQ0GWe3qX7B5O2cOpVF0DpGUbwhfDz+P
-         oqIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=w+9WBX8T8487sYdaCRBOXdftKEOOIGARUU12ptPCXoI=;
-        b=MqThzFsQTUIhMePlQjCsvuI1qQQhLE0kg4y1PzsKdxKBrzDqvSewhEFFumq/zvohuz
-         5PNfCauUgx6iEeQYtm+2QiudxJwNHzVd1RvtqchZPt6rX1RbtdhsFZyJY8+9lb8Upt9R
-         4OkisXZrgZO+vvRynjcuCOMyE/Ovlusgdvl9TuUkaydUDy1V0/hnRq4SLYbvQV7aISqw
-         zZa3yDFMWzCblWdhxiJXCCqdBPe4miv6jqg29wSJc4giIFpV5Nc3zg4i+Z45wsMMucCo
-         r9G0Gicv2jFgbc0R3Q6pfv07F2Kd2JiMGzXifDikuvfsmeNt8zXcPSq/Qvckl4gwRy7k
-         ysKQ==
-X-Gm-Message-State: APjAAAVSnoJ3L94JhtONz530DG+z5gJMwQ4TrlPZPvDFYAFnp+6rFfuR
-        ZWo/sMT6XeP0U66HZd0sg9ciwA==
-X-Google-Smtp-Source: APXvYqxyY0xjDcRn7kSUge9Pe/ZJykQdMkCOLrQxdDGvp71dWPGzFxihXcV4Py+Y8+/t7qRz+k6uxg==
-X-Received: by 2002:a1c:dcd5:: with SMTP id t204mr19453471wmg.34.1579534088409;
-        Mon, 20 Jan 2020 07:28:08 -0800 (PST)
-Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
-        by smtp.gmail.com with ESMTPSA id d14sm51225920wru.9.2020.01.20.07.28.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 07:28:07 -0800 (PST)
-Date:   Mon, 20 Jan 2020 15:28:04 +0000
-From:   Quentin Perret <qperret@google.com>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     lukasz.luba@arm.com, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com, Morten.Rasmussen@arm.com, Chris.Redpath@arm.com,
-        ionela.voinescu@arm.com, javi.merino@arm.com,
-        cw00.choi@samsung.com, b.zolnierkie@samsung.com, rjw@rjwysocki.net,
-        sudeep.holla@arm.com, viresh.kumar@linaro.org, nm@ti.com,
-        sboyd@kernel.org, rui.zhang@intel.com, amit.kucheria@verdurent.com,
-        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
-        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, patrick.bellasi@matbug.net
-Subject: Re: [PATCH 1/4] PM / EM: and devices to Energy Model
-Message-ID: <20200120152804.GB164543@google.com>
-References: <20200116152032.11301-1-lukasz.luba@arm.com>
- <20200116152032.11301-2-lukasz.luba@arm.com>
- <17b77e0c-9455-0479-d37b-c57717c784c7@arm.com>
+        Mon, 20 Jan 2020 10:31:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=xdW7ZbNaRNtAWdc9c+FrOhTuCFBDAo8UcLvABTlCBKA=; b=rnKYb6YgZ4XrYGPSSnSaltIuf
+        1VVasubTGgWe0IJev0rDwg93xKDkJY1oimN3gTAWQtANYrjEVmgr2D5S2cLAcnOH56SXwRayhZETJ
+        Rp4L831Bg8d2qNtB4xNv/SQNKm22TUSwZjWwV4kkrl8Kwn1CzXXn2vh6C7c6/iCvVMErLUiub1OKB
+        fBFRCNjHqDEGC3A8b050geDwGeElRe1pEdxuB5xK4p5nICD8OusMl0K99Lq76hY9o4qMSc9XveLHu
+        Nj5oKF1LlpxQfiTwoUErZsEI/3FXW2qdu/s/xWnjJ4Ufk+k7fjG3Ds5Fdqpi3nD7JINts3yOlgna7
+        vzhFxkJtA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1itZ1V-0007Ym-2o; Mon, 20 Jan 2020 15:31:29 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 15EB930067C;
+        Mon, 20 Jan 2020 16:29:47 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id BA8C62020D909; Mon, 20 Jan 2020 16:31:25 +0100 (CET)
+Date:   Mon, 20 Jan 2020 16:31:25 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Benjamin Thiel <b.thiel@posteo.de>
+Cc:     X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] kernel/events: Add a missing prototype for
+ arch_perf_update_userpage()
+Message-ID: <20200120153125.GE14897@hirez.programming.kicks-ass.net>
+References: <20200109131351.9468-1-b.thiel@posteo.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <17b77e0c-9455-0479-d37b-c57717c784c7@arm.com>
+In-Reply-To: <20200109131351.9468-1-b.thiel@posteo.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday 20 Jan 2020 at 15:53:35 (+0100), Dietmar Eggemann wrote:
-> Would be really nice if this wouldn't be required. We should really aim
-> for 1 framework == 1 set of interfaces.
+On Thu, Jan 09, 2020 at 02:13:51PM +0100, Benjamin Thiel wrote:
+> ... in order to fix a -Wmissing-prototype warning.
 > 
-> What happens if someone calls em_get_pd() on a CPU EM?
+> No functional changes.
 > 
-> E.g:
+> Signed-off-by: Benjamin Thiel <b.thiel@posteo.de>
+> ---
+>  include/linux/perf_event.h | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
->  static struct perf_domain *pd_init(int cpu)
->  {
-> -       struct em_perf_domain *obj = em_cpu_get(cpu);
-> +       struct device *dev = get_cpu_device(cpu);
-> +       struct em_perf_domain *obj = em_pd_get(dev);
->         struct perf_domain *pd;
-> 
-> Two versions of one functionality will confuse API user from the
-> beginning ...
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index 6d4c22aee384..de3874271814 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -1544,4 +1544,7 @@ int perf_event_exit_cpu(unsigned int cpu);
+>  #define perf_event_exit_cpu	NULL
+>  #endif
+>  
+> +void __weak arch_perf_update_userpage(
+> +	struct perf_event *event, struct perf_event_mmap_page *userpg, u64 now);
+> +
 
-Agreed, this looks a bit confusing. It should be trivial to make
-em_dev_get() (or whatever we end up calling it) work for CPUs too,
-though. And we could always have a em_cpu_get(int cpu) API that is a
-basically a wrapper around em_dev_get() for convenience.
+Indeed so, I've slightly changed to:
 
-Thanks,
-Quentin
++extern void __weak arch_perf_update_userpage(struct perf_event *event,
++                                            struct perf_event_mmap_page *userpg,
++                                            u64 now);
+
+Thanks!
