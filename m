@@ -2,174 +2,131 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFB2C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 17:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB2DCC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 17:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F781217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 17:17:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579540646;
-	bh=2arvuzsZRrho6p2CID+zbyOJeN2gWR+02fv26IstiHQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2cquojO+ZtFdk7rTMoalnf505adLbi26cNw/7dGLZaxuMasb5T7U2dHUstnOKYdg8
-	 PB+bbRlCmm4r1M0Mmlb2UFzsx4Rn3JqCgyZYw7BqUQp9OqSlgempnQA/J4OTeY8kZA
-	 ekj7Wk/lhIM0D5F4X+bhaxyiT/UFI3MYCuicIZss=
+	by mail.kernel.org (Postfix) with ESMTP id 869DA21835
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 17:27:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728596AbgATRRE (ORCPT
+        id S1727114AbgATR10 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 12:17:04 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41694 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726642AbgATRRD (ORCPT
+        Mon, 20 Jan 2020 12:27:26 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:30608 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726642AbgATR10 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 12:17:03 -0500
-Received: by mail-wr1-f67.google.com with SMTP id c9so248624wrw.8
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 09:17:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kEYMCzpg5Y3ZBlBbc0R3YsIwbWtq+NyZ2Gxt9ht/DWE=;
-        b=oKh8NW3kC6ZSxqxPOcQ1BH7Anob8ygGz1lUrgFFh1B417z6iPMo9fMYSh6Wg1eZUBB
-         SVMLdqE1JjtN+sBSvu37vOz/rO0F6g2aUJ7JGovVy2/LuugGY5pz924VgBt0Alm8L0UU
-         pk7vhZYl2aTN26gAb/EPtiuiFkReudTuCqMVG0K4LmsbmQLk4aaRGml9U7c0zen1l/oS
-         yGIa3uR9op64rl/Sby5zHCWEw3dRuIQnBvQf9Xg0wHSnr13ZVkHpz/RnSl/ufYA7Ljbf
-         qLBsmomgihDzl/DTmYoXMnMvW2aMMeZNiSTLbadzd/hV6Yan7UDd8VkvshfAqw6bMp99
-         /g1A==
-X-Gm-Message-State: APjAAAV5s3K8zY+DN0tqTm7VpUJeFf5gsHbOGpejMJher2BqxD1uXsvQ
-        9MaBf3VNFAncXf6rRU5W4zo+Pr1R
-X-Google-Smtp-Source: APXvYqxmH0H4n5gECO7t2dqiUpCbt0SDkU6q+JbFc7hG6xUJ4gtX8mvxed1FR6xIwxuWjbLcyRRdsw==
-X-Received: by 2002:adf:b64b:: with SMTP id i11mr589441wre.58.1579540621745;
-        Mon, 20 Jan 2020 09:17:01 -0800 (PST)
-Received: from localhost (ip-37-188-230-253.eurotel.cz. [37.188.230.253])
-        by smtp.gmail.com with ESMTPSA id v8sm46557560wrw.2.2020.01.20.09.17.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 09:17:01 -0800 (PST)
-Date:   Mon, 20 Jan 2020 18:16:59 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     akpm@linux-foundation.org, david@redhat.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -mm v3] mm/page_isolation: fix potential warning from user
-Message-ID: <20200120171659.GA29276@dhcp22.suse.cz>
-References: <20200120163915.1469-1-cai@lca.pw>
+        Mon, 20 Jan 2020 12:27:26 -0500
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00KHRNri121570
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 12:27:24 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xmgbp9qd5-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 12:27:24 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <srikar@linux.vnet.ibm.com>;
+        Mon, 20 Jan 2020 17:27:14 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 20 Jan 2020 17:27:10 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00KHR9GP58917074
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Jan 2020 17:27:09 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3E7224C04A;
+        Mon, 20 Jan 2020 17:27:09 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0D3C34C05A;
+        Mon, 20 Jan 2020 17:27:07 +0000 (GMT)
+Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Mon, 20 Jan 2020 17:27:06 +0000 (GMT)
+Date:   Mon, 20 Jan 2020 22:57:06 +0530
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Phil Auld <pauld@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <Morten.Rasmussen@arm.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Parth Shah <parth@linux.ibm.com>,
+        Rik van Riel <riel@surriel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] sched, fair: Allow a small load imbalance between low
+ utilisation SD_NUMA domains v4
+Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+References: <20200114101319.GO3466@techsingularity.net>
+ <20200117175631.GC20112@linux.vnet.ibm.com>
+ <20200117215853.GS3466@techsingularity.net>
+ <20200120080935.GD20112@linux.vnet.ibm.com>
+ <20200120083354.GT3466@techsingularity.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200120163915.1469-1-cai@lca.pw>
+In-Reply-To: <20200120083354.GT3466@techsingularity.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+x-cbid: 20012017-0016-0000-0000-000002DF23A6
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20012017-0017-0000-0000-00003341C877
+Message-Id: <20200120172706.GE20112@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-20_07:2020-01-20,2020-01-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
+ mlxlogscore=999 spamscore=0 malwarescore=0 lowpriorityscore=0 adultscore=0
+ mlxscore=0 bulkscore=0 impostorscore=0 clxscore=1015 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-2001200147
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 20-01-20 11:39:15, Qian Cai wrote:
-> It makes sense to call the WARN_ON_ONCE(zone_idx(zone) == ZONE_MOVABLE)
-> from start_isolate_page_range(), but should avoid triggering it from
-> userspace, i.e, from is_mem_section_removable() because it could crash
-> the system by a non-root user if warn_on_panic is set.
+> And this is why I'm curious as to why your workload is affected at all
+> because it uses many tasks.  I stopped allowing an imbalance for higher
+> task counts partially on the basis of your previous report.
 > 
-> While at it, simplify the code a bit by removing an unnecessary jump
-> label.
-> 
-> Suggested-by: Michal Hocko <mhocko@kernel.org>
-> Signed-off-by: Qian Cai <cai@lca.pw>
 
-Acked-by: Michal Hocko <mhocko@suse.com>
+With this hunk on top of your patch and 5 runs of numa02, there were 0
+traces.
 
-Thanks!
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index ade7a8dca5e4..7506cf67bde8 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -8714,8 +8714,10 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
+ 			 * the risk that lower domains have to be rebalanced.
+ 			 */
+ 			imbalance_min = 2;
+-			if (busiest->sum_nr_running <= imbalance_min)
++			if (busiest->sum_nr_running <= imbalance_min) {
++				trace_printk("Reseting imbalance: busiest->sum_nr_running=%d, local->sum_nr_running=%d\n", busiest->sum_nr_irunning, local->sum_nr_running);
+ 				env->imbalance = 0;
++			}
+ 		}
+ 
+ 		return;
 
-> ---
-> 
-> v3: Drop the page_isolation.c cleanup change.
-> v2: Improve the commit log.
->     Warn for all start_isolate_page_range() users not just offlining.
-> 
->  mm/page_alloc.c     | 11 ++++-------
->  mm/page_isolation.c | 18 +++++++++++-------
->  2 files changed, 15 insertions(+), 14 deletions(-)
-> 
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index 621716a25639..3c4eb750a199 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -8231,7 +8231,7 @@ struct page *has_unmovable_pages(struct zone *zone, struct page *page,
->  		if (is_migrate_cma(migratetype))
->  			return NULL;
->  
-> -		goto unmovable;
-> +		return page;
->  	}
->  
->  	for (; iter < pageblock_nr_pages; iter++) {
-> @@ -8241,7 +8241,7 @@ struct page *has_unmovable_pages(struct zone *zone, struct page *page,
->  		page = pfn_to_page(pfn + iter);
->  
->  		if (PageReserved(page))
-> -			goto unmovable;
-> +			return page;
->  
->  		/*
->  		 * If the zone is movable and we have ruled out all reserved
-> @@ -8261,7 +8261,7 @@ struct page *has_unmovable_pages(struct zone *zone, struct page *page,
->  			unsigned int skip_pages;
->  
->  			if (!hugepage_migration_supported(page_hstate(head)))
-> -				goto unmovable;
-> +				return page;
->  
->  			skip_pages = compound_nr(head) - (page - head);
->  			iter += skip_pages - 1;
-> @@ -8303,12 +8303,9 @@ struct page *has_unmovable_pages(struct zone *zone, struct page *page,
->  		 * is set to both of a memory hole page and a _used_ kernel
->  		 * page at boot.
->  		 */
-> -		goto unmovable;
-> +		return page;
->  	}
->  	return NULL;
-> -unmovable:
-> -	WARN_ON_ONCE(zone_idx(zone) == ZONE_MOVABLE);
-> -	return pfn_to_page(pfn + iter);
->  }
->  
->  #ifdef CONFIG_CONTIG_ALLOC
-> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
-> index e70586523ca3..a9fd7c740c23 100644
-> --- a/mm/page_isolation.c
-> +++ b/mm/page_isolation.c
-> @@ -54,14 +54,18 @@ static int set_migratetype_isolate(struct page *page, int migratetype, int isol_
->  
->  out:
->  	spin_unlock_irqrestore(&zone->lock, flags);
-> -	if (!ret)
-> +	if (!ret) {
->  		drain_all_pages(zone);
-> -	else if ((isol_flags & REPORT_FAILURE) && unmovable)
-> -		/*
-> -		 * printk() with zone->lock held will guarantee to trigger a
-> -		 * lockdep splat, so defer it here.
-> -		 */
-> -		dump_page(unmovable, "unmovable page");
-> +	} else {
-> +		WARN_ON_ONCE(zone_idx(zone) == ZONE_MOVABLE);
-> +
-> +		if ((isol_flags & REPORT_FAILURE) && unmovable)
-> +			/*
-> +			 * printk() with zone->lock held will likely trigger a
-> +			 * lockdep splat, so defer it here.
-> +			 */
-> +			dump_page(unmovable, "unmovable page");
-> +	}
->  
->  	return ret;
->  }
-> -- 
-> 2.21.0 (Apple Git-122.2)
+
+perf stat for the 5 iterations this time shows: 
+77.817 +- 0.995 seconds time elapsed  ( +-  1.28% )
+which I think is significantly less than last time around.
+
+So I think it may be some other noise that could have contributed to the
+jump last time. Also since the time consumption of numa02 is very small, a
+small disturbance can show up as a big number from a percentage perspective.
 
 -- 
-Michal Hocko
-SUSE Labs
+Thanks and Regards
+Srikar Dronamraju
+
