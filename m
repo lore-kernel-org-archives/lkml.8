@@ -2,299 +2,105 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A55D2C33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70099C33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 694F521835
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:14:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eS0DBYdf"
+	by mail.kernel.org (Postfix) with ESMTP id 46D9E22314
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:14:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579529678;
+	bh=s+B1Zj2tP63CcGWhhEWSPDbKXf7ZgnCb1d+/R8JiMro=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0aZEsH3fovpUqmUEupsMBK/heVsMi0WVQiV8BWtbwIrYviGvCA4XKZfo9i9sRMv70
+	 aa27qu0HuouqdQPbqPp0XYYqORPdFlbXeRAMEqfQAe1W5JPIgjbnKxymRghpDsk5fA
+	 oKkPY9zB50fLu5Y9O99C6khjKDAGg6F7RkAulCSw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727289AbgATOOD (ORCPT
+        id S1728093AbgATOOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 09:14:03 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:60893 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726885AbgATOOC (ORCPT
+        Mon, 20 Jan 2020 09:14:37 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33573 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726885AbgATOOh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 09:14:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579529641;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=hO6n5NzJdPtqLw8Nl0EBPTz7Df5HPZ6HbyJsYMSOIEg=;
-        b=eS0DBYdfWoyjkAkdAYtZgXa7Eld1deKrKi42/thxSKN6L7wVNUB+IUB1OBpAnX3YRdWCbe
-        cHGK2I+paXkymcztsyob6mu2shmAnXsmpcmcUUtvbKbH7m9QN9XdQL0I8bAKP9SgJqyIMA
-        qSKlWfbDFyEFTqEy2gFNskmZ6s7nZBc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-278-eutsiOH2NUu5vBA2Id-gzw-1; Mon, 20 Jan 2020 09:13:57 -0500
-X-MC-Unique: eutsiOH2NUu5vBA2Id-gzw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B49018010C4;
-        Mon, 20 Jan 2020 14:13:56 +0000 (UTC)
-Received: from [10.36.118.34] (unknown [10.36.118.34])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7CC6610027A3;
-        Mon, 20 Jan 2020 14:13:55 +0000 (UTC)
-Subject: Re: [PATCH -mm v2] mm/page_isolation: fix potential warning from user
-To:     Qian Cai <cai@lca.pw>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <20200120131909.813-1-cai@lca.pw>
- <8c56268d-9b8a-f62e-eca9-7707852a2aaf@redhat.com>
- <ba3215a2-d616-c636-e70d-99bb8f504292@redhat.com>
- <96675869-3815-4E98-8492-1D84F5B42AED@lca.pw>
- <74aebdfe-e727-acd6-e664-6e63948a68ae@redhat.com>
- <F8997A77-7F52-4C0C-8045-F39C57B4CC74@lca.pw>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <aa5f235e-6449-1531-1355-6974f3d38740@redhat.com>
-Date:   Mon, 20 Jan 2020 15:13:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Mon, 20 Jan 2020 09:14:37 -0500
+Received: by mail-wr1-f68.google.com with SMTP id b6so29780839wrq.0;
+        Mon, 20 Jan 2020 06:14:35 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lkDkkMY1TWgj8+gYQdlaFHI7hmmwbXGQtowlL27ZgDI=;
+        b=Nrwv0yvJTzzbJuT58voYmYgzfFlF6wgNA1P1HpK4Wa7NYjd99eYag5WD5bIe42UT7k
+         5bOvEdiYDUe7VPyjlItS0Vuj/bwNhmuJL1knyX6Y+TuL+2wug5MhpQC03u7mNyjIsgSn
+         uc11evw/04AG/X1tXK3b9QR9SIbLt40YGzM9Q6gPsRxSO3GvcGuU/hvWZfZwSTYuFEx/
+         xcemiqpoEWtsPWdGRqKulOHzW6cEYZOsdz4e2rCq1ViBYOSenHztVtTNjDhuSG/M/cWJ
+         sz25dAGte6G1pTCpp6UVm86i3a2LW/FBuORepe0wxn98hxQRdNAtkp+980kHo25L9RTl
+         Rk7g==
+X-Gm-Message-State: APjAAAUmjeigQJ9k1+uwiOo0NPzOj6+GSGNzTsJfRbKAOYfkCosTbdDA
+        edoeL3HOXRLgY9M3j+uEr2Y=
+X-Google-Smtp-Source: APXvYqz5/OtwpB21BRTDCwjNdY9uy8qzHGGRso8Ycl1SAhw43eAeI0AzOpJL6n5gnGShrtZ2EdKgaA==
+X-Received: by 2002:adf:fd43:: with SMTP id h3mr18440651wrs.169.1579529675281;
+        Mon, 20 Jan 2020 06:14:35 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id i11sm49089379wrs.10.2020.01.20.06.14.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jan 2020 06:14:34 -0800 (PST)
+Date:   Mon, 20 Jan 2020 15:14:33 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Tianyu Lan <Tianyu.Lan@microsoft.com>
+Cc:     David Hildenbrand <david@redhat.com>,
+        "lantianyu1986@gmail.com" <lantianyu1986@gmail.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        vkuznets <vkuznets@redhat.com>,
+        "eric.devolder@oracle.com" <eric.devolder@oracle.com>,
+        "vbabka@suse.cz" <vbabka@suse.cz>,
+        "osalvador@suse.de" <osalvador@suse.de>,
+        Pasha Tatashin <Pavel.Tatashin@microsoft.com>,
+        "rppt@linux.ibm.com" <rppt@linux.ibm.com>
+Subject: Re: [EXTERNAL] Re: [RFC PATCH V2 2/10] mm: expose
+ is_mem_section_removable() symbol
+Message-ID: <20200120141433.GI18451@dhcp22.suse.cz>
+References: <20200107130950.2983-1-Tianyu.Lan@microsoft.com>
+ <20200107130950.2983-3-Tianyu.Lan@microsoft.com>
+ <20200107133623.GJ32178@dhcp22.suse.cz>
+ <99a6db0c-6d73-d982-58b3-7a0172748ae4@redhat.com>
+ <SG2P153MB0349F85FB0C1C02F55391F6D92350@SG2P153MB0349.APCP153.PROD.OUTLOOK.COM>
+ <20200114095057.GK19428@dhcp22.suse.cz>
+ <PS1P15301MB034764C1FFA3D2711DAED14C92360@PS1P15301MB0347.APCP153.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-In-Reply-To: <F8997A77-7F52-4C0C-8045-F39C57B4CC74@lca.pw>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PS1P15301MB034764C1FFA3D2711DAED14C92360@PS1P15301MB0347.APCP153.PROD.OUTLOOK.COM>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20.01.20 15:11, Qian Cai wrote:
->=20
->=20
->> On Jan 20, 2020, at 9:01 AM, David Hildenbrand <david@redhat.com> wrot=
-e:
->>
->> On 20.01.20 14:56, Qian Cai wrote:
->>>
->>>
->>>> On Jan 20, 2020, at 8:38 AM, David Hildenbrand <david@redhat.com> wr=
-ote:
->>>>
->>>> On 20.01.20 14:30, David Hildenbrand wrote:
->>>>> On 20.01.20 14:19, Qian Cai wrote:
->>>>>> It makes sense to call the WARN_ON_ONCE(zone_idx(zone) =3D=3D ZONE=
-_MOVABLE)
->>>>>> from start_isolate_page_range(), but should avoid triggering it fr=
-om
->>>>>> userspace, i.e, from is_mem_section_removable() because it could b=
-e a
->>>>>> DoS if warn_on_panic is set.
->>>>>>
->>>>>> While at it, simplify the code a bit by removing an unnecessary ju=
-mp
->>>>>> label and a local variable, so set_migratetype_isolate() could rea=
-lly
->>>>>> return a bool.
->>>>>>
->>>>>> Suggested-by: Michal Hocko <mhocko@kernel.org>
->>>>>> Signed-off-by: Qian Cai <cai@lca.pw>
->>>>>> ---
->>>>>>
->>>>>> v2: Improve the commit log.
->>>>>>   Warn for all start_isolate_page_range() users not just offlining=
-.
->>>>>>
->>>>>> mm/page_alloc.c     | 11 ++++-------
->>>>>> mm/page_isolation.c | 30 +++++++++++++++++-------------
->>>>>> 2 files changed, 21 insertions(+), 20 deletions(-)
->>>>>>
->>>>>> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
->>>>>> index 621716a25639..3c4eb750a199 100644
->>>>>> --- a/mm/page_alloc.c
->>>>>> +++ b/mm/page_alloc.c
->>>>>> @@ -8231,7 +8231,7 @@ struct page *has_unmovable_pages(struct zone=
- *zone, struct page *page,
->>>>>> 		if (is_migrate_cma(migratetype))
->>>>>> 			return NULL;
->>>>>>
->>>>>> -		goto unmovable;
->>>>>> +		return page;
->>>>>> 	}
->>>>>>
->>>>>> 	for (; iter < pageblock_nr_pages; iter++) {
->>>>>> @@ -8241,7 +8241,7 @@ struct page *has_unmovable_pages(struct zone=
- *zone, struct page *page,
->>>>>> 		page =3D pfn_to_page(pfn + iter);
->>>>>>
->>>>>> 		if (PageReserved(page))
->>>>>> -			goto unmovable;
->>>>>> +			return page;
->>>>>>
->>>>>> 		/*
->>>>>> 		 * If the zone is movable and we have ruled out all reserved
->>>>>> @@ -8261,7 +8261,7 @@ struct page *has_unmovable_pages(struct zone=
- *zone, struct page *page,
->>>>>> 			unsigned int skip_pages;
->>>>>>
->>>>>> 			if (!hugepage_migration_supported(page_hstate(head)))
->>>>>> -				goto unmovable;
->>>>>> +				return page;
->>>>>>
->>>>>> 			skip_pages =3D compound_nr(head) - (page - head);
->>>>>> 			iter +=3D skip_pages - 1;
->>>>>> @@ -8303,12 +8303,9 @@ struct page *has_unmovable_pages(struct zon=
-e *zone, struct page *page,
->>>>>> 		 * is set to both of a memory hole page and a _used_ kernel
->>>>>> 		 * page at boot.
->>>>>> 		 */
->>>>>> -		goto unmovable;
->>>>>> +		return page;
->>>>>> 	}
->>>>>> 	return NULL;
->>>>>> -unmovable:
->>>>>> -	WARN_ON_ONCE(zone_idx(zone) =3D=3D ZONE_MOVABLE);
->>>>>> -	return pfn_to_page(pfn + iter);
->>>>>> }
->>>>>>
->>>>>> #ifdef CONFIG_CONTIG_ALLOC
->>>>>> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
->>>>>> index e70586523ca3..31f5516f5d54 100644
->>>>>> --- a/mm/page_isolation.c
->>>>>> +++ b/mm/page_isolation.c
->>>>>> @@ -15,12 +15,12 @@
->>>>>> #define CREATE_TRACE_POINTS
->>>>>> #include <trace/events/page_isolation.h>
->>>>>>
->>>>>> -static int set_migratetype_isolate(struct page *page, int migrate=
-type, int isol_flags)
->>>>>> +static bool set_migratetype_isolate(struct page *page, int migrat=
-etype,
->>>>>> +				    int isol_flags)
->>>>>
->>>>> Why this change?
->>>>>
->>>>>> {
->>>>>> -	struct page *unmovable =3D NULL;
->>>>>> +	struct page *unmovable =3D ERR_PTR(-EBUSY);
->>>>>
->>>>> Also, why this change?
->>>>>
->>>>>> 	struct zone *zone;
->>>>>> 	unsigned long flags;
->>>>>> -	int ret =3D -EBUSY;
->>>>>>
->>>>>> 	zone =3D page_zone(page);
->>>>>>
->>>>>> @@ -49,21 +49,25 @@ static int set_migratetype_isolate(struct page=
- *page, int migratetype, int isol_
->>>>>> 									NULL);
->>>>>>
->>>>>> 		__mod_zone_freepage_state(zone, -nr_pages, mt);
->>>>>> -		ret =3D 0;
->>>>>> 	}
->>>>>>
->>>>>> out:
->>>>>> 	spin_unlock_irqrestore(&zone->lock, flags);
->>>>>> -	if (!ret)
->>>>>> +
->>>>>> +	if (!unmovable) {
->>>>>> 		drain_all_pages(zone);
->>>>>> -	else if ((isol_flags & REPORT_FAILURE) && unmovable)
->>>>>> -		/*
->>>>>> -		 * printk() with zone->lock held will guarantee to trigger a
->>>>>> -		 * lockdep splat, so defer it here.
->>>>>> -		 */
->>>>>> -		dump_page(unmovable, "unmovable page");
->>>>>> -
->>>>>> -	return ret;
->>>>>> +	} else {
->>>>>> +		WARN_ON_ONCE(zone_idx(zone) =3D=3D ZONE_MOVABLE);
->>>>>> +
->>>>>> +		if ((isol_flags & REPORT_FAILURE) && !IS_ERR(unmovable))
->>>>>> +			/*
->>>>>
->>>>> Why this change? (!IS_ERR)
->>>>>
->>>>>
->>>>> Some things here look unrelated - or I am missing something :)
->>>>>
->>>>
->>>> FWIW, I'd prefer this change without any such cleanups (e.g., I don'=
-t
->>>> like returning a bool from this function and the IS_ERR handling, ma=
-kes
->>>> the function harder to read than before)
->>>
->>> What is Michal or Andrew=E2=80=99s opinion? BTW, a bonus point to ret=
-urn a bool
->>> is that it helps the code robustness in general, as UBSAN will be abl=
-e to
->>> catch any abuse.
->>>
->>
->> A return type of bool on a function that does not test a property
->> ("has_...", "is"...") is IMHO confusing.
->=20
-> That is fine. It could be renamed to set_migratetype_is_isolate() or
-> is_set_migratetype_isolate() which seems pretty minor because we
-> have no consistency in the naming of this in linux kernel at all, i.e.,
-> many existing bool function names without those test of properties.=20
+On Fri 17-01-20 16:35:03, Tianyu Lan wrote:
+[...]
+> > Could you describe your usecase in more details please?
+> 
+> Hyper-V sends hot-remove request message which just contains requested
+> page number but not provide detail range. So Hyper-V driver needs to search
+> suitable memory block in system memory to return back to host if there is no
+> memory hot-add before. So I used the is_mem_section_removable() do such check.
 
-It does not query a property, so "is_set_migratetype_isolate()" is plain
-wrong.
-
-Anyhow, Michal does not seem to care.
-
---=20
-Thanks,
-
-David / dhildenb
-
+As David described, you would be much better of by using
+alloc_contig_range to find a memory that would be suitable for
+hotremoving without any races.
+-- 
+Michal Hocko
+SUSE Labs
