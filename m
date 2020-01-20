@@ -2,143 +2,75 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80555C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1132FC33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41DB422314
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:20:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qz2BL8Dd"
+	by mail.kernel.org (Postfix) with ESMTP id DA6BA2070C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:20:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728913AbgATPUN (ORCPT
+        id S1729030AbgATPUl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 10:20:13 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39968 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726626AbgATPUN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 10:20:13 -0500
-Received: by mail-wm1-f68.google.com with SMTP id t14so15081457wmi.5;
-        Mon, 20 Jan 2020 07:20:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=RzNA/B1zWOp+s3c1S4KTFzaLREFyMoeK9blIPOWv0tg=;
-        b=qz2BL8DdvCQ0lG9BBDK/zr1PYABbh7SfEbmME2/1/QZ1ZMh9WlmjZ4N+kA7rFvKSQh
-         l6aObfsqeoS/IlgFFfkuQIa4wRYBB+PmcfUyo9GVawd4ItTj+uw5t9rYcpvUx10KAE5D
-         kI56+DFVH3sD28X+1FGa2YuSSvF6Rb5bWauAhaAJbAOqk/j7RCxWza4qxSDTKi1KH55Y
-         pIyjEvGRtZ5TEZK+SMK/lW2nkzuGrdPGjT/byPkhRa9z9e5uCQR2dfEWstcDDOT2TzA6
-         4drnG18gmIF4pYBqcLw68n81ibecINJ6ZxWR5kKVxkj4dIC/LyLqsq+KRcIW0uKgohyS
-         +VeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=RzNA/B1zWOp+s3c1S4KTFzaLREFyMoeK9blIPOWv0tg=;
-        b=XSfzJv9ZF8ZIjH1YweZosLuJnkIqKRE7q0wKJs+nz6EhySeGauHAIfi6nQF70VyvuW
-         tb5dsGDWVeHZ+gO5fDJaBNWaUJqeZ6INqs1gpgYlWZwMmoOriDC9wPR3ua+6sG/IIMnX
-         xB73FohCpBTzu9irIw4BfaTuWMJUbWyPu2L4VN7YwVKHAiNpL6Pn7HlHV52r/pXjKE+7
-         Lz9FE7dr0tyY82/IzXCYYK3VynffVJCB4tf0aMUx4uP64fe5TM40w55u7F4/mBMjF9Kt
-         dplJ7xWQXq53Z7CigUGt/iy4oix9sgefa+ijpPk4kqeMuIpaRJr2nAYy29w8nhFN0rjp
-         8tvA==
-X-Gm-Message-State: APjAAAVSyPmFT/WOiAlSgi6ElH0FctRcGwWJoERSo1BtAQAye5S5buMW
-        6CyvTzHFOwKT9/eQwhVnsJs=
-X-Google-Smtp-Source: APXvYqxuTtfIMonsoUg4b+46IkEJGhK7vgKCjB4XTVegDc2CQzTQK2TeycP83DPFhew+ky1gbZw1IQ==
-X-Received: by 2002:a7b:c389:: with SMTP id s9mr18584278wmj.7.1579533611655;
-        Mon, 20 Jan 2020 07:20:11 -0800 (PST)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id a1sm23528152wmj.40.2020.01.20.07.20.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 07:20:10 -0800 (PST)
-Date:   Mon, 20 Jan 2020 16:20:09 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Namjae Jeon <linkinjeon@gmail.com>,
-        Gabriel Krisman Bertazi <krisman@collabora.com>
-Subject: Re: vfat: Broken case-insensitive support for UTF-8
-Message-ID: <20200120152009.5vbemgmvhke4qupq@pali>
-References: <20200119221455.bac7dc55g56q2l4r@pali>
- <87sgkan57p.fsf@mail.parknet.co.jp>
- <20200120110438.ak7jpyy66clx5v6x@pali>
- <89eba9906011446f8441090f496278d2@AcuMS.aculab.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        Mon, 20 Jan 2020 10:20:41 -0500
+Received: from gate.crashing.org ([63.228.1.57]:52061 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726626AbgATPUk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 10:20:40 -0500
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 00KFJb5J002311;
+        Mon, 20 Jan 2020 09:19:38 -0600
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id 00KFJbq8002310;
+        Mon, 20 Jan 2020 09:19:37 -0600
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Mon, 20 Jan 2020 09:19:36 -0600
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, nathanl@linux.ibm.com,
+        arnd@arndb.de, tglx@linutronix.de, vincenzo.frascino@arm.com,
+        luto@kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mips@vger.kernel.org
+Subject: Re: [RFC PATCH v4 00/11] powerpc: switch VDSO to C implementation.
+Message-ID: <20200120151936.GB3191@gate.crashing.org>
+References: <cover.1579196675.git.christophe.leroy@c-s.fr> <20200117085851.GS3191@gate.crashing.org> <3027b6d2-47a9-a871-7c52-050a5f9c6ab7@c-s.fr>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <89eba9906011446f8441090f496278d2@AcuMS.aculab.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <3027b6d2-47a9-a871-7c52-050a5f9c6ab7@c-s.fr>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday 20 January 2020 15:07:20 David Laight wrote:
-> From: Pali Rohár
-> > Sent: 20 January 2020 11:05
-> > On Monday 20 January 2020 13:04:42 OGAWA Hirofumi wrote:
-> > > Pali Rohár <pali.rohar@gmail.com> writes:
-> > >
-> > > > Which means that fat_name_match(), vfat_hashi() and vfat_cmpi() are
-> > > > broken for vfat in UTF-8 mode.
-> > >
-> > > Right. It is a known issue.
-> > 
-> > Could be this issue better documented? E.g. in mount(8) manpage where
-> > are written mount options for vfat? I think that people should be aware
-> > of this issue when they use "utf8=1" mount option.
+On Mon, Jan 20, 2020 at 02:56:00PM +0000, Christophe Leroy wrote:
+> >Nice!  Much better.
+> >
+> >It should be tested on more representative hardware, too, but this looks
+> >promising alright :-)
 > 
-> What happens if the filesystem has filenames that invalid UTF8 sequences
-
-Could you please describe what you mean by this question?
-
-
-VFAT filesystem stores file names in UTF-16. Therefore you cannot have
-UTF-8 on FS (and therefore also you cannot have invalid UTF-8).
-
-Ehm... UTF-16 is not fully truth, MS FAT32 implementations allows half
-of UTF-16 surrogate pair stored in FS.
-
-Therefore practically, on VFAT you can store any uint16_t[] sequence as
-filename, there is no invalid sequence (except those characters like
-:<>?... which are invalid in MS-DOS).
-
-
-
-If by "the filesystem has filenames" you do not mean filesystem file
-names, but rather Linux VFS file names (e.g. you call creat() call with
-invalid UTF-8 sequence) then function utf8s_to_utf16s() (called in
-namei_vfat.c) fails and returns error. Which should be propagated to
-open() / creat() call that it is not possible to create filename with
-such UTF-8 sequence.
-
-> or multiple filenames that decode from UTF8 to the same 'wchar' value.
-
-This is not possible. There is 1:1 mapping between UTF-8 sequence and
-Unicode code point. wchar_t in kernel represent either one Unicode code
-point (limited up to U+FFFF in NLS framework functions) or 2bytes in
-UTF-16 sequence (only in utf8s_to_utf16s() and utf16s_to_utf8s()
-functions).
-
-> Never mind ones that are just case-differences for the same filename.
+> mpc832x (e300c2 core) at 333 MHz:
 > 
-> UTF8 is just so broken it should never have been allowed to become
-> a standard.
+> Before:
+> 
+> gettimeofday:    vdso: 235 nsec/call
+> clock-gettime-realtime:    vdso: 244 nsec/call
+> 
+> With the series:
+> 
+> gettimeofday:    vdso: 271 nsec/call
+> clock-gettime-realtime:    vdso: 281 nsec/call
 
-Well, UTF-16 is worse then UTF-8... incompatible with ASCII, variable
-length and space consuming.
+Those are important, and degrade ~15%.  That is acceptable IMO, but do
+you see a way to optimise this (later)?
 
--- 
-Pali Rohár
-pali.rohar@gmail.com
+Anyway, excellent results, thanks for your persistence!
+
+
+Segher
