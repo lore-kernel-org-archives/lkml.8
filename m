@@ -2,170 +2,206 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_RHS_DOB,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE73C33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:39:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43417C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A38D122522
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:39:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="q/z6+Bde"
+	by mail.kernel.org (Postfix) with ESMTP id 1A86D2073D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:39:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729184AbgATQjX (ORCPT
+        id S1729253AbgATQjj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 11:39:23 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:33846 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726642AbgATQjX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 11:39:23 -0500
-Received: by mail-qk1-f195.google.com with SMTP id j9so30707407qkk.1
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 08:39:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bjYtDUvLvMYlhIvuD1xMxndqXr35/jOrhQJr+DWUbRw=;
-        b=q/z6+Bdex6ZDtkJAAhBIZaTdS8LZpO0r7h1LGwU22odEOD4YPNUzHhYmUEUm51DrrX
-         fQ5OkfN/REx9CwH/khr/P8qOLs9o2qQgzHWbHPuOEgHwTJkY6/7A9WtBRlgA9J+eB6pg
-         sUet/WbHIwgWWyZPTSL/wCQyXV9ajt3QP0jHHUfO+T0Xa5L5SLqj7vWMcAUD7BTtUnNo
-         TmYgBWYG0ERAjmACwRIz7c2cUsVqtrEoPix2WcrGQP7/ceG+sukv2uRrq+79HBB6z+ji
-         j1Ruxsmeu9laRNX99RFj9vAsDfDeH5PLaXV1H8LPUGYqYh+0NTDqwntN/NcPJ9bKL/Fg
-         evWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bjYtDUvLvMYlhIvuD1xMxndqXr35/jOrhQJr+DWUbRw=;
-        b=BcaUfcF92OIipLfLZp+kIC9Bq00W33QpWJrugo8PrgNkJVHXb4PAPGV/NCughL3rLL
-         GLmeg6q9JKypCoPltoddK8yKFVkJhrEn8CUQwtuLb2bBhaDAsaU968senQBpoNqD+djw
-         29zEZvgDm1nQ2RsiT53pfYO6ycRleFwy6pascyj0YxMe7mXuX1LJf+FlITy+xnxDkVUX
-         p285nBokFQvIHIQJCKlsSIeNUI5txVp8AVc2FxXokwIq5uW0XqroKRaXqnu7HbH7+hth
-         1d6x7zEqJN7yI8ArLDLkf5ebqp8DSfg5wnA2eaiF15B9gCwspp/XA+U23+ITFaWVK7cT
-         3eUw==
-X-Gm-Message-State: APjAAAV44xTmCAkqrXOn9SOV79ozFkYEFTlELK225epcTYkzrp2MXKNd
-        RBG0imo7E0qViTUY7UPWnIyxXQ==
-X-Google-Smtp-Source: APXvYqz0GHpFOA+3eQ0vNIS6wz4J7l778/zehWDFokXO4lRATb+gC65IN8Rol5K3TJPnkqzPy7cLXA==
-X-Received: by 2002:a37:a54b:: with SMTP id o72mr332538qke.313.1579538362344;
-        Mon, 20 Jan 2020 08:39:22 -0800 (PST)
-Received: from ovpn-123-97.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id g62sm15877601qkd.25.2020.01.20.08.39.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 Jan 2020 08:39:21 -0800 (PST)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     mhocko@kernel.org, david@redhat.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH -mm v3] mm/page_isolation: fix potential warning from user
-Date:   Mon, 20 Jan 2020 11:39:15 -0500
-Message-Id: <20200120163915.1469-1-cai@lca.pw>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
+        Mon, 20 Jan 2020 11:39:39 -0500
+Received: from mx2.suse.de ([195.135.220.15]:50566 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729190AbgATQji (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 11:39:38 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 63533ABB3;
+        Mon, 20 Jan 2020 16:39:36 +0000 (UTC)
+Date:   Mon, 20 Jan 2020 17:39:33 +0100
+From:   Cyril Hrubis <chrubis@suse.cz>
+To:     ltp@lists.linux.it, linux-kernel@vger.kernel.org,
+        libc-alpha@sourceware.org
+Cc:     lwn@lwn.net, akpm@linux-foundation.org,
+        torvalds@linux-foundation.org
+Subject: [ANNOUNCE] The Linux Test Project has been released for JANUARY 2020
+Message-ID: <20200120163933.GA7391@rei>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It makes sense to call the WARN_ON_ONCE(zone_idx(zone) == ZONE_MOVABLE)
-from start_isolate_page_range(), but should avoid triggering it from
-userspace, i.e, from is_mem_section_removable() because it could crash
-the system by a non-root user if warn_on_panic is set.
+Good news everyone,
 
-While at it, simplify the code a bit by removing an unnecessary jump
-label.
+the Linux Test Project test suite stable release for *January 2020* has been
+released.
 
-Suggested-by: Michal Hocko <mhocko@kernel.org>
-Signed-off-by: Qian Cai <cai@lca.pw>
----
+Since the last release 195 patches by 31 authors were merged.
 
-v3: Drop the page_isolation.c cleanup change.
-v2: Improve the commit log.
-    Warn for all start_isolate_page_range() users not just offlining.
+NOTABLE CHANGES
+===============
 
- mm/page_alloc.c     | 11 ++++-------
- mm/page_isolation.c | 18 +++++++++++-------
- 2 files changed, 15 insertions(+), 14 deletions(-)
+* New tests
+  - vmsplice03 (splicing pipe to user memory)
+  - prctl08, prctl09 (PR_{SET,GET}_TIMERSLACK)
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 621716a25639..3c4eb750a199 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -8231,7 +8231,7 @@ struct page *has_unmovable_pages(struct zone *zone, struct page *page,
- 		if (is_migrate_cma(migratetype))
- 			return NULL;
- 
--		goto unmovable;
-+		return page;
- 	}
- 
- 	for (; iter < pageblock_nr_pages; iter++) {
-@@ -8241,7 +8241,7 @@ struct page *has_unmovable_pages(struct zone *zone, struct page *page,
- 		page = pfn_to_page(pfn + iter);
- 
- 		if (PageReserved(page))
--			goto unmovable;
-+			return page;
- 
- 		/*
- 		 * If the zone is movable and we have ruled out all reserved
-@@ -8261,7 +8261,7 @@ struct page *has_unmovable_pages(struct zone *zone, struct page *page,
- 			unsigned int skip_pages;
- 
- 			if (!hugepage_migration_supported(page_hstate(head)))
--				goto unmovable;
-+				return page;
- 
- 			skip_pages = compound_nr(head) - (page - head);
- 			iter += skip_pages - 1;
-@@ -8303,12 +8303,9 @@ struct page *has_unmovable_pages(struct zone *zone, struct page *page,
- 		 * is set to both of a memory hole page and a _used_ kernel
- 		 * page at boot.
- 		 */
--		goto unmovable;
-+		return page;
- 	}
- 	return NULL;
--unmovable:
--	WARN_ON_ONCE(zone_idx(zone) == ZONE_MOVABLE);
--	return pfn_to_page(pfn + iter);
- }
- 
- #ifdef CONFIG_CONTIG_ALLOC
-diff --git a/mm/page_isolation.c b/mm/page_isolation.c
-index e70586523ca3..a9fd7c740c23 100644
---- a/mm/page_isolation.c
-+++ b/mm/page_isolation.c
-@@ -54,14 +54,18 @@ static int set_migratetype_isolate(struct page *page, int migratetype, int isol_
- 
- out:
- 	spin_unlock_irqrestore(&zone->lock, flags);
--	if (!ret)
-+	if (!ret) {
- 		drain_all_pages(zone);
--	else if ((isol_flags & REPORT_FAILURE) && unmovable)
--		/*
--		 * printk() with zone->lock held will guarantee to trigger a
--		 * lockdep splat, so defer it here.
--		 */
--		dump_page(unmovable, "unmovable page");
-+	} else {
-+		WARN_ON_ONCE(zone_idx(zone) == ZONE_MOVABLE);
-+
-+		if ((isol_flags & REPORT_FAILURE) && unmovable)
-+			/*
-+			 * printk() with zone->lock held will likely trigger a
-+			 * lockdep splat, so defer it here.
-+			 */
-+			dump_page(unmovable, "unmovable page");
-+	}
- 
- 	return ret;
- }
+* New regression tests
+  - bpf_prog03
+
+* Increased coverage
+  - quotactl tests were rewritten and coverage was increased
+
+* Additional 19 tests were converted to the new test library
+
+* Removed tests
+  - TI-RPC authdes related tests (authdes is disabled by default since libtirpc 1.2.5)
+  - openposix/pi_test*
+  - ext4 features tests
+    (the interesting bits are being moved to xfstests
+     https://patchwork.kernel.org/patch/11290345/)
+
+* Our Travis now includes native ppc64le and s390x builds
+
+* Improved musl support, build with musl in Travis CI using Alpine Linux
+  (broken tests are documented in Travis build script travis/alpine.sh)
+
+* Regression tests now print possibly missing kernel commits:
+
+    --------------------------------------------------------------------------
+    snd_timer01.c:134: FAIL: kernel seems vulnerable
+
+    HINT: You _MAY_ be missing kernel fixes, see:
+
+    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d11662f4f798
+    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ba3021b2c79b
+
+    HINT: You _MAY_ be vulnerable to CVE(s), see:
+
+    https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-1000380
+
+    Summary:
+    passed   0
+    failed   1
+    skipped  0
+    warnings 0
+    --------------------------------------------------------------------------
+
++ The usual amount of fixes and cleanups.
+
+
+METADATA EXTRACTION & TEST CATALOGUE
+====================================
+
+There is an ongoing experiment that attempts to extract metadata[1] from the
+testcases, we also have a proof of concept web page that renders the json
+metadata into a browseable test documentation[2]. There is not much there yet,
+but we are hoping, among other things, to build a nice, searchable and
+browseable test catalogue based on these efforts.
+
+[1] https://github.com/metan-ucw/ltp/tree/master/docparse
+[2] http://metan.ucw.cz/outgoing/metadata.html
+    http://metan.ucw.cz/outgoing/metadata.html?test=abort01
+    http://metan.ucw.cz/outgoing/metadata.html?test=pcrypt_aead01
+
+
+NOTABLE CHANGES IN NETWORK TESTS
+================================
+brought to you by Petr Vorel
+
+* iptables: add new test for iptables-translate and nft, add IPv6 support
+* route: rewrite route change destination, gateway and interface tests into new API
+
+
+DOWNLOAD AND LINKS
+==================
+
+The latest version of the test-suite contains 3000+ tests for the Linux
+and can be downloaded at:
+
+https://github.com/linux-test-project/ltp/releases/tag/20190930
+
+The project pages as well as GIT repository are hosted on GitHub:
+
+https://github.com/linux-test-project/ltp
+http://linux-test-project.github.io/
+
+If you ever wondered how to write a LTP testcase, don't miss our developer
+documentation at:
+
+https://github.com/linux-test-project/ltp/wiki/C-Test-Case-Tutorial
+https://github.com/linux-test-project/ltp/wiki/Test-Writing-Guidelines
+https://github.com/linux-test-project/ltp/wiki/BuildSystem
+
+Patches, new tests, bugs, comments or questions should go to to our mailing
+list at ltp@lists.linux.it.
+
+
+CREDITS
+=======
+
+Many thanks to the people contributing to this release:
+
+git shortlog -s -e -n 20190930..
+    45  Petr Vorel <pvorel@suse.cz>
+    22  Jan Stancek <jstancek@redhat.com>
+    22  Yang Xu <xuyang2018.jy@cn.fujitsu.com>
+    13  Cyril Hrubis <chrubis@suse.cz>
+    13  Petr Vorel <petr.vorel@gmail.com>
+    11  Li Wang <liwang@redhat.com>
+    10  Joerg Vehlow <joerg.vehlow@aox-tech.de>
+    10  Martin Doucha <mdoucha@suse.cz>
+     7  Alexey Kodanev <alexey.kodanev@oracle.com>
+     6  Clemens Famulla-Conrad <cfamullaconrad@suse.de>
+     5  Xiao Yang <ice_yangxiao@163.com>
+     3  Feiyu Zhu <zhufy.jy@cn.fujitsu.com>
+     2  Jorik Cronenberg <jcronenberg@suse.de>
+     2  Pengfei Xu <pengfei.xu@intel.com>
+     2  Ping Fang <pifang@redhat.com>
+     2  Richard Palethorpe <rpalethorpe@suse.com>
+     1  Cai Zhenglong <caizhenglong_cm@deepin.com>
+     1  Dylan Chung <dylan@andestech.com>
+     1  Eric Lin <tesheng@andestech.com>
+     1  Fabrice Fontaine <fontaine.fabrice@gmail.com>
+     1  He Zhe <zhe.he@windriver.com>
+     1  Ivan Hu <ivan.hu@canonical.com>
+     1  Ma Feng <mafeng.ma@huawei.com>
+     1  Mathias Fiedler <mathias.fiedler@aox-tech.de>
+     1  Rachel Sibley <rasibley@redhat.com>
+     1  Song Jian <songjian15@huawei.com>
+     1  Sultan Alsawaf <sultan@kerneltoast.com>
+     1  Xiang Li <lixian@qti.qualcomm.com>
+     1  Yi Zhao <yi.zhao@windriver.com>
+     1  Yongxin Liu <yongxin.liu@windriver.com>
+     1  Zou Wei <zou_wei@huawei.com>
+
+
+And also thanks to patch reviewers:
+
+git log 20190930.. | grep -Ei '(reviewed|acked)-by:' | sed 's/.*by: //' | sort | uniq -c | sort -n -r
+     76 Cyril Hrubis <chrubis@suse.cz>
+     46 Petr Vorel <pvorel@suse.cz>
+     28 Li Wang <liwang@redhat.com>
+     19 Jan Stancek <jstancek@redhat.com>
+      9 Alexey Kodanev <alexey.kodanev@oracle.com>
+      5 Clemens Famulla-Conrad <cfamullaconrad@suse.de>
+      4 Richard Palethorpe <rpalethorpe@suse.com>
+      3 Yang Xu <xuyang2018.jy@cn.fujitsu.com>
+      1 Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+      1 Sumit Garg <sumit.garg@linaro.org>
+      1 Steve Dickson <steved@redhat.com>
+      1 Petr Vorel <petr.vorel@gmail.com>
+      1 Joerg Vehlow <joerg.vehlow@aox-tech.de>
+      1 Amir Goldstein <amir73il@gmail.com>
+
 -- 
-2.21.0 (Apple Git-122.2)
-
+Cyril Hrubis
+chrubis@suse.cz
