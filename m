@@ -2,104 +2,94 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C453C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C73B0C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:53:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9F8D21835
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:51:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99B7121835
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:53:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Md6XQet8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729327AbgATQvj convert rfc822-to-8bit (ORCPT
+        id S1729174AbgATQxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 11:51:39 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:44860 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726897AbgATQvi (ORCPT
+        Mon, 20 Jan 2020 11:53:04 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:42570 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726642AbgATQxD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 11:51:38 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-154-mp5ZcybCPZC3Psf2uuXE4w-1; Mon, 20 Jan 2020 16:51:35 +0000
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 20 Jan 2020 16:51:34 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 20 Jan 2020 16:51:34 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Al Viro' <viro@zeniv.linux.org.uk>
-CC:     =?iso-8859-1?Q?=27Pali_Roh=E1r=27?= <pali.rohar@gmail.com>,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        "Namjae Jeon" <linkinjeon@gmail.com>,
-        Gabriel Krisman Bertazi <krisman@collabora.com>
-Subject: RE: vfat: Broken case-insensitive support for UTF-8
-Thread-Topic: vfat: Broken case-insensitive support for UTF-8
-Thread-Index: AQHVz4FsiOVqsS4Qp0SucuDN4afIhKfzph4wgAAFE4CAAADOMIAADbUAgAAIwlA=
-Date:   Mon, 20 Jan 2020 16:51:34 +0000
-Message-ID: <db8161512f33468981cbc49e71b7bf05@AcuMS.aculab.com>
-References: <20200119221455.bac7dc55g56q2l4r@pali>
- <87sgkan57p.fsf@mail.parknet.co.jp> <20200120110438.ak7jpyy66clx5v6x@pali>
- <89eba9906011446f8441090f496278d2@AcuMS.aculab.com>
- <20200120152009.5vbemgmvhke4qupq@pali>
- <1a4c545dc7f14e33b7e59321a0aab868@AcuMS.aculab.com>
- <20200120161206.GC8904@ZenIV.linux.org.uk>
-In-Reply-To: <20200120161206.GC8904@ZenIV.linux.org.uk>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 20 Jan 2020 11:53:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=VDW7FtXo4BtzloxC2r6H0DCb1zORddn+6B6Y6JeqHl4=; b=Md6XQet82ug27plX8I1roPwWY
+        fcY7rANcFZ9K4vSec64bgyfnkrG270L+ECykSrd4zaJaL/JGxzPm8hhZ+g9R7ohusKYCptQWLu1q5
+        MCuJwU5znf6xj/m1CjCy4lCpisLRyxXz2Q+XpCYgfMtGnQ79OQ+zOfzrkUUAP4cLJMbR0XEptG7ta
+        OvYlEe4CX9jlFAstqZDK0ypBwjrK4zaiG2eE1ut6p5A+vlaILXUNfGZ4AkgP4E6kE3sZlOXeyKeWL
+        Cz/u+oKqLMNr64TuH+QHM7Iax8CoTu+UHuowBs0qFfIPkG/nOO1aqmymo3woryIzF7Nch8UmnFlnt
+        DTAJHm8pw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1itaHq-00022B-Mr; Mon, 20 Jan 2020 16:52:26 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 89C353008A9;
+        Mon, 20 Jan 2020 17:50:44 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 2574820146B63; Mon, 20 Jan 2020 17:52:23 +0100 (CET)
+Date:   Mon, 20 Jan 2020 17:52:23 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Marco Elver <elver@google.com>, andreyknvl@google.com,
+        glider@google.com, dvyukov@google.com, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+        will@kernel.org, boqun.feng@gmail.com, arnd@arndb.de,
+        viro@zeniv.linux.org.uk, christophe.leroy@c-s.fr, dja@axtens.net,
+        mpe@ellerman.id.au, rostedt@goodmis.org, mhiramat@kernel.org,
+        mingo@kernel.org, christian.brauner@ubuntu.com,
+        daniel@iogearbox.net, cyphar@cyphar.com, keescook@chromium.org,
+        linux-arch@vger.kernel.org
+Subject: Re: [PATCH 3/5] asm-generic, kcsan: Add KCSAN instrumentation for
+ bitops
+Message-ID: <20200120165223.GC14914@hirez.programming.kicks-ass.net>
+References: <20200120141927.114373-1-elver@google.com>
+ <20200120141927.114373-3-elver@google.com>
+ <20200120144048.GB14914@hirez.programming.kicks-ass.net>
+ <20200120162725.GE2935@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-X-MC-Unique: mp5ZcybCPZC3Psf2uuXE4w-1
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200120162725.GE2935@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro
-> Sent: 20 January 2020 16:12
-> > From: Pali Rohár
-> > > Sent: 20 January 2020 15:20
-> > ...
-> > > This is not possible. There is 1:1 mapping between UTF-8 sequence and
-> > > Unicode code point. wchar_t in kernel represent either one Unicode code
-> > > point (limited up to U+FFFF in NLS framework functions) or 2bytes in
-> > > UTF-16 sequence (only in utf8s_to_utf16s() and utf16s_to_utf8s()
-> > > functions).
-> >
-> > Unfortunately there is neither a 1:1 mapping of all possible byte sequences
-> > to wchar_t (or unicode code points), nor a 1:1 mapping of all possible
-> > wchar_t values to UTF-8.
-> > Really both need to be defined - even for otherwise 'invalid' sequences.
+On Mon, Jan 20, 2020 at 08:27:25AM -0800, Paul E. McKenney wrote:
+> On Mon, Jan 20, 2020 at 03:40:48PM +0100, Peter Zijlstra wrote:
+> > On Mon, Jan 20, 2020 at 03:19:25PM +0100, Marco Elver wrote:
+> > > Add explicit KCSAN checks for bitops.
+> > > 
+> > > Note that test_bit() is an atomic bitop, and we instrument it as such,
+> > 
+> > Well, it is 'atomic' in the same way that atomic_read() is. Both are
+> > very much not atomic ops, but are part of an interface that facilitates
+> > atomic operations.
 > 
-> Who.  Cares?
-> 
-> Filename is a sequence of octets, not codepoints.  Its interpretation is
-> entirely up to the userland.
+> True, but they all are either inline assembly or have either an
+> implicit or explicit cast to volatile, so they could be treated
+> the same as atomic_read(), correct?  If not, what am I missing?
 
-For filesystems that really ought to be true.
-Saves a lot of problems in the kernel.
+Sure, but that is due to instrumentation requirements, not anything
+else.
 
-I guess the fat driver has to do something to convert the UCS-16 on-disk filenames
-to/from a sequence of octets.
-
-Even Microsoft have made it much easier to have case-dependant
-NTS4 filesystems in windows 10.
-(Ever watched the number of different cases in the list of c:/windows/system32/drivers/*.sys
-filenames output when windows boots? They are nearly all different!)
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+Also note the distinct lack of __test_bit(), to mirror the non-atomic
+__set_bit() and __clear_bit().
