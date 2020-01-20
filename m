@@ -2,88 +2,122 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B75F0C33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:07:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F41C33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F1BB20684
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:07:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC85B2077C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:08:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579507738;
+	bh=YDEovj2cYhnf/FKg78G2sdgiBvpBIIy7DcSgA489aJ8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=LflBJRJ5VTOH6gYfM2xTf0iTjPPTOXs79cg49JkDyYTDsFwfpajVgBQW/Fuy/fJX5
+	 D+iISJab3IaMnJmw8r5vBFSGiB5Nx3DobKmjib/m2ywKoGZp/lXnycJelnV6l32TBw
+	 kInOKUwvuWoINlR4d0QqoPRZegkgktXKuMDPpiFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726590AbgATIHZ (ORCPT
+        id S1726626AbgATII6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 03:07:25 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:45080 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726075AbgATIHZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 03:07:25 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1itS5h-00BuDu-HA; Mon, 20 Jan 2020 08:07:21 +0000
-Date:   Mon, 20 Jan 2020 08:07:21 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-Cc:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Namjae Jeon <linkinjeon@gmail.com>,
-        Gabriel Krisman Bertazi <krisman@collabora.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: oopsably broken case-insensitive support in ext4 and f2fs (Re: vfat:
- Broken case-insensitive support for UTF-8)
-Message-ID: <20200120080721.GB8904@ZenIV.linux.org.uk>
-References: <20200119221455.bac7dc55g56q2l4r@pali>
- <87sgkan57p.fsf@mail.parknet.co.jp>
- <20200120073040.GZ8904@ZenIV.linux.org.uk>
- <20200120074558.GA8904@ZenIV.linux.org.uk>
+        Mon, 20 Jan 2020 03:08:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52708 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726421AbgATII5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 03:08:57 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C492720684;
+        Mon, 20 Jan 2020 08:08:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579507736;
+        bh=YDEovj2cYhnf/FKg78G2sdgiBvpBIIy7DcSgA489aJ8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ko9cei3ZkD4EgsgvmkeI3g06C+BOeL5X/5LOAykUd4Q04Y6f46P/QxseZSo1k81aC
+         kKiW+obogUPlWPMbi58LapZ7sJQCHG6isr8Nh7nxxO1j9uPu398CtV4Z9Dulhcgmc3
+         l9ur72HQYijEQK9rFVM0H1eEzdk1vxklU2nd5Byg=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1itS7D-000CoA-1l; Mon, 20 Jan 2020 08:08:55 +0000
+Date:   Mon, 20 Jan 2020 08:08:53 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Kevin Hao <haokexin@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        David Daney <david.daney@cavium.com>
+Subject: Re: [PATCH] irqdomain: Fix a memory leak in irq_domain_push_irq()
+Message-ID: <20200120080853.31f23c98@why>
+In-Reply-To: <20200120043547.22271-1-haokexin@gmail.com>
+References: <20200120043547.22271-1-haokexin@gmail.com>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200120074558.GA8904@ZenIV.linux.org.uk>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: haokexin@gmail.com, linux-kernel@vger.kernel.org, tglx@linutronix.de, david.daney@cavium.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 07:45:58AM +0000, Al Viro wrote:
-> On Mon, Jan 20, 2020 at 07:30:40AM +0000, Al Viro wrote:
-> 
-> > <checks ext4>
-> > Yup, that bug is there as well, all right.  Look:
-> > #ifdef CONFIG_UNICODE
-> > static int ext4_d_compare(const struct dentry *dentry, unsigned int len,
-> >                           const char *str, const struct qstr *name)
-> > {
-> >         struct qstr qstr = {.name = str, .len = len };
-> >         struct inode *inode = dentry->d_parent->d_inode;
-> > 
-> >         if (!IS_CASEFOLDED(inode) || !EXT4_SB(inode->i_sb)->s_encoding) {
-> > 
-> > Guess what happens if your (lockless) call of ->d_compare() runs
-> > into the following sequence:
-> > CPU1:	ext4_d_compare() fetches ->d_parent
-> > CPU1:	takes a hardware interrupt
-> > CPU2:	dentry gets evicted by memory pressure; so is its parent, since
-> > it was the only thing that used to keep it pinned.  Eviction of the parent
-> > calls dentry_unlink_inode() on the parent, which zeroes its ->d_inode.
-> > CPU1:	comes back
-> > CPU1:	fetches parent's ->d_inode and gets NULL
-> > CPU1:	oopses on null pointer dereference.
-> > 
-> > It's not impossible to hit.  Note that e.g. vfat_cmpi() is not vulnerable
-> > to that problem - ->d_sb is stable and both the superblock and ->nls_io
-> > freeing is RCU-delayed.
-> > 
-> > I hadn't checked ->d_compare() instances for a while; somebody needs to
-> > do that again, by the look of it.  The above definitely is broken;
-> > no idea how many other instaces had grown such bugs...
-> 
-> f2fs one also has the same bug.  Anyway, I'm going down right now, will
-> check the rest tomorrow morning...
+On Mon, 20 Jan 2020 12:35:47 +0800
+Kevin Hao <haokexin@gmail.com> wrote:
 
-We _probably_ can get away with just checking that inode for NULL and
-buggering off if it is (->d_seq mismatch is guaranteed in that case),
-but I suspect that we might need READ_ONCE() on both dereferences.
-I hate memory barriers...
+> Fix a memory leak reported by kmemleak:
+> unreferenced object 0xffff000bc6f50e80 (size 128):
+>   comm "kworker/23:2", pid 201, jiffies 4294894947 (age 942.132s)
+>   hex dump (first 32 bytes):
+>     00 00 00 00 41 00 00 00 86 c0 03 00 00 00 00 00  ....A...........
+>     00 a0 b2 c6 0b 00 ff ff 40 51 fd 10 00 80 ff ff  ........@Q......
+>   backtrace:
+>     [<00000000e62d2240>] kmem_cache_alloc_trace+0x1a4/0x320
+>     [<00000000279143c9>] irq_domain_push_irq+0x7c/0x188
+>     [<00000000d9f4c154>] thunderx_gpio_probe+0x3ac/0x438
+>     [<00000000fd09ec22>] pci_device_probe+0xe4/0x198
+>     [<00000000d43eca75>] really_probe+0xdc/0x320
+>     [<00000000d3ebab09>] driver_probe_device+0x5c/0xf0
+>     [<000000005b3ecaa0>] __device_attach_driver+0x88/0xc0
+>     [<000000004e5915f5>] bus_for_each_drv+0x7c/0xc8
+>     [<0000000079d4db41>] __device_attach+0xe4/0x140
+>     [<00000000883bbda9>] device_initial_probe+0x18/0x20
+>     [<000000003be59ef6>] bus_probe_device+0x98/0xa0
+>     [<0000000039b03d3f>] deferred_probe_work_func+0x74/0xa8
+>     [<00000000870934ce>] process_one_work+0x1c8/0x470
+>     [<00000000e3cce570>] worker_thread+0x1f8/0x428
+>     [<000000005d64975e>] kthread+0xfc/0x128
+>     [<00000000f0eaa764>] ret_from_fork+0x10/0x18
+> 
+> Fixes: 495c38d3001f ("irqdomain: Add irq_domain_{push,pop}_irq() functions")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Kevin Hao <haokexin@gmail.com>
+> ---
+>  kernel/irq/irqdomain.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+> index dd822fd8a7d5..480df3659720 100644
+> --- a/kernel/irq/irqdomain.c
+> +++ b/kernel/irq/irqdomain.c
+> @@ -1459,6 +1459,7 @@ int irq_domain_push_irq(struct irq_domain *domain, int virq, void *arg)
+>  	if (rv) {
+>  		/* Restore the original irq_data. */
+>  		*root_irq_data = *child_irq_data;
+> +		kfree(child_irq_data);
+>  		goto error;
+>  	}
+>  
+
+Nice catch. I'll queue this for 5.6.
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
