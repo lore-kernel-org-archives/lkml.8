@@ -2,181 +2,108 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URI_HEX,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE7C0C33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:06:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 796CCC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:07:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94FC7207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:06:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fc4gDPS9"
+	by mail.kernel.org (Postfix) with ESMTP id 5748C207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:07:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbgATMG2 (ORCPT
+        id S1727114AbgATMHR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 07:06:28 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:49776 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727026AbgATMG2 (ORCPT
+        Mon, 20 Jan 2020 07:07:17 -0500
+Received: from mail.parknet.co.jp ([210.171.160.6]:52522 "EHLO
+        mail.parknet.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726589AbgATMHR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 07:06:28 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00KC6HuV076287;
-        Mon, 20 Jan 2020 06:06:17 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579521977;
-        bh=Z9noDxBqHLJiwsDBGAYw1GuUMNodrJKgcOswZfE6cEM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=fc4gDPS98yw0zZlTP7pDNEQraGkMWtEi8eY9kSajObZDK0FBUzXa3EjZOWGGfKxRs
-         kR8dz1FJbInEYqLZY3V5tvjTkqQQcCj2Ga7ZALJFYZNO58aMlh/yDIanq79PXBj0YC
-         2lWOFuIk6mRMF4mTwH4PQcjJkXcKdE+x153wTWQo=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00KC6Ho7025613;
-        Mon, 20 Jan 2020 06:06:17 -0600
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 20
- Jan 2020 06:06:16 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 20 Jan 2020 06:06:16 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00KC6E86055498;
-        Mon, 20 Jan 2020 06:06:14 -0600
-Subject: Re: [PATCH v2] dmaengine: Create symlinks between DMA channels and
- slaves
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        <dmaengine@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200117153056.31363-1-geert+renesas@glider.be>
- <d2b669e7-a5d4-20ec-5b54-103b71df7407@ti.com>
- <CAMuHMdVzQCWvH-LJ9ME5dRyafudZBHQLaJQzkSCPnughv_q2aA@mail.gmail.com>
- <1cdc4f71-f365-8c9e-4634-408c59e6a3f9@ti.com>
- <CAMuHMdU=-Eo29=DQmq96OegdYAvW7Vw9PpgNWSTfjDWVF5jd-A@mail.gmail.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <f7bbb132-1278-7030-7f40-b89733bcbd83@ti.com>
-Date:   Mon, 20 Jan 2020 14:06:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 20 Jan 2020 07:07:17 -0500
+Received: from ibmpc.myhome.or.jp (server.parknet.ne.jp [210.171.168.39])
+        by mail.parknet.co.jp (Postfix) with ESMTPSA id 5745215CBE2;
+        Mon, 20 Jan 2020 21:07:16 +0900 (JST)
+Received: from devron.myhome.or.jp (foobar@devron.myhome.or.jp [192.168.0.3])
+        by ibmpc.myhome.or.jp (8.15.2/8.15.2/Debian-16) with ESMTPS id 00KC7Fw9037236
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+        Mon, 20 Jan 2020 21:07:16 +0900
+Received: from devron.myhome.or.jp (foobar@localhost [127.0.0.1])
+        by devron.myhome.or.jp (8.15.2/8.15.2/Debian-16) with ESMTPS id 00KC7Ebd227995
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+        Mon, 20 Jan 2020 21:07:14 +0900
+Received: (from hirofumi@localhost)
+        by devron.myhome.or.jp (8.15.2/8.15.2/Submit) id 00KC7CGW227993;
+        Mon, 20 Jan 2020 21:07:12 +0900
+From:   OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Namjae Jeon <linkinjeon@gmail.com>,
+        Gabriel Krisman Bertazi <krisman@collabora.com>
+Subject: Re: vfat: Broken case-insensitive support for UTF-8
+References: <20200119221455.bac7dc55g56q2l4r@pali>
+        <87sgkan57p.fsf@mail.parknet.co.jp>
+        <20200120110438.ak7jpyy66clx5v6x@pali>
+Date:   Mon, 20 Jan 2020 21:07:12 +0900
+In-Reply-To: <20200120110438.ak7jpyy66clx5v6x@pali> ("Pali
+ =?iso-8859-1?Q?Roh=E1r=22's?= message of
+        "Mon, 20 Jan 2020 12:04:38 +0100")
+Message-ID: <875zh6pc0f.fsf@mail.parknet.co.jp>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdU=-Eo29=DQmq96OegdYAvW7Vw9PpgNWSTfjDWVF5jd-A@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+Pali Rohár <pali.rohar@gmail.com> writes:
 
-On 20/01/2020 12.51, Geert Uytterhoeven wrote:
-> Hi Peter,
-> 
-> On Mon, Jan 20, 2020 at 11:16 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
->> On 20/01/2020 11.01, Geert Uytterhoeven wrote:
->>> On Fri, Jan 17, 2020 at 9:08 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
->>>> On 1/17/20 5:30 PM, Geert Uytterhoeven wrote:
->>>>> Currently it is not easy to find out which DMA channels are in use, and
->>>>> which slave devices are using which channels.
->>>>>
->>>>> Fix this by creating two symlinks between the DMA channel and the actual
->>>>> slave device when a channel is requested:
->>>>>   1. A "slave" symlink from DMA channel to slave device,
->>>>
->>>> Have you considered similar link name as on the slave device:
->>>> slave:<name>
->>>>
->>>> That way it would be easier to grasp which channel is used for what
->>>> purpose by only looking under /sys/class/dma/ and no need to check the
->>>> slave device.
->>>
->>> Would this really provide more information?
->>> The device name is already provided in the target of the symlink:
->>>
->>> root@koelsch:~# readlink
->>> /sys/devices/platform/soc/e6720000.dma-controller/dma/dma1chan2/slave
->>> ../../../ee140000.sd
->>
->> e6720000.dma-controller/dma/dma1chan2/slave -> ../../../ee140000.sd
->> e6720000.dma-controller/dma/dma1chan3/slave -> ../../../ee140000.sd
->>
->> It is hard to tell which one is the tx and RX channel without looking
->> under the ee140000.sd:
->>
->> ee140000.sd/dma:rx -> ../e6720000.dma-controller/dma/dma1chan3
->> ee140000.sd/dma:tx -> ../e6720000.dma-controller/dma/dma1chan2
-> 
-> Oh, you meant the name of the channel, not the name of the device.
-> My mistake.
+>> To be perfect, the table would have to emulate what Windows use. It can
+>> be unicode standard, or something other.
 >
-> As this name is a property of the slave device, not of the DMA channel,
-> I don't think it belongs under dma*chan*.
+> Windows FAT32 implementation (fastfat.sys) is opensource. So it should
+> be possible to inspect code and figure out how it is working.
+>
+> I will try to look at it.
 
-Right, but it gives me only half the information I need to be a link useful.
-I know that device X is using two channels but I need to check the
-device X's directory to know which channel is used for what purpose.
+I don't think the conversion library is not in fs driver though,
+checking implement itself would be good.
 
->> Another option would be to not have symlinks, but a debugfs file where
->> this information can be extracted and would only compiled if debugfs is
->> enabled.
-> 
-> Like /proc/interrupts?
+>> And other fs can use different what Windows use.
+>> 
+>> So the table would have to be switchable in perfect world (if there is
+>> no consensus to use 1 table).  If we use switchable table, I think it
+>> would be better to put in userspace, and loadable like firmware data.
+>> 
+>> Well, so then it would not be simple work (especially, to be perfect).
+>
+> Switchable table is not really simple and I think as a first step would
+> be enough to have one (hardcoded) table for UTF-8. Like we have for all
+> other encodings.
 
-More like /sys/kernel/debug/gpio
+Ignoring if utf8 table is good or not.  If the table is not windows
+compatible or doesn't satisfy other fs's requirement, it also is yet
+another broken table like now (of course, it would likely be better
+off).  Of course, we can define it as linux implementation limitation
+though.
 
-> That brings the complexity of traversing all channels etc.
+So yes, I think this work is not simple.
 
-Sure, but only when the file is read.
-You can add
-#ifdef CONFIG_DEBUG_FS
-#endif
+>> Also, not directly same issue though. There is related issue for
+>> case-insensitive. Even if we use some sort of internal wide char
+>> (e.g. in nls, 16bits), dcache is holding name in user's encode
+>> (e.g. utf8). So inefficient to convert cached name to wide char for each
+>> access.
+>
+> Yes, this is truth. But this conversion is already doing exFAT
+> implementation. I think we do not have other choice if we want Windows
+> compatible implementation.
 
-around the slave_device and name in struct dma_chan {}
+For example, we can cache the both of display name, and upper/lower case
+name. Anyway, at least, there are some implement options.
 
-and when user reads the file you print out something like this:
-cat /sys/kernel/debug/dmaengine
-
-e6700000.dma-controller:
-dma0chan0		e6e20000.spi:tx
-dma0chan1		e6e20000.spi:rx
-dma0chan2		ee100000.sd:tx
-dma0chan3		ee100000.sd:rx
-...
-dma0chan14		non slave
-...
-
-e6720000.dma-controller:
-dma1chan0		e6b10000.spi:tx
-dma1chan1		e6b10000.spi:rx
-...
-
-This way we will have all the information in one place, easy to look up
-and you don't need to manage symlinks dynamically, just check all
-channels if they have slave_device/name when they are in_use (in_use w/o
-slave_device is 'non slave')
-
-Some drivers are requesting and releasing the DMA channel per transfer
-or when they are opened/closed or other variations.
-
-> What do other people think?
-> 
-> Thanks!
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-
-- PÃ©ter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Thanks.
+-- 
+OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
