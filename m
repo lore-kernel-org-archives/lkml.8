@@ -2,134 +2,123 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C314C33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:04:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC0BC32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70E3E22527
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:04:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3670622525
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:10:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579547071;
-	bh=MC3N+Wv4sZDY/KTjQ16DtpX5lwEApgsdi4mGAlS3ahk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PJYQ2u4HHsEITwX1RHjVrNYz3iik6v5w96mN8badL0VOnzxsiDXv+iNWHsU/RmXED
-	 gszDY74d2htY29vlqFsomHN3rZm6EYJ6+3YN/vfYjbtmwYYXo1ejTy81epOXFGIIid
-	 odprPeakdo2osM6fRqnCjODkUgpoL6eO3XlnKm70=
+	s=default; t=1579547425;
+	bh=lEONHsr3GAx24vb1v03/TXmyMyYCrvC5PTz8mcLz5nE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=A5qL/vLLFNiSMQeTbMbqvM0AorZXHrASD+q8SIS5+B6LpPyukOm9alRYZuBlVDjfE
+	 5mU92qjsjRJIW7C9Tv2XlO4lVCtOFD7gUqPg8xKY102ki8IHXb+9neKl/SbQ1aT4xN
+	 l/q2u1yQlI9uD0Ykp5o87Fpz84nWgz5Ooh1Rdx6w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbgATTEa (ORCPT
+        id S1726843AbgATTKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 14:04:30 -0500
-Received: from foss.arm.com ([217.140.110.172]:35904 "EHLO foss.arm.com"
+        Mon, 20 Jan 2020 14:10:24 -0500
+Received: from foss.arm.com ([217.140.110.172]:35958 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726642AbgATTEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 14:04:30 -0500
+        id S1726112AbgATTKY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 14:10:24 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A43931B;
-        Mon, 20 Jan 2020 11:04:29 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 52A8231B;
+        Mon, 20 Jan 2020 11:10:23 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 08FCE3F68E;
-        Mon, 20 Jan 2020 11:04:28 -0800 (PST)
-Date:   Mon, 20 Jan 2020 19:04:27 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C5C973F68E;
+        Mon, 20 Jan 2020 11:10:22 -0800 (PST)
+Date:   Mon, 20 Jan 2020 19:10:21 +0000
 From:   Mark Brown <broonie@kernel.org>
-To:     Wen Su <Wen.Su@mediatek.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, wsd_upstream@mediatek.com
-Subject: Re: [RESEND 3/4] regulator: mt6359: Add support for MT6359 regulator
-Message-ID: <20200120190427.GO6852@sirena.org.uk>
-References: <1579506450-21830-1-git-send-email-Wen.Su@mediatek.com>
- <1579506450-21830-4-git-send-email-Wen.Su@mediatek.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Qa0ccP92Gc0Ko3P8"
-Content-Disposition: inline
-In-Reply-To: <1579506450-21830-4-git-send-email-Wen.Su@mediatek.com>
-X-Cookie: I invented skydiving in 1989!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Collabora Kernel ML <kernel@collabora.com>, dianders@chromium.org,
+        Dmitry Osipenko <digetx@gmail.com>, drinkcat@chromium.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        mka@chromium.org
+Subject: Applied "regulator: core: Fix exported symbols to the exported GPL version" to the regulator tree
+In-Reply-To: <20200120123921.1204339-1-enric.balletbo@collabora.com>
+Message-Id: <applied-20200120123921.1204339-1-enric.balletbo@collabora.com>
+X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The patch
 
---Qa0ccP92Gc0Ko3P8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+   regulator: core: Fix exported symbols to the exported GPL version
 
-On Mon, Jan 20, 2020 at 03:47:29PM +0800, Wen Su wrote:
+has been applied to the regulator tree at
 
-This seems pretty good, a few comments below but they're fairly small
-and should be easy to address:
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.5
 
-> +static int mt6359_set_voltage_sel(struct regulator_dev *rdev,
-> +				  unsigned int selector)
-> +{
-> +	int idx, ret;
-> +	const u32 *pvol;
-> +	struct mt6359_regulator_info *info = rdev_get_drvdata(rdev);
-> +
-> +	pvol = info->index_table;
-> +
-> +	idx = pvol[selector];
-> +	ret = regmap_update_bits(rdev->regmap, info->desc.vsel_reg,
-> +				 info->desc.vsel_mask,
-> +				 idx << info->vsel_shift);
-> +
-> +	return ret;
-> +}
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-This looks like you should be using regulator_list_voltage_table() and
-associated functions, probably map_voltage_ascend() or _iterate() and
-just a simple set_voltage_sel_regmap().
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-> +static int mt6359_get_status(struct regulator_dev *rdev)
-> +{
-> +	int ret;
-> +	u32 regval;
-> +	struct mt6359_regulator_info *info = rdev_get_drvdata(rdev);
-> +
-> +	ret = regmap_read(rdev->regmap, info->status_reg, &regval);
-> +	if (ret != 0) {
-> +		dev_err(&rdev->dev, "Failed to get enable reg: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	return (regval & info->qi) ? REGULATOR_STATUS_ON : REGULATOR_STATUS_OFF;
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-Please write normal conditionl statements rather than using the ternery
-operator to improve legibility.
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-> +	switch (mode) {
-> +	case REGULATOR_MODE_FAST:
-> +		if (curr_mode == REGULATOR_MODE_IDLE) {
-> +			WARN_ON(1);
-> +			dev_notice(&rdev->dev,
-> +				   "BUCK %s is LP mode, can't FPWM\n",
-> +				   rdev->desc->name);
-> +			return -EIO;
+Thanks,
+Mark
 
-I'd expect the device to go out of low power mode then into force PWM
-mode if it has to do that rather than reject the operation.
+From 3d7610e8da993539346dce6f7c909fd3d56bf4d5 Mon Sep 17 00:00:00 2001
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Date: Mon, 20 Jan 2020 13:39:21 +0100
+Subject: [PATCH] regulator: core: Fix exported symbols to the exported GPL
+ version
 
---Qa0ccP92Gc0Ko3P8
-Content-Type: application/pgp-signature; name="signature.asc"
+Change the exported symbols introduced by commit e9153311491da
+("regulator: vctrl-regulator: Avoid deadlock getting and setting the voltage")
+from EXPORT_SYMBOL() to EXPORT_SYMBOL_GPL(), like is used for all the core
+parts.
 
------BEGIN PGP SIGNATURE-----
+Fixes: e9153311491da ("regulator: vctrl-regulator: Avoid deadlock getting and setting the voltage")
+Reported-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Link: https://lore.kernel.org/r/20200120123921.1204339-1-enric.balletbo@collabora.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/regulator/core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4l+boACgkQJNaLcl1U
-h9CShAf/WdS4iLv8FmqgPQ6jxUZsWIHU4beM7oDoeI16KydYH71AEzVsF5AmZ/Fi
-q6qUuiabJm+9IVCwXc55mWA5IlFDMSoYM5VCt+QwxsUxaO2QoCjs/FgdkZcvNPyu
-KJfmVJdGPE3ZzA6UjDC7tVOR1CYCC8ey8U6Y45rhPU6ln4RDxTnVAFFtKlUM5UM7
-/Mw/NwmnR3AtdQvHw20WbLhTqWiNR8m5XAryzMRd+H35WuF/3xRlPSRvrGYjxkAL
-7R3Wbs2KsQ7J+bPCPbLf0N9WSvZurn/hMT++bQJKqeAei0V+bo2Phk66Iq7rQkgJ
-TGSDUr+2JcIj+zZtLcbRkcrnQUCt1w==
-=Vsrk
------END PGP SIGNATURE-----
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index 6be687d25484..5bab251b9a9d 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -3466,7 +3466,7 @@ int regulator_set_voltage_rdev(struct regulator_dev *rdev, int min_uV,
+ out:
+ 	return ret;
+ }
+-EXPORT_SYMBOL(regulator_set_voltage_rdev);
++EXPORT_SYMBOL_GPL(regulator_set_voltage_rdev);
+ 
+ static int regulator_limit_voltage_step(struct regulator_dev *rdev,
+ 					int *current_uV, int *min_uV)
+@@ -4031,7 +4031,7 @@ int regulator_get_voltage_rdev(struct regulator_dev *rdev)
+ 		return ret;
+ 	return ret - rdev->constraints->uV_offset;
+ }
+-EXPORT_SYMBOL(regulator_get_voltage_rdev);
++EXPORT_SYMBOL_GPL(regulator_get_voltage_rdev);
+ 
+ /**
+  * regulator_get_voltage - get regulator output voltage
+-- 
+2.20.1
 
---Qa0ccP92Gc0Ko3P8--
