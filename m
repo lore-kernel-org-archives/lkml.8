@@ -2,95 +2,116 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38FBBC32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 04:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A1F5C32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 04:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 037DE20684
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 04:45:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DE5220684
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 04:47:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kgvrbGR1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s08gSl21"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729121AbgATEpI (ORCPT
+        id S1729139AbgATErj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 23:45:08 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:32871 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729043AbgATEpI (ORCPT
+        Sun, 19 Jan 2020 23:47:39 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:35658 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729043AbgATErj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 23:45:08 -0500
-Received: by mail-lf1-f65.google.com with SMTP id n25so22942381lfl.0;
-        Sun, 19 Jan 2020 20:45:06 -0800 (PST)
+        Sun, 19 Jan 2020 23:47:39 -0500
+Received: by mail-pf1-f194.google.com with SMTP id i23so15196085pfo.2
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jan 2020 20:47:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=v4gNUzx14wi5Q2LGqxGckShRs7K+FGBFyHDqioJzbu8=;
-        b=kgvrbGR1TUzou0oyefZ/ZcSEKByOLic6u1/cL11Fsc+t6eVsyHyfzVSgRk1Jtw9xTF
-         41gdc+Q8Eug+UpY9hY4Yi9NO8qIDT5yFWFk7YwsaC3g5KWV9tdF+1ZGYl4lFzsch7C6r
-         zItDsoDiVguX+nRP23Bvjsr3xwLhGf6yDjea1pgGoarfLA0xLeyU3APZMSb8OzdADhQ1
-         p2k+Q6b7FJ4+OaMTwz8gq8rzDauLSafXUDgn87jXwVLZbEgbm7dLTKchwIyiSw7PsXQl
-         2ERieycrccayKPn6RFTAEGK81HPdotwjDXFVNTVjVzetRZFe/ndJ1HfQvVidbU+YCnLf
-         MKXQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=ti8+hB0utpLZr3O4fYMQ5nwM3OICAeQdhYguP4pp9Gw=;
+        b=s08gSl21xfXw+lzR6rvvCCbZu5eiTr0vPpRL+4Ig80BO2Mwo6MwF9Zu0d7wvsBGBps
+         7NGR8uyTmaJppNfQ7XEx6J6yIOtL3s8do+X/rC9enda0tAfnpnDeWOsNb3Bp03+r1bTk
+         wGQlVd0o33KXbLJBFjStqFPPEID6NXcUwkwKt+ZmFzV0vkBwfTjIzQuTYpUX9XbrkAO3
+         wYjGRyOr1g1R8E5hFZ6g7y9Bje1SV3lX/GcJnMHkWaG3/Hat2+WhmyqQQrskNaGB6dG3
+         o+Rrx/QzfcQ62gfgLMdmeeDaW6zwMjYkimNx7RJ9dLViClQ8hoUXjk8srlQCdGAzEMCn
+         ytWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v4gNUzx14wi5Q2LGqxGckShRs7K+FGBFyHDqioJzbu8=;
-        b=gmJYAdoNMlfW38ROR7arodwGHjwvK3rTaQtavbb1zUCvuPEDdAfiybIh+RfHZqWzCX
-         Q95MpHegapVj6bq9EGSPsCesEquHFCoPlJvmc1NcVHlIeI2jg8rak0kErebhiq1k4XYZ
-         6fLzDDb2G2JoygxZnEd1J5ypdBDcQS/rAYLzz4bxaIyRMhe3Gc1uC33kW73Qd5XQDbJl
-         g1KmyZp5ARsxdEOId28BaH9yb4DHr1y4dnsy7sjIotm/iMnlJKq/ysmdBZkqDu/jg+Af
-         kEgr+/NravCU3aGzoESIg3tSJ/J4mKnnN65Tc9n1HLC7FJvbhoZK9ZUgQakegNi+9kdl
-         GkNA==
-X-Gm-Message-State: APjAAAUC+hyuV2RV1+LeRFN8aGoe72OX0VQ4fgM22p8QgFAK/F3NcVOj
-        rjyanawnFRFRMSVon2qvGSeToQoTlSQYD2ohfBGJDF7q
-X-Google-Smtp-Source: APXvYqw2yRksWZ+WJFnHMGInLgk7eBdsHBiSS9/DcGZk4AWnUQgqGdvhA8tOYHcJPcS/cFwuMq4OsOg4bWLsZ+qY6E8=
-X-Received: by 2002:a19:6d13:: with SMTP id i19mr12034062lfc.6.1579495505859;
- Sun, 19 Jan 2020 20:45:05 -0800 (PST)
-MIME-Version: 1.0
-References: <20200120032639.2963-1-xiaofeng.yan2012@gmail.com>
-In-Reply-To: <20200120032639.2963-1-xiaofeng.yan2012@gmail.com>
-From:   Taehee Yoo <ap420073@gmail.com>
-Date:   Mon, 20 Jan 2020 13:44:56 +0900
-Message-ID: <CAMArcTW6YXKjDnxq4bgqQM6aL=ZZ2u+SNVs+NXoA-HSLxaq16g@mail.gmail.com>
-Subject: Re: [PATCH] hsr: Fix a compilation error
-To:     "xiaofeng.yan" <xiaofeng.yan2012@gmail.com>
-Cc:     arvid.brodin@alten.se, David Miller <davem@davemloft.net>,
-        Netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, yanxiaofeng7@jd.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ti8+hB0utpLZr3O4fYMQ5nwM3OICAeQdhYguP4pp9Gw=;
+        b=A373/YkPY1Z8P5GpZEOlN7+jrnYu0OWpNxUxBs4aNNx+zDlkIO7pixv4ZHtWr0Itpg
+         AnMlHFpi0N3DA8FFY15FdK8SO5jRzSivS0vYYaOdCcpqShj1wSienpRH1REWXs+eY9PN
+         yX7t/z+60RGCFsRbu+sQx95yfnGRzUTMZK/Ow04IMUAiC5JhlzqwJGGFEJHhLaW2mqL2
+         ccpQ/uE5zoKWPtDaNOtrjK9fWasWiYHK6aW01EwDhHtwz5zeXt1La/JP2rqVUm3etXEe
+         tyzVBjLWLyIVswxBrd+qxYmY7U0euQo6iauRvw4abPq+hrIH5sxNmeooUQna0YUocYIe
+         azPw==
+X-Gm-Message-State: APjAAAUumR9x9L1DaqhBtxgtY45u3+iAVbwmOunNSdJx97ljliD0RyDF
+        A8cPbpZvb1eWMqYhTD2LKK35uKYp/bU=
+X-Google-Smtp-Source: APXvYqz18kh5Is5mWKOoszjfsXjhDjcW1TWkbN/4SMW60NJaSH1jBWkgUNLbPZ70Pd6LLSVdYNBu8g==
+X-Received: by 2002:aa7:8098:: with SMTP id v24mr15666527pff.33.1579495658415;
+        Sun, 19 Jan 2020 20:47:38 -0800 (PST)
+Received: from pek-lpggp6.wrs.com (unknown-105-123.windriver.com. [147.11.105.123])
+        by smtp.gmail.com with ESMTPSA id h3sm15791836pjs.0.2020.01.19.20.47.33
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 19 Jan 2020 20:47:38 -0800 (PST)
+From:   Kevin Hao <haokexin@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        David Daney <david.daney@cavium.com>
+Subject: [PATCH] irqdomain: Fix a memory leak in irq_domain_push_irq()
+Date:   Mon, 20 Jan 2020 12:35:47 +0800
+Message-Id: <20200120043547.22271-1-haokexin@gmail.com>
+X-Mailer: git-send-email 2.14.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jan 2020 at 12:26, xiaofeng.yan <xiaofeng.yan2012@gmail.com> wrote:
->
-> From: "xiaofeng.yan" <yanxiaofeng7@jd.com>
->
+Fix a memory leak reported by kmemleak:
+unreferenced object 0xffff000bc6f50e80 (size 128):
+  comm "kworker/23:2", pid 201, jiffies 4294894947 (age 942.132s)
+  hex dump (first 32 bytes):
+    00 00 00 00 41 00 00 00 86 c0 03 00 00 00 00 00  ....A...........
+    00 a0 b2 c6 0b 00 ff ff 40 51 fd 10 00 80 ff ff  ........@Q......
+  backtrace:
+    [<00000000e62d2240>] kmem_cache_alloc_trace+0x1a4/0x320
+    [<00000000279143c9>] irq_domain_push_irq+0x7c/0x188
+    [<00000000d9f4c154>] thunderx_gpio_probe+0x3ac/0x438
+    [<00000000fd09ec22>] pci_device_probe+0xe4/0x198
+    [<00000000d43eca75>] really_probe+0xdc/0x320
+    [<00000000d3ebab09>] driver_probe_device+0x5c/0xf0
+    [<000000005b3ecaa0>] __device_attach_driver+0x88/0xc0
+    [<000000004e5915f5>] bus_for_each_drv+0x7c/0xc8
+    [<0000000079d4db41>] __device_attach+0xe4/0x140
+    [<00000000883bbda9>] device_initial_probe+0x18/0x20
+    [<000000003be59ef6>] bus_probe_device+0x98/0xa0
+    [<0000000039b03d3f>] deferred_probe_work_func+0x74/0xa8
+    [<00000000870934ce>] process_one_work+0x1c8/0x470
+    [<00000000e3cce570>] worker_thread+0x1f8/0x428
+    [<000000005d64975e>] kthread+0xfc/0x128
+    [<00000000f0eaa764>] ret_from_fork+0x10/0x18
 
-Hi Xiaofeng,
+Fixes: 495c38d3001f ("irqdomain: Add irq_domain_{push,pop}_irq() functions")
+Cc: stable@vger.kernel.org
+Signed-off-by: Kevin Hao <haokexin@gmail.com>
+---
+ kernel/irq/irqdomain.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> A compliation error happen when building branch 5.5-rc7
->
-> In file included from net/hsr/hsr_main.c:12:0:
-> net/hsr/hsr_main.h:194:20: error: two or more data types in declaration specifiers
->  static inline void void hsr_debugfs_rename(struct net_device *dev)
->
-> So Removed one void.
->
-> Signed-off-by: xiaofeng.yan <yanxiaofeng7@jd.com>
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index dd822fd8a7d5..480df3659720 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -1459,6 +1459,7 @@ int irq_domain_push_irq(struct irq_domain *domain, int virq, void *arg)
+ 	if (rv) {
+ 		/* Restore the original irq_data. */
+ 		*root_irq_data = *child_irq_data;
++		kfree(child_irq_data);
+ 		goto error;
+ 	}
+ 
+-- 
+2.14.4
 
-Acked-by: Taehee Yoo <ap420073@gmail.com>
-
-I think the Fixes tag is needed.
-You might have to send a v2 patch, which includes this Fixes tag.
-Fixes: 4c2d5e33dcd3 ("hsr: rename debugfs file when interface name is changed")
-
-Thank you!
-Taehee Yoo
