@@ -2,100 +2,128 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E94C33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99066C33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:28:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 047CB207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:27:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D357207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:28:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BHJe91Os"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbgATJ1e convert rfc822-to-8bit (ORCPT
+        id S1726775AbgATJ24 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 04:27:34 -0500
-Received: from mx2.suse.de ([195.135.220.15]:46644 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726130AbgATJ1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 04:27:33 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id BD255AD85;
-        Mon, 20 Jan 2020 09:27:31 +0000 (UTC)
-Date:   Mon, 20 Jan 2020 10:27:30 +0100
-From:   Jean Delvare <jdelvare@suse.de>
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     linux-doc@vger.kernel.org, linux-i2c@vger.kernel.org,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/26] docs: i2c: summary: extend introduction
-Message-ID: <20200120102730.4eb9116b@endymion>
-In-Reply-To: <20200105225012.11701-2-luca@lucaceresoli.net>
-References: <20200105224006.10321-1-luca@lucaceresoli.net>
-        <20200105225012.11701-1-luca@lucaceresoli.net>
-        <20200105225012.11701-2-luca@lucaceresoli.net>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        Mon, 20 Jan 2020 04:28:56 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:45459 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725872AbgATJ24 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 04:28:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579512535;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=0iBlSiPbU11kx1FE6pEyiDrTybK6mV+iNStxOfr7SjY=;
+        b=BHJe91Oskt/yxwTLU46DcrfT4WpuaeJ5TLP1VlGXg9BpOP+nJDvtnKMBBC4A+lKtD78q9M
+        hAXss8J013T3As9D6DiEIWl9VN5ZLYF1Ey3HjmfMDrQUQ8GkYo1Iqv4JgfZ/pm0W54DBQB
+        U63R/IsguV3l4IMDEz9ro2mZB4WlmkE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-297-fHoWUM4WOTWhpkSy5ZLqjA-1; Mon, 20 Jan 2020 04:28:52 -0500
+X-MC-Unique: fHoWUM4WOTWhpkSy5ZLqjA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 47A808017CC;
+        Mon, 20 Jan 2020 09:28:50 +0000 (UTC)
+Received: from krava (unknown [10.43.17.48])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 295AF60C05;
+        Mon, 20 Jan 2020 09:28:46 +0000 (UTC)
+Date:   Mon, 20 Jan 2020 10:28:44 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Kim Phillips <kim.phillips@amd.com>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] perf symbols: Update the list of kernel idle symbols
+Message-ID: <20200120092844.GC608405@krava>
+References: <20200115222949.7247-1-kim.phillips@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200115222949.7247-1-kim.phillips@amd.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun,  5 Jan 2020 23:49:48 +0100, Luca Ceresoli wrote:
-> - state the "official" name (I²C, not I2C, according to the spec) at
->    the beginning but keep using the more practical I2C elsewhere
->  - mention some known different names
->  - add link to the specification document
-
-Indentation is inconsistent.
-
+On Wed, Jan 15, 2020 at 04:29:48PM -0600, Kim Phillips wrote:
+> "acpi_idle_do_entry", "acpi_processor_ffh_cstate_enter", and "idle_cpu"
+> appear in 'perf top' output, at least on AMD systems.
 > 
-> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+> Add them to perf's idle_symbols list, so they don't dominate 'perf top'
+> output.
+> 
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Cong Wang <xiyou.wangcong@gmail.com>
+> Cc: Andi Kleen <ak@linux.intel.com>
+> Cc: Jin Yao <yao.jin@linux.intel.com>
+> Cc: Kan Liang <kan.liang@linux.intel.com>
+> Cc: Kim Phillips <kim.phillips@amd.com>
+> Cc: Song Liu <songliubraving@fb.com>
+> Cc: Davidlohr Bueso <dave@stgolabs.net>
+> Cc: linux-perf-users@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Kim Phillips <kim.phillips@amd.com>
 > ---
->  Documentation/i2c/summary.rst | 18 ++++++++++++------
->  1 file changed, 12 insertions(+), 6 deletions(-)
+>  tools/perf/util/symbol.c | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> diff --git a/Documentation/i2c/summary.rst b/Documentation/i2c/summary.rst
-> index 3a24eac17375..b7d3e620155b 100644
-> --- a/Documentation/i2c/summary.rst
-> +++ b/Documentation/i2c/summary.rst
-> @@ -2,12 +2,18 @@
->  I2C and SMBus
->  =============
->  
-> -I2C (pronounce: I squared C) is a protocol developed by Philips. It is a
-> -slow two-wire protocol (variable speed, up to 400 kHz), with a high speed
-> -extension (3.4 MHz).  It provides an inexpensive bus for connecting many
-> -types of devices with infrequent or low bandwidth communications needs.
-> -I2C is widely used with embedded systems.  Some systems use variants that
-> -don't meet branding requirements, and so are not advertised as being I2C.
-> +I²C (pronounce: I squared C and written I2C in the kernel documentation) is
-> +a protocol developed by Philips. It is a slow two-wire protocol (variable
-> +speed, up to 400 kHz), with a high speed extension (3.4 MHz).  It provides
-> +an inexpensive bus for connecting many types of devices with infrequent or
-> +low bandwidth communications needs.  I2C is widely used with embedded
-> +systems.  Some systems use variants that don't meet branding requirements,
-> +and so are not advertised as being I2C but with different names, e.g. TWI
-> +(Two Wire Interface), IIC.
+> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> index 3b379b1296f1..f3120c4f47ad 100644
+> --- a/tools/perf/util/symbol.c
+> +++ b/tools/perf/util/symbol.c
+> @@ -635,9 +635,12 @@ int modules__parse(const char *filename, void *arg,
+>  static bool symbol__is_idle(const char *name)
+>  {
+>  	const char * const idle_symbols[] = {
+> +		"acpi_idle_do_entry",
+> +		"acpi_processor_ffh_cstate_enter",
+>  		"arch_cpu_idle",
+>  		"cpu_idle",
+>  		"cpu_startup_entry",
+> +		"idle_cpu",
+>  		"intel_idle",
+>  		"default_idle",
+>  		"native_safe_halt",
 
-Maybe that's just me but "but with different names" sounds strange to
-me in the sentence construct. Maybe "but come under different names"
-instead?
+ok, at some point we should put this in strlist ;-)
 
-> +
-> +The official I2C specification is the `"I2C-bus specification and user
-> +manual" (UM10204) <https://www.nxp.com/docs/en/user-guide/UM10204.pdf>`_
-> +published by NXP Semiconductors.
->  
->  SMBus (System Management Bus) is based on the I2C protocol, and is mostly
->  a subset of I2C protocols and signaling.  Many I2C devices will work on an
+Acked-by: Jiri Olsa <jolsa@redhat.com
 
-Reviewed-by: Jean Delvare <jdelvare@suse.de>
+thanks,
+jirka
 
--- 
-Jean Delvare
-SUSE L3 Support
