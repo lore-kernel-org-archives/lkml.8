@@ -2,143 +2,225 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A51B5C33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97346C33CB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:31:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10D06207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:30:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69F8B2073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:31:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727011AbgATJaH (ORCPT
+        id S1726860AbgATJbE convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 04:30:07 -0500
-Received: from twhmllg3.macronix.com ([122.147.135.201]:19761 "EHLO
-        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726075AbgATJaH (ORCPT
+        Mon, 20 Jan 2020 04:31:04 -0500
+Received: from relay-b01.edpnet.be ([212.71.1.221]:51167 "EHLO
+        relay-b01.edpnet.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726075AbgATJbE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 04:30:07 -0500
-Received: from twhfmlp1.macronix.com (twhfm1p1.macronix.com [172.17.20.91])
-        by TWHMLLG3.macronix.com with ESMTP id 00K9SWMX073874;
-        Mon, 20 Jan 2020 17:28:32 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-Received: from MXML06C.mxic.com.tw (mxml06c.macronix.com [172.17.14.55])
-        by Forcepoint Email with ESMTP id 6B1B2630C9CB4D990834;
-        Mon, 20 Jan 2020 17:28:33 +0800 (CST)
-In-Reply-To: <20200117101346.3611dc0a@xps13>
-References: <1571902807-10388-1-git-send-email-masonccyang@mxic.com.tw> <1571902807-10388-2-git-send-email-masonccyang@mxic.com.tw>
-        <20200109172816.6c1d7be7@xps13> <OFECBDB130.03AD44B7-ON482584F2.002B40F2-482584F2.002B720F@mxic.com.tw> <20200117101346.3611dc0a@xps13>
-To:     "Miquel Raynal" <miquel.raynal@bootlin.com>
-Cc:     bbrezillon@kernel.org, computersforpeace@gmail.com,
-        devicetree@vger.kernel.org, dwmw2@infradead.org,
-        juliensu@mxic.com.tw, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, marek.vasut@gmail.com,
-        mark.rutland@arm.com, richard@nod.at, robh+dt@kernel.org,
-        vigneshr@ti.com
-Subject: Re: [PATCH v4 1/2] mtd: rawnand: Add support for Macronix NAND randomizer
+        Mon, 20 Jan 2020 04:31:04 -0500
+X-Greylist: delayed 1146 seconds by postgrey-1.27 at vger.kernel.org; Mon, 20 Jan 2020 04:31:01 EST
+X-ASG-Debug-ID: 1579511512-0a7ff5137b3a2cc30001-xx1T2L
+Received: from zotac.vandijck-laurijssen.be (77.109.123.72.adsl.dyn.edpnet.net [77.109.123.72]) by relay-b01.edpnet.be with ESMTP id rtg1bnLzyDpKkdEq; Mon, 20 Jan 2020 10:11:52 +0100 (CET)
+X-Barracuda-Envelope-From: dev.kurt@vandijck-laurijssen.be
+X-Barracuda-Effective-Source-IP: 77.109.123.72.adsl.dyn.edpnet.net[77.109.123.72]
+X-Barracuda-Apparent-Source-IP: 77.109.123.72
+Received: from x1.vandijck-laurijssen.be (x1.vandijck-laurijssen.be [IPv6:fd01::1a1d:eaff:fe02:d339])
+        by zotac.vandijck-laurijssen.be (Postfix) with ESMTPSA id BCE8FC64006;
+        Mon, 20 Jan 2020 10:11:51 +0100 (CET)
+Date:   Mon, 20 Jan 2020 10:11:46 +0100
+From:   Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
+To:     Oliver Hartkopp <socketcan@hartkopp.net>
+Cc:     mkl@pengutronix.de, o.rempel@pengutronix.de,
+        syzbot <syzbot+c3ea30e1e2485573f953@syzkaller.appspotmail.com>,
+        davem@davemloft.net, linux-can@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: general protection fault in can_rx_register
+Message-ID: <20200120091146.GD11138@x1.vandijck-laurijssen.be>
+X-ASG-Orig-Subj: Re: general protection fault in can_rx_register
+Mail-Followup-To: Oliver Hartkopp <socketcan@hartkopp.net>,
+        mkl@pengutronix.de, o.rempel@pengutronix.de,
+        syzbot <syzbot+c3ea30e1e2485573f953@syzkaller.appspotmail.com>,
+        davem@davemloft.net, linux-can@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+References: <00000000000030dddb059c562a3f@google.com>
+ <55ad363b-1723-28aa-78b1-8aba5565247e@hartkopp.net>
 MIME-Version: 1.0
-X-KeepSent: 1377603E:0BE29BC1-482584F5:00335731;
- type=4; name=$KeepSent
-X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
-Message-ID: <OF1377603E.0BE29BC1-ON482584F5.00335731-482584F5.00340DE4@mxic.com.tw>
-From:   masonccyang@mxic.com.tw
-Date:   Mon, 20 Jan 2020 17:28:35 +0800
-X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
- 2020/01/20 PM 05:28:33,
-        Serialize complete at 2020/01/20 PM 05:28:33
-Content-Type: text/plain; charset="US-ASCII"
-X-MAIL: TWHMLLG3.macronix.com 00K9SWMX073874
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <55ad363b-1723-28aa-78b1-8aba5565247e@hartkopp.net>
+User-Agent: Mutt/1.5.22 (2013-10-16)
+X-Barracuda-Connect: 77.109.123.72.adsl.dyn.edpnet.net[77.109.123.72]
+X-Barracuda-Start-Time: 1579511512
+X-Barracuda-URL: https://212.71.1.221:443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at edpnet.be
+X-Barracuda-Scan-Msg-Size: 6997
+X-Barracuda-BRTS-Status: 1
+X-Barracuda-Bayes: INNOCENT GLOBAL 0.6949 1.0000 1.3308
+X-Barracuda-Spam-Score: 1.33
+X-Barracuda-Spam-Status: No, SCORE=1.33 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=7.0 tests=
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.79457
+        Rule breakdown below
+         pts rule name              description
+        ---- ---------------------- --------------------------------------------------
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+If bisect was right with this:
 
-Hi Miquel,
+> >The bug was bisected to:
+> >
+> >commit 9868b5d44f3df9dd75247acd23dddff0a42f79be
+> >Author: Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
+> >Date:   Mon Oct 8 09:48:33 2018 +0000
+> >
+> >     can: introduce CAN_REQUIRED_SIZE macro
 
-> > > > +}
-> > > > +
-> > > >  static void macronix_nand_onfi_init(struct nand_chip *chip)
-> > > >  {
-> > > >     struct nand_parameters *p = &chip->parameters;
-> > > >     struct nand_onfi_vendor_macronix *mxic;
-> > > > +   struct device_node *dn = nand_get_flash_node(chip);
-> > > > +   int rand_otp = 0;
-> > > > +   int ret;
-> > > > 
-> > > >     if (!p->onfi)
-> > > >        return;
-> > > > 
-> > > > +   if (of_find_property(dn, "mxic,enable-randomizer-otp", NULL))
-> > > > +      rand_otp = 1;
-> > > > +
-> > > >     mxic = (struct nand_onfi_vendor_macronix *)p->onfi->vendor;
-> > > > +   /* Subpage write is prohibited in randomizer operatoin */ 
-> > > 
-> > >                                        with          operation
-> > > 
-> > > > +   if (rand_otp && chip->options & NAND_NO_SUBPAGE_WRITE &&
-> > > > +       mxic->reliability_func & MACRONIX_RANDOMIZER_BIT) {
-> > > > +      if (p->supports_set_get_features) {
-> > > > +         bitmap_set(p->set_feature_list,
-> > > > +               ONFI_FEATURE_ADDR_MXIC_RANDOMIZER, 1);
-> > > > +         bitmap_set(p->get_feature_list,
-> > > > +               ONFI_FEATURE_ADDR_MXIC_RANDOMIZER, 1);
-> > > > +         ret = macronix_nand_randomizer_check_enable(chip);
-> > > > +         if (ret < 0)
-> > > > +            pr_info("Macronix NAND randomizer failed\n");
-> > > > +         else
-> > > > +            pr_info("Macronix NAND randomizer enabled\n"); 
-> > > 
-> > > Maybe we should update the bitmaps only if it succeeds? 
-> > 
-> > okay, will drop pr_info();
+Then I'd start looking in malformed sockaddr_can data instead.
+
+Is this code what triggers the bug?
+> >C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=138f5db9e00000
+
+Kind regards,
+Kurt
+
+On vr, 17 jan 2020 21:02:48 +0100, Oliver Hartkopp wrote:
+> Hi Marc, Oleksij, Kurt,
 > 
-> It's not my point, you can keep the pr_info, I just say that you should
-> check ret before updating the bitmap maybe? Otherwise if
-> macronix_nand_randomizer_check_enable() fails, you end up without the
-> feature but with its bit set in the bitmap.
-
-Driver should set ONFI_FEATURE_ADDR_MXIC_RANDOMIZER in 
-p->set/get_feature_list
-before calling macronix_nand_randomizer_check_enable() for randomizer 
-set/get
-feature operation.
-
-I will patch bitmap_clear() if macronix_nand_randomizer_check_enable() 
-return fails.
-
-thanks for your time & comments.
-Mason
-
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information 
-and/or personal data, which is protected by applicable laws. Please be 
-reminded that duplication, disclosure, distribution, or use of this e-mail 
-(and/or its attachments) or any part thereof is prohibited. If you receive 
-this e-mail in error, please notify us immediately and delete this mail as 
-well as its attachment(s) from your system. In addition, please be 
-informed that collection, processing, and/or use of personal data is 
-prohibited unless expressly permitted by personal data protection laws. 
-Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
-
-
-============================================================================
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
+> On 17/01/2020 14.46, syzbot wrote:
+> >Hello,
+> >
+> >syzbot found the following crash on:
+> >
+> >HEAD commit:    f5ae2ea6 Fix built-in early-load Intel microcode alignment
+> >git tree:       upstream
+> >console output: https://syzkaller.appspot.com/x/log.txt?x=1033df15e00000
+> >kernel config:  https://syzkaller.appspot.com/x/.config?x=cfbb8fa33f49f9f3
+> >dashboard link:
+> >https://syzkaller.appspot.com/bug?extid=c3ea30e1e2485573f953
+> >compiler:       clang version 10.0.0
+> >(https://github.com/llvm/llvm-project/
+> >c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+> >syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13204f15e00000
+> >C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=138f5db9e00000
+> >
+> >The bug was bisected to:
+> >
+> >commit 9868b5d44f3df9dd75247acd23dddff0a42f79be
+> >Author: Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
+> >Date:   Mon Oct 8 09:48:33 2018 +0000
+> >
+> >     can: introduce CAN_REQUIRED_SIZE macro
+> >
+> >bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=129bfdb9e00000
+> >final crash:    https://syzkaller.appspot.com/x/report.txt?x=119bfdb9e00000
+> >console output: https://syzkaller.appspot.com/x/log.txt?x=169bfdb9e00000
+> >
+> >IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> >Reported-by: syzbot+c3ea30e1e2485573f953@syzkaller.appspotmail.com
+> >Fixes: 9868b5d44f3d ("can: introduce CAN_REQUIRED_SIZE macro")
+> >
+> >kasan: CONFIG_KASAN_INLINE enabled
+> >kasan: GPF could be caused by NULL-ptr deref or user memory access
+> >general protection fault: 0000 [#1] PREEMPT SMP KASAN
+> >CPU: 0 PID: 9593 Comm: syz-executor302 Not tainted 5.5.0-rc6-syzkaller #0
+> >Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> >Google 01/01/2011
+> >RIP: 0010:hlist_add_head_rcu include/linux/rculist.h:528 [inline]
+> >RIP: 0010:can_rx_register+0x43b/0x600 net/can/af_can.c:476
+> 
+> include/linux/rculist.h:528 is
+> 
+> struct hlist_node *first = h->first;
+> 
+> which would mean that 'h' must be NULL.
+> 
+> But the h parameter is rcv_list from
+> rcv_list = can_rcv_list_find(&can_id, &mask, dev_rcv_lists);
+> 
+> Which can not return NULL - at least when dev_rcv_lists is a proper pointer
+> to the dev_rcv_lists provided by can_dev_rcv_lists_find().
+> 
+> So either dev->ml_priv is NULL in the case of having a CAN interface (here
+> vxcan) or we have not allocated net->can.rx_alldev_list in can_pernet_init()
+> properly (which would lead to an -ENOMEM which is reported to whom?).
+> 
+> Hm. I'm lost. Any ideas?
+> 
+> Regards,
+> Oliver
+> 
+> 
+> >Code: 48 89 d8 48 c1 e8 03 42 80 3c 28 00 74 08 48 89 df e8 89 22 8a fa 4c
+> >89 33 4d 89 e5 49 c1 ed 03 48 b8 00 00 00 00 00 fc ff df <41> 80 7c 05 00
+> >00 74 08 4c 89 e7 e8 c5 21 8a fa 4d 8b 34 24 4c 89
+> >RSP: 0018:ffffc90003e27d00 EFLAGS: 00010202
+> >RAX: dffffc0000000000 RBX: ffff8880a77336c8 RCX: ffff88809306a100
+> >RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8880a77336c0
+> >RBP: ffffc90003e27d58 R08: ffffffff87289cd6 R09: fffff520007c4f94
+> >R10: fffff520007c4f94 R11: 0000000000000000 R12: 0000000000000008
+> >R13: 0000000000000001 R14: ffff88809fbcf000 R15: ffff8880a7733690
+> >FS:  00007fb132f26700(0000) GS:ffff8880aec00000(0000)
+> >knlGS:0000000000000000
+> >CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> >CR2: 000000000178f590 CR3: 00000000996d6000 CR4: 00000000001406f0
+> >DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> >DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> >Call Trace:
+> >  raw_enable_filters net/can/raw.c:189 [inline]
+> >  raw_enable_allfilters net/can/raw.c:255 [inline]
+> >  raw_bind+0x326/0x1230 net/can/raw.c:428
+> >  __sys_bind+0x2bd/0x3a0 net/socket.c:1649
+> >  __do_sys_bind net/socket.c:1660 [inline]
+> >  __se_sys_bind net/socket.c:1658 [inline]
+> >  __x64_sys_bind+0x7a/0x90 net/socket.c:1658
+> >  do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+> >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> >RIP: 0033:0x446ba9
+> >Code: e8 0c e8 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7
+> >48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
+> >ff 0f 83 5b 07 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+> >RSP: 002b:00007fb132f25d98 EFLAGS: 00000246 ORIG_RAX: 0000000000000031
+> >RAX: ffffffffffffffda RBX: 00000000006dbc88 RCX: 0000000000446ba9
+> >RDX: 0000000000000008 RSI: 0000000020000180 RDI: 0000000000000003
+> >RBP: 00000000006dbc80 R08: 00007fb132f26700 R09: 0000000000000000
+> >R10: 00007fb132f26700 R11: 0000000000000246 R12: 00000000006dbc8c
+> >R13: 0000000000000000 R14: 0000000000000000 R15: 068500100000003c
+> >Modules linked in:
+> >---[ end trace 0dedabb13ca8e7d7 ]---
+> >RIP: 0010:hlist_add_head_rcu include/linux/rculist.h:528 [inline]
+> >RIP: 0010:can_rx_register+0x43b/0x600 net/can/af_can.c:476
+> >Code: 48 89 d8 48 c1 e8 03 42 80 3c 28 00 74 08 48 89 df e8 89 22 8a fa 4c
+> >89 33 4d 89 e5 49 c1 ed 03 48 b8 00 00 00 00 00 fc ff df <41> 80 7c 05 00
+> >00 74 08 4c 89 e7 e8 c5 21 8a fa 4d 8b 34 24 4c 89
+> >RSP: 0018:ffffc90003e27d00 EFLAGS: 00010202
+> >RAX: dffffc0000000000 RBX: ffff8880a77336c8 RCX: ffff88809306a100
+> >RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8880a77336c0
+> >RBP: ffffc90003e27d58 R08: ffffffff87289cd6 R09: fffff520007c4f94
+> >R10: fffff520007c4f94 R11: 0000000000000000 R12: 0000000000000008
+> >R13: 0000000000000001 R14: ffff88809fbcf000 R15: ffff8880a7733690
+> >FS:  00007fb132f26700(0000) GS:ffff8880aec00000(0000)
+> >knlGS:0000000000000000
+> >CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> >CR2: 000000000178f590 CR3: 00000000996d6000 CR4: 00000000001406f0
+> >DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> >DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> >
+> >
+> >---
+> >This bug is generated by a bot. It may contain errors.
+> >See https://goo.gl/tpsmEJ for more information about syzbot.
+> >syzbot engineers can be reached at syzkaller@googlegroups.com.
+> >
+> >syzbot will keep track of this bug report. See:
+> >https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> >For information about bisection process see:
+> >https://goo.gl/tpsmEJ#bisection
+> >syzbot can test patches for this bug, for details see:
+> >https://goo.gl/tpsmEJ#testing-patches
