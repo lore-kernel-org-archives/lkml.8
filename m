@@ -2,101 +2,69 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9827C33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40AF6C32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:36:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8248D22527
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:31:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1640222522
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:36:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbgATTbY (ORCPT
+        id S1727075AbgATTgD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 14:31:24 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:37231 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726607AbgATTbY (ORCPT
+        Mon, 20 Jan 2020 14:36:03 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:54342 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726752AbgATTgD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 14:31:24 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1itclc-0005rx-4z; Mon, 20 Jan 2020 20:31:20 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1itclb-0001lC-0P; Mon, 20 Jan 2020 20:31:19 +0100
-Date:   Mon, 20 Jan 2020 20:31:18 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5] gpio: pca953x: Add Maxim MAX7313 PWM support
-Message-ID: <20200120193118.3vzwy5uxnsy2w4sv@pengutronix.de>
-References: <20200107133130.1338-1-miquel.raynal@bootlin.com>
- <20200120121329.GC206171@ulmo>
- <20200120134137.54dc307e@xps13>
- <20200120141944.GD206171@ulmo>
- <20200120144457.eznywc423ehw6kuc@pengutronix.de>
- <20200120163822.232b1410@xps13>
+        Mon, 20 Jan 2020 14:36:03 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1itcq6-00CD2L-9O; Mon, 20 Jan 2020 19:35:58 +0000
+Date:   Mon, 20 Jan 2020 19:35:58 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Cc:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Namjae Jeon <linkinjeon@gmail.com>,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: oopsably broken case-insensitive support in ext4 and f2fs (Re:
+ vfat: Broken case-insensitive support for UTF-8)
+Message-ID: <20200120193558.GD8904@ZenIV.linux.org.uk>
+References: <20200119221455.bac7dc55g56q2l4r@pali>
+ <87sgkan57p.fsf@mail.parknet.co.jp>
+ <20200120073040.GZ8904@ZenIV.linux.org.uk>
+ <20200120074558.GA8904@ZenIV.linux.org.uk>
+ <20200120080721.GB8904@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200120163822.232b1410@xps13>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200120080721.GB8904@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Miquèl,
+On Mon, Jan 20, 2020 at 08:07:21AM +0000, Al Viro wrote:
 
-On Mon, Jan 20, 2020 at 04:38:22PM +0100, Miquel Raynal wrote:
-> One dumb question that I still have is: besides any backward
-> compatibility aspects, do we really care about the period/frequency of
-> the PWM? Why do we enforce a period and an active duration, while
-> we could limit ourselves to a ratio and let the driver use the most
-> suitable frequency if the hardware supports it?
+> > > I hadn't checked ->d_compare() instances for a while; somebody needs to
+> > > do that again, by the look of it.  The above definitely is broken;
+> > > no idea how many other instaces had grown such bugs...
+> > 
+> > f2fs one also has the same bug.  Anyway, I'm going down right now, will
+> > check the rest tomorrow morning...
+> 
+> We _probably_ can get away with just checking that inode for NULL and
+> buggering off if it is (->d_seq mismatch is guaranteed in that case),
+> but I suspect that we might need READ_ONCE() on both dereferences.
+> I hate memory barriers...
 
-There are situations where just fixing the ratio would (nearly) be good
-enough. For example if you drive an LED just requesting a ratio might
-look fine at first glance. But 
+FWIW, other instances seem to be OK; HFS+ one might or might not be
+OK in the face of concurrent rename (wrong result in that case is
+no problem; oops would be), but it doesn't play silly buggers with
+pointer-chasing.
 
-	.period = 5000 ms, .duty_cycle = 2500 ms
-
-has quite a different effect than
-
-	.period = 500 ns, .duty_cycle = 250 ns
-
-while both are valid if you requested 50%.
-
-Having said that I think the lowlevel API (i.e. what a device driver has
-to implement) is sane, as it allows to implement all possible requests,
-even if there might be a consumer that cares more about the absolute
-value of duty-cycle than the duty-cycle/period ratio; and it matches
-what most hardware models implement. There is usually a register to
-specify the period and one to specify the duty-cycle.
-
-And on top of that (at least once there is pwm_round_state()) you can
-implement all sort of helper functions that implement for example "best
-effort 50% with a period < 2ms".
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+ext4 and f2fs do, and ->d_compare() is broken in both of them.
