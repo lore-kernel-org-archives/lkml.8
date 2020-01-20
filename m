@@ -2,97 +2,139 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF007C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:49:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B02B8C33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1BEC207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:49:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8061D2073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:50:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="upXzz8qe"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZJCzDnVO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbgATItV (ORCPT
+        id S1726761AbgATIun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 03:49:21 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:50383 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726421AbgATItU (ORCPT
+        Mon, 20 Jan 2020 03:50:43 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:33478 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbgATIun (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 03:49:20 -0500
-Received: by mail-wm1-f66.google.com with SMTP id a5so13557685wmb.0
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 00:49:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=xjO9Eev+SU5Q9NPoX47dhlIyYm65ZrIzTpmYSXcC0fU=;
-        b=upXzz8qeD/5BtJaGzLdwuEqBKz7Y4Y95ZLbt4pmDEhvAN4VLtUl9KSf6TyxkeN3fRV
-         ypojrslYQxBfDcwhLSlJacyHxEoW2v4EonxT6YAt3v0FxmiPF3Jfw2Ea0CmO7UBuvz3g
-         3BTGbfIPuoZm8iMuLLZYRaz8MBTSE3Y9n4BAQyD0wDRaZsqp0NWfFbmDEjnJSpuwwtoZ
-         mNFH+UXTtF87MPsVXVYMzLE3nNICfSpl+n02Lwan1WcjSHYk0ap8iJVjFyPBKSCzbMdD
-         IFLWzOXNf8nRRJT/Vx7a7OgqrXnMoHUmaOC78NMfJzWFdDNC5cEI6Oz0jLu3cdxL9YDd
-         hebQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=xjO9Eev+SU5Q9NPoX47dhlIyYm65ZrIzTpmYSXcC0fU=;
-        b=EDan3djlQbVg1bov+4PgESnDLdQ7GlgBxgR3fqLVIb7vF20PHzjF5UyI38phWX0h62
-         04nk/LOBwKPSNmokFP2vfIdNrpjf2aD84AK7Tb56C+MspKjNzhtbmWklVvxrkfY+pe5o
-         cDE0XTdIY8c16SCaIRB8R5SLTGzGyTOEy4IWNGKu/MXwmQylm6n7W4PS0BxQjruF2RSc
-         YAfn2NcuUrRHoJhICQGkMqOWerClAT3MccOIOgkhkEy/LqCrEqKuSpc61pHIo4Sor6Hw
-         OulncgQ6hZT8nJQUGOMgmIc0+dkcFUzq6TosD2tT3Gd42ID1uNCaqu7+SHDcUuLRW3qJ
-         AjXQ==
-X-Gm-Message-State: APjAAAWbgw6SdJHd/Seq3IPHQXEglx0cswGro5x0sjnA51QBw5SdfDxF
-        NW6LA/9smRfTPH49W0BP59mkyg==
-X-Google-Smtp-Source: APXvYqx0cpFv+M2+CJytRSA34riJUQ4p8jfdKQZ24wK7qihHsiYbl5xYfHDu7dN4FSwJ3ErNm2cVKQ==
-X-Received: by 2002:a05:600c:145:: with SMTP id w5mr17160695wmm.157.1579510158564;
-        Mon, 20 Jan 2020 00:49:18 -0800 (PST)
-Received: from dell ([2.27.35.227])
-        by smtp.gmail.com with ESMTPSA id 60sm47747417wrn.86.2020.01.20.00.49.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 00:49:18 -0800 (PST)
-Date:   Mon, 20 Jan 2020 08:49:34 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, b.galvani@gmail.com, linus.walleij@linaro.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        phh@phh.me, stefan@agner.ch, letux-kernel@openphoenux.org
-Subject: Re: [PATCH 2/5] mfd: rn5t618: add ADC subdevice for RC5T619
-Message-ID: <20200120084934.GZ15507@dell>
-References: <20200117215926.15194-1-andreas@kemnade.info>
- <20200117215926.15194-3-andreas@kemnade.info>
+        Mon, 20 Jan 2020 03:50:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=FHQHy9MJDq8pTNILUwL7Udrti/XuWgeB7brLm2Zqto8=; b=ZJCzDnVOx8H2QIEA18weBsJYC
+        bMBOjOCNrI+vUOu42EbxW0fNdEqeto3PJ7fMEtoDJgaNEir9A7U+QFxh4tY5aUnLBVimuVXxgdnbO
+        4NnRj10z4RvNBxthlAzd5yYe2wQ+UVudOcON2ggL3P5SawflTAXVlJzxLPxfEKE63Ku52bZVsTwG0
+        pFsYBtr6Q3wjd7ctJSbJM5AeXXbPeNhXCobcZKNXlFrCMNdoph5YQnJTeRAAuu4QGwSW9wZftuMK9
+        jOGFmeOtL/ON0U5fzfoufh09N7VzKuy3KBzRk+FcQ94Fb0n2sYsdeM+ps0lv9TFGxcloKpvtsw6u9
+        XYS1bG4wg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1itSlO-0002QF-4l; Mon, 20 Jan 2020 08:50:26 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 643FA3008A9;
+        Mon, 20 Jan 2020 09:48:44 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id EB3282B2811DA; Mon, 20 Jan 2020 09:50:22 +0100 (CET)
+Date:   Mon, 20 Jan 2020 09:50:22 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        Andi Kleen <andi@firstfloor.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] perf/core: Install cgroup event via IPI
+Message-ID: <20200120085022.GJ14879@hirez.programming.kicks-ass.net>
+References: <20200116172555.3674873-1-songliubraving@fb.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200117215926.15194-3-andreas@kemnade.info>
+In-Reply-To: <20200116172555.3674873-1-songliubraving@fb.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Jan 2020, Andreas Kemnade wrote:
-
-> This adds a subdevice for the ADC in the RC5T619.
+On Thu, Jan 16, 2020 at 09:25:55AM -0800, Song Liu wrote:
+> cgroup events in OFF state cannot be installed without IPI, otherwise, it
+> may trigger the following calltrace with CONFIG_DEBUG_LIST:
 > 
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> ---
->  drivers/mfd/rn5t618.c | 1 +
->  1 file changed, 1 insertion(+)
+> [   31.776974] ------------[ cut here ]------------
+> [   31.777570] list_add double add: new=ffff888ff7cf0db0, prev=ffff888ff7ce82f0, next=ffff888ff7cf0db0.
+> [   31.778737] WARNING: CPU: 3 PID: 1186 at lib/list_debug.c:31 __list_add_valid+0x67/0x70
+> [   31.779745] Modules linked in:
+> [   31.780138] CPU: 3 PID: 1186 Comm: perf Tainted: G        W         5.5.0-rc6+ #3962
+> [   31.781125] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.11.0-2.el7 04/01/2014
+> [   31.782199] RIP: 0010:__list_add_valid+0x67/0x70
 
-Applied, thanks.
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index a1f8bde19b56..36e8fe27e2a1 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -2682,14 +2682,18 @@ perf_install_in_context(struct perf_event_context *ctx,
+>  	smp_store_release(&event->ctx, ctx);
+>  
+>  	/*
+> -	 * perf_event_attr::disabled events will not run and can be initialized
+> -	 * without IPI. Except when this is the first event for the context, in
+> -	 * that case we need the magic of the IPI to set ctx->is_active.
+> +	 * perf_event_attr::disabled events will not run and can be
+> +	 * initialized without IPI. Except:
+> +	 *   1. when this is the first event for the context, in that case
+> +	 *      we need the magic of the IPI to set ctx->is_active;
+> +	 *   2. cgroup event in OFF state, because it is installed in the
+> +	 *      cpuctx.
+>  	 *
+>  	 * The IOC_ENABLE that is sure to follow the creation of a disabled
+>  	 * event will issue the IPI and reprogram the hardware.
+>  	 */
+> -	if (__perf_effective_state(event) == PERF_EVENT_STATE_OFF && ctx->nr_events) {
+> +	if (__perf_effective_state(event) == PERF_EVENT_STATE_OFF &&
+> +	    !is_cgroup_event(event) && ctx->nr_events) {
+>  		raw_spin_lock_irq(&ctx->lock);
+>  		if (ctx->task == TASK_TOMBSTONE) {
+>  			raw_spin_unlock_irq(&ctx->lock);
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+I don't think this is right. Because cgroup events are always per-cpu
+events, ctx == &cpuctx->ctx, so the locking should work out just fine.
+
+What does appear to be the problem is that:
+
+  add_event_to_ctx()
+    list_update_cgroup_event()
+      cpuctx = __get_cpu_context(ctx)
+
+uses this_cpu_ptr() and we're now calling it from the 'wrong' CPU.
+
+But I'm thinking the below should also work just fine, hmm?
+
+---
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 2173c23c25b4..2c6134604811 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -951,9 +951,9 @@ list_update_cgroup_event(struct perf_event *event,
+ 
+ 	/*
+ 	 * Because cgroup events are always per-cpu events,
+-	 * this will always be called from the right CPU.
++	 * @ctx == &cpuctx->cpu.
+ 	 */
+-	cpuctx = __get_cpu_context(ctx);
++	cpuctx = container_of(ctx, struct perf_cpu_context, ctx);
+ 
+ 	/*
+ 	 * Since setting cpuctx->cgrp is conditional on the current @cgrp
