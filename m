@@ -2,124 +2,142 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50487C33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC7EC33CB8
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2760E20684
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:08:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 217062077C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:09:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579511396;
+	bh=vbAaO1LjWMydY+UDit/LOlD+QdhAMjmRUBC6/xTciUI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=lOX5lkKQo1CJfzbZFwO2iQNKplneD7VPNJ0Zm03tVQbidOmyoirzMz+lUm1WOnvCl
+	 +lqQbLYLbgXF6Hi14vwVgmmCrayHQ/Nf9j7HdFTQNOUBMNY/31nQ7jNY86D1bQJn4R
+	 jbJz3lBTzt/081xk2XJbTYq7Q1ZrovH6JdyvllGQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbgATJIy (ORCPT
+        id S1726860AbgATJJz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 04:08:54 -0500
-Received: from mx2.suse.de ([195.135.220.15]:59260 "EHLO mx2.suse.de"
+        Mon, 20 Jan 2020 04:09:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726130AbgATJIy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 04:08:54 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 0A8D2B254;
-        Mon, 20 Jan 2020 09:08:52 +0000 (UTC)
-Date:   Mon, 20 Jan 2020 10:08:50 +0100
-From:   Jean Delvare <jdelvare@suse.de>
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     linux-doc@vger.kernel.org, linux-i2c@vger.kernel.org,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/26] docs: i2c: sort index logically
-Message-ID: <20200120100850.001e032b@endymion>
-In-Reply-To: <20200105225012.11701-1-luca@lucaceresoli.net>
-References: <20200105224006.10321-1-luca@lucaceresoli.net>
-        <20200105225012.11701-1-luca@lucaceresoli.net>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        id S1726130AbgATJJy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 04:09:54 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A67020684;
+        Mon, 20 Jan 2020 09:09:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579511393;
+        bh=vbAaO1LjWMydY+UDit/LOlD+QdhAMjmRUBC6/xTciUI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Z8JoobvHuhNgmbrbIoqg/RNLpNLhodMK2TnkhVzBAaozj7wRwet84iBLCdbKiu68V
+         JTPENT7TvgZv0pRxV3YVp4G79sL4cu+peo64P9DRY6axIzHnliS19t4ctptG/k6BU0
+         Ae//fG/4yViRpu4zaXyfma5rNZ92GppC49HKsues=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1itT4B-000DhL-KB; Mon, 20 Jan 2020 09:09:51 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Mon, 20 Jan 2020 10:09:51 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Yash Shah <yash.shah@sifive.com>
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, palmer@dabbelt.com,
+        paul.walmsley@sifive.com, aou@eecs.berkeley.edu,
+        tglx@linutronix.de, jason@lakedaemon.net, bmeng.cn@gmail.com,
+        atish.patra@wdc.com, sagar.kadam@sifive.com,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        sachin.ghadi@sifive.com
+Subject: Re: [PATCH v4 0/6] GPIO & Hierarchy IRQ support for HiFive Unleashed
+In-Reply-To: <1575976274-13487-1-git-send-email-yash.shah@sifive.com>
+References: <1575976274-13487-1-git-send-email-yash.shah@sifive.com>
+Message-ID: <8dcb52c94eb5a585f6cf052c18571805@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.8
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: yash.shah@sifive.com, linus.walleij@linaro.org, bgolaszewski@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, palmer@dabbelt.com, paul.walmsley@sifive.com, aou@eecs.berkeley.edu, tglx@linutronix.de, jason@lakedaemon.net, bmeng.cn@gmail.com, atish.patra@wdc.com, sagar.kadam@sifive.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Luca,
-
-On Sun,  5 Jan 2020 23:49:47 +0100, Luca Ceresoli wrote:
-> The index page currently lists sections in alphabetical file order without
-> caring about their content. Sort sections based on their content logically,
-> according to the following structure:
+On 2019-12-10 12:11, Yash Shah wrote:
+> This patch series adds GPIO drivers, DT documentation and DT nodes for
+> HiFive Unleashed board. The gpio patches are mostly based on Wesley's 
+> patch.
+> The patchset also adds hierarchy irq domain support as it is required 
+> by this
+> gpio driver. It also includes the irqdomain patch to introduce
+> irq_domain_translate_onecell() and irq-nvic driver patch to use this 
+> newly
+> introduced function.
 > 
->  * Intro to I2C/SMBus and their usage in Linux: summary, i2c-protocol,
->    smbus-protocol, instantiating-devices, busses/index, i2c-topology,
->    muxes/i2c-mux-gpio
->  * Implementing drivers: writing-clients, dev-interface,
->    dma-considerations, fault-codes, functionality
->  * Debugging: gpio-fault-injection, i2c-stub
->  * Slave I2C: slave-interface, slave-eeprom-backend
->  * Advanced: ten-bit-addresses
->  * Obsolete info: upgrading-clients, old-module-parameters
-
-Good idea. I wonder, would there be a way to materialize these group
-names in the documentation itself? I found it useful when reviewing the
-patch, but in the long term it would be even more useful if the end
-readers would see them too.
-
-> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
-> ---
->  Documentation/i2c/index.rst | 21 ++++++++++-----------
->  1 file changed, 10 insertions(+), 11 deletions(-)
+> This patchset is based on Linux 5.4-rc6 and tested on HiFive Unleashed 
+> board
 > 
-> diff --git a/Documentation/i2c/index.rst b/Documentation/i2c/index.rst
-> index a0fbaf6d0675..bd0ff9d00793 100644
-> --- a/Documentation/i2c/index.rst
-> +++ b/Documentation/i2c/index.rst
-> @@ -7,27 +7,26 @@ I2C/SMBus Subsystem
->  .. toctree::
->     :maxdepth: 1
->  
-> +   summary
-> +   i2c-protocol
-> +   smbus-protocol
-> +   instantiating-devices
-> +   busses/index
-> +   i2c-topology
-> +   muxes/i2c-mux-gpio
-> +   writing-clients
->     dev-interface
->     dma-considerations
->     fault-codes
->     functionality
->     gpio-fault-injection
-> -   i2c-protocol
->     i2c-stub
-> -   i2c-topology
-> -   instantiating-devices
-> -   old-module-parameters
-> -   slave-eeprom-backend
->     slave-interface
-> -   smbus-protocol
-> -   summary
-> +   slave-eeprom-backend
->     ten-bit-addresses
->     upgrading-clients
-> -   writing-clients
-> -
-> -   muxes/i2c-mux-gpio
-> +   old-module-parameters
->  
-> -   busses/index
->  
+> Changes:
+> v4 vs v3:
+> - Rename the DT yaml document to more standard naming 
+> (sifive,gpio.yaml)
+> - Drop "clock-names" property from yaml document
+> - Add "minItems" to "interrupts" node in yaml
+> 
+> v3 vs v2:
+> - Include patch for irq-nvic driver to use irq_domain_translate_onecell
+> - Remove unnecessary inclusion of header files
+> - Use a single prefix for all symbols in this driver
+> - Rename the "enabled" field of struct sifive_gpio to "irq_state"
+> - Remove unused variables and locking from probe()
+> - Other minor changes
+> 
+> v2 vs v1:
+> - Add patch to introduce irq_domain_translate_onecell() and use it in
+>   the sifive PLIC driver
+> - Drop the usage of own locks, instead use internal bgpio_locks
+> - Consistently use regmap for register access throughout the gpio code
+> - Convert the GPIO DT documentation into a json schema
+> - Other minor changes based upon feedback received on v1
+> 
+> v1 vs RFC:
+> Incorporated below changes as suggested by Linus Walleij on RFC version 
+> of this
+> patchset[0]
+> - Dropped PWM patches as they are already merged.
+> - Include "GPIO_GENERIC" and "REGMAP_MMIO" in Kconfig select option
+> - Remove unwanted inclusion of header files
+> - Use regmap MMIO instead of customised sifive_assign_bit()
+> - Use GPIOLIB_GENERIC and bgpio_init() to set up the accessors
+> - Use hierarchical irqdomain
+> 
+> [0]
+> https://lore.kernel.org/linux-riscv/20181010123519.RVexDppaPFpIWl7QU_hpP8tc5qqWPJgeuLYn0FaGbeQ@z/
+> 
+> Yash Shah (6):
+>   genirq: introduce irq_domain_translate_onecell
+>   irqchip: nvic: Use irq_domain_translate_onecell instead of custom 
+> func
+>   irqchip: sifive: Support hierarchy irq domain
+>   gpio: sifive: Add DT documentation for SiFive GPIO
+>   gpio: sifive: Add GPIO driver for SiFive SoCs
+>   riscv: dts: Add DT support for SiFive FU540 GPIO driver
 
-You end up with 2 blank lines in a row here, ideally there should be
-only one left.
+I've queued the first 5 patches. The last one should go via the
+corresponding platform tree.
 
->  .. only::  subproject and html
->  
+Thanks,
 
-Reviewed-by: Jean Delvare <jdelvare@suse.de>
-
+         M.
 -- 
-Jean Delvare
-SUSE L3 Support
+Jazz is not dead. It just smells funny...
