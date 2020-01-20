@@ -2,370 +2,403 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C158BC33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:09:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47AE2C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:10:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9840D2073D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:09:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BF0820674
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:10:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="P8NpeW3A"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LJd3ubrD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbgATLJ4 (ORCPT
+        id S1727005AbgATLKt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 06:09:56 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:33470 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726589AbgATLJz (ORCPT
+        Mon, 20 Jan 2020 06:10:49 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34147 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726451AbgATLKt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 06:09:55 -0500
-Received: by mail-wm1-f66.google.com with SMTP id d139so14505637wmd.0
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 03:09:53 -0800 (PST)
+        Mon, 20 Jan 2020 06:10:49 -0500
+Received: by mail-wr1-f65.google.com with SMTP id t2so29103197wrr.1;
+        Mon, 20 Jan 2020 03:10:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=RspWDOuWB94i7/kbi7JammXa2EW0J7yWnKwQFB9cKlM=;
-        b=P8NpeW3AeZuEVz1jzbkL4MKGPOrL4M6IoO7+omC7PffznVE2d1lCJnOXNeIrcaYUsK
-         jrzuhj7R3li5vMlT0ntHsE2GUWJHdxa1v6aJWcoEGmFdYBnoYPdbcoGBiPLPNVNLMebT
-         8ZohB3jfFbzXsC0alSRXzSAHBMmQh6q8MFaJM=
+        bh=XxjuYsKUbDiz7eFcRRQZbuZAsY8EPgVG4WEacTDhas0=;
+        b=LJd3ubrDA1YYnW0VwxOlRBHvCGTdtfIP4ItiHLy+GvrIWi7YsinM4uitzU1KHQQAzc
+         1Q5YX6vdqVIHPC4FFtcVqHAE7Ik6TvBHlthI8WiC6NjMHHSLSH0i6J7Jhx7CJ4eBTQKB
+         6/+Pl+D9VVa5tNVh/F9urbxjy+oN9qUHDk0jUns3haf8Hhgw+4E6ZwgNMXV+5xWPXtIt
+         wvxc7Z/P2YhgtxvSuIS8dLShlS8horpvo+wdZp4umZXWBQxELzfD/PDBY4hHCvrZClN7
+         0HMMTi1hVlh49R34rvjtBqzD3YlC/oy1tV62/lHrMNVNfhJUN4BALhP7SdG73Zu8YtRJ
+         emDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RspWDOuWB94i7/kbi7JammXa2EW0J7yWnKwQFB9cKlM=;
-        b=eQ3KmkSxWff1d0TnzPJErF9aBazydi50eHiN4a/gwAJ2Ps1I2JMpWmJiv0uTjr8cop
-         LrlB1ofcqets7pt6U/VJ42vmUx7CaGyi82oc+qhIFiF7uKOs56/2HDs+Lg3RqAagX40M
-         z7apkAcHZa/wKWq4OFJ0hXNjN6M0dSSgSDw3gZZA7VSUWWcNoff0joeM5BV+Sdvsms3E
-         6w4MBg8cLQTJbkOTS+8JAHfTkB/voyGYxqplxxW6ikulVxg5U7rYdD4yKQ+tYL2PzsJE
-         h4IA1vPeqVbCbBn/ShqbBBCIJwRi2GucGu5ay3D6Jt3Kx9yGrbmjfOJogNqalaNygJAd
-         Q4uA==
-X-Gm-Message-State: APjAAAVrmIBdMFGR/ZWYCH31VBfGhD82aRAmKUS4cKBCEX1jRd4ML8cm
-        UyVrs6VKHuGuS6xEeP5X7gYP7w==
-X-Google-Smtp-Source: APXvYqyDk4jizH/XUJGSaGOPu6EqrnnUUjF7Yly9Etd4JBrzZfrlvh8zaBDXhks0HUetnI71eaCagQ==
-X-Received: by 2002:a1c:f009:: with SMTP id a9mr18379484wmb.73.1579518592324;
-        Mon, 20 Jan 2020 03:09:52 -0800 (PST)
-Received: from chromium.org ([2620:0:105f:fd00:24a7:c82b:86d8:5ae9])
-        by smtp.gmail.com with ESMTPSA id l15sm45167551wrv.39.2020.01.20.03.09.51
+        bh=XxjuYsKUbDiz7eFcRRQZbuZAsY8EPgVG4WEacTDhas0=;
+        b=SZHeFTT4+ZendNfkBf4fPKMjbWw+/E7ejPLye+EUUIO6Pdk4H7NZPQxlxaYtksog2P
+         /zgqPb8JdvTXBQLJAjaFzhjqULewliSSYBz+UMrWRDsWt3j9Yg+oapoVGkqQBimhTTqe
+         QSGHRWqOmEPmlKL8tMzGwtLx9cWs5SCOcYlcPl2j29CBWAVW/eD1lTXAd95UdRyzKNvt
+         K3HZ0DpYLC6q8s3xXJyW+XHviziqB56QFCgTfryrKDScz1/wh/8dqQIqu/sqbqvhi/Qr
+         AsrzgNMR576UgiLmGOLwtcWGyOWfFFgtirj08IpQCIhjXnpfaV+1nFZKWBDYzFwYgIsi
+         Oy2w==
+X-Gm-Message-State: APjAAAUC56pW0h0H8TMQNqAKKiwHnNbzlQaEjAT9M8vprUJBCpJonxYQ
+        HI09GblQF+uYKUDUDs07AaY=
+X-Google-Smtp-Source: APXvYqyl4ylVdF+AiTxNgXdRo5YR4lcqdNlGfGwTAN9f+WZTAmstUFIYW9x1D19J+9wxzTq3XXROzQ==
+X-Received: by 2002:adf:dd46:: with SMTP id u6mr17055902wrm.13.1579518644845;
+        Mon, 20 Jan 2020 03:10:44 -0800 (PST)
+Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
+        by smtp.gmail.com with ESMTPSA id l6sm22504947wmf.21.2020.01.20.03.10.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 03:09:51 -0800 (PST)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Mon, 20 Jan 2020 12:10:14 +0100
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Michael Halcrow <mhalcrow@google.com>,
-        Paul Turner <pjt@google.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
-Subject: Re: [PATCH bpf-next v2 05/10] bpf: lsm: BTF API for LSM hooks
-Message-ID: <20200120111014.GB26394@chromium.org>
-References: <20200115171333.28811-1-kpsingh@chromium.org>
- <20200115171333.28811-6-kpsingh@chromium.org>
- <CAEf4BzYJy40csmwfBgtD+UZY3X+hjqpQ=NwjUQ-cwy+RPF8VHA@mail.gmail.com>
+        Mon, 20 Jan 2020 03:10:43 -0800 (PST)
+Date:   Mon, 20 Jan 2020 12:10:42 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Vidya Sagar <vidyas@nvidia.com>, bjorn@helgaas.com,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Andrew Murray <andrew.murray@arm.com>, treding@nvidia.com,
+        jonathanh@nvidia.com, linux-tegra@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH] PCI: Add MCFG quirks for Tegra194 host controllers
+Message-ID: <20200120111042.GA203160@ulmo>
+References: <20200103174935.5612-1-vidyas@nvidia.com>
+ <CABhMZUUHGEEhsJ-+foSsodqtKXyX5ZNPkGgv_VzXz=Qv+NVcUA@mail.gmail.com>
+ <9a767725-9671-6402-4e1c-a648f5a7860b@nvidia.com>
+ <20200117121736.GA7072@e121166-lin.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="tThc/1wpZn/ma/RB"
 Content-Disposition: inline
-In-Reply-To: <CAEf4BzYJy40csmwfBgtD+UZY3X+hjqpQ=NwjUQ-cwy+RPF8VHA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200117121736.GA7072@e121166-lin.cambridge.arm.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for reviewing!
 
-On 16-Jan 16:28, Andrii Nakryiko wrote:
-> On Wed, Jan 15, 2020 at 9:14 AM KP Singh <kpsingh@chromium.org> wrote:
-> >
-> > From: KP Singh <kpsingh@google.com>
-> >
-> > The BTF API provides information required by the BPF verifier to
-> > attach eBPF programs to the LSM hooks by using the BTF information of
-> > two types:
-> >
-> > - struct security_hook_heads: This type provides the offset which
-> >   a new dynamically allocated security hook must be attached to.
-> > - union security_list_options: This provides the information about the
-> >   function prototype required by the hook.
-> >
-> > When the program is loaded:
-> >
-> > - The verifier receives the index of a member in struct
-> >   security_hook_heads to which a program must be attached as
-> >   prog->aux->lsm_hook_index. The index is one-based for better
-> >   verification.
-> > - bpf_lsm_type_by_index is used to determine the func_proto of
-> >   the LSM hook and updates prog->aux->attach_func_proto
-> > - bpf_lsm_head_by_index is used to determine the hlist_head to which
-> >   the BPF program must be attached.
-> >
-> > Signed-off-by: KP Singh <kpsingh@google.com>
-> > ---
-> >  include/linux/bpf_lsm.h |  12 +++++
-> >  security/bpf/Kconfig    |   1 +
-> >  security/bpf/hooks.c    | 104 ++++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 117 insertions(+)
-> >
-> > diff --git a/include/linux/bpf_lsm.h b/include/linux/bpf_lsm.h
-> > index 9883cf25241c..a9b4f7b41c65 100644
-> > --- a/include/linux/bpf_lsm.h
-> > +++ b/include/linux/bpf_lsm.h
-> > @@ -19,6 +19,8 @@ extern struct security_hook_heads bpf_lsm_hook_heads;
-> >
-> >  int bpf_lsm_srcu_read_lock(void);
-> >  void bpf_lsm_srcu_read_unlock(int idx);
-> > +const struct btf_type *bpf_lsm_type_by_index(struct btf *btf, u32 offset);
-> > +const struct btf_member *bpf_lsm_head_by_index(struct btf *btf, u32 id);
-> >
-> >  #define CALL_BPF_LSM_VOID_HOOKS(FUNC, ...)                     \
-> >         do {                                                    \
-> > @@ -65,6 +67,16 @@ static inline int bpf_lsm_srcu_read_lock(void)
-> >         return 0;
-> >  }
-> >  static inline void bpf_lsm_srcu_read_unlock(int idx) {}
-> > +static inline const struct btf_type *bpf_lsm_type_by_index(
-> > +       struct btf *btf, u32 index)
-> > +{
-> > +       return ERR_PTR(-EOPNOTSUPP);
-> > +}
-> > +static inline const struct btf_member *bpf_lsm_head_by_index(
-> > +       struct btf *btf, u32 id)
-> > +{
-> > +       return ERR_PTR(-EOPNOTSUPP);
-> > +}
-> >
-> >  #endif /* CONFIG_SECURITY_BPF */
-> >
-> > diff --git a/security/bpf/Kconfig b/security/bpf/Kconfig
-> > index 595e4ad597ae..9438d899b618 100644
-> > --- a/security/bpf/Kconfig
-> > +++ b/security/bpf/Kconfig
-> > @@ -7,6 +7,7 @@ config SECURITY_BPF
-> >         depends on SECURITY
-> >         depends on BPF_SYSCALL
-> >         depends on SRCU
-> > +       depends on DEBUG_INFO_BTF
-> >         help
-> >           This enables instrumentation of the security hooks with
-> >           eBPF programs.
-> > diff --git a/security/bpf/hooks.c b/security/bpf/hooks.c
-> > index b123d9cb4cd4..82725611693d 100644
-> > --- a/security/bpf/hooks.c
-> > +++ b/security/bpf/hooks.c
-> > @@ -5,6 +5,8 @@
-> >   */
-> >
-> >  #include <linux/bpf_lsm.h>
-> > +#include <linux/bpf.h>
-> > +#include <linux/btf.h>
-> >  #include <linux/srcu.h>
-> >
-> >  DEFINE_STATIC_SRCU(security_hook_srcu);
-> > @@ -18,3 +20,105 @@ void bpf_lsm_srcu_read_unlock(int idx)
-> >  {
-> >         return srcu_read_unlock(&security_hook_srcu, idx);
-> >  }
-> > +
-> > +static inline int validate_hlist_head(struct btf *btf, u32 type_id)
-> > +{
-> > +       s32 hlist_id;
-> > +
-> > +       hlist_id = btf_find_by_name_kind(btf, "hlist_head", BTF_KIND_STRUCT);
-> > +       if (hlist_id < 0 || hlist_id != type_id)
-> > +               return -EINVAL;
-> 
-> This feels backwards and expensive. You already have type_id you want
-> to check. Do a quick look up, check type and other attributes, if you
-> want. There is no need to do linear search for struct named
-> "hlist_head".
-> 
-> But in reality, you should trust kernel BTF, you already know that you
-> found correct "security_hook_heads" struct, so its member has to be
-> hlist_head, no?
+--tThc/1wpZn/ma/RB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-We had a discussion internally and also came the same conclusion (it's
-okay to trust the BTF) and will remove sone of the "over-cautious"
-checks in the next revision.
+On Fri, Jan 17, 2020 at 12:17:37PM +0000, Lorenzo Pieralisi wrote:
+> On Sat, Jan 04, 2020 at 09:14:42AM +0530, Vidya Sagar wrote:
+> > On 1/3/2020 11:34 PM, Bjorn Helgaas wrote:
+> > > External email: Use caution opening links or attachments
+> > >=20
+> > >=20
+> > > On Fri, Jan 3, 2020 at 11:50 AM Vidya Sagar <vidyas@nvidia.com> wrote:
+> > > >=20
+> > > > The PCIe controller in Tegra194 SoC is not completely ECAM-complian=
+t.
+> > >=20
+> > > What is the plan for making these SoCs ECAM-compliant?  When was
+> > > Tegra194 designed?  Is it shipping to end customers, i.e., would I be
+> > > able to buy one?
+> > Tegra194 is designed in 2017 and started shipping from 2018 onwards.
+> > Nothing much can be done for Tegra194 to make it fully ECAM compliant
+> > at this point in time. Tegra194 based development kits are available @
+> > https://developer.nvidia.com/embedded/jetson-agx-xavier-developer-kit
+> > Currently the BSP has the kernel booting through Device Tree mechanism
+> > and there is a plan to support UEFI based boot as well in the future so=
+ftware
+> > releases for which we need this quirky way of handling ECAM.
+> > Tegra194 is going to be the only and last chip with this issue and next=
+ chip
+> > in line in Tegra SoC series will be fully compliant with ECAM.
+>=20
+> ACPI on ARM64 works on a standard subset of systems, defined by the
+> ARM SBSA:
+>=20
+> http://infocenter.arm.com/help/topic/com.arm.doc.den0029c/Server_Base_Sys=
+tem_Architecture_v6_0_ARM_DEN_0029C_SBSA_6_0.pdf
 
-This one, however, in particular is to protect against the case when a
-new member which is not a hlist_head is added to security_hook_heads
-and the user-space tries to attach at that index.
+I don't understand what you're saying here. Are you saying that you want
+to prevent vendors from upstreaming code that they need to support their
+ACPI based platforms? I understand that the lack of support for proper
+ECAM means that a platform will not be SBSA compatible, but I wasn't
+aware that lack of SBSA compatibility meant that a platform would be
+prohibited from implementing ACPI support in an upstream kernel.
 
-I admit that the likelyhood of that happening is very little  but I
-think it's worth checking. I do, like your idea and will update the
-code to use the type_id and do a quick check rather than a linear
-search to look for the type_id.
+> These patches will have to be carried out of tree, the MCFG quirk
+> mechanism (merged as Bjorn said more than three years ago) was supposed
+> to be a temporary plaster to bootstrap server platforms with teething
+> issues, the aim is to remove it eventually not to add more code to it
+> indefinitely.
 
-This is what remains of all the pedantic checks pertaining to
-hlist_head:
+Now, I fully agree that quirks are suboptimal and we'd all prefer if we
+didn't have to deal with them. Unfortunately the reality is that
+mistakes happen and hardware doesn't always work the way we want it to.
+There's plenty of other quirk mechanisms in the kernel, and frankly this
+one isn't really that bad in comparison.
 
-	t = btf_type_by_id(btf, member->type);
-	if (unlikely(!t))
-		return -EINVAL;
+> So I am afraid but this quirk (and any other coming our way) will not be
+> merged in an upstream kernel anymore - for any queries please put Nvidia
+> in touch.
 
-	if (BTF_INFO_KIND(t->info) != BTF_KIND_STRUCT)
-		return -EINVAL;
+Again, I don't understand what you're trying to achieve here. You seem
+to be saying that we categorically can't support this hardware because
+it isn't fully SBSA compatible.
 
-	if (t->size != sizeof(struct hlist_head))
-		return -EINVAL;
+Do you have any alternative suggestions on how we can support this in an
+upstream kernel?
 
-> 
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +/* Find the BTF representation of the security_hook_heads member for a member
-> > + * with a given index in struct security_hook_heads.
-> > + */
-> > +const struct btf_member *bpf_lsm_head_by_index(struct btf *btf, u32 index)
-> > +{
-> > +       const struct btf_member *member;
-> > +       const struct btf_type *t;
-> > +       u32 off, i;
-> > +       int ret;
-> > +
-> > +       t = btf_type_by_name_kind(btf, "security_hook_heads", BTF_KIND_STRUCT);
-> > +       if (WARN_ON_ONCE(IS_ERR(t)))
-> > +               return ERR_CAST(t);
-> > +
-> > +       for_each_member(i, t, member) {
-> > +               /* We've found the id requested and need to check the
+We realized a while ago that we cannot achieve proper ECAM on Tegra194
+because of some issues with the hardware and we've provided this as
+feedback to the hardware engineers. As a result, the next generation of
+Tegra should no longer suffer from these issues.
 
-> > +                * the following:
-> > +                *
-> > +                * - Is it at a valid alignment for struct hlist_head?
-> > +                *
-> > +                * - Is it a valid hlist_head struct?
-> > +                */
-> > +               if (index == i) {
-> 
-> Also not efficient. Check index to be < vlen(t), then member =
-> btf_type_member(t) + index;
+As for Tegra194, that chip taped out two years ago and it isn't possible
+to make it fully ECAM compliant other than by revising the chip, which,
+frankly, isn't going to happen.
 
-Neat! Updated.
+So I see two options here: either we find a way of dealing with this, by
+either merging this quirk or finding an alternative solution, or we make
+the decision that some hardware just can't be supported.
 
-> 
-> 
-> > +                       off = btf_member_bit_offset(t, member);
-> > +                       if (off % 8)
-> > +                               /* valid c code cannot generate such btf */
-> > +                               return ERR_PTR(-EINVAL);
-> > +                       off /= 8;
-> > +
-> > +                       if (off % __alignof__(struct hlist_head))
-> > +                               return ERR_PTR(-EINVAL);
-> > +
-> > +                       ret = validate_hlist_head(btf, member->type);
-> > +                       if (ret < 0)
-> > +                               return ERR_PTR(ret);
-> > +
-> > +                       return member;
-> 
-> This feels a bit over-cautious to double-check this. If
-> security_hook_heads definition is controlled by kernel sources, then
-> we could just trust vmlinux BTF?
+The former is fairly common, whereas I've never heard of the latter.
 
-Yep, makes sense. Removed some of these checks.
+Thierry
 
-> 
-> > +               }
-> > +       }
-> > +
-> > +       return ERR_PTR(-ENOENT);
-> > +}
-> > +
-> > +/* Given an index of a member in security_hook_heads return the
-> > + * corresponding type for the LSM hook. The members of the union
-> > + * security_list_options have the same name as the security_hook_heads which
-> > + * is ensured by the LSM_HOOK_INIT macro defined in include/linux/lsm_hooks.h
-> > + */
-> > +const struct btf_type *bpf_lsm_type_by_index(struct btf *btf, u32 index)
-> > +{
-> > +       const struct btf_member *member, *hook_head = NULL;
-> > +       const struct btf_type *t, *hook_type = NULL;
-> > +       u32 i;
-> > +
-> > +       hook_head = bpf_lsm_head_by_index(btf, index);
-> > +       if (IS_ERR(hook_head))
-> > +               return ERR_PTR(PTR_ERR(hook_head));
-> > +
-> > +       t = btf_type_by_name_kind(btf, "security_list_options", BTF_KIND_UNION);
-> > +       if (WARN_ON_ONCE(IS_ERR(t)))
-> > +               return ERR_CAST(t);
-> 
-> btf_type_by_name_kind() is a linear search (at least right now), so it
-> might be a good idea to cache found type_id's of security_list_options
-> and security_hook_heads?
+> Thanks,
+> Lorenzo
+>=20
+> > - Vidya Sagar
+> > >=20
+> > > I do not want to add these quirks indefinitely, and the first quirks
+> > > were added over three years ago.
+> > >=20
+> > > > With the current hardware design limitations in place, ECAM can be =
+enabled
+> > > > only for one controller (C5 controller to be precise) with bus numb=
+ers
+> > > > starting from 160 instead of 0. A different approach is taken to av=
+oid this
+> > > > abnormal way of enabling ECAM  for just one controller and to also =
+enable
+> > > > configuration space access for all the other controllers. In this a=
+pproach,
+> > > > MCFG quirks are added for each controller with a 30MB PCIe aperture
+> > > > resource for each controller in the disguise of ECAM region. But, t=
+his
+> > > > region actually contains DesignWare core's internal Address Transla=
+tion
+> > > > Unit (iATU) using which the ECAM ops access configuration space in =
+the
+> > > > otherwise standard way of programming iATU registers in DesignWare =
+core
+> > > > based IPs for a respective B:D:F.
+> > > >=20
+> > > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> > > > ---
+> > > >   drivers/acpi/pci_mcfg.c                    | 13 +++
+> > > >   drivers/pci/controller/dwc/pcie-tegra194.c | 95 +++++++++++++++++=
++++++
+> > > >   include/linux/pci-ecam.h                   |  1 +
+> > > >   3 files changed, 109 insertions(+)
+> > > >=20
+> > > > diff --git a/drivers/acpi/pci_mcfg.c b/drivers/acpi/pci_mcfg.c
+> > > > index 6b347d9920cc..a42918ecc19a 100644
+> > > > --- a/drivers/acpi/pci_mcfg.c
+> > > > +++ b/drivers/acpi/pci_mcfg.c
+> > > > @@ -116,6 +116,19 @@ static struct mcfg_fixup mcfg_quirks[] =3D {
+> > > >          THUNDER_ECAM_QUIRK(2, 12),
+> > > >          THUNDER_ECAM_QUIRK(2, 13),
+> > > >=20
+> > > > +       { "NVIDIA", "TEGRA194", 1, 0, MCFG_BUS_ANY, &tegra194_pcie_=
+ops,
+> > > > +         DEFINE_RES_MEM(0x38200000, (30 * SZ_1M))},
+> > > > +       { "NVIDIA", "TEGRA194", 1, 1, MCFG_BUS_ANY, &tegra194_pcie_=
+ops,
+> > > > +         DEFINE_RES_MEM(0x30200000, (30 * SZ_1M))},
+> > > > +       { "NVIDIA", "TEGRA194", 1, 2, MCFG_BUS_ANY, &tegra194_pcie_=
+ops,
+> > > > +         DEFINE_RES_MEM(0x32200000, (30 * SZ_1M))},
+> > > > +       { "NVIDIA", "TEGRA194", 1, 3, MCFG_BUS_ANY, &tegra194_pcie_=
+ops,
+> > > > +         DEFINE_RES_MEM(0x34200000, (30 * SZ_1M))},
+> > > > +       { "NVIDIA", "TEGRA194", 1, 4, MCFG_BUS_ANY, &tegra194_pcie_=
+ops,
+> > > > +         DEFINE_RES_MEM(0x36200000, (30 * SZ_1M))},
+> > > > +       { "NVIDIA", "TEGRA194", 1, 5, MCFG_BUS_ANY, &tegra194_pcie_=
+ops,
+> > > > +         DEFINE_RES_MEM(0x3a200000, (30 * SZ_1M))},
+> > > > +
+> > > >   #define XGENE_V1_ECAM_MCFG(rev, seg) \
+> > > >          {"APM   ", "XGENE   ", rev, seg, MCFG_BUS_ANY, \
+> > > >                  &xgene_v1_pcie_ecam_ops }
+> > > > diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/p=
+ci/controller/dwc/pcie-tegra194.c
+> > > > index cbe95f0ea0ca..91496978deb7 100644
+> > > > --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> > > > +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> > > > @@ -21,6 +21,8 @@
+> > > >   #include <linux/of_irq.h>
+> > > >   #include <linux/of_pci.h>
+> > > >   #include <linux/pci.h>
+> > > > +#include <linux/pci-acpi.h>
+> > > > +#include <linux/pci-ecam.h>
+> > > >   #include <linux/phy/phy.h>
+> > > >   #include <linux/pinctrl/consumer.h>
+> > > >   #include <linux/platform_device.h>
+> > > > @@ -895,6 +897,99 @@ static struct dw_pcie_host_ops tegra_pcie_dw_h=
+ost_ops =3D {
+> > > >          .set_num_vectors =3D tegra_pcie_set_msi_vec_num,
+> > > >   };
+> > > >=20
+> > > > +#if defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS)
+> > > > +struct tegra194_pcie_acpi  {
+> > > > +       void __iomem *dbi_base;
+> > > > +       void __iomem *iatu_base;
+> > > > +};
+> > > > +
+> > > > +static int tegra194_acpi_init(struct pci_config_window *cfg)
+> > > > +{
+> > > > +       struct device *dev =3D cfg->parent;
+> > > > +       struct tegra194_pcie_acpi *pcie;
+> > > > +
+> > > > +       pcie =3D devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
+> > > > +       if (!pcie)
+> > > > +               return -ENOMEM;
+> > > > +
+> > > > +       pcie->dbi_base =3D cfg->win;
+> > > > +       pcie->iatu_base =3D cfg->win + SZ_256K;
+> > > > +       cfg->priv =3D pcie;
+> > > > +
+> > > > +       return 0;
+> > > > +}
+> > > > +
+> > > > +static inline void atu_reg_write(struct tegra194_pcie_acpi *pcie, =
+int index,
+> > > > +                                u32 val, u32 reg)
+> > > > +{
+> > > > +       u32 offset =3D PCIE_GET_ATU_OUTB_UNR_REG_OFFSET(index);
+> > > > +
+> > > > +       writel(val, pcie->iatu_base + offset + reg);
+> > > > +}
+> > > > +
+> > > > +static void program_outbound_atu(struct tegra194_pcie_acpi *pcie, =
+int index,
+> > > > +                                int type, u64 cpu_addr, u64 pci_ad=
+dr, u64 size)
+> > > > +{
+> > > > +       atu_reg_write(pcie, index, lower_32_bits(cpu_addr),
+> > > > +                     PCIE_ATU_LOWER_BASE);
+> > > > +       atu_reg_write(pcie, index, upper_32_bits(cpu_addr),
+> > > > +                     PCIE_ATU_UPPER_BASE);
+> > > > +       atu_reg_write(pcie, index, lower_32_bits(pci_addr),
+> > > > +                     PCIE_ATU_LOWER_TARGET);
+> > > > +       atu_reg_write(pcie, index, lower_32_bits(cpu_addr + size - =
+1),
+> > > > +                     PCIE_ATU_LIMIT);
+> > > > +       atu_reg_write(pcie, index, upper_32_bits(pci_addr),
+> > > > +                     PCIE_ATU_UPPER_TARGET);
+> > > > +       atu_reg_write(pcie, index, type, PCIE_ATU_CR1);
+> > > > +       atu_reg_write(pcie, index, PCIE_ATU_ENABLE, PCIE_ATU_CR2);
+> > > > +}
+> > > > +
+> > > > +static void __iomem *tegra194_map_bus(struct pci_bus *bus,
+> > > > +                                     unsigned int devfn, int where)
+> > > > +{
+> > > > +       struct pci_config_window *cfg =3D bus->sysdata;
+> > > > +       struct tegra194_pcie_acpi *pcie =3D cfg->priv;
+> > > > +       u32 busdev;
+> > > > +       int type;
+> > > > +
+> > > > +       if (bus->number < cfg->busr.start || bus->number > cfg->bus=
+r.end)
+> > > > +               return NULL;
+> > > > +
+> > > > +       if (bus->number =3D=3D cfg->busr.start) {
+> > > > +               if (PCI_SLOT(devfn) =3D=3D 0)
+> > > > +                       return pcie->dbi_base + where;
+> > > > +               else
+> > > > +                       return NULL;
+> > > > +       }
+> > > > +
+> > > > +       busdev =3D PCIE_ATU_BUS(bus->number) | PCIE_ATU_DEV(PCI_SLO=
+T(devfn)) |
+> > > > +                PCIE_ATU_FUNC(PCI_FUNC(devfn));
+> > > > +
+> > > > +       if (bus->parent->number =3D=3D cfg->busr.start) {
+> > > > +               if (PCI_SLOT(devfn) =3D=3D 0)
+> > > > +                       type =3D PCIE_ATU_TYPE_CFG0;
+> > > > +               else
+> > > > +                       return NULL;
+> > > > +       } else {
+> > > > +               type =3D PCIE_ATU_TYPE_CFG1;
+> > > > +       }
+> > > > +
+> > > > +       program_outbound_atu(pcie, PCIE_ATU_REGION_INDEX0, type,
+> > > > +                            cfg->res.start + SZ_128K, busdev, SZ_1=
+28K);
+> > > > +       return (void __iomem *)(pcie->dbi_base + SZ_128K + where);
+> > > > +}
+> > > > +
+> > > > +struct pci_ecam_ops tegra194_pcie_ops =3D {
+> > > > +       .bus_shift      =3D 20,
+> > > > +       .init           =3D tegra194_acpi_init,
+> > > > +       .pci_ops        =3D {
+> > > > +               .map_bus        =3D tegra194_map_bus,
+> > > > +               .read           =3D pci_generic_config_read,
+> > > > +               .write          =3D pci_generic_config_write,
+> > > > +       }
+> > > > +};
+> > > > +#endif /* defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS) */
+> > > > +
+> > > >   static void tegra_pcie_disable_phy(struct tegra_pcie_dw *pcie)
+> > > >   {
+> > > >          unsigned int phy_count =3D pcie->phy_count;
+> > > > diff --git a/include/linux/pci-ecam.h b/include/linux/pci-ecam.h
+> > > > index a73164c85e78..6156140dcbb6 100644
+> > > > --- a/include/linux/pci-ecam.h
+> > > > +++ b/include/linux/pci-ecam.h
+> > > > @@ -57,6 +57,7 @@ extern struct pci_ecam_ops pci_thunder_ecam_ops; =
+/* Cavium ThunderX 1.x */
+> > > >   extern struct pci_ecam_ops xgene_v1_pcie_ecam_ops; /* APM X-Gene =
+PCIe v1 */
+> > > >   extern struct pci_ecam_ops xgene_v2_pcie_ecam_ops; /* APM X-Gene =
+PCIe v2.x */
+> > > >   extern struct pci_ecam_ops al_pcie_ops; /* Amazon Annapurna Labs =
+PCIe */
+> > > > +extern struct pci_ecam_ops tegra194_pcie_ops; /* Tegra194 PCIe */
+> > > >   #endif
+> > > >=20
+> > > >   #ifdef CONFIG_PCI_HOST_COMMON
+> > > > --
+> > > > 2.17.1
+> > > >=20
+> >=20
 
-I am already caching these types in the next patch (struct
-bpf_lsm_info) of the series which implements attachment. I moved it to
-this patch so that it's clearer.
+--tThc/1wpZn/ma/RB
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> 
-> > +
-> > +       for_each_member(i, t, member) {
-> > +               if (hook_head->name_off == member->name_off) {
-> > +                       /* There should be only one member with the same name
-> > +                        * as the LSM hook. This should never really happen
-> > +                        * and either indicates malformed BTF or someone trying
-> > +                        * trick the LSM.
-> > +                        */
-> > +                       if (WARN_ON(hook_type))
-> > +                               return ERR_PTR(-EINVAL);
-> > +
-> > +                       hook_type = btf_type_by_id(btf, member->type);
-> > +                       if (unlikely(!hook_type))
-> > +                               return ERR_PTR(-EINVAL);
-> > +
-> > +                       if (!btf_type_is_ptr(hook_type))
-> > +                               return ERR_PTR(-EINVAL);
-> > +               }
-> > +       }
-> > +
-> > +       if (!hook_type)
-> > +               return ERR_PTR(-ENOENT);
-> > +
-> > +       t = btf_type_by_id(btf, hook_type->type);
-> > +       if (unlikely(!t))
-> > +               return ERR_PTR(-EINVAL);
-> 
-> why not do this inside the loop when you find correct member and not
-> continue processing all the fields?
+-----BEGIN PGP SIGNATURE-----
 
-Updated.
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl4lirAACgkQ3SOs138+
+s6F1cBAAn8y05JYXccjfVL+DYYtcbgaCO7D/qPsPJkWlyrn2JmFDubM5AcUPc7Bg
+yvKwMaVDB5UVOJo3lwJH4yrHk9VkyK15+rcddyqTswLjYQH2AQH9bY+4QQvS1j2M
+IuF2p3n5HLvmOzZaJ5vJDjiwkemXX5H1cyK2wTfaJFguiWRYEZypeJwiTnaOHgPX
+yqE3LN+gcYC4syvN/QYnJgwgfXzS7SqvVPsWo7376BScBDrYO77jM5kVTRYkRa2u
+hyvwdSSbijY/AsWSSumV1MuXXzDIRzRvTqiMuzoCyJPcVN3VaJH6TBJS+Ea3jJ/e
+xX2/V2TUAc+0M/sZ1n+xwOAfFNvPu0PzB9rRptcm6vHx53/gIvlc3UVjkPGBmEYZ
+uMXUgz3G94gsBQIxtsvVymuswmLYn4Gww4DzMfxhIiYUa3XM4+K3cwR3sSDPW6vT
+kGoIBjRhgH7dwqHyQUzNuuxTaF8+zWRaS9oNpkLYgbtgAkUeZ93SQJ9TlR9GmEqS
+g6YIEfIN0hnernQUfbZrX/0D8esQ5OsnhopaH7DMLG9YYdwo9rAASSw8wsuoYf8T
+zF1TFJYpNf8hVCAFIhE1RJlQyu/p3RqkdrOVmcUi2SEwJqDoKrarWKrlKmsxTC78
+qbKEIsVapIH0IhfP+0pO8yIqUi0AvRyh54tJE64oGgCmbYJlxyY=
+=yRk/
+-----END PGP SIGNATURE-----
 
-- KP
-
-> 
-> > +
-> > +       return t;
-> > +}
-> > --
-> > 2.20.1
-> >
+--tThc/1wpZn/ma/RB--
