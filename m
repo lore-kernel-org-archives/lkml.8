@@ -2,242 +2,252 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE58AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:53:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27DADC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:56:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 784CA2070C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:53:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8F1A24653
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:56:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gBOINAIW"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="ZKp4wxt5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729073AbgATPxy (ORCPT
+        id S1728712AbgATPz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 10:53:54 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:42640 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726942AbgATPxy (ORCPT
+        Mon, 20 Jan 2020 10:55:59 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:33765 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726642AbgATPz7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 10:53:54 -0500
-Received: by mail-oi1-f196.google.com with SMTP id 18so28881019oin.9
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 07:53:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qiceCXFRSUBzYMQE2f4OjMMcZXcb2LTrkgPg5J2K4zg=;
-        b=gBOINAIWIpnwWTbIyBvKjan36BdH+BxlO5xhhZFoTHgA6xGmX/4keBv/6JREpFttf5
-         +ayFbf7t2XeoV5N2ksZKvjp21ESf/IebZ+82ndA8d/pVADqqK1NTFe2PoHgql+OsICPU
-         XSR1aldBTVM1v2P4FKGgv+RoorEyfMDPH1JMkJ3sQd5+CofRH5JGw/BcwiBkzHturPsb
-         LCjMDMz22Qo2LwU9nuVO4qEc/owK4yssFR6A3yGg3RlB1+G/+PVgPyxBkU20tpCrUCSC
-         swGskDd4v3KUmu3VV2XagGxzsVU56SbsvL6FWtpzL0/gvoxAthudPnIXOWLmNWsivtem
-         NjrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qiceCXFRSUBzYMQE2f4OjMMcZXcb2LTrkgPg5J2K4zg=;
-        b=N+dwJ2nTWkYjMEjTqn41xca0DNZsVVI2IHcnmardq0PwJD8ltom/xwLWXPhjLDuh6A
-         0EjLt3SJn7P3rXCke7O5KXPxPnHhycvZXMS9BrIKltWiYC8fbHxirKzM2+IpTYmsUJqk
-         oKTMNinkg4rBTMJxDFBJRvMMUgjT0jLqO/Xq0W519wKzKUD5vHAVYgNrOC1g0aOch5f7
-         mqDWn2yjPyHqIkT9wxmwVOBsi0i6RyVqZr2qunwifDRZeAg8Bc+kYoD8LhbI+xKeTHAl
-         hyh6zhiL5Xy1pfgNvF/Jk3xD24P11Of/VFkuk4+8du5f184Sv2TkJ3wi1+l2SHgP2aph
-         +a3A==
-X-Gm-Message-State: APjAAAXsCIHU0GCezEXJbQiyIRpd62mAvZMuZSTFamEa0Jvld2K+zCh8
-        uZ/e9ylKTVTnT8dTiAs/kVkCQkvH2VCrGXOZ/8E/gQ==
-X-Google-Smtp-Source: APXvYqwmflC/yNzWv+Db2nr3WV+DLKRgthZvh+EzUFiOuic5zA65sbECmY9Y8fx6wftlS5NL/KUU4onhHpTmPr84oRQ=
-X-Received: by 2002:aca:2112:: with SMTP id 18mr12680928oiz.155.1579535633036;
- Mon, 20 Jan 2020 07:53:53 -0800 (PST)
+        Mon, 20 Jan 2020 10:55:59 -0500
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 41D2A22FEB;
+        Mon, 20 Jan 2020 16:55:56 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1579535756;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0ooYTeglPjja9XHWcnDgkHhVKkBwaE2MvC2UUFHOdGc=;
+        b=ZKp4wxt5LVptrZx1UYJw57ss+UDp/gXPw9Ot2BVdnGFG+DMs8qCSt72OOdD9/PnY0Husao
+        SEPxvfnYj6MECvSiYNF1194r+boPpfbsTmP00jsl6ok4AXgyo5PLShzp1X4Cybz/3CtMdC
+        vY5btFfaXoEeQAoC2qxWE3uPTHrsC9s=
 MIME-Version: 1.0
-References: <20200120141927.114373-1-elver@google.com> <CACT4Y+ajkjCzv2adupX9oVKjNppn-AKsGkGqLMExwjHXG37Lxw@mail.gmail.com>
-In-Reply-To: <CACT4Y+ajkjCzv2adupX9oVKjNppn-AKsGkGqLMExwjHXG37Lxw@mail.gmail.com>
-From:   Marco Elver <elver@google.com>
-Date:   Mon, 20 Jan 2020 16:53:41 +0100
-Message-ID: <CANpmjNN4XhU6WL35bHF2Wu76fJMXO5++uRBk0nh_s6BiRV9jdA@mail.gmail.com>
-Subject: Re: [PATCH 1/5] include/linux: Add instrumented.h infrastructure
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Daniel Axtens <dja@axtens.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Daniel Borkmann <daniel@iogearbox.net>, cyphar@cyphar.com,
-        Kees Cook <keescook@chromium.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 20 Jan 2020 16:55:55 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Tudor.Ambarus@microchip.com
+Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        richard@nod.at, vigneshr@ti.com, miquel.raynal@bootlin.com
+Subject: Re: [PATCH] mtd: spi-nor: Add support for w25qNNjwim
+In-Reply-To: <3862353.UOg0IvECEa@localhost.localdomain>
+References: <20200103223423.14025-1-michael@walle.cc>
+ <8021667.67K7kvUAe6@192.168.0.113>
+ <66c1ad8e74fb20a061f35f8b23a925ab@walle.cc>
+ <3862353.UOg0IvECEa@localhost.localdomain>
+Message-ID: <d3f03e392c060ff4ed4c2ae8a8999d9f@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.8
+X-Spamd-Bar: /
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 41D2A22FEB
+X-Spamd-Result: default: False [-0.10 / 15.00];
+         ARC_NA(0.00)[];
+         FROM_HAS_DN(0.00)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         TO_DN_NONE(0.00)[];
+         RCPT_COUNT_FIVE(0.00)[6];
+         DKIM_SIGNED(0.00)[];
+         NEURAL_HAM(-0.00)[-0.721];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         MID_RHS_MATCH_FROM(0.00)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jan 2020 at 15:34, Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> On Mon, Jan 20, 2020 at 3:19 PM Marco Elver <elver@google.com> wrote:
-> >
-> > This adds instrumented.h, which provides generic wrappers for memory
-> > access instrumentation that the compiler cannot emit for various
-> > sanitizers. Currently this unifies KASAN and KCSAN instrumentation. In
-> > future this will also include KMSAN instrumentation.
-> >
-> > Note that, copy_{to,from}_user require special instrumentation,
-> > providing hooks before and after the access, since we may need to know
-> > the actual bytes accessed (currently this is relevant for KCSAN, and is
-> > also relevant in future for KMSAN).
->
-> How will KMSAN instrumentation look like?
->
-> > Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> > Signed-off-by: Marco Elver <elver@google.com>
-> > ---
-> >  include/linux/instrumented.h | 153 +++++++++++++++++++++++++++++++++++
-> >  1 file changed, 153 insertions(+)
-> >  create mode 100644 include/linux/instrumented.h
-> >
-> > diff --git a/include/linux/instrumented.h b/include/linux/instrumented.h
-> > new file mode 100644
-> > index 000000000000..9f83c8520223
-> > --- /dev/null
-> > +++ b/include/linux/instrumented.h
-> > @@ -0,0 +1,153 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +
-> > +/*
-> > + * This header provides generic wrappers for memory access instrumentation that
-> > + * the compiler cannot emit for: KASAN, KCSAN.
-> > + */
-> > +#ifndef _LINUX_INSTRUMENTED_H
-> > +#define _LINUX_INSTRUMENTED_H
-> > +
-> > +#include <linux/compiler.h>
-> > +#include <linux/kasan-checks.h>
-> > +#include <linux/kcsan-checks.h>
-> > +#include <linux/types.h>
-> > +
-> > +/**
-> > + * instrument_read - instrument regular read access
-> > + *
-> > + * Instrument a regular read access. The instrumentation should be inserted
-> > + * before the actual read happens.
-> > + *
-> > + * @ptr address of access
-> > + * @size size of access
-> > + */
-> > +static __always_inline void instrument_read(const volatile void *v, size_t size)
-> > +{
-> > +       kasan_check_read(v, size);
-> > +       kcsan_check_read(v, size);
-> > +}
-> > +
-> > +/**
-> > + * instrument_write - instrument regular write access
-> > + *
-> > + * Instrument a regular write access. The instrumentation should be inserted
-> > + * before the actual write happens.
-> > + *
-> > + * @ptr address of access
-> > + * @size size of access
-> > + */
-> > +static __always_inline void instrument_write(const volatile void *v, size_t size)
-> > +{
-> > +       kasan_check_write(v, size);
-> > +       kcsan_check_write(v, size);
-> > +}
-> > +
-> > +/**
-> > + * instrument_atomic_read - instrument atomic read access
-> > + *
-> > + * Instrument an atomic read access. The instrumentation should be inserted
-> > + * before the actual read happens.
-> > + *
-> > + * @ptr address of access
-> > + * @size size of access
-> > + */
-> > +static __always_inline void instrument_atomic_read(const volatile void *v, size_t size)
-> > +{
-> > +       kasan_check_read(v, size);
-> > +       kcsan_check_atomic_read(v, size);
-> > +}
-> > +
-> > +/**
-> > + * instrument_atomic_write - instrument atomic write access
-> > + *
-> > + * Instrument an atomic write access. The instrumentation should be inserted
-> > + * before the actual write happens.
-> > + *
-> > + * @ptr address of access
-> > + * @size size of access
-> > + */
-> > +static __always_inline void instrument_atomic_write(const volatile void *v, size_t size)
-> > +{
-> > +       kasan_check_write(v, size);
-> > +       kcsan_check_atomic_write(v, size);
-> > +}
-> > +
-> > +/**
-> > + * instrument_copy_to_user_pre - instrument reads of copy_to_user
-> > + *
-> > + * Instrument reads from kernel memory, that are due to copy_to_user (and
-> > + * variants).
-> > + *
-> > + * The instrumentation must be inserted before the accesses. At this point the
-> > + * actual number of bytes accessed is not yet known.
-> > + *
-> > + * @dst destination address
-> > + * @size maximum access size
-> > + */
-> > +static __always_inline void
-> > +instrument_copy_to_user_pre(const volatile void *src, size_t size)
-> > +{
-> > +       /* Check before, to warn before potential memory corruption. */
-> > +       kasan_check_read(src, size);
-> > +}
-> > +
-> > +/**
-> > + * instrument_copy_to_user_post - instrument reads of copy_to_user
-> > + *
-> > + * Instrument reads from kernel memory, that are due to copy_to_user (and
-> > + * variants).
-> > + *
-> > + * The instrumentation must be inserted after the accesses. At this point the
-> > + * actual number of bytes accessed should be known.
-> > + *
-> > + * @dst destination address
-> > + * @size maximum access size
-> > + * @left number of bytes left that were not copied
-> > + */
-> > +static __always_inline void
-> > +instrument_copy_to_user_post(const volatile void *src, size_t size, size_t left)
-> > +{
-> > +       /* Check after, to avoid false positive if memory was not accessed. */
-> > +       kcsan_check_read(src, size - left);
->
-> Why don't we check the full range?
-> Kernel intending to copy something racy to user already looks like a
-> bug to me, even if user-space has that page unmapped. User-space can
-> always make the full range succeed. What am I missing?
+Hi Tudor,
 
-Fair enough. I can move this into the pre-hooks in v2.
+Am 2020-01-20 12:03, schrieb Tudor.Ambarus@microchip.com:
+> On Monday, January 20, 2020 12:24:25 AM EET Michael Walle wrote:
+>> EXTERNAL EMAIL: Do not click links or open attachments unless you know 
+>> the
+>> content is safe
+>> 
+>> Hi Tudor,
+> 
+> Hi, Michael,
+> 
+>> 
+>> >> Am 2020-01-13 11:07, schrieb Michael Walle:
+>> >> >>> Btw. is renaming the flashes also considered a backwards incomaptible
+>> >> >>> change?
+>> >> >>
+>> >> >> No, we can fix the names.
+>> >> >>
+>> >> >>> And can there be two flashes with the same name? Because IMHO it
+>> >> >>> would
+>> >> >>> be
+>> >> >>
+>> >> >> I would prefer that we don't. Why would you have two different
+>> >> >> jedec-ids with
+>> >> >> the same name?
+>> >> >
+>> >> > Because as pointed out in the Winbond example you cannot distiguish
+>> >> > between
+>> >> > W25Q32DW and W25Q32JWIQ; and in the Macronix example between MX25L8005
+>> >> > and
+>> >> > MX25L8006E. Thus my reasoning was to show only the common part, ie
+>> >> > W25Q32
+>> >> > or MX25L80 which should be the same for this particular ID. Like I
+>> >> > said, I'd
+>> >> > prefer showing an ambiguous name instead of a wrong one. But then you
+>> >> > may
+>> >> > have different IDs with the same ambiguous name.
+>> >>
+>> >> Another solution would be to have the device tree provide a hint for
+>> >> the
+>> >> actual flash chip. There would be multiple entries in the spi_nor_ids
+>> >> with the
+>> >> same flash id. By default the first one is used (keeping the current
+>> >> behaviour). If there is for example
+>> >>
+>> >>    compatible = "jedec,spi-nor", "w25q32jwq";
+>> >>
+>> >> the flash_info for the w25q32jwq will be chosen.
+>> >
+>> > This won't work for plug-able flashes. You will influence the name in
+>> > dt to be
+>> > chosen as w25q32jwq, and if you change w25q32jwq with w25q32dw you will
+>> > end up
+>> > with a wrong name for w25q32dw, thus the same problem.
+>> 
+>> No, because then the device tree is wrong and doesn't fit the 
+>> hardware.
+>> You'd
+>> have to some instance which could change the device tree node, like 
+>> the
+>> bootloader or some device tree overlay for plugable flashes. We should
+>> try to
+>> solve the actual problem at hand first..
+>> 
+>> It is just not possible to autodetect the SPI flash, just because
+>> the vendors reuse the same IDs for flashes with different features 
+>> (and
+>> the
+>> SFDP is likely not enough). Therefore, you need to have a hint in some
+>> place
+>> to use the flash properly.
+>> 
+>> > If the flashes are identical but differ just in terms of name, we can
+>> > rename
+>> > the flash to "w25q32jwq (w25q32dw)". I haven't studied the differences
+>> > between
+>> > these flashes; if you want to fix them, send a patch and I'll try to
+>> > help.
+>> 
+>> It is not only the name, here are two examples which differ in
+>> functionality:
+>>   (1) mx25l8005 doesn't support dual/quad mode. mx25l8006e supports
+>> dual/quad
+>>       mode
+>>   (2) mx25u3235f doesn't support TB bit, mx25u3232e has a TB bit.
+>> 
+>> well.. to repeat myself, the mx25l25635_post_bfpt_fixups is a third
+> 
+> sorry if this exhausted you.
 
-However, note that, that leaves us with a bunch of empty post-hooks in
-the patch. While this will probably change when we get KMSAN, is it
-reasonable to keep them empty for now?
+TBH, this is no fun (and I'm doing this on my spare time because I like
+open source). I guess our opinions differ waaay too much. I don't
+really like band-aid fixes; eg. with vague information "it seems that
+the F version adveritses support for Fast Read 4-4-4", what about other
+flashes with that idcode and this property. This might break at any time
+or with anyone trying support for other flashes with that ID.
 
-Thanks,
--- Marco
+That's what I've meant with first come first serve, I'm lucky now that
+there was no flash with the same jedec id as the W25Q32JW.
+
+To add the MX25U3232F I could check the JEDEC revision (or the BFPT
+length) because it differers from the MX25U3235F. But I don't feel well
+doing that. Who says Macronix won't update their description for the
+MX25U3235F to the new revision.. FYI the Winbond guys apparently use the
+first OTP region to store the JEDEC data, which is clever because they
+can update it during production.
+
+>> example.
+>> 
+> 
+> Flash auto-detection is nice and we should preserve it if possible. I 
+> would
+> prefer having a post bfpt fixup than giving a hint about the flash in 
+> the
+> compatible.
+
+see above.
+
+> The flashes that you mention are quite old and I don't know if it
+> is worth to harm the auto-detection for them. A compromise has to be 
+> made.
+
+so you'd drop support for them? because SFDP is never read if there is 
+no
+DUAL_READ or QUAD_READ flag.
+
+> You can gain traction in your endeavor if you have such a flash and 
+> there's
+> nothing auto-detectable that differentiates it from some other flash 
+> that
+> shares the sama jedec-id.
+> 
+> If you have such a flash and you care about it, send a patch and I'll 
+> try to
+> help.
+
+Given my reasoning above.. well maybe in the future. The Macronix would 
+be
+a second source candidate. For now we are using the Winbond flash.
+
+I would rather like to have the flash protection topic and OTP support
+sorted out, because that is something we are actually using.
+
+-michael
+
+> 
+>> -michael
+>> 
+>> > Cheers,
+>> > ta
+>> >
+>> >> I know this will conflict with the new rule that there should only be
+>> >>
+>> >>    compatible = "jedec,spi-nor";
+>> >>
+>> >> without the actual flash chip. But it seems that it is not always
+>> >> possible
+>> >> to just use the jedec id to match the correct chip.
+>> >>
+>> >> Also see for example mx25l25635_post_bfpt_fixups() which tries to
+>> >> figure
+>> >> out different behaviour by looking at "some" SFDP data. In this case
+>> >> we
+>> >> might have been lucky, but I fear that this won't work in all cases
+>> >> and
+>> >> for older flashes it won't work at all.
+>> >>
+>> >> BTW I do not suggest to add the strings to the the spi_nor_dev_ids[].
+>> >>
+>> >> I guess that would be a less invasive way to fix different flashes
+>> >> with
+>> >> same jedec ids.
+>> >>
+>> >> -michael
