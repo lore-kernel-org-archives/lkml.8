@@ -2,170 +2,139 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 135D5C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B977EC33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 23:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6ED322522
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:59:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WMoUJnxP"
+	by mail.kernel.org (Postfix) with ESMTP id 9804322522
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 23:05:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbgATW7P (ORCPT
+        id S1726958AbgATXFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 17:59:15 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:58630 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726816AbgATW7O (ORCPT
+        Mon, 20 Jan 2020 18:05:35 -0500
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:57058 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726752AbgATXFe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 17:59:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579561154;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=UYSjWv1dfnioBe8F1SvdnjqlkR0e7zTphIpvFJSRRIE=;
-        b=WMoUJnxPrxB3Lp6s0xqQE2I42FEfi8x6pN8GOOmRzyovzTaSEeuxf24WjXyk6R9I6D7j83
-        PxYg5hlYwI4AgFBIZ9+CdbhtXaEDpT7kHpAyqXWtc71+AZ1wOk+JUee13x7tucvp1kAKkW
-        hYbR312d+kIH0Twz+l7klogrenh1Q7k=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-305-FxJAN8_wOWiCy0tquRdetw-1; Mon, 20 Jan 2020 17:59:10 -0500
-X-MC-Unique: FxJAN8_wOWiCy0tquRdetw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 20 Jan 2020 18:05:34 -0500
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 87A943C04C1;
+        Tue, 21 Jan 2020 00:05:31 +0100 (CET)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 2kw2xE_nrUve; Tue, 21 Jan 2020 00:05:26 +0100 (CET)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2F5CB18FF661;
-        Mon, 20 Jan 2020 22:59:09 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-16.pek2.redhat.com [10.72.8.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id AF5D61001B2D;
-        Mon, 20 Jan 2020 22:59:02 +0000 (UTC)
-Date:   Tue, 21 Jan 2020 06:58:58 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mingfangsen <mingfangsen@huawei.com>, Guiyao <guiyao@huawei.com>,
-        zhangsaisai <zhangsaisai@huawei.com>,
-        "wubo (T)" <wubo40@huawei.com>
-Subject: Re: [PATCH V3] brd: check and limit max_part par
-Message-ID: <20200120225858.GB19571@ming.t460p>
-References: <c8236e55-f64f-ef40-b394-8b7e86ce50df@huawei.com>
- <20200115022725.GA14585@ming.t460p>
- <ce5823ea-2183-90df-05b0-c02d1f654be3@huawei.com>
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 4B12F3C00C5;
+        Tue, 21 Jan 2020 00:05:26 +0100 (CET)
+Received: from lxhi-065.adit-jv.com (10.72.93.66) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 21 Jan
+ 2020 00:05:25 +0100
+Date:   Tue, 21 Jan 2020 00:05:22 +0100
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     John Ogness <john.ogness@linutronix.de>
+CC:     <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        Sanjeev Chugh <sanjeev_chugh@mentor.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Daniel Wang <wonderfly@google.com>,
+        Dean Jenkins <dean_jenkins@mentor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dirk Behme <dirk.behme@de.bosch.com>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Jiri Slaby <jslaby@suse.com>,
+        Peter Feiner <pfeiner@google.com>,
+        <linux-serial@vger.kernel.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: Re: [RFC PATCH v1 00/25] printk: new implementation
+Message-ID: <20200120230522.GA23636@lxhi-065.adit-jv.com>
+References: <20190212143003.48446-1-john.ogness@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <ce5823ea-2183-90df-05b0-c02d1f654be3@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190212143003.48446-1-john.ogness@linutronix.de>
+X-Originating-IP: [10.72.93.66]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 09:14:50PM +0800, Zhiqiang Liu wrote:
->=20
->=20
-> On 2020/1/15 10:27, Ming Lei wrote:
->=20
-> >=20
-> >>  MODULE_PARM_DESC(rd_nr, "Maximum number of brd devices");
-> >>
-> >>  unsigned long rd_size =3D CONFIG_BLK_DEV_RAM_SIZE;
-> >>  module_param(rd_size, ulong, 0444);
-> >>  MODULE_PARM_DESC(rd_size, "Size of each RAM disk in kbytes.");
-> >>
-> >> -static int max_part =3D 1;
-> >> -module_param(max_part, int, 0444);
-> >> +static unsigned int max_part =3D 1;
-> >> +module_param(max_part, uint, 0444);
-> >=20
-> > The above change isn't needed.
-> Thanks for your suggestion.
-> I will remove that in v4 patch.
-> >=20
-> >>  MODULE_PARM_DESC(max_part, "Num Minors to reserve between devices")=
-;
-> >>
-> >>  MODULE_LICENSE("GPL");
-> >> @@ -393,7 +393,14 @@ static struct brd_device *brd_alloc(int i)
-> >>  	if (!disk)
-> >>  		goto out_free_queue;
-> >>  	disk->major		=3D RAMDISK_MAJOR;
-> >> -	disk->first_minor	=3D i * max_part;
-> >> +	/*
-> >> +	 * Clear .minors when running out of consecutive minor space since
-> >> +	 * GENHD_FL_EXT_DEVT is set, and we can allocate from extended dev=
-t.
-> >> +	 */
-> >> +	if ((i * disk->minors) & ~MINORMASK)
-> >> +		disk->minors =3D 0;
-> >> +	else
-> >> +		disk->first_minor =3D i * disk->minors;
-> >=20
-> > The above looks a bit ugly, one nice way could be to change in
-> > brd_alloc():
-> >=20
-> > 	disk =3D brd->brd_disk =3D alloc_disk(((i * max_part) & ~MINORMASK) =
-?
-> > 		0 : max_part);
->=20
-> I will change it as your suggestion.
->=20
-> >=20
-> >>  	disk->fops		=3D &brd_fops;
-> >>  	disk->private_data	=3D brd;
-> >>  	disk->queue		=3D brd->brd_queue;
-> >> @@ -468,6 +475,21 @@ static struct kobject *brd_probe(dev_t dev, int=
- *part, void *data)
-> >>  	return kobj;
-> >>  }
-> >>
-> >> +static inline void brd_check_and_reset_par(void)
-> >> +{
-> >> +	if (unlikely(!rd_nr))
-> >> +		rd_nr =3D 1;
-> >=20
-> > zero rd_nr should work as expected, given user can create dev file vi=
-a
-> > mknod, and brd_probe() will be called for populate brd disk/queue whe=
-n
-> > the disk file is opened.
-> >=20
-> >> +static inline void brd_check_and_reset_par(void)
-> >> +{
-> >> + =A0 =A0 =A0 if (unlikely(!rd_nr))
-> >> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 rd_nr =3D 1;
-> >> +
-> >> + =A0 =A0 =A0 if (unlikely(!max_part))
-> >> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 max_part =3D 1;
-> >=20
-> > Another limit is that 'max_part' needs to be divided exactly by (1U <=
-<
-> > MINORBITS), something like:
-> >=20
-> > 	max_part =3D 1UL << fls(max_part)
->=20
-> Do we have to limit that 'max_part' needs to be divided exactly by (1U =
-<<
-> > MINORBITS)? As your suggestion, the i * max_part is larger than MINOR=
-MASK,
-> we can allocate from extended devt.
+Hello John, all,
 
-Exact dividing is for reserving same minors for all disks with
-RAMDISK_MAJOR, otherwise there is still chance to get same dev_t when
-adding partitions.
+Cc: Geert, Morimoto-san,
 
-Extended devt is for covering more disks, not related with 'max_part'.
+On Tue, Feb 12, 2019 at 03:29:38PM +0100, John Ogness wrote:
+> Hello,
+> 
+> As probably many of you are aware, the current printk implementation
+> has some issues. This series (against 5.0-rc6) makes some fundamental
+> changes in an attempt to address these issues. The particular issues I
+> am referring to:
+> 
+> 1. The printk buffer is protected by a global raw spinlock for readers
+>    and writers. This restricts the contexts that are allowed to
+>    access the buffer.
+> 
+> 2. Because of #1, NMI and recursive contexts are handled by deferring
+>    logging/printing to a spinlock-safe context. This means that
+>    messages will not be visible if (for example) the kernel dies in
+>    NMI context and the irq_work mechanism does not survive.
+> 
+> 3. Because of #1, when *not* using features such as PREEMPT_RT, large
+>    latencies exist when printing to slow consoles.
 
+This [1] is a fairly old thread, but I only recently stumbled upon it,
+while co-investigating below audio distortions [2] on R-Car3 ARM64
+boards, which can be reproduced by stressing [3] the serial console.
 
-Thanks,
-Ming
+The investigation started a few months ago, when users reported
+audio drops during the first seconds of system startup. Only after
+a few weeks it became clear (thanks to some people in Cc) that the
+distortions were contributed by the above-average serial console load
+during the early boot. Once understood, we were able to come up with
+a synthetic test [2-3].
 
+I thought it would be interesting to share below reproduction matrix,
+in order to contrast vanilla to linux-rt-devel [4], as well as to
+compare various preemption models.
+ 
+                           | Ser.console  Ser.console
+                           | stressed     at rest or disabled
+      --------------------------------------------
+      v5.5-rc6 (PREEMPT=y) | distorted    clean
+    v5.4.5-rt3 (PREEMPT=y) | distorted    clean
+ v5.4.5-rt3 (PREEMPT_RT=y) | clean        clean
+
+My feeling is that the results probably do not surprise linux-rt people.
+
+My first question is, should there be any improvement in the case of
+v5.4.5-rt3 (PREEMPT=y), which I do not sense? I would expect so, based
+on the cover letter of this series (pointing out the advantages of the
+redesigned printk mechanism).
+
+And the other question is, how would you, generally speaking, tackle
+the problem, given that backporting the linux-rt patches is *not* an
+option and enabling serial console is a must?
+
+[1] https://lore.kernel.org/lkml/20190212143003.48446-1-john.ogness@linutronix.de/
+[2] H3ULCB> speaker-test -f24_LE -c2 -t wav -Dplughw:rcarsound -b 4000
+    https://vocaroo.com/9NV98mMgdjX
+[3] https://github.com/erosca/linux/tree/stress-serial
+[4] https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git/
+
+-- 
+Best Regards,
+Eugeniu
