@@ -2,259 +2,343 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C5DC33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB91CC33CB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6447020684
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:16:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JucvU8Cm"
+	by mail.kernel.org (Postfix) with ESMTP id B517820684
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:17:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbgATJQp (ORCPT
+        id S1726889AbgATJR3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 04:16:45 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:56335 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725872AbgATJQo (ORCPT
+        Mon, 20 Jan 2020 04:17:29 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:39928 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbgATJR2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 04:16:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579511803;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=3nhshWWLkpieH3MHa4qSdIugCEnwJsw24nQRATXXfLM=;
-        b=JucvU8Cm5SLvH8bMKn1s1aVGYaRIYuZlr/BRqXAVZwxZslQBkIvPjZErXEKgyZV4dISab+
-        ND654V7+dU4LrItFQy+l4qBjQ5+YyuSPESwOrlGHroVFfk6pALYgLYR6AA9h0EY06j+uKc
-        E8tDdozc0IjAx4XBOMyEwcKpFbVuNFE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-360-ry2Ty5UwNyimnwwrZy6U9w-1; Mon, 20 Jan 2020 04:16:39 -0500
-X-MC-Unique: ry2Ty5UwNyimnwwrZy6U9w-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CE148800D4E;
-        Mon, 20 Jan 2020 09:16:38 +0000 (UTC)
-Received: from localhost (ovpn-8-20.pek2.redhat.com [10.72.8.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 529085D9D6;
-        Mon, 20 Jan 2020 09:16:30 +0000 (UTC)
-From:   Ming Lei <ming.lei@redhat.com>
-To:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ming Lei <ming.lei@redhat.com>, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Peter Xu <peterx@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>
-Subject: [PATCH V4] sched/isolation: isolate from handling managed interrupt
-Date:   Mon, 20 Jan 2020 17:16:25 +0800
-Message-Id: <20200120091625.17912-1-ming.lei@redhat.com>
+        Mon, 20 Jan 2020 04:17:28 -0500
+Received: by mail-lj1-f193.google.com with SMTP id l2so32974212lja.6;
+        Mon, 20 Jan 2020 01:17:25 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hcJKksZaUNB0/Z5joLxcWgk3TUQhgbPvNvSudN5seNA=;
+        b=goOvTYQFyHJRQslwKVLxtvYOIvh7zy0HPYYrCH6wuwn3+5mcI4EfK52ffkSY1J84jh
+         3P6e1uFPhGb+CD6Fa4fHq6nVfaVddNFYzbXZUCu2W9b8WcOceAPBjhN4EABh2cnL1z0W
+         PIZ5weVehZjTFlIUlT3pqxGf4SjENmViMN4c0xFWsBz+NiGg5CXesm1UR4lIH1+M6WI/
+         /J8DSa5neNO6XPHjOsL00oeMYAcvMKYPLsBreqZSJVS8PzWg44ly0hZ8Teu1T34GzQx3
+         sHDr/VS/QfPFLgKqRHUMF6DFbM5CItI6KZPFY2lOLr2gqhPAp+tyuiTjZRd0JYaTn1sa
+         wGeA==
+X-Gm-Message-State: APjAAAVjgwPaJzm/Z74a7mlTrhQgkUFH32sekB1O0ZJb3zCo1W5vdQwP
+        5SrqwJNiD4ALzjkdAD3gO3U=
+X-Google-Smtp-Source: APXvYqzb53BVKttrl+NZHqAo3xUQEYmamso+kdF4EdePtgHpVuCbzy/+QiumQxc0G5wyoDaNX0Aocg==
+X-Received: by 2002:a05:651c:1032:: with SMTP id w18mr12210962ljm.61.1579511844963;
+        Mon, 20 Jan 2020 01:17:24 -0800 (PST)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id f12sm16169919ljo.100.2020.01.20.01.17.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jan 2020 01:17:24 -0800 (PST)
+Date:   Mon, 20 Jan 2020 11:17:12 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Brown <broonie@kernel.org>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org
+Subject: [PATCH v12 03/10] mfd: rohm PMICs - use platform_device_id to match
+ MFD sub-devices
+Message-ID: <13994480cab6d5d6376c8f5228572e55ca06e479.1579511114.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1579511114.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1579511114.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Userspace can't change managed interrupt's affinity via /proc interface,
-however, applications often require the specified isolated CPUs not
-disturbed by interrupts.
+Thanks to Stephen Boyd I today learned we can use platform_device_id
+to do device and module matching for MFD sub-devices!
 
-Add sub-parameter 'managed_irq' for 'isolcpus', so that we can isolate
-from handling managed interrupt.
+Do device matching using the platform_device_id instead of using
+explicit module_aliases to load modules and custom parent-data field
+to do module loading and sub-device matching.
 
-Not select irq effective CPU from isolated CPUs if the interrupt affinity
-includes at least one housekeeping CPU. This way guarantees that isolated
-CPUs won't be interrupted by managed irq if IO isn't submitted from any
-isolated CPU.
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Stephen Boyd <sboyd@kernel.org>
 
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Peter Xu <peterx@redhat.com>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
 ---
-V4:
-	- patch style fix
-	- avoid unnecessary checks in hk_should_isolate()
-V3:
-	- add global lock to protect the global temporary cpumask
-	- use delayed irq migration as suggested by Thomas=20
-V2:
-	- not allocate cpumask in context with irq_desc::lock held
-	- deal with cpu hotplug race with new flag of IRQD_MANAGED_FORCE_MIGRATE
-	- use comment doc from Thomas
 
- .../admin-guide/kernel-parameters.txt         |  9 +++++
- include/linux/sched/isolation.h               |  1 +
- kernel/irq/cpuhotplug.c                       | 19 ++++++++-
- kernel/irq/manage.c                           | 39 ++++++++++++++++++-
- kernel/sched/isolation.c                      |  6 +++
- 5 files changed, 72 insertions(+), 2 deletions(-)
+Mark and Stephen - Could you please ack this or tell me what to change?
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentat=
-ion/admin-guide/kernel-parameters.txt
-index ade4e6ec23e0..e0f18ac866d4 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -1933,6 +1933,15 @@
- 			  <cpu number> begins at 0 and the maximum value is
- 			  "number of CPUs in system - 1".
-=20
-+			managed_irq
-+			  Isolate from handling managed interrupt. Userspace can't
-+			  change managed interrupt's affinity via /proc interface,
-+			  however application often requires the specified isolated
-+			  CPUs not disturbed by interrupts. This way guarantees that
-+			  isolated CPU won't be interrupted if IO isn't submitted
-+			  from isolated CPU when managed interrupt is used by IO
-+			  drivers.
-+
- 			The format of <cpu-list> is described above.
-=20
-=20
-diff --git a/include/linux/sched/isolation.h b/include/linux/sched/isolat=
-ion.h
-index 6c8512d3be88..0fbcbacd1b29 100644
---- a/include/linux/sched/isolation.h
-+++ b/include/linux/sched/isolation.h
-@@ -13,6 +13,7 @@ enum hk_flags {
- 	HK_FLAG_TICK		=3D (1 << 4),
- 	HK_FLAG_DOMAIN		=3D (1 << 5),
- 	HK_FLAG_WQ		=3D (1 << 6),
-+	HK_FLAG_MANAGED_IRQ	=3D (1 << 7),
- };
-=20
- #ifdef CONFIG_CPU_ISOLATION
-diff --git a/kernel/irq/cpuhotplug.c b/kernel/irq/cpuhotplug.c
-index 6c7ca2e983a5..fbcba938a771 100644
---- a/kernel/irq/cpuhotplug.c
-+++ b/kernel/irq/cpuhotplug.c
-@@ -12,6 +12,7 @@
- #include <linux/interrupt.h>
- #include <linux/ratelimit.h>
- #include <linux/irq.h>
-+#include <linux/sched/isolation.h>
-=20
- #include "internals.h"
-=20
-@@ -171,6 +172,21 @@ void irq_migrate_all_off_this_cpu(void)
- 	}
- }
-=20
-+static bool hk_should_isolate(struct irq_data *data,
-+			      const struct cpumask *affinity, unsigned int cpu)
-+{
-+	const struct cpumask *hk_mask;
-+
-+	if (!housekeeping_enabled(HK_FLAG_MANAGED_IRQ))
-+		return false;
-+
-+	hk_mask =3D housekeeping_cpumask(HK_FLAG_MANAGED_IRQ);
-+	if (cpumask_subset(irq_data_get_effective_affinity_mask(data), hk_mask)=
-)
-+		return false;
-+
-+	return cpumask_test_cpu(cpu, hk_mask);
-+}
-+
- static void irq_restore_affinity_of_irq(struct irq_desc *desc, unsigned =
-int cpu)
- {
- 	struct irq_data *data =3D irq_desc_get_irq_data(desc);
-@@ -190,7 +206,8 @@ static void irq_restore_affinity_of_irq(struct irq_de=
-sc *desc, unsigned int cpu)
- 	 * CPU then it is already assigned to a CPU in the affinity
- 	 * mask. No point in trying to move it around.
- 	 */
--	if (!irqd_is_single_target(data))
-+	if (!irqd_is_single_target(data) ||
-+	    hk_should_isolate(data, affinity, cpu))
- 		irq_set_affinity_locked(data, affinity, false);
- }
-=20
-diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-index 1753486b440c..6c0e06c0d6d8 100644
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -18,6 +18,7 @@
- #include <linux/sched.h>
- #include <linux/sched/rt.h>
- #include <linux/sched/task.h>
-+#include <linux/sched/isolation.h>
- #include <uapi/linux/sched/types.h>
- #include <linux/task_work.h>
-=20
-@@ -217,7 +218,43 @@ int irq_do_set_affinity(struct irq_data *data, const=
- struct cpumask *mask,
- 	if (!chip || !chip->irq_set_affinity)
+ drivers/clk/clk-bd718x7.c             | 12 ++++++++-
+ drivers/mfd/rohm-bd70528.c            |  3 +--
+ drivers/mfd/rohm-bd718x7.c            | 39 ++++++++++++++++++++++-----
+ drivers/regulator/bd718x7-regulator.c | 17 +++++++++---
+ include/linux/mfd/rohm-generic.h      |  3 +--
+ 5 files changed, 58 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/clk/clk-bd718x7.c b/drivers/clk/clk-bd718x7.c
+index 00926c587390..33699ee1bdf3 100644
+--- a/drivers/clk/clk-bd718x7.c
++++ b/drivers/clk/clk-bd718x7.c
+@@ -74,6 +74,7 @@ static int bd71837_clk_probe(struct platform_device *pdev)
+ 		.name = "bd718xx-32k-out",
+ 		.ops = &bd71837_clk_ops,
+ 	};
++	enum rohm_chip_type chip = platform_get_device_id(pdev)->driver_data;
+ 
+ 	c = devm_kzalloc(&pdev->dev, sizeof(*c), GFP_KERNEL);
+ 	if (!c)
+@@ -87,7 +88,7 @@ static int bd71837_clk_probe(struct platform_device *pdev)
+ 		dev_err(&pdev->dev, "No parent clk found\n");
  		return -EINVAL;
-=20
--	ret =3D chip->irq_set_affinity(data, mask, force);
-+	/*
-+	 * If this is a managed interrupt and housekeeping is enabled on
-+	 * it check whether the requested affinity mask intersects with
-+	 * a housekeeping CPU. If so, then remove the isolated CPUs from
-+	 * the mask and just keep the housekeeping CPU(s). This prevents
-+	 * the affinity setter from routing the interrupt to an isolated
-+	 * CPU to avoid that I/O submitted from a housekeeping CPU causes
-+	 * interrupts on an isolated one.
-+	 *
-+	 * If the masks do not intersect or include online CPU(s) then
-+	 * keep the requested mask. The isolated target CPUs are only
-+	 * receiving interrupts when the I/O operation was submitted
-+	 * directly from them.
-+	 *
-+	 * If all housekeeping CPUs in the affinity mask are offline,
-+	 * we will migrate the irq from isolate CPU when any housekeeping
-+	 * CPU in the mask becomes online.
-+	 */
-+	if (irqd_affinity_is_managed(data) &&
-+	    housekeeping_enabled(HK_FLAG_MANAGED_IRQ)) {
-+		static DEFINE_RAW_SPINLOCK(tmp_mask_lock);
-+		static struct cpumask tmp_mask;
-+		const struct cpumask *hk_mask, *prog_mask;
-+
-+		hk_mask =3D housekeeping_cpumask(HK_FLAG_MANAGED_IRQ);
-+
-+		raw_spin_lock(&tmp_mask_lock);
-+		cpumask_and(&tmp_mask, mask, hk_mask);
-+		if (!cpumask_intersects(&tmp_mask, cpu_online_mask))
-+			prog_mask =3D mask;
-+		else
-+			prog_mask =3D &tmp_mask;
-+		ret =3D chip->irq_set_affinity(data, prog_mask, force);
-+		raw_spin_unlock(&tmp_mask_lock);
-+	} else {
-+		ret =3D chip->irq_set_affinity(data, mask, force);
-+	}
- 	switch (ret) {
- 	case IRQ_SET_MASK_OK:
- 	case IRQ_SET_MASK_OK_DONE:
-diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
-index 9fcb2a695a41..008d6ac2342b 100644
---- a/kernel/sched/isolation.c
-+++ b/kernel/sched/isolation.c
-@@ -163,6 +163,12 @@ static int __init housekeeping_isolcpus_setup(char *=
-str)
- 			continue;
- 		}
-=20
-+		if (!strncmp(str, "managed_irq,", 12)) {
-+			str +=3D 12;
-+			flags |=3D HK_FLAG_MANAGED_IRQ;
-+			continue;
-+		}
-+
- 		pr_warn("isolcpus: Error, unknown flag\n");
- 		return 0;
  	}
---=20
-2.20.1
+-	switch (mfd->chip_type) {
++	switch (chip) {
+ 	case ROHM_CHIP_TYPE_BD71837:
+ 	case ROHM_CHIP_TYPE_BD71847:
+ 		c->reg = BD718XX_REG_OUT32K;
+@@ -121,11 +122,20 @@ static int bd71837_clk_probe(struct platform_device *pdev)
+ 	return rval;
+ }
+ 
++static const struct platform_device_id bd718x7_clk_id[] = {
++	{ "bd71837-clk", ROHM_CHIP_TYPE_BD71837 },
++	{ "bd71847-clk", ROHM_CHIP_TYPE_BD71847 },
++	{ "bd70528-clk", ROHM_CHIP_TYPE_BD70528 },
++	{ },
++};
++MODULE_DEVICE_TABLE(platform, bd718x7_clk_id);
++
+ static struct platform_driver bd71837_clk = {
+ 	.driver = {
+ 		.name = "bd718xx-clk",
+ 	},
+ 	.probe = bd71837_clk_probe,
++	.id_table = bd718x7_clk_id,
+ };
+ 
+ module_platform_driver(bd71837_clk);
+diff --git a/drivers/mfd/rohm-bd70528.c b/drivers/mfd/rohm-bd70528.c
+index ef6786fd3b00..5c44d3b77b3e 100644
+--- a/drivers/mfd/rohm-bd70528.c
++++ b/drivers/mfd/rohm-bd70528.c
+@@ -48,7 +48,7 @@ static struct mfd_cell bd70528_mfd_cells[] = {
+ 	 * We use BD71837 driver to drive the clock block. Only differences to
+ 	 * BD70528 clock gate are the register address and mask.
+ 	 */
+-	{ .name = "bd718xx-clk", },
++	{ .name = "bd70528-clk", },
+ 	{ .name = "bd70528-wdt", },
+ 	{
+ 		.name = "bd70528-power",
+@@ -236,7 +236,6 @@ static int bd70528_i2c_probe(struct i2c_client *i2c,
+ 
+ 	dev_set_drvdata(&i2c->dev, &bd70528->chip);
+ 
+-	bd70528->chip.chip_type = ROHM_CHIP_TYPE_BD70528;
+ 	bd70528->chip.regmap = devm_regmap_init_i2c(i2c, &bd70528_regmap);
+ 	if (IS_ERR(bd70528->chip.regmap)) {
+ 		dev_err(&i2c->dev, "Failed to initialize Regmap\n");
+diff --git a/drivers/mfd/rohm-bd718x7.c b/drivers/mfd/rohm-bd718x7.c
+index 85e7f5133365..bb86ec829079 100644
+--- a/drivers/mfd/rohm-bd718x7.c
++++ b/drivers/mfd/rohm-bd718x7.c
+@@ -30,14 +30,24 @@ static struct gpio_keys_platform_data bd718xx_powerkey_data = {
+ 	.name = "bd718xx-pwrkey",
+ };
+ 
+-static struct mfd_cell bd718xx_mfd_cells[] = {
++static struct mfd_cell bd71837_mfd_cells[] = {
+ 	{
+ 		.name = "gpio-keys",
+ 		.platform_data = &bd718xx_powerkey_data,
+ 		.pdata_size = sizeof(bd718xx_powerkey_data),
+ 	},
+-	{ .name = "bd718xx-clk", },
+-	{ .name = "bd718xx-pmic", },
++	{ .name = "bd71837-clk", },
++	{ .name = "bd71837-pmic", },
++};
++
++static struct mfd_cell bd71847_mfd_cells[] = {
++	{
++		.name = "gpio-keys",
++		.platform_data = &bd718xx_powerkey_data,
++		.pdata_size = sizeof(bd718xx_powerkey_data),
++	},
++	{ .name = "bd71847-clk", },
++	{ .name = "bd71847-pmic", },
+ };
+ 
+ static const struct regmap_irq bd718xx_irqs[] = {
+@@ -124,6 +134,9 @@ static int bd718xx_i2c_probe(struct i2c_client *i2c,
+ {
+ 	struct bd718xx *bd718xx;
+ 	int ret;
++	unsigned int chip_type;
++	struct mfd_cell *mfd;
++	int cells;
+ 
+ 	if (!i2c->irq) {
+ 		dev_err(&i2c->dev, "No IRQ configured\n");
+@@ -136,8 +149,21 @@ static int bd718xx_i2c_probe(struct i2c_client *i2c,
+ 		return -ENOMEM;
+ 
+ 	bd718xx->chip_irq = i2c->irq;
+-	bd718xx->chip.chip_type = (unsigned int)(uintptr_t)
+-				of_device_get_match_data(&i2c->dev);
++	chip_type = (unsigned int)(uintptr_t)
++		    of_device_get_match_data(&i2c->dev);
++	switch (chip_type) {
++	case ROHM_CHIP_TYPE_BD71837:
++		mfd = bd71837_mfd_cells;
++		cells = ARRAY_SIZE(bd71837_mfd_cells);
++		break;
++	case ROHM_CHIP_TYPE_BD71847:
++		mfd = bd71847_mfd_cells;
++		cells = ARRAY_SIZE(bd71847_mfd_cells);
++		break;
++	default:
++		dev_err(&i2c->dev, "Unknown device type");
++		return -EINVAL;
++	}
+ 	bd718xx->chip.dev = &i2c->dev;
+ 	dev_set_drvdata(&i2c->dev, bd718xx);
+ 
+@@ -170,8 +196,7 @@ static int bd718xx_i2c_probe(struct i2c_client *i2c,
+ 	button.irq = ret;
+ 
+ 	ret = devm_mfd_add_devices(bd718xx->chip.dev, PLATFORM_DEVID_AUTO,
+-				   bd718xx_mfd_cells,
+-				   ARRAY_SIZE(bd718xx_mfd_cells), NULL, 0,
++				   mfd, cells, NULL, 0,
+ 				   regmap_irq_get_domain(bd718xx->irq_data));
+ 	if (ret)
+ 		dev_err(&i2c->dev, "Failed to create subdevices\n");
+diff --git a/drivers/regulator/bd718x7-regulator.c b/drivers/regulator/bd718x7-regulator.c
+index 13a43eee2e46..6beaf867d9cb 100644
+--- a/drivers/regulator/bd718x7-regulator.c
++++ b/drivers/regulator/bd718x7-regulator.c
+@@ -1164,6 +1164,7 @@ static int bd718xx_probe(struct platform_device *pdev)
+ 
+ 	int i, j, err;
+ 	bool use_snvs;
++	enum rohm_chip_type chip = platform_get_device_id(pdev)->driver_data;
+ 
+ 	mfd = dev_get_drvdata(pdev->dev.parent);
+ 	if (!mfd) {
+@@ -1172,8 +1173,8 @@ static int bd718xx_probe(struct platform_device *pdev)
+ 		goto err;
+ 	}
+ 
+-	if (mfd->chip.chip_type >= ROHM_CHIP_TYPE_AMOUNT ||
+-	    !pmic_regulators[mfd->chip.chip_type].r_datas) {
++	if (chip >= ROHM_CHIP_TYPE_AMOUNT || chip < 0 ||
++	    !pmic_regulators[chip].r_datas) {
+ 		dev_err(&pdev->dev, "Unsupported chip type\n");
+ 		err = -EINVAL;
+ 		goto err;
+@@ -1215,13 +1216,13 @@ static int bd718xx_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
+-	for (i = 0; i < pmic_regulators[mfd->chip.chip_type].r_amount; i++) {
++	for (i = 0; i < pmic_regulators[chip].r_amount; i++) {
+ 
+ 		const struct regulator_desc *desc;
+ 		struct regulator_dev *rdev;
+ 		const struct bd718xx_regulator_data *r;
+ 
+-		r = &pmic_regulators[mfd->chip.chip_type].r_datas[i];
++		r = &pmic_regulators[chip].r_datas[i];
+ 		desc = &r->desc;
+ 
+ 		config.dev = pdev->dev.parent;
+@@ -1281,11 +1282,19 @@ static int bd718xx_probe(struct platform_device *pdev)
+ 	return err;
+ }
+ 
++static const struct platform_device_id bd718x7_pmic_id[] = {
++	{ "bd71837-pmic", ROHM_CHIP_TYPE_BD71837 },
++	{ "bd71847-pmic", ROHM_CHIP_TYPE_BD71847 },
++	{ },
++};
++MODULE_DEVICE_TABLE(platform, bd718x7_pmic_id);
++
+ static struct platform_driver bd718xx_regulator = {
+ 	.driver = {
+ 		.name = "bd718xx-pmic",
+ 	},
+ 	.probe = bd718xx_probe,
++	.id_table = bd718x7_pmic_id,
+ };
+ 
+ module_platform_driver(bd718xx_regulator);
+diff --git a/include/linux/mfd/rohm-generic.h b/include/linux/mfd/rohm-generic.h
+index bff15ac26f2c..922f88008232 100644
+--- a/include/linux/mfd/rohm-generic.h
++++ b/include/linux/mfd/rohm-generic.h
+@@ -4,7 +4,7 @@
+ #ifndef __LINUX_MFD_ROHM_H__
+ #define __LINUX_MFD_ROHM_H__
+ 
+-enum {
++enum rohm_chip_type {
+ 	ROHM_CHIP_TYPE_BD71837 = 0,
+ 	ROHM_CHIP_TYPE_BD71847,
+ 	ROHM_CHIP_TYPE_BD70528,
+@@ -12,7 +12,6 @@ enum {
+ };
+ 
+ struct rohm_regmap_dev {
+-	unsigned int chip_type;
+ 	struct device *dev;
+ 	struct regmap *regmap;
+ };
+-- 
+2.21.0
 
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
