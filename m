@@ -2,105 +2,83 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12CDEC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B6FC33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:44:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDFE92073D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:43:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF1412073D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:44:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729205AbgATQnZ (ORCPT
+        id S1729221AbgATQoy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 11:43:25 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:39774 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726897AbgATQnY (ORCPT
+        Mon, 20 Jan 2020 11:44:54 -0500
+Received: from mout.kundenserver.de ([212.227.126.133]:54743 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726897AbgATQoy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 11:43:24 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-247-W8g1vLVvOyGkIi9z1W8g3w-1; Mon, 20 Jan 2020 16:43:21 +0000
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 20 Jan 2020 16:43:21 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 20 Jan 2020 16:43:21 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     =?utf-8?B?J1BhbGkgUm9ow6FyJw==?= <pali.rohar@gmail.com>
-CC:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Namjae Jeon <linkinjeon@gmail.com>,
-        "Gabriel Krisman Bertazi" <krisman@collabora.com>
-Subject: RE: vfat: Broken case-insensitive support for UTF-8
-Thread-Topic: vfat: Broken case-insensitive support for UTF-8
-Thread-Index: AQHVz4FsiOVqsS4Qp0SucuDN4afIhKfzph4wgAAFE4CAAADOMIAAEeCAgAAB5zA=
-Date:   Mon, 20 Jan 2020 16:43:21 +0000
-Message-ID: <b42888a01c8847e48116873ebbbbb261@AcuMS.aculab.com>
-References: <20200119221455.bac7dc55g56q2l4r@pali>
- <87sgkan57p.fsf@mail.parknet.co.jp> <20200120110438.ak7jpyy66clx5v6x@pali>
- <89eba9906011446f8441090f496278d2@AcuMS.aculab.com>
- <20200120152009.5vbemgmvhke4qupq@pali>
- <1a4c545dc7f14e33b7e59321a0aab868@AcuMS.aculab.com>
- <20200120162701.guxcrmqysejaqw6y@pali>
-In-Reply-To: <20200120162701.guxcrmqysejaqw6y@pali>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 20 Jan 2020 11:44:54 -0500
+Received: from localhost ([217.91.205.33]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MfYc4-1jZDRL25RA-00g3Dd; Mon, 20 Jan 2020 17:44:35 +0100
+Date:   Mon, 20 Jan 2020 17:44:34 +0100
+From:   Andreas Klinger <ak@it-klinger.de>
+To:     jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        rpi-receiver@htl-steyr.ac.at, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/2] iio: srf04: add support for power management
+Message-ID: <20200120164433.GA8702@arbad>
 MIME-Version: 1.0
-X-MC-Unique: W8g1vLVvOyGkIi9z1W8g3w-1
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Provags-ID: V03:K1:gWvLycNxUPsrfbKQlc543piJ9HSAtVHQVSZDVqfMQ5233yg18uB
+ YycTa9XcrDLFra4aaZEPuVfq5Um/1CTNOoKrhTE4OP36JNNPMfA+B/mHkKSDTOMlRKSpyDh
+ QTIYf85itUhYwCyr5k5FvNIRR+1UNWJfFnvWrzDSzaC1mpgMH9KUW77g2px1gMJ/zV1uwia
+ jPjEkCO2BFZaO0tdX1ZqA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:1DmxnLrgqy0=:mMbAxVGX4GDdscZIyZiVO4
+ U3LwVClaeAEyH5SFz4Tnnp179vVlTXXfF45o5rmfKf9c+DCaJNamOnNEkrOHqYd8DZ73RwCRz
+ EbOvrP5GYCBIkbGlzrPi7swKZGj28YXqPRBkP2tNkBotlURYcgk5SdVUY09OqUuU3UCw/Yegn
+ 8EOOOE9KaVDK1o01PzQX4zjSv+xQmFlkcu/zHLB1Ze6As+aM++BJNgzIwqCu8gdAIOMZxofjr
+ DwxBEZrq6j35636mdqPueHgVfSR6ZPbhJrQbWzD/wy6VdbbDIEFQ8qNENCkZ5tgw5dlum5EL3
+ 0hMpm35061JMN7UAFL5z+bq63UduB2zuyEbPSYEqMRsF2/fSRrW2B4Ef/O6g4GNdH1X/7B8/Z
+ JAcLC8Y7nHlypedR5RxVi47MtUl8EZld8HfKJhMRMQz6crZKFtmRBPONdqIefWj6ZaNizUU6x
+ OA7X7uia6YcW0P8NIVRkpntkY2oaUTXYbX7WSLvVJKwc7+6cD9tLfSsyH2dQrLTW+lSi89KX/
+ KCgKJ9+8UUN+WBrXBnk72ftd2gOYsKIv58J1YVaAdvqB+S47SH00AF2smY/cjqXc87sRDIxNm
+ D130Pr/GuZIBaPBuX46suADzZiYRHA9GwVdZviUH1qN5+SaPV1FpnFF45ASql5kQ1E6wf6kOG
+ 40oVtOc3ImiTiCsLpt93/CpGisgWQSovEzUaN1jJjHAawNh6bxVFOEKXf4viRkrEy762jTtbd
+ 8FCBvwRFOFf6dCyP7aDxKKI0SBLvjKTp3IP2DtB3TfHW9x2BLY93D+7iqjc/uuEkNeH2utJ7L
+ mx1dGu3crSHQx+/CqrnjZyovHjSqkT/aCLVbC3u5+HY1B9JoMT4ur9UUuDp3bxbkgHNmeeSt1
+ zyVN5Cc75wCvTtzS6niw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogUGFsaSBSb2jDoXINCj4gU2VudDogMjAgSmFudWFyeSAyMDIwIDE2OjI3DQouLi4NCj4g
-PiBVbmZvcnR1bmF0ZWx5IHRoZXJlIGlzIG5laXRoZXIgYSAxOjEgbWFwcGluZyBvZiBhbGwgcG9z
-c2libGUgYnl0ZSBzZXF1ZW5jZXMNCj4gPiB0byB3Y2hhcl90IChvciB1bmljb2RlIGNvZGUgcG9p
-bnRzKSwNCj4gDQo+IEkgd2FzIHRhbGtpbmcgYWJvdXQgdmFsaWQgVVRGLTggc2VxdWVuY2UgKGlu
-dmFsaWQsIGlsbGZvcm1lZCBpcyBvdXQgb2YNCj4gZ2FtZSBhbmQgZm9yIHN1cmUgd291bGQgYWx3
-YXlzIGNhdXNlIHByb2JsZW1zKS4NCg0KRXhjZXB0IHRoYXQgdGhleSBhcmUgYWx3YXlzIGxpa2Vs
-eSB0byBoYXBwZW4uDQpJJ3ZlIGJlZW4gcGlzc2VkIG9mZiBieSBwcm9ncmFtcyBjcmFzaGluZyBi
-ZWNhdXNlIHRoZXkgYXNzdW1lIHRoYXQNCmEgaW5wdXQgc3RyaW5nIChlZyBhbiBlbWFpbCkgaXMg
-VVRGLTggYnV0IGhhcHBlbnMgdG8gY29udGFpbiBhIHNpbmdsZQ0KMHhhMyBieXRlIGluIHRoZSBv
-dGhlcndpc2UgNy1iaXQgZGF0YS4NCg0KVGhlIHN0YW5kYXJkIG91Z2h0IHRvIGhhdmUgZGVmaW5l
-ZCBhIHRyYW5zbGF0aW9uIGZvciBzdWNoIHNlcXVlbmNlcw0KYW5kIGp1c3QgYSAnd2FybmluZycg
-ZnJvbSB0aGUgZnVuY3Rpb24ocykgdGhhdCB1bmV4cGVjdGVkIGJ5dGVzIHdlcmUNCnByb2Nlc3Nl
-ZC4NCg0KPiA+IG5vciBhIDE6MSBtYXBwaW5nIG9mIGFsbCBwb3NzaWJsZSB3Y2hhcl90IHZhbHVl
-cyB0byBVVEYtOC4NCj4gDQo+IFRoaXMgaXMgbm90IHRydXRoLiBUaGVyZSBpcyBleGFjdGx5IG9u
-bHkgb25lIHdheSBob3cgdG8gY29udmVydCBzZXF1ZW5jZQ0KPiBvZiBVbmljb2RlIGNvZGUgcG9p
-bnRzIHRvIFVURi04LiBVVEYgaXMgVW5pY29kZSBUcmFuc2Zvcm1hdGlvbiBGb3JtYXQNCj4gYW5k
-IGhhcyBleGFjdCBkZWZpbml0aW9uIGhvdyBpcyBVbmljb2RlIFRyYW5zZm9ybWVkLg0KDQpCdXQg
-YSB3Y2hhcl90IGNhbiBob2xkIGxvdHMgb2YgdmFsdWVzIHRoYXQgYXJlbid0IFVuaWNvZGUgY29k
-ZSBwb2ludHMuDQpQcmlvciB0byB0aGUgMjAwMyBjaGFuZ2VzIGhhbGYgb2YgdGhlIDJeMzIgdmFs
-dWVzIGNvdWxkIGJlIGNvbnZlcnRlZC4NCkFmdGVyd2FyZHMgb25seSBhIHNtYWxsIGZyYWN0aW9u
-Lg0KDQo+IElmIHlvdSBoYXZlIHZhbGlkIFVURi04IHNlcXVlbmNlIHRoZW4gaXQgZGVzY3JpYmUg
-b25lIGV4YWN0IHNlcXVlbmNlIG9mDQo+IFVuaWNvZGUgY29kZSBwb2ludHMuIEFuZCBpZiB5b3Ug
-aGF2ZSBzZXF1ZW5jZSAob3JkaW5hbHMpIG9mIFVuaWNvZGUgY29kZQ0KPiBwb2ludHMgdGhlcmUg
-aXMgZXhhY3RseSBvbmUgYW5kIG9ubHkgb25lIGl0cyByZXByZXNlbnRhdGlvbiBpbiBVVEYtOC4N
-Cj4gDQo+IEkgd291bGQgc3VnZ2VzdCB5b3UgdG8gcmVhZCBVbmljb2RlIHN0YW5kYXJkLCBzZWN0
-aW9uIDIuNSBFbmNvZGluZyBGb3Jtcy4NCg0KVGhhdCBhbGwgYXNzdW1lcyBldmVyeW9uZSBpcyBw
-bGF5aW5nIHRoZSBjb3JyZWN0IGdhbWUNCg0KPiA+IFJlYWxseSBib3RoIG5lZWQgdG8gYmUgZGVm
-aW5lZCAtIGV2ZW4gZm9yIG90aGVyd2lzZSAnaW52YWxpZCcgc2VxdWVuY2VzLg0KPiA+DQo+ID4g
-RXZlbiB0aGUgMTYtYml0IHZhbHVlcyBhYm92ZSAweGQwMDAgY2FuIGFwcGVhciBvbiB0aGVpciBv
-d24gaW4NCj4gPiB3aW5kb3dzIGZpbGVzeXN0ZW1zIChhY2NvcmRpbmcgdG8gd2lraXBlZGlhKS4N
-Cj4gDQo+IElmIHlvdSBhcmUgdGFsa2luZyBhYm91dCBVVEYtMTYgKHdoaWNoIGlzIF9ub3RfIDE2
-LWJpdCBhcyB5b3Ugd3JvdGUpLA0KPiBsb29rIGF0IG15IHByZXZpb3VzIGVtYWlsOg0KDQpVRlQt
-MTYgaXMgYSBzZXF1ZW5jZSBvZiAxNi1iaXQgdmFsdWVzLi4uLg0KSXQgY2FuIGNvbnRhaW4gMHhk
-MDAwIHRvIDB4ZmZmZiAodXN1YWxseSBpbiBwYWlycykgYnV0IHRoZXkgYXJlbid0IFVURi04IGNv
-ZGVwb2ludHMuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJy
-YW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lz
-dHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
+This patchset adds support for power management for the srf04 iio driver.
+It was suggested by Franz for the purpose of saving energy on battery driven
+vehicles.
 
+Changes in v3:
+Thanks to Jonathan for reviewing:
+- drop CONFIG_PM
+- use __maybe_unused for suspend and resume functions
+
+Changes in v2:
+Thanks to Rob for pointing out some improvements in dt-binding:
+ - add minimum, maximum and default value for startup-time-ms
+ - drop schema reference
+
+Andreas Klinger (2):
+  dt-bindings: devantech-srf04.yaml: add pm feature
+  iio: srf04: add power management feature
+
+ .../iio/proximity/devantech-srf04.yaml        | 18 ++++
+ drivers/iio/proximity/srf04.c                 | 96 ++++++++++++++++++-
+ 2 files changed, 113 insertions(+), 1 deletion(-)
+
+-- 
+2.20.1
