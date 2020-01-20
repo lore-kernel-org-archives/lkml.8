@@ -2,197 +2,167 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC179C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1841C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82F38217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:06:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Baf6RJnN"
+	by mail.kernel.org (Postfix) with ESMTP id 7F57E2465B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:08:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729145AbgATQG3 (ORCPT
+        id S1729112AbgATQIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 11:06:29 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:42127 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729045AbgATQG3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 11:06:29 -0500
-Received: by mail-qk1-f196.google.com with SMTP id z14so30548920qkg.9
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 08:06:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rKBXxvKIRJE9r95Oq/vyPWMrKks8UEDi+Qo4dUocXJw=;
-        b=Baf6RJnN+FgpGw0uph9xwLD0Y+xAcJSaSvv3RdARcDa7LNpveANlU1k6FDswjvy2Xc
-         LObElRWDHMKUj3ZjRSNTBeO/htrBIYiKHweFN5P4tGQq8ToBhQbvCWcvJrSKxEPS3cBd
-         oHUw3dHvbBeOVXV8JvEvvJHoJixZ5NHOGHvztKvlXrnUFBej3ua1JqsCjxG+qkttVE8F
-         iRT1A16DFSmFPRw9dEtVOy/TAHOtJc7+TtiB8sAHFVcUtWX/WqYyo/TcgEJcEDcmRV2R
-         Rz0lHHDuPohMF0E/czlHX+sLN/V8zBqp2azUpf0GHBEpP5dOVwAoA58Zmf9LD/Oro79O
-         wE2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rKBXxvKIRJE9r95Oq/vyPWMrKks8UEDi+Qo4dUocXJw=;
-        b=WfjsoDdL5V3I775MGHc8pSyNbjVtjXXBt9X+B4WVPYBPm2DiRckM2Ji7I7NEAaNPDv
-         DVR49rSLx8sufjy+nirP61mQWePkLtwHgdqPkPA38v5mOAEw1wZT5ce72sAS+Zx7QnT2
-         CoRZ3npAwOe34IYAbzqx2AXE0a27r3q4ymUy6rPuF19quHrXH8F9kMPvIYm/0E+SJFPw
-         MI444kVSkICYpm7u+xoO+hp9FgL9EdyYRLbxbZQqpUvjTiAYjtTAOi6sbON8SN2mFHaU
-         HhZSax1blHXfqte/qehPBw5khRWesTtnnlJH07qy7QgDdbMxjajC5znPS/3TkahCiZb5
-         9lfg==
-X-Gm-Message-State: APjAAAXqnWtBNhctR1UARIJrE0Q77/m6iOGSg0IG3zhNpKlQ5varDx30
-        RnEVxCwwZLOju3/Lwj90Vf71CWz4xC7ErkJgynkeUw==
-X-Google-Smtp-Source: APXvYqwT5+NGklKeJW9N17LjaUMueBSxha4MJyQJj2jm+eal1mEy4e4CAbkxKeRN2PB93VKB3+yirSo4Y26EHFlBDZ8=
-X-Received: by 2002:a05:620a:1136:: with SMTP id p22mr240817qkk.8.1579536388045;
- Mon, 20 Jan 2020 08:06:28 -0800 (PST)
+        Mon, 20 Jan 2020 11:08:17 -0500
+Received: from mga09.intel.com ([134.134.136.24]:19096 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726819AbgATQIQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 11:08:16 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 08:08:16 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,342,1574150400"; 
+   d="scan'208";a="374357088"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga004.jf.intel.com with ESMTP; 20 Jan 2020 08:08:13 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id F0BA52CB; Mon, 20 Jan 2020 18:08:12 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 3/9] x86/quirks: Introduce hpet_dev_print_force_hpet_address() helper
+Date:   Mon, 20 Jan 2020 18:07:55 +0200
+Message-Id: <20200120160801.53089-4-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200120160801.53089-1-andriy.shevchenko@linux.intel.com>
+References: <20200120160801.53089-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-References: <20200120141927.114373-1-elver@google.com> <CACT4Y+bnRoKinPopVqyxj4av6_xa_OUN0wwnidpO3dX3iYq_gg@mail.gmail.com>
- <CACT4Y+YuTT6kZ-AkgU0c1o09qmQdFWr4_Sds4jaDg-Va6g6jkA@mail.gmail.com>
- <CACT4Y+acrXkA-ixjQXqNf1EC=fpgTWf3Rcevxxon0DfrPdD-UQ@mail.gmail.com> <CANpmjNNcXUF-=Y-hmry9-xEoNpJd0WH+fOcJJM6kv2eRm5v-kg@mail.gmail.com>
-In-Reply-To: <CANpmjNNcXUF-=Y-hmry9-xEoNpJd0WH+fOcJJM6kv2eRm5v-kg@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 20 Jan 2020 17:06:16 +0100
-Message-ID: <CACT4Y+bD3cNxfaWOuhHz338MoVoaHpw-E8+b7v6mo_ir2KD46Q@mail.gmail.com>
-Subject: Re: [PATCH 1/5] include/linux: Add instrumented.h infrastructure
-To:     Marco Elver <elver@google.com>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Daniel Axtens <dja@axtens.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Daniel Borkmann <daniel@iogearbox.net>, cyphar@cyphar.com,
-        Kees Cook <keescook@chromium.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 4:40 PM Marco Elver <elver@google.com> wrote:
-> > > > > This adds instrumented.h, which provides generic wrappers for memory
-> > > > > access instrumentation that the compiler cannot emit for various
-> > > > > sanitizers. Currently this unifies KASAN and KCSAN instrumentation. In
-> > > > > future this will also include KMSAN instrumentation.
-> > > > >
-> > > > > Note that, copy_{to,from}_user require special instrumentation,
-> > > > > providing hooks before and after the access, since we may need to know
-> > > > > the actual bytes accessed (currently this is relevant for KCSAN, and is
-> > > > > also relevant in future for KMSAN).
-> > > > >
-> > > > > Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> > > > > Signed-off-by: Marco Elver <elver@google.com>
-> > > > > ---
-> > > > >  include/linux/instrumented.h | 153 +++++++++++++++++++++++++++++++++++
-> > > > >  1 file changed, 153 insertions(+)
-> > > > >  create mode 100644 include/linux/instrumented.h
-> > > > >
-> > > > > diff --git a/include/linux/instrumented.h b/include/linux/instrumented.h
-> > > > > new file mode 100644
-> > > > > index 000000000000..9f83c8520223
-> > > > > --- /dev/null
-> > > > > +++ b/include/linux/instrumented.h
-> > > > > @@ -0,0 +1,153 @@
-> > > > > +/* SPDX-License-Identifier: GPL-2.0 */
-> > > > > +
-> > > > > +/*
-> > > > > + * This header provides generic wrappers for memory access instrumentation that
-> > > > > + * the compiler cannot emit for: KASAN, KCSAN.
-> > > > > + */
-> > > > > +#ifndef _LINUX_INSTRUMENTED_H
-> > > > > +#define _LINUX_INSTRUMENTED_H
-> > > > > +
-> > > > > +#include <linux/compiler.h>
-> > > > > +#include <linux/kasan-checks.h>
-> > > > > +#include <linux/kcsan-checks.h>
-> > > > > +#include <linux/types.h>
-> > > > > +
-> > > > > +/**
-> > > > > + * instrument_read - instrument regular read access
-> > > > > + *
-> > > > > + * Instrument a regular read access. The instrumentation should be inserted
-> > > > > + * before the actual read happens.
-> > > > > + *
-> > > > > + * @ptr address of access
-> > > > > + * @size size of access
-> > > > > + */
-> > > >
-> > > > Based on offline discussion, that's what we add for KMSAN:
-> > > >
-> > > > > +static __always_inline void instrument_read(const volatile void *v, size_t size)
-> > > > > +{
-> > > > > +       kasan_check_read(v, size);
-> > > > > +       kcsan_check_read(v, size);
-> > > >
-> > > > KMSAN: nothing
-> > >
-> > > KMSAN also has instrumentation in
-> > > copy_to_user_page/copy_from_user_page. Do we need to do anything for
-> > > KASAN/KCSAN for these functions?
->
-> copy_to_user_page/copy_from_user_page can be instrumented with
-> instrument_copy_{to,from}_user_. I prefer keeping this series with no
-> functional change intended for KASAN at least.
->
-> > There is also copy_user_highpage.
-> >
-> > And ioread/write8/16/32_rep: do we need any instrumentation there. It
-> > seems we want both KSAN and KCSAN too. One may argue that KCSAN
-> > instrumentation there is to super critical at this point, but KASAN
-> > instrumentation is important, if anything to prevent silent memory
-> > corruptions. How do we instrument there? I don't see how it maps to
-> > any of the existing instrumentation functions.
->
-> These should be able to use the regular instrument_{read,write}. I
-> prefer keeping this series with no functional change intended for
-> KASAN at least.
+Introduce hpet_dev_print_force_hpet_address() helper to unify printing
+forced HPET address. No functional change intended.
 
-instrument_{read,write} will not contain any KMSAN instrumentation,
-which means we will effectively remove KMSAN instrumentation, which is
-weird because we instrumented these functions because of KMSAN in the
-first place...
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ arch/x86/kernel/quirks.c | 32 ++++++++++++++------------------
+ 1 file changed, 14 insertions(+), 18 deletions(-)
 
-> > There is also kmsan_check_skb/kmsan_handle_dma/kmsan_handle_urb that
-> > does not seem to map to any of the instrumentation functions.
->
-> For now, I would rather that there are some one-off special
-> instrumentation, like for KMSAN. Coming up with a unified interface
-> here that, without the use-cases even settled, seems hard to justify.
-> Once instrumentation for these have settled, unifying the interface
-> would have better justification.
+diff --git a/arch/x86/kernel/quirks.c b/arch/x86/kernel/quirks.c
+index 5b96654aacc0..ce8fc9bec43b 100644
+--- a/arch/x86/kernel/quirks.c
++++ b/arch/x86/kernel/quirks.c
+@@ -68,6 +68,11 @@ static enum {
+ 	ATI_FORCE_HPET_RESUME,
+ } force_hpet_resume_type;
+ 
++static void hpet_dev_print_force_hpet_address(struct device *dev)
++{
++	dev_printk(KERN_DEBUG, dev, "Force enabled HPET at 0x%lx\n", force_hpet_address);
++}
++
+ static void __iomem *rcba_base;
+ 
+ static void ich_force_hpet_resume(void)
+@@ -125,8 +130,7 @@ static void ich_force_enable_hpet(struct pci_dev *dev)
+ 		/* HPET is enabled in HPTC. Just not reported by BIOS */
+ 		val = val & 0x3;
+ 		force_hpet_address = 0xFED00000 | (val << 12);
+-		dev_printk(KERN_DEBUG, &dev->dev, "Force enabled HPET at "
+-			"0x%lx\n", force_hpet_address);
++		hpet_dev_print_force_hpet_address(&dev->dev);
+ 		iounmap(rcba_base);
+ 		return;
+ 	}
+@@ -149,8 +153,7 @@ static void ich_force_enable_hpet(struct pci_dev *dev)
+ 			"Failed to force enable HPET\n");
+ 	} else {
+ 		force_hpet_resume_type = ICH_FORCE_HPET_RESUME;
+-		dev_printk(KERN_DEBUG, &dev->dev, "Force enabled HPET at "
+-			"0x%lx\n", force_hpet_address);
++		hpet_dev_print_force_hpet_address(&dev->dev);
+ 	}
+ }
+ 
+@@ -223,8 +226,7 @@ static void old_ich_force_enable_hpet(struct pci_dev *dev)
+ 	if (val & 0x4) {
+ 		val &= 0x3;
+ 		force_hpet_address = 0xFED00000 | (val << 12);
+-		dev_printk(KERN_DEBUG, &dev->dev, "HPET at 0x%lx\n",
+-			force_hpet_address);
++		hpet_dev_print_force_hpet_address(&dev->dev);
+ 		return;
+ 	}
+ 
+@@ -244,8 +246,7 @@ static void old_ich_force_enable_hpet(struct pci_dev *dev)
+ 		/* HPET is enabled in HPTC. Just not reported by BIOS */
+ 		val &= 0x3;
+ 		force_hpet_address = 0xFED00000 | (val << 12);
+-		dev_printk(KERN_DEBUG, &dev->dev, "Force enabled HPET at "
+-			"0x%lx\n", force_hpet_address);
++		hpet_dev_print_force_hpet_address(&dev->dev);
+ 		cached_dev = dev;
+ 		force_hpet_resume_type = OLD_ICH_FORCE_HPET_RESUME;
+ 		return;
+@@ -316,8 +317,7 @@ static void vt8237_force_enable_hpet(struct pci_dev *dev)
+ 	 */
+ 	if (val & 0x80) {
+ 		force_hpet_address = (val & ~0x3ff);
+-		dev_printk(KERN_DEBUG, &dev->dev, "HPET at 0x%lx\n",
+-			force_hpet_address);
++		hpet_dev_print_force_hpet_address(&dev->dev);
+ 		return;
+ 	}
+ 
+@@ -331,8 +331,7 @@ static void vt8237_force_enable_hpet(struct pci_dev *dev)
+ 	pci_read_config_dword(dev, 0x68, &val);
+ 	if (val & 0x80) {
+ 		force_hpet_address = (val & ~0x3ff);
+-		dev_printk(KERN_DEBUG, &dev->dev, "Force enabled HPET at "
+-			"0x%lx\n", force_hpet_address);
++		hpet_dev_print_force_hpet_address(&dev->dev);
+ 		cached_dev = dev;
+ 		force_hpet_resume_type = VT8237_FORCE_HPET_RESUME;
+ 		return;
+@@ -412,8 +411,7 @@ static void ati_force_enable_hpet(struct pci_dev *dev)
+ 
+ 	force_hpet_address = val;
+ 	force_hpet_resume_type = ATI_FORCE_HPET_RESUME;
+-	dev_printk(KERN_DEBUG, &dev->dev, "Force enabled HPET at 0x%lx\n",
+-		   force_hpet_address);
++	hpet_dev_print_force_hpet_address(&dev->dev);
+ 	cached_dev = dev;
+ }
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATI, PCI_DEVICE_ID_ATI_IXP400_SMBUS,
+@@ -444,8 +442,7 @@ static void nvidia_force_enable_hpet(struct pci_dev *dev)
+ 	pci_read_config_dword(dev, 0x44, &val);
+ 	force_hpet_address = val & 0xfffffffe;
+ 	force_hpet_resume_type = NVIDIA_FORCE_HPET_RESUME;
+-	dev_printk(KERN_DEBUG, &dev->dev, "Force enabled HPET at 0x%lx\n",
+-		force_hpet_address);
++	hpet_dev_print_force_hpet_address(&dev->dev);
+ 	cached_dev = dev;
+ }
+ 
+@@ -509,8 +506,7 @@ static void e6xx_force_enable_hpet(struct pci_dev *dev)
+ 
+ 	force_hpet_address = 0xFED00000;
+ 	force_hpet_resume_type = NONE_FORCE_HPET_RESUME;
+-	dev_printk(KERN_DEBUG, &dev->dev, "Force enabled HPET at "
+-		"0x%lx\n", force_hpet_address);
++	hpet_dev_print_force_hpet_address(&dev->dev);
+ }
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_E6XX_CU,
+ 			 e6xx_force_enable_hpet);
+-- 
+2.24.1
 
-I would assume they may also require an annotation that checks the
-memory region under all 3 tools and we don't have such annotation
-(same as the previous case and effectively copy_to_user). I would
-expect such annotation will be used in more places once we start
-looking for more opportunities.
-
-> This patch series is merely supposed to introduce instrumented.h and
-> replace the kasan_checks (also implicitly introducing kcsan_checks
-> there), however, with no further functional change intended.
->
-> I propose that adding entirely new instrumentation for both KASAN and
-> KCSAN, we should send a separate patch-series.
->
-> Thanks,
-> -- Marco
