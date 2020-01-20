@@ -2,151 +2,124 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD286C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE30C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:33:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F5CC2073D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:31:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C06D92073D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:33:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="ia6R52oG";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="HbGyQnL4"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Br3VK53h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgATKbZ (ORCPT
+        id S1726761AbgATKd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 05:31:25 -0500
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:58838 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726125AbgATKbZ (ORCPT
+        Mon, 20 Jan 2020 05:33:59 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44223 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726125AbgATKd6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 05:31:25 -0500
-Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 76F9E405BC;
-        Mon, 20 Jan 2020 10:31:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1579516284; bh=ycG69vqqJf2SJdOjvAt79klZQl/ducuFe87qeuhzCRc=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=ia6R52oGXQPWhOCuKAXHcfQlPVq8gK5WUOJ4qkYkSu3tIAw2ci+4ruYNSGhPKy9jv
-         5suQbBDi8EAQCwCKEEjTY72S7nRIA3Ml5uWvB50qoQ5P7w2otJn2j4ZxyHe5PNbboH
-         nV1JCV7P5jIYELtQFUI3KR+R4gtQfI5zpQrinAFqLlL7MOTy7hyHfIRGBRUlUxg7at
-         N6M9h61qZ/I0KvFHIbUA7u1nz5p4pu8wDmnB1cLHu7Zt/bBRNOGU/87qGrX6EYbcYu
-         bNHXFehxQ8ZBknFlXL8V2FoNt05Vl59fqJQGCTHqAAdUnemVEiogod15lhayvnc7vj
-         5NL9jsDn3JuvQ==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id C9708A007F;
-        Mon, 20 Jan 2020 10:31:19 +0000 (UTC)
-Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 20 Jan 2020 02:31:19 -0800
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (10.202.3.67) by
- mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Mon, 20 Jan 2020 02:31:18 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LVsLcwNVOaEClIw+9HI7BTCLVmEhWyuK/unr3fwnkecLXIIVTUT4QRNK5b9eI5a57IgL06ye2dVkwsTA9S07QrLraWh8QbjqMSKg6+ufZ0yIURquMXuxl8pP39m5Xne7zkmnV4UuEGbeOqhwyWxHna1Oi/efHocBIXZ9HN4tXBYXzhNJk97eCQYn40fisvMYhx7tRuNg+1gE8tdrODPqI4fDSGay7ZYxs23N5pg8CJOG1M/wJ4hjHtPK0eO4Q2zZ+WvB46lNc0ZS2YdpPx5EiLMwJZ+98DPmFU/uVgSL8yaRKWXK9GnBRwqdeZzidTeNEp2PqgGvgzwZfz7NdAPadA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ofeJndvIVzjG/7Pzj+0op2T2CbnWAPw3H1fJmLnoGDc=;
- b=ed6jT+WiTFnKCpr2ApbrU3bwUmeGqsqZEfTZT2+8Qwrf6FjbuG8XNEr8CPmsyyLeagD2I/BVBiwzOFsgqgdt+/ZemJ68co6iZcmHqPgOiufEYCBK+ie8HPkJQCV2EMuN3qubMOdcc18y6q1qiM0qm+dlf2Dcd5FAvpYUOVb8tUUD+JjTIsG7u5DlnxsaMK92FNwB/VMEKHhj1muN47o1CiWyvlz0wrHThrANT/DhLLLr9NldYaapdNyqHK1noufWiI6hz+0QoBHxDQk1Vhzqv9YQQHXT2ijQiabN84F725f2NZL7MNXmR5u8qMBdEcXvmeza7+dEYDVtDqrfST4Q4A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ofeJndvIVzjG/7Pzj+0op2T2CbnWAPw3H1fJmLnoGDc=;
- b=HbGyQnL4vu3h7mG33wohgM6btxLwJU8WcyTwL7yWq/GOluwXWaVDNJevAO2O4DYK/GBj+B9YQRzQVgKg+KYe+qoV4KJw0nxSwFWfBwZlywjwXG6c1lI82RTpChVynztmLv86Ol3w9YeOWP1qVDrCiW8jjRs0MjVxsCeOOd+VDFg=
-Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.67.145) by
- BN8PR12MB2994.namprd12.prod.outlook.com (20.178.210.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.23; Mon, 20 Jan 2020 10:31:17 +0000
-Received: from BN8PR12MB3266.namprd12.prod.outlook.com
- ([fe80::c62:b247:6963:9da2]) by BN8PR12MB3266.namprd12.prod.outlook.com
- ([fe80::c62:b247:6963:9da2%6]) with mapi id 15.20.2644.024; Mon, 20 Jan 2020
- 10:31:17 +0000
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-CC:     Andrew Lunn <andrew@lunn.ch>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [RFC net-next] net: phy: Add basic support for Synopsys XPCS
- using a PHY driver
-Thread-Topic: [RFC net-next] net: phy: Add basic support for Synopsys XPCS
- using a PHY driver
-Thread-Index: AQHVyhMHPh1TkUf6pU+JUVzLFdFzk6fomWeAgAAAjSCAAAp/gIAKvyCA
-Date:   Mon, 20 Jan 2020 10:31:17 +0000
-Message-ID: <BN8PR12MB3266EC7870338BA4A65E8A6CD3320@BN8PR12MB3266.namprd12.prod.outlook.com>
-References: <4953fc69a26bee930bccdeb612f1ce740a4294df.1578921062.git.Jose.Abreu@synopsys.com>
- <20200113133845.GD11788@lunn.ch>
- <BN8PR12MB32666F34D45D7881BDD4CAB3D3350@BN8PR12MB3266.namprd12.prod.outlook.com>
- <20200113141817.GN25745@shell.armlinux.org.uk>
-In-Reply-To: <20200113141817.GN25745@shell.armlinux.org.uk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=joabreu@synopsys.com; 
-x-originating-ip: [83.174.63.141]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7f2bacdf-4ee2-4cc0-5d08-08d79d93e1f8
-x-ms-traffictypediagnostic: BN8PR12MB2994:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BN8PR12MB2994DCB432725B968DA7963ED3320@BN8PR12MB2994.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0288CD37D9
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(396003)(376002)(39860400002)(136003)(366004)(199004)(189003)(6506007)(4744005)(81166006)(6916009)(81156014)(54906003)(8676002)(5660300002)(52536014)(71200400001)(316002)(86362001)(7696005)(478600001)(2906002)(186003)(33656002)(66556008)(66476007)(66446008)(55016002)(64756008)(76116006)(9686003)(26005)(4326008)(8936002)(66946007);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB2994;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: E27O1xTYa5GY+FelrI6rv7iBctfL+eFmaDBT10tX8QrHFgHKjkcaY2gwLzsoI3qwhmVLswuoProTQPex4JulUDzJOSQxG9IYWKM1ehI3LCmB82J3jWCRvLNBXvZAgSw5syEAFW+/aHpw1H2NHJLuB4jSKpz/1C5I973sleU2IwzKULWJqiR1sdrNQHlcHnAdWPP+XKOaOHB8YEpIIexbRv6d9SIug1sGKTOkqF2wyPcKNA+7BdOGIo+5VNzm5qZOi0X+frqkTnSwKc6CPmSi0T+KOTPEiBKEwUMl822NkKF591Jd+Ue+EdzYGgEHWfECxbK9aAxeW5D2U3BhKqL5whB/7uVZCaK1Oye2A6GgjsYtjVe2wSNOpfpTd3iknr2Gb7U+9dq7bfB/jGy0KTd1zuEX2e5tv6Fzh1dP+CgTLA5NGhu7GR+QPFoYbK1jFg5l
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 20 Jan 2020 05:33:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579516437;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=qJR64Lgz5zSWEXU05VYTGaMjJP53H0YAi/lnRrE9Dq8=;
+        b=Br3VK53hLLiM2dyd2kDmpqYKq18VpIqI3/f5mB+j+VIFOgT7O3hQsvCtPQIDOYdX2xqecY
+        9zrIZl2SQYGDJLwUDi7XDL0Gz+2wFg8msF9JJXtuMhbnXyfFvtprzc8ekWXqlDCZHyoS0h
+        vWLRT/a4Il8X4ZcFkCc5k+SXMHAt+5M=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-296--bnBkz4XORO4N9xWid2HZA-1; Mon, 20 Jan 2020 05:33:56 -0500
+X-MC-Unique: -bnBkz4XORO4N9xWid2HZA-1
+Received: by mail-wr1-f72.google.com with SMTP id f15so14074822wrr.2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 02:33:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=qJR64Lgz5zSWEXU05VYTGaMjJP53H0YAi/lnRrE9Dq8=;
+        b=OhRk0o1o/8jAEcOZqv+ojRpPz5iV8/Re9aD5VpaHpB81HWcU+r5QmVi7uxziNIiIDo
+         OM3du+3xy8JapITHDHhO79Zl5y8NhXgh7zEDMmIsbOI3bdlch9PEMS513SgxpzBI5ryZ
+         LkXtGu9udOHlZLz1iUvPPTz3+XiJUH4rogky/tTVgyJMfZok6TK+WjKKEydmHpA3o0is
+         MqSgA5LEKiUiHqXmAWoANy6nG8uBMiwEyime8dzR7p+/RSEMOZqc8jL7d7aSBHuOftnN
+         jN4BvDo1w3uN2Qh7fENpyNytfX7oWyDne0fh9VIAukrZTRbBNbOAfKU9fD49YGszAI4m
+         Yseg==
+X-Gm-Message-State: APjAAAW7ExjkUhKZJF/ziaxayNDlonKJ04WLmhzF+KssMdrhNWUITGXH
+        MuganXHqM1tE7v3EK1fVdg0lIP9xBB2iTwwy0YmHtHdBRU2h94MrTXb9+uukOCKkpluuP2RXnAI
+        26txiOnVCJar5Z8TpMQeF1HWy
+X-Received: by 2002:a7b:cf01:: with SMTP id l1mr18049011wmg.86.1579516435516;
+        Mon, 20 Jan 2020 02:33:55 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxPzprOup/ucbM1P9rBV9XmWxl30oih10hcKT7ltFCGUEvFlIONj+0vKzn9cx1PD42odqSiUA==
+X-Received: by 2002:a7b:cf01:: with SMTP id l1mr18048981wmg.86.1579516435320;
+        Mon, 20 Jan 2020 02:33:55 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id e18sm46511363wrw.70.2020.01.20.02.33.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jan 2020 02:33:54 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     linmiaohe <linmiaohe@huawei.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
+        pbonzini@redhat.com, rkrcmar@redhat.com,
+        sean.j.christopherson@intel.com, wanpengli@tencent.com,
+        jmattson@google.com, joro@8bytes.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com
+Subject: Re: [PATCH] KVM: apic: short-circuit kvm_apic_accept_pic_intr() when pic intr is accepted
+In-Reply-To: <1579315837-15994-1-git-send-email-linmiaohe@huawei.com>
+References: <1579315837-15994-1-git-send-email-linmiaohe@huawei.com>
+Date:   Mon, 20 Jan 2020 11:33:53 +0100
+Message-ID: <87sgkafmcu.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7f2bacdf-4ee2-4cc0-5d08-08d79d93e1f8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jan 2020 10:31:17.1299
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: rcyH5Cf2tvH6hh3GpMjeQD0iPd793c3o9S7d3pWK7vG8VNRDHe+fFd4nB6wB0QDTC2Dh9mRw96/IkFiRB8geaQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB2994
-X-OriginatorOrg: synopsys.com
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Date: Jan/13/2020, 14:18:17 (UTC+00:00)
+linmiaohe <linmiaohe@huawei.com> writes:
 
-> I've recently suggested a patch to phylink to add a generic helper to
-> read the state from a generic 802.3 clause 37 PCS, but I guess that
-> won't be sufficient for an XPCS.  However, it should give some clues
-> if you're intending to use phylink.
+> From: Miaohe Lin <linmiaohe@huawei.com>
+>
+> Short-circuit kvm_apic_accept_pic_intr() when pic intr is accepted, there
+> is no need to proceed further. Also remove unnecessary var r.
+>
+> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+> ---
+>  arch/x86/kvm/lapic.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> index 679692b55f6d..502c7b0d8fdb 100644
+> --- a/arch/x86/kvm/lapic.c
+> +++ b/arch/x86/kvm/lapic.c
+> @@ -2370,14 +2370,13 @@ int kvm_apic_has_interrupt(struct kvm_vcpu *vcpu)
+>  int kvm_apic_accept_pic_intr(struct kvm_vcpu *vcpu)
+>  {
+>  	u32 lvt0 = kvm_lapic_get_reg(vcpu->arch.apic, APIC_LVT0);
+> -	int r = 0;
+>  
+>  	if (!kvm_apic_hw_enabled(vcpu->arch.apic))
+> -		r = 1;
+> +		return 1;
+>  	if ((lvt0 & APIC_LVT_MASKED) == 0 &&
+>  	    GET_APIC_DELIVERY_MODE(lvt0) == APIC_MODE_EXTINT)
+> -		r = 1;
+> -	return r;
+> +		return 1;
+> +	return 0;
+>  }
+>  
+>  void kvm_inject_apic_timer_irqs(struct kvm_vcpu *vcpu)
 
-So, I think for my particular setup (that has no "real" PHY) we can have=20
-something like this in SW PoV:
+My eyes would've appreciated a blank line after each "return 1;" but you
+patch makes the code a bit nicer anyway, thanks.
 
-stmmac -> xpcs -> SW-PHY / Fixed PHY
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-- stmmac + xpcs state would be handled by phylink (MAC side)
-- SW-PHY / Fixed PHY state would be handled by phylink (PHY side)
+-- 
+Vitaly
 
-This would need updates for Fixed PHY to support >1G speeds.
-
----
-Thanks,
-Jose Miguel Abreu
