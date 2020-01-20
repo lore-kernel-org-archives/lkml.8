@@ -2,89 +2,138 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF493C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 17:46:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F415C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 17:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC0582253D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 17:46:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579542400;
-	bh=8/17QWYrx9IAjC5T1/TZY+b3d23qd5HapWk0cYUUKaY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BzwSCPTYiyGWvgPp96MT3391462cCipru5+r9RlmbKcxHWwhrU69dC7t2g3DqSHQI
-	 sckk79iYUCJOB4RVHSLZfZFfnOOq1kX/OdsmUaCeAWhVeCGjdwkMQ+PXctmryv1TTI
-	 O0JcAfPhh477uRhc5U6kLutFFuCCbtEdlxHIRRYc=
+	by mail.kernel.org (Postfix) with ESMTP id 5069A22525
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 17:48:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727531AbgATRqj (ORCPT
+        id S1728205AbgATRsE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 12:46:39 -0500
-Received: from foss.arm.com ([217.140.110.172]:35144 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726642AbgATRqj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 12:46:39 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 20BF531B;
-        Mon, 20 Jan 2020 09:46:39 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9349F3F68E;
-        Mon, 20 Jan 2020 09:46:38 -0800 (PST)
-Date:   Mon, 20 Jan 2020 17:46:36 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        alsa-devel@alsa-project.org
-Subject: Re: [PATCH v2 8/9] ASoC: rt5645: Switch DMI table match to a test of
- variable
-Message-ID: <20200120174636.GI6852@sirena.org.uk>
-References: <20200120160801.53089-1-andriy.shevchenko@linux.intel.com>
- <20200120160801.53089-9-andriy.shevchenko@linux.intel.com>
+        Mon, 20 Jan 2020 12:48:04 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:51595 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726642AbgATRsE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 12:48:04 -0500
+Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1itb9b-0004hc-84; Mon, 20 Jan 2020 18:47:59 +0100
+Message-ID: <aaf2f587a61dee42c25805c3fe7916bed4dbd0c3.camel@pengutronix.de>
+Subject: Re: [PATCH v2 13/24] drm/etnaviv: reject timeouts with tv_nsec >=
+ NSEC_PER_SEC
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Guido =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>, y2038@lists.linaro.org,
+        etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+Date:   Mon, 20 Jan 2020 18:47:56 +0100
+In-Reply-To: <20200117154726.GA328525@bogon.m.sigxcpu.org>
+References: <20191213204936.3643476-1-arnd@arndb.de>
+         <20191213205417.3871055-4-arnd@arndb.de>
+         <20200117154726.GA328525@bogon.m.sigxcpu.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="KrHCbChajFcK0yQE"
-Content-Disposition: inline
-In-Reply-To: <20200120160801.53089-9-andriy.shevchenko@linux.intel.com>
-X-Cookie: I invented skydiving in 1989!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fr, 2020-01-17 at 16:47 +0100, Guido Günther wrote:
+> Hi,
+> On Fri, Dec 13, 2019 at 09:53:41PM +0100, Arnd Bergmann wrote:
+> > Most kernel interfaces that take a timespec require normalized
+> > representation with tv_nsec between 0 and NSEC_PER_SEC.
+> > 
+> > Passing values larger than 0x100000000ull further behaves differently
+> > on 32-bit and 64-bit kernels, and can cause the latter to spend a long
+> > time counting seconds in timespec64_sub()/set_normalized_timespec64().
+> > 
+> > Reject those large values at the user interface to enforce sane and
+> > portable behavior.
+> > 
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > ---
+> >  drivers/gpu/drm/etnaviv/etnaviv_drv.c | 9 +++++++++
+> >  1 file changed, 9 insertions(+)
+> > 
+> > diff --git a/drivers/gpu/drm/etnaviv/etnaviv_drv.c b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
+> > index 1f9c01be40d7..95d72dc00280 100644
+> > --- a/drivers/gpu/drm/etnaviv/etnaviv_drv.c
+> > +++ b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
+> > @@ -297,6 +297,9 @@ static int etnaviv_ioctl_gem_cpu_prep(struct drm_device *dev, void *data,
+> >  	if (args->op & ~(ETNA_PREP_READ | ETNA_PREP_WRITE | ETNA_PREP_NOSYNC))
+> >  		return -EINVAL;
+> >  
+> > +	if (args->timeout.tv_nsec > NSEC_PER_SEC)
+> > +		return -EINVAL;
+> > +
+> >  	obj = drm_gem_object_lookup(file, args->handle);
+> >  	if (!obj)
+> >  		return -ENOENT;
+> > @@ -360,6 +363,9 @@ static int etnaviv_ioctl_wait_fence(struct drm_device *dev, void *data,
+> >  	if (args->flags & ~(ETNA_WAIT_NONBLOCK))
+> >  		return -EINVAL;
+> >  
+> > +	if (args->timeout.tv_nsec > NSEC_PER_SEC)
+> > +		return -EINVAL;
+> > +
+> >  	if (args->pipe >= ETNA_MAX_PIPES)
+> >  		return -EINVAL;
+> >  
+> > @@ -411,6 +417,9 @@ static int etnaviv_ioctl_gem_wait(struct drm_device *dev, void *data,
+> >  	if (args->flags & ~(ETNA_WAIT_NONBLOCK))
+> >  		return -EINVAL;
+> >  
+> > +	if (args->timeout.tv_nsec > NSEC_PER_SEC)
+> > +		return -EINVAL;
+> > +
+> >  	if (args->pipe >= ETNA_MAX_PIPES)
+> >  		return -EINVAL;
+> > 
+> 
+> This breaks rendering here on arm64/gc7000 due to
+> 
+> ioctl(6, DRM_IOCTL_ETNAVIV_GEM_CPU_PREP or DRM_IOCTL_MSM_GEM_CPU_PREP, 0xfffff7888680) = -1 EINVAL (Invalid argument)
+> ioctl(6, DRM_IOCTL_ETNAVIV_GEM_CPU_FINI or DRM_IOCTL_QXL_CLIENTCAP, 0xfffff78885e0) = 0
+> ioctl(6, DRM_IOCTL_ETNAVIV_GEM_CPU_PREP or DRM_IOCTL_MSM_GEM_CPU_PREP, 0xfffff7888680) = -1 EINVAL (Invalid argument)
+> ioctl(6, DRM_IOCTL_ETNAVIV_GEM_CPU_FINI or DRM_IOCTL_QXL_CLIENTCAP, 0xfffff78885e0) = 0
+> ioctl(6, DRM_IOCTL_ETNAVIV_GEM_CPU_PREP or DRM_IOCTL_MSM_GEM_CPU_PREP, 0xfffff7888680) = -1 EINVAL (Invalid argument)
+> ioctl(6, DRM_IOCTL_ETNAVIV_GEM_CPU_FINI or DRM_IOCTL_QXL_CLIENTCAP, 0xfffff78885e0) = 0
+> 
+> This is due to
+> 
+>     get_abs_timeout(&req.timeout, 5000000000);
+> 
+> in etna_bo_cpu_prep which can exceed NSEC_PER_SEC.
+> 
+> Should i send a patch to revert that change since it breaks existing userspace?
 
---KrHCbChajFcK0yQE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+No need to revert. This patch has not been applied to the etnaviv tree
+yet, I guess it's just in one of Arnds branches feeding into -next.
 
-On Mon, Jan 20, 2020 at 06:08:00PM +0200, Andy Shevchenko wrote:
-> Since we have a common x86 quirk that provides an exported variable,
-> use it instead of local DMI table match.
+That part of userspace is pretty dumb, as it misses to renormalize
+tv_nsec when it overflows the second boundary. So if what I see is
+correct it should be enough to allow 2 * NSEC_PER_SEC, which should
+both reject broken large timeout and keep existing userspace working.
 
-Acked-by: Mark Brown <broonie@kernel.org>
+Regards,
+Lucas
 
---KrHCbChajFcK0yQE
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4l53wACgkQJNaLcl1U
-h9DIrwf6AsprEx6YCK24bZdaV78Npclx27lelAxU1lZFUxtb9LDQpSeDKlfMxwS6
-y6Onh8a4whYq1rRKC5VhhhIxlmRnZStNOPj67ZAguIOGYudh3gLGdptGDbfYJ4uP
-iCqZM8VCvStSlRUBEhrrBXjgXooJSX3YbarO8bt2Z7IAxi9yitgXW69aAHqy5j51
-PxWPDL5AyAVxnBCWUdxbeb3h3NRE6q5DdaCZGbNrAjxky0tAXKPfWHQ/7MfqQlYa
-ET8Z6S4iEt0JMiTQot8TIHKoTlv6mhQpfnciriNDxxt9bIAnUFv0Qxqw4+Y1tdE5
-SwoeSenvdt67uSM6SFXKP+Nj8vrneQ==
-=OzLd
------END PGP SIGNATURE-----
-
---KrHCbChajFcK0yQE--
