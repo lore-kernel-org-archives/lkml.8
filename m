@@ -2,147 +2,125 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4BA8C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C0E4C33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 730EE2070C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:04:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="baBZ/42W"
+	by mail.kernel.org (Postfix) with ESMTP id 342772070C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:05:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579536306;
+	bh=snj6kBC+qwauXm+Cg4x1ZKCg9igIOoAgEOwVP0KDbaQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rJRVk9tzPJjQ5YTW9sirm1ohAPAqvoWKee4kmtfGiQzh7qU2km9Na0E8HOaiNNXZf
+	 DrUH8ZAcrZRWbgf5rTV7Ll528Przgrbyccmi3n1sZEkM/y28FeshhIpHZiXOdSk18h
+	 JKKit1uP2yXZ+ZeFGXkPuyS+KyFAzBVQJbMvoPx8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729219AbgATQEp (ORCPT
+        id S1729251AbgATQFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 11:04:45 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:39122 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726876AbgATQEp (ORCPT
+        Mon, 20 Jan 2020 11:05:05 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34302 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726876AbgATQFF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 11:04:45 -0500
-Received: by mail-pj1-f65.google.com with SMTP id e11so7409259pjt.4;
-        Mon, 20 Jan 2020 08:04:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6RxjFM/GfKD5nyo9iA2+9b4lmEgTQWkl8cQBrKwCqZs=;
-        b=baBZ/42WJWI6QSYxH+wVyJ6ueuMXRsDRjwuDLiKmzBE8yYQBWc/dX0suG7sywu0bJX
-         7J1AJmQ28lW0dNoBwWupBCEr8EZLYZjjpKmz3LOtuinAavVoNblnG1O3KUMYuxgLQ91x
-         1X+mNDtAgaZBM1jtiUMy3rXdpxywElcY6Yj4IlZ3lZqwiXYanHcD+zG7EjihroeLY/Kd
-         XLApWQENwqJqVpyYHrGzvk2FNQ4+0aMV8rclnbQW1i5VUiW5PtaUUwPMpiB8OMpxLFC/
-         2p3AjZ9+YarLjLWfRYHakMPCDUwNQOpTQBzKKXUnWKFkC1e3X2q7O1W1p1k8D4jqKaCI
-         pUVg==
+        Mon, 20 Jan 2020 11:05:05 -0500
+Received: by mail-wr1-f68.google.com with SMTP id t2so34910wrr.1
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 08:05:03 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6RxjFM/GfKD5nyo9iA2+9b4lmEgTQWkl8cQBrKwCqZs=;
-        b=ozP+jA0u22M8l1uH/OqPJKT+BFWJTgWpz4wCzbTOElu9QUYHdy7T6lQhlmELnN2Dvp
-         rOvadEgj9YdQ1tBltJKw3EkR08ENNMNDRZsFbL5QwAOqgtwvLBAtDSf6vMBDhlrOdawt
-         Tg9xiwacW0Vg9x+476EmogK/dvP/WY2SGtsfy6fPSP255SUZRqplPxGO/VtwkV6wSH7I
-         W0c0YGu61MGUQzsUto7FNuwkxh1AfEpZBsAgdehAMd0D+j+yYuCg19iq76yQhg50RIwj
-         0aUD3uSkSBZqWHqrBDTtHqUBYoxIDyLrmgUESDA+xRxKCKfly4ody9goZpGWxqQvOkgK
-         1a4A==
-X-Gm-Message-State: APjAAAVKj1+ufhXsUqwtczLE1yJiTieidAKyB0z1eZGlG8msRaiZn1tm
-        lvb9Q10kDE+JKZtpVxym/ewzVgoV
-X-Google-Smtp-Source: APXvYqy+etnS5/3xrC+jjUrFU6lqSkzhah2jdFw43oEIu9cb2x9nHMTrcuxahaQB+/qkjeH7eaLfHw==
-X-Received: by 2002:a17:90a:db48:: with SMTP id u8mr291512pjx.54.1579536284631;
-        Mon, 20 Jan 2020 08:04:44 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id c22sm39332864pfo.50.2020.01.20.08.04.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Jan 2020 08:04:43 -0800 (PST)
-Subject: Re: [Bug ?] usb :typec :tcpm :fusb302
-To:     Markus Reichl <m.reichl@fivetechno.de>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Linux USB Mailing List <linux-usb@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        linux-rockchip@lists.infradead.org
-References: <0ac6bbe7-6395-526d-213c-ac58a19d8673@fivetechno.de>
- <20200120115828.GC32175@kuha.fi.intel.com>
- <e05b6c1f-5e00-c000-23b9-1683230fd9f7@roeck-us.net>
- <546a5723-a974-ed0a-93e3-b46c919b0f7e@fivetechno.de>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <2e739a08-191b-d7c9-1273-4000cbbca423@roeck-us.net>
-Date:   Mon, 20 Jan 2020 08:04:41 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pchtgtPl7QsNhnLKqQnFHxUQcOqFwM/PSkX6RSgnDKM=;
+        b=pJEWgg9BoaUJFzHJGCRFrY23wQSQB+DL8BNjP9zRvE1tL6Rhdyso9DJ5L0ClPz8oQR
+         i1T3gC7PQfqDwTrWwAxgL0BaRq4g5VvrYlW2Ho9+esksU1kdJ1Iy6Fci2Oeo4ZWjshqZ
+         QRCT1uwVF18D/3F/bZhfh5UH+ZGp/VRikEpHVhqQL4i/e0GG6mRiGTAGseRMRUsY21vn
+         CZ8j40Enhvtbt2CGbmyzdWwp4c8kTnWFKi3PIH+hYkiO9BIEyNICFmhMmVsnE5rS0zN6
+         p7rgqqQiVEisvC4Q4Kbfq5gkuCsEO8vqPr2iKYAOtlCTK32KyyCE2bGHFvYLB3lKEGTv
+         cZ7w==
+X-Gm-Message-State: APjAAAXiJ4Eh4z6gQRxriZvR97PAw4n73NdMX2ifQ55foc0/h2ZNX7pm
+        NqDLjVq/6U2qgNBG79yzxhM=
+X-Google-Smtp-Source: APXvYqyMf+pGJvZD7BFKyy1zUboNw4H+hWUL04RoWn8vOUeeecst1TBK1XWG1ZIz+dYtdajL5OPYjw==
+X-Received: by 2002:a05:6000:11c3:: with SMTP id i3mr228393wrx.244.1579536302938;
+        Mon, 20 Jan 2020 08:05:02 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id d8sm49235291wre.13.2020.01.20.08.05.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jan 2020 08:05:01 -0800 (PST)
+Date:   Mon, 20 Jan 2020 17:05:00 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Li Xinhai <lixinhai.lxh@gmail.com>
+Cc:     "anshuman.khandual" <anshuman.khandual@arm.com>,
+        n-horiguchi <n-horiguchi@ah.jp.nec.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        akpm <akpm@linux-foundation.org>,
+        torvalds <torvalds@linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+Subject: Re: [PATCH v4] mm/mempolicy,hugetlb: Checking hstate for hugetlbfs
+ page in vma_migratable
+Message-ID: <20200120160500.GM18451@dhcp22.suse.cz>
+References: <1579147885-23511-1-git-send-email-lixinhai.lxh@gmail.com>
+ <20200116095614.GO19428@dhcp22.suse.cz>
+ <20200116215032206994102@gmail.com>
+ <20200116151803.GV19428@dhcp22.suse.cz>
+ <20200116233817972969139@gmail.com>
+ <20200117111629898234212@gmail.com>
+ <20200118111121432688303@gmail.com>
+ <20200120101202.GU18451@dhcp22.suse.cz>
+ <20200120233723466954346@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <546a5723-a974-ed0a-93e3-b46c919b0f7e@fivetechno.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200120233723466954346@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/20/20 6:34 AM, Markus Reichl wrote:
-> Hi Guenter,
+On Mon 20-01-20 23:37:25, Li Xinhai wrote:
+[...]
+> Changelog is updated as below, thanks for comments:
+> ---
+> mm/mempolicy: Checking hugepage migration is supported by arch in vma_migratable
 > 
-> Am 20.01.20 um 15:21 schrieb Guenter Roeck:
->> On 1/20/20 3:58 AM, Heikki Krogerus wrote:
->>> Hi Markus,
->>>
->>> On Thu, Jan 09, 2020 at 05:29:07PM +0100, Markus Reichl wrote:
->>>> Hi,
->>>>
->>>> I'm working with a ROC-RK3399-PC arm64 board from firefly, circuit sheet [1].
->>>> The board is powered from an USB-C type connector via an FUSB302 PD controller.
->>>> With measured 15W+ power consumption it should use higher voltage PD modes than
->>>> the standard 5V USB-C mode.
->>>>
->>>> When I add the related connector node in DTS [2] the FUSB302 initializes
->>>> the right PD mode (e.g. 15V/3A).
->>>>
->>>> But during initialisation the PD is switched off shortly and the board has a blackout.
->>>> When I inject a backup supply voltage behind the FUSB302 (e.g. at SYS_12V line) during boot
->>>> I can remove the backup after succesfull setting up the PD and the board will run fine.
->>>>
->>>> Is it possible to change the behaviour of the fusb302 driver to not power down the PD supply
->>>> during init?
->>>
->>> I guess it's also possible that the problem is with tcpm.c instead of
->>> fusb302.c. tcpm.c provides the USB PD state matchines. Guenter! Can
->>> you take a look at this?
->>>
->>
->> There was always a problem with handoff from the bootloader. tcpm_init() calls
->> tcpm_reset_port() which turns vbus and vconn off, which I imagine can
->> trigger the situation.
->>
->> Unfortunately I was never able to solve the puzzle. The Type-C protocol does
->> not support any kind of "hand-off" from one component in the system to another.
->> If the state machine doesn't start from a clean state, there is pretty
->> much no guarantee that it ever synchronizes.
->>
->> Maybe someone can find a better solution, but when I wrote the code I just
->> could not get it to work reliably without resetting everything during
->> registration.
->>
->> Note that v4.4 did not include the upstream tcpm code, suggesting the
->> code in the vendor kernel was possibly using a different or backported
->> state machine. Impossible to say what was done there without access
->> to the code.
+> vma_migratable() is called to check if pages in vma can be migrated
+> before go ahead to further actions. Currently it is used in below code
+> path:
+> - task_numa_work
+> - mbind
+> - move_pages
 > 
-> The vendor code for fusb302 is here:
-> https://github.com/FireflyTeam/kernel/tree/rk3399/firefly/drivers/mfd
+> For hugetlb mapping, whether vma is migratable or not is determined by:
+> - CONFIG_ARCH_ENABLE_HUGEPAGE_MIGRATION
+> - arch_hugetlb_migration_supported
 > 
+> Issue: current code only checks for CONFIG_ARCH_ENABLE_HUGEPAGE_MIGRATION,
+> which express less accurate semantics of vma_migratable(). (note that
+> current code in vma_migratable don't cause failure or bug because
+> unmap_and_move_huge_page() will catch unsupported hugepage and handle it
+> properly)
+> 
+> This patch checks the two factors for impoveing code logic and
+> robustness. It will enable early bail out of hugepage migration procedure,
+> but because currently all architecture supporting hugepage migration is able
+> to support all page size, we would not see performance gain with this patch
+> applied.
 
-AFAICS the vendor code don't reset VBUS, and selectively (only) resets the
-PD state machine in the fusb302 on startup. The tcpm state machine is embedded
-in the fusb302 driver, making this easier to control.
+This looks definitely better than the original one. I hope it is more
+clear to you what I meant by a better description for the justification.
+I would just add that the no code should use
+CONFIG_ARCH_ENABLE_HUGEPAGE_MIGRATION directly and use
+arch_hugetlb_migration_supported instead. This will be the case after
+this patch.
 
-The fusb302 Linux kernel driver, on the other side, resets the entire fusb302
-on initialization, not just PD (bit 0 of the reset register). Question is if
-that can be changed to just reset PD (bit 1 of the reset register).
-Maybe that would already fix the problem. Can you give it a try ?
-
-Guenter
+Please keep in mind that changelogs are really important and growing in
+importance as the code gets more complicated over time. It is much more
+easier to see what the patch does because reading diffs and the code is
+easy but the lack of motivation is what people usually fighting with.
+-- 
+Michal Hocko
+SUSE Labs
