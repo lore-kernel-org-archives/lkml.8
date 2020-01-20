@@ -2,56 +2,67 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F46C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 20:47:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BFE4C33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 20:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A223122525
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 20:47:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D32EB22525
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 20:49:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="JdY1j6tK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbgATUrZ (ORCPT
+        id S1727032AbgATUtU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 15:47:25 -0500
-Received: from mga17.intel.com ([192.55.52.151]:39913 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726586AbgATUrZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 15:47:25 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 12:47:25 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,343,1574150400"; 
-   d="scan'208";a="227140992"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 20 Jan 2020 12:47:24 -0800
-Received: from [10.251.23.107] (kliang2-mobl.ccr.corp.intel.com [10.251.23.107])
+        Mon, 20 Jan 2020 15:49:20 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:50605 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726752AbgATUtT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 15:49:19 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1579553359; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=kcD4cIT6TO+GhmHS0MBwC7/uH5JRJvAdsZCjW78zRow=; b=JdY1j6tKq24IxKKZbzo+JTZK/Vn3YR96Cb0XuWbqUDEspml374oG3ZvqRfawVIAS5jfb8HWX
+ ewmCpzP1Oa0MIDxTDmZJYSgyp1cCLVBXScTVkYjH+NZPhKbThAqpYUPFKgPynNVyKn3Vrdct
+ g+gMk3IrS27et5yx4qmxpPnbw/E=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e26124c.7f522c449378-smtp-out-n02;
+ Mon, 20 Jan 2020 20:49:16 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8D3E3C4479F; Mon, 20 Jan 2020 20:49:15 +0000 (UTC)
+Received: from [10.46.161.159] (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id D700F5802C1;
-        Mon, 20 Jan 2020 12:47:23 -0800 (PST)
-Subject: Re: [RESEND PATCH V5 1/2] perf/core: Add new branch sample type for
- HW index of raw branch records
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     eranian@google.com, acme@redhat.com, mingo@kernel.org,
-        mpe@ellerman.id.au, linux-kernel@vger.kernel.org, jolsa@kernel.org,
-        namhyung@kernel.org, vitaly.slobodskoy@intel.com,
-        pavel.gerasimov@intel.com, ak@linux.intel.com
-References: <20200116155757.19624-1-kan.liang@linux.intel.com>
- <20200116155757.19624-2-kan.liang@linux.intel.com>
- <20200120092300.GK14879@hirez.programming.kicks-ass.net>
- <88802724-aa70-23bc-b2c8-a7a34aa3dfe5@linux.intel.com>
- <20200120202445.GD14914@hirez.programming.kicks-ass.net>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <71ead9fd-04db-e859-2842-3eddc77c35c4@linux.intel.com>
-Date:   Mon, 20 Jan 2020 15:47:22 -0500
+        (Authenticated sender: asutoshd)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 92D2AC43383;
+        Mon, 20 Jan 2020 20:49:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 92D2AC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=asutoshd@codeaurora.org
+Subject: Re: [PATCH v1 2/3] scsi: ufs: export some functions for vendor usage
+To:     Stanley Chu <stanley.chu@mediatek.com>, linux-scsi@vger.kernel.org,
+        martin.petersen@oracle.com, avri.altman@wdc.com,
+        alim.akhtar@samsung.com, jejb@linux.ibm.com
+Cc:     beanhuo@micron.com, cang@codeaurora.org, matthias.bgg@gmail.com,
+        bvanassche@acm.org, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
+        chun-hung.wu@mediatek.com, andy.teng@mediatek.com
+References: <20200117035108.19699-1-stanley.chu@mediatek.com>
+ <20200117035108.19699-3-stanley.chu@mediatek.com>
+From:   "Asutosh Das (asd)" <asutoshd@codeaurora.org>
+Message-ID: <4dc0cb58-13f6-0678-dcf2-6b0394200157@codeaurora.org>
+Date:   Mon, 20 Jan 2020 12:49:13 -0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200120202445.GD14914@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200117035108.19699-3-stanley.chu@mediatek.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -60,105 +71,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 1/20/2020 3:24 PM, Peter Zijlstra wrote:
-> On Mon, Jan 20, 2020 at 11:50:59AM -0500, Liang, Kan wrote:
->>
->>
->> On 1/20/2020 4:23 AM, Peter Zijlstra wrote:
->>> On Thu, Jan 16, 2020 at 07:57:56AM -0800, kan.liang@linux.intel.com wrote:
->>>
->>>>    struct perf_branch_stack {
->>>>    	__u64				nr;
->>>> +	__u64				hw_idx;
->>>>    	struct perf_branch_entry	entries[0];
->>>>    };
->>>
->>> The above and below order doesn't match.
->>>
->>>> @@ -849,7 +853,11 @@ enum perf_event_type {
->>>>    	 *	  char                  data[size];}&& PERF_SAMPLE_RAW
->>>>    	 *
->>>>    	 *	{ u64                   nr;
->>>> -	 *        { u64 from, to, flags } lbr[nr];} && PERF_SAMPLE_BRANCH_STACK
->>>> +	 *        { u64 from, to, flags } lbr[nr];
->>>> +	 *
->>>> +	 *        # only available if PERF_SAMPLE_BRANCH_HW_INDEX is set
->>>> +	 *        u64			hw_idx;
->>>> +	 *      } && PERF_SAMPLE_BRANCH_STACK
->>>
->>> That wants to be written as:
->>>
->>> 		{ u64			nr;
->>> 		  { u64 from, to, flags; } entries[nr];
->>> 		  { u64	hw_idx; } && PERF_SAMPLE_BRANCH_HW_INDEX
->>> 		} && PERF_SAMPLE_BRANCH_STACK
->>>
->>> But the big question is; why isn't it:
->>>
->>> 		{ u64			nr;
->>> 		  { u64	hw_idx; } && PERF_SAMPLE_BRANCH_HW_INDEX
->>> 		  { u64 from, to, flags; } entries[nr];
->>> 		} && PERF_SAMPLE_BRANCH_STACK
->>>
->>> to match the struct perf_branch_stack order. Having that variable sized
->>> entry in the middle just seems weird.
->>
->>
->> Usually, new data should be output to the end of a sample.
+On 1/16/2020 7:51 PM, Stanley Chu wrote:
+> Export below functions for vendor usage,
 > 
-> Because.... you want old tools to read new output?
->
-
-Yes, for some cases, it helps.
-If no other sample types are output after PERF_SAMPLE_BRANCH_STACK,
-old perf tool will ignore the hw_idx.
-But, if we also have to output other sample types, e.g 
-PERF_SAMPLE_DATA_SRC or PERF_SAMPLE_PHYS_ADDR, which are output after 
-PERF_SAMPLE_BRANCH_STACK. The hw_idx will mess them up.
-Old perf tool doesn't work anymore.
-
-
->> However, the entries[0] is sized entry, so I have to put the hw_idx before
+> int ufshcd_hba_enable(struct ufs_hba *hba);
+> int ufshcd_make_hba_operational(struct ufs_hba *hba);
+> int ufshcd_uic_hibern8_exit(struct ufs_hba *hba);
 > 
-> entries[0] is only in the C thing, and in C you indeed have to put
-> hw_idx before.
+> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+> ---
+
+LGTM.
+
+Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
+
+>   drivers/scsi/ufs/ufshcd.c | 11 +++++++----
+>   drivers/scsi/ufs/ufshcd.h |  3 +++
+>   2 files changed, 10 insertions(+), 4 deletions(-)
 > 
->> entry. It makes the inconsistency. Sorry for the confusion caused.
+> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> index bea036ab189a..1168baf358ea 100644
+> --- a/drivers/scsi/ufs/ufshcd.c
+> +++ b/drivers/scsi/ufs/ufshcd.c
+> @@ -250,7 +250,6 @@ static int ufshcd_probe_hba(struct ufs_hba *hba);
+>   static int __ufshcd_setup_clocks(struct ufs_hba *hba, bool on,
+>   				 bool skip_ref_clk);
+>   static int ufshcd_setup_clocks(struct ufs_hba *hba, bool on);
+> -static int ufshcd_uic_hibern8_exit(struct ufs_hba *hba);
+>   static int ufshcd_uic_hibern8_enter(struct ufs_hba *hba);
+>   static inline void ufshcd_add_delay_before_dme_cmd(struct ufs_hba *hba);
+>   static int ufshcd_host_reset_and_restore(struct ufs_hba *hba);
+> @@ -3865,7 +3864,7 @@ static int ufshcd_uic_hibern8_enter(struct ufs_hba *hba)
+>   	return ret;
+>   }
+>   
+> -static int ufshcd_uic_hibern8_exit(struct ufs_hba *hba)
+> +int ufshcd_uic_hibern8_exit(struct ufs_hba *hba)
+>   {
+>   	struct uic_command uic_cmd = {0};
+>   	int ret;
+> @@ -3891,6 +3890,7 @@ static int ufshcd_uic_hibern8_exit(struct ufs_hba *hba)
+>   
+>   	return ret;
+>   }
+> +EXPORT_SYMBOL_GPL(ufshcd_uic_hibern8_exit);
+>   
+>   void ufshcd_auto_hibern8_update(struct ufs_hba *hba, u32 ahit)
+>   {
+> @@ -4162,7 +4162,7 @@ static int ufshcd_complete_dev_init(struct ufs_hba *hba)
+>    *
+>    * Returns 0 on success, non-zero value on failure
+>    */
+> -static int ufshcd_make_hba_operational(struct ufs_hba *hba)
+> +int ufshcd_make_hba_operational(struct ufs_hba *hba)
+>   {
+>   	int err = 0;
+>   	u32 reg;
+> @@ -4208,6 +4208,7 @@ static int ufshcd_make_hba_operational(struct ufs_hba *hba)
+>   out:
+>   	return err;
+>   }
+> +EXPORT_SYMBOL_GPL(ufshcd_make_hba_operational);
+>   
+>   /**
+>    * ufshcd_hba_stop - Send controller to reset state
+> @@ -4285,7 +4286,7 @@ static int ufshcd_hba_execute_hce(struct ufs_hba *hba)
+>   	return 0;
+>   }
+>   
+> -static int ufshcd_hba_enable(struct ufs_hba *hba)
+> +int ufshcd_hba_enable(struct ufs_hba *hba)
+>   {
+>   	int ret;
+>   
+> @@ -4310,6 +4311,8 @@ static int ufshcd_hba_enable(struct ufs_hba *hba)
+>   
+>   	return ret;
+>   }
+> +EXPORT_SYMBOL_GPL(ufshcd_hba_enable);
+> +
+>   static int ufshcd_disable_tx_lcc(struct ufs_hba *hba, bool peer)
+>   {
+>   	int tx_lanes, i, err = 0;
+> diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+> index b1a1c65be8b1..fca372d98495 100644
+> --- a/drivers/scsi/ufs/ufshcd.h
+> +++ b/drivers/scsi/ufs/ufshcd.h
+> @@ -799,8 +799,11 @@ static inline void ufshcd_rmwl(struct ufs_hba *hba, u32 mask, u32 val, u32 reg)
+>   
+>   int ufshcd_alloc_host(struct device *, struct ufs_hba **);
+>   void ufshcd_dealloc_host(struct ufs_hba *);
+> +int ufshcd_hba_enable(struct ufs_hba *hba);
+>   int ufshcd_init(struct ufs_hba * , void __iomem * , unsigned int);
+> +int ufshcd_make_hba_operational(struct ufs_hba *hba);
+>   void ufshcd_remove(struct ufs_hba *);
+> +int ufshcd_uic_hibern8_exit(struct ufs_hba *hba);
+>   int ufshcd_wait_for_register(struct ufs_hba *hba, u32 reg, u32 mask,
+>   				u32 val, unsigned long interval_us,
+>   				unsigned long timeout_ms, bool can_sleep);
 > 
-> n/p it's clear now I think.
-
-Should I send V6 patch to move hw_idx before entry as below?
-
-@@ -853,7 +857,9 @@ enum perf_event_type {
-          *        char                  data[size];}&& PERF_SAMPLE_RAW
-          *
-          *      { u64                   nr;
--        *        { u64 from, to, flags } lbr[nr];} && 
-PERF_SAMPLE_BRANCH_STACK
-+        *        { u64 hw_idx; } && PERF_SAMPLE_BRANCH_HW_INDEX
-+        *        { u64 from, to, flags } lbr[nr];
-+        *      } && PERF_SAMPLE_BRANCH_STACK
-          *
-          *      { u64                   abi; # enum perf_sample_regs_abi
-          *        u64                   regs[weight(mask)]; } && 
-PERF_SAMPLE_REGS_USER
-
-@@ -6634,6 +6639,8 @@ void perf_output_sample(struct perf_output_handle 
-*handle,
-                              * sizeof(struct perf_branch_entry);
-
-                         perf_output_put(handle, data->br_stack->nr);
-+                       if (perf_sample_save_hw_index(event))
-+                               perf_output_put(handle, 
-data->br_stack->hw_idx);
-                         perf_output_copy(handle, 
-data->br_stack->entries, size);
-                 } else {
-                         /*
 
 
-
-Thanks,
-Kan
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+Linux Foundation Collaborative Project
