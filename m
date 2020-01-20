@@ -2,102 +2,123 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URI_HEX autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A12EC33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA5BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAB2220674
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:51:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7816220674
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:51:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726999AbgATKvL (ORCPT
+        id S1727048AbgATKvO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 05:51:11 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:43439 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726148AbgATKvL (ORCPT
+        Mon, 20 Jan 2020 05:51:14 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:45939 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726148AbgATKvN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 05:51:11 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-77-UQ1tz0pqPPOA0jnC9SlVCQ-1; Mon, 20 Jan 2020 10:51:08 +0000
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 20 Jan 2020 10:51:07 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 20 Jan 2020 10:51:07 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Dietmar Eggemann' <dietmar.eggemann@arm.com>,
-        'Steven Rostedt' <rostedt@goodmis.org>
-CC:     'Vincent Guittot' <vincent.guittot@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: RE: sched/fair: scheduler not running high priority process on idle
- cpu
-Thread-Topic: sched/fair: scheduler not running high priority process on idle
- cpu
-Thread-Index: AdXK8cUFXa7JpPXmQNq7oQ32S9fYHAACik4AAADJLkAAAO3PAAAmXEggAAKDBAAAAvfesAABpyOAAABDBiAA7uyIgAAB3Sgw
-Date:   Mon, 20 Jan 2020 10:51:07 +0000
-Message-ID: <512f01b3e4cd4c3fa26ce767466fec21@AcuMS.aculab.com>
-References: <212fabd759b0486aa8df588477acf6d0@AcuMS.aculab.com>
- <20200114115906.22f952ff@gandalf.local.home>
- <5ba2ae2d426c4058b314c20c25a9b1d0@AcuMS.aculab.com>
- <20200114124812.4d5355ae@gandalf.local.home>
- <878a35a6642d482aa0770a055506bd5e@AcuMS.aculab.com>
- <20200115081830.036ade4e@gandalf.local.home>
- <9f98b2dd807941a3b85d217815a4d9aa@AcuMS.aculab.com>
- <20200115103049.06600f6e@gandalf.local.home>
- <ab54668ad13d48da8aa43f955631ef9e@AcuMS.aculab.com>
- <26b2f8f7-b11f-0df0-5260-a232e1d5bf1a@arm.com>
-In-Reply-To: <26b2f8f7-b11f-0df0-5260-a232e1d5bf1a@arm.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 20 Jan 2020 05:51:13 -0500
+Received: by mail-oi1-f194.google.com with SMTP id n16so28120739oie.12;
+        Mon, 20 Jan 2020 02:51:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uvHX7RkeGS1j3292t6lYP6xOMynSovwccmbxVM2lgsw=;
+        b=YJJeXw6ae7qgYqMitzMkrRdQUq6678B5XnQgKb/ZREeHQabqsvViNGCVCe2Cd0CbpB
+         vkUIlB+o+Ah+Vnrfrrakp/bsJodJD1YrNYwnReGQdoPXOdPPT5KiedYaLeMZuwx635Fn
+         c/Q/oZBsRrSa6WL3Jho1o/gy4/zL/4x44ZX+xKDbLvzpbmtSmYK5lDK/Do3KHPJUPBaH
+         yqZLHU63OMyjYkowR16M1/7Gcbwpv8AetwMJ0qJTKO31q/V9UIzkj/Z4d1FpOCs6Kr4s
+         IcBa+txrrmu71Sd56llLT4wFOha9QSJ5LxFi7n68nPXGU/08d7XGgu/6HPpmO3BKM2xa
+         99HQ==
+X-Gm-Message-State: APjAAAWZnXldiqx7hro8oaOENIw2xL1oxzn+8D7uaheiPVjrbeIlKKKo
+        F3iKCXXezOagHsj7RK3fHGyTX5gJ2YzE8+BMUeo=
+X-Google-Smtp-Source: APXvYqyKxm5Fxmfn34wBVirSiayi+wKFT6KoBe9Fd0oC618a+sBxaaTmyWk2Wq5mWaKcGGVoGFHx5+VXEDE0rH0qqjw=
+X-Received: by 2002:a05:6808:292:: with SMTP id z18mr11864654oic.131.1579517473071;
+ Mon, 20 Jan 2020 02:51:13 -0800 (PST)
 MIME-Version: 1.0
-X-MC-Unique: UQ1tz0pqPPOA0jnC9SlVCQ-1
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+References: <20200117153056.31363-1-geert+renesas@glider.be>
+ <d2b669e7-a5d4-20ec-5b54-103b71df7407@ti.com> <CAMuHMdVzQCWvH-LJ9ME5dRyafudZBHQLaJQzkSCPnughv_q2aA@mail.gmail.com>
+ <1cdc4f71-f365-8c9e-4634-408c59e6a3f9@ti.com>
+In-Reply-To: <1cdc4f71-f365-8c9e-4634-408c59e6a3f9@ti.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 20 Jan 2020 11:51:01 +0100
+Message-ID: <CAMuHMdU=-Eo29=DQmq96OegdYAvW7Vw9PpgNWSTfjDWVF5jd-A@mail.gmail.com>
+Subject: Re: [PATCH v2] dmaengine: Create symlinks between DMA channels and slaves
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogRGlldG1hciBFZ2dlbWFubg0KPiBTZW50OiAyMCBKYW51YXJ5IDIwMjAgMDk6MzkNCi4u
-DQo+ID4gSSBndWVzcyB0aGlzIG9ubHkgJ2dpdmVzIGF3YXknIGV4dHJhIFJUIHByb2Nlc3Nlcy4N
-Cj4gPiBSYXRoZXIgdGhhbiAnc3RlYWxpbmcnIHRoZW0gLSB3aGljaCBpcyB3aGF0IEkgbmVlZC4N
-Cj4gDQo+IElzbid0IHBhcnQgb2YgdGhlIHByb2JsZW0gdGhhdCBSVCBkb2Vzbid0IG1haW50YWlu
-DQo+IGNwLT5wcmlfdG9fY3B1W0NQVVBSSV9JRExFXSAoQ1BVUFJJX0lETEUgPSAwKS4NCj4gDQo+
-IFNvIHB1c2gvcHVsbCAoZmluZF9sb3dlc3RfcnEoKSkgbmV2ZXIgcmV0dXJucyBhIG1hc2sgb2Yg
-aWRsZSBDUFVzLg0KPiANCj4gVGhlcmUgd2FzDQo+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL3Iv
-MTQxNTI2MDMyNy0zMDQ2NS0yLWdpdC1zZW5kLWVtYWlsLXBhbmcueHVubGVpQGxpbmFyby5vcmcN
-Cj4gaW4gMjAxNCBidXQgaXQgZGlkbid0IGdvIG1haW5saW5lLg0KPiANCj4gVGhlcmUgd2FzIGEg
-c2ltaWxhciBxdWVzdGlvbiBpbiBOb3YgbGFzdCB5ZWFyOg0KPiANCj4gaHR0cHM6Ly9sb3JlLmtl
-cm5lbC5vcmcvci9DSDJQUjE5TUIzODk2QUZFMUQxM0FEODhBMTcxNjA4NjBGQzcwMEBDSDJQUjE5
-TUIzODk2Lm5hbXByZDE5LnByb2Qub3V0bG9vay5jb20NCg0KVGhleSBhcmUgcHJvYmFibHkgYWxs
-IHJlbGF0ZWQuDQpNeSBicmFpbiBkb2Vzbid0IGhhdmUgc3BhY2UgdG8gY29tcGxldGVseSAnZ3Jv
-aycgdGhlIHNjaGVkdWxlciB3aXRob3V0IHNvbWV0aGluZw0KZWxzZSBiZWluZyBwdXNoZWQgb3V0
-IG9mIHRoZSBtYWluIGNhY2hlLg0KDQpJIGJldCB0aGVyZSBhcmUgb3RoZXIgY2FzZXMgd2hlcmUg
-aXQgZGVjaWRlcyB0byBydW4gYSBwcm9jZXNzIG9uIGEgY3B1IHRoYXQNCmlzIHJ1bm5pbmcgYSBw
-cm9jZXNzIHRoYXQgaXMgYm91bmQgdG8gdGhhdCBjcHUgd2hpbGUgdGhlcmUgYXJlIG90aGVyIGlk
-bGUgY3B1Lg0KDQpQYXJ0aWFsbHkgYmVjYXVzZSB0aGUgcHJvYmxlbSBpcyAnaGFyZCcsIGdldHRp
-bmcgaXQgYW55d2hlcmUgbmVhciAncmlnaHQnDQpmb3IgTlVNQSBzeXN0ZW1zIHdpdGggbG90cyBv
-ZiBjcHVzIHdpdGhvdXQgdXNpbmcgYWxsIHRoZSBwcm9jZXNzaW5nDQpwb3dlciBqdXN0IGRlY2lk
-aW5nIHdoYXQgdG8gcnVuIGlzIHByb2JhYmx5IGltcG9zc2libGUuDQpIb3dldmVyIGZhc3RlciBk
-ZWNpc2lvbnMgY2FuIHByb2JhYmx5IGJlIG1hZGUgd2l0aCAnc2xpZ2h0bHkgc3RhbGUnIGRhdGEg
-dGhhdA0KZ2V0IGNvcnJlY3RlZCBsYXRlciBpZiB0aGV5IGFyZSBpbmNvcnJlY3QuDQoNCglEYXZp
-ZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQg
-RmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4
-NiAoV2FsZXMpDQo=
+Hi Peter,
 
+On Mon, Jan 20, 2020 at 11:16 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+> On 20/01/2020 11.01, Geert Uytterhoeven wrote:
+> > On Fri, Jan 17, 2020 at 9:08 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+> >> On 1/17/20 5:30 PM, Geert Uytterhoeven wrote:
+> >>> Currently it is not easy to find out which DMA channels are in use, and
+> >>> which slave devices are using which channels.
+> >>>
+> >>> Fix this by creating two symlinks between the DMA channel and the actual
+> >>> slave device when a channel is requested:
+> >>>   1. A "slave" symlink from DMA channel to slave device,
+> >>
+> >> Have you considered similar link name as on the slave device:
+> >> slave:<name>
+> >>
+> >> That way it would be easier to grasp which channel is used for what
+> >> purpose by only looking under /sys/class/dma/ and no need to check the
+> >> slave device.
+> >
+> > Would this really provide more information?
+> > The device name is already provided in the target of the symlink:
+> >
+> > root@koelsch:~# readlink
+> > /sys/devices/platform/soc/e6720000.dma-controller/dma/dma1chan2/slave
+> > ../../../ee140000.sd
+>
+> e6720000.dma-controller/dma/dma1chan2/slave -> ../../../ee140000.sd
+> e6720000.dma-controller/dma/dma1chan3/slave -> ../../../ee140000.sd
+>
+> It is hard to tell which one is the tx and RX channel without looking
+> under the ee140000.sd:
+>
+> ee140000.sd/dma:rx -> ../e6720000.dma-controller/dma/dma1chan3
+> ee140000.sd/dma:tx -> ../e6720000.dma-controller/dma/dma1chan2
+
+Oh, you meant the name of the channel, not the name of the device.
+My mistake.
+
+As this name is a property of the slave device, not of the DMA channel,
+I don't think it belongs under dma*chan*.
+
+> Another option would be to not have symlinks, but a debugfs file where
+> this information can be extracted and would only compiled if debugfs is
+> enabled.
+
+Like /proc/interrupts?
+That brings the complexity of traversing all channels etc.
+
+What do other people think?
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
