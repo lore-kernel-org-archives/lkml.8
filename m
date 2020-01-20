@@ -2,150 +2,123 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60967C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF09FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:00:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F26924679
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:58:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uKQkn4nh"
+	by mail.kernel.org (Postfix) with ESMTP id B6A112253D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:00:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727573AbgATO65 (ORCPT
+        id S1728709AbgATPAF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 09:58:57 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:42558 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726885AbgATO65 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 09:58:57 -0500
-Received: by mail-qk1-f195.google.com with SMTP id z14so30327215qkg.9
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 06:58:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eRQ0+UJNHKW1NOT+X9Ptz3p1mfuoK3ob/c2NaAESbjw=;
-        b=uKQkn4nh1Hmb1VzqfGj1kZNZpHOrqe0/gjQHY6kKXtdLQ2OKPhf5qpFDHlh2p1nbsB
-         PIyX/YsHR12twaWudeSAD22nkWJ1trGRlp0u6J1ywEvCrYSpVxAdP+GCgHpvDDhKjIAa
-         TGPNT9ThvBZL3XAszK8rudkiAUCZeKIs0ccefuE1koi0i86ip/IioT0H6sCKytubTsD7
-         PdrefwHeqlXpdr0Y868iwnvfK3sXrSKv9WanwMhA2JBenKkE92KveWk1nTE7m7nW8OJE
-         /1gjqv4qZHC93/iSDbh6GnISn0B/VoqHQD1KKGYF6LVQbPW9wJ0Csot5eALz9Agw8KqE
-         XTYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eRQ0+UJNHKW1NOT+X9Ptz3p1mfuoK3ob/c2NaAESbjw=;
-        b=PtkKKItZSSOo2TtsgWXGxN5qOwudKAbQ1zvXCJ9GGUjty+8m3N951CgAJU+lAkDc42
-         NNnu9H1qTUxPcFjwmszjfpPbr+LnqfyhgMbkKXkOXA61Fz/Pu2U3cumG1Bb3pTnPmPm7
-         sQWkcQqna0aMDY4FOy0w71wOq6djlPgxlfaaKHL3wNwqHxU174RcP4FnqeYptxAJvAqw
-         xnT4eX32DMb0ZFyPlI4o0ecLW0Ut+x7bmykPuKOd6lS5FYlBJ7HgoTWYeVsuqPE5PIg4
-         OXPPKOb9YwTTup1kZjUDqwhfz2ePyDxJI9UN/LYOWVzXDh8CCctG8xhpxMKB6x3FaLt1
-         wzkA==
-X-Gm-Message-State: APjAAAWsEeE6vMbMjTTagzBzKezwphmykp8QirSUWBRgbBI36tGUAwga
-        oFQMGnU75abzTQfos9Vze8LcJeps2I/r/YuLftpaow==
-X-Google-Smtp-Source: APXvYqzRzzU9O3ZxF6WLrarovy3UD8IDGUR8JjGUu5YnvlYVbMHVlZ9dmLHCHobXwQoPv4fnY4LrBPOppw4nTPnvn5w=
-X-Received: by 2002:a05:620a:1136:: with SMTP id p22mr52465723qkk.8.1579532336048;
- Mon, 20 Jan 2020 06:58:56 -0800 (PST)
+        Mon, 20 Jan 2020 10:00:05 -0500
+Received: from mga02.intel.com ([134.134.136.20]:57455 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726642AbgATPAF (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 10:00:05 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 07:00:04 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,342,1574150400"; 
+   d="scan'208";a="275576205"
+Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.254.209.167]) ([10.254.209.167])
+  by fmsmga001.fm.intel.com with ESMTP; 20 Jan 2020 07:00:02 -0800
+Subject: Re: [PATCH v4 3/4] perf util: Flexible to set block info output
+ formats
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <20200115192904.16798-1-yao.jin@linux.intel.com>
+ <20200115192904.16798-3-yao.jin@linux.intel.com>
+ <20200120094737.GF608405@krava>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <6c35864b-e396-6865-12a9-2fd001b0f567@linux.intel.com>
+Date:   Mon, 20 Jan 2020 23:00:02 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200120141927.114373-1-elver@google.com> <CACT4Y+bnRoKinPopVqyxj4av6_xa_OUN0wwnidpO3dX3iYq_gg@mail.gmail.com>
-In-Reply-To: <CACT4Y+bnRoKinPopVqyxj4av6_xa_OUN0wwnidpO3dX3iYq_gg@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 20 Jan 2020 15:58:45 +0100
-Message-ID: <CACT4Y+YuTT6kZ-AkgU0c1o09qmQdFWr4_Sds4jaDg-Va6g6jkA@mail.gmail.com>
-Subject: Re: [PATCH 1/5] include/linux: Add instrumented.h infrastructure
-To:     Marco Elver <elver@google.com>
-Cc:     paulmck@kernel.org, Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Daniel Axtens <dja@axtens.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Daniel Borkmann <daniel@iogearbox.net>, cyphar@cyphar.com,
-        Kees Cook <keescook@chromium.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200120094737.GF608405@krava>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 3:45 PM Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> On Mon, Jan 20, 2020 at 3:19 PM Marco Elver <elver@google.com> wrote:
-> >
-> > This adds instrumented.h, which provides generic wrappers for memory
-> > access instrumentation that the compiler cannot emit for various
-> > sanitizers. Currently this unifies KASAN and KCSAN instrumentation. In
-> > future this will also include KMSAN instrumentation.
-> >
-> > Note that, copy_{to,from}_user require special instrumentation,
-> > providing hooks before and after the access, since we may need to know
-> > the actual bytes accessed (currently this is relevant for KCSAN, and is
-> > also relevant in future for KMSAN).
-> >
-> > Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> > Signed-off-by: Marco Elver <elver@google.com>
-> > ---
-> >  include/linux/instrumented.h | 153 +++++++++++++++++++++++++++++++++++
-> >  1 file changed, 153 insertions(+)
-> >  create mode 100644 include/linux/instrumented.h
-> >
-> > diff --git a/include/linux/instrumented.h b/include/linux/instrumented.h
-> > new file mode 100644
-> > index 000000000000..9f83c8520223
-> > --- /dev/null
-> > +++ b/include/linux/instrumented.h
-> > @@ -0,0 +1,153 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +
-> > +/*
-> > + * This header provides generic wrappers for memory access instrumentation that
-> > + * the compiler cannot emit for: KASAN, KCSAN.
-> > + */
-> > +#ifndef _LINUX_INSTRUMENTED_H
-> > +#define _LINUX_INSTRUMENTED_H
-> > +
-> > +#include <linux/compiler.h>
-> > +#include <linux/kasan-checks.h>
-> > +#include <linux/kcsan-checks.h>
-> > +#include <linux/types.h>
-> > +
-> > +/**
-> > + * instrument_read - instrument regular read access
-> > + *
-> > + * Instrument a regular read access. The instrumentation should be inserted
-> > + * before the actual read happens.
-> > + *
-> > + * @ptr address of access
-> > + * @size size of access
-> > + */
->
-> Based on offline discussion, that's what we add for KMSAN:
->
-> > +static __always_inline void instrument_read(const volatile void *v, size_t size)
-> > +{
-> > +       kasan_check_read(v, size);
-> > +       kcsan_check_read(v, size);
->
-> KMSAN: nothing
 
-KMSAN also has instrumentation in
-copy_to_user_page/copy_from_user_page. Do we need to do anything for
-KASAN/KCSAN for these functions?
+
+On 1/20/2020 5:47 PM, Jiri Olsa wrote:
+> On Thu, Jan 16, 2020 at 03:29:03AM +0800, Jin Yao wrote:
+> 
+> SNIP
+> 
+>> +			       block_hpps, nr_hpps);
+>>   
+>> -	perf_hpp_list__register_sort_field(&bh->block_list,
+>> -		&block_fmts[PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_PCT].fmt);
+>> +	/* Sort by the first fmt */
+>> +	perf_hpp_list__register_sort_field(&bh->block_list, &block_fmts[0].fmt);
+>>   }
+>>   
+>> -static void process_block_report(struct hists *hists,
+>> -				 struct block_report *block_report,
+>> -				 u64 total_cycles)
+>> +static int process_block_report(struct hists *hists,
+>> +				struct block_report *block_report,
+>> +				u64 total_cycles, int *block_hpps,
+>> +				int nr_hpps)
+>>   {
+>>   	struct rb_node *next = rb_first_cached(&hists->entries);
+>>   	struct block_hist *bh = &block_report->hist;
+>>   	struct hist_entry *he;
+>>   
+>> -	init_block_hist(bh, block_report->fmts);
+>> +	if (nr_hpps > PERF_HPP_REPORT__BLOCK_MAX_INDEX)
+> 
+> hum, should be '>=' above.. ?
+> 
+> jirka
+> 
+
+'=' should be OK.
+
+enum {
+	PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_PCT,
+	PERF_HPP_REPORT__BLOCK_LBR_CYCLES,
+	PERF_HPP_REPORT__BLOCK_CYCLES_PCT,
+	PERF_HPP_REPORT__BLOCK_AVG_CYCLES,
+	PERF_HPP_REPORT__BLOCK_RANGE,
+	PERF_HPP_REPORT__BLOCK_DSO,
+	PERF_HPP_REPORT__BLOCK_MAX_INDEX
+};
+
+PERF_HPP_REPORT__BLOCK_MAX_INDEX is 6.
+
+If nr_hpps is 6, for example, block_hpps[] is,
+
+		int block_hpps[6] = {
+			PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_PCT,
+			PERF_HPP_REPORT__BLOCK_LBR_CYCLES,
+			PERF_HPP_REPORT__BLOCK_CYCLES_PCT,
+			PERF_HPP_REPORT__BLOCK_AVG_CYCLES,
+			PERF_HPP_REPORT__BLOCK_RANGE,
+			PERF_HPP_REPORT__BLOCK_DSO,
+		};
+
+		block_info__create_report(session->evlist,
+					  rep->total_cycles,
+                                           block_hpps, 6,
+                                           &rep->nr_block_reports);
+
+That should be legal.
+
+Thanks
+Jin Yao
