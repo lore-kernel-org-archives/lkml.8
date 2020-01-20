@@ -2,206 +2,208 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_RHS_DOB,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43417C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C7AC33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:39:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A86D2073D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:39:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 828C42073D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:39:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tMSVAicR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729253AbgATQjj (ORCPT
+        id S1729285AbgATQjw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 11:39:39 -0500
-Received: from mx2.suse.de ([195.135.220.15]:50566 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729190AbgATQji (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 11:39:38 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 63533ABB3;
-        Mon, 20 Jan 2020 16:39:36 +0000 (UTC)
-Date:   Mon, 20 Jan 2020 17:39:33 +0100
-From:   Cyril Hrubis <chrubis@suse.cz>
-To:     ltp@lists.linux.it, linux-kernel@vger.kernel.org,
-        libc-alpha@sourceware.org
-Cc:     lwn@lwn.net, akpm@linux-foundation.org,
-        torvalds@linux-foundation.org
-Subject: [ANNOUNCE] The Linux Test Project has been released for JANUARY 2020
-Message-ID: <20200120163933.GA7391@rei>
+        Mon, 20 Jan 2020 11:39:52 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:42005 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729080AbgATQjw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 11:39:52 -0500
+Received: by mail-qt1-f193.google.com with SMTP id j5so227847qtq.9
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 08:39:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sZcsttqoOqoppbG6e/pqRXCvsc9U04ANxonvw6+R+xA=;
+        b=tMSVAicRbicpyLXDMO4rYsQeKh3JeBuTMmH7INzePJGBSTEWRijFlmLaEkpBkE/S0/
+         pPZ9Eqs4i4wySskXaxwgqiQ+9HdlDXQnB+4UkY3WxOmryFKLHp5o3MN7r4jddjcftDpl
+         qvV5jFTHJ8gFeE0b+4taMTnl6tSGniO9r0muDyy7osmytx0zBVJP2jQWz5vH+sIbeuiP
+         wHAfN+vnfGbWnq6EfmIgO42Aaq4jNmX7q+JIGmkH68GLnk7Gl9JHnMzIlkYAtLt3ChFm
+         WqhEQXtyD/4BhCT0YDEBWq96VQmK4fl27mQF0j6ySeBFBPmbWzRhzAU2GzrmBiUAN4Im
+         DxKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sZcsttqoOqoppbG6e/pqRXCvsc9U04ANxonvw6+R+xA=;
+        b=XKzij/xL9hSWYzFf6OmiJrISJBpMeVdeihthqldc4/FC7D13OI3hyhVd86rnOigcnL
+         XHrMf00H1gfWUKoabXlNPnaO7Y/lbaJ4adwHWiqO9RMHiIR76Dgf53tcU83+kOBOsWrF
+         u/cjDhvV62XPLiiveqP3+D7/lNM6iLtzL6zUBhMPvN3WWMG90dXOVO58cc9oXT5fyxy9
+         CjN3EhgUVVRiFagISw/wBvVI95vLB3+mKpaAwklJeVSms428lVUmMdcgBZ32bPp9HbYM
+         zlUfHYciEJdfMRnVKWet3wSbKCd/2Cf9CM3aI1lIo5VvqvK+CSSR8ipxE3vJWfmvqQj1
+         /4PQ==
+X-Gm-Message-State: APjAAAUzHFMIMUlSrQ09Ce/MApPKCj9XcogXmjJpnSM5yYZ6DJLrzO9M
+        8P427NOVR6E0ugAyTZCVDEsT818YAofHLw4un4tyFg==
+X-Google-Smtp-Source: APXvYqzrYE50D8YKSrDPkL1mTaP9NxaA9IUrSzhA5houBQEElh77ireRGTeCqawKKA+jbFPqIc+JLCDWas3HZC0qEcA=
+X-Received: by 2002:aed:3b6e:: with SMTP id q43mr129761qte.57.1579538390395;
+ Mon, 20 Jan 2020 08:39:50 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200120141927.114373-1-elver@google.com> <CACT4Y+bnRoKinPopVqyxj4av6_xa_OUN0wwnidpO3dX3iYq_gg@mail.gmail.com>
+ <CACT4Y+YuTT6kZ-AkgU0c1o09qmQdFWr4_Sds4jaDg-Va6g6jkA@mail.gmail.com>
+ <CACT4Y+acrXkA-ixjQXqNf1EC=fpgTWf3Rcevxxon0DfrPdD-UQ@mail.gmail.com>
+ <CANpmjNNcXUF-=Y-hmry9-xEoNpJd0WH+fOcJJM6kv2eRm5v-kg@mail.gmail.com>
+ <CACT4Y+bD3cNxfaWOuhHz338MoVoaHpw-E8+b7v6mo_ir2KD46Q@mail.gmail.com> <CANpmjNN-8CLN9v7MehNUXy=iEXOfFHwpAUEPivGM573EQqmCZw@mail.gmail.com>
+In-Reply-To: <CANpmjNN-8CLN9v7MehNUXy=iEXOfFHwpAUEPivGM573EQqmCZw@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Mon, 20 Jan 2020 17:39:39 +0100
+Message-ID: <CACT4Y+bgLy=AiCdLauBaSi_Q1gQsqQ08hr1-ipz60k+WFdmiuA@mail.gmail.com>
+Subject: Re: [PATCH 1/5] include/linux: Add instrumented.h infrastructure
+To:     Marco Elver <elver@google.com>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Daniel Axtens <dja@axtens.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Daniel Borkmann <daniel@iogearbox.net>, cyphar@cyphar.com,
+        Kees Cook <keescook@chromium.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Good news everyone,
+On Mon, Jan 20, 2020 at 5:25 PM Marco Elver <elver@google.com> wrote:
+> > > > > > > This adds instrumented.h, which provides generic wrappers for memory
+> > > > > > > access instrumentation that the compiler cannot emit for various
+> > > > > > > sanitizers. Currently this unifies KASAN and KCSAN instrumentation. In
+> > > > > > > future this will also include KMSAN instrumentation.
+> > > > > > >
+> > > > > > > Note that, copy_{to,from}_user require special instrumentation,
+> > > > > > > providing hooks before and after the access, since we may need to know
+> > > > > > > the actual bytes accessed (currently this is relevant for KCSAN, and is
+> > > > > > > also relevant in future for KMSAN).
+> > > > > > >
+> > > > > > > Suggested-by: Arnd Bergmann <arnd@arndb.de>
+> > > > > > > Signed-off-by: Marco Elver <elver@google.com>
+> > > > > > > ---
+> > > > > > >  include/linux/instrumented.h | 153 +++++++++++++++++++++++++++++++++++
+> > > > > > >  1 file changed, 153 insertions(+)
+> > > > > > >  create mode 100644 include/linux/instrumented.h
+> > > > > > >
+> > > > > > > diff --git a/include/linux/instrumented.h b/include/linux/instrumented.h
+> > > > > > > new file mode 100644
+> > > > > > > index 000000000000..9f83c8520223
+> > > > > > > --- /dev/null
+> > > > > > > +++ b/include/linux/instrumented.h
+> > > > > > > @@ -0,0 +1,153 @@
+> > > > > > > +/* SPDX-License-Identifier: GPL-2.0 */
+> > > > > > > +
+> > > > > > > +/*
+> > > > > > > + * This header provides generic wrappers for memory access instrumentation that
+> > > > > > > + * the compiler cannot emit for: KASAN, KCSAN.
+> > > > > > > + */
+> > > > > > > +#ifndef _LINUX_INSTRUMENTED_H
+> > > > > > > +#define _LINUX_INSTRUMENTED_H
+> > > > > > > +
+> > > > > > > +#include <linux/compiler.h>
+> > > > > > > +#include <linux/kasan-checks.h>
+> > > > > > > +#include <linux/kcsan-checks.h>
+> > > > > > > +#include <linux/types.h>
+> > > > > > > +
+> > > > > > > +/**
+> > > > > > > + * instrument_read - instrument regular read access
+> > > > > > > + *
+> > > > > > > + * Instrument a regular read access. The instrumentation should be inserted
+> > > > > > > + * before the actual read happens.
+> > > > > > > + *
+> > > > > > > + * @ptr address of access
+> > > > > > > + * @size size of access
+> > > > > > > + */
+> > > > > >
+> > > > > > Based on offline discussion, that's what we add for KMSAN:
+> > > > > >
+> > > > > > > +static __always_inline void instrument_read(const volatile void *v, size_t size)
+> > > > > > > +{
+> > > > > > > +       kasan_check_read(v, size);
+> > > > > > > +       kcsan_check_read(v, size);
+> > > > > >
+> > > > > > KMSAN: nothing
+> > > > >
+> > > > > KMSAN also has instrumentation in
+> > > > > copy_to_user_page/copy_from_user_page. Do we need to do anything for
+> > > > > KASAN/KCSAN for these functions?
+> > >
+> > > copy_to_user_page/copy_from_user_page can be instrumented with
+> > > instrument_copy_{to,from}_user_. I prefer keeping this series with no
+> > > functional change intended for KASAN at least.
+> > >
+> > > > There is also copy_user_highpage.
+> > > >
+> > > > And ioread/write8/16/32_rep: do we need any instrumentation there. It
+> > > > seems we want both KSAN and KCSAN too. One may argue that KCSAN
+> > > > instrumentation there is to super critical at this point, but KASAN
+> > > > instrumentation is important, if anything to prevent silent memory
+> > > > corruptions. How do we instrument there? I don't see how it maps to
+> > > > any of the existing instrumentation functions.
+> > >
+> > > These should be able to use the regular instrument_{read,write}. I
+> > > prefer keeping this series with no functional change intended for
+> > > KASAN at least.
+> >
+> > instrument_{read,write} will not contain any KMSAN instrumentation,
+> > which means we will effectively remove KMSAN instrumentation, which is
+> > weird because we instrumented these functions because of KMSAN in the
+> > first place...
+> >
+> > > > There is also kmsan_check_skb/kmsan_handle_dma/kmsan_handle_urb that
+> > > > does not seem to map to any of the instrumentation functions.
+> > >
+> > > For now, I would rather that there are some one-off special
+> > > instrumentation, like for KMSAN. Coming up with a unified interface
+> > > here that, without the use-cases even settled, seems hard to justify.
+> > > Once instrumentation for these have settled, unifying the interface
+> > > would have better justification.
+> >
+> > I would assume they may also require an annotation that checks the
+> > memory region under all 3 tools and we don't have such annotation
+> > (same as the previous case and effectively copy_to_user). I would
+> > expect such annotation will be used in more places once we start
+> > looking for more opportunities.
+>
+> Agreed, I'm certainly not against adding these. We may need to
+> introduce 'instrument_dma_' etc. However, would it be reasonable to do
+> this in a separate follow-up patch-series, to avoid stalling bitops
+> instrumentation?  Assuming that the 8 hooks in instrumented.h right
+> now are reasonable, and such future changes add new hooks, I think
+> that would be the more pragmatic approach.
 
-the Linux Test Project test suite stable release for *January 2020* has been
-released.
-
-Since the last release 195 patches by 31 authors were merged.
-
-NOTABLE CHANGES
-===============
-
-* New tests
-  - vmsplice03 (splicing pipe to user memory)
-  - prctl08, prctl09 (PR_{SET,GET}_TIMERSLACK)
-
-* New regression tests
-  - bpf_prog03
-
-* Increased coverage
-  - quotactl tests were rewritten and coverage was increased
-
-* Additional 19 tests were converted to the new test library
-
-* Removed tests
-  - TI-RPC authdes related tests (authdes is disabled by default since libtirpc 1.2.5)
-  - openposix/pi_test*
-  - ext4 features tests
-    (the interesting bits are being moved to xfstests
-     https://patchwork.kernel.org/patch/11290345/)
-
-* Our Travis now includes native ppc64le and s390x builds
-
-* Improved musl support, build with musl in Travis CI using Alpine Linux
-  (broken tests are documented in Travis build script travis/alpine.sh)
-
-* Regression tests now print possibly missing kernel commits:
-
-    --------------------------------------------------------------------------
-    snd_timer01.c:134: FAIL: kernel seems vulnerable
-
-    HINT: You _MAY_ be missing kernel fixes, see:
-
-    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d11662f4f798
-    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ba3021b2c79b
-
-    HINT: You _MAY_ be vulnerable to CVE(s), see:
-
-    https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-1000380
-
-    Summary:
-    passed   0
-    failed   1
-    skipped  0
-    warnings 0
-    --------------------------------------------------------------------------
-
-+ The usual amount of fixes and cleanups.
-
-
-METADATA EXTRACTION & TEST CATALOGUE
-====================================
-
-There is an ongoing experiment that attempts to extract metadata[1] from the
-testcases, we also have a proof of concept web page that renders the json
-metadata into a browseable test documentation[2]. There is not much there yet,
-but we are hoping, among other things, to build a nice, searchable and
-browseable test catalogue based on these efforts.
-
-[1] https://github.com/metan-ucw/ltp/tree/master/docparse
-[2] http://metan.ucw.cz/outgoing/metadata.html
-    http://metan.ucw.cz/outgoing/metadata.html?test=abort01
-    http://metan.ucw.cz/outgoing/metadata.html?test=pcrypt_aead01
-
-
-NOTABLE CHANGES IN NETWORK TESTS
-================================
-brought to you by Petr Vorel
-
-* iptables: add new test for iptables-translate and nft, add IPv6 support
-* route: rewrite route change destination, gateway and interface tests into new API
-
-
-DOWNLOAD AND LINKS
-==================
-
-The latest version of the test-suite contains 3000+ tests for the Linux
-and can be downloaded at:
-
-https://github.com/linux-test-project/ltp/releases/tag/20190930
-
-The project pages as well as GIT repository are hosted on GitHub:
-
-https://github.com/linux-test-project/ltp
-http://linux-test-project.github.io/
-
-If you ever wondered how to write a LTP testcase, don't miss our developer
-documentation at:
-
-https://github.com/linux-test-project/ltp/wiki/C-Test-Case-Tutorial
-https://github.com/linux-test-project/ltp/wiki/Test-Writing-Guidelines
-https://github.com/linux-test-project/ltp/wiki/BuildSystem
-
-Patches, new tests, bugs, comments or questions should go to to our mailing
-list at ltp@lists.linux.it.
-
-
-CREDITS
-=======
-
-Many thanks to the people contributing to this release:
-
-git shortlog -s -e -n 20190930..
-    45  Petr Vorel <pvorel@suse.cz>
-    22  Jan Stancek <jstancek@redhat.com>
-    22  Yang Xu <xuyang2018.jy@cn.fujitsu.com>
-    13  Cyril Hrubis <chrubis@suse.cz>
-    13  Petr Vorel <petr.vorel@gmail.com>
-    11  Li Wang <liwang@redhat.com>
-    10  Joerg Vehlow <joerg.vehlow@aox-tech.de>
-    10  Martin Doucha <mdoucha@suse.cz>
-     7  Alexey Kodanev <alexey.kodanev@oracle.com>
-     6  Clemens Famulla-Conrad <cfamullaconrad@suse.de>
-     5  Xiao Yang <ice_yangxiao@163.com>
-     3  Feiyu Zhu <zhufy.jy@cn.fujitsu.com>
-     2  Jorik Cronenberg <jcronenberg@suse.de>
-     2  Pengfei Xu <pengfei.xu@intel.com>
-     2  Ping Fang <pifang@redhat.com>
-     2  Richard Palethorpe <rpalethorpe@suse.com>
-     1  Cai Zhenglong <caizhenglong_cm@deepin.com>
-     1  Dylan Chung <dylan@andestech.com>
-     1  Eric Lin <tesheng@andestech.com>
-     1  Fabrice Fontaine <fontaine.fabrice@gmail.com>
-     1  He Zhe <zhe.he@windriver.com>
-     1  Ivan Hu <ivan.hu@canonical.com>
-     1  Ma Feng <mafeng.ma@huawei.com>
-     1  Mathias Fiedler <mathias.fiedler@aox-tech.de>
-     1  Rachel Sibley <rasibley@redhat.com>
-     1  Song Jian <songjian15@huawei.com>
-     1  Sultan Alsawaf <sultan@kerneltoast.com>
-     1  Xiang Li <lixian@qti.qualcomm.com>
-     1  Yi Zhao <yi.zhao@windriver.com>
-     1  Yongxin Liu <yongxin.liu@windriver.com>
-     1  Zou Wei <zou_wei@huawei.com>
-
-
-And also thanks to patch reviewers:
-
-git log 20190930.. | grep -Ei '(reviewed|acked)-by:' | sed 's/.*by: //' | sort | uniq -c | sort -n -r
-     76 Cyril Hrubis <chrubis@suse.cz>
-     46 Petr Vorel <pvorel@suse.cz>
-     28 Li Wang <liwang@redhat.com>
-     19 Jan Stancek <jstancek@redhat.com>
-      9 Alexey Kodanev <alexey.kodanev@oracle.com>
-      5 Clemens Famulla-Conrad <cfamullaconrad@suse.de>
-      4 Richard Palethorpe <rpalethorpe@suse.com>
-      3 Yang Xu <xuyang2018.jy@cn.fujitsu.com>
-      1 Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
-      1 Sumit Garg <sumit.garg@linaro.org>
-      1 Steve Dickson <steved@redhat.com>
-      1 Petr Vorel <petr.vorel@gmail.com>
-      1 Joerg Vehlow <joerg.vehlow@aox-tech.de>
-      1 Amir Goldstein <amir73il@gmail.com>
-
--- 
-Cyril Hrubis
-chrubis@suse.cz
+I think it would be a wrong direction. Just like this change does not
+introduce all of instrument_test_and_set_bit,
+instrument___clear_bit_unlock, instrument_copyin,
+instrument_copyout_mcsafe, instrument_atomic_andnot, .... All of these
+can be grouped into a very small set of cases with respect to what
+type of memory access they do from the point of view of sanitizers.
+And we introduce instrumentation for these _types_ of accesses, rather
+than application functions (we don't care much if the access is for
+atomic operations, copy to/from user, usb, dma, skb or something
+else). It seems that our set of instrumentation annotations can't
+handle some very basic cases...
