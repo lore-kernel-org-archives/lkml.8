@@ -2,86 +2,112 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B0DC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 18:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 207C2C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 18:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11CD022525
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 18:22:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF9E922525
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 18:27:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728712AbgATSWC (ORCPT
+        id S1727121AbgATS1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 13:22:02 -0500
-Received: from mail-io1-f72.google.com ([209.85.166.72]:33656 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727011AbgATSWB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 13:22:01 -0500
-Received: by mail-io1-f72.google.com with SMTP id i8so186906ioi.0
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 10:22:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=MqDXOoM9vvTcTH3u9+KklRDGAKW3hOgR3ZSR/h+boWo=;
-        b=CT69srHHqlfZ7K/XvalpGbe3pUpo/Z+IUw2B68DuXebI0tpZRmEjRQrICgGCcJaHb3
-         XFEyGQiGs3N0PhX1DyIgLgWxHlgJRmtEftJkK6aXAf05h1sJ2jC2VrzCFxxNJr3nH0en
-         FBtiNXNShMCiSc9CsfzTzLXYFmxvpBStLwMGPgO5yhlvrtqGeUegu5vO5Fbx8o9Tp80q
-         Lkzt3DhJbTf8Z8pyGhPECPTlVDVeyjzi8slJqAEIZufA4CiwSaifAytJZ/a+2oyECapM
-         XUQNKDy2fA+qXlz0D4iQ1YWy9/mzKSqCNaxGfntdoOUUWGJTstD0GUyu5Wwyrbp2oq/+
-         DHDw==
-X-Gm-Message-State: APjAAAWTo4ECXm0tBLcXf6yUFJWQ4PLDY1leGTD5hl71unonMsy3PPjY
-        8O653TWSMa20v+5pjb9UvtxSrxv+tiWbAyf4ENywxM0VNJwx
-X-Google-Smtp-Source: APXvYqzfQyTnxVv2xv/HZdiNuXYYiHLNeNXNJ6hv0nTAZFxD/xXg/rkalEYxh8LA+d9fc9B6xIMLWxfmsZDaI5AWugpAqhqpGZ/4
+        Mon, 20 Jan 2020 13:27:36 -0500
+Received: from foss.arm.com ([217.140.110.172]:35484 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726642AbgATS1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 13:27:35 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A249731B;
+        Mon, 20 Jan 2020 10:27:34 -0800 (PST)
+Received: from [192.168.0.7] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2843F3F68E;
+        Mon, 20 Jan 2020 10:27:28 -0800 (PST)
+Subject: Re: [PATCH 1/4] PM / EM: and devices to Energy Model
+To:     Quentin Perret <qperret@google.com>,
+        Lukasz Luba <lukasz.luba@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-imx@nxp.com, Morten.Rasmussen@arm.com, Chris.Redpath@arm.com,
+        ionela.voinescu@arm.com, javi.merino@arm.com,
+        cw00.choi@samsung.com, b.zolnierkie@samsung.com, rjw@rjwysocki.net,
+        sudeep.holla@arm.com, viresh.kumar@linaro.org, nm@ti.com,
+        sboyd@kernel.org, rui.zhang@intel.com, amit.kucheria@verdurent.com,
+        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
+        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh@kernel.org,
+        matthias.bgg@gmail.com, steven.price@arm.com,
+        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
+        airlied@linux.ie, daniel@ffwll.ch, kernel-team@android.com
+References: <20200116152032.11301-1-lukasz.luba@arm.com>
+ <20200116152032.11301-2-lukasz.luba@arm.com>
+ <20200117105437.GA211774@google.com>
+ <40587d98-0e8d-cbac-dbf5-d26501d47a8c@arm.com>
+ <20200120150918.GA164543@google.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <8332c4ac-2a7d-1e2d-76e9-7c979a666257@arm.com>
+Date:   Mon, 20 Jan 2020 19:27:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-Received: by 2002:a02:856a:: with SMTP id g97mr227401jai.97.1579544520986;
- Mon, 20 Jan 2020 10:22:00 -0800 (PST)
-Date:   Mon, 20 Jan 2020 10:22:00 -0800
-In-Reply-To: <00000000000043aa29059c91459e@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000149402059c965e75@google.com>
-Subject: Re: KASAN: slab-out-of-bounds Read in bitmap_ipmac_gc
-From:   syzbot <syzbot+c1a1fb435465986efe35@syzkaller.appspotmail.com>
-To:     a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
-        coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
-        gregkh@linuxfoundation.org, info@metux.net, jeremy@azazel.net,
-        kadlec@netfilter.org, kstewart@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, lipeng321@huawei.com,
-        liuyonglong@huawei.com, mareklindner@neomailbox.ch,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        pablo@netfilter.org, salil.mehta@huawei.com, sbrivio@redhat.com,
-        shuliubin@huawei.com, sw@simonwunderlich.de,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-        yisen.zhuang@huawei.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200120150918.GA164543@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On 20/01/2020 16:09, Quentin Perret wrote:
+> Hey Lukasz,
+> 
+> On Monday 20 Jan 2020 at 14:52:07 (+0000), Lukasz Luba wrote:
+>> On 1/17/20 10:54 AM, Quentin Perret wrote:
+>>> Suggested alternative: have two registration functions like so:
+>>>
+>>> 	int em_register_dev_pd(struct device *dev, unsigned int nr_states,
+>>> 			       struct em_data_callback *cb);
+>>> 	int em_register_cpu_pd(cpumask_t *span, unsigned int nr_states,
+>>> 			       struct em_data_callback *cb);
+>>
+>> Interesting, in the internal review Dietmar asked me to remove these two
+>> functions. I had the same idea, which would simplify a bit the
+>> registration and it does not need to check the dev->bus if it is CPU.
+>>
+>> Unfortunately, we would need also two function in drivers/opp/of.c:
+>> dev_pm_opp_of_register_cpu_em(policy->cpus);
+>> and
+>> dev_pm_opp_of_register_dev_em(dev);
+>>
+>> Thus, I have created only one registration function, which you can see
+>> in this patch set.
+> 
+> Right, I can see how having a unified API would be appealing, but the
+> OPP dependency is a nono, so we'll need to work around one way or
+> another.
+> 
+> FWIW, I don't think having separate APIs for CPUs and other devices is
+> that bad given that we already have entirely different frameworks to
+> drive their respective frequencies. And the _cpu variants are basically
+> just wrappers around the _dev ones, so not too bad either IMO :).
 
-commit 0d581ba311a27762fe1a14e5db5f65d225b3d844
-Author: Yonglong Liu <liuyonglong@huawei.com>
-Date:   Wed Jul 3 11:12:30 2019 +0000
+It's true that we need the policy->cpus cpumask only for cpu devices and
+we have it available when we call em_register_perf_domain()
+[scmi-cpufreq.c driver] or the OPP wrapper dev_pm_opp_of_register_em()
+[e.g. cpufreq-dt.c driver].
 
-    net: hns: add support for vlan TSO
+And we shouldn't make EM code dependent on OPP.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16d5dfaee00000
-start commit:   def9d278 Linux 5.5-rc7
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=15d5dfaee00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=11d5dfaee00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=cf8e288883e40aba
-dashboard link: https://syzkaller.appspot.com/bug?extid=c1a1fb435465986efe35
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=153ac495e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=153471d1e00000
+But can't we add 'struct cpumask *mask' as an additional argument to
+both which can be set to NULL for (devfreq) devices?
 
-Reported-by: syzbot+c1a1fb435465986efe35@syzkaller.appspotmail.com
-Fixes: 0d581ba311a2 ("net: hns: add support for vlan TSO")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+We can check in em_register_perf_domain() that we got a valid cpumask
+for a cpu device and ignore it for (devfreq) devices.
