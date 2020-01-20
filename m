@@ -2,91 +2,62 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCE3C33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 17:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F57C33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 17:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B86622314
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 17:58:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gF03ANpU"
+	by mail.kernel.org (Postfix) with ESMTP id 7E68D22314
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 17:58:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727692AbgATR60 (ORCPT
+        id S1728665AbgATR6j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 12:58:26 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:32923 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726642AbgATR60 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 12:58:26 -0500
-Received: by mail-pg1-f193.google.com with SMTP id 6so62199pgk.0;
-        Mon, 20 Jan 2020 09:58:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ysjJBMwBw0DEoJwVh/oOrH8bpLVarkoQHD4ZW+ZjLcc=;
-        b=gF03ANpUCTOHWnxa81GGHBT7Os+poOUoxf9lJpXAZdFljtqX/E1L86s0lFCGFiLEAf
-         63LkHabEs2LiDpT5d+/kN20UhjZ0YTNZjF1URvkycUTxAV6I4QfEJwoAnxdhHQuVw/eK
-         lFiUHmUWCFyt+HUPcIgp4d5HOz1TfVFuK4ZFuHRYgvuSbvoKsvEoM7530zd70kzmDGQt
-         +R8vA35zdlm7XVHG2Muv20Slp3w6VzmvvOVZZ+93zgnjnRen9RB22YZ2KdeTg7+1LuDs
-         p+AslZbe5sxhnTGOBP1p2vj19Ftyjq2vOwh4h2sqD2LDnMFSG+gRw2uSNzGBEf1QvhkI
-         MbOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ysjJBMwBw0DEoJwVh/oOrH8bpLVarkoQHD4ZW+ZjLcc=;
-        b=dpL/RzN/CUwsg0/gaEn8NV0BFQZocmUifi2rmYPBFbX68zN89r/2PNjp35/PMtNlpm
-         yg41eMEPM2SZr8lDNyIsIlrQEJCvWvEPpbS0y7jogKyfIutGqgYjGHhzFjJMgjLC3E1T
-         Cy0XIqjXJLyD/iMDx9n0zC3GbgnspxgCKYtE7C6SEL75ttvUCNZ5N51/3zXqj8O7BOY/
-         VMXDXfb2bospX0SjxU53ktiNj8uP/zxI9Ipgl/0E29lvlFzUn4jeg283IxMep81W6ilP
-         +jaR69yU9Mg5/q32sMD9L5ZBJ2iwxA+6LkFuYNpLfAFPxGeGlgR4mfbUsIukn1sv/4L5
-         NMjQ==
-X-Gm-Message-State: APjAAAVaEUhuR0il/C4KStOfcWUXvVVsBhcXSq2ubNzone005PJol/Zg
-        aY1N05zIU0Fv6K3NkGZegTXcFI0o
-X-Google-Smtp-Source: APXvYqwzBgH9rYplTvGAFyQMF6dstlqiCjG1FvSkBKHvOYosUMrEnnFXo5Rhym8wqEmHato6nTyaSg==
-X-Received: by 2002:a62:7681:: with SMTP id r123mr325130pfc.169.1579543105701;
-        Mon, 20 Jan 2020 09:58:25 -0800 (PST)
-Received: from [192.168.86.235] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
-        by smtp.gmail.com with ESMTPSA id b24sm39794104pfo.55.2020.01.20.09.58.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Jan 2020 09:58:25 -0800 (PST)
-Subject: Re: [PATCH] tcp_bbr: improve arithmetic division in bbr_update_bw()
-To:     Wen Yang <wenyang@linux.alibaba.com>,
-        Eric Dumazet <edumazet@google.com>, davem@davemloft.net
-Cc:     Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200120100456.45609-1-wenyang@linux.alibaba.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <af89b1c6-2182-be2e-6b44-1921483d426b@gmail.com>
-Date:   Mon, 20 Jan 2020 09:58:23 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 20 Jan 2020 12:58:39 -0500
+Received: from mx2.suse.de ([195.135.220.15]:48640 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727740AbgATR6j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 12:58:39 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 6B209AD5B;
+        Mon, 20 Jan 2020 17:58:37 +0000 (UTC)
+Date:   Mon, 20 Jan 2020 09:51:44 -0800
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Davidlohr Bueso <dbueso@suse.de>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>
+Subject: Re: [PATCH] lib/rbtree: avoid pointless rb_node alignment
+Message-ID: <20200120175144.67625skg6eiprpsa@linux-p48b>
+References: <20200110215429.30360-1-dave@stgolabs.net>
+ <CAMuHMdXeZvJ0X6Ah2CpLRoQJm+YhxAWBt-rUpxoyfOLTcHp+0g@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200120100456.45609-1-wenyang@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdXeZvJ0X6Ah2CpLRoQJm+YhxAWBt-rUpxoyfOLTcHp+0g@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 20 Jan 2020, Geert Uytterhoeven wrote:
 
+>timerqueue_del() uses rbtree, and
+>
+>    #define rb_parent(r)   ((struct rb_node *)((r)->__rb_parent_color & ~3))
+>
+>relies on all objects being 4-byte aligned.  But your patch broke that
+>assumption on m68k, where the default alignment is 2-byte.
+>
+>Andrew: please drop this patch.
 
-On 1/20/20 2:04 AM, Wen Yang wrote:
-> do_div() does a 64-by-32 division. Use div64_long() instead of it
-> if the divisor is long, to avoid truncation to 32-bit.
-> And as a nice side effect also cleans up the function a bit.
-> 
+Yeah that's too bad. I'll send a patch improving the comment around the alignment
+once the patch is dropped.
 
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-
-Thanks !
+Thanks,
+Davidlohr
