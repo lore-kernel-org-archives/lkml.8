@@ -2,170 +2,117 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A847C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:20:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10473C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68B9221D7E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:20:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5C9521D7E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:21:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729145AbgATQUv (ORCPT
+        id S1729221AbgATQVC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 11:20:51 -0500
-Received: from mx2.suse.de ([195.135.220.15]:42376 "EHLO mx2.suse.de"
+        Mon, 20 Jan 2020 11:21:02 -0500
+Received: from foss.arm.com ([217.140.110.172]:34240 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729045AbgATQUv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 11:20:51 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 1715BAE8C;
-        Mon, 20 Jan 2020 16:20:49 +0000 (UTC)
-Subject: Re: reiserfs broke between 4.9.205 and 4.9.208
-To:     Byron Stanoszek <gandalf@winds.org>
-Cc:     linux-kernel@vger.kernel.org
-References: <alpine.LNX.2.21.1.2001200956220.14639@winds.org>
-From:   Jeff Mahoney <jeffm@suse.com>
-Organization: SUSE Labs Data & Performance
-Message-ID: <4c36762f-1fa7-01a9-868c-e3deeaa10fa3@suse.com>
-Date:   Mon, 20 Jan 2020 11:20:46 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.4.1
+        id S1729146AbgATQVC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 11:21:02 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4EDB731B;
+        Mon, 20 Jan 2020 08:21:01 -0800 (PST)
+Received: from [10.37.12.169] (unknown [10.37.12.169])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5C2703F6C4;
+        Mon, 20 Jan 2020 08:20:51 -0800 (PST)
+Subject: Re: [PATCH 1/4] PM / EM: and devices to Energy Model
+To:     Quentin Perret <qperret@google.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-imx@nxp.com, Morten.Rasmussen@arm.com, Chris.Redpath@arm.com,
+        ionela.voinescu@arm.com, javi.merino@arm.com,
+        cw00.choi@samsung.com, b.zolnierkie@samsung.com, rjw@rjwysocki.net,
+        sudeep.holla@arm.com, viresh.kumar@linaro.org, nm@ti.com,
+        sboyd@kernel.org, rui.zhang@intel.com, amit.kucheria@verdurent.com,
+        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
+        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh@kernel.org,
+        matthias.bgg@gmail.com, steven.price@arm.com,
+        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
+        airlied@linux.ie, daniel@ffwll.ch, patrick.bellasi@matbug.net
+References: <20200116152032.11301-1-lukasz.luba@arm.com>
+ <20200116152032.11301-2-lukasz.luba@arm.com>
+ <17b77e0c-9455-0479-d37b-c57717c784c7@arm.com>
+ <20200120152804.GB164543@google.com>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <453034e5-f7b9-20f7-4e26-5d0d7164edd1@arm.com>
+Date:   Mon, 20 Jan 2020 16:20:49 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <alpine.LNX.2.21.1.2001200956220.14639@winds.org>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="sjPuTMLKU0tHcirru48NnQUFQPTOfw74D"
+In-Reply-To: <20200120152804.GB164543@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---sjPuTMLKU0tHcirru48NnQUFQPTOfw74D
-Content-Type: multipart/mixed; boundary="aufVKgB8PG1Tl2Jo6yNwUHtkIQyE9MSAI"
 
---aufVKgB8PG1Tl2Jo6yNwUHtkIQyE9MSAI
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
 
-On 1/20/20 10:03 AM, Byron Stanoszek wrote:
-> On Wed, 15 Jan 2020, Jeff Mahoney wrote:
->> On 1/9/20 7:12 AM, Jan Kara wrote:
->>>
->>> Hello,
->>>
->>> On Wed 08-01-20 15:42:58, Randy Dunlap wrote:
->>>> On 1/8/20 11:36 AM, Michael Brunnbauer wrote:
->>>>> after upgrading from 4.9.205 to 4.9.208, I get errors on two differ=
-ent
->>>>> reiserfs filesystems when doing cp -a (the chown part seems to
->>>>> fail) and
->>>>> on other occasions:
->>>>>
->>>>> =C2=A0kernel: REISERFS warning (device sda1): jdm-20004
->>>>> reiserfs_delete_xattrs: Couldn't delete all xattrs (-95)
->>>>>
->>>>> =C2=A0kernel: REISERFS warning (device sdc1): jdm-20004
->>>>> reiserfs_delete_xattrs: Couldn't delete all xattrs (-95)
->>>>>
->>>>> This behaviour disappeared after a downgrade to 4.9.205.
->>>>>
->>>>> I understand there have been changes to the file system code but
->>>>> I'm not
->>>>> sure they affect reiserfs, e.g.
->>>>>
->>>>> =C2=A0https://bugzilla.kernel.org/show_bug.cgi?id=3D205433
->>>>>
->>>>> Any Idea?
->>>>>
->>>>> Regards,
->>>>>
->>>>> Michael Brunnbauer
->>>>>
->>>>
->>>> Looks to me like 4.9.207 contains reiserfs changes.
->>>>
->>>> Adding CC's.
->>>
->>> Looks like a regression from commit 60e4cf67a582 "reiserfs: fix exten=
-ded
->>> attributes on the root directory". We are getting -EOPNOTSUPP from
->>> reiserfs_for_each_xattr() likely originally from open_xa_root().
->>> Previously
->>> we were returning -ENODATA from there which error
->>> reiserfs_for_each_xattr()
->>> converted to 0. I don't understand reiserfs xattrs enough to quickly
->>> tell
->>> what should actually be happening after the Jeff's change - naively I=
-'d
->>> think we should just silence the bogus warning in case of EOPNOTSUPP.=
-
->>> Jeff,
->>> can you have a look?
->>>
->>> Also Michael, I'd like to clarify: Does 'cp -a' return any error or
->>> is it
->>> just that the kernel is spewing these annoying warnings?=C2=A0 Becaus=
-e
->>> from the
->>> code reading I'd think that it is only the kernel spewing errors but
->>> userspace should be fine...
+On 1/20/20 3:28 PM, Quentin Perret wrote:
+> On Monday 20 Jan 2020 at 15:53:35 (+0100), Dietmar Eggemann wrote:
+>> Would be really nice if this wouldn't be required. We should really aim
+>> for 1 framework == 1 set of interfaces.
 >>
->> This error occurs when extended attributes are not enabled on the file=
-
->> system *and* the module is not built with extended attributes enabled.=
-
->> I've sent out the fix for it just now.
+>> What happens if someone calls em_get_pd() on a CPU EM?
 >>
->> -Jeff
->=20
-> Hi Jeff,
->=20
-> Can you share the patch with us for testing? I haven't seen this hit
-> mainline
-> yet.
+>> E.g:
+>>
+>>   static struct perf_domain *pd_init(int cpu)
+>>   {
+>> -       struct em_perf_domain *obj = em_cpu_get(cpu);
+>> +       struct device *dev = get_cpu_device(cpu);
+>> +       struct em_perf_domain *obj = em_pd_get(dev);
+>>          struct perf_domain *pd;
+>>
+>> Two versions of one functionality will confuse API user from the
+>> beginning ...
+> 
+> Agreed, this looks a bit confusing. It should be trivial to make
+> em_dev_get() (or whatever we end up calling it) work for CPUs too,
+> though. And we could always have a em_cpu_get(int cpu) API that is a
+> basically a wrapper around em_dev_get() for convenience.
 
-Sure.  I posted it to the reiserfs-devel list last week and Jan Kara
-pulled it into his tree for submission to mainline.
+The problem not only here is that we have a CPU index 'int cpu'
+and if we ask for device like:
 
-It's in linux-next:
+struct device *dev = get_cpu_device(cpu);
 
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commi=
-t/fs/reiserfs?id=3D394440d469413fa9b74f88a11f144d76017221f2
+It might be not the same device that was used during the
+registration, when we had i.e. 4 CPUs for the same policy:
 
--Jeff
+int cpu_id = cpumask_first(policy->cpus);
+struct device *cpu_dev = get_cpu_device(cpu_id);
+em_register_perf_domain(cpu_dev, nr_opp, &em_cb);
 
---=20
-Jeff Mahoney
-Director, SUSE Labs Data & Performance
+That's why the em_cpu_get() is different than em_get_pd(), mainly by:
+if (cpumask_test_cpu(cpu, em_span_cpus(em_pd)))
 
+It won't be simple wrapper, let me think how it could be handled
+differently than it is now.
 
---aufVKgB8PG1Tl2Jo6yNwUHtkIQyE9MSAI--
+Regards,
+Lukasz
 
---sjPuTMLKU0tHcirru48NnQUFQPTOfw74D
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEE8wzgbmZ74SnKPwtDHntLYyF55bIFAl4l014ACgkQHntLYyF5
-5bIKCA//WBZlPdTHYsb2KLyzY4HrXWgaghkoPvK9oglsEL5DjxGBAKEBLKSnRvkh
-6Yx1Lcr2Wt8KbFTMF5KvOTUayd893xMNmPKHE91FZnJlq1rnvhjG7zZ/mdq8JwD6
-EKLmVTMibsvVuZF0P9Z5qTU/3u1CijKCUnTrKcuB8IrQxjooQlRMYX3Av+fcljy7
-Ciy5gri7zT3WQ2pr9ZezbNzB95T0RDfGRs4R7Zh8v+lmV9HrpivW1yWdX+0xEd++
-Wj3eUBeED+Ctfr7iCK8HaG7nY7ymwbrRSQF0WCAvi/gcBy764HGaIB4ZrSuEfvfC
-DfGFtJy4VAzpmeU25fDkePJD2HKBp0bWVoeTe8avO4ciuInqnad9A9Oi9JAQp7+U
-nzsfGyJxKhpz0sNMIz4zKfcNfz9m0UiKBxyN6kldhyhKj1gHFMb6pVavGE//l/+C
-JOK2+qDAN8uhNx/76Xk46ZcArzJXmPryPKT5y/FvUHTwErhuXfPUENU5ZxFyFvpq
-TULNtGT0d1djr6b1+OX6l3veW5uz+mIJisI/WwxQLSRGN+0UfxkkPP/YZDj2+Sfc
-MzWd+1U/0d16C5Yvz1xE2Lm3wjssojtB6TJ6rVn/XdmeEHz7Igd022F38x2O/4Iu
-d/Cw6VkFCt8qT+uW7+eB7GqCdNC7tnutRJbqMs0I/OOXAaTNyEQ=
-=vhfi
------END PGP SIGNATURE-----
-
---sjPuTMLKU0tHcirru48NnQUFQPTOfw74D--
+> 
+> Thanks,
+> Quentin
+> 
