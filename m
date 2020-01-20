@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D7E0C33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 835FBC35240
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:29:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EEB8217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:29:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50B232087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:29:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="RmcoRByR"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="u9ndmuBz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729414AbgATQ3G (ORCPT
+        id S1729436AbgATQ3I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 11:29:06 -0500
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:45832 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726876AbgATQ3B (ORCPT
+        Mon, 20 Jan 2020 11:29:08 -0500
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:10975 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726942AbgATQ3G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 11:29:01 -0500
+        Mon, 20 Jan 2020 11:29:06 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1579537740; x=1611073740;
+  t=1579537746; x=1611073746;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version;
-  bh=izvBTIQXa2EvAogeErXSklqQs4ieTuQHhNTxNOQYoGk=;
-  b=RmcoRByRxHfu1q7x8aFSteXDJI/hMb239z75FCeP3vvJ1S8f8X72Pp6A
-   /IyTlwoFQU6gvrMI17zsElsbswz9WiOMevBCf2gfyk9nehtjxudaaApOr
-   S6mZoeH42WOWecsF44fZRup5nLeCCQ7HY7aMKUGnyE0GybdWHIFj3KyxO
-   M=;
-IronPort-SDR: FJdhGH/wWsoJC2iw6OFie3zwBucIuPjzdDcVFkGAx9FVa0L4e5+TYiiPKSkKj2KltK0es0lGFH
- n7meafouL+sA==
+  bh=VWI3iKWCGFxKCrPhXElhJRjHWg68meG4dSAmn+17eBI=;
+  b=u9ndmuBziFcCx01mgnzZs/wpcJLiCE6Cle9rK6G1ojXLqNH7pM0b8Vor
+   WipuO/gyhkvdcfcV3RebEH596yPQpgJV+UhpDm702KMeJEopqVuHyXyuj
+   YlGGvWeuDAWHJk5i6UVSFsfHo+w+LcNjTgVnf3n++VMYGH5fey55U/FTs
+   0=;
+IronPort-SDR: +ddrrpCzZaIVycq8yz72hIlt2gHwluQ8c9DkRoLclXVXB0JLP46i3BI7GY8pjQwgAbrN4A4p73
+ rVTzUB8a0qpA==
 X-IronPort-AV: E=Sophos;i="5.70,342,1574121600"; 
-   d="scan'208";a="12341486"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-d0be17ee.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 20 Jan 2020 16:28:59 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2a-d0be17ee.us-west-2.amazon.com (Postfix) with ESMTPS id E43ACA2026;
-        Mon, 20 Jan 2020 16:28:57 +0000 (UTC)
+   d="scan'208";a="19801579"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 20 Jan 2020 16:28:46 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com (Postfix) with ESMTPS id DFD04A1EB6;
+        Mon, 20 Jan 2020 16:28:41 +0000 (UTC)
 Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
  EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1236.3; Mon, 20 Jan 2020 16:28:57 +0000
+ id 15.0.1236.3; Mon, 20 Jan 2020 16:28:41 +0000
 Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.253) by
  EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 20 Jan 2020 16:28:51 +0000
+ id 15.0.1367.3; Mon, 20 Jan 2020 16:28:35 +0000
 From:   SeongJae Park <sjpark@amazon.com>
 To:     <akpm@linux-foundation.org>
 CC:     SeongJae Park <sjpark@amazon.de>, <acme@kernel.org>,
@@ -55,9 +55,9 @@ CC:     SeongJae Park <sjpark@amazon.de>, <acme@kernel.org>,
         <dwmw@amazon.com>, <amit@kernel.org>, <rostedt@goodmis.org>,
         <sj38.park@gmail.com>, <linux-mm@kvack.org>,
         <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 4/8] mm/damon: Apply dynamic memory mapping changes
-Date:   Mon, 20 Jan 2020 17:27:53 +0100
-Message-ID: <20200120162757.32375-5-sjpark@amazon.com>
+Subject: [PATCH 1/8] mm: Introduce Data Access MONitor (DAMON)
+Date:   Mon, 20 Jan 2020 17:27:50 +0100
+Message-ID: <20200120162757.32375-2-sjpark@amazon.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200120162757.32375-1-sjpark@amazon.com>
 References: <20200120162757.32375-1-sjpark@amazon.com>
@@ -73,173 +73,353 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: SeongJae Park <sjpark@amazon.de>
 
-Only a number of parts in the virtual address space of the processes is
-mapped to physical memory and accessed.  Thus, tracking the unmapped
-address regions is just wasteful.  However, tracking every memory
-mapping change might incur an overhead.  For the reason, DAMON applies
-the dynamic memory mapping changes to the tracking regions only for each
-of a user-specified time interval (``regions update interval``).
+This commit introduces a new kernel module named DAMON.  Note that this
+commit is implementing only the stub for the module load/unload, basic
+data structures, and simple manipulation functions of the structures to
+keep the size of commit small.  The core mechanisms of DAMON will be
+implemented one by one by following commits.
+
+Brief Introduction
+==================
+
+DAMON is a kernel module that would allow users to monitor the actual
+memory access pattern of specific user-space processes.  It aims to be
+1) accurate enough to be useful for performance-centric domains, and 2)
+sufficiently light-weight so that it can be applied online.
+
+For the goals, DAMON will utilize its two core mechanisms, called
+region-based sampling and adaptive regions adjustment.  The region-based
+sampling allows users to make their own trade-off between the quality
+and the overhead of the monitoring and set the upperbound of the
+monitoring overhead.  Further, the adaptive regions adjustment mechanism
+makes DAMON to maximize the quality and minimize the overhead with its
+best efforts while preserving the users configured trade-off.
+
+Please note that the term 'memory' in this context means 'main memory'.
+It also assumes that it would usually utilizes the middle level speed
+memory devices such as DRAMs or NVRAMs.  CPU caches or storage devices
+are not DAMON's concern, as those are too fast or too slow to be in
+DAMON's scope.
+
+Expected Use-cases
+==================
+
+A straightforward usecase of DAMON would be the program behavior
+analysis.  With the DAMON output, users can confirm whether the program
+is running as intended or not.  This will be useful for debuggings and
+tests of design points.
+
+The monitored results can also be useful for counting the dynamic
+working set size of workloads.  For the administration of memory
+overcommitted systems or selection of the environments (e.g., containers
+providing different amount of memory) for your workloads, this will be
+useful.
+
+If you are a programmer, you can optimize your program by managing the
+memory based on the actual data access pattern.  For example, you can
+identify the dynamic hotness of your data using DAMON and call
+``mlock()`` to keep your hot data in DRAM, or call ``madvise()`` with
+``MADV_PAGEOUT`` to proactively reclaim cold data.  Even though your
+program is guaranteed to not encounter memory pressure, you can still
+improve the performance by applying the DAMON outputs for call of
+``MADV_HUGEPAGE`` and ``MADV_NOHUGEPAGE``.  More creative optimizations
+would be possible.  Our evaluations of DAMON includes a straightforward
+optimization using the ``mlock()``.  Please refer to the below
+Evaluation section for more detail.
+
+As DAMON incurs very low overhead, such optimizations can be applied not
+only offline, but also online.  Also, there is no reason to limit such
+optimizations to the user space.  Several parts of the kernel's memory
+management mechanisms could be also optimized using DAMON. The
+reclamation, the THP (de)promotion decisions, and the compaction would
+be such a candidates.  Nevertheless, current version of DAMON is not
+highly optimized for the online/in-kernel uses.
 
 Signed-off-by: SeongJae Park <sjpark@amazon.de>
 ---
- mm/damon.c | 95 ++++++++++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 93 insertions(+), 2 deletions(-)
+ MAINTAINERS |   6 ++
+ mm/Kconfig  |  12 +++
+ mm/Makefile |   1 +
+ mm/damon.c  | 223 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 242 insertions(+)
+ create mode 100644 mm/damon.c
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 97e3ce930083..c8db500a182f 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4583,6 +4583,12 @@ F:	net/ax25/ax25_out.c
+ F:	net/ax25/ax25_timer.c
+ F:	net/ax25/sysctl_net_ax25.c
+ 
++DATA ACCESS MONITOR
++M:	SeongJae Park <sjpark@amazon.de>
++L:	linux-mm@kvack.org
++S:	Maintained
++F:	mm/damon.c
++
+ DAVICOM FAST ETHERNET (DMFE) NETWORK DRIVER
+ L:	netdev@vger.kernel.org
+ S:	Orphan
+diff --git a/mm/Kconfig b/mm/Kconfig
+index a5dae9a7eb51..35813e0d0e28 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -736,4 +736,16 @@ config ARCH_HAS_PTE_SPECIAL
+ config ARCH_HAS_HUGEPD
+ 	bool
+ 
++config DAMON
++	tristate "Data Access Monitor"
++	depends on MMU
++	default y
++	help
++	  Provides data access monitoring.
++
++	  DAMON is a kernel module that allows users to monitor the actual
++	  memory access pattern of specific user-space processes.  It aims to
++	  be 1) accurate enough to be useful for performance-centric domains,
++	  and 2) sufficiently light-weight so that it can be applied online.
++
+ endmenu
+diff --git a/mm/Makefile b/mm/Makefile
+index d996846697ef..6c3c7c364015 100644
+--- a/mm/Makefile
++++ b/mm/Makefile
+@@ -107,3 +107,4 @@ obj-$(CONFIG_PERCPU_STATS) += percpu-stats.o
+ obj-$(CONFIG_ZONE_DEVICE) += memremap.o
+ obj-$(CONFIG_HMM_MIRROR) += hmm.o
+ obj-$(CONFIG_MEMFD_CREATE) += memfd.o
++obj-$(CONFIG_DAMON) += damon.o
 diff --git a/mm/damon.c b/mm/damon.c
-index 5012d8c25b8b..9252a2ba825d 100644
---- a/mm/damon.c
+new file mode 100644
+index 000000000000..064ec1f6ded9
+--- /dev/null
 +++ b/mm/damon.c
-@@ -63,14 +63,18 @@ static LIST_HEAD(damon_tasks_list);
-  * For each 'sample_interval', DAMON checks whether each region is accessed or
-  * not.  It aggregates and keeps the access information (number of accesses to
-  * each region) for 'aggr_interval' and then flushes it to the result buffer if
-- * an 'aggr_interval' surpassed.
-+ * an 'aggr_interval' surpassed.  And for each 'regions_update_interval', damon
-+ * checks whether the memory mapping of the target tasks has changed (e.g., by
-+ * mmap() calls from the applications) and applies the changes.
-  *
-  * All time intervals are in micro-seconds.
-  */
- static unsigned long sample_interval = 5 * 1000;
- static unsigned long aggr_interval = 100 * 1000;
-+static unsigned long regions_update_interval = 1000 * 1000;
- 
- static struct timespec64 last_aggregate_time;
-+static struct timespec64 last_regions_update_time;
- 
- static unsigned long min_nr_regions = 10;
- static unsigned long max_nr_regions = 1000;
-@@ -726,6 +730,87 @@ static void kdamond_split_regions(void)
- 		damon_split_regions_of(t);
- }
- 
+@@ -0,0 +1,223 @@
++// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Check whether it is time to check and apply the dynamic mmap changes
++ * Data Access Monitor
 + *
-+ * Returns true if it is.
-+ */
-+static bool kdamond_need_update_regions(void)
-+{
-+	return damon_check_reset_time_interval(&last_regions_update_time,
-+			regions_update_interval);
-+}
-+
-+static bool damon_intersect(struct damon_region *r, struct region *re)
-+{
-+	return !(r->vm_end <= re->start || re->end <= r->vm_start);
-+}
-+
-+/*
-+ * Update damon regions for the three big regions of the given task
++ * Copyright 2019 Amazon.com, Inc. or its affiliates.  All rights reserved.
 + *
-+ * t		the given task
-+ * bregions	the three big regions of the task
++ * Author: SeongJae Park <sjpark@amazon.de>
 + */
-+static void damon_apply_three_regions(struct damon_task *t,
-+				struct region bregions[3])
++
++#define pr_fmt(fmt) "damon: " fmt
++
++#include <linux/mm.h>
++#include <linux/module.h>
++#include <linux/random.h>
++#include <linux/slab.h>
++
++#define damon_get_task_struct(t) \
++	(get_pid_task(find_vpid(t->pid), PIDTYPE_PID))
++
++#define damon_next_region(r) \
++	(container_of(r->list.next, struct damon_region, list))
++
++#define damon_prev_region(r) \
++	(container_of(r->list.prev, struct damon_region, list))
++
++#define damon_for_each_region(r, t) \
++	list_for_each_entry(r, &t->regions_list, list)
++
++#define damon_for_each_region_safe(r, next, t) \
++	list_for_each_entry_safe(r, next, &t->regions_list, list)
++
++#define damon_for_each_task(t) \
++	list_for_each_entry(t, &damon_tasks_list, list)
++
++#define damon_for_each_task_safe(t, next) \
++	list_for_each_entry_safe(t, next, &damon_tasks_list, list)
++
++/* Represents a monitoring target region on the virtual address space */
++struct damon_region {
++	unsigned long vm_start;
++	unsigned long vm_end;
++	unsigned long sampling_addr;
++	unsigned int nr_accesses;
++	struct list_head list;
++};
++
++/* Represents a monitoring target task */
++struct damon_task {
++	unsigned long pid;
++	struct list_head regions_list;
++	struct list_head list;
++};
++
++/* List of damon_task objects */
++static LIST_HEAD(damon_tasks_list);
++
++static struct rnd_state rndseed;
++/* Get a random number in [l, r) */
++#define damon_rand(l, r) (l + prandom_u32_state(&rndseed) % (r - l))
++
++/*
++ * Construct a damon_region struct
++ *
++ * Returns the pointer to the new struct if success, or NULL otherwise
++ */
++static struct damon_region *damon_new_region(unsigned long vm_start,
++					unsigned long vm_end)
 +{
-+	struct damon_region *r, *next;
-+	unsigned int i = 0;
++	struct damon_region *ret;
 +
-+	/* Remove regions which isn't in the three big regions now */
-+	damon_for_each_region_safe(r, next, t) {
-+		for (i = 0; i < 3; i++) {
-+			if (damon_intersect(r, &bregions[i]))
-+				break;
-+		}
-+		if (i == 3)
-+			damon_destroy_region(r);
-+	}
++	ret = kmalloc(sizeof(struct damon_region), GFP_KERNEL);
++	if (!ret)
++		return NULL;
++	ret->vm_start = vm_start;
++	ret->vm_end = vm_end;
++	ret->nr_accesses = 0;
++	ret->sampling_addr = damon_rand(vm_start, vm_end);
++	INIT_LIST_HEAD(&ret->list);
 +
-+	/* Adjust intersecting regions to fit with the threee big regions */
-+	for (i = 0; i < 3; i++) {
-+		struct damon_region *first = NULL, *last;
-+		struct damon_region *newr;
-+		struct region *br;
-+
-+		br = &bregions[i];
-+		/* Get the first and last regions which intersects with br */
-+		damon_for_each_region(r, t) {
-+			if (damon_intersect(r, br)) {
-+				if (!first)
-+					first = r;
-+				last = r;
-+			}
-+			if (r->vm_start >= br->end)
-+				break;
-+		}
-+		if (!first) {
-+			/* no damon_region intersects with this big region */
-+			newr = damon_new_region(br->start, br->end);
-+			damon_add_region(newr, damon_prev_region(r), r);
-+		} else {
-+			first->vm_start = br->start;
-+			last->vm_end = br->end;
-+		}
-+	}
++	return ret;
 +}
 +
 +/*
-+ * Update regions for current memory mappings
++ * Add a region between two other regions
 + */
-+static void kdamond_update_regions(void)
++static inline void damon_add_region(struct damon_region *r,
++		struct damon_region *prev, struct damon_region *next)
 +{
-+	struct region three_regions[3];
++	__list_add(&r->list, &prev->list, &next->list);
++}
++
++/*
++ * Append a region to a task's list of regions
++ */
++static void damon_add_region_tail(struct damon_region *r, struct damon_task *t)
++{
++	list_add_tail(&r->list, &t->regions_list);
++}
++
++/*
++ * Delete a region from its list
++ */
++static void damon_del_region(struct damon_region *r)
++{
++	list_del(&r->list);
++}
++
++/*
++ * De-allocate a region
++ */
++static void damon_free_region(struct damon_region *r)
++{
++	kfree(r);
++}
++
++static void damon_destroy_region(struct damon_region *r)
++{
++	damon_del_region(r);
++	damon_free_region(r);
++}
++
++/*
++ * Construct a damon_task struct
++ *
++ * Returns the pointer to the new struct if success, or NULL otherwise
++ */
++static struct damon_task *damon_new_task(unsigned long pid)
++{
 +	struct damon_task *t;
 +
-+	damon_for_each_task(t) {
-+		if (damon_three_regions_of(t, three_regions))
-+			continue;
-+		damon_apply_three_regions(t, three_regions);
-+	}
++	t = kmalloc(sizeof(struct damon_task), GFP_KERNEL);
++	if (!t)
++		return NULL;
++	t->pid = pid;
++	INIT_LIST_HEAD(&t->regions_list);
++
++	return t;
 +}
 +
- /*
-  * Check whether current monitoring should be stopped
-  *
-@@ -789,6 +874,9 @@ static int kdamond_fn(void *data)
- 			kdamond_split_regions();
- 		}
- 
-+		if (kdamond_need_update_regions())
-+			kdamond_update_regions();
++/* Returns n-th damon_region of the given task */
++struct damon_region *damon_nth_region_of(struct damon_task *t, unsigned int n)
++{
++	struct damon_region *r;
++	unsigned int i;
 +
- 		usleep_range(sample_interval, sample_interval + 1);
- 	}
- 	damon_flush_rbuffer();
-@@ -895,6 +983,7 @@ static long damon_set_pids(unsigned long *pids, ssize_t nr_pids)
-  *
-  * sample_int		time interval between samplings
-  * aggr_int		time interval between aggregations
-+ * regions_update_int	time interval between vma update checks
-  * min_nr_reg		minimal number of regions
-  * max_nr_reg		maximum number of regions
-  * path_to_rfile	path to the monitor result files
-@@ -905,7 +994,7 @@ static long damon_set_pids(unsigned long *pids, ssize_t nr_pids)
-  * Returns 0 on success, negative error code otherwise.
-  */
- static long damon_set_attrs(unsigned long sample_int,
--		unsigned long aggr_int,
-+		unsigned long aggr_int, unsigned long regions_update_int,
- 		unsigned long min_nr_reg, unsigned long max_nr_reg,
- 		char *path_to_rfile)
- {
-@@ -927,6 +1016,7 @@ static long damon_set_attrs(unsigned long sample_int,
- 
- 	sample_interval = sample_int;
- 	aggr_interval = aggr_int;
-+	regions_update_interval = regions_update_int;
- 	min_nr_regions = min_nr_reg;
- 	max_nr_regions = max_nr_reg;
- 	strncpy(rfile_path, path_to_rfile, LEN_RES_FILE_PATH);
-@@ -939,6 +1029,7 @@ static int __init damon_init(void)
- 
- 	prandom_seed_state(&rndseed, 42);
- 	ktime_get_coarse_ts64(&last_aggregate_time);
-+	last_regions_update_time = last_aggregate_time;
- 	return 0;
- }
- 
++	i = 0;
++	damon_for_each_region(r, t) {
++		if (i++ == n)
++			return r;
++	}
++	return NULL;
++}
++
++static void damon_add_task_tail(struct damon_task *t)
++{
++	list_add_tail(&t->list, &damon_tasks_list);
++}
++
++static void damon_del_task(struct damon_task *t)
++{
++	list_del(&t->list);
++}
++
++static void damon_free_task(struct damon_task *t)
++{
++	struct damon_region *r, *next;
++
++	damon_for_each_region_safe(r, next, t)
++		damon_free_region(r);
++	kfree(t);
++}
++
++static void damon_destroy_task(struct damon_task *t)
++{
++	damon_del_task(t);
++	damon_free_task(t);
++}
++
++/*
++ * Returns number of monitoring target tasks
++ */
++static unsigned int nr_damon_tasks(void)
++{
++	struct damon_task *t;
++	unsigned int ret = 0;
++
++	damon_for_each_task(t)
++		ret++;
++	return ret;
++}
++
++/*
++ * Returns the number of target regions for a given target task
++ */
++static unsigned int nr_damon_regions(struct damon_task *t)
++{
++	struct damon_region *r;
++	unsigned int ret = 0;
++
++	damon_for_each_region(r, t)
++		ret++;
++	return ret;
++}
++
++static int __init damon_init(void)
++{
++	pr_info("init\n");
++
++	prandom_seed_state(&rndseed, 42);
++	return 0;
++}
++
++static void __exit damon_exit(void)
++{
++	pr_info("exit\n");
++}
++
++module_init(damon_init);
++module_exit(damon_exit);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("SeongJae Park <sjpark@amazon.de>");
++MODULE_DESCRIPTION("DAMON: Data Access MONitor");
 -- 
 2.17.1
 
