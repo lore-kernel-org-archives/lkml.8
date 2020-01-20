@@ -2,145 +2,103 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25740C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:35:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13363C32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:37:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A35142253D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:35:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D16D922525
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:37:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b="ihrTIgA+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MdhUeRZx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729117AbgATWfb (ORCPT
+        id S1726982AbgATWhw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 17:35:31 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.50]:30780 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727011AbgATWfb (ORCPT
+        Mon, 20 Jan 2020 17:37:52 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52168 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726607AbgATWhv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 17:35:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1579559728;
-        s=strato-dkim-0002; d=hartkopp.net;
-        h=In-Reply-To:Date:Message-ID:References:To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=KGocXKFbjNvf1reVOuA05/9wsguBPo3pEkM+yQaN6GY=;
-        b=ihrTIgA+lMdkmhtpqH+yRNQACFRvq39uA3bZGMoVT+9PSeKqQMrAUEEx+EF8UmFbj2
-        CoeTMf5Ysw+pnBC1Ls1CWKc8BbmWCDV2fh7GtOU3iLhhlwwdo49Va3PkpA9Plj3oHvn6
-        pebLoRl0p0SpudNhkaQvJtFcmMAns+4CevzX/PxWOJFH+P3UvCnIlu2SstJtEFLzV7Yu
-        +ZQNCKKpHzijq7tI6z3IOsGaei0xcj6/2aOBH71WzIZF8ggsrUD9umlQ+hUIAAx1HL4O
-        1fTTFBt7E830u55c7Onr1UE5GzmvGvLEXAKVKYkX9OD+eNr2+IOoQN6+gg1n9UWa9NUV
-        9gQA==
-X-RZG-AUTH: ":P2MHfkW8eP4Mre39l357AZT/I7AY/7nT2yrDxb8mjG14FZxedJy6qgO1o3PMaViOoLMJVsh5lUkl"
-X-RZG-CLASS-ID: mo00
-Received: from [192.168.40.177]
-        by smtp.strato.de (RZmta 46.1.5 DYNA|AUTH)
-        with ESMTPSA id t040cew0KMZG2Rm
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Mon, 20 Jan 2020 23:35:16 +0100 (CET)
-Subject: Re: general protection fault in can_rx_register
-From:   Oliver Hartkopp <socketcan@hartkopp.net>
-To:     Dmitry Vyukov <dvyukov@google.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        o.rempel@pengutronix.de,
-        syzbot <syzbot+c3ea30e1e2485573f953@syzkaller.appspotmail.com>,
-        David Miller <davem@davemloft.net>, linux-can@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
-References: <00000000000030dddb059c562a3f@google.com>
- <55ad363b-1723-28aa-78b1-8aba5565247e@hartkopp.net>
- <20200120091146.GD11138@x1.vandijck-laurijssen.be>
- <CACT4Y+a+GusEA1Gs+z67uWjtwBRp_s7P4Wd_SMmgpCREnDu3kg@mail.gmail.com>
- <8332ec7f-2235-fdf6-9bda-71f789c57b37@hartkopp.net>
-Message-ID: <2a676c0e-20f2-61b5-c72b-f51947bafc7d@hartkopp.net>
-Date:   Mon, 20 Jan 2020 23:35:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 20 Jan 2020 17:37:51 -0500
+Received: by mail-wm1-f66.google.com with SMTP id d73so997478wmd.1
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 14:37:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OADQyKE/ubXeK6XRyrfkTm/uQdcKdRz0U3P+emh+8jQ=;
+        b=MdhUeRZxNnPuTdxRppiPAEKXp0Kuytm3biLQptgEfJNmVNibI0k100tyzDq9Nj3/JQ
+         vRlc4pdQjDdNd5VqFS/j/UDrJYknaUZyMNH/A+yTik97p767QPrWJmJVSUSBc/RygzNs
+         11zSqz/I13jJfTKDIxRjVi09oFvkJXrxwL7ARTAYr8j0qJcfrkby2OuVfPpVplULCNKe
+         DFaH9zGA43TY962myAPt2/XJNLyZOC3oNZ9k2VAg6CwvUn1cO8K+VHQOswuXiI7SPYR6
+         nKz7UMgQOLwzAiABo/LSnxgdgatxHO88jFCcfI5beXlMY8cCr0MtnuOCOBTX108hpmMl
+         gQ7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OADQyKE/ubXeK6XRyrfkTm/uQdcKdRz0U3P+emh+8jQ=;
+        b=dsPpMlnfrf968mpFcXgpnSVb5B7bFecNOC4MCrw0s+3yTs5Nh96e0/8uZISwqsmSzR
+         dcDHl9sgIgSFqh/QtAURejLJBvb9Yrypv38GURWoTyeUxxpQ5OIXL+OhE4ticCjtOoBC
+         EC9eJ0AGyQa6mc04lK0dYfErL6njTevIttMMGNoQs05M38B6NFNbHS9mjN/saW4L49jh
+         1v+Xs3QEDv4NjMBKbHMVbKFf8Om96UiJBoVMKOufgLYdLy0HA1yBxk8HU9I5ZRbrJyZ6
+         3yxK1Hp1Vpc9KvUPz8kzkv551cbn+5c6F6kb/RAD3LEe9C9K4lCdHGEk1tfxNkMFHvP4
+         vevw==
+X-Gm-Message-State: APjAAAVLb2njAz5aU118uksPxoUjJMFy3HyEBBFlMz3CXX4fhapXBW5v
+        dTAnKVbwckr0UwsSVgIp8fHNoYWRrnwz
+X-Google-Smtp-Source: APXvYqxhLw78EY+jdD3jPaEAv6Ha0Fhrmapb06Cy3XpsdEAq//HRGBi6Pimofx+G98YG80i8ng8mVw==
+X-Received: by 2002:a7b:cb0a:: with SMTP id u10mr938794wmj.165.1579559869526;
+        Mon, 20 Jan 2020 14:37:49 -0800 (PST)
+Received: from ninjahost.lan (host-92-15-170-165.as43234.net. [92.15.170.165])
+        by smtp.googlemail.com with ESMTPSA id y7sm1851569wmd.1.2020.01.20.14.37.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jan 2020 14:37:49 -0800 (PST)
+From:   Jules Irenge <jbi.octave@gmail.com>
+To:     tglx@linutronix.de
+Cc:     linux-kernel@vger.kernel.org, boqun.feng@gmail.com,
+        Jules Irenge <jbi.octave@gmail.com>
+Subject: [PATCH 1/5] irq: Add  missing annotation for __irq_put_desc_unlock()
+Date:   Mon, 20 Jan 2020 22:37:34 +0000
+Message-Id: <20200120223734.51425-1-jbi.octave@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <8332ec7f-2235-fdf6-9bda-71f789c57b37@hartkopp.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Answering myself ...
+Sparse reports a warning at __irq_put_desc_unlock()
 
-On 20/01/2020 23.02, Oliver Hartkopp wrote:
+|warning: context imbalance in __irq_put_desc_unlock() - unexpected unlock.
 
-> 
-> Added some code to check whether dev->ml_priv is NULL:
-> 
-> ~/linux$ git diff
-> diff --git a/net/can/af_can.c b/net/can/af_can.c
-> index 128d37a4c2e0..6fb4ae4c359e 100644
-> --- a/net/can/af_can.c
-> +++ b/net/can/af_can.c
-> @@ -463,6 +463,10 @@ int can_rx_register(struct net *net, struct 
-> net_device *dev, canid_t can_id,
->          spin_lock_bh(&net->can.rcvlists_lock);
-> 
->          dev_rcv_lists = can_dev_rcv_lists_find(net, dev);
-> +       if (!dev_rcv_lists) {
-> +               pr_err("dev_rcv_lists == NULL! %p\n", dev);
-> +               goto out_unlock;
-> +       }
->          rcv_list = can_rcv_list_find(&can_id, &mask, dev_rcv_lists);
-> 
->          rcv->can_id = can_id;
-> @@ -479,6 +483,7 @@ int can_rx_register(struct net *net, struct 
-> net_device *dev, canid_t can_id,
->          rcv_lists_stats->rcv_entries++;
->          rcv_lists_stats->rcv_entries_max = 
-> max(rcv_lists_stats->rcv_entries_max,
-> 
-> rcv_lists_stats->rcv_entries);
-> +out_unlock:
->          spin_unlock_bh(&net->can.rcvlists_lock);
-> 
->          return err;
-> 
-> And the output (after some time) is:
-> 
-> [  758.505841] netlink: 'crash': attribute type 1 has an invalid length.
-> [  758.508045] bond7148: (slave vxcan1): The slave device specified does 
-> not support setting the MAC address
-> [  758.508057] bond7148: (slave vxcan1): Error -22 calling dev_set_mtu
-> [  758.532025] bond10413: (slave vxcan1): The slave device specified 
-> does not support setting the MAC address
-> [  758.532043] bond10413: (slave vxcan1): Error -22 calling dev_set_mtu
-> [  758.532254] dev_rcv_lists == NULL! 000000006b9d257f
-> [  758.547392] netlink: 'crash': attribute type 1 has an invalid length.
-> [  758.549310] bond7145: (slave vxcan1): The slave device specified does 
-> not support setting the MAC address
-> [  758.549313] bond7145: (slave vxcan1): Error -22 calling dev_set_mtu
-> [  758.550464] netlink: 'crash': attribute type 1 has an invalid length.
-> [  758.552301] bond7146: (slave vxcan1): The slave device specified does 
-> not support setting the MAC address
-> 
-> So we can see that we get a ml_priv pointer which is NULL which should 
-> not be possible due to this:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/net/can/dev.c#n743 
+To fix this, a __releases(&desc->lock) annotation is added.
+Given that __irq_put_desc_unlock() does actually
+call raw_spin_unlock_irqrestore(&desc->lock, flags)
+This not only fixes the warning
+but also improves on readability of the code.
 
-This reference doesn't point to the right code as vxcan has its own 
-handling do assign ml_priv in vxcan.c .
+Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+---
+ kernel/irq/irqdesc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> Btw. the variable 'size' is set two times at the top of 
-> alloc_candev_mqs() depending on echo_skb_max. This looks wrong.
+diff --git a/kernel/irq/irqdesc.c b/kernel/irq/irqdesc.c
+index 5b8fdd659e54..98a5f10d1900 100644
+--- a/kernel/irq/irqdesc.c
++++ b/kernel/irq/irqdesc.c
+@@ -891,6 +891,7 @@ __irq_get_desc_lock(unsigned int irq, unsigned long *flags, bool bus,
+ }
+ 
+ void __irq_put_desc_unlock(struct irq_desc *desc, unsigned long flags, bool bus)
++	__releases(&desc->lock)
+ {
+ 	raw_spin_unlock_irqrestore(&desc->lock, flags);
+ 	if (bus)
+-- 
+2.24.1
 
-No. It looks right as I did not get behind the ALIGN() macro at first sight.
-
-But it is still open why dev->ml_priv is not set correctly in vxcan.c as 
-all the settings for .priv_size and in vxcan_setup look fine.
-
-Best regards,
-Oliver
