@@ -2,196 +2,171 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16346C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 03:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE26C33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 03:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3A4F20678
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 03:26:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mywlhb4I"
+	by mail.kernel.org (Postfix) with ESMTP id F3BE020678
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 03:28:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729113AbgATD0O (ORCPT
+        id S1729091AbgATD2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 22:26:14 -0500
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:33007 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729011AbgATD0N (ORCPT
+        Sun, 19 Jan 2020 22:28:11 -0500
+Received: from 60-251-196-230.HINET-IP.hinet.net ([60.251.196.230]:18790 "EHLO
+        ironport.ite.com.tw" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729011AbgATD2L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 22:26:13 -0500
-Received: by mail-vk1-f193.google.com with SMTP id i78so8170685vke.0;
-        Sun, 19 Jan 2020 19:26:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=hI8W90n6MD+xGR60GW7O6kg6yOqBBrxpSDC+QSaeJXs=;
-        b=mywlhb4IlXG/4jD8LdEeUeZMJAl5pht17hl1XhzOh+01LCDFRJueDB27Os2vsouLdP
-         KmbNEfYdVccBgSYyggMXDoZ34Nagy2nW0wGb+H/CiXjhPk02C4e01FdpPQuizAfCEAzF
-         g3HnQwvC2LiXQ/uEh/w16a5r2p8wwQPzpqK9IjdI/a0+ku3EFB1rPx4BKmFcJ8abyyU5
-         EkBdg037SY2rxBvTemllmWYs49d57Rrh3wIZ3UgK+zG27/lzHnDbOcrx/OEfHE9AT3oQ
-         UnaErYUgo4nrYDVLRn8lF/2ISUiuVJEr6CwKu6FXSpj417VIYmwxYht203b91sn6os1o
-         /fvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=hI8W90n6MD+xGR60GW7O6kg6yOqBBrxpSDC+QSaeJXs=;
-        b=lhXbsVJXYPHL2BdYxGniUkreKaV80G7moDDEcTcbbukAoWlztJtb0QtMNS3SXQaqlf
-         hFnUbnhTncwpfkm0mMyrR7JfsPp0dNCOZ8isFuuy9A9+OLPRHWq/BhKBClsscU5f6/XF
-         iZvFsL/vOfKz5LYJL6lbFXaCOrviEh7Ux90oeyvEjcaFQ7oFWzd7lBPn5sYcwLih/ylP
-         kyNSsjh5ZjZZfueGtFf040VaDSgwaFyJ1eLcuFjGy1qYaZ/j6ZnSQPbydnaPTMel2tBB
-         Ani2tYzEucz3+Gddh40XgI5+4/+eACDq0g+rAeM8oSFG/b5sFHPT1QyrW18GKFEcfySZ
-         LotQ==
-X-Gm-Message-State: APjAAAXnlsn5dDSfF6OK0yApuoTwI4e7STlMxlDWkx0db+dkUrQjzRlR
-        yEtCcR6FymNmPPgdFWOVVABGvzBxdKc9bczwAcY=
-X-Google-Smtp-Source: APXvYqwZKixedgysJNkmuNw83lMmAjbyxc4jGJBjlDPLJbY+vGysFjl58XT5P0Jtedv73c2R8w1qmgjkhjyg6Zn8+cQ=
-X-Received: by 2002:a1f:db81:: with SMTP id s123mr27775105vkg.45.1579490771859;
- Sun, 19 Jan 2020 19:26:11 -0800 (PST)
-MIME-Version: 1.0
-References: <20200119001327.29155-1-huobean@gmail.com> <CAGOxZ52xHFedU+1DUgL02xjXzG2CtXUk3MRaq=uSUZKX=7AeDw@mail.gmail.com>
- <BN7PR08MB568498ED5D86FAA8098EE1C9DB330@BN7PR08MB5684.namprd08.prod.outlook.com>
-In-Reply-To: <BN7PR08MB568498ED5D86FAA8098EE1C9DB330@BN7PR08MB5684.namprd08.prod.outlook.com>
-From:   Alim Akhtar <alim.akhtar@gmail.com>
-Date:   Mon, 20 Jan 2020 08:55:35 +0530
-Message-ID: <CAGOxZ52qVH4M=dSa3ynhzToki-TPN5D5YevvvuuKyJtepp2zMg@mail.gmail.com>
-Subject: Re: [EXT] Re: [PATCH v3 0/8] Use UFS device indicated maximum LU number
-To:     "Bean Huo (beanhuo)" <beanhuo@micron.com>
-Cc:     Bean Huo <huobean@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Can Guo <cang@codeaurora.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        Sun, 19 Jan 2020 22:28:11 -0500
+Received: from unknown (HELO mse.ite.com.tw) ([192.168.35.30])
+  by ironport.ite.com.tw with ESMTP; 20 Jan 2020 10:59:08 +0800
+Received: from csbcas.ite.com.tw (csbmail1.internal.ite.com.tw [192.168.65.58])
+        by mse.ite.com.tw with ESMTP id 00K2x1nv079300;
+        Mon, 20 Jan 2020 10:59:01 +0800 (GMT-8)
+        (envelope-from allen.chen@ite.com.tw)
+Received: from allen-VirtualBox.internal.ite.com.tw (192.168.70.14) by
+ CSBMAIL1.internal.ite.com.tw (192.168.65.58) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Mon, 20 Jan 2020 10:58:54 +0800
+From:   allen <allen.chen@ite.com.tw>
+CC:     Allen Chen <allen.chen@ite.com.tw>,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Jau-Chih Tseng <Jau-Chih.Tseng@ite.com.tw>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
         open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: [PATCH v6 3/4] dt-bindings: Add binding for IT6505.
+Date:   Mon, 20 Jan 2020 10:44:33 +0800
+Message-ID: <1579488364-13182-4-git-send-email-allen.chen@ite.com.tw>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1579488364-13182-1-git-send-email-allen.chen@ite.com.tw>
+References: <1579488364-13182-1-git-send-email-allen.chen@ite.com.tw>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [192.168.70.14]
+X-ClientProxiedBy: CSBMAIL1.internal.ite.com.tw (192.168.65.58) To
+ CSBMAIL1.internal.ite.com.tw (192.168.65.58)
+X-TM-SNTS-SMTP: FCF751CC26A93D9A5BB88666EF62CF7855EBC473629BDB91C384C1D4AD94D6932000:8
+X-MAIL: mse.ite.com.tw 00K2x1nv079300
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 3:29 AM Bean Huo (beanhuo) <beanhuo@micron.com> wro=
-te:
->
-> Hi, Alim
->
-> >
-> > Hi Bean
-> >
-> > Your patches based on which tree? At least on Jame's for-next, it give
-> > compilation errors.
-> > (git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git)
-> > Looks like patch-2 introduces below error:
->
-> My patches are based on the Martin's tree 5.6/scsi-queue. I tested my pat=
-ches on James' tree.
-> Didn't find the compilation error as you mentioned.  You can check your s=
-ource code if it is pretty new,
-> The last UFS driver updated commit id should be :
->
->
-> commit ea92c32bd336efba89c5b09cf609e6e26e963796
-> Author: Stanley Chu <stanley.chu@mediatek.com>
-> Date:   Sat Jan 11 15:11:47 2020 +0800
->
->  scsi: ufs-mediatek: add apply_dev_quirks variant operation
->
->  Add vendor-specific variant callback "apply_dev_quirks" to MediaTek UFS =
-driver.
->
-Thanks Bean for letting me know about this.
-Unfortunately, I still see the error (with enabled MKT and QCOM driver
-in defconfig)
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-drivers/scsi/ufs/ufs-mediatek.c: In function =E2=80=98ufs_mtk_apply_dev_qui=
-rks=E2=80=99:
-drivers/scsi/ufs/ufs-mediatek.c:411:34: error: incompatible types when
-initializing type =E2=80=98struct ufs_dev_info *=E2=80=99 using type =E2=80=
-=98struct
-ufs_dev_info=E2=80=99
-  struct ufs_dev_info *dev_info =3D hba->dev_info;
-                                  ^~~
-scripts/Makefile.build:265: recipe for target
-'drivers/scsi/ufs/ufs-mediatek.o' failed
-make[3]: *** [drivers/scsi/ufs/ufs-mediatek.o] Error 1
-make[3]: *** Waiting for unfinished jobs....
-drivers/scsi/ufs/ufs-qcom.c: In function =E2=80=98ufs_qcom_apply_dev_quirks=
-=E2=80=99:
-drivers/scsi/ufs/ufs-qcom.c:955:34: error: incompatible types when
-initializing type =E2=80=98struct ufs_dev_info *=E2=80=99 using type =E2=80=
-=98struct
-ufs_dev_info=E2=80=99
-  struct ufs_dev_info *dev_info =3D hba->dev_info;
-                                  ^~~
-drivers/scsi/ufs/ufs-qcom.c:957:14: error: =E2=80=98struct ufs_dev_info=E2=
-=80=99 has
-no member named =E2=80=98dev_quirks=E2=80=99
-  if (dev_info->dev_quirks & UFS_DEVICE_QUIRK_HOST_PA_SAVECONFIGTIME)
-              ^~
-scripts/Makefile.build:265: recipe for target
-'drivers/scsi/ufs/ufs-qcom.o' failed
-=3D=3D=3D=3D=3D=3D
-git log --oneline on the tree looks like below:
+Add a DT binding documentation for IT6505.
 
-7b700f8ec213 (HEAD -> local-martin-5.6-scsi-queue) scsi: ufs: Use UFS
-device indicated maximum LU number
-be7a1644f3af scsi: ufs: Add max_lu_supported in struct ufs_dev_info
-13cd5c519941 scsi: ufs: Delete is_init_prefetch from struct ufs_hba
-27539cb1d81d scsi: ufs: Inline two functions into their callers
-cbe20395fe01 scsi: ufs: move ufshcd_get_max_pwr_mode() to ufs_init_params()
-9fb0c168ef38 scsi: ufs: Split ufshcd_probe_hba() based on its called flow
-a5d0e0fbd4d0 scsi: ufs: Delete struct ufs_dev_desc
-c2aa6b365857 scsi: ufs: Fix ufshcd_probe_hba() reture value in case
-ufshcd_scsi_add_wlus() fails
-824b72db5086 (tag: mkp-scsi-queue, scsi/misc, martin-scsi/queue,
-martin-scsi/5.6/scsi-queue) scsi: megaraid_sas: Update driver version
-to 07.713.01.00-rc1
-4d1634b8d12e scsi: megaraid_sas: Use Block layer API to check SCSI
-device in-flight IO requests
-56ee0c585602 scsi: megaraid_sas: Limit the number of retries for the
-IOCTLs causing firmware fault
-6d7537270e32 scsi: megaraid_sas: Do not initiate OCR if controller is
-not in ready state
-=3D=3D=3D=3D=3D
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
+Signed-off-by: Allen Chen <allen.chen@ite.com.tw>
+Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+---
+ .../bindings/display/bridge/ite,it6505.yaml        | 89 ++++++++++++++++++++++
+ 1 file changed, 89 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
 
-~/work/linux (local-martin-5.6-scsi-queue) $ git log --oneline
-drivers/scsi/ufs/ufs-mediatek.c
-a5d0e0fbd4d0 scsi: ufs: Delete struct ufs_dev_desc
-ea92c32bd336 scsi: ufs-mediatek: add apply_dev_quirks variant operation
-5d74e18edd7b scsi: ufs-mediatek: configure and enable clk-gating
+diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml b/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
+new file mode 100644
+index 00000000..5c152ca8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
+@@ -0,0 +1,89 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/bridge/ite,it6505.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ITE it6505 Device Tree Bindings
++
++maintainers:
++  - Allen Chen <allen.chen@ite.com.tw>
++
++description: |
++  The IT6505 is a high-performance DisplayPort 1.1a transmitter,
++  fully compliant with DisplayPort 1.1a, HDCP 1.3 specifications.
++  The IT6505 supports color depth of up to 36 bits (12 bits/color)
++  and ensures robust transmission of high-quality uncompressed video
++  content, along with uncompressed and compressed digital audio content.
++
++  Aside from the various video output formats supported, the IT6505
++  also encodes and transmits up to 8 channels of I2S digital audio,
++  with sampling rate up to 192kHz and sample size up to 24 bits.
++  In addition, an S/PDIF input port takes in compressed audio of up to
++  192kHz frame rate.
++
++  Each IT6505 chip comes preprogrammed with an unique HDCP key,
++  in compliance with the HDCP 1.3 standard so as to provide secure
++  transmission of high-definition content. Users of the IT6505 need not
++  purchase any HDCP keys or ROMs.
++
++properties:
++  compatible:
++    const: ite,it6505
++
++  reg:
++    maxItems: 1
++    description: i2c address of the bridge
++
++  ovdd-supply:
++    maxItems: 1
++    description: I/O voltage
++
++  pwr18-supply:
++    maxItems: 1
++    description: core voltage
++
++  interrupts:
++    maxItems: 1
++    description: interrupt specifier of INT pin
++
++  reset-gpios:
++    maxItems: 1
++    description: gpio specifier of RESET pin
++
++  extcon:
++    maxItems: 1
++    description: extcon specifier for the Power Delivery
++
++  port:
++    type: object
++    description: A port node pointing to DPI host port node
++
++required:
++  - compatible
++  - reg
++  - ovdd-supply
++  - pwr18-supply
++  - interrupts
++  - reset-gpios
++  - extcon
++
++examples:
++  - |
++    dp-bridge@5c {
++        compatible = "ite,it6505";
++        interrupts = <152 IRQ_TYPE_EDGE_RISING 152 0>;
++        reg = <0x5c>;
++        pinctrl-names = "default";
++        pinctrl-0 = <&it6505_pins>;
++        ovdd-supply = <&mt6358_vsim1_reg>;
++        pwr18-supply = <&it6505_pp18_reg>;
++        reset-gpios = <&pio 179 1>;
++        extcon = <&usbc_extcon>;
++
++        port {
++            it6505_in: endpoint {
++                remote-endpoint = <&dpi_out>;
++            };
++        };
++    };
+-- 
+1.9.1
 
-=3D=3D=3D=3D=3D=3D=3D=3D
-~/work/linux (local-martin-5.6-scsi-queue) $ git log --oneline
-drivers/scsi/ufs/ufs-mediatek.c
-a5d0e0fbd4d0 scsi: ufs: Delete struct ufs_dev_desc
-ea92c32bd336 scsi: ufs-mediatek: add apply_dev_quirks variant operation
-5d74e18edd7b scsi: ufs-mediatek: configure and enable clk-gating
-
-Which has the mentioned commit by you.
-=3D=3D=3D=3D=3D=3D=3D
-
-I am on gcc: aarch64-linux-gnu-gcc (Ubuntu/Linaro 7.4.0-1ubuntu1~18.04.1) 7=
-.4.0
-
-Am I missed any patches which is needed?
-
->
-> Thanks,
->
-> //Bean
-
-
-
---=20
-Regards,
-Alim
