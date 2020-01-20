@@ -2,85 +2,125 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA8D4C33CB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:17:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F05C33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C8B6207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:17:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48A1B20684
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:18:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbgATJRj (ORCPT
+        id S1727011AbgATJSP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 04:17:39 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:34211 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726728AbgATJRj (ORCPT
+        Mon, 20 Jan 2020 04:18:15 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:37580 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726148AbgATJSP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 04:17:39 -0500
-Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1itTBc-0005op-C8; Mon, 20 Jan 2020 10:17:32 +0100
-Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1itTBb-0000TQ-SF; Mon, 20 Jan 2020 10:17:31 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     support.opensource@diasemi.com, linux@roeck-us.net,
-        stwiss.opensource@diasemi.com, Adam.Thomson.Opensource@diasemi.com
-Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@pengutronix.de
-Subject: [PATCH] watchdog: da9062: do not ping the hw during stop()
-Date:   Mon, 20 Jan 2020 10:17:29 +0100
-Message-Id: <20200120091729.16256-1-m.felsch@pengutronix.de>
-X-Mailer: git-send-email 2.20.1
+        Mon, 20 Jan 2020 04:18:15 -0500
+Received: by mail-lf1-f68.google.com with SMTP id b15so23449461lfc.4;
+        Mon, 20 Jan 2020 01:18:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nwutvSRr8XpFBMA7LDbRxN1JeFf/PyimQjlchz5hegw=;
+        b=KuvE8oSloEjkyzdU5ZOhvAFsGdy5ZVuBX03ce9qkBN31C+82MLJYjtrxsXaoS9sw1I
+         5Xx2EqqTjONEkpsTT1pWjOZE9xZnera1Mz2QCQglqEuNE3l1Fg2i/Z4B3n1UCp1/oLhV
+         TnXEPmwpORfb3bsvhhboTxqAEEAwcWMJzt77n09t6KM8DYS4/7q1H8IM7Itk+RfgrdcP
+         v4f3cGDcaQTNROhmGD6AksJkPFaDP/ZflNMJ726CmSno05TfvmC1ytOSRrsZLVrDfvQC
+         YvE1Kvnqbuv41k3jrplFJerjHbbiELRL0eEaGJeJZdjsqdf4cMtS5EQi80pLVI0WzDJA
+         n7GQ==
+X-Gm-Message-State: APjAAAWwA4OnwZdXcn6Ls8EmVFgrJeMWeS/ULlVWtL2OxnvnXXh0HNg6
+        k5ac/aRCZSmGgGU00G7oFns=
+X-Google-Smtp-Source: APXvYqzGmlceGIGxqnTTb4ogSsD55VphI9d20VIdttEiFFRgXpZsSgt7CUJUuomP+PUbty41gZSk4g==
+X-Received: by 2002:ac2:4214:: with SMTP id y20mr10467480lfh.212.1579511891792;
+        Mon, 20 Jan 2020 01:18:11 -0800 (PST)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id u16sm19117059lfi.36.2020.01.20.01.18.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jan 2020 01:18:10 -0800 (PST)
+Date:   Mon, 20 Jan 2020 11:18:04 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org
+Subject: [PATCH v12 04/10] mfd: bd718x7: Add compatible for BD71850
+Message-ID: <9771850fe04040c30ff3668fcba7002f7f0681fd.1579511114.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1579511114.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1579511114.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The da9062 hw has a minimum ping cool down phase of at least 200ms. The
-driver takes that into account by setting the min_hw_heartbeat_ms to
-300ms and the core guarantees that the hw limit is observed for the
-ping() calls. But the core can't guarantees the required minimum ping
-cool down phase if a stop() command is send immediately after the ping()
-command. So it is not allowed to ping the watchdog within the stop()
-command as the driver do. Remove the ping can be done without doubts
-because the watchdog gets disabled anyway and a (re)start reset the
-watchdog counter too.
+ROHM BD71850 PMIC is almost identical to BD71847. Main difference is some
+initial voltage values for regulators. The BD71850 can be handled by
+BD71847 driver but adding own compatible makes it clearer for one who
+creates the DT for board containing this PMIC and allows SW to be
+differentiating PMICs if needed.
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/watchdog/da9062_wdt.c | 7 -------
- 1 file changed, 7 deletions(-)
+ drivers/mfd/rohm-bd718x7.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/watchdog/da9062_wdt.c b/drivers/watchdog/da9062_wdt.c
-index 77b6b5336067..0ad15d55071c 100644
---- a/drivers/watchdog/da9062_wdt.c
-+++ b/drivers/watchdog/da9062_wdt.c
-@@ -97,13 +97,6 @@ static int da9062_wdt_stop(struct watchdog_device *wdd)
- 	struct da9062_watchdog *wdt = watchdog_get_drvdata(wdd);
- 	int ret;
- 
--	ret = da9062_reset_watchdog_timer(wdt);
--	if (ret) {
--		dev_err(wdt->hw->dev, "Failed to ping the watchdog (err = %d)\n",
--			ret);
--		return ret;
--	}
--
- 	ret = regmap_update_bits(wdt->hw->regmap,
- 				 DA9062AA_CONTROL_D,
- 				 DA9062AA_TWDSCALE_MASK,
+diff --git a/drivers/mfd/rohm-bd718x7.c b/drivers/mfd/rohm-bd718x7.c
+index bb86ec829079..c32c1b6c98fa 100644
+--- a/drivers/mfd/rohm-bd718x7.c
++++ b/drivers/mfd/rohm-bd718x7.c
+@@ -213,6 +213,10 @@ static const struct of_device_id bd718xx_of_match[] = {
+ 		.compatible = "rohm,bd71847",
+ 		.data = (void *)ROHM_CHIP_TYPE_BD71847,
+ 	},
++	{
++		.compatible = "rohm,bd71850",
++		.data = (void *)ROHM_CHIP_TYPE_BD71847,
++	},
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, bd718xx_of_match);
 -- 
-2.20.1
+2.21.0
 
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
