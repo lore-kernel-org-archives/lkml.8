@@ -2,108 +2,79 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B7E7C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99253C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:46:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E2A4207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:45:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n28hu2Op"
+	by mail.kernel.org (Postfix) with ESMTP id 78A55208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:46:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729165AbgATMpd (ORCPT
+        id S1727041AbgATMqt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 07:45:33 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45225 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729147AbgATMpa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 07:45:30 -0500
-Received: by mail-pg1-f193.google.com with SMTP id b9so15479071pgk.12;
-        Mon, 20 Jan 2020 04:45:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=riQeoCpIjGKHvSbMIa1Ue7ypVDo9yukWYqavka5JSLY=;
-        b=n28hu2Op6ZundRS9FWFQ/PyAW0+C1OGbWn3juvgTK3QzjElBXjoWCXlkgfQgpB5VGr
-         jICqI1oSn9LO+Vpxor3NGPetoHplDQ82DiEyvhICQad5SAr4sqV9TIjUU7Cka+xRjFJn
-         zjijJZ69il/DzQttGmew8Lm/zdUkVguPHWJwzoIsG0giqI2Xt6Nca8tiL204U3Pm3ifp
-         xfmhWf3aKV9brMJJYxgMIrokcoZrK6/C2KElvrRn6aZXYPqVZz5VBw+SFEI5LNiwry9v
-         fz5zNtOlNNMIdXkhO8+YNp5JWEZ6fD8GjqCJdV5hdBLUt8fqAxWwMLZis72YFhDW/5Hj
-         R/nQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=riQeoCpIjGKHvSbMIa1Ue7ypVDo9yukWYqavka5JSLY=;
-        b=LEaIa+ifzCtHryjJmYazulnSlDMmVnQWvLJmvsqVWAXZRoM9ZCwobyfF32wTRpTkXR
-         lDRKphwd7UygxEuZsots8xm05kFhLvp0m/mRCxGJXHyRcw218YnFMhFTeVG0ifV6Mx4d
-         xgL/LEoDIoi1ZFSz23QSZuPqAJ9H/Rt7dsbCVs5kx+fnzcoO89JlnNxXsaQBInuPSs8e
-         4Il9jjWqV+T3s/6yqb4ItC6M2J+mLfQ9awMK60XtdRuyk/fZJSfJiMuUatScmIqPutbC
-         +Gkt5qO4hD4zx3u/FtlozjIDGgrufOrQmWtHvL+PIgAKQ/+qZ44qFfTf92l651d0xmkm
-         ZueQ==
-X-Gm-Message-State: APjAAAVHnoaUWUhX6a/yoGswlIXo1smU1TTMVgrQ8ke+LbdQUghzjkIl
-        rbpRKTKdIpFKFMpUuLybr6s0l2yr
-X-Google-Smtp-Source: APXvYqz8geIWlfVrrsh3UQfdDyE+o51ycF781dC+UTAT5pS18x9VwS6T5zvdtBEs9Ig4T2ZRUzPqJQ==
-X-Received: by 2002:a63:31d1:: with SMTP id x200mr55867061pgx.405.1579524329897;
-        Mon, 20 Jan 2020 04:45:29 -0800 (PST)
-Received: from localhost.localdomain ([221.146.116.86])
-        by smtp.gmail.com with ESMTPSA id h3sm39184590pfo.132.2020.01.20.04.45.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 04:45:29 -0800 (PST)
-From:   Namjae Jeon <linkinjeon@gmail.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
-        sj1557.seo@samsung.com, pali.rohar@gmail.com, arnd@arndb.de,
-        namjae.jeon@samsung.com, Namjae Jeon <linkinjeon@gmail.com>
-Subject: [PATCH v12 13/13] staging: exfat: make staging/exfat and fs/exfat mutually exclusive
-Date:   Mon, 20 Jan 2020 21:44:28 +0900
-Message-Id: <20200120124428.17863-14-linkinjeon@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200120124428.17863-1-linkinjeon@gmail.com>
-References: <20200120124428.17863-1-linkinjeon@gmail.com>
+        Mon, 20 Jan 2020 07:46:49 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:53424 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726619AbgATMqt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 07:46:49 -0500
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 25D258781940879D0680;
+        Mon, 20 Jan 2020 20:46:47 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Mon, 20 Jan 2020
+ 20:46:39 +0800
+From:   Sun Ke <sunke32@huawei.com>
+To:     <sunke32@huawei.com>, <josef@toxicpanda.com>, <axboe@kernel.dk>,
+        <mchristi@redhat.com>
+CC:     <linux-block@vger.kernel.org>, <nbd@other.debian.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [v2] nbd: fix potential NULL pointer fault in nbd_genl_disconnect
+Date:   Mon, 20 Jan 2020 20:45:49 +0800
+Message-ID: <20200120124549.27648-1-sunke32@huawei.com>
+X-Mailer: git-send-email 2.17.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Namjae Jeon <namjae.jeon@samsung.com>
+Open /dev/nbdX first, the config_refs will be 1 and
+the pointers in nbd_device are still null. Disconnect
+/dev/nbdX, then reference a null recv_workq. The
+protection by config_refs in nbd_genl_disconnect is useless.
 
-Make staging/exfat and fs/exfat mutually exclusive to select the one
-between two same filesystem.
+To fix it, just add a check for a non null task_recv in
+nbd_genl_disconnect.
 
-Suggested-by: Amir Goldstein <amir73il@gmail.com>
-Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
-Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
-Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Sun Ke <sunke32@huawei.com>
 ---
- drivers/staging/exfat/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v1 -> v2:
 
-diff --git a/drivers/staging/exfat/Kconfig b/drivers/staging/exfat/Kconfig
-index 292a19dfcaf5..9a0fccec65d9 100644
---- a/drivers/staging/exfat/Kconfig
-+++ b/drivers/staging/exfat/Kconfig
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- config STAGING_EXFAT_FS
- 	tristate "exFAT fs support"
--	depends on BLOCK
-+	depends on BLOCK && !EXFAT_FS
- 	select NLS
- 	help
- 	  This adds support for the exFAT file system.
+add an omitted mutex_unlock.
+---
+ drivers/block/nbd.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index b4607dd96185..668bc9cb92ed 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -2008,6 +2008,10 @@ static int nbd_genl_disconnect(struct sk_buff *skb, struct genl_info *info)
+ 		       index);
+ 		return -EINVAL;
+ 	}
++	if (!nbd->task_recv) {
++		mutex_unlock(&nbd_index_mutex);
++		return -EINVAL;
++	}
+ 	if (!refcount_inc_not_zero(&nbd->refs)) {
+ 		mutex_unlock(&nbd_index_mutex);
+ 		printk(KERN_ERR "nbd: device at index %d is going down\n",
 -- 
-2.17.1
+2.17.2
 
