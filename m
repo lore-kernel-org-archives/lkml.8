@@ -2,109 +2,202 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B06C33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A528BC33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 989EE20684
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:45:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OyGgjdD9"
+	by mail.kernel.org (Postfix) with ESMTP id 77F3D20684
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:47:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726586AbgATGp6 (ORCPT
+        id S1726874AbgATGrK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 01:45:58 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:40354 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726388AbgATGp6 (ORCPT
+        Mon, 20 Jan 2020 01:47:10 -0500
+Received: from mail-il1-f197.google.com ([209.85.166.197]:38211 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgATGrI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 01:45:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579502757;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=vqNKhNygXBIFN97LCULqdWGu9X9CxFiSHBJuN0O9XTc=;
-        b=OyGgjdD9TH/4jWXHc31Pyzwii6vmkp21qFGhov2MOCLZ1L7TuR4er5tTZ2xJohkeqViurY
-        w42BEokqdx3fG/mbji0KKdh6Mt4t6Cn3+GOISFoFbdpbBUBNT4M7Feiu/ZqrB5+Tctce9R
-        t+Ba1e9RdW+/EnRXWLBszdC+tYJEVr4=
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
- [209.85.216.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-29-sSfJzVA0PaCbHXe8qaYNVg-1; Mon, 20 Jan 2020 01:45:54 -0500
-X-MC-Unique: sSfJzVA0PaCbHXe8qaYNVg-1
-Received: by mail-pj1-f71.google.com with SMTP id c31so10191624pje.9
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jan 2020 22:45:54 -0800 (PST)
+        Mon, 20 Jan 2020 01:47:08 -0500
+Received: by mail-il1-f197.google.com with SMTP id i67so24479705ilf.5
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jan 2020 22:47:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vqNKhNygXBIFN97LCULqdWGu9X9CxFiSHBJuN0O9XTc=;
-        b=ncoySzM7hCumb6irwvuDmMQTeuZ0/nNykFOpbgArT8bNqF6Mb8DzEkGoEBEBMeWff+
-         lnf+5e8gZz8ymM6bdAWFmgqd8iash2+C5/AqHUFwa4qP7PuBhO6hVZX+t0aDbApDj1tr
-         JWhTv8lNnmVrhiHTuuAFLWMoTve8hgTLkMpNy/4Phe5a9MTcZbXto1zmXINYuBfIywQt
-         623vuBkhfLNsFBzQYwTU1OjEJ6aSLt6EAwt6ywBwMgxXVWxRPHPixR7iMbMGjUAHo2KD
-         FosFqJTTMeo7uavb+snZg+tlNSF+vOzn+38pfk3fxhE5kCKK6y93RrQ+Qq87hXEnw47I
-         fpgw==
-X-Gm-Message-State: APjAAAUykBk8j42zouMXpRwspfpQZW47NhQ778n1e1aznZSdKR5g3R49
-        IIArP5dCc5nzHTvulQabLLmo09lHIPMuRLxq7FVtZgt+2JMugY5BjIiswfwPqnR18wn9z+VT0aG
-        hnooQiD5C5jWtCe/5DdmhF2bo
-X-Received: by 2002:a17:902:bc85:: with SMTP id bb5mr13239911plb.208.1579502753214;
-        Sun, 19 Jan 2020 22:45:53 -0800 (PST)
-X-Google-Smtp-Source: APXvYqx8wxSabuAGXP8LHVag7+1TwIUhVg8HOPxfCSJFySXCs0RiXtk0jFc9Dqlntqp4v6sH9fYKvw==
-X-Received: by 2002:a17:902:bc85:: with SMTP id bb5mr13239902plb.208.1579502752949;
-        Sun, 19 Jan 2020 22:45:52 -0800 (PST)
-Received: from xz-x1 ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id z16sm38786923pff.125.2020.01.19.22.45.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Jan 2020 22:45:52 -0800 (PST)
-Date:   Mon, 20 Jan 2020 14:45:40 +0800
-From:   Peter Xu <peterx@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Yan Zhao <yan.y.zhao@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Kevin Kevin <kevin.tian@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
-Subject: Re: [PATCH v3 09/21] KVM: X86: Don't track dirty for
- KVM_SET_[TSS_ADDR|IDENTITY_MAP_ADDR]
-Message-ID: <20200120064540.GB380565@xz-x1>
-References: <20200109145729.32898-1-peterx@redhat.com>
- <20200109145729.32898-10-peterx@redhat.com>
- <5af8e2ff-4bde-9652-fb25-4fe1f74daae2@redhat.com>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=MuAwe6mdiCtWoj0bCmHk0ViJmRHm0jBAoLaW34a3xHw=;
+        b=g2zxNjkp9U/i6J7KT74CHQjEz2ECNy9Wa1MMW9O/qboyxnBusNYL2kvRtEOIT9HkiQ
+         SdvPpH6B7/nCctMHDWPprs62JWGhWb7bhVahK2JNOJR6voxvBIu6N25EeQzAzLQvgG5r
+         NHDgtly+XhD+DLtflLFhDg+tlFEn1x2B6dx8xf8d3GjJ4uOLzAlr38jcnHZBQc4gpex4
+         k0iMr3BNQtKbm4w4PdBq1sBE6gAz2LMQMtoiLnBKOlWWYWpDV+DiEp9Mw54P/AYR/TOD
+         d/klPNnTgNRwY3ESVWrakO5LeMa75BxnrsEEiCKddM+jr1j48Z2kc8W4DlE4OPoT610W
+         n+Pg==
+X-Gm-Message-State: APjAAAWmbPLtdLf93a+Yr3YthBA3X/1NwXP+TDCpmbDbpLDVYiTEllCa
+        MFvjAld264z6KqnpFAG1zh1UF/gpKZfzYfssV73bO5DI0X5L
+X-Google-Smtp-Source: APXvYqx/N3926g6aQZLHQYvWAg5Z+toNaZNNH8dSy1S60HiNcDABnqHWvzr5exIMUOM3b5/Bf3ppWtN1CH7Khvcl6EL+jkLVcYEA
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <5af8e2ff-4bde-9652-fb25-4fe1f74daae2@redhat.com>
+X-Received: by 2002:a5d:9514:: with SMTP id d20mr35139554iom.198.1579502827821;
+ Sun, 19 Jan 2020 22:47:07 -0800 (PST)
+Date:   Sun, 19 Jan 2020 22:47:07 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f96400059c8ca8cd@google.com>
+Subject: KASAN: slab-out-of-bounds Read in bitmap_ipmac_ext_cleanup
+From:   syzbot <syzbot+c400f7b04cadb5df6ea7@syzkaller.appspotmail.com>
+To:     coreteam@netfilter.org, davem@davemloft.net,
+        florent.fourcot@wifirst.fr, fw@strlen.de, jeremy@azazel.net,
+        johannes.berg@intel.com, kadlec@netfilter.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, pablo@netfilter.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 19, 2020 at 10:01:50AM +0100, Paolo Bonzini wrote:
-> On 09/01/20 15:57, Peter Xu wrote:
-> > -int __x86_set_memory_region(struct kvm *kvm, int id, gpa_t gpa, u32 size)
-> > +/*
-> > + * If `uaddr' is specified, `*uaddr' will be returned with the
-> > + * userspace address that was just allocated.  `uaddr' is only
-> > + * meaningful if the function returns zero, and `uaddr' will only be
-> > + * valid when with either the slots_lock or with the SRCU read lock
-> > + * held.  After we release the lock, the returned `uaddr' will be invalid.
-> > + */
-> 
-> In practice the address is still protected by the refcount, isn't it?
-> Only destroying the VM could invalidate it.
+Hello,
 
-Yes I think so.  I wanted to make it clear that uaddr is temporary,
-however "will be invalid" could be be too strong...  Thanks,
+syzbot found the following crash on:
 
--- 
-Peter Xu
+HEAD commit:    09d4f10a net: sched: act_ctinfo: fix memory leak
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=13bc21d1e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7e89bd00623fe71e
+dashboard link: https://syzkaller.appspot.com/bug?extid=c400f7b04cadb5df6ea7
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=170871d1e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16b02cc9e00000
 
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+c400f7b04cadb5df6ea7@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: slab-out-of-bounds in test_bit include/asm-generic/bitops/instrumented-non-atomic.h:110 [inline]
+BUG: KASAN: slab-out-of-bounds in bitmap_ipmac_ext_cleanup+0xd8/0x290 net/netfilter/ipset/ip_set_bitmap_gen.h:51
+Read of size 8 at addr ffff88809e126b40 by task syz-executor256/9597
+
+CPU: 0 PID: 9597 Comm: syz-executor256 Not tainted 5.5.0-rc5-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x197/0x210 lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
+ __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
+ kasan_report+0x12/0x20 mm/kasan/common.c:639
+ check_memory_region_inline mm/kasan/generic.c:185 [inline]
+ check_memory_region+0x134/0x1a0 mm/kasan/generic.c:192
+ __kasan_check_read+0x11/0x20 mm/kasan/common.c:95
+ test_bit include/asm-generic/bitops/instrumented-non-atomic.h:110 [inline]
+ bitmap_ipmac_ext_cleanup+0xd8/0x290 net/netfilter/ipset/ip_set_bitmap_gen.h:51
+ bitmap_ipmac_destroy+0x180/0x1d0 net/netfilter/ipset/ip_set_bitmap_gen.h:64
+ ip_set_create+0xe47/0x1500 net/netfilter/ipset/ip_set_core.c:1165
+ nfnetlink_rcv_msg+0xcf2/0xfb0 net/netfilter/nfnetlink.c:229
+ netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
+ nfnetlink_rcv+0x1ba/0x460 net/netfilter/nfnetlink.c:563
+ netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+ netlink_unicast+0x58c/0x7d0 net/netlink/af_netlink.c:1328
+ netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
+ sock_sendmsg_nosec net/socket.c:639 [inline]
+ sock_sendmsg+0xd7/0x130 net/socket.c:659
+ ____sys_sendmsg+0x753/0x880 net/socket.c:2330
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2384
+ __sys_sendmsg+0x105/0x1d0 net/socket.c:2417
+ __do_sys_sendmsg net/socket.c:2426 [inline]
+ __se_sys_sendmsg net/socket.c:2424 [inline]
+ __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2424
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4413f9
+Code: e8 fc ab 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 9b 09 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffeb99f7fc8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00000000004413f9
+RDX: 0000000000000000 RSI: 0000000020000300 RDI: 0000000000000003
+RBP: 00000000000182b5 R08: 00000000004002c8 R09: 00000000004002c8
+R10: 0000000000000004 R11: 0000000000000246 R12: 0000000000402220
+R13: 00000000004022b0 R14: 0000000000000000 R15: 0000000000000000
+
+Allocated by task 9597:
+ save_stack+0x23/0x90 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ __kasan_kmalloc mm/kasan/common.c:513 [inline]
+ __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:486
+ kasan_kmalloc+0x9/0x10 mm/kasan/common.c:527
+ __do_kmalloc mm/slab.c:3656 [inline]
+ __kmalloc+0x163/0x770 mm/slab.c:3665
+ kmalloc include/linux/slab.h:561 [inline]
+ kzalloc include/linux/slab.h:670 [inline]
+ ip_set_alloc+0x38/0x5e net/netfilter/ipset/ip_set_core.c:255
+ init_map_ipmac net/netfilter/ipset/ip_set_bitmap_ipmac.c:302 [inline]
+ bitmap_ipmac_create+0x4e8/0xa00 net/netfilter/ipset/ip_set_bitmap_ipmac.c:365
+ ip_set_create+0x6f1/0x1500 net/netfilter/ipset/ip_set_core.c:1111
+ nfnetlink_rcv_msg+0xcf2/0xfb0 net/netfilter/nfnetlink.c:229
+ netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
+ nfnetlink_rcv+0x1ba/0x460 net/netfilter/nfnetlink.c:563
+ netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+ netlink_unicast+0x58c/0x7d0 net/netlink/af_netlink.c:1328
+ netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
+ sock_sendmsg_nosec net/socket.c:639 [inline]
+ sock_sendmsg+0xd7/0x130 net/socket.c:659
+ ____sys_sendmsg+0x753/0x880 net/socket.c:2330
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2384
+ __sys_sendmsg+0x105/0x1d0 net/socket.c:2417
+ __do_sys_sendmsg net/socket.c:2426 [inline]
+ __se_sys_sendmsg net/socket.c:2424 [inline]
+ __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2424
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 9327:
+ save_stack+0x23/0x90 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ kasan_set_free_info mm/kasan/common.c:335 [inline]
+ __kasan_slab_free+0x102/0x150 mm/kasan/common.c:474
+ kasan_slab_free+0xe/0x10 mm/kasan/common.c:483
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x10a/0x2c0 mm/slab.c:3757
+ tomoyo_check_open_permission+0x19e/0x3e0 security/tomoyo/file.c:786
+ tomoyo_file_open security/tomoyo/tomoyo.c:319 [inline]
+ tomoyo_file_open+0xa9/0xd0 security/tomoyo/tomoyo.c:314
+ security_file_open+0x71/0x300 security/security.c:1497
+ do_dentry_open+0x37a/0x1380 fs/open.c:784
+ vfs_open+0xa0/0xd0 fs/open.c:914
+ do_last fs/namei.c:3420 [inline]
+ path_openat+0x10df/0x4500 fs/namei.c:3537
+ do_filp_open+0x1a1/0x280 fs/namei.c:3567
+ do_sys_open+0x3fe/0x5d0 fs/open.c:1097
+ __do_sys_open fs/open.c:1115 [inline]
+ __se_sys_open fs/open.c:1110 [inline]
+ __x64_sys_open+0x7e/0xc0 fs/open.c:1110
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff88809e126b40
+ which belongs to the cache kmalloc-32 of size 32
+The buggy address is located 0 bytes inside of
+ 32-byte region [ffff88809e126b40, ffff88809e126b60)
+The buggy address belongs to the page:
+page:ffffea0002784980 refcount:1 mapcount:0 mapping:ffff8880aa4001c0 index:0xffff88809e126fc1
+raw: 00fffe0000000200 ffffea00028bebc8 ffffea00027ca4c8 ffff8880aa4001c0
+raw: ffff88809e126fc1 ffff88809e126000 000000010000002b 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff88809e126a00: fb fb fb fb fc fc fc fc 00 01 fc fc fc fc fc fc
+ ffff88809e126a80: 00 01 fc fc fc fc fc fc fb fb fb fb fc fc fc fc
+>ffff88809e126b00: fb fb fb fb fc fc fc fc 04 fc fc fc fc fc fc fc
+                                           ^
+ ffff88809e126b80: fb fb fb fb fc fc fc fc fb fb fb fb fc fc fc fc
+ ffff88809e126c00: fb fb fb fb fc fc fc fc 00 01 fc fc fc fc fc fc
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
