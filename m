@@ -2,204 +2,147 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D516C33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0962BC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C052207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5053207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:43:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="K+MZCW31"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727573AbgATMll convert rfc822-to-8bit (ORCPT
+        id S1727011AbgATMnB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 07:41:41 -0500
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:57615 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726589AbgATMll (ORCPT
+        Mon, 20 Jan 2020 07:43:01 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:56758 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726589AbgATMnA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 07:41:41 -0500
-X-Originating-IP: 90.76.211.102
-Received: from xps13 (lfbn-tou-1-1151-102.w90-76.abo.wanadoo.fr [90.76.211.102])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 80D38FF802;
-        Mon, 20 Jan 2020 12:41:38 +0000 (UTC)
-Date:   Mon, 20 Jan 2020 13:41:37 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
-        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5] gpio: pca953x: Add Maxim MAX7313 PWM support
-Message-ID: <20200120134137.54dc307e@xps13>
-In-Reply-To: <20200120121329.GC206171@ulmo>
-References: <20200107133130.1338-1-miquel.raynal@bootlin.com>
-        <20200120121329.GC206171@ulmo>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 20 Jan 2020 07:43:00 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00KCgtS7064086;
+        Mon, 20 Jan 2020 06:42:55 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579524175;
+        bh=tC/peLSq3Bzc5cp8eak6KuGrswkAUS1ZeB9UTQGw9qc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=K+MZCW31nyLyHm/xSmdpCfKqSObEAkO0imiCQVrto9wt82nkavGOqzB7oZ0sHspi7
+         e8QNt0c7mVZXFT3axr4anRYBQ2/g6ztu355laZSmL/bGG0aa+ZmMk0YMmfLFlQyZIu
+         gbNghl+wPkPhvlrI4EER75ltGfxCKQxeUGuMf0dY=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00KCgtl1057276
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 20 Jan 2020 06:42:55 -0600
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 20
+ Jan 2020 06:42:54 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 20 Jan 2020 06:42:54 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00KCgqNv125311;
+        Mon, 20 Jan 2020 06:42:53 -0600
+Subject: Re: [PATCH] media: rcar_drif: Use dma_request_chan() instead
+ dma_request_slave_channel()
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Ramesh Shanmugasundaram <rashanmu@gmail.com>,
+        Vinod <vkoul@kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+References: <20191217104025.23318-1-peter.ujfalusi@ti.com>
+ <CAMuHMdUPhabZrXJ3UqSVTdy2aWf6VG27q287MizKJ5q5tyRnwA@mail.gmail.com>
+ <c7eedf72-aa00-8ffe-8c8f-4946a4f54fa7@ti.com>
+ <CAMuHMdXU9_WY54iU5DY6UHZHmyaR06pW7X0nnyCWHA=R3GtcJA@mail.gmail.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <f2bc1bea-c844-8627-4480-8174259be0a4@ti.com>
+Date:   Mon, 20 Jan 2020 14:43:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <CAMuHMdXU9_WY54iU5DY6UHZHmyaR06pW7X0nnyCWHA=R3GtcJA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thierry,
 
-Thanks for reviewing,
 
-> > +static bool max7313_pwm_reg_is_accessible(struct device *dev, unsigned int reg)
-> > +{
-> > +	struct pca953x_chip *chip = dev_get_drvdata(dev);
-> > +	unsigned int bank_sz = chip->driver_data & PCA_GPIO_MASK;
-> > +
-> > +	if (reg >= MAX7313_MASTER && reg < (MAX7313_INTENSITY + bank_sz))
-> > +		return true;
-> > +
-> > +	return false;
-> > +}
-> > +
-> >  static bool pca953x_readable_register(struct device *dev, unsigned int reg)
-> >  {
-> >  	struct pca953x_chip *chip = dev_get_drvdata(dev);
-> >  	u32 bank;
-> >  
-> > +	if ((chip->driver_data & MAX_PWM) &&
-> > +	    max7313_pwm_reg_is_accessible(dev, reg))
-> > +		return true;  
+On 20/01/2020 14.36, Geert Uytterhoeven wrote:
+> Hi Peter,
 > 
-> This doesn't look correct. The MAX_PWM flag doesn't signify that all
-> GPIOs are used in PWM mode, right? So the above check would return true
-> even if you're trying to access GPIO registers on a chip that has PWM
-> support.
-
-Not exactly: this part returns true only if we are using a chip with
-PWM and we are accessing PWM registers.
-
-Otherwise, for instance if we are accessing GPIO registers, this will
-not return anything.
-
+> On Mon, Jan 20, 2020 at 1:09 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+>> On 20/01/2020 14.05, Geert Uytterhoeven wrote:
+>>> On Tue, Dec 17, 2019 at 11:41 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+>>>> dma_request_slave_channel() is a wrapper on top of dma_request_chan()
+>>>> eating up the error code.
+>>>>
+>>>> By using dma_request_chan() directly the driver can support deferred
+>>>> probing against DMA.
+>>>>
+>>>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>>>
+>>> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>>>
+>>> One comment below.
+>>>
+>>>> --- a/drivers/media/platform/rcar_drif.c
+>>>> +++ b/drivers/media/platform/rcar_drif.c
+>>>> @@ -275,10 +275,10 @@ static int rcar_drif_alloc_dmachannels(struct rcar_drif_sdr *sdr)
+>>>>         for_each_rcar_drif_channel(i, &sdr->cur_ch_mask) {
+>>>>                 struct rcar_drif *ch = sdr->ch[i];
+>>>>
+>>>> -               ch->dmach = dma_request_slave_channel(&ch->pdev->dev, "rx");
+>>>> -               if (!ch->dmach) {
+>>>> +               ch->dmach = dma_request_chan(&ch->pdev->dev, "rx");
+>>>> +               if (IS_ERR(ch->dmach)) {
+>>>>                         rdrif_err(sdr, "ch%u: dma channel req failed\n", i);
+>>>
+>>> Now there is an error code, you might (1) want to print it, and (2) only
+>>> do so when it is not due to probe deferral:
+>>>
+>>>         if (PTR_ERR(ch->dmach) != -EPROBE_DEFER)
+>>>                 rdrif_err(sdr, "ch%u: dma channel req failed %pe\n",
+>>> i, ch->dmach);
+>>
+>> Yes, this is true.
+>>
+>>>
+>>>> -                       ret = -ENODEV;
+>>>> +                       ret = PTR_ERR(ch->dmach);
+>>
+>> if (ret != -EPROBE_DEFER)
+>>         rdrif_err(sdr, "ch%u: dma channel req failed (%d)\n", i, ret);
+>>
+>> might be simpler.
 > 
-> I think you still want to proceed with the checks below if reg doesn't
-> match any of the PWM related registers.
+> Sure, checking ret is simpler.
+> But printing ch->dmach means you can use the new %pe format specifier
+> to pretty-print the error code.
 
-This is precisely what we do here. See the
-max7313_pwm_reg_is_accessible helper above: only the PWM registers are
-checked, I suppose this is the part you missed.
+Ah, I was not aware of this, but there is another issue with the patch:
+I need to set the ch->dmach to NULL before jumping to dmach_error..
 
-> So it'd be something more along
-> these lines:
-> 
-> 	if ((chip->driver_data & MAX_PWM) &&
-> 	    !max7313_pwm_reg_is_accessible(dev, reg))
-> 		return false;
-> 
-> > +
-> >  	if (PCA_CHIP_TYPE(chip->driver_data) == PCA953X_TYPE) {
-> >  		bank = PCA953x_BANK_INPUT | PCA953x_BANK_OUTPUT |
-> >  		       PCA953x_BANK_POLARITY | PCA953x_BANK_CONFIG;
-> > @@ -267,6 +318,10 @@ static bool pca953x_writeable_register(struct device *dev, unsigned int reg)
-> >  	struct pca953x_chip *chip = dev_get_drvdata(dev);
-> >  	u32 bank;
-> >  
-> > +	if ((chip->driver_data & MAX_PWM) &&
-> > +	    max7313_pwm_reg_is_accessible(dev, reg))
-> > +		return true;  
-> 
-> Same here.
-> 
-> > +
-> >  	if (PCA_CHIP_TYPE(chip->driver_data) == PCA953X_TYPE) {
-> >  		bank = PCA953x_BANK_OUTPUT | PCA953x_BANK_POLARITY |
-> >  			PCA953x_BANK_CONFIG;
-> > @@ -855,6 +910,335 @@ static int device_pca957x_init(struct pca953x_chip *chip, u32 invert)
-> >  	return ret;
-> >  }
-> >  
-
-[...]
-
-> > +static void max7313_pwm_free(struct pwm_chip *chip,
-> > +			     struct pwm_device *pwm)
-> > +{
-> > +	struct max7313_pwm_data *data = pwm_get_chip_data(pwm);
-> > +
-> > +	gpiochip_free_own_desc(data->desc);
-> > +	kfree(data);
-> > +}
-> > +
-> > +static int max7313_pwm_apply(struct pwm_chip *chip,
-> > +			     struct pwm_device *pwm,
-> > +			     const struct pwm_state *state)
-> > +{
-> > +	struct max7313_pwm *max_pwm = to_max7313_pwm(chip);
-> > +	struct pca953x_chip *pca_chip = to_pca953x(max_pwm);
-> > +	unsigned int intensity, active;
-> > +	int ret = 0;
-> > +
-> > +	if (!state->enabled ||
-> > +	    state->period < PWM_PERIOD_NS ||  
-> 
-> I think you should actually make this a != so that you refuse any
-> attempt to change the period, since you can't do it anyway.
-
-Actually we discussed this with Uwe, see the below snippet:
-
----8<---
-> > > +	if (state->period != PWM_PERIOD_NS ||
-> > > +	    state->polarity != PWM_POLARITY_NORMAL)
-> > > +		return -EINVAL;    
-> > 
-> > The check for period is too strong. Anything bigger than PWM_PERIOD_NS
-> > is acceptable, too. (The policy I'd like to see is: Provide the biggest
-> > period possible not bigger than the requested policy.)  
-> 
-> I don't understand, what is this parameter supposed to mean? the period
-> cannot be changed, it is ruled by an internal oscillator. In this case
-> any period bigger than the actual period cannot be physically achieved.
-> If we derive ratios with a bigger period than possible, why not
-> allowing it for lower periods too?  
-
-Yes, I understood that the period is fixed for your PWM. However
-consider a consumer who would prefer a different period. If you decline
-all requests unless state->period == PWM_PERIOD_NS the consumer has no
-guide to determine that unless all periods are tested. If however asking
-for period = 2s results in getting 31.25 ms this allows the consumer to
-assume that no period setting between 2s and 31.25 ms is possible. And
-so the usual policy to implement is as stated in my previous mail.
---->8---
+I'll send v3 in a minute.
 
 > 
-> > +	    state->polarity != PWM_POLARITY_NORMAL)
-> > +		return -EINVAL;
-> > +
-> > +	/* Convert the duty-cycle to be in the [0;16] range */
-> > +	intensity = max7313_pwm_duty_to_intensity(state->duty_cycle);
-> > +
-
-[...]
-
-> > @@ -1130,7 +1522,7 @@ static const struct of_device_id pca953x_dt_ids[] = {
-> >  
-> >  	{ .compatible = "maxim,max7310", .data = OF_953X( 8, 0), },
-> >  	{ .compatible = "maxim,max7312", .data = OF_953X(16, PCA_INT), },
-> > -	{ .compatible = "maxim,max7313", .data = OF_953X(16, PCA_INT), },
-> > +	{ .compatible = "maxim,max7313", .data = OF_953X(16, PCA_INT | MAX_PWM), },
-> >  	{ .compatible = "maxim,max7315", .data = OF_953X( 8, PCA_INT), },
-> >  	{ .compatible = "maxim,max7318", .data = OF_953X(16, PCA_INT), },  
+> Gr{oetje,eeting}s,
 > 
-> Aren't you missing a call to pwmchip_remove() somewhere? Otherwise once
-> you unload the driver, the PWM chip will become dangling and any attempt
-> to access its PWMs will crash.
+>                         Geert
+> 
 
-That's true, I'll correct.
+- Péter
 
-
-Thanks,
-Miquèl
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
