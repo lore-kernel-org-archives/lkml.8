@@ -2,133 +2,186 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E6EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:06:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCEF6C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65BEC2073D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:06:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A37F82087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:07:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B7TS/pxS"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="gqcDDJLH";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="Zjzj5Mss"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbgATLG6 (ORCPT
+        id S1727031AbgATLH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 06:06:58 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:49906 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726148AbgATLG6 (ORCPT
+        Mon, 20 Jan 2020 06:07:28 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:40398 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726148AbgATLH2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 06:06:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579518417;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=GBr/Vebb3VXffLj0Is78F4eUTgwO3xgPG3+P62qQsx8=;
-        b=B7TS/pxSE85KOZPnucMq7MiF8znZC5m023mFLV4+fbvRoGQ/U5uSj2KUvgb9MSDn5lj6P+
-        GCXfb3RgmczfjNwcoQ4u75Bbcyx2G7G9QkO12CtrbxOx+rQCg181eCP6u+ETY20ddboSuj
-        2CAHVn3ZGUBsaFCNIFVi97BzmCR/348=
-Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
- [209.85.208.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-374-IUHroKxKOjCx9Vkd99DuxA-1; Mon, 20 Jan 2020 06:06:48 -0500
-X-MC-Unique: IUHroKxKOjCx9Vkd99DuxA-1
-Received: by mail-lj1-f199.google.com with SMTP id f19so7453292ljm.0
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 03:06:48 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=GBr/Vebb3VXffLj0Is78F4eUTgwO3xgPG3+P62qQsx8=;
-        b=quO/8wAERDLJAgKupd9G8qR+cy4Fk7xEcwXrvKnHkD8OOy6pHq4JRY66fpMeQoXjIz
-         JnzkTCvOYVJRZRGIhNOP9CQx9rB8I1H2e83F8fQlfySIYPbFoWvYl/h6909WvAYNtQHO
-         73yz4d5n47yMrkakXZjByoAhB6QlUhzi0knaserjBJssb3lTpHfQ4SSNPJCR9RNLSvB1
-         +o5pR2lsMCyBngXv+LtCqNUGv0tBziQG1p3QX59VAAqX4Q9QQxf77lgCe+6B/Js/Rcz8
-         eP0+zdC5voA77d0aXSTLFOv1hvd1Qadexed/A96JKfesIxTWPK6dNQxb1YxDjc78kVxK
-         28PQ==
-X-Gm-Message-State: APjAAAVQxsTuKpcHaGccYk9OZ8L6ki+BR995iUQvvJB4H/0nejc31b9N
-        1WO4tNCgC+njIB2yZB7sPDDCpadzyvcc90JGD3D9kWmdEU5NVV5nYxHUt4Qk+z7XXElGV8YaUN/
-        Xyl+BsG10T+BRqmh2r/kr0Of8
-X-Received: by 2002:a2e:8e22:: with SMTP id r2mr12213810ljk.51.1579518406711;
-        Mon, 20 Jan 2020 03:06:46 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwRHGGNFbd5H0/cF1REV/7+jcnpPn0KrgS8p2w5aL+jlmOCDTBslDcW/9arMdp3KMXCx8EM9A==
-X-Received: by 2002:a2e:8e22:: with SMTP id r2mr12213786ljk.51.1579518406456;
-        Mon, 20 Jan 2020 03:06:46 -0800 (PST)
-Received: from alrua-x1.borgediget.toke.dk ([85.204.121.218])
-        by smtp.gmail.com with ESMTPSA id p136sm16758946lfa.8.2020.01.20.03.06.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 03:06:45 -0800 (PST)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id C1D8A1804D6; Mon, 20 Jan 2020 12:06:44 +0100 (CET)
-From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
+        Mon, 20 Jan 2020 06:07:28 -0500
+Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 3829DC04F8;
+        Mon, 20 Jan 2020 11:07:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1579518446; bh=67UELf37HLA7knRcTO9RSHQjeRH2O+VztZCRbvwf8FA=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=gqcDDJLHs6ZM599uIyb3SvCVTqUp/P5n8sRHNgIr5wN4hzCBG/X5Bqr+1DYPMj2H7
+         pi4x5InIujs3ysVeI3yChWAvn6GJWGPWUXptbeDASEAIf4kBtuZSPYOlNRONinNqIw
+         WgX2/ytlCvhUNOJ6dTDknCCGb/EpKPfXqQM9dC37/UCaoiu4Hpxqun2vJemlEkeWP3
+         30oXwtJiENGtUq2HxlkYQc4jKaeUEPhzEgg5bAlr6eyJ34z6R3dxRgg0Jsb3JmdYZZ
+         ErIMQMgSqClKsJ14VCUr87RLnRslQrRAgwse5wl+8C+m7z+7osEDJu0IsUd3qUFs7W
+         8mK/fiXWsD9sw==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 59D6CA0079;
+        Mon, 20 Jan 2020 11:07:25 +0000 (UTC)
+Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 20 Jan 2020 03:07:25 -0800
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Mon, 20 Jan 2020 03:07:24 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cLpYrAH37FhBGiBNB+XLU2FmV/wjJ1Lp1rtZ+/30Tw7jJCjZyxbPm+XU1O9AouOQd5X1w4yQ1/yc/dhrrvbq91FLG735wsSU/TDJkDYGKsNkUfXzmJYPy4oZeduQvBoKz+njrfJr2ZQDtoH4FP4thnYc/vEGizx9jQiF/78v9W+GkAlM23sbc1snvMcshDDUBTY4afG9EAVTr0IgIXhyk5H34YKKMN9L/e82mu2nvrM4+zSwXJH7UchO9PP568ZaejvUhruiQ80X4gBBwofQwuwHQlAWh1bov3peZQhhi8y5Ag0u4euruMYtQ9PsOH8yZlnDMKZJnlNyvJLXmqUSZw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IXyTyKjato9E3MvIR5PaZbMMskgok0GyJmgBcGh0T70=;
+ b=mT0HVYclPK/mkms8zBhXcM7XU52QnTIgMX+/CMh8HxklUliisafLCOLKGlUp1ioSa2t6tS6Gs7GOEAjGg/wy2VtCOqp4PyEAG9MbbLWIOy72v4+GAPTUgToqvQ/8sQ7+wSXiKLg9qbCslKS1qwtXOMoZMzG0ThvoK+7B6BmyqA6skriokhegPJwM3x38SqoC/fEh2uDRgP+uMvshhi7GAg2sbMpQQWWpAeOPKx96FGO2cTWl8tzNMYDmGdsgg+tDDnJ+EuK9byx36xFaz6q7iKjZojktijJz8qlVCyeYjsGZOOyKRZawwVn7DOP/d8Ttn4gD1zIiss8dr91ZSGaCvQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IXyTyKjato9E3MvIR5PaZbMMskgok0GyJmgBcGh0T70=;
+ b=Zjzj5Mss3HVwIM6HaEXvwQ9I8yklNwHqTdClFQ9LIshu1HpZd2lFgIodBaLqWephwczh4HMiaIPKs2IdGinK4lTK5iktcSETMci/GQB7RWFEawGJV/+bEDtjh1mN7+d311G8DfIdZW282cy984dvAoQJXUnSljyt3AMiXiJIw0M=
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.67.145) by
+ BN8PR12MB3268.namprd12.prod.outlook.com (20.179.67.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.20; Mon, 20 Jan 2020 11:07:23 +0000
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::c62:b247:6963:9da2]) by BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::c62:b247:6963:9da2%6]) with mapi id 15.20.2644.024; Mon, 20 Jan 2020
+ 11:07:23 +0000
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+CC:     Andrew Lunn <andrew@lunn.ch>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-rdma@vger.kernel.org,
-        "open list\:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH bpf-next v4 09/10] selftests: Remove tools/lib/bpf from include path
-In-Reply-To: <CAEf4Bzb9zUmhxTyYahJqySJzgfyB-zMEd+o4ybv=a8-t+iZS4w@mail.gmail.com>
-References: <157926819690.1555735.10756593211671752826.stgit@toke.dk> <157926820677.1555735.5437255599683298212.stgit@toke.dk> <CAEf4Bzb9zUmhxTyYahJqySJzgfyB-zMEd+o4ybv=a8-t+iZS4w@mail.gmail.com>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date:   Mon, 20 Jan 2020 12:06:44 +0100
-Message-ID: <878sm2pet7.fsf@toke.dk>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [RFC net-next] net: phy: Add basic support for Synopsys XPCS
+ using a PHY driver
+Thread-Topic: [RFC net-next] net: phy: Add basic support for Synopsys XPCS
+ using a PHY driver
+Thread-Index: AQHVyhMHPh1TkUf6pU+JUVzLFdFzk6fomWeAgAAAjSCAAAp/gIAKvyCAgAAHGACAAANl4A==
+Date:   Mon, 20 Jan 2020 11:07:23 +0000
+Message-ID: <BN8PR12MB32663612E58060077996670ED3320@BN8PR12MB3266.namprd12.prod.outlook.com>
+References: <4953fc69a26bee930bccdeb612f1ce740a4294df.1578921062.git.Jose.Abreu@synopsys.com>
+ <20200113133845.GD11788@lunn.ch>
+ <BN8PR12MB32666F34D45D7881BDD4CAB3D3350@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <20200113141817.GN25745@shell.armlinux.org.uk>
+ <BN8PR12MB3266EC7870338BA4A65E8A6CD3320@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <20200120105020.GB25745@shell.armlinux.org.uk>
+In-Reply-To: <20200120105020.GB25745@shell.armlinux.org.uk>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=joabreu@synopsys.com; 
+x-originating-ip: [83.174.63.141]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: dead3062-a74b-46e7-1b4b-08d79d98ed30
+x-ms-traffictypediagnostic: BN8PR12MB3268:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN8PR12MB3268C2A9EBCE8E825DAF1D28D3320@BN8PR12MB3268.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5516;
+x-forefront-prvs: 0288CD37D9
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(136003)(366004)(396003)(346002)(39860400002)(189003)(199004)(81156014)(81166006)(66446008)(4326008)(316002)(6916009)(54906003)(64756008)(186003)(66556008)(76116006)(6506007)(52536014)(478600001)(8936002)(66946007)(66476007)(26005)(2906002)(33656002)(55016002)(9686003)(5660300002)(71200400001)(7696005)(8676002)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB3268;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: rLZwzqLDcBNhghkE+1hmCKFWb/Rz0Dg6X8UO19WqCUrFrm7kC7PvEqB/AYr6+ldRUzHxswgL6eUav9xd4WT1+qgzXVNJyv1LEd036sS4n7+uGsVLeLaohhdSWnqGeqmsglgberUTiXzQjfBZjPQ6oeNC/IylhK4Y5kJk61N271sK5/EFrxKHEq6SbpgEbxMiw+60Dvvlrcnr2TlHJY+gKiT4iJJWysXHCvBmsxLRj0/EZ/yS0g01Q3/3Jdrn1msTQYcAmQy8h52tNAz5fl57XOQahEsf0c/tbMh8fgRYDRzJzSKzIDeBsVPoZUJFV50NxdYEnBQ28ZpWMtLlb8fWqNJrNGCjsb7/ml/MMGJzmEofIhalUt/830uJqN3Q6y3Pb9jIWSqJgq2lxVW0sGb3dBPqJy3hhR5U12QBo7+UctvuFQ73PCHezyOyYRj/nH8j
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
+X-MS-Exchange-CrossTenant-Network-Message-Id: dead3062-a74b-46e7-1b4b-08d79d98ed30
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jan 2020 11:07:23.4418
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Paj8ILY9flkdatAaO/SNRS9idQG4mFN5/pWwNlx1yUTMl452nH9yFAFBHC5xtWC+TqHXFzSQKUVzt0wsZIwfGQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3268
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Date: Jan/20/2020, 10:50:20 (UTC+00:00)
+
+> On Mon, Jan 20, 2020 at 10:31:17AM +0000, Jose Abreu wrote:
+> > From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+> > Date: Jan/13/2020, 14:18:17 (UTC+00:00)
+> >=20
+> > > I've recently suggested a patch to phylink to add a generic helper to
+> > > read the state from a generic 802.3 clause 37 PCS, but I guess that
+> > > won't be sufficient for an XPCS.  However, it should give some clues
+> > > if you're intending to use phylink.
+> >=20
+> > So, I think for my particular setup (that has no "real" PHY) we can hav=
+e=20
+> > something like this in SW PoV:
+> >=20
+> > stmmac -> xpcs -> SW-PHY / Fixed PHY
+> >=20
+> > - stmmac + xpcs state would be handled by phylink (MAC side)
+> > - SW-PHY / Fixed PHY state would be handled by phylink (PHY side)
+> >=20
+> > This would need updates for Fixed PHY to support >1G speeds.
+>=20
+> You don't want to do that if you have 1G SFPs.  Yes, you *can* do it
+> and make it work, but you miss out completely on the fact that the
+> link is supposed to be negotiated across the SFP link for 1G speeds,
+> and then you're into the realms of having to provide users ways to
+> edit the DT and reboot if the parameters at the link partner change.
+
+You may have missed my answer to Andrew so I'll quote it here:
+
+---
 [...]
-> I really-really didn't like this alternating dependency on directory
-> or a set of file, depending on current state of those temporary
-> directories. Then also this ugly check to avoid circular dependency.
-> All that seemed wrong. So I played a bit with how to achieve the same
-> differently, and here's what I came up with, which I like a bit
-> better. What do you think?
->
-> $(BPFOBJ): $(wildcard $(BPFDIR)/*.c $(BPFDIR)/*.h $(BPFDIR)/Makefile)          \
->            ../../../include/uapi/linux/bpf.h                                   \
->            | $(INCLUDE_DIR) $(BUILD_DIR)/libbpf
->         $(Q)$(MAKE) $(submake_extras) -C $(BPFDIR) OUTPUT=$(BUILD_DIR)/libbpf/ \
->                     DESTDIR=$(SCRATCH_DIR) prefix= all install_headers
->
-> So, essentially, just make sure that we install local copies of
-> headers whenever libbpf.a needs to be re-built.
-> ../../../include/uapi/linux/bpf.h ensures we don't miss uapi header
-> changes as well. Now anything that uses libbpf headers will need to
-> depend on $(BPFOBJ) and will automatically get up-to-date local copies
-> of headers.
->
-> This seems much simpler. Please give it a try, thanks!
 
-Yes, this is a good idea! It did actually occur to me that the $(BPFOBJ)
-rule could just include the install_headers make arg, but only after I
-sent out this latest version. Thank you for taking the time to work out
-the details, I'll fold this in :)
+My current setup is this:
 
--Toke
+Host PC x86 -> PCI -> XGMAC -> XPCS -> SERDES 10G-BASE-R -> QSFP+
 
+The only piece that needs configuration besides XGMAC is the XPCS hereby=20
+
+I "called" it a PHY [...]
+---
+
+So, besides not having a DT based setup to test changes, I also don't have=
+=20
+access to SFP bus neither SERDES ... As you suggested, I would like to=20
+integrate XPCS with PHYLINK in stmmac but I'm not entirely sure on how to=20
+implement the remaining connections as the connect_phy() callbacks will=20
+fail because the only MMD device in the bus will be XPCS. That's why I=20
+suggested the Fixed PHY approach ...
+
+---
+Thanks,
+Jose Miguel Abreu
