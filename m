@@ -2,351 +2,947 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D37DC3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 324BAC32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:34:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EC1F2073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:33:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECE792073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:34:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726421AbgATGdo (ORCPT
+        id S1726607AbgATGeE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 01:33:44 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:39599 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbgATGdn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 01:33:43 -0500
-Received: by mail-lf1-f66.google.com with SMTP id y1so23082828lfb.6;
-        Sun, 19 Jan 2020 22:33:40 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=tFgGWNZakGfANkR1ARYjBOxOcWoawQ1Z6a6kdRexlIA=;
-        b=Zs6N0xwlPLVYvj5nbPL1Mp19k1WQVW2qms65lP7tncdl+jUzOKIoJLOYOeSHhsy5KW
-         kTsbo9lFsFTUWe3OD0JNtPC0R2/nX0nInjxk3Rrrp0fjOw5AsZGEBc9zCfVCl7laU6Ih
-         mC1qEgUV3diIJbcMgP0StOTpzX2bS1FGuR+8O9JRZt9T2/2nGygYG3VLwjKjsuNAB1VN
-         ufNMPXL1CZWdLndXPjzzVJPHddxuTQbPHmZ8G2LkmVw8Bss2yWx/vz/lWYVDY/65Od2y
-         FiiGRcr6QzZOSd2lfpZywdFsPhJV2USmqD4lXBEILv3Dyebz8NKTdCFxSkDI/1IkHiwv
-         9kGQ==
-X-Gm-Message-State: APjAAAXiHE9TJj8VSEFWUwIHB4XZHxEyRgiOICNokhyfJ+QT9+GTUChi
-        1awhxmizSaVSQBDyYCn2ARQ=
-X-Google-Smtp-Source: APXvYqyEB1yaF0lVRXlR20IzZ/Gl19W1Jl+hptGnasZW+8wrGmbL/GbleVWbtdKZXS/i3f1tuwqyGw==
-X-Received: by 2002:ac2:5496:: with SMTP id t22mr3158582lfk.85.1579502019372;
-        Sun, 19 Jan 2020 22:33:39 -0800 (PST)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id f11sm19174252lfa.9.2020.01.19.22.33.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Jan 2020 22:33:38 -0800 (PST)
-Date:   Mon, 20 Jan 2020 08:33:27 +0200
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org
-Subject: [PATCH v11 00/13] Support ROHM BD71828 PMIC
-Message-ID: <cover.1579501711.git.matti.vaittinen@fi.rohmeurope.com>
+        Mon, 20 Jan 2020 01:34:04 -0500
+Received: from mga11.intel.com ([192.55.52.93]:55382 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725783AbgATGeD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 01:34:03 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jan 2020 22:34:02 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,340,1574150400"; 
+   d="asc'?scan'208";a="258600234"
+Received: from zhen-hp.sh.intel.com (HELO zhen-hp) ([10.239.13.14])
+  by fmsmga002.fm.intel.com with ESMTP; 19 Jan 2020 22:34:00 -0800
+Date:   Mon, 20 Jan 2020 14:22:10 +0800
+From:   Zhenyu Wang <zhenyuw@linux.intel.com>
+To:     Julian Stecklina <julian.stecklina@cyberus-technology.de>
+Cc:     intel-gvt-dev@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Zhenyu Wang <zhenyuw@linux.intel.com>, hang.yuan@intel.com,
+        dri-devel@lists.freedesktop.org, zhiyuan.lv@intel.com
+Subject: Re: [RFC PATCH 1/4] drm/i915/gvt: make gvt oblivious of kvmgt data
+ structures
+Message-ID: <20200120062210.GA14597@zhen-hp.sh.intel.com>
+Reply-To: Zhenyu Wang <zhenyuw@linux.intel.com>
+References: <4079ce7c26a2d2a3c7e0828ed1ea6008d6e2c805.camel@cyberus-technology.de>
+ <20200109171357.115936-1-julian.stecklina@cyberus-technology.de>
+ <20200109171357.115936-2-julian.stecklina@cyberus-technology.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="ReaqsoxgOBHFXBhH"
 Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20200109171357.115936-2-julian.stecklina@cyberus-technology.de>
+User-Agent: Mutt/1.10.0 (2018-05-17)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Patch series introducing support for ROHM BD71828 PMIC
 
-ROHM BD71828 is a power management IC containing 7 bucks and 7 LDOs. All
-regulators can be controlled individually via I2C. Bucks 1,2,6 and
-7 can also be assigned to a "regulator group" controlled by run-levels.
-Eg. Run level specific voltages and enable/disable statuses for each of
-these bucks can be set via register interface. The buck run-level group
-assignment (selection if buck is to be controlled individually or via
-run-levels) can be changed at run-time via I2C.
+--ReaqsoxgOBHFXBhH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This patch series brings only the basic support for controlling
-regulators individually via I2C.
+On 2020.01.09 19:13:54 +0200, Julian Stecklina wrote:
+> Instead of defining KVMGT per-device state in struct intel_vgpu
+> directly, add an indirection. This makes the GVT code oblivious of
+> what state KVMGT needs to keep.
+>=20
+> The intention here is to eventually make it possible to build
+> hypervisor backends for the mediator, without having to touch the
+> mediator itself. This is a first step.
+>=20
+> Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
+>=20
+> Signed-off-by: Julian Stecklina <julian.stecklina@cyberus-technology.de>
+> ---
 
-In addition to the bucks and LDOs there are:
+Acked-by: Zhenyu Wang <zhenyuw@linux.intel.com>
 
-- The usual clk gate
-- 4 IO pins (mostly usable as GPO or tied to specific purpose)
-- power button support
-- RTC
-- two LEDs
-- battery charger
-- HALL sensor input
+>  drivers/gpu/drm/i915/gvt/gvt.h   |  32 +---
+>  drivers/gpu/drm/i915/gvt/kvmgt.c | 287 +++++++++++++++++++------------
+>  2 files changed, 184 insertions(+), 135 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/i915/gvt/gvt.h b/drivers/gpu/drm/i915/gvt/gv=
+t.h
+> index 0081b051d3e0..2604739e5680 100644
+> --- a/drivers/gpu/drm/i915/gvt/gvt.h
+> +++ b/drivers/gpu/drm/i915/gvt/gvt.h
+> @@ -196,31 +196,8 @@ struct intel_vgpu {
+> =20
+>  	struct dentry *debugfs;
+> =20
+> -#if IS_ENABLED(CONFIG_DRM_I915_GVT_KVMGT)
+> -	struct {
+> -		struct mdev_device *mdev;
+> -		struct vfio_region *region;
+> -		int num_regions;
+> -		struct eventfd_ctx *intx_trigger;
+> -		struct eventfd_ctx *msi_trigger;
+> -
+> -		/*
+> -		 * Two caches are used to avoid mapping duplicated pages (eg.
+> -		 * scratch pages). This help to reduce dma setup overhead.
+> -		 */
+> -		struct rb_root gfn_cache;
+> -		struct rb_root dma_addr_cache;
+> -		unsigned long nr_cache_entries;
+> -		struct mutex cache_lock;
+> -
+> -		struct notifier_block iommu_notifier;
+> -		struct notifier_block group_notifier;
+> -		struct kvm *kvm;
+> -		struct work_struct release_work;
+> -		atomic_t released;
+> -		struct vfio_device *vfio_device;
+> -	} vdev;
+> -#endif
+> +	/* Hypervisor-specific device state. */
+> +	void *vdev;
+> =20
+>  	struct list_head dmabuf_obj_list_head;
+>  	struct mutex dmabuf_lock;
+> @@ -231,6 +208,11 @@ struct intel_vgpu {
+>  	u32 scan_nonprivbb;
+>  };
+> =20
+> +static inline void *intel_vgpu_vdev(struct intel_vgpu *vgpu)
+> +{
+> +	return vgpu->vdev;
+> +}
+> +
+>  /* validating GM healthy status*/
+>  #define vgpu_is_vm_unhealthy(ret_val) \
+>  	(((ret_val) =3D=3D -EBADRQC) || ((ret_val) =3D=3D -EFAULT))
+> diff --git a/drivers/gpu/drm/i915/gvt/kvmgt.c b/drivers/gpu/drm/i915/gvt/=
+kvmgt.c
+> index bd79a9718cc7..d725a4fb94b9 100644
+> --- a/drivers/gpu/drm/i915/gvt/kvmgt.c
+> +++ b/drivers/gpu/drm/i915/gvt/kvmgt.c
+> @@ -108,6 +108,36 @@ struct gvt_dma {
+>  	struct kref ref;
+>  };
+> =20
+> +struct kvmgt_vdev {
+> +	struct intel_vgpu *vgpu;
+> +	struct mdev_device *mdev;
+> +	struct vfio_region *region;
+> +	int num_regions;
+> +	struct eventfd_ctx *intx_trigger;
+> +	struct eventfd_ctx *msi_trigger;
+> +
+> +	/*
+> +	 * Two caches are used to avoid mapping duplicated pages (eg.
+> +	 * scratch pages). This help to reduce dma setup overhead.
+> +	 */
+> +	struct rb_root gfn_cache;
+> +	struct rb_root dma_addr_cache;
+> +	unsigned long nr_cache_entries;
+> +	struct mutex cache_lock;
+> +
+> +	struct notifier_block iommu_notifier;
+> +	struct notifier_block group_notifier;
+> +	struct kvm *kvm;
+> +	struct work_struct release_work;
+> +	atomic_t released;
+> +	struct vfio_device *vfio_device;
+> +};
+> +
+> +static inline struct kvmgt_vdev *kvmgt_vdev(struct intel_vgpu *vgpu)
+> +{
+> +	return intel_vgpu_vdev(vgpu);
+> +}
+> +
+>  static inline bool handle_valid(unsigned long handle)
+>  {
+>  	return !!(handle & ~0xff);
+> @@ -129,7 +159,7 @@ static void gvt_unpin_guest_page(struct intel_vgpu *v=
+gpu, unsigned long gfn,
+>  	for (npage =3D 0; npage < total_pages; npage++) {
+>  		unsigned long cur_gfn =3D gfn + npage;
+> =20
+> -		ret =3D vfio_unpin_pages(mdev_dev(vgpu->vdev.mdev), &cur_gfn, 1);
+> +		ret =3D vfio_unpin_pages(mdev_dev(kvmgt_vdev(vgpu)->mdev), &cur_gfn, 1=
+);
+>  		WARN_ON(ret !=3D 1);
+>  	}
+>  }
+> @@ -152,7 +182,7 @@ static int gvt_pin_guest_page(struct intel_vgpu *vgpu=
+, unsigned long gfn,
+>  		unsigned long cur_gfn =3D gfn + npage;
+>  		unsigned long pfn;
+> =20
+> -		ret =3D vfio_pin_pages(mdev_dev(vgpu->vdev.mdev), &cur_gfn, 1,
+> +		ret =3D vfio_pin_pages(mdev_dev(kvmgt_vdev(vgpu)->mdev), &cur_gfn, 1,
+>  				     IOMMU_READ | IOMMU_WRITE, &pfn);
+>  		if (ret !=3D 1) {
+>  			gvt_vgpu_err("vfio_pin_pages failed for gfn 0x%lx, ret %d\n",
+> @@ -219,7 +249,7 @@ static void gvt_dma_unmap_page(struct intel_vgpu *vgp=
+u, unsigned long gfn,
+>  static struct gvt_dma *__gvt_cache_find_dma_addr(struct intel_vgpu *vgpu,
+>  		dma_addr_t dma_addr)
+>  {
+> -	struct rb_node *node =3D vgpu->vdev.dma_addr_cache.rb_node;
+> +	struct rb_node *node =3D kvmgt_vdev(vgpu)->dma_addr_cache.rb_node;
+>  	struct gvt_dma *itr;
+> =20
+>  	while (node) {
+> @@ -237,7 +267,7 @@ static struct gvt_dma *__gvt_cache_find_dma_addr(stru=
+ct intel_vgpu *vgpu,
+> =20
+>  static struct gvt_dma *__gvt_cache_find_gfn(struct intel_vgpu *vgpu, gfn=
+_t gfn)
+>  {
+> -	struct rb_node *node =3D vgpu->vdev.gfn_cache.rb_node;
+> +	struct rb_node *node =3D kvmgt_vdev(vgpu)->gfn_cache.rb_node;
+>  	struct gvt_dma *itr;
+> =20
+>  	while (node) {
+> @@ -258,6 +288,7 @@ static int __gvt_cache_add(struct intel_vgpu *vgpu, g=
+fn_t gfn,
+>  {
+>  	struct gvt_dma *new, *itr;
+>  	struct rb_node **link, *parent =3D NULL;
+> +	struct kvmgt_vdev *vdev =3D kvmgt_vdev(vgpu);
+> =20
+>  	new =3D kzalloc(sizeof(struct gvt_dma), GFP_KERNEL);
+>  	if (!new)
+> @@ -270,7 +301,7 @@ static int __gvt_cache_add(struct intel_vgpu *vgpu, g=
+fn_t gfn,
+>  	kref_init(&new->ref);
+> =20
+>  	/* gfn_cache maps gfn to struct gvt_dma. */
+> -	link =3D &vgpu->vdev.gfn_cache.rb_node;
+> +	link =3D &vdev->gfn_cache.rb_node;
+>  	while (*link) {
+>  		parent =3D *link;
+>  		itr =3D rb_entry(parent, struct gvt_dma, gfn_node);
+> @@ -281,11 +312,11 @@ static int __gvt_cache_add(struct intel_vgpu *vgpu,=
+ gfn_t gfn,
+>  			link =3D &parent->rb_right;
+>  	}
+>  	rb_link_node(&new->gfn_node, parent, link);
+> -	rb_insert_color(&new->gfn_node, &vgpu->vdev.gfn_cache);
+> +	rb_insert_color(&new->gfn_node, &vdev->gfn_cache);
+> =20
+>  	/* dma_addr_cache maps dma addr to struct gvt_dma. */
+>  	parent =3D NULL;
+> -	link =3D &vgpu->vdev.dma_addr_cache.rb_node;
+> +	link =3D &vdev->dma_addr_cache.rb_node;
+>  	while (*link) {
+>  		parent =3D *link;
+>  		itr =3D rb_entry(parent, struct gvt_dma, dma_addr_node);
+> @@ -296,46 +327,51 @@ static int __gvt_cache_add(struct intel_vgpu *vgpu,=
+ gfn_t gfn,
+>  			link =3D &parent->rb_right;
+>  	}
+>  	rb_link_node(&new->dma_addr_node, parent, link);
+> -	rb_insert_color(&new->dma_addr_node, &vgpu->vdev.dma_addr_cache);
+> +	rb_insert_color(&new->dma_addr_node, &vdev->dma_addr_cache);
+> =20
+> -	vgpu->vdev.nr_cache_entries++;
+> +	vdev->nr_cache_entries++;
+>  	return 0;
+>  }
+> =20
+>  static void __gvt_cache_remove_entry(struct intel_vgpu *vgpu,
+>  				struct gvt_dma *entry)
+>  {
+> -	rb_erase(&entry->gfn_node, &vgpu->vdev.gfn_cache);
+> -	rb_erase(&entry->dma_addr_node, &vgpu->vdev.dma_addr_cache);
+> +	struct kvmgt_vdev *vdev =3D kvmgt_vdev(vgpu);
+> +
+> +	rb_erase(&entry->gfn_node, &vdev->gfn_cache);
+> +	rb_erase(&entry->dma_addr_node, &vdev->dma_addr_cache);
+>  	kfree(entry);
+> -	vgpu->vdev.nr_cache_entries--;
+> +	vdev->nr_cache_entries--;
+>  }
+> =20
+>  static void gvt_cache_destroy(struct intel_vgpu *vgpu)
+>  {
+>  	struct gvt_dma *dma;
+>  	struct rb_node *node =3D NULL;
+> +	struct kvmgt_vdev *vdev =3D kvmgt_vdev(vgpu);
+> =20
+>  	for (;;) {
+> -		mutex_lock(&vgpu->vdev.cache_lock);
+> -		node =3D rb_first(&vgpu->vdev.gfn_cache);
+> +		mutex_lock(&vdev->cache_lock);
+> +		node =3D rb_first(&vdev->gfn_cache);
+>  		if (!node) {
+> -			mutex_unlock(&vgpu->vdev.cache_lock);
+> +			mutex_unlock(&vdev->cache_lock);
+>  			break;
+>  		}
+>  		dma =3D rb_entry(node, struct gvt_dma, gfn_node);
+>  		gvt_dma_unmap_page(vgpu, dma->gfn, dma->dma_addr, dma->size);
+>  		__gvt_cache_remove_entry(vgpu, dma);
+> -		mutex_unlock(&vgpu->vdev.cache_lock);
+> +		mutex_unlock(&vdev->cache_lock);
+>  	}
+>  }
+> =20
+>  static void gvt_cache_init(struct intel_vgpu *vgpu)
+>  {
+> -	vgpu->vdev.gfn_cache =3D RB_ROOT;
+> -	vgpu->vdev.dma_addr_cache =3D RB_ROOT;
+> -	vgpu->vdev.nr_cache_entries =3D 0;
+> -	mutex_init(&vgpu->vdev.cache_lock);
+> +	struct kvmgt_vdev *vdev =3D kvmgt_vdev(vgpu);
+> +
+> +	vdev->gfn_cache =3D RB_ROOT;
+> +	vdev->dma_addr_cache =3D RB_ROOT;
+> +	vdev->nr_cache_entries =3D 0;
+> +	mutex_init(&vdev->cache_lock);
+>  }
+> =20
+>  static void kvmgt_protect_table_init(struct kvmgt_guest_info *info)
+> @@ -409,16 +445,18 @@ static void kvmgt_protect_table_del(struct kvmgt_gu=
+est_info *info,
+>  static size_t intel_vgpu_reg_rw_opregion(struct intel_vgpu *vgpu, char *=
+buf,
+>  		size_t count, loff_t *ppos, bool iswrite)
+>  {
+> +	struct kvmgt_vdev *vdev =3D kvmgt_vdev(vgpu);
+>  	unsigned int i =3D VFIO_PCI_OFFSET_TO_INDEX(*ppos) -
+>  			VFIO_PCI_NUM_REGIONS;
+> -	void *base =3D vgpu->vdev.region[i].data;
+> +	void *base =3D vdev->region[i].data;
+>  	loff_t pos =3D *ppos & VFIO_PCI_OFFSET_MASK;
+> =20
+> -	if (pos >=3D vgpu->vdev.region[i].size || iswrite) {
+> +
+> +	if (pos >=3D vdev->region[i].size || iswrite) {
+>  		gvt_vgpu_err("invalid op or offset for Intel vgpu OpRegion\n");
+>  		return -EINVAL;
+>  	}
+> -	count =3D min(count, (size_t)(vgpu->vdev.region[i].size - pos));
+> +	count =3D min(count, (size_t)(vdev->region[i].size - pos));
+>  	memcpy(buf, base + pos, count);
+> =20
+>  	return count;
+> @@ -512,7 +550,7 @@ static size_t intel_vgpu_reg_rw_edid(struct intel_vgp=
+u *vgpu, char *buf,
+>  	unsigned int i =3D VFIO_PCI_OFFSET_TO_INDEX(*ppos) -
+>  			VFIO_PCI_NUM_REGIONS;
+>  	struct vfio_edid_region *region =3D
+> -		(struct vfio_edid_region *)vgpu->vdev.region[i].data;
+> +		(struct vfio_edid_region *)kvmgt_vdev(vgpu)->region[i].data;
+>  	loff_t pos =3D *ppos & VFIO_PCI_OFFSET_MASK;
+> =20
+>  	if (pos < region->vfio_edid_regs.edid_offset) {
+> @@ -544,32 +582,34 @@ static int intel_vgpu_register_reg(struct intel_vgp=
+u *vgpu,
+>  		const struct intel_vgpu_regops *ops,
+>  		size_t size, u32 flags, void *data)
+>  {
+> +	struct kvmgt_vdev *vdev =3D kvmgt_vdev(vgpu);
+>  	struct vfio_region *region;
+> =20
+> -	region =3D krealloc(vgpu->vdev.region,
+> -			(vgpu->vdev.num_regions + 1) * sizeof(*region),
+> +	region =3D krealloc(vdev->region,
+> +			(vdev->num_regions + 1) * sizeof(*region),
+>  			GFP_KERNEL);
+>  	if (!region)
+>  		return -ENOMEM;
+> =20
+> -	vgpu->vdev.region =3D region;
+> -	vgpu->vdev.region[vgpu->vdev.num_regions].type =3D type;
+> -	vgpu->vdev.region[vgpu->vdev.num_regions].subtype =3D subtype;
+> -	vgpu->vdev.region[vgpu->vdev.num_regions].ops =3D ops;
+> -	vgpu->vdev.region[vgpu->vdev.num_regions].size =3D size;
+> -	vgpu->vdev.region[vgpu->vdev.num_regions].flags =3D flags;
+> -	vgpu->vdev.region[vgpu->vdev.num_regions].data =3D data;
+> -	vgpu->vdev.num_regions++;
+> +	vdev->region =3D region;
+> +	vdev->region[vdev->num_regions].type =3D type;
+> +	vdev->region[vdev->num_regions].subtype =3D subtype;
+> +	vdev->region[vdev->num_regions].ops =3D ops;
+> +	vdev->region[vdev->num_regions].size =3D size;
+> +	vdev->region[vdev->num_regions].flags =3D flags;
+> +	vdev->region[vdev->num_regions].data =3D data;
+> +	vdev->num_regions++;
+>  	return 0;
+>  }
+> =20
+>  static int kvmgt_get_vfio_device(void *p_vgpu)
+>  {
+>  	struct intel_vgpu *vgpu =3D (struct intel_vgpu *)p_vgpu;
+> +	struct kvmgt_vdev *vdev =3D kvmgt_vdev(vgpu);
+> =20
+> -	vgpu->vdev.vfio_device =3D vfio_device_get_from_dev(
+> -		mdev_dev(vgpu->vdev.mdev));
+> -	if (!vgpu->vdev.vfio_device) {
+> +	vdev->vfio_device =3D vfio_device_get_from_dev(
+> +		mdev_dev(vdev->mdev));
+> +	if (!vdev->vfio_device) {
+>  		gvt_vgpu_err("failed to get vfio device\n");
+>  		return -ENODEV;
+>  	}
+> @@ -637,10 +677,12 @@ static int kvmgt_set_edid(void *p_vgpu, int port_nu=
+m)
+> =20
+>  static void kvmgt_put_vfio_device(void *vgpu)
+>  {
+> -	if (WARN_ON(!((struct intel_vgpu *)vgpu)->vdev.vfio_device))
+> +	struct kvmgt_vdev *vdev =3D kvmgt_vdev((struct intel_vgpu *)vgpu);
+> +
+> +	if (WARN_ON(!vdev->vfio_device))
+>  		return;
+> =20
+> -	vfio_device_put(((struct intel_vgpu *)vgpu)->vdev.vfio_device);
+> +	vfio_device_put(vdev->vfio_device);
+>  }
+> =20
+>  static int intel_vgpu_create(struct kobject *kobj, struct mdev_device *m=
+dev)
+> @@ -669,9 +711,9 @@ static int intel_vgpu_create(struct kobject *kobj, st=
+ruct mdev_device *mdev)
+>  		goto out;
+>  	}
+> =20
+> -	INIT_WORK(&vgpu->vdev.release_work, intel_vgpu_release_work);
+> +	INIT_WORK(&kvmgt_vdev(vgpu)->release_work, intel_vgpu_release_work);
+> =20
+> -	vgpu->vdev.mdev =3D mdev;
+> +	kvmgt_vdev(vgpu)->mdev =3D mdev;
+>  	mdev_set_drvdata(mdev, vgpu);
+> =20
+>  	gvt_dbg_core("intel_vgpu_create succeeded for mdev: %s\n",
+> @@ -696,9 +738,10 @@ static int intel_vgpu_remove(struct mdev_device *mde=
+v)
+>  static int intel_vgpu_iommu_notifier(struct notifier_block *nb,
+>  				     unsigned long action, void *data)
+>  {
+> -	struct intel_vgpu *vgpu =3D container_of(nb,
+> -					struct intel_vgpu,
+> -					vdev.iommu_notifier);
+> +	struct kvmgt_vdev *vdev =3D container_of(nb,
+> +					       struct kvmgt_vdev,
+> +					       iommu_notifier);
+> +	struct intel_vgpu *vgpu =3D vdev->vgpu;
+> =20
+>  	if (action =3D=3D VFIO_IOMMU_NOTIFY_DMA_UNMAP) {
+>  		struct vfio_iommu_type1_dma_unmap *unmap =3D data;
+> @@ -708,7 +751,7 @@ static int intel_vgpu_iommu_notifier(struct notifier_=
+block *nb,
+>  		iov_pfn =3D unmap->iova >> PAGE_SHIFT;
+>  		end_iov_pfn =3D iov_pfn + unmap->size / PAGE_SIZE;
+> =20
+> -		mutex_lock(&vgpu->vdev.cache_lock);
+> +		mutex_lock(&vdev->cache_lock);
+>  		for (; iov_pfn < end_iov_pfn; iov_pfn++) {
+>  			entry =3D __gvt_cache_find_gfn(vgpu, iov_pfn);
+>  			if (!entry)
+> @@ -718,7 +761,7 @@ static int intel_vgpu_iommu_notifier(struct notifier_=
+block *nb,
+>  					   entry->size);
+>  			__gvt_cache_remove_entry(vgpu, entry);
+>  		}
+> -		mutex_unlock(&vgpu->vdev.cache_lock);
+> +		mutex_unlock(&vdev->cache_lock);
+>  	}
+> =20
+>  	return NOTIFY_OK;
+> @@ -727,16 +770,16 @@ static int intel_vgpu_iommu_notifier(struct notifie=
+r_block *nb,
+>  static int intel_vgpu_group_notifier(struct notifier_block *nb,
+>  				     unsigned long action, void *data)
+>  {
+> -	struct intel_vgpu *vgpu =3D container_of(nb,
+> -					struct intel_vgpu,
+> -					vdev.group_notifier);
+> +	struct kvmgt_vdev *vdev =3D container_of(nb,
+> +					       struct kvmgt_vdev,
+> +					       group_notifier);
+> =20
+>  	/* the only action we care about */
+>  	if (action =3D=3D VFIO_GROUP_NOTIFY_SET_KVM) {
+> -		vgpu->vdev.kvm =3D data;
+> +		vdev->kvm =3D data;
+> =20
+>  		if (!data)
+> -			schedule_work(&vgpu->vdev.release_work);
+> +			schedule_work(&vdev->release_work);
+>  	}
+> =20
+>  	return NOTIFY_OK;
+> @@ -745,15 +788,16 @@ static int intel_vgpu_group_notifier(struct notifie=
+r_block *nb,
+>  static int intel_vgpu_open(struct mdev_device *mdev)
+>  {
+>  	struct intel_vgpu *vgpu =3D mdev_get_drvdata(mdev);
+> +	struct kvmgt_vdev *vdev =3D kvmgt_vdev(vgpu);
+>  	unsigned long events;
+>  	int ret;
+> =20
+> -	vgpu->vdev.iommu_notifier.notifier_call =3D intel_vgpu_iommu_notifier;
+> -	vgpu->vdev.group_notifier.notifier_call =3D intel_vgpu_group_notifier;
+> +	vdev->iommu_notifier.notifier_call =3D intel_vgpu_iommu_notifier;
+> +	vdev->group_notifier.notifier_call =3D intel_vgpu_group_notifier;
+> =20
+>  	events =3D VFIO_IOMMU_NOTIFY_DMA_UNMAP;
+>  	ret =3D vfio_register_notifier(mdev_dev(mdev), VFIO_IOMMU_NOTIFY, &even=
+ts,
+> -				&vgpu->vdev.iommu_notifier);
+> +				&vdev->iommu_notifier);
+>  	if (ret !=3D 0) {
+>  		gvt_vgpu_err("vfio_register_notifier for iommu failed: %d\n",
+>  			ret);
+> @@ -762,7 +806,7 @@ static int intel_vgpu_open(struct mdev_device *mdev)
+> =20
+>  	events =3D VFIO_GROUP_NOTIFY_SET_KVM;
+>  	ret =3D vfio_register_notifier(mdev_dev(mdev), VFIO_GROUP_NOTIFY, &even=
+ts,
+> -				&vgpu->vdev.group_notifier);
+> +				&vdev->group_notifier);
+>  	if (ret !=3D 0) {
+>  		gvt_vgpu_err("vfio_register_notifier for group failed: %d\n",
+>  			ret);
+> @@ -781,50 +825,52 @@ static int intel_vgpu_open(struct mdev_device *mdev)
+> =20
+>  	intel_gvt_ops->vgpu_activate(vgpu);
+> =20
+> -	atomic_set(&vgpu->vdev.released, 0);
+> +	atomic_set(&vdev->released, 0);
+>  	return ret;
+> =20
+>  undo_group:
+>  	vfio_unregister_notifier(mdev_dev(mdev), VFIO_GROUP_NOTIFY,
+> -					&vgpu->vdev.group_notifier);
+> +					&vdev->group_notifier);
+> =20
+>  undo_iommu:
+>  	vfio_unregister_notifier(mdev_dev(mdev), VFIO_IOMMU_NOTIFY,
+> -					&vgpu->vdev.iommu_notifier);
+> +					&vdev->iommu_notifier);
+>  out:
+>  	return ret;
+>  }
+> =20
+>  static void intel_vgpu_release_msi_eventfd_ctx(struct intel_vgpu *vgpu)
+>  {
+> +	struct kvmgt_vdev *vdev =3D kvmgt_vdev(vgpu);
+>  	struct eventfd_ctx *trigger;
+> =20
+> -	trigger =3D vgpu->vdev.msi_trigger;
+> +	trigger =3D vdev->msi_trigger;
+>  	if (trigger) {
+>  		eventfd_ctx_put(trigger);
+> -		vgpu->vdev.msi_trigger =3D NULL;
+> +		vdev->msi_trigger =3D NULL;
+>  	}
+>  }
+> =20
+>  static void __intel_vgpu_release(struct intel_vgpu *vgpu)
+>  {
+> +	struct kvmgt_vdev *vdev =3D kvmgt_vdev(vgpu);
+>  	struct kvmgt_guest_info *info;
+>  	int ret;
+> =20
+>  	if (!handle_valid(vgpu->handle))
+>  		return;
+> =20
+> -	if (atomic_cmpxchg(&vgpu->vdev.released, 0, 1))
+> +	if (atomic_cmpxchg(&vdev->released, 0, 1))
+>  		return;
+> =20
+>  	intel_gvt_ops->vgpu_release(vgpu);
+> =20
+> -	ret =3D vfio_unregister_notifier(mdev_dev(vgpu->vdev.mdev), VFIO_IOMMU_=
+NOTIFY,
+> -					&vgpu->vdev.iommu_notifier);
+> +	ret =3D vfio_unregister_notifier(mdev_dev(vdev->mdev), VFIO_IOMMU_NOTIF=
+Y,
+> +					&vdev->iommu_notifier);
+>  	WARN(ret, "vfio_unregister_notifier for iommu failed: %d\n", ret);
+> =20
+> -	ret =3D vfio_unregister_notifier(mdev_dev(vgpu->vdev.mdev), VFIO_GROUP_=
+NOTIFY,
+> -					&vgpu->vdev.group_notifier);
+> +	ret =3D vfio_unregister_notifier(mdev_dev(vdev->mdev), VFIO_GROUP_NOTIF=
+Y,
+> +					&vdev->group_notifier);
+>  	WARN(ret, "vfio_unregister_notifier for group failed: %d\n", ret);
+> =20
+>  	/* dereference module reference taken at open */
+> @@ -835,7 +881,7 @@ static void __intel_vgpu_release(struct intel_vgpu *v=
+gpu)
+> =20
+>  	intel_vgpu_release_msi_eventfd_ctx(vgpu);
+> =20
+> -	vgpu->vdev.kvm =3D NULL;
+> +	vdev->kvm =3D NULL;
+>  	vgpu->handle =3D 0;
+>  }
+> =20
+> @@ -848,10 +894,10 @@ static void intel_vgpu_release(struct mdev_device *=
+mdev)
+> =20
+>  static void intel_vgpu_release_work(struct work_struct *work)
+>  {
+> -	struct intel_vgpu *vgpu =3D container_of(work, struct intel_vgpu,
+> -					vdev.release_work);
+> +	struct kvmgt_vdev *vdev =3D container_of(work, struct kvmgt_vdev,
+> +					       release_work);
+> =20
+> -	__intel_vgpu_release(vgpu);
+> +	__intel_vgpu_release(vdev->vgpu);
+>  }
+> =20
+>  static u64 intel_vgpu_get_bar_addr(struct intel_vgpu *vgpu, int bar)
+> @@ -933,12 +979,13 @@ static ssize_t intel_vgpu_rw(struct mdev_device *md=
+ev, char *buf,
+>  			size_t count, loff_t *ppos, bool is_write)
+>  {
+>  	struct intel_vgpu *vgpu =3D mdev_get_drvdata(mdev);
+> +	struct kvmgt_vdev *vdev =3D kvmgt_vdev(vgpu);
+>  	unsigned int index =3D VFIO_PCI_OFFSET_TO_INDEX(*ppos);
+>  	u64 pos =3D *ppos & VFIO_PCI_OFFSET_MASK;
+>  	int ret =3D -EINVAL;
+> =20
+> =20
+> -	if (index >=3D VFIO_PCI_NUM_REGIONS + vgpu->vdev.num_regions) {
+> +	if (index >=3D VFIO_PCI_NUM_REGIONS + vdev->num_regions) {
+>  		gvt_vgpu_err("invalid index: %u\n", index);
+>  		return -EINVAL;
+>  	}
+> @@ -967,11 +1014,11 @@ static ssize_t intel_vgpu_rw(struct mdev_device *m=
+dev, char *buf,
+>  	case VFIO_PCI_ROM_REGION_INDEX:
+>  		break;
+>  	default:
+> -		if (index >=3D VFIO_PCI_NUM_REGIONS + vgpu->vdev.num_regions)
+> +		if (index >=3D VFIO_PCI_NUM_REGIONS + vdev->num_regions)
+>  			return -EINVAL;
+> =20
+>  		index -=3D VFIO_PCI_NUM_REGIONS;
+> -		return vgpu->vdev.region[index].ops->rw(vgpu, buf, count,
+> +		return vdev->region[index].ops->rw(vgpu, buf, count,
+>  				ppos, is_write);
+>  	}
+> =20
+> @@ -1224,7 +1271,7 @@ static int intel_vgpu_set_msi_trigger(struct intel_=
+vgpu *vgpu,
+>  			gvt_vgpu_err("eventfd_ctx_fdget failed\n");
+>  			return PTR_ERR(trigger);
+>  		}
+> -		vgpu->vdev.msi_trigger =3D trigger;
+> +		kvmgt_vdev(vgpu)->msi_trigger =3D trigger;
+>  	} else if ((flags & VFIO_IRQ_SET_DATA_NONE) && !count)
+>  		intel_vgpu_release_msi_eventfd_ctx(vgpu);
+> =20
+> @@ -1276,6 +1323,7 @@ static long intel_vgpu_ioctl(struct mdev_device *md=
+ev, unsigned int cmd,
+>  			     unsigned long arg)
+>  {
+>  	struct intel_vgpu *vgpu =3D mdev_get_drvdata(mdev);
+> +	struct kvmgt_vdev *vdev =3D kvmgt_vdev(vgpu);
+>  	unsigned long minsz;
+> =20
+>  	gvt_dbg_core("vgpu%d ioctl, cmd: %d\n", vgpu->id, cmd);
+> @@ -1294,7 +1342,7 @@ static long intel_vgpu_ioctl(struct mdev_device *md=
+ev, unsigned int cmd,
+>  		info.flags =3D VFIO_DEVICE_FLAGS_PCI;
+>  		info.flags |=3D VFIO_DEVICE_FLAGS_RESET;
+>  		info.num_regions =3D VFIO_PCI_NUM_REGIONS +
+> -				vgpu->vdev.num_regions;
+> +				vdev->num_regions;
+>  		info.num_irqs =3D VFIO_PCI_NUM_IRQS;
+> =20
+>  		return copy_to_user((void __user *)arg, &info, minsz) ?
+> @@ -1385,22 +1433,22 @@ static long intel_vgpu_ioctl(struct mdev_device *=
+mdev, unsigned int cmd,
+>  					.header.version =3D 1 };
+> =20
+>  				if (info.index >=3D VFIO_PCI_NUM_REGIONS +
+> -						vgpu->vdev.num_regions)
+> +						vdev->num_regions)
+>  					return -EINVAL;
+>  				info.index =3D
+>  					array_index_nospec(info.index,
+>  							VFIO_PCI_NUM_REGIONS +
+> -							vgpu->vdev.num_regions);
+> +							vdev->num_regions);
+> =20
+>  				i =3D info.index - VFIO_PCI_NUM_REGIONS;
+> =20
+>  				info.offset =3D
+>  					VFIO_PCI_INDEX_TO_OFFSET(info.index);
+> -				info.size =3D vgpu->vdev.region[i].size;
+> -				info.flags =3D vgpu->vdev.region[i].flags;
+> +				info.size =3D vdev->region[i].size;
+> +				info.flags =3D vdev->region[i].flags;
+> =20
+> -				cap_type.type =3D vgpu->vdev.region[i].type;
+> -				cap_type.subtype =3D vgpu->vdev.region[i].subtype;
+> +				cap_type.type =3D vdev->region[i].type;
+> +				cap_type.subtype =3D vdev->region[i].subtype;
+> =20
+>  				ret =3D vfio_info_add_capability(&caps,
+>  							&cap_type.header,
+> @@ -1740,13 +1788,15 @@ static int kvmgt_guest_init(struct mdev_device *m=
+dev)
+>  {
+>  	struct kvmgt_guest_info *info;
+>  	struct intel_vgpu *vgpu;
+> +	struct kvmgt_vdev *vdev;
+>  	struct kvm *kvm;
+> =20
+>  	vgpu =3D mdev_get_drvdata(mdev);
+>  	if (handle_valid(vgpu->handle))
+>  		return -EEXIST;
+> =20
+> -	kvm =3D vgpu->vdev.kvm;
+> +	vdev =3D kvmgt_vdev(vgpu);
+> +	kvm =3D vdev->kvm;
+>  	if (!kvm || kvm->mm !=3D current->mm) {
+>  		gvt_vgpu_err("KVM is required to use Intel vGPU\n");
+>  		return -ESRCH;
+> @@ -1776,7 +1826,7 @@ static int kvmgt_guest_init(struct mdev_device *mde=
+v)
+>  	info->debugfs_cache_entries =3D debugfs_create_ulong(
+>  						"kvmgt_nr_cache_entries",
+>  						0444, vgpu->debugfs,
+> -						&vgpu->vdev.nr_cache_entries);
+> +						&vdev->nr_cache_entries);
+>  	return 0;
+>  }
+> =20
+> @@ -1793,9 +1843,17 @@ static bool kvmgt_guest_exit(struct kvmgt_guest_in=
+fo *info)
+>  	return true;
+>  }
+> =20
+> -static int kvmgt_attach_vgpu(void *vgpu, unsigned long *handle)
+> +static int kvmgt_attach_vgpu(void *p_vgpu, unsigned long *handle)
+>  {
+> -	/* nothing to do here */
+> +	struct intel_vgpu *vgpu =3D (struct intel_vgpu *)p_vgpu;
+> +
+> +	vgpu->vdev =3D kzalloc(sizeof(struct kvmgt_vdev), GFP_KERNEL);
+> +
+> +	if (!vgpu->vdev)
+> +		return -ENOMEM;
+> +
+> +	kvmgt_vdev(vgpu)->vgpu =3D vgpu;
+> +
+>  	return 0;
+>  }
+> =20
+> @@ -1803,29 +1861,34 @@ static void kvmgt_detach_vgpu(void *p_vgpu)
+>  {
+>  	int i;
+>  	struct intel_vgpu *vgpu =3D (struct intel_vgpu *)p_vgpu;
+> +	struct kvmgt_vdev *vdev =3D kvmgt_vdev(vgpu);
+> =20
+> -	if (!vgpu->vdev.region)
+> +	if (!vdev->region)
+>  		return;
+> =20
+> -	for (i =3D 0; i < vgpu->vdev.num_regions; i++)
+> -		if (vgpu->vdev.region[i].ops->release)
+> -			vgpu->vdev.region[i].ops->release(vgpu,
+> -					&vgpu->vdev.region[i]);
+> -	vgpu->vdev.num_regions =3D 0;
+> -	kfree(vgpu->vdev.region);
+> -	vgpu->vdev.region =3D NULL;
+> +	for (i =3D 0; i < vdev->num_regions; i++)
+> +		if (vdev->region[i].ops->release)
+> +			vdev->region[i].ops->release(vgpu,
+> +					&vdev->region[i]);
+> +	vdev->num_regions =3D 0;
+> +	kfree(vdev->region);
+> +	vdev->region =3D NULL;
+> +
+> +	kfree(vdev);
+>  }
+> =20
+>  static int kvmgt_inject_msi(unsigned long handle, u32 addr, u16 data)
+>  {
+>  	struct kvmgt_guest_info *info;
+>  	struct intel_vgpu *vgpu;
+> +	struct kvmgt_vdev *vdev;
+> =20
+>  	if (!handle_valid(handle))
+>  		return -ESRCH;
+> =20
+>  	info =3D (struct kvmgt_guest_info *)handle;
+>  	vgpu =3D info->vgpu;
+> +	vdev =3D kvmgt_vdev(vgpu);
+> =20
+>  	/*
+>  	 * When guest is poweroff, msi_trigger is set to NULL, but vgpu's
+> @@ -1836,10 +1899,10 @@ static int kvmgt_inject_msi(unsigned long handle,=
+ u32 addr, u16 data)
+>  	 * enabled by guest. so if msi_trigger is null, success is still
+>  	 * returned and don't inject interrupt into guest.
+>  	 */
+> -	if (vgpu->vdev.msi_trigger =3D=3D NULL)
+> +	if (vdev->msi_trigger =3D=3D NULL)
+>  		return 0;
+> =20
+> -	if (eventfd_signal(vgpu->vdev.msi_trigger, 1) =3D=3D 1)
+> +	if (eventfd_signal(vdev->msi_trigger, 1) =3D=3D 1)
+>  		return 0;
+> =20
+>  	return -EFAULT;
+> @@ -1865,26 +1928,26 @@ static unsigned long kvmgt_gfn_to_pfn(unsigned lo=
+ng handle, unsigned long gfn)
+>  static int kvmgt_dma_map_guest_page(unsigned long handle, unsigned long =
+gfn,
+>  		unsigned long size, dma_addr_t *dma_addr)
+>  {
+> -	struct kvmgt_guest_info *info;
+>  	struct intel_vgpu *vgpu;
+> +	struct kvmgt_vdev *vdev;
+>  	struct gvt_dma *entry;
+>  	int ret;
+> =20
+>  	if (!handle_valid(handle))
+>  		return -EINVAL;
+> =20
+> -	info =3D (struct kvmgt_guest_info *)handle;
+> -	vgpu =3D info->vgpu;
+> +	vgpu =3D ((struct kvmgt_guest_info *)handle)->vgpu;
+> +	vdev =3D kvmgt_vdev(vgpu);
+> =20
+> -	mutex_lock(&info->vgpu->vdev.cache_lock);
+> +	mutex_lock(&vdev->cache_lock);
+> =20
+> -	entry =3D __gvt_cache_find_gfn(info->vgpu, gfn);
+> +	entry =3D __gvt_cache_find_gfn(vgpu, gfn);
+>  	if (!entry) {
+>  		ret =3D gvt_dma_map_page(vgpu, gfn, dma_addr, size);
+>  		if (ret)
+>  			goto err_unlock;
+> =20
+> -		ret =3D __gvt_cache_add(info->vgpu, gfn, *dma_addr, size);
+> +		ret =3D __gvt_cache_add(vgpu, gfn, *dma_addr, size);
+>  		if (ret)
+>  			goto err_unmap;
+>  	} else if (entry->size !=3D size) {
+> @@ -1896,7 +1959,7 @@ static int kvmgt_dma_map_guest_page(unsigned long h=
+andle, unsigned long gfn,
+>  		if (ret)
+>  			goto err_unlock;
+> =20
+> -		ret =3D __gvt_cache_add(info->vgpu, gfn, *dma_addr, size);
+> +		ret =3D __gvt_cache_add(vgpu, gfn, *dma_addr, size);
+>  		if (ret)
+>  			goto err_unmap;
+>  	} else {
+> @@ -1904,19 +1967,20 @@ static int kvmgt_dma_map_guest_page(unsigned long=
+ handle, unsigned long gfn,
+>  		*dma_addr =3D entry->dma_addr;
+>  	}
+> =20
+> -	mutex_unlock(&info->vgpu->vdev.cache_lock);
+> +	mutex_unlock(&vdev->cache_lock);
+>  	return 0;
+> =20
+>  err_unmap:
+>  	gvt_dma_unmap_page(vgpu, gfn, *dma_addr, size);
+>  err_unlock:
+> -	mutex_unlock(&info->vgpu->vdev.cache_lock);
+> +	mutex_unlock(&vdev->cache_lock);
+>  	return ret;
+>  }
+> =20
+>  static int kvmgt_dma_pin_guest_page(unsigned long handle, dma_addr_t dma=
+_addr)
+>  {
+>  	struct kvmgt_guest_info *info;
+> +	struct kvmgt_vdev *vdev;
+>  	struct gvt_dma *entry;
+>  	int ret =3D 0;
+> =20
+> @@ -1924,14 +1988,15 @@ static int kvmgt_dma_pin_guest_page(unsigned long=
+ handle, dma_addr_t dma_addr)
+>  		return -ENODEV;
+> =20
+>  	info =3D (struct kvmgt_guest_info *)handle;
+> +	vdev =3D kvmgt_vdev(info->vgpu);
+> =20
+> -	mutex_lock(&info->vgpu->vdev.cache_lock);
+> +	mutex_lock(&vdev->cache_lock);
+>  	entry =3D __gvt_cache_find_dma_addr(info->vgpu, dma_addr);
+>  	if (entry)
+>  		kref_get(&entry->ref);
+>  	else
+>  		ret =3D -ENOMEM;
+> -	mutex_unlock(&info->vgpu->vdev.cache_lock);
+> +	mutex_unlock(&vdev->cache_lock);
+> =20
+>  	return ret;
+>  }
+> @@ -1947,19 +2012,21 @@ static void __gvt_dma_release(struct kref *ref)
+> =20
+>  static void kvmgt_dma_unmap_guest_page(unsigned long handle, dma_addr_t =
+dma_addr)
+>  {
+> -	struct kvmgt_guest_info *info;
+> +	struct intel_vgpu *vgpu;
+> +	struct kvmgt_vdev *vdev;
+>  	struct gvt_dma *entry;
+> =20
+>  	if (!handle_valid(handle))
+>  		return;
+> =20
+> -	info =3D (struct kvmgt_guest_info *)handle;
+> +	vgpu =3D ((struct kvmgt_guest_info *)handle)->vgpu;
+> +	vdev =3D kvmgt_vdev(vgpu);
+> =20
+> -	mutex_lock(&info->vgpu->vdev.cache_lock);
+> -	entry =3D __gvt_cache_find_dma_addr(info->vgpu, dma_addr);
+> +	mutex_lock(&vdev->cache_lock);
+> +	entry =3D __gvt_cache_find_dma_addr(vgpu, dma_addr);
+>  	if (entry)
+>  		kref_put(&entry->ref, __gvt_dma_release);
+> -	mutex_unlock(&info->vgpu->vdev.cache_lock);
+> +	mutex_unlock(&vdev->cache_lock);
+>  }
+> =20
+>  static int kvmgt_rw_gpa(unsigned long handle, unsigned long gpa,
+> --=20
+> 2.24.1
+>=20
+> _______________________________________________
+> intel-gvt-dev mailing list
+> intel-gvt-dev@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/intel-gvt-dev
 
-This patch series adds support to regulators, clk, RTC, GPIOs and LEDs.
+--=20
+Open Source Technology Center, Intel ltd.
 
-Power-supply driver for charger is not included in this series.
+$gpg --keyserver wwwkeys.pgp.net --recv-keys 4D781827
 
-The series also adds LED DT-node lookup based on node name or given
-property name/value pair in LED core. It also adds generic default-state
-and default-trigger property handling to LED core. Follow-up patches
-simplifying few other LED drivers should follow.
+--ReaqsoxgOBHFXBhH
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Changelog v11:
-  - converted a macro to enum member as was requested by Lee.
+-----BEGIN PGP SIGNATURE-----
 
-Changelog v10:
-  - Split RTC patch to a BD70528 fix (which hopefully goes to 5.4) and to
-    BD71828 support
+iF0EARECAB0WIQTXuabgHDW6LPt9CICxBBozTXgYJwUCXiVHEgAKCRCxBBozTXgY
+JyvMAJ0V+AYqN4h1ekBgRh9fUO8EtrudtwCfUhAFTXTVj1sQOkZ+lzZQRnXfjLE=
+=NIUw
+-----END PGP SIGNATURE-----
 
-Changelog v9: (Changes suggested by Lee)
-  - Added kerneldoc to struct rohm_dvs_config
-  - cleaned few comments
-  - updated copyright date
-  - renamed variable 'mfd' to 'parent'.
-
-Changelog v8:
-  LEDs:
-    - Fixed bunch of typos.
-    - Corrected the commit message which errorneously contained the
-      'leds-compatible' which I dropped in favour of match_property.
-    - use max_brightness instead of LED_FULL if it is given when
-      handling the default_state, "on".
-    - clean fwnode_owned at the end of unsuccessful registration or
-      at the end of deregistration.
-    - fix the accidental linuxdoc comment.
-    - rename led_find_fwnode to led_get_fwnode as it increases refcount.
-
-Changelog v7:
-  - Rebased on top of v5.5-rc2
-  - Dropped already applied patches
-    - basic regulator support (in regulator tree now)
-    - regulator dt-bindings (in regulator tree now)
-    - gpio devm function documentation (in GPIO tree now)
-  - Dropped new devm-variant of gpio_array getting for MFD sub-devices who
-    have consumer information in parent DT node as gpio consumer was
-    dropped from the series
-  - removed extra line-breaks from MFD driver and Makefile
-  - fixed RTC patch subject line (added missing colon)
-  - included a patch which adds compatible for ROHM BD71850 PMIC
-
-Changelog v6:
-  Rebased on top of v5.5-rc1
-  LED core:
-    - Do new fw-node look-up only if the new match data is given. That
-      way behaviour for existing drivers is not changed
-    - Handle generic LED properties by core only if explisitly requested
-      in init-data. That way behaviour for existing drivers is not changed
-      until they are verified to work.
-  BD71828 LEDs:
-    - Fix module loading by adding "dummy" of_device_id table.
-  DT bindings:
-    All:
-    - Remove regulator run-level properties as run-level support was
-      dropped for now.
-    - Change SPDX to dual lisence
-    LED:
-    - added select: false
-    - replace oneOf + const by enum
-    Regulator:
-    - remove forgotten comments
-    - comment indenting
-    MFD:
-    - remove unnecessary descriptions
-  Regulators:
-    - Dropped patch 12 with run-level controls
-    - Dropped unnecessary ramp_delay_supported() - ram_delay ops were
-      already only filled for DVS bucks.
-  GPIO:
-    - rename internal function.
-  RTC:
-    - Added missing blank line
-  
-Changelog v5:
-  Only LED patch (patch 15) changed, rest as in v4.
-  LED:
-    - Fixed issues reported by Dan Carpenter and kbuild-bot static
-      analysis.
-Changelog v4 (first non RFC):
-  General:
-    - Changed subdevice loading and chip version identification to use
-      platform ID.
-    - License identifiers changed to GPL-2.0-only
-  MFD:
-    - Styling fixes mostly
-  DT-Bindings:
-    - a few more checks as suggested by Rob Herring.
-    - Order of DT patches changed.
-    - me as maintainer
-    - standard units to new properties (microvolts, ohms)
-    - runlevel values in an array
-  LED:
-    - BD71828 driver added (back)
-      - Added DT support
-    - Added LED DT node lookup in led framework when init_data is given
-      with DT node match information.
-    - Added common property parsing for default-state and
-      default-trigger.
-  Regulators:
-    - dropped sysfs interfaces
-    - fixed module unload/reload by binding gpio consumer information to
-      regulator device not to MFD.
-  GPIO:
-    - Added devm_gpiod_get_parent_array
-    - added few missing devm functions to documentation
-
-Changelog v3:
-  DT-Bindings:
-    - yamlify
-    - add LED binding doc
-  CLK:
-    - Move clk register definitions from MFD headers to clk driver
-  GPIO:
-    - Add generic direction define and use it.
-  LED:
-    - Drop LED driver from the series (for now).
-
-Changelog v2: Mainly RTC and GPIO fixes suggested by Alexandre and Bartosz
-  General:
-    -Patch ordering changed to provide dt binding documents right after the
-     MFD core.
-  DT-Bindings for regulators (Patch 3)
-    -Fix typo in PMIC model number
-  RTC (patch 11)
-    -Reverted renaming in order to reduce patch size.
-    -Reworded commit message
-  BD71828 regulator (patch 7)
-    -Add MODULE_ALIAS
-  GPIO (patch 12)
-    -Remove file-name from comment
-    -prefix IN and OUT defines with chip type
-    -improved documentation for the INPUT only pin.
-    -removed empty left-over function
-    -removed unnecessary #ifdef CONFIG_OF_GPIO
-    -removed unnecessary error print
-    -Add MODULE_ALIAS
-
-Patch 1:
-        dt-bindings for LEDs on BD71828 PMIC
-Patch 2:
-	dt-bindings for BD71828 PMIC
-Patch 3:
-	Convert rohm PMICs with common sub-devices to use platform_
-	device_id to match MFD sub-devices
-Patch 4:
-	Add compatible for BD71850
-Patch 5:
-        BD71828 MFD core.
-Patch 6:
-	Power button support using GPIO keys.
-Patch 7:
-        CLK gate support using existing clk-bd718x7
-Patch 8:
-        Split existing bd718x7 regulator driver to generic ROHM dt
-        parsing portion (used by more than one ROHM drivers) and
-        bd718x8 specific parts
-Patch 9:
-        Fix BD70528 RTC HOUR mask
-Patch 10:
-        Support BD71828 RTC block using BD70528 RTC driver
-Patch 11:
-        Allow control of GP(I)O pins on BD71828 via GPIO subsystem
-Patch 12:
-	Add LED node lookup and common LED binding parsing support
-	to LED class/core
-Patch 13:
-        Support toggling the LEDs on BD71828.
-
----
-
-Matti Vaittinen (13):
-  dt-bindings: leds: ROHM BD71282 PMIC LED driver
-  dt-bindings: mfd: Document ROHM BD71828 bindings
-  mfd: rohm PMICs - use platform_device_id to match MFD sub-devices
-  mfd: bd718x7: Add compatible for BD71850
-  mfd: bd71828: Support ROHM BD71828 PMIC - core
-  mfd: input: bd71828: Add power-key support
-  clk: bd718x7: Support ROHM BD71828 clk block
-  regulator: bd718x7: Split driver to common and bd718x7 specific parts
-  mfd: bd70528: Fix hour register mask
-  rtc: bd70528: add BD71828 support
-  gpio: bd71828: Initial support for ROHM BD71828 PMIC GPIOs
-  leds: Add common LED binding parsing support to LED class/core
-  led: bd71828: Support LED outputs on ROHM BD71828 PMIC
-
- .../bindings/leds/rohm,bd71828-leds.yaml      |  52 +++
- .../bindings/mfd/rohm,bd71828-pmic.yaml       | 193 ++++++++
- drivers/clk/Kconfig                           |   6 +-
- drivers/clk/clk-bd718x7.c                     |  50 ++-
- drivers/gpio/Kconfig                          |  12 +
- drivers/gpio/Makefile                         |   1 +
- drivers/gpio/gpio-bd71828.c                   | 159 +++++++
- drivers/leds/Kconfig                          |  10 +
- drivers/leds/Makefile                         |   1 +
- drivers/leds/led-class.c                      | 115 ++++-
- drivers/leds/led-core.c                       | 258 +++++++++--
- drivers/leds/leds-bd71828.c                   | 118 +++++
- drivers/mfd/Kconfig                           |  15 +
- drivers/mfd/Makefile                          |   1 +
- drivers/mfd/rohm-bd70528.c                    |   3 +-
- drivers/mfd/rohm-bd71828.c                    | 344 ++++++++++++++
- drivers/mfd/rohm-bd718x7.c                    |  43 +-
- drivers/regulator/Kconfig                     |   4 +
- drivers/regulator/Makefile                    |   1 +
- drivers/regulator/bd718x7-regulator.c         | 200 +++------
- drivers/regulator/rohm-regulator.c            |  95 ++++
- drivers/rtc/Kconfig                           |   3 +-
- drivers/rtc/rtc-bd70528.c                     | 220 +++++++--
- include/linux/leds.h                          |  94 +++-
- include/linux/mfd/rohm-bd70528.h              |  19 +-
- include/linux/mfd/rohm-bd71828.h              | 423 ++++++++++++++++++
- include/linux/mfd/rohm-bd718x7.h              |   6 -
- include/linux/mfd/rohm-generic.h              |  70 ++-
- include/linux/mfd/rohm-shared.h               |  21 +
- 29 files changed, 2248 insertions(+), 289 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/leds/rohm,bd71828-leds.yaml
- create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml
- create mode 100644 drivers/gpio/gpio-bd71828.c
- create mode 100644 drivers/leds/leds-bd71828.c
- create mode 100644 drivers/mfd/rohm-bd71828.c
- create mode 100644 drivers/regulator/rohm-regulator.c
- create mode 100644 include/linux/mfd/rohm-bd71828.h
- create mode 100644 include/linux/mfd/rohm-shared.h
-
-
-base-commit: b3a987b0264d ("Linux 5.5-rc6")
--- 
-2.21.0
-
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+--ReaqsoxgOBHFXBhH--
