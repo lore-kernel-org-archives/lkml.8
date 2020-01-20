@@ -2,96 +2,75 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE92C33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:25:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5465AC33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EA6B20678
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:25:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WIaInGW1"
+	by mail.kernel.org (Postfix) with ESMTP id 25D7E22527
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:26:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729043AbgATOZh (ORCPT
+        id S1728981AbgATO0G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 09:25:37 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41005 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726626AbgATOZh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 09:25:37 -0500
-Received: by mail-wr1-f67.google.com with SMTP id c9so29781016wrw.8
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 06:25:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=a/e5dg21LEzYYUw3GLX+eh4t5Ki915Hi9I2m5nwm1oQ=;
-        b=WIaInGW1/YxWU+FMNX6Iq+apLMpk1qMvrKrpuCVYR7gF8m5cysUPa+7JtkGEGoDkcF
-         4p34U6amoJJ5gWmLCY/VlsGZ2U0palDNCFJrSx9GGfncovXSa6btP7njUfMmBHw7o0lR
-         gut1ORxfLanximKRdXh0vfGW/MwT6GXE6i3NmqztmGvZs970er4sU64ChQ8B+YutIQDv
-         FZA5Ib0jaa6l5W2jRAmHWGakpr9YjR/RwU3l67kndt7SFfYMRXAMnz5JP6tJLKu/0Frd
-         C00vLssT2gS+wcMi+84wVcXig+Oe8dTvyrci/lBFkX/b7wV9ZZEatZElyuzbRuww5QbN
-         fykg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=a/e5dg21LEzYYUw3GLX+eh4t5Ki915Hi9I2m5nwm1oQ=;
-        b=CLfmrdM/MXvNlrk0UrIg2PUPyyftEAS0h+p7mIiq5J5H0Sr88zbRqyJRzc7DTA52ov
-         jS1N8HhXnpT4PlM70mxcUEMR9WM0I8EHmiLsOkRUZGrvwWg4tuMlXPPUJIc/K7ixZ4y8
-         7AsrDs+g1EuzUtwTLWuuQ64s0Oi3jEuGmY7V1Pg/lvuNkqFrcX+0zhJza7QRoKE/vaHk
-         LM/yLPEn5T7vPOrovss70TgEzG+izd4lRy5bN8TW3zsh8p8ADE50s6RK08lbJuycVuk5
-         jaJt3g6Ki+K1gXT5cGIWBBzt0+9Qmi7j5pu/q8sT2u1+ltK3MkRl9ZXL3biqscQw4AHL
-         APCw==
-X-Gm-Message-State: APjAAAUswnc2VkMA8cDvz4L8lb8bBmQ3zf1Yf1zx2q9umVgRAk2RM7YI
-        AYlTcdkiMoW//4hCm7r6zLfYixe4e9CtIfnxSSjZRQ==
-X-Google-Smtp-Source: APXvYqwKz3415rtQk6sMnniIRBrA9/wL6CnUrN2n5iQOicJlTjqQi5LvMPRLcboyhgam00gmvqJMkOTx2iaiKQTmSNk=
-X-Received: by 2002:adf:e6cb:: with SMTP id y11mr19036917wrm.345.1579530334844;
- Mon, 20 Jan 2020 06:25:34 -0800 (PST)
+        Mon, 20 Jan 2020 09:26:06 -0500
+Received: from mx2.suse.de ([195.135.220.15]:57652 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726626AbgATO0G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 09:26:06 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 61118AAD0;
+        Mon, 20 Jan 2020 14:26:04 +0000 (UTC)
+Date:   Mon, 20 Jan 2020 15:26:03 +0100
+From:   Jean Delvare <jdelvare@suse.de>
+To:     Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     linux-doc@vger.kernel.org, linux-i2c@vger.kernel.org,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 14/26] docs: i2c: smbus-protocol: use proper names for
+ ACK and NACK
+Message-ID: <20200120152603.12a81fe1@endymion>
+In-Reply-To: <20200105225012.11701-14-luca@lucaceresoli.net>
+References: <20200105224006.10321-1-luca@lucaceresoli.net>
+        <20200105225012.11701-1-luca@lucaceresoli.net>
+        <20200105225012.11701-14-luca@lucaceresoli.net>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-References: <20200120141927.114373-1-elver@google.com>
-In-Reply-To: <20200120141927.114373-1-elver@google.com>
-From:   Alexander Potapenko <glider@google.com>
-Date:   Mon, 20 Jan 2020 15:25:23 +0100
-Message-ID: <CAG_fn=VyL3t0L-ZhRtc41+fcipmSWrhwb+QFkRZ+ZeZQ=X_dLg@mail.gmail.com>
-Subject: Re: [PATCH 1/5] include/linux: Add instrumented.h infrastructure
-To:     Marco Elver <elver@google.com>
-Cc:     paulmck@kernel.org, Andrey Konovalov <andreyknvl@google.com>,
-        Dmitriy Vyukov <dvyukov@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, will@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>, boqun.feng@gmail.com,
-        Arnd Bergmann <arnd@arndb.de>,
-        Al Viro <viro@zeniv.linux.org.uk>, christophe.leroy@c-s.fr,
-        Daniel Axtens <dja@axtens.net>, mpe@ellerman.id.au,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, christian.brauner@ubuntu.com,
-        daniel@iogearbox.net, cyphar@cyphar.com,
-        Kees Cook <keescook@chromium.org>, linux-arch@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 3:19 PM Marco Elver <elver@google.com> wrote:
->
-> This adds instrumented.h, which provides generic wrappers for memory
-> access instrumentation that the compiler cannot emit for various
-> sanitizers. Currently this unifies KASAN and KCSAN instrumentation. In
-> future this will also include KMSAN instrumentation.
->
-> Note that, copy_{to,from}_user require special instrumentation,
-> providing hooks before and after the access, since we may need to know
-> the actual bytes accessed (currently this is relevant for KCSAN, and is
-> also relevant in future for KMSAN).
->
-> Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Marco Elver <elver@google.com>
-Acked-by: Alexander Potapenko <glider@google.com>
+On Sun,  5 Jan 2020 23:50:00 +0100, Luca Ceresoli wrote:
+> Use the proper ACK and NACK naming from the I2C specification instead of
+> "accept" and "reverse accept".
+> 
+> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+> ---
+>  Documentation/i2c/smbus-protocol.rst | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/i2c/smbus-protocol.rst b/Documentation/i2c/smbus-protocol.rst
+> index fbadd4d25ad5..10c4a989982c 100644
+> --- a/Documentation/i2c/smbus-protocol.rst
+> +++ b/Documentation/i2c/smbus-protocol.rst
+> @@ -38,7 +38,7 @@ Key to symbols
+>  S               Start condition
+>  P               Stop condition
+>  Rd/Wr (1 bit)   Read/Write bit. Rd equals 1, Wr equals 0.
+> -A, NA (1 bit)   Accept and reverse accept bit.
+> +A, NA (1 bit)   Acknowledge (ACK) and Not Acknowledge (NACK) bit
+>  Addr  (7 bits)  I2C 7 bit address. Note that this can be expanded as usual to
+>                  get a 10 bit I2C address.
+>  Comm  (8 bits)  Command byte, a data byte which often selects a register on
+
+Reviewed-by: Jean Delvare <jdelvare@suse.de>
+
+-- 
+Jean Delvare
+SUSE L3 Support
