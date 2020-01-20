@@ -2,167 +2,110 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0044C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CCAC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 816A120674
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:57:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="WhmySkKW"
+	by mail.kernel.org (Postfix) with ESMTP id 40A5D20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:59:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbgATK5I (ORCPT
+        id S1726752AbgATK7w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 05:57:08 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:58578 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726148AbgATK5I (ORCPT
+        Mon, 20 Jan 2020 05:59:52 -0500
+Received: from mout.kundenserver.de ([212.227.17.13]:59333 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726148AbgATK7w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 05:57:08 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00KArVoL012020;
-        Mon, 20 Jan 2020 11:56:46 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=bIRHwgpqgU803NnMOwsEIsnL8ULDWviN0SfB76bEG7w=;
- b=WhmySkKWFl6omfBikRqjrkeanA12VrhTOSj6gS1L2zzZwGjE1YKG9x0kRn2VLnE5tOp/
- qthIHKggg+8tz0/zrrESxk86w4lRa8DJVwi9X7SJ/4iQM1cJncdKenYYVjdaBn1zrFzr
- nbWp0FjNF0Fpe7/WsuVJtSMXx6Eo/7+FB/6c6EkBLPyt7RTBM4yK3lXtqovoyWLtV4r7
- brBTdoRVkdZwtwDqtm1w/StIDTvGaFVhH3QU14ZGrPbmtH3HQ7HiMfh0xijnCTtETazY
- lQJXoArSolItFYhFuWhKfxXKr9hQgYKKPmf5VwFFBTuXIB71+9rV0sv4qRQZl0LipHf/ Eg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xkssnrukf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jan 2020 11:56:46 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7BBDE100034;
-        Mon, 20 Jan 2020 11:56:42 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 649572A96F4;
-        Mon, 20 Jan 2020 11:56:42 +0100 (CET)
-Received: from lmecxl0912.lme.st.com (10.75.127.50) by SFHDAG3NODE3.st.com
- (10.75.127.9) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 20 Jan
- 2020 11:56:41 +0100
-Subject: Re: [RFC PATCH 0/3] Add device tree build information
-To:     Frank Rowand <frowand.list@gmail.com>, <robh+dt@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        <david@gibson.dropbear.id.au>, <sjg@chromium.org>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-kbuild@vger.kernel.org>,
-        <devicetree-compiler@vger.kernel.org>
-References: <20200113181625.3130-1-alexandre.torgue@st.com>
- <f21ad44d-f119-2035-b4ee-16b3619879af@gmail.com>
- <233e0a5f-d38f-908c-5ca7-66ee87d0fcae@st.com>
- <7cfd0bc0-13fd-98ea-9bfd-6cfbbfd77b6d@gmail.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <220e3aea-b273-417a-69c9-059236c888af@st.com>
-Date:   Mon, 20 Jan 2020 11:56:41 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 20 Jan 2020 05:59:52 -0500
+Received: from mail-qv1-f42.google.com ([209.85.219.42]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1M7auJ-1iyjaC3BjZ-0082pz for <linux-kernel@vger.kernel.org>; Mon, 20 Jan
+ 2020 11:59:49 +0100
+Received: by mail-qv1-f42.google.com with SMTP id u1so13769608qvk.13
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 02:59:49 -0800 (PST)
+X-Gm-Message-State: APjAAAW/j4iAxaX1pgZAI4Sjxm7x2DBaTOF2Fds3uHpQgC1zEJt7mxW0
+        WVGK+HPQh6b6+W8iplNLByVlE2vAcZDk9Ct6+os=
+X-Google-Smtp-Source: APXvYqzQ1MvMqg+hoJdxvZCu816eN+yyJcaaU/qIVUUfYGEOqB3mVriBM3UpWcgYozrKpF4M3hDisExBQ1RIB2aqcKE=
+X-Received: by 2002:a0c:8e08:: with SMTP id v8mr20095619qvb.4.1579517988617;
+ Mon, 20 Jan 2020 02:59:48 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <7cfd0bc0-13fd-98ea-9bfd-6cfbbfd77b6d@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.50]
-X-ClientProxiedBy: SFHDAG4NODE3.st.com (10.75.127.12) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-20_01:2020-01-20,2020-01-20 signatures=0
+References: <CAFH1YnOad7aVjoX_PR6mLqT=pXQjpBW9ZDHkKYzNkeistFkA4A@mail.gmail.com>
+ <CAK8P3a3DwaZnRff7CCrJoSxP_MeVUn1S6nRd+hb5rHnv9dBgLQ@mail.gmail.com> <CAFH1YnMDL1gBNT4vr+C=eGGoCYJvkVDnoXUVN8OL9Xs3668Z+Q@mail.gmail.com>
+In-Reply-To: <CAFH1YnMDL1gBNT4vr+C=eGGoCYJvkVDnoXUVN8OL9Xs3668Z+Q@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 20 Jan 2020 11:59:32 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a0aFr546fF+=LDm3rwZ-sK-xC8VLYTZjOEn+o6fVixRHg@mail.gmail.com>
+Message-ID: <CAK8P3a0aFr546fF+=LDm3rwZ-sK-xC8VLYTZjOEn+o6fVixRHg@mail.gmail.com>
+Subject: Re: Question about dynamic minor number of misc device
+To:     Zhenzhong Duan <zhenzhong.duan@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:oUuVCRVWt0NAiOBBkbU5zLjXESwHtBqBVnH3fc4p8P41XXXVIW8
+ XSDB8rTl3mUerkzkTnIZiyL1heoj98CWzm7QuRA2NxYBFJN3LWlsO8mfEyoJ/dsTKrGgeKG
+ i6IH17tOJXQWNQ4AsLPNnyEKiRfqp7JdhJlIqWQG8R1ZqW7tRXh+qjXfv9N2rVujtn2jMfn
+ ddfpudDwI3USen5Q4AJMA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Sg2/3O7aNec=:VghGxn/Th/V7iDoH4bHI07
+ /I603fPIDsrJH1ZnYgqPnHI3TRReC4+vwpayatAeBv03Gbnknx81aK6zswV3zhPKlpXBw2ZiQ
+ njFJkzIcauekMsPgfJyCmp8GOkzH2KlJjNE5/TGgQdEEEOPr6e/lgH/VUiKc8zkJgtV7IFN0k
+ BByA+nBOmaGdLfv4AMCKKdrCikd+YTt90xbVEVcvk6Zh6G4sHw4y5nDKZ9TkJ1xGIPTO0xyzA
+ z/NyHEorPSRKNmahJDBlsDI/3AbBsw6OCkUh56N29iNDivxizBsZ1SVpMRAqK8KzPqF+DJYHl
+ duytp8Dvf8Qx+lt5p+JgnwxEDi1N1oZiGxaKb8MnrUwuOCO7XyzDYRpzwJqJGWt9onQM78flO
+ 6mpdWZCtudMXVr80HtYB+kd50J5BddCn4+UuZ8Rw5UckB3OhkZw4K95I24SY1uJ3n7hNlw6Jm
+ cd4n2Dianj2cmoJGZtWI9qPpIb1iziIhBklqojSsl8GzLCkRmpOksgVGXus5iWcmK3QhW7c8H
+ N+wyBybbNzhRMm38FLitjoU3qBa1cnTfLTC7lJe24Zlpe5smuZFqVgYr70nDtAQUhh0n2jBVr
+ rZuG5p4iKq5gKSCoucc521ghBbXAsbLbMq7G2O57kKiHSGxseWg8MQAyLBRi/SgSFdAnUBIEn
+ /7t0cmrSH3Q/YGlPDTMzDTFQyff3B4B0idv+BjsPiZSY9qBrlEcWkW3ZE4Sio/A5/5v/TtmRK
+ 3W8PZ6oM19gkjCFY+1fSReuIFeaqKyPQtQb1yCGVIlNJvUeb9TR8Hus8OBUMiC43FEKlQvbvX
+ SE1eKMzGhgkNIWoEWgfLNqkouRm4LXRM7I5DPFD9aSU48jkifR146Shv0Ri+0DZwb4hNkcZzm
+ iYe4+CaW0dY//OYsvjhA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Franck
+On Mon, Jan 20, 2020 at 11:26 AM Zhenzhong Duan
+<zhenzhong.duan@gmail.com> wrote:
+> On Mon, Jan 20, 2020 at 6:03 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Mon, Jan 20, 2020 at 9:33 AM Zhenzhong Duan <zhenzhong.duan@gmail.com> wrote:
+> > On a  related note, I checked for drivers that call misc_register()
+> > with a minor number that is not defined in include/linux/misc.h
+> > and found a bunch, including some that have conflicting numbers,
+> > conflicting names  or numbers from the dynamic range:
+> >
+> > drivers/staging/speakup/devsynth.c:#define SYNTH_MINOR 25
+> > drivers/staging/speakup/speakup_soft.c:#define SOFTSYNTH_MINOR 26 /*
+> > drivers/staging/speakup/speakup_soft.c:#define SOFTSYNTHU_MINOR 27 /*
+> > drivers/macintosh/via-pmu.c:#define PMU_MINOR           154
+> > drivers/macintosh/ans-lcd.h:#define ANSLCD_MINOR                156
+> > drivers/auxdisplay/charlcd.c:#define LCD_MINOR          156
+> > drivers/char/applicom.c:#define AC_MINOR 157
+> > drivers/char/nwbutton.h:#define BUTTON_MINOR 158
+> > arch/arm/include/asm/nwflash.h:#define FLASH_MINOR               160
+> > drivers/sbus/char/envctrl.c:#define ENVCTRL_MINOR       162
+> > drivers/sbus/char/flash.c:#define FLASH_MINOR   152
+> > drivers/sbus/char/uctrl.c:#define UCTRL_MINOR   174
+> > drivers/char/toshiba.c:#define TOSH_MINOR_DEV 181
+> > arch/um/drivers/random.c:#define RNG_MISCDEV_MINOR
+> > drivers/auxdisplay/panel.c:#define KEYPAD_MINOR         185
+> > drivers/video/fbdev/pxa3xx-gcu.c:#define MISCDEV_MINOR  197
+> > kernel/power/user.c:#define SNAPSHOT_MINOR      231
+> > drivers/parisc/eisa_eeprom.c:#define    EISA_EEPROM_MINOR 241
+> >
+> > If you would like to help clean that up, you are definitely welcome
+> > to send patches.
+>
+> Ok, should that be a patch for all drivers or seperate patch for each driver?
 
-On 1/17/20 8:13 PM, Frank Rowand wrote:
-> 
-> On 1/16/20 2:19 AM, Alexandre Torgue wrote:
->> Hi Franck,
->>
->> On 1/16/20 3:28 AM, Frank Rowand wrote:
->>> On 1/13/20 12:16 PM, Alexandre Torgue wrote:
->>>> Hi,
->>>>
->>>> The goal of this series is to add device tree build information in dtb.
->>>> This information can be dtb build date, where devicetree files come from,
->>>> who built the dtb ... Actually, same kind of information that you can find
->>>> in the Linux banner which is printout during kernel boot. Having the same
->>>> kind of information for device tree is useful for debugging and maintenance.
->>>>
->>>> To achieve that a new option "-B" (using an argument) is added to dtc.
->>>> The argument is a file containing a string with build information
->>>> (e.g., From Linux 5.5.0-rc1 by alex the Mon Jan 13 18:25:38 CET 2020).
->>>> DTC use it to append dts file with a new string property "Build-info".
->>>>
->>>> of/fdt.c is modified to printout "Build-info" property during Kernel boot and
->>>> scripts/Makefile.lib is modified to use dtc -B option during kernel make (this
->>>> last part could be improved for sure).
->>>
->>> Please read through the thread at:
->>>
->>>     https://lore.kernel.org/linux-arm-kernel/550A42AC.8060104@gmail.com/
->>>
->>> which was my attempt to do something similar.
->>
->> Yes the idea is the same: get build DTB information like build date,
->> "who built the DTB" ... The difference seems to be the way to do it.
->> In my case, I don't want to modify existing dts source files., but I
->> "just" append them by creating a new property with a string
->> containing this build information.>
->> Why your proposition has not been accepted ?
-> 
-> Since you are asking this question, I am presuming that you did not
-> read the replies in the thread I referenced.  Please read through
-> the entire thread.  Most of the review comments were objecting to
-> the concept of my proposal.
+I think one patch to move the ones with unique names would be fine,
+but then separate patches for
 
-Sorry I have been lazy :$. This series is a tiny one compare to yours, 
-and adds less dtb information (only git used, who built dtb and the 
-date). There are no "dtb versions", and "absolute/relative" path which 
-created concerns. One remaining concern is "reproducible build" but 
-making dtb info optional could respond to it.
-I continue to think that it's useful to get those information (even if 
-it's only a string) But before continuing (and find a better technical 
-way to do it), I need to know if there are no other obstacles.
+- FLASH_MINOR move and rename to avoid conflict
+- change speakup to dynamic minors
+- support for high dynamic minor numbers if you are really motivated
+  (probably nobody needs these)
 
-
-Regards
-Alex
-
-
-> 
-> -Frank
-> 
->>
->> Regards
->> Alex
->>
->>>
->>> -Frank
->>>
->>>>
->>>> Regards
->>>> Alex
->>>>
->>>> Alexandre Torgue (3):
->>>>     dtc: Add dtb build information option
->>>>     of: fdt: print dtb build information
->>>>     scripts: Use -B dtc option to generate dtb build information.
->>>>
->>>>    drivers/of/fdt.c           |  9 +++++++
->>>>    scripts/Makefile.lib       | 11 +++++---
->>>>    scripts/dtc/dtc.c          | 55 +++++++++++++++++++++++++++++++++-----
->>>>    scripts/gen_dtb_build_info | 11 ++++++++
->>>>    4 files changed, 76 insertions(+), 10 deletions(-)
->>>>    create mode 100755 scripts/gen_dtb_build_info
->>>>
->>>
->>
-> 
+      Arnd
