@@ -2,125 +2,367 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF43CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7281DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C465022464
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:11:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vQchanyu"
+	by mail.kernel.org (Postfix) with ESMTP id 3A30D2070C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:11:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728982AbgATPLN (ORCPT
+        id S1729045AbgATPLR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 10:11:13 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:44343 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726860AbgATPLM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 10:11:12 -0500
-Received: by mail-oi1-f194.google.com with SMTP id d62so28706790oia.11
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 07:11:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TQoSylkDTjGNW+otOWNEut12k2291qZWwUfCl+hYpEQ=;
-        b=vQchanyuO70Z5EGQnoMxx1gScqFQzlQR4A5b+1yUyTm5zGPm9br/FIVu4v9HRD57H7
-         7Z2uFgqE6uNowRlgQDT87nV2pFknhrlTNSZB3/gQcc872TfzH+7KraS6DjWAXeAa0i/V
-         QJojrBCtgsGr1GHDAu8O/Tbj3LOBpHBltF19yQNeIzKc1+9Wc85AsqSGZBDholF1//W1
-         rqmBKMJo8kxtKbIfAIP9O0jOrShRo9ET/nTs00X6u8QnFWjK/ySQQb/5Pv3h9EyiWUxD
-         9bme+MpIHHhE09cnW3tQHBCplvmqD++2jibFLjF4lSr/sfjClXQZ6ZAkKU9Zfxu2EZ29
-         MDYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TQoSylkDTjGNW+otOWNEut12k2291qZWwUfCl+hYpEQ=;
-        b=BV8cOWeRSeuArDWcgWZFaEC7ZuBWIjdmpi2DTxvGsQ72NVviotl0SAhXLDItJWhVM+
-         G7R+vhKwIoZPg1USDmpK4IbKDbfW+7gg9lL3U4B3hy88Y8GZYy9g1IqY/ZsNmaJQVync
-         0Kn0dJeifVCVHxbP4yGf0gS+ZlOEVvpr1c1XwTV6gzaFldlNIQEDn6/jGPzFLcFra2Zz
-         eNXhwcMAzsP2N6TksIpLXrfY0WI3rB/paPI95ayfaogJajmJK914cu3WwybjHmoKD9OL
-         iyJR3tTkUuNwidgrq2zZ6sYclyuDPh2YUri4QTVJi9e7Y/qh4bVnTGXM5gz5myKJAcva
-         c80g==
-X-Gm-Message-State: APjAAAXEGIJwMYQsuMV1QnAM3SQBG1RlQfTcmKq2xjWV69Z+vKnjWEiT
-        E/KjIVKMfSkxyz14P/E6uTaEccB4Huwf4Sn9PfArKg==
-X-Google-Smtp-Source: APXvYqxHNO8Wy7YfP0r/9CRFT9lGPPzl6fsdi0/lWx6CKOX9WuFobiss3VFcGTw8q94N0XUMCb44V0VVtEP60Snw5Ag=
-X-Received: by 2002:aca:d4c1:: with SMTP id l184mr13228717oig.172.1579533071637;
- Mon, 20 Jan 2020 07:11:11 -0800 (PST)
+        Mon, 20 Jan 2020 10:11:17 -0500
+Received: from mga06.intel.com ([134.134.136.31]:48517 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726860AbgATPLQ (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 10:11:16 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 07:11:15 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,342,1574150400"; 
+   d="scan'208";a="275606497"
+Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.254.209.167]) ([10.254.209.167])
+  by fmsmga001.fm.intel.com with ESMTP; 20 Jan 2020 07:11:13 -0800
+Subject: Re: [PATCH v6 2/4] perf report: Change sort order by a specified
+ event in group
+To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com
+Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <20191220013722.20592-1-yao.jin@linux.intel.com>
+ <20191220013722.20592-2-yao.jin@linux.intel.com>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <4e1fdcb5-3702-18b5-7807-866467297fcd@linux.intel.com>
+Date:   Mon, 20 Jan 2020 23:11:12 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200115165749.145649-1-elver@google.com> <CAK8P3a3b=SviUkQw7ZXZF85gS1JO8kzh2HOns5zXoEJGz-+JiQ@mail.gmail.com>
- <CANpmjNOpTYnF3ssqrE_s+=UA-2MpfzzdrXoyaifb3A55_mc0uA@mail.gmail.com>
- <CAK8P3a3WywSsahH2vtZ_EOYTWE44YdN+Pj6G8nt_zrL3sckdwQ@mail.gmail.com>
- <CANpmjNMk2HbuvmN1RaZ=8OV+tx9qZwKyRySONDRQar6RCGM1SA@mail.gmail.com>
- <CAK8P3a066Knr-KC2v4M8Dr1phr0Gbb2KeZZLQ7Ana0fkrgPDPg@mail.gmail.com>
- <CANpmjNO395-atZXu_yEArZqAQ+ib3Ack-miEhA9msJ6_eJsh4g@mail.gmail.com>
- <CANpmjNOH1h=txXnd1aCXTN8THStLTaREcQpzd5QvoXz_3r=8+A@mail.gmail.com> <CAK8P3a0p9Y8080T-RR2pp-p2_A0FBae7zB-kSq09sMZ_X7AOhw@mail.gmail.com>
-In-Reply-To: <CAK8P3a0p9Y8080T-RR2pp-p2_A0FBae7zB-kSq09sMZ_X7AOhw@mail.gmail.com>
-From:   Marco Elver <elver@google.com>
-Date:   Mon, 20 Jan 2020 16:11:00 +0100
-Message-ID: <CANpmjNOUTed6FT8X0bUSc1tGBh3jrEJ0DRpQwBfoPF5ah8Wrhw@mail.gmail.com>
-Subject: Re: [PATCH -rcu] asm-generic, kcsan: Add KCSAN instrumentation for bitops
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        christophe leroy <christophe.leroy@c-s.fr>,
-        Daniel Axtens <dja@axtens.net>,
-        linux-arch <linux-arch@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191220013722.20592-2-yao.jin@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jan 2020 at 15:40, Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Mon, Jan 20, 2020 at 3:23 PM Marco Elver <elver@google.com> wrote:
-> > On Fri, 17 Jan 2020 at 14:14, Marco Elver <elver@google.com> wrote:
-> > > On Fri, 17 Jan 2020 at 13:25, Arnd Bergmann <arnd@arndb.de> wrote:
-> > > > On Wed, Jan 15, 2020 at 9:50 PM Marco Elver <elver@google.com> wrote:
->
-> > > > If you can't find any, I would prefer having the simpler interface
-> > > > with just one set of annotations.
-> > >
-> > > That's fair enough. I'll prepare a v2 series that first introduces the
-> > > new header, and then applies it to the locations that seem obvious
-> > > candidates for having both checks.
-> >
-> > I've sent a new patch series which introduces instrumented.h:
-> >    http://lkml.kernel.org/r/20200120141927.114373-1-elver@google.com
->
-> Looks good to me, feel free to add
->
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
->
-> if you are merging this through your own tree or someone else's,
-> or let me know if I should put it into the asm-generic git tree.
+Hi Arnaldo,
 
-Thank you!  It seems there is still some debate around the user-copy
-instrumentation.
+I see the patch 1/4 has been accpeted. Can the remaining 3 patches be 
+picked up? :)
 
-The main question we have right now is if we should add pre/post hooks
-for them. Although in the version above I added KCSAN checks after the
-user-copies, it seems maybe we want it before. I personally don't have
-a strong preference, and wanted to err on the side of being more
-conservative.
+Thanks
+Jin Yao
 
-If I send a v2, and it now turns out we do all the instrumentation
-before the user-copies for KASAN and KCSAN, then we have a bunch of
-empty hooks. However, for KMSAN we need the post-hook, at least for
-copy_from_user. Do you mind a bunch of empty functions to provide
-pre/post hooks for user-copies? Could the post-hooks be generally
-useful for something else?
-
-Thanks,
--- Marco
+On 12/20/2019 9:37 AM, Jin Yao wrote:
+> When performing "perf report --group", it shows the event group information
+> together. By default, the output is sorted by the first event in group.
+> 
+> It would be nice for user to select any event for sorting. This patch
+> introduces a new option "--group-sort-idx" to sort the output by the
+> event at the index n in event group.
+> 
+> For example,
+> 
+> Before:
+> 
+>    # perf report --group --stdio
+> 
+>    # To display the perf.data header info, please use --header/--header-only options.
+>    #
+>    #
+>    # Total Lost Samples: 0
+>    #
+>    # Samples: 12K of events 'cpu/instructions,period=2000003/, cpu/cpu-cycles,period=200003/, BR_MISP_RETIRED.ALL_BRANCHES:pp, cpu/event=0xc0,umask=1,cmask=1,
+>    # Event count (approx.): 6451235635
+>    #
+>    #                         Overhead  Command    Shared Object            Symbol
+>    # ................................  .........  .......................  ...................................
+>    #
+>        92.19%  98.68%   0.00%  93.30%  mgen       mgen                     [.] LOOP1
+>         3.12%   0.29%   0.00%   0.16%  gsd-color  libglib-2.0.so.0.5600.4  [.] 0x0000000000049515
+>         1.56%   0.03%   0.00%   0.04%  gsd-color  libglib-2.0.so.0.5600.4  [.] 0x00000000000494b7
+>         1.56%   0.01%   0.00%   0.00%  gsd-color  libglib-2.0.so.0.5600.4  [.] 0x00000000000494ce
+>         1.56%   0.00%   0.00%   0.00%  mgen       [kernel.kallsyms]        [k] task_tick_fair
+>         0.00%   0.15%   0.00%   0.04%  perf       [kernel.kallsyms]        [k] smp_call_function_single
+>         0.00%   0.13%   0.00%   6.08%  swapper    [kernel.kallsyms]        [k] intel_idle
+>         0.00%   0.03%   0.00%   0.00%  gsd-color  libglib-2.0.so.0.5600.4  [.] g_main_context_check
+>         0.00%   0.03%   0.00%   0.00%  swapper    [kernel.kallsyms]        [k] apic_timer_interrupt
+>         ...
+> 
+> After:
+> 
+>    # perf report --group --stdio --group-sort-idx 3
+> 
+>    # To display the perf.data header info, please use --header/--header-only options.
+>    #
+>    #
+>    # Total Lost Samples: 0
+>    #
+>    # Samples: 12K of events 'cpu/instructions,period=2000003/, cpu/cpu-cycles,period=200003/, BR_MISP_RETIRED.ALL_BRANCHES:pp, cpu/event=0xc0,umask=1,cmask=1,
+>    # Event count (approx.): 6451235635
+>    #
+>    #                         Overhead  Command    Shared Object            Symbol
+>    # ................................  .........  .......................  ...................................
+>    #
+>        92.19%  98.68%   0.00%  93.30%  mgen       mgen                     [.] LOOP1
+>         0.00%   0.13%   0.00%   6.08%  swapper    [kernel.kallsyms]        [k] intel_idle
+>         3.12%   0.29%   0.00%   0.16%  gsd-color  libglib-2.0.so.0.5600.4  [.] 0x0000000000049515
+>         0.00%   0.00%   0.00%   0.06%  swapper    [kernel.kallsyms]        [k] hrtimer_start_range_ns
+>         1.56%   0.03%   0.00%   0.04%  gsd-color  libglib-2.0.so.0.5600.4  [.] 0x00000000000494b7
+>         0.00%   0.15%   0.00%   0.04%  perf       [kernel.kallsyms]        [k] smp_call_function_single
+>         0.00%   0.00%   0.00%   0.02%  mgen       [kernel.kallsyms]        [k] update_curr
+>         0.00%   0.00%   0.00%   0.02%  mgen       [kernel.kallsyms]        [k] apic_timer_interrupt
+>         0.00%   0.00%   0.00%   0.02%  mgen       [kernel.kallsyms]        [k] native_apic_msr_eoi_write
+>         0.00%   0.00%   0.00%   0.02%  mgen       [kernel.kallsyms]        [k] __update_load_avg_se
+>         0.00%   0.00%   0.00%   0.02%  mgen       [kernel.kallsyms]        [k] scheduler_tick
+> 
+> Now the output is sorted by the fourth event in group.
+> 
+>   v6:
+>   ---
+>   No change.
+> 
+>   v5:
+>   ---
+>   No change in v5.
+>   v4 has been ACKed by Jiri.
+> 
+>   v4:
+>   ---
+>   1. Update Documentation/perf-report.txt to mention
+>      '--group-sort-idx' support multiple groups with different
+>      amount of events and it should be used on grouped events.
+> 
+>   2. Update __hpp__group_sort_idx(), just return when the
+>      idx is out of limit.
+> 
+>   3. Return failure on symbol_conf.group_sort_idx && !session->evlist->nr_groups.
+>      So now we don't need to use together with --group.
+> 
+>   v3:
+>   ---
+>   Refine the code in __hpp__group_sort_idx().
+> 
+>   Before:
+>     for (i = 1; i < nr_members; i++) {
+>          if (i == idx) {
+>                  ret = field_cmp(fields_a[i], fields_b[i]);
+>                  if (ret)
+>                          goto out;
+>          }
+>     }
+> 
+>   After:
+>     if (idx >= 1 && idx < nr_members) {
+>          ret = field_cmp(fields_a[idx], fields_b[idx]);
+>          if (ret)
+>                  goto out;
+>     }
+> 
+>   v2:
+>   ---
+>   No change
+> 
+> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+> ---
+>   tools/perf/Documentation/perf-report.txt |   5 ++
+>   tools/perf/builtin-report.c              |  10 +++
+>   tools/perf/ui/hist.c                     | 104 +++++++++++++++++++----
+>   tools/perf/util/symbol_conf.h            |   1 +
+>   4 files changed, 105 insertions(+), 15 deletions(-)
+> 
+> diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
+> index 8dbe2119686a..fbb715bcb512 100644
+> --- a/tools/perf/Documentation/perf-report.txt
+> +++ b/tools/perf/Documentation/perf-report.txt
+> @@ -371,6 +371,11 @@ OPTIONS
+>   	Show event group information together. It forces group output also
+>   	if there are no groups defined in data file.
+>   
+> +--group-sort-idx::
+> +	Sort the output by the event at the index n in group. If n is invalid,
+> +	sort by the first event. It can support multiple groups with different
+> +	amount of events. WARNING: This should be used on grouped events.
+> +
+>   --demangle::
+>   	Demangle symbol names to human readable form. It's enabled by default,
+>   	disable with --no-demangle.
+> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+> index de988589d99b..4c80a3ba73c3 100644
+> --- a/tools/perf/builtin-report.c
+> +++ b/tools/perf/builtin-report.c
+> @@ -1211,6 +1211,10 @@ int cmd_report(int argc, const char **argv)
+>   		    "Show a column with the sum of periods"),
+>   	OPT_BOOLEAN_SET(0, "group", &symbol_conf.event_group, &report.group_set,
+>   		    "Show event group information together"),
+> +	OPT_INTEGER(0, "group-sort-idx", &symbol_conf.group_sort_idx,
+> +		    "Sort the output by the event at the index n in group. "
+> +		    "If n is invalid, sort by the first event. "
+> +		    "WARNING: should be used on grouped events."),
+>   	OPT_CALLBACK_NOOPT('b', "branch-stack", &branch_mode, "",
+>   		    "use branch records for per branch histogram filling",
+>   		    parse_branch_mode),
+> @@ -1350,6 +1354,12 @@ int cmd_report(int argc, const char **argv)
+>   
+>   	setup_forced_leader(&report, session->evlist);
+>   
+> +	if (symbol_conf.group_sort_idx && !session->evlist->nr_groups) {
+> +		parse_options_usage(NULL, options, "group-sort-idx", 0);
+> +		ret = -EINVAL;
+> +		goto error;
+> +	}
+> +
+>   	if (itrace_synth_opts.last_branch)
+>   		has_br_stack = true;
+>   
+> diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
+> index f73675500061..35224b366305 100644
+> --- a/tools/perf/ui/hist.c
+> +++ b/tools/perf/ui/hist.c
+> @@ -151,15 +151,100 @@ static int field_cmp(u64 field_a, u64 field_b)
+>   	return 0;
+>   }
+>   
+> +static int pair_fields_alloc(struct hist_entry *a, struct hist_entry *b,
+> +			     hpp_field_fn get_field, int nr_members,
+> +			     u64 **fields_a, u64 **fields_b)
+> +{
+> +	struct evsel *evsel;
+> +	struct hist_entry *pair;
+> +	u64 *fa, *fb;
+> +	int ret = -1;
+> +
+> +	fa = calloc(nr_members, sizeof(*fa));
+> +	fb = calloc(nr_members, sizeof(*fb));
+> +
+> +	if (!fa || !fb)
+> +		goto out;
+> +
+> +	list_for_each_entry(pair, &a->pairs.head, pairs.node) {
+> +		evsel = hists_to_evsel(pair->hists);
+> +		fa[perf_evsel__group_idx(evsel)] = get_field(pair);
+> +	}
+> +
+> +	list_for_each_entry(pair, &b->pairs.head, pairs.node) {
+> +		evsel = hists_to_evsel(pair->hists);
+> +		fb[perf_evsel__group_idx(evsel)] = get_field(pair);
+> +	}
+> +
+> +	*fields_a = fa;
+> +	*fields_b = fb;
+> +	ret = 0;
+> +
+> +out:
+> +	if (ret != 0) {
+> +		free(fa);
+> +		free(fb);
+> +		*fields_a = NULL;
+> +		*fields_b = NULL;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int __hpp__group_sort_idx(struct hist_entry *a, struct hist_entry *b,
+> +				 hpp_field_fn get_field, int idx)
+> +{
+> +	struct evsel *evsel = hists_to_evsel(a->hists);
+> +	u64 *fields_a, *fields_b;
+> +	int cmp, nr_members, ret, i;
+> +
+> +	cmp = field_cmp(get_field(a), get_field(b));
+> +	if (!perf_evsel__is_group_event(evsel))
+> +		return cmp;
+> +
+> +	nr_members = evsel->core.nr_members;
+> +	if (idx < 1 || idx >= nr_members)
+> +		return cmp;
+> +
+> +	ret = pair_fields_alloc(a, b, get_field, nr_members,
+> +				&fields_a, &fields_b);
+> +	if (ret) {
+> +		ret = cmp;
+> +		goto out;
+> +	}
+> +
+> +	ret = field_cmp(fields_a[idx], fields_b[idx]);
+> +	if (ret)
+> +		goto out;
+> +
+> +	for (i = 1; i < nr_members; i++) {
+> +		if (i != idx) {
+> +			ret = field_cmp(fields_a[i], fields_b[i]);
+> +			if (ret)
+> +				goto out;
+> +		}
+> +	}
+> +
+> +out:
+> +	free(fields_a);
+> +	free(fields_b);
+> +
+> +	return ret;
+> +}
+> +
+>   static int __hpp__sort(struct hist_entry *a, struct hist_entry *b,
+>   		       hpp_field_fn get_field)
+>   {
+>   	s64 ret;
+>   	int i, nr_members;
+>   	struct evsel *evsel;
+> -	struct hist_entry *pair;
+>   	u64 *fields_a, *fields_b;
+>   
+> +	if (symbol_conf.group_sort_idx && symbol_conf.event_group) {
+> +		return __hpp__group_sort_idx(a, b, get_field,
+> +					     symbol_conf.group_sort_idx);
+> +	}
+> +
+>   	ret = field_cmp(get_field(a), get_field(b));
+>   	if (ret || !symbol_conf.event_group)
+>   		return ret;
+> @@ -169,22 +254,11 @@ static int __hpp__sort(struct hist_entry *a, struct hist_entry *b,
+>   		return ret;
+>   
+>   	nr_members = evsel->core.nr_members;
+> -	fields_a = calloc(nr_members, sizeof(*fields_a));
+> -	fields_b = calloc(nr_members, sizeof(*fields_b));
+> -
+> -	if (!fields_a || !fields_b)
+> +	i = pair_fields_alloc(a, b, get_field, nr_members,
+> +			      &fields_a, &fields_b);
+> +	if (i)
+>   		goto out;
+>   
+> -	list_for_each_entry(pair, &a->pairs.head, pairs.node) {
+> -		evsel = hists_to_evsel(pair->hists);
+> -		fields_a[perf_evsel__group_idx(evsel)] = get_field(pair);
+> -	}
+> -
+> -	list_for_each_entry(pair, &b->pairs.head, pairs.node) {
+> -		evsel = hists_to_evsel(pair->hists);
+> -		fields_b[perf_evsel__group_idx(evsel)] = get_field(pair);
+> -	}
+> -
+>   	for (i = 1; i < nr_members; i++) {
+>   		ret = field_cmp(fields_a[i], fields_b[i]);
+>   		if (ret)
+> diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
+> index 10f1ec3e0349..b916afb95ec5 100644
+> --- a/tools/perf/util/symbol_conf.h
+> +++ b/tools/perf/util/symbol_conf.h
+> @@ -73,6 +73,7 @@ struct symbol_conf {
+>   	const char	*symfs;
+>   	int		res_sample;
+>   	int		pad_output_len_dso;
+> +	int		group_sort_idx;
+>   };
+>   
+>   extern struct symbol_conf symbol_conf;
+> 
