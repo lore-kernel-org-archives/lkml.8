@@ -2,121 +2,150 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E536C33CB8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:54:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C9CC33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0653E2077C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:54:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5A23207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:55:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vDepYFXL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M0m7vaNm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbgATIy5 (ORCPT
+        id S1727045AbgATIzS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 03:54:57 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42980 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726635AbgATIy4 (ORCPT
+        Mon, 20 Jan 2020 03:55:18 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43363 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726148AbgATIzR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 03:54:56 -0500
-Received: by mail-wr1-f68.google.com with SMTP id q6so28487064wro.9
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 00:54:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=wFASbmAcjMPLyphRbOiX44SHWrp7PXj1/IhOzEqtzro=;
-        b=vDepYFXLBoVAdHKjwHAvg6Gv/5dJ2HbkMPPpNvh407VhcxpDu6rwVdq06AwjKNtA7z
-         yVjrmfzAr7J2P7/UahLaaxU+a9AEin1BmQ3qPLTeKJebJSXIg/GqD6eKP+QgCMTIHa5X
-         jBpSKQD6BwgTsW0J/wTt5Zr0L9ZVvXUPcN2VJBYBYxNPNOMRhV4Hfkpi0lDASbYL13e2
-         SEQiVDtM6nt9Q+3J9KyCbGBppcZCANbQ0HIohP6/TRBANJBA+oNkyK6r5wifm7b3mZgO
-         MkRAmiuzyekDPZPKh4U9itVgYWiSU0UvlIsEc7d/lTaMTBf5g+VlJWFL9+d0A2NRG0aR
-         unjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=wFASbmAcjMPLyphRbOiX44SHWrp7PXj1/IhOzEqtzro=;
-        b=PeEDwbRJTG23JPVDBOU2cYeiO89wb3xap/r9+gsN40w4LccCWkm2nyRImPseVvYh/M
-         QeP45gGaBbuMl+MCVsR8d3Z5BXs2A5rKoHrmtjRcfpzsoEhS++hegYljVe3vY1jGUxLX
-         nSAATspZlphsVuOFAofDeK/tfKhkR6KE/9tYi4TnyCjGi2izZIHjR1rIgrh3Dd0bwvKV
-         FE8WLcAJbH7Y3WtkHawiDJPtNovs+kNTi2o2Ye4vfcULIE33zjHDrj5PrwYsvBF1XLZd
-         z5fE2trtr3wsb/hwAUj12lPKQvnrvVIrRocCuOirFicVSDq1vqR+lWMA7cGVVj0R8vYZ
-         3BjA==
-X-Gm-Message-State: APjAAAVBIKObtK1MES3kVErGDOv9dDHVaiJU6gnTGoFljMcLWF/JMHmU
-        7LjftlsaGPjwPXAbkmx9M55HBw==
-X-Google-Smtp-Source: APXvYqwCRnZUydx1xxyOAIBs26zb8aTMIoGVsErSpJUIql/6cfDBP9xZ/3XnLh11Kt0M950WObQehQ==
-X-Received: by 2002:adf:fc08:: with SMTP id i8mr16738404wrr.82.1579510494964;
-        Mon, 20 Jan 2020 00:54:54 -0800 (PST)
-Received: from dell ([2.27.35.227])
-        by smtp.gmail.com with ESMTPSA id m10sm47135255wrx.19.2020.01.20.00.54.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 00:54:54 -0800 (PST)
-Date:   Mon, 20 Jan 2020 08:55:10 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v11 06/13] mfd: input: bd71828: Add power-key support
-Message-ID: <20200120085510.GB15507@dell>
-References: <cover.1579501711.git.matti.vaittinen@fi.rohmeurope.com>
- <aa965067acfbdaa862f5f5de8b66e2c161f276a0.1579501711.git.matti.vaittinen@fi.rohmeurope.com>
+        Mon, 20 Jan 2020 03:55:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579510516;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fI1fVeRIsOBuPL3W4q06PtSWODULRySXWyy020h2K1k=;
+        b=M0m7vaNmHu41XUDY7/QG5kUUZoaX9dDYpYJzeW2mA97SQRsvDU8SfGPN4ScxF7EdzzgW6U
+        fuOOYtga97bzlKNvO9HDj/olkLA9qrhcbVPEclbf+CjVoc5VYXxDX5yxV2OcEUgDvd5mRA
+        ydyYDaOnJDXeGAaawylX3sW0V/6SQ4s=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-99-LBseXebTN2qYkvWetKJbug-1; Mon, 20 Jan 2020 03:55:15 -0500
+X-MC-Unique: LBseXebTN2qYkvWetKJbug-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 96CA061264;
+        Mon, 20 Jan 2020 08:55:13 +0000 (UTC)
+Received: from gondolin (ovpn-205-161.brq.redhat.com [10.40.205.161])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A17D65C21A;
+        Mon, 20 Jan 2020 08:55:03 +0000 (UTC)
+Date:   Mon, 20 Jan 2020 09:55:00 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     "Liu, Yi L" <yi.l.liu@intel.com>
+Cc:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v4 11/12] samples: add vfio-mdev-pci driver
+Message-ID: <20200120095500.1659a4ea.cohuck@redhat.com>
+In-Reply-To: <A2975661238FB949B60364EF0F2C25743A18878E@SHSMSX104.ccr.corp.intel.com>
+References: <1578398509-26453-1-git-send-email-yi.l.liu@intel.com>
+        <1578398509-26453-12-git-send-email-yi.l.liu@intel.com>
+        <20200115133027.228452fd.cohuck@redhat.com>
+        <A2975661238FB949B60364EF0F2C25743A184041@SHSMSX104.ccr.corp.intel.com>
+        <20200116184027.2954c3f5.cohuck@redhat.com>
+        <A2975661238FB949B60364EF0F2C25743A18878E@SHSMSX104.ccr.corp.intel.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aa965067acfbdaa862f5f5de8b66e2c161f276a0.1579501711.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jan 2020, Matti Vaittinen wrote:
+On Sat, 18 Jan 2020 14:23:45 +0000
+"Liu, Yi L" <yi.l.liu@intel.com> wrote:
 
-> Use gpio_keys to send power input-event to user-space when power
-> button (short) press is detected.
+> > From: Cornelia Huck [mailto:cohuck@redhat.com]
+> > Sent: Friday, January 17, 2020 1:40 AM
+> > To: Liu, Yi L <yi.l.liu@intel.com>
+> > Subject: Re: [PATCH v4 11/12] samples: add vfio-mdev-pci driver
+> > 
+> > On Thu, 16 Jan 2020 13:23:28 +0000
+> > "Liu, Yi L" <yi.l.liu@intel.com> wrote:
+> >   
+> > > > From: Cornelia Huck [mailto:cohuck@redhat.com]
+> > > > Sent: Wednesday, January 15, 2020 8:30 PM
+> > > > To: Liu, Yi L <yi.l.liu@intel.com>
+> > > > Subject: Re: [PATCH v4 11/12] samples: add vfio-mdev-pci driver
+> > > >
+> > > > On Tue,  7 Jan 2020 20:01:48 +0800
+> > > > Liu Yi L <yi.l.liu@intel.com> wrote:  
+> >   
+> > > > > diff --git a/samples/Kconfig b/samples/Kconfig index
+> > > > > 9d236c3..50d207c 100644
+> > > > > --- a/samples/Kconfig
+> > > > > +++ b/samples/Kconfig
+> > > > > @@ -190,5 +190,15 @@ config SAMPLE_INTEL_MEI
+> > > > >  	help
+> > > > >  	  Build a sample program to work with mei device.
+> > > > >
+> > > > > +config SAMPLE_VFIO_MDEV_PCI
+> > > > > +	tristate "Sample driver for wrapping PCI device as a mdev"
+> > > > > +	select VFIO_PCI_COMMON
+> > > > > +	select VFIO_PCI  
+> > > >
+> > > > Why does this still need to select VFIO_PCI? Shouldn't all needed
+> > > > infrastructure rather be covered by VFIO_PCI_COMMON already?  
+> > >
+> > > VFIO_PCI_COMMON is supposed to be the dependency of both VFIO_PCI and
+> > > SAMPLE_VFIO_MDEV_PCI. However, the source code of VFIO_PCI_COMMON are
+> > > under drivers/vfio/pci which is compiled per the configuration of VFIO_PCI.
+> > > Besides of letting SAMPLE_VFIO_MDEV_PCI select VFIO_PCI, I can also
+> > > add a line in drivers/vfio/Makefile to make the source code under
+> > > drivers/vfio/pci to be compiled when either VFIO_PCI or
+> > > VFIO_PCI_COMMON are configed. But I'm afraid it is a bit ugly. So I
+> > > choose to let SAMPLE_VFIO_MDEV_PCI select VFIO_PCI. If you have other
+> > > idea, I would be pleased to know it. :-)  
+> > 
+> > Shouldn't building drivers/vfio/pci/ for CONFIG_VFIO_PCI_COMMON already be
+> > enough (the Makefile changes look fine to me)? Or am I missing something obvious?  
 > 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-> ---
-> No changes since v10
+> The problem is in the drivers/vfio/Makefile. If CONFIG_VFIO_PCI is not
+> selected then the pci/ directory is not compiled. Even CONFIG_VFIO_PCI=M,
+> it will throw error if SAMPLE_VFIO_MDEV_PCI=y. So I let SAMPLE_VFIO_MDEV_PCI
+> select CONFIG_VFIO_PCI all the same. I'm not sure if this is good. Or maybe
+> there is better way to ensure pci/ is compiled.
 > 
->  drivers/mfd/rohm-bd71828.c | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
+> # SPDX-License-Identifier: GPL-2.0
+> vfio_virqfd-y := virqfd.o
+> 
+> obj-$(CONFIG_VFIO) += vfio.o
+> obj-$(CONFIG_VFIO_VIRQFD) += vfio_virqfd.o
+> obj-$(CONFIG_VFIO_IOMMU_TYPE1) += vfio_iommu_type1.o
+> obj-$(CONFIG_VFIO_IOMMU_SPAPR_TCE) += vfio_iommu_spapr_tce.o
+> obj-$(CONFIG_VFIO_SPAPR_EEH) += vfio_spapr_eeh.o
+> obj-$(CONFIG_VFIO_PCI) += pci/
 
-Drop the "input:" tag from the subject line please.
+That's actually what I meant: s/CONFIG_VFIO_PCI/CONFIG_VFIO_PCI_COMMON/ here.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> obj-$(CONFIG_VFIO_PLATFORM) += platform/
+> obj-$(CONFIG_VFIO_MDEV) += mdev/
+> 
+> Thanks,
+> Yi Liu
+> 
+
