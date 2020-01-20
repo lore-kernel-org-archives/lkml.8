@@ -2,124 +2,163 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 992C3C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 20:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F46C32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 20:47:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67A2C22527
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 20:44:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i1RiFunv"
+	by mail.kernel.org (Postfix) with ESMTP id A223122525
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 20:47:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbgATUoi (ORCPT
+        id S1726915AbgATUrZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 15:44:38 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41562 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726586AbgATUoi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 15:44:38 -0500
-Received: by mail-wr1-f68.google.com with SMTP id c9so888504wrw.8
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 12:44:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zCCS+xkufB0QNR51eBW0fDBzy5n2Yxy6YYGIGoFxFjY=;
-        b=i1RiFunvaU1pkUAr1jdAQEBuueohAtVroihCJr4V9fb1vnBa4gG5/cAxUd2CioYmeu
-         jOOQJgYjl05aQ/LyzpF1vZpyvT6/5XUkkmfW1QzFreSJD21aUci5s7MI1UlJwBN0wwvG
-         UHFGCyhlekqTHipTI7JKrkvJ9uj8uafYlaewKSVxtqDtFrzERcRsnR91XD75NBYlhst6
-         1mi/uLGZufehNQYTx9JSHgpTXOZy1+yDc9wqcVAmnF82VfGJVZ45V576Jy1pA18g05vP
-         Lm4OPEdrL/K9A9JGRZngIBA6vNipWjovT+4hz8Ins1VBqsyK0NQw/4kenVBUFWytyJAO
-         fC/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zCCS+xkufB0QNR51eBW0fDBzy5n2Yxy6YYGIGoFxFjY=;
-        b=Y9HUnrM2H8K6uinuSRwxXnPv2etr+1lrD4p/ayIJH6gwzA4H5EOlorgb/E/RvloiFH
-         lMAIBEDC/wGqqbNMo00BZv2LprWOHKTGnZwrRmGR3GpCElVt2ryocAJ+3IVX30MBuTKY
-         4VRRDwuUauDe7aA+C7rpCX+T7Mp07NUcbvC8Rb+ku15tc3Fj1xeUIreIp3xuiems8oHG
-         KXVK+jibGLx4SR4cW2Lp6BKkySyYMUBHcmJduCh1kZAUKL5hYLo9mRpYillPSROtog4a
-         tjPByxxq0J0SgRxB/PALm5F9nSqpVG6KrrOU8wUjdnDh+quieqyo9nX/LF99Uhylk8gv
-         pjZg==
-X-Gm-Message-State: APjAAAXk4kZzq6OY3c34niB0gG93j3C1GRUX2c4JjHytL7QKL6pKkoo/
-        jOzI5ugPVJlPrL1IWv+pq/VR4mlKzxWklw==
-X-Google-Smtp-Source: APXvYqxCJ0WfiL3WPs+cvGhKPFUiva4SCirEzA9kYvDpa5+v86CMADSwFkrnCBtdC9pf46QCQsRKKA==
-X-Received: by 2002:adf:e887:: with SMTP id d7mr1279030wrm.162.1579553076213;
-        Mon, 20 Jan 2020 12:44:36 -0800 (PST)
-Received: from andrea (ip-213-220-200-127.net.upcbroadband.cz. [213.220.200.127])
-        by smtp.gmail.com with ESMTPSA id n16sm49912696wro.88.2020.01.20.12.44.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 12:44:35 -0800 (PST)
-Date:   Mon, 20 Jan 2020 21:44:29 +0100
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>
-Subject: Re: [PATCH] workqueue: Document (some) memory-ordering properties of
- {queue,schedule}_work()
-Message-ID: <20200120204429.GA1473@andrea>
-References: <20200118215820.7646-1-parri.andrea@gmail.com>
- <20200120020235.GA8126@paulmck-ThinkPad-P72>
+        Mon, 20 Jan 2020 15:47:25 -0500
+Received: from mga17.intel.com ([192.55.52.151]:39913 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726586AbgATUrZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 15:47:25 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 12:47:25 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,343,1574150400"; 
+   d="scan'208";a="227140992"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga003.jf.intel.com with ESMTP; 20 Jan 2020 12:47:24 -0800
+Received: from [10.251.23.107] (kliang2-mobl.ccr.corp.intel.com [10.251.23.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id D700F5802C1;
+        Mon, 20 Jan 2020 12:47:23 -0800 (PST)
+Subject: Re: [RESEND PATCH V5 1/2] perf/core: Add new branch sample type for
+ HW index of raw branch records
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     eranian@google.com, acme@redhat.com, mingo@kernel.org,
+        mpe@ellerman.id.au, linux-kernel@vger.kernel.org, jolsa@kernel.org,
+        namhyung@kernel.org, vitaly.slobodskoy@intel.com,
+        pavel.gerasimov@intel.com, ak@linux.intel.com
+References: <20200116155757.19624-1-kan.liang@linux.intel.com>
+ <20200116155757.19624-2-kan.liang@linux.intel.com>
+ <20200120092300.GK14879@hirez.programming.kicks-ass.net>
+ <88802724-aa70-23bc-b2c8-a7a34aa3dfe5@linux.intel.com>
+ <20200120202445.GD14914@hirez.programming.kicks-ass.net>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <71ead9fd-04db-e859-2842-3eddc77c35c4@linux.intel.com>
+Date:   Mon, 20 Jan 2020 15:47:22 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200120020235.GA8126@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200120202445.GD14914@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 19, 2020 at 06:02:35PM -0800, Paul E. McKenney wrote:
-> On Sat, Jan 18, 2020 at 10:58:20PM +0100, Andrea Parri wrote:
-> > It's desirable to be able to rely on the following property:  All stores
-> > preceding (in program order) a call to a successful queue_work() will be
-> > visible from the CPU which will execute the queued work by the time such
-> > work executes, e.g.,
-> > 
-> >   { x is initially 0 }
-> > 
-> >     CPU0                              CPU1
-> > 
-> >     WRITE_ONCE(x, 1);                 [ "work" is being executed ]
-> >     r0 = queue_work(wq, work);          r1 = READ_ONCE(x);
-> > 
-> >   Forbids: r0 == true && r1 == 0
-> > 
-> > The current implementation of queue_work() provides such memory-ordering
-> > property:
-> > 
-> >   - In __queue_work(), the ->lock spinlock is acquired.
-> > 
-> >   - On the other side, in worker_thread(), this same ->lock is held
-> >     when dequeueing work.
-> > 
-> > So the locking ordering makes things work out.
-> > 
-> > Add this property to the DocBook headers of {queue,schedule}_work().
-> > 
-> > Suggested-by: Paul E. McKenney <paulmck@kernel.org>
-> > Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
+
+
+On 1/20/2020 3:24 PM, Peter Zijlstra wrote:
+> On Mon, Jan 20, 2020 at 11:50:59AM -0500, Liang, Kan wrote:
+>>
+>>
+>> On 1/20/2020 4:23 AM, Peter Zijlstra wrote:
+>>> On Thu, Jan 16, 2020 at 07:57:56AM -0800, kan.liang@linux.intel.com wrote:
+>>>
+>>>>    struct perf_branch_stack {
+>>>>    	__u64				nr;
+>>>> +	__u64				hw_idx;
+>>>>    	struct perf_branch_entry	entries[0];
+>>>>    };
+>>>
+>>> The above and below order doesn't match.
+>>>
+>>>> @@ -849,7 +853,11 @@ enum perf_event_type {
+>>>>    	 *	  char                  data[size];}&& PERF_SAMPLE_RAW
+>>>>    	 *
+>>>>    	 *	{ u64                   nr;
+>>>> -	 *        { u64 from, to, flags } lbr[nr];} && PERF_SAMPLE_BRANCH_STACK
+>>>> +	 *        { u64 from, to, flags } lbr[nr];
+>>>> +	 *
+>>>> +	 *        # only available if PERF_SAMPLE_BRANCH_HW_INDEX is set
+>>>> +	 *        u64			hw_idx;
+>>>> +	 *      } && PERF_SAMPLE_BRANCH_STACK
+>>>
+>>> That wants to be written as:
+>>>
+>>> 		{ u64			nr;
+>>> 		  { u64 from, to, flags; } entries[nr];
+>>> 		  { u64	hw_idx; } && PERF_SAMPLE_BRANCH_HW_INDEX
+>>> 		} && PERF_SAMPLE_BRANCH_STACK
+>>>
+>>> But the big question is; why isn't it:
+>>>
+>>> 		{ u64			nr;
+>>> 		  { u64	hw_idx; } && PERF_SAMPLE_BRANCH_HW_INDEX
+>>> 		  { u64 from, to, flags; } entries[nr];
+>>> 		} && PERF_SAMPLE_BRANCH_STACK
+>>>
+>>> to match the struct perf_branch_stack order. Having that variable sized
+>>> entry in the middle just seems weird.
+>>
+>>
+>> Usually, new data should be output to the end of a sample.
 > 
-> Acked-by: Paul E. McKenney <paulmck@kernel.org>
-
-Thanks!
-
+> Because.... you want old tools to read new output?
 >
-> An alternative to Randy's suggestion of dropping the comma following
-> the "cf." is to just drop that whole phrase.  I will let you and Randy
-> work that one out, though.  ;-)
 
-Either way works for me.
+Yes, for some cases, it helps.
+If no other sample types are output after PERF_SAMPLE_BRANCH_STACK,
+old perf tool will ignore the hw_idx.
+But, if we also have to output other sample types, e.g 
+PERF_SAMPLE_DATA_SRC or PERF_SAMPLE_PHYS_ADDR, which are output after 
+PERF_SAMPLE_BRANCH_STACK. The hw_idx will mess them up.
+Old perf tool doesn't work anymore.
 
-I'd give Tejun and Lai some more time to review this and send a non-RFC with
-your Ack and this nit fixed later this week (unless I hear some objections).
+
+>> However, the entries[0] is sized entry, so I have to put the hw_idx before
+> 
+> entries[0] is only in the C thing, and in C you indeed have to put
+> hw_idx before.
+> 
+>> entry. It makes the inconsistency. Sorry for the confusion caused.
+> 
+> n/p it's clear now I think.
+
+Should I send V6 patch to move hw_idx before entry as below?
+
+@@ -853,7 +857,9 @@ enum perf_event_type {
+          *        char                  data[size];}&& PERF_SAMPLE_RAW
+          *
+          *      { u64                   nr;
+-        *        { u64 from, to, flags } lbr[nr];} && 
+PERF_SAMPLE_BRANCH_STACK
++        *        { u64 hw_idx; } && PERF_SAMPLE_BRANCH_HW_INDEX
++        *        { u64 from, to, flags } lbr[nr];
++        *      } && PERF_SAMPLE_BRANCH_STACK
+          *
+          *      { u64                   abi; # enum perf_sample_regs_abi
+          *        u64                   regs[weight(mask)]; } && 
+PERF_SAMPLE_REGS_USER
+
+@@ -6634,6 +6639,8 @@ void perf_output_sample(struct perf_output_handle 
+*handle,
+                              * sizeof(struct perf_branch_entry);
+
+                         perf_output_put(handle, data->br_stack->nr);
++                       if (perf_sample_save_hw_index(event))
++                               perf_output_put(handle, 
+data->br_stack->hw_idx);
+                         perf_output_copy(handle, 
+data->br_stack->entries, size);
+                 } else {
+                         /*
+
+
 
 Thanks,
-  Andrea
+Kan
