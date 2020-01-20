@@ -2,160 +2,191 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5232AC33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:01:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E27C33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24DFC2073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:01:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EURITZ+S"
+	by mail.kernel.org (Postfix) with ESMTP id 812392073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:01:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbgATIBg (ORCPT
+        id S1726867AbgATIB6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 03:01:36 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54647 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726039AbgATIBg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 03:01:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579507295;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Iz/qjvodYnEnB5eFL79FzYhZwFSrGU3EpRLL9cwpXcI=;
-        b=EURITZ+SqOjV5q7tLanZ7k6cj3rvCr7qPBFeWkFZ7XF0NeUWzqDey1P9JYPhqooprN6qg6
-        DG4Es+o7q7Z5QtYZ2Pb0BbyUi8g9PVA+eQlYO6u7UjbtwgoN99sw4lVJ5A/8HCnaGlhJv3
-        5ASmLblzD+5ajZwzWH35AFFxwTfTQDk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-68-gYKPL3i1Oa25naBeSRDvIw-1; Mon, 20 Jan 2020 03:01:33 -0500
-X-MC-Unique: gYKPL3i1Oa25naBeSRDvIw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CA35A10054E3;
-        Mon, 20 Jan 2020 08:01:30 +0000 (UTC)
-Received: from [10.72.12.173] (ovpn-12-173.pek2.redhat.com [10.72.12.173])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B046510013A7;
-        Mon, 20 Jan 2020 08:01:11 +0000 (UTC)
-Subject: Re: [PATCH 5/5] vdpasim: vDPA device simulator
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     "mst@redhat.com" <mst@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "tiwei.bie@intel.com" <tiwei.bie@intel.com>,
-        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
-        "cunming.liang@intel.com" <cunming.liang@intel.com>,
-        "zhihong.wang@intel.com" <zhihong.wang@intel.com>,
-        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
-        "xiao.w.wang@intel.com" <xiao.w.wang@intel.com>,
-        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
-        "lingshan.zhu@intel.com" <lingshan.zhu@intel.com>,
-        "eperezma@redhat.com" <eperezma@redhat.com>,
-        "lulu@redhat.com" <lulu@redhat.com>,
-        Parav Pandit <parav@mellanox.com>,
-        "kevin.tian@intel.com" <kevin.tian@intel.com>,
-        "stefanha@redhat.com" <stefanha@redhat.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "aadam@redhat.com" <aadam@redhat.com>,
-        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Shahaf Shuler <shahafs@mellanox.com>,
-        "hanand@xilinx.com" <hanand@xilinx.com>,
-        "mhabets@solarflare.com" <mhabets@solarflare.com>,
-        "kuba@kernel.org" <kuba@kernel.org>
-References: <20200116124231.20253-1-jasowang@redhat.com>
- <20200116124231.20253-6-jasowang@redhat.com>
- <20200116154658.GJ20978@mellanox.com>
- <aea2bff8-82c8-2c0f-19ee-e86db73e199f@redhat.com>
- <20200117141021.GW20978@mellanox.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <cd5477b1-7e41-aeeb-c592-09b2ec81566a@redhat.com>
-Date:   Mon, 20 Jan 2020 16:01:10 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 20 Jan 2020 03:01:58 -0500
+Received: from mout.perfora.net ([74.208.4.197]:36105 "EHLO mout.perfora.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726417AbgATIB5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 03:01:57 -0500
+Received: from marcel-nb-toradex-int.toradex.int ([31.10.206.124]) by
+ mrelay.perfora.net (mreueus001 [74.208.5.2]) with ESMTPSA (Nemesis) id
+ 0Ma46L-1jCLDy1EsB-00Lp2H; Mon, 20 Jan 2020 09:01:13 +0100
+From:   Marcel Ziswiler <marcel@ziswiler.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, info@logictechno.com,
+        j.bauer@endrich.com, Sam Ravnborg <sam@ravnborg.org>,
+        dri-devel@lists.freedesktop.org,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>
+Subject: [PATCH v4 3/3] drm/panel: simple: add display timings for logic technologies displays
+Date:   Mon, 20 Jan 2020 09:01:00 +0100
+Message-Id: <20200120080100.170294-3-marcel@ziswiler.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200120080100.170294-1-marcel@ziswiler.com>
+References: <20200120080100.170294-1-marcel@ziswiler.com>
 MIME-Version: 1.0
-In-Reply-To: <20200117141021.GW20978@mellanox.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:anI6rwLomoZdt5T5jBL59aV9NQScit0zPIbdt/SagbVH1Gala22
+ j+W2jRkUjmcptZDJwQ57IQS6Z6wWSGXjVbvOtb/XqVE23fdMiywzHNUxaDQh43ZGRxZ3NIW
+ ZV2ryo/9Ln3um+V+FXj+jpePnDWkrJ7cZMYez+UmxDt6i3nRfp8JooFqbfc9URLUaY5qsBG
+ TGPnZdWfOqvnQIqoUfiUA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:wsN8s4dxJzk=:nTvDYien5G49OQ8P021V0L
+ wtbCUrqEbUU3GoqHgMr1pa49CaIDT26aWsFKQCQo9N/qTczcOUDBEhtxHIpNrqO3TNe5Sj6qS
+ A31cnoHf7ohYuBntgUeBmY1pftnRP/vhbIaXBzXUvQRTGkRuhxfjSP6ZNlYccBk7Eh1L0XoQC
+ zZ7H5UWcH+8UoOpnwq3A2GUbOzHp1Ui0HrS1Tu3se1BByv/Z8rr4U2g+fiQZrGlFdNYOn3kK7
+ OOFS2lMRMI3/PycO+Hl74lYs9ECctDWtA7YwHpSBac65KSnv61zo7DF+uiagjz69PhTuGcFX0
+ +cRlxLrTVGppqLbyeofx1CQWO5NHum0oz6Amijka63a/egATDzivKmkfR0Y7OHfFerty7unDk
+ Qkyk58VoRTX2ZRzw+K/KVTbsF5nB5ZT4Ey3lbdgxouhPPn+ofx7ah9FyQ/+n4SAJkuauyBrGX
+ HLcX/cSB03vZIJ4dWhEibILqwdXInfCMOBcx/JTXuF84LNf/0TeEEHDvwTarnoATQIlnn25s3
+ c+f0FXxMhmCl2lCEIfZwK6LR+sQ3o4enjQrigMZNcAhFVR+qYTUB0q++bGqor3r0ygQ8VY6AV
+ +ac/CvAnMpOus/BBw5NhrSwJvKpA3m5z9rjpVtlqxrFegfT/U5ZHVdeiwww3IsvPBj/noXfhN
+ DohfL19afL7LuMA6/Vq8gWICP3M8cBBF014He4W6P2DWv4xHKiTaBQ94dQ3RP+BSS+9JLkDlv
+ d5KiNDesnB/18CwwSLmiMBjR/OtigoW05HoNIJ4twAnaaLdFD66T7Fli9q1XOkM05PHL3F65k
+ nT679afWJxp4sjNsQO+dCypv0sGROKF+KusQjl80O8Vo65Bv2trtSGqxoVw4Rtq+htn9tEudV
+ hsTSpvbnh+lGmzaKcP1g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 
-On 2020/1/17 =E4=B8=8B=E5=8D=8810:10, Jason Gunthorpe wrote:
-> On Fri, Jan 17, 2020 at 05:32:39PM +0800, Jason Wang wrote:
->> On 2020/1/16 =E4=B8=8B=E5=8D=8811:47, Jason Gunthorpe wrote:
->>> On Thu, Jan 16, 2020 at 08:42:31PM +0800, Jason Wang wrote:
->>>> This patch implements a software vDPA networking device. The datapat=
-h
->>>> is implemented through vringh and workqueue. The device has an on-ch=
-ip
->>>> IOMMU which translates IOVA to PA. For kernel virtio drivers, vDPA
->>>> simulator driver provides dma_ops. For vhost driers, set_map() metho=
-ds
->>>> of vdpa_config_ops is implemented to accept mappings from vhost.
->>>>
->>>> A sysfs based management interface is implemented, devices are
->>>> created and removed through:
->>>>
->>>> /sys/devices/virtual/vdpa_simulator/netdev/{create|remove}
->>> This is very gross, creating a class just to get a create/remove and
->>> then not using the class for anything else? Yuk.
->>
->> It includes more information, e.g the devices and the link from vdpa_s=
-im
->> device and vdpa device.
-> I feel like regardless of how the device is created there should be a
-> consistent virtio centric management for post-creation tasks, such as
-> introspection and destruction
+Add display timings for the following 3 display panels manufactured by
+Logic Technologies Limited:
 
+- LT161010-2NHC e.g. as found in the Toradex Capacitive Touch Display
+  7" Parallel [1]
+- LT161010-2NHR e.g. as found in the Toradex Resistive Touch Display 7"
+  Parallel [2]
+- LT170410-2WHC e.g. as found in the Toradex Capacitive Touch Display
+  10.1" LVDS [3]
 
-Right, actually, this is something that could be done by sysfs as well.=20
-Having an intermediate steps as "activate" and introducing attributes=20
-for post-creation tasks.
+Those panels may also be distributed by Endrich Bauelemente Vertriebs
+GmbH [4].
 
+[1] https://docs.toradex.com/104497-7-inch-parallel-capacitive-touch-display-800x480-datasheet.pdf
+[2] https://docs.toradex.com/104498-7-inch-parallel-resistive-touch-display-800x480.pdf
+[3] https://docs.toradex.com/105952-10-1-inch-lvds-capacitive-touch-display-1280x800-datasheet.pdf
+[4] https://www.endrich.com/isi50_isi30_tft-displays/lt170410-1whc_isi30
 
->
-> A virto struct device should already have back pointers to it's parent
-> device, which should be enough to discover the vdpa_sim, none of the
-> extra sysfs munging should be needed.
->
->>>> Netlink based lifecycle management could be implemented for vDPA
->>>> simulator as well.
->>> This is just begging for a netlink based approach.
->>>
->>> Certainly netlink driven removal should be an agreeable standard for
->>> all devices, I think.
->>
->> Well, I think Parav had some proposals during the discussion of mdev
->> approach. But I'm not sure if he had any RFC codes for me to integrate=
- it
->> into vdpasim.
->>
->> Or do you want me to propose the netlink API? If yes, would you prefer=
- to a
->> new virtio dedicated one or be a subset of devlink?
-> Well, lets see what feed back Parav has
->
-> Jason
+Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Reviewed-by: Philippe Schenker <philippe.schenker@toradex.com>
 
+---
 
-Ok.
+Changes in v4:
+- Added recently made mandatory connector_type information as pointed
+  out by Sam.
 
-Thanks
+Changes in v3:
+- Fix typo in pixelclock frequency for lt170410_2whc as recently
+  discovered by Philippe.
+
+Changes in v2:
+- Added Philippe's reviewed-by.
+
+ drivers/gpu/drm/panel/panel-simple.c | 67 ++++++++++++++++++++++++++++
+ 1 file changed, 67 insertions(+)
+
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index d6f77bc494c7..a0dd84e11db7 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -2107,6 +2107,64 @@ static const struct panel_desc lg_lp129qe = {
+ 	},
+ };
+ 
++static const struct display_timing logictechno_lt161010_2nh_timing = {
++	.pixelclock = { 26400000, 33300000, 46800000 },
++	.hactive = { 800, 800, 800 },
++	.hfront_porch = { 16, 210, 354 },
++	.hback_porch = { 46, 46, 46 },
++	.hsync_len = { 1, 20, 40 },
++	.vactive = { 480, 480, 480 },
++	.vfront_porch = { 7, 22, 147 },
++	.vback_porch = { 23, 23, 23 },
++	.vsync_len = { 1, 10, 20 },
++	.flags = DISPLAY_FLAGS_HSYNC_LOW | DISPLAY_FLAGS_VSYNC_LOW |
++		 DISPLAY_FLAGS_DE_HIGH | DISPLAY_FLAGS_PIXDATA_POSEDGE |
++		 DISPLAY_FLAGS_SYNC_POSEDGE,
++};
++
++static const struct panel_desc logictechno_lt161010_2nh = {
++	.timings = &logictechno_lt161010_2nh_timing,
++	.num_timings = 1,
++	.size = {
++		.width = 154,
++		.height = 86,
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
++	.bus_flags = DRM_BUS_FLAG_DE_HIGH |
++		     DRM_BUS_FLAG_PIXDATA_SAMPLE_NEGEDGE |
++		     DRM_BUS_FLAG_SYNC_SAMPLE_NEGEDGE,
++	.connector_type = DRM_MODE_CONNECTOR_DPI,
++};
++
++static const struct display_timing logictechno_lt170410_2whc_timing = {
++	.pixelclock = { 68900000, 71100000, 73400000 },
++	.hactive = { 1280, 1280, 1280 },
++	.hfront_porch = { 23, 60, 71 },
++	.hback_porch = { 23, 60, 71 },
++	.hsync_len = { 15, 40, 47 },
++	.vactive = { 800, 800, 800 },
++	.vfront_porch = { 5, 7, 10 },
++	.vback_porch = { 5, 7, 10 },
++	.vsync_len = { 6, 9, 12 },
++	.flags = DISPLAY_FLAGS_HSYNC_LOW | DISPLAY_FLAGS_VSYNC_LOW |
++		 DISPLAY_FLAGS_DE_HIGH | DISPLAY_FLAGS_PIXDATA_POSEDGE |
++		 DISPLAY_FLAGS_SYNC_POSEDGE,
++};
++
++static const struct panel_desc logictechno_lt170410_2whc = {
++	.timings = &logictechno_lt170410_2whc_timing,
++	.num_timings = 1,
++	.size = {
++		.width = 217,
++		.height = 136,
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
++	.bus_flags = DRM_BUS_FLAG_DE_HIGH |
++		     DRM_BUS_FLAG_PIXDATA_SAMPLE_NEGEDGE |
++		     DRM_BUS_FLAG_SYNC_SAMPLE_NEGEDGE,
++	.connector_type = DRM_MODE_CONNECTOR_LVDS,
++};
++
+ static const struct drm_display_mode mitsubishi_aa070mc01_mode = {
+ 	.clock = 30400,
+ 	.hdisplay = 800,
+@@ -3417,6 +3475,15 @@ static const struct of_device_id platform_of_match[] = {
+ 	}, {
+ 		.compatible = "logicpd,type28",
+ 		.data = &logicpd_type_28,
++	}, {
++		.compatible = "logictechno,lt161010-2nhc",
++		.data = &logictechno_lt161010_2nh,
++	}, {
++		.compatible = "logictechno,lt161010-2nhr",
++		.data = &logictechno_lt161010_2nh,
++	}, {
++		.compatible = "logictechno,lt170410-2whc",
++		.data = &logictechno_lt170410_2whc,
+ 	}, {
+ 		.compatible = "mitsubishi,aa070mc01-ca1",
+ 		.data = &mitsubishi_aa070mc01,
+-- 
+2.24.1
 
