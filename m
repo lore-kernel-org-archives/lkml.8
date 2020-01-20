@@ -2,123 +2,120 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F5BC33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:44:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E42CC33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:45:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 365E2207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:44:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42579207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:45:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579513507;
+	bh=ApmvLrELZfhcqYo85uXCVJ2jkuq9HLOrltdH6gt9VeU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GZWBA6MiDortxsa/VZ7JrK7zCq09wQegks8ti3YII9RhR0fpJaoYDOTdzV7Tpx0j7
+	 JMyfOVL/9UANJ1M+6ViJdPEksJRf/5iPAXCCO5Z4k23U951OBwWODCiiPW93ii4qk+
+	 WDBRO0rDrI+AB253C9EbLBVWqssfRhYOzoqFHkuk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbgATJo4 (ORCPT
+        id S1727049AbgATJpG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 04:44:56 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2283 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726075AbgATJo4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 04:44:56 -0500
-Received: from LHREML710-CAH.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 3DA39BD29D6DA30D2A22;
-        Mon, 20 Jan 2020 09:44:53 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- LHREML710-CAH.china.huawei.com (10.201.108.33) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 20 Jan 2020 09:44:52 +0000
-Received: from [127.0.0.1] (10.202.226.43) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 20 Jan
- 2020 09:44:52 +0000
-Subject: Re: [RFC PATCH 0/4] iommu: Per-group default domain type
-To:     Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-CC:     <kevin.tian@intel.com>, <ashok.raj@intel.com>,
-        <linux-kernel@vger.kernel.org>, <iommu@lists.linux-foundation.org>,
-        <jacob.jun.pan@intel.com>, Robin Murphy <robin.murphy@arm.com>,
-        "Christoph Hellwig" <hch@lst.de>
-References: <20200101052648.14295-1-baolu.lu@linux.intel.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <ba7a7e6a-8b23-fca0-a8bb-72c4dbfa8390@huawei.com>
-Date:   Mon, 20 Jan 2020 09:44:51 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Mon, 20 Jan 2020 04:45:06 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39016 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726417AbgATJpG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 04:45:06 -0500
+Received: by mail-wm1-f67.google.com with SMTP id 20so13969588wmj.4
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 01:45:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3iTVE2tqoMsXkoe3MYL5m+Qa1tyuzuu6FafNlWLs6fA=;
+        b=Zw6dt9eK7bWLkBw8QlfTKHdcyQTs6s/Chb1CBsjyB8ZWKkzK5AOWBvequBEidcoxio
+         ZeIpJd4JDZMTSiNmlyA02E00/wFvHHlSkVz64fzKgeFnDdfBx1MBTdgjVU7MTue4WPyA
+         ehEHgI+sV1QUtiM0Q5IPL6KO6I8CzUVt3JVj3Zfo02otCaS0wk4PhqWZwKh4cIAADgLP
+         L7OVskFlTHMpMGA2Bik5+ZCy7sAeHSk2a9XpB55rdDuQ6dYxM0EAeV0T2eqORcE7uGmJ
+         kT25xDqi2H9uSJwFawyiV5TQ6wB++Ga2AH+2uajl66rFJ3csz7BgCJwwQJHj9KpQl/Cx
+         R/2Q==
+X-Gm-Message-State: APjAAAX0Wh/is3ZUJOt9J7LYs20iDYCgBnWQRhVta//hIzuR5BkSsOTZ
+        C3PWNkUOXWr4Fws70nwghSs=
+X-Google-Smtp-Source: APXvYqxc+QyDCPn3v70sKZ08DTK7X18YnCfsx7bHkx56YHq9wZ3Y9Gou5TTnbYTLpfln7vdgiZJBOw==
+X-Received: by 2002:a1c:44d:: with SMTP id 74mr18530043wme.53.1579513504735;
+        Mon, 20 Jan 2020 01:45:04 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id t8sm47113310wrp.69.2020.01.20.01.45.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jan 2020 01:45:04 -0800 (PST)
+Date:   Mon, 20 Jan 2020 10:45:03 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Wei Yang <richardw.yang@linux.intel.com>
+Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, yang.shi@linux.alibaba.com
+Subject: Re: [PATCH 2/8] mm/migrate.c: not necessary to check start and i
+Message-ID: <20200120094503.GM18451@dhcp22.suse.cz>
+References: <20200119030636.11899-1-richardw.yang@linux.intel.com>
+ <20200119030636.11899-3-richardw.yang@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200101052648.14295-1-baolu.lu@linux.intel.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.43]
-X-ClientProxiedBy: lhreml718-chm.china.huawei.com (10.201.108.69) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200119030636.11899-3-richardw.yang@linux.intel.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/01/2020 05:26, Lu Baolu wrote:
-> An IOMMU group represents the smallest set of devices that are considered
-> to be isolated. All devices belonging to an IOMMU group share a default
-> domain for DMA APIs. There are two types of default domain: IOMMU_DOMAIN_DMA
-> and IOMMU_DOMAIN_IDENTITY. The former means IOMMU translation, while the
-> latter means IOMMU by-pass.
+On Sun 19-01-20 11:06:30, Wei Yang wrote:
+> Till here, i must no less than start. And if i equals to start,
+> store_status() would always return 0.
 > 
-> Currently, the default domain type for the IOMMU groups is determined
-> globally. All IOMMU groups use a single default domain type. The global
-> default domain type can be adjusted by kernel build configuration or
-> kernel parameters.
-> 
-> More and more users are looking forward to a fine grained default domain
-> type. For example, with the global default domain type set to translation,
-> the OEM verndors or end users might want some trusted and fast-speed devices
-> to bypass IOMMU for performance gains. On the other hand, with global
-> default domain type set to by-pass, some devices with limited system
-> memory addressing capability might want IOMMU translation to remove the
-> bounce buffer overhead.
+> Remove some unnecessary check to make it easy to read and prepare for
+> further cleanup.
 
-Hi Lu Baolu,
+You are right. This is likely a left over from the development.
+i >= start because the former is the actual iterator and start is the
+first index with the cached node.
 
-Do you think that it would be a more common usecase to want 
-kernel-managed devices to be passthrough for performance reasons and 
-some select devices to be in DMA domain, like those with limited address 
-cap or whose drivers request huge amounts of memory?
+Dropping the check improves readability because one might indeed wonder
+why this is the only place to do the check and the overal iteration is
+complex enough to add more questions on top.
 
-I just think it would be more manageable to set kernel commandline 
-parameters for this, i.e. those select few which want DMA domain.
+> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
 
-Thanks,
-John
+Acked-by: Michal Hocko <mhocko@suse.com>
 
-> 
-> This series proposes per-group default domain type to meet these demands.
-> It adds a per-device iommu_passthrough attribute. By setting this
-> attribute, end users or device vendors are able to tell the IOMMU subsystem
-> that this device is willing to use a default domain of IOMMU_DOMAIN_IDENTITY.
-> The IOMMU device probe procedure is reformed to pre-allocate groups for
-> all devices on a specific bus before adding the devices into the groups.
-> This enables the IOMMU device probe precedure to determine a per-group
-> default domain type before allocating IOMMU domains and attaching them
-> to devices.
-> 
-> Please help to review it. Your comments and suggestions are appricated.
-> 
-> Best regards,
-> baolu
-> 
-> Lu Baolu (4):
->    driver core: Add iommu_passthrough to struct device
->    PCI: Add "pci=iommu_passthrough=" parameter for iommu passthrough
->    iommu: Preallocate iommu group when probing devices
->    iommu: Determine default domain type before allocating domain
-> 
->   .../admin-guide/kernel-parameters.txt         |   5 +
->   drivers/iommu/iommu.c                         | 127 ++++++++++++++----
->   drivers/pci/pci.c                             |  34 +++++
->   drivers/pci/pci.h                             |   1 +
->   drivers/pci/probe.c                           |   2 +
->   include/linux/device.h                        |   3 +
->   6 files changed, 143 insertions(+), 29 deletions(-)
-> 
+Thanks!
 
+> ---
+>  mm/migrate.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/mm/migrate.c b/mm/migrate.c
+> index ba7cf4fa43a0..c3ef70de5876 100644
+> --- a/mm/migrate.c
+> +++ b/mm/migrate.c
+> @@ -1664,11 +1664,9 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
+>  		err = do_move_pages_to_node(mm, &pagelist, current_node);
+>  		if (err)
+>  			goto out;
+> -		if (i > start) {
+> -			err = store_status(status, start, current_node, i - start);
+> -			if (err)
+> -				goto out;
+> -		}
+> +		err = store_status(status, start, current_node, i - start);
+> +		if (err)
+> +			goto out;
+>  		current_node = NUMA_NO_NODE;
+>  	}
+>  out_flush:
+> -- 
+> 2.17.1
+
+-- 
+Michal Hocko
+SUSE Labs
