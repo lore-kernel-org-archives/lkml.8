@@ -2,74 +2,81 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4764AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B33FC33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AC852070C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:07:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DckzPWGi"
+	by mail.kernel.org (Postfix) with ESMTP id 37AE722464
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:07:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728843AbgATPHT (ORCPT
+        id S1729158AbgATPHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 10:07:19 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:36246 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726626AbgATPHS (ORCPT
+        Mon, 20 Jan 2020 10:07:24 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:44991 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726860AbgATPHY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 10:07:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=T/cpQD/zbDsi8Y9ri+v+0mcbKKUYlsn8Knn3mtIwVJ0=; b=DckzPWGitgftKtAtwS4LlmEX9
-        ZuSZtfcESSP5zj74FXV4O78Www2YVMKhgNuohr1R2RE/Y7iPH7ayAC2Fl508famKqyvGK/BJUKHNt
-        Y3XCF0d/NZdbCdMgfQl5Y29seEbvGfk+lbnTU3diovjI0ADbjwYNMzvcwOzpQJFqvJ5i43wvI1O9h
-        Y6cNWJYLUHPLAkhd84utU3mAQ/NZzthmP7d+GRAY9r6po6NNVXBHzo2Xu1iPs2Xv8kWJHvbGPEUIA
-        BwTLqvCAEcu6d1TGvb1BpEx+8vjjdLkFHilmS1PT1PRn4JP34Q5xnnA7xmM9VsM4JaUfxkOXTL9tA
-        s5xErLGjA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1itYe1-0007LW-8o; Mon, 20 Jan 2020 15:07:13 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D7426305E4E;
-        Mon, 20 Jan 2020 16:05:32 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6580C28B86E62; Mon, 20 Jan 2020 16:07:11 +0100 (CET)
-Date:   Mon, 20 Jan 2020 16:07:11 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Julien Thierry <jthierry@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        jpoimboe@redhat.com, raphael.gault@arm.com,
-        catalin.marinas@arm.com, will@kernel.org
-Subject: Re: [RFC v5 00/57] objtool: Add support for arm64
-Message-ID: <20200120150711.GD14897@hirez.programming.kicks-ass.net>
-References: <20200109160300.26150-1-jthierry@redhat.com>
+        Mon, 20 Jan 2020 10:07:24 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-181-lviwv2PpPtqQgvwmkaJWJw-1; Mon, 20 Jan 2020 15:07:20 +0000
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 20 Jan 2020 15:07:20 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 20 Jan 2020 15:07:20 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     =?utf-8?B?J1BhbGkgUm9ow6FyJw==?= <pali.rohar@gmail.com>,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Namjae Jeon <linkinjeon@gmail.com>,
+        "Gabriel Krisman Bertazi" <krisman@collabora.com>
+Subject: RE: vfat: Broken case-insensitive support for UTF-8
+Thread-Topic: vfat: Broken case-insensitive support for UTF-8
+Thread-Index: AQHVz4FsiOVqsS4Qp0SucuDN4afIhKfzph4w
+Date:   Mon, 20 Jan 2020 15:07:20 +0000
+Message-ID: <89eba9906011446f8441090f496278d2@AcuMS.aculab.com>
+References: <20200119221455.bac7dc55g56q2l4r@pali>
+ <87sgkan57p.fsf@mail.parknet.co.jp> <20200120110438.ak7jpyy66clx5v6x@pali>
+In-Reply-To: <20200120110438.ak7jpyy66clx5v6x@pali>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200109160300.26150-1-jthierry@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MC-Unique: lviwv2PpPtqQgvwmkaJWJw-1
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 04:02:03PM +0000, Julien Thierry wrote:
-> In the mean time, any feedback on the current state is appreciated.
-> 
-> * Patches 1 to 18 adapts the current objtool code to make it easier to
->   support new architectures.
+RnJvbTogUGFsaSBSb2jDoXINCj4gU2VudDogMjAgSmFudWFyeSAyMDIwIDExOjA1DQo+IE9uIE1v
+bmRheSAyMCBKYW51YXJ5IDIwMjAgMTM6MDQ6NDIgT0dBV0EgSGlyb2Z1bWkgd3JvdGU6DQo+ID4g
+UGFsaSBSb2jDoXIgPHBhbGkucm9oYXJAZ21haWwuY29tPiB3cml0ZXM6DQo+ID4NCj4gPiA+IFdo
+aWNoIG1lYW5zIHRoYXQgZmF0X25hbWVfbWF0Y2goKSwgdmZhdF9oYXNoaSgpIGFuZCB2ZmF0X2Nt
+cGkoKSBhcmUNCj4gPiA+IGJyb2tlbiBmb3IgdmZhdCBpbiBVVEYtOCBtb2RlLg0KPiA+DQo+ID4g
+UmlnaHQuIEl0IGlzIGEga25vd24gaXNzdWUuDQo+IA0KPiBDb3VsZCBiZSB0aGlzIGlzc3VlIGJl
+dHRlciBkb2N1bWVudGVkPyBFLmcuIGluIG1vdW50KDgpIG1hbnBhZ2Ugd2hlcmUNCj4gYXJlIHdy
+aXR0ZW4gbW91bnQgb3B0aW9ucyBmb3IgdmZhdD8gSSB0aGluayB0aGF0IHBlb3BsZSBzaG91bGQg
+YmUgYXdhcmUNCj4gb2YgdGhpcyBpc3N1ZSB3aGVuIHRoZXkgdXNlICJ1dGY4PTEiIG1vdW50IG9w
+dGlvbi4NCg0KV2hhdCBoYXBwZW5zIGlmIHRoZSBmaWxlc3lzdGVtIGhhcyBmaWxlbmFtZXMgdGhh
+dCBpbnZhbGlkIFVURjggc2VxdWVuY2VzDQpvciBtdWx0aXBsZSBmaWxlbmFtZXMgdGhhdCBkZWNv
+ZGUgZnJvbSBVVEY4IHRvIHRoZSBzYW1lICd3Y2hhcicgdmFsdWUuDQpOZXZlciBtaW5kIG9uZXMg
+dGhhdCBhcmUganVzdCBjYXNlLWRpZmZlcmVuY2VzIGZvciB0aGUgc2FtZSBmaWxlbmFtZS4NCg0K
+VVRGOCBpcyBqdXN0IHNvIGJyb2tlbiBpdCBzaG91bGQgbmV2ZXIgaGF2ZSBiZWVuIGFsbG93ZWQg
+dG8gYmVjb21lDQphIHN0YW5kYXJkLg0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNz
+IExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAx
+UFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
 
-In the interrest of moving things along; I've looked through these
-and 1-14,16 look good to me, 17,18 hurt my brain.
-
-Josh, what say you?
