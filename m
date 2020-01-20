@@ -2,252 +2,133 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27DADC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5CBAC33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:56:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8F1A24653
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:56:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C4C92070C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:56:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="ZKp4wxt5"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Eq8su56c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728712AbgATPz7 (ORCPT
+        id S1729108AbgATP4v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 10:55:59 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:33765 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726642AbgATPz7 (ORCPT
+        Mon, 20 Jan 2020 10:56:51 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44726 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726642AbgATP4v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 10:55:59 -0500
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 41D2A22FEB;
-        Mon, 20 Jan 2020 16:55:56 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1579535756;
+        Mon, 20 Jan 2020 10:56:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579535810;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=0ooYTeglPjja9XHWcnDgkHhVKkBwaE2MvC2UUFHOdGc=;
-        b=ZKp4wxt5LVptrZx1UYJw57ss+UDp/gXPw9Ot2BVdnGFG+DMs8qCSt72OOdD9/PnY0Husao
-        SEPxvfnYj6MECvSiYNF1194r+boPpfbsTmP00jsl6ok4AXgyo5PLShzp1X4Cybz/3CtMdC
-        vY5btFfaXoEeQAoC2qxWE3uPTHrsC9s=
+        bh=4e5hNsjyX6zx1OYI6NvhnYccfBkWo6gxjd9Kp9Jqg/w=;
+        b=Eq8su56cemFRQZNb2VRBKcQH/0uNy2G/Yc/wR0OEe51EDapI5gv1iplohStPv1JbnOmC2/
+        nGqxIlktOWAvX/ZugDmQ1cwA2kYQR8vlxZGami/IW6wz4hBSdTGQwomr8IZqE31aV2aqKB
+        qNqKKFTY1MnGzosoKda8siEnZqjQchA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-402-5ZYWsX5eNluUaNaSkmL5RQ-1; Mon, 20 Jan 2020 10:56:47 -0500
+X-MC-Unique: 5ZYWsX5eNluUaNaSkmL5RQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7439910054E3;
+        Mon, 20 Jan 2020 15:56:44 +0000 (UTC)
+Received: from w520.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E97767DB34;
+        Mon, 20 Jan 2020 15:56:40 +0000 (UTC)
+Date:   Mon, 20 Jan 2020 08:56:40 -0700
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        Alexandru Gagniuc <alex_gagniuc@dellteam.com>,
+        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jan Vesely <jano.vesely@gmail.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Austin Bolen <austin_bolen@dell.com>,
+        Shyam Iyer <Shyam_Iyer@dell.com>,
+        Sinan Kaya <okaya@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Issues with "PCI/LINK: Report degraded links via link bandwidth
+ notification"
+Message-ID: <20200120085640.53dc9652@w520.home>
+In-Reply-To: <20200120023326.GA149019@google.com>
+References: <20200115221008.GA191037@google.com>
+        <20200120023326.GA149019@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Date:   Mon, 20 Jan 2020 16:55:55 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Tudor.Ambarus@microchip.com
-Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        richard@nod.at, vigneshr@ti.com, miquel.raynal@bootlin.com
-Subject: Re: [PATCH] mtd: spi-nor: Add support for w25qNNjwim
-In-Reply-To: <3862353.UOg0IvECEa@localhost.localdomain>
-References: <20200103223423.14025-1-michael@walle.cc>
- <8021667.67K7kvUAe6@192.168.0.113>
- <66c1ad8e74fb20a061f35f8b23a925ab@walle.cc>
- <3862353.UOg0IvECEa@localhost.localdomain>
-Message-ID: <d3f03e392c060ff4ed4c2ae8a8999d9f@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.8
-X-Spamd-Bar: /
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 41D2A22FEB
-X-Spamd-Result: default: False [-0.10 / 15.00];
-         ARC_NA(0.00)[];
-         FROM_HAS_DN(0.00)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         TO_DN_NONE(0.00)[];
-         RCPT_COUNT_FIVE(0.00)[6];
-         DKIM_SIGNED(0.00)[];
-         NEURAL_HAM(-0.00)[-0.721];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         MID_RHS_MATCH_FROM(0.00)[]
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tudor,
+On Sun, 19 Jan 2020 20:33:26 -0600
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-Am 2020-01-20 12:03, schrieb Tudor.Ambarus@microchip.com:
-> On Monday, January 20, 2020 12:24:25 AM EET Michael Walle wrote:
->> EXTERNAL EMAIL: Do not click links or open attachments unless you know 
->> the
->> content is safe
->> 
->> Hi Tudor,
+> [+cc NVMe, GPU driver folks]
 > 
-> Hi, Michael,
+> On Wed, Jan 15, 2020 at 04:10:08PM -0600, Bjorn Helgaas wrote:
+> > I think we have a problem with link bandwidth change notifications
+> > (see https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/pcie/bw_notification.c).
+> > 
+> > Here's a recent bug report where Jan reported "_tons_" of these
+> > notifications on an nvme device:
+> > https://bugzilla.kernel.org/show_bug.cgi?id=206197
+> > 
+> > There was similar discussion involving GPU drivers at
+> > https://lore.kernel.org/r/20190429185611.121751-2-helgaas@kernel.org
+> > 
+> > The current solution is the CONFIG_PCIE_BW config option, which
+> > disables the messages completely.  That option defaults to "off" (no
+> > messages), but even so, I think it's a little problematic.
+> > 
+> > Users are not really in a position to figure out whether it's safe to
+> > enable.  All they can do is experiment and see whether it works with
+> > their current mix of devices and drivers.
+> > 
+> > I don't think it's currently useful for distros because it's a
+> > compile-time switch, and distros cannot predict what system configs
+> > will be used, so I don't think they can enable it.
+> > 
+> > Does anybody have proposals for making it smarter about distinguishing
+> > real problems from intentional power management, or maybe interfaces
+> > drivers could use to tell us when we should ignore bandwidth changes?  
 > 
->> 
->> >> Am 2020-01-13 11:07, schrieb Michael Walle:
->> >> >>> Btw. is renaming the flashes also considered a backwards incomaptible
->> >> >>> change?
->> >> >>
->> >> >> No, we can fix the names.
->> >> >>
->> >> >>> And can there be two flashes with the same name? Because IMHO it
->> >> >>> would
->> >> >>> be
->> >> >>
->> >> >> I would prefer that we don't. Why would you have two different
->> >> >> jedec-ids with
->> >> >> the same name?
->> >> >
->> >> > Because as pointed out in the Winbond example you cannot distiguish
->> >> > between
->> >> > W25Q32DW and W25Q32JWIQ; and in the Macronix example between MX25L8005
->> >> > and
->> >> > MX25L8006E. Thus my reasoning was to show only the common part, ie
->> >> > W25Q32
->> >> > or MX25L80 which should be the same for this particular ID. Like I
->> >> > said, I'd
->> >> > prefer showing an ambiguous name instead of a wrong one. But then you
->> >> > may
->> >> > have different IDs with the same ambiguous name.
->> >>
->> >> Another solution would be to have the device tree provide a hint for
->> >> the
->> >> actual flash chip. There would be multiple entries in the spi_nor_ids
->> >> with the
->> >> same flash id. By default the first one is used (keeping the current
->> >> behaviour). If there is for example
->> >>
->> >>    compatible = "jedec,spi-nor", "w25q32jwq";
->> >>
->> >> the flash_info for the w25q32jwq will be chosen.
->> >
->> > This won't work for plug-able flashes. You will influence the name in
->> > dt to be
->> > chosen as w25q32jwq, and if you change w25q32jwq with w25q32dw you will
->> > end up
->> > with a wrong name for w25q32dw, thus the same problem.
->> 
->> No, because then the device tree is wrong and doesn't fit the 
->> hardware.
->> You'd
->> have to some instance which could change the device tree node, like 
->> the
->> bootloader or some device tree overlay for plugable flashes. We should
->> try to
->> solve the actual problem at hand first..
->> 
->> It is just not possible to autodetect the SPI flash, just because
->> the vendors reuse the same IDs for flashes with different features 
->> (and
->> the
->> SFDP is likely not enough). Therefore, you need to have a hint in some
->> place
->> to use the flash properly.
->> 
->> > If the flashes are identical but differ just in terms of name, we can
->> > rename
->> > the flash to "w25q32jwq (w25q32dw)". I haven't studied the differences
->> > between
->> > these flashes; if you want to fix them, send a patch and I'll try to
->> > help.
->> 
->> It is not only the name, here are two examples which differ in
->> functionality:
->>   (1) mx25l8005 doesn't support dual/quad mode. mx25l8006e supports
->> dual/quad
->>       mode
->>   (2) mx25u3235f doesn't support TB bit, mx25u3232e has a TB bit.
->> 
->> well.. to repeat myself, the mx25l25635_post_bfpt_fixups is a third
+> NVMe, GPU folks, do your drivers or devices change PCIe link
+> speed/width for power saving or other reasons?  When CONFIG_PCIE_BW=y,
+> the PCI core interprets changes like that as problems that need to be
+> reported.
 > 
-> sorry if this exhausted you.
-
-TBH, this is no fun (and I'm doing this on my spare time because I like
-open source). I guess our opinions differ waaay too much. I don't
-really like band-aid fixes; eg. with vague information "it seems that
-the F version adveritses support for Fast Read 4-4-4", what about other
-flashes with that idcode and this property. This might break at any time
-or with anyone trying support for other flashes with that ID.
-
-That's what I've meant with first come first serve, I'm lucky now that
-there was no flash with the same jedec id as the W25Q32JW.
-
-To add the MX25U3232F I could check the JEDEC revision (or the BFPT
-length) because it differers from the MX25U3235F. But I don't feel well
-doing that. Who says Macronix won't update their description for the
-MX25U3235F to the new revision.. FYI the Winbond guys apparently use the
-first OTP region to store the JEDEC data, which is clever because they
-can update it during production.
-
->> example.
->> 
+> If drivers do change link speed/width, can you point me to where
+> that's done?  Would it be feasible to add some sort of PCI core
+> interface so the driver could say "ignore" or "pay attention to"
+> subsequent link changes?
 > 
-> Flash auto-detection is nice and we should preserve it if possible. I 
-> would
-> prefer having a post bfpt fixup than giving a hint about the flash in 
-> the
-> compatible.
+> Or maybe there would even be a way to move the link change itself into
+> the PCI core, so the core would be aware of what's going on?
 
-see above.
+One case where we previously saw sporadic link change messages was
+vfio-pci owned devices.  If the transitions are based on config space
+manipulation then I can trap those accesses and wrap them in a PCI core
+API, but I suspect that's not the exclusive (or potentially even
+primary) mechanism for initiating link changes.  So I think we'd
+probably need a mechanism for a driver to opt-out of link notification
+for their devices (presumably the fn0 device per link would opt-out the
+entire link?).  Thanks,
 
-> The flashes that you mention are quite old and I don't know if it
-> is worth to harm the auto-detection for them. A compromise has to be 
-> made.
+Alex
 
-so you'd drop support for them? because SFDP is never read if there is 
-no
-DUAL_READ or QUAD_READ flag.
-
-> You can gain traction in your endeavor if you have such a flash and 
-> there's
-> nothing auto-detectable that differentiates it from some other flash 
-> that
-> shares the sama jedec-id.
-> 
-> If you have such a flash and you care about it, send a patch and I'll 
-> try to
-> help.
-
-Given my reasoning above.. well maybe in the future. The Macronix would 
-be
-a second source candidate. For now we are using the Winbond flash.
-
-I would rather like to have the flash protection topic and OTP support
-sorted out, because that is something we are actually using.
-
--michael
-
-> 
->> -michael
->> 
->> > Cheers,
->> > ta
->> >
->> >> I know this will conflict with the new rule that there should only be
->> >>
->> >>    compatible = "jedec,spi-nor";
->> >>
->> >> without the actual flash chip. But it seems that it is not always
->> >> possible
->> >> to just use the jedec id to match the correct chip.
->> >>
->> >> Also see for example mx25l25635_post_bfpt_fixups() which tries to
->> >> figure
->> >> out different behaviour by looking at "some" SFDP data. In this case
->> >> we
->> >> might have been lucky, but I fear that this won't work in all cases
->> >> and
->> >> for older flashes it won't work at all.
->> >>
->> >> BTW I do not suggest to add the strings to the the spi_nor_dev_ids[].
->> >>
->> >> I guess that would be a less invasive way to fix different flashes
->> >> with
->> >> same jedec ids.
->> >>
->> >> -michael
