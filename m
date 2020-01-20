@@ -2,162 +2,170 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A7E9C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:51:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 135D5C32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 092D722522
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:51:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6ED322522
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:59:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="epC64Lfh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WMoUJnxP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbgATWv6 (ORCPT
+        id S1726942AbgATW7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 17:51:58 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:40159 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726607AbgATWv6 (ORCPT
+        Mon, 20 Jan 2020 17:59:15 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:58630 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726816AbgATW7O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 17:51:58 -0500
-Received: by mail-pj1-f67.google.com with SMTP id bg7so442375pjb.5
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 14:51:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=axtens.net; s=google;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=w0zMfmjniH4zzHcGVzEyuTowhv2zMpn6uusMDHHpzZQ=;
-        b=epC64LfhOt/+j38AGGJ1UuLq2UW9B2CyXRfcRTnaw89Udb+rexQXQ2/Z4fMSoOdT2U
-         XJdh1SLFUcFFV/GO8+Hlec1oIA2TQ/t9/OWFpd74VQJvaWow/SOWQhIXJuzCgB8LUJJp
-         bIe4XKDP0CmPZVDAn+zcRNZM9AdpE44Lt4eVE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version:content-transfer-encoding;
-        bh=w0zMfmjniH4zzHcGVzEyuTowhv2zMpn6uusMDHHpzZQ=;
-        b=NgwQRx15L3nRx/6+76UsQtEMtRGrQ0t0aVOcx8V7VId+15YZDyvTgXmbgtHQK6OsbU
-         GRCCPfHvMLTrCxqZkeVBXKtmXGZ5F7zMLgbxoVitHUDTwMtKcuc7Z/de0HDIo2GCm/e4
-         Z0s2lQAbHzgsJSXubJHkvjvHC0+tn+AtOnMpxr5JBxr0QbrXIToQxYnfFbwQyJpS8eGw
-         QnEeB7Vay9wKnDKPQzKP2s7gUZMN/Kif+WPLZM3k1NdnyWAgi6YaC3kdhflA2FpL2Jce
-         olBvP/jlVwGWQhPsXbUskhr6+y7bn/TsCX6pgKqaBVXUR4+UovnMEWShwYB0CcjJeLGv
-         wLLg==
-X-Gm-Message-State: APjAAAUBxTDwMExuQyy5xTwMcYpW/afYc4IG5FUgorGvZrLUKq7BVSaU
-        5gqEAyQDiR5u12BeCwG/yvGlfw==
-X-Google-Smtp-Source: APXvYqy/1x59yiJFYrOMghpFcNNE55t7k7m33lxIBZKtqS7BILoXWoJW6mXDP21Ecj+V3cPxMWr44Q==
-X-Received: by 2002:a17:902:fe17:: with SMTP id g23mr2190434plj.42.1579560717171;
-        Mon, 20 Jan 2020 14:51:57 -0800 (PST)
-Received: from localhost (2001-44b8-1113-6700-4064-d910-a710-f29a.static.ipv6.internode.on.net. [2001:44b8:1113:6700:4064:d910:a710:f29a])
-        by smtp.gmail.com with ESMTPSA id v10sm38692738pgk.24.2020.01.20.14.51.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 14:51:56 -0800 (PST)
-From:   Daniel Axtens <dja@axtens.net>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     kernel-hardening@lists.openwall.com, linux-mm@kvack.org,
-        keescook@chromium.org, linux-kernel@vger.kernel.org,
-        akpm@linux-foundation.org
-Subject: Re: [PATCH 4/5] [VERY RFC] mm: kmalloc(_node): return NULL immediately for SIZE_MAX
-In-Reply-To: <20200120111411.GX18451@dhcp22.suse.cz>
-References: <20200120074344.504-1-dja@axtens.net> <20200120074344.504-5-dja@axtens.net> <20200120111411.GX18451@dhcp22.suse.cz>
-Date:   Tue, 21 Jan 2020 09:51:52 +1100
-Message-ID: <87pnfdkagn.fsf@dja-thinkpad.axtens.net>
+        Mon, 20 Jan 2020 17:59:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579561154;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=UYSjWv1dfnioBe8F1SvdnjqlkR0e7zTphIpvFJSRRIE=;
+        b=WMoUJnxPrxB3Lp6s0xqQE2I42FEfi8x6pN8GOOmRzyovzTaSEeuxf24WjXyk6R9I6D7j83
+        PxYg5hlYwI4AgFBIZ9+CdbhtXaEDpT7kHpAyqXWtc71+AZ1wOk+JUee13x7tucvp1kAKkW
+        hYbR312d+kIH0Twz+l7klogrenh1Q7k=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-305-FxJAN8_wOWiCy0tquRdetw-1; Mon, 20 Jan 2020 17:59:10 -0500
+X-MC-Unique: FxJAN8_wOWiCy0tquRdetw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2F5CB18FF661;
+        Mon, 20 Jan 2020 22:59:09 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-16.pek2.redhat.com [10.72.8.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id AF5D61001B2D;
+        Mon, 20 Jan 2020 22:59:02 +0000 (UTC)
+Date:   Tue, 21 Jan 2020 06:58:58 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mingfangsen <mingfangsen@huawei.com>, Guiyao <guiyao@huawei.com>,
+        zhangsaisai <zhangsaisai@huawei.com>,
+        "wubo (T)" <wubo40@huawei.com>
+Subject: Re: [PATCH V3] brd: check and limit max_part par
+Message-ID: <20200120225858.GB19571@ming.t460p>
+References: <c8236e55-f64f-ef40-b394-8b7e86ce50df@huawei.com>
+ <20200115022725.GA14585@ming.t460p>
+ <ce5823ea-2183-90df-05b0-c02d1f654be3@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <ce5823ea-2183-90df-05b0-c02d1f654be3@huawei.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michal,
+On Mon, Jan 20, 2020 at 09:14:50PM +0800, Zhiqiang Liu wrote:
+>=20
+>=20
+> On 2020/1/15 10:27, Ming Lei wrote:
+>=20
+> >=20
+> >>  MODULE_PARM_DESC(rd_nr, "Maximum number of brd devices");
+> >>
+> >>  unsigned long rd_size =3D CONFIG_BLK_DEV_RAM_SIZE;
+> >>  module_param(rd_size, ulong, 0444);
+> >>  MODULE_PARM_DESC(rd_size, "Size of each RAM disk in kbytes.");
+> >>
+> >> -static int max_part =3D 1;
+> >> -module_param(max_part, int, 0444);
+> >> +static unsigned int max_part =3D 1;
+> >> +module_param(max_part, uint, 0444);
+> >=20
+> > The above change isn't needed.
+> Thanks for your suggestion.
+> I will remove that in v4 patch.
+> >=20
+> >>  MODULE_PARM_DESC(max_part, "Num Minors to reserve between devices")=
+;
+> >>
+> >>  MODULE_LICENSE("GPL");
+> >> @@ -393,7 +393,14 @@ static struct brd_device *brd_alloc(int i)
+> >>  	if (!disk)
+> >>  		goto out_free_queue;
+> >>  	disk->major		=3D RAMDISK_MAJOR;
+> >> -	disk->first_minor	=3D i * max_part;
+> >> +	/*
+> >> +	 * Clear .minors when running out of consecutive minor space since
+> >> +	 * GENHD_FL_EXT_DEVT is set, and we can allocate from extended dev=
+t.
+> >> +	 */
+> >> +	if ((i * disk->minors) & ~MINORMASK)
+> >> +		disk->minors =3D 0;
+> >> +	else
+> >> +		disk->first_minor =3D i * disk->minors;
+> >=20
+> > The above looks a bit ugly, one nice way could be to change in
+> > brd_alloc():
+> >=20
+> > 	disk =3D brd->brd_disk =3D alloc_disk(((i * max_part) & ~MINORMASK) =
+?
+> > 		0 : max_part);
+>=20
+> I will change it as your suggestion.
+>=20
+> >=20
+> >>  	disk->fops		=3D &brd_fops;
+> >>  	disk->private_data	=3D brd;
+> >>  	disk->queue		=3D brd->brd_queue;
+> >> @@ -468,6 +475,21 @@ static struct kobject *brd_probe(dev_t dev, int=
+ *part, void *data)
+> >>  	return kobj;
+> >>  }
+> >>
+> >> +static inline void brd_check_and_reset_par(void)
+> >> +{
+> >> +	if (unlikely(!rd_nr))
+> >> +		rd_nr =3D 1;
+> >=20
+> > zero rd_nr should work as expected, given user can create dev file vi=
+a
+> > mknod, and brd_probe() will be called for populate brd disk/queue whe=
+n
+> > the disk file is opened.
+> >=20
+> >> +static inline void brd_check_and_reset_par(void)
+> >> +{
+> >> + =A0 =A0 =A0 if (unlikely(!rd_nr))
+> >> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 rd_nr =3D 1;
+> >> +
+> >> + =A0 =A0 =A0 if (unlikely(!max_part))
+> >> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 max_part =3D 1;
+> >=20
+> > Another limit is that 'max_part' needs to be divided exactly by (1U <=
+<
+> > MINORBITS), something like:
+> >=20
+> > 	max_part =3D 1UL << fls(max_part)
+>=20
+> Do we have to limit that 'max_part' needs to be divided exactly by (1U =
+<<
+> > MINORBITS)? As your suggestion, the i * max_part is larger than MINOR=
+MASK,
+> we can allocate from extended devt.
 
->> For example, struct_size(struct, array member, array elements) returns t=
-he
->> size of a structure that has an array as the last element, containing a
->> given number of elements, or SIZE_MAX on overflow.
->>=20
->> However, struct_size operates in (arguably) unintuitive ways at compile =
-time.
->> Consider the following snippet:
->>=20
->> struct foo {
->> 	int a;
->> 	int b[0];
->> };
->>=20
->> struct foo *alloc_foo(int elems)
->> {
->> 	struct foo *result;
->> 	size_t size =3D struct_size(result, b, elems);
->> 	if (__builtin_constant_p(size)) {
->> 		BUILD_BUG_ON(size =3D=3D SIZE_MAX);
->> 	}
->> 	result =3D kmalloc(size, GFP_KERNEL);
->> 	return result;
->> }
->>=20
->> I expected that size would only be constant if alloc_foo() was called
->> within that translation unit with a constant number of elements, and the
->> compiler had decided to inline it. I'd therefore expect that 'size' is o=
-nly
->> SIZE_MAX if the constant provided was a huge number.
->>=20
->> However, instead, this function hits the BUILD_BUG_ON, even if never
->> called.
->>=20
->> include/linux/compiler.h:394:38: error: call to =E2=80=98__compiletime_a=
-ssert_32=E2=80=99 declared with attribute error: BUILD_BUG_ON failed: size =
-=3D=3D SIZE_MAX
->
-> This sounds more like a bug to me. Have you tried to talk to compiler
-> guys?
+Exact dividing is for reserving same minors for all disks with
+RAMDISK_MAJOR, otherwise there is still chance to get same dev_t when
+adding partitions.
 
-You're now the second person to suggest this to me, so I will do that
-today.
+Extended devt is for covering more disks, not related with 'max_part'.
 
->> This is with gcc 9.2.1, and I've also observed it with an gcc 8 series
->> compiler.
->>=20
->> My best explanation of this is:
->>=20
->>  - elems is a signed int, so a small negative number will become a very
->>    large unsigned number when cast to a size_t, leading to overflow.
->>=20
->>  - Then, the only way in which size can be a constant is if we hit the
->>    overflow case, in which 'size' will be 'SIZE_MAX'.
->>=20
->>  - So the compiler takes that value into the body of the if statement and
->>    blows up.
->>=20
->> But I could be totally wrong.
->>=20
->> Anyway, this is relevant to slab.h because kmalloc() and kmalloc_node()
->> check if the supplied size is a constant and take a faster path if so. A
->> number of callers of those functions use struct_size to determine the si=
-ze
->> of a memory allocation. Therefore, at compile time, those functions will=
- go
->> down the constant path, specialising for the overflow case.
->>=20
->> When my next patch is applied, gcc will then throw a warning any time
->> kmalloc_large could be called with a SIZE_MAX size, as gcc deems SIZE_MAX
->> to be too big an allocation.
->>=20
->> So, make functions that check __builtin_constant_p check also against
->> SIZE_MAX in the constant path, and immediately return NULL if we hit it.
->
-> I am not sure I am happy about an additional conditional path in the hot
-> path of the allocator. Especially when we already have a check for
-> KMALLOC_MAX_CACHE_SIZE.
 
-It is guarded by __builtin_constant_p in both cases, so it should not
-cause an additional runtime branch. But I'll check in with our friendly
-local compiler folks and see where that leads first.
+Thanks,
+Ming
 
-Regards,
-Daniel
-
-> --=20
-> Michal Hocko
-> SUSE Labs
