@@ -2,111 +2,115 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84FC3C33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:50:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4093AC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AE0A22522
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:50:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EwcOXp5j"
+	by mail.kernel.org (Postfix) with ESMTP id 19BD92073D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:51:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729210AbgATQuu (ORCPT
+        id S1729273AbgATQvE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 11:50:50 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:49225 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726876AbgATQuu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 11:50:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579539049;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=jLPz2Zth+2ZStIwZ+5ljQmnZerYZCaQViHX5ArD0Uso=;
-        b=EwcOXp5jNtAhkQiwO94Hap0MS44E4hDFiLOfzuTu3qMkTY/F3B6QOFJe6j7KOz4yTRc53K
-        VDrbNwAluxmjXzXAQmz2gsjWF5D8fFFuoQEbQgvRhR5OD/oDSr5LEj8QeZO59QB3LyYqgN
-        Q2eEYeh4peo37ALkrrbBse0TkMkCLsA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-423-jvNGqmbPODqUa4-fwhBrLA-1; Mon, 20 Jan 2020 11:50:47 -0500
-X-MC-Unique: jvNGqmbPODqUa4-fwhBrLA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 20 Jan 2020 11:51:04 -0500
+Received: from mga04.intel.com ([192.55.52.120]:45399 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726942AbgATQvD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 11:51:03 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 08:51:03 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,342,1574150400"; 
+   d="scan'208";a="275080916"
+Received: from linux.intel.com ([10.54.29.200])
+  by FMSMGA003.fm.intel.com with ESMTP; 20 Jan 2020 08:51:03 -0800
+Received: from [10.251.23.107] (kliang2-mobl.ccr.corp.intel.com [10.251.23.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7A15D8018CC;
-        Mon, 20 Jan 2020 16:50:44 +0000 (UTC)
-Received: from treble (ovpn-125-19.rdu2.redhat.com [10.10.125.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C9F308643A;
-        Mon, 20 Jan 2020 16:50:41 +0000 (UTC)
-Date:   Mon, 20 Jan 2020 10:50:39 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
+        by linux.intel.com (Postfix) with ESMTPS id 1D39E58033E;
+        Mon, 20 Jan 2020 08:51:02 -0800 (PST)
+Subject: Re: [RESEND PATCH V5 1/2] perf/core: Add new branch sample type for
+ HW index of raw branch records
 To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Jessica Yu <jeyu@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
-        x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, live-patching@vger.kernel.org,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
-Message-ID: <20200120165039.6hohicj5o52gdghu@treble>
-References: <20191011125903.GN2359@hirez.programming.kicks-ass.net>
- <20191015130739.GA23565@linux-8ccs>
- <20191015135634.GK2328@hirez.programming.kicks-ass.net>
- <alpine.LSU.2.21.1910151611000.13169@pobox.suse.cz>
- <88bab814-ea24-ece9-2bc0-7a1e10a62f12@redhat.com>
- <20191015153120.GA21580@linux-8ccs>
- <7e9c7dd1-809e-f130-26a3-3d3328477437@redhat.com>
- <20191015182705.1aeec284@gandalf.local.home>
- <20191016074217.GL2328@hirez.programming.kicks-ass.net>
- <20191021150549.bitgqifqk2tbd3aj@treble>
+Cc:     eranian@google.com, acme@redhat.com, mingo@kernel.org,
+        mpe@ellerman.id.au, linux-kernel@vger.kernel.org, jolsa@kernel.org,
+        namhyung@kernel.org, vitaly.slobodskoy@intel.com,
+        pavel.gerasimov@intel.com, ak@linux.intel.com
+References: <20200116155757.19624-1-kan.liang@linux.intel.com>
+ <20200116155757.19624-2-kan.liang@linux.intel.com>
+ <20200120092300.GK14879@hirez.programming.kicks-ass.net>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <88802724-aa70-23bc-b2c8-a7a34aa3dfe5@linux.intel.com>
+Date:   Mon, 20 Jan 2020 11:50:59 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191021150549.bitgqifqk2tbd3aj@treble>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <20200120092300.GK14879@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 10:05:49AM -0500, Josh Poimboeuf wrote:
-> On Wed, Oct 16, 2019 at 09:42:17AM +0200, Peter Zijlstra wrote:
-> > > which are not compatible with livepatching. GCC upstream now has
-> > > -flive-patching option, which disables all those interfering optimizations.
-> > 
-> > Which, IIRC, has a significant performance impact and should thus really
-> > not be used...
-> > 
-> > If distros ship that crap, I'm going to laugh at them the next time they
-> > want a single digit performance improvement because *important*.
+
+
+On 1/20/2020 4:23 AM, Peter Zijlstra wrote:
+> On Thu, Jan 16, 2020 at 07:57:56AM -0800, kan.liang@linux.intel.com wrote:
 > 
-> I have a crazy plan to try to use objtool to detect function changes at
-> a binary level, which would hopefully allow us to drop this flag.
+>>   struct perf_branch_stack {
+>>   	__u64				nr;
+>> +	__u64				hw_idx;
+>>   	struct perf_branch_entry	entries[0];
+>>   };
 > 
-> But regardless, I wonder if we enabled this flag prematurely.  We still
-> don't have a reasonable way to use it for creating source-based live
-> patches upstream, and it should really be optional for CONFIG_LIVEPATCH,
-> since kpatch-build doesn't need it.
+> The above and below order doesn't match.
+> 
+>> @@ -849,7 +853,11 @@ enum perf_event_type {
+>>   	 *	  char                  data[size];}&& PERF_SAMPLE_RAW
+>>   	 *
+>>   	 *	{ u64                   nr;
+>> -	 *        { u64 from, to, flags } lbr[nr];} && PERF_SAMPLE_BRANCH_STACK
+>> +	 *        { u64 from, to, flags } lbr[nr];
+>> +	 *
+>> +	 *        # only available if PERF_SAMPLE_BRANCH_HW_INDEX is set
+>> +	 *        u64			hw_idx;
+>> +	 *      } && PERF_SAMPLE_BRANCH_STACK
+> 
+> That wants to be written as:
+> 
+> 		{ u64			nr;
+> 		  { u64 from, to, flags; } entries[nr];
+> 		  { u64	hw_idx; } && PERF_SAMPLE_BRANCH_HW_INDEX
+> 		} && PERF_SAMPLE_BRANCH_STACK
+> 
+> But the big question is; why isn't it:
+> 
+> 		{ u64			nr;
+> 		  { u64	hw_idx; } && PERF_SAMPLE_BRANCH_HW_INDEX
+> 		  { u64 from, to, flags; } entries[nr];
+> 		} && PERF_SAMPLE_BRANCH_STACK
+> 
+> to match the struct perf_branch_stack order. Having that variable sized
+> entry in the middle just seems weird.
 
-I also just discovered that -flive-patching is responsible for all those
-"unreachable instruction" objtool warnings which Randy has been
-dutifully bugging me about over the last several months.  For some
-reason it subtly breaks GCC implicit noreturn detection for local
-functions.
 
-At this point, I only see downsides of -flive-patching, at least until
-we actually have real upstream code which needs it.
+Usually, new data should be output to the end of a sample.
+The comments and codes are all based on that way.
+However, the entries[0] is sized entry, so I have to put the hw_idx 
+before entry. It makes the inconsistency. Sorry for the confusion caused.
 
-If there aren't any objections I'll be posting a patch soon to revert.
+I will fix it in V6.
 
--- 
-Josh
+Thanks,
+Kan
 
+> 
+>>   	 *
+>>   	 * 	{ u64			abi; # enum perf_sample_regs_abi
+>>   	 * 	  u64			regs[weight(mask)]; } && PERF_SAMPLE_REGS_USER
