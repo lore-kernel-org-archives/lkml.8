@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76132C33CB8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5739C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:24:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 429DC21569
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:24:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C36C8208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:24:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729028AbgATMYh (ORCPT
+        id S1729050AbgATMYk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 07:24:37 -0500
-Received: from foss.arm.com ([217.140.110.172]:59542 "EHLO foss.arm.com"
+        Mon, 20 Jan 2020 07:24:40 -0500
+Received: from foss.arm.com ([217.140.110.172]:59558 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728977AbgATMYe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 07:24:34 -0500
+        id S1728992AbgATMYg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 07:24:36 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7A97530E;
-        Mon, 20 Jan 2020 04:24:33 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AABA613FD;
+        Mon, 20 Jan 2020 04:24:35 -0800 (PST)
 Received: from e120937-lin.cambridge.arm.com (e120937-lin.cambridge.arm.com [10.1.197.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 95F313F68E;
-        Mon, 20 Jan 2020 04:24:32 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C64CD3F68E;
+        Mon, 20 Jan 2020 04:24:34 -0800 (PST)
 From:   Cristian Marussi <cristian.marussi@arm.com>
 To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     sudeep.holla@arm.com, lukasz.luba@arm.com,
         james.quinlan@broadcom.com, cristian.marussi@arm.com
-Subject: [RFC PATCH 08/11] firmware: arm_scmi: Add Perf notifications support
-Date:   Mon, 20 Jan 2020 12:23:30 +0000
-Message-Id: <20200120122333.46217-9-cristian.marussi@arm.com>
+Subject: [RFC PATCH 10/11] firmware: arm_scmi: Add Reset notifications support
+Date:   Mon, 20 Jan 2020 12:23:32 +0000
+Message-Id: <20200120122333.46217-11-cristian.marussi@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200120122333.46217-1-cristian.marussi@arm.com>
 References: <20200120122333.46217-1-cristian.marussi@arm.com>
@@ -40,81 +40,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make SCMI Perf protocol register with the notification core.
+Make SCMI Reset protocol register with the notification core.
 
 Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
 ---
- drivers/firmware/arm_scmi/perf.c | 162 ++++++++++++++++++++++++++++++-
- include/linux/scmi_protocol.h    |  20 ++++
- 2 files changed, 181 insertions(+), 1 deletion(-)
+ drivers/firmware/arm_scmi/reset.c | 126 +++++++++++++++++++++++++++++-
+ include/linux/scmi_protocol.h     |  11 +++
+ 2 files changed, 136 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/firmware/arm_scmi/perf.c b/drivers/firmware/arm_scmi/perf.c
-index 88509ec637d0..3e09ced2adc8 100644
---- a/drivers/firmware/arm_scmi/perf.c
-+++ b/drivers/firmware/arm_scmi/perf.c
-@@ -14,6 +14,7 @@
- #include <linux/sort.h>
+diff --git a/drivers/firmware/arm_scmi/reset.c b/drivers/firmware/arm_scmi/reset.c
+index de73054554f3..528993d62fbb 100644
+--- a/drivers/firmware/arm_scmi/reset.c
++++ b/drivers/firmware/arm_scmi/reset.c
+@@ -6,6 +6,7 @@
+  */
  
  #include "common.h"
 +#include "notify.h"
  
- enum scmi_performance_protocol_cmd {
- 	PERF_DOMAIN_ATTRIBUTES = 0x3,
-@@ -86,6 +87,19 @@ struct scmi_perf_notify_level_or_limits {
- 	__le32 notify_enable;
+ enum scmi_reset_protocol_cmd {
+ 	RESET_DOMAIN_ATTRIBUTES = 0x3,
+@@ -40,6 +41,17 @@ struct scmi_msg_reset_domain_reset {
+ #define ARCH_COLD_RESET		(ARCH_RESET_TYPE | COLD_RESET_STATE)
  };
  
-+struct scmi_perf_limits_notify_payld {
-+	__le32 agent_id;
-+	__le32 domain_id;
-+	__le32 range_max;
-+	__le32 range_min;
++struct scmi_msg_reset_notify {
++	__le32 id;
++	__le32 event_control;
++#define RESET_TP_NOTIFY_ALL	BIT(0)
 +};
 +
-+struct scmi_perf_level_notify_payld {
-+	__le32 agent_id;
++struct scmi_reset_issued_notify_payld {
 +	__le32 domain_id;
-+	__le32 performance_level;
++	__le32 reset_state;
 +};
 +
- struct scmi_msg_resp_perf_describe_levels {
- 	__le16 num_returned;
- 	__le16 num_remaining;
-@@ -156,6 +170,14 @@ struct scmi_perf_info {
- 	u64 stats_addr;
- 	u32 stats_size;
- 	struct perf_dom_info *dom_info;
+ struct reset_dom_info {
+ 	bool async_reset;
+ 	bool reset_notify;
+@@ -51,8 +63,11 @@ struct scmi_reset_info {
+ 	u32 version;
+ 	int num_domains;
+ 	struct reset_dom_info *dom_info;
 +	const struct scmi_handle *handle;
-+};
-+
-+static struct scmi_perf_info *pinfo;
-+
-+static enum scmi_performance_protocol_cmd evt_2_cmd[] = {
-+	PERF_NOTIFY_LIMITS,
-+	PERF_NOTIFY_LEVEL,
  };
  
- static int scmi_perf_attributes_get(const struct scmi_handle *handle,
-@@ -488,6 +510,29 @@ static int scmi_perf_level_get(const struct scmi_handle *handle, u32 domain,
- 	return scmi_perf_mb_level_get(handle, domain, level, poll);
- }
++static struct scmi_reset_info *pinfo;
++
+ static int scmi_reset_attributes_get(const struct scmi_handle *handle,
+ 				     struct scmi_reset_info *pi)
+ {
+@@ -190,11 +205,101 @@ static struct scmi_reset_ops reset_ops = {
+ 	.deassert = scmi_reset_domain_deassert,
+ };
  
-+static int scmi_perf_level_limits_notify(const struct scmi_handle *handle,
-+					 u32 domain, int message_id,
-+					 bool enable)
++static int scmi_reset_notify(const struct scmi_handle *handle, u32 domain_id,
++			     bool enable)
 +{
 +	int ret;
++	u32 evt_cntl = enable ? RESET_TP_NOTIFY_ALL : 0;
 +	struct scmi_xfer *t;
-+	struct scmi_perf_notify_level_or_limits *notify;
++	struct scmi_msg_reset_notify *cfg;
 +
-+	ret = scmi_xfer_get_init(handle, message_id, SCMI_PROTOCOL_PERF,
-+				 sizeof(*notify), 0, &t);
++	ret = scmi_xfer_get_init(handle, RESET_NOTIFY,
++				 SCMI_PROTOCOL_RESET, sizeof(*cfg), 0, &t);
 +	if (ret)
 +		return ret;
 +
-+	notify = t->tx.buf;
-+	notify->domain = cpu_to_le32(domain);
-+	notify->notify_enable = enable ? cpu_to_le32(BIT(0)) : 0;
++	cfg = t->tx.buf;
++	cfg->id = cpu_to_le32(domain_id);
++	cfg->event_control = cpu_to_le32(evt_cntl);
 +
 +	ret = scmi_do_xfer(handle, t);
 +
@@ -122,37 +117,24 @@ index 88509ec637d0..3e09ced2adc8 100644
 +	return ret;
 +}
 +
- static bool scmi_perf_fc_size_is_valid(u32 msg, u32 size)
- {
- 	if ((msg == PERF_LEVEL_GET || msg == PERF_LEVEL_SET) && size == 4)
-@@ -710,11 +755,107 @@ static struct scmi_perf_ops perf_ops = {
- 	.est_power_get = scmi_dvfs_est_power_get,
- };
- 
-+static bool scmi_perf_set_notify_enabled(u8 evt_id, const u32 *src_id,
-+					 bool enable)
++static bool scmi_reset_set_notify_enabled(u8 evt_id, const u32 *src_id,
++					  bool enable)
 +{
-+	int ret, cmd_id;
-+
-+	cmd_id = MAP_EVT_TO_ENABLE_CMD(evt_id, evt_2_cmd);
-+	if (cmd_id < 0)
-+		return false;
++	int ret;
 +
 +	if (src_id) {
-+		ret = scmi_perf_level_limits_notify(pinfo->handle,
-+						    *src_id, cmd_id, enable);
++		ret = scmi_reset_notify(pinfo->handle, *src_id, enable);
 +		if (ret)
-+			pr_warn("Failed enabling SCMI Notifications - Perf - evt[%X] dom[%d] - ret:%d\n",
++			pr_warn("Failed enabling SCMI Notifications - Reset - evt[%X] dom[%d] - ret:%d\n",
 +				evt_id, *src_id, ret);
 +	} else {
 +		int r, dom;
 +
 +		ret = 1;
 +		for (dom = 0; dom < pinfo->num_domains; dom++) {
-+			r = scmi_perf_level_limits_notify(pinfo->handle, dom,
-+							  cmd_id, enable);
++			r = scmi_reset_notify(pinfo->handle, dom, enable);
 +			if (r)
-+				pr_warn("Failed enabling SCMI Notifications - Perf - evt[%X] dom[%d] - ret:%d\n",
++				pr_warn("Failed enabling SCMI Notifications - Reset - evt[%X] dom[%d] - ret:%d\n",
 +					evt_id, dom, r);
 +			ret *= r;
 +		}
@@ -161,42 +143,24 @@ index 88509ec637d0..3e09ced2adc8 100644
 +	return !ret ? true : false;
 +}
 +
-+static void *scmi_perf_fill_custom_report(u8 evt_id, u64 timestamp,
-+					  const void *payld, size_t payld_sz,
-+					  void *report, u32 *src_id)
++static void *scmi_reset_fill_custom_report(u8 evt_id, u64 timestamp,
++					   const void *payld, size_t payld_sz,
++					   void *report, u32 *src_id)
 +{
 +	void *rep = NULL;
 +
 +	switch (evt_id) {
-+	case PERFORMANCE_LIMITS_CHANGED:
++	case RESET_ISSUED:
 +	{
-+		const struct scmi_perf_limits_notify_payld *p = payld;
-+		struct scmi_perf_limits_report *r = report;
++		const struct scmi_reset_issued_notify_payld *p = payld;
++		struct scmi_reset_issued_report *r = report;
 +
 +		if (sizeof(*p) != payld_sz)
 +			break;
 +
 +		r->timestamp = timestamp;
-+		r->agent_id = le32_to_cpu(p->agent_id);
 +		r->domain_id = le32_to_cpu(p->domain_id);
-+		r->range_max = le32_to_cpu(p->range_max);
-+		r->range_min = le32_to_cpu(p->range_min);
-+		*src_id = r->domain_id;
-+		rep = r;
-+		break;
-+	}
-+	case PERFORMANCE_LEVEL_CHANGED:
-+	{
-+		const struct scmi_perf_level_notify_payld *p = payld;
-+		struct scmi_perf_level_report *r = report;
-+
-+		if (sizeof(*p) != payld_sz)
-+			break;
-+
-+		r->timestamp = timestamp;
-+		r->agent_id = le32_to_cpu(p->agent_id);
-+		r->domain_id = le32_to_cpu(p->domain_id);
-+		r->performance_level = le32_to_cpu(p->performance_level);
++		r->reset_state = le32_to_cpu(p->reset_state);
 +		*src_id = r->domain_id;
 +		rep = r;
 +		break;
@@ -208,90 +172,76 @@ index 88509ec637d0..3e09ced2adc8 100644
 +	return rep;
 +}
 +
-+static const struct scmi_event perf_events[] = {
++static const struct scmi_event reset_events[] = {
 +	{
-+		.evt_id = PERFORMANCE_LIMITS_CHANGED,
-+		.max_payld_sz = 16,
-+		.max_report_sz = sizeof(struct scmi_perf_limits_report),
-+	},
-+	{
-+		.evt_id = PERFORMANCE_LEVEL_CHANGED,
-+		.max_payld_sz = 12,
-+		.max_report_sz = sizeof(struct scmi_perf_level_report),
++		.evt_id = RESET_NOTIFY,
++		.max_payld_sz = 8,
++		.max_report_sz = sizeof(struct scmi_reset_issued_report),
 +	},
 +};
 +
-+static const struct scmi_protocol_event_ops perf_event_ops = {
-+	.set_notify_enabled = scmi_perf_set_notify_enabled,
-+	.fill_custom_report = scmi_perf_fill_custom_report,
++static const struct scmi_protocol_event_ops reset_event_ops = {
++	.set_notify_enabled = scmi_reset_set_notify_enabled,
++	.fill_custom_report = scmi_reset_fill_custom_report,
 +};
 +
- static int scmi_perf_protocol_init(struct scmi_handle *handle)
+ static int scmi_reset_protocol_init(struct scmi_handle *handle)
  {
  	int domain;
  	u32 version;
--	struct scmi_perf_info *pinfo;
+-	struct scmi_reset_info *pinfo;
  
- 	scmi_version_get(handle, SCMI_PROTOCOL_PERF, &version);
+ 	scmi_version_get(handle, SCMI_PROTOCOL_RESET, &version);
  
-@@ -742,7 +883,12 @@ static int scmi_perf_protocol_init(struct scmi_handle *handle)
- 			scmi_perf_domain_init_fc(handle, domain, &dom->fc_info);
+@@ -218,7 +323,12 @@ static int scmi_reset_protocol_init(struct scmi_handle *handle)
+ 		scmi_reset_domain_attributes_get(handle, domain, dom);
  	}
  
-+	scmi_register_protocol_events(SCMI_PROTOCOL_PERF, PAGE_SIZE,
-+				      &perf_event_ops, perf_events,
-+				      ARRAY_SIZE(perf_events));
++	scmi_register_protocol_events(SCMI_PROTOCOL_RESET, PAGE_SIZE,
++				      &reset_event_ops, reset_events,
++				      ARRAY_SIZE(reset_events));
 +
  	pinfo->version = version;
 +	pinfo->handle = handle;
- 	handle->perf_ops = &perf_ops;
- 	handle->perf_priv = pinfo;
+ 	handle->reset_ops = &reset_ops;
+ 	handle->reset_priv = pinfo;
  
-@@ -755,3 +901,17 @@ static int __init scmi_perf_init(void)
- 				      &scmi_perf_protocol_init);
+@@ -231,3 +341,17 @@ static int __init scmi_reset_init(void)
+ 				      &scmi_reset_protocol_init);
  }
- subsys_initcall(scmi_perf_init);
+ subsys_initcall(scmi_reset_init);
 +
-+int scmi_register_perf_event_notifier(u8 evt_id, u32 *dom_id,
-+				      struct notifier_block *nb)
++int scmi_register_reset_event_notifier(u8 evt_id, u32 *dom_id,
++				       struct notifier_block *nb)
 +{
-+	return scmi_register_event_notifier(SCMI_PROTOCOL_PERF, evt_id,
++	return scmi_register_event_notifier(SCMI_PROTOCOL_RESET, evt_id,
 +					    dom_id, nb);
 +}
 +
-+int scmi_unregister_perf_event_notifier(u8 evt_id, u32 *dom_id,
-+					struct notifier_block *nb)
++int scmi_unregister_reset_event_notifier(u8 evt_id, u32 *dom_id,
++					 struct notifier_block *nb)
 +{
-+	return scmi_unregister_event_notifier(SCMI_PROTOCOL_PERF, evt_id,
++	return scmi_unregister_event_notifier(SCMI_PROTOCOL_RESET, evt_id,
 +					      dom_id, nb);
 +}
 diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.h
-index 61bdfe0bebe2..a719f3cd394b 100644
+index 833e21af52fe..4af258f07c1e 100644
 --- a/include/linux/scmi_protocol.h
 +++ b/include/linux/scmi_protocol.h
-@@ -344,4 +344,24 @@ int scmi_register_power_event_notifier(u8 evt_id, u32 *dom_id,
- int scmi_unregister_power_event_notifier(u8 evt_id, u32 *dom_id,
- 					 struct notifier_block *nb);
+@@ -376,4 +376,15 @@ int scmi_register_sensor_event_notifier(u8 evt_id, u32 *sens_id,
+ int scmi_unregister_sensor_event_notifier(u8 evt_id, u32 *sens_id,
+ 					struct notifier_block *nb);
  
-+struct scmi_perf_limits_report {
++struct scmi_reset_issued_report {
 +	ktime_t	timestamp;
-+	u32	agent_id;
 +	u32	domain_id;
-+	u32	range_max;
-+	u32	range_min;
++	u32	reset_state;
 +};
 +
-+struct scmi_perf_level_report {
-+	ktime_t	timestamp;
-+	u32	agent_id;
-+	u32	domain_id;
-+	u32	performance_level;
-+};
-+
-+int scmi_register_perf_event_notifier(u8 evt_id, u32 *dom_id,
-+				      struct notifier_block *nb);
-+int scmi_unregister_perf_event_notifier(u8 evt_id, u32 *dom_id,
-+					struct notifier_block *nb);
++int scmi_register_reset_event_notifier(u8 evt_id, u32 *dom_id,
++				       struct notifier_block *nb);
++int scmi_unregister_reset_event_notifier(u8 evt_id, u32 *dom_id,
++					 struct notifier_block *nb);
 +
  #endif /* _LINUX_SCMI_PROTOCOL_H */
 -- 
