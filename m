@@ -2,100 +2,230 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=BAD_ENC_HEADER,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 670FBC33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A368DC32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 20:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D51422527
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:59:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E69822525
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 20:02:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=brennan.io header.i=stephen@brennan.io header.b="Pwe9wDFD"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HkRIfJVz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbgATT7V (ORCPT
+        id S1726951AbgATUCF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 14:59:21 -0500
-Received: from sender4-of-o51.zoho.com ([136.143.188.51]:21128 "EHLO
-        sender4-of-o51.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726586AbgATT7V (ORCPT
+        Mon, 20 Jan 2020 15:02:05 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:35180 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726752AbgATUCF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 14:59:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1579550348;
-        s=selector01; d=brennan.io; i=stephen@brennan.io;
-        h=Content-Transfer-Encoding:Content-Type:In-Reply-To:Date:Subject:From:To:Cc:Message-Id;
-        bh=zGEdNMOLYUYRRFqkqQsKe15wlZAeAg0gSQKMVkqOP1g=;
-        b=Pwe9wDFD2vVddbh4roqz2VZ+YSXzOhU7ZRLVdYZHQNQ4wDVmXyadx67RG0G5iEob
-        Cl7YPIGzVqy1fqpo08WLBkZEVb7ytHY1ooWF4rfqvPuNcrOXAQ/YHRk+dt96FxDd3Nt
-        LqisxORP7jbEwJheB7gfR5YRBhv8aQaFNCIC9WxM=
-Received: from localhost (195.173.24.136.in-addr.arpa [136.24.173.195]) by mx.zohomail.com
-        with SMTPS id 1579550343636345.40512828000374; Mon, 20 Jan 2020 11:59:03 -0800 (PST)
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Originaldate: Mon Jan 20, 2020 at 12:03 PM
-Originalfrom: "Nicolas Saenz Julienne" <nsaenzjulienne@suse.de>
-Original: =?utf-8?q?Hi_Stephen,
- =0D=0A=0D=0AOn_Sun,_2020-01-19_at_20:17_-0800,_Steph?=
- =?utf-8?q?en_Brennan_wrote:=0D=0A>_When_booting_Raspberry_Pi_4B_using_a_m?=
- =?utf-8?q?icro_SDHC_UHS_class_1_card,_the_SD=0D=0A>_card_partitions_never?=
- =?utf-8?q?_appear_in_/dev.__According_to_the_device_tree=0D=0A>_bindings_?=
- =?utf-8?q?for_Broadcom_IPROC_SDHCI_controller,_we_should_use=0D=0A>_"brcm?=
- =?utf-8?q?,bcm2711-emmc2"_compatible_string_on_BCM2711._Set_this_compatib?=
- =?utf-8?q?le=0D=0A>_string,_which_allows_these_cards_to_be_mounted.=0D=0A?=
- =?utf-8?q?>=3D20=0D=0A>_Signed-off-by:_Stephen_Brennan_<stephen@brennan.i?=
- =?utf-8?q?o>=0D=0A=0D=0AYour_UHS_class_1_card_should_work_out_of_the_box_?=
- =?utf-8?q?using_the_current_kernel=0D=0Aversion._Note_that_the_device_nod?=
- =?utf-8?q?e_is_defined_here:=0D=0A=0D=0Ahttps://git.kernel.org/pub/scm/li?=
- =?utf-8?q?nux/kernel/git/torvalds/linux.git/tree/arc=3D=0D=0Ah/arm/boot/d?=
- =?utf-8?q?ts/bcm2711.dtsi=3Fh=3D3Dv5.5-rc7#n255=0D=0A=0D=0Aand_enabled_he?=
- =?utf-8?q?re:=0D=0A=0D=0Ahttps://git.kernel.org/pub/scm/linux/kernel/git/?=
- =?utf-8?q?torvalds/linux.git/tree/arc=3D=0D=0Ah/arm/boot/dts/bcm2711-rpi-?=
- =?utf-8?q?4-b.dts=3Fh=3D3Dv5.5-rc7#n98=0D=0A=0D=0ARegards,=0D=0ANicolas?=
- =?utf-8?q?=0D=0A=0D=0A?=
-In-Reply-To: <936f10bbeca467ea8ebc669280a50c688730689d.camel@suse.de>
-Date:   Mon, 20 Jan 2020 11:59:00 -0800
-Subject: Re: [PATCH] ARM: dts: bcm2711: Use bcm2711 compatible for sdhci
-From:   "Stephen Brennan" <stephen@brennan.io>
-To:     "Nicolas Saenz Julienne" <nsaenzjulienne@suse.de>
-Cc:     "Mark Rutland" <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        <bcm-kernel-feedback-list@broadcom.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-rpi-kernel@lists.infradead.org>
-Message-Id: <C00VV4QDHC2Q.20QYUR6KOPB8G@pride>
-X-ZohoMailClient: External
+        Mon, 20 Jan 2020 15:02:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579550523;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=yXBBxKgjxdPXPXxh/cc9O4GvaQfZZ5zC481c5ThX3+8=;
+        b=HkRIfJVzUIE/3aSamgtnEjQRZwY74N0ahaYkZ2BE0djKT3N0/prMfU0h64IOtkPDbkBhLc
+        nPSfZz44IUO2w5/97U4+4o642EI/tl+v3A1gSpqxeYZbEi7RXQ9FCGkgM//5faPslc8PWq
+        WZ+KLgIOk6RGsees9zU9H+lj6JhBMQc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-21-beGNQvrDNBCvUTRoImg-bw-1; Mon, 20 Jan 2020 15:02:00 -0500
+X-MC-Unique: beGNQvrDNBCvUTRoImg-bw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D4466800D41;
+        Mon, 20 Jan 2020 20:01:58 +0000 (UTC)
+Received: from w520.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3A9321001B35;
+        Mon, 20 Jan 2020 20:01:58 +0000 (UTC)
+Date:   Mon, 20 Jan 2020 13:01:57 -0700
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Yan Zhao <yan.y.zhao@intel.com>
+Cc:     "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "peterx@redhat.com" <peterx@redhat.com>
+Subject: Re: [PATCH v2 2/2] drm/i915/gvt: subsitute kvm_read/write_guest
+ with vfio_dma_rw
+Message-ID: <20200120130157.0ee7042d@w520.home>
+In-Reply-To: <20200119100637.GD1759@joy-OptiPlex-7040>
+References: <20200115034132.2753-1-yan.y.zhao@intel.com>
+        <20200115035455.12417-1-yan.y.zhao@intel.com>
+        <20200115130651.29d7e9e0@w520.home>
+        <20200116054941.GB1759@joy-OptiPlex-7040>
+        <20200116083729.40983f38@w520.home>
+        <20200119100637.GD1759@joy-OptiPlex-7040>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nicolas,
+On Sun, 19 Jan 2020 05:06:37 -0500
+Yan Zhao <yan.y.zhao@intel.com> wrote:
 
-You're right, this patch doesn't work (it doesn't even touch the correct=20
-device tree node). My bad.
+> On Thu, Jan 16, 2020 at 11:37:29PM +0800, Alex Williamson wrote:
+> > On Thu, 16 Jan 2020 00:49:41 -0500
+> > Yan Zhao <yan.y.zhao@intel.com> wrote:
+> >   
+> > > On Thu, Jan 16, 2020 at 04:06:51AM +0800, Alex Williamson wrote:  
+> > > > On Tue, 14 Jan 2020 22:54:55 -0500
+> > > > Yan Zhao <yan.y.zhao@intel.com> wrote:
+> > > >     
+> > > > > As a device model, it is better to read/write guest memory using vfio
+> > > > > interface, so that vfio is able to maintain dirty info of device IOVAs.
+> > > > > 
+> > > > > Compared to kvm interfaces kvm_read/write_guest(), vfio_dma_rw() has ~600
+> > > > > cycles more overhead on average.
+> > > > > 
+> > > > > -------------------------------------
+> > > > > |    interface     | avg cpu cycles |
+> > > > > |-----------------------------------|
+> > > > > | kvm_write_guest  |     1554       |
+> > > > > | ----------------------------------|
+> > > > > | kvm_read_guest   |     707        |
+> > > > > |-----------------------------------|
+> > > > > | vfio_dma_rw(w)   |     2274       |
+> > > > > |-----------------------------------|
+> > > > > | vfio_dma_rw(r)   |     1378       |
+> > > > > -------------------------------------    
+> > > > 
+> > > > In v1 you had:
+> > > > 
+> > > > -------------------------------------
+> > > > |    interface     | avg cpu cycles |
+> > > > |-----------------------------------|
+> > > > | kvm_write_guest  |     1546       |
+> > > > | ----------------------------------|
+> > > > | kvm_read_guest   |     686        |
+> > > > |-----------------------------------|
+> > > > | vfio_iova_rw(w)  |     2233       |
+> > > > |-----------------------------------|
+> > > > | vfio_iova_rw(r)  |     1262       |
+> > > > -------------------------------------
+> > > > 
+> > > > So the kvm numbers remained within +0.5-3% while the vfio numbers are
+> > > > now +1.8-9.2%.  I would have expected the algorithm change to at least
+> > > > not be worse for small accesses and be better for accesses crossing
+> > > > page boundaries.  Do you know what happened?
+> > > >    
+> > > I only tested the 4 interfaces in GVT's environment, where most of the
+> > > guest memory accesses are less than one page.
+> > > And the different fluctuations should be caused by the locks.
+> > > vfio_dma_rw contends locks with other vfio accesses which are assumed to
+> > > be abundant in the case of GVT.  
+> > 
+> > Hmm, so maybe it's time to convert vfio_iommu.lock from a mutex to a
+> > rwsem?  Thanks,
+> >   
+> 
+> hi Alex
+> I tested your rwsem patches at (https://lkml.org/lkml/2020/1/16/1869).
+> They works without any runtime error at my side. :) 
+> However, I found out that the previous fluctuation may be because I didn't
+> take read/write counts in to account.
+> For example. though the two tests have different avg read/write cycles,
+> their average cycles are almost the same.
+>  ______________________________________________________________________
+> |        | avg read |            | avg write |            |            |
+> |        | cycles   | read cnt   | cycles    | write cnt  | avg cycles |
+> |----------------------------------------------------------------------|
+> | test 1 |   1339   | 29,587,120 |  2258     | 17,098,364 |    1676    |
+> | test 2 |   1340   | 28,454,262 |  2238     | 16,501,788 |    1670    |
+>  ----------------------------------------------------------------------
+> 
+> After measuring the exact read/write cnt and cycles of a specific workload,
+> I get below findings:
+> 
+> (1) with single VM running glmark2 inside.
+> glmark2: 40M+ read+write cnt, among which 63% is read.
+> among reads, 48% is of PAGE_SIZE, the rest is less than a page.
+> among writes, 100% is less than a page.
+> 
+>  __________________________________________________
+> |       cycles         | read | write |  avg | inc |
+> |--------------------------------------------------|
+> | kvm_read/write_page  |  694 |  1506 |  993 |  /  |
+> |--------------------------------------------------|
+> |  vfio_dma_rw(mutex)  | 1340 |  2248 | 1673 | 680 |
+> |--------------------------------------------------|
+> | vfio_dma_rw(rwsem r) | 1323 |  2198 | 1645 | 653 |
+>  ---------------------------------------------------
+> 
+> so vfio_dma_rw generally has 650+ more cycles per each read/write.
+> While kvm->srcu is of 160 cycles on average with one vm is running, the
+> cycles spending on locks for vfio_dma_rw spread like this:
+>  ___________________________
+> |        cycles       | avg |
+> |---------------------------|
+> |     iommu->lock     | 117 |
+> |---------------------------|
+> |   vfio.group_lock   | 108 |
+> |---------------------------|
+> | group->unbound_lock | 114 |
+> |---------------------------|
+> |  group->device_lock | 115 |
+> |---------------------------|
+> |     group->mutex    | 113 |
+>  ---------------------------
+> 
+> I measured the cycles for a mutex without any contention is 104 cycles
+> on average (including time for get_cycles() and measured in the same way
+> as other locks). So the contention of a single lock in a single vm
+> environment is light. probably because there's a vgpu lock hold in GVT already.
+> 
+> (2) with two VMs each running glmark2 inside.
+> The contention increases a little.
+> 
+>  ___________________________________________________
+> |       cycles         | read | write |  avg | inc  |
+> |---------------------------------------------------|
+> | kvm_read/write_page  | 1035 |  1832 | 1325 |  /   |
+> |---------------------------------------------------|
+> |  vfio_dma_rw(mutex)  | 2104 |  2886 | 2390 | 1065 |
+> |---------------------------------------------------|
+> | vfio_dma_rw(rwsem r) | 1965 |  2778 | 2260 | 935  |
+>  ---------------------------------------------------
+> 
+> 
+>  -----------------------------------------------
+> |     avg cycles       |   one VM   |  two VMs  |
+> |-----------------------------------------------|
+> |  iommu lock (mutex)  |     117    |   150     |
+> |-----------------------------------|-----------|
+> | iommu lock (rwsem r) |     117    |   156     |
+> |-----------------------------------|-----------|
+> |   kvm->srcu          |     160    |   213     |
+>  -----------------------------------------------
+> 
+> In the kvm case, avg cycles increased 332 cycles, while kvm->srcu only costed
+> 213 cycles. The rest 109 cycles may be spent on atomic operations.
+> But I didn't measure them, as get_cycles() operation itself would influence final
+> cycles by ~20 cycles.
 
-> Your UHS class 1 card should work out of the box using the current
-> kernel version.
+It seems like we need to extend the vfio external user interface so
+that GVT-g can hold the group and container user references across
+multiple calls.  For instance if we had a
+vfio_group_get_external_user_from_dev() (based on
+vfio_group_get_external_user()) then i915 could get an opaque
+vfio_group pointer which it could use to call vfio_group_dma_rw() which
+would leave us with only the iommu rw_sem locking.  i915 would release
+the reference with vfio_group_put_external_user() when the device is
+released.  The same could be done with the pin pages interface to
+streamline that as well.  Thoughts?  Thanks,
 
-I've been debugging an issue (reproduced on today's linux-next) in which my=
-=20
-UHS class 1 card's partitions don't show up in `/dev`. For example, if I do=
-=20
-`ls /dev | grep mmc`, I get just one result, "mmcblk1". I thought my patch=
-=20
-fixed the issue, but it turns out that the issue is sporadic: on some=20
-boots, the issue manifests. On others, the partitions appear in /dev as=20
-normal. When I tested this patch, the issue had sporadically disappeared,=
-=20
-leading me to believe the patch was effective.
-
-Sorry for the noise! If you have any suggestions on debugging this, I'd=20
-appreciate it. As far as I know it could be anything - the particular card,=
-=20
-the particular Pi, etc.
-
-Thanks,
-Stephen
+Alex
 
