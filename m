@@ -2,139 +2,86 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B977EC33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 23:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B69DC32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 23:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9804322522
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 23:05:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D5DA20882
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 23:08:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PMMUAYFb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbgATXFf (ORCPT
+        id S1727032AbgATXIV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 18:05:35 -0500
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:57058 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726752AbgATXFe (ORCPT
+        Mon, 20 Jan 2020 18:08:21 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:52856 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726752AbgATXIU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 18:05:34 -0500
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 87A943C04C1;
-        Tue, 21 Jan 2020 00:05:31 +0100 (CET)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 2kw2xE_nrUve; Tue, 21 Jan 2020 00:05:26 +0100 (CET)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 4B12F3C00C5;
-        Tue, 21 Jan 2020 00:05:26 +0100 (CET)
-Received: from lxhi-065.adit-jv.com (10.72.93.66) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 21 Jan
- 2020 00:05:25 +0100
-Date:   Tue, 21 Jan 2020 00:05:22 +0100
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     John Ogness <john.ogness@linutronix.de>
-CC:     <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        Sanjeev Chugh <sanjeev_chugh@mentor.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Daniel Wang <wonderfly@google.com>,
-        Dean Jenkins <dean_jenkins@mentor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dirk Behme <dirk.behme@de.bosch.com>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Jiri Slaby <jslaby@suse.com>,
-        Peter Feiner <pfeiner@google.com>,
-        <linux-serial@vger.kernel.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: [RFC PATCH v1 00/25] printk: new implementation
-Message-ID: <20200120230522.GA23636@lxhi-065.adit-jv.com>
-References: <20190212143003.48446-1-john.ogness@linutronix.de>
+        Mon, 20 Jan 2020 18:08:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=EodYlEmpwWAl9DTdaczpMAO/Teu6D46q7CSzgtYCgVY=; b=PMMUAYFb2tDSWSgQuk+bIbmJj
+        hZIa/MfnKK7Yl17lk5QDUd69m2UF5CLI0L1Ey4e+BsQpj76U3us2q1LSnh2I9UwpiBiZ0it1iBNKw
+        nEIcSDV1HkzFOmnR1Vkr0iKkSxLfl9SCeTW2hOLH78ET45MaXlx2cIlwAa9UZc2Fz7xjqZjx713uZ
+        iNuydb0EeCvUQNiYk0smRkU1J57E1iLj6YwI5H8PnK9yWQKMDZiEUUGGI3M9xixqD3nmNnrcSGJFz
+        2ADqa0/Mzjp5N4hqMqxdJoD0pqZud/AumShJGuOGhdoKbxCig9Ddo0VShoIuGbbzgyTBxZb6iaibB
+        lpNv6uDcg==;
+Received: from [2601:1c0:6280:3f0::ed68]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1itg9Z-0003dI-6u; Mon, 20 Jan 2020 23:08:17 +0000
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH -next] sched: fair.c: fix kernel-doc warning of @flags removal
+Message-ID: <27d7d14f-aab3-ea45-9efc-2e8099bc758b@infradead.org>
+Date:   Mon, 20 Jan 2020 15:08:15 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190212143003.48446-1-john.ogness@linutronix.de>
-X-Originating-IP: [10.72.93.66]
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello John, all,
+From: Randy Dunlap <rdunlap@infradead.org>
 
-Cc: Geert, Morimoto-san,
+Fix kernel-doc warning in kernel/sched/fair.c, caused by a recent
+function parameter removal:
 
-On Tue, Feb 12, 2019 at 03:29:38PM +0100, John Ogness wrote:
-> Hello,
-> 
-> As probably many of you are aware, the current printk implementation
-> has some issues. This series (against 5.0-rc6) makes some fundamental
-> changes in an attempt to address these issues. The particular issues I
-> am referring to:
-> 
-> 1. The printk buffer is protected by a global raw spinlock for readers
->    and writers. This restricts the contexts that are allowed to
->    access the buffer.
-> 
-> 2. Because of #1, NMI and recursive contexts are handled by deferring
->    logging/printing to a spinlock-safe context. This means that
->    messages will not be visible if (for example) the kernel dies in
->    NMI context and the irq_work mechanism does not survive.
-> 
-> 3. Because of #1, when *not* using features such as PREEMPT_RT, large
->    latencies exist when printing to slow consoles.
+../kernel/sched/fair.c:3526: warning: Excess function parameter 'flags' description in 'attach_entity_load_avg'
 
-This [1] is a fairly old thread, but I only recently stumbled upon it,
-while co-investigating below audio distortions [2] on R-Car3 ARM64
-boards, which can be reproduced by stressing [3] the serial console.
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc:	Ingo Molnar <mingo@redhat.com>
+Cc:	Peter Zijlstra <peterz@infradead.org>
+Cc:	Vincent Guittot <vincent.guittot@linaro.org> (SCHED_NORMAL)
+Cc:	Dietmar Eggemann <dietmar.eggemann@arm.com> (SCHED_NORMAL)
+---
+ kernel/sched/fair.c |    1 -
+ 1 file changed, 1 deletion(-)
 
-The investigation started a few months ago, when users reported
-audio drops during the first seconds of system startup. Only after
-a few weeks it became clear (thanks to some people in Cc) that the
-distortions were contributed by the above-average serial console load
-during the early boot. Once understood, we were able to come up with
-a synthetic test [2-3].
+--- linux-next-20200120.orig/kernel/sched/fair.c
++++ linux-next-20200120/kernel/sched/fair.c
+@@ -3516,7 +3516,6 @@ update_cfs_rq_load_avg(u64 now, struct c
+  * attach_entity_load_avg - attach this entity to its cfs_rq load avg
+  * @cfs_rq: cfs_rq to attach to
+  * @se: sched_entity to attach
+- * @flags: migration hints
+  *
+  * Must call update_cfs_rq_load_avg() before this, since we rely on
+  * cfs_rq->avg.last_update_time being current.
 
-I thought it would be interesting to share below reproduction matrix,
-in order to contrast vanilla to linux-rt-devel [4], as well as to
-compare various preemption models.
- 
-                           | Ser.console  Ser.console
-                           | stressed     at rest or disabled
-      --------------------------------------------
-      v5.5-rc6 (PREEMPT=y) | distorted    clean
-    v5.4.5-rt3 (PREEMPT=y) | distorted    clean
- v5.4.5-rt3 (PREEMPT_RT=y) | clean        clean
 
-My feeling is that the results probably do not surprise linux-rt people.
-
-My first question is, should there be any improvement in the case of
-v5.4.5-rt3 (PREEMPT=y), which I do not sense? I would expect so, based
-on the cover letter of this series (pointing out the advantages of the
-redesigned printk mechanism).
-
-And the other question is, how would you, generally speaking, tackle
-the problem, given that backporting the linux-rt patches is *not* an
-option and enabling serial console is a must?
-
-[1] https://lore.kernel.org/lkml/20190212143003.48446-1-john.ogness@linutronix.de/
-[2] H3ULCB> speaker-test -f24_LE -c2 -t wav -Dplughw:rcarsound -b 4000
-    https://vocaroo.com/9NV98mMgdjX
-[3] https://github.com/erosca/linux/tree/stress-serial
-[4] https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git/
-
--- 
-Best Regards,
-Eugeniu
