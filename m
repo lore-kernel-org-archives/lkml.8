@@ -2,140 +2,111 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B62C33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 02:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A19CC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 02:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2191820678
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 02:02:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51DD420714
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 02:37:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579485760;
-	bh=IgWnmFG4IWCDZ7oFxlaJMqo1c+sGlwmV3F6Rqf7BC48=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=0lyIxQtYX2Rsn0H4enOpX1x5VjImcjsHGTlikkhUEahYLRtul/80uxAFhgtl/kSBc
-	 01CloNfT9dHko8LoQ8R+i9ZW1TeYBsqY6e78BnYgYnqmBDPjFK+zegxx3txqtgSeg0
-	 wgNs0MPCqebJA1u12J+pdnI66QHbBLiC6fXUVPrY=
+	s=default; t=1579487836;
+	bh=1sYs9H8+JsDNq45a9MdMoXvIVGncR7j7QbIPXhvbpYk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=1QK6INdGocc0Dd/VDOtqnMf6p+ZDbLs7GfJdGwP9f4DO14jrPgpQku8zRJlw0g9z2
+	 mGfLRkKELHyTgRpoWoRSu8DR5+6Yav4Y3sxS3seyrHQN2jVORWeBMZpMBR8c5DXSnx
+	 d1fRc1gtBxOQiaD1Tlz7Fz/DbI6aMz9CwQuGGjnU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729021AbgATCCi (ORCPT
+        id S1729016AbgATCd2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 21:02:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43800 "EHLO mail.kernel.org"
+        Sun, 19 Jan 2020 21:33:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728931AbgATCCh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 21:02:37 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        id S1728874AbgATCd2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jan 2020 21:33:28 -0500
+Received: from localhost (108.sub-174-195-2.myvzw.com [174.195.2.108])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24A7620678;
-        Mon, 20 Jan 2020 02:02:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9387206B7;
+        Mon, 20 Jan 2020 02:33:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579485756;
-        bh=IgWnmFG4IWCDZ7oFxlaJMqo1c+sGlwmV3F6Rqf7BC48=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=XHWlK1OtrHCH+uzYyEW9WBn0OcAE7z/KrNkeW4ZdgQgSUKxkCIuPfhNsa5BOdxdHy
-         XFca+kRq/mYPxdlrRRWoaRBqHfWxwsoFwFOMfrqJZ1Suda4wJIzTBoo9BGHN/k7cHv
-         xJPxDMDEP6SmH4IsgZYupmw9IzpG7kDnoBXxU3O4=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id E4B9635227EF; Sun, 19 Jan 2020 18:02:35 -0800 (PST)
-Date:   Sun, 19 Jan 2020 18:02:35 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Andrea Parri <parri.andrea@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>
-Subject: Re: [PATCH] workqueue: Document (some) memory-ordering properties of
- {queue,schedule}_work()
-Message-ID: <20200120020235.GA8126@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200118215820.7646-1-parri.andrea@gmail.com>
+        s=default; t=1579487608;
+        bh=1sYs9H8+JsDNq45a9MdMoXvIVGncR7j7QbIPXhvbpYk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=zRTBpwFLl5+RLb8xQmoK3vv43rDvPwct1C7dMIpW6c9+bMbr2jjIqGKnveeIGRJsh
+         doH6uQxYWjjzzgjns6bZeRziMuG3ziUKa5wOAdde9sJj0hwD42yxE12WYMuv6kBqW3
+         rSBXfRgsCQYr3aVF7Jaf3i7ou25Qq4SWwr4gaU+k=
+Date:   Sun, 19 Jan 2020 20:33:26 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        Alexandru Gagniuc <alex_gagniuc@dellteam.com>,
+        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     Jan Vesely <jano.vesely@gmail.com>, Lukas Wunner <lukas@wunner.de>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Austin Bolen <austin_bolen@dell.com>,
+        Shyam Iyer <Shyam_Iyer@dell.com>,
+        Sinan Kaya <okaya@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Issues with "PCI/LINK: Report degraded links via link bandwidth
+ notification"
+Message-ID: <20200120023326.GA149019@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200118215820.7646-1-parri.andrea@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200115221008.GA191037@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 18, 2020 at 10:58:20PM +0100, Andrea Parri wrote:
-> It's desirable to be able to rely on the following property:  All stores
-> preceding (in program order) a call to a successful queue_work() will be
-> visible from the CPU which will execute the queued work by the time such
-> work executes, e.g.,
-> 
->   { x is initially 0 }
-> 
->     CPU0                              CPU1
-> 
->     WRITE_ONCE(x, 1);                 [ "work" is being executed ]
->     r0 = queue_work(wq, work);          r1 = READ_ONCE(x);
-> 
->   Forbids: r0 == true && r1 == 0
-> 
-> The current implementation of queue_work() provides such memory-ordering
-> property:
-> 
->   - In __queue_work(), the ->lock spinlock is acquired.
-> 
->   - On the other side, in worker_thread(), this same ->lock is held
->     when dequeueing work.
-> 
-> So the locking ordering makes things work out.
-> 
-> Add this property to the DocBook headers of {queue,schedule}_work().
-> 
-> Suggested-by: Paul E. McKenney <paulmck@kernel.org>
-> Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
+[+cc NVMe, GPU driver folks]
 
-Acked-by: Paul E. McKenney <paulmck@kernel.org>
-
-An alternative to Randy's suggestion of dropping the comma following
-the "cf." is to just drop that whole phrase.  I will let you and Randy
-work that one out, though.  ;-)
-
-> ---
->  include/linux/workqueue.h | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+On Wed, Jan 15, 2020 at 04:10:08PM -0600, Bjorn Helgaas wrote:
+> I think we have a problem with link bandwidth change notifications
+> (see https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/pcie/bw_notification.c).
 > 
-> diff --git a/include/linux/workqueue.h b/include/linux/workqueue.h
-> index 4261d1c6e87b1..4fef6c38b0536 100644
-> --- a/include/linux/workqueue.h
-> +++ b/include/linux/workqueue.h
-> @@ -487,6 +487,19 @@ extern void wq_worker_comm(char *buf, size_t size, struct task_struct *task);
->   *
->   * We queue the work to the CPU on which it was submitted, but if the CPU dies
->   * it can be processed by another CPU.
-> + *
-> + * Memory-ordering properties:  If it returns %true, guarantees that all stores
-> + * preceding the call to queue_work() in the program order will be visible from
-> + * the CPU which will execute @work by the time such work executes, e.g.,
-> + *
-> + * { x is initially 0 }
-> + *
-> + *   CPU0				CPU1
-> + *
-> + *   WRITE_ONCE(x, 1);			[ @work is being executed ]
-> + *   r0 = queue_work(wq, work);		  r1 = READ_ONCE(x);
-> + *
-> + * Forbids: r0 == true && r1 == 0
->   */
->  static inline bool queue_work(struct workqueue_struct *wq,
->  			      struct work_struct *work)
-> @@ -546,6 +559,9 @@ static inline bool schedule_work_on(int cpu, struct work_struct *work)
->   * This puts a job in the kernel-global workqueue if it was not already
->   * queued and leaves it in the same position on the kernel-global
->   * workqueue otherwise.
-> + *
-> + * Shares the same memory-ordering properties of queue_work(), c.f., the
-> + * DocBook header of queue_work().
->   */
->  static inline bool schedule_work(struct work_struct *work)
->  {
-> -- 
-> 2.24.0
+> Here's a recent bug report where Jan reported "_tons_" of these
+> notifications on an nvme device:
+> https://bugzilla.kernel.org/show_bug.cgi?id=206197
 > 
+> There was similar discussion involving GPU drivers at
+> https://lore.kernel.org/r/20190429185611.121751-2-helgaas@kernel.org
+> 
+> The current solution is the CONFIG_PCIE_BW config option, which
+> disables the messages completely.  That option defaults to "off" (no
+> messages), but even so, I think it's a little problematic.
+> 
+> Users are not really in a position to figure out whether it's safe to
+> enable.  All they can do is experiment and see whether it works with
+> their current mix of devices and drivers.
+> 
+> I don't think it's currently useful for distros because it's a
+> compile-time switch, and distros cannot predict what system configs
+> will be used, so I don't think they can enable it.
+> 
+> Does anybody have proposals for making it smarter about distinguishing
+> real problems from intentional power management, or maybe interfaces
+> drivers could use to tell us when we should ignore bandwidth changes?
+
+NVMe, GPU folks, do your drivers or devices change PCIe link
+speed/width for power saving or other reasons?  When CONFIG_PCIE_BW=y,
+the PCI core interprets changes like that as problems that need to be
+reported.
+
+If drivers do change link speed/width, can you point me to where
+that's done?  Would it be feasible to add some sort of PCI core
+interface so the driver could say "ignore" or "pay attention to"
+subsequent link changes?
+
+Or maybe there would even be a way to move the link change itself into
+the PCI core, so the core would be aware of what's going on?
+
+Bjorn
