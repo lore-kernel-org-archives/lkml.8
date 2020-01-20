@@ -2,67 +2,192 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F84EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6956BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCCF5217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:40:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D5A8217F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:40:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VbUJNHV1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729016AbgATPkt (ORCPT
+        id S1729121AbgATPkz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 10:40:49 -0500
-Received: from mx2.suse.de ([195.135.220.15]:42262 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726988AbgATPks (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 10:40:48 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 40E91B376;
-        Mon, 20 Jan 2020 15:40:44 +0000 (UTC)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     akpm@linux-foundation.org, jpoimboe@redhat.com, trivial@kernel.org
-Cc:     linux-kernel@vger.kernel.org, Miroslav Benes <mbenes@suse.cz>
-Subject: [PATCH] arch/Kconfig: Update HAVE_RELIABLE_STACKTRACE description
-Date:   Mon, 20 Jan 2020 16:40:42 +0100
-Message-Id: <20200120154042.9934-1-mbenes@suse.cz>
-X-Mailer: git-send-email 2.24.1
+        Mon, 20 Jan 2020 10:40:55 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:36450 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726819AbgATPkz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 10:40:55 -0500
+Received: by mail-ot1-f66.google.com with SMTP id m2so129744otq.3
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 07:40:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bW+iYMzyJar5RkTMPGCcQG+bJOCaKWAlm479KJ6EAJc=;
+        b=VbUJNHV1v/I38PKXDVIMoFye1oZVkkX7SJwJbvOOD7n4G2y8o79w3tA+/PDj1eFIAr
+         hBmicIIU24JnBiwvffKhfRYNCEfdtJNfQDpOzvQIxdCjivxW5TSMA7Wa3nZ38oePzy2+
+         qMKkH9Hhv9vX7wSW3HPT+pv1+ZtAMMwRYppY6oMhDuRDLM3NRGDeaAU2AHd9NulTvFuI
+         4tbxl+rERpJJWSzspLh7RFLS9kNcBnhKkThxr+4aETQngE/KIIi4gJt+HmIyELS1PBJq
+         ROXOe+lauiiaT/nNfUG6bmuTrlVOETx5UwWtgS6yFYd3FPJsqD7HNq1LEOU6AJXJQblM
+         QIIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bW+iYMzyJar5RkTMPGCcQG+bJOCaKWAlm479KJ6EAJc=;
+        b=NmHA9SWzXGndSve1JdJUJHpWvXl+81kmcdaYljnbZXKFb2fz43XUff2Tse2LqpHx4m
+         6ae3sjRvQtzntGtwrnZ6121K7qQJVc4Uh4puljAiSannX43RFs0jduApc0/1mHf6yRKP
+         908CXcOeLsZVZFIcGjTe5FQpQ+Wixi5eKnP/r9wczwEwvJb0n42ZRUPjfNNjLocPja4F
+         /k7AqKxS7jl/5F0H4sXcuQ3puZWQOZ3lL1G+bF3TMBSDYvigYd5gzz9HFZi9cEBuaFbl
+         PGmS7MeSGvrthJ6ZNOUUNfQa5g4ZjszevpI6gnvGXD9AqCFw75zdASbalMkLg27Qb1vH
+         Amzg==
+X-Gm-Message-State: APjAAAWr/ktNXNRTBFP4l2WsNL+APIW8n+JyuJvfz8Q8agKZbM3Nclgq
+        komm16Fslu1ksp4IY5+1VPCrp31EJ9JoJTo+ltvcLQ==
+X-Google-Smtp-Source: APXvYqzYSYuKezAl7YpUgPSRKQPA6H2KEbg8/UlKlfYHOFR01Pivkt2lcBRDlUu5Mxcw6HJtVeDKxsfdhfFE+UFLaRQ=
+X-Received: by 2002:a05:6830:1d7b:: with SMTP id l27mr15490059oti.251.1579534853838;
+ Mon, 20 Jan 2020 07:40:53 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200120141927.114373-1-elver@google.com> <CACT4Y+bnRoKinPopVqyxj4av6_xa_OUN0wwnidpO3dX3iYq_gg@mail.gmail.com>
+ <CACT4Y+YuTT6kZ-AkgU0c1o09qmQdFWr4_Sds4jaDg-Va6g6jkA@mail.gmail.com> <CACT4Y+acrXkA-ixjQXqNf1EC=fpgTWf3Rcevxxon0DfrPdD-UQ@mail.gmail.com>
+In-Reply-To: <CACT4Y+acrXkA-ixjQXqNf1EC=fpgTWf3Rcevxxon0DfrPdD-UQ@mail.gmail.com>
+From:   Marco Elver <elver@google.com>
+Date:   Mon, 20 Jan 2020 16:40:42 +0100
+Message-ID: <CANpmjNNcXUF-=Y-hmry9-xEoNpJd0WH+fOcJJM6kv2eRm5v-kg@mail.gmail.com>
+Subject: Re: [PATCH 1/5] include/linux: Add instrumented.h infrastructure
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Daniel Axtens <dja@axtens.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Daniel Borkmann <daniel@iogearbox.net>, cyphar@cyphar.com,
+        Kees Cook <keescook@chromium.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-save_stack_trace_tsk_reliable() is not the only function providing the
-reliable stack traces anymore. Architecture might define ARCH_STACKWALK
-which provides a newer stack walking interface and has
-arch_stack_walk_reliable() function. Update the description accordingly.
+On Mon, 20 Jan 2020 at 16:09, Dmitry Vyukov <dvyukov@google.com> wrote:
+>
+> On Mon, Jan 20, 2020 at 3:58 PM Dmitry Vyukov <dvyukov@google.com> wrote:
+> >
+> > On Mon, Jan 20, 2020 at 3:45 PM Dmitry Vyukov <dvyukov@google.com> wrote:
+> > >
+> > > On Mon, Jan 20, 2020 at 3:19 PM Marco Elver <elver@google.com> wrote:
+> > > >
+> > > > This adds instrumented.h, which provides generic wrappers for memory
+> > > > access instrumentation that the compiler cannot emit for various
+> > > > sanitizers. Currently this unifies KASAN and KCSAN instrumentation. In
+> > > > future this will also include KMSAN instrumentation.
+> > > >
+> > > > Note that, copy_{to,from}_user require special instrumentation,
+> > > > providing hooks before and after the access, since we may need to know
+> > > > the actual bytes accessed (currently this is relevant for KCSAN, and is
+> > > > also relevant in future for KMSAN).
+> > > >
+> > > > Suggested-by: Arnd Bergmann <arnd@arndb.de>
+> > > > Signed-off-by: Marco Elver <elver@google.com>
+> > > > ---
+> > > >  include/linux/instrumented.h | 153 +++++++++++++++++++++++++++++++++++
+> > > >  1 file changed, 153 insertions(+)
+> > > >  create mode 100644 include/linux/instrumented.h
+> > > >
+> > > > diff --git a/include/linux/instrumented.h b/include/linux/instrumented.h
+> > > > new file mode 100644
+> > > > index 000000000000..9f83c8520223
+> > > > --- /dev/null
+> > > > +++ b/include/linux/instrumented.h
+> > > > @@ -0,0 +1,153 @@
+> > > > +/* SPDX-License-Identifier: GPL-2.0 */
+> > > > +
+> > > > +/*
+> > > > + * This header provides generic wrappers for memory access instrumentation that
+> > > > + * the compiler cannot emit for: KASAN, KCSAN.
+> > > > + */
+> > > > +#ifndef _LINUX_INSTRUMENTED_H
+> > > > +#define _LINUX_INSTRUMENTED_H
+> > > > +
+> > > > +#include <linux/compiler.h>
+> > > > +#include <linux/kasan-checks.h>
+> > > > +#include <linux/kcsan-checks.h>
+> > > > +#include <linux/types.h>
+> > > > +
+> > > > +/**
+> > > > + * instrument_read - instrument regular read access
+> > > > + *
+> > > > + * Instrument a regular read access. The instrumentation should be inserted
+> > > > + * before the actual read happens.
+> > > > + *
+> > > > + * @ptr address of access
+> > > > + * @size size of access
+> > > > + */
+> > >
+> > > Based on offline discussion, that's what we add for KMSAN:
+> > >
+> > > > +static __always_inline void instrument_read(const volatile void *v, size_t size)
+> > > > +{
+> > > > +       kasan_check_read(v, size);
+> > > > +       kcsan_check_read(v, size);
+> > >
+> > > KMSAN: nothing
+> >
+> > KMSAN also has instrumentation in
+> > copy_to_user_page/copy_from_user_page. Do we need to do anything for
+> > KASAN/KCSAN for these functions?
 
-Signed-off-by: Miroslav Benes <mbenes@suse.cz>
----
- arch/Kconfig | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+copy_to_user_page/copy_from_user_page can be instrumented with
+instrument_copy_{to,from}_user_. I prefer keeping this series with no
+functional change intended for KASAN at least.
 
-diff --git a/arch/Kconfig b/arch/Kconfig
-index 48b5e103bdb0..f73dbbcc86fe 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -733,8 +733,9 @@ config HAVE_STACK_VALIDATION
- config HAVE_RELIABLE_STACKTRACE
- 	bool
- 	help
--	  Architecture has a save_stack_trace_tsk_reliable() function which
--	  only returns a stack trace if it can guarantee the trace is reliable.
-+	  Architecture has either save_stack_trace_tsk_reliable() or
-+	  arch_stack_walk_reliable() function which only returns a stack trace
-+	  if it can guarantee the trace is reliable.
- 
- config HAVE_ARCH_HASH
- 	bool
--- 
-2.24.1
+> There is also copy_user_highpage.
+>
+> And ioread/write8/16/32_rep: do we need any instrumentation there. It
+> seems we want both KSAN and KCSAN too. One may argue that KCSAN
+> instrumentation there is to super critical at this point, but KASAN
+> instrumentation is important, if anything to prevent silent memory
+> corruptions. How do we instrument there? I don't see how it maps to
+> any of the existing instrumentation functions.
 
+These should be able to use the regular instrument_{read,write}. I
+prefer keeping this series with no functional change intended for
+KASAN at least.
+
+> There is also kmsan_check_skb/kmsan_handle_dma/kmsan_handle_urb that
+> does not seem to map to any of the instrumentation functions.
+
+For now, I would rather that there are some one-off special
+instrumentation, like for KMSAN. Coming up with a unified interface
+here that, without the use-cases even settled, seems hard to justify.
+Once instrumentation for these have settled, unifying the interface
+would have better justification.
+
+This patch series is merely supposed to introduce instrumented.h and
+replace the kasan_checks (also implicitly introducing kcsan_checks
+there), however, with no further functional change intended.
+
+I propose that adding entirely new instrumentation for both KASAN and
+KCSAN, we should send a separate patch-series.
+
+Thanks,
+-- Marco
