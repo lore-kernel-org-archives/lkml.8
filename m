@@ -2,111 +2,89 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A19CC3F68F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A44FAC33CB6
 	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 02:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51DD420714
+	by mail.kernel.org (Postfix) with ESMTP id 7C90B20678
 	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 02:37:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579487836;
-	bh=1sYs9H8+JsDNq45a9MdMoXvIVGncR7j7QbIPXhvbpYk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=1QK6INdGocc0Dd/VDOtqnMf6p+ZDbLs7GfJdGwP9f4DO14jrPgpQku8zRJlw0g9z2
-	 mGfLRkKELHyTgRpoWoRSu8DR5+6Yav4Y3sxS3seyrHQN2jVORWeBMZpMBR8c5DXSnx
-	 d1fRc1gtBxOQiaD1Tlz7Fz/DbI6aMz9CwQuGGjnU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729016AbgATCd2 (ORCPT
+        id S1729050AbgATChO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 21:33:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56132 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728874AbgATCd2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 21:33:28 -0500
-Received: from localhost (108.sub-174-195-2.myvzw.com [174.195.2.108])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9387206B7;
-        Mon, 20 Jan 2020 02:33:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579487608;
-        bh=1sYs9H8+JsDNq45a9MdMoXvIVGncR7j7QbIPXhvbpYk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=zRTBpwFLl5+RLb8xQmoK3vv43rDvPwct1C7dMIpW6c9+bMbr2jjIqGKnveeIGRJsh
-         doH6uQxYWjjzzgjns6bZeRziMuG3ziUKa5wOAdde9sJj0hwD42yxE12WYMuv6kBqW3
-         rSBXfRgsCQYr3aVF7Jaf3i7ou25Qq4SWwr4gaU+k=
-Date:   Sun, 19 Jan 2020 20:33:26 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Alexandru Gagniuc <alex_gagniuc@dellteam.com>,
-        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     Jan Vesely <jano.vesely@gmail.com>, Lukas Wunner <lukas@wunner.de>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Austin Bolen <austin_bolen@dell.com>,
-        Shyam Iyer <Shyam_Iyer@dell.com>,
-        Sinan Kaya <okaya@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Issues with "PCI/LINK: Report degraded links via link bandwidth
- notification"
-Message-ID: <20200120023326.GA149019@google.com>
+        Sun, 19 Jan 2020 21:37:14 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:50290 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728874AbgATChO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jan 2020 21:37:14 -0500
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 6196DC053B8285566763;
+        Mon, 20 Jan 2020 10:37:11 +0800 (CST)
+Received: from [127.0.0.1] (10.177.131.64) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Mon, 20 Jan 2020
+ 10:37:02 +0800
+Subject: Re: [PATCH -next] net: hns3: replace snprintf with scnprintf in
+ hns3_dbg_cmd_read
+To:     tanhuazhong <tanhuazhong@huawei.com>, <yisen.zhuang@huawei.com>,
+        <salil.mehta@huawei.com>, <davem@davemloft.net>
+References: <20200119124147.30394-1-chenzhou10@huawei.com>
+ <2e1ab30a-af35-6bc6-f880-a3051375a6a8@huawei.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+From:   Chen Zhou <chenzhou10@huawei.com>
+Message-ID: <dbd54fd8-b356-18a2-cb16-ad3aaaa933ca@huawei.com>
+Date:   Mon, 20 Jan 2020 10:37:01 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200115221008.GA191037@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <2e1ab30a-af35-6bc6-f880-a3051375a6a8@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.131.64]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc NVMe, GPU driver folks]
 
-On Wed, Jan 15, 2020 at 04:10:08PM -0600, Bjorn Helgaas wrote:
-> I think we have a problem with link bandwidth change notifications
-> (see https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/pcie/bw_notification.c).
-> 
-> Here's a recent bug report where Jan reported "_tons_" of these
-> notifications on an nvme device:
-> https://bugzilla.kernel.org/show_bug.cgi?id=206197
-> 
-> There was similar discussion involving GPU drivers at
-> https://lore.kernel.org/r/20190429185611.121751-2-helgaas@kernel.org
-> 
-> The current solution is the CONFIG_PCIE_BW config option, which
-> disables the messages completely.  That option defaults to "off" (no
-> messages), but even so, I think it's a little problematic.
-> 
-> Users are not really in a position to figure out whether it's safe to
-> enable.  All they can do is experiment and see whether it works with
-> their current mix of devices and drivers.
-> 
-> I don't think it's currently useful for distros because it's a
-> compile-time switch, and distros cannot predict what system configs
-> will be used, so I don't think they can enable it.
-> 
-> Does anybody have proposals for making it smarter about distinguishing
-> real problems from intentional power management, or maybe interfaces
-> drivers could use to tell us when we should ignore bandwidth changes?
 
-NVMe, GPU folks, do your drivers or devices change PCIe link
-speed/width for power saving or other reasons?  When CONFIG_PCIE_BW=y,
-the PCI core interprets changes like that as problems that need to be
-reported.
+On 2020/1/20 9:28, tanhuazhong wrote:
+> 
+> 
+> On 2020/1/19 20:41, Chen Zhou wrote:
+>> The return value of snprintf may be greater than the size of
+>> HNS3_DBG_READ_LEN, use scnprintf instead in hns3_dbg_cmd_read.
+>>
+>> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+>> ---
+>>   drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c b/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c
+>> index 6b328a2..8fad699 100644
+>> --- a/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c
+>> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c
+>> @@ -297,7 +297,7 @@ static ssize_t hns3_dbg_cmd_read(struct file *filp, char __user *buffer,
+>>       if (!buf)
+>>           return -ENOMEM;
+>>   -    len = snprintf(buf, HNS3_DBG_READ_LEN, "%s\n",
+>> +    len = scnprintf(buf, HNS3_DBG_READ_LEN, "%s\n",
+>>                  "Please echo help to cmd to get help information");
+> 
+> not align?
 
-If drivers do change link speed/width, can you point me to where
-that's done?  Would it be feasible to add some sort of PCI core
-interface so the driver could say "ignore" or "pay attention to"
-subsequent link changes?
+Ok, i will fix in next version.
 
-Or maybe there would even be a way to move the link change itself into
-the PCI core, so the core would be aware of what's going on?
+Thanks,
+Chen Zhou
 
-Bjorn
+> 
+>>       uncopy_bytes = copy_to_user(buffer, buf, len);
+>>  
+> 
+> 
+> .
+> 
+
