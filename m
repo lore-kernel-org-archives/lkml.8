@@ -6,109 +6,73 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E52C33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16212C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15CB421569
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:25:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE42F21569
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:26:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbgATMYR (ORCPT
+        id S1728998AbgATM05 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 07:24:17 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:46812 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726589AbgATMYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 07:24:16 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D94972002F3;
-        Mon, 20 Jan 2020 13:24:13 +0100 (CET)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id CBCCA200275;
-        Mon, 20 Jan 2020 13:24:13 +0100 (CET)
-Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 5E94420414;
-        Mon, 20 Jan 2020 13:24:13 +0100 (CET)
-From:   Iuliana Prodan <iuliana.prodan@nxp.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Horia Geanta <horia.geanta@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Silvano Di Ninno <silvano.dininno@nxp.com>,
-        Franck Lenormand <franck.lenormand@nxp.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-imx <linux-imx@nxp.com>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>
-Subject: [PATCH v4 0/9] crypto: caam - backlogging support
-Date:   Mon, 20 Jan 2020 14:23:59 +0200
-Message-Id: <1579523048-21078-1-git-send-email-iuliana.prodan@nxp.com>
-X-Mailer: git-send-email 2.1.0
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 20 Jan 2020 07:26:57 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:9213 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726642AbgATM04 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 07:26:56 -0500
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id B5353EF6A50EE0610B56;
+        Mon, 20 Jan 2020 20:26:53 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.58) by
+ DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 20 Jan 2020 20:26:43 +0800
+From:   John Garry <john.garry@huawei.com>
+To:     <jejb@linux.vnet.ibm.com>, <martin.petersen@oracle.com>
+CC:     <linux-scsi@vger.kernel.org>, <linuxarm@huawei.com>,
+        <linux-kernel@vger.kernel.org>, John Garry <john.garry@huawei.com>
+Subject: [PATCH 0/7] hisi_sas: Misc patches
+Date:   Mon, 20 Jan 2020 20:22:30 +0800
+Message-ID: <1579522957-4393-1-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.58]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Integrate crypto_engine framework into CAAM, to make use of
-the engine queue.
-Added support for SKCIPHER, HASH, RSA and AEAD algorithms.
-This is intended to be used for CAAM backlogging support.
-The requests, with backlog flag (e.g. from dm-crypt) will be
-listed into crypto-engine queue and processed by CAAM when free.
+This series introduces some misc patches for the driver for the v5.6
+cycle.
 
-While here, I've also made some refactorization.
-Patches #1 - #4 include some refactorizations on caamalg, caamhash
-and caampkc.
-Patch #5 changes the return code of caam_jr_enqueue function
-to -EINPROGRESS, in case of success, -ENOSPC in case the CAAM is
-busy, -EIO if it cannot map the caller's descriptor.
-Patches #6 - #9 integrate crypto_engine into CAAM, for
-SKCIPHER/AEAD/RSA/HASH algorithms.
+Nothing especially interesting, but maybe the change to switch the v2
+driver to use reply map also, which improves performance.
 
----
-Changes since V3:
-	- update return on ahash_enqueue_req function from patch #9.
+There is also a change to switch the driver to use threaded interrupt
+handling over tasklets.
 
-Changes since V2:
-	- remove patch ("crypto: caam - refactor caam_jr_enqueue"),
-	  that added some structures not needed anymore;
-	- use _done_ callback function directly for skcipher and aead;
-	- handle resource leak in case of transfer request to crypto-engine;
-	- update commit messages.
+John Garry (2):
+  scsi: hisi_sas: Rename hisi_sas_cq.pci_irq_mask
+  scsi: hisi_sas: Use reply map for v2 hw
 
-Changes since V1:
-	- remove helper function - akcipher_request_cast;
-	- remove any references to crypto_async_request,
-	  use specific request type;
-	- remove bypass crypto-engine queue, in case is empty;
-	- update some commit messages;
-	- remove unrelated changes, like whitespaces;
-	- squash some changes from patch #9 to patch #6;
-	- added Reviewed-by.
----
+Luo Jiaxing (3):
+  scsi: hisi_sas: Replace magic number when handle channel interrupt
+  scsi: hisi_sas: Modify the file permissions of trigger_dump to write
+    only
+  scsi: hisi_sas: Add prints for v3 hw interrupt converge and automatic
+    affinity
 
-Iuliana Prodan (9):
-  crypto: caam - refactor skcipher/aead/gcm/chachapoly {en,de}crypt
-    functions
-  crypto: caam - refactor ahash_done callbacks
-  crypto: caam - refactor ahash_edesc_alloc
-  crypto: caam - refactor RSA private key _done callbacks
-  crypto: caam - change return code in caam_jr_enqueue function
-  crypto: caam - support crypto_engine framework for SKCIPHER algorithms
-  crypto: caam - add crypto_engine support for AEAD algorithms
-  crypto: caam - add crypto_engine support for RSA algorithms
-  crypto: caam - add crypto_engine support for HASH algorithms
+Xiang Chen (2):
+  scsi: hisi_sas: use threaded irq to process CQ interrupts
+  scsi: hisi_sas: replace spin_lock_irqsave/spin_unlock_restore with
+    spin_lock/spin_unlock
 
- drivers/crypto/caam/Kconfig    |   1 +
- drivers/crypto/caam/caamalg.c  | 416 ++++++++++++++++++-----------------------
- drivers/crypto/caam/caamhash.c | 341 ++++++++++++++++-----------------
- drivers/crypto/caam/caampkc.c  | 187 +++++++++++-------
- drivers/crypto/caam/caampkc.h  |  10 +
- drivers/crypto/caam/caamrng.c  |   4 +-
- drivers/crypto/caam/intern.h   |   2 +
- drivers/crypto/caam/jr.c       |  37 +++-
- drivers/crypto/caam/key_gen.c  |   2 +-
- 9 files changed, 523 insertions(+), 477 deletions(-)
+ drivers/scsi/hisi_sas/hisi_sas.h       |  9 ++-
+ drivers/scsi/hisi_sas/hisi_sas_main.c  | 74 ++++++++++-----------
+ drivers/scsi/hisi_sas/hisi_sas_v2_hw.c | 90 +++++++++++++++++++-------
+ drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 54 +++++++++-------
+ 4 files changed, 139 insertions(+), 88 deletions(-)
 
 -- 
-2.1.0
+2.17.1
 
