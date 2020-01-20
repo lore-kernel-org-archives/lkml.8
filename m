@@ -2,144 +2,101 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55BABC33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9827C33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:31:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3673C22314
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:27:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8248D22527
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:31:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbgATT1X (ORCPT
+        id S1726951AbgATTbY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 14:27:23 -0500
-Received: from out03.mta.xmission.com ([166.70.13.233]:42384 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726607AbgATT1X (ORCPT
+        Mon, 20 Jan 2020 14:31:24 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:37231 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726607AbgATTbY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 14:27:23 -0500
-X-Greylist: delayed 12101 seconds by postgrey-1.27 at vger.kernel.org; Mon, 20 Jan 2020 14:27:22 EST
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1itZYa-00015n-O0; Mon, 20 Jan 2020 09:05:40 -0700
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1itZYV-0005Jn-BB; Mon, 20 Jan 2020 09:05:40 -0700
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Dave Young <dyoung@redhat.com>, linux-efi@vger.kernel.org,
-        ard.biesheuvel@linaro.org, matt@codeblueprint.co.uk,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean Delvare <jdelvare@suse.de>
-References: <20161202195416.58953-1-andriy.shevchenko@linux.intel.com>
-        <20161202195416.58953-3-andriy.shevchenko@linux.intel.com>
-        <20161215122856.7d24b7a8@endymion>
-        <20161216023213.GA4505@dhcp-128-65.nay.redhat.com>
-        <1481890738.9552.70.camel@linux.intel.com>
-        <20161216143330.69e9c8ee@endymion>
-        <20161217105721.GB6922@dhcp-128-65.nay.redhat.com>
-        <20200120121927.GJ32742@smile.fi.intel.com>
-Date:   Mon, 20 Jan 2020 10:04:04 -0600
-In-Reply-To: <20200120121927.GJ32742@smile.fi.intel.com> (Andy Shevchenko's
-        message of "Mon, 20 Jan 2020 14:19:27 +0200")
-Message-ID: <87a76i9ksr.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 20 Jan 2020 14:31:24 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1itclc-0005rx-4z; Mon, 20 Jan 2020 20:31:20 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1itclb-0001lC-0P; Mon, 20 Jan 2020 20:31:19 +0100
+Date:   Mon, 20 Jan 2020 20:31:18 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5] gpio: pca953x: Add Maxim MAX7313 PWM support
+Message-ID: <20200120193118.3vzwy5uxnsy2w4sv@pengutronix.de>
+References: <20200107133130.1338-1-miquel.raynal@bootlin.com>
+ <20200120121329.GC206171@ulmo>
+ <20200120134137.54dc307e@xps13>
+ <20200120141944.GD206171@ulmo>
+ <20200120144457.eznywc423ehw6kuc@pengutronix.de>
+ <20200120163822.232b1410@xps13>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1itZYV-0005Jn-BB;;;mid=<87a76i9ksr.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/gB42Om93MVQYunpLwTKkpM5H9wK/PFUg=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v1 2/2] firmware: dmi_scan: Pass dmi_entry_point to kexec'ed kernel
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200120163822.232b1410@xps13>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
+Hi Miquèl,
 
-> On Sat, Dec 17, 2016 at 06:57:21PM +0800, Dave Young wrote:
->> Ccing efi people.
->> 
->> On 12/16/16 at 02:33pm, Jean Delvare wrote:
->> > On Fri, 16 Dec 2016 14:18:58 +0200, Andy Shevchenko wrote:
->> > > On Fri, 2016-12-16 at 10:32 +0800, Dave Young wrote:
->> > > > On 12/15/16 at 12:28pm, Jean Delvare wrote:
->> > > > > I am no kexec expert but this confuses me. Shouldn't the second
->> > > > > kernel have access to the EFI systab as the first kernel does? It
->> > > > > includes many more pointers than just ACPI and DMI tables, and it
->> > > > > would seem inconvenient to have to pass all these addresses
->> > > > > individually explicitly.
->> > > > 
->> > > > Yes, in modern linux kernel, kexec has the support for EFI, I think it
->> > > > should work naturally at least in x86_64.
->> > > 
->> > > Thanks for this good news!
->> > > 
->> > > Unfortunately Intel Galileo is 32-bit platform.
->> > 
->> > If it was done for X86_64 then maybe it can be generalized to X86?
->> 
->> For X86_64, we have a new way for efi runtime memmory mapping, in i386
->> code it still use old ioremap way. It is impossible to use same way as
->> the X86_64 since the virtual address space is limited.
->> 
->> But maybe for 32bit, kexec kernel can run in physical mode, but I'm not
->> sure, I would suggest Andy to do a test first with efi=noruntime for
->> kexec 2nd kernel.
->
-> Guys, it was quite a long no hear from you. As I told you the proposed work
-> around didn't help. Today I found that Microsoft Surface 3 also affected
-> by this.
->
-> Can we apply these patches for now until you will find better
-> solution?
+On Mon, Jan 20, 2020 at 04:38:22PM +0100, Miquel Raynal wrote:
+> One dumb question that I still have is: besides any backward
+> compatibility aspects, do we really care about the period/frequency of
+> the PWM? Why do we enforce a period and an active duration, while
+> we could limit ourselves to a ratio and let the driver use the most
+> suitable frequency if the hardware supports it?
 
-Not a chance.  The patches don't apply to any kernel in the git history.
+There are situations where just fixing the ratio would (nearly) be good
+enough. For example if you drive an LED just requesting a ratio might
+look fine at first glance. But 
 
-Which may be part of your problem.  You are or at least were running
-with code that has not been merged upstream.
+	.period = 5000 ms, .duty_cycle = 2500 ms
 
-> P.S. I may resend them rebased on recent vanilla.
+has quite a different effect than
 
-Second.  I looked at your test results and they don't directly make
-sense.  dmidecode bypasses the kernel completely or it did last time
-I looked so I don't know why you would be using that to test if
-something in the kernel is working.
+	.period = 500 ns, .duty_cycle = 250 ns
 
-However dmidecode failing suggests that the actual problem is something
-in the first kernel is stomping the dmi tables.
+while both are valid if you requested 50%.
 
-Adding a command line option won't fix stomped tables.
+Having said that I think the lowlevel API (i.e. what a device driver has
+to implement) is sane, as it allows to implement all possible requests,
+even if there might be a consumer that cares more about the absolute
+value of duty-cycle than the duty-cycle/period ratio; and it matches
+what most hardware models implement. There is usually a register to
+specify the period and one to specify the duty-cycle.
 
-So what I would suggest is:
-a) Verify that dmidecode works before kexec.
-b) Test to see if dmidecode works after kexec.
-c) Once (a) shows that dmidecode works and (b) shows that dmidecode
-   fails figure out what is stomping your dmi tables during or before
-   kexec and that is what should get fixed.
+And on top of that (at least once there is pwm_round_state()) you can
+implement all sort of helper functions that implement for example "best
+effort 50% with a period < 2ms".
 
-Now using a non-efi method of dmi detection relies on the
-tables being between 0xF0000 and 0x10000. AKA the last 64K
-of the first 1MiB of memory.  You might check to see if your
-dmi tables are in that address range.
+Best regards
+Uwe
 
-Otherwise I suspect the good solution is to give efi it's own page
-tables in the kernel and switch to it whenever efi functions are called.
-
-But on 32bit the Linux kernel has historically been just fine directly
-accessing the hardware, and ignoring efi and all of the other BIOS's.
-So if that doesn't work on Intel Galileo that is probably a firmware
-problem.
-
-Eric
-
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
