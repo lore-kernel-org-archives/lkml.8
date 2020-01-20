@@ -6,44 +6,40 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 237A0C32771
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A112EC33CA1
 	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3E49217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:45:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 800A722527
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:45:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbgATTp2 (ORCPT
+        id S1727312AbgATTp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 14:45:28 -0500
-Received: from outgoing18.flk.host-h.net ([197.242.87.52]:44697 "EHLO
+        Mon, 20 Jan 2020 14:45:29 -0500
+Received: from outgoing18.flk.host-h.net ([197.242.87.52]:39029 "EHLO
         outgoing18.flk.host-h.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726890AbgATTp2 (ORCPT
+        with ESMTP id S1726876AbgATTp3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 14:45:28 -0500
+        Mon, 20 Jan 2020 14:45:29 -0500
 Received: from www31.flk1.host-h.net ([188.40.1.173])
         by antispam5-flk1.host-h.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
         (Exim 4.89)
         (envelope-from <justin.swartz@risingedge.co.za>)
-        id 1itczF-00045Z-9N; Mon, 20 Jan 2020 21:45:25 +0200
+        id 1itczE-000467-8G; Mon, 20 Jan 2020 21:45:25 +0200
 Received: from [130.255.73.16] (helo=v01.28459.vpscontrol.net)
         by www31.flk1.host-h.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.89)
         (envelope-from <justin.swartz@risingedge.co.za>)
-        id 1itczA-0004Hk-RM; Mon, 20 Jan 2020 21:45:20 +0200
+        id 1itczC-0004Hk-3p; Mon, 20 Jan 2020 21:45:22 +0200
 From:   Justin Swartz <justin.swartz@risingedge.co.za>
-To:     Jacob Chen <jacob-chen@iotwrt.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>
+To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
 Cc:     Justin Swartz <justin.swartz@risingedge.co.za>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/4] [media] dt-bindings: Add rk3228 to the Rockchip RGA binding doc
-Date:   Mon, 20 Jan 2020 19:41:55 +0000
-Message-Id: <20200120194158.25357-2-justin.swartz@risingedge.co.za>
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 3/4] ARM: dts: rockchip: add rga node for rk322x
+Date:   Mon, 20 Jan 2020 19:41:56 +0000
+Message-Id: <20200120194158.25357-3-justin.swartz@risingedge.co.za>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20200120194158.25357-1-justin.swartz@risingedge.co.za>
 References: <20200120194158.25357-1-justin.swartz@risingedge.co.za>
@@ -54,54 +50,62 @@ X-SpamExperts-Domain: risingedge.co.za
 X-SpamExperts-Username: 
 Authentication-Results: host-h.net; auth=pass (login) smtp.auth=@risingedge.co.za
 X-SpamExperts-Outgoing-Class: ham
-X-SpamExperts-Outgoing-Evidence: Combined (0.02)
+X-SpamExperts-Outgoing-Evidence: Combined (0.03)
 X-Recommended-Action: accept
-X-Filter-ID: Mvzo4OR0dZXEDF/gcnlw0Xm17NJf4el5vffImWwWrhCpSDasLI4SayDByyq9LIhVjN6Oe0bZSj7x
- nWUgTBxzfkTNWdUk1Ol2OGx3IfrIJKyP9eGNFz9TW9u+Jt8z2T3K7uDjV/sFUXQr+CDrNQuIHgQg
- mAX8Bxy/iUu0ThNZg0h/RxVysY5Ye6+GGw0VqdJD7ren9RtRNyYim5e3GD8LGfWrcbYvelpuN/Pk
- qhBpvAyWwieZyauFYqHkIbFa+ipF21HJWO60ZqrvKy/1AXUV5oXt6ymoFHaG7BQtEYvFCSrK5j1T
- Po5/LpleUgQM5/MAHmDvzkMd4joYqrUfcPIQdUYI3fUXyt8g6v09xrG7vu/fdUS1M5thdxxsnOTC
- rRmvZNXA7urqkuRkjn1fyteVYP+HXs9CMbFn9vCz9Z+lGmDQvQDDheqH4lBQpR0ziVlLWDAC1vRC
- hq319+C3vxdCgsyStZRkQwmoMeUp+gQglixgZmTW6H0Uo/QzUeaLOBvNEC1g+U1SXfUhLsTk5wUY
- WaWokZC3JOaEfAcg3rPhhfeK9cZ48uDEoRc5vgP+N4akg5nlaTNYebWa2W6GbNvgwptlhJrsz+8j
- XuMdjIbLZhwoK/VzePATsXS/rFxRypFKMiPLyoQzvILSDO18VtgBXbQkUN2dXl9fJsQYqiZZBuHY
- Ta6/LJzl4pg0ZC9q5gYH7EOMauBWC98ol0xUHcbfIJ9ZJ7PpnPxGejDS+HAMyOjpxOsB8gG0slV7
- ra6jI4BS3XLmxFz+88FWeB7miCnFrS+xkiYMmdOwRIKnLhTyDa49KiI6ApkBL1M2pjeIsNv0i2bz
- nHJ53CHS5fL+CC61pH+Mdi8KDLlrJjQEyoQkvVqjwoXSktopqY7X3mJE1vuavCrJPmnnTHzVkpyb
- MK7ZTZV8hN6hngxqNW/p6/rAjB3Bo9WPi4IE45J8SMIBWsA7tm+5pSj1YjV94R3x16NaT9yCB/zW
- LYsk4/ealtlYzK51KubfNuS9lgsouDG6gpp8iIlTfpXH3eJ/htNFsfRJIIsn2dSUfOon4SSOHnp1
- et/MPu6LuWW8C6xs4jnP0QXTijBi5PZExX8sQXRK2Ohd4N83CNy2/HP4CS/B6ymwJqdrYqktDHCy
- f2KOgPWiC6z4HnV1R/vfaN0C4C3KdSxIKbHYhXQwhXELIBZC+BuxdgK5cVvzDCtuQClUbi7eRJvI
- 01OLeFH4QvqpC2nLfIqdZUeVlVebzZqu+9TcX2V266qVhLwCLj5UzlqDZIb7xEp3klSpLYn5Sshm
- tRDo/ib6qUd+ON9Iwv3fqFcmzUrJkUoL/PyVSe2/DDFq5n7HBuKWYRb2mL6sFaAAW2m3yODQWZ6C
- UzN46xT2FnDD31r1QFs2yPRk3H1E4ANRdN1BlPI5cpunCmbc5xpJVMDSneyWOiQlotRPFwUdX67F
- 3JAjgow=
+X-Filter-ID: Mvzo4OR0dZXEDF/gcnlw0Xm17NJf4el5vffImWwWrhCpSDasLI4SayDByyq9LIhV1DC+T4iekLkk
+ i4Yxkf6yMETNWdUk1Ol2OGx3IfrIJKyP9eGNFz9TW9u+Jt8z2T3K7uDjV/sFUXQr+CDrNQuIHgQg
+ mAX8Bxy/iUu0ThNZg0jxJtcVJProrT987X1VDPOqN+OoDzRTdku7DidYUZdNf38Sp7Of4wP429AA
+ f49baR+f3He7jw4SoVhmTJ/3eP9ORQWVx8ds1M4qmk3/bYr2p8zbg4Paoa3pNVQ0zl7t/+UfQLYB
+ qEPnp1U88kqVD8AM2G81dFO0E3gi+MOI1foZYzDggRXhpvoPtF3cVkniFXU3qJSqpdJudO6+rkiw
+ E5i8Wl78Q18OeOfsy4h7jF1Uv9lnibl3vcBqVmvQB4A18actDDDgABV3k+TCb1ym68eMAVXirbLu
+ Jjy3NtnGWLbnBGfrUBEXB2fYGLNieGQuoHtJvp0r29Rf3ZjFwL+MhHEWw/0qBlNDp8uABz3dkWV+
+ tgmYFaNu+2UDArzT1gq7P+ZTycYLFeAN4+MGwnsp7SkU6CLbyF0Zq4b1/7rjUzETJrWks4pbbQJq
+ 6gWopI3ep45X19ZysgQ+31LcAX8eoFXAhohfegXGH2GIVQVglJFbK771YV8YbC29CtmpcTqTfSIf
+ CWq9oj7OiT8GwpAriB+3/81I3rvR8KJ2fK9jiDYgijyqqY0rATpzHKGfmtNsYTr4SmDZ/bGW8xZC
+ RRs6ZD24UhFcZZEpLhnBCwImTQNvxaLyCc35VA7RvW/HGiGqxL09Cymermt8NAa/gGopT3kKfO4C
+ gvcKmV0o9jYzsFpuc43pp/LzIs3ornuRuAAdgrkq+6l7ZLNYJcf7Z6PCydDzoYZgInuDxgFOs7AZ
+ TwbwMWQbSR6Wmuan/Ls9Qsz9RDB7QexKJ4YAOEaPoA/bFrwb38NrFoXSENXH6UXfnav35JPA4YfM
+ 6tBkXsqvKY6zoLLTPpuFqUUQz+mM8JAD4ECWNo09vb0YLIRnK477e9Xake5PIWKjIXX7qe2zOXoS
+ fozl3YQYVDLOw3T54l/NyVO8Dt0WhqJP7mY8k292SrPw+mbjO41FyBEqIaDudcVplPE6wCr6GXU1
+ lCw88ijyus1sGnWknJqS8gGhNQxpB5P3qu7c1xMljx2PG/R+pKBSKy8hXOgvE1zSS7XUhkYEQYeb
+ 3jR5NeVaJQBh0uawl0Cg8j+knAzOA9mmoJvkuhKHiekUuskYaI6ERCKp8gXWqnT9kLHhStr5fiGK
+ 7KncpWELuTEvuGslKTrRIXcXpFg5ivY=
 X-Report-Abuse-To: spam@antispammaster.host-h.net
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add "rockchip,rk3228-rga" to the list of acceptable values for
-the "compatible" property.
+Add a node to define the presence of RGA, a 2D raster graphic
+acceleration unit.
 
 Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
 ---
- Documentation/devicetree/bindings/media/rockchip-rga.txt | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/rk322x.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/rockchip-rga.txt b/Documentation/devicetree/bindings/media/rockchip-rga.txt
-index fd5276abf..9bac1782d 100644
---- a/Documentation/devicetree/bindings/media/rockchip-rga.txt
-+++ b/Documentation/devicetree/bindings/media/rockchip-rga.txt
-@@ -6,6 +6,7 @@ BitBLT, alpha blending and image blur/sharpness.
+diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
+index 340ed6ccb..486ad591f 100644
+--- a/arch/arm/boot/dts/rk322x.dtsi
++++ b/arch/arm/boot/dts/rk322x.dtsi
+@@ -566,6 +566,17 @@
+ 		status = "disabled";
+ 	};
  
- Required properties:
- - compatible: value should be one of the following
-+		"rockchip,rk3228-rga";
- 		"rockchip,rk3288-rga";
- 		"rockchip,rk3399-rga";
- 
++	rga: rga@20060000 {
++		compatible = "rockchip,rk3228-rga";
++		reg = <0x20060000 0x1000>;
++		interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru ACLK_RGA>, <&cru HCLK_RGA>, <&cru SCLK_RGA>;
++		clock-names = "aclk", "hclk", "sclk";
++		resets = <&cru SRST_RGA>, <&cru SRST_RGA_A>, <&cru SRST_RGA_H>;
++		reset-names = "core", "axi", "ahb";
++		status = "disabled";
++	};
++
+ 	vpu_mmu: iommu@20020800 {
+ 		compatible = "rockchip,iommu";
+ 		reg = <0x20020800 0x100>;
 -- 
 2.11.0
 
