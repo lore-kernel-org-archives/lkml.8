@@ -2,108 +2,233 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UPPERCASE_50_75,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F68C33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 240B2C33CB8
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:01:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB3E92070C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:58:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E749724676
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:01:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fP/G9x+L"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="DQeNOKDj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729145AbgATP6Q (ORCPT
+        id S1729016AbgATQBC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 10:58:16 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:35147 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726876AbgATP6P (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 10:58:15 -0500
-Received: by mail-ed1-f65.google.com with SMTP id f8so29955826edv.2;
-        Mon, 20 Jan 2020 07:58:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hCx0FkOyPUAD6FImSxkekqB+LP9ak15a5zOVHzRkbmQ=;
-        b=fP/G9x+L9PkgABveHZWoY9IaNc5ecTNODt99ULgbvz4WSGj+RnBE9AphLW93GtkZ3F
-         1JJaEFbixiJRZPRtcGTck/aS3dEh5qIPQaxMRxB2EgifHFzu9s6KQfhgI9PzfbSboilB
-         IXo01B8GkrtVd7FFkOOl3Up1RM4ZRrWx+OJ/9NSKwrc9AngKrSVo/8izMGXL+UvzS3Vd
-         8LvD+ure5A3IoxOcaX7RuFrYapJxo/1o86BbhRX+6EtEA167ic6Ecytm9lh9h2EJWyP8
-         px4zrGg8O6XS7YbF8EQTkILa04SzPKDDcjT9b8yvTyKs/0yLzcZZ2s/azXsJbH20itbq
-         zN5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hCx0FkOyPUAD6FImSxkekqB+LP9ak15a5zOVHzRkbmQ=;
-        b=NFRZn6ILXyfVszk1r4EXfCzAe1yOtlSwHot9uMUA74Lcq6vvedec9TV+f7q/ajb2tu
-         9rocu8kD2JbEsIvw8N4A76Wus0cxDccP8F7979tWnx/b175UuoiUxy1q5HIzQrHe8Y0M
-         ZhTbYxzam9sc9lM665As4p/SGr29tW9gE0JC9BtnFILkSecLHddmgm72zZOz88YRwZi6
-         7oDB/8z7IODwDhkoWoOWIpmJWurY3D/mKRP75duvRiC7ctriWlj9cLX7odY1AOjbo6pu
-         FMeuDqJ3jHG35frrLevx+y7r0AdeC0pbwTeD8ej3r5d84GofJPBX0K/mkuMNSryD8mVu
-         kG9w==
-X-Gm-Message-State: APjAAAWE0jSGIsYTKbOAtM8Ex1f+lVxjT4SOFMOwTI4lqNj8l8k3To+B
-        NPlPGjMHItmAid8AQb/j7IU=
-X-Google-Smtp-Source: APXvYqyWbXRB0TX6y0VmIJ7AAivnItgalHZTSGnWc7Y6DX1cBKxWX2c1pdhOcKTxeWIEECp/nlZ/zA==
-X-Received: by 2002:a17:906:7006:: with SMTP id n6mr53213ejj.1.1579535893494;
-        Mon, 20 Jan 2020 07:58:13 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id r9sm1162950ejx.31.2020.01.20.07.58.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Jan 2020 07:58:12 -0800 (PST)
-Subject: Re: [alsa-devel] [PATCH 2/9] ASoC: tegra: add support for CIF
- programming
-To:     Sameer Pujar <spujar@nvidia.com>, perex@perex.cz, tiwai@suse.com,
-        robh+dt@kernel.org
-Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        atalambedu@nvidia.com, linux-kernel@vger.kernel.org,
-        lgirdwood@gmail.com, jonathanh@nvidia.com, viswanathl@nvidia.com,
-        sharadg@nvidia.com, broonie@kernel.org, thierry.reding@gmail.com,
-        linux-tegra@vger.kernel.org, rlokhande@nvidia.com,
-        mkumard@nvidia.com, dramesh@nvidia.com
-References: <1579530198-13431-1-git-send-email-spujar@nvidia.com>
- <1579530198-13431-3-git-send-email-spujar@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <d01ed171-d949-19b2-3390-ee30eada2779@gmail.com>
-Date:   Mon, 20 Jan 2020 18:58:11 +0300
+        Mon, 20 Jan 2020 11:01:02 -0500
+Received: from vern.gendns.com ([98.142.107.122]:42808 "EHLO vern.gendns.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726626AbgATQBB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 11:01:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=oetEg5fj/8NVUMsSSQOrxfgNlGM/ZZ/jjm0sZwoCSO4=; b=DQeNOKDjz9g1nGoGOuDajUmD3+
+        gMdqW1mQqsYHpytC4feb++yYn3XPWDQOPhX/3gxTwp5Q2iLqiyWAsh/vc5Bc4ORx80wVg71E+QB0L
+        yeZ9/YLAkahXl5poGpuT2uHekfU0KXec2cPJibm5lzX4IjfZyymJbkrpwhoI8kSWMUYy7nwtj23iy
+        iTsPdyg8A4qH3XvK2wkOiaCOn3mCqBHr1BA7unu+NQjuJaGgegtgpn4r0AqkGMgMO5wyGG9EQNy9m
+        NZTh0FAic/prdQteKCb3voaRDHyLkZfb7FLAmZLai4LQVZbEDJHQvNrxSNnbdFS9dRHTTT7uyhFDP
+        sXvIvaUA==;
+Received: from 108-198-5-147.lightspeed.okcbok.sbcglobal.net ([108.198.5.147]:49460 helo=[192.168.0.134])
+        by vern.gendns.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <david@lechnology.com>)
+        id 1itZTv-0006Fx-E5; Mon, 20 Jan 2020 11:00:51 -0500
+Subject: Re: [PATCH v2 1/5] dt-bindings: display: sitronix,st7735r: Convert to
+ DT schema
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Sam Ravnborg <sam@ravnborg.org>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200115124548.3951-1-geert+renesas@glider.be>
+ <20200115124548.3951-2-geert+renesas@glider.be>
+From:   David Lechner <david@lechnology.com>
+Message-ID: <ba21d2c8-ccc6-2704-fa1f-d28239700547@lechnology.com>
+Date:   Mon, 20 Jan 2020 10:00:49 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <1579530198-13431-3-git-send-email-spujar@nvidia.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200115124548.3951-2-geert+renesas@glider.be>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - vern.gendns.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lechnology.com
+X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Sameer,
-
-20.01.2020 17:23, Sameer Pujar пишет:
-
-[snip]
-
-> Tegra30 and Tegra124 have an identical CIF programming helper function.
-
-[snip]
-
-> -#define TEGRA124_AUDIOCIF_CTRL_FIFO_THRESHOLD_SHIFT	24
-> -#define TEGRA124_AUDIOCIF_CTRL_FIFO_THRESHOLD_MASK_US	0x3f
-> -#define TEGRA124_AUDIOCIF_CTRL_FIFO_THRESHOLD_MASK	(TEGRA124_AUDIOCIF_CTRL_FIFO_THRESHOLD_MASK_US << TEGRA124_AUDIOCIF_CTRL_FIFO_THRESHOLD_SHIFT)
+On 1/15/20 6:45 AM, Geert Uytterhoeven wrote:
+> Convert the DT binding documentation for Sitronix ST7735R displays to DT
+> schema.
+> 
+> Add a reference to the Adafruit 1.8" LCD while at it.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> v2:
+>    - New.
+> ---
+>   .../bindings/display/sitronix,st7735r.txt     | 35 ----------
+>   .../bindings/display/sitronix,st7735r.yaml    | 65 +++++++++++++++++++
+>   MAINTAINERS                                   |  2 +-
+>   3 files changed, 66 insertions(+), 36 deletions(-)
+>   delete mode 100644 Documentation/devicetree/bindings/display/sitronix,st7735r.txt
+>   create mode 100644 Documentation/devicetree/bindings/display/sitronix,st7735r.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/sitronix,st7735r.txt b/Documentation/devicetree/bindings/display/sitronix,st7735r.txt
+> deleted file mode 100644
+> index cd5c7186890a2be7..0000000000000000
+> --- a/Documentation/devicetree/bindings/display/sitronix,st7735r.txt
+> +++ /dev/null
+> @@ -1,35 +0,0 @@
+> -Sitronix ST7735R display panels
 > -
-> -/* Channel count minus 1 */
-> -#define TEGRA30_AUDIOCIF_CTRL_AUDIO_CHANNELS_SHIFT	24
-> -#define TEGRA30_AUDIOCIF_CTRL_AUDIO_CHANNELS_MASK_US	7
-> -#define TEGRA30_AUDIOCIF_CTRL_AUDIO_CHANNELS_MASK	(TEGRA30_AUDIOCIF_CTRL_AUDIO_CHANNELS_MASK_US << TEGRA30_AUDIOCIF_CTRL_AUDIO_CHANNELS_SHIFT)
+> -This binding is for display panels using a Sitronix ST7735R controller in SPI
+> -mode.
+> -
+> -Required properties:
+> -- compatible:	"jianda,jd-t18003-t01", "sitronix,st7735r"
+> -- dc-gpios:	Display data/command selection (D/CX)
+> -- reset-gpios:	Reset signal (RSTX)
+> -
+> -The node for this driver must be a child node of a SPI controller, hence
+> -all mandatory properties described in ../spi/spi-bus.txt must be specified.
+> -
+> -Optional properties:
+> -- rotation:	panel rotation in degrees counter clockwise (0,90,180,270)
+> -- backlight:	phandle of the backlight device attached to the panel
+> -
+> -Example:
+> -
+> -	backlight: backlight {
+> -		compatible = "gpio-backlight";
+> -		gpios = <&gpio 44 GPIO_ACTIVE_HIGH>;
+> -	};
+> -
+> -	...
+> -
+> -	display@0{
+> -		compatible = "jianda,jd-t18003-t01", "sitronix,st7735r";
+> -		reg = <0>;
+> -		spi-max-frequency = <32000000>;
+> -		dc-gpios = <&gpio 43 GPIO_ACTIVE_HIGH>;
+> -		reset-gpios = <&gpio 80 GPIO_ACTIVE_HIGH>;
+> -		rotation = <270>;
+> -		backlight = &backlight;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/display/sitronix,st7735r.yaml b/Documentation/devicetree/bindings/display/sitronix,st7735r.yaml
+> new file mode 100644
+> index 0000000000000000..21bccc91f74255e1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/sitronix,st7735r.yaml
+> @@ -0,0 +1,65 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/sitronix,st7735r.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Sitronix ST7735R Display Panels Device Tree Bindings
+> +
+> +maintainers:
+> +  - David Lechner <david@lechnology.com>
+> +
+> +description:
+> +  This binding is for display panels using a Sitronix ST7735R controller in
+> +  SPI mode.
+> +
+> +allOf:
+> +  - $ref: panel/panel-common.yaml#
 
-The AUDIOCIF_CTRL bitfields are not the same on T30 and T124, why are
-you claiming that programming is identical? Have you actually tried to
-test these patches on T30?
+not all of these properties are applicable.
+
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - description:
+> +          Adafruit 1.8" 160x128 Color TFT LCD (Product ID 358 or 618)
+> +        items:
+> +          - enum:
+> +              - jianda,jd-t18003-t01
+> +          - const: sitronix,st7735r
+> +
+> +  spi-max-frequency:
+> +    maximum: 32000000
+> +
+> +  dc-gpios:
+> +    maxItems: 1
+> +    description: Display data/command selection (D/CX)
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - dc-gpios
+> +  - reset-gpios
+
+Missing optional rotation and backlight properties.
+
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    backlight: backlight {
+> +            compatible = "gpio-backlight";
+> +            gpios = <&gpio 44 GPIO_ACTIVE_HIGH>;
+> +    };
+> +
+> +    spi {
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +
+> +            display@0{
+> +                    compatible = "jianda,jd-t18003-t01", "sitronix,st7735r";
+> +                    reg = <0>;
+> +                    spi-max-frequency = <32000000>;
+> +                    dc-gpios = <&gpio 43 GPIO_ACTIVE_HIGH>;
+> +                    reset-gpios = <&gpio 80 GPIO_ACTIVE_HIGH>;
+> +                    rotation = <270>;
+> +            };
+> +    };
+> +
+> +...
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index ea8262509bdd21ac..3007f83bd504194a 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -5382,7 +5382,7 @@ M:	David Lechner <david@lechnology.com>
+>   T:	git git://anongit.freedesktop.org/drm/drm-misc
+>   S:	Maintained
+>   F:	drivers/gpu/drm/tiny/st7735r.c
+> -F:	Documentation/devicetree/bindings/display/sitronix,st7735r.txt
+> +F:	Documentation/devicetree/bindings/display/sitronix,st7735r.yaml
+>   
+>   DRM DRIVER FOR SONY ACX424AKP PANELS
+>   M:	Linus Walleij <linus.walleij@linaro.org>
+> 
+
