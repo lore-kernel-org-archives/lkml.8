@@ -2,250 +2,186 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B19CC33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 07:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04BCDC33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 07:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D254D2073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 07:56:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="W+yDabe+"
+	by mail.kernel.org (Postfix) with ESMTP id C51072073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 07:58:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579507112;
+	bh=boajZ4+b6ZNroAy0wDyye24QFq+6IYabHskdZ7hjMrY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hXRqtF+I0QnGK2aUMSWUIaAhKZU7+KY5sHlBvTz3F9kHcnGaDbSd9jYeBhOAd9uaG
+	 op278zcwmHZ7WxSUFwAVhfScotNpz0BhlZNkH3cAIG5yW6HdiLJji29Scnf243nvRz
+	 UCIgmOR0b2QBgnazmf4hYVq4dH8A3SpSOPy00asQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726816AbgATH40 (ORCPT
+        id S1726587AbgATH6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 02:56:26 -0500
-Received: from mail-eopbgr1320129.outbound.protection.outlook.com ([40.107.132.129]:4512
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726039AbgATH40 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 02:56:26 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MZ7/HbQ1piYvztU2SzUcou3AUvaRjIro4D4n8LGGdxPp65xvAReNmkzrSqQ+d6X7BPCm/5Qb489+N92Fsh25Xf3srE4EKsoVkLveZ3xT3Q1zPskN1DCE0DciK4kv1EmJq+7zfgMMYCEDLGEhNOyJeuuYt10PHH+IgcP0zsWOz2opDU/nyUCzvA8n1/+Cdh0aHz2V1r1/3FNiKfUtTaJ4wvDtGG1TWV0lsbAAKBLL0JIalz0TUlAPgbZjTOzNFVm2j0313YuFMYHC8Kb6sVeaYhlUM11Z/gF1rTuK5VHjbqH0zt9J6+OtJsGvEl9+4WPzBkyhuzWz8vLWhkgR/zDtdg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XCphCZAAiG8enhlYStV+g8AcfrRNWboTXVluCYE87Qc=;
- b=PuomB6zwpJmnwyDAgl1vXicyx35uO2HbfnI5lDmdrKlV8sadt+ELJHTxmEdcFBMzgFVzu73Cbxux0SLNvtIB2+rVoq0Zdme0yaB73Vfv+ap+6bJvwU/nV17UEjlGpo99B8rNTzRUW/vyTCuUvfV3DFBATmtebGHjczc3RT0VXSgIX3oACCGZr03eh5Ph2Mv0z3LL2qAOMAisxZXpSkFk0uQjt5urmIqb5glFcVth8XbpbTAIi+YK2v6XbWZOAbEWak8pIMbVHCfznZcZ5hN+iYj3axJWKINhMvAnyoj6VF2VG1vAkzBhYbTYfM40Os9bvL97mA1YpSOXg/0fm+Cn4A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XCphCZAAiG8enhlYStV+g8AcfrRNWboTXVluCYE87Qc=;
- b=W+yDabe+YAu+8PF6hw+FGeOMD3k6KKJLXe3wiwpSNxDQVypi9Zt0OsY1J5yCkmNLfieMPmkoCmIKU9pEa3cS6Rox+Vk2/J8vQDUf7omsaOoFus4zZsNZFqPiuzDCiEefFjtrNyWmvaDBORnVFq4RxofgHRv0Bh1ABBa6G6UnI0E=
-Received: from SG2P153MB0349.APCP153.PROD.OUTLOOK.COM (52.132.233.84) by
- SG2P153MB0255.APCP153.PROD.OUTLOOK.COM (10.255.246.74) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2686.3; Mon, 20 Jan 2020 07:56:17 +0000
-Received: from SG2P153MB0349.APCP153.PROD.OUTLOOK.COM
- ([fe80::e8e6:3ff5:1354:c16c]) by SG2P153MB0349.APCP153.PROD.OUTLOOK.COM
- ([fe80::e8e6:3ff5:1354:c16c%4]) with mapi id 15.20.2686.007; Mon, 20 Jan 2020
- 07:56:17 +0000
-From:   Tianyu Lan <Tianyu.Lan@microsoft.com>
-To:     Michael Kelley <mikelley@microsoft.com>,
-        "lantianyu1986@gmail.com" <lantianyu1986@gmail.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        vkuznets <vkuznets@redhat.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH V2] x86/Hyper-V: Balloon up according to request page
- number
-Thread-Topic: [PATCH V2] x86/Hyper-V: Balloon up according to request page
- number
-Thread-Index: AQHVzjWbsjxOGkWFdEaVS9cNDyCZfafzLvxg
-Date:   Mon, 20 Jan 2020 07:56:16 +0000
-Message-ID: <SG2P153MB03494F5D6419A9DAA2E7A18192320@SG2P153MB0349.APCP153.PROD.OUTLOOK.COM>
-References: <20200116141600.23391-1-Tianyu.Lan@microsoft.com>
- <MW2PR2101MB10520A27DC77E3B2F15EC75FD7300@MW2PR2101MB1052.namprd21.prod.outlook.com>
-In-Reply-To: <MW2PR2101MB10520A27DC77E3B2F15EC75FD7300@MW2PR2101MB1052.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-01-18T19:29:24.8895054Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=20eeef19-b79d-4e67-97db-f5edc5648f20;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Tianyu.Lan@microsoft.com; 
-x-originating-ip: [167.220.255.119]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: f5731fcc-3060-43c2-23e1-08d79d7e3adf
-x-ms-traffictypediagnostic: SG2P153MB0255:|SG2P153MB0255:|SG2P153MB0255:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <SG2P153MB0255ECDAB6D3143F9C2C092D92320@SG2P153MB0255.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 0288CD37D9
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(136003)(39860400002)(396003)(366004)(376002)(189003)(199004)(52536014)(5660300002)(10290500003)(478600001)(33656002)(186003)(8676002)(26005)(2906002)(81156014)(8936002)(81166006)(54906003)(316002)(9686003)(7696005)(6506007)(53546011)(110136005)(55016002)(76116006)(66476007)(66946007)(66556008)(64756008)(71200400001)(4326008)(66446008)(8990500004)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:SG2P153MB0255;H:SG2P153MB0349.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: SO7fQdqxXVbC5xcVHfBit6iULfQ3ulxxjb7qX4r9BNlpz1NrqBdjsAPy9JH2b14yeK0QjXScBHdmLOYKtTG0OZkH46FY34XzUMwhSNi+XbBJ6l6DW/F2Xy4oMnGoxrvKbaFHFG/0hoavHhx6M/3EGyTL1QaJwaq+49ASGjB/S7DZ63ElZlEUGwiopS9A5O/posdtH3cVSxM5NoCDkwV6dVtkJOhVX6+8FX2h5n1Ekud+5qrA621qLiqrLmJDvV8orSZGWx0G8c9FUD5SntXALuHas9OmAv7OxFnXpiowLlRdt6rHVV0o5D2vBQ7rXvkGBL0BHoMvAOtvdkVb3PKLX2ovFiO3+t/QJrmoFhoRmXCXrziPyi5JsXfdblovtnKQiIOKXscLLguopfh13eXoG1bGmRBd7lHa2MobvVXov2EK5P9kgornUrgqVWGiayyr
-x-ms-exchange-antispam-messagedata: 70sjRXhE3n/eIoyOy3fiu0gUk7Qai5nKMNmzYL7DTBY5nLuwPVWRUhyao8fTqqYMeVXgRTkaVxzK7bZuqAQ+QtJ/FcntXooc0Qv72irMf/l2hLd2tJ1X7dnaUvqWjrtTA3WuFObowL9wEURjP9PW6w==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 20 Jan 2020 02:58:31 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37141 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbgATH6b (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 02:58:31 -0500
+Received: by mail-wm1-f65.google.com with SMTP id f129so13650303wmf.2;
+        Sun, 19 Jan 2020 23:58:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Ft1ppkkfH4raCeZxme+a2Wu4lfTixTdm+rB0YxpNt7A=;
+        b=L39Ed5BEaITLmKOhFtaw5Wva89RuPLqr+0jGoFsKopKNbZlO5eb6ykmvNC+rfwQ4fm
+         Q0iycmL5dCz5bUHABW9V4FhUXgi7KOKnlwLPdZY84UtOupDDdqHLUsbHC65gUquSPK2/
+         MDOD32Q+0+x/O8dVJHHWetfXlSO7v8353RDJbeQ4sUSKUkzfYwpNG4tOJYkVZLPK4Gqv
+         sRABppsp2SFWllmU32oa3H1Pcym1Q4J9f3JTwJY7vO1/D6XxHOGrjTJcgSvLKQiBZxk5
+         USyJjvxsKDrtuE/inHeJQ3OyIOcFdpbk1v4IvnsJ04FSrGNdFeXZbEYIMOhi3xKO82Aj
+         RbDQ==
+X-Gm-Message-State: APjAAAX9oBnGda4z8yxMQhoJ+UrVwDl7FIAuxH5I8NGgO4fjXRcEEQXd
+        JKyQPWTABotmuz2s4czcUBs=
+X-Google-Smtp-Source: APXvYqwC6Bg1AKZ6q+JZzdOdWI3t9Bdf0NOozf9LisD6pjmZiGnRVPu5F+IzqyzFKeAbourkQkAobA==
+X-Received: by 2002:a05:600c:28d:: with SMTP id 13mr18340346wmk.52.1579507108009;
+        Sun, 19 Jan 2020 23:58:28 -0800 (PST)
+Received: from localhost (ip-37-188-138-155.eurotel.cz. [37.188.138.155])
+        by smtp.gmail.com with ESMTPSA id z83sm8741410wmg.2.2020.01.19.23.58.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 19 Jan 2020 23:58:27 -0800 (PST)
+Date:   Mon, 20 Jan 2020 08:58:25 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     sspatil@google.com
+Cc:     kirill@shutemov.name, minchan@kernel.org,
+        akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-api@vger.kernel.org,
+        oleksandr@redhat.com, surenb@google.com, timmurray@google.com,
+        dancol@google.com, sonnyrao@google.com, bgeffon@google.com,
+        hannes@cmpxchg.org, shakeelb@google.com, joaodias@google.com,
+        ktkhai@virtuozzo.com, christian.brauner@ubuntu.com,
+        sjpark@amazon.de
+Subject: Re: [PATCH v2 2/5] mm: introduce external memory hinting API
+Message-ID: <20200120075825.GH18451@dhcp22.suse.cz>
+References: <20200116235953.163318-1-minchan@kernel.org>
+ <20200116235953.163318-3-minchan@kernel.org>
+ <20200117115225.GV19428@dhcp22.suse.cz>
+ <20200117155837.bowyjpndfiym6cgs@box>
+ <20200117173239.GB140922@google.com>
+ <20200117212653.7uftw3lk35oykkmb@box>
+ <20200119161431.GA94410@google.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f5731fcc-3060-43c2-23e1-08d79d7e3adf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jan 2020 07:56:17.0589
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xlYVHHwlHr8h08VaGpZpmbskgnmsIgeCx9J1H8hfDmQ7K8rYhsYvA5KWWDgmo1j15Y9Jak1m+d/DE7QypdV4pA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2P153MB0255
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200119161431.GA94410@google.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michael:
-	Thanks for your review.
+On Sun 19-01-20 08:14:31, sspatil@google.com wrote:
+> On Sat, Jan 18, 2020 at 12:26:53AM +0300, Kirill A. Shutemov wrote:
+> > On Fri, Jan 17, 2020 at 09:32:39AM -0800, Minchan Kim wrote:
+> > > On Fri, Jan 17, 2020 at 06:58:37PM +0300, Kirill A. Shutemov wrote:
+> > > > On Fri, Jan 17, 2020 at 12:52:25PM +0100, Michal Hocko wrote:
+> > > > > On Thu 16-01-20 15:59:50, Minchan Kim wrote:
+> > > > > > There is usecase that System Management Software(SMS) want to give
+> > > > > > a memory hint like MADV_[COLD|PAGEEOUT] to other processes and
+> > > > > > in the case of Android, it is the ActivityManagerService.
+> > > > > > 
+> > > > > > It's similar in spirit to madvise(MADV_WONTNEED), but the information
+> > > > > > required to make the reclaim decision is not known to the app. Instead,
+> > > > > > it is known to the centralized userspace daemon(ActivityManagerService),
+> > > > > > and that daemon must be able to initiate reclaim on its own without
+> > > > > > any app involvement.
+> > > > > > 
+> > > > > > To solve the issue, this patch introduces new syscall process_madvise(2).
+> > > > > > It uses pidfd of an external processs to give the hint.
+> > > > > > 
+> > > > > >  int process_madvise(int pidfd, void *addr, size_t length, int advise,
+> > > > > > 			unsigned long flag);
+> > > > > > 
+> > > > > > Since it could affect other process's address range, only privileged
+> > > > > > process(CAP_SYS_PTRACE) or something else(e.g., being the same UID)
+> > > > > > gives it the right to ptrace the process could use it successfully.
+> > > > > > The flag argument is reserved for future use if we need to extend the
+> > > > > > API.
+> > > > > > 
+> > > > > > I think supporting all hints madvise has/will supported/support to
+> > > > > > process_madvise is rather risky. Because we are not sure all hints make
+> > > > > > sense from external process and implementation for the hint may rely on
+> > > > > > the caller being in the current context so it could be error-prone.
+> > > > > > Thus, I just limited hints as MADV_[COLD|PAGEOUT] in this patch.
+> > > > > > 
+> > > > > > If someone want to add other hints, we could hear hear the usecase and
+> > > > > > review it for each hint. It's more safe for maintainace rather than
+> > > > > > introducing a buggy syscall but hard to fix it later.
+> > > > > 
+> > > > > I have brought this up when we discussed this in the past but there is
+> > > > > no reflection on that here so let me bring that up again. 
+> > > > > 
+> > > > > I believe that the interface has an inherent problem that it is racy.
+> > > > > The external entity needs to know the address space layout of the target
+> > > > > process to do anyhing useful on it. The address space is however under
+> > > > > the full control of the target process though and the external entity
+> > > > > has no means to find out that the layout has changed. So
+> > > > > time-to-check-time-to-act is an inherent problem.
+> > > > > 
+> > > > > This is a serious design flaw and it should be explained why it doesn't
+> > > > > matter or how to use the interface properly to prevent that problem.
+> > > > 
+> > > > I agree, it looks flawed.
+> > > > 
+> > > > Also I don't see what System Management Software can generically do on
+> > > > sub-process level. I mean how can it decide which part of address space is
+> > > > less important than other.
+> > > > 
+> > > > I see how a manager can indicate that this process (or a group of
+> > > > processes) is less important than other, but on per-addres-range basis?
+> > > 
+> > > For example, memory ranges shared by several processes or critical for the
+> > > latency, we could avoid those ranges to be cold/pageout to prevent
+> > > unncecessary CPU burning/paging.
+> > 
+> > Hmm.. I still don't see why any external entity has a better (or any)
+> > knowledge about the matter. The process has to do this, no?
+> 
+> FWIW, I totally agree with the time-to-check-time-to-react problem. However,
+> I'd like to clarify the ActivityManager/SystemServer case (I'll call it
+> SystemServer from now on)
+> 
+> For Android, every application (including the special SystemServer) are forked
+> from Zygote. The reason ofcourse is to share as many libraries and classes between
+> the two as possible to benefit from the preloading during boot.
+> 
+> After applications start, (almost) all of the APIs  end up calling into this
+> SystemServer process over IPC (binder) and back to the application.
+> 
+> In a fully running system, the SystemServer monitors every single process
+> periodically to calculate their PSS / RSS and also decides which process is
+> "important" to the user for interactivity.
+> 
+> So, because of how these processes start _and_ the fact that the SystemServer
+> is looping to monitor each process, it does tend to *know* which address
+> range of the application is not used / useful.
+> 
+> Besides, we can never rely on applications to clean things up themselves.
+> We've had the "hey app1, the system is low on memory, please trim your
+> memory usage down" notifications for a long time[1]. They rely on
+> applications honoring the broadcasts and very few do.
+> 
+> So, if we want to avoid the inevitable killing of the application and
+> restarting it, some way to be able to tell the OS about unimportant memory in
+> these applications will be useful.
 
-> From: Michael Kelley <mikelley@microsoft.com>
-> Sent: Sunday, January 19, 2020 3:29 AM
-> To: lantianyu1986@gmail.com; KY Srinivasan <kys@microsoft.com>; Haiyang
-> Zhang <haiyangz@microsoft.com>; Stephen Hemminger
-> <sthemmin@microsoft.com>; sashal@kernel.org
-> Cc: Tianyu Lan <Tianyu.Lan@microsoft.com>; linux-hyperv@vger.kernel.org;
-> linux-kernel@vger.kernel.org; vkuznets <vkuznets@redhat.com>;
-> stable@vger.kernel.org
-> Subject: RE: [PATCH V2] x86/Hyper-V: Balloon up according to request page
-> number
->=20
-> From: Tianyu Lan <Tianyu.Lan@microsoft.com> Sent: Thursday, January 16,
-> 2020 6:16 AM
-> >
-> > Current code has assumption that balloon request memory size aligns
-> > with 2MB. But actually Hyper-V doesn't guarantee such alignment. When
-> > balloon driver receives non-aligned balloon request, it produces
-> > warning and balloon up more memory than requested in order to keep 2MB
-> alignment.
-> > Remove the warning and balloon up memory according to actual requested
-> > memory size.
-> >
-> > Fixes: f6712238471a ("hv: hv_balloon: avoid memory leak on alloc_error
-> > of 2MB memory
-> > block")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> > ---
-> > Change since v2:
-> >     - Change logic of switching alloc_unit from 2MB to 4KB
-> >     in the balloon_up() to avoid redundant iteration when
-> >     handle non-aligned page request.
-> >     - Remove 2MB alignment operation and comment in balloon_up()
-> > ---
-> >  drivers/hv/hv_balloon.c | 12 ++++--------
-> >  1 file changed, 4 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c index
-> > 7f3e7ab22d5d..536807efbc35 100644
-> > --- a/drivers/hv/hv_balloon.c
-> > +++ b/drivers/hv/hv_balloon.c
-> > @@ -1684,7 +1684,7 @@ static unsigned int alloc_balloon_pages(struct
-> > hv_dynmem_device *dm,
-> >  	if (num_pages < alloc_unit)
-> >  		return 0;
->=20
-> The above test is no longer necessary.  The num_pages < alloc_unit case i=
-s
-> handled implicitly by your new 'for' loop condition.
->=20
+This is a useful information that should be a part of the changelog. I
+do see how the current form of the API might fit into Android model
+without many problems. But we are not designing an API for a single
+usecase, right? In a highly cooperative environments you can use ptrace
+code injection as mentioned by Kirill. Or is there any fundamental
+problem about that?
 
-Yes, will update in the next version.
-
-> >
-> > -	for (i =3D 0; (i * alloc_unit) < num_pages; i++) {
-> > +	for (i =3D 0; i < num_pages / alloc_unit; i++) {
-> >  		if (bl_resp->hdr.size + sizeof(union dm_mem_page_range) >
-> >  			HV_HYP_PAGE_SIZE)
-> >  			return i * alloc_unit;
-> > @@ -1722,7 +1722,7 @@ static unsigned int alloc_balloon_pages(struct
-> > hv_dynmem_device *dm,
-> >
-> >  	}
-> >
-> > -	return num_pages;
-> > +	return i * alloc_unit;
-> >  }
-> >
-> >  static void balloon_up(union dm_msg_info *msg_info) @@ -1737,9
-> > +1737,6 @@ static void balloon_up(union dm_msg_info *msg_info)
-> >  	long avail_pages;
-> >  	unsigned long floor;
-> >
-> > -	/* The host balloons pages in 2M granularity. */
-> > -	WARN_ON_ONCE(num_pages % PAGES_IN_2M !=3D 0);
-> > -
-> >  	/*
-> >  	 * We will attempt 2M allocations. However, if we fail to
-> >  	 * allocate 2M chunks, we will go back to PAGE_SIZE allocations.
-> > @@ -1749,14 +1746,13 @@ static void balloon_up(union dm_msg_info
-> *msg_info)
-> >  	avail_pages =3D si_mem_available();
-> >  	floor =3D compute_balloon_floor();
-> >
-> > -	/* Refuse to balloon below the floor, keep the 2M granularity. */
-> > +	/* Refuse to balloon below the floor. */
-> >  	if (avail_pages < num_pages || avail_pages - num_pages < floor) {
-> >  		pr_warn("Balloon request will be partially fulfilled. %s\n",
-> >  			avail_pages < num_pages ? "Not enough memory." :
-> >  			"Balloon floor reached.");
-> >
-> >  		num_pages =3D avail_pages > floor ? (avail_pages - floor) : 0;
-> > -		num_pages -=3D num_pages % PAGES_IN_2M;
-> >  	}
-> >
-> >  	while (!done) {
-> > @@ -1770,7 +1766,7 @@ static void balloon_up(union dm_msg_info
-> *msg_info)
-> >  		num_ballooned =3D alloc_balloon_pages(&dm_device,
-> num_pages,
-> >  						    bl_resp, alloc_unit);
-> >
-> > -		if (alloc_unit !=3D 1 && num_ballooned =3D=3D 0) {
-> > +		if (alloc_unit !=3D 1 && num_ballooned !=3D num_pages) {
->=20
-> Maybe I'm missing something, but I don't think Vitaly's optimization work=
-s.  If
-> alloc_unit specifies 2 Mbytes, and num_pages specifies 3 Mbytes, then
-> num_ballooned will come back as 2 Mbytes, which is correct.  But if we re=
-vert
-> alloc_unit to 1 page and "continue" in that case, we will lose the 2 Mbyt=
-es of
-> memory (it's not freed), and the next time through the loop will try to a=
-llocate
-> only 1 Mbyte (because num_pages will be decremented by num_ballooned).  I
-> think the original code does the right thing.
->=20
-> Michael
-
-Sorry. I should remove the "continue" here and then it will work.  Will fix=
- this in the
-next version.
-
->=20
-> >  			alloc_unit =3D 1;
-> >  			continue;
-> >  		}
-> > --
-> > 2.14.5
-
+The interface really has to be robust to future potential usecases.
+-- 
+Michal Hocko
+SUSE Labs
