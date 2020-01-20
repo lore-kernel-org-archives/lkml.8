@@ -2,207 +2,106 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C5C2C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06BB0C32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:17:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44D06207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:16:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE2C82073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:17:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="ysDRdfFS"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="DPEN5idy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726586AbgATGQe (ORCPT
+        id S1726407AbgATGRz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 01:16:34 -0500
-Received: from mail-eopbgr770085.outbound.protection.outlook.com ([40.107.77.85]:47073
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725783AbgATGQd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 01:16:33 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eViEwMYFw938s1G7k5CZJnMHlHz2b+eoYttn16q/zgxbX1B90SzVkpZIQ/ThvCRETk966PNoA1PrUNKnlXGp/9QM3j94oJCNFJJ/iaHlVJ9h+3K1nVON7FZNKFcMMW8RS5XBN4qzXCYlSWwqKo0Emx059VGZw5Om+EUuRvgS5o9FWkyqqKDPOEQUL4n7fkv/f4N7CNwpyiOE8xS7u/42REv3FnBavyiMBJAOaCHHO8EytxY6JCFamabEDzlIFGZ1+Lbo7+OULtGIkIa6WyAZ6q2VQlhkOBKy9Xdb2NggOpPgj/OTgZJZ9DL6lc8llr303bJPKG8lgF20N78Ycuj/Sw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UdLb9D5Gt2A43LYbPPnUoblTuI1crEaVEqFv4JerRIk=;
- b=mbzpPiWnAkmfO3WlhREHVrTWMBtz6rB9oCpyVVoNCoPcFdNVeAURPULac+16XnXMgak6sn6bv9ft5zEWXrwC8Qhy27bwDePV9oeUwc+I+WSaPbidF4aWh2OqPgab8BBhvaJby8sGEOw8VsO3KA2P0qYMJmuNb4zPSHFA0at6eIfzSIVcHm8PBnqoGgevKfPoSae2M2xz8kStPoDXt7WkoUL0X0xenv2b0rv0he9Ysf6YvsOMeo3Z88WMmjNYzYsEDtEajqcXNe+VdnfrXMAJ4fUxy/DlFJh4WwGwMhtYwBpgPZDVvLjjqmU/SC/4MKKUOhX0SPRS3nGOMmygIezKlg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UdLb9D5Gt2A43LYbPPnUoblTuI1crEaVEqFv4JerRIk=;
- b=ysDRdfFSnpeUbkSVAh3PPeDVlk4yd6TbMkX+mVA7WTdeeCdsghbZ7cIXhFqjab1xRanqAidWiK90/NnKBVc29h14WbdZB1gKTyz3hmIOMbgbsxA8fSejep1qcbAfODTEW8FhyPoNKUYJ430+n5YzejoqTcnXFYyRKzcd1NWTCBA=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Suravee.Suthikulpanit@amd.com; 
-Received: from DM6PR12MB3865.namprd12.prod.outlook.com (10.255.172.206) by
- DM6PR12MB2682.namprd12.prod.outlook.com (20.176.118.13) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.20; Mon, 20 Jan 2020 06:16:24 +0000
-Received: from DM6PR12MB3865.namprd12.prod.outlook.com
- ([fe80::fdd1:4a97:85cc:d302]) by DM6PR12MB3865.namprd12.prod.outlook.com
- ([fe80::fdd1:4a97:85cc:d302%3]) with mapi id 15.20.2644.024; Mon, 20 Jan 2020
- 06:16:23 +0000
-Subject: Re: [PATCH v5 00/18] kvm: x86: Support AMD SVM AVIC w/ in-kernel
- irqchip mode
-From:   Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, joro@8bytes.org,
-        vkuznets@redhat.com, rkagan@virtuozzo.com, graf@amazon.com,
-        jschoenh@amazon.de, karahmed@amazon.de, rimasluk@amazon.com,
-        jon.grimm@amd.com
-References: <1573762520-80328-1-git-send-email-suravee.suthikulpanit@amd.com>
- <9e3e9692-d786-844e-c625-62b69505d2c9@amd.com>
-Message-ID: <b4fa2422-f479-e1e4-11c6-5a4dfda53b74@amd.com>
-Date:   Mon, 20 Jan 2020 13:16:11 +0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.3.1
-In-Reply-To: <9e3e9692-d786-844e-c625-62b69505d2c9@amd.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SG2PR02CA0055.apcprd02.prod.outlook.com
- (2603:1096:4:54::19) To DM6PR12MB3865.namprd12.prod.outlook.com
- (2603:10b6:5:1c4::14)
+        Mon, 20 Jan 2020 01:17:55 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:14659 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbgATGRy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 01:17:54 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e2545e80000>; Sun, 19 Jan 2020 22:17:12 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sun, 19 Jan 2020 22:17:54 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sun, 19 Jan 2020 22:17:54 -0800
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 20 Jan
+ 2020 06:17:53 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 20 Jan 2020 06:17:53 +0000
+Received: from audio.nvidia.com (Not Verified[10.24.34.185]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e25460f0000>; Sun, 19 Jan 2020 22:17:52 -0800
+From:   Sameer Pujar <spujar@nvidia.com>
+To:     <oder_chiou@realtek.com>, <bardliao@realtek.com>, <tiwai@suse.com>,
+        <perex@perex.cz>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        Sameer Pujar <spujar@nvidia.com>
+Subject: [PATCH] ASoC: rt5659: add S32_LE format
+Date:   Mon, 20 Jan 2020 11:47:39 +0530
+Message-ID: <1579501059-27936-1-git-send-email-spujar@nvidia.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Received: from Suravees-MacBook-Pro.local (165.204.140.250) by SG2PR02CA0055.apcprd02.prod.outlook.com (2603:1096:4:54::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.20 via Frontend Transport; Mon, 20 Jan 2020 06:16:19 +0000
-X-Originating-IP: [165.204.140.250]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: d1b32654-b56f-498f-ee6b-08d79d7045c1
-X-MS-TrafficTypeDiagnostic: DM6PR12MB2682:|DM6PR12MB2682:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB26828E9B30E8FBF685E235C6F3320@DM6PR12MB2682.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
-X-Forefront-PRVS: 0288CD37D9
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(366004)(39860400002)(396003)(346002)(199004)(189003)(31696002)(4326008)(6512007)(186003)(16526019)(81166006)(81156014)(52116002)(6486002)(5660300002)(66946007)(36756003)(53546011)(2616005)(478600001)(66476007)(66556008)(86362001)(6506007)(8676002)(316002)(2906002)(7416002)(956004)(6666004)(31686004)(44832011)(26005)(8936002)(21314003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB2682;H:DM6PR12MB3865.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 7wlBbpLOtPHtilvaU//g0v8bnCTdfOUEgwzdmPUrG2TmokxWdTmIKZLxZotNt5k8v6rcMsO4HzWk1B4ht/XEBbsGRjRwxvx1OqtVzec4FkR8MCJXLzDwHcRa7pzjachRmHErIGG2thI9541NpwlH7pf3XtldIjBIJYI3nBWfCuqz7BsWcDN+KFjBpSmEIpGzQvVVX6fLZ3bJC35jwnjagb80IlA3BJeKtMmHanVF+ZSfSuX/bCOT7gdJyUvzw9/CRG9pVE6P5TFDi2YTqo0cAQQ/KcgQ70CanNqrVupv/vm4oHoVSRuGaEs9gMDunihW2XomcVIL9ch5f3LGlmX61HUgRsiEhbqQShETp5J64CVCbqwIYEpXt6iWLQ6JCFyu+soX5G7zSJ1fANAQ99cZjpaEyHeCQDyviWMwJlf53d5DaQkMtauqPNeszdyCVqW20kdrv/+SqXOAtPbuIrKid3af9tR0YMnbQhl6uOoZs0aiZHSagUItJIfgIYEDKUWYU3pQ8vsmr+TZidK/6RMc+1WDSb5nerph/697E7a4Ei4cE4iSQyUq1DVe61vUNW63
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d1b32654-b56f-498f-ee6b-08d79d7045c1
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jan 2020 06:16:23.7684
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4JNSb5mUbC7AboFoRyZSo5TtovG+ZMsmLVzp8dXEmwd1Uy3A6kOnKidOpvQ6uxyMfc1VuXHVE14XzS2EAuytyg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2682
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1579501032; bh=y0KuUHnikrqaYl+AkuZgAWArMBLX50J5YFwz5WfJk08=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:Content-Type;
+        b=DPEN5idyJgzm2UDuPOm/OFoQREwFgQerUJtKuDcWM5En/svuJEE3lPbniYiVh6lTU
+         zOIPi3LEjcDeT42jhY+iQ724jJX/K24V2wezlqrSlN0tknEyYvoF27jOfiEgLNsuM+
+         xeRQBem8lqAp+SdfJCwBRGYomAwl1M1BlQ2CB4hLgmb76UF+1kFHepZcqYESjywQhB
+         eptOA3axpayafuiDhb+G4gORb+qWi73maMWfP93qjEc1NlARp7isRsf0RdEE6YLyw7
+         qbu/z8z0f0SLibcBZVFJ08KHzDaRI7derNbbVkUN7gm/QBsxxf2KlwqzoOw44r/Etd
+         gd1d5iAnsJoog==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ping
+ALC5659 supports maximum data length of 24-bit. Currently driver supports
+S24_LE which is a 32-bit container with valid data in [23:0] and 0s in MSB.
+S24_3LE is not commonly used and is hard to find audio streams with this
+format. Also many SoC HW do not support S24_LE and S32_LE is used in
+general. The 24-bit data can be represented in S32_LE [31:8] and 0s are
+padded in LSB.
 
-Thanks
-Suravee
+This patch adds S32_LE to ALC5659 driver and data length for this is set
+to 24 as per codec's maximum data length support. This helps to play
+24-bit audio, packed in S32_LE, on HW which do not support S24_LE.
 
-On 1/2/20 5:17 PM, Suravee Suthikulpanit wrote:
-> Paolo,
-> 
-> Ping. Would you please let me know your feedback when you get a chance to review this series
-> 
-> Thanks,
-> Suravee
-> 
-> On 11/15/19 3:15 AM, Suravee Suthikulpanit wrote:
->> The 'commit 67034bb9dd5e ("KVM: SVM: Add irqchip_split() checks before
->> enabling AVIC")' was introduced to fix miscellaneous boot-hang issues
->> when enable AVIC. This is mainly due to AVIC hardware doest not #vmexit
->> on write to LAPIC EOI register resulting in-kernel PIC and IOAPIC to
->> wait and do not inject new interrupts (e.g. PIT, RTC).
->>
->> This limits AVIC to only work with kernel_irqchip=split mode, which is
->> not currently enabled by default, and also required user-space to
->> support split irqchip model, which might not be the case.
->>
->> The goal of this series is to enable AVIC to work in both irqchip modes,
->> by allowing AVIC to be deactivated temporarily during runtime, and fallback
->> to legacy interrupt injection mode (w/ vINTR and interrupt windows)
->> when needed, and then re-enabled subsequently (a.k.a Dynamic APICv).
->>
->> Similar approach is also used to handle Hyper-V SynIC in the
->> 'commit 5c919412fe61 ("kvm/x86: Hyper-V synthetic interrupt controller")',
->> where APICv is permanently disabled at runtime (currently broken for
->> AVIC, and fixed by this series).
->>
->> This series contains several parts:
->>    * Part 1: patch 1,2
->>      Code clean up, refactor, and introduce helper functions
->>
->>    * Part 2: patch 3
->>      Introduce APICv deactivate bits to keep track of APICv state
->>      for each vm.
->>    * Part 3: patch 4-10
->>      Add support for activate/deactivate APICv at runtime
->>
->>    * Part 4: patch 11-14:
->>      Add support for various cases where APICv needs to
->>      be deactivated
->>
->>    * Part 5: patch 15-17:
->>      Introduce in-kernel IOAPIC workaround for AVIC EOI
->>
->>    * Part 6: path 18
->>      Allow enable AVIC w/ kernel_irqchip=on
->>
->> Pre-requisite Patch:
->>    * commit b9c6ff94e43a ("iommu/amd: Re-factor guest virtual APIC (de-)activation code")
->>      (https://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git/commit/
->>       ?h=next&id=b9c6ff94e43a0ee053e0c1d983fba1ac4953b762)
->>
->> This series has been tested against v5.3 as following:
->>    * Booting Linux, FreeBSD, and Windows Server 2019 VMs upto 240 vcpus
->>      w/ qemu option "kernel-irqchip=on" and "-no-hpet".
->>    * Pass-through Intel 10GbE NIC and run netperf in the VM.
->>
->> Changes from V4: (https://lkml.org/lkml/2019/11/1/764)
->>    * Rename APICV_DEACT_BIT_xxx to APICV_INHIBIT_REASON_xxxx
->>    * Introduce kvm_x86_ops.check_apicv_inhibit_reasons hook
->>      to allow vendors to specify which APICv inhibit reason bits
->>      to support (patch 08/18).
->>    * Update comment on kvm_request_apicv_update() no-lock requirement.
->>      (patch 04/18)
->>
->> Suravee Suthikulpanit (18):
->>    kvm: x86: Modify kvm_x86_ops.get_enable_apicv() to use struct kvm
->>      parameter
->>    kvm: lapic: Introduce APICv update helper function
->>    kvm: x86: Introduce APICv inhibit reason bits
->>    kvm: x86: Add support for dynamic APICv
->>    kvm: x86: Add APICv (de)activate request trace points
->>    kvm: x86: svm: Add support to (de)activate posted interrupts
->>    svm: Add support for setup/destroy virutal APIC backing page for AVIC
->>    kvm: x86: Introduce APICv x86 ops for checking APIC inhibit reasons
->>    kvm: x86: Introduce x86 ops hook for pre-update APICv
->>    svm: Add support for dynamic APICv
->>    kvm: x86: hyperv: Use APICv update request interface
->>    svm: Deactivate AVIC when launching guest with nested SVM support
->>    svm: Temporary deactivate AVIC during ExtINT handling
->>    kvm: i8254: Deactivate APICv when using in-kernel PIT re-injection
->>      mode.
->>    kvm: lapic: Clean up APIC predefined macros
->>    kvm: ioapic: Refactor kvm_ioapic_update_eoi()
->>    kvm: ioapic: Lazy update IOAPIC EOI
->>    svm: Allow AVIC with in-kernel irqchip mode
->>
->>   arch/x86/include/asm/kvm_host.h |  19 ++++-
->>   arch/x86/kvm/hyperv.c           |   5 +-
->>   arch/x86/kvm/i8254.c            |  12 +++
->>   arch/x86/kvm/ioapic.c           | 149 +++++++++++++++++++++++-------------
->>   arch/x86/kvm/lapic.c            |  35 +++++----
->>   arch/x86/kvm/lapic.h            |   2 +
->>   arch/x86/kvm/svm.c              | 164 +++++++++++++++++++++++++++++++++++-----
->>   arch/x86/kvm/trace.h            |  19 +++++
->>   arch/x86/kvm/vmx/vmx.c          |  12 ++-
->>   arch/x86/kvm/x86.c              |  71 ++++++++++++++---
->>   10 files changed, 385 insertions(+), 103 deletions(-)
->>
+Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+---
+ sound/soc/codecs/rt5659.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/sound/soc/codecs/rt5659.c b/sound/soc/codecs/rt5659.c
+index fc74dd63..f910ddf 100644
+--- a/sound/soc/codecs/rt5659.c
++++ b/sound/soc/codecs/rt5659.c
+@@ -3339,6 +3339,7 @@ static int rt5659_hw_params(struct snd_pcm_substream *substream,
+ 		val_len |= RT5659_I2S_DL_20;
+ 		break;
+ 	case 24:
++	case 32:
+ 		val_len |= RT5659_I2S_DL_24;
+ 		break;
+ 	case 8:
+@@ -3733,7 +3734,8 @@ static int rt5659_resume(struct snd_soc_component *component)
+ 
+ #define RT5659_STEREO_RATES SNDRV_PCM_RATE_8000_192000
+ #define RT5659_FORMATS (SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S20_3LE | \
+-		SNDRV_PCM_FMTBIT_S24_LE | SNDRV_PCM_FMTBIT_S8)
++		SNDRV_PCM_FMTBIT_S24_LE | SNDRV_PCM_FMTBIT_S32_LE | \
++		SNDRV_PCM_FMTBIT_S8)
+ 
+ static const struct snd_soc_dai_ops rt5659_aif_dai_ops = {
+ 	.hw_params = rt5659_hw_params,
+-- 
+2.7.4
+
