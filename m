@@ -2,102 +2,131 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B7FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01CC2C47409
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:03:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D78A208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:58:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6561208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:03:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IUsagC+Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbgATL6d (ORCPT
+        id S1727047AbgATMDd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 06:58:33 -0500
-Received: from mga02.intel.com ([134.134.136.20]:46845 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726573AbgATL6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 06:58:33 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 03:58:32 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,341,1574150400"; 
-   d="scan'208";a="275091434"
-Received: from kuha.fi.intel.com ([10.237.72.53])
-  by fmsmga001.fm.intel.com with SMTP; 20 Jan 2020 03:58:29 -0800
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 20 Jan 2020 13:58:28 +0200
-Date:   Mon, 20 Jan 2020 13:58:28 +0200
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Markus Reichl <m.reichl@fivetechno.de>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Linux USB Mailing List <linux-usb@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        linux-rockchip@lists.infradead.org
-Subject: Re: [Bug ?] usb :typec :tcpm :fusb302
-Message-ID: <20200120115828.GC32175@kuha.fi.intel.com>
-References: <0ac6bbe7-6395-526d-213c-ac58a19d8673@fivetechno.de>
+        Mon, 20 Jan 2020 07:03:33 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42183 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726890AbgATMDc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 07:03:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579521811;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=i0FYwpPvJVwXX6WibGdKe3t8GmO0Q/BB/ry3XOYj5v4=;
+        b=IUsagC+QT7o8Lg7F1pqLCJbSApDaimaTwWR2DDCb+EFmTbNbyTERf0ROeQzX6iE2e3fthU
+        8F+yuUTDv9de3lrQaArYnjglILK+XcLEWnwlYCnFXQssRlJpkb5HigEHVl5nJCAVc7o+4f
+        e3mDKsdzEwwtdJ/I6u5d9fFXZCzJ1GM=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-172-KSVrNUxKNzC1SttC00pAgw-1; Mon, 20 Jan 2020 07:03:28 -0500
+X-MC-Unique: KSVrNUxKNzC1SttC00pAgw-1
+Received: by mail-qk1-f198.google.com with SMTP id j16so20365478qkk.17
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 04:03:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=i0FYwpPvJVwXX6WibGdKe3t8GmO0Q/BB/ry3XOYj5v4=;
+        b=L8+5JZMgVQxSGGHY5hCllzWifrrUxf519OqWeFyNByi2/sI+zkKe0Tb+9rvH0xxOtx
+         JPQa0kDmraBD8lXTDNJ38K4w+sr1A9eCKC+uEwmB8GbbOXETrTojG998eZ4efY2aopoa
+         47h2/ftMGdec+vAIr5F1BePuLlcUgNadyKNzBFyQJtC+BKsNwvOrs4leaqKVj2985CeF
+         THbN0RiakaXhXq3VQw+N/p5dXyALpgGg4T+SOTyyQe+LlqOeMUruW+q7Bl2dbUA03ghX
+         mYWDguy6TvdmwXuunfDVKl7XD+2ZnsuEpaZn13uEkQbZo5qgtSns70DrKT1HQjYRiNWU
+         6mHg==
+X-Gm-Message-State: APjAAAX/1YhJa0NdULEK6JpWvo4GwEQVH0p2yDCiGE94D1dNVEfJj0W3
+        NMLLe3DaXV+KlCNUSuOEzjY+Ir7Sin9OkvrxZJV9QHtqbF3sTxHvWV15aAp63ELxPHXFes1J0Of
+        5bJnxfo81fcrRJer+N79QJmE5
+X-Received: by 2002:ac8:2c7d:: with SMTP id e58mr20372305qta.196.1579521807749;
+        Mon, 20 Jan 2020 04:03:27 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwBOvpzVbluzRk2PBevjR+yTn5PHKpCN1mkjbfx/S5QQmnZyFB/1WiP+Ct1GD9bo9yvXG9y7A==
+X-Received: by 2002:ac8:2c7d:: with SMTP id e58mr20372288qta.196.1579521807486;
+        Mon, 20 Jan 2020 04:03:27 -0800 (PST)
+Received: from redhat.com (bzq-79-179-85-180.red.bezeqint.net. [79.179.85.180])
+        by smtp.gmail.com with ESMTPSA id h8sm17044762qtm.51.2020.01.20.04.03.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jan 2020 04:03:26 -0800 (PST)
+Date:   Mon, 20 Jan 2020 07:03:20 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jhansen@vmware.com,
+        jasowang@redhat.com, kvm@vger.kernel.org, stefanha@redhat.com,
+        virtualization@lists.linux-foundation.org,
+        linux-hyperv@vger.kernel.org, decui@microsoft.com
+Subject: Re: [PATCH net-next 1/3] vsock: add network namespace support
+Message-ID: <20200120060601-mutt-send-email-mst@kernel.org>
+References: <20200116172428.311437-1-sgarzare@redhat.com>
+ <20200116172428.311437-2-sgarzare@redhat.com>
+ <20200120.100610.546818167633238909.davem@davemloft.net>
+ <20200120101735.uyh4o64gb4njakw5@steredhat>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0ac6bbe7-6395-526d-213c-ac58a19d8673@fivetechno.de>
+In-Reply-To: <20200120101735.uyh4o64gb4njakw5@steredhat>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Markus,
-
-On Thu, Jan 09, 2020 at 05:29:07PM +0100, Markus Reichl wrote:
-> Hi,
+On Mon, Jan 20, 2020 at 11:17:35AM +0100, Stefano Garzarella wrote:
+> On Mon, Jan 20, 2020 at 10:06:10AM +0100, David Miller wrote:
+> > From: Stefano Garzarella <sgarzare@redhat.com>
+> > Date: Thu, 16 Jan 2020 18:24:26 +0100
+> > 
+> > > This patch adds 'netns' module param to enable this new feature
+> > > (disabled by default), because it changes vsock's behavior with
+> > > network namespaces and could break existing applications.
+> > 
+> > Sorry, no.
+> > 
+> > I wonder if you can even design a legitimate, reasonable, use case
+> > where these netns changes could break things.
 > 
-> I'm working with a ROC-RK3399-PC arm64 board from firefly, circuit sheet [1].
-> The board is powered from an USB-C type connector via an FUSB302 PD controller.
-> With measured 15W+ power consumption it should use higher voltage PD modes than
-> the standard 5V USB-C mode.
+> I forgot to mention the use case.
+> I tried the RFC with Kata containers and we found that Kata shim-v1
+> doesn't work (Kata shim-v2 works as is) because there are the following
+> processes involved:
+> - kata-runtime (runs in the init_netns) opens /dev/vhost-vsock and
+>   passes it to qemu
+> - kata-shim (runs in a container) wants to talk with the guest but the
+>   vsock device is assigned to the init_netns and kata-shim runs in a
+>   different netns, so the communication is not allowed
+> But, as you said, this could be a wrong design, indeed they already
+> found a fix, but I was not sure if others could have the same issue.
 > 
-> When I add the related connector node in DTS [2] the FUSB302 initializes
-> the right PD mode (e.g. 15V/3A).
+> In this case, do you think it is acceptable to make this change in
+> the vsock's behavior with netns and ask the user to change the design?
+
+David's question is what would be a usecase that's broken
+(as opposed to fixed) by enabling this by default.
+
+If it does exist, you need a way for userspace to opt-in,
+module parameter isn't that.
+
 > 
-> But during initialisation the PD is switched off shortly and the board has a blackout.
-> When I inject a backup supply voltage behind the FUSB302 (e.g. at SYS_12V line) during boot
-> I can remove the backup after succesfull setting up the PD and the board will run fine.
+> > 
+> > I am totally against adding a module parameter for this, it's
+> > incredibly confusing for users and will create a test scenerio
+> > that is strongly less likely to be covered.
+> > 
 > 
-> Is it possible to change the behaviour of the fusb302 driver to not power down the PD supply
-> during init?
-
-I guess it's also possible that the problem is with tcpm.c instead of
-fusb302.c. tcpm.c provides the USB PD state matchines. Guenter! Can
-you take a look at this?
-
-Both tcpm.c and fusb302.c create debugfs entries that have a more
-detailed log about things that are happening. Can you check what you
-have in those (when you boot with the mains cable plugged it)?
-
-        % mount debugfs -t debugfs /sys/kernel/debug
-        % cat /sys/kernel/debug/tcpm*
-        % cat /sys/kernel/debug/fusb302/*
-
-Which kernel are you running by the way?
-
-> In vendor kernel (4.4) this is done somehow but the sources are too different for me to find
-> out how.
+> Got it, I'll remove the module parameter!
 > 
-> Gruß,
-> -- 
-> Markus Reichl
-> 
-> [1]
-> http://download.t-firefly.com/product/RK3399/Docs/Hardware/%E5%8E%9F%E7%90%86%E5%9B%BE%E5%92%8C%E8%B4%B4%E7%89%87%E5%9B%BE/ROC-RK3399-PC/ROC-3399-PC-V10-A-20180804_%E5%8E%9F%E7%90%86%E5%9B%BE.pdf
-> 
-> [2]
-> https://lkml.org/lkml/2019/12/10/517
+> Thanks,
+> Stefano
 
--- 
-heikki
