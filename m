@@ -2,103 +2,106 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D87C33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 21:55:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F5CC33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 21:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C353722527
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 21:55:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 141F724125
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 21:55:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hM2yFnlG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728205AbgATVzR (ORCPT
+        id S1728709AbgATVzy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 16:55:17 -0500
-Received: from outgoing11.flk.host-h.net ([188.40.208.241]:60969 "EHLO
-        outgoing11.flk.host-h.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726752AbgATVzQ (ORCPT
+        Mon, 20 Jan 2020 16:55:54 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:54897 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726752AbgATVzy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 16:55:16 -0500
-X-Greylist: delayed 7787 seconds by postgrey-1.27 at vger.kernel.org; Mon, 20 Jan 2020 16:55:16 EST
-Received: from www31.flk1.host-h.net ([188.40.1.173])
-        by antispam3-flk1.host-h.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <justin.swartz@risingedge.co.za>)
-        id 1itczG-0000cv-RT; Mon, 20 Jan 2020 21:45:27 +0200
-Received: from [130.255.73.16] (helo=v01.28459.vpscontrol.net)
-        by www31.flk1.host-h.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <justin.swartz@risingedge.co.za>)
-        id 1itczD-0004Hk-Es; Mon, 20 Jan 2020 21:45:23 +0200
-From:   Justin Swartz <justin.swartz@risingedge.co.za>
-To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Justin Swartz <justin.swartz@risingedge.co.za>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] ARM: dts: rockchip: add rga to rk3229-xms6
-Date:   Mon, 20 Jan 2020 19:41:57 +0000
-Message-Id: <20200120194158.25357-4-justin.swartz@risingedge.co.za>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200120194158.25357-1-justin.swartz@risingedge.co.za>
-References: <20200120194158.25357-1-justin.swartz@risingedge.co.za>
-X-Authenticated-Sender: justin.swartz@risingedge.co.za
-X-Virus-Scanned: Clear
-X-Originating-IP: 188.40.1.173
-X-SpamExperts-Domain: risingedge.co.za
-X-SpamExperts-Username: 
-Authentication-Results: host-h.net; auth=pass (login) smtp.auth=@risingedge.co.za
-X-SpamExperts-Outgoing-Class: ham
-X-SpamExperts-Outgoing-Evidence: Combined (0.03)
-X-Recommended-Action: accept
-X-Filter-ID: Mvzo4OR0dZXEDF/gcnlw0fKZ8wcD78QFAaYhvfMzLIKpSDasLI4SayDByyq9LIhVeWb5TMLTma+i
- 4jOGzZGfZETNWdUk1Ol2OGx3IfrIJKyP9eGNFz9TW9u+Jt8z2T3K7uDjV/sFUXQr+CDrNQuIHgQg
- mAX8Bxy/iUu0ThNZg0jxJtcVJProrT987X1VDPOqN+OoDzRTdku7DidYUZdNf38Sp7Of4wP429AA
- f49baR+f3He7jw4SoVhmTJ/3eP9ORQWVx8ds1M4qmk3/bYr2p8zbg4Paoa3pNVQ0zl7t/+UfQLYB
- qEPnp1U88kqVD8AM2G81dFO0E3gi+MOI1foZYzDggRXhpvoPtF3cVkniFXU3qJSqpdJudO6+rkiw
- E5i8Wl78Q18OeOfsy4h7jF1Uv9lnibl3vcBqVmvQB4A18afb/FOITJmxBc0QX+fY5eUpAVXirbLu
- Jjy3NtnGWLbnBGfrUBEXB2fYGLNieGQuoHtJvp0r29Rf3ZjFwL+MhHEWw/0qBlNDp8uABz3dkWV+
- ttWGem52QLIiDo2hv5/Q58JTycYLFeAN4+MGwnsp7SkU6CLbyF0Zq4b1/7rjUzETJrWks4pbbQJq
- 6gWopI3ep45X19ZysgQ+31LcAX8eoFXAhohfegXGH2GIVQVglJFbK771YV8YbC29CtmpcTqTfSIf
- CWq9oj7OiT8GwpAriB+3/81I3rvR8KJ2fK9jiDYgijyqqY0rATpzHKGfmtNsYTr4SmDZ/bGW8xZC
- RRs6ZD24UhFcZZEpLhnBCwImTQNvxaLyCc35VA7RvW/HGiGqxL09Cymermt8NAa/gGopT3kKfO4C
- gvcKmV0o9jYzsFpuc43pp/LzIs3ornuRuAAdgrkq+6l7ZLNYJcf7Z6PCydDzoYZgInuDxgFOs7AZ
- TwbwMaed1BaNkB2/QnXFItfl/CWjT+yf5NxUSmxyzYlBxqy338NrFoXSENXH6UXfnav35JPA4YfM
- 6tBkXsqvKY6zoLLTPpuFqUUQz+mM8JAD4ECWNo09vb0YLIRnK477e9Xake5PIWKjIXX7qe2zOXoS
- fozs0E8f2AsASs7mWOF+2zisWBpVRcW84PzgOLDW9zuKlWbjO41FyBEqIaDudcVplPE6wCr6GXU1
- lCw88ijyus1sGnWknJqS8gGhNQxpB5P3qu7c1xMljx2PG/R+pKBSKy8hXOgvE1zSS7XUhkYEQYeb
- 3jR5NeVaJQBh0uawl0Cg8j+knAzOA9mmoJvkuhKHiekUuskYaI6ERCKp8gXWqnT9kLHhStr5fiGK
- 7KncpWELuTEvuGslKTrRIXcXpFg5ivY=
-X-Report-Abuse-To: spam@antispammaster.host-h.net
+        Mon, 20 Jan 2020 16:55:54 -0500
+Received: by mail-pj1-f65.google.com with SMTP id kx11so337849pjb.4;
+        Mon, 20 Jan 2020 13:55:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yz+RC08LXcOfqh007ME4eF+FjZEItC+jHzaYRevoImc=;
+        b=hM2yFnlG+mX/xO5k3PyRGynk4RsP3WHWyFHM3oFVKoTwzv5zVOfHnS4ePT+xyCuDaM
+         gj/Tjv+zB/VhLCk4AzOjK+Nz8HDCD5c33B+TRiuJFAIc/8RPo6CCxhbq12YOqID6cvWG
+         GksiCOXgSojOnCOTJX4TZdhbsWMWdnnp/H92ZrzNEdjInfeORNj3klX/DtdqgSbgHRrR
+         UTcyBQq1Kx7pUrlg3qQCekUmOVNUskDlnpfXWkEcuJfdDqnS2+XKTcVG6in2H4HOH/3u
+         RfWjIc65RtZEhFhuZgqgk4JZt6LgQ1K4O1fq6uYPhOgzKhv2KvPs+ykau1AHuMbGLnn+
+         41hQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yz+RC08LXcOfqh007ME4eF+FjZEItC+jHzaYRevoImc=;
+        b=ZTYbhD/sQiB50AowZ1DLW401W8NufrdTR9A9y1bFh9WcfO/9KEZF7pRAb8JP7KHrF/
+         aHDqtFXJ6zdc7tlwWDXgIxJCArUB390ZP1/t7aJfaELrrslZkMYcokK8L6+03QgtiKVJ
+         CXwBvMYA6bVMuMsqudh0mht5UhP53y77bUGthg4SVi/h6029uRA+NjIb+yB6Vv8VFgCo
+         Rk0BDG+nBytjIqwiEoFn5VsZwSAg9NEi0awnLsKaMKs7vS75kXWHM53Ddrvj1rTTD6Gm
+         RLDaCey9x1DMFF50KslCySLH5rbfDgSfymVa+cVXw2Ze2zQ477KLodJ5OzFgukFFHKXi
+         m1qA==
+X-Gm-Message-State: APjAAAU1fcVF2mgI3Rk9zBSZr6cJY+Vq5P9h5iVRMyripT9LYaCsYwjm
+        /8viGJBRvMJcp2dAyM2S+HAZF5MQKjLNSPklb0E=
+X-Google-Smtp-Source: APXvYqwAnMrdxUof1ypYQ1jFBbFXx8VyehJMjwx/BCsTqeK5Gfkg8wWJe1FrprUGSneVGrFNyiUIwzDYiz40QVv6Uk0=
+X-Received: by 2002:a17:902:a9c7:: with SMTP id b7mr1836647plr.255.1579557353372;
+ Mon, 20 Jan 2020 13:55:53 -0800 (PST)
+MIME-Version: 1.0
+References: <20161202195416.58953-1-andriy.shevchenko@linux.intel.com>
+ <20161202195416.58953-3-andriy.shevchenko@linux.intel.com>
+ <20161215122856.7d24b7a8@endymion> <20161216023213.GA4505@dhcp-128-65.nay.redhat.com>
+ <1481890738.9552.70.camel@linux.intel.com> <20161216143330.69e9c8ee@endymion>
+ <20161217105721.GB6922@dhcp-128-65.nay.redhat.com> <20200120121927.GJ32742@smile.fi.intel.com>
+ <87a76i9ksr.fsf@x220.int.ebiederm.org> <20200120224204.4e5cc0df@endymion>
+In-Reply-To: <20200120224204.4e5cc0df@endymion>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 20 Jan 2020 23:55:43 +0200
+Message-ID: <CAHp75Veb02m3tU9tzZe912ZmX5mdaYkZ90DD67FVERJS15VsXw@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] firmware: dmi_scan: Pass dmi_entry_point to
+ kexec'ed kernel
+To:     Jean Delvare <jdelvare@suse.de>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dave Young <dyoung@redhat.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        kexec@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable RGA for Mecer Xtreme Mini S6.
+On Mon, Jan 20, 2020 at 11:44 PM Jean Delvare <jdelvare@suse.de> wrote:
+>
+> On Mon, 20 Jan 2020 10:04:04 -0600, Eric W. Biederman wrote:
+> > Second.  I looked at your test results and they don't directly make
+> > sense.  dmidecode bypasses the kernel completely or it did last time
+> > I looked so I don't know why you would be using that to test if
+> > something in the kernel is working.
+>
+> That must have been long ago. A recent version of dmidecode (>= 3.0)
+> running on a recent kernel
+> (>= d7f96f97c4031fa4ffdb7801f9aae23e96170a6f, v4.2) will read the DMI
+> data from /sys/firmware/dmi/tables, so it is very much relying on the
+> kernel doing the right thing. If not, it will still try to fallback to
+> reading from /dev/mem directly on certain architectures. You can force
+> that old method with --no-sysfs.
+>
+> Hope that helps,
 
-Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
----
- arch/arm/boot/dts/rk3229-xms6.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+I don't understand how it possible can help for in-kernel code, like
+DMI quirks in a drivers.
 
-diff --git a/arch/arm/boot/dts/rk3229-xms6.dts b/arch/arm/boot/dts/rk3229-xms6.dts
-index 679fc2b00..894f64a4a 100644
---- a/arch/arm/boot/dts/rk3229-xms6.dts
-+++ b/arch/arm/boot/dts/rk3229-xms6.dts
-@@ -202,6 +202,10 @@
- 	status = "okay";
- };
- 
-+&rga {
-+	status = "okay";
-+};
-+
- &sdmmc {
- 	cap-mmc-highspeed;
- 	disable-wp;
 -- 
-2.11.0
-
+With Best Regards,
+Andy Shevchenko
