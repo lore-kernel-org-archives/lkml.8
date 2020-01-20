@@ -2,115 +2,78 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3562BC32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F3EC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF2AC217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:25:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 901DB22522
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:25:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cyEOldZv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727144AbgATWZb (ORCPT
+        id S1728668AbgATWZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 17:25:31 -0500
-Received: from mga01.intel.com ([192.55.52.88]:60414 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726752AbgATWZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 17:25:30 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 14:25:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,343,1574150400"; 
-   d="scan'208";a="425300248"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga005.fm.intel.com with ESMTP; 20 Jan 2020 14:25:28 -0800
-Date:   Tue, 21 Jan 2020 06:25:40 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, yang.shi@linux.alibaba.com
-Subject: Re: [PATCH 1/8] mm/migrate.c: skip node check if done in last round
-Message-ID: <20200120222540.GA32314@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20200119030636.11899-1-richardw.yang@linux.intel.com>
- <20200119030636.11899-2-richardw.yang@linux.intel.com>
- <20200120093646.GL18451@dhcp22.suse.cz>
+        Mon, 20 Jan 2020 17:25:46 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:46693 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726752AbgATWZq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 17:25:46 -0500
+Received: by mail-oi1-f194.google.com with SMTP id 13so750971oij.13;
+        Mon, 20 Jan 2020 14:25:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iTPep2W7UwVeIZMm8WjEHSoy+SW5Y3J2SshdpaxNQvs=;
+        b=cyEOldZvI1XX0p3OtEkJp8j0rHACG/6fsXC57nk04r4DAFsobmen2NeoRyoMGfN17C
+         4/H952OLxM0HnFoaY3rLbUWbhZ2uirP1ulrzRrR68vUE8RWcm7ntKnUlaJ5mzNJjr6wa
+         ZTBqHMux/Si62iIXrhdCzsFKu0fdPgWp2hFRThl27EBF67nExLBTzU3lO3CoAXQz6F3f
+         T5qU5NOmgckqy8MeqJoEPUNSlW0zYDC+Ku+vy5l1RqtV9Rz5A1H2b84Bi4gcd6Mzxp+n
+         Vbgi5cVOAUURsaB7OCfcTJB/VjS2DhH5n1FzNDQV06Qrc3FR3nMQpaiCQHjUVt/NTFrY
+         A4Rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iTPep2W7UwVeIZMm8WjEHSoy+SW5Y3J2SshdpaxNQvs=;
+        b=Lj9WKHIWCQmS2KU1BTYpsipp8VBXRBXQpbifdPL6MfUw4MHn7UPPXiVJAKKrNXaqGY
+         er26NwWLinri77NTSbvvHaxTERXd/gGqQA5msSfI60ho5ru9cpRWdkB33uXLdTnPERiM
+         IRLDXoE6UO79tPF5Ky7Oy4qQEkqcpzWAt8OLhCMUpz9RCsoRC08EqVKBfh1BtLUxJax4
+         wxgX84p2M2QJ23A9Lf4eRuooYWuROmPsnN20gCr8WEfRmtAPLzmT5v07aYqv+me1Zi9y
+         1yK7kdLuh4vNSgYIkJ7ZWvheBSVTjR6rXNWqMtP+hDb80t3ptPjytZXk8TVRNVwkdgo7
+         0fDA==
+X-Gm-Message-State: APjAAAVkoUWLSqSOF6pKQHW6DC+1rGwv9I0h82Fu3vri6TpNw8lXKrSF
+        VehrkO4pqDxKwkCbfB/fnqt8z/Db+AfXYuPBCunQItli
+X-Google-Smtp-Source: APXvYqwq0b2pMVQJOfgCMPHaSxATrV3Ufremupr1l64dVBNqdAL+wUSdN7MtzrC/KTaQiRiNedf6zR6k9Dg75LGTZuQ=
+X-Received: by 2002:aca:3cd7:: with SMTP id j206mr822744oia.142.1579559145464;
+ Mon, 20 Jan 2020 14:25:45 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200120093646.GL18451@dhcp22.suse.cz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200110221500.19678-1-xiyou.wangcong@gmail.com> <20200120132812.384274d3@gandalf.local.home>
+In-Reply-To: <20200120132812.384274d3@gandalf.local.home>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Mon, 20 Jan 2020 14:25:33 -0800
+Message-ID: <CAM_iQpX6vGB5hczhJDOCY-Z-8At+rYEAqexryXZd_Tnd8km3Xw@mail.gmail.com>
+Subject: Re: [PATCH] block: introduce block_rq_error tracepoint
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-block@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 10:36:46AM +0100, Michal Hocko wrote:
->On Sun 19-01-20 11:06:29, Wei Yang wrote:
->> Before move page to target node, we would check if the node id is valid.
->> In case we would try to move pages to the same target node, it is not
->> necessary to do the check each time.
->> 
->> This patch tries to skip the check if the node has been checked.
->> 
->> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
->> ---
->>  mm/migrate.c | 19 +++++++++++--------
->>  1 file changed, 11 insertions(+), 8 deletions(-)
->> 
->> diff --git a/mm/migrate.c b/mm/migrate.c
->> index 430fdccc733e..ba7cf4fa43a0 100644
->> --- a/mm/migrate.c
->> +++ b/mm/migrate.c
->> @@ -1612,15 +1612,18 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
->>  			goto out_flush;
->>  		addr = (unsigned long)untagged_addr(p);
->>  
->> -		err = -ENODEV;
->> -		if (node < 0 || node >= MAX_NUMNODES)
->> -			goto out_flush;
->> -		if (!node_state(node, N_MEMORY))
->> -			goto out_flush;
->> +		/* Check node if it is not checked. */
->> +		if (current_node == NUMA_NO_NODE || node != current_node) {
->> +			err = -ENODEV;
->> +			if (node < 0 || node >= MAX_NUMNODES)
->> +				goto out_flush;
->> +			if (!node_state(node, N_MEMORY))
->> +				goto out_flush;
->
->This makes the code harder to read IMHO. The original code checks the
->valid node first and it doesn't conflate that with the node caching
->logic which your change does.
->
+On Mon, Jan 20, 2020 at 10:28 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+> The ring buffer will hold a pointer to a location that may no longer
+> exist, and cause a fault when read. Also, this makes the user space
+> utilities trace-cmd and perf useless to know what the name is, as they
+> read the raw ring buffer data directly.
 
-I am sorry, would you mind showing me an example about the conflate in my
-change? I don't get it.
+Yeah, my bad, I will send an updated patch.
 
->>  
->> -		err = -EACCES;
->> -		if (!node_isset(node, task_nodes))
->> -			goto out_flush;
->> +			err = -EACCES;
->> +			if (!node_isset(node, task_nodes))
->> +				goto out_flush;
->> +		}
->>  
->>  		if (current_node == NUMA_NO_NODE) {
->>  			current_node = node;
->> -- 
->> 2.17.1
->
->-- 
->Michal Hocko
->SUSE Labs
-
--- 
-Wei Yang
-Help you, Help me
+Thanks.
