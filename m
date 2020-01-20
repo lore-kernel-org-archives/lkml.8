@@ -2,145 +2,100 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B150EC33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 04:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E71C32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 04:54:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88BD22073D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 04:52:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579495940;
-	bh=DAtdwoWn08bxGri1PxDJ/LULe8Ktr8pcYIS21k28EN4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jCqorq3X85LB+nUWEyUkoJzuxRLmoiO4JOOO98lFcfagSjKw+KMbdhLSO+8ST1bPn
-	 3N7gW0GJ9wNZujRf4TIZGgyxFRS9S7QyZhs3PcauLFX0AFeI3mU6Uq1wIr8aUbVu/C
-	 7dpZFNcsrlTxic1KVE/6XDkZbQ2rq9TXvAqiQRqs=
+	by mail.kernel.org (Postfix) with ESMTP id DD3552073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 04:54:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="W0L2jdRQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729149AbgATEwU (ORCPT
+        id S1729123AbgATEyb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 23:52:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41128 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729043AbgATEwT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 23:52:19 -0500
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE82A2073A;
-        Mon, 20 Jan 2020 04:52:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579495938;
-        bh=DAtdwoWn08bxGri1PxDJ/LULe8Ktr8pcYIS21k28EN4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=j0tf43nqBaHRTk8KvCSppcB0LKW557pYqYNlt49K3zTMGOJWI1C55cXqV6Sa+upBN
-         fe1G0uKWFmL5LwUIKfbU9zbeAHfL4x+4mO/ID01faHvm3joFX5AL1Kn8Zsh+bQ3+NM
-         w1eqcV5s+H8nFfeVbQ2zUJHWkDdHVGMQVksgVduE=
-Date:   Sun, 19 Jan 2020 20:52:16 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Daniel Rosenberg <drosen@google.com>
-Cc:     Theodore Ts'o <tytso@mit.edu>, linux-ext4@vger.kernel.org,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-fscrypt@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Gabriel Krisman Bertazi <krisman@collabora.com>,
-        kernel-team@android.com
-Subject: Re: [PATCH v3 0/9] Support for Casefolding and Encryption
-Message-ID: <20200120045216.GB913@sol.localdomain>
-References: <20200117214246.235591-1-drosen@google.com>
+        Sun, 19 Jan 2020 23:54:31 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:45603 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729043AbgATEya (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jan 2020 23:54:30 -0500
+Received: by mail-pf1-f195.google.com with SMTP id 2so15193066pfg.12
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jan 2020 20:54:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=axtens.net; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xN3Z4EtUvjD28efJ92xKpoRYufScEeM5MB1/Qfws810=;
+        b=W0L2jdRQ6MREKzDtBfeqsFqnHKSHfF7Sb0eeF/NO+1tO1ak2JirozIT8ho0P748UC9
+         v4qHLYd83CfoETl2RH3lHI86fgn7phaWJtD2sN+sibKTOv/Q5NMU8XhsujL/2ad6Z4y/
+         dfI+HuzKHI86RmSdmNVVEy0X3+DDCG3/jSsa0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xN3Z4EtUvjD28efJ92xKpoRYufScEeM5MB1/Qfws810=;
+        b=p5GKa2KoxvVB4LFYpnCxH5o/uWQidoXQOj5pl7dPrIG3nq+YS14n8ZYw1LjtXrjDpU
+         QuMH+gd+2gZ3xg7ygkt+1ooxdkPD4UcaoD2JcWGkTNztklNTEbEG7Fm1a3Ev1YeNMRw1
+         qn4gFxthcO2IQZqG6NO0GDeEJ4gKNFAk2bIkn7VnBPjUwuTURMX83O0dJwGIxdSI3KER
+         vZWMq+MwCkbCzDyAgeFsvLVwNve7+ntk4WrQBdnmqVwxZlxtqrtERnxlo6t+kXV/mQM2
+         siaygdct9RfbXCzf5LINtGN4vUe3ZNIioD1mrDVTPD25i/nhEQ5KpU1u2MQtMlrgy6hE
+         KAfA==
+X-Gm-Message-State: APjAAAVFLaB+qpdS+V9DOJBeauQqB7ok1xSyP50nxJsZ5M2X/mpjS/L5
+        72NJo3dKfWwJqLD0Ze3LoNhkCQ==
+X-Google-Smtp-Source: APXvYqxbURRFxgJ90M08NbktU6NV4cTwTLt4WEZcRDxlNQeK+6mOpbIca82m89cBJLFfn4kJ+VH1eA==
+X-Received: by 2002:a63:642:: with SMTP id 63mr56653726pgg.73.1579496069997;
+        Sun, 19 Jan 2020 20:54:29 -0800 (PST)
+Received: from localhost (2001-44b8-1113-6700-4064-d910-a710-f29a.static.ipv6.internode.on.net. [2001:44b8:1113:6700:4064:d910:a710:f29a])
+        by smtp.gmail.com with ESMTPSA id i2sm35693066pgi.94.2020.01.19.20.54.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 19 Jan 2020 20:54:29 -0800 (PST)
+From:   Daniel Axtens <dja@axtens.net>
+To:     kernel-hardening@lists.openwall.com, akpm@linux-foundation.org,
+        keescook@chromium.org
+Cc:     linux-kernel@vger.kernel.org, Daniel Axtens <dja@axtens.net>
+Subject: [PATCH v2 0/2] FORTIFY_SOURCE: detect intra-object overflow in string functions
+Date:   Mon, 20 Jan 2020 15:54:22 +1100
+Message-Id: <20200120045424.16147-1-dja@axtens.net>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200117214246.235591-1-drosen@google.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 01:42:37PM -0800, Daniel Rosenberg wrote:
-> These patches are all on top of fscrypt's developement branch
-> 
-> Ext4 and F2FS currently both support casefolding and encryption, but not at
-> the same time. These patches aim to rectify that.
-> 
-> Since directory names are stored case preserved, we cannot just take the hash
-> of the ciphertext. Instead we use the siphash of the casefolded name. With this
-> we no longer have a direct path from an encrypted name to the hash without the
-> key. To deal with this, fscrypt now always includes the hash in the name it
-> presents when the key is not present. There is a pre-existing bug where you can
-> change parts of the hash and still match the name so long as the disruption to
-> the hash does not happen to affect lookup on that filesystem. I'm not sure how
-> to fix that without making ext4 lookups slower in the more common case.
-> 
-> I moved the identical dcache operations for ext4 and f2fs into the VFS, as any
-> filesystem that uses casefolding will need the same code. This will also allow
-> further optimizations to that path, although my current changes don't take
-> advantage of that yet.
-> 
-> For Ext4, this also means that we need to store the hash on disk. We only do so
-> for encrypted and casefolded directories to avoid on disk format changes.
-> Previously encryption and casefolding could not live on the same filesystem,
-> and we're relaxing that requirement. F2fs is a bit more straightforward since
-> it already stores hashes on disk.
-> 
-> I've updated the related tools with just enough to enable the feature. I still
-> need to adjust ext4's fsck's, although without access to the keys,
-> neither fsck will be able to verify the hashes of casefolded and encrypted names.
-> 
-> v3 changes:
-> fscrypt patch only creates hash key if it will be needed.
-> Rebased on top of fscrypt branch, reconstified match functions in ext4/f2fs
-> 
-> v2 changes:
-> fscrypt moved to separate thread to rebase on fscrypt dev branch
-> addressed feedback, plus some minor fixes
-> 
-> 
-> Daniel Rosenberg (9):
->   fscrypt: Add siphash and hash key for policy v2
->   fscrypt: Don't allow v1 policies with casefolding
->   fscrypt: Change format of no-key token
->   fscrypt: Only create hash key when needed
->   vfs: Fold casefolding into vfs
->   f2fs: Handle casefolding with Encryption
->   ext4: Use struct super_blocks' casefold data
->   ext4: Hande casefolding with encryption
->   ext4: Optimize match for casefolded encrypted dirs
+When the fortify feature was first introduced in commit 6974f0c4555e
+("include/linux/string.h: add the option of fortified string.h functions"),
+Daniel Micay observed:
 
-Thanks for the new version of this patchset, Daniel!
+  * It should be possible to optionally use __builtin_object_size(x, 1) for
+    some functions (C strings) to detect intra-object overflows (like
+    glibc's _FORTIFY_SOURCE=2), but for now this takes the conservative
+    approach to avoid likely compatibility issues.
 
-I'd like to apply the first four patches (the fs/crypto/ part, to prepare for
-the new dirhash method) for 5.6, to get ready for the actual
-encrypted+casefolded support in filesystems later.
+This patch set:
 
-But we don't have much time left before the merge window, the more I look at the
-patches I'm still not very happy with them.  E.g., some comments I made haven't
-been addressed, it's missing updates to the documentation, and some of the code
-comments and commit messages are still confusing.  For one, there's still some
-ambiguity between the dirhash and the SHA-256 hash, and it's not really
-explained why the patch introduces the SHA-256 stuff, which actually has nothing
-to do with encrypted+casefold (other than it was a good opportunity to do it as
-the nokey name format had to be changed for encrypted+casefold anyway).
+ - converts a number of string functions to use __builtin_object_size(x, 1)
 
-I also found a bug where the return value of base64_decode() isn't being checked
-properly.  We should also keep fscrypt_match_name() simpler by setting disk_name
-for short names, like we were before.  There are also some places that count the
-padding in struct fscrypt_nokey_name and some that don't, which is confusing.
-We also no longer need to call fscrypt_get_policy() during setflags, as we call
-fscrypt_require_key() now anyway.  And there's now some ambiguity about what's
-meant by a "per-file key", since now there will be 2 types of per-file keys.
+ - adds LKDTM tests for both types of fortified function.
 
-So I hope you don't mind, but to move things along I've had a go at cleaning up
-the fscrypt patches, and I've sent out an updated version of them.  Can you
-please take a look when you have a chance?:
-https://lkml.kernel.org/linux-fscrypt/20200120044401.325453-1-ebiggers@kernel.org/T/#u
+This change passes an allyesconfig on powerpc and x86, and an x86 kernel
+built with it survives running with syz-stress from syzkaller, so it seems
+safe so far.
 
-Thanks!
+Daniel Axtens (2):
+  string.h: detect intra-object overflow in fortified string functions
+  lkdtm: tests for FORTIFY_SOURCE
 
-- Eric
+ drivers/misc/lkdtm/bugs.c  | 51 ++++++++++++++++++++++++++++++++++++++
+ drivers/misc/lkdtm/core.c  |  2 ++
+ drivers/misc/lkdtm/lkdtm.h |  2 ++
+ include/linux/string.h     | 27 ++++++++++++--------
+ 4 files changed, 71 insertions(+), 11 deletions(-)
+
+-- 
+2.20.1
+
