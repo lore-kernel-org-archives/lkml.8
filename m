@@ -6,38 +6,38 @@ X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E35C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 18:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD42CC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 18:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CBA12465A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 18:12:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B91AF2253D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 18:12:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728760AbgATSMA (ORCPT
+        id S1728827AbgATSMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 13:12:00 -0500
-Received: from mga18.intel.com ([134.134.136.126]:39080 "EHLO mga18.intel.com"
+        Mon, 20 Jan 2020 13:12:02 -0500
+Received: from mga07.intel.com ([134.134.136.100]:6528 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728680AbgATSMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728093AbgATSMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 Jan 2020 13:12:00 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 10:11:59 -0800
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 10:11:59 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,342,1574150400"; 
-   d="scan'208";a="227116426"
+   d="scan'208";a="425256416"
 Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 20 Jan 2020 10:11:58 -0800
+  by fmsmga005.fm.intel.com with ESMTP; 20 Jan 2020 10:11:58 -0800
 Received: from kbuild by lkp-server01 with local (Exim 4.89)
         (envelope-from <lkp@intel.com>)
-        id 1itbWn-0005mw-Ld; Tue, 21 Jan 2020 02:11:57 +0800
-Date:   Tue, 21 Jan 2020 02:11:24 +0800
+        id 1itbWo-0005qT-8l; Tue, 21 Jan 2020 02:11:58 +0800
+Date:   Tue, 21 Jan 2020 02:11:23 +0800
 From:   kbuild test robot <lkp@intel.com>
 To:     "x86-ml" <x86@kernel.org>
 Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:locking/kcsan] BUILD SUCCESS
- 837171fe77d700222bb75ef5fe26f4785fcd9e99
-Message-ID: <5e25ed4c.5MLv9atpH+rOEEHC%lkp@intel.com>
+Subject: [tip:sched/core] BUILD SUCCESS
+ afa70d941f663c69c9a64ec1021bbcfa82f0e54a
+Message-ID: <5e25ed4b.GO1OIgPFkp5YjmWH%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -47,8 +47,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  locking/kcsan
-branch HEAD: 837171fe77d700222bb75ef5fe26f4785fcd9e99  Merge tag 'v5.5-rc7' into locking/kcsan, to refresh the tree
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  sched/core
+branch HEAD: afa70d941f663c69c9a64ec1021bbcfa82f0e54a  sched/fair: Define sched_idle_cpu() only for SMP configurations
 
 elapsed time: 390m
 
