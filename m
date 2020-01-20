@@ -2,129 +2,106 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE6CC33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:15:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17601C33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:17:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1429F21D7E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:15:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SJ3XuwMD"
+	by mail.kernel.org (Postfix) with ESMTP id E323522464
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:17:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579526269;
+	bh=xb4oL8mDXUR9uCGZa9Fwa6jdXL/jAKA3QRxlowXiZdI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AhWZgWQuC/ougN1TZGw625agsu7rEPlZeWN+F/bgoILiu/Cx44K53IgK2XsM8wtJY
+	 xyw4mEeWVZpeNC9Uy1XpXc5+wPWIE5DBXvmUyA1BDJu+uhtd0Np5FwoonqZAGKvqTK
+	 oqkLKm8yrL4mBlnAhF/E9kbzfkuJTWtBdzW/fFJs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727465AbgATNPv (ORCPT
+        id S1727688AbgATNRs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 08:15:51 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:56665 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726798AbgATNPu (ORCPT
+        Mon, 20 Jan 2020 08:17:48 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39209 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726876AbgATNRs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 08:15:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579526149;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2lf+TJXDtlpY1pLKgkkU89rddl+SS/0hPfh7anuZY6s=;
-        b=SJ3XuwMDxY3AqoxymeIRHLoFPA4Hb/X+5pw+cxwBQGwThnEwFto569WaL5C719VemZD4Il
-        mqp53DqC+fhPI7Wl3iSMOPoqvSXPqvaHo3N8stXmnF+gq0ihhhL4GiS5/IvMs+Ez7UFpVe
-        W1p4Zi49bG54nviqFzftejO38dO0VxI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-333-jujFIrIBOQy1v6cv6l-gZw-1; Mon, 20 Jan 2020 08:15:46 -0500
-X-MC-Unique: jujFIrIBOQy1v6cv6l-gZw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 106F8DBA3;
-        Mon, 20 Jan 2020 13:15:44 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-49.rdu2.redhat.com [10.10.120.49])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E2CB45D9E2;
-        Mon, 20 Jan 2020 13:15:41 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200120082335.GD21151@kadam>
-References: <20200120082335.GD21151@kadam> <0000000000001a91f9059c52f727@google.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     dhowells@redhat.com,
-        syzbot <syzbot+afeecc39f502a8681560@syzkaller.appspotmail.com>,
-        arnd@arndb.de, dmitry.torokhov@gmail.com, ebiederm@xmission.com,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, stern@rowland.harvard.edu,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: linux-next boot error: KASAN: slab-out-of-bounds Read in post_usb_notification
+        Mon, 20 Jan 2020 08:17:48 -0500
+Received: by mail-wr1-f66.google.com with SMTP id y11so29525286wrt.6;
+        Mon, 20 Jan 2020 05:17:46 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Hg8lEj6IfSDi5BHq/iEw/j7YLmN0NQVwuEmhkiLJ3Jc=;
+        b=kzFFB8DKQU5dar1S8h+QNUVTgXs7ctPMEnIbv9UdAnWnOfJn4uKU6xQffI+Px12XfZ
+         Bjui103auC4T7+rXOLQmifpZtceAHN1FNyOBqPNELItRFEtkJSj+qPYuQi43Qtpg2JoN
+         7+qxeA50TF+wsKaDwmU7hWC9SuTROglTWirpRbs3F2t214UXQqwnVolRlB0kqm2xMwVz
+         AdK8ixYCn4yVI4o+RqBp8bAQvlzNKDWcy5XtCGQKRurduLmXtRIXkFdNC2NrOk8ko8d3
+         kBGkQebZxAYGP0ro8TCNMVXwHT4Mw82YQOZjUbABV3olYdeyOJdT6BPX55N2TDf1K8rM
+         mROA==
+X-Gm-Message-State: APjAAAWtYxA/85umLe/4Ybn9D5s8iTzoJ8plhd6dkPna/2oD6GJgnTd2
+        UH5GgDDCuls8ONDFaIBsWsj8nlRE
+X-Google-Smtp-Source: APXvYqyVfB1hBEBbz7ctRSgXmXP0aTRxz7DuVUW+KSpWwK5HyHTKJKUeZtYsWDLXBPs4ghfkmDelrg==
+X-Received: by 2002:a5d:4392:: with SMTP id i18mr18272968wrq.199.1579526265911;
+        Mon, 20 Jan 2020 05:17:45 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id t131sm24423327wmb.13.2020.01.20.05.17.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jan 2020 05:17:45 -0800 (PST)
+Date:   Mon, 20 Jan 2020 14:17:44 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     richardw.yang@linux.intel.com, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] mm: move_pages: fix the return value if there are
+ not-migrated pages
+Message-ID: <20200120131744.GE18451@dhcp22.suse.cz>
+References: <1579325203-16405-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20200120130624.GD18451@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <929067.1579526141.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Mon, 20 Jan 2020 13:15:41 +0000
-Message-ID: <929068.1579526141@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200120130624.GD18451@dhcp22.suse.cz>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan Carpenter <dan.carpenter@oracle.com> wrote:
+On Mon 20-01-20 14:06:26, Michal Hocko wrote:
+> On Sat 18-01-20 13:26:43, Yang Shi wrote:
+> > The do_move_pages_to_node() might return > 0 value, the number of pages
+> > that are not migrated, then the value will be returned to userspace
+> > directly.  But, move_pages() syscall would just return 0 or errno.  So,
+> > we need reset the return value to 0 for such case as what pre-v4.17 did.
+> 
+> The patch is wrong. migrate_pages returns the number of pages it
+> _hasn't_ migrated or -errno. Yeah that semantic sucks but...
+> So err != 0 is always an error. Except err > 0 doesn't really provide
+> any useful information to the userspace. I cannot really remember what
+> was the actual behavior before my rework because there were some gotchas
+> hidden there.
 
->   2759          struct {
->   2760                  struct usb_notification n;
->   2761                  char more_name[USB_NOTIFICATION_MAX_NAME_LEN -
->   2762                                 (sizeof(struct usb_notification) =
--
->   2763                                  offsetof(struct usb_notification=
-, name))];
->   2764          } n;
->   2765  =
+OK, so I've double checked. do_move_page_to_node_array would carry the
+error code over to do_pages_move and it would store the status stored
+in the pm array. It contains page_to_nid(page) so the resulting code
+indeed behaves properly before my change and this is a regression. I
+have a very vague recollection that this has been brought up already.
+<...looks in notes...>
+Found it! The report is
+http://lkml.kernel.org/r/0329efa0984b9b0252ef166abb4498c0795fab36.1535113317.git.jstancek@redhat.com
+and my proposed workaround was http://lkml.kernel.org/r/20180829145537.GZ10223@dhcp22.suse.cz
 
->   2766          name_len =3D strlen(devname);
->   2767          name_len =3D min_t(size_t, name_len, USB_NOTIFICATION_MA=
-X_NAME_LEN);
->                                                    ^^^^^^^^^^^^^^^^^^^^^=
-^^^^^^^^
-> This limit is too high.  It should be USB_NOTIFICATION_MAX_NAME_LEN -
-> sizeof(struct usb_notification). or just
-> "min_t(size_t, name_len, sizeof(n.more_name));".  n.n.name[] is a
-> zero size array.
+> If you want to fix this properly then you have to query node status of
+> each page unmigrated when migrate_pages fails with > 0. This would be
+> easier if the fix is done on the latest cleanup posted to the list which
+> consolidates all do_move_pages_to_node and store_status calls to a
+> single function.
 
-No.  It's not that simple.  If you look at the struct:
+Sorry forgot to put a reference to the patch: http://lkml.kernel.org/r/20200119030636.11899-5-richardw.yang@linux.intel.com
 
-	struct usb_notification {
-		struct watch_notification watch;
-		__u32	error;
-		__u32	reserved;
-		__u8	name_len;
-		__u8	name[0];
-	};
-
-There are at least 3, if not 7, bytes of padding after name[] as the struc=
-t is
-not packed - and isn't necessarily rounded up to a multiple of 8 bytes eit=
-her.
-If you look at the definition of more_name[] above, you'll see:
-
-	USB_NOTIFICATION_MAX_NAME_LEN -
-	(sizeof(struct usb_notification) -
-	 offsetof(struct usb_notification, name))
-
-That calculates the amount of padding and then subtracts it from the amoun=
-t of
-name bufferage required.
-
-USB_NOTIFICATION_MAX_NAME_LEN is 63, which is 64 minus one for the length.
-
->   2771          memcpy(n.n.name, devname, n_len);
->                                           ^^^^^
-> name_len was intended here.
-
-Yeah.  I think that's actually the bug.  n_len is the length of the entire
-notification record.
-
-David
-
+-- 
+Michal Hocko
+SUSE Labs
