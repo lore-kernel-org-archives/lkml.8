@@ -2,123 +2,218 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC0BC32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4443EC32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3670622525
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:10:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579547425;
-	bh=lEONHsr3GAx24vb1v03/TXmyMyYCrvC5PTz8mcLz5nE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=A5qL/vLLFNiSMQeTbMbqvM0AorZXHrASD+q8SIS5+B6LpPyukOm9alRYZuBlVDjfE
-	 5mU92qjsjRJIW7C9Tv2XlO4lVCtOFD7gUqPg8xKY102ki8IHXb+9neKl/SbQ1aT4xN
-	 l/q2u1yQlI9uD0Ykp5o87Fpz84nWgz5Ooh1Rdx6w=
+	by mail.kernel.org (Postfix) with ESMTP id 0F06B22525
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:10:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w7NkbXTd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbgATTKY (ORCPT
+        id S1726958AbgATTK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 14:10:24 -0500
-Received: from foss.arm.com ([217.140.110.172]:35958 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726112AbgATTKY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 14:10:24 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 52A8231B;
-        Mon, 20 Jan 2020 11:10:23 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C5C973F68E;
-        Mon, 20 Jan 2020 11:10:22 -0800 (PST)
-Date:   Mon, 20 Jan 2020 19:10:21 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Collabora Kernel ML <kernel@collabora.com>, dianders@chromium.org,
-        Dmitry Osipenko <digetx@gmail.com>, drinkcat@chromium.org,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        mka@chromium.org
-Subject: Applied "regulator: core: Fix exported symbols to the exported GPL version" to the regulator tree
-In-Reply-To: <20200120123921.1204339-1-enric.balletbo@collabora.com>
-Message-Id: <applied-20200120123921.1204339-1-enric.balletbo@collabora.com>
-X-Patchwork-Hint: ignore
+        Mon, 20 Jan 2020 14:10:56 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:37248 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726876AbgATTKz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 14:10:55 -0500
+Received: by mail-pj1-f65.google.com with SMTP id m13so196915pjb.2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 11:10:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=rXtzpxRBIE54NbCvNgdaKsPlCWBPoiNnJLPrJ2Xtl5w=;
+        b=w7NkbXTdYBjDcf7yBd6WBO3d6v8S1fSy+5cYHvqfrcYXtYwCT34+z88oysaHaUlmZP
+         LWkIgy9UGkm87o5PBEeb+vzN9b2gm1MLm+hKmXvugptbqcp6boKa5yC4EPZ+cESZOP/l
+         yqfa4ewjlcWUYKXyKBAJUFqcFtVEpM+4GRJ1JUqlTF89aNqjGIjlApOuGXyCeyATmCtt
+         HQw+tmAETpJUta0vfkqOF1oeqdEmWDlBQoNbZAOLjlMOb8MX7hpWICOg9sDNf7rr0twd
+         VmHfF0QcxORxk20SUjJ9LQTOw7uQVm53bMX4agFqe0uQ0QrDXgTMCQPpogxuJt/svx87
+         3n6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=rXtzpxRBIE54NbCvNgdaKsPlCWBPoiNnJLPrJ2Xtl5w=;
+        b=DUov3E6clkNe9PWaBEDG4lgo8f6bjc1fkHLJ9fEpBNRosOgLTvoW6adAWWSEs1q1L4
+         1tuniqntSvHZQT8wl0o7xvLqZgks1/zLWMs/n4eh27fiHs75BlsCmS9z+3Wlsh9xMe1E
+         uVPgnLpamFp+mQZgPlWZOingOtbzEE+MWp5AAfzUkOUtsupCoao11M6V2I+d/srjdycb
+         6XIU3s8q8WXXJ00Jzs8YelAIh5myiHdufCP7Vn5ImY7f4dwYGmKJBt+as6oNbq6qhzeI
+         gRzhyIcBuu4wLtV/cYLSGa7xbyZl2v4Bd9hVv92Dx1+M6xVu+amf/ggdo3x46cflglKN
+         vocQ==
+X-Gm-Message-State: APjAAAXnPrcxes2EGiFxW4uR1uW9kP6PIVhu29aKMBh0AxlF/j2YJiA/
+        ISMjZrtnRwshM/aa/jD9wzuv7w==
+X-Google-Smtp-Source: APXvYqzQaP2gKO6EjHWzGpIEGeHTIlbgpKefn/FSwJBuYvq/6nSexiHXscfYNT96GGWIYNjisjzAzQ==
+X-Received: by 2002:a17:90a:ac0e:: with SMTP id o14mr529997pjq.11.1579547454760;
+        Mon, 20 Jan 2020 11:10:54 -0800 (PST)
+Received: from yoga (wsip-184-181-24-67.sd.sd.cox.net. [184.181.24.67])
+        by smtp.gmail.com with ESMTPSA id b24sm39900195pfo.55.2020.01.20.11.10.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jan 2020 11:10:54 -0800 (PST)
+Date:   Mon, 20 Jan 2020 11:10:47 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Cl?ment Leger <cleger@kalray.eu>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] remoteproc: Add support for predefined notifyids
+Message-ID: <20200120191047.GI1511@yoga>
+References: <20200115102142.11229-1-cleger@kalray.eu>
+ <088ceab9-f135-6e70-dcf6-f75ec46110b1@st.com>
+ <79048597.12371594.1579098506802.JavaMail.zimbra@kalray.eu>
+ <a1116656-cf2e-c1a1-7cc3-0fe2a79f076e@st.com>
+ <612100872.12377996.1579101063237.JavaMail.zimbra@kalray.eu>
+ <20200117225217.GA27535@xps15>
+ <377421261.12898679.1579462834671.JavaMail.zimbra@kalray.eu>
+ <CANLsYky-dp3=J__x9d7BJtu1=ppEiFMfuJnRQ7ZTVn6X43BJ_g@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANLsYky-dp3=J__x9d7BJtu1=ppEiFMfuJnRQ7ZTVn6X43BJ_g@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On Mon 20 Jan 08:28 PST 2020, Mathieu Poirier wrote:
 
-   regulator: core: Fix exported symbols to the exported GPL version
+> On Sun, 19 Jan 2020 at 12:40, Clément Leger <cleger@kalray.eu> wrote:
+> >
+> > Hi Mathieu,
+> >
+> > ----- On 17 Jan, 2020, at 23:52, Mathieu Poirier mathieu.poirier@linaro.org wrote:
+> >
+> > > Hey guys,
+> > >
+> > > On Wed, Jan 15, 2020 at 04:11:03PM +0100, Clément Leger wrote:
+> > >>
+> > >>
+> > >> ----- On 15 Jan, 2020, at 16:09, Arnaud Pouliquen arnaud.pouliquen@st.com wrote:
+> > >>
+> > >> > On 1/15/20 3:28 PM, Clément Leger wrote:
+> > >> >> Hi Arnaud,
+> > >> >>
+> > >> >> ----- On 15 Jan, 2020, at 15:06, Arnaud Pouliquen arnaud.pouliquen@st.com wrote:
+> > >> >>
+> > >> >>> Hi Clément,
+> > >> >>>
+> > >> >>> On 1/15/20 11:21 AM, Clement Leger wrote:
+> > >> >>>> In order to support preallocated notify ids, if their value is
+> > >> >>>> equal to FW_RSC_NOTIFY_ID_ANY, then do no allocate a notify id
+> > >> >>>> dynamically but try to allocate the requested one. This is useful when
+> > >> >>>> using custom ids to bind them to custom vendor resources. For instance,
+> > >> >>>> it allow to assign a group of queues to a specific interrupti in order
+> > >> >>>> to dispatch notifications.
+> > >> >>>>
+> > >> >>>> Signed-off-by: Clement Leger <cleger@kalray.eu>
+> > >> >>>> ---
+> > >> >>>>  drivers/remoteproc/remoteproc_core.c | 27 +++++++++++++++++++--------
+> > >> >>>>  include/linux/remoteproc.h           |  1 +
+> > >> >>>>  2 files changed, 20 insertions(+), 8 deletions(-)
+> > >> >>>>
+> > >> >>>> diff --git a/drivers/remoteproc/remoteproc_core.c
+> > >> >>>> b/drivers/remoteproc/remoteproc_core.c
+> > >> >>>> index 307df98347ba..b1485fcd0f11 100644
+> > >> >>>> --- a/drivers/remoteproc/remoteproc_core.c
+> > >> >>>> +++ b/drivers/remoteproc/remoteproc_core.c
+> > >> >>>> @@ -351,14 +351,27 @@ int rproc_alloc_vring(struct rproc_vdev *rvdev, int i)
+> > >> >>>>         /*
+> > >> >>>>          * Assign an rproc-wide unique index for this vring
+> > >> >>>>          * TODO: assign a notifyid for rvdev updates as well
+> > >> >>>> -        * TODO: support predefined notifyids (via resource table)
+> > >> >>>>          */
+> > >> >>>> -       ret = idr_alloc(&rproc->notifyids, rvring, 0, 0, GFP_KERNEL);
+> > >> >>>> -       if (ret < 0) {
+> > >> >>>> -               dev_err(dev, "idr_alloc failed: %d\n", ret);
+> > >> >>>> -               return ret;
+> > >> >>>> +       if (rsc->vring[i].notifyid == FW_RSC_NOTIFY_ID_ANY) {
+> > >> >>>> +               ret = idr_alloc(&rproc->notifyids, rvring, 0, 0, GFP_KERNEL);
+> > >> >>>> +               if (ret < 0) {
+> > >> >>>> +                       dev_err(dev, "idr_alloc failed: %d\n", ret);
+> > >> >>>> +                       return ret;
+> > >> >>>> +               }
+> > >> >>>> +               notifyid = ret;
+> > >> >>>> +
+> > >> >>>> +               /* Let the rproc know the notifyid of this vring.*/
+> > >> >>>> +               rsc->vring[i].notifyid = notifyid;
+> > >> >>>> +       } else {
+> > >> >>>> +               /* Reserve requested notify_id */
+> > >> >>>> +               notifyid = rsc->vring[i].notifyid;
+> > >> >>>> +               ret = idr_alloc(&rproc->notifyids, rvring, notifyid,
+> > >> >>>> +                               notifyid + 1, GFP_KERNEL);
+> > >> >>>> +               if (ret < 0) {
+> > >> >>>> +                       dev_err(dev, "idr_alloc failed: %d\n", ret);
+> > >> >>>> +                       return ret;
+> > >> >>>> +               }
+> > >> >>>>         }
+> > >> >>>> -       notifyid = ret;
+> > >> >>>>
+> > >> >>>>         /* Potentially bump max_notifyid */
+> > >> >>>>         if (notifyid > rproc->max_notifyid)
+> > >> >>>> @@ -366,8 +379,6 @@ int rproc_alloc_vring(struct rproc_vdev *rvdev, int i)
+> > >> >>>>
+> > >> >>>>         rvring->notifyid = notifyid;
+> > >> >>>>
+> > >> >>>> -       /* Let the rproc know the notifyid of this vring.*/
+> > >> >>>> -       rsc->vring[i].notifyid = notifyid;
+> > >> >>>>         return 0;
+> > >> >>>>  }
+> > >> >>> The rproc_free_vring function resets the notifyid to -1 on free.
+> > >> >>> This could generate a side effect if the resource table is not reloaded.
+> > >> >>
+> > >> >> Oh indeed, I did not thought of that. What would you recommend ?
+> > >> >> If using -1 in free vring, notify ids will be reallocated at next
+> > >> >> round.
+> > >> > Regarding the code i'm not sure that it is useful to reset the notifyID to -1 on
+> > >> > free.
+> > >
+> > > I'm not sure setting notifyid to -1 in rproc_free_vring() is such a big problem.
+> > > No matter the code path I look at, if rproc_free_vring() is called something
+> > > serious has happened and the resource table will be reloaded if another attempt
+> > > at booting the remote processor is done.  It can also be that a graceful
+> > > shutdown is underway, in which case the resource table will be reloaded anyway
+> > > if/when the slave is brought back in service.
+> > >
+> > > Let me know if I'm missing a scenario.
+> >
+> > No, you are actually right
+> >
+> > >
+> > > To me the real problem is if a FW image has set the notifyids in the resource
+> > > table to 0xffffffff, thinking they will be overwritten.  In that case things
+> > > will really south.
+> >
+> > Hum, if set to 0xFFFFFFFF, then they will be assigned dynamically and updated
+> > in the resource table (with this patch). But your probably mean existing code,
+> > right ?
+> 
+> My apologies for not expressing myself clearly here - let me try again.
+> 
+> At this time notifyids in the firmware's resource table can be set to
+> anything because the code will overwrite them.  With this patch
+> firmware images that don't have their notifyids set to -1 will see a
+> change in how ids are assigned, something that has the potential to
+> break user space.
+> 
 
-has been applied to the regulator tree at
+Right, we should have had a check in place to ensure that we only
+accepted -1 here, as that's what the code relies upon.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.5
+If a conclusion on the new resource table format is imminent it sounds
+reasonable to document the behaviour for the current version and make it
+behave as as expected in the new one.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 3d7610e8da993539346dce6f7c909fd3d56bf4d5 Mon Sep 17 00:00:00 2001
-From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Date: Mon, 20 Jan 2020 13:39:21 +0100
-Subject: [PATCH] regulator: core: Fix exported symbols to the exported GPL
- version
-
-Change the exported symbols introduced by commit e9153311491da
-("regulator: vctrl-regulator: Avoid deadlock getting and setting the voltage")
-from EXPORT_SYMBOL() to EXPORT_SYMBOL_GPL(), like is used for all the core
-parts.
-
-Fixes: e9153311491da ("regulator: vctrl-regulator: Avoid deadlock getting and setting the voltage")
-Reported-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Link: https://lore.kernel.org/r/20200120123921.1204339-1-enric.balletbo@collabora.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/regulator/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index 6be687d25484..5bab251b9a9d 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -3466,7 +3466,7 @@ int regulator_set_voltage_rdev(struct regulator_dev *rdev, int min_uV,
- out:
- 	return ret;
- }
--EXPORT_SYMBOL(regulator_set_voltage_rdev);
-+EXPORT_SYMBOL_GPL(regulator_set_voltage_rdev);
- 
- static int regulator_limit_voltage_step(struct regulator_dev *rdev,
- 					int *current_uV, int *min_uV)
-@@ -4031,7 +4031,7 @@ int regulator_get_voltage_rdev(struct regulator_dev *rdev)
- 		return ret;
- 	return ret - rdev->constraints->uV_offset;
- }
--EXPORT_SYMBOL(regulator_get_voltage_rdev);
-+EXPORT_SYMBOL_GPL(regulator_get_voltage_rdev);
- 
- /**
-  * regulator_get_voltage - get regulator output voltage
--- 
-2.20.1
-
+Regards,
+Bjorn
