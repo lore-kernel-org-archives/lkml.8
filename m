@@ -2,131 +2,106 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01CC2C47409
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B29C33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6561208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:03:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IUsagC+Q"
+	by mail.kernel.org (Postfix) with ESMTP id 37893208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:05:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbgATMDd (ORCPT
+        id S1726954AbgATMFW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 07:03:33 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42183 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726890AbgATMDc (ORCPT
+        Mon, 20 Jan 2020 07:05:22 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:38670 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726573AbgATMFW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 07:03:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579521811;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=i0FYwpPvJVwXX6WibGdKe3t8GmO0Q/BB/ry3XOYj5v4=;
-        b=IUsagC+QT7o8Lg7F1pqLCJbSApDaimaTwWR2DDCb+EFmTbNbyTERf0ROeQzX6iE2e3fthU
-        8F+yuUTDv9de3lrQaArYnjglILK+XcLEWnwlYCnFXQssRlJpkb5HigEHVl5nJCAVc7o+4f
-        e3mDKsdzEwwtdJ/I6u5d9fFXZCzJ1GM=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-172-KSVrNUxKNzC1SttC00pAgw-1; Mon, 20 Jan 2020 07:03:28 -0500
-X-MC-Unique: KSVrNUxKNzC1SttC00pAgw-1
-Received: by mail-qk1-f198.google.com with SMTP id j16so20365478qkk.17
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 04:03:28 -0800 (PST)
+        Mon, 20 Jan 2020 07:05:22 -0500
+Received: by mail-ot1-f68.google.com with SMTP id z9so26330427oth.5;
+        Mon, 20 Jan 2020 04:05:21 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=i0FYwpPvJVwXX6WibGdKe3t8GmO0Q/BB/ry3XOYj5v4=;
-        b=L8+5JZMgVQxSGGHY5hCllzWifrrUxf519OqWeFyNByi2/sI+zkKe0Tb+9rvH0xxOtx
-         JPQa0kDmraBD8lXTDNJ38K4w+sr1A9eCKC+uEwmB8GbbOXETrTojG998eZ4efY2aopoa
-         47h2/ftMGdec+vAIr5F1BePuLlcUgNadyKNzBFyQJtC+BKsNwvOrs4leaqKVj2985CeF
-         THbN0RiakaXhXq3VQw+N/p5dXyALpgGg4T+SOTyyQe+LlqOeMUruW+q7Bl2dbUA03ghX
-         mYWDguy6TvdmwXuunfDVKl7XD+2ZnsuEpaZn13uEkQbZo5qgtSns70DrKT1HQjYRiNWU
-         6mHg==
-X-Gm-Message-State: APjAAAX/1YhJa0NdULEK6JpWvo4GwEQVH0p2yDCiGE94D1dNVEfJj0W3
-        NMLLe3DaXV+KlCNUSuOEzjY+Ir7Sin9OkvrxZJV9QHtqbF3sTxHvWV15aAp63ELxPHXFes1J0Of
-        5bJnxfo81fcrRJer+N79QJmE5
-X-Received: by 2002:ac8:2c7d:: with SMTP id e58mr20372305qta.196.1579521807749;
-        Mon, 20 Jan 2020 04:03:27 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwBOvpzVbluzRk2PBevjR+yTn5PHKpCN1mkjbfx/S5QQmnZyFB/1WiP+Ct1GD9bo9yvXG9y7A==
-X-Received: by 2002:ac8:2c7d:: with SMTP id e58mr20372288qta.196.1579521807486;
-        Mon, 20 Jan 2020 04:03:27 -0800 (PST)
-Received: from redhat.com (bzq-79-179-85-180.red.bezeqint.net. [79.179.85.180])
-        by smtp.gmail.com with ESMTPSA id h8sm17044762qtm.51.2020.01.20.04.03.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 04:03:26 -0800 (PST)
-Date:   Mon, 20 Jan 2020 07:03:20 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jhansen@vmware.com,
-        jasowang@redhat.com, kvm@vger.kernel.org, stefanha@redhat.com,
-        virtualization@lists.linux-foundation.org,
-        linux-hyperv@vger.kernel.org, decui@microsoft.com
-Subject: Re: [PATCH net-next 1/3] vsock: add network namespace support
-Message-ID: <20200120060601-mutt-send-email-mst@kernel.org>
-References: <20200116172428.311437-1-sgarzare@redhat.com>
- <20200116172428.311437-2-sgarzare@redhat.com>
- <20200120.100610.546818167633238909.davem@davemloft.net>
- <20200120101735.uyh4o64gb4njakw5@steredhat>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8IGISWNwTs2bNmoDODVRHiVGV+QnUc2aI36aOiRfO3A=;
+        b=ehBMNUNSvqJ0oQ91aZxbfu2Lcp9Oy9dECZx1qTD3176riFrhyJvEASm8wXRcC3DKIe
+         ntiqtUUtvxMfw6BWizVAddjEsgZ+wKPs+vOU36vfr7FN0+ycwD2w7Sf5cQtW8tW0Wikg
+         CbFRffcZfcLjPrkmpEU55vPdv8B97Fgr17ZW9y/VpXdIpkhwl3BR1Mm53JXyHqggph2I
+         Ndc/Jp2eDkNwULhhNmLL+5wtJ7o5LmT595km+8wn4o/bhIX77faBXgO49BrbMw9VCFmo
+         ERcwkQdpodHzKUoBtk8gsFc4WNIzvcZalJ/7C9wzgLsno6X7BSmlR1oM+MwausP0mC6c
+         ZIsA==
+X-Gm-Message-State: APjAAAUTi8h2HFQwGuxeTSQZWHkKis5LtErivUdhLiLxl4y+BjAqzoF1
+        JeeFFVg6jUikWvi8riOrKUIg/xkZRCdva8SG4fuXU9MG
+X-Google-Smtp-Source: APXvYqz4OtZxTxDjvqbBlOXznpj0zV6t75mZIt8QDFhI+1zDn4ZTkzfm/BzJLg7d/t4A9sO4EamAcXsetSXbnBkA2OM=
+X-Received: by 2002:a9d:8f1:: with SMTP id 104mr14795679otf.107.1579521920977;
+ Mon, 20 Jan 2020 04:05:20 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200120101735.uyh4o64gb4njakw5@steredhat>
+References: <20191217104025.23318-1-peter.ujfalusi@ti.com>
+In-Reply-To: <20191217104025.23318-1-peter.ujfalusi@ti.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 20 Jan 2020 13:05:09 +0100
+Message-ID: <CAMuHMdUPhabZrXJ3UqSVTdy2aWf6VG27q287MizKJ5q5tyRnwA@mail.gmail.com>
+Subject: Re: [PATCH] media: rcar_drif: Use dma_request_chan() instead dma_request_slave_channel()
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Ramesh Shanmugasundaram <rashanmu@gmail.com>,
+        Vinod <vkoul@kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 11:17:35AM +0100, Stefano Garzarella wrote:
-> On Mon, Jan 20, 2020 at 10:06:10AM +0100, David Miller wrote:
-> > From: Stefano Garzarella <sgarzare@redhat.com>
-> > Date: Thu, 16 Jan 2020 18:24:26 +0100
-> > 
-> > > This patch adds 'netns' module param to enable this new feature
-> > > (disabled by default), because it changes vsock's behavior with
-> > > network namespaces and could break existing applications.
-> > 
-> > Sorry, no.
-> > 
-> > I wonder if you can even design a legitimate, reasonable, use case
-> > where these netns changes could break things.
-> 
-> I forgot to mention the use case.
-> I tried the RFC with Kata containers and we found that Kata shim-v1
-> doesn't work (Kata shim-v2 works as is) because there are the following
-> processes involved:
-> - kata-runtime (runs in the init_netns) opens /dev/vhost-vsock and
->   passes it to qemu
-> - kata-shim (runs in a container) wants to talk with the guest but the
->   vsock device is assigned to the init_netns and kata-shim runs in a
->   different netns, so the communication is not allowed
-> But, as you said, this could be a wrong design, indeed they already
-> found a fix, but I was not sure if others could have the same issue.
-> 
-> In this case, do you think it is acceptable to make this change in
-> the vsock's behavior with netns and ask the user to change the design?
+On Tue, Dec 17, 2019 at 11:41 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+> dma_request_slave_channel() is a wrapper on top of dma_request_chan()
+> eating up the error code.
+>
+> By using dma_request_chan() directly the driver can support deferred
+> probing against DMA.
+>
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-David's question is what would be a usecase that's broken
-(as opposed to fixed) by enabling this by default.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-If it does exist, you need a way for userspace to opt-in,
-module parameter isn't that.
+One comment below.
 
-> 
-> > 
-> > I am totally against adding a module parameter for this, it's
-> > incredibly confusing for users and will create a test scenerio
-> > that is strongly less likely to be covered.
-> > 
-> 
-> Got it, I'll remove the module parameter!
-> 
-> Thanks,
-> Stefano
+> --- a/drivers/media/platform/rcar_drif.c
+> +++ b/drivers/media/platform/rcar_drif.c
+> @@ -275,10 +275,10 @@ static int rcar_drif_alloc_dmachannels(struct rcar_drif_sdr *sdr)
+>         for_each_rcar_drif_channel(i, &sdr->cur_ch_mask) {
+>                 struct rcar_drif *ch = sdr->ch[i];
+>
+> -               ch->dmach = dma_request_slave_channel(&ch->pdev->dev, "rx");
+> -               if (!ch->dmach) {
+> +               ch->dmach = dma_request_chan(&ch->pdev->dev, "rx");
+> +               if (IS_ERR(ch->dmach)) {
+>                         rdrif_err(sdr, "ch%u: dma channel req failed\n", i);
 
+Now there is an error code, you might (1) want to print it, and (2) only
+do so when it is not due to probe deferral:
+
+        if (PTR_ERR(ch->dmach) != -EPROBE_DEFER)
+                rdrif_err(sdr, "ch%u: dma channel req failed %pe\n",
+i, ch->dmach);
+
+> -                       ret = -ENODEV;
+> +                       ret = PTR_ERR(ch->dmach);
+>                         goto dmach_error;
+>                 }
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
