@@ -2,210 +2,177 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 237F7C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F271C33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4AAB22314
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:11:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579533093;
-	bh=LCcU4e5UGq3OH9ShprWhNnt09GF0XJXuxMbSyUBugW4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=MmxNCsO0xLoh81uqvMhcMd8gr4/nbsNCe7j7xCQwunBYbvxbMGUvfO/ZqH39QoXHA
-	 /PE+CPKW68R8BHPDjthsQIRFeoTkpJBsZXkpiR+kb519BVvT2/ktgWdx79PLoVv+63
-	 E3krlZePUKsM+OQMcRkh1EW5qJREqNM9hAj2w9Pk=
+	by mail.kernel.org (Postfix) with ESMTP id 21CDE2070C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:11:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=neuralgames.com header.i=@neuralgames.com header.b="kY+GPOBB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729158AbgATPLc (ORCPT
+        id S1729208AbgATPLr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 10:11:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45408 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726642AbgATPLa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 10:11:30 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA2032070C;
-        Mon, 20 Jan 2020 15:11:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579533090;
-        bh=LCcU4e5UGq3OH9ShprWhNnt09GF0XJXuxMbSyUBugW4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=pTvFmKdnoaOuLcxDRYa7Ta1L8hTE/HN51tSEtJxuDqbRY6ttUABkmSxnFLKjrjG9K
-         FIo4rDliaMvnwjRwl/YtLrUOfQmAA/GGm2VTl1ac0fhEr2A4TmDhkkCoD8FBGKzm4j
-         XgW/eESNMulzby33FBgMq9MZ6NTCMBpTEVC7Qhfs=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1itYi8-000IhN-2l; Mon, 20 Jan 2020 15:11:28 +0000
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 20 Jan 2020 15:11:28 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Zenghui Yu <yuzenghui@huawei.com>
-Cc:     kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        Eric Auger <eric.auger@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <Andrew.Murray@arm.com>,
-        Robert Richter <rrichter@marvell.com>
-Subject: Re: [PATCH v3 05/32] irqchip/gic-v4.1: VPE table (aka
- GICR_VPROPBASER) allocation
-In-Reply-To: <b4a78cea-4ba3-58fb-4121-44508e7ae384@huawei.com>
-References: <20191224111055.11836-1-maz@kernel.org>
- <20191224111055.11836-6-maz@kernel.org>
- <b4a78cea-4ba3-58fb-4121-44508e7ae384@huawei.com>
-Message-ID: <3f1aad5c7f79b5ae5b87cef57523ec78@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.8
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org, eric.auger@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, tglx@linutronix.de, jason@lakedaemon.net, lorenzo.pieralisi@arm.com, Andrew.Murray@arm.com, rrichter@marvell.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Mon, 20 Jan 2020 10:11:47 -0500
+Received: from kross.rwserver.com ([69.13.37.146]:37040 "EHLO
+        kross2019.rwserver.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728783AbgATPLr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 10:11:47 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by kross2019.rwserver.com (Postfix) with ESMTP id 3E1EBB3629;
+        Mon, 20 Jan 2020 09:01:33 -0600 (CST)
+Authentication-Results: kross2019.rwserver.com (amavisd-new);
+        dkim=pass (1024-bit key) reason="pass (just generated, assumed good)"
+        header.d=neuralgames.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=neuralgames.com;
+         h=x-mailer:message-id:date:date:subject:subject:from:from; s=
+        default; t=1579532490; x=1581346891; bh=dshgkKumJVS0zAqIIrcV+cw7
+        enEW8iyIBXeKU3OU9w4=; b=kY+GPOBBbjAO2SEjaQm70ehoBqYzhl9zuqJcDvf9
+        rZjYn0c8QmwPVNoZ13ejhQEWEEnhy4Kh5ot8OLH+v4A4uxbzILR/GUZ+2SXAfMJp
+        Ie2Jt9n13YD3PsTv8s1wVAI0BzbzOf1+onms+kCrTQTe3ti050chJ2HoYxhOJn6F
+        Yyg=
+X-Virus-Scanned: Debian amavisd-new at kross2019.rwserver.com
+Received: from kross2019.rwserver.com ([127.0.0.1])
+        by localhost (kross2019.rwserver.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 5l7g2zoo_9du; Mon, 20 Jan 2020 09:01:30 -0600 (CST)
+Received: from localhost (ZT-GROUP-IN.bear1.Houston1.Level3.net [4.14.58.158])
+        (Authenticated sender: linux@neuralgames.com)
+        by kross2019.rwserver.com (Postfix) with ESMTPSA id 9F147B3628;
+        Mon, 20 Jan 2020 09:01:30 -0600 (CST)
+From:   Oscar A Perez <linux@neuralgames.com>
+To:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Oscar A Perez <linux@neuralgames.com>,
+        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] hwrng: Add support for ASPEED RNG
+Date:   Mon, 20 Jan 2020 15:01:08 +0000
+Message-Id: <20200120150113.2565-1-linux@neuralgames.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-20 14:03, Zenghui Yu wrote:
-> Hi Marc,
-> 
-> On 2019/12/24 19:10, Marc Zyngier wrote:
->> GICv4.1 defines a new VPE table that is potentially shared between
->> both the ITSs and the redistributors, following complicated affinity
->> rules.
->> 
->> To make things more confusing, the programming of this table at
->> the redistributor level is reusing the GICv4.0 GICR_VPROPBASER 
->> register
->> for something completely different.
->> 
->> The code flow is somewhat complexified by the need to respect the
->> affinities required by the HW, meaning that tables can either be
->> inherited from a previously discovered ITS or redistributor.
->> 
->> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> 
-> Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
-> 
-> With two very minor concerns below.
-> 
-> [...]
-> 
->> +static int allocate_vpe_l1_table(void)
->> +{
->> +	void __iomem *vlpi_base = gic_data_rdist_vlpi_base();
->> +	u64 val, gpsz, npg, pa;
->> +	unsigned int psz = SZ_64K;
->> +	unsigned int np, epp, esz;
->> +	struct page *page;
->> +
->> +	if (!gic_rdists->has_rvpeid)
->> +		return 0;
->> +
->> +	/*
->> +	 * if VPENDBASER.Valid is set, disable any previously programmed
->> +	 * VPE by setting PendingLast while clearing Valid. This has the
->> +	 * effect of making sure no doorbell will be generated and we can
->> +	 * then safely clear VPROPBASER.Valid.
->> +	 */
->> +	if (gits_read_vpendbaser(vlpi_base + GICR_VPENDBASER) & 
->> GICR_VPENDBASER_Valid)
->> +		gits_write_vpendbaser(GICR_VPENDBASER_PendingLast,
->> +				      vlpi_base + GICR_VPENDBASER);
-> 
-> I'm confused here.  The Valid field resets to 0.  Under which scenario
-> will the Valid==1 while we're doing initialization for this RD?
+This minimal driver adds support for the Hardware Random Number Generator
+that comes with the AST2400/AST2500/AST2600 SOCs from AspeedTech.
 
-The cases I'm worried about are things like kexec or cpu hotplug,
-where we could find that the RD programming is still valid, one way
-or another. This is unlikely to hit in practice, but who knows...
+The HRNG on these SOCs uses Ring Oscillators working together to generate
+a stream of random bits that can be read by the platform via a 32bit data
+register.
 
-> 
->> +
->> +	/*
->> +	 * If we can inherit the configuration from another RD, let's do
->> +	 * so. Otherwise, we have to go through the allocation process. We
->> +	 * assume that all RDs have the exact same requirements, as
->> +	 * nothing will work otherwise.
->> +	 */
->> +	val = 
->> inherit_vpe_l1_table_from_rd(&gic_data_rdist()->vpe_table_mask);
->> +	if (val & GICR_VPROPBASER_4_1_VALID)
->> +		goto out;
->> +
->> +	gic_data_rdist()->vpe_table_mask = kzalloc(sizeof(cpumask_t), 
->> GFP_KERNEL);
->> +	if (!gic_data_rdist()->vpe_table_mask)
->> +		return -ENOMEM;
->> +
->> +	val = inherit_vpe_l1_table_from_its();
->> +	if (val & GICR_VPROPBASER_4_1_VALID)
->> +		goto out;
->> +
->> +	/* First probe the page size */
->> +	val = FIELD_PREP(GICR_VPROPBASER_4_1_PAGE_SIZE, GIC_PAGE_SIZE_64K);
->> +	gits_write_vpropbaser(val, vlpi_base + GICR_VPROPBASER);
->> +	val = gits_read_vpropbaser(vlpi_base + GICR_VPROPBASER);
->> +	gpsz = FIELD_GET(GICR_VPROPBASER_4_1_PAGE_SIZE, val);
->> +	esz = FIELD_GET(GICR_VPROPBASER_4_1_ENTRY_SIZE, val);
->> +
->> +	switch (gpsz) {
->> +	default:
->> +		gpsz = GIC_PAGE_SIZE_4K;
->> +		/* fall through */
->> +	case GIC_PAGE_SIZE_4K:
->> +		psz = SZ_4K;
->> +		break;
->> +	case GIC_PAGE_SIZE_16K:
->> +		psz = SZ_16K;
->> +		break;
->> +	case GIC_PAGE_SIZE_64K:
->> +		psz = SZ_64K;
->> +		break;
->> +	}
->> +
->> +	/*
->> +	 * Start populating the register from scratch, including RO fields
->> +	 * (which we want to print in debug cases...)
->> +	 */
->> +	val = 0;
->> +	val |= FIELD_PREP(GICR_VPROPBASER_4_1_PAGE_SIZE, gpsz);
->> +	val |= FIELD_PREP(GICR_VPROPBASER_4_1_ENTRY_SIZE, esz);
->> +
->> +	/* How many entries per GIC page? */
->> +	esz++;
->> +	epp = psz / (esz * SZ_8);
->> +
->> +	/*
->> +	 * If we need more than just a single L1 page, flag the table
->> +	 * as indirect and compute the number of required L1 pages.
->> +	 */
->> +	if (epp < ITS_MAX_VPEID) {
->> +		int nl2;
->> +
->> +		gic_rdists->flags |= RDIST_FLAGS_VPE_INDIRECT;
-> 
-> This flag is set but not used, can we just drop it?
+Signed-off-by: Oscar A Perez <linux@neuralgames.com>
+---
+ .../devicetree/bindings/rng/aspeed-rng.yaml   | 90 +++++++++++++++++++
+ 1 file changed, 90 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rng/aspeed-rng.yaml
 
-Yes, good point. I can't even remember what I had in mind with this
-flag, so it can't be that important! ;-).
-
-I'll clean that up.
-
-Thanks,
-
-         M.
+diff --git a/Documentation/devicetree/bindings/rng/aspeed-rng.yaml b/Documentation/devicetree/bindings/rng/aspeed-rng.yaml
+new file mode 100644
+index 000000000000..06070ebe1c33
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rng/aspeed-rng.yaml
+@@ -0,0 +1,90 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/rng/aspeed-rng.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++
++title: Bindings for Aspeed Hardware Random Number Generator
++
++
++maintainers:
++  - Oscar A Perez <linux@neuralgames.com>
++
++
++description: |
++  The HRNG on the AST2400/AST2500/AST2600 SOCs from AspeedTech  uses four Ring
++  Oscillators working together to generate a stream of random bits that can be
++  read by the platform via a 32bit data register every one microsecond.
++  All the platform has to do is to provide to the driver the 'quality' entropy
++  value, the  'mode' in which the combining  ROs will generate the  stream  of
++  random bits and, the 'period' value that is used as a wait-time between reads
++  from the 32bit data register.
++
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++          - enum:
++              - aspeed,ast2400-rng
++              - aspeed,ast2500-rng
++              - aspeed,ast2600-rng
++
++
++  reg:
++    description:
++      Base address and length of the register set of this block.
++      Currently 'reg' must be eight bytes wide and 32-bit aligned.
++
++    maxItems: 1
++
++
++  period:
++    description:
++      Wait time in microseconds to be used between reads.
++      The RNG on these Aspeed SOCs generates 32bit of random data
++      every one microsecond. Choose between 1 and n microseconds.
++
++    maxItems: 1
++
++
++  mode:
++    description:
++      One of the eight modes in which the four internal ROs (Ring
++      Oscillators)  are combined to generate a stream  of random
++      bits. The default mode is seven which is the default method
++      of combining RO random bits on these Aspeed SOCs.
++
++    maxItems: 1
++
++
++  quality:
++    description:
++      Estimated number of bits of entropy per 1024 bits read from
++      the RNG.  Note that the default quality is zero which stops
++      this HRNG from automatically filling the kernel's entropy
++      pool with data.
++
++    maxItems: 1
++
++
++required:
++  - compatible
++  - reg
++  - period
++  - quality
++
++
++examples:
++  - |
++    rng: hwrng@1e6e2074 {
++         compatible = "aspeed,ast2500-rng";
++         reg = <0x1e6e2074 0x8>;
++         period = <4>;
++         quality = <128>;
++         mode = <0x7>;
++    };
++
++
++...
 -- 
-Jazz is not dead. It just smells funny...
+2.17.1
+
