@@ -2,57 +2,68 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75505C33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:34:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A732C33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:35:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FAAB22522
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:34:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579559682;
-	bh=z2Y0IHglkKCvSNW3HrTdG8/6BD+OKkO7hiP7aqvSJao=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tzEc9F5bokTm94Y3ghqe+BJgj5eJhxCjXEQPk0nBu9ydn7FXcx2VyPRwA23tnhAmC
-	 pOMlNeBY7s47ru91A1emixHd26lTFD402jFi7zVgvUW9Sydh2DK5taZ2rsibz+SbX8
-	 1TS/MKeh3LvTMIXcfg6gOxE2bD/XzyxWO10TLiew=
+	by mail.kernel.org (Postfix) with ESMTP id 3D3D8217F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:35:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e8/RztKU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729112AbgATWel (ORCPT
+        id S1728852AbgATWf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 17:34:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37990 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728852AbgATWeT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 17:34:19 -0500
-Received: from sol.hsd1.ca.comcast.net (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8125524125;
-        Mon, 20 Jan 2020 22:34:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579559658;
-        bh=z2Y0IHglkKCvSNW3HrTdG8/6BD+OKkO7hiP7aqvSJao=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZB3SVJ8mSzoYzK9TQg1dPhopO5UVnGDpovyzD09WXgRSNwFHyvEGuEnJuXKB8QU0M
-         PwAjhqcs/SkmEahZUDCqWX/w8vAfdZ7DzKFpXQHyzzwViiMZ8WwPjBUBOy2vdNNi/P
-         /gzyfLaRHRr2ZdmVU0xfBIzVXnFBcyFDVqXiNG6M=
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     linux-fscrypt@vger.kernel.org
-Cc:     Daniel Rosenberg <drosen@google.com>, kernel-team@android.com,
-        linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        Gabriel Krisman Bertazi <krisman@collabora.com>,
-        linux-mtd@lists.infradead.org, Richard Weinberger <richard@nod.at>
-Subject: [PATCH v5 4/6] ubifs: don't trigger assertion on invalid no-key filename
-Date:   Mon, 20 Jan 2020 14:31:59 -0800
-Message-Id: <20200120223201.241390-5-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200120223201.241390-1-ebiggers@kernel.org>
-References: <20200120223201.241390-1-ebiggers@kernel.org>
+        Mon, 20 Jan 2020 17:35:27 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:34461 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727011AbgATWf1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 17:35:27 -0500
+Received: by mail-wm1-f66.google.com with SMTP id w5so835518wmi.1;
+        Mon, 20 Jan 2020 14:35:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7y+9jcXPCSZhEx3NX+qoACFZGUpTqdiKM8//qksV/wQ=;
+        b=e8/RztKUTOxk4TpVS0UaHQ7AW9nnb/saWhB32I4djbutPSNabLAyUcp2F5s+5lOjAL
+         LiN0siarHL8RNGI/YLUy1bvafhxUNeLp2JGNxIup899i50z7nCFAcegP1HhpKYXPWQp/
+         RsDvLtSVOP9Sp1ugLkjLzq+U22PnWE4wc8KM05IrEc08dANFerzmHbxKt6qjYvoz8wSM
+         8pPCRz5GVXtdfqR2HtESeRIA9YxnXhox95j1rjK2SM2B3QKgpep7i/IE6GLbM41pYm4R
+         dk+FFR9hFuH2vMntj+/I3U6IvAHbqMg0P6Gpx3m+ENY/MED6i7QJjMkFCBWkcP5cxdku
+         mbzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7y+9jcXPCSZhEx3NX+qoACFZGUpTqdiKM8//qksV/wQ=;
+        b=Al7kkJ323iWjuvqY/qc3RFUGyj/Ldu0yxghd4yELBML1prR+O3RS2In1ByG4T9lVJd
+         KEqOzVy0ikivuFA+voEOiBPtBjR7eJgP/yFFFiBXXXKkUE0Ed8n+jHzm9G5FZ6twfDyn
+         lEPJLWJiGZYvXACH/uEALGsoMR+tXtkAxb1vcn2SFwzkZJN81a+52WvLAK4DntkGGrwa
+         ETXCOR+fCslbj1x8FRMJ/dyLqPBxvzBZJ+K1il6l1mBL4iOVIT/jOD4t7vNWbFE0aeC3
+         5tv6CbxKyEMrTMOkxxBbIMos+CWbNqa+8M3U5VyOnkS4RA4HvopJWa29qgAHVu38+jpF
+         Ycfg==
+X-Gm-Message-State: APjAAAWZ6Y66lstRo593AxFvDCGik9fj7l12XOY9jqbaTJaVBESJQk49
+        9HjsZW3Sg5iCVYKCAKeeh0gOmjVNei6M
+X-Google-Smtp-Source: APXvYqwfucQ7OKW5yitDW5nNdnnZ48z8RtghuViGeJ+elzu4gbmME8rQaw5EBWB5OkcQHl/gC8bhhQ==
+X-Received: by 2002:a1c:1f56:: with SMTP id f83mr912984wmf.93.1579559725274;
+        Mon, 20 Jan 2020 14:35:25 -0800 (PST)
+Received: from ninjahost.lan (host-92-15-170-165.as43234.net. [92.15.170.165])
+        by smtp.googlemail.com with ESMTPSA id f207sm1213744wme.9.2020.01.20.14.35.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jan 2020 14:35:24 -0800 (PST)
+From:   Jules Irenge <jbi.octave@gmail.com>
+To:     rcu@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        Jules Irenge <jbi.octave@gmail.com>
+Subject: [PATCH 0/5] Lock warning clean up 
+Date:   Mon, 20 Jan 2020 22:35:15 +0000
+Message-Id: <20200120223515.51287-1-jbi.octave@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -60,47 +71,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+This patch series adds missing annotations to functions that register warnings of context imbalance when built with Sparse tool.
+The adds fix these warnings and give insight on what the functions are actually doing.
+In the core kernel,
 
-If userspace provides an invalid fscrypt no-key filename which encodes a
-hash value with any of the UBIFS node type bits set (i.e. the high 3
-bits), gracefully report ENOENT rather than triggering ubifs_assert().
+1. IRQ and RCU subsystems: exactly patch 1 and 3,  __releases() annotations were added as these functions exit the critical section
+2. RCU subsystem again, patch 2 and 4, __acquire() annotations were added as the functions allow entry to the critical section.
+3. TIME subsystem, patch 5 where lock is held at entry and exit of the function, an __must_hold() annotation was added.
 
-Test case with kvm-xfstests shell:
+Jules Irenge (5):
+  irq: Add  missing annotation for __irq_put_desc_unlock()
+  rcu: Add missing annotation for exit_tasks_rcu_start()
+  rcu: Add missing annotation for exit_tasks_rcu_finish()
+  rcu: Add missing annotation for rcu_nocb_bypass_lock()
+  time: Add missing annotation for __run_timer()
 
-    . fs/ubifs/config
-    . ~/xfstests/common/encrypt
-    dev=$(__blkdev_to_ubi_volume /dev/vdc)
-    ubiupdatevol $dev -t
-    mount $dev /mnt -t ubifs
-    mkdir /mnt/edir
-    xfs_io -c set_encpolicy /mnt/edir
-    rm /mnt/edir/_,,,,,DAAAAAAAAAAAAAAAAAAAAAAAAAA
+ kernel/irq/irqdesc.c     | 1 +
+ kernel/rcu/tree_plugin.h | 1 +
+ kernel/rcu/update.c      | 4 ++--
+ kernel/time/hrtimer.c    | 2 +-
+ 4 files changed, 5 insertions(+), 3 deletions(-)
 
-With the bug, the following assertion fails on the 'rm' command:
-
-    [   19.066048] UBIFS error (ubi0:0 pid 379): ubifs_assert_failed: UBIFS assert failed: !(hash & ~UBIFS_S_KEY_HASH_MASK), in fs/ubifs/key.h:170
-
-Fixes: f4f61d2cc6d8 ("ubifs: Implement encrypted filenames")
-Cc: <stable@vger.kernel.org> # v4.10+
-Signed-off-by: Eric Biggers <ebiggers@google.com>
----
- fs/ubifs/dir.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/fs/ubifs/dir.c b/fs/ubifs/dir.c
-index 636c3222c2308..5f937226976a6 100644
---- a/fs/ubifs/dir.c
-+++ b/fs/ubifs/dir.c
-@@ -228,6 +228,8 @@ static struct dentry *ubifs_lookup(struct inode *dir, struct dentry *dentry,
- 	if (nm.hash) {
- 		ubifs_assert(c, fname_len(&nm) == 0);
- 		ubifs_assert(c, fname_name(&nm) == NULL);
-+		if (nm.hash & ~UBIFS_S_KEY_HASH_MASK)
-+			goto done; /* ENOENT */
- 		dent_key_init_hash(c, &key, dir->i_ino, nm.hash);
- 		err = ubifs_tnc_lookup_dh(c, &key, dent, nm.minor_hash);
- 	} else {
 -- 
-2.25.0
+2.24.1
 
