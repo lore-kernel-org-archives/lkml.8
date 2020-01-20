@@ -2,118 +2,273 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F73C33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B973C33CB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC8192087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:59:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bsUJbV6a"
+	by mail.kernel.org (Postfix) with ESMTP id F10982077C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:59:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728512AbgATI7L (ORCPT
+        id S1728640AbgATI7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 03:59:11 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35007 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726125AbgATI7K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 03:59:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579510749;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=JOihZ07JJijUAk3UpxjX9RG7atOa9W0V80tsgdS9iBM=;
-        b=bsUJbV6atkbZmWyIlWtH36bALFv3K1OxBWyoysLG8nEwnLE52j0Ngno6h3nOK+MweuF2eb
-        n71WwSWC9+hbx/tgWX8ubOcwgav+URcM5jOiYFNukKzgwYwRhPYQattAjiMzH79IIcbMiD
-        QQSaoG/NPcpr/uxgOYg94fVvXh9Gs2s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-43-E2Sk6cHtOpGnk39x4Lf3xg-1; Mon, 20 Jan 2020 03:59:06 -0500
-X-MC-Unique: E2Sk6cHtOpGnk39x4Lf3xg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DDDAA800D48;
-        Mon, 20 Jan 2020 08:59:04 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-20.pek2.redhat.com [10.72.8.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5ADB51001DD7;
-        Mon, 20 Jan 2020 08:58:54 +0000 (UTC)
-Date:   Mon, 20 Jan 2020 16:58:49 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Peter Xu <peterx@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>
-Subject: Re: [PATCH V3] sched/isolation: isolate from handling managed
- interrupt
-Message-ID: <20200120085849.GA21740@ming.t460p>
-References: <20200118125354.15796-1-ming.lei@redhat.com>
- <87ftgb4chi.fsf@nanos.tec.linutronix.de>
+        Mon, 20 Jan 2020 03:59:33 -0500
+Received: from mga18.intel.com ([134.134.136.126]:6919 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726125AbgATI7d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 03:59:33 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 00:59:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,341,1574150400"; 
+   d="scan'208";a="258634541"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
+  by fmsmga002.fm.intel.com with ESMTP; 20 Jan 2020 00:59:25 -0800
+Subject: Re: [PATCH V2 2/2] mmc: sdhci-msm: Add CQHCI support for sdhci-msm
+To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        ulf.hansson@linaro.org
+Cc:     asutoshd@codeaurora.org, stummala@codeaurora.org,
+        sayalil@codeaurora.org, cang@codeaurora.org,
+        rampraka@codeaurora.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Ritesh Harjani <riteshh@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        BOUGH CHEN <haibo.chen@nxp.com>,
+        Takao Orito <orito.takao@socionext.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+References: <1579194192-7942-1-git-send-email-vbadigan@codeaurora.org>
+ <1579194192-7942-3-git-send-email-vbadigan@codeaurora.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <2d6be21b-deb3-9048-f44a-8a8d637f06e6@intel.com>
+Date:   Mon, 20 Jan 2020 10:58:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87ftgb4chi.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <1579194192-7942-3-git-send-email-vbadigan@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Thomas,
+On 16/01/20 7:03 pm, Veerabhadrarao Badiganti wrote:
+> From: Ritesh Harjani <riteshh@codeaurora.org>
+> 
+> This adds CQHCI support for sdhci-msm platforms.
+> 
+> Signed-off-by: Ritesh Harjani <riteshh@codeaurora.org>
+> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
 
-On Sun, Jan 19, 2020 at 05:50:17PM +0100, Thomas Gleixner wrote:
-> Ming,
-> 
-> Ming Lei <ming.lei@redhat.com> writes:
-> >  
-> > +static bool hk_should_isolate(struct irq_data *data,
-> > +		const struct cpumask *affinity, unsigned int cpu)
-> 
-> Please align the first argument on the second line with the first
-> argument on the first line.
-> 
-> > +{
-> > +	const struct cpumask *hk_mask;
-> > +
-> > +	if (!housekeeping_enabled(HK_FLAG_MANAGED_IRQ))
-> > +		return false;
-> > +
-> > +	if (!irqd_affinity_is_managed(data))
-> > +		return false;
-> 
-> Pointless. That's already checked at the begin of the calling function.
-> 
-> > +
-> > +	if (!cpumask_test_cpu(cpu, affinity))
-> > +		return false;
-> 
-> Ditto.
-> 
-> > +	hk_mask = housekeeping_cpumask(HK_FLAG_MANAGED_IRQ);
-> > +	if (cpumask_subset(affinity, hk_mask))
-> > +		return false;
-> > +
-> > +	if (cpumask_intersects(irq_data_get_effective_affinity_mask(data),
-> > +				hk_mask))
-> 
-> I really had to think twice why this is correct. The example I gave you
-> is far more intuitive. It's just missing the check below.
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
-Your example uses isolation mask, which has to be allocated and built
-from housekeeping_cpumask(HK_FLAG_MANAGED_IRQ), that is why I use the
-above way so that we can avoid the allocation.
-
-IMO, the above is intuitive too, given it can be thought as effective
-affinity including hk CPUs.
-
-Thanks,
-Ming
+> ---
+>  drivers/mmc/host/Kconfig     |   1 +
+>  drivers/mmc/host/sdhci-msm.c | 133 ++++++++++++++++++++++++++++++++++++++++++-
+>  2 files changed, 133 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+> index d06b2df..7f2ae59 100644
+> --- a/drivers/mmc/host/Kconfig
+> +++ b/drivers/mmc/host/Kconfig
+> @@ -501,6 +501,7 @@ config MMC_SDHCI_MSM
+>  	depends on ARCH_QCOM || (ARM && COMPILE_TEST)
+>  	depends on MMC_SDHCI_PLTFM
+>  	select MMC_SDHCI_IO_ACCESSORS
+> +	select MMC_CQHCI
+>  	help
+>  	  This selects the Secure Digital Host Controller Interface (SDHCI)
+>  	  support present in Qualcomm SOCs. The controller supports
+> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+> index 3d0bb5e..0b4d01f 100644
+> --- a/drivers/mmc/host/sdhci-msm.c
+> +++ b/drivers/mmc/host/sdhci-msm.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/regulator/consumer.h>
+>  
+>  #include "sdhci-pltfm.h"
+> +#include "cqhci.h"
+>  
+>  #define CORE_MCI_VERSION		0x50
+>  #define CORE_VERSION_MAJOR_SHIFT	28
+> @@ -122,6 +123,10 @@
+>  #define msm_host_writel(msm_host, val, host, offset) \
+>  	msm_host->var_ops->msm_writel_relaxed(val, host, offset)
+>  
+> +/* CQHCI vendor specific registers */
+> +#define CQHCI_VENDOR_CFG1	0xA00
+> +#define CQHCI_VENDOR_DIS_RST_ON_CQ_EN	(0x3 << 13)
+> +
+>  struct sdhci_msm_offset {
+>  	u32 core_hc_mode;
+>  	u32 core_mci_data_cnt;
+> @@ -1567,6 +1572,127 @@ static void sdhci_msm_set_clock(struct sdhci_host *host, unsigned int clock)
+>  	__sdhci_msm_set_clock(host, clock);
+>  }
+>  
+> +/*****************************************************************************\
+> + *                                                                           *
+> + * MSM Command Queue Engine (CQE)                                            *
+> + *                                                                           *
+> +\*****************************************************************************/
+> +
+> +static u32 sdhci_msm_cqe_irq(struct sdhci_host *host, u32 intmask)
+> +{
+> +	int cmd_error = 0;
+> +	int data_error = 0;
+> +
+> +	if (!sdhci_cqe_irq(host, intmask, &cmd_error, &data_error))
+> +		return intmask;
+> +
+> +	cqhci_irq(host->mmc, intmask, cmd_error, data_error);
+> +	return 0;
+> +}
+> +
+> +void sdhci_msm_cqe_disable(struct mmc_host *mmc, bool recovery)
+> +{
+> +	struct sdhci_host *host = mmc_priv(mmc);
+> +	unsigned long flags;
+> +	u32 ctrl;
+> +
+> +	/*
+> +	 * When CQE is halted, the legacy SDHCI path operates only
+> +	 * on 16-byte descriptors in 64bit mode.
+> +	 */
+> +	if (host->flags & SDHCI_USE_64_BIT_DMA)
+> +		host->desc_sz = 16;
+> +
+> +	spin_lock_irqsave(&host->lock, flags);
+> +
+> +	/*
+> +	 * During CQE command transfers, command complete bit gets latched.
+> +	 * So s/w should clear command complete interrupt status when CQE is
+> +	 * either halted or disabled. Otherwise unexpected SDCHI legacy
+> +	 * interrupt gets triggered when CQE is halted/disabled.
+> +	 */
+> +	ctrl = sdhci_readl(host, SDHCI_INT_ENABLE);
+> +	ctrl |= SDHCI_INT_RESPONSE;
+> +	sdhci_writel(host,  ctrl, SDHCI_INT_ENABLE);
+> +	sdhci_writel(host, SDHCI_INT_RESPONSE, SDHCI_INT_STATUS);
+> +
+> +	spin_unlock_irqrestore(&host->lock, flags);
+> +
+> +	sdhci_cqe_disable(mmc, recovery);
+> +}
+> +
+> +static const struct cqhci_host_ops sdhci_msm_cqhci_ops = {
+> +	.enable		= sdhci_cqe_enable,
+> +	.disable	= sdhci_msm_cqe_disable,
+> +};
+> +
+> +static int sdhci_msm_cqe_add_host(struct sdhci_host *host,
+> +				struct platform_device *pdev)
+> +{
+> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+> +	struct cqhci_host *cq_host;
+> +	bool dma64;
+> +	u32 cqcfg;
+> +	int ret;
+> +
+> +	/*
+> +	 * When CQE is halted, SDHC operates only on 16byte ADMA descriptors.
+> +	 * So ensure ADMA table is allocated for 16byte descriptors.
+> +	 */
+> +	if (host->caps & SDHCI_CAN_64BIT)
+> +		host->alloc_desc_sz = 16;
+> +
+> +	ret = sdhci_setup_host(host);
+> +	if (ret)
+> +		return ret;
+> +
+> +	cq_host = cqhci_pltfm_init(pdev);
+> +	if (IS_ERR(cq_host)) {
+> +		ret = PTR_ERR(cq_host);
+> +		dev_err(&pdev->dev, "cqhci-pltfm init: failed: %d\n", ret);
+> +		goto cleanup;
+> +	}
+> +
+> +	msm_host->mmc->caps2 |= MMC_CAP2_CQE | MMC_CAP2_CQE_DCMD;
+> +	cq_host->ops = &sdhci_msm_cqhci_ops;
+> +
+> +	dma64 = host->flags & SDHCI_USE_64_BIT_DMA;
+> +
+> +	ret = cqhci_init(cq_host, host->mmc, dma64);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "%s: CQE init: failed (%d)\n",
+> +				mmc_hostname(host->mmc), ret);
+> +		goto cleanup;
+> +	}
+> +
+> +	/* Disable cqe reset due to cqe enable signal */
+> +	cqcfg = cqhci_readl(cq_host, CQHCI_VENDOR_CFG1);
+> +	cqcfg |= CQHCI_VENDOR_DIS_RST_ON_CQ_EN;
+> +	cqhci_writel(cq_host, cqcfg, CQHCI_VENDOR_CFG1);
+> +
+> +	/*
+> +	 * SDHC expects 12byte ADMA descriptors till CQE is enabled.
+> +	 * So limit desc_sz to 12 so that the data commands that are sent
+> +	 * during card initialization (before CQE gets enabled) would
+> +	 * get executed without any issues.
+> +	 */
+> +	if (host->flags & SDHCI_USE_64_BIT_DMA)
+> +		host->desc_sz = 12;
+> +
+> +	ret = __sdhci_add_host(host);
+> +	if (ret)
+> +		goto cleanup;
+> +
+> +	dev_info(&pdev->dev, "%s: CQE init: success\n",
+> +			mmc_hostname(host->mmc));
+> +	return ret;
+> +
+> +cleanup:
+> +	sdhci_cleanup_host(host);
+> +	return ret;
+> +}
+> +
+>  /*
+>   * Platform specific register write functions. This is so that, if any
+>   * register write needs to be followed up by platform specific actions,
+> @@ -1731,6 +1857,7 @@ static void sdhci_msm_set_regulator_caps(struct sdhci_msm_host *msm_host)
+>  	.set_uhs_signaling = sdhci_msm_set_uhs_signaling,
+>  	.write_w = sdhci_msm_writew,
+>  	.write_b = sdhci_msm_writeb,
+> +	.irq	= sdhci_msm_cqe_irq,
+>  };
+>  
+>  static const struct sdhci_pltfm_data sdhci_msm_pdata = {
+> @@ -1754,6 +1881,7 @@ static int sdhci_msm_probe(struct platform_device *pdev)
+>  	u8 core_major;
+>  	const struct sdhci_msm_offset *msm_offset;
+>  	const struct sdhci_msm_variant_info *var_info;
+> +	struct device_node *node = pdev->dev.of_node;
+>  
+>  	host = sdhci_pltfm_init(pdev, &sdhci_msm_pdata, sizeof(*msm_host));
+>  	if (IS_ERR(host))
+> @@ -1952,7 +2080,10 @@ static int sdhci_msm_probe(struct platform_device *pdev)
+>  	pm_runtime_use_autosuspend(&pdev->dev);
+>  
+>  	host->mmc_host_ops.execute_tuning = sdhci_msm_execute_tuning;
+> -	ret = sdhci_add_host(host);
+> +	if (of_property_read_bool(node, "supports-cqe"))
+> +		ret = sdhci_msm_cqe_add_host(host, pdev);
+> +	else
+> +		ret = sdhci_add_host(host);
+>  	if (ret)
+>  		goto pm_runtime_disable;
+>  	sdhci_msm_set_regulator_caps(msm_host);
+> 
 
