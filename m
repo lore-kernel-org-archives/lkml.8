@@ -2,98 +2,125 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D60BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 428ACC33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:32:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3B38207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:32:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KPQbM/zb"
+	by mail.kernel.org (Postfix) with ESMTP id 22F9B207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:32:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbgATLcg (ORCPT
+        id S1727586AbgATLc5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 06:32:36 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33784 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726752AbgATLcf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 06:32:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579519954;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=H9SYcfz1oePHF0++rlV1xUZ6OF7Ac6ASAIkjSA5Z3T4=;
-        b=KPQbM/zbpH6pFuDRiTLV0X/G/TJJ6DiTClEMqb4f4TC0gERBJoAVvDd5H+97s1wJ3wdaQR
-        eCn41PTo3POoM7Mu/Ei5U8Qi0OI/WomEZuE/xBMl4SlCVrCq6HWdA6H9L3p+0QZ42YiWyY
-        e7DOBnGzeekTCpepTp8c+ihHd9IKB0M=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-362-pJN7XweONy2WmwNrjbK5cw-1; Mon, 20 Jan 2020 06:32:31 -0500
-X-MC-Unique: pJN7XweONy2WmwNrjbK5cw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 72C34107ACC4;
-        Mon, 20 Jan 2020 11:32:30 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-49.rdu2.redhat.com [10.10.120.49])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AADFA8BE0D;
-        Mon, 20 Jan 2020 11:32:29 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200120085411.116252-1-weiyongjun1@huawei.com>
-References: <20200120085411.116252-1-weiyongjun1@huawei.com>
-To:     Wei Yongjun <weiyongjun1@huawei.com>
-Cc:     dhowells@redhat.com, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH -next] watch_queue: Fix error return code in watch_queue_set_size()
+        Mon, 20 Jan 2020 06:32:57 -0500
+Received: from mga05.intel.com ([192.55.52.43]:59982 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726752AbgATLc4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 06:32:56 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 03:32:56 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,341,1574150400"; 
+   d="scan'208";a="399348452"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga005.jf.intel.com with ESMTP; 20 Jan 2020 03:32:55 -0800
+Received: from [10.125.252.193] (abudanko-mobl.ccr.corp.intel.com [10.125.252.193])
+        by linux.intel.com (Postfix) with ESMTP id DE8365803C5;
+        Mon, 20 Jan 2020 03:32:47 -0800 (PST)
+Subject: [PATCH v5 09/10] drivers/perf: open access for CAP_PERFMON privileged
+ process
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
+        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "james.bottomley@hansenpartnership.com" 
+        <james.bottomley@hansenpartnership.com>,
+        Serge Hallyn <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Robert Richter <rric@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Lionel Landwerlin <lionel.g.landwerlin@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        oprofile-list@lists.sf.net
+References: <0548c832-7f4b-dc4c-8883-3f2b6d351a08@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <a3cbbde8-a06c-3ac7-22c4-32a1f91824f3@linux.intel.com>
+Date:   Mon, 20 Jan 2020 14:32:46 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <771478.1579519948.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Mon, 20 Jan 2020 11:32:28 +0000
-Message-ID: <771479.1579519948@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <0548c832-7f4b-dc4c-8883-3f2b6d351a08@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wei Yongjun <weiyongjun1@huawei.com> wrote:
 
->  	pages =3D kcalloc(sizeof(struct page *), nr_pages, GFP_KERNEL);
-> -	if (!pages)
-> +	if (!pages) {
-> +		ret =3D -ENOMEM;
+Open access to monitoring for CAP_PERFMON privileged processes.
+For backward compatibility reasons access to the monitoring remains
+open for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN usage
+for secure monitoring is discouraged with respect to CAP_PERFMON
+capability. Providing the access under CAP_PERFMON capability singly,
+without the rest of CAP_SYS_ADMIN credentials, excludes chances to
+misuse the credentials and makes the operations more secure.
 
-I think the preferred method would be to set ret before calling kcalloc as=
- the
-attached.
-
-David
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 ---
+ drivers/perf/arm_spe_pmu.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/watch_queue.c b/kernel/watch_queue.c
-index 8c625cf451e6..a11724d66834 100644
---- a/kernel/watch_queue.c
-+++ b/kernel/watch_queue.c
-@@ -249,6 +249,7 @@ long watch_queue_set_size(struct pipe_inode_info *pipe=
-, unsigned int nr_notes)
- 	if (ret < 0)
- 		goto error;
- =
-
-+	ret =3D -ENOMEM;
- 	pages =3D kcalloc(sizeof(struct page *), nr_pages, GFP_KERNEL);
- 	if (!pages)
- 		goto error;
+diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
+index 4e4984a55cd1..5dff81bc3324 100644
+--- a/drivers/perf/arm_spe_pmu.c
++++ b/drivers/perf/arm_spe_pmu.c
+@@ -274,7 +274,7 @@ static u64 arm_spe_event_to_pmscr(struct perf_event *event)
+ 	if (!attr->exclude_kernel)
+ 		reg |= BIT(SYS_PMSCR_EL1_E1SPE_SHIFT);
+ 
+-	if (IS_ENABLED(CONFIG_PID_IN_CONTEXTIDR) && capable(CAP_SYS_ADMIN))
++	if (IS_ENABLED(CONFIG_PID_IN_CONTEXTIDR) && perfmon_capable())
+ 		reg |= BIT(SYS_PMSCR_EL1_CX_SHIFT);
+ 
+ 	return reg;
+@@ -700,7 +700,7 @@ static int arm_spe_pmu_event_init(struct perf_event *event)
+ 		return -EOPNOTSUPP;
+ 
+ 	reg = arm_spe_event_to_pmscr(event);
+-	if (!capable(CAP_SYS_ADMIN) &&
++	if (!perfmon_capable() &&
+ 	    (reg & (BIT(SYS_PMSCR_EL1_PA_SHIFT) |
+ 		    BIT(SYS_PMSCR_EL1_CX_SHIFT) |
+ 		    BIT(SYS_PMSCR_EL1_PCT_SHIFT))))
+-- 
+2.20.1
 
