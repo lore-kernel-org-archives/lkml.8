@@ -2,170 +2,140 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F4F6C33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 01:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B62C33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 02:02:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 580EC206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 01:51:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2191820678
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 02:02:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579485760;
+	bh=IgWnmFG4IWCDZ7oFxlaJMqo1c+sGlwmV3F6Rqf7BC48=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=0lyIxQtYX2Rsn0H4enOpX1x5VjImcjsHGTlikkhUEahYLRtul/80uxAFhgtl/kSBc
+	 01CloNfT9dHko8LoQ8R+i9ZW1TeYBsqY6e78BnYgYnqmBDPjFK+zegxx3txqtgSeg0
+	 wgNs0MPCqebJA1u12J+pdnI66QHbBLiC6fXUVPrY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729016AbgATBvA (ORCPT
+        id S1729021AbgATCCi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 20:51:00 -0500
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:54554 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728874AbgATBvA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 20:51:00 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07484;MF=teawaterz@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0To7hRgx_1579485053;
-Received: from localhost(mailfrom:teawaterz@linux.alibaba.com fp:SMTPD_---0To7hRgx_1579485053)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 20 Jan 2020 09:50:58 +0800
-From:   Hui Zhu <teawater@gmail.com>
-To:     fengguang.wu@intel.com, linux-kernel@vger.kernel.org
-Cc:     Hui Zhu <teawater@gmail.com>, Hui Zhu <teawaterz@linux.alibaba.com>
-Subject: [PATCH for vm-scalability] usemem: Add new option --fragmentation for generating fragmented pages
-Date:   Mon, 20 Jan 2020 09:50:51 +0800
-Message-Id: <1579485051-19624-1-git-send-email-teawater@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Sun, 19 Jan 2020 21:02:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43800 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728931AbgATCCh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jan 2020 21:02:37 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24A7620678;
+        Mon, 20 Jan 2020 02:02:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579485756;
+        bh=IgWnmFG4IWCDZ7oFxlaJMqo1c+sGlwmV3F6Rqf7BC48=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=XHWlK1OtrHCH+uzYyEW9WBn0OcAE7z/KrNkeW4ZdgQgSUKxkCIuPfhNsa5BOdxdHy
+         XFca+kRq/mYPxdlrRRWoaRBqHfWxwsoFwFOMfrqJZ1Suda4wJIzTBoo9BGHN/k7cHv
+         xJPxDMDEP6SmH4IsgZYupmw9IzpG7kDnoBXxU3O4=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id E4B9635227EF; Sun, 19 Jan 2020 18:02:35 -0800 (PST)
+Date:   Sun, 19 Jan 2020 18:02:35 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Andrea Parri <parri.andrea@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>
+Subject: Re: [PATCH] workqueue: Document (some) memory-ordering properties of
+ {queue,schedule}_work()
+Message-ID: <20200120020235.GA8126@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200118215820.7646-1-parri.andrea@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200118215820.7646-1-parri.andrea@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit adds new option --fragmentation.  usemem will generate
-size/2/pagesize fragmented pages with this option.
-Its implementation is to use madvise to release a page every other page.
-For example:
-usemem --fragment -s -1 400m
-Ideally, this command will generate 200m fragmented pages in the system.
+On Sat, Jan 18, 2020 at 10:58:20PM +0100, Andrea Parri wrote:
+> It's desirable to be able to rely on the following property:  All stores
+> preceding (in program order) a call to a successful queue_work() will be
+> visible from the CPU which will execute the queued work by the time such
+> work executes, e.g.,
+> 
+>   { x is initially 0 }
+> 
+>     CPU0                              CPU1
+> 
+>     WRITE_ONCE(x, 1);                 [ "work" is being executed ]
+>     r0 = queue_work(wq, work);          r1 = READ_ONCE(x);
+> 
+>   Forbids: r0 == true && r1 == 0
+> 
+> The current implementation of queue_work() provides such memory-ordering
+> property:
+> 
+>   - In __queue_work(), the ->lock spinlock is acquired.
+> 
+>   - On the other side, in worker_thread(), this same ->lock is held
+>     when dequeueing work.
+> 
+> So the locking ordering makes things work out.
+> 
+> Add this property to the DocBook headers of {queue,schedule}_work().
+> 
+> Suggested-by: Paul E. McKenney <paulmck@kernel.org>
+> Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
 
-This command can help test anti-fragmentation function and other features
-that are affected by fragmentation issues of the Linux kernel.
+Acked-by: Paul E. McKenney <paulmck@kernel.org>
 
-Signed-off-by: Hui Zhu <teawaterz@linux.alibaba.com>
----
- usemem.c | 51 ++++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 50 insertions(+), 1 deletion(-)
+An alternative to Randy's suggestion of dropping the comma following
+the "cf." is to just drop that whole phrase.  I will let you and Randy
+work that one out, though.  ;-)
 
-diff --git a/usemem.c b/usemem.c
-index 9ac36e4..10e8874 100644
---- a/usemem.c
-+++ b/usemem.c
-@@ -95,6 +95,7 @@ int opt_sync_free = 0;
- int opt_bind_interval = 0;
- unsigned long opt_delay = 0;
- int opt_read_again = 0;
-+int opt_fragmentation = 0;
- int nr_task;
- int nr_thread;
- int nr_cpu;
-@@ -153,6 +154,7 @@ void usage(int ok)
- 	"    -O|--anonymous      mmap with MAP_ANONYMOUS\n"
- 	"    -U|--hugetlb        allocate hugetlbfs page\n"
- 	"    -Z|--read-again     read memory again after access the memory\n"
-+	"    --fragmentation     generate size/2/pagesize fragmented pages\n"
- 	"    -h|--help           show this message\n"
- 	,		ourname);
- 
-@@ -191,6 +193,7 @@ static const struct option opts[] = {
- 	{ "delay"	, 1, NULL, 'e' },
- 	{ "hugetlb"	, 0, NULL, 'U' },
- 	{ "read-again"	, 0, NULL, 'Z' },
-+	{ "fragmentation", 0, NULL, 0 },
- 	{ "help"	, 0, NULL, 'h' },
- 	{ NULL		, 0, NULL, 0 }
- };
-@@ -655,6 +658,26 @@ static void timing_free(void *ptrs[], unsigned int nptr,
- 
- static void wait_for_sigusr1(int signal) {}
- 
-+static void do_fragmentation(void *addr, unsigned long len)
-+{
-+	unsigned long offset;
-+	int should_free = 1;
-+
-+	for (offset = 0; offset <= len - pagesize; offset += pagesize) {
-+		if (should_free) {
-+			if (madvise(addr + offset, pagesize,
-+				MADV_DONTNEED) != 0) {
-+				fprintf(stderr,
-+					"msync failed with error %s\n",
-+					strerror(errno));
-+				exit(1);
-+			}
-+			should_free = 0;
-+		} else
-+			should_free = 1;
-+	}
-+}
-+
- long do_units(void)
- {
- 	struct drand48_data rand_data;
-@@ -752,6 +775,15 @@ long do_units(void)
- 		}
- 	}
- 
-+	if (opt_fragmentation) {
-+		if (prealloc)
-+			do_fragmentation(prealloc, opt_bytes);
-+		else {
-+			for (i = 0; i < nptr; i++)
-+				do_fragmentation(ptrs[i], lens[i]);
-+		}
-+	}
-+
- 	while (sleep_secs)
- 		sleep_secs = sleep(sleep_secs);
- 
-@@ -896,6 +928,7 @@ int do_tasks(void)
- int main(int argc, char *argv[])
- {
- 	int c;
-+	int opt_index = 0;
- 
- #ifdef DBG
- 	/* print the command line parameters passed on to main */
-@@ -910,9 +943,18 @@ int main(int argc, char *argv[])
- 	pagesize = getpagesize();
- 
- 	while ((c = getopt_long(argc, argv,
--				"aAB:f:FPp:gqowRMm:n:t:b:ds:T:Sr:u:j:e:EHDNLWyxOUZh", opts, NULL)) != -1)
-+				"aAB:f:FPp:gqowRMm:n:t:b:ds:T:Sr:u:j:e:EHDNLWyxOUZh",
-+				opts, &opt_index)) != -1)
- 		{
- 		switch (c) {
-+		case 0:
-+			if (strcmp(opts[opt_index].name,
-+				"fragmentation") == 0) {
-+				opt_fragmentation = 1;
-+			} else
-+				usage(1);
-+			break;
-+
- 		case 'a':
- 			opt_malloc++;
- 			break;
-@@ -1045,6 +1087,13 @@ int main(int argc, char *argv[])
- 		}
- 	}
- 
-+	if (opt_fragmentation && opt_malloc) {
-+		fprintf(stderr,
-+			"%s: malloc options ignored for fragmentation\n",
-+			ourname);
-+		opt_malloc = 0;
-+	}
-+
- 	if (opt_malloc) {
- 		if (map_populate|map_anonymous|map_hugetlb)
- 			fprintf(stderr,
--- 
-2.7.4
-
+> ---
+>  include/linux/workqueue.h | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/include/linux/workqueue.h b/include/linux/workqueue.h
+> index 4261d1c6e87b1..4fef6c38b0536 100644
+> --- a/include/linux/workqueue.h
+> +++ b/include/linux/workqueue.h
+> @@ -487,6 +487,19 @@ extern void wq_worker_comm(char *buf, size_t size, struct task_struct *task);
+>   *
+>   * We queue the work to the CPU on which it was submitted, but if the CPU dies
+>   * it can be processed by another CPU.
+> + *
+> + * Memory-ordering properties:  If it returns %true, guarantees that all stores
+> + * preceding the call to queue_work() in the program order will be visible from
+> + * the CPU which will execute @work by the time such work executes, e.g.,
+> + *
+> + * { x is initially 0 }
+> + *
+> + *   CPU0				CPU1
+> + *
+> + *   WRITE_ONCE(x, 1);			[ @work is being executed ]
+> + *   r0 = queue_work(wq, work);		  r1 = READ_ONCE(x);
+> + *
+> + * Forbids: r0 == true && r1 == 0
+>   */
+>  static inline bool queue_work(struct workqueue_struct *wq,
+>  			      struct work_struct *work)
+> @@ -546,6 +559,9 @@ static inline bool schedule_work_on(int cpu, struct work_struct *work)
+>   * This puts a job in the kernel-global workqueue if it was not already
+>   * queued and leaves it in the same position on the kernel-global
+>   * workqueue otherwise.
+> + *
+> + * Shares the same memory-ordering properties of queue_work(), c.f., the
+> + * DocBook header of queue_work().
+>   */
+>  static inline bool schedule_work(struct work_struct *work)
+>  {
+> -- 
+> 2.24.0
+> 
