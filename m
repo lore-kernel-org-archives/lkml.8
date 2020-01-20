@@ -4,122 +4,131 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9C7C33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0173C33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:20:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3997207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:19:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 913CD207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:20:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ibL7D0nY"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="U9ADaXXT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbgATITl (ORCPT
+        id S1726999AbgATIUE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 03:19:41 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:45423 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726039AbgATITk (ORCPT
+        Mon, 20 Jan 2020 03:20:04 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:36708 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726039AbgATIUE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 03:19:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579508379;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=jEiSgvaAAQAeTsd3Se/ZuFf+OWr2upYmR4dY+/WXBIE=;
-        b=ibL7D0nYBdVAuzgQi1hQ4cGrzNLdMMOedSTC7t+QjxuXTyUh3aPc/std25xZPaGIVNqn6T
-        Lc2YbpBakfLwSdIu1X1yH7lMsEPV5HTRRFKzIBE+Lr/AlpQT2tQhTagCxhd6oi0csFDWl1
-        sYha7TiRS13k8k+z1EhpjfL6P40Zn/Y=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-429-P8KSRlF4PzGBmy91vGOhqQ-1; Mon, 20 Jan 2020 03:19:38 -0500
-X-MC-Unique: P8KSRlF4PzGBmy91vGOhqQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E91FADB60;
-        Mon, 20 Jan 2020 08:19:34 +0000 (UTC)
-Received: from [10.72.12.173] (ovpn-12-173.pek2.redhat.com [10.72.12.173])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 071CE2857A;
-        Mon, 20 Jan 2020 08:19:11 +0000 (UTC)
-Subject: Re: [PATCH 3/5] vDPA: introduce vDPA bus
-To:     Rob Miller <rob.miller@broadcom.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Netdev <netdev@vger.kernel.org>,
-        "Bie, Tiwei" <tiwei.bie@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>, maxime.coquelin@redhat.com,
-        "Liang, Cunming" <cunming.liang@intel.com>,
-        "Wang, Zhihong" <zhihong.wang@intel.com>,
-        "Wang, Xiao W" <xiao.w.wang@intel.com>, haotian.wang@sifive.com,
-        "Zhu, Lingshan" <lingshan.zhu@intel.com>, eperezma@redhat.com,
-        lulu@redhat.com, Parav Pandit <parav@mellanox.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>, stefanha@redhat.com,
-        rdunlap@infradead.org, hch@infradead.org,
-        Ariel Adam <aadam@redhat.com>, jakub.kicinski@netronome.com,
-        Jiri Pirko <jiri@mellanox.com>, shahafs@mellanox.com,
-        hanand@xilinx.com, mhabets@solarflare.com
-References: <20200116124231.20253-1-jasowang@redhat.com>
- <20200116124231.20253-4-jasowang@redhat.com>
- <20200117070324-mutt-send-email-mst@kernel.org>
- <239b042c-2d9e-0eec-a1ef-b03b7e2c5419@redhat.com>
- <CAJPjb1+fG9L3=iKbV4Vn13VwaeDZZdcfBPvarogF_Nzhk+FnKg@mail.gmail.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <a4573aa4-f0d6-bb7d-763a-96352fc2c86e@redhat.com>
-Date:   Mon, 20 Jan 2020 16:19:10 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 20 Jan 2020 03:20:04 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00K8JGFD122135;
+        Mon, 20 Jan 2020 08:19:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=rWSkzO4kWyFHYtTM9gCwBTK5rn1TFL358t/mnlVX4do=;
+ b=U9ADaXXTDyRSCpgjUHFDXS1lrjRSx7WLn1u3X5FwStHAHsvyiBXYgjsh9xTJVJG/vfX2
+ XjkUKOtI5bqxb9hpRAhPk41FpgV6guQ2A/HKyPwBi27X8VE2a3g4BzXZzYUsbhfcnjOs
+ OOUQWSX/ljaO4IWFrm3MzmP9+NUar74RHooLIo+8hhkVB/z4H48AevJWxjtidz/m93jq
+ Ieph0UV1flPZxUdwMQkI4L6HW9Cb5eSSwY88bQZ1eW/7Mfn350/Gksmay4i4KFclWQTR
+ ArfY9P612XWlccgMJHLfrS29eIU/8mjV7H1eBu0eG2OYCkZO6Knp3CcSoqN2MUFSO/dN YQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2xksypwndp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Jan 2020 08:19:52 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00K8JN0v061108;
+        Mon, 20 Jan 2020 08:19:51 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2xmc5k5wd7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Jan 2020 08:19:51 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00K8JlOM009066;
+        Mon, 20 Jan 2020 08:19:47 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 20 Jan 2020 00:19:46 -0800
+Date:   Mon, 20 Jan 2020 11:23:36 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     syzbot <syzbot+afeecc39f502a8681560@syzkaller.appspotmail.com>,
+        dhowells@redhat.com
+Cc:     arnd@arndb.de, dmitry.torokhov@gmail.com, ebiederm@xmission.com,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, stern@rowland.harvard.edu,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: linux-next boot error: KASAN: slab-out-of-bounds Read in
+ post_usb_notification
+Message-ID: <20200120082335.GD21151@kadam>
+References: <0000000000001a91f9059c52f727@google.com>
 MIME-Version: 1.0
-In-Reply-To: <CAJPjb1+fG9L3=iKbV4Vn13VwaeDZZdcfBPvarogF_Nzhk+FnKg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0000000000001a91f9059c52f727@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9505 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=4 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001200074
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9505 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=4 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001200074
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hey David,
 
-On 2020/1/17 =E4=B8=8B=E5=8D=8810:12, Rob Miller wrote:
->
->
->     >> + * @get_vendor_id:=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 Get id for=
- the vendor that
->     provides this device
->     >> + *=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 @vdev: vdpa device
->     >> + *=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 Returns u32: virtio vendor id
->     > what's the idea behind this? userspace normally doesn't interact
->     with
->     > this ... debugging?
->
->
->     This allows some vendor specific driver on top of vDPA bus. If
->     this is
->     not interested, I can drop this.
->
-> RJM>] wouldn't=C2=A0 usage of get_device_id & get_vendor_id, beyond=20
-> reporting, tend to possibly leading to vendor specific code in the=20
-> framework instead of leaving the framework=C2=A0agnostic and leave the=20
-> vendor specific stuff to the vendor's vDPA device driver?
+This crash was from commit 72cc88648972 ("usb: Add USB subsystem
+notifications").
 
+drivers/usb/core/devio.c
+  2752  static noinline void post_usb_notification(const char *devname,
+  2753                                             enum usb_notification_type subtype,
+  2754                                             u32 error)
+  2755  {
+  2756          unsigned int name_len, n_len;
+  2757          u64 id = 0; /* We can put a device ID here for separate dev watches */
+  2758  
+  2759          struct {
+  2760                  struct usb_notification n;
+  2761                  char more_name[USB_NOTIFICATION_MAX_NAME_LEN -
+  2762                                 (sizeof(struct usb_notification) -
+  2763                                  offsetof(struct usb_notification, name))];
+  2764          } n;
+  2765  
+  2766          name_len = strlen(devname);
+  2767          name_len = min_t(size_t, name_len, USB_NOTIFICATION_MAX_NAME_LEN);
+                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+This limit is too high.  It should be USB_NOTIFICATION_MAX_NAME_LEN -
+sizeof(struct usb_notification). or just
+"min_t(size_t, name_len, sizeof(n.more_name));".  The n.n.name[] is a
+zero size array.
 
-For virtio device id, I think it is needed for kernel/userspace to know=20
-which driver to load (e.g loading virtio-net for networking devic).
+  2768          n_len = offsetof(struct usb_notification, name) + name_len;
+  2769  
+  2770          memset(&n, 0, sizeof(n));
+  2771          memcpy(n.n.name, devname, n_len);
+                                          ^^^^^
+name_len was intended here.
 
-For virtio vendor id, it was needed by kernel virtio driver, and virtio=20
-bus can match driver based on virtio vendor id. So it doesn't prevent=20
-3rd vendor specific driver for virtio device.
+  2772  
+  2773          n.n.watch.type          = WATCH_TYPE_USB_NOTIFY;
+  2774          n.n.watch.subtype       = subtype;
+  2775          n.n.watch.info          = n_len;
+  2776          n.n.error               = error;
+  2777          n.n.name_len            = name_len;
+  2778  
+  2779          post_device_notification(&n.n.watch, id);
+  2780  }
 
-Maybe we can report VIRTIO_DEV_ANY_ID as vendor id to forbid vendor=20
-specific stuffs.
-
-Thanks
-
-
+regards,
+dan carpenter
