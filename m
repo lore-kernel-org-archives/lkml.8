@@ -2,110 +2,174 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CCAC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A1ECC33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40A5D20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:59:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30BE5207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:00:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="B6/6xZTE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbgATK7w (ORCPT
+        id S1726951AbgATLA3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 05:59:52 -0500
-Received: from mout.kundenserver.de ([212.227.17.13]:59333 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726148AbgATK7w (ORCPT
+        Mon, 20 Jan 2020 06:00:29 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43582 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726775AbgATLA3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 05:59:52 -0500
-Received: from mail-qv1-f42.google.com ([209.85.219.42]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1M7auJ-1iyjaC3BjZ-0082pz for <linux-kernel@vger.kernel.org>; Mon, 20 Jan
- 2020 11:59:49 +0100
-Received: by mail-qv1-f42.google.com with SMTP id u1so13769608qvk.13
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 02:59:49 -0800 (PST)
-X-Gm-Message-State: APjAAAW/j4iAxaX1pgZAI4Sjxm7x2DBaTOF2Fds3uHpQgC1zEJt7mxW0
-        WVGK+HPQh6b6+W8iplNLByVlE2vAcZDk9Ct6+os=
-X-Google-Smtp-Source: APXvYqzQ1MvMqg+hoJdxvZCu816eN+yyJcaaU/qIVUUfYGEOqB3mVriBM3UpWcgYozrKpF4M3hDisExBQ1RIB2aqcKE=
-X-Received: by 2002:a0c:8e08:: with SMTP id v8mr20095619qvb.4.1579517988617;
- Mon, 20 Jan 2020 02:59:48 -0800 (PST)
+        Mon, 20 Jan 2020 06:00:29 -0500
+Received: by mail-wr1-f66.google.com with SMTP id d16so29058122wre.10
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 03:00:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=h0kvQ4eCX79cpNR9tBb856KH4IB2MxohzQIizX2CeOI=;
+        b=B6/6xZTEr6V0++DfY1ylmdTYxdhl/GcgB1ZbHA6eMl5px5cB/qiivsacOUp74gwG5C
+         gejERd4IdLUidU9rCmQL5ivW2cjrv609ZzKDtji1yVhfW2D4ZY9hVSQwlScAhDiDwBh/
+         GMl3Mb090BjevPnMdSIu4rkvdfG+KM5RjLj98=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=h0kvQ4eCX79cpNR9tBb856KH4IB2MxohzQIizX2CeOI=;
+        b=f9eQveHXIydjeCKGF7COBk1Z5jhUDJLIJGg2xyKaK+FU4lnAGcQ7h1dE5A/21Lv9A4
+         2Rum7JYZD952oWTVflvOh40qYRxVi1d7IBw8P4VVBNrGgnMXKPf69muEFhZHyPKZj66u
+         Zfvwbk3U89its6/Rv5maoT64iKD3E0zS4AiTAA5ACZyw0+xcXPf3mcF2uvxSe8ZSUFMq
+         2tc36MaDLpRM81MiqEHJAN6nmu/YYNl7kE+3GuHwTUA5BKDFQfTwldFs8EPrkogvz+bv
+         WqzwNF7i7LoD+g25dpvroxaUlExsjQ8ie/e+P7SG5Bb94IXcYrAYeoq/msnLBnx3XUZO
+         bKHA==
+X-Gm-Message-State: APjAAAU78lYIo/fm9YzTf8K8wscqI/6cOLLGCa4ovegDRx4YeTb4ZkE3
+        gG9CSC6xst/3tC5w/Q3vbRGeDA==
+X-Google-Smtp-Source: APXvYqxMSc51FxkyiwRzhynXKNNeeQtMip5aCjqZxIyrjKMZGMDBa8eIDMoS5v8dmDLw25owEHo1Zg==
+X-Received: by 2002:adf:f484:: with SMTP id l4mr18387323wro.207.1579518024273;
+        Mon, 20 Jan 2020 03:00:24 -0800 (PST)
+Received: from chromium.org ([2620:0:105f:fd00:24a7:c82b:86d8:5ae9])
+        by smtp.gmail.com with ESMTPSA id h66sm25546490wme.41.2020.01.20.03.00.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jan 2020 03:00:23 -0800 (PST)
+From:   KP Singh <kpsingh@chromium.org>
+X-Google-Original-From: KP Singh <kpsingh>
+Date:   Mon, 20 Jan 2020 12:00:44 +0100
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, linux-security-module@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
+Subject: Re: [PATCH bpf-next v2 01/10] bpf: btf: Make some of the API visible
+ outside BTF
+Message-ID: <20200120110044.GA26394@chromium.org>
+References: <20200115171333.28811-2-kpsingh@chromium.org>
+ <202001182045.QaQ0kGP8%lkp@intel.com>
 MIME-Version: 1.0
-References: <CAFH1YnOad7aVjoX_PR6mLqT=pXQjpBW9ZDHkKYzNkeistFkA4A@mail.gmail.com>
- <CAK8P3a3DwaZnRff7CCrJoSxP_MeVUn1S6nRd+hb5rHnv9dBgLQ@mail.gmail.com> <CAFH1YnMDL1gBNT4vr+C=eGGoCYJvkVDnoXUVN8OL9Xs3668Z+Q@mail.gmail.com>
-In-Reply-To: <CAFH1YnMDL1gBNT4vr+C=eGGoCYJvkVDnoXUVN8OL9Xs3668Z+Q@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 20 Jan 2020 11:59:32 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a0aFr546fF+=LDm3rwZ-sK-xC8VLYTZjOEn+o6fVixRHg@mail.gmail.com>
-Message-ID: <CAK8P3a0aFr546fF+=LDm3rwZ-sK-xC8VLYTZjOEn+o6fVixRHg@mail.gmail.com>
-Subject: Re: Question about dynamic minor number of misc device
-To:     Zhenzhong Duan <zhenzhong.duan@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:oUuVCRVWt0NAiOBBkbU5zLjXESwHtBqBVnH3fc4p8P41XXXVIW8
- XSDB8rTl3mUerkzkTnIZiyL1heoj98CWzm7QuRA2NxYBFJN3LWlsO8mfEyoJ/dsTKrGgeKG
- i6IH17tOJXQWNQ4AsLPNnyEKiRfqp7JdhJlIqWQG8R1ZqW7tRXh+qjXfv9N2rVujtn2jMfn
- ddfpudDwI3USen5Q4AJMA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Sg2/3O7aNec=:VghGxn/Th/V7iDoH4bHI07
- /I603fPIDsrJH1ZnYgqPnHI3TRReC4+vwpayatAeBv03Gbnknx81aK6zswV3zhPKlpXBw2ZiQ
- njFJkzIcauekMsPgfJyCmp8GOkzH2KlJjNE5/TGgQdEEEOPr6e/lgH/VUiKc8zkJgtV7IFN0k
- BByA+nBOmaGdLfv4AMCKKdrCikd+YTt90xbVEVcvk6Zh6G4sHw4y5nDKZ9TkJ1xGIPTO0xyzA
- z/NyHEorPSRKNmahJDBlsDI/3AbBsw6OCkUh56N29iNDivxizBsZ1SVpMRAqK8KzPqF+DJYHl
- duytp8Dvf8Qx+lt5p+JgnwxEDi1N1oZiGxaKb8MnrUwuOCO7XyzDYRpzwJqJGWt9onQM78flO
- 6mpdWZCtudMXVr80HtYB+kd50J5BddCn4+UuZ8Rw5UckB3OhkZw4K95I24SY1uJ3n7hNlw6Jm
- cd4n2Dianj2cmoJGZtWI9qPpIb1iziIhBklqojSsl8GzLCkRmpOksgVGXus5iWcmK3QhW7c8H
- N+wyBybbNzhRMm38FLitjoU3qBa1cnTfLTC7lJe24Zlpe5smuZFqVgYr70nDtAQUhh0n2jBVr
- rZuG5p4iKq5gKSCoucc521ghBbXAsbLbMq7G2O57kKiHSGxseWg8MQAyLBRi/SgSFdAnUBIEn
- /7t0cmrSH3Q/YGlPDTMzDTFQyff3B4B0idv+BjsPiZSY9qBrlEcWkW3ZE4Sio/A5/5v/TtmRK
- 3W8PZ6oM19gkjCFY+1fSReuIFeaqKyPQtQb1yCGVIlNJvUeb9TR8Hus8OBUMiC43FEKlQvbvX
- SE1eKMzGhgkNIWoEWgfLNqkouRm4LXRM7I5DPFD9aSU48jkifR146Shv0Ri+0DZwb4hNkcZzm
- iYe4+CaW0dY//OYsvjhA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202001182045.QaQ0kGP8%lkp@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 11:26 AM Zhenzhong Duan
-<zhenzhong.duan@gmail.com> wrote:
-> On Mon, Jan 20, 2020 at 6:03 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Mon, Jan 20, 2020 at 9:33 AM Zhenzhong Duan <zhenzhong.duan@gmail.com> wrote:
-> > On a  related note, I checked for drivers that call misc_register()
-> > with a minor number that is not defined in include/linux/misc.h
-> > and found a bunch, including some that have conflicting numbers,
-> > conflicting names  or numbers from the dynamic range:
-> >
-> > drivers/staging/speakup/devsynth.c:#define SYNTH_MINOR 25
-> > drivers/staging/speakup/speakup_soft.c:#define SOFTSYNTH_MINOR 26 /*
-> > drivers/staging/speakup/speakup_soft.c:#define SOFTSYNTHU_MINOR 27 /*
-> > drivers/macintosh/via-pmu.c:#define PMU_MINOR           154
-> > drivers/macintosh/ans-lcd.h:#define ANSLCD_MINOR                156
-> > drivers/auxdisplay/charlcd.c:#define LCD_MINOR          156
-> > drivers/char/applicom.c:#define AC_MINOR 157
-> > drivers/char/nwbutton.h:#define BUTTON_MINOR 158
-> > arch/arm/include/asm/nwflash.h:#define FLASH_MINOR               160
-> > drivers/sbus/char/envctrl.c:#define ENVCTRL_MINOR       162
-> > drivers/sbus/char/flash.c:#define FLASH_MINOR   152
-> > drivers/sbus/char/uctrl.c:#define UCTRL_MINOR   174
-> > drivers/char/toshiba.c:#define TOSH_MINOR_DEV 181
-> > arch/um/drivers/random.c:#define RNG_MISCDEV_MINOR
-> > drivers/auxdisplay/panel.c:#define KEYPAD_MINOR         185
-> > drivers/video/fbdev/pxa3xx-gcu.c:#define MISCDEV_MINOR  197
-> > kernel/power/user.c:#define SNAPSHOT_MINOR      231
-> > drivers/parisc/eisa_eeprom.c:#define    EISA_EEPROM_MINOR 241
-> >
-> > If you would like to help clean that up, you are definitely welcome
-> > to send patches.
->
-> Ok, should that be a patch for all drivers or seperate patch for each driver?
+Thanks! I have fixed this in the v3 of the series. btf_find_by_name_kind
+is independant of CONFIG_BPF_SYSCALL and btf_type_by_name_kind needs
+to be as well.
 
-I think one patch to move the ones with unique names would be fine,
-but then separate patches for
+The mistake was adding a static inline definition of the function
+in the !CONFIG_BPF_SYSCALL section which is not needed in this case.
 
-- FLASH_MINOR move and rename to avoid conflict
-- change speakup to dynamic minors
-- support for high dynamic minor numbers if you are really motivated
-  (probably nobody needs these)
+- KP
 
-      Arnd
+On 18-Jan 20:44, kbuild test robot wrote:
+> Hi KP,
+> 
+> Thank you for the patch! Yet something to improve:
+> 
+> [auto build test ERROR on next-20200116]
+> [cannot apply to bpf-next/master bpf/master linus/master security/next-testing v5.5-rc6 v5.5-rc5 v5.5-rc4 v5.5-rc6]
+> [if your patch is applied to the wrong git tree, please drop us a note to help
+> improve the system. BTW, we also suggest to use '--base' option to specify the
+> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> 
+> url:    https://github.com/0day-ci/linux/commits/KP-Singh/MAC-and-Audit-policy-using-eBPF-KRSI/20200117-070342
+> base:    2747d5fdab78f43210256cd52fb2718e0b3cce74
+> config: nds32-defconfig (attached as .config)
+> compiler: nds32le-linux-gcc (GCC) 9.2.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=9.2.0 make.cross ARCH=nds32 
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    In file included from kernel/bpf/core.c:27:
+> >> include/linux/btf.h:148:38: error: static declaration of 'btf_type_by_name_kind' follows non-static declaration
+>      148 | static inline const struct btf_type *btf_type_by_name_kind(
+>          |                                      ^~~~~~~~~~~~~~~~~~~~~
+>    include/linux/btf.h:70:24: note: previous declaration of 'btf_type_by_name_kind' was here
+>       70 | const struct btf_type *btf_type_by_name_kind(
+>          |                        ^~~~~~~~~~~~~~~~~~~~~
+> 
+> vim +/btf_type_by_name_kind +148 include/linux/btf.h
+> 
+>    136	
+>    137	#ifdef CONFIG_BPF_SYSCALL
+>    138	const struct btf_type *btf_type_by_id(const struct btf *btf, u32 type_id);
+>    139	const char *btf_name_by_offset(const struct btf *btf, u32 offset);
+>    140	struct btf *btf_parse_vmlinux(void);
+>    141	struct btf *bpf_prog_get_target_btf(const struct bpf_prog *prog);
+>    142	#else
+>    143	static inline const struct btf_type *btf_type_by_id(const struct btf *btf,
+>    144							    u32 type_id)
+>    145	{
+>    146		return NULL;
+>    147	}
+>  > 148	static inline const struct btf_type *btf_type_by_name_kind(
+>    149		struct btf *btf, const char *name, u8 kind)
+>    150	{
+>    151		return ERR_PTR(-EOPNOTSUPP);
+>    152	}
+>    153	static inline const char *btf_name_by_offset(const struct btf *btf,
+>    154						     u32 offset)
+>    155	{
+>    156		return NULL;
+>    157	}
+>    158	#endif
+>    159	
+> 
+> ---
+> 0-DAY kernel test infrastructure                 Open Source Technology Center
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+
+
