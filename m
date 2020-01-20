@@ -2,277 +2,133 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 535D0C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 453EDC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:39:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DDD920678
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:35:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18FBE217F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:39:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FJupk/tj"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="wXFZ2BgD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727285AbgATOe7 (ORCPT
+        id S1729153AbgATOj2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 09:34:59 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46844 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726626AbgATOe7 (ORCPT
+        Mon, 20 Jan 2020 09:39:28 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:40773 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726738AbgATOj1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 09:34:59 -0500
-Received: by mail-qt1-f195.google.com with SMTP id e25so16455279qtr.13
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 06:34:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2RrHqMcOCPUU5FqgQCKkNsIxL0qLg6y6IPiTMnVNNc4=;
-        b=FJupk/tj7yTKWcarnSBRVLVipSlAptjaPAxN590dDHdtbsSBOPi5EcsIyiV4eARlw+
-         MnbU0EKc8wcxm9LKJ+wdTVg5A0cHrKZlxZlUZc9sR5wqtbDEJLQT+yFQgp+bqhME7RN5
-         79EFT7eBj20tTY02xSIMOzH7BA5hycjofagNkNxzVhoib5x4Pn//pVsoWezVfHjo3sDj
-         tb1ICwzkVfmzOdUEdpysZ6znpiS9dFxM2E6ChruM1Khoxb6VfNuhAzO9Q88hntytVb/S
-         KAH9vVKeex/Z7zPWbtB6F2efn0IYc+vyFqt7VdC4CvQdnjXPjOxiiDc1L9iz2T0zVIYp
-         ZecQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2RrHqMcOCPUU5FqgQCKkNsIxL0qLg6y6IPiTMnVNNc4=;
-        b=kVB5S3eT60a46TWLW7iN12JxHdaOD42U86xlR/KZDChd5Ffovz+qe7nxVhHZ/GN8sU
-         5v8fTqxkTz/KCYNQbDu6fXMhrMniyl36ZD8hLjiP09cmw7n8Ma5q12M9ZRPDKvnX+6V/
-         zNN74PLkpHZgbeK1dFhsOI5bH++DjotsEYWPG0GH+T/3kdEK4l7bBLlpQcrCFGEYNJ+b
-         aXraYiDNllBXFVuZmrUoHdzOfRYp4VuTxCdK56s8sxd/YyW8Nf2qSRRGG7AF0GfS3ni5
-         uG/U9vQIquHBWj0AM7lILW4eZW0KYa+u+sSdOqAsh+GIgVQp2dDaeFSURjjXqzgtAVIv
-         X9MA==
-X-Gm-Message-State: APjAAAVfqmjoQ1wddqpFt0SVEXJVfkx5icmL/tGEJ0LE1gASQg29ZYVY
-        Qr6hdiKkkrQB72Fxl3e6/qtW1WsqVUUgFULvvly6pQ==
-X-Google-Smtp-Source: APXvYqzAdq0rpDxVaGskGGRnali0alMaMTOb8ATqh5U3KjnsnpDJR+/GvMZerxqWmQSNanb04s5bbp1HzDTeqGi5Nhc=
-X-Received: by 2002:aed:2465:: with SMTP id s34mr20721986qtc.158.1579530897534;
- Mon, 20 Jan 2020 06:34:57 -0800 (PST)
-MIME-Version: 1.0
-References: <20200120141927.114373-1-elver@google.com>
-In-Reply-To: <20200120141927.114373-1-elver@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 20 Jan 2020 15:34:45 +0100
-Message-ID: <CACT4Y+ajkjCzv2adupX9oVKjNppn-AKsGkGqLMExwjHXG37Lxw@mail.gmail.com>
-Subject: Re: [PATCH 1/5] include/linux: Add instrumented.h infrastructure
-To:     Marco Elver <elver@google.com>
-Cc:     paulmck@kernel.org, Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Daniel Axtens <dja@axtens.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Daniel Borkmann <daniel@iogearbox.net>, cyphar@cyphar.com,
-        Kees Cook <keescook@chromium.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 20 Jan 2020 09:39:27 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1579531166; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=BzDRV7ulYCXM+3B574lgGPBya371clGZvJ4IdiMMJzI=; b=wXFZ2BgDbIOB1+geVHEeBSj2Iatx9JgFalOhkjdUVOncFsMQh8ckFsa3+f80uXfvLJPD5a67
+ B/QNsYDoZjFCV4te4pDri+Qz2e7zNP5NXyAteL32oBVWJ/hYaaJk2bSHXoN4W85uDHcz2CX8
+ YHTskPmcmPTtSY+jwqp8kjEhfFQ=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e25bb9a.7fd55fd684c8-smtp-out-n01;
+ Mon, 20 Jan 2020 14:39:22 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 39AA4C4479C; Mon, 20 Jan 2020 14:39:22 +0000 (UTC)
+Received: from vbadigan-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: vbadigan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 28D8AC433CB;
+        Mon, 20 Jan 2020 14:39:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 28D8AC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
+From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+To:     ulf.hansson@linaro.org, adrian.hunter@intel.com
+Cc:     asutoshd@codeaurora.org, stummala@codeaurora.org,
+        sayalil@codeaurora.org, cang@codeaurora.org,
+        rampraka@codeaurora.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Subject: [PATCH V3] mmc: sdhci: Let a vendor driver supply and update ADMA descriptor size
+Date:   Mon, 20 Jan 2020 20:08:38 +0530
+Message-Id: <1579531122-28341-1-git-send-email-vbadigan@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1579519045-26467-1-git-send-email-vbadigan@codeaurora.org>
+References: <1579519045-26467-1-git-send-email-vbadigan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 3:19 PM Marco Elver <elver@google.com> wrote:
->
-> This adds instrumented.h, which provides generic wrappers for memory
-> access instrumentation that the compiler cannot emit for various
-> sanitizers. Currently this unifies KASAN and KCSAN instrumentation. In
-> future this will also include KMSAN instrumentation.
->
-> Note that, copy_{to,from}_user require special instrumentation,
-> providing hooks before and after the access, since we may need to know
-> the actual bytes accessed (currently this is relevant for KCSAN, and is
-> also relevant in future for KMSAN).
+Let a vendor driver supply the maximum descriptor size that it
+can operate on. ADMA descriptor table would be allocated using this
+supplied size.
+If any SD Host controller is of version prior to v4.10 spec
+but supports 16byte descriptor, this change allows them to supply
+correct descriptor size for ADMA table allocation.
 
-How will KMSAN instrumentation look like?
+Also let a vendor driver update the descriptor size by overriding
+sdhc_host->desc_size if it has to operates on a different descriptor
+sizes in different conditions.
 
-> Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Marco Elver <elver@google.com>
-> ---
->  include/linux/instrumented.h | 153 +++++++++++++++++++++++++++++++++++
->  1 file changed, 153 insertions(+)
->  create mode 100644 include/linux/instrumented.h
->
-> diff --git a/include/linux/instrumented.h b/include/linux/instrumented.h
-> new file mode 100644
-> index 000000000000..9f83c8520223
-> --- /dev/null
-> +++ b/include/linux/instrumented.h
-> @@ -0,0 +1,153 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +
-> +/*
-> + * This header provides generic wrappers for memory access instrumentation that
-> + * the compiler cannot emit for: KASAN, KCSAN.
-> + */
-> +#ifndef _LINUX_INSTRUMENTED_H
-> +#define _LINUX_INSTRUMENTED_H
-> +
-> +#include <linux/compiler.h>
-> +#include <linux/kasan-checks.h>
-> +#include <linux/kcsan-checks.h>
-> +#include <linux/types.h>
-> +
-> +/**
-> + * instrument_read - instrument regular read access
-> + *
-> + * Instrument a regular read access. The instrumentation should be inserted
-> + * before the actual read happens.
-> + *
-> + * @ptr address of access
-> + * @size size of access
-> + */
-> +static __always_inline void instrument_read(const volatile void *v, size_t size)
-> +{
-> +       kasan_check_read(v, size);
-> +       kcsan_check_read(v, size);
-> +}
-> +
-> +/**
-> + * instrument_write - instrument regular write access
-> + *
-> + * Instrument a regular write access. The instrumentation should be inserted
-> + * before the actual write happens.
-> + *
-> + * @ptr address of access
-> + * @size size of access
-> + */
-> +static __always_inline void instrument_write(const volatile void *v, size_t size)
-> +{
-> +       kasan_check_write(v, size);
-> +       kcsan_check_write(v, size);
-> +}
-> +
-> +/**
-> + * instrument_atomic_read - instrument atomic read access
-> + *
-> + * Instrument an atomic read access. The instrumentation should be inserted
-> + * before the actual read happens.
-> + *
-> + * @ptr address of access
-> + * @size size of access
-> + */
-> +static __always_inline void instrument_atomic_read(const volatile void *v, size_t size)
-> +{
-> +       kasan_check_read(v, size);
-> +       kcsan_check_atomic_read(v, size);
-> +}
-> +
-> +/**
-> + * instrument_atomic_write - instrument atomic write access
-> + *
-> + * Instrument an atomic write access. The instrumentation should be inserted
-> + * before the actual write happens.
-> + *
-> + * @ptr address of access
-> + * @size size of access
-> + */
-> +static __always_inline void instrument_atomic_write(const volatile void *v, size_t size)
-> +{
-> +       kasan_check_write(v, size);
-> +       kcsan_check_atomic_write(v, size);
-> +}
-> +
-> +/**
-> + * instrument_copy_to_user_pre - instrument reads of copy_to_user
-> + *
-> + * Instrument reads from kernel memory, that are due to copy_to_user (and
-> + * variants).
-> + *
-> + * The instrumentation must be inserted before the accesses. At this point the
-> + * actual number of bytes accessed is not yet known.
-> + *
-> + * @dst destination address
-> + * @size maximum access size
-> + */
-> +static __always_inline void
-> +instrument_copy_to_user_pre(const volatile void *src, size_t size)
-> +{
-> +       /* Check before, to warn before potential memory corruption. */
-> +       kasan_check_read(src, size);
-> +}
-> +
-> +/**
-> + * instrument_copy_to_user_post - instrument reads of copy_to_user
-> + *
-> + * Instrument reads from kernel memory, that are due to copy_to_user (and
-> + * variants).
-> + *
-> + * The instrumentation must be inserted after the accesses. At this point the
-> + * actual number of bytes accessed should be known.
-> + *
-> + * @dst destination address
-> + * @size maximum access size
-> + * @left number of bytes left that were not copied
-> + */
-> +static __always_inline void
-> +instrument_copy_to_user_post(const volatile void *src, size_t size, size_t left)
-> +{
-> +       /* Check after, to avoid false positive if memory was not accessed. */
-> +       kcsan_check_read(src, size - left);
+Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+--
+Thanks Adrian.
 
-Why don't we check the full range?
-Kernel intending to copy something racy to user already looks like a
-bug to me, even if user-space has that page unmapped. User-space can
-always make the full range succeed. What am I missing?
+Hi Ulf,
+Can you pick this patch instead of earlier one? This is more clean
+change, sorry for the multiple interations.
+Otherwise let me know, I will make these changes as seperate patch.
+---
+ drivers/mmc/host/sdhci.c | 16 +++++++---------
+ drivers/mmc/host/sdhci.h |  3 ++-
+ 2 files changed, 9 insertions(+), 10 deletions(-)
 
-
-> +}
-> +
-> +/**
-> + * instrument_copy_from_user_pre - instrument writes of copy_from_user
-> + *
-> + * Instrument writes to kernel memory, that are due to copy_from_user (and
-> + * variants).
-> + *
-> + * The instrumentation must be inserted before the accesses. At this point the
-> + * actual number of bytes accessed is not yet known.
-> + *
-> + * @dst destination address
-> + * @size maximum access size
-> + */
-> +static __always_inline void
-> +instrument_copy_from_user_pre(const volatile void *dst, size_t size)
-> +{
-> +       /* Check before, to warn before potential memory corruption. */
-> +       kasan_check_write(dst, size);
-> +}
-> +
-> +/**
-> + * instrument_copy_from_user_post - instrument writes of copy_from_user
-> + *
-> + * Instrument writes to kernel memory, that are due to copy_from_user (and
-> + * variants).
-> + *
-> + * The instrumentation must be inserted after the accesses. At this point the
-> + * actual number of bytes accessed should be known.
-> + *
-> + * @dst destination address
-> + * @size maximum access size
-> + * @left number of bytes left that were not copied
-> + */
-> +static __always_inline void
-> +instrument_copy_from_user_post(const volatile void *dst, size_t size, size_t left)
-> +{
-> +       /* Check after, to avoid false positive if memory was not accessed. */
-> +       kcsan_check_write(dst, size - left);
-> +}
-> +
-> +#endif /* _LINUX_INSTRUMENTED_H */
-> --
-> 2.25.0.341.g760bfbb309-goog
->
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index 3140fe2..7a7a18e 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -3821,15 +3821,13 @@ int sdhci_setup_host(struct sdhci_host *host)
+ 		dma_addr_t dma;
+ 		void *buf;
+ 
+-		if (host->flags & SDHCI_USE_64_BIT_DMA) {
+-			host->adma_table_sz = host->adma_table_cnt *
+-					      SDHCI_ADMA2_64_DESC_SZ(host);
+-			host->desc_sz = SDHCI_ADMA2_64_DESC_SZ(host);
+-		} else {
+-			host->adma_table_sz = host->adma_table_cnt *
+-					      SDHCI_ADMA2_32_DESC_SZ;
+-			host->desc_sz = SDHCI_ADMA2_32_DESC_SZ;
+-		}
++		if (!(host->flags & SDHCI_USE_64_BIT_DMA))
++			host->alloc_desc_sz = SDHCI_ADMA2_32_DESC_SZ;
++		else if (!host->alloc_desc_sz)
++			host->alloc_desc_sz = SDHCI_ADMA2_64_DESC_SZ(host);
++
++		host->desc_sz = host->alloc_desc_sz;
++		host->adma_table_sz = host->adma_table_cnt * host->desc_sz;
+ 
+ 		host->align_buffer_sz = SDHCI_MAX_SEGS * SDHCI_ADMA2_ALIGN;
+ 		/*
+diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+index 0ed3e0e..10bda3a 100644
+--- a/drivers/mmc/host/sdhci.h
++++ b/drivers/mmc/host/sdhci.h
+@@ -554,7 +554,8 @@ struct sdhci_host {
+ 	dma_addr_t adma_addr;	/* Mapped ADMA descr. table */
+ 	dma_addr_t align_addr;	/* Mapped bounce buffer */
+ 
+-	unsigned int desc_sz;	/* ADMA descriptor size */
++	unsigned int desc_sz;	/* ADMA current descriptor size */
++	unsigned int alloc_desc_sz;	/* ADMA descr. max size host supports */
+ 
+ 	struct workqueue_struct *complete_wq;	/* Request completion wq */
+ 	struct work_struct	complete_work;	/* Request completion work */
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
