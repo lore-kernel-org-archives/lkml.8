@@ -2,163 +2,215 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4BE1C33CB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A4BC33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 795402077C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:03:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579507414;
-	bh=7IhXPbsNriUrUDNvgKxZRuAQJLo8U2+A6F86F1CLA4g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tIc7NYRcpdwA6nQOQszfCz6ir2WrayM7LO7wwYHvKbMuU96MmsUeEQ0sO7qom4Qi3
-	 yK6AQvLGhBgw9tXvwO+GuxjC/0FkHU8/WXs0yXL5y1+SuETYMtIIQWH5jK8F7CGSez
-	 5LqtAoLGx21/QycqPT1Xk+xukCeSKiYvAIAcxStc=
+	by mail.kernel.org (Postfix) with ESMTP id 5BC99207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:04:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Er60HReN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbgATIDd (ORCPT
+        id S1726607AbgATIE4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 03:03:33 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43679 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgATIDd (ORCPT
+        Mon, 20 Jan 2020 03:04:56 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39289 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726075AbgATIE4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 03:03:33 -0500
-Received: by mail-wr1-f65.google.com with SMTP id d16so28429953wre.10;
-        Mon, 20 Jan 2020 00:03:30 -0800 (PST)
+        Mon, 20 Jan 2020 03:04:56 -0500
+Received: by mail-wm1-f67.google.com with SMTP id 20so13656311wmj.4
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 00:04:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=17kpobL9pe7DY0967paYNJ+En7t5oWpJIpEYf5k48PQ=;
+        b=Er60HReN8xhCspg1PRhfsLFaO/mlNJMVpAMLqJRLQDM0poSHd/zbpv4pdUu6hK07pR
+         mNqDaXk53eqfE5U+f2Z8TkReG/HJ+ecuC104RamLEpzAYUbw35sXtLQ7Z/PcGcpNTjHk
+         c9y2UgcqOPUV/Z5m9TCB7Sfydf62XkMQfHQLXmGF4W2P5n95O9TXOHr8EHShpixSwqVA
+         vySaJ6jf1QVcVgOB+W2Rtmj9JAge7bkf8tZ0MoLJlf9tQ+gFJFaOnzK51nvw7pa2LKyj
+         3ebM7+oCpXoy6/8IXBAmwe7EVgsDHZuRDhtj+vTZxKSKAu9N6sEktSmJSZBagF2ZSEjv
+         ow/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lDmezBsJvvXTKgPzl7Xvo58o6+oumRfpkAIXFK+J8DU=;
-        b=SPQwoc6nrZpw4pSUqZfB7ptf7WFMx6MpIaUm1UgqLErbCylB9sJ2UuSBQkDvo01dYH
-         uAU2q7FOZhhWogeMKKp3feHlGGuGegyYmIZPBWWphkFtfXwPgMqw6DaEsl6Gyi0etPg/
-         /jleXbpvMgY3fHQGTw9+06dcNUJPmXF5C5yfyQ3+9gDWOOeQrOd1B5BFWn7YdJBLwgPN
-         DTsW8uDUkwNPNgV93pS+kNnBLpYbnSXt2svcqiZfJ02T0he6BWRH+f37Tb6suZ3iYcL8
-         bdptRijVkoPstlVLW8QKksLGVD0Buh5zw9GoXnbUzrq30WhkySpQ4WfmP2E2FdPafldm
-         qv3w==
-X-Gm-Message-State: APjAAAWu2GSy3AHmNPuzbEYt00wRDaVCtm4ZLAKZDhoX47Mrxei1W+tR
-        sbCMEwnfEzhmM6sp2sbruD0=
-X-Google-Smtp-Source: APXvYqw9SSSto7+XdEORAAN2GaIZ7SGXrUkE5SOTrMmMO40hITkY79xhN1nH/PfkvbFscm8Z/vIAcQ==
-X-Received: by 2002:adf:e290:: with SMTP id v16mr17398000wri.16.1579507410211;
-        Mon, 20 Jan 2020 00:03:30 -0800 (PST)
-Received: from localhost (ip-37-188-138-155.eurotel.cz. [37.188.138.155])
-        by smtp.gmail.com with ESMTPSA id t5sm45407177wrr.35.2020.01.20.00.03.28
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=17kpobL9pe7DY0967paYNJ+En7t5oWpJIpEYf5k48PQ=;
+        b=dVHcxS1dhbBDhxTAopJWNgOReWuunzpGYWwDepQKPX4s5msUCeFThR1QDw7BSbQRiK
+         o4gF100o0HzTcYht8Y72TB/PoWG1PtTAvCL1Uzt3CRFUOXdJzHtt2+FAXQvyPMbkVp/C
+         eWwNXKKi7SlmwCnpJLKlphZcmJ/gUKetmSAnJplPyiyQBL4RudRWEWqTwpZ8UqKBlZ7Q
+         3ZbK1Wlh5KxD72K5DDP0EIIYmePOf+IzZYkMhkJbyFGK1h0BMFIfD1a8RFpcwojVRVK+
+         Gz5AciJLcr1JuDHmHdKc/DUVH41tfQYaJXwXhXLfB2iQP55/CcaqqItX+IheDNA7VhE7
+         omaA==
+X-Gm-Message-State: APjAAAVZzusnj9BR8SbxllDp5JhTSd8Xve96miPqRoQWiR4x2hQKqgC/
+        +aNWOKazqifrvzgoFkzxSWM6jQ==
+X-Google-Smtp-Source: APXvYqwpEq+4n2t5EMT1AbSeu6+mFoAJPz1VLAcg9IzfsLOq3hCvn7lOrZjSBjWtyfcdCvyGQxBjdQ==
+X-Received: by 2002:a05:600c:10cd:: with SMTP id l13mr17881421wmd.102.1579507492645;
+        Mon, 20 Jan 2020 00:04:52 -0800 (PST)
+Received: from dell ([2.27.35.227])
+        by smtp.gmail.com with ESMTPSA id m7sm1820762wma.39.2020.01.20.00.04.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 00:03:29 -0800 (PST)
-Date:   Mon, 20 Jan 2020 09:03:26 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
-        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>, ktkhai@virtuozzo.com,
-        christian.brauner@ubuntu.com, sjpark@amazon.de
-Subject: Re: [PATCH v2 2/5] mm: introduce external memory hinting API
-Message-ID: <20200120080326.GI18451@dhcp22.suse.cz>
-References: <20200116235953.163318-1-minchan@kernel.org>
- <20200116235953.163318-3-minchan@kernel.org>
- <20200117115225.GV19428@dhcp22.suse.cz>
- <20200117172542.GA140922@google.com>
+        Mon, 20 Jan 2020 00:04:52 -0800 (PST)
+Date:   Mon, 20 Jan 2020 08:05:08 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Orson Zhai <orson.zhai@unisoc.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        baolin.wang@unisoc.com, chunyan.zhang@unisoc.com
+Subject: Re: [PATCH v4] mfd: syscon: Add arguments support for syscon
+ reference
+Message-ID: <20200120080508.GR15507@dell>
+References: <1579397619-28547-1-git-send-email-orson.zhai@unisoc.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200117172542.GA140922@google.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1579397619-28547-1-git-send-email-orson.zhai@unisoc.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 17-01-20 09:25:42, Minchan Kim wrote:
-> On Fri, Jan 17, 2020 at 12:52:25PM +0100, Michal Hocko wrote:
-> > On Thu 16-01-20 15:59:50, Minchan Kim wrote:
-> > > There is usecase that System Management Software(SMS) want to give
-> > > a memory hint like MADV_[COLD|PAGEEOUT] to other processes and
-> > > in the case of Android, it is the ActivityManagerService.
-> > > 
-> > > It's similar in spirit to madvise(MADV_WONTNEED), but the information
-> > > required to make the reclaim decision is not known to the app. Instead,
-> > > it is known to the centralized userspace daemon(ActivityManagerService),
-> > > and that daemon must be able to initiate reclaim on its own without
-> > > any app involvement.
-> > > 
-> > > To solve the issue, this patch introduces new syscall process_madvise(2).
-> > > It uses pidfd of an external processs to give the hint.
-> > > 
-> > >  int process_madvise(int pidfd, void *addr, size_t length, int advise,
-> > > 			unsigned long flag);
-> > > 
-> > > Since it could affect other process's address range, only privileged
-> > > process(CAP_SYS_PTRACE) or something else(e.g., being the same UID)
-> > > gives it the right to ptrace the process could use it successfully.
-> > > The flag argument is reserved for future use if we need to extend the
-> > > API.
-> > > 
-> > > I think supporting all hints madvise has/will supported/support to
-> > > process_madvise is rather risky. Because we are not sure all hints make
-> > > sense from external process and implementation for the hint may rely on
-> > > the caller being in the current context so it could be error-prone.
-> > > Thus, I just limited hints as MADV_[COLD|PAGEOUT] in this patch.
-> > > 
-> > > If someone want to add other hints, we could hear hear the usecase and
-> > > review it for each hint. It's more safe for maintainace rather than
-> > > introducing a buggy syscall but hard to fix it later.
-> > 
-> > I have brought this up when we discussed this in the past but there is
-> > no reflection on that here so let me bring that up again. 
-> > 
-> > I believe that the interface has an inherent problem that it is racy.
-> > The external entity needs to know the address space layout of the target
-> > process to do anyhing useful on it. The address space is however under
-> > the full control of the target process though and the external entity
-> > has no means to find out that the layout has changed. So
-> > time-to-check-time-to-act is an inherent problem.
-> > 
-> > This is a serious design flaw and it should be explained why it doesn't
-> > matter or how to use the interface properly to prevent that problem.
+On Sun, 19 Jan 2020, Orson Zhai wrote:
+
+> There are a lot of similar global registers being used across multiple SoCs
+> from Unisoc. But most of these registers are assigned with different offset
+> for different SoCs. It is hard to handle all of them in an all-in-one
+> kernel image.
 > 
-> Sorry for the missing that part.
+> Add a helper function to get regmap with arguments where we could put some
+> extra information such as the offset value.
 > 
-> It's not a particular problem of this API because other APIs already have
-> done with that(e.g., move_pages, process_vm_writev).
+> Signed-off-by: Orson Zhai <orson.zhai@unisoc.com>
+> Tested-by: Baolin Wang <baolin.wang@unisoc.com>
+> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+> Acked-by: Lee Jones <lee.jones@linaro.org>
+> ---
+> 
+> V3 Change:
+>  Rebase on latest kernel v5.5-rc6 for Lee.
+> 
+> V4 Change:
+>  Remove trailing spaces according to checkpatch.
+> 
+>  drivers/mfd/syscon.c       | 29 +++++++++++++++++++++++++++++
+>  include/linux/mfd/syscon.h | 14 ++++++++++++++
+>  2 files changed, 43 insertions(+)
 
-I am sorry but this is not really an argument.
+Nope, still not working:
 
-> Point is userspace has several ways for the control of target process
-> like SIGSTOP, cgroup freezer or even no need to control since platform
-> is already aware of that the process will never run until he grant it
-> or it's resilient even though the race happens.
+ Applying patch #1181935 using "git am -s -3"
+ Description: [v4] mfd: syscon: Add arguments support for syscon reference
+ Applying: mfd: syscon: Add arguments support for syscon reference
+ Using index info to reconstruct a base tree...
+ M	drivers/mfd/syscon.c
+ /home/lee/projects/linux/kernel/.git/worktrees/mfd/rebase-apply/patch:25: indent with spaces.
+                                        const char *property,
+ /home/lee/projects/linux/kernel/.git/worktrees/mfd/rebase-apply/patch:26: indent with spaces.
+                                        int arg_count,
+ /home/lee/projects/linux/kernel/.git/worktrees/mfd/rebase-apply/patch:27: indent with spaces.
+                                        unsigned int *out_args)
+ /home/lee/projects/linux/kernel/.git/worktrees/mfd/rebase-apply/patch:36: indent with spaces.
+                        0, &args);
+ /home/lee/projects/linux/kernel/.git/worktrees/mfd/rebase-apply/patch:38: indent with spaces.
+                return ERR_PTR(rc);
+ error: patch failed: drivers/mfd/syscon.c:224
+ error: drivers/mfd/syscon.c: patch does not apply
+ error: patch failed: include/linux/mfd/syscon.h:23
+ error: include/linux/mfd/syscon.h: patch does not apply
+ error: Did you hand edit your patch?
+ It does not apply to blobs recorded in its index.
+ Patch failed at 0001 mfd: syscon: Add arguments support for syscon reference
+ hint: Use 'git am --show-current-patch' to see the failed patch
+ When you have resolved this problem, run "git am --continue".
+ If you prefer to skip this patch, run "git am --skip" instead.
+ To restore the original branch and stop patching, run "git am --abort".
+ 'git am' failed with exit status 128
 
-If you have that level of control then you can simply inject the code
-via ptrace and you do not need a new syscall in the first place.
+Please talk me through how you are sending the patch.
 
-> In future, if we want to support more fine-grained consistency model
-> like memory layout, we could provide some API to get cookie(e.g.,
-> seq count which is updated whenever vma of the process changes).  And then
-> we could feed the cookie to process_madvise's last argument so that
-> it can fail if founds it's not matched.
-> For that API, Daniel already posted RFC - process_getinfo[1].
-> https://lore.kernel.org/lkml/20190520035254.57579-1-minchan@kernel.org/T/#m7694416fd179b2066a2c62b5b139b14e3894e224
+> diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+> index e22197c..2918b05 100644
+> --- a/drivers/mfd/syscon.c
+> +++ b/drivers/mfd/syscon.c
+> @@ -224,6 +224,35 @@ struct regmap *syscon_regmap_lookup_by_phandle(struct device_node *np,
+>  }
+>  EXPORT_SYMBOL_GPL(syscon_regmap_lookup_by_phandle);
+> 
+> +struct regmap *syscon_regmap_lookup_by_phandle_args(struct device_node *np,
+> +                                       const char *property,
+> +                                       int arg_count,
+> +                                       unsigned int *out_args)
+> +{
+> +       struct device_node *syscon_np;
+> +       struct of_phandle_args args;
+> +       struct regmap *regmap;
+> +       unsigned int index;
+> +       int rc;
+> +
+> +       rc = of_parse_phandle_with_fixed_args(np, property, arg_count,
+> +                       0, &args);
+> +       if (rc)
+> +               return ERR_PTR(rc);
+> +
+> +       syscon_np = args.np;
+> +       if (!syscon_np)
+> +               return ERR_PTR(-ENODEV);
+> +
+> +       regmap = syscon_node_to_regmap(syscon_np);
+> +       for (index = 0; index < arg_count; index++)
+> +               out_args[index] = args.args[index];
+> +       of_node_put(syscon_np);
+> +
+> +       return regmap;
+> +}
+> +EXPORT_SYMBOL_GPL(syscon_regmap_lookup_by_phandle_args);
+> +
+>  static int syscon_probe(struct platform_device *pdev)
+>  {
+>         struct device *dev = &pdev->dev;
+> diff --git a/include/linux/mfd/syscon.h b/include/linux/mfd/syscon.h
+> index 112dc66..714cab1 100644
+> --- a/include/linux/mfd/syscon.h
+> +++ b/include/linux/mfd/syscon.h
+> @@ -23,6 +23,11 @@ extern struct regmap *syscon_regmap_lookup_by_compatible(const char *s);
+>  extern struct regmap *syscon_regmap_lookup_by_phandle(
+>                                         struct device_node *np,
+>                                         const char *property);
+> +extern struct regmap *syscon_regmap_lookup_by_phandle_args(
+> +                                       struct device_node *np,
+> +                                       const char *property,
+> +                                       int arg_count,
+> +                                       unsigned int *out_args);
+>  #else
+>  static inline struct regmap *device_node_to_regmap(struct device_node *np)
+>  {
+> @@ -45,6 +50,15 @@ static inline struct regmap *syscon_regmap_lookup_by_phandle(
+>  {
+>         return ERR_PTR(-ENOTSUPP);
+>  }
+> +
+> +static struct regmap *syscon_regmap_lookup_by_phandle_args(
+> +                                       struct device_node *np,
+> +                                       const char *property,
+> +                                       int arg_count,
+> +                                       unsigned int *out_args)
+> +{
+> +       return ERR_PTR(-ENOTSUPP);
+> +}
+>  #endif
+> 
+>  #endif /* __LINUX_MFD_SYSCON_H__ */
 
-So why do not we start with a clean API since the beginning? I do agree
-that a remote madvise is an interesting feature and it opens gates to
-all sorts of userspace memory management which is not possible this
-days. But the syscall has to have a reasonable semantic to allow that.
-We cannot simply start with a half proken symantic first based on an
-Android usecase and then hit the wall as soon as others with a different
-user space model want to use it as well.
 -- 
-Michal Hocko
-SUSE Labs
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
