@@ -2,126 +2,103 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45C31C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4CB8C33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:26:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1901A21835
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:25:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="jB3pySYi"
+	by mail.kernel.org (Postfix) with ESMTP id C5CB921835
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:26:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727144AbgATNYS (ORCPT
+        id S1727011AbgATN0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 08:24:18 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:32028 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726619AbgATNYR (ORCPT
+        Mon, 20 Jan 2020 08:26:16 -0500
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:54619 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726619AbgATN0P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 08:24:17 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00KDNm7Z031635;
-        Mon, 20 Jan 2020 14:24:14 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=3i7l2WA4p8t1LEW/kuJPwDKcIEYGPK5gxi8vuaP0ZV0=;
- b=jB3pySYiytbAnO69I7W+ysXkdp1M9jANngEqdkNND/YCemwvmDqVy6ITbVjHtcNrfcC7
- nHv405WARkPQtMVy2LQkqaSuEm7xoXbJB4d36yRW5qGrAcXjXYc27XBW7fgwIhAjSyjE
- 7EroGgGklpXGq1y6cSp/AXPGR9NIuGqRSQqtXewTb+yk5j60twgAbg6UM4LShuwb7Oxq
- zM3KG/BBBEjH/bdPSK+Dshwlzz/Uqkoc4St1LrgE7v/ZoYgFt8AMMZSGxLNtK46tHBzq
- kJuLAIS4zQmu/j9yBvXGKPJ8jJnRfackqNfQfbeKZWBdo7rQq98LIDppL4qEnl32YcEs Dg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xkrc4spwk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jan 2020 14:24:14 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 07BFD10002A;
-        Mon, 20 Jan 2020 14:24:10 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EAD4A2BE234;
-        Mon, 20 Jan 2020 14:24:09 +0100 (CET)
-Received: from localhost (10.75.127.48) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 20 Jan 2020 14:24:09
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <rjw@rjwysocki.net>, <daniel.lezcano@linaro.org>
-CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH] cpuidle: coupled: fix warning when compiling with W=1
-Date:   Mon, 20 Jan 2020 14:24:08 +0100
-Message-ID: <20200120132408.20734-1-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
+        Mon, 20 Jan 2020 08:26:15 -0500
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 805063C04C1;
+        Mon, 20 Jan 2020 14:26:12 +0100 (CET)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 0WEtl-NDxPMY; Mon, 20 Jan 2020 14:26:07 +0100 (CET)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 5FC4E3C00C5;
+        Mon, 20 Jan 2020 14:26:07 +0100 (CET)
+Received: from lxhi-065.adit-jv.com (10.72.93.66) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Mon, 20 Jan
+ 2020 14:26:07 +0100
+Date:   Mon, 20 Jan 2020 14:26:07 +0100
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-gpio@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <qemu-devel@nongnu.org>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: Re: [PATCH v4 0/5] gpio: Add GPIO Aggregator
+Message-ID: <20200120132607.GB24951@lxhi-065.adit-jv.com>
+References: <20200115181523.23556-1-geert+renesas@glider.be>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG3NODE2.st.com (10.75.127.8) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-20_02:2020-01-20,2020-01-20 signatures=0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200115181523.23556-1-geert+renesas@glider.be>
+X-Originating-IP: [10.72.93.66]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the warning that show up when compiling with W=1
+Hi Geert,
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
- drivers/cpuidle/coupled.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+On Wed, Jan 15, 2020 at 07:15:18PM +0100, Geert Uytterhoeven wrote:
+> 	Hi all,
+> 
+> GPIO controllers are exported to userspace using /dev/gpiochip*
+> character devices.  Access control to these devices is provided by
+> standard UNIX file system permissions, on an all-or-nothing basis:
+> either a GPIO controller is accessible for a user, or it is not.
+> Currently no mechanism exists to control access to individual GPIOs.
+> 
+> Hence this adds a GPIO driver to aggregate existing GPIOs, and expose
+> them as a new gpiochip.  This is useful for implementing access control,
+> and assigning a set of GPIOs to a specific user.  Furthermore, this
+> simplifies and hardens exporting GPIOs to a virtual machine, as the VM
+> can just grab the full GPIO controller, and no longer needs to care
+> about which GPIOs to grab and which not, reducing the attack surface.
+> 
+> Recently, other use cases have been discovered[1]:
+>   - Describing simple GPIO-operated devices in DT, and using the GPIO
+>     Aggregator as a generic GPIO driver for userspace, which is useful
+>     for industrial control.
 
-diff --git a/drivers/cpuidle/coupled.c b/drivers/cpuidle/coupled.c
-index b607278df25b..04003b90dc49 100644
---- a/drivers/cpuidle/coupled.c
-+++ b/drivers/cpuidle/coupled.c
-@@ -89,6 +89,7 @@
-  * @coupled_cpus: mask of cpus that are part of the coupled set
-  * @requested_state: array of requested states for cpus in the coupled set
-  * @ready_waiting_counts: combined count of cpus  in ready or waiting loops
-+ * @abort_barrier: synchronisation point for abort cases
-  * @online_count: count of cpus that are online
-  * @refcnt: reference count of cpuidle devices that are using this struct
-  * @prevent: flag to prevent coupled idle while a cpu is hotplugging
-@@ -338,7 +339,7 @@ static void cpuidle_coupled_poke(int cpu)
- 
- /**
-  * cpuidle_coupled_poke_others - wake up all other cpus that may be waiting
-- * @dev: struct cpuidle_device for this cpu
-+ * @this_cpu: target cpu
-  * @coupled: the struct coupled that contains the current cpu
-  *
-  * Calls cpuidle_coupled_poke on all other online cpus.
-@@ -355,7 +356,7 @@ static void cpuidle_coupled_poke_others(int this_cpu,
- 
- /**
-  * cpuidle_coupled_set_waiting - mark this cpu as in the wait loop
-- * @dev: struct cpuidle_device for this cpu
-+ * @cpu: target cpu
-  * @coupled: the struct coupled that contains the current cpu
-  * @next_state: the index in drv->states of the requested state for this cpu
-  *
-@@ -376,7 +377,7 @@ static int cpuidle_coupled_set_waiting(int cpu,
- 
- /**
-  * cpuidle_coupled_set_not_waiting - mark this cpu as leaving the wait loop
-- * @dev: struct cpuidle_device for this cpu
-+ * @cpu: target cpu
-  * @coupled: the struct coupled that contains the current cpu
-  *
-  * Removes the requested idle state for the specified cpuidle device.
-@@ -412,7 +413,7 @@ static void cpuidle_coupled_set_done(int cpu, struct cpuidle_coupled *coupled)
- 
- /**
-  * cpuidle_coupled_clear_pokes - spin until the poke interrupt is processed
-- * @cpu - this cpu
-+ * @cpu: this cpu
-  *
-  * Turns on interrupts and spins until any outstanding poke interrupts have
-  * been processed and the poke bit has been cleared.
+As per comments and test results in [*] (accidentally attached to v3):
+
+Reviewed-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+
+[*] https://lore.kernel.org/linux-renesas-soc/20200120121439.GA24951@lxhi-065.adit-jv.com/
+    ("Re: [PATCH v3 0/7] gpio: Add GPIO Aggregator/Repeater")
+
 -- 
-2.15.0
-
+Best Regards,
+Eugeniu Rosca
