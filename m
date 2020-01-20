@@ -2,152 +2,161 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54E14C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A7FEC33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:23:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27A6620678
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:23:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F156720678
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:23:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z/QAqXKh"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="fUMb/4Yb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728760AbgATOXg (ORCPT
+        id S1728863AbgATOXl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 09:23:36 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35699 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726626AbgATOXf (ORCPT
+        Mon, 20 Jan 2020 09:23:41 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:6897 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728765AbgATOXk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 09:23:35 -0500
-Received: by mail-ot1-f66.google.com with SMTP id i15so28828731oto.2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 06:23:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nnn4KKkHt1EljhMT9CxicHtKv9oSHz/LL7W2XJ6R4BE=;
-        b=Z/QAqXKhkQnUrpb+hI+53DRu6kDqnE+w9xmmPN4YoUerubfVB2WR6JMzQ3mJz9cQbH
-         LideBY2IOx+BJVlFZUsnma1lZQJfcr6Kg+pLY/xZf4eISp/1ylSzHEMsPYWd/KcFWQ3S
-         wrHfZj6dbCU/c8MXu9eAa8fN+oW6CmHUsX4TGeodRCUVzA/7DT/GK9w7uSCOl04hnC12
-         HOs16UTTPfptMBrB8nPXLjCJs1ntcYAhUFc2mbsqbtzpbSAryYC4l/159I4ga/7cczhc
-         A/BS2UZS1V2fnFDMRJ02FK+54ZMb/p/Kk8WM2MWKtEKxJpe30SIxauSjIwE57zSFTpnE
-         Iogg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nnn4KKkHt1EljhMT9CxicHtKv9oSHz/LL7W2XJ6R4BE=;
-        b=HxCnjVpHCRJg5u+9FSChUTwyxESwAFJum7hGIBHbyBYLCr0lVAYaY6P9BS8h/KmldR
-         FslRDySh2E8TmweytmxvbC/jmWw2YB+u0RqYlu2MehOFBCmtVytKtT1aX5L2ZNBSz57I
-         emcWMmK8OcLh2tt9GVbxk4SvCUJDLA6yXzfr9oMyHs2JVO6wkEH8B4lZqrlraEiV+ACA
-         mN9EB+O8WV4eia3d4sd8WfQC2Whu0sChXzmGwHfYmB5jCVjqRgGqQTWLhrp2yEhPGxqm
-         4/ZSKlc/at8WKWF8wK2H4Ufj3jmaXtQ+6I+gkwVu7LPZngRqzLzkNjHOt2+g5X+rDd8V
-         dGCA==
-X-Gm-Message-State: APjAAAXjePY2hgmwUogwNTe5X6h0qEhtUKuzmkHIxtFmkZ0GDGqZJQj2
-        nRqVazMGJMNMjp4Cfhu0OA6x4uLVjxAS7lqpS75P7Q==
-X-Google-Smtp-Source: APXvYqxOOKWrDtxXbMNrSjzwDWgHr5x/Rbu/3eVl2qJzSvBh1Z3fza5fTtePRCaaRAiuXUv6TT88BF1UAwh9j96+taE=
-X-Received: by 2002:a9d:7f12:: with SMTP id j18mr16933059otq.17.1579530214919;
- Mon, 20 Jan 2020 06:23:34 -0800 (PST)
+        Mon, 20 Jan 2020 09:23:40 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e25b7dc0000>; Mon, 20 Jan 2020 06:23:24 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 20 Jan 2020 06:23:39 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 20 Jan 2020 06:23:39 -0800
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 20 Jan
+ 2020 14:23:39 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 20 Jan 2020 14:23:39 +0000
+Received: from audio.nvidia.com (Not Verified[10.24.34.185]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e25b7e60001>; Mon, 20 Jan 2020 06:23:38 -0800
+From:   Sameer Pujar <spujar@nvidia.com>
+To:     <perex@perex.cz>, <tiwai@suse.com>, <robh+dt@kernel.org>
+CC:     <broonie@kernel.org>, <lgirdwood@gmail.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sharadg@nvidia.com>, <mkumard@nvidia.com>,
+        <viswanathl@nvidia.com>, <rlokhande@nvidia.com>,
+        <dramesh@nvidia.com>, <atalambedu@nvidia.com>,
+        Sameer Pujar <spujar@nvidia.com>
+Subject: [PATCH 0/9] add ASoC components for AHUB
+Date:   Mon, 20 Jan 2020 19:53:09 +0530
+Message-ID: <1579530198-13431-1-git-send-email-spujar@nvidia.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <20200115165749.145649-1-elver@google.com> <CAK8P3a3b=SviUkQw7ZXZF85gS1JO8kzh2HOns5zXoEJGz-+JiQ@mail.gmail.com>
- <CANpmjNOpTYnF3ssqrE_s+=UA-2MpfzzdrXoyaifb3A55_mc0uA@mail.gmail.com>
- <CAK8P3a3WywSsahH2vtZ_EOYTWE44YdN+Pj6G8nt_zrL3sckdwQ@mail.gmail.com>
- <CANpmjNMk2HbuvmN1RaZ=8OV+tx9qZwKyRySONDRQar6RCGM1SA@mail.gmail.com>
- <CAK8P3a066Knr-KC2v4M8Dr1phr0Gbb2KeZZLQ7Ana0fkrgPDPg@mail.gmail.com> <CANpmjNO395-atZXu_yEArZqAQ+ib3Ack-miEhA9msJ6_eJsh4g@mail.gmail.com>
-In-Reply-To: <CANpmjNO395-atZXu_yEArZqAQ+ib3Ack-miEhA9msJ6_eJsh4g@mail.gmail.com>
-From:   Marco Elver <elver@google.com>
-Date:   Mon, 20 Jan 2020 15:23:23 +0100
-Message-ID: <CANpmjNOH1h=txXnd1aCXTN8THStLTaREcQpzd5QvoXz_3r=8+A@mail.gmail.com>
-Subject: Re: [PATCH -rcu] asm-generic, kcsan: Add KCSAN instrumentation for bitops
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        christophe leroy <christophe.leroy@c-s.fr>,
-        Daniel Axtens <dja@axtens.net>,
-        linux-arch <linux-arch@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1579530205; bh=sVGMvsXJQ6JsuBd+PLRFpAWsDnTvG1rYsC5JQVaB0T0=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:Content-Type;
+        b=fUMb/4YbwZ0XTAeUPWMxqWnKINkn07UBCoCAAjLbdFdLFrJ5Jm9zRfIfZSjVNCNCU
+         eVamqwNt3pIWN+uQaVHh1SQeqbc12KoElR5pQAJnBN4Z8+EMtKC41EbiC/zULCX7YM
+         2FU6AWMZ/F0PHdqEHDBo+sdZ9k3NCmw52Jcoi+wkoG3RNybVvXJz7sawD6sJUiO+db
+         9mSzlMOwOi7JUE2ojTH4j7IG0AWGEXLNZS7iOlKa39yniu050LP4zLu9EawIJ4Bxx9
+         /s1Zh+pvHIuD96ZgtF4Z/y+GtLHC6FlXbY1TlP9hfa0u3RsoaAZ/ad8sJj+xwuIpNi
+         FExgsPGoVqj+A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Jan 2020 at 14:14, Marco Elver <elver@google.com> wrote:
->
-> On Fri, 17 Jan 2020 at 13:25, Arnd Bergmann <arnd@arndb.de> wrote:
-> >
-> > On Wed, Jan 15, 2020 at 9:50 PM Marco Elver <elver@google.com> wrote:
-> > > On Wed, 15 Jan 2020 at 20:55, Arnd Bergmann <arnd@arndb.de> wrote:
-> > > > On Wed, Jan 15, 2020 at 8:51 PM Marco Elver <elver@google.com> wrote:
-> > > > > On Wed, 15 Jan 2020 at 20:27, Arnd Bergmann <arnd@arndb.de> wrote:
-> > > > Are there any that really just want kasan_check_write() but not one
-> > > > of the kcsan checks?
-> > >
-> > > If I understood correctly, this suggestion would amount to introducing
-> > > a new header, e.g. 'ksan-checks.h', that provides unified generic
-> > > checks. For completeness, we will also need to consider reads. Since
-> > > KCSAN provides 4 check variants ({read,write} x {plain,atomic}), we
-> > > will need 4 generic check variants.
-> >
-> > Yes, that was the idea.
-> >
-> > > I certainly do not feel comfortable blindly introducing kcsan_checks
-> > > in all places where we have kasan_checks, but it may be worthwhile
-> > > adding this infrastructure and starting with atomic-instrumented and
-> > > bitops-instrumented wrappers. The other locations you list above would
-> > > need to be evaluated on a case-by-case basis to check if we want to
-> > > report data races for those accesses.
-> >
-> > I think the main question to answer is whether it is more likely to go
-> > wrong because we are missing checks when one caller accidentally
-> > only has one but not the other, or whether they go wrong because
-> > we accidentally check both when we should only be checking one.
-> >
-> > My guess would be that the first one is more likely to happen, but
-> > the second one is more likely to cause problems when it happens.
->
-> Right, I guess both have trade-offs.
->
-> > > As a minor data point, {READ,WRITE}_ONCE in compiler.h currently only
-> > > has kcsan_checks and not kasan_checks.
-> >
-> > Right. This is because we want an explicit "atomic" check for kcsan
-> > but we want to have the function inlined for kasan, right?
->
-> Yes, correct.
->
-> > > My personal preference would be to keep the various checks explicit,
-> > > clearly opting into either KCSAN and/or KASAN. Since I do not think
-> > > it's obvious if we want both for the existing and potentially new
-> > > locations (in future), the potential for error by blindly using a
-> > > generic 'ksan_check' appears worse than potentially adding a dozen
-> > > lines or so.
-> > >
-> > > Let me know if you'd like to proceed with 'ksan-checks.h'.
-> >
-> > Could you have a look at the files I listed and see if there are any
-> > other examples that probably a different set of checks between the
-> > two, besides the READ_ONCE() example?
->
-> All the user-copy related code should probably have kcsan_checks as well.
->
-> > If you can't find any, I would prefer having the simpler interface
-> > with just one set of annotations.
->
-> That's fair enough. I'll prepare a v2 series that first introduces the
-> new header, and then applies it to the locations that seem obvious
-> candidates for having both checks.
+Overview
+========
+The Audio Hub (AHUB) is part of the Audio Processing Engine (APE) which
+comprises a collection of hardware accelerators for audio pre-processing
+and post-processing. It also includes a programmable full crossbar for
+routing audio data across these accelerators.
 
-I've sent a new patch series which introduces instrumented.h:
-   http://lkml.kernel.org/r/20200120141927.114373-1-elver@google.com
+This series exposes some of these below mentioned HW devices as ASoC
+components for Tegra platforms from Tegra210 onwards.
+ * ADMAIF : The interface between ADMA and AHUB
+ * XBAR   : Crossbar for routing audio samples across various modules
+ * I2S    : Inter-IC Sound Controller
+ * DMIC   : Digital Microphone
+ * DSPK   : Digital Speaker
 
-Thanks,
--- Marco
+Following is the summary of current series.
+ 1. Add YAML DT binding documentation for above mentioned modules.
+ 2. ACIF programming is same for Tegra generations and hence it is moved
+    to a common file.
+ 3. Add ASoC driver components for each of the above modules.
+ 4. Add DT entries for above components for Tegra210, Tegra186 and
+    Tegra194.
+ 5. Enable these components for Jetson-Tx1, Jetson-Tx2 and
+    Jetson-Xavier.
+
+Machine driver series will be sent separately.
+
+Sameer Pujar (9):
+  dt-bindings: sound: tegra: add DT binding for AHUB
+  ASoC: tegra: add support for CIF programming
+  ASoC: tegra: add Tegra210 based DMIC driver
+  ASoC: tegra: add Tegra210 based I2S driver
+  ASoC: tegra: add Tegra210 based AHUB driver
+  ASoC: tegra: add Tegra186 based DSPK driver
+  ASoC: tegra: add Tegra210 based ADMAIF driver
+  arm64: tegra: add AHUB components for few Tegra chips
+  arm64: tegra: enable AHUB modules for few Tegra chips
+
+ .../bindings/sound/nvidia,tegra186-dspk.yaml       | 105 +++
+ .../bindings/sound/nvidia,tegra210-admaif.yaml     | 165 ++++
+ .../bindings/sound/nvidia,tegra210-ahub.yaml       | 130 +++
+ .../bindings/sound/nvidia,tegra210-dmic.yaml       | 105 +++
+ .../bindings/sound/nvidia,tegra210-i2s.yaml        | 112 +++
+ arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts |  48 ++
+ arch/arm64/boot/dts/nvidia/tegra186.dtsi           | 231 ++++-
+ arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts |  36 +
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi           | 239 +++++-
+ arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts |  40 +
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi           | 145 ++++
+ sound/soc/tegra/Kconfig                            |  56 ++
+ sound/soc/tegra/Makefile                           |  12 +
+ sound/soc/tegra/tegra186_dspk.c                    | 516 +++++++++++
+ sound/soc/tegra/tegra186_dspk.h                    |  73 ++
+ sound/soc/tegra/tegra210_admaif.c                  | 896 ++++++++++++++++++++
+ sound/soc/tegra/tegra210_admaif.h                  | 164 ++++
+ sound/soc/tegra/tegra210_ahub.c                    | 667 +++++++++++++++
+ sound/soc/tegra/tegra210_ahub.h                    | 125 +++
+ sound/soc/tegra/tegra210_dmic.c                    | 522 ++++++++++++
+ sound/soc/tegra/tegra210_dmic.h                    |  85 ++
+ sound/soc/tegra/tegra210_i2s.c                     | 941 +++++++++++++++++++++
+ sound/soc/tegra/tegra210_i2s.h                     | 132 +++
+ sound/soc/tegra/tegra30_ahub.c                     |  94 +-
+ sound/soc/tegra/tegra30_ahub.h                     | 129 ---
+ sound/soc/tegra/tegra30_i2s.c                      |  35 +-
+ sound/soc/tegra/tegra30_i2s.h                      |   7 -
+ sound/soc/tegra/tegra_cif.c                        |  34 +
+ sound/soc/tegra/tegra_cif.h                        |  50 ++
+ sound/soc/tegra/tegra_pcm.c                        | 224 ++++-
+ sound/soc/tegra/tegra_pcm.h                        |  23 +-
+ 31 files changed, 5897 insertions(+), 244 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra186-dspk.yaml
+ create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-admaif.yaml
+ create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-ahub.yaml
+ create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-dmic.yaml
+ create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-i2s.yaml
+ create mode 100644 sound/soc/tegra/tegra186_dspk.c
+ create mode 100644 sound/soc/tegra/tegra186_dspk.h
+ create mode 100644 sound/soc/tegra/tegra210_admaif.c
+ create mode 100644 sound/soc/tegra/tegra210_admaif.h
+ create mode 100644 sound/soc/tegra/tegra210_ahub.c
+ create mode 100644 sound/soc/tegra/tegra210_ahub.h
+ create mode 100644 sound/soc/tegra/tegra210_dmic.c
+ create mode 100644 sound/soc/tegra/tegra210_dmic.h
+ create mode 100644 sound/soc/tegra/tegra210_i2s.c
+ create mode 100644 sound/soc/tegra/tegra210_i2s.h
+ create mode 100644 sound/soc/tegra/tegra_cif.c
+ create mode 100644 sound/soc/tegra/tegra_cif.h
+
+-- 
+2.7.4
+
