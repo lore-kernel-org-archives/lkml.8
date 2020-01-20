@@ -2,125 +2,134 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF1ADC32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:03:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C314C33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D07F724677
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:03:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70E3E22527
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:04:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579547071;
+	bh=MC3N+Wv4sZDY/KTjQ16DtpX5lwEApgsdi4mGAlS3ahk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PJYQ2u4HHsEITwX1RHjVrNYz3iik6v5w96mN8badL0VOnzxsiDXv+iNWHsU/RmXED
+	 gszDY74d2htY29vlqFsomHN3rZm6EYJ6+3YN/vfYjbtmwYYXo1ejTy81epOXFGIIid
+	 odprPeakdo2osM6fRqnCjODkUgpoL6eO3XlnKm70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbgATTDG (ORCPT
+        id S1727312AbgATTEa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 14:03:06 -0500
-Received: from mout.kundenserver.de ([212.227.126.134]:58153 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726112AbgATTDE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 14:03:04 -0500
-Received: from mail-qt1-f177.google.com ([209.85.160.177]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MHGPA-1ipALF2U3E-00DGre; Mon, 20 Jan 2020 20:03:01 +0100
-Received: by mail-qt1-f177.google.com with SMTP id v25so614991qto.7;
-        Mon, 20 Jan 2020 11:03:01 -0800 (PST)
-X-Gm-Message-State: APjAAAU2b19EsYgjPqf3lWEury14h744bF3DovOfFzCgBvQyc5ygBq/O
-        pAbY0ppqjuFg5QdSF2GDwlPUaRpz4ILiGD0V6Lc=
-X-Google-Smtp-Source: APXvYqz35x39I8DSspW1D7zXoSgFG6f385p7mWbzgBb6GjESNlGfr5iF1XLATEUOO8X7/j+CYWdeJN7g8IvYvApiM0E=
-X-Received: by 2002:ac8:768d:: with SMTP id g13mr805093qtr.7.1579546980409;
- Mon, 20 Jan 2020 11:03:00 -0800 (PST)
+        Mon, 20 Jan 2020 14:04:30 -0500
+Received: from foss.arm.com ([217.140.110.172]:35904 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726642AbgATTEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 14:04:30 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A43931B;
+        Mon, 20 Jan 2020 11:04:29 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 08FCE3F68E;
+        Mon, 20 Jan 2020 11:04:28 -0800 (PST)
+Date:   Mon, 20 Jan 2020 19:04:27 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Wen Su <Wen.Su@mediatek.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, wsd_upstream@mediatek.com
+Subject: Re: [RESEND 3/4] regulator: mt6359: Add support for MT6359 regulator
+Message-ID: <20200120190427.GO6852@sirena.org.uk>
+References: <1579506450-21830-1-git-send-email-Wen.Su@mediatek.com>
+ <1579506450-21830-4-git-send-email-Wen.Su@mediatek.com>
 MIME-Version: 1.0
-References: <20200115165749.145649-1-elver@google.com> <CAK8P3a3b=SviUkQw7ZXZF85gS1JO8kzh2HOns5zXoEJGz-+JiQ@mail.gmail.com>
- <CANpmjNOpTYnF3ssqrE_s+=UA-2MpfzzdrXoyaifb3A55_mc0uA@mail.gmail.com>
- <CAK8P3a3WywSsahH2vtZ_EOYTWE44YdN+Pj6G8nt_zrL3sckdwQ@mail.gmail.com>
- <CANpmjNMk2HbuvmN1RaZ=8OV+tx9qZwKyRySONDRQar6RCGM1SA@mail.gmail.com>
- <CAK8P3a066Knr-KC2v4M8Dr1phr0Gbb2KeZZLQ7Ana0fkrgPDPg@mail.gmail.com>
- <CANpmjNO395-atZXu_yEArZqAQ+ib3Ack-miEhA9msJ6_eJsh4g@mail.gmail.com>
- <CANpmjNOH1h=txXnd1aCXTN8THStLTaREcQpzd5QvoXz_3r=8+A@mail.gmail.com>
- <CAK8P3a0p9Y8080T-RR2pp-p2_A0FBae7zB-kSq09sMZ_X7AOhw@mail.gmail.com> <CANpmjNOUTed6FT8X0bUSc1tGBh3jrEJ0DRpQwBfoPF5ah8Wrhw@mail.gmail.com>
-In-Reply-To: <CANpmjNOUTed6FT8X0bUSc1tGBh3jrEJ0DRpQwBfoPF5ah8Wrhw@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 20 Jan 2020 20:02:44 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a32sVU4umk2FLnWnMGMQxThvMHAKxVM+G4X-hMgpBsXMA@mail.gmail.com>
-Message-ID: <CAK8P3a32sVU4umk2FLnWnMGMQxThvMHAKxVM+G4X-hMgpBsXMA@mail.gmail.com>
-Subject: Re: [PATCH -rcu] asm-generic, kcsan: Add KCSAN instrumentation for bitops
-To:     Marco Elver <elver@google.com>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        christophe leroy <christophe.leroy@c-s.fr>,
-        Daniel Axtens <dja@axtens.net>,
-        linux-arch <linux-arch@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:jR7dToZSz+pkZ+H0k5vLn3WxHAvBzUvp3ljrXIGkzvRot+PDpsg
- jvUS6yMJBrzIa5w8PoqfcIyUxp6R0ukVQsudQ5jcvbSZBzbkYiGpDO368uKbT3GS1zMTax6
- fYr6mXoL9VkOH4vxVc/626eppN3uzhWad2gTfMiDZowwRgFPV25v52+xoRoMQwhXws8s4O6
- XJlqCZts9DbDomGlf0i7A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:l3QBPowaTZQ=:sRbWnLFf27OK+UK7+9qpof
- kwPt46XaHvZva95NukcvqRN8B+WTktgovYpCxLpjyzoybNq9aSo4NoTE8QmBoUZS1RmHPBN3O
- JxuSWZwOcUWZcqjCmgwlDy5DyqJDaxkaPz/Nkgult+b7uI34ASguRqWm8dqFl7mm5sGqmi611
- HfMxJJUOIFDrrF6j66MWYHe7WJVFbRjATPfrdN+eP9IU85Gt78j+vrpL4onL9FsJqmuu7mEQE
- r6CbmFtYBc61T3+4ZfcoIdi0jxqcjbW6+cTwSwmhNbt5efjoxt1uXj8opXK8L4SDksSoi8HVl
- fAlVXG7rKO05DiAS06MkyjbZe+jGNDYPevAFAOkxSIUrcIthNQaSBtFHhLzQa3Nod0Vgl2lUW
- SMLHW53liptmhdTg0q4H8m5ChB9jWsVBRhvAbs6gvduiR/vq/goOgRKsr4AoDfXMmTwX7Ad6J
- 1A8MuGFWykbHCnXp1OpPsG1A7DHwGt0A00wmobx5RbsZs81otdVXhWH1yo+3meC6aMDN9YLNp
- KJswW9VlS/GYIjjv1KsGzn+pPNWxO+tHx8u9hRgZkDaB/F6u65dSDnnWrN7z00XA++XiOaoqW
- XGQKTCYTokGcjDohE/nGDmTVXpP3MSR6tKLgly1p7mly017IANjzQtZPiAJMVpojVW8Kg/YMb
- IA/A6xN+pNXterGSQo/Vm95Qxgq+PH7d68YGnXbRzLOiHhKVsT88gJrQFyI2W26ChyzBIZ4aP
- Tj9K5CbGego3mfwnPMdfSTmATTp0bm3ESuGDdokiE6CCIDgmXHVyh85xewT3AoxxJFP4W8OBd
- H898tlU9G2jc4aHY2LssA65PElWWQ1MfRAObEL+klzX2MphZ4oXhXqeAeJsNCryjxeA8V9z54
- ucpDaNXlOUyuEr5Kn9fg==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Qa0ccP92Gc0Ko3P8"
+Content-Disposition: inline
+In-Reply-To: <1579506450-21830-4-git-send-email-Wen.Su@mediatek.com>
+X-Cookie: I invented skydiving in 1989!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 4:11 PM Marco Elver <elver@google.com> wrote:
-> On Mon, 20 Jan 2020 at 15:40, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Mon, Jan 20, 2020 at 3:23 PM Marco Elver <elver@google.com> wrote:
-> > > On Fri, 17 Jan 2020 at 14:14, Marco Elver <elver@google.com> wrote:
-> > > > On Fri, 17 Jan 2020 at 13:25, Arnd Bergmann <arnd@arndb.de> wrote:
-> > > > > On Wed, Jan 15, 2020 at 9:50 PM Marco Elver <elver@google.com> wrote:
-> >
-> > > > > If you can't find any, I would prefer having the simpler interface
-> > > > > with just one set of annotations.
-> > > >
-> > > > That's fair enough. I'll prepare a v2 series that first introduces the
-> > > > new header, and then applies it to the locations that seem obvious
-> > > > candidates for having both checks.
-> > >
-> > > I've sent a new patch series which introduces instrumented.h:
-> > >    http://lkml.kernel.org/r/20200120141927.114373-1-elver@google.com
-> >
-> > Looks good to me, feel free to add
-> >
-> > Acked-by: Arnd Bergmann <arnd@arndb.de>
-> >
-> > if you are merging this through your own tree or someone else's,
-> > or let me know if I should put it into the asm-generic git tree.
->
-> Thank you!  It seems there is still some debate around the user-copy
-> instrumentation.
->
-> The main question we have right now is if we should add pre/post hooks
-> for them. Although in the version above I added KCSAN checks after the
-> user-copies, it seems maybe we want it before. I personally don't have
-> a strong preference, and wanted to err on the side of being more
-> conservative.
->
-> If I send a v2, and it now turns out we do all the instrumentation
-> before the user-copies for KASAN and KCSAN, then we have a bunch of
-> empty hooks. However, for KMSAN we need the post-hook, at least for
-> copy_from_user. Do you mind a bunch of empty functions to provide
-> pre/post hooks for user-copies? Could the post-hooks be generally
-> useful for something else?
 
-I'd prefer not to add any empty hooks, let's do that once they
-are actually used.
+--Qa0ccP92Gc0Ko3P8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-      Arnd
+On Mon, Jan 20, 2020 at 03:47:29PM +0800, Wen Su wrote:
+
+This seems pretty good, a few comments below but they're fairly small
+and should be easy to address:
+
+> +static int mt6359_set_voltage_sel(struct regulator_dev *rdev,
+> +				  unsigned int selector)
+> +{
+> +	int idx, ret;
+> +	const u32 *pvol;
+> +	struct mt6359_regulator_info *info = rdev_get_drvdata(rdev);
+> +
+> +	pvol = info->index_table;
+> +
+> +	idx = pvol[selector];
+> +	ret = regmap_update_bits(rdev->regmap, info->desc.vsel_reg,
+> +				 info->desc.vsel_mask,
+> +				 idx << info->vsel_shift);
+> +
+> +	return ret;
+> +}
+
+This looks like you should be using regulator_list_voltage_table() and
+associated functions, probably map_voltage_ascend() or _iterate() and
+just a simple set_voltage_sel_regmap().
+
+> +static int mt6359_get_status(struct regulator_dev *rdev)
+> +{
+> +	int ret;
+> +	u32 regval;
+> +	struct mt6359_regulator_info *info = rdev_get_drvdata(rdev);
+> +
+> +	ret = regmap_read(rdev->regmap, info->status_reg, &regval);
+> +	if (ret != 0) {
+> +		dev_err(&rdev->dev, "Failed to get enable reg: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return (regval & info->qi) ? REGULATOR_STATUS_ON : REGULATOR_STATUS_OFF;
+
+Please write normal conditionl statements rather than using the ternery
+operator to improve legibility.
+
+> +	switch (mode) {
+> +	case REGULATOR_MODE_FAST:
+> +		if (curr_mode == REGULATOR_MODE_IDLE) {
+> +			WARN_ON(1);
+> +			dev_notice(&rdev->dev,
+> +				   "BUCK %s is LP mode, can't FPWM\n",
+> +				   rdev->desc->name);
+> +			return -EIO;
+
+I'd expect the device to go out of low power mode then into force PWM
+mode if it has to do that rather than reject the operation.
+
+--Qa0ccP92Gc0Ko3P8
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4l+boACgkQJNaLcl1U
+h9CShAf/WdS4iLv8FmqgPQ6jxUZsWIHU4beM7oDoeI16KydYH71AEzVsF5AmZ/Fi
+q6qUuiabJm+9IVCwXc55mWA5IlFDMSoYM5VCt+QwxsUxaO2QoCjs/FgdkZcvNPyu
+KJfmVJdGPE3ZzA6UjDC7tVOR1CYCC8ey8U6Y45rhPU6ln4RDxTnVAFFtKlUM5UM7
+/Mw/NwmnR3AtdQvHw20WbLhTqWiNR8m5XAryzMRd+H35WuF/3xRlPSRvrGYjxkAL
+7R3Wbs2KsQ7J+bPCPbLf0N9WSvZurn/hMT++bQJKqeAei0V+bo2Phk66Iq7rQkgJ
+TGSDUr+2JcIj+zZtLcbRkcrnQUCt1w==
+=Vsrk
+-----END PGP SIGNATURE-----
+
+--Qa0ccP92Gc0Ko3P8--
