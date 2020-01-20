@@ -2,129 +2,166 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D172C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A97F6C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:10:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1507122525
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:09:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C97A2070C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:10:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qg1ZLvvi"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PQ+9HJwk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728760AbgATPJZ (ORCPT
+        id S1728931AbgATPJ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 10:09:25 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:38874 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726982AbgATPJZ (ORCPT
+        Mon, 20 Jan 2020 10:09:59 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:42062 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726860AbgATPJ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 10:09:25 -0500
-Received: by mail-wm1-f65.google.com with SMTP id u2so15056364wmc.3
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 07:09:23 -0800 (PST)
+        Mon, 20 Jan 2020 10:09:59 -0500
+Received: by mail-qk1-f196.google.com with SMTP id z14so30367053qkg.9
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 07:09:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ByBSacKRJKuzSIYiOQyT8J9CJv5HzmRfCVnRBxTEqEo=;
-        b=qg1ZLvviVZfjbWUxveYlY31YKSPtpCoqGvUCxFFFmuSNhzrZG+8/JTUBew4MqF1QwT
-         ZkjTqLHsvs275UZGLdOmP854e8vkiW0i8IheAE92enwVx5dgNXUWibw7xuJsq5IzFhhk
-         pKzY/RUwbanMSqGLmJ0vUxWmHzbBOZqzoxp9yT0uRtho17C6I5oH1xMf+pTIjzSN3MZY
-         H8HxiblWXheI6D/R+4rBvbQG0cc5g6adqj0TwfF4L2cC1eWieAELuSXvre7Nin13453w
-         MgPO0mLx6I2rhlnxlc70+w5Qw7/m8lq2IEay5qYyHSQ30y8iTLRUAkWggiNl+AA9LLR9
-         CgVQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RILlv2/4lxhYaS+kKGTocXUc7rBZNj6liYWIdFAYLvQ=;
+        b=PQ+9HJwkpHh6UGSfmbZj1yoVjU3WBfmMRoDHyXZg8Xym+mrPVA2I5Y8KrzBd7kel+T
+         reuDWjyQ6GYnF7/woKV1/RXpvtxtb5X9gzk/wuzN63SKNFmHBKPzErKfOCOmlY1mhVkF
+         z0qBOG92IaACs+MeaUYSvpBvqF+7knmED3PJy3HVF85s9z4Fk2ZIImGAtZVtjlE+N8Ya
+         O2MtOz6Ir/FH3qqZvKcO4Qp071b7MH2gMhcrV4Pa6bSMeX0gnIB3fwL7cQDrOfQdiIqa
+         eTdm3s5r4FVsJNQ9hXC7Twh9dImfDJfTB09QSPsfErWOHsOMYzoyDvkGaWfKCbRGg8/r
+         +iVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ByBSacKRJKuzSIYiOQyT8J9CJv5HzmRfCVnRBxTEqEo=;
-        b=caWjR6AYuu6ERmXjqno8WYp+SZvMaXCCIm0WfRGirx4rnTN6p/60zxxPqJng7CZJ4T
-         inPj3F12vc4flMSYN5q9ML9zi271idyIVo/8Nm0gnPov6iN9pt4Pza4eI1weJKNDuhHo
-         +x59+RXtHJX5qYkJ/SCaIAf3RjVXbPSvfVuekHXhHIiBmY84O4nMsIG/S2GXkCsXrvYE
-         V173Wmf1dbwcFQGWMLFG1PvxNjfNp16ttSBPxGqjlEmqzk4YPksQLdCQM+/rM0iFRAMo
-         0epgvXWXv9cTKbONJQBJlJMQKKG/zaUzrRQbvVjLlxtfWMC5eP+wBs1lUVaBjfFA8a/u
-         xnww==
-X-Gm-Message-State: APjAAAVJOcDqQmtviEWNG96d4FGZpME0hoIZVpmoUPY2CW0BfestDfZx
-        4jpEK+wWTnEcix8W00Spt9NzJg==
-X-Google-Smtp-Source: APXvYqyH6QMzJgz4YZQ39CG1D478e9/BsTiziBKmrfafEV/iedUuTR3YTBW7pk8iuudU9KBXYjMY8g==
-X-Received: by 2002:a05:600c:21da:: with SMTP id x26mr19321181wmj.4.1579532962450;
-        Mon, 20 Jan 2020 07:09:22 -0800 (PST)
-Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
-        by smtp.gmail.com with ESMTPSA id a5sm23285242wmb.37.2020.01.20.07.09.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 07:09:21 -0800 (PST)
-Date:   Mon, 20 Jan 2020 15:09:18 +0000
-From:   Quentin Perret <qperret@google.com>
-To:     Lukasz Luba <lukasz.luba@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com, Morten.Rasmussen@arm.com,
-        Dietmar.Eggemann@arm.com, Chris.Redpath@arm.com,
-        ionela.voinescu@arm.com, javi.merino@arm.com,
-        cw00.choi@samsung.com, b.zolnierkie@samsung.com, rjw@rjwysocki.net,
-        sudeep.holla@arm.com, viresh.kumar@linaro.org, nm@ti.com,
-        sboyd@kernel.org, rui.zhang@intel.com, amit.kucheria@verdurent.com,
-        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
-        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, kernel-team@android.com
-Subject: Re: [PATCH 1/4] PM / EM: and devices to Energy Model
-Message-ID: <20200120150918.GA164543@google.com>
-References: <20200116152032.11301-1-lukasz.luba@arm.com>
- <20200116152032.11301-2-lukasz.luba@arm.com>
- <20200117105437.GA211774@google.com>
- <40587d98-0e8d-cbac-dbf5-d26501d47a8c@arm.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RILlv2/4lxhYaS+kKGTocXUc7rBZNj6liYWIdFAYLvQ=;
+        b=Z/9MB7iWRBn4jTWbpWCySSKDrup0FW4r1DsLl5jrPPqah8hKQ2z2ob1LaJjmAv8C8+
+         EmuFB4qG49smW8GK0WCYLEaJzk5dex9K8UpyU5Egdrk4z9BbkS7cCgiQJfSy7dlQeu6S
+         bhM3TxwTlGUO9IWEIbT/8RPt9UY+j5TD94mFgZMutwxxdCyeSfJgtnnL3ERqqIKyq80O
+         7OvtszqL1wqBrKVFfTFd4FoDP6YBKrBRHarvw2hTacL/nD/AwCkdNqJYsR3XbGXB22+6
+         UTWaiCFoeBLKwGf4P1474EaMem/LnyzTb4gc6sgX4Jf3KdQLQ7Ng+ns6tW5tb1pHv+xl
+         uYZw==
+X-Gm-Message-State: APjAAAWyuRBfjbR6ADu+oXTXH6Mt0/hnnVWXjX+EG3o4AC7aUaHuXIYC
+        2WkX2aZNYMpzNo4sMca4nA46qKdqPjbCcDccq1RWtg==
+X-Google-Smtp-Source: APXvYqxIiGtso33+ZGjACAQiFbsYtbOxc4Shn8h2vPNcQORsrLV8LawWPsHl9Potnj3q87J+zgQ9995P7S/CcUG9p6g=
+X-Received: by 2002:a05:620a:1136:: with SMTP id p22mr52522165qkk.8.1579532997947;
+ Mon, 20 Jan 2020 07:09:57 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <40587d98-0e8d-cbac-dbf5-d26501d47a8c@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200120141927.114373-1-elver@google.com> <CACT4Y+bnRoKinPopVqyxj4av6_xa_OUN0wwnidpO3dX3iYq_gg@mail.gmail.com>
+ <CACT4Y+YuTT6kZ-AkgU0c1o09qmQdFWr4_Sds4jaDg-Va6g6jkA@mail.gmail.com>
+In-Reply-To: <CACT4Y+YuTT6kZ-AkgU0c1o09qmQdFWr4_Sds4jaDg-Va6g6jkA@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Mon, 20 Jan 2020 16:09:46 +0100
+Message-ID: <CACT4Y+acrXkA-ixjQXqNf1EC=fpgTWf3Rcevxxon0DfrPdD-UQ@mail.gmail.com>
+Subject: Re: [PATCH 1/5] include/linux: Add instrumented.h infrastructure
+To:     Marco Elver <elver@google.com>
+Cc:     paulmck@kernel.org, Andrey Konovalov <andreyknvl@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Daniel Axtens <dja@axtens.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Daniel Borkmann <daniel@iogearbox.net>, cyphar@cyphar.com,
+        Kees Cook <keescook@chromium.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Lukasz,
+On Mon, Jan 20, 2020 at 3:58 PM Dmitry Vyukov <dvyukov@google.com> wrote:
+>
+> On Mon, Jan 20, 2020 at 3:45 PM Dmitry Vyukov <dvyukov@google.com> wrote:
+> >
+> > On Mon, Jan 20, 2020 at 3:19 PM Marco Elver <elver@google.com> wrote:
+> > >
+> > > This adds instrumented.h, which provides generic wrappers for memory
+> > > access instrumentation that the compiler cannot emit for various
+> > > sanitizers. Currently this unifies KASAN and KCSAN instrumentation. In
+> > > future this will also include KMSAN instrumentation.
+> > >
+> > > Note that, copy_{to,from}_user require special instrumentation,
+> > > providing hooks before and after the access, since we may need to know
+> > > the actual bytes accessed (currently this is relevant for KCSAN, and is
+> > > also relevant in future for KMSAN).
+> > >
+> > > Suggested-by: Arnd Bergmann <arnd@arndb.de>
+> > > Signed-off-by: Marco Elver <elver@google.com>
+> > > ---
+> > >  include/linux/instrumented.h | 153 +++++++++++++++++++++++++++++++++++
+> > >  1 file changed, 153 insertions(+)
+> > >  create mode 100644 include/linux/instrumented.h
+> > >
+> > > diff --git a/include/linux/instrumented.h b/include/linux/instrumented.h
+> > > new file mode 100644
+> > > index 000000000000..9f83c8520223
+> > > --- /dev/null
+> > > +++ b/include/linux/instrumented.h
+> > > @@ -0,0 +1,153 @@
+> > > +/* SPDX-License-Identifier: GPL-2.0 */
+> > > +
+> > > +/*
+> > > + * This header provides generic wrappers for memory access instrumentation that
+> > > + * the compiler cannot emit for: KASAN, KCSAN.
+> > > + */
+> > > +#ifndef _LINUX_INSTRUMENTED_H
+> > > +#define _LINUX_INSTRUMENTED_H
+> > > +
+> > > +#include <linux/compiler.h>
+> > > +#include <linux/kasan-checks.h>
+> > > +#include <linux/kcsan-checks.h>
+> > > +#include <linux/types.h>
+> > > +
+> > > +/**
+> > > + * instrument_read - instrument regular read access
+> > > + *
+> > > + * Instrument a regular read access. The instrumentation should be inserted
+> > > + * before the actual read happens.
+> > > + *
+> > > + * @ptr address of access
+> > > + * @size size of access
+> > > + */
+> >
+> > Based on offline discussion, that's what we add for KMSAN:
+> >
+> > > +static __always_inline void instrument_read(const volatile void *v, size_t size)
+> > > +{
+> > > +       kasan_check_read(v, size);
+> > > +       kcsan_check_read(v, size);
+> >
+> > KMSAN: nothing
+>
+> KMSAN also has instrumentation in
+> copy_to_user_page/copy_from_user_page. Do we need to do anything for
+> KASAN/KCSAN for these functions?
 
-On Monday 20 Jan 2020 at 14:52:07 (+0000), Lukasz Luba wrote:
-> On 1/17/20 10:54 AM, Quentin Perret wrote:
-> > Suggested alternative: have two registration functions like so:
-> > 
-> > 	int em_register_dev_pd(struct device *dev, unsigned int nr_states,
-> > 			       struct em_data_callback *cb);
-> > 	int em_register_cpu_pd(cpumask_t *span, unsigned int nr_states,
-> > 			       struct em_data_callback *cb);
-> 
-> Interesting, in the internal review Dietmar asked me to remove these two
-> functions. I had the same idea, which would simplify a bit the
-> registration and it does not need to check the dev->bus if it is CPU.
-> 
-> Unfortunately, we would need also two function in drivers/opp/of.c:
-> dev_pm_opp_of_register_cpu_em(policy->cpus);
-> and
-> dev_pm_opp_of_register_dev_em(dev);
-> 
-> Thus, I have created only one registration function, which you can see
-> in this patch set.
 
-Right, I can see how having a unified API would be appealing, but the
-OPP dependency is a nono, so we'll need to work around one way or
-another.
+There is also copy_user_highpage.
 
-FWIW, I don't think having separate APIs for CPUs and other devices is
-that bad given that we already have entirely different frameworks to
-drive their respective frequencies. And the _cpu variants are basically
-just wrappers around the _dev ones, so not too bad either IMO :).
+And ioread/write8/16/32_rep: do we need any instrumentation there. It
+seems we want both KSAN and KCSAN too. One may argue that KCSAN
+instrumentation there is to super critical at this point, but KASAN
+instrumentation is important, if anything to prevent silent memory
+corruptions. How do we instrument there? I don't see how it maps to
+any of the existing instrumentation functions.
 
-Thanks,
-Quentin
+There is also kmsan_check_skb/kmsan_handle_dma/kmsan_handle_urb that
+does not seem to map to any of the instrumentation functions.
