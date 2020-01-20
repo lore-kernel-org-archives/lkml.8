@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50345C33CB8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:54:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E536C33CB8
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:54:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 260D92077C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:54:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0653E2077C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:54:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="we/6y6ed"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vDepYFXL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbgATIyX (ORCPT
+        id S1727009AbgATIy5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 03:54:23 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36279 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbgATIyW (ORCPT
+        Mon, 20 Jan 2020 03:54:57 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42980 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726635AbgATIy4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 03:54:22 -0500
-Received: by mail-wr1-f67.google.com with SMTP id z3so28604197wru.3
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 00:54:21 -0800 (PST)
+        Mon, 20 Jan 2020 03:54:56 -0500
+Received: by mail-wr1-f68.google.com with SMTP id q6so28487064wro.9
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 00:54:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=kioLvgS74f9sJjCTsbx/ZLFmZG4mkGnzw8r1w1WYA/4=;
-        b=we/6y6edkk3YpKlsBXl/AgdVTKspovJ98gF9DwytZxXRdKu2lf0yHGZ9cqG+OHNl43
-         1D3wAY7FLKrkB72RdPqnamX5YdLo51GRCa74KmSY6GD35joffcxpIlx05IcZqarzXOP6
-         +x+WZdL8Gs45yw6pNJWCoKrxJUIpW0Icot9uVJGDAki8AJAjxn9VczF5OAkFpdczph4B
-         RkCNnyR+3vU+CuNo9xNEbZOrEsQFIuCf9xPQu0wKKvvAO/Bx0ch6NjL4QHxAd+wfp2yG
-         0v3gxZaqF1zpen8HTiUQZ68tg3+k1M5szuubctad3xbmDv0AW6NzZw39zcETHvk5c+cj
-         kz9g==
+        bh=wFASbmAcjMPLyphRbOiX44SHWrp7PXj1/IhOzEqtzro=;
+        b=vDepYFXLBoVAdHKjwHAvg6Gv/5dJ2HbkMPPpNvh407VhcxpDu6rwVdq06AwjKNtA7z
+         yVjrmfzAr7J2P7/UahLaaxU+a9AEin1BmQ3qPLTeKJebJSXIg/GqD6eKP+QgCMTIHa5X
+         jBpSKQD6BwgTsW0J/wTt5Zr0L9ZVvXUPcN2VJBYBYxNPNOMRhV4Hfkpi0lDASbYL13e2
+         SEQiVDtM6nt9Q+3J9KyCbGBppcZCANbQ0HIohP6/TRBANJBA+oNkyK6r5wifm7b3mZgO
+         MkRAmiuzyekDPZPKh4U9itVgYWiSU0UvlIsEc7d/lTaMTBf5g+VlJWFL9+d0A2NRG0aR
+         unjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=kioLvgS74f9sJjCTsbx/ZLFmZG4mkGnzw8r1w1WYA/4=;
-        b=qfc9D0o/9Dt0EGtALz+Hkila54tQklDf83XDPeg3K/dnTklg7X013Od12HKIB2bdTF
-         v//MXF//0pARME7vWBW98yFHhfeWAYfTSgSiRMV2gEOmLBSS93U6DUMaN1W21zVaDTYI
-         1QQNNpHiCG7We7Tp7ZTN/1+danUGu+F+/PtPLYUAPJHp01D/ypzGNXLhKkAyZ9K4oXzz
-         dCBwjM5ezocdHv3hhZvio8hZA97WPD7lVHpSAxYwWu9m4kA0x6nWkI4OHAW36gDS/P2r
-         f2sbMqxtm6ClLlRf2+toMyYYxs9Yl6d3gJy64BxYLt9XPkbyLymgWblvnynqPj2USuCR
-         GzMA==
-X-Gm-Message-State: APjAAAU5Khw47PxQtgAALoZIUmFhYnHVogupjLL0lwdJ/eMkVPdcYzS6
-        by3ioJRBC/kiuDhPJfymM4TMKw==
-X-Google-Smtp-Source: APXvYqxCEa3WXWluxoJWVXwFldWEGwXwSD1xXL7D/5WNmT4sWEkYFaFe3u9dMJfoNyljA8GfrAY9CA==
-X-Received: by 2002:a5d:5304:: with SMTP id e4mr17084301wrv.426.1579510460638;
-        Mon, 20 Jan 2020 00:54:20 -0800 (PST)
+        bh=wFASbmAcjMPLyphRbOiX44SHWrp7PXj1/IhOzEqtzro=;
+        b=PeEDwbRJTG23JPVDBOU2cYeiO89wb3xap/r9+gsN40w4LccCWkm2nyRImPseVvYh/M
+         QeP45gGaBbuMl+MCVsR8d3Z5BXs2A5rKoHrmtjRcfpzsoEhS++hegYljVe3vY1jGUxLX
+         nSAATspZlphsVuOFAofDeK/tfKhkR6KE/9tYi4TnyCjGi2izZIHjR1rIgrh3Dd0bwvKV
+         FE8WLcAJbH7Y3WtkHawiDJPtNovs+kNTi2o2Ye4vfcULIE33zjHDrj5PrwYsvBF1XLZd
+         z5fE2trtr3wsb/hwAUj12lPKQvnrvVIrRocCuOirFicVSDq1vqR+lWMA7cGVVj0R8vYZ
+         3BjA==
+X-Gm-Message-State: APjAAAVBIKObtK1MES3kVErGDOv9dDHVaiJU6gnTGoFljMcLWF/JMHmU
+        7LjftlsaGPjwPXAbkmx9M55HBw==
+X-Google-Smtp-Source: APXvYqwCRnZUydx1xxyOAIBs26zb8aTMIoGVsErSpJUIql/6cfDBP9xZ/3XnLh11Kt0M950WObQehQ==
+X-Received: by 2002:adf:fc08:: with SMTP id i8mr16738404wrr.82.1579510494964;
+        Mon, 20 Jan 2020 00:54:54 -0800 (PST)
 Received: from dell ([2.27.35.227])
-        by smtp.gmail.com with ESMTPSA id b21sm11998wmd.37.2020.01.20.00.54.19
+        by smtp.gmail.com with ESMTPSA id m10sm47135255wrx.19.2020.01.20.00.54.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 00:54:20 -0800 (PST)
-Date:   Mon, 20 Jan 2020 08:54:35 +0000
+        Mon, 20 Jan 2020 00:54:54 -0800 (PST)
+Date:   Mon, 20 Jan 2020 08:55:10 +0000
 From:   Lee Jones <lee.jones@linaro.org>
 To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 Cc:     mazziesaccount@gmail.com,
@@ -85,16 +85,15 @@ Cc:     mazziesaccount@gmail.com,
         linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
         linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v11 03/13] mfd: rohm PMICs - use platform_device_id to
- match MFD sub-devices
-Message-ID: <20200120085435.GA15507@dell>
+Subject: Re: [PATCH v11 06/13] mfd: input: bd71828: Add power-key support
+Message-ID: <20200120085510.GB15507@dell>
 References: <cover.1579501711.git.matti.vaittinen@fi.rohmeurope.com>
- <13994480cab6d5d6376c8f5228572e55ca06e479.1579501711.git.matti.vaittinen@fi.rohmeurope.com>
+ <aa965067acfbdaa862f5f5de8b66e2c161f276a0.1579501711.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <13994480cab6d5d6376c8f5228572e55ca06e479.1579501711.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <aa965067acfbdaa862f5f5de8b66e2c161f276a0.1579501711.git.matti.vaittinen@fi.rohmeurope.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -103,26 +102,18 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Mon, 20 Jan 2020, Matti Vaittinen wrote:
 
-> Thanks to Stephen Boyd I today learned we can use platform_device_id
-> to do device and module matching for MFD sub-devices!
-> 
-> Do device matching using the platform_device_id instead of using
-> explicit module_aliases to load modules and custom parent-data field
-> to do module loading and sub-device matching.
+> Use gpio_keys to send power input-event to user-space when power
+> button (short) press is detected.
 > 
 > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 > Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 > ---
 > No changes since v10
 > 
->  drivers/clk/clk-bd718x7.c             | 12 ++++++++-
->  drivers/mfd/rohm-bd70528.c            |  3 +--
->  drivers/mfd/rohm-bd718x7.c            | 39 ++++++++++++++++++++++-----
->  drivers/regulator/bd718x7-regulator.c | 17 +++++++++---
->  include/linux/mfd/rohm-generic.h      |  3 +--
->  5 files changed, 58 insertions(+), 16 deletions(-)
+>  drivers/mfd/rohm-bd71828.c | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
 
-Still needs Clk and Regulator Acks.
+Drop the "input:" tag from the subject line please.
 
 -- 
 Lee Jones [李琼斯]
