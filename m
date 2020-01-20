@@ -2,142 +2,98 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ABC4C33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 17:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D065C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 17:55:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7630622525
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 17:55:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Shm/O2tz"
+	by mail.kernel.org (Postfix) with ESMTP id 5A88522314
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 17:55:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579542958;
+	bh=TOl9ykBL6v4Z7lUHO9KTQ7wq+ACISXVmRYMF7MA98d8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rTeSizGd876YeMl4e8wEaXqbl4xEj1XqG0H5egS8zkyendYlfT9OEahyAK0xJr3Y0
+	 edw6UBIlKfBETTGeAA00LkzEI+JdJWK37XArhFVg9LBv3WFZ1kEr0vnXUtSAz7DqIJ
+	 6FVH0Woim+SIBV7WkAWZKrd6owXF4DEC6gA85m/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbgATRzF (ORCPT
+        id S1728093AbgATRz5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 12:55:05 -0500
-Received: from mail-wr1-f51.google.com ([209.85.221.51]:44381 "EHLO
-        mail-wr1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726876AbgATRzE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 12:55:04 -0500
-Received: by mail-wr1-f51.google.com with SMTP id q10so355331wrm.11;
-        Mon, 20 Jan 2020 09:55:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:thread-index
-         :content-language;
-        bh=O5uMg6n8WGJ3DBsT5DEpdZ6rnvvc2qRQxYALKuYYT+A=;
-        b=Shm/O2tzG6ppkV1MKlYA5MYSsidRt5iztNG0N6I2Svc+1rC4msjb9YaWaYzpmuPvAU
-         YlsTGL7oxYVZnlhCdX7jrWzcjusIgsV++ZOfUPYD0CH6BGamlgaiyNtWJbNJCQFGsZ6l
-         Y4TFl0/5T891OwLnaHKPVWYDfL1glj4jkDZYfcXAeupnaSZAB3mHEIXVV0KtTVHU3nJW
-         8JM+tzmklvYpGtdRmW1aQEqO2u0dNtekmNR1K+hjdfz+CCDwJ8fSAxWy0dNangOtBxsy
-         kgReO03g5AoY+TuZBiMd0r7b1V+DAQ5pO7l/Jf0mRrluliYC5gL9nPw9Fv3hSAKNnZj6
-         sV/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:thread-index
-         :content-language;
-        bh=O5uMg6n8WGJ3DBsT5DEpdZ6rnvvc2qRQxYALKuYYT+A=;
-        b=D9absaOm9Ee01SezQOByQ6wX7NKRLkmbnZ99RKoFAnrUw9LYWl7zZq7UdQEHu+COP/
-         Bpt7k18OzwP+IL6CMZM3qrN1CXSCjz7uojEPMNkesxf9RCE/0oq9KL73/hIxxofU4rJ/
-         8E692t7B8Fq1yl7YUL6OFAF862c3cBeDIxdaM3VPHjpWeXLVq8ToYVEHLduHkk0s4aOE
-         3f2+aLl/JrplKIyudQGoq+EH/7ugZfXXvwJOxpY/BhDVQf7QoR5H+rI8t6meRI2cb8Mc
-         0rd/SWG7O/5eZfHsNhOoMZMLcZeo2XCdvzQWHWPRfUsj0eHnNTUmEgB7Vl9c02dVPcIO
-         fdLg==
-X-Gm-Message-State: APjAAAWe/1aWIQs7j5UH5rju5KBvjOW8rVwO5RpcwScTmG7rdxPQTtuc
-        syLPhlK+U9zNSnUW86yZSU9Zzr9apo8=
-X-Google-Smtp-Source: APXvYqz7YXkQZ8dyRvLAFJO9vJHbPgvQyXxoKIByuPaAUfRMI2IYRQC4sHXqDvhH4AYunqNhrfKviw==
-X-Received: by 2002:a5d:49cc:: with SMTP id t12mr668846wrs.363.1579542902577;
-        Mon, 20 Jan 2020 09:55:02 -0800 (PST)
-Received: from WINDOWSSS5SP16 ([82.31.89.128])
-        by smtp.gmail.com with ESMTPSA id r15sm185321wmh.21.2020.01.20.09.55.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 Jan 2020 09:55:02 -0800 (PST)
-From:   "Robert Milkowski" <rmilkowski@gmail.com>
-To:     "'Chuck Lever'" <chuck.lever@oracle.com>,
-        "'Trond Myklebust'" <trondmy@hammerspace.com>
-Cc:     "'Linux NFS Mailing List'" <linux-nfs@vger.kernel.org>,
-        "'Trond Myklebust'" <trond.myklebust@hammerspace.com>,
-        "'Anna Schumaker'" <anna.schumaker@netapp.com>,
-        <linux-kernel@vger.kernel.org>
-References: <025801d5bf24$aa242100$fe6c6300$@gmail.com> <D82A1590-FAA3-47C5-B198-937ED88EF71C@oracle.com>
-In-Reply-To: <D82A1590-FAA3-47C5-B198-937ED88EF71C@oracle.com>
-Subject: RE: [PATCH v3] NFSv4.0: nfs4_do_fsinfo() should not do implicit lease renewals
-Date:   Mon, 20 Jan 2020 17:55:00 -0000
-Message-ID: <084f01d5cfba$bc5c4d10$3514e730$@gmail.com>
+        Mon, 20 Jan 2020 12:55:57 -0500
+Received: from foss.arm.com ([217.140.110.172]:35258 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726982AbgATRz5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 12:55:57 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8F30031B;
+        Mon, 20 Jan 2020 09:55:56 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0E7343F68E;
+        Mon, 20 Jan 2020 09:55:55 -0800 (PST)
+Date:   Mon, 20 Jan 2020 17:55:54 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        alsa-devel@alsa-project.org
+Subject: Re: [PATCH v2 9/9] ASoC: Intel: Switch DMI table match to a test of
+ variable
+Message-ID: <20200120175554.GK6852@sirena.org.uk>
+References: <20200120160801.53089-1-andriy.shevchenko@linux.intel.com>
+ <20200120160801.53089-10-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQFSV8btGYpaKSSrODVQVe6EyfKpewKNWQiWqOZaxJA=
-Content-Language: en-gb
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Ucgz5Oc/kKURWzXs"
+Content-Disposition: inline
+In-Reply-To: <20200120160801.53089-10-andriy.shevchenko@linux.intel.com>
+X-Cookie: I invented skydiving in 1989!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--Ucgz5Oc/kKURWzXs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> -----Original Message-----
-> From: Chuck Lever <chuck.lever@oracle.com>
-> Sent: 30 December 2019 15:37
-> To: Robert Milkowski <rmilkowski@gmail.com>
-> Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>; Trond Myklebust
-> <trond.myklebust@hammerspace.com>; Anna Schumaker
-> <anna.schumaker@netapp.com>; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH v3] NFSv4.0: nfs4_do_fsinfo() should not do implicit
-> lease renewals
-> 
-> 
-> 
-> > On Dec 30, 2019, at 10:20 AM, Robert Milkowski <rmilkowski@gmail.com>
-> wrote:
-> >
-> > From: Robert Milkowski <rmilkowski@gmail.com>
-> >
-> > Currently, each time nfs4_do_fsinfo() is called it will do an implicit
-> > NFS4 lease renewal, which is not compliant with the NFS4
-> specification.
-> > This can result in a lease being expired by an NFS server.
-> >
-> > Commit 83ca7f5ab31f ("NFS: Avoid PUTROOTFH when managing leases")
-> > introduced implicit client lease renewal in nfs4_do_fsinfo(), which
-> > can result in the NFSv4.0 lease to expire on a server side, and
-> > servers returning NFS4ERR_EXPIRED or NFS4ERR_STALE_CLIENTID.
-> >
-> > This can easily be reproduced by frequently unmounting a sub-mount,
-> > then stat'ing it to get it mounted again, which will delay or even
-> > completely prevent client from sending RENEW operations if no other
-> > NFS operations are issued. Eventually nfs server will expire client's
-> > lease and return an error on file access or next RENEW.
-> >
-> > This can also happen when a sub-mount is automatically unmounted due
-> > to inactivity (after nfs_mountpoint_expiry_timeout), then it is
-> > mounted again via stat(). This can result in a short window during
-> > which client's lease will expire on a server but not on a client.
-> > This specific case was observed on production systems.
-> >
-> > This patch makes an explicit lease renewal instead of an implicit one,
-> > by adding RENEW to a compound operation issued by nfs4_do_fsinfo(),
-> > similarly to NFSv4.1 which adds SEQUENCE operation.
-> >
-> > Fixes: 83ca7f5ab31f ("NFS: Avoid PUTROOTFH when managing leases")
-> > Signed-off-by: Robert Milkowski <rmilkowski@gmail.com>
-> 
-> Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
-> 
-> 
+On Mon, Jan 20, 2020 at 06:08:01PM +0200, Andy Shevchenko wrote:
+> Since we have a common x86 quirk that provides an exported variable,
+> use it instead of local DMI table match.
 
-How do we progress it further?
+Acked-by: Mark Brown <broonie@kernel.org>
 
--- 
-Robert Milkowski
+> -	if (cht_machine_id == CHT_SURFACE_MACH)
+> -		return &cht_surface_mach;
+> -	else
+> -		return mach;
+> +	return x86_microsoft_surface_3_machine ? &cht_surface_mach : arg;
 
+but if you're respinning this please replace this with a normal
+conditional statement to improve legibility.
 
+--Ucgz5Oc/kKURWzXs
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4l6akACgkQJNaLcl1U
+h9CSpgf+MMjb+D55JRRorEe3BQ4M1I3cFOs+Bj/gzwORglvmHGKTGAvV4lt9Qz3Y
+7mOitkpYtKoUpXSAr9xlxfMdYQvEGex599+4KCS76A1gdAjcIOwejaJcq8N88Lnw
+s2kogJgt5nteihn7spBaT2scBUCkhwF25jCTjfFDVVgk6vTANDjja0sLL13rg2Rl
+0a6fXh5ZSVgmi9ckouFC8b1K2YLBJ0kwSBtONXBvWfttQG8taOfwdNk363e8simL
+gR67f8gexPh7rjX3f77QMdlmKx9UPWoeh6IkFVL3LOwJNM8j42mwipTK29++JYaf
+G2s1Eo7nbPCkXGnwWzwr5ANfbhqzog==
+=KRvr
+-----END PGP SIGNATURE-----
+
+--Ucgz5Oc/kKURWzXs--
