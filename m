@@ -2,96 +2,135 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1993C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 23:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90FBBC32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 23:45:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84E4122522
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 23:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4886D22522
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 23:45:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bgid2RQT"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="piP3faKZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728668AbgATXip (ORCPT
+        id S1728512AbgATXpc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 18:38:45 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:50186 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727009AbgATXip (ORCPT
+        Mon, 20 Jan 2020 18:45:32 -0500
+Received: from gateway24.websitewelcome.com ([192.185.50.45]:13692 "EHLO
+        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727045AbgATXpc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 18:38:45 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00KNceHq064551;
-        Mon, 20 Jan 2020 23:38:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=SVJN3fEqmwpyRkm+dKBJ0PyEYMdf2lHqnmEdtL8pKeY=;
- b=bgid2RQT2al7Ad7Ns5NOvbQ4uM3N7QZEDBynyn2rchqqfClaxfRd5qVrhEBpCHjYzzZi
- 4+dxZxZKx6NJwiE0JM8wMSqzeH8ASlNenpmx0bq/T+q9WCyipQOvSLUp+ukpAPMC+pDK
- 8mE5zsYdOjRfqV3VcXI7bV2EUNuIo5upRZl0SXeo4sAgiyu14y/HzHJMrt327RkCqQF8
- 7AIT92K8PizSj6tdDatenSLzR4+VesOPqXfy/pjh/TVpZ3tJM31mhd/P6H6/ncUwPpMc
- MFIN+IqizwkkHLK5/4pz9VfYTApTX94/6f/ZdYRQw9kVgxx7heA02aDGaMBATw/H71HE 6w== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2xksyq1rb8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Jan 2020 23:38:39 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00KNXZh4105362;
-        Mon, 20 Jan 2020 23:36:39 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2xmc5mdek4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Jan 2020 23:36:38 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00KNabQv017101;
-        Mon, 20 Jan 2020 23:36:38 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 20 Jan 2020 15:36:37 -0800
-To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Cc:     Michael Reed <mdr@sgi.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scsi: qla1280: Make checking for 64bit support consistent
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20200117115628.13219-1-tbogendoerfer@suse.de>
-Date:   Mon, 20 Jan 2020 18:36:35 -0500
-In-Reply-To: <20200117115628.13219-1-tbogendoerfer@suse.de> (Thomas
-        Bogendoerfer's message of "Fri, 17 Jan 2020 12:56:27 +0100")
-Message-ID: <yq1o8uxk8e4.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Mon, 20 Jan 2020 18:45:32 -0500
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway24.websitewelcome.com (Postfix) with ESMTP id 6C51739372
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 17:45:30 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id tgjaiZWCr9jb7tgjaigW5v; Mon, 20 Jan 2020 17:45:30 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=07Tf64pQAmiDup6FxV7EE+r4VySFfyDuXyrZ0/gMUto=; b=piP3faKZqz2doeRGcQSKBn+2CQ
+        5qTWjr0PJRQjA67oeh4/fcgmhwJNeC+kG+RixCUxJeqBA70H0VnvPxVHN/KYAkxRHRyZHlnfugMf6
+        4UF7GT9V7LbGkWPRPT6mSa41DTiFA+q1W1wQYp8fRm1vDQj+cjNwK7t9sqrgto7uVJ4gpMqTetFOB
+        9DhzZf7Do+pypt919RDNCfVIBeIEKX72k8P34n+NwKBioNY7Q/t/HfNWb8vCJlyxM/GN93a40/TgJ
+        5RI3EUEwjEZSoTw9WJCkcvLlLh9jJTBjhZMsIJuTtv+AMt3Qfelclutz64AGncyNayMjW9f66ch+I
+        D7CNZYxA==;
+Received: from 187-162-252-62.static.axtel.net ([187.162.252.62]:44948 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1itgjZ-003jVH-5v; Mon, 20 Jan 2020 17:45:29 -0600
+Date:   Mon, 20 Jan 2020 17:45:28 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] tty: n_hdlc: Use flexible-array member
+Message-ID: <20200120234528.GA26790@embeddedor.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9506 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001200199
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9506 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001200200
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.252.62
+X-Source-L: No
+X-Exim-ID: 1itgjZ-003jVH-5v
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-252-62.static.axtel.net (embeddedor) [187.162.252.62]:44948
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 3
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Old code in the kernel uses 1-byte and 0-byte arrays to indicate the
+presence of a "variable length array":
 
-Thomas,
+struct something {
+    int length;
+    u8 data[1];
+};
 
-> Use #ifdef QLA_64BIT_PTR to check if 64bit support is enabled.  This
-> fixes ("scsi: qla1280: Fix dma firmware download, if dma address is
-> 64bit").
+struct something *instance;
 
-Applied to 5.6/scsi-queue, thanks!
+instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
+instance->length = size;
+memcpy(instance->data, source, size);
 
+There is also 0-byte arrays. Both cases pose confusion for things like
+sizeof(), CONFIG_FORTIFY_SOURCE, etc.[1] Instead, the preferred mechanism
+to declare variable-length types such as the one above is a flexible array
+member[2] which need to be the last member of a structure and empty-sized:
+
+struct something {
+        int stuff;
+        u8 data[];
+};
+
+Also, by making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+unadvertenly introduced[3] to the codebase from now on.
+
+[1] https://github.com/KSPP/linux/issues/21
+[2] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/tty/n_hdlc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/tty/n_hdlc.c b/drivers/tty/n_hdlc.c
+index 98361acd3053..b5499ca8757e 100644
+--- a/drivers/tty/n_hdlc.c
++++ b/drivers/tty/n_hdlc.c
+@@ -115,7 +115,7 @@
+ struct n_hdlc_buf {
+ 	struct list_head  list_item;
+ 	int		  count;
+-	char		  buf[1];
++	char		  buf[];
+ };
+ 
+ #define	N_HDLC_BUF_SIZE	(sizeof(struct n_hdlc_buf) + maxframe)
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.23.0
+
