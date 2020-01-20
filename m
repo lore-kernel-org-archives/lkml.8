@@ -2,134 +2,117 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D21C33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32593C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:03:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 485C92087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:03:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579514613;
-	bh=PaW4jANCzmziwx1lY3lO8sFPbhBSMCzhtzus4/NBbZ8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=idPt+hYG944Tm1clMEJ463J1daC3UD+BCRUaH8jvn7B26ouZ9jgZkb3gC2TFoR135
-	 vXijhQOzUZXrPMibm2xZfBiISqxoiGAe7m381FpxRsTvk6FhlU41aypvfrI78vxTTp
-	 SqG/2kQrUQxAwKOENUZEikwe1/tLept3Xb/DNW+s=
+	by mail.kernel.org (Postfix) with ESMTP id 0F13F2087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:03:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbgATKDc (ORCPT
+        id S1727254AbgATKDt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 05:03:32 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38354 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726573AbgATKDc (ORCPT
+        Mon, 20 Jan 2020 05:03:49 -0500
+Received: from mout.kundenserver.de ([212.227.126.130]:40911 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726421AbgATKDt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 05:03:32 -0500
-Received: by mail-wr1-f65.google.com with SMTP id y17so28857957wrh.5
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 02:03:30 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Cu8cSR4Bnec+tkaO+g7MgIEFj+2elstBE2vN31ryndg=;
-        b=KVHbWX5I2uqpT86h/6qJKXhIyYJ+hkf9G4AeUCgdMgKl23qWKIdjrdzIC938CfRxDK
-         MmLKKvYt4MJCiybaYrkPbsWvDY25Aq5bscYd6Fq9sMnrwU+pyar6COLIDPjS/htt+W5B
-         ByPM7yn48BIhWQkewnqWTZBWUKGb50GtnMj+EYeQh9yyueg1A0l0kri5xAtofIW+pVBE
-         i53Kv0nAukYcGvGzlPBiK27alEd05jWXSIobYNeaV3r9BnTtjM4BhKn6FfHzKdeQSMyL
-         P3SHT1hRjbGq2QKTuf2xWUR/Iq1yIxIPWvm5Mz0uD7wRBltutXsAuf784I6ebmCgmsgb
-         h9AA==
-X-Gm-Message-State: APjAAAXW8N2b3b0/VmKJul/cIUOSkwOKxuDDnO81M3nLHc9YK++SRcGp
-        qv5eIcR+rttMtFZ4fr27j0KYvhEI
-X-Google-Smtp-Source: APXvYqyeM74K8SE2MiQArXPNtrR2i6KIc9h5W4nRAi55aZJhvwJKkUh14I86FL6zXu60sfokmBKNUg==
-X-Received: by 2002:a5d:4e90:: with SMTP id e16mr17068286wru.318.1579514609772;
-        Mon, 20 Jan 2020 02:03:29 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id i11sm48193424wrs.10.2020.01.20.02.03.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 02:03:29 -0800 (PST)
-Date:   Mon, 20 Jan 2020 11:03:28 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Wei Yang <richardw.yang@linux.intel.com>
-Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, yang.shi@linux.alibaba.com
-Subject: Re: [PATCH 8/8] mm/migrate.c: use break instead of goto out_flush
-Message-ID: <20200120100328.GS18451@dhcp22.suse.cz>
-References: <20200119030636.11899-1-richardw.yang@linux.intel.com>
- <20200119030636.11899-9-richardw.yang@linux.intel.com>
+        Mon, 20 Jan 2020 05:03:49 -0500
+Received: from mail-qt1-f172.google.com ([209.85.160.172]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MmlGg-1jJR4f17pu-00jpkW for <linux-kernel@vger.kernel.org>; Mon, 20 Jan
+ 2020 11:03:47 +0100
+Received: by mail-qt1-f172.google.com with SMTP id k40so27189316qtk.8
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 02:03:47 -0800 (PST)
+X-Gm-Message-State: APjAAAUoaxsMv/IdRMPEuHNKtW0KmbA9J2fIoDh6FalnrUajdWbVSJbE
+        MIsLT3FeJTiqjWgK14MtiIom9Ze4hLrHcYpKbvM=
+X-Google-Smtp-Source: APXvYqzuD+ia4TeuoIu8AvPBeT4uvB5VA/ctMprlhEJuuELxxjRelaI7mLhjpYkeZFRt5AnGsonhlPEo9nsDyZNe/hA=
+X-Received: by 2002:ac8:6153:: with SMTP id d19mr19426566qtm.18.1579514626114;
+ Mon, 20 Jan 2020 02:03:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200119030636.11899-9-richardw.yang@linux.intel.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <CAFH1YnOad7aVjoX_PR6mLqT=pXQjpBW9ZDHkKYzNkeistFkA4A@mail.gmail.com>
+In-Reply-To: <CAFH1YnOad7aVjoX_PR6mLqT=pXQjpBW9ZDHkKYzNkeistFkA4A@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 20 Jan 2020 11:03:29 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a3DwaZnRff7CCrJoSxP_MeVUn1S6nRd+hb5rHnv9dBgLQ@mail.gmail.com>
+Message-ID: <CAK8P3a3DwaZnRff7CCrJoSxP_MeVUn1S6nRd+hb5rHnv9dBgLQ@mail.gmail.com>
+Subject: Re: Question about dynamic minor number of misc device
+To:     Zhenzhong Duan <zhenzhong.duan@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:axvGa0SVBkQotRREvZnUecy/yzRvvTyzKYydtXOYoXC5ht0nnhL
+ 3K91MDLeGLpiQwJTXNu8sqlNHi8WCzm3MKD1cF2wa8QEy534WmWoj+ZKHkiheuKI3K990WW
+ go8aOoKv0zTUr3KwdnPuxfw95zRoDwicjq0jlVGVEFEPFWzfb8jE1ihLGUbE8bdvbomdrIL
+ Pgfx7HHVLpy45ArAz1IIw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:3HOqjbKXyTM=:YAxCiIZcto5vBEZ5l7MS3R
+ xbymjNV5GLM8N7mSxhdLc6MADHHQif9XrQwRAByftGWAyf/J9/Cl79YCMaFivqFJAzwpMYlZo
+ TP3jMPyB4HgC5pG6mI3H+1e5eYggwP73CGn1i5umMFj7Q6VjX2ucRfK0f/815fWb+CH4PAgXG
+ nG8hGN0BlKiNTJh8cOb6iQmEXJYEGAr0JVPSc0tc8sFRdLBtOYHsdM45eCnlLwv4pv2921xxd
+ WxIepSECXhY183BOFDS1ZWG9ZhFDHdZN1rys4Hp6kdJQy9YOedNlsLOuFD7ukLfx1zpQccSTf
+ P6KL69dBZgHQfh0pci0PmNGJgP6OezzHs2otVf9oPjzD203WFXfMauH5gUmBSZoKfInYZpW1p
+ o+tnwoRlmqGT6zJDV6ezpxSbJoDI2ADlLXqP0xL6jnQ+9UvwOInJrNVNwhp1LQeJJYCDNPMTq
+ 38fHZ7TtK8ghZ3dlm4NlXw/j26kpWRFvpT2yGGY753mtaeIx0/e6o+28QW3xrMS1mBO4lx/YD
+ WLCqauJehkDZNUfswvzdo/7UNpF0TrZsJwrfbAvfLP6G5UgWfHkh5Y0e70YKjZAp1pf1hwlNE
+ eMW6zeVFriwi/YlaDtxKysbJ8ysICShKl1njuhQ1ojmWRd8+iWHj+/z2hb85YEzR03flRkt0e
+ n3m7X1TcQ7JRF6xgPzorhob54+VKS4N9wQqCbNWm32TZFAERMjAxd1MYrMrtzOPoD74qOv39R
+ S4e18A0/Xo3Z5u9w3KhPuaQpcqRSa7BVOYoCRECfcqvRp3dC+j1KpC4LFekWzCzAvkoKK9jQS
+ HNAk9XrDETSDS2SLWv8Y9AFXxtXk2jUA7QYnOCUAdC5fvvQAmna3tM72ZKsxV0WZbnOZPX5O9
+ 29uB/S6Epbc+aHXUDhEw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun 19-01-20 11:06:36, Wei Yang wrote:
-> Label out_flush is just outside the loop, so break the loop is enough.
+On Mon, Jan 20, 2020 at 9:33 AM Zhenzhong Duan <zhenzhong.duan@gmail.com> wrote:
+>
+> Hi Maintainers,
+>
+> I see there are 64 free slots(0-63) used for misc devices with dynamic
+> minor number. But PSMOUSE_MINOR(1) overlaps with that dynamic range.
+>
+> So if the dynamic minor number exhaust, psaux driver will fail with
+> "could not register psaux device, error: -16", is this expected?
+> Should we preserve a slot for psaux and serio_raw which use static
+> minor number PSMOUSE_MINOR?
 
-I find the explicit label easier to follow than breaking out of the
-loop. Especially when there is another break out of the loop with a
-different label.
+Is this a theoretical question, or are you actually running out of dynamic
+minor numbers? I would guess that if we change the limit to only allow
+dynamic minors 2 through 63, that would technically be a correct
+change, but the result would be that in the same situation another random
+driver fails, which is not much of an improvement, unless the dynamic
+minor numbers also continue into the range above 255.
 
-While the patch is correct I find the resulting code worse readable.
+On a  related note, I checked for drivers that call misc_register()
+with a minor number that is not defined in include/linux/misc.h
+and found a bunch, including some that have conflicting numbers,
+conflicting names  or numbers from the dynamic range:
 
-> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
-> ---
->  mm/migrate.c | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
-> 
-> diff --git a/mm/migrate.c b/mm/migrate.c
-> index 2a857fec65b6..59bfae11b9d6 100644
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -1621,22 +1621,22 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
->  
->  		err = -EFAULT;
->  		if (get_user(p, pages + i))
-> -			goto out_flush;
-> +			break;
->  		if (get_user(node, nodes + i))
-> -			goto out_flush;
-> +			break;
->  		addr = (unsigned long)untagged_addr(p);
->  
->  		/* Check node if it is not checked. */
->  		if (current_node == NUMA_NO_NODE || node != current_node) {
->  			err = -ENODEV;
->  			if (node < 0 || node >= MAX_NUMNODES)
-> -				goto out_flush;
-> +				break;
->  			if (!node_state(node, N_MEMORY))
-> -				goto out_flush;
-> +				break;
->  
->  			err = -EACCES;
->  			if (!node_isset(node, task_nodes))
-> -				goto out_flush;
-> +				break;
->  		}
->  
->  		if (current_node == NUMA_NO_NODE) {
-> @@ -1676,9 +1676,9 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
->  		 */
->  		err = store_status(status, i, err ? : current_node, 1);
->  		if (err)
-> -			goto out_flush;
-> +			break;
->  	}
-> -out_flush:
-> +
->  	/* Make sure we do not overwrite the existing error */
->  	err1 = move_pages_and_store_status(mm, current_node, &pagelist,
->  				status, start, i - start - need_move);
-> -- 
-> 2.17.1
+drivers/staging/speakup/devsynth.c:#define SYNTH_MINOR 25
+drivers/staging/speakup/speakup_soft.c:#define SOFTSYNTH_MINOR 26 /*
+might as well give it one more than /dev/synth */
+drivers/staging/speakup/speakup_soft.c:#define SOFTSYNTHU_MINOR 27 /*
+might as well give it one more than /dev/synth */
+drivers/macintosh/via-pmu.c:#define PMU_MINOR           154
+drivers/macintosh/ans-lcd.h:#define ANSLCD_MINOR                156
+drivers/auxdisplay/charlcd.c:#define LCD_MINOR          156
+drivers/char/applicom.c:#define AC_MINOR 157
+drivers/char/nwbutton.h:#define BUTTON_MINOR 158
+arch/arm/include/asm/nwflash.h:#define FLASH_MINOR               160
+drivers/sbus/char/envctrl.c:#define ENVCTRL_MINOR       162
+drivers/sbus/char/flash.c:#define FLASH_MINOR   152
+drivers/sbus/char/uctrl.c:#define UCTRL_MINOR   174
+drivers/char/toshiba.c:#define TOSH_MINOR_DEV 181
+arch/um/drivers/random.c:#define RNG_MISCDEV_MINOR              183 /*
+official */
+drivers/auxdisplay/panel.c:#define KEYPAD_MINOR         185
+drivers/video/fbdev/pxa3xx-gcu.c:#define MISCDEV_MINOR  197
+kernel/power/user.c:#define SNAPSHOT_MINOR      231
+drivers/parisc/eisa_eeprom.c:#define    EISA_EEPROM_MINOR 241
 
--- 
-Michal Hocko
-SUSE Labs
+If you would like to help clean that up, you are definitely welcome
+to send patches.
+
+      Arnd
