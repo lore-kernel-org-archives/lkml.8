@@ -2,116 +2,116 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F1BC33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D14A6C33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EAB624650
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:33:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qdGAVTw1"
+	by mail.kernel.org (Postfix) with ESMTP id A571124650
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:34:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579559658;
+	bh=xm885UhKFUwKfgBkYWfnG/AC3Rw6vyxcGdpz/w5UOxs=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Xb9qm948zp5r/YCxPfbpdZC93n7ZkKA8/esAsiaT/JVlhAVa7HDKRWKkK5FJviJzq
+	 YGS09S6DvozDuLYiA2QhuK2se6kFmwps9Huey3sLw2bFEQZ9arjFkpDFoQ3ANiYOcG
+	 XT8v5qapcWKayXWudh8v5mdjBh7vq654Epc9dV1Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727683AbgATWdT (ORCPT
+        id S1728783AbgATWeS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 17:33:19 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:37684 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726607AbgATWdT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 17:33:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=6395EwuwLp7BSh0SHkkcV4mhJoN9KeSV8+Z7AuG+fu8=; b=qdGAVTw11fJXgxBM+eQAMaXxy
-        1D5Rtb7kkwChm7QKLWThgRIslj0MkAT3Nh8tdZnzBKf04NAnn023dCn3v4MReCFJcqiFJ9lpsrulq
-        VBGBFcwGMtRCWq/IsPbNktlx8xHUsz9OTJNoOqMnPVdVOZksbUynpdqa8Y4wtdhhSlD/hb2c+Q7gt
-        XVfiwdUli55oTSiwOJghgXCNnlZK+E9t/Yzz3Wp0pOKizHheqUVEKHOi5kF/fb6/3eN2gTN2nvIaz
-        Q0naYmLro/AwhffJm81aofZHsBgwwKAyliBny3UxLvmPjQUTrSAppabTsRFXSPcYd9I81TnMJmHDf
-        kfs0VGvYQ==;
-Received: from [2601:1c0:6280:3f0::ed68]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1itfbi-0006nI-IH; Mon, 20 Jan 2020 22:33:18 +0000
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH -next] Documentation: cpu-idle-cooling: fix a SEVERE docs
- build failure
-Message-ID: <712c1152-56b5-307f-b3f3-ed03a30b804a@infradead.org>
-Date:   Mon, 20 Jan 2020 14:33:16 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Mon, 20 Jan 2020 17:34:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37892 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726607AbgATWeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 17:34:17 -0500
+Received: from sol.hsd1.ca.comcast.net (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5FBF217F4;
+        Mon, 20 Jan 2020 22:34:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579559657;
+        bh=xm885UhKFUwKfgBkYWfnG/AC3Rw6vyxcGdpz/w5UOxs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=n9BG408GF/aokCw8EG9MBQ9hJw9mAgpR6LRC5KJXhFvrUD8dUEMcz1fPCmgxfOxnK
+         FYltkiqo8UTJrZL597rrakuG7LCaY6g0rVjw3rHQFWyQaaJluloPm74WLLPuT+6kjF
+         HwzLBOeRmONd/Z5cEVB5lRpaCnrKE0dDiJHJ32rU=
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     linux-fscrypt@vger.kernel.org
+Cc:     Daniel Rosenberg <drosen@google.com>, kernel-team@android.com,
+        linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        linux-mtd@lists.infradead.org, Richard Weinberger <richard@nod.at>
+Subject: [PATCH v5 0/6] fscrypt preparations for encryption+casefolding
+Date:   Mon, 20 Jan 2020 14:31:55 -0800
+Message-Id: <20200120223201.241390-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+This is a cleaned up and fixed version of the fscrypt patches to prepare
+for directories that are both encrypted and casefolded.
 
-Sphinx ('make htmldocs') stops with a SEVERE error:
+Patches 1-3 start deriving a SipHash key for the new dirhash method that
+will be used by encrypted+casefolded directories.  To avoid unnecessary
+overhead, we only do this if the directory is actually casefolded.
 
+Patch 4 fixes a bug in UBIFS where it didn't gracefully handle invalid
+hash values in fscrypt no-key names.  This is an existing bug, but the
+new fscrypt no-key name format (patch 6) made it much easier to trigger;
+it started being hit by 'kvm-xfstests -c ubifs -g encrypt'.
 
-Sphinx parallel build error:
-SystemMessage: /home/rdunlap/lnx/next/linux-next-20200120/Documentation/driver-api/thermal/cpu-idle-cooling.rst:69: (SEVERE/4) Unexpected section title.
+Patch 5 updates UBIFS to make it ready for the new fscrypt no-key name
+format that always includes the dirhash.
 
-^
-|
+Patch 6 modifies the fscrypt no-key names to always include the dirhash,
+since with the new dirhash method the dirhash will no longer be
+computable from the ciphertext filename without the key.  It also fixes
+a longstanding issue where there could be collisions in the no-key
+names, due to not using a proper cryptographic hash to abbreviate names.
 
-so fix the .rst file so that the SEVERE build error does not happen.
-Also fix another minor formatting warning (unexpected unindent).
+For more information see the main patch series, which includes the
+filesystem-specific changes:
+https://lkml.kernel.org/linux-fscrypt/20200117214246.235591-1-drosen@google.com/T/#u
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Zhang Rui <rui.zhang@intel.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Amit Kucheria <amit.kucheria@verdurent.com>
-Cc: linux-pm@vger.kernel.org
+This applies to fscrypt.git#master.
 
----
- Documentation/driver-api/thermal/cpu-idle-cooling.rst |    5 +++++
- 1 file changed, 5 insertions(+)
+Changed v4 => v5:
+  - Fixed UBIFS encryption to work with the new no-key name format.
 
---- linux-next-20200120.orig/Documentation/driver-api/thermal/cpu-idle-cooling.rst
-+++ linux-next-20200120/Documentation/driver-api/thermal/cpu-idle-cooling.rst
-@@ -65,6 +65,8 @@ We use a fixed duration of idle injectio
- performance penalty and a fixed latency. Mitigation can be increased
- or decreased by modulating the duty cycle of the idle injection.
- 
-+::
-+
-      ^
-      |
-      |
-@@ -91,6 +93,8 @@ computed.
- The governor will change the cooling device state thus the duty cycle
- and this variation will modulate the cooling effect.
- 
-+::
-+
-      ^
-      |
-      |
-@@ -154,6 +158,7 @@ equation:
- 
-  P(opp)target = ((Trunning x (P(opp)running) + (Tidle x P(opp)idle)) /
- 			(Trunning + Tidle)
-+
-   ...
- 
-  Tidle = Trunning x ((P(opp)running / P(opp)target) - 1)
+Daniel Rosenberg (3):
+  fscrypt: don't allow v1 policies with casefolding
+  fscrypt: derive dirhash key for casefolded directories
+  fscrypt: improve format of no-key names
+
+Eric Biggers (3):
+  fscrypt: clarify what is meant by a per-file key
+  ubifs: don't trigger assertion on invalid no-key filename
+  ubifs: allow both hash and disk name to be provided in no-key names
+
+ Documentation/filesystems/fscrypt.rst |  40 +++--
+ fs/crypto/Kconfig                     |   1 +
+ fs/crypto/fname.c                     | 239 ++++++++++++++++++++------
+ fs/crypto/fscrypt_private.h           |  19 +-
+ fs/crypto/hooks.c                     |  44 +++++
+ fs/crypto/keysetup.c                  |  81 ++++++---
+ fs/crypto/keysetup_v1.c               |   4 +-
+ fs/crypto/policy.c                    |   7 +
+ fs/inode.c                            |   3 +-
+ fs/ubifs/dir.c                        |   6 +-
+ fs/ubifs/journal.c                    |   4 +-
+ fs/ubifs/key.h                        |   1 -
+ include/linux/fscrypt.h               |  94 +++-------
+ 13 files changed, 365 insertions(+), 178 deletions(-)
+
+-- 
+2.25.0
 
