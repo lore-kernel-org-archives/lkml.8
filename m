@@ -2,286 +2,232 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C405C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 18:32:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44609C33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 18:34:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44B7722525
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 18:32:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1585622525
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 18:34:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="k9+eqfl9"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="LoRXBMwe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727465AbgATScN (ORCPT
+        id S1727586AbgATSeF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 13:32:13 -0500
-Received: from mail-dm6nam10on2058.outbound.protection.outlook.com ([40.107.93.58]:20620
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        Mon, 20 Jan 2020 13:34:05 -0500
+Received: from mail-bn7nam10on2100.outbound.protection.outlook.com ([40.107.92.100]:39265
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726642AbgATScM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 13:32:12 -0500
+        id S1726642AbgATSeF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 13:34:05 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CeFp+sykQJgo9Gs0zVhdB2ecgYUNuci1rFaYP3nX6kmYB2h7WswSHqLKDGljUPAF2Ov1s8R3RUt8EA+QQl8VWalmjZn8BWje6sw+U7+HgPS8tXinTlBVWnoliYWeXKfdbyHqXfB9sYIpBcJbL8YgrhTjfyBz4SerEZ0TMTNt575HQIvA3PkgRCVBqzfbzKP/lK8ltPXviFnluGWggvf9AC8qIJyiZqUBQa26Q4o5oNhHRu0vSww17YU0IyJ9bQRDbdUkJw/phz795fSKAK7dAXyrMr/ORX7FlZPhlrWNoUq7Jlm7AIgVsxV3z2mXINfMGND2HDF5F0kMKEMxxspfNQ==
+ b=CyAt2IrrqKT5i8Q9DLvnC+x2HxCYy2Rxd6ltIW/W6fAr7eJBgw6y4ujVkOlY/F+7OHuldsQgPzPwpZJtgfeqZiCnKXDfoB+jnkFnXn2EAKR9ceK42fpQVEXiCWTJEvW1V+3oPjyBjIzf6CfDYVKYC+qGL56gkZ8caAQB3nOJeulnc2S1g+YaV7HNK+p25XFBsBaWLkWgENnIszWXwMjxLi8FsgBbzBqauyBQ0Pt9Ltt+fd6mJSC+HJf5E7tLCOyOHjKDSdDqFb4slJ8JPFXTlzwwNxXhCbxnNkNe1AKYwzvONz7hOvQLO7SIJDTMVgo+4rZIcp0uvt9B3PcL3gNHfQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YBx9+UPzMP25sh/3PiNlNsjcXaSwIzai+8HL9QZ7IFs=;
- b=bha5KGYRRqXa8W7azwnVZwnuqa4e0FLwMSLU8CJI9EiWU6cnKANJtFpPNvZc/M1F5jXDErcGh0p7c34m3smUsimuxAMyhvX7CxH1uPpjo86tyZzc8l/3DQyEFiQor9iMKt+sOXBt0EbgtzeapwGHOWKiLiKqcqyI6rW4hcdGp7w3JgA+JIdU+4ywXjhTzzYjZP4cCe8K3cL9EQfeS8R2rq+NeZxK97rq/fSRJg/J5yFqfBii1In1G2KkY8v1iMRxbcOKYp1AFTyyC5OMkrvHK6efJjtjA+Q/Rd7lHCqkID/AcrWnRVaMOdFFrQV6Au7FzDxJ+XdXPtQxJI8QiFvPXQ==
+ bh=uhHLWaPXPDXMVi9aN425whSPWOmcTxEZnnX2H+wvum4=;
+ b=Qo8lXRQ/HsW5JP8LNPcJJxrOL8yVfMpsg7gZ1ShqGX4V5b0ja/wZKkXs23GrPTYlCwX7xSBi/5oMgdKSUp75okB2jY5FPwgUH5GjwD73b6n0UzZEFvlnQw+4V3ECi2ZEvyO0FwfKosOF9zSWwcpvMKBB7SDDC2qp6CvO4JJxtmRc4tPo85zWkgH9lotgK8ypJ8qdnTI3XOeQiXBGS5BKjljGoOrR8MVLcEKnZSEVSuvblWr9srxIiBAldrfPWub7mvTndk3YKyhJygk+1sjznGqob0K/NtvE5YCOLTYz8wvV7Em/8CMQPQ/k7kGPoUJQaqn2Hxyb+WuUO25cb2kYfA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YBx9+UPzMP25sh/3PiNlNsjcXaSwIzai+8HL9QZ7IFs=;
- b=k9+eqfl9R6wgfyH4L/fFrQdcTtJZYkRejQDh1JEgPEj/ePfhWcZ70srRt6CQK9mhDWklJ+16nxdBTwT9SrxzINTbs97nBdQdqdJX+V7ZoRXhFy25PVIG+XYI9Yg6ITlE1RBiU2QiTj0tS56p4nfOaFqNwWdBK2cfiylXrEHRUmY=
-Received: from CH2PR02MB7000.namprd02.prod.outlook.com (20.180.9.216) by
- CH2PR02MB6055.namprd02.prod.outlook.com (10.255.156.80) with Microsoft SMTP
+ bh=uhHLWaPXPDXMVi9aN425whSPWOmcTxEZnnX2H+wvum4=;
+ b=LoRXBMweoVhuo1Qs05rSBDAWcy4CUftmE042NTS2CJO4EaRcZ2zh5A2K+an7zr0l46V/7mghBgb8Kda6uZNQ/DXZLRLumfJuDaS2rE3jPvDJ1bJtuVLQIRyiZcE0oSfde9mPPseEwfNDkKYrgK54ZDaxfEma/ZQfdkmmef67qfA=
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (52.132.149.16) by
+ MW2PR2101MB0940.namprd21.prod.outlook.com (52.132.146.13) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.21; Mon, 20 Jan 2020 18:32:09 +0000
-Received: from CH2PR02MB7000.namprd02.prod.outlook.com
- ([fe80::969:436f:b4b8:4899]) by CH2PR02MB7000.namprd02.prod.outlook.com
- ([fe80::969:436f:b4b8:4899%7]) with mapi id 15.20.2644.026; Mon, 20 Jan 2020
- 18:32:09 +0000
-From:   Radhey Shyam Pandey <radheys@xilinx.com>
-To:     Andre Przywara <andre.przywara@arm.com>
-CC:     "David S . Miller" <davem@davemloft.net>,
-        Michal Simek <michals@xilinx.com>,
-        Robert Hancock <hancock@sedsystems.ca>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 03/14] net: axienet: Fix DMA descriptor cleanup path
-Thread-Topic: [PATCH 03/14] net: axienet: Fix DMA descriptor cleanup path
-Thread-Index: AQHVx6y2ShwELFcgQk2RmkO2ceD3dafj/VgAgAAMtgCAABRgIIAJgLgAgAZRIvA=
-Date:   Mon, 20 Jan 2020 18:32:09 +0000
-Message-ID: <CH2PR02MB70003F8D2662BB1F9D144A55C7320@CH2PR02MB7000.namprd02.prod.outlook.com>
-References: <20200110115415.75683-1-andre.przywara@arm.com>
-        <20200110115415.75683-4-andre.przywara@arm.com>
-        <CH2PR02MB7000F64AB27D352E00DC77A7C7380@CH2PR02MB7000.namprd02.prod.outlook.com>
-        <20200110154328.6676215f@donnerap.cambridge.arm.com>
-        <CH2PR02MB70008D24DA7D1426E8A71013C7380@CH2PR02MB7000.namprd02.prod.outlook.com>
- <20200116180326.47c93ce2@donnerap.cambridge.arm.com>
-In-Reply-To: <20200116180326.47c93ce2@donnerap.cambridge.arm.com>
+ 15.20.2686.6; Mon, 20 Jan 2020 18:34:01 +0000
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::f1bb:c094:cb30:ba1f]) by MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::f1bb:c094:cb30:ba1f%6]) with mapi id 15.20.2644.015; Mon, 20 Jan 2020
+ 18:34:01 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     "lantianyu1986@gmail.com" <lantianyu1986@gmail.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "jgg@ziepe.ca" <jgg@ziepe.ca>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "richardw.yang@linux.intel.com" <richardw.yang@linux.intel.com>,
+        "namit@vmware.com" <namit@vmware.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "david@redhat.com" <david@redhat.com>,
+        "christophe.leroy@c-s.fr" <christophe.leroy@c-s.fr>
+CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        vkuznets <vkuznets@redhat.com>,
+        "eric.devolder@oracle.com" <eric.devolder@oracle.com>
+Subject: RE: [RFC PATCH V2 1/10] mm/resource: Move child to new resource when
+ release mem region.
+Thread-Topic: [RFC PATCH V2 1/10] mm/resource: Move child to new resource when
+ release mem region.
+Thread-Index: AQHVxVvKIEcG+CpTJkitsskMuv0x06fz8zSA
+Date:   Mon, 20 Jan 2020 18:34:00 +0000
+Message-ID: <MW2PR2101MB1052322016F0B5CF91AFD3B1D7320@MW2PR2101MB1052.namprd21.prod.outlook.com>
+References: <20200107130950.2983-1-Tianyu.Lan@microsoft.com>
+ <20200107130950.2983-2-Tianyu.Lan@microsoft.com>
+In-Reply-To: <20200107130950.2983-2-Tianyu.Lan@microsoft.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
 X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-01-20T18:33:58.8724560Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=b8500966-b3db-4344-8270-1a70d94c770c;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=radheys@xilinx.com; 
-x-originating-ip: [149.199.50.133]
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 54ffc32e-5d4a-4a12-092e-08d79dd70f18
-x-ms-traffictypediagnostic: CH2PR02MB6055:|CH2PR02MB6055:
+x-ms-office365-filtering-correlation-id: c8d6a88e-ec8e-435b-e12e-08d79dd751b2
+x-ms-traffictypediagnostic: MW2PR2101MB0940:|MW2PR2101MB0940:|MW2PR2101MB0940:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CH2PR02MB60558E5D32FE4E47E7269FC3C7320@CH2PR02MB6055.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <MW2PR2101MB09405D0CF06114401E9A6EA2D7320@MW2PR2101MB0940.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
 x-forefront-prvs: 0288CD37D9
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(366004)(376002)(396003)(346002)(189003)(199004)(86362001)(478600001)(6916009)(54906003)(33656002)(316002)(66556008)(66476007)(66946007)(76116006)(64756008)(66446008)(7696005)(26005)(52536014)(8676002)(53546011)(6506007)(8936002)(55016002)(5660300002)(81166006)(186003)(4326008)(71200400001)(81156014)(2906002)(9686003);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6055;H:CH2PR02MB7000.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(346002)(396003)(366004)(136003)(376002)(189003)(199004)(316002)(4326008)(8990500004)(7696005)(6506007)(26005)(478600001)(71200400001)(10290500003)(8936002)(7416002)(186003)(54906003)(110136005)(2906002)(55016002)(86362001)(81156014)(81166006)(8676002)(9686003)(66446008)(52536014)(5660300002)(64756008)(66476007)(66556008)(33656002)(76116006)(66946007)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:MW2PR2101MB0940;H:MW2PR2101MB1052.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: idhwUSwgcSwPsYFN0pVF/JdFiWpKP2udKnXM8inWH1K1FPHxr3RZH6IQ8a0bKGnO+GZsNVZlfvCUvP2J1O9P11Bm6GgJ0tvKf5jODO/fk/EcmA4POgKkogPdQwbez/3MBQywBgazd8wBL3r7B8S0tlkxxRsmXd+CSzrFYbHejeGZ0PtCMV/iHxu9pmL+JPE/CRfAhZcMkV+Jxv45pyBIMgrsEQynu03qxQYkzpUot51RrO/rKxBtApIc9dLDTsJfoS64zFuyfdOcS8UL5keadikli/20WMGkl2V6Wz1lY99s1nnMRnzVDZSYo+V0rdguffEScYxNGMb2UmlODtIUNxRSEtmLOSMN+snBbwine2uxlzYXajC81lnnGYMYt8k0UKITvBkIuw/0PMYX5L8Avsh9VSa/8bU5j0neF/U/zWclYSgh9hJ4iD+gT5ENFGiv
+x-microsoft-antispam-message-info: +c0gUz4nZC4KjzuHTtNaCq9fVt5QBFzqNJZG8I96THCNYkBPAydGm2exQJU+TTz4mwG2Zly2vyLt8qfowxP4C+Ay87iO43i8i6nC3kO36AwDuDqRzip+xHeJacarE5FRA4LGsuVIuz1qNmsH8a+FAjm03oALAjcUA1veH4mu4nL4OsS2yTLqHKTeU7nZ+k24HpwwUQfaUn/pvBGPmT8GVdLKlQh4ZySvXfJMjMjf/zAl3C9zucOSKC5x5ghEnRHEWa5VcbTnJ5crtRMOpA5dbMNO6JMyjt4iMfi0icCalUYt6xY90aTVzVQ4sNOodCX2I81rRaqMWkiH3M3PNj5UHC9DYWfcnyJAvDEANlCP343uoDafJgPdBB0+vy55nq38VpVAOER4grHmwatjIYTOmnXgBuXEzBB5gn1POOA2DIfc5+1KcsJjY358E2Vg2ZH8MzHakrkaqj+T2/zCAgWnb25aGSSNGRxl98+ZJDEpIjeFb1WSS5fwkXxamUejgbIn
+x-ms-exchange-antispam-messagedata: HLZsGufKc8QWGB9oy1VWaoDduf3iN72UKpwjpoGGdUO76XwJCyxXe8j2tjGxBn+MJYOLXm1liFFCvRuQkWqS4C28ysv4jSEBSA4c2gFqczpQheCLeXIU21EbK4CUbwLBcdbz6vXISMcMv8LCLd3OWQ==
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 54ffc32e-5d4a-4a12-092e-08d79dd70f18
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jan 2020 18:32:09.1454
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c8d6a88e-ec8e-435b-e12e-08d79dd751b2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jan 2020 18:34:00.8742
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zyelcvfBmTS+xFzjGLKvZdVi8Ff10oT3DN4TLQ9OumeNZ6Ocw1TGjTszdHDxa8TNloh5H3gppt+exPvV2MU+Nw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6055
+X-MS-Exchange-CrossTenant-userprincipalname: UeZXdiE5DccVttGWtDGIs5qVsQxE861TqqJBff7MXiz0J2O0bmz0lxGXAwQ/q5RXNuYw3MVy0Vc/DA+cazJoFB0nb4FmsEklrlOJn8IWcVE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0940
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
- -----Original Message-----
-> From: Andre Przywara <andre.przywara@arm.com>
-> Sent: Thursday, January 16, 2020 11:33 PM
-> To: Radhey Shyam Pandey <radheys@xilinx.com>
-> Cc: David S . Miller <davem@davemloft.net>; Michal Simek
-> <michals@xilinx.com>; Robert Hancock <hancock@sedsystems.ca>;
-> netdev@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
-> kernel@vger.kernel.org
-> Subject: Re: [PATCH 03/14] net: axienet: Fix DMA descriptor cleanup path
+From: Tianyu Lan <Tianyu.Lan@microsoft.com> Sent: Tuesday, January 7, 2020 =
+5:10 AM
 >=20
-> On Fri, 10 Jan 2020 17:05:45 +0000
-> Radhey Shyam Pandey <radheys@xilinx.com> wrote:
+> When release mem region, old mem region may be splited to
+> two regions. Current allocate new struct resource for high
+> end mem region but not move child resources whose ranges are
+> in the high end range to new resource. When adjust old mem
+> region's range, adjust_resource() detects child region's range
+> is out of new range and return error. Move child resources to
+> high end resource before adjusting old mem range.
 >=20
-> Hi,
+> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> ---
+>  kernel/resource.c | 38 ++++++++++++++++++++++++++++++++++----
+>  1 file changed, 34 insertions(+), 4 deletions(-)
 >=20
-> > > -----Original Message-----
-> > > From: Andre Przywara <andre.przywara@arm.com>
-> > > Sent: Friday, January 10, 2020 9:13 PM
-> > > To: Radhey Shyam Pandey <radheys@xilinx.com>
-> > > Cc: David S . Miller <davem@davemloft.net>; Michal Simek
-> > > <michals@xilinx.com>; Robert Hancock <hancock@sedsystems.ca>;
-> > > netdev@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
-> > > kernel@vger.kernel.org
-> > > Subject: Re: [PATCH 03/14] net: axienet: Fix DMA descriptor cleanup
-> > > path
-> > >
-> > > On Fri, 10 Jan 2020 15:14:46 +0000
-> > > Radhey Shyam Pandey <radheys@xilinx.com> wrote:
-> > >
-> > > Hi Radhey,
-> > >
-> > > thanks for having a look!
-> > >
-> > > > > -----Original Message-----
-> > > > > From: Andre Przywara <andre.przywara@arm.com>
-> > > > > Sent: Friday, January 10, 2020 5:24 PM
-> > > > > To: David S . Miller <davem@davemloft.net>; Radhey Shyam Pandey
-> > > > > <radheys@xilinx.com>
-> > > > > Cc: Michal Simek <michals@xilinx.com>; Robert Hancock
-> > > > > <hancock@sedsystems.ca>; netdev@vger.kernel.org; linux-arm-
-> > > > > kernel@lists.infradead.org; linux-kernel@vger.kernel.org
-> > > > > Subject: [PATCH 03/14] net: axienet: Fix DMA descriptor cleanup
-> > > > > path
-> > > > >
-> > > > > When axienet_dma_bd_init() bails out during the initialisation
-> > > > > process, it might do so with parts of the structure already
-> > > > > allocated and initialised, while other parts have not been
-> > > > > touched yet. Before returning in this case, we call
-> > > > > axienet_dma_bd_release(), which does not take care of this corner=
- case.
-> > > > > This is most obvious by the first loop happily dereferencing
-> > > > > lp->rx_bd_v, which we actually check to be non NULL *afterwards*.
-> > > > >
-> > > > > Make sure we only unmap or free already allocated structures, by:
-> > > > > - directly returning with -ENOMEM if nothing has been allocated
-> > > > > at all
-> > > > > - checking for lp->rx_bd_v to be non-NULL *before* using it
-> > > > > - only unmapping allocated DMA RX regions
-> > > > >
-> > > > > This avoids NULL pointer dereferences when initialisation fails.
-> > > > >
-> > > > > Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> > > > > ---
-> > > > >  .../net/ethernet/xilinx/xilinx_axienet_main.c | 43
-> > > > > ++++++++++++-------
-> > > > >  1 file changed, 28 insertions(+), 15 deletions(-)
-> > > > >
-> > > > > diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> > > > > b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> > > > > index 97482cf093ce..7e90044cf2d9 100644
-> > > > > --- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> > > > > +++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> > > > > @@ -160,24 +160,37 @@ static void axienet_dma_bd_release(struct
-> > > > > net_device *ndev)
-> > > > >  	int i;
-> > > > >  	struct axienet_local *lp =3D netdev_priv(ndev);
-> > > > >
-> > > > > +	/* If we end up here, tx_bd_v must have been DMA allocated.
-> */
-> > > > > +	dma_free_coherent(ndev->dev.parent,
-> > > > > +			  sizeof(*lp->tx_bd_v) * lp->tx_bd_num,
-> > > > > +			  lp->tx_bd_v,
-> > > > > +			  lp->tx_bd_p);
-> > > > > +
-> > > > > +	if (!lp->rx_bd_v)
-> > > > > +		return;
-> > > > > +
-> > > > >  	for (i =3D 0; i < lp->rx_bd_num; i++) {
-> > > > > -		dma_unmap_single(ndev->dev.parent, lp->rx_bd_v[i].phys,
-> > > > > -				 lp->max_frm_size, DMA_FROM_DEVICE);
-> > > > > +		/* A NULL skb means this descriptor has not been
-> initialised
-> > > > > +		 * at all.
-> > > > > +		 */
-> > > > > +		if (!lp->rx_bd_v[i].skb)
-> > > > > +			break;
-> > > > > +
-> > > > >  		dev_kfree_skb(lp->rx_bd_v[i].skb);
-> > > > > -	}
-> > > > >
-> > > > > -	if (lp->rx_bd_v) {
-> > > > > -		dma_free_coherent(ndev->dev.parent,
-> > > > > -				  sizeof(*lp->rx_bd_v) * lp->rx_bd_num,
-> > > > > -				  lp->rx_bd_v,
-> > > > > -				  lp->rx_bd_p);
-> > > > > -	}
-> > > > > -	if (lp->tx_bd_v) {
-> > > > > -		dma_free_coherent(ndev->dev.parent,
-> > > > > -				  sizeof(*lp->tx_bd_v) * lp->tx_bd_num,
-> > > > > -				  lp->tx_bd_v,
-> > > > > -				  lp->tx_bd_p);
-> > > > > +		/* For each descriptor, we programmed cntrl with the
-> (non-
-> > > > > zero)
-> > > > > +		 * descriptor size, after it had been successfully
-> allocated.
-> > > > > +		 * So a non-zero value in there means we need to
-> unmap it.
-> > > > > +		 */
-> > > >
-> > > > > +		if (lp->rx_bd_v[i].cntrl)
-> > > >
-> > > > I think it should ok to unmap w/o any check?
-> > >
-> > > Do you mean because .phys would be 0 if not initialised? AFAIK 0 can
-> > > be a valid DMA address, so there is no special check for that, and
-> > > unmapping DMA address 0 will probably go wrong at some point. So
-> > > it's unlike kfree(NULL).
-> >
-> > I mean if skb allocation is successful in _dma_bd_init then in release
-> > path we can assume .phys is always a valid address and skip
-> > rx_bd_v[i].cntrl check.
+> diff --git a/kernel/resource.c b/kernel/resource.c
+> index 76036a41143b..1c7362825134 100644
+> --- a/kernel/resource.c
+> +++ b/kernel/resource.c
+> @@ -181,6 +181,38 @@ static struct resource *alloc_resource(gfp_t flags)
+>  	return res;
+>  }
 >=20
-> I don't think we can assume this. If the skb allocation succeeded, but th=
-en the
-> dma_map_single failed (which we check with dma_mapping_error()), we would
-> end up with a valid skb, but an uninitialised phys DMA address in the reg=
-isters.
-> That's why I set .cntrl only after having checked the dma_map_single() re=
-sult.
->=20
-> Or am I missing something?
+> +static void move_child_to_newresource(struct resource *old,
+> +				      struct resource *new)
+> +{
+> +	struct resource *tmp, **p, **np;
+> +
+> +	if (!old->child)
+> +		return;
 
-Got it. Looks fine then.
+I don't think the above test is needed.  This case is handled by the first
+three lines of the "for" loop.
+
+> +
+> +	p =3D &old->child;
+> +	np =3D &new->child;
+> +
+> +	for (;;) {
+> +		tmp =3D *p;
+> +		if (!tmp)
+> +			break;
+> +
+> +		if (tmp->start >=3D new->start && tmp->end <=3D new->end) {
+> +			tmp->parent =3D new;
+> +			*np =3D tmp;
+> +			np =3D &tmp->sibling;
+> +			*p =3D tmp->sibling;
+> +
+> +			if (!tmp->sibling)
+> +				*np =3D NULL;
+
+I don't think the above two lines are right.  They seem tautological.  If t=
+he ! were
+removed it would be clearing the sibling link for the child as it exists un=
+der its new
+parent, which should be done.  But the child that is moved to the new paren=
+t always
+becomes the last entry in the new parent's child list.  So could you just u=
+nconditionally
+do tmp->sibling =3D NULL?   That link will get fixed up if another child is=
+ moved.
+
+Michael
+
+> +			continue;
+> +		}
+> +
+> +		p =3D &tmp->sibling;
+> +	}
+> +}
+> +
+> +
+>  /* Return the conflict entry if you can't request it */
+>  static struct resource * __request_resource(struct resource *root, struc=
+t resource *new)
+>  {
+> @@ -1246,9 +1278,6 @@ EXPORT_SYMBOL(__release_region);
+>   * Note:
+>   * - Additional release conditions, such as overlapping region, can be
+>   *   supported after they are confirmed as valid cases.
+> - * - When a busy memory resource gets split into two entries, the code
+> - *   assumes that all children remain in the lower address entry for
+> - *   simplicity.  Enhance this logic when necessary.
+>   */
+>  int release_mem_region_adjustable(struct resource *parent,
+>  				  resource_size_t start, resource_size_t size)
+> @@ -1331,11 +1360,12 @@ int release_mem_region_adjustable(struct resource=
+ *parent,
+>  			new_res->sibling =3D res->sibling;
+>  			new_res->child =3D NULL;
 >=20
-> Cheers,
-> Andre
+> +			move_child_to_newresource(res, new_res);
+> +			res->sibling =3D new_res;
+>  			ret =3D __adjust_resource(res, res->start,
+>  						start - res->start);
+>  			if (ret)
+>  				break;
+> -			res->sibling =3D new_res;
+>  			new_res =3D NULL;
+>  		}
 >=20
-> > > > > +			dma_unmap_single(ndev->dev.parent, lp-
-> > > > > >rx_bd_v[i].phys,
-> > > > > +					 lp->max_frm_size,
-> > > > > DMA_FROM_DEVICE);
-> > > > >  	}
-> > > > > +
-> > > > > +	dma_free_coherent(ndev->dev.parent,
-> > > > > +			  sizeof(*lp->rx_bd_v) * lp->rx_bd_num,
-> > > > > +			  lp->rx_bd_v,
-> > > > > +			  lp->rx_bd_p);
-> > > > >  }
-> > > > >
-> > > > >  /**
-> > > > > @@ -207,7 +220,7 @@ static int axienet_dma_bd_init(struct
-> > > > > net_device
-> > > > > *ndev)
-> > > > >  					 sizeof(*lp->tx_bd_v) * lp-
-> > > > > >tx_bd_num,
-> > > > >  					 &lp->tx_bd_p, GFP_KERNEL);
-> > > > >  	if (!lp->tx_bd_v)
-> > > > > -		goto out;
-> > > > > +		return -ENOMEM;
-> > > > >
-> > > > >  	lp->rx_bd_v =3D dma_alloc_coherent(ndev->dev.parent,
-> > > > >  					 sizeof(*lp->rx_bd_v) * lp-
-> > > > > >rx_bd_num,
-> > > > > --
-> > > > > 2.17.1
-> > > >
-> >
+> --
+> 2.14.5
 
