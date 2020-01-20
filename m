@@ -2,97 +2,73 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCFF8C33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2227EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:57:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A438724676
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:56:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E932624679
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:57:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Z5t+4iwW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728794AbgATO45 (ORCPT
+        id S1728900AbgATO5C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 09:56:57 -0500
-Received: from mx2.suse.de ([195.135.220.15]:45734 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726860AbgATO44 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 09:56:56 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id D5B61AD00;
-        Mon, 20 Jan 2020 14:56:53 +0000 (UTC)
-Date:   Mon, 20 Jan 2020 15:56:48 +0100
-From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-To:     Suren Baghdasaryan <surenb@google.com>
-Cc:     Tejun Heo <tj@kernel.org>,
-        cgroups mailinglist <cgroups@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Li Zefan <lizefan@huawei.com>, alex.shi@linux.alibaba.com,
-        Roman Gushchin <guro@fb.com>,
-        kernel-team <kernel-team@android.com>,
-        JeiFeng Lee <linger.lee@mediatek.com>,
-        linux-arm-kernel@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com,
-        shuah@kernel.org, Tom Cherry <tomcherry@google.com>
-Subject: Re: [PATCH 2/3] cgroup: Iterate tasks that did not finish do_exit()
-Message-ID: <20200120145635.GA30904@blackbody.suse.cz>
-References: <20200116043612.52782-1-surenb@google.com>
- <20200117151533.12381-1-mkoutny@suse.com>
- <20200117151533.12381-3-mkoutny@suse.com>
- <20200117172806.GK2677547@devbig004.ftw2.facebook.com>
- <CAJuCfpFqEUVFXsjD8XcCKsGXKTf72r0Ek5_1yqu_k5UZAssKTw@mail.gmail.com>
+        Mon, 20 Jan 2020 09:57:02 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:43686 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726860AbgATO5B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 09:57:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=DGoBy5lueJuGdaXaHkZHhUG39mTwTUjVgeOPvuTvBY8=; b=Z5t+4iwWO6pTKcFSOv3OQX70a
+        5xWTubtEAVFD1kGqSUz271Ob4ZFezSnul12w8ihlsGRGlg8YustxibsfSDN987u1VgyDHektjgm29
+        mzCWSTG3gOQBWzJ7ljErmQt/pq3QfpttiRFMA4AWAt9klc3USkxAiNkaGHG44jRNTtfi3krbej6it
+        8+gZFHZwFOgn/yf71MVm5ZmIH2TAh/KriHO9IJ/Z4GJCmLQt6x7mt5NydXylPcKx78oryeZ49BwIc
+        SViMAbhuqeLy4ZaouAPY78rB+dyj+UTNt/pUE2D0LS9F+RVgfXjJHsKra519gB75QQz9vtUTe7JEn
+        VfYWCd9Fw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1itYU6-0007t4-74; Mon, 20 Jan 2020 14:56:58 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CA6BF3010D2;
+        Mon, 20 Jan 2020 15:55:17 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5856E28B86E61; Mon, 20 Jan 2020 15:56:56 +0100 (CET)
+Date:   Mon, 20 Jan 2020 15:56:56 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Julien Thierry <jthierry@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        jpoimboe@redhat.com, raphael.gault@arm.com,
+        catalin.marinas@arm.com, will@kernel.org
+Subject: Re: [RFC v5 12/57] objtool: check: Allow jumps from an alternative
+ group to itself
+Message-ID: <20200120145656.GC14897@hirez.programming.kicks-ass.net>
+References: <20200109160300.26150-1-jthierry@redhat.com>
+ <20200109160300.26150-13-jthierry@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="IiVenqGWf+H9Y6IX"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJuCfpFqEUVFXsjD8XcCKsGXKTf72r0Ek5_1yqu_k5UZAssKTw@mail.gmail.com>
+In-Reply-To: <20200109160300.26150-13-jthierry@redhat.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jan 09, 2020 at 04:02:15PM +0000, Julien Thierry wrote:
+> Alternatives can contain instructions that jump to another instruction
+> in the same alternative group. This is actually a common pattern on
+> arm64.
 
---IiVenqGWf+H9Y6IX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+LL/SC I bet...
 
-On Fri, Jan 17, 2020 at 10:41:29AM -0800, Suren Baghdasaryan <surenb@google.com> wrote:
-> Tested-by: Suren Baghdasaryan <surenb@google.com>
-Thanks.
-
-> > Yeah, this looks fine to me.  Any chance you can order this before the
-> > clean up so that we can mark it for -stable.
-> +1 for reordering. Makes it easier to backport.
-The grounds still need to be prepared for css_task_iter to store
-additional information. Let me see how the preceding changes can be
-minimized.
-
-Michal
-
---IiVenqGWf+H9Y6IX
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEEoQaUCWq8F2Id1tNia1+riC5qSgFAl4lv7AACgkQia1+riC5
-qSjnlQ//WGljOTcfv0L0yWBKqXL3O0PLyuPdsN+7v3R9YLMlZy1NE0YMJjm2cbii
-cC0lB8Lr4kg8R1IuUh8Iks+eIFNGMmBRzxChxzm4DTEPkB6i775f67ELwxWw6xFD
-H/oHvQKfvQUt3r/vVfyG8bRsJvpLjVViiRq1fy6SkX0UgVuDcchKFYOUaeaJAcB/
-d7JRVvtvyV11ruAKx7nK+GTBhCLCdgcqh4ZTKEc2dtB7CWp7JCHKbyw5Y/sic/zc
-XDilupblbFI6zerlS6ojzptQbuMPdZ09dG/e2xJK9K/crVaE837opkVISg0MPzrc
-eDdXKz3j5P/koE5nvwfv+GCuZ1hIqn8asmmrn6hwl2RMeb0I6ah4hVYTEbPJ/d8v
-wB9csLCQDFJx/meZfuESumssrCofS++SQfsQR43lR8oilNefg2j+EZgcOHOfVYY/
-iHu8M3RR1ClosYvjNIs0sU/i+9s2jGZpCfA0P0WWbSLPMvMSt/Gx+TE8iiHAaztb
-G/lCm1cvWIEWcXbGvRG91YjKDWMxqTpV9ZceIyEMKQudqpYyTFQr4QBhdE+djb1r
-e6+88ykq8nYxT9G1SDcYCA03OyouKIm5TBfObcdvZptAh2szrI9cATC3lEz/Dj4f
-cfvdIA0PwZgLaccFAIc75NAY6IQJhcK/t6rqsE2fxiEofvrfiXI=
-=VU1C
------END PGP SIGNATURE-----
-
---IiVenqGWf+H9Y6IX--
