@@ -2,103 +2,106 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA570C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 173F6C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:37:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B22AC22464
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:37:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEE8724656
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:37:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FsHrqNFj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728712AbgATPhA (ORCPT
+        id S1728935AbgATPhv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 10:37:00 -0500
-Received: from foss.arm.com ([217.140.110.172]:33812 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726876AbgATPg7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 10:36:59 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BBC2830E;
-        Mon, 20 Jan 2020 07:36:58 -0800 (PST)
-Received: from [10.37.12.169] (unknown [10.37.12.169])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 024BF3F52E;
-        Mon, 20 Jan 2020 07:36:48 -0800 (PST)
-Subject: Re: [PATCH 1/4] PM / EM: and devices to Energy Model
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com
-Cc:     Morten.Rasmussen@arm.com, Chris.Redpath@arm.com,
-        ionela.voinescu@arm.com, javi.merino@arm.com,
-        cw00.choi@samsung.com, b.zolnierkie@samsung.com, rjw@rjwysocki.net,
-        sudeep.holla@arm.com, viresh.kumar@linaro.org, nm@ti.com,
-        sboyd@kernel.org, rui.zhang@intel.com, amit.kucheria@verdurent.com,
-        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        rostedt@goodmis.org, qperret@google.com, bsegall@google.com,
-        mgorman@suse.de, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        festevam@gmail.com, kernel@pengutronix.de, khilman@kernel.org,
-        agross@kernel.org, bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, patrick.bellasi@matbug.net
-References: <20200116152032.11301-1-lukasz.luba@arm.com>
- <20200116152032.11301-2-lukasz.luba@arm.com>
- <17b77e0c-9455-0479-d37b-c57717c784c7@arm.com>
- <d0b90b97-3604-d4f4-b873-3879a9221532@arm.com>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <38307e88-f7ff-bc2a-bbce-5e508e275526@arm.com>
-Date:   Mon, 20 Jan 2020 15:36:46 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 20 Jan 2020 10:37:51 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:21569 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726876AbgATPhv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 10:37:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579534670;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xBV8jGRs/XA3UVuyMQfvzcPKmplldno4+x7U6B33yFA=;
+        b=FsHrqNFj7F4WmvYLDdnP69RFVphlsm57Tu++k42sbHZhlS/p4NeGjrStp5MlkMkmC9CaEb
+        Vg9mF9+sbDRoGC4Kn+r5HuhfEu6PFPW3znDlXul9DG5LYTt8FB5KclU6EamOrPr4GPfSIA
+        9kdxHQ9ZKFKd6L4VwOgj44/W9Georo0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-398-6jS4MzZCP-KIuj0-IG5DQQ-1; Mon, 20 Jan 2020 10:37:49 -0500
+X-MC-Unique: 6jS4MzZCP-KIuj0-IG5DQQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C07CE18543BA;
+        Mon, 20 Jan 2020 15:37:47 +0000 (UTC)
+Received: from treble (ovpn-125-19.rdu2.redhat.com [10.10.125.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6894E5DA75;
+        Mon, 20 Jan 2020 15:37:45 +0000 (UTC)
+Date:   Mon, 20 Jan 2020 09:37:43 -0600
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: linux-next: Tree for Nov 15 (objtool)
+Message-ID: <20200120153743.z6ws3jbgnsmsjvvx@treble>
+References: <20191115190525.77efdf6c@canb.auug.org.au>
+ <c49752fe-4b47-2329-2cb8-caad44803e3a@infradead.org>
+ <20191115163830.g262y75w3sh535fm@treble>
 MIME-Version: 1.0
-In-Reply-To: <d0b90b97-3604-d4f4-b873-3879a9221532@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191115163830.g262y75w3sh535fm@treble>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Nov 15, 2019 at 10:38:30AM -0600, Josh Poimboeuf wrote:
+> On Fri, Nov 15, 2019 at 08:02:30AM -0800, Randy Dunlap wrote:
+> > On 11/15/19 12:05 AM, Stephen Rothwell wrote:
+> > > Hi all,
+> > > 
+> > > Changes since 20191114:
+> > > 
+> > 
+> > on x86_64:
+> > 
+> > already reported and Josh supplied a fix (yet unmerged),
+> > but this is still around:
+> > 
+> > kernel/exit.o: warning: objtool: __x64_sys_exit_group()+0x14: unreachable instruction
+> 
+> My apologies, I have a growing backlog of objtool fixes which I hope to
+> post next week.
+> 
+> > 
+> > new AFAIK:
+> > 
+> > drivers/gpu/drm/bridge/cdns-dsi.o: warning: objtool: cdns_dsi_bridge_enable()+0x3e0: unreachable instruction
+> > 
+> > obj file for latter one is attached.
+> 
+> This seems fishy.  cdns_dsi_init_link() never returns, it always dies a
+> with UD2.  I bet GCC decided that it always does a divide-by-zero, and
+> so it forces a crash as a result.  Will try to dig deeper next week...
 
+Hi Randy,
 
-On 1/20/20 3:11 PM, Dietmar Eggemann wrote:
-> On 20/01/2020 15:53, Dietmar Eggemann wrote:
->> On 16/01/2020 16:20, lukasz.luba@arm.com wrote:
->>> From: Lukasz Luba <lukasz.luba@arm.com>
-> 
-> [...]
-> 
->>> +enum em_type {
->>> +	EM_SIMPLE,
->>> +	EM_CPU,
->>> +};
->>
->> s/EM_SIMPLE/EM_DEV ?
->>
->> Right now I only see energy models and _one_ specific type (the CPU EM).
->> So a tag 'is a CPU EM' would suffice. No need for EM_SIMPE ...
-> 
-> Wait, you even have
-> 
-> struct em_device {
->          struct em_perf_domain *em_pd;
->          struct device *dev;
->          ...
-> }
-> 
-> static bool _is_cpu_device(struct device *dev)
-> 
-> Shouldn't this be enough to distinguish between EM and special CPU EM
-> under the API? Even when required to use container_of() to get from
-> em_perf_domain to device.
-> 
+(Digging up old objtool threads...)
 
-Agree, I will remove this em_type related code.
+This is another one that it would be nice to recreate, so I can open a
+GCC bug if needed.  If you can still recreate it, can you provide the
+config file and GCC version?
 
-Lukasz
+-- 
+Josh
+
