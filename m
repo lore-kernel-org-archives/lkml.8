@@ -2,152 +2,136 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 586E1C33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:21:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8047C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DA5B21D7E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:21:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAB2A21D7E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:21:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MrGpEq5f"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="yCf8eijx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729083AbgATOV0 (ORCPT
+        id S1729106AbgATOVe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 09:21:26 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:36475 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727048AbgATOVZ (ORCPT
+        Mon, 20 Jan 2020 09:21:34 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:40176 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727683AbgATOVd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 09:21:25 -0500
-Received: by mail-pg1-f195.google.com with SMTP id k3so15626195pgc.3;
-        Mon, 20 Jan 2020 06:21:24 -0800 (PST)
+        Mon, 20 Jan 2020 09:21:33 -0500
+Received: by mail-lf1-f66.google.com with SMTP id i23so24193934lfo.7
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 06:21:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8E3LRqxKWSJfkkJ8nF8BrhNVWHzr4oovt9xNy2ECPZw=;
-        b=MrGpEq5f95RjzKX+K9agMHoOO/DR9lCooXV9nSQor1+iUOs5bjVIMQRkZRlnrSpzEv
-         r9IGrEYlAPlU0NBC0Yh/FIstYIIle18S1d5za6NJkNmqBlfXJIGUMHvPPhq6d7rl4Uem
-         mkZyeuw+JXdokXpLl3ezX6lzhQr396xs350Nkk0RU7lHFDl/rBe11B//6o+udFkZ89Qi
-         T3I0C1/66EvJAOelxMHyCuEGeWqIYdIVJM4Jxq54CGtGLiyD6J7AK0ZlMfi7qrUyTegz
-         oSc1r+BlIINicegh2kPjvLn96/xGLBh2/gWT6tqwo1BTkI2FDhuiMJhnie+9FK6gXS9t
-         udbA==
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=JXShFQ0oblTBfvPtqqTvc94TmQn0BCw/PupNhNwEy2g=;
+        b=yCf8eijxwY8WwDB2/Xb0a5xkddKP7t+aYeipLHveuhL3muN/Xss5zfR1qKSEIs3Qpo
+         HADp0UzQj1i5pfw/c6o41NSrOGJ56UcXRSR4M5niAv6hNU+e3pt7ZnoOfL2L4KF2Uof8
+         myQaNJ16F/2FqV4s0es47Wqy6khsUCKjK6UokmpMYJvXcqN/VDSp/JEeAFuJJJ4Fem5f
+         Bckb4EpS+8Ie5mB3xCW7mFQckXmrxAtapkcKdd+yS2u/BjxFfi1qWs9YDCg+Xq/4ZQrU
+         aD3ZFFSIM3vj4iro/AjcUB5BEU3YqYI2sCPT+UkwbQhbaVR+cLQ0ZFjcZNYrvCTPeVW1
+         1FJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8E3LRqxKWSJfkkJ8nF8BrhNVWHzr4oovt9xNy2ECPZw=;
-        b=V0/Ln2JaPtNF08MaIGr4OuJ6T56L7HrEYoxWmGtw3sSp5CVbB3+aO54Wf8PsmGiieK
-         mWWoBj0+qU6U2YUOThrZRU3C5QW4Jpi5obvnqIkSMGKW2ozhy6nKKxsaEB/96y9pnxMO
-         lMBynFwzWVN+zO2QbnZwTsiS7QItVis2y5W/m0XnCGYzXXNXNCeCLz+1dyVFBAqJcWUG
-         MWKarbi0rTZqiZhz8ZkovbxoIRQG9RXNvld5WcQh3Gkjs67uyqK7Db6RswVyVdyUK1Re
-         OOVx/IdEgnOfe8ccWApWnPycdUth31DBPRmQYlvZtbr4WHrk21mOSwNQU0JEW2L/VAn1
-         xF4g==
-X-Gm-Message-State: APjAAAV8LzO+LQOSoXE1i064Rw4v16QwD9RpHEsdF7row96VQCHpEQ1p
-        G0Ptj73keU6xv0riP3lU42A=
-X-Google-Smtp-Source: APXvYqy5CAGjZ7NT2LD5lX6OlrEIwIIRCga5Q5oavOeqTRD4chaXDJD4yFNzZEWW+AbQp/4/4WdGHQ==
-X-Received: by 2002:a63:cb06:: with SMTP id p6mr60103196pgg.236.1579530083959;
-        Mon, 20 Jan 2020 06:21:23 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id g9sm40314223pfm.150.2020.01.20.06.21.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Jan 2020 06:21:21 -0800 (PST)
-Subject: Re: [Bug ?] usb :typec :tcpm :fusb302
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Markus Reichl <m.reichl@fivetechno.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Linux USB Mailing List <linux-usb@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        linux-rockchip@lists.infradead.org
-References: <0ac6bbe7-6395-526d-213c-ac58a19d8673@fivetechno.de>
- <20200120115828.GC32175@kuha.fi.intel.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <e05b6c1f-5e00-c000-23b9-1683230fd9f7@roeck-us.net>
-Date:   Mon, 20 Jan 2020 06:21:19 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JXShFQ0oblTBfvPtqqTvc94TmQn0BCw/PupNhNwEy2g=;
+        b=FUKaYiCbzUzIqBPz45bTHy/l7kjQ1a2pL1NXAd7HM5rrFWs9LoAj4DXUFHivxxWd8l
+         8gHf21v8TtHJW5jAec7UxvW7R71UlRteticduQCtp6TErWVqiVhGQRcEaJBllMPxj8o+
+         hUWV8bftm2ZcMaIG63pvugWVbCYSf+Kn4cen7T8/uOyJjfPloQ55B7prhlFIHYVw4JoJ
+         DZuj69483pJM2tdg4+pqw1O2mR9hc4i+V6Vdp3ALsUl60uVmlztHeweLG/N3yPpbLCrk
+         avCBAMs24jic0WchFIkKOL2MDCYhsZpxdMzLJy6yt92Oba1/iVbVEvVhuGDC8wjfTB36
+         NJ4w==
+X-Gm-Message-State: APjAAAVKUImcl8NyJ3mpf7BTIBe9oR7Lp9DY81jlVBNB5R17I428omeh
+        8jnkpVVUgqX7tVu3wwVtLjfaig==
+X-Google-Smtp-Source: APXvYqw85OfgCXSwLFzcIjd4qIUW/Jrpb1WW0f9nf0Yms9qWwNXycwAOoHvOilI4y/sT5u6cX4I/gQ==
+X-Received: by 2002:ac2:4884:: with SMTP id x4mr13867121lfc.92.1579530091868;
+        Mon, 20 Jan 2020 06:21:31 -0800 (PST)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id z13sm16924732ljh.21.2020.01.20.06.21.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jan 2020 06:21:31 -0800 (PST)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 2607210013E; Mon, 20 Jan 2020 17:21:32 +0300 (+03)
+Date:   Mon, 20 Jan 2020 17:21:32 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
+        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>, christian.brauner@ubuntu.com,
+        sjpark@amazon.de
+Subject: Re: [PATCH v2 2/5] mm: introduce external memory hinting API
+Message-ID: <20200120142132.srf4igph4zmecu7b@box>
+References: <20200116235953.163318-1-minchan@kernel.org>
+ <20200116235953.163318-3-minchan@kernel.org>
+ <20200117115225.GV19428@dhcp22.suse.cz>
+ <f57fb198-4070-d3b4-b6bd-43b29ff40a2c@virtuozzo.com>
+ <20200120112722.GY18451@dhcp22.suse.cz>
+ <20200120123935.onlls7enjtzenbvt@box>
+ <20200120132405.GF18451@dhcp22.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <20200120115828.GC32175@kuha.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200120132405.GF18451@dhcp22.suse.cz>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/20/20 3:58 AM, Heikki Krogerus wrote:
-> Hi Markus,
+On Mon, Jan 20, 2020 at 02:24:05PM +0100, Michal Hocko wrote:
+> On Mon 20-01-20 15:39:35, Kirill A. Shutemov wrote:
+> > On Mon, Jan 20, 2020 at 12:27:22PM +0100, Michal Hocko wrote:
+> > > On Mon 20-01-20 13:24:35, Kirill Tkhai wrote:
+> [...]
+> > > > Even two threads on common memory need a synchronization
+> > > > to manage mappings in a sane way. Managing memory from two processes
+> > > > is the same in principle, and the only difference is that another level
+> > > > of synchronization is required.
+> > > 
+> > > Well, not really. The operation might simply attempt to perform an
+> > > operation on a specific memory area and get a failure if it doesn't
+> > > reference the same object anymore. What I think we need is some form of
+> > > a handle to operate on. In the past we have discussed several
+> > > directions. I was proposing /proc/self/map_anon/ (analogous to
+> > > map_files) where you could inspect anonymous memory and get a file
+> > > handle for it. madvise would then operate on the fd and then there
+> > > shouldn't be a real problem to revalidate that the object is still
+> > > valid. But there was no general enthusiasm about that approach. There
+> > > are likely some land mines on the way.
+> > 
+> > Converting anon memory to file-backed is bad idea and going to backfire.
 > 
-> On Thu, Jan 09, 2020 at 05:29:07PM +0100, Markus Reichl wrote:
->> Hi,
->>
->> I'm working with a ROC-RK3399-PC arm64 board from firefly, circuit sheet [1].
->> The board is powered from an USB-C type connector via an FUSB302 PD controller.
->> With measured 15W+ power consumption it should use higher voltage PD modes than
->> the standard 5V USB-C mode.
->>
->> When I add the related connector node in DTS [2] the FUSB302 initializes
->> the right PD mode (e.g. 15V/3A).
->>
->> But during initialisation the PD is switched off shortly and the board has a blackout.
->> When I inject a backup supply voltage behind the FUSB302 (e.g. at SYS_12V line) during boot
->> I can remove the backup after succesfull setting up the PD and the board will run fine.
->>
->> Is it possible to change the behaviour of the fusb302 driver to not power down the PD supply
->> during init?
+> I didn't mean to convert. I meant to expose that information via proc
+> the same way we do for file backed mappings. That shouldn't really
+> require to re-design the way how anonymous vma work IMO. But I haven't
+> tried that so there might be many gotchas there.
 > 
-> I guess it's also possible that the problem is with tcpm.c instead of
-> fusb302.c. tcpm.c provides the USB PD state matchines. Guenter! Can
-> you take a look at this?
-> 
+> There are obvious things to think about though. Such fd cannot be sent
+> to other processes (SCM stuff), mmap of the file would have to be
+> disallowed and many others I am not aware of. I am not even pushing this
+> direction because I am not convinced about how viable it is myself. But
+> it would sound like a nice extension of the existing mechanism we have
+> and a file based madvise sounds attractive to me as well because we
+> already have that.
 
-There was always a problem with handoff from the bootloader. tcpm_init() calls
-tcpm_reset_port() which turns vbus and vconn off, which I imagine can
-trigger the situation.
+If the fd cannot be passed around or mmaped what does it represent?
+And how is it different from plain address?
 
-Unfortunately I was never able to solve the puzzle. The Type-C protocol does
-not support any kind of "hand-off" from one component in the system to another.
-If the state machine doesn't start from a clean state, there is pretty
-much no guarantee that it ever synchronizes.
-
-Maybe someone can find a better solution, but when I wrote the code I just
-could not get it to work reliably without resetting everything during
-registration.
-
-Note that v4.4 did not include the upstream tcpm code, suggesting the
-code in the vendor kernel was possibly using a different or backported
-state machine. Impossible to say what was done there without access
-to the code.
-
-Guenter
-
-> Both tcpm.c and fusb302.c create debugfs entries that have a more
-> detailed log about things that are happening. Can you check what you
-> have in those (when you boot with the mains cable plugged it)?
-> 
->          % mount debugfs -t debugfs /sys/kernel/debug
->          % cat /sys/kernel/debug/tcpm*
->          % cat /sys/kernel/debug/fusb302/*
-> 
-> Which kernel are you running by the way?
-> 
->> In vendor kernel (4.4) this is done somehow but the sources are too different for me to find
->> out how.
->>
->> Gruß,
->> -- 
->> Markus Reichl
->>
->> [1]
->> http://download.t-firefly.com/product/RK3399/Docs/Hardware/%E5%8E%9F%E7%90%86%E5%9B%BE%E5%92%8C%E8%B4%B4%E7%89%87%E5%9B%BE/ROC-RK3399-PC/ROC-3399-PC-V10-A-20180804_%E5%8E%9F%E7%90%86%E5%9B%BE.pdf
->>
->> [2]
->> https://lkml.org/lkml/2019/12/10/517
-> 
-
+-- 
+ Kirill A. Shutemov
