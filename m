@@ -2,103 +2,102 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42AD0C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:50:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A12EC33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 146A320674
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:50:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="G2Unp/Kt"
+	by mail.kernel.org (Postfix) with ESMTP id DAB2220674
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:51:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbgATKua (ORCPT
+        id S1726999AbgATKvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 05:50:30 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:33164 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726417AbgATKu3 (ORCPT
+        Mon, 20 Jan 2020 05:51:11 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:43439 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726148AbgATKvL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 05:50:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=OCp9nsRDYcWQsrV3GjryqLOSAJxrAWhH+tupDptDjZo=; b=G2Unp/Kt5L8sqcRcZviY2SFcr
-        YPso8Lk+HuRnFhCgRGPkqSajiuXbYlc/M+AW3gxjxO604q0mH71Suv+HduzqpTa+I4BavJ0yCV8fd
-        K9YZSh99KUPq0ix7i2+FrIiEOGQUplA/be98njgBOFTPSXJ7o54X4vNNsisZ6ePdPDlNHEKTznFVq
-        fqyUN7uFkkrXBcnBK5GwzKpvXA17gS+wT8hdp0WZWKQok8EDjyIk7YemEc+prQPVKKuE8/dklRCjY
-        EcpumKNUKaMqnBBC1+IrtgZJxcNscvU+1z8szaDfPYhnvQaE+bUotpT0VoPkcMoXrNhbr7dgKS7hT
-        vnAKfX2/g==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:40826)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1itUdT-0005bt-Vi; Mon, 20 Jan 2020 10:50:24 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1itUdQ-0002mK-U8; Mon, 20 Jan 2020 10:50:20 +0000
-Date:   Mon, 20 Jan 2020 10:50:20 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Jose Abreu <Jose.Abreu@synopsys.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC net-next] net: phy: Add basic support for Synopsys XPCS
- using a PHY driver
-Message-ID: <20200120105020.GB25745@shell.armlinux.org.uk>
-References: <4953fc69a26bee930bccdeb612f1ce740a4294df.1578921062.git.Jose.Abreu@synopsys.com>
- <20200113133845.GD11788@lunn.ch>
- <BN8PR12MB32666F34D45D7881BDD4CAB3D3350@BN8PR12MB3266.namprd12.prod.outlook.com>
- <20200113141817.GN25745@shell.armlinux.org.uk>
- <BN8PR12MB3266EC7870338BA4A65E8A6CD3320@BN8PR12MB3266.namprd12.prod.outlook.com>
+        Mon, 20 Jan 2020 05:51:11 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-77-UQ1tz0pqPPOA0jnC9SlVCQ-1; Mon, 20 Jan 2020 10:51:08 +0000
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 20 Jan 2020 10:51:07 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 20 Jan 2020 10:51:07 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Dietmar Eggemann' <dietmar.eggemann@arm.com>,
+        'Steven Rostedt' <rostedt@goodmis.org>
+CC:     'Vincent Guittot' <vincent.guittot@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: RE: sched/fair: scheduler not running high priority process on idle
+ cpu
+Thread-Topic: sched/fair: scheduler not running high priority process on idle
+ cpu
+Thread-Index: AdXK8cUFXa7JpPXmQNq7oQ32S9fYHAACik4AAADJLkAAAO3PAAAmXEggAAKDBAAAAvfesAABpyOAAABDBiAA7uyIgAAB3Sgw
+Date:   Mon, 20 Jan 2020 10:51:07 +0000
+Message-ID: <512f01b3e4cd4c3fa26ce767466fec21@AcuMS.aculab.com>
+References: <212fabd759b0486aa8df588477acf6d0@AcuMS.aculab.com>
+ <20200114115906.22f952ff@gandalf.local.home>
+ <5ba2ae2d426c4058b314c20c25a9b1d0@AcuMS.aculab.com>
+ <20200114124812.4d5355ae@gandalf.local.home>
+ <878a35a6642d482aa0770a055506bd5e@AcuMS.aculab.com>
+ <20200115081830.036ade4e@gandalf.local.home>
+ <9f98b2dd807941a3b85d217815a4d9aa@AcuMS.aculab.com>
+ <20200115103049.06600f6e@gandalf.local.home>
+ <ab54668ad13d48da8aa43f955631ef9e@AcuMS.aculab.com>
+ <26b2f8f7-b11f-0df0-5260-a232e1d5bf1a@arm.com>
+In-Reply-To: <26b2f8f7-b11f-0df0-5260-a232e1d5bf1a@arm.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BN8PR12MB3266EC7870338BA4A65E8A6CD3320@BN8PR12MB3266.namprd12.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MC-Unique: UQ1tz0pqPPOA0jnC9SlVCQ-1
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 10:31:17AM +0000, Jose Abreu wrote:
-> From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-> Date: Jan/13/2020, 14:18:17 (UTC+00:00)
-> 
-> > I've recently suggested a patch to phylink to add a generic helper to
-> > read the state from a generic 802.3 clause 37 PCS, but I guess that
-> > won't be sufficient for an XPCS.  However, it should give some clues
-> > if you're intending to use phylink.
-> 
-> So, I think for my particular setup (that has no "real" PHY) we can have 
-> something like this in SW PoV:
-> 
-> stmmac -> xpcs -> SW-PHY / Fixed PHY
-> 
-> - stmmac + xpcs state would be handled by phylink (MAC side)
-> - SW-PHY / Fixed PHY state would be handled by phylink (PHY side)
-> 
-> This would need updates for Fixed PHY to support >1G speeds.
+RnJvbTogRGlldG1hciBFZ2dlbWFubg0KPiBTZW50OiAyMCBKYW51YXJ5IDIwMjAgMDk6MzkNCi4u
+DQo+ID4gSSBndWVzcyB0aGlzIG9ubHkgJ2dpdmVzIGF3YXknIGV4dHJhIFJUIHByb2Nlc3Nlcy4N
+Cj4gPiBSYXRoZXIgdGhhbiAnc3RlYWxpbmcnIHRoZW0gLSB3aGljaCBpcyB3aGF0IEkgbmVlZC4N
+Cj4gDQo+IElzbid0IHBhcnQgb2YgdGhlIHByb2JsZW0gdGhhdCBSVCBkb2Vzbid0IG1haW50YWlu
+DQo+IGNwLT5wcmlfdG9fY3B1W0NQVVBSSV9JRExFXSAoQ1BVUFJJX0lETEUgPSAwKS4NCj4gDQo+
+IFNvIHB1c2gvcHVsbCAoZmluZF9sb3dlc3RfcnEoKSkgbmV2ZXIgcmV0dXJucyBhIG1hc2sgb2Yg
+aWRsZSBDUFVzLg0KPiANCj4gVGhlcmUgd2FzDQo+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL3Iv
+MTQxNTI2MDMyNy0zMDQ2NS0yLWdpdC1zZW5kLWVtYWlsLXBhbmcueHVubGVpQGxpbmFyby5vcmcN
+Cj4gaW4gMjAxNCBidXQgaXQgZGlkbid0IGdvIG1haW5saW5lLg0KPiANCj4gVGhlcmUgd2FzIGEg
+c2ltaWxhciBxdWVzdGlvbiBpbiBOb3YgbGFzdCB5ZWFyOg0KPiANCj4gaHR0cHM6Ly9sb3JlLmtl
+cm5lbC5vcmcvci9DSDJQUjE5TUIzODk2QUZFMUQxM0FEODhBMTcxNjA4NjBGQzcwMEBDSDJQUjE5
+TUIzODk2Lm5hbXByZDE5LnByb2Qub3V0bG9vay5jb20NCg0KVGhleSBhcmUgcHJvYmFibHkgYWxs
+IHJlbGF0ZWQuDQpNeSBicmFpbiBkb2Vzbid0IGhhdmUgc3BhY2UgdG8gY29tcGxldGVseSAnZ3Jv
+aycgdGhlIHNjaGVkdWxlciB3aXRob3V0IHNvbWV0aGluZw0KZWxzZSBiZWluZyBwdXNoZWQgb3V0
+IG9mIHRoZSBtYWluIGNhY2hlLg0KDQpJIGJldCB0aGVyZSBhcmUgb3RoZXIgY2FzZXMgd2hlcmUg
+aXQgZGVjaWRlcyB0byBydW4gYSBwcm9jZXNzIG9uIGEgY3B1IHRoYXQNCmlzIHJ1bm5pbmcgYSBw
+cm9jZXNzIHRoYXQgaXMgYm91bmQgdG8gdGhhdCBjcHUgd2hpbGUgdGhlcmUgYXJlIG90aGVyIGlk
+bGUgY3B1Lg0KDQpQYXJ0aWFsbHkgYmVjYXVzZSB0aGUgcHJvYmxlbSBpcyAnaGFyZCcsIGdldHRp
+bmcgaXQgYW55d2hlcmUgbmVhciAncmlnaHQnDQpmb3IgTlVNQSBzeXN0ZW1zIHdpdGggbG90cyBv
+ZiBjcHVzIHdpdGhvdXQgdXNpbmcgYWxsIHRoZSBwcm9jZXNzaW5nDQpwb3dlciBqdXN0IGRlY2lk
+aW5nIHdoYXQgdG8gcnVuIGlzIHByb2JhYmx5IGltcG9zc2libGUuDQpIb3dldmVyIGZhc3RlciBk
+ZWNpc2lvbnMgY2FuIHByb2JhYmx5IGJlIG1hZGUgd2l0aCAnc2xpZ2h0bHkgc3RhbGUnIGRhdGEg
+dGhhdA0KZ2V0IGNvcnJlY3RlZCBsYXRlciBpZiB0aGV5IGFyZSBpbmNvcnJlY3QuDQoNCglEYXZp
+ZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQg
+RmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4
+NiAoV2FsZXMpDQo=
 
-You don't want to do that if you have 1G SFPs.  Yes, you *can* do it
-and make it work, but you miss out completely on the fact that the
-link is supposed to be negotiated across the SFP link for 1G speeds,
-and then you're into the realms of having to provide users ways to
-edit the DT and reboot if the parameters at the link partner change.
-
-Please, avoid fixed-links with SFPs where possible, and let's
-implement things correctly.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
