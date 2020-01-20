@@ -2,148 +2,143 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3915FC33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80555C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14E412070C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:18:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41DB422314
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:20:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qz2BL8Dd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728829AbgATPS5 (ORCPT
+        id S1728913AbgATPUN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 10:18:57 -0500
-Received: from foss.arm.com ([217.140.110.172]:33568 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726626AbgATPS5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 10:18:57 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 60D2D30E;
-        Mon, 20 Jan 2020 07:18:56 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 661003F52E;
-        Mon, 20 Jan 2020 07:18:54 -0800 (PST)
-Date:   Mon, 20 Jan 2020 15:18:49 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Vidya Sagar <vidyas@nvidia.com>, bjorn@helgaas.com,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Andrew Murray <andrew.murray@arm.com>, treding@nvidia.com,
-        jonathanh@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH] PCI: Add MCFG quirks for Tegra194 host controllers
-Message-ID: <20200120151849.GA24402@e121166-lin.cambridge.arm.com>
-References: <20200103174935.5612-1-vidyas@nvidia.com>
- <CABhMZUUHGEEhsJ-+foSsodqtKXyX5ZNPkGgv_VzXz=Qv+NVcUA@mail.gmail.com>
- <9a767725-9671-6402-4e1c-a648f5a7860b@nvidia.com>
- <20200117121736.GA7072@e121166-lin.cambridge.arm.com>
- <20200120111042.GA203160@ulmo>
+        Mon, 20 Jan 2020 10:20:13 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39968 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726626AbgATPUN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 10:20:13 -0500
+Received: by mail-wm1-f68.google.com with SMTP id t14so15081457wmi.5;
+        Mon, 20 Jan 2020 07:20:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=RzNA/B1zWOp+s3c1S4KTFzaLREFyMoeK9blIPOWv0tg=;
+        b=qz2BL8DdvCQ0lG9BBDK/zr1PYABbh7SfEbmME2/1/QZ1ZMh9WlmjZ4N+kA7rFvKSQh
+         l6aObfsqeoS/IlgFFfkuQIa4wRYBB+PmcfUyo9GVawd4ItTj+uw5t9rYcpvUx10KAE5D
+         kI56+DFVH3sD28X+1FGa2YuSSvF6Rb5bWauAhaAJbAOqk/j7RCxWza4qxSDTKi1KH55Y
+         pIyjEvGRtZ5TEZK+SMK/lW2nkzuGrdPGjT/byPkhRa9z9e5uCQR2dfEWstcDDOT2TzA6
+         4drnG18gmIF4pYBqcLw68n81ibecINJ6ZxWR5kKVxkj4dIC/LyLqsq+KRcIW0uKgohyS
+         +VeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=RzNA/B1zWOp+s3c1S4KTFzaLREFyMoeK9blIPOWv0tg=;
+        b=XSfzJv9ZF8ZIjH1YweZosLuJnkIqKRE7q0wKJs+nz6EhySeGauHAIfi6nQF70VyvuW
+         tb5dsGDWVeHZ+gO5fDJaBNWaUJqeZ6INqs1gpgYlWZwMmoOriDC9wPR3ua+6sG/IIMnX
+         xB73FohCpBTzu9irIw4BfaTuWMJUbWyPu2L4VN7YwVKHAiNpL6Pn7HlHV52r/pXjKE+7
+         Lz9FE7dr0tyY82/IzXCYYK3VynffVJCB4tf0aMUx4uP64fe5TM40w55u7F4/mBMjF9Kt
+         dplJ7xWQXq53Z7CigUGt/iy4oix9sgefa+ijpPk4kqeMuIpaRJr2nAYy29w8nhFN0rjp
+         8tvA==
+X-Gm-Message-State: APjAAAVSyPmFT/WOiAlSgi6ElH0FctRcGwWJoERSo1BtAQAye5S5buMW
+        6CyvTzHFOwKT9/eQwhVnsJs=
+X-Google-Smtp-Source: APXvYqxuTtfIMonsoUg4b+46IkEJGhK7vgKCjB4XTVegDc2CQzTQK2TeycP83DPFhew+ky1gbZw1IQ==
+X-Received: by 2002:a7b:c389:: with SMTP id s9mr18584278wmj.7.1579533611655;
+        Mon, 20 Jan 2020 07:20:11 -0800 (PST)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id a1sm23528152wmj.40.2020.01.20.07.20.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jan 2020 07:20:10 -0800 (PST)
+Date:   Mon, 20 Jan 2020 16:20:09 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Namjae Jeon <linkinjeon@gmail.com>,
+        Gabriel Krisman Bertazi <krisman@collabora.com>
+Subject: Re: vfat: Broken case-insensitive support for UTF-8
+Message-ID: <20200120152009.5vbemgmvhke4qupq@pali>
+References: <20200119221455.bac7dc55g56q2l4r@pali>
+ <87sgkan57p.fsf@mail.parknet.co.jp>
+ <20200120110438.ak7jpyy66clx5v6x@pali>
+ <89eba9906011446f8441090f496278d2@AcuMS.aculab.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200120111042.GA203160@ulmo>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <89eba9906011446f8441090f496278d2@AcuMS.aculab.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 12:10:42PM +0100, Thierry Reding wrote:
-
-[...]
-
-> > > Currently the BSP has the kernel booting through Device Tree mechanism
-> > > and there is a plan to support UEFI based boot as well in the future software
-> > > releases for which we need this quirky way of handling ECAM.
-> > > Tegra194 is going to be the only and last chip with this issue and next chip
-> > > in line in Tegra SoC series will be fully compliant with ECAM.
+On Monday 20 January 2020 15:07:20 David Laight wrote:
+> From: Pali Rohár
+> > Sent: 20 January 2020 11:05
+> > On Monday 20 January 2020 13:04:42 OGAWA Hirofumi wrote:
+> > > Pali Rohár <pali.rohar@gmail.com> writes:
+> > >
+> > > > Which means that fat_name_match(), vfat_hashi() and vfat_cmpi() are
+> > > > broken for vfat in UTF-8 mode.
+> > >
+> > > Right. It is a known issue.
 > > 
-> > ACPI on ARM64 works on a standard subset of systems, defined by the
-> > ARM SBSA:
-> > 
-> > http://infocenter.arm.com/help/topic/com.arm.doc.den0029c/Server_Base_System_Architecture_v6_0_ARM_DEN_0029C_SBSA_6_0.pdf
+> > Could be this issue better documented? E.g. in mount(8) manpage where
+> > are written mount options for vfat? I think that people should be aware
+> > of this issue when they use "utf8=1" mount option.
 > 
-> I don't understand what you're saying here. Are you saying that you want
-> to prevent vendors from upstreaming code that they need to support their
-> ACPI based platforms? I understand that the lack of support for proper
-> ECAM means that a platform will not be SBSA compatible, but I wasn't
-> aware that lack of SBSA compatibility meant that a platform would be
-> prohibited from implementing ACPI support in an upstream kernel.
+> What happens if the filesystem has filenames that invalid UTF8 sequences
 
-ACPI on ARM64 requires a set of HW components described in the SBSA.
+Could you please describe what you mean by this question?
 
-If those HW requirements are not fulfilled you can't bootstrap an ARM64
-system with ACPI - it is as simple as that. It is not even appropriate
-to discuss this on a Linux mailing list anymore since it is HW
-requirements and it has been public information since ACPI on ARM64 was
-first enabled.
 
-> > These patches will have to be carried out of tree, the MCFG quirk
-> > mechanism (merged as Bjorn said more than three years ago) was supposed
-> > to be a temporary plaster to bootstrap server platforms with teething
-> > issues, the aim is to remove it eventually not to add more code to it
-> > indefinitely.
+VFAT filesystem stores file names in UTF-16. Therefore you cannot have
+UTF-8 on FS (and therefore also you cannot have invalid UTF-8).
+
+Ehm... UTF-16 is not fully truth, MS FAT32 implementations allows half
+of UTF-16 surrogate pair stored in FS.
+
+Therefore practically, on VFAT you can store any uint16_t[] sequence as
+filename, there is no invalid sequence (except those characters like
+:<>?... which are invalid in MS-DOS).
+
+
+
+If by "the filesystem has filenames" you do not mean filesystem file
+names, but rather Linux VFS file names (e.g. you call creat() call with
+invalid UTF-8 sequence) then function utf8s_to_utf16s() (called in
+namei_vfat.c) fails and returns error. Which should be propagated to
+open() / creat() call that it is not possible to create filename with
+such UTF-8 sequence.
+
+> or multiple filenames that decode from UTF8 to the same 'wchar' value.
+
+This is not possible. There is 1:1 mapping between UTF-8 sequence and
+Unicode code point. wchar_t in kernel represent either one Unicode code
+point (limited up to U+FFFF in NLS framework functions) or 2bytes in
+UTF-16 sequence (only in utf8s_to_utf16s() and utf16s_to_utf8s()
+functions).
+
+> Never mind ones that are just case-differences for the same filename.
 > 
-> Now, I fully agree that quirks are suboptimal and we'd all prefer if we
-> didn't have to deal with them. Unfortunately the reality is that
-> mistakes happen and hardware doesn't always work the way we want it to.
-> There's plenty of other quirk mechanisms in the kernel, and frankly this
-> one isn't really that bad in comparison.
+> UTF8 is just so broken it should never have been allowed to become
+> a standard.
 
-Because you don't have to maintain it ;) - I think I said what I had to
-say about the MCFG mechanism in the past - it has been three years
-and counting - it is time to remove it rather that adding to it.
+Well, UTF-16 is worse then UTF-8... incompatible with ASCII, variable
+length and space consuming.
 
-> > So I am afraid but this quirk (and any other coming our way) will not be
-> > merged in an upstream kernel anymore - for any queries please put Nvidia
-> > in touch.
-> 
-> Again, I don't understand what you're trying to achieve here. You seem
-> to be saying that we categorically can't support this hardware because
-> it isn't fully SBSA compatible.
-
-I am not trying to achieve anything - I am just stating public
-information - let me repeat it again for interested readers: to
-bootstrap an ARM64 system with ACPI the platform HW design must follow
-the SBSA guidelines.
-
-> Do you have any alternative suggestions on how we can support this in an
-> upstream kernel?
-
-Booting with a device tree ?
-
-> We realized a while ago that we cannot achieve proper ECAM on Tegra194
-> because of some issues with the hardware and we've provided this as
-> feedback to the hardware engineers. As a result, the next generation of
-> Tegra should no longer suffer from these issues.
-
-We will bootstrap next generation Tegra with ACPI then, there are
-SBSA tests available for compliancy - again, that's a matter for
-Nvidia and Arm to settle, not a mailing list discussion.
-
-> As for Tegra194, that chip taped out two years ago and it isn't possible
-> to make it fully ECAM compliant other than by revising the chip, which,
-> frankly, isn't going to happen.
-> 
-> So I see two options here: either we find a way of dealing with this, by
-> either merging this quirk or finding an alternative solution, or we make
-> the decision that some hardware just can't be supported.
-> 
-> The former is fairly common, whereas I've never heard of the latter.
-
-What does this mean ? Should I wreck the upstream kernel to make it boot
-with ACPI on *any* ARM64 platform out there then ?
-
-My stance is clear above and the ACPI PCI programming model - inclusive
-of firmware - has been there since ACPI was deployed, if ACPI support
-is required HW must comply, either that or it is out of tree patches
-and I can't be blamed for that.
-
-Thanks,
-Lorenzo
+-- 
+Pali Rohár
+pali.rohar@gmail.com
