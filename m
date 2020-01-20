@@ -6,111 +6,133 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71BCAC3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22647C33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41CC822527
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:43:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECE3822522
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:44:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579535001;
-	bh=k5hulNuhjJN1vpqs8RWygBeDicqghWeZskZmfEGyJyA=;
+	s=default; t=1579535092;
+	bh=rjV8FttWPq2V0ESKiO1IQN6bgA+YTD9RSp62JAnGJqo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cTWHRNpwtPfFPycq6NZUI2tW3siUI2v93H8oOMlLjy3V0PLnuMbh3CS8ACCT6H9Pn
-	 RRjYC4W4O0di4fl1vvUy3JyV9IzBJ5eDQH8jItrVz+no4TgmOLntlTlCoH8qHLwJff
-	 eRJiIDmKFro0psXl/LSwASt9s/Az57x7yENLxQuI=
+	b=M8S42bEHCxCPaBtrtmv/hAWWvDrFNKSNVH6Uga7ya0kMhpyyNH8y0NEDmVCt8MP44
+	 vkaE74WiuRxsF+D5eheljcGei89DGzv1SEeThvZD+zLHaVSMAIdytzfmemKj4xT0Yh
+	 DkNDoYzWUOQG1ASAiLy5CvnE1V4gVCQ+sqINXjKQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728783AbgATPnU (ORCPT
+        id S1728935AbgATPov (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 10:43:20 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43214 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726642AbgATPnU (ORCPT
+        Mon, 20 Jan 2020 10:44:51 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36130 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726642AbgATPov (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 10:43:20 -0500
-Received: by mail-wr1-f68.google.com with SMTP id d16so30073903wre.10
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 07:43:18 -0800 (PST)
+        Mon, 20 Jan 2020 10:44:51 -0500
+Received: by mail-wm1-f67.google.com with SMTP id p17so71674wma.1;
+        Mon, 20 Jan 2020 07:44:49 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=Sj2OJDyUF+Gs3NUJLayq5kxeopk2pOJl5Jx9/Iosi0s=;
-        b=JmLZ/NsP/uskmIxQQVn37UOx8ymsmEIwaLKQL4s9CAOzDBq6GPoLfKX0PIp1gsq8JC
-         ycftxhlHzNH9AT0S+QT6IhIFQBoARiL50Zj6h4ywUbsknWbwFxZ6h2Pp1zi85Akq+VIP
-         nkdL5PWKTO8uXUWiC+suRE4m7YoURKXxllGCQEvWFYWFDODvKz5srBYe+WnhQZ6EEa1C
-         Z1qMLBRZy8VP/qapJr0yj9/Zr1vVgIYC3BsiAyUqBaUNBgDOqrtCi0GNHiODxq1PeWWr
-         tBp0ShUof5RiwK7SfAMCsQSgLJfRBnMiYLppKjfSs13GszcrG2O8YTca6nhgXjDxxY3s
-         vnMw==
-X-Gm-Message-State: APjAAAWTrj0sNX14uJ+c6/Ul9TLpI1FemzKmx0fLgvqfFXtZ3KHaQkds
-        OPBsy2F3HD8BycKXdB/f82c=
-X-Google-Smtp-Source: APXvYqxeiJDkSuTikFlnLFD18uLcUXUfw88VtFEHnGvcvq5ZQ4uskDSiDHvv+NORnSeanVqL3Rpk0g==
-X-Received: by 2002:adf:c145:: with SMTP id w5mr98337wre.205.1579534998158;
-        Mon, 20 Jan 2020 07:43:18 -0800 (PST)
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JRmMzO219tY5iJKWdolr3waKgeawvzdw0ymvmaVvtNg=;
+        b=Id6TxFBF1RlxNA1DFDzBmOYNe/lTlNUz+iWd8m14XTFOMHy1dXntWfum9EZcOMZQeT
+         Mz4Vkmzlk5WUb578a2FMvGwmle/fYiuVfSegs8+mNVGKdQpd9lvh1dYh+45WaGvI5ZrU
+         afAc3c7yf8zu6HLfma2ZKiuErew1wfPigTrQHW+PLI/mDQHBKh8QtKFdIfjEWxXQpFMa
+         JpGzK/Xbm73QtgsGJPQBAjG73LtdG4hCZUlud6Euvrt8oyAiacdayPYNsHKXtoHDeRqo
+         ijB/8iT/0X5Hvh87t43rBeJksl0qM4XpszHiYC/F/ziDFzRNVXxDM1ACYy9ITzzRS+gM
+         LP9g==
+X-Gm-Message-State: APjAAAULJfoY/6YuI1Io5mnF7XMg4Jee8YdCFpYFa5JuaZ35ZAVcFev8
+        rKJ+Ct1EdCrwEe4YNPWYiV1AxBGU
+X-Google-Smtp-Source: APXvYqzAIcLxEjmh3U3YLGcGTq8iaQY80TZAl/1LPfWmpjMPs4mLoPEkFXfSbbEY9QWlzESIg/1FRg==
+X-Received: by 2002:a1c:740b:: with SMTP id p11mr15320wmc.78.1579535088464;
+        Mon, 20 Jan 2020 07:44:48 -0800 (PST)
 Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id s3sm23187912wmh.25.2020.01.20.07.43.16
+        by smtp.gmail.com with ESMTPSA id v3sm47734043wru.32.2020.01.20.07.44.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 07:43:16 -0800 (PST)
-Date:   Mon, 20 Jan 2020 16:43:15 +0100
+        Mon, 20 Jan 2020 07:44:47 -0800 (PST)
+Date:   Mon, 20 Jan 2020 16:44:47 +0100
 From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Qian Cai <cai@lca.pw>, Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -mm v2] mm/page_isolation: fix potential warning from user
-Message-ID: <20200120154315.GK18451@dhcp22.suse.cz>
-References: <20200120131909.813-1-cai@lca.pw>
- <8c56268d-9b8a-f62e-eca9-7707852a2aaf@redhat.com>
- <ba3215a2-d616-c636-e70d-99bb8f504292@redhat.com>
- <96675869-3815-4E98-8492-1D84F5B42AED@lca.pw>
- <74aebdfe-e727-acd6-e664-6e63948a68ae@redhat.com>
- <F8997A77-7F52-4C0C-8045-F39C57B4CC74@lca.pw>
- <aa5f235e-6449-1531-1355-6974f3d38740@redhat.com>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
+        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>, christian.brauner@ubuntu.com,
+        sjpark@amazon.de
+Subject: Re: [PATCH v2 2/5] mm: introduce external memory hinting API
+Message-ID: <20200120154447.GL18451@dhcp22.suse.cz>
+References: <20200116235953.163318-1-minchan@kernel.org>
+ <20200116235953.163318-3-minchan@kernel.org>
+ <20200117115225.GV19428@dhcp22.suse.cz>
+ <f57fb198-4070-d3b4-b6bd-43b29ff40a2c@virtuozzo.com>
+ <20200120112722.GY18451@dhcp22.suse.cz>
+ <20200120123935.onlls7enjtzenbvt@box>
+ <20200120132405.GF18451@dhcp22.suse.cz>
+ <20200120142132.srf4igph4zmecu7b@box>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aa5f235e-6449-1531-1355-6974f3d38740@redhat.com>
+In-Reply-To: <20200120142132.srf4igph4zmecu7b@box>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 20-01-20 15:13:54, David Hildenbrand wrote:
-> On 20.01.20 15:11, Qian Cai wrote:
-> >> On Jan 20, 2020, at 9:01 AM, David Hildenbrand <david@redhat.com> wrote:
-> >> On 20.01.20 14:56, Qian Cai wrote:
-[...]
-> >>>> FWIW, I'd prefer this change without any such cleanups (e.g., I don't
-> >>>> like returning a bool from this function and the IS_ERR handling, makes
-> >>>> the function harder to read than before)
-> >>>
-> >>> What is Michal or Andrew’s opinion? BTW, a bonus point to return a bool
-> >>> is that it helps the code robustness in general, as UBSAN will be able to
-> >>> catch any abuse.
-> >>>
-> >>
-> >> A return type of bool on a function that does not test a property
-> >> ("has_...", "is"...") is IMHO confusing.
+On Mon 20-01-20 17:21:32, Kirill A. Shutemov wrote:
+> On Mon, Jan 20, 2020 at 02:24:05PM +0100, Michal Hocko wrote:
+> > On Mon 20-01-20 15:39:35, Kirill A. Shutemov wrote:
+> > > On Mon, Jan 20, 2020 at 12:27:22PM +0100, Michal Hocko wrote:
+> > > > On Mon 20-01-20 13:24:35, Kirill Tkhai wrote:
+> > [...]
+> > > > > Even two threads on common memory need a synchronization
+> > > > > to manage mappings in a sane way. Managing memory from two processes
+> > > > > is the same in principle, and the only difference is that another level
+> > > > > of synchronization is required.
+> > > > 
+> > > > Well, not really. The operation might simply attempt to perform an
+> > > > operation on a specific memory area and get a failure if it doesn't
+> > > > reference the same object anymore. What I think we need is some form of
+> > > > a handle to operate on. In the past we have discussed several
+> > > > directions. I was proposing /proc/self/map_anon/ (analogous to
+> > > > map_files) where you could inspect anonymous memory and get a file
+> > > > handle for it. madvise would then operate on the fd and then there
+> > > > shouldn't be a real problem to revalidate that the object is still
+> > > > valid. But there was no general enthusiasm about that approach. There
+> > > > are likely some land mines on the way.
+> > > 
+> > > Converting anon memory to file-backed is bad idea and going to backfire.
 > > 
-> > That is fine. It could be renamed to set_migratetype_is_isolate() or
-> > is_set_migratetype_isolate() which seems pretty minor because we
-> > have no consistency in the naming of this in linux kernel at all, i.e.,
-> > many existing bool function names without those test of properties. 
+> > I didn't mean to convert. I meant to expose that information via proc
+> > the same way we do for file backed mappings. That shouldn't really
+> > require to re-design the way how anonymous vma work IMO. But I haven't
+> > tried that so there might be many gotchas there.
+> > 
+> > There are obvious things to think about though. Such fd cannot be sent
+> > to other processes (SCM stuff), mmap of the file would have to be
+> > disallowed and many others I am not aware of. I am not even pushing this
+> > direction because I am not convinced about how viable it is myself. But
+> > it would sound like a nice extension of the existing mechanism we have
+> > and a file based madvise sounds attractive to me as well because we
+> > already have that.
 > 
-> It does not query a property, so "is_set_migratetype_isolate()" is plain
-> wrong.
-> 
-> Anyhow, Michal does not seem to care.
+> If the fd cannot be passed around or mmaped what does it represent?
 
-Well, TBH I have missed this change. My bad. I have mostly checked that
-the WARN_ONCE is not gated by the check and didn't expect more changes.
-But I have likely missed that change in the previous version already.
-You guys are too quick with new version to my standard.
+Because it is a cookie maintained by the kernel.
 
-Anyway, I do agree that bool is clumsy here. Returning false on success
-is just head scratching. Nobody really consumes the errno value but I
-would just leave it that way or if there is a strong need to change then
-do it in a separate patch.
+> And how is it different from plain address?
+
+Kernel can revalidate that the given fd is denoting the vma it was
+created for and simply fail with ENOENT or whatever suits if somebody
+did unmap and mmap to the same address.
 -- 
 Michal Hocko
 SUSE Labs
