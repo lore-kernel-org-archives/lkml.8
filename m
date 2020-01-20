@@ -7,33 +7,32 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D9EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34655C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:05:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9448322525
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:05:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EE082087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:05:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbgATKFV (ORCPT
+        id S1727683AbgATKFg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 05:05:21 -0500
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:57837 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726075AbgATKFV (ORCPT
+        Mon, 20 Jan 2020 05:05:36 -0500
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:57535 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726075AbgATKFg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 05:05:21 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R301e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0ToE1bps_1579514711;
-Received: from localhost(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0ToE1bps_1579514711)
+        Mon, 20 Jan 2020 05:05:36 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0ToDeF5-_1579514727;
+Received: from localhost(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0ToDeF5-_1579514727)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 20 Jan 2020 18:05:18 +0800
+          Mon, 20 Jan 2020 18:05:34 +0800
 From:   Wen Yang <wenyang@linux.alibaba.com>
-To:     Eric Dumazet <edumazet@google.com>, davem@davemloft.net
+To:     John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
 Cc:     Wen Yang <wenyang@linux.alibaba.com>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] tcp_bbr: improve arithmetic division in bbr_update_bw()
-Date:   Mon, 20 Jan 2020 18:04:56 +0800
-Message-Id: <20200120100456.45609-1-wenyang@linux.alibaba.com>
+        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH] timekeeping: improve arithmetic division in scale64_check_overflow()
+Date:   Mon, 20 Jan 2020 18:05:23 +0800
+Message-Id: <20200120100523.45656-1-wenyang@linux.alibaba.com>
 X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -42,35 +41,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-do_div() does a 64-by-32 division. Use div64_long() instead of it
-if the divisor is long, to avoid truncation to 32-bit.
+do_div() does a 64-by-32 division. Use div64_u64() instead of it
+if the divisor is u64, to avoid truncation to 32-bit.
 And as a nice side effect also cleans up the function a bit.
 
 Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>
-Cc: Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
-Cc: netdev@vger.kernel.org
+Cc: John Stultz <john.stultz@linaro.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Stephen Boyd <sboyd@kernel.org>
 Cc: linux-kernel@vger.kernel.org
 ---
- net/ipv4/tcp_bbr.c | 3 +--
+ kernel/time/timekeeping.c | 3 +--
  1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/net/ipv4/tcp_bbr.c b/net/ipv4/tcp_bbr.c
-index a6545ef0d27b..6c4d79baff26 100644
---- a/net/ipv4/tcp_bbr.c
-+++ b/net/ipv4/tcp_bbr.c
-@@ -779,8 +779,7 @@ static void bbr_update_bw(struct sock *sk, const struct rate_sample *rs)
- 	 * bandwidth sample. Delivered is in packets and interval_us in uS and
- 	 * ratio will be <<1 for most connections. So delivered is first scaled.
- 	 */
--	bw = (u64)rs->delivered * BW_UNIT;
--	do_div(bw, rs->interval_us);
-+	bw = div64_long((u64)rs->delivered * BW_UNIT, rs->interval_us);
+diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
+index ca69290bee2a..4fc2af4367a7 100644
+--- a/kernel/time/timekeeping.c
++++ b/kernel/time/timekeeping.c
+@@ -1005,9 +1005,8 @@ static int scale64_check_overflow(u64 mult, u64 div, u64 *base)
+ 	    ((int)sizeof(u64)*8 - fls64(mult) < fls64(rem)))
+ 		return -EOVERFLOW;
+ 	tmp *= mult;
+-	rem *= mult;
  
- 	/* If this sample is application-limited, it is likely to have a very
- 	 * low delivered count that represents application behavior rather than
+-	do_div(rem, div);
++	rem = div64_u64(rem * mult, div);
+ 	*base = tmp + rem;
+ 	return 0;
+ }
 -- 
 2.23.0
 
