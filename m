@@ -2,133 +2,131 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3526C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B6AC32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B45D122525
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:12:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 231F822525
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:18:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727011AbgATTMp (ORCPT
+        id S1726867AbgATTSx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 14:12:45 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:43908 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726136AbgATTMp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 14:12:45 -0500
-Received: by mail-oi1-f194.google.com with SMTP id p125so304462oif.10
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 11:12:44 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jjq97LN7paeiNndMMU1ClIoeahA1RUutU+l84dotge4=;
-        b=uFGXNyfNgrJ+upFgFfYunV6WO5EcN9VCh/V/DKbExjVb4WWlJ+Ehwmzu7hXQPaMh22
-         xiaBKh7uBfuXwN+Hc3CyI+9woOO7pHmqowDajfH8mGi6SRDre4+QwjLxqbPkr8SWey/N
-         gUYFBJc2jE6JuCbY5Ql3XJk7IiAUU1wC61oION3GXwbV6tbQMe89Tsk/jPmFG3TqJEOZ
-         AyhWvXHlMuV7wv1d49iMb0zrURCvkkw3QL9jghe3y+maBEuVOlDcWzG5MXzpKVPir0iM
-         Ge586IU3v0kPPJXQg6JDDHwJ7W9JHmGCFdnPltc16Af4V3fVj7rC2XW2cMAEEAXP+kN4
-         bfNA==
-X-Gm-Message-State: APjAAAWNJxntsIM8FYSRrhdX9K/6Bi4LTBOM9gJmbLQxwOSXfA01V6zk
-        vQCZtORSgHgjw+x12n7soZfff+UND0uiu+tFaColYw==
-X-Google-Smtp-Source: APXvYqx+QeBZerMZYsQXGnGVyHkqjvt/cNaN/+PihgCyBaDh1UaA25j/U0wI+4upj1pGyuPi7vWximhYHGkwDegIB+8=
-X-Received: by 2002:aca:5905:: with SMTP id n5mr287272oib.54.1579547564535;
- Mon, 20 Jan 2020 11:12:44 -0800 (PST)
+        Mon, 20 Jan 2020 14:18:53 -0500
+Received: from mga02.intel.com ([134.134.136.20]:8054 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726136AbgATTSx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 14:18:53 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 11:18:51 -0800
+X-IronPort-AV: E=Sophos;i="5.70,343,1574150400"; 
+   d="scan'208";a="425268662"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 11:18:51 -0800
+Subject: [PATCH v3 0/6] Memory Hierarchy: Enable target node lookups for
+ reserved memory
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     tglx@linutronix.de, mingo@redhat.com
+Cc:     David Hildenbrand <david@redhat.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        kbuild test robot <lkp@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        x86@kernel.org
+Date:   Mon, 20 Jan 2020 11:02:48 -0800
+Message-ID: <157954696789.2239526.17707265517154476652.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
-References: <20180802193909.GA11443@ravnborg.org> <20180802194536.10820-2-sam@ravnborg.org>
- <CAMuHMdVP4UwGYuNcOphPO9F2pSCaHS1j-ODxYrv_LNOoo_4coA@mail.gmail.com> <20200120184804.GA7630@ravnborg.org>
-In-Reply-To: <20200120184804.GA7630@ravnborg.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 20 Jan 2020 20:12:23 +0100
-Message-ID: <CAMuHMdWR-EY+yBaOu_pL=5mfwi=ra76YwTt5d+GZ3Qy-e7Evzw@mail.gmail.com>
-Subject: Re: [PATCH v1 2/5] pardata: new bus for parallel data access
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        Noralf T <noralf@tronnes.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sam,
+Changes since v2 [1]:
+- Fix numa_cleanup_meminfo() to skip trimming reserved ranges to max_pfn.
 
-On Mon, Jan 20, 2020 at 7:48 PM Sam Ravnborg <sam@ravnborg.org> wrote:
-> On Mon, Jan 20, 2020 at 11:10:37AM +0100, Geert Uytterhoeven wrote:
-> > On Thu, Aug 2, 2018 at 9:46 PM Sam Ravnborg <sam@ravnborg.org> wrote:
-> > > The pardata supports implement a simple bus for devices
-> > > that are connected using a parallel bus driven by GPIOs.
-> > > The is often used in combination with simple displays
-> > > that is often seen in older embedded designs.
-> > > There is a demand for this support also in the linux
-> > > kernel for HW designs that uses these kind of displays.
-> > >
-> > > The pardata bus uses a platfrom_driver that when probed
-> > > creates devices for all child nodes in the DT,
-> > > which are then supposed to be handled by pardata_drivers.
-> > >
-> > > Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-> >
-> > > --- /dev/null
-> > > +++ b/Documentation/driver-api/pardata.rst
-> > > @@ -0,0 +1,60 @@
-> > > +.. SPDX-License-Identifier: GPL-2.0
-> > > +
-> > > +=========================
-> > > +Parallel Data Bus/Drivers
-> > > +=========================
-> > > +
-> > > +Displays may be connected using a simple parallel bus.
-> > > +This is often seen in embedded systems with a simple MCU, but is also
-> > > +used in Linux based systems to a small extent.
-> > > +
-> > > +The bus looks like this:
-> > > +
-> > > +.. code-block:: none
-> > > +
-> > > +       ----+
-> > > +           |  DB0-DB7 or DB4-DB7      +----
-> > > +           ===/========================
-> > > +           |  E - enable              |  D
-> > > +           ----------------------------  I
-> > > +        C  |  Reset                   |  S
-> > > +        P  ----------------------------  P
-> > > +        U  |  Read/Write (one or two) |  L
-> > > +           ----------------------------  A
-> > > +           |  RS - instruction/data   |  Y
-> > > +           ----------------------------
-> > > +           |                          +----
-> > > +       ----+
-> >
-> > Oh, cool!  Looks like this can be used by the hd44780 driver.
-> >
-> >     Documentation/devicetree/bindings/auxdisplay/hit,hd44780.txt
-> >     drivers/auxdisplay/hd44780.c
->
-> This patchset was from a time when I knew next to nothing about DRM.
-> Now I am just confused on a different level :-)
+- Collect Michael's acked-by
 
-The more you know, the more you realize what you don't know ;-)
+[1]: http://lore.kernel.org/r/157401267421.43284.2135775608523385279.stgit@dwillia2-desk3.amr.corp.intel.com
 
-> It is on my TODO list to make a mipi-dbi driver that in the future
-> replaces the auxdisplay driver for hd44780.
+---
 
-Please note that hd44780 is a character controller.
+Merge notes:
 
-Gr{oetje,eeting}s,
+x86 folks: This has an ack from Rafael for ACPI, and Michael for Power.
+With an x86 ack I plan to take this through the libnvdimm tree provided
+the x86 touches look ok to you.
 
-                        Geert
+---
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Cover:
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Arrange for platform numa info to be preserved for determining
+'target_node' data. Where a 'target_node' is the node a reserved memory
+range will become when it is onlined.
+
+This new infrastructure is expected to be more valuable over time for
+Memory Tiers / Hierarchy management as more platforms (via the ACPI HMAT
+and EFI Specific Purpose Memory) publish reserved or "soft-reserved"
+ranges to Linux. Linux system administrators will expect to be able to
+interact with those ranges with a unique numa node number when/if that
+memory is onlined via the dax_kmem driver [2].
+
+One configuration that currently fails to properly convey the target
+node for the resulting memory hotplug operation is persistent memory
+defined by the memmap=nn!ss parameter. For example, today if node1 is a
+memory only node, and all the memory from node1 is specified to
+memmap=nn!ss and subsequently onlined, it will end up being onlined as
+node0 memory. As it stands, memory_add_physaddr_to_nid() can only
+identify online nodes and since node1 in this example has no online cpus
+/ memory the target node is initialized node0.
+
+The fix is to preserve rather than discard the numa_meminfo entries that
+are relevant for reserved memory ranges, and to uplevel the node
+distance helper for determining the "local" (closest) node relative to
+an initiator node.
+
+[2]: https://pmem.io/ndctl/daxctl-reconfigure-device.html
+
+---
+
+Dan Williams (6):
+      ACPI: NUMA: Up-level "map to online node" functionality
+      mm/numa: Skip NUMA_NO_NODE and online nodes in numa_map_to_online_node()
+      powerpc/papr_scm: Switch to numa_map_to_online_node()
+      x86/mm: Introduce CONFIG_KEEP_NUMA
+      x86/numa: Provide a range-to-target_node lookup facility
+      libnvdimm/e820: Retrieve and populate correct 'target_node' info
+
+
+ arch/powerpc/platforms/pseries/papr_scm.c |   21 --------
+ arch/x86/Kconfig                          |    1 
+ arch/x86/mm/numa.c                        |   74 +++++++++++++++++++++++------
+ drivers/acpi/numa/srat.c                  |   41 ----------------
+ drivers/nvdimm/e820.c                     |   18 ++-----
+ include/linux/acpi.h                      |   23 +++++++++
+ include/linux/numa.h                      |   23 +++++++++
+ mm/Kconfig                                |    5 ++
+ mm/mempolicy.c                            |   35 ++++++++++++++
+ 9 files changed, 149 insertions(+), 92 deletions(-)
