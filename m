@@ -2,96 +2,84 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B62E5C33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 21:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 194DFC32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 21:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8026524655
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 21:34:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="JBcc7663"
+	by mail.kernel.org (Postfix) with ESMTP id E827324653
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 21:39:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbgATVef (ORCPT
+        id S1727047AbgATVjK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 16:34:35 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:32949 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726752AbgATVef (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 16:34:35 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 481lLG6Vcgz9sPK;
-        Tue, 21 Jan 2020 08:34:30 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1579556073;
-        bh=B/uaXNOzGmgYx5o+zZDaRq+uyNaotC/PaEI4OhmL6/U=;
-        h=Date:From:To:Cc:Subject:From;
-        b=JBcc76639Ocp2dtjOb89h6KEIrZHrNc76gi8rxRpVYHULgmOvMOm+/4DYaicgmAu3
-         pn9dM+seyoL9/Xhygb0wuiC1eJEpKlIKL8Q/WoDUUKCoA6uJ+o3vvrmuAOykE8QUcH
-         TtQ/Xn8qQe5gxVogUjoiK4Iu79289rmju09O7k70S1PwX4L0Qh9b7pprkSAwUjYit0
-         Os8ZceP+1jmsEXuph1TfaGwU9FdeMZr5a6gK104S4ryRmuhKHggfLEOINlrW1u7Qx1
-         20JvLonvHgPhWpqNcGi8bkSCZp+gHhKjqBR+zQzMSMVm/RyZmYRBsJcyDJeSr2GJ0d
-         RaY3CsRLFPZ0A==
-Date:   Tue, 21 Jan 2020 08:34:24 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Matthew Auld <matthew.auld@intel.com>
-Subject: linux-next: build failure after merge of the drm-intel-fixes tree
-Message-ID: <20200121083424.66d98dc5@canb.auug.org.au>
+        Mon, 20 Jan 2020 16:39:10 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:44702 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726752AbgATVjK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 16:39:10 -0500
+Received: from [154.119.55.246] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1itelG-0001cJ-AZ; Mon, 20 Jan 2020 21:39:06 +0000
+Date:   Mon, 20 Jan 2020 22:38:56 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tejun Heo <tj@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Li Zefan <lizefan@huawei.com>,
+        Peter Zijlstra <peterz@infradead.org>, cgroups@vger.kernel.org
+Subject: Re: [PATCH v4 5/6] clone3: allow spawning processes into cgroups
+Message-ID: <20200120213854.32mzzo6ifh76fs5q@wittgenstein>
+References: <20200117181219.14542-1-christian.brauner@ubuntu.com>
+ <20200117181219.14542-6-christian.brauner@ubuntu.com>
+ <20200120153930.GE30403@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/XwC9.aYjJCeolnFRpcIZ6sg";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200120153930.GE30403@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/XwC9.aYjJCeolnFRpcIZ6sg
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Jan 20, 2020 at 04:39:30PM +0100, Oleg Nesterov wrote:
+> On 01/17, Christian Brauner wrote:
+> >
+> > +static int cgroup_css_set_fork(struct task_struct *parent,
+> > +			       struct kernel_clone_args *kargs)
+> ...
+> > +	kargs->cset = find_css_set(cset, dst_cgrp);
+> > +	if (!kargs->cset) {
+> > +		ret = -ENOMEM;
+> > +		goto err;
+> > +	}
+> > +
+> > +	if (cgroup_is_dead(dst_cgrp)) {
+> > +		ret = -ENODEV;
+> > +		goto err;
+>                 ^^^^^^^^
+> 
+> this looks wrong... don't we need put_css_set(kargs->cset) before "goto err" ?
 
-Hi all,
+Yeah, but we should rather do:
 
-After merging the drm-intel-fixes tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index 4d36255ef25f..482055d1e64a 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -5994,6 +5994,8 @@ static int cgroup_css_set_fork(struct kernel_clone_args *kargs)
+        if (dst_cgrp)
+                cgroup_put(dst_cgrp);
+        put_css_set(cset);
++       if (kargs->cset)
++               put_css_set(kargs->cset);
+        return ret;
+ }
 
-
-Caused by commit
-
-  d8fcca47e195 ("drm/i915/userptr: fix size calculation")
-
-I have reverted that commit for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/XwC9.aYjJCeolnFRpcIZ6sg
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4mHOAACgkQAVBC80lX
-0GyiIggAh+uEumRRLd/uzS0G2uWsepBy1Yq2Du+SZOvq5q6eXzxPFi3v4yq5G/Z3
-91kKDbUbXIq0bt+4ZeBWCVa9JHfac7zaD6v96oj0/WAGptURVMWs8IQzSeCE5ly8
-OaRbBIw0l/7R6oDXh0+UmePioF1mh1PiZ2uHQNmVgGS9ECzzGsHYst0WlWKbfrcW
-tF/i5GkROKKAy92QKh+SHQKa+QMi9qYOzffYXqyVbTmUD4BUit9Es86qFcYnMebu
-60CJT2QjE1vOcPeThd8mRGmHy9qrMlLypvMnEV4KmI4hDq3X9LR4GnDsms5Ej+nI
-AhoRQjAGR3OGYJqZGubAw/fwzQw1Zg==
-=0wfI
------END PGP SIGNATURE-----
-
---Sig_/XwC9.aYjJCeolnFRpcIZ6sg--
+Christian
