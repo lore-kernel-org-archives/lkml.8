@@ -2,243 +2,106 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9458C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 237A0C32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93642217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:45:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yHnU8lNV"
+	by mail.kernel.org (Postfix) with ESMTP id F3E49217F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:45:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbgATTpF (ORCPT
+        id S1727075AbgATTp2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 14:45:05 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42325 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726874AbgATTpF (ORCPT
+        Mon, 20 Jan 2020 14:45:28 -0500
+Received: from outgoing18.flk.host-h.net ([197.242.87.52]:44697 "EHLO
+        outgoing18.flk.host-h.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726890AbgATTp2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 14:45:05 -0500
-Received: by mail-pf1-f194.google.com with SMTP id 4so213733pfz.9
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 11:45:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vra/ayO7Hv5ZTpKJr2wDgQyoS7rN2is/vNAM65Supwc=;
-        b=yHnU8lNVQmUMQGyXiOwpLI4cU2GSjtx5ErZQ9Yo+Tdsl+ySR5Pl6NV3czcvI/lmtd9
-         oAfTivmsVrkb0ilS5v9/+kmIc2R5MAL6LVFTmCjXvI2y910h4dge4y5lAQuc98ZLA5j+
-         5Px47QaPq9jP4uM20ol1e4ymDSsHPN91u9De7jM0Y48xci6UcSkpgL46PeMyU0cY0ZQc
-         3tfR4IYsCmgp3wataIChebo7No9EaphsxNqDXYn1q44GJ0RaQvEKNVLsRAMETNZBRMsG
-         kEK17vzyIFdjTw5KhLZf4fYM66F7i1zxwFg8Tesy+b8MjvdmICaTipdqc5oadUg+gYwU
-         WRnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vra/ayO7Hv5ZTpKJr2wDgQyoS7rN2is/vNAM65Supwc=;
-        b=Wn19eb4d5m04Ou2ZwgdRzOwnFWydwThEusQtIwPWYpo9/fATIEnWanDAymbV215QsC
-         O4OTR+8Xy6QggsMQpJtI2pnll3SxSv/SEW+Ucj/GnMfLn3eR3ZQaGv2fc5CQbJWjJ0Pz
-         vBebRzhhVzYb/jaD/Nz3tXfhiATsrCBQBRrIN0LMcq/U+yjKnGdNBMxVCIuBCAJ2tHNa
-         y6+B8yfvyvOlF8NdpFMYWpad4OUmG5O9hT9JGztFNPoH/5r/zQZA9PufAaatS1+tawqv
-         uR3b4xi5S7bN/rDrls0ZLWLITl1JgupEBtvYjtpxmk2WlTESbGLqL4ft9lWZomXBMFCv
-         iMFQ==
-X-Gm-Message-State: APjAAAU1ShFMC5GpzQW1lbn6l/seRZJ/qnKG7saSYg/O/OJ20QaMeNrE
-        wbCRgLisQwLEyqb4dTYfOQ632Q==
-X-Google-Smtp-Source: APXvYqyW8fDbS/lJwkosIwPqcq42R7hQ3w4BR8KWf/VZHH6WJsnCXQfG5YvvCeudC77ofjjDuV959w==
-X-Received: by 2002:a62:a515:: with SMTP id v21mr783153pfm.128.1579549504464;
-        Mon, 20 Jan 2020 11:45:04 -0800 (PST)
-Received: from yoga (wsip-184-181-24-67.sd.sd.cox.net. [184.181.24.67])
-        by smtp.gmail.com with ESMTPSA id h26sm42224287pfr.9.2020.01.20.11.45.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 11:45:03 -0800 (PST)
-Date:   Mon, 20 Jan 2020 11:45:00 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Fabien DESSENNE <fabien.dessenne@st.com>
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
+        Mon, 20 Jan 2020 14:45:28 -0500
+Received: from www31.flk1.host-h.net ([188.40.1.173])
+        by antispam5-flk1.host-h.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <justin.swartz@risingedge.co.za>)
+        id 1itczF-00045Z-9N; Mon, 20 Jan 2020 21:45:25 +0200
+Received: from [130.255.73.16] (helo=v01.28459.vpscontrol.net)
+        by www31.flk1.host-h.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <justin.swartz@risingedge.co.za>)
+        id 1itczA-0004Hk-RM; Mon, 20 Jan 2020 21:45:20 +0200
+From:   Justin Swartz <justin.swartz@risingedge.co.za>
+To:     Jacob Chen <jacob-chen@iotwrt.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, "od@zcrc.me" <od@zcrc.me>,
-        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 2/5] remoteproc: Add device-managed variants of
- rproc_alloc/rproc_add
-Message-ID: <20200120194500.GM1511@yoga>
-References: <20191210164014.50739-1-paul@crapouillou.net>
- <20191210164014.50739-2-paul@crapouillou.net>
- <6fff431f-dd3f-a67e-e40b-8cee4060c37a@st.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6fff431f-dd3f-a67e-e40b-8cee4060c37a@st.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Cc:     Justin Swartz <justin.swartz@risingedge.co.za>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/4] [media] dt-bindings: Add rk3228 to the Rockchip RGA binding doc
+Date:   Mon, 20 Jan 2020 19:41:55 +0000
+Message-Id: <20200120194158.25357-2-justin.swartz@risingedge.co.za>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200120194158.25357-1-justin.swartz@risingedge.co.za>
+References: <20200120194158.25357-1-justin.swartz@risingedge.co.za>
+X-Authenticated-Sender: justin.swartz@risingedge.co.za
+X-Virus-Scanned: Clear
+X-Originating-IP: 188.40.1.173
+X-SpamExperts-Domain: risingedge.co.za
+X-SpamExperts-Username: 
+Authentication-Results: host-h.net; auth=pass (login) smtp.auth=@risingedge.co.za
+X-SpamExperts-Outgoing-Class: ham
+X-SpamExperts-Outgoing-Evidence: Combined (0.02)
+X-Recommended-Action: accept
+X-Filter-ID: Mvzo4OR0dZXEDF/gcnlw0Xm17NJf4el5vffImWwWrhCpSDasLI4SayDByyq9LIhVjN6Oe0bZSj7x
+ nWUgTBxzfkTNWdUk1Ol2OGx3IfrIJKyP9eGNFz9TW9u+Jt8z2T3K7uDjV/sFUXQr+CDrNQuIHgQg
+ mAX8Bxy/iUu0ThNZg0h/RxVysY5Ye6+GGw0VqdJD7ren9RtRNyYim5e3GD8LGfWrcbYvelpuN/Pk
+ qhBpvAyWwieZyauFYqHkIbFa+ipF21HJWO60ZqrvKy/1AXUV5oXt6ymoFHaG7BQtEYvFCSrK5j1T
+ Po5/LpleUgQM5/MAHmDvzkMd4joYqrUfcPIQdUYI3fUXyt8g6v09xrG7vu/fdUS1M5thdxxsnOTC
+ rRmvZNXA7urqkuRkjn1fyteVYP+HXs9CMbFn9vCz9Z+lGmDQvQDDheqH4lBQpR0ziVlLWDAC1vRC
+ hq319+C3vxdCgsyStZRkQwmoMeUp+gQglixgZmTW6H0Uo/QzUeaLOBvNEC1g+U1SXfUhLsTk5wUY
+ WaWokZC3JOaEfAcg3rPhhfeK9cZ48uDEoRc5vgP+N4akg5nlaTNYebWa2W6GbNvgwptlhJrsz+8j
+ XuMdjIbLZhwoK/VzePATsXS/rFxRypFKMiPLyoQzvILSDO18VtgBXbQkUN2dXl9fJsQYqiZZBuHY
+ Ta6/LJzl4pg0ZC9q5gYH7EOMauBWC98ol0xUHcbfIJ9ZJ7PpnPxGejDS+HAMyOjpxOsB8gG0slV7
+ ra6jI4BS3XLmxFz+88FWeB7miCnFrS+xkiYMmdOwRIKnLhTyDa49KiI6ApkBL1M2pjeIsNv0i2bz
+ nHJ53CHS5fL+CC61pH+Mdi8KDLlrJjQEyoQkvVqjwoXSktopqY7X3mJE1vuavCrJPmnnTHzVkpyb
+ MK7ZTZV8hN6hngxqNW/p6/rAjB3Bo9WPi4IE45J8SMIBWsA7tm+5pSj1YjV94R3x16NaT9yCB/zW
+ LYsk4/ealtlYzK51KubfNuS9lgsouDG6gpp8iIlTfpXH3eJ/htNFsfRJIIsn2dSUfOon4SSOHnp1
+ et/MPu6LuWW8C6xs4jnP0QXTijBi5PZExX8sQXRK2Ohd4N83CNy2/HP4CS/B6ymwJqdrYqktDHCy
+ f2KOgPWiC6z4HnV1R/vfaN0C4C3KdSxIKbHYhXQwhXELIBZC+BuxdgK5cVvzDCtuQClUbi7eRJvI
+ 01OLeFH4QvqpC2nLfIqdZUeVlVebzZqu+9TcX2V266qVhLwCLj5UzlqDZIb7xEp3klSpLYn5Sshm
+ tRDo/ib6qUd+ON9Iwv3fqFcmzUrJkUoL/PyVSe2/DDFq5n7HBuKWYRb2mL6sFaAAW2m3yODQWZ6C
+ UzN46xT2FnDD31r1QFs2yPRk3H1E4ANRdN1BlPI5cpunCmbc5xpJVMDSneyWOiQlotRPFwUdX67F
+ 3JAjgow=
+X-Report-Abuse-To: spam@antispammaster.host-h.net
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 12 Dec 01:43 PST 2019, Fabien DESSENNE wrote:
+Add "rockchip,rk3228-rga" to the list of acceptable values for
+the "compatible" property.
 
-> Hi Paul,
-> 
-> 
-> Good initiative! See me remarks below.
-> 
+Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
+---
+ Documentation/devicetree/bindings/media/rockchip-rga.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-I concur!
+diff --git a/Documentation/devicetree/bindings/media/rockchip-rga.txt b/Documentation/devicetree/bindings/media/rockchip-rga.txt
+index fd5276abf..9bac1782d 100644
+--- a/Documentation/devicetree/bindings/media/rockchip-rga.txt
++++ b/Documentation/devicetree/bindings/media/rockchip-rga.txt
+@@ -6,6 +6,7 @@ BitBLT, alpha blending and image blur/sharpness.
+ 
+ Required properties:
+ - compatible: value should be one of the following
++		"rockchip,rk3228-rga";
+ 		"rockchip,rk3288-rga";
+ 		"rockchip,rk3399-rga";
+ 
+-- 
+2.11.0
 
-> 
-> On 10/12/2019 5:40 PM, Paul Cercueil wrote:
-> > Add API functions devm_rproc_alloc() and devm_rproc_add(), which behave
-> > like rproc_alloc() and rproc_add() respectively, but register their
-> > respective cleanup function to be called on driver detach.
-> >
-> > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> > ---
-> >
-> > Notes:
-> >      v3: New patch
-> >      v4: No change
-> >
-> >   drivers/remoteproc/remoteproc_core.c | 67 ++++++++++++++++++++++++++++
-> >   include/linux/remoteproc.h           |  5 +++
-> >   2 files changed, 72 insertions(+)
-> >
-> > diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> > index 307df98347ba..0a9fc7fdd1c3 100644
-> > --- a/drivers/remoteproc/remoteproc_core.c
-> > +++ b/drivers/remoteproc/remoteproc_core.c
-> 
-> 
-> Maybe these devm function shall be defined in a new remoteproc/devres.c 
-> file. Although it seems to be a common usage I don't know if there is a 
-> rule for that.
-> 
-
-Let's keep it in this same file, the devres.c would be tiny.
-
-> 
-> > @@ -1932,6 +1932,33 @@ int rproc_add(struct rproc *rproc)
-> >   }
-> >   EXPORT_SYMBOL(rproc_add);
-> >   
-> > +static void devm_rproc_remove(void *rproc)
-> > +{
-> > +	rproc_del(rproc);
-> > +}
-> > +
-> > +/**
-> > + * devm_rproc_add() - resource managed rproc_add()
-> > + * @dev: the underlying device
-> > + * @rproc: the remote processor handle to register
-> > + *
-> > + * This function performs like rproc_add() but the registered rproc device will
-> > + * automatically be removed on driver detach.
-> > + *
-> > + * Returns 0 on success and an appropriate error code otherwise.
-> > + */
-> > +int devm_rproc_add(struct device *dev, struct rproc *rproc)
-> > +{
-> > +	int err;
-> > +
-> > +	err = rproc_add(rproc);
-> > +	if (err)
-> > +		return err;
-> > +
-> > +	return devm_add_action_or_reset(dev, devm_rproc_remove, rproc);
-> > +}
-> > +EXPORT_SYMBOL(devm_rproc_add);
-> > +
-> >   /**
-> >    * rproc_type_release() - release a remote processor instance
-> >    * @dev: the rproc's device
-> > @@ -2149,6 +2176,46 @@ int rproc_del(struct rproc *rproc)
-> >   }
-> >   EXPORT_SYMBOL(rproc_del);
-> >   
-> > +static void devm_rproc_free(struct device *dev, void *res)
-> > +{
-> > +	rproc_free(*(struct rproc **)res);
-> > +}
-> > +
-> > +/**
-> > + * devm_rproc_alloc() - resource managed rproc_alloc()
-> > + * @dev: the underlying device
-> > + * @name: name of this remote processor
-> > + * @ops: platform-specific handlers (mainly start/stop)
-> > + * @firmware: name of firmware file to load, can be NULL
-> > + * @len: length of private data needed by the rproc driver (in bytes)
-> > + *
-> > + * This function performs like rproc_alloc() but the acuired rproc device will
-> 
-> 
-> typo: s/acuired/acquired
-> 
-> 
-> > + * automatically be released on driver detach.
-> > + *
-> > + * On success the new rproc is returned, and on failure, NULL.
-> > + */
-> > +struct rproc *devm_rproc_alloc(struct device *dev, const char *name,
-> > +			       const struct rproc_ops *ops,
-> > +			       const char *firmware, int len)
-> > +{
-> > +	struct rproc **ptr, *rproc;
-> > +
-> > +	ptr = devres_alloc(devm_rproc_free, sizeof(*ptr), GFP_KERNEL);
-> > +	if (!ptr)
-> > +		return ERR_PTR(-ENOMEM);
-> > +
-> > +	rproc = rproc_alloc(dev, name, ops, firmware, len);
-> > +	if (rproc) {
-> > +		*ptr = rproc;
-> > +		devres_add(dev, ptr);
-> > +	} else {
-> > +		devres_free(ptr);
-> > +	}
-> > +
-> > +	return rproc;
-> 
-> 
-> Can't you use devm_add_action_or_reset() here too?
-> 
-
-The proposed function matches how everyone else is doing devm_*_alloc(),
-so I would like to keep it as is.
-
-Regards,
-Bjorn
-
-> 
-> > +}
-> > +EXPORT_SYMBOL(devm_rproc_alloc);
-> > +
-> >   /**
-> >    * rproc_add_subdev() - add a subdevice to a remoteproc
-> >    * @rproc: rproc handle to add the subdevice to
-> > diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-> > index 16ad66683ad0..5f201f0c86c3 100644
-> > --- a/include/linux/remoteproc.h
-> > +++ b/include/linux/remoteproc.h
-> > @@ -595,6 +595,11 @@ int rproc_add(struct rproc *rproc);
-> >   int rproc_del(struct rproc *rproc);
-> >   void rproc_free(struct rproc *rproc);
-> >   
-> > +struct rproc *devm_rproc_alloc(struct device *dev, const char *name,
-> > +			       const struct rproc_ops *ops,
-> > +			       const char *firmware, int len);
-> > +int devm_rproc_add(struct device *dev, struct rproc *rproc);
-> > +
-> >   void rproc_add_carveout(struct rproc *rproc, struct rproc_mem_entry *mem);
-> >   
-> >   struct rproc_mem_entry *
-> 
-> 
-> BR
-> 
-> Fabien
