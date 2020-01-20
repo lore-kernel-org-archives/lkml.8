@@ -2,139 +2,159 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B02B8C33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD465C33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:53:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8061D2073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:50:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZJCzDnVO"
+	by mail.kernel.org (Postfix) with ESMTP id 7F4E42077C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:53:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgATIun (ORCPT
+        id S1726642AbgATIxi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 03:50:43 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:33478 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbgATIun (ORCPT
+        Mon, 20 Jan 2020 03:53:38 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34018 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725872AbgATIxi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 03:50:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=FHQHy9MJDq8pTNILUwL7Udrti/XuWgeB7brLm2Zqto8=; b=ZJCzDnVOx8H2QIEA18weBsJYC
-        bMBOjOCNrI+vUOu42EbxW0fNdEqeto3PJ7fMEtoDJgaNEir9A7U+QFxh4tY5aUnLBVimuVXxgdnbO
-        4NnRj10z4RvNBxthlAzd5yYe2wQ+UVudOcON2ggL3P5SawflTAXVlJzxLPxfEKE63Ku52bZVsTwG0
-        pFsYBtr6Q3wjd7ctJSbJM5AeXXbPeNhXCobcZKNXlFrCMNdoph5YQnJTeRAAuu4QGwSW9wZftuMK9
-        jOGFmeOtL/ON0U5fzfoufh09N7VzKuy3KBzRk+FcQ94Fb0n2sYsdeM+ps0lv9TFGxcloKpvtsw6u9
-        XYS1bG4wg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1itSlO-0002QF-4l; Mon, 20 Jan 2020 08:50:26 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 643FA3008A9;
-        Mon, 20 Jan 2020 09:48:44 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id EB3282B2811DA; Mon, 20 Jan 2020 09:50:22 +0100 (CET)
-Date:   Mon, 20 Jan 2020 09:50:22 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com,
-        Andi Kleen <andi@firstfloor.org>,
+        Mon, 20 Jan 2020 03:53:38 -0500
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00K8nXFc083810;
+        Mon, 20 Jan 2020 03:53:28 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2xmg7gyr7e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jan 2020 03:53:27 -0500
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 00K8nZEl084091;
+        Mon, 20 Jan 2020 03:53:27 -0500
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2xmg7gyr6r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jan 2020 03:53:27 -0500
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 00K8qB9N031902;
+        Mon, 20 Jan 2020 08:53:26 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma02dal.us.ibm.com with ESMTP id 2xksn6df81-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jan 2020 08:53:26 +0000
+Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00K8rPUT41550268
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Jan 2020 08:53:25 GMT
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0D6626E04E;
+        Mon, 20 Jan 2020 08:53:25 +0000 (GMT)
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9F50F6E04C;
+        Mon, 20 Jan 2020 08:53:20 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.199.33.136])
+        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 20 Jan 2020 08:53:20 +0000 (GMT)
+Subject: Re: [PATCH] tools/perf/metricgroup: Fix printing event names of
+ metric group with multiple events incase of overlapping events
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     "Jin, Yao" <yao.jin@linux.intel.com>, acme@kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] perf/core: Install cgroup event via IPI
-Message-ID: <20200120085022.GJ14879@hirez.programming.kicks-ass.net>
-References: <20200116172555.3674873-1-songliubraving@fb.com>
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+References: <20200108065844.4030-1-kjain@linux.ibm.com>
+ <e866c12a-7328-8524-fd0e-668301da6875@linux.intel.com>
+ <822bcb9d-4c08-39c5-e6e7-9c3e20d77852@linux.ibm.com>
+ <20200108160249.GD402774@krava>
+From:   kajoljain <kjain@linux.ibm.com>
+Message-ID: <dde66abd-6025-31e3-9bda-a6eb1986eea8@linux.ibm.com>
+Date:   Mon, 20 Jan 2020 14:23:19 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200116172555.3674873-1-songliubraving@fb.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200108160249.GD402774@krava>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-20_01:2020-01-16,2020-01-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
+ suspectscore=0 clxscore=1015 impostorscore=0 malwarescore=0
+ priorityscore=1501 lowpriorityscore=0 bulkscore=0 phishscore=0
+ adultscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001200079
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 09:25:55AM -0800, Song Liu wrote:
-> cgroup events in OFF state cannot be installed without IPI, otherwise, it
-> may trigger the following calltrace with CONFIG_DEBUG_LIST:
-> 
-> [   31.776974] ------------[ cut here ]------------
-> [   31.777570] list_add double add: new=ffff888ff7cf0db0, prev=ffff888ff7ce82f0, next=ffff888ff7cf0db0.
-> [   31.778737] WARNING: CPU: 3 PID: 1186 at lib/list_debug.c:31 __list_add_valid+0x67/0x70
-> [   31.779745] Modules linked in:
-> [   31.780138] CPU: 3 PID: 1186 Comm: perf Tainted: G        W         5.5.0-rc6+ #3962
-> [   31.781125] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.11.0-2.el7 04/01/2014
-> [   31.782199] RIP: 0010:__list_add_valid+0x67/0x70
 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index a1f8bde19b56..36e8fe27e2a1 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -2682,14 +2682,18 @@ perf_install_in_context(struct perf_event_context *ctx,
->  	smp_store_release(&event->ctx, ctx);
->  
->  	/*
-> -	 * perf_event_attr::disabled events will not run and can be initialized
-> -	 * without IPI. Except when this is the first event for the context, in
-> -	 * that case we need the magic of the IPI to set ctx->is_active.
-> +	 * perf_event_attr::disabled events will not run and can be
-> +	 * initialized without IPI. Except:
-> +	 *   1. when this is the first event for the context, in that case
-> +	 *      we need the magic of the IPI to set ctx->is_active;
-> +	 *   2. cgroup event in OFF state, because it is installed in the
-> +	 *      cpuctx.
->  	 *
->  	 * The IOC_ENABLE that is sure to follow the creation of a disabled
->  	 * event will issue the IPI and reprogram the hardware.
->  	 */
-> -	if (__perf_effective_state(event) == PERF_EVENT_STATE_OFF && ctx->nr_events) {
-> +	if (__perf_effective_state(event) == PERF_EVENT_STATE_OFF &&
-> +	    !is_cgroup_event(event) && ctx->nr_events) {
->  		raw_spin_lock_irq(&ctx->lock);
->  		if (ctx->task == TASK_TOMBSTONE) {
->  			raw_spin_unlock_irq(&ctx->lock);
+On 1/8/20 9:32 PM, Jiri Olsa wrote:
+> On Wed, Jan 08, 2020 at 02:41:35PM +0530, kajoljain wrote:
+>
+> SNIP
+>
+>>>> -    int i = 0;
+>>>> +    int i = 0, j = 0;
+>>>>        bool leader_found;
+>>>>          evlist__for_each_entry (perf_evlist, ev) {
+>>>> +        j++;
+>>>> +        if (j <= iterator_perf_evlist)
+>>>> +            continue;
+>>>>            if (!strcmp(ev->name, ids[i])) {
+>>>>                if (!metric_events[i])
+>>>>                    metric_events[i] = ev;
+>>>> @@ -146,6 +151,7 @@ static struct evsel *find_evsel_group(struct
+>>>> evlist *perf_evlist,
+>>>>                }
+>>>>            }
+>>>>        }
+>>>> +    iterator_perf_evlist = j;
+>>>>          return metric_events[0];
+>>>>    }
+>>>>
+>>> Thanks for reporting and fixing this issue.
+>>>
+>>> I just have one question, do we really need a *static variable* to track
+>>> the matched events? Perhaps using an input parameter?
+>> Hi Jin,
+>>
+>> The other way I come up with to solve this issue is, making change in
+>> perf_evlist itself by adding some flag in event name, to keep track of
+>> matched events.
+>>
+>> As if we change event name itself, next time when we compare it won't
+>> matched. But in that case we need to remove those flag later. Which will
+>> increase the
+>>
+>> complexity. If you have any suggestions, please let me know.
+> we already keep evsel::cpu_iter for similar concept
+>
+> so I guess we could have some iterator_perf_evlist variable in evlist..
+> that is if we don't find other solution (other than static varable)
 
-I don't think this is right. Because cgroup events are always per-cpu
-events, ctx == &cpuctx->ctx, so the locking should work out just fine.
+Hi Jiri,
 
-What does appear to be the problem is that:
+          Thanks for reviewing the patch. I checked 'evsel::cpu_iter' 
+variable, I think it added recently and I am not able to find any 
+similar kind of variable in
 
-  add_event_to_ctx()
-    list_update_cgroup_event()
-      cpuctx = __get_cpu_context(ctx)
+          evlist. Please let me know if my understanding is fine. Do you 
+want me to add new variable in evlist itself or there is any other way 
+possible.
 
-uses this_cpu_ptr() and we're now calling it from the 'wrong' CPU.
+Thanks,
 
-But I'm thinking the below should also work just fine, hmm?
+Kajol
 
----
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 2173c23c25b4..2c6134604811 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -951,9 +951,9 @@ list_update_cgroup_event(struct perf_event *event,
- 
- 	/*
- 	 * Because cgroup events are always per-cpu events,
--	 * this will always be called from the right CPU.
-+	 * @ctx == &cpuctx->cpu.
- 	 */
--	cpuctx = __get_cpu_context(ctx);
-+	cpuctx = container_of(ctx, struct perf_cpu_context, ctx);
- 
- 	/*
- 	 * Since setting cpuctx->cgrp is conditional on the current @cgrp
+
+
+> thanks,
+> jirka
+>
