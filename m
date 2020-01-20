@@ -2,89 +2,124 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96120C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7C1EC33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:26:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6894121569
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:26:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB51621569
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:26:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="APZUfh4z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728668AbgATL0k (ORCPT
+        id S1728765AbgATL0q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 06:26:40 -0500
-Received: from mga12.intel.com ([192.55.52.136]:43818 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726589AbgATL0k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 06:26:40 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 03:26:39 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,341,1574150400"; 
-   d="scan'208";a="275002405"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 20 Jan 2020 03:26:35 -0800
-Received: by lahna (sSMTP sendmail emulation); Mon, 20 Jan 2020 13:26:34 +0200
-Date:   Mon, 20 Jan 2020 13:26:34 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 35/36] platform/x86: intel_pmc_ipc: Convert to MFD
-Message-ID: <20200120112634.GN2665@lahna.fi.intel.com>
-References: <20200113135623.56286-1-mika.westerberg@linux.intel.com>
- <20200113135623.56286-36-mika.westerberg@linux.intel.com>
- <20200116132108.GH325@dell>
- <20200116143730.GE2838@lahna.fi.intel.com>
- <20200117113202.GH15507@dell>
- <20200117142750.GP2838@lahna.fi.intel.com>
- <20200120081246.GS15507@dell>
- <20200120091258.GH2665@lahna.fi.intel.com>
- <20200120111450.GE15507@dell>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200120111450.GE15507@dell>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        Mon, 20 Jan 2020 06:26:46 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:36051 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726775AbgATL0p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 06:26:45 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1579519604; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=xDwR6rvudM19JzpXoego2eURGMlAKnT+NaTDfn5CpRw=; b=APZUfh4z97n4+2y4I7LWoRtM6C+dqTBYxedNtf4DW+CSVCFHiP5UMLbIfXjjY4tesBuunHI5
+ 8iz9mc9Hrf6OtLzVWaTWqbta1g0MNC+GlJfixipFuy9zqwxm0+5CIp+1zFDFqheh2nEA2hjA
+ qVawVVHDJEawGGYZgBsCpBhTmXk=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e258e73.7fc55b2f0768-smtp-out-n02;
+ Mon, 20 Jan 2020 11:26:43 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 05E94C447A5; Mon, 20 Jan 2020 11:26:43 +0000 (UTC)
+Received: from vbadigan-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: vbadigan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A5B5BC447A1;
+        Mon, 20 Jan 2020 11:26:35 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A5B5BC447A1
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
+From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+To:     ulf.hansson@linaro.org, adrian.hunter@intel.com
+Cc:     asutoshd@codeaurora.org, stummala@codeaurora.org,
+        sayalil@codeaurora.org, cang@codeaurora.org,
+        rampraka@codeaurora.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Subject: [PATCH V2 1/2] mmc: sdhci: Let a vendor driver supply and update ADMA descriptor size
+Date:   Mon, 20 Jan 2020 16:47:03 +0530
+Message-Id: <1579519045-26467-1-git-send-email-vbadigan@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1579194192-7942-2-git-send-email-vbadigan@codeaurora.org>
+References: <1579194192-7942-2-git-send-email-vbadigan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 11:14:50AM +0000, Lee Jones wrote:
-> On Mon, 20 Jan 2020, Mika Westerberg wrote:
-> 
-> > On Mon, Jan 20, 2020 at 08:12:46AM +0000, Lee Jones wrote:
-> > > > Well, by "library" I mean that the SCU IPC itself does not bind to
-> > > > anything but instead it gets called by different drivers such as this
-> > > > one passing the device pointer that is the SCU IPC device. Here for
-> > > > example it is the platfrom device created from an ACPI description.
-> > > 
-> > > Not keen on that at all.  Why can it not be a platform device?
-> > 
-> > We also call the same library from a PCI driver (intel_scu_pcidrv.c in
-> > this series) where the device is of type struct pci_dev.
-> 
-> Not sure I understand the issue.
+Let a vendor driver supply the maximum descriptor size that it
+can operate on. ADMA descriptor table would be allocated using this
+supplied size.
+If any SD Host controller is of version prior to v4.10 spec
+but supports 16byte descriptor, this change allows them to supply
+correct descriptor size for ADMA table allocation.
 
-You are asking why it cannot be a platform device. It cannot be because
-we are calling the same library from a PCI driver where there is no
-platform device available (only struct pci_dev).
+Also let a vendor driver update the descriptor size by overriding
+sdhc_host->desc_size if it has to operates on a different descriptor
+sizes in different conditions.
 
-> What does the device do?
+Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+---
+ drivers/mmc/host/sdhci.c | 13 +++++++------
+ drivers/mmc/host/sdhci.h |  3 ++-
+ 2 files changed, 9 insertions(+), 7 deletions(-)
 
-It provides an access to the SCU IPC mechanism (part of the PMC/SCU).
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index 3140fe2..44fb446 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -3822,14 +3822,15 @@ int sdhci_setup_host(struct sdhci_host *host)
+ 		void *buf;
+ 
+ 		if (host->flags & SDHCI_USE_64_BIT_DMA) {
+-			host->adma_table_sz = host->adma_table_cnt *
+-					      SDHCI_ADMA2_64_DESC_SZ(host);
+-			host->desc_sz = SDHCI_ADMA2_64_DESC_SZ(host);
++			if (!host->alloc_desc_sz)
++				host->alloc_desc_sz =
++					SDHCI_ADMA2_64_DESC_SZ(host);
+ 		} else {
+-			host->adma_table_sz = host->adma_table_cnt *
+-					      SDHCI_ADMA2_32_DESC_SZ;
+-			host->desc_sz = SDHCI_ADMA2_32_DESC_SZ;
++			host->alloc_desc_sz = SDHCI_ADMA2_32_DESC_SZ;
+ 		}
++		host->desc_sz = host->alloc_desc_sz;
++		host->adma_table_sz = host->adma_table_cnt *
++					      host->desc_sz;
+ 
+ 		host->align_buffer_sz = SDHCI_MAX_SEGS * SDHCI_ADMA2_ALIGN;
+ 		/*
+diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+index 0ed3e0e..10bda3a 100644
+--- a/drivers/mmc/host/sdhci.h
++++ b/drivers/mmc/host/sdhci.h
+@@ -554,7 +554,8 @@ struct sdhci_host {
+ 	dma_addr_t adma_addr;	/* Mapped ADMA descr. table */
+ 	dma_addr_t align_addr;	/* Mapped bounce buffer */
+ 
+-	unsigned int desc_sz;	/* ADMA descriptor size */
++	unsigned int desc_sz;	/* ADMA current descriptor size */
++	unsigned int alloc_desc_sz;	/* ADMA descr. max size host supports */
+ 
+ 	struct workqueue_struct *complete_wq;	/* Request completion wq */
+ 	struct work_struct	complete_work;	/* Request completion work */
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
