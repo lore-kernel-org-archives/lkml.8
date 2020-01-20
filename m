@@ -2,168 +2,381 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67566C33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:45:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E43C33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3405921835
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:45:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2893021835
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:45:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="kcftFNee"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K61t9DsV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728927AbgATMpI (ORCPT
+        id S1728992AbgATMpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 20 Jan 2020 07:45:11 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:38964 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728776AbgATMpI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 Jan 2020 07:45:08 -0500
-Received: from mail-eopbgr80082.outbound.protection.outlook.com ([40.107.8.82]:15501
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728852AbgATMpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 07:45:06 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UT8JgGDSY8g068ANVrAMVlFQy0om7Hf4RwHlCuLm4En1/pTivYE9kFLEtkATnzdBJTbwcY5D2lmUNim4yEYBCd3S3Dk7jUq3+9GyJt5RCQFm11PEWA1DXOc4fg7q8zDqcKQb4OySq+g5fyzONqHzqzeB+8CFgLmicsHiN2pJv8WLqY86FsDILrGEeOn3cZtHj0H9IRfqjS5wYp+8aS/48jOEBFEqWi/+uh7Alt+3xITrKZMHIMKKbyMZtsVRTpYU/Q4hzr2YIDsHczu96+82IPCjWG+JspEJ+IsZhvD3ddOU83DvjAcwbd1zYR5YgThf8Tf6DUL50Qoxie/t/7hT9w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VvbD91ZAlLfkkhIX2Uwkv3c0T4qOl5Zo0pGMo4d3kJ4=;
- b=Ul8DMfql8uVozl8gW1SoYZLnLdLZ0NwXisL3S3pp66PcHprSltSZdamU8aL12rHVOjnqSzxidawUnijqpDvDIVWySOOtJvHXlqA084aYyhC/x5cIOd9jUwRjvwQh1yiwVyEOrqE+pUKGXrjHPQrcqLjpMgn/6rTAsaUCBKEA3ZLLECXjUOdTvOQXhA8XmgEEn4gwA9ogZHLpf+xthUyu9A5p7JohH+eGIhvAaO9TLdnh0aftNY3PfrEUXOwebqSVBe+ujqu/jkeLZgXCSmew7cpES5269kBBEzyEF5w7mR0YWPVns6AShau7PTQkFpx/ICPr4Lu/PIet2QgX7MlDCQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VvbD91ZAlLfkkhIX2Uwkv3c0T4qOl5Zo0pGMo4d3kJ4=;
- b=kcftFNee4HloLHxa3P/tyWWcO0w/O/VicXAeM9hJLomrTdItfOFMOlOxUUyh1qkL6CkssCUkvdzJtDvjOzJPBCxr8SQx/ndXPrXnr/XZqQJjFPLbLpqshrIRUlVnF5rrC1uxS+1P8kjnpqfxr6IhDroSC/EzDN1YhPBrsqDkJyg=
-Received: from VI1PR04MB7023.eurprd04.prod.outlook.com (10.186.159.144) by
- VI1PR04MB4365.eurprd04.prod.outlook.com (52.134.122.146) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.22; Mon, 20 Jan 2020 12:45:03 +0000
-Received: from VI1PR04MB7023.eurprd04.prod.outlook.com
- ([fe80::58c5:f02f:2211:4953]) by VI1PR04MB7023.eurprd04.prod.outlook.com
- ([fe80::58c5:f02f:2211:4953%7]) with mapi id 15.20.2644.024; Mon, 20 Jan 2020
- 12:45:03 +0000
-From:   Leonard Crestez <leonard.crestez@nxp.com>
-To:     Peng Fan <peng.fan@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>
-CC:     "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "olof@lixom.net" <olof@lixom.net>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        "krzk@kernel.org" <krzk@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/4] soc: imx: increase build coverage for imx8 soc driver
-Thread-Topic: [PATCH 0/4] soc: imx: increase build coverage for imx8 soc
- driver
-Thread-Index: AQHVzB/hVXSait8oKkG3c6qn/lfwPw==
-Date:   Mon, 20 Jan 2020 12:45:03 +0000
-Message-ID: <VI1PR04MB70231E81AB33489264502009EE320@VI1PR04MB7023.eurprd04.prod.outlook.com>
-References: <1579146280-1750-1-git-send-email-peng.fan@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leonard.crestez@nxp.com; 
-x-originating-ip: [89.37.124.34]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 75f03ec9-99eb-4d71-dac5-08d79da69203
-x-ms-traffictypediagnostic: VI1PR04MB4365:|VI1PR04MB4365:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB4365A8EE3D0997DA4FBAF3CBEE320@VI1PR04MB4365.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 0288CD37D9
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(366004)(136003)(376002)(396003)(199004)(189003)(8936002)(478600001)(81156014)(9686003)(71200400001)(55016002)(81166006)(54906003)(8676002)(316002)(110136005)(86362001)(53546011)(186003)(6506007)(7416002)(33656002)(5660300002)(44832011)(66446008)(64756008)(2906002)(4326008)(66556008)(66476007)(52536014)(7696005)(66946007)(91956017)(76116006)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4365;H:VI1PR04MB7023.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: /rD01SqhokGuLJWzwRl3hwSD61d4P09VIWUmm6uO1we1PYbX/PwtRwp62+0/V0CkOIbQPkV13S72fUGTWd3eiv4sjFHTm11gHmbNg/eqVhgM1m95u3p75+or9B+CD6azRGgz5+0sgL+R8s2/nOui1YDUVh71RH2+Jrvi305M1LdE6B0qLMInTE9k7n7U7E4/d1Y135tZqjr3a3QzGcEleZuZqFCNHgP4ZMuIz4KyOWp/AsEjEyuS7GO5Kc/jq1pWa5pA5B5vyrx22rbouVMpQ2FWOvc6ZHmiSLZfVBP9tWiyKG2snXQXICBIXtxJVl886r9ObBlXKyXoS44UfPivJEtAvqDbr1xdk04y4OtxYk5qcdZLMpGql/SdL13FyUzjnuJZAtR4favEuRE4FpjOLyOYNahE13otsqow+EfPynGXWCrkF9Ikbvs4XhmFAeJQ
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: quoted-printable
+Received: by mail-pl1-f196.google.com with SMTP id g6so13155627plp.6;
+        Mon, 20 Jan 2020 04:45:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Q1+nIcbVKE/ymPlTJxssTDLYlZLeeNj4k4BWR131W0E=;
+        b=K61t9DsVyAPCvjtKV1wdSJkLPAciT2VMhkrXEjne2yw7nOZqrcNzt6R99X1yf1rhLR
+         8mb7c8gwh+IU22SPSZ2x7FrGGzUcsk7XjGJLWa1BB5J3PXxqhfZuIqdEgD2B+FeZ5lff
+         CcDaXm3lEjNJi+BZwFFIdVC7M4OYsjiD0iSgWEYS45aXUxhLM8THvwhPx80KNAv9yzk5
+         SBbrh0jT1JW1FO1wtCHqWcAtaXPOGRvXCaVjbYizH7SGpydU3lKzEKN/GIAG2swyuDpY
+         LuST3UZUvl3OSt0FPg4k3ocRHWt5TG+af1SAmxTO4A8Dl193AkOPkFw6RxfmViqzedKy
+         52Bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Q1+nIcbVKE/ymPlTJxssTDLYlZLeeNj4k4BWR131W0E=;
+        b=IlXqok4FfkKUh0vEjODD0+aPKmE2kYQ9B7wtjYSOoJK6LArowqOQR/jX2qqPyO+qun
+         MGt1G1E0hz72zUSbPGwS8I0wGQl77Tu0Uf3bd7MRia4UUYc6s1uVqWIfNputM+4FgEYb
+         76NKBQS/d4LTxXnC1zGLk757w2nRd5VVltowYvLhW071rj9uJ6MiZiBk8xFYfxvz5MnG
+         IFep4ii+vghMAfd7y/cerpRMkfywuBduYuGODjXbgil4EY7H2DGhFlCCAJbzfd4x6pcy
+         ISoJFXMhXvgIQoeoVu8pJyODqyOSriKGt0U22s49Pov4785j26kBlON77bYKV3y5Swe5
+         CaUQ==
+X-Gm-Message-State: APjAAAXgQJ/s/pPynft5zbFcfot6nT+/JV1JvlIeFRdXr20MpUzYbRuq
+        l6utvQCoe5UF2XTLz7JmNqluO1hk
+X-Google-Smtp-Source: APXvYqxVjuF5fuqkKzxjvHYmeVTpoAX/Nc0DqGO+VhErZZj+RrBaZdP5p+8vORf2PrCAy+iYmmLG5w==
+X-Received: by 2002:a17:90a:26e1:: with SMTP id m88mr23492566pje.101.1579524306828;
+        Mon, 20 Jan 2020 04:45:06 -0800 (PST)
+Received: from localhost.localdomain ([221.146.116.86])
+        by smtp.gmail.com with ESMTPSA id h3sm39184590pfo.132.2020.01.20.04.45.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jan 2020 04:45:06 -0800 (PST)
+From:   Namjae Jeon <linkinjeon@gmail.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
+        sj1557.seo@samsung.com, pali.rohar@gmail.com, arnd@arndb.de,
+        namjae.jeon@samsung.com, Namjae Jeon <linkinjeon@gmail.com>
+Subject: [PATCH v12 07/13] exfat: add bitmap operations
+Date:   Mon, 20 Jan 2020 21:44:22 +0900
+Message-Id: <20200120124428.17863-8-linkinjeon@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200120124428.17863-1-linkinjeon@gmail.com>
+References: <20200120124428.17863-1-linkinjeon@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 75f03ec9-99eb-4d71-dac5-08d79da69203
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jan 2020 12:45:03.4887
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +ddm25sp5eT8ScQre+U168nfSQXaGhg+vEGk1HispNjgHfblfPx8ZOybTikZjAj/+cxbcC6x3u1G+eNHL1/67A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4365
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16.01.2020 05:48, Peng Fan wrote:=0A=
-> From: Peng Fan <peng.fan@nxp.com>=0A=
-> =0A=
-> Rename soc-imx8.c to soc-imx8m.c which is for i.MX8M family=0A=
-> Add SOC_IMX8M for build gate soc-imx8m.c=0A=
-> Increase build coverage for i.MX SoC driver=0A=
-> =0A=
-> Peng Fan (4):=0A=
->    soc: imx: Kconfig: add SOC_IMX8M entry=0A=
->    arm64: defconfig: Enable CONFIG_SOC_IMX8M by default=0A=
->    soc: Makefile: increase build coverage for i.MX=0A=
->    soc: imx: Use CONFIG_SOC_IMX8M as build gate=0A=
-> =0A=
->   arch/arm64/configs/defconfig                | 1 +=0A=
->   drivers/soc/Makefile                        | 2 +-=0A=
->   drivers/soc/imx/Kconfig                     | 8 ++++++++=0A=
->   drivers/soc/imx/Makefile                    | 2 +-=0A=
->   drivers/soc/imx/{soc-imx8.c =3D> soc-imx8m.c} | 0=0A=
->   5 files changed, 11 insertions(+), 2 deletions(-)=0A=
->   rename drivers/soc/imx/{soc-imx8.c =3D> soc-imx8m.c} (100%)=0A=
-=0A=
-I applied your patches and compiletest failed for me on x86:=0A=
-=0A=
-../drivers/soc/imx/gpcv2.c: In function =91imx_gpcv2_probe=92:=0A=
-../drivers/soc/imx/gpcv2.c:561:21: error: =91SZ_4K=92 undeclared (first use=
- =0A=
-in this function)=0A=
-    .max_register   =3D SZ_4K,=0A=
-                      ^~~~~=0A=
-../drivers/soc/imx/gpcv2.c:561:21: note: each undeclared identifier is =0A=
-reported only once for each function it appears in=0A=
-=0A=
-It seems that on x86 <linux/sizes.h> needs to be included explicitly =0A=
-while on arm it is already included indirectly through arch headers. Fix =
-=0A=
-is very simple:=0A=
-=0A=
-diff --git drivers/soc/imx/gpcv2.c drivers/soc/imx/gpcv2.c=0A=
-index b0dffb06c05d..6cf8a7a412bd 100644=0A=
---- drivers/soc/imx/gpcv2.c=0A=
-+++ drivers/soc/imx/gpcv2.c=0A=
-@@ -14,6 +14,7 @@=0A=
-  #include <linux/pm_domain.h>=0A=
-  #include <linux/regmap.h>=0A=
-  #include <linux/regulator/consumer.h>=0A=
-+#include <linux/sizes.h>=0A=
-  #include <dt-bindings/power/imx7-power.h>=0A=
-  #include <dt-bindings/power/imx8mq-power.h>=0A=
-=0A=
----=0A=
-=0A=
-My test looks like this:=0A=
-=0A=
-make O=3Dbuild_compiletest defconfig=0A=
-make O=3Dbuild_compiletest allmodconfig=0A=
-echo CONFIG_COMPILE_TEST=3Dy >> build_compiletest/.config=0A=
-make O=3Dbuild_compiletest "$@"=0A=
-=0A=
-Other than this:=0A=
-=0A=
-Reviewed-by: Leonard Crestez <leonard.crestez@nxp.com>=0A=
+From: Namjae Jeon <namjae.jeon@samsung.com>
+
+This adds the implementation of bitmap operations for exfat.
+
+Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
+Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
+---
+ fs/exfat/balloc.c | 282 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 282 insertions(+)
+ create mode 100644 fs/exfat/balloc.c
+
+diff --git a/fs/exfat/balloc.c b/fs/exfat/balloc.c
+new file mode 100644
+index 000000000000..b568f5efc984
+--- /dev/null
++++ b/fs/exfat/balloc.c
+@@ -0,0 +1,282 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ *  Copyright (C) 2012-2013 Samsung Electronics Co., Ltd.
++ */
++
++#include <linux/blkdev.h>
++#include <linux/slab.h>
++#include <linux/buffer_head.h>
++
++#include "exfat_raw.h"
++#include "exfat_fs.h"
++
++static const unsigned char free_bit[] = {
++	0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4, 0, 1, 0, 2,/*  0 ~  19*/
++	0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 5, 0, 1, 0, 2, 0, 1, 0, 3,/* 20 ~  39*/
++	0, 1, 0, 2, 0, 1, 0, 4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2,/* 40 ~  59*/
++	0, 1, 0, 6, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4,/* 60 ~  79*/
++	0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 5, 0, 1, 0, 2,/* 80 ~  99*/
++	0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4, 0, 1, 0, 2, 0, 1, 0, 3,/*100 ~ 119*/
++	0, 1, 0, 2, 0, 1, 0, 7, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2,/*120 ~ 139*/
++	0, 1, 0, 4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 5,/*140 ~ 159*/
++	0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4, 0, 1, 0, 2,/*160 ~ 179*/
++	0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 6, 0, 1, 0, 2, 0, 1, 0, 3,/*180 ~ 199*/
++	0, 1, 0, 2, 0, 1, 0, 4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2,/*200 ~ 219*/
++	0, 1, 0, 5, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4,/*220 ~ 239*/
++	0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0                /*240 ~ 254*/
++};
++
++static const unsigned char used_bit[] = {
++	0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4, 1, 2, 2, 3,/*  0 ~  19*/
++	2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5, 1, 2, 2, 3, 2, 3, 3, 4,/* 20 ~  39*/
++	2, 3, 3, 4, 3, 4, 4, 5, 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5,/* 40 ~  59*/
++	4, 5, 5, 6, 1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,/* 60 ~  79*/
++	2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 2, 3, 3, 4,/* 80 ~  99*/
++	3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 3, 4, 4, 5, 4, 5, 5, 6,/*100 ~ 119*/
++	4, 5, 5, 6, 5, 6, 6, 7, 1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4,/*120 ~ 139*/
++	3, 4, 4, 5, 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,/*140 ~ 159*/
++	2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 3, 4, 4, 5,/*160 ~ 179*/
++	4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7, 2, 3, 3, 4, 3, 4, 4, 5,/*180 ~ 199*/
++	3, 4, 4, 5, 4, 5, 5, 6, 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6,/*200 ~ 219*/
++	5, 6, 6, 7, 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,/*220 ~ 239*/
++	4, 5, 5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8             /*240 ~ 255*/
++};
++
++/*
++ *  Allocation Bitmap Management Functions
++ */
++static int exfat_allocate_bitmap(struct super_block *sb,
++		struct exfat_dentry *ep)
++{
++	struct exfat_sb_info *sbi = EXFAT_SB(sb);
++	long long map_size;
++	unsigned int i, need_map_size;
++	sector_t sector;
++
++	sbi->map_clu = le32_to_cpu(ep->dentry.bitmap.start_clu);
++	map_size = le64_to_cpu(ep->dentry.bitmap.size);
++	need_map_size = ((EXFAT_DATA_CLUSTER_COUNT(sbi) - 1) / BITS_PER_BYTE)
++		+ 1;
++	if (need_map_size != map_size) {
++		exfat_msg(sb, KERN_ERR,
++				"bogus allocation bitmap size(need : %u, cur : %lld)",
++				need_map_size, map_size);
++		/*
++		 * Only allowed when bogus allocation
++		 * bitmap size is large
++		 */
++		if (need_map_size > map_size)
++			return -EIO;
++	}
++	sbi->map_sectors = ((need_map_size - 1) >>
++			(sb->s_blocksize_bits)) + 1;
++	sbi->vol_amap = kmalloc_array(sbi->map_sectors,
++				sizeof(struct buffer_head *), GFP_KERNEL);
++	if (!sbi->vol_amap)
++		return -ENOMEM;
++
++	sector = exfat_cluster_to_sector(sbi, sbi->map_clu);
++	for (i = 0; i < sbi->map_sectors; i++) {
++		sbi->vol_amap[i] = sb_bread(sb, sector + i);
++		if (!sbi->vol_amap[i]) {
++			/* release all buffers and free vol_amap */
++			int j = 0;
++
++			while (j < i)
++				brelse(sbi->vol_amap[j++]);
++
++			kfree(sbi->vol_amap);
++			sbi->vol_amap = NULL;
++			return -EIO;
++		}
++	}
++
++	sbi->pbr_bh = NULL;
++	return 0;
++}
++
++int exfat_load_bitmap(struct super_block *sb)
++{
++	unsigned int i, type;
++	struct exfat_chain clu;
++	struct exfat_sb_info *sbi = EXFAT_SB(sb);
++
++	exfat_chain_set(&clu, sbi->root_dir, 0, ALLOC_FAT_CHAIN);
++	while (clu.dir != EXFAT_EOF_CLUSTER) {
++		for (i = 0; i < sbi->dentries_per_clu; i++) {
++			struct exfat_dentry *ep;
++			struct buffer_head *bh;
++
++			ep = exfat_get_dentry(sb, &clu, i, &bh, NULL);
++			if (!ep)
++				return -EIO;
++
++			type = exfat_get_entry_type(ep);
++			if (type == TYPE_UNUSED)
++				break;
++			if (type != TYPE_BITMAP)
++				continue;
++			if (ep->dentry.bitmap.flags == 0x0) {
++				int err;
++
++				err = exfat_allocate_bitmap(sb, ep);
++				brelse(bh);
++				return err;
++			}
++			brelse(bh);
++		}
++
++		if (exfat_get_next_cluster(sb, &clu.dir))
++			return -EIO;
++	}
++
++	return -EINVAL;
++}
++
++void exfat_free_bitmap(struct super_block *sb)
++{
++	int i;
++	struct exfat_sb_info *sbi = EXFAT_SB(sb);
++
++	brelse(sbi->pbr_bh);
++
++	for (i = 0; i < sbi->map_sectors; i++)
++		__brelse(sbi->vol_amap[i]);
++
++	kfree(sbi->vol_amap);
++	sbi->vol_amap = NULL;
++}
++
++/*
++ * If the value of "clu" is 0, it means cluster 2 which is the first cluster of
++ * the cluster heap.
++ */
++int exfat_set_bitmap(struct inode *inode, unsigned int clu)
++{
++	int i, b;
++	unsigned int ent_idx;
++	struct super_block *sb = inode->i_sb;
++	struct exfat_sb_info *sbi = EXFAT_SB(sb);
++
++	WARN_ON(clu < EXFAT_FIRST_CLUSTER);
++	ent_idx = CLUSTER_TO_BITMAP_ENT(clu);
++	i = BITMAP_OFFSET_SECTOR_INDEX(sb, ent_idx);
++	b = BITMAP_OFFSET_BIT_IN_SECTOR(sb, ent_idx);
++
++	set_bit_le(b, sbi->vol_amap[i]->b_data);
++	exfat_update_bh(sb, sbi->vol_amap[i], IS_DIRSYNC(inode));
++	return 0;
++}
++
++/*
++ * If the value of "clu" is 0, it means cluster 2 which is the first cluster of
++ * the cluster heap.
++ */
++void exfat_clear_bitmap(struct inode *inode, unsigned int clu)
++{
++	int i, b;
++	unsigned int ent_idx;
++	struct super_block *sb = inode->i_sb;
++	struct exfat_sb_info *sbi = EXFAT_SB(sb);
++	struct exfat_mount_options *opts = &sbi->options;
++
++	WARN_ON(clu < EXFAT_FIRST_CLUSTER);
++	ent_idx = CLUSTER_TO_BITMAP_ENT(clu);
++	i = BITMAP_OFFSET_SECTOR_INDEX(sb, ent_idx);
++	b = BITMAP_OFFSET_BIT_IN_SECTOR(sb, ent_idx);
++
++	clear_bit_le(b, sbi->vol_amap[i]->b_data);
++	exfat_update_bh(sb, sbi->vol_amap[i], IS_DIRSYNC(inode));
++
++	if (opts->discard) {
++		int ret_discard;
++
++		ret_discard = sb_issue_discard(sb,
++			exfat_cluster_to_sector(sbi, clu +
++						EXFAT_RESERVED_CLUSTERS),
++			(1 << sbi->sect_per_clus_bits), GFP_NOFS, 0);
++
++		if (ret_discard == -EOPNOTSUPP) {
++			exfat_msg(sb, KERN_ERR,
++				"discard not supported by device, disabling");
++			opts->discard = 0;
++		}
++	}
++}
++
++/*
++ * If the value of "clu" is 0, it means cluster 2 which is the first cluster of
++ * the cluster heap.
++ */
++unsigned int exfat_find_free_bitmap(struct super_block *sb, unsigned int clu)
++{
++	unsigned int i, map_i, map_b, ent_idx;
++	unsigned int clu_base, clu_free;
++	unsigned char k, clu_mask;
++	struct exfat_sb_info *sbi = EXFAT_SB(sb);
++
++	WARN_ON(clu < EXFAT_FIRST_CLUSTER);
++	ent_idx = CLUSTER_TO_BITMAP_ENT(clu);
++	clu_base = BITMAP_ENT_TO_CLUSTER(ent_idx & ~(BITS_PER_BYTE_MASK));
++	clu_mask = IGNORED_BITS_REMAINED(clu, clu_base);
++
++	map_i = BITMAP_OFFSET_SECTOR_INDEX(sb, ent_idx);
++	map_b = BITMAP_OFFSET_BYTE_IN_SECTOR(sb, ent_idx);
++
++	for (i = EXFAT_FIRST_CLUSTER; i < sbi->num_clusters;
++	     i += BITS_PER_BYTE) {
++		k = *(sbi->vol_amap[map_i]->b_data + map_b);
++		if (clu_mask > 0) {
++			k |= clu_mask;
++			clu_mask = 0;
++		}
++		if (k < 0xFF) {
++			clu_free = clu_base + free_bit[k];
++			if (clu_free < sbi->num_clusters)
++				return clu_free;
++		}
++		clu_base += BITS_PER_BYTE;
++
++		if (++map_b >= sb->s_blocksize ||
++		    clu_base >= sbi->num_clusters) {
++			if (++map_i >= sbi->map_sectors) {
++				clu_base = EXFAT_FIRST_CLUSTER;
++				map_i = 0;
++			}
++			map_b = 0;
++		}
++	}
++
++	return EXFAT_EOF_CLUSTER;
++}
++
++int exfat_count_used_clusters(struct super_block *sb, unsigned int *ret_count)
++{
++	struct exfat_sb_info *sbi = EXFAT_SB(sb);
++	unsigned int count = 0;
++	unsigned int i, map_i = 0, map_b = 0;
++	unsigned int total_clus = EXFAT_DATA_CLUSTER_COUNT(sbi);
++	unsigned int last_mask = total_clus & BITS_PER_BYTE_MASK;
++	unsigned char clu_bits;
++	const unsigned char last_bit_mask[] = {0, 0b00000001, 0b00000011,
++		0b00000111, 0b00001111, 0b00011111, 0b00111111, 0b01111111};
++
++	total_clus &= ~last_mask;
++	for (i = 0; i < total_clus; i += BITS_PER_BYTE) {
++		clu_bits = *(sbi->vol_amap[map_i]->b_data + map_b);
++		count += used_bit[clu_bits];
++		if (++map_b >= (unsigned int)sb->s_blocksize) {
++			map_i++;
++			map_b = 0;
++		}
++	}
++
++	if (last_mask) {
++		clu_bits = *(sbi->vol_amap[map_i]->b_data + map_b);
++		clu_bits &= last_bit_mask[last_mask];
++		count += used_bit[clu_bits];
++	}
++
++	*ret_count = count;
++	return 0;
++}
+-- 
+2.17.1
+
