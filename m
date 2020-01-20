@@ -2,122 +2,201 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 887B5C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36057C33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C7FC20684
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:17:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02C5E2073D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:21:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N4kAnv8F"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KqQ4T0pr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbgATKRn (ORCPT
+        id S1726619AbgATKVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 05:17:43 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36496 "EHLO
+        Mon, 20 Jan 2020 05:21:45 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:32522 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726796AbgATKRm (ORCPT
+        with ESMTP id S1726130AbgATKVo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 05:17:42 -0500
+        Mon, 20 Jan 2020 05:21:44 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579515462;
+        s=mimecast20190719; t=1579515703;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=3Kn3eF1bDp58ABo+Z+VK7m/se8AJ6JmDqRXHpdzmrrQ=;
-        b=N4kAnv8FyaeBpT/U+DneiQLEAqOjHWzqFxCI1hBnEn6ZN7kWZESpfXFUZDmakgzk9C8HC/
-        wndmQmZdzAFlXKv4ognXfZHTpM1SeXatCu5LuedbbS37oiwhsZPdJbk9iYyB06yZyj7oue
-        dS2VJHPJ5VlHaSrtWZyrMP6xK0CUEic=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-328-BCEGrRCkOX2A5cFVF0rs9Q-1; Mon, 20 Jan 2020 05:17:40 -0500
-X-MC-Unique: BCEGrRCkOX2A5cFVF0rs9Q-1
-Received: by mail-wm1-f69.google.com with SMTP id c4so3543335wmb.8
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 02:17:40 -0800 (PST)
+        bh=67Jq//WKsjDLFPDEaYBVfnLMTqVMtRKgNH9ezxHhqMg=;
+        b=KqQ4T0prMUyF2sn9KgAAu3rDEqiquTt1Z5WCtFWWxzn/1hXc4R1wXzUPxQSSIBfn68IOcc
+        5f/Q4YXkOpws4HTsYMQC26/VbnTqKML1lNFuF0znoNhOIJrnfPD2oGWY5sKQaOgzWyRbQ0
+        gp5gYrsDlEzeC05w+Esn7h/SEfFNwTo=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-221-vsinma0gOAKJLKcZcU6G9g-1; Mon, 20 Jan 2020 05:21:42 -0500
+X-MC-Unique: vsinma0gOAKJLKcZcU6G9g-1
+Received: by mail-wm1-f70.google.com with SMTP id c4so3547381wmb.8
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 02:21:41 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3Kn3eF1bDp58ABo+Z+VK7m/se8AJ6JmDqRXHpdzmrrQ=;
-        b=VD4IcmHg1S/XWCGZMMd+Ptx/NkfnNPjgXXCMsH+MpByFw6Y75DoQP3sY/gSBqJsGFf
-         KJSLaXAFo6/sERFcI0HEXlR3OExb06uOxsrgVB3xmggM0iZeV4wzfdGoKjiULQKooEWo
-         JkHfPtf0fftTe4A2NpjQXCBnpeMC5d4nWYHMjgfeUlZqHEikDV/MTsrujPBGGjCFW0Fg
-         E6oeVE0A+AUMrcKRBGOyi+bVRPN/aeMGlmkVi2FWymAEWbFG3t5kEpucFUR6odwGYfgZ
-         I2AMsGV7R/O7eQ0AWcNaAbrDPKtzdo1IK0Ks6mw4wcP6UpZF0Vp5eWHgafGAJLWV4lkl
-         w2dg==
-X-Gm-Message-State: APjAAAUlIYMZ7THlEKbMxGRo7TfuqJTjBEElmJ4qTk7P0uUrGO7WPPqJ
-        S5z28DXcYL0YOqip7zgp/ebPAs/Kai9VLusElhK5gVh5mNSOVpbBUUy2mYMVg2qyU/sQyLoZXeC
-        1Vlq0+g9loA6BECIZLl2Zj+No
-X-Received: by 2002:a5d:4c8c:: with SMTP id z12mr17204959wrs.222.1579515459302;
-        Mon, 20 Jan 2020 02:17:39 -0800 (PST)
-X-Google-Smtp-Source: APXvYqx8nPgpJZeiHtCAtqFdRM5avjMVn14ZlpARF6xuxaOm5EpPLbYY6JuPnFuxmQoQgypkH/rg3g==
-X-Received: by 2002:a5d:4c8c:: with SMTP id z12mr17204936wrs.222.1579515459017;
-        Mon, 20 Jan 2020 02:17:39 -0800 (PST)
-Received: from steredhat (host84-49-dynamic.31-79-r.retail.telecomitalia.it. [79.31.49.84])
-        by smtp.gmail.com with ESMTPSA id p18sm22504644wmb.8.2020.01.20.02.17.37
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=67Jq//WKsjDLFPDEaYBVfnLMTqVMtRKgNH9ezxHhqMg=;
+        b=t3lHuUVl026aTO9p9IIAWbM0Hqo+OV8fHYm0DjjCrWsGXzZBWGoOf/IcSolW3/SFvr
+         eqT0arfk38DupJOntllL/QEL8tCqHvmM4iobYxUwMhVuGHTes8NiBIrVK8y6CuBjPPly
+         Lmt8Oprabnh9yu61FEhv8IqdMLDGCNxSdTE5pV6X1MwMt5P6076CJB87tCeu2mwrP/iC
+         MT76wvcyFcJJnxt3EkqisCsBhw8jTgINXXYalfMjYQFcCw5bDDHzRSkiwtVY/jjhfA9o
+         3kNhKFgb3wJDS1qp5JYFL+nTldoTSbxRJM3SY5xV+yJ7IG5+2r/C8o1Ucr875cTf2MbW
+         ZGtQ==
+X-Gm-Message-State: APjAAAVLYIVftm41VLN7kYQikbfTJRFHvAXBqaH+yGoxpY4GKk/q4jMm
+        P0yizJRX4XEYIauw855aCzvNgDEaKf/OqKXH6HrvMUOm2SdQK8AtyX92zJwxAo0skRldaJJ7g0Q
+        xiE5ivSFZLiedHHyafXJwmsMb
+X-Received: by 2002:a05:600c:2150:: with SMTP id v16mr17832468wml.156.1579515700323;
+        Mon, 20 Jan 2020 02:21:40 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwOmP+ELYrXivXo+i0W5sc55kAKNukW98pZAJ6186zbUwlTIDccyDsLIjkL0bVQpkRQKBr10g==
+X-Received: by 2002:a05:600c:2150:: with SMTP id v16mr17832449wml.156.1579515700094;
+        Mon, 20 Jan 2020 02:21:40 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id f1sm21994131wmc.45.2020.01.20.02.21.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 02:17:38 -0800 (PST)
-Date:   Mon, 20 Jan 2020 11:17:35 +0100
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     David Miller <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jhansen@vmware.com, jasowang@redhat.com, kvm@vger.kernel.org,
-        stefanha@redhat.com, virtualization@lists.linux-foundation.org,
-        linux-hyperv@vger.kernel.org, mst@redhat.com, decui@microsoft.com
-Subject: Re: [PATCH net-next 1/3] vsock: add network namespace support
-Message-ID: <20200120101735.uyh4o64gb4njakw5@steredhat>
-References: <20200116172428.311437-1-sgarzare@redhat.com>
- <20200116172428.311437-2-sgarzare@redhat.com>
- <20200120.100610.546818167633238909.davem@davemloft.net>
+        Mon, 20 Jan 2020 02:21:39 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Michael Kelley <mikelley@microsoft.com>,
+        "lantianyu1986\@gmail.com" <lantianyu1986@gmail.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal\@kernel.org" <sashal@kernel.org>
+Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable\@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH V2] x86/Hyper-V: Balloon up according to request page number
+In-Reply-To: <MW2PR2101MB10520A27DC77E3B2F15EC75FD7300@MW2PR2101MB1052.namprd21.prod.outlook.com>
+References: <20200116141600.23391-1-Tianyu.Lan@microsoft.com> <MW2PR2101MB10520A27DC77E3B2F15EC75FD7300@MW2PR2101MB1052.namprd21.prod.outlook.com>
+Date:   Mon, 20 Jan 2020 11:21:38 +0100
+Message-ID: <87v9p6fmx9.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200120.100610.546818167633238909.davem@davemloft.net>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 10:06:10AM +0100, David Miller wrote:
-> From: Stefano Garzarella <sgarzare@redhat.com>
-> Date: Thu, 16 Jan 2020 18:24:26 +0100
-> 
-> > This patch adds 'netns' module param to enable this new feature
-> > (disabled by default), because it changes vsock's behavior with
-> > network namespaces and could break existing applications.
-> 
-> Sorry, no.
-> 
-> I wonder if you can even design a legitimate, reasonable, use case
-> where these netns changes could break things.
+Michael Kelley <mikelley@microsoft.com> writes:
 
-I forgot to mention the use case.
-I tried the RFC with Kata containers and we found that Kata shim-v1
-doesn't work (Kata shim-v2 works as is) because there are the following
-processes involved:
-- kata-runtime (runs in the init_netns) opens /dev/vhost-vsock and
-  passes it to qemu
-- kata-shim (runs in a container) wants to talk with the guest but the
-  vsock device is assigned to the init_netns and kata-shim runs in a
-  different netns, so the communication is not allowed
+> From: Tianyu Lan <Tianyu.Lan@microsoft.com> Sent: Thursday, January 16, 2020 6:16 AM
+>> 
+>> Current code has assumption that balloon request memory size aligns
+>> with 2MB. But actually Hyper-V doesn't guarantee such alignment. When
+>> balloon driver receives non-aligned balloon request, it produces warning
+>> and balloon up more memory than requested in order to keep 2MB alignment.
+>> Remove the warning and balloon up memory according to actual requested
+>> memory size.
+>> 
+>> Fixes: f6712238471a ("hv: hv_balloon: avoid memory leak on alloc_error of 2MB memory
+>> block")
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+>> ---
+>> Change since v2:
+>>     - Change logic of switching alloc_unit from 2MB to 4KB
+>>     in the balloon_up() to avoid redundant iteration when
+>>     handle non-aligned page request.
+>>     - Remove 2MB alignment operation and comment in balloon_up()
+>> ---
+>>  drivers/hv/hv_balloon.c | 12 ++++--------
+>>  1 file changed, 4 insertions(+), 8 deletions(-)
+>> 
+>> diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+>> index 7f3e7ab22d5d..536807efbc35 100644
+>> --- a/drivers/hv/hv_balloon.c
+>> +++ b/drivers/hv/hv_balloon.c
+>> @@ -1684,7 +1684,7 @@ static unsigned int alloc_balloon_pages(struct
+>> hv_dynmem_device *dm,
+>>  	if (num_pages < alloc_unit)
+>>  		return 0;
+>
+> The above test is no longer necessary.  The num_pages < alloc_unit
+> case is handled implicitly by your new 'for' loop condition.
+>
+>> 
+>> -	for (i = 0; (i * alloc_unit) < num_pages; i++) {
+>> +	for (i = 0; i < num_pages / alloc_unit; i++) {
+>>  		if (bl_resp->hdr.size + sizeof(union dm_mem_page_range) >
+>>  			HV_HYP_PAGE_SIZE)
+>>  			return i * alloc_unit;
+>> @@ -1722,7 +1722,7 @@ static unsigned int alloc_balloon_pages(struct
+>> hv_dynmem_device *dm,
+>> 
+>>  	}
+>> 
+>> -	return num_pages;
+>> +	return i * alloc_unit;
+>>  }
+>> 
+>>  static void balloon_up(union dm_msg_info *msg_info)
+>> @@ -1737,9 +1737,6 @@ static void balloon_up(union dm_msg_info *msg_info)
+>>  	long avail_pages;
+>>  	unsigned long floor;
+>> 
+>> -	/* The host balloons pages in 2M granularity. */
+>> -	WARN_ON_ONCE(num_pages % PAGES_IN_2M != 0);
+>> -
+>>  	/*
+>>  	 * We will attempt 2M allocations. However, if we fail to
+>>  	 * allocate 2M chunks, we will go back to PAGE_SIZE allocations.
+>> @@ -1749,14 +1746,13 @@ static void balloon_up(union dm_msg_info *msg_info)
+>>  	avail_pages = si_mem_available();
+>>  	floor = compute_balloon_floor();
+>> 
+>> -	/* Refuse to balloon below the floor, keep the 2M granularity. */
+>> +	/* Refuse to balloon below the floor. */
+>>  	if (avail_pages < num_pages || avail_pages - num_pages < floor) {
+>>  		pr_warn("Balloon request will be partially fulfilled. %s\n",
+>>  			avail_pages < num_pages ? "Not enough memory." :
+>>  			"Balloon floor reached.");
+>> 
+>>  		num_pages = avail_pages > floor ? (avail_pages - floor) : 0;
+>> -		num_pages -= num_pages % PAGES_IN_2M;
+>>  	}
+>> 
+>>  	while (!done) {
+>> @@ -1770,7 +1766,7 @@ static void balloon_up(union dm_msg_info *msg_info)
+>>  		num_ballooned = alloc_balloon_pages(&dm_device, num_pages,
+>>  						    bl_resp, alloc_unit);
+>> 
+>> -		if (alloc_unit != 1 && num_ballooned == 0) {
+>> +		if (alloc_unit != 1 && num_ballooned != num_pages) {
+>
+> Maybe I'm missing something, but I don't think Vitaly's optimization works.  If
+> alloc_unit specifies 2 Mbytes, and num_pages specifies 3 Mbytes, then num_ballooned
+> will come back as 2 Mbytes, which is correct.  But if we revert alloc_unit to 1 page and
+> "continue" in that case, we will lose the 2 Mbytes of memory (it's not freed), and the
+> next time through the loop will try to allocate only 1 Mbyte (because num_pages
+> will be decremented by num_ballooned).  I think the original code does the right thing.
+>
 
-But, as you said, this could be a wrong design, indeed they already
-found a fix, but I was not sure if others could have the same issue.
+True, nice catch! What I meant to say is that we can avoid sending two
+replies to the host and get away with just one. Unfortunately,
+"num_ballooned != num_pages" modification is not sufficient as
+alloc_balloon_pages() will overwrite bl_resp->range_array[] (as it
+always starts from 0). I think we can still achieve the goal by
+allocating bl_resp outside of the loop and filling it from
+range_array[range_count] instead of range_array[i] but it seems to big
+of a change for now particular gain. Let's just drop the idea.
 
-In this case, do you think it is acceptable to make this change in
-the vsock's behavior with netns and ask the user to change the design?
 
-> 
-> I am totally against adding a module parameter for this, it's
-> incredibly confusing for users and will create a test scenerio
-> that is strongly less likely to be covered.
-> 
+> Michael
+>
+>>  			alloc_unit = 1;
+>>  			continue;
+>>  		}
+>> --
+>> 2.14.5
+>
 
-Got it, I'll remove the module parameter!
-
-Thanks,
-Stefano
+-- 
+Vitaly
 
