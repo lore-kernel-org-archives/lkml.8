@@ -2,259 +2,295 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C286C33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7025C33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1388E217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:45:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7430D217F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:46:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="smPgCG/V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729037AbgATOpE (ORCPT
+        id S1728783AbgATOqL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 09:45:04 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:53509 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726819AbgATOpD (ORCPT
+        Mon, 20 Jan 2020 09:46:11 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:39593 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726626AbgATOqK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 09:45:03 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1itYIV-00017T-5f; Mon, 20 Jan 2020 15:44:59 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1itYIT-00027X-UE; Mon, 20 Jan 2020 15:44:57 +0100
-Date:   Mon, 20 Jan 2020 15:44:57 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5] gpio: pca953x: Add Maxim MAX7313 PWM support
-Message-ID: <20200120144457.eznywc423ehw6kuc@pengutronix.de>
-References: <20200107133130.1338-1-miquel.raynal@bootlin.com>
- <20200120121329.GC206171@ulmo>
- <20200120134137.54dc307e@xps13>
- <20200120141944.GD206171@ulmo>
+        Mon, 20 Jan 2020 09:46:10 -0500
+Received: by mail-qk1-f194.google.com with SMTP id c16so30295421qko.6
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 06:46:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3mOQDsNsMEMdcvwZ9EOVAmI2Aq9GLe7RdHuUtWY0eg0=;
+        b=smPgCG/VvbG6vsWCWbx8s/aWjNSEuYQgNMoRmlbZ2oDkrLDe3fhXY6npZAVyDCnBZV
+         bm1+02gHiSMcHjlL7We8IsbAtwj6Qdy3vD7NYYcfdGUBQyTSzf6RZbpedBYcYEO38RvL
+         g0yE2wlGkr520/pJ0nUZpb1iPk5PjPUhbwATseqwXNpnAazq6FlP7BsggOWfGkPZNK8E
+         M9/YmFC94YrZvGcwsM11tpKMtd8Pt9IIuZf5y2XQSC4srMK/RKflwNsb2X67O49J/NOo
+         Ok04MsFySXa5vIufvVBHtdU3K+0QgO3NTytYBWQuDmCkZT7Y69a3Vdj2lUfqsj7qAKpl
+         +3wQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3mOQDsNsMEMdcvwZ9EOVAmI2Aq9GLe7RdHuUtWY0eg0=;
+        b=entcJTlFayKxNB/XPl4nRong/5GGCraYgUaABILspUdQw5h6Y8CX+O5+RdeV99X+Wt
+         ftp+Z8V/IPOHXV6de9TIQoYI1I62YcMGmyp3IKPcTXsljMG0kATJ8vEz4iTeQs+DlJ2P
+         IRRDeLER/DiV+lFOac3+o2p5M+L1QTga4Las5E9YsZV/KZKQGaN8SYfsQJlCKdO1eMUG
+         i5qX2U7D9UdoZNGeRSWxB3nlekqOHmTm+67Eium+V88m44N1OsT6sQeXo7RlZixaF7ro
+         ldS3Kuvb3+1rc3d2Lnhx0F6kABPIm1lpwp2veJPQSf4YqJl8HJg1jTjBm6DD02ImyPih
+         r49g==
+X-Gm-Message-State: APjAAAWmFwvaO9z/o0lUkDLeShTcopWWmK+aogCVzjgoXDJ73/k/CaCt
+        uFfeeAlay/3BAKHYsDhRfLOaMVDkOZlGumXEnQ68ow==
+X-Google-Smtp-Source: APXvYqwYDBXJpwgqX0FiWsgunqp1YsK982AUQrmnhejICBhDZWA+0ZTMGV+eLa9hMePuqmCZqqFSVD6WxjPczxXi1Pw=
+X-Received: by 2002:a37:5841:: with SMTP id m62mr50539398qkb.256.1579531569022;
+ Mon, 20 Jan 2020 06:46:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200120141944.GD206171@ulmo>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20200120141927.114373-1-elver@google.com>
+In-Reply-To: <20200120141927.114373-1-elver@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Mon, 20 Jan 2020 15:45:57 +0100
+Message-ID: <CACT4Y+bnRoKinPopVqyxj4av6_xa_OUN0wwnidpO3dX3iYq_gg@mail.gmail.com>
+Subject: Re: [PATCH 1/5] include/linux: Add instrumented.h infrastructure
+To:     Marco Elver <elver@google.com>
+Cc:     paulmck@kernel.org, Andrey Konovalov <andreyknvl@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Daniel Axtens <dja@axtens.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Daniel Borkmann <daniel@iogearbox.net>, cyphar@cyphar.com,
+        Kees Cook <keescook@chromium.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Thierry,
+On Mon, Jan 20, 2020 at 3:19 PM Marco Elver <elver@google.com> wrote:
+>
+> This adds instrumented.h, which provides generic wrappers for memory
+> access instrumentation that the compiler cannot emit for various
+> sanitizers. Currently this unifies KASAN and KCSAN instrumentation. In
+> future this will also include KMSAN instrumentation.
+>
+> Note that, copy_{to,from}_user require special instrumentation,
+> providing hooks before and after the access, since we may need to know
+> the actual bytes accessed (currently this is relevant for KCSAN, and is
+> also relevant in future for KMSAN).
+>
+> Suggested-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Marco Elver <elver@google.com>
+> ---
+>  include/linux/instrumented.h | 153 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 153 insertions(+)
+>  create mode 100644 include/linux/instrumented.h
+>
+> diff --git a/include/linux/instrumented.h b/include/linux/instrumented.h
+> new file mode 100644
+> index 000000000000..9f83c8520223
+> --- /dev/null
+> +++ b/include/linux/instrumented.h
+> @@ -0,0 +1,153 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +
+> +/*
+> + * This header provides generic wrappers for memory access instrumentation that
+> + * the compiler cannot emit for: KASAN, KCSAN.
+> + */
+> +#ifndef _LINUX_INSTRUMENTED_H
+> +#define _LINUX_INSTRUMENTED_H
+> +
+> +#include <linux/compiler.h>
+> +#include <linux/kasan-checks.h>
+> +#include <linux/kcsan-checks.h>
+> +#include <linux/types.h>
+> +
+> +/**
+> + * instrument_read - instrument regular read access
+> + *
+> + * Instrument a regular read access. The instrumentation should be inserted
+> + * before the actual read happens.
+> + *
+> + * @ptr address of access
+> + * @size size of access
+> + */
 
-On Mon, Jan 20, 2020 at 03:19:44PM +0100, Thierry Reding wrote:
-> On Mon, Jan 20, 2020 at 01:41:37PM +0100, Miquel Raynal wrote:
-> > Hi Thierry,
-> > 
-> > Thanks for reviewing,
-> > 
-> > > > +static bool max7313_pwm_reg_is_accessible(struct device *dev, unsigned int reg)
-> > > > +{
-> > > > +	struct pca953x_chip *chip = dev_get_drvdata(dev);
-> > > > +	unsigned int bank_sz = chip->driver_data & PCA_GPIO_MASK;
-> > > > +
-> > > > +	if (reg >= MAX7313_MASTER && reg < (MAX7313_INTENSITY + bank_sz))
-> > > > +		return true;
-> > > > +
-> > > > +	return false;
-> > > > +}
-> > > > +
-> > > >  static bool pca953x_readable_register(struct device *dev, unsigned int reg)
-> > > >  {
-> > > >  	struct pca953x_chip *chip = dev_get_drvdata(dev);
-> > > >  	u32 bank;
-> > > >  
-> > > > +	if ((chip->driver_data & MAX_PWM) &&
-> > > > +	    max7313_pwm_reg_is_accessible(dev, reg))
-> > > > +		return true;  
-> > > 
-> > > This doesn't look correct. The MAX_PWM flag doesn't signify that all
-> > > GPIOs are used in PWM mode, right? So the above check would return true
-> > > even if you're trying to access GPIO registers on a chip that has PWM
-> > > support.
-> > 
-> > Not exactly: this part returns true only if we are using a chip with
-> > PWM and we are accessing PWM registers.
-> > 
-> > Otherwise, for instance if we are accessing GPIO registers, this will
-> > not return anything.
-> > 
-> > > 
-> > > I think you still want to proceed with the checks below if reg doesn't
-> > > match any of the PWM related registers.
-> > 
-> > This is precisely what we do here. See the
-> > max7313_pwm_reg_is_accessible helper above: only the PWM registers are
-> > checked, I suppose this is the part you missed.
-> 
-> No idea what I missed, but on a second look, yes, you're absolutely
-> right.
-> 
-> > > So it'd be something more along
-> > > these lines:
-> > > 
-> > > 	if ((chip->driver_data & MAX_PWM) &&
-> > > 	    !max7313_pwm_reg_is_accessible(dev, reg))
-> > > 		return false;
-> > > 
-> > > > +
-> > > >  	if (PCA_CHIP_TYPE(chip->driver_data) == PCA953X_TYPE) {
-> > > >  		bank = PCA953x_BANK_INPUT | PCA953x_BANK_OUTPUT |
-> > > >  		       PCA953x_BANK_POLARITY | PCA953x_BANK_CONFIG;
-> > > > @@ -267,6 +318,10 @@ static bool pca953x_writeable_register(struct device *dev, unsigned int reg)
-> > > >  	struct pca953x_chip *chip = dev_get_drvdata(dev);
-> > > >  	u32 bank;
-> > > >  
-> > > > +	if ((chip->driver_data & MAX_PWM) &&
-> > > > +	    max7313_pwm_reg_is_accessible(dev, reg))
-> > > > +		return true;  
-> > > 
-> > > Same here.
-> > > 
-> > > > +
-> > > >  	if (PCA_CHIP_TYPE(chip->driver_data) == PCA953X_TYPE) {
-> > > >  		bank = PCA953x_BANK_OUTPUT | PCA953x_BANK_POLARITY |
-> > > >  			PCA953x_BANK_CONFIG;
-> > > > @@ -855,6 +910,335 @@ static int device_pca957x_init(struct pca953x_chip *chip, u32 invert)
-> > > >  	return ret;
-> > > >  }
-> > > >  
-> > 
-> > [...]
-> > 
-> > > > +static void max7313_pwm_free(struct pwm_chip *chip,
-> > > > +			     struct pwm_device *pwm)
-> > > > +{
-> > > > +	struct max7313_pwm_data *data = pwm_get_chip_data(pwm);
-> > > > +
-> > > > +	gpiochip_free_own_desc(data->desc);
-> > > > +	kfree(data);
-> > > > +}
-> > > > +
-> > > > +static int max7313_pwm_apply(struct pwm_chip *chip,
-> > > > +			     struct pwm_device *pwm,
-> > > > +			     const struct pwm_state *state)
-> > > > +{
-> > > > +	struct max7313_pwm *max_pwm = to_max7313_pwm(chip);
-> > > > +	struct pca953x_chip *pca_chip = to_pca953x(max_pwm);
-> > > > +	unsigned int intensity, active;
-> > > > +	int ret = 0;
-> > > > +
-> > > > +	if (!state->enabled ||
-> > > > +	    state->period < PWM_PERIOD_NS ||  
-> > > 
-> > > I think you should actually make this a != so that you refuse any
-> > > attempt to change the period, since you can't do it anyway.
-> > 
-> > Actually we discussed this with Uwe, see the below snippet:
-> > 
-> > ---8<---
-> > > > > +	if (state->period != PWM_PERIOD_NS ||
-> > > > > +	    state->polarity != PWM_POLARITY_NORMAL)
-> > > > > +		return -EINVAL;    
-> > > > 
-> > > > The check for period is too strong. Anything bigger than PWM_PERIOD_NS
-> > > > is acceptable, too. (The policy I'd like to see is: Provide the biggest
-> > > > period possible not bigger than the requested policy.)  
-> > > 
-> > > I don't understand, what is this parameter supposed to mean? the period
-> > > cannot be changed, it is ruled by an internal oscillator. In this case
-> > > any period bigger than the actual period cannot be physically achieved.
-> > > If we derive ratios with a bigger period than possible, why not
-> > > allowing it for lower periods too?  
-> > 
-> > Yes, I understood that the period is fixed for your PWM. However
-> > consider a consumer who would prefer a different period. If you decline
-> > all requests unless state->period == PWM_PERIOD_NS the consumer has no
-> > guide to determine that unless all periods are tested. If however asking
-> > for period = 2s results in getting 31.25 ms this allows the consumer to
-> > assume that no period setting between 2s and 31.25 ms is possible. And
-> > so the usual policy to implement is as stated in my previous mail.
-> > --->8---
-> 
-> I think I understand what Uwe is getting at, but I don't think we should
-> lie to consumers. It's true that in some cases the drivers will silently
-> use a slightly different period if they can't match the one requested,
-> but I don't think that's a good thing. Most of the time in those drivers
-> the computed period that the controller can support is "close enough".
-> 
-> But in this case the controller doesn't support anything other than the
-> one period, so I don't think accepting anything other than that is good
-> for any consumer.
-> 
-> Also, typically this doesn't really matter because this will have been
-> defined in device tree and if the device tree has the wrong period, then
-> this should already be caught before the buggy DTS is upstreamed.
-> 
-> So, I agree that the current situation is not ideal and perhaps we
-> should enforce stronger requirements for accuracy. I suspect that a good
-> solution would be for the drivers to report back the state that would've
-> been applied without actually applying it (kind of like the semantics of
-> clk_round_rate() from the common clock framework). That would give users
-> a good way of checking whether the supported parameters are within the
-> desired range before applying them. For consumers that don't care all
-> that much about precision, they can feel free to ignore any differences
-> between what they asked and what they got, and most of the time that
-> will be fine.
+Based on offline discussion, that's what we add for KMSAN:
 
-Yeah, it's something like clk_round_rate that I want in the end. And to
-make it actually workable the IMHO only sane approach is to allow
-rounding in one direction without limit. And as pwm_apply_state() should
-be consistent with pwm_round_state() the former must round without
-limit, too.
+> +static __always_inline void instrument_read(const volatile void *v, size_t size)
+> +{
+> +       kasan_check_read(v, size);
+> +       kcsan_check_read(v, size);
 
-And if you want to require that a consumer of a PWM that only supports a
-single period setting passes that period, how do you want to handle the
-situation if this period happens to be 2000/3 ns. Is it ok to pass
-.period = 666? Is it ok to pass 667?
+KMSAN: nothing
 
-> In many cases it doesn't matter because the period is defined in DT and
-> is hand-picked to be among the ones supported by the controller, or the
-> small differences between the period in DT and the closest one supported
-> by the controller is not significant and things will just work.
+> +}
+> +
+> +/**
+> + * instrument_write - instrument regular write access
+> + *
+> + * Instrument a regular write access. The instrumentation should be inserted
+> + * before the actual write happens.
+> + *
+> + * @ptr address of access
+> + * @size size of access
+> + */
+> +static __always_inline void instrument_write(const volatile void *v, size_t size)
+> +{
+> +       kasan_check_write(v, size);
+> +       kcsan_check_write(v, size);
 
-In my eyes to get a uniform behaviour of the PWM framework independant
-of the backend used, it must not be the driver who decides if a request
-is "close enough". We need a defined policy. And then it is obvious to
-me that this policy must be implemented in a way that it is in fact the
-consumer who has to decide which settings are ok and which are not. And
-then rounding without limit is the easiest to work with.
+KMSAN: nothing
 
-> However, ignoring period settings because the controller supports only a
-> fixed period seems a bit of an extreme.
+> +}
+> +
+> +/**
+> + * instrument_atomic_read - instrument atomic read access
+> + *
+> + * Instrument an atomic read access. The instrumentation should be inserted
+> + * before the actual read happens.
+> + *
+> + * @ptr address of access
+> + * @size size of access
+> + */
+> +static __always_inline void instrument_atomic_read(const volatile void *v, size_t size)
+> +{
+> +       kasan_check_read(v, size);
+> +       kcsan_check_atomic_read(v, size);
 
-So the setting I want is:
+KMSAN: nothing
 
-	if (request.period < HW_PERIOD)
-		fail();
-		
-and with the reasoning above, that's the only sensible thing (apart from
-the revered policy of rounding up and so failing for requested periods
-that are bigger than the implementable period).
+> +}
+> +
+> +/**
+> + * instrument_atomic_write - instrument atomic write access
+> + *
+> + * Instrument an atomic write access. The instrumentation should be inserted
+> + * before the actual write happens.
+> + *
+> + * @ptr address of access
+> + * @size size of access
+> + */
+> +static __always_inline void instrument_atomic_write(const volatile void *v, size_t size)
+> +{
+> +       kasan_check_write(v, size);
+> +       kcsan_check_atomic_write(v, size);
 
-Best regards
-Uwe
+KMSAN: nothing
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+> +}
+> +
+> +/**
+> + * instrument_copy_to_user_pre - instrument reads of copy_to_user
+> + *
+> + * Instrument reads from kernel memory, that are due to copy_to_user (and
+> + * variants).
+> + *
+> + * The instrumentation must be inserted before the accesses. At this point the
+> + * actual number of bytes accessed is not yet known.
+> + *
+> + * @dst destination address
+> + * @size maximum access size
+> + */
+> +static __always_inline void
+> +instrument_copy_to_user_pre(const volatile void *src, size_t size)
+> +{
+> +       /* Check before, to warn before potential memory corruption. */
+> +       kasan_check_read(src, size);
+
+KMSAN: check that (src,size) is initialized
+
+> +}
+> +
+> +/**
+> + * instrument_copy_to_user_post - instrument reads of copy_to_user
+> + *
+> + * Instrument reads from kernel memory, that are due to copy_to_user (and
+> + * variants).
+> + *
+> + * The instrumentation must be inserted after the accesses. At this point the
+> + * actual number of bytes accessed should be known.
+> + *
+> + * @dst destination address
+> + * @size maximum access size
+> + * @left number of bytes left that were not copied
+> + */
+> +static __always_inline void
+> +instrument_copy_to_user_post(const volatile void *src, size_t size, size_t left)
+> +{
+> +       /* Check after, to avoid false positive if memory was not accessed. */
+> +       kcsan_check_read(src, size - left);
+
+KMSAN: nothing
+
+> +}
+> +
+> +/**
+> + * instrument_copy_from_user_pre - instrument writes of copy_from_user
+> + *
+> + * Instrument writes to kernel memory, that are due to copy_from_user (and
+> + * variants).
+> + *
+> + * The instrumentation must be inserted before the accesses. At this point the
+> + * actual number of bytes accessed is not yet known.
+> + *
+> + * @dst destination address
+> + * @size maximum access size
+> + */
+> +static __always_inline void
+> +instrument_copy_from_user_pre(const volatile void *dst, size_t size)
+> +{
+> +       /* Check before, to warn before potential memory corruption. */
+> +       kasan_check_write(dst, size);
+
+KMSAN: nothing
+
+> +}
+> +
+> +/**
+> + * instrument_copy_from_user_post - instrument writes of copy_from_user
+> + *
+> + * Instrument writes to kernel memory, that are due to copy_from_user (and
+> + * variants).
+> + *
+> + * The instrumentation must be inserted after the accesses. At this point the
+> + * actual number of bytes accessed should be known.
+> + *
+> + * @dst destination address
+> + * @size maximum access size
+> + * @left number of bytes left that were not copied
+> + */
+> +static __always_inline void
+> +instrument_copy_from_user_post(const volatile void *dst, size_t size, size_t left)
+> +{
+> +       /* Check after, to avoid false positive if memory was not accessed. */
+> +       kcsan_check_write(dst, size - left);
+
+KMSAN: mark (dst, size-left) as initialized
+
+> +}
+> +
+> +#endif /* _LINUX_INSTRUMENTED_H */
+> --
+> 2.25.0.341.g760bfbb309-goog
+>
