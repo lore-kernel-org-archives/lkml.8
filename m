@@ -2,191 +2,158 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B37D5C33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:04:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C50C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:04:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8079A208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:04:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF2D7207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:04:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UlzPZXXk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dNQchdWM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbgATLER (ORCPT
+        id S1727243AbgATLEn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 06:04:17 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:32153 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726465AbgATLEQ (ORCPT
+        Mon, 20 Jan 2020 06:04:43 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38078 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726587AbgATLEm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 06:04:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579518255;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0D2NV9EyT8+bRJWlmQx32SvVPgUYttr3IYvJpCG0gTo=;
-        b=UlzPZXXkfStwOUTOhlmhLUgn8H1x/D1EM04ioleX1smxggN/QOfkA4IFvQnk1Ysf4my3F/
-        sDhm8lZNLzJMUFGBiuRL6tAaQelttCOy7LH1BePcqNiuQ2Gm1hi5d2FK76AB0y/CPJGVyO
-        v9foDTcMzfQjZeR4udPm7juF1/+8JkU=
-Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
- [209.85.208.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-327-iQRfkm1rM16s0BYntCgkYw-1; Mon, 20 Jan 2020 06:04:14 -0500
-X-MC-Unique: iQRfkm1rM16s0BYntCgkYw-1
-Received: by mail-lj1-f200.google.com with SMTP id k21so7476180ljg.3
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 03:04:13 -0800 (PST)
+        Mon, 20 Jan 2020 06:04:42 -0500
+Received: by mail-wm1-f68.google.com with SMTP id u2so14239463wmc.3;
+        Mon, 20 Jan 2020 03:04:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=fMgA2IlKF4foqDDRTZWDuHqhdy+ZvLnJ5Qyt7SeTruM=;
+        b=dNQchdWMDUMBcm43vAZi9xHzgG48+QTzA5Yk4xkSraJNGabUPdFREFLNWGbZaNJTeb
+         YfLk+DqiBu6HZqrEPRYZPpI+Gq88KatexOKxR+juNKcYum72+M5JCYsQSKhG+rxOucfN
+         yKX2XLpMCeGtnxau/FBKVpwtC1KcjyMrBffPY95z57ToDV1rO2F6+Kgb8Apxfb9rM8v2
+         cyv+ofpb0hmmS+GAqDlLqWjIp7RxuvmZPE+UlM+M2OKlvzHEy8lv0V/ImZqq1KEs29lH
+         Pcl3gszfCU3GGbS29Kla3GfB6OPJYEVGSJeqSi7JFOpVOYw8KFWnE62E/DDIMi5nEJv7
+         GkqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version:content-transfer-encoding;
-        bh=0D2NV9EyT8+bRJWlmQx32SvVPgUYttr3IYvJpCG0gTo=;
-        b=tGgKPgZDGbgKNcRxrOGq8KQ6RkUjZLgbQIsZ36pf2ZmDH0CiaDP3nn9DP/s7JoQyTy
-         w6iyxn3a9lF+DRjax0vwo/MLrKtFBqnr6LdpI8T/XTdlsT9Z7v9rtH5l1h8J2Drfptd4
-         PyZJgu2xF83ZapwirsS54PEiP1pvYrvMU39Xxi7gbiSWIAUN87X6AUjMiRotLlW7Sr02
-         5S6v7Govok5+LuM2WUe4mUVaPtHTeXgd9HWEEbDt+hrXwC6Z6oUuii68cv4klpJNI64r
-         tNRLbJG3TpcgG9yqspUV8SQ75lwjQ1WMz+DhpLkG7MA/XlrRbm7UuXnGmqsYs6VzQBms
-         WPNQ==
-X-Gm-Message-State: APjAAAU8/Zb3AsuN6U4LUnsRhvOdUf/1J4qGlFUbRICSJw71qOukQTTu
-        sjBM3xnIpaW8xV0T2EMaisYuhAbMAYw9BYx129yI4ySxTQUIAvRDyTxE0bpD3/uE8aX7BT5hZTZ
-        uvtR3a/gMcqb4mddzPtQTDwTi
-X-Received: by 2002:a2e:2c16:: with SMTP id s22mr13113870ljs.248.1579518252322;
-        Mon, 20 Jan 2020 03:04:12 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzXI2yd2Oi5VKXpLVh9lATHnVWtfkEINyqNvSzJ0CGsMQ8EPIgo05xlthJ7jXSiWSfn+eDmEA==
-X-Received: by 2002:a2e:2c16:: with SMTP id s22mr13113829ljs.248.1579518251933;
-        Mon, 20 Jan 2020 03:04:11 -0800 (PST)
-Received: from alrua-x1.borgediget.toke.dk ([85.204.121.218])
-        by smtp.gmail.com with ESMTPSA id z5sm16616586lji.40.2020.01.20.03.04.11
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=fMgA2IlKF4foqDDRTZWDuHqhdy+ZvLnJ5Qyt7SeTruM=;
+        b=tyUwMJppI3Y6pEWBHwHTAkPezHMNZnRltQPip7lfowiFcYoK2AavD0gXzR/zcNAIZv
+         GXRpM8+lWBwGNvUla4zEp62sl7+xLu1Nl/pCCcfBrpUovYYcpeiWOjB9tAm7S97e4Jk3
+         hzVnV3j7A+Y0F+SCh2eYrhGlIS+XnTg3mAGk1eQujM5yFYkRxmySbxjUrXvH8xiUPLRK
+         RJhzZLkMt3ZnnWFsl7RpglX3cEMTYHiQjYy3JZB5iJV+wobEZhU29xaJ52R7A6c/BgT9
+         OatCbyfdF4Vsb+OsRUPExXBi3R9/sf6PId4pIBlH23S8VM5P7/Pz9WAL2P9Eoz7Q12NX
+         v0ZA==
+X-Gm-Message-State: APjAAAU5gg1CDDgsMug7MmNTZfo9PM+/w+Qf95Onf1HIdyfyvMntN299
+        3UudZLlI7usM4cC3ZF1EENg=
+X-Google-Smtp-Source: APXvYqzCEwZgPjh2AuOswAnz+eK0J2sTtoJ4EKUpM50fjy57ge9GqU4FjN1ocoeV8Yh/rINzvYAaaw==
+X-Received: by 2002:a7b:cf12:: with SMTP id l18mr18967871wmg.66.1579518280431;
+        Mon, 20 Jan 2020 03:04:40 -0800 (PST)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id t8sm47371962wrp.69.2020.01.20.03.04.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 03:04:11 -0800 (PST)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id 50B871804D6; Mon, 20 Jan 2020 12:04:09 +0100 (CET)
-From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-rdma@vger.kernel.org,
-        "open list\:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH bpf-next v4 02/10] tools/bpf/runqslower: Fix override option for VMLINUX_BTF
-In-Reply-To: <CAEf4BzY3RM3LS3bvU4dHY+8U27RaezeaC9rfuW1YLAcFQEQKEA@mail.gmail.com>
-References: <157926819690.1555735.10756593211671752826.stgit@toke.dk> <157926819920.1555735.13051810516683828343.stgit@toke.dk> <CAEf4BzY3RM3LS3bvU4dHY+8U27RaezeaC9rfuW1YLAcFQEQKEA@mail.gmail.com>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date:   Mon, 20 Jan 2020 12:04:09 +0100
-Message-ID: <87blqypexi.fsf@toke.dk>
+        Mon, 20 Jan 2020 03:04:39 -0800 (PST)
+Date:   Mon, 20 Jan 2020 12:04:38 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Namjae Jeon <linkinjeon@gmail.com>,
+        Gabriel Krisman Bertazi <krisman@collabora.com>
+Subject: Re: vfat: Broken case-insensitive support for UTF-8
+Message-ID: <20200120110438.ak7jpyy66clx5v6x@pali>
+References: <20200119221455.bac7dc55g56q2l4r@pali>
+ <87sgkan57p.fsf@mail.parknet.co.jp>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87sgkan57p.fsf@mail.parknet.co.jp>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrii Nakryiko <andrii.nakryiko@gmail.com> writes:
+On Monday 20 January 2020 13:04:42 OGAWA Hirofumi wrote:
+> Pali Rohár <pali.rohar@gmail.com> writes:
+> 
+> > Which means that fat_name_match(), vfat_hashi() and vfat_cmpi() are
+> > broken for vfat in UTF-8 mode.
+> 
+> Right. It is a known issue.
 
-> On Fri, Jan 17, 2020 at 5:37 AM Toke H=C3=B8iland-J=C3=B8rgensen <toke@re=
-dhat.com> wrote:
->>
->> From: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
->>
->> The runqslower tool refuses to build without a file to read vmlinux BTF
->> from. The build fails with an error message to override the location by
->> setting the VMLINUX_BTF variable if autodetection fails. However, the
->> Makefile doesn't actually work with that override - the error message is
->> still emitted.
->>
->> Fix this by including the value of VMLINUX_BTF in the expansion, and only
->> emitting the error message if the *result* is empty. Also permit running
->> 'make clean' even though no VMLINUX_BTF is set.
->>
->> Fixes: 9c01546d26d2 ("tools/bpf: Add runqslower tool to tools/bpf")
->> Signed-off-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
->> ---
->
-> approach looks good, thanks, few nits below
->
->>  tools/bpf/runqslower/Makefile |   18 +++++++++---------
->>  1 file changed, 9 insertions(+), 9 deletions(-)
->>
->> diff --git a/tools/bpf/runqslower/Makefile b/tools/bpf/runqslower/Makefi=
-le
->> index cff2fbcd29a8..b62fc9646c39 100644
->> --- a/tools/bpf/runqslower/Makefile
->> +++ b/tools/bpf/runqslower/Makefile
->> @@ -10,13 +10,9 @@ CFLAGS :=3D -g -Wall
->>
->>  # Try to detect best kernel BTF source
->>  KERNEL_REL :=3D $(shell uname -r)
->> -ifneq ("$(wildcard /sys/kernel/btf/vmlinux)","")
->> -VMLINUX_BTF :=3D /sys/kernel/btf/vmlinux
->> -else ifneq ("$(wildcard /boot/vmlinux-$(KERNEL_REL))","")
->> -VMLINUX_BTF :=3D /boot/vmlinux-$(KERNEL_REL)
->> -else
->> -$(error "Can't detect kernel BTF, use VMLINUX_BTF to specify it explici=
-tly")
->> -endif
->> +VMLINUX_BTF_PATHS :=3D /sys/kernel/btf/vmlinux /boot/vmlinux-$(KERNEL_R=
-EL)
->> +VMLINUX_BTF_PATH :=3D $(abspath $(or $(VMLINUX_BTF),$(firstword \
->> +       $(wildcard $(VMLINUX_BTF_PATHS)))))
->
-> you can drop abspath, relative path for VMLINUX_BTF would work just fine
+Could be this issue better documented? E.g. in mount(8) manpage where
+are written mount options for vfat? I think that people should be aware
+of this issue when they use "utf8=1" mount option.
 
-OK.
+> > I was thinking how to fix it, and the only possible way is to write a
+> > uni_tolower() function which takes one Unicode code point and returns
+> > lowercase of input's Unicode code point. We cannot do any Unicode
+> > normalization as VFAT specification does not say anything about it and
+> > MS reference fastfat.sys implementation does not do it neither.
+> >
+> > So, what would be the best option for implementing that function?
+> >
+> >   unicode_t uni_tolower(unicode_t u);
+> >
+> > Could a new fs/unicode code help with it? Or it is too tied with NFD
+> > normalization and therefore cannot be easily used or extended?
+> 
+> To be perfect, the table would have to emulate what Windows use. It can
+> be unicode standard, or something other.
 
->>
->>  abs_out :=3D $(abspath $(OUTPUT))
->>  ifeq ($(V),1)
->> @@ -67,9 +63,13 @@ $(OUTPUT):
->>         $(call msg,MKDIR,$@)
->>         $(Q)mkdir -p $(OUTPUT)
->>
->> -$(OUTPUT)/vmlinux.h: $(VMLINUX_BTF) | $(OUTPUT) $(BPFTOOL)
->> +$(OUTPUT)/vmlinux.h: $(VMLINUX_BTF_PATH) | $(OUTPUT) $(BPFTOOL)
->>         $(call msg,GEN,$@)
->> -       $(Q)$(BPFTOOL) btf dump file $(VMLINUX_BTF) format c > $@
->> +       @if [ ! -e "$(VMLINUX_BTF_PATH)" ] ; then \
->
-> $(Q), not @
+Windows FAT32 implementation (fastfat.sys) is opensource. So it should
+be possible to inspect code and figure out how it is working.
 
-This was actually deliberate, since I was replacing an $(error) (which
-doesn't show up in V=3D1 output). But OK, I guess we can output the whole
-if statement as well on verbose builds...
+I will try to look at it.
 
->> +               echo "Couldn't find kernel BTF; set VMLINUX_BTF to speci=
-fy its location."; \
->> +               exit 1;\
->
-> nit: please align \'s (same above for VMLONUX_BTF_PATH) at the right
-> edge as it's done everywhere in this Makefile
+> And other fs can use different what Windows use.
+> 
+> So the table would have to be switchable in perfect world (if there is
+> no consensus to use 1 table).  If we use switchable table, I think it
+> would be better to put in userspace, and loadable like firmware data.
+> 
+> Well, so then it would not be simple work (especially, to be perfect).
 
-Right, I'll try to fix those up (for the whole series). My emacs is
-being a bit weird with displaying tabstops, so some of these look
-aligned when I'm editing. I'll see if I can figure out how to fix this
-so it becomes obvious while I'm making changes...
+Switchable table is not really simple and I think as a first step would
+be enough to have one (hardcoded) table for UTF-8. Like we have for all
+other encodings.
 
--Toke
+> Also, not directly same issue though. There is related issue for
+> case-insensitive. Even if we use some sort of internal wide char
+> (e.g. in nls, 16bits), dcache is holding name in user's encode
+> (e.g. utf8). So inefficient to convert cached name to wide char for each
+> access.
 
+Yes, this is truth. But this conversion is already doing exFAT
+implementation. I think we do not have other choice if we want Windows
+compatible implementation.
+
+> Relatively recent EXT4 case-insensitive may tackled this though, I'm not
+> checking it yet.
+> 
+> > New exfat code which is under review and hopefully would be merged,
+> > contains own unicode upcase table (as defined by exfat specification) so
+> > as exfat is similar to FAT32, maybe reusing it would be a better option?
+> 
+> exfat just put a case conversion table in fs. So I don't think it helps
+> fatfs.
+
+exfat has fallback conversion table (hardcoded in driver) which is used
+when fs itself does not have conversion table. This is mandated by exfat
+specification. Part of exFAT specification is that default conversion
+table.
+
+I was thinking... as both VFAT and exFAT are MS standard and exFAT is
+just evolved FAT32 we could use that exFAT default conversion table
+(which is prevent in that exfat driver).
+
+-- 
+Pali Rohár
+pali.rohar@gmail.com
