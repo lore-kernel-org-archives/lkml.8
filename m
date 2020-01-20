@@ -2,106 +2,196 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17601C33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:17:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E23CC33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:19:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E323522464
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:17:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579526269;
-	bh=xb4oL8mDXUR9uCGZa9Fwa6jdXL/jAKA3QRxlowXiZdI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AhWZgWQuC/ougN1TZGw625agsu7rEPlZeWN+F/bgoILiu/Cx44K53IgK2XsM8wtJY
-	 xyw4mEeWVZpeNC9Uy1XpXc5+wPWIE5DBXvmUyA1BDJu+uhtd0Np5FwoonqZAGKvqTK
-	 oqkLKm8yrL4mBlnAhF/E9kbzfkuJTWtBdzW/fFJs=
+	by mail.kernel.org (Postfix) with ESMTP id D4C5724673
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:19:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="G06DXa04"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727688AbgATNRs (ORCPT
+        id S1727071AbgATNTX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 08:17:48 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39209 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726876AbgATNRs (ORCPT
+        Mon, 20 Jan 2020 08:19:23 -0500
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:42190 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726619AbgATNTX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 08:17:48 -0500
-Received: by mail-wr1-f66.google.com with SMTP id y11so29525286wrt.6;
-        Mon, 20 Jan 2020 05:17:46 -0800 (PST)
+        Mon, 20 Jan 2020 08:19:23 -0500
+Received: by mail-qv1-f65.google.com with SMTP id dc14so13913952qvb.9
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 05:19:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HgJJtE+3yyE+N9S25iMw/ePK2fC497PluXTrflyuZaE=;
+        b=G06DXa046ce21M+FFj1pf7M+SGMVIOvKQ+KNzI/2S3rOacs4u1ls5MIf1HIAx+FNiE
+         I0qr8pAozP1iqZ2XsgbOehQSm/pMzINNxWS0+mJOho4c8xYI0jGBaMo7emeg/gPMz79t
+         9evp2GdT1tOWeiM55y76vxTZzbHaA5GWZj3iFKLf3tVmrzp3YS8Yw1gJw3aRjbxo0zzJ
+         tEhmdQHGtK0D9F2I17LwpvEYHEYm7+yVycIsG+Ge8q40XddoVwWDt/e6X5YafgYBAp80
+         uMJwGSlxMcCeWKaJPzFujOlXNjjIk/px3nfH7a0tbdqNtuNSGUrT8A7fM9gnQYMbpRyw
+         VJUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Hg8lEj6IfSDi5BHq/iEw/j7YLmN0NQVwuEmhkiLJ3Jc=;
-        b=kzFFB8DKQU5dar1S8h+QNUVTgXs7ctPMEnIbv9UdAnWnOfJn4uKU6xQffI+Px12XfZ
-         Bjui103auC4T7+rXOLQmifpZtceAHN1FNyOBqPNELItRFEtkJSj+qPYuQi43Qtpg2JoN
-         7+qxeA50TF+wsKaDwmU7hWC9SuTROglTWirpRbs3F2t214UXQqwnVolRlB0kqm2xMwVz
-         AdK8ixYCn4yVI4o+RqBp8bAQvlzNKDWcy5XtCGQKRurduLmXtRIXkFdNC2NrOk8ko8d3
-         kBGkQebZxAYGP0ro8TCNMVXwHT4Mw82YQOZjUbABV3olYdeyOJdT6BPX55N2TDf1K8rM
-         mROA==
-X-Gm-Message-State: APjAAAWtYxA/85umLe/4Ybn9D5s8iTzoJ8plhd6dkPna/2oD6GJgnTd2
-        UH5GgDDCuls8ONDFaIBsWsj8nlRE
-X-Google-Smtp-Source: APXvYqyVfB1hBEBbz7ctRSgXmXP0aTRxz7DuVUW+KSpWwK5HyHTKJKUeZtYsWDLXBPs4ghfkmDelrg==
-X-Received: by 2002:a5d:4392:: with SMTP id i18mr18272968wrq.199.1579526265911;
-        Mon, 20 Jan 2020 05:17:45 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id t131sm24423327wmb.13.2020.01.20.05.17.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 05:17:45 -0800 (PST)
-Date:   Mon, 20 Jan 2020 14:17:44 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     richardw.yang@linux.intel.com, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] mm: move_pages: fix the return value if there are
- not-migrated pages
-Message-ID: <20200120131744.GE18451@dhcp22.suse.cz>
-References: <1579325203-16405-1-git-send-email-yang.shi@linux.alibaba.com>
- <20200120130624.GD18451@dhcp22.suse.cz>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HgJJtE+3yyE+N9S25iMw/ePK2fC497PluXTrflyuZaE=;
+        b=Qe4D+pHeOqKU4zfHm+J35SYc6BuJuiRaYyrh0uE1HzHe/jfYyzwYJSwdm1I9a6+tbe
+         wDjNGqVACa6Q2QUaZMHKxWGQlH40h0IzBY9oZB84IDDZSfc+A3cHqW51he6XPfu3Uox5
+         HoTAjC57Js3h8Z0H/TciZ5m9K7IlLbdaZoCdhqsD0SC81eD2y4NR6gkvNfYSO8B/EjM6
+         OxvBCFHe+KcqC+ZBSFDhtA1nI+VYacVcbstQBZp6Wrcl0GSP2L7s8qmVyeHOm7fbsbOo
+         XDyUrEm4jhUJ18gcMzpOWV75q1Qfd1w2Hc8N2O9/WEw0DgycsyCQ3LIeSg9gk0vDzJc3
+         ln4A==
+X-Gm-Message-State: APjAAAW7x2a8URQE5goAL71CINYVfCuGMTOLs3ZEhfGiBpUNDuF2ZrD6
+        4Cwq+EzaRVzRdBl3ZoDamzODvA==
+X-Google-Smtp-Source: APXvYqxsRmhPVJuM4MfM26pZXbz3E1qumMVxOSodoqqDohH3qx7zZcC75mmbeG64Yp8Grh8JNuVP1w==
+X-Received: by 2002:ad4:55ec:: with SMTP id bu12mr20644399qvb.107.1579526362281;
+        Mon, 20 Jan 2020 05:19:22 -0800 (PST)
+Received: from Qians-MBP.fios-router.home (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id t73sm15903831qke.71.2020.01.20.05.19.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 Jan 2020 05:19:21 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org
+Cc:     mhocko@kernel.org, david@redhat.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH -mm v2] mm/page_isolation: fix potential warning from user
+Date:   Mon, 20 Jan 2020 08:19:09 -0500
+Message-Id: <20200120131909.813-1-cai@lca.pw>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200120130624.GD18451@dhcp22.suse.cz>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 20-01-20 14:06:26, Michal Hocko wrote:
-> On Sat 18-01-20 13:26:43, Yang Shi wrote:
-> > The do_move_pages_to_node() might return > 0 value, the number of pages
-> > that are not migrated, then the value will be returned to userspace
-> > directly.  But, move_pages() syscall would just return 0 or errno.  So,
-> > we need reset the return value to 0 for such case as what pre-v4.17 did.
-> 
-> The patch is wrong. migrate_pages returns the number of pages it
-> _hasn't_ migrated or -errno. Yeah that semantic sucks but...
-> So err != 0 is always an error. Except err > 0 doesn't really provide
-> any useful information to the userspace. I cannot really remember what
-> was the actual behavior before my rework because there were some gotchas
-> hidden there.
+It makes sense to call the WARN_ON_ONCE(zone_idx(zone) == ZONE_MOVABLE)
+from start_isolate_page_range(), but should avoid triggering it from
+userspace, i.e, from is_mem_section_removable() because it could be a
+DoS if warn_on_panic is set.
 
-OK, so I've double checked. do_move_page_to_node_array would carry the
-error code over to do_pages_move and it would store the status stored
-in the pm array. It contains page_to_nid(page) so the resulting code
-indeed behaves properly before my change and this is a regression. I
-have a very vague recollection that this has been brought up already.
-<...looks in notes...>
-Found it! The report is
-http://lkml.kernel.org/r/0329efa0984b9b0252ef166abb4498c0795fab36.1535113317.git.jstancek@redhat.com
-and my proposed workaround was http://lkml.kernel.org/r/20180829145537.GZ10223@dhcp22.suse.cz
+While at it, simplify the code a bit by removing an unnecessary jump
+label and a local variable, so set_migratetype_isolate() could really
+return a bool.
 
-> If you want to fix this properly then you have to query node status of
-> each page unmigrated when migrate_pages fails with > 0. This would be
-> easier if the fix is done on the latest cleanup posted to the list which
-> consolidates all do_move_pages_to_node and store_status calls to a
-> single function.
+Suggested-by: Michal Hocko <mhocko@kernel.org>
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
 
-Sorry forgot to put a reference to the patch: http://lkml.kernel.org/r/20200119030636.11899-5-richardw.yang@linux.intel.com
+v2: Improve the commit log.
+    Warn for all start_isolate_page_range() users not just offlining.
 
+ mm/page_alloc.c     | 11 ++++-------
+ mm/page_isolation.c | 30 +++++++++++++++++-------------
+ 2 files changed, 21 insertions(+), 20 deletions(-)
+
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 621716a25639..3c4eb750a199 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -8231,7 +8231,7 @@ struct page *has_unmovable_pages(struct zone *zone, struct page *page,
+ 		if (is_migrate_cma(migratetype))
+ 			return NULL;
+ 
+-		goto unmovable;
++		return page;
+ 	}
+ 
+ 	for (; iter < pageblock_nr_pages; iter++) {
+@@ -8241,7 +8241,7 @@ struct page *has_unmovable_pages(struct zone *zone, struct page *page,
+ 		page = pfn_to_page(pfn + iter);
+ 
+ 		if (PageReserved(page))
+-			goto unmovable;
++			return page;
+ 
+ 		/*
+ 		 * If the zone is movable and we have ruled out all reserved
+@@ -8261,7 +8261,7 @@ struct page *has_unmovable_pages(struct zone *zone, struct page *page,
+ 			unsigned int skip_pages;
+ 
+ 			if (!hugepage_migration_supported(page_hstate(head)))
+-				goto unmovable;
++				return page;
+ 
+ 			skip_pages = compound_nr(head) - (page - head);
+ 			iter += skip_pages - 1;
+@@ -8303,12 +8303,9 @@ struct page *has_unmovable_pages(struct zone *zone, struct page *page,
+ 		 * is set to both of a memory hole page and a _used_ kernel
+ 		 * page at boot.
+ 		 */
+-		goto unmovable;
++		return page;
+ 	}
+ 	return NULL;
+-unmovable:
+-	WARN_ON_ONCE(zone_idx(zone) == ZONE_MOVABLE);
+-	return pfn_to_page(pfn + iter);
+ }
+ 
+ #ifdef CONFIG_CONTIG_ALLOC
+diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+index e70586523ca3..31f5516f5d54 100644
+--- a/mm/page_isolation.c
++++ b/mm/page_isolation.c
+@@ -15,12 +15,12 @@
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/page_isolation.h>
+ 
+-static int set_migratetype_isolate(struct page *page, int migratetype, int isol_flags)
++static bool set_migratetype_isolate(struct page *page, int migratetype,
++				    int isol_flags)
+ {
+-	struct page *unmovable = NULL;
++	struct page *unmovable = ERR_PTR(-EBUSY);
+ 	struct zone *zone;
+ 	unsigned long flags;
+-	int ret = -EBUSY;
+ 
+ 	zone = page_zone(page);
+ 
+@@ -49,21 +49,25 @@ static int set_migratetype_isolate(struct page *page, int migratetype, int isol_
+ 									NULL);
+ 
+ 		__mod_zone_freepage_state(zone, -nr_pages, mt);
+-		ret = 0;
+ 	}
+ 
+ out:
+ 	spin_unlock_irqrestore(&zone->lock, flags);
+-	if (!ret)
++
++	if (!unmovable) {
+ 		drain_all_pages(zone);
+-	else if ((isol_flags & REPORT_FAILURE) && unmovable)
+-		/*
+-		 * printk() with zone->lock held will guarantee to trigger a
+-		 * lockdep splat, so defer it here.
+-		 */
+-		dump_page(unmovable, "unmovable page");
+-
+-	return ret;
++	} else {
++		WARN_ON_ONCE(zone_idx(zone) == ZONE_MOVABLE);
++
++		if ((isol_flags & REPORT_FAILURE) && !IS_ERR(unmovable))
++			/*
++			 * printk() with zone->lock held will likely trigger a
++			 * lockdep splat, so defer it here.
++			 */
++			dump_page(unmovable, "unmovable page");
++	}
++
++	return !!unmovable;
+ }
+ 
+ static void unset_migratetype_isolate(struct page *page, unsigned migratetype)
 -- 
-Michal Hocko
-SUSE Labs
+2.21.0 (Apple Git-122.2)
+
