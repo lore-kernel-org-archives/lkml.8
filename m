@@ -2,161 +2,112 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A020C33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD764C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10F67207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90A1C207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:26:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kkZOpbNc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zoiGWUQL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbgATL0M (ORCPT
+        id S1727531AbgATL0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 06:26:12 -0500
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:45511 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726752AbgATL0M (ORCPT
+        Mon, 20 Jan 2020 06:26:17 -0500
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:43338 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727032AbgATL0P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 06:26:12 -0500
-Received: by mail-vk1-f193.google.com with SMTP id g7so8432065vkl.12
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 03:26:11 -0800 (PST)
+        Mon, 20 Jan 2020 06:26:15 -0500
+Received: by mail-vs1-f67.google.com with SMTP id s16so18697829vsc.10
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 03:26:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=/6h44apr/MBSH4phU83NTZvL9KJrwpMdL+9j2IrAWsY=;
-        b=kkZOpbNcTWORy2JfVELYofOW2Ah224v7M22T8SKH9T2lgF/Z1WoikTNktM+8c+QZ/A
-         HYsXAguAT8AodT0l3BObL8TLKAK9EfixNNwhb6tVdQMcCKGQWfb8iZw1rCZkKhc+kqz2
-         WRg+XE9V0hR0fSQ1pQLD51INKWNvveLYXukdQlp0RUd0cpaP9GG+dFWD/nVrt0Qs4FTi
-         M4wcty/2vh+DLzJMrX0feBXVNkft1LZ/zfUQpA3xrlsqm3O580b/Z2i/a5AaEpDBvRm/
-         +3tx/roNgqOPUIo+dbqDMRT4GKfnxLy4gWfp0n2xmRDpTjV0VBXDsBFJ10c6wpCfr1BY
-         kBCg==
+         :cc;
+        bh=+QrjNjPG/DY5+TEdC5uJWY8ByCtGQfHlt+6TWxLSsd4=;
+        b=zoiGWUQLncvGKY1aPONfIIVo9eJD/fSbxnAqre/srpx1AIsJDP8FjgE7e3GNOo6Av5
+         /M2+iSTfyjh44HEBZLB41qjpf2AiUyagQS8CPwv9iImXbf9jDf7KiXWd3hfVZTZGgpkR
+         QOW1jHlxTMAQE15YHuWbSuH5FF40TTvlEO/8TYyjJBOj+dAdF9AWDUwIdfRjDe1RWqDH
+         CquW7dewJPQ9rbFJroufRB8QhV1RvqliTijL3g37FKxzWnbEWkXItiLMBCCgk9BFIAEL
+         Vdg+5CMdnTkOXnAPyQS91moWacc2LqFV4mJsWT1mAjsWklRbdA4xUtD0hIBwh77YJGHZ
+         hMVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=/6h44apr/MBSH4phU83NTZvL9KJrwpMdL+9j2IrAWsY=;
-        b=ZDqN5sdHVGryfCCvE9RpnPHaN5yvgSCBJFgbfndNhQgQMa5oG7Dqoz4Gi+a/T77M7s
-         LBll/pzxqo0kVDV/Cpk1vxNFdW9IhF2zIqGcpsCG7ueDlZrVPmVr8yCw9Io9ins9t3yv
-         kT9LjowZxlSC/W/+E1Ff5cLeDlfPwyF8V+Wv8bunlflLrNnHRtEuhvTN6kDeJ/W9+sVG
-         7rGD4UssdB+2epxnNHIOOhWvF6Wc30jYhzcso0H1SpisD5PH713/n/MaF4ABv3dew2po
-         pWRg3Ri7zCmwMjb4yIIHJITGTGXKD1IBFYUb/LFYtZ/VAAMYE+qxs03uGVQJYQO4sILA
-         pudQ==
-X-Gm-Message-State: APjAAAVbIoUt5FumRR/QPBmqinAUxFwx1/onrI+gAYlSs2KdJPRFgNyG
-        SA1ozCRSMg6+VHXOtdOP2n+C64uy7wMFKygmMCEcXg==
-X-Google-Smtp-Source: APXvYqxI1iMU6cU9a4kyNfcT/7FhHDagumdwB9XVb3vIpFfPpgyU01bKZfDvZ/cqXO7oNV0JlnfKNItv19qv5BnlyOQ=
-X-Received: by 2002:ac5:cde3:: with SMTP id v3mr605857vkn.43.1579519570907;
- Mon, 20 Jan 2020 03:26:10 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=+QrjNjPG/DY5+TEdC5uJWY8ByCtGQfHlt+6TWxLSsd4=;
+        b=h/079ZiN3AZok0zG23x9MwRkOobr62vmYqbSNuz0/u5iw8eXddt5xqI+6F9WPIeTyp
+         Unvlt2pJnZArbkbOJdnH37ibY3t+Mq6fJXoudDQ37s435kM8pFP3hiRtVANCFlOhVVD0
+         QTau44Gw1CrUnKp2xPvLavnJkKQJpAM7tHOLpjyEOWr91CDgXDJ2iefjjcBwEFcyihZi
+         kIZmtI8bwGEzlVH25I4OEelow/LNWV0fN6U8Z3P0gXHKZKpz1DXGuuQoWS+syUyeCIXB
+         OieaNr18qNscfGG268OIm7AWj+FoRQ4I5bK9HJ6/xdrmjfNo7HRspzS6m1ghxZMJP2My
+         NOZQ==
+X-Gm-Message-State: APjAAAWa9UANJab16/LxU93xE54ZubWVGeYSH2AVxCFauLeuO92CmJHH
+        iuixvl105XLm/6btqgA98oWgqbYo5XRsDbqoIT0tvQ==
+X-Google-Smtp-Source: APXvYqzPrS1MXcvEuqxBLO8sPjfn2RusFoIONf4AdpYQaWU83tRuO628KtI5n/YR1Uw5+lIy2J5gBsGl7ibfC9txULI=
+X-Received: by 2002:a67:314e:: with SMTP id x75mr11583092vsx.35.1579519574713;
+ Mon, 20 Jan 2020 03:26:14 -0800 (PST)
 MIME-Version: 1.0
-References: <f471bceaf237d582d746bd289c4c4f3639cb7b45.1577962382.git.mirq-linux@rere.qmqm.pl>
- <CAPDyKFpZWnkK7UmCZ8M4UnM05wR3MQsPrpEjOJuwkKcN2gePSg@mail.gmail.com>
- <20200117140511.GC26135@qmqm.qmqm.pl> <CAPDyKFpkhwnzi5PAr_0bAriYteeBUVM5Qr1byiXtJkgYd=dKfw@mail.gmail.com>
- <20200117161422.GA11081@qmqm.qmqm.pl>
-In-Reply-To: <20200117161422.GA11081@qmqm.qmqm.pl>
+References: <20200120031023.32482-1-zhang.chunyan@linaro.org>
+ <20200120033223.897-1-zhang.chunyan@linaro.org> <65f7272c-ecea-03de-433b-21ba2e672d20@intel.com>
+ <CAAfSe-vjmFGkK5Enj9Nj_qrERJbNQTLejpVL+JVJLG7tgNhT9w@mail.gmail.com>
+In-Reply-To: <CAAfSe-vjmFGkK5Enj9Nj_qrERJbNQTLejpVL+JVJLG7tgNhT9w@mail.gmail.com>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 20 Jan 2020 12:25:35 +0100
-Message-ID: <CAPDyKFqdq_eizwgaKf=ZdohBY01K2RhVNZG2dyrLbQgVT+Miwg@mail.gmail.com>
-Subject: Re: [PATCH] mmc: core: limit probe clock frequency to configured f_max
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Mon, 20 Jan 2020 12:25:38 +0100
+Message-ID: <CAPDyKFq0PnCwcjENc+SJvkFKsuC-iWMX0t6QNqdo89JEGGk-=w@mail.gmail.com>
+Subject: Re: [PATCH v2] mmc: sdhci: fix an issue of mixing different types
+To:     Chunyan Zhang <zhang.lyra@gmail.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Chunyan Zhang <zhang.chunyan@linaro.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        clang-built-linux@googlegroups.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kbuild test robot <lkp@intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Jan 2020 at 17:14, Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qm=
-qm.pl> wrote:
+On Mon, 20 Jan 2020 at 09:14, Chunyan Zhang <zhang.lyra@gmail.com> wrote:
 >
-> On Fri, Jan 17, 2020 at 04:26:30PM +0100, Ulf Hansson wrote:
-> > On Fri, 17 Jan 2020 at 15:05, Micha=C5=82 Miros=C5=82aw <mirq-linux@rer=
-e.qmqm.pl> wrote:
-> > >
-> > > On Thu, Jan 16, 2020 at 03:07:22PM +0100, Ulf Hansson wrote:
-> > > > On Thu, 2 Jan 2020 at 11:54, Micha=C5=82 Miros=C5=82aw <mirq-linux@=
-rere.qmqm.pl> wrote:
-> > > > >
-> > > > > Currently MMC core disregards host->f_max during card initializat=
-ion
-> > > > > phase. Obey upper boundary for the clock frequency and skip faste=
-r
-> > > > > speeds when they are above the limit.
-> > > >
-> > > > Is this a hypothetical problem or a real problem?
-> > >
-> > > This is a problem on noisy or broken boards or cards - so needed for
-> > > debugging such a combination. I wouldn't expect this is required for
-> > > normal devices.
+> On Mon, 20 Jan 2020 at 15:15, Adrian Hunter <adrian.hunter@intel.com> wrote:
 > >
-> > Alright.
-> >
+> > On 20/01/20 5:32 am, Chunyan Zhang wrote:
+> > > Fix an issue reported by sparse, since mixed types of parameters are
+> > > used on calling dmaengine_prep_slave_sg().
 > > >
-> > > > > Signed-off-by: Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl=
+> > > Fixes: 36e1da441fec (mmc: sdhci: add support for using external DMA devices)
+> >
+> > That commit number is only in next
 >
-> > > > > ---
-> > > > >  drivers/mmc/core/core.c | 10 ++++++++--
-> > > > >  1 file changed, 8 insertions(+), 2 deletions(-)
-> > > > >
-> > > > > diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
-> > > > > index abf8f5eb0a1c..aa54d359dab7 100644
-> > > > > --- a/drivers/mmc/core/core.c
-> > > > > +++ b/drivers/mmc/core/core.c
-> > > > > @@ -2330,7 +2330,13 @@ void mmc_rescan(struct work_struct *work)
-> > > > >         }
-> > > > >
-> > > > >         for (i =3D 0; i < ARRAY_SIZE(freqs); i++) {
-> > > > > -               if (!mmc_rescan_try_freq(host, max(freqs[i], host=
-->f_min)))
-> > > > > +               unsigned int freq =3D freqs[i];
-> > > > > +               if (freq > host->f_max) {
-> > > > > +                       if (i + 1 < ARRAY_SIZE(freqs))
-> > > > > +                               continue;
-> > > > > +                       freq =3D host->f_max;
-> > > >
-> > > > This looks wrong to me. For example, what if f_max =3D 250KHz and f=
-_min =3D 50 KHz.
-> > > >
-> > > > Then we should try with 250KHz, then 200KHz and then 100KHz. This
-> > > > isn't what the above code does, I think.
-> > > >
-> > > > Instead it will try with 200KHz and then 100KHz, thus skip 250KHz.
-> > > >
-> > > > Maybe we should figure out what index of freqs[] to start the loop =
-for
-> > > > (before actually starting the loop), depending on the value of f_ma=
-x -
-> > > > rather than always start at 0.
-> > >
-> > > Yes, it will skip higher frequencies. I didn't view it a problem,
-> > > because the new code guarantees at least one frequency will be tried.
-> > > The eMMC standard specifies only max init frequency (400kHz), so all =
-we
-> > > should try is something less whatever works.
-> > >
-> > > SD spec specifies minimal frequency (100kHz), but I wouldn't expect
-> > > this to be enforced nor required to be anywhere.
-> >
-> > Well, my point isn't so much about the specs, rather about providing a
-> > consistent behaviour.
-> >
-> > We deal with f_min constraints like I described above, then I think we
-> > should make f_max behave the similar way.
->
-> Okay, this would be a second fix as trying the same freq multiple times
-> is not what this code is supposed to do.
+> Ok, so should this line be removed?
 
-Well, I think we want to allow to run a couple retries on failures,
-but I admit that it's kind of questionable to try the same freq
-multiple times. Anyway, that's what the code around f_min does.
+Normally yes, because I may rebase my next branch.
 
-In any case, I have queued this is up for next, thanks!
+However, at this point in time I am not planning for a rebase, so let's keep it.
+
+>
+> >
+> > > Reported-by: kbuild test robot <lkp@intel.com>
+> > > Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
+> > > Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+> >
+> > Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+>
+> Thank you!
+>
+> Chunyan
+
+[...]
+
+Applied for next, thanks!
 
 Kind regards
 Uffe
