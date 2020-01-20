@@ -2,186 +2,111 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCEF6C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:07:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43003C33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A37F82087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:07:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="gqcDDJLH";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="Zjzj5Mss"
+	by mail.kernel.org (Postfix) with ESMTP id 24D0B2073D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:07:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbgATLH2 (ORCPT
+        id S1727121AbgATLHf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 06:07:28 -0500
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:40398 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726148AbgATLH2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 06:07:28 -0500
-Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 3829DC04F8;
-        Mon, 20 Jan 2020 11:07:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1579518446; bh=67UELf37HLA7knRcTO9RSHQjeRH2O+VztZCRbvwf8FA=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=gqcDDJLHs6ZM599uIyb3SvCVTqUp/P5n8sRHNgIr5wN4hzCBG/X5Bqr+1DYPMj2H7
-         pi4x5InIujs3ysVeI3yChWAvn6GJWGPWUXptbeDASEAIf4kBtuZSPYOlNRONinNqIw
-         WgX2/ytlCvhUNOJ6dTDknCCGb/EpKPfXqQM9dC37/UCaoiu4Hpxqun2vJemlEkeWP3
-         30oXwtJiENGtUq2HxlkYQc4jKaeUEPhzEgg5bAlr6eyJ34z6R3dxRgg0Jsb3JmdYZZ
-         ErIMQMgSqClKsJ14VCUr87RLnRslQrRAgwse5wl+8C+m7z+7osEDJu0IsUd3qUFs7W
-         8mK/fiXWsD9sw==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 59D6CA0079;
-        Mon, 20 Jan 2020 11:07:25 +0000 (UTC)
-Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 20 Jan 2020 03:07:25 -0800
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (10.202.3.67) by
- mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Mon, 20 Jan 2020 03:07:24 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cLpYrAH37FhBGiBNB+XLU2FmV/wjJ1Lp1rtZ+/30Tw7jJCjZyxbPm+XU1O9AouOQd5X1w4yQ1/yc/dhrrvbq91FLG735wsSU/TDJkDYGKsNkUfXzmJYPy4oZeduQvBoKz+njrfJr2ZQDtoH4FP4thnYc/vEGizx9jQiF/78v9W+GkAlM23sbc1snvMcshDDUBTY4afG9EAVTr0IgIXhyk5H34YKKMN9L/e82mu2nvrM4+zSwXJH7UchO9PP568ZaejvUhruiQ80X4gBBwofQwuwHQlAWh1bov3peZQhhi8y5Ag0u4euruMYtQ9PsOH8yZlnDMKZJnlNyvJLXmqUSZw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IXyTyKjato9E3MvIR5PaZbMMskgok0GyJmgBcGh0T70=;
- b=mT0HVYclPK/mkms8zBhXcM7XU52QnTIgMX+/CMh8HxklUliisafLCOLKGlUp1ioSa2t6tS6Gs7GOEAjGg/wy2VtCOqp4PyEAG9MbbLWIOy72v4+GAPTUgToqvQ/8sQ7+wSXiKLg9qbCslKS1qwtXOMoZMzG0ThvoK+7B6BmyqA6skriokhegPJwM3x38SqoC/fEh2uDRgP+uMvshhi7GAg2sbMpQQWWpAeOPKx96FGO2cTWl8tzNMYDmGdsgg+tDDnJ+EuK9byx36xFaz6q7iKjZojktijJz8qlVCyeYjsGZOOyKRZawwVn7DOP/d8Ttn4gD1zIiss8dr91ZSGaCvQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IXyTyKjato9E3MvIR5PaZbMMskgok0GyJmgBcGh0T70=;
- b=Zjzj5Mss3HVwIM6HaEXvwQ9I8yklNwHqTdClFQ9LIshu1HpZd2lFgIodBaLqWephwczh4HMiaIPKs2IdGinK4lTK5iktcSETMci/GQB7RWFEawGJV/+bEDtjh1mN7+d311G8DfIdZW282cy984dvAoQJXUnSljyt3AMiXiJIw0M=
-Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.67.145) by
- BN8PR12MB3268.namprd12.prod.outlook.com (20.179.67.18) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.20; Mon, 20 Jan 2020 11:07:23 +0000
-Received: from BN8PR12MB3266.namprd12.prod.outlook.com
- ([fe80::c62:b247:6963:9da2]) by BN8PR12MB3266.namprd12.prod.outlook.com
- ([fe80::c62:b247:6963:9da2%6]) with mapi id 15.20.2644.024; Mon, 20 Jan 2020
- 11:07:23 +0000
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-CC:     Andrew Lunn <andrew@lunn.ch>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [RFC net-next] net: phy: Add basic support for Synopsys XPCS
- using a PHY driver
-Thread-Topic: [RFC net-next] net: phy: Add basic support for Synopsys XPCS
- using a PHY driver
-Thread-Index: AQHVyhMHPh1TkUf6pU+JUVzLFdFzk6fomWeAgAAAjSCAAAp/gIAKvyCAgAAHGACAAANl4A==
-Date:   Mon, 20 Jan 2020 11:07:23 +0000
-Message-ID: <BN8PR12MB32663612E58060077996670ED3320@BN8PR12MB3266.namprd12.prod.outlook.com>
-References: <4953fc69a26bee930bccdeb612f1ce740a4294df.1578921062.git.Jose.Abreu@synopsys.com>
- <20200113133845.GD11788@lunn.ch>
- <BN8PR12MB32666F34D45D7881BDD4CAB3D3350@BN8PR12MB3266.namprd12.prod.outlook.com>
- <20200113141817.GN25745@shell.armlinux.org.uk>
- <BN8PR12MB3266EC7870338BA4A65E8A6CD3320@BN8PR12MB3266.namprd12.prod.outlook.com>
- <20200120105020.GB25745@shell.armlinux.org.uk>
-In-Reply-To: <20200120105020.GB25745@shell.armlinux.org.uk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=joabreu@synopsys.com; 
-x-originating-ip: [83.174.63.141]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: dead3062-a74b-46e7-1b4b-08d79d98ed30
-x-ms-traffictypediagnostic: BN8PR12MB3268:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BN8PR12MB3268C2A9EBCE8E825DAF1D28D3320@BN8PR12MB3268.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
-x-forefront-prvs: 0288CD37D9
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(136003)(366004)(396003)(346002)(39860400002)(189003)(199004)(81156014)(81166006)(66446008)(4326008)(316002)(6916009)(54906003)(64756008)(186003)(66556008)(76116006)(6506007)(52536014)(478600001)(8936002)(66946007)(66476007)(26005)(2906002)(33656002)(55016002)(9686003)(5660300002)(71200400001)(7696005)(8676002)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB3268;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: rLZwzqLDcBNhghkE+1hmCKFWb/Rz0Dg6X8UO19WqCUrFrm7kC7PvEqB/AYr6+ldRUzHxswgL6eUav9xd4WT1+qgzXVNJyv1LEd036sS4n7+uGsVLeLaohhdSWnqGeqmsglgberUTiXzQjfBZjPQ6oeNC/IylhK4Y5kJk61N271sK5/EFrxKHEq6SbpgEbxMiw+60Dvvlrcnr2TlHJY+gKiT4iJJWysXHCvBmsxLRj0/EZ/yS0g01Q3/3Jdrn1msTQYcAmQy8h52tNAz5fl57XOQahEsf0c/tbMh8fgRYDRzJzSKzIDeBsVPoZUJFV50NxdYEnBQ28ZpWMtLlb8fWqNJrNGCjsb7/ml/MMGJzmEofIhalUt/830uJqN3Q6y3Pb9jIWSqJgq2lxVW0sGb3dBPqJy3hhR5U12QBo7+UctvuFQ73PCHezyOyYRj/nH8j
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 20 Jan 2020 06:07:35 -0500
+Received: from mga07.intel.com ([134.134.136.100]:48060 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726148AbgATLHe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 06:07:34 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 03:07:34 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,341,1574150400"; 
+   d="scan'208";a="274942210"
+Received: from kuha.fi.intel.com ([10.237.72.53])
+  by fmsmga001.fm.intel.com with SMTP; 20 Jan 2020 03:07:31 -0800
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 20 Jan 2020 13:07:30 +0200
+Date:   Mon, 20 Jan 2020 13:07:30 +0200
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Thomas Hebb <tommyhebb@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>, linux-usb@vger.kernel.org
+Subject: Re: [PATCH] usb: typec: fix "op-sink-microwatt" defaults that were
+ in mW
+Message-ID: <20200120110730.GB32175@kuha.fi.intel.com>
+References: <bcd87046185bb7cea42873186d706aeb50e27a80.1579517594.git.tommyhebb@gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: dead3062-a74b-46e7-1b4b-08d79d98ed30
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jan 2020 11:07:23.4418
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Paj8ILY9flkdatAaO/SNRS9idQG4mFN5/pWwNlx1yUTMl452nH9yFAFBHC5xtWC+TqHXFzSQKUVzt0wsZIwfGQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3268
-X-OriginatorOrg: synopsys.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bcd87046185bb7cea42873186d706aeb50e27a80.1579517594.git.tommyhebb@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Date: Jan/20/2020, 10:50:20 (UTC+00:00)
+Hi Thomas,
 
-> On Mon, Jan 20, 2020 at 10:31:17AM +0000, Jose Abreu wrote:
-> > From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-> > Date: Jan/13/2020, 14:18:17 (UTC+00:00)
-> >=20
-> > > I've recently suggested a patch to phylink to add a generic helper to
-> > > read the state from a generic 802.3 clause 37 PCS, but I guess that
-> > > won't be sufficient for an XPCS.  However, it should give some clues
-> > > if you're intending to use phylink.
-> >=20
-> > So, I think for my particular setup (that has no "real" PHY) we can hav=
-e=20
-> > something like this in SW PoV:
-> >=20
-> > stmmac -> xpcs -> SW-PHY / Fixed PHY
-> >=20
-> > - stmmac + xpcs state would be handled by phylink (MAC side)
-> > - SW-PHY / Fixed PHY state would be handled by phylink (PHY side)
-> >=20
-> > This would need updates for Fixed PHY to support >1G speeds.
->=20
-> You don't want to do that if you have 1G SFPs.  Yes, you *can* do it
-> and make it work, but you miss out completely on the fact that the
-> link is supposed to be negotiated across the SFP link for 1G speeds,
-> and then you're into the realms of having to provide users ways to
-> edit the DT and reboot if the parameters at the link partner change.
+On Mon, Jan 20, 2020 at 02:53:16AM -0800, Thomas Hebb wrote:
+> commit 8f6244055bd3 ("usb: typec: fusb302: Always provide fwnode for the
+> port") and commit 4c912bff46cc ("usb: typec: wcove: Provide fwnode for
+> the port") converted a legacy TCPM platdata structure to a more generic
+> format. However, one field, denoting required sink power, was specified
+> in mW in the old format but uW in the new format. The migration failed
+> to account for this, meaning that the values are now 1000x too small.
+> 
+> Correct the issue by converting the values to uW.
+> 
+> Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
 
-You may have missed my answer to Andrew so I'll quote it here:
+Thanks for catching this.
 
----
-[...]
+You should split this in two, one patch for each driver, and those
+should have proper "Fixes:" tags.
 
-My current setup is this:
+I think those should also go to the stable trees, so you'll also need
+the stable tag (Cc: stable@vger.kernel.org).
 
-Host PC x86 -> PCI -> XGMAC -> XPCS -> SERDES 10G-BASE-R -> QSFP+
+> ---
+> 
+>  drivers/usb/typec/tcpm/fusb302.c | 2 +-
+>  drivers/usb/typec/tcpm/wcove.c   | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/usb/typec/tcpm/fusb302.c b/drivers/usb/typec/tcpm/fusb302.c
+> index ed8655c6af8c..b498960ff72b 100644
+> --- a/drivers/usb/typec/tcpm/fusb302.c
+> +++ b/drivers/usb/typec/tcpm/fusb302.c
+> @@ -1666,7 +1666,7 @@ static const struct property_entry port_props[] = {
+>  	PROPERTY_ENTRY_STRING("try-power-role", "sink"),
+>  	PROPERTY_ENTRY_U32_ARRAY("source-pdos", src_pdo),
+>  	PROPERTY_ENTRY_U32_ARRAY("sink-pdos", snk_pdo),
+> -	PROPERTY_ENTRY_U32("op-sink-microwatt", 2500),
+> +	PROPERTY_ENTRY_U32("op-sink-microwatt", 2500000),
+>  	{ }
+>  };
+>  
+> diff --git a/drivers/usb/typec/tcpm/wcove.c b/drivers/usb/typec/tcpm/wcove.c
+> index edc271da14f4..9b745f432c91 100644
+> --- a/drivers/usb/typec/tcpm/wcove.c
+> +++ b/drivers/usb/typec/tcpm/wcove.c
+> @@ -597,7 +597,7 @@ static const struct property_entry wcove_props[] = {
+>  	PROPERTY_ENTRY_STRING("try-power-role", "sink"),
+>  	PROPERTY_ENTRY_U32_ARRAY("source-pdos", src_pdo),
+>  	PROPERTY_ENTRY_U32_ARRAY("sink-pdos", snk_pdo),
+> -	PROPERTY_ENTRY_U32("op-sink-microwatt", 15000),
+> +	PROPERTY_ENTRY_U32("op-sink-microwatt", 15000000),
+>  	{ }
+>  };
+>  
+> -- 
+> 2.24.1
 
-The only piece that needs configuration besides XGMAC is the XPCS hereby=20
+thanks,
 
-I "called" it a PHY [...]
----
-
-So, besides not having a DT based setup to test changes, I also don't have=
-=20
-access to SFP bus neither SERDES ... As you suggested, I would like to=20
-integrate XPCS with PHYLINK in stmmac but I'm not entirely sure on how to=20
-implement the remaining connections as the connect_phy() callbacks will=20
-fail because the only MMD device in the bus will be XPCS. That's why I=20
-suggested the Fixed PHY approach ...
-
----
-Thanks,
-Jose Miguel Abreu
+-- 
+heikki
