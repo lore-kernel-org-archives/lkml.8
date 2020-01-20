@@ -2,113 +2,103 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 020BAC33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 21:54:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D87C33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 21:55:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D417A22525
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 21:54:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C353722527
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 21:55:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbgATVyK convert rfc822-to-8bit (ORCPT
+        id S1728205AbgATVzR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 16:54:10 -0500
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:36509 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726752AbgATVyJ (ORCPT
+        Mon, 20 Jan 2020 16:55:17 -0500
+Received: from outgoing11.flk.host-h.net ([188.40.208.241]:60969 "EHLO
+        outgoing11.flk.host-h.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726752AbgATVzQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 16:54:09 -0500
-Received: from [212.124.162.70] (port=49808 helo=[192.168.77.51])
-        by hostingweb31.netsons.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1itezm-000CuJ-GG; Mon, 20 Jan 2020 22:54:06 +0100
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-Subject: Re: [PATCH 02/26] docs: i2c: summary: extend introduction
-To:     Jean Delvare <jdelvare@suse.de>
-Cc:     linux-doc@vger.kernel.org, linux-i2c@vger.kernel.org,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
-References: <20200105224006.10321-1-luca@lucaceresoli.net>
- <20200105225012.11701-1-luca@lucaceresoli.net>
- <20200105225012.11701-2-luca@lucaceresoli.net>
- <20200120102730.4eb9116b@endymion>
-Message-ID: <4a772de1-cb81-37bb-4170-9d19d56aaaac@lucaceresoli.net>
-Date:   Mon, 20 Jan 2020 22:54:06 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200120102730.4eb9116b@endymion>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8BIT
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+        Mon, 20 Jan 2020 16:55:16 -0500
+X-Greylist: delayed 7787 seconds by postgrey-1.27 at vger.kernel.org; Mon, 20 Jan 2020 16:55:16 EST
+Received: from www31.flk1.host-h.net ([188.40.1.173])
+        by antispam3-flk1.host-h.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <justin.swartz@risingedge.co.za>)
+        id 1itczG-0000cv-RT; Mon, 20 Jan 2020 21:45:27 +0200
+Received: from [130.255.73.16] (helo=v01.28459.vpscontrol.net)
+        by www31.flk1.host-h.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <justin.swartz@risingedge.co.za>)
+        id 1itczD-0004Hk-Es; Mon, 20 Jan 2020 21:45:23 +0200
+From:   Justin Swartz <justin.swartz@risingedge.co.za>
+To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Justin Swartz <justin.swartz@risingedge.co.za>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 4/4] ARM: dts: rockchip: add rga to rk3229-xms6
+Date:   Mon, 20 Jan 2020 19:41:57 +0000
+Message-Id: <20200120194158.25357-4-justin.swartz@risingedge.co.za>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200120194158.25357-1-justin.swartz@risingedge.co.za>
+References: <20200120194158.25357-1-justin.swartz@risingedge.co.za>
+X-Authenticated-Sender: justin.swartz@risingedge.co.za
+X-Virus-Scanned: Clear
+X-Originating-IP: 188.40.1.173
+X-SpamExperts-Domain: risingedge.co.za
+X-SpamExperts-Username: 
+Authentication-Results: host-h.net; auth=pass (login) smtp.auth=@risingedge.co.za
+X-SpamExperts-Outgoing-Class: ham
+X-SpamExperts-Outgoing-Evidence: Combined (0.03)
+X-Recommended-Action: accept
+X-Filter-ID: Mvzo4OR0dZXEDF/gcnlw0fKZ8wcD78QFAaYhvfMzLIKpSDasLI4SayDByyq9LIhVeWb5TMLTma+i
+ 4jOGzZGfZETNWdUk1Ol2OGx3IfrIJKyP9eGNFz9TW9u+Jt8z2T3K7uDjV/sFUXQr+CDrNQuIHgQg
+ mAX8Bxy/iUu0ThNZg0jxJtcVJProrT987X1VDPOqN+OoDzRTdku7DidYUZdNf38Sp7Of4wP429AA
+ f49baR+f3He7jw4SoVhmTJ/3eP9ORQWVx8ds1M4qmk3/bYr2p8zbg4Paoa3pNVQ0zl7t/+UfQLYB
+ qEPnp1U88kqVD8AM2G81dFO0E3gi+MOI1foZYzDggRXhpvoPtF3cVkniFXU3qJSqpdJudO6+rkiw
+ E5i8Wl78Q18OeOfsy4h7jF1Uv9lnibl3vcBqVmvQB4A18afb/FOITJmxBc0QX+fY5eUpAVXirbLu
+ Jjy3NtnGWLbnBGfrUBEXB2fYGLNieGQuoHtJvp0r29Rf3ZjFwL+MhHEWw/0qBlNDp8uABz3dkWV+
+ ttWGem52QLIiDo2hv5/Q58JTycYLFeAN4+MGwnsp7SkU6CLbyF0Zq4b1/7rjUzETJrWks4pbbQJq
+ 6gWopI3ep45X19ZysgQ+31LcAX8eoFXAhohfegXGH2GIVQVglJFbK771YV8YbC29CtmpcTqTfSIf
+ CWq9oj7OiT8GwpAriB+3/81I3rvR8KJ2fK9jiDYgijyqqY0rATpzHKGfmtNsYTr4SmDZ/bGW8xZC
+ RRs6ZD24UhFcZZEpLhnBCwImTQNvxaLyCc35VA7RvW/HGiGqxL09Cymermt8NAa/gGopT3kKfO4C
+ gvcKmV0o9jYzsFpuc43pp/LzIs3ornuRuAAdgrkq+6l7ZLNYJcf7Z6PCydDzoYZgInuDxgFOs7AZ
+ TwbwMaed1BaNkB2/QnXFItfl/CWjT+yf5NxUSmxyzYlBxqy338NrFoXSENXH6UXfnav35JPA4YfM
+ 6tBkXsqvKY6zoLLTPpuFqUUQz+mM8JAD4ECWNo09vb0YLIRnK477e9Xake5PIWKjIXX7qe2zOXoS
+ fozs0E8f2AsASs7mWOF+2zisWBpVRcW84PzgOLDW9zuKlWbjO41FyBEqIaDudcVplPE6wCr6GXU1
+ lCw88ijyus1sGnWknJqS8gGhNQxpB5P3qu7c1xMljx2PG/R+pKBSKy8hXOgvE1zSS7XUhkYEQYeb
+ 3jR5NeVaJQBh0uawl0Cg8j+knAzOA9mmoJvkuhKHiekUuskYaI6ERCKp8gXWqnT9kLHhStr5fiGK
+ 7KncpWELuTEvuGslKTrRIXcXpFg5ivY=
+X-Report-Abuse-To: spam@antispammaster.host-h.net
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jean,
+Enable RGA for Mecer Xtreme Mini S6.
 
-On 20/01/20 10:27, Jean Delvare wrote:
-> On Sun,  5 Jan 2020 23:49:48 +0100, Luca Ceresoli wrote:
->> - state the "official" name (I²C, not I2C, according to the spec) at
->>    the beginning but keep using the more practical I2C elsewhere
->>  - mention some known different names
->>  - add link to the specification document
-> 
-> Indentation is inconsistent.
+Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
+---
+ arch/arm/boot/dts/rk3229-xms6.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Weird, this looks OK in my git log and my inbox, wrong on patchwork.
-Perhaps starting an e-mail with a space breaks something? I'll try to
-avoid that in the future.
-
->> diff --git a/Documentation/i2c/summary.rst b/Documentation/i2c/summary.rst
->> index 3a24eac17375..b7d3e620155b 100644
->> --- a/Documentation/i2c/summary.rst
->> +++ b/Documentation/i2c/summary.rst
->> @@ -2,12 +2,18 @@
->>  I2C and SMBus
->>  =============
->>  
->> -I2C (pronounce: I squared C) is a protocol developed by Philips. It is a
->> -slow two-wire protocol (variable speed, up to 400 kHz), with a high speed
->> -extension (3.4 MHz).  It provides an inexpensive bus for connecting many
->> -types of devices with infrequent or low bandwidth communications needs.
->> -I2C is widely used with embedded systems.  Some systems use variants that
->> -don't meet branding requirements, and so are not advertised as being I2C.
->> +I²C (pronounce: I squared C and written I2C in the kernel documentation) is
->> +a protocol developed by Philips. It is a slow two-wire protocol (variable
->> +speed, up to 400 kHz), with a high speed extension (3.4 MHz).  It provides
->> +an inexpensive bus for connecting many types of devices with infrequent or
->> +low bandwidth communications needs.  I2C is widely used with embedded
->> +systems.  Some systems use variants that don't meet branding requirements,
->> +and so are not advertised as being I2C but with different names, e.g. TWI
->> +(Two Wire Interface), IIC.
-> 
-> Maybe that's just me but "but with different names" sounds strange to
-> me in the sentence construct. Maybe "but come under different names"
-> instead?
-
-What I mean is "...are not advertised as being I2C but [are advertised]
-with different names". Looks equally clear to me, but since it has to be
-clear to readers, I'll take your suggestion for v2.
-
-Thanks for all the review work. I'm not going to reply to each e-mail
-individually, but each of your suggestions will be taken in v2 unless I
-reply differently.
-
+diff --git a/arch/arm/boot/dts/rk3229-xms6.dts b/arch/arm/boot/dts/rk3229-xms6.dts
+index 679fc2b00..894f64a4a 100644
+--- a/arch/arm/boot/dts/rk3229-xms6.dts
++++ b/arch/arm/boot/dts/rk3229-xms6.dts
+@@ -202,6 +202,10 @@
+ 	status = "okay";
+ };
+ 
++&rga {
++	status = "okay";
++};
++
+ &sdmmc {
+ 	cap-mmc-highspeed;
+ 	disable-wp;
 -- 
-Luca
+2.11.0
 
