@@ -8,66 +8,69 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D6CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C4CC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:05:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9859217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:05:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 867F5217F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:05:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ElLgojf+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qBYZJhae"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728750AbgATOFv (ORCPT
+        id S1728811AbgATOFz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 09:05:51 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:39199 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726876AbgATOFu (ORCPT
+        Mon, 20 Jan 2020 09:05:55 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43389 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726876AbgATOFy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 09:05:50 -0500
-Received: by mail-pl1-f195.google.com with SMTP id g6so13237308plp.6;
-        Mon, 20 Jan 2020 06:05:50 -0800 (PST)
+        Mon, 20 Jan 2020 09:05:54 -0500
+Received: by mail-pg1-f194.google.com with SMTP id k197so15590815pga.10;
+        Mon, 20 Jan 2020 06:05:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/v1IzDSLfJvfKfWBZua8/9zmrUBTaByJf1uzQJas5Wc=;
-        b=ElLgojf+YrtHVzJCr9kbn2bG4YjALZxIq7P1KG85hf4xWO8aOu25uJfsu7eqQvJvXx
-         Kp9D/3v1TYjMpm6Apkilc24M9Ou7Lohn15ioUO0W3c1kN2B/nBuFr+XliJR7dFlwng1k
-         Eav86HDp1P/QXLD/czDXFPgEeFvSRAcNbtkt5d0IwPHOhrqWv9yXdAg6bBlGhWek6l96
-         RuiSeh+Lk+t+uX5KwAk3Fdd813JArg446/GB3eI1GVlIAUXLBTAMvLhnl0S50/e1PeE3
-         MSOsi2I6Bf1DX94OV4BszhB7maP20RWbsoe4cZxa7dPgOt/UMhEKJnooxZ4TI6bWJC8M
-         SQyg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=hJrcFJ3vsqXp48qo1RuEHDb7bDX0LbPhJcuIERyga/A=;
+        b=qBYZJhaeClTqitdQhQn1Nh/6WuACkmiDFzbx82/EYpB5s21+STqhxYmWqYS+oi7GlX
+         oIBo+AZ56AuXoc7ZJkwnecAWJ1DH3oiXaq/8g3BakcRA4x/97ANXzbFbdDqiIxT/98T7
+         JYsUB5GVDPm5p0vN9+klwEfD6QaNn8ZHRRcg3c6NUEu93kCCgr4GcGEPC2GsHFEKvICS
+         jWCBrXfuNWIiN9WMj8Txisyat8sNQF1CItStp58bvXzO3MYjaRiwM6PNIri7jVqAF0yl
+         cXeapFOBZSdEFJ+Ftk2rdnqyoGItJEG5C2vDS0W/6pyI4pXN6qMvLYy2OpXxPlQfe7CX
+         Eiyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/v1IzDSLfJvfKfWBZua8/9zmrUBTaByJf1uzQJas5Wc=;
-        b=EvhlJcovAyVc5BM9FqneQPFZhVFqNoYV+/csj/1s0o501nGsfgiGgGWDhCG8Evt5ed
-         igQYfgezKi+Qrp36xRdPETpmj+ZKX1EMnBerXYaD5rzYC/E6UgjRJ8qkVoYGvNiC4WmP
-         bLtFxYpKZ727uaK1og/tfSumZjHsyj1Ape0Zly40i4++0U6y/0tEdK8ouuI6z3FEHSVY
-         RUl9dFPeE2g18XyiCuvtFlvUVKvNl12SAMAx+yUNWtnuGFwfWfGCR1XWCzOeiP1cBmhH
-         pf1GthDEhNRR6C5uY+/ZqsJtsfWq9+nPbDkJspji98bn55QHquWCRN7sMwyER7xvwZNm
-         /PnQ==
-X-Gm-Message-State: APjAAAWGeu+Wzwi4encOxAXHKMDfNQxuwWSQmdICwkg5uI1tBgIgNYEV
-        Tt8d5Yl723CvZ2Nf7UyW3VT571MmkHtEzA==
-X-Google-Smtp-Source: APXvYqx8oijiciBf5VQCSc1j5Qt/mwD0QWcVLLM8S5xmmTZ1bWDMyHqHKbM5FEDFyLHOWSgJDhfeag==
-X-Received: by 2002:a17:902:9a96:: with SMTP id w22mr4839458plp.107.1579529149530;
-        Mon, 20 Jan 2020 06:05:49 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=hJrcFJ3vsqXp48qo1RuEHDb7bDX0LbPhJcuIERyga/A=;
+        b=LAXSLnVi13bpvQ71EufCG9ZrX3eX0PLKEDLFT+5w7DfDynVdTpIOZqBLxJZnrVk9sO
+         /U23EXYCcrWV6X7mEjJgNvrZHCiObhpjWiR1JJT224mfpIkSvYsqRjnhEFlRJ2moKLJ7
+         YVJLE0hkyjnKucD1N6bDn9lm5sLC8yItgrnhTGbmY7xFBObs6lEhpsm57pu/o+Mi8fCx
+         JIyBCKj33A27uZkvqysMs0oMLI8PDw04Fb2+3WkUSXwv189LPBAX6hCPaPp/uLC8cBFt
+         Ugv+1FhM7zTEu/ksRgaOjXfiN940Dlx+WfYOO2qLhvsbf11dpqvsAsmxBzsa1Tj2jXBU
+         pcMg==
+X-Gm-Message-State: APjAAAXgEbI10dJa0H6QmqSSTiPOceFLDh3AUdd55Bv1aS0jxno5hS+w
+        x0EYlkTD/QWkj5J2giesHVgjCT2xrXiQyw==
+X-Google-Smtp-Source: APXvYqw70cs8vLjnYZx/kM+R8OVhr+GwwfEZSBnYr/t0VvyJGzPLRR/18E35qoo5J+w3AhThHV5I3w==
+X-Received: by 2002:a63:7a56:: with SMTP id j22mr11188460pgn.35.1579529153152;
+        Mon, 20 Jan 2020 06:05:53 -0800 (PST)
 Received: from glados.lan ([2601:647:4c01:6541:fa16:54ff:fed1:1bd6])
-        by smtp.gmail.com with ESMTPSA id b42sm188991pjc.27.2020.01.20.06.05.48
+        by smtp.gmail.com with ESMTPSA id b42sm188991pjc.27.2020.01.20.06.05.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 06:05:49 -0800 (PST)
+        Mon, 20 Jan 2020 06:05:52 -0800 (PST)
 From:   Thomas Hebb <tommyhebb@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-stable@vger.kernel.org, Thomas Hebb <tommyhebb@gmail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Guenter Roeck <linux@roeck-us.net>,
+        Hans de Goede <hdegoede@redhat.com>,
         Heikki Krogerus <heikki.krogerus@linux.intel.com>,
         linux-usb@vger.kernel.org
-Subject: [PATCH v2 1/2] usb: typec: wcove: fix "op-sink-microwatt" default that was in mW
-Date:   Mon, 20 Jan 2020 06:05:40 -0800
-Message-Id: <0eac53c4878423a9abd49d2142fe4cb1136db4e2.1579529138.git.tommyhebb@gmail.com>
+Subject: [PATCH v2 2/2] usb: typec: fusb302: fix "op-sink-microwatt" default that was in mW
+Date:   Mon, 20 Jan 2020 06:05:41 -0800
+Message-Id: <c497958a1b0d8e3421c5eda46abddba6651cec1e.1579529138.git.tommyhebb@gmail.com>
 X-Mailer: git-send-email 2.24.1
+In-Reply-To: <0eac53c4878423a9abd49d2142fe4cb1136db4e2.1579529138.git.tommyhebb@gmail.com>
+References: <0eac53c4878423a9abd49d2142fe4cb1136db4e2.1579529138.git.tommyhebb@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,33 +78,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 4c912bff46cc ("usb: typec: wcove: Provide fwnode for the port")
-didn't convert this value from mW to uW when migrating to a new
+commit 8f6244055bd3 ("usb: typec: fusb302: Always provide fwnode for the
+port") didn't convert this value from mW to uW when migrating to a new
 specification format like it should have.
 
-Fixes: 4c912bff46cc ("usb: typec: wcove: Provide fwnode for the port")
+Fixes: 8f6244055bd3 ("usb: typec: fusb302: Always provide fwnode for the port")
 Cc: linux-stable@vger.kernel.org
 Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
 
 ---
 
-Changes in v2:
-- Split fix into two patches
-- Added stable cc
+Changes in v2: None
 
- drivers/usb/typec/tcpm/wcove.c | 2 +-
+ drivers/usb/typec/tcpm/fusb302.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/typec/tcpm/wcove.c b/drivers/usb/typec/tcpm/wcove.c
-index edc271da14f4..9b745f432c91 100644
---- a/drivers/usb/typec/tcpm/wcove.c
-+++ b/drivers/usb/typec/tcpm/wcove.c
-@@ -597,7 +597,7 @@ static const struct property_entry wcove_props[] = {
+diff --git a/drivers/usb/typec/tcpm/fusb302.c b/drivers/usb/typec/tcpm/fusb302.c
+index ed8655c6af8c..b498960ff72b 100644
+--- a/drivers/usb/typec/tcpm/fusb302.c
++++ b/drivers/usb/typec/tcpm/fusb302.c
+@@ -1666,7 +1666,7 @@ static const struct property_entry port_props[] = {
  	PROPERTY_ENTRY_STRING("try-power-role", "sink"),
  	PROPERTY_ENTRY_U32_ARRAY("source-pdos", src_pdo),
  	PROPERTY_ENTRY_U32_ARRAY("sink-pdos", snk_pdo),
--	PROPERTY_ENTRY_U32("op-sink-microwatt", 15000),
-+	PROPERTY_ENTRY_U32("op-sink-microwatt", 15000000),
+-	PROPERTY_ENTRY_U32("op-sink-microwatt", 2500),
++	PROPERTY_ENTRY_U32("op-sink-microwatt", 2500000),
  	{ }
  };
  
