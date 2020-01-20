@@ -2,186 +2,166 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C39C33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01AFBC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:27:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14704207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:27:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB5F9207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:27:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579519648;
+	bh=88M46HvM7WEro2kKFr73vSWKr16Wn4WYQs57XxjDLcc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JC72HZ9RuKIGFunPIvxeGXnlGHfxwNC0LZxw2f2YfMh6P1pVDuRXeB1jtObyqHZcH
+	 8wJKmCAYCd7BcuqFYefzxLZpNMOVQBZZhex1/qOcCUxqkA46LrMWFxorG4l8A01/Me
+	 tJWrSY8dZA9IXQfZIG5tou6KCSyMqBYWnzuX+Tp8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728799AbgATL1N (ORCPT
+        id S1727144AbgATL11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 06:27:13 -0500
-Received: from mga03.intel.com ([134.134.136.65]:57533 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726752AbgATL1N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 06:27:13 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 03:27:12 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,341,1574150400"; 
-   d="scan'208";a="244380948"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga002.jf.intel.com with ESMTP; 20 Jan 2020 03:27:12 -0800
-Received: from [10.125.252.193] (abudanko-mobl.ccr.corp.intel.com [10.125.252.193])
-        by linux.intel.com (Postfix) with ESMTP id E6B7B5802C1;
-        Mon, 20 Jan 2020 03:27:03 -0800 (PST)
-Subject: [PATCH v5 04/10] perf tool: extend Perf tool with CAP_PERFMON
- capability support
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
-        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "james.bottomley@hansenpartnership.com" 
-        <james.bottomley@hansenpartnership.com>,
-        Serge Hallyn <serge@hallyn.com>,
-        James Morris <jmorris@namei.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Lionel Landwerlin <lionel.g.landwerlin@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        oprofile-list@lists.sf.net
-References: <0548c832-7f4b-dc4c-8883-3f2b6d351a08@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <409fb007-ce29-5d53-aeb6-dd30b059ec67@linux.intel.com>
-Date:   Mon, 20 Jan 2020 14:27:02 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 20 Jan 2020 06:27:27 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46503 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726573AbgATL11 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 06:27:27 -0500
+Received: by mail-wr1-f67.google.com with SMTP id z7so29095572wrl.13;
+        Mon, 20 Jan 2020 03:27:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=n5bQ+OogGIDLA3P5SuqSCggZosT/rPX+E93SVPGqmAE=;
+        b=N1m6OKatMouGwU4TvnPHYoQY0phCbmeBJ1SeTt1r5VKeNJQya/GiOvSz0cAhNkBDpG
+         OUkLc4HZvZ9AAJ8uxHwJ+nNMxckhdL9INdpS0tcub3M5PR86bhrgfxZMC+hTIIBmNZCI
+         ey8clz5PkSaTENpUePsvrZuO470vH2LT7aRFjROs6xivSJN8kN/1RyrFQiLpa9Ww5AFV
+         Agu6w3p/7Sx00121ex2C8RjShF9Lvc0jNU0iERMY9fzSM8a3Ia6FA+NKeKps9ZDYNFmP
+         /eOmANt5G40dkY+hBiDb5m0QgXv8n4dU+Ot4b/8y/Kw7zk9XVu37dj1M3VBVRGV019I3
+         9VgA==
+X-Gm-Message-State: APjAAAUs8FFTznUhb1sknfLjwn4jbJSWE649gTDyXK0pDxTFv+XLfqaL
+        Iu2HkoW/pH5PLxUItuobFbg=
+X-Google-Smtp-Source: APXvYqyX0RlQo2lpD3Kwf0u/gBQ/R0SPxmcmLOKoPxSoegA7XlW0ftXNaWv3H2dt8Jzl1CZ/z1FCnQ==
+X-Received: by 2002:adf:ee45:: with SMTP id w5mr4615789wro.352.1579519644002;
+        Mon, 20 Jan 2020 03:27:24 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id z8sm46388142wrq.22.2020.01.20.03.27.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jan 2020 03:27:23 -0800 (PST)
+Date:   Mon, 20 Jan 2020 12:27:22 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc:     Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
+        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>, christian.brauner@ubuntu.com,
+        sjpark@amazon.de
+Subject: Re: [PATCH v2 2/5] mm: introduce external memory hinting API
+Message-ID: <20200120112722.GY18451@dhcp22.suse.cz>
+References: <20200116235953.163318-1-minchan@kernel.org>
+ <20200116235953.163318-3-minchan@kernel.org>
+ <20200117115225.GV19428@dhcp22.suse.cz>
+ <f57fb198-4070-d3b4-b6bd-43b29ff40a2c@virtuozzo.com>
 MIME-Version: 1.0
-In-Reply-To: <0548c832-7f4b-dc4c-8883-3f2b6d351a08@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f57fb198-4070-d3b4-b6bd-43b29ff40a2c@virtuozzo.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon 20-01-20 13:24:35, Kirill Tkhai wrote:
+> On 17.01.2020 14:52, Michal Hocko wrote:
+> > On Thu 16-01-20 15:59:50, Minchan Kim wrote:
+> >> There is usecase that System Management Software(SMS) want to give
+> >> a memory hint like MADV_[COLD|PAGEEOUT] to other processes and
+> >> in the case of Android, it is the ActivityManagerService.
+> >>
+> >> It's similar in spirit to madvise(MADV_WONTNEED), but the information
+> >> required to make the reclaim decision is not known to the app. Instead,
+> >> it is known to the centralized userspace daemon(ActivityManagerService),
+> >> and that daemon must be able to initiate reclaim on its own without
+> >> any app involvement.
+> >>
+> >> To solve the issue, this patch introduces new syscall process_madvise(2).
+> >> It uses pidfd of an external processs to give the hint.
+> >>
+> >>  int process_madvise(int pidfd, void *addr, size_t length, int advise,
+> >> 			unsigned long flag);
+> >>
+> >> Since it could affect other process's address range, only privileged
+> >> process(CAP_SYS_PTRACE) or something else(e.g., being the same UID)
+> >> gives it the right to ptrace the process could use it successfully.
+> >> The flag argument is reserved for future use if we need to extend the
+> >> API.
+> >>
+> >> I think supporting all hints madvise has/will supported/support to
+> >> process_madvise is rather risky. Because we are not sure all hints make
+> >> sense from external process and implementation for the hint may rely on
+> >> the caller being in the current context so it could be error-prone.
+> >> Thus, I just limited hints as MADV_[COLD|PAGEOUT] in this patch.
+> >>
+> >> If someone want to add other hints, we could hear hear the usecase and
+> >> review it for each hint. It's more safe for maintainace rather than
+> >> introducing a buggy syscall but hard to fix it later.
+> > 
+> > I have brought this up when we discussed this in the past but there is
+> > no reflection on that here so let me bring that up again. 
+> > 
+> > I believe that the interface has an inherent problem that it is racy.
+> > The external entity needs to know the address space layout of the target
+> > process to do anyhing useful on it. The address space is however under
+> > the full control of the target process though and the external entity
+> > has no means to find out that the layout has changed. So
+> > time-to-check-time-to-act is an inherent problem.
+> > 
+> > This is a serious design flaw and it should be explained why it doesn't
+> > matter or how to use the interface properly to prevent that problem.
+> 
+> Really, any address space manipulation, where more than one process is
+> involved, is racy.
 
-Extend error messages to mention CAP_PERFMON capability as an option
-to substitute CAP_SYS_ADMIN capability for secure system performance
-monitoring and observability operations. Make perf_event_paranoid_check()
-and __cmd_ftrace() to be aware of CAP_PERFMON capability.
+They are, indeed. But that is not the point I wanted to make.
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- tools/perf/builtin-ftrace.c |  5 +++--
- tools/perf/design.txt       |  3 ++-
- tools/perf/util/cap.h       |  4 ++++
- tools/perf/util/evsel.c     | 10 +++++-----
- tools/perf/util/util.c      |  1 +
- 5 files changed, 15 insertions(+), 8 deletions(-)
+> Even two threads on common memory need a synchronization
+> to manage mappings in a sane way. Managing memory from two processes
+> is the same in principle, and the only difference is that another level
+> of synchronization is required.
 
-diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-index d5adc417a4ca..55eda54240fb 100644
---- a/tools/perf/builtin-ftrace.c
-+++ b/tools/perf/builtin-ftrace.c
-@@ -284,10 +284,11 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
- 		.events = POLLIN,
- 	};
- 
--	if (!perf_cap__capable(CAP_SYS_ADMIN)) {
-+	if (!(perf_cap__capable(CAP_PERFMON) ||
-+	      perf_cap__capable(CAP_SYS_ADMIN))) {
- 		pr_err("ftrace only works for %s!\n",
- #ifdef HAVE_LIBCAP_SUPPORT
--		"users with the SYS_ADMIN capability"
-+		"users with the CAP_PERFMON or CAP_SYS_ADMIN capability"
- #else
- 		"root"
- #endif
-diff --git a/tools/perf/design.txt b/tools/perf/design.txt
-index 0453ba26cdbd..a42fab308ff6 100644
---- a/tools/perf/design.txt
-+++ b/tools/perf/design.txt
-@@ -258,7 +258,8 @@ gets schedule to. Per task counters can be created by any user, for
- their own tasks.
- 
- A 'pid == -1' and 'cpu == x' counter is a per CPU counter that counts
--all events on CPU-x. Per CPU counters need CAP_SYS_ADMIN privilege.
-+all events on CPU-x. Per CPU counters need CAP_PERFMON or CAP_SYS_ADMIN
-+privilege.
- 
- The 'flags' parameter is currently unused and must be zero.
- 
-diff --git a/tools/perf/util/cap.h b/tools/perf/util/cap.h
-index 051dc590ceee..ae52878c0b2e 100644
---- a/tools/perf/util/cap.h
-+++ b/tools/perf/util/cap.h
-@@ -29,4 +29,8 @@ static inline bool perf_cap__capable(int cap __maybe_unused)
- #define CAP_SYSLOG	34
- #endif
- 
-+#ifndef CAP_PERFMON
-+#define CAP_PERFMON	38
-+#endif
-+
- #endif /* __PERF_CAP_H */
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index a69e64236120..a35f17723dd3 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -2491,14 +2491,14 @@ int perf_evsel__open_strerror(struct evsel *evsel, struct target *target,
- 		 "You may not have permission to collect %sstats.\n\n"
- 		 "Consider tweaking /proc/sys/kernel/perf_event_paranoid,\n"
- 		 "which controls use of the performance events system by\n"
--		 "unprivileged users (without CAP_SYS_ADMIN).\n\n"
-+		 "unprivileged users (without CAP_PERFMON or CAP_SYS_ADMIN).\n\n"
- 		 "The current value is %d:\n\n"
- 		 "  -1: Allow use of (almost) all events by all users\n"
- 		 "      Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK\n"
--		 ">= 0: Disallow ftrace function tracepoint by users without CAP_SYS_ADMIN\n"
--		 "      Disallow raw tracepoint access by users without CAP_SYS_ADMIN\n"
--		 ">= 1: Disallow CPU event access by users without CAP_SYS_ADMIN\n"
--		 ">= 2: Disallow kernel profiling by users without CAP_SYS_ADMIN\n\n"
-+		 ">= 0: Disallow ftrace function tracepoint by users without CAP_PERFMON or CAP_SYS_ADMIN\n"
-+		 "      Disallow raw tracepoint access by users without CAP_SYS_PERFMON or CAP_SYS_ADMIN\n"
-+		 ">= 1: Disallow CPU event access by users without CAP_PERFMON or CAP_SYS_ADMIN\n"
-+		 ">= 2: Disallow kernel profiling by users without CAP_PERFMON or CAP_SYS_ADMIN\n\n"
- 		 "To make this setting permanent, edit /etc/sysctl.conf too, e.g.:\n\n"
- 		 "	kernel.perf_event_paranoid = -1\n" ,
- 				 target->system_wide ? "system-wide " : "",
-diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
-index 969ae560dad9..51cf3071db74 100644
---- a/tools/perf/util/util.c
-+++ b/tools/perf/util/util.c
-@@ -272,6 +272,7 @@ int perf_event_paranoid(void)
- bool perf_event_paranoid_check(int max_level)
- {
- 	return perf_cap__capable(CAP_SYS_ADMIN) ||
-+			perf_cap__capable(CAP_PERFMON) ||
- 			perf_event_paranoid() <= max_level;
- }
- 
+Well, not really. The operation might simply attempt to perform an
+operation on a specific memory area and get a failure if it doesn't
+reference the same object anymore. What I think we need is some form of
+a handle to operate on. In the past we have discussed several
+directions. I was proposing /proc/self/map_anon/ (analogous to
+map_files) where you could inspect anonymous memory and get a file
+handle for it. madvise would then operate on the fd and then there
+shouldn't be a real problem to revalidate that the object is still
+valid. But there was no general enthusiasm about that approach. There
+are likely some land mines on the way.
+
+There was another approach mentioned by Minchan in other email in this
+thread.
+
+What I want to say is that I believe a remove madvise can have a
+sensible semantic even without a strong synchronization between the
+monitor and the target task. We just have to make sure that the monitor
+never operates on a different object then it believes it acts on.
+
+On the other hand, there will never be any way to make this interface
+reasonable for destructive operations though because the content of the
+memory needs a strong synchronization IMHO.
 -- 
-2.20.1
-
-
+Michal Hocko
+SUSE Labs
