@@ -2,95 +2,144 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8F2C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 05:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF3FC33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 05:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4089208CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 05:39:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4778207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 05:58:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="J+1jjLQ4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KbeoHMBx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727422AbgATFjE (ORCPT
+        id S1726148AbgATF60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 00:39:04 -0500
-Received: from ozlabs.org ([203.11.71.1]:33485 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725783AbgATFjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 00:39:03 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 481L7l3BLmz9sRQ;
-        Mon, 20 Jan 2020 16:38:59 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1579498741;
-        bh=I8Lh+RA8avcoXnghl+JZrgYPpe7DTQbPFeiLUa8yXq0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=J+1jjLQ4/2jn70tfJi+iTpd+0lH+f4qmZO/g48dbBc7fVswSflzXL+/OGY8wgIVx3
-         TcjgnSQXtmkO86CT5jcyWyuk2BL9zvkkN91QAbPgmBIvnZtefaK795QHMs+8N3/ozC
-         4grmP2EcoPxcVpDdLavn87X6JfYfTWI9NKmzAzVtbZjefeuaqHsvd5tyHW5bfDRtsN
-         BNRwKJitm42JA3Z2ZAp8SJ/I3QdcFktJH2FSgFjT6WK7ZVNTek9X7L/Plw8NwFjQLc
-         Vgs23yWMYXSssRa37rX+hFxaN3CpAfGt1snf0CP5hHYT2wiYW1Mc38UeVPdOBqTP3s
-         RcoV6+iog9jOw==
-Date:   Mon, 20 Jan 2020 16:38:53 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Subject: linux-next: build warning after merge of the tip tree
-Message-ID: <20200120163853.53da0ac5@canb.auug.org.au>
+        Mon, 20 Jan 2020 00:58:26 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41024 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbgATF6Z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 00:58:25 -0500
+Received: by mail-pf1-f196.google.com with SMTP id w62so15274377pfw.8;
+        Sun, 19 Jan 2020 21:58:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=44OvwPqHGhblGpev/Fgsdo0KBCwnSccL+pFHHJODwRA=;
+        b=KbeoHMBxGQBM/Im21AP25FrgmZHdXs95J2h6j/+YlJAiPtyRvC/i4UqABBcF1zV/5A
+         GlVRgFkkC3+3Xm9aS5svlW4KJUkQGd7c4O2zgLmqSN89gTd95UZqcEc/ZDBdyKd6snkG
+         QjZFnq+8tp3HgISoXncj2zYpB7DxwAfDrvQogCRcjWa1j20OZV//rLAzTHlstjAa2HT6
+         bgNEyExdJ0A8H8zs2/OcKwyEafaRG7NrxZ39JoQNUxPpX+kVSiF0mqv1QEB05UyXP61n
+         VEKy/3akwDV1g62/13f5OCYIQAGO0ac8Ay0N9CIRiJCOqZ2RSLE1RhzyqYuAX3w3FMjF
+         ns3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=44OvwPqHGhblGpev/Fgsdo0KBCwnSccL+pFHHJODwRA=;
+        b=ehcjCCwefureHUV2BYzQzNTMi5xSszNloWAhg8VUkf0OpQYygXFuIy3G5XM/B3lmpY
+         1UANcT6TQiQzsYyhq9IiMmIi8vmncrNjn3sXoicxLOUyemiTGPGRRwCQ3FNL4DNTp4tL
+         MacRyvTYicB0hkJKmWaLe2jJxsR6Kdsr/4FLo2QdjsYrTl6v3k+lwQEepzb6VcnMN7Z1
+         phQ8f9aQCHxJG0F3tc+C8OkKMLNkYU0umT/xuaUpv2YNsIaTjsYpuihmsQRaFunAV+NM
+         EnithFbnUWh3XVif9caxwrGhkL1sTw50T1NXo+N4Q3z3M1+CYCudacKLew7wEJ6X0J5x
+         zA1Q==
+X-Gm-Message-State: APjAAAWXuorwiFrbL0hcgziWxbZIQk4LkXsSp53TqB7Qm0YNVIWK/BXt
+        SaL/OVLam1YVenvoHSC1/QHMLypsEGY=
+X-Google-Smtp-Source: APXvYqw9JjQQ6aSCtG0lkpD4uoTTy1UXI9ZPV3n5VK5AoeuRyNfmc4uOarzUHC61VTUXbFXxF7/LtA==
+X-Received: by 2002:a63:6787:: with SMTP id b129mr58751152pgc.103.1579499905338;
+        Sun, 19 Jan 2020 21:58:25 -0800 (PST)
+Received: from localhost ([43.224.245.179])
+        by smtp.gmail.com with ESMTPSA id z5sm7976205pfq.3.2020.01.19.21.58.24
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Sun, 19 Jan 2020 21:58:24 -0800 (PST)
+Date:   Mon, 20 Jan 2020 13:58:22 +0800
+From:   chenqiwu <qiwuchen55@gmail.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     mmayer@broadcom.com, rjw@rjwysocki.net, f.fainelli@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        chenqiwu <chenqiwu@xiaomi.com>
+Subject: Re: [PATCH v3] cpufreq: brcmstb-avs: fix imbalance of cpufreq policy
+ refcount
+Message-ID: <20200120055822.GB5185@cqw-OptiPlex-7050>
+References: <1579417750-21984-1-git-send-email-qiwuchen55@gmail.com>
+ <20200120053250.igkwofqfzvmqb3c3@vireshk-i7>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/y5z4jywl5eWu=/1eiCAP6Q7";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200120053250.igkwofqfzvmqb3c3@vireshk-i7>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/y5z4jywl5eWu=/1eiCAP6Q7
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Jan 20, 2020 at 11:02:50AM +0530, Viresh Kumar wrote:
+> On 19-01-20, 15:09, qiwuchen55@gmail.com wrote:
+> > From: chenqiwu <chenqiwu@xiaomi.com>
+> > 
+> > brcm_avs_cpufreq_get() calls cpufreq_cpu_get() to get the cpufreq policy,
+> > meanwhile, it also increments the kobject reference count to mark it busy.
+> > However, a corresponding call of cpufreq_cpu_put() is ignored to decrement
+> > the kobject reference count back, which may lead to a potential stuck risk
+> > that the cpuhp thread deadly waits for dropping of kobject refcount when
+> > cpufreq policy free.
+> > 
+> > For fixing this bug, cpufreq_get_policy() is referenced to do a proper
+> > cpufreq_cpu_get()/cpufreq_cpu_put() and fill a policy copy for the user.
+> > If the policy return NULL, we just return 0 to hit the code path of
+> > cpufreq_driver->get.
+> > 
+> > Signed-off-by: chenqiwu <chenqiwu@xiaomi.com>
+> > ---
+> >  drivers/cpufreq/brcmstb-avs-cpufreq.c | 12 ++++++++++--
+> >  1 file changed, 10 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/cpufreq/brcmstb-avs-cpufreq.c b/drivers/cpufreq/brcmstb-avs-cpufreq.c
+> > index 77b0e5d..ee0d404 100644
+> > --- a/drivers/cpufreq/brcmstb-avs-cpufreq.c
+> > +++ b/drivers/cpufreq/brcmstb-avs-cpufreq.c
+> > @@ -452,8 +452,16 @@ static bool brcm_avs_is_firmware_loaded(struct private_data *priv)
+> >  
+> >  static unsigned int brcm_avs_cpufreq_get(unsigned int cpu)
+> >  {
+> > -	struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
+> 
+> Why can't we just add a corresponding cpufreq_cpu_put() instead of all this ?
+> 
 
-Hi all,
+cpufreq_get_policy() does a proper cpufreq_cpu_get()/cpufreq_cpu_put(),
+meanwhile fills a policy copy for the user. It equals to using
+cpufreq_cpu_get() and a corresponding cpufreq_cpu_put() around access
+to the policy pointer. I think both methods are fine here.
+What do you think?
 
-After merging the tip tree, today's linux-next build (x86_64 allnoconfig
-and a couple of other allnoconfigs) produced this warning:
+> > -	struct private_data *priv = policy->driver_data;
+> > +	struct cpufreq_policy policy;
+> > +	struct private_data *priv;
+> > +
+> > +	/*
+> > +	 * In case cpufreq policy has been released, just return 0.
+> > +	 */
+> > +	if (cpufreq_get_policy(&policy, cpu))
+> > +		return 0;
+> 
+> Why did you move away from the previous implementation of cpufreq_cpu_get() ?
+> 
+> > +
+> > +	priv = policy.driver_data;
+> >  
+> >  	return brcm_avs_get_frequency(priv->base);
+> >  }
+> > -- 
+> > 1.9.1
+> 
+> -- 
+> viresh
 
-kernel/sched/fair.c:5221:12: warning: 'sched_idle_cpu' defined but not used=
- [-Wunused-function]
- 5221 | static int sched_idle_cpu(int cpu)
-      |            ^~~~~~~~~~~~~~
-
-Introduced (I think) by commit
-
-  323af6deaf70 ("sched/fair: Load balance aggressively for SCHED_IDLE CPUs")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/y5z4jywl5eWu=/1eiCAP6Q7
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4lPO0ACgkQAVBC80lX
-0Gzfbwf/QBxTNLlsonWssDSAEzGq3OCAIHM7LHiSVb2R7I2BD53VnsFWnN46zmhA
-VN0/oH525des+4RKdtCRX/8fyRjxsmi81bpdy0WawWjggo3REtXankV+3sM17qAH
-LripUkm6VvMqnjgBmvAcc0YoDWgR9IjuFOpspMJzs+7bri8aO37kp2coRTy7qWQt
-xc1q1OtVJyVUOEvjRHSPt4sr+XAXvjogEHGKtjU24xyXywc8ag5Aim3Hon5DT6Xr
-yHMY9CUNaQOhdAjkuGrCfNV3qMHvuUGscFt9eI/N2xFqiLXMnoHKISUvSWkepkes
-qGwo3tmqitjIdCfSnStPGYomsD3MKA==
-=tRSA
------END PGP SIGNATURE-----
-
---Sig_/y5z4jywl5eWu=/1eiCAP6Q7--
+Qiwu
