@@ -2,78 +2,129 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90EDDC33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5602FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6925422464
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:06:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C91924125
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:07:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CGafp+6A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729044AbgATNGz (ORCPT
+        id S1729121AbgATNHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 20 Jan 2020 08:07:01 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:57652 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729045AbgATNGz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 Jan 2020 08:06:55 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:44834 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728792AbgATNGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 08:06:52 -0500
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id E578B618678A3BA5CAF1;
-        Mon, 20 Jan 2020 21:06:49 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 20 Jan 2020 21:06:32 +0800
-From:   Chen Zhou <chenzhou10@huawei.com>
-To:     <agross@kernel.org>, <bjorn.andersson@linaro.org>,
-        <lee.jones@linaro.org>, <daniel.thompson@linaro.org>,
-        <jingoohan1@gmail.com>, <b.zolnierkie@samsung.com>
-CC:     <kgunda@codeaurora.org>, <linux-arm-msm@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <linux-fbdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <chenzhou10@huawei.com>
-Subject: [PATCH -next] backlight: qcom-wled: fix unsigned comparison to zero
-Date:   Mon, 20 Jan 2020 21:01:43 +0800
-Message-ID: <20200120130143.35363-1-chenzhou10@huawei.com>
-X-Mailer: git-send-email 2.20.1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579525615;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=KsPh+K2sGLcZZLAcEa0kQAsvwcVmMWDpkU86Oyeqz+o=;
+        b=CGafp+6AcscDmOKb7TOukKRU/pAENkXcEorcv9QzCspgqK4AAMjZl6jxrW/DK3PVUDjdQb
+        wtGph+d4ueshXXNVTrmpKWvYG9S4cFIlTT99kYG7SL2EncsMFyWPwvh++jnG9/pjJZLVzl
+        pg7QomFc2x9Y+OOsgKJ7090M927wFc0=
+Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
+ [209.85.208.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-241-Q970KM1KPiWjxd9MbyL_RA-1; Mon, 20 Jan 2020 08:06:54 -0500
+X-MC-Unique: Q970KM1KPiWjxd9MbyL_RA-1
+Received: by mail-lj1-f200.google.com with SMTP id g10so6590918ljg.8
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 05:06:53 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=KsPh+K2sGLcZZLAcEa0kQAsvwcVmMWDpkU86Oyeqz+o=;
+        b=SevnmJ7DWXRs1xtAKE8g2PTxf7P5xXFkIAMMLFUqJQdNSEgEZ47mFrUkM2XBITvKwX
+         Po+SlETS3idFScrPuzk2JEJ1ojNlvjZSPjlkQpsVNC8leSVXEcHEkeZBLVgIIuhMmb6S
+         UuTn+yqIHWtYbcf9ooLoZZdq4qpg7TgekDR1Nlajp8gxq/4Td6CaWgeHQ+NrUuzAorvR
+         RBI4WSAVUgkbqMyYJePR6b5FSoVDI+p64dWuKgUXHpxqM/HmqEWfScg9Wp9q2xI20TcD
+         toTQZj5zxtQIIdyZuyMrL16D3nsDsNpWok0SQKiXwEsUYnz+4Vhwet56JVHuRwOXYds6
+         KAgQ==
+X-Gm-Message-State: APjAAAXojKI7q1DZlrJFfBiPp9cyQtOZW0tLP/t5O00gmptsXMMGfTvS
+        K1ClIUGqELAVCFICeha4rOTzqrXHhzdhjfrnSSHGzYhB5++3z0IwhULVJHJfmaAxUuSI+mkYM01
+        dA5O2o66V4SrHFRhc1k0tPjDw
+X-Received: by 2002:a2e:7a13:: with SMTP id v19mr13537748ljc.43.1579525612608;
+        Mon, 20 Jan 2020 05:06:52 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxq7D+NOw8boRnGBWgzLuvcBMZuEgfqik8rj3u7ynVqVlOwh9aSescMWf6m9o80N+P1u7Do7g==
+X-Received: by 2002:a2e:7a13:: with SMTP id v19mr13537712ljc.43.1579525612235;
+        Mon, 20 Jan 2020 05:06:52 -0800 (PST)
+Received: from alrua-x1.borgediget.toke.dk ([85.204.121.218])
+        by smtp.gmail.com with ESMTPSA id u9sm16734044lji.49.2020.01.20.05.06.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jan 2020 05:06:51 -0800 (PST)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id 567801804D8; Mon, 20 Jan 2020 14:06:50 +0100 (CET)
+Subject: [PATCH bpf-next v5 09/11] tools/runqslower: Remove tools/lib/bpf from
+ include path
+From:   =?utf-8?q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     Alexei Starovoitov <ast@kernel.org>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Date:   Mon, 20 Jan 2020 14:06:50 +0100
+Message-ID: <157952561027.1683545.1976265477926794138.stgit@toke.dk>
+In-Reply-To: <157952560001.1683545.16757917515390545122.stgit@toke.dk>
+References: <157952560001.1683545.16757917515390545122.stgit@toke.dk>
+User-Agent: StGit/0.21
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes coccicheck warning:
-./drivers/video/backlight/qcom-wled.c:1104:5-15:
-	WARNING: Unsigned expression compared with zero: string_len > 0
+From: Toke Høiland-Jørgensen <toke@redhat.com>
 
-The unsigned variable string_len is assigned a return value from the call
-to wled_configure, which may return negative error code.
+Since we are now consistently using the bpf/ prefix on #include directives,
+we don't need to include tools/lib/bpf in the include path. Remove it to
+make sure we don't inadvertently introduce new includes without the prefix.
 
-Fixes: 775d2ffb4af6 ("backlight: qcom-wled: Restructure the driver for WLED3")
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
 ---
- drivers/video/backlight/qcom-wled.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/bpf/runqslower/Makefile |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/video/backlight/qcom-wled.c b/drivers/video/backlight/qcom-wled.c
-index d46052d..3d276b3 100644
---- a/drivers/video/backlight/qcom-wled.c
-+++ b/drivers/video/backlight/qcom-wled.c
-@@ -956,8 +956,8 @@ static int wled_configure(struct wled *wled, int version)
- 	struct wled_config *cfg = &wled->cfg;
- 	struct device *dev = wled->dev;
- 	const __be32 *prop_addr;
--	u32 size, val, c, string_len;
--	int rc, i, j;
-+	u32 size, val, c;
-+	int rc, i, j, string_len;
+diff --git a/tools/bpf/runqslower/Makefile b/tools/bpf/runqslower/Makefile
+index b7b2230f807b..b90044caf270 100644
+--- a/tools/bpf/runqslower/Makefile
++++ b/tools/bpf/runqslower/Makefile
+@@ -6,7 +6,7 @@ LLVM_STRIP := llvm-strip
+ DEFAULT_BPFTOOL := $(OUTPUT)/sbin/bpftool
+ BPFTOOL ?= $(DEFAULT_BPFTOOL)
+ LIBBPF_SRC := $(abspath ../../lib/bpf)
+-INCLUDES := -I$(OUTPUT) -I$(abspath ../../lib) -I$(abspath ../../lib/bpf)
++INCLUDES := -I$(OUTPUT) -I$(abspath ../../lib)
+ CFLAGS := -g -Wall
  
- 	const struct wled_u32_opts *u32_opts = NULL;
- 	const struct wled_u32_opts wled3_opts[] = {
--- 
-2.7.4
+ # Try to detect best kernel BTF source
 
