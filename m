@@ -4,345 +4,726 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22CB4C33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:03:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A853C33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:03:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02FA020882
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:03:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55C9C20882
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:03:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbgATKDR (ORCPT
+        id S1727101AbgATKDV convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 20 Jan 2020 05:03:21 -0500
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:36811 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726573AbgATKDR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 Jan 2020 05:03:17 -0500
-Received: from relay.sw.ru ([185.231.240.75]:37130 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726465AbgATKDR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 05:03:17 -0500
-Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1itTsh-00089v-6Y; Mon, 20 Jan 2020 13:02:03 +0300
-Subject: Re: [PATCH block v2 2/3] block: Add support for REQ_NOZERO flag
-To:     Bob Liu <bob.liu@oracle.com>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, martin.petersen@oracle.com,
-        axboe@kernel.dk, tytso@mit.edu, adilger.kernel@dilger.ca,
-        Chaitanya.Kulkarni@wdc.com, darrick.wong@oracle.com,
-        ming.lei@redhat.com, osandov@fb.com, jthumshirn@suse.de,
-        minwoo.im.dev@gmail.com, damien.lemoal@wdc.com,
-        andrea.parri@amarulasolutions.com, hare@suse.com, tj@kernel.org,
-        ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
-        bvanassche@acm.org, dhowells@redhat.com, asml.silence@gmail.com
-References: <157917805422.88675.6477661554332322975.stgit@localhost.localdomain>
- <157917816325.88675.16481772163916741596.stgit@localhost.localdomain>
- <a6f36a19-0607-fc1e-d2da-37aa00c4b76e@oracle.com>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <fe055cf4-db28-e72d-c247-3a9c921919f5@virtuozzo.com>
-Date:   Mon, 20 Jan 2020 13:02:02 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+X-Originating-IP: 90.76.211.102
+Received: from xps13 (lfbn-tou-1-1151-102.w90-76.abo.wanadoo.fr [90.76.211.102])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 3C40A1C001A;
+        Mon, 20 Jan 2020 10:03:06 +0000 (UTC)
+Date:   Mon, 20 Jan 2020 11:03:06 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     WeiXiong Liao <liaoweixiong@allwinnertech.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org
+Subject: Re: [PATCH v1 11/11] mtd: new support oops logger based on
+ pstore/blk
+Message-ID: <20200120110306.32e53fd8@xps13>
+In-Reply-To: <1579482233-2672-12-git-send-email-liaoweixiong@allwinnertech.com>
+References: <1579482233-2672-1-git-send-email-liaoweixiong@allwinnertech.com>
+        <1579482233-2672-12-git-send-email-liaoweixiong@allwinnertech.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <a6f36a19-0607-fc1e-d2da-37aa00c4b76e@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19.01.2020 04:50, Bob Liu wrote:
-> On 1/16/20 8:36 PM, Kirill Tkhai wrote:
->> This adds support for REQ_NOZERO extension of REQ_OP_WRITE_ZEROES
->> operation, which encourages a block device driver to just allocate
->> blocks (or mark them allocated) instead of actual blocks zeroing.
->> REQ_NOZERO is aimed to be used for network filesystems providing
->> a block device interface. Also, block devices, which map a file
->> on other filesystem (like loop), may use this for less fragmentation
->> and batching fallocate() requests. Hypervisors like QEMU may
->> introduce optimizations of clusters allocations based on this.
->>
->> BLKDEV_ZERO_ALLOCATE is a new corresponding flag for
->> blkdev_issue_zeroout().
->>> CC: Martin K. Petersen <martin.petersen@oracle.com>
->> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
->> ---
->>  block/blk-core.c          |    6 +++---
->>  block/blk-lib.c           |   17 ++++++++++-------
->>  block/blk-merge.c         |    9 ++++++---
->>  block/blk-settings.c      |   17 +++++++++++++++++
->>  fs/block_dev.c            |    4 ++++
->>  include/linux/blk_types.h |    5 ++++-
->>  include/linux/blkdev.h    |   31 ++++++++++++++++++++++++-------
->>  7 files changed, 68 insertions(+), 21 deletions(-)
->>
->> diff --git a/block/blk-core.c b/block/blk-core.c
->> index 50a5de025d5e..2edcd55624f1 100644
->> --- a/block/blk-core.c
->> +++ b/block/blk-core.c
->> @@ -978,7 +978,7 @@ generic_make_request_checks(struct bio *bio)
->>  			goto not_supported;
->>  		break;
->>  	case REQ_OP_WRITE_ZEROES:
->> -		if (!q->limits.max_write_zeroes_sectors)
->> +		if (!blk_queue_get_max_write_zeroes_sectors(q, bio->bi_opf))
->>  			goto not_supported;
->>  		break;
->>  	default:
->> @@ -1250,10 +1250,10 @@ EXPORT_SYMBOL(submit_bio);
->>  static int blk_cloned_rq_check_limits(struct request_queue *q,
->>  				      struct request *rq)
->>  {
->> -	if (blk_rq_sectors(rq) > blk_queue_get_max_sectors(q, req_op(rq))) {
->> +	if (blk_rq_sectors(rq) > blk_queue_get_max_sectors(q, rq->cmd_flags)) {
->>  		printk(KERN_ERR "%s: over max size limit. (%u > %u)\n",
->>  			__func__, blk_rq_sectors(rq),
->> -			blk_queue_get_max_sectors(q, req_op(rq)));
->> +			blk_queue_get_max_sectors(q, rq->cmd_flags));
->>  		return -EIO;
->>  	}
->>  
->> diff --git a/block/blk-lib.c b/block/blk-lib.c
->> index 3e38c93cfc53..3e80279eb029 100644
->> --- a/block/blk-lib.c
->> +++ b/block/blk-lib.c
->> @@ -214,7 +214,7 @@ static int __blkdev_issue_write_zeroes(struct block_device *bdev,
->>  		struct bio **biop, unsigned flags)
->>  {
->>  	struct bio *bio = *biop;
->> -	unsigned int max_write_zeroes_sectors;
->> +	unsigned int max_write_zeroes_sectors, req_flags = 0;
->>  	struct request_queue *q = bdev_get_queue(bdev);
->>  
->>  	if (!q)
->> @@ -224,18 +224,21 @@ static int __blkdev_issue_write_zeroes(struct block_device *bdev,
->>  		return -EPERM;
->>  
->>  	/* Ensure that max_write_zeroes_sectors doesn't overflow bi_size */
->> -	max_write_zeroes_sectors = bdev_write_zeroes_sectors(bdev, 0);
->> +	max_write_zeroes_sectors = bdev_write_zeroes_sectors(bdev, flags);
->>  
->>  	if (max_write_zeroes_sectors == 0)
->>  		return -EOPNOTSUPP;
->>  
->> +	if (flags & BLKDEV_ZERO_NOUNMAP)
->> +		req_flags |= REQ_NOUNMAP;
->> +	if (flags & BLKDEV_ZERO_ALLOCATE)
->> +		req_flags |= REQ_NOZERO|REQ_NOUNMAP;
->> +
->>  	while (nr_sects) {
->>  		bio = blk_next_bio(bio, 0, gfp_mask);
->>  		bio->bi_iter.bi_sector = sector;
->>  		bio_set_dev(bio, bdev);
->> -		bio->bi_opf = REQ_OP_WRITE_ZEROES;
->> -		if (flags & BLKDEV_ZERO_NOUNMAP)
->> -			bio->bi_opf |= REQ_NOUNMAP;
->> +		bio->bi_opf = REQ_OP_WRITE_ZEROES | req_flags;
->>  
->>  		if (nr_sects > max_write_zeroes_sectors) {
->>  			bio->bi_iter.bi_size = max_write_zeroes_sectors << 9;
->> @@ -362,7 +365,7 @@ int blkdev_issue_zeroout(struct block_device *bdev, sector_t sector,
->>  	sector_t bs_mask;
->>  	struct bio *bio;
->>  	struct blk_plug plug;
->> -	bool try_write_zeroes = !!bdev_write_zeroes_sectors(bdev, 0);
->> +	bool try_write_zeroes = !!bdev_write_zeroes_sectors(bdev, flags);
->>  
->>  	bs_mask = (bdev_logical_block_size(bdev) >> 9) - 1;
->>  	if ((sector | nr_sects) & bs_mask)
->> @@ -391,7 +394,7 @@ int blkdev_issue_zeroout(struct block_device *bdev, sector_t sector,
->>  			try_write_zeroes = false;
->>  			goto retry;
->>  		}
->> -		if (!bdev_write_zeroes_sectors(bdev, 0)) {
->> +		if (!bdev_write_zeroes_sectors(bdev, flags)) {
->>  			/*
->>  			 * Zeroing offload support was indicated, but the
->>  			 * device reported ILLEGAL REQUEST (for some devices
->> diff --git a/block/blk-merge.c b/block/blk-merge.c
->> index 347782a24a35..e3ce4b87bbaa 100644
->> --- a/block/blk-merge.c
->> +++ b/block/blk-merge.c
->> @@ -105,15 +105,18 @@ static struct bio *blk_bio_discard_split(struct request_queue *q,
->>  static struct bio *blk_bio_write_zeroes_split(struct request_queue *q,
->>  		struct bio *bio, struct bio_set *bs, unsigned *nsegs)
->>  {
->> +	unsigned int max_sectors;
->> +
->> +	max_sectors = blk_queue_get_max_write_zeroes_sectors(q, bio->bi_opf);
->>  	*nsegs = 0;
->>  
->> -	if (!q->limits.max_write_zeroes_sectors)
->> +	if (!max_sectors)
->>  		return NULL;
->>  
->> -	if (bio_sectors(bio) <= q->limits.max_write_zeroes_sectors)
->> +	if (bio_sectors(bio) <= max_sectors)
->>  		return NULL;
->>  
->> -	return bio_split(bio, q->limits.max_write_zeroes_sectors, GFP_NOIO, bs);
->> +	return bio_split(bio, max_sectors, GFP_NOIO, bs);
->>  }
->>  
->>  static struct bio *blk_bio_write_same_split(struct request_queue *q,
->> diff --git a/block/blk-settings.c b/block/blk-settings.c
->> index 5f6dcc7a47bd..f682374c5106 100644
->> --- a/block/blk-settings.c
->> +++ b/block/blk-settings.c
->> @@ -48,6 +48,7 @@ void blk_set_default_limits(struct queue_limits *lim)
->>  	lim->chunk_sectors = 0;
->>  	lim->max_write_same_sectors = 0;
->>  	lim->max_write_zeroes_sectors = 0;
->> +	lim->max_allocate_sectors = 0;
->>  	lim->max_discard_sectors = 0;
->>  	lim->max_hw_discard_sectors = 0;
->>  	lim->discard_granularity = 0;
->> @@ -83,6 +84,7 @@ void blk_set_stacking_limits(struct queue_limits *lim)
->>  	lim->max_dev_sectors = UINT_MAX;
->>  	lim->max_write_same_sectors = UINT_MAX;
->>  	lim->max_write_zeroes_sectors = UINT_MAX;
->> +	lim->max_allocate_sectors = UINT_MAX;
->>  }
->>  EXPORT_SYMBOL(blk_set_stacking_limits);
->>  
->> @@ -257,6 +259,19 @@ void blk_queue_max_write_zeroes_sectors(struct request_queue *q,
->>  }
->>  EXPORT_SYMBOL(blk_queue_max_write_zeroes_sectors);
->>  
->> +/**
->> + * blk_queue_max_allocate_sectors - set max sectors for a single
->> + *                                  allocate request
->> + * @q:  the request queue for the device
->> + * @max_allocate_sectors: maximum number of sectors to write per command
->> + **/
->> +void blk_queue_max_allocate_sectors(struct request_queue *q,
->> +		unsigned int max_allocate_sectors)
->> +{
->> +	q->limits.max_allocate_sectors = max_allocate_sectors;
->> +}
->> +EXPORT_SYMBOL(blk_queue_max_allocate_sectors);
->> +
+Hi WeiXiong,
+
+WeiXiong Liao <liaoweixiong@allwinnertech.com> wrote on Mon, 20 Jan
+2020 09:03:53 +0800:
+
+> It's the last one of a series of patches for adaptive to MTD device.
 > 
-> I'd suggest split this to a separated patch.
+> The mtdpstore is similar to mtdoops but more powerful. It bases on
+> pstore/blk, aims to store panic and oops log to a flash partition,
 
-Yeah, this function is used in [3/3] only, so in may go after this patch [2/3] as a separate patch.
+                                           logs?
 
->>  /**
->>   * blk_queue_max_segments - set max hw segments for a request for this queue
->>   * @q:  the request queue for the device
->> @@ -506,6 +521,8 @@ int blk_stack_limits(struct queue_limits *t, struct queue_limits *b,
->>  					b->max_write_same_sectors);
->>  	t->max_write_zeroes_sectors = min(t->max_write_zeroes_sectors,
->>  					b->max_write_zeroes_sectors);
->> +	t->max_allocate_sectors = min(t->max_allocate_sectors,
->> +					b->max_allocate_sectors);
->>  	t->bounce_pfn = min_not_zero(t->bounce_pfn, b->bounce_pfn);
->>  
->>  	t->seg_boundary_mask = min_not_zero(t->seg_boundary_mask,
->> diff --git a/fs/block_dev.c b/fs/block_dev.c
->> index 69bf2fb6f7cd..1ffef894b3bd 100644
->> --- a/fs/block_dev.c
->> +++ b/fs/block_dev.c
->> @@ -2122,6 +2122,10 @@ static long blkdev_fallocate(struct file *file, int mode, loff_t start,
->>  		error = blkdev_issue_zeroout(bdev, start >> 9, len >> 9,
->>  					     GFP_KERNEL, BLKDEV_ZERO_NOFALLBACK);
->>  		break;
->> +	case FALLOC_FL_KEEP_SIZE:
->> +		error = blkdev_issue_zeroout(bdev, start >> 9, len >> 9,
->> +			GFP_KERNEL, BLKDEV_ZERO_ALLOCATE | BLKDEV_ZERO_NOFALLBACK);
->> +		break;
->>  	case FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE | FALLOC_FL_NO_HIDE_STALE:
->>  		error = blkdev_issue_discard(bdev, start >> 9, len >> 9,
->>  					     GFP_KERNEL, 0);
->> diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
->> index 70254ae11769..9ed166860099 100644
->> --- a/include/linux/blk_types.h
->> +++ b/include/linux/blk_types.h
->> @@ -335,7 +335,9 @@ enum req_flag_bits {
->>  
->>  	/* command specific flags for REQ_OP_WRITE_ZEROES: */
->>  	__REQ_NOUNMAP,		/* do not free blocks when zeroing */
->> -
->> +	__REQ_NOZERO,		/* only notify about allocated blocks,
->> +				 * and do not actual zero them
->> +				 */
->>  	__REQ_HIPRI,
->>  
->>  	/* for driver use */
->> @@ -362,6 +364,7 @@ enum req_flag_bits {
->>  #define REQ_CGROUP_PUNT		(1ULL << __REQ_CGROUP_PUNT)
->>  
->>  #define REQ_NOUNMAP		(1ULL << __REQ_NOUNMAP)
->> +#define REQ_NOZERO		(1ULL << __REQ_NOZERO)
->>  #define REQ_HIPRI		(1ULL << __REQ_HIPRI)
->>  
->>  #define REQ_DRV			(1ULL << __REQ_DRV)
->> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
->> index 4cd69552df9a..f4ec5db64432 100644
->> --- a/include/linux/blkdev.h
->> +++ b/include/linux/blkdev.h
->> @@ -336,6 +336,7 @@ struct queue_limits {
->>  	unsigned int		max_hw_discard_sectors;
->>  	unsigned int		max_write_same_sectors;
->>  	unsigned int		max_write_zeroes_sectors;
->> +	unsigned int		max_allocate_sectors;
->>  	unsigned int		discard_granularity;
->>  	unsigned int		discard_alignment;
->>  
->> @@ -988,9 +989,19 @@ static inline struct bio_vec req_bvec(struct request *rq)
->>  	return mp_bvec_iter_bvec(rq->bio->bi_io_vec, rq->bio->bi_iter);
->>  }
->>  
->> +static inline unsigned int blk_queue_get_max_write_zeroes_sectors(
->> +		struct request_queue *q, unsigned int op_flags)
->> +{
->> +	if (op_flags & REQ_NOZERO)
->> +		return q->limits.max_allocate_sectors;
->> +	return q->limits.max_write_zeroes_sectors;
->> +}
->> +
+> where it can be read back as files after mounting pstore filesystem.
 > 
-> And this one.
+> The pstore/blk and blkoops, a wrapper for pstore/blk, are designed for
+> block device at the very beginning, but now, compatible to not only
+> block device. After this series of patches, pstore/blk can also work
+> for MTD device. To make it work, 'blkdev' on kconfig or module
+> parameter of blkoops should be set as mtd device name or mtd number.
+> See more about pstore/blk and blkoops on:
+>     Documentation/admin-guide/pstore-block.rst
+> 
+> Why do we need mtdpstore?
+> 1. repetitive jobs between pstore and mtdoops
+>    Both of pstore and mtdoops do the same jobs that store panic/oops log.
+>    They have much similar logic that register to kmsg dumper and store
+>    log to several chunks one by one.
+> 2. do what a driver should do
+>    To me, a driver should provide methods instead of policies. What MTD
+>    should do is to provide read/write/erase operations, geting rid of codes
+>    about chunk management, kmsg dumper and configuration.
+> 3. enhanced feature
+>    Not only store log, but also show it as files.
+>    Not only log, but also trigger time and trigger count.
+>    Not only panic/oops log, but also log recorder for pmsg, console and
+>    ftrace in the future.
+> 
+> Signed-off-by: WeiXiong Liao <liaoweixiong@allwinnertech.com>
+> Reported-by: kbuild test robot <lkp@intel.com>
 
-It looks it won't be good, since this will require to declare REQ_NOZERO
-in a separate patch. This will tear off the flag declaration from the logic.
+I don't thing the test robot has a meaning here.
 
-> Also, should we consider other code path used q->limits.max_write_zeroes_sectors?
+> ---
+>  drivers/mtd/Kconfig     |  10 +
+>  drivers/mtd/Makefile    |   1 +
+>  drivers/mtd/mtdpstore.c | 530 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 541 insertions(+)
+>  create mode 100644 drivers/mtd/mtdpstore.c
+> 
+> diff --git a/drivers/mtd/Kconfig b/drivers/mtd/Kconfig
+> index 42d401ea60ee..a6e59495a738 100644
+> --- a/drivers/mtd/Kconfig
+> +++ b/drivers/mtd/Kconfig
+> @@ -170,6 +170,16 @@ config MTD_OOPS
+>  	  buffer in a flash partition where it can be read back at some
+>  	  later point.
+>  
+> +config MTD_PSTORE
+> +	tristate "Log panic/oops to an MTD buffer base on pstore"
 
-Other code paths should not dereference q->limits.max_allocate_sectors, unless
-it is directly set in not-zero value. In case of max_allocate_sectors is zero,
-high-level primitives (generic_make_request_checks(), __blkdev_issue_write_zeroes(), ..)
-complete such the bios immediately. Other drivers may need additional work
-to support this, and really only subset of drivers need support of this, so this is
-not a subject of this patchset.
+                                                  based
 
-Hm, it looks like there is an exception, which may inherit stack limits from children.
-Device-mapper will pick all the limits we enable for children.
-We may disable REQ_WRITE_ZEROES|REQ_NOZERO directly there, since it's not supported
-in this driver yet.
+> +	depends on PSTORE_BLKOOPS
+> +	help
+> +	  This enables panic and oops messages to be logged to a circular
+> +	  buffer in a flash partition where it can be read back as files after
+> +	  mounting pstore filesystem.
+> +
+> +	  If unsure, say N.
+> +
+>  config MTD_SWAP
+>  	tristate "Swap on MTD device support"
+>  	depends on MTD && SWAP
+> diff --git a/drivers/mtd/Makefile b/drivers/mtd/Makefile
+> index 56cc60ccc477..593d0593a038 100644
+> --- a/drivers/mtd/Makefile
+> +++ b/drivers/mtd/Makefile
+> @@ -20,6 +20,7 @@ obj-$(CONFIG_RFD_FTL)		+= rfd_ftl.o
+>  obj-$(CONFIG_SSFDC)		+= ssfdc.o
+>  obj-$(CONFIG_SM_FTL)		+= sm_ftl.o
+>  obj-$(CONFIG_MTD_OOPS)		+= mtdoops.o
+> +obj-$(CONFIG_MTD_PSTORE)	+= mtdpstore.o
+>  obj-$(CONFIG_MTD_SWAP)		+= mtdswap.o
+>  
+>  nftl-objs		:= nftlcore.o nftlmount.o
+> diff --git a/drivers/mtd/mtdpstore.c b/drivers/mtd/mtdpstore.c
+> new file mode 100644
+> index 000000000000..ab4acd3a9011
+> --- /dev/null
+> +++ b/drivers/mtd/mtdpstore.c
+> @@ -0,0 +1,530 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * MTD Oops/Panic loger for pstore/blk
+> + *
+> + * Copyright (C) 2019 WeiXiong Liao <liaoweixiong@gallwinnertech.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+> + * GNU General Public License for more details.
 
-Are you hinting at this here?
+The license text is not needed since you added SPDX tag.
 
-diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
-index 0a2cc197f62b..b8aa5f6f9ce1 100644
---- a/drivers/md/dm-table.c
-+++ b/drivers/md/dm-table.c
-@@ -489,6 +489,7 @@ static int dm_set_device_limits(struct dm_target *ti, struct dm_dev *dev,
- 		       (unsigned long long) start << SECTOR_SHIFT);
- 
- 	limits->zoned = blk_queue_zoned_model(q);
-+	limits->max_allocate_sectors = 0;
- 
- 	return 0;
- }
-@@ -1548,6 +1549,7 @@ int dm_calculate_queue_limits(struct dm_table *table,
- 			       dm_device_name(table->md),
- 			       (unsigned long long) ti->begin,
- 			       (unsigned long long) ti->len);
-+		limits->max_allocate_sectors = 0;
- 
- 		/*
- 		 * FIXME: this should likely be moved to blk_stack_limits(), would
+> + *
+> + */
+> +#define pr_fmt(fmt) "mtdoops-pstore: " fmt
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/blkoops.h>
+> +#include <linux/mtd/mtd.h>
+> +#include <linux/bitops.h>
+> +
+> +/* Maximum MTD partition size */
+> +#define MTDPSTORE_MAX_MTD_SIZE (8 * 1024 * 1024)
+
+                                  SZ_8M
+
+> +
+> +static struct mtdpstore_context {
+> +	int index;
+> +	struct blkoops_info bo_info;
+> +	struct blkoops_device bo_dev;
+> +	struct mtd_info *mtd;
+> +	unsigned long *rmmap;		/* removed bit map */
+> +	unsigned long *usedmap;		/* used bit map */
+> +	/*
+> +	 * used for panic write
+> +	 * As there are no block_isbad for panic case, we should keep this
+> +	 * status before panic to ensure panic_write not failed.
+> +	 */
+> +	unsigned long *badmap;		/* bad block bit map */
+> +} oops_cxt;
+> +
+> +static int mtdpstore_block_isbad(struct mtdpstore_context *cxt, loff_t off)
+> +{
+> +	int ret;
+> +	struct mtd_info *mtd = cxt->mtd;
+> +	u64 blknum = div_u64(off, mtd->erasesize);
+> +
+> +	if (test_bit(blknum, cxt->badmap))
+> +		return true;
+> +	ret = mtd_block_isbad(mtd, off);
+> +	if (ret < 0) {
+> +		pr_err("mtd_block_isbad failed, aborting\n");
+> +		return ret;
+> +	} else if (ret > 0) {
+> +		set_bit(blknum, cxt->badmap);
+> +		return true;
+> +	}
+> +	return false;
+> +}
+> +
+> +static inline int mtdpstore_panic_block_isbad(struct mtdpstore_context *cxt,
+> +		loff_t off)
+> +{
+> +	struct mtd_info *mtd = cxt->mtd;
+> +	u64 blknum = div_u64(off, mtd->erasesize);
+> +
+> +	return test_bit(blknum, cxt->badmap);
+> +}
+> +
+> +static inline void mtdpstore_mark_used(struct mtdpstore_context *cxt,
+> +		loff_t off)
+> +{
+> +	u64 zonenum = div_u64(off, cxt->bo_info.dmesg_size);
+> +
+> +	pr_debug("mark zone %llu used\n", zonenum);
+> +	set_bit(zonenum, cxt->usedmap);
+> +}
+> +
+> +static inline void mtdpstore_mark_unused(struct mtdpstore_context *cxt,
+> +		loff_t off)
+> +{
+> +	u64 zonenum = div_u64(off, cxt->bo_info.dmesg_size);
+> +
+> +	pr_debug("mark zone %llu unused\n", zonenum);
+> +	clear_bit(zonenum, cxt->usedmap);
+> +}
+> +
+> +static inline void mtdpstore_block_mark_unused(struct mtdpstore_context *cxt,
+> +		loff_t off)
+> +{
+> +	u64 zonenum = div_u64(off, cxt->bo_info.dmesg_size);
+> +	u32 zonecnt = cxt->mtd->erasesize / cxt->bo_info.dmesg_size;
+> +
+> +	while (zonecnt > 0) {
+> +		pr_debug("mark zone %llu unused\n", zonenum);
+> +		clear_bit(zonenum, cxt->usedmap);
+> +		zonenum++;
+> +		zonecnt--;
+> +	}
+> +}
+> +
+> +static inline int mtdpstore_is_used(struct mtdpstore_context *cxt, loff_t off)
+> +{
+> +	u64 zonenum = div_u64(off, cxt->bo_info.dmesg_size);
+> +	u64 blknum = div_u64(off, cxt->mtd->erasesize);
+> +
+> +	if (test_bit(blknum, cxt->badmap))
+> +		return true;
+> +	return test_bit(zonenum, cxt->usedmap);
+> +}
+> +
+> +static int mtdpstore_block_is_used(struct mtdpstore_context *cxt,
+> +		loff_t off)
+> +{
+> +	u64 zonenum = div_u64(off, cxt->bo_info.dmesg_size);
+> +	u32 zonecnt = cxt->mtd->erasesize / cxt->bo_info.dmesg_size;
+> +
+> +	while (zonecnt > 0) {
+> +		if (test_bit(zonenum, cxt->usedmap))
+> +			return true;
+> +		zonenum++;
+> +		zonecnt--;
+> +	}
+> +	return false;
+> +}
+> +
+> +static int mtdpstore_is_empty(struct mtdpstore_context *cxt, char *buf,
+> +		size_t size)
+> +{
+> +	struct mtd_info *mtd = cxt->mtd;
+> +	size_t sz;
+> +	int i;
+> +
+> +	sz = min_t(uint32_t, size, mtd->writesize / 4);
+> +	for (i = 0; i < sz; i++) {
+> +		if (buf[i] != (char)0xFF)
+> +			return false;
+> +	}
+> +	return true;
+> +}
+> +
+> +static void mtdpstore_mark_removed(struct mtdpstore_context *cxt, loff_t off)
+> +{
+> +	u64 zonenum = div_u64(off, cxt->bo_info.dmesg_size);
+> +
+> +	pr_debug("mark zone %llu removed\n", zonenum);
+> +	set_bit(zonenum, cxt->rmmap);
+> +}
+> +
+> +static void mtdpstore_block_clear_removed(struct mtdpstore_context *cxt,
+> +		loff_t off)
+> +{
+> +	u64 zonenum = div_u64(off, cxt->bo_info.dmesg_size);
+> +	u32 zonecnt = cxt->mtd->erasesize / cxt->bo_info.dmesg_size;
+> +
+> +	while (zonecnt > 0) {
+> +		clear_bit(zonenum, cxt->rmmap);
+> +		zonenum++;
+> +		zonecnt--;
+> +	}
+> +}
+> +
+> +static int mtdpstore_block_is_removed(struct mtdpstore_context *cxt,
+> +		loff_t off)
+> +{
+> +	u64 zonenum = div_u64(off, cxt->bo_info.dmesg_size);
+> +	u32 zonecnt = cxt->mtd->erasesize / cxt->bo_info.dmesg_size;
+> +
+> +	while (zonecnt > 0) {
+> +		if (test_bit(zonenum, cxt->rmmap))
+> +			return true;
+> +		zonenum++;
+> +		zonecnt--;
+> +	}
+> +	return false;
+> +}
+> +
+> +static int mtdpstore_erase_do(struct mtdpstore_context *cxt, loff_t off)
+> +{
+> +	struct erase_info erase;
+> +	int ret;
+> +
+> +	pr_debug("try to erase off 0x%llx\n", off);
+> +	erase.len = cxt->mtd->erasesize;
+> +	erase.addr = off;
+> +	ret = mtd_erase(cxt->mtd, &erase);
+> +	if (!ret)
+> +		mtdpstore_block_clear_removed(cxt, off);
+> +	else
+> +		pr_err("erase of region [0x%llx, 0x%llx] on \"%s\" failed\n",
+> +		       (unsigned long long)erase.addr,
+> +		       (unsigned long long)erase.len, cxt->bo_info.device);
+> +	return ret;
+> +}
+> +
+> +/*
+> + * called while removing file
+> + *
+> + * Avoiding over erasing, do erase only when all zones are removed or unused.
+> + * Ensure to remove when unregister by reading, erasing and wrtiing back.
+> + */
+> +static ssize_t mtdpstore_erase(size_t size, loff_t off)
+> +{
+> +	struct mtdpstore_context *cxt = &oops_cxt;
+> +
+> +	if (mtdpstore_block_isbad(cxt, off))
+> +		return -EIO;
+> +
+> +	mtdpstore_mark_unused(cxt, off);
+> +
+> +	if (likely(mtdpstore_block_is_used(cxt, off))) {
+> +		mtdpstore_mark_removed(cxt, off);
+> +		return 0;
+> +	}
+> +
+> +	/* all zones are unused, erase it */
+> +	off = ALIGN_DOWN(off, cxt->mtd->erasesize);
+> +	return mtdpstore_erase_do(cxt, off);
+> +}
+> +
+> +/*
+> + * What is securety for mtdpstore?
+
+              security
+
+> + * As there is no erase for panic case, we should ensure at least one zone
+> + * is writable. Otherwise, panic write will be failed.
+
+                                          will fail.
+
+> + * If zone is used, write operation will return -ENEXT, which means that
+> + * pstore/blk will try one by one until get a empty zone. So, it's no need
+
+                                           it gets an empty zone. So it
+                                           is not needed to ...
+    
+> + * to ensure next zone is empty, but at least one.
+
+               the
+
+> + */
+> +static int mtdpstore_security(struct mtdpstore_context *cxt, loff_t off)
+> +{
+> +	int ret = 0, i;
+> +	u32 zonenum = (u32)div_u64(off, cxt->bo_info.dmesg_size);
+> +	u32 zonecnt = (u32)div_u64(cxt->mtd->size, cxt->bo_info.dmesg_size);
+> +	u32 blkcnt = (u32)div_u64(cxt->mtd->size, cxt->mtd->erasesize);
+> +	u32 erasesize = cxt->mtd->erasesize;
+> +
+> +	for (i = 0; i < zonecnt; i++) {
+> +		u32 num = (zonenum + i) % zonecnt;
+> +
+> +		/* found empty zone */
+> +		if (!test_bit(num, cxt->usedmap))
+> +			return 0;
+> +	}
+> +
+> +	/* If there is no any empty zone, we have no way but to do erase */
+> +	off = ALIGN_DOWN(off, erasesize);
+> +	while (blkcnt--) {
+> +		div64_u64_rem(off + erasesize, cxt->mtd->size, (u64 *)&off);
+> +
+> +		if (mtdpstore_block_isbad(cxt, off))
+> +			continue;
+> +
+> +		ret = mtdpstore_erase_do(cxt, off);
+> +		if (!ret) {
+> +			mtdpstore_block_mark_unused(cxt, off);
+> +			break;
+> +		}
+> +	}
+> +
+> +	if (ret)
+> +		pr_err("all blocks bad!\n");
+> +	pr_debug("end security\n");
+> +	return ret;
+> +}
+> +
+> +static ssize_t mtdpstore_write(const char *buf, size_t size, loff_t off)
+> +{
+> +	struct mtdpstore_context *cxt = &oops_cxt;
+> +	size_t retlen;
+> +	int ret;
+> +
+> +	if (mtdpstore_block_isbad(cxt, off))
+> +		return -ENEXT;
+> +
+> +	/* zone is used, please try next one */
+> +	if (mtdpstore_is_used(cxt, off))
+> +		return -ENEXT;
+> +
+> +	pr_debug("try to write off 0x%llx size %zu\n", off, size);
+> +	ret = mtd_write(cxt->mtd, off, size, &retlen, (u_char *)buf);
+> +	if (ret < 0 || retlen != size) {
+> +		pr_err("write failure at %lld (%zu of %zu written), err %d\n",
+> +				off, retlen, size, ret);
+> +		return -EIO;
+> +	}
+> +	mtdpstore_mark_used(cxt, off);
+> +
+> +	mtdpstore_security(cxt, off);
+> +	return retlen;
+> +}
+> +
+> +/*
+> + * All zones will be read as pstore/blk will read zone one by one when do
+> + * recover.
+> + */
+> +static ssize_t mtdpstore_read(char *buf, size_t size, loff_t off)
+> +{
+> +	struct mtdpstore_context *cxt = &oops_cxt;
+> +	size_t retlen;
+> +	int ret;
+> +
+> +	if (mtdpstore_block_isbad(cxt, off))
+> +		return -ENEXT;
+> +
+> +	pr_debug("try to read off 0x%llx size %zu\n", off, size);
+> +	ret = mtd_read(cxt->mtd, off, size, &retlen, (u_char *)buf);
+> +	if ((ret < 0 && !mtd_is_bitflip(ret)) || size != retlen)  {
+
+IIRC size != retlen does not mean it failed, but that you should
+continue reading after retlen bytes, no?
+
+Also, mtd_is_bitflip() does not mean that you are reading a false
+buffer, but that the data has been corrected as it contained bitflips.
+mtd_is_eccerr() however, would be meaningful.
+
+> +		pr_err("read failure at %lld (%zu of %zu read), err %d\n",
+> +				off, retlen, size, ret);
+> +		return -EIO;
+> +	}
+> +
+> +	if (mtdpstore_is_empty(cxt, buf, size))
+> +		mtdpstore_mark_unused(cxt, off);
+> +	else
+> +		mtdpstore_mark_used(cxt, off);
+> +
+> +	mtdpstore_security(cxt, off);
+> +	return retlen;
+> +}
+> +
+> +static ssize_t mtdpstore_panic_write(const char *buf, size_t size, loff_t off)
+> +{
+> +	struct mtdpstore_context *cxt = &oops_cxt;
+> +	size_t retlen;
+> +	int ret;
+> +
+> +	if (mtdpstore_panic_block_isbad(cxt, off))
+> +		return -ENEXT;
+> +
+> +	/* zone is used, please try next one */
+> +	if (mtdpstore_is_used(cxt, off))
+> +		return -ENEXT;
+> +
+> +	ret = mtd_panic_write(cxt->mtd, off, size, &retlen, (u_char *)buf);
+> +	if (ret < 0 || size != retlen) {
+> +		pr_err("panic write failure at %lld (%zu of %zu read), err %d\n",
+> +				off, retlen, size, ret);
+> +		return -EIO;
+> +	}
+> +	mtdpstore_mark_used(cxt, off);
+> +
+> +	return retlen;
+> +}
+> +
+> +static void mtdpstore_notify_add(struct mtd_info *mtd)
+> +{
+> +	int ret;
+> +	struct mtdpstore_context *cxt = &oops_cxt;
+> +	struct blkoops_info *info = &cxt->bo_info;
+> +	unsigned long longcnt;
+> +
+> +	if (!strcmp(mtd->name, info->device))
+> +		cxt->index = mtd->index;
+> +
+> +	if (mtd->index != cxt->index || cxt->index < 0)
+> +		return;
+> +
+> +	pr_debug("found matching MTD device %s\n", mtd->name);
+> +
+> +	if (mtd->size < info->dmesg_size * 2) {
+> +		pr_err("MTD partition %d not big enough\n", mtd->index);
+> +		return;
+> +	}
+> +	if (mtd->erasesize < info->dmesg_size) {
+> +		pr_err("eraseblock size of MTD partition %d too small\n",
+> +				mtd->index);
+
+What is the usual size of dmesg? Could this check be too limiting?
+
+> +		return;
+> +	}
+> +	if (unlikely(info->dmesg_size % mtd->writesize)) {
+> +		pr_err("record size %lu KB must align to write size %d KB\n",
+> +				info->dmesg_size / 1024,
+> +				mtd->writesize / 1024);
+
+This condition is weird, why would you check this?
+
+> +		return;
+> +	}
+> +	if (unlikely(mtd->size > MTDPSTORE_MAX_MTD_SIZE)) {
+> +		pr_err("mtd%d is too large (limit is %d MiB)\n",
+> +				mtd->index,
+> +				MTDPSTORE_MAX_MTD_SIZE / 1024 / 1024);
+
+Same question? I could understand that it is easier to manage blocks
+knowing their maximum number though.
+
+> +		return;
+> +	}
+> +
+> +	longcnt = BITS_TO_LONGS(div_u64(mtd->size, info->dmesg_size));
+> +	cxt->rmmap = kcalloc(longcnt, sizeof(long), GFP_KERNEL);
+> +	cxt->usedmap = kcalloc(longcnt, sizeof(long), GFP_KERNEL);
+> +
+> +	longcnt = BITS_TO_LONGS(div_u64(mtd->size, mtd->erasesize));
+> +	cxt->badmap = kcalloc(longcnt, sizeof(long), GFP_KERNEL);
+> +
+> +	cxt->bo_dev.total_size = mtd->size;
+> +	/* just support dmesg right now */
+> +	cxt->bo_dev.flags = BLKOOPS_DEV_SUPPORT_DMESG;
+> +	cxt->bo_dev.read = mtdpstore_read;
+> +	cxt->bo_dev.write = mtdpstore_write;
+> +	cxt->bo_dev.erase = mtdpstore_erase;
+> +	cxt->bo_dev.panic_write = mtdpstore_panic_write;
+> +
+> +	ret = blkoops_register_device(&cxt->bo_dev);
+> +	if (ret) {
+> +		pr_err("mtd%d register to blkoops failed\n", mtd->index);
+> +		return;
+> +	}
+> +	cxt->mtd = mtd;
+> +	pr_info("Attached to MTD device %d\n", mtd->index);
+> +}
+> +
+> +static int mtdpstore_flush_removed_do(struct mtdpstore_context *cxt,
+> +		loff_t off, size_t size)
+> +{
+> +	struct mtd_info *mtd = cxt->mtd;
+> +	u_char *buf;
+> +	int ret;
+> +	size_t retlen;
+> +	struct erase_info erase;
+> +
+> +	buf = kmalloc(mtd->erasesize, GFP_KERNEL);
+> +	if (!buf)
+> +		return -ENOMEM;
+> +
+> +	/* 1st. read to cache */
+> +	ret = mtd_read(mtd, off, mtd->erasesize, &retlen, buf);
+> +	if (ret || retlen != mtd->erasesize)
+> +		goto free;
+> +
+> +	/* 2nd. erase block */
+> +	erase.len = mtd->erasesize;
+> +	erase.addr = off;
+> +	ret = mtd_erase(mtd, &erase);
+> +	if (ret)
+> +		goto free;
+> +
+> +	/* 3rd. write back */
+> +	while (size) {
+> +		unsigned int zonesize = cxt->bo_info.dmesg_size;
+> +
+> +		/* remove must clear used bit */
+> +		if (mtdpstore_is_used(cxt, off))
+> +			mtd_write(mtd, off, zonesize, &retlen, buf);
+
+Besides the fact that should definitely check the write return code, I
+don't understand what you do in this function. What does
+flush_removed_do mean?
+
+> +
+> +		off += zonesize;
+> +		size -= min_t(unsigned int, zonesize, size);
+> +	}
+> +
+> +free:
+> +	kfree(buf);
+> +	return ret;
+> +}
+> +
+> +static int mtdpstore_flush_removed(struct mtdpstore_context *cxt)
+> +{
+> +	struct mtd_info *mtd = cxt->mtd;
+> +	int ret;
+> +	loff_t off;
+> +	u32 blkcnt = (u32)div_u64(mtd->size, mtd->erasesize);
+> +
+> +	for (off = 0; blkcnt > 0; blkcnt--, off += mtd->erasesize) {
+> +		ret = mtdpstore_block_is_removed(cxt, off);
+> +		if (!ret) {
+> +			off += mtd->erasesize;
+> +			continue;
+> +		}
+> +
+> +		ret = mtdpstore_flush_removed_do(cxt, off, mtd->erasesize);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static void mtdpstore_notify_remove(struct mtd_info *mtd)
+> +{
+> +	struct mtdpstore_context *cxt = &oops_cxt;
+> +
+> +	if (mtd->index != cxt->index || cxt->index < 0)
+> +		return;
+> +
+> +	mtdpstore_flush_removed(cxt);
+> +
+> +	blkoops_unregister_device(&cxt->bo_dev);
+> +	kfree(cxt->badmap);
+> +	kfree(cxt->usedmap);
+> +	kfree(cxt->rmmap);
+> +	cxt->mtd = NULL;
+> +	cxt->index = -1;
+> +}
+> +
+> +static struct mtd_notifier mtdpstore_notifier = {
+> +	.add	= mtdpstore_notify_add,
+> +	.remove	= mtdpstore_notify_remove,
+> +};
+> +
+> +static int __init mtdpstore_init(void)
+> +{
+> +	int ret;
+> +	struct mtdpstore_context *cxt = &oops_cxt;
+> +	struct blkoops_info *info = &cxt->bo_info;
+> +
+> +	ret = blkoops_info(info);
+> +	if (unlikely(ret))
+> +		return ret;
+> +
+> +	if (strlen(info->device) == 0) {
+> +		pr_err("mtd device must be supplied\n");
+> +		return -EINVAL;
+> +	}
+> +	if (!info->dmesg_size) {
+> +		pr_err("no recorder enabled\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* Setup the MTD device to use */
+> +	ret = kstrtoint((char *)info->device, 0, &cxt->index);
+> +	if (ret)
+> +		cxt->index = -1;
+> +
+> +	register_mtd_user(&mtdpstore_notifier);
+> +	return 0;
+> +}
+> +module_init(mtdpstore_init);
+> +
+> +static void __exit mtdpstore_exit(void)
+> +{
+> +	unregister_mtd_user(&mtdpstore_notifier);
+> +}
+> +module_exit(mtdpstore_exit);
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("WeiXiong Liao <liaoweixiong@allwinnertech.com>");
+> +MODULE_DESCRIPTION("MTD Oops/Panic console logger/driver");
+
+
+
 
 Thanks,
-Kirill
+Miquèl
