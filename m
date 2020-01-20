@@ -2,217 +2,104 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 487E6C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C453C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:51:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1108621D7E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:51:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YNXPaAJp"
+	by mail.kernel.org (Postfix) with ESMTP id E9F8D21835
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:51:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729324AbgATQvP (ORCPT
+        id S1729327AbgATQvj convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 11:51:15 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39429 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726942AbgATQvO (ORCPT
+        Mon, 20 Jan 2020 11:51:39 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:44860 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726897AbgATQvi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 11:51:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579539073;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=ctEd/SnIDmbzWmkvNof9KUfWTLCc5dBDq6c9aIsCgKQ=;
-        b=YNXPaAJph4lZrc2x1QtC+YVVAdQteSijErtE0hnIsTg1YbVOkcikOeIlu77HiydAE8Im57
-        wcNfXDk3jz2awYJ+5IGQMKhQeOk5cf+0Wt4p33ESgCBQ54eKfXaVOwtjWZg6NaGqqxTeu5
-        53UQlimJyMHtA2RaDRFnQeTzoGjRZ7I=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-327-pQ9WGBrNOB6UP_36qxv8fg-1; Mon, 20 Jan 2020 11:51:11 -0500
-X-MC-Unique: pQ9WGBrNOB6UP_36qxv8fg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5DCF11088382;
-        Mon, 20 Jan 2020 16:51:10 +0000 (UTC)
-Received: from [10.36.118.34] (unknown [10.36.118.34])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E0D18387;
-        Mon, 20 Jan 2020 16:51:08 +0000 (UTC)
-Subject: Re: [PATCH -mm v3] mm/page_isolation: fix potential warning from user
-To:     Qian Cai <cai@lca.pw>, akpm@linux-foundation.org
-Cc:     mhocko@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20200120163915.1469-1-cai@lca.pw>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <1583ef4a-efcd-d3e2-28f5-30a3530d2300@redhat.com>
-Date:   Mon, 20 Jan 2020 17:51:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
-MIME-Version: 1.0
-In-Reply-To: <20200120163915.1469-1-cai@lca.pw>
-Content-Type: text/plain; charset=utf-8
+        Mon, 20 Jan 2020 11:51:38 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-154-mp5ZcybCPZC3Psf2uuXE4w-1; Mon, 20 Jan 2020 16:51:35 +0000
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 20 Jan 2020 16:51:34 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 20 Jan 2020 16:51:34 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Al Viro' <viro@zeniv.linux.org.uk>
+CC:     =?iso-8859-1?Q?=27Pali_Roh=E1r=27?= <pali.rohar@gmail.com>,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        "Namjae Jeon" <linkinjeon@gmail.com>,
+        Gabriel Krisman Bertazi <krisman@collabora.com>
+Subject: RE: vfat: Broken case-insensitive support for UTF-8
+Thread-Topic: vfat: Broken case-insensitive support for UTF-8
+Thread-Index: AQHVz4FsiOVqsS4Qp0SucuDN4afIhKfzph4wgAAFE4CAAADOMIAADbUAgAAIwlA=
+Date:   Mon, 20 Jan 2020 16:51:34 +0000
+Message-ID: <db8161512f33468981cbc49e71b7bf05@AcuMS.aculab.com>
+References: <20200119221455.bac7dc55g56q2l4r@pali>
+ <87sgkan57p.fsf@mail.parknet.co.jp> <20200120110438.ak7jpyy66clx5v6x@pali>
+ <89eba9906011446f8441090f496278d2@AcuMS.aculab.com>
+ <20200120152009.5vbemgmvhke4qupq@pali>
+ <1a4c545dc7f14e33b7e59321a0aab868@AcuMS.aculab.com>
+ <20200120161206.GC8904@ZenIV.linux.org.uk>
+In-Reply-To: <20200120161206.GC8904@ZenIV.linux.org.uk>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-MC-Unique: mp5ZcybCPZC3Psf2uuXE4w-1
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20.01.20 17:39, Qian Cai wrote:
-> It makes sense to call the WARN_ON_ONCE(zone_idx(zone) == ZONE_MOVABLE)
-> from start_isolate_page_range(), but should avoid triggering it from
-> userspace, i.e, from is_mem_section_removable() because it could crash
-> the system by a non-root user if warn_on_panic is set.
+From: Al Viro
+> Sent: 20 January 2020 16:12
+> > From: Pali Rohár
+> > > Sent: 20 January 2020 15:20
+> > ...
+> > > This is not possible. There is 1:1 mapping between UTF-8 sequence and
+> > > Unicode code point. wchar_t in kernel represent either one Unicode code
+> > > point (limited up to U+FFFF in NLS framework functions) or 2bytes in
+> > > UTF-16 sequence (only in utf8s_to_utf16s() and utf16s_to_utf8s()
+> > > functions).
+> >
+> > Unfortunately there is neither a 1:1 mapping of all possible byte sequences
+> > to wchar_t (or unicode code points), nor a 1:1 mapping of all possible
+> > wchar_t values to UTF-8.
+> > Really both need to be defined - even for otherwise 'invalid' sequences.
 > 
-> While at it, simplify the code a bit by removing an unnecessary jump
-> label.
+> Who.  Cares?
 > 
-> Suggested-by: Michal Hocko <mhocko@kernel.org>
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> ---
-> 
-> v3: Drop the page_isolation.c cleanup change.
-> v2: Improve the commit log.
->     Warn for all start_isolate_page_range() users not just offlining.
-> 
->  mm/page_alloc.c     | 11 ++++-------
->  mm/page_isolation.c | 18 +++++++++++-------
->  2 files changed, 15 insertions(+), 14 deletions(-)
-> 
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index 621716a25639..3c4eb750a199 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -8231,7 +8231,7 @@ struct page *has_unmovable_pages(struct zone *zone, struct page *page,
->  		if (is_migrate_cma(migratetype))
->  			return NULL;
->  
-> -		goto unmovable;
-> +		return page;
->  	}
->  
->  	for (; iter < pageblock_nr_pages; iter++) {
-> @@ -8241,7 +8241,7 @@ struct page *has_unmovable_pages(struct zone *zone, struct page *page,
->  		page = pfn_to_page(pfn + iter);
->  
->  		if (PageReserved(page))
-> -			goto unmovable;
-> +			return page;
->  
->  		/*
->  		 * If the zone is movable and we have ruled out all reserved
-> @@ -8261,7 +8261,7 @@ struct page *has_unmovable_pages(struct zone *zone, struct page *page,
->  			unsigned int skip_pages;
->  
->  			if (!hugepage_migration_supported(page_hstate(head)))
-> -				goto unmovable;
-> +				return page;
->  
->  			skip_pages = compound_nr(head) - (page - head);
->  			iter += skip_pages - 1;
-> @@ -8303,12 +8303,9 @@ struct page *has_unmovable_pages(struct zone *zone, struct page *page,
->  		 * is set to both of a memory hole page and a _used_ kernel
->  		 * page at boot.
->  		 */
-> -		goto unmovable;
-> +		return page;
->  	}
->  	return NULL;
-> -unmovable:
-> -	WARN_ON_ONCE(zone_idx(zone) == ZONE_MOVABLE);
-> -	return pfn_to_page(pfn + iter);
->  }
->  
->  #ifdef CONFIG_CONTIG_ALLOC
-> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
-> index e70586523ca3..a9fd7c740c23 100644
-> --- a/mm/page_isolation.c
-> +++ b/mm/page_isolation.c
-> @@ -54,14 +54,18 @@ static int set_migratetype_isolate(struct page *page, int migratetype, int isol_
->  
->  out:
->  	spin_unlock_irqrestore(&zone->lock, flags);
-> -	if (!ret)
-> +	if (!ret) {
->  		drain_all_pages(zone);
-> -	else if ((isol_flags & REPORT_FAILURE) && unmovable)
-> -		/*
-> -		 * printk() with zone->lock held will guarantee to trigger a
-> -		 * lockdep splat, so defer it here.
-> -		 */
-> -		dump_page(unmovable, "unmovable page");
-> +	} else {
-> +		WARN_ON_ONCE(zone_idx(zone) == ZONE_MOVABLE);
-> +
-> +		if ((isol_flags & REPORT_FAILURE) && unmovable)
-> +			/*
-> +			 * printk() with zone->lock held will likely trigger a
-> +			 * lockdep splat, so defer it here.
-> +			 */
-> +			dump_page(unmovable, "unmovable page");
-> +	}
->  
->  	return ret;
->  }
-> 
+> Filename is a sequence of octets, not codepoints.  Its interpretation is
+> entirely up to the userland.
 
-Thanks!
+For filesystems that really ought to be true.
+Saves a lot of problems in the kernel.
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
+I guess the fat driver has to do something to convert the UCS-16 on-disk filenames
+to/from a sequence of octets.
 
--- 
-Thanks,
+Even Microsoft have made it much easier to have case-dependant
+NTS4 filesystems in windows 10.
+(Ever watched the number of different cases in the list of c:/windows/system32/drivers/*.sys
+filenames output when windows boots? They are nearly all different!)
 
-David / dhildenb
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
