@@ -2,163 +2,171 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C69C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 20:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE035C32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 20:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 835B022522
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 20:52:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D53D22522
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 20:52:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="ZI4tydE3"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Bbj6LHyQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727597AbgATUw2 (ORCPT
+        id S1728205AbgATUwb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 15:52:28 -0500
-Received: from mail-db8eur05on2041.outbound.protection.outlook.com ([40.107.20.41]:61728
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726586AbgATUw1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 15:52:27 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GinDkqLvzgbmalXmyMtMefJW3nmjuXcgxT87JPD2KJ8goziWb5dFzfRlYwM2zkKB4yWfNi93Wyu6/Jbk9iXdGtIyd26lOp+UgQqFWZwFaPZr/ise/ceHPG523DfZGA/R27pZdy44hZCA2p1uSMYorM2+C009LWp/l2AAZ1DArFpaFK5JSi1EEx1aVFZ/R7VGK8UuIqsiKKJl5XsINBRyl932+/X1lANfPYrsPUj8/g5uIfI+lpg+ZS06ppb8KHwuezXXF4anFaoigHcAG+1T8IoRJ1uXytAJQGtCg9iqOVrlBdNOEA+ifSd5lUQqB+iNb39HghOHGeMLtS6kpRvShQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BALKI9NsSM2rAos4Vxt8hfbiMtUUjSbmJC1+NsyQhls=;
- b=Ue4a3PhX7WPKXOWZIgyx3iFfxeF1a33kZlgn6AeWY8b41pmo6I1+MTem0yG/m2FnGMRSHUAAzwH8WzkTSZKrXOc7yJXSlp80jVc95uC4Rfa8VqXoMFMAKKymU+JjyDskbGupuIBhOhBZQn4vl/yvgEy/FjFNVHBoQnpVa+WJpN8mIaVoTT+5mUI6LFyC4VT3GYRabU4ypd1LVolGmCzKhQRbFywbws0in1dglqxfONgaTfryoHFL/P8N2zf6QXFRzO8DNxIyI/1zhSguu3K/qpvTOQxaApS9oWCnOLT2Q96mcJbRrXRiu8KFQCkT8QfX3UJp5SHq22nexDaTHLGN/Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BALKI9NsSM2rAos4Vxt8hfbiMtUUjSbmJC1+NsyQhls=;
- b=ZI4tydE3ozP1fwSmARFAldlRlCa6V0gPoLoUp1EFueDMOXStDOTM5Av0SBCbUCo3RxFanW3wSvJ+btrawdXmdYlU40knGAhAmUr3KDaAKf/JUj6siRQWIcpQ57qPl7aFQ53L7TpqnVPtvap47NTK9NZoAtNwt7q/eaitHHtYIfg=
-Received: from AM0PR0502MB3795.eurprd05.prod.outlook.com (52.133.45.150) by
- AM0PR0502MB3876.eurprd05.prod.outlook.com (52.133.48.18) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.19; Mon, 20 Jan 2020 20:51:44 +0000
-Received: from AM0PR0502MB3795.eurprd05.prod.outlook.com
- ([fe80::d862:228a:d87f:99bb]) by AM0PR0502MB3795.eurprd05.prod.outlook.com
- ([fe80::d862:228a:d87f:99bb%7]) with mapi id 15.20.2644.026; Mon, 20 Jan 2020
- 20:51:44 +0000
-From:   Shahaf Shuler <shahafs@mellanox.com>
-To:     Jason Gunthorpe <jgg@mellanox.com>,
-        Jason Wang <jasowang@redhat.com>
-CC:     Rob Miller <rob.miller@broadcom.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Netdev <netdev@vger.kernel.org>,
-        "Bie, Tiwei" <tiwei.bie@intel.com>,
-        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
-        "Liang, Cunming" <cunming.liang@intel.com>,
-        "Wang, Zhihong" <zhihong.wang@intel.com>,
-        "Wang, Xiao W" <xiao.w.wang@intel.com>,
-        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
-        "Zhu, Lingshan" <lingshan.zhu@intel.com>,
-        "eperezma@redhat.com" <eperezma@redhat.com>,
-        "lulu@redhat.com" <lulu@redhat.com>,
-        Parav Pandit <parav@mellanox.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "stefanha@redhat.com" <stefanha@redhat.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "hch@infradead.org" <hch@infradead.org>,
-        Ariel Adam <aadam@redhat.com>,
-        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "hanand@xilinx.com" <hanand@xilinx.com>,
-        "mhabets@solarflare.com" <mhabets@solarflare.com>
-Subject: RE: [PATCH 3/5] vDPA: introduce vDPA bus
-Thread-Topic: [PATCH 3/5] vDPA: introduce vDPA bus
-Thread-Index: AQHVzGqTFJN2iC19r0STv/0Uj4sDPafuxkEAgAAbnwCAAAWygIACyO6wgAGSJ4CAAJh8gIAAMkCQ
-Date:   Mon, 20 Jan 2020 20:51:43 +0000
-Message-ID: <AM0PR0502MB3795C92485338180FC8059CFC3320@AM0PR0502MB3795.eurprd05.prod.outlook.com>
-References: <20200116124231.20253-1-jasowang@redhat.com>
- <20200116124231.20253-4-jasowang@redhat.com>
- <20200117070324-mutt-send-email-mst@kernel.org>
- <239b042c-2d9e-0eec-a1ef-b03b7e2c5419@redhat.com>
- <CAJPjb1+fG9L3=iKbV4Vn13VwaeDZZdcfBPvarogF_Nzhk+FnKg@mail.gmail.com>
- <AM0PR0502MB379553984D0D55FDE25426F6C3330@AM0PR0502MB3795.eurprd05.prod.outlook.com>
- <d69918ca-8af4-44b2-9652-633530d4c113@redhat.com>
- <20200120174933.GB3891@mellanox.com>
-In-Reply-To: <20200120174933.GB3891@mellanox.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=shahafs@mellanox.com; 
-x-originating-ip: [31.154.10.105]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: eb4ec263-5f1e-49ac-f1eb-08d79dea8ee8
-x-ms-traffictypediagnostic: AM0PR0502MB3876:|AM0PR0502MB3876:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR0502MB387684856DB6569E79273B38C3320@AM0PR0502MB3876.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0288CD37D9
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(366004)(346002)(39860400002)(136003)(199004)(189003)(81156014)(81166006)(86362001)(478600001)(8676002)(76116006)(66946007)(52536014)(7416002)(33656002)(8936002)(66446008)(64756008)(66476007)(66556008)(26005)(9686003)(7696005)(6506007)(55016002)(2906002)(186003)(4326008)(316002)(110136005)(54906003)(5660300002)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR0502MB3876;H:AM0PR0502MB3795.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: HvYo1urlyLxjeYX7pRDEQ0gytB4zlLC73tpyt2mlGAEcOT7pOrgROhAiDO23XXwimGvk7fquLACm/iwSh2u2UTF64e3obID/6+4hbQdLrUV/f4L0p6/n6XZA2pIMV4HpNBIrvJqDOvZOv3xYtGNF/w92U+8smbeVu40nqkPyy/74Es791dEOVHNLWEug+eHn8ZXpdVhcbiRSXFSQVwKPKF+zYpt2L48tMzHw+KhLS+/i3JObMlafxI0H4hmTRPrLFJuXouEJm+VMj8S01ml7OLwr6NaLlX0alooUM9LhKoRos4IXFrryzSkjrXAUHhWIniEiwdxbUwUQnPqfSAVU1B2Bfw4ZZt7965BvkLAR+XiQe9VhiOUJXY/lVnFzPzCENmQeTKhHQ6zpVcQxMUX1s/QNvAzKUI+XwqRYqOA0XXLZ1dCPkC/0ttuQrR3XHPhr
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 20 Jan 2020 15:52:31 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:18232 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726874AbgATUw0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 15:52:26 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1579553546; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=/F/P/PamSf53/0NktI+vEIZjO2L7dILbSNYBUNX/1aI=; b=Bbj6LHyQQqgA5Lp6RyqeKtaQQjU4ewgFMPe11S+GGMUQvDR5QRq2pbFsueSfNMlGOUFtgzlO
+ DIT2aHzKowj3yvcx3v5nN1wYOp2b6KxGq2FGGu07mFywr4c2ccmL2jVDsetD232Z5KKrqrfN
+ aSI78MGxhxW3HQE7mHi7eIri6pk=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e261305.7f6447773fb8-smtp-out-n03;
+ Mon, 20 Jan 2020 20:52:21 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A1680C4479C; Mon, 20 Jan 2020 20:52:19 +0000 (UTC)
+Received: from [10.46.161.159] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: asutoshd)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E6EB9C433CB;
+        Mon, 20 Jan 2020 20:52:17 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E6EB9C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=asutoshd@codeaurora.org
+Subject: Re: [PATCH v1 3/3] scsi: ufs-mediatek: enable low-power mode for
+ hibern8 state
+To:     Stanley Chu <stanley.chu@mediatek.com>, linux-scsi@vger.kernel.org,
+        martin.petersen@oracle.com, avri.altman@wdc.com,
+        alim.akhtar@samsung.com, jejb@linux.ibm.com
+Cc:     beanhuo@micron.com, cang@codeaurora.org, matthias.bgg@gmail.com,
+        bvanassche@acm.org, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
+        chun-hung.wu@mediatek.com, andy.teng@mediatek.com
+References: <20200117035108.19699-1-stanley.chu@mediatek.com>
+ <20200117035108.19699-4-stanley.chu@mediatek.com>
+From:   "Asutosh Das (asd)" <asutoshd@codeaurora.org>
+Message-ID: <38b2614d-1fdd-8bad-63a1-e9bc5698cc66@codeaurora.org>
+Date:   Mon, 20 Jan 2020 12:52:17 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eb4ec263-5f1e-49ac-f1eb-08d79dea8ee8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jan 2020 20:51:44.1143
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: CBU9dbfDpUmSc4YQKFwCKGAo5AuIV7aQVk+gsSwzKrZWWXEZafcNt/pUrypeB5BuLReiVVdRLIRPd3nTQltu4w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR0502MB3876
+In-Reply-To: <20200117035108.19699-4-stanley.chu@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Monday, January 20, 2020 7:50 PM, Jason Gunthorpe:
-> Subject: Re: [PATCH 3/5] vDPA: introduce vDPA bus
->=20
-> On Mon, Jan 20, 2020 at 04:43:53PM +0800, Jason Wang wrote:
-> > This is similar to the design of platform IOMMU part of vhost-vdpa. We
-> > decide to send diffs to platform IOMMU there. If it's ok to do that in
-> > driver, we can replace set_map with incremental API like map()/unmap().
-> >
-> > Then driver need to maintain rbtree itself.
->=20
-> I think we really need to see two modes, one where there is a fixed
-> translation without dynamic vIOMMU driven changes and one that supports
-> vIOMMU.
->=20
-> There are different optimization goals in the drivers for these two
-> configurations.
+On 1/16/2020 7:51 PM, Stanley Chu wrote:
+> In MediaTek Chipsets, UniPro link and ufshci can enter proprietary
+> low-power mode while link is in hibern8 state.
+> 
+> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+> ---
 
-+1.
-It will be best to have one API for static config (i.e. mapping can be set =
-only before virtio device gets active), and one API for dynamic changes tha=
-t can be set after the virtio device is active.=20
+Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
 
->=20
-> > > If the first one, then I think memory hotplug is a heavy flow
-> > > regardless. Do you think the extra cycles for the tree traverse will
-> > > be visible in any way?
-> >
-> > I think if the driver can pause the DMA during the time for setting up
-> > new mapping, it should be fine.
->=20
-> This is very tricky for any driver if the mapping change hits the virtio =
-rings. :(
->=20
-> Even a IOMMU using driver is going to have problems with that..
->=20
-> Jason
+>   drivers/scsi/ufs/ufs-mediatek.c | 53 +++++++++++++++++++++++++++++++++
+>   1 file changed, 53 insertions(+)
+> 
+> diff --git a/drivers/scsi/ufs/ufs-mediatek.c b/drivers/scsi/ufs/ufs-mediatek.c
+> index d5194d0c4ef5..f32f3f34f6d0 100644
+> --- a/drivers/scsi/ufs/ufs-mediatek.c
+> +++ b/drivers/scsi/ufs/ufs-mediatek.c
+> @@ -382,11 +382,60 @@ static void ufs_mtk_device_reset(struct ufs_hba *hba)
+>   	dev_info(hba->dev, "device reset done\n");
+>   }
+>   
+> +static int ufs_mtk_link_set_hpm(struct ufs_hba *hba)
+> +{
+> +	int err;
+> +
+> +	err = ufshcd_hba_enable(hba);
+> +	if (err)
+> +		return err;
+> +
+> +	err = ufshcd_dme_set(hba,
+> +			     UIC_ARG_MIB_SEL(VS_UNIPROPOWERDOWNCONTROL, 0),
+> +			     0);
+> +	if (err)
+> +		return err;
+> +
+> +	err = ufshcd_uic_hibern8_exit(hba);
+> +	if (!err)
+> +		ufshcd_set_link_active(hba);
+> +	else
+> +		return err;
+> +
+> +	err = ufshcd_make_hba_operational(hba);
+> +	if (err)
+> +		return err;
+> +
+> +	return 0;
+> +}
+> +
+> +static int ufs_mtk_link_set_lpm(struct ufs_hba *hba)
+> +{
+> +	int err;
+> +
+> +	err = ufshcd_dme_set(hba,
+> +			     UIC_ARG_MIB_SEL(VS_UNIPROPOWERDOWNCONTROL, 0),
+> +			     1);
+> +	if (err) {
+> +		/* Resume UniPro state for following error recovery */
+> +		ufshcd_dme_set(hba,
+> +			       UIC_ARG_MIB_SEL(VS_UNIPROPOWERDOWNCONTROL, 0),
+> +			       0);
+> +		return err;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>   static int ufs_mtk_suspend(struct ufs_hba *hba, enum ufs_pm_op pm_op)
+>   {
+> +	int err;
+>   	struct ufs_mtk_host *host = ufshcd_get_variant(hba);
+>   
+>   	if (ufshcd_is_link_hibern8(hba)) {
+> +		err = ufs_mtk_link_set_lpm(hba);
+> +		if (err)
+> +			return -EAGAIN;
+>   		phy_power_off(host->mphy);
+>   		ufs_mtk_setup_ref_clk(hba, false);
+>   	}
+> @@ -397,10 +446,14 @@ static int ufs_mtk_suspend(struct ufs_hba *hba, enum ufs_pm_op pm_op)
+>   static int ufs_mtk_resume(struct ufs_hba *hba, enum ufs_pm_op pm_op)
+>   {
+>   	struct ufs_mtk_host *host = ufshcd_get_variant(hba);
+> +	int err;
+>   
+>   	if (ufshcd_is_link_hibern8(hba)) {
+>   		ufs_mtk_setup_ref_clk(hba, true);
+>   		phy_power_on(host->mphy);
+> +		err = ufs_mtk_link_set_hpm(hba);
+> +		if (err)
+> +			return err;
+>   	}
+>   
+>   	return 0;
+> 
+
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+Linux Foundation Collaborative Project
