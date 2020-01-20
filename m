@@ -2,103 +2,123 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B89C33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:44:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F5BC33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:44:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9AC2207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:44:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RZHZvJdK"
+	by mail.kernel.org (Postfix) with ESMTP id 365E2207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:44:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727018AbgATJoI (ORCPT
+        id S1726935AbgATJo4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 04:44:08 -0500
-Received: from mail-vk1-f194.google.com ([209.85.221.194]:41052 "EHLO
-        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbgATJoH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 04:44:07 -0500
-Received: by mail-vk1-f194.google.com with SMTP id p191so8364651vkf.8
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 01:44:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=8WXD++puZRBDfX+XovxCYxezYIYsgF4bFnxytu5iD+I=;
-        b=RZHZvJdKK+liUUkELaYnw7PGaEroFf9bWYekXdHa0nKjOWN1cV6Cs1e09zCuchePzu
-         RijCqeXtUHanoE2AIw5XN23OfQwNyKbfztEp2OtpSMASCijrurE07e2dKXVxsyCWVEPs
-         FWZ+WLM/N+K0H92fquLbaCGqfEj23QyGNxICFJJN+fa9gGLppp/qEiQorEXFSC6szQDG
-         xGtnebS9HNjcCQiiFhJdJxZECbi+meO5SGl50HCnbJjPJFvhh5ru4R0X++MQ+sap0bVH
-         fqWYqYINlrp62H/fNGfi/JgDYS74n82ogq5FiUOnZ0de3oJZDIs57MqeT3ZH4AVoczYX
-         KuZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=8WXD++puZRBDfX+XovxCYxezYIYsgF4bFnxytu5iD+I=;
-        b=jU47HGuHUIjEwX011rfuqEAkszmjSSJiyHDXeKy5tq21w+7m6RRYGu5Ve1To3cB2nL
-         48OAKVprINbQ72dsQUcK2yS9mWRbAz2q0wY45dXFeIAGACWlftOry1RFd0S6RXbBUwBE
-         XVTPaLfAu3DLCDM2awRK+wBicew5O1UjJrEOzDa+u7fBYKuatzcoM8VJh5BE+VlhX0A3
-         t2eKu6tKNkN1ne4CZZRlXnJ/RugGEtceWxFWXP3gZRteta0bnh2X+EZOY7Z7a9mFoWRU
-         tbBP9YB9722m20a1N5xHKwiAw2i/ObBvOCnseqXlfoqQdA0oYVEzqKLFiq0lmdrLxZpE
-         I8ZQ==
-X-Gm-Message-State: APjAAAV9vgPvoLGDjbzw7M8E57GgvfbuLtMmMlpuJJljuy7J0fTOBmFB
-        HTd+89hxbaXiJUcH91I3wR4KjsvViokJOTiUxkl5+w==
-X-Google-Smtp-Source: APXvYqx+cHz8q5EP3Nl248rDH5+9yKyZOEZH6I3T1+KhPmpO6mTORqbQWVIORQg+2MtPoXgeClbCG0k4xhRdmPE3Nqc=
-X-Received: by 2002:ac5:cde3:: with SMTP id v3mr378521vkn.43.1579513446738;
- Mon, 20 Jan 2020 01:44:06 -0800 (PST)
+        Mon, 20 Jan 2020 04:44:56 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2283 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726075AbgATJo4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 04:44:56 -0500
+Received: from LHREML710-CAH.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 3DA39BD29D6DA30D2A22;
+        Mon, 20 Jan 2020 09:44:53 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ LHREML710-CAH.china.huawei.com (10.201.108.33) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 20 Jan 2020 09:44:52 +0000
+Received: from [127.0.0.1] (10.202.226.43) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 20 Jan
+ 2020 09:44:52 +0000
+Subject: Re: [RFC PATCH 0/4] iommu: Per-group default domain type
+To:     Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+CC:     <kevin.tian@intel.com>, <ashok.raj@intel.com>,
+        <linux-kernel@vger.kernel.org>, <iommu@lists.linux-foundation.org>,
+        <jacob.jun.pan@intel.com>, Robin Murphy <robin.murphy@arm.com>,
+        "Christoph Hellwig" <hch@lst.de>
+References: <20200101052648.14295-1-baolu.lu@linux.intel.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <ba7a7e6a-8b23-fca0-a8bb-72c4dbfa8390@huawei.com>
+Date:   Mon, 20 Jan 2020 09:44:51 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-References: <9aff1d859935e59edd81e4939e40d6c55e0b55f6.1578390388.git.mirq-linux@rere.qmqm.pl>
- <CAPDyKFqXmbnH_NWZZTHHCE+Lt-f3JHAhJ8-=aoKNEPyQed44YA@mail.gmail.com> <20200117141145.GD26135@qmqm.qmqm.pl>
-In-Reply-To: <20200117141145.GD26135@qmqm.qmqm.pl>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 20 Jan 2020 10:43:28 +0100
-Message-ID: <CAPDyKFqmXiv75XCK6-tNJn5xTxyYpZcKRGKhvg-G0ycSZ_xw7g@mail.gmail.com>
-Subject: Re: [PATCH v3] mmc: tegra: fix SDR50 tuning override
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Lucas Stach <dev@lynxeye.de>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200101052648.14295-1-baolu.lu@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.43]
+X-ClientProxiedBy: lhreml718-chm.china.huawei.com (10.201.108.69) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Jan 2020 at 15:11, Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qm=
-qm.pl> wrote:
->
-> On Thu, Jan 16, 2020 at 03:39:54PM +0100, Ulf Hansson wrote:
-> > On Tue, 7 Jan 2020 at 10:47, Micha=C5=82 Miros=C5=82aw <mirq-linux@rere=
-.qmqm.pl> wrote:
-> > >
-> > > Commit 7ad2ed1dfcbe inadvertently mixed up a quirk flag's name and
-> > > broke SDR50 tuning override. Use correct NVQUIRK_ name.
-> > >
-> > > Fixes: 7ad2ed1dfcbe ("mmc: tegra: enable UHS-I modes")
-> > > Cc: <stable@vger.kernel.org> # 4f6aa3264af4: mmc: tegra: Only adverti=
-se UHS modes if IO regulator is present
-> >
-> > I am dropping this tag, simply because I don't understand what it shoul=
-d tell.
->
-> It tells the maintainer that he needs to cherry-pick this commit if
-> its not in particular stable version already. I guess this is only
-> for v4.4, as v4.9+ already have it, and v3.16 does not include the
-> Fixed commit.
+On 01/01/2020 05:26, Lu Baolu wrote:
+> An IOMMU group represents the smallest set of devices that are considered
+> to be isolated. All devices belonging to an IOMMU group share a default
+> domain for DMA APIs. There are two types of default domain: IOMMU_DOMAIN_DMA
+> and IOMMU_DOMAIN_IDENTITY. The former means IOMMU translation, while the
+> latter means IOMMU by-pass.
+> 
+> Currently, the default domain type for the IOMMU groups is determined
+> globally. All IOMMU groups use a single default domain type. The global
+> default domain type can be adjusted by kernel build configuration or
+> kernel parameters.
+> 
+> More and more users are looking forward to a fine grained default domain
+> type. For example, with the global default domain type set to translation,
+> the OEM verndors or end users might want some trusted and fast-speed devices
+> to bypass IOMMU for performance gains. On the other hand, with global
+> default domain type set to by-pass, some devices with limited system
+> memory addressing capability might want IOMMU translation to remove the
+> bounce buffer overhead.
 
-Alright, I updated myself on stable rules and found this, thanks!
+Hi Lu Baolu,
 
-So I have amended the patch to add back the tag, let's give this a try.
+Do you think that it would be a more common usecase to want 
+kernel-managed devices to be passthrough for performance reasons and 
+some select devices to be in DMA domain, like those with limited address 
+cap or whose drivers request huge amounts of memory?
 
-Kind regards
-Uffe
+I just think it would be more manageable to set kernel commandline 
+parameters for this, i.e. those select few which want DMA domain.
+
+Thanks,
+John
+
+> 
+> This series proposes per-group default domain type to meet these demands.
+> It adds a per-device iommu_passthrough attribute. By setting this
+> attribute, end users or device vendors are able to tell the IOMMU subsystem
+> that this device is willing to use a default domain of IOMMU_DOMAIN_IDENTITY.
+> The IOMMU device probe procedure is reformed to pre-allocate groups for
+> all devices on a specific bus before adding the devices into the groups.
+> This enables the IOMMU device probe precedure to determine a per-group
+> default domain type before allocating IOMMU domains and attaching them
+> to devices.
+> 
+> Please help to review it. Your comments and suggestions are appricated.
+> 
+> Best regards,
+> baolu
+> 
+> Lu Baolu (4):
+>    driver core: Add iommu_passthrough to struct device
+>    PCI: Add "pci=iommu_passthrough=" parameter for iommu passthrough
+>    iommu: Preallocate iommu group when probing devices
+>    iommu: Determine default domain type before allocating domain
+> 
+>   .../admin-guide/kernel-parameters.txt         |   5 +
+>   drivers/iommu/iommu.c                         | 127 ++++++++++++++----
+>   drivers/pci/pci.c                             |  34 +++++
+>   drivers/pci/pci.h                             |   1 +
+>   drivers/pci/probe.c                           |   2 +
+>   include/linux/device.h                        |   3 +
+>   6 files changed, 143 insertions(+), 29 deletions(-)
+> 
+
