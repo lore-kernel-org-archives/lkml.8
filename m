@@ -2,124 +2,116 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FFABC33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44991C33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 108C2207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:48:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WrMhGYfs"
+	by mail.kernel.org (Postfix) with ESMTP id 21A2420684
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:48:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726586AbgATGs3 (ORCPT
+        id S1726890AbgATGsc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 01:48:29 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:34300 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725851AbgATGs2 (ORCPT
+        Mon, 20 Jan 2020 01:48:32 -0500
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:55856 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbgATGs3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 01:48:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579502907;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=mbPSCio8/LP2m+y+0WtJxGAsKNtPaMEjLFdacvoLLa8=;
-        b=WrMhGYfsJ3BoNl8+8n1CmGMTYGAS05hGieYSqzn2nJtdWF7AnAL1IoKv03PK7SPmzYSJSY
-        Z/jmulbCYCmp3xQMgzElqKo7t5kHMP7zD2Qou/c/gDUaDQBcCWZM+CDidUhOePzauJIWjB
-        80bnETZTfOnvIeNIf6KRF6Pt5KMsrF0=
-Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com
- [209.85.215.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-79-nfzhNLOTMFaMlFUCzTYXWg-1; Mon, 20 Jan 2020 01:48:26 -0500
-X-MC-Unique: nfzhNLOTMFaMlFUCzTYXWg-1
-Received: by mail-pg1-f197.google.com with SMTP id g20so18746292pgb.18
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jan 2020 22:48:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mbPSCio8/LP2m+y+0WtJxGAsKNtPaMEjLFdacvoLLa8=;
-        b=AWfWmbX5dQ4L0QUJHtygGAu5gRavPUp1PmFgjDHf7lBAJNRIx3ciiuyvBbFd0oOge9
-         glruGhk8l5eQXGtBMVZPBMq3VnJrt5is5cdi1lw6oXDJhuGS+//dm9nCjfXVEZ4GCxli
-         GZJWHtClz/lGJV+U7NKUXEz9bzCMdcb063CZoRNZwBdI0APGGIu69eiEBlKrTbTS3cqr
-         fKgkAp6bCwSttQ+E9utJ83WAIM1xgChS1wYZxJlLLKgwnLsJBWRSU64SlHmDLY5mmhK2
-         52JvYxfYNwWqbBdIb0tt03bJeEBF/DnyxTDsUz2ZCq11pmDLDptD/BW+ORcfOSvvKAUa
-         hkNg==
-X-Gm-Message-State: APjAAAWNXRONXcozgE65jwa6XaSwLSe1mbX9EroP5qFthjCf20D26W9R
-        1BavlObSYpl9y0SkGDT5je+CC0Vs7l6BlmAWle1yJFgbOR4Kr/y+q9W3udUx06OUgA6r0oUKArW
-        O9IKT2OXcDx+xLXHcluE8jHif
-X-Received: by 2002:a63:a4b:: with SMTP id z11mr56366217pgk.97.1579502905190;
-        Sun, 19 Jan 2020 22:48:25 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzXFGmeddIVnOlaDqMWJbI+cXOBU/LMjL/VsJRQLf4JU44G/RoO8NR+SY+o895T3e4rZphHIA==
-X-Received: by 2002:a63:a4b:: with SMTP id z11mr56366193pgk.97.1579502904925;
-        Sun, 19 Jan 2020 22:48:24 -0800 (PST)
-Received: from xz-x1 ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id q64sm16484005pjb.1.2020.01.19.22.48.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Jan 2020 22:48:24 -0800 (PST)
-Date:   Mon, 20 Jan 2020 14:48:11 +0800
-From:   Peter Xu <peterx@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Yan Zhao <yan.y.zhao@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Kevin Kevin <kevin.tian@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Lei Cao <lei.cao@stratus.com>
-Subject: Re: [PATCH v3 12/21] KVM: X86: Implement ring-based dirty memory
- tracking
-Message-ID: <20200120064811.GC380565@xz-x1>
-References: <20200109145729.32898-1-peterx@redhat.com>
- <20200109145729.32898-13-peterx@redhat.com>
- <20200116033725-mutt-send-email-mst@kernel.org>
- <20200116162703.GA344339@xz-x1>
- <20200117045019-mutt-send-email-mst@kernel.org>
+        Mon, 20 Jan 2020 01:48:29 -0500
+X-AuditID: c0a8fbf4-199ff70000001fa6-71-5e254d3a9540
+Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 25.A8.08102.A3D452E5; Mon, 20 Jan 2020 07:48:27 +0100 (CET)
+Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
+ WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
+ 14.03.0439.000; Mon, 20 Jan 2020 07:48:16 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "lee.jones@linaro.org" <lee.jones@linaro.org>
+CC:     "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "broonie@kernel.org" <broonie@kernel.org>
+Subject: Re: [PATCH v10 11/13] gpio: bd71828: Initial support for ROHM
+ BD71828 PMIC GPIOs
+Thread-Topic: [PATCH v10 11/13] gpio: bd71828: Initial support for ROHM
+ BD71828 PMIC GPIOs
+Thread-Index: AQHVzRqEzUhPKa3zcECjmnaGmPw9eafulMiAgAR7eYA=
+Date:   Mon, 20 Jan 2020 06:48:15 +0000
+Message-ID: <9f405dfc4c7e56e32f4eb2f9cb6e87c05aea1ac9.camel@fi.rohmeurope.com>
+References: <cover.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
+         <c8ed62a1efa0c6fde93a8a08fe6bc74a450a34f3.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
+         <20200117102127.GD15507@dell>
+In-Reply-To: <20200117102127.GD15507@dell>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [213.255.186.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <705A642178A6094F8C12E603197A316A@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200117045019-mutt-send-email-mst@kernel.org>
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Te0wTSRx2drfb4bE4VrAjPhJW8SIGtPHBhDPGXIJZjacmRr07TnCVlaK0
+        xW1RUWPIGeUsmqCi5qqAktYz0vio+EKMSKrWau6CUHyCEkUeGozii6Dcdbsq/DXf/L5XJvkN
+        pHVP2ViYbbZJslnM4dlwpvZ4nyfxx5/j06d0uwFx1ge0pLD7mJa8K/UzZH/rc5aUe//RkKLb
+        VRry6Nxphjx5fx2QD41/UqTk898UebOrRUPOln8GpKH6MEvOvToJyI3KRpa47tVT5LDLx5B6
+        fypp9l9nyfYrXi3pbzrDzI4R3GVuILy+v10rlLk3C5cczVrBc2InKzxuqmGFm/cvUMLBsl5K
+        OF75USv0eMYuCv8tYuZK0bZ+cXaWefKsFRHG8os7mNwPURsbegtBAfBG2QGEGE3DlU1T7SAc
+        6lAA4LM+J6NefAB/aX8EFBGLZmL7A60dhMFoZMBOX1tIQyMnxPv8LUAhhqM0XLg3wKii3/Gp
+        2qcaFafgLz13QnMGxeP6835WyeTQAlzTF6l2eQE+HailFU0YSsCdlyooBQM0Bu8s6A5hGumx
+        58XHUCZGCDtr/qVVHIM7n/V/nfP4Sm8ro+TTaCI+VT1Ztc7GHe03GRXH4ZKi1tBbODQM3/rr
+        OVMMRjgGNTgG3I5Bbscgt2OQ+wjQnADYJGbnZIk2yZAkS3lJssVoCh6rLCYPUDfm3UXwX93c
+        OkBBUAdGQoqP4bRr+HRd1EpLZr5RtBoz5LwcyVoHMKT5aK55d1y6jssU8zdJsuUbNQoyvJ77
+        oXXPch1SutZKUq4kf2NHQ8hjbvP8+HTdMFnKkjauzs6xDdAUDFPCw2OjrZI5U5LFPJsxQ1mP
+        DGtwPxQqMthrVuycNVc0Baeq1Q8mweLO0goaektdFbSOMVvMUqyeIylBKVKkxjzz96IuoIeA
+        H85tVYIig9/me05XsIIKVgSSeaXCJg5QsQVgzhZ5Wqp+bH8cpiYYtmwQfFmuX0hK8Yxbf6Q0
+        RoxvqaaWNS2dUZKQNnJcT8m8hVVDIo7YO+c2+Do63rfBq5+OHlpwcv7Vt11LLh946QbbMn/1
+        JiYXiPbRI366G5WWXLxjnElTVJW4tL1vesKT/lTD7VVtZa4bSfm5W9ftfrgs42jktaE8YzWK
+        hgRator/A1AMV27zAwAA
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 04:50:48AM -0500, Michael S. Tsirkin wrote:
-> On Thu, Jan 16, 2020 at 11:27:03AM -0500, Peter Xu wrote:
-> > On Thu, Jan 16, 2020 at 03:38:21AM -0500, Michael S. Tsirkin wrote:
-> > > On Thu, Jan 09, 2020 at 09:57:20AM -0500, Peter Xu wrote:
-> > > > +	/* If to map any writable page within dirty ring, fail it */
-> > > > +	if ((kvm_page_in_dirty_ring(vcpu->kvm, vma->vm_pgoff) ||
-> > > > +	     kvm_page_in_dirty_ring(vcpu->kvm, vma->vm_pgoff + pages - 1)) &&
-> > > > +	    vma->vm_flags & VM_WRITE)
-> > > > +		return -EINVAL;
-> > > 
-> > > Worth thinking about other flags. Do we want to force VM_SHARED?
-> > > Disable VM_EXEC?
-> > 
-> > Makes sense to me.  I think it worths a standalone patch since they
-> > should apply for the whole per-vcpu mmaped regions rather than only
-> > for the dirty ring buffers.
-> > 
-> > (Should include KVM_PIO_PAGE_OFFSET, KVM_COALESCED_MMIO_PAGE_OFFSET,
-> >  KVM_S390_SIE_PAGE_OFFSET, kvm_run, and this new one)
-> > 
-> > Thanks,
-> 
-> 
-> I don't think we can change UAPI for existing ones.
-> Userspace might be setting these by mistake.
-
-Right (especially for VM_EXEC)... I'll only check that for the new
-pages then.  Thanks,
-
--- 
-Peter Xu
-
+SGVsbG8sDQoNCk9uIEZyaSwgMjAyMC0wMS0xNyBhdCAxMDoyMSArMDAwMCwgTGVlIEpvbmVzIHdy
+b3RlOg0KPiBPbiBGcmksIDE3IEphbiAyMDIwLCBNYXR0aSBWYWl0dGluZW4gd3JvdGU6DQo+IA0K
+PiA+IFJPSE0gQkQ3MTgyOCBQTUlDIGNvbnRhaW5zIDQgcGlucyB3aGljaCBjYW4gYmUgY29uZmln
+dXJlZCBieSBPVFANCj4gPiB0byBiZSB1c2VkIGZvciBnZW5lcmFsIHB1cnBvc2VzLiBGaXJzdCAz
+IGNhbiBiZSB1c2VkIGFzIG91dHB1dHMNCj4gPiBhbmQgNC50aCBwaW4gY2FuIGJlIHVzZWQgYXMg
+aW5wdXQuIEFsbG93IHRoZW0gdG8gYmUgY29udHJvbGxlZA0KPiA+IHZpYSBHUElPIGZyYW1ld29y
+ay4NCj4gPiANCj4gPiBUaGUgZHJpdmVyIGFzc3VtZXMgYWxsIG9mIHRoZSBwaW5zIGFyZSBjb25m
+aWd1cmVkIGFzIEdQSU9zIGFuZA0KPiA+IHRydXN0cyB0aGF0IHRoZSByZXNlcnZlZCBwaW5zIGlu
+IG90aGVyIE9UUCBjb25maWd1cmF0aW9ucyBhcmUNCj4gPiBleGNsdWRlZCBmcm9tIGNvbnRyb2wg
+dXNpbmcgImdwaW8tcmVzZXJ2ZWQtcmFuZ2VzIiBkZXZpY2UgdHJlZQ0KPiA+IHByb3BlcnR5IChv
+ciBsZWZ0IHVudG91Y2hlZCBieSBHUElPIHVzZXJzKS4NCj4gPiANCj4gPiBUeXBpY2FsIHVzZSBm
+b3IgNC50aCBwaW4gKGlucHV0KSBpcyB0byB1c2UgaXQgYXMgSEFMTCBzZW5zb3INCj4gPiBpbnB1
+dCBzbyB0aGF0IHRoaXMgcGluIHN0YXRlIGlzIHRvZ2dsZWQgd2hlbiBIQUxMIHNlbnNvciBkZXRl
+Y3RzDQo+ID4gTElEIHBvc2l0aW9uIGNoYW5nZSAoZnJvbSBjbG9zZSB0byBvcGVuIG9yIG9wZW4g
+dG8gY2xvc2UpLiBQTUlDDQo+ID4gSFcgaW1wbGVtZW50cyBzb21lIGV4dHJhIGxvZ2ljIHdoaWNo
+IGFsbG93cyBQTUlDIHRvIHBvd2VyLXVwIHRoZQ0KPiA+IHN5c3RlbSB3aGVuIHRoaXMgcGluIGlz
+IHRvZ2dsZWQuIFBsZWFzZSBzZWUgdGhlIGRhdGEgc2hlZXQgZm9yDQo+ID4gZGV0YWlscyBvZiBH
+UElPIG9wdGlvbnMgd2hpY2ggY2FuIGJlIHNlbGVjdGVkIGJ5IE9UUCBzZXR0aW5ncy4NCj4gPiAN
+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBNYXR0aSBWYWl0dGluZW4gPG1hdHRpLnZhaXR0aW5lbkBmaS5y
+b2htZXVyb3BlLmNvbT4NCj4gPiBSZXZpZXdlZC1ieTogQmFydG9zeiBHb2xhc3pld3NraSA8Ymdv
+bGFzemV3c2tpQGJheWxpYnJlLmNvbT4NCj4gPiBSZXZpZXdlZC1ieTogTGludXMgV2FsbGVpaiA8
+bGludXMud2FsbGVpakBsaW5hcm8ub3JnPg0KPiANCj4gTGludXMsIElzIHRoYXQgYW4gQWNrPw0K
+SSBoYXZlIGFsd2F5cyB0aG91Z2h0IHRoYXQgcmV2aWV3ZWQtYnkgaW1wbGllcyB0aGF0IHJldmll
+d2VyIGlzIE9rIHdpdGgNCnRoZSBwYXRjaCAoaW1wbGVzIEFjaykuIE1heWJlIEkgaGF2ZSBtaXN0
+YWtlbj8NCg0KQnIsDQogICAgLS1NYXR0aQ0K
