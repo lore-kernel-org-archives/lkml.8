@@ -2,236 +2,149 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16563C33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7575C33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDFCF207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:23:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A4082077C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:24:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jUcNuoDQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HLUe6bgC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727285AbgATJXL (ORCPT
+        id S1726951AbgATJYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 04:23:11 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:39529 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726125AbgATJXK (ORCPT
+        Mon, 20 Jan 2020 04:24:01 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:22821 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726039AbgATJYB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 04:23:10 -0500
-Received: by mail-qk1-f196.google.com with SMTP id c16so29438197qko.6
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 01:23:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=+drl7LyyZzQ3Le0+6nOIotpvZ8Ybc/8gJ2Qh+5zlDLU=;
-        b=jUcNuoDQUieW2IaNkSuxM3KcUhV324LuFUUrQ9zebkohA2XLZUuelDZobz3BlCqPI6
-         ucRumVGc0kPCkZhFBCye8PWQoNRgITflmy9cZBnBSz9VmP8eU0aHm/tGnFSOKaAZdVSO
-         PxbCzb4piUbvBnXt1YV6yWuNjjEf1VkODTnkGrr2y3cjCCrXqTwYJ3ieEIk84c0Buiqy
-         yfxXan44+434anwTrDLOhAncpI+ujcWesyfyV4YVvFncu+JwQGeImApWR8rneHEgt63e
-         j93KzSiNVm9sKTYscfVN1yMvL6XI+Fsa6e4C5KJ/o7RpFk30GNJIf6DwsMKkl0PHiFec
-         LbEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=+drl7LyyZzQ3Le0+6nOIotpvZ8Ybc/8gJ2Qh+5zlDLU=;
-        b=oGQan69UaavLCk/LIS1KCRi+e4tWdm8+BUwmCG9npHAvhz57XsyijUBKtzqAq+7iLG
-         rMLYwsgNrouuWcXIxNerQGgbtH9UNHY1qNjI/vYpOo4NSKgfhK1/gLvTwv3Gf7cA62G7
-         Yp0cBy2kAuoU85wBujvYU4RzmnZZCyLmUuOsp6at/2dVc+uedn2gJSM5Wym1mosR+KtQ
-         RV8fFIed5Dk8/97LlZ0jyGlHYQeZFmugszK+6h5G6fHRHF10rO/UNGF/k11Ma0rstLA9
-         feUUhKgajcdnb3KXyAD98txlB3VkgbqpA/ndKKkgUj6R3CmgevSKoGkV33r/ed/dMKxP
-         5V3g==
-X-Gm-Message-State: APjAAAUZiROHHk7SpTYhm3LDaTl7dUJhAQHcWvs29mElTFq4l5ZDXa0K
-        9afJNNej1DKY7MV+22XDhT5geT0MCYOg7OwX1V1UlA==
-X-Google-Smtp-Source: APXvYqzyRAeiny/5VvFFvMyO0C2nxWNX7+AyAtmfBHbm2UMLuYEf8laTqYsljsMIakg/kRj73d40W0PPsqs+UFSqv5I=
-X-Received: by 2002:a37:5841:: with SMTP id m62mr49294755qkb.256.1579512188826;
- Mon, 20 Jan 2020 01:23:08 -0800 (PST)
+        Mon, 20 Jan 2020 04:24:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579512240;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=rrHv7U16b0hpMhKonKhllashBRa3U27D9d/xyzuh1sY=;
+        b=HLUe6bgCiU0E9krIr4sw+di2zGVpAXh7upPJknNUV3pabLHeUDVp6Q33xw7HvWqxC48cd+
+        INtwvv9nKc11cflMd9iZn4Lu9umTVn14xo0ouyxDNXXW1gEbw3ylM4aYoLwJxNkqn2Wd/i
+        iSde7h0MfMDijJMUw2FnXk3tQi5xomY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-265-bTPf7-FSNuyHvO3jE0m2VA-1; Mon, 20 Jan 2020 04:23:58 -0500
+X-MC-Unique: bTPf7-FSNuyHvO3jE0m2VA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D594718A6EC0;
+        Mon, 20 Jan 2020 09:23:56 +0000 (UTC)
+Received: from krava (unknown [10.43.17.48])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6854A84D9F;
+        Mon, 20 Jan 2020 09:23:54 +0000 (UTC)
+Date:   Mon, 20 Jan 2020 10:23:52 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     kajoljain <kjain@linux.ibm.com>
+Cc:     "Jin, Yao" <yao.jin@linux.intel.com>, acme@kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Subject: Re: [PATCH] tools/perf/metricgroup: Fix printing event names of
+ metric group with multiple events incase of overlapping events
+Message-ID: <20200120092352.GA608405@krava>
+References: <20200108065844.4030-1-kjain@linux.ibm.com>
+ <e866c12a-7328-8524-fd0e-668301da6875@linux.intel.com>
+ <822bcb9d-4c08-39c5-e6e7-9c3e20d77852@linux.ibm.com>
+ <20200108160249.GD402774@krava>
+ <dde66abd-6025-31e3-9bda-a6eb1986eea8@linux.ibm.com>
 MIME-Version: 1.0
-References: <00000000000030dddb059c562a3f@google.com> <55ad363b-1723-28aa-78b1-8aba5565247e@hartkopp.net>
- <20200120091146.GD11138@x1.vandijck-laurijssen.be>
-In-Reply-To: <20200120091146.GD11138@x1.vandijck-laurijssen.be>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 20 Jan 2020 10:22:57 +0100
-Message-ID: <CACT4Y+a+GusEA1Gs+z67uWjtwBRp_s7P4Wd_SMmgpCREnDu3kg@mail.gmail.com>
-Subject: Re: general protection fault in can_rx_register
-To:     Oliver Hartkopp <socketcan@hartkopp.net>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        o.rempel@pengutronix.de,
-        syzbot <syzbot+c3ea30e1e2485573f953@syzkaller.appspotmail.com>,
-        David Miller <davem@davemloft.net>, linux-can@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <dde66abd-6025-31e3-9bda-a6eb1986eea8@linux.ibm.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 10:11 AM Kurt Van Dijck
-<dev.kurt@vandijck-laurijssen.be> wrote:
->
-> If bisect was right with this:
->
-> > >The bug was bisected to:
-> > >
-> > >commit 9868b5d44f3df9dd75247acd23dddff0a42f79be
-> > >Author: Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
-> > >Date:   Mon Oct 8 09:48:33 2018 +0000
-> > >
-> > >     can: introduce CAN_REQUIRED_SIZE macro
->
-> Then I'd start looking in malformed sockaddr_can data instead.
->
-> Is this code what triggers the bug?
-> > >C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=138f5db9e00000
+On Mon, Jan 20, 2020 at 02:23:19PM +0530, kajoljain wrote:
+>=20
+> On 1/8/20 9:32 PM, Jiri Olsa wrote:
+> > On Wed, Jan 08, 2020 at 02:41:35PM +0530, kajoljain wrote:
+> >=20
+> > SNIP
+> >=20
+> > > > > -=A0=A0=A0 int i =3D 0;
+> > > > > +=A0=A0=A0 int i =3D 0, j =3D 0;
+> > > > >  =A0=A0=A0=A0=A0 bool leader_found;
+> > > > >  =A0 =A0=A0=A0=A0=A0 evlist__for_each_entry (perf_evlist, ev) {
+> > > > > +=A0=A0=A0=A0=A0=A0=A0 j++;
+> > > > > +=A0=A0=A0=A0=A0=A0=A0 if (j <=3D iterator_perf_evlist)
+> > > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 continue;
+> > > > >  =A0=A0=A0=A0=A0=A0=A0=A0=A0 if (!strcmp(ev->name, ids[i])) {
+> > > > >  =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 if (!metric_events[i])
+> > > > >  =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 metric_eve=
+nts[i] =3D ev;
+> > > > > @@ -146,6 +151,7 @@ static struct evsel *find_evsel_group(struc=
+t
+> > > > > evlist *perf_evlist,
+> > > > >  =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 }
+> > > > >  =A0=A0=A0=A0=A0=A0=A0=A0=A0 }
+> > > > >  =A0=A0=A0=A0=A0 }
+> > > > > +=A0=A0=A0 iterator_perf_evlist =3D j;
+> > > > >  =A0 =A0=A0=A0=A0=A0 return metric_events[0];
+> > > > >  =A0 }
+> > > > >=20
+> > > > Thanks for reporting and fixing this issue.
+> > > >=20
+> > > > I just have one question, do we really need a *static variable* t=
+o track
+> > > > the matched events? Perhaps using an input parameter?
+> > > Hi Jin,
+> > >=20
+> > > The other way I come up with to solve this issue is, making change =
+in
+> > > perf_evlist itself by adding some flag in event name, to keep track=
+ of
+> > > matched events.
+> > >=20
+> > > As if we change event name itself, next time when we compare it won=
+'t
+> > > matched. But in that case we need to remove those flag later. Which=
+ will
+> > > increase the
+> > >=20
+> > > complexity. If you have any suggestions, please let me know.
+> > we already keep evsel::cpu_iter for similar concept
+> >=20
+> > so I guess we could have some iterator_perf_evlist variable in evlist=
+..
+> > that is if we don't find other solution (other than static varable)
+>=20
+> Hi Jiri,
+>=20
+> =A0=A0=A0=A0=A0=A0=A0=A0 Thanks for reviewing the patch. I checked 'evs=
+el::cpu_iter'
+> variable, I think it added recently and I am not able to find any simil=
+ar
+> kind of variable in
+>=20
+> =A0=A0=A0 =A0=A0=A0=A0 evlist. Please let me know if my understanding i=
+s fine. Do you want
+> me to add new variable in evlist itself or there is any other way possi=
+ble.
 
-yes
+please check Arnaldo's tree:
+  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf/core
 
-> Kind regards,
-> Kurt
->
-> On vr, 17 jan 2020 21:02:48 +0100, Oliver Hartkopp wrote:
-> > Hi Marc, Oleksij, Kurt,
-> >
-> > On 17/01/2020 14.46, syzbot wrote:
-> > >Hello,
-> > >
-> > >syzbot found the following crash on:
-> > >
-> > >HEAD commit:    f5ae2ea6 Fix built-in early-load Intel microcode alignment
-> > >git tree:       upstream
-> > >console output: https://syzkaller.appspot.com/x/log.txt?x=1033df15e00000
-> > >kernel config:  https://syzkaller.appspot.com/x/.config?x=cfbb8fa33f49f9f3
-> > >dashboard link:
-> > >https://syzkaller.appspot.com/bug?extid=c3ea30e1e2485573f953
-> > >compiler:       clang version 10.0.0
-> > >(https://github.com/llvm/llvm-project/
-> > >c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-> > >syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13204f15e00000
-> > >C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=138f5db9e00000
-> > >
-> > >The bug was bisected to:
-> > >
-> > >commit 9868b5d44f3df9dd75247acd23dddff0a42f79be
-> > >Author: Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
-> > >Date:   Mon Oct 8 09:48:33 2018 +0000
-> > >
-> > >     can: introduce CAN_REQUIRED_SIZE macro
-> > >
-> > >bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=129bfdb9e00000
-> > >final crash:    https://syzkaller.appspot.com/x/report.txt?x=119bfdb9e00000
-> > >console output: https://syzkaller.appspot.com/x/log.txt?x=169bfdb9e00000
-> > >
-> > >IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > >Reported-by: syzbot+c3ea30e1e2485573f953@syzkaller.appspotmail.com
-> > >Fixes: 9868b5d44f3d ("can: introduce CAN_REQUIRED_SIZE macro")
-> > >
-> > >kasan: CONFIG_KASAN_INLINE enabled
-> > >kasan: GPF could be caused by NULL-ptr deref or user memory access
-> > >general protection fault: 0000 [#1] PREEMPT SMP KASAN
-> > >CPU: 0 PID: 9593 Comm: syz-executor302 Not tainted 5.5.0-rc6-syzkaller #0
-> > >Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > >Google 01/01/2011
-> > >RIP: 0010:hlist_add_head_rcu include/linux/rculist.h:528 [inline]
-> > >RIP: 0010:can_rx_register+0x43b/0x600 net/can/af_can.c:476
-> >
-> > include/linux/rculist.h:528 is
-> >
-> > struct hlist_node *first = h->first;
-> >
-> > which would mean that 'h' must be NULL.
-> >
-> > But the h parameter is rcv_list from
-> > rcv_list = can_rcv_list_find(&can_id, &mask, dev_rcv_lists);
-> >
-> > Which can not return NULL - at least when dev_rcv_lists is a proper pointer
-> > to the dev_rcv_lists provided by can_dev_rcv_lists_find().
-> >
-> > So either dev->ml_priv is NULL in the case of having a CAN interface (here
-> > vxcan) or we have not allocated net->can.rx_alldev_list in can_pernet_init()
-> > properly (which would lead to an -ENOMEM which is reported to whom?).
-> >
-> > Hm. I'm lost. Any ideas?
-> >
-> > Regards,
-> > Oliver
-> >
-> >
-> > >Code: 48 89 d8 48 c1 e8 03 42 80 3c 28 00 74 08 48 89 df e8 89 22 8a fa 4c
-> > >89 33 4d 89 e5 49 c1 ed 03 48 b8 00 00 00 00 00 fc ff df <41> 80 7c 05 00
-> > >00 74 08 4c 89 e7 e8 c5 21 8a fa 4d 8b 34 24 4c 89
-> > >RSP: 0018:ffffc90003e27d00 EFLAGS: 00010202
-> > >RAX: dffffc0000000000 RBX: ffff8880a77336c8 RCX: ffff88809306a100
-> > >RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8880a77336c0
-> > >RBP: ffffc90003e27d58 R08: ffffffff87289cd6 R09: fffff520007c4f94
-> > >R10: fffff520007c4f94 R11: 0000000000000000 R12: 0000000000000008
-> > >R13: 0000000000000001 R14: ffff88809fbcf000 R15: ffff8880a7733690
-> > >FS:  00007fb132f26700(0000) GS:ffff8880aec00000(0000)
-> > >knlGS:0000000000000000
-> > >CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > >CR2: 000000000178f590 CR3: 00000000996d6000 CR4: 00000000001406f0
-> > >DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > >DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > >Call Trace:
-> > >  raw_enable_filters net/can/raw.c:189 [inline]
-> > >  raw_enable_allfilters net/can/raw.c:255 [inline]
-> > >  raw_bind+0x326/0x1230 net/can/raw.c:428
-> > >  __sys_bind+0x2bd/0x3a0 net/socket.c:1649
-> > >  __do_sys_bind net/socket.c:1660 [inline]
-> > >  __se_sys_bind net/socket.c:1658 [inline]
-> > >  __x64_sys_bind+0x7a/0x90 net/socket.c:1658
-> > >  do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
-> > >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > >RIP: 0033:0x446ba9
-> > >Code: e8 0c e8 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7
-> > >48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
-> > >ff 0f 83 5b 07 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-> > >RSP: 002b:00007fb132f25d98 EFLAGS: 00000246 ORIG_RAX: 0000000000000031
-> > >RAX: ffffffffffffffda RBX: 00000000006dbc88 RCX: 0000000000446ba9
-> > >RDX: 0000000000000008 RSI: 0000000020000180 RDI: 0000000000000003
-> > >RBP: 00000000006dbc80 R08: 00007fb132f26700 R09: 0000000000000000
-> > >R10: 00007fb132f26700 R11: 0000000000000246 R12: 00000000006dbc8c
-> > >R13: 0000000000000000 R14: 0000000000000000 R15: 068500100000003c
-> > >Modules linked in:
-> > >---[ end trace 0dedabb13ca8e7d7 ]---
-> > >RIP: 0010:hlist_add_head_rcu include/linux/rculist.h:528 [inline]
-> > >RIP: 0010:can_rx_register+0x43b/0x600 net/can/af_can.c:476
-> > >Code: 48 89 d8 48 c1 e8 03 42 80 3c 28 00 74 08 48 89 df e8 89 22 8a fa 4c
-> > >89 33 4d 89 e5 49 c1 ed 03 48 b8 00 00 00 00 00 fc ff df <41> 80 7c 05 00
-> > >00 74 08 4c 89 e7 e8 c5 21 8a fa 4d 8b 34 24 4c 89
-> > >RSP: 0018:ffffc90003e27d00 EFLAGS: 00010202
-> > >RAX: dffffc0000000000 RBX: ffff8880a77336c8 RCX: ffff88809306a100
-> > >RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8880a77336c0
-> > >RBP: ffffc90003e27d58 R08: ffffffff87289cd6 R09: fffff520007c4f94
-> > >R10: fffff520007c4f94 R11: 0000000000000000 R12: 0000000000000008
-> > >R13: 0000000000000001 R14: ffff88809fbcf000 R15: ffff8880a7733690
-> > >FS:  00007fb132f26700(0000) GS:ffff8880aec00000(0000)
-> > >knlGS:0000000000000000
-> > >CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > >CR2: 000000000178f590 CR3: 00000000996d6000 CR4: 00000000001406f0
-> > >DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > >DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > >
-> > >
-> > >---
-> > >This bug is generated by a bot. It may contain errors.
-> > >See https://goo.gl/tpsmEJ for more information about syzbot.
-> > >syzbot engineers can be reached at syzkaller@googlegroups.com.
-> > >
-> > >syzbot will keep track of this bug report. See:
-> > >https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> > >For information about bisection process see:
-> > >https://goo.gl/tpsmEJ#bisection
-> > >syzbot can test patches for this bug, for details see:
-> > >https://goo.gl/tpsmEJ#testing-patches
->
-> --
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/20200120091146.GD11138%40x1.vandijck-laurijssen.be.
+jirka
+
