@@ -2,270 +2,134 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 225C4C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:13:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2230AC33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E22EB22314
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:13:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CU6+1cuO"
+	by mail.kernel.org (Postfix) with ESMTP id F1E7822314
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:15:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbgATNN1 (ORCPT
+        id S1727243AbgATNPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 08:13:27 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:53302 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726860AbgATNNX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 08:13:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579526002;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=OV2F5KycaRYFyA7gRNTRFrtUAPvKB/uVOGe3Q95tG20=;
-        b=CU6+1cuOi2LmooHfumWcf5DxSVOAtPnYT4y6XtSnrBOIIR69fFvpuFldD7tmjc/tUfE44n
-        lX4hrf2/vPwcd/hQ8gvJWDM586610tY5Vla/Dvo2yQnKDdgoRBRhitkjHiekZpFNL8lOIh
-        Ujz2ZpCvtJNXt09j2zXwOq9z2rKcAYQ=
-Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
- [209.85.208.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-362-tpWPYiwDOaas7LGqrPb19A-1; Mon, 20 Jan 2020 08:13:21 -0500
-X-MC-Unique: tpWPYiwDOaas7LGqrPb19A-1
-Received: by mail-lj1-f199.google.com with SMTP id 126so7541869ljj.10
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 05:13:20 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=OV2F5KycaRYFyA7gRNTRFrtUAPvKB/uVOGe3Q95tG20=;
-        b=LvUzqmhqUYJ+qUi/P7kpERiONMFMZ/VMLAMmIggfxP+ADCkgnTgsxnYZWbJPL/VofJ
-         fnXK7raK0a4vkx9mL+iSBiVYrKliVvBRmNGdqV8a6I26aYy2WnS45Nq/nRFjxfl5Gv8B
-         44QXZgQqloycQ7ZvXzw1gcv63P+enl6har7/NpCRjElcdEWX/M0/l8YUjddM2n0Jhz42
-         SGEoJjW/Ah2scBjytj5d3YZd/P3VhpUFvDqRGpndGKghcMwMBUDX5/HA3aAWdzHNsZoh
-         hYU1gJdL/X2ziNLIlbsLQ4nRBtTpiq8M9y31DnY2v7fdg09H+S/8AYurVlG/riE43198
-         ybxw==
-X-Gm-Message-State: APjAAAX0cNc61shKDnnbaxj6VzJ1i7FIU2qQq0pqLnqp+k1X9kkQfYRM
-        sUhiyUVySuvlnGnDOgVK4RKKGDgcgE+4kgYpshoEzp3gKp36aevQdQU+ShRDl7uT+qc10ZFZcdI
-        14z+xCJL34sTznk5Y5Dqv+Yeq
-X-Received: by 2002:ac2:58c1:: with SMTP id u1mr6526503lfo.57.1579525999329;
-        Mon, 20 Jan 2020 05:13:19 -0800 (PST)
-X-Google-Smtp-Source: APXvYqw6GaaMgnx8Xd+lJy37awgoTe/xbVU+R2aCqUfNb8TodmbD6JzVbGj8RG+80hAD+E40R80DWQ==
-X-Received: by 2002:ac2:58c1:: with SMTP id u1mr6526468lfo.57.1579525998962;
-        Mon, 20 Jan 2020 05:13:18 -0800 (PST)
-Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
-        by smtp.gmail.com with ESMTPSA id b14sm16762076lff.68.2020.01.20.05.13.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 05:13:16 -0800 (PST)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id 8CE311804D8; Mon, 20 Jan 2020 14:06:52 +0100 (CET)
-Subject: [PATCH bpf-next v5 11/11] selftests: Refactor build to remove
- tools/lib/bpf from include path
-From:   =?utf-8?q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To:     Alexei Starovoitov <ast@kernel.org>
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Date:   Mon, 20 Jan 2020 14:06:52 +0100
-Message-ID: <157952561246.1683545.2762245552022369203.stgit@toke.dk>
-In-Reply-To: <157952560001.1683545.16757917515390545122.stgit@toke.dk>
-References: <157952560001.1683545.16757917515390545122.stgit@toke.dk>
-User-Agent: StGit/0.21
+        Mon, 20 Jan 2020 08:15:03 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:51446 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726619AbgATNPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 08:15:02 -0500
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id DC48F2AC7CA908E68B80;
+        Mon, 20 Jan 2020 21:15:00 +0800 (CST)
+Received: from [127.0.0.1] (10.173.220.183) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Mon, 20 Jan 2020
+ 21:14:52 +0800
+Subject: Re: [PATCH V3] brd: check and limit max_part par
+To:     Ming Lei <ming.lei@redhat.com>
+CC:     Jens Axboe <axboe@kernel.dk>, <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mingfangsen <mingfangsen@huawei.com>, Guiyao <guiyao@huawei.com>,
+        zhangsaisai <zhangsaisai@huawei.com>,
+        "wubo (T)" <wubo40@huawei.com>
+References: <c8236e55-f64f-ef40-b394-8b7e86ce50df@huawei.com>
+ <20200115022725.GA14585@ming.t460p>
+From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Message-ID: <ce5823ea-2183-90df-05b0-c02d1f654be3@huawei.com>
+Date:   Mon, 20 Jan 2020 21:14:50 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
+In-Reply-To: <20200115022725.GA14585@ming.t460p>
 Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.173.220.183]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Toke Høiland-Jørgensen <toke@redhat.com>
 
-To make sure no new files are introduced that doesn't include the bpf/
-prefix in its #include, remove tools/lib/bpf from the include path
-entirely.
 
-Instead, we introduce a new header files directory under the scratch tools/
-dir, and add a rule to run the 'install_headers' rule from libbpf to have a
-full set of consistent libbpf headers in $(OUTPUT)/tools/include/bpf, and
-then use $(OUTPUT)/tools/include as the include path for selftests.
+On 2020/1/15 10:27, Ming Lei wrote:
 
-For consistency we also make sure we put all the scratch build files from
-other bpftool and libbpf into tools/build/, so everything stays within
-selftests/.
+> 
+>>  MODULE_PARM_DESC(rd_nr, "Maximum number of brd devices");
+>>
+>>  unsigned long rd_size = CONFIG_BLK_DEV_RAM_SIZE;
+>>  module_param(rd_size, ulong, 0444);
+>>  MODULE_PARM_DESC(rd_size, "Size of each RAM disk in kbytes.");
+>>
+>> -static int max_part = 1;
+>> -module_param(max_part, int, 0444);
+>> +static unsigned int max_part = 1;
+>> +module_param(max_part, uint, 0444);
+> 
+> The above change isn't needed.
+Thanks for your suggestion.
+I will remove that in v4 patch.
+> 
+>>  MODULE_PARM_DESC(max_part, "Num Minors to reserve between devices");
+>>
+>>  MODULE_LICENSE("GPL");
+>> @@ -393,7 +393,14 @@ static struct brd_device *brd_alloc(int i)
+>>  	if (!disk)
+>>  		goto out_free_queue;
+>>  	disk->major		= RAMDISK_MAJOR;
+>> -	disk->first_minor	= i * max_part;
+>> +	/*
+>> +	 * Clear .minors when running out of consecutive minor space since
+>> +	 * GENHD_FL_EXT_DEVT is set, and we can allocate from extended devt.
+>> +	 */
+>> +	if ((i * disk->minors) & ~MINORMASK)
+>> +		disk->minors = 0;
+>> +	else
+>> +		disk->first_minor = i * disk->minors;
+> 
+> The above looks a bit ugly, one nice way could be to change in
+> brd_alloc():
+> 
+> 	disk = brd->brd_disk = alloc_disk(((i * max_part) & ~MINORMASK) ?
+> 		0 : max_part);
 
-Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
----
- tools/testing/selftests/bpf/.gitignore |    4 +-
- tools/testing/selftests/bpf/Makefile   |   59 ++++++++++++++++----------------
- 2 files changed, 30 insertions(+), 33 deletions(-)
+I will change it as your suggestion.
 
-diff --git a/tools/testing/selftests/bpf/.gitignore b/tools/testing/selftests/bpf/.gitignore
-index 1d14e3ab70be..ec464859c6b6 100644
---- a/tools/testing/selftests/bpf/.gitignore
-+++ b/tools/testing/selftests/bpf/.gitignore
-@@ -29,8 +29,6 @@ test_tcpnotify_user
- test_libbpf
- test_tcp_check_syncookie_user
- test_sysctl
--libbpf.pc
--libbpf.so.*
- test_hashmap
- test_btf_dump
- xdping
-@@ -39,4 +37,4 @@ test_cpp
- /no_alu32
- /bpf_gcc
- /tools
--bpf_helper_defs.h
-+
-diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
-index 2cd91e0524cf..be8fe404a086 100644
---- a/tools/testing/selftests/bpf/Makefile
-+++ b/tools/testing/selftests/bpf/Makefile
-@@ -20,8 +20,8 @@ CLANG		?= clang
- LLC		?= llc
- LLVM_OBJCOPY	?= llvm-objcopy
- BPF_GCC		?= $(shell command -v bpf-gcc;)
--CFLAGS += -g -Wall -O2 $(GENFLAGS) -I$(CURDIR) -I$(APIDIR) -I$(LIBDIR)  \
--	  -I$(BPFDIR) -I$(GENDIR) -I$(TOOLSINCDIR)			\
-+CFLAGS += -g -Wall -O2 $(GENFLAGS) -I$(CURDIR) -I$(APIDIR)		\
-+	  -I$(INCLUDE_DIR) -I$(GENDIR) -I$(LIBDIR) -I$(TOOLSINCDIR)	\
- 	  -Dbpf_prog_load=bpf_prog_test_load				\
- 	  -Dbpf_load_program=bpf_test_load_program
- LDLIBS += -lcap -lelf -lz -lrt -lpthread
-@@ -97,11 +97,15 @@ OVERRIDE_TARGETS := 1
- override define CLEAN
- 	$(call msg,CLEAN)
- 	$(RM) -r $(TEST_GEN_PROGS) $(TEST_GEN_PROGS_EXTENDED) $(TEST_GEN_FILES) $(EXTRA_CLEAN)
--	$(MAKE) -C $(BPFDIR) OUTPUT=$(OUTPUT)/ clean
- endef
- 
- include ../lib.mk
- 
-+SCRATCH_DIR := $(OUTPUT)/tools
-+BUILD_DIR := $(SCRATCH_DIR)/build
-+INCLUDE_DIR := $(SCRATCH_DIR)/include
-+BPFOBJ := $(BUILD_DIR)/libbpf/libbpf.a
-+
- # Define simple and short `make test_progs`, `make test_sysctl`, etc targets
- # to build individual tests.
- # NOTE: Semicolon at the end is critical to override lib.mk's default static
-@@ -120,7 +124,7 @@ $(OUTPUT)/urandom_read: urandom_read.c
- 	$(call msg,BINARY,,$@)
- 	$(CC) -o $@ $< -Wl,--build-id
- 
--$(OUTPUT)/test_stub.o: test_stub.c
-+$(OUTPUT)/test_stub.o: test_stub.c $(BPFOBJ)
- 	$(call msg,CC,,$@)
- 	$(CC) -c $(CFLAGS) -o $@ $<
- 
-@@ -128,12 +132,10 @@ VMLINUX_BTF_PATHS := $(abspath ../../../../vmlinux)			\
- 			       /sys/kernel/btf/vmlinux			\
- 			       /boot/vmlinux-$(shell uname -r)
- VMLINUX_BTF:= $(firstword $(wildcard $(VMLINUX_BTF_PATHS)))
--.PHONY: $(OUTPUT)/runqslower
--$(OUTPUT)/runqslower: force
-+$(OUTPUT)/runqslower: $(BPFOBJ)
- 	$(Q)$(MAKE) $(submake_extras) -C $(TOOLSDIR)/bpf/runqslower	\
--		    OUTPUT=$(OUTPUT)/tools/ VMLINUX_BTF=$(VMLINUX_BTF)
--
--BPFOBJ := $(OUTPUT)/libbpf.a
-+		    OUTPUT=$(SCRATCH_DIR)/ VMLINUX_BTF=$(VMLINUX_BTF)   \
-+		    BPFOBJ=$(BPFOBJ) BPF_INCLUDE=$(INCLUDE_DIR)
- 
- $(TEST_GEN_PROGS) $(TEST_GEN_PROGS_EXTENDED): $(OUTPUT)/test_stub.o $(BPFOBJ)
- 
-@@ -151,25 +153,22 @@ $(OUTPUT)/test_netcnt: cgroup_helpers.c
- $(OUTPUT)/test_sock_fields: cgroup_helpers.c
- $(OUTPUT)/test_sysctl: cgroup_helpers.c
- 
--.PHONY: force
--
--# force a rebuild of BPFOBJ when its dependencies are updated
--force:
--
--DEFAULT_BPFTOOL := $(OUTPUT)/tools/sbin/bpftool
-+DEFAULT_BPFTOOL := $(SCRATCH_DIR)/sbin/bpftool
- BPFTOOL ?= $(DEFAULT_BPFTOOL)
-+$(DEFAULT_BPFTOOL): $(BPFOBJ) | $(BUILD_DIR)/bpftool
-+	$(Q)$(MAKE) $(submake_extras)  -C $(BPFTOOLDIR)			\
-+		    OUTPUT=$(BUILD_DIR)/bpftool/			\
-+		    prefix= DESTDIR=$(SCRATCH_DIR)/ install
- 
--$(DEFAULT_BPFTOOL): force
--	$(Q)$(MAKE) $(submake_extras)  -C $(BPFTOOLDIR)			      \
--		    prefix= DESTDIR=$(OUTPUT)/tools/ install
--
--$(BPFOBJ): force
--	$(Q)$(MAKE) $(submake_extras) -C $(BPFDIR) OUTPUT=$(OUTPUT)/
-+$(BPFOBJ): $(wildcard $(BPFDIR)/*.c $(BPFDIR)/*.h $(BPFDIR)/Makefile)          \
-+	   ../../../include/uapi/linux/bpf.h                                   \
-+	   | $(INCLUDE_DIR) $(BUILD_DIR)/libbpf
-+	$(Q)$(MAKE) $(submake_extras) -C $(BPFDIR) OUTPUT=$(BUILD_DIR)/libbpf/ \
-+		DESTDIR=$(SCRATCH_DIR) prefix= all install_headers
- 
--BPF_HELPERS := $(OUTPUT)/bpf_helper_defs.h $(wildcard $(BPFDIR)/bpf_*.h)
--$(OUTPUT)/bpf_helper_defs.h: $(BPFOBJ)
--	$(Q)$(MAKE) $(submake_extras) -C $(BPFDIR)			      \
--		    OUTPUT=$(OUTPUT)/ $(OUTPUT)/bpf_helper_defs.h
-+$(BUILD_DIR)/libbpf $(BUILD_DIR)/bpftool $(INCLUDE_DIR):
-+	$(call msg,MKDIR,,$@)
-+	mkdir -p $@
- 
- # Get Clang's default includes on this system, as opposed to those seen by
- # '-target bpf'. This fixes "missing" files on some architectures/distros,
-@@ -189,8 +188,8 @@ MENDIAN=$(if $(IS_LITTLE_ENDIAN),-mlittle-endian,-mbig-endian)
- 
- CLANG_SYS_INCLUDES = $(call get_sys_includes,$(CLANG))
- BPF_CFLAGS = -g -D__TARGET_ARCH_$(SRCARCH) $(MENDIAN) 			\
--	     -I$(OUTPUT) -I$(CURDIR) -I$(CURDIR)/include/uapi		\
--	     -I$(APIDIR) -I$(LIBDIR) -I$(BPFDIR) -I$(abspath $(OUTPUT)/../usr/include)
-+	     -I$(INCLUDE_DIR) -I$(CURDIR) -I$(CURDIR)/include/uapi	\
-+	     -I$(APIDIR) -I$(abspath $(OUTPUT)/../usr/include)
- 
- CLANG_CFLAGS = $(CLANG_SYS_INCLUDES) \
- 	       -Wno-compare-distinct-pointer-types
-@@ -279,7 +278,7 @@ $(TRUNNER_BPF_PROGS_DIR)$(if $2,-)$2-bpfobjs := y
- $(TRUNNER_BPF_OBJS): $(TRUNNER_OUTPUT)/%.o:				\
- 		     $(TRUNNER_BPF_PROGS_DIR)/%.c			\
- 		     $(TRUNNER_BPF_PROGS_DIR)/*.h			\
--		     $$(BPF_HELPERS) | $(TRUNNER_OUTPUT)
-+		     $$(BPFOBJ) | $(TRUNNER_OUTPUT)
- 	$$(call $(TRUNNER_BPF_BUILD_RULE),$$<,$$@,			\
- 					  $(TRUNNER_BPF_CFLAGS),	\
- 					  $(TRUNNER_BPF_LDFLAGS))
-@@ -392,7 +391,7 @@ $(OUTPUT)/test_cpp: test_cpp.cpp $(OUTPUT)/test_core_extern.skel.h $(BPFOBJ)
- 	$(call msg,CXX,,$@)
- 	$(CXX) $(CFLAGS) $^ $(LDLIBS) -o $@
- 
--EXTRA_CLEAN := $(TEST_CUSTOM_PROGS)					\
-+EXTRA_CLEAN := $(TEST_CUSTOM_PROGS) $(SCRATCH_DIR)			\
- 	prog_tests/tests.h map_tests/tests.h verifier/tests.h		\
- 	feature								\
--	$(addprefix $(OUTPUT)/,*.o *.skel.h no_alu32 bpf_gcc tools)
-+	$(addprefix $(OUTPUT)/,*.o *.skel.h no_alu32 bpf_gcc)
+> 
+>>  	disk->fops		= &brd_fops;
+>>  	disk->private_data	= brd;
+>>  	disk->queue		= brd->brd_queue;
+>> @@ -468,6 +475,21 @@ static struct kobject *brd_probe(dev_t dev, int *part, void *data)
+>>  	return kobj;
+>>  }
+>>
+>> +static inline void brd_check_and_reset_par(void)
+>> +{
+>> +	if (unlikely(!rd_nr))
+>> +		rd_nr = 1;
+> 
+> zero rd_nr should work as expected, given user can create dev file via
+> mknod, and brd_probe() will be called for populate brd disk/queue when
+> the disk file is opened.
+> 
+>> +static inline void brd_check_and_reset_par(void)
+>> +{
+>> +       if (unlikely(!rd_nr))
+>> +               rd_nr = 1;
+>> +
+>> +       if (unlikely(!max_part))
+>> +               max_part = 1;
+> 
+> Another limit is that 'max_part' needs to be divided exactly by (1U <<
+> MINORBITS), something like:
+> 
+> 	max_part = 1UL << fls(max_part)
+
+Do we have to limit that 'max_part' needs to be divided exactly by (1U <<
+> MINORBITS)? As your suggestion, the i * max_part is larger than MINORMASK,
+we can allocate from extended devt.
+
+Thanks,
+Zhiqiang Liu
 
