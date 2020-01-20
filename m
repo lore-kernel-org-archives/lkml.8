@@ -2,94 +2,169 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C42A0C33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A71B1C33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A20A2073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:40:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DA972073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:42:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hxw6Ec/T"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z7EBYI7c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbgATIkz (ORCPT
+        id S1726991AbgATImA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 03:40:55 -0500
-Received: from mail-wr1-f42.google.com ([209.85.221.42]:35111 "EHLO
-        mail-wr1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726421AbgATIkz (ORCPT
+        Mon, 20 Jan 2020 03:42:00 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41353 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726075AbgATIl7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 03:40:55 -0500
-Received: by mail-wr1-f42.google.com with SMTP id g17so28509979wro.2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 00:40:54 -0800 (PST)
+        Mon, 20 Jan 2020 03:41:59 -0500
+Received: by mail-pf1-f194.google.com with SMTP id w62so15496307pfw.8;
+        Mon, 20 Jan 2020 00:41:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=YcyMDNxU6CeZD0M4XJTzTVAVqgpQcDsBZ5eIyxVur50=;
-        b=hxw6Ec/TOFHL1uviTFBXvHVns2s9jWeNiGPGY/t1nMnDss7ykWrKFU5OtlWIUYN/rn
-         CSz/bR6YM4gxEe17MPUqY2sokNN+JOcvbUGn2uDJDb3DIau1C1LqvB4qjiulY/yHM1CS
-         d/VfmvGC8KOnS0AHEyrqYUnG1QVsZgPJcxH8+tQSNrNuhR6Cjtso48v5pIUyorrMwyrg
-         VXYIFb27EiVo5/RXvhpRR1RlvZZU5jsohwFCoBsLc1fKCk9sUkeNZgw1v+m7IjsYaOo8
-         nQJWeVM7a+vNKAp0AigC4Y1uuJ067vY4nlXZ2IdjfSeym3L/srI6T/cKHXIb0xUZy8jY
-         gJPA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=EY2MDrWinifj7MCYl+z9onO507BA337ICgHM373gFUM=;
+        b=Z7EBYI7cGAGA0LYnhxJIxhm/AmdmvJcGkWQq574+rFyxqNkfBdMKlvg3XRDucT9lDw
+         VKeKbh6jGZQITq2/U9J9nZlRt46Q2DkCNszl1H84XpL/jU3DmIV4ILkDJWUN+cR+h+tX
+         454yTWc2UCPCQZF8BveHA7fAtaRxocpvYMzZ53KD/f9/EI5OT7zrqvy17LXyhJSxowgj
+         n1OYXtTmyfs8j6ob6+g6vP7stIG8Ge4Wq1ZFHB9Ddu3aDge2kzF+9nvh2eG74lo3sJ4c
+         YCOzTuI+79p621ggW2j9MS4d1gALEgDL8NcMRJp7blkpCdudhr4IdpX+KfrsGK57JHAZ
+         SBAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=YcyMDNxU6CeZD0M4XJTzTVAVqgpQcDsBZ5eIyxVur50=;
-        b=SMb+NcVh55OS3zO/e9wWnqe18fjljeJUK5G8BbjVQh9tr8xk0j3KayIDUEcOgAeIxq
-         ibidO0SjiufS6x68BGQXtTmmCQU+qgKIReoVRSwta0MggfU9qmiSBgdD8U3k95A3150I
-         AlkEtPXyNd24I9mhOXtAnX64WO3XlZWB+U21n8OY7NR94h6vXsdA9bAPfeHnQJrW4QUI
-         Xpb26PovELcwRjSuCaGd4Xdva8s5x/Ei25p0gDTrQnvmpBWgQ340iAcEB+HIQdSZ5k/I
-         mian9wVOzt9zcSznkzs6ch48/lIbsPHyLziRNkgGAU2xIpmHAxW0SDci82Nx3WH/x2/U
-         9flQ==
-X-Gm-Message-State: APjAAAW53u6SEmzuucKsaOH/6gnWtdu6E89RRCH4zgESkK0H8F5LwduG
-        OoDrJ9oaVx/S3C4fPa+EImnBpu0Qgdk=
-X-Google-Smtp-Source: APXvYqyFzecxKx1E4K2sGz5OeZKOZDc0OJZI0IE0kmHpxY+jcimDKMgxHvzb7SXw0xV4Pn/XfxamKg==
-X-Received: by 2002:adf:fd0d:: with SMTP id e13mr17024029wrr.421.1579509653290;
-        Mon, 20 Jan 2020 00:40:53 -0800 (PST)
-Received: from dell ([2.27.35.227])
-        by smtp.gmail.com with ESMTPSA id x6sm21451676wmi.44.2020.01.20.00.40.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 00:40:52 -0800 (PST)
-Date:   Mon, 20 Jan 2020 08:41:08 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Wen Su <Wen.Su@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, wsd_upstream@mediatek.com
-Subject: Re: [RESEND 0/4] Add Support for MediaTek PMIC MT6359 Regulator
-Message-ID: <20200120084108.GV15507@dell>
-References: <1579506450-21830-1-git-send-email-Wen.Su@mediatek.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1579506450-21830-1-git-send-email-Wen.Su@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=EY2MDrWinifj7MCYl+z9onO507BA337ICgHM373gFUM=;
+        b=Ch4wpI8JQPxyduY99HJjWY5eI+keETNiq1qA31R8hhdzWdPDze46w58e6+HBrkKDSC
+         yAstAmeVUU/A7xSpCsXCT8DbAVcfp4j6wWpK6wZc4SE9HxmRToXPxDUDLJNlFVbYUOEP
+         hQ/n190AJgrLDCZyuDJeD3QM7iuOGagDanlG+pxtzs/rLg20QRh82O0cC1kfixqD8urM
+         G6koHTXmBUDy3gmfTPcq9syCtfXHWJ7bG+ADlFulrZaXCcQtEzXGpM+G0Q0ui0pNQa8o
+         UnMup2GcN2uO66qw6BwitTrqPMZ/BnxojgfKqwqRhjcRt2StzJNDkqSfKVsogvmMe7pr
+         DqYw==
+X-Gm-Message-State: APjAAAV2QyKYQvp+peHZWfuZ/ILKINBBiRNHX7fvZQMmnCbglK+sEJMK
+        SihbrvsOgNpx/zLO4Q87hh8=
+X-Google-Smtp-Source: APXvYqxwN4NmF5om54ObzIn0da84s6+Cyh5NURt5Vp0Y16BCtacyYQlsdnCyq8yJyYKlGCCT3NHdJQ==
+X-Received: by 2002:a63:5062:: with SMTP id q34mr58778067pgl.378.1579509718742;
+        Mon, 20 Jan 2020 00:41:58 -0800 (PST)
+Received: from localhost.corp.microsoft.com ([167.220.255.5])
+        by smtp.googlemail.com with ESMTPSA id z6sm38259693pfa.155.2020.01.20.00.41.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 20 Jan 2020 00:41:58 -0800 (PST)
+From:   lantianyu1986@gmail.com
+X-Google-Original-From: Tianyu.Lan@microsoft.com
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        sashal@kernel.org, michael.h.kelley@microsoft.com
+Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vkuznets@redhat.com, stable@vger.kernel.org
+Subject: [PATCH V3] x86/Hyper-V: Balloon up according to request page number
+Date:   Mon, 20 Jan 2020 16:41:49 +0800
+Message-Id: <20200120084149.4791-1-Tianyu.Lan@microsoft.com>
+X-Mailer: git-send-email 2.14.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jan 2020, Wen Su wrote:
+From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-> This patchset add support to MT6359 PMIC regulator. MT6359 is primary
-> PMIC for MT6779 platform.
+Current code has assumption that balloon request memory size aligns
+with 2MB. But actually Hyper-V doesn't guarantee such alignment. When
+balloon driver receives non-aligned balloon request, it produces warning
+and balloon up more memory than requested in order to keep 2MB alignment.
+Remove the warning and balloon up memory according to actual requested
+memory size.
 
-This is not a proper cover-letter.  Please use the correct formatting,
-which can be provided to you for free using `git format-patch`.
+Fixes: f6712238471a ("hv: hv_balloon: avoid memory leak on alloc_error of 2MB memory block")
+Cc: stable@vger.kernel.org
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+---
+Change since v2:
+    - Remove check between request page number and alloc_unit
+    in the alloc_balloon_pages() because it's redundant with
+    new change.
+    - Remove the "continue" just follwoing alloc_unit switch
+     from 2MB to 4K in order to avoid skipping allocated
+     memory.
 
+Change since v1:
+    - Change logic of switching alloc_unit from 2MB to 4KB
+    in the balloon_up() to avoid redundant iteration when
+    handle non-aligned page request.
+    - Remove 2MB alignment operation and comment in balloon_up()
+---
+ drivers/hv/hv_balloon.c | 17 ++++-------------
+ 1 file changed, 4 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+index 7f3e7ab22d5d..73092a7a3345 100644
+--- a/drivers/hv/hv_balloon.c
++++ b/drivers/hv/hv_balloon.c
+@@ -1681,10 +1681,7 @@ static unsigned int alloc_balloon_pages(struct hv_dynmem_device *dm,
+ 	unsigned int i, j;
+ 	struct page *pg;
+ 
+-	if (num_pages < alloc_unit)
+-		return 0;
+-
+-	for (i = 0; (i * alloc_unit) < num_pages; i++) {
++	for (i = 0; i < num_pages / alloc_unit; i++) {
+ 		if (bl_resp->hdr.size + sizeof(union dm_mem_page_range) >
+ 			HV_HYP_PAGE_SIZE)
+ 			return i * alloc_unit;
+@@ -1722,7 +1719,7 @@ static unsigned int alloc_balloon_pages(struct hv_dynmem_device *dm,
+ 
+ 	}
+ 
+-	return num_pages;
++	return i * alloc_unit;
+ }
+ 
+ static void balloon_up(union dm_msg_info *msg_info)
+@@ -1737,9 +1734,6 @@ static void balloon_up(union dm_msg_info *msg_info)
+ 	long avail_pages;
+ 	unsigned long floor;
+ 
+-	/* The host balloons pages in 2M granularity. */
+-	WARN_ON_ONCE(num_pages % PAGES_IN_2M != 0);
+-
+ 	/*
+ 	 * We will attempt 2M allocations. However, if we fail to
+ 	 * allocate 2M chunks, we will go back to PAGE_SIZE allocations.
+@@ -1749,14 +1743,13 @@ static void balloon_up(union dm_msg_info *msg_info)
+ 	avail_pages = si_mem_available();
+ 	floor = compute_balloon_floor();
+ 
+-	/* Refuse to balloon below the floor, keep the 2M granularity. */
++	/* Refuse to balloon below the floor. */
+ 	if (avail_pages < num_pages || avail_pages - num_pages < floor) {
+ 		pr_warn("Balloon request will be partially fulfilled. %s\n",
+ 			avail_pages < num_pages ? "Not enough memory." :
+ 			"Balloon floor reached.");
+ 
+ 		num_pages = avail_pages > floor ? (avail_pages - floor) : 0;
+-		num_pages -= num_pages % PAGES_IN_2M;
+ 	}
+ 
+ 	while (!done) {
+@@ -1770,10 +1763,8 @@ static void balloon_up(union dm_msg_info *msg_info)
+ 		num_ballooned = alloc_balloon_pages(&dm_device, num_pages,
+ 						    bl_resp, alloc_unit);
+ 
+-		if (alloc_unit != 1 && num_ballooned == 0) {
++		if (alloc_unit != 1 && num_ballooned != num_pages)
+ 			alloc_unit = 1;
+-			continue;
+-		}
+ 
+ 		if (num_ballooned == 0 || num_ballooned == num_pages) {
+ 			pr_debug("Ballooned %u out of %u requested pages.\n",
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.14.5
+
