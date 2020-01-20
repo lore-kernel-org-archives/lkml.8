@@ -2,124 +2,164 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE30C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95CF3C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C06D92073D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:33:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Br3VK53h"
+	by mail.kernel.org (Postfix) with ESMTP id 680F32087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:40:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgATKd7 (ORCPT
+        id S1726650AbgATKkQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 05:33:59 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44223 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726125AbgATKd6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 05:33:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579516437;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=qJR64Lgz5zSWEXU05VYTGaMjJP53H0YAi/lnRrE9Dq8=;
-        b=Br3VK53hLLiM2dyd2kDmpqYKq18VpIqI3/f5mB+j+VIFOgT7O3hQsvCtPQIDOYdX2xqecY
-        9zrIZl2SQYGDJLwUDi7XDL0Gz+2wFg8msF9JJXtuMhbnXyfFvtprzc8ekWXqlDCZHyoS0h
-        vWLRT/a4Il8X4ZcFkCc5k+SXMHAt+5M=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-296--bnBkz4XORO4N9xWid2HZA-1; Mon, 20 Jan 2020 05:33:56 -0500
-X-MC-Unique: -bnBkz4XORO4N9xWid2HZA-1
-Received: by mail-wr1-f72.google.com with SMTP id f15so14074822wrr.2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 02:33:56 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=qJR64Lgz5zSWEXU05VYTGaMjJP53H0YAi/lnRrE9Dq8=;
-        b=OhRk0o1o/8jAEcOZqv+ojRpPz5iV8/Re9aD5VpaHpB81HWcU+r5QmVi7uxziNIiIDo
-         OM3du+3xy8JapITHDHhO79Zl5y8NhXgh7zEDMmIsbOI3bdlch9PEMS513SgxpzBI5ryZ
-         LkXtGu9udOHlZLz1iUvPPTz3+XiJUH4rogky/tTVgyJMfZok6TK+WjKKEydmHpA3o0is
-         MqSgA5LEKiUiHqXmAWoANy6nG8uBMiwEyime8dzR7p+/RSEMOZqc8jL7d7aSBHuOftnN
-         jN4BvDo1w3uN2Qh7fENpyNytfX7oWyDne0fh9VIAukrZTRbBNbOAfKU9fD49YGszAI4m
-         Yseg==
-X-Gm-Message-State: APjAAAW7ExjkUhKZJF/ziaxayNDlonKJ04WLmhzF+KssMdrhNWUITGXH
-        MuganXHqM1tE7v3EK1fVdg0lIP9xBB2iTwwy0YmHtHdBRU2h94MrTXb9+uukOCKkpluuP2RXnAI
-        26txiOnVCJar5Z8TpMQeF1HWy
-X-Received: by 2002:a7b:cf01:: with SMTP id l1mr18049011wmg.86.1579516435516;
-        Mon, 20 Jan 2020 02:33:55 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxPzprOup/ucbM1P9rBV9XmWxl30oih10hcKT7ltFCGUEvFlIONj+0vKzn9cx1PD42odqSiUA==
-X-Received: by 2002:a7b:cf01:: with SMTP id l1mr18048981wmg.86.1579516435320;
-        Mon, 20 Jan 2020 02:33:55 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id e18sm46511363wrw.70.2020.01.20.02.33.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 02:33:54 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     linmiaohe <linmiaohe@huawei.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
-        pbonzini@redhat.com, rkrcmar@redhat.com,
-        sean.j.christopherson@intel.com, wanpengli@tencent.com,
-        jmattson@google.com, joro@8bytes.org, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com
-Subject: Re: [PATCH] KVM: apic: short-circuit kvm_apic_accept_pic_intr() when pic intr is accepted
-In-Reply-To: <1579315837-15994-1-git-send-email-linmiaohe@huawei.com>
-References: <1579315837-15994-1-git-send-email-linmiaohe@huawei.com>
-Date:   Mon, 20 Jan 2020 11:33:53 +0100
-Message-ID: <87sgkafmcu.fsf@vitty.brq.redhat.com>
+        Mon, 20 Jan 2020 05:40:16 -0500
+Received: from relay.sw.ru ([185.231.240.75]:38280 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726125AbgATKkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 05:40:16 -0500
+Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1itUTD-0008KJ-NK; Mon, 20 Jan 2020 13:39:47 +0300
+Subject: Re: [PATCH v2 2/5] mm: introduce external memory hinting API
+To:     Michal Hocko <mhocko@kernel.org>, sspatil@google.com
+Cc:     kirill@shutemov.name, minchan@kernel.org,
+        akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-api@vger.kernel.org,
+        oleksandr@redhat.com, surenb@google.com, timmurray@google.com,
+        dancol@google.com, sonnyrao@google.com, bgeffon@google.com,
+        hannes@cmpxchg.org, shakeelb@google.com, joaodias@google.com,
+        christian.brauner@ubuntu.com, sjpark@amazon.de
+References: <20200116235953.163318-1-minchan@kernel.org>
+ <20200116235953.163318-3-minchan@kernel.org>
+ <20200117115225.GV19428@dhcp22.suse.cz> <20200117155837.bowyjpndfiym6cgs@box>
+ <20200117173239.GB140922@google.com> <20200117212653.7uftw3lk35oykkmb@box>
+ <20200119161431.GA94410@google.com> <20200120075825.GH18451@dhcp22.suse.cz>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <e516b6c0-1868-5f0a-d18c-f0e8de5a2326@virtuozzo.com>
+Date:   Mon, 20 Jan 2020 13:39:47 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200120075825.GH18451@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-linmiaohe <linmiaohe@huawei.com> writes:
+On 20.01.2020 10:58, Michal Hocko wrote:
+> On Sun 19-01-20 08:14:31, sspatil@google.com wrote:
+>> On Sat, Jan 18, 2020 at 12:26:53AM +0300, Kirill A. Shutemov wrote:
+>>> On Fri, Jan 17, 2020 at 09:32:39AM -0800, Minchan Kim wrote:
+>>>> On Fri, Jan 17, 2020 at 06:58:37PM +0300, Kirill A. Shutemov wrote:
+>>>>> On Fri, Jan 17, 2020 at 12:52:25PM +0100, Michal Hocko wrote:
+>>>>>> On Thu 16-01-20 15:59:50, Minchan Kim wrote:
+>>>>>>> There is usecase that System Management Software(SMS) want to give
+>>>>>>> a memory hint like MADV_[COLD|PAGEEOUT] to other processes and
+>>>>>>> in the case of Android, it is the ActivityManagerService.
+>>>>>>>
+>>>>>>> It's similar in spirit to madvise(MADV_WONTNEED), but the information
+>>>>>>> required to make the reclaim decision is not known to the app. Instead,
+>>>>>>> it is known to the centralized userspace daemon(ActivityManagerService),
+>>>>>>> and that daemon must be able to initiate reclaim on its own without
+>>>>>>> any app involvement.
+>>>>>>>
+>>>>>>> To solve the issue, this patch introduces new syscall process_madvise(2).
+>>>>>>> It uses pidfd of an external processs to give the hint.
+>>>>>>>
+>>>>>>>  int process_madvise(int pidfd, void *addr, size_t length, int advise,
+>>>>>>> 			unsigned long flag);
+>>>>>>>
+>>>>>>> Since it could affect other process's address range, only privileged
+>>>>>>> process(CAP_SYS_PTRACE) or something else(e.g., being the same UID)
+>>>>>>> gives it the right to ptrace the process could use it successfully.
+>>>>>>> The flag argument is reserved for future use if we need to extend the
+>>>>>>> API.
+>>>>>>>
+>>>>>>> I think supporting all hints madvise has/will supported/support to
+>>>>>>> process_madvise is rather risky. Because we are not sure all hints make
+>>>>>>> sense from external process and implementation for the hint may rely on
+>>>>>>> the caller being in the current context so it could be error-prone.
+>>>>>>> Thus, I just limited hints as MADV_[COLD|PAGEOUT] in this patch.
+>>>>>>>
+>>>>>>> If someone want to add other hints, we could hear hear the usecase and
+>>>>>>> review it for each hint. It's more safe for maintainace rather than
+>>>>>>> introducing a buggy syscall but hard to fix it later.
+>>>>>>
+>>>>>> I have brought this up when we discussed this in the past but there is
+>>>>>> no reflection on that here so let me bring that up again. 
+>>>>>>
+>>>>>> I believe that the interface has an inherent problem that it is racy.
+>>>>>> The external entity needs to know the address space layout of the target
+>>>>>> process to do anyhing useful on it. The address space is however under
+>>>>>> the full control of the target process though and the external entity
+>>>>>> has no means to find out that the layout has changed. So
+>>>>>> time-to-check-time-to-act is an inherent problem.
+>>>>>>
+>>>>>> This is a serious design flaw and it should be explained why it doesn't
+>>>>>> matter or how to use the interface properly to prevent that problem.
+>>>>>
+>>>>> I agree, it looks flawed.
+>>>>>
+>>>>> Also I don't see what System Management Software can generically do on
+>>>>> sub-process level. I mean how can it decide which part of address space is
+>>>>> less important than other.
+>>>>>
+>>>>> I see how a manager can indicate that this process (or a group of
+>>>>> processes) is less important than other, but on per-addres-range basis?
+>>>>
+>>>> For example, memory ranges shared by several processes or critical for the
+>>>> latency, we could avoid those ranges to be cold/pageout to prevent
+>>>> unncecessary CPU burning/paging.
+>>>
+>>> Hmm.. I still don't see why any external entity has a better (or any)
+>>> knowledge about the matter. The process has to do this, no?
+>>
+>> FWIW, I totally agree with the time-to-check-time-to-react problem. However,
+>> I'd like to clarify the ActivityManager/SystemServer case (I'll call it
+>> SystemServer from now on)
+>>
+>> For Android, every application (including the special SystemServer) are forked
+>> from Zygote. The reason ofcourse is to share as many libraries and classes between
+>> the two as possible to benefit from the preloading during boot.
+>>
+>> After applications start, (almost) all of the APIs  end up calling into this
+>> SystemServer process over IPC (binder) and back to the application.
+>>
+>> In a fully running system, the SystemServer monitors every single process
+>> periodically to calculate their PSS / RSS and also decides which process is
+>> "important" to the user for interactivity.
+>>
+>> So, because of how these processes start _and_ the fact that the SystemServer
+>> is looping to monitor each process, it does tend to *know* which address
+>> range of the application is not used / useful.
+>>
+>> Besides, we can never rely on applications to clean things up themselves.
+>> We've had the "hey app1, the system is low on memory, please trim your
+>> memory usage down" notifications for a long time[1]. They rely on
+>> applications honoring the broadcasts and very few do.
+>>
+>> So, if we want to avoid the inevitable killing of the application and
+>> restarting it, some way to be able to tell the OS about unimportant memory in
+>> these applications will be useful.
+> 
+> This is a useful information that should be a part of the changelog. I
+> do see how the current form of the API might fit into Android model
+> without many problems. But we are not designing an API for a single
+> usecase, right? In a highly cooperative environments you can use ptrace
+> code injection as mentioned by Kirill. Or is there any fundamental
+> problem about that?
 
-> From: Miaohe Lin <linmiaohe@huawei.com>
->
-> Short-circuit kvm_apic_accept_pic_intr() when pic intr is accepted, there
-> is no need to proceed further. Also remove unnecessary var r.
->
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-> ---
->  arch/x86/kvm/lapic.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> index 679692b55f6d..502c7b0d8fdb 100644
-> --- a/arch/x86/kvm/lapic.c
-> +++ b/arch/x86/kvm/lapic.c
-> @@ -2370,14 +2370,13 @@ int kvm_apic_has_interrupt(struct kvm_vcpu *vcpu)
->  int kvm_apic_accept_pic_intr(struct kvm_vcpu *vcpu)
->  {
->  	u32 lvt0 = kvm_lapic_get_reg(vcpu->arch.apic, APIC_LVT0);
-> -	int r = 0;
->  
->  	if (!kvm_apic_hw_enabled(vcpu->arch.apic))
-> -		r = 1;
-> +		return 1;
->  	if ((lvt0 & APIC_LVT_MASKED) == 0 &&
->  	    GET_APIC_DELIVERY_MODE(lvt0) == APIC_MODE_EXTINT)
-> -		r = 1;
-> -	return r;
-> +		return 1;
-> +	return 0;
->  }
->  
->  void kvm_inject_apic_timer_irqs(struct kvm_vcpu *vcpu)
+There could be only problems with multi-threads applications, which
+poll the state of another threads (and exit with error, when they
+found that someone is traced). But this may be workarounded by freezer
+cgroup making all the thread group is frozen. It should guarantee
+consistent state of the whole process after attaching.
 
-My eyes would've appreciated a blank line after each "return 1;" but you
-patch makes the code a bit nicer anyway, thanks.
-
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-
--- 
-Vitaly
+Kirill
 
