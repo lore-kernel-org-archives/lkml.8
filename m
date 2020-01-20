@@ -2,79 +2,146 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E712C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:28:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96ECDC33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:30:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB0A221835
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:28:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E13621D7D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:30:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Y0PPMzgM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KbBc/4dc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727045AbgATM22 (ORCPT
+        id S1726974AbgATMas (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 07:28:28 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:35008 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726798AbgATM21 (ORCPT
+        Mon, 20 Jan 2020 07:30:48 -0500
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:43790 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726626AbgATMas (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 07:28:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=jr9/irqC8ShIKukDwNJnAL4WQ23TMTPSdm6Vmh8GkUA=; b=Y0PPMzgMkMNwvHE1get2590/h
-        bxldWzviwYqXtGrEbCR2BG91JkKWC0ZoenQfzbiBi4NwGioI7DU1Ng+zSfLSCgn4gnurhTZkLk/9F
-        YlI2NDeyOY+tU22fm0btLLTow8SFTIn2tEcn80lPV6zNeXLyhrmf6OauI1JVBk+RVcNFxz7HnjZYN
-        j+W/LphtaXTuQiQHIBQi8/h4gwrig9R7REF94tcmo89FHYGbkK8iUh0SgdSrGWoEgp/LDcXrPamfS
-        jHeA6GXUbh/9R3RuV3dqhVbul8msVZgpa317mZq/aX9fsM/3WplHTU2zc5joi5RGKUd4Et33Ev4LG
-        DlZhzXxpg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1itWAH-0005X8-Ej; Mon, 20 Jan 2020 12:28:21 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 961063035D4;
-        Mon, 20 Jan 2020 13:26:39 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 3F23D2B6A0696; Mon, 20 Jan 2020 13:28:18 +0100 (CET)
-Date:   Mon, 20 Jan 2020 13:28:18 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Scott Wood <swood@redhat.com>
-Cc:     Frederic Weisbecker <fweisbec@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] Track loadavg changes during full nohz
-Message-ID: <20200120122818.GO14879@hirez.programming.kicks-ass.net>
-References: <1578736419-14628-1-git-send-email-swood@redhat.com>
+        Mon, 20 Jan 2020 07:30:48 -0500
+Received: by mail-ua1-f67.google.com with SMTP id o42so11383612uad.10
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 04:30:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Lv1MPNHFWjo0ON39JmT/WKcoiXYrc2VnESryks917GQ=;
+        b=KbBc/4dcRtTUTAqEZILlwUr8aY7RicPqFPhMqaSmSgzlwm0dy3IJzM7b4zyo+Zrzsw
+         svnxqpHLqmfu/U39uaJkhyW6K4YfC4pTchVUYxbYpLtPgb7cxAdYtkEh7YoHdGewhpRs
+         h3LU2bIXgQgYwpw16fgmeiibpjlKKOANnAEJDLHchHtRomnhB4Jq4HfvqX2+RRTjB5lQ
+         A/e0AynR6pmlCcZS02DbmEQOQHzOr7HPiFkK+pzIahsa5bEstoVabJQ3/nML6fq8QpHd
+         EMKShIQrb4iLXPTncGaba/ZAh00ITKCYC0nYUwpzcjxlv+J8FAVkTUwTGCAX6fUwgQZZ
+         PO8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Lv1MPNHFWjo0ON39JmT/WKcoiXYrc2VnESryks917GQ=;
+        b=M4veAOW4sdWSy0NErL4edZMugxYZnr6fJWCkFgtvRIwZRtoZZTAonmG3wrV5kkbPj/
+         LC2RGCb63zjeFAS2BndOuJdFonJxGWdcRUYTy/gg3q7AKz+TTfiI/fyFavHyeWOupeKk
+         duUCsmeEnwgOz6BrWxqxdBDwpiSnH3UzJQCRLrVp+KZBfUp0rp8HnWVq5kmAtU33FBN9
+         MuoWu4c+PQ+zP7rfnQkG7XgaSbhVqFsRmi0CctHlJIMZUfJIX8NgFS6Lc1H6qBjODe7y
+         dZ8oxpsATz7ozFSHtqXtKCPIFIfIwtmYuehwqjEhxhtNVVqxvBfXK55zeq99sUyn2Biq
+         NOtQ==
+X-Gm-Message-State: APjAAAW5OWckFyVkYsXNTGc0aP+IhWt4WJ3jMtT2mNWYGlkKNmILh/Jz
+        l3QcOjFxyFIlIeFivNpmgkHQOaV//Xsfn+ltQnOnEA==
+X-Google-Smtp-Source: APXvYqzNrQBcQkFDTb0eI4iFF9c5IVvIUVfCzKrf7Q91wzKsTXRso+/BH2LPw2j43fbOz+5HHbJhZ8ItCp5b05IWoZc=
+X-Received: by 2002:ab0:740e:: with SMTP id r14mr28922933uap.104.1579523447188;
+ Mon, 20 Jan 2020 04:30:47 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1578736419-14628-1-git-send-email-swood@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1579194192-7942-2-git-send-email-vbadigan@codeaurora.org> <1579519045-26467-1-git-send-email-vbadigan@codeaurora.org>
+In-Reply-To: <1579519045-26467-1-git-send-email-vbadigan@codeaurora.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Mon, 20 Jan 2020 13:30:09 +0100
+Message-ID: <CAPDyKFq4yE6bcxjFrw0jzqL6i73jKSXUGshSDtFuNA+yaWLjpw@mail.gmail.com>
+Subject: Re: [PATCH V2 1/2] mmc: sdhci: Let a vendor driver supply and update
+ ADMA descriptor size
+To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Sahitya Tummala <stummala@codeaurora.org>,
+        Sayali Lokhande <sayalil@codeaurora.org>, cang@codeaurora.org,
+        Ram Prakash Gupta <rampraka@codeaurora.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 11, 2020 at 04:53:37AM -0500, Scott Wood wrote:
-> v2: drop the first couple patches that appear unnecessary
-> 
-> Peter Zijlstra (Intel) (1):
->   timers/nohz: Update nohz load in remote tick
-> 
-> Scott Wood (1):
->   sched/core: Don't skip remote tick for idle cpus
-> 
->  include/linux/sched/nohz.h |  2 ++
->  kernel/sched/core.c        | 22 +++++++++++++---------
->  kernel/sched/loadavg.c     | 33 +++++++++++++++++++++++----------
->  3 files changed, 38 insertions(+), 19 deletions(-)
+On Mon, 20 Jan 2020 at 12:26, Veerabhadrarao Badiganti
+<vbadigan@codeaurora.org> wrote:
+>
+> Let a vendor driver supply the maximum descriptor size that it
+> can operate on. ADMA descriptor table would be allocated using this
+> supplied size.
+> If any SD Host controller is of version prior to v4.10 spec
+> but supports 16byte descriptor, this change allows them to supply
+> correct descriptor size for ADMA table allocation.
+>
+> Also let a vendor driver update the descriptor size by overriding
+> sdhc_host->desc_size if it has to operates on a different descriptor
+> sizes in different conditions.
+>
+> Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
+> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
 
-Thanks, I've queued them.
+Applied for next, and by adding Adrian's ack, thanks!
+
+Kind regards
+Uffe
+
+
+> ---
+>  drivers/mmc/host/sdhci.c | 13 +++++++------
+>  drivers/mmc/host/sdhci.h |  3 ++-
+>  2 files changed, 9 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> index 3140fe2..44fb446 100644
+> --- a/drivers/mmc/host/sdhci.c
+> +++ b/drivers/mmc/host/sdhci.c
+> @@ -3822,14 +3822,15 @@ int sdhci_setup_host(struct sdhci_host *host)
+>                 void *buf;
+>
+>                 if (host->flags & SDHCI_USE_64_BIT_DMA) {
+> -                       host->adma_table_sz = host->adma_table_cnt *
+> -                                             SDHCI_ADMA2_64_DESC_SZ(host);
+> -                       host->desc_sz = SDHCI_ADMA2_64_DESC_SZ(host);
+> +                       if (!host->alloc_desc_sz)
+> +                               host->alloc_desc_sz =
+> +                                       SDHCI_ADMA2_64_DESC_SZ(host);
+>                 } else {
+> -                       host->adma_table_sz = host->adma_table_cnt *
+> -                                             SDHCI_ADMA2_32_DESC_SZ;
+> -                       host->desc_sz = SDHCI_ADMA2_32_DESC_SZ;
+> +                       host->alloc_desc_sz = SDHCI_ADMA2_32_DESC_SZ;
+>                 }
+> +               host->desc_sz = host->alloc_desc_sz;
+> +               host->adma_table_sz = host->adma_table_cnt *
+> +                                             host->desc_sz;
+>
+>                 host->align_buffer_sz = SDHCI_MAX_SEGS * SDHCI_ADMA2_ALIGN;
+>                 /*
+> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+> index 0ed3e0e..10bda3a 100644
+> --- a/drivers/mmc/host/sdhci.h
+> +++ b/drivers/mmc/host/sdhci.h
+> @@ -554,7 +554,8 @@ struct sdhci_host {
+>         dma_addr_t adma_addr;   /* Mapped ADMA descr. table */
+>         dma_addr_t align_addr;  /* Mapped bounce buffer */
+>
+> -       unsigned int desc_sz;   /* ADMA descriptor size */
+> +       unsigned int desc_sz;   /* ADMA current descriptor size */
+> +       unsigned int alloc_desc_sz;     /* ADMA descr. max size host supports */
+>
+>         struct workqueue_struct *complete_wq;   /* Request completion wq */
+>         struct work_struct      complete_work;  /* Request completion work */
+> --
+> Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
