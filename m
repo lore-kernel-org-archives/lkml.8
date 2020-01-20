@@ -2,105 +2,115 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93438C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:41:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71BCAC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63CEA217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:41:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VIIncSWa"
+	by mail.kernel.org (Postfix) with ESMTP id 41CC822527
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:43:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579535001;
+	bh=k5hulNuhjJN1vpqs8RWygBeDicqghWeZskZmfEGyJyA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cTWHRNpwtPfFPycq6NZUI2tW3siUI2v93H8oOMlLjy3V0PLnuMbh3CS8ACCT6H9Pn
+	 RRjYC4W4O0di4fl1vvUy3JyV9IzBJ5eDQH8jItrVz+no4TgmOLntlTlCoH8qHLwJff
+	 eRJiIDmKFro0psXl/LSwASt9s/Az57x7yENLxQuI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729126AbgATPl3 (ORCPT
+        id S1728783AbgATPnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 10:41:29 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:31376 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726642AbgATPl3 (ORCPT
+        Mon, 20 Jan 2020 10:43:20 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43214 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726642AbgATPnU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 10:41:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579534888;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NfFFq+70X6qMf8r4MuhAIxjiC5PLXTTi4WgHQp9hBEw=;
-        b=VIIncSWaXCSFCAzCDHRvM7Svzpxmm56oFCWZpexN1XuWEof1KLAsbJsqW8mgMCkDY0LgKQ
-        +zxsVmZw1Hfcx2iE1QGBtKbI/QqUwfA3065xwytYBigJptR2hxKJsjtqd2wqplRtXrfuzO
-        hBQee3nKDMXc825vVKNUu195UnDEPmY=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-161-BXJpP6TdNk-8ENCuo2gZZQ-1; Mon, 20 Jan 2020 10:41:26 -0500
-X-MC-Unique: BXJpP6TdNk-8ENCuo2gZZQ-1
-Received: by mail-wm1-f69.google.com with SMTP id h130so3816848wme.7
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 07:41:26 -0800 (PST)
+        Mon, 20 Jan 2020 10:43:20 -0500
+Received: by mail-wr1-f68.google.com with SMTP id d16so30073903wre.10
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 07:43:18 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NfFFq+70X6qMf8r4MuhAIxjiC5PLXTTi4WgHQp9hBEw=;
-        b=AFZH+vcjIWB6c4FG7mHLVmLsPl/kqqQe2xohucK8qa98xMlhOyqwiBFWkpIql+7BZs
-         p43JrIAv3tStXzygpBbhaijuLekhdkCYN/tQwKkhCILHiXuuAU8BTDDMuofDOLa3bTcp
-         x2dtsHeWe07u1wwXUJfup1Ax14tMAUTCya6a+p+PwVbIkzF4dSoA2UYPcwm2zklOYP5m
-         nNFKENzw/oZzw0RsQSgK3OMP501oyt2zyfL+wuvwPM0XaTpanc8zzyZJ1MSjz177uFSa
-         NbLgZ0esIM/454kzbuF1XLorY/Ip/s3Lg7w+bX4wffyVQfE8qRfmINHqrv0+ETa/a3pw
-         JoNg==
-X-Gm-Message-State: APjAAAWnHsBnEh/LJkJdD1/eod7bcdXrySvZSZRM7/qUIeV+Vo35pbwq
-        aPCGW/bgkVZtbG2ONb5fyO8lmQLBviNrsnJH6CkgmWyQ0W+J58yvof/f0QhyNsC8ElX0mmCtInn
-        qwgbMQ9khZemce4pi+eH8pdrh
-X-Received: by 2002:adf:f091:: with SMTP id n17mr68437wro.387.1579534885718;
-        Mon, 20 Jan 2020 07:41:25 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxeN1H9XOiFOvdvahLayiiufSFu8dp6MB099coHjd9OyFt/De8dDdWWcXre82VFxJtVqeW/4A==
-X-Received: by 2002:adf:f091:: with SMTP id n17mr68392wro.387.1579534885056;
-        Mon, 20 Jan 2020 07:41:25 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:b509:fc01:ee8a:ca8a? ([2001:b07:6468:f312:b509:fc01:ee8a:ca8a])
-        by smtp.gmail.com with ESMTPSA id s65sm4968546wmf.48.2020.01.20.07.41.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Jan 2020 07:41:24 -0800 (PST)
-Subject: Re: [RFC] Revert "kvm: nVMX: Restrict VMX capability MSR changes"
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Liran Alon <liran.alon@oracle.com>
-References: <20200120151141.227254-1-vkuznets@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <30525d58-10de-abb4-8dad-228da766ff82@redhat.com>
-Date:   Mon, 20 Jan 2020 16:41:27 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=Sj2OJDyUF+Gs3NUJLayq5kxeopk2pOJl5Jx9/Iosi0s=;
+        b=JmLZ/NsP/uskmIxQQVn37UOx8ymsmEIwaLKQL4s9CAOzDBq6GPoLfKX0PIp1gsq8JC
+         ycftxhlHzNH9AT0S+QT6IhIFQBoARiL50Zj6h4ywUbsknWbwFxZ6h2Pp1zi85Akq+VIP
+         nkdL5PWKTO8uXUWiC+suRE4m7YoURKXxllGCQEvWFYWFDODvKz5srBYe+WnhQZ6EEa1C
+         Z1qMLBRZy8VP/qapJr0yj9/Zr1vVgIYC3BsiAyUqBaUNBgDOqrtCi0GNHiODxq1PeWWr
+         tBp0ShUof5RiwK7SfAMCsQSgLJfRBnMiYLppKjfSs13GszcrG2O8YTca6nhgXjDxxY3s
+         vnMw==
+X-Gm-Message-State: APjAAAWTrj0sNX14uJ+c6/Ul9TLpI1FemzKmx0fLgvqfFXtZ3KHaQkds
+        OPBsy2F3HD8BycKXdB/f82c=
+X-Google-Smtp-Source: APXvYqxeiJDkSuTikFlnLFD18uLcUXUfw88VtFEHnGvcvq5ZQ4uskDSiDHvv+NORnSeanVqL3Rpk0g==
+X-Received: by 2002:adf:c145:: with SMTP id w5mr98337wre.205.1579534998158;
+        Mon, 20 Jan 2020 07:43:18 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id s3sm23187912wmh.25.2020.01.20.07.43.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jan 2020 07:43:16 -0800 (PST)
+Date:   Mon, 20 Jan 2020 16:43:15 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Qian Cai <cai@lca.pw>, Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -mm v2] mm/page_isolation: fix potential warning from user
+Message-ID: <20200120154315.GK18451@dhcp22.suse.cz>
+References: <20200120131909.813-1-cai@lca.pw>
+ <8c56268d-9b8a-f62e-eca9-7707852a2aaf@redhat.com>
+ <ba3215a2-d616-c636-e70d-99bb8f504292@redhat.com>
+ <96675869-3815-4E98-8492-1D84F5B42AED@lca.pw>
+ <74aebdfe-e727-acd6-e664-6e63948a68ae@redhat.com>
+ <F8997A77-7F52-4C0C-8045-F39C57B4CC74@lca.pw>
+ <aa5f235e-6449-1531-1355-6974f3d38740@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200120151141.227254-1-vkuznets@redhat.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aa5f235e-6449-1531-1355-6974f3d38740@redhat.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/01/20 16:11, Vitaly Kuznetsov wrote:
+On Mon 20-01-20 15:13:54, David Hildenbrand wrote:
+> On 20.01.20 15:11, Qian Cai wrote:
+> >> On Jan 20, 2020, at 9:01 AM, David Hildenbrand <david@redhat.com> wrote:
+> >> On 20.01.20 14:56, Qian Cai wrote:
+[...]
+> >>>> FWIW, I'd prefer this change without any such cleanups (e.g., I don't
+> >>>> like returning a bool from this function and the IS_ERR handling, makes
+> >>>> the function harder to read than before)
+> >>>
+> >>> What is Michal or Andrew’s opinion? BTW, a bonus point to return a bool
+> >>> is that it helps the code robustness in general, as UBSAN will be able to
+> >>> catch any abuse.
+> >>>
+> >>
+> >> A return type of bool on a function that does not test a property
+> >> ("has_...", "is"...") is IMHO confusing.
+> > 
+> > That is fine. It could be renamed to set_migratetype_is_isolate() or
+> > is_set_migratetype_isolate() which seems pretty minor because we
+> > have no consistency in the naming of this in linux kernel at all, i.e.,
+> > many existing bool function names without those test of properties. 
 > 
-> RFC. I think the check for vmx->nested.vmxon is legitimate for everything
-> but restore so removing it (what I do with the revert) is likely a no-go.
-> I'd like to gather opinions on the proper fix: should we somehow check
-> that the vCPU is in 'restore' start (has never being run) and make
-> KVM_SET_MSRS pass or should we actually mandate that KVM_SET_NESTED_STATE
-> is run after KVM_SET_MSRS by userspace?
+> It does not query a property, so "is_set_migratetype_isolate()" is plain
+> wrong.
 > 
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Anyhow, Michal does not seem to care.
 
-I think this should be fixed in QEMU, by doing KVM_SET_MSRS for feature
-MSRs way earlier.  I'll do it since I'm currently working on a patch to
-add a KVM_SET_MSR for the microcode revision.
+Well, TBH I have missed this change. My bad. I have mostly checked that
+the WARN_ONCE is not gated by the check and didn't expect more changes.
+But I have likely missed that change in the previous version already.
+You guys are too quick with new version to my standard.
 
-Thanks,
-
-Paolo
-
+Anyway, I do agree that bool is clumsy here. Returning false on success
+is just head scratching. Nobody really consumes the errno value but I
+would just leave it that way or if there is a strong need to change then
+do it in a separate patch.
+-- 
+Michal Hocko
+SUSE Labs
