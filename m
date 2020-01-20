@@ -2,107 +2,81 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29788C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0CCEC33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEBEF207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:45:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 878DA207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:48:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbgATLpD (ORCPT
+        id S1726958AbgATLse (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 06:45:03 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:49716 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726589AbgATLpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 06:45:02 -0500
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 5F8E6EBFB9287DB8B0BD;
-        Mon, 20 Jan 2020 19:45:01 +0800 (CST)
-Received: from [127.0.0.1] (10.173.220.179) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Mon, 20 Jan 2020
- 19:44:52 +0800
-Subject: Re: [PATCH] jffs2: move jffs2_init_inode_info() just after allocating
- inode
-To:     <viro@zeniv.linux.org.uk>
-CC:     <ast@kernel.org>, <daniel@iogearbox.net>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mtd@lists.infradead.org>, <yihuaijie@huawei.com>,
-        <zhongguohua1@huawei.com>, <chenjie6@huawei.com>
-References: <20200106080411.41394-1-yi.zhang@huawei.com>
-From:   "zhangyi (F)" <yi.zhang@huawei.com>
-Message-ID: <1559fa23-525b-5dad-220e-2ab2821d33eb@huawei.com>
-Date:   Mon, 20 Jan 2020 19:44:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Mon, 20 Jan 2020 06:48:34 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:35079 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726589AbgATLse (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 06:48:34 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1itVXk-00074F-Sj; Mon, 20 Jan 2020 12:48:32 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1itVXk-0008IH-Iz; Mon, 20 Jan 2020 12:48:32 +0100
+Date:   Mon, 20 Jan 2020 12:48:32 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     "yukuai (C)" <yukuai3@huawei.com>
+Cc:     thierry.reding@gmail.com, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, zhengbin13@huawei.com,
+        yi.zhang@huawei.com
+Subject: Re: [PATCH] pwm: remove set but not set variable 'pwm'
+Message-ID: <20200120114832.uqa4dthodltu6xdv@pengutronix.de>
+References: <20200119122202.14502-1-yukuai3@huawei.com>
+ <20200120073407.ck2fmk7qdvqsfqsy@pengutronix.de>
+ <55871ad5-4cb0-f3c8-a408-2c1be894126a@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20200106080411.41394-1-yi.zhang@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.220.179]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <55871ad5-4cb0-f3c8-a408-2c1be894126a@huawei.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ping.
+On Mon, Jan 20, 2020 at 07:40:37PM +0800, yukuai (C) wrote:
+> On 2020/1/20 15:34, Uwe Kleine-König wrote:
+> > Fixes: e926b12c611c ("pwm: Clear chip_data in pwm_put()")
+> 
+> Thank you for your advise! I'll add 'Fixes' in a V2 patch.
+> 
+> > Did you check that dropping the locking is save? (I didn't)
+> > 
+> > I'd assume that no harm is introduced, but mentioning that in the commit
+> > log would be good.
+> 
+> I think dropping the lock is safe since there is nothing to be done
+> inside the lock. However, I didn't run a full test. By the way, I'll
+> mentioning it in a V2 patch.
 
-On 2020/1/6 16:04, zhangyi (F) wrote:
-> After commit 4fdcfab5b553 ("jffs2: fix use-after-free on symlink
-> traversal"), it expose a freeing uninitialized memory problem due to
-> this commit move the operaion of freeing f->target to
-> jffs2_i_callback(), which may not be initialized in some error path of
-> allocating jffs2 inode (eg: jffs2_iget()->iget_locked()->
-> destroy_inode()->..->jffs2_i_callback()->kfree(f->target)).
-> 
-> Fix this by initialize the jffs2_inode_info just after allocating it.
-> 
-> Reported-by: Guohua Zhong <zhongguohua1@huawei.com>
-> Reported-by: Huaijie Yi <yihuaijie@huawei.com>
-> Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-> Cc: stable@vger.kernel.org
-> ---
->  fs/jffs2/fs.c    | 2 --
->  fs/jffs2/super.c | 2 ++
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/jffs2/fs.c b/fs/jffs2/fs.c
-> index ab8cdd9e9325..50a9df7d43a5 100644
-> --- a/fs/jffs2/fs.c
-> +++ b/fs/jffs2/fs.c
-> @@ -270,7 +270,6 @@ struct inode *jffs2_iget(struct super_block *sb, unsigned long ino)
->  	f = JFFS2_INODE_INFO(inode);
->  	c = JFFS2_SB_INFO(inode->i_sb);
->  
-> -	jffs2_init_inode_info(f);
->  	mutex_lock(&f->sem);
->  
->  	ret = jffs2_do_read_inode(c, f, inode->i_ino, &latest_node);
-> @@ -438,7 +437,6 @@ struct inode *jffs2_new_inode (struct inode *dir_i, umode_t mode, struct jffs2_r
->  		return ERR_PTR(-ENOMEM);
->  
->  	f = JFFS2_INODE_INFO(inode);
-> -	jffs2_init_inode_info(f);
->  	mutex_lock(&f->sem);
->  
->  	memset(ri, 0, sizeof(*ri));
-> diff --git a/fs/jffs2/super.c b/fs/jffs2/super.c
-> index 0e6406c4f362..90373898587f 100644
-> --- a/fs/jffs2/super.c
-> +++ b/fs/jffs2/super.c
-> @@ -42,6 +42,8 @@ static struct inode *jffs2_alloc_inode(struct super_block *sb)
->  	f = kmem_cache_alloc(jffs2_inode_cachep, GFP_KERNEL);
->  	if (!f)
->  		return NULL;
-> +
-> +	jffs2_init_inode_info(f);
->  	return &f->vfs_inode;
->  }
->  
-> 
+There are (rare) situations where taking and dropping a lock might make
+sense. For example if you have a another context and want to make sure
+that a shared resource isn't about to be used.
 
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
