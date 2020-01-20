@@ -2,201 +2,116 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E181C33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0EC9C33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47D6B217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:21:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94341217F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:22:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fhdl7qM8"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="eeUM6+Ak"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728708AbgATWVJ (ORCPT
+        id S1728765AbgATWWz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 17:21:09 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:35310 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726843AbgATWVJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 17:21:09 -0500
-Received: by mail-qk1-f195.google.com with SMTP id z76so833088qka.2;
-        Mon, 20 Jan 2020 14:21:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=wvKfZKzY5I12j5SecEs/3JRExvNNhiJqlDDq3iBdhXo=;
-        b=Fhdl7qM8LX4IpvsWr1dAEePrn5SGSIoS+8d0TlyQlPt13eQ7tARY4+HE6YuYgqcSdu
-         foKFK+ghLxfMRowd4DXEVN1FkPSkcmmwsIrJLE+WCmNbWCsnc8U+BeJirtYaVdneTZ1/
-         4T0rpqUmrJKQc0ejJ1JoBDEa2YAmNVzOyhGZr99MuHcsZUoIocUxJs2FaOPGNr2DRCgK
-         sUvB8wfeJhOHREZH9FxmSDcMzXtzb9cjrA09HOtFpgGA8xG9k9YOKzUsFOfLVTro0VJ9
-         guuFC6M3ZeMDFRPp9gK316GweOHR9EN6AuPKUd8fBmAB9qB89aqCDnhtGvcXgT9Lv90k
-         Y+4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=wvKfZKzY5I12j5SecEs/3JRExvNNhiJqlDDq3iBdhXo=;
-        b=MUv0wpHkptdsblcyUAKdEO6QWwccDulA+vu7ppEpgNihS0Ke1MaWhLidqJDrWYn4gF
-         HhDBxGiOLLkha6+tnmPZyt8aj9UyrmD6Fbl+YMehPuzkOUOn/MYdpAkPeZoS1RTpz7Pj
-         F+5DfPoXoIGW9168FxjpLGEXA44yZt3sKT5PB6SMnimiL9Lym8Or7nuB1Cfnmn1rOLB8
-         C9DjKVKYjACE2Bk9pijy0Y4dCSFJIoW2RUxtIlrgQdLvhYkX1b0xamAeOWcM590OijtC
-         ORoMqJic23TJxd/3cplMqLGcQYuX3l/khwIO8PhCfaV9xZuZyQgx4KEesx8hRIltXc/r
-         yxwg==
-X-Gm-Message-State: APjAAAWcKgtk82tDtN/3mHgKr501rwjjFQlKdUAWNOTAlTQU18IJa7DE
-        PY6LXZ2Ljb1G/hFuudinRUQqi/wSXU/lyFbBHJE=
-X-Google-Smtp-Source: APXvYqwN97ytmdm+m2yXmDP7lSbj2QlGHO0xeyPd+wXqrhIEOE6NB97NJ7ZutY+Q7HkQp+geBcZ/+KlaIwupDVI6X/Q=
-X-Received: by 2002:a05:620a:5ae:: with SMTP id q14mr1755114qkq.437.1579558867281;
- Mon, 20 Jan 2020 14:21:07 -0800 (PST)
+        Mon, 20 Jan 2020 17:22:55 -0500
+Received: from mail-dm6nam12on2095.outbound.protection.outlook.com ([40.107.243.95]:42464
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726752AbgATWWz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 17:22:55 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oJJE2yA2U7ra/7GjIdlgTaL/azevkWNfjEaMl27smphUuQywHeDdZK+3/TqTJZCfRZCVnAHgaknkFzck7RNkdnuSRbP4YdKXWNWD+Vjyf5uPyoGD6gEuLF/MPEMuJ5oTpumw19RCMKJSZWEwXxC2QoEBIzvOegsyewGPLATVvV75BbsvUgHc47poiwNIIOt9cHqninSmie6RuvlTkF5VdO79h9EJwmQuIRCCLmAWRJTbkeGq1GoCq7AUG4BFcm80fTk9h6w1uM96PHjEv40OLoiFDvR7CROVdFPmysPUYEyMUs7a1CkfMK7u0c0uxNIGHaetLEtJKU4XAtb+sllWNg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZGg24GLpR8rlRDZn4MB5mIrPL3AeZtftuO6XpWAhj1I=;
+ b=fF8oSajLhoWRVJb2KeuQDGGxw2fPnSo7AAcMPa/8iM4uksQMfAChzT5K1hMw7uI9byhXNkmWNsYAPrBfMTeHSt1SN66roAw6MSRaZUKKgVeTohEWu+rStinGQwi5yHHrADMYaKTuN6l5sj52rT2dwcNrxbTmI+TeK/vfo1Zp6MDz2H2OPCXlmZrhdUUTlMA/rtoL6BU+rZS4oUlYs+denBcMKN4ESw04gt4x+0cyUvOOsEvgaYkNPPIdgyrFqV7HXtfU7UxoAGSlGVxhTP33JuPqDEDN154gEyFN/TiI+ZvXSCpiED7gS+Qkiup51EzrFaCvRz2u5oxhSRUKyGdGyA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZGg24GLpR8rlRDZn4MB5mIrPL3AeZtftuO6XpWAhj1I=;
+ b=eeUM6+Ak0UhYGIs+n7FPMZtmHu32bUwQBUPLUohNIFvmrCif+hOE53Zbuo0qyc0bYzBZPmHId4AmL6IavI66OPpfRq2oPaLEoXURqZssHrIfK36AtF4AVzQr6tf4g3zZ4mhHhjcn0eWgE/+regucdWwAnKEnWGmuoZke2DhHqTo=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=lkmlhyz@microsoft.com; 
+Received: from DM5PR2101MB0901.namprd21.prod.outlook.com (52.132.132.158) by
+ DM5PR2101MB1094.namprd21.prod.outlook.com (52.132.130.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2686.3; Mon, 20 Jan 2020 22:22:52 +0000
+Received: from DM5PR2101MB0901.namprd21.prod.outlook.com
+ ([fe80::b084:4e21:c292:6bb2]) by DM5PR2101MB0901.namprd21.prod.outlook.com
+ ([fe80::b084:4e21:c292:6bb2%9]) with mapi id 15.20.2644.024; Mon, 20 Jan 2020
+ 22:22:52 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     sashal@kernel.org, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     haiyangz@microsoft.com, kys@microsoft.com, sthemmin@microsoft.com,
+        olaf@aepfle.de, vkuznets@redhat.com, davem@davemloft.net,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH V2,net-next, 0/2] hv_netvsc: Add XDP support
+Date:   Mon, 20 Jan 2020 14:22:35 -0800
+Message-Id: <1579558957-62496-1-git-send-email-haiyangz@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Content-Type: text/plain
+X-ClientProxiedBy: MWHPR15CA0043.namprd15.prod.outlook.com
+ (2603:10b6:300:ad::29) To DM5PR2101MB0901.namprd21.prod.outlook.com
+ (2603:10b6:4:a7::30)
 MIME-Version: 1.0
-References: <157952560001.1683545.16757917515390545122.stgit@toke.dk>
-In-Reply-To: <157952560001.1683545.16757917515390545122.stgit@toke.dk>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Mon, 20 Jan 2020 14:20:55 -0800
-Message-ID: <CAEf4BzYNp81_bOFSEZR=AcruC2ms76fCWQGit+=2QZrFAXpGqg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v5 00/11] tools: Use consistent libbpf include
- paths everywhere
-To:     =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-rdma@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by MWHPR15CA0043.namprd15.prod.outlook.com (2603:10b6:300:ad::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.19 via Frontend Transport; Mon, 20 Jan 2020 22:22:50 +0000
+X-Mailer: git-send-email 1.8.3.1
+X-Originating-IP: [13.77.154.182]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 4ac75e67-fe62-4833-4365-08d79df74912
+X-MS-TrafficTypeDiagnostic: DM5PR2101MB1094:|DM5PR2101MB1094:|DM5PR2101MB1094:
+X-MS-Exchange-Transport-Forked: True
+X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+X-Microsoft-Antispam-PRVS: <DM5PR2101MB1094DF8C60D3F0C5E15C95BFAC320@DM5PR2101MB1094.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2582;
+X-Forefront-PRVS: 0288CD37D9
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(136003)(346002)(366004)(396003)(376002)(189003)(199004)(66556008)(66946007)(66476007)(52116002)(6486002)(478600001)(2616005)(6666004)(4326008)(8936002)(10290500003)(36756003)(26005)(4744005)(6506007)(316002)(6512007)(16526019)(2906002)(186003)(8676002)(956004)(81166006)(81156014)(5660300002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR2101MB1094;H:DM5PR2101MB0901.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: kDLE0PV63L93YR0/0CTCUPn52BSFvFbxB2wOstMXwp01UEqbDyWj7Tp2LXSGzt1H4KcyPlN0ZMbFWMJ/89KwIZg3n2IMfuXx0eVW2Dw0vQUYnQZ+tXdgxqMMlk5mvgz9EdBX4ERn9jAWchAHa4J9Nc2ivaGa5XGGLaMN0Lax71XvbYAfiDArS4mlHLc11s87dcvz+XXKl/rhB8u1kdMTV9pZgPBQFnKmwxNgUM+9NM0dHJTcpghDudkDslujNmj24tRPW1mIRqKimPH6ftrV6TrxA502qSeqpHDkBl2KHanODvDIkNPyodpUTTqQWsB8Bb3b7jokca5JUdhxewj9WEgWwRz+w1u4cAZ9trxaTq9KvSx3BMaHUMOL5I3j6G6LCHLGMagRemyxoTm+p37MVojrQG9AJzgiLrg5gD7BOqWKWcRZEPaXNyNpXomuoR+F
+X-MS-Exchange-AntiSpam-MessageData: P9tUO46zWl5G8wuXGphgBIXZc0dRBVmbsAjkR6Dw3dbauvuKNZ0X1AKxkiUTn6l63Af9UlMSatthKJz33RfX+ab0cn++czcr0ing/veUwxaoPJ76A9w+DLy0jFVyF+9RTcvWGcP+o7/sU3Wnmns9Gw==
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4ac75e67-fe62-4833-4365-08d79df74912
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jan 2020 22:22:52.6378
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: iXc3MpKaWwuA6xe3bVNaZ7o1JVZ0yN1PLLRYJzvIsQwzpomAnZeNRT1fLV39tk+7juSbKMAQSEK9jdJsqMJoWA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR2101MB1094
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 5:08 AM Toke H=C3=B8iland-J=C3=B8rgensen <toke@redh=
-at.com> wrote:
->
-> We are currently being somewhat inconsistent with the libbpf include path=
-s,
-> which makes it difficult to move files from the kernel into an external
-> libbpf-using project without adjusting include paths.
->
-> Having the bpf/ subdir of $INCLUDEDIR in the include path has never been =
-a
-> requirement for building against libbpf before, and indeed the libbpf pkg=
--config
-> file doesn't include it. So let's make all libbpf includes across the ker=
-nel
-> tree use the bpf/ prefix in their includes. Since bpftool skeleton genera=
-tion
-> emits code with a libbpf include, this also ensures that those can be use=
-d in
-> existing external projects using the regular pkg-config include path.
->
-> This turns out to be a somewhat invasive change in the number of files to=
-uched;
-> however, the actual changes to files are fairly trivial (most of them are=
- simply
-> made with 'sed'). The series is split to make the change for one tool sub=
-dir at
-> a time, while trying not to break the build along the way. It is structur=
-ed like
-> this:
->
-> - Patch 1-3: Trivial fixes to Makefiles for issues I discovered while cha=
-nging
->   the include paths.
->
-> - Patch 4-8: Change the include directives to use the bpf/ prefix, and up=
-dates
->   Makefiles to make sure tools/lib/ is part of the include path, but with=
-out
->   removing tools/lib/bpf
->
-> - Patch 9-11: Remove tools/lib/bpf from include paths to make sure we don=
-'t
->   inadvertently re-introduce includes without the bpf/ prefix.
->
-> Changelog:
->
-> v5:
->   - Combine the libbpf build rules in selftests Makefile (using Andrii's
->     suggestion for a make rule).
->   - Re-use self-tests libbpf build for runqslower (new patch 10)
->   - Formatting fixes
->
-> v4:
->   - Move runqslower error on missing BTF into make rule
->   - Make sure we don't always force a rebuild selftests
->   - Rebase on latest bpf-next (dropping patch 11)
->
-> v3:
->   - Don't add the kernel build dir to the runqslower Makefile, pass it in=
- from
->     selftests instead.
->   - Use libbpf's 'make install_headers' in selftests instead of trying to
->     generate bpf_helper_defs.h in-place (to also work on read-only filesy=
-stems).
->   - Use a scratch builddir for both libbpf and bpftool when building in s=
-elftests.
->   - Revert bpf_helpers.h to quoted include instead of angled include with=
- a bpf/
->     prefix.
->   - Fix a few style nits from Andrii
->
-> v2:
->   - Do a full cleanup of libbpf includes instead of just changing the
->     bpf_helper_defs.h include.
->
-> ---
->
+Add XDP support and update related document.
 
-Looks good, it's a clear improvement on what we had before, thanks!
+Haiyang Zhang (2):
+  hv_netvsc: Add XDP support
+  hv_netvsc: Update document for XDP support
 
-It doesn't re-build bpftool when bpftool sources changes, but I think
-it was like that even before, so no need to block on that. Would be
-nice to have a follow up fixing that, though. $(wildcard
-$(BPFTOOL_DIR)/*.[ch] $(BPFTOOL_DIR)/Makefile) should do it, same as
-for libbpf.
+ .../networking/device_drivers/microsoft/netvsc.txt |  21 +++
+ drivers/net/hyperv/Makefile                        |   2 +-
+ drivers/net/hyperv/hyperv_net.h                    |  21 ++-
+ drivers/net/hyperv/netvsc.c                        |  31 ++-
+ drivers/net/hyperv/netvsc_bpf.c                    | 209 +++++++++++++++++++++
+ drivers/net/hyperv/netvsc_drv.c                    | 175 ++++++++++++++---
+ drivers/net/hyperv/rndis_filter.c                  |   2 +-
+ 7 files changed, 422 insertions(+), 39 deletions(-)
+ create mode 100644 drivers/net/hyperv/netvsc_bpf.c
 
-So, for the series:
+-- 
+1.8.3.1
 
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Tested-by: Andrii Nakryiko <andriin@fb.com>
-
-> Toke H=C3=B8iland-J=C3=B8rgensen (11):
->       samples/bpf: Don't try to remove user's homedir on clean
->       tools/bpf/runqslower: Fix override option for VMLINUX_BTF
->       selftests: Pass VMLINUX_BTF to runqslower Makefile
->       tools/runqslower: Use consistent include paths for libbpf
->       selftests: Use consistent include paths for libbpf
->       bpftool: Use consistent include paths for libbpf
->       perf: Use consistent include paths for libbpf
->       samples/bpf: Use consistent include paths for libbpf
->       tools/runqslower: Remove tools/lib/bpf from include path
->       runsqslower: Support user-specified libbpf include and object paths
->       selftests: Refactor build to remove tools/lib/bpf from include path
->
->
-
-[...]
