@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6913EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76132C33CB8
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C6BA21569
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:24:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 429DC21569
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:24:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728984AbgATMYe (ORCPT
+        id S1729028AbgATMYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 07:24:34 -0500
-Received: from foss.arm.com ([217.140.110.172]:59520 "EHLO foss.arm.com"
+        Mon, 20 Jan 2020 07:24:37 -0500
+Received: from foss.arm.com ([217.140.110.172]:59542 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728847AbgATMYb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 07:24:31 -0500
+        id S1728977AbgATMYe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 07:24:34 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 30EF91396;
-        Mon, 20 Jan 2020 04:24:30 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7A97530E;
+        Mon, 20 Jan 2020 04:24:33 -0800 (PST)
 Received: from e120937-lin.cambridge.arm.com (e120937-lin.cambridge.arm.com [10.1.197.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 48A053F68E;
-        Mon, 20 Jan 2020 04:24:29 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 95F313F68E;
+        Mon, 20 Jan 2020 04:24:32 -0800 (PST)
 From:   Cristian Marussi <cristian.marussi@arm.com>
 To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     sudeep.holla@arm.com, lukasz.luba@arm.com,
         james.quinlan@broadcom.com, cristian.marussi@arm.com
-Subject: [RFC PATCH 05/11] firmware: arm_scmi: Add notifications anti-tampering
-Date:   Mon, 20 Jan 2020 12:23:27 +0000
-Message-Id: <20200120122333.46217-6-cristian.marussi@arm.com>
+Subject: [RFC PATCH 08/11] firmware: arm_scmi: Add Perf notifications support
+Date:   Mon, 20 Jan 2020 12:23:30 +0000
+Message-Id: <20200120122333.46217-9-cristian.marussi@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200120122333.46217-1-cristian.marussi@arm.com>
 References: <20200120122333.46217-1-cristian.marussi@arm.com>
@@ -40,249 +40,260 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a simple mechanism to avoid the fact that with standard Kernel
-notification chains a notifier callback, registered by a user, can
-potentially stop further processing for the notification chain itself,
-or mangle the *data content callback parameter along the way.
-
-A simple notifier_block wrapper layer is introduced in order to limit the
-above described tampering capabilities.
+Make SCMI Perf protocol register with the notification core.
 
 Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
 ---
-This patch can be simply dropped from the series if the anti-tampering
-mechanism itself is not deemed worth the effort
----
- drivers/firmware/arm_scmi/notify.c | 151 ++++++++++++++++++++++++++++-
- 1 file changed, 147 insertions(+), 4 deletions(-)
+ drivers/firmware/arm_scmi/perf.c | 162 ++++++++++++++++++++++++++++++-
+ include/linux/scmi_protocol.h    |  20 ++++
+ 2 files changed, 181 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/firmware/arm_scmi/notify.c b/drivers/firmware/arm_scmi/notify.c
-index da342f43021e..ab5033c1b03c 100644
---- a/drivers/firmware/arm_scmi/notify.c
-+++ b/drivers/firmware/arm_scmi/notify.c
-@@ -111,6 +111,9 @@
- #define KEY_XTRACT_EVT_ID(key)		FIELD_GET(EVT_ID_MASK, (key))
- #define KEY_XTRACT_SRC_ID(key)		FIELD_GET(SRC_ID_MASK, (key))
+diff --git a/drivers/firmware/arm_scmi/perf.c b/drivers/firmware/arm_scmi/perf.c
+index 88509ec637d0..3e09ced2adc8 100644
+--- a/drivers/firmware/arm_scmi/perf.c
++++ b/drivers/firmware/arm_scmi/perf.c
+@@ -14,6 +14,7 @@
+ #include <linux/sort.h>
  
-+#define	PTR_2_EVT_KEY(p)		\
-+	((u32)((unsigned long)(p) & 0x00000000ffffffffL))
-+
- /**
-  * events_queue  - Describes a queue and its associated worker
-  *
-@@ -180,6 +183,7 @@ struct scmi_registered_event {
-  *	     related IDR mapping
-  * @r_evt: A reference to the underlying registered event
-  * @chain: The notification chain dedicated to this specific event tuple
-+ * @scmi_registered_nbs: An IDR map to the currently allocated wrapper nbs.
-  */
- struct scmi_event_handler {
- 	u32				evt_key;
-@@ -187,6 +191,7 @@ struct scmi_event_handler {
- 	refcount_t			users;
- 	struct scmi_registered_event	*r_evt;
- 	struct blocking_notifier_head	chain;
-+	struct idr			scmi_registered_nbs;
+ #include "common.h"
++#include "notify.h"
+ 
+ enum scmi_performance_protocol_cmd {
+ 	PERF_DOMAIN_ATTRIBUTES = 0x3,
+@@ -86,6 +87,19 @@ struct scmi_perf_notify_level_or_limits {
+ 	__le32 notify_enable;
  };
  
- /**
-@@ -211,6 +216,26 @@ struct scmi_event_header {
- 	u8	payld[];
- } __packed;
- 
-+/**
-+ * scmi_wrapper_block  - A wrapper notifier_block
-+ *
-+ * Used to wrap the original notifier_block provided by the user to limit user
-+ * capabilities to cut short the notification chain or mangle the *data
-+ * parameters.
-+ *
-+ * @original_nb: The original notifier_block provided by the user
-+ * @wnb: A wrapper notifier_block to be effectively registered with the chains
-+ * @report_copy: A pointer to the pre-allocated report buffer effectively passed
-+ *		 down to the user notifier_block as *data param
-+ * @report_sz: The size of the @report_copy buffer
-+ */
-+struct scmi_wrapper_block {
-+	struct notifier_block	*original_nb;
-+	struct notifier_block	wnb;
-+	void			*report_copy;
-+	size_t			report_sz;
++struct scmi_perf_limits_notify_payld {
++	__le32 agent_id;
++	__le32 domain_id;
++	__le32 range_max;
++	__le32 range_min;
 +};
 +
- /*
-  * A few IDR maps to track:
-  *
-@@ -579,6 +604,104 @@ int scmi_register_protocol_events(u8 proto_id, size_t queue_sz,
- 	return 0;
++struct scmi_perf_level_notify_payld {
++	__le32 agent_id;
++	__le32 domain_id;
++	__le32 performance_level;
++};
++
+ struct scmi_msg_resp_perf_describe_levels {
+ 	__le16 num_returned;
+ 	__le16 num_remaining;
+@@ -156,6 +170,14 @@ struct scmi_perf_info {
+ 	u64 stats_addr;
+ 	u32 stats_size;
+ 	struct perf_dom_info *dom_info;
++	const struct scmi_handle *handle;
++};
++
++static struct scmi_perf_info *pinfo;
++
++static enum scmi_performance_protocol_cmd evt_2_cmd[] = {
++	PERF_NOTIFY_LIMITS,
++	PERF_NOTIFY_LEVEL,
+ };
+ 
+ static int scmi_perf_attributes_get(const struct scmi_handle *handle,
+@@ -488,6 +510,29 @@ static int scmi_perf_level_get(const struct scmi_handle *handle, u32 domain,
+ 	return scmi_perf_mb_level_get(handle, domain, level, poll);
  }
  
-+/**
-+ * scmi_wrapper_notifier_call  - A common wrapper notifier_call function
-+ *
-+ * This wrapper callback is what is effectively registered on the notification
-+ * chains; it ensures the user provided callback which is in turn called from
-+ * this cannot tamper with the notification deliveries, like returning a
-+ * NOTIFY_STOP to cut the chain or mangling with the event reports passed down
-+ * *data.
-+ *
-+ * @nb: The associated notifier block
-+ * @event: The event ID
-+ * @data: A custom event report
-+ *
-+ * Return: Alwways NOTIFY_OK
-+ */
-+static int scmi_wrapper_notifier_call(struct notifier_block *nb,
-+				      unsigned long event, void *data)
++static int scmi_perf_level_limits_notify(const struct scmi_handle *handle,
++					 u32 domain, int message_id,
++					 bool enable)
 +{
 +	int ret;
-+	struct scmi_wrapper_block *cwnb;
-+	void *report = data;
++	struct scmi_xfer *t;
++	struct scmi_perf_notify_level_or_limits *notify;
 +
-+	cwnb = container_of(nb, struct scmi_wrapper_block, wnb);
++	ret = scmi_xfer_get_init(handle, message_id, SCMI_PROTOCOL_PERF,
++				 sizeof(*notify), 0, &t);
++	if (ret)
++		return ret;
 +
-+	if (!cwnb)
-+		return NOTIFY_STOP;
++	notify = t->tx.buf;
++	notify->domain = cpu_to_le32(domain);
++	notify->notify_enable = enable ? cpu_to_le32(BIT(0)) : 0;
 +
-+	if (cwnb->report_copy) {
-+		memcpy(cwnb->report_copy, data, cwnb->report_sz);
-+		report = cwnb->report_copy;
-+	}
-+	ret = cwnb->original_nb->notifier_call(cwnb->original_nb,
-+					       event, report);
++	ret = scmi_do_xfer(handle, t);
 +
-+	return NOTIFY_OK;
++	scmi_xfer_put(handle, t);
++	return ret;
 +}
 +
-+/**
-+ * scmi_register_wrapper_blocking_notifier  - Register a notifier wrapper
-+ *
-+ * In order to avoid a user registering a notifier_block to tamper with the
-+ * notification delivery process, this function builds a notifier_block wrapper
-+ * and embeds into it the user provided one @nb.
-+ *
-+ * @hndl: The event handler to act upon
-+ * @nb: the original user provided notfier_block to wrap over
-+ *
-+ * Return: The allocated and registered scmi_wrapper_block on Success
-+ */
-+static struct scmi_wrapper_block *
-+scmi_register_wrapper_blocking_notifier(struct scmi_event_handler *hndl,
+ static bool scmi_perf_fc_size_is_valid(u32 msg, u32 size)
+ {
+ 	if ((msg == PERF_LEVEL_GET || msg == PERF_LEVEL_SET) && size == 4)
+@@ -710,11 +755,107 @@ static struct scmi_perf_ops perf_ops = {
+ 	.est_power_get = scmi_dvfs_est_power_get,
+ };
+ 
++static bool scmi_perf_set_notify_enabled(u8 evt_id, const u32 *src_id,
++					 bool enable)
++{
++	int ret, cmd_id;
++
++	cmd_id = MAP_EVT_TO_ENABLE_CMD(evt_id, evt_2_cmd);
++	if (cmd_id < 0)
++		return false;
++
++	if (src_id) {
++		ret = scmi_perf_level_limits_notify(pinfo->handle,
++						    *src_id, cmd_id, enable);
++		if (ret)
++			pr_warn("Failed enabling SCMI Notifications - Perf - evt[%X] dom[%d] - ret:%d\n",
++				evt_id, *src_id, ret);
++	} else {
++		int r, dom;
++
++		ret = 1;
++		for (dom = 0; dom < pinfo->num_domains; dom++) {
++			r = scmi_perf_level_limits_notify(pinfo->handle, dom,
++							  cmd_id, enable);
++			if (r)
++				pr_warn("Failed enabling SCMI Notifications - Perf - evt[%X] dom[%d] - ret:%d\n",
++					evt_id, dom, r);
++			ret *= r;
++		}
++	}
++
++	return !ret ? true : false;
++}
++
++static void *scmi_perf_fill_custom_report(u8 evt_id, u64 timestamp,
++					  const void *payld, size_t payld_sz,
++					  void *report, u32 *src_id)
++{
++	void *rep = NULL;
++
++	switch (evt_id) {
++	case PERFORMANCE_LIMITS_CHANGED:
++	{
++		const struct scmi_perf_limits_notify_payld *p = payld;
++		struct scmi_perf_limits_report *r = report;
++
++		if (sizeof(*p) != payld_sz)
++			break;
++
++		r->timestamp = timestamp;
++		r->agent_id = le32_to_cpu(p->agent_id);
++		r->domain_id = le32_to_cpu(p->domain_id);
++		r->range_max = le32_to_cpu(p->range_max);
++		r->range_min = le32_to_cpu(p->range_min);
++		*src_id = r->domain_id;
++		rep = r;
++		break;
++	}
++	case PERFORMANCE_LEVEL_CHANGED:
++	{
++		const struct scmi_perf_level_notify_payld *p = payld;
++		struct scmi_perf_level_report *r = report;
++
++		if (sizeof(*p) != payld_sz)
++			break;
++
++		r->timestamp = timestamp;
++		r->agent_id = le32_to_cpu(p->agent_id);
++		r->domain_id = le32_to_cpu(p->domain_id);
++		r->performance_level = le32_to_cpu(p->performance_level);
++		*src_id = r->domain_id;
++		rep = r;
++		break;
++	}
++	default:
++		break;
++	}
++
++	return rep;
++}
++
++static const struct scmi_event perf_events[] = {
++	{
++		.evt_id = PERFORMANCE_LIMITS_CHANGED,
++		.max_payld_sz = 16,
++		.max_report_sz = sizeof(struct scmi_perf_limits_report),
++	},
++	{
++		.evt_id = PERFORMANCE_LEVEL_CHANGED,
++		.max_payld_sz = 12,
++		.max_report_sz = sizeof(struct scmi_perf_level_report),
++	},
++};
++
++static const struct scmi_protocol_event_ops perf_event_ops = {
++	.set_notify_enabled = scmi_perf_set_notify_enabled,
++	.fill_custom_report = scmi_perf_fill_custom_report,
++};
++
+ static int scmi_perf_protocol_init(struct scmi_handle *handle)
+ {
+ 	int domain;
+ 	u32 version;
+-	struct scmi_perf_info *pinfo;
+ 
+ 	scmi_version_get(handle, SCMI_PROTOCOL_PERF, &version);
+ 
+@@ -742,7 +883,12 @@ static int scmi_perf_protocol_init(struct scmi_handle *handle)
+ 			scmi_perf_domain_init_fc(handle, domain, &dom->fc_info);
+ 	}
+ 
++	scmi_register_protocol_events(SCMI_PROTOCOL_PERF, PAGE_SIZE,
++				      &perf_event_ops, perf_events,
++				      ARRAY_SIZE(perf_events));
++
+ 	pinfo->version = version;
++	pinfo->handle = handle;
+ 	handle->perf_ops = &perf_ops;
+ 	handle->perf_priv = pinfo;
+ 
+@@ -755,3 +901,17 @@ static int __init scmi_perf_init(void)
+ 				      &scmi_perf_protocol_init);
+ }
+ subsys_initcall(scmi_perf_init);
++
++int scmi_register_perf_event_notifier(u8 evt_id, u32 *dom_id,
++				      struct notifier_block *nb)
++{
++	return scmi_register_event_notifier(SCMI_PROTOCOL_PERF, evt_id,
++					    dom_id, nb);
++}
++
++int scmi_unregister_perf_event_notifier(u8 evt_id, u32 *dom_id,
 +					struct notifier_block *nb)
 +{
-+	int id;
-+	struct scmi_wrapper_block *cwnb;
-+
-+	cwnb = kzalloc(sizeof(*cwnb), GFP_KERNEL);
-+	if (!cwnb)
-+		return ERR_PTR(-ENOMEM);
-+
-+	cwnb->report_sz = hndl->r_evt->evt->max_report_sz;
-+	cwnb->report_copy = kzalloc(cwnb->report_sz, GFP_KERNEL);
-+	if (!cwnb->report_copy)
-+		pr_warn("SCMI Failed to allocate per-notifier report-buffer\n");
-+	cwnb->original_nb = nb;
-+	cwnb->wnb.notifier_call = scmi_wrapper_notifier_call;
-+	cwnb->wnb.priority = nb->priority;
-+
-+	id = idr_alloc(&hndl->scmi_registered_nbs, cwnb, PTR_2_EVT_KEY(nb),
-+		       PTR_2_EVT_KEY(nb) + 1, GFP_KERNEL);
-+	if (id < 0) {
-+		pr_err("SCMI Failed to allocate NB IDR - err:%d\n", id);
-+		kfree(cwnb);
-+		return ERR_PTR(id);
-+	}
-+
-+	blocking_notifier_chain_register(&hndl->chain, &cwnb->wnb);
-+
-+	return cwnb;
++	return scmi_unregister_event_notifier(SCMI_PROTOCOL_PERF, evt_id,
++					      dom_id, nb);
 +}
+diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.h
+index 61bdfe0bebe2..a719f3cd394b 100644
+--- a/include/linux/scmi_protocol.h
++++ b/include/linux/scmi_protocol.h
+@@ -344,4 +344,24 @@ int scmi_register_power_event_notifier(u8 evt_id, u32 *dom_id,
+ int scmi_unregister_power_event_notifier(u8 evt_id, u32 *dom_id,
+ 					 struct notifier_block *nb);
+ 
++struct scmi_perf_limits_report {
++	ktime_t	timestamp;
++	u32	agent_id;
++	u32	domain_id;
++	u32	range_max;
++	u32	range_min;
++};
 +
-+/**
-+ * scmi_unregister_wrapper_blocking_notifier  - Unregister a notifier wrapper
-+ *
-+ * @hndl: The event handler to act upon
-+ * @cwnb: The wrapper notifier to be unregistered
-+ */
-+static void
-+scmi_unregister_wrapper_blocking_notifier(struct scmi_event_handler *hndl,
-+					  struct scmi_wrapper_block *cwnb)
-+{
-+	idr_remove(&hndl->scmi_registered_nbs,
-+		   PTR_2_EVT_KEY(cwnb->original_nb));
-+	blocking_notifier_chain_unregister(&hndl->chain, &cwnb->wnb);
-+	kfree(cwnb->report_copy);
-+	kfree(cwnb);
-+}
++struct scmi_perf_level_report {
++	ktime_t	timestamp;
++	u32	agent_id;
++	u32	domain_id;
++	u32	performance_level;
++};
 +
- /**
-  * scmi_register_event_handler  - Allocate an Event handler
-  *
-@@ -624,6 +747,8 @@ static struct scmi_event_handler *scmi_register_event_handler(u32 evt_key)
- 		return ERR_PTR(id);
- 	}
- 
-+	idr_init(&hndl->scmi_registered_nbs);
++int scmi_register_perf_event_notifier(u8 evt_id, u32 *dom_id,
++				      struct notifier_block *nb);
++int scmi_unregister_perf_event_notifier(u8 evt_id, u32 *dom_id,
++					struct notifier_block *nb);
 +
- 	return hndl;
- }
- 
-@@ -779,17 +904,28 @@ int scmi_register_event_notifier(u8 proto_id, u8 evt_id, u32 *src_id,
- {
- 	u32 evt_key;
- 	struct scmi_event_handler *hndl;
-+	struct scmi_wrapper_block *cwnb;
- 
- 	evt_key = MAKE_EVT_KEY(proto_id, evt_id, src_id);
- 	hndl = scmi_get_or_create_event_handler(evt_key);
- 	if (IS_ERR_OR_NULL(hndl))
- 		return PTR_ERR(hndl);
- 
--	blocking_notifier_chain_register(&hndl->chain, nb);
-+	if (idr_find(&hndl->scmi_registered_nbs, PTR_2_EVT_KEY(nb))) {
-+		pr_err("SCMI Duplicated NB\n");
-+		scmi_put_event_handler(hndl);
-+		return -EINVAL;
-+	}
-+
-+	cwnb = scmi_register_wrapper_blocking_notifier(hndl, nb);
-+	if (IS_ERR_OR_NULL(cwnb)) {
-+		scmi_put_event_handler(hndl);
-+		return PTR_ERR(cwnb);
-+	}
- 
- 	if (!scmi_enable_events(hndl)) {
- 		pr_err("SCMI Failed to ENABLE events for key:%X !\n", evt_key);
--		blocking_notifier_chain_unregister(&hndl->chain, nb);
-+		scmi_unregister_wrapper_blocking_notifier(hndl, cwnb);
- 		scmi_put_event_handler(hndl);
- 		return -EINVAL;
- 	}
-@@ -816,15 +952,22 @@ int scmi_unregister_event_notifier(u8 proto_id, u8 evt_id, u32 *src_id,
- {
- 	u32 evt_key;
- 	struct scmi_event_handler *hndl;
-+	struct scmi_wrapper_block *cwnb;
- 
- 	evt_key = MAKE_EVT_KEY(proto_id, evt_id, src_id);
- 	hndl = scmi_get_event_handler(evt_key);
- 	if (IS_ERR_OR_NULL(hndl))
- 		return -EINVAL;
- 
--	blocking_notifier_chain_unregister(&hndl->chain, nb);
--
-+	cwnb = idr_find(&hndl->scmi_registered_nbs, PTR_2_EVT_KEY(nb));
-+	if (!cwnb) {
-+		pr_err("SCMI Unknown NB\n");
-+		scmi_put_event_handler(hndl);
-+		return -EINVAL;
-+	}
-+	scmi_unregister_wrapper_blocking_notifier(hndl, cwnb);
- 	scmi_put_event_handler(hndl);
-+
- 	/*
- 	 * If this was the last user callback for this handler, this last put
- 	 * will force the handler to be freed.
+ #endif /* _LINUX_SCMI_PROTOCOL_H */
 -- 
 2.17.1
 
