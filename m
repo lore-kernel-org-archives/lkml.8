@@ -7,38 +7,41 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B636C33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D3AC33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD5992467A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:27:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 004BC22525
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:27:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbgATI1S (ORCPT
+        id S1727049AbgATI1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 03:27:18 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:60732 "EHLO
+        Mon, 20 Jan 2020 03:27:23 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:60765 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726075AbgATI1R (ORCPT
+        with ESMTP id S1726075AbgATI1V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 03:27:17 -0500
+        Mon, 20 Jan 2020 03:27:21 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1itSOu-0002sB-OE; Mon, 20 Jan 2020 09:27:12 +0100
+        id 1itSOu-0002sD-Th; Mon, 20 Jan 2020 09:27:13 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id ED7121C1A3A;
-        Mon, 20 Jan 2020 09:27:11 +0100 (CET)
-Date:   Mon, 20 Jan 2020 08:27:11 -0000
-From:   "tip-bot2 for Michael Petlan" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 8AABD1C1A3E;
+        Mon, 20 Jan 2020 09:27:12 +0100 (CET)
+Date:   Mon, 20 Jan 2020 08:27:12 -0000
+From:   "tip-bot2 for Cengiz Can" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf header: Use last modification time for timestamp
-Cc:     Michael Petlan <mpetlan@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+Subject: [tip: perf/core] perf beauty sockaddr: Fix augmented syscall format warning
+Cc:     Cengiz Can <cengiz@kernel.wtf>,
+        Peter Zijlstra <peterz@infradead.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200113174438.102975-1-cengiz@kernel.wtf>
+References: <20200113174438.102975-1-cengiz@kernel.wtf>
 MIME-Version: 1.0
-Message-ID: <157950883176.396.4878083330473631264.tip-bot2@tip-bot2>
+Message-ID: <157950883237.396.4794014175030555572.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -54,68 +57,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     8af19d66b956401bab1ef24049eec9421be93862
-Gitweb:        https://git.kernel.org/tip/8af19d66b956401bab1ef24049eec9421be93862
-Author:        Michael Petlan <mpetlan@redhat.com>
-AuthorDate:    Tue, 14 Jan 2020 11:42:36 +01:00
+Commit-ID:     49e0b6f4e95aa3ade8f512c50d1ccc113fe917b4
+Gitweb:        https://git.kernel.org/tip/49e0b6f4e95aa3ade8f512c50d1ccc113fe917b4
+Author:        Cengiz Can <cengiz@kernel.wtf>
+AuthorDate:    Mon, 13 Jan 2020 20:44:39 +03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Wed, 15 Jan 2020 10:17:20 -03:00
+CommitterDate: Tue, 14 Jan 2020 12:42:26 -03:00
 
-perf header: Use last modification time for timestamp
+perf beauty sockaddr: Fix augmented syscall format warning
 
-Using .st_ctime clobbers the timestamp information in perf report header
-whenever any operation is done with the file. Even tar-ing and untar-ing
-the perf.data file (which preserves the file last modification timestamp)
-doesn't prevent that:
+The sockaddr related examples given in
+`tools/perf/examples/bpf/augmented_syscalls.c` almost always use `long`s
+to represent most of their fields.
 
-    [Michael@Diego tmp]$ ls -l perf.data
-->	-rw-------. 1 Michael Michael 169888 Dec  2 15:23 perf.data
+However, `size_t syscall_arg__scnprintf_sockaddr(..)` has a `scnprintf`
+call that uses `"%#x"` as format string.
 
-	[Michael@Diego tmp]$ perf report --header-only
-	# ========
-->	# captured on    : Mon Dec  2 15:23:42 2019
-	 [...]
+This throws a warning (whenever the syscall argument is `unsigned
+long`).
 
-	[Michael@Diego tmp]$ tar c perf.data | xz > perf.data.tar.xz
-	[Michael@Diego tmp]$ mkdir aaa
-	[Michael@Diego tmp]$ cd aaa
-	[Michael@Diego aaa]$ xzcat ../perf.data.tar.xz | tar x
-	[Michael@Diego aaa]$ ls -l -a
-	total 172
-	drwxrwxr-x. 2 Michael Michael     23 Jan 14 11:26 .
-	drwxrwxr-x. 6 Michael Michael   4096 Jan 14 11:26 ..
-->	-rw-------. 1 Michael Michael 169888 Dec  2 15:23 perf.data
+Added `l` identifier to indicate that the `arg->value` is an unsigned
+long.
 
-	[Michael@Diego aaa]$ perf report --header-only
-	# ========
-->	# captured on    : Tue Jan 14 11:26:16 2020
-	 [...]
+Not sure about the complications of this with x86 though.
 
-When using .st_mtime instead, correct information is printed:
-
-	[Michael@Diego aaa]$ ~/acme/tools/perf/perf report --header-only
-	# ========
-->	# captured on    : Mon Dec  2 15:23:42 2019
-	 [...]
-
-Signed-off-by: Michael Petlan <mpetlan@redhat.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-LPU-Reference: 20200114104236.31555-1-mpetlan@redhat.com
+Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lore.kernel.org/lkml/20200113174438.102975-1-cengiz@kernel.wtf
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/header.c | 2 +-
+ tools/perf/trace/beauty/sockaddr.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 93ad278..4246e74 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -2922,7 +2922,7 @@ int perf_header__fprintf_info(struct perf_session *session, FILE *fp, bool full)
- 	if (ret == -1)
- 		return -1;
+diff --git a/tools/perf/trace/beauty/sockaddr.c b/tools/perf/trace/beauty/sockaddr.c
+index 173c8f7..e0c13e6 100644
+--- a/tools/perf/trace/beauty/sockaddr.c
++++ b/tools/perf/trace/beauty/sockaddr.c
+@@ -72,5 +72,5 @@ size_t syscall_arg__scnprintf_sockaddr(char *bf, size_t size, struct syscall_arg
+ 	if (arg->augmented.args)
+ 		return syscall_arg__scnprintf_augmented_sockaddr(arg, bf, size);
  
--	stctime = st.st_ctime;
-+	stctime = st.st_mtime;
- 	fprintf(fp, "# captured on    : %s", ctime(&stctime));
- 
- 	fprintf(fp, "# header version : %u\n", header->version);
+-	return scnprintf(bf, size, "%#x", arg->val);
++	return scnprintf(bf, size, "%#lx", arg->val);
+ }
