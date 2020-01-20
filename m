@@ -2,115 +2,185 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 584CDC33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:33:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F38C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39632207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:33:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B849421D7D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:37:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbgATLdx (ORCPT
+        id S1726942AbgATLhL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 06:33:53 -0500
-Received: from mga01.intel.com ([192.55.52.88]:50762 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726589AbgATLdw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 06:33:52 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 03:33:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,341,1574150400"; 
-   d="scan'208";a="374296392"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga004.jf.intel.com with ESMTP; 20 Jan 2020 03:33:52 -0800
-Received: from [10.125.252.193] (abudanko-mobl.ccr.corp.intel.com [10.125.252.193])
-        by linux.intel.com (Postfix) with ESMTP id E511D5803C5;
-        Mon, 20 Jan 2020 03:33:43 -0800 (PST)
-Subject: [PATCH v5 10/10] drivers/oprofile: open access for CAP_PERFMON
- privileged process
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
-        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "james.bottomley@hansenpartnership.com" 
-        <james.bottomley@hansenpartnership.com>,
-        Serge Hallyn <serge@hallyn.com>,
-        James Morris <jmorris@namei.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Lionel Landwerlin <lionel.g.landwerlin@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        oprofile-list@lists.sf.net
-References: <0548c832-7f4b-dc4c-8883-3f2b6d351a08@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <196ea578-5079-a27f-07ca-23df0e38485c@linux.intel.com>
-Date:   Mon, 20 Jan 2020 14:33:42 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 20 Jan 2020 06:37:11 -0500
+Received: from mail-il1-f198.google.com ([209.85.166.198]:51336 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726642AbgATLhK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 06:37:10 -0500
+Received: by mail-il1-f198.google.com with SMTP id v13so24913825ili.18
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 03:37:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=xBNA/KgA2wagbqF/XqH/qEY6DtCxvfx3ozrZJF+FY60=;
+        b=VyS81gldrHonuBM3nVR38VxlhiEJzg7UcNz+5OcKP8Yx3aC9owPlXNEPZ1rfmaZnqR
+         cdOcOZXNHWn2HDG7C9ltJnfL4HEc4iu8eAjNnZS4ie2kVZ6UbjTfjaR9nWeLvJHKq2X+
+         QtsphRn85UjvR+3CYyfALfOwmrniSHPq/ngVDd1zCrGStaaHxVEemLU+fd1DiXODj7i4
+         UgxKqJcwUpY4gl7Np7ADUoct5eLdIfkOttO+NClzZmUmr78pH7JYbF/zVC7VKe6kvFE0
+         kenh9hsz+Vb7MUb113kwHfevDW1KwDKrbyshoXMlpLknxjSry9QhGtQtQ0JzI3Wqscu7
+         nT1g==
+X-Gm-Message-State: APjAAAUtK7gOJZOOLnoxX+K9y4HP7wPosmnOWQP1qaHRGwYHKSTfXe0C
+        zfX57zjjpk1dohwRg8qPeG+Y+Lh/LPhRo/2Dayoer0nvlNZY
+X-Google-Smtp-Source: APXvYqyyPInJ+VE6VgIJfo5d2Ws7ikGEU73uOM4B1N5bMf4CHCMYDRODgnN2k8anBIa46t0NiOGKRSQS7YC+o+aTZIQrTvvoMu9G
 MIME-Version: 1.0
-In-Reply-To: <0548c832-7f4b-dc4c-8883-3f2b6d351a08@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a92:db4f:: with SMTP id w15mr10001596ilq.182.1579520229796;
+ Mon, 20 Jan 2020 03:37:09 -0800 (PST)
+Date:   Mon, 20 Jan 2020 03:37:09 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000367175059c90b6bf@google.com>
+Subject: KASAN: use-after-free Read in __nf_tables_abort
+From:   syzbot <syzbot+29125d208b3dae9a7019@syzkaller.appspotmail.com>
+To:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
+        kadlec@netfilter.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        pablo@netfilter.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
-Open access to monitoring for CAP_PERFMON privileged processes.
-For backward compatibility reasons access to the monitoring remains
-open for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN usage
-for secure monitoring is discouraged with respect to CAP_PERFMON
-capability. Providing the access under CAP_PERFMON capability singly,
-without the rest of CAP_SYS_ADMIN credentials, excludes chances to
-misuse the credentials and makes the operations more secure.
+syzbot found the following crash on:
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+HEAD commit:    def9d278 Linux 5.5-rc7
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=16d4e966e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=cf8e288883e40aba
+dashboard link: https://syzkaller.appspot.com/bug?extid=29125d208b3dae9a7019
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12c78faee00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+29125d208b3dae9a7019@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: use-after-free in __list_del_entry_valid+0xd2/0xf5 lib/list_debug.c:42
+Read of size 8 at addr ffff888096085408 by task syz-executor.0/9949
+
+CPU: 0 PID: 9949 Comm: syz-executor.0 Not tainted 5.5.0-rc7-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x197/0x210 lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
+ __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
+ kasan_report+0x12/0x20 mm/kasan/common.c:639
+ __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:135
+ __list_del_entry_valid+0xd2/0xf5 lib/list_debug.c:42
+ __list_del_entry include/linux/list.h:131 [inline]
+ list_del_rcu include/linux/rculist.h:148 [inline]
+ __nf_tables_abort+0x1e53/0x2a50 net/netfilter/nf_tables_api.c:7258
+ nf_tables_abort+0x17/0x30 net/netfilter/nf_tables_api.c:7373
+ nfnetlink_rcv_batch+0xa5d/0x17a0 net/netfilter/nfnetlink.c:494
+ nfnetlink_rcv_skb_batch net/netfilter/nfnetlink.c:543 [inline]
+ nfnetlink_rcv+0x3e7/0x460 net/netfilter/nfnetlink.c:561
+ netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+ netlink_unicast+0x58c/0x7d0 net/netlink/af_netlink.c:1328
+ netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
+ sock_sendmsg_nosec net/socket.c:639 [inline]
+ sock_sendmsg+0xd7/0x130 net/socket.c:659
+ ____sys_sendmsg+0x753/0x880 net/socket.c:2330
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2384
+ __sys_sendmsg+0x105/0x1d0 net/socket.c:2417
+ __do_sys_sendmsg net/socket.c:2426 [inline]
+ __se_sys_sendmsg net/socket.c:2424 [inline]
+ __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2424
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45b349
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f29992c7c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00007f29992c86d4 RCX: 000000000045b349
+RDX: 0000000000000000 RSI: 0000000020000280 RDI: 0000000000000003
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 0000000000000917 R14: 00000000004ca810 R15: 000000000075bf2c
+
+Allocated by task 9949:
+ save_stack+0x23/0x90 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ __kasan_kmalloc mm/kasan/common.c:513 [inline]
+ __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:486
+ kasan_kmalloc+0x9/0x10 mm/kasan/common.c:527
+ kmem_cache_alloc_trace+0x158/0x790 mm/slab.c:3551
+ kmalloc include/linux/slab.h:556 [inline]
+ kzalloc include/linux/slab.h:670 [inline]
+ nf_tables_newtable+0xa4d/0x1510 net/netfilter/nf_tables_api.c:981
+ nfnetlink_rcv_batch+0xf42/0x17a0 net/netfilter/nfnetlink.c:433
+ nfnetlink_rcv_skb_batch net/netfilter/nfnetlink.c:543 [inline]
+ nfnetlink_rcv+0x3e7/0x460 net/netfilter/nfnetlink.c:561
+ netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+ netlink_unicast+0x58c/0x7d0 net/netlink/af_netlink.c:1328
+ netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
+ sock_sendmsg_nosec net/socket.c:639 [inline]
+ sock_sendmsg+0xd7/0x130 net/socket.c:659
+ ____sys_sendmsg+0x753/0x880 net/socket.c:2330
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2384
+ __sys_sendmsg+0x105/0x1d0 net/socket.c:2417
+ __do_sys_sendmsg net/socket.c:2426 [inline]
+ __se_sys_sendmsg net/socket.c:2424 [inline]
+ __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2424
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 2840:
+ save_stack+0x23/0x90 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ kasan_set_free_info mm/kasan/common.c:335 [inline]
+ __kasan_slab_free+0x102/0x150 mm/kasan/common.c:474
+ kasan_slab_free+0xe/0x10 mm/kasan/common.c:483
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x10a/0x2c0 mm/slab.c:3757
+ nf_tables_table_destroy.isra.0+0xef/0x150 net/netfilter/nf_tables_api.c:1160
+ nft_commit_release net/netfilter/nf_tables_api.c:6810 [inline]
+ nf_tables_trans_destroy_work+0x406/0x7c0 net/netfilter/nf_tables_api.c:6860
+ process_one_work+0x9af/0x1740 kernel/workqueue.c:2264
+ worker_thread+0x98/0xe40 kernel/workqueue.c:2410
+ kthread+0x361/0x430 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+The buggy address belongs to the object at ffff888096085400
+ which belongs to the cache kmalloc-512 of size 512
+The buggy address is located 8 bytes inside of
+ 512-byte region [ffff888096085400, ffff888096085600)
+The buggy address belongs to the page:
+page:ffffea0002582140 refcount:1 mapcount:0 mapping:ffff8880aa400a80 index:0x0
+raw: 00fffe0000000200 ffffea0002402a88 ffffea000294a748 ffff8880aa400a80
+raw: 0000000000000000 ffff888096085000 0000000100000004 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff888096085300: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff888096085380: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>ffff888096085400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                      ^
+ ffff888096085480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888096085500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
 ---
- drivers/oprofile/event_buffer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/oprofile/event_buffer.c b/drivers/oprofile/event_buffer.c
-index 12ea4a4ad607..6c9edc8bbc95 100644
---- a/drivers/oprofile/event_buffer.c
-+++ b/drivers/oprofile/event_buffer.c
-@@ -113,7 +113,7 @@ static int event_buffer_open(struct inode *inode, struct file *file)
- {
- 	int err = -EPERM;
- 
--	if (!capable(CAP_SYS_ADMIN))
-+	if (!perfmon_capable())
- 		return -EPERM;
- 
- 	if (test_and_set_bit_lock(0, &buffer_opened))
--- 
-2.20.1
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
