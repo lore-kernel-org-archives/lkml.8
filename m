@@ -2,111 +2,146 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 269D6C33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 07:42:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 596BEC33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 07:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F21712087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 07:42:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579506148;
-	bh=3YQVEHCog7/EoCM8/BbQmTRXqcOmvSAy5U6IN5NqEfQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=km8z4Qr8328QyEzXSkUNYViUZToMJIg5Hmg9ZL9AZ/1wz0vIjDBdvbU1VIaHQ+QmU
-	 c7PoyzSmQDlYxoFZ4XOIEVHhFW1hu9XcDGf6xf7pZkRNnPc7Das6vZ8lsjszEHrfOc
-	 MazS7Y7gkZKsJzqZrTz7XHD1DqgiBSHa58tkQcEo=
+	by mail.kernel.org (Postfix) with ESMTP id 28D952073D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 07:43:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="k+UiYYHG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbgATHm1 (ORCPT
+        id S1726619AbgATHnu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 02:42:27 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39374 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbgATHm0 (ORCPT
+        Mon, 20 Jan 2020 02:43:50 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:36227 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726039AbgATHnu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 02:42:26 -0500
-Received: by mail-wr1-f68.google.com with SMTP id y11so28360617wrt.6
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jan 2020 23:42:25 -0800 (PST)
+        Mon, 20 Jan 2020 02:43:50 -0500
+Received: by mail-pl1-f193.google.com with SMTP id a6so12839650plm.3
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jan 2020 23:43:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=axtens.net; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6YkuZ8tp2wmCPxdpgMXItiYj736TUwlM7992jMev2hM=;
+        b=k+UiYYHG/v+VJD/4zWr69Wkd6H+h5loGovze3xLnJFbvL7nXcqhcsBh3ieanqlchRQ
+         jcG9Xv5AvZxJ/UXVHazQgMkBxNtnZELVWNUt27L+7mDr53+M2Yan5mS45jhpnJa/NRZz
+         v1nM8OE/bwDqVj/nZcOPD1br0C8bHAa892PKA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oYPv014C6O3vR5nrvfR9UKHGQnNqmP0rTFCUylko2hY=;
-        b=uOZrgz+1R36EjANfruyLGRVWC4QPuwjqV7yfMdS/ANWL3IlBkoaarpNV3D9nd4ohhL
-         GPcgVOyvO1Im2K/eG9MAQ8EvBEg4+Aa3U1b5NxopcYOcHb52sj/El4j5TdPJVRGBIhwi
-         dd59jsvOmFdE+O6JOgxiUCLryY0clZCmj9aieHGuK5gRX64mNl5KKE5evSATXtKvTIrS
-         8sYWH2iLrHrUrviFqfSzeN9vClG5eygfrmfhq+8hWpulcGolmXwI/BWQ3nbD0T2zRBlL
-         5I3Dyfh7/uRF21t+xMxG7wd1TrqjrysBIf7PNQC5ht1J7Su/wYhpqEZy8gpcJF6AlCWq
-         Hb6A==
-X-Gm-Message-State: APjAAAXwaYsg/hf6cwrREmZRNjXEAfhomLJeTlQBm1y3tW1YQVRJzJ3/
-        wWYCoNTQg+Ldu3p9ZxnrmZc=
-X-Google-Smtp-Source: APXvYqyxHbwCf1rEwyiPliE2VJRRsUpskKzOCC9hpd3QOUPFNfJx3XHUPNjrUjzx9oPxyxEzRGSxTg==
-X-Received: by 2002:adf:f847:: with SMTP id d7mr16568464wrq.35.1579506145143;
-        Sun, 19 Jan 2020 23:42:25 -0800 (PST)
-Received: from localhost (ip-37-188-138-155.eurotel.cz. [37.188.138.155])
-        by smtp.gmail.com with ESMTPSA id d14sm49499767wru.9.2020.01.19.23.42.23
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6YkuZ8tp2wmCPxdpgMXItiYj736TUwlM7992jMev2hM=;
+        b=dib/VYHoCivcZzuQoCRLjD5C8nny/WEvelJul9kq4KajZzPHX3VPoIsLBy+lFY0Kvf
+         z5vglPeqmKCNnKDY9v8jl5bHxvpQXPoZk6Z9FHUadfZJVNHAh9qkbbQuk7ON+Vqy+Ba1
+         Fu6BUe3Z5fN0pzjq01VIQ/MMXwDeXsQWWsLZQ0yESFG1onMaKD9gYXzxKp7u/TWwIx70
+         6+7BQ9o9hCWAdS0eVCjRjC6/34XWp26Xgs28eg6UdiCTIyQu779RW1kOIZ34Ilqe53dZ
+         u3T84KFXuIwIzukEbJMM/+C5oSc93yuGS4TkOp8jCTBJzek3xA9vXk6kl0qN74S5hWXI
+         6UMg==
+X-Gm-Message-State: APjAAAVIBzSXq1I7RbbQdjWGVNvoMZzE9ipxtrLpNpyRFTsGg/Zg7KOC
+        SxGk2/ts29UHwSsNSnxHTXssAQ==
+X-Google-Smtp-Source: APXvYqx6WIelXXQ1XxBQSJPB9fvVEwMpFGLYN0Oq9eHgf6RjMRe6JDnsTVkTumU89S7sClpvNsw8dQ==
+X-Received: by 2002:a17:902:b704:: with SMTP id d4mr12873725pls.54.1579506229307;
+        Sun, 19 Jan 2020 23:43:49 -0800 (PST)
+Received: from localhost (2001-44b8-1113-6700-4064-d910-a710-f29a.static.ipv6.internode.on.net. [2001:44b8:1113:6700:4064:d910:a710:f29a])
+        by smtp.gmail.com with ESMTPSA id 83sm37136676pgh.12.2020.01.19.23.43.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Jan 2020 23:42:24 -0800 (PST)
-Date:   Mon, 20 Jan 2020 08:42:22 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     Qian Cai <cai@lca.pw>, akpm@linux-foundation.org, david@redhat.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -mm] mm/page_isolation: fix potential warning from user
-Message-ID: <20200120074222.GF18451@dhcp22.suse.cz>
-References: <20200120034252.1558-1-cai@lca.pw>
- <91ba5997-b227-7ae2-8459-310e18b9bb87@arm.com>
+        Sun, 19 Jan 2020 23:43:48 -0800 (PST)
+From:   Daniel Axtens <dja@axtens.net>
+To:     kernel-hardening@lists.openwall.com, linux-mm@kvack.org,
+        keescook@chromium.org
+Cc:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+        Daniel Axtens <dja@axtens.net>
+Subject: [PATCH 0/5] Annotate allocation functions with alloc_size attribute
+Date:   Mon, 20 Jan 2020 18:43:39 +1100
+Message-Id: <20200120074344.504-1-dja@axtens.net>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <91ba5997-b227-7ae2-8459-310e18b9bb87@arm.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 20-01-20 09:50:33, Anshuman Khandual wrote:
-> Hello Qian,
-> 
-> On 01/20/2020 09:12 AM, Qian Cai wrote:
-> > It makes sense to call the WARN_ON_ONCE(zone_idx(zone) == ZONE_MOVABLE)
-> > from the offlining path, but should avoid triggering it from userspace,
-> > i.e, from is_mem_section_removable().
-> 
-> Could you elaborate why it makes sense not to warn about an unmovable
-> ZONE_MOVABLE page when an user tries to query about a memory block
-> device's movability through sysfs ?
+Both gcc and clang support the 'alloc_size' function attribute. It tells
+the compiler that a function returns a pointer to a certain amount of
+memory.
 
-Because somebody might have panic_on_warn and then this is unlikely (but
-not impossible) way to put the system down by arbitrary user. Besides
-that it is stupid to warn when we convey the information to the
-userspace anyway.
- 
-[...]
-> > +	} else {
-> > +		if (isol_flags & MEMORY_OFFLINE)
-> > +			WARN_ON_ONCE(zone_idx(zone) == ZONE_MOVABLE);> +
-> > +		if ((isol_flags & REPORT_FAILURE) && !IS_ERR(unmovable))
-> > +			/*
-> > +			 * printk() with zone->lock held will likely trigger a
-> > +			 * lockdep splat, so defer it here.
-> > +			 */
-> > +			dump_page(unmovable, "unmovable page");
-> > +	}
-> > +
-> > +	return !!unmovable;
-> >  }
-> >  
-> >  static void unset_migratetype_isolate(struct page *page, unsigned migratetype)
-> 
-> set_migratetype_isolate() gets called from CMA as well as HugeTLB
-> allocation paths, so its not only during offline. Hence the commit
-> message should be changed to reflect this.
+This series tries applying that attribute to a number of our memory
+allocation functions. This provides much more information to things that
+use __builtin_object_size() (FORTIFY_SOURCE and some copy_to/from_user
+stuff), as well as enhancing inlining opportunities where __builtin_mem* or
+__builtin_str* are used.
 
-We should just report for all those cases I believe.
+With this series, FORTIFY_SOURCE picks up a bug in altera-stapl, which is
+fixed in patch 1.
+
+It also generates a bunch of warnings about times memory allocation
+functions can be called with SIZE_MAX as the parameter. For example, from
+patch 3:
+
+drivers/staging/rts5208/rtsx_chip.c: In function ‘rtsx_write_cfg_seq’:
+drivers/staging/rts5208/rtsx_chip.c:1453:7: warning: argument 1 value ‘18446744073709551615’ exceeds maximum object size 9223372036854775807 [-Walloc-size-larger-than=]
+  data = vzalloc(array_size(dw_len, 4));
+  ~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The parameter to array_size is a size_t, but it is called with a signed
+integer argument. If the argument is a negative integer, it will become a
+very large positive number when cast to size_t. This could cause an
+overflow, so array_size() will return SIZE_MAX _at compile time_. gcc then
+notices that this value is too large for an allocation and throws a
+warning.
+
+I propose two ways to deal with this:
+
+ - Individually go through and address these warnings, usualy by
+   catching when struct_size/array_size etc are called with a signed
+   type, and insert bounds checks or change the type where
+   appropriate. Patch 3 is an example.
+
+ - Patch 4: make kmalloc(_node) catch SIZE_MAX and return NULL early,
+   preventing an annotated kmalloc-family allocation function from seeing
+   SIZE_MAX as a parameter.
+
+I'm not sure whether I like the idea of catching SIZE_MAX in the inlined
+functions. Here are some pros and cons, and I'd be really interested to
+hear feedback:
+
+ * Making kmalloc return NULL early doesn't change _runtime_ behaviour:
+   obviously no SIZE_MAX allocation will ever succeed. And it means we
+   could have this feature earlier, which will help to catch issues like
+   what we catch in altera-stapl.
+
+ * However, it does mean we don't audit callsites where perhaps we should
+   have stricter types or bounds-checking. It also doesn't cover any of the
+   v*alloc functions.
+
+Overall I think this is a meaningful strengthening of FORTIFY_SOURCE
+and worth pursuing.
+
+Daniel Axtens (5):
+  altera-stapl: altera_get_note: prevent write beyond end of 'key'
+  [RFC] kasan: kasan_test: hide allocation sizes from the compiler
+  [RFC] staging: rts5208: make len a u16 in rtsx_write_cfg_seq
+  [VERY RFC] mm: kmalloc(_node): return NULL immediately for SIZE_MAX
+  [RFC] mm: annotate memory allocation functions with their sizes
+
+ drivers/misc/altera-stapl/altera.c  | 12 ++++----
+ drivers/staging/rts5208/rtsx_chip.c |  2 +-
+ drivers/staging/rts5208/rtsx_chip.h |  2 +-
+ include/linux/compiler_attributes.h |  6 ++++
+ include/linux/kasan.h               | 12 ++++----
+ include/linux/slab.h                | 44 +++++++++++++++++---------
+ include/linux/vmalloc.h             | 26 ++++++++--------
+ lib/test_kasan.c                    | 48 +++++++++++++++++++++--------
+ 8 files changed, 98 insertions(+), 54 deletions(-)
+
 -- 
-Michal Hocko
-SUSE Labs
+2.20.1
+
