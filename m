@@ -2,97 +2,192 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4811C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 03:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A445C32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 03:43:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89D20207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 03:42:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D76F2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 03:43:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PVXdAKWO"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="H7wsE3DH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729093AbgATDmA (ORCPT
+        id S1729121AbgATDnD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 22:42:00 -0500
-Received: from mail-pf1-f171.google.com ([209.85.210.171]:40204 "EHLO
-        mail-pf1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728949AbgATDmA (ORCPT
+        Sun, 19 Jan 2020 22:43:03 -0500
+Received: from mail-qt1-f182.google.com ([209.85.160.182]:38034 "EHLO
+        mail-qt1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729011AbgATDnD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 22:42:00 -0500
-Received: by mail-pf1-f171.google.com with SMTP id q8so15105315pfh.7
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jan 2020 19:41:59 -0800 (PST)
+        Sun, 19 Jan 2020 22:43:03 -0500
+Received: by mail-qt1-f182.google.com with SMTP id c24so15859265qtp.5
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jan 2020 19:43:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=ZSuENgj57EJKhDmrfo9UwbHjaQk00c2fnA9ZQ7sTuQY=;
-        b=PVXdAKWOv/6CJv7DJIkonwpRHjwNWN9U1j2HnbQnfUKvJVYLi2I0AHxah/DMJbjYAB
-         15pnV9iy/ntluqy5wyfXsoz84xPIQaXlMk66HygM/cxUzzt8RB8Z7SoLdHHfxQdO1z5A
-         LwmVO+q7oqnuRmutB129elUk5Xdvr3+MaXmB7y0Gqzusz28BYmPNKn4yvx4P4br8w1Gk
-         RI4zd+Po+aQEEbPIuJA2GInS3HBLbi4MPyuZ90Tmgcy7Gv0nmo95L2j4fB0yrGwM6VHf
-         qIBSKEMpPeB/Q5Yd0MALAtVCv9+loTzbHnE7kd1syTI+DmfWXvDlc2wnA0xc7sjdEDHo
-         JLVw==
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XE7pI/1UkwxiaUIIDslwmE8c/uvsS/a7QnJibWPUjk8=;
+        b=H7wsE3DH2UAfgH9BPwA6nHJQWjTlb8LNVMxYkbYMAnsC8wbtsl3pZeHoW35dNX+9bi
+         33wubpQLVkJKWHCbLz/bFfSDh3orrINpBFczmFEm11SFvr/afJyQ8bicdsMeoiGru4RE
+         iYWx4dAnHJVeI+ms6wvaAKw6D6k1o5l5Q5WEERKtdd/RPXV3JjY/v3QO4d18ucbtrvWF
+         J9LymZQzsTTpp/USsaeq2wkSs2daXQ9UseSP4q17wvqwVulOK6VTDWzfDYI8oqm7byDj
+         EA63IysBWbb1PtvN+Ude5aBPW6qR0qrVNvdJm3Mli5NzYRoMHapR4Pz1QjtpO7cuvOGR
+         4hEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ZSuENgj57EJKhDmrfo9UwbHjaQk00c2fnA9ZQ7sTuQY=;
-        b=AbYlo6mis40+EcOty4cRdR5l9W13HTBMSHVqwZUmXmexdd/Ze5Fve6T3YgEjd9P0FR
-         RsfcG5B0UJqQ1Yy30Vxss2rbQ7ajfctnBIA9WoGe6SLWKBuzXaBl4k8dEGXr3G1yH2EG
-         EoA12FIfaHwo3O24JAbL0kXqCAyVkKWXfVKO3eET+2bqbVROnrw522c8jOSCAjXrT4hj
-         OzVAFFnuJXC6UDLAbsuKDIOg0NkZ8bg44Ce5V5RD63k01Pj4Oh9fuV6A4w5HcKdp0Ntl
-         wjyhpgZcm9GbSyHzWL/t6O7vVtLdA5IH1CDZTNfpmpi2S1ZLi60H2jNkaYNLG6wHHtRu
-         U9GA==
-X-Gm-Message-State: APjAAAUMVf3XtA5/zyEePDbblZeNGVUQwEuSIIBE6LrTE8H8LqNAGjoC
-        zGvBxYkiDMsknxgekj47ajo=
-X-Google-Smtp-Source: APXvYqx9SFiP+HJHo5vJ9WNDDRJqY9FfJU2DKgJp/f5tUP2r6Sg8iGBBo13UVak42TonbSh0tPg8Ng==
-X-Received: by 2002:aa7:961b:: with SMTP id q27mr15327820pfg.23.1579491719639;
-        Sun, 19 Jan 2020 19:41:59 -0800 (PST)
-Received: from huyue2.ccdomain.com ([103.29.143.67])
-        by smtp.gmail.com with ESMTPSA id e2sm37158327pfh.84.2020.01.19.19.41.57
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XE7pI/1UkwxiaUIIDslwmE8c/uvsS/a7QnJibWPUjk8=;
+        b=os2HGmSuzt9bfvsOO4uSQNMAtttn1VIp5BAHrXTS4Dqk4hjHeNsibveRfluIlifaMZ
+         B3QLSmKIgzuwSXrA99mJP0PUkAvUwIxdFpvu//qK7rq9eHQALhWEbUajqgMBGLeGW82m
+         lRxDrBRX29XsxCR4b5tYKO/m2enRFD4C2edzciKe2mCMwGrIxkjS1EEQxUlYgFbegyHs
+         kf1mLKBHNF/Oa1DmfI+TUb/RBYNT5C+4vuBRVBOIxReMOo8ZNu333zG0Yys1dKFUNdax
+         AXnuIxh/ODOwv5tpaY2689THrN9CRovDM+qijd2S5zdZljBBXpEvbt4zC6prPpzWKxaU
+         Wgqw==
+X-Gm-Message-State: APjAAAXfwWz0QkvrJTrQ1lEEKjvlNwoY8IAZRcPpeNl9eC56/eFPTzrP
+        se3pF0Vxq9ihuSk6ziEH7ep3VQSrYQuyaA==
+X-Google-Smtp-Source: APXvYqyQZ+NKIh4NSv9lo3s1cdPpbMu7ss6hh5VkYE+4i2Iklpcr0kYCTinu2TAYv431zJaOjuJazg==
+X-Received: by 2002:ac8:6f63:: with SMTP id u3mr18756005qtv.39.1579491781901;
+        Sun, 19 Jan 2020 19:43:01 -0800 (PST)
+Received: from ovpn-121-56.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id h32sm17240718qth.2.2020.01.19.19.43.00
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 19 Jan 2020 19:41:59 -0800 (PST)
-From:   Yue Hu <zbestahu@gmail.com>
-To:     minchan@kernel.org, ngupta@vflare.org,
-        sergey.senozhatsky.work@gmail.com
-Cc:     linux-kernel@vger.kernel.org, huyue2@yulong.com
-Subject: [PATCH] zram: move backing_dev under macro CONFIG_ZRAM_WRITEBACK
-Date:   Mon, 20 Jan 2020 11:41:55 +0800
-Message-Id: <20200120034155.6048-1-zbestahu@gmail.com>
-X-Mailer: git-send-email 2.17.1.windows.2
+        Sun, 19 Jan 2020 19:43:01 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org
+Cc:     mhocko@kernel.org, david@redhat.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH -mm] mm/page_isolation: fix potential warning from user
+Date:   Sun, 19 Jan 2020 22:42:52 -0500
+Message-Id: <20200120034252.1558-1-cai@lca.pw>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yue Hu <huyue2@yulong.com>
+It makes sense to call the WARN_ON_ONCE(zone_idx(zone) == ZONE_MOVABLE)
+from the offlining path, but should avoid triggering it from userspace,
+i.e, from is_mem_section_removable().
 
-backing_dev is never used when not enable CONFIG_ZRAM_WRITEBACK and
-it's introduced from writeback feature. So it's needless also affect
-readability in that case.
+While at it, simplify the code a bit by removing an unnecessary jump
+label and a local variable, so set_migratetype_isolate() could really
+return a bool.
 
-Signed-off-by: Yue Hu <huyue2@yulong.com>
+Suggested-by: Michal Hocko <mhocko@kernel.org>
+Signed-off-by: Qian Cai <cai@lca.pw>
 ---
- drivers/block/zram/zram_drv.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/page_alloc.c     | 11 ++++-------
+ mm/page_isolation.c | 31 ++++++++++++++++++-------------
+ 2 files changed, 22 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/block/zram/zram_drv.h b/drivers/block/zram/zram_drv.h
-index f2fd46d..1cb3b9a 100644
---- a/drivers/block/zram/zram_drv.h
-+++ b/drivers/block/zram/zram_drv.h
-@@ -112,8 +112,8 @@ struct zram {
- 	 * zram is claimed so open request will be failed
- 	 */
- 	bool claim; /* Protected by bdev->bd_mutex */
--	struct file *backing_dev;
- #ifdef CONFIG_ZRAM_WRITEBACK
-+	struct file *backing_dev;
- 	spinlock_t wb_limit_lock;
- 	bool wb_limit_enable;
- 	u64 bd_wb_limit;
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 621716a25639..3c4eb750a199 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -8231,7 +8231,7 @@ struct page *has_unmovable_pages(struct zone *zone, struct page *page,
+ 		if (is_migrate_cma(migratetype))
+ 			return NULL;
+ 
+-		goto unmovable;
++		return page;
+ 	}
+ 
+ 	for (; iter < pageblock_nr_pages; iter++) {
+@@ -8241,7 +8241,7 @@ struct page *has_unmovable_pages(struct zone *zone, struct page *page,
+ 		page = pfn_to_page(pfn + iter);
+ 
+ 		if (PageReserved(page))
+-			goto unmovable;
++			return page;
+ 
+ 		/*
+ 		 * If the zone is movable and we have ruled out all reserved
+@@ -8261,7 +8261,7 @@ struct page *has_unmovable_pages(struct zone *zone, struct page *page,
+ 			unsigned int skip_pages;
+ 
+ 			if (!hugepage_migration_supported(page_hstate(head)))
+-				goto unmovable;
++				return page;
+ 
+ 			skip_pages = compound_nr(head) - (page - head);
+ 			iter += skip_pages - 1;
+@@ -8303,12 +8303,9 @@ struct page *has_unmovable_pages(struct zone *zone, struct page *page,
+ 		 * is set to both of a memory hole page and a _used_ kernel
+ 		 * page at boot.
+ 		 */
+-		goto unmovable;
++		return page;
+ 	}
+ 	return NULL;
+-unmovable:
+-	WARN_ON_ONCE(zone_idx(zone) == ZONE_MOVABLE);
+-	return pfn_to_page(pfn + iter);
+ }
+ 
+ #ifdef CONFIG_CONTIG_ALLOC
+diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+index e70586523ca3..97f673d5fefa 100644
+--- a/mm/page_isolation.c
++++ b/mm/page_isolation.c
+@@ -15,12 +15,12 @@
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/page_isolation.h>
+ 
+-static int set_migratetype_isolate(struct page *page, int migratetype, int isol_flags)
++static bool set_migratetype_isolate(struct page *page, int migratetype,
++				    int isol_flags)
+ {
+-	struct page *unmovable = NULL;
++	struct page *unmovable = ERR_PTR(-EBUSY);
+ 	struct zone *zone;
+ 	unsigned long flags;
+-	int ret = -EBUSY;
+ 
+ 	zone = page_zone(page);
+ 
+@@ -49,21 +49,26 @@ static int set_migratetype_isolate(struct page *page, int migratetype, int isol_
+ 									NULL);
+ 
+ 		__mod_zone_freepage_state(zone, -nr_pages, mt);
+-		ret = 0;
+ 	}
+ 
+ out:
+ 	spin_unlock_irqrestore(&zone->lock, flags);
+-	if (!ret)
++
++	if (!unmovable) {
+ 		drain_all_pages(zone);
+-	else if ((isol_flags & REPORT_FAILURE) && unmovable)
+-		/*
+-		 * printk() with zone->lock held will guarantee to trigger a
+-		 * lockdep splat, so defer it here.
+-		 */
+-		dump_page(unmovable, "unmovable page");
+-
+-	return ret;
++	} else {
++		if (isol_flags & MEMORY_OFFLINE)
++			WARN_ON_ONCE(zone_idx(zone) == ZONE_MOVABLE);
++
++		if ((isol_flags & REPORT_FAILURE) && !IS_ERR(unmovable))
++			/*
++			 * printk() with zone->lock held will likely trigger a
++			 * lockdep splat, so defer it here.
++			 */
++			dump_page(unmovable, "unmovable page");
++	}
++
++	return !!unmovable;
+ }
+ 
+ static void unset_migratetype_isolate(struct page *page, unsigned migratetype)
 -- 
-1.9.1
+2.21.0 (Apple Git-122.2)
 
