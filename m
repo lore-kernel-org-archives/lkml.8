@@ -2,80 +2,239 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4898FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7209C33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CBE922522
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:41:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C20E217F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:42:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="E2iEv9VX"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="nxitAyNL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728890AbgATOl0 (ORCPT
+        id S1729096AbgATOmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 09:41:26 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:59090 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726738AbgATOl0 (ORCPT
+        Mon, 20 Jan 2020 09:42:08 -0500
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:10433 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727032AbgATOmI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 09:41:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=4vIHUP9As2MHt/JTSJQoVlkdeNmF2zWPaSmNysm1Qn8=; b=E2iEv9VXGSdatAc8hrd7dKhN6
-        mi3zF/s/rHUeynfPDWwXxwIz6Klpgs1KdfzSA/Rbz0F5rZWQhjwaEOTeDXgBAaTLoECb7iwHNKiOw
-        gc4OLOvoedumQN3JBP+iGJGPdh0hkZslBHd6s5xLz0VQokrrJN7T2o80hxuLRlBQXSBxiN/MY3rSN
-        WrEMQn5Q7f8EKzjbV06mn6k/SO61Yax+mHLCGb5kpE/hBa0qOIy2185/wg1uqgnkFlXtBX9JAuVtD
-        zxDWnGMpCJYA8KCnbaoV6VBmh2460Sbx0v7BpgFunUBauIL/L5R4+hcacPDl6cblrWBU77yuAMRTf
-        uzm+DqXKQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1itYEV-0001Bj-4K; Mon, 20 Jan 2020 14:40:51 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BC36E3010D2;
-        Mon, 20 Jan 2020 15:39:09 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 643E92020D90A; Mon, 20 Jan 2020 15:40:48 +0100 (CET)
-Date:   Mon, 20 Jan 2020 15:40:48 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Marco Elver <elver@google.com>
-Cc:     paulmck@kernel.org, andreyknvl@google.com, glider@google.com,
-        dvyukov@google.com, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        will@kernel.org, boqun.feng@gmail.com, arnd@arndb.de,
-        viro@zeniv.linux.org.uk, christophe.leroy@c-s.fr, dja@axtens.net,
-        mpe@ellerman.id.au, rostedt@goodmis.org, mhiramat@kernel.org,
-        mingo@kernel.org, christian.brauner@ubuntu.com,
-        daniel@iogearbox.net, cyphar@cyphar.com, keescook@chromium.org,
-        linux-arch@vger.kernel.org
-Subject: Re: [PATCH 3/5] asm-generic, kcsan: Add KCSAN instrumentation for
- bitops
-Message-ID: <20200120144048.GB14914@hirez.programming.kicks-ass.net>
-References: <20200120141927.114373-1-elver@google.com>
- <20200120141927.114373-3-elver@google.com>
+        Mon, 20 Jan 2020 09:42:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1579531326; x=1611067326;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=gKcvgCuvnxsmMrSqVMP8I3jCbAOxHqI5Zf/I7NhlmXQ=;
+  b=nxitAyNLRyMa4au2N332a/Bsqwy4YCZ7h63cp2T2P4JJFxyY6gSJfnBH
+   StSkBy6Eo22kTAdFlfH1rM4fixi4tFeVCyrSM1B4L+5xOineNBKkkRxRh
+   yJGuuF5UVcn6xoIUjcbcu9QxRz6Bpg31Ft/zXKFfdKn17Ibhj20jCnI4M
+   4=;
+IronPort-SDR: kOowB5dfeAw9jGKaq9Bzmkt5Bc8aqgZFC80RStNdKmrg03CU0XAmMXUbIHCvIAs6AljMKHU1Bs
+ D0u3sXDiWluQ==
+X-IronPort-AV: E=Sophos;i="5.70,342,1574121600"; 
+   d="scan'208";a="13773069"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-c7c08562.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 20 Jan 2020 14:42:05 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1e-c7c08562.us-east-1.amazon.com (Postfix) with ESMTPS id CAB4B240F67;
+        Mon, 20 Jan 2020 14:42:00 +0000 (UTC)
+Received: from EX13D13UWB004.ant.amazon.com (10.43.161.218) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 20 Jan 2020 14:41:59 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
+ EX13D13UWB004.ant.amazon.com (10.43.161.218) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 20 Jan 2020 14:41:59 +0000
+Received: from [10.95.92.21] (10.95.92.21) by mail-relay.amazon.com
+ (10.43.161.249) with Microsoft SMTP Server (TLS) id 15.0.1367.3 via Frontend
+ Transport; Mon, 20 Jan 2020 14:41:53 +0000
+Subject: Re: [PATCH v7 1/3] edac: Add support for Amazon's Annapurna Labs L1
+ EDAC
+To:     James Morse <james.morse@arm.com>, <Sudeep.Holla@arm.com>
+CC:     <bp@alien8.de>, <mchehab@kernel.org>, <mark.rutland@arm.com>,
+        <robh+dt@kernel.org>, <frowand.list@gmail.com>,
+        <davem@davemloft.net>, <gregkh@linuxfoundation.org>,
+        <linus.walleij@linaro.org>, <daniel@iogearbox.net>,
+        <paulmck@linux.ibm.com>, <linux-kernel@vger.kernel.org>,
+        <linux-edac@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <dwmw@amazon.co.uk>, <benh@amazon.com>, <ronenk@amazon.com>,
+        <talel@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>
+References: <20191015120927.10470-1-hhhawa@amazon.com>
+ <20191015120927.10470-2-hhhawa@amazon.com>
+ <9ef0917d-b1d1-53c1-e459-309e509c2ff2@arm.com>
+From:   "Hawa, Hanna" <hhhawa@amazon.com>
+Message-ID: <0bd30915-71ca-cba2-f273-f7a1ff6d5a8d@amazon.com>
+Date:   Mon, 20 Jan 2020 16:41:51 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200120141927.114373-3-elver@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <9ef0917d-b1d1-53c1-e459-309e509c2ff2@arm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 03:19:25PM +0100, Marco Elver wrote:
-> Add explicit KCSAN checks for bitops.
-> 
-> Note that test_bit() is an atomic bitop, and we instrument it as such,
 
-Well, it is 'atomic' in the same way that atomic_read() is. Both are
-very much not atomic ops, but are part of an interface that facilitates
-atomic operations.
+
+On 1/15/2020 8:49 PM, James Morse wrote:
+> Hi Hanna,
+> 
+> (This was still on my list. I've not seen a newer version, its not in next, and it still
+> applies, so:)
+
+Thank you.
+
+> 
+> On 15/10/2019 13:09, Hanna Hawa wrote:
+>> Adds support for Amazon's Annapurna Labs L1 EDAC driver to detect and
+>> report L1 errors.
+> 
+>> diff --git a/drivers/edac/al_l1_edac.c b/drivers/edac/al_l1_edac.c
+>> new file mode 100644
+>> index 000000000000..e363a80b4d13
+>> --- /dev/null
+>> +++ b/drivers/edac/al_l1_edac.c
+>> @@ -0,0 +1,190 @@
+> 
+>> +#include <asm/sysreg.h>
+>> +#include <linux/bitfield.h>
+>> +#include <linux/of.h>
+>> +#include <linux/smp.h>
+> 
+> You need <linux/platform_device.h> for platform_device_register_simple().
+
+Will be added in next PS.
+
+> 
+> [...]
+> 
+>> +static void al_l1_edac_cpumerrsr_read_status(void *arg)
+>> +{
+> 
+>> +	for (i = 0; i < repeat; i++) {
+>> +		if (fatal)
+>> +			edac_device_handle_ue(edac_dev, 0, 0, msg);
+>> +		else
+>> +			edac_device_handle_ce(edac_dev, 0, 0, msg);
+>> +	}
+> 
+> What serialises these? You kick this off from on_each_cpu(), what stops two CPUs calling
+> this at the same time? 'edac_dev->counters.ce_count += count;' will go wrong in this case.
+> 
+> I think you need a spinlock around the edac_device_* calls that take edac_dev so that only
+> one occurs at a time.
+
+Agree with you, will add spinlock in next PS.
+
+> 
+> 
+>> +}
+>> +
+>> +static void al_l1_edac_check(struct edac_device_ctl_info *edac_dev)
+>> +{
+>> +	on_each_cpu(al_l1_edac_cpumerrsr_read_status, edac_dev, 1);
+>> +}
+>> +
+>> +static int al_l1_edac_probe(struct platform_device *pdev)
+>> +{
+>> +	struct edac_device_ctl_info *edac_dev;
+>> +	struct device *dev = &pdev->dev;
+>> +	int ret;
+>> +
+>> +	edac_dev = edac_device_alloc_ctl_info(0, DRV_NAME, 1, "L", 1, 1, NULL,
+>> +					      0, edac_device_alloc_index());
+>> +	if (!edac_dev)
+>> +		return -ENOMEM;
+>> +
+>> +	edac_dev->edac_check = al_l1_edac_check;
+>> +	edac_dev->dev = dev;
+>> +	edac_dev->mod_name = DRV_NAME;
+>> +	edac_dev->dev_name = dev_name(dev);
+>> +	edac_dev->ctl_name = "L1_cache";
+>> +	platform_set_drvdata(pdev, edac_dev);
+>> +
+>> +	ret = edac_device_add_device(edac_dev);
+>> +	if (ret)
+>> +		goto err;
+>> +
+>> +	return 0;
+>> +err:
+> 
+> (this goto has one user, meaning you can remove it by restructuring the code)
+
+Will be fixed in next PS.
+
+> 
+> 
+>> +	dev_err(dev, "Failed to add L1 edac device (%d)\n", ret);
+>> +	edac_device_free_ctl_info(edac_dev);
+>> +
+>> +	return ret;
+>> +}
+>> +
+> 
+>> +static const struct of_device_id al_l1_edac_of_match[] = {
+>> +	{ .compatible = "al,alpine-v2" },
+>> +	{ .compatible = "amazon,alpine-v3" },
+>> +	{}
+>> +};
+> 
+> Unusually these are machine compatibles. It may be worth a comment that these are the
+> platforms which are known to have Cortex-A57/A72 configured with this support, and access
+> to the registers enabled by firmware.
+
+Will be added.
+
+> 
+> 
+>> +MODULE_DEVICE_TABLE(of, al_l1_edac_of_match);
+> 
+> [..]
+> 
+>> +static int __init al_l1_init(void)
+>> +{
+>> +	struct device_node *root = of_find_node_by_path("/");
+>> +	int ret;
+> 
+> root could be NULL here.
+
+Will be fixed.
+
+> 
+> 
+>> +	if (!of_match_node(al_l1_edac_of_match, root))
+>> +		return 0;
+>> +
+>> +	ret = platform_driver_register(&al_l1_edac_driver);
+>> +	if (ret) {
+>> +		pr_err("Failed to register %s (%d)\n", DRV_NAME, ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	edac_l1_device = platform_device_register_simple(DRV_NAME, -1, NULL, 0);
+>> +	if (IS_ERR(edac_l1_device)) {
+>> +		pr_err("Failed to register EDAC AL L1 platform device\n");
+>> +		return PTR_ERR(edac_l1_device);
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+> 
+> With the edac_device_handle_ce() race fixed:
+> Reviewed-by: James Morse <james.morse@arm.com>
+
+Thanks,
+Hanna
+
+> 
+> 
+> Thanks,
+> 
+> James
+> 
