@@ -2,121 +2,130 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A55C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 02:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E411C33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 02:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E97522073D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 02:45:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9C0720678
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 02:47:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Y3qVTjWT"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="OswGjo+E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729027AbgATCpf (ORCPT
+        id S1729064AbgATCr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 21:45:35 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:52065 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728946AbgATCpe (ORCPT
+        Sun, 19 Jan 2020 21:47:26 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:61234 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728946AbgATCrZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 21:45:34 -0500
-Received: by mail-pj1-f67.google.com with SMTP id d15so6039885pjw.1
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jan 2020 18:45:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=tSA7tjQ0gZwwIxLsC3H38R1G6GxZRXNeLGZnOEN9y2s=;
-        b=Y3qVTjWTPNV5H8+jp1UxyYrh+5RE5/V7FLkYQMxTtVs4Yu1GWSItts1OpZHr4f7SMX
-         rds4rGjGDE3RfW/gTysiwdGDwbhGd10uO7eY84wGNujZYt8nztdyp0SWZisov53+/m+Y
-         zUyLLltJhior5qAlHoXpoiLJkwSCVYCT/4T8mUt92rXZfdS9QrxjfcIVYlq45pCQXYeA
-         BavuhWh3a0ZAhYH3k38x+w7JhSMws0ALDZQDjLTJ62J15MVE282tUNAONxTXy7NerrJ2
-         THKdi6+SrO8JO5ynoShOQR3hxhlFIoa+lkmEQiZjBhzK5f9U1iy3bI3CKwja2hRVuF+2
-         P6aA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=tSA7tjQ0gZwwIxLsC3H38R1G6GxZRXNeLGZnOEN9y2s=;
-        b=oe9RMepJBeBY/WzyL0hmrLbo/vuvRgthaoQaLboaOU5sWPpXpXwZCXw1lmYQ47m/fD
-         NtDTIcEnQvEbypQcgR4Fqsd5UsHFWahY1wP7PMdo1BrbS9kklwVvNclWLrblS+f8rwRq
-         IUYzBAS1RfLVOOXU7zecIhEVm4L45nBW3jUORPQ4IbZWT6iXVMkCEkCrceMOWsdpa2Jc
-         /4V9kUTlshyNJTUY5xZh1pFZZbIfPPgxUEEjvqyvom556e3RQE0zfTEq+Y2UQ2UjAdjd
-         NEZoKsQib7PBRnHEbr8WPL5RO36+zIjsvwqyEHuLeG8LMC+xp82fbZWbEuOC+maM61N1
-         /lFw==
-X-Gm-Message-State: APjAAAX0TfDqZEZig74QYv0zZyatckNrHrfeW6HwRnF9D1hABO859Gzg
-        rZJT4kndl0NC1DR+0Uyutrl2Ug==
-X-Google-Smtp-Source: APXvYqwizD7zKOp7aV1NwnruAEOpn02MxxgF/dP6zCxiIUPM8XwhimnueiHcQcvOLDqJhgNc8Yq9RQ==
-X-Received: by 2002:a17:902:74c5:: with SMTP id f5mr12199970plt.229.1579488333971;
-        Sun, 19 Jan 2020 18:45:33 -0800 (PST)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id z22sm37421853pfr.83.2020.01.19.18.45.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 19 Jan 2020 18:45:33 -0800 (PST)
-Subject: Re: linux-next: manual merge of the block tree with the vfs tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Al Viro <viro@ZenIV.linux.org.uk>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Aleksa Sarai <cyphar@cyphar.com>
-References: <20191220123614.5f11d2e3@canb.auug.org.au>
- <f6ff3aa5-e08b-8b25-454a-9aa51b8b5c37@kernel.dk>
- <20200120124051.2fdcfc61@canb.auug.org.au>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <e0af609c-aa1b-5a8b-89d4-ea6aff779c67@kernel.dk>
-Date:   Sun, 19 Jan 2020 19:45:32 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sun, 19 Jan 2020 21:47:25 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1579488445; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=VMIU6qr3Wgt3xkflneQ7e/aD1ybOQyncDm4GEzhwaY8=;
+ b=OswGjo+Ez8QO3NEVvrZiriUQvl1Yayt3E7cSV0eDs9dr6/PfumWtQBgEkTuQYA11DAE+TlS4
+ ahzUDDJAwkabnt8RW0PWhRPdf8lPABnteOgF5UOTP1ndeeMmhgwf7ctFomt8gw9n9i7yhonz
+ NR3/xqAGBkKtz7NonHb0NjR9u9A=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e2514b7.7f584f5d91b8-smtp-out-n02;
+ Mon, 20 Jan 2020 02:47:19 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 73A3DC4479F; Mon, 20 Jan 2020 02:47:18 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9620CC43383;
+        Mon, 20 Jan 2020 02:47:17 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <20200120124051.2fdcfc61@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Mon, 20 Jan 2020 08:17:17 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <maz@kernel.org>,
+        catalin.marinas@arm.com
+Cc:     suzuki.poulose@arm.com, linux-kernel@vger.kernel.org,
+        jeremy.linton@arm.com, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, andrew.murray@arm.com,
+        will@kernel.org, Dave.Martin@arm.com,
+        linux-arm-kernel@lists.infradead.org,
+        Stephen Boyd <swboyd@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>
+Subject: Re: Relax CPU features sanity checking on heterogeneous architectures
+In-Reply-To: <20191011135431.GB33537@lakrids.cambridge.arm.com>
+References: <b3606e76af42f7ecf65b1bfc2a5ed30a@codeaurora.org>
+ <20191011105010.GA29364@lakrids.cambridge.arm.com>
+ <20191011143343.541da66c@why>
+ <20191011135431.GB33537@lakrids.cambridge.arm.com>
+Message-ID: <a6987e0c5a1c986a962fec282dac690d@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/19/20 6:40 PM, Stephen Rothwell wrote:
-> Hi Jens,
-> 
-> On Thu, 19 Dec 2019 22:34:59 -0700 Jens Axboe <axboe@kernel.dk> wrote:
->>
->> On 12/19/19 6:36 PM, Stephen Rothwell wrote:
->>>
->>> Today's linux-next merge of the block tree got a conflict in:
->>>
->>>   fs/open.c
->>>
->>> between commit:
->>>
->>>   0a51692d49ec ("open: introduce openat2(2) syscall")
->>>
->>> from the vfs tree and commit:
->>>
->>>   252270311374 ("fs: make build_open_flags() available internally")
->>>
->>> from the block tree.
->>>
->>> I fixed it up (see at end, plus the merge fix patch below) and can
->>> carry the fix as necessary. This is now fixed as far as linux-next is
->>> concerned, but any non trivial conflicts should be mentioned to your
->>> upstream maintainer when your tree is submitted for merging.  You may
->>> also want to consider cooperating with the maintainer of the
->>> conflicting tree to minimise any particularly complex conflicts.  
->>
->> Thanks Stephen, I may just pull in the vfs tree to avoid this conflict.
-> 
-> I looks like Al has rewritten the branch you merged from his tree and
-> caused various conflicts in my merge of the block tree today.  I used
-> Al's new versions of the conflicting files.
+Hi Mark,
 
-That's a bummer. I guess I'll have to rebase on top of the new one. Al,
-is the new one going to be persistent?
+On 2019-10-11 19:24, Mark Rutland wrote:
+> On Fri, Oct 11, 2019 at 02:33:43PM +0100, Marc Zyngier wrote:
+>> On Fri, 11 Oct 2019 11:50:11 +0100
+>> Mark Rutland <mark.rutland@arm.com> wrote:
+>> 
+>> > Hi,
+>> >
+>> > On Fri, Oct 11, 2019 at 11:19:00AM +0530, Sai Prakash Ranjan wrote:
+>> > > On latest QCOM SoCs like SM8150 and SC7180 with big.LITTLE arch, below
+>> > > warnings are observed during bootup of big cpu cores.
+>> >
+>> > For reference, which CPUs are in those SoCs?
+>> >
+>> > > SM8150:
+>> > >
+>> > > [    0.271177] CPU features: SANITY CHECK: Unexpected variation in
+>> > > SYS_ID_AA64PFR0_EL1. Boot CPU: 0x00000011112222, CPU4: 0x00000011111112
+>> >
+>> > The differing fields are EL3, EL2, and EL1: the boot CPU supports
+>> > AArch64 and AArch32 at those exception levels, while the secondary only
+>> > supports AArch64.
+>> >
+>> > Do we handle this variation in KVM?
+>> 
+>> We do, at least at vcpu creation time (see kvm_reset_vcpu). But if one
+>> of the !AArch32 CPU comes in late in the game (after we've started a
+>> guest), all bets are off (we'll schedule the 32bit guest on that CPU,
+>> enter the guest, immediately take an Illegal Exception Return, and
+>> return to userspace with KVM_EXIT_FAIL_ENTRY).
+> 
+> Ouch. We certainly can't remove the warning untill we deal with that
+> somehow, then.
+> 
+>> Not sure we could do better, given the HW. My preference would be to
+>> fail these CPUs if they aren't present at boot time.
+> 
+> I agree; I think we need logic to check the ID register fields against
+> their EXACT, {LOWER,HIGHER}_SAFE, etc rules regardless of whether we
+> have an associated cap. That can then abort a late onlining of a CPU
+> which violates those rules w.r.t. the finalised system value.
+> 
+> I suspect that we may want to split the notion of
+> safe-for-{user,kernel-guest} in the feature tables, as if nothing else
+> it will force us to consider those cases separately when adding new
+> stuff.
+> 
+
+I can help with testing these if you have any sample patches.
+
+Thanks,
+Sai
 
 -- 
-Jens Axboe
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
