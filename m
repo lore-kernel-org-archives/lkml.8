@@ -2,149 +2,100 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9BD0C33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 03:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C009C32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 03:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D598207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 03:23:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579490611;
-	bh=bFXtcmrmYQ5EaV0kOE8JiB2aYQ31SgC7NfzQHg2UPxs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1iBIdVkvYQPdfGcFZvOeHRSz5qRCD+uASbiZneQRuj5y4d6vFOT487MdSvqCochEc
-	 p+mnT/NGSAjOO4yOqak3rk/Lh0oWOf6BqjsW7xhqaZ+l+KZaJsjqCag22g6GsZ2VDP
-	 3+VDy8S3RLMNjydLZb72shzC6udUZyVC4aFiCHVQ=
+	by mail.kernel.org (Postfix) with ESMTP id E5F0A20678
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 03:25:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PlzVDVIV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729158AbgATDXa (ORCPT
+        id S1729096AbgATDZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 22:23:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53298 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728949AbgATDXa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 22:23:30 -0500
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BCE92077C;
-        Mon, 20 Jan 2020 03:23:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579490609;
-        bh=bFXtcmrmYQ5EaV0kOE8JiB2aYQ31SgC7NfzQHg2UPxs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c9mJ5Agwkp77r+U0PAZA20yEaLWLW1G83oaMKpAcUmGMJbknhrDgbWn2+FCXaERMG
-         wWrIV2dbKH5ue/OgJqIQZOTU7MZ7zSMCogcHleY7kBaA9T6/eq4irSk/krw20a0q7v
-         VHzfzYyM/lt4m0h0P/S/fZp7f/W3LskHFv40ENS0=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Tim Bird <Tim.Bird@sony.com>, Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Sun, 19 Jan 2020 22:25:23 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:47081 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728949AbgATDZW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 19 Jan 2020 22:25:22 -0500
+Received: by mail-pl1-f196.google.com with SMTP id y8so12541191pll.13;
+        Sun, 19 Jan 2020 19:25:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=gGTltzfrdckJmMP0SmbR/3670dsenUvBc1hdDm8j+Co=;
+        b=PlzVDVIVTYL+JvwV8Jivonm8IKSry0nGRLpyb41XKV64sw14IXqFXP0KBNUvAUasmh
+         sH6hrK+/CndaAbTha23UoL6t4mg94f3dyLgm1wYq5MnfbNPt5RVhOd+DHoF/2FQ6uYd2
+         PIL5rCiztacJ2sxELOkNZmdaIxcgrwxrIieV53Mmpn7MzoRZ96uJUBxITxWew+TpJ8Jv
+         nF9EbTRrzV3phT6GGptkpVktkihXTGRcC92Vw5J/W6a76cv5AVmsKAxxs781FvyRsh7W
+         /Oyqo+v4tu6se3dWBBK4DeLH1OdRB/Y9+X6SbHaj48PfIn5oL7umCuweerN3mXbK9juH
+         dGHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=gGTltzfrdckJmMP0SmbR/3670dsenUvBc1hdDm8j+Co=;
+        b=UPneMEwa+X8cIyYf6ODjS+PWyVaBjCvZadDg+HUYEefQk2Yvzlr4myLWd/M4QLVEmR
+         8xtM4eS1qsKZ+BeaEMrYiK8sPGSLZUZQoI1NPPm2JzmdfKe1M3mIF4XH88KIOJikjjav
+         V0cjng2yz4ULrTV6EvQnzturkcC/JI82B4/2duQ4rT0Kg2MmwU8jvHTl61sQsw0ZF0ij
+         9kXLk6tH1AytHjU1XW8RIm3NdGCi7YUScHpLdd/fkoL/v+mFIiQFB+2WdwXcYdMHq+b9
+         9eOi+jGRI13Rfn9QIJ9YWWQRVvZxJyonF5n/uz0Epjg+F7gQenMPpTL+NNC/xgmJM33G
+         UZfw==
+X-Gm-Message-State: APjAAAWG9frmB3cmqkjZgjtIB1C2HC09z/nPHpLDweshksyi/AU/mkkD
+        it5QXqFTJ8kwLk6mTzh2ID0=
+X-Google-Smtp-Source: APXvYqxkf/BUOusDpiYDUNsBIuxzh5pWYB7+AVHM5lunzVYC7OtQorC1S2H37IiMbr2g1HMudSsKIQ==
+X-Received: by 2002:a17:902:bd96:: with SMTP id q22mr12244457pls.318.1579490722243;
+        Sun, 19 Jan 2020 19:25:22 -0800 (PST)
+Received: from ZB-PF11LQ25.360buyad.local ([103.90.76.242])
+        by smtp.gmail.com with ESMTPSA id k44sm491901pjb.20.2020.01.19.19.25.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 19 Jan 2020 19:25:21 -0800 (PST)
+From:   "xiaofeng.yan" <xiaofeng.yan2012@gmail.com>
+To:     arvid.brodin@alten.se, davem@davemloft.net, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] Documentation: tracing: Fix typos in boot-time tracing documentation
-Date:   Mon, 20 Jan 2020 12:23:23 +0900
-Message-Id: <157949060335.25888.13153184562531693684.stgit@devnote2>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <157949056842.25888.12912764773767908046.stgit@devnote2>
-References: <157949056842.25888.12912764773767908046.stgit@devnote2>
-User-Agent: StGit/0.17.1-dirty
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Cc:     xiaofeng.yan2012@gmail.com, yanxiaofeng7@jd.com
+Subject: [PATCH] hsr: Fix a compilation error
+Date:   Mon, 20 Jan 2020 11:26:39 +0800
+Message-Id: <20200120032639.2963-1-xiaofeng.yan2012@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix typos in boottime-trace.rst according to Randy's suggestions.
+From: "xiaofeng.yan" <yanxiaofeng7@jd.com>
 
-Suggested-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+A compliation error happen when building branch 5.5-rc7
+
+In file included from net/hsr/hsr_main.c:12:0:
+net/hsr/hsr_main.h:194:20: error: two or more data types in declaration specifiers
+ static inline void void hsr_debugfs_rename(struct net_device *dev)
+
+So Removed one void.
+
+Signed-off-by: xiaofeng.yan <yanxiaofeng7@jd.com>
 ---
- Documentation/trace/boottime-trace.rst |   18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ net/hsr/hsr_main.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/trace/boottime-trace.rst b/Documentation/trace/boottime-trace.rst
-index 1d10fdebf1b2..dcb390075ca1 100644
---- a/Documentation/trace/boottime-trace.rst
-+++ b/Documentation/trace/boottime-trace.rst
-@@ -13,7 +13,7 @@ Boot-time tracing allows users to trace boot-time process including
- device initialization with full features of ftrace including per-event
- filter and actions, histograms, kprobe-events and synthetic-events,
- and trace instances.
--Since kernel cmdline is not enough to control these complex features,
-+Since kernel command line is not enough to control these complex features,
- this uses bootconfig file to describe tracing feature programming.
- 
- Options in the Boot Config
-@@ -21,7 +21,7 @@ Options in the Boot Config
- 
- Here is the list of available options list for boot time tracing in
- boot config file [1]_. All options are under "ftrace." or "kernel."
--refix. See kernel parameters for the options which starts
-+prefix. See kernel parameters for the options which starts
- with "kernel." prefix [2]_.
- 
- .. [1] See :ref:`Documentation/admin-guide/bootconfig.rst <bootconfig>`
-@@ -50,7 +50,7 @@ kernel.fgraph_filters = FILTER[, FILTER2...]
-    Add fgraph tracing function filters.
- 
- kernel.fgraph_notraces = FILTER[, FILTER2...]
--   Add fgraph non tracing function filters.
-+   Add fgraph non-tracing function filters.
- 
- 
- Ftrace Per-instance Options
-@@ -81,10 +81,10 @@ ftrace.[instance.INSTANCE.]tracer = TRACER
-    Set TRACER to current tracer on boot. (e.g. function)
- 
- ftrace.[instance.INSTANCE.]ftrace.filters
--   This will take an array of tracing function filter rules
-+   This will take an array of tracing function filter rules.
- 
- ftrace.[instance.INSTANCE.]ftrace.notraces
--   This will take an array of NON-tracing function filter rules
-+   This will take an array of NON-tracing function filter rules.
- 
- 
- Ftrace Per-Event Options
-@@ -93,7 +93,7 @@ Ftrace Per-Event Options
- These options are setting per-event options.
- 
- ftrace.[instance.INSTANCE.]event.GROUP.EVENT.enable
--   Enables GROUP:EVENT tracing.
-+   Enable GROUP:EVENT tracing.
- 
- ftrace.[instance.INSTANCE.]event.GROUP.EVENT.filter = FILTER
-    Set FILTER rule to the GROUP:EVENT.
-@@ -145,10 +145,10 @@ below::
-         }
-   }
- 
--Also, boottime tracing supports "instance" node, which allows us to run
-+Also, boot-time tracing supports "instance" node, which allows us to run
- several tracers for different purpose at once. For example, one tracer
--is for tracing functions start with "user\_", and others tracing "kernel\_"
--functions, you can write boot config as below::
-+is for tracing functions starting with "user\_", and others tracing
-+"kernel\_" functions, you can write boot config as below::
- 
-   ftrace.instance {
-         foo {
+diff --git a/net/hsr/hsr_main.h b/net/hsr/hsr_main.h
+index d40de84..754d84b 100644
+--- a/net/hsr/hsr_main.h
++++ b/net/hsr/hsr_main.h
+@@ -191,7 +191,7 @@ static inline u16 hsr_get_skb_sequence_nr(struct sk_buff *skb)
+ void hsr_debugfs_create_root(void);
+ void hsr_debugfs_remove_root(void);
+ #else
+-static inline void void hsr_debugfs_rename(struct net_device *dev)
++static inline void hsr_debugfs_rename(struct net_device *dev)
+ {
+ }
+ static inline void hsr_debugfs_init(struct hsr_priv *priv,
+-- 
+1.8.3.1
 
