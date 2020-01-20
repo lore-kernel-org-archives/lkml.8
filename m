@@ -2,140 +2,73 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0AD8C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 21:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA07FC33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 21:42:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BCD422522
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 21:40:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NJmlIDgO"
+	by mail.kernel.org (Postfix) with ESMTP id 7EB7222522
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 21:42:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728042AbgATVkv (ORCPT
+        id S1727586AbgATVmn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 16:40:51 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:36289 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726752AbgATVkv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 16:40:51 -0500
-Received: by mail-wm1-f65.google.com with SMTP id p17so889018wma.1;
-        Mon, 20 Jan 2020 13:40:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=EclQbYOQEkzamFYNx/Y4PzCYvv/zjV5YtY7vdNyyehw=;
-        b=NJmlIDgOuzcNpXmypgRGRuNTI+EY5rWcJry9WzvjCRt2DfZVKx/ZqkpT9w6c4f1P4k
-         cvYGp8/dUbgQkSPrCAf+VeyJHCOkiv/vYhdbNfrTz2NDzpNN/PEtWvMnhJL/DpVCkapY
-         KFFsIW6XRxqhQ8gONMayZuN9dg0WYc4oPXP6qfVLVcB1z4IbbZI5SPRrYht8OMPZbZ/5
-         dQjYjemra+dXJX5b37O7Jipj0y2zh6pQm8T+9mmuos/FMfuggQc9LEkGiGMZpnTGQK+h
-         JXIbfdzIalxR6zdpk9r/SRYN94y2/rKJujJEwiaNJsjmcSAsWfRZxXgEwxqoog6QE+N/
-         /fbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EclQbYOQEkzamFYNx/Y4PzCYvv/zjV5YtY7vdNyyehw=;
-        b=TQNG5xI7UJfkqT8jPVh5sAelVfpm98w4DYvm7yO0Q0ZiPFhF74S13HzkpydmuDygvM
-         L5xDisq5hpTAECg0qwYb20/4E+luhDkiQ+g+4iiMqyEVQkPLuZf2Vo46Xn/h/DDPfyRE
-         J0q9jepaCaKpJSDXHENw0SoqFEaRzarlmJF7JaCp04XMB0PhBgcTeiKVkCSi2wh4+ogu
-         VYIgkKtot7gqADbxYvh1FA/v8LoQ3ZraN/GbKgOv9FuZpqt4srGpzB4G+/nI8Y2J8tS3
-         lRrYno/zvCvBKdvLUhjaePgXCAYFIhUEOp48Zo29St3IH9hh60NS59N8bNYN+ENbzvV3
-         4f1w==
-X-Gm-Message-State: APjAAAXq+SkEHnwvGBTVZs8KgjI4mzH5JICvmKMlr4LI+HzmZR1fdwtd
-        5mI8eCz3faTNdrAiNMF2bdA=
-X-Google-Smtp-Source: APXvYqzo05DDEd29zOE88PvXVdBesd8iqi8SnC8gPVfVOjKhTWKkVQwvaJXBBqduSHSI+3XqDe7+FA==
-X-Received: by 2002:a1c:28d4:: with SMTP id o203mr767255wmo.123.1579556448870;
-        Mon, 20 Jan 2020 13:40:48 -0800 (PST)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id h2sm50235953wrv.66.2020.01.20.13.40.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 13:40:47 -0800 (PST)
-Date:   Mon, 20 Jan 2020 22:40:46 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Namjae Jeon <linkinjeon@gmail.com>,
-        Gabriel Krisman Bertazi <krisman@collabora.com>
-Subject: Re: vfat: Broken case-insensitive support for UTF-8
-Message-ID: <20200120214046.f6uq7rlih7diqahz@pali>
-References: <20200119221455.bac7dc55g56q2l4r@pali>
- <87sgkan57p.fsf@mail.parknet.co.jp>
- <20200120110438.ak7jpyy66clx5v6x@pali>
- <875zh6pc0f.fsf@mail.parknet.co.jp>
+        Mon, 20 Jan 2020 16:42:43 -0500
+Received: from mx2.suse.de ([195.135.220.15]:43080 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726915AbgATVmn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 16:42:43 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 22C13AD5D;
+        Mon, 20 Jan 2020 21:42:41 +0000 (UTC)
+Date:   Mon, 20 Jan 2020 22:42:04 +0100
+From:   Jean Delvare <jdelvare@suse.de>
+To:     ebiederm@xmission.com (Eric W. Biederman)
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dave Young <dyoung@redhat.com>, linux-efi@vger.kernel.org,
+        ard.biesheuvel@linaro.org, matt@codeblueprint.co.uk,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH v1 2/2] firmware: dmi_scan: Pass dmi_entry_point to
+ kexec'ed kernel
+Message-ID: <20200120224204.4e5cc0df@endymion>
+In-Reply-To: <87a76i9ksr.fsf@x220.int.ebiederm.org>
+References: <20161202195416.58953-1-andriy.shevchenko@linux.intel.com>
+        <20161202195416.58953-3-andriy.shevchenko@linux.intel.com>
+        <20161215122856.7d24b7a8@endymion>
+        <20161216023213.GA4505@dhcp-128-65.nay.redhat.com>
+        <1481890738.9552.70.camel@linux.intel.com>
+        <20161216143330.69e9c8ee@endymion>
+        <20161217105721.GB6922@dhcp-128-65.nay.redhat.com>
+        <20200120121927.GJ32742@smile.fi.intel.com>
+        <87a76i9ksr.fsf@x220.int.ebiederm.org>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="uh7dvwiyhyuai6mk"
-Content-Disposition: inline
-In-Reply-To: <875zh6pc0f.fsf@mail.parknet.co.jp>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 20 Jan 2020 10:04:04 -0600, Eric W. Biederman wrote:
+> Second.  I looked at your test results and they don't directly make
+> sense.  dmidecode bypasses the kernel completely or it did last time
+> I looked so I don't know why you would be using that to test if
+> something in the kernel is working.
 
---uh7dvwiyhyuai6mk
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+That must have been long ago. A recent version of dmidecode (>= 3.0)
+running on a recent kernel
+(>= d7f96f97c4031fa4ffdb7801f9aae23e96170a6f, v4.2) will read the DMI
+data from /sys/firmware/dmi/tables, so it is very much relying on the
+kernel doing the right thing. If not, it will still try to fallback to
+reading from /dev/mem directly on certain architectures. You can force
+that old method with --no-sysfs.
 
-On Monday 20 January 2020 21:07:12 OGAWA Hirofumi wrote:
-> Pali Roh=C3=A1r <pali.rohar@gmail.com> writes:
->=20
-> >> To be perfect, the table would have to emulate what Windows use. It can
-> >> be unicode standard, or something other.
-> >
-> > Windows FAT32 implementation (fastfat.sys) is opensource. So it should
-> > be possible to inspect code and figure out how it is working.
-> >
-> > I will try to look at it.
->=20
-> I don't think the conversion library is not in fs driver though,
-> checking implement itself would be good.
-
-Ok, I did some research. It took me it longer as I thought as lot of
-stuff is undocumented and hard to find all relevant information.
-
-So... fastfat.sys is using ntos function RtlUpcaseUnicodeString() which
-takes UTF-16 string and returns upper case UTF-16 string. There is no
-mapping table in fastfat.sys driver itself.
-
-RtlUpcaseUnicodeString() is a ntos kernel function and after my research
-it seems that this function is using only conversion table stored in
-file l_intl.nls (from c:\windows\system32).
-
-Project wine describe this file as "unicode casing tables" and seems
-that it can parse this file format. Even more it distributes its own
-version of this file which looks like to be generated from official
-Unicode UnicodeData.txt via Perl script make_unicode (part of wine).
-
-So question is... how much is MS changing l_intl.nls file in their
-released Windows versions?
-
-I would try to decode what is format of that file l_intl.nls and try to
-compare data in it from some Windows versions.
-
-Can we reuse upper case mapping table from that file?
-
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---uh7dvwiyhyuai6mk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EARECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXiYeWQAKCRCL8Mk9A+RD
-Uh0bAJ9oXybx7i8wTkLtZEpeDpnDUmCgNwCgys3n6EWFgeEQxy3My+sXPUnxXXQ=
-=nzVm
------END PGP SIGNATURE-----
-
---uh7dvwiyhyuai6mk--
+Hope that helps,
+-- 
+Jean Delvare
+SUSE L3 Support
