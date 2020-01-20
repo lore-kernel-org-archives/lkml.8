@@ -2,108 +2,104 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AA74C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F240BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C28420684
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:12:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H8OWaOkb"
+	by mail.kernel.org (Postfix) with ESMTP id CDDD020684
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 10:14:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbgATKM4 (ORCPT
+        id S1726635AbgATKOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 05:12:56 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49605 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726130AbgATKM4 (ORCPT
+        Mon, 20 Jan 2020 05:14:18 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:32831 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726125AbgATKOS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 05:12:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579515174;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=SBwMhBXZhRdxuq/HoUDwGKfRSE/uVBbn2q1ub14ALCU=;
-        b=H8OWaOkbhxFkjg2dKvv2btyuudrY45FtT30povB2v8SusjAJZfC13/xlTLsWpdQu85RB3r
-        1disG54/ik6KpHs4MAL+Rf+5OALcrNYDP1lRWkypODWdlM6JMJsXtI0kqYbz2L9RNo8EBV
-        6FOrfO8udjrhaas8UmMWQKOBTpFsbro=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-22-dSSGdUXqOFeLBU2J3dAhyA-1; Mon, 20 Jan 2020 05:12:51 -0500
-X-MC-Unique: dSSGdUXqOFeLBU2J3dAhyA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 30369800D4E;
-        Mon, 20 Jan 2020 10:12:50 +0000 (UTC)
-Received: from krava (unknown [10.43.17.48])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B2B7B8573A;
-        Mon, 20 Jan 2020 10:12:48 +0000 (UTC)
-Date:   Mon, 20 Jan 2020 11:12:46 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc:     acme@kernel.org, namhyung@kernel.org, irogers@google.com,
-        songliubraving@fb.com, yao.jin@linux.intel.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] perf annotate: Fix segfault with source toggle
-Message-ID: <20200120101246.GH608405@krava>
-References: <20200117092612.30874-1-ravi.bangoria@linux.ibm.com>
- <20200117092612.30874-4-ravi.bangoria@linux.ibm.com>
+        Mon, 20 Jan 2020 05:14:18 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1itU4O-0005BH-Qg; Mon, 20 Jan 2020 11:14:09 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D3FD11C1A3F;
+        Mon, 20 Jan 2020 11:14:07 +0100 (CET)
+Date:   Mon, 20 Jan 2020 10:14:07 -0000
+From:   "tip-bot2 for Arvind Sankar" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/boot] x86/sysfb: Fix check for bad VRAM size
+Cc:     Christopher Head <chead@chead.ca>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Borislav Petkov <bp@suse.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200107230410.2291947-1-nivedita@alum.mit.edu>
+References: <20200107230410.2291947-1-nivedita@alum.mit.edu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200117092612.30874-4-ravi.bangoria@linux.ibm.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Message-ID: <157951524757.396.6875449897563073243.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 02:56:12PM +0530, Ravi Bangoria wrote:
-> While rendering annotate browser from perf report tui, we keep track
-> of total number of lines(asm + source) in annotation->nr_entries and
-> total number of asm lines in annotation->nr_asm_entries. But we don't
-> reset them before starting. Thus if user annotates same function
-> multiple times, we restart incrementing these fields with old values.
-> 
-> This causes a segfault when user tries to toggle source code after
-> annotating same function multiple times. Fix it.
-> 
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-> ---
->  tools/perf/util/annotate.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-> index fe98d29dfbc4..df09c2070337 100644
-> --- a/tools/perf/util/annotate.c
-> +++ b/tools/perf/util/annotate.c
-> @@ -2610,6 +2610,8 @@ void annotation__set_offsets(struct annotation *notes, s64 size)
->  	struct annotation_line *al;
->  
->  	notes->max_line_len = 0;
-> +	notes->nr_entries = 0;
-> +	notes->nr_asm_entries = 0;
+The following commit has been merged into the x86/boot branch of tip:
 
-seems fair ;-)
+Commit-ID:     dacc9092336be20b01642afe1a51720b31f60369
+Gitweb:        https://git.kernel.org/tip/dacc9092336be20b01642afe1a51720b31f60369
+Author:        Arvind Sankar <nivedita@alum.mit.edu>
+AuthorDate:    Tue, 07 Jan 2020 18:04:10 -05:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Mon, 20 Jan 2020 10:57:53 +01:00
 
-Acked-by: Jiri Olsa <jolsa@redhat.com>
+x86/sysfb: Fix check for bad VRAM size
 
-also could you please make that function static (in separate change)
-in your next repost?
+When checking whether the reported lfb_size makes sense, the height
+* stride result is page-aligned before seeing whether it exceeds the
+reported size.
 
-thanks,
-jirka
+This doesn't work if height * stride is not an exact number of pages.
+For example, as reported in the kernel bugzilla below, an 800x600x32 EFI
+framebuffer gets skipped because of this.
 
->  
->  	list_for_each_entry(al, &notes->src->source, node) {
->  		size_t line_len = strlen(al->line);
-> -- 
-> 2.24.1
-> 
+Move the PAGE_ALIGN to after the check vs size.
 
+Reported-by: Christopher Head <chead@chead.ca>
+Tested-by: Christopher Head <chead@chead.ca>
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206051
+Link: https://lkml.kernel.org/r/20200107230410.2291947-1-nivedita@alum.mit.edu
+---
+ arch/x86/kernel/sysfb_simplefb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/kernel/sysfb_simplefb.c b/arch/x86/kernel/sysfb_simplefb.c
+index 01f0e22..298fc1e 100644
+--- a/arch/x86/kernel/sysfb_simplefb.c
++++ b/arch/x86/kernel/sysfb_simplefb.c
+@@ -90,11 +90,11 @@ __init int create_simplefb(const struct screen_info *si,
+ 	if (si->orig_video_isVGA == VIDEO_TYPE_VLFB)
+ 		size <<= 16;
+ 	length = mode->height * mode->stride;
+-	length = PAGE_ALIGN(length);
+ 	if (length > size) {
+ 		printk(KERN_WARNING "sysfb: VRAM smaller than advertised\n");
+ 		return -EINVAL;
+ 	}
++	length = PAGE_ALIGN(length);
+ 
+ 	/* setup IORESOURCE_MEM as framebuffer memory */
+ 	memset(&res, 0, sizeof(res));
