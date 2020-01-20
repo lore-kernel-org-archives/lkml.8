@@ -2,136 +2,92 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E6AC33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0612FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4162E217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:10:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OciUar9F"
+	by mail.kernel.org (Postfix) with ESMTP id CF1DC21D7E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:12:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729205AbgATQKO (ORCPT
+        id S1729126AbgATQMN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 11:10:14 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:42412 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726942AbgATQKO (ORCPT
+        Mon, 20 Jan 2020 11:12:13 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:51872 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726626AbgATQMM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 11:10:14 -0500
-Received: by mail-oi1-f194.google.com with SMTP id 18so28929456oin.9;
-        Mon, 20 Jan 2020 08:10:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hEQYDkqPX4uYMhuYWM6fr7tZlzBSPPJbG7zw6GGKPF8=;
-        b=OciUar9FLHyi9IzxNGF0oGxjYDc7nKe/qJAhc24dHR1Vtqh7IUpF15oI1J7Z5s+0ab
-         5cJbX/UiiBMHmHeRDNOQT7Fw+756E4wkrPGMxEDdsT/36jqo7aHGllHztsSocthRSdl4
-         N4gk5zNCk8DpaEueOiEZapFJ9x50YqEiRAnU0+TmX+AFfFO3K7Sq0jsJQ499OiMxr+go
-         UVc6deORjfwkOCmKlHfowWRpL7bTAV47/f31GqcpKMa7O6wHKjS77ORC56+UIPMljamR
-         f3IKOPCysvdBfAljXA7SllOl5A6y8NnmRdPJ+Xa5yVxD2nodTOosbwEAmSY4rMCFa1Oz
-         CruQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hEQYDkqPX4uYMhuYWM6fr7tZlzBSPPJbG7zw6GGKPF8=;
-        b=SFQI02EpQhJZ4/fQo+765y7Stj0s+3kIYoN6lvyMo1/PiDFIT+ZCxG/WAjCgmNL+o0
-         m28W6xhccLt7/LOnMb6tklzavggDX4U3dMtK7G3vq/DBalx28h8YIAI2jnEL+ak4RxEF
-         o/SY8T7ONqFF58clZcjbiphHRb4G6RHuPRbUpF+qhKQKySzCWEx9EeZex/M+LJ1P341S
-         /pFFHdgH1vN+EIAQpOs4E5K3hDGKVxCdSuR78l5/bDQF43CaDnY4gjMuHdGROZsxA/CO
-         9sXheOzW1hHdvMXiUCCiui7p+T65jH5Opeh1pgDO5K/U//e/4/tErUDqoIsanm05akw2
-         5hFg==
-X-Gm-Message-State: APjAAAWkiov8wcDhoA6lzktAaDzxNhPyh30f1equlKEopCnIpkF58NFm
-        ytfyO8dNo2CIIvye7yfyvCk=
-X-Google-Smtp-Source: APXvYqwKvXhusvAdd7PpGLaF7zlMGa8YTeeENIG0hi//rrxEB1/pVI5yuHqAvt/aNka9v5qJ2TcYvA==
-X-Received: by 2002:a05:6808:1c5:: with SMTP id x5mr5765oic.57.1579536613069;
-        Mon, 20 Jan 2020 08:10:13 -0800 (PST)
-Received: from [100.71.96.87] ([143.166.81.254])
-        by smtp.gmail.com with ESMTPSA id m12sm12480238otq.15.2020.01.20.08.10.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 Jan 2020 08:10:12 -0800 (PST)
-Subject: Re: [PATCH v2] PCI: pciehp: Make sure pciehp_isr clears interrupt
- events
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lukas@wunner.de
-References: <20191120222043.53432-1-stuart.w.hayes@gmail.com>
-From:   Stuart Hayes <stuart.w.hayes@gmail.com>
-Message-ID: <41285254-1bc1-3ffe-383e-276dc7193990@gmail.com>
-Date:   Mon, 20 Jan 2020 10:10:11 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 20 Jan 2020 11:12:12 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1itZeo-00C6v8-G5; Mon, 20 Jan 2020 16:12:06 +0000
+Date:   Mon, 20 Jan 2020 16:12:06 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     David Laight <David.Laight@aculab.com>
+Cc:     'Pali =?iso-8859-1?Q?Roh=E1r'?= <pali.rohar@gmail.com>,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Namjae Jeon <linkinjeon@gmail.com>,
+        Gabriel Krisman Bertazi <krisman@collabora.com>
+Subject: Re: vfat: Broken case-insensitive support for UTF-8
+Message-ID: <20200120161206.GC8904@ZenIV.linux.org.uk>
+References: <20200119221455.bac7dc55g56q2l4r@pali>
+ <87sgkan57p.fsf@mail.parknet.co.jp>
+ <20200120110438.ak7jpyy66clx5v6x@pali>
+ <89eba9906011446f8441090f496278d2@AcuMS.aculab.com>
+ <20200120152009.5vbemgmvhke4qupq@pali>
+ <1a4c545dc7f14e33b7e59321a0aab868@AcuMS.aculab.com>
 MIME-Version: 1.0
-In-Reply-To: <20191120222043.53432-1-stuart.w.hayes@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1a4c545dc7f14e33b7e59321a0aab868@AcuMS.aculab.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/20/19 4:20 PM, Stuart Hayes wrote:
-> Without this patch, a pciehp hotplug port can stop generating interrupts
-> on hotplug events, so device adds and removals will not be seen.
+On Mon, Jan 20, 2020 at 03:47:22PM +0000, David Laight wrote:
+> From: Pali Rohár
+> > Sent: 20 January 2020 15:20
+> ...
+> > This is not possible. There is 1:1 mapping between UTF-8 sequence and
+> > Unicode code point. wchar_t in kernel represent either one Unicode code
+> > point (limited up to U+FFFF in NLS framework functions) or 2bytes in
+> > UTF-16 sequence (only in utf8s_to_utf16s() and utf16s_to_utf8s()
+> > functions).
 > 
-> The pciehp interrupt handler pciehp_isr() will read the slot status
-> register and then write back to it to clear the bits that caused the
-> interrupt. If a different interrupt event bit gets set between the read and
-> the write, pciehp_isr will exit without having cleared all of the interrupt
-> event bits. If this happens, and the port is using an MSI interrupt where
-> per-vector masking is not supported, we won't get any more hotplug
-> interrupts from that device.
-> 
-> That is expected behavior, according to the PCI Express Base Specification
-> Revision 5.0 Version 1.0, section 6.7.3.4, "Software Notification of Hot-
-> Plug Events".
-> 
-> Because the "presence detect changed" and "data link layer state changed"
-> event bits are both getting set at nearly the same time when a device is
-> added or removed, this is more likely to happen than it might seem. The
-> issue was found (and can be reproduced rather easily) by connecting and
-> disconnecting an NVMe storage device on at least one system model.
-> 
-> This issue was found while adding and removing various NVMe storage devices
-> on an AMD PCIe port (PCI device 0x1022/0x1483).
-> 
-> This patch fixes this issue by modifying pciehp_isr() by looping back and
-> re-reading the slot status register immediately after writing to it, until
-> it sees that all of the event status bits have been cleared.
-> 
-> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
-> ---
-> v2:
->   * fixed ctrl_warn() call
->   * improved comments
->   * added pvm_capable flag and changed pciehp_isr() to loop back only when
->     pvm_capable flag not set (suggested by Lukas Wunner)
->   
->  drivers/pci/hotplug/pciehp.h     |  3 ++
->  drivers/pci/hotplug/pciehp_hpc.c | 50 ++++++++++++++++++++++++++++----
->  2 files changed, 47 insertions(+), 6 deletions(-)
-> 
+> Unfortunately there is neither a 1:1 mapping of all possible byte sequences
+> to wchar_t (or unicode code points), nor a 1:1 mapping of all possible
+> wchar_t values to UTF-8.
+> Really both need to be defined - even for otherwise 'invalid' sequences.
 
-Bjorn,
+Who.  Cares?
 
-Please let me know if I could do anything to help get this patch accepted.
+Filename is a sequence of octets, not codepoints.  Its interpretation is
+entirely up to the userland.
 
-Thanks!
-Stuart
+Same goes for the notion of "case" (locale-dependent, etc.); some
+filesystems impose their (arbitrary) restrictions on the possible
+octet sequences (and equally arbitrary equivalence relations between
+them) that can be approximated in terms of upper/lower case in some
+locale.  It does not matter how arbitrary those are, or what stands
+behind them:
+	* don't do that for any new filesystem designs
+	* for existing filesystem types, the actual behaviour of
+native implementation IS THE ONE AND ONLY AUTHORITY.  It does not
+matter from what misguided thought process it has come from;
+the absolute requirement is that if you mount a filesystem valid
+from the native implementation POV, you must leave it in a state
+that would be valid from the native implementation POV.  That's
+it.
 
+Any talk about normalization, etc. is completely pointless -
+for any sane uses it's an opaque stream of octets that filesystem
+and VFS should leave the fuck alone.  Codepoints, encodings, etc.
+come into the game only to an extent they are useful to describe
+the weird rules given filesystem might have.  And they are just
+that - tools to describe externally imposed mappings.
