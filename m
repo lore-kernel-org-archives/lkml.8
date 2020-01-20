@@ -2,113 +2,102 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B915FC32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 221EAC32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7881C207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:24:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA3192073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:25:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Uo5RfD6p"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pd4TtqZa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726130AbgATGYg (ORCPT
+        id S1726590AbgATGZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 01:24:36 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:19908 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgATGYg (ORCPT
+        Mon, 20 Jan 2020 01:25:17 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:44569 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbgATGZQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 01:24:36 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e2547950000>; Sun, 19 Jan 2020 22:24:21 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sun, 19 Jan 2020 22:24:35 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sun, 19 Jan 2020 22:24:35 -0800
-Received: from [10.24.44.92] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 20 Jan
- 2020 06:24:33 +0000
-Subject: Re: [PATCH] ASoC: rt5659: add S32_LE format
-To:     <oder_chiou@realtek.com>, <tiwai@suse.com>, <perex@perex.cz>
-CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
-References: <1579501059-27936-1-git-send-email-spujar@nvidia.com>
-From:   Sameer Pujar <spujar@nvidia.com>
-Message-ID: <74a42452-f19c-1175-9928-da12ccad621d@nvidia.com>
-Date:   Mon, 20 Jan 2020 11:54:30 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <1579501059-27936-1-git-send-email-spujar@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1579501461; bh=OnCPnZ18bhGbUj+/reh1GSCR+rCNXuxYQcZqRDc01EU=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=Uo5RfD6pOFX74niOwMzdIl95ZiS3KibGo8gUB/AyRE27VCavZNn+eGcWbfIsPhVYN
-         ItMplFTFeW3eLsHSdh7QYnovMMroGhgvE9qLCb7XNWNdEISQ8/qNux5FcDXoj1zlk4
-         WhGkqsZBrH2xNULxH8KD3T6FTQ2TOIzy3wNwsU1IgtOi4aqSHqbMrjPUcqebN+s+rz
-         kXyigzNORq96W+/XfgDPXkP0eg5vFzfbSTMCDh7naMRwaEAiLpbY0DVuIMLTSJPtth
-         anENEwTTG31Yk+SA+QvPt9OvsoLQJkwGYl9zPA7SByl8X+p4aOOQnZk28JUM4sYAGa
-         PjJLTqUMXlt8g==
+        Mon, 20 Jan 2020 01:25:16 -0500
+Received: by mail-pl1-f193.google.com with SMTP id d9so972107plo.11;
+        Sun, 19 Jan 2020 22:25:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=d5Eadt8gafPSmu+6ZZhsajj1XzECvvpLFOHL6bzhCvE=;
+        b=pd4TtqZa/TDq8H3rhUA/D8jxwFSwuZExZvB8kkCdh5lhqZXXL2nRS0NhKqcPVbG7Jt
+         Zw6lwxNQk0yz08JBh4GTRgxoj4kLhOxtr82oi2ySUU/kp0UbIraA820X9KHLL1KmlKDd
+         T4rcLeRc82gc+JNjfMOLh6IsFtqVz1f2ihQOs5IrQsVclUyg+EO+9tuufaP7W5ZAJG4U
+         nC3qJOnbrSy42PFPbYlEM2mKPEqggdorRt/Zjq648gy8bi8z+hAfJ9PNHwGfDiSGHFPO
+         61E1MX/zP/3WvDgF+rCw9GhAIQCAyJb10ws4WXQY6NIJri+elG2UxVHgTQToRxGL96To
+         zytg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=d5Eadt8gafPSmu+6ZZhsajj1XzECvvpLFOHL6bzhCvE=;
+        b=i5/ltK6NxnmeHti9RXit+4fzlcFet6Z2ciBF5O4dF9yBhNHGqZ7AbX6r6Enz5pKqeZ
+         bTYXPb1MRKmDQ/Bt0PJ3eM4iSnVwqNuEv84jrBmsp9P50eks9A6uGHff1joUOk5wcrwJ
+         4kZr6nLJaTEuXiJDa2soGtV4QfSjvYwWj9sk8n47tUDt1i0T7KcTJmsb1ItBBNJYS0as
+         udnOar5i6UxmvijxjDIhg543xjgOZUjXhL7Sd1fDfdlr5zLCmaXPY6uVrsakPuM7APk4
+         SWVgfCdz/reCirJWzuXYIw/IrkjkGXsBjxauInhU5q1tTNx4vOzkEn684fF7c5NXaZJ/
+         7xmQ==
+X-Gm-Message-State: APjAAAWtEFYECUFFz1vxXDALpdN+Fzk89WwmAOYqdLgKKSsZouQf7IRm
+        oK5W+IG+HDtYeFXFwaMk7V4=
+X-Google-Smtp-Source: APXvYqyeX89XTVd/d48tgvN0KQjBvCDz09xOQlNHI8Ziia3LWmsq2gBwr1g8Md4IXPLClvRlhcYfWQ==
+X-Received: by 2002:a17:902:8a91:: with SMTP id p17mr12598108plo.75.1579501516231;
+        Sun, 19 Jan 2020 22:25:16 -0800 (PST)
+Received: from ZB-PF11LQ25.360buyad.local ([103.90.76.242])
+        by smtp.gmail.com with ESMTPSA id hg11sm7758425pjb.14.2020.01.19.22.25.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 19 Jan 2020 22:25:15 -0800 (PST)
+From:   "xiaofeng.yan" <xiaofeng.yan2012@gmail.com>
+To:     davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ap420073@gmail.com
+Cc:     xiaofeng.yan2012@gmail.com, yanxiaofeng7@jd.com
+Subject: [PATCH v2] hsr: Fix a compilation error
+Date:   Mon, 20 Jan 2020 14:26:39 +0800
+Message-Id: <20200120062639.3074-1-xiaofeng.yan2012@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Removing Bard(bardliao@realtek.com) from "to" list since I am getting 
-undelivered message.
+From: "xiaofeng.yan" <yanxiaofeng7@jd.com>
 
-Oder,
-Please add right folks as you feel necessary. Thanks.
+A compliation error happen when building branch 5.5-rc7
 
-On 1/20/2020 11:47 AM, Sameer Pujar wrote:
-> ALC5659 supports maximum data length of 24-bit. Currently driver supports
-> S24_LE which is a 32-bit container with valid data in [23:0] and 0s in MSB.
-> S24_3LE is not commonly used and is hard to find audio streams with this
-> format. Also many SoC HW do not support S24_LE and S32_LE is used in
-> general. The 24-bit data can be represented in S32_LE [31:8] and 0s are
-> padded in LSB.
->
-> This patch adds S32_LE to ALC5659 driver and data length for this is set
-> to 24 as per codec's maximum data length support. This helps to play
-> 24-bit audio, packed in S32_LE, on HW which do not support S24_LE.
->
-> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
-> ---
->   sound/soc/codecs/rt5659.c | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/sound/soc/codecs/rt5659.c b/sound/soc/codecs/rt5659.c
-> index fc74dd63..f910ddf 100644
-> --- a/sound/soc/codecs/rt5659.c
-> +++ b/sound/soc/codecs/rt5659.c
-> @@ -3339,6 +3339,7 @@ static int rt5659_hw_params(struct snd_pcm_substream *substream,
->   		val_len |= RT5659_I2S_DL_20;
->   		break;
->   	case 24:
-> +	case 32:
->   		val_len |= RT5659_I2S_DL_24;
->   		break;
->   	case 8:
-> @@ -3733,7 +3734,8 @@ static int rt5659_resume(struct snd_soc_component *component)
->   
->   #define RT5659_STEREO_RATES SNDRV_PCM_RATE_8000_192000
->   #define RT5659_FORMATS (SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S20_3LE | \
-> -		SNDRV_PCM_FMTBIT_S24_LE | SNDRV_PCM_FMTBIT_S8)
-> +		SNDRV_PCM_FMTBIT_S24_LE | SNDRV_PCM_FMTBIT_S32_LE | \
-> +		SNDRV_PCM_FMTBIT_S8)
->   
->   static const struct snd_soc_dai_ops rt5659_aif_dai_ops = {
->   	.hw_params = rt5659_hw_params,
+In file included from net/hsr/hsr_main.c:12:0:
+net/hsr/hsr_main.h:194:20: error: two or more data types in declaration specifiers
+ static inline void void hsr_debugfs_rename(struct net_device *dev)
+
+So Removed one void.
+
+Fixes: 4c2d5e33dcd3 ("hsr: rename debugfs file when interface name is changed")
+Signed-off-by: xiaofeng.yan <yanxiaofeng7@jd.com>
+Acked-by: Taehee Yoo <ap420073@gmail.com>
+---
+ net/hsr/hsr_main.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/hsr/hsr_main.h b/net/hsr/hsr_main.h
+index d40de84..754d84b 100644
+--- a/net/hsr/hsr_main.h
++++ b/net/hsr/hsr_main.h
+@@ -191,7 +191,7 @@ static inline u16 hsr_get_skb_sequence_nr(struct sk_buff *skb)
+ void hsr_debugfs_create_root(void);
+ void hsr_debugfs_remove_root(void);
+ #else
+-static inline void void hsr_debugfs_rename(struct net_device *dev)
++static inline void hsr_debugfs_rename(struct net_device *dev)
+ {
+ }
+ static inline void hsr_debugfs_init(struct hsr_priv *priv,
+-- 
+1.8.3.1
+
