@@ -2,112 +2,156 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 207C2C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 18:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B15C33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 18:28:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF9E922525
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 18:27:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B63722525
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 18:28:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbgATS1g (ORCPT
+        id S1727665AbgATS2P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 13:27:36 -0500
-Received: from foss.arm.com ([217.140.110.172]:35484 "EHLO foss.arm.com"
+        Mon, 20 Jan 2020 13:28:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726642AbgATS1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 13:27:35 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A249731B;
-        Mon, 20 Jan 2020 10:27:34 -0800 (PST)
-Received: from [192.168.0.7] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2843F3F68E;
-        Mon, 20 Jan 2020 10:27:28 -0800 (PST)
-Subject: Re: [PATCH 1/4] PM / EM: and devices to Energy Model
-To:     Quentin Perret <qperret@google.com>,
-        Lukasz Luba <lukasz.luba@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com, Morten.Rasmussen@arm.com, Chris.Redpath@arm.com,
-        ionela.voinescu@arm.com, javi.merino@arm.com,
-        cw00.choi@samsung.com, b.zolnierkie@samsung.com, rjw@rjwysocki.net,
-        sudeep.holla@arm.com, viresh.kumar@linaro.org, nm@ti.com,
-        sboyd@kernel.org, rui.zhang@intel.com, amit.kucheria@verdurent.com,
-        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
-        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, kernel-team@android.com
-References: <20200116152032.11301-1-lukasz.luba@arm.com>
- <20200116152032.11301-2-lukasz.luba@arm.com>
- <20200117105437.GA211774@google.com>
- <40587d98-0e8d-cbac-dbf5-d26501d47a8c@arm.com>
- <20200120150918.GA164543@google.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <8332c4ac-2a7d-1e2d-76e9-7c979a666257@arm.com>
-Date:   Mon, 20 Jan 2020 19:27:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1726642AbgATS2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 13:28:15 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CA2422525;
+        Mon, 20 Jan 2020 18:28:13 +0000 (UTC)
+Date:   Mon, 20 Jan 2020 13:28:12 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Cong Wang <xiyou.wangcong@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH] block: introduce block_rq_error tracepoint
+Message-ID: <20200120132812.384274d3@gandalf.local.home>
+In-Reply-To: <20200110221500.19678-1-xiyou.wangcong@gmail.com>
+References: <20200110221500.19678-1-xiyou.wangcong@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200120150918.GA164543@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/01/2020 16:09, Quentin Perret wrote:
-> Hey Lukasz,
+On Fri, 10 Jan 2020 14:15:00 -0800
+Cong Wang <xiyou.wangcong@gmail.com> wrote:
+
+> Currently, rasdaemon uses the existing tracepoint block_rq_complete
+> and filters out non-error cases in order to capture block disk errors.
 > 
-> On Monday 20 Jan 2020 at 14:52:07 (+0000), Lukasz Luba wrote:
->> On 1/17/20 10:54 AM, Quentin Perret wrote:
->>> Suggested alternative: have two registration functions like so:
->>>
->>> 	int em_register_dev_pd(struct device *dev, unsigned int nr_states,
->>> 			       struct em_data_callback *cb);
->>> 	int em_register_cpu_pd(cpumask_t *span, unsigned int nr_states,
->>> 			       struct em_data_callback *cb);
->>
->> Interesting, in the internal review Dietmar asked me to remove these two
->> functions. I had the same idea, which would simplify a bit the
->> registration and it does not need to check the dev->bus if it is CPU.
->>
->> Unfortunately, we would need also two function in drivers/opp/of.c:
->> dev_pm_opp_of_register_cpu_em(policy->cpus);
->> and
->> dev_pm_opp_of_register_dev_em(dev);
->>
->> Thus, I have created only one registration function, which you can see
->> in this patch set.
+> But there are a few problems with this approach:
 > 
-> Right, I can see how having a unified API would be appealing, but the
-> OPP dependency is a nono, so we'll need to work around one way or
-> another.
+> 1. Even kernel trace filter could do the filtering work, there is
+>    still some overhead after we enable this tracepoint.
 > 
-> FWIW, I don't think having separate APIs for CPUs and other devices is
-> that bad given that we already have entirely different frameworks to
-> drive their respective frequencies. And the _cpu variants are basically
-> just wrappers around the _dev ones, so not too bad either IMO :).
+> 2. The filter is merely based on errno, which does not align with kernel
+>    logic to check the errors for print_req_error().
+> 
+> 3. block_rq_complete only provides dev major and minor to identify
+>    the block device, it is not convenient to use in user-space.
+> 
+> So introduce a new tracepoint block_rq_error just for the error case
+> and provides the device name for convenience too. With this patch,
+> rasdaemon could switch to block_rq_error.
+> 
+> Cc: Jens Axboe <axboe@kernel.dk>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+> ---
+>  block/blk-core.c             |  4 +++-
+>  include/trace/events/block.h | 43 ++++++++++++++++++++++++++++++++++++
+>  2 files changed, 46 insertions(+), 1 deletion(-)
+> 
+> diff --git a/block/blk-core.c b/block/blk-core.c
+> index 089e890ab208..0c7ad70d06be 100644
+> --- a/block/blk-core.c
+> +++ b/block/blk-core.c
+> @@ -1450,8 +1450,10 @@ bool blk_update_request(struct request *req, blk_status_t error,
+>  #endif
+>  
+>  	if (unlikely(error && !blk_rq_is_passthrough(req) &&
+> -		     !(req->rq_flags & RQF_QUIET)))
+> +		     !(req->rq_flags & RQF_QUIET))) {
+> +		trace_block_rq_error(req, blk_status_to_errno(error), nr_bytes);
+>  		print_req_error(req, error, __func__);
+> +	}
+>  
+>  	blk_account_io_completion(req, nr_bytes);
+>  
+> diff --git a/include/trace/events/block.h b/include/trace/events/block.h
+> index 81b43f5bdf23..a0f63f4d50c4 100644
+> --- a/include/trace/events/block.h
+> +++ b/include/trace/events/block.h
+> @@ -145,6 +145,49 @@ TRACE_EVENT(block_rq_complete,
+>  		  __entry->nr_sector, __entry->error)
+>  );
+>  
+> +/**
+> + * block_rq_error - block IO operation error reported by device driver
+> + * @rq: block operations request
+> + * @error: status code
+> + * @nr_bytes: number of completed bytes
+> + *
+> + * The block_rq_error tracepoint event indicates that some portion
+> + * of operation request has failed as reported by the device driver.
+> + */
+> +TRACE_EVENT(block_rq_error,
+> +
+> +	TP_PROTO(struct request *rq, int error, unsigned int nr_bytes),
+> +
+> +	TP_ARGS(rq, error, nr_bytes),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(  dev_t,	dev			)
+> +		__field(  char *,	name			)
 
-It's true that we need the policy->cpus cpumask only for cpu devices and
-we have it available when we call em_register_perf_domain()
-[scmi-cpufreq.c driver] or the OPP wrapper dev_pm_opp_of_register_em()
-[e.g. cpufreq-dt.c driver].
+Please make this a string() field and not a pointer to name.
 
-And we shouldn't make EM code dependent on OPP.
+> +		__field(  sector_t,	sector			)
+> +		__field(  unsigned int,	nr_sector		)
+> +		__field(  int,		error			)
+> +		__array(  char,		rwbs,	RWBS_LEN	)
+> +		__dynamic_array( char,	cmd,	1		)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->dev	   = rq->rq_disk ? disk_devt(rq->rq_disk) : 0;
+> +		__entry->name	   = rq->rq_disk ? rq->rq_disk->disk_name : "?";
+> +		__entry->sector    = blk_rq_pos(rq);
+> +		__entry->nr_sector = nr_bytes >> 9;
+> +		__entry->error     = error;
+> +
+> +		blk_fill_rwbs(__entry->rwbs, rq->cmd_flags, nr_bytes);
+> +		__get_str(cmd)[0] = '\0';
+> +	),
+> +
+> +	TP_printk("%d,%d %s %s (%s) %llu + %u [%d]",
+> +		  MAJOR(__entry->dev), MINOR(__entry->dev),
+> +		  __entry->name, __entry->rwbs, __get_str(cmd),
 
-But can't we add 'struct cpumask *mask' as an additional argument to
-both which can be set to NULL for (devfreq) devices?
+The ring buffer will hold a pointer to a location that may no longer
+exist, and cause a fault when read. Also, this makes the user space
+utilities trace-cmd and perf useless to know what the name is, as they
+read the raw ring buffer data directly.
 
-We can check in em_register_perf_domain() that we got a valid cpumask
-for a cpu device and ignore it for (devfreq) devices.
+-- Steve
+
+
+> +		  (unsigned long long)__entry->sector,
+> +		  __entry->nr_sector, __entry->error)
+> +);
+> +
+>  DECLARE_EVENT_CLASS(block_rq,
+>  
+>  	TP_PROTO(struct request_queue *q, struct request *rq),
+
