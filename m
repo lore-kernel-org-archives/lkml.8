@@ -2,91 +2,120 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A91EC33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36005C33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:59:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07327207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:59:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16DC22077C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:59:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbgATI7E (ORCPT
+        id S1727289AbgATI7K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 03:59:04 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:9211 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726465AbgATI7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 03:59:04 -0500
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 522D414C753858038CAE;
-        Mon, 20 Jan 2020 16:59:02 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 20 Jan 2020 16:58:54 +0800
-From:   Wei Yongjun <weiyongjun1@huawei.com>
-To:     David Howells <dhowells@redhat.com>
-CC:     Wei Yongjun <weiyongjun1@huawei.com>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-Subject: [PATCH -next] watch_queue: Fix error return code in watch_queue_set_size()
-Date:   Mon, 20 Jan 2020 08:54:11 +0000
-Message-ID: <20200120085411.116252-1-weiyongjun1@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 20 Jan 2020 03:59:10 -0500
+Received: from mga02.intel.com ([134.134.136.20]:36396 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726988AbgATI7K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 03:59:10 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 00:59:09 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,341,1574150400"; 
+   d="scan'208";a="258634448"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
+  by fmsmga002.fm.intel.com with ESMTP; 20 Jan 2020 00:59:06 -0800
+Subject: Re: [PATCH V2 1/2] mmc: sdhci: Let a vendor driver supply and update
+ ADMA descriptor size
+To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        ulf.hansson@linaro.org
+Cc:     asutoshd@codeaurora.org, stummala@codeaurora.org,
+        sayalil@codeaurora.org, cang@codeaurora.org,
+        rampraka@codeaurora.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+References: <1579194192-7942-1-git-send-email-vbadigan@codeaurora.org>
+ <1579194192-7942-2-git-send-email-vbadigan@codeaurora.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <aaffb145-69ab-af11-7470-e887b45583a9@intel.com>
+Date:   Mon, 20 Jan 2020 10:58:11 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+In-Reply-To: <1579194192-7942-2-git-send-email-vbadigan@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix to return a negative error code from the error handling
-case instead of 0, as done elsewhere in this function.
+On 16/01/20 7:03 pm, Veerabhadrarao Badiganti wrote:
+> Let a vendor driver supply the maximum descriptor size that it
+> can operate on. ADMA descriptor table would be allocated using this
+> supplied size.
+> If any SD Host controller is of version prior to v4.10 spec
+> but supports 16byte descriptor, this change allows them to supply
+> correct descriptor size for ADMA table allocation.
+> 
+> Also let a vendor driver update the descriptor size by overriding
+> sdhc_host->desc_size if it has to operates on a different descriptor
+> sizes in different conditions.
+> 
+> Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
+> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
 
-Fixes: d9a34f010efd ("pipe: Add general notification queue support")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
----
- kernel/watch_queue.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+A couple of minor comments below but with those changes:
 
-diff --git a/kernel/watch_queue.c b/kernel/watch_queue.c
-index f195cbbbb3d3..3051cf4e35c6 100644
---- a/kernel/watch_queue.c
-+++ b/kernel/watch_queue.c
-@@ -252,21 +252,27 @@ long watch_queue_set_size(struct pipe_inode_info *pipe, unsigned int nr_notes)
- 		goto error;
- 
- 	pages = kcalloc(sizeof(struct page *), nr_pages, GFP_KERNEL);
--	if (!pages)
-+	if (!pages) {
-+		ret = -ENOMEM;
- 		goto error;
-+	}
- 
- 	for (i = 0; i < nr_pages; i++) {
- 		pages[i] = alloc_page(GFP_KERNEL);
--		if (!pages[i])
-+		if (!pages[i]) {
-+			ret = -ENOMEM;
- 			goto error_p;
-+		}
- 		pages[i]->index = i * WATCH_QUEUE_NOTES_PER_PAGE;
- 	}
- 
- 	bmsize = (nr_notes + BITS_PER_LONG - 1) / BITS_PER_LONG;
- 	bmsize *= sizeof(unsigned long);
- 	bitmap = kmalloc(bmsize, GFP_KERNEL);
--	if (!bitmap)
-+	if (!bitmap) {
-+		ret = -ENOMEM;
- 		goto error_p;
-+	}
- 
- 	memset(bitmap, 0xff, bmsize);
- 	wqueue->notes = pages;
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
+> ---
+>  drivers/mmc/host/sdhci.c | 7 +++++--
+>  drivers/mmc/host/sdhci.h | 1 +
+>  2 files changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> index 3140fe2..19a5ad3 100644
+> --- a/drivers/mmc/host/sdhci.c
+> +++ b/drivers/mmc/host/sdhci.c
+> @@ -3822,9 +3822,12 @@ int sdhci_setup_host(struct sdhci_host *host)
+>  		void *buf;
+>  
+>  		if (host->flags & SDHCI_USE_64_BIT_DMA) {
+> +			if (!host->alloc_desc_sz)
+> +				host->alloc_desc_sz =
+> +					SDHCI_ADMA2_64_DESC_SZ(host);
+> +			host->desc_sz = host->alloc_desc_sz;
+>  			host->adma_table_sz = host->adma_table_cnt *
+> -					      SDHCI_ADMA2_64_DESC_SZ(host);
+> -			host->desc_sz = SDHCI_ADMA2_64_DESC_SZ(host);
+> +					      host->desc_sz;
+>  		} else {
+>  			host->adma_table_sz = host->adma_table_cnt *
+>  					      SDHCI_ADMA2_32_DESC_SZ;
 
+Please also initialize host->alloc_desc_sz for the 32-bit case here.
+
+> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+> index 0ed3e0e..8e7c77d 100644
+> --- a/drivers/mmc/host/sdhci.h
+> +++ b/drivers/mmc/host/sdhci.h
+> @@ -555,6 +555,7 @@ struct sdhci_host {
+>  	dma_addr_t align_addr;	/* Mapped bounce buffer */
+>  
+>  	unsigned int desc_sz;	/* ADMA descriptor size */
+
+Please  amend the comment above to:
+				/* ADMA current descriptor size */
+
+> +	unsigned int alloc_desc_sz;	/* ADMA descr. max size host supports */
+>  
+>  	struct workqueue_struct *complete_wq;	/* Request completion wq */
+>  	struct work_struct	complete_work;	/* Request completion work */
+> 
 
