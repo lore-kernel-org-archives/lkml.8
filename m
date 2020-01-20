@@ -2,85 +2,217 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 171E4C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 23:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FB0C33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 23:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEECC208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 23:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DCCC208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 23:18:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="keGeVmau"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbgATXQB (ORCPT
+        id S1727011AbgATXSS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 18:16:01 -0500
-Received: from mail-io1-f72.google.com ([209.85.166.72]:55142 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726816AbgATXQB (ORCPT
+        Mon, 20 Jan 2020 18:18:18 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:34578 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726894AbgATXSS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 18:16:01 -0500
-Received: by mail-io1-f72.google.com with SMTP id u6so571200iog.21
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 15:16:01 -0800 (PST)
+        Mon, 20 Jan 2020 18:18:18 -0500
+Received: by mail-wm1-f66.google.com with SMTP id w5so890111wmi.1
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 15:18:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2YTMxBWhx7Otjnn8r5v7NzSq3gAYo+K8MrbMb1Wf8a4=;
+        b=keGeVmaua312ZZ03Dym3shj0xcDQDYg1grRvVYsLFkBUQnZoKznSlOHun4+yttx20L
+         GbVr1dyzmkAwZtYz+m+nd/iHpOJI3N8A5NwkH+vEp8G596bOXYpFT7MuvtjRGO8SzA/j
+         HkHp7J5m6g4UwYhXJtNpVHkbrgJQLFRj8guJwWnfiMsWENdaV/Lr3wXSZOqv47pnF2qI
+         DDGRm1TSOaWBcxqLctUihEL6nWsdJpWtuI2jOGFjsl8RgLpImWAKpZb2+eZYUw+Vjg9R
+         4wo/TPf6zJ9/CWB7e8mybA07FOMWLuKI9BwZJQILnEAiFjnrwzZEEecV+v5/7fBWrrT2
+         ieGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=y3GTXWLuk9NLOUo9vngxj+QH9Vmo0/vEpcLHw8rmxOE=;
-        b=uRN1ARuXVzdbSqzosmf9H9Y1c9VGbKTWCAObadMHnLYUhvHIGsD378TMirpxZpsHlJ
-         5Z5tyzvZzpvTPxLti44+0Av0yV6H/hCr7om2mIF+gKQQ402df8xM/2WOUnj0c9+jUyR0
-         UUtodS+xjgBc8MBVFDNH3W7QoZwbz4AZQ99CiI/t3DFPlHCIfIkwdZ77nNPTWj6z3sGc
-         thEixC5invFXPWW1/3qTN3cBpFndFJEIJoFtaqw6/TSs7lcdJgaScf2NDti0/G2sUFEv
-         5oqggU1v4gppoodt5eBC374/M/gjJ2Ahje9T6DI5iYind608M5hmvWV4Pp6he6Na6WMJ
-         pAsg==
-X-Gm-Message-State: APjAAAXj3/HaEgiPNLIQboboZG3Asdp8Gl3Uf1eel1tMOMt4X/xOOu2K
-        jv3Lsk/JokYk790tJIsXFvuu6FB6t+HC7rGQRSfjiOBPYznX
-X-Google-Smtp-Source: APXvYqwTQzxbm8PYHQsYDQTufEheVPhobojoxo91G/kDDsKtigITdXJIOhyQnk0UJj6rRXnzx2pnx/MUqigsEvuGYyTl0a8JeDIb
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2YTMxBWhx7Otjnn8r5v7NzSq3gAYo+K8MrbMb1Wf8a4=;
+        b=NbKl5x+MIpC53jScnD29S4ZbuFXDCbRxlG9vQAtMa6PDRmK4rYZ7UtYhlTiNJflscE
+         Fxnbrt3uXD7klCqxNpdNZxE8Nouqo9MwiCDzImOHfqwu8Kl/kwycJKeMJja/VY3OVIXr
+         CfsF8z8zR/UKrMZdClZS4N2W9BxN5C6F3EBHnjhn94E4FU6RdigH77VYjv6fihEnmWzL
+         tdLyCB/rHquR0eaI8whfOyfkOUW/7vP9OvgwxsBcklxTJ47wO6DZjf91wc/zBpg0WvAT
+         stu1BTf3tuaNvZVt//TdTBK7CmRmKbWBIrZRAiQ6ls0BqKtFE4JU9wce1PYKbnyuPjrR
+         AaaQ==
+X-Gm-Message-State: APjAAAXAxBkWXx/kyR9mBjY8nAKj83mD4oZYH8ZVL3LuxuVSIcQ8prPl
+        Yl0F75ebkEVD6iOUkavEh7Kz85UUIkiUNbiOFaJxYw==
+X-Google-Smtp-Source: APXvYqzQrpODphjkUzqVsGGqQnlP1a+JBKNbyESdvhjtt+/rfoCTjgBik4/Y5ODqVprjwiZ2S3sV1E4QPqOrz8SNne8=
+X-Received: by 2002:a7b:cfc9:: with SMTP id f9mr1069517wmm.1.1579562295660;
+ Mon, 20 Jan 2020 15:18:15 -0800 (PST)
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:f0f:: with SMTP id x15mr1213167ilj.298.1579562160891;
- Mon, 20 Jan 2020 15:16:00 -0800 (PST)
-Date:   Mon, 20 Jan 2020 15:16:00 -0800
-In-Reply-To: <000000000000c7999e059c86eebe@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000802f87059c9a7984@google.com>
-Subject: Re: KASAN: use-after-free Read in bitmap_ipmac_ext_cleanup
-From:   syzbot <syzbot+33fc3ad6fa11675e1a7e@syzkaller.appspotmail.com>
-To:     a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
-        coreteam@netfilter.org, davem@davemloft.net,
-        florent.fourcot@wifirst.fr, fw@strlen.de, jeremy@azazel.net,
-        johannes.berg@intel.com, kadlec@netfilter.org,
-        linux-kernel@vger.kernel.org, mareklindner@neomailbox.ch,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        pablo@netfilter.org, po-hsu.lin@canonical.com,
-        skhan@linuxfoundation.org, sw@simonwunderlich.de,
-        syzkaller-bugs@googlegroups.com
+References: <20161202195416.58953-1-andriy.shevchenko@linux.intel.com>
+ <20161202195416.58953-3-andriy.shevchenko@linux.intel.com>
+ <20161215122856.7d24b7a8@endymion> <20161216023213.GA4505@dhcp-128-65.nay.redhat.com>
+ <1481890738.9552.70.camel@linux.intel.com> <20161216143330.69e9c8ee@endymion>
+ <20161217105721.GB6922@dhcp-128-65.nay.redhat.com> <20200120121927.GJ32742@smile.fi.intel.com>
+ <87a76i9ksr.fsf@x220.int.ebiederm.org> <CAHp75VdjwWfqHtJ3n-UK_n5nzpgcpERbM+_9-Z3FrjJx7nHQzQ@mail.gmail.com>
+In-Reply-To: <CAHp75VdjwWfqHtJ3n-UK_n5nzpgcpERbM+_9-Z3FrjJx7nHQzQ@mail.gmail.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Tue, 21 Jan 2020 00:18:03 +0100
+Message-ID: <CAKv+Gu-sVSWNYHEjzjOfbEryOR_XruwH=qQphq4uTXMLPK18tw@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] firmware: dmi_scan: Pass dmi_entry_point to
+ kexec'ed kernel
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dave Young <dyoung@redhat.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Kexec Mailing List <kexec@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean Delvare <jdelvare@suse.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On Mon, 20 Jan 2020 at 23:31, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+>
+> On Mon, Jan 20, 2020 at 9:28 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+> > Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
+> > > On Sat, Dec 17, 2016 at 06:57:21PM +0800, Dave Young wrote:
+> > >> Ccing efi people.
+> > >>
+> > >> On 12/16/16 at 02:33pm, Jean Delvare wrote:
+> > >> > On Fri, 16 Dec 2016 14:18:58 +0200, Andy Shevchenko wrote:
+> > >> > > On Fri, 2016-12-16 at 10:32 +0800, Dave Young wrote:
+> > >> > > > On 12/15/16 at 12:28pm, Jean Delvare wrote:
+> > >> > > > > I am no kexec expert but this confuses me. Shouldn't the second
+> > >> > > > > kernel have access to the EFI systab as the first kernel does? It
+> > >> > > > > includes many more pointers than just ACPI and DMI tables, and it
+> > >> > > > > would seem inconvenient to have to pass all these addresses
+> > >> > > > > individually explicitly.
+> > >> > > >
+> > >> > > > Yes, in modern linux kernel, kexec has the support for EFI, I think it
+> > >> > > > should work naturally at least in x86_64.
+> > >> > >
+> > >> > > Thanks for this good news!
+> > >> > >
+> > >> > > Unfortunately Intel Galileo is 32-bit platform.
+> > >> >
+> > >> > If it was done for X86_64 then maybe it can be generalized to X86?
+> > >>
+> > >> For X86_64, we have a new way for efi runtime memmory mapping, in i386
+> > >> code it still use old ioremap way. It is impossible to use same way as
+> > >> the X86_64 since the virtual address space is limited.
+> > >>
+> > >> But maybe for 32bit, kexec kernel can run in physical mode, but I'm not
+> > >> sure, I would suggest Andy to do a test first with efi=noruntime for
+> > >> kexec 2nd kernel.
+> > >
+> > > Guys, it was quite a long no hear from you. As I told you the proposed work
+> > > around didn't help. Today I found that Microsoft Surface 3 also affected
+> > > by this.
+> > >
+> > > Can we apply these patches for now until you will find better
+> > > solution?
+> >
+> > Not a chance.  The patches don't apply to any kernel in the git history.
+> >
+> > Which may be part of your problem.  You are or at least were running
+> > with code that has not been merged upstream.
+>
+> It's done against linux-next.
+> Applied clearly. (Not the version in this more than yearly old series
+> of course, that's why I told I can resend)
+>
+> > > P.S. I may resend them rebased on recent vanilla.
+> >
+> > Second.  I looked at your test results and they don't directly make
+> > sense.  dmidecode bypasses the kernel completely or it did last time
+> > I looked so I don't know why you would be using that to test if
+> > something in the kernel is working.
+> >
+> > However dmidecode failing suggests that the actual problem is something
+> > in the first kernel is stomping the dmi tables.
+>
+> See below.
+>
+> > Adding a command line option won't fix stomped tables.
+>
+> It provides a mechanism, which seems to be absent, to the second
+> kernel to know where to look for SMBIOS tables.
+>
+> > So what I would suggest is:
+> > a) Verify that dmidecode works before kexec.
+>
+> Yes, it does.
+>
+> > b) Test to see if dmidecode works after kexec.
+>
+> No, it doesn't.
+>
+> > c) Once (a) shows that dmidecode works and (b) shows that dmidecode
+> >    fails figure out what is stomping your dmi tables during or before
+> >    kexec and that is what should get fixed.
+>
+> The problem here as I can see it that EFI and kexec protocols are not
+> friendly to each other.
+> I'm not an expert in either. That's why I'm asking for possible
+> solutions. And this needs to be done in kernel to allow drivers to
+> work.
+>
+> Does the
+>
+> commit 4996c02306a25def1d352ec8e8f48895bbc7dea9
+> Author: Takao Indoh <indou.takao@jp.fujitsu.com>
+> Date:   Thu Jul 14 18:05:21 2011 -0400
+>
+>     ACPI: introduce "acpi_rsdp=" parameter for kdump
+>
+> description shed a light on this?
+>
+> > Now using a non-efi method of dmi detection relies on the
+> > tables being between 0xF0000 and 0x10000. AKA the last 64K
+> > of the first 1MiB of memory.  You might check to see if your
+> > dmi tables are in that address range.
+>
+> # dmidecode --no-sysfs
+> # dmidecode 3.2
+> Scanning /dev/mem for entry point.
+> # No SMBIOS nor DMI entry point found, sorry.
+>
+> === with patch applied ===
+> # dmidecode
+> ...
+>         Release Date: 03/10/2015
+> ...
+>
+> >
+> > Otherwise I suspect the good solution is to give efi it's own page
+> > tables in the kernel and switch to it whenever efi functions are called.
+> >
+>
+> > But on 32bit the Linux kernel has historically been just fine directly
+> > accessing the hardware, and ignoring efi and all of the other BIOS's.
+>
+> It seems not only for 32-bit Linux kernel anymore. MS Surface 3 runs
+> 64-bit code.
+>
+> > So if that doesn't work on Intel Galileo that is probably a firmware
+> > problem.
+>
+> It's not only about Galileo anymore.
+>
 
-commit ff95bf28c23490584b9d75913a520bb7bb1f2ecb
-Author: Po-Hsu Lin <po-hsu.lin@canonical.com>
-Date:   Mon Jul 1 04:40:31 2019 +0000
+Looking at the x86 kexec EFI code, it seems that it has special
+handling for the legacy SMBIOS table address, but not for the SMBIOS3
+table address, which was introduced to accommodate SMBIOS tables
+living in memory that is not 32-bit addressable.
 
-    selftests/net: skip psock_tpacket test if KALLSYMS was not enabled
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17e2e966e00000
-start commit:   8f8972a3 Merge tag 'mtd/fixes-for-5.5-rc7' of git://git.ke..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=1412e966e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1012e966e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d9290aeb7e6cf1c4
-dashboard link: https://syzkaller.appspot.com/bug?extid=33fc3ad6fa11675e1a7e
-userspace arch: i386
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15982cc9e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11be38d6e00000
-
-Reported-by: syzbot+33fc3ad6fa11675e1a7e@syzkaller.appspotmail.com
-Fixes: ff95bf28c234 ("selftests/net: skip psock_tpacket test if KALLSYMS was not enabled")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Could anyone check whether these systems provide SMBIOS 3.0 tables,
+and whether their address gets virtually remapped at ExitBootServices?
