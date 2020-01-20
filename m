@@ -2,234 +2,156 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83220C33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB50C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:47:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 640BC2073D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:46:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56A242073D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:47:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729165AbgATQqB (ORCPT
+        id S1729165AbgATQrS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 11:46:01 -0500
-Received: from mout.kundenserver.de ([217.72.192.74]:50119 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726642AbgATQqB (ORCPT
+        Mon, 20 Jan 2020 11:47:18 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:33645 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726642AbgATQrS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 11:46:01 -0500
-Received: from localhost ([217.91.205.33]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MZTyi-1j6BdY0P4Q-00WUV8; Mon, 20 Jan 2020 17:45:42 +0100
-Date:   Mon, 20 Jan 2020 17:45:41 +0100
-From:   Andreas Klinger <ak@it-klinger.de>
-To:     jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        rpi-receiver@htl-steyr.ac.at, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/2] iio: srf04: add power management feature
-Message-ID: <20200120164540.GA8725@arbad>
+        Mon, 20 Jan 2020 11:47:18 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1itaCm-000438-81; Mon, 20 Jan 2020 17:47:12 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C22301C1A41;
+        Mon, 20 Jan 2020 17:47:11 +0100 (CET)
+Date:   Mon, 20 Jan 2020 16:47:11 -0000
+From:   "tip-bot2 for Xiaochen Shen" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/resctrl: Clean up unused function parameter in
+ mkdir path
+Cc:     Xiaochen Shen <xiaochen.shen@intel.com>,
+        Borislav Petkov <bp@suse.de>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <1578500886-21771-5-git-send-email-xiaochen.shen@intel.com>
+References: <1578500886-21771-5-git-send-email-xiaochen.shen@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Provags-ID: V03:K1:3hCyP3wz1c4WNIC8NGVeJsBSI1zAjBZAjz1ma3u4tSTLyexJTXg
- RLrVcj9jQSOjdNE9+ZeoZ8tOIKi2N3OoOVog1GXNx0AuH0CWIL3KQFIJMpf1AL/eSPXEuuS
- oUPOHFziMrpVaXjshUgdSfOILvbibmPRE5wVNdkIZJJzksXF6OOCFqOc2TPrD+0X918k816
- 6G2IUtfOKxDmTYKaWvkpA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:9G8UZvti0Co=:Z5lnGF5Gj3/IXYsIy9Zo7N
- wg4VefxQVSXyNAVIlSCwmzsY87jtd+7qm/aCSV/m4qL26dQVhALVQTFhRpoEekNFUpHK8lCJz
- hAPkWE9wHoyESRdqwxIiDV4SZCIIiUAJCNYgYVjYYOUvQcYXSeVbgbsohelcyr/J74HGVdC/5
- VvGdGGJBdTFmhRDtnTOmdbjqF+u+ssDJseWlbA490Kj05JedEN8qIDjLtlAKGzpANIsaDYLTh
- X3yt/kQ7a4IjM07HqI64fXz/zu3CaAnGHLKpjqurWAWA1k5ggtn1Y9pIxfgpHF/9f8z4jQOy2
- 7ENy5Usn0IoJZNfBSYVcYCdFOBm/K5K2UVCYYuyjPc14P92U4hkLC6kcywFBzT5CGUDaFedml
- fLIs0Zl7cE4Iip+3I8G21mtWzHSHxHT+zRB0PjDhEhJW+ECeqcSEjEjo7xPqFieS53v0bhxIe
- DxlnZva8t4C8NhklCTpweU5IxKHW9vnLAXoBF0nYd8E1WbPA8NbVNC88BRgTdZ3TuHT62zxRA
- K6H6bDSQfaEOGFVXIfUnJCk9bgrMLZvFNngoWP6ICHT8Q+juz/che7gCw+PHVG6HQn5OY0egw
- q8/Eprkn5sllo/0TF1/Ic0WDq9a84b81hwoLQywMthX6wPUoKfCOzmDmKohewXKik3LA2ImS/
- 1bheaTtRQMb1TDlIdZ3oTcN6OMhEmED7KTcyuTVivnRj6YldrIoP9uQspA4YAkxodWKvJc4OL
- iR/gd47Y7Iiu0Fk5hw1fJ5me2qxQXJS/k7BRI0EShUZu23JCt4gYfZoHzMa5XoIaAPml2mlkz
- 1hLYTtYab5hXMBCzJht6zF8lqozMrpttuk2md17WQaWh/Ubwx1tq3lO6cwRzOg9r4ecDpLfsS
- 86T/RWLB/JPbZukqkbqQ==
+Message-ID: <157953883153.396.9276824335957965312.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add suspend and resume operations for being used by optional power
-management.
+The following commit has been merged into the x86/urgent branch of tip:
 
-The suspend function is switching off an GPIO which can be used by the
-hardware to switch power off. The resume function is switching the GPIO
-on and sleeps an adjustable time to give the device a chance to be up
-and running.
+Commit-ID:     32ada3b9e04c6f6d4916967bd8bbe2450ad5bc5e
+Gitweb:        https://git.kernel.org/tip/32ada3b9e04c6f6d4916967bd8bbe2450ad5bc5e
+Author:        Xiaochen Shen <xiaochen.shen@intel.com>
+AuthorDate:    Thu, 09 Jan 2020 00:28:06 +08:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Mon, 20 Jan 2020 17:00:41 +01:00
 
-If activated the driver gets into autosuspend after some time of
-inactivity.
+x86/resctrl: Clean up unused function parameter in mkdir path
 
-Suggested-by: Franz Parzer <rpi-receiver@htl-steyr.ac.at>
-Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+Commit
+
+  334b0f4e9b1b ("x86/resctrl: Fix a deadlock due to inaccurate reference")
+
+changed the argument to rdtgroup_kn_lock_live()/rdtgroup_kn_unlock()
+within mkdir_rdt_prepare(). That change resulted in an unused function
+parameter to mkdir_rdt_prepare().
+
+Clean up the unused function parameter in mkdir_rdt_prepare() and its
+callers rdtgroup_mkdir_mon() and rdtgroup_mkdir_ctrl_mon().
+
+Signed-off-by: Xiaochen Shen <xiaochen.shen@intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/1578500886-21771-5-git-send-email-xiaochen.shen@intel.com
 ---
- drivers/iio/proximity/srf04.c | 96 ++++++++++++++++++++++++++++++++++-
- 1 file changed, 95 insertions(+), 1 deletion(-)
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c | 16 +++++-----------
+ 1 file changed, 5 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/iio/proximity/srf04.c b/drivers/iio/proximity/srf04.c
-index 01eb8cc63076..568b76e06385 100644
---- a/drivers/iio/proximity/srf04.c
-+++ b/drivers/iio/proximity/srf04.c
-@@ -45,6 +45,7 @@
- #include <linux/sched.h>
- #include <linux/interrupt.h>
- #include <linux/delay.h>
-+#include <linux/pm_runtime.h>
- #include <linux/iio/iio.h>
- #include <linux/iio/sysfs.h>
- 
-@@ -56,6 +57,7 @@ struct srf04_data {
- 	struct device		*dev;
- 	struct gpio_desc	*gpiod_trig;
- 	struct gpio_desc	*gpiod_echo;
-+	struct gpio_desc	*gpiod_power;
- 	struct mutex		lock;
- 	int			irqnr;
- 	ktime_t			ts_rising;
-@@ -63,6 +65,7 @@ struct srf04_data {
- 	struct completion	rising;
- 	struct completion	falling;
- 	const struct srf04_cfg	*cfg;
-+	int			startup_time_ms;
- };
- 
- static const struct srf04_cfg srf04_cfg = {
-@@ -97,6 +100,9 @@ static int srf04_read(struct srf04_data *data)
- 	u64 dt_ns;
- 	u32 time_ns, distance_mm;
- 
-+	if (data->gpiod_power)
-+		pm_runtime_get_sync(data->dev);
-+
- 	/*
- 	 * just one read-echo-cycle can take place at a time
- 	 * ==> lock against concurrent reading calls
-@@ -110,6 +116,11 @@ static int srf04_read(struct srf04_data *data)
- 	udelay(data->cfg->trigger_pulse_us);
- 	gpiod_set_value(data->gpiod_trig, 0);
- 
-+	if (data->gpiod_power) {
-+		pm_runtime_mark_last_busy(data->dev);
-+		pm_runtime_put_autosuspend(data->dev);
-+	}
-+
- 	/* it should not take more than 20 ms until echo is rising */
- 	ret = wait_for_completion_killable_timeout(&data->rising, HZ/50);
- 	if (ret < 0) {
-@@ -268,6 +279,22 @@ static int srf04_probe(struct platform_device *pdev)
- 		return PTR_ERR(data->gpiod_echo);
- 	}
- 
-+	data->gpiod_power = devm_gpiod_get_optional(dev, "power",
-+								GPIOD_OUT_LOW);
-+	if (IS_ERR(data->gpiod_power)) {
-+		dev_err(dev, "failed to get power-gpios: err=%ld\n",
-+						PTR_ERR(data->gpiod_power));
-+		return PTR_ERR(data->gpiod_power);
-+	}
-+	if (data->gpiod_power) {
-+
-+		if (of_property_read_u32(dev->of_node, "startup-time-ms",
-+						&data->startup_time_ms))
-+			data->startup_time_ms = 100;
-+		dev_dbg(dev, "using power gpio: startup-time-ms=%d\n",
-+							data->startup_time_ms);
-+	}
-+
- 	if (gpiod_cansleep(data->gpiod_echo)) {
- 		dev_err(data->dev, "cansleep-GPIOs not supported\n");
- 		return -ENODEV;
-@@ -296,14 +323,81 @@ static int srf04_probe(struct platform_device *pdev)
- 	indio_dev->channels = srf04_chan_spec;
- 	indio_dev->num_channels = ARRAY_SIZE(srf04_chan_spec);
- 
--	return devm_iio_device_register(dev, indio_dev);
-+	ret = iio_device_register(indio_dev);
-+	if (ret < 0) {
-+		dev_err(data->dev, "iio_device_register: %d\n", ret);
-+		return ret;
-+	}
-+
-+	if (data->gpiod_power) {
-+		pm_runtime_set_autosuspend_delay(data->dev, 1000);
-+		pm_runtime_use_autosuspend(data->dev);
-+
-+		ret = pm_runtime_set_active(data->dev);
-+		if (ret) {
-+			dev_err(data->dev, "pm_runtime_set_active: %d\n", ret);
-+			iio_device_unregister(indio_dev);
-+		}
-+
-+		pm_runtime_enable(data->dev);
-+		pm_runtime_idle(data->dev);
-+	}
-+
-+	return ret;
+diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+index 954fd04..2804562 100644
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -2644,7 +2644,6 @@ static int rdtgroup_init_alloc(struct rdtgroup *rdtgrp)
  }
  
-+static int srf04_remove(struct platform_device *pdev)
-+{
-+	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
-+	struct srf04_data *data = iio_priv(indio_dev);
-+
-+	iio_device_unregister(indio_dev);
-+
-+	if (data->gpiod_power) {
-+		pm_runtime_disable(data->dev);
-+		pm_runtime_set_suspended(data->dev);
-+	}
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused srf04_pm_runtime_suspend(struct device *dev)
-+{
-+	struct platform_device *pdev = container_of(dev,
-+						struct platform_device, dev);
-+	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
-+	struct srf04_data *data = iio_priv(indio_dev);
-+
-+	gpiod_set_value(data->gpiod_power, 0);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused srf04_pm_runtime_resume(struct device *dev)
-+{
-+	struct platform_device *pdev = container_of(dev,
-+						struct platform_device, dev);
-+	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
-+	struct srf04_data *data = iio_priv(indio_dev);
-+
-+	gpiod_set_value(data->gpiod_power, 1);
-+	msleep(data->startup_time_ms);
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops srf04_pm_ops = {
-+	SET_RUNTIME_PM_OPS(srf04_pm_runtime_suspend,
-+				srf04_pm_runtime_resume, NULL)
-+};
-+
- static struct platform_driver srf04_driver = {
- 	.probe		= srf04_probe,
-+	.remove		= srf04_remove,
- 	.driver		= {
- 		.name		= "srf04-gpio",
- 		.of_match_table	= of_srf04_match,
-+		.pm		= &srf04_pm_ops,
- 	},
- };
+ static int mkdir_rdt_prepare(struct kernfs_node *parent_kn,
+-			     struct kernfs_node *prgrp_kn,
+ 			     const char *name, umode_t mode,
+ 			     enum rdt_group_type rtype, struct rdtgroup **r)
+ {
+@@ -2754,15 +2753,12 @@ static void mkdir_rdt_prepare_clean(struct rdtgroup *rgrp)
+  * to monitor a subset of tasks and cpus in its parent ctrl_mon group.
+  */
+ static int rdtgroup_mkdir_mon(struct kernfs_node *parent_kn,
+-			      struct kernfs_node *prgrp_kn,
+-			      const char *name,
+-			      umode_t mode)
++			      const char *name, umode_t mode)
+ {
+ 	struct rdtgroup *rdtgrp, *prgrp;
+ 	int ret;
  
--- 
-2.20.1
+-	ret = mkdir_rdt_prepare(parent_kn, prgrp_kn, name, mode, RDTMON_GROUP,
+-				&rdtgrp);
++	ret = mkdir_rdt_prepare(parent_kn, name, mode, RDTMON_GROUP, &rdtgrp);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -2784,7 +2780,6 @@ static int rdtgroup_mkdir_mon(struct kernfs_node *parent_kn,
+  * to allocate and monitor resources.
+  */
+ static int rdtgroup_mkdir_ctrl_mon(struct kernfs_node *parent_kn,
+-				   struct kernfs_node *prgrp_kn,
+ 				   const char *name, umode_t mode)
+ {
+ 	struct rdtgroup *rdtgrp;
+@@ -2792,8 +2787,7 @@ static int rdtgroup_mkdir_ctrl_mon(struct kernfs_node *parent_kn,
+ 	u32 closid;
+ 	int ret;
+ 
+-	ret = mkdir_rdt_prepare(parent_kn, prgrp_kn, name, mode, RDTCTRL_GROUP,
+-				&rdtgrp);
++	ret = mkdir_rdt_prepare(parent_kn, name, mode, RDTCTRL_GROUP, &rdtgrp);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -2867,14 +2861,14 @@ static int rdtgroup_mkdir(struct kernfs_node *parent_kn, const char *name,
+ 	 * subdirectory
+ 	 */
+ 	if (rdt_alloc_capable && parent_kn == rdtgroup_default.kn)
+-		return rdtgroup_mkdir_ctrl_mon(parent_kn, parent_kn, name, mode);
++		return rdtgroup_mkdir_ctrl_mon(parent_kn, name, mode);
+ 
+ 	/*
+ 	 * If RDT monitoring is supported and the parent directory is a valid
+ 	 * "mon_groups" directory, add a monitoring subdirectory.
+ 	 */
+ 	if (rdt_mon_capable && is_mon_groups(parent_kn, name))
+-		return rdtgroup_mkdir_mon(parent_kn, parent_kn->parent, name, mode);
++		return rdtgroup_mkdir_mon(parent_kn, name, mode);
+ 
+ 	return -EPERM;
+ }
