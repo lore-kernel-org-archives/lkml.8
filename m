@@ -2,155 +2,142 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8BCBC33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 18:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1862FC33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 18:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B155922314
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 18:36:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n6OHQmi2"
+	by mail.kernel.org (Postfix) with ESMTP id F01C52253D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 18:38:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728042AbgATSgJ (ORCPT
+        id S1726843AbgATSiz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 13:36:09 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:33601 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726642AbgATSgI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 13:36:08 -0500
-Received: by mail-qk1-f194.google.com with SMTP id d71so219404qkc.0;
-        Mon, 20 Jan 2020 10:36:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=nypa0fmcU1qrcDA/69y5vVyGSxEYCTlbnT0MYvisCOY=;
-        b=n6OHQmi2Lqnt+u56UyfOnq36LdLY/90AjbbbAuc8Yi+Sexy1YUz2TZnz29vuv8c1GA
-         AFxN+hfJx4ikYoOkGw7RUtlqRcJLAU/8edx7OLCcMNGYFxMzSoJpUXhWzcN0YthgGkTT
-         qEG84m7Cz0WHjv1u3YwE01A4d+lgJveFYMf0YXHdOnienwPstAziOMIilVGV9PtJIHIX
-         MWbMRgb1+F9w+EbiEoulZtnb+bSp/exAEqak/Jojul1Q2WjNv/tuHtTTmGFgrRZyJ2RA
-         GeHNnfD1qa4l6Jnpoh8S515/p62ljovXd7MmiSVhmFRm0EnrBj4naN92dsKCe9y0YJ/9
-         bxeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=nypa0fmcU1qrcDA/69y5vVyGSxEYCTlbnT0MYvisCOY=;
-        b=AvFxy3JI4ndXddh7C+xS/Ort3iUVKd4c4uyCrMdlzI5NixWe24+LCFzTgfPNBh3H0v
-         SBj1w4QV7K768V4sX+gDOHfZyft9vcyiHrUKBiiUNrKYvvjqdHM0HGZKIdotrkx6RRSZ
-         xScC/v9cDO4kILvr4220z/Wt71CM2x2LSHle2mWvYx+PYcSNgnOvfIiwGaXwoCrxWxRH
-         oLDMUY2s1jsJMn7ZEqswtG/9gMmpb8WgjAEPp6qXVBq0sMguinP03ywXCxFe9ZmBXpp5
-         PdmTRqj266vPr1Nkcry2fWquDS4VrxURcJUHWQGA1HwstboKGgnI9SHIuAk0/xgNptwR
-         TT9w==
-X-Gm-Message-State: APjAAAWj6lBVlV5b4J1XCK/dEfr++Y6hAVW/n16lJuWMky2ggSvygR4I
-        SwecOcl818WSEgeBPrZg80n3DyLI/h2Y+On1HN0=
-X-Google-Smtp-Source: APXvYqyGHYkSXOZiJvAONUelyvaLJfv9/CZYkyPdYsL0xeUScApGmNT8/JruIuZcQj5K1GGwsZvg7mP2yjaYIUQCMas=
-X-Received: by 2002:a05:620a:5ae:: with SMTP id q14mr871914qkq.437.1579545367408;
- Mon, 20 Jan 2020 10:36:07 -0800 (PST)
+        Mon, 20 Jan 2020 13:38:55 -0500
+Received: from foss.arm.com ([217.140.110.172]:35624 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726112AbgATSiz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 13:38:55 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D770E31B;
+        Mon, 20 Jan 2020 10:38:53 -0800 (PST)
+Received: from [10.37.12.169] (unknown [10.37.12.169])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B943B3F68E;
+        Mon, 20 Jan 2020 10:38:43 -0800 (PST)
+Subject: Re: [PATCH 1/4] PM / EM: and devices to Energy Model
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Quentin Perret <qperret@google.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-imx@nxp.com, Morten.Rasmussen@arm.com, Chris.Redpath@arm.com,
+        ionela.voinescu@arm.com, javi.merino@arm.com,
+        cw00.choi@samsung.com, b.zolnierkie@samsung.com, rjw@rjwysocki.net,
+        sudeep.holla@arm.com, viresh.kumar@linaro.org, nm@ti.com,
+        sboyd@kernel.org, rui.zhang@intel.com, amit.kucheria@verdurent.com,
+        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
+        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh@kernel.org,
+        matthias.bgg@gmail.com, steven.price@arm.com,
+        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
+        airlied@linux.ie, daniel@ffwll.ch, kernel-team@android.com
+References: <20200116152032.11301-1-lukasz.luba@arm.com>
+ <20200116152032.11301-2-lukasz.luba@arm.com>
+ <20200117105437.GA211774@google.com>
+ <40587d98-0e8d-cbac-dbf5-d26501d47a8c@arm.com>
+ <20200120150918.GA164543@google.com>
+ <8332c4ac-2a7d-1e2d-76e9-7c979a666257@arm.com>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <b02da0ed-9e0b-36db-9813-daa334cbf2ba@arm.com>
+Date:   Mon, 20 Jan 2020 18:38:41 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <157926819690.1555735.10756593211671752826.stgit@toke.dk>
- <157926820131.1555735.1177228853838027248.stgit@toke.dk> <CAEf4BzbAV0TmEUL=62jz+RD6SPmu927z-dhGL9JHepcAOGMSJA@mail.gmail.com>
- <875zh6p9pg.fsf@toke.dk>
-In-Reply-To: <875zh6p9pg.fsf@toke.dk>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Mon, 20 Jan 2020 10:35:56 -0800
-Message-ID: <CAEf4BzZ7x4F_-bjGg7TdzXcin6c1BAT6OKe53ujh1tx-GB6-ZQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v4 04/10] tools/runqslower: Use consistent
- include paths for libbpf
-To:     =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-rdma@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <8332c4ac-2a7d-1e2d-76e9-7c979a666257@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 4:57 AM Toke H=C3=B8iland-J=C3=B8rgensen <toke@redh=
-at.com> wrote:
->
-> Andrii Nakryiko <andrii.nakryiko@gmail.com> writes:
->
-> > On Fri, Jan 17, 2020 at 5:37 AM Toke H=C3=B8iland-J=C3=B8rgensen <toke@=
-redhat.com> wrote:
-> >>
-> >> From: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
-> >>
-> >> Fix the runqslower tool to include libbpf header files with the bpf/
-> >> prefix, to be consistent with external users of the library. Also ensu=
-re
-> >> that all includes of exported libbpf header files (those that are expo=
-rted
-> >> on 'make install' of the library) use bracketed includes instead of qu=
-oted.
-> >>
-> >> To not break the build, keep the old include path until everything has=
- been
-> >> changed to the new one; a subsequent patch will remove that.
-> >>
-> >> Fixes: 6910d7d3867a ("selftests/bpf: Ensure bpf_helper_defs.h are take=
-n from selftests dir")
-> >> Acked-by: Andrii Nakryiko <andriin@fb.com>
-> >> Signed-off-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
-> >> ---
-> >>  tools/bpf/runqslower/Makefile         |    5 +++--
-> >>  tools/bpf/runqslower/runqslower.bpf.c |    2 +-
-> >>  tools/bpf/runqslower/runqslower.c     |    4 ++--
-> >>  3 files changed, 6 insertions(+), 5 deletions(-)
-> >>
-> >> diff --git a/tools/bpf/runqslower/Makefile b/tools/bpf/runqslower/Make=
-file
-> >> index b62fc9646c39..9f022f7f2593 100644
-> >> --- a/tools/bpf/runqslower/Makefile
-> >> +++ b/tools/bpf/runqslower/Makefile
-> >> @@ -5,6 +5,7 @@ LLC :=3D llc
-> >>  LLVM_STRIP :=3D llvm-strip
-> >>  DEFAULT_BPFTOOL :=3D $(OUTPUT)/sbin/bpftool
-> >>  BPFTOOL ?=3D $(DEFAULT_BPFTOOL)
-> >> +INCLUDES :=3D -I$(OUTPUT) -I$(abspath ../../lib) -I$(abspath ../../li=
-b/bpf)
-> >>  LIBBPF_SRC :=3D $(abspath ../../lib/bpf)
-> >
-> > drop LIBBPF_SRC, it's not used anymore
->
-> It is: in the rule for building libbpf there's a '-C $(LIBBPF_SRC)'
->
 
-Ah, right, missed that one. Looked a bit weird to have $(abspath
-../../lib/bpf) used in INCLUDES and then separate LIBBPF_SRC
-definition there, maybe
 
-LIBBPF_SRC :=3D $(abspath ../../lib/bpf)
-INCLUDES :=3D -I$(OUTPUT) -I$(abspath ../../lib) -I$(LIBBPF_SRC)
+On 1/20/20 6:27 PM, Dietmar Eggemann wrote:
+> On 20/01/2020 16:09, Quentin Perret wrote:
+>> Hey Lukasz,
+>>
+>> On Monday 20 Jan 2020 at 14:52:07 (+0000), Lukasz Luba wrote:
+>>> On 1/17/20 10:54 AM, Quentin Perret wrote:
+>>>> Suggested alternative: have two registration functions like so:
+>>>>
+>>>> 	int em_register_dev_pd(struct device *dev, unsigned int nr_states,
+>>>> 			       struct em_data_callback *cb);
+>>>> 	int em_register_cpu_pd(cpumask_t *span, unsigned int nr_states,
+>>>> 			       struct em_data_callback *cb);
+>>>
+>>> Interesting, in the internal review Dietmar asked me to remove these two
+>>> functions. I had the same idea, which would simplify a bit the
+>>> registration and it does not need to check the dev->bus if it is CPU.
+>>>
+>>> Unfortunately, we would need also two function in drivers/opp/of.c:
+>>> dev_pm_opp_of_register_cpu_em(policy->cpus);
+>>> and
+>>> dev_pm_opp_of_register_dev_em(dev);
+>>>
+>>> Thus, I have created only one registration function, which you can see
+>>> in this patch set.
+>>
+>> Right, I can see how having a unified API would be appealing, but the
+>> OPP dependency is a nono, so we'll need to work around one way or
+>> another.
+>>
+>> FWIW, I don't think having separate APIs for CPUs and other devices is
+>> that bad given that we already have entirely different frameworks to
+>> drive their respective frequencies. And the _cpu variants are basically
+>> just wrappers around the _dev ones, so not too bad either IMO :).
+> 
+> It's true that we need the policy->cpus cpumask only for cpu devices and
+> we have it available when we call em_register_perf_domain()
+> [scmi-cpufreq.c driver] or the OPP wrapper dev_pm_opp_of_register_em()
+> [e.g. cpufreq-dt.c driver].
+> 
+> And we shouldn't make EM code dependent on OPP.
+> 
+> But can't we add 'struct cpumask *mask' as an additional argument to
+> both which can be set to NULL for (devfreq) devices?
+> 
+> We can check in em_register_perf_domain() that we got a valid cpumask
+> for a cpu device and ignore it for (devfreq) devices.
+> 
 
-> -Toke
->
+I think we could avoid this additional argument 'cpumask'. I have
+checked the cpufreq_cpu_get function, which should do be good for this:
+
+---------->8-------------------------
+static int _get_sharing_cpus(struct device *cpu_dev, struct cpumask *span)
+{
+         struct cpufreq_policy *policy;
+
+         policy = cpufreq_cpu_get(cpu_dev->id);
+         if (policy) {
+                 cpumask_copy(span, policy->cpus);
+                 cpufreq_cpu_put(policy);
+                 return 0;
+         } else {
+                 return -EINVAL;
+         }
+}
+--------------------------8<-------------------------------
+
+It would be a replacement for:
+ret = dev_pm_opp_get_sharing_cpus(dev, span);
+
+Regards,
+Lukasz
