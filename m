@@ -2,205 +2,151 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB58C33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 342EAC33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E663222525
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:43:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A93622314
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:47:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=pedrovanzella.com header.i=@pedrovanzella.com header.b="VnJdwdbN";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Zxm2g+z7"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="gj+P8sv4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727117AbgATNnl (ORCPT
+        id S1726999AbgATNrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 08:43:41 -0500
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:46937 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726626AbgATNnl (ORCPT
+        Mon, 20 Jan 2020 08:47:20 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:60876 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726738AbgATNrU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 08:43:41 -0500
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id AB6F020FBE;
-        Mon, 20 Jan 2020 08:43:39 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Mon, 20 Jan 2020 08:43:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        pedrovanzella.com; h=subject:to:references:from:message-id:date
-        :mime-version:in-reply-to:content-type
-        :content-transfer-encoding; s=fm2; bh=SibAiAd7KR/fy3khbzYlcHHfTc
-        +BnLMI3tLmysU5OEo=; b=VnJdwdbNJshVQbNM/Lk4NN9O6xQrF0V99U33Ygr/hA
-        FIgMUOWs5z8nPCL3ssv2WXQaPZnK680OXbtKwolLHx4brrX3KwPJfY3ozo8QaPz7
-        ErVrrXb1Gf9tXc1qhdfEDlwj1mgy6coAQI6L1lVMNvBD8eeIMcMl5BWisPnuyYZ5
-        sc+NktqzkobCmJJT89GSLYD2vVMxfT0dL5eAPpujpOUYJpwFK3zxHxZGAHTq50XP
-        xFSf+gZVxZzAOY+Wpi/Kheg/K1Dl+e+yuLFqReWyG7JubrgaGaMt+8AWXMyMHts6
-        jQDpnzF8JVbNrJyd/zkQaGPgShX2Sn+kQ3JH1H2bsuHw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm1; bh=SibAiAd7KR/fy3khbzYlcHHfTc+BnLMI3tLmysU5O
-        Eo=; b=Zxm2g+z7kMKIU2RK3pIkM/fGqMer2XcMjqbfZKxkKRELEKplzs1RYBybQ
-        2utvkqwGh9gTZVJvpu5irYIpxeAUbv3fBO9C5FAzMRqokZlR2SMRmLNOOLjGlMIB
-        cC/wxPoScrTvHAMXQ1MclmL/y0+6M4zMeLsr9AkZhs0yx4Ie+wMtrXg2gSDIXTIN
-        ga8LlbmhVH6d+B0lztWRJsLhs4jm85IQq41T8UJ3PRoXShabtgO9/gwpK9mE0Q+X
-        6ezBEBj8JiQ92hFTlEFEMGEA+r/hdHpEZZAFVdEUfjNsA4rXvboO0wVp1NhxnHVi
-        wLpsfloyLor3+0jJw4ToWoWruuk8Q==
-X-ME-Sender: <xms:iq4lXnA3jozRgEEet3xEULlDr6MXtWUupTlMtX4LROhCPr5w-rkjFg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudehgdegfecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefuvfhfhffkffgfgggjtgfgsehtkeertddtfeejnecuhfhrohhmpefrvggurhho
-    ucggrghniigvlhhlrgcuoehpvggurhhosehpvggurhhovhgrnhiivghllhgrrdgtohhmqe
-    enucfkphepvddtuddrkeejrddvtdehrddvheegnecuvehluhhsthgvrhfuihiivgeptden
-    ucfrrghrrghmpehmrghilhhfrhhomhepphgvughrohesphgvughrohhvrghniigvlhhlrg
-    drtghomh
-X-ME-Proxy: <xmx:iq4lXrAyDqYw_DkbDG5CVhxvKPsUkwqtBqs3H15tYoj48-Rh8C-trA>
-    <xmx:iq4lXo51wh0A2BWq5Xa5BlaFGdc3Rd3J9JbclH2FmyPvGQtDSmZfDg>
-    <xmx:iq4lXg7JQQull7Fo5WsWznvZBU77UDSf2DdAKRobq34bY3UgkppJLA>
-    <xmx:i64lXiue1IPSGFnkdMCLD4PSgPZQogEp_QLJ__65n4_jStvSEutjVA>
-Received: from [192.168.20.6] (unknown [201.87.205.254])
-        by mail.messagingengine.com (Postfix) with ESMTPA id AC5D880061;
-        Mon, 20 Jan 2020 08:43:37 -0500 (EST)
-Subject: Re: [PATCH] HID: logitech-hidpp: BatteryVoltage: only read
- chargeStatus if extPower is active
-To:     =?UTF-8?Q?Filipe_La=c3=adns?= <lains@archlinux.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200111192419.2503922-1-lains@archlinux.org>
-From:   Pedro Vanzella <pedro@pedrovanzella.com>
-Message-ID: <aaca852e-cb31-2690-7f90-819ed673bacb@pedrovanzella.com>
-Date:   Mon, 20 Jan 2020 10:43:36 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Mon, 20 Jan 2020 08:47:20 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00KDbQJC019186;
+        Mon, 20 Jan 2020 14:47:05 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
+ date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=STMicroelectronics;
+ bh=RQpTI3zFQW+ChdmHDDySJ08NSVtL9lOc5ZIv6JMCj74=;
+ b=gj+P8sv4Kh+ikTblV4bXosCD65PqoiQrtdSjmKPqhDTn9Famk0YKrnA5y9NbgGK4AgdB
+ 5LUwZgXMEyEQGIGWjY7HQhZvgLnifjWudJFodUW5bv0F0gR1FJSDA2etBRn3jutiq5zn
+ q1kLb+ahj90oshPM/IUOpXMWP0TPWkZuhWzx11JOoUNcEefAE4slkoxsVH7vDrfUdCOK
+ WBgbOJ5raNdUAtk/hjIypmiNSZsU8pblgD9dYRDUFHPBlnqZmfWZZ4J7J9AaKoraRgGP
+ uKvNxHrMvOuXg9skKPOeZmj8W0eqycQdYGyMS3DquZPfoDbyKTTJnQxiNAk2T2AjidYt UA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xkssnsg0w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jan 2020 14:47:05 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C7356100034;
+        Mon, 20 Jan 2020 14:47:00 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag6node3.st.com [10.75.127.18])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 916642BF9A8;
+        Mon, 20 Jan 2020 14:47:00 +0100 (CET)
+Received: from localhost (10.75.127.47) by SFHDAG6NODE3.st.com (10.75.127.18)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 20 Jan 2020 14:47:00
+ +0100
+From:   Yannick Fertre <yannick.fertre@st.com>
+To:     Yannick Fertre <yannick.fertre@st.com>,
+        Philippe Cornu <philippe.cornu@st.com>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] drm/stm: ltdc: enable/disable depends on encoder
+Date:   Mon, 20 Jan 2020 14:46:53 +0100
+Message-ID: <1579528013-28445-1-git-send-email-yannick.fertre@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <20200111192419.2503922-1-lains@archlinux.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG3NODE3.st.com (10.75.127.9) To SFHDAG6NODE3.st.com
+ (10.75.127.18)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-20_02:2020-01-20,2020-01-20 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/11/20 4:24 PM, Filipe Laíns wrote:
-> In the HID++ 2.0 function getBatteryInfo() from the BatteryVoltage
-> (0x1001) feature, chargeStatus is only valid if extPower is active.
-> 
-> Previously we were ignoring extPower, which resulted in wrong values.
+From: Yannick Fertré <yannick.fertre@st.com>
 
-Nice catch. Sorry for missing that the first time around.
+When connected to a dsi host, the ltdc display controller
+must send frames only after the end of the dsi panel
+initialization to avoid errors when the dsi host sends
+commands to the dsi panel (dsi px fifo full).
+To avoid this issue, the display controller must be
+enabled/disabled when the encoder is enabled/disabled.
 
-> 
-> Example:
->      With an unplugged mouse
-> 
->      $ cat /sys/class/power_supply/hidpp_battery_0/status
->      Charging
+Signed-off-by: Yannick Fertré <yannick.fertre@st.com>
+---
+ drivers/gpu/drm/stm/ltdc.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-Tested and it works as expected now.
+diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
+index 719dfc5..9ef125d 100644
+--- a/drivers/gpu/drm/stm/ltdc.c
++++ b/drivers/gpu/drm/stm/ltdc.c
+@@ -437,9 +437,6 @@ static void ltdc_crtc_atomic_enable(struct drm_crtc *crtc,
+ 	/* Commit shadow registers = update planes at next vblank */
+ 	reg_set(ldev->regs, LTDC_SRCR, SRCR_VBR);
+ 
+-	/* Enable LTDC */
+-	reg_set(ldev->regs, LTDC_GCR, GCR_LTDCEN);
+-
+ 	drm_crtc_vblank_on(crtc);
+ }
+ 
+@@ -453,9 +450,6 @@ static void ltdc_crtc_atomic_disable(struct drm_crtc *crtc,
+ 
+ 	drm_crtc_vblank_off(crtc);
+ 
+-	/* disable LTDC */
+-	reg_clear(ldev->regs, LTDC_GCR, GCR_LTDCEN);
+-
+ 	/* disable IRQ */
+ 	reg_clear(ldev->regs, LTDC_IER, IER_RRIE | IER_FUIE | IER_TERRIE);
+ 
+@@ -1058,9 +1052,13 @@ static const struct drm_encoder_funcs ltdc_encoder_funcs = {
+ static void ltdc_encoder_disable(struct drm_encoder *encoder)
+ {
+ 	struct drm_device *ddev = encoder->dev;
++	struct ltdc_device *ldev = ddev->dev_private;
+ 
+ 	DRM_DEBUG_DRIVER("\n");
+ 
++	/* Disable LTDC */
++	reg_clear(ldev->regs, LTDC_GCR, GCR_LTDCEN);
++
+ 	/* Set to sleep state the pinctrl whatever type of encoder */
+ 	pinctrl_pm_select_sleep_state(ddev->dev);
+ }
+@@ -1068,6 +1066,7 @@ static void ltdc_encoder_disable(struct drm_encoder *encoder)
+ static void ltdc_encoder_enable(struct drm_encoder *encoder)
+ {
+ 	struct drm_device *ddev = encoder->dev;
++	struct ltdc_device *ldev = ddev->dev_private;
+ 
+ 	DRM_DEBUG_DRIVER("\n");
+ 
+@@ -1078,6 +1077,9 @@ static void ltdc_encoder_enable(struct drm_encoder *encoder)
+ 	 */
+ 	if (encoder->encoder_type == DRM_MODE_ENCODER_DPI)
+ 		pinctrl_pm_select_default_state(ddev->dev);
++
++	/* Enable LTDC */
++	reg_set(ldev->regs, LTDC_GCR, GCR_LTDCEN);
+ }
+ 
+ static const struct drm_encoder_helper_funcs ltdc_encoder_helper_funcs = {
+-- 
+2.7.4
 
-> 
-> This patch makes fixes that, it also renames charge_sts to flags as
-> charge_sts can be confused with chargeStatus from the spec.
-> 
-> Spec:
-> +--------+-------------------------------------------------------------------------+
-> |  byte  |                                    2                                    |
-> +--------+--------------+------------+------------+----------+----------+----------+
-> |   bit  |     0..2     |      3     |      4     |     5    |     6    |     7    |
-> +--------+--------------+------------+------------+----------+----------+----------+
-> | buffer | chargeStatus | fastCharge | slowCharge | critical | (unused) | extPower |
-> +--------+--------------+------------+------------+----------+----------+----------+
-> Table 1 - battery voltage (0x1001), getBatteryInfo() (ASE 0), 3rd byte
-> 
-> +-------+--------------------------------------+
-> | value |                meaning               |
-> +-------+--------------------------------------+
-> |   0   | Charging                             |
-> +-------+--------------------------------------+
-> |   1   | End of charge (100% charged)         |
-> +-------+--------------------------------------+
-> |   2   | Charge stopped (any "normal" reason) |
-> +-------+--------------------------------------+
-> |   7   | Hardware error                       |
-> +-------+--------------------------------------+
-> Table 2 - chargeStatus value
-> 
-> Signed-off-by: Filipe Laíns <lains@archlinux.org>
-> ---
->   drivers/hid/hid-logitech-hidpp.c | 43 ++++++++++++++++----------------
->   1 file changed, 21 insertions(+), 22 deletions(-)
-> 
-> diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
-> index bb063e7d48df..39a5ee0aaab0 100644
-> --- a/drivers/hid/hid-logitech-hidpp.c
-> +++ b/drivers/hid/hid-logitech-hidpp.c
-> @@ -1256,36 +1256,35 @@ static int hidpp20_battery_map_status_voltage(u8 data[3], int *voltage,
->   {
->   	int status;
->   
-> -	long charge_sts = (long)data[2];
-> +	long flags = (long) data[2];
->   
-> -	*level = POWER_SUPPLY_CAPACITY_LEVEL_UNKNOWN;
-> -	switch (data[2] & 0xe0) {
-> -	case 0x00:
-> -		status = POWER_SUPPLY_STATUS_CHARGING;
-> -		break;
-> -	case 0x20:
-> -		status = POWER_SUPPLY_STATUS_FULL;
-> -		*level = POWER_SUPPLY_CAPACITY_LEVEL_FULL;
-> -		break;
-> -	case 0x40:
-> +	if (flags & 0x80)
-> +		switch (flags & 0x07) {
-> +		case 0:
-> +			status = POWER_SUPPLY_STATUS_CHARGING;
-> +			break;
-> +		case 1:
-> +			status = POWER_SUPPLY_STATUS_FULL;
-> +			*level = POWER_SUPPLY_CAPACITY_LEVEL_FULL;
-> +			break;
-> +		case 2:
-> +			status = POWER_SUPPLY_STATUS_NOT_CHARGING;
-> +			break;
-> +		default:
-> +			status = POWER_SUPPLY_STATUS_UNKNOWN;
-> +			break;
-> +		}
-> +	else
->   		status = POWER_SUPPLY_STATUS_DISCHARGING;
-> -		break;
-> -	case 0xe0:
-> -		status = POWER_SUPPLY_STATUS_NOT_CHARGING;
-> -		break;
-> -	default:
-> -		status = POWER_SUPPLY_STATUS_UNKNOWN;
-> -	}
->   
->   	*charge_type = POWER_SUPPLY_CHARGE_TYPE_STANDARD;
-> -	if (test_bit(3, &charge_sts)) {
-> +	if (test_bit(3, &flags)) {
->   		*charge_type = POWER_SUPPLY_CHARGE_TYPE_FAST;
->   	}
-> -	if (test_bit(4, &charge_sts)) {
-> +	if (test_bit(4, &flags)) {
->   		*charge_type = POWER_SUPPLY_CHARGE_TYPE_TRICKLE;
->   	}
-> -
-> -	if (test_bit(5, &charge_sts)) {
-> +	if (test_bit(5, &flags)) {
->   		*level = POWER_SUPPLY_CAPACITY_LEVEL_CRITICAL;
->   	}
->   
-> 
-
-Tested-by: Pedro Vanzella <pedro@pedrovanzella.com>
-Reviewed-by: Pedro Vanzella <pedro@pedrovanzella.com>
