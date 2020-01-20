@@ -2,297 +2,169 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48AAAC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A34C33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:25:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F432208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:25:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A2B2208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:25:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729187AbgATMZL (ORCPT
+        id S1729162AbgATMZJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 07:25:11 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:46926 "EHLO inva021.nxp.com"
+        Mon, 20 Jan 2020 07:25:09 -0500
+Received: from foss.arm.com ([217.140.110.172]:59476 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727144AbgATMYT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 07:24:19 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 7A2C02002A0;
-        Mon, 20 Jan 2020 13:24:17 +0100 (CET)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6C8B520058E;
-        Mon, 20 Jan 2020 13:24:17 +0100 (CET)
-Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id EC74A20414;
-        Mon, 20 Jan 2020 13:24:16 +0100 (CET)
-From:   Iuliana Prodan <iuliana.prodan@nxp.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Horia Geanta <horia.geanta@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Silvano Di Ninno <silvano.dininno@nxp.com>,
-        Franck Lenormand <franck.lenormand@nxp.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-imx <linux-imx@nxp.com>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>
-Subject: [PATCH v4 7/9] crypto: caam - add crypto_engine support for AEAD algorithms
-Date:   Mon, 20 Jan 2020 14:24:06 +0200
-Message-Id: <1579523048-21078-8-git-send-email-iuliana.prodan@nxp.com>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1579523048-21078-1-git-send-email-iuliana.prodan@nxp.com>
-References: <1579523048-21078-1-git-send-email-iuliana.prodan@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1728682AbgATMYY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 07:24:24 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 64E6530E;
+        Mon, 20 Jan 2020 04:24:24 -0800 (PST)
+Received: from e120937-lin.cambridge.arm.com (e120937-lin.cambridge.arm.com [10.1.197.50])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7F2E43F68E;
+        Mon, 20 Jan 2020 04:24:23 -0800 (PST)
+From:   Cristian Marussi <cristian.marussi@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     sudeep.holla@arm.com, lukasz.luba@arm.com,
+        james.quinlan@broadcom.com, cristian.marussi@arm.com
+Subject: [RFC PATCH 00/11] SCMI Notifications Support
+Date:   Mon, 20 Jan 2020 12:23:22 +0000
+Message-Id: <20200120122333.46217-1-cristian.marussi@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add crypto_engine support for AEAD algorithms, to make use of
-the engine queue.
-The requests, with backlog flag, will be listed into crypto-engine
-queue and processed by CAAM when free.
-If sending just the backlog request to crypto-engine, and non-blocking
-directly to CAAM, the latter requests have a better chance to be
-executed since JR has up to 1024 entries, more than the 10 entries
-from crypto-engine.
+Hi all,
 
-Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
----
- drivers/crypto/caam/caamalg.c | 108 ++++++++++++++++++++++++++++++------------
- 1 file changed, 78 insertions(+), 30 deletions(-)
+this series wants to introduce SCMI Notification Support, built on top of
+the standard Kernel notification chain subsystem.
 
-diff --git a/drivers/crypto/caam/caamalg.c b/drivers/crypto/caam/caamalg.c
-index 292db60..0f20bcf 100644
---- a/drivers/crypto/caam/caamalg.c
-+++ b/drivers/crypto/caam/caamalg.c
-@@ -120,6 +120,10 @@ struct caam_skcipher_req_ctx {
- 	struct skcipher_edesc *edesc;
- };
- 
-+struct caam_aead_req_ctx {
-+	struct aead_edesc *edesc;
-+};
-+
- static int aead_null_set_sh_desc(struct crypto_aead *aead)
- {
- 	struct caam_ctx *ctx = crypto_aead_ctx(aead);
-@@ -865,6 +869,7 @@ static int xts_skcipher_setkey(struct crypto_skcipher *skcipher, const u8 *key,
-  * @mapped_dst_nents: number of segments in output h/w link table
-  * @sec4_sg_bytes: length of dma mapped sec4_sg space
-  * @sec4_sg_dma: bus physical mapped address of h/w link table
-+ * @bklog: stored to determine if the request needs backlog
-  * @sec4_sg: pointer to h/w link table
-  * @hw_desc: the h/w job descriptor followed by any referenced link tables
-  */
-@@ -875,6 +880,7 @@ struct aead_edesc {
- 	int mapped_dst_nents;
- 	int sec4_sg_bytes;
- 	dma_addr_t sec4_sg_dma;
-+	bool bklog;
- 	struct sec4_sg_entry *sec4_sg;
- 	u32 hw_desc[];
- };
-@@ -953,12 +959,14 @@ static void aead_crypt_done(struct device *jrdev, u32 *desc, u32 err,
- 			    void *context)
- {
- 	struct aead_request *req = context;
-+	struct caam_aead_req_ctx *rctx = aead_request_ctx(req);
-+	struct caam_drv_private_jr *jrp = dev_get_drvdata(jrdev);
- 	struct aead_edesc *edesc;
- 	int ecode = 0;
- 
- 	dev_dbg(jrdev, "%s %d: err 0x%x\n", __func__, __LINE__, err);
- 
--	edesc = container_of(desc, struct aead_edesc, hw_desc[0]);
-+	edesc = rctx->edesc;
- 
- 	if (err)
- 		ecode = caam_jr_strstatus(jrdev, err);
-@@ -967,7 +975,14 @@ static void aead_crypt_done(struct device *jrdev, u32 *desc, u32 err,
- 
- 	kfree(edesc);
- 
--	aead_request_complete(req, ecode);
-+	/*
-+	 * If no backlog flag, the completion of the request is done
-+	 * by CAAM, not crypto engine.
-+	 */
-+	if (!edesc->bklog)
-+		aead_request_complete(req, ecode);
-+	else
-+		crypto_finalize_aead_request(jrp->engine, req, ecode);
- }
- 
- static void skcipher_crypt_done(struct device *jrdev, u32 *desc, u32 err,
-@@ -1262,6 +1277,7 @@ static struct aead_edesc *aead_edesc_alloc(struct aead_request *req,
- 	struct crypto_aead *aead = crypto_aead_reqtfm(req);
- 	struct caam_ctx *ctx = crypto_aead_ctx(aead);
- 	struct device *jrdev = ctx->jrdev;
-+	struct caam_aead_req_ctx *rctx = aead_request_ctx(req);
- 	gfp_t flags = (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?
- 		       GFP_KERNEL : GFP_ATOMIC;
- 	int src_nents, mapped_src_nents, dst_nents = 0, mapped_dst_nents = 0;
-@@ -1362,6 +1378,10 @@ static struct aead_edesc *aead_edesc_alloc(struct aead_request *req,
- 	edesc->mapped_dst_nents = mapped_dst_nents;
- 	edesc->sec4_sg = (void *)edesc + sizeof(struct aead_edesc) +
- 			 desc_bytes;
-+
-+	edesc->bklog = false;
-+	rctx->edesc = edesc;
-+
- 	*all_contig_ptr = !(mapped_src_nents > 1);
- 
- 	sec4_sg_index = 0;
-@@ -1392,6 +1412,33 @@ static struct aead_edesc *aead_edesc_alloc(struct aead_request *req,
- 	return edesc;
- }
- 
-+static int aead_enqueue_req(struct device *jrdev, struct aead_request *req)
-+{
-+	struct caam_drv_private_jr *jrpriv = dev_get_drvdata(jrdev);
-+	struct caam_aead_req_ctx *rctx = aead_request_ctx(req);
-+	struct aead_edesc *edesc = rctx->edesc;
-+	u32 *desc = edesc->hw_desc;
-+	int ret;
-+
-+	/*
-+	 * Only the backlog request are sent to crypto-engine since the others
-+	 * can be handled by CAAM, if free, especially since JR has up to 1024
-+	 * entries (more than the 10 entries from crypto-engine).
-+	 */
-+	if (req->base.flags & CRYPTO_TFM_REQ_MAY_BACKLOG)
-+		ret = crypto_transfer_aead_request_to_engine(jrpriv->engine,
-+							     req);
-+	else
-+		ret = caam_jr_enqueue(jrdev, desc, aead_crypt_done, req);
-+
-+	if ((ret != -EINPROGRESS) && (ret != -EBUSY)) {
-+		aead_unmap(jrdev, edesc, req);
-+		kfree(rctx->edesc);
-+	}
-+
-+	return ret;
-+}
-+
- static inline int chachapoly_crypt(struct aead_request *req, bool encrypt)
- {
- 	struct aead_edesc *edesc;
-@@ -1400,7 +1447,6 @@ static inline int chachapoly_crypt(struct aead_request *req, bool encrypt)
- 	struct device *jrdev = ctx->jrdev;
- 	bool all_contig;
- 	u32 *desc;
--	int ret;
- 
- 	edesc = aead_edesc_alloc(req, CHACHAPOLY_DESC_JOB_IO_LEN, &all_contig,
- 				 encrypt);
-@@ -1414,13 +1460,7 @@ static inline int chachapoly_crypt(struct aead_request *req, bool encrypt)
- 			     DUMP_PREFIX_ADDRESS, 16, 4, desc, desc_bytes(desc),
- 			     1);
- 
--	ret = caam_jr_enqueue(jrdev, desc, aead_crypt_done, req);
--	if (ret != -EINPROGRESS) {
--		aead_unmap(jrdev, edesc, req);
--		kfree(edesc);
--	}
--
--	return ret;
-+	return aead_enqueue_req(jrdev, req);
- }
- 
- static int chachapoly_encrypt(struct aead_request *req)
-@@ -1440,8 +1480,6 @@ static inline int aead_crypt(struct aead_request *req, bool encrypt)
- 	struct caam_ctx *ctx = crypto_aead_ctx(aead);
- 	struct device *jrdev = ctx->jrdev;
- 	bool all_contig;
--	u32 *desc;
--	int ret = 0;
- 
- 	/* allocate extended descriptor */
- 	edesc = aead_edesc_alloc(req, AUTHENC_DESC_JOB_IO_LEN,
-@@ -1456,14 +1494,7 @@ static inline int aead_crypt(struct aead_request *req, bool encrypt)
- 			     DUMP_PREFIX_ADDRESS, 16, 4, edesc->hw_desc,
- 			     desc_bytes(edesc->hw_desc), 1);
- 
--	desc = edesc->hw_desc;
--	ret = caam_jr_enqueue(jrdev, desc, aead_crypt_done, req);
--	if (ret != -EINPROGRESS) {
--		aead_unmap(jrdev, edesc, req);
--		kfree(edesc);
--	}
--
--	return ret;
-+	return aead_enqueue_req(jrdev, req);
- }
- 
- static int aead_encrypt(struct aead_request *req)
-@@ -1476,6 +1507,28 @@ static int aead_decrypt(struct aead_request *req)
- 	return aead_crypt(req, false);
- }
- 
-+static int aead_do_one_req(struct crypto_engine *engine, void *areq)
-+{
-+	struct aead_request *req = aead_request_cast(areq);
-+	struct caam_ctx *ctx = crypto_aead_ctx(crypto_aead_reqtfm(req));
-+	struct caam_aead_req_ctx *rctx = aead_request_ctx(req);
-+	u32 *desc = rctx->edesc->hw_desc;
-+	int ret;
-+
-+	rctx->edesc->bklog = true;
-+
-+	ret = caam_jr_enqueue(ctx->jrdev, desc, aead_crypt_done, req);
-+
-+	if (ret != -EINPROGRESS) {
-+		aead_unmap(ctx->jrdev, rctx->edesc, req);
-+		kfree(rctx->edesc);
-+	} else {
-+		ret = 0;
-+	}
-+
-+	return ret;
-+}
-+
- static inline int gcm_crypt(struct aead_request *req, bool encrypt)
- {
- 	struct aead_edesc *edesc;
-@@ -1483,8 +1536,6 @@ static inline int gcm_crypt(struct aead_request *req, bool encrypt)
- 	struct caam_ctx *ctx = crypto_aead_ctx(aead);
- 	struct device *jrdev = ctx->jrdev;
- 	bool all_contig;
--	u32 *desc;
--	int ret = 0;
- 
- 	/* allocate extended descriptor */
- 	edesc = aead_edesc_alloc(req, GCM_DESC_JOB_IO_LEN, &all_contig,
-@@ -1499,14 +1550,7 @@ static inline int gcm_crypt(struct aead_request *req, bool encrypt)
- 			     DUMP_PREFIX_ADDRESS, 16, 4, edesc->hw_desc,
- 			     desc_bytes(edesc->hw_desc), 1);
- 
--	desc = edesc->hw_desc;
--	ret = caam_jr_enqueue(jrdev, desc, aead_crypt_done, req);
--	if (ret != -EINPROGRESS) {
--		aead_unmap(jrdev, edesc, req);
--		kfree(edesc);
--	}
--
--	return ret;
-+	return aead_enqueue_req(jrdev, req);
- }
- 
- static int gcm_encrypt(struct aead_request *req)
-@@ -3336,6 +3380,10 @@ static int caam_aead_init(struct crypto_aead *tfm)
- 		 container_of(alg, struct caam_aead_alg, aead);
- 	struct caam_ctx *ctx = crypto_aead_ctx(tfm);
- 
-+	crypto_aead_set_reqsize(tfm, sizeof(struct caam_aead_req_ctx));
-+
-+	ctx->enginectx.op.do_one_request = aead_do_one_req;
-+
- 	return caam_init_common(ctx, &caam_alg->caam, !caam_alg->caam.nodkp);
- }
- 
+At initialization time each SCMI Protocol takes care to register with the
+new SCMI notification core the set of its own events which it intends to
+support.
+
+Using a possibly proposed API in scmi_protocol.h (not finalized though,
+NO EXPORTs_) a Kernel user can register its own notifier_t callback
+(so via a notifier_block as usual) against any registered event as
+identified by the tuple:
+
+		(proto_id, event_id, src_id)
+
+where src_id represents a generic source identifier which is protocol
+dependent like domain_id, performance_id, sensor_id and so forth.
+(users can anyway do NOT provide any src_id, and subscribe instead to ALL
+ the existing (if any) src_id sources for that proto_id/evt_id combination)
+
+Each of the above tuple-specified event will be served on its own dedicated
+blocking notification chain; given the great number of possible events, and
+the extensibility of the SCMI Protocol itself, all the underlying machinery
+of notifications chains it is dynamically created and destroyed at run-time
+on-demand, depending on the number of effective registered users: no users
+no allocations at all.
+
+Upon a notification delivery all the users' registered notifier_t callbacks
+will be in turn invoked and fed with the event_id as @action param and a
+generated custom per-event report struct as @data param.
+Each event report carries also a timestamp, gathered when the notification
+message had first entered the richOS world in the SCMI rx ISR.
+
+The final step of notification delivery via users' callback invocation is
+instead delegated to a pool of deferred workers (Kernel cmwq): each
+SCMI protocol has its own dedicated worker and queue to push events from
+the rx ISR to the worker.
+
+Additionally, since the original Kernel notification chain mechanism does
+not stop users' registered callbacks from interacting with the notification
+delivery itself (like cutting the chain with a NOTIFY_STOP or mangling the
+*data report struct along the way), it was thought that such behaviour was
+generally undesirable for a notification delivery service, and a possible
+'anti-tampering' solution is proposed in patch [02/11]
+
+("firmware: arm_scmi: Add notifications anti-tampering")
+
+but maybe this attempt is not worth the cost of the additional complication
+or simply deemed not needed (being anyway in Kernel land), in such a case
+the above anti-tampering commit can simply be dropped from the series.
+
+The series is marked as RFC mainly because:
+
+- the API as said is tentative and not EXPORTed; currently consisting of a
+  per-protocol interface like:
+ 	 scmi_register_<proto>_event_notifier(evt_id, *src_id, *nb)
+
+  but it could be simplified to one single simpler generic one like:
+
+ 	 scmi_register_event_notifier(proto_id, evt_id, *src_id, *nb)
+
+  It's open for discussion.
+
+- no Event priorization has been considered: each protocol has its own
+  queue and deferred worker instance, so as to avoid that one protocol
+  flooding can overrun a single queue and influence other protocols'
+  notifications' delivery.
+  But that's it, all the workers are unbound, low_pri cmwq workers.
+
+  Should we enforce some sort of built-in prio amongst the events ?
+  Should this priority instead be compile time configurable ?
+
+  Again, open for discussion.
+
+- no configuration is possible: it can be imagined that on a real platform
+  events' priority (if any) and events queues' depth could be something
+  somehow compile-time configurable, but this is not addressed by this
+  series at all.
+
+Based on scmi-next [1], on top of:
+
+commit 257d0e20ec4f ("include: trace: Add SCMI header with trace events")
+
+This series has been tested on JUNO with an experimental firmware only
+supporting Perf Notifications.
+
+Any thoughts ?
+
+Thanks
+
+Cristian
+----
+
+[1] git://git.kernel.org/pub/scm/linux/kernel/git/sudeep.holla/linux.git
+
+Cristian Marussi (8):
+  firmware: arm_scmi: Add core notifications support
+  firmware: arm_scmi: Add notifications anti-tampering
+  firmware: arm_scmi: Enable core notifications
+  firmware: arm_scmi: Add Power notifications support
+  firmware: arm_scmi: Add Perf notifications support
+  firmware: arm_scmi: Add Sensor notifications support
+  firmware: arm_scmi: Add Reset notifications support
+  firmware: arm_scmi: Add Base notifications support
+
+Sudeep Holla (3):
+  firmware: arm_scmi: Add receive buffer support for notifications
+  firmware: arm_scmi: Update protocol commands and notification list
+  firmware: arm_scmi: Add support for notifications message processing
+
+ drivers/firmware/arm_scmi/Makefile  |    2 +-
+ drivers/firmware/arm_scmi/base.c    |  132 ++++
+ drivers/firmware/arm_scmi/bus.c     |    3 +
+ drivers/firmware/arm_scmi/common.h  |    4 +
+ drivers/firmware/arm_scmi/driver.c  |  121 +++-
+ drivers/firmware/arm_scmi/notify.c  | 1047 +++++++++++++++++++++++++++
+ drivers/firmware/arm_scmi/notify.h  |   79 ++
+ drivers/firmware/arm_scmi/perf.c    |  167 ++++-
+ drivers/firmware/arm_scmi/power.c   |  161 +++-
+ drivers/firmware/arm_scmi/reset.c   |  126 +++-
+ drivers/firmware/arm_scmi/sensors.c |  105 ++-
+ include/linux/scmi_protocol.h       |   82 +++
+ 12 files changed, 1991 insertions(+), 38 deletions(-)
+ create mode 100644 drivers/firmware/arm_scmi/notify.c
+ create mode 100644 drivers/firmware/arm_scmi/notify.h
+
 -- 
-2.1.0
+2.17.1
 
