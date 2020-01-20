@@ -2,173 +2,91 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 711CDC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:03:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FBB7C33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:04:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CBE021D7E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:03:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2625321D7E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:04:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BA3YxcrF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727285AbgATODw (ORCPT
+        id S1728655AbgATOEK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 09:03:52 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:37804 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726626AbgATODw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 09:03:52 -0500
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id B98CDA86436E8D119C3C;
-        Mon, 20 Jan 2020 22:03:49 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.27) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Mon, 20 Jan 2020
- 22:03:42 +0800
-Subject: Re: [PATCH v3 05/32] irqchip/gic-v4.1: VPE table (aka
- GICR_VPROPBASER) allocation
-To:     Marc Zyngier <maz@kernel.org>, <kvmarm@lists.cs.columbia.edu>,
+        Mon, 20 Jan 2020 09:04:10 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:46636 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726626AbgATOEJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 09:04:09 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00KE46cM114806;
+        Mon, 20 Jan 2020 08:04:07 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579529047;
+        bh=+Xv3pRHSeD5+/rifxAd4m2FjGsvidIUYqZb4HrDmSXQ=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=BA3YxcrFmBPZM1+WdJ8GlunF2BXoKDJpNoFlR5A2KP6BvwXTXIOUnrgcBMtM3dxsv
+         lpNhi6mpF3EfGWJhNubzZbXBBP8puwbfj9DiCmt6PqzgFnTWo4+gciaEgwMz50ZhNQ
+         5cmFRcLZ4GlXlnTlcl2vjA5pcJMwYsGYZ7FrLeMw=
+Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00KE462Q049612
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 20 Jan 2020 08:04:06 -0600
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 20
+ Jan 2020 08:04:06 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 20 Jan 2020 08:04:06 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00KE46Yk064611;
+        Mon, 20 Jan 2020 08:04:06 -0600
+Date:   Mon, 20 Jan 2020 08:04:06 -0600
+From:   Bin Liu <b-liu@ti.com>
+To:     Colin King <colin.king@canonical.com>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-usb@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-CC:     Eric Auger <eric.auger@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "Andrew Murray" <Andrew.Murray@arm.com>,
-        Robert Richter <rrichter@marvell.com>
-References: <20191224111055.11836-1-maz@kernel.org>
- <20191224111055.11836-6-maz@kernel.org>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <b4a78cea-4ba3-58fb-4121-44508e7ae384@huawei.com>
-Date:   Mon, 20 Jan 2020 22:03:39 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+Subject: Re: [PATCH][next] usb: musb: fix spelling mistake: "periperal" ->
+ "peripheral"
+Message-ID: <20200120140406.GA9789@iaqt7>
+Mail-Followup-To: Bin Liu <b-liu@ti.com>,
+        Colin King <colin.king@canonical.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200117093124.97965-1-colin.king@canonical.com>
 MIME-Version: 1.0
-In-Reply-To: <20191224111055.11836-6-maz@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.222.27]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200117093124.97965-1-colin.king@canonical.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
+Hi Greg,
 
-On 2019/12/24 19:10, Marc Zyngier wrote:
-> GICv4.1 defines a new VPE table that is potentially shared between
-> both the ITSs and the redistributors, following complicated affinity
-> rules.
+On Fri, Jan 17, 2020 at 09:31:24AM +0000, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> To make things more confusing, the programming of this table at
-> the redistributor level is reusing the GICv4.0 GICR_VPROPBASER register
-> for something completely different.
+> There is a spelling mistake in a dev_err error message. Fix it.
 > 
-> The code flow is somewhat complexified by the need to respect the
-> affinities required by the HW, meaning that tables can either be
-> inherited from a previously discovered ITS or redistributor.
-> 
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
+Do you mind to take this directly? Here is my Acked-by:
 
-With two very minor concerns below.
-
-[...]
-
-> +static int allocate_vpe_l1_table(void)
-> +{
-> +	void __iomem *vlpi_base = gic_data_rdist_vlpi_base();
-> +	u64 val, gpsz, npg, pa;
-> +	unsigned int psz = SZ_64K;
-> +	unsigned int np, epp, esz;
-> +	struct page *page;
-> +
-> +	if (!gic_rdists->has_rvpeid)
-> +		return 0;
-> +
-> +	/*
-> +	 * if VPENDBASER.Valid is set, disable any previously programmed
-> +	 * VPE by setting PendingLast while clearing Valid. This has the
-> +	 * effect of making sure no doorbell will be generated and we can
-> +	 * then safely clear VPROPBASER.Valid.
-> +	 */
-> +	if (gits_read_vpendbaser(vlpi_base + GICR_VPENDBASER) & GICR_VPENDBASER_Valid)
-> +		gits_write_vpendbaser(GICR_VPENDBASER_PendingLast,
-> +				      vlpi_base + GICR_VPENDBASER);
-
-I'm confused here.  The Valid field resets to 0.  Under which scenario
-will the Valid==1 while we're doing initialization for this RD?
-
-> +
-> +	/*
-> +	 * If we can inherit the configuration from another RD, let's do
-> +	 * so. Otherwise, we have to go through the allocation process. We
-> +	 * assume that all RDs have the exact same requirements, as
-> +	 * nothing will work otherwise.
-> +	 */
-> +	val = inherit_vpe_l1_table_from_rd(&gic_data_rdist()->vpe_table_mask);
-> +	if (val & GICR_VPROPBASER_4_1_VALID)
-> +		goto out;
-> +
-> +	gic_data_rdist()->vpe_table_mask = kzalloc(sizeof(cpumask_t), GFP_KERNEL);
-> +	if (!gic_data_rdist()->vpe_table_mask)
-> +		return -ENOMEM;
-> +
-> +	val = inherit_vpe_l1_table_from_its();
-> +	if (val & GICR_VPROPBASER_4_1_VALID)
-> +		goto out;
-> +
-> +	/* First probe the page size */
-> +	val = FIELD_PREP(GICR_VPROPBASER_4_1_PAGE_SIZE, GIC_PAGE_SIZE_64K);
-> +	gits_write_vpropbaser(val, vlpi_base + GICR_VPROPBASER);
-> +	val = gits_read_vpropbaser(vlpi_base + GICR_VPROPBASER);
-> +	gpsz = FIELD_GET(GICR_VPROPBASER_4_1_PAGE_SIZE, val);
-> +	esz = FIELD_GET(GICR_VPROPBASER_4_1_ENTRY_SIZE, val);
-> +
-> +	switch (gpsz) {
-> +	default:
-> +		gpsz = GIC_PAGE_SIZE_4K;
-> +		/* fall through */
-> +	case GIC_PAGE_SIZE_4K:
-> +		psz = SZ_4K;
-> +		break;
-> +	case GIC_PAGE_SIZE_16K:
-> +		psz = SZ_16K;
-> +		break;
-> +	case GIC_PAGE_SIZE_64K:
-> +		psz = SZ_64K;
-> +		break;
-> +	}
-> +
-> +	/*
-> +	 * Start populating the register from scratch, including RO fields
-> +	 * (which we want to print in debug cases...)
-> +	 */
-> +	val = 0;
-> +	val |= FIELD_PREP(GICR_VPROPBASER_4_1_PAGE_SIZE, gpsz);
-> +	val |= FIELD_PREP(GICR_VPROPBASER_4_1_ENTRY_SIZE, esz);
-> +
-> +	/* How many entries per GIC page? */
-> +	esz++;
-> +	epp = psz / (esz * SZ_8);
-> +
-> +	/*
-> +	 * If we need more than just a single L1 page, flag the table
-> +	 * as indirect and compute the number of required L1 pages.
-> +	 */
-> +	if (epp < ITS_MAX_VPEID) {
-> +		int nl2;
-> +
-> +		gic_rdists->flags |= RDIST_FLAGS_VPE_INDIRECT;
-
-This flag is set but not used, can we just drop it?
-
+Acked-by: Bin Liu <b-liu@ti.com>
 
 Thanks,
-Zenghui
+-Bin.
 
