@@ -2,151 +2,236 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 357BCC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41192C33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:56:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04682217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D8EC217F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:56:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="IwVG86sx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727117AbgATN4n (ORCPT
+        id S1727586AbgATN4u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 08:56:43 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:8202 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726738AbgATN4m (ORCPT
+        Mon, 20 Jan 2020 08:56:50 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:46962 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726738AbgATN4t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 08:56:42 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00KDIpd3072358
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 08:20:25 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xmgh9s7ty-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 08:20:24 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <tmricht@linux.ibm.com>;
-        Mon, 20 Jan 2020 13:20:23 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 20 Jan 2020 13:20:20 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00KDKIZA38010888
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Jan 2020 13:20:18 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CA0A3A4068;
-        Mon, 20 Jan 2020 13:20:18 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 87267A4054;
-        Mon, 20 Jan 2020 13:20:18 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 20 Jan 2020 13:20:18 +0000 (GMT)
-From:   Thomas Richter <tmricht@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
-Cc:     gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH v2] perf probe: Add ustring support for perf probe command
-Date:   Mon, 20 Jan 2020 14:20:10 +0100
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200120132011.64698-1-tmricht@linux.ibm.com>
-References: <20200120132011.64698-1-tmricht@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 20012013-0016-0000-0000-000002DF123B
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20012013-0017-0000-0000-00003341B5FD
-Message-Id: <20200120132011.64698-2-tmricht@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-20_02:2020-01-20,2020-01-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
- lowpriorityscore=0 impostorscore=0 spamscore=0 phishscore=0
- priorityscore=1501 clxscore=1015 mlxscore=0 mlxlogscore=999 malwarescore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001200115
+        Mon, 20 Jan 2020 08:56:49 -0500
+Received: by mail-qt1-f195.google.com with SMTP id e25so16353892qtr.13
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 05:56:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=UDw9crDqR4wuzSt+UUQwG9e+dAgvTCVj+tj91bpFb5k=;
+        b=IwVG86sx9Lal+wnkqP7aHYTH3k6lsQoaHMIqKhMY3rAY0lY1bwRPlKkRoI1PdR95rr
+         hRAG85dHZS9ji9iStf/Ehxnyq2zzr4cGQNfh0KOrS2u0JOz+dU71AiFfpQBJkxtz5SMK
+         ujwJypuJEhbXmwudqMWISSA2btDZ8ipgFut6ZMJ2/6akmiLirUsd8j4CJ7RagwCljgRc
+         3zgO0yJ7qyruHjSyTq6roKQyC368Y6J3oATccJv5jxSSxnlDpWKFy0VObUlPnkGomM4x
+         D6udpzNxzmA0UhAP7Mj1M4t/0QuxfcRT/MTq3IVCjA2Rmazj7jz6Z2L2h1cWg0mrhg6J
+         czAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=UDw9crDqR4wuzSt+UUQwG9e+dAgvTCVj+tj91bpFb5k=;
+        b=PRaAS+tOTRf6UUGOxBd0dETUJ3qroJF8LNOyKgS1t5JJQLayaUR/AxAuYE4a7eNxu9
+         CWRgS3YoKKfXJzdCELCLNgFri+pybpUUyf0R4/HRAl1pRnFBznC8Cy3JV3PeJPZHS0J8
+         83dDYlifb031G8hWH715cJtS4q8M3BfWVLYTpgp4mQwbiOgutDg1rQAByWF+Bpw7E3Mc
+         x3wmYUm5cj3C6ER4fTSqlY0mXg9hh7fBubmPx8RObO7tjH+gh0RdNZsDP56kGb2jtZfU
+         FfDAys8dl7eGmWT+JPoCXzT1gREvLtvtQ2SfVgoppX+/pJCX6VY8Bngqcwr179UX1bfX
+         KzRg==
+X-Gm-Message-State: APjAAAUtIBeEijRP1EXRl6ODFOwU7nRjpCGxse2L31m/wvkLEfKAt/oM
+        TbVPbiLn4ojM6HBxWzZ9rpoLzykYthISOQ==
+X-Google-Smtp-Source: APXvYqwD8U+ozurfTwVFyCwlyCeLFxNMSxMeTnnCY7Eto/JANTFlyaPjX/ctFbQLYbh9UJyvxfLkug==
+X-Received: by 2002:ac8:31f0:: with SMTP id i45mr20739412qte.327.1579528608282;
+        Mon, 20 Jan 2020 05:56:48 -0800 (PST)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id f19sm15659723qkk.69.2020.01.20.05.56.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 Jan 2020 05:56:47 -0800 (PST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
+Subject: Re: [PATCH -mm v2] mm/page_isolation: fix potential warning from user
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <ba3215a2-d616-c636-e70d-99bb8f504292@redhat.com>
+Date:   Mon, 20 Jan 2020 08:56:46 -0500
+Cc:     Andrew Morton <akpm@linux-foundation.org>, mhocko@kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <96675869-3815-4E98-8492-1D84F5B42AED@lca.pw>
+References: <20200120131909.813-1-cai@lca.pw>
+ <8c56268d-9b8a-f62e-eca9-7707852a2aaf@redhat.com>
+ <ba3215a2-d616-c636-e70d-99bb8f504292@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+X-Mailer: Apple Mail (2.3608.40.2.2.4)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kernel commit 88903c464321 ("tracing/probe: Add ustring type for user-space string")
-adds support for user-space strings when type 'ustring' is specified.
 
-Here is an example using sysfs command line interface
-for kprobes:
 
-Function to probe:
-  struct filename *
-  getname_flags(const char __user *filename, int flags, int *empty)
+> On Jan 20, 2020, at 8:38 AM, David Hildenbrand <david@redhat.com> =
+wrote:
+>=20
+> On 20.01.20 14:30, David Hildenbrand wrote:
+>> On 20.01.20 14:19, Qian Cai wrote:
+>>> It makes sense to call the WARN_ON_ONCE(zone_idx(zone) =3D=3D =
+ZONE_MOVABLE)
+>>> from start_isolate_page_range(), but should avoid triggering it from
+>>> userspace, i.e, from is_mem_section_removable() because it could be =
+a
+>>> DoS if warn_on_panic is set.
+>>>=20
+>>> While at it, simplify the code a bit by removing an unnecessary jump
+>>> label and a local variable, so set_migratetype_isolate() could =
+really
+>>> return a bool.
+>>>=20
+>>> Suggested-by: Michal Hocko <mhocko@kernel.org>
+>>> Signed-off-by: Qian Cai <cai@lca.pw>
+>>> ---
+>>>=20
+>>> v2: Improve the commit log.
+>>>    Warn for all start_isolate_page_range() users not just offlining.
+>>>=20
+>>> mm/page_alloc.c     | 11 ++++-------
+>>> mm/page_isolation.c | 30 +++++++++++++++++-------------
+>>> 2 files changed, 21 insertions(+), 20 deletions(-)
+>>>=20
+>>> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+>>> index 621716a25639..3c4eb750a199 100644
+>>> --- a/mm/page_alloc.c
+>>> +++ b/mm/page_alloc.c
+>>> @@ -8231,7 +8231,7 @@ struct page *has_unmovable_pages(struct zone =
+*zone, struct page *page,
+>>> 		if (is_migrate_cma(migratetype))
+>>> 			return NULL;
+>>>=20
+>>> -		goto unmovable;
+>>> +		return page;
+>>> 	}
+>>>=20
+>>> 	for (; iter < pageblock_nr_pages; iter++) {
+>>> @@ -8241,7 +8241,7 @@ struct page *has_unmovable_pages(struct zone =
+*zone, struct page *page,
+>>> 		page =3D pfn_to_page(pfn + iter);
+>>>=20
+>>> 		if (PageReserved(page))
+>>> -			goto unmovable;
+>>> +			return page;
+>>>=20
+>>> 		/*
+>>> 		 * If the zone is movable and we have ruled out all =
+reserved
+>>> @@ -8261,7 +8261,7 @@ struct page *has_unmovable_pages(struct zone =
+*zone, struct page *page,
+>>> 			unsigned int skip_pages;
+>>>=20
+>>> 			if =
+(!hugepage_migration_supported(page_hstate(head)))
+>>> -				goto unmovable;
+>>> +				return page;
+>>>=20
+>>> 			skip_pages =3D compound_nr(head) - (page - =
+head);
+>>> 			iter +=3D skip_pages - 1;
+>>> @@ -8303,12 +8303,9 @@ struct page *has_unmovable_pages(struct zone =
+*zone, struct page *page,
+>>> 		 * is set to both of a memory hole page and a _used_ =
+kernel
+>>> 		 * page at boot.
+>>> 		 */
+>>> -		goto unmovable;
+>>> +		return page;
+>>> 	}
+>>> 	return NULL;
+>>> -unmovable:
+>>> -	WARN_ON_ONCE(zone_idx(zone) =3D=3D ZONE_MOVABLE);
+>>> -	return pfn_to_page(pfn + iter);
+>>> }
+>>>=20
+>>> #ifdef CONFIG_CONTIG_ALLOC
+>>> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+>>> index e70586523ca3..31f5516f5d54 100644
+>>> --- a/mm/page_isolation.c
+>>> +++ b/mm/page_isolation.c
+>>> @@ -15,12 +15,12 @@
+>>> #define CREATE_TRACE_POINTS
+>>> #include <trace/events/page_isolation.h>
+>>>=20
+>>> -static int set_migratetype_isolate(struct page *page, int =
+migratetype, int isol_flags)
+>>> +static bool set_migratetype_isolate(struct page *page, int =
+migratetype,
+>>> +				    int isol_flags)
+>>=20
+>> Why this change?
+>>=20
+>>> {
+>>> -	struct page *unmovable =3D NULL;
+>>> +	struct page *unmovable =3D ERR_PTR(-EBUSY);
+>>=20
+>> Also, why this change?
+>>=20
+>>> 	struct zone *zone;
+>>> 	unsigned long flags;
+>>> -	int ret =3D -EBUSY;
+>>>=20
+>>> 	zone =3D page_zone(page);
+>>>=20
+>>> @@ -49,21 +49,25 @@ static int set_migratetype_isolate(struct page =
+*page, int migratetype, int isol_
+>>> 									=
+NULL);
+>>>=20
+>>> 		__mod_zone_freepage_state(zone, -nr_pages, mt);
+>>> -		ret =3D 0;
+>>> 	}
+>>>=20
+>>> out:
+>>> 	spin_unlock_irqrestore(&zone->lock, flags);
+>>> -	if (!ret)
+>>> +
+>>> +	if (!unmovable) {
+>>> 		drain_all_pages(zone);
+>>> -	else if ((isol_flags & REPORT_FAILURE) && unmovable)
+>>> -		/*
+>>> -		 * printk() with zone->lock held will guarantee to =
+trigger a
+>>> -		 * lockdep splat, so defer it here.
+>>> -		 */
+>>> -		dump_page(unmovable, "unmovable page");
+>>> -
+>>> -	return ret;
+>>> +	} else {
+>>> +		WARN_ON_ONCE(zone_idx(zone) =3D=3D ZONE_MOVABLE);
+>>> +
+>>> +		if ((isol_flags & REPORT_FAILURE) && !IS_ERR(unmovable))
+>>> +			/*
+>>=20
+>> Why this change? (!IS_ERR)
+>>=20
+>>=20
+>> Some things here look unrelated - or I am missing something :)
+>>=20
+>=20
+> FWIW, I'd prefer this change without any such cleanups (e.g., I don't
+> like returning a bool from this function and the IS_ERR handling, =
+makes
+> the function harder to read than before)
 
-Setup:
-  # cd /sys/kernel/debug/tracing/
-  # echo 'p:tmr1 getname_flags +0(%r2):ustring' > kprobe_events
-  # cat events/kprobes/tmr1/format | fgrep print
-  print fmt: "(%lx) arg1=\"%s\"", REC->__probe_ip, REC->arg1
-  # echo 1 > events/kprobes/tmr1/enable
-  # touch /tmp/111
-  # echo 0 > events/kprobes/tmr1/enable
-  # cat trace|fgrep /tmp/111
-  touch-5846  [005] d..2 255520.717960: tmr1:\
-	  (getname_flags+0x0/0x400) arg1="/tmp/111"
-
-Doing the same with the perf tool fails.
-Using type 'string' succeeds:
- # perf probe "vfs_getname=getname_flags:72 pathname=filename:string"
- Added new event:
-   probe:vfs_getname (on getname_flags:72 with pathname=filename:string)
-   ....
- # perf probe -d probe:vfs_getname
- Removed event: probe:vfs_getname
-
-However using type 'ustring' fails (output before):
- # perf probe "vfs_getname=getname_flags:72 pathname=filename:ustring"
- Failed to write event: Invalid argument
-   Error: Failed to add events.
- #
-
-Fix this by adding type 'ustring' in function
-convert_variable_type().
-
-Using ustring succeeds (output after):
- # ./perf probe "vfs_getname=getname_flags:72 pathname=filename:ustring"
- Added new event:
-   probe:vfs_getname (on getname_flags:72 with pathname=filename:ustring)
-
- You can now use it in all perf tools, such as:
-
-	perf record -e probe:vfs_getname -aR sleep 1
-
- #
-
-Note: This issue also exists on x86, it is not s390 specific.
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
----
- tools/perf/util/probe-finder.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index c470c49a804f..1c817add6ca4 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -303,7 +303,8 @@ static int convert_variable_type(Dwarf_Die *vr_die,
- 	char prefix;
- 
- 	/* TODO: check all types */
--	if (cast && strcmp(cast, "string") != 0 && strcmp(cast, "x") != 0 &&
-+	if (cast && strcmp(cast, "string") != 0 && strcmp(cast, "ustring") &&
-+	    strcmp(cast, "x") != 0 &&
- 	    strcmp(cast, "s") != 0 && strcmp(cast, "u") != 0) {
- 		/* Non string type is OK */
- 		/* and respect signedness/hexadecimal cast */
--- 
-2.21.0
+What is Michal or Andrew=E2=80=99s opinion? BTW, a bonus point to return =
+a bool
+is that it helps the code robustness in general, as UBSAN will be able =
+to
+catch any abuse.
 
