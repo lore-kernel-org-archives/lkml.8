@@ -2,198 +2,133 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA2EC33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61498C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:11:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6BFE20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:11:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3386A20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:11:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="OVH6QCj7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B3tmgLbj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbgATLLS (ORCPT
+        id S1727107AbgATLLq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 06:11:18 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:57652 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726451AbgATLLR (ORCPT
+        Mon, 20 Jan 2020 06:11:46 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54219 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726451AbgATLLq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 06:11:17 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00KB3duZ020866;
-        Mon, 20 Jan 2020 12:10:44 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=hWK6MgmisYVJHmm88uG+uXlwDqS8xjGWqplDvjUmUsM=;
- b=OVH6QCj782dFUzH3SixLd2+21g0BRZqsDvfwcxHaO983aQ+cfRH9YZO1WAZ28F3/Aia/
- IMDcL2o0cNWzwFJjxGiY7pDgFguenYEm1J/a3sIz37nAFjUZVRBKQrJyGzptN+KD0bZH
- UHUGK9QcHZ3P1Nmeyo01iQhpHGwXjb+7y5spltDG7+pgOoLJ3gAojBH5rgEo9K+Uqi3T
- mbBSuKNDMzZVkWkEreWwvhqH/0b6Zl9sFlgvSLImE9D6gLdBR/wgYl2qPGaEAoZY2QTB
- /SmoEM5tXtYbBtJCLw3uKUHQzCNwKG4nOa1Ypzi6ld6q8JjUbQAW4g75+yKl/lU7s0El Ng== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xkrc4s779-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jan 2020 12:10:44 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 47F0C10002A;
-        Mon, 20 Jan 2020 12:10:42 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 292592A96F8;
-        Mon, 20 Jan 2020 12:10:42 +0100 (CET)
-Received: from localhost (10.75.127.51) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 20 Jan 2020 12:10:41
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <linux@armlinux.org.uk>, <akpm@linux-foundation.org>,
-        <geert@linux-m68k.org>, <sstabellini@kernel.org>,
-        <ben-linux@fluff.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH] arm: mm: dma-mapping: Fix missing DMA attributs in functions documentation
-Date:   Mon, 20 Jan 2020 12:10:40 +0100
-Message-ID: <20200120111040.13983-1-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
+        Mon, 20 Jan 2020 06:11:46 -0500
+Received: by mail-wm1-f65.google.com with SMTP id m24so14046082wmc.3
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 03:11:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=NFqslHpRgb1cgGJbyvLG5KhYME4wr5wvzaaCw4RQTw4=;
+        b=B3tmgLbjOcghFZeyKogDMxiOXy0h+J5JW45qdnSZtKrpseMK3WDhy8hoWdYuweirdU
+         0CV2A94jMl5UZv0c1vwqWmUehWI75uORwvtMnB2QIjIATmdJEmEILPHbfJw6iThU9CTG
+         MZh04Ruhele8ximcvmEWddBSQvdAMuvlHnN+dZJ889xkIVh2M+OQ0fvADoaqJy0BdBFF
+         vlcG+Mn+NFCfkhZ4M7sIyVcL3095Y/iq+qH7ILjjZBkd/LJ51iW7oTsqCAx2iMekdk/J
+         oCQo4O9VEmRGDhJlCUQgm/KFEs886wLMgPBRbk1VAc2j19v4B3s0pRomHSkdN2WgfuzR
+         e4OA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=NFqslHpRgb1cgGJbyvLG5KhYME4wr5wvzaaCw4RQTw4=;
+        b=uDzKD6eAYUMKbxSGqWh5aHjnDG8OZY1HH9dNKnpfyJ/ZoqaEQOKcmbsv0Oqd6ZLbJo
+         6qh/TF3iQ/gOPUocoFPwldUpLbX9CdiLOiy5fyUin66DnUjbgDGPmBnM1ZbgtImwDGPz
+         1mIOmGpuJ+whyMBHS/oLuhZuyjwdSVp/wS3ggnQVNfEEXdhTIrwxXDdoIiJ0SLUmuVnP
+         3bHny01+Qf0K4FwN4DuhcDCLgS/LG0CWKMWRA+4f5uztI4TriR1lQr9lylsEuaPq4FgJ
+         oWVnk9odU0KpK1YmVJSD9EM4I3rdlz+UYA2JypM+/H8g5bbeyEZ54TWZxhcB5VSWNxoS
+         W3HQ==
+X-Gm-Message-State: APjAAAWLwVQhjmhHtRBa063n8gJAoCo3Yn02N7Osx6V+seVQ99z5EhZ8
+        omCmDt/WezZI2GapXLl0CPvDDQ==
+X-Google-Smtp-Source: APXvYqzMFhFWBcT7UY+37nRz5idtK8GuGZ0Wt8TGoyoaVqzPnkXenNKuXq5AFZAo5ab8npJUNi9NPw==
+X-Received: by 2002:a1c:67c3:: with SMTP id b186mr18014003wmc.36.1579518703943;
+        Mon, 20 Jan 2020 03:11:43 -0800 (PST)
+Received: from dell ([2.27.35.227])
+        by smtp.gmail.com with ESMTPSA id w13sm47420157wru.38.2020.01.20.03.11.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jan 2020 03:11:43 -0800 (PST)
+Date:   Mon, 20 Jan 2020 11:11:59 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 35/36] platform/x86: intel_pmc_ipc: Convert to MFD
+Message-ID: <20200120111159.GC15507@dell>
+References: <20200113135623.56286-1-mika.westerberg@linux.intel.com>
+ <20200113135623.56286-36-mika.westerberg@linux.intel.com>
+ <20200116132108.GH325@dell>
+ <20200116143730.GE2838@lahna.fi.intel.com>
+ <20200117113202.GH15507@dell>
+ <20200120092650.GI2665@lahna.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG8NODE3.st.com (10.75.127.24) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-20_02:2020-01-20,2020-01-20 signatures=0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200120092650.GI2665@lahna.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add documentation for DMA attributes in functions documentation.
-That fix warnings when compiling with W=1.
+Adding Mark (the Regmap Maintainer) to the conversation.
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
- arch/arm/mm/dma-mapping.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+On Mon, 20 Jan 2020, Mika Westerberg wrote:
+> On Fri, Jan 17, 2020 at 11:32:02AM +0000, Lee Jones wrote:
+> > [...]
+> > 
+> > > > Looks like Regmap could save you the trouble here.
+> > > 
+> > > Agreed.
+> > 
+> > Great.
+> 
+> I started to implement regmap for this driver but I run into some
+> problems. The registers we read/write are all 64-bit and accessed trough
+> readq/writeq accessors. However, the regmap API takes unsigned int:
+> 
+>   int regmap_write(struct regmap *map, unsigned int reg, unsigned int val);
+>   int regmap_read(struct regmap *map, unsigned int reg, unsigned int *val);
+> 
+> I'm not sure how we can take advantage of this API with the 64-bit
+> registers. There are "raw" versions of the functions that take void
+> pointer like:
+> 
+>  int regmap_raw_read(struct regmap *map, unsigned int reg,
+>                      void *val, size_t val_len);
+> 
+> but looking at the implementation if the register gets cached it
+> internally does reads in unsigned int sized chunks (if I understand it
+> right).
+> 
+> Any ideas how this can be done?
 
-diff --git a/arch/arm/mm/dma-mapping.c b/arch/arm/mm/dma-mapping.c
-index e822af0d9219..5cd122b9e7d0 100644
---- a/arch/arm/mm/dma-mapping.c
-+++ b/arch/arm/mm/dma-mapping.c
-@@ -118,6 +118,7 @@ static void __dma_page_dev_to_cpu(struct page *, unsigned long,
-  * @offset: offset into page for start of buffer
-  * @size: size of buffer to map
-  * @dir: DMA transfer direction
-+ * @attrs: DMA attributes
-  *
-  * Ensure that any data held in the cache is appropriately discarded
-  * or written back.
-@@ -147,6 +148,7 @@ static dma_addr_t arm_coherent_dma_map_page(struct device *dev, struct page *pag
-  * @handle: DMA address of buffer
-  * @size: size of buffer (same as passed to dma_map_page)
-  * @dir: DMA transfer direction (same as passed to dma_map_page)
-+ * @attrs: DMA attributes
-  *
-  * Unmap a page streaming mode DMA translation.  The handle and size
-  * must match what was provided in the previous dma_map_page() call.
-@@ -993,6 +995,7 @@ static void __dma_page_dev_to_cpu(struct page *page, unsigned long off,
-  * @sg: list of buffers
-  * @nents: number of buffers to map
-  * @dir: DMA transfer direction
-+ * @attrs: DMA attributes
-  *
-  * Map a set of buffers described by scatterlist in streaming mode for DMA.
-  * This is the scatter-gather version of the dma_map_single interface.
-@@ -1033,6 +1036,7 @@ int arm_dma_map_sg(struct device *dev, struct scatterlist *sg, int nents,
-  * @sg: list of buffers
-  * @nents: number of buffers to unmap (same as was passed to dma_map_sg)
-  * @dir: DMA transfer direction (same as was passed to dma_map_sg)
-+ * @attrs: DMA attributes
-  *
-  * Unmap a set of streaming mode DMA translations.  Again, CPU access
-  * rules concerning calls here are the same as for dma_unmap_single().
-@@ -1708,6 +1712,7 @@ static int __iommu_map_sg(struct device *dev, struct scatterlist *sg, int nents,
-  * @sg: list of buffers
-  * @nents: number of buffers to map
-  * @dir: DMA transfer direction
-+ * @attrs: DMA attributes
-  *
-  * Map a set of i/o coherent buffers described by scatterlist in streaming
-  * mode for DMA. The scatter gather list elements are merged together (if
-@@ -1726,6 +1731,7 @@ static int arm_coherent_iommu_map_sg(struct device *dev, struct scatterlist *sg,
-  * @sg: list of buffers
-  * @nents: number of buffers to map
-  * @dir: DMA transfer direction
-+ * @attrs: DMA attributes
-  *
-  * Map a set of buffers described by scatterlist in streaming mode for DMA.
-  * The scatter gather list elements are merged together (if possible) and
-@@ -1761,6 +1767,7 @@ static void __iommu_unmap_sg(struct device *dev, struct scatterlist *sg,
-  * @sg: list of buffers
-  * @nents: number of buffers to unmap (same as was passed to dma_map_sg)
-  * @dir: DMA transfer direction (same as was passed to dma_map_sg)
-+ * @attrs: DMA attributes
-  *
-  * Unmap a set of streaming mode DMA translations.  Again, CPU access
-  * rules concerning calls here are the same as for dma_unmap_single().
-@@ -1778,6 +1785,7 @@ static void arm_coherent_iommu_unmap_sg(struct device *dev,
-  * @sg: list of buffers
-  * @nents: number of buffers to unmap (same as was passed to dma_map_sg)
-  * @dir: DMA transfer direction (same as was passed to dma_map_sg)
-+ * @attrs: DMA attributes
-  *
-  * Unmap a set of streaming mode DMA translations.  Again, CPU access
-  * rules concerning calls here are the same as for dma_unmap_single().
-@@ -1835,6 +1843,7 @@ static void arm_iommu_sync_sg_for_device(struct device *dev,
-  * @offset: offset into page for start of buffer
-  * @size: size of buffer to map
-  * @dir: DMA transfer direction
-+ * @attrs: DMA attributes
-  *
-  * Coherent IOMMU aware version of arm_dma_map_page()
-  */
-@@ -1869,6 +1878,7 @@ static dma_addr_t arm_coherent_iommu_map_page(struct device *dev, struct page *p
-  * @offset: offset into page for start of buffer
-  * @size: size of buffer to map
-  * @dir: DMA transfer direction
-+ * @attrs: DMA attributes
-  *
-  * IOMMU aware version of arm_dma_map_page()
-  */
-@@ -1888,6 +1898,7 @@ static dma_addr_t arm_iommu_map_page(struct device *dev, struct page *page,
-  * @handle: DMA address of buffer
-  * @size: size of buffer (same as passed to dma_map_page)
-  * @dir: DMA transfer direction (same as passed to dma_map_page)
-+ * @attrs: DMA attributes
-  *
-  * Coherent IOMMU aware version of arm_dma_unmap_page()
-  */
-@@ -1912,6 +1923,7 @@ static void arm_coherent_iommu_unmap_page(struct device *dev, dma_addr_t handle,
-  * @handle: DMA address of buffer
-  * @size: size of buffer (same as passed to dma_map_page)
-  * @dir: DMA transfer direction (same as passed to dma_map_page)
-+ * @attrs: DMA attributes
-  *
-  * IOMMU aware version of arm_dma_unmap_page()
-  */
-@@ -1940,6 +1952,7 @@ static void arm_iommu_unmap_page(struct device *dev, dma_addr_t handle,
-  * @phys_addr: physical address of resource
-  * @size: size of resource to map
-  * @dir: DMA transfer direction
-+ * @attrs: DMA attributes
-  */
- static dma_addr_t arm_iommu_map_resource(struct device *dev,
- 		phys_addr_t phys_addr, size_t size,
-@@ -1974,6 +1987,7 @@ static dma_addr_t arm_iommu_map_resource(struct device *dev,
-  * @dma_handle: DMA address to resource
-  * @size: size of resource to map
-  * @dir: DMA transfer direction
-+ * @attrs: DMA attributes
-  */
- static void arm_iommu_unmap_resource(struct device *dev, dma_addr_t dma_handle,
- 		size_t size, enum dma_data_direction dir,
+Mark,
+
+  Does Regmap support 64bit accesses?
+
 -- 
-2.15.0
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
