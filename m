@@ -2,280 +2,240 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A247AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:47:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D7A6C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7762521D7E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:47:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 015A32073D
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:50:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729360AbgATQr3 (ORCPT
+        id S1729100AbgATQuU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 11:47:29 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:33659 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729285AbgATQr1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 11:47:27 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1itaCm-00043G-W2; Mon, 20 Jan 2020 17:47:13 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A07071C1A41;
-        Mon, 20 Jan 2020 17:47:12 +0100 (CET)
-Date:   Mon, 20 Jan 2020 16:47:12 -0000
-From:   "tip-bot2 for Xiaochen Shen" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/resctrl: Fix use-after-free when deleting
- resource groups
-Cc:     Reinette Chatre <reinette.chatre@intel.com>,
-        Xiaochen Shen <xiaochen.shen@intel.com>,
-        Borislav Petkov <bp@suse.de>, Tony Luck <tony.luck@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>, stable@vger.kernel.org,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <1578500886-21771-2-git-send-email-xiaochen.shen@intel.com>
-References: <1578500886-21771-2-git-send-email-xiaochen.shen@intel.com>
+        Mon, 20 Jan 2020 11:50:20 -0500
+Received: from mga14.intel.com ([192.55.52.115]:62575 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726897AbgATQuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 11:50:19 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 08:50:19 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,342,1574150400"; 
+   d="scan'208";a="220714436"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga007.fm.intel.com with ESMTP; 20 Jan 2020 08:50:17 -0800
+Received: from [10.251.23.107] (kliang2-mobl.ccr.corp.intel.com [10.251.23.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id E5B225802C1;
+        Mon, 20 Jan 2020 08:50:17 -0800 (PST)
+Subject: Re: [PATCH] perf/x86/intel/ds: Fix x86_pmu_stop warning for large
+ PEBS
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        like.xu@linux.intel.com
+References: <20200113140935.3474-1-kan.liang@linux.intel.com>
+ <20200120105008.GN14879@hirez.programming.kicks-ass.net>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <b721cfd3-8fb5-5225-1fb7-29b8cc85f417@linux.intel.com>
+Date:   Mon, 20 Jan 2020 11:50:16 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Message-ID: <157953883246.396.8806061711020542800.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200120105008.GN14879@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
 
-Commit-ID:     b8511ccc75c033f6d54188ea4df7bf1e85778740
-Gitweb:        https://git.kernel.org/tip/b8511ccc75c033f6d54188ea4df7bf1e85778740
-Author:        Xiaochen Shen <xiaochen.shen@intel.com>
-AuthorDate:    Thu, 09 Jan 2020 00:28:03 +08:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Mon, 20 Jan 2020 16:45:43 +01:00
 
-x86/resctrl: Fix use-after-free when deleting resource groups
+On 1/20/2020 5:50 AM, Peter Zijlstra wrote:
+> On Mon, Jan 13, 2020 at 06:09:35AM -0800, kan.liang@linux.intel.com wrote:
+>> From: Kan Liang <kan.liang@linux.intel.com>
+>>
+>> A warning as below may be triggered when sampling large PEBS.
+> 
+>> [  410.729822] WARNING: CPU: 0 PID: 16397 at arch/x86/events/core.c:1422
+>> x86_pmu_stop+0x95/0xa0
+> 
+>> For large PEBS, the PEBS buffer can be drained from either NMI handler
+>> or !NMI e.g. context switch. Current implementation doesn't handle them
+>> differently. For !nmi, perf also call the generic overflow handler for
+>> the last PEBS record. That may trigger the interrupt throttle, and stop
+>> the event. That's wrong.
+>>
+>> Here is an example for !NMI scenario, context switch.
+>> Let's say the max_samples_per_tick is adjusted to 2 for some reason.
+>> A context switch happens right after a NMI.
+>> When an old task is scheduled out, it will drain the PEBS buffer, and
+>> then delete the event.
+>> When draining the PEBS buffer, perf_event_overflow() will be called for
+>> the last PEBS record. Since the max_samples_per_tick is only 2, the
+>> interrupt throttle must be triggered. The event will be stopped.
+>> After the draining, the scheduler will delete the event, which stops the
+>> event again. The warning is triggered.
+>>
+>> Perf should handle the NMI and !NMI differently for large PEBS.
+>> For NMI, the generic overflow handler is required for the last PEBS
+>> record.
+>> But, for !NMI, there is no overflow. The generic overflow handler should
+>> not be invoked. Perf should treat the last record exactly the same as
+>> the rest of PEBS records.
+> 
+> Hurmph. there's something there, but the above is hard to read.
+>
 
-A resource group (rdtgrp) contains a reference count (rdtgrp->waitcount)
-that indicates how many waiters expect this rdtgrp to exist. Waiters
-could be waiting on rdtgroup_mutex or some work sitting on a task's
-workqueue for when the task returns from kernel mode or exits.
+It describes an example as below
+//max_samples_per_tick is adjusted to 2
+//NMI happens
+intel_pmu_handle_irq()
+   handle_pmi_common()
+     drain_pebs()
+       __intel_pmu_pebs_event()
+         perf_event_overflow()
+           __perf_event_account_interrupt()
+             hwc->interrupts = 1
+             return 0
+//A context switch right after the NMI.
+//In the same tick, perf_throttled_seq is not changed.
+perf_event_task_sched_out()
+   perf_pmu_sched_task()
+     intel_pmu_drain_pebs_buffer()
+       __intel_pmu_pebs_event()
+         perf_event_overflow()
+           __perf_event_account_interrupt()
+             ++hwc->interrupts >= max_samples_per_tick
+             return 1
+       x86_pmu_stop();  # First stop
+   perf_event_context_sched_out()
+     task_ctx_sched_out()
+       ctx_sched_out()
+         event_sched_out()
+           x86_pmu_del()
+             x86_pmu_stop();  # Second stop and trigger the warning
 
-The deletion of a rdtgrp is intended to have two phases:
+> drain_pebs() is called from:
+> 
+>   - handle_pmi_common()		-- sample context
+>   - intel_pmu_pebs_sched_task()  -- non sample context
+>   - intel_pmu_pebs_disable()     -- non sample context
+>   - intel_pmu_auto_reload_read() -- possible sample context
+> > So the question is what to do for PERF_SAMPLE_READ + PERF_FORMAT_GROUP.
+> 
+> I don't think throttling there is right either, but that does mean the
+> simple in_nmi() test you use is wrong.
 
-  (1) while holding rdtgroup_mutex the necessary cleanup is done and
-  rdtgrp->flags is set to RDT_DELETED,
 
-  (2) after releasing the rdtgroup_mutex, the rdtgrp structure is freed
-  only if there are no waiters and its flag is set to RDT_DELETED. Upon
-  gaining access to rdtgroup_mutex or rdtgrp, a waiter is required to check
-  for the RDT_DELETED flag.
+I'm not sure if it's accurate to call it sample/non sample context.
+Because for large PEBS, it should always output samples here for any cases.
 
-When unmounting the resctrl file system or deleting ctrl_mon groups,
-all of the subdirectories are removed and the data structure of rdtgrp
-is forcibly freed without checking rdtgrp->waitcount. If at this point
-there was a waiter on rdtgrp then a use-after-free issue occurs when the
-waiter starts running and accesses the rdtgrp structure it was waiting
-on.
+As my understanding, the sample context you mean is actually the same as 
+interrupt context.
+   - handle_pmi_common(): -- NMI
+   - intel_pmu_pebs_sched_task(): -- Can only be invoked in !NMI
+   - intel_pmu_pebs_disable(): -- Can only be invoked in !NMI
+     (I think there is only one case which the function will be called
+      in NMI, throttling triggered x86_pmu_stop(). For this case, the
+      PEBS buffer has been drained. __intel_pmu_pebs_event() will not
+      be touched.)
+   - intel_pmu_auto_reload_read(): Can only be invoked in NMI via
+     PERF_SAMPLE_READ. For other cases, it will be only invoked in !NMI.
 
-See kfree() calls in [1], [2] and [3] in these two call paths in
-following scenarios:
-(1) rdt_kill_sb() -> rmdir_all_sub() -> free_all_child_rdtgrp()
-(2) rdtgroup_rmdir() -> rdtgroup_rmdir_ctrl() -> free_all_child_rdtgrp()
+The throttling here is to control the number of interrupts. In NMI 
+context, we should check the throttling. Otherwise, it's unnecessary.
 
-There are several scenarios that result in use-after-free issue in
-following:
+I think the in_nmi() test should be enough here.
 
-Scenario 1:
------------
-In Thread 1, rdtgroup_tasks_write() adds a task_work callback
-move_myself(). If move_myself() is scheduled to execute after Thread 2
-rdt_kill_sb() is finished, referring to earlier rdtgrp memory
-(rdtgrp->waitcount) which was already freed in Thread 2 results in
-use-after-free issue.
+> 
+> Perhaps we can do something with how intel_pmu_drain_pebs_buffer()
+> passes in dummy regs pointer to distinguish between the sample and non
+> sample context.
+> 
+>> ---
+>>   arch/x86/events/intel/ds.c | 23 +++++++++++++++--------
+>>   1 file changed, 15 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+>> index 7c896d7e8b6c..51baff083938 100644
+>> --- a/arch/x86/events/intel/ds.c
+>> +++ b/arch/x86/events/intel/ds.c
+>> @@ -1780,15 +1780,22 @@ static void __intel_pmu_pebs_event(struct perf_event *event,
+>>   
+>>   	setup_sample(event, iregs, at, &data, regs);
+>>   
+>> -	/*
+>> -	 * All but the last records are processed.
+>> -	 * The last one is left to be able to call the overflow handler.
+>> -	 */
+>> -	if (perf_event_overflow(event, &data, regs)) {
+>> -		x86_pmu_stop(event, 0);
+>> -		return;
+>> +	if (in_nmi()) {
+>> +		/*
+>> +		 * All but the last records are processed.
+>> +		 * The last one is left to be able to call the overflow handler.
+>> +		 */
+>> +		if (perf_event_overflow(event, &data, regs))
+>> +			x86_pmu_stop(event, 0);
+>> +	} else {
+>> +		/*
+>> +		 * For !NMI, e.g context switch, there is no overflow.
+>> +		 * The generic overflow handler should not be invoked.
+>> +		 * Perf should treat the last record exactly the same as the
+>> +		 * rest of PEBS records.
+>> +		 */
+>> +		perf_event_output(event, &data, regs);
+>>   	}
+> 
+> Maybe write it like so?
+> 
+> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+> index 4b94ae4ae369..b66be085c7a4 100644
+> --- a/arch/x86/events/intel/ds.c
+> +++ b/arch/x86/events/intel/ds.c
+> @@ -1747,25 +1747,22 @@ static void __intel_pmu_pebs_event(struct perf_event *event,
+>   	} else if (!intel_pmu_save_and_restart(event))
+>   		return;
+>   
+> -	while (count > 1) {
+> +	while (count > /* cond */) {
 
-Thread 1 (rdtgroup_tasks_write)        Thread 2 (rdt_kill_sb)
--------------------------------        ----------------------
-rdtgroup_kn_lock_live
-  atomic_inc(&rdtgrp->waitcount)
-  mutex_lock
-rdtgroup_move_task
-  __rdtgroup_move_task
-    /*
-     * Take an extra refcount, so rdtgrp cannot be freed
-     * before the call back move_myself has been invoked
-     */
-    atomic_inc(&rdtgrp->waitcount)
-    /* Callback move_myself will be scheduled for later */
-    task_work_add(move_myself)
-rdtgroup_kn_unlock
-  mutex_unlock
-  atomic_dec_and_test(&rdtgrp->waitcount)
-  && (flags & RDT_DELETED)
-                                       mutex_lock
-                                       rmdir_all_sub
-                                         /*
-                                          * sentry and rdtgrp are freed
-                                          * without checking refcount
-                                          */
-                                         free_all_child_rdtgrp
-                                           kfree(sentry)*[1]
-                                         kfree(rdtgrp)*[2]
-                                       mutex_unlock
-/*
- * Callback is scheduled to execute
- * after rdt_kill_sb is finished
- */
-move_myself
-  /*
-   * Use-after-free: refer to earlier rdtgrp
-   * memory which was freed in [1] or [2].
-   */
-  atomic_dec_and_test(&rdtgrp->waitcount)
-  && (flags & RDT_DELETED)
-    kfree(rdtgrp)
+What's cond?
+Could you please elaborate?
 
-Scenario 2:
------------
-In Thread 1, rdtgroup_tasks_write() adds a task_work callback
-move_myself(). If move_myself() is scheduled to execute after Thread 2
-rdtgroup_rmdir() is finished, referring to earlier rdtgrp memory
-(rdtgrp->waitcount) which was already freed in Thread 2 results in
-use-after-free issue.
+Thanks,
+Kan
 
-Thread 1 (rdtgroup_tasks_write)        Thread 2 (rdtgroup_rmdir)
--------------------------------        -------------------------
-rdtgroup_kn_lock_live
-  atomic_inc(&rdtgrp->waitcount)
-  mutex_lock
-rdtgroup_move_task
-  __rdtgroup_move_task
-    /*
-     * Take an extra refcount, so rdtgrp cannot be freed
-     * before the call back move_myself has been invoked
-     */
-    atomic_inc(&rdtgrp->waitcount)
-    /* Callback move_myself will be scheduled for later */
-    task_work_add(move_myself)
-rdtgroup_kn_unlock
-  mutex_unlock
-  atomic_dec_and_test(&rdtgrp->waitcount)
-  && (flags & RDT_DELETED)
-                                       rdtgroup_kn_lock_live
-                                         atomic_inc(&rdtgrp->waitcount)
-                                         mutex_lock
-                                       rdtgroup_rmdir_ctrl
-                                         free_all_child_rdtgrp
-                                           /*
-                                            * sentry is freed without
-                                            * checking refcount
-                                            */
-                                           kfree(sentry)*[3]
-                                         rdtgroup_ctrl_remove
-                                           rdtgrp->flags = RDT_DELETED
-                                       rdtgroup_kn_unlock
-                                         mutex_unlock
-                                         atomic_dec_and_test(
-                                                     &rdtgrp->waitcount)
-                                         && (flags & RDT_DELETED)
-                                           kfree(rdtgrp)
-/*
- * Callback is scheduled to execute
- * after rdt_kill_sb is finished
- */
-move_myself
-  /*
-   * Use-after-free: refer to earlier rdtgrp
-   * memory which was freed in [3].
-   */
-  atomic_dec_and_test(&rdtgrp->waitcount)
-  && (flags & RDT_DELETED)
-    kfree(rdtgrp)
-
-If CONFIG_DEBUG_SLAB=y, Slab corruption on kmalloc-2k can be observed
-like following. Note that "0x6b" is POISON_FREE after kfree(). The
-corrupted bits "0x6a", "0x64" at offset 0x424 correspond to
-waitcount member of struct rdtgroup which was freed:
-
-  Slab corruption (Not tainted): kmalloc-2k start=ffff9504c5b0d000, len=2048
-  420: 6b 6b 6b 6b 6a 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b  kkkkjkkkkkkkkkkk
-  Single bit error detected. Probably bad RAM.
-  Run memtest86+ or a similar memory test tool.
-  Next obj: start=ffff9504c5b0d800, len=2048
-  000: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b  kkkkkkkkkkkkkkkk
-  010: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b  kkkkkkkkkkkkkkkk
-
-  Slab corruption (Not tainted): kmalloc-2k start=ffff9504c58ab800, len=2048
-  420: 6b 6b 6b 6b 64 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b  kkkkdkkkkkkkkkkk
-  Prev obj: start=ffff9504c58ab000, len=2048
-  000: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b  kkkkkkkkkkkkkkkk
-  010: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b  kkkkkkkkkkkkkkkk
-
-Fix this by taking reference count (waitcount) of rdtgrp into account in
-the two call paths that currently do not do so. Instead of always
-freeing the resource group it will only be freed if there are no waiters
-on it. If there are waiters, the resource group will have its flags set
-to RDT_DELETED.
-
-It will be left to the waiter to free the resource group when it starts
-running and finding that it was the last waiter and the resource group
-has been removed (rdtgrp->flags & RDT_DELETED) since. (1) rdt_kill_sb()
--> rmdir_all_sub() -> free_all_child_rdtgrp() (2) rdtgroup_rmdir() ->
-rdtgroup_rmdir_ctrl() -> free_all_child_rdtgrp()
-
-Fixes: f3cbeacaa06e ("x86/intel_rdt/cqm: Add rmdir support")
-Fixes: 60cf5e101fd4 ("x86/intel_rdt: Add mkdir to resctrl file system")
-Suggested-by: Reinette Chatre <reinette.chatre@intel.com>
-Signed-off-by: Xiaochen Shen <xiaochen.shen@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/1578500886-21771-2-git-send-email-xiaochen.shen@intel.com
----
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index dac7209..23904ab 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -2205,7 +2205,11 @@ static void free_all_child_rdtgrp(struct rdtgroup *rdtgrp)
- 	list_for_each_entry_safe(sentry, stmp, head, mon.crdtgrp_list) {
- 		free_rmid(sentry->mon.rmid);
- 		list_del(&sentry->mon.crdtgrp_list);
--		kfree(sentry);
-+
-+		if (atomic_read(&sentry->waitcount) != 0)
-+			sentry->flags = RDT_DELETED;
-+		else
-+			kfree(sentry);
- 	}
- }
- 
-@@ -2243,7 +2247,11 @@ static void rmdir_all_sub(void)
- 
- 		kernfs_remove(rdtgrp->kn);
- 		list_del(&rdtgrp->rdtgroup_list);
--		kfree(rdtgrp);
-+
-+		if (atomic_read(&rdtgrp->waitcount) != 0)
-+			rdtgrp->flags = RDT_DELETED;
-+		else
-+			kfree(rdtgrp);
- 	}
- 	/* Notify online CPUs to update per cpu storage and PQR_ASSOC MSR */
- 	update_closid_rmid(cpu_online_mask, &rdtgroup_default);
+>   		setup_sample(event, iregs, at, &data, regs);
+>   		perf_event_output(event, &data, regs);
+>   		at += cpuc->pebs_record_size;
+>   		at = get_next_pebs_record_by_bit(at, top, bit);
+> -		count--;
+> +		if (!--count)
+> +			return; >   	}
+>   
+> -	setup_sample(event, iregs, at, &data, regs);
+> -
+>   	/*
+>   	 * All but the last records are processed.
+>   	 * The last one is left to be able to call the overflow handler.
+>   	 */
+> -	if (perf_event_overflow(event, &data, regs)) {
+> +	setup_sample(event, iregs, at, &data, regs);
+> +	if (perf_event_overflow(event, &data, regs))
+>   		x86_pmu_stop(event, 0);
+> -		return;
+> -	}
+> -
+>   }
+>   
+>   static void intel_pmu_drain_pebs_core(struct pt_regs *iregs)
+> 
