@@ -2,120 +2,143 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17689C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A0EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:04:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAAA22073D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:02:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 792302070C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:04:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=permerror (0-bit key) header.d=uniroma2.it header.i=@uniroma2.it header.b="UgSakFBK";
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=uniroma2.it header.i=@uniroma2.it header.b="k7RgmoAP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EgKfywju"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729205AbgATQCp (ORCPT
+        id S1729159AbgATQEO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 11:02:45 -0500
-Received: from smtp.uniroma2.it ([160.80.6.23]:44075 "EHLO smtp.uniroma2.it"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728712AbgATQCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 11:02:44 -0500
-Received: from smtpauth-2019-1.uniroma2.it (smtpauth-2019-1.uniroma2.it [160.80.5.46])
-        by smtp-2015.uniroma2.it (8.14.4/8.14.4/Debian-8) with ESMTP id 00KG273t001572;
-        Mon, 20 Jan 2020 17:02:12 +0100
-Received: from lubuntu-18.04 (unknown [160.80.103.126])
-        by smtpauth-2019-1.uniroma2.it (Postfix) with ESMTPSA id 282991228FC;
-        Mon, 20 Jan 2020 17:02:03 +0100 (CET)
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=uniroma2.it;
-        s=ed201904; t=1579536123; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
+        Mon, 20 Jan 2020 11:04:14 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36967 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729016AbgATQEM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 11:04:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579536251;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=jzn1+kiTTbQRfzDcKUMnYRw23BnDOCtFw37Gdplq3W8=;
-        b=UgSakFBK2frzr8ktrnPbuslLzIwZ3+mIvw1KP5lxywgFr98/1xB0S1glYN5EXGEm7ZyeZR
-        KrSCijXOkbVwLOCQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniroma2.it; s=rsa201904;
-        t=1579536123; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=jzn1+kiTTbQRfzDcKUMnYRw23BnDOCtFw37Gdplq3W8=;
-        b=k7RgmoAPij3y5m/i9wOIlSAtNnmTu7Mu73/otLExCtTLul+Vi976KpcWHj91zMSpO6srDf
-        Fn1KJDCdkwKBd6tvFPNbe0ip4DwqX7iPADlD3Th8po176BW1HljTwxjRKSr3+PlK8hvP21
-        SUDQWyvZ0VOHHygItLrpOF9HkRgutuJi1tt5FCEykJb3cLX+J4fge95uxEFT7QL7W+Jbgm
-        UlleyK0tXQAdzFPAd7WAYwghI74zil8IEBbz/uVM1YyPij8ncVZMd6M1V2ubyoyZ3/eRF4
-        aTWKheeOrljgrfMTLiIx9H943NXB5f8fHwGDeWUqdkVC8F1C873GU/R4IH7xyA==
-Date:   Mon, 20 Jan 2020 17:02:03 +0100
-From:   Andrea Mayer <andrea.mayer@uniroma2.it>
-To:     Sabrina Dubroca <sd@queasysnail.net>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Petr Machata <petrm@mellanox.com>,
-        Stefano Brivio <sbrivio@redhat.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Taehee Yoo <ap420073@gmail.com>,
-        Litao jiao <jiaolitao@raisecom.com>,
-        Roopa Prabhu <roopa@cumulusnetworks.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paolo Lungaroni <paolo.lungaroni@cnit.it>,
-        Andrea Mayer <andrea.mayer@uniroma2.it>
-Subject: Re: [net] vxlan: fix vxlan6_get_route() adding a call to
- xfrm_lookup_route()
-Message-Id: <20200120170203.19663047eb00b221778ff465@uniroma2.it>
-In-Reply-To: <20200116142839.98b04af5d16f8ec3ed209288@uniroma2.it>
-References: <20200115192231.3005-1-andrea.mayer@uniroma2.it>
-        <20200115211621.GA573446@bistromath.localdomain>
-        <20200116142839.98b04af5d16f8ec3ed209288@uniroma2.it>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: clamav-milter 0.100.0 at smtp-2015
-X-Virus-Status: Clean
+        bh=p4ejQ2/oe91bnyA0QOnuHtrCvG5ijZh9PVgfR3T6gU8=;
+        b=EgKfywjuXiYjewNhok12RHl3ly1/ZIUcCFGNl4K1J5z02gvIsPMFEmEf8pTVU2TP8SqcLT
+        O+hIsB6Fn7uUqJggxP0gAneyCjxLrrIoKlDxISpQlJWtUswqeHkzzJ5Vm4as/v6wVwIHbj
+        j0Y+CXa6pQtgNXDFQS95Fz5xCMFb4fw=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-432-Hk5GbMLvONaFujzTtsGtJA-1; Mon, 20 Jan 2020 11:04:08 -0500
+X-MC-Unique: Hk5GbMLvONaFujzTtsGtJA-1
+Received: by mail-qk1-f198.google.com with SMTP id u10so25329qkk.1
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 08:04:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=p4ejQ2/oe91bnyA0QOnuHtrCvG5ijZh9PVgfR3T6gU8=;
+        b=qTcfU6VJt/0qgTxowH3ZG80hhUalvc9HnaBtC2MmZbEJ1uLHlr+q5Pcsk00K8oJCVf
+         uoyhHT4NENBt6FAx1rHVfCJeZSiwg/onwi44OFkhi7sBoHid9KcUTWn55ochLs6hfnrA
+         jB1p/6wqxD1ANG9KbDwpFIh5OEnlPE/PGr4B4MON4oEwLTBevrVOmFiCCdbcP0t+q3WG
+         vey1gk8TP1hvenEpRWTyv2bTyPbSgdV0dAeAjxUoc/agplSeZmaWR2bHfHPt01aR2DwZ
+         cV3iDy/6eurLszj98lH2gL4t1fMbXV7Uk8ntxwLwlsnjnQHajRaxtaKMPTJC5i/GK4iC
+         TpTA==
+X-Gm-Message-State: APjAAAUSPaScWcd2hFdYYqUlr6T/ba5kiSNTIk+o6B+Fu1NeJY8JKYab
+        mruUG+akCTaiT0gpXMRXOoMFO+bkGqX2CiDJfsWM0xnHkPutPQUIJXj84QARsDmK0UUq+1xZvw8
+        yhD8TxZn7am9zpxdO0k4WSNHq
+X-Received: by 2002:aed:2d67:: with SMTP id h94mr14152qtd.74.1579536247742;
+        Mon, 20 Jan 2020 08:04:07 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyHYHZZeb/F+oSnPwvaj7ijjCP3wY5WXEKtUs5DPKrE69F2FmzJea/xoQ0/lmBxFbbg2H6+0w==
+X-Received: by 2002:aed:2d67:: with SMTP id h94mr14119qtd.74.1579536247441;
+        Mon, 20 Jan 2020 08:04:07 -0800 (PST)
+Received: from redhat.com (bzq-79-179-85-180.red.bezeqint.net. [79.179.85.180])
+        by smtp.gmail.com with ESMTPSA id 68sm16186184qkj.102.2020.01.20.08.04.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jan 2020 08:04:06 -0800 (PST)
+Date:   Mon, 20 Jan 2020 11:04:00 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jorgen Hansen <jhansen@vmware.com>,
+        Jason Wang <jasowang@redhat.com>, kvm <kvm@vger.kernel.org>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        virtualization@lists.linux-foundation.org,
+        linux-hyperv@vger.kernel.org, Dexuan Cui <decui@microsoft.com>
+Subject: Re: [PATCH net-next 1/3] vsock: add network namespace support
+Message-ID: <20200120110319-mutt-send-email-mst@kernel.org>
+References: <20200116172428.311437-1-sgarzare@redhat.com>
+ <20200116172428.311437-2-sgarzare@redhat.com>
+ <20200120.100610.546818167633238909.davem@davemloft.net>
+ <20200120101735.uyh4o64gb4njakw5@steredhat>
+ <20200120060601-mutt-send-email-mst@kernel.org>
+ <CAGxU2F6VH8Eb5UH_9KjN6MONbZEo1D7EHAiocVVus6jW55BJDg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGxU2F6VH8Eb5UH_9KjN6MONbZEo1D7EHAiocVVus6jW55BJDg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Jan 2020 14:28:39 +0100
-Andrea Mayer <andrea.mayer@uniroma2.it> wrote:
-
-> On Wed, 15 Jan 2020 22:16:21 +0100
-> Sabrina Dubroca <sd@queasysnail.net> wrote:
+On Mon, Jan 20, 2020 at 02:58:01PM +0100, Stefano Garzarella wrote:
+> On Mon, Jan 20, 2020 at 1:03 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> > On Mon, Jan 20, 2020 at 11:17:35AM +0100, Stefano Garzarella wrote:
+> > > On Mon, Jan 20, 2020 at 10:06:10AM +0100, David Miller wrote:
+> > > > From: Stefano Garzarella <sgarzare@redhat.com>
+> > > > Date: Thu, 16 Jan 2020 18:24:26 +0100
+> > > >
+> > > > > This patch adds 'netns' module param to enable this new feature
+> > > > > (disabled by default), because it changes vsock's behavior with
+> > > > > network namespaces and could break existing applications.
+> > > >
+> > > > Sorry, no.
+> > > >
+> > > > I wonder if you can even design a legitimate, reasonable, use case
+> > > > where these netns changes could break things.
+> > >
+> > > I forgot to mention the use case.
+> > > I tried the RFC with Kata containers and we found that Kata shim-v1
+> > > doesn't work (Kata shim-v2 works as is) because there are the following
+> > > processes involved:
+> > > - kata-runtime (runs in the init_netns) opens /dev/vhost-vsock and
+> > >   passes it to qemu
+> > > - kata-shim (runs in a container) wants to talk with the guest but the
+> > >   vsock device is assigned to the init_netns and kata-shim runs in a
+> > >   different netns, so the communication is not allowed
+> > > But, as you said, this could be a wrong design, indeed they already
+> > > found a fix, but I was not sure if others could have the same issue.
+> > >
+> > > In this case, do you think it is acceptable to make this change in
+> > > the vsock's behavior with netns and ask the user to change the design?
+> >
+> > David's question is what would be a usecase that's broken
+> > (as opposed to fixed) by enabling this by default.
 > 
-> > 2020-01-15, 20:22:31 +0100, Andrea Mayer wrote:
-> > > currently IPSEC cannot be used to encrypt/decrypt IPv6 vxlan traffic.
-> > > The problem is that the vxlan module uses the vxlan6_get_route()
-> > > function to find out the route for transmitting an IPv6 packet, which in
-> > > turn uses ip6_dst_lookup() available in ip6_output.c.
-> > > Unfortunately ip6_dst_lookup() does not perform any xfrm route lookup,
-> > > so the xfrm framework cannot be used with vxlan6.
-> > 
-> > That's not the case anymore, since commit 6c8991f41546 ("net:
-> > ipv6_stub: use ip6_dst_lookup_flow instead of ip6_dst_lookup").
-> > 
-> > Can you retest on the latest net tree?
-> > 
-> > Thanks.
-> > 
-> > -- 
-> > Sabrina
-> > 
+> Yes, I got that. Thanks for clarifying.
+> I just reported a broken example that can be fixed with a different
+> design (due to the fact that before this series, vsock devices were
+> accessible to all netns).
 > 
-> Hi Sabrina,
-> thanks for sharing the fix.
-> Sorry, my net tree was a bit outdated. I will retest with the fix and let you know.
+> >
+> > If it does exist, you need a way for userspace to opt-in,
+> > module parameter isn't that.
 > 
-> -- 
-> Andrea Mayer <andrea.mayer@uniroma2.it>
+> Okay, but I honestly can't find a case that can't be solved.
+> So I don't know whether to add an option (ioctl, sysfs ?) or wait for
+> a real case to come up.
+> 
+> I'll try to see better if there's any particular case where we need
+> to disable netns in vsock.
+> 
+> Thanks,
+> Stefano
 
-Hi,
-I've tested the new net tree in my setup and now vxlan6 and IPSec seems to work good.
+Me neither. so what did you have in mind when you wrote:
+"could break existing applications"?
 
-Thanks.
-
--- 
-Andrea Mayer <andrea.mayer@uniroma2.it>
