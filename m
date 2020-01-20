@@ -2,181 +2,307 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D75CC32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 04:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1312CC32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 04:30:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 028932073D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 04:22:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JxplNAB5"
+	by mail.kernel.org (Postfix) with ESMTP id C7BD72070C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 04:30:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579494625;
+	bh=AWbD4rdNXtQmzk4xlqY1PAVy+PKzMd2IJdQRd+ZUyj8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=M3y2HPzPcc5xjUVppeifFINZG8iawVT067+O7O+uTWRkIQlLFz9hUxfJw6dlXj4U9
+	 EyZS6OCiE6aGaol4RiJDKYZKn7Tvz8M+pAMe02XvPH+Kdjk8nn1Hqe4pzZUFmHXr0A
+	 ANnhPify1+pxe1p1S+qMFbrAHnyQ5gWdoiF3qP6g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729107AbgATEWs (ORCPT
+        id S1729117AbgATE3n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 23:22:48 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39901 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729049AbgATEWr (ORCPT
+        Sun, 19 Jan 2020 23:29:43 -0500
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:37073 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729043AbgATE3m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 23:22:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579494166;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7H/3OwnH2y72bzLU/aag9n1jdO/BAr0cOUycXDHyrcw=;
-        b=JxplNAB52JrQWfONr1O564OEZ/01LI62suN+ZYa51Orrtrw+1ewigxG5h+jRZoNMvWQ/7d
-        7gAXKoApudFbgMNeDMYKIXuL0bX4dq7futhJnFPg8gASliWH3S0G7x8swMiJiSq0FUdOIU
-        9uhKinZdLeBcloT1TCCnLKoHVfWqkQ4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-374-esCG_ZmhNoSX9TXu69rSVw-1; Sun, 19 Jan 2020 23:22:39 -0500
-X-MC-Unique: esCG_ZmhNoSX9TXu69rSVw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9F7AC100550E;
-        Mon, 20 Jan 2020 04:22:36 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-120-218.rdu2.redhat.com [10.10.120.218])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0EA2D60BF1;
-        Mon, 20 Jan 2020 04:22:35 +0000 (UTC)
-Subject: Re: [PATCH v3 6/8] locking/lockdep: Reuse freed chain_hlocks entries
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>
-References: <20200115214313.13253-1-longman@redhat.com>
- <20200115214313.13253-7-longman@redhat.com>
- <20200116211300.GT2827@hirez.programming.kicks-ass.net>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <be61dc08-574b-069e-eac3-0fa040014886@redhat.com>
-Date:   Sun, 19 Jan 2020 23:22:38 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Sun, 19 Jan 2020 23:29:42 -0500
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id 00K4TaCv027578
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 13:29:37 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 00K4TaCv027578
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1579494577;
+        bh=uYdG7iUySOYqc/LXv1pAaIujocqmRvAs946MXohMbOA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=zPU4yev3fGBwtPhFZxEhYXN94LZwEwYKFfewXqOLAhf9krTiNlum9FEKyAQdnLjJe
+         fJs6N5NQalLVxwv1wDTwtHwngqrzA5y0S9UWWlH9+mopi8PdpuahtJukcQNqWex8OS
+         f2ngwBs7NurLT+06dV2RhwphbRlrVYZvdksMtrjTfgOVSQ5wCFUqW7PTM3ttRlh9vP
+         bKF/ERWmpknL0iyMQQ7rD801BKWFix5yGrMWhCf/7RIcwwSKgGsb6gzM2kIJ/vwu3f
+         Y82rMDjR/pwhNHDDsUVXmsG2gI56RMeMMvfHCAqknEBHvEMmMZvBVJ571qlcrJUvoh
+         aQYUyYy+y8hSw==
+X-Nifty-SrcIP: [209.85.217.52]
+Received: by mail-vs1-f52.google.com with SMTP id g23so18187744vsr.7
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jan 2020 20:29:37 -0800 (PST)
+X-Gm-Message-State: APjAAAXhWgZJPrUPfvRCd78f8pXPEl7VHes63EDH2w07TLuvygCm4oEz
+        kE88/yQtKmWpVVhVE0Y0o0SR1mlHeFmoQ2mQlfM=
+X-Google-Smtp-Source: APXvYqxoDaC/MCZh6SNAlmkIpbge23v94Wn4xhPFeYgoTR1mwdeFIZyjWye70LLo1aBVg1emDpziEyngo3FHfE6PBT8=
+X-Received: by 2002:a05:6102:3102:: with SMTP id e2mr11564176vsh.179.1579494575986;
+ Sun, 19 Jan 2020 20:29:35 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200116211300.GT2827@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+References: <20200119010822.6897-1-masahiroy@kernel.org> <20200119224805.GY25745@shell.armlinux.org.uk>
+In-Reply-To: <20200119224805.GY25745@shell.armlinux.org.uk>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Mon, 20 Jan 2020 13:28:59 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATwurOd7PCra4P3X9Gsh0x43p+8iWYiw1WBnLZ7SnKiiQ@mail.gmail.com>
+Message-ID: <CAK7LNATwurOd7PCra4P3X9Gsh0x43p+8iWYiw1WBnLZ7SnKiiQ@mail.gmail.com>
+Subject: Re: [PATCH v2] ARM: decompressor: simplify libfdt builds
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="000000000000207daa059c8abd22"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/16/20 4:13 PM, Peter Zijlstra wrote:
-> On Wed, Jan 15, 2020 at 04:43:11PM -0500, Waiman Long wrote:
->> +static inline int alloc_chain_hlocks_from_buckets(int size)
->> +{
->> +	int prev, curr, next;
->> +
->> +	if (!nr_free_chain_hlocks)
->> +		return -1;
->> +
->> +	if (size <= MAX_CHAIN_BUCKETS) {
->> +		curr = chain_block_buckets[size - 1];
->> +		if (curr < 0)
->> +			return -1;
->> +
->> +		chain_block_buckets[size - 1] = next_chain_block(curr);
->> +		nr_free_chain_hlocks -= size;
->> +		return curr;
->> +	}
->> +
->> +	/*
->> +	 * Look for a free chain block of the given size
->> +	 *
->> +	 * It is rare to have a lock chain with depth > MAX_CHAIN_BUCKETS.
->> +	 * It is also more expensive as we may iterate the whole list
->> +	 * without finding one.
->> +	 */
->> +	for_each_chain_block(0, prev, curr, next) {
->> +		next = next_chain_block(curr);
->> +		if (chain_block_size(curr) == size) {
->> +			set_chain_block(prev, 0, next);
->> +			nr_free_chain_hlocks -= size;
->> +			nr_large_chain_blocks--;
->> +			return curr;
->> +		}
->> +	}
->> +	return -1;
->> +}
->> +static int alloc_chain_hlocks(int size)
->> +{
->> +	int curr;
->> +
->> +	if (size < 2)
->> +		size = 2;
->> +
->> +	curr = alloc_chain_hlocks_from_buckets(size);
->> +	if (curr >= 0)
->> +		return curr;
->> +
->> +	BUILD_BUG_ON((1UL << 24) <= ARRAY_SIZE(chain_hlocks));
->> +	BUILD_BUG_ON((1UL << 6)  <= ARRAY_SIZE(current->held_locks));
->> +	BUILD_BUG_ON((1UL << 8*sizeof(chain_hlocks[0])) <=
->> +		     ARRAY_SIZE(lock_classes));
->> +
->> +	/*
->> +	 * Allocate directly from chain_hlocks.
->> +	 */
->> +	if (likely(nr_chain_hlocks + size <= MAX_LOCKDEP_CHAIN_HLOCKS)) {
->> +		curr = nr_chain_hlocks;
->> +		nr_chain_hlocks += size;
->> +		return curr;
->> +	}
->> +	if (!debug_locks_off_graph_unlock())
->> +		return -1;
->> +
->> +	print_lockdep_off("BUG: MAX_LOCKDEP_CHAIN_HLOCKS too low!");
->> +	dump_stack();
->> +	return -1;
->> +}
-> Argh, that's still _two_ half allocators.
+--000000000000207daa059c8abd22
+Content-Type: text/plain; charset="UTF-8"
+
+Hi Russell,
+
+On Mon, Jan 20, 2020 at 7:48 AM Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
 >
-> Here, please try this one, it seems to boot. It compiles with some
-> noise, but that is because GCC is stupid and I'm too tired.
+> On Sun, Jan 19, 2020 at 10:08:22AM +0900, Masahiro Yamada wrote:
+> > Copying source files during the build time may not end up with
+> > as clean code as expected.
+> >
+> > lib/fdt*.c simply wrap scripts/dtc/libfdt/fdt*.c, and it works
+> > nicely. Let's follow that approach for the arm decompressor, too.
+> >
+> > Add four wrappers, arch/arm/boot/compressed/fdt*.c and remove
+> > the Makefile messes. Another nice thing is we no longer need to
+> > maintain the own libfdt_env.h because the decompressor can include
+> > <linux/libfdt_env.h>.
 >
-> ---
+> Hi,
 >
-> --- a/kernel/locking/lockdep.c
-> +++ b/kernel/locking/lockdep.c
-> @@ -1071,15 +1071,22 @@ static inline void check_data_structures
->  
->  #endif /* CONFIG_DEBUG_LOCKDEP */
->  
-> +static void init_chain_block_buckets(void);
-> +
->  /*
->   * Initialize the lock_classes[] array elements, the free_lock_classes list
->   * and also the delayed_free structure.
->   */
->  static void init_data_structures_once(void)
->  {
-> -	static bool ds_initialized, rcu_head_initialized;
-> +	static bool ds_initialized, rcu_head_initialized, chain_block_initialized;
->  	int i;
->  
-> +	if (!chain_block_initialized) {
-> +		chain_block_initialized = true;
-> +		init_chain_block_buckets();
-> +	}
-> +
->  	if (likely(rcu_head_initialized))
->  		return;
+> This is a nice idea, but as Stephen's build has found, it is a very
+> fragile change, particularly if you're doing a rebuild of an existing
+> tree.
+>
+> Stephen's issue appears to be that - he has stale "shipped" copies
+> that the old Makefile implementation created, which were attempted
+> to be built with this patch applied.  The result of that is we
+> try and pick up scripts/dtc/libfdt/libfdt_env.h.
+>
+> The whole point of the kernel build system is so that we can make
+> changes to the kernel tree, and then build the kernel, and have the
+> build system work out how to rebuild the kernel in a proper and safe
+> way without us having to endlessly clean the build tree just because
+> a few patches have been added.  This patch breaks that expectation.
+>
+> At the very least, this build-breaking nature needs to be mentioned,
+> preferably telling people what they should be doing to fix the issue.
+>
+> An even better would be to find some way to avoid the issue in the
+> first place, or find some way to warn about it - maybe by leaving a
+> libfdt_env.h behind that has an appropriate #warning in it telling
+> people what to do.  Or something.
+>
+> Thanks.
 
-Oh, I was not aware that there is such a init_data_structure_once()
-function. I don't think we need a chain_block_initialized. The
-ds_initialized should be enough and the init_chain_block_buckets() can
-be put to the end of the function.
 
-Other than that, the rests look OK to me so far. I will try it out tomorrow.
+Sorry for causing a trouble again.
 
-Thanks,
-Longman
 
+I will add the following code in arch/arm/boot/compressed/Makefile:
+
+# These were previously generated C files. When you are building the kernel
+# with O=, make sure to remove the stale files in the output tree. Otherwise,
+# the build system would wrongly compile the stale ones.
+ifdef building_out_of_srctree
+$(shell rm -f $(addprefix $(obj)/, fdt_rw.c fdt_ro.c fdt_wip.c fdt.c))
+endif
+
+
+
+Maybe we can remove this code in the future,
+but we should keep it long enough.
+If the out-of-tree "git bisect" crosses this commit,
+the same build error would happen.
+People usually do not clean the tree while git-bisecting.
+
+
+
+I explained it in the commit description too.
+
+
+
+I tested the out-of-tree build
+with this patch applied/dropped.
+
+
+For in-tree build,
+"git checkout" seems to nicely overwrite
+the stale generated files with the new
+check-in files.
+
+
+I attached the v3 patch.
+
+If it is OK with you,
+I will put it in the patch tracker.
+
+
+Thank you.
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
+
+--000000000000207daa059c8abd22
+Content-Type: text/x-patch; charset="US-ASCII"; 
+	name="0001-ARM-decompressor-simplify-libfdt-builds.patch"
+Content-Disposition: attachment; 
+	filename="0001-ARM-decompressor-simplify-libfdt-builds.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_k5lxwx5e0>
+X-Attachment-Id: f_k5lxwx5e0
+
+RnJvbSBkNmM4Njc4YTlhMmM1MThjNDU0ZDdlNjhhYzY5ZWEyYWM0MzU5MzRmIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBNYXNhaGlybyBZYW1hZGEgPG1hc2FoaXJveUBrZXJuZWwub3Jn
+PgpEYXRlOiBTdW4sIDE5IEphbiAyMDIwIDEwOjA4OjIyICswOTAwClN1YmplY3Q6IFtQQVRDSCB2
+M10gQVJNOiBkZWNvbXByZXNzb3I6IHNpbXBsaWZ5IGxpYmZkdCBidWlsZHMKCkNvcHlpbmcgc291
+cmNlIGZpbGVzIGR1cmluZyB0aGUgYnVpbGQgdGltZSBtYXkgbm90IGVuZCB1cCB3aXRoCmFzIGNs
+ZWFuIGNvZGUgYXMgZXhwZWN0ZWQuCgpsaWIvZmR0Ki5jIHNpbXBseSB3cmFwIHNjcmlwdHMvZHRj
+L2xpYmZkdC9mZHQqLmMsIGFuZCBpdCB3b3JrcwpuaWNlbHkuIExldCdzIGZvbGxvdyB0aGF0IGFw
+cHJvYWNoIGZvciB0aGUgYXJtIGRlY29tcHJlc3NvciwgdG9vLgoKQWRkIGZvdXIgd3JhcHBlcnMs
+IGFyY2gvYXJtL2Jvb3QvY29tcHJlc3NlZC9mZHQqLmMgYW5kIHJlbW92ZQp0aGUgTWFrZWZpbGUg
+bWVzc2VzLiBBbm90aGVyIG5pY2UgdGhpbmcgaXMgd2Ugbm8gbG9uZ2VyIG5lZWQgdG8KbWFpbnRh
+aW4gdGhlIG93biBsaWJmZHRfZW52LmggYmVjYXVzZSB0aGUgZGVjb21wcmVzc29yIGNhbiBpbmNs
+dWRlCjxsaW51eC9saWJmZHRfZW52Lmg+LgoKVGhlcmUgaXMgYSBzdWJ0bGUgcHJvYmxlbSB3aGVu
+IGdlbmVyYXRlZCBmaWxlcyBhcmUgdHVybmVkIGludG8KY2hlY2staW4gZmlsZXMuCgpXaGVuIHlv
+dSBhcmUgZG9pbmcgYSByZWJ1aWxkIG9mIGFuIGV4aXN0aW5nIG9iamVjdCB0cmVlIHdpdGggTz0K
+b3B0aW9uLCB0aGVyZSBleGlzdHMgc3RhbGUgInNoaXBwZWQiIGNvcGllcyB0aGF0IHRoZSBvbGQg
+TWFrZWZpbGUKaW1wbGVtZW50YXRpb24gY3JlYXRlZC4gVGhlIGJ1aWxkIHN5c3RlbSBlbmRzIHVw
+IHdpdGggY29tcGlsaW5nIHRoZQpzdGFsZSBnZW5lcmF0ZWQgQyBmaWxlcyBiZWNhdXNlIE1ha2Ug
+c2VhcmNoZXMgZm9yIHByZXJlcXVpc2l0ZXMKaW4gdGhlIGN1cnJlbnQgZGlyZWN0b3J5IChvYmp0
+cmVlKSBmaXJzdCwgYW5kIHRoZW4gdGhlIGRpcmVjdG9yeQpsaXN0ZWQgaW4gVlBBVEggKHNyY3Ry
+ZWUpLgoKVG8gbWVuZCB0aGlzIGlzc3VlLCBJIGFkZGVkIHRoZSBmb2xsb3dpbmcgY29kZToKCiAg
+aWZkZWYgYnVpbGRpbmdfb3V0X29mX3NyY3RyZWUKICAkKHNoZWxsIHJtIC1mICQoYWRkcHJlZml4
+ICQob2JqKS8sIGZkdF9ydy5jIGZkdF9yby5jIGZkdF93aXAuYyBmZHQuYykpCiAgZW5kaWYKClRo
+aXMgd2lsbCBuZWVkIHRvIHN0YXkgZm9yIGEgd2hpbGUgYmVjYXVzZSAiZ2l0IGJpc2VjdCIgY3Jv
+c3NpbmcgdGhpcwpjb21taXQsIG90aGVyd2lzZSwgd291bGQgcmVzdWx0IGluIGEgYnVpbGQgZXJy
+b3IuCgpTaWduZWQtb2ZmLWJ5OiBNYXNhaGlybyBZYW1hZGEgPG1hc2FoaXJveUBrZXJuZWwub3Jn
+PgotLS0KCktlcm5lbFZlcnNpb246IHY1LjUtcmMxCgpDaGFuZ2VzIGluIHYzOgogIC0gcmVtb3Zl
+IHN0YWxlIGZpbGVzIGluIHRoZSBvdXRwdXQgdHJlZQoKQ2hhbmdlcyBpbiB2MjoKICAtIGZpeCBi
+dWlsZCBlcnJvcgoKIGFyY2gvYXJtL2Jvb3QvY29tcHJlc3NlZC8uZ2l0aWdub3JlICAgICB8ICA5
+IC0tLS0tLQogYXJjaC9hcm0vYm9vdC9jb21wcmVzc2VkL01ha2VmaWxlICAgICAgIHwgMzkgKysr
+KysrKysrKy0tLS0tLS0tLS0tLS0tLQogYXJjaC9hcm0vYm9vdC9jb21wcmVzc2VkL2F0YWdzX3Rv
+X2ZkdC5jIHwgIDEgKwogYXJjaC9hcm0vYm9vdC9jb21wcmVzc2VkL2ZkdC5jICAgICAgICAgIHwg
+IDEgKwogYXJjaC9hcm0vYm9vdC9jb21wcmVzc2VkL2ZkdF9yby5jICAgICAgIHwgIDEgKwogYXJj
+aC9hcm0vYm9vdC9jb21wcmVzc2VkL2ZkdF9ydy5jICAgICAgIHwgIDEgKwogYXJjaC9hcm0vYm9v
+dC9jb21wcmVzc2VkL2ZkdF93aXAuYyAgICAgIHwgIDEgKwogYXJjaC9hcm0vYm9vdC9jb21wcmVz
+c2VkL2xpYmZkdF9lbnYuaCAgIHwgMjQgLS0tLS0tLS0tLS0tLS0tCiA4IGZpbGVzIGNoYW5nZWQs
+IDIxIGluc2VydGlvbnMoKyksIDU2IGRlbGV0aW9ucygtKQogY3JlYXRlIG1vZGUgMTAwNjQ0IGFy
+Y2gvYXJtL2Jvb3QvY29tcHJlc3NlZC9mZHQuYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJt
+L2Jvb3QvY29tcHJlc3NlZC9mZHRfcm8uYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtL2Jv
+b3QvY29tcHJlc3NlZC9mZHRfcncuYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtL2Jvb3Qv
+Y29tcHJlc3NlZC9mZHRfd2lwLmMKIGRlbGV0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybS9ib290L2Nv
+bXByZXNzZWQvbGliZmR0X2Vudi5oCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9jb21wcmVz
+c2VkLy5naXRpZ25vcmUgYi9hcmNoL2FybS9ib290L2NvbXByZXNzZWQvLmdpdGlnbm9yZQppbmRl
+eCA4NmIyZjVkMjgyNDAuLjJmZGI0ODg1ODQ2YiAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9j
+b21wcmVzc2VkLy5naXRpZ25vcmUKKysrIGIvYXJjaC9hcm0vYm9vdC9jb21wcmVzc2VkLy5naXRp
+Z25vcmUKQEAgLTYsMTIgKzYsMyBAQCBoeXAtc3R1Yi5TCiBwaWdneV9kYXRhCiB2bWxpbnV4CiB2
+bWxpbnV4LmxkcwotCi0jIGJvcnJvd2VkIGxpYmZkdCBmaWxlcwotZmR0LmMKLWZkdC5oCi1mZHRf
+cm8uYwotZmR0X3J3LmMKLWZkdF93aXAuYwotbGliZmR0LmgKLWxpYmZkdF9pbnRlcm5hbC5oCmRp
+ZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2NvbXByZXNzZWQvTWFrZWZpbGUgYi9hcmNoL2FybS9i
+b290L2NvbXByZXNzZWQvTWFrZWZpbGUKaW5kZXggZGE1OTljM2ExMTkzLi4xYmVmNzk5NTEwN2Eg
+MTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3QvY29tcHJlc3NlZC9NYWtlZmlsZQorKysgYi9hcmNo
+L2FybS9ib290L2NvbXByZXNzZWQvTWFrZWZpbGUKQEAgLTc2LDI5ICs3NiwzMSBAQCBjb21wcmVz
+cy0kKENPTkZJR19LRVJORUxfTFpNQSkgPSBsem1hCiBjb21wcmVzcy0kKENPTkZJR19LRVJORUxf
+WFopICAgPSB4emtlcm4KIGNvbXByZXNzLSQoQ09ORklHX0tFUk5FTF9MWjQpICA9IGx6NAogCi0j
+IEJvcnJvd2VkIGxpYmZkdCBmaWxlcyBmb3IgdGhlIEFUQUcgY29tcGF0aWJpbGl0eSBtb2RlCi0K
+LWxpYmZkdAkJOj0gZmR0X3J3LmMgZmR0X3JvLmMgZmR0X3dpcC5jIGZkdC5jCi1saWJmZHRfaGRy
+cwk6PSBmZHQuaCBsaWJmZHQuaCBsaWJmZHRfaW50ZXJuYWwuaAotCi1saWJmZHRfb2Jqcwk6PSAk
+KGFkZHN1ZmZpeCAubywgJChiYXNlbmFtZSAkKGxpYmZkdCkpKQoraWZlcSAoJChDT05GSUdfQVJN
+X0FUQUdfRFRCX0NPTVBBVCkseSkKK2xpYmZkdF9vYmpzID0gZmR0X3J3Lm8gZmR0X3JvLm8gZmR0
+X3dpcC5vIGZkdC5vIGF0YWdzX3RvX2ZkdC5vCiAKLSQoYWRkcHJlZml4ICQob2JqKS8sJChsaWJm
+ZHQpICQobGliZmR0X2hkcnMpKTogJChvYmopLyU6ICQoc3JjdHJlZSkvc2NyaXB0cy9kdGMvbGli
+ZmR0LyUKLQkkKGNhbGwgY21kLHNoaXBwZWQpCitPQkpTCSs9ICQobGliZmR0X29ianMpCiAKLSQo
+YWRkcHJlZml4ICQob2JqKS8sJChsaWJmZHRfb2JqcykgYXRhZ3NfdG9fZmR0Lm8pOiBcCi0JJChh
+ZGRwcmVmaXggJChvYmopLywkKGxpYmZkdF9oZHJzKSkKKyMgLWZzdGFjay1wcm90ZWN0b3Itc3Ry
+b25nIHRyaWdnZXJzIHByb3RlY3Rpb24gY2hlY2tzIGluIHRoaXMgY29kZSwKKyMgYnV0IGl0IGlz
+IGJlaW5nIHVzZWQgdG9vIGVhcmx5IHRvIGxpbmsgdG8gbWVhbmluZ2Z1bCBzdGFja19jaGsgbG9n
+aWMuCitub3NzcC1mbGFncy0kKENPTkZJR19DQ19IQVNfU1RBQ0tQUk9URUNUT1JfTk9ORSkgOj0g
+LWZuby1zdGFjay1wcm90ZWN0b3IKKyQoZm9yZWFjaCBvLCAkKGxpYmZkdF9vYmpzKSwgXAorCSQo
+ZXZhbCBDRkxBR1NfJChvKSA6PSAtSSAkKHNyY3RyZWUpL3NjcmlwdHMvZHRjL2xpYmZkdCAkKG5v
+c3NwLWZsYWdzLXkpKSkKKworIyBUaGVzZSB3ZXJlIHByZXZpb3VzbHkgZ2VuZXJhdGVkIEMgZmls
+ZXMuIFdoZW4geW91IGFyZSBidWlsZGluZyB0aGUga2VybmVsCisjIHdpdGggTz0sIG1ha2Ugc3Vy
+ZSB0byByZW1vdmUgdGhlIHN0YWxlIGZpbGVzIGluIHRoZSBvdXRwdXQgdHJlZS4gT3RoZXJ3aXNl
+LAorIyB0aGUgYnVpbGQgc3lzdGVtIHdyb25nbHkgY29tcGlsZXMgdGhlIHN0YWxlIG9uZXMuCitp
+ZmRlZiBidWlsZGluZ19vdXRfb2Zfc3JjdHJlZQorJChzaGVsbCBybSAtZiAkKGFkZHByZWZpeCAk
+KG9iaikvLCBmZHRfcncuYyBmZHRfcm8uYyBmZHRfd2lwLmMgZmR0LmMpKQorZW5kaWYKIAotaWZl
+cSAoJChDT05GSUdfQVJNX0FUQUdfRFRCX0NPTVBBVCkseSkKLU9CSlMJKz0gJChsaWJmZHRfb2Jq
+cykgYXRhZ3NfdG9fZmR0Lm8KIGVuZGlmCiAKIHRhcmdldHMgICAgICAgOj0gdm1saW51eCB2bWxp
+bnV4LmxkcyBwaWdneV9kYXRhIHBpZ2d5Lm8gXAogCQkgbGliMWZ1bmNzLm8gYXNobGRpMy5vIGJz
+d2Fwc2RpMi5vIFwKIAkJIGhlYWQubyAkKE9CSlMpCiAKLWNsZWFuLWZpbGVzICs9IHBpZ2d5X2Rh
+dGEgbGliMWZ1bmNzLlMgYXNobGRpMy5TIGJzd2Fwc2RpMi5TIFwKLQkJJChsaWJmZHQpICQobGli
+ZmR0X2hkcnMpIGh5cC1zdHViLlMKK2NsZWFuLWZpbGVzICs9IHBpZ2d5X2RhdGEgbGliMWZ1bmNz
+LlMgYXNobGRpMy5TIGJzd2Fwc2RpMi5TIGh5cC1zdHViLlMKIAogS0JVSUxEX0NGTEFHUyArPSAt
+RERJU0FCTEVfQlJBTkNIX1BST0ZJTElORwogS0JVSUxEX0NGTEFHUyArPSAkKERJU0FCTEVfQVJN
+X1NTUF9QRVJfVEFTS19QTFVHSU4pCkBAIC0xMDgsMTUgKzExMCw2IEBAIE9SSUdfQ0ZMQUdTIDo9
+ICQoS0JVSUxEX0NGTEFHUykKIEtCVUlMRF9DRkxBR1MgPSAkKHN1YnN0IC1wZywgLCAkKE9SSUdf
+Q0ZMQUdTKSkKIGVuZGlmCiAKLSMgLWZzdGFjay1wcm90ZWN0b3Itc3Ryb25nIHRyaWdnZXJzIHBy
+b3RlY3Rpb24gY2hlY2tzIGluIHRoaXMgY29kZSwKLSMgYnV0IGl0IGlzIGJlaW5nIHVzZWQgdG9v
+IGVhcmx5IHRvIGxpbmsgdG8gbWVhbmluZ2Z1bCBzdGFja19jaGsgbG9naWMuCi1ub3NzcC1mbGFn
+cy0kKENPTkZJR19DQ19IQVNfU1RBQ0tQUk9URUNUT1JfTk9ORSkgOj0gLWZuby1zdGFjay1wcm90
+ZWN0b3IKLUNGTEFHU19hdGFnc190b19mZHQubyA6PSAkKG5vc3NwLWZsYWdzLXkpCi1DRkxBR1Nf
+ZmR0Lm8gOj0gJChub3NzcC1mbGFncy15KQotQ0ZMQUdTX2ZkdF9yby5vIDo9ICQobm9zc3AtZmxh
+Z3MteSkKLUNGTEFHU19mZHRfcncubyA6PSAkKG5vc3NwLWZsYWdzLXkpCi1DRkxBR1NfZmR0X3dp
+cC5vIDo9ICQobm9zc3AtZmxhZ3MteSkKLQogY2NmbGFncy15IDo9IC1mcGljICQoY2FsbCBjYy1v
+cHRpb24sLW1uby1zaW5nbGUtcGljLWJhc2UsKSAtZm5vLWJ1aWx0aW4gLUkkKG9iaikKIGFzZmxh
+Z3MteSA6PSAtRFpJTUFHRQogCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2NvbXByZXNzZWQv
+YXRhZ3NfdG9fZmR0LmMgYi9hcmNoL2FybS9ib290L2NvbXByZXNzZWQvYXRhZ3NfdG9fZmR0LmMK
+aW5kZXggNjRjNDk3NDdmOGEzLi44NDUyNzUzZWZlYmUgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jv
+b3QvY29tcHJlc3NlZC9hdGFnc190b19mZHQuYworKysgYi9hcmNoL2FybS9ib290L2NvbXByZXNz
+ZWQvYXRhZ3NfdG9fZmR0LmMKQEAgLTEsNCArMSw1IEBACiAvLyBTUERYLUxpY2Vuc2UtSWRlbnRp
+ZmllcjogR1BMLTIuMAorI2luY2x1ZGUgPGxpbnV4L2xpYmZkdF9lbnYuaD4KICNpbmNsdWRlIDxh
+c20vc2V0dXAuaD4KICNpbmNsdWRlIDxsaWJmZHQuaD4KIApkaWZmIC0tZ2l0IGEvYXJjaC9hcm0v
+Ym9vdC9jb21wcmVzc2VkL2ZkdC5jIGIvYXJjaC9hcm0vYm9vdC9jb21wcmVzc2VkL2ZkdC5jCm5l
+dyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAwMDAwMC4uNDliYzFmYzFlMjczCi0tLSAv
+ZGV2L251bGwKKysrIGIvYXJjaC9hcm0vYm9vdC9jb21wcmVzc2VkL2ZkdC5jCkBAIC0wLDAgKzEg
+QEAKKyNpbmNsdWRlICIuLi8uLi8uLi8uLi9saWIvZmR0LmMiCmRpZmYgLS1naXQgYS9hcmNoL2Fy
+bS9ib290L2NvbXByZXNzZWQvZmR0X3JvLmMgYi9hcmNoL2FybS9ib290L2NvbXByZXNzZWQvZmR0
+X3JvLmMKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMDAwMDAwLi5mYzdmODMxM2U5
+M2UKLS0tIC9kZXYvbnVsbAorKysgYi9hcmNoL2FybS9ib290L2NvbXByZXNzZWQvZmR0X3JvLmMK
+QEAgLTAsMCArMSBAQAorI2luY2x1ZGUgIi4uLy4uLy4uLy4uL2xpYi9mZHRfcm8uYyIKZGlmZiAt
+LWdpdCBhL2FyY2gvYXJtL2Jvb3QvY29tcHJlc3NlZC9mZHRfcncuYyBiL2FyY2gvYXJtL2Jvb3Qv
+Y29tcHJlc3NlZC9mZHRfcncuYwpuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwMDAw
+MDAuLjdlOTc3N2RhMjcwOAotLS0gL2Rldi9udWxsCisrKyBiL2FyY2gvYXJtL2Jvb3QvY29tcHJl
+c3NlZC9mZHRfcncuYwpAQCAtMCwwICsxIEBACisjaW5jbHVkZSAiLi4vLi4vLi4vLi4vbGliL2Zk
+dF9ydy5jIgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9jb21wcmVzc2VkL2ZkdF93aXAuYyBi
+L2FyY2gvYXJtL2Jvb3QvY29tcHJlc3NlZC9mZHRfd2lwLmMKbmV3IGZpbGUgbW9kZSAxMDA2NDQK
+aW5kZXggMDAwMDAwMDAwMDAwLi5mMGI1ODBlNzYwYTcKLS0tIC9kZXYvbnVsbAorKysgYi9hcmNo
+L2FybS9ib290L2NvbXByZXNzZWQvZmR0X3dpcC5jCkBAIC0wLDAgKzEgQEAKKyNpbmNsdWRlICIu
+Li8uLi8uLi8uLi9saWIvZmR0X3dpcC5jIgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9jb21w
+cmVzc2VkL2xpYmZkdF9lbnYuaCBiL2FyY2gvYXJtL2Jvb3QvY29tcHJlc3NlZC9saWJmZHRfZW52
+LmgKZGVsZXRlZCBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDZhMGYxZjUyNDQ2Ni4uMDAwMDAwMDAw
+MDAwCi0tLSBhL2FyY2gvYXJtL2Jvb3QvY29tcHJlc3NlZC9saWJmZHRfZW52LmgKKysrIC9kZXYv
+bnVsbApAQCAtMSwyNCArMCwwIEBACi0vKiBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIu
+MCAqLwotI2lmbmRlZiBfQVJNX0xJQkZEVF9FTlZfSAotI2RlZmluZSBfQVJNX0xJQkZEVF9FTlZf
+SAotCi0jaW5jbHVkZSA8bGludXgvbGltaXRzLmg+Ci0jaW5jbHVkZSA8bGludXgvdHlwZXMuaD4K
+LSNpbmNsdWRlIDxsaW51eC9zdHJpbmcuaD4KLSNpbmNsdWRlIDxhc20vYnl0ZW9yZGVyLmg+Ci0K
+LSNkZWZpbmUgSU5UMzJfTUFYCVMzMl9NQVgKLSNkZWZpbmUgVUlOVDMyX01BWAlVMzJfTUFYCi0K
+LXR5cGVkZWYgX19iZTE2IGZkdDE2X3Q7Ci10eXBlZGVmIF9fYmUzMiBmZHQzMl90OwotdHlwZWRl
+ZiBfX2JlNjQgZmR0NjRfdDsKLQotI2RlZmluZSBmZHQxNl90b19jcHUoeCkJCWJlMTZfdG9fY3B1
+KHgpCi0jZGVmaW5lIGNwdV90b19mZHQxNih4KQkJY3B1X3RvX2JlMTYoeCkKLSNkZWZpbmUgZmR0
+MzJfdG9fY3B1KHgpCQliZTMyX3RvX2NwdSh4KQotI2RlZmluZSBjcHVfdG9fZmR0MzIoeCkJCWNw
+dV90b19iZTMyKHgpCi0jZGVmaW5lIGZkdDY0X3RvX2NwdSh4KQkJYmU2NF90b19jcHUoeCkKLSNk
+ZWZpbmUgY3B1X3RvX2ZkdDY0KHgpCQljcHVfdG9fYmU2NCh4KQotCi0jZW5kaWYKLS0gCjIuMTcu
+MQoK
+--000000000000207daa059c8abd22--
