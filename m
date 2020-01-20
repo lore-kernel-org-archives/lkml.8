@@ -2,562 +2,168 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74AB9C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:45:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67566C33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:45:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32FC02253D
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:45:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3405921835
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:45:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mBEuLbgD"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="kcftFNee"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728898AbgATMpF (ORCPT
+        id S1728927AbgATMpI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 07:45:05 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:52966 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728776AbgATMpE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 07:45:04 -0500
-Received: by mail-pj1-f68.google.com with SMTP id a6so6744015pjh.2;
-        Mon, 20 Jan 2020 04:45:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=xOYH3s3ErqCtDLu0Pc5LrxnOrTVUItl2wfAStt+aauw=;
-        b=mBEuLbgDpb0BH6HzrMDVoDCAsg7N6WcK9ZvPfdFCdPDWptlJVWX/VD5AJ+Gr1CmstV
-         CER52Om0QED63/rVcy4BLoxzvlAlE4cCkZverZiB+u2GGCSLoIZCHwED/8QGvpgElMDL
-         pkoHGEuYojjLUHkZcxdbHe8O3eYHGcaFuGC/6xS1puE9kEw5HRc5TyVWUjuOLE27HRPQ
-         dglygGo0DojVj03eH5CMsDO2SqMdO3EJtHwMSCebfribKqpHc9TuyTcyMJj/Bd94pS/F
-         Ona6zJwYqBq739vKJCWeCjsdZaVTcvQj582c9ZsOLH6q4LLc1dXvhOORcAy/tuWLCzRb
-         b9hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=xOYH3s3ErqCtDLu0Pc5LrxnOrTVUItl2wfAStt+aauw=;
-        b=IBvEfapEdaelbPjqHQ0OCRwqvE2lL6tY1zDU7tnKEysh43yQvK8nxJ4qe8r0/ZOxgO
-         /Q42qDk/1a6S0G2nWYGPugbyaV41yWxQhQG1W62WpmdAKJC5KDR6O3KSbvF4Uia3bbsV
-         cCzbHXoyXg1MrRapZPgOaFDX1LwGEgP4dc0KMtIgacrToiMb5nb8vs1j44Lhdhoxrp4e
-         ixmx+LOPP/EFFjnGLTfkafvnvVEVlGDziSviCF9694ygE0RcsJ2fjjrE8P675e3z5svw
-         zud0UjBu+KTAR13DXoVkSQr5Q88IdvsIdRCwYHGeBsGvlkPYlLouAu+MoJ71DWypyvP3
-         Ap6g==
-X-Gm-Message-State: APjAAAWkwG9gu4FEzGlZBYILWK57olMpvWLaUdAtFD1qKaGE/23MyKLs
-        S98EEsEl2mK/cwqrZlGaeCqXGrum
-X-Google-Smtp-Source: APXvYqzQ1lLqgh1Xwad8LL7oiYlKEBXAowD1zaqE8pQKVl14VVKWi7LGNVt51ufTAw1PwVOIfeOrpQ==
-X-Received: by 2002:a17:90a:d995:: with SMTP id d21mr23688393pjv.118.1579524303294;
-        Mon, 20 Jan 2020 04:45:03 -0800 (PST)
-Received: from localhost.localdomain ([221.146.116.86])
-        by smtp.gmail.com with ESMTPSA id h3sm39184590pfo.132.2020.01.20.04.45.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 04:45:02 -0800 (PST)
-From:   Namjae Jeon <linkinjeon@gmail.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
-        sj1557.seo@samsung.com, pali.rohar@gmail.com, arnd@arndb.de,
-        namjae.jeon@samsung.com, Namjae Jeon <linkinjeon@gmail.com>
-Subject: [PATCH v12 06/13] exfat: add fat entry operations
-Date:   Mon, 20 Jan 2020 21:44:21 +0900
-Message-Id: <20200120124428.17863-7-linkinjeon@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200120124428.17863-1-linkinjeon@gmail.com>
-References: <20200120124428.17863-1-linkinjeon@gmail.com>
+        Mon, 20 Jan 2020 07:45:08 -0500
+Received: from mail-eopbgr80082.outbound.protection.outlook.com ([40.107.8.82]:15501
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728852AbgATMpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 07:45:06 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UT8JgGDSY8g068ANVrAMVlFQy0om7Hf4RwHlCuLm4En1/pTivYE9kFLEtkATnzdBJTbwcY5D2lmUNim4yEYBCd3S3Dk7jUq3+9GyJt5RCQFm11PEWA1DXOc4fg7q8zDqcKQb4OySq+g5fyzONqHzqzeB+8CFgLmicsHiN2pJv8WLqY86FsDILrGEeOn3cZtHj0H9IRfqjS5wYp+8aS/48jOEBFEqWi/+uh7Alt+3xITrKZMHIMKKbyMZtsVRTpYU/Q4hzr2YIDsHczu96+82IPCjWG+JspEJ+IsZhvD3ddOU83DvjAcwbd1zYR5YgThf8Tf6DUL50Qoxie/t/7hT9w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VvbD91ZAlLfkkhIX2Uwkv3c0T4qOl5Zo0pGMo4d3kJ4=;
+ b=Ul8DMfql8uVozl8gW1SoYZLnLdLZ0NwXisL3S3pp66PcHprSltSZdamU8aL12rHVOjnqSzxidawUnijqpDvDIVWySOOtJvHXlqA084aYyhC/x5cIOd9jUwRjvwQh1yiwVyEOrqE+pUKGXrjHPQrcqLjpMgn/6rTAsaUCBKEA3ZLLECXjUOdTvOQXhA8XmgEEn4gwA9ogZHLpf+xthUyu9A5p7JohH+eGIhvAaO9TLdnh0aftNY3PfrEUXOwebqSVBe+ujqu/jkeLZgXCSmew7cpES5269kBBEzyEF5w7mR0YWPVns6AShau7PTQkFpx/ICPr4Lu/PIet2QgX7MlDCQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VvbD91ZAlLfkkhIX2Uwkv3c0T4qOl5Zo0pGMo4d3kJ4=;
+ b=kcftFNee4HloLHxa3P/tyWWcO0w/O/VicXAeM9hJLomrTdItfOFMOlOxUUyh1qkL6CkssCUkvdzJtDvjOzJPBCxr8SQx/ndXPrXnr/XZqQJjFPLbLpqshrIRUlVnF5rrC1uxS+1P8kjnpqfxr6IhDroSC/EzDN1YhPBrsqDkJyg=
+Received: from VI1PR04MB7023.eurprd04.prod.outlook.com (10.186.159.144) by
+ VI1PR04MB4365.eurprd04.prod.outlook.com (52.134.122.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.22; Mon, 20 Jan 2020 12:45:03 +0000
+Received: from VI1PR04MB7023.eurprd04.prod.outlook.com
+ ([fe80::58c5:f02f:2211:4953]) by VI1PR04MB7023.eurprd04.prod.outlook.com
+ ([fe80::58c5:f02f:2211:4953%7]) with mapi id 15.20.2644.024; Mon, 20 Jan 2020
+ 12:45:03 +0000
+From:   Leonard Crestez <leonard.crestez@nxp.com>
+To:     Peng Fan <peng.fan@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>
+CC:     "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "olof@lixom.net" <olof@lixom.net>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "krzk@kernel.org" <krzk@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/4] soc: imx: increase build coverage for imx8 soc driver
+Thread-Topic: [PATCH 0/4] soc: imx: increase build coverage for imx8 soc
+ driver
+Thread-Index: AQHVzB/hVXSait8oKkG3c6qn/lfwPw==
+Date:   Mon, 20 Jan 2020 12:45:03 +0000
+Message-ID: <VI1PR04MB70231E81AB33489264502009EE320@VI1PR04MB7023.eurprd04.prod.outlook.com>
+References: <1579146280-1750-1-git-send-email-peng.fan@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=leonard.crestez@nxp.com; 
+x-originating-ip: [89.37.124.34]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 75f03ec9-99eb-4d71-dac5-08d79da69203
+x-ms-traffictypediagnostic: VI1PR04MB4365:|VI1PR04MB4365:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR04MB4365A8EE3D0997DA4FBAF3CBEE320@VI1PR04MB4365.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 0288CD37D9
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(366004)(136003)(376002)(396003)(199004)(189003)(8936002)(478600001)(81156014)(9686003)(71200400001)(55016002)(81166006)(54906003)(8676002)(316002)(110136005)(86362001)(53546011)(186003)(6506007)(7416002)(33656002)(5660300002)(44832011)(66446008)(64756008)(2906002)(4326008)(66556008)(66476007)(52536014)(7696005)(66946007)(91956017)(76116006)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4365;H:VI1PR04MB7023.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: /rD01SqhokGuLJWzwRl3hwSD61d4P09VIWUmm6uO1we1PYbX/PwtRwp62+0/V0CkOIbQPkV13S72fUGTWd3eiv4sjFHTm11gHmbNg/eqVhgM1m95u3p75+or9B+CD6azRGgz5+0sgL+R8s2/nOui1YDUVh71RH2+Jrvi305M1LdE6B0qLMInTE9k7n7U7E4/d1Y135tZqjr3a3QzGcEleZuZqFCNHgP4ZMuIz4KyOWp/AsEjEyuS7GO5Kc/jq1pWa5pA5B5vyrx22rbouVMpQ2FWOvc6ZHmiSLZfVBP9tWiyKG2snXQXICBIXtxJVl886r9ObBlXKyXoS44UfPivJEtAvqDbr1xdk04y4OtxYk5qcdZLMpGql/SdL13FyUzjnuJZAtR4favEuRE4FpjOLyOYNahE13otsqow+EfPynGXWCrkF9Ikbvs4XhmFAeJQ
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 75f03ec9-99eb-4d71-dac5-08d79da69203
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jan 2020 12:45:03.4887
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: +ddm25sp5eT8ScQre+U168nfSQXaGhg+vEGk1HispNjgHfblfPx8ZOybTikZjAj/+cxbcC6x3u1G+eNHL1/67A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4365
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Namjae Jeon <namjae.jeon@samsung.com>
-
-This adds the implementation of fat entry operations for exfat.
-
-Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
-Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
----
- fs/exfat/fatent.c | 463 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 463 insertions(+)
- create mode 100644 fs/exfat/fatent.c
-
-diff --git a/fs/exfat/fatent.c b/fs/exfat/fatent.c
-new file mode 100644
-index 000000000000..a855b1769a96
---- /dev/null
-+++ b/fs/exfat/fatent.c
-@@ -0,0 +1,463 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Copyright (C) 2012-2013 Samsung Electronics Co., Ltd.
-+ */
-+
-+#include <linux/slab.h>
-+#include <asm/unaligned.h>
-+#include <linux/buffer_head.h>
-+
-+#include "exfat_raw.h"
-+#include "exfat_fs.h"
-+
-+static int exfat_mirror_bh(struct super_block *sb, sector_t sec,
-+		struct buffer_head *bh)
-+{
-+	struct buffer_head *c_bh;
-+	struct exfat_sb_info *sbi = EXFAT_SB(sb);
-+	sector_t sec2;
-+	int err = 0;
-+
-+	if (sbi->FAT2_start_sector != sbi->FAT1_start_sector) {
-+		sec2 = sec - sbi->FAT1_start_sector + sbi->FAT2_start_sector;
-+		c_bh = sb_getblk(sb, sec2);
-+		if (!c_bh)
-+			return -ENOMEM;
-+		memcpy(c_bh->b_data, bh->b_data, sb->s_blocksize);
-+		set_buffer_uptodate(c_bh);
-+		mark_buffer_dirty(c_bh);
-+		if (sb->s_flags & SB_SYNCHRONOUS)
-+			err = sync_dirty_buffer(c_bh);
-+		brelse(c_bh);
-+	}
-+
-+	return err;
-+}
-+
-+static int __exfat_ent_get(struct super_block *sb, unsigned int loc,
-+		unsigned int *content)
-+{
-+	unsigned int off;
-+	sector_t sec;
-+	struct buffer_head *bh;
-+
-+	sec = FAT_ENT_OFFSET_SECTOR(sb, loc);
-+	off = FAT_ENT_OFFSET_BYTE_IN_SECTOR(sb, loc);
-+
-+	bh = sb_bread(sb, sec);
-+	if (!bh)
-+		return -EIO;
-+
-+	*content = le32_to_cpu(*(__le32 *)(&bh->b_data[off]));
-+
-+	/* remap reserved clusters to simplify code */
-+	if (*content > EXFAT_BAD_CLUSTER)
-+		*content = EXFAT_EOF_CLUSTER;
-+
-+	brelse(bh);
-+	return 0;
-+}
-+
-+int exfat_ent_set(struct super_block *sb, unsigned int loc,
-+		unsigned int content)
-+{
-+	unsigned int off;
-+	sector_t sec;
-+	__le32 *fat_entry;
-+	struct buffer_head *bh;
-+
-+	sec = FAT_ENT_OFFSET_SECTOR(sb, loc);
-+	off = FAT_ENT_OFFSET_BYTE_IN_SECTOR(sb, loc);
-+
-+	bh = sb_bread(sb, sec);
-+	if (!bh)
-+		return -EIO;
-+
-+	fat_entry = (__le32 *)&(bh->b_data[off]);
-+	*fat_entry = cpu_to_le32(content);
-+	exfat_update_bh(sb, bh, sb->s_flags & SB_SYNCHRONOUS);
-+	exfat_mirror_bh(sb, sec, bh);
-+	brelse(bh);
-+	return 0;
-+}
-+
-+static inline bool is_valid_cluster(struct exfat_sb_info *sbi,
-+		unsigned int clus)
-+{
-+	if (clus < EXFAT_FIRST_CLUSTER || sbi->num_clusters <= clus)
-+		return false;
-+	return true;
-+}
-+
-+int exfat_ent_get(struct super_block *sb, unsigned int loc,
-+		unsigned int *content)
-+{
-+	struct exfat_sb_info *sbi = EXFAT_SB(sb);
-+	int err;
-+
-+	if (!is_valid_cluster(sbi, loc)) {
-+		exfat_fs_error(sb, "invalid access to FAT (entry 0x%08x)",
-+			loc);
-+		return -EIO;
-+	}
-+
-+	err = __exfat_ent_get(sb, loc, content);
-+	if (err) {
-+		exfat_fs_error(sb,
-+			"failed to access to FAT (entry 0x%08x, err:%d)",
-+			loc, err);
-+		return err;
-+	}
-+
-+	if (*content == EXFAT_FREE_CLUSTER) {
-+		exfat_fs_error(sb,
-+			"invalid access to FAT free cluster (entry 0x%08x)",
-+			loc);
-+		return -EIO;
-+	}
-+
-+	if (*content == EXFAT_BAD_CLUSTER) {
-+		exfat_fs_error(sb,
-+			"invalid access to FAT bad cluster (entry 0x%08x)",
-+			loc);
-+		return -EIO;
-+	}
-+
-+	if (*content != EXFAT_EOF_CLUSTER && !is_valid_cluster(sbi, *content)) {
-+		exfat_fs_error(sb,
-+			"invalid access to FAT (entry 0x%08x) bogus content (0x%08x)",
-+			loc, *content);
-+		return -EIO;
-+	}
-+
-+	return 0;
-+}
-+
-+int exfat_chain_cont_cluster(struct super_block *sb, unsigned int chain,
-+		unsigned int len)
-+{
-+	if (!len)
-+		return 0;
-+
-+	while (len > 1) {
-+		if (exfat_ent_set(sb, chain, chain + 1))
-+			return -EIO;
-+		chain++;
-+		len--;
-+	}
-+
-+	if (exfat_ent_set(sb, chain, EXFAT_EOF_CLUSTER))
-+		return -EIO;
-+	return 0;
-+}
-+
-+int exfat_free_cluster(struct inode *inode, struct exfat_chain *p_chain)
-+{
-+	unsigned int num_clusters = 0;
-+	unsigned int clu;
-+	struct super_block *sb = inode->i_sb;
-+	struct exfat_sb_info *sbi = EXFAT_SB(sb);
-+
-+	/* invalid cluster number */
-+	if (p_chain->dir == EXFAT_FREE_CLUSTER ||
-+	    p_chain->dir == EXFAT_EOF_CLUSTER ||
-+	    p_chain->dir < EXFAT_FIRST_CLUSTER)
-+		return 0;
-+
-+	/* no cluster to truncate */
-+	if (p_chain->size == 0)
-+		return 0;
-+
-+	/* check cluster validation */
-+	if (p_chain->dir < 2 && p_chain->dir >= sbi->num_clusters) {
-+		exfat_msg(sb, KERN_ERR, "invalid start cluster (%u)",
-+				p_chain->dir);
-+		return -EIO;
-+	}
-+
-+	set_bit(EXFAT_SB_DIRTY, &sbi->s_state);
-+	clu = p_chain->dir;
-+
-+	if (p_chain->flags == ALLOC_NO_FAT_CHAIN) {
-+		do {
-+			exfat_clear_bitmap(inode, clu);
-+			clu++;
-+
-+			num_clusters++;
-+		} while (num_clusters < p_chain->size);
-+	} else {
-+		do {
-+			exfat_clear_bitmap(inode, clu);
-+
-+			if (exfat_get_next_cluster(sb, &clu))
-+				goto dec_used_clus;
-+
-+			num_clusters++;
-+		} while (clu != EXFAT_EOF_CLUSTER);
-+	}
-+
-+dec_used_clus:
-+	sbi->used_clusters -= num_clusters;
-+	return 0;
-+}
-+
-+int exfat_find_last_cluster(struct super_block *sb, struct exfat_chain *p_chain,
-+		unsigned int *ret_clu)
-+{
-+	unsigned int clu, next;
-+	unsigned int count = 0;
-+
-+	next = p_chain->dir;
-+	if (p_chain->flags == ALLOC_NO_FAT_CHAIN) {
-+		*ret_clu = next + p_chain->size - 1;
-+		return 0;
-+	}
-+
-+	do {
-+		count++;
-+		clu = next;
-+		if (exfat_ent_get(sb, clu, &next))
-+			return -EIO;
-+	} while (next != EXFAT_EOF_CLUSTER);
-+
-+	if (p_chain->size != count) {
-+		exfat_fs_error(sb,
-+			"bogus directory size (clus : ondisk(%d) != counted(%d))",
-+			p_chain->size, count);
-+		return -EIO;
-+	}
-+
-+	*ret_clu = clu;
-+	return 0;
-+}
-+
-+static inline int exfat_sync_bhs(struct buffer_head **bhs, int nr_bhs)
-+{
-+	int i, err = 0;
-+
-+	for (i = 0; i < nr_bhs; i++)
-+		write_dirty_buffer(bhs[i], 0);
-+
-+	for (i = 0; i < nr_bhs; i++) {
-+		wait_on_buffer(bhs[i]);
-+		if (!err && !buffer_uptodate(bhs[i]))
-+			err = -EIO;
-+	}
-+	return err;
-+}
-+
-+int exfat_zeroed_cluster(struct inode *dir, unsigned int clu)
-+{
-+	struct super_block *sb = dir->i_sb;
-+	struct exfat_sb_info *sbi = EXFAT_SB(sb);
-+	struct buffer_head *bhs[MAX_BUF_PER_PAGE];
-+	int nr_bhs = MAX_BUF_PER_PAGE;
-+	sector_t blknr, last_blknr;
-+	int err, i, n;
-+
-+	blknr = exfat_cluster_to_sector(sbi, clu);
-+	last_blknr = blknr + sbi->sect_per_clus;
-+
-+	if (last_blknr > sbi->num_sectors && sbi->num_sectors > 0) {
-+		exfat_fs_error_ratelimit(sb,
-+			"%s: out of range(sect:%llu len:%u)",
-+			__func__, (unsigned long long)blknr,
-+			sbi->sect_per_clus);
-+		return -EIO;
-+	}
-+
-+	/* Zeroing the unused blocks on this cluster */
-+	n = 0;
-+	while (blknr < last_blknr) {
-+		bhs[n] = sb_getblk(sb, blknr);
-+		if (!bhs[n]) {
-+			err = -ENOMEM;
-+			goto release_bhs;
-+		}
-+		memset(bhs[n]->b_data, 0, sb->s_blocksize);
-+		exfat_update_bh(sb, bhs[n], 0);
-+
-+		n++;
-+		blknr++;
-+
-+		if (n == nr_bhs) {
-+			if (IS_DIRSYNC(dir)) {
-+				err = exfat_sync_bhs(bhs, n);
-+				if (err)
-+					goto release_bhs;
-+			}
-+
-+			for (i = 0; i < n; i++)
-+				brelse(bhs[i]);
-+			n = 0;
-+		}
-+	}
-+
-+	if (IS_DIRSYNC(dir)) {
-+		err = exfat_sync_bhs(bhs, n);
-+		if (err)
-+			goto release_bhs;
-+	}
-+
-+	for (i = 0; i < n; i++)
-+		brelse(bhs[i]);
-+
-+	return 0;
-+
-+release_bhs:
-+	exfat_msg(sb, KERN_ERR, "failed zeroed sect %llu\n",
-+		(unsigned long long)blknr);
-+	for (i = 0; i < n; i++)
-+		bforget(bhs[i]);
-+	return err;
-+}
-+
-+int exfat_alloc_cluster(struct inode *inode, unsigned int num_alloc,
-+		struct exfat_chain *p_chain)
-+{
-+	int ret = -ENOSPC;
-+	unsigned int num_clusters = 0, total_cnt;
-+	unsigned int hint_clu, new_clu, last_clu = EXFAT_EOF_CLUSTER;
-+	struct super_block *sb = inode->i_sb;
-+	struct exfat_sb_info *sbi = EXFAT_SB(sb);
-+
-+	total_cnt = EXFAT_DATA_CLUSTER_COUNT(sbi);
-+
-+	if (unlikely(total_cnt < sbi->used_clusters)) {
-+		exfat_fs_error_ratelimit(sb,
-+			"%s: invalid used clusters(t:%u,u:%u)\n",
-+			__func__, total_cnt, sbi->used_clusters);
-+		return -EIO;
-+	}
-+
-+	if (num_alloc > total_cnt - sbi->used_clusters)
-+		return -ENOSPC;
-+
-+	hint_clu = p_chain->dir;
-+	/* find new cluster */
-+	if (hint_clu == EXFAT_EOF_CLUSTER) {
-+		if (sbi->clu_srch_ptr < EXFAT_FIRST_CLUSTER) {
-+			exfat_msg(sb, KERN_ERR,
-+				"sbi->clu_srch_ptr is invalid (%u)\n",
-+				sbi->clu_srch_ptr);
-+			sbi->clu_srch_ptr = EXFAT_FIRST_CLUSTER;
-+		}
-+
-+		hint_clu = exfat_find_free_bitmap(sb, sbi->clu_srch_ptr);
-+		if (hint_clu == EXFAT_EOF_CLUSTER)
-+			return -ENOSPC;
-+	}
-+
-+	/* check cluster validation */
-+	if (hint_clu < EXFAT_FIRST_CLUSTER && hint_clu >= sbi->num_clusters) {
-+		exfat_msg(sb, KERN_ERR, "hint_cluster is invalid (%u)\n",
-+			hint_clu);
-+		hint_clu = EXFAT_FIRST_CLUSTER;
-+		if (p_chain->flags == ALLOC_NO_FAT_CHAIN) {
-+			if (exfat_chain_cont_cluster(sb, p_chain->dir,
-+					num_clusters))
-+				return -EIO;
-+			p_chain->flags = ALLOC_FAT_CHAIN;
-+		}
-+	}
-+
-+	set_bit(EXFAT_SB_DIRTY, &sbi->s_state);
-+
-+	p_chain->dir = EXFAT_EOF_CLUSTER;
-+
-+	while ((new_clu = exfat_find_free_bitmap(sb, hint_clu)) !=
-+	       EXFAT_EOF_CLUSTER) {
-+		if (new_clu != hint_clu &&
-+		    p_chain->flags == ALLOC_NO_FAT_CHAIN) {
-+			if (exfat_chain_cont_cluster(sb, p_chain->dir,
-+					num_clusters)) {
-+				ret = -EIO;
-+				goto free_cluster;
-+			}
-+			p_chain->flags = ALLOC_FAT_CHAIN;
-+		}
-+
-+		/* update allocation bitmap */
-+		if (exfat_set_bitmap(inode, new_clu)) {
-+			ret = -EIO;
-+			goto free_cluster;
-+		}
-+
-+		num_clusters++;
-+
-+		/* update FAT table */
-+		if (p_chain->flags == ALLOC_FAT_CHAIN) {
-+			if (exfat_ent_set(sb, new_clu, EXFAT_EOF_CLUSTER)) {
-+				ret = -EIO;
-+				goto free_cluster;
-+			}
-+		}
-+
-+		if (p_chain->dir == EXFAT_EOF_CLUSTER) {
-+			p_chain->dir = new_clu;
-+		} else if (p_chain->flags == ALLOC_FAT_CHAIN) {
-+			if (exfat_ent_set(sb, last_clu, new_clu)) {
-+				ret = -EIO;
-+				goto free_cluster;
-+			}
-+		}
-+		last_clu = new_clu;
-+
-+		if (--num_alloc == 0) {
-+			sbi->clu_srch_ptr = hint_clu;
-+			sbi->used_clusters += num_clusters;
-+
-+			p_chain->size += num_clusters;
-+			return 0;
-+		}
-+
-+		hint_clu = new_clu + 1;
-+		if (hint_clu >= sbi->num_clusters) {
-+			hint_clu = EXFAT_FIRST_CLUSTER;
-+
-+			if (p_chain->flags == ALLOC_NO_FAT_CHAIN) {
-+				if (exfat_chain_cont_cluster(sb, p_chain->dir,
-+						num_clusters)) {
-+					ret = -EIO;
-+					goto free_cluster;
-+				}
-+				p_chain->flags = ALLOC_FAT_CHAIN;
-+			}
-+		}
-+	}
-+free_cluster:
-+	if (num_clusters)
-+		exfat_free_cluster(inode, p_chain);
-+	return ret;
-+}
-+
-+int exfat_count_num_clusters(struct super_block *sb,
-+		struct exfat_chain *p_chain, unsigned int *ret_count)
-+{
-+	unsigned int i, count;
-+	unsigned int clu;
-+	struct exfat_sb_info *sbi = EXFAT_SB(sb);
-+
-+	if (!p_chain->dir || p_chain->dir == EXFAT_EOF_CLUSTER) {
-+		*ret_count = 0;
-+		return 0;
-+	}
-+
-+	if (p_chain->flags == ALLOC_NO_FAT_CHAIN) {
-+		*ret_count = p_chain->size;
-+		return 0;
-+	}
-+
-+	clu = p_chain->dir;
-+	count = 0;
-+	for (i = EXFAT_FIRST_CLUSTER; i < sbi->num_clusters; i++) {
-+		count++;
-+		if (exfat_ent_get(sb, clu, &clu))
-+			return -EIO;
-+		if (clu == EXFAT_EOF_CLUSTER)
-+			break;
-+	}
-+
-+	*ret_count = count;
-+	return 0;
-+}
--- 
-2.17.1
-
+On 16.01.2020 05:48, Peng Fan wrote:=0A=
+> From: Peng Fan <peng.fan@nxp.com>=0A=
+> =0A=
+> Rename soc-imx8.c to soc-imx8m.c which is for i.MX8M family=0A=
+> Add SOC_IMX8M for build gate soc-imx8m.c=0A=
+> Increase build coverage for i.MX SoC driver=0A=
+> =0A=
+> Peng Fan (4):=0A=
+>    soc: imx: Kconfig: add SOC_IMX8M entry=0A=
+>    arm64: defconfig: Enable CONFIG_SOC_IMX8M by default=0A=
+>    soc: Makefile: increase build coverage for i.MX=0A=
+>    soc: imx: Use CONFIG_SOC_IMX8M as build gate=0A=
+> =0A=
+>   arch/arm64/configs/defconfig                | 1 +=0A=
+>   drivers/soc/Makefile                        | 2 +-=0A=
+>   drivers/soc/imx/Kconfig                     | 8 ++++++++=0A=
+>   drivers/soc/imx/Makefile                    | 2 +-=0A=
+>   drivers/soc/imx/{soc-imx8.c =3D> soc-imx8m.c} | 0=0A=
+>   5 files changed, 11 insertions(+), 2 deletions(-)=0A=
+>   rename drivers/soc/imx/{soc-imx8.c =3D> soc-imx8m.c} (100%)=0A=
+=0A=
+I applied your patches and compiletest failed for me on x86:=0A=
+=0A=
+../drivers/soc/imx/gpcv2.c: In function =91imx_gpcv2_probe=92:=0A=
+../drivers/soc/imx/gpcv2.c:561:21: error: =91SZ_4K=92 undeclared (first use=
+ =0A=
+in this function)=0A=
+    .max_register   =3D SZ_4K,=0A=
+                      ^~~~~=0A=
+../drivers/soc/imx/gpcv2.c:561:21: note: each undeclared identifier is =0A=
+reported only once for each function it appears in=0A=
+=0A=
+It seems that on x86 <linux/sizes.h> needs to be included explicitly =0A=
+while on arm it is already included indirectly through arch headers. Fix =
+=0A=
+is very simple:=0A=
+=0A=
+diff --git drivers/soc/imx/gpcv2.c drivers/soc/imx/gpcv2.c=0A=
+index b0dffb06c05d..6cf8a7a412bd 100644=0A=
+--- drivers/soc/imx/gpcv2.c=0A=
++++ drivers/soc/imx/gpcv2.c=0A=
+@@ -14,6 +14,7 @@=0A=
+  #include <linux/pm_domain.h>=0A=
+  #include <linux/regmap.h>=0A=
+  #include <linux/regulator/consumer.h>=0A=
++#include <linux/sizes.h>=0A=
+  #include <dt-bindings/power/imx7-power.h>=0A=
+  #include <dt-bindings/power/imx8mq-power.h>=0A=
+=0A=
+---=0A=
+=0A=
+My test looks like this:=0A=
+=0A=
+make O=3Dbuild_compiletest defconfig=0A=
+make O=3Dbuild_compiletest allmodconfig=0A=
+echo CONFIG_COMPILE_TEST=3Dy >> build_compiletest/.config=0A=
+make O=3Dbuild_compiletest "$@"=0A=
+=0A=
+Other than this:=0A=
+=0A=
+Reviewed-by: Leonard Crestez <leonard.crestez@nxp.com>=0A=
