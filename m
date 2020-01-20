@@ -2,160 +2,89 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F7B3C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA80C33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:07:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45ACF22314
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:07:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9506E21D7E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:07:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LgVUSukG"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OaRWqr/S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729285AbgATNHt (ORCPT
+        id S1729305AbgATNH5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 08:07:49 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27891 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726954AbgATNGs (ORCPT
+        Mon, 20 Jan 2020 08:07:57 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:37528 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726954AbgATNHz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 08:06:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579525607;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kMzta49FGi59zAWBh6JcpPryK5CAVyLgor/XGDFTJFQ=;
-        b=LgVUSukG3ik0ak2C5mNhG38qBjx0MO9+6zi17Yu3mLqiV9pl8sjWXbLPSAdDZjXKLpwLN2
-        g8rGo8iCyrU+YS7o/jpxkfTCO2sZLdXNHz+USbnTMom2HDCQY8l9yBLvtKQQ3w1LmAH1C1
-        9VBOUYigCWUYRIcYseq5P814EgXDog0=
-Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
- [209.85.167.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-184-cI_amZQdOqeIcMM8BRzyWw-1; Mon, 20 Jan 2020 08:06:46 -0500
-X-MC-Unique: cI_amZQdOqeIcMM8BRzyWw-1
-Received: by mail-lf1-f69.google.com with SMTP id n24so6228441lfe.6
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 05:06:46 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=kMzta49FGi59zAWBh6JcpPryK5CAVyLgor/XGDFTJFQ=;
-        b=m5wJE0ndEi+Z7UYU7Ef9EgDd8qZmiQHLAgpY22oIKnfklwd4iQYCL3GLS55dXeGObY
-         ed/bx4cliFzaoi9tH9cKymU0vbqMANumFDN6bxDeHieME0otnyDR+fJOdaTBRUfhcvNZ
-         huTmF1G30gbcHg7G5u+dFRgfOP8R5srtWcAPMHbQITXjSeYfKtl+Np5PFxtCR5BFIyZc
-         epWQxOqX4I1bFMjN4ZyVW1eKx1cAZ+H3NuSlr8ziWyzD3H7x0ot6vD5EKazeZS+aGulK
-         3KXC57fam+yFnV6nE4Pw4DY3JFAlT32+I0GXsrLFzRenY6QafrFXGF79HhZ9FFWdf6cV
-         7c5g==
-X-Gm-Message-State: APjAAAXVHb3RCQSWXGuL4TKKZLaSqQ1yrirsLrSzRuAHUIunUXHClZVa
-        +fq2rsJ9/qm9lF8PVIsz6SyglFoCTsByk8Tog/yHw5fELLbxcVrrnaVK3DqKfODjE0Pz/gA+mnD
-        fkqUpM0L1H70SoKzpoZnRGD0W
-X-Received: by 2002:a05:651c:1a8:: with SMTP id c8mr13483677ljn.207.1579525604705;
-        Mon, 20 Jan 2020 05:06:44 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzo6PPrjA+yEC25WheWBME+LbIJh05BG+CMwVRxmNLaLUKATUm84PPo4NGjn917QF32fT66dg==
-X-Received: by 2002:a05:651c:1a8:: with SMTP id c8mr13483642ljn.207.1579525604292;
-        Mon, 20 Jan 2020 05:06:44 -0800 (PST)
-Received: from alrua-x1.borgediget.toke.dk ([85.204.121.218])
-        by smtp.gmail.com with ESMTPSA id e8sm19898063ljb.45.2020.01.20.05.06.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 05:06:43 -0800 (PST)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id 6CD9C1804D6; Mon, 20 Jan 2020 14:06:42 +0100 (CET)
-Subject: [PATCH bpf-next v5 02/11] tools/bpf/runqslower: Fix override option
- for VMLINUX_BTF
-From:   =?utf-8?q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To:     Alexei Starovoitov <ast@kernel.org>
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Date:   Mon, 20 Jan 2020 14:06:42 +0100
-Message-ID: <157952560237.1683545.17771785178857224877.stgit@toke.dk>
-In-Reply-To: <157952560001.1683545.16757917515390545122.stgit@toke.dk>
-References: <157952560001.1683545.16757917515390545122.stgit@toke.dk>
-User-Agent: StGit/0.21
+        Mon, 20 Jan 2020 08:07:55 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00KD7iJR080088;
+        Mon, 20 Jan 2020 07:07:44 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579525664;
+        bh=XOMjtz8AYcgNq/GdZlpgNj3EL74LUYAzBlWO0APU4Eo=;
+        h=From:To:CC:Subject:Date;
+        b=OaRWqr/SpCU0NmkVCZ2hVdWStA4dlJ1u0Qx9MmeBUNzSGXWKTr6SO7YBBzxv6pDjr
+         EV6V27Uh7+CXj55HEzz1rhbkajgKBpe8qAswsk7EhA5F8I9fNpE2P5gOlyRtXHYXun
+         k+TAjva3kPn27Rymuz+cct1LRSWKB0N14vYmwFrA=
+Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00KD7imf019992
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 20 Jan 2020 07:07:44 -0600
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 20
+ Jan 2020 07:07:44 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 20 Jan 2020 07:07:44 -0600
+Received: from a0230074-OptiPlex-7010.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00KD7fkU085028;
+        Mon, 20 Jan 2020 07:07:42 -0600
+From:   Faiz Abbas <faiz_abbas@ti.com>
+To:     <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     <will@kernel.org>, <catalin.marinas@arm.com>, <t-kristo@ti.com>,
+        <nm@ti.com>
+Subject: [PATCH] arm64: defconfig: Enable AM654x SDHCI controller
+Date:   Mon, 20 Jan 2020 18:39:15 +0530
+Message-ID: <20200120130915.25711-1-faiz_abbas@ti.com>
+X-Mailer: git-send-email 2.19.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Toke Høiland-Jørgensen <toke@redhat.com>
+Enable CONFIG_SDHCI_AM654 to Support AM65x sdhci controller.
 
-The runqslower tool refuses to build without a file to read vmlinux BTF
-from. The build fails with an error message to override the location by
-setting the VMLINUX_BTF variable if autodetection fails. However, the
-Makefile doesn't actually work with that override - the error message is
-still emitted.
-
-Fix this by including the value of VMLINUX_BTF in the expansion, and only
-emitting the error message if the *result* is empty. Also permit running
-'make clean' even though no VMLINUX_BTF is set.
-
-Fixes: 9c01546d26d2 ("tools/bpf: Add runqslower tool to tools/bpf")
-Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
 ---
- tools/bpf/runqslower/Makefile |   19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/bpf/runqslower/Makefile b/tools/bpf/runqslower/Makefile
-index cff2fbcd29a8..3242ab874ac0 100644
---- a/tools/bpf/runqslower/Makefile
-+++ b/tools/bpf/runqslower/Makefile
-@@ -10,13 +10,9 @@ CFLAGS := -g -Wall
- 
- # Try to detect best kernel BTF source
- KERNEL_REL := $(shell uname -r)
--ifneq ("$(wildcard /sys/kernel/btf/vmlinux)","")
--VMLINUX_BTF := /sys/kernel/btf/vmlinux
--else ifneq ("$(wildcard /boot/vmlinux-$(KERNEL_REL))","")
--VMLINUX_BTF := /boot/vmlinux-$(KERNEL_REL)
--else
--$(error "Can't detect kernel BTF, use VMLINUX_BTF to specify it explicitly")
--endif
-+VMLINUX_BTF_PATHS := /sys/kernel/btf/vmlinux /boot/vmlinux-$(KERNEL_REL)
-+VMLINUX_BTF_PATH := $(or $(VMLINUX_BTF),$(firstword			       \
-+					  $(wildcard $(VMLINUX_BTF_PATHS))))
- 
- abs_out := $(abspath $(OUTPUT))
- ifeq ($(V),1)
-@@ -67,9 +63,14 @@ $(OUTPUT):
- 	$(call msg,MKDIR,$@)
- 	$(Q)mkdir -p $(OUTPUT)
- 
--$(OUTPUT)/vmlinux.h: $(VMLINUX_BTF) | $(OUTPUT) $(BPFTOOL)
-+$(OUTPUT)/vmlinux.h: $(VMLINUX_BTF_PATH) | $(OUTPUT) $(BPFTOOL)
- 	$(call msg,GEN,$@)
--	$(Q)$(BPFTOOL) btf dump file $(VMLINUX_BTF) format c > $@
-+	$(Q)if [ ! -e "$(VMLINUX_BTF_PATH)" ] ; then \
-+		echo "Couldn't find kernel BTF; set VMLINUX_BTF to"	       \
-+			"specify its location." >&2;			       \
-+		exit 1;\
-+	fi
-+	$(Q)$(BPFTOOL) btf dump file $(VMLINUX_BTF_PATH) format c > $@
- 
- $(OUTPUT)/libbpf.a: | $(OUTPUT)
- 	$(Q)$(MAKE) $(submake_extras) -C $(LIBBPF_SRC)			       \
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 6a83ba2aea3e..458bddeba89c 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -629,6 +629,7 @@ CONFIG_MMC_DW_ROCKCHIP=y
+ CONFIG_MMC_SUNXI=y
+ CONFIG_MMC_BCM2835=y
+ CONFIG_MMC_SDHCI_XENON=y
++CONFIG_MMC_SDHCI_AM654=y
+ CONFIG_NEW_LEDS=y
+ CONFIG_LEDS_CLASS=y
+ CONFIG_LEDS_GPIO=y
+-- 
+2.19.2
 
