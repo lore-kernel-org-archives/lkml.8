@@ -2,122 +2,96 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37B32C33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 21:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B62E5C33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 21:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BADA217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 21:27:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579555656;
-	bh=q0zQFHfPmHFMrGYUN36xxhVlPWDGQewChJCUa1T0tmk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wpwM6Fspe4mdXsHSYBB5A2+cLXwMtl77cYDiPP4wR4PprrEnPA6rSwEfAorw30ihO
-	 TwYD/1y413p3BC42H4NGKu2nwz30npmq2c3LPtIbSjs+pcIYijZWyULC4Ii98CbeeD
-	 gbgF4gAkbl1Q6ttolECN4fzve1NGlJsPsJfyhktQ=
+	by mail.kernel.org (Postfix) with ESMTP id 8026524655
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 21:34:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="JBcc7663"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727144AbgATV1f (ORCPT
+        id S1727005AbgATVef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 16:27:35 -0500
-Received: from mail-wr1-f43.google.com ([209.85.221.43]:34539 "EHLO
-        mail-wr1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726586AbgATV1f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 16:27:35 -0500
-Received: by mail-wr1-f43.google.com with SMTP id t2so1060543wrr.1;
-        Mon, 20 Jan 2020 13:27:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xRMZlrNlQg9cdO4fRMxM7tI9dWMAzyGA31Iy64N3nl8=;
-        b=iWVwTeDEyN2muQbm+4Ut9dEwC0pJVh35SMTjzD0klwRpICJ04oCwPMtlucso3pGMOd
-         VHP6lHsrfQSOkUsUVx7ZD0rNFol6wcR8txftXkLIVTBFt7vs1nFVwX510HsPTst1xP84
-         BsjCzhWtKO4a4rWpZnUbmwzvJakc4t/cLHCdUD7lllx6/id+MrfkMcArXw1Zt59h9C8x
-         Iu7hD0dovUFgZqbhQ4Uaj+kx5HMfAGjPcanWJfWUTiBxx5stWpvjXmdi0XjaXmFkAoOy
-         GeU3eP2+fozkmHQOeU7AFEFfTwNq+wFmpvDYr22Ev67gY+aYKH8eGdsD/wiaGOXh/TTd
-         HDiw==
-X-Gm-Message-State: APjAAAX0f+BPHf58T6GLpBuiATEaVKBIl5B/IzY0INTUOF8ifGO4Xyf6
-        MmeFHyKl6ig9K5QAqufqYfWj+OBr
-X-Google-Smtp-Source: APXvYqyYgz2mI0koULHiATO7/pyVqYlpiyljM7jza7dSiOuNS5UDLDHVm+KJL6g9yjj9NKtYMqDKWw==
-X-Received: by 2002:adf:d0c1:: with SMTP id z1mr1443832wrh.371.1579555653420;
-        Mon, 20 Jan 2020 13:27:33 -0800 (PST)
-Received: from localhost (ip-37-188-245-167.eurotel.cz. [37.188.245.167])
-        by smtp.gmail.com with ESMTPSA id v83sm939560wmg.16.2020.01.20.13.27.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 13:27:32 -0800 (PST)
-Date:   Mon, 20 Jan 2020 22:27:26 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Rientjes <rientjes@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Wei Yang <richardw.yang@linux.intel.com>, hannes@cmpxchg.org,
-        vdavydov.dev@gmail.com, ktkhai@virtuozzo.com,
-        kirill.shutemov@linux.intel.com, yang.shi@linux.alibaba.com,
-        cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, alexander.duyck@gmail.com,
-        stable@vger.kernel.org
-Subject: Re: [Patch v4] mm: thp: remove the defer list related code since
- this will not happen
-Message-ID: <20200120212726.GB29276@dhcp22.suse.cz>
-References: <20200117233836.3434-1-richardw.yang@linux.intel.com>
- <20200118145421.0ab96d5d9bea21a3339d52fe@linux-foundation.org>
- <alpine.DEB.2.21.2001181525250.27051@chino.kir.corp.google.com>
- <20200120072237.GA18451@dhcp22.suse.cz>
- <alpine.DEB.2.21.2001201307520.259466@chino.kir.corp.google.com>
+        Mon, 20 Jan 2020 16:34:35 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:32949 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726752AbgATVef (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 16:34:35 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 481lLG6Vcgz9sPK;
+        Tue, 21 Jan 2020 08:34:30 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1579556073;
+        bh=B/uaXNOzGmgYx5o+zZDaRq+uyNaotC/PaEI4OhmL6/U=;
+        h=Date:From:To:Cc:Subject:From;
+        b=JBcc76639Ocp2dtjOb89h6KEIrZHrNc76gi8rxRpVYHULgmOvMOm+/4DYaicgmAu3
+         pn9dM+seyoL9/Xhygb0wuiC1eJEpKlIKL8Q/WoDUUKCoA6uJ+o3vvrmuAOykE8QUcH
+         TtQ/Xn8qQe5gxVogUjoiK4Iu79289rmju09O7k70S1PwX4L0Qh9b7pprkSAwUjYit0
+         Os8ZceP+1jmsEXuph1TfaGwU9FdeMZr5a6gK104S4ryRmuhKHggfLEOINlrW1u7Qx1
+         20JvLonvHgPhWpqNcGi8bkSCZp+gHhKjqBR+zQzMSMVm/RyZmYRBsJcyDJeSr2GJ0d
+         RaY3CsRLFPZ0A==
+Date:   Tue, 21 Jan 2020 08:34:24 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthew Auld <matthew.auld@intel.com>
+Subject: linux-next: build failure after merge of the drm-intel-fixes tree
+Message-ID: <20200121083424.66d98dc5@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.2001201307520.259466@chino.kir.corp.google.com>
+Content-Type: multipart/signed; boundary="Sig_/XwC9.aYjJCeolnFRpcIZ6sg";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 20-01-20 13:10:56, David Rientjes wrote:
-> On Mon, 20 Jan 2020, Michal Hocko wrote:
-> 
-> > > When migrating memcg charges of thp memory, there are two possibilities:
-> > > 
-> > >  (1) The underlying compound page is mapped by a pmd and thus does is not 
-> > >      on a deferred split queue (it's mapped), or
-> > > 
-> > >  (2) The compound page is not mapped by a pmd and is awaiting split on a
-> > >      deferred split queue.
-> > > 
-> > > The current charge migration implementation does *not* migrate charges for 
-> > > thp memory on the deferred split queue, it only migrates charges for pages 
-> > > that are mapped by a pmd.
-> > > 
-> > > Thus, to migrate charges, the underlying compound page cannot be on a 
-> > > deferred split queue; no list manipulation needs to be done in 
-> > > mem_cgroup_move_account().
-> > > 
-> > > With the current code, the underlying compound page is moved to the 
-> > > deferred split queue of the memcg its memory is not charged to, so 
-> > > susbequent reclaim will consider these pages for the wrong memcg.  Remove 
-> > > the deferred split queue handling in mem_cgroup_move_account() entirely.
-> > 
-> > I believe this still doesn't describe the underlying problem to the full
-> > extent. What happens with the page on the deferred list when it
-> > shouldn't be there in fact? Unless I am missing something deferred_split_scan
-> > will simply split that huge page. Which is a bit unfortunate but nothing
-> > really critical. This should be mentioned in the changelog.
-> > 
-> 
-> Are you referring to a compound page on the deferred split queue before a 
-> task is moved?  I'm not sure this is within the scope of Wei's patch.. 
-> this is simply preventing a page from being moved to the deferred split
-> queue of a memcg that it is not charged to.  Is there a concern about why 
-> this code can be removed or a suggestion on something else it should be 
-> doing instead?
+--Sig_/XwC9.aYjJCeolnFRpcIZ6sg
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-No, I do not have any concern about the patch itslef. It is that the
-changelog doesn't decribe the user visible effect. All I am saying is
-that the current code splits THPs of moved pages under memory pressure
-even if that is not needed. And that is a clear bug.
--- 
-Michal Hocko
-SUSE Labs
+Hi all,
+
+After merging the drm-intel-fixes tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
+
+
+Caused by commit
+
+  d8fcca47e195 ("drm/i915/userptr: fix size calculation")
+
+I have reverted that commit for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/XwC9.aYjJCeolnFRpcIZ6sg
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4mHOAACgkQAVBC80lX
+0GyiIggAh+uEumRRLd/uzS0G2uWsepBy1Yq2Du+SZOvq5q6eXzxPFi3v4yq5G/Z3
+91kKDbUbXIq0bt+4ZeBWCVa9JHfac7zaD6v96oj0/WAGptURVMWs8IQzSeCE5ly8
+OaRbBIw0l/7R6oDXh0+UmePioF1mh1PiZ2uHQNmVgGS9ECzzGsHYst0WlWKbfrcW
+tF/i5GkROKKAy92QKh+SHQKa+QMi9qYOzffYXqyVbTmUD4BUit9Es86qFcYnMebu
+60CJT2QjE1vOcPeThd8mRGmHy9qrMlLypvMnEV4KmI4hDq3X9LR4GnDsms5Ej+nI
+AhoRQjAGR3OGYJqZGubAw/fwzQw1Zg==
+=0wfI
+-----END PGP SIGNATURE-----
+
+--Sig_/XwC9.aYjJCeolnFRpcIZ6sg--
