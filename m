@@ -7,60 +7,59 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18999C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 04:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A4AC32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 04:54:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D37252073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 04:54:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A82CF2073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 04:54:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="HErB6DHE"
+	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="oHxM02Cr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729145AbgATEyf (ORCPT
+        id S1729182AbgATEyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 19 Jan 2020 23:54:35 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:35567 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729043AbgATEye (ORCPT
+        Sun, 19 Jan 2020 23:54:40 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:37214 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729043AbgATEyj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 19 Jan 2020 23:54:34 -0500
-Received: by mail-pl1-f193.google.com with SMTP id g6so12652269plt.2
-        for <linux-kernel@vger.kernel.org>; Sun, 19 Jan 2020 20:54:34 -0800 (PST)
+        Sun, 19 Jan 2020 23:54:39 -0500
+Received: by mail-pg1-f196.google.com with SMTP id q127so14898162pga.4
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jan 2020 20:54:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=axtens.net; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Q4BdOeTArsFeOLkWOltqSDzbsVTMB1DhmfQ/wMwlBh8=;
-        b=HErB6DHEz05P7HfbSHsadDt8p5fu0zb0K6lg8oXEJnO41RWGDIlURmCpHZMTZ1p2RD
-         01u3IvBgZfq1nalGmcYXCjIz9gSELXL+VnGjSurFstSztcmbs5HpPdgXgOHP+YQKzkfM
-         KVCbFl4TYZfxOxvs8kOGuWPANzXITXNZiP9UA=
+        bh=pOmFCBblhkqj3gkmP+37nPe0hJ5NkRyIggkMoZ1sHnY=;
+        b=oHxM02Cr48GBC2n2ErbUXAGiQbp9a9tIcZ01GW7OKYJz7SZdJx/qhAqSqjyNPLtZHc
+         iXgHOE9I9QQlka8lEeceHuV/2cuIprxB8oep2Vgu9GlkUbjY9SELUov3xaKqMu7+FpNS
+         NJ3D9mZpMq9jHjQyR1ePY6oL3wPxcf7nalshU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Q4BdOeTArsFeOLkWOltqSDzbsVTMB1DhmfQ/wMwlBh8=;
-        b=QEw+mfXxbfCpOnYfpyo540UTe/G4HH6AbpMC6yZHMbhJ02V8S8sycqPHzZytQ+NQqi
-         w7+V30V7vL13jahBRECaoEwgm2FrFfFzJxP5hWN/qrmHjHsPRZB2ORw4dPps/JPp9K4d
-         HvQr0PjsY7ClohTLkyPfjK0miYkuZk2t87D1izb4V1tEOGvnDB2puP+HMgqOwCw5L0We
-         eqboVrbjKQswXTJA+z41nyNhJQQc8ICnMyp8R/WylnCQC/3cXRZ3A+tye2a7ZR1GIIA7
-         Fb79A4GCLyNaDjMZ8IdHhT0bytSKL6VKPklFuu4TWHCiktjjKHKsRp4yo9DUK3iy0htH
-         wRJQ==
-X-Gm-Message-State: APjAAAWSEsGsg1qr+H7zV7jz+8WgYmvpyl0YCw3cpi3iidWDyAbEzBcJ
-        O27v1Uy99uWYm86bcSCmyiDkjA==
-X-Google-Smtp-Source: APXvYqxxSXSgIxfhFcLiHJlvxq3iD1FqCPObTaUjZE58C8mVflHN8qdOZfOJ60P3mb5NTZuthE/ttA==
-X-Received: by 2002:a17:90a:e2ce:: with SMTP id fr14mr20743857pjb.99.1579496074078;
-        Sun, 19 Jan 2020 20:54:34 -0800 (PST)
+        bh=pOmFCBblhkqj3gkmP+37nPe0hJ5NkRyIggkMoZ1sHnY=;
+        b=SYETf0m6I4Yoi69r/CJjwxlfOyeqmwHxyXTewe0V1YLQV23hkG8yISRQXBEvwE1e4R
+         sGyHu5YsDkFwxD+MyHJSTWMTJu6HCrQN5SPt14zO7MT3MadqEQLU9I8pzxINVLTtnz/n
+         PZ6Kn+GODrOfnlSEH89M5wANxc+sUnK+k5ttvIEz4sIZH2g4jCFkyxAKwB1g7nXBcOmZ
+         nfyMEyUkLDNdYNBazi5l/dTNnCsxvig12C4pdbPwryqiVdMvtYjzDBI51JgLeh3H/Lpv
+         gXAMjlDkohWIPSqJ0qu9BgPlkvO/QEn2S3NMY6sL4sOuGPDYoACduzCz35J6NnflC+iz
+         XM+Q==
+X-Gm-Message-State: APjAAAUjdb+gTA4GSqYMJWh3KEFRx6m4ITAFHRI67KVVYWgBZAy5B7Ie
+        tzqOwKp3hMQUXUWKKUuTCEgpUg==
+X-Google-Smtp-Source: APXvYqx7MFbc9YXjaXN7u01v6rADAHDuX6xKBxQb86CEcWZHxmIXyxvsRMsN6v83PEIaZCaoJ+1MrA==
+X-Received: by 2002:a63:a4b:: with SMTP id z11mr56030367pgk.97.1579496078651;
+        Sun, 19 Jan 2020 20:54:38 -0800 (PST)
 Received: from localhost (2001-44b8-1113-6700-4064-d910-a710-f29a.static.ipv6.internode.on.net. [2001:44b8:1113:6700:4064:d910:a710:f29a])
-        by smtp.gmail.com with ESMTPSA id z16sm38268871pff.125.2020.01.19.20.54.32
+        by smtp.gmail.com with ESMTPSA id d4sm1663895pjg.19.2020.01.19.20.54.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Jan 2020 20:54:33 -0800 (PST)
+        Sun, 19 Jan 2020 20:54:38 -0800 (PST)
 From:   Daniel Axtens <dja@axtens.net>
 To:     kernel-hardening@lists.openwall.com, akpm@linux-foundation.org,
         keescook@chromium.org
-Cc:     linux-kernel@vger.kernel.org, Daniel Axtens <dja@axtens.net>,
-        Daniel Micay <danielmicay@gmail.com>
-Subject: [PATCH v2 1/2] string.h: detect intra-object overflow in fortified string functions
-Date:   Mon, 20 Jan 2020 15:54:23 +1100
-Message-Id: <20200120045424.16147-2-dja@axtens.net>
+Cc:     linux-kernel@vger.kernel.org, Daniel Axtens <dja@axtens.net>
+Subject: [PATCH v2 2/2] lkdtm: tests for FORTIFY_SOURCE
+Date:   Mon, 20 Jan 2020 15:54:24 +1100
+Message-Id: <20200120045424.16147-3-dja@axtens.net>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200120045424.16147-1-dja@axtens.net>
 References: <20200120045424.16147-1-dja@axtens.net>
@@ -71,148 +70,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the fortify feature was first introduced in commit 6974f0c4555e
-("include/linux/string.h: add the option of fortified string.h functions"),
-Daniel Micay observed:
+Add code to test both:
 
-  * It should be possible to optionally use __builtin_object_size(x, 1) for
-    some functions (C strings) to detect intra-object overflows (like
-    glibc's _FORTIFY_SOURCE=2), but for now this takes the conservative
-    approach to avoid likely compatibility issues.
+ - runtime detection of the overrun of a structure. This covers the
+   __builtin_object_size(x, 0) case. This test is called FORTIFY_OBJECT.
 
-This is a case that often cannot be caught by KASAN. Consider:
+ - runtime detection of the overrun of a char array within a structure.
+   This covers the __builtin_object_size(x, 1) case which can be used
+   for some string functions. This test is called FORTIFY_SUBOBJECT.
 
-struct foo {
-    char a[10];
-    char b[10];
-}
-
-void test() {
-    char *msg;
-    struct foo foo;
-
-    msg = kmalloc(16, GFP_KERNEL);
-    strcpy(msg, "Hello world!!");
-    // this copy overwrites foo.b
-    strcpy(foo.a, msg);
-}
-
-The questionable copy overflows foo.a and writes to foo.b as well. It
-cannot be detected by KASAN. Currently it is also not detected by fortify,
-because strcpy considers __builtin_object_size(x, 0), which considers the
-size of the surrounding object (here, struct foo). However, if we switch
-the string functions over to use __builtin_object_size(x, 1), the compiler
-will measure the size of the closest surrounding subobject (here, foo.a),
-rather than the size of the surrounding object as a whole. See
-https://gcc.gnu.org/onlinedocs/gcc/Object-Size-Checking.html for more info.
-
-Only do this for string functions: we cannot use it on things like
-memcpy, memmove, memcmp and memchr_inv due to code like this which
-purposefully operates on multiple structure members:
-(arch/x86/kernel/traps.c)
-
-	/*
-	 * regs->sp points to the failing IRET frame on the
-	 * ESPFIX64 stack.  Copy it to the entry stack.  This fills
-	 * in gpregs->ss through gpregs->ip.
-	 *
-	 */
-	memmove(&gpregs->ip, (void *)regs->sp, 5*8);
-
-This change passes an allyesconfig on powerpc and x86, and an x86 kernel
-built with it survives running with syz-stress from syzkaller, so it seems
-safe so far.
-
-Cc: Daniel Micay <danielmicay@gmail.com>
-Cc: Kees Cook <keescook@chromium.org>
+Suggested-by: Kees Cook <keescook@chromium.org>
 Reviewed-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Daniel Axtens <dja@axtens.net>
 ---
- include/linux/string.h | 27 ++++++++++++++++-----------
- 1 file changed, 16 insertions(+), 11 deletions(-)
+ drivers/misc/lkdtm/bugs.c  | 51 ++++++++++++++++++++++++++++++++++++++
+ drivers/misc/lkdtm/core.c  |  2 ++
+ drivers/misc/lkdtm/lkdtm.h |  2 ++
+ 3 files changed, 55 insertions(+)
 
-diff --git a/include/linux/string.h b/include/linux/string.h
-index 3b8e8b12dd37..e7f34c3113f8 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -319,7 +319,7 @@ void __write_overflow(void) __compiletime_error("detected write beyond size of o
- #if !defined(__NO_FORTIFY) && defined(__OPTIMIZE__) && defined(CONFIG_FORTIFY_SOURCE)
- __FORTIFY_INLINE char *strncpy(char *p, const char *q, __kernel_size_t size)
- {
--	size_t p_size = __builtin_object_size(p, 0);
-+	size_t p_size = __builtin_object_size(p, 1);
- 	if (__builtin_constant_p(size) && p_size < size)
- 		__write_overflow();
- 	if (p_size < size)
-@@ -329,7 +329,7 @@ __FORTIFY_INLINE char *strncpy(char *p, const char *q, __kernel_size_t size)
+diff --git a/drivers/misc/lkdtm/bugs.c b/drivers/misc/lkdtm/bugs.c
+index a4fdad04809a..77bf01ce7e0c 100644
+--- a/drivers/misc/lkdtm/bugs.c
++++ b/drivers/misc/lkdtm/bugs.c
+@@ -11,6 +11,7 @@
+ #include <linux/sched/signal.h>
+ #include <linux/sched/task_stack.h>
+ #include <linux/uaccess.h>
++#include <linux/slab.h>
  
- __FORTIFY_INLINE char *strcat(char *p, const char *q)
- {
--	size_t p_size = __builtin_object_size(p, 0);
-+	size_t p_size = __builtin_object_size(p, 1);
- 	if (p_size == (size_t)-1)
- 		return __builtin_strcat(p, q);
- 	if (strlcat(p, q, p_size) >= p_size)
-@@ -340,7 +340,7 @@ __FORTIFY_INLINE char *strcat(char *p, const char *q)
- __FORTIFY_INLINE __kernel_size_t strlen(const char *p)
- {
- 	__kernel_size_t ret;
--	size_t p_size = __builtin_object_size(p, 0);
-+	size_t p_size = __builtin_object_size(p, 1);
- 
- 	/* Work around gcc excess stack consumption issue */
- 	if (p_size == (size_t)-1 ||
-@@ -355,7 +355,7 @@ __FORTIFY_INLINE __kernel_size_t strlen(const char *p)
- extern __kernel_size_t __real_strnlen(const char *, __kernel_size_t) __RENAME(strnlen);
- __FORTIFY_INLINE __kernel_size_t strnlen(const char *p, __kernel_size_t maxlen)
- {
--	size_t p_size = __builtin_object_size(p, 0);
-+	size_t p_size = __builtin_object_size(p, 1);
- 	__kernel_size_t ret = __real_strnlen(p, maxlen < p_size ? maxlen : p_size);
- 	if (p_size <= ret && maxlen != ret)
- 		fortify_panic(__func__);
-@@ -367,8 +367,8 @@ extern size_t __real_strlcpy(char *, const char *, size_t) __RENAME(strlcpy);
- __FORTIFY_INLINE size_t strlcpy(char *p, const char *q, size_t size)
- {
- 	size_t ret;
--	size_t p_size = __builtin_object_size(p, 0);
--	size_t q_size = __builtin_object_size(q, 0);
-+	size_t p_size = __builtin_object_size(p, 1);
-+	size_t q_size = __builtin_object_size(q, 1);
- 	if (p_size == (size_t)-1 && q_size == (size_t)-1)
- 		return __real_strlcpy(p, q, size);
- 	ret = strlen(q);
-@@ -388,8 +388,8 @@ __FORTIFY_INLINE size_t strlcpy(char *p, const char *q, size_t size)
- __FORTIFY_INLINE char *strncat(char *p, const char *q, __kernel_size_t count)
- {
- 	size_t p_len, copy_len;
--	size_t p_size = __builtin_object_size(p, 0);
--	size_t q_size = __builtin_object_size(q, 0);
-+	size_t p_size = __builtin_object_size(p, 1);
-+	size_t q_size = __builtin_object_size(q, 1);
- 	if (p_size == (size_t)-1 && q_size == (size_t)-1)
- 		return __builtin_strncat(p, q, count);
- 	p_len = strlen(p);
-@@ -502,11 +502,16 @@ __FORTIFY_INLINE void *kmemdup(const void *p, size_t size, gfp_t gfp)
- /* defined after fortified strlen and memcpy to reuse them */
- __FORTIFY_INLINE char *strcpy(char *p, const char *q)
- {
--	size_t p_size = __builtin_object_size(p, 0);
--	size_t q_size = __builtin_object_size(q, 0);
-+	size_t p_size = __builtin_object_size(p, 1);
-+	size_t q_size = __builtin_object_size(q, 1);
-+	size_t size;
- 	if (p_size == (size_t)-1 && q_size == (size_t)-1)
- 		return __builtin_strcpy(p, q);
--	memcpy(p, q, strlen(q) + 1);
-+	size = strlen(q) + 1;
-+	/* test here to use the more stringent object size */
-+	if (p_size < size)
-+		fortify_panic(__func__);
-+	memcpy(p, q, size);
- 	return p;
+ #ifdef CONFIG_X86_32
+ #include <asm/desc.h>
+@@ -376,3 +377,53 @@ void lkdtm_DOUBLE_FAULT(void)
+ 	panic("tried to double fault but didn't die\n");
  }
+ #endif
++
++void lkdtm_FORTIFY_OBJECT(void)
++{
++	struct target {
++		char a[10];
++	} target[2] = {};
++	int result;
++
++	/*
++	 * Using volatile prevents the compiler from determining the value of
++	 * 'size' at compile time. Without that, we would get a compile error
++	 * rather than a runtime error.
++	 */
++	volatile int size = 11;
++
++	pr_info("trying to read past the end of a struct\n");
++
++	result = memcmp(&target[0], &target[1], size);
++
++	/* Print result to prevent the code from being eliminated */
++	pr_err("FAIL: fortify did not catch an object overread!\n"
++	       "\"%d\" was the memcmp result.\n", result);
++}
++
++void lkdtm_FORTIFY_SUBOBJECT(void)
++{
++	struct target {
++		char a[10];
++		char b[10];
++	} target;
++	char *src;
++
++	src = kmalloc(20, GFP_KERNEL);
++	strscpy(src, "over ten bytes", 20);
++
++	pr_info("trying to strcpy past the end of a member of a struct\n");
++
++	/*
++	 * strncpy(target.a, src, 20); will hit a compile error because the
++	 * compiler knows at build time that target.a < 20 bytes. Use strcpy()
++	 * to force a runtime error.
++	 */
++	strcpy(target.a, src);
++
++	/* Use target.a to prevent the code from being eliminated */
++	pr_err("FAIL: fortify did not catch an sub-object overrun!\n"
++	       "\"%s\" was copied.\n", target.a);
++
++	kfree(src);
++}
+diff --git a/drivers/misc/lkdtm/core.c b/drivers/misc/lkdtm/core.c
+index ee0d6e721441..78d22a23b4f9 100644
+--- a/drivers/misc/lkdtm/core.c
++++ b/drivers/misc/lkdtm/core.c
+@@ -117,6 +117,8 @@ static const struct crashtype crashtypes[] = {
+ 	CRASHTYPE(STACK_GUARD_PAGE_TRAILING),
+ 	CRASHTYPE(UNSET_SMEP),
+ 	CRASHTYPE(UNALIGNED_LOAD_STORE_WRITE),
++	CRASHTYPE(FORTIFY_OBJECT),
++	CRASHTYPE(FORTIFY_SUBOBJECT),
+ 	CRASHTYPE(OVERWRITE_ALLOCATION),
+ 	CRASHTYPE(WRITE_AFTER_FREE),
+ 	CRASHTYPE(READ_AFTER_FREE),
+diff --git a/drivers/misc/lkdtm/lkdtm.h b/drivers/misc/lkdtm/lkdtm.h
+index c56d23e37643..13f13421dc19 100644
+--- a/drivers/misc/lkdtm/lkdtm.h
++++ b/drivers/misc/lkdtm/lkdtm.h
+@@ -31,6 +31,8 @@ void lkdtm_UNSET_SMEP(void);
+ #ifdef CONFIG_X86_32
+ void lkdtm_DOUBLE_FAULT(void);
+ #endif
++void lkdtm_FORTIFY_OBJECT(void);
++void lkdtm_FORTIFY_SUBOBJECT(void);
  
+ /* lkdtm_heap.c */
+ void __init lkdtm_heap_init(void);
 -- 
 2.20.1
 
