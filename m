@@ -2,102 +2,151 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84918C33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 357BCC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6477B217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:56:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04682217F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:56:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbgATN4V (ORCPT
+        id S1727117AbgATN4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 08:56:21 -0500
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:33958 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726738AbgATN4V (ORCPT
+        Mon, 20 Jan 2020 08:56:43 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:8202 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726738AbgATN4m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 08:56:21 -0500
-Received: from [109.168.11.45] (port=46296 helo=[192.168.101.73])
-        by hostingweb31.netsons.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1itXXP-0004oK-3X; Mon, 20 Jan 2020 14:56:19 +0100
-Subject: Re: [PATCH 01/26] docs: i2c: sort index logically
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-To:     Jean Delvare <jdelvare@suse.de>
-Cc:     linux-doc@vger.kernel.org, linux-i2c@vger.kernel.org,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
-References: <20200105224006.10321-1-luca@lucaceresoli.net>
- <20200105225012.11701-1-luca@lucaceresoli.net>
- <20200120100850.001e032b@endymion>
- <e5d3656d-04a1-dd1b-e847-fb063e56a987@lucaceresoli.net>
-Message-ID: <9073e6c2-1f82-6067-0d2a-3e8d32dca89a@lucaceresoli.net>
-Date:   Mon, 20 Jan 2020 14:56:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <e5d3656d-04a1-dd1b-e847-fb063e56a987@lucaceresoli.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+        Mon, 20 Jan 2020 08:56:42 -0500
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00KDIpd3072358
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 08:20:25 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xmgh9s7ty-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 08:20:24 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <tmricht@linux.ibm.com>;
+        Mon, 20 Jan 2020 13:20:23 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 20 Jan 2020 13:20:20 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00KDKIZA38010888
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Jan 2020 13:20:18 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CA0A3A4068;
+        Mon, 20 Jan 2020 13:20:18 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 87267A4054;
+        Mon, 20 Jan 2020 13:20:18 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 20 Jan 2020 13:20:18 +0000 (GMT)
+From:   Thomas Richter <tmricht@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Cc:     gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH v2] perf probe: Add ustring support for perf probe command
+Date:   Mon, 20 Jan 2020 14:20:10 +0100
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200120132011.64698-1-tmricht@linux.ibm.com>
+References: <20200120132011.64698-1-tmricht@linux.ibm.com>
+X-TM-AS-GCONF: 00
+x-cbid: 20012013-0016-0000-0000-000002DF123B
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20012013-0017-0000-0000-00003341B5FD
+Message-Id: <20200120132011.64698-2-tmricht@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-20_02:2020-01-20,2020-01-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ lowpriorityscore=0 impostorscore=0 spamscore=0 phishscore=0
+ priorityscore=1501 clxscore=1015 mlxscore=0 mlxlogscore=999 malwarescore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001200115
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Kernel commit 88903c464321 ("tracing/probe: Add ustring type for user-space string")
+adds support for user-space strings when type 'ustring' is specified.
 
-On 20/01/20 10:22, Luca Ceresoli wrote:
-> Hi Jean,
-> 
-> On 20/01/20 10:08, Jean Delvare wrote:
->> Hi Luca,
->>
->> On Sun,  5 Jan 2020 23:49:47 +0100, Luca Ceresoli wrote:
->>> The index page currently lists sections in alphabetical file order without
->>> caring about their content. Sort sections based on their content logically,
->>> according to the following structure:
->>>
->>>  * Intro to I2C/SMBus and their usage in Linux: summary, i2c-protocol,
->>>    smbus-protocol, instantiating-devices, busses/index, i2c-topology,
->>>    muxes/i2c-mux-gpio
->>>  * Implementing drivers: writing-clients, dev-interface,
->>>    dma-considerations, fault-codes, functionality
->>>  * Debugging: gpio-fault-injection, i2c-stub
->>>  * Slave I2C: slave-interface, slave-eeprom-backend
->>>  * Advanced: ten-bit-addresses
->>>  * Obsolete info: upgrading-clients, old-module-parameters
->>
->> Good idea. I wonder, would there be a way to materialize these group
->> names in the documentation itself? I found it useful when reviewing the
->> patch, but in the long term it would be even more useful if the end
->> readers would see them too.
-> 
-> I had the same idea, but didn't find an obvious way to do it with the
-> ReST/Sphynx syntax. I have also browsed through a few index pages for
-> other subsystems and they all have a flat list too, so for the moment I
-> gave up.
+Here is an example using sysfs command line interface
+for kprobes:
 
-The best way I could find is in Documentation/core-api/index.rst
-(https://www.kernel.org/doc/html/latest/core-api/index.html). I don't
-like very much how the .rst source looks like, but AFAICT this seems
-like "the" way of doing it.
+Function to probe:
+  struct filename *
+  getname_flags(const char __user *filename, int flags, int *empty)
 
-Unless there are better options, I'll try this syntax in v2.
+Setup:
+  # cd /sys/kernel/debug/tracing/
+  # echo 'p:tmr1 getname_flags +0(%r2):ustring' > kprobe_events
+  # cat events/kprobes/tmr1/format | fgrep print
+  print fmt: "(%lx) arg1=\"%s\"", REC->__probe_ip, REC->arg1
+  # echo 1 > events/kprobes/tmr1/enable
+  # touch /tmp/111
+  # echo 0 > events/kprobes/tmr1/enable
+  # cat trace|fgrep /tmp/111
+  touch-5846  [005] d..2 255520.717960: tmr1:\
+	  (getname_flags+0x0/0x400) arg1="/tmp/111"
 
+Doing the same with the perf tool fails.
+Using type 'string' succeeds:
+ # perf probe "vfs_getname=getname_flags:72 pathname=filename:string"
+ Added new event:
+   probe:vfs_getname (on getname_flags:72 with pathname=filename:string)
+   ....
+ # perf probe -d probe:vfs_getname
+ Removed event: probe:vfs_getname
+
+However using type 'ustring' fails (output before):
+ # perf probe "vfs_getname=getname_flags:72 pathname=filename:ustring"
+ Failed to write event: Invalid argument
+   Error: Failed to add events.
+ #
+
+Fix this by adding type 'ustring' in function
+convert_variable_type().
+
+Using ustring succeeds (output after):
+ # ./perf probe "vfs_getname=getname_flags:72 pathname=filename:ustring"
+ Added new event:
+   probe:vfs_getname (on getname_flags:72 with pathname=filename:ustring)
+
+ You can now use it in all perf tools, such as:
+
+	perf record -e probe:vfs_getname -aR sleep 1
+
+ #
+
+Note: This issue also exists on x86, it is not s390 specific.
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+---
+ tools/perf/util/probe-finder.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+index c470c49a804f..1c817add6ca4 100644
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -303,7 +303,8 @@ static int convert_variable_type(Dwarf_Die *vr_die,
+ 	char prefix;
+ 
+ 	/* TODO: check all types */
+-	if (cast && strcmp(cast, "string") != 0 && strcmp(cast, "x") != 0 &&
++	if (cast && strcmp(cast, "string") != 0 && strcmp(cast, "ustring") &&
++	    strcmp(cast, "x") != 0 &&
+ 	    strcmp(cast, "s") != 0 && strcmp(cast, "u") != 0) {
+ 		/* Non string type is OK */
+ 		/* and respect signedness/hexadecimal cast */
 -- 
-Luca
+2.21.0
+
