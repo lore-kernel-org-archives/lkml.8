@@ -2,424 +2,301 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 835FBC35240
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:29:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 083C5C35241
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50B232087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:29:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C93F72087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 16:29:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="u9ndmuBz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dQWfSSaA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729436AbgATQ3I (ORCPT
+        id S1729398AbgATQ3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 11:29:08 -0500
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:10975 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726942AbgATQ3G (ORCPT
+        Mon, 20 Jan 2020 11:29:02 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:38842 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729210AbgATQ3B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 11:29:06 -0500
+        Mon, 20 Jan 2020 11:29:01 -0500
+Received: by mail-il1-f195.google.com with SMTP id f5so27704043ilq.5
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 08:29:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1579537746; x=1611073746;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=VWI3iKWCGFxKCrPhXElhJRjHWg68meG4dSAmn+17eBI=;
-  b=u9ndmuBziFcCx01mgnzZs/wpcJLiCE6Cle9rK6G1ojXLqNH7pM0b8Vor
-   WipuO/gyhkvdcfcV3RebEH596yPQpgJV+UhpDm702KMeJEopqVuHyXyuj
-   YlGGvWeuDAWHJk5i6UVSFsfHo+w+LcNjTgVnf3n++VMYGH5fey55U/FTs
-   0=;
-IronPort-SDR: +ddrrpCzZaIVycq8yz72hIlt2gHwluQ8c9DkRoLclXVXB0JLP46i3BI7GY8pjQwgAbrN4A4p73
- rVTzUB8a0qpA==
-X-IronPort-AV: E=Sophos;i="5.70,342,1574121600"; 
-   d="scan'208";a="19801579"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 20 Jan 2020 16:28:46 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com (Postfix) with ESMTPS id DFD04A1EB6;
-        Mon, 20 Jan 2020 16:28:41 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1236.3; Mon, 20 Jan 2020 16:28:41 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.253) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 20 Jan 2020 16:28:35 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <acme@kernel.org>,
-        <brendan.d.gregg@gmail.com>, <corbet@lwn.net>, <mgorman@suse.de>,
-        <dwmw@amazon.com>, <amit@kernel.org>, <rostedt@goodmis.org>,
-        <sj38.park@gmail.com>, <linux-mm@kvack.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 1/8] mm: Introduce Data Access MONitor (DAMON)
-Date:   Mon, 20 Jan 2020 17:27:50 +0100
-Message-ID: <20200120162757.32375-2-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200120162757.32375-1-sjpark@amazon.com>
-References: <20200120162757.32375-1-sjpark@amazon.com>
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=WhDafEfpWxCZW7N1ekgfBlfxmyFi2MY1suCA9Nt8g4g=;
+        b=dQWfSSaAoPOHR9zlU3AQWP+N+8XjUaOZog2voCI3BigUAoKt6IwPkXnmWjCUSujnhy
+         YGa8UPh9uxPhxWMvLZ3AGlafundnFv9d0pBpbAXKur7asg77zkQoTyVzyHvT1YwOLj8r
+         OvuMcYJi6YELFbOHDMdZLFdSUSTYqdB9PXiIG3gv0gfqOOyYYdqn4wq2ZrpKJD7X8ewt
+         uDCa93APw5k6rwdRrf9k5nHIXKSm+sMr/L0Z/bE7xA6q60hUoKma2D472uwBBN8nRocE
+         KwzaytgrF5c56O7X4gVj/3QzyQhnUiUHdV1Vp/+7mWwchTd/vYNQPyBJpy1Nicxge4Uo
+         VLAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=WhDafEfpWxCZW7N1ekgfBlfxmyFi2MY1suCA9Nt8g4g=;
+        b=O0OP1eAWIuTc3ZF3kwsenrmOd2z6SQtkupZVaKSAlL4udNA6RENy63JY4EkZvwA4w4
+         MoYUY8QItenQrJPAbPKK0iPE9GTHrVXF8EdPjo285O5ASFQlOr230swrI48ZSb6h/vYd
+         wC0BwDp5y9ajYHKT8d46Y68KC3rLiyy2ri7OBmGjjxhe+Q7NF6mlN/ukHMqOhX+WT2JK
+         tevx6zTvBTHUGJxiPSlimpO9udqjvcktkkzWQnlK7WKjQpUtviXDFt8jEaKBEHXs8KFE
+         2hLO72/fDWs+hRb0gKAbOSVADb/65vyqOeN7zuO6KslvTkhUWILa46To+MLOt2fWOn1K
+         f4PA==
+X-Gm-Message-State: APjAAAWK3aKwHzgHBRcWDDeaLNIzOAAoPQHekPIdXA7vqnhh/vwSR4oH
+        QWoef30JLLIXuW2v2zDDRcoA+50VuwVLkiC6pZ4LsQ==
+X-Google-Smtp-Source: APXvYqwGOlg/bZzzVUqCT7xHmwP5mV9QXmWru21WXXC0v+hMyrf3Myr2Ep5G40vm+zE7B1I2Tme02g61dWoubr/dvfo=
+X-Received: by 2002:a92:9f1a:: with SMTP id u26mr11955936ili.72.1579537739870;
+ Mon, 20 Jan 2020 08:28:59 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.253]
-X-ClientProxiedBy: EX13D14UWC002.ant.amazon.com (10.43.162.214) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+References: <20200115102142.11229-1-cleger@kalray.eu> <088ceab9-f135-6e70-dcf6-f75ec46110b1@st.com>
+ <79048597.12371594.1579098506802.JavaMail.zimbra@kalray.eu>
+ <a1116656-cf2e-c1a1-7cc3-0fe2a79f076e@st.com> <612100872.12377996.1579101063237.JavaMail.zimbra@kalray.eu>
+ <20200117225217.GA27535@xps15> <377421261.12898679.1579462834671.JavaMail.zimbra@kalray.eu>
+In-Reply-To: <377421261.12898679.1579462834671.JavaMail.zimbra@kalray.eu>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Mon, 20 Jan 2020 09:28:49 -0700
+Message-ID: <CANLsYky-dp3=J__x9d7BJtu1=ppEiFMfuJnRQ7ZTVn6X43BJ_g@mail.gmail.com>
+Subject: Re: [PATCH] remoteproc: Add support for predefined notifyids
+To:     =?UTF-8?Q?Cl=C3=A9ment_Leger?= <cleger@kalray.eu>
+Cc:     Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+On Sun, 19 Jan 2020 at 12:40, Cl=C3=A9ment Leger <cleger@kalray.eu> wrote:
+>
+> Hi Mathieu,
+>
+> ----- On 17 Jan, 2020, at 23:52, Mathieu Poirier mathieu.poirier@linaro.o=
+rg wrote:
+>
+> > Hey guys,
+> >
+> > On Wed, Jan 15, 2020 at 04:11:03PM +0100, Cl=C3=A9ment Leger wrote:
+> >>
+> >>
+> >> ----- On 15 Jan, 2020, at 16:09, Arnaud Pouliquen arnaud.pouliquen@st.=
+com wrote:
+> >>
+> >> > On 1/15/20 3:28 PM, Cl=C3=A9ment Leger wrote:
+> >> >> Hi Arnaud,
+> >> >>
+> >> >> ----- On 15 Jan, 2020, at 15:06, Arnaud Pouliquen arnaud.pouliquen@=
+st.com wrote:
+> >> >>
+> >> >>> Hi Cl=C3=A9ment,
+> >> >>>
+> >> >>> On 1/15/20 11:21 AM, Clement Leger wrote:
+> >> >>>> In order to support preallocated notify ids, if their value is
+> >> >>>> equal to FW_RSC_NOTIFY_ID_ANY, then do no allocate a notify id
+> >> >>>> dynamically but try to allocate the requested one. This is useful=
+ when
+> >> >>>> using custom ids to bind them to custom vendor resources. For ins=
+tance,
+> >> >>>> it allow to assign a group of queues to a specific interrupti in =
+order
+> >> >>>> to dispatch notifications.
+> >> >>>>
+> >> >>>> Signed-off-by: Clement Leger <cleger@kalray.eu>
+> >> >>>> ---
+> >> >>>>  drivers/remoteproc/remoteproc_core.c | 27 +++++++++++++++++++---=
+-----
+> >> >>>>  include/linux/remoteproc.h           |  1 +
+> >> >>>>  2 files changed, 20 insertions(+), 8 deletions(-)
+> >> >>>>
+> >> >>>> diff --git a/drivers/remoteproc/remoteproc_core.c
+> >> >>>> b/drivers/remoteproc/remoteproc_core.c
+> >> >>>> index 307df98347ba..b1485fcd0f11 100644
+> >> >>>> --- a/drivers/remoteproc/remoteproc_core.c
+> >> >>>> +++ b/drivers/remoteproc/remoteproc_core.c
+> >> >>>> @@ -351,14 +351,27 @@ int rproc_alloc_vring(struct rproc_vdev *rv=
+dev, int i)
+> >> >>>>         /*
+> >> >>>>          * Assign an rproc-wide unique index for this vring
+> >> >>>>          * TODO: assign a notifyid for rvdev updates as well
+> >> >>>> -        * TODO: support predefined notifyids (via resource table=
+)
+> >> >>>>          */
+> >> >>>> -       ret =3D idr_alloc(&rproc->notifyids, rvring, 0, 0, GFP_KE=
+RNEL);
+> >> >>>> -       if (ret < 0) {
+> >> >>>> -               dev_err(dev, "idr_alloc failed: %d\n", ret);
+> >> >>>> -               return ret;
+> >> >>>> +       if (rsc->vring[i].notifyid =3D=3D FW_RSC_NOTIFY_ID_ANY) {
+> >> >>>> +               ret =3D idr_alloc(&rproc->notifyids, rvring, 0, 0=
+, GFP_KERNEL);
+> >> >>>> +               if (ret < 0) {
+> >> >>>> +                       dev_err(dev, "idr_alloc failed: %d\n", re=
+t);
+> >> >>>> +                       return ret;
+> >> >>>> +               }
+> >> >>>> +               notifyid =3D ret;
+> >> >>>> +
+> >> >>>> +               /* Let the rproc know the notifyid of this vring.=
+*/
+> >> >>>> +               rsc->vring[i].notifyid =3D notifyid;
+> >> >>>> +       } else {
+> >> >>>> +               /* Reserve requested notify_id */
+> >> >>>> +               notifyid =3D rsc->vring[i].notifyid;
+> >> >>>> +               ret =3D idr_alloc(&rproc->notifyids, rvring, noti=
+fyid,
+> >> >>>> +                               notifyid + 1, GFP_KERNEL);
+> >> >>>> +               if (ret < 0) {
+> >> >>>> +                       dev_err(dev, "idr_alloc failed: %d\n", re=
+t);
+> >> >>>> +                       return ret;
+> >> >>>> +               }
+> >> >>>>         }
+> >> >>>> -       notifyid =3D ret;
+> >> >>>>
+> >> >>>>         /* Potentially bump max_notifyid */
+> >> >>>>         if (notifyid > rproc->max_notifyid)
+> >> >>>> @@ -366,8 +379,6 @@ int rproc_alloc_vring(struct rproc_vdev *rvde=
+v, int i)
+> >> >>>>
+> >> >>>>         rvring->notifyid =3D notifyid;
+> >> >>>>
+> >> >>>> -       /* Let the rproc know the notifyid of this vring.*/
+> >> >>>> -       rsc->vring[i].notifyid =3D notifyid;
+> >> >>>>         return 0;
+> >> >>>>  }
+> >> >>> The rproc_free_vring function resets the notifyid to -1 on free.
+> >> >>> This could generate a side effect if the resource table is not rel=
+oaded.
+> >> >>
+> >> >> Oh indeed, I did not thought of that. What would you recommend ?
+> >> >> If using -1 in free vring, notify ids will be reallocated at next
+> >> >> round.
+> >> > Regarding the code i'm not sure that it is useful to reset the notif=
+yID to -1 on
+> >> > free.
+> >
+> > I'm not sure setting notifyid to -1 in rproc_free_vring() is such a big=
+ problem.
+> > No matter the code path I look at, if rproc_free_vring() is called some=
+thing
+> > serious has happened and the resource table will be reloaded if another=
+ attempt
+> > at booting the remote processor is done.  It can also be that a gracefu=
+l
+> > shutdown is underway, in which case the resource table will be reloaded=
+ anyway
+> > if/when the slave is brought back in service.
+> >
+> > Let me know if I'm missing a scenario.
+>
+> No, you are actually right
+>
+> >
+> > To me the real problem is if a FW image has set the notifyids in the re=
+source
+> > table to 0xffffffff, thinking they will be overwritten.  In that case t=
+hings
+> > will really south.
+>
+> Hum, if set to 0xFFFFFFFF, then they will be assigned dynamically and upd=
+ated
+> in the resource table (with this patch). But your probably mean existing =
+code,
+> right ?
 
-This commit introduces a new kernel module named DAMON.  Note that this
-commit is implementing only the stub for the module load/unload, basic
-data structures, and simple manipulation functions of the structures to
-keep the size of commit small.  The core mechanisms of DAMON will be
-implemented one by one by following commits.
+My apologies for not expressing myself clearly here - let me try again.
 
-Brief Introduction
-==================
+At this time notifyids in the firmware's resource table can be set to
+anything because the code will overwrite them.  With this patch
+firmware images that don't have their notifyids set to -1 will see a
+change in how ids are assigned, something that has the potential to
+break user space.
 
-DAMON is a kernel module that would allow users to monitor the actual
-memory access pattern of specific user-space processes.  It aims to be
-1) accurate enough to be useful for performance-centric domains, and 2)
-sufficiently light-weight so that it can be applied online.
+Regards,
+Mathieu
 
-For the goals, DAMON will utilize its two core mechanisms, called
-region-based sampling and adaptive regions adjustment.  The region-based
-sampling allows users to make their own trade-off between the quality
-and the overhead of the monitoring and set the upperbound of the
-monitoring overhead.  Further, the adaptive regions adjustment mechanism
-makes DAMON to maximize the quality and minimize the overhead with its
-best efforts while preserving the users configured trade-off.
-
-Please note that the term 'memory' in this context means 'main memory'.
-It also assumes that it would usually utilizes the middle level speed
-memory devices such as DRAMs or NVRAMs.  CPU caches or storage devices
-are not DAMON's concern, as those are too fast or too slow to be in
-DAMON's scope.
-
-Expected Use-cases
-==================
-
-A straightforward usecase of DAMON would be the program behavior
-analysis.  With the DAMON output, users can confirm whether the program
-is running as intended or not.  This will be useful for debuggings and
-tests of design points.
-
-The monitored results can also be useful for counting the dynamic
-working set size of workloads.  For the administration of memory
-overcommitted systems or selection of the environments (e.g., containers
-providing different amount of memory) for your workloads, this will be
-useful.
-
-If you are a programmer, you can optimize your program by managing the
-memory based on the actual data access pattern.  For example, you can
-identify the dynamic hotness of your data using DAMON and call
-``mlock()`` to keep your hot data in DRAM, or call ``madvise()`` with
-``MADV_PAGEOUT`` to proactively reclaim cold data.  Even though your
-program is guaranteed to not encounter memory pressure, you can still
-improve the performance by applying the DAMON outputs for call of
-``MADV_HUGEPAGE`` and ``MADV_NOHUGEPAGE``.  More creative optimizations
-would be possible.  Our evaluations of DAMON includes a straightforward
-optimization using the ``mlock()``.  Please refer to the below
-Evaluation section for more detail.
-
-As DAMON incurs very low overhead, such optimizations can be applied not
-only offline, but also online.  Also, there is no reason to limit such
-optimizations to the user space.  Several parts of the kernel's memory
-management mechanisms could be also optimized using DAMON. The
-reclamation, the THP (de)promotion decisions, and the compaction would
-be such a candidates.  Nevertheless, current version of DAMON is not
-highly optimized for the online/in-kernel uses.
-
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- MAINTAINERS |   6 ++
- mm/Kconfig  |  12 +++
- mm/Makefile |   1 +
- mm/damon.c  | 223 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 242 insertions(+)
- create mode 100644 mm/damon.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 97e3ce930083..c8db500a182f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4583,6 +4583,12 @@ F:	net/ax25/ax25_out.c
- F:	net/ax25/ax25_timer.c
- F:	net/ax25/sysctl_net_ax25.c
- 
-+DATA ACCESS MONITOR
-+M:	SeongJae Park <sjpark@amazon.de>
-+L:	linux-mm@kvack.org
-+S:	Maintained
-+F:	mm/damon.c
-+
- DAVICOM FAST ETHERNET (DMFE) NETWORK DRIVER
- L:	netdev@vger.kernel.org
- S:	Orphan
-diff --git a/mm/Kconfig b/mm/Kconfig
-index a5dae9a7eb51..35813e0d0e28 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -736,4 +736,16 @@ config ARCH_HAS_PTE_SPECIAL
- config ARCH_HAS_HUGEPD
- 	bool
- 
-+config DAMON
-+	tristate "Data Access Monitor"
-+	depends on MMU
-+	default y
-+	help
-+	  Provides data access monitoring.
-+
-+	  DAMON is a kernel module that allows users to monitor the actual
-+	  memory access pattern of specific user-space processes.  It aims to
-+	  be 1) accurate enough to be useful for performance-centric domains,
-+	  and 2) sufficiently light-weight so that it can be applied online.
-+
- endmenu
-diff --git a/mm/Makefile b/mm/Makefile
-index d996846697ef..6c3c7c364015 100644
---- a/mm/Makefile
-+++ b/mm/Makefile
-@@ -107,3 +107,4 @@ obj-$(CONFIG_PERCPU_STATS) += percpu-stats.o
- obj-$(CONFIG_ZONE_DEVICE) += memremap.o
- obj-$(CONFIG_HMM_MIRROR) += hmm.o
- obj-$(CONFIG_MEMFD_CREATE) += memfd.o
-+obj-$(CONFIG_DAMON) += damon.o
-diff --git a/mm/damon.c b/mm/damon.c
-new file mode 100644
-index 000000000000..064ec1f6ded9
---- /dev/null
-+++ b/mm/damon.c
-@@ -0,0 +1,223 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Data Access Monitor
-+ *
-+ * Copyright 2019 Amazon.com, Inc. or its affiliates.  All rights reserved.
-+ *
-+ * Author: SeongJae Park <sjpark@amazon.de>
-+ */
-+
-+#define pr_fmt(fmt) "damon: " fmt
-+
-+#include <linux/mm.h>
-+#include <linux/module.h>
-+#include <linux/random.h>
-+#include <linux/slab.h>
-+
-+#define damon_get_task_struct(t) \
-+	(get_pid_task(find_vpid(t->pid), PIDTYPE_PID))
-+
-+#define damon_next_region(r) \
-+	(container_of(r->list.next, struct damon_region, list))
-+
-+#define damon_prev_region(r) \
-+	(container_of(r->list.prev, struct damon_region, list))
-+
-+#define damon_for_each_region(r, t) \
-+	list_for_each_entry(r, &t->regions_list, list)
-+
-+#define damon_for_each_region_safe(r, next, t) \
-+	list_for_each_entry_safe(r, next, &t->regions_list, list)
-+
-+#define damon_for_each_task(t) \
-+	list_for_each_entry(t, &damon_tasks_list, list)
-+
-+#define damon_for_each_task_safe(t, next) \
-+	list_for_each_entry_safe(t, next, &damon_tasks_list, list)
-+
-+/* Represents a monitoring target region on the virtual address space */
-+struct damon_region {
-+	unsigned long vm_start;
-+	unsigned long vm_end;
-+	unsigned long sampling_addr;
-+	unsigned int nr_accesses;
-+	struct list_head list;
-+};
-+
-+/* Represents a monitoring target task */
-+struct damon_task {
-+	unsigned long pid;
-+	struct list_head regions_list;
-+	struct list_head list;
-+};
-+
-+/* List of damon_task objects */
-+static LIST_HEAD(damon_tasks_list);
-+
-+static struct rnd_state rndseed;
-+/* Get a random number in [l, r) */
-+#define damon_rand(l, r) (l + prandom_u32_state(&rndseed) % (r - l))
-+
-+/*
-+ * Construct a damon_region struct
-+ *
-+ * Returns the pointer to the new struct if success, or NULL otherwise
-+ */
-+static struct damon_region *damon_new_region(unsigned long vm_start,
-+					unsigned long vm_end)
-+{
-+	struct damon_region *ret;
-+
-+	ret = kmalloc(sizeof(struct damon_region), GFP_KERNEL);
-+	if (!ret)
-+		return NULL;
-+	ret->vm_start = vm_start;
-+	ret->vm_end = vm_end;
-+	ret->nr_accesses = 0;
-+	ret->sampling_addr = damon_rand(vm_start, vm_end);
-+	INIT_LIST_HEAD(&ret->list);
-+
-+	return ret;
-+}
-+
-+/*
-+ * Add a region between two other regions
-+ */
-+static inline void damon_add_region(struct damon_region *r,
-+		struct damon_region *prev, struct damon_region *next)
-+{
-+	__list_add(&r->list, &prev->list, &next->list);
-+}
-+
-+/*
-+ * Append a region to a task's list of regions
-+ */
-+static void damon_add_region_tail(struct damon_region *r, struct damon_task *t)
-+{
-+	list_add_tail(&r->list, &t->regions_list);
-+}
-+
-+/*
-+ * Delete a region from its list
-+ */
-+static void damon_del_region(struct damon_region *r)
-+{
-+	list_del(&r->list);
-+}
-+
-+/*
-+ * De-allocate a region
-+ */
-+static void damon_free_region(struct damon_region *r)
-+{
-+	kfree(r);
-+}
-+
-+static void damon_destroy_region(struct damon_region *r)
-+{
-+	damon_del_region(r);
-+	damon_free_region(r);
-+}
-+
-+/*
-+ * Construct a damon_task struct
-+ *
-+ * Returns the pointer to the new struct if success, or NULL otherwise
-+ */
-+static struct damon_task *damon_new_task(unsigned long pid)
-+{
-+	struct damon_task *t;
-+
-+	t = kmalloc(sizeof(struct damon_task), GFP_KERNEL);
-+	if (!t)
-+		return NULL;
-+	t->pid = pid;
-+	INIT_LIST_HEAD(&t->regions_list);
-+
-+	return t;
-+}
-+
-+/* Returns n-th damon_region of the given task */
-+struct damon_region *damon_nth_region_of(struct damon_task *t, unsigned int n)
-+{
-+	struct damon_region *r;
-+	unsigned int i;
-+
-+	i = 0;
-+	damon_for_each_region(r, t) {
-+		if (i++ == n)
-+			return r;
-+	}
-+	return NULL;
-+}
-+
-+static void damon_add_task_tail(struct damon_task *t)
-+{
-+	list_add_tail(&t->list, &damon_tasks_list);
-+}
-+
-+static void damon_del_task(struct damon_task *t)
-+{
-+	list_del(&t->list);
-+}
-+
-+static void damon_free_task(struct damon_task *t)
-+{
-+	struct damon_region *r, *next;
-+
-+	damon_for_each_region_safe(r, next, t)
-+		damon_free_region(r);
-+	kfree(t);
-+}
-+
-+static void damon_destroy_task(struct damon_task *t)
-+{
-+	damon_del_task(t);
-+	damon_free_task(t);
-+}
-+
-+/*
-+ * Returns number of monitoring target tasks
-+ */
-+static unsigned int nr_damon_tasks(void)
-+{
-+	struct damon_task *t;
-+	unsigned int ret = 0;
-+
-+	damon_for_each_task(t)
-+		ret++;
-+	return ret;
-+}
-+
-+/*
-+ * Returns the number of target regions for a given target task
-+ */
-+static unsigned int nr_damon_regions(struct damon_task *t)
-+{
-+	struct damon_region *r;
-+	unsigned int ret = 0;
-+
-+	damon_for_each_region(r, t)
-+		ret++;
-+	return ret;
-+}
-+
-+static int __init damon_init(void)
-+{
-+	pr_info("init\n");
-+
-+	prandom_seed_state(&rndseed, 42);
-+	return 0;
-+}
-+
-+static void __exit damon_exit(void)
-+{
-+	pr_info("exit\n");
-+}
-+
-+module_init(damon_init);
-+module_exit(damon_exit);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("SeongJae Park <sjpark@amazon.de>");
-+MODULE_DESCRIPTION("DAMON: Data Access MONitor");
--- 
-2.17.1
-
+>
+> >
+> >> > In current version, on alloc, the notifyID is overwriten without che=
+ck.
+> >> > And as vdev status is updated, vring struct in resource table should=
+ be
+> >> > considered as invalid
+> >> > Except if i missed a usecase/race condition...
+> >> >
+> >> >>
+> >> >> I was also worried that it would break some existing user applicati=
+ons
+> >> >> which uses "0" as a notify id in vring but expect the id to be
+> >> >> allocated dynamically. With my modification, it means it will try t=
+o
+> >> >> use "0" as a predefined id, leading to allocation failure.
+> >
+> > From my point of view they will have been lucky for all this time.  Eve=
+n with
+> > a new version of the resource table (which I think is the right way go)
+> > cases like this will break.
+>
+> Agreed, and actually, I may have missread some code. I can't find were I =
+read
+> that. By the way, is there any documentation which state the allowed valu=
+es of
+> notify ids ?
+>
+> >
+> > Thanks,
+> > Mathieu
+> >
+> >> >>
+> >> > Yes this could introduce regression for firmware that sets 0 as defa=
+ult value.
+> >> > Probably better to introduce this patch with a new version of the re=
+source table
+> >> > :)
+> >>
+> >> Understood ;)
+> >>
+> >> Regards,
+> >>
+> >> Cl=C3=A9ment
+> >>
+> >> >
+> >> > Regards
+> >> > Arnaud
+> >> >>>
+> >> >>>>
+> >> >>>> diff --git a/include/linux/remoteproc.h b/include/linux/remotepro=
+c.h
+> >> >>>> index 16ad66683ad0..dcae3394243e 100644
+> >> >>>> --- a/include/linux/remoteproc.h
+> >> >>>> +++ b/include/linux/remoteproc.h
+> >> >>>> @@ -123,6 +123,7 @@ enum fw_resource_type {
+> >> >>>>  };
+> >> >>>>
+> >> >>>>  #define FW_RSC_ADDR_ANY (-1)
+> >> >>>> +#define FW_RSC_NOTIFY_ID_ANY (-1)This define can also be used in
+> >> >>>> rproc_free_vring
+> >> >>
+> >> >> Indeed.
+> >> >>
+> >> >> Thanks for your review.
+> >> >>
+> >> >> Regards,
+> >> >>
+> >> >> Cl=C3=A9ment
+> >> >>
+> >> >>>
+> >> >>> Regards,
+> >> >>> Arnaud
+> >> >>>>
+> >> >>>>  /**
+> > > > >>>   * struct fw_rsc_carveout - physically contiguous memory reque=
+st
