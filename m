@@ -2,106 +2,299 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06BB0C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F351EC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:21:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE2C82073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:17:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B74522073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:21:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="DPEN5idy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CvqTeXhX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726407AbgATGRz (ORCPT
+        id S1726451AbgATGVJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 01:17:55 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:14659 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgATGRy (ORCPT
+        Mon, 20 Jan 2020 01:21:09 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:34650 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbgATGVI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 01:17:54 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e2545e80000>; Sun, 19 Jan 2020 22:17:12 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sun, 19 Jan 2020 22:17:54 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sun, 19 Jan 2020 22:17:54 -0800
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 20 Jan
- 2020 06:17:53 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 20 Jan 2020 06:17:53 +0000
-Received: from audio.nvidia.com (Not Verified[10.24.34.185]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e25460f0000>; Sun, 19 Jan 2020 22:17:52 -0800
-From:   Sameer Pujar <spujar@nvidia.com>
-To:     <oder_chiou@realtek.com>, <bardliao@realtek.com>, <tiwai@suse.com>,
-        <perex@perex.cz>
-CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        Sameer Pujar <spujar@nvidia.com>
-Subject: [PATCH] ASoC: rt5659: add S32_LE format
-Date:   Mon, 20 Jan 2020 11:47:39 +0530
-Message-ID: <1579501059-27936-1-git-send-email-spujar@nvidia.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 20 Jan 2020 01:21:08 -0500
+Received: by mail-qk1-f195.google.com with SMTP id j9so29127135qkk.1;
+        Sun, 19 Jan 2020 22:21:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=HzgwQjk23FH9alWYUZE6q0CWsQkjBSTe2jUKbbfrMf8=;
+        b=CvqTeXhX9F6eVJZp+SYzLBQGk1j0R2KFNWPCi2rapCMh4k2e1ccT//93/BPrWl82y1
+         vGarXBJzdbATNWwv/w9OlWb+ZVhBtDiyan/veftuq9TC5NB1wKROhJDgjUBLx/V5dUZc
+         0Q9/RlS3HmjPLQPgJctAqVzZIicj/l8DEDtcVKSn7KnbOdwd+4jWGhZI6KbpxLNBXEmt
+         MQqnbeDlWSshcgQOKRHQ181Hhbj7+ZqVt6uq82LMofX5Nk20WVSmM99TD+NwzwTMgYLj
+         PJP0O6DGp9v8ZdizZZdoFOu7lAfFobH/Je2qQXRCAC2D2J7+d/WnDcDgQsOlve/gUbys
+         JpeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=HzgwQjk23FH9alWYUZE6q0CWsQkjBSTe2jUKbbfrMf8=;
+        b=iJZ3V8n3haQHUpA4YYze4a8YBOFdIOHUlKDJKyVxoYJmkdcMtuCoS7X1fdznTK78b3
+         jRvZcasBZT1etMtzara6WS/l00uS+GXvAFyYBxQ502X99a3WQjekUvJqp1mb0nuP1w6A
+         LiDiLBitNS7QnNimpvOtU49BgiETGPuz8fcq4aclG9DJ74gGmdz2PXbNOwrP+4cLjDdk
+         FF3lKmAoCtbXO6iFFHsN6E9n/yUhVRCVjoufy89VNq7SlQnUKJ6DAHXn/tw2/aj45mj1
+         idigrvaFo+JgUxxllVVmgwjMpbl96+nTnSSK1PpfQCIu+mot217iWy8vV5W0xRNDZMZC
+         Lc7g==
+X-Gm-Message-State: APjAAAUTNUXCUQY6d9H4LkkfFZ66QqzD6+ooSQQ2Qa5X5wtikuKJ8vPz
+        Hb2RiJBwhwphHxhsAu5Lc++iSaUWmcmpHp6G/Cg=
+X-Google-Smtp-Source: APXvYqyf+AOg23rg7WeXYxqzp4r3mgJLIWtxn6tckbkEE2rtwGF9JOexPu3kHucfyEKTtHP4YPeGHwAWjvVI+3UbALs=
+X-Received: by 2002:a05:620a:5ae:: with SMTP id q14mr46460647qkq.437.1579501266863;
+ Sun, 19 Jan 2020 22:21:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1579501032; bh=y0KuUHnikrqaYl+AkuZgAWArMBLX50J5YFwz5WfJk08=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:Content-Type;
-        b=DPEN5idyJgzm2UDuPOm/OFoQREwFgQerUJtKuDcWM5En/svuJEE3lPbniYiVh6lTU
-         zOIPi3LEjcDeT42jhY+iQ724jJX/K24V2wezlqrSlN0tknEyYvoF27jOfiEgLNsuM+
-         xeRQBem8lqAp+SdfJCwBRGYomAwl1M1BlQ2CB4hLgmb76UF+1kFHepZcqYESjywQhB
-         eptOA3axpayafuiDhb+G4gORb+qWi73maMWfP93qjEc1NlARp7isRsf0RdEE6YLyw7
-         qbu/z8z0f0SLibcBZVFJ08KHzDaRI7derNbbVkUN7gm/QBsxxf2KlwqzoOw44r/Etd
-         gd1d5iAnsJoog==
+References: <157926819690.1555735.10756593211671752826.stgit@toke.dk> <157926820677.1555735.5437255599683298212.stgit@toke.dk>
+In-Reply-To: <157926820677.1555735.5437255599683298212.stgit@toke.dk>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Sun, 19 Jan 2020 22:20:55 -0800
+Message-ID: <CAEf4Bzb9zUmhxTyYahJqySJzgfyB-zMEd+o4ybv=a8-t+iZS4w@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v4 09/10] selftests: Remove tools/lib/bpf from
+ include path
+To:     =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-rdma@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ALC5659 supports maximum data length of 24-bit. Currently driver supports
-S24_LE which is a 32-bit container with valid data in [23:0] and 0s in MSB.
-S24_3LE is not commonly used and is hard to find audio streams with this
-format. Also many SoC HW do not support S24_LE and S32_LE is used in
-general. The 24-bit data can be represented in S32_LE [31:8] and 0s are
-padded in LSB.
+On Fri, Jan 17, 2020 at 5:43 AM Toke H=C3=B8iland-J=C3=B8rgensen <toke@redh=
+at.com> wrote:
+>
+> From: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
+>
+> To make sure no new files are introduced that doesn't include the bpf/
+> prefix in its #include, remove tools/lib/bpf from the include path
+> entirely.
+>
+> Instead, we introduce a new header files directory under the scratch tool=
+s/
+> dir, and add a rule to run the 'install_headers' rule from libbpf to have=
+ a
+> full set of consistent libbpf headers in $(OUTPUT)/tools/include/bpf, and
+> then use $(OUTPUT)/tools/include as the include path for selftests.
+>
+> For consistency we also make sure we put all the scratch build files from
+> other bpftool and libbpf into tools/build/, so everything stays within
+> selftests/.
+>
+> Signed-off-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
+> ---
+>  tools/testing/selftests/bpf/.gitignore |    2 +
+>  tools/testing/selftests/bpf/Makefile   |   49 +++++++++++++++++++++-----=
+------
+>  2 files changed, 33 insertions(+), 18 deletions(-)
+>
+> diff --git a/tools/testing/selftests/bpf/.gitignore b/tools/testing/selft=
+ests/bpf/.gitignore
+> index 1d14e3ab70be..8c9eac626996 100644
+> --- a/tools/testing/selftests/bpf/.gitignore
+> +++ b/tools/testing/selftests/bpf/.gitignore
+> @@ -39,4 +39,4 @@ test_cpp
+>  /no_alu32
+>  /bpf_gcc
+>  /tools
+> -bpf_helper_defs.h
 
-This patch adds S32_LE to ALC5659 driver and data length for this is set
-to 24 as per codec's maximum data length support. This helps to play
-24-bit audio, packed in S32_LE, on HW which do not support S24_LE.
+can you please also drop libbpf.pc and libbpf.so.* rules from .gitignore?
 
-Signed-off-by: Sameer Pujar <spujar@nvidia.com>
----
- sound/soc/codecs/rt5659.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+> +
+> diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftes=
+ts/bpf/Makefile
+> index 858d4e3369ad..ac0292a82fdc 100644
+> --- a/tools/testing/selftests/bpf/Makefile
+> +++ b/tools/testing/selftests/bpf/Makefile
+> @@ -20,8 +20,8 @@ CLANG         ?=3D clang
+>  LLC            ?=3D llc
+>  LLVM_OBJCOPY   ?=3D llvm-objcopy
+>  BPF_GCC                ?=3D $(shell command -v bpf-gcc;)
+> -CFLAGS +=3D -g -Wall -O2 $(GENFLAGS) -I$(CURDIR) -I$(APIDIR) -I$(LIBDIR)=
+  \
+> -         -I$(BPFDIR) -I$(GENDIR) -I$(TOOLSINCDIR)                      \
+> +CFLAGS +=3D -g -Wall -O2 $(GENFLAGS) -I$(CURDIR) -I$(APIDIR)            =
+  \
 
-diff --git a/sound/soc/codecs/rt5659.c b/sound/soc/codecs/rt5659.c
-index fc74dd63..f910ddf 100644
---- a/sound/soc/codecs/rt5659.c
-+++ b/sound/soc/codecs/rt5659.c
-@@ -3339,6 +3339,7 @@ static int rt5659_hw_params(struct snd_pcm_substream *substream,
- 		val_len |= RT5659_I2S_DL_20;
- 		break;
- 	case 24:
-+	case 32:
- 		val_len |= RT5659_I2S_DL_24;
- 		break;
- 	case 8:
-@@ -3733,7 +3734,8 @@ static int rt5659_resume(struct snd_soc_component *component)
- 
- #define RT5659_STEREO_RATES SNDRV_PCM_RATE_8000_192000
- #define RT5659_FORMATS (SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S20_3LE | \
--		SNDRV_PCM_FMTBIT_S24_LE | SNDRV_PCM_FMTBIT_S8)
-+		SNDRV_PCM_FMTBIT_S24_LE | SNDRV_PCM_FMTBIT_S32_LE | \
-+		SNDRV_PCM_FMTBIT_S8)
- 
- static const struct snd_soc_dai_ops rt5659_aif_dai_ops = {
- 	.hw_params = rt5659_hw_params,
--- 
-2.7.4
+extra space here
 
+> +         -I$(INCLUDE_DIR) -I$(GENDIR) -I$(LIBDIR) -I$(TOOLSINCDIR)     \
+>           -Dbpf_prog_load=3Dbpf_prog_test_load                           =
+ \
+>           -Dbpf_load_program=3Dbpf_test_load_program
+>  LDLIBS +=3D -lcap -lelf -lz -lrt -lpthread
+> @@ -97,11 +97,15 @@ OVERRIDE_TARGETS :=3D 1
+>  override define CLEAN
+>         $(call msg,CLEAN)
+>         $(RM) -r $(TEST_GEN_PROGS) $(TEST_GEN_PROGS_EXTENDED) $(TEST_GEN_=
+FILES) $(EXTRA_CLEAN)
+> -       $(MAKE) -C $(BPFDIR) OUTPUT=3D$(OUTPUT)/ clean
+>  endef
+>
+>  include ../lib.mk
+>
+> +SCRATCH_DIR :=3D $(OUTPUT)/tools
+> +BUILD_DIR :=3D $(SCRATCH_DIR)/build
+> +INCLUDE_DIR :=3D $(SCRATCH_DIR)/include
+> +INCLUDE_BPF :=3D $(INCLUDE_DIR)/bpf
+> +
+>  # Define simple and short `make test_progs`, `make test_sysctl`, etc tar=
+gets
+>  # to build individual tests.
+>  # NOTE: Semicolon at the end is critical to override lib.mk's default st=
+atic
+> @@ -120,7 +124,7 @@ $(OUTPUT)/urandom_read: urandom_read.c
+>         $(call msg,BINARY,,$@)
+>         $(CC) -o $@ $< -Wl,--build-id
+>
+> -$(OUTPUT)/test_stub.o: test_stub.c
+> +$(OUTPUT)/test_stub.o: test_stub.c $(INCLUDE_BPF)
+>         $(call msg,CC,,$@)
+>         $(CC) -c $(CFLAGS) -o $@ $<
+>
+> @@ -133,7 +137,7 @@ $(OUTPUT)/runqslower: force
+>         $(Q)$(MAKE) $(submake_extras) -C $(TOOLSDIR)/bpf/runqslower     \
+>                     OUTPUT=3D$(OUTPUT)/tools/ VMLINUX_BTF=3D$(VMLINUX_BTF=
+)
+>
+> -BPFOBJ :=3D $(OUTPUT)/libbpf.a
+> +BPFOBJ :=3D $(BUILD_DIR)/libbpf/libbpf.a
+>
+>  $(TEST_GEN_PROGS) $(TEST_GEN_PROGS_EXTENDED): $(OUTPUT)/test_stub.o $(BP=
+FOBJ)
+>
+> @@ -159,17 +163,28 @@ force:
+>  DEFAULT_BPFTOOL :=3D $(OUTPUT)/tools/sbin/bpftool
+>  BPFTOOL ?=3D $(DEFAULT_BPFTOOL)
+>
+> -$(DEFAULT_BPFTOOL): force
+> -       $(Q)$(MAKE) $(submake_extras)  -C $(BPFTOOLDIR)                  =
+     \
+> +$(BUILD_DIR)/libbpf $(BUILD_DIR)/bpftool $(INCLUDE_DIR):
+> +       $(call msg,MKDIR,,$@)
+> +       mkdir -p $@
+> +
+> +$(DEFAULT_BPFTOOL): force | $(BUILD_DIR)/bpftool
+> +       $(Q)$(MAKE) $(submake_extras)  -C $(BPFTOOLDIR)         \
+
+slash alignment
+
+
+> +                   OUTPUT=3D$(BUILD_DIR)/bpftool/                       =
+ \
+>                     prefix=3D DESTDIR=3D$(OUTPUT)/tools/ install
+>
+> -$(BPFOBJ): force
+> -       $(Q)$(MAKE) $(submake_extras) -C $(BPFDIR) OUTPUT=3D$(OUTPUT)/
+> +$(BPFOBJ): force | $(BUILD_DIR)/libbpf
+> +       $(Q)$(MAKE) $(submake_extras) -C $(BPFDIR) \
+> +               OUTPUT=3D$(BUILD_DIR)/libbpf/
+> +
+> +$(INCLUDE_BPF): $(BPFOBJ) | $(INCLUDE_DIR)
+> +       $(Q)$(MAKE) $(submake_extras) -C $(BPFDIR) install_headers \
+> +               OUTPUT=3D$(BUILD_DIR)/libbpf/ DESTDIR=3D$(SCRATCH_DIR) pr=
+efix=3D
+> +
+> +BPF_HELPERS :=3D $(or $(wildcard $(INCLUDE_BPF)/bpf_*.h),$(INCLUDE_BPF))
+> +ifneq ($(BPF_HELPERS),$(INCLUDE_BPF))
+> +$(BPF_HELPERS): $(INCLUDE_BPF)
+> +endif
+>
+> -BPF_HELPERS :=3D $(OUTPUT)/bpf_helper_defs.h $(wildcard $(BPFDIR)/bpf_*.=
+h)
+> -$(OUTPUT)/bpf_helper_defs.h: $(BPFOBJ)
+> -       $(Q)$(MAKE) $(submake_extras) -C $(BPFDIR)                       =
+     \
+> -                   OUTPUT=3D$(OUTPUT)/ $(OUTPUT)/bpf_helper_defs.h
+>
+
+I really-really didn't like this alternating dependency on directory
+or a set of file, depending on current state of those temporary
+directories. Then also this ugly check to avoid circular dependency.
+All that seemed wrong. So I played a bit with how to achieve the same
+differently, and here's what I came up with, which I like a bit
+better. What do you think?
+
+$(BPFOBJ): $(wildcard $(BPFDIR)/*.c $(BPFDIR)/*.h $(BPFDIR)/Makefile)      =
+    \
+           ../../../include/uapi/linux/bpf.h                               =
+    \
+           | $(INCLUDE_DIR) $(BUILD_DIR)/libbpf
+        $(Q)$(MAKE) $(submake_extras) -C $(BPFDIR) OUTPUT=3D$(BUILD_DIR)/li=
+bbpf/ \
+                    DESTDIR=3D$(SCRATCH_DIR) prefix=3D all install_headers
+
+So, essentially, just make sure that we install local copies of
+headers whenever libbpf.a needs to be re-built.
+../../../include/uapi/linux/bpf.h ensures we don't miss uapi header
+changes as well. Now anything that uses libbpf headers will need to
+depend on $(BPFOBJ) and will automatically get up-to-date local copies
+of headers.
+
+This seems much simpler. Please give it a try, thanks!
+
+>  # Get Clang's default includes on this system, as opposed to those seen =
+by
+>  # '-target bpf'. This fixes "missing" files on some architectures/distro=
+s,
+> @@ -189,8 +204,8 @@ MENDIAN=3D$(if $(IS_LITTLE_ENDIAN),-mlittle-endian,-m=
+big-endian)
+>
+>  CLANG_SYS_INCLUDES =3D $(call get_sys_includes,$(CLANG))
+>  BPF_CFLAGS =3D -g -D__TARGET_ARCH_$(SRCARCH) $(MENDIAN)                 =
+ \
+> -            -I$(OUTPUT) -I$(CURDIR) -I$(CURDIR)/include/uapi           \
+> -            -I$(APIDIR) -I$(LIBDIR) -I$(BPFDIR) -I$(abspath $(OUTPUT)/..=
+/usr/include)
+> +            -I$(INCLUDE_DIR) -I$(CURDIR) -I$(CURDIR)/include/uapi      \
+> +            -I$(APIDIR) -I$(abspath $(OUTPUT)/../usr/include)
+>
+>  CLANG_CFLAGS =3D $(CLANG_SYS_INCLUDES) \
+>                -Wno-compare-distinct-pointer-types
+> @@ -392,7 +407,7 @@ $(OUTPUT)/test_cpp: test_cpp.cpp $(OUTPUT)/test_core_=
+extern.skel.h $(BPFOBJ)
+>         $(call msg,CXX,,$@)
+>         $(CXX) $(CFLAGS) $^ $(LDLIBS) -o $@
+>
+> -EXTRA_CLEAN :=3D $(TEST_CUSTOM_PROGS)                                   =
+ \
+> +EXTRA_CLEAN :=3D $(TEST_CUSTOM_PROGS) $(SCRATCH_DIR)                    =
+ \
+>         prog_tests/tests.h map_tests/tests.h verifier/tests.h           \
+>         feature                                                         \
+> -       $(addprefix $(OUTPUT)/,*.o *.skel.h no_alu32 bpf_gcc tools)
+> +       $(addprefix $(OUTPUT)/,*.o *.skel.h no_alu32 bpf_gcc)
+>
