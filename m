@@ -2,109 +2,115 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B889FC32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:23:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3562BC32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:25:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 916C922522
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:23:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF2AC217F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 22:25:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728981AbgATWXl (ORCPT
+        id S1727144AbgATWZb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 17:23:41 -0500
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:44068 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727018AbgATWXl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 17:23:41 -0500
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by kvm5.telegraphics.com.au (Postfix) with ESMTP id 0FECF27E71;
-        Mon, 20 Jan 2020 17:23:36 -0500 (EST)
-Date:   Tue, 21 Jan 2020 09:23:34 +1100 (AEDT)
-From:   Finn Thain <fthain@telegraphics.com.au>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-cc:     "David S. Miller" <davem@davemloft.net>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Chris Zankel <chris@zankel.net>,
-        Laurent Vivier <laurent@vivier.eu>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net 04/19] net/sonic: Add mutual exclusion for accessing
- shared state
-In-Reply-To: <CAMuHMdWvJ975X7zz1C=1Sq=Yuf9nYY1zxWaJ=XCXJukfP=nygg@mail.gmail.com>
-Message-ID: <alpine.LNX.2.21.1.2001210914150.8@nippy.intranet>
-References: <cover.1579474569.git.fthain@telegraphics.com.au> <b47662493a776811d4d457e5a75e18a7169aed23.1579474569.git.fthain@telegraphics.com.au> <CAMuHMdWvJ975X7zz1C=1Sq=Yuf9nYY1zxWaJ=XCXJukfP=nygg@mail.gmail.com>
+        Mon, 20 Jan 2020 17:25:31 -0500
+Received: from mga01.intel.com ([192.55.52.88]:60414 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726752AbgATWZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 17:25:30 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 14:25:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,343,1574150400"; 
+   d="scan'208";a="425300248"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga005.fm.intel.com with ESMTP; 20 Jan 2020 14:25:28 -0800
+Date:   Tue, 21 Jan 2020 06:25:40 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, yang.shi@linux.alibaba.com
+Subject: Re: [PATCH 1/8] mm/migrate.c: skip node check if done in last round
+Message-ID: <20200120222540.GA32314@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20200119030636.11899-1-richardw.yang@linux.intel.com>
+ <20200119030636.11899-2-richardw.yang@linux.intel.com>
+ <20200120093646.GL18451@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200120093646.GL18451@dhcp22.suse.cz>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jan 2020, Geert Uytterhoeven wrote:
+On Mon, Jan 20, 2020 at 10:36:46AM +0100, Michal Hocko wrote:
+>On Sun 19-01-20 11:06:29, Wei Yang wrote:
+>> Before move page to target node, we would check if the node id is valid.
+>> In case we would try to move pages to the same target node, it is not
+>> necessary to do the check each time.
+>> 
+>> This patch tries to skip the check if the node has been checked.
+>> 
+>> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+>> ---
+>>  mm/migrate.c | 19 +++++++++++--------
+>>  1 file changed, 11 insertions(+), 8 deletions(-)
+>> 
+>> diff --git a/mm/migrate.c b/mm/migrate.c
+>> index 430fdccc733e..ba7cf4fa43a0 100644
+>> --- a/mm/migrate.c
+>> +++ b/mm/migrate.c
+>> @@ -1612,15 +1612,18 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
+>>  			goto out_flush;
+>>  		addr = (unsigned long)untagged_addr(p);
+>>  
+>> -		err = -ENODEV;
+>> -		if (node < 0 || node >= MAX_NUMNODES)
+>> -			goto out_flush;
+>> -		if (!node_state(node, N_MEMORY))
+>> -			goto out_flush;
+>> +		/* Check node if it is not checked. */
+>> +		if (current_node == NUMA_NO_NODE || node != current_node) {
+>> +			err = -ENODEV;
+>> +			if (node < 0 || node >= MAX_NUMNODES)
+>> +				goto out_flush;
+>> +			if (!node_state(node, N_MEMORY))
+>> +				goto out_flush;
+>
+>This makes the code harder to read IMHO. The original code checks the
+>valid node first and it doesn't conflate that with the node caching
+>logic which your change does.
+>
 
-> Hi Finn,
-> 
-> On Mon, Jan 20, 2020 at 12:19 AM Finn Thain <fthain@telegraphics.com.au> wrote:
-> > The netif_stop_queue() call in sonic_send_packet() races with the
-> > netif_wake_queue() call in sonic_interrupt(). This causes issues
-> > like "NETDEV WATCHDOG: eth0 (macsonic): transmit queue 0 timed out".
-> > Fix this by disabling interrupts when accessing tx_skb[] and next_tx.
-> > Update a comment to clarify the synchronization properties.
-> >
-> > Fixes: efcce839360f ("[PATCH] macsonic/jazzsonic network drivers update")
-> > Tested-by: Stan Johnson <userm57@yahoo.com>
-> > Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-> 
-> Thanks for your patch!
-> 
-> > --- a/drivers/net/ethernet/natsemi/sonic.c
-> > +++ b/drivers/net/ethernet/natsemi/sonic.c
-> > @@ -242,7 +242,7 @@ static void sonic_tx_timeout(struct net_device *dev)
-> >   *   wake the tx queue
-> >   * Concurrently with all of this, the SONIC is potentially writing to
-> >   * the status flags of the TDs.
-> > - * Until some mutual exclusion is added, this code will not work with SMP. However,
-> > + * A spin lock is needed to make this work on SMP platforms. However,
-> >   * MIPS Jazz machines and m68k Macs were all uni-processor machines.
-> >   */
-> >
-> > @@ -252,6 +252,7 @@ static int sonic_send_packet(struct sk_buff *skb, struct net_device *dev)
-> >         dma_addr_t laddr;
-> >         int length;
-> >         int entry;
-> > +       unsigned long flags;
-> >
-> >         netif_dbg(lp, tx_queued, dev, "%s: skb=%p\n", __func__, skb);
-> >
-> > @@ -273,6 +274,8 @@ static int sonic_send_packet(struct sk_buff *skb, struct net_device *dev)
-> >                 return NETDEV_TX_OK;
-> >         }
-> >
-> > +       local_irq_save(flags);
-> > +
-> 
-> Wouldn't it be better to use a spinlock instead?
+I am sorry, would you mind showing me an example about the conflate in my
+change? I don't get it.
 
-Yes, better in the sense of "more portable". And worse in the sense of 
-"needless complexity".
+>>  
+>> -		err = -EACCES;
+>> -		if (!node_isset(node, task_nodes))
+>> -			goto out_flush;
+>> +			err = -EACCES;
+>> +			if (!node_isset(node, task_nodes))
+>> +				goto out_flush;
+>> +		}
+>>  
+>>  		if (current_node == NUMA_NO_NODE) {
+>>  			current_node = node;
+>> -- 
+>> 2.17.1
+>
+>-- 
+>Michal Hocko
+>SUSE Labs
 
-> It looks like all currently supported platforms (Mac, Jazz, and XT2000) 
-> do no support SMP, but I'm not 100% sure about the latter. And this 
-> generic sonic.c core may end up being used on other platforms that do 
-> support SMP.
-> 
-
-I'm not sure about XT2000 either. It would be surprising if they 
-overlooked this. But I'll add the spinlock, just in case.
-
-Thanks for your review.
-
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> 
+-- 
+Wei Yang
+Help you, Help me
