@@ -2,238 +2,159 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C80C33CB8
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F6EC33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F20E420674
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:11:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Xfor+QLE"
+	by mail.kernel.org (Postfix) with ESMTP id 05E662087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:12:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727573AbgATLL4 (ORCPT
+        id S1727011AbgATLMk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 06:11:56 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46880 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726451AbgATLLz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 06:11:55 -0500
-Received: by mail-wr1-f66.google.com with SMTP id z7so29040690wrl.13
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 03:11:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=w9F1hoP3S1ul32+hBujttlabOR6HK4x53W1VGK8wrSU=;
-        b=Xfor+QLEzkc7JxvtxHrkCkYyXIHXZZ878bSUru2o13cPR264WG8kc20BBcEe7PfaM5
-         xAo+aZTyCrCkedBjrRj8qmQQ3x9/jQ3D2yULbuxwtT0OoFe86wHJpBMIB63N0CwaRSU4
-         0A/TPeCcu5lviJwxXP7wn91TsBZ1kBs1kDMt0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=w9F1hoP3S1ul32+hBujttlabOR6HK4x53W1VGK8wrSU=;
-        b=Vg2IFqTB0OvJsMMf8fW9CM4VmadHWOReaw+LXAXkgZCH2AYQ48bDopmSeQ42QbMhSz
-         MJdgRac2y4Wrw2X9T5MFAUQ6ADOCToV+nrEcLYFdxcQMLlpOAvgb2MRahXoy1PGXQnZ1
-         12vhRHt6GtYgvgqLc+vD2DF8ANqHXIvez8SuUqV0LyuNsQvNWmXSzuf5SdxtoHuIbyZM
-         z0l/5WN8RsTybGgbkMoorz48Tprw88TJW4XamCNpmq5jIK/9+Qn/0+QVyswprdaO79ll
-         FwP28rQVV4xoyhmBHv14ArD82zrpzMZa/iDU4ZWIdl9ZZ2qMlfJ3qZWpR69gcWELzUx1
-         Lt4w==
-X-Gm-Message-State: APjAAAVQstNCoQLeqtjZRgZxmFit7H7lOJBppKBSL0UUvYn6X1GklY2c
-        wueBnl83kYhlZdzQgyl8rFawrA==
-X-Google-Smtp-Source: APXvYqxPcnRjxSWbpsvsgEJAom/kFNoYJ7Nh8oruEeCyG9G10bZw8E7DhFfAOqWPd6ploF8uHuv3Ig==
-X-Received: by 2002:adf:e70d:: with SMTP id c13mr17513193wrm.248.1579518712627;
-        Mon, 20 Jan 2020 03:11:52 -0800 (PST)
-Received: from chromium.org ([2620:0:105f:fd00:24a7:c82b:86d8:5ae9])
-        by smtp.gmail.com with ESMTPSA id w17sm47163506wrt.89.2020.01.20.03.11.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 03:11:51 -0800 (PST)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Mon, 20 Jan 2020 12:12:14 +0100
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Michael Halcrow <mhalcrow@google.com>,
-        Paul Turner <pjt@google.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
-Subject: Re: [PATCH bpf-next v2 00/10] MAC and Audit policy using eBPF (KRSI)
-Message-ID: <20200120111214.GC26394@chromium.org>
-References: <20200115171333.28811-1-kpsingh@chromium.org>
- <CAEf4BzbCT8_LvgyeOtfjx7tm+Q41iGEmjvHwSkR=aBoBs3xVZA@mail.gmail.com>
+        Mon, 20 Jan 2020 06:12:40 -0500
+Received: from relay.sw.ru ([185.231.240.75]:39632 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726421AbgATLMk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 06:12:40 -0500
+Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1itUy7-00008M-PD; Mon, 20 Jan 2020 14:11:43 +0300
+Subject: Re: [PATCH block v2 1/3] block: Add @flags argument to
+ bdev_write_zeroes_sectors()
+To:     Bob Liu <bob.liu@oracle.com>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, martin.petersen@oracle.com,
+        axboe@kernel.dk, tytso@mit.edu, adilger.kernel@dilger.ca,
+        Chaitanya.Kulkarni@wdc.com, darrick.wong@oracle.com,
+        ming.lei@redhat.com, osandov@fb.com, jthumshirn@suse.de,
+        minwoo.im.dev@gmail.com, damien.lemoal@wdc.com,
+        andrea.parri@amarulasolutions.com, hare@suse.com, tj@kernel.org,
+        ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
+        bvanassche@acm.org, dhowells@redhat.com, asml.silence@gmail.com
+References: <157917805422.88675.6477661554332322975.stgit@localhost.localdomain>
+ <157917815798.88675.11900718803129164489.stgit@localhost.localdomain>
+ <a8c5c5fd-d6b1-950e-0493-b5020e5ca87d@oracle.com>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <85d0dcea-d151-18e9-cb7a-8b277d168bc7@virtuozzo.com>
+Date:   Mon, 20 Jan 2020 14:11:43 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEf4BzbCT8_LvgyeOtfjx7tm+Q41iGEmjvHwSkR=aBoBs3xVZA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <a8c5c5fd-d6b1-950e-0493-b5020e5ca87d@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15-Jan 14:12, Andrii Nakryiko wrote:
-> On Wed, Jan 15, 2020 at 9:15 AM KP Singh <kpsingh@chromium.org> wrote:
-> >
-> > From: KP Singh <kpsingh@google.com>
-> >
-> > # Changes since v1 (https://lore.kernel.org/bpf/20191220154208.15895-1-kpsingh@chromium.org/):
-> >
-> > * Eliminate the requirement to maintain LSM hooks separately in
-> >   security/bpf/hooks.h Use BPF trampolines to dynamically allocate
-> >   security hooks
-> > * Drop the use of securityfs as bpftool provides the required
-> >   introspection capabilities.  Update the tests to use the bpf_skeleton
-> >   and global variables
-> > * Use O_CLOEXEC anonymous fds to represent BPF attachment in line with
-> >   the other BPF programs with the possibility to use bpf program pinning
-> >   in the future to provide "permanent attachment".
-> > * Drop the logic based on prog names for handling re-attachment.
-> > * Drop bpf_lsm_event_output from this series and send it as a separate
-> >   patch.
-> >
-> > # Motivation
-> >
-> > Google does analysis of rich runtime security data to detect and thwart
-> > threats in real-time. Currently, this is done in custom kernel modules
-> > but we would like to replace this with something that's upstream and
-> > useful to others.
-> >
-> > The current kernel infrastructure for providing telemetry (Audit, Perf
-> > etc.) is disjoint from access enforcement (i.e. LSMs).  Augmenting the
-> > information provided by audit requires kernel changes to audit, its
-> > policy language and user-space components. Furthermore, building a MAC
-> > policy based on the newly added telemetry data requires changes to
-> > various LSMs and their respective policy languages.
-> >
-> > This patchset proposes a new stackable and privileged LSM which allows
-> > the LSM hooks to be implemented using eBPF. This facilitates a unified
-> > and dynamic (not requiring re-compilation of the kernel) audit and MAC
-> > policy.
-> >
-> > # Why an LSM?
-> >
-> > Linux Security Modules target security behaviours rather than the
-> > kernel's API. For example, it's easy to miss out a newly added system
-> > call for executing processes (eg. execve, execveat etc.) but the LSM
-> > framework ensures that all process executions trigger the relevant hooks
-> > irrespective of how the process was executed.
-> >
-> > Allowing users to implement LSM hooks at runtime also benefits the LSM
-> > eco-system by enabling a quick feedback loop from the security community
-> > about the kind of behaviours that the LSM Framework should be targeting.
-> >
-> > # How does it work?
-> >
-> > The LSM introduces a new eBPF (https://docs.cilium.io/en/v1.6/bpf/)
-> > program type BPF_PROG_TYPE_LSM which can only be attached to LSM hooks.
-> > Attachment requires CAP_SYS_ADMIN for loading eBPF programs and
-> > CAP_MAC_ADMIN for modifying MAC policies.
-> >
-> > The eBPF programs are attached to a separate security_hook_heads
-> > maintained by the BPF LSM for mutable hooks and executed after all the
-> > statically defined hooks (i.e. the ones declared by SELinux, AppArmor,
-> > Smack etc). This also ensures that statically defined LSM hooks retain
-> > the behaviour of "being read-only after init", i.e. __lsm_ro_after_init.
-> >
-> > Upon attachment, a security hook is dynamically allocated with
-> > arch_bpf_prepare_trampoline which generates code to handle the
-> > conversion from the signature of the hook to the BPF context and allows
-> > the JIT'ed BPF program to be called as a C function with the same
-> > arguments as the LSM hooks. If any of the attached eBPF programs returns
-> > an error (like ENOPERM), the behaviour represented by the hook is
-> > denied.
-> >
-> > Audit logs can be written using a format chosen by the eBPF program to
-> > the perf events buffer or to global eBPF variables or maps and can be
-> > further processed in user-space.
-> >
-> > # BTF Based Design
-> >
-> > The current design uses BTF
-> > (https://facebookmicrosites.github.io/bpf/blog/2018/11/14/btf-enhancement.html,
-> > https://lwn.net/Articles/803258/) which allows verifiable read-only
-> > structure accesses by field names rather than fixed offsets. This allows
-> > accessing the hook parameters using a dynamically created context which
-> > provides a certain degree of ABI stability:
-> >
-> >
-> > // Only declare the structure and fields intended to be used
-> > // in the program
-> > struct vm_area_struct {
-> >         unsigned long vm_start;
-> > } __attribute__((preserve_access_index));
-> >
+On 19.01.2020 04:46, Bob Liu wrote:
+> On 1/16/20 8:35 PM, Kirill Tkhai wrote:
+>> This is a preparation for next patch, which introduces
+>> a new flag BLKDEV_ZERO_ALLOCATE for calls, which need
+>> only allocation of blocks and don't need actual blocks
+>> zeroing.
+>>
+>> CC: Martin K. Petersen <martin.petersen@oracle.com>
+>> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+>> ---
+>>  block/blk-lib.c                     |    6 +++---
+>>  drivers/md/dm-kcopyd.c              |    2 +-
+>>  drivers/target/target_core_iblock.c |    4 ++--
+>>  include/linux/blkdev.h              |    3 ++-
+>>  4 files changed, 8 insertions(+), 7 deletions(-)
+>>
 > 
-> It would be nice to also mention that you don't even have to
-> "re-define" these structs if you use vmlinux.h generated with `bpftool
-> btf dump file <path-to-vm-linux-or-/sys/kernel/btf/vmlinux> format c`.
-> Its output will contain all types of the kernel, including internal
-> ones not exposed through any public headers. And it will also
-> automatically have __attribute__((preserve_access_index)) applied to
-> all structs/unions. It can be pre-generated and checked in somewhere
-> along the application or generated on the fly, if environment and use
-> case allows.
+> Looks good to me.
+> Reviewed-by: Bob Liu <bob.liu@oracle.com>
 
-Cool, I will update the documentation to mention this. Thanks!
-
-- KP
-
+Thanks, Bob.
+ 
+>> diff --git a/block/blk-lib.c b/block/blk-lib.c
+>> index 5f2c429d4378..3e38c93cfc53 100644
+>> --- a/block/blk-lib.c
+>> +++ b/block/blk-lib.c
+>> @@ -224,7 +224,7 @@ static int __blkdev_issue_write_zeroes(struct block_device *bdev,
+>>  		return -EPERM;
+>>  
+>>  	/* Ensure that max_write_zeroes_sectors doesn't overflow bi_size */
+>> -	max_write_zeroes_sectors = bdev_write_zeroes_sectors(bdev);
+>> +	max_write_zeroes_sectors = bdev_write_zeroes_sectors(bdev, 0);
+>>  
+>>  	if (max_write_zeroes_sectors == 0)
+>>  		return -EOPNOTSUPP;
+>> @@ -362,7 +362,7 @@ int blkdev_issue_zeroout(struct block_device *bdev, sector_t sector,
+>>  	sector_t bs_mask;
+>>  	struct bio *bio;
+>>  	struct blk_plug plug;
+>> -	bool try_write_zeroes = !!bdev_write_zeroes_sectors(bdev);
+>> +	bool try_write_zeroes = !!bdev_write_zeroes_sectors(bdev, 0);
+>>  
+>>  	bs_mask = (bdev_logical_block_size(bdev) >> 9) - 1;
+>>  	if ((sector | nr_sects) & bs_mask)
+>> @@ -391,7 +391,7 @@ int blkdev_issue_zeroout(struct block_device *bdev, sector_t sector,
+>>  			try_write_zeroes = false;
+>>  			goto retry;
+>>  		}
+>> -		if (!bdev_write_zeroes_sectors(bdev)) {
+>> +		if (!bdev_write_zeroes_sectors(bdev, 0)) {
+>>  			/*
+>>  			 * Zeroing offload support was indicated, but the
+>>  			 * device reported ILLEGAL REQUEST (for some devices
+>> diff --git a/drivers/md/dm-kcopyd.c b/drivers/md/dm-kcopyd.c
+>> index 1bbe4a34ef4c..f1b8e7926dd4 100644
+>> --- a/drivers/md/dm-kcopyd.c
+>> +++ b/drivers/md/dm-kcopyd.c
+>> @@ -831,7 +831,7 @@ void dm_kcopyd_copy(struct dm_kcopyd_client *kc, struct dm_io_region *from,
+>>  		 */
+>>  		job->rw = REQ_OP_WRITE_ZEROES;
+>>  		for (i = 0; i < job->num_dests; i++)
+>> -			if (!bdev_write_zeroes_sectors(job->dests[i].bdev)) {
+>> +			if (!bdev_write_zeroes_sectors(job->dests[i].bdev, 0)) {
+>>  				job->rw = WRITE;
+>>  				break;
+>>  			}
+>> diff --git a/drivers/target/target_core_iblock.c b/drivers/target/target_core_iblock.c
+>> index 51ffd5c002de..73a63e197bf5 100644
+>> --- a/drivers/target/target_core_iblock.c
+>> +++ b/drivers/target/target_core_iblock.c
+>> @@ -117,7 +117,7 @@ static int iblock_configure_device(struct se_device *dev)
+>>  	 * Enable write same emulation for IBLOCK and use 0xFFFF as
+>>  	 * the smaller WRITE_SAME(10) only has a two-byte block count.
+>>  	 */
+>> -	max_write_zeroes_sectors = bdev_write_zeroes_sectors(bd);
+>> +	max_write_zeroes_sectors = bdev_write_zeroes_sectors(bd, 0);
+>>  	if (max_write_zeroes_sectors)
+>>  		dev->dev_attrib.max_write_same_len = max_write_zeroes_sectors;
+>>  	else
+>> @@ -468,7 +468,7 @@ iblock_execute_write_same(struct se_cmd *cmd)
+>>  		return TCM_INVALID_CDB_FIELD;
+>>  	}
+>>  
+>> -	if (bdev_write_zeroes_sectors(bdev)) {
+>> +	if (bdev_write_zeroes_sectors(bdev, 0)) {
+>>  		if (!iblock_execute_zero_out(bdev, cmd))
+>>  			return 0;
+>>  	}
+>> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+>> index c45779f00cbd..4cd69552df9a 100644
+>> --- a/include/linux/blkdev.h
+>> +++ b/include/linux/blkdev.h
+>> @@ -1418,7 +1418,8 @@ static inline unsigned int bdev_write_same(struct block_device *bdev)
+>>  	return 0;
+>>  }
+>>  
+>> -static inline unsigned int bdev_write_zeroes_sectors(struct block_device *bdev)
+>> +static inline unsigned int bdev_write_zeroes_sectors(struct block_device *bdev,
+>> +						     unsigned int flags)
+>>  {
+>>  	struct request_queue *q = bdev_get_queue(bdev);
+>>  
+>>
+>>
 > 
-> > // Declare the eBPF program mprotect_audit which attaches to
-> > // to the file_mprotect LSM hook and accepts three arguments.
-> > SEC("lsm/file_mprotect")
-> > int BPF_PROG(mprotect_audit, struct vm_area_struct *vma,
-> >              unsigned long reqprot, unsigned long prot)
-> > {
-> >         unsigned long vm_start = vma->vm_start;
-> >
-> >         return 0;
-> > }
-> >
-> > By relocating field offsets, BTF makes a large portion of kernel data
-> > structures readily accessible across kernel versions without requiring a
-> > large corpus of BPF helper functions and requiring recompilation with
-> > every kernel version. The BTF type information is also used by the BPF
-> > verifier to validate memory accesses within the BPF program and also
-> > prevents arbitrary writes to the kernel memory.
-> >
-> > The limitations of BTF compatibility are described in BPF Co-Re
-> > (http://vger.kernel.org/bpfconf2019_talks/bpf-core.pdf, i.e. field
-> > renames, #defines and changes to the signature of LSM hooks).
-> >
-> > This design imposes that the MAC policy (eBPF programs) be updated when
-> > the inspected kernel structures change outside of BTF compatibility
-> > guarantees. In practice, this is only required when a structure field
-> > used by a current policy is removed (or renamed) or when the used LSM
-> > hooks change. We expect the maintenance cost of these changes to be
-> > acceptable as compared to the previous design
-> > (https://lore.kernel.org/bpf/20190910115527.5235-1-kpsingh@chromium.org/).
-> >
-> 
-> [...]
+
