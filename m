@@ -6,50 +6,50 @@ X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A528BC33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05BE2C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77F3D20684
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:47:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D333B207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 06:47:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbgATGrK (ORCPT
+        id S1726798AbgATGrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 01:47:10 -0500
-Received: from mail-il1-f197.google.com ([209.85.166.197]:38211 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgATGrI (ORCPT
+        Mon, 20 Jan 2020 01:47:09 -0500
+Received: from mail-io1-f72.google.com ([209.85.166.72]:38318 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725876AbgATGrI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 Jan 2020 01:47:08 -0500
-Received: by mail-il1-f197.google.com with SMTP id i67so24479705ilf.5
+Received: by mail-io1-f72.google.com with SMTP id x2so19219914iog.5
         for <linux-kernel@vger.kernel.org>; Sun, 19 Jan 2020 22:47:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=MuAwe6mdiCtWoj0bCmHk0ViJmRHm0jBAoLaW34a3xHw=;
-        b=g2zxNjkp9U/i6J7KT74CHQjEz2ECNy9Wa1MMW9O/qboyxnBusNYL2kvRtEOIT9HkiQ
-         SdvPpH6B7/nCctMHDWPprs62JWGhWb7bhVahK2JNOJR6voxvBIu6N25EeQzAzLQvgG5r
-         NHDgtly+XhD+DLtflLFhDg+tlFEn1x2B6dx8xf8d3GjJ4uOLzAlr38jcnHZBQc4gpex4
-         k0iMr3BNQtKbm4w4PdBq1sBE6gAz2LMQMtoiLnBKOlWWYWpDV+DiEp9Mw54P/AYR/TOD
-         d/klPNnTgNRwY3ESVWrakO5LeMa75BxnrsEEiCKddM+jr1j48Z2kc8W4DlE4OPoT610W
-         n+Pg==
-X-Gm-Message-State: APjAAAWmbPLtdLf93a+Yr3YthBA3X/1NwXP+TDCpmbDbpLDVYiTEllCa
-        MFvjAld264z6KqnpFAG1zh1UF/gpKZfzYfssV73bO5DI0X5L
-X-Google-Smtp-Source: APXvYqx/N3926g6aQZLHQYvWAg5Z+toNaZNNH8dSy1S60HiNcDABnqHWvzr5exIMUOM3b5/Bf3ppWtN1CH7Khvcl6EL+jkLVcYEA
+        bh=cIdmPd9T49k4wiqUYsL6iwyA5/K/5mAfkMfBSkCrK8o=;
+        b=qDXRluGmt3XRsr1+rmJP2//8ckcXcS6ykepWpZlSYo41SO80ADSy+Vyo3msGD1xw4c
+         2PGQ4IY1FgC+v/NJarrApK58SQfYoHz43G0+TROgmmxCKMImJSyR1es2K8e0G8g8T21e
+         tMErvNJojSLNdQ2O8bCLGjmOr6aMO8XopDcAPXudBrVy3qiwuUPdT5gF9xu0rhJLi+lN
+         xA4LQZ7iGY5PYAIR7iJszEjs0tVDgVqCi7+Zsb7WNJzwmqFvytLOHZjrHwuACpf+w3v7
+         em0kwu2tAcrN82KAOLxlA5NYBxvMbNkOfRAWq71Yqj6L1iJ5ZHNTUken3BPpR6iLl0/O
+         lJWw==
+X-Gm-Message-State: APjAAAVBPmVPUnoAdis/X3Lre9Cw0NFzjBnR2bQQoqAFG8Nz78AOm8Iu
+        0R/vIzz8knJ9HYW9IcwHwLjBjeJJC8aluZzr6+4iAwcITyLE
+X-Google-Smtp-Source: APXvYqz69J753AHOIMOPF0z/tt4wAGEiwX/3+cyakeFsgp9vWRB7zm8SZOQa5IW9/m5ftPwGK4yW4BbqtzLVNxwb2ALkYecxvXqx
 MIME-Version: 1.0
-X-Received: by 2002:a5d:9514:: with SMTP id d20mr35139554iom.198.1579502827821;
+X-Received: by 2002:a6b:915:: with SMTP id t21mr37643107ioi.34.1579502827619;
  Sun, 19 Jan 2020 22:47:07 -0800 (PST)
 Date:   Sun, 19 Jan 2020 22:47:07 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f96400059c8ca8cd@google.com>
-Subject: KASAN: slab-out-of-bounds Read in bitmap_ipmac_ext_cleanup
-From:   syzbot <syzbot+c400f7b04cadb5df6ea7@syzkaller.appspotmail.com>
-To:     coreteam@netfilter.org, davem@davemloft.net,
-        florent.fourcot@wifirst.fr, fw@strlen.de, jeremy@azazel.net,
-        johannes.berg@intel.com, kadlec@netfilter.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, pablo@netfilter.org,
-        syzkaller-bugs@googlegroups.com
+Message-ID: <000000000000f649ad059c8ca893@google.com>
+Subject: KASAN: slab-out-of-bounds Write in bitmap_ip_del
+From:   syzbot <syzbot+24d0577de55b8b8f6975@syzkaller.appspotmail.com>
+To:     allison@lohutok.net, coreteam@netfilter.org, davem@davemloft.net,
+        fw@strlen.de, gregkh@linuxfoundation.org, jeremy@azazel.net,
+        kadlec@netfilter.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        pablo@netfilter.org, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -62,22 +62,23 @@ syzbot found the following crash on:
 
 HEAD commit:    09d4f10a net: sched: act_ctinfo: fix memory leak
 git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=13bc21d1e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=168f73b9e00000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=7e89bd00623fe71e
-dashboard link: https://syzkaller.appspot.com/bug?extid=c400f7b04cadb5df6ea7
+dashboard link: https://syzkaller.appspot.com/bug?extid=24d0577de55b8b8f6975
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=170871d1e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16b02cc9e00000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1799c135e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=176b8faee00000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+c400f7b04cadb5df6ea7@syzkaller.appspotmail.com
+Reported-by: syzbot+24d0577de55b8b8f6975@syzkaller.appspotmail.com
 
 ==================================================================
-BUG: KASAN: slab-out-of-bounds in test_bit include/asm-generic/bitops/instrumented-non-atomic.h:110 [inline]
-BUG: KASAN: slab-out-of-bounds in bitmap_ipmac_ext_cleanup+0xd8/0x290 net/netfilter/ipset/ip_set_bitmap_gen.h:51
-Read of size 8 at addr ffff88809e126b40 by task syz-executor256/9597
+BUG: KASAN: slab-out-of-bounds in test_and_clear_bit include/asm-generic/bitops/instrumented-atomic.h:83 [inline]
+BUG: KASAN: slab-out-of-bounds in bitmap_ip_do_del net/netfilter/ipset/ip_set_bitmap_ip.c:89 [inline]
+BUG: KASAN: slab-out-of-bounds in bitmap_ip_del+0xdb/0x380 net/netfilter/ipset/ip_set_bitmap_gen.h:182
+Write of size 8 at addr ffff888094779ec0 by task syz-executor498/9869
 
-CPU: 0 PID: 9597 Comm: syz-executor256 Not tainted 5.5.0-rc5-syzkaller #0
+CPU: 0 PID: 9869 Comm: syz-executor498 Not tainted 5.5.0-rc5-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
 Call Trace:
  __dump_stack lib/dump_stack.c:77 [inline]
@@ -87,11 +88,14 @@ Call Trace:
  kasan_report+0x12/0x20 mm/kasan/common.c:639
  check_memory_region_inline mm/kasan/generic.c:185 [inline]
  check_memory_region+0x134/0x1a0 mm/kasan/generic.c:192
- __kasan_check_read+0x11/0x20 mm/kasan/common.c:95
- test_bit include/asm-generic/bitops/instrumented-non-atomic.h:110 [inline]
- bitmap_ipmac_ext_cleanup+0xd8/0x290 net/netfilter/ipset/ip_set_bitmap_gen.h:51
- bitmap_ipmac_destroy+0x180/0x1d0 net/netfilter/ipset/ip_set_bitmap_gen.h:64
- ip_set_create+0xe47/0x1500 net/netfilter/ipset/ip_set_core.c:1165
+ __kasan_check_write+0x14/0x20 mm/kasan/common.c:101
+ test_and_clear_bit include/asm-generic/bitops/instrumented-atomic.h:83 [inline]
+ bitmap_ip_do_del net/netfilter/ipset/ip_set_bitmap_ip.c:89 [inline]
+ bitmap_ip_del+0xdb/0x380 net/netfilter/ipset/ip_set_bitmap_gen.h:182
+ bitmap_ip_uadt+0x73e/0xa10 net/netfilter/ipset/ip_set_bitmap_ip.c:186
+ call_ad+0x1a0/0x5a0 net/netfilter/ipset/ip_set_core.c:1716
+ ip_set_ad.isra.0+0x572/0xb20 net/netfilter/ipset/ip_set_core.c:1804
+ ip_set_udel+0x3a/0x50 net/netfilter/ipset/ip_set_core.c:1838
  nfnetlink_rcv_msg+0xcf2/0xfb0 net/netfilter/nfnetlink.c:229
  netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
  nfnetlink_rcv+0x1ba/0x460 net/netfilter/nfnetlink.c:563
@@ -108,16 +112,16 @@ Call Trace:
  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2424
  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4413f9
-Code: e8 fc ab 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 9b 09 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffeb99f7fc8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00000000004413f9
-RDX: 0000000000000000 RSI: 0000000020000300 RDI: 0000000000000003
-RBP: 00000000000182b5 R08: 00000000004002c8 R09: 00000000004002c8
-R10: 0000000000000004 R11: 0000000000000246 R12: 0000000000402220
-R13: 00000000004022b0 R14: 0000000000000000 R15: 0000000000000000
+RIP: 0033:0x440689
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffc9c51e348 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440689
+RDX: 0000000000000000 RSI: 0000000020000080 RDI: 0000000000000004
+RBP: 00000000006ca018 R08: 000000000000001c R09: 00000000004002c8
+R10: 0000000000000001 R11: 0000000000000246 R12: 0000000000401f10
+R13: 0000000000401fa0 R14: 0000000000000000 R15: 0000000000000000
 
-Allocated by task 9597:
+Allocated by task 9869:
  save_stack+0x23/0x90 mm/kasan/common.c:72
  set_track mm/kasan/common.c:80 [inline]
  __kasan_kmalloc mm/kasan/common.c:513 [inline]
@@ -128,8 +132,8 @@ Allocated by task 9597:
  kmalloc include/linux/slab.h:561 [inline]
  kzalloc include/linux/slab.h:670 [inline]
  ip_set_alloc+0x38/0x5e net/netfilter/ipset/ip_set_core.c:255
- init_map_ipmac net/netfilter/ipset/ip_set_bitmap_ipmac.c:302 [inline]
- bitmap_ipmac_create+0x4e8/0xa00 net/netfilter/ipset/ip_set_bitmap_ipmac.c:365
+ init_map_ip net/netfilter/ipset/ip_set_bitmap_ip.c:223 [inline]
+ bitmap_ip_create+0x6ec/0xc20 net/netfilter/ipset/ip_set_bitmap_ip.c:327
  ip_set_create+0x6f1/0x1500 net/netfilter/ipset/ip_set_core.c:1111
  nfnetlink_rcv_msg+0xcf2/0xfb0 net/netfilter/nfnetlink.c:229
  netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
@@ -148,7 +152,7 @@ Allocated by task 9597:
  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Freed by task 9327:
+Freed by task 9598:
  save_stack+0x23/0x90 mm/kasan/common.c:72
  set_track mm/kasan/common.c:80 [inline]
  kasan_set_free_info mm/kasan/common.c:335 [inline]
@@ -172,23 +176,23 @@ Freed by task 9327:
  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-The buggy address belongs to the object at ffff88809e126b40
+The buggy address belongs to the object at ffff888094779ec0
  which belongs to the cache kmalloc-32 of size 32
 The buggy address is located 0 bytes inside of
- 32-byte region [ffff88809e126b40, ffff88809e126b60)
+ 32-byte region [ffff888094779ec0, ffff888094779ee0)
 The buggy address belongs to the page:
-page:ffffea0002784980 refcount:1 mapcount:0 mapping:ffff8880aa4001c0 index:0xffff88809e126fc1
-raw: 00fffe0000000200 ffffea00028bebc8 ffffea00027ca4c8 ffff8880aa4001c0
-raw: ffff88809e126fc1 ffff88809e126000 000000010000002b 0000000000000000
+page:ffffea000251de40 refcount:1 mapcount:0 mapping:ffff8880aa4001c0 index:0xffff888094779fc1
+raw: 00fffe0000000200 ffffea00027fee88 ffffea0002a42888 ffff8880aa4001c0
+raw: ffff888094779fc1 ffff888094779000 000000010000002f 0000000000000000
 page dumped because: kasan: bad access detected
 
 Memory state around the buggy address:
- ffff88809e126a00: fb fb fb fb fc fc fc fc 00 01 fc fc fc fc fc fc
- ffff88809e126a80: 00 01 fc fc fc fc fc fc fb fb fb fb fc fc fc fc
->ffff88809e126b00: fb fb fb fb fc fc fc fc 04 fc fc fc fc fc fc fc
+ ffff888094779d80: fb fb fb fb fc fc fc fc fb fb fb fb fc fc fc fc
+ ffff888094779e00: fb fb fb fb fc fc fc fc fb fb fb fb fc fc fc fc
+>ffff888094779e80: 00 00 05 fc fc fc fc fc 04 fc fc fc fc fc fc fc
                                            ^
- ffff88809e126b80: fb fb fb fb fc fc fc fc fb fb fb fb fc fc fc fc
- ffff88809e126c00: fb fb fb fb fc fc fc fc 00 01 fc fc fc fc fc fc
+ ffff888094779f00: 00 fc fc fc fc fc fc fc 00 00 03 fc fc fc fc fc
+ ffff888094779f80: fb fb fb fb fc fc fc fc fc fc fc fc fc fc fc fc
 ==================================================================
 
 
