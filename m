@@ -2,75 +2,100 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5465AC33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D183C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25D7E22527
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:26:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E10620678
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 14:31:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728981AbgATO0G (ORCPT
+        id S1727117AbgATObh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 09:26:06 -0500
-Received: from mx2.suse.de ([195.135.220.15]:57652 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726626AbgATO0G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 09:26:06 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 61118AAD0;
-        Mon, 20 Jan 2020 14:26:04 +0000 (UTC)
-Date:   Mon, 20 Jan 2020 15:26:03 +0100
-From:   Jean Delvare <jdelvare@suse.de>
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     linux-doc@vger.kernel.org, linux-i2c@vger.kernel.org,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 14/26] docs: i2c: smbus-protocol: use proper names for
- ACK and NACK
-Message-ID: <20200120152603.12a81fe1@endymion>
-In-Reply-To: <20200105225012.11701-14-luca@lucaceresoli.net>
-References: <20200105224006.10321-1-luca@lucaceresoli.net>
-        <20200105225012.11701-1-luca@lucaceresoli.net>
-        <20200105225012.11701-14-luca@lucaceresoli.net>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        Mon, 20 Jan 2020 09:31:37 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:59843 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726642AbgATObh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 09:31:37 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1itY5X-0008BC-4k; Mon, 20 Jan 2020 15:31:35 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1itY5W-0001f3-2f; Mon, 20 Jan 2020 15:31:34 +0100
+Date:   Mon, 20 Jan 2020 15:31:34 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, CK Hu <ck.hu@mediatek.com>,
+        linux-mediatek@lists.infradead.org, sj.huang@mediatek.com
+Subject: Re: [PATCH v4 1/2] pwm: mtk_disp: fix pwm clocks not poweroff when
+ disable pwm
+Message-ID: <20200120143134.yqojufklnack27xf@pengutronix.de>
+References: <20191217040237.28238-1-jitao.shi@mediatek.com>
+ <20191217040237.28238-2-jitao.shi@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191217040237.28238-2-jitao.shi@mediatek.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun,  5 Jan 2020 23:50:00 +0100, Luca Ceresoli wrote:
-> Use the proper ACK and NACK naming from the I2C specification instead of
-> "accept" and "reverse accept".
-> 
-> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
-> ---
->  Documentation/i2c/smbus-protocol.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/i2c/smbus-protocol.rst b/Documentation/i2c/smbus-protocol.rst
-> index fbadd4d25ad5..10c4a989982c 100644
-> --- a/Documentation/i2c/smbus-protocol.rst
-> +++ b/Documentation/i2c/smbus-protocol.rst
-> @@ -38,7 +38,7 @@ Key to symbols
->  S               Start condition
->  P               Stop condition
->  Rd/Wr (1 bit)   Read/Write bit. Rd equals 1, Wr equals 0.
-> -A, NA (1 bit)   Accept and reverse accept bit.
-> +A, NA (1 bit)   Acknowledge (ACK) and Not Acknowledge (NACK) bit
->  Addr  (7 bits)  I2C 7 bit address. Note that this can be expanded as usual to
->                  get a 10 bit I2C address.
->  Comm  (8 bits)  Command byte, a data byte which often selects a register on
+Hello,
 
-Reviewed-by: Jean Delvare <jdelvare@suse.de>
+I fully agree to what Thierry said about the commit log.
+
+One more comment:
+
+On Tue, Dec 17, 2019 at 12:02:36PM +0800, Jitao Shi wrote:
+> @@ -194,14 +194,6 @@ static int mtk_disp_pwm_probe(struct platform_device *pdev)
+>  	if (IS_ERR(mdp->clk_mm))
+>  		return PTR_ERR(mdp->clk_mm);
+>  
+> -	ret = clk_prepare(mdp->clk_main);
+> -	if (ret < 0)
+> -		return ret;
+> -
+> -	ret = clk_prepare(mdp->clk_mm);
+> -	if (ret < 0)
+> -		goto disable_clk_main;
+> -
+>  	mdp->chip.dev = &pdev->dev;
+>  	mdp->chip.ops = &mtk_disp_pwm_ops;
+>  	mdp->chip.base = -1;
+
+After this there is:
+
+	if (!mdp->data->has_commit) {
+		mtk_disp_pwm_update_bits(mdp, mdp->data->bls_debug, ...);
+		...
+	}
+
+So I wonder if dropping the clk_enables above is safe if there are some
+register accesses later on.
+
+Side note: The driver you're touching here is still using the legacy
+API. Would be great to convert it to .apply() instead.
+
+Best regards
+Uwe
 
 -- 
-Jean Delvare
-SUSE L3 Support
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
