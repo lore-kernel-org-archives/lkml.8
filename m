@@ -2,79 +2,67 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C084EC33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B58C33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:15:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B60A20882
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:15:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0F2820684
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:15:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ee9Jng6Z"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TGbrBxMl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726626AbgATJO7 (ORCPT
+        id S1726775AbgATJPm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 04:14:59 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:51189 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725872AbgATJO7 (ORCPT
+        Mon, 20 Jan 2020 04:15:42 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:56735 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725872AbgATJPm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 04:14:59 -0500
+        Mon, 20 Jan 2020 04:15:42 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579511697;
+        s=mimecast20190719; t=1579511740;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=PRVgV96LNwxTCVwZ9dhTlHiA4MDq8ViHrKNAkzAOxhs=;
-        b=ee9Jng6ZgSOIRHxc9LHXo7NfMRqo4VOP2jkGBfW9lhTBDZ/ej1l2gvTo0amZQulcbaSf4y
-        1PZ7JCiGh+iTnJx+3KfqoQbcIm+CY7zDzIsnziXs1QA7UVdhgY7VNtZm/13XNFmKStOmsT
-        tprxNBKkYeLguy1zsTwixi9Iovsnr9I=
+        bh=wCoD90tXfleo2QVgo0b+j5VFuj0bFuIVrZNZme3ikmU=;
+        b=TGbrBxMltJpGp/beq2B3cVQMAruIRafOO4niAxHsOKXGXr0Vqdlpe3rJ2dMZ/dNneE7jx2
+        q/Bk7aW9Dlj2gEvzQot9qcLBC0LrEnieNXFkK3NmYQZIR/XsM1VYE3OeFu6UXiaLBGIloj
+        nWxnDydyfqyIKbFrg0O8QcH/jf5luuw=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-122-SiyJ3CudPWuXjRenOjkC4Q-1; Mon, 20 Jan 2020 04:14:54 -0500
-X-MC-Unique: SiyJ3CudPWuXjRenOjkC4Q-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+ us-mta-368-JNA-XHQxPh2meh4Qzc1Diw-1; Mon, 20 Jan 2020 04:15:37 -0500
+X-MC-Unique: JNA-XHQxPh2meh4Qzc1Diw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 295C78017CC;
-        Mon, 20 Jan 2020 09:14:50 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D1129800D4E;
+        Mon, 20 Jan 2020 09:15:35 +0000 (UTC)
 Received: from [10.36.118.34] (unknown [10.36.118.34])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 959165D9CD;
-        Mon, 20 Jan 2020 09:14:45 +0000 (UTC)
-Subject: Re: [PATCH RFC v1] mm: is_mem_section_removable() overhaul
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9B4C860C18;
+        Mon, 20 Jan 2020 09:15:33 +0000 (UTC)
+Subject: Re: [PATCH v4] drivers/base/memory.c: cache blocks in radix tree to
+ accelerate lookup
 To:     Michal Hocko <mhocko@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Scott Cheloha <cheloha@linux.vnet.ibm.com>
+Cc:     linux-kernel@vger.kernel.org,
         "Rafael J. Wysocki" <rafael@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Leonardo Bras <leonardo@linux.ibm.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Allison Randal <allison@lohutok.net>,
-        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        lantianyu1986@gmail.com,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-References: <20200117105759.27905-1-david@redhat.com>
- <20200117113353.GT19428@dhcp22.suse.cz>
- <c82a0dd7-a99b-6def-83d4-a19fbdd405d9@redhat.com>
- <20200117145233.GB19428@dhcp22.suse.cz>
- <65606e2e-1cf7-de3b-10b1-33653cb41a52@redhat.com>
- <20200117152947.GK19428@dhcp22.suse.cz>
- <CAPcyv4hHHzdPp4SQ0sePzx7XEvD7U_B+vZDT00O6VbFY8kJqjw@mail.gmail.com>
- <25a94f61-46a1-59a6-6b54-8cc6b35790d2@redhat.com>
- <CAPcyv4jvmYRbX9i+1_LvHoTDGABadHbYH3NVkqczKsQ4fsf74g@mail.gmail.com>
- <20200120074816.GG18451@dhcp22.suse.cz>
+        nathanl@linux.ibm.com, ricklind@linux.vnet.ibm.com,
+        Scott Cheloha <cheloha@linux.ibm.com>,
+        Donald Dutile <ddutile@redhat.com>
+References: <20191217193238-1-cheloha@linux.vnet.ibm.com>
+ <20200109212516.17849-1-cheloha@linux.vnet.ibm.com>
+ <181caae3-ffb8-c745-a4c9-1aef93ea6dd5@redhat.com>
+ <20200116152214.GX19428@dhcp22.suse.cz>
+ <765a07fe-47e9-fe3d-716a-44d9ee4a5e99@redhat.com>
+ <fe92b4f0-0cd7-c705-1ed9-239175689051@redhat.com>
+ <20200117093514.GO19428@dhcp22.suse.cz>
 From:   David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -120,76 +108,88 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
  FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
 Organization: Red Hat GmbH
-Message-ID: <a5f0bd8d-de5e-9f27-5c94-7746a3d20a95@redhat.com>
-Date:   Mon, 20 Jan 2020 10:14:44 +0100
+Message-ID: <2df18523-e410-bcfb-478e-6a7579608196@redhat.com>
+Date:   Mon, 20 Jan 2020 10:15:32 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <20200120074816.GG18451@dhcp22.suse.cz>
+In-Reply-To: <20200117093514.GO19428@dhcp22.suse.cz>
 Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20.01.20 08:48, Michal Hocko wrote:
-> On Fri 17-01-20 08:57:51, Dan Williams wrote:
+On 17.01.20 10:35, Michal Hocko wrote:
+> On Thu 16-01-20 17:17:54, David Hildenbrand wrote:
 > [...]
->> Unless the user is willing to hold the device_hotplug_lock over the
->> evaluation then the result is unreliable.
->=20
-> Do we want to hold the device_hotplug_lock from this user readable file
-> in the first place? My book says that this just waits to become a
-> problem.
+>> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+>> index c6d288fad493..c75dec35de43 100644
+>> --- a/drivers/base/memory.c
+>> +++ b/drivers/base/memory.c
+>> @@ -19,7 +19,7 @@
+>>  #include <linux/memory.h>
+>>  #include <linux/memory_hotplug.h>
+>>  #include <linux/mm.h>
+>> -#include <linux/radix-tree.h>
+>> +#include <linux/xarray.h>
+>>  #include <linux/stat.h>
+>>  #include <linux/slab.h>
+>>  
+>> @@ -58,11 +58,11 @@ static struct bus_type memory_subsys = {
+>>  };
+>>  
+>>  /*
+>> - * Memory blocks are cached in a local radix tree to avoid
+>> + * Memory blocks are cached in a local xarray to avoid
+>>   * a costly linear search for the corresponding device on
+>>   * the subsystem bus.
+>>   */
+>> -static RADIX_TREE(memory_blocks, GFP_KERNEL);
+>> +static DEFINE_XARRAY(memory_blocks);
+>>  
+>>  static BLOCKING_NOTIFIER_HEAD(memory_chain);
+>>  
+>> @@ -566,7 +566,7 @@ static struct memory_block *find_memory_block_by_id(unsigned long block_id)
+>>  {
+>>         struct memory_block *mem;
+>>  
+>> -       mem = radix_tree_lookup(&memory_blocks, block_id);
+>> +       mem = xa_load(&memory_blocks, block_id);
+>>         if (mem)
+>>                 get_device(&mem->dev);
+>>         return mem;
+>> @@ -621,7 +621,8 @@ int register_memory(struct memory_block *memory)
+>>                 put_device(&memory->dev);
+>>                 return ret;
+>>         }
+>> -       ret = radix_tree_insert(&memory_blocks, memory->dev.id, memory);
+>> +       ret = xa_err(xa_store(&memory_blocks, memory->dev.id, memory,
+>> +                             GFP_KERNEL));
+>>         if (ret) {
+>>                 put_device(&memory->dev);
+>>                 device_unregister(&memory->dev);
+>> @@ -683,7 +684,7 @@ static void unregister_memory(struct memory_block *memory)
+>>         if (WARN_ON_ONCE(memory->dev.bus != &memory_subsys))
+>>                 return;
+>>  
+>> -       WARN_ON(radix_tree_delete(&memory_blocks, memory->dev.id) == NULL);
+>> +       WARN_ON(xa_erase(&memory_blocks, memory->dev.id) == NULL);
+>>  
+>>         /* drop the ref. we got via find_memory_block() */
+>>         put_device(&memory->dev);
+> 
+> OK, this looks sensible. xa_store shouldn't ever return an existing
+> device as we do the lookpup beforehand so good. We might need to
+> reorganize the code if we want to drop the loopup though.
 
-It was the "big hammer" solution for this RFC.
+Ping Scott. Will you resend a cleanup like this as a proper patch or
+shall I?
 
-I think we could do with a try_lock() on the device_lock() paired with a
-device->removed flag. The latter is helpful for properly catching zombie
-devices on the onlining/offlining path either way (and on my todo list).
-
->=20
-> Really, the interface is flawed and should have never been merged in th=
-e
-> first place. We cannot simply remove it altogether I am afraid so let's
-> at least remove the bogus code and pretend that the world is a better
-> place where everything is removable except the reality sucks...
-
-As I expressed already, the interface works as designed/documented and
-has been used like that for years. I tend to agree that it never should
-have been merged like that.
-
-We have (at least) two places that are racy (with concurrent memory
-hotplug):
-
-1. /sys/.../memoryX/removable
-- a) make it always return yes and make the interface useless
-- b) add proper locking and keep it running as is (e.g., so David can
-     identify offlineable memory blocks :) ).
-
-2. /sys/.../memoryX/valid_zones
-- a) always return "none" if the memory is online
-- b) add proper locking and keep it running as is
-- c) cache the result ("zone") when a block is onlined (e.g., in
-mem->zone. If it is NULL, either mixed zones or unknown)
-
-At least 2. already scream for a proper device_lock() locking as the
-mem->state is not stable across the function call.
-
-1a and 2a are the easiest solutions but remove all ways to identify if a
-memory block could theoretically be offlined - without trying
-(especially, also to identify the MOVABLE zone).
-
-I tend to prefer 1b) and 2c), paired with proper device_lock() locking.
-We don't affect existing use cases but are able to simplify the code +
-fix the races.
-
-What's your opinion? Any alternatives?
-
---=20
+-- 
 Thanks,
 
 David / dhildenb
