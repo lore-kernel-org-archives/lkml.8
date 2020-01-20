@@ -2,75 +2,73 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1132FC33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B51C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA6BA2070C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:20:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 079A922314
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:23:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729030AbgATPUl (ORCPT
+        id S1728665AbgATPXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 10:20:41 -0500
-Received: from gate.crashing.org ([63.228.1.57]:52061 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726626AbgATPUk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 10:20:40 -0500
-Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 00KFJb5J002311;
-        Mon, 20 Jan 2020 09:19:38 -0600
-Received: (from segher@localhost)
-        by gate.crashing.org (8.14.1/8.14.1/Submit) id 00KFJbq8002310;
-        Mon, 20 Jan 2020 09:19:37 -0600
-X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
-Date:   Mon, 20 Jan 2020 09:19:36 -0600
-From:   Segher Boessenkool <segher@kernel.crashing.org>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, nathanl@linux.ibm.com,
-        arnd@arndb.de, tglx@linutronix.de, vincenzo.frascino@arm.com,
-        luto@kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org
-Subject: Re: [RFC PATCH v4 00/11] powerpc: switch VDSO to C implementation.
-Message-ID: <20200120151936.GB3191@gate.crashing.org>
-References: <cover.1579196675.git.christophe.leroy@c-s.fr> <20200117085851.GS3191@gate.crashing.org> <3027b6d2-47a9-a871-7c52-050a5f9c6ab7@c-s.fr>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3027b6d2-47a9-a871-7c52-050a5f9c6ab7@c-s.fr>
-User-Agent: Mutt/1.4.2.3i
+        Mon, 20 Jan 2020 10:23:13 -0500
+Received: from netrider.rowland.org ([192.131.102.5]:46005 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726819AbgATPXM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 10:23:12 -0500
+Received: (qmail 18294 invoked by uid 500); 20 Jan 2020 10:23:11 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 20 Jan 2020 10:23:11 -0500
+Date:   Mon, 20 Jan 2020 10:23:11 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@netrider.rowland.org
+To:     Paul Zimmerman <pauldzim@gmail.com>
+cc:     David Heinzelmann <heinzelmann.david@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>
+Subject: Re: [REGRESSION][BISECTED] 5.5-rc suspend/resume failure caused by
+ patch a4f55d8b8c14 ("usb: hub: Check device descriptor before resusciation")
+In-Reply-To: <20200119211145.7dcc86ec@EliteBook>
+Message-ID: <Pine.LNX.4.44L0.2001201016300.16814-100000@netrider.rowland.org>
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 02:56:00PM +0000, Christophe Leroy wrote:
-> >Nice!  Much better.
-> >
-> >It should be tested on more representative hardware, too, but this looks
-> >promising alright :-)
-> 
-> mpc832x (e300c2 core) at 333 MHz:
-> 
-> Before:
-> 
-> gettimeofday:    vdso: 235 nsec/call
-> clock-gettime-realtime:    vdso: 244 nsec/call
-> 
-> With the series:
-> 
-> gettimeofday:    vdso: 271 nsec/call
-> clock-gettime-realtime:    vdso: 281 nsec/call
+On Sun, 19 Jan 2020, Paul Zimmerman wrote:
 
-Those are important, and degrade ~15%.  That is acceptable IMO, but do
-you see a way to optimise this (later)?
+> I reported this regression last week (see
+> https://lore.kernel.org/linux-usb/20200115153714.03d5b3aa@EliteBook/T/#u)
+> but I got no response to my email. Today I have retested with 5.5-rc7
+> and verified that the problem still exists. So I am resending with a
+> different subject line to see if anyone responds.
+> 
+> The $subject patch causes a regression on my HP EliteBook laptop with a
+> built-in USB bluetooth adapter. About 50% of the time, a suspend/resume
+> cycle will cause the bluetooth adapter to stop working.
+> 
+> The dmesg log below shows two suspend/resume cycles. At time 63.928 you can
+> see the bluetooth adapter being successfully resumed, and at time 140.969
+> you can see it fail. After reverting the patch, the bluetooth adapter
+> resumes 100% of the time.
+> 
+> I also included below a lsusb -v of the bluetooth adapter. Is there any
+> other debugging info you'd like me to send?
 
-Anyway, excellent results, thanks for your persistence!
+It looks like your dmesg log was made without enabling debugging 
+messages in usbcore.  Can you collect another log with debugging 
+messages turned on?
 
+	echo 'module usbcore =p' >/sys/kernel/debug/dynamic_debug/control
 
-Segher
+Also, it might not hurt to collect and post a usbmon trace for a bad
+suspend-resume cycle.
+
+Alan Stern
+
