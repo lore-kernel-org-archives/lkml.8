@@ -2,281 +2,264 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DAE7C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:16:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 600DCC33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 705542087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:16:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C78420882
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:19:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727011AbgATLQN (ORCPT
+        id S1726860AbgATLTE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 06:16:13 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:34696 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726451AbgATLQN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 06:16:13 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: aragua)
-        with ESMTPSA id C63A22925AE
-Message-ID: <ed7667b85c9aa9465f1b4bb97b672aa1099572ee.camel@collabora.com>
-Subject: Re: [PATCH] mfd / platform: cros_ec: Query EC protocol version if
- EC transitions between RO/RW
-From:   Fabien Lahoudere <fabien.lahoudere@collabora.com>
-To:     Yicheng Li <yichengli@google.com>
-Cc:     Yicheng Li <yichengli@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>, bleung@chromium.org,
-        gwendal@chromium.org, enric.balletbo@collabora.com
-Date:   Mon, 20 Jan 2020 12:16:06 +0100
-In-Reply-To: <CAB8_tbG8NSQyLZBizhiKFcfOszOhfi1FFoRAi9SLcFFRTuJDzw@mail.gmail.com>
-References: <20191118200000.35484-1-yichengli@chromium.org>
-         <b5149024683189b78224f4c6639818e9d833e126.camel@collabora.com>
-         <CAB8_tbG8NSQyLZBizhiKFcfOszOhfi1FFoRAi9SLcFFRTuJDzw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
+        Mon, 20 Jan 2020 06:19:04 -0500
+Received: from mga03.intel.com ([134.134.136.65]:57131 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726421AbgATLTE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 06:19:04 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 03:19:02 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,341,1574150400"; 
+   d="scan'208";a="275015353"
+Received: from linux.intel.com ([10.54.29.200])
+  by FMSMGA003.fm.intel.com with ESMTP; 20 Jan 2020 03:19:01 -0800
+Received: from [10.125.252.193] (abudanko-mobl.ccr.corp.intel.com [10.125.252.193])
+        by linux.intel.com (Postfix) with ESMTP id 168DE5802C1;
+        Mon, 20 Jan 2020 03:18:52 -0800 (PST)
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Subject: [PATCH v5 0/10] Introduce CAP_PERFMON to secure system performance
+ monitoring and observability
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
+        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "james.bottomley@hansenpartnership.com" 
+        <james.bottomley@hansenpartnership.com>,
+        Serge Hallyn <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Robert Richter <rric@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Lionel Landwerlin <lionel.g.landwerlin@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        oprofile-list@lists.sf.net
+Organization: Intel Corp.
+Message-ID: <0548c832-7f4b-dc4c-8883-3f2b6d351a08@linux.intel.com>
+Date:   Mon, 20 Jan 2020 14:18:51 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yicheng,
 
-Thanks for your quick answer.
+Currently access to perf_events, i915_perf and other performance monitoring and
+observability subsystems of the kernel is open for a privileged process [1] with
+CAP_SYS_ADMIN capability enabled in the process effective set [2].
 
-I updated the firmware after my first email on friday.
-Now the version is correct:
+This patch set introduces CAP_PERFMON capability designed to secure system
+performance monitoring and observability operations so that CAP_PERFMON would
+assist CAP_SYS_ADMIN capability in its governing role for perf_events, i915_perf
+and other performance monitoring and observability subsystems of the kernel.
 
-   # ectool version --name=cros_fp
-   RO version:    nocturne_fp_v2.2.64-58cf5974e
-   RW version:    nocturne_fp_v2.2.191-1d529566e
-   Firmware copy: RW
-   Build info:    nocturne_fp_v2.2.191-1d529566e 2019-11-01 20:30:58
-   @chromeos-ci-legacy-us-central1-b-x32-72-dltd
-   Tool version:  v2.0.3031-9e0f24fad 2020-01-13 06:11:02 @chromeos-ci-
-   legacy-us-east1-d-x32-89-i09h
+CAP_PERFMON intends to take over CAP_SYS_ADMIN credentials related to system
+performance monitoring and observability operations and balance amount of
+CAP_SYS_ADMIN credentials following the recommendations in the capabilities man
+page [2] for CAP_SYS_ADMIN: "Note: this capability is overloaded; see Notes to
+kernel developers, below."
 
-The result does not change. This is the console output after I sent the
-reboot command.
+CAP_PERFMON intends to harden system security and integrity during system
+performance monitoring and observability operations by decreasing attack surface
+that is available to a CAP_SYS_ADMIN privileged process [2]. Providing the access
+to system performance monitoring and observability operations under CAP_PERFMON
+capability singly, without the rest of CAP_SYS_ADMIN credentials, excludes chances
+to misuse the credentials and makes the operation more secure.
 
-   $ ectool name=cros_fp output
-   ...
-   [250664.176204 HC 0xa9]
-   [250664.176287 HC 0xa9 err 1]
-   [250664.177413 HC 0x67]
-   [250664.177489 HC 0x67 err 9]
-   [250664.178434 HC 0x02]
-   [250664.180308 HC Suppressed: 0x97=127 0x98=138 0x115=0]
-   [250664.477987 HC 0x01]
-   [250892.898421 HC 0x02]
-   [250892.900447 HC 0x07]
-   [250892.901286 HC 0x0b]
-   [250902.139053 HC 0x02]
-   [250902.141059 HC 0x07]
-   [250902.141847 HC 0x0b]
-   [250902.142988 HC 0xd2]
-   [250902.143072 Executing host reboot command 1]
-   [250902.143176 HC 0xd2 err 4]
-   [250908.838254 HC 0x02]
-   [250908.840474 HC 0x07]
-   [250908.841391 HC 0x0b]
+For backward compatibility reasons access to system performance monitoring and
+observability subsystems of the kernel remains open for CAP_SYS_ADMIN privileged
+processes but CAP_SYS_ADMIN capability usage for secure system performance
+monitoring and observability operations is discouraged with respect to the
+designed CAP_PERFMON capability.
 
-it seems we have an error when executing the 0zd2 command.
+CAP_PERFMON intends to meet the demand to secure system performance monitoring
+and observability operations in security sensitive, restricted, multiuser production
+environments (e.g. HPC clusters, cloud and virtual compute environments) where
+root or CAP_SYS_ADMIN credentials are not available to mass users of a system
+because of security considerations.
 
-Any idea what is error 4?
+Possible alternative solution to this capabilities balancing, system security
+hardening task could be to use the existing CAP_SYS_PTRACE capability to govern
+system performance monitoring and observability operations. However CAP_SYS_PTRACE
+capability still provides users with more credentials than are required for
+secure performance monitoring and observability operations and this excess is
+avoided by the designed CAP_PERFMON capability.
 
-Thanks
+Although the software running under CAP_PERFMON can not ensure avoidance of
+related hardware issues, the software can still mitigate those issues following
+the official embargoed hardware issues mitigation procedure [3]. The bugs in
+the software itself could be fixed following the standard kernel development
+process [4] to maintain and harden security of system performance monitoring
+and observability operations. After all, the patch set is shaped in the way
+that simplifies procedure for backtracking of possible issues and bugs [5] as
+much as possible.
 
-Fabien
+The patch set is for tip perf/core repository:
+git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip perf/core
+sha1: 5738891229a25e9e678122a843cbf0466a456d0c
 
-Le jeudi 16 janvier 2020 à 05:04 -0800, Yicheng Li a écrit :
-> Hi Fabien,
-> 
-> First, you need the new firmware which has RW 2.2.191 instead of
-> 2.2.110. It's available in release M80. The old firmware you were
-> using does not have the RO/RW protocol incompatibility problem
-> because RW 2.2.110 still only support versions 0 and 1 of
-> EC_CMD_GET_NEXT_EVENT, same as RO 2.2.64. RW 2.2.191 has version 2 of
-> EC_CMD_GET_NEXT_ EVENT, hence the issue described in the commit
-> message.
-> 
-> With RW 2.2.191, if the kernal does not have this patch, rebooting
-> cros_fp will leave you in an infinite loop in RO, as described in the
-> commit message. This patch solves the problem and you should be in RW
-> after the reboot. You can see more details on the commands sent to
-> cros_fp during RO if you have cros_fp.log 
-> 
-> Let me know if you have other questions. Thanks!
-> 
-> Best,
-> Yicheng
-> 
-> 
-> On Thu, Jan 16, 2020, 4:27 AM Fabien Lahoudere <
-> fabien.lahoudere@collabora.com> wrote:
-> > Hi,
-> > 
-> > I tried to test that patch but I cannot switch to RO firmware.
-> > I do the following steps:
-> > 
-> > root@debian:/sys/class/chromeos/cros_fp# cat version 
-> > RO version:    nocturne_fp_v2.2.64-58cf5974e
-> > RW version:    nocturne_fp_v2.2.110-b936c0a3c
-> > Firmware copy: RW
-> > Build info:    nocturne_fp_v2.2.110-b936c0a3c 2018-11-02 14:16:46
-> > @swarm-cros-461
-> > Chip vendor:   stm
-> > Chip name:     stm32h7x3
-> > Chip revision: 
-> > Board version: EC error 1
-> > root@debian:/sys/class/chromeos/cros_fp# echo ro > reboot
-> > root@debian:/sys/class/chromeos/cros_fp# cat version 
-> > RO version:    nocturne_fp_v2.2.64-58cf5974e
-> > RW version:    nocturne_fp_v2.2.110-b936c0a3c
-> > Firmware copy: RW
-> > Build info:    nocturne_fp_v2.2.110-b936c0a3c 2018-11-02 14:16:46
-> > @swarm-cros-461
-> > Chip vendor:   stm
-> > Chip name:     stm32h7x3
-> > Chip revision: 
-> > Board version: EC error 1
-> > root@debian:/sys/class/chromeos/cros_fp#
-> > 
-> > We see here that cros_fp is still RW.
-> > 
-> > I also tried with:
-> > 
-> > debian@debian:/src/ec$ sudo build/bds/util/ectool --name=cros_fp
-> > reboot_ec RO
-> > debian@debian:/src/ec$ sudo build/bds/util/ectool --name=cros_fp
-> > version     
-> > RO version:    nocturne_fp_v2.2.64-58cf5974e
-> > RW version:    nocturne_fp_v2.2.110-b936c0a3c
-> > Firmware copy: RW
-> > Build info:    nocturne_fp_v2.2.110-b936c0a3c 2018-11-02 14:16:46
-> > @swarm-cros-461
-> > Tool version:  v2.0.3074-a5052d4e7 2020-01-16 10:23:05 
-> > debian@debian
-> > debian@debian:/src/ec$
-> > 
-> > with the same result.
-> > 
-> > Can you decribe us steps you follow to test that patch?
-> > 
-> > Thanks
-> > 
-> > Fabien
-> > 
-> > Le lundi 18 novembre 2019 à 12:00 -0800, Yicheng Li a écrit :
-> > > RO and RW of EC may have different EC protocol version. If EC
-> > > transitions
-> > > between RO and RW, but AP does not reboot (this is true for
-> > > fingerprint
-> > > microcontroller / cros_fp, but not true for main ec / cros_ec),
-> > the
-> > > AP
-> > > still uses the protocol version queried before transition, which
-> > can
-> > > cause problems. In the case of fingerprint microcontroller, this
-> > > causes
-> > > AP to send the wrong version of EC_CMD_GET_NEXT_EVENT to RO in
-> > the
-> > > interrupt handler, which in turn prevents RO to clear the
-> > interrupt
-> > > line to AP, in an infinite loop.
-> > > 
-> > > Once an EC_HOST_EVENT_INTERFACE_READY is received, we know that
-> > there
-> > > might have been a transition between RO and RW, so re-query the
-> > > protocol.
-> > > 
-> > > Signed-off-by: Yicheng Li <yichengli@chromium.org>
-> > > 
-> > > Change-Id: Ib58032ff4a8e113bdbd07212e8aff42807afff38
-> > > Series-to: LKML <linux-kernel@vger.kernel.org>
-> > > Series-cc: Benson Leung <bleung@chromium.org>, Enric Balletbo i
-> > Serra
-> > > <enric.balletbo@collabora.com>, Gwendal Grignou <
-> > gwendal@chromium.org
-> > > >
-> > > ---
-> > >  drivers/platform/chrome/cros_ec.c           | 24
-> > > +++++++++++++++++++++
-> > >  include/linux/platform_data/cros_ec_proto.h |  1 +
-> > >  2 files changed, 25 insertions(+)
-> > > 
-> > > diff --git a/drivers/platform/chrome/cros_ec.c
-> > > b/drivers/platform/chrome/cros_ec.c
-> > > index 9b2d07422e17..0c910846d99d 100644
-> > > --- a/drivers/platform/chrome/cros_ec.c
-> > > +++ b/drivers/platform/chrome/cros_ec.c
-> > > @@ -104,6 +104,23 @@ static int cros_ec_sleep_event(struct
-> > > cros_ec_device *ec_dev, u8 sleep_event)
-> > >       return ret;
-> > >  }
-> > >  
-> > > +static int cros_ec_ready_event(struct notifier_block *nb,
-> > > +     unsigned long queued_during_suspend, void *_notify)
-> > > +{
-> > > +     struct cros_ec_device *ec_dev = container_of(nb, struct
-> > > cros_ec_device,
-> > > +                                                 
-> > notifier_ready);
-> > > +     u32 host_event = cros_ec_get_host_event(ec_dev);
-> > > +
-> > > +     if (host_event &
-> > > EC_HOST_EVENT_MASK(EC_HOST_EVENT_INTERFACE_READY)) {
-> > > +             mutex_lock(&ec_dev->lock);
-> > > +             cros_ec_query_all(ec_dev);
-> > > +             mutex_unlock(&ec_dev->lock);
-> > > +             return NOTIFY_OK;
-> > > +     } else {
-> > > +             return NOTIFY_DONE;
-> > > +     }
-> > > +}
-> > > +
-> > >  /**
-> > >   * cros_ec_register() - Register a new ChromeOS EC, using the
-> > > provided info.
-> > >   * @ec_dev: Device to register.
-> > > @@ -201,6 +218,13 @@ int cros_ec_register(struct cros_ec_device
-> > > *ec_dev)
-> > >               dev_dbg(ec_dev->dev, "Error %d clearing sleep event
-> > to
-> > > ec",
-> > >                       err);
-> > >  
-> > > +     /* Register the notifier for EC_HOST_EVENT_INTERFACE_READY
-> > > event. */
-> > > +     ec_dev->notifier_ready.notifier_call = cros_ec_ready_event;
-> > > +     err = blocking_notifier_chain_register(&ec_dev-
-> > >event_notifier,
-> > > +                                            &ec_dev-
-> > > >notifier_ready);
-> > > +     if (err < 0)
-> > > +             dev_warn(ec_dev->dev, "Failed to register
-> > notifier\n");
-> > > +
-> > >       dev_info(dev, "Chrome EC device registered\n");
-> > >  
-> > >       return 0;
-> > > diff --git a/include/linux/platform_data/cros_ec_proto.h
-> > > b/include/linux/platform_data/cros_ec_proto.h
-> > > index 0d4e4aaed37a..9840408c0b01 100644
-> > > --- a/include/linux/platform_data/cros_ec_proto.h
-> > > +++ b/include/linux/platform_data/cros_ec_proto.h
-> > > @@ -161,6 +161,7 @@ struct cros_ec_device {
-> > >       int event_size;
-> > >       u32 host_event_wake_mask;
-> > >       u32 last_resume_result;
-> > > +     struct notifier_block notifier_ready;
-> > >  
-> > >       /* The platform devices used by the mfd driver */
-> > >       struct platform_device *ec;
-> > 
+---
+Changes in v5:
+- renamed CAP_SYS_PERFMON to CAP_PERFMON
+- extended perfmon_capable() with noaudit checks
+Changes in v4:
+- converted perfmon_capable() into an inline function
+- made perf_events kprobes, uprobes, hw breakpoints and namespaces data available
+  to CAP_SYS_PERFMON privileged processes
+- applied perfmon_capable() to drivers/perf and drivers/oprofile
+- extended __cmd_ftrace() with support of CAP_SYS_PERFMON
+Changes in v3:
+- implemented perfmon_capable() macros aggregating required capabilities checks
+Changes in v2:
+- made perf_events trace points available to CAP_SYS_PERFMON privileged processes
+- made perf_event_paranoid_check() treat CAP_SYS_PERFMON equally to CAP_SYS_ADMIN
+- applied CAP_SYS_PERFMON to i915_perf, bpf_trace, powerpc and parisc system
+  performance monitoring and observability related subsystems
 
+---
+Alexey Budankov (10):
+  capabilities: introduce CAP_PERFMON to kernel and user space
+  perf/core: open access to the core for CAP_PERFMON privileged process
+  perf/core: open access to anon probes for CAP_PERFMON privileged process
+  perf tool: extend Perf tool with CAP_PERFMON capability support
+  drm/i915/perf: open access for CAP_PERFMON privileged process
+  trace/bpf_trace: open access for CAP_PERFMON privileged process
+  powerpc/perf: open access for CAP_PERFMON privileged process
+  parisc/perf: open access for CAP_PERFMON privileged process
+  drivers/perf: open access for CAP_PERFMON privileged process
+  drivers/oprofile: open access for CAP_PERFMON privileged process
+
+ arch/parisc/kernel/perf.c           |  2 +-
+ arch/powerpc/perf/imc-pmu.c         |  4 ++--
+ drivers/gpu/drm/i915/i915_perf.c    | 13 ++++++-------
+ drivers/oprofile/event_buffer.c     |  2 +-
+ drivers/perf/arm_spe_pmu.c          |  4 ++--
+ include/linux/capability.h          | 12 ++++++++++++
+ include/linux/perf_event.h          |  6 +++---
+ include/uapi/linux/capability.h     |  8 +++++++-
+ kernel/events/core.c                |  6 +++---
+ kernel/trace/bpf_trace.c            |  2 +-
+ security/selinux/include/classmap.h |  4 ++--
+ tools/perf/builtin-ftrace.c         |  5 +++--
+ tools/perf/design.txt               |  3 ++-
+ tools/perf/util/cap.h               |  4 ++++
+ tools/perf/util/evsel.c             | 10 +++++-----
+ tools/perf/util/util.c              |  1 +
+ 16 files changed, 55 insertions(+), 31 deletions(-)
+
+---
+Testing and validation (Intel Skylake, 8 cores, Fedora 29, 5.5.0-rc3+, x86_64):
+
+libcap library [4], [5], [6] and Perf tool can be used to apply CAP_PERFMON 
+capability for secure system performance monitoring and observability beyond the
+scope permitted by the system wide perf_event_paranoid kernel setting [7] and
+below are the steps for evaluation:
+
+  - patch, build and boot the kernel
+  - patch, build Perf tool e.g. to /home/user/perf
+  ...
+  # git clone git://git.kernel.org/pub/scm/libs/libcap/libcap.git libcap
+  # pushd libcap
+  # patch libcap/include/uapi/linux/capabilities.h with [PATCH 1]
+  # make
+  # pushd progs
+  # ./setcap "cap_perfmon,cap_sys_ptrace,cap_syslog=ep" /home/user/perf
+  # ./setcap -v "cap_perfmon,cap_sys_ptrace,cap_syslog=ep" /home/user/perf
+  /home/user/perf: OK
+  # ./getcap /home/user/perf
+  /home/user/perf = cap_sys_ptrace,cap_syslog,cap_perfmon+ep
+  # echo 2 > /proc/sys/kernel/perf_event_paranoid
+  # cat /proc/sys/kernel/perf_event_paranoid 
+  2
+  ...
+  $ /home/user/perf top
+    ... works as expected ...
+  $ cat /proc/`pidof perf`/status
+  Name:	perf
+  Umask:	0002
+  State:	S (sleeping)
+  Tgid:	2958
+  Ngid:	0
+  Pid:	2958
+  PPid:	9847
+  TracerPid:	0
+  Uid:	500	500	500	500
+  Gid:	500	500	500	500
+  FDSize:	256
+  ...
+  CapInh:	0000000000000000
+  CapPrm:	0000004400080000
+  CapEff:	0000004400080000 => 01000100 00000000 00001000 00000000 00000000
+                                     cap_perfmon,cap_sys_ptrace,cap_syslog
+  CapBnd:	0000007fffffffff
+  CapAmb:	0000000000000000
+  NoNewPrivs:	0
+  Seccomp:	0
+  Speculation_Store_Bypass:	thread vulnerable
+  Cpus_allowed:	ff
+  Cpus_allowed_list:	0-7
+  ...
+
+Usage of cap_perfmon effectively avoids unused credentials excess:
+
+- with cap_sys_admin:
+  CapEff:	0000007fffffffff => 01111111 11111111 11111111 11111111 11111111
+
+- with cap_perfmon:
+  CapEff:	0000004400080000 => 01000100 00000000 00001000 00000000 00000000
+                                    38   34               19
+                               perfmon   syslog           sys_ptrace
+
+---
+[1] https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
+[2] http://man7.org/linux/man-pages/man7/capabilities.7.html
+[3] https://www.kernel.org/doc/html/latest/process/embargoed-hardware-issues.html
+[4] https://www.kernel.org/doc/html/latest/admin-guide/security-bugs.html
+[5] https://www.kernel.org/doc/html/latest/process/management-style.html#decisions
+[6] http://man7.org/linux/man-pages/man8/setcap.8.html
+[7] https://git.kernel.org/pub/scm/libs/libcap/libcap.git
+[8] https://sites.google.com/site/fullycapable/, posix_1003.1e-990310.pdf
+[9] http://man7.org/linux/man-pages/man2/perf_event_open.2.html
+
+-- 
+2.20.1
