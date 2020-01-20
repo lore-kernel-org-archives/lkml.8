@@ -2,123 +2,126 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E83C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45C31C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:25:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A924621835
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:24:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579526650;
-	bh=ccrF3TSkZ06/slHyjQ254fUrC/MMmjaFRtd6a1TZW5I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dbGz+zs/dbRJX42dbLLbZs0MwXa44ckk6ob0TScwA4NuRZyiaoQ2OtYcLVin/D7H1
-	 3HAm/Mg4dI5rC6uohIQFwarwwgxTivQeH21grV19bdaBHqUYxhujMalRm1zwaHXUKj
-	 KttZUAPeL2Jp1La3qzP4qGxOzstCn5nUbLhymJGw=
+	by mail.kernel.org (Postfix) with ESMTP id 1901A21835
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:25:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="jB3pySYi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbgATNYJ (ORCPT
+        id S1727144AbgATNYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 08:24:09 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44599 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726619AbgATNYJ (ORCPT
+        Mon, 20 Jan 2020 08:24:18 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:32028 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726619AbgATNYR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 08:24:09 -0500
-Received: by mail-wr1-f65.google.com with SMTP id q10so29550697wrm.11;
-        Mon, 20 Jan 2020 05:24:08 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xHYwI1c4dvmZ1Pb+9NFFerZpg3qzCoeSJtlv6Fl2OEo=;
-        b=O2ca8CtOzmKaw5SrNmEFoRwuyCNxT4YCbywXq8pVAHQmzn4Suh2TxcRf5w+qMsV9+4
-         AtSR/BbRkBMfHSTpngIp4fI58cQYapM5iyP+2wtA60o+HKlf/Wt5dj/0l1XprI9DvFzJ
-         9qOcnx9oUQ/2hOiXoq9Nt+vlifj4vSdj9KbC+URv4apzoShKyXnqK3FoK4mYmkKe/0uQ
-         b1PE8+sBE4yR/qKAhPgjA0/J+6JTzAJs3t9ftgEJutBsJwCzI0fNfo0GZgkq8AwHnWSD
-         2LZbgWN/imipbqbDyny9iiZYHo0azjHTrjryVWIvqFW329zNg8QDsQpYdvgteGGzCrDY
-         VpLg==
-X-Gm-Message-State: APjAAAXjI6NA86h18pVnF0FQO237EeQyrea81n1QJFMZnaLysY6SWCme
-        +7LIt5/xuQYnTjKXT9953Mc/M6QW
-X-Google-Smtp-Source: APXvYqwz363seedT/u6ORqRmln0OxS4y1h1TOUeH8L2/nLGIXUtTnmYs+avUnskCxcR26g24PYSV5g==
-X-Received: by 2002:adf:ef4e:: with SMTP id c14mr18209651wrp.142.1579526647518;
-        Mon, 20 Jan 2020 05:24:07 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id n67sm23630987wmf.46.2020.01.20.05.24.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 05:24:06 -0800 (PST)
-Date:   Mon, 20 Jan 2020 14:24:05 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
-        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>, christian.brauner@ubuntu.com,
-        sjpark@amazon.de
-Subject: Re: [PATCH v2 2/5] mm: introduce external memory hinting API
-Message-ID: <20200120132405.GF18451@dhcp22.suse.cz>
-References: <20200116235953.163318-1-minchan@kernel.org>
- <20200116235953.163318-3-minchan@kernel.org>
- <20200117115225.GV19428@dhcp22.suse.cz>
- <f57fb198-4070-d3b4-b6bd-43b29ff40a2c@virtuozzo.com>
- <20200120112722.GY18451@dhcp22.suse.cz>
- <20200120123935.onlls7enjtzenbvt@box>
+        Mon, 20 Jan 2020 08:24:17 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00KDNm7Z031635;
+        Mon, 20 Jan 2020 14:24:14 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=3i7l2WA4p8t1LEW/kuJPwDKcIEYGPK5gxi8vuaP0ZV0=;
+ b=jB3pySYiytbAnO69I7W+ysXkdp1M9jANngEqdkNND/YCemwvmDqVy6ITbVjHtcNrfcC7
+ nHv405WARkPQtMVy2LQkqaSuEm7xoXbJB4d36yRW5qGrAcXjXYc27XBW7fgwIhAjSyjE
+ 7EroGgGklpXGq1y6cSp/AXPGR9NIuGqRSQqtXewTb+yk5j60twgAbg6UM4LShuwb7Oxq
+ zM3KG/BBBEjH/bdPSK+Dshwlzz/Uqkoc4St1LrgE7v/ZoYgFt8AMMZSGxLNtK46tHBzq
+ kJuLAIS4zQmu/j9yBvXGKPJ8jJnRfackqNfQfbeKZWBdo7rQq98LIDppL4qEnl32YcEs Dg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xkrc4spwk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jan 2020 14:24:14 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 07BFD10002A;
+        Mon, 20 Jan 2020 14:24:10 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EAD4A2BE234;
+        Mon, 20 Jan 2020 14:24:09 +0100 (CET)
+Received: from localhost (10.75.127.48) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 20 Jan 2020 14:24:09
+ +0100
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <rjw@rjwysocki.net>, <daniel.lezcano@linaro.org>
+CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH] cpuidle: coupled: fix warning when compiling with W=1
+Date:   Mon, 20 Jan 2020 14:24:08 +0100
+Message-ID: <20200120132408.20734-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200120123935.onlls7enjtzenbvt@box>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.48]
+X-ClientProxiedBy: SFHDAG3NODE2.st.com (10.75.127.8) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-20_02:2020-01-20,2020-01-20 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 20-01-20 15:39:35, Kirill A. Shutemov wrote:
-> On Mon, Jan 20, 2020 at 12:27:22PM +0100, Michal Hocko wrote:
-> > On Mon 20-01-20 13:24:35, Kirill Tkhai wrote:
-[...]
-> > > Even two threads on common memory need a synchronization
-> > > to manage mappings in a sane way. Managing memory from two processes
-> > > is the same in principle, and the only difference is that another level
-> > > of synchronization is required.
-> > 
-> > Well, not really. The operation might simply attempt to perform an
-> > operation on a specific memory area and get a failure if it doesn't
-> > reference the same object anymore. What I think we need is some form of
-> > a handle to operate on. In the past we have discussed several
-> > directions. I was proposing /proc/self/map_anon/ (analogous to
-> > map_files) where you could inspect anonymous memory and get a file
-> > handle for it. madvise would then operate on the fd and then there
-> > shouldn't be a real problem to revalidate that the object is still
-> > valid. But there was no general enthusiasm about that approach. There
-> > are likely some land mines on the way.
-> 
-> Converting anon memory to file-backed is bad idea and going to backfire.
+Fix the warning that show up when compiling with W=1
 
-I didn't mean to convert. I meant to expose that information via proc
-the same way we do for file backed mappings. That shouldn't really
-require to re-design the way how anonymous vma work IMO. But I haven't
-tried that so there might be many gotchas there.
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+ drivers/cpuidle/coupled.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-There are obvious things to think about though. Such fd cannot be sent
-to other processes (SCM stuff), mmap of the file would have to be
-disallowed and many others I am not aware of. I am not even pushing this
-direction because I am not convinced about how viable it is myself. But
-it would sound like a nice extension of the existing mechanism we have
-and a file based madvise sounds attractive to me as well because we
-already have that.
+diff --git a/drivers/cpuidle/coupled.c b/drivers/cpuidle/coupled.c
+index b607278df25b..04003b90dc49 100644
+--- a/drivers/cpuidle/coupled.c
++++ b/drivers/cpuidle/coupled.c
+@@ -89,6 +89,7 @@
+  * @coupled_cpus: mask of cpus that are part of the coupled set
+  * @requested_state: array of requested states for cpus in the coupled set
+  * @ready_waiting_counts: combined count of cpus  in ready or waiting loops
++ * @abort_barrier: synchronisation point for abort cases
+  * @online_count: count of cpus that are online
+  * @refcnt: reference count of cpuidle devices that are using this struct
+  * @prevent: flag to prevent coupled idle while a cpu is hotplugging
+@@ -338,7 +339,7 @@ static void cpuidle_coupled_poke(int cpu)
+ 
+ /**
+  * cpuidle_coupled_poke_others - wake up all other cpus that may be waiting
+- * @dev: struct cpuidle_device for this cpu
++ * @this_cpu: target cpu
+  * @coupled: the struct coupled that contains the current cpu
+  *
+  * Calls cpuidle_coupled_poke on all other online cpus.
+@@ -355,7 +356,7 @@ static void cpuidle_coupled_poke_others(int this_cpu,
+ 
+ /**
+  * cpuidle_coupled_set_waiting - mark this cpu as in the wait loop
+- * @dev: struct cpuidle_device for this cpu
++ * @cpu: target cpu
+  * @coupled: the struct coupled that contains the current cpu
+  * @next_state: the index in drv->states of the requested state for this cpu
+  *
+@@ -376,7 +377,7 @@ static int cpuidle_coupled_set_waiting(int cpu,
+ 
+ /**
+  * cpuidle_coupled_set_not_waiting - mark this cpu as leaving the wait loop
+- * @dev: struct cpuidle_device for this cpu
++ * @cpu: target cpu
+  * @coupled: the struct coupled that contains the current cpu
+  *
+  * Removes the requested idle state for the specified cpuidle device.
+@@ -412,7 +413,7 @@ static void cpuidle_coupled_set_done(int cpu, struct cpuidle_coupled *coupled)
+ 
+ /**
+  * cpuidle_coupled_clear_pokes - spin until the poke interrupt is processed
+- * @cpu - this cpu
++ * @cpu: this cpu
+  *
+  * Turns on interrupts and spins until any outstanding poke interrupts have
+  * been processed and the poke bit has been cleared.
 -- 
-Michal Hocko
-SUSE Labs
+2.15.0
+
