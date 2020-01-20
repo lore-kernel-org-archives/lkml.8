@@ -2,226 +2,100 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=BAD_ENC_HEADER,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB079C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 670FBC33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:59:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE8CC22525
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D51422527
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:59:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=brennan.io header.i=stephen@brennan.io header.b="Pwe9wDFD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbgATTwb (ORCPT
+        id S1726903AbgATT7V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 14:52:31 -0500
-Received: from mga02.intel.com ([134.134.136.20]:9724 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726586AbgATTwb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 14:52:31 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 11:52:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,343,1574150400"; 
-   d="scan'208";a="425273367"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 20 Jan 2020 11:52:28 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1itd63-0006DE-I7; Tue, 21 Jan 2020 03:52:27 +0800
-Date:   Tue, 21 Jan 2020 03:51:56 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:efi/core] BUILD SUCCESS
- 615bf8d9a96b3695eb6bb9b35c2279f5a17fd8c3
-Message-ID: <5e2604dc.vuKtQBJaEnWyKJgA%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+        Mon, 20 Jan 2020 14:59:21 -0500
+Received: from sender4-of-o51.zoho.com ([136.143.188.51]:21128 "EHLO
+        sender4-of-o51.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726586AbgATT7V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 14:59:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1579550348;
+        s=selector01; d=brennan.io; i=stephen@brennan.io;
+        h=Content-Transfer-Encoding:Content-Type:In-Reply-To:Date:Subject:From:To:Cc:Message-Id;
+        bh=zGEdNMOLYUYRRFqkqQsKe15wlZAeAg0gSQKMVkqOP1g=;
+        b=Pwe9wDFD2vVddbh4roqz2VZ+YSXzOhU7ZRLVdYZHQNQ4wDVmXyadx67RG0G5iEob
+        Cl7YPIGzVqy1fqpo08WLBkZEVb7ytHY1ooWF4rfqvPuNcrOXAQ/YHRk+dt96FxDd3Nt
+        LqisxORP7jbEwJheB7gfR5YRBhv8aQaFNCIC9WxM=
+Received: from localhost (195.173.24.136.in-addr.arpa [136.24.173.195]) by mx.zohomail.com
+        with SMTPS id 1579550343636345.40512828000374; Mon, 20 Jan 2020 11:59:03 -0800 (PST)
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Originaldate: Mon Jan 20, 2020 at 12:03 PM
+Originalfrom: "Nicolas Saenz Julienne" <nsaenzjulienne@suse.de>
+Original: =?utf-8?q?Hi_Stephen,
+ =0D=0A=0D=0AOn_Sun,_2020-01-19_at_20:17_-0800,_Steph?=
+ =?utf-8?q?en_Brennan_wrote:=0D=0A>_When_booting_Raspberry_Pi_4B_using_a_m?=
+ =?utf-8?q?icro_SDHC_UHS_class_1_card,_the_SD=0D=0A>_card_partitions_never?=
+ =?utf-8?q?_appear_in_/dev.__According_to_the_device_tree=0D=0A>_bindings_?=
+ =?utf-8?q?for_Broadcom_IPROC_SDHCI_controller,_we_should_use=0D=0A>_"brcm?=
+ =?utf-8?q?,bcm2711-emmc2"_compatible_string_on_BCM2711._Set_this_compatib?=
+ =?utf-8?q?le=0D=0A>_string,_which_allows_these_cards_to_be_mounted.=0D=0A?=
+ =?utf-8?q?>=3D20=0D=0A>_Signed-off-by:_Stephen_Brennan_<stephen@brennan.i?=
+ =?utf-8?q?o>=0D=0A=0D=0AYour_UHS_class_1_card_should_work_out_of_the_box_?=
+ =?utf-8?q?using_the_current_kernel=0D=0Aversion._Note_that_the_device_nod?=
+ =?utf-8?q?e_is_defined_here:=0D=0A=0D=0Ahttps://git.kernel.org/pub/scm/li?=
+ =?utf-8?q?nux/kernel/git/torvalds/linux.git/tree/arc=3D=0D=0Ah/arm/boot/d?=
+ =?utf-8?q?ts/bcm2711.dtsi=3Fh=3D3Dv5.5-rc7#n255=0D=0A=0D=0Aand_enabled_he?=
+ =?utf-8?q?re:=0D=0A=0D=0Ahttps://git.kernel.org/pub/scm/linux/kernel/git/?=
+ =?utf-8?q?torvalds/linux.git/tree/arc=3D=0D=0Ah/arm/boot/dts/bcm2711-rpi-?=
+ =?utf-8?q?4-b.dts=3Fh=3D3Dv5.5-rc7#n98=0D=0A=0D=0ARegards,=0D=0ANicolas?=
+ =?utf-8?q?=0D=0A=0D=0A?=
+In-Reply-To: <936f10bbeca467ea8ebc669280a50c688730689d.camel@suse.de>
+Date:   Mon, 20 Jan 2020 11:59:00 -0800
+Subject: Re: [PATCH] ARM: dts: bcm2711: Use bcm2711 compatible for sdhci
+From:   "Stephen Brennan" <stephen@brennan.io>
+To:     "Nicolas Saenz Julienne" <nsaenzjulienne@suse.de>
+Cc:     "Mark Rutland" <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        <bcm-kernel-feedback-list@broadcom.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-rpi-kernel@lists.infradead.org>
+Message-Id: <C00VV4QDHC2Q.20QYUR6KOPB8G@pride>
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  efi/core
-branch HEAD: 615bf8d9a96b3695eb6bb9b35c2279f5a17fd8c3  efi/x86: Disallow efi=old_map in mixed mode
+Hi Nicolas,
 
-elapsed time: 491m
+You're right, this patch doesn't work (it doesn't even touch the correct=20
+device tree node). My bad.
 
-configs tested: 163
-configs skipped: 0
+> Your UHS class 1 card should work out of the box using the current
+> kernel version.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+I've been debugging an issue (reproduced on today's linux-next) in which my=
+=20
+UHS class 1 card's partitions don't show up in `/dev`. For example, if I do=
+=20
+`ls /dev | grep mmc`, I get just one result, "mmcblk1". I thought my patch=
+=20
+fixed the issue, but it turns out that the issue is sporadic: on some=20
+boots, the issue manifests. On others, the partitions appear in /dev as=20
+normal. When I tested this patch, the issue had sporadically disappeared,=
+=20
+leading me to believe the patch was effective.
 
-x86_64               randconfig-e001-20200120
-x86_64               randconfig-e002-20200120
-x86_64               randconfig-e003-20200120
-i386                 randconfig-e001-20200120
-i386                 randconfig-e002-20200120
-i386                 randconfig-e003-20200120
-i386                             alldefconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-parisc                            allnoconfig
-parisc                            allyesonfig
-parisc                         b180_defconfig
-parisc                        c3000_defconfig
-parisc                              defconfig
-arc                              allyesconfig
-arc                                 defconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-csky                 randconfig-a001-20200120
-openrisc             randconfig-a001-20200120
-s390                 randconfig-a001-20200120
-sh                   randconfig-a001-20200120
-xtensa               randconfig-a001-20200120
-s390                             alldefconfig
-s390                             allmodconfig
-s390                              allnoconfig
-s390                             allyesconfig
-s390                          debug_defconfig
-s390                                defconfig
-s390                       zfcpdump_defconfig
-x86_64               randconfig-g001-20200120
-x86_64               randconfig-g002-20200120
-x86_64               randconfig-g003-20200120
-i386                 randconfig-g001-20200120
-i386                 randconfig-g002-20200120
-i386                 randconfig-g003-20200120
-h8300                     edosk2674_defconfig
-h8300                    h8300h-sim_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-m68k                       m5475evb_defconfig
-m68k                          multi_defconfig
-m68k                           sun3_defconfig
-alpha                               defconfig
-csky                                defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-alpha                randconfig-a001-20200121
-m68k                 randconfig-a001-20200121
-mips                 randconfig-a001-20200121
-nds32                randconfig-a001-20200121
-parisc               randconfig-a001-20200121
-riscv                randconfig-a001-20200121
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-ia64                                defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                               rhel-7.6
-csky                 randconfig-a001-20200121
-openrisc             randconfig-a001-20200121
-s390                 randconfig-a001-20200121
-sh                   randconfig-a001-20200121
-xtensa               randconfig-a001-20200121
-x86_64               randconfig-d001-20200121
-x86_64               randconfig-d002-20200121
-x86_64               randconfig-d003-20200121
-i386                 randconfig-d001-20200121
-i386                 randconfig-d002-20200121
-i386                 randconfig-d003-20200121
-um                                  defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-x86_64               randconfig-f001-20200121
-x86_64               randconfig-f002-20200121
-x86_64               randconfig-f003-20200121
-i386                 randconfig-f001-20200121
-i386                 randconfig-f002-20200121
-i386                 randconfig-f003-20200121
-c6x                  randconfig-a001-20200121
-h8300                randconfig-a001-20200121
-microblaze           randconfig-a001-20200121
-nios2                randconfig-a001-20200121
-sparc64              randconfig-a001-20200121
-x86_64               randconfig-e001-20200121
-x86_64               randconfig-e002-20200121
-x86_64               randconfig-e003-20200121
-i386                 randconfig-e001-20200121
-i386                 randconfig-e002-20200121
-i386                 randconfig-e003-20200121
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-x86_64               randconfig-a001-20200120
-x86_64               randconfig-a002-20200120
-x86_64               randconfig-a003-20200120
-i386                 randconfig-a001-20200120
-i386                 randconfig-a002-20200120
-i386                 randconfig-a003-20200120
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-x86_64               randconfig-c001-20200121
-x86_64               randconfig-c002-20200121
-x86_64               randconfig-c003-20200121
-i386                 randconfig-c001-20200121
-i386                 randconfig-c002-20200121
-i386                 randconfig-c003-20200121
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-x86_64               randconfig-d001-20200120
-x86_64               randconfig-d002-20200120
-x86_64               randconfig-d003-20200120
-i386                 randconfig-d001-20200120
-i386                 randconfig-d002-20200120
-i386                 randconfig-d003-20200120
+Sorry for the noise! If you have any suggestions on debugging this, I'd=20
+appreciate it. As far as I know it could be anything - the particular card,=
+=20
+the particular Pi, etc.
 
----
-0-DAY kernel test infrastructure                 Open Source Technology Center
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+Thanks,
+Stephen
+
