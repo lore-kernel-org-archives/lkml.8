@@ -2,62 +2,100 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F57C33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 17:58:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF632C33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 18:02:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E68D22314
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 17:58:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 911C424655
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 18:02:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579543355;
+	bh=5g+nhNLBu3QaKcp7T3GYytUhOVrS04sl1IWrP+4wSqk=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Hk6sezqOPBCFf+9LDsrMWQmJ0WJ1QNYWzseFojtUGzA1kEcwHuTU6WR2hDPm3kBY9
+	 qvq7qMsR+WFV9LPNs6iia3IF0agpWILZ6c640HJZbzrH3HDZE3OugEB61bLvX23TYF
+	 JOX183CupOv7xs9hyy718qm8/xOIY4bNg+bK9lFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728665AbgATR6j (ORCPT
+        id S1727243AbgATSCf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 12:58:39 -0500
-Received: from mx2.suse.de ([195.135.220.15]:48640 "EHLO mx2.suse.de"
+        Mon, 20 Jan 2020 13:02:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727740AbgATR6j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 12:58:39 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 6B209AD5B;
-        Mon, 20 Jan 2020 17:58:37 +0000 (UTC)
-Date:   Mon, 20 Jan 2020 09:51:44 -0800
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Davidlohr Bueso <dbueso@suse.de>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>
-Subject: Re: [PATCH] lib/rbtree: avoid pointless rb_node alignment
-Message-ID: <20200120175144.67625skg6eiprpsa@linux-p48b>
-References: <20200110215429.30360-1-dave@stgolabs.net>
- <CAMuHMdXeZvJ0X6Ah2CpLRoQJm+YhxAWBt-rUpxoyfOLTcHp+0g@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdXeZvJ0X6Ah2CpLRoQJm+YhxAWBt-rUpxoyfOLTcHp+0g@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+        id S1726642AbgATSCe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 13:02:34 -0500
+Received: from localhost.localdomain (unknown [194.230.155.229])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DFE522314;
+        Mon, 20 Jan 2020 18:02:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579543354;
+        bh=5g+nhNLBu3QaKcp7T3GYytUhOVrS04sl1IWrP+4wSqk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=r2hEtFLB/hocwTKWiMWXITcsdVBrZg7eEOoxP3U3OvU4tVMZVxa/qtumf7KuOsFAh
+         JB70raMw7aosIAQP3fV7enDBefarYoslwimkcYRBEPAUBbZU2qLHbOnCFWJT+sJzpQ
+         LuAD+Xk5GJeM2eWK5I5ZnnWx2Ld91bsUBbeHaNa4=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
+        arm@kernel.org, soc@kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] ARM: defconfig: Samsung defconfig for v5.6
+Date:   Mon, 20 Jan 2020 19:02:27 +0100
+Message-Id: <20200120180227.9061-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jan 2020, Geert Uytterhoeven wrote:
+Hi,
 
->timerqueue_del() uses rbtree, and
->
->    #define rb_parent(r)   ((struct rb_node *)((r)->__rb_parent_color & ~3))
->
->relies on all objects being 4-byte aligned.  But your patch broke that
->assumption on m68k, where the default alignment is 2-byte.
->
->Andrew: please drop this patch.
+I hope it is not too late for these defconfig changes.
 
-Yeah that's too bad. I'll send a patch improving the comment around the alignment
-once the patch is dropped.
 
-Thanks,
-Davidlohr
+Best regards,
+Krzysztof
+
+
+The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
+
+  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/samsung-defconfig-5.6
+
+for you to fetch changes up to cdfc88f1cdbf12b666dcf2da3f1de38fb1512262:
+
+  ARM: multi_v7_defconfig: Enable devfreq thermal integration (2020-01-17 20:28:54 +0100)
+
+----------------------------------------------------------------
+Samsung defconfig changes for v5.6
+
+1. Bring back explicitly wanted options which were removed through
+   `make savedefconfig`.  savedefconfig removes options selected by
+   other symbol, however developers of this other symbol can remove
+   anytime 'select' statement.
+2. Enable NFS v4.1 and v4.2, useful in testing/CI systems.
+3. Enable thermal throttling through devfreq framework.
+
+----------------------------------------------------------------
+Krzysztof Kozlowski (3):
+      ARM: exynos_defconfig: Bring back explicitly wanted options
+      ARM: exynos_defconfig: Enable NFS v4.1 and v4.2
+      ARM: multi_v7_defconfig: Enable NFS v4.1 and v4.2
+
+Marek Szyprowski (2):
+      ARM: exynos_defconfig: Enable devfreq thermal integration
+      ARM: multi_v7_defconfig: Enable devfreq thermal integration
+
+ arch/arm/configs/exynos_defconfig   | 9 +++++++++
+ arch/arm/configs/multi_v7_defconfig | 3 +++
+ 2 files changed, 12 insertions(+)
