@@ -2,94 +2,102 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11203C33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 07:32:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1796C33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 07:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB3FD20684
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 07:32:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE6802077C
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 07:34:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbgATHcd (ORCPT
+        id S1726738AbgATHeK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 02:32:33 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:56870 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726089AbgATHcc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 02:32:32 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id EA2081A058C;
-        Mon, 20 Jan 2020 08:32:30 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 77D441A02E4;
-        Mon, 20 Jan 2020 08:32:27 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id EF3E8402C4;
-        Mon, 20 Jan 2020 15:32:22 +0800 (SGT)
-From:   Shengjiu Wang <shengjiu.wang@nxp.com>
-To:     lars@metafoo.de, lgirdwood@gmail.com, broonie@kernel.org,
-        perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, john.stultz@linaro.org
-Subject: [PATCH] ASoC: soc-generic-dmaengine-pcm: Fix error handling
-Date:   Mon, 20 Jan 2020 15:28:06 +0800
-Message-Id: <1579505286-32085-1-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 20 Jan 2020 02:34:10 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:50821 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726148AbgATHeJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 02:34:09 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1itRZY-0001W4-AV; Mon, 20 Jan 2020 08:34:08 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1itRZX-00010y-8l; Mon, 20 Jan 2020 08:34:07 +0100
+Date:   Mon, 20 Jan 2020 08:34:07 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     yu kuai <yukuai3@huawei.com>
+Cc:     thierry.reding@gmail.com, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, zhengbin13@huawei.com,
+        yi.zhang@huawei.com
+Subject: Re: [PATCH] pwm: remove set but not set variable 'pwm'
+Message-ID: <20200120073407.ck2fmk7qdvqsfqsy@pengutronix.de>
+References: <20200119122202.14502-1-yukuai3@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200119122202.14502-1-yukuai3@huawei.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the return value checking, that is to align with the code
-before adding snd_dmaengine_pcm_refine_runtime_hwparams function.
+Hello,
 
-Otherwise it causes a regression on the HiKey board:
+$Subject ~= s/not set/not used/
 
-[   17.721424] hi6210_i2s f7118000.i2s: ASoC: can't open component f7118000.i2s: -6
+On Sun, Jan 19, 2020 at 08:22:02PM +0800, yu kuai wrote:
+> Fixes gcc '-Wunused-but-set-variable' warning:
+> 
+> drivers/pwm/pwm-pca9685.c: In function ‘pca9685_pwm_gpio_free’:
+> drivers/pwm/pwm-pca9685.c:162:21: warning: variable ‘pwm’ set but
+> not used [-Wunused-but-set-variable]
+> 
+> It is never used, and so can be removed.
+> 
+> Signed-off-by: yu kuai <yukuai3@huawei.com>
 
-Fixes: e957204e732b ("ASoC: pcm_dmaengine: Extract snd_dmaengine_pcm_refine_runtime_hwparams")
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Reported-by: John Stultz <john.stultz@linaro.org>
----
- sound/soc/soc-generic-dmaengine-pcm.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+Fixes: e926b12c611c ("pwm: Clear chip_data in pwm_put()")
 
-diff --git a/sound/soc/soc-generic-dmaengine-pcm.c b/sound/soc/soc-generic-dmaengine-pcm.c
-index a428ff393ea2..2b5f3b1b062b 100644
---- a/sound/soc/soc-generic-dmaengine-pcm.c
-+++ b/sound/soc/soc-generic-dmaengine-pcm.c
-@@ -117,7 +117,6 @@ dmaengine_pcm_set_runtime_hwparams(struct snd_soc_component *component,
- 	struct dma_chan *chan = pcm->chan[substream->stream];
- 	struct snd_dmaengine_dai_dma_data *dma_data;
- 	struct snd_pcm_hardware hw;
--	int ret;
- 
- 	if (pcm->config && pcm->config->pcm_hardware)
- 		return snd_soc_set_runtime_hwparams(substream,
-@@ -138,12 +137,15 @@ dmaengine_pcm_set_runtime_hwparams(struct snd_soc_component *component,
- 	if (pcm->flags & SND_DMAENGINE_PCM_FLAG_NO_RESIDUE)
- 		hw.info |= SNDRV_PCM_INFO_BATCH;
- 
--	ret = snd_dmaengine_pcm_refine_runtime_hwparams(substream,
--							dma_data,
--							&hw,
--							chan);
--	if (ret)
--		return ret;
-+	/**
-+	 * FIXME: Remove the return value check to align with the code
-+	 * before adding snd_dmaengine_pcm_refine_runtime_hwparams
-+	 * function.
-+	 */
-+	snd_dmaengine_pcm_refine_runtime_hwparams(substream,
-+						  dma_data,
-+						  &hw,
-+						  chan);
- 
- 	return snd_soc_set_runtime_hwparams(substream, &hw);
- }
+> ---
+>  drivers/pwm/pwm-pca9685.c | 4 ----
+>  1 file changed, 4 deletions(-)
+> 
+> diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
+> index 168684b02ebc..b07bdca3d510 100644
+> --- a/drivers/pwm/pwm-pca9685.c
+> +++ b/drivers/pwm/pwm-pca9685.c
+> @@ -159,13 +159,9 @@ static void pca9685_pwm_gpio_set(struct gpio_chip *gpio, unsigned int offset,
+>  static void pca9685_pwm_gpio_free(struct gpio_chip *gpio, unsigned int offset)
+>  {
+>  	struct pca9685 *pca = gpiochip_get_data(gpio);
+> -	struct pwm_device *pwm;
+>  
+>  	pca9685_pwm_gpio_set(gpio, offset, 0);
+>  	pm_runtime_put(pca->chip.dev);
+> -	mutex_lock(&pca->lock);
+> -	pwm = &pca->chip.pwms[offset];
+> -	mutex_unlock(&pca->lock);
+
+Did you check that dropping the locking is save? (I didn't)
+
+I'd assume that no harm is introduced, but mentioning that in the commit
+log would be good.
+
+Best regards
+Uwe
+
 -- 
-2.21.0
-
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
