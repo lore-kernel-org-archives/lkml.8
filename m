@@ -2,126 +2,142 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1140BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 17:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ABC4C33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 17:55:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAC3222314
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 17:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7630622525
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 17:55:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="jFImkGId"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Shm/O2tz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727531AbgATRyf (ORCPT
+        id S1728709AbgATRzF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 12:54:35 -0500
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:53722 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726897AbgATRye (ORCPT
+        Mon, 20 Jan 2020 12:55:05 -0500
+Received: from mail-wr1-f51.google.com ([209.85.221.51]:44381 "EHLO
+        mail-wr1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726876AbgATRzE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 12:54:34 -0500
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200120175433euoutp016def80c453d74a5e2fd055d6039dc4de~rqd-nhDpN0179201792euoutp01y
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 17:54:33 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200120175433euoutp016def80c453d74a5e2fd055d6039dc4de~rqd-nhDpN0179201792euoutp01y
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1579542873;
-        bh=s14Tjymw/v9Byd80J79G1eYHiWpomQTUFQYZl/ghrNk=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=jFImkGIdKrkZ+ECWkpMse/KUDd0JA7+Tl/wz6PVqZu9aZA30vv5aPBvtg17LoGW0C
-         Iuw0/izwieSup9D7g1y3IzhO0UESr3QyHZm61xhG9bJ+EIOeuFEnuvwTpswt8sA/HY
-         Sd8Vl1BNHz52xqeZCFoo/XG/KGm5PutadTsh6FqY=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200120175432eucas1p107f9c642b59c542a1cd6f8c735db1e07~rqd_-olrA1568115681eucas1p1k;
-        Mon, 20 Jan 2020 17:54:32 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id EA.F6.60679.859E52E5; Mon, 20
-        Jan 2020 17:54:32 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200120175432eucas1p2609e38ccdda10cb0ba91392207b12f99~rqd_XwLd10980509805eucas1p2U;
-        Mon, 20 Jan 2020 17:54:32 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200120175432eusmtrp176216afc29f4bb8af192b144ca752959~rqd_XNPWa3187631876eusmtrp1q;
-        Mon, 20 Jan 2020 17:54:32 +0000 (GMT)
-X-AuditID: cbfec7f4-0e5ff7000001ed07-53-5e25e9582c2a
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id A3.89.08375.759E52E5; Mon, 20
-        Jan 2020 17:54:31 +0000 (GMT)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200120175431eusmtip173cf6a03147fbb7524c5bb429f75ed58~rqd9jCQVB2386023860eusmtip1M;
-        Mon, 20 Jan 2020 17:54:31 +0000 (GMT)
-Subject: Re: [PATCH] fbdev: wait for references go away
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-To:     Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
-Cc:     marmarek@invisiblethingslab.com,
-        "open list:FRAMEBUFFER LAYER" <linux-fbdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Message-ID: <a8031679-4fcf-830d-dcf5-80654f2fbc97@samsung.com>
-Date:   Mon, 20 Jan 2020 18:54:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Mon, 20 Jan 2020 12:55:04 -0500
+Received: by mail-wr1-f51.google.com with SMTP id q10so355331wrm.11;
+        Mon, 20 Jan 2020 09:55:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:references:in-reply-to:subject:date:message-id
+         :mime-version:content-transfer-encoding:thread-index
+         :content-language;
+        bh=O5uMg6n8WGJ3DBsT5DEpdZ6rnvvc2qRQxYALKuYYT+A=;
+        b=Shm/O2tzG6ppkV1MKlYA5MYSsidRt5iztNG0N6I2Svc+1rC4msjb9YaWaYzpmuPvAU
+         YlsTGL7oxYVZnlhCdX7jrWzcjusIgsV++ZOfUPYD0CH6BGamlgaiyNtWJbNJCQFGsZ6l
+         Y4TFl0/5T891OwLnaHKPVWYDfL1glj4jkDZYfcXAeupnaSZAB3mHEIXVV0KtTVHU3nJW
+         8JM+tzmklvYpGtdRmW1aQEqO2u0dNtekmNR1K+hjdfz+CCDwJ8fSAxWy0dNangOtBxsy
+         kgReO03g5AoY+TuZBiMd0r7b1V+DAQ5pO7l/Jf0mRrluliYC5gL9nPw9Fv3hSAKNnZj6
+         sV/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
+         :message-id:mime-version:content-transfer-encoding:thread-index
+         :content-language;
+        bh=O5uMg6n8WGJ3DBsT5DEpdZ6rnvvc2qRQxYALKuYYT+A=;
+        b=D9absaOm9Ee01SezQOByQ6wX7NKRLkmbnZ99RKoFAnrUw9LYWl7zZq7UdQEHu+COP/
+         Bpt7k18OzwP+IL6CMZM3qrN1CXSCjz7uojEPMNkesxf9RCE/0oq9KL73/hIxxofU4rJ/
+         8E692t7B8Fq1yl7YUL6OFAF862c3cBeDIxdaM3VPHjpWeXLVq8ToYVEHLduHkk0s4aOE
+         3f2+aLl/JrplKIyudQGoq+EH/7ugZfXXvwJOxpY/BhDVQf7QoR5H+rI8t6meRI2cb8Mc
+         0rd/SWG7O/5eZfHsNhOoMZMLcZeo2XCdvzQWHWPRfUsj0eHnNTUmEgB7Vl9c02dVPcIO
+         fdLg==
+X-Gm-Message-State: APjAAAWe/1aWIQs7j5UH5rju5KBvjOW8rVwO5RpcwScTmG7rdxPQTtuc
+        syLPhlK+U9zNSnUW86yZSU9Zzr9apo8=
+X-Google-Smtp-Source: APXvYqz7YXkQZ8dyRvLAFJO9vJHbPgvQyXxoKIByuPaAUfRMI2IYRQC4sHXqDvhH4AYunqNhrfKviw==
+X-Received: by 2002:a5d:49cc:: with SMTP id t12mr668846wrs.363.1579542902577;
+        Mon, 20 Jan 2020 09:55:02 -0800 (PST)
+Received: from WINDOWSSS5SP16 ([82.31.89.128])
+        by smtp.gmail.com with ESMTPSA id r15sm185321wmh.21.2020.01.20.09.55.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 Jan 2020 09:55:02 -0800 (PST)
+From:   "Robert Milkowski" <rmilkowski@gmail.com>
+To:     "'Chuck Lever'" <chuck.lever@oracle.com>,
+        "'Trond Myklebust'" <trondmy@hammerspace.com>
+Cc:     "'Linux NFS Mailing List'" <linux-nfs@vger.kernel.org>,
+        "'Trond Myklebust'" <trond.myklebust@hammerspace.com>,
+        "'Anna Schumaker'" <anna.schumaker@netapp.com>,
+        <linux-kernel@vger.kernel.org>
+References: <025801d5bf24$aa242100$fe6c6300$@gmail.com> <D82A1590-FAA3-47C5-B198-937ED88EF71C@oracle.com>
+In-Reply-To: <D82A1590-FAA3-47C5-B198-937ED88EF71C@oracle.com>
+Subject: RE: [PATCH v3] NFSv4.0: nfs4_do_fsinfo() should not do implicit lease renewals
+Date:   Mon, 20 Jan 2020 17:55:00 -0000
+Message-ID: <084f01d5cfba$bc5c4d10$3514e730$@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <d143e43b-8a38-940e-3ae5-e7b830a74bb3@samsung.com>
-Content-Language: en-US
+Content-Type: text/plain;
+        charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRju2zk7OxtNPqe2NzWDgZWSmpY4StYFEX/6U4SsUzuo6bxsalp/
-        1MjLvFUq2lAzjUyNEkk3LaQWZSYa5SUxsQsqXpvpBBe2cvuQ/Pc8z/u8V16WktUJPdnElAxe
-        m8IlKxgJ3f3WNhwQs+Abd2zyuZ9ydMPCKOcmByjlu/JVoXKkt45Rruf10meEUWV906KoryX9
-        gihL3xgTtd7pE03HSsLVfHJiFq8NUl2UJCxbaum0IUF2cadNlItqBHrEsoBPwGN9rB5JWBl+
-        hGChp1BEiBVBrWmaImQdgaXVtJ0hdmZMd5oRCbQgsNbnCQlZQWAcb0MOlxsOgx+ri5QDM/gk
-        3C4kujuOhJHadtqRQOFSBEuv6pwmKVZBQ2uJswWNfaHr5yjjwB44Bta+vRYSjysM3J2hHViM
-        T4Phw2dnUQrLYXLmnoDgg2BcITUBN4mgun0fwRFQbJ9FBLvBYv8zEcHeMFhZ6hwI8BMEf4rm
-        KUKMCFoq7QxxnYKp4d+M42QU9oOnvUFEPgvW/AcickkXmFhxJTO4wJ3uGorIUigqkBH3Ieh4
-        2MHstNX3tFK3kMKwazPDrm0Mu7Yx/O/biOg2JOczdZp4XheSwl8N1HEaXWZKfODlVE0n2v6Z
-        QXu/1YR6ty6ZEWaRYq90vtI3TibksnQ5GjMCllK4SxvztyWpmsu5xmtTL2gzk3mdGXmxtEIu
-        Pd60cF6G47kMPonn03jtTlTAij1zkfivks+enQrbU7FpVyurmGjOeyv5cMDH3PJf3yeyjEd8
-        QlXWybHNblN7SM+n8JupbkNlLzOXNFsHMuJnlqvO3VBZQxS25qb9aw1ezQWr7mIP+cb9L0fd
-        r5dUR4ynRdg6NkIr8HvxUP2VyDkq2JCQnkS1rKUHFft3cdlv1NbmFwpal8AF+1NaHfcPGtSi
-        uy8DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPIsWRmVeSWpSXmKPExsVy+t/xu7rhL1XjDH7fsbG48vU9m8WzWyeZ
-        LU70fWC1uLxrDpvF58ZdLA6sHr377rF73O8+zuTxft9VNo/Pm+QCWKL0bIryS0tSFTLyi0ts
-        laINLYz0DC0t9IxMLPUMjc1jrYxMlfTtbFJSczLLUov07RL0Mt68n8FScJaponPTT/YGxulM
-        XYycHBICJhL3Nh1i7GLk4hASWMoocap7ClCCAyghI3F8fRlEjbDEn2tdbBA1rxkl7txbxAqS
-        EBYwl3j04RUziM0mYCUxsX0VI4gtIuAmcXnGahaQBmaBPkaJG3v2s0N072eU+DPvAthqXgE7
-        iXkru8FsFgFVia3vrrCB2KICERKHd8xihKgRlDg58wkLiM0pYC8x6/x1sDizgDrQnEvMELa4
-        xK0n85kgbHmJ7W/nME9gFJqFpH0WkpZZSFpmIWlZwMiyilEktbQ4Nz232FCvODG3uDQvXS85
-        P3cTIzCyth37uXkH46WNwYcYBTgYlXh4HaapxgmxJpYVV+YeYpTgYFYS4V3QBBTiTUmsrEot
-        yo8vKs1JLT7EaAr03ERmKdHkfGDU55XEG5oamltYGpobmxubWSiJ83YIHIwREkhPLEnNTk0t
-        SC2C6WPi4JRqYHR496pV23Xy2mypbf52Gcvky5dL3Wr0u5M+Ne5fpHsI7/YeJ8dNkh/k9+bs
-        iLlZd2X+/lIfmQ7Ph7Ms16hknHFd+EpzSV/Qsf2pNrcL/rw79XyJTlny1YbQWtutT+bPOrYo
-        dtpDpojHl1qqxTIP2pyPMn664thqA/cpD5ffn7Lgc6bdr8OifVVKLMUZiYZazEXFiQAyUnU6
-        wgIAAA==
-X-CMS-MailID: 20200120175432eucas1p2609e38ccdda10cb0ba91392207b12f99
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200120100025eucas1p21f5e2da0fd7c1fcb33cb47a97e9e645c
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200120100025eucas1p21f5e2da0fd7c1fcb33cb47a97e9e645c
-References: <CGME20200120100025eucas1p21f5e2da0fd7c1fcb33cb47a97e9e645c@eucas1p2.samsung.com>
-        <20200120100014.23488-1-kraxel@redhat.com>
-        <d143e43b-8a38-940e-3ae5-e7b830a74bb3@samsung.com>
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQFSV8btGYpaKSSrODVQVe6EyfKpewKNWQiWqOZaxJA=
+Content-Language: en-gb
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 1/20/20 6:51 PM, Bartlomiej Zolnierkiewicz wrote:
 
-> do_unregister_framebuffer() doesn't guarantee that fb_info is freed after
-> function's return (it only drops the kernel reference on fb_info).
-s/kernel/fbdev device driver/
+> -----Original Message-----
+> From: Chuck Lever <chuck.lever@oracle.com>
+> Sent: 30 December 2019 15:37
+> To: Robert Milkowski <rmilkowski@gmail.com>
+> Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>; Trond Myklebust
+> <trond.myklebust@hammerspace.com>; Anna Schumaker
+> <anna.schumaker@netapp.com>; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH v3] NFSv4.0: nfs4_do_fsinfo() should not do implicit
+> lease renewals
+> 
+> 
+> 
+> > On Dec 30, 2019, at 10:20 AM, Robert Milkowski <rmilkowski@gmail.com>
+> wrote:
+> >
+> > From: Robert Milkowski <rmilkowski@gmail.com>
+> >
+> > Currently, each time nfs4_do_fsinfo() is called it will do an implicit
+> > NFS4 lease renewal, which is not compliant with the NFS4
+> specification.
+> > This can result in a lease being expired by an NFS server.
+> >
+> > Commit 83ca7f5ab31f ("NFS: Avoid PUTROOTFH when managing leases")
+> > introduced implicit client lease renewal in nfs4_do_fsinfo(), which
+> > can result in the NFSv4.0 lease to expire on a server side, and
+> > servers returning NFS4ERR_EXPIRED or NFS4ERR_STALE_CLIENTID.
+> >
+> > This can easily be reproduced by frequently unmounting a sub-mount,
+> > then stat'ing it to get it mounted again, which will delay or even
+> > completely prevent client from sending RENEW operations if no other
+> > NFS operations are issued. Eventually nfs server will expire client's
+> > lease and return an error on file access or next RENEW.
+> >
+> > This can also happen when a sub-mount is automatically unmounted due
+> > to inactivity (after nfs_mountpoint_expiry_timeout), then it is
+> > mounted again via stat(). This can result in a short window during
+> > which client's lease will expire on a server but not on a client.
+> > This specific case was observed on production systems.
+> >
+> > This patch makes an explicit lease renewal instead of an implicit one,
+> > by adding RENEW to a compound operation issued by nfs4_do_fsinfo(),
+> > similarly to NFSv4.1 which adds SEQUENCE operation.
+> >
+> > Fixes: 83ca7f5ab31f ("NFS: Avoid PUTROOTFH when managing leases")
+> > Signed-off-by: Robert Milkowski <rmilkowski@gmail.com>
+> 
+> Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
+> 
+> 
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+How do we progress it further?
+
+-- 
+Robert Milkowski
+
+
+
