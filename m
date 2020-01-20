@@ -2,122 +2,136 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0317AC33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6117DC33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:06:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CED0022464
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:06:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579525589;
-	bh=LGKDMwExFELnth4Be4EVRBZGdudUpsgEXs5NODdPAdY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RukQulwfPI1r///XfvN1Kma+cnP1Wyni5yvpx/qK8kfHFhrAzEVlpw+EWxkdZk1Qo
-	 jSAsF0lyizbipcOVQhRZwVHVD722q26oDv+DbuoqI4l//+ZTM4O2WQPtNVI/l+ExNK
-	 rXVc8Fha2LVv8l3IXwdCXcRrEt0jp3yn7NyFUfn0=
+	by mail.kernel.org (Postfix) with ESMTP id 3756022525
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:06:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bhX7yiQC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbgATNG3 (ORCPT
+        id S1728516AbgATNGr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 08:06:29 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36168 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726589AbgATNG3 (ORCPT
+        Mon, 20 Jan 2020 08:06:47 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48044 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727121AbgATNGr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 08:06:29 -0500
-Received: by mail-wm1-f68.google.com with SMTP id p17so14662913wma.1;
-        Mon, 20 Jan 2020 05:06:27 -0800 (PST)
+        Mon, 20 Jan 2020 08:06:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579525606;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=oVICxkwYE819T09jumS9b6kqZZVW9alGabNhw2Byv4c=;
+        b=bhX7yiQC06ov8M3HpddvHv1pG1e/EwEZ6AzVoYP+YZaot0iUufBUXPWd1c8e7WTe+FmGBj
+        HSllop26wd/fEU9wb3SCNorMgXZ+JGdZAJLmxDIbzeDNgMedZR+zw3NS3Awlkhlu2Oe42k
+        tuHM1oxS0oGxA5+lE/ec2khu+6SZ1AE=
+Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
+ [209.85.208.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-4-V7EBC7SaNvaVUPkGXNDtQw-1; Mon, 20 Jan 2020 08:06:45 -0500
+X-MC-Unique: V7EBC7SaNvaVUPkGXNDtQw-1
+Received: by mail-lj1-f197.google.com with SMTP id h23so7532718ljk.14
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 05:06:44 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yAP4AxE8jezFjjNwotXQWmTcKA84LGA03EpyU82A5NQ=;
-        b=JFQt4NA9ODEdbrhgqEnltqJvRrqhvFTw6q548TRUBfPZbxeV/NGixFVZHipaxPFn2R
-         PfshJIod+7e3W3xcMHzNt+N59SITEe/EbaKu4lmCqZ/D6IDD1KcIMB/uIREOuxpAivLJ
-         s6OSGP7hKkVU7ImbGWNyWPu8KyNKxV1waHyl/tSvQteXViGSCZAOGyW2PkJ1MceMRogF
-         TOpKj5GfTn5gVcH3xj9uMtIOHHma26n+Zd/gJwDZ+DWs65LpTsTuJuEz+MdSjwfuSz22
-         ga1rYipaN2UQEiuEZA08sr6SR6j5eI0xxSxPn2++JjeqCGrOhv1ozuryiU1U52pD6kaI
-         mZKg==
-X-Gm-Message-State: APjAAAUBHHU/cHq2FqddxOp5TTo21KmOlVI9Q6L1g19JY9VV5e2pqARL
-        54XeCGvTciiKJJNdOworKS8cV9Rl
-X-Google-Smtp-Source: APXvYqy9ZRyVn2Uj4Hak4b0GCXZIvQoCZGbEy/6ofUz59wN/vXZ2z+9kjnuxMPGnLSbwovzTlQdxwQ==
-X-Received: by 2002:a05:600c:22d3:: with SMTP id 19mr18745263wmg.20.1579525586658;
-        Mon, 20 Jan 2020 05:06:26 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id c195sm3106848wmd.45.2020.01.20.05.06.24
+        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=oVICxkwYE819T09jumS9b6kqZZVW9alGabNhw2Byv4c=;
+        b=H2c5dNfftvHyOY2Fz7KaShF5EgfVs6kFrN5zEJIKhcjMLQNE0E0texarxrbyHECZFP
+         MnYuG0I4iMtschY4kviUCk0EWGdbfF+5K2q1tYSUn7I/lTq1rm1wy4eZe0YSTj74Jnxv
+         SDCWWr46GLwnZMkX7wtfDFTMYZomy3BLo+xOYjog9jxpUFGKqtwX8sPUEnTrpMMUyqDt
+         hfka9blsDmScwqs45ibrzzybAzVj9uTE+1PII6lVtndYgmmTkkPkrYJH1svPMAilVuEQ
+         ON7EAIJmKLxlFgNs0mM6DJzzvmnrj9L4Yr1LW7rhai7lxNYM6ByiPGP6ZsYuuWb1qAd6
+         50rg==
+X-Gm-Message-State: APjAAAXqPg+F6o0h2VzgP8zmo06oUIfIbYoey/ZV2c3Xk+8uRmA6kq9I
+        hj7lh7SwVnIJu+2Vtyz81ALPK9HzwYLmOdtPRsMg5NdtN+F/mPiEKof/FX/QR0o3EDumS62hsrI
+        tb2L1LCQpNJyjd11LujxEG2oc
+X-Received: by 2002:a2e:9015:: with SMTP id h21mr13901690ljg.69.1579525603443;
+        Mon, 20 Jan 2020 05:06:43 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxl6cjsyjw8Scl4Npe4TQQoKpYIFE7qfthL3twnuQzv1KZL4kmSTEjNXwjKvkvlIou0OEBbwA==
+X-Received: by 2002:a2e:9015:: with SMTP id h21mr13901661ljg.69.1579525603114;
+        Mon, 20 Jan 2020 05:06:43 -0800 (PST)
+Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
+        by smtp.gmail.com with ESMTPSA id z5sm16825740lji.40.2020.01.20.05.06.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 05:06:25 -0800 (PST)
-Date:   Mon, 20 Jan 2020 14:06:24 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     richardw.yang@linux.intel.com, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] mm: move_pages: fix the return value if there are
- not-migrated pages
-Message-ID: <20200120130624.GD18451@dhcp22.suse.cz>
-References: <1579325203-16405-1-git-send-email-yang.shi@linux.alibaba.com>
+        Mon, 20 Jan 2020 05:06:42 -0800 (PST)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id 59E971804D7; Mon, 20 Jan 2020 14:06:41 +0100 (CET)
+Subject: [PATCH bpf-next v5 01/11] samples/bpf: Don't try to remove user's
+ homedir on clean
+From:   =?utf-8?q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     Alexei Starovoitov <ast@kernel.org>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Date:   Mon, 20 Jan 2020 14:06:41 +0100
+Message-ID: <157952560126.1683545.7273054725976032511.stgit@toke.dk>
+In-Reply-To: <157952560001.1683545.16757917515390545122.stgit@toke.dk>
+References: <157952560001.1683545.16757917515390545122.stgit@toke.dk>
+User-Agent: StGit/0.21
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1579325203-16405-1-git-send-email-yang.shi@linux.alibaba.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 18-01-20 13:26:43, Yang Shi wrote:
-> The do_move_pages_to_node() might return > 0 value, the number of pages
-> that are not migrated, then the value will be returned to userspace
-> directly.  But, move_pages() syscall would just return 0 or errno.  So,
-> we need reset the return value to 0 for such case as what pre-v4.17 did.
+From: Toke Høiland-Jørgensen <toke@redhat.com>
 
-The patch is wrong. migrate_pages returns the number of pages it
-_hasn't_ migrated or -errno. Yeah that semantic sucks but...
-So err != 0 is always an error. Except err > 0 doesn't really provide
-any useful information to the userspace. I cannot really remember what
-was the actual behavior before my rework because there were some gotchas
-hidden there.
+The 'clean' rule in the samples/bpf Makefile tries to remove backup
+files (ending in ~). However, if no such files exist, it will instead try
+to remove the user's home directory. While the attempt is mostly harmless,
+it does lead to a somewhat scary warning like this:
 
-If you want to fix this properly then you have to query node status of
-each page unmigrated when migrate_pages fails with > 0. This would be
-easier if the fix is done on the latest cleanup posted to the list which
-consolidates all do_move_pages_to_node and store_status calls to a
-single function.
+rm: cannot remove '~': Is a directory
 
-> Fixes: a49bd4d71637 ("mm, numa: rework do_pages_move")
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Wei Yang <richardw.yang@linux.intel.com>
-> Cc: <stable@vger.kernel.org>    [4.17+]
-> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-> ---
->  mm/migrate.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/mm/migrate.c b/mm/migrate.c
-> index 86873b6..3e75432 100644
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -1659,8 +1659,11 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
->  			goto out_flush;
->  
->  		err = do_move_pages_to_node(mm, &pagelist, current_node);
-> -		if (err)
-> +		if (err) {
-> +			if (err > 0)
-> +				err = 0;
->  			goto out;
-> +		}
->  		if (i > start) {
->  			err = store_status(status, start, current_node, i - start);
->  			if (err)
-> -- 
-> 1.8.3.1
+Fix this by using find instead of shell expansion to locate any actual
+backup files that need to be removed.
 
--- 
-Michal Hocko
-SUSE Labs
+Fixes: b62a796c109c ("samples/bpf: allow make to be run from samples/bpf/ directory")
+Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
+Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+---
+ samples/bpf/Makefile |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
+index 5b89c0370f33..f86d713a17a5 100644
+--- a/samples/bpf/Makefile
++++ b/samples/bpf/Makefile
+@@ -254,7 +254,7 @@ all:
+ 
+ clean:
+ 	$(MAKE) -C ../../ M=$(CURDIR) clean
+-	@rm -f *~
++	@find $(CURDIR) -type f -name '*~' -delete
+ 
+ $(LIBBPF): FORCE
+ # Fix up variables inherited from Kbuild that tools/ build system won't like
+
