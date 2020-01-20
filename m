@@ -2,106 +2,118 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E099FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A23F9C33CB8
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF050207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:40:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lMjKXplV"
+	by mail.kernel.org (Postfix) with ESMTP id 7F082207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 12:41:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbgATMky (ORCPT
+        id S1727071AbgATMla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 07:40:54 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:42308 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726589AbgATMkx (ORCPT
+        Mon, 20 Jan 2020 07:41:30 -0500
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:43708 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726589AbgATMla (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 07:40:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=A7ASFk0z2TqRbFR1ju+tc68fwEGsQHIpdYzXYGrSwZo=; b=lMjKXplVRQnT4b5Hzw6FVcROW
-        xOXSREB58PdNkolgu3G438vAfj57OrnS3ZgeMQUUTk/M5oEKAuTCczYTUKic6QWzzXHsoHrqsqg71
-        X8RyKIoWyRPQ2CFtOLYdV9mRg0khhHKEJUBAEVpl5MB8q/1Lgw3rB2LY2aLhPvKWUVcvTzCeNrYYK
-        K/VfH6+weyZ2v24BV6pcMVLo4Ye3wT+hilHMAH7EFQ630BJkm72KNTq4jMdXRbozOoOG2HYDlkFE2
-        N1hb0UDz6Zt6ioH9SMtFhw8mvspGMnawzZQo3EU1uy93DuRPkxk/2L1OW0FVdWQj1rMf32lSZ4AlQ
-        Nxws13U7g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1itWLx-0003Xd-1h; Mon, 20 Jan 2020 12:40:26 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DA1B93035D4;
-        Mon, 20 Jan 2020 13:38:43 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4AF8E2B29B4BF; Mon, 20 Jan 2020 13:40:22 +0100 (CET)
-Date:   Mon, 20 Jan 2020 13:40:22 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <thoiland@redhat.com>,
-        Jean-Tsung Hsiao <jhsiao@redhat.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tracing/uprobe: Fix double perf_event linking on
- multiprobe uprobe
-Message-ID: <20200120124022.GA14897@hirez.programming.kicks-ass.net>
-References: <157862073931.1800.3800576241181489174.stgit@devnote2>
+        Mon, 20 Jan 2020 07:41:30 -0500
+X-AuditID: c0a8fbf4-183ff70000001fa6-ca-5e259ff60110
+Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 0A.AA.08102.6FF952E5; Mon, 20 Jan 2020 13:41:26 +0100 (CET)
+Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
+ WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
+ 14.03.0439.000; Mon, 20 Jan 2020 13:41:14 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>
+CC:     "corbet@lwn.net" <corbet@lwn.net>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "noralf@tronnes.org" <noralf@tronnes.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>
+Subject: Re: [PATCH v12 00/10] Support ROHM BD71828 PMIC
+Thread-Topic: [PATCH v12 00/10] Support ROHM BD71828 PMIC
+Thread-Index: AQHVz3GxRarqEI+FJkC62zSkifitkKfzbi0A
+Date:   Mon, 20 Jan 2020 12:41:14 +0000
+Message-ID: <ecc8ab43dfdb78c7bcab82311f608f6d4e12dc5c.camel@fi.rohmeurope.com>
+References: <cover.1579511114.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <cover.1579511114.git.matti.vaittinen@fi.rohmeurope.com>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [213.255.186.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <1A3D109FBE7D05489C91039926E23B72@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <157862073931.1800.3800576241181489174.stgit@devnote2>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Tf1AUZRjH593d211+bPNygryRNrUjUo1CNEav5TQ2Sb415Thj9YcVuMbK
+        kcfdzd7RgNZEMGicDAr4A0/uTpJTwPPQC4b4NTGEhKdjHYLglDAow4yMgoXiGGrtcir88+73
+        fZ7n8/3uH8/L0/p6Lo7PMtlkxSQZRTac6ayd9a+cccenvTpctxrXBAc4vHvyOIcflvdw+I4z
+        wOADo2MsHuvcDbC7+6IO7znfqMOFxxpY/GfTaQaP3D0L8Ez/DxTe/+AEhf8uGdbh6l01DP7J
+        /QDgS61VLG666QO452Q/iz2DQQpXeXoZPPVPMYWDgVR8IDDJ4auBsywuDA7RuKijm8OPLp9h
+        cOnF9WuXEq/LC8jsv+WATA0VccTl3UlaHFc54q8vZslfl9tZ8ovTy5FjpRU6MnOhjCHj1Q0M
+        +W2omSKHXPcp0lDSDUjtyXscmfY/vxFujlizVbJ9vSkr05T09pYIw/G+vZylUsi9Nn2LzQc3
+        I+0gjEdwFbpV8StlB+G8Hg4A1FjeyoQuvQD11p9m7YDnWbgG2a9wmoyGq9GZYJQ2QsNABHLV
+        lnCa0SKI0aFL93Sa1mb+OFhFhfRraLjaSWssA+NRUbNFKwtwA5qqu05rWg/Xoba+ibnxMJiK
+        2tsCcxrApag4f3JO0zAW+cdD9ghCVNP+Ox3SMejG9UeP6yLquD/KaFE0fBk1tCaF0LWoxd34
+        2OZFtH/PKBf6hSh07vAYsw8sdixIcMzTjgW0YwHtWEAfBbp6gLKlLGOmZJOTExU5J1ExG7LV
+        z5fmbD8Ibd2dn8F/Xe93AYoHXeBZnhJjBO4rMU3/zFZzRp5BshrSlRyjbO0CiKfFaOFoQXya
+        XsiQ8nbIivlJ6zmeEWOFhNGyL/RQy9ouyxZZedJdwvMiEh5WqWCUImfKuduyjLb5NsWHaebh
+        cdFW2ZQhK1KOzZCubUe6VV0PrRWp5h5xablWi5StVkNoACTz+244f6T5bqdHPQenOjy0njGZ
+        TXJcrIDfVAGoAYYc09O4CRDLA3GRoGh2keoDfOo2oQZRatDAG6IWZJPmW3H5YPHns4c/u3Aq
+        pfluQeLrlh353m+b6FP2IwWZ68Dg8iUp7/R/2PlCwvrAyJaVm26/+1EeO1KTK99mIs5t3vVB
+        4rLKl86n9u28EvQVruK2rYjXfeLbnlrstV8rrfv4LdDigx6j8N7y8aS9ZfwKQ8KyysH2PvJd
+        64m2b3qmY6Yrv3f7Pk2pEBmrQUp+hVas0v+4eIqdPQQAAA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 10:45:39AM +0900, Masami Hiramatsu wrote:
-
-> diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-> index 4ee703728aec..03e4e180058d 100644
-> --- a/kernel/trace/trace_probe.h
-> +++ b/kernel/trace/trace_probe.h
-> @@ -230,6 +230,7 @@ struct trace_probe_event {
->  	struct trace_event_call		call;
->  	struct list_head 		files;
->  	struct list_head		probes;
-> +	char				data[0];
->  };
-
-Would it make sense to make the above:
-
-	struct trace_uprobe_filter	filter[0];
-
-instead? That would ensure that alignment is respected. While I think
-the current code works by accident.
-
-> @@ -264,6 +263,14 @@ process_fetch_insn(struct fetch_insn *code, struct pt_regs *regs, void *dest,
->  }
->  NOKPROBE_SYMBOL(process_fetch_insn)
->  
-> +static struct trace_uprobe_filter *
-> +trace_uprobe_get_filter(struct trace_uprobe *tu)
-> +{
-> +	struct trace_probe_event *event = tu->tp.event;
-> +
-> +	return (struct trace_uprobe_filter *)&event->data[0];
-> +}
-
-
+SGVsbG8sDQoNCkRvIHlvdSBrbm93IHRob3NlIGRheXMgd2hlbiBub3RoaW5nLCBfbm90aGluZ18g
+anVzdCB3b3JrcyBvdXQgYXMNCmludGVuZGVkPyBUb2RheSBpcyBvbmUgb2YgdGhvc2UuDQoNCk9u
+IE1vbiwgMjAyMC0wMS0yMCBhdCAxMToxMiArMDIwMCwgTWF0dGkgVmFpdHRpbmVuIHdyb3RlOg0K
+PiBQYXRjaCBzZXJpZXMgaW50cm9kdWNpbmcgc3VwcG9ydCBmb3IgUk9ITSBCRDcxODI4IFBNSUMN
+Cj4gDQo+IFJPSE0gQkQ3MTgyOCBpcyBhIHBvd2VyIG1hbmFnZW1lbnQgSUMgY29udGFpbmluZyA3
+IGJ1Y2tzIGFuZCA3IExET3MuDQo+IEFsbA0KPiByZWd1bGF0b3JzIGNhbiBiZSBjb250cm9sbGVk
+IGluZGl2aWR1YWxseSB2aWEgSTJDLiBCdWNrcyAxLDIsNiBhbmQNCj4gNyBjYW4gYWxzbyBiZSBh
+c3NpZ25lZCB0byBhICJyZWd1bGF0b3IgZ3JvdXAiIGNvbnRyb2xsZWQgYnkgcnVuLQ0KPiBsZXZl
+bHMuDQo+IEVnLiBSdW4gbGV2ZWwgc3BlY2lmaWMgdm9sdGFnZXMgYW5kIGVuYWJsZS9kaXNhYmxl
+IHN0YXR1c2VzIGZvciBlYWNoDQo+IG9mDQo+IHRoZXNlIGJ1Y2tzIGNhbiBiZSBzZXQgdmlhIHJl
+Z2lzdGVyIGludGVyZmFjZS4gVGhlIGJ1Y2sgcnVuLWxldmVsDQo+IGdyb3VwDQo+IGFzc2lnbm1l
+bnQgKHNlbGVjdGlvbiBpZiBidWNrIGlzIHRvIGJlIGNvbnRyb2xsZWQgaW5kaXZpZHVhbGx5IG9y
+IHZpYQ0KPiBydW4tbGV2ZWxzKSBjYW4gYmUgY2hhbmdlZCBhdCBydW4tdGltZSB2aWEgSTJDLg0K
+PiANCj4gVGhpcyBwYXRjaCBzZXJpZXMgYnJpbmdzIG9ubHkgdGhlIGJhc2ljIHN1cHBvcnQgZm9y
+IGNvbnRyb2xsaW5nDQo+IHJlZ3VsYXRvcnMgaW5kaXZpZHVhbGx5IHZpYSBJMkMuDQoNCi8vc25p
+cA0KDQo+IFBhdGNoIDExOg0KPiAgICAgICAgIEFsbG93IGNvbnRyb2wgb2YgR1AoSSlPIHBpbnMg
+b24gQkQ3MTgyOCB2aWEgR1BJTyBzdWJzeXN0ZW0NCj4gDQoNCkkgYWNjaWRlbnRhbGx5IHJlYmFz
+ZWQgdG8gd3JvbmcgY29tbWl0IGFuZCBjcm9wcGVkIHRoZSBHUElPIHBhdGNoIG91dA0Kb2YgdGhl
+IHNlcmllcy4gTGVlIC0gY2FuIHlvdSB0YWtlIHRoZSBHUElPIHBhcnQgZnJvbSB2MTEgKHBhdGNo
+IDExLzEzDQp0aGVyZSkuIEl0IHNob3VsZCBhcHBseSBjbGVhbmx5IGFuZCBJIGhhdmUgbm8gY2hh
+bmdlcyB0byBpdC4gT3Igc2hvdWxkDQpJIGp1c3QgcmVzZW5kIHRoZSB3aG9sZSBzZXJpZXMgKGFn
+YWluKT8NCg0KQnIsDQogICAgTWF0dGkgVmFpdHRpbmVuDQo=
