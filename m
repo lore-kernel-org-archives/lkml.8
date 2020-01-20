@@ -2,151 +2,113 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 342EAC33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E843C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A93622314
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:47:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="gj+P8sv4"
+	by mail.kernel.org (Postfix) with ESMTP id 0BD5B217F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:49:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726999AbgATNrU (ORCPT
+        id S1727071AbgATNtP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 08:47:20 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:60876 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726738AbgATNrU (ORCPT
+        Mon, 20 Jan 2020 08:49:15 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37432 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726738AbgATNtP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 08:47:20 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00KDbQJC019186;
-        Mon, 20 Jan 2020 14:47:05 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
- date : message-id : mime-version : content-type :
- content-transfer-encoding; s=STMicroelectronics;
- bh=RQpTI3zFQW+ChdmHDDySJ08NSVtL9lOc5ZIv6JMCj74=;
- b=gj+P8sv4Kh+ikTblV4bXosCD65PqoiQrtdSjmKPqhDTn9Famk0YKrnA5y9NbgGK4AgdB
- 5LUwZgXMEyEQGIGWjY7HQhZvgLnifjWudJFodUW5bv0F0gR1FJSDA2etBRn3jutiq5zn
- q1kLb+ahj90oshPM/IUOpXMWP0TPWkZuhWzx11JOoUNcEefAE4slkoxsVH7vDrfUdCOK
- WBgbOJ5raNdUAtk/hjIypmiNSZsU8pblgD9dYRDUFHPBlnqZmfWZZ4J7J9AaKoraRgGP
- uKvNxHrMvOuXg9skKPOeZmj8W0eqycQdYGyMS3DquZPfoDbyKTTJnQxiNAk2T2AjidYt UA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xkssnsg0w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jan 2020 14:47:05 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C7356100034;
-        Mon, 20 Jan 2020 14:47:00 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node3.st.com [10.75.127.18])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 916642BF9A8;
-        Mon, 20 Jan 2020 14:47:00 +0100 (CET)
-Received: from localhost (10.75.127.47) by SFHDAG6NODE3.st.com (10.75.127.18)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 20 Jan 2020 14:47:00
- +0100
-From:   Yannick Fertre <yannick.fertre@st.com>
-To:     Yannick Fertre <yannick.fertre@st.com>,
-        Philippe Cornu <philippe.cornu@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] drm/stm: ltdc: enable/disable depends on encoder
-Date:   Mon, 20 Jan 2020 14:46:53 +0100
-Message-ID: <1579528013-28445-1-git-send-email-yannick.fertre@st.com>
-X-Mailer: git-send-email 2.7.4
-MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG3NODE3.st.com (10.75.127.9) To SFHDAG6NODE3.st.com
- (10.75.127.18)
+        Mon, 20 Jan 2020 08:49:15 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00KDHVhD043971
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 08:20:27 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xmgcn8xar-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 08:20:27 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <tmricht@linux.ibm.com>;
+        Mon, 20 Jan 2020 13:20:25 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 20 Jan 2020 13:20:22 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00KDJUPd19988804
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Jan 2020 13:19:30 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 960D1A4068;
+        Mon, 20 Jan 2020 13:20:20 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5C529A4060;
+        Mon, 20 Jan 2020 13:20:20 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 20 Jan 2020 13:20:20 +0000 (GMT)
+From:   Thomas Richter <tmricht@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Cc:     gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH v2] perf test: Fix test trace+probe_vfs_getname.sh
+Date:   Mon, 20 Jan 2020 14:20:11 +0100
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200120132011.64698-1-tmricht@linux.ibm.com>
+References: <20200120132011.64698-1-tmricht@linux.ibm.com>
+X-TM-AS-GCONF: 00
+x-cbid: 20012013-0028-0000-0000-000003D2CAF3
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20012013-0029-0000-0000-00002496FCBA
+Message-Id: <20200120132011.64698-3-tmricht@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-01-20_02:2020-01-20,2020-01-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 mlxscore=0
+ phishscore=0 impostorscore=0 priorityscore=1501 bulkscore=0 adultscore=0
+ spamscore=0 clxscore=1015 lowpriorityscore=0 malwarescore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-2001200115
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yannick Fertré <yannick.fertre@st.com>
+This test places a kprobe to function getname_flags() in the kernel
+which has the following prototype:
 
-When connected to a dsi host, the ltdc display controller
-must send frames only after the end of the dsi panel
-initialization to avoid errors when the dsi host sends
-commands to the dsi panel (dsi px fifo full).
-To avoid this issue, the display controller must be
-enabled/disabled when the encoder is enabled/disabled.
+  struct filename *
+  getname_flags(const char __user *filename, int flags, int *empty)
 
-Signed-off-by: Yannick Fertré <yannick.fertre@st.com>
+Variable filename points to a filename located in user space memory.
+Looking at
+commit 88903c464321c ("tracing/probe: Add ustring type for user-space string")
+the kprobe should indicate that user space memory is accessed.
+
+Fix this with a patch to specify user space memory access to
+parameter 'filename' and 'string' is replaced by 'ustring'.
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
 ---
- drivers/gpu/drm/stm/ltdc.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ tools/perf/tests/shell/lib/probe_vfs_getname.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
-index 719dfc5..9ef125d 100644
---- a/drivers/gpu/drm/stm/ltdc.c
-+++ b/drivers/gpu/drm/stm/ltdc.c
-@@ -437,9 +437,6 @@ static void ltdc_crtc_atomic_enable(struct drm_crtc *crtc,
- 	/* Commit shadow registers = update planes at next vblank */
- 	reg_set(ldev->regs, LTDC_SRCR, SRCR_VBR);
- 
--	/* Enable LTDC */
--	reg_set(ldev->regs, LTDC_GCR, GCR_LTDCEN);
--
- 	drm_crtc_vblank_on(crtc);
+diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+index 7cb99b433888..7ecf117651dd 100644
+--- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
++++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+@@ -13,8 +13,8 @@ add_probe_vfs_getname() {
+ 	local verbose=$1
+ 	if [ $had_vfs_getname -eq 1 ] ; then
+ 		line=$(perf probe -L getname_flags 2>&1 | egrep 'result.*=.*filename;' | sed -r 's/[[:space:]]+([[:digit:]]+)[[:space:]]+result->uptr.*/\1/')
+-		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->name:string" || \
+-		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:string"
++		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->uptr:ustring" || \
++		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring"
+ 	fi
  }
  
-@@ -453,9 +450,6 @@ static void ltdc_crtc_atomic_disable(struct drm_crtc *crtc,
- 
- 	drm_crtc_vblank_off(crtc);
- 
--	/* disable LTDC */
--	reg_clear(ldev->regs, LTDC_GCR, GCR_LTDCEN);
--
- 	/* disable IRQ */
- 	reg_clear(ldev->regs, LTDC_IER, IER_RRIE | IER_FUIE | IER_TERRIE);
- 
-@@ -1058,9 +1052,13 @@ static const struct drm_encoder_funcs ltdc_encoder_funcs = {
- static void ltdc_encoder_disable(struct drm_encoder *encoder)
- {
- 	struct drm_device *ddev = encoder->dev;
-+	struct ltdc_device *ldev = ddev->dev_private;
- 
- 	DRM_DEBUG_DRIVER("\n");
- 
-+	/* Disable LTDC */
-+	reg_clear(ldev->regs, LTDC_GCR, GCR_LTDCEN);
-+
- 	/* Set to sleep state the pinctrl whatever type of encoder */
- 	pinctrl_pm_select_sleep_state(ddev->dev);
- }
-@@ -1068,6 +1066,7 @@ static void ltdc_encoder_disable(struct drm_encoder *encoder)
- static void ltdc_encoder_enable(struct drm_encoder *encoder)
- {
- 	struct drm_device *ddev = encoder->dev;
-+	struct ltdc_device *ldev = ddev->dev_private;
- 
- 	DRM_DEBUG_DRIVER("\n");
- 
-@@ -1078,6 +1077,9 @@ static void ltdc_encoder_enable(struct drm_encoder *encoder)
- 	 */
- 	if (encoder->encoder_type == DRM_MODE_ENCODER_DPI)
- 		pinctrl_pm_select_default_state(ddev->dev);
-+
-+	/* Enable LTDC */
-+	reg_set(ldev->regs, LTDC_GCR, GCR_LTDCEN);
- }
- 
- static const struct drm_encoder_helper_funcs ltdc_encoder_helper_funcs = {
 -- 
-2.7.4
+2.21.0
 
