@@ -2,102 +2,111 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1796C33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 07:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 269D6C33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 07:42:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE6802077C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 07:34:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F21712087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 07:42:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579506148;
+	bh=3YQVEHCog7/EoCM8/BbQmTRXqcOmvSAy5U6IN5NqEfQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=km8z4Qr8328QyEzXSkUNYViUZToMJIg5Hmg9ZL9AZ/1wz0vIjDBdvbU1VIaHQ+QmU
+	 c7PoyzSmQDlYxoFZ4XOIEVHhFW1hu9XcDGf6xf7pZkRNnPc7Das6vZ8lsjszEHrfOc
+	 MazS7Y7gkZKsJzqZrTz7XHD1DqgiBSHa58tkQcEo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbgATHeK (ORCPT
+        id S1726451AbgATHm1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 02:34:10 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:50821 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726148AbgATHeJ (ORCPT
+        Mon, 20 Jan 2020 02:42:27 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39374 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726039AbgATHm0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 02:34:09 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1itRZY-0001W4-AV; Mon, 20 Jan 2020 08:34:08 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1itRZX-00010y-8l; Mon, 20 Jan 2020 08:34:07 +0100
-Date:   Mon, 20 Jan 2020 08:34:07 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     yu kuai <yukuai3@huawei.com>
-Cc:     thierry.reding@gmail.com, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, zhengbin13@huawei.com,
-        yi.zhang@huawei.com
-Subject: Re: [PATCH] pwm: remove set but not set variable 'pwm'
-Message-ID: <20200120073407.ck2fmk7qdvqsfqsy@pengutronix.de>
-References: <20200119122202.14502-1-yukuai3@huawei.com>
+        Mon, 20 Jan 2020 02:42:26 -0500
+Received: by mail-wr1-f68.google.com with SMTP id y11so28360617wrt.6
+        for <linux-kernel@vger.kernel.org>; Sun, 19 Jan 2020 23:42:25 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oYPv014C6O3vR5nrvfR9UKHGQnNqmP0rTFCUylko2hY=;
+        b=uOZrgz+1R36EjANfruyLGRVWC4QPuwjqV7yfMdS/ANWL3IlBkoaarpNV3D9nd4ohhL
+         GPcgVOyvO1Im2K/eG9MAQ8EvBEg4+Aa3U1b5NxopcYOcHb52sj/El4j5TdPJVRGBIhwi
+         dd59jsvOmFdE+O6JOgxiUCLryY0clZCmj9aieHGuK5gRX64mNl5KKE5evSATXtKvTIrS
+         8sYWH2iLrHrUrviFqfSzeN9vClG5eygfrmfhq+8hWpulcGolmXwI/BWQ3nbD0T2zRBlL
+         5I3Dyfh7/uRF21t+xMxG7wd1TrqjrysBIf7PNQC5ht1J7Su/wYhpqEZy8gpcJF6AlCWq
+         Hb6A==
+X-Gm-Message-State: APjAAAXwaYsg/hf6cwrREmZRNjXEAfhomLJeTlQBm1y3tW1YQVRJzJ3/
+        wWYCoNTQg+Ldu3p9ZxnrmZc=
+X-Google-Smtp-Source: APXvYqyxHbwCf1rEwyiPliE2VJRRsUpskKzOCC9hpd3QOUPFNfJx3XHUPNjrUjzx9oPxyxEzRGSxTg==
+X-Received: by 2002:adf:f847:: with SMTP id d7mr16568464wrq.35.1579506145143;
+        Sun, 19 Jan 2020 23:42:25 -0800 (PST)
+Received: from localhost (ip-37-188-138-155.eurotel.cz. [37.188.138.155])
+        by smtp.gmail.com with ESMTPSA id d14sm49499767wru.9.2020.01.19.23.42.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 19 Jan 2020 23:42:24 -0800 (PST)
+Date:   Mon, 20 Jan 2020 08:42:22 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     Qian Cai <cai@lca.pw>, akpm@linux-foundation.org, david@redhat.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -mm] mm/page_isolation: fix potential warning from user
+Message-ID: <20200120074222.GF18451@dhcp22.suse.cz>
+References: <20200120034252.1558-1-cai@lca.pw>
+ <91ba5997-b227-7ae2-8459-310e18b9bb87@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200119122202.14502-1-yukuai3@huawei.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <91ba5997-b227-7ae2-8459-310e18b9bb87@arm.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-$Subject ~= s/not set/not used/
-
-On Sun, Jan 19, 2020 at 08:22:02PM +0800, yu kuai wrote:
-> Fixes gcc '-Wunused-but-set-variable' warning:
+On Mon 20-01-20 09:50:33, Anshuman Khandual wrote:
+> Hello Qian,
 > 
-> drivers/pwm/pwm-pca9685.c: In function ‘pca9685_pwm_gpio_free’:
-> drivers/pwm/pwm-pca9685.c:162:21: warning: variable ‘pwm’ set but
-> not used [-Wunused-but-set-variable]
+> On 01/20/2020 09:12 AM, Qian Cai wrote:
+> > It makes sense to call the WARN_ON_ONCE(zone_idx(zone) == ZONE_MOVABLE)
+> > from the offlining path, but should avoid triggering it from userspace,
+> > i.e, from is_mem_section_removable().
 > 
-> It is never used, and so can be removed.
+> Could you elaborate why it makes sense not to warn about an unmovable
+> ZONE_MOVABLE page when an user tries to query about a memory block
+> device's movability through sysfs ?
+
+Because somebody might have panic_on_warn and then this is unlikely (but
+not impossible) way to put the system down by arbitrary user. Besides
+that it is stupid to warn when we convey the information to the
+userspace anyway.
+ 
+[...]
+> > +	} else {
+> > +		if (isol_flags & MEMORY_OFFLINE)
+> > +			WARN_ON_ONCE(zone_idx(zone) == ZONE_MOVABLE);> +
+> > +		if ((isol_flags & REPORT_FAILURE) && !IS_ERR(unmovable))
+> > +			/*
+> > +			 * printk() with zone->lock held will likely trigger a
+> > +			 * lockdep splat, so defer it here.
+> > +			 */
+> > +			dump_page(unmovable, "unmovable page");
+> > +	}
+> > +
+> > +	return !!unmovable;
+> >  }
+> >  
+> >  static void unset_migratetype_isolate(struct page *page, unsigned migratetype)
 > 
-> Signed-off-by: yu kuai <yukuai3@huawei.com>
+> set_migratetype_isolate() gets called from CMA as well as HugeTLB
+> allocation paths, so its not only during offline. Hence the commit
+> message should be changed to reflect this.
 
-Fixes: e926b12c611c ("pwm: Clear chip_data in pwm_put()")
-
-> ---
->  drivers/pwm/pwm-pca9685.c | 4 ----
->  1 file changed, 4 deletions(-)
-> 
-> diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
-> index 168684b02ebc..b07bdca3d510 100644
-> --- a/drivers/pwm/pwm-pca9685.c
-> +++ b/drivers/pwm/pwm-pca9685.c
-> @@ -159,13 +159,9 @@ static void pca9685_pwm_gpio_set(struct gpio_chip *gpio, unsigned int offset,
->  static void pca9685_pwm_gpio_free(struct gpio_chip *gpio, unsigned int offset)
->  {
->  	struct pca9685 *pca = gpiochip_get_data(gpio);
-> -	struct pwm_device *pwm;
->  
->  	pca9685_pwm_gpio_set(gpio, offset, 0);
->  	pm_runtime_put(pca->chip.dev);
-> -	mutex_lock(&pca->lock);
-> -	pwm = &pca->chip.pwms[offset];
-> -	mutex_unlock(&pca->lock);
-
-Did you check that dropping the locking is save? (I didn't)
-
-I'd assume that no harm is introduced, but mentioning that in the commit
-log would be good.
-
-Best regards
-Uwe
-
+We should just report for all those cases I believe.
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Michal Hocko
+SUSE Labs
