@@ -2,137 +2,187 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B781C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83274C33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FE5A208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:19:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DmyWJdqg"
+	by mail.kernel.org (Postfix) with ESMTP id 641A8207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 11:23:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbgATLTU (ORCPT
+        id S1726867AbgATLXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 06:19:20 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45935 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726421AbgATLTT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 06:19:19 -0500
-Received: by mail-wr1-f65.google.com with SMTP id j42so29078468wrj.12;
-        Mon, 20 Jan 2020 03:19:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=sAKBI8tLvGzr6UvLomua7UpEPoIAkM60jCOjbm0hIrQ=;
-        b=DmyWJdqghx6XRc275lGOaD/9JdK4XbHgV8V33ihri7Or9AYpu0acSKzt+aioLHFALE
-         vaDTdHM7uPeSlMFYFzmNrPQGflhokrHJwmd3AkUm6ru7oDv2j0TK+fLxwLd4UM34xgO8
-         RTa9TtzELAT9bm6JKpFUEhvsXBSPogxvZCrLo3LrSmKqhl+dOzABmGPirpqkqPKHo8c1
-         xr+jA+6KLH+Ycw6CRP/FsQNoogSw6Gd1lx2rD1eBsld/Ij9Is/3Jf6y7xYXVvt5ng5nB
-         2vflSU+B1/4+eXV7BhhbuOi3wb6rfQM/+FC5BUvVoNfT2Y/oceTXEoiId2V9erY0oIOl
-         CGKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=sAKBI8tLvGzr6UvLomua7UpEPoIAkM60jCOjbm0hIrQ=;
-        b=AoX7dS1E9W/FBml8jDB3WAvFRTxNOkka5tUVWgG4GwU3V4IVcZWE19hk2bcpGOPVZF
-         368ZeKBobwWkWBoC4kOfvh31CjaFgsx7rBwWSnJ4Jcg5oX9FL9heskDHf4h210r5roxv
-         QpI+4sd8xh38YLHEI+Ktxgkw3cOfBaJyY+cqJcI/g1c76/KpGql4s6tMF7NYp2zaccvi
-         84UPSHlqD+R6J0XFOGMEBjT+UsqVdGRdDY6AYRQfNEtdqa7vv7HAyPu47rDZvsxKLwjz
-         qm4rKkQeC+KsccnMMkskp2DwiEihrCSEjK4aAywmTML3XKUTQ/HhRXsqhsJaTalZGVRT
-         eZtw==
-X-Gm-Message-State: APjAAAV+UNHjwjtEnEXErV3JdUeId1KwHMXG0vlP8n5XLJlLy9aq0+/q
-        OxqINJNQC2LsxU/ulN9hIbDF5jOM
-X-Google-Smtp-Source: APXvYqyHiPSvBEx6WZ0DOYYYLyEIUDktPV86NCVVv1OSHvFMGWvNsohU8URtj259sSIh2bxFyNIMiQ==
-X-Received: by 2002:adf:bc87:: with SMTP id g7mr17959302wrh.121.1579519158079;
-        Mon, 20 Jan 2020 03:19:18 -0800 (PST)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id u1sm291600wmc.5.2020.01.20.03.19.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 03:19:17 -0800 (PST)
-Date:   Mon, 20 Jan 2020 12:19:16 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        Namjae Jeon <linkinjeon@gmail.com>,
-        Gabriel Krisman Bertazi <krisman@collabora.com>
-Subject: Re: vfat: Broken case-insensitive support for UTF-8
-Message-ID: <20200120111916.pc2ml2farnga3yen@pali>
-References: <20200119221455.bac7dc55g56q2l4r@pali>
- <20200119230809.GW8904@ZenIV.linux.org.uk>
- <20200119233348.es5m63kapdvyesal@pali>
- <20200120000931.GX8904@ZenIV.linux.org.uk>
+        Mon, 20 Jan 2020 06:23:12 -0500
+Received: from mga14.intel.com ([192.55.52.115]:41716 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726573AbgATLXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 06:23:12 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 03:23:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,341,1574150400"; 
+   d="scan'208";a="244380297"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga002.jf.intel.com with ESMTP; 20 Jan 2020 03:23:10 -0800
+Received: from [10.125.252.193] (abudanko-mobl.ccr.corp.intel.com [10.125.252.193])
+        by linux.intel.com (Postfix) with ESMTP id 386365802C1;
+        Mon, 20 Jan 2020 03:23:01 -0800 (PST)
+Subject: [PATCH v5 01/10] capabilities: introduce CAP_PERFMON to kernel and
+ user space
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
+        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "james.bottomley@hansenpartnership.com" 
+        <james.bottomley@hansenpartnership.com>,
+        Serge Hallyn <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Robert Richter <rric@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Lionel Landwerlin <lionel.g.landwerlin@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        oprofile-list@lists.sf.net
+References: <0548c832-7f4b-dc4c-8883-3f2b6d351a08@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <9b77124b-675d-5ac7-3741-edec575bd425@linux.intel.com>
+Date:   Mon, 20 Jan 2020 14:23:00 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <0548c832-7f4b-dc4c-8883-3f2b6d351a08@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200120000931.GX8904@ZenIV.linux.org.uk>
-User-Agent: NeoMutt/20180716
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday 20 January 2020 00:09:31 Al Viro wrote:
-> On Mon, Jan 20, 2020 at 12:33:48AM +0100, Pali Rohár wrote:
-> 
-> > > Does the behaviour match how Windows handles that thing?
-> > 
-> > Linux behavior does not match Windows behavior.
-> > 
-> > On Windows is FAT32 (fastfat.sys) case insensitive and file names "č"
-> > and "Č" are treated as same file. Windows does not allow you to create
-> > both files. It says that file already exists.
-> 
-> So how is the mapping specified in their implementation?  That's
-> obviously the mapping we have to match.
 
-FAT specification (fatgen103.doc) is just parody for specifications.
-E.g. it requires you to use pencil and paper during implementation...
+Introduce CAP_PERFMON capability designed to secure system performance
+monitoring and observability operations so that CAP_PERFMON would assist
+CAP_SYS_ADMIN capability in its governing role for perf_events, i915_perf
+and other performance monitoring and observability subsystems.
 
-About case insensitivity I found in specification these parts:
+CAP_PERFMON intends to harden system security and integrity during system
+performance monitoring and observability operations by decreasing attack
+surface that is available to a CAP_SYS_ADMIN privileged process [1].
+Providing access to system performance monitoring and observability
+operations under CAP_PERFMON capability singly, without the rest of
+CAP_SYS_ADMIN credentials, excludes chances to misuse the credentials and
+makes operation more secure.
 
-"The UNICODE name passed to the file system is converted to upper case."
+CAP_PERFMON intends to take over CAP_SYS_ADMIN credentials related to
+system performance monitoring and observability operations and balance
+amount of CAP_SYS_ADMIN credentials following the recommendations in the
+capabilities man page [1] for CAP_SYS_ADMIN: "Note: this capability is
+overloaded; see Notes to kernel developers, below."
 
-"UNICODE solves the case mapping problem prevalent in some OEM code
-pages by always providing a translation for lower case characters to a
-single, unique upper case character."
+Although the software running under CAP_PERFMON can not ensure avoidance
+of related hardware issues, the software can still mitigate these issues
+following the official embargoed hardware issues mitigation procedure [2].
+The bugs in the software itself could be fixed following the standard
+kernel development process [3] to maintain and harden security of system
+performance monitoring and observability operations.
 
-Which basically says nothing... I can deduce from it that for mapping
-table should be used Unicode standard.
+[1] http://man7.org/linux/man-pages/man7/capabilities.7.html
+[2] https://www.kernel.org/doc/html/latest/process/embargoed-hardware-issues.html
+[3] https://www.kernel.org/doc/html/latest/admin-guide/security-bugs.html
 
-But we already know that in that specifications are mistakes. And
-relevant is Microsoft FAT implementation (fastfat.sys). It is now open
-source on github, so we can inspect how it implements upper case
-conversion.
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+---
+ include/linux/capability.h          | 12 ++++++++++++
+ include/uapi/linux/capability.h     |  8 +++++++-
+ security/selinux/include/classmap.h |  4 ++--
+ 3 files changed, 21 insertions(+), 3 deletions(-)
 
-> > > That's the only reason to support that garbage at all...
-> > 
-> > What do you mean by garbage?
-> 
-> Case-insensitive anything... the only reason to have that crap at all
-> is that native implementations are basically forcing it as fs
-> image correctness issue.
-
-You are right. But we need to deal with it.
-
-> It's worthless on its own merits, but
-> we can't do something that amounts to corrupting fs image when
-> we access it for write.
-
-If we implement same upper case conversion as in reference
-implementation (fastfat.sys) then we prevent "corrupting fs".
-
+diff --git a/include/linux/capability.h b/include/linux/capability.h
+index ecce0f43c73a..8784969d91e1 100644
+--- a/include/linux/capability.h
++++ b/include/linux/capability.h
+@@ -251,6 +251,18 @@ extern bool privileged_wrt_inode_uidgid(struct user_namespace *ns, const struct
+ extern bool capable_wrt_inode_uidgid(const struct inode *inode, int cap);
+ extern bool file_ns_capable(const struct file *file, struct user_namespace *ns, int cap);
+ extern bool ptracer_capable(struct task_struct *tsk, struct user_namespace *ns);
++static inline bool perfmon_capable(void)
++{
++	struct user_namespace *ns = &init_user_ns;
++
++	if (ns_capable_noaudit(ns, CAP_PERFMON))
++		return ns_capable(ns, CAP_PERFMON);
++
++	if (ns_capable_noaudit(ns, CAP_SYS_ADMIN))
++		return ns_capable(ns, CAP_SYS_ADMIN);
++
++	return false;
++}
+ 
+ /* audit system wants to get cap info from files as well */
+ extern int get_vfs_caps_from_disk(const struct dentry *dentry, struct cpu_vfs_cap_data *cpu_caps);
+diff --git a/include/uapi/linux/capability.h b/include/uapi/linux/capability.h
+index 240fdb9a60f6..8b416e5f3afa 100644
+--- a/include/uapi/linux/capability.h
++++ b/include/uapi/linux/capability.h
+@@ -366,8 +366,14 @@ struct vfs_ns_cap_data {
+ 
+ #define CAP_AUDIT_READ		37
+ 
++/*
++ * Allow system performance and observability privileged operations
++ * using perf_events, i915_perf and other kernel subsystems
++ */
++
++#define CAP_PERFMON		38
+ 
+-#define CAP_LAST_CAP         CAP_AUDIT_READ
++#define CAP_LAST_CAP         CAP_PERFMON
+ 
+ #define cap_valid(x) ((x) >= 0 && (x) <= CAP_LAST_CAP)
+ 
+diff --git a/security/selinux/include/classmap.h b/security/selinux/include/classmap.h
+index 7db24855e12d..c599b0c2b0e7 100644
+--- a/security/selinux/include/classmap.h
++++ b/security/selinux/include/classmap.h
+@@ -27,9 +27,9 @@
+ 	    "audit_control", "setfcap"
+ 
+ #define COMMON_CAP2_PERMS  "mac_override", "mac_admin", "syslog", \
+-		"wake_alarm", "block_suspend", "audit_read"
++		"wake_alarm", "block_suspend", "audit_read", "perfmon"
+ 
+-#if CAP_LAST_CAP > CAP_AUDIT_READ
++#if CAP_LAST_CAP > CAP_PERFMON
+ #error New capability defined, please update COMMON_CAP2_PERMS.
+ #endif
+ 
 -- 
-Pali Rohár
-pali.rohar@gmail.com
+2.20.1
+
+
