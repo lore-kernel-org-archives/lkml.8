@@ -2,218 +2,151 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4443EC32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA207C33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:12:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F06B22525
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:10:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B4E622525
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:12:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w7NkbXTd"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="dy3KsyFG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbgATTK4 (ORCPT
+        id S1726988AbgATTMP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 14:10:56 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:37248 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726876AbgATTKz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 14:10:55 -0500
-Received: by mail-pj1-f65.google.com with SMTP id m13so196915pjb.2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 11:10:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=rXtzpxRBIE54NbCvNgdaKsPlCWBPoiNnJLPrJ2Xtl5w=;
-        b=w7NkbXTdYBjDcf7yBd6WBO3d6v8S1fSy+5cYHvqfrcYXtYwCT34+z88oysaHaUlmZP
-         LWkIgy9UGkm87o5PBEeb+vzN9b2gm1MLm+hKmXvugptbqcp6boKa5yC4EPZ+cESZOP/l
-         yqfa4ewjlcWUYKXyKBAJUFqcFtVEpM+4GRJ1JUqlTF89aNqjGIjlApOuGXyCeyATmCtt
-         HQw+tmAETpJUta0vfkqOF1oeqdEmWDlBQoNbZAOLjlMOb8MX7hpWICOg9sDNf7rr0twd
-         VmHfF0QcxORxk20SUjJ9LQTOw7uQVm53bMX4agFqe0uQ0QrDXgTMCQPpogxuJt/svx87
-         3n6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=rXtzpxRBIE54NbCvNgdaKsPlCWBPoiNnJLPrJ2Xtl5w=;
-        b=DUov3E6clkNe9PWaBEDG4lgo8f6bjc1fkHLJ9fEpBNRosOgLTvoW6adAWWSEs1q1L4
-         1tuniqntSvHZQT8wl0o7xvLqZgks1/zLWMs/n4eh27fiHs75BlsCmS9z+3Wlsh9xMe1E
-         uVPgnLpamFp+mQZgPlWZOingOtbzEE+MWp5AAfzUkOUtsupCoao11M6V2I+d/srjdycb
-         6XIU3s8q8WXXJ00Jzs8YelAIh5myiHdufCP7Vn5ImY7f4dwYGmKJBt+as6oNbq6qhzeI
-         gRzhyIcBuu4wLtV/cYLSGa7xbyZl2v4Bd9hVv92Dx1+M6xVu+amf/ggdo3x46cflglKN
-         vocQ==
-X-Gm-Message-State: APjAAAXnPrcxes2EGiFxW4uR1uW9kP6PIVhu29aKMBh0AxlF/j2YJiA/
-        ISMjZrtnRwshM/aa/jD9wzuv7w==
-X-Google-Smtp-Source: APXvYqzQaP2gKO6EjHWzGpIEGeHTIlbgpKefn/FSwJBuYvq/6nSexiHXscfYNT96GGWIYNjisjzAzQ==
-X-Received: by 2002:a17:90a:ac0e:: with SMTP id o14mr529997pjq.11.1579547454760;
-        Mon, 20 Jan 2020 11:10:54 -0800 (PST)
-Received: from yoga (wsip-184-181-24-67.sd.sd.cox.net. [184.181.24.67])
-        by smtp.gmail.com with ESMTPSA id b24sm39900195pfo.55.2020.01.20.11.10.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 11:10:54 -0800 (PST)
-Date:   Mon, 20 Jan 2020 11:10:47 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Cl?ment Leger <cleger@kalray.eu>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] remoteproc: Add support for predefined notifyids
-Message-ID: <20200120191047.GI1511@yoga>
-References: <20200115102142.11229-1-cleger@kalray.eu>
- <088ceab9-f135-6e70-dcf6-f75ec46110b1@st.com>
- <79048597.12371594.1579098506802.JavaMail.zimbra@kalray.eu>
- <a1116656-cf2e-c1a1-7cc3-0fe2a79f076e@st.com>
- <612100872.12377996.1579101063237.JavaMail.zimbra@kalray.eu>
- <20200117225217.GA27535@xps15>
- <377421261.12898679.1579462834671.JavaMail.zimbra@kalray.eu>
- <CANLsYky-dp3=J__x9d7BJtu1=ppEiFMfuJnRQ7ZTVn6X43BJ_g@mail.gmail.com>
+        Mon, 20 Jan 2020 14:12:15 -0500
+Received: from mail-mw2nam10on2124.outbound.protection.outlook.com ([40.107.94.124]:22721
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726136AbgATTMP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 14:12:15 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VamHucB0T6sjb6cQ6w/s7YOumKIDqXVMrvZF7tOf0mzBG/2gOmDQPHfwTns0BGGbxlBpn6oeJsgavWduIpgNWl/psZFHYpcz97uRnAF5Rb0LxbOu7iHgLSiVOJxJ1LxnV5VIoKN2vkFN/STZgVDbNIW9p7o0LNZJzwRXxuN5nY1t37vOF+lyJchHPqQGdUIK4cJqf+fT6rWJ+7hsyVUaTGsUtsQddfxKQr4zHeScEpdBDhhp/JYlFgx6GisgwtM9GM6HAB89g3al9+zKW0gkuG/u02hN5+S/3958RGwASeStIbE89sXRQawHPzsrp5EvgaXaVgXjSei8l0qTUc78BA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IlRYVQoqVcD8474af9ScKwIZnDbTxiw8pp+8a7eFNG0=;
+ b=EJTMb3YOtqK/w+mFUCzqE6dr61QTYmmOTr63C5rfHw6bdL29Mc63j2WLm9jl/JroC6wJYF+KgjXHrXkAEB85PJCmEARP9hsGeH8LTStfBs+9NQFZ1j0xMTZsu5mLrT5jvBbv7kP/LKw0VotaCuuuvRu2Yjku0e4XrF3fUQCQ2h061eenRTp/ShpFcldK2PLomzcd4KdYFhtq1wLwUvJx9/u9rnLsdzT9RgN17AFQ2FlLJ0fsrK9W80RWHKA3eYT4y9uGhuh4LIasQCnPMgh2wA6Xarlsi9TMkT+2Rgbg1HGH4bNNi24y7M2YgesPZZ4C5P+ToKCtsITxPufbgBVBOw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IlRYVQoqVcD8474af9ScKwIZnDbTxiw8pp+8a7eFNG0=;
+ b=dy3KsyFG6FMKMYJHLeS89BV7EH+WqEw9YaE9iqrZlCbVhcZVtxfCBgrbm2SFBxqPR+lnPdSkOv3scrIldB02vV2kNYf1HZIgogdMWuiqCwkdJRqkL0m0/JrW4GgEcQsZKi0RgAn5DHfqQXr+kitPYjCqvAAyMcU6yDSwCz8ZUEw=
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (52.132.149.16) by
+ MW2PR2101MB1131.namprd21.prod.outlook.com (52.132.146.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.4; Mon, 20 Jan 2020 19:12:13 +0000
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::f1bb:c094:cb30:ba1f]) by MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::f1bb:c094:cb30:ba1f%6]) with mapi id 15.20.2644.015; Mon, 20 Jan 2020
+ 19:12:13 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     "lantianyu1986@gmail.com" <lantianyu1986@gmail.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "david@redhat.com" <david@redhat.com>
+CC:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        vkuznets <vkuznets@redhat.com>,
+        "eric.devolder@oracle.com" <eric.devolder@oracle.com>
+Subject: RE: [RFC PATCH V2 3/10] x86/Hyper-V/Balloon: Replace hot-add and
+ balloon up works with a common work
+Thread-Topic: [RFC PATCH V2 3/10] x86/Hyper-V/Balloon: Replace hot-add and
+ balloon up works with a common work
+Thread-Index: AQHVxVvQ02alYkCFnUKt/8K72MYw8qfz9n3w
+Date:   Mon, 20 Jan 2020 19:12:13 +0000
+Message-ID: <MW2PR2101MB105232ADDEC7A4E5B6B05D61D7320@MW2PR2101MB1052.namprd21.prod.outlook.com>
+References: <20200107130950.2983-1-Tianyu.Lan@microsoft.com>
+ <20200107130950.2983-4-Tianyu.Lan@microsoft.com>
+In-Reply-To: <20200107130950.2983-4-Tianyu.Lan@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-01-20T19:12:11.4411420Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=2e67ac73-0126-45c2-bf72-026c7da8673e;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 036b1b30-e9bf-4db0-d0b1-08d79ddca847
+x-ms-traffictypediagnostic: MW2PR2101MB1131:|MW2PR2101MB1131:|MW2PR2101MB1131:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <MW2PR2101MB113161040086B5ADF92A626ED7320@MW2PR2101MB1131.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 0288CD37D9
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(136003)(366004)(346002)(39860400002)(396003)(199004)(189003)(7696005)(186003)(52536014)(26005)(5660300002)(8990500004)(4326008)(10290500003)(86362001)(478600001)(6506007)(76116006)(2906002)(54906003)(66946007)(55016002)(9686003)(33656002)(66476007)(66556008)(64756008)(66446008)(110136005)(81156014)(81166006)(8676002)(316002)(71200400001)(8936002);DIR:OUT;SFP:1102;SCL:1;SRVR:MW2PR2101MB1131;H:MW2PR2101MB1052.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: nxtLry7hKBHktXIbm5620sVJltvF5nd5ZJffQJTDooPcODM8ezy+V+UoiaTnLdkcwnBPi3oIqHBrImKZWmenf5aewlTXnVH5O5Fk24wd+D/ZlunInOLP1h13N1XSNd8w0Ta9ARhBqu/dzMbW6irMQRm3ReMipM/fjj9G4gCMMd9157VZNnbTkoY37jLozYlfQvuaDZBH89HHoS7jKehDXXdB+SLSp1eYjVVSb4OW1j9wqBngeMgV3IG+V/DfLTtYdEMn3ZCnfQawyCblI8B6khxyAiWr/XNUs20bTUI0qhzEEPezhYhk1nNibVqEK9reYNlcRLOr9DQSd/ilJnCsXZSc2CGROz7Rs8sGtD7dpAZPvurcx3WK2PHhizcaKeDiTh2dE35CCBj5BOgCw5SJRfuh0rEAu/eyn8LoNej1cBUC8GJBXFdiNlm26tRh3AIL
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANLsYky-dp3=J__x9d7BJtu1=ppEiFMfuJnRQ7ZTVn6X43BJ_g@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 036b1b30-e9bf-4db0-d0b1-08d79ddca847
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jan 2020 19:12:13.5790
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Z7jt+lAMmMr1dl4ZipE3uZwUOoiZ7VMaX3grkTBSOVVkgxZOcy4kOMwDkWLSpSCeHYb6w7MZtrQ8xSECJsptxHvHOcuMck0ZrtqwXJdG9aY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1131
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 20 Jan 08:28 PST 2020, Mathieu Poirier wrote:
+From: Tianyu Lan <Tianyu.Lan@microsoft.com> Sent: Tuesday, January 7, 2020 =
+5:10 AM
+>=20
+> The mem hot-remove operation and balloon down will be added
+> or moved into work context. Add a common work to handle
+> opeations of mem hot-add/remove and balloon up/down.
 
-> On Sun, 19 Jan 2020 at 12:40, Clément Leger <cleger@kalray.eu> wrote:
-> >
-> > Hi Mathieu,
-> >
-> > ----- On 17 Jan, 2020, at 23:52, Mathieu Poirier mathieu.poirier@linaro.org wrote:
-> >
-> > > Hey guys,
-> > >
-> > > On Wed, Jan 15, 2020 at 04:11:03PM +0100, Clément Leger wrote:
-> > >>
-> > >>
-> > >> ----- On 15 Jan, 2020, at 16:09, Arnaud Pouliquen arnaud.pouliquen@st.com wrote:
-> > >>
-> > >> > On 1/15/20 3:28 PM, Clément Leger wrote:
-> > >> >> Hi Arnaud,
-> > >> >>
-> > >> >> ----- On 15 Jan, 2020, at 15:06, Arnaud Pouliquen arnaud.pouliquen@st.com wrote:
-> > >> >>
-> > >> >>> Hi Clément,
-> > >> >>>
-> > >> >>> On 1/15/20 11:21 AM, Clement Leger wrote:
-> > >> >>>> In order to support preallocated notify ids, if their value is
-> > >> >>>> equal to FW_RSC_NOTIFY_ID_ANY, then do no allocate a notify id
-> > >> >>>> dynamically but try to allocate the requested one. This is useful when
-> > >> >>>> using custom ids to bind them to custom vendor resources. For instance,
-> > >> >>>> it allow to assign a group of queues to a specific interrupti in order
-> > >> >>>> to dispatch notifications.
-> > >> >>>>
-> > >> >>>> Signed-off-by: Clement Leger <cleger@kalray.eu>
-> > >> >>>> ---
-> > >> >>>>  drivers/remoteproc/remoteproc_core.c | 27 +++++++++++++++++++--------
-> > >> >>>>  include/linux/remoteproc.h           |  1 +
-> > >> >>>>  2 files changed, 20 insertions(+), 8 deletions(-)
-> > >> >>>>
-> > >> >>>> diff --git a/drivers/remoteproc/remoteproc_core.c
-> > >> >>>> b/drivers/remoteproc/remoteproc_core.c
-> > >> >>>> index 307df98347ba..b1485fcd0f11 100644
-> > >> >>>> --- a/drivers/remoteproc/remoteproc_core.c
-> > >> >>>> +++ b/drivers/remoteproc/remoteproc_core.c
-> > >> >>>> @@ -351,14 +351,27 @@ int rproc_alloc_vring(struct rproc_vdev *rvdev, int i)
-> > >> >>>>         /*
-> > >> >>>>          * Assign an rproc-wide unique index for this vring
-> > >> >>>>          * TODO: assign a notifyid for rvdev updates as well
-> > >> >>>> -        * TODO: support predefined notifyids (via resource table)
-> > >> >>>>          */
-> > >> >>>> -       ret = idr_alloc(&rproc->notifyids, rvring, 0, 0, GFP_KERNEL);
-> > >> >>>> -       if (ret < 0) {
-> > >> >>>> -               dev_err(dev, "idr_alloc failed: %d\n", ret);
-> > >> >>>> -               return ret;
-> > >> >>>> +       if (rsc->vring[i].notifyid == FW_RSC_NOTIFY_ID_ANY) {
-> > >> >>>> +               ret = idr_alloc(&rproc->notifyids, rvring, 0, 0, GFP_KERNEL);
-> > >> >>>> +               if (ret < 0) {
-> > >> >>>> +                       dev_err(dev, "idr_alloc failed: %d\n", ret);
-> > >> >>>> +                       return ret;
-> > >> >>>> +               }
-> > >> >>>> +               notifyid = ret;
-> > >> >>>> +
-> > >> >>>> +               /* Let the rproc know the notifyid of this vring.*/
-> > >> >>>> +               rsc->vring[i].notifyid = notifyid;
-> > >> >>>> +       } else {
-> > >> >>>> +               /* Reserve requested notify_id */
-> > >> >>>> +               notifyid = rsc->vring[i].notifyid;
-> > >> >>>> +               ret = idr_alloc(&rproc->notifyids, rvring, notifyid,
-> > >> >>>> +                               notifyid + 1, GFP_KERNEL);
-> > >> >>>> +               if (ret < 0) {
-> > >> >>>> +                       dev_err(dev, "idr_alloc failed: %d\n", ret);
-> > >> >>>> +                       return ret;
-> > >> >>>> +               }
-> > >> >>>>         }
-> > >> >>>> -       notifyid = ret;
-> > >> >>>>
-> > >> >>>>         /* Potentially bump max_notifyid */
-> > >> >>>>         if (notifyid > rproc->max_notifyid)
-> > >> >>>> @@ -366,8 +379,6 @@ int rproc_alloc_vring(struct rproc_vdev *rvdev, int i)
-> > >> >>>>
-> > >> >>>>         rvring->notifyid = notifyid;
-> > >> >>>>
-> > >> >>>> -       /* Let the rproc know the notifyid of this vring.*/
-> > >> >>>> -       rsc->vring[i].notifyid = notifyid;
-> > >> >>>>         return 0;
-> > >> >>>>  }
-> > >> >>> The rproc_free_vring function resets the notifyid to -1 on free.
-> > >> >>> This could generate a side effect if the resource table is not reloaded.
-> > >> >>
-> > >> >> Oh indeed, I did not thought of that. What would you recommend ?
-> > >> >> If using -1 in free vring, notify ids will be reallocated at next
-> > >> >> round.
-> > >> > Regarding the code i'm not sure that it is useful to reset the notifyID to -1 on
-> > >> > free.
-> > >
-> > > I'm not sure setting notifyid to -1 in rproc_free_vring() is such a big problem.
-> > > No matter the code path I look at, if rproc_free_vring() is called something
-> > > serious has happened and the resource table will be reloaded if another attempt
-> > > at booting the remote processor is done.  It can also be that a graceful
-> > > shutdown is underway, in which case the resource table will be reloaded anyway
-> > > if/when the slave is brought back in service.
-> > >
-> > > Let me know if I'm missing a scenario.
-> >
-> > No, you are actually right
-> >
-> > >
-> > > To me the real problem is if a FW image has set the notifyids in the resource
-> > > table to 0xffffffff, thinking they will be overwritten.  In that case things
-> > > will really south.
-> >
-> > Hum, if set to 0xFFFFFFFF, then they will be assigned dynamically and updated
-> > in the resource table (with this patch). But your probably mean existing code,
-> > right ?
-> 
-> My apologies for not expressing myself clearly here - let me try again.
-> 
-> At this time notifyids in the firmware's resource table can be set to
-> anything because the code will overwrite them.  With this patch
-> firmware images that don't have their notifyids set to -1 will see a
-> change in how ids are assigned, something that has the potential to
-> break user space.
-> 
+Let me suggest some improved wording for this commit message:
 
-Right, we should have had a check in place to ensure that we only
-accepted -1 here, as that's what the code relies upon.
+The Hyper-V balloon driver currently has separate work contexts for memory
+hot-add operations and for balloon up (i.e., remove memory from the guest)
+operations.  Hot-remove is being added and must be done in a work context.
+And finally, balloon down is currently not done in a work context, but need=
+s
+to move to a work context because of a Hyper-V bug that confuses balloon
+operations and hot-remove.  Rather than add code for two additional work
+contexts, consolidate the current hot-add and balloon up operations onto
+a single work context.  Subsequent patches will add hot-remove and
+balloon down to that same work context.
 
-If a conclusion on the new resource table format is imminent it sounds
-reasonable to document the behaviour for the current version and make it
-behave as as expected in the new one.
+My assumption is that the consolidation into a single work context is
+just code simplification.  If there's another reason, please describe it.
 
-Regards,
-Bjorn
+The code is this patch looks OK to me.
+
+Michael
+
+>=20
+> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> ---
+>  drivers/hv/hv_balloon.c | 86 ++++++++++++++++++++++++++++++-------------=
+------
+>  1 file changed, 52 insertions(+), 34 deletions(-)
+>=20
