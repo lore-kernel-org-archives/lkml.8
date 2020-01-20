@@ -6,113 +6,140 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C1C2C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55BABC33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41E0522314
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:24:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3673C22314
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 19:27:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbgATTYt (ORCPT
+        id S1726942AbgATT1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 14:24:49 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:34165 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726345AbgATTYt (ORCPT
+        Mon, 20 Jan 2020 14:27:23 -0500
+Received: from out03.mta.xmission.com ([166.70.13.233]:42384 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726607AbgATT1X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 14:24:49 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1itcf6-0006Xb-98; Mon, 20 Jan 2020 20:24:36 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id ABF8A105BE6; Mon, 20 Jan 2020 20:24:35 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Marc Zyngier <maz@kernel.org>, John Garry <john.garry@huawei.com>
-Cc:     linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>,
-        Ming Lei <ming.lei@redhat.com>,
-        "chenxiang \(M\)" <chenxiang66@hisilicon.com>
-Subject: Re: [PATCH] irqchip/gic-v3-its: Balance initial LPI affinity across CPUs
-In-Reply-To: <7dc37b35d8ec6c78e75969d8c6c2d2e9@kernel.org>
-References: <20200119190554.1002-1-maz@kernel.org> <5d04d904-d7ea-04ea-ac3b-8cdc90074a92@huawei.com> <afb60c5f9a176470449a83126db326a9@kernel.org> <83eb55b0-2f2d-3335-85cf-6d7ed379b3c7@huawei.com> <7dc37b35d8ec6c78e75969d8c6c2d2e9@kernel.org>
-Date:   Mon, 20 Jan 2020 20:24:35 +0100
-Message-ID: <87h80q2aoc.fsf@nanos.tec.linutronix.de>
+        Mon, 20 Jan 2020 14:27:23 -0500
+X-Greylist: delayed 12101 seconds by postgrey-1.27 at vger.kernel.org; Mon, 20 Jan 2020 14:27:22 EST
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1itZYa-00015n-O0; Mon, 20 Jan 2020 09:05:40 -0700
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1itZYV-0005Jn-BB; Mon, 20 Jan 2020 09:05:40 -0700
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Dave Young <dyoung@redhat.com>, linux-efi@vger.kernel.org,
+        ard.biesheuvel@linaro.org, matt@codeblueprint.co.uk,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean Delvare <jdelvare@suse.de>
+References: <20161202195416.58953-1-andriy.shevchenko@linux.intel.com>
+        <20161202195416.58953-3-andriy.shevchenko@linux.intel.com>
+        <20161215122856.7d24b7a8@endymion>
+        <20161216023213.GA4505@dhcp-128-65.nay.redhat.com>
+        <1481890738.9552.70.camel@linux.intel.com>
+        <20161216143330.69e9c8ee@endymion>
+        <20161217105721.GB6922@dhcp-128-65.nay.redhat.com>
+        <20200120121927.GJ32742@smile.fi.intel.com>
+Date:   Mon, 20 Jan 2020 10:04:04 -0600
+In-Reply-To: <20200120121927.GJ32742@smile.fi.intel.com> (Andy Shevchenko's
+        message of "Mon, 20 Jan 2020 14:19:27 +0200")
+Message-ID: <87a76i9ksr.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-XM-SPF: eid=1itZYV-0005Jn-BB;;;mid=<87a76i9ksr.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1/gB42Om93MVQYunpLwTKkpM5H9wK/PFUg=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v1 2/2] firmware: dmi_scan: Pass dmi_entry_point to kexec'ed kernel
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Marc,
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
 
-Marc Zyngier <maz@kernel.org> writes:
-> We're stuck between a rock and a hard place here:
+> On Sat, Dec 17, 2016 at 06:57:21PM +0800, Dave Young wrote:
+>> Ccing efi people.
+>> 
+>> On 12/16/16 at 02:33pm, Jean Delvare wrote:
+>> > On Fri, 16 Dec 2016 14:18:58 +0200, Andy Shevchenko wrote:
+>> > > On Fri, 2016-12-16 at 10:32 +0800, Dave Young wrote:
+>> > > > On 12/15/16 at 12:28pm, Jean Delvare wrote:
+>> > > > > I am no kexec expert but this confuses me. Shouldn't the second
+>> > > > > kernel have access to the EFI systab as the first kernel does? It
+>> > > > > includes many more pointers than just ACPI and DMI tables, and it
+>> > > > > would seem inconvenient to have to pass all these addresses
+>> > > > > individually explicitly.
+>> > > > 
+>> > > > Yes, in modern linux kernel, kexec has the support for EFI, I think it
+>> > > > should work naturally at least in x86_64.
+>> > > 
+>> > > Thanks for this good news!
+>> > > 
+>> > > Unfortunately Intel Galileo is 32-bit platform.
+>> > 
+>> > If it was done for X86_64 then maybe it can be generalized to X86?
+>> 
+>> For X86_64, we have a new way for efi runtime memmory mapping, in i386
+>> code it still use old ioremap way. It is impossible to use same way as
+>> the X86_64 since the virtual address space is limited.
+>> 
+>> But maybe for 32bit, kexec kernel can run in physical mode, but I'm not
+>> sure, I would suggest Andy to do a test first with efi=noruntime for
+>> kexec 2nd kernel.
 >
-> (1) We place all interrupts on the least loaded CPU that matches
->      the affinity -> results in performance issues on some funky
->      HW (like D05's SAS controller).
+> Guys, it was quite a long no hear from you. As I told you the proposed work
+> around didn't help. Today I found that Microsoft Surface 3 also affected
+> by this.
 >
-> (2) We place managed interrupts on the least loaded CPU that matches
->      the affinity -> we have artificial load on NUMA boundaries, and
->      reduced spread of overlapping managed interrupts.
->
-> (3) We don't account for non-managed LPIs, and we run the risk of
->      unpredictable performance because we don't really know where
->      the *other* interrupts are.
->
-> My personal preference would be to go for (1), as in my original post.
-> I find (3) the least appealing, because we don't track things anymore.
-> (2) feels like "the least of all evils", as it is a decent performance
-> gain, seems to give predictable performance, and doesn't regress lesser
-> systems...
->
-> I'm definitely open to suggestions here.
+> Can we apply these patches for now until you will find better
+> solution?
 
-The way x86 does it and that's mostly ok except for some really broken
-setups is:
+Not a chance.  The patches don't apply to any kernel in the git history.
 
-1) Non-managed interrupts:
+Which may be part of your problem.  You are or at least were running
+with code that has not been merged upstream.
 
-   If the interrupt is bound to a node, then we try to find a target
+> P.S. I may resend them rebased on recent vanilla.
 
-     I)  in the intersection of affinity mask and node mask.
+Second.  I looked at your test results and they don't directly make
+sense.  dmidecode bypasses the kernel completely or it did last time
+I looked so I don't know why you would be using that to test if
+something in the kernel is working.
 
-     II) in the nodemask itself
+However dmidecode failing suggests that the actual problem is something
+in the first kernel is stomping the dmi tables.
 
-         Yes we ignore affinity mask there because that's pretty much
-         the same as if the given affinity does not contain an online
-         CPU.
+Adding a command line option won't fix stomped tables.
 
-     If all of that fails then we try the nodeless mode
+So what I would suggest is:
+a) Verify that dmidecode works before kexec.
+b) Test to see if dmidecode works after kexec.
+c) Once (a) shows that dmidecode works and (b) shows that dmidecode
+   fails figure out what is stomping your dmi tables during or before
+   kexec and that is what should get fixed.
 
-   If the interrupt is not bound to a node, then we try to find a target
+Now using a non-efi method of dmi detection relies on the
+tables being between 0xF0000 and 0x10000. AKA the last 64K
+of the first 1MiB of memory.  You might check to see if your
+dmi tables are in that address range.
 
-     I)  in the intersection of affinity mask and online mask.
+Otherwise I suspect the good solution is to give efi it's own page
+tables in the kernel and switch to it whenever efi functions are called.
 
-     II) in the onlinemask itself
+But on 32bit the Linux kernel has historically been just fine directly
+accessing the hardware, and ignoring efi and all of the other BIOS's.
+So if that doesn't work on Intel Galileo that is probably a firmware
+problem.
 
-  Each step searches for the CPU in the searched mask which has the
-  least number of total interrupts assigned.
-
-2) Managed interrupts
-
-  For managed interrupts we just search in the intersection of assigned
-  mask and online CPUs for the CPU with the least number of managed
-  interrupts.
-
-  If no CPU is online then the interrupt is shutdown anyway, so no
-  fallback required.
-
-Don't know whether that's something you can map to ARM64, but I assume
-the principle of trying to enforce NUMA locality plus balancing the
-number of interrupts makes sense in general.
-
-Thanks,
-
-        tglx
-
+Eric
 
