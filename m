@@ -2,120 +2,118 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36005C33CB7
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F73C33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16DC22077C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:59:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC8192087E
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:59:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bsUJbV6a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727289AbgATI7K (ORCPT
+        id S1728512AbgATI7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 20 Jan 2020 03:59:11 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35007 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726125AbgATI7K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 Jan 2020 03:59:10 -0500
-Received: from mga02.intel.com ([134.134.136.20]:36396 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726988AbgATI7K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 03:59:10 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 00:59:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,341,1574150400"; 
-   d="scan'208";a="258634448"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
-  by fmsmga002.fm.intel.com with ESMTP; 20 Jan 2020 00:59:06 -0800
-Subject: Re: [PATCH V2 1/2] mmc: sdhci: Let a vendor driver supply and update
- ADMA descriptor size
-To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        ulf.hansson@linaro.org
-Cc:     asutoshd@codeaurora.org, stummala@codeaurora.org,
-        sayalil@codeaurora.org, cang@codeaurora.org,
-        rampraka@codeaurora.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-References: <1579194192-7942-1-git-send-email-vbadigan@codeaurora.org>
- <1579194192-7942-2-git-send-email-vbadigan@codeaurora.org>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <aaffb145-69ab-af11-7470-e887b45583a9@intel.com>
-Date:   Mon, 20 Jan 2020 10:58:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579510749;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=JOihZ07JJijUAk3UpxjX9RG7atOa9W0V80tsgdS9iBM=;
+        b=bsUJbV6atkbZmWyIlWtH36bALFv3K1OxBWyoysLG8nEwnLE52j0Ngno6h3nOK+MweuF2eb
+        n71WwSWC9+hbx/tgWX8ubOcwgav+URcM5jOiYFNukKzgwYwRhPYQattAjiMzH79IIcbMiD
+        QQSaoG/NPcpr/uxgOYg94fVvXh9Gs2s=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-43-E2Sk6cHtOpGnk39x4Lf3xg-1; Mon, 20 Jan 2020 03:59:06 -0500
+X-MC-Unique: E2Sk6cHtOpGnk39x4Lf3xg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DDDAA800D48;
+        Mon, 20 Jan 2020 08:59:04 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-20.pek2.redhat.com [10.72.8.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5ADB51001DD7;
+        Mon, 20 Jan 2020 08:58:54 +0000 (UTC)
+Date:   Mon, 20 Jan 2020 16:58:49 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Peter Xu <peterx@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>
+Subject: Re: [PATCH V3] sched/isolation: isolate from handling managed
+ interrupt
+Message-ID: <20200120085849.GA21740@ming.t460p>
+References: <20200118125354.15796-1-ming.lei@redhat.com>
+ <87ftgb4chi.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <1579194192-7942-2-git-send-email-vbadigan@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87ftgb4chi.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/01/20 7:03 pm, Veerabhadrarao Badiganti wrote:
-> Let a vendor driver supply the maximum descriptor size that it
-> can operate on. ADMA descriptor table would be allocated using this
-> supplied size.
-> If any SD Host controller is of version prior to v4.10 spec
-> but supports 16byte descriptor, this change allows them to supply
-> correct descriptor size for ADMA table allocation.
+Hello Thomas,
+
+On Sun, Jan 19, 2020 at 05:50:17PM +0100, Thomas Gleixner wrote:
+> Ming,
 > 
-> Also let a vendor driver update the descriptor size by overriding
-> sdhc_host->desc_size if it has to operates on a different descriptor
-> sizes in different conditions.
+> Ming Lei <ming.lei@redhat.com> writes:
+> >  
+> > +static bool hk_should_isolate(struct irq_data *data,
+> > +		const struct cpumask *affinity, unsigned int cpu)
 > 
-> Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
-> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-
-A couple of minor comments below but with those changes:
-
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-
-> ---
->  drivers/mmc/host/sdhci.c | 7 +++++--
->  drivers/mmc/host/sdhci.h | 1 +
->  2 files changed, 6 insertions(+), 2 deletions(-)
+> Please align the first argument on the second line with the first
+> argument on the first line.
 > 
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index 3140fe2..19a5ad3 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -3822,9 +3822,12 @@ int sdhci_setup_host(struct sdhci_host *host)
->  		void *buf;
->  
->  		if (host->flags & SDHCI_USE_64_BIT_DMA) {
-> +			if (!host->alloc_desc_sz)
-> +				host->alloc_desc_sz =
-> +					SDHCI_ADMA2_64_DESC_SZ(host);
-> +			host->desc_sz = host->alloc_desc_sz;
->  			host->adma_table_sz = host->adma_table_cnt *
-> -					      SDHCI_ADMA2_64_DESC_SZ(host);
-> -			host->desc_sz = SDHCI_ADMA2_64_DESC_SZ(host);
-> +					      host->desc_sz;
->  		} else {
->  			host->adma_table_sz = host->adma_table_cnt *
->  					      SDHCI_ADMA2_32_DESC_SZ;
-
-Please also initialize host->alloc_desc_sz for the 32-bit case here.
-
-> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-> index 0ed3e0e..8e7c77d 100644
-> --- a/drivers/mmc/host/sdhci.h
-> +++ b/drivers/mmc/host/sdhci.h
-> @@ -555,6 +555,7 @@ struct sdhci_host {
->  	dma_addr_t align_addr;	/* Mapped bounce buffer */
->  
->  	unsigned int desc_sz;	/* ADMA descriptor size */
-
-Please  amend the comment above to:
-				/* ADMA current descriptor size */
-
-> +	unsigned int alloc_desc_sz;	/* ADMA descr. max size host supports */
->  
->  	struct workqueue_struct *complete_wq;	/* Request completion wq */
->  	struct work_struct	complete_work;	/* Request completion work */
+> > +{
+> > +	const struct cpumask *hk_mask;
+> > +
+> > +	if (!housekeeping_enabled(HK_FLAG_MANAGED_IRQ))
+> > +		return false;
+> > +
+> > +	if (!irqd_affinity_is_managed(data))
+> > +		return false;
 > 
+> Pointless. That's already checked at the begin of the calling function.
+> 
+> > +
+> > +	if (!cpumask_test_cpu(cpu, affinity))
+> > +		return false;
+> 
+> Ditto.
+> 
+> > +	hk_mask = housekeeping_cpumask(HK_FLAG_MANAGED_IRQ);
+> > +	if (cpumask_subset(affinity, hk_mask))
+> > +		return false;
+> > +
+> > +	if (cpumask_intersects(irq_data_get_effective_affinity_mask(data),
+> > +				hk_mask))
+> 
+> I really had to think twice why this is correct. The example I gave you
+> is far more intuitive. It's just missing the check below.
+
+Your example uses isolation mask, which has to be allocated and built
+from housekeeping_cpumask(HK_FLAG_MANAGED_IRQ), that is why I use the
+above way so that we can avoid the allocation.
+
+IMO, the above is intuitive too, given it can be thought as effective
+affinity including hk CPUs.
+
+Thanks,
+Ming
 
