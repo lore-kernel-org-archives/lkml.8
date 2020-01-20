@@ -2,142 +2,153 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B79C33CA1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2994CC33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D44D520684
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:11:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED585207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:12:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="j6yw6w9I"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IUOxECxI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbgATIL3 (ORCPT
+        id S1726752AbgATIMe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 03:11:29 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:44734 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726039AbgATIL2 (ORCPT
+        Mon, 20 Jan 2020 03:12:34 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42125 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726125AbgATIMd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 03:11:28 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00K87Ku6013010;
-        Mon, 20 Jan 2020 09:11:05 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=W5ZIAUnsWsfFcqvySnIeAvxGCgNCyePoHk2zyVInFqg=;
- b=j6yw6w9I0h9Zv7j87xHA1fneV8BH+khC8d4c4JYHNvtyAYGXnxGZcZNiE0wtfIfDiXRl
- sQQJsDHVNjq7cj9uQ1056zLeL1hzWUr0S7YsMej/LNsks2f6otKbh6IwOBm9D5XL+VAd
- setBjnOIZOFtDgoZnDAypppM335JLgnIQcPmBx0B0pyY7sNyLmvT91JjUDnOuBrr0XuE
- kZoeTJ7MvS6hzJkPlIbRqfrsH+1mF50pbGhVqy8UxDHd6QhODLdg5czx+eBQhH0U/ILi
- Ifxolw8X5J4VYj1eHr/HVqvMGcQ+gYRHFlZbWRhZwsb4HKUWL/RTinnw6TvOPkhvYw4S SA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xkssnr2mr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jan 2020 09:11:05 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A9F52100034;
-        Mon, 20 Jan 2020 09:11:02 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5A87421CA7E;
-        Mon, 20 Jan 2020 09:11:02 +0100 (CET)
-Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 20 Jan
- 2020 09:11:02 +0100
-Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
- SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
- 15.00.1347.000; Mon, 20 Jan 2020 09:11:01 +0100
-From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
-To:     Sam Ravnborg <sam@ravnborg.org>
-CC:     "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "mripard@kernel.org" <mripard@kernel.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH v2] drm: fix parameters documentation style
-Thread-Topic: [PATCH v2] drm: fix parameters documentation style
-Thread-Index: AQHVyvPofDa6XF50OUmec7ESqHJ+56fwIF8AgAMLQ4A=
-Date:   Mon, 20 Jan 2020 08:11:01 +0000
-Message-ID: <372573cc-b0ae-72cb-f2c3-3f9310c3cf27@st.com>
-References: <20200114160135.14990-1-benjamin.gaignard@st.com>
- <20200118094156.GB12245@ravnborg.org>
-In-Reply-To: <20200118094156.GB12245@ravnborg.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <2E698A794AA66D4AA82A905734947894@st.com>
-Content-Transfer-Encoding: base64
+        Mon, 20 Jan 2020 03:12:33 -0500
+Received: by mail-wr1-f68.google.com with SMTP id q6so28355129wro.9
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 00:12:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=iA3EwgrIbCP+VdgBtFW9CZv31WmNUdZplPog0qNx7xc=;
+        b=IUOxECxIXb2To4NkBUArsH/prMwH8vr7g2COTWLshO68+0FbZ2C9c6RlS5BH566kAq
+         Em16ZUQGhSPNyQqKmwZvbf/usI85Q58gKT6k622D9IJO3hjelsKN0Ax7/0u02keFL20Q
+         vZLob1SYC5n1N3lS4XPJYDzah98lBW7AP5T7vTaK/22U/JykbrdDRwpRdDHlcP7ODOfT
+         kHGuM69MSVqPOQ+hywS4Ff8wlAlOu8QgiHMy4TBNijEq5puYhFa1o4gjJIIj03kdyr7q
+         osdFveKQHawx/RXYDy4Qrp8M5/09vDiaEyJPSZVvVXJyjI10XkQVss9tt2ansUX7URqP
+         pK8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=iA3EwgrIbCP+VdgBtFW9CZv31WmNUdZplPog0qNx7xc=;
+        b=SiE01fmcomdac0D43svPL8Fz0GWKg/HuP0DQ5ABvMsm81R9NatT6CPXX35KXrPN0Wg
+         EuFuGiJ/tM/Cu1zRxedjUlK6TE1gl2ffkgBXLCZGcZekmynL5fIRMCD5IYXcpncPGeDd
+         LMi7MXib7P8JMtN2eVFK2KDxQuZdbGD7RTcz6w2rxKRA9m584SjLGUqXkDKQhBJtKyGO
+         szHN9rOxk9i7MD9KZ5dfsR9GnToU8pp25OIlhE0oX3wQMeHi0k269PWXoMdh1f76CGMq
+         P3rp0weExgzycP9PzbpPH9h9yAyUzjpJzPqulACuAIZkTcp20vg/olWyqT5BiKICMe45
+         OmBw==
+X-Gm-Message-State: APjAAAVx+oq0vzAEkgCIlRs5rCoYIaaG8BXpDuLuVL8HYmTZxOHmV4+/
+        BcAuLIFcM3xf19Du3BcyQM/TlQ==
+X-Google-Smtp-Source: APXvYqy7AhB5hANh5i3GxwRkqjd99DuRQCWIlVWcGjRRxnMutH/h96ZafZ6lV3QC/+e1GNqGlqqM0A==
+X-Received: by 2002:a5d:4d4a:: with SMTP id a10mr17518365wru.220.1579507951432;
+        Mon, 20 Jan 2020 00:12:31 -0800 (PST)
+Received: from dell ([2.27.35.227])
+        by smtp.gmail.com with ESMTPSA id o15sm47150199wra.83.2020.01.20.00.12.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jan 2020 00:12:30 -0800 (PST)
+Date:   Mon, 20 Jan 2020 08:12:46 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 35/36] platform/x86: intel_pmc_ipc: Convert to MFD
+Message-ID: <20200120081246.GS15507@dell>
+References: <20200113135623.56286-1-mika.westerberg@linux.intel.com>
+ <20200113135623.56286-36-mika.westerberg@linux.intel.com>
+ <20200116132108.GH325@dell>
+ <20200116143730.GE2838@lahna.fi.intel.com>
+ <20200117113202.GH15507@dell>
+ <20200117142750.GP2838@lahna.fi.intel.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-19_08:2020-01-16,2020-01-19 signatures=0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200117142750.GP2838@lahna.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiAxLzE4LzIwIDEwOjQxIEFNLCBTYW0gUmF2bmJvcmcgd3JvdGU6DQo+IEhpIEJlbmphbWlu
-DQo+DQo+IE9uIFR1ZSwgSmFuIDE0LCAyMDIwIGF0IDA1OjAxOjM1UE0gKzAxMDAsIEJlbmphbWlu
-IEdhaWduYXJkIHdyb3RlOg0KPj4gUmVtb3ZlIG9sZCBkb2N1bWVudGF0aW9uIHN0eWxlIGFuZCB1
-c2UgbmV3IG9uZSB0byBhdm9pZCB3YXJuaW5ncyB3aGVuDQo+PiBjb21waWxpbmcgd2l0aCBXPTEN
-Cj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBCZW5qYW1pbiBHYWlnbmFyZCA8YmVuamFtaW4uZ2FpZ25h
-cmRAc3QuY29tPg0KPiBUaGFua3MgZm9yIHRoZSB3YXJuaW5nIGZpeGVzLg0KPiBUaGlzIGlzIGxl
-Z2FjeSBzdHVmZiB0aGF0IGlzIG5vdCBldmVuIHdpcmVkIGludG8gdGhlIGtlcm5lbC1kb2Mgc3R1
-ZmYuDQo+IEJ1dCB0aGF0IGlzIG5vIGV4Y3VzZSBmb3Igb2xkLXN0eWxlIGNvbW1lbnRzLg0KDQpU
-aGVyZSBpcyBzdGlsbCBxdWl0ZSBhIGZldyBvZiB0aGVtIGluIG90aGVyIGRybSBmaWxlcyAoZHJt
-X2NvbnRleHQuYyzCoCANCmRybV9idWZzLmMsIGRybV92bS5jLCBkcm1fbG9jay5jKQ0KDQpidXQg
-SSBkb24ndCBrbm93IGhvdyB0byBmaXggdGhlbS4gWW91ciBhZHZpY2VzIGFyZSB3ZWxjb21lLg0K
-DQpCZW5qYW1pbg0KDQo+DQo+IEFwcGxpZWQgdG8gZHJtLW1pc2MtbmV4dC4NCj4NCj4gCVNhbQ0K
-Pg0KPj4gLS0tDQo+PiBDQzogUmFuZHkgRHVubGFwIDxyZHVubGFwQGluZnJhZGVhZC5vcmc+DQo+
-PiB2ZXJzaW9uIDI6DQo+PiAtIGZpeCByZXR1cm4gZG9jdW1lbnRhdGlvbg0KPj4NCj4+ICAgZHJp
-dmVycy9ncHUvZHJtL2RybV9kbWEuYyB8IDIxICsrKysrKysrKysrLS0tLS0tLS0tLQ0KPj4gICAx
-IGZpbGUgY2hhbmdlZCwgMTEgaW5zZXJ0aW9ucygrKSwgMTAgZGVsZXRpb25zKC0pDQo+Pg0KPj4g
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9kcm1fZG1hLmMgYi9kcml2ZXJzL2dwdS9kcm0v
-ZHJtX2RtYS5jDQo+PiBpbmRleCBlNDViMDc4OTBjNWEuLmE3YWRkNTVhODViNCAxMDA2NDQNCj4+
-IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9kcm1fZG1hLmMNCj4+ICsrKyBiL2RyaXZlcnMvZ3B1L2Ry
-bS9kcm1fZG1hLmMNCj4+IEBAIC00MiwxMCArNDIsMTAgQEANCj4+ICAgI2luY2x1ZGUgImRybV9s
-ZWdhY3kuaCINCj4+ICAgDQo+PiAgIC8qKg0KPj4gLSAqIEluaXRpYWxpemUgdGhlIERNQSBkYXRh
-Lg0KPj4gKyAqIGRybV9sZWdhY3lfZG1hX3NldHVwKCkgLSBJbml0aWFsaXplIHRoZSBETUEgZGF0
-YS4NCj4+ICAgICoNCj4+IC0gKiBccGFyYW0gZGV2IERSTSBkZXZpY2UuDQo+PiAtICogXHJldHVy
-biB6ZXJvIG9uIHN1Y2Nlc3Mgb3IgYSBuZWdhdGl2ZSB2YWx1ZSBvbiBmYWlsdXJlLg0KPj4gKyAq
-IEBkZXY6IERSTSBkZXZpY2UuDQo+PiArICogUmV0dXJuOiB6ZXJvIG9uIHN1Y2Nlc3Mgb3IgYSBu
-ZWdhdGl2ZSB2YWx1ZSBvbiBmYWlsdXJlLg0KPj4gICAgKg0KPj4gICAgKiBBbGxvY2F0ZSBhbmQg
-aW5pdGlhbGl6ZSBhIGRybV9kZXZpY2VfZG1hIHN0cnVjdHVyZS4NCj4+ICAgICovDQo+PiBAQCAt
-NzEsOSArNzEsOSBAQCBpbnQgZHJtX2xlZ2FjeV9kbWFfc2V0dXAoc3RydWN0IGRybV9kZXZpY2Ug
-KmRldikNCj4+ICAgfQ0KPj4gICANCj4+ICAgLyoqDQo+PiAtICogQ2xlYW51cCB0aGUgRE1BIHJl
-c291cmNlcy4NCj4+ICsgKiBkcm1fbGVnYWN5X2RtYV90YWtlZG93bigpIC0gQ2xlYW51cCB0aGUg
-RE1BIHJlc291cmNlcy4NCj4+ICAgICoNCj4+IC0gKiBccGFyYW0gZGV2IERSTSBkZXZpY2UuDQo+
-PiArICogQGRldjogRFJNIGRldmljZS4NCj4+ICAgICoNCj4+ICAgICogRnJlZSBhbGwgcGFnZXMg
-YXNzb2NpYXRlZCB3aXRoIERNQSBidWZmZXJzLCB0aGUgYnVmZmVycyBhbmQgcGFnZXMgbGlzdHMs
-IGFuZA0KPj4gICAgKiBmaW5hbGx5IHRoZSBkcm1fZGV2aWNlOjpkbWEgc3RydWN0dXJlIGl0c2Vs
-Zi4NCj4+IEBAIC0xMjAsMTAgKzEyMCwxMCBAQCB2b2lkIGRybV9sZWdhY3lfZG1hX3Rha2Vkb3du
-KHN0cnVjdCBkcm1fZGV2aWNlICpkZXYpDQo+PiAgIH0NCj4+ICAgDQo+PiAgIC8qKg0KPj4gLSAq
-IEZyZWUgYSBidWZmZXIuDQo+PiArICogZHJtX2xlZ2FjeV9mcmVlX2J1ZmZlcigpIC0gRnJlZSBh
-IGJ1ZmZlci4NCj4+ICAgICoNCj4+IC0gKiBccGFyYW0gZGV2IERSTSBkZXZpY2UuDQo+PiAtICog
-XHBhcmFtIGJ1ZiBidWZmZXIgdG8gZnJlZS4NCj4+ICsgKiBAZGV2OiBEUk0gZGV2aWNlLg0KPj4g
-KyAqIEBidWY6IGJ1ZmZlciB0byBmcmVlLg0KPj4gICAgKg0KPj4gICAgKiBSZXNldHMgdGhlIGZp
-ZWxkcyBvZiBccCBidWYuDQo+PiAgICAqLw0KPj4gQEAgLTEzOSw5ICsxMzksMTAgQEAgdm9pZCBk
-cm1fbGVnYWN5X2ZyZWVfYnVmZmVyKHN0cnVjdCBkcm1fZGV2aWNlICpkZXYsIHN0cnVjdCBkcm1f
-YnVmICogYnVmKQ0KPj4gICB9DQo+PiAgIA0KPj4gICAvKioNCj4+IC0gKiBSZWNsYWltIHRoZSBi
-dWZmZXJzLg0KPj4gKyAqIGRybV9sZWdhY3lfcmVjbGFpbV9idWZmZXJzKCkgLSBSZWNsYWltIHRo
-ZSBidWZmZXJzLg0KPj4gICAgKg0KPj4gLSAqIFxwYXJhbSBmaWxlX3ByaXYgRFJNIGZpbGUgcHJp
-dmF0ZS4NCj4+ICsgKiBAZGV2OiBEUk0gZGV2aWNlLg0KPj4gKyAqIEBmaWxlX3ByaXY6IERSTSBm
-aWxlIHByaXZhdGUuDQo+PiAgICAqDQo+PiAgICAqIEZyZWVzIGVhY2ggYnVmZmVyIGFzc29jaWF0
-ZWQgd2l0aCBccCBmaWxlX3ByaXYgbm90IGFscmVhZHkgb24gdGhlIGhhcmR3YXJlLg0KPj4gICAg
-Ki8NCj4+IC0tIA0KPj4gMi4xNS4wDQo+Pg0KPj4gX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18NCj4+IGRyaS1kZXZlbCBtYWlsaW5nIGxpc3QNCj4+IGRyaS1k
-ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcNCj4+IGh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+On Fri, 17 Jan 2020, Mika Westerberg wrote:
+
+> On Fri, Jan 17, 2020 at 11:32:02AM +0000, Lee Jones wrote:
+> > On Thu, 16 Jan 2020, Mika Westerberg wrote:
+> > > On Thu, Jan 16, 2020 at 01:21:08PM +0000, Lee Jones wrote:
+> > > > On Mon, 13 Jan 2020, Mika Westerberg wrote:
+> > > > 
+> > > > > This driver only creates a bunch of platform devices sharing resources
+> > > > > belonging to the PMC device. This is pretty much what MFD subsystem is
+> > > > > for so move the driver there, renaming it to intel_pmc_bxt.c which
+> > > > > should be more clear what it is.
+> > > > > 
+> > > > > MFD subsystem provides nice helper APIs for subdevice creation so
+> > > > > convert the driver to use those. Unfortunately the ACPI device includes
+> > > > > separate resources for most of the subdevices so we cannot simply call
+> > > > > mfd_add_devices() to create all of them but instead we need to call it
+> > > > > separately for each device.
+> > > > > 
+> > > > > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > > > > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > > > ---
+> > > > >  drivers/mfd/Kconfig                           |  16 +-
+> > > > >  drivers/mfd/Makefile                          |   1 +
+> > > > >  drivers/mfd/intel_pmc_bxt.c                   | 543 +++++++++++++++
+> > > > >  drivers/platform/x86/Kconfig                  |  16 +-
+> > > > >  drivers/platform/x86/Makefile                 |   1 -
+> > > > >  drivers/platform/x86/intel_pmc_ipc.c          | 650 ------------------
+> > > > >  .../platform/x86/intel_telemetry_debugfs.c    |   2 +-
+> > > > >  drivers/usb/typec/tcpm/Kconfig                |   2 +-
+> > > > >  .../linux/mfd/intel_pmc_bxt.h                 |  11 +-
+> > > > >  9 files changed, 573 insertions(+), 669 deletions(-)
+> > > > >  create mode 100644 drivers/mfd/intel_pmc_bxt.c
+> > > > >  delete mode 100644 drivers/platform/x86/intel_pmc_ipc.c
+> > > > >  rename arch/x86/include/asm/intel_pmc_ipc.h => include/linux/mfd/intel_pmc_bxt.h (83%)
+
+[...]
+
+> > > > > +	scu = intel_scu_ipc_probe(&pdev->dev, &pdata);
+> > > > 
+> > > > This is a parent or child device?
+> > > 
+> > > The SCU IPC is a library so here it is just the device that has the SCU
+> > > IPC registers the library can use.
+> > 
+> > "probing" a library doesn't sound right.
+> > 
+> > Looking at the code, I think this should be a device.
+> 
+> Well, by "library" I mean that the SCU IPC itself does not bind to
+> anything but instead it gets called by different drivers such as this
+> one passing the device pointer that is the SCU IPC device. Here for
+> example it is the platfrom device created from an ACPI description.
+
+Not keen on that at all.  Why can it not be a platform device?
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
