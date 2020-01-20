@@ -2,93 +2,210 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE98EC33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 237F7C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6C1822314
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:11:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4AAB22314
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 15:11:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579533093;
+	bh=LCcU4e5UGq3OH9ShprWhNnt09GF0XJXuxMbSyUBugW4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=MmxNCsO0xLoh81uqvMhcMd8gr4/nbsNCe7j7xCQwunBYbvxbMGUvfO/ZqH39QoXHA
+	 /PE+CPKW68R8BHPDjthsQIRFeoTkpJBsZXkpiR+kb519BVvT2/ktgWdx79PLoVv+63
+	 E3krlZePUKsM+OQMcRkh1EW5qJREqNM9hAj2w9Pk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729130AbgATPLa (ORCPT
+        id S1729158AbgATPLc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 10:11:30 -0500
-Received: from foss.arm.com ([217.140.110.172]:33464 "EHLO foss.arm.com"
+        Mon, 20 Jan 2020 10:11:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726642AbgATPL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 10:11:29 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B3B7330E;
-        Mon, 20 Jan 2020 07:11:28 -0800 (PST)
-Received: from [192.168.0.7] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 49CBA3F52E;
-        Mon, 20 Jan 2020 07:11:22 -0800 (PST)
-Subject: Re: [PATCH 1/4] PM / EM: and devices to Energy Model
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-To:     lukasz.luba@arm.com, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com
-Cc:     Morten.Rasmussen@arm.com, Chris.Redpath@arm.com,
-        ionela.voinescu@arm.com, javi.merino@arm.com,
-        cw00.choi@samsung.com, b.zolnierkie@samsung.com, rjw@rjwysocki.net,
-        sudeep.holla@arm.com, viresh.kumar@linaro.org, nm@ti.com,
-        sboyd@kernel.org, rui.zhang@intel.com, amit.kucheria@verdurent.com,
-        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        rostedt@goodmis.org, qperret@google.com, bsegall@google.com,
-        mgorman@suse.de, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        festevam@gmail.com, kernel@pengutronix.de, khilman@kernel.org,
-        agross@kernel.org, bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, patrick.bellasi@matbug.net
-References: <20200116152032.11301-1-lukasz.luba@arm.com>
- <20200116152032.11301-2-lukasz.luba@arm.com>
- <17b77e0c-9455-0479-d37b-c57717c784c7@arm.com>
-Message-ID: <d0b90b97-3604-d4f4-b873-3879a9221532@arm.com>
-Date:   Mon, 20 Jan 2020 16:11:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1726642AbgATPLa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 10:11:30 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA2032070C;
+        Mon, 20 Jan 2020 15:11:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579533090;
+        bh=LCcU4e5UGq3OH9ShprWhNnt09GF0XJXuxMbSyUBugW4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=pTvFmKdnoaOuLcxDRYa7Ta1L8hTE/HN51tSEtJxuDqbRY6ttUABkmSxnFLKjrjG9K
+         FIo4rDliaMvnwjRwl/YtLrUOfQmAA/GGm2VTl1ac0fhEr2A4TmDhkkCoD8FBGKzm4j
+         XgW/eESNMulzby33FBgMq9MZ6NTCMBpTEVC7Qhfs=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1itYi8-000IhN-2l; Mon, 20 Jan 2020 15:11:28 +0000
 MIME-Version: 1.0
-In-Reply-To: <17b77e0c-9455-0479-d37b-c57717c784c7@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Mon, 20 Jan 2020 15:11:28 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Cc:     kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
+        Eric Auger <eric.auger@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <Andrew.Murray@arm.com>,
+        Robert Richter <rrichter@marvell.com>
+Subject: Re: [PATCH v3 05/32] irqchip/gic-v4.1: VPE table (aka
+ GICR_VPROPBASER) allocation
+In-Reply-To: <b4a78cea-4ba3-58fb-4121-44508e7ae384@huawei.com>
+References: <20191224111055.11836-1-maz@kernel.org>
+ <20191224111055.11836-6-maz@kernel.org>
+ <b4a78cea-4ba3-58fb-4121-44508e7ae384@huawei.com>
+Message-ID: <3f1aad5c7f79b5ae5b87cef57523ec78@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.8
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org, eric.auger@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, tglx@linutronix.de, jason@lakedaemon.net, lorenzo.pieralisi@arm.com, Andrew.Murray@arm.com, rrichter@marvell.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/01/2020 15:53, Dietmar Eggemann wrote:
-> On 16/01/2020 16:20, lukasz.luba@arm.com wrote:
->> From: Lukasz Luba <lukasz.luba@arm.com>
-
-[...]
-
->> +enum em_type {
->> +	EM_SIMPLE,
->> +	EM_CPU,
->> +};
+On 2020-01-20 14:03, Zenghui Yu wrote:
+> Hi Marc,
 > 
-> s/EM_SIMPLE/EM_DEV ?
+> On 2019/12/24 19:10, Marc Zyngier wrote:
+>> GICv4.1 defines a new VPE table that is potentially shared between
+>> both the ITSs and the redistributors, following complicated affinity
+>> rules.
+>> 
+>> To make things more confusing, the programming of this table at
+>> the redistributor level is reusing the GICv4.0 GICR_VPROPBASER 
+>> register
+>> for something completely different.
+>> 
+>> The code flow is somewhat complexified by the need to respect the
+>> affinities required by the HW, meaning that tables can either be
+>> inherited from a previously discovered ITS or redistributor.
+>> 
+>> Signed-off-by: Marc Zyngier <maz@kernel.org>
 > 
-> Right now I only see energy models and _one_ specific type (the CPU EM).
-> So a tag 'is a CPU EM' would suffice. No need for EM_SIMPE ...
+> Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
+> 
+> With two very minor concerns below.
+> 
+> [...]
+> 
+>> +static int allocate_vpe_l1_table(void)
+>> +{
+>> +	void __iomem *vlpi_base = gic_data_rdist_vlpi_base();
+>> +	u64 val, gpsz, npg, pa;
+>> +	unsigned int psz = SZ_64K;
+>> +	unsigned int np, epp, esz;
+>> +	struct page *page;
+>> +
+>> +	if (!gic_rdists->has_rvpeid)
+>> +		return 0;
+>> +
+>> +	/*
+>> +	 * if VPENDBASER.Valid is set, disable any previously programmed
+>> +	 * VPE by setting PendingLast while clearing Valid. This has the
+>> +	 * effect of making sure no doorbell will be generated and we can
+>> +	 * then safely clear VPROPBASER.Valid.
+>> +	 */
+>> +	if (gits_read_vpendbaser(vlpi_base + GICR_VPENDBASER) & 
+>> GICR_VPENDBASER_Valid)
+>> +		gits_write_vpendbaser(GICR_VPENDBASER_PendingLast,
+>> +				      vlpi_base + GICR_VPENDBASER);
+> 
+> I'm confused here.  The Valid field resets to 0.  Under which scenario
+> will the Valid==1 while we're doing initialization for this RD?
 
-Wait, you even have
+The cases I'm worried about are things like kexec or cpu hotplug,
+where we could find that the RD programming is still valid, one way
+or another. This is unlikely to hit in practice, but who knows...
 
-struct em_device {
-        struct em_perf_domain *em_pd;
-        struct device *dev;
-        ...
-}
+> 
+>> +
+>> +	/*
+>> +	 * If we can inherit the configuration from another RD, let's do
+>> +	 * so. Otherwise, we have to go through the allocation process. We
+>> +	 * assume that all RDs have the exact same requirements, as
+>> +	 * nothing will work otherwise.
+>> +	 */
+>> +	val = 
+>> inherit_vpe_l1_table_from_rd(&gic_data_rdist()->vpe_table_mask);
+>> +	if (val & GICR_VPROPBASER_4_1_VALID)
+>> +		goto out;
+>> +
+>> +	gic_data_rdist()->vpe_table_mask = kzalloc(sizeof(cpumask_t), 
+>> GFP_KERNEL);
+>> +	if (!gic_data_rdist()->vpe_table_mask)
+>> +		return -ENOMEM;
+>> +
+>> +	val = inherit_vpe_l1_table_from_its();
+>> +	if (val & GICR_VPROPBASER_4_1_VALID)
+>> +		goto out;
+>> +
+>> +	/* First probe the page size */
+>> +	val = FIELD_PREP(GICR_VPROPBASER_4_1_PAGE_SIZE, GIC_PAGE_SIZE_64K);
+>> +	gits_write_vpropbaser(val, vlpi_base + GICR_VPROPBASER);
+>> +	val = gits_read_vpropbaser(vlpi_base + GICR_VPROPBASER);
+>> +	gpsz = FIELD_GET(GICR_VPROPBASER_4_1_PAGE_SIZE, val);
+>> +	esz = FIELD_GET(GICR_VPROPBASER_4_1_ENTRY_SIZE, val);
+>> +
+>> +	switch (gpsz) {
+>> +	default:
+>> +		gpsz = GIC_PAGE_SIZE_4K;
+>> +		/* fall through */
+>> +	case GIC_PAGE_SIZE_4K:
+>> +		psz = SZ_4K;
+>> +		break;
+>> +	case GIC_PAGE_SIZE_16K:
+>> +		psz = SZ_16K;
+>> +		break;
+>> +	case GIC_PAGE_SIZE_64K:
+>> +		psz = SZ_64K;
+>> +		break;
+>> +	}
+>> +
+>> +	/*
+>> +	 * Start populating the register from scratch, including RO fields
+>> +	 * (which we want to print in debug cases...)
+>> +	 */
+>> +	val = 0;
+>> +	val |= FIELD_PREP(GICR_VPROPBASER_4_1_PAGE_SIZE, gpsz);
+>> +	val |= FIELD_PREP(GICR_VPROPBASER_4_1_ENTRY_SIZE, esz);
+>> +
+>> +	/* How many entries per GIC page? */
+>> +	esz++;
+>> +	epp = psz / (esz * SZ_8);
+>> +
+>> +	/*
+>> +	 * If we need more than just a single L1 page, flag the table
+>> +	 * as indirect and compute the number of required L1 pages.
+>> +	 */
+>> +	if (epp < ITS_MAX_VPEID) {
+>> +		int nl2;
+>> +
+>> +		gic_rdists->flags |= RDIST_FLAGS_VPE_INDIRECT;
+> 
+> This flag is set but not used, can we just drop it?
 
-static bool _is_cpu_device(struct device *dev)
+Yes, good point. I can't even remember what I had in mind with this
+flag, so it can't be that important! ;-).
 
-Shouldn't this be enough to distinguish between EM and special CPU EM
-under the API? Even when required to use container_of() to get from
-em_perf_domain to device.
+I'll clean that up.
+
+Thanks,
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
