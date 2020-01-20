@@ -2,108 +2,236 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D41BC33CB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16563C33CA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 746252077C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:23:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDFCF207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 09:23:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XSHHxChO"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jUcNuoDQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727683AbgATJXM (ORCPT
+        id S1727285AbgATJXL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 04:23:12 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:41274 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727254AbgATJXL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 20 Jan 2020 04:23:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=4uEiMVm/2RivzprYXuYQzMtYidTlX8YQdwZ9M5LzWJ4=; b=XSHHxChOVmqtgqoywdk9bNqWL
-        I4EuDnnLiBTMkuhcDZ/9nrRIMupvn9VaQBoObNgj5yAoEuIiRwQUsxTtvr/6TIF/QyIfNrrogywW2
-        DkePG5DtROgRlLevwB956wgkpcf8Q0SOpdXSggLzBjF0GnprkFVykDJGNnkDqK5LYj5zTpX03c8/4
-        uj1Mbao42UwkxwlMaN/UxdmoFpYDfb3HSV9E5B3whDka9yetIOkpKcOYVeutQJIx3MZyjxjfGxMPx
-        r9Iwq/zeSwKAPj/svpkg/Ci9jJlx3IZLHvee8RzUlUhhMZPIswiYsKqX/Ir3OwnqHQMWB6G187i9U
-        PcGFdo5sA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1itTGx-0007mM-57; Mon, 20 Jan 2020 09:23:03 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3BBD4305D3F;
-        Mon, 20 Jan 2020 10:21:21 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1F3FF2041FB24; Mon, 20 Jan 2020 10:23:00 +0100 (CET)
-Date:   Mon, 20 Jan 2020 10:23:00 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     kan.liang@linux.intel.com
-Cc:     eranian@google.com, acme@redhat.com, mingo@kernel.org,
-        mpe@ellerman.id.au, linux-kernel@vger.kernel.org, jolsa@kernel.org,
-        namhyung@kernel.org, vitaly.slobodskoy@intel.com,
-        pavel.gerasimov@intel.com, ak@linux.intel.com
-Subject: Re: [RESEND PATCH V5 1/2] perf/core: Add new branch sample type for
- HW index of raw branch records
-Message-ID: <20200120092300.GK14879@hirez.programming.kicks-ass.net>
-References: <20200116155757.19624-1-kan.liang@linux.intel.com>
- <20200116155757.19624-2-kan.liang@linux.intel.com>
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:39529 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726125AbgATJXK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 04:23:10 -0500
+Received: by mail-qk1-f196.google.com with SMTP id c16so29438197qko.6
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 01:23:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=+drl7LyyZzQ3Le0+6nOIotpvZ8Ybc/8gJ2Qh+5zlDLU=;
+        b=jUcNuoDQUieW2IaNkSuxM3KcUhV324LuFUUrQ9zebkohA2XLZUuelDZobz3BlCqPI6
+         ucRumVGc0kPCkZhFBCye8PWQoNRgITflmy9cZBnBSz9VmP8eU0aHm/tGnFSOKaAZdVSO
+         PxbCzb4piUbvBnXt1YV6yWuNjjEf1VkODTnkGrr2y3cjCCrXqTwYJ3ieEIk84c0Buiqy
+         yfxXan44+434anwTrDLOhAncpI+ujcWesyfyV4YVvFncu+JwQGeImApWR8rneHEgt63e
+         j93KzSiNVm9sKTYscfVN1yMvL6XI+Fsa6e4C5KJ/o7RpFk30GNJIf6DwsMKkl0PHiFec
+         LbEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=+drl7LyyZzQ3Le0+6nOIotpvZ8Ybc/8gJ2Qh+5zlDLU=;
+        b=oGQan69UaavLCk/LIS1KCRi+e4tWdm8+BUwmCG9npHAvhz57XsyijUBKtzqAq+7iLG
+         rMLYwsgNrouuWcXIxNerQGgbtH9UNHY1qNjI/vYpOo4NSKgfhK1/gLvTwv3Gf7cA62G7
+         Yp0cBy2kAuoU85wBujvYU4RzmnZZCyLmUuOsp6at/2dVc+uedn2gJSM5Wym1mosR+KtQ
+         RV8fFIed5Dk8/97LlZ0jyGlHYQeZFmugszK+6h5G6fHRHF10rO/UNGF/k11Ma0rstLA9
+         feUUhKgajcdnb3KXyAD98txlB3VkgbqpA/ndKKkgUj6R3CmgevSKoGkV33r/ed/dMKxP
+         5V3g==
+X-Gm-Message-State: APjAAAUZiROHHk7SpTYhm3LDaTl7dUJhAQHcWvs29mElTFq4l5ZDXa0K
+        9afJNNej1DKY7MV+22XDhT5geT0MCYOg7OwX1V1UlA==
+X-Google-Smtp-Source: APXvYqzyRAeiny/5VvFFvMyO0C2nxWNX7+AyAtmfBHbm2UMLuYEf8laTqYsljsMIakg/kRj73d40W0PPsqs+UFSqv5I=
+X-Received: by 2002:a37:5841:: with SMTP id m62mr49294755qkb.256.1579512188826;
+ Mon, 20 Jan 2020 01:23:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200116155757.19624-2-kan.liang@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <00000000000030dddb059c562a3f@google.com> <55ad363b-1723-28aa-78b1-8aba5565247e@hartkopp.net>
+ <20200120091146.GD11138@x1.vandijck-laurijssen.be>
+In-Reply-To: <20200120091146.GD11138@x1.vandijck-laurijssen.be>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Mon, 20 Jan 2020 10:22:57 +0100
+Message-ID: <CACT4Y+a+GusEA1Gs+z67uWjtwBRp_s7P4Wd_SMmgpCREnDu3kg@mail.gmail.com>
+Subject: Re: general protection fault in can_rx_register
+To:     Oliver Hartkopp <socketcan@hartkopp.net>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        o.rempel@pengutronix.de,
+        syzbot <syzbot+c3ea30e1e2485573f953@syzkaller.appspotmail.com>,
+        David Miller <davem@davemloft.net>, linux-can@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 07:57:56AM -0800, kan.liang@linux.intel.com wrote:
+On Mon, Jan 20, 2020 at 10:11 AM Kurt Van Dijck
+<dev.kurt@vandijck-laurijssen.be> wrote:
+>
+> If bisect was right with this:
+>
+> > >The bug was bisected to:
+> > >
+> > >commit 9868b5d44f3df9dd75247acd23dddff0a42f79be
+> > >Author: Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
+> > >Date:   Mon Oct 8 09:48:33 2018 +0000
+> > >
+> > >     can: introduce CAN_REQUIRED_SIZE macro
+>
+> Then I'd start looking in malformed sockaddr_can data instead.
+>
+> Is this code what triggers the bug?
+> > >C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=138f5db9e00000
 
->  struct perf_branch_stack {
->  	__u64				nr;
-> +	__u64				hw_idx;
->  	struct perf_branch_entry	entries[0];
->  };
+yes
 
-The above and below order doesn't match.
-
-> @@ -849,7 +853,11 @@ enum perf_event_type {
->  	 *	  char                  data[size];}&& PERF_SAMPLE_RAW
->  	 *
->  	 *	{ u64                   nr;
-> -	 *        { u64 from, to, flags } lbr[nr];} && PERF_SAMPLE_BRANCH_STACK
-> +	 *        { u64 from, to, flags } lbr[nr];
-> +	 *
-> +	 *        # only available if PERF_SAMPLE_BRANCH_HW_INDEX is set
-> +	 *        u64			hw_idx;
-> +	 *      } && PERF_SAMPLE_BRANCH_STACK
-
-That wants to be written as:
-
-		{ u64			nr;
-		  { u64 from, to, flags; } entries[nr];
-		  { u64	hw_idx; } && PERF_SAMPLE_BRANCH_HW_INDEX
-		} && PERF_SAMPLE_BRANCH_STACK
-
-But the big question is; why isn't it:
-
-		{ u64			nr;
-		  { u64	hw_idx; } && PERF_SAMPLE_BRANCH_HW_INDEX
-		  { u64 from, to, flags; } entries[nr];
-		} && PERF_SAMPLE_BRANCH_STACK
-
-to match the struct perf_branch_stack order. Having that variable sized
-entry in the middle just seems weird.
-
->  	 *
->  	 * 	{ u64			abi; # enum perf_sample_regs_abi
->  	 * 	  u64			regs[weight(mask)]; } && PERF_SAMPLE_REGS_USER
+> Kind regards,
+> Kurt
+>
+> On vr, 17 jan 2020 21:02:48 +0100, Oliver Hartkopp wrote:
+> > Hi Marc, Oleksij, Kurt,
+> >
+> > On 17/01/2020 14.46, syzbot wrote:
+> > >Hello,
+> > >
+> > >syzbot found the following crash on:
+> > >
+> > >HEAD commit:    f5ae2ea6 Fix built-in early-load Intel microcode alignment
+> > >git tree:       upstream
+> > >console output: https://syzkaller.appspot.com/x/log.txt?x=1033df15e00000
+> > >kernel config:  https://syzkaller.appspot.com/x/.config?x=cfbb8fa33f49f9f3
+> > >dashboard link:
+> > >https://syzkaller.appspot.com/bug?extid=c3ea30e1e2485573f953
+> > >compiler:       clang version 10.0.0
+> > >(https://github.com/llvm/llvm-project/
+> > >c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+> > >syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13204f15e00000
+> > >C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=138f5db9e00000
+> > >
+> > >The bug was bisected to:
+> > >
+> > >commit 9868b5d44f3df9dd75247acd23dddff0a42f79be
+> > >Author: Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
+> > >Date:   Mon Oct 8 09:48:33 2018 +0000
+> > >
+> > >     can: introduce CAN_REQUIRED_SIZE macro
+> > >
+> > >bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=129bfdb9e00000
+> > >final crash:    https://syzkaller.appspot.com/x/report.txt?x=119bfdb9e00000
+> > >console output: https://syzkaller.appspot.com/x/log.txt?x=169bfdb9e00000
+> > >
+> > >IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > >Reported-by: syzbot+c3ea30e1e2485573f953@syzkaller.appspotmail.com
+> > >Fixes: 9868b5d44f3d ("can: introduce CAN_REQUIRED_SIZE macro")
+> > >
+> > >kasan: CONFIG_KASAN_INLINE enabled
+> > >kasan: GPF could be caused by NULL-ptr deref or user memory access
+> > >general protection fault: 0000 [#1] PREEMPT SMP KASAN
+> > >CPU: 0 PID: 9593 Comm: syz-executor302 Not tainted 5.5.0-rc6-syzkaller #0
+> > >Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > >Google 01/01/2011
+> > >RIP: 0010:hlist_add_head_rcu include/linux/rculist.h:528 [inline]
+> > >RIP: 0010:can_rx_register+0x43b/0x600 net/can/af_can.c:476
+> >
+> > include/linux/rculist.h:528 is
+> >
+> > struct hlist_node *first = h->first;
+> >
+> > which would mean that 'h' must be NULL.
+> >
+> > But the h parameter is rcv_list from
+> > rcv_list = can_rcv_list_find(&can_id, &mask, dev_rcv_lists);
+> >
+> > Which can not return NULL - at least when dev_rcv_lists is a proper pointer
+> > to the dev_rcv_lists provided by can_dev_rcv_lists_find().
+> >
+> > So either dev->ml_priv is NULL in the case of having a CAN interface (here
+> > vxcan) or we have not allocated net->can.rx_alldev_list in can_pernet_init()
+> > properly (which would lead to an -ENOMEM which is reported to whom?).
+> >
+> > Hm. I'm lost. Any ideas?
+> >
+> > Regards,
+> > Oliver
+> >
+> >
+> > >Code: 48 89 d8 48 c1 e8 03 42 80 3c 28 00 74 08 48 89 df e8 89 22 8a fa 4c
+> > >89 33 4d 89 e5 49 c1 ed 03 48 b8 00 00 00 00 00 fc ff df <41> 80 7c 05 00
+> > >00 74 08 4c 89 e7 e8 c5 21 8a fa 4d 8b 34 24 4c 89
+> > >RSP: 0018:ffffc90003e27d00 EFLAGS: 00010202
+> > >RAX: dffffc0000000000 RBX: ffff8880a77336c8 RCX: ffff88809306a100
+> > >RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8880a77336c0
+> > >RBP: ffffc90003e27d58 R08: ffffffff87289cd6 R09: fffff520007c4f94
+> > >R10: fffff520007c4f94 R11: 0000000000000000 R12: 0000000000000008
+> > >R13: 0000000000000001 R14: ffff88809fbcf000 R15: ffff8880a7733690
+> > >FS:  00007fb132f26700(0000) GS:ffff8880aec00000(0000)
+> > >knlGS:0000000000000000
+> > >CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > >CR2: 000000000178f590 CR3: 00000000996d6000 CR4: 00000000001406f0
+> > >DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > >DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > >Call Trace:
+> > >  raw_enable_filters net/can/raw.c:189 [inline]
+> > >  raw_enable_allfilters net/can/raw.c:255 [inline]
+> > >  raw_bind+0x326/0x1230 net/can/raw.c:428
+> > >  __sys_bind+0x2bd/0x3a0 net/socket.c:1649
+> > >  __do_sys_bind net/socket.c:1660 [inline]
+> > >  __se_sys_bind net/socket.c:1658 [inline]
+> > >  __x64_sys_bind+0x7a/0x90 net/socket.c:1658
+> > >  do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+> > >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> > >RIP: 0033:0x446ba9
+> > >Code: e8 0c e8 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7
+> > >48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
+> > >ff 0f 83 5b 07 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+> > >RSP: 002b:00007fb132f25d98 EFLAGS: 00000246 ORIG_RAX: 0000000000000031
+> > >RAX: ffffffffffffffda RBX: 00000000006dbc88 RCX: 0000000000446ba9
+> > >RDX: 0000000000000008 RSI: 0000000020000180 RDI: 0000000000000003
+> > >RBP: 00000000006dbc80 R08: 00007fb132f26700 R09: 0000000000000000
+> > >R10: 00007fb132f26700 R11: 0000000000000246 R12: 00000000006dbc8c
+> > >R13: 0000000000000000 R14: 0000000000000000 R15: 068500100000003c
+> > >Modules linked in:
+> > >---[ end trace 0dedabb13ca8e7d7 ]---
+> > >RIP: 0010:hlist_add_head_rcu include/linux/rculist.h:528 [inline]
+> > >RIP: 0010:can_rx_register+0x43b/0x600 net/can/af_can.c:476
+> > >Code: 48 89 d8 48 c1 e8 03 42 80 3c 28 00 74 08 48 89 df e8 89 22 8a fa 4c
+> > >89 33 4d 89 e5 49 c1 ed 03 48 b8 00 00 00 00 00 fc ff df <41> 80 7c 05 00
+> > >00 74 08 4c 89 e7 e8 c5 21 8a fa 4d 8b 34 24 4c 89
+> > >RSP: 0018:ffffc90003e27d00 EFLAGS: 00010202
+> > >RAX: dffffc0000000000 RBX: ffff8880a77336c8 RCX: ffff88809306a100
+> > >RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8880a77336c0
+> > >RBP: ffffc90003e27d58 R08: ffffffff87289cd6 R09: fffff520007c4f94
+> > >R10: fffff520007c4f94 R11: 0000000000000000 R12: 0000000000000008
+> > >R13: 0000000000000001 R14: ffff88809fbcf000 R15: ffff8880a7733690
+> > >FS:  00007fb132f26700(0000) GS:ffff8880aec00000(0000)
+> > >knlGS:0000000000000000
+> > >CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > >CR2: 000000000178f590 CR3: 00000000996d6000 CR4: 00000000001406f0
+> > >DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > >DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > >
+> > >
+> > >---
+> > >This bug is generated by a bot. It may contain errors.
+> > >See https://goo.gl/tpsmEJ for more information about syzbot.
+> > >syzbot engineers can be reached at syzkaller@googlegroups.com.
+> > >
+> > >syzbot will keep track of this bug report. See:
+> > >https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> > >For information about bisection process see:
+> > >https://goo.gl/tpsmEJ#bisection
+> > >syzbot can test patches for this bug, for details see:
+> > >https://goo.gl/tpsmEJ#testing-patches
+>
+> --
+> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/20200120091146.GD11138%40x1.vandijck-laurijssen.be.
