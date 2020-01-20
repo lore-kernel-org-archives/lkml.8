@@ -2,133 +2,141 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41D46C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:14:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E21EBC33CB7
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 194EC2077C
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:14:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hR97wZBL"
+	by mail.kernel.org (Postfix) with ESMTP id BF783207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 08:17:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbgATIOs (ORCPT
+        id S1726780AbgATIRD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 03:14:48 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46927 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbgATIOs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 03:14:48 -0500
-Received: by mail-wr1-f67.google.com with SMTP id z7so28403755wrl.13;
-        Mon, 20 Jan 2020 00:14:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UIic33wM3WlTJ/qyfJXoCISYAJdeCBgMYcJKMtJGZhk=;
-        b=hR97wZBLWr1+Ibu1Ok50ubBmNZKDYxODRZGXmDgSE8I4z+qigOztYfDFRGhRbTBZNg
-         vQrZH0sniNsaGedRp8/E1Nx8upDIiQZBvlWnzHvYE23kG2CuD7K7BlNo+Yz5UyY1EXNW
-         /PODrFK9DeJ9fB9R10m7IqikGUNPD8nJpBUxeBHt+kmOozb1k7WGkOld2Rx90iYmagN0
-         CterkSvdulr/3kvrKQt4aX9ilhVn8pYe95vUzHYvihYDoWX+lqAtQPq0lXUK5WKHqKhk
-         fE4VTQl+MD8x24OkGou3MHHvPbUfa7fEpjZnCTx6TxYPPRPyRRye/nCsIR8Ywxhl0IkX
-         1k8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UIic33wM3WlTJ/qyfJXoCISYAJdeCBgMYcJKMtJGZhk=;
-        b=U6wiac5SEs0OG7Qxnjude9HGsKq0hjPT1nsfPZeyDtLTXqe8BG3vpQSM1U4QGgandu
-         Dt+AnVcS68Bm7zzi8qzgbisydJEHLv+zse6wf1o51z9Gp/BI5zwF2PMq80zsXRSG8QBP
-         T6p154Ik/Sg7oc8muIrNme+zqQALPa2rsuFdyTWSU0NqTaN0QQWeAhY9pTyirZF88BXv
-         SGdxIc8jwWHJmORdkjpa8NRBh/FpZw204+536Dgh45IBOhaucAPy6rl7MuKMJE1yEJyj
-         pZxZmkxNztkU5woYB7nxH2UV7jJpj6IiU8Y5wq5xXUeFoOu6VNM3Q1ihe33acuqNwW0B
-         xfmQ==
-X-Gm-Message-State: APjAAAVYqSoXe/0B6ICS/BpIG5iWdZjbdrYVVm2CFP35WICnUnXCsdpO
-        kpeXbL9iCdW7WRw8reUj8AetWVlS3owqK2kC1gQ=
-X-Google-Smtp-Source: APXvYqzgV/mG0TFZfplGPIk8mHqPPEpkeRaeT9UjNfROg6vhcZWqbbE6tfq0jl5yXrghTaEq4G+Z5sWN77M00vQS+ZY=
-X-Received: by 2002:a5d:5704:: with SMTP id a4mr17680370wrv.198.1579508085926;
- Mon, 20 Jan 2020 00:14:45 -0800 (PST)
+        Mon, 20 Jan 2020 03:17:03 -0500
+Received: from mga01.intel.com ([192.55.52.88]:38466 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726039AbgATIRC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 03:17:02 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 00:17:01 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,341,1574150400"; 
+   d="scan'208";a="258624482"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga002.fm.intel.com with ESMTP; 20 Jan 2020 00:17:00 -0800
+Date:   Mon, 20 Jan 2020 16:17:10 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     David Rientjes <rientjes@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Wei Yang <richardw.yang@linux.intel.com>, hannes@cmpxchg.org,
+        vdavydov.dev@gmail.com, ktkhai@virtuozzo.com,
+        kirill.shutemov@linux.intel.com, yang.shi@linux.alibaba.com,
+        cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, alexander.duyck@gmail.com,
+        stable@vger.kernel.org
+Subject: Re: [Patch v4] mm: thp: remove the defer list related code since
+ this will not happen
+Message-ID: <20200120081710.GA18028@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20200117233836.3434-1-richardw.yang@linux.intel.com>
+ <20200118145421.0ab96d5d9bea21a3339d52fe@linux-foundation.org>
+ <alpine.DEB.2.21.2001181525250.27051@chino.kir.corp.google.com>
+ <20200120072237.GA18451@dhcp22.suse.cz>
 MIME-Version: 1.0
-References: <20200120031023.32482-1-zhang.chunyan@linaro.org>
- <20200120033223.897-1-zhang.chunyan@linaro.org> <65f7272c-ecea-03de-433b-21ba2e672d20@intel.com>
-In-Reply-To: <65f7272c-ecea-03de-433b-21ba2e672d20@intel.com>
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-Date:   Mon, 20 Jan 2020 16:14:09 +0800
-Message-ID: <CAAfSe-vjmFGkK5Enj9Nj_qrERJbNQTLejpVL+JVJLG7tgNhT9w@mail.gmail.com>
-Subject: Re: [PATCH v2] mmc: sdhci: fix an issue of mixing different types
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Chunyan Zhang <zhang.chunyan@linaro.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        clang-built-linux@googlegroups.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kbuild test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200120072237.GA18451@dhcp22.suse.cz>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jan 2020 at 15:15, Adrian Hunter <adrian.hunter@intel.com> wrote:
+On Mon, Jan 20, 2020 at 08:22:37AM +0100, Michal Hocko wrote:
+>On Sat 18-01-20 15:36:06, David Rientjes wrote:
+>> On Sat, 18 Jan 2020, Andrew Morton wrote:
+>> 
+>> > On Sat, 18 Jan 2020 07:38:36 +0800 Wei Yang <richardw.yang@linux.intel.com> wrote:
+>> > 
+>> > > If compound is true, this means it is a PMD mapped THP. Which implies
+>> > > the page is not linked to any defer list. So the first code chunk will
+>> > > not be executed.
+>> > > 
+>> > > Also with this reason, it would not be proper to add this page to a
+>> > > defer list. So the second code chunk is not correct.
+>> > > 
+>> > > Based on this, we should remove the defer list related code.
+>> > > 
+>> > > Fixes: 87eaceb3faa5 ("mm: thp: make deferred split shrinker memcg aware")
+>> > > 
+>> > > Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+>> > > Suggested-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+>> > > Cc: <stable@vger.kernel.org>    [5.4+]
+>> > 
+>> > This patch is identical to "mm: thp: grab the lock before manipulating
+>> > defer list", which is rather confusing.  Please let people know when
+>> > this sort of thing is done.
+>> > 
+>> > The earlier changelog mentioned a possible race condition.  This
+>> > changelog does not.  In fact this changelog fails to provide any
+>> > description of any userspace-visible runtime effects of the bug. 
+>> > Please send along such a description for inclusion, as always.
+>> > 
+>> 
+>> The locking concern that Wei was originally looking at is no longer an 
+>> issue because we determined that the code in question could simply be 
+>> removed.
+>> 
+>> I think the following can be added to the changelog:
+>> 
+>> ----->o-----
+>> 
+>> When migrating memcg charges of thp memory, there are two possibilities:
+>> 
+>>  (1) The underlying compound page is mapped by a pmd and thus does is not 
+>>      on a deferred split queue (it's mapped), or
+>> 
+>>  (2) The compound page is not mapped by a pmd and is awaiting split on a
+>>      deferred split queue.
+>> 
+>> The current charge migration implementation does *not* migrate charges for 
+>> thp memory on the deferred split queue, it only migrates charges for pages 
+>> that are mapped by a pmd.
+>> 
+>> Thus, to migrate charges, the underlying compound page cannot be on a 
+>> deferred split queue; no list manipulation needs to be done in 
+>> mem_cgroup_move_account().
+>> 
+>> With the current code, the underlying compound page is moved to the 
+>> deferred split queue of the memcg its memory is not charged to, so 
+>> susbequent reclaim will consider these pages for the wrong memcg.  Remove 
+>> the deferred split queue handling in mem_cgroup_move_account() entirely.
 >
-> On 20/01/20 5:32 am, Chunyan Zhang wrote:
-> > Fix an issue reported by sparse, since mixed types of parameters are
-> > used on calling dmaengine_prep_slave_sg().
-> >
-> > Fixes: 36e1da441fec (mmc: sdhci: add support for using external DMA devices)
+>I believe this still doesn't describe the underlying problem to the full
+>extent. What happens with the page on the deferred list when it
+>shouldn't be there in fact? Unless I am missing something deferred_split_scan
+>will simply split that huge page. Which is a bit unfortunate but nothing
+>really critical. This should be mentioned in the changelog.
 >
-> That commit number is only in next
 
-Ok, so should this line be removed?
+Per my understanding, if we do the split when it is not necessary, we
+probably have a lower performance due to tlb miss. For others, I don't see the
+impact.
 
+>With that clarified, feel free to add
 >
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> > Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
-> > Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+>Acked-by: Michal Hocko <mhocko@suse.com>
 >
-> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+>-- 
+>Michal Hocko
+>SUSE Labs
 
-Thank you!
-
-Chunyan
-
->
-> > ---
-> > Changes from v1:
-> > * address comments from Nathan Chancellor
-> > - define a new variable to avoid type conversions.
-> > ---
-> >  drivers/mmc/host/sdhci.c | 5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> > index 30b5a624b50e..f9e0b5f2c692 100644
-> > --- a/drivers/mmc/host/sdhci.c
-> > +++ b/drivers/mmc/host/sdhci.c
-> > @@ -1201,6 +1201,7 @@ static int sdhci_external_dma_setup(struct sdhci_host *host,
-> >                                   struct mmc_command *cmd)
-> >  {
-> >       int ret, i;
-> > +     enum dma_transfer_direction dir;
-> >       struct dma_async_tx_descriptor *desc;
-> >       struct mmc_data *data = cmd->data;
-> >       struct dma_chan *chan;
-> > @@ -1234,8 +1235,8 @@ static int sdhci_external_dma_setup(struct sdhci_host *host,
-> >       if (sg_cnt <= 0)
-> >               return -EINVAL;
-> >
-> > -     desc = dmaengine_prep_slave_sg(chan, data->sg, data->sg_len,
-> > -                                    mmc_get_dma_dir(data),
-> > +     dir = data->flags & MMC_DATA_WRITE ? DMA_MEM_TO_DEV : DMA_DEV_TO_MEM;
-> > +     desc = dmaengine_prep_slave_sg(chan, data->sg, data->sg_len, dir,
-> >                                      DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
-> >       if (!desc)
-> >               return -EINVAL;
-> >
->
+-- 
+Wei Yang
+Help you, Help me
