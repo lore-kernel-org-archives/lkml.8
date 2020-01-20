@@ -7,274 +7,234 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D1FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C4EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 516E321835
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:30:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 451032465B
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 13:30:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SZKGZ4tF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FAUen8s7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbgATNab (ORCPT
+        id S1727071AbgATNao (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 08:30:31 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29986 "EHLO
+        Mon, 20 Jan 2020 08:30:44 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59685 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726626AbgATNab (ORCPT
+        with ESMTP id S1726626AbgATNan (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 08:30:31 -0500
+        Mon, 20 Jan 2020 08:30:43 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579527029;
+        s=mimecast20190719; t=1579527042;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=TahDzpx2FwVLwxvnjEhWFO8fvu/DLphSie6ZIG78wig=;
-        b=SZKGZ4tFKTQuXPVUBU6AFyQODU2vaDRz0FITjYFKseu/uk+AwkvFtO1FkZ9cZKGYrnVEs2
-        SVuyK3SFtzTy3+fDJ0uFW8NIOmhvvc7pOe5SpeQMbnhnED0HfFXNjie65vS0iC/3TPjKSL
-        lEVRvfFPqgOs45+S/g8alAeyO7gyhas=
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=jPAzBN9XG7C1n7bOKW3O9zHcnFfsPL/ThYIrObalgyA=;
+        b=FAUen8s76XQX5rDoN9d/GHIRzhK9Xl6wLMbwxuF5yOxBs8VXYTG23RztiBBU6njLA5K5tr
+        75cKsNVbzaR8RYmcVXey+XVawi71zxV73uToGW2v0Jp3kuTC7ZqvyzuE8wZAa5OXXVrtf6
+        jWfIxbP1WMXWKYbYFtMx4nTJoQfLYbY=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-94-vo7-Jc-tPgOWVGMX5t687w-1; Mon, 20 Jan 2020 08:30:26 -0500
-X-MC-Unique: vo7-Jc-tPgOWVGMX5t687w-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+ us-mta-316-Krw-Xtf6OTqmh6iQV1RH0A-1; Mon, 20 Jan 2020 08:30:36 -0500
+X-MC-Unique: Krw-Xtf6OTqmh6iQV1RH0A-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D8A018010C4;
-        Mon, 20 Jan 2020 13:30:23 +0000 (UTC)
-Received: from [10.36.117.108] (ovpn-117-108.ams2.redhat.com [10.36.117.108])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4CA2284790;
-        Mon, 20 Jan 2020 13:30:18 +0000 (UTC)
-Subject: Re: [RFC 2/3] KVM: arm64: pmu: Fix chained SW_INCR counters
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     eric.auger.pro@gmail.com, linux-kernel@vger.kernel.org,
-        kvmarm@lists.cs.columbia.edu, james.morse@arm.com,
-        andrew.murray@arm.com, suzuki.poulose@arm.com, drjones@redhat.com
-References: <20191204204426.9628-1-eric.auger@redhat.com>
- <20191204204426.9628-3-eric.auger@redhat.com>
- <561ac6df385e977cc51d51a8ab28ee49@www.loen.fr>
- <2b30c1ca-3bc0-9f73-4bea-ee42bb74cbac@redhat.com>
- <15507faca89a980056df7119e105e82a@www.loen.fr>
- <145cdd1c-266c-6252-9688-e9e4c6809dfd@redhat.com>
- <20200119175851.2104d86f@why>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <2a989f57-c6ff-652f-4c0d-50881639024d@redhat.com>
-Date:   Mon, 20 Jan 2020 14:30:17 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 68AAB1005510;
+        Mon, 20 Jan 2020 13:30:35 +0000 (UTC)
+Received: from [10.36.118.34] (unknown [10.36.118.34])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 110CA5C21A;
+        Mon, 20 Jan 2020 13:30:33 +0000 (UTC)
+Subject: Re: [PATCH -mm v2] mm/page_isolation: fix potential warning from user
+To:     Qian Cai <cai@lca.pw>, akpm@linux-foundation.org
+Cc:     mhocko@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20200120131909.813-1-cai@lca.pw>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <8c56268d-9b8a-f62e-eca9-7707852a2aaf@redhat.com>
+Date:   Mon, 20 Jan 2020 14:30:33 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <20200119175851.2104d86f@why>
+In-Reply-To: <20200120131909.813-1-cai@lca.pw>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
-On 1/19/20 6:58 PM, Marc Zyngier wrote:
-> On Thu, 5 Dec 2019 20:01:42 +0100
-> Auger Eric <eric.auger@redhat.com> wrote:
->=20
-> Hi Eric,
->=20
->> Hi Marc,
->>
->> On 12/5/19 3:52 PM, Marc Zyngier wrote:
->>> On 2019-12-05 14:06, Auger Eric wrote: =20
->>>> Hi Marc,
->>>>
->>>> On 12/5/19 10:43 AM, Marc Zyngier wrote: =20
->>>>> Hi Eric,
->>>>>
->>>>> On 2019-12-04 20:44, Eric Auger wrote: =20
->>>>>> At the moment a SW_INCR counter always overflows on 32-bit
->>>>>> boundary, independently on whether the n+1th counter is
->>>>>> programmed as CHAIN.
->>>>>>
->>>>>> Check whether the SW_INCR counter is a 64b counter and if so,
->>>>>> implement the 64b logic.
->>>>>>
->>>>>> Fixes: 80f393a23be6 ("KVM: arm/arm64: Support chained PMU counters=
-")
->>>>>> Signed-off-by: Eric Auger <eric.auger@redhat.com>
->>>>>> ---
->>>>>> =C2=A0virt/kvm/arm/pmu.c | 16 +++++++++++++++-
->>>>>> =C2=A01 file changed, 15 insertions(+), 1 deletion(-)
->>>>>>
->>>>>> diff --git a/virt/kvm/arm/pmu.c b/virt/kvm/arm/pmu.c
->>>>>> index c3f8b059881e..7ab477db2f75 100644
->>>>>> --- a/virt/kvm/arm/pmu.c
->>>>>> +++ b/virt/kvm/arm/pmu.c
->>>>>> @@ -491,6 +491,8 @@ void kvm_pmu_software_increment(struct kvm_vcp=
-u
->>>>>> *vcpu, u64 val)
->>>>>>
->>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 enable =3D __vcpu_sys_reg(vcpu, PMCNTENSE=
-T_EL0);
->>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < ARMV8_PMU_CYCLE_IDX; i+=
-+) {
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool chained =3D test_=
-bit(i >> 1, vcpu->arch.pmu.chained);
->>>>>> + =20
->>>>>
->>>>> I'd rather you use kvm_pmu_pmc_is_chained() rather than open-coding
->>>>> this. But see below:
->>>>> =20
->>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!(val & BIT(i=
-)))
->>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 continue;
->>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 type =3D __vcpu_s=
-ys_reg(vcpu, PMEVTYPER0_EL0 + i)
->>>>>> @@ -500,8 +502,20 @@ void kvm_pmu_software_increment(struct kvm_vc=
-pu
->>>>>> *vcpu, u64 val)
->>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 reg =3D __vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i) + 1;
->>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 reg =3D lower_32_bits(reg);
->>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 __vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i) =3D reg;
->>>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- if (!reg)
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- if (reg) /* no overflow */
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 continue;
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- if (chained) {
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 reg =3D __vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i +=
- 1) + 1;
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 reg =3D lower_32_bits(reg);
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 __vcpu_sys_reg(vcpu, PMEVCNTR0_EL0 + i + 1) =3D =
-reg;
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 if (reg)
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 continue;
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 /* mark an overflow on high counter */
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 __vcpu_sys_reg(vcpu, PMOVSSET_EL0) |=3D BIT(i + =
-1);
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- } else {
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 /* mark an overflow */
->>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __vcpu_sys_reg(vcpu, PMOVSSET_EL0) |=3D BI=
-T(i);
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- }
->>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 }
->>>>>> =C2=A0} =20
->>>>>
->>>>> I think the whole function is a bit of a mess, and could be better
->>>>> structured to treat 64bit counters as a first class citizen.
->>>>>
->>>>> I'm suggesting something along those lines, which tries to
->>>>> streamline things a bit and keep the flow uniform between the
->>>>> two word sizes. IMHO, it helps reasonning about it and gives
->>>>> scope to the ARMv8.5 full 64bit counters... It is of course
->>>>> completely untested. =20
->>>>
->>>> Looks OK to me as well. One remark though, don't we need to test if =
-the
->>>> n+1th reg is enabled before incrementing it? =20
->>>
->>> Hmmm. I'm not sure. I think we should make sure that we don't flag
->>> a counter as being chained if the odd counter is disabled, rather
->>> than checking it here. As long as the odd counter is not chained
->>> *and* enabled, we shouldn't touch it.>
->>> Again, untested:
->>>
->>> diff --git a/virt/kvm/arm/pmu.c b/virt/kvm/arm/pmu.c
->>> index cf371f643ade..47366817cd2a 100644
->>> --- a/virt/kvm/arm/pmu.c
->>> +++ b/virt/kvm/arm/pmu.c
->>> @@ -15,6 +15,7 @@
->>> =C2=A0#include <kvm/arm_vgic.h>
->>>
->>> =C2=A0static void kvm_pmu_create_perf_event(struct kvm_vcpu *vcpu, u6=
-4
->>> select_idx);
->>> +static void kvm_pmu_update_pmc_chained(struct kvm_vcpu *vcpu, u64
->>> select_idx);
->>>
->>> =C2=A0#define PERF_ATTR_CFG1_KVM_PMU_CHAINED 0x1
->>>
->>> @@ -298,6 +299,7 @@ void kvm_pmu_enable_counter_mask(struct kvm_vcpu
->>> *vcpu, u64 val)
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * For high cou=
-nters of chained events we must recreate the
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * perf event w=
-ith the long (64bit) attribute set.
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 kvm_pmu_update_pmc_chaine=
-d(vcpu, i);
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (kvm_pmu_pmc_is_c=
-hained(pmc) &&
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 kvm_pmu_idx_is_high_counter(i)) {
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 kvm_pmu_create_perf_event(vcpu, i);
->>> @@ -645,7 +647,8 @@ static void kvm_pmu_update_pmc_chained(struct
->>> kvm_vcpu *vcpu, u64 select_idx)
->>> =C2=A0=C2=A0=C2=A0=C2=A0 struct kvm_pmu *pmu =3D &vcpu->arch.pmu;
->>> =C2=A0=C2=A0=C2=A0=C2=A0 struct kvm_pmc *pmc =3D &pmu->pmc[select_idx=
-];
->>>
->>> -=C2=A0=C2=A0=C2=A0 if (kvm_pmu_idx_has_chain_evtype(vcpu, pmc->idx))=
- {
->>> +=C2=A0=C2=A0=C2=A0 if (kvm_pmu_idx_has_chain_evtype(vcpu, pmc->idx) =
-&&
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 kvm_pmu_counter_is_enable=
-d(vcpu, pmc->idx)) { =20
->>
->> In create_perf_event(), has_chain_evtype() is used and a 64b sample
->> period would be chosen even if the counters are disjoined (since the o=
-dd
->> is disabled). We would need to use pmc_is_chained() instead.
->>
->> With perf_events, the check of whether the odd register is enabled is
->> properly done (create_perf_event). Then I understand whenever there is=
- a
->> change in enable state or type we delete the previous perf event and
->> re-create a new one. Enable state check just is missing for SW_INCR.
->=20
-> Can you please respin this? I'd like to have it queued quickly, if at
-> all possible.
+On 20.01.20 14:19, Qian Cai wrote:
+> It makes sense to call the WARN_ON_ONCE(zone_idx(zone) == ZONE_MOVABLE)
+> from start_isolate_page_range(), but should avoid triggering it from
+> userspace, i.e, from is_mem_section_removable() because it could be a
+> DoS if warn_on_panic is set.
+> 
+> While at it, simplify the code a bit by removing an unnecessary jump
+> label and a local variable, so set_migratetype_isolate() could really
+> return a bool.
+> 
+> Suggested-by: Michal Hocko <mhocko@kernel.org>
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+> 
+> v2: Improve the commit log.
+>     Warn for all start_isolate_page_range() users not just offlining.
+> 
+>  mm/page_alloc.c     | 11 ++++-------
+>  mm/page_isolation.c | 30 +++++++++++++++++-------------
+>  2 files changed, 21 insertions(+), 20 deletions(-)
+> 
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 621716a25639..3c4eb750a199 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -8231,7 +8231,7 @@ struct page *has_unmovable_pages(struct zone *zone, struct page *page,
+>  		if (is_migrate_cma(migratetype))
+>  			return NULL;
+>  
+> -		goto unmovable;
+> +		return page;
+>  	}
+>  
+>  	for (; iter < pageblock_nr_pages; iter++) {
+> @@ -8241,7 +8241,7 @@ struct page *has_unmovable_pages(struct zone *zone, struct page *page,
+>  		page = pfn_to_page(pfn + iter);
+>  
+>  		if (PageReserved(page))
+> -			goto unmovable;
+> +			return page;
+>  
+>  		/*
+>  		 * If the zone is movable and we have ruled out all reserved
+> @@ -8261,7 +8261,7 @@ struct page *has_unmovable_pages(struct zone *zone, struct page *page,
+>  			unsigned int skip_pages;
+>  
+>  			if (!hugepage_migration_supported(page_hstate(head)))
+> -				goto unmovable;
+> +				return page;
+>  
+>  			skip_pages = compound_nr(head) - (page - head);
+>  			iter += skip_pages - 1;
+> @@ -8303,12 +8303,9 @@ struct page *has_unmovable_pages(struct zone *zone, struct page *page,
+>  		 * is set to both of a memory hole page and a _used_ kernel
+>  		 * page at boot.
+>  		 */
+> -		goto unmovable;
+> +		return page;
+>  	}
+>  	return NULL;
+> -unmovable:
+> -	WARN_ON_ONCE(zone_idx(zone) == ZONE_MOVABLE);
+> -	return pfn_to_page(pfn + iter);
+>  }
+>  
+>  #ifdef CONFIG_CONTIG_ALLOC
+> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+> index e70586523ca3..31f5516f5d54 100644
+> --- a/mm/page_isolation.c
+> +++ b/mm/page_isolation.c
+> @@ -15,12 +15,12 @@
+>  #define CREATE_TRACE_POINTS
+>  #include <trace/events/page_isolation.h>
+>  
+> -static int set_migratetype_isolate(struct page *page, int migratetype, int isol_flags)
+> +static bool set_migratetype_isolate(struct page *page, int migratetype,
+> +				    int isol_flags)
 
-Yes I am going to respin quickly.
+Why this change?
 
-Thanks
+>  {
+> -	struct page *unmovable = NULL;
+> +	struct page *unmovable = ERR_PTR(-EBUSY);
 
-Eric
->=20
->>
->> Some other questions:
->> - do we need a perf event to be created even if the counter is not
->> enabled? For instance on counter resets, create_perf_events get called=
-.
->=20
-> It shouldn't be necessary.
->=20
->> - also actions are made for counters which are not implemented. loop
->> until ARMV8_PMU_MAX_COUNTERS. Do you think it is valuable to have a
->> bitmask of supported counters stored before pmu readiness?
->> I can propose such changes if you think they are valuable.
->=20
-> That would certainly be a performance optimization.
->=20
-> Thanks,
->=20
-> 	M.
->=20
+Also, why this change?
+
+>  	struct zone *zone;
+>  	unsigned long flags;
+> -	int ret = -EBUSY;
+>  
+>  	zone = page_zone(page);
+>  
+> @@ -49,21 +49,25 @@ static int set_migratetype_isolate(struct page *page, int migratetype, int isol_
+>  									NULL);
+>  
+>  		__mod_zone_freepage_state(zone, -nr_pages, mt);
+> -		ret = 0;
+>  	}
+>  
+>  out:
+>  	spin_unlock_irqrestore(&zone->lock, flags);
+> -	if (!ret)
+> +
+> +	if (!unmovable) {
+>  		drain_all_pages(zone);
+> -	else if ((isol_flags & REPORT_FAILURE) && unmovable)
+> -		/*
+> -		 * printk() with zone->lock held will guarantee to trigger a
+> -		 * lockdep splat, so defer it here.
+> -		 */
+> -		dump_page(unmovable, "unmovable page");
+> -
+> -	return ret;
+> +	} else {
+> +		WARN_ON_ONCE(zone_idx(zone) == ZONE_MOVABLE);
+> +
+> +		if ((isol_flags & REPORT_FAILURE) && !IS_ERR(unmovable))
+> +			/*
+
+Why this change? (!IS_ERR)
+
+
+Some things here look unrelated - or I am missing something :)
+
+-- 
+Thanks,
+
+David / dhildenb
 
