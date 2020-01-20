@@ -2,158 +2,185 @@ Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B1D2C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 17:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEBD0C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 17:51:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D77A722525
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 17:51:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE24422525
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 17:51:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="lam6MJCS"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Ar8vgtEC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728750AbgATRvA (ORCPT
+        id S1728831AbgATRvT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 12:51:00 -0500
-Received: from mail-eopbgr80053.outbound.protection.outlook.com ([40.107.8.53]:19623
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726897AbgATRu7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 12:50:59 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Y88J61tvUvsYHT+zp0d8awILIoGOslFNjl2LRGrbk1JrQtElU81N3rc/z4v2VHiyz6hmC/cNye4AsxzTP2dKNi3D0ZQru/dxtGlTEP1r6rK78RCGwCH7mCI2dKBjZrgT5HZRAhN6RveI/mlGq5KEsL0jQVEqLsDI2HuH4UqS7pBs5wYh64lChes+YibIYlPkDtClLIzdHntGBoZ/uhqCaX4ItyLKuIGMKqPTcJa1Mk8GUwQv2ZAtor53ln5aqotQHw2dQfukpwhDIAXcuYihWSep7Ke7eEGDeFTZwBjVodK4HFRb+MxdZasDjZ2nVuugHXm7txD2/v2z5y6yDbC8Dg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ECTrdlo1fv2Az2UVjPfINeLkgTGxScjZODiR+1ocQhs=;
- b=Zl3SxnyMhzoKCf3zN/QChiVSx7d791ML3geGracbIRM/EbbTkSi7t3TaOCebtQotb3lN9gX04x/pkLlPzXVhJp2mOrmqPOwhQfS+iLz31/S0LDz0ut4SUeIt8CM3OzJOLQ8I9x0t6NZEGHdikey+RIituG3XQrJivPr7xKkpW7JUphWmoWh9/cICUohoY40nkJi+Af6/BEcu0Qoskt+04923wF7eOUhasCqWTLwOtjnr2C1andGVNR1/IHb18qzBb8hiqAyt5PNwQdhb0yf/4cJb6BoWv0n8k/9g88fo9rDwbF/+JXXJpqC4MNBFWcelgpfC8MkmUOArO6QADDxuOw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ECTrdlo1fv2Az2UVjPfINeLkgTGxScjZODiR+1ocQhs=;
- b=lam6MJCSd+leIXdfH/K0k8h2LbVUztlkgDEdk7vPTjd8T3gE9+lxgsOkK5nMoVJhk9v8elPkAuyBMNJ6m07tu3V/A6FTJUuM6Ke2VaEw5vF71G3Qbyj4jRVyGKqY4TmVoEBntJpDJnNF3iLbKtKeiGj3B6Jue0Smibrpomye4VY=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
- VI1PR05MB5741.eurprd05.prod.outlook.com (20.178.122.141) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.20; Mon, 20 Jan 2020 17:50:55 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1c00:7925:d5c6:d60d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1c00:7925:d5c6:d60d%7]) with mapi id 15.20.2644.024; Mon, 20 Jan 2020
- 17:50:55 +0000
-Received: from mlx.ziepe.ca (208.176.44.194) by SN4PR0501CA0116.namprd05.prod.outlook.com (2603:10b6:803:42::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.16 via Frontend Transport; Mon, 20 Jan 2020 17:50:55 +0000
-Received: from jgg by jggl.ziepe.ca with local (Exim 4.90_1)    (envelope-from <jgg@mellanox.com>)      id 1itbCM-0001JG-5d; Mon, 20 Jan 2020 13:50:50 -0400
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-CC:     Jason Wang <jasowang@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "tiwei.bie@intel.com" <tiwei.bie@intel.com>,
-        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
-        "cunming.liang@intel.com" <cunming.liang@intel.com>,
-        "zhihong.wang@intel.com" <zhihong.wang@intel.com>,
-        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
-        "xiao.w.wang@intel.com" <xiao.w.wang@intel.com>,
-        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
-        "lingshan.zhu@intel.com" <lingshan.zhu@intel.com>,
-        "eperezma@redhat.com" <eperezma@redhat.com>,
-        "lulu@redhat.com" <lulu@redhat.com>,
-        Parav Pandit <parav@mellanox.com>,
-        "kevin.tian@intel.com" <kevin.tian@intel.com>,
-        "stefanha@redhat.com" <stefanha@redhat.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "aadam@redhat.com" <aadam@redhat.com>,
-        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Shahaf Shuler <shahafs@mellanox.com>,
-        "hanand@xilinx.com" <hanand@xilinx.com>,
-        "mhabets@solarflare.com" <mhabets@solarflare.com>
-Subject: Re: [PATCH 3/5] vDPA: introduce vDPA bus
-Thread-Topic: [PATCH 3/5] vDPA: introduce vDPA bus
-Thread-Index: AQHVzGqUgTlkW8H4N0+zRVK4Lh0XAKftaJqAgADD3wCAALX/gIAEm9kAgABdJwA=
-Date:   Mon, 20 Jan 2020 17:50:55 +0000
-Message-ID: <20200120175050.GC3891@mellanox.com>
-References: <20200116124231.20253-1-jasowang@redhat.com>
- <20200116124231.20253-4-jasowang@redhat.com>
- <20200116152209.GH20978@mellanox.com>
- <03cfbcc2-fef0-c9d8-0b08-798b2a293b8c@redhat.com>
- <20200117135435.GU20978@mellanox.com>
- <20200120071406-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20200120071406-mutt-send-email-mst@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN4PR0501CA0116.namprd05.prod.outlook.com
- (2603:10b6:803:42::33) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [208.176.44.194]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: bc36fa4c-0687-44f2-a263-08d79dd14c59
-x-ms-traffictypediagnostic: VI1PR05MB5741:|VI1PR05MB5741:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR05MB57413F64EA4F6545AACC3AD5CF320@VI1PR05MB5741.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0288CD37D9
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(136003)(366004)(376002)(346002)(199004)(189003)(66946007)(2906002)(6916009)(66446008)(64756008)(33656002)(478600001)(66476007)(66556008)(316002)(2616005)(7416002)(4326008)(81156014)(8676002)(81166006)(26005)(5660300002)(1076003)(71200400001)(8936002)(52116002)(9786002)(9746002)(36756003)(86362001)(186003)(54906003)(24400500001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5741;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 0sY72fP6ctyCUyiXZchkrdpHohJf2eebdSMO14QUlKS528P/QUD467ZPIX0eISDyBG9kxWvr4Qk7QUrv9CwtO6rizI5IyEVNrQf8jMW8jHFZNb/P4f3ZXRQRmStytN5hkx3HS0J0LXHP2uWD5r5q4pOrKSRPqJF0R/YEWZKjb90mglH8I2g60vrzYOL3Wpc7LZplOUdNriox+FQ3Pi9DLSEJ6KE6+sAfSsbQgQ7U5iQbCeV55JvWerJudM48hNxiDj1dMGUIr83NkpcbM3L16HMtpOlnLDnjHapbPJ84/7z1LiLUUs1QXjjF+z6njT4izGmPnhOoTCGAR4jqMkAZEaCnsnAZI/7M+gL/RHmrnOUSE1bRVgM6hm66QpwwpSPJCGsUDFiBek27oAi93vpMEVcHZps8WytGIR0ohTYF3PSqsXhfcFivx7rIWUp7A2ifKrTDlHmFO/4fOwxe03+774SBX0r3jhjFeGLCFc/qMaETXDwpFSXi45UkGvunJ6Cj
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <94C3646DE8533A4083A9EE4FD962ED2C@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 20 Jan 2020 12:51:19 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:48856 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726876AbgATRvS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 12:51:18 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200120175116euoutp02404df0e30ccfbd914a613f7994d4de28~rqbH7cLo62804728047euoutp024
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 17:51:16 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200120175116euoutp02404df0e30ccfbd914a613f7994d4de28~rqbH7cLo62804728047euoutp024
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1579542676;
+        bh=LQu0WAK7L/G6p0pzpWUx1m8ZKHecfzvgq8NfbkxkCU0=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=Ar8vgtECytJfvywEpNTjcLzPPy4YhgYqBqnmLZB+24xagcWdNkLH/qdm4tpq2nQgX
+         ddj9O6xsUjNaRtLtSvOzqfDU0bWmlRfy4ctibvwTGQbakpLWOr1W3K2MG+XCJifRr/
+         ZzrziM+Q0lmcxHW9wyeJXc2TG98tjgn/mMcFyZyQ=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200120175116eucas1p2f7a33189967472123183610637356d7d~rqbHvE8lL3191431914eucas1p2m;
+        Mon, 20 Jan 2020 17:51:16 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id AC.13.61286.398E52E5; Mon, 20
+        Jan 2020 17:51:15 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200120175115eucas1p16442cb8229ee7e4c54459a67902e12ec~rqbHVEuxl3013830138eucas1p1Y;
+        Mon, 20 Jan 2020 17:51:15 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200120175115eusmtrp2079e2c08a928be485a3beb72e37b7782~rqbHUf0L83183031830eusmtrp2F;
+        Mon, 20 Jan 2020 17:51:15 +0000 (GMT)
+X-AuditID: cbfec7f2-ef1ff7000001ef66-e2-5e25e893b0d7
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id A8.B8.07950.398E52E5; Mon, 20
+        Jan 2020 17:51:15 +0000 (GMT)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200120175113eusmtip2d62b016876d122c0463336b601643865~rqbFXydCR2105521055eusmtip2J;
+        Mon, 20 Jan 2020 17:51:13 +0000 (GMT)
+Subject: Re: [PATCH] fbdev: wait for references go away
+To:     Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
+Cc:     marmarek@invisiblethingslab.com,
+        "open list:FRAMEBUFFER LAYER" <linux-fbdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <d143e43b-8a38-940e-3ae5-e7b830a74bb3@samsung.com>
+Date:   Mon, 20 Jan 2020 18:51:17 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bc36fa4c-0687-44f2-a263-08d79dd14c59
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jan 2020 17:50:55.3991
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ruGe0LtPNv5tp2ujgoY7rn6JGws9N72/MxY08xUWBcAD32eJ6btjMSEZDDYuIoktszlK10aisF12vBWUQP2lfw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5741
+In-Reply-To: <20200120100014.23488-1-kraxel@redhat.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprLKsWRmVeSWpSXmKPExsWy7djPc7qTX6jGGaz4ZGZx5et7Notnt04y
+        W5zo+8BqcXnXHDaLz427WBxYPXr33WP3uN99nMnj/b6rbB6fN8kFsERx2aSk5mSWpRbp2yVw
+        Zfz6s5CpYJ1wxeSnX1kaGF/zdzFyckgImEjMb//P3MXIxSEksIJR4uj9/UwQzhdGiWfbf7JC
+        OJ8ZJeZ9WMEO0/Lq0hKoluWMElPmv2WBcN4ySqzbcpoZpEpYwFzi0YdXYLaIgJvE5RmrwYqY
+        BXoYJV4fnAOWYBOwkpjYvooRxOYVsJN4dv0bE4jNIqAqse7QGzYQW1QgQuLTg8OsEDWCEidn
+        PmEBsTmBFpw61ARWwywgLnHryXwmCFteonnrbGaIUxexS/yfVQhhu0h8+Hka6gVhiVfHt0DZ
+        MhL/d84He1pCYB2jxN+OF8wQznZGieWT/7FBVFlL3Dn3C8jmANqgKbF+lz5E2FHiS9MSdpCw
+        hACfxI23ghA38ElM2jadGSLMK9HRJgRRrSaxYdkGNpi1XTtXMk9gVJqF5LNZSL6ZheSbWQh7
+        FzCyrGIUTy0tzk1PLTbMSy3XK07MLS7NS9dLzs/dxAhMNKf/Hf+0g/HrpaRDjAIcjEo8vA7T
+        VOOEWBPLiitzDzFKcDArifAuaAIK8aYkVlalFuXHF5XmpBYfYpTmYFES5zVe9DJWSCA9sSQ1
+        OzW1ILUIJsvEwSnVwDiho1misqlCL+bEMcuQV0ybmeYobAs4l6ry4abyntM/Req/7rzCrrv6
+        k3nl/80Trc0PNXxU3JveLsAbHdR5O9XJjqlaq0Tn4/vbMrF9IauKWDv+l2y2U+kSf7nW57WX
+        9rl0vhQj8yfdwou73srF6SlO+XWyhKNE9fLhwjUzX/34JNNdeyHcXImlOCPRUIu5qDgRAPmj
+        oRYwAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPIsWRmVeSWpSXmKPExsVy+t/xe7qTX6jGGTx8I2dx5et7Notnt04y
+        W5zo+8BqcXnXHDaLz427WBxYPXr33WP3uN99nMnj/b6rbB6fN8kFsETp2RTll5akKmTkF5fY
+        KkUbWhjpGVpa6BmZWOoZGpvHWhmZKunb2aSk5mSWpRbp2yXoZfz6s5CpYJ1wxeSnX1kaGF/z
+        dzFyckgImEi8urSEuYuRi0NIYCmjxO+H6xm7GDmAEjISx9eXQdQIS/y51sUGUfOaUeLqwaWM
+        IAlhAXOJRx9eMYPYIgJuEpdnrGYBKWIW6GOUuLFnPztERxejxN15X8A62ASsJCa2rwKzeQXs
+        JJ5d/8YEYrMIqEqsO/SGDcQWFYiQOLxjFlSNoMTJmU9YQGxOoG2nDjWB1TALqEv8mXeJGcIW
+        l7j1ZD4ThC0v0bx1NvMERqFZSNpnIWmZhaRlFpKWBYwsqxhFUkuLc9Nzi430ihNzi0vz0vWS
+        83M3MQIja9uxn1t2MHa9Cz7EKMDBqMTD6zBNNU6INbGsuDL3EKMEB7OSCO+CJqAQb0piZVVq
+        UX58UWlOavEhRlOg5yYyS4km5wOjPq8k3tDU0NzC0tDc2NzYzEJJnLdD4GCMkEB6Yklqdmpq
+        QWoRTB8TB6dUA6OuxtdCkZRrnVKb7NvK1j+xeaxurBa7fuVahvmmn+Y/eaK1rH7r8+JlSq48
+        oY9r+xiWhOg4f+KKlhe12tD04oPLE/n1ye8K+d/rPq1dMS2nsD1mewjLtqKP6yK/Ju/s+9aa
+        0SPCvOm4VvyHBxt4HR0EBS3PNH5N0psRu9p3HeMMBZFD+3YE6iuxFGckGmoxFxUnAgAK4CPR
+        wgIAAA==
+X-CMS-MailID: 20200120175115eucas1p16442cb8229ee7e4c54459a67902e12ec
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200120100025eucas1p21f5e2da0fd7c1fcb33cb47a97e9e645c
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200120100025eucas1p21f5e2da0fd7c1fcb33cb47a97e9e645c
+References: <CGME20200120100025eucas1p21f5e2da0fd7c1fcb33cb47a97e9e645c@eucas1p2.samsung.com>
+        <20200120100014.23488-1-kraxel@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 07:17:26AM -0500, Michael S. Tsirkin wrote:
-> On Fri, Jan 17, 2020 at 01:54:42PM +0000, Jason Gunthorpe wrote:
-> > > 1) "virtio" vs "vhost", I implemented matching method for this in mde=
-v
-> > > series, but it looks unnecessary for vDPA device driver to know about=
- this.
-> > > Anyway we can use sysfs driver bind/unbind to switch drivers
-> > > 2) virtio device id and vendor id. I'm not sure we need this consider=
- the
-> > > two drivers so far (virtio/vhost) are all bus drivers.
-> >=20
-> > As we seem to be contemplating some dynamic creation of vdpa devices I
-> > think upon creation time it should be specified what mode they should
-> > run it and then all driver binding and autoloading should happen
-> > automatically. Telling the user to bind/unbind is a very poor
-> > experience.
->=20
-> Maybe but OTOH it's an existing interface. I think we can reasonably
-> start with bind/unbind and then add ability to specify
-> the mode later. bind/unbind come from core so they will be
-> maintained anyway.
 
-Existing where? For vfio? vfio is the only thing I am aware doing
-that, and this is not vfio..
+Hi,
 
-Jason
+On 1/20/20 11:00 AM, Gerd Hoffmann wrote:
+> Problem: do_unregister_framebuffer() might return before the device is
+> fully cleaned up, due to userspace having a file handle for /dev/fb0
+
+do_unregister_framebuffer() doesn't guarantee that fb_info is freed after
+function's return (it only drops the kernel reference on fb_info).
+
+> open.  Which can result in drm driver not being able to grab resources
+> (and fail initialization) because the firmware framebuffer still holds
+> them.  Reportedly plymouth can trigger this.
+
+Could you please describe issue some more?
+
+I guess that a problem is happening during DRM driver load while fbdev
+driver is loaded? I assume do_unregister_framebuffer() is called inside
+do_remove_conflicting_framebuffers()?
+
+At first glance it seems to be an user-space issue as it should not be
+holding references on /dev/fb0 while DRM driver is being loaded.
+
+> Fix this by trying to wait until all references are gone.  Don't wait
+> forever though given that userspace might keep the file handle open.
+
+Where does the 1s maximum delay come from?
+
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
+
+> Reported-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
+> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> ---
+>  drivers/video/fbdev/core/fbmem.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
+> index d04554959ea7..2ea8ac05b065 100644
+> --- a/drivers/video/fbdev/core/fbmem.c
+> +++ b/drivers/video/fbdev/core/fbmem.c
+> @@ -35,6 +35,7 @@
+>  #include <linux/fbcon.h>
+>  #include <linux/mem_encrypt.h>
+>  #include <linux/pci.h>
+> +#include <linux/delay.h>
+>  
+>  #include <asm/fb.h>
+>  
+> @@ -1707,6 +1708,8 @@ static void unlink_framebuffer(struct fb_info *fb_info)
+>  
+>  static void do_unregister_framebuffer(struct fb_info *fb_info)
+>  {
+> +	int limit = 100;
+> +
+>  	unlink_framebuffer(fb_info);
+>  	if (fb_info->pixmap.addr &&
+>  	    (fb_info->pixmap.flags & FB_PIXMAP_DEFAULT))
+> @@ -1726,6 +1729,10 @@ static void do_unregister_framebuffer(struct fb_info *fb_info)
+>  	fbcon_fb_unregistered(fb_info);
+>  	console_unlock();
+>  
+> +	/* try wait until all references are gone */
+> +	while (atomic_read(&fb_info->count) > 1 && --limit > 0)
+> +		msleep(10);
+> +
+>  	/* this may free fb info */
+>  	put_fb_info(fb_info);
+>  }
