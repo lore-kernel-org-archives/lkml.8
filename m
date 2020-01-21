@@ -2,291 +2,119 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F8A9C33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 02:09:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 239A9C32771
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 02:10:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFB6324125
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 02:09:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD3CD2253D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 02:10:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EZgmCQgJ"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="BGcGfD3P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728896AbgAUCJF (ORCPT
+        id S1728935AbgAUCK6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 21:09:05 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:41208 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726890AbgAUCJF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 21:09:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
-        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=rXMrLf9/G2BXHIeWJSwrtnOkiG4UyCzSBXmzSIQzq4A=; b=EZgmCQgJYHsDxvUDK8yK7/g3o
-        +CX5b0H01VeUS7//LnlZySMfD05BfNplR8c0LfnHOVaYjD2bBJyhV3ZpiLMqAeUOyq7BAIej8rKj9
-        XLiuGN1xeO6Fqdaq1aB3r9CWpBRq4YyvZ2if5Cm6ax0VWPv3++YwJ49ES285wn9cxB9T4rtFfS12C
-        JsOC3nwU41t0Ldh4zyP6IXnoydtWUosWaquA1N1ip/cezLzGwSa/kDhvjV14uVzwePWXq099p4k+9
-        egShldfwZplbNuvSz2Jnyc15RQgNGOWKNSgEsBgNKGkrFy17kJvlqzG6YRTkRHu0SiEUEPuxRd8U/
-        do8lJ/PTw==;
-Received: from [2601:1c0:6280:3f0::ed68]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1itiyQ-0000Lj-Co; Tue, 21 Jan 2020 02:08:58 +0000
-Subject: Re: [PATCH v8 2/2] sched/numa: documentation for per-cgroup numa,
- statistics
-To:     =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Jonathan Corbet <corbet@lwn.net>
-References: <743eecad-9556-a241-546b-c8a66339840e@linux.alibaba.com>
- <207ef46c-672c-27c8-2012-735bd692a6de@linux.alibaba.com>
- <040def80-9c38-4bcc-e4a8-8a0d10f131ed@linux.alibaba.com>
- <25cf7ef5-e37e-7578-eea7-29ad0b76c4ea@linux.alibaba.com>
- <443641e7-f968-0954-5ff6-3b7e7fed0e83@linux.alibaba.com>
- <d2c4cace-623a-9317-c957-807e3875aa4a@linux.alibaba.com>
- <a95a7e05-ad60-b9ee-ca39-f46c8e08887d@linux.alibaba.com>
- <b9249375-fe8c-034e-c3bd-cacfe4e89658@linux.alibaba.com>
- <23fc0493-967c-d0e1-767b-89e8f7c85718@linux.alibaba.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <5c299da6-762e-1d2d-dafb-cfe3a0082d56@infradead.org>
-Date:   Mon, 20 Jan 2020 18:08:57 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
-MIME-Version: 1.0
-In-Reply-To: <23fc0493-967c-d0e1-767b-89e8f7c85718@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
+        Mon, 20 Jan 2020 21:10:58 -0500
+Received: from mail-co1nam11on2079.outbound.protection.outlook.com ([40.107.220.79]:6433
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726890AbgAUCK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 21:10:57 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NsVNmDEWWsbvQiqDCLSuC6u8tCoDxuWMJQhcxPq2OqRIK6SYtXxBhuTqBRVP6tktnGzbg7ZbVwnOSldRbMUDT1Y3GM7ytuZ4XOD26gzAZ0sl0QPd0HNj8wUVMrXmWgo3j6R2KfEFWxlv/YpZR+aoV+KEEQ8mLdqkrQb5+Qabmg/rd/ekBwnTmbdvg+z7eqee2Mce+esIwdRMnqHJmOp61+REOWFSh+mc0HUzJpRvTfr4D+qnjffsoCta+OVsqkXDo0fi1eA7YE0iTusRZIp8Qzlkn+p2kVijKQ0pLWtZRUqZjSVqFxXR6G9RVE/Z7P0EMlHnWoxvEcthStC2SqxqNw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KnvXIv/3ZVbXAl4FUa2YZjdkBF5cE9dElVs7TGy2lA4=;
+ b=esj9oAcHlver08Er/gOgp32GxhY1dnPoTL8XlXqW7eSJSpbCF1X2KfvhrZr06tgSTpA+E978EFGEFLNLB+8BJEYVp0m4hBSv+ANQcxaHu5cjBgxa3BVMSMDnPzykd1BIJgOYA17kBPDA0wEuEgQn718BonTsKDViWRfp80oXVqi81T1RyHi4VngfDrpDdqKgTPazc+mPl6Kq6PVZ8Sn/4EYFrnoL3nFhAV/9Kq2dFIwKihycTiAp8tqly9jsi1WFrplCUAhdWsh0CP/sHV2/j8vGnpGWRZ3DKj2L18Im5tBZO8u+S+XQPx4skaMLeGGnPNp1CJlMGwg+ojP2WVse1Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KnvXIv/3ZVbXAl4FUa2YZjdkBF5cE9dElVs7TGy2lA4=;
+ b=BGcGfD3PZo4ygnyvO8YoCRoTNe6kcD9FDNbxjKWzRy8KA+ky3obYU9RyF43w44zpAl7/5qmKo29FG1f98CDn81l9a+Gn+1KeKNkOwTHId/rmgtJdTEdJNWoRe7ZBvjh6B9a0mF7RjXyGmj071RcpUZLWHxI/TOZr/U6NWsAmlz8=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Suravee.Suthikulpanit@amd.com; 
+Received: from DM6PR12MB3865.namprd12.prod.outlook.com (10.255.172.206) by
+ DM6PR12MB3513.namprd12.prod.outlook.com (20.179.106.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.23; Tue, 21 Jan 2020 02:10:53 +0000
+Received: from DM6PR12MB3865.namprd12.prod.outlook.com
+ ([fe80::fdd1:4a97:85cc:d302]) by DM6PR12MB3865.namprd12.prod.outlook.com
+ ([fe80::fdd1:4a97:85cc:d302%3]) with mapi id 15.20.2644.024; Tue, 21 Jan 2020
+ 02:10:53 +0000
+Subject: Re: [PATCH] iommu: amd: Fix IOMMU perf counter clobbering during init
+To:     Joerg Roedel <joro@8bytes.org>,
+        Shuah Khan <skhan@linuxfoundation.org>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+References: <20200114151220.29578-1-skhan@linuxfoundation.org>
+ <20200117100829.GE15760@8bytes.org>
+From:   Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Message-ID: <42c0a806-9947-1401-9754-8aa88bd7062f@amd.com>
+Date:   Tue, 21 Jan 2020 09:10:41 +0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
+In-Reply-To: <20200117100829.GE15760@8bytes.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: KL1PR01CA0102.apcprd01.prod.exchangelabs.com
+ (2603:1096:820:3::18) To DM6PR12MB3865.namprd12.prod.outlook.com
+ (2603:10b6:5:1c4::14)
+MIME-Version: 1.0
+Received: from [10.252.73.101] (165.204.80.7) by KL1PR01CA0102.apcprd01.prod.exchangelabs.com (2603:1096:820:3::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.18 via Frontend Transport; Tue, 21 Jan 2020 02:10:51 +0000
+X-Originating-IP: [165.204.80.7]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 52a1de49-a639-4ac7-fe64-08d79e172449
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3513:
+X-Microsoft-Antispam-PRVS: <DM6PR12MB3513F405794340A7E33A9651F30D0@DM6PR12MB3513.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
+X-Forefront-PRVS: 0289B6431E
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(396003)(39860400002)(376002)(136003)(189003)(199004)(6486002)(44832011)(2616005)(4744005)(956004)(36756003)(66476007)(66556008)(66946007)(5660300002)(4326008)(16526019)(31696002)(478600001)(8676002)(8936002)(6666004)(86362001)(186003)(31686004)(53546011)(52116002)(16576012)(26005)(81156014)(81166006)(316002)(110136005)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3513;H:DM6PR12MB3865.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: dZWP2E2Ls+Zea27XzaJLipftiiFDee2xlwU3ty7BDj5rcsIuhm9jo2oYWBST9P65Y/QkltoS2uDi0pBapy2TipmKxLAQinyCI/c/uMF07N3nEict+GHExYtQOY3Ag5V6+b2ZQszAQZJ8XPzc9HxLIzxZz505qhQ4L2mq5q3YZOmDuloh75PJluhE33Ey54IkRhm/7+9YDodvaKdpFgGRNL8fgywawBEKbFqSv32KB7X3WsVun6WUH1APvnfuRPAN0LF+V/dwQYSUms8KjHjT8uqR+k7302j6P/jBxdKh90R+QQspkLLW0vSaRINZYMyQ2gH+DO13FdmxH9Gjc0f9nYRNPiLCtzdcM33kwx3O4IWojnNL7uoQS+sWmss7aAOpr4cLA4YSQ1Rb3a9at4sIOsjvCLzDBMQiv46lcaoOiZi2Vu1SNJS93Yst91EzmR1i
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 52a1de49-a639-4ac7-fe64-08d79e172449
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jan 2020 02:10:52.9708
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: mpR8fkVUvZRbygqcT085MhmO9RAsMBeMpC0fLYgrUdnY/ps4KTE0Tiw2ytPJjXV8iBhX2BG86M+Xf8SB8CMSeQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3513
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/20/20 5:57 PM, 王贇 wrote:
-> Add the description for 'numa_locality', also a new doc to explain
-> the details on how to deal with the per-cgroup numa statistics.
+On 1/17/2020 5:08 PM, Joerg Roedel wrote:
+> Adding Suravee, who wrote the IOMMU Perf Counter code.
 > 
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Michal Koutný <mkoutny@suse.com>
-> Cc: Mel Gorman <mgorman@suse.de>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: Iurii Zaikin <yzaikin@google.com>
-> Cc: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
-
-Thanks for the updates.
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-
-
-> ---
->  Documentation/admin-guide/cg-numa-stat.rst      | 178 ++++++++++++++++++++++++
->  Documentation/admin-guide/index.rst             |   1 +
->  Documentation/admin-guide/kernel-parameters.txt |   4 +
->  Documentation/admin-guide/sysctl/kernel.rst     |   9 ++
->  init/Kconfig                                    |   2 +
->  5 files changed, 194 insertions(+)
->  create mode 100644 Documentation/admin-guide/cg-numa-stat.rst
+> On Tue, Jan 14, 2020 at 08:12:20AM -0700, Shuah Khan wrote:
+>> init_iommu_perf_ctr() clobbers the register when it checks write access
+>> to IOMMU perf counters and fails to restore when they are writable.
+>>
+>> Add save and restore to fix it.
+>>
+>> Signed-off-by: Shuah Khan<skhan@linuxfoundation.org>
+>> ---
+>>   drivers/iommu/amd_iommu_init.c | 22 ++++++++++++++++------
+>>   1 file changed, 16 insertions(+), 6 deletions(-)
+> Suravee, can you please review this patch?
 > 
-> diff --git a/Documentation/admin-guide/cg-numa-stat.rst b/Documentation/admin-guide/cg-numa-stat.rst
-> new file mode 100644
-> index 000000000000..1106eb1e4050
-> --- /dev/null
-> +++ b/Documentation/admin-guide/cg-numa-stat.rst
-> @@ -0,0 +1,178 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +===============================
-> +Per-cgroup NUMA statistics
-> +===============================
-> +
-> +Background
-> +----------
-> +
-> +On NUMA platforms, remote memory accessing always has a performance penalty.
-> +Although we have NUMA balancing working hard to maximize the access locality,
-> +there are still situations it can't help.
-> +
-> +This could happen in modern production environment. When a large number of
-> +cgroups are used to classify and control resources, this creates a complex
-> +configuration for memory policy, CPUs and NUMA nodes. In such cases NUMA
-> +balancing could end up with the wrong memory policy or exhausted local NUMA
-> +node, which would lead to low percentage of local page accesses.
-> +
-> +We need to detect such cases, figure out which workloads from which cgroup
-> +have introduced the issues, then we get chance to do adjustment to avoid
-> +performance degradation.
-> +
-> +However, there are no hardware counters for per-task local/remote accessing
-> +info, we don't know how many remote page accesses have occurred for a
-> +particular task.
-> +
-> +NUMA Locality
-> +-------------
-> +
-> +Fortunately, we have NUMA Balancing which scans task's mapping and triggers
-> +page fault periodically, giving us the opportunity to record per-task page
-> +accessing info, when the CPU fall into PF is from the same node of pages, we
-> +consider task as doing local page accessing, otherwise the remote page
-> +accessing, we call these two counters the locality info.
-> +
-> +On each tick, we acquire the locality info of current task on that CPU, update
-> +the increments into its cgroup, becoming the group locality info.
-> +
-> +By "echo 1 > /proc/sys/kernel/numa_locality" at runtime or adding boot parameter
-> +'numa_locality', we will enable the accounting of per-cgroup NUMA locality info,
-> +the 'cpu.numa_stat' entry of CPU cgroup will show statistics::
-> +
-> +  page_access local=NR_LOCAL_PAGE_ACCESS remote=NR_REMOTE_PAGE_ACCESS
-> +
-> +We define 'NUMA locality' as::
-> +
-> +  NR_LOCAL_PAGE_ACCESS * 100 / (NR_LOCAL_PAGE_ACCESS + NR_REMOTE_PAGE_ACCESS)
-> +
-> +This per-cgroup percentage number helps to represent the NUMA Balancing behavior.
-> +
-> +Note that the accounting is hierarchical, which means the NUMA locality info for
-> +a given group represents not only the workload of this group, but also the
-> +workloads of all its descendants.
-> +
-> +For example the 'cpu.numa_stat' shows::
-> +
-> +  page_access local=129909383 remote=18265810
-> +
-> +The NUMA locality calculated as::
-> +
-> +  129909383 * 100 / (129909383 + 18265810) = 87.67
-> +
-> +Thus we know the workload of this group and its descendants have totally done
-> +129909383 times of local page accessing and 18265810 times of remotes, locality
-> +is 87.67% which implies most of the memory access are local.
-> +
-> +NUMA Consumption
-> +----------------
-> +
-> +There are also other cgroup entries which help us to estimate NUMA efficiency.
-> +They are 'cpuacct.usage_percpu' and 'memory.numa_stat'.
-> +
-> +By reading 'cpuacct.usage_percpu' we will get per-cpu runtime (in nanoseconds)
-> +info (in hierarchy) as::
-> +
-> +  CPU_0_RUNTIME CPU_1_RUNTIME CPU_2_RUNTIME ... CPU_X_RUNTIME
-> +
-> +Combined with the info from::
-> +
-> +  cat /sys/devices/system/node/nodeX/cpulist
-> +
-> +We would be able to accumulate the runtime of CPUs into NUMA nodes, to get the
-> +per-cgroup node runtime info.
-> +
-> +By reading 'memory.numa_stat' we will get per-cgroup node memory consumption
-> +info as::
-> +
-> +  total=TOTAL_MEM N0=MEM_ON_NODE0 N1=MEM_ON_NODE1 ... NX=MEM_ON_NODEX
-> +
-> +Together we call these the per-cgroup NUMA consumption info, telling us how many
-> +resources a particular workload has consumed, on a particular NUMA node.
-> +
-> +Monitoring
-> +----------
-> +
-> +By monitoring the increments of locality info, we can easily know whether NUMA
-> +Balancing is working well for a particular workload.
-> +
-> +For example we take a 5 seconds sample period, then on each sampling we have::
-> +
-> +  local_diff = last_nr_local_page_access - nr_local_page_access
-> +  remote_diff = last_nr_remote_page_access - nr_remote_page_access
-> +
-> +and we get the locality in this period as::
-> +
-> +  locality = local_diff * 100 / (local_diff + remote_diff)
-> +
-> +We can plot a line for locality. When the line is close to 100%, things are
-> +good; when getting close to 0% something is wrong. We can pick a proper
-> +watermark to trigger warning message.
-> +
-> +You may want to drop the data if the local/remote_diff is too small, which
-> +implies there are not many available pages for NUMA Balancing to scan, ignoring
-> +would be fine since most likely the workload is insensitive to NUMA, or the
-> +memory topology is already good enough.
-> +
-> +Monitoring root group helps you control the overall situation, while you may
-> +also want to monitor all the leaf groups which contain the workloads, this
-> +helps to catch the mouse.
-> +
-> +Try to put your workload into also the cpuacct & memory cgroup, when NUMA
-> +Balancing is disabled or locality becomes too small, we may want to monitor
-> +the per-node runtime & memory info to see if the node consumption meet the
-> +requirements.
-> +
-> +For NUMA node X on each sampling we have::
-> +
-> +  runtime_X_diff = runtime_X - last_runtime_X
-> +  runtime_all_diff = runtime_all - last_runtime_all
-> +
-> +  runtime_percent_X = runtime_X_diff * 100 / runtime_all_diff
-> +  memory_percent_X = memory_X * 100 / memory_all
-> +
-> +These two percentages are usually matched on each node, workload should execute
-> +mostly on the node that contains most of its memory, but it's not guaranteed.
-> +
-> +The workload may only access a small part of its memory, in such cases although
-> +the majority of memory are remote, locality could still be good.
-> +
-> +Thus to tell if things are fine or not depends on the understanding of system
-> +resource deployment, however, if you find node X got 100% memory percent but 0%
-> +runtime percent, definitely something is wrong.
-> +
-> +Troubleshooting
-> +---------------
-> +
-> +After identifying which workload introduced the bad locality, check:
-> +
-> +1). Is the workload bound to a particular NUMA node?
-> +2). Has any NUMA node run out of resources?
-> +
-> +There are several ways to bind task's memory with a NUMA node, the strict way
-> +like the MPOL_BIND memory policy or 'cpuset.mems' will limit the memory
-> +node where to allocate pages. In this situation, admin should make sure the
-> +task is allowed to run on the CPUs of that NUMA node, and make sure there are
-> +available CPU resources there.
-> +
-> +There are also ways to bind task's CPU with a NUMA node, like 'cpuset.cpus' or
-> +sched_setaffinity() syscall. In this situation, NUMA Balancing helps to migrate
-> +pages into that node, admin should make sure there is available memory there.
-> +
-> +Admin could try to rebind or unbind the NUMA node to erase the damage, make a
-> +change then observe the statistics to see if things get better until the
-> +situation is acceptable.
-> +
-> +Highlights
-> +----------
-> +
-> +For some tasks, NUMA Balancing may be found to be unnecessary to scan pages,
-> +and locality could always be 0 or small number, don't pay attention to them
-> +since they most likely insensitive to NUMA.
-> +
-> +There is no accounting until the option is turned on, so enable it in advance
-> +if you want to have the whole history.
-> +
-> +We have per-task migfailed counter to tell how many page migrations have
-> +failed for a particular task; you will find it in /proc/PID/sched entry.
 
+This looks ok. Does this fix certain issues? Or is this just for sanity.
+
+Reviewed-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+
+Thanks,
+Suravee
