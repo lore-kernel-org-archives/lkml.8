@@ -2,293 +2,134 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6AE0C33CAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 21:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05771C33CAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 21:25:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9135A217F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 21:23:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCE70217F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 21:25:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Znkf8yiD"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="qXjTaDPw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729031AbgAUVXN (ORCPT
+        id S1729061AbgAUVZU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 16:23:13 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:33640 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728776AbgAUVXN (ORCPT
+        Tue, 21 Jan 2020 16:25:20 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:40190 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728799AbgAUVZU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 16:23:13 -0500
-Received: by mail-lj1-f196.google.com with SMTP id y6so4418032lji.0;
-        Tue, 21 Jan 2020 13:23:10 -0800 (PST)
+        Tue, 21 Jan 2020 16:25:20 -0500
+Received: by mail-il1-f193.google.com with SMTP id c4so3519072ilo.7
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 13:25:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=b0e47hfuHVqQ3RlreV067jhMkKP4EChxl8z4USHZAn0=;
-        b=Znkf8yiDZmuz2u6fxHNHBP4U0l3nqx5VdCZ+2ochZk4c16z9G7LDVoX+PElqYV018R
-         xDoUc9GAvJFzBewwa8Z9R5ysoxo7x7azBrFGFckY5fIdSJ1oMae9y2uGTRBbxhaaKKVY
-         bRdtIeYaD1lfpNMZsA8IDp7bQWGnR+PiZxwWYMBqu20iNgNmGteE4ueCfsfY/VcjwrQ6
-         l4YCNA1I/U8tnxogvSI6WREa3fFVnA7/qog0c34ox1xpIc7WTCo9jKoonHnKwbmIF8U/
-         5uRyWMu5jbsaK9iHrI9MmvNLOTPIaLf7pKxBsq4hOpC5YCT1efkGEGj/3UvDlF7bhf0B
-         2kEw==
+        bh=FHCvw3BPgEGuM+0lfBGPIFX9bQ88tvGWWuXcX9fLsHY=;
+        b=qXjTaDPwyPUafBpzuhsi1ITIYQBhCPvnUaCq5unGMHCEZID3D2E7vNgrj6YiQvb/Dl
+         vW9/+EL1jdb/jKYwudEW7PEOy42rH/0t0IodwwMAFEi6g61Z+4pkFeAgoXgMG8744qJx
+         Bcnmf9Nw/RgVRm44x07L8eeTfw9WBSjXU8fU2Dxq+J1G4yrto2eDUAFSPCRVLoKr26/V
+         l+ioFMzci7six7lSmV3a9jjjqfg4nBXF6IY8k8yzr/POU+0w/K2xAHpaE5MEnFUse493
+         zCAdGwD6tByHfhs5dJN4hytggJKVC22sHrK5U/BwKxLCQ5FLDDSjqXhqA+3kChv/v2sh
+         /O+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=b0e47hfuHVqQ3RlreV067jhMkKP4EChxl8z4USHZAn0=;
-        b=kfIGF3McCdXIwqf+ykhUj/AbjdIpVySH8mXiRtNC+htqgQbxUjJkYdjqVQxFo1Psku
-         H2Y85VgFTlTDxKp9JY1MmUNvKJZPEglar8cw8+6inYhv4PtdVaM7jYRwalgKMC6JZmRt
-         dBErpYKrKSI9RHTNNUAYLolftumKUUEan8Y6aGOp67f0fCtnRgTUnJdD03XYyvrJDbq5
-         sz4y10/EBMh1n9tjgYy2metlTZBSbmIBC21DXOv1SW94Odi844xZB+tDY65SXSQj6tU3
-         k3NpWSABJ4yRf5rqjWoHDR/6r9jq5h66GF5A3Ww02FrxarRPGxF5XLbDamSDx2RdcARF
-         FH0Q==
-X-Gm-Message-State: APjAAAXlJaucrDT0VlN6CZV0nm4/l2SEZN54RYB0oRqMUlNLs1yoE0Mu
-        xyqEGsBofMLM4FrreDdt3j5apKHP
-X-Google-Smtp-Source: APXvYqxcyvx6QMH8v8kxuunZP9IH+Mbb7MnvNDwj0Fs01Diy3b7BSM1aMjPhpKGtvaWJQvXO/Ckvyw==
-X-Received: by 2002:a2e:9b03:: with SMTP id u3mr17261711lji.87.1579641789328;
-        Tue, 21 Jan 2020 13:23:09 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id q26sm1618839lfp.85.2020.01.21.13.23.08
+        bh=FHCvw3BPgEGuM+0lfBGPIFX9bQ88tvGWWuXcX9fLsHY=;
+        b=mIqrFXMWnbe5Lf8jJsGlNYg5QaeKQLkYGOVnd9L48okjOoH1724RfZxIAqCa2F7Oeg
+         QY8L8PJWm9qjESe7MgFkcw/NjGL5nAy/T5mGGXA0wuFbt/LY9iV1M0xshE58PEYSHTFA
+         brTatLfIDwxQcAseP3l6DJqDilE+O3YuL6eSI0X5u1t0j97iGECpE7icv3lqd+Ve04AA
+         Me8ccGH5k5hvSYAGXOWZM4mhLbckmjC4jBMJS+Y1JqN+I30dYoIQX7/uVH9wP0pS5m2m
+         gDtfBcpCB0HgYuMepSMQfpyqVurE157nDPeo6yKDDHzMl/4ppbvDNMbpJ8mC3ZCDR8n3
+         SMcA==
+X-Gm-Message-State: APjAAAWOIA3psWxT4HkQgHsebcPHZ1bwYfnYVnNNMv76I1Di8PEaELtr
+        LKJyU3Hf5mL7VMjz7Ksi/MIbIgEfqxQ=
+X-Google-Smtp-Source: APXvYqxPLzlyge3FdUW1OJLyyZvj9cGo8aGoZ7RSW91nft7bFum48eXlAWOVjm4i1elqSsWJy65tCg==
+X-Received: by 2002:a92:9e97:: with SMTP id s23mr5712813ilk.139.1579641919076;
+        Tue, 21 Jan 2020 13:25:19 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id l8sm9854822ioc.42.2020.01.21.13.25.17
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jan 2020 13:23:08 -0800 (PST)
-Subject: Re: [PATCH v4 11/14] dmaengine: tegra-apb: Clean up suspend-resume
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        Tue, 21 Jan 2020 13:25:18 -0800 (PST)
+Subject: Re: [PATCH] nbd: add a flush_workqueue in nbd_start_device
+To:     Josef Bacik <josef@toxicpanda.com>, Sun Ke <sunke32@huawei.com>,
+        mchristi@redhat.com
+Cc:     linux-block@vger.kernel.org, nbd@other.debian.org,
         linux-kernel@vger.kernel.org
-References: <20200112173006.29863-1-digetx@gmail.com>
- <20200112173006.29863-12-digetx@gmail.com>
-Message-ID: <7e0d2cfa-5570-93e6-e3dc-7d3f6902a528@gmail.com>
-Date:   Wed, 22 Jan 2020 00:23:06 +0300
+References: <20200121124813.13332-1-sunke32@huawei.com>
+ <82a3eb7e-883c-a091-feec-27f3937491ab@toxicpanda.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <83d21549-66a0-0e76-89e5-1303c5b19102@kernel.dk>
+Date:   Tue, 21 Jan 2020 14:25:17 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200112173006.29863-12-digetx@gmail.com>
+In-Reply-To: <82a3eb7e-883c-a091-feec-27f3937491ab@toxicpanda.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-12.01.2020 20:30, Dmitry Osipenko пишет:
-> It is enough to check whether hardware is busy on suspend and to reset
-> it across of suspend-resume because channel's configuration is fully
-> re-programmed on each DMA transaction anyways and because save-restore
-> of an active channel won't end up well without pausing transfer prior to
-> saving of the state (note that all channels shall be idling at the time of
-> suspend, so save-restore is not needed at all).
+On 1/21/20 7:00 AM, Josef Bacik wrote:
+> On 1/21/20 7:48 AM, Sun Ke wrote:
+>> When kzalloc fail, may cause trying to destroy the
+>> workqueue from inside the workqueue.
+>>
+>> If num_connections is m (2 < m), and NO.1 ~ NO.n
+>> (1 < n < m) kzalloc are successful. The NO.(n + 1)
+>> failed. Then, nbd_start_device will return ENOMEM
+>> to nbd_start_device_ioctl, and nbd_start_device_ioctl
+>> will return immediately without running flush_workqueue.
+>> However, we still have n recv threads. If nbd_release
+>> run first, recv threads may have to drop the last
+>> config_refs and try to destroy the workqueue from
+>> inside the workqueue.
+>>
+>> To fix it, add a flush_workqueue in nbd_start_device.
+>>
+>> Fixes: e9e006f5fcf2 ("nbd: fix max number of supported devs")
+>> Signed-off-by: Sun Ke <sunke32@huawei.com>
+>> ---
+>>   drivers/block/nbd.c | 7 ++++++-
+>>   1 file changed, 6 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+>> index b4607dd96185..dd1f8c2c6169 100644
+>> --- a/drivers/block/nbd.c
+>> +++ b/drivers/block/nbd.c
+>> @@ -1264,7 +1264,12 @@ static int nbd_start_device(struct nbd_device *nbd)
+>>   
+>>   		args = kzalloc(sizeof(*args), GFP_KERNEL);
+>>   		if (!args) {
+>> -			sock_shutdown(nbd);
+>> +			if (i == 0)
+>> +				sock_shutdown(nbd);
+>> +			else {
+>> +				sock_shutdown(nbd);
+>> +				flush_workqueue(nbd->recv_workq);
+>> +			}
 > 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/dma/tegra20-apb-dma.c | 131 +++++++++++++++++-----------------
->  1 file changed, 67 insertions(+), 64 deletions(-)
-> 
-> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-> index b9d8e57eaf54..398a0e1d6506 100644
-> --- a/drivers/dma/tegra20-apb-dma.c
-> +++ b/drivers/dma/tegra20-apb-dma.c
-> @@ -1392,6 +1392,36 @@ static const struct tegra_dma_chip_data tegra148_dma_chip_data = {
->  	.support_separate_wcount_reg = true,
->  };
->  
-> +static int tegra_dma_init_hw(struct tegra_dma *tdma)
-> +{
-> +	int err;
-> +
-> +	err = reset_control_assert(tdma->rst);
-> +	if (err) {
-> +		dev_err(tdma->dev, "failed to assert reset: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	err = clk_enable(tdma->dma_clk);
-> +	if (err) {
-> +		dev_err(tdma->dev, "failed to enable clk: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	/* reset DMA controller */
-> +	udelay(2);
-> +	reset_control_deassert(tdma->rst);
-> +
-> +	/* enable global DMA registers */
-> +	tdma_write(tdma, TEGRA_APBDMA_GENERAL, TEGRA_APBDMA_GENERAL_ENABLE);
-> +	tdma_write(tdma, TEGRA_APBDMA_CONTROL, 0);
-> +	tdma_write(tdma, TEGRA_APBDMA_IRQ_MASK_SET, 0xFFFFFFFF);
-> +
-> +	clk_disable(tdma->dma_clk);
-> +
-> +	return 0;
-> +}
-> +
->  static int tegra_dma_probe(struct platform_device *pdev)
->  {
->  	const struct tegra_dma_chip_data *cdata;
-> @@ -1433,30 +1463,18 @@ static int tegra_dma_probe(struct platform_device *pdev)
->  	if (ret)
->  		return ret;
->  
-> +	ret = tegra_dma_init_hw(tdma);
-> +	if (ret)
-> +		goto err_clk_unprepare;
-> +
->  	pm_runtime_irq_safe(&pdev->dev);
->  	pm_runtime_enable(&pdev->dev);
->  	if (!pm_runtime_enabled(&pdev->dev)) {
->  		ret = tegra_dma_runtime_resume(&pdev->dev);
->  		if (ret)
->  			goto err_clk_unprepare;
+> Just for readability sake why don't we just flush_workqueue()
+> unconditionally, and add a comment so we know why in the future.
 
-Jon, but isn't the RPM mandatory for all Tegra SoCs now and thus
-guaranteed to be enabled? Maybe we should start to remove handling the
-case of unavailable RPM from all Tegra drivers?
+Or maybe just make it:
 
-> -	} else {
-> -		ret = pm_runtime_get_sync(&pdev->dev);
-> -		if (ret < 0)
-> -			goto err_pm_disable;
->  	}
->  
-> -	/* Reset DMA controller */
-> -	reset_control_assert(tdma->rst);
-> -	udelay(2);
-> -	reset_control_deassert(tdma->rst);
-> -
-> -	/* Enable global DMA registers */
-> -	tdma_write(tdma, TEGRA_APBDMA_GENERAL, TEGRA_APBDMA_GENERAL_ENABLE);
-> -	tdma_write(tdma, TEGRA_APBDMA_CONTROL, 0);
-> -	tdma_write(tdma, TEGRA_APBDMA_IRQ_MASK_SET, 0xFFFFFFFFul);
-> -
-> -	pm_runtime_put(&pdev->dev);
-> -
->  	INIT_LIST_HEAD(&tdma->dma_dev.channels);
->  	for (i = 0; i < cdata->nr_channels; i++) {
->  		struct tegra_dma_channel *tdc = &tdma->channels[i];
-> @@ -1583,26 +1601,6 @@ static int tegra_dma_remove(struct platform_device *pdev)
->  static int tegra_dma_runtime_suspend(struct device *dev)
->  {
->  	struct tegra_dma *tdma = dev_get_drvdata(dev);
-> -	unsigned int i;
-> -
-> -	tdma->reg_gen = tdma_read(tdma, TEGRA_APBDMA_GENERAL);
-> -	for (i = 0; i < tdma->chip_data->nr_channels; i++) {
-> -		struct tegra_dma_channel *tdc = &tdma->channels[i];
-> -		struct tegra_dma_channel_regs *ch_reg = &tdc->channel_reg;
-> -
-> -		/* Only save the state of DMA channels that are in use */
-> -		if (!tdc->config_init)
-> -			continue;
-> -
-> -		ch_reg->csr = tdc_read(tdc, TEGRA_APBDMA_CHAN_CSR);
-> -		ch_reg->ahb_ptr = tdc_read(tdc, TEGRA_APBDMA_CHAN_AHBPTR);
-> -		ch_reg->apb_ptr = tdc_read(tdc, TEGRA_APBDMA_CHAN_APBPTR);
-> -		ch_reg->ahb_seq = tdc_read(tdc, TEGRA_APBDMA_CHAN_AHBSEQ);
-> -		ch_reg->apb_seq = tdc_read(tdc, TEGRA_APBDMA_CHAN_APBSEQ);
-> -		if (tdma->chip_data->support_separate_wcount_reg)
-> -			ch_reg->wcount = tdc_read(tdc,
-> -						  TEGRA_APBDMA_CHAN_WCOUNT);
-> -	}
->  
->  	clk_disable(tdma->dma_clk);
->  
-> @@ -1612,46 +1610,51 @@ static int tegra_dma_runtime_suspend(struct device *dev)
->  static int tegra_dma_runtime_resume(struct device *dev)
->  {
->  	struct tegra_dma *tdma = dev_get_drvdata(dev);
-> -	unsigned int i;
-> -	int ret;
->  
-> -	ret = clk_enable(tdma->dma_clk);
-> -	if (ret < 0) {
-> -		dev_err(dev, "clk_enable failed: %d\n", ret);
-> -		return ret;
-> -	}
-> +	return clk_enable(tdma->dma_clk);
-> +}
->  
-> -	tdma_write(tdma, TEGRA_APBDMA_GENERAL, tdma->reg_gen);
-> -	tdma_write(tdma, TEGRA_APBDMA_CONTROL, 0);
-> -	tdma_write(tdma, TEGRA_APBDMA_IRQ_MASK_SET, 0xFFFFFFFFul);
-> +static int __maybe_unused tegra_dma_dev_suspend(struct device *dev)
-> +{
-> +	struct tegra_dma *tdma = dev_get_drvdata(dev);
-> +	unsigned long flags;
-> +	unsigned int i;
-> +	bool busy;
->  
->  	for (i = 0; i < tdma->chip_data->nr_channels; i++) {
->  		struct tegra_dma_channel *tdc = &tdma->channels[i];
-> -		struct tegra_dma_channel_regs *ch_reg = &tdc->channel_reg;
-> -
-> -		/* Only restore the state of DMA channels that are in use */
-> -		if (!tdc->config_init)
-> -			continue;
-> -
-> -		if (tdma->chip_data->support_separate_wcount_reg)
-> -			tdc_write(tdc, TEGRA_APBDMA_CHAN_WCOUNT,
-> -				  ch_reg->wcount);
-> -		tdc_write(tdc, TEGRA_APBDMA_CHAN_APBSEQ, ch_reg->apb_seq);
-> -		tdc_write(tdc, TEGRA_APBDMA_CHAN_APBPTR, ch_reg->apb_ptr);
-> -		tdc_write(tdc, TEGRA_APBDMA_CHAN_AHBSEQ, ch_reg->ahb_seq);
-> -		tdc_write(tdc, TEGRA_APBDMA_CHAN_AHBPTR, ch_reg->ahb_ptr);
-> -		tdc_write(tdc, TEGRA_APBDMA_CHAN_CSR,
-> -			  ch_reg->csr & ~TEGRA_APBDMA_CSR_ENB);
-> +
-> +		spin_lock_irqsave(&tdc->lock, flags);
-> +		busy = tdc->busy;
-> +		spin_unlock_irqrestore(&tdc->lock, flags);
-> +
-> +		if (busy) {
-> +			dev_err(tdma->dev, "channel %u busy\n", i);
-> +			return -EBUSY;
-> +		}
-> +
-> +		tasklet_kill(&tdc->tasklet);
+	sock_shutdown(nbd);
+	if (i)
+		flush_workqueue(nbd->recv_workq);
 
-I realized that it will be more robust to kill the tasklet before
-checking the busy state because technically tasklet could issue new DMA
-transfer, will correct it in v5.
+which does the same thing, but is still readable. The current code with
+the shutdown duplication is just a bit odd. Needs a comment either way.
 
->  	}
->  
-> -	return 0;
-> +	return pm_runtime_force_suspend(dev);
-> +}
-> +
-> +static int __maybe_unused tegra_dma_dev_resume(struct device *dev)
-> +{
-> +	struct tegra_dma *tdma = dev_get_drvdata(dev);
-> +	int err;
-> +
-> +	err = tegra_dma_init_hw(tdma);
-> +	if (err)
-> +		return err;
-> +
-> +	return pm_runtime_force_resume(dev);
->  }
->  
->  static const struct dev_pm_ops tegra_dma_dev_pm_ops = {
->  	SET_RUNTIME_PM_OPS(tegra_dma_runtime_suspend, tegra_dma_runtime_resume,
->  			   NULL)
-> -	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-> -				pm_runtime_force_resume)
-> +	SET_SYSTEM_SLEEP_PM_OPS(tegra_dma_dev_suspend, tegra_dma_dev_resume)
->  };
->  
->  static const struct of_device_id tegra_dma_of_match[] = {
-> 
+-- 
+Jens Axboe
 
