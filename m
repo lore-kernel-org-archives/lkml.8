@@ -2,105 +2,114 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E38C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1445DC33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D09BD20678
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:46:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE30C24655
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:48:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hsvLm3FS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jZW+7CkL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729205AbgAUSqR (ORCPT
+        id S1729184AbgAUSst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 13:46:17 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:45901 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728901AbgAUSqR (ORCPT
+        Tue, 21 Jan 2020 13:48:49 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:44485 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728901AbgAUSss (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 13:46:17 -0500
-Received: by mail-ed1-f65.google.com with SMTP id v28so4013267edw.12;
-        Tue, 21 Jan 2020 10:46:15 -0800 (PST)
+        Tue, 21 Jan 2020 13:48:48 -0500
+Received: by mail-qt1-f196.google.com with SMTP id w8so3471257qts.11
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 10:48:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Yc0IP3XS/A/MF2SKNkD0xb3ocUvgaUcyJ5PYh1S4XEg=;
-        b=hsvLm3FSNOomINeqzZ/xklDiLcUduPd78vmEQ6qHk3y1dKVsPck+EnftcAtN1iEIEV
-         SQrgMj2lFc5H+RdAheIfqmH/rKm7P7NzsC1VYv8APNfdq9/GoMNZWUP+hIyVZy02AaaA
-         VpXVKXf4k/nWBG4ZaW5uOPdvI4fXuedN3Y03swDTOlNxIuMyp6PqsN1pdCWsQEiLkw7C
-         NnMlyBHlVB80drsW61y+1oIyvwu3eVPJQRBsatMUkYAB5zIwDbXkBELKVP7oPr21UxX6
-         zYcn3uHnykU2QNzQuebHsDoK5+QXAiPVrCBoQzKLiB7r4Q+2JQtsr6DPRvpPu+Gu1E6w
-         VATg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Gcjbt/f2IWl06GbS/u53lANqReBi2slHilk3OT8D7PQ=;
+        b=jZW+7CkLrHEnzQEQRabNc7ECI23liTIsyvT7iRYK8lxCiDma7OFjrpsSR6sClkAbmC
+         12LrjCGO/T13qtko/pkOdnPEE7UcKCU/8OCub2N0x6gBl2pPK2yyI0sdp/nY3f3Y0Smo
+         1mhItqjj20ORVcfbMUl6k2J9NI3CbtSvP1kmuGZoMzhwiBHd5SjZDcEIL4g+um/R4+w+
+         w0zLN/sdx7EG9vPmlPJFL8mcpCLMnYjHQ91FEnH1HfTvQqlfzYp+Iz3P1ggltPaafznw
+         7MtSVDzQFcImBKkZ9OqrBzyQqwXX6Xej7ngm6dFqcyY0l9vsPF8LDjTR6qhGcq/AVDyE
+         JdYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Yc0IP3XS/A/MF2SKNkD0xb3ocUvgaUcyJ5PYh1S4XEg=;
-        b=FLSnjkb9oRWahy1E87hesf+3V1CMwYc2rl9aiQIhGiEOJf7Yst+YLGreC4o1fVOwXg
-         0U3UzPvvw1K9ienKri4X1E5uO2N39zvxP24AH/RzLSC/Scpuy//z3GVsvYIGjTAYVyFB
-         K9CHPZAqH8CRgciLRh8xlSk+mvMaXNj7q9txo1y9jnGUSPrKysVnlt6EHJBHYJ6KEe63
-         sfZmpH1ev+8WMZPl9tAEH0M6ZFgJ1w8oo1SSuR500cZYd4pWhHaOvCHd/XHfmnco0FcS
-         adTtY7w/4GLSfGJIuB6vy1um6hUANpf42UbeWmM/VKXR2CBSg7p582y/kRWFcybZg61s
-         eZTA==
-X-Gm-Message-State: APjAAAVzs9l1/ftubZpso9BhlQHMUYmNnehYfT6LWwT5+AOKJWQLGKAR
-        Fi2aMaqBpqocqieMv7i0whI=
-X-Google-Smtp-Source: APXvYqwcgcgDplAyYwb3Xj91MUH46aidLOBTjN9PuBERrHhJk98x6VpN1ATV4R5SNXb9KMui8W9g8g==
-X-Received: by 2002:a17:906:114e:: with SMTP id i14mr5750317eja.358.1579632374944;
-        Tue, 21 Jan 2020 10:46:14 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id w12sm1441106edq.94.2020.01.21.10.46.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jan 2020 10:46:14 -0800 (PST)
-Subject: Re: [PATCH] serial: 8250_tegra: Create Tegra specific 8250 driver
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-tegra@vger.kernel.org, Jeff Brasen <jbrasen@nvidia.com>
-References: <20200120160149.29072-1-jonathanh@nvidia.com>
- <f02faa4c-5838-15d2-1b76-75c17fcc0d9d@gmail.com>
- <714eb00b-bb49-9536-ce9c-8928941edef3@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <176b695b-6790-ff26-8c32-a3920639e6ca@gmail.com>
-Date:   Tue, 21 Jan 2020 21:46:11 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Gcjbt/f2IWl06GbS/u53lANqReBi2slHilk3OT8D7PQ=;
+        b=BxoZWWLK2et00C2lH9oFdlcKehjVJOhqb7uc6R6FtkF/kGCXR2U1vn5g+tSKAt6wa1
+         /HQhuYPEz7D/3Bs5Lqj8LjnosUDWjj0kx3PHSi6TnUt2HZ/1W1aIxjTpsJ6I8+xvmOjJ
+         8outEQAWm7oc9XrgKfTvRiqzcsJkD2Tm2PsPdq8/NMeoKzcmnGw2KtDbONA90SqQhMaZ
+         HMwizrZlMaKgc1YHDvAAK1ZH8h6S/E40lO8Kv4ZjXlzM7MrZUNhSHv+knLA0V91ug4xU
+         RfRr6zool4fkArSrHZuYpD90hjha8U99sisPrghXhYB/3mAQLrVSQsCReJpUkQXH3dv+
+         RejA==
+X-Gm-Message-State: APjAAAU5MdHgqGHijETWwBIPR6Rl/yGikWS1zLRFDfDrBwIBti6+I6Sf
+        hsKWuUIjWhmfvoBxt8QOnugFmCGRr6E81T4CcXw=
+X-Google-Smtp-Source: APXvYqyWi/C1DQePOtb0Gxc6V7Ze34ZYUTXa7cphunXNt0w1icdGaKitimVOcgcZehrEAruCzz/mmNRFDTxM48RTWsk=
+X-Received: by 2002:ac8:337c:: with SMTP id u57mr5873302qta.42.1579632527734;
+ Tue, 21 Jan 2020 10:48:47 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <714eb00b-bb49-9536-ce9c-8928941edef3@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200119163104.13274-1-samuel@sholland.org> <20200119163104.13274-3-samuel@sholland.org>
+ <20200121090539.mgswdzfharrfy5ad@gilmour.lan>
+In-Reply-To: <20200121090539.mgswdzfharrfy5ad@gilmour.lan>
+From:   Vasily Khoruzhick <anarsoul@gmail.com>
+Date:   Tue, 21 Jan 2020 10:49:37 -0800
+Message-ID: <CA+E=qVcdza_E17_=r+0eZ2UexCYah35jt8=v+uFTLHx3+BvHSg@mail.gmail.com>
+Subject: Re: [PATCH 3/9] arm64: dts: allwinner: pinebook: Remove unused AXP803 regulators
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     Samuel Holland <samuel@sholland.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        arm-linux <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-21.01.2020 21:34, Jon Hunter пишет:
-> 
-> On 21/01/2020 16:31, Dmitry Osipenko wrote:
->> Hello Jon,
->>
->> 20.01.2020 19:01, Jon Hunter пишет:
->>
->> [snip]
->>
->>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>> +	if (!res)
->>> +		return -ENODEV;
->>> +
->>> +	port->membase = devm_ioremap(&pdev->dev, res->start,
->>> +				     resource_size(res));
->>
->> devm_platform_ioremap_resource()
-> 
-> That would be ideal, but we cannot. The driver needs the res structure
-> as well later on.
+On Tue, Jan 21, 2020 at 1:05 AM Maxime Ripard <mripard@kernel.org> wrote:
+>
+> On Sun, Jan 19, 2020 at 10:30:58AM -0600, Samuel Holland wrote:
+> > The Pinebook does not use the CSI bus on the A64. In fact it does not
+> > use GPIO port E for anything at all. Thus the following regulators are
+> > not used and do not need voltages set:
+> >
+> >  - ALDO1: Connected to VCC-PE only
+> >  - DLDO3: Not connected
+> >  - ELDO3: Not connected
+> >
+> > Signed-off-by: Samuel Holland <samuel@sholland.org>
+> > ---
+> >  .../boot/dts/allwinner/sun50i-a64-pinebook.dts   | 16 +---------------
+> >  1 file changed, 1 insertion(+), 15 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
+> > index ff32ca1a495e..8e7ce6ad28dd 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
+> > @@ -202,9 +202,7 @@
+> >  };
+> >
+> >  &reg_aldo1 {
+> > -     regulator-min-microvolt = <2800000>;
+> > -     regulator-max-microvolt = <2800000>;
+> > -     regulator-name = "vcc-csi";
+> > +     regulator-name = "vcc-pe";
+> >  };
+>
+> If it's connected to PE, I'd expect the voltage to be at 3.3v?
 
-Oh, indeed.
+Commit message says that PE is not used, so we don't need to set it at all.
+
+> Maxime
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
