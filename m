@@ -2,137 +2,207 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C33E2C33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 13:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC2B6C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 13:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A9832070C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 13:48:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95BDF217F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 13:50:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VXtV+cC/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DpBjrrCf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729238AbgAUNs6 (ORCPT
+        id S1729153AbgAUNuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 08:48:58 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49913 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728708AbgAUNs6 (ORCPT
+        Tue, 21 Jan 2020 08:50:18 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:28486 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728916AbgAUNuS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 08:48:58 -0500
+        Tue, 21 Jan 2020 08:50:18 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579614534;
+        s=mimecast20190719; t=1579614617;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=5sry8glaf+2eDUM7x4dnclmuXsj6ELrKrtRIG9vYSZo=;
-        b=VXtV+cC/l0X4NcShyX55iJu8dipc39kgu5OYrIFZZ1vNysCMXtumh+WVEl/TfVJ/NMQzts
-        8LQeRzwWZolBykFvvdpYl9lChyIo3vtuc+1l4yfN3nsEdQpSsBKOARZMH7G4ft7pGI+PY5
-        1DYsY9mg5r4fIkKX//rCAfqtRN3GghY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-350-X16t49KjNWKuSIvbi2LOzg-1; Tue, 21 Jan 2020 08:48:50 -0500
-X-MC-Unique: X16t49KjNWKuSIvbi2LOzg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 20246107ACC4;
-        Tue, 21 Jan 2020 13:48:47 +0000 (UTC)
-Received: from localhost (unknown [10.18.25.174])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 77D6C7DB5D;
-        Tue, 21 Jan 2020 13:48:41 +0000 (UTC)
-Date:   Tue, 21 Jan 2020 08:48:40 -0500
-From:   Mike Snitzer <snitzer@redhat.com>
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        martin.petersen@oracle.com, bob.liu@oracle.com, axboe@kernel.dk,
-        agk@redhat.com, dm-devel@redhat.com, song@kernel.org,
-        tytso@mit.edu, adilger.kernel@dilger.ca,
-        Chaitanya.Kulkarni@wdc.com, darrick.wong@oracle.com,
-        ming.lei@redhat.com, osandov@fb.com, jthumshirn@suse.de,
-        minwoo.im.dev@gmail.com, damien.lemoal@wdc.com,
-        andrea.parri@amarulasolutions.com, hare@suse.com, tj@kernel.org,
-        ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
-        bvanassche@acm.org, dhowells@redhat.com, asml.silence@gmail.com
-Subject: Re: [PATCH v4 6/7] dm: Directly disable max_allocate_sectors for now
-Message-ID: <20200121134840.GA9944@redhat.com>
-References: <157960325642.108120.13626623438131044304.stgit@localhost.localdomain>
- <157960337238.108120.18048939587162465175.stgit@localhost.localdomain>
- <20200121122458.GA9365@redhat.com>
- <f7e0fb38-a894-da33-c46b-e192ed907ee0@virtuozzo.com>
- <619a7a14-44e6-eca7-c1ea-3f04abeee53d@virtuozzo.com>
+        bh=QSA9nedBLY+hJJ/U902gs3UmyLK6X1rNeQVNhq9BcRk=;
+        b=DpBjrrCfpL3ADMet6GmkzlxC3y2FWkxNkrspbkdvVlHQl/kSKsosELnCk/gXcj64Iczrfx
+        8rsqbiGkLjrsLFOcMcEX4l0MXjhBJgzCMmhaHibVEGF+K3Kwb/F7Ywj5yxfTOepQotLMVI
+        eVwEOjNHo280x9GWw9J754ygDx/X/Y8=
+Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
+ [209.85.167.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-133-HRZJzTq8Md-1cU7gRJVmiw-1; Tue, 21 Jan 2020 08:50:15 -0500
+X-MC-Unique: HRZJzTq8Md-1cU7gRJVmiw-1
+Received: by mail-lf1-f71.google.com with SMTP id x23so902945lfc.5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 05:50:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version:content-transfer-encoding;
+        bh=QSA9nedBLY+hJJ/U902gs3UmyLK6X1rNeQVNhq9BcRk=;
+        b=b5Yx6X5BTwvLXnlUPfU30hsAc9uEACYJ/267W3iJWokfs0v3Rc1YeP2ahnzJ6On2+b
+         UKloi3kzt+l9mQ/ocAJR2NB6TynZXNdGroH66qsLQ1FxcL8BlXz3pSzgtv8QAZH71VPs
+         Gv6q4E5+xJk54rgxjeHQFvh0eW+dkT5R+VbzSNq4xfO1mbI78fgpxz7Fr4DfLL9A+Uti
+         7CbOsHfJEh0XvwSJpeQsUY9xF2wjgWBmbenO353W0t9meZTWqIpDvdjU3pBGSmkUCZfH
+         ugL0J62ca/BD/nvYflHiT3+cXZ/iohVvykpRu7DfxPOcbY/QPmln7uEymLT7nyeQL2Of
+         ZsyQ==
+X-Gm-Message-State: APjAAAUKfydYD0Z4b5Nhzqfw+QAdpYRv4i6TjYrVANPKxkpiRvCmB2rW
+        9mlJdaw3LiPWN2eo7sx1L6fzQP8a1+O+dpFne7zOcaUekKUbhRWWF27py0Njz6bM8NlbCpCvEaf
+        KzkRb07HuIlXQ7tIQC0/L9SM2
+X-Received: by 2002:a19:48c5:: with SMTP id v188mr2838241lfa.100.1579614614301;
+        Tue, 21 Jan 2020 05:50:14 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyn5xqRhHmPpySMcmkFZmX06i6ruLvGvbAL8D8ASe1wRGX+vhBALjz8OzpwILxiqeG3ZXt2kA==
+X-Received: by 2002:a19:48c5:: with SMTP id v188mr2838216lfa.100.1579614613963;
+        Tue, 21 Jan 2020 05:50:13 -0800 (PST)
+Received: from alrua-x1.borgediget.toke.dk ([85.204.121.218])
+        by smtp.gmail.com with ESMTPSA id r2sm18840207lfn.13.2020.01.21.05.50.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2020 05:50:13 -0800 (PST)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id 1B9471804D6; Tue, 21 Jan 2020 14:33:47 +0100 (CET)
+From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-rdma@vger.kernel.org,
+        "open list\:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH bpf-next v5 00/11] tools: Use consistent libbpf include paths everywhere
+In-Reply-To: <CAEf4BzYNp81_bOFSEZR=AcruC2ms76fCWQGit+=2QZrFAXpGqg@mail.gmail.com>
+References: <157952560001.1683545.16757917515390545122.stgit@toke.dk> <CAEf4BzYNp81_bOFSEZR=AcruC2ms76fCWQGit+=2QZrFAXpGqg@mail.gmail.com>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date:   Tue, 21 Jan 2020 14:33:46 +0100
+Message-ID: <874kwpndc5.fsf@toke.dk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <619a7a14-44e6-eca7-c1ea-3f04abeee53d@virtuozzo.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21 2020 at  8:33am -0500,
-Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+Andrii Nakryiko <andrii.nakryiko@gmail.com> writes:
 
-> On 21.01.2020 15:36, Kirill Tkhai wrote:
-> > On 21.01.2020 15:24, Mike Snitzer wrote:
-> >> On Tue, Jan 21 2020 at  5:42am -0500,
-> >> Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
-> >>
-> >>> Since dm inherits limits from underlining block devices,
-> >>> this patch directly disables max_allocate_sectors for dm
-> >>> till full allocation support is implemented.
-> >>>
-> >>> This prevents high-level primitives (generic_make_request_checks(),
-> >>> __blkdev_issue_write_zeroes(), ...) from sending REQ_ALLOCATE
-> >>> requests.
-> >>>
-> >>> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
-> >>> ---
-> >>>  drivers/md/dm-table.c |    2 ++
-> >>>  drivers/md/md.h       |    1 +
-> >>>  2 files changed, 3 insertions(+)
-> >>
-> >> You're mixing DM and MD changes in the same patch.
-> >>
-> >> But I'm wondering if it might be best to set this default for stacking
-> >> devices in blk_set_stacking_limits()?
-> >>
-> >> And then it is up to each stacking driver to override as needed.
-> > 
-> > Hm. Sound like a good idea. This "lim->max_allocate_sectors = 0" in blk_set_stacking_limits()
-> > should work for dm's dm_calculate_queue_limits(), since it calls blk_stack_limits(), which is:
-> > 
-> > 	t->max_allocate_sectors = min(t->max_allocate_sectors,
-> > 				      b->max_allocate_sectors);
-> > 
-> > Could you please tell is this fix is also enough for md?
-> 
-> It looks like it's enough since queue defaults are set in md_alloc()->blk_set_stacking_limits().
-> In case of we set "max_allocate_sectors = 0", in further it can be changed only manually,
-> but nobody does this.
+> On Mon, Jan 20, 2020 at 5:08 AM Toke H=C3=B8iland-J=C3=B8rgensen <toke@re=
+dhat.com> wrote:
+>>
+>> We are currently being somewhat inconsistent with the libbpf include pat=
+hs,
+>> which makes it difficult to move files from the kernel into an external
+>> libbpf-using project without adjusting include paths.
+>>
+>> Having the bpf/ subdir of $INCLUDEDIR in the include path has never been=
+ a
+>> requirement for building against libbpf before, and indeed the libbpf pk=
+g-config
+>> file doesn't include it. So let's make all libbpf includes across the ke=
+rnel
+>> tree use the bpf/ prefix in their includes. Since bpftool skeleton gener=
+ation
+>> emits code with a libbpf include, this also ensures that those can be us=
+ed in
+>> existing external projects using the regular pkg-config include path.
+>>
+>> This turns out to be a somewhat invasive change in the number of files t=
+ouched;
+>> however, the actual changes to files are fairly trivial (most of them ar=
+e simply
+>> made with 'sed'). The series is split to make the change for one tool su=
+bdir at
+>> a time, while trying not to break the build along the way. It is structu=
+red like
+>> this:
+>>
+>> - Patch 1-3: Trivial fixes to Makefiles for issues I discovered while ch=
+anging
+>>   the include paths.
+>>
+>> - Patch 4-8: Change the include directives to use the bpf/ prefix, and u=
+pdates
+>>   Makefiles to make sure tools/lib/ is part of the include path, but wit=
+hout
+>>   removing tools/lib/bpf
+>>
+>> - Patch 9-11: Remove tools/lib/bpf from include paths to make sure we do=
+n't
+>>   inadvertently re-introduce includes without the bpf/ prefix.
+>>
+>> Changelog:
+>>
+>> v5:
+>>   - Combine the libbpf build rules in selftests Makefile (using Andrii's
+>>     suggestion for a make rule).
+>>   - Re-use self-tests libbpf build for runqslower (new patch 10)
+>>   - Formatting fixes
+>>
+>> v4:
+>>   - Move runqslower error on missing BTF into make rule
+>>   - Make sure we don't always force a rebuild selftests
+>>   - Rebase on latest bpf-next (dropping patch 11)
+>>
+>> v3:
+>>   - Don't add the kernel build dir to the runqslower Makefile, pass it i=
+n from
+>>     selftests instead.
+>>   - Use libbpf's 'make install_headers' in selftests instead of trying to
+>>     generate bpf_helper_defs.h in-place (to also work on read-only files=
+ystems).
+>>   - Use a scratch builddir for both libbpf and bpftool when building in =
+selftests.
+>>   - Revert bpf_helpers.h to quoted include instead of angled include wit=
+h a bpf/
+>>     prefix.
+>>   - Fix a few style nits from Andrii
+>>
+>> v2:
+>>   - Do a full cleanup of libbpf includes instead of just changing the
+>>     bpf_helper_defs.h include.
+>>
+>> ---
+>>
+>
+> Looks good, it's a clear improvement on what we had before, thanks!
+>
+> It doesn't re-build bpftool when bpftool sources changes, but I think
+> it was like that even before, so no need to block on that. Would be
+> nice to have a follow up fixing that, though. $(wildcard
+> $(BPFTOOL_DIR)/*.[ch] $(BPFTOOL_DIR)/Makefile) should do it, same as
+> for libbpf.
 
-Yes, it will work to disable this capability for MD and DM.
+Yeah, I did realise there was some potential for improvement for bpftool
+as well, but I got enough of Makefiles for now :)
 
-But if/when a stacked device _dooes_ want to support this then it'll be
-awkward to override this stacking default to allow blk_stack_limits()
-to properly stack up this limit.  blk_limits are extremely fiddley so
-this isn't necessarily new.  But by explicitly defaulting to 0 and then
-having blk_stack_limits use min() for this limit: it results in stacking
-drivers needing to clumsily unwind the default.  E.g. DM will need to
-tweak its blk_stack_limits() related code to allow override that
-actually _does_  stack up the underlying devices' capability (and not
-just impose its own limit that ignores the underlying devices).
+I'll see if I can't circle back to this at some point...
 
-So I'm not convinced this is the right way to go (be it the v4 approach
-you took or the cleaner use of blk_set_stacking_limits I suggested).
+> So, for the series:
+>
+> Acked-by: Andrii Nakryiko <andriin@fb.com>
+> Tested-by: Andrii Nakryiko <andriin@fb.com>
 
-And to be clear, I'm interested in having DM thinp support this
-capability to preallocate blocks.
+Thanks!
 
-Mike
+-Toke
 
