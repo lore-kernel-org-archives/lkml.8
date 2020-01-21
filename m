@@ -2,209 +2,141 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F11C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 13:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D55BBC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 13:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 549C224125
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 13:40:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFDFE2070C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 13:41:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728916AbgAUNki convert rfc822-to-8bit (ORCPT
+        id S1729112AbgAUNlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 08:40:38 -0500
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:35473 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727255AbgAUNki (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 08:40:38 -0500
-X-Originating-IP: 90.76.211.102
-Received: from xps13 (lfbn-tou-1-1151-102.w90-76.abo.wanadoo.fr [90.76.211.102])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id CED78FF809;
-        Tue, 21 Jan 2020 13:40:34 +0000 (UTC)
-Date:   Tue, 21 Jan 2020 14:40:34 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     "Shivamurthy Shastri (sshivamurthy)" <sshivamurthy@micron.com>
-Cc:     Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Shivamurthy Shastri <shiva.linuxworks@gmail.com>
-Subject: Re: [EXT] Re: [PATCH 3/4] mtd: spinand: Add M70A series Micron SPI
- NAND devices
-Message-ID: <20200121144034.05a8f49d@xps13>
-In-Reply-To: <MN2PR08MB6397062A37D39287E820A0D8B80D0@MN2PR08MB6397.namprd08.prod.outlook.com>
-References: <20200119145432.10405-1-sshivamurthy@micron.com>
-        <20200119145432.10405-4-sshivamurthy@micron.com>
-        <20200120111626.7cb2f6c5@xps13>
-        <MN2PR08MB6397062A37D39287E820A0D8B80D0@MN2PR08MB6397.namprd08.prod.outlook.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 21 Jan 2020 08:41:45 -0500
+Received: from mga14.intel.com ([192.55.52.115]:23934 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728977AbgAUNlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 08:41:45 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 05:41:43 -0800
+X-IronPort-AV: E=Sophos;i="5.70,346,1574150400"; 
+   d="scan'208";a="279583951"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 05:41:40 -0800
+Received: from punajuuri.localdomain (punajuuri.localdomain [192.168.240.130])
+        by paasikivi.fi.intel.com (Postfix) with ESMTP id CCD6E209B3;
+        Tue, 21 Jan 2020 15:41:38 +0200 (EET)
+Received: from sailus by punajuuri.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@linux.intel.com>)
+        id 1ittn3-0005Jp-B7; Tue, 21 Jan 2020 15:41:57 +0200
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     linux-i2c@vger.kernel.org
+Cc:     Wolfram Sang <wsa@the-dreams.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-acpi@vger.kernel.org, Bingbu Cao <bingbu.cao@intel.com>,
+        linux-media@vger.kernel.org,
+        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
+        Hyungwoo Yang <hyungwoo.yang@intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        rajmohan.mani@intel.com, Tomasz Figa <tfiga@chromium.org>
+Subject: [PATCH v4 1/6] i2c: Allow driver to manage the device's power state during probe
+Date:   Tue, 21 Jan 2020 15:41:52 +0200
+Message-Id: <20200121134157.20396-2-sakari.ailus@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200121134157.20396-1-sakari.ailus@linux.intel.com>
+References: <20200121134157.20396-1-sakari.ailus@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shivamurthy,
+Enable drivers to tell ACPI that there's no need to power on a device for
+probe. Drivers should still perform this by themselves if there's a need
+to. In some cases powering on the device during probe is undesirable, and
+this change enables a driver to choose what fits best for it.
 
-"Shivamurthy Shastri (sshivamurthy)" <sshivamurthy@micron.com> wrote on
-Tue, 21 Jan 2020 12:23:20 +0000:
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+ drivers/i2c/i2c-core-base.c | 15 ++++++++++++---
+ include/linux/i2c.h         |  3 +++
+ 2 files changed, 15 insertions(+), 3 deletions(-)
 
-> Hi Miquel,
-> 
-> > 
-> > Hi Shiva,
-> > 
-> > This is remark common to the four patches: you miss the 'v2' prefix in
-> > the object.
-> >   
-> 
-> Sorry for this mistake.
-> I recognized this after sending out the patches.
-> 
-> > shiva.linuxworks@gmail.com wrote on Sun, 19 Jan 2020 15:54:31 +0100:
-> >   
-> > > From: Shivamurthy Shastri <sshivamurthy@micron.com>
-> > >
-> > > Add device table for M70A series Micron SPI NAND devices.
-> > >
-> > > While at it, disable the Continuous Read feature which is enabled by
-> > > default.  
-> > 
-> > Can you please give us more detail on why this is an issue?  
-> 
-> "Continuous Read" is the new feature added by the Micron for 
-> M70A series devices. If this feature is enabled, the READ command 
-> doesn't output the OOB area. The following short description
-> describes this feature.
-> 
-> Description:
-> If the Continuous Read feature is enabled, the device provides 
-> the capability to read the whole block with a single command.
-> However, the read command doesn't output the OOB area.
-> 
-> Read command behavior (if Continuous Read enabled):
-> The READ CACHE command doesn't require the starting column address.
-> The device always output the data starting from the first column of the
-> cache register, and once the end of the cache register reached, the data
-> output continues through the next page. With the continuous read mode,
-> it is possible to read out the entire block using a single READ command, and
-> once the end of the block reached, the output pins become High-Z state.
+diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+index 9f8dcd3f83850..7bf1699c9044d 100644
+--- a/drivers/i2c/i2c-core-base.c
++++ b/drivers/i2c/i2c-core-base.c
+@@ -303,6 +303,14 @@ static int i2c_smbus_host_notify_to_irq(const struct i2c_client *client)
+ 	return irq > 0 ? irq : -ENXIO;
+ }
+ 
++static bool probe_low_power(struct device *dev)
++{
++	struct i2c_driver *driver = to_i2c_driver(dev->driver);
++
++	return driver->probe_low_power &&
++		device_property_present(dev, "probe-low-power");
++}
++
+ static int i2c_device_probe(struct device *dev)
+ {
+ 	struct i2c_client	*client = i2c_verify_client(dev);
+@@ -375,7 +383,8 @@ static int i2c_device_probe(struct device *dev)
+ 	if (status < 0)
+ 		goto err_clear_wakeup_irq;
+ 
+-	status = dev_pm_domain_attach(&client->dev, true);
++	status = dev_pm_domain_attach(&client->dev,
++				      !probe_low_power(&client->dev));
+ 	if (status)
+ 		goto err_clear_wakeup_irq;
+ 
+@@ -397,7 +406,7 @@ static int i2c_device_probe(struct device *dev)
+ 	return 0;
+ 
+ err_detach_pm_domain:
+-	dev_pm_domain_detach(&client->dev, true);
++	dev_pm_domain_detach(&client->dev, !probe_low_power(&client->dev));
+ err_clear_wakeup_irq:
+ 	dev_pm_clear_wake_irq(&client->dev);
+ 	device_init_wakeup(&client->dev, false);
+@@ -419,7 +428,7 @@ static int i2c_device_remove(struct device *dev)
+ 		status = driver->remove(client);
+ 	}
+ 
+-	dev_pm_domain_detach(&client->dev, true);
++	dev_pm_domain_detach(&client->dev, !probe_low_power(&client->dev));
+ 
+ 	dev_pm_clear_wake_irq(&client->dev);
+ 	device_init_wakeup(&client->dev, false);
+diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+index 582ef05ec07ed..6d0d6af393c56 100644
+--- a/include/linux/i2c.h
++++ b/include/linux/i2c.h
+@@ -229,6 +229,8 @@ enum i2c_alert_protocol {
+  * @address_list: The I2C addresses to probe (for detect)
+  * @clients: List of detected clients we created (for i2c-core use only)
+  * @disable_i2c_core_irq_mapping: Tell the i2c-core to not do irq-mapping
++ * @probe_low_power: Let the driver manage the device's power state
++ *		     during probe and remove.
+  *
+  * The driver.owner field should be set to the module owner of this driver.
+  * The driver.name field should be set to the name of this driver.
+@@ -289,6 +291,7 @@ struct i2c_driver {
+ 	struct list_head clients;
+ 
+ 	bool disable_i2c_core_irq_mapping;
++	bool probe_low_power;
+ };
+ #define to_i2c_driver(d) container_of(d, struct i2c_driver, driver)
+ 
+-- 
+2.20.1
 
-Ok I understand better. In this case there is no need to split this
-commit, instead just reword the commit log to something like:
-
---->8---
-Add device table for M70A series Micron SPI-NAND devices.
-
-As opposed to the M60A series already supported, M70A parts have the
-"Continuous Read" feature enabled by default which does not fit the
-subsystem needs.
-
-<here explain the feature>.
-
-Hence, we disable the feature at probe time.
----8<---
-
-However, below, you disable this bit for all the parts. Is this really
-ok? Souldn't we make it more specific to this series?
-
-> 
-> > 
-> > Shall we backport it to stable?  
-> 
-> This is not a bug fix and applicable only to M70A series devices, there is no
-> need to backport.
-> (FYI, the previously enabled device was M79A series)
-> 
-> > 
-> > As a rule of thumb, when you start a sentence by "while at it" in a
-> > commit message and this is not a trivial change : split the patch,
-> > please. Unless this is really related and in this case explain how and
-> > why in the commit message.  
-> 
-> Okay, I will explain in my next version.
-> 
-> >   
-> > >
-> > > Signed-off-by: Shivamurthy Shastri <sshivamurthy@micron.com>
-> > > ---
-> > >  drivers/mtd/nand/spi/micron.c | 31  
-> > +++++++++++++++++++++++++++++++  
-> > >  1 file changed, 31 insertions(+)
-> > >
-> > > diff --git a/drivers/mtd/nand/spi/micron.c  
-> > b/drivers/mtd/nand/spi/micron.c  
-> > > index 5fd1f921ef12..45fc37c58f8a 100644
-> > > --- a/drivers/mtd/nand/spi/micron.c
-> > > +++ b/drivers/mtd/nand/spi/micron.c
-> > > @@ -131,6 +131,26 @@ static const struct spinand_info  
-> > micron_spinand_table[] = {  
-> > >  		     0,
-> > >  		     SPINAND_ECCINFO(&micron_8_ooblayout,
-> > >  				     micron_8_ecc_get_status)),
-> > > +	/* M70A 4Gb 3.3V */
-> > > +	SPINAND_INFO("MT29F4G01ABAFD", 0x34,
-> > > +		     NAND_MEMORG(1, 4096, 256, 64, 2048, 40, 1, 1, 1),
-> > > +		     NAND_ECCREQ(8, 512),
-> > > +		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-> > > +					      &write_cache_variants,
-> > > +					      &update_cache_variants),
-> > > +		     0,
-> > > +		     SPINAND_ECCINFO(&micron_8_ooblayout,
-> > > +				     micron_8_ecc_get_status)),
-> > > +	/* M70A 4Gb 1.8V */
-> > > +	SPINAND_INFO("MT29F4G01ABBFD", 0x35,
-> > > +		     NAND_MEMORG(1, 4096, 256, 64, 2048, 40, 1, 1, 1),
-> > > +		     NAND_ECCREQ(8, 512),
-> > > +		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-> > > +					      &write_cache_variants,
-> > > +					      &update_cache_variants),
-> > > +		     0,
-> > > +		     SPINAND_ECCINFO(&micron_8_ooblayout,
-> > > +				     micron_8_ecc_get_status)),
-> > >  };
-> > >
-> > >  static int micron_spinand_detect(struct spinand_device *spinand)
-> > > @@ -153,8 +173,19 @@ static int micron_spinand_detect(struct  
-> > spinand_device *spinand)  
-> > >  	return 1;
-> > >  }
-> > >
-> > > +static int micron_spinand_init(struct spinand_device *spinand)
-> > > +{
-> > > +	/*
-> > > +	 * M70A device series enable Continuous Read feature at Power-up,
-> > > +	 * which is not supported. Disable this bit to avoid any possible
-> > > +	 * failure.
-> > > +	 */
-> > > +	return spinand_upd_cfg(spinand, CFG_QUAD_ENABLE, 0);
-> > > +}
-> > > +
-> > >  static const struct spinand_manufacturer_ops  
-> > micron_spinand_manuf_ops = {  
-> > >  	.detect = micron_spinand_detect,
-> > > +	.init = micron_spinand_init,
-> > >  };
-> > >
-> > >  const struct spinand_manufacturer micron_spinand_manufacturer = {  
-> > 
-> > Thanks,
-> > Miquèl  
-> 
-> Thanks,
-> Shiva
-
-
-
-
-Thanks,
-Miquèl
