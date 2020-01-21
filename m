@@ -2,153 +2,118 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D447C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:20:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C24CBC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:25:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B86222522
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:20:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1E6E2087E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:25:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729255AbgAUSUJ (ORCPT
+        id S1729224AbgAUSZz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 13:20:09 -0500
-Received: from mga14.intel.com ([192.55.52.115]:47888 "EHLO mga14.intel.com"
+        Tue, 21 Jan 2020 13:25:55 -0500
+Received: from mga09.intel.com ([134.134.136.24]:13936 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728186AbgAUSUJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 13:20:09 -0500
+        id S1728186AbgAUSZz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 13:25:55 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 10:20:08 -0800
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 10:25:54 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,346,1574150400"; 
-   d="scan'208";a="427139898"
-Received: from labuser-ice-lake-client-platform.jf.intel.com ([10.54.55.45])
-  by fmsmga006.fm.intel.com with ESMTP; 21 Jan 2020 10:20:08 -0800
-From:   kan.liang@linux.intel.com
-To:     peterz@infradead.org, acme@redhat.com, mingo@kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     ak@linux.intel.com, eranian@google.com,
-        Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V3] perf/x86/intel: Avoid unnecessary PEBS_ENABLE MSR access in PMI
-Date:   Tue, 21 Jan 2020 10:13:38 -0800
-Message-Id: <20200121181338.3234-1-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
+   d="scan'208";a="228945624"
+Received: from ray.jf.intel.com (HELO [10.24.8.199]) ([10.24.8.199])
+  by orsmga006.jf.intel.com with ESMTP; 21 Jan 2020 10:25:54 -0800
+Subject: Re: [FYI PATCH 0/7] Mitigation for CVE-2018-12207
+To:     Jan Kiszka <jan.kiszka@siemens.com>,
+        Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     "Gupta, Pawan Kumar" <pawan.kumar.gupta@intel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+References: <1573593697-25061-1-git-send-email-pbonzini@redhat.com>
+ <23353382-53ea-8b20-7e30-763ef6df374c@siemens.com>
+ <ea5a084b-e047-6677-b8fe-d7bb6f8c0ef8@redhat.com>
+ <dffb19ab-daa2-a513-531e-c43279d8a4bf@intel.com>
+ <e86c01a8-8265-5e42-2fae-2c42c7e3d961@siemens.com>
+ <60b2a488-74b8-897c-4b25-e228d3fe7d55@oth-regensburg.de>
+ <9f8b95d1-7b5f-d16d-2e5a-52f4b9cd0922@siemens.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <ded3bd8d-3639-0d35-8df3-b63690bdd3b5@intel.com>
+Date:   Tue, 21 Jan 2020 10:25:54 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <9f8b95d1-7b5f-d16d-2e5a-52f4b9cd0922@siemens.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+On 1/21/20 10:08 AM, Jan Kiszka wrote:
+>>> Would be interesting to see this. Ralf and tried something quickly, but
+>>> there seems to be a detail missing or wrong.
+>>
+>> Yep, we still can't reproduce the issue on an affected CPU, and don't
+>> know what we miss.
+> 
+> I just realized that this thread stranded. Ralf told me that he got no
+> access to that reproducer which would be very valuable for us right now
+> to validate a static mitigation method in Jailhouse. Any chance to get
+> the access?
 
-The perf PMI handler, intel_pmu_handle_irq(), currently does
-unnecessary MSR accesses for PEBS_ENABLE MSR in
-__intel_pmu_enable/disable_all() when PEBS is enabled.
+I can't share mine.  Although, if anyone else can share theirs, I can
+take a look and make sure that it covers the same cases that mine did.
 
-When entering the handler, global ctrl is explicitly disabled. All
-counters do not count anymore. It doesn't matter if PEBS is enabled
-or not in a PMI handler.
-Furthermore, for most cases, the cpuc->pebs_enabled is not changed in
-PMI. The PEBS status doesn't change. The PEBS_ENABLE MSR doesn't need to
-be changed either when exiting the handler.
-
-PMI throttle may change the PEBS status during PMI handler. The
-x86_pmu_stop() ends up in intel_pmu_pebs_disable() which can update
-cpuc->pebs_enabled. But the MSR_IA32_PEBS_ENABLE is not updated
-at the same time. Because the cpuc->enabled has been forced to 0.
-The patch explicitly update the MSR_IA32_PEBS_ENABLE for this case.
-
-Use ftrace to measure the duration of intel_pmu_handle_irq() on BDX.
-   #perf record -e cycles:P -- ./tchain_edit
-
-The average duration of intel_pmu_handle_irq()
-Without the patch       1.144 us
-With the patch          1.025 us
-
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
-
-Changes since V2
-- Explicitly update the MSR_IA32_PEBS_ENABLE if pebs_enabled is changed.
-
- arch/x86/events/intel/core.c | 25 ++++++++++++++++++++++---
- 1 file changed, 22 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index bc6468329c52..3141879a9eec 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -1963,6 +1963,14 @@ static __initconst const u64 knl_hw_cache_extra_regs
-  * intel_bts events don't coexist with intel PMU's BTS events because of
-  * x86_add_exclusive(x86_lbr_exclusive_lbr); there's no need to keep them
-  * disabled around intel PMU's event batching etc, only inside the PMI handler.
-+ *
-+ * Avoid PEBS_ENABLE MSR access in PMIs.
-+ * The GLOBAL_CTRL has been disabled. All the counters do not count anymore.
-+ * It doesn't matter if the PEBS is enabled or not.
-+ * Usually, the PEBS status are not changed in PMIs. It's unnecessary to
-+ * access PEBS_ENABLE MSR in disable_all()/enable_all().
-+ * However, there are some cases which may change PEBS status, e.g. PMI
-+ * throttle. The PEBS_ENABLE should be updated where the status changes.
-  */
- static void __intel_pmu_disable_all(void)
- {
-@@ -1972,13 +1980,12 @@ static void __intel_pmu_disable_all(void)
- 
- 	if (test_bit(INTEL_PMC_IDX_FIXED_BTS, cpuc->active_mask))
- 		intel_pmu_disable_bts();
--
--	intel_pmu_pebs_disable_all();
- }
- 
- static void intel_pmu_disable_all(void)
- {
- 	__intel_pmu_disable_all();
-+	intel_pmu_pebs_disable_all();
- 	intel_pmu_lbr_disable_all();
- }
- 
-@@ -1986,7 +1993,6 @@ static void __intel_pmu_enable_all(int added, bool pmi)
- {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 
--	intel_pmu_pebs_enable_all();
- 	intel_pmu_lbr_enable_all(pmi);
- 	wrmsrl(MSR_CORE_PERF_GLOBAL_CTRL,
- 			x86_pmu.intel_ctrl & ~cpuc->intel_ctrl_guest_mask);
-@@ -2004,6 +2010,7 @@ static void __intel_pmu_enable_all(int added, bool pmi)
- 
- static void intel_pmu_enable_all(int added)
- {
-+	intel_pmu_pebs_enable_all();
- 	__intel_pmu_enable_all(added, false);
- }
- 
-@@ -2617,9 +2624,21 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
- 	 * PEBS overflow sets bit 62 in the global status register
- 	 */
- 	if (__test_and_clear_bit(GLOBAL_STATUS_BUFFER_OVF_BIT, (unsigned long *)&status)) {
-+		u64 pebs_enabled = cpuc->pebs_enabled;
-+
- 		handled++;
- 		x86_pmu.drain_pebs(regs);
- 		status &= x86_pmu.intel_ctrl | GLOBAL_STATUS_TRACE_TOPAPMI;
-+
-+		/*
-+		 * PMI throttle may be triggered, which stops the PEBS event.
-+		 * Although cpuc->pebs_enabled is updated accordingly, the
-+		 * MSR_IA32_PEBS_ENABLE is not updated. Because the
-+		 * cpuc->enabled has been forced to 0 in PMI.
-+		 * Update the MSR if pebs_enabled is changed.
-+		 */
-+		if (pebs_enabled != cpuc->pebs_enabled)
-+			wrmsrl(MSR_IA32_PEBS_ENABLE, cpuc->pebs_enabled);
- 	}
- 
- 	/*
--- 
-2.17.1
-
+Does anyone else have a reproducer they can share?
