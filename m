@@ -2,728 +2,203 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B0EC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28A32C33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A118624125
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:53:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3C0024655
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:53:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="ap+jDAeV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728783AbgAUIxH (ORCPT
+        id S1728900AbgAUIxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 03:53:07 -0500
-Received: from mga11.intel.com ([192.55.52.93]:49078 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725789AbgAUIxH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 03:53:07 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 00:53:05 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,345,1574150400"; 
-   d="scan'208";a="258984038"
-Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.16])
-  by fmsmga002.fm.intel.com with ESMTP; 21 Jan 2020 00:53:03 -0800
-Date:   Tue, 21 Jan 2020 03:43:51 -0500
-From:   Yan Zhao <yan.y.zhao@intel.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        Tue, 21 Jan 2020 03:53:30 -0500
+Received: from mail-dm6nam12on2044.outbound.protection.outlook.com ([40.107.243.44]:23104
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727220AbgAUIxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 03:53:30 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LQH1hJFoz2bxx90/x5ouX/dG09YT1UyDCmrQJOHjSy7OoazCuetWtEPv7cCc2BXpLWdiqHWIR9nN/B2CwcMX1junZwBgQ9uqILVH1OjjTzEV3r40LL2otu71bQZqQo1hdTGleHYre0vje7kWf34qHClqQJfUBA+hanDQtuk4+mQTlCZ2YJWZSluhu3PyjirxtMfMwdWPIlN0hiv/ncDAGV5z8mcBsYOMjFLkSywQ3cUnYCy3FzBIoLyILeALDz29XvPl8u37cQ/UsvryV+c/p0PK6y4xACAoyVxT3D2LZeEPadOr/1wURyxYsxV263Ev1wQqnqxaI8oTIRg5FObdwQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gV32NLsqq/wTt3dDDn60JYdntv6g/flZbaGSC2MnbvM=;
+ b=BWqXuQYpMD2jvbcZEUW8x4EMGvAgFUL80qqo8YGUd8mSCMU9KS/bbQ1CxgB3HZCjeVpWuMvbfl58bhbNMS/oqnzMdncVoWBVo8NwXwac6AUt/C/BP4qWu68XBtXdd/LutW1JiLxsIGPkXGnQfti10KpEyyXJ/nSx0fy9/ITW3sFvJBMzgBkF45hiahIFDKOoBzsdFZ60l+WfTgcg058FR/P1ZDM+7Ucp/P5JN+7kNjx5rfzfVdYa5eUDd3RdlottEz3/nuXFeru1Dl5wezRlqocg8GsHei7Q4cBFB+j5KKc+YGsvzjXsvMYmc1MdgBrPxNWhAiq/nSf2MhaTbKdFjw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
+ dkim=pass header.d=sifive.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gV32NLsqq/wTt3dDDn60JYdntv6g/flZbaGSC2MnbvM=;
+ b=ap+jDAeVfkGGy8dqENuOJziWfgcqTPPn58OLDDYEEVBfRLSU4clhYYqW733pu8zMVnlDhPHOzv+Wm2HybGRRM0yHR0LYIpU1631mBRzzz8ymS2WIgYxhalxanZZRPZx9DGKHDHJNla7n8ylQmSE6GOSDPsFaKgOtxrJ2dwjJnVs=
+Received: from CH2PR13MB3368.namprd13.prod.outlook.com (52.132.246.90) by
+ CH2PR13MB3701.namprd13.prod.outlook.com (20.180.14.200) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2665.15; Tue, 21 Jan 2020 08:53:26 +0000
+Received: from CH2PR13MB3368.namprd13.prod.outlook.com
+ ([fe80::eccb:16ac:e897:85d5]) by CH2PR13MB3368.namprd13.prod.outlook.com
+ ([fe80::eccb:16ac:e897:85d5%3]) with mapi id 15.20.2665.015; Tue, 21 Jan 2020
+ 08:53:26 +0000
+From:   Yash Shah <yash.shah@sifive.com>
+To:     Marc Zyngier <maz@kernel.org>,
+        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>
+CC:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "bmeng.cn@gmail.com" <bmeng.cn@gmail.com>,
+        "atish.patra@wdc.com" <atish.patra@wdc.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH v4 11/12] samples: add vfio-mdev-pci driver
-Message-ID: <20200121084351.GF1759@joy-OptiPlex-7040>
-Reply-To: Yan Zhao <yan.y.zhao@intel.com>
-References: <1578398509-26453-1-git-send-email-yi.l.liu@intel.com>
- <1578398509-26453-12-git-send-email-yi.l.liu@intel.com>
- <20200109154831.4c43564f@w520.home>
- <A2975661238FB949B60364EF0F2C25743A183EB3@SHSMSX104.ccr.corp.intel.com>
- <20200116142418.6ca1b6b2@w520.home>
- <A2975661238FB949B60364EF0F2C25743A1887A5@SHSMSX104.ccr.corp.intel.com>
- <20200120140748.33fa0b0a@w520.home>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D73EAC0@SHSMSX104.ccr.corp.intel.com>
+        Sachin Ghadi <sachin.ghadi@sifive.com>
+Subject: RE: [PATCH v4 0/6] GPIO & Hierarchy IRQ support for HiFive Unleashed
+Thread-Topic: [PATCH v4 0/6] GPIO & Hierarchy IRQ support for HiFive Unleashed
+Thread-Index: AQHVr0qXIGRQgEWZxkGyu8rRJnxI3qfzhCiAgAGNCQA=
+Date:   Tue, 21 Jan 2020 08:53:26 +0000
+Message-ID: <CH2PR13MB33684A3DB50725FC496C26F18C0D0@CH2PR13MB3368.namprd13.prod.outlook.com>
+References: <1575976274-13487-1-git-send-email-yash.shah@sifive.com>
+ <8dcb52c94eb5a585f6cf052c18571805@kernel.org>
+In-Reply-To: <8dcb52c94eb5a585f6cf052c18571805@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yash.shah@sifive.com; 
+x-originating-ip: [114.143.65.226]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 76388797-e791-4dcb-b766-08d79e4f60f7
+x-ms-traffictypediagnostic: CH2PR13MB3701:
+x-ld-processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CH2PR13MB37019CD3E2FD4C3484B2EA2E8C0D0@CH2PR13MB3701.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:608;
+x-forefront-prvs: 0289B6431E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(6029001)(366004)(39850400004)(396003)(376002)(346002)(136003)(199004)(189003)(316002)(52536014)(53546011)(7416002)(54906003)(33656002)(966005)(44832011)(5660300002)(6636002)(110136005)(81156014)(81166006)(6506007)(9686003)(4001150100001)(186003)(55016002)(26005)(86362001)(4326008)(19627235002)(8936002)(2906002)(7696005)(8676002)(76116006)(71200400001)(66946007)(66476007)(107886003)(64756008)(66556008)(478600001)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR13MB3701;H:CH2PR13MB3368.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: sifive.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: tuyo8CveiKXrpdD/Zum+WzSax1Nl38WKEeal5+603TFQ8kOnzVtmo4GtoBvBwro+sVd3xTD8zbSI3mS34I8nCPw7FC14Fr+aOACUJm9/7KWd34uJjQnvGv0q44wYlIHtD889EnsckcmTh9rgNPRNucNMBvQmin3L2jSEFMrfIh2JQmVQdL/VBsC+pmtry/gbMRFku1e/fW7UaMuRJBKaZgXk6vT61v/zI3KjueXneZn2D12xPRlFEn+B9Jl6UOG2NSkdtsZREHY7JpQKhRxZziW3YQLRQKEhWoux6Uq/faBOP0h8lMWtz/oK788d4Qd++Qcv64D8+J976HtxtHTIVO7pNbo6fKC51JE5BEJ6/JzPh6Rpm1Ai6acLbG/W1qREhtHEoAG1h7y8WGe1CQDaYObh/zewWjz1Ntvi7DU6fUNHsy/6LHgJb/z61YfXubsj/Vie4nJtx/fuZVu3wlrWywpkeUiHGhzekmb2xHeeP/v2xzyHeMVGPQY1cVJghwOcdQtxUwPjOSgahw8MJH/xXg==
+x-ms-exchange-antispam-messagedata: SnSvbcTOVNSbNiAteJ9/yI8wZFKwrhXiLoE53VsE2Oy5iKuTsKAAgPL0Ri8EjiXQYFwISQ9V7apqLb2qHXpBohbiapMTLIlin8+jiweqwmv12UUh9qa3HkdPoIL12/OEBdpmqD7geMUhuU8W/tR3rQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D73EAC0@SHSMSX104.ccr.corp.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: sifive.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 76388797-e791-4dcb-b766-08d79e4f60f7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jan 2020 08:53:26.0877
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: dZHy2hoHi326GAmIShuecuAiI92wn9xQ7FWMhspHF40A3VI8Ns/BhbJukDYHOOhKHOL1Xf8lpOEawZ/F6aE5dw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3701
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 03:43:02PM +0800, Tian, Kevin wrote:
-> > From: Alex Williamson <alex.williamson@redhat.com>
-> > Sent: Tuesday, January 21, 2020 5:08 AM
-> > 
-> > On Sat, 18 Jan 2020 14:25:11 +0000
-> > "Liu, Yi L" <yi.l.liu@intel.com> wrote:
-> > 
-> > > > From: Alex Williamson [mailto:alex.williamson@redhat.com]
-> > > > Sent: Friday, January 17, 2020 5:24 AM
-> > > > To: Liu, Yi L <yi.l.liu@intel.com>
-> > > > Subject: Re: [PATCH v4 11/12] samples: add vfio-mdev-pci driver
-> > > >
-> > > > On Thu, 16 Jan 2020 12:33:06 +0000
-> > > > "Liu, Yi L" <yi.l.liu@intel.com> wrote:
-> > > >
-> > > > > > From: Alex Williamson [mailto:alex.williamson@redhat.com]
-> > > > > > Sent: Friday, January 10, 2020 6:49 AM
-> > > > > > To: Liu, Yi L <yi.l.liu@intel.com>
-> > > > > > Subject: Re: [PATCH v4 11/12] samples: add vfio-mdev-pci driver
-> > > > > >
-> > > > > > On Tue,  7 Jan 2020 20:01:48 +0800
-> > > > > > Liu Yi L <yi.l.liu@intel.com> wrote:
-> > > > > >
-> > > > > > > This patch adds sample driver named vfio-mdev-pci. It is to wrap
-> > > > > > > a PCI device as a mediated device. For a pci device, once bound
-> > > > > > > to vfio-mdev-pci driver, user space access of this device will
-> > > > > > > go through vfio mdev framework. The usage of the device follows
-> > > > > > > mdev management method. e.g. user should create a mdev before
-> > > > > > > exposing the device to user-space.
-> > > > > > >
-> > > > > > > Benefit of this new driver would be acting as a sample driver
-> > > > > > > for recent changes from "vfio/mdev: IOMMU aware mediated
-> > device"
-> > > > > > > patchset. Also it could be a good experiment driver for future
-> > > > > > > device specific mdev migration support. This sample driver only
-> > > > > > > supports singleton iommu groups, for non-singleton iommu groups,
-> > > > > > > this sample driver doesn't work. It will fail when trying to assign
-> > > > > > > the non-singleton iommu group to VMs.
-> > > > > > >
-> > > > > > > To use this driver:
-> > > > > > > a) build and load vfio-mdev-pci.ko module
-> > > > > > >    execute "make menuconfig" and config
-> > CONFIG_SAMPLE_VFIO_MDEV_PCI
-> > > > > > >    then load it with following command:
-> > > > > > >    > sudo modprobe vfio
-> > > > > > >    > sudo modprobe vfio-pci
-> > > > > > >    > sudo insmod samples/vfio-mdev-pci/vfio-mdev-pci.ko
-> > > > > > >
-> > > > > > > b) unbind original device driver
-> > > > > > >    e.g. use following command to unbind its original driver
-> > > > > > >    > echo $dev_bdf > /sys/bus/pci/devices/$dev_bdf/driver/unbind
-> > > > > > >
-> > > > > > > c) bind vfio-mdev-pci driver to the physical device
-> > > > > > >    > echo $vend_id $dev_id > /sys/bus/pci/drivers/vfio-mdev-
-> > pci/new_id
-> > > > > > >
-> > > > > > > d) check the supported mdev instances
-> > > > > > >    > ls /sys/bus/pci/devices/$dev_bdf/mdev_supported_types/
-> > > > > > >      vfio-mdev-pci-type_name
-> > > > > > >    > ls /sys/bus/pci/devices/$dev_bdf/mdev_supported_types/\
-> > > > > > >      vfio-mdev-pci-type_name/
-> > > > > > >      available_instances  create  device_api  devices  name
-> > > > > > >
-> > > > > > > e)  create mdev on this physical device (only 1 instance)
-> > > > > > >    > echo "83b8f4f2-509f-382f-3c1e-e6bfe0fa1003" > \
-> > > > > > >      /sys/bus/pci/devices/$dev_bdf/mdev_supported_types/\
-> > > > > > >      vfio-mdev-pci-type_name/create
-> > > > > > >
-> > > > > > > f) passthru the mdev to guest
-> > > > > > >    add the following line in QEMU boot command
-> > > > > > >     -device vfio-pci,\
-> > > > > > >      sysfsdev=/sys/bus/mdev/devices/83b8f4f2-509f-382f-3c1e-
-> > e6bfe0fa1003
-> > > > > > >
-> > > > > > > g) destroy mdev
-> > > > > > >    > echo 1 > /sys/bus/mdev/devices/83b8f4f2-509f-382f-3c1e-
-> > e6bfe0fa1003/\
-> > > > > > >      remove
-> > > > > > >
-> > > > > > > Cc: Kevin Tian <kevin.tian@intel.com>
-> > > > > > > Cc: Lu Baolu <baolu.lu@linux.intel.com>
-> > > > > > > Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > > > > > > Suggested-by: Alex Williamson <alex.williamson@redhat.com>
-> > > > > > > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> > > > > > > ---
-> > > > > > >  samples/Kconfig                       |  10 +
-> > > > > > >  samples/Makefile                      |   1 +
-> > > > > > >  samples/vfio-mdev-pci/Makefile        |   4 +
-> > > > > > >  samples/vfio-mdev-pci/vfio_mdev_pci.c | 397
-> > > > > > ++++++++++++++++++++++++++++++++++
-> > > > > > >  4 files changed, 412 insertions(+)
-> > > > > > >  create mode 100644 samples/vfio-mdev-pci/Makefile
-> > > > > > >  create mode 100644 samples/vfio-mdev-pci/vfio_mdev_pci.c
-> > > > > > >
-> > > > > > > diff --git a/samples/Kconfig b/samples/Kconfig
-> > > > > > > index 9d236c3..50d207c 100644
-> > > > > > > --- a/samples/Kconfig
-> > > > > > > +++ b/samples/Kconfig
-> > > > > > > @@ -190,5 +190,15 @@ config SAMPLE_INTEL_MEI
-> > > > > > >  	help
-> > > > > > >  	  Build a sample program to work with mei device.
-> > > > > > >
-> > > > > > > +config SAMPLE_VFIO_MDEV_PCI
-> > > > > > > +	tristate "Sample driver for wrapping PCI device as a mdev"
-> > > > > > > +	select VFIO_PCI_COMMON
-> > > > > > > +	select VFIO_PCI
-> > > > > > > +	depends on VFIO_MDEV && VFIO_MDEV_DEVICE
-> > > > > > > +	help
-> > > > > > > +	  Sample driver for wrapping a PCI device as a mdev. Once
-> > bound to
-> > > > > > > +	  this driver, device passthru should through mdev path.
-> > > > > > > +
-> > > > > > > +	  If you don't know what to do here, say N.
-> > > > > > >
-> > > > > > >  endif # SAMPLES
-> > > > > > > diff --git a/samples/Makefile b/samples/Makefile
-> > > > > > > index 5ce50ef..84faced 100644
-> > > > > > > --- a/samples/Makefile
-> > > > > > > +++ b/samples/Makefile
-> > > > > > > @@ -21,5 +21,6 @@ obj-$(CONFIG_SAMPLE_FTRACE_DIRECT)
-> > 	+= ftrace/
-> > > > > > >  obj-$(CONFIG_SAMPLE_TRACE_ARRAY)	+= ftrace/
-> > > > > > >  obj-$(CONFIG_VIDEO_PCI_SKELETON)	+= v4l/
-> > > > > > >  obj-y					+= vfio-mdev/
-> > > > > > > +obj-y					+= vfio-mdev-pci/
-> > > > > >
-> > > > > > I think we could just lump this into vfio-mdev rather than making
-> > > > > > another directory.
-> > > > >
-> > > > > sure. will move it. :-)
-> > > > >
-> > > > > >
-> > > > > > >  subdir-$(CONFIG_SAMPLE_VFS)		+= vfs
-> > > > > > >  obj-$(CONFIG_SAMPLE_INTEL_MEI)		+= mei/
-> > > > > > > diff --git a/samples/vfio-mdev-pci/Makefile b/samples/vfio-mdev-
-> > pci/Makefile
-> > > > > > > new file mode 100644
-> > > > > > > index 0000000..41b2139
-> > > > > > > --- /dev/null
-> > > > > > > +++ b/samples/vfio-mdev-pci/Makefile
-> > > > > > > @@ -0,0 +1,4 @@
-> > > > > > > +# SPDX-License-Identifier: GPL-2.0-only
-> > > > > > > +vfio-mdev-pci-y := vfio_mdev_pci.o
-> > > > > > > +
-> > > > > > > +obj-$(CONFIG_SAMPLE_VFIO_MDEV_PCI) += vfio-mdev-pci.o
-> > > > > > > diff --git a/samples/vfio-mdev-pci/vfio_mdev_pci.c b/samples/vfio-
-> > mdev-
-> > > > > > pci/vfio_mdev_pci.c
-> > > > > > > new file mode 100644
-> > > > > > > index 0000000..b180356
-> > > > > > > --- /dev/null
-> > > > > > > +++ b/samples/vfio-mdev-pci/vfio_mdev_pci.c
-> > > > > > > @@ -0,0 +1,397 @@
-> > > > > > > +/*
-> > > > > > > + * Copyright © 2020 Intel Corporation.
-> > > > > > > + *     Author: Liu Yi L <yi.l.liu@intel.com>
-> > > > > > > + *
-> > > > > > > + * This program is free software; you can redistribute it and/or
-> > modify
-> > > > > > > + * it under the terms of the GNU General Public License version 2 as
-> > > > > > > + * published by the Free Software Foundation.
-> > > > > > > + *
-> > > > > > > + * Derived from original vfio_pci.c:
-> > > > > > > + * Copyright (C) 2012 Red Hat, Inc.  All rights reserved.
-> > > > > > > + *     Author: Alex Williamson <alex.williamson@redhat.com>
-> > > > > > > + *
-> > > > > > > + * Derived from original vfio:
-> > > > > > > + * Copyright 2010 Cisco Systems, Inc.  All rights reserved.
-> > > > > > > + * Author: Tom Lyon, pugs@cisco.com
-> > > > > > > + */
-> > > > > > > +
-> > > > > > > +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> > > > > > > +
-> > > > > > > +#include <linux/device.h>
-> > > > > > > +#include <linux/eventfd.h>
-> > > > > > > +#include <linux/file.h>
-> > > > > > > +#include <linux/interrupt.h>
-> > > > > > > +#include <linux/iommu.h>
-> > > > > > > +#include <linux/module.h>
-> > > > > > > +#include <linux/mutex.h>
-> > > > > > > +#include <linux/notifier.h>
-> > > > > > > +#include <linux/pci.h>
-> > > > > > > +#include <linux/pm_runtime.h>
-> > > > > > > +#include <linux/slab.h>
-> > > > > > > +#include <linux/types.h>
-> > > > > > > +#include <linux/uaccess.h>
-> > > > > > > +#include <linux/vfio.h>
-> > > > > > > +#include <linux/vgaarb.h>
-> > > > > > > +#include <linux/nospec.h>
-> > > > > > > +#include <linux/mdev.h>
-> > > > > > > +#include <linux/vfio_pci_common.h>
-> > > > > > > +
-> > > > > > > +#define DRIVER_VERSION  "0.1"
-> > > > > > > +#define DRIVER_AUTHOR   "Liu Yi L <yi.l.liu@intel.com>"
-> > > > > > > +#define DRIVER_DESC     "VFIO Mdev PCI - Sample driver for PCI
-> > device as a
-> > > > > > mdev"
-> > > > > > > +
-> > > > > > > +#define VFIO_MDEV_PCI_NAME  "vfio-mdev-pci"
-> > > > > > > +
-> > > > > > > +static char ids[1024] __initdata;
-> > > > > > > +module_param_string(ids, ids, sizeof(ids), 0);
-> > > > > > > +MODULE_PARM_DESC(ids, "Initial PCI IDs to add to the vfio-mdev-
-> > pci driver,
-> > > > > > format is
-> > \"vendor:device[:subvendor[:subdevice[:class[:class_mask]]]]\" and
-> > > > > > multiple comma separated entries can be specified");
-> > > > > > > +
-> > > > > > > +static bool nointxmask;
-> > > > > > > +module_param_named(nointxmask, nointxmask, bool, S_IRUGO |
-> > S_IWUSR);
-> > > > > > > +MODULE_PARM_DESC(nointxmask,
-> > > > > > > +		  "Disable support for PCI 2.3 style INTx masking.  If
-> > this resolves
-> > > > > > problems for specific devices, report lspci -vvvxxx to linux-
-> > pci@vger.kernel.org
-> > > > so
-> > > > > > the device can be fixed automatically via the broken_intx_masking
-> > flag.");
-> > > > > > > +
-> > > > > > > +#ifdef CONFIG_VFIO_PCI_VGA
-> > > > > > > +static bool disable_vga;
-> > > > > > > +module_param(disable_vga, bool, S_IRUGO);
-> > > > > > > +MODULE_PARM_DESC(disable_vga, "Disable VGA resource access
-> > through
-> > > > vfio-
-> > > > > > mdev-pci");
-> > > > > > > +#endif
-> > > > > > > +
-> > > > > > > +static bool disable_idle_d3;
-> > > > > > > +module_param(disable_idle_d3, bool, S_IRUGO | S_IWUSR);
-> > > > > > > +MODULE_PARM_DESC(disable_idle_d3,
-> > > > > > > +		 "Disable using the PCI D3 low power state for idle,
-> > unused devices");
-> > > > > > > +
-> > > > > > > +static struct pci_driver vfio_mdev_pci_driver;
-> > > > > > > +
-> > > > > > > +static ssize_t
-> > > > > > > +name_show(struct kobject *kobj, struct device *dev, char *buf)
-> > > > > > > +{
-> > > > > > > +	return sprintf(buf, "%s-type1\n", dev_name(dev));
-> > > > > > > +}
-> > > > > > > +
-> > > > > > > +MDEV_TYPE_ATTR_RO(name);
-> > > > > > > +
-> > > > > > > +static ssize_t
-> > > > > > > +available_instances_show(struct kobject *kobj, struct device *dev,
-> > char *buf)
-> > > > > > > +{
-> > > > > > > +	return sprintf(buf, "%d\n", 1);
-> > > > > > > +}
-> > > > > > > +
-> > > > > > > +MDEV_TYPE_ATTR_RO(available_instances);
-> > > > > > > +
-> > > > > > > +static ssize_t device_api_show(struct kobject *kobj, struct device
-> > *dev,
-> > > > > > > +		char *buf)
-> > > > > > > +{
-> > > > > > > +	return sprintf(buf, "%s\n", VFIO_DEVICE_API_PCI_STRING);
-> > > > > > > +}
-> > > > > > > +
-> > > > > > > +MDEV_TYPE_ATTR_RO(device_api);
-> > > > > > > +
-> > > > > > > +static struct attribute *vfio_mdev_pci_types_attrs[] = {
-> > > > > > > +	&mdev_type_attr_name.attr,
-> > > > > > > +	&mdev_type_attr_device_api.attr,
-> > > > > > > +	&mdev_type_attr_available_instances.attr,
-> > > > > > > +	NULL,
-> > > > > > > +};
-> > > > > > > +
-> > > > > > > +static struct attribute_group vfio_mdev_pci_type_group1 = {
-> > > > > > > +	.name  = "type1",
-> > > > > > > +	.attrs = vfio_mdev_pci_types_attrs,
-> > > > > > > +};
-> > > > > > > +
-> > > > > > > +struct attribute_group *vfio_mdev_pci_type_groups[] = {
-> > > > > > > +	&vfio_mdev_pci_type_group1,
-> > > > > > > +	NULL,
-> > > > > > > +};
-> > > > > > > +
-> > > > > > > +struct vfio_mdev_pci {
-> > > > > > > +	struct vfio_pci_device *vdev;
-> > > > > > > +	struct mdev_device *mdev;
-> > > > > > > +	unsigned long handle;
-> > > > > > > +};
-> > > > > > > +
-> > > > > > > +static int vfio_mdev_pci_create(struct kobject *kobj, struct
-> > mdev_device
-> > > > *mdev)
-> > > > > > > +{
-> > > > > > > +	struct device *pdev;
-> > > > > > > +	struct vfio_pci_device *vdev;
-> > > > > > > +	struct vfio_mdev_pci *pmdev;
-> > > > > > > +	int ret;
-> > > > > > > +
-> > > > > > > +	pdev = mdev_parent_dev(mdev);
-> > > > > > > +	vdev = dev_get_drvdata(pdev);
-> > > > > > > +	pmdev = kzalloc(sizeof(struct vfio_mdev_pci), GFP_KERNEL);
-> > > > > > > +	if (pmdev == NULL) {
-> > > > > > > +		ret = -EBUSY;
-> > > > > > > +		goto out;
-> > > > > > > +	}
-> > > > > > > +
-> > > > > > > +	pmdev->mdev = mdev;
-> > > > > > > +	pmdev->vdev = vdev;
-> > > > > > > +	mdev_set_drvdata(mdev, pmdev);
-> > > > > > > +	ret = mdev_set_iommu_device(mdev_dev(mdev), pdev);
-> > > > > > > +	if (ret) {
-> > > > > > > +		pr_info("%s, failed to config iommu isolation for
-> > mdev: %s on
-> > > > > > pf: %s\n",
-> > > > > > > +			__func__, dev_name(mdev_dev(mdev)),
-> > dev_name(pdev));
-> > > > > > > +		goto out;
-> > > > > > > +	}
-> > > > > > > +
-> > > > > > > +	pr_info("%s, creation succeeded for mdev: %s\n", __func__,
-> > > > > > > +		     dev_name(mdev_dev(mdev)));
-> > > > > > > +out:
-> > > > > > > +	return ret;
-> > > > > > > +}
-> > > > > > > +
-> > > > > > > +static int vfio_mdev_pci_remove(struct mdev_device *mdev)
-> > > > > > > +{
-> > > > > > > +	struct vfio_mdev_pci *pmdev = mdev_get_drvdata(mdev);
-> > > > > > > +
-> > > > > > > +	kfree(pmdev);
-> > > > > > > +	pr_info("%s, succeeded for mdev: %s\n", __func__,
-> > > > > > > +		     dev_name(mdev_dev(mdev)));
-> > > > > > > +
-> > > > > > > +	return 0;
-> > > > > > > +}
-> > > > > > > +
-> > > > > > > +static int vfio_mdev_pci_open(struct mdev_device *mdev)
-> > > > > > > +{
-> > > > > > > +	struct vfio_mdev_pci *pmdev = mdev_get_drvdata(mdev);
-> > > > > > > +	struct vfio_pci_device *vdev = pmdev->vdev;
-> > > > > > > +	int ret = 0;
-> > > > > > > +
-> > > > > > > +	if (!try_module_get(THIS_MODULE))
-> > > > > > > +		return -ENODEV;
-> > > > > > > +
-> > > > > > > +	vfio_pci_refresh_config(vdev, nointxmask, disable_idle_d3);
-> > > > > > > +
-> > > > > > > +	mutex_lock(&vdev->reflck->lock);
-> > > > > > > +
-> > > > > > > +	if (!vdev->refcnt) {
-> > > > > > > +		ret = vfio_pci_enable(vdev);
-> > > > > > > +		if (ret)
-> > > > > > > +			goto error;
-> > > > > > > +
-> > > > > > > +		vfio_spapr_pci_eeh_open(vdev->pdev);
-> > > > > > > +	}
-> > > > > > > +	vdev->refcnt++;
-> > > > > > > +error:
-> > > > > > > +	mutex_unlock(&vdev->reflck->lock);
-> > > > > > > +	if (!ret)
-> > > > > > > +		pr_info("Succeeded to open mdev: %s on pf: %s\n",
-> > > > > > > +		dev_name(mdev_dev(mdev)), dev_name(&pmdev-
-> > >vdev->pdev-
-> > > > > > >dev));
-> > > > > > > +	else {
-> > > > > > > +		pr_info("Failed to open mdev: %s on pf: %s\n",
-> > > > > > > +		dev_name(mdev_dev(mdev)), dev_name(&pmdev-
-> > >vdev->pdev-
-> > > > > > >dev));
-> > > > > > > +		module_put(THIS_MODULE);
-> > > > > > > +	}
-> > > > > > > +	return ret;
-> > > > > > > +}
-> > > > > > > +
-> > > > > > > +static void vfio_mdev_pci_release(struct mdev_device *mdev)
-> > > > > > > +{
-> > > > > > > +	struct vfio_mdev_pci *pmdev = mdev_get_drvdata(mdev);
-> > > > > > > +	struct vfio_pci_device *vdev = pmdev->vdev;
-> > > > > > > +
-> > > > > > > +	pr_info("Release mdev: %s on pf: %s\n",
-> > > > > > > +		dev_name(mdev_dev(mdev)), dev_name(&pmdev-
-> > >vdev->pdev-
-> > > > > > >dev));
-> > > > > > > +
-> > > > > > > +	mutex_lock(&vdev->reflck->lock);
-> > > > > > > +
-> > > > > > > +	if (!(--vdev->refcnt)) {
-> > > > > > > +		vfio_spapr_pci_eeh_release(vdev->pdev);
-> > > > > > > +		vfio_pci_disable(vdev);
-> > > > > > > +	}
-> > > > > > > +
-> > > > > > > +	mutex_unlock(&vdev->reflck->lock);
-> > > > > > > +
-> > > > > > > +	module_put(THIS_MODULE);
-> > > > > > > +}
-> > > > > >
-> > > > > > open() and release() here are almost identical between vfio_pci and
-> > > > > > vfio_mdev_pci, which suggests maybe there should be common
-> > functions to
-> > > > > > call into like we do for the below.
-> > > > >
-> > > > > yes, let me have more study and do better abstract in next version. :-)
-> > > > >
-> > > > > > > +static long vfio_mdev_pci_ioctl(struct mdev_device *mdev,
-> > unsigned int cmd,
-> > > > > > > +			     unsigned long arg)
-> > > > > > > +{
-> > > > > > > +	struct vfio_mdev_pci *pmdev = mdev_get_drvdata(mdev);
-> > > > > > > +
-> > > > > > > +	return vfio_pci_ioctl(pmdev->vdev, cmd, arg);
-> > > > > > > +}
-> > > > > > > +
-> > > > > > > +static int vfio_mdev_pci_mmap(struct mdev_device *mdev,
-> > > > > > > +				struct vm_area_struct *vma)
-> > > > > > > +{
-> > > > > > > +	struct vfio_mdev_pci *pmdev = mdev_get_drvdata(mdev);
-> > > > > > > +
-> > > > > > > +	return vfio_pci_mmap(pmdev->vdev, vma);
-> > > > > > > +}
-> > > > > > > +
-> > > > > > > +static ssize_t vfio_mdev_pci_read(struct mdev_device *mdev, char
-> > __user
-> > > > *buf,
-> > > > > > > +			size_t count, loff_t *ppos)
-> > > > > > > +{
-> > > > > > > +	struct vfio_mdev_pci *pmdev = mdev_get_drvdata(mdev);
-> > > > > > > +
-> > > > > > > +	return vfio_pci_read(pmdev->vdev, buf, count, ppos);
-> > > > > > > +}
-> > > > > > > +
-> > > > > > > +static ssize_t vfio_mdev_pci_write(struct mdev_device *mdev,
-> > > > > > > +				const char __user *buf,
-> > > > > > > +				size_t count, loff_t *ppos)
-> > > > > > > +{
-> > > > > > > +	struct vfio_mdev_pci *pmdev = mdev_get_drvdata(mdev);
-> > > > > > > +
-> > > > > > > +	return vfio_pci_write(pmdev->vdev, (char __user *)buf,
-> > count, ppos);
-> > > > > > > +}
-> > > > > > > +
-> > > > > > > +static const struct mdev_parent_ops vfio_mdev_pci_ops = {
-> > > > > > > +	.supported_type_groups	=
-> > vfio_mdev_pci_type_groups,
-> > > > > > > +	.create			= vfio_mdev_pci_create,
-> > > > > > > +	.remove			= vfio_mdev_pci_remove,
-> > > > > > > +
-> > > > > > > +	.open			= vfio_mdev_pci_open,
-> > > > > > > +	.release		= vfio_mdev_pci_release,
-> > > > > > > +
-> > > > > > > +	.read			= vfio_mdev_pci_read,
-> > > > > > > +	.write			= vfio_mdev_pci_write,
-> > > > > > > +	.mmap			= vfio_mdev_pci_mmap,
-> > > > > > > +	.ioctl			= vfio_mdev_pci_ioctl,
-> > > > > > > +};
-> > > > > > > +
-> > > > > > > +static int vfio_mdev_pci_driver_probe(struct pci_dev *pdev,
-> > > > > > > +				       const struct pci_device_id *id)
-> > > > > > > +{
-> > > > > > > +	struct vfio_pci_device *vdev;
-> > > > > > > +	int ret;
-> > > > > > > +
-> > > > > > > +	if (pdev->hdr_type != PCI_HEADER_TYPE_NORMAL)
-> > > > > > > +		return -EINVAL;
-> > > > > > > +
-> > > > > > > +	/*
-> > > > > > > +	 * Prevent binding to PFs with VFs enabled, this too easily
-> > allows
-> > > > > > > +	 * userspace instance with VFs and PFs from the same device,
-> > which
-> > > > > > > +	 * cannot work.  Disabling SR-IOV here would initiate
-> > removing the
-> > > > > > > +	 * VFs, which would unbind the driver, which is prone to
-> > blocking
-> > > > > > > +	 * if that VF is also in use by vfio-pci or vfio-mdev-pci. Just
-> > > > > > > +	 * reject these PFs and let the user sort it out.
-> > > > > > > +	 */
-> > > > > > > +	if (pci_num_vf(pdev)) {
-> > > > > > > +		pci_warn(pdev, "Cannot bind to PF with SR-IOV
-> > enabled\n");
-> > > > > > > +		return -EBUSY;
-> > > > > > > +	}
-> > > > > > > +
-> > > > > > > +	vdev = kzalloc(sizeof(*vdev), GFP_KERNEL);
-> > > > > > > +	if (!vdev)
-> > > > > > > +		return -ENOMEM;
-> > > > > > > +
-> > > > > > > +	vdev->pdev = pdev;
-> > > > > > > +	vdev->irq_type = VFIO_PCI_NUM_IRQS;
-> > > > > > > +	mutex_init(&vdev->igate);
-> > > > > > > +	spin_lock_init(&vdev->irqlock);
-> > > > > > > +	mutex_init(&vdev->ioeventfds_lock);
-> > > > > > > +	INIT_LIST_HEAD(&vdev->ioeventfds_list);
-> > > > > > > +	vdev->nointxmask = nointxmask;
-> > > > > > > +#ifdef CONFIG_VFIO_PCI_VGA
-> > > > > > > +	vdev->disable_vga = disable_vga;
-> > > > > > > +#endif
-> > > > > > > +	vdev->disable_idle_d3 = disable_idle_d3;
-> > > > > > > +
-> > > > > > > +	pci_set_drvdata(pdev, vdev);
-> > > > > > > +
-> > > > > > > +	ret = vfio_pci_reflck_attach(vdev);
-> > > > > > > +	if (ret) {
-> > > > > > > +		pci_set_drvdata(pdev, NULL);
-> > > > > > > +		kfree(vdev);
-> > > > > > > +		return ret;
-> > > > > > > +	}
-> > > > > > > +
-> > > > > > > +	if (vfio_pci_is_vga(pdev)) {
-> > > > > > > +		vga_client_register(pdev, vdev, NULL,
-> > vfio_pci_set_vga_decode);
-> > > > > > > +		vga_set_legacy_decoding(pdev,
-> > > > > > > +
-> > 	vfio_pci_set_vga_decode(vdev, false));
-> > > > > > > +	}
-> > > > > > > +
-> > > > > > > +	vfio_pci_probe_power_state(vdev);
-> > > > > > > +
-> > > > > > > +	if (!vdev->disable_idle_d3) {
-> > > > > > > +		/*
-> > > > > > > +		 * pci-core sets the device power state to an
-> > unknown value at
-> > > > > > > +		 * bootup and after being removed from a driver.
-> > The only
-> > > > > > > +		 * transition it allows from this unknown state is to
-> > D0, which
-> > > > > > > +		 * typically happens when a driver calls
-> > pci_enable_device().
-> > > > > > > +		 * We're not ready to enable the device yet, but we
-> > do want to
-> > > > > > > +		 * be able to get to D3.  Therefore first do a D0
-> > transition
-> > > > > > > +		 * before going to D3.
-> > > > > > > +		 */
-> > > > > > > +		vfio_pci_set_power_state(vdev, PCI_D0);
-> > > > > > > +		vfio_pci_set_power_state(vdev, PCI_D3hot);
-> > > > > > > +	}
-> > > > > >
-> > > > > > Ditto here and remove below, this seems like boilerplate that
-> > shouldn't
-> > > > > > be duplicated per leaf module.  Thanks,
-> > > > >
-> > > > > Sure, the code snippet above may also be abstracted to be a common
-> > API
-> > > > > provided by vfio-pci-common.ko. :-)
-> > > > >
-> > > > > I have a confusion which may need confirm with you. Do you also want
-> > the
-> > > > > below code snippet be placed in the vfio-pci-common.ko and exposed
-> > out
-> > > > > as a wrapped API? Thus it can be used by sample driver and other
-> > future
-> > > > > drivers which want to wrap PCI device as a mdev. May be I
-> > misundstood
-> > > > > your comment. :-(
-> > > >
-> > > >
-> > > > I think some sort of vfio_pci_common_{probe,remove}() would be a
-> > > > reasonable starting point where the respective module _{probe,remove}
-> > > > functions would call into these and add their module specific code
-> > > > around it.  That would at least give us a point to cleanup things that
-> > > > are only used by the common code in the common code.
-> > >
-> > > sure, I can start from here if we are still going with this direction. :-)
-> > >
-> > > > I'm still struggling how we make this user consumable should we accept
-> > > > this and progress beyond a proof of concept sample driver though.  For
-> > > > example, if a vendor actually implements an mdev wrapper driver or
-> > even
-> > > > just a device specific vfio-pci wrapper, to enable for example
-> > > > migration support, how does a user know which driver to use for each
-> > > > particular feature?  The best I can come up with so far is something
-> > > > like was done for vfio-platform reset modules.  For instance a module
-> > > > that extends features for a given device in vfio-pci might register an
-> > > > ops structure and id table with vfio-pci, along with creating a module
-> > > > alias (or aliases) for the devices it supports.  When a device is
-> > > > probed by vfio-pci it could try to match against registered id tables
-> > > > to find a device specific ops structure, if one is not found it could
-> > > > do a request_module using the PCI vendor and device IDs and some
-> > unique
-> > > > vfio-pci string, check again, and use the default ops if device
-> > > > specific ops are still not present.  That would solve the problem on
-> > > > the vfio-pci side.
-> > >
-> > > yeah, this is letting vfio-pci to invoke the ops from vendor drivers/modules.
-> > > I think this is what Yan is trying to do.
-> > 
-> > I think I'm suggesting a callback ops structure a level above what Yan
-> > previously proposed.  For example, could we have device specific
-> > vfio_device_ops where the vendor module can call out to common code
-> > rather than requiring common code to test for and optionally call out
-> > to device specific code.
-> > 
-> > > > For mdevs, I tend to assume that this vfio-mdev-pci
-> > > > meta driver is an anomaly only for the purpose of creating a generic
-> > > > test device for IOMMU backed mdevs and that "real" mdev vendor
-> > > > drivers will just be mdev enlightened host drivers, like i915 and
-> > > > nvidia are now.  Thanks,
-> > >
-> > > yes, this vfio-mdev-pci meta driver is just creating a test device.
-> > > Do we still go with the current direction, or find any other way
-> > > which may be easier for adding this meta driver?
-> > 
-> > I think if the code split allows us to create an environment where
-> > vendor drivers can re-use much of vfio-pci while creating a
-> > vfio_device_ops that supports additional features for their device and
-> > we bring that all together with a request module interface and module
-> > aliases to make that work seamlessly, then it has value.  A concern I
-> > have in only doing this split in order to create the vfio-mdev-pci
-> > module is that it leaves open the question and groundwork for forking
-> > vfio-pci into multiple vendor specific modules that would become a mess
-> > for user's to mange.
-> > 
-> > > Compared with the "real" mdev vendor drivers, it is like a
-> > > "vfio-pci + dummy mdev ops" driver. dummy mdev ops means
-> > > no vendor specific handling and passthru to vfio-pci codes directly.
-> > >
-> > > I think this meta driver is even lighter than the "real" mdev vendor
-> > > drivers. right? Is it possible to let this driver follow the way of
-> > > registering ops structure and id table with vfio-pci? The obstacle
-> > > I can see is the meta driver is a generic driver, which means it has
-> > > no id table... For the "real" mdev vendor drivers, they naturally have
-> > > such info. If vfio-mdev-pci can also get the id info without binding
-> > > to a device, it may be possible. thoughts? :-)
-> > 
-> > IDs could be provided via a module option or potentially with
-> > build-time options.  That might allow us to test all aspects of the
-> > above proposal, ie. allowing sub-modules to provide vfio_device_ops for
-> > specific devices, allowing those vendor vfio_device_ops to re-use much
-> > of the existing vfio-pci code in that implementation, and a mechanism
-> > for generically testing IOMMU backed mdevs.  That's starting to sound a
-> > lot more worthwhile than moving a bunch of code around only to
-> > implement a sample driver for the latter.  Thoughts?  Thanks,
-> > 
-> 
-> sounds a good idea. If feasible suppose Yan's mediate_ops series
-> can be also largely avoided. The vendor driver can directly register its
-> own vfio_device_ops and selectively introduces proprietary logic 
-> (e.g. for tracking dirty pages) on top of the generic vfio_pci code.
+> -----Original Message-----
+> From: Marc Zyngier <maz@kernel.org>
+> Sent: 20 January 2020 14:40
+> To: Yash Shah <yash.shah@sifive.com>
+> Cc: linus.walleij@linaro.org; bgolaszewski@baylibre.com;
+> robh+dt@kernel.org; mark.rutland@arm.com; palmer@dabbelt.com; Paul
+> Walmsley ( Sifive) <paul.walmsley@sifive.com>; aou@eecs.berkeley.edu;
+> tglx@linutronix.de; jason@lakedaemon.net; bmeng.cn@gmail.com;
+> atish.patra@wdc.com; Sagar Kadam <sagar.kadam@sifive.com>; linux-
+> gpio@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> riscv@lists.infradead.org; linux-kernel@vger.kernel.org; Sachin Ghadi
+> <sachin.ghadi@sifive.com>
+> Subject: Re: [PATCH v4 0/6] GPIO & Hierarchy IRQ support for HiFive
+> Unleashed
+>=20
+> On 2019-12-10 12:11, Yash Shah wrote:
+> > This patch series adds GPIO drivers, DT documentation and DT nodes for
+> > HiFive Unleashed board. The gpio patches are mostly based on Wesley's
+> > patch.
+> > The patchset also adds hierarchy irq domain support as it is required
+> > by this gpio driver. It also includes the irqdomain patch to introduce
+> > irq_domain_translate_onecell() and irq-nvic driver patch to use this
+> > newly introduced function.
+> >
+> > This patchset is based on Linux 5.4-rc6 and tested on HiFive Unleashed
+> > board
+> >
+> > Changes:
+> > v4 vs v3:
+> > - Rename the DT yaml document to more standard naming
+> > (sifive,gpio.yaml)
+> > - Drop "clock-names" property from yaml document
+> > - Add "minItems" to "interrupts" node in yaml
+> >
+> > v3 vs v2:
+> > - Include patch for irq-nvic driver to use
+> > irq_domain_translate_onecell
+> > - Remove unnecessary inclusion of header files
+> > - Use a single prefix for all symbols in this driver
+> > - Rename the "enabled" field of struct sifive_gpio to "irq_state"
+> > - Remove unused variables and locking from probe()
+> > - Other minor changes
+> >
+> > v2 vs v1:
+> > - Add patch to introduce irq_domain_translate_onecell() and use it in
+> >   the sifive PLIC driver
+> > - Drop the usage of own locks, instead use internal bgpio_locks
+> > - Consistently use regmap for register access throughout the gpio code
+> > - Convert the GPIO DT documentation into a json schema
+> > - Other minor changes based upon feedback received on v1
+> >
+> > v1 vs RFC:
+> > Incorporated below changes as suggested by Linus Walleij on RFC
+> > version of this patchset[0]
+> > - Dropped PWM patches as they are already merged.
+> > - Include "GPIO_GENERIC" and "REGMAP_MMIO" in Kconfig select option
+> > - Remove unwanted inclusion of header files
+> > - Use regmap MMIO instead of customised sifive_assign_bit()
+> > - Use GPIOLIB_GENERIC and bgpio_init() to set up the accessors
+> > - Use hierarchical irqdomain
+> >
+> > [0]
+> > https://lore.kernel.org/linux-
+> riscv/20181010123519.RVexDppaPFpIWl7QU_h
+> > pP8tc5qqWPJgeuLYn0FaGbeQ@z/
+> >
+> > Yash Shah (6):
+> >   genirq: introduce irq_domain_translate_onecell
+> >   irqchip: nvic: Use irq_domain_translate_onecell instead of custom
+> > func
+> >   irqchip: sifive: Support hierarchy irq domain
+> >   gpio: sifive: Add DT documentation for SiFive GPIO
+> >   gpio: sifive: Add GPIO driver for SiFive SoCs
+> >   riscv: dts: Add DT support for SiFive FU540 GPIO driver
+>=20
+> I've queued the first 5 patches. The last one should go via the correspon=
+ding
+> platform tree.
 
-hi Alex
-as our previously discussed, I'm preparing to implement my v2 as this
-way:
+Thanks.
+@Paul, Are you going to merge the last patch (DT support for GPIO) or you w=
+ant me to rebase and send it separately?
 
-1. on vfio-pci binding to a device, it will modprobe modules of alias
-"vfio-pci-(vendorid)-(deviceid)", as a way to notify vendor drivers of
-registering their vendor ops. (I renamed mediate_ops to vendor_ops in
-v2)
-2. in a module aliasing to "vfio-pci-(vendor_id)-(devivce_id)", in its
-module_init, it will register a vendor ops to vfio-pci.
-If there are two modules of the same alias and both registering vendor
-ops at the same time, they are chained according to the prio in
-its vendor ops.
-3. vfio-pci would ask for region_infos for all vendor ops of a vdev in
-vfio_pci_open, and init regions for vendor drivers. Current code in
-vfio_pci_igd.c, vfio_pci_nvlink2.c, vfio_pci_nvlink2.c would all be
-wrapped into separate modules. so current vfio_pci_register_dev_region()
-would be removed accordingly. vfio_pci_rw would now be direct to 
-vendor_ops->region[i].rw. higher priority module's ops wins.
-For example, module vfio_pci_igd may register to regions of index 10,
-11, 12 for its opregion, and two cfg regions. still, vendor driver can
-provide a module named i915_migration to register for regions of index 0
-and 13 for BAR0 and migration.
+- Yash
 
-Thanks
-Yan
-
-
+>=20
+> Thanks,
+>=20
+>          M.
+> --
+> Jazz is not dead. It just smells funny...
