@@ -2,75 +2,80 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C4BC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A91C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF6C924653
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:32:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06B9A24653
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:32:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UawKJfnu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="td1MpXYY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729347AbgAUOcE (ORCPT
+        id S1729378AbgAUOcI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 09:32:04 -0500
-Received: from mail-wm1-f54.google.com ([209.85.128.54]:55357 "EHLO
-        mail-wm1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728992AbgAUOcD (ORCPT
+        Tue, 21 Jan 2020 09:32:08 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34588 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728779AbgAUOcH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 09:32:03 -0500
-Received: by mail-wm1-f54.google.com with SMTP id q9so3165272wmj.5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 06:32:02 -0800 (PST)
+        Tue, 21 Jan 2020 09:32:07 -0500
+Received: by mail-wr1-f67.google.com with SMTP id t2so3483162wrr.1
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 06:32:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id;
-        bh=qLpfOk1ZTqYL3sl9pfEhz5Xx/erysYZDRTRJ2cdP8Hs=;
-        b=UawKJfnuMSQgmUuHc3aPKzKnMhPeh32MiDDtA1GqSTiPHgrZqlxPPnezQNpJqfH2kO
-         qq0AFTkqn9nh5EgVIQ/LuhMo40HGyycLx04fxID+ibRHqomNZkKdRnOktrcwz9bmF1rt
-         FM45IuWtshnWJ9wa6goei9ZjsqKlc4iub0sJC8udVzyN+NsnF+SbWBTqG3GbqUOFVxce
-         clAq4A5RmVY2WV88UOsowKBgwBkqPAZFFxBeq9QedPjPxFabHXnJW8JoUZaxO2nDzr5n
-         VMDZN2NdsGICnukAG7E4EwJSTYfSc41iS3cVZky05MvBM5h6HusiFaKLgQLHqbUiwtJa
-         oYMw==
+        h=from:to:subject:date:message-id:in-reply-to:references;
+        bh=BKzjh1mWJS7uNNwFhcl5hs0Za+t5SKpiQwE1FgRQkiQ=;
+        b=td1MpXYYP+u4O83G5ICBFAQlKeMrKixBYsdWGrUVak43GHHbVTyjeSHz9zWTSwJykf
+         cNz+R4PIR0ohFjDXpF1lVBGAmsAfJV6/F0AyQjAW5Vk2P2IIrH2e23X6uicKNa2HkhOP
+         OBed30ErQP0aLGzzsG8YCy490oOcKOueQVgHgzgF+nQIyGfPQGJJyWqbB0jOZCpIDj5u
+         sOlkWVTpkBNAwUx1k+L1G9anzGKz0lIWwRGz7ZZEqiSHQmXiJsXhX/p5jcWrGCEIUzph
+         fk+ugL3syIKf4HUcwhRN1deguvagRbm/AWew9L1HthgO5vKtzp+JwG4voSg6LVsdWXSZ
+         3U3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id;
-        bh=qLpfOk1ZTqYL3sl9pfEhz5Xx/erysYZDRTRJ2cdP8Hs=;
-        b=dIX49qdkPzPkugc0/9DwXg5yaRkR/YfZCk0Xr+fZCpWBp/cx1OrNJ+2U30W0ApS8Tx
-         GSCJJdYJWq0niGP1PmBYnlxdpBgNJ3fdxdouxZghXDTCpbEEP1ivtcDVOfnmCoxypPS0
-         m2Imw+Ych8ADUzYtB8/eFtje97fvIjKk0v7iR0eWLHs8un1zf9GKfIZLQmMIOYMF7+jq
-         a8Em4jgj1WE4oGLv5//n+SX0c3nO6JHWtHgFDxWysyDzpSo9btKZPo1kOUyTMvRciJE0
-         7h/PYI6RHBQwrZtHe5c9SR9I7zLKto9Hzyx4waLu1L7ws/8FbkEkcY1+XVGiipavoMc/
-         X5Xg==
-X-Gm-Message-State: APjAAAWAbFqkvRuehV5oYv5u5pAcj+pXoYPYeijQUJNd967qkKlMvq8m
-        2/0TsWMFOQ1Ztfr9xTz9Ays=
-X-Google-Smtp-Source: APXvYqykAUt3BlKLSt2mxqLiNoLsqzzasnLDS1vsGFedEPdhJTbCnJ2DtQ7kzs7LImsKq1sqx+9jyA==
-X-Received: by 2002:a05:600c:2c53:: with SMTP id r19mr4680841wmg.39.1579617121769;
-        Tue, 21 Jan 2020 06:32:01 -0800 (PST)
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references;
+        bh=BKzjh1mWJS7uNNwFhcl5hs0Za+t5SKpiQwE1FgRQkiQ=;
+        b=atHYLs22CzNmarWvEhiIhdv2V9jLCREcGC0qg+KfDnO/jeFTuDmmO9VGKa5uEFerf2
+         EG+a5G4MGc9cp34DXVMWSWKGlUguMQRitfMkTVe1bZz2FL/OW+02kEkyepMVSvscHmyp
+         XnP+bSOxO2BNiI8QGrRT6ilBz/LazF7s1RuIkbvFwtRQHxUfBXuIA03fhOCZAAY6s07a
+         4dzpxnIGoliHFhdIQDrRrnzx6FgCfdBx9QllWAjQenzcCpdJIuiUyh1XZnEb8X/Llr7s
+         hz0dmqSTblEG2xGFRp2Pcv6ePaXrzS88rD5QCEelTy4obhsUmEewCO/wvJmFC0/JGZhJ
+         qGGw==
+X-Gm-Message-State: APjAAAVWOaYanME4SAGNequLQogmwjw7MjnxxBpteVxfTxKfPyFHdxZr
+        T3YY8eG70/WabPKfoTgu0rE=
+X-Google-Smtp-Source: APXvYqy/C0mpc16YxEaeK4DdXQgEaQwtt/G6BnYWePDQWWWTONNTqzUGxWBWd/Q9Xcy4KDvhpXEg6g==
+X-Received: by 2002:a5d:4ed0:: with SMTP id s16mr5658252wrv.144.1579617125395;
+        Tue, 21 Jan 2020 06:32:05 -0800 (PST)
 Received: from localhost.localdomain ([197.254.95.38])
-        by smtp.googlemail.com with ESMTPSA id g2sm52781284wrw.76.2020.01.21.06.31.58
+        by smtp.googlemail.com with ESMTPSA id g2sm52781284wrw.76.2020.01.21.06.32.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 06:32:01 -0800 (PST)
+        Tue, 21 Jan 2020 06:32:04 -0800 (PST)
 From:   Wambui Karuga <wambui.karugax@gmail.com>
 To:     jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
         rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
         intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 0/6] conversion to struct drm_device logging macros. 
-Date:   Tue, 21 Jan 2020 17:31:49 +0300
-Message-Id: <20200121143155.20856-1-wambui.karugax@gmail.com>
+Subject: [PATCH 1/6] drm/i915/dsi: conversion to struct drm_device log macros
+Date:   Tue, 21 Jan 2020 17:31:50 +0300
+Message-Id: <20200121143155.20856-2-wambui.karugax@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200121143155.20856-1-wambui.karugax@gmail.com>
+References: <20200121143155.20856-1-wambui.karugax@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series continues the ongoing conversion to the new struct
-drm_device based logging macros for debug in i915. This series was done
-using the coccinelle script:
+This converts the more straightforward instances of the printk based
+logging macros with the struct drm_device based logging macros.
+This transformation was achieved using coccinelle and the following
+script for matching an existing struct drm_i915_private device:
 @rule1@
 identifier fn, T;
 @@
@@ -149,23 +154,292 @@ struct drm_i915_private *T = ...;
 ...+>
 }
 
-Wambui Karuga (6):
-  drm/i915/dsi: conversion to struct drm_device log macros
-  drm/i915/ddi: convert to struct drm_device log macros.
-  drm/i915/power: convert to struct drm_device macros in
-    display/intel_display_power.c
-  drm/i915/dp: conversion to struct drm_device logging macros.
-  drm/i915/opregion: conversion to struct drm_device logging macros.
-  drm/i915/hdcp: conversion to struct drm_device based logging macros
+New checkpatch warnings were fixed manually.
 
- drivers/gpu/drm/i915/display/icl_dsi.c        |  82 ++--
- drivers/gpu/drm/i915/display/intel_ddi.c      |  98 +++--
- .../drm/i915/display/intel_display_power.c    | 177 +++++----
- drivers/gpu/drm/i915/display/intel_dp.c       | 349 ++++++++++--------
- drivers/gpu/drm/i915/display/intel_hdcp.c     | 138 ++++---
- drivers/gpu/drm/i915/display/intel_opregion.c | 134 ++++---
- 6 files changed, 572 insertions(+), 406 deletions(-)
+Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
+---
+ drivers/gpu/drm/i915/display/icl_dsi.c | 82 ++++++++++++++++----------
+ 1 file changed, 51 insertions(+), 31 deletions(-)
 
+diff --git a/drivers/gpu/drm/i915/display/icl_dsi.c b/drivers/gpu/drm/i915/display/icl_dsi.c
+index a7457303c62e..1186a5df057e 100644
+--- a/drivers/gpu/drm/i915/display/icl_dsi.c
++++ b/drivers/gpu/drm/i915/display/icl_dsi.c
+@@ -55,7 +55,7 @@ static void wait_for_header_credits(struct drm_i915_private *dev_priv,
+ {
+ 	if (wait_for_us(header_credits_available(dev_priv, dsi_trans) >=
+ 			MAX_HEADER_CREDIT, 100))
+-		DRM_ERROR("DSI header credits not released\n");
++		drm_err(&dev_priv->drm, "DSI header credits not released\n");
+ }
+ 
+ static void wait_for_payload_credits(struct drm_i915_private *dev_priv,
+@@ -63,7 +63,7 @@ static void wait_for_payload_credits(struct drm_i915_private *dev_priv,
+ {
+ 	if (wait_for_us(payload_credits_available(dev_priv, dsi_trans) >=
+ 			MAX_PLOAD_CREDIT, 100))
+-		DRM_ERROR("DSI payload credits not released\n");
++		drm_err(&dev_priv->drm, "DSI payload credits not released\n");
+ }
+ 
+ static enum transcoder dsi_port_to_transcoder(enum port port)
+@@ -97,7 +97,8 @@ static void wait_for_cmds_dispatched_to_panel(struct intel_encoder *encoder)
+ 		dsi->channel = 0;
+ 		ret = mipi_dsi_dcs_nop(dsi);
+ 		if (ret < 0)
+-			DRM_ERROR("error sending DCS NOP command\n");
++			drm_err(&dev_priv->drm,
++				"error sending DCS NOP command\n");
+ 	}
+ 
+ 	/* wait for header credits to be released */
+@@ -111,7 +112,7 @@ static void wait_for_cmds_dispatched_to_panel(struct intel_encoder *encoder)
+ 		dsi_trans = dsi_port_to_transcoder(port);
+ 		if (wait_for_us(!(I915_READ(DSI_LP_MSG(dsi_trans)) &
+ 				  LPTX_IN_PROGRESS), 20))
+-			DRM_ERROR("LPTX bit not cleared\n");
++			drm_err(&dev_priv->drm, "LPTX bit not cleared\n");
+ 	}
+ }
+ 
+@@ -129,7 +130,8 @@ static bool add_payld_to_queue(struct intel_dsi_host *host, const u8 *data,
+ 
+ 		free_credits = payload_credits_available(dev_priv, dsi_trans);
+ 		if (free_credits < 1) {
+-			DRM_ERROR("Payload credit not available\n");
++			drm_err(&dev_priv->drm,
++				"Payload credit not available\n");
+ 			return false;
+ 		}
+ 
+@@ -154,7 +156,8 @@ static int dsi_send_pkt_hdr(struct intel_dsi_host *host,
+ 	/* check if header credit available */
+ 	free_credits = header_credits_available(dev_priv, dsi_trans);
+ 	if (free_credits < 1) {
+-		DRM_ERROR("send pkt header failed, not enough hdr credits\n");
++		drm_err(&dev_priv->drm,
++			"send pkt header failed, not enough hdr credits\n");
+ 		return -1;
+ 	}
+ 
+@@ -286,7 +289,8 @@ static void configure_dual_link_mode(struct intel_encoder *encoder,
+ 		dl_buffer_depth = hactive / 2 + intel_dsi->pixel_overlap;
+ 
+ 		if (dl_buffer_depth > MAX_DL_BUFFER_TARGET_DEPTH)
+-			DRM_ERROR("DL buffer depth exceed max value\n");
++			drm_err(&dev_priv->drm,
++				"DL buffer depth exceed max value\n");
+ 
+ 		dss_ctl1 &= ~LEFT_DL_BUF_TARGET_DEPTH_MASK;
+ 		dss_ctl1 |= LEFT_DL_BUF_TARGET_DEPTH(dl_buffer_depth);
+@@ -500,7 +504,8 @@ static void gen11_dsi_enable_ddi_buffer(struct intel_encoder *encoder)
+ 		if (wait_for_us(!(I915_READ(DDI_BUF_CTL(port)) &
+ 				  DDI_BUF_IS_IDLE),
+ 				  500))
+-			DRM_ERROR("DDI port:%c buffer idle\n", port_name(port));
++			drm_err(&dev_priv->drm, "DDI port:%c buffer idle\n",
++				port_name(port));
+ 	}
+ }
+ 
+@@ -780,7 +785,7 @@ gen11_dsi_configure_transcoder(struct intel_encoder *encoder,
+ 		dsi_trans = dsi_port_to_transcoder(port);
+ 		if (wait_for_us((I915_READ(DSI_TRANS_FUNC_CONF(dsi_trans)) &
+ 				LINK_READY), 2500))
+-			DRM_ERROR("DSI link not ready\n");
++			drm_err(&dev_priv->drm, "DSI link not ready\n");
+ 	}
+ }
+ 
+@@ -836,11 +841,12 @@ gen11_dsi_set_transcoder_timings(struct intel_encoder *encoder,
+ 
+ 	/* minimum hactive as per bspec: 256 pixels */
+ 	if (adjusted_mode->crtc_hdisplay < 256)
+-		DRM_ERROR("hactive is less then 256 pixels\n");
++		drm_err(&dev_priv->drm, "hactive is less then 256 pixels\n");
+ 
+ 	/* if RGB666 format, then hactive must be multiple of 4 pixels */
+ 	if (intel_dsi->pixel_format == MIPI_DSI_FMT_RGB666 && hactive % 4 != 0)
+-		DRM_ERROR("hactive pixels are not multiple of 4\n");
++		drm_err(&dev_priv->drm,
++			"hactive pixels are not multiple of 4\n");
+ 
+ 	/* program TRANS_HTOTAL register */
+ 	for_each_dsi_port(port, intel_dsi->ports) {
+@@ -855,11 +861,12 @@ gen11_dsi_set_transcoder_timings(struct intel_encoder *encoder,
+ 		    VIDEO_MODE_NON_BURST_WITH_SYNC_PULSE) {
+ 			/* BSPEC: hsync size should be atleast 16 pixels */
+ 			if (hsync_size < 16)
+-				DRM_ERROR("hsync size < 16 pixels\n");
++				drm_err(&dev_priv->drm,
++					"hsync size < 16 pixels\n");
+ 		}
+ 
+ 		if (hback_porch < 16)
+-			DRM_ERROR("hback porch < 16 pixels\n");
++			drm_err(&dev_priv->drm, "hback porch < 16 pixels\n");
+ 
+ 		if (intel_dsi->dual_link) {
+ 			hsync_start /= 2;
+@@ -887,10 +894,10 @@ gen11_dsi_set_transcoder_timings(struct intel_encoder *encoder,
+ 	}
+ 
+ 	if (vsync_end < vsync_start || vsync_end > vtotal)
+-		DRM_ERROR("Invalid vsync_end value\n");
++		drm_err(&dev_priv->drm, "Invalid vsync_end value\n");
+ 
+ 	if (vsync_start < vactive)
+-		DRM_ERROR("vsync_start less than vactive\n");
++		drm_err(&dev_priv->drm, "vsync_start less than vactive\n");
+ 
+ 	/* program TRANS_VSYNC register */
+ 	for_each_dsi_port(port, intel_dsi->ports) {
+@@ -937,7 +944,8 @@ static void gen11_dsi_enable_transcoder(struct intel_encoder *encoder)
+ 		/* wait for transcoder to be enabled */
+ 		if (intel_de_wait_for_set(dev_priv, PIPECONF(dsi_trans),
+ 					  I965_PIPECONF_ACTIVE, 10))
+-			DRM_ERROR("DSI transcoder not enabled\n");
++			drm_err(&dev_priv->drm,
++				"DSI transcoder not enabled\n");
+ 	}
+ }
+ 
+@@ -1048,7 +1056,8 @@ static void gen11_dsi_powerup_panel(struct intel_encoder *encoder)
+ 		dsi = intel_dsi->dsi_hosts[port]->device;
+ 		ret = mipi_dsi_set_maximum_return_packet_size(dsi, tmp);
+ 		if (ret < 0)
+-			DRM_ERROR("error setting max return pkt size%d\n", tmp);
++			drm_err(&dev_priv->drm,
++				"error setting max return pkt size%d\n", tmp);
+ 	}
+ 
+ 	/* panel power on related mipi dsi vbt sequences */
+@@ -1120,7 +1129,8 @@ static void gen11_dsi_disable_transcoder(struct intel_encoder *encoder)
+ 		/* wait for transcoder to be disabled */
+ 		if (intel_de_wait_for_clear(dev_priv, PIPECONF(dsi_trans),
+ 					    I965_PIPECONF_ACTIVE, 50))
+-			DRM_ERROR("DSI trancoder not disabled\n");
++			drm_err(&dev_priv->drm,
++				"DSI trancoder not disabled\n");
+ 	}
+ }
+ 
+@@ -1155,7 +1165,7 @@ static void gen11_dsi_deconfigure_trancoder(struct intel_encoder *encoder)
+ 		if (wait_for_us((I915_READ(DSI_LP_MSG(dsi_trans)) &
+ 				LINK_IN_ULPS),
+ 				10))
+-			DRM_ERROR("DSI link not in ULPS\n");
++			drm_err(&dev_priv->drm, "DSI link not in ULPS\n");
+ 	}
+ 
+ 	/* disable ddi function */
+@@ -1193,8 +1203,9 @@ static void gen11_dsi_disable_port(struct intel_encoder *encoder)
+ 		if (wait_for_us((I915_READ(DDI_BUF_CTL(port)) &
+ 				 DDI_BUF_IS_IDLE),
+ 				 8))
+-			DRM_ERROR("DDI port:%c buffer not idle\n",
+-				  port_name(port));
++			drm_err(&dev_priv->drm,
++				"DDI port:%c buffer not idle\n",
++				port_name(port));
+ 	}
+ 	gen11_dsi_gate_clocks(encoder);
+ }
+@@ -1458,7 +1469,7 @@ static bool gen11_dsi_get_hw_state(struct intel_encoder *encoder,
+ 			*pipe = PIPE_D;
+ 			break;
+ 		default:
+-			DRM_ERROR("Invalid PIPE input\n");
++			drm_err(&dev_priv->drm, "Invalid PIPE input\n");
+ 			goto out;
+ 		}
+ 
+@@ -1582,7 +1593,8 @@ static void icl_dphy_param_init(struct intel_dsi *intel_dsi)
+ 	 */
+ 	prepare_cnt = DIV_ROUND_UP(ths_prepare_ns * 4, tlpx_ns);
+ 	if (prepare_cnt > ICL_PREPARE_CNT_MAX) {
+-		DRM_DEBUG_KMS("prepare_cnt out of range (%d)\n", prepare_cnt);
++		drm_dbg_kms(&dev_priv->drm, "prepare_cnt out of range (%d)\n",
++			    prepare_cnt);
+ 		prepare_cnt = ICL_PREPARE_CNT_MAX;
+ 	}
+ 
+@@ -1590,28 +1602,33 @@ static void icl_dphy_param_init(struct intel_dsi *intel_dsi)
+ 	clk_zero_cnt = DIV_ROUND_UP(mipi_config->tclk_prepare_clkzero -
+ 				    ths_prepare_ns, tlpx_ns);
+ 	if (clk_zero_cnt > ICL_CLK_ZERO_CNT_MAX) {
+-		DRM_DEBUG_KMS("clk_zero_cnt out of range (%d)\n", clk_zero_cnt);
++		drm_dbg_kms(&dev_priv->drm,
++			    "clk_zero_cnt out of range (%d)\n", clk_zero_cnt);
+ 		clk_zero_cnt = ICL_CLK_ZERO_CNT_MAX;
+ 	}
+ 
+ 	/* trail cnt in escape clocks*/
+ 	trail_cnt = DIV_ROUND_UP(tclk_trail_ns, tlpx_ns);
+ 	if (trail_cnt > ICL_TRAIL_CNT_MAX) {
+-		DRM_DEBUG_KMS("trail_cnt out of range (%d)\n", trail_cnt);
++		drm_dbg_kms(&dev_priv->drm, "trail_cnt out of range (%d)\n",
++			    trail_cnt);
+ 		trail_cnt = ICL_TRAIL_CNT_MAX;
+ 	}
+ 
+ 	/* tclk pre count in escape clocks */
+ 	tclk_pre_cnt = DIV_ROUND_UP(mipi_config->tclk_pre, tlpx_ns);
+ 	if (tclk_pre_cnt > ICL_TCLK_PRE_CNT_MAX) {
+-		DRM_DEBUG_KMS("tclk_pre_cnt out of range (%d)\n", tclk_pre_cnt);
++		drm_dbg_kms(&dev_priv->drm,
++			    "tclk_pre_cnt out of range (%d)\n", tclk_pre_cnt);
+ 		tclk_pre_cnt = ICL_TCLK_PRE_CNT_MAX;
+ 	}
+ 
+ 	/* tclk post count in escape clocks */
+ 	tclk_post_cnt = DIV_ROUND_UP(mipi_config->tclk_post, tlpx_ns);
+ 	if (tclk_post_cnt > ICL_TCLK_POST_CNT_MAX) {
+-		DRM_DEBUG_KMS("tclk_post_cnt out of range (%d)\n", tclk_post_cnt);
++		drm_dbg_kms(&dev_priv->drm,
++			    "tclk_post_cnt out of range (%d)\n",
++			    tclk_post_cnt);
+ 		tclk_post_cnt = ICL_TCLK_POST_CNT_MAX;
+ 	}
+ 
+@@ -1619,14 +1636,17 @@ static void icl_dphy_param_init(struct intel_dsi *intel_dsi)
+ 	hs_zero_cnt = DIV_ROUND_UP(mipi_config->ths_prepare_hszero -
+ 				   ths_prepare_ns, tlpx_ns);
+ 	if (hs_zero_cnt > ICL_HS_ZERO_CNT_MAX) {
+-		DRM_DEBUG_KMS("hs_zero_cnt out of range (%d)\n", hs_zero_cnt);
++		drm_dbg_kms(&dev_priv->drm, "hs_zero_cnt out of range (%d)\n",
++			    hs_zero_cnt);
+ 		hs_zero_cnt = ICL_HS_ZERO_CNT_MAX;
+ 	}
+ 
+ 	/* hs exit zero cnt in escape clocks */
+ 	exit_zero_cnt = DIV_ROUND_UP(mipi_config->ths_exit, tlpx_ns);
+ 	if (exit_zero_cnt > ICL_EXIT_ZERO_CNT_MAX) {
+-		DRM_DEBUG_KMS("exit_zero_cnt out of range (%d)\n", exit_zero_cnt);
++		drm_dbg_kms(&dev_priv->drm,
++			    "exit_zero_cnt out of range (%d)\n",
++			    exit_zero_cnt);
+ 		exit_zero_cnt = ICL_EXIT_ZERO_CNT_MAX;
+ 	}
+ 
+@@ -1737,7 +1757,7 @@ void icl_dsi_init(struct drm_i915_private *dev_priv)
+ 	mutex_unlock(&dev->mode_config.mutex);
+ 
+ 	if (!fixed_mode) {
+-		DRM_ERROR("DSI fixed mode info missing\n");
++		drm_err(&dev_priv->drm, "DSI fixed mode info missing\n");
+ 		goto err;
+ 	}
+ 
+@@ -1763,7 +1783,7 @@ void icl_dsi_init(struct drm_i915_private *dev_priv)
+ 	}
+ 
+ 	if (!intel_dsi_vbt_init(intel_dsi, MIPI_DSI_GENERIC_PANEL_ID)) {
+-		DRM_DEBUG_KMS("no device found\n");
++		drm_dbg_kms(&dev_priv->drm, "no device found\n");
+ 		goto err;
+ 	}
+ 
 -- 
 2.17.1
 
