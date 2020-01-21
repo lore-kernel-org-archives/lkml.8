@@ -2,130 +2,123 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4620C33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:05:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12345C33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:05:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B48D221734
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:05:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDF892465A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:05:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ImkOggh0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729275AbgAUTFM (ORCPT
+        id S1729251AbgAUTFZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 14:05:12 -0500
-Received: from mail-io1-f71.google.com ([209.85.166.71]:37864 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729162AbgAUTFL (ORCPT
+        Tue, 21 Jan 2020 14:05:25 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41940 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729121AbgAUTFY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 14:05:11 -0500
-Received: by mail-io1-f71.google.com with SMTP id s6so2383217iod.4
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 11:05:11 -0800 (PST)
+        Tue, 21 Jan 2020 14:05:24 -0500
+Received: by mail-pf1-f196.google.com with SMTP id w62so1957827pfw.8
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 11:05:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Pa59fYCDlAe6Tpwao7wMVi6YpE63nP24dCm06l2iicc=;
+        b=ImkOggh07bXyDGZ5/RZe49clFsRhDpDFfmsQ2CJ63cUE/5jBCzcy5pNKeRTQ8ES55B
+         mM3tBSmTjGO/z562nUCoeaJZaBO3v1e/uEoLtxVhRzIaWkx1FqFQcKBqVZXeTr1lrl5K
+         mPR+YrzSRr0zPuKGgzTgzxboWVJ+td5/fYjJE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=hh2ESy2i/NiRcbPskm2nSqHQ3QN16smrsuvBjfTZgUM=;
-        b=pOBQG0T2/+SKnit9/0CfzlpLZWWANBZnuRgBEBIqEYGc+7fXEU2BvHkq21c79+iJoO
-         hTZbm3BrI3I5w4P0QrOKXWWTzxoalDXL/Q54Aai8OMosxFjsAzRlJ2WkBWvRbQlAzcd/
-         k9yyhP3UvY0dIW81KF6U8qcvKvMtGzBpfV5LTb7evRfI+3u0MfCSNZxxnZEy5GgVidGy
-         uS6XIwr7KZnMOUjKtw4hBKGMK8Oa6Xj5crktzo9QfvLbw5s47hMRDjmcdjaKzQnA34E5
-         pwUIAyYTL9Qi9zY5uA3SH6rfY6sUn7JSSYnMa6oMt3OZNILURiuTCVJJvTKdpX7Sl3yq
-         6Ycg==
-X-Gm-Message-State: APjAAAUj9woExAQvCgGVrGItvl5i0QVmBrUrZlgeTKHEySvulsrtMGW7
-        NBU0t/eB1SVT5Qp1BmI2b1cuLexL4kQCRjygn04gLFrEiunA
-X-Google-Smtp-Source: APXvYqyZ1QuvEk+mqTzqtnA/MZi4neaIzQRg7ExQ7pNjV6hYabWrj6Ictf/X0GhvKHIRjlto/mdRrhfEOUAUluhnhGm+/UvwnEzI
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Pa59fYCDlAe6Tpwao7wMVi6YpE63nP24dCm06l2iicc=;
+        b=XRMI+61NPt7Xim8EJo1PcNj9bfe1qh/zIo/BppTtCmDw5IKrHcEpntNrKMufGLZrAI
+         wiJPzkKDIWQbq7IUMuRoT4YuLjDD10E+IGGbK1K+XcC4NSPO0CLnLXOvFT3TbrbkJuZI
+         +jvX2i8ExlUILfWWcegIVN2wSySSzzWQ5kkD4gXp8ihKkK/BtfJ4+V/65fRNuxXEfknx
+         fwuzHesRgkVJkG53TTtfvaWqpOHIKK2+xJzvZ2gyjowzvVb2a7z6GBhcZ+TEIcNdvFBF
+         +s5qJnr9c/RBr4z45ohezaFDSTzw+CvCVY5eUcZ1zpuPUlqlSeXFcpjAmQua9WwhxrQN
+         S6oA==
+X-Gm-Message-State: APjAAAVsKT5NQMdxBn9aVFwRXMgjPL/Z4SdSZSWsSENTEO1cM/jkR043
+        5s0gLrWzGKf4M1osfbex3NLrgw==
+X-Google-Smtp-Source: APXvYqxm51yEBdJrV3LGqLaPvhqBlzgHVrjIRyZodBwEGeiX8FCB2IV12uXzvx5oAHAAFK+2KrrOPQ==
+X-Received: by 2002:a63:4850:: with SMTP id x16mr7279208pgk.334.1579633524281;
+        Tue, 21 Jan 2020 11:05:24 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id 80sm44717385pfw.123.2020.01.21.11.05.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jan 2020 11:05:23 -0800 (PST)
+Date:   Tue, 21 Jan 2020 11:05:21 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Maulik Shah <mkshah@codeaurora.org>
+Cc:     swboyd@chromium.org, agross@kernel.org, david.brown@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, bjorn.andersson@linaro.org,
+        evgreen@chromium.org, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org, ulf.hansson@linaro.org
+Subject: Re: [PATCH v2 0/6] Add RSC power domain support
+Message-ID: <20200121190521.GT89495@google.com>
+References: <20190823081703.17325-1-mkshah@codeaurora.org>
 MIME-Version: 1.0
-X-Received: by 2002:a5e:a614:: with SMTP id q20mr3966732ioi.36.1579633510714;
- Tue, 21 Jan 2020 11:05:10 -0800 (PST)
-Date:   Tue, 21 Jan 2020 11:05:10 -0800
-In-Reply-To: <00000000000031a8d7059c27c540@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000048111c059cab1695@google.com>
-Subject: Re: general protection fault in free_verifier_state (3)
-From:   syzbot <syzbot+b296579ba5015704d9fa@syzkaller.appspotmail.com>
-To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
-        clang-built-linux@googlegroups.com, daniel@iogearbox.net,
-        davem@davemloft.net, hawk@kernel.org, jakub.kicinski@netronome.com,
-        john.fastabend@gmail.com, kafai@fb.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190823081703.17325-1-mkshah@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+Hi Maulik,
 
-HEAD commit:    2e3a94aa bpf: Fix memory leaks in generic update/delete ba..
-git tree:       bpf-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=15aefc6ee00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a736c99e9fe5a676
-dashboard link: https://syzkaller.appspot.com/bug?extid=b296579ba5015704d9fa
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10a4280de00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1411544ee00000
+What is the status of this series? It seems it hasn't been updated since
+you sent it in August last year. Do you plan to send a v3 in the near future
+to address the outstanding comments?
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+b296579ba5015704d9fa@syzkaller.appspotmail.com
+Thanks
 
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441339
-RDX: 0000000000000048 RSI: 00000000200017c0 RDI: 0000000000000005
-RBP: 00000000006cc018 R08: 0000000000000002 R09: 00000000004002c8
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402280
-R13: 0000000000402310 R14: 0000000000000000 R15: 0000000000000000
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 9996 Comm: syz-executor310 Not tainted 5.5.0-rc4-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:free_verifier_state+0x49/0x1d0 kernel/bpf/verifier.c:744
-Code: db 48 83 ec 20 48 89 45 b8 48 c1 e8 03 4c 01 f8 89 75 c4 48 89 45 c8 e8 05 9c f2 ff 4c 63 f3 4f 8d 2c f4 4c 89 e8 48 c1 e8 03 <42> 80 3c 38 00 0f 85 2b 01 00 00 4f 8d 34 f4 49 8b 3e 48 85 ff 48
-RSP: 0018:ffffc90002007688 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff8184dd58
-RDX: 0000000000000000 RSI: ffffffff8182644b RDI: 0000000000000000
-RBP: ffffc900020076d0 R08: ffff888098656280 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: dffffc0000000000
-FS:  000000000236b880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffff600400 CR3: 0000000098345000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- do_check_common+0x2ec7/0x9650 kernel/bpf/verifier.c:9597
- do_check_main kernel/bpf/verifier.c:9654 [inline]
- bpf_check+0x84ed/0xbb07 kernel/bpf/verifier.c:10009
- bpf_prog_load+0xeab/0x17f0 kernel/bpf/syscall.c:2095
- __do_sys_bpf+0x1521/0x41e0 kernel/bpf/syscall.c:3387
- __se_sys_bpf kernel/bpf/syscall.c:3346 [inline]
- __x64_sys_bpf+0x73/0xb0 kernel/bpf/syscall.c:3346
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x441339
-Code: e8 5c ae 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 bb 0a fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffe7971f348 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441339
-RDX: 0000000000000048 RSI: 00000000200017c0 RDI: 0000000000000005
-RBP: 00000000006cc018 R08: 0000000000000002 R09: 00000000004002c8
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402280
-R13: 0000000000402310 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
----[ end trace af38d247c1b207c2 ]---
-RIP: 0010:free_verifier_state+0x49/0x1d0 kernel/bpf/verifier.c:744
-Code: db 48 83 ec 20 48 89 45 b8 48 c1 e8 03 4c 01 f8 89 75 c4 48 89 45 c8 e8 05 9c f2 ff 4c 63 f3 4f 8d 2c f4 4c 89 e8 48 c1 e8 03 <42> 80 3c 38 00 0f 85 2b 01 00 00 4f 8d 34 f4 49 8b 3e 48 85 ff 48
-RSP: 0018:ffffc90002007688 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff8184dd58
-RDX: 0000000000000000 RSI: ffffffff8182644b RDI: 0000000000000000
-RBP: ffffc900020076d0 R08: ffff888098656280 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: dffffc0000000000
-FS:  000000000236b880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffff600400 CR3: 0000000098345000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Matthias
 
+On Fri, Aug 23, 2019 at 01:46:57PM +0530, Maulik Shah wrote:
+> Changes in v2:
+> - Add Stephen's Reviewed-By to the first three patches
+> - Addressed Stephen's comments on fourth patch
+> - Include changes to connect rpmh domain to cpuidle and genpds
+> 
+> Resource State Coordinator (RSC) is responsible for powering off/lowering
+> the requirements from CPU subsystem for the associated hardware like buses,
+> clocks, and regulators when all CPUs and cluster is powered down.
+> 
+> RSC power domain uses last-man activities provided by genpd framework based on
+> Ulf Hansoon's patch series[1], when the cluster of CPUs enter deepest idle
+> states. As a part of domain poweroff, RSC can lower resource state requirements
+> by flushing the cached sleep and wake state votes for resources.
+> 
+> Dependencies:
+> 
+> [1] https://lkml.org/lkml/2019/5/13/839
+> 
+> Maulik Shah (6):
+>   drivers: qcom: rpmh: fix macro to accept NULL argument
+>   drivers: qcom: rpmh: remove rpmh_flush export
+>   dt-bindings: soc: qcom: Add RSC power domain specifier
+>   drivers: qcom: rpmh-rsc: Add RSC power domain support
+>   arm64: dts: Convert to the hierarchical CPU topology layout for sdm845
+>   arm64: dts: Add rsc power domain for sdm845
+> 
+>  .../devicetree/bindings/soc/qcom/rpmh-rsc.txt |   8 ++
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi          | 105 +++++++++++++-----
+>  drivers/soc/qcom/rpmh-internal.h              |   3 +
+>  drivers/soc/qcom/rpmh-rsc.c                   |  84 ++++++++++++++
+>  drivers/soc/qcom/rpmh.c                       |  22 ++--
+>  include/soc/qcom/rpmh.h                       |   5 -
+>  6 files changed, 185 insertions(+), 42 deletions(-)
+> 
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, hosted by The Linux Foundation.
+> 
