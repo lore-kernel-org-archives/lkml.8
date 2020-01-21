@@ -2,79 +2,73 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6467DC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 12:26:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11BA9C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 12:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36E1921734
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 12:26:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7E7021734
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 12:27:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728847AbgAUM0i (ORCPT
+        id S1729347AbgAUM13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 07:26:38 -0500
-Received: from mail.parknet.co.jp ([210.171.160.6]:60894 "EHLO
-        mail.parknet.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726968AbgAUM0i (ORCPT
+        Tue, 21 Jan 2020 07:27:29 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:37146 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726968AbgAUM13 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 07:26:38 -0500
-Received: from ibmpc.myhome.or.jp (server.parknet.ne.jp [210.171.168.39])
-        by mail.parknet.co.jp (Postfix) with ESMTPSA id 08B13129664;
-        Tue, 21 Jan 2020 21:26:37 +0900 (JST)
-Received: from devron.myhome.or.jp (foobar@devron.myhome.or.jp [192.168.0.3])
-        by ibmpc.myhome.or.jp (8.15.2/8.15.2/Debian-16) with ESMTPS id 00LCQZ9I061591
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-        Tue, 21 Jan 2020 21:26:36 +0900
-Received: from devron.myhome.or.jp (foobar@localhost [127.0.0.1])
-        by devron.myhome.or.jp (8.15.2/8.15.2/Debian-16) with ESMTPS id 00LCQZK4079652
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-        Tue, 21 Jan 2020 21:26:35 +0900
-Received: (from hirofumi@localhost)
-        by devron.myhome.or.jp (8.15.2/8.15.2/Submit) id 00LCQYm5079651;
-        Tue, 21 Jan 2020 21:26:34 +0900
-From:   OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Namjae Jeon <linkinjeon@gmail.com>,
-        Gabriel Krisman Bertazi <krisman@collabora.com>
-Subject: Re: vfat: Broken case-insensitive support for UTF-8
-References: <20200119221455.bac7dc55g56q2l4r@pali>
-        <87sgkan57p.fsf@mail.parknet.co.jp> <20200120173215.GF15860@mit.edu>
-        <87eevt4ga5.fsf@mail.parknet.co.jp>
-        <20200121110049.4upreexmv5kxwp5n@pali>
-Date:   Tue, 21 Jan 2020 21:26:34 +0900
-In-Reply-To: <20200121110049.4upreexmv5kxwp5n@pali> ("Pali
- =?iso-8859-1?Q?Roh=E1r=22's?= message of
-        "Tue, 21 Jan 2020 12:00:49 +0100")
-Message-ID: <87muahov0l.fsf@mail.parknet.co.jp>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+        Tue, 21 Jan 2020 07:27:29 -0500
+Received: from localhost (82-95-191-104.ip.xs4all.nl [82.95.191.104])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id C66DB14EFC238;
+        Tue, 21 Jan 2020 04:27:26 -0800 (PST)
+Date:   Tue, 21 Jan 2020 13:27:25 +0100 (CET)
+Message-Id: <20200121.132725.1938964059289099578.davem@davemloft.net>
+To:     arnd@arndb.de
+Cc:     sam@ravnborg.org, stable@vger.kernel.org, ldv@altlinux.org,
+        dalias@libc.org, libc-alpha@sourceware.org,
+        sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sparc32: fix struct ipc64_perm type definition
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200114132633.3694261-1-arnd@arndb.de>
+References: <20200114132633.3694261-1-arnd@arndb.de>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 21 Jan 2020 04:27:28 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pali Rohár <pali.rohar@gmail.com> writes:
+From: Arnd Bergmann <arnd@arndb.de>
+Date: Tue, 14 Jan 2020 14:26:14 +0100
 
-> On Tuesday 21 January 2020 12:52:50 OGAWA Hirofumi wrote:
->> BTW, VFAT has to store the both of shortname (codepage) and longname
->> (UTF16), and using both names to open a file. So Windows should be using
->> current locale codepage to make shortname even latest Windows for VFAT.
->
-> fastfat.sys stores into shortnames only 7bit characters. Which is same
-> in all OEM codepages. Non-7bit are replaced by underline or shortened by
-> "~N" syntax. According to source code of fastfat.sys it has some
-> registry option to allow usage also of full 8bit OEM codepage.
->
-> So default behavior seems to be safe.
+> As discussed in the strace issue tracker, it appears that the sparc32
+> sysvipc support has been broken for the past 11 years. It was however
+> working in compat mode, which is how it must have escaped most of the
+> regular testing.
+> 
+> The problem is that a cleanup patch inadvertently changed the uid/gid
+> fields in struct ipc64_perm from 32-bit types to 16-bit types in uapi
+> headers.
+> 
+> Both glibc and uclibc-ng still use the original types, so they should
+> work fine with compat mode, but not natively.  Change the definitions
+> to use __kernel_uid32_t and __kernel_gid32_t again.
+> 
+> Fixes: 83c86984bff2 ("sparc: unify ipcbuf.h")
+> Link: https://github.com/strace/strace/issues/116
+> Cc: <stable@vger.kernel.org> # v2.6.29
+> Cc: Sam Ravnborg <sam@ravnborg.org>
+> Cc: "Dmitry V . Levin" <ldv@altlinux.org>
+> Cc: Rich Felker <dalias@libc.org>
+> Cc: libc-alpha@sourceware.org
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Are you sure if default is 7bit only? I'm pretty sure, at least, old
-Windows version stored 8bit chars by default install.
-
-Thanks.
--- 
-OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Applied and queued up for -stable, thanks Arnd.
