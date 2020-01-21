@@ -2,113 +2,102 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46F0BC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F302EC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B54324653
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:05:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="lqWja4lT"
+	by mail.kernel.org (Postfix) with ESMTP id C5860206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:07:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579626420;
+	bh=a2HLQ4r+m6XgAaQ7rRdk9QRf1WK+fkPWNFq8ecE1QKU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=P5vtdmIOvf3euI4xtMcGGCqE8VvNDaeRQfG05JUksarjNoA4l3kTwhGpGncoavFwz
+	 WoPJZvN9s/14Vb0EYjjfsRd32VCKa/L3agO+OXsCgUrDe53ZNlCwxISWp5b7Qc4c7E
+	 u3sANLUB5tygmXI8VUld1H0lYuXnlqvY4Yjnm0Yo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729259AbgAURFT (ORCPT
+        id S1729164AbgAURHA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 12:05:19 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:54256 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726714AbgAURFS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 12:05:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=HOkuQLxE1IM33Ws1DA0iCvA3nHSpKBt03fizcakeBVI=; b=lqWja4lTgiHFf7h/oDfSYwCdn
-        ffE1FbqEvVVa0ZyuzTEB7L+9H9DVIFJoLjBxGAXw4ry7Xhq5p1/2yEQ8XD4RiFRYDjvygjcfhzVIx
-        FytKHCkFcdu4WuDthrdhSBR8BbUTfCXExC/rH+yigGw/Rwr4gQ4cqWDmq1AnC+PHJsyDEMyRaBUpb
-        K4M6JwWJ6rdSQGiCGVjD00NhBrp7mCIU66sDbHl0dwGSxPeJZGXQXFZv5MKwRbi7BROmZcoMbI+rd
-        glFn2AvJ9ISNYvF2qD7Oghf3xAJHZdEE2ptzb/++AM9fOjRTiqpAGbpv6pXA6GYrQMNTkHeTOP1uU
-        MECN0fQgw==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:37252)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1itwxk-00062b-CI; Tue, 21 Jan 2020 17:05:12 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1itwxj-0003zR-Nj; Tue, 21 Jan 2020 17:05:11 +0000
-Date:   Tue, 21 Jan 2020 17:05:11 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Tue, 21 Jan 2020 12:07:00 -0500
+Received: from foss.arm.com ([217.140.110.172]:46040 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726714AbgAURG7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 12:06:59 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DC40F30E;
+        Tue, 21 Jan 2020 09:06:58 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3190E3F6C4;
+        Tue, 21 Jan 2020 09:06:58 -0800 (PST)
+Date:   Tue, 21 Jan 2020 17:06:56 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 03/14] arm: arm64: Don't use disable_nonboot_cpus()
-Message-ID: <20200121170511.GI25745@shell.armlinux.org.uk>
-References: <20191125112754.25223-1-qais.yousef@arm.com>
- <20191125112754.25223-4-qais.yousef@arm.com>
- <20200121165030.xksivf6mrhsaynq2@e107158-lin.cambridge.arm.com>
- <20200121165321.GH25745@shell.armlinux.org.uk>
- <20200121165809.3kk3xauky4vjp5ni@e107158-lin.cambridge.arm.com>
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 00/38] platform/x86: Rework intel_scu_ipc and
+ intel_pmc_ipc drivers
+Message-ID: <20200121170656.GI4656@sirena.org.uk>
+References: <20200121160114.60007-1-mika.westerberg@linux.intel.com>
+ <20200121162157.GD4656@sirena.org.uk>
+ <20200121163312.GZ2665@lahna.fi.intel.com>
+ <20200121164515.GG4656@sirena.org.uk>
+ <20200121170022.GA2665@lahna.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="pe+tqlI1iYzVj1X/"
 Content-Disposition: inline
-In-Reply-To: <20200121165809.3kk3xauky4vjp5ni@e107158-lin.cambridge.arm.com>
+In-Reply-To: <20200121170022.GA2665@lahna.fi.intel.com>
+X-Cookie: You too can wear a nose mitten.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 04:58:09PM +0000, Qais Yousef wrote:
-> On 01/21/20 16:53, Russell King - ARM Linux admin wrote:
-> > On Tue, Jan 21, 2020 at 04:50:31PM +0000, Qais Yousef wrote:
-> > > On 11/25/19 11:27, Qais Yousef wrote:
-> > > > disable_nonboot_cpus() is not safe to use when doing machine_down(),
-> > > > because it relies on freeze_secondary_cpus() which in return is
-> > > > a suspend/resume related freeze and could abort if the logic detects any
-> > > > pending activities that can prevent finishing the offlining process.
-> > > > 
-> > > > Beside disable_nonboot_cpus() is dependent on CONFIG_PM_SLEEP_SMP which
-> > > > is an othogonal config to rely on to ensure this function works
-> > > > correctly.
-> > > > 
-> > > > Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-> > > > CC: Russell King <linux@armlinux.org.uk>
-> > > > CC: Catalin Marinas <catalin.marinas@arm.com>
-> > > > CC: Will Deacon <will@kernel.org>
-> > > > CC: linux-arm-kernel@lists.infradead.org
-> > > > CC: linux-kernel@vger.kernel.org
-> > > > ---
-> > > 
-> > > Ping :)
-> > > 
-> > > I'm missing ACKs on this patch and patch 4 for arm64. Hopefully none should be
-> > > controversial.
-> > 
-> > ARM and ARM64 are maintained separately, so you can't submit a single
-> > patch covering both.  Sorry.
-> 
-> Sure I'd be happy to split.
-> 
-> It was just a single line change and I expected Thomas to pick the whole series
-> up, so I didn't think there'd be an issue in combining them up since they're
-> identical.
-> 
-> Do I take it you have no objection to the code change itself and just would
-> like to see this split up?
 
-I do have an objection to the new function you're introducing in patch
-1.  See my reply to that.
+--pe+tqlI1iYzVj1X/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+On Tue, Jan 21, 2020 at 07:00:22PM +0200, Mika Westerberg wrote:
+
+> OK, thanks for the clarification. I guess in this case we can probably
+> just live without using it, if that's fine for Lee and others. The new
+> MFD driver itself is ~500 lines so not sure how much regmap would help
+> there, and we only expose two simple functions for the subdevices both
+> dealing with 64-bit registers.
+
+The usual motivation is all the diagnostic infrastructure you get with
+regmap - tracepoints for I/O and the ability to dump the register map in
+debugfs mainly.
+
+--pe+tqlI1iYzVj1X/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4nL7AACgkQJNaLcl1U
+h9CYXQf5ARVExYEyXhd/b8vqn9kwQ5n79Izrai7EPKOa/3PxMUBu1546nympiQTk
+AyGalWpOBNIMs0/CqVxUcytTvcVSVBJ80dN6XA3ZcYqaYVLB603cgxrXDgarnh6k
+TjA/vMZFJklxeOUM4OmTDQHgKKt1gj0v7Bs5mNxUNJbYKfxksrWoM94S/Ywx5nke
+A/fmlnV4WkO5x2fVh2A7oHV5HqTuK2+C9bYXsEzSky8Vza88PhTBeBxZ/MXugndy
+xOugKpkM04hYZBv/c1/CD86T4fZisCMZeBJ+TIJHE4q7q4PylFJ1ZKZm8lWAnQnC
+iHOUsYkSPtNk98Sw4/1cz3UYEe2w8g==
+=lI9Q
+-----END PGP SIGNATURE-----
+
+--pe+tqlI1iYzVj1X/--
