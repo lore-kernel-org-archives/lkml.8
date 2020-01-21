@@ -2,124 +2,160 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E5CC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 20:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30138C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 20:55:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65A5321734
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 20:51:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 024E821734
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 20:55:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="mc1C1XTt"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Q4U19iIq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729076AbgAUUvz (ORCPT
+        id S1729031AbgAUUzQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 15:51:55 -0500
-Received: from mail-eopbgr40052.outbound.protection.outlook.com ([40.107.4.52]:7143
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727360AbgAUUvz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 15:51:55 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mxc8MJmxe7ggmfM1Vi3Og4BmceI+c1z1z5aymIB31yIF+Z2aHt+9FyttENEQAdL+RLlMvyZvERL1yfd0c1dOI0dfgAr6ktYD069M7d3aTZYw3BH0BiwhyTNnc/c1iXUArGIz6ECQTlBgX17H/+qdNS9PhY6JPDX3CzlznPNuSpHs7HeRzM9eyru2oldmZ3oT50ss+9mkQFj3Jj9s++z+mhgGixOuyf/TUVcZtxKKvQnpwem7ldaBE/+wddiy5LFfdiB3GCiLZYvKr4DK1iCBpZXTD7sNf0WZ18XCfYdhrf/5vssYowPme2nAGFQRV45wTcI2LaTPsFNFwyM21+nPvg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LWC2EF/p/VQGts/WF57OJLZlfZocESE604FRvnjLFgQ=;
- b=Y81fGe+SnIInVmlmBtLvNpmMB+x5bl7GiohwfrhO7sv9IiciAdrXqgMoA6WyNY/uRcx6tcpy5jfS9+foVeUqLeutMot6O9ztMUT02yWp1S9A3NSDingxKPlc+9OG1TvUBCyTjRTarm4TFLY6agk63hmdyQqa+Q2eOl92jZcoLE12XQL6iYBUinlocbrnRidGiA7FmGphj0upHD3B3dHRwajS8WrD1pWJKgDpgfF+j2YCtF0vSaTf1YcId/FlX5hbrIx8AkTYkiYm3wQoQSiwv/Xbt4L/IKqJt3l2qFuafjN/GpPhIe3dtTH6em9gndW3ePZk9Rx9YyC4hmzbt0PTaw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LWC2EF/p/VQGts/WF57OJLZlfZocESE604FRvnjLFgQ=;
- b=mc1C1XTtmfAaeR3NcD+Pu8qKjL9WxFgfMO8voYhxd2RwyN844PxIguFpr9gWzPyuzSkYyVtT0q/1ZRLpwKhN47Z1n/ZIBhrCdiyr2fGjUHSgf41xNg02G0b+KqkrMleUE/6dGA/b5xIII6b14HWA8WP7fxfb+duRJtd1wFvsRh8=
-Received: from VI1PR05MB5102.eurprd05.prod.outlook.com (20.177.51.151) by
- VI1PR05MB4381.eurprd05.prod.outlook.com (52.133.13.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.25; Tue, 21 Jan 2020 20:51:51 +0000
-Received: from VI1PR05MB5102.eurprd05.prod.outlook.com
- ([fe80::d830:96fc:e928:c096]) by VI1PR05MB5102.eurprd05.prod.outlook.com
- ([fe80::d830:96fc:e928:c096%6]) with mapi id 15.20.2644.027; Tue, 21 Jan 2020
- 20:51:51 +0000
-From:   Saeed Mahameed <saeedm@mellanox.com>
-To:     "davem@davemloft.net" <davem@davemloft.net>,
-        Moshe Shemesh <moshe@mellanox.com>
-CC:     "vikas.gupta@broadcom.com" <vikas.gupta@broadcom.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next] devlink: Add health recover notifications on
- devlink flows
-Thread-Topic: [PATCH net-next] devlink: Add health recover notifications on
- devlink flows
-Thread-Index: AQHVztnRsDQzlo/oHESjyf9Do8M2O6fzUGKAgAJLHAA=
-Date:   Tue, 21 Jan 2020 20:51:51 +0000
-Message-ID: <b03ae6bfd49fea39e6a99d8bf921122d3740a88a.camel@mellanox.com>
-References: <1579446268-26540-1-git-send-email-moshe@mellanox.com>
-         <20200120.105027.695127072650482577.davem@davemloft.net>
-In-Reply-To: <20200120.105027.695127072650482577.davem@davemloft.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.34.3 (3.34.3-1.fc31) 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=saeedm@mellanox.com; 
-x-originating-ip: [209.116.155.178]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: e84514c9-48bf-4acc-fd2e-08d79eb3bdcc
-x-ms-traffictypediagnostic: VI1PR05MB4381:|VI1PR05MB4381:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR05MB43817BDC330BD376722A679ABE0D0@VI1PR05MB4381.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0289B6431E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(376002)(39860400002)(396003)(346002)(189003)(199004)(91956017)(81166006)(66446008)(81156014)(66556008)(15650500001)(4326008)(86362001)(8676002)(66476007)(66946007)(8936002)(64756008)(76116006)(2616005)(6506007)(26005)(186003)(316002)(54906003)(110136005)(5660300002)(36756003)(6486002)(6636002)(478600001)(2906002)(6512007)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4381;H:VI1PR05MB5102.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 0QFyR2Pu78U5HtwJe8dGQ5CSPxhLxR2bXWTpfrmV1ch+gdlbeCpQemW7oN7oIz6SE1WRBvYofjf8KhZHOiiquln2XXtmnsl57GFbDeUDDuhr3unpJnQp62sorVHFSIT93t0b7+A/4B4AWe2h1WKmk+/IjGD7fsKkoHqcm4ap9sKH2Z2W02CNZcMJN0ObUCGe2N3YrVzuukUUPwUslCtyPgg7kpkMEpGHwIVRrF3RIG9dVDu1hDnYpRrRmtfIGK7G1UJxFQX+EPQzbNBl6iUmi40BrS3XpNSwTq2UP5rnZR7T3vIzZ4JnlXDUMN2Bo0QJ0uKD7FIn9kg5EuAQ5mKNyIE8c8CNSyHgm/MF9Yg+iUxeKYnonjjAm6b9PaEYXzxqWqtY6gy+77npV0ov/dGPJW4zi3+NvZHtndwiSUqpQ54IeHf/bnTS0uUrjNux4Oqn
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <902FC8B3001DF04DA29A0D12615DA77C@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 21 Jan 2020 15:55:16 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:39550 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728741AbgAUUzP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 15:55:15 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00LKhosb128897;
+        Tue, 21 Jan 2020 20:54:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=097qPjqdtLQ/u66QFt3FxKMZ7mao/EVAbbQjFNVYa14=;
+ b=Q4U19iIqSyGgLf5SGthY7IKajJE5vk6hjt4L/JH8/cr3D5Cx+68VRLb01YBXLrPSfHWH
+ mzgi458Q12OJJJdqeJSV+b84dhCdlKDAd+/EnV1kVk9igTMpp2Xpgt8xaCvsBcJ0DsdX
+ DrVCwfRhUnvozWJSLy8Nm1DpskaD3XpzR7Az56cup1Apu6WAJgkC10vX8dqL31+z/HPb
+ yYEjSK3cu7Gyt/+P27HtBzgysZLYCNbk/xmQILMXDRb5x1dyXxNCoxo/gqeoKoRGwayp
+ Ipg/bBGAm4qC61wXvW82vCX5U5GTeNwWh1l00O11cCGy02wscx0WoxY6SUF1xQI7VxsK 7Q== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2xkseufvcy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Jan 2020 20:54:11 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00LKiPUf139141;
+        Tue, 21 Jan 2020 20:54:11 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2xnsj5bx6j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Jan 2020 20:54:11 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00LKs7er001986;
+        Tue, 21 Jan 2020 20:54:07 GMT
+Received: from Konrads-MacBook-Pro.local (/10.74.98.244)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 21 Jan 2020 12:54:07 -0800
+Date:   Tue, 21 Jan 2020 15:54:03 -0500
+From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+To:     Ashish Kalra <ashish.kalra@amd.com>
+Cc:     Konrad Rzeszutek Wilk <konrad@darnok.org>, hch@lst.de,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, luto@kernel.org, peterz@infradead.org,
+        dave.hansen@linux-intel.com, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, brijesh.singh@amd.com,
+        Thomas.Lendacky@amd.com
+Subject: Re: [PATCH v2] swiotlb: Adjust SWIOTBL bounce buffer size for SEV
+ guests.
+Message-ID: <20200121205403.GC75374@Konrads-MacBook-Pro.local>
+References: <20191209231346.5602-1-Ashish.Kalra@amd.com>
+ <20191220015245.GA7010@localhost.localdomain>
+ <20200121200947.GA24884@ashkalra_ubuntu_server>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e84514c9-48bf-4acc-fd2e-08d79eb3bdcc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jan 2020 20:51:51.5108
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: i1jVcqwEgKLmkRSm6G7xr7a3KUxUwvpTHbTBQlUcCu/XnLB+/ZiN2q1/vjkug3e6J9oxt+KtQw084+TojZVm1w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4381
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200121200947.GA24884@ashkalra_ubuntu_server>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9507 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001210156
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9507 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001210156
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTAxLTIwIGF0IDEwOjUwICswMTAwLCBEYXZpZCBNaWxsZXIgd3JvdGU6DQo+
-IEZyb206IE1vc2hlIFNoZW1lc2ggPG1vc2hlQG1lbGxhbm94LmNvbT4NCj4gRGF0ZTogU3VuLCAx
-OSBKYW4gMjAyMCAxNzowNDoyOCArMDIwMA0KPiANCj4gPiBEZXZsaW5rIGhlYWx0aCByZWNvdmVy
-IG5vdGlmaWNhdGlvbnMgd2VyZSBhZGRlZCBvbmx5IG9uIGRyaXZlcg0KPiBkaXJlY3QNCj4gPiB1
-cGRhdGVzIG9mIGhlYWx0aF9zdGF0ZSB0aHJvdWdoDQo+IGRldmxpbmtfaGVhbHRoX3JlcG9ydGVy
-X3N0YXRlX3VwZGF0ZSgpLg0KPiA+IEFkZCBub3RpZmljYXRpb25zIG9uIHVwZGF0ZXMgb2YgaGVh
-bHRoX3N0YXRlIGJ5IGRldmxpbmsgZmxvd3Mgb2YNCj4gcmVwb3J0DQo+ID4gYW5kIHJlY292ZXIu
-DQo+ID4gDQo+ID4gRml4ZXM6IDk3ZmYzYmQzN2ZhYyAoImRldmxpbms6IGFkZCBkZXZpbmsgbm90
-aWZpY2F0aW9uIHdoZW4NCj4gcmVwb3J0ZXIgdXBkYXRlIGhlYWx0aCBzdGF0ZSIpDQo+ID4gU2ln
-bmVkLW9mZi1ieTogTW9zaGUgU2hlbWVzaCA8bW9zaGVAbWVsbGFub3guY29tPg0KPiA+IEFja2Vk
-LWJ5OiBKaXJpIFBpcmtvIDxqaXJpQG1lbGxhbm94LmNvbT4NCj4gDQo+IEkgcmVhbGx5IGRpc2xp
-a2UgZm9yd2FyZCBkZWNsYXJhdGlvbnMgYW5kIGFsbW9zdCBhbGwgb2YgdGhlIHRpbWUgdGhleQ0K
-PiBhcmUNCj4gdW5uZWNlc3NhcnkuDQo+IA0KDQpIaSBEYXZlLCBhIHF1ZXN0aW9uIGp1c3QgZm9y
-IGVkdWNhdGlvbmFsIHB1cnBvc2VzLCBpIGFncmVlIHJlZ2FyZGluZw0KZnVuY3Rpb24gZm9yd2Fy
-ZCBkZWNsYXJhdGlvbnMsIGJvdHRvbS11cCBvcmdhbml6aW5nIHNob3VsZCBhbHdheXMgYmUNCmZv
-bGxvd2VkLiANCg0KQnV0IGhvdyBhYm91dCB0eXBlIGZvcndhcmQgZGVjbGFyYXRpb24gPyBmb3Ig
-aGlkaW5nIHN0cnVjdCBkZXRhaWxzIGluDQpzcGVjaWZjIGMgZmlsZS4uIGlzIGl0IGEgYmFkIHBy
-YWN0aWNlID8NCg0KSSB1c2UgdGhpcyB0cmljayBhIGxvdCBpbiBtbHg1LCBmb3IgZGV0YWlsIGhp
-ZGluZyBhbmQgbW9kdWxlIHNlcGFyYXRpb24NCi4uIA0KDQo+IENvdWxkIHlvdSBwbGVhc2UganVz
-dCByZWFycmFuZ2UgdGhlIGNvZGUgYXMgbmVlZGVkIGFuZCByZXN1Ym1pdD8NCj4gDQo+IFRoYW5r
-IHlvdS4NCg==
+On Tue, Jan 21, 2020 at 08:09:47PM +0000, Ashish Kalra wrote:
+> On Thu, Dec 19, 2019 at 08:52:45PM -0500, Konrad Rzeszutek Wilk wrote:
+> > On Mon, Dec 09, 2019 at 11:13:46PM +0000, Ashish Kalra wrote:
+> > > From: Ashish Kalra <ashish.kalra@amd.com>
+> > > 
+> > > For SEV, all DMA to and from guest has to use shared
+> > > (un-encrypted) pages. SEV uses SWIOTLB to make this happen
+> > > without requiring changes to device drivers. However,
+> > > depending on workload being run, the default 64MB of SWIOTLB
+> > > might not be enough and SWIOTLB may run out of buffers to
+> > > use for DMA, resulting in I/O errors.
+> > > 
+> > > Increase the default size of SWIOTLB for SEV guests using
+> > > a minimum value of 128MB and a maximum value of 512MB,
+> > > determining on amount of provisioned guest memory.
+> > > 
+> > > The SWIOTLB default size adjustment is added as an
+> > > architecture specific interface/callback to allow
+> > > architectures such as those supporting memory encryption
+> > > to adjust/expand SWIOTLB size for their use.
+> > 
+> > What if this was made dynamic? That is if there is a memory
+> > pressure you end up expanding the SWIOTLB dynamically?
+> 
+> As of now we want to keep it as simple as possible and more
+> like a stop-gap arrangement till something more elegant is
+> available.
+
+That is nice. But past experience has shown that stop-gap arrangments
+end up being the defacto solution.
+
+> 
+> > 
+> >> Also is it worth doing this calculation based on memory or
+> >> more on the # of PCI devices + their MMIO ranges size?
+> 
+> Additional memory calculations based on # of PCI devices and
+> their memory ranges will make it more complicated with so
+> many other permutations and combinations to explore, it is
+> essential to keep this patch as simple as possible by 
+> adjusting the bounce buffer size simply by determining it
+> from the amount of provisioned guest memory.
+
+Please rework the patch to:
+
+ - Use a log solution instead of the multiplication.
+   Feel free to cap it at a sensible value.
+
+ - Also the code depends on SWIOTLB calling in to the
+   adjust_swiotlb_default_size which looks wrong.
+
+   You should not adjust io_tlb_nslabs from swiotlb_size_or_default.
+   That function's purpose is to report a value.
+
+ - Make io_tlb_nslabs be visible outside of the SWIOTLB code.
+
+ - Can you utilize the IOMMU_INIT APIs and have your own detect which would
+   modify the io_tlb_nslabs (and set swiotbl=1?).
+
+   Actually you seem to be piggybacking on pci_swiotlb_detect_4gb - so
+   perhaps add in this code ? Albeit it really should be in it's own
+   file, not in arch/x86/kernel/pci-swiotlb.c
+
+ - Tweak the code in the swiotlb code to make sure it can deal
+   with io_tlb_nslabs being modified outside of the code at
+   the start. It should have no trouble, but only testing will
+   tell for sure.
+
+> 
+> Thanks,
+> Ashish
