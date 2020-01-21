@@ -2,93 +2,92 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4036BC33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:13:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 332E4C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 176CD24656
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:13:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ZoLn8nS6"
+	by mail.kernel.org (Postfix) with ESMTP id 0F93821569
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:13:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729378AbgAURNN (ORCPT
+        id S1729380AbgAURNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 12:13:13 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:51160 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729080AbgAURNN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 12:13:13 -0500
-Received: from nramas-ThinkStation-P520.corp.microsoft.com (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 8088220B4798;
-        Tue, 21 Jan 2020 09:13:12 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8088220B4798
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1579626792;
-        bh=4d23IOuwwmeJeaRu6c99Bav9ImfA/rQDKq2tTLeuCSw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ZoLn8nS6Z9bPDtkxbcGdFOzZk7EQ/di/T3/lGGtUIDG56B4I5sTOaLb/tixqmK339
-         Y6qssmNlw9YNwm/2g4pMie6I2/aQ6VI1M7kibgZrTr0RemrH0mY8W1aylfIFh2d9T4
-         UrP1/labEksJ5r43pqdWBlz6nMCdFGPF8yWHydeQ=
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-To:     zohar@linux.ibm.com, linux-integrity@vger.kernel.org
-Cc:     sashal@kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] IMA: Turn IMA_MEASURE_ASYMMETRIC_KEYS off by default
-Date:   Tue, 21 Jan 2020 09:13:02 -0800
-Message-Id: <20200121171302.4935-1-nramas@linux.microsoft.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 21 Jan 2020 12:13:49 -0500
+Received: from [167.172.186.51] ([167.172.186.51]:33326 "EHLO shell.v3.sk"
+        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729080AbgAURNs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 12:13:48 -0500
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 9F8C1DFB9D;
+        Tue, 21 Jan 2020 17:13:55 +0000 (UTC)
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id egpkrthuXcvC; Tue, 21 Jan 2020 17:13:55 +0000 (UTC)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id F3CF4DFE6D;
+        Tue, 21 Jan 2020 17:13:54 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at zimbra.v3.sk
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id fa5bH0yR5lYx; Tue, 21 Jan 2020 17:13:54 +0000 (UTC)
+Received: from localhost (unknown [109.183.109.54])
+        by zimbra.v3.sk (Postfix) with ESMTPSA id 92789DFB9D;
+        Tue, 21 Jan 2020 17:13:54 +0000 (UTC)
+Date:   Tue, 21 Jan 2020 18:13:43 +0100
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 13/20] ARM: mmp: Drop unneeded select of COMMON_CLK
+Message-ID: <20200121171343.GA171627@furthur.local>
+References: <20200121103413.1337-1-geert+renesas@glider.be>
+ <20200121103722.1781-1-geert+renesas@glider.be>
+ <20200121103722.1781-13-geert+renesas@glider.be>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200121103722.1781-13-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enabling IMA and ASYMMETRIC_PUBLIC_KEY_SUBTYPE configs will
-automatically enable the IMA hook to measure asymmetric keys. Keys
-created or updated early in the boot process are queued up whether
-or not a custom IMA policy is provided. Although the queued keys will
-be freed if a custom IMA policy is not loaded within 5 minutes, it could
-still cause significant performance impact on smaller systems.
+On Tue, Jan 21, 2020 at 11:37:15AM +0100, Geert Uytterhoeven wrote:
+> Support for Marvell MMP ARMv5 platforms depends on ARCH_MULTI_V5, and
+> thus on ARCH_MULTIPLATFORM.
+> As the latter selects COMMON_CLK, there is no need for MACH_MMP_DT to
+> select COMMON_CLK.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: Lubomir Rintel <lkundrak@v3.sk>
 
-This patch turns the config IMA_MEASURE_ASYMMETRIC_KEYS off by default.
-Since a custom IMA policy that defines key measurement is required to
-measure keys, systems that require key measurement can enable this
-config option in addition to providing a custom IMA policy.
+Acked-by: Lubomir Rintel <lkundrak@v3.sk>
 
-Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
----
- security/integrity/ima/Kconfig | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+Thank you
+Lubo
 
-diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
-index 355754a6b6ca..8e678219ee9e 100644
---- a/security/integrity/ima/Kconfig
-+++ b/security/integrity/ima/Kconfig
-@@ -312,7 +312,19 @@ config IMA_APPRAISE_SIGNED_INIT
- 	   This option requires user-space init to be signed.
- 
- config IMA_MEASURE_ASYMMETRIC_KEYS
--	bool
-+	bool "Enable asymmetric keys measurement on key create or update"
- 	depends on IMA
- 	depends on ASYMMETRIC_PUBLIC_KEY_SUBTYPE=y
--	default y
-+	default n
-+	help
-+	   This option enables measuring asymmetric keys when the key
-+	   is created or updated. Additionally a custom IMA policy that
-+	   defines key measurement should also be loaded.
-+
-+	   If this option is enabled, keys created or updated early in
-+	   the boot process are queued up. The queued keys are processed
-+	   when a custom IMA policy is loaded. But if a custom IMA policy
-+	   is not loaded within 5 minutes after IMA subsystem is initialized,
-+	   any queued keys are just freed. Keys created or updated after
-+	   a custom IMA policy is loaded will be processed immediately and
-+	   not queued.
--- 
-2.17.1
-
+> ---
+> All patches in this series are independent of each other.
+> Cover letter at https://lore.kernel.org/r/20200121103413.1337-1-geert+renesas@glider.be
+> 
+>  arch/arm/mach-mmp/Kconfig | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/arch/arm/mach-mmp/Kconfig b/arch/arm/mach-mmp/Kconfig
+> index b58a03b18bdef14c..6fe1550f43ec6aef 100644
+> --- a/arch/arm/mach-mmp/Kconfig
+> +++ b/arch/arm/mach-mmp/Kconfig
+> @@ -110,7 +110,6 @@ config MACH_MMP_DT
+>  	depends on ARCH_MULTI_V5
+>  	select PINCTRL
+>  	select PINCTRL_SINGLE
+> -	select COMMON_CLK
+>  	select ARCH_HAS_RESET_CONTROLLER
+>  	select CPU_MOHAWK
+>  	help
+> -- 
+> 2.17.1
+> 
