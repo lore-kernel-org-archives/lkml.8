@@ -2,126 +2,130 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3656BC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:04:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4620C33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1331D24672
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:04:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B48D221734
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:05:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729399AbgAUTEG (ORCPT
+        id S1729275AbgAUTFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 14:04:06 -0500
-Received: from mga04.intel.com ([192.55.52.120]:62583 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728829AbgAUTEG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 14:04:06 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 11:04:05 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,346,1574150400"; 
-   d="scan'208";a="227431773"
-Received: from labuser-ice-lake-client-platform.jf.intel.com ([10.54.55.45])
-  by orsmga003.jf.intel.com with ESMTP; 21 Jan 2020 11:04:05 -0800
-From:   kan.liang@linux.intel.com
-To:     peterz@infradead.org, mingo@kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     ak@linux.intel.com, Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V2] perf/x86/intel: Fix inaccurate period in context switch for auto-reload
-Date:   Tue, 21 Jan 2020 11:01:25 -0800
-Message-Id: <20200121190125.3389-1-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 21 Jan 2020 14:05:12 -0500
+Received: from mail-io1-f71.google.com ([209.85.166.71]:37864 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729162AbgAUTFL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 14:05:11 -0500
+Received: by mail-io1-f71.google.com with SMTP id s6so2383217iod.4
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 11:05:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=hh2ESy2i/NiRcbPskm2nSqHQ3QN16smrsuvBjfTZgUM=;
+        b=pOBQG0T2/+SKnit9/0CfzlpLZWWANBZnuRgBEBIqEYGc+7fXEU2BvHkq21c79+iJoO
+         hTZbm3BrI3I5w4P0QrOKXWWTzxoalDXL/Q54Aai8OMosxFjsAzRlJ2WkBWvRbQlAzcd/
+         k9yyhP3UvY0dIW81KF6U8qcvKvMtGzBpfV5LTb7evRfI+3u0MfCSNZxxnZEy5GgVidGy
+         uS6XIwr7KZnMOUjKtw4hBKGMK8Oa6Xj5crktzo9QfvLbw5s47hMRDjmcdjaKzQnA34E5
+         pwUIAyYTL9Qi9zY5uA3SH6rfY6sUn7JSSYnMa6oMt3OZNILURiuTCVJJvTKdpX7Sl3yq
+         6Ycg==
+X-Gm-Message-State: APjAAAUj9woExAQvCgGVrGItvl5i0QVmBrUrZlgeTKHEySvulsrtMGW7
+        NBU0t/eB1SVT5Qp1BmI2b1cuLexL4kQCRjygn04gLFrEiunA
+X-Google-Smtp-Source: APXvYqyZ1QuvEk+mqTzqtnA/MZi4neaIzQRg7ExQ7pNjV6hYabWrj6Ictf/X0GhvKHIRjlto/mdRrhfEOUAUluhnhGm+/UvwnEzI
+MIME-Version: 1.0
+X-Received: by 2002:a5e:a614:: with SMTP id q20mr3966732ioi.36.1579633510714;
+ Tue, 21 Jan 2020 11:05:10 -0800 (PST)
+Date:   Tue, 21 Jan 2020 11:05:10 -0800
+In-Reply-To: <00000000000031a8d7059c27c540@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000048111c059cab1695@google.com>
+Subject: Re: general protection fault in free_verifier_state (3)
+From:   syzbot <syzbot+b296579ba5015704d9fa@syzkaller.appspotmail.com>
+To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
+        clang-built-linux@googlegroups.com, daniel@iogearbox.net,
+        davem@davemloft.net, hawk@kernel.org, jakub.kicinski@netronome.com,
+        john.fastabend@gmail.com, kafai@fb.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+syzbot has found a reproducer for the following crash on:
 
-Perf doesn't take the left period into account when auto-reload is
-enabled with fixed period sampling mode in context switch.
+HEAD commit:    2e3a94aa bpf: Fix memory leaks in generic update/delete ba..
+git tree:       bpf-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=15aefc6ee00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a736c99e9fe5a676
+dashboard link: https://syzkaller.appspot.com/bug?extid=b296579ba5015704d9fa
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10a4280de00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1411544ee00000
 
-Here is the MSR trace of the perf command as below.
-(The MSR trace is simplified from a ftrace log.)
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+b296579ba5015704d9fa@syzkaller.appspotmail.com
 
-    #perf record -e cycles:p -c 2000000 -- ./triad_loop
-
-      //The MSR trace of task schedule out
-      //perf disable all counters, disable PEBS, disable GP counter 0,
-      //read GP counter 0, and re-enable all counters.
-      //The counter 0 stops at 0xfffffff82840
-      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value 0
-      write_msr: MSR_IA32_PEBS_ENABLE(3f1), value 0
-      write_msr: MSR_P6_EVNTSEL0(186), value 40003003c
-      rdpmc: 0, value fffffff82840
-      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value f000000ff
-
-
-      //The MSR trace of the same task schedule in again
-      //perf disable all counters, enable and set GP counter 0,
-      //enable PEBS, and re-enable all counters.
-      //0xffffffe17b80 (-2000000) is written to GP counter 0.
-      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value 0
-      write_msr: MSR_IA32_PMC0(4c1), value ffffffe17b80
-      write_msr: MSR_P6_EVNTSEL0(186), value 40043003c
-      write_msr: MSR_IA32_PEBS_ENABLE(3f1), value 1
-      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value f000000ff
-
-When the same task schedule in again, the counter should starts from
-previous left. However, it starts from the fixed period -2000000 again.
-
-A special variant of intel_pmu_save_and_restart() is used for
-auto-reload, which doesn't update the hwc->period_left.
-When the monitored task schedules in again, perf doesn't know the left
-period. The fixed period is used, which is inaccurate.
-
-With auto-reload, the counter always has a negative counter value. So
-the left period is -value. Update the period_left in
-intel_pmu_save_and_restart_reload().
-
-With the patch,
-      //The MSR trace of task schedule out
-      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value 0
-      write_msr: MSR_IA32_PEBS_ENABLE(3f1), value 0
-      write_msr: MSR_P6_EVNTSEL0(186), value 40003003c
-      rdpmc: 0, value ffffffe25cbc
-      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value f000000ff
-
-      //The MSR trace of the same task schedule in again
-      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value 0
-      write_msr: MSR_IA32_PMC0(4c1), value ffffffe25cbc
-      write_msr: MSR_P6_EVNTSEL0(186), value 40043003c
-      write_msr: MSR_IA32_PEBS_ENABLE(3f1), value 1
-      write_msr: MSR_CORE_PERF_GLOBAL_CTRL(38f), value f000000ff
-
-Fixes: d31fc13fdcb2 ("perf/x86/intel: Fix event update for auto-reload")
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
-
-Changes since V1
-- Update description
-
- arch/x86/events/intel/ds.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index ce83950036c5..e5ad97a82342 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -1713,6 +1713,8 @@ intel_pmu_save_and_restart_reload(struct perf_event *event, int count)
- 	old = ((s64)(prev_raw_count << shift) >> shift);
- 	local64_add(new - old + count * period, &event->count);
- 
-+	local64_set(&hwc->period_left, -new);
-+
- 	perf_event_update_userpage(event);
- 
- 	return 0;
--- 
-2.17.1
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441339
+RDX: 0000000000000048 RSI: 00000000200017c0 RDI: 0000000000000005
+RBP: 00000000006cc018 R08: 0000000000000002 R09: 00000000004002c8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402280
+R13: 0000000000402310 R14: 0000000000000000 R15: 0000000000000000
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 9996 Comm: syz-executor310 Not tainted 5.5.0-rc4-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:free_verifier_state+0x49/0x1d0 kernel/bpf/verifier.c:744
+Code: db 48 83 ec 20 48 89 45 b8 48 c1 e8 03 4c 01 f8 89 75 c4 48 89 45 c8 e8 05 9c f2 ff 4c 63 f3 4f 8d 2c f4 4c 89 e8 48 c1 e8 03 <42> 80 3c 38 00 0f 85 2b 01 00 00 4f 8d 34 f4 49 8b 3e 48 85 ff 48
+RSP: 0018:ffffc90002007688 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff8184dd58
+RDX: 0000000000000000 RSI: ffffffff8182644b RDI: 0000000000000000
+RBP: ffffc900020076d0 R08: ffff888098656280 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: dffffc0000000000
+FS:  000000000236b880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffff600400 CR3: 0000000098345000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ do_check_common+0x2ec7/0x9650 kernel/bpf/verifier.c:9597
+ do_check_main kernel/bpf/verifier.c:9654 [inline]
+ bpf_check+0x84ed/0xbb07 kernel/bpf/verifier.c:10009
+ bpf_prog_load+0xeab/0x17f0 kernel/bpf/syscall.c:2095
+ __do_sys_bpf+0x1521/0x41e0 kernel/bpf/syscall.c:3387
+ __se_sys_bpf kernel/bpf/syscall.c:3346 [inline]
+ __x64_sys_bpf+0x73/0xb0 kernel/bpf/syscall.c:3346
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x441339
+Code: e8 5c ae 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 bb 0a fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffe7971f348 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441339
+RDX: 0000000000000048 RSI: 00000000200017c0 RDI: 0000000000000005
+RBP: 00000000006cc018 R08: 0000000000000002 R09: 00000000004002c8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402280
+R13: 0000000000402310 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+---[ end trace af38d247c1b207c2 ]---
+RIP: 0010:free_verifier_state+0x49/0x1d0 kernel/bpf/verifier.c:744
+Code: db 48 83 ec 20 48 89 45 b8 48 c1 e8 03 4c 01 f8 89 75 c4 48 89 45 c8 e8 05 9c f2 ff 4c 63 f3 4f 8d 2c f4 4c 89 e8 48 c1 e8 03 <42> 80 3c 38 00 0f 85 2b 01 00 00 4f 8d 34 f4 49 8b 3e 48 85 ff 48
+RSP: 0018:ffffc90002007688 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff8184dd58
+RDX: 0000000000000000 RSI: ffffffff8182644b RDI: 0000000000000000
+RBP: ffffc900020076d0 R08: ffff888098656280 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: dffffc0000000000
+FS:  000000000236b880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffff600400 CR3: 0000000098345000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
