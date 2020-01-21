@@ -2,206 +2,111 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BDDCC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:02:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C07D9C33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D96024125
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:02:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 876A524125
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:04:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579629879;
+	bh=eWx9r3OgGFha93yD4HcPPTOU3j/WWgtWVraB0zKY4ks=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=H9JOwMkbb+DEDg8ZiR5KGlVSjgzzc1Pg3cbx9g3d2ZUeRsVzMhDR0gmUspZKwgW6D
+	 6sB0MnfducIz/zJER872uOxa8JL9ctfqYhFCunX63i38iikklf97oXPGEK4mIXJ0d0
+	 ll8xCl79LCYxL4ZZiTmCz73fHljJQa5ej3q9N7ao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729424AbgAUSCh (ORCPT
+        id S1729253AbgAUSEj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 13:02:37 -0500
-Received: from mx2.suse.de ([195.135.220.15]:38472 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729273AbgAUSCh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 13:02:37 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 184BAAEC1;
-        Tue, 21 Jan 2020 18:02:34 +0000 (UTC)
-Date:   Tue, 21 Jan 2020 19:02:31 +0100
-From:   Jean Delvare <jdelvare@suse.de>
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     linux-doc@vger.kernel.org, linux-i2c@vger.kernel.org,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 21/26] docs: i2c: instantiating-devices: rearrange
- static instatiation
-Message-ID: <20200121190231.6e88bbdc@endymion>
-In-Reply-To: <20200105225012.11701-21-luca@lucaceresoli.net>
-References: <20200105224006.10321-1-luca@lucaceresoli.net>
-        <20200105225012.11701-1-luca@lucaceresoli.net>
-        <20200105225012.11701-21-luca@lucaceresoli.net>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        Tue, 21 Jan 2020 13:04:39 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:38555 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728829AbgAUSEi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 13:04:38 -0500
+Received: by mail-oi1-f194.google.com with SMTP id l9so3444652oii.5;
+        Tue, 21 Jan 2020 10:04:38 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5AOc1fVDSObIakXLqV48NhVm6z9cVbBEAMQpRuKiW50=;
+        b=mu0BSfSIm7zEE2Lc55hQxXG3Q60EEz3iM4Kxy5Vij9LAMf9KOBcfld2nlbTCheKGJA
+         x3yRkM44/ifHS1F0nr+EagFu9nINrVltIcNpcLdRvTtQkI1CZa35BpV9BvIfxHCMemJ8
+         yDE9AMdfMIiCR00geQZ3oW97FPQyS//AyNkc7+IRWU5tHbcoX73/jTaJmcTfE3G08u87
+         cPOkcBVsM/DSfLMm17DK3hfxP4AkpbteHWLPN5xlm2Ifz+2vcAtUH1mYvC5SITTX+aA/
+         A/k09na8six6Ieu4khiLvakNwAJNvAAWFcAdA2KG8XNkDRrpCCzrVPuNaKScI3r0yFUj
+         Rm2Q==
+X-Gm-Message-State: APjAAAXm4WEXWtk2Ez307aVqq59/XhZMEpoyQvi0zOqF4f6da7yKkLcW
+        YkZ2md0JAnxfqyCAAA1hSF10zTI=
+X-Google-Smtp-Source: APXvYqxJ2H+vZyDN3gmn4pC4D+ZcrNIsyxhR4/L25BmvN4Dqt/xngylC9DS3CsGIERCxiizPEYHg3w==
+X-Received: by 2002:aca:503:: with SMTP id 3mr3791581oif.24.1579629877653;
+        Tue, 21 Jan 2020 10:04:37 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id l17sm6793267otj.21.2020.01.21.10.04.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2020 10:04:37 -0800 (PST)
+Received: (nullmailer pid 7135 invoked by uid 1000);
+        Tue, 21 Jan 2020 18:04:36 -0000
+Date:   Tue, 21 Jan 2020 12:04:36 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
+        bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org,
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Subject: Re: [PATCH v2 04/19] dt-bindings: Add Qualcomm USB SuperSpeed PHY
+ bindings
+Message-ID: <20200121180436.GA6701@bogus>
+References: <20200120163116.1197682-1-bryan.odonoghue@linaro.org>
+ <20200120163116.1197682-5-bryan.odonoghue@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200120163116.1197682-5-bryan.odonoghue@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun,  5 Jan 2020 23:50:07 +0100, Luca Ceresoli wrote:
-> Among the "static" instantiation methods the "board file" method is
-> described first. Move it as last, since it is being replaced by the other
-> methods.
+On Mon, 20 Jan 2020 16:31:01 +0000, Bryan O'Donoghue wrote:
+> From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 > 
-> Also fix subsubsection heading syntax and remove the "Method 1[abc]"
-> prefix as the subsubsection structure clarifies the logical hierarchy.
+> Binding description for Qualcomm's Synopsys 1.0.0 SuperSpeed phy
+> controller embedded in QCS404.
 > 
-> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+> Based on Sriharsha Allenki's <sallenki@codeaurora.org> original
+> definitions.
+> 
+> [bod: converted to yaml format]
+> 
+> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> Cc: Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 > ---
->  Documentation/i2c/instantiating-devices.rst | 98 ++++++++++++---------
->  1 file changed, 54 insertions(+), 44 deletions(-)
+>  .../devicetree/bindings/phy/qcom,usb-ss.yaml  | 75 +++++++++++++++++++
+>  1 file changed, 75 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-ss.yaml
 > 
-> diff --git a/Documentation/i2c/instantiating-devices.rst b/Documentation/i2c/instantiating-devices.rst
-> index 5debaafef64d..cbcafb36b417 100644
-> --- a/Documentation/i2c/instantiating-devices.rst
-> +++ b/Documentation/i2c/instantiating-devices.rst
-> @@ -9,54 +9,27 @@ reason, the kernel code must instantiate I2C devices explicitly. There are
->  several ways to achieve this, depending on the context and requirements.
->  
->  
-> -Method 1a: Declare the I2C devices by bus number
-> -------------------------------------------------
-> +Method 1: Declare the I2C devices statically
-> +--------------------------------------------
->  
->  This method is appropriate when the I2C bus is a system bus as is the case
-> -for many embedded systems. On such systems, each I2C bus has a number
-> -which is known in advance. It is thus possible to pre-declare the I2C
-> -devices which live on this bus. This is done with an array of struct
-> -i2c_board_info which is registered by calling i2c_register_board_info().
-> +for many embedded systems. On such systems, each I2C bus has a number which
-> +is known in advance. It is thus possible to pre-declare the I2C devices
-> +which live on this bus.
->  
-> -Example (from omap2 h4)::
-> +This information is provided to the kernel in a different way on different
-> +architectures: device tree, ACPI or board files.
->  
-> -  static struct i2c_board_info h4_i2c_board_info[] __initdata = {
-> -	{
-> -		I2C_BOARD_INFO("isp1301_omap", 0x2d),
-> -		.irq		= OMAP_GPIO_IRQ(125),
-> -	},
-> -	{	/* EEPROM on mainboard */
-> -		I2C_BOARD_INFO("24c01", 0x52),
-> -		.platform_data	= &m24c01,
-> -	},
-> -	{	/* EEPROM on cpu card */
-> -		I2C_BOARD_INFO("24c01", 0x57),
-> -		.platform_data	= &m24c01,
-> -	},
-> -  };
-> -
-> -  static void __init omap_h4_init(void)
-> -  {
-> -	(...)
-> -	i2c_register_board_info(1, h4_i2c_board_info,
-> -			ARRAY_SIZE(h4_i2c_board_info));
-> -	(...)
-> -  }
-> -
-> -The above code declares 3 devices on I2C bus 1, including their respective
-> -addresses and custom data needed by their drivers. When the I2C bus in
-> -question is registered, the I2C devices will be instantiated automatically
-> -by i2c-core.
-> +When the I2C bus in question is registered, the I2C devices will be
-> +instantiated automatically by i2c-core. The devices will be automatically
-> +unbound and destroyed when the I2C bus they sit on goes away (if ever).
->  
-> -The devices will be automatically unbound and destroyed when the I2C bus
-> -they sit on goes away (if ever.)
->  
-> +Declare the I2C devices via devicetree
-> +^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->  
-> -Method 1b: Declare the I2C devices via devicetree
-> --------------------------------------------------
-> -
-> -This method has the same implications as method 1a. The declaration of I2C
-> -devices is here done via devicetree as subnodes of the master controller.
-> +On platforms using devicetree the declaration of I2C devices is done in
 
-I suggest adding a comma between "devicetree" and "the" to make the
-sentence easier to read.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-> +subnodes of the master controller.
->  
->  Example::
->  
-> @@ -81,14 +54,51 @@ Here, two devices are attached to the bus using a speed of 100kHz. For
->  additional properties which might be needed to set up the device, please refer
->  to its devicetree documentation in Documentation/devicetree/bindings/.
->  
-> -
-> -Method 1c: Declare the I2C devices via ACPI
-> --------------------------------------------
-> +Declare the I2C devices via ACPI
-> +^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->  
->  ACPI can also describe I2C devices. There is special documentation for this
->  which is currently located at :doc:`../firmware-guide/acpi/enumeration` .
->  
->  
-> +Declare the I2C devices in board files
-> +^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> +
-> +In many embedded architectures devicetree has replaced the old hardware
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/qcom,usb-ss.example.dt.yaml: usb3-phy@78000: clock-names:2: 'sleep' was expected
 
-Same here between "architectures" and "devicetree".
-
-> +description based on board files, but the latter are still used in old
-> +code. Instantiating I2C devices via board files is done with an array of
-> +struct i2c_board_info which is registered by calling
-> +i2c_register_board_info().
-> +
-> +Example (from omap2 h4)::
-> +
-> +  static struct i2c_board_info h4_i2c_board_info[] __initdata = {
-> +	{
-> +		I2C_BOARD_INFO("isp1301_omap", 0x2d),
-> +		.irq		= OMAP_GPIO_IRQ(125),
-> +	},
-> +	{	/* EEPROM on mainboard */
-> +		I2C_BOARD_INFO("24c01", 0x52),
-> +		.platform_data	= &m24c01,
-> +	},
-> +	{	/* EEPROM on cpu card */
-> +		I2C_BOARD_INFO("24c01", 0x57),
-> +		.platform_data	= &m24c01,
-> +	},
-> +  };
-> +
-> +  static void __init omap_h4_init(void)
-> +  {
-> +	(...)
-> +	i2c_register_board_info(1, h4_i2c_board_info,
-> +			ARRAY_SIZE(h4_i2c_board_info));
-> +	(...)
-> +  }
-> +
-> +The above code declares 3 devices on I2C bus 1, including their respective
-> +addresses and custom data needed by their drivers.
-> +
-> +
->  Method 2: Instantiate the devices explicitly
->  --------------------------------------------
->  
-
-
-You have some inconsistency in your spacing between subsections, some
-have 1 blank line before while some have 2. I think 1 is enough. At any
-rate it should be consistent.
-
-Reviewed-by: Jean Delvare <jdelvare@suse.de>
-
--- 
-Jean Delvare
-SUSE L3 Support
+See https://patchwork.ozlabs.org/patch/1226060
+Please check and re-submit.
