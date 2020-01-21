@@ -2,104 +2,122 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B95C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 10:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 753B1C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 10:25:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7963324672
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 10:24:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B5C424125
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 10:25:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="CiUaDZU4"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WwHvZOpn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729439AbgAUKYU (ORCPT
+        id S1729634AbgAUKZE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 05:24:20 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:60266 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729351AbgAUKYR (ORCPT
+        Tue, 21 Jan 2020 05:25:04 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:46640 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728792AbgAUKZD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 05:24:17 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00LANZwU018454;
-        Tue, 21 Jan 2020 11:24:08 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
- date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=pI7AA/Y71uPaqPIJ2pPaaj7cAY0VgViFKDQM2Xpcc1k=;
- b=CiUaDZU4k7zp94wz705BhuSlfRLEp2QM2zhKnKrTogvJGrh5BkF0g98tcECrCnUQoKXg
- n+a38j1ooP1+JMOXMq+DMH3BCRWBP/pqO8dYvr7Sf0t/FFhJHa8tShfgWTiiSrqs6K8e
- XfDJa33JAH+DlNRBwgxCCLuGvMiYllHevBVHWTDHJn7jxuy9oPwvkmEck84VsD77WFpZ
- wcB0ftzbWvbQ+QL8z826tsOlXDP0NOr2NvjSrIwyXBvsfquG1H8p2auONvgLYupu6S+0
- g4mmzqCdf9bx4n0cKpz0BjhIeMT415jkJDXYRauDNUee4SCXNJBdUsJZMsiAX9KrOlEZ Mg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xkssnwsjp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jan 2020 11:24:08 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C8F7D10003D;
-        Tue, 21 Jan 2020 11:24:06 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id BA1F52B1874;
-        Tue, 21 Jan 2020 11:24:06 +0100 (CET)
-Received: from localhost (10.75.127.47) by SFHDAG6NODE1.st.com (10.75.127.16)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 Jan 2020 11:24:06
- +0100
-From:   Yannick Fertre <yannick.fertre@st.com>
-To:     Yannick Fertre <yannick.fertre@st.com>,
-        Philippe Cornu <philippe.cornu@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] drm/stm: dsi: stm mipi dsi doesn't print error on probe deferral
-Date:   Tue, 21 Jan 2020 11:24:05 +0100
-Message-ID: <1579602245-7577-1-git-send-email-yannick.fertre@st.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 21 Jan 2020 05:25:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579602301;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=aCi48PVWkDA8UrXfSnL/5YO1GyZMOjomyxZveXaEvec=;
+        b=WwHvZOpnY0H3PNYv0oKS3hnvVT2syxRnfRtbnTMCjbxOn//7iO7JtFz1cJe5vplJ0kRzAJ
+        E6GMYn9TMp6lsn02a4XOf9C2s8OOeJQkttTmPsFiFhPBkjoGGHF1KWWTp3/UJ8ufJJmvHw
+        JX6V4mWC8jbM3FAtc9yPLT1eeC8afMw=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-357-4YyIf6U2PvaQXFaSzuWgzg-1; Tue, 21 Jan 2020 05:24:59 -0500
+X-MC-Unique: 4YyIf6U2PvaQXFaSzuWgzg-1
+Received: by mail-wm1-f72.google.com with SMTP id 18so439080wmp.0
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 02:24:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=aCi48PVWkDA8UrXfSnL/5YO1GyZMOjomyxZveXaEvec=;
+        b=pB62aJjtpSVinPbcC349Wsab4d8S1u6E462kdfrPRnu+TyD0UUI1k/y7f5IBW+BoXO
+         tMkKEpa4tdIi4AphYDhphGVhVIUGm3P9my5Q2bHp9WeROMS7Olymwx+em82WPTqisswX
+         QJX/6GdyzJy2fmjUCeoB4rgCbdnf2zwuzRDsKeFGolKkqEUwDfnfjxtDh5ABdjWB0Eta
+         93HEo9qWaVc8b2gS8YD0kfEVjha7ryfjm39Fcw07mBlSp+CvztE6XqTTGRwmvEbtVtRj
+         rylq4ORAfDdWlY2cDvAtOK7pdNCcBEf8ycZ+f+9jXN+AIDpMMhc7a2kACH5itvcuGl44
+         Qb0w==
+X-Gm-Message-State: APjAAAUrVtcncMoi79wJgP+TOB7b0LwXZBvC3CNOFQ/keYXyKiwLW07B
+        wo1ZcaGvxqPIbo4HTrXEjdHexKxyYuuvrgNvRUYn8qX+V0O7HaB1i/mw6c7pVDEr4nc2O0CR4+8
+        Yy9UZ1FPbQRlzUCrT/8FauIYc
+X-Received: by 2002:a05:600c:2c7:: with SMTP id 7mr3522411wmn.87.1579602298806;
+        Tue, 21 Jan 2020 02:24:58 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwwbUM3KKi/8PzBPn0yJAulXWiBEnPnllYFTZSqZ130XUc0JnR6nrnpLeUYhWl6VLYPSf8ejA==
+X-Received: by 2002:a05:600c:2c7:: with SMTP id 7mr3522380wmn.87.1579602298497;
+        Tue, 21 Jan 2020 02:24:58 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:b509:fc01:ee8a:ca8a? ([2001:b07:6468:f312:b509:fc01:ee8a:ca8a])
+        by smtp.gmail.com with ESMTPSA id c17sm51703396wrr.87.2020.01.21.02.24.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jan 2020 02:24:57 -0800 (PST)
+Subject: Re: [PATCH v3 12/21] KVM: X86: Implement ring-based dirty memory
+ tracking
+To:     Peter Xu <peterx@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Christophe de Dinechin <dinechin@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Yan Zhao <yan.y.zhao@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Kevin Kevin <kevin.tian@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Lei Cao <lei.cao@stratus.com>
+References: <20200109145729.32898-1-peterx@redhat.com>
+ <20200109145729.32898-13-peterx@redhat.com>
+ <20200109110110-mutt-send-email-mst@kernel.org>
+ <20200109191514.GD36997@xz-x1>
+ <22bcd5fc-338c-6b72-2bda-47ba38d7e8ef@redhat.com>
+ <20200119051145-mutt-send-email-mst@kernel.org>
+ <20200120072915.GD380565@xz-x1>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <4e75a275-6687-2efc-0595-9b993ec300be@redhat.com>
+Date:   Tue, 21 Jan 2020 11:24:56 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG3NODE1.st.com (10.75.127.7) To SFHDAG6NODE1.st.com
- (10.75.127.16)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-21_02:2020-01-21,2020-01-21 signatures=0
+In-Reply-To: <20200120072915.GD380565@xz-x1>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Etienne Carriere <etienne.carriere@st.com>
+On 20/01/20 08:29, Peter Xu wrote:
+>>>
+>>>    00b (invalid GFN) ->
+>>>      01b (valid gfn published by kernel, which is dirty) ->
+>>>        1*b (gfn dirty page collected by userspace) ->
+>>>          00b (gfn reset by kernel, so goes back to invalid gfn)
+>>> That is 10b and 11b are equivalent.  The kernel doesn't read that bit if
+>>> userspace has collected the page.
+> Yes "1*b" is good too (IMHO as long as we can define three states for
+> an entry).  However do you want me to change to that?  Note that I
+> still think we need to read the rest of the field (in this case,
+> "slot" and "gfn") besides the two bits to do re-protect.  Should we
+> trust that unconditionally if writable?
 
-Change DSI driver to not print an error trace when probe
-is deferred for a clock resource.
+I think that userspace would only hurt itself if they do so.  As long as
+the kernel has a trusted copy of the indices, it's okay.
 
-Signed-off-by: Etienne Carriere <etienne.carriere@st.com>
----
- drivers/gpu/drm/stm/dw_mipi_dsi-stm.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+We have plenty of bits--x86 limits GFNs to 40 bits (52 bits maximum
+physical address).  However, even on other architectures GFNs are
+limited to address space size - page shift (64-12).
 
-diff --git a/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c b/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c
-index 4b16563..2e1f266 100644
---- a/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c
-+++ b/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c
-@@ -377,7 +377,9 @@ static int dw_mipi_dsi_stm_probe(struct platform_device *pdev)
- 	dsi->pllref_clk = devm_clk_get(dev, "ref");
- 	if (IS_ERR(dsi->pllref_clk)) {
- 		ret = PTR_ERR(dsi->pllref_clk);
--		DRM_ERROR("Unable to get pll reference clock: %d\n", ret);
-+		if (ret != -EPROBE_DEFER)
-+			DRM_ERROR("Unable to get pll reference clock: %d\n",
-+				  ret);
- 		goto err_clk_get;
- 	}
- 
--- 
-2.7.4
+Paolo
 
