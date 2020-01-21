@@ -2,80 +2,170 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B52C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 23:34:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB87EC33CAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 23:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2886D24655
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 23:34:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C80962465A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 23:35:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728750AbgAUXel (ORCPT
+        id S1728829AbgAUXfO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 18:34:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44958 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725933AbgAUXel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 18:34:41 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20A0E24125;
-        Tue, 21 Jan 2020 23:34:40 +0000 (UTC)
-Date:   Tue, 21 Jan 2020 18:34:38 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] trace/kprobe: remove MAX_KPROBE_CMDLINE_SIZE
-Message-ID: <20200121183438.635b0ff7@gandalf.local.home>
-In-Reply-To: <1579586075-45132-1-git-send-email-alex.shi@linux.alibaba.com>
-References: <1579586075-45132-1-git-send-email-alex.shi@linux.alibaba.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 21 Jan 2020 18:35:14 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:43769 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbgAUXfN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 18:35:13 -0500
+Received: from 79.184.255.84.ipv4.supernova.orange.pl (79.184.255.84) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.320)
+ id 282784e7c78b0209; Wed, 22 Jan 2020 00:35:11 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Chanho Min <chanho.min@lge.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Daewoong Kim <daewoong00.kim@lge.com>,
+        Seokjoo Lee <seokjoo.lee@lge.com>,
+        Lee Gunho <gunho.lee@lge.com>
+Subject: Re: [PATCH] PM / sleep: fix use-after-free on async resume
+Date:   Wed, 22 Jan 2020 00:35:11 +0100
+Message-ID: <24696489.X8ojiuEZiU@kreacher>
+In-Reply-To: <175529881.VBaH80lGUZ@kreacher>
+References: <1579568452-27253-1-git-send-email-chanho.min@lge.com> <CAJZ5v0hP4S3+8yNZkbWAUaQof_ikar+w3F8Li6zvPSJcKif3NQ@mail.gmail.com> <175529881.VBaH80lGUZ@kreacher>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Masami,
-
-With your new bootconfig work, will you be utilizing
-MAX_KPROBE_CMDLINE_SIZE, or should it be removed?
-
--- Steve
-
-
-On Tue, 21 Jan 2020 13:54:35 +0800
-Alex Shi <alex.shi@linux.alibaba.com> wrote:
-
-> This limitation are never lunched from introduce commit 970988e19eb0
-> ("tracing/kprobe: Add kprobe_event= boot parameter")
+On Wednesday, January 22, 2020 12:03:16 AM CET Rafael J. Wysocki wrote:
+> On Tuesday, January 21, 2020 5:54:58 PM CET Rafael J. Wysocki wrote:
+> > On Tue, Jan 21, 2020 at 2:31 AM Chanho Min <chanho.min@lge.com> wrote:
+> > >
+> > > Some device can be released during suspend (e.g. usb disconnection).
+> > > But, Its child device still use dev->parent's lock in dpm_wait().
+> > > It can be ocurred use-after-free as bellows. This is happened during
+> > > usb resume in practice.
+> > 
+> > In that case the resume of the child is going to be carried out after
+> > its parent has gone away, which is generally incorrect..
 > 
-> Could we remove it if no intention to implement it?
+> That isn't really a problem in the case at hand, though, because the memory
+> taken up by the parent can only be freed when all of its children have been
+> unregistered and all of the class, type, bus, driver etc pointers of the
+> children are NULL then, so there won't be a resume callback to execute for
+> the child.
+
+Well, not really true, because device_del() doesn't clear dev->bus, for
+example, AFAICS, so the resume really needs to be explicitly avoided if
+the device has been deleted.
+
+[cut]
+
+> > > --
+> > 
+> > Something a bit more sophisticated is needed here, let me think about that.
+> > 
 > 
-> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-> Cc: Steven Rostedt <rostedt@goodmis.org> 
-> Cc: Ingo Molnar <mingo@redhat.com> 
-> Cc: linux-kernel@vger.kernel.org 
-> ---
->  kernel/trace/trace_kprobe.c | 1 -
->  1 file changed, 1 deletion(-)
+> I've ended up with the patch below.
 > 
-> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-> index 7f890262c8a3..eafa90d0f760 100644
-> --- a/kernel/trace/trace_kprobe.c
-> +++ b/kernel/trace/trace_kprobe.c
-> @@ -22,7 +22,6 @@
->  
->  #define KPROBE_EVENT_SYSTEM "kprobes"
->  #define KRETPROBE_MAXACTIVE_MAX 4096
-> -#define MAX_KPROBE_CMDLINE_SIZE 1024
->  
->  /* Kprobe early definition from command line */
->  static char kprobe_boot_events_buf[COMMAND_LINE_SIZE] __initdata;
+> The lock prevents the unregistration of dev from completing, if it is acquired
+> before device_pm_remove() in device_del(), and that prevents the parent
+> reference from being dropped (at the end of the latter) until the lock is held.
+> If the lock is acquired after device_pm_remove() has been called for the
+> device, there obviously is no need to wait for the parent.
+> 
+
+So something like this should work:
+
+---
+ drivers/base/power/main.c |   42 +++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 37 insertions(+), 5 deletions(-)
+
+Index: linux-pm/drivers/base/power/main.c
+===================================================================
+--- linux-pm.orig/drivers/base/power/main.c
++++ linux-pm/drivers/base/power/main.c
+@@ -273,10 +273,38 @@ static void dpm_wait_for_suppliers(struc
+ 	device_links_read_unlock(idx);
+ }
+ 
+-static void dpm_wait_for_superior(struct device *dev, bool async)
++static bool dpm_wait_for_superior(struct device *dev, bool async)
+ {
+-	dpm_wait(dev->parent, async);
++	struct device *parent;
++
++	/*
++	 * If the device and its parent are both resumed asynchronously and the
++	 * parent's callback deletes both the device and the parent itself, the
++	 * parent object may be freed while this function is running, so avoid
++	 * that by reference counting the parent once more unless the device has
++	 * been deleted already.
++	 */
++	mutex_lock(&dpm_list_mtx);
++
++	if (!device_pm_initialized(dev)) {
++		mutex_unlock(&dpm_list_mtx);
++		return false;
++	}
++
++	parent = get_device(dev->parent);
++
++	mutex_unlock(&dpm_list_mtx);
++
++	dpm_wait(parent, async);
++	put_device(parent);
++
+ 	dpm_wait_for_suppliers(dev, async);
++
++	/*
++	 * If the parent's callback has deleted the device, it is not correct to
++	 * attempt to resume it, so avoid doing that then.
++	 */
++	return device_pm_initialized(dev);
+ }
+ 
+ static void dpm_wait_for_consumers(struct device *dev, bool async)
+@@ -621,7 +649,8 @@ static int device_resume_noirq(struct de
+ 	if (!dev->power.is_noirq_suspended)
+ 		goto Out;
+ 
+-	dpm_wait_for_superior(dev, async);
++	if (!dpm_wait_for_superior(dev, async))
++		goto Out;
+ 
+ 	skip_resume = dev_pm_may_skip_resume(dev);
+ 
+@@ -829,7 +858,8 @@ static int device_resume_early(struct de
+ 	if (!dev->power.is_late_suspended)
+ 		goto Out;
+ 
+-	dpm_wait_for_superior(dev, async);
++	if (!dpm_wait_for_superior(dev, async))
++		goto Out;
+ 
+ 	callback = dpm_subsys_resume_early_cb(dev, state, &info);
+ 
+@@ -944,7 +974,9 @@ static int device_resume(struct device *
+ 		goto Complete;
+ 	}
+ 
+-	dpm_wait_for_superior(dev, async);
++	if (!dpm_wait_for_superior(dev, async))
++		goto Complete;
++
+ 	dpm_watchdog_set(&wd, dev);
+ 	device_lock(dev);
+ 
+
+
 
