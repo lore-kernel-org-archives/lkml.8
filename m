@@ -7,30 +7,31 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D2ACC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00826C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 595AD24653
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:49:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D214724653
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:49:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729094AbgAUItM (ORCPT
+        id S1729112AbgAUItS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 03:49:12 -0500
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:46650 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728977AbgAUItM (ORCPT
+        Tue, 21 Jan 2020 03:49:18 -0500
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:59567 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728680AbgAUItR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 03:49:12 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07417;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0ToHWsbJ_1579596549;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0ToHWsbJ_1579596549)
+        Tue, 21 Jan 2020 03:49:17 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R831e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0ToHVLxs_1579596554;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0ToHVLxs_1579596554)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 21 Jan 2020 16:49:09 +0800
+          Tue, 21 Jan 2020 16:49:15 +0800
 From:   Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     David Howells <dhowells@redhat.com>, linux-cachefs@redhat.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] fcache: remove unused macro CACHEFILES_KEYBUF_SIZE
-Date:   Tue, 21 Jan 2020 16:49:03 +0800
-Message-Id: <1579596543-257734-1-git-send-email-alex.shi@linux.alibaba.com>
+Cc:     Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        cluster-devel@redhat.com, linux-kernel@vger.kernel.org
+Subject: [PATCH] fs/gfs2: remove IS_DINODE
+Date:   Tue, 21 Jan 2020 16:49:12 +0800
+Message-Id: <1579596552-257820-1-git-send-email-alex.shi@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -38,30 +39,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-after commit 402cb8dda949 ("fscache: Attach the index key and aux data
-to the cookie"), no one use this macro anymore, remove it.
+After commit 1579343a73e3 ("GFS2: Remove dirent_first() function"), this
+macro isn't used any more. so remove it.
 
 Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: David Howells <dhowells@redhat.com> 
-Cc: linux-cachefs@redhat.com 
+Cc: Bob Peterson <rpeterso@redhat.com> 
+Cc: Andreas Gruenbacher <agruenba@redhat.com> 
+Cc: cluster-devel@redhat.com 
 Cc: linux-kernel@vger.kernel.org 
 ---
- fs/cachefiles/namei.c | 2 --
- 1 file changed, 2 deletions(-)
+ fs/gfs2/dir.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/fs/cachefiles/namei.c b/fs/cachefiles/namei.c
-index ecc8ecbbfa5a..e327f781dae7 100644
---- a/fs/cachefiles/namei.c
-+++ b/fs/cachefiles/namei.c
-@@ -18,8 +18,6 @@
- #include <linux/slab.h>
- #include "internal.h"
+diff --git a/fs/gfs2/dir.c b/fs/gfs2/dir.c
+index eb9c0578978f..636a8d0f3dab 100644
+--- a/fs/gfs2/dir.c
++++ b/fs/gfs2/dir.c
+@@ -74,7 +74,6 @@
+ #include "util.h"
  
--#define CACHEFILES_KEYBUF_SIZE 512
--
- /*
-  * dump debugging info about an object
-  */
+ #define IS_LEAF     1 /* Hashed (leaf) directory */
+-#define IS_DINODE   2 /* Linear (stuffed dinode block) directory */
+ 
+ #define MAX_RA_BLOCKS 32 /* max read-ahead blocks */
+ 
 -- 
 1.8.3.1
 
