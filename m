@@ -2,85 +2,102 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61275C32771
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 00:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB06C33CA1
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 00:11:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 299C52253D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 00:07:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E238B24650
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 00:11:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ezRDrvTl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728792AbgAUAHI (ORCPT
+        id S1728760AbgAUALl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 19:07:08 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:57038 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727075AbgAUAHI (ORCPT
+        Mon, 20 Jan 2020 19:11:41 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:46852 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727045AbgAUALk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 19:07:08 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ith4P-00CK6C-FD; Tue, 21 Jan 2020 00:07:01 +0000
-Date:   Tue, 21 Jan 2020 00:07:01 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Namjae Jeon <linkinjeon@gmail.com>,
-        Gabriel Krisman Bertazi <krisman@collabora.com>
-Subject: Re: vfat: Broken case-insensitive support for UTF-8
-Message-ID: <20200121000701.GG8904@ZenIV.linux.org.uk>
-References: <20200119221455.bac7dc55g56q2l4r@pali>
- <87sgkan57p.fsf@mail.parknet.co.jp>
- <20200120110438.ak7jpyy66clx5v6x@pali>
- <875zh6pc0f.fsf@mail.parknet.co.jp>
- <20200120214046.f6uq7rlih7diqahz@pali>
- <20200120224625.GE8904@ZenIV.linux.org.uk>
- <20200120235745.hzza3fkehlmw5s45@pali>
+        Mon, 20 Jan 2020 19:11:40 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00L08QET083194;
+        Tue, 21 Jan 2020 00:11:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=9FblVbcSnUCDH7zhnS/i2/0a0D7oRnkTC1vUJXOtlIc=;
+ b=ezRDrvTlLW8PYGviRj7jCiKInxf7Dm8+It1fOSdw+aieI299GZNKyVcKg3y6LACv+hDl
+ oYCMHO6VPrOe9MgbfOZQjNsv1sJ61hwzpmY7D37ZUcdJXeQfXunRxJuAmi72QKMbs3tZ
+ pY5KPoZmhGKZeRs1RqRte6eodDzb71cELLrUiYGZ8TUJfYl35xQoWXoW6Ot8mFuChYX7
+ T/QHZdhoBNktek3zmCkm0XmUzyzziokio/BVAPUkvygmDveRp8xdNlZ7+5fHhQqyt/aG
+ sQxhLXlVJ0IIK2DDnZI72w6JNHBLXbVkLalHWoCdpjPpdEpKzImK0MVNauX0T8tyPY0a LA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2xksyq1tp7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Jan 2020 00:11:08 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00L08mU3176761;
+        Tue, 21 Jan 2020 00:11:08 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2xnpfn02ey-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Jan 2020 00:11:08 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00L0B3Ml000710;
+        Tue, 21 Jan 2020 00:11:04 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 20 Jan 2020 16:11:03 -0800
+To:     Stanley Chu <stanley.chu@mediatek.com>
+Cc:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
+        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
+        <jejb@linux.ibm.com>, <beanhuo@micron.com>,
+        <asutoshd@codeaurora.org>, <cang@codeaurora.org>,
+        <matthias.bgg@gmail.com>, <bvanassche@acm.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
+        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
+        <andy.teng@mediatek.com>
+Subject: Re: [PATCH v1 0/3] scsi: ufs-mediatek: add MediaTek vendor implementation part II
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20200117035108.19699-1-stanley.chu@mediatek.com>
+Date:   Mon, 20 Jan 2020 19:10:59 -0500
+In-Reply-To: <20200117035108.19699-1-stanley.chu@mediatek.com> (Stanley Chu's
+        message of "Fri, 17 Jan 2020 11:51:05 +0800")
+Message-ID: <yq1blqxk6ss.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200120235745.hzza3fkehlmw5s45@pali>
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9506 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001210000
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9506 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001210000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 12:57:45AM +0100, Pali Rohár wrote:
-> On Monday 20 January 2020 22:46:25 Al Viro wrote:
-> > On Mon, Jan 20, 2020 at 10:40:46PM +0100, Pali Rohár wrote:
-> > 
-> > > Ok, I did some research. It took me it longer as I thought as lot of
-> > > stuff is undocumented and hard to find all relevant information.
-> > > 
-> > > So... fastfat.sys is using ntos function RtlUpcaseUnicodeString() which
-> > > takes UTF-16 string and returns upper case UTF-16 string. There is no
-> > > mapping table in fastfat.sys driver itself.
-> > 
-> > Er...  Surely it's OK to just tabulate that function on 65536 values
-> > and see how could that be packed into something more compact?
-> 
-> It is OK, but too complicated. That function is in nt kernel. So you
-> need to build a new kernel module and also decide where to put output of
-> that function. It is a long time since I did some nt kernel hacking and
-> nowadays you need to download 10GB+ of Visual Studio code, then addons
-> for building kernel modules, figure out how to write and compile simple
-> kernel module via Visual Studio, write ini install file, try to load it
-> and then you even fail as recent Windows kernels refuse to load kernel
-> modules which are not signed...
 
-Wait a sec...  From NT userland, on a mounted VFAT:
-	for all s in single-codepoint strings
-		open s for append
-		if failed
-			print s on stderr, along with error value
-		write s to the opened file, adding to its tail
-		close the file
-the for each equivalence class you'll get a single file, with all
-members of that class written to it.  In addition you'll get the
-list of prohibited codepoints.
+Stanley,
 
-Why bother with any kind of kernel modules?  IDGI...
+> This series adds some MediaTek vendor implementations in UFS driver:
+>   - Callback dbg_register_dump
+>   - Low-power mode for hibern8 state
+
+Applied to 5.6/scsi-queue, thanks!
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
