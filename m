@@ -2,97 +2,79 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DAF0C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 11:00:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08091C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 11:01:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70A1720882
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 11:00:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qqbRpNcL"
+	by mail.kernel.org (Postfix) with ESMTP id CD6D220882
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 11:01:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729017AbgAULAx (ORCPT
+        id S1729145AbgAULBu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 06:00:53 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45359 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727255AbgAULAx (ORCPT
+        Tue, 21 Jan 2020 06:01:50 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:36260 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727255AbgAULBu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 06:00:53 -0500
-Received: by mail-wr1-f65.google.com with SMTP id j42so2605192wrj.12;
-        Tue, 21 Jan 2020 03:00:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=1yHO78BlmD5ePF7vR6G6f3SYtNqfwsMJwSdjTduHry8=;
-        b=qqbRpNcLc+Hp9q2HHXLmzIqC+zsFFJMfWtlb69Hk9/vjCrnU2ql5Qwq2CMgIdQUxon
-         46Fpn1KwV1EXe2WaOp6JJCs8E6I03QzDKCigqQe2HseeRpJk0Xhl//evdoBU//rN9uJc
-         t8CzqxjItvYXPnf/ttUf6iO/xn7EjfiQE2skV1RD68PICHwQYe6kRaG5K2PFyiZeVCaR
-         NXc/SvbN0uOoCuW7mwOlM9mD5XGy6dRLy9wcMKPc4PhInPTpxUb1pHHVaQ5KgDA+DCwx
-         bUYl0NTrJQRe5RgtEadrjqtXXo6iLtkrEKxJHoHKLpr7li8CWkdNeAq29IH9E6JQ1+lt
-         KkKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=1yHO78BlmD5ePF7vR6G6f3SYtNqfwsMJwSdjTduHry8=;
-        b=XqAbCTJeMd2jDBbOZ15laDQaRNRlITrzBuroPqzulqknj1sQn9l6h9iEum9YnJ1CbO
-         AX9wX1Hf1c99Z1TLL6pFRKzCijy71kw+qBRb+qRZOpmyfC6vXDRBrUkd2KKMuw6mt8Qg
-         GmbWLXGhQuuBZLNdLJaHsoTZhRddCbsCveY+59H5Sze0iJoFY9Po132Y3xZ1z0z/vbuU
-         tYcRihBdqxmUBw5s6d+wep4m/QgrAbXoAl/h7i4mipwREmUVqRrvOa1m9M3iRvKZ0Z0c
-         t61wz44esJvBLLFU1hs13imH0SGVdqkh5lnQdq01rEe4e6SJBPkVnELppoLYBOu/4h4w
-         UPkA==
-X-Gm-Message-State: APjAAAWUlr+wRRJkgifGdCj+GShwfcnbnhyqvaK5nyeFl7pxGSBwQR5o
-        a1wCzC2BPUz1WsOzgVFIyl0=
-X-Google-Smtp-Source: APXvYqyHts9oIQp+L9m14UxOXzol1XEhlCbUwKMiRBQmIvCbb8SXYmjeyMR1B7fxUn3Im8JOdEh8pA==
-X-Received: by 2002:adf:dfc2:: with SMTP id q2mr4750352wrn.251.1579604451026;
-        Tue, 21 Jan 2020 03:00:51 -0800 (PST)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id u22sm54596665wru.30.2020.01.21.03.00.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 03:00:50 -0800 (PST)
-Date:   Tue, 21 Jan 2020 12:00:49 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Namjae Jeon <linkinjeon@gmail.com>,
-        Gabriel Krisman Bertazi <krisman@collabora.com>
-Subject: Re: vfat: Broken case-insensitive support for UTF-8
-Message-ID: <20200121110049.4upreexmv5kxwp5n@pali>
-References: <20200119221455.bac7dc55g56q2l4r@pali>
- <87sgkan57p.fsf@mail.parknet.co.jp>
- <20200120173215.GF15860@mit.edu>
- <87eevt4ga5.fsf@mail.parknet.co.jp>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87eevt4ga5.fsf@mail.parknet.co.jp>
-User-Agent: NeoMutt/20180716
+        Tue, 21 Jan 2020 06:01:50 -0500
+Received: from localhost (82-95-191-104.ip.xs4all.nl [82.95.191.104])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id ABD1715C19EF6;
+        Tue, 21 Jan 2020 03:01:48 -0800 (PST)
+Date:   Tue, 21 Jan 2020 12:01:47 +0100 (CET)
+Message-Id: <20200121.120147.1198296072172480771.davem@davemloft.net>
+To:     ms@dev.tdt.de
+Cc:     kubakici@wp.pl, khc@pm.waw.pl, linux-x25@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] wan/hdlc_x25: make lapb params configurable
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200121.114152.532453946458399573.davem@davemloft.net>
+References: <20200121060034.30554-1-ms@dev.tdt.de>
+        <20200121.114152.532453946458399573.davem@davemloft.net>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 21 Jan 2020 03:01:49 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday 21 January 2020 12:52:50 OGAWA Hirofumi wrote:
-> BTW, VFAT has to store the both of shortname (codepage) and longname
-> (UTF16), and using both names to open a file. So Windows should be using
-> current locale codepage to make shortname even latest Windows for VFAT.
+From: David Miller <davem@davemloft.net>
+Date: Tue, 21 Jan 2020 11:41:52 +0100 (CET)
 
-fastfat.sys stores into shortnames only 7bit characters. Which is same
-in all OEM codepages. Non-7bit are replaced by underline or shortened by
-"~N" syntax. According to source code of fastfat.sys it has some
-registry option to allow usage also of full 8bit OEM codepage.
+> From: Martin Schiller <ms@dev.tdt.de>
+> Date: Tue, 21 Jan 2020 07:00:33 +0100
+> 
+>> This enables you to configure mode (DTE/DCE), Modulo, Window, T1, T2, N2 via
+>> sethdlc (which needs to be patched as well).
+>> 
+>> Signed-off-by: Martin Schiller <ms@dev.tdt.de>
+> 
+> Applied to net-next.
 
-So default behavior seems to be safe.
+I seriously wonder how much you tested this code, because the compiler warned
+me about:
 
--- 
-Pali Rohár
-pali.rohar@gmail.com
+diff --git a/drivers/net/wan/hdlc_x25.c b/drivers/net/wan/hdlc_x25.c
+index 63c9aeed9a34..c84536b03aa8 100644
+--- a/drivers/net/wan/hdlc_x25.c
++++ b/drivers/net/wan/hdlc_x25.c
+@@ -253,7 +253,7 @@ static int x25_ioctl(struct net_device *dev, struct ifreq *ifr)
+ 			return -EBUSY;
+ 
+ 		/* backward compatibility */
+-		if (ifr->ifr_settings.size = 0) {
++		if (ifr->ifr_settings.size == 0) {
+ 			new_settings.dce = 0;
+ 			new_settings.modulo = 8;
+ 			new_settings.window = 7;
+
+I'll commit that fix, but this is truly careless especially since the compiler
+warns about it.
