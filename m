@@ -2,198 +2,229 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EDD6C33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 06:35:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA0BC33CB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 06:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D10C22522
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 06:35:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4742421734
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 06:37:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JlopErK1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728843AbgAUGfG (ORCPT
+        id S1728609AbgAUGhF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 01:35:06 -0500
-Received: from mout0.freenet.de ([195.4.92.90]:33188 "EHLO mout0.freenet.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbgAUGfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 01:35:05 -0500
-X-Greylist: delayed 300 seconds by postgrey-1.27 at vger.kernel.org; Tue, 21 Jan 2020 01:35:03 EST
-Received: from [195.4.92.165] (helo=mjail2.freenet.de)
-        by mout0.freenet.de with esmtpa (ID andihartmann@freenet.de) (port 25) (Exim 4.92 #3)
-        id 1itn34-0004wO-8u
-        for linux-kernel@vger.kernel.org; Tue, 21 Jan 2020 07:30:02 +0100
-Received: from [::1] (port=48248 helo=mjail2.freenet.de)
-        by mjail2.freenet.de with esmtpa (ID andihartmann@freenet.de) (Exim 4.92 #3)
-        id 1itn34-0002y4-75
-        for linux-kernel@vger.kernel.org; Tue, 21 Jan 2020 07:30:02 +0100
-Received: from sub8.freenet.de ([195.4.92.127]:59914)
-        by mjail2.freenet.de with esmtpa (ID andihartmann@freenet.de) (Exim 4.92 #3)
-        id 1itn0z-00026u-M3
-        for linux-kernel@vger.kernel.org; Tue, 21 Jan 2020 07:27:53 +0100
-Received: from p200300de571bdf00505400fffe15ac42.dip0.t-ipconnect.de ([2003:de:571b:df00:5054:ff:fe15:ac42]:57682 helo=mail.maya.org)
-        by sub8.freenet.de with esmtpsa (ID andihartmann@freenet.de) (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128) (port 465) (Exim 4.92 #3)
-        id 1itn0z-0007Q7-Jw
-        for linux-kernel@vger.kernel.org; Tue, 21 Jan 2020 07:27:53 +0100
-Received: internal info suppressed
-References: <20200118172615.26329-1-linux@roeck-us.net>
-To:     Kernel-Mailingliste <linux-kernel@vger.kernel.org>
-From:   Andreas Hartmann <andihartmann@01019freenet.de>
-Autocrypt: addr=andihartmann@01019freenet.de; keydata=
- xsDiBDz/vtQRBAC+OSpes1p57fA8ENLYy3Nl/CpEvtRoDdhy7DPyc1+adE57vpK52naRfaZB
- f0RSMvIZwJYggMio+emiN5Du7kL9y2IEjmHBvp/1x68dEwswHP9X4hJmHmyOJL3IB2WsvEdh
- QF97913bWX34MYCeuOoSJ1OWvBLGfNs0zv70HOTfJwCgricyy8N1itEryLwoeu5HWz0SmDED
- /2IiuDhPZ332i0Ylp40RQb2Wb0xBvpscVeRZDItsYYbJ/Sgmso1sn93sFFWmmrvGUyg3MNCt
- +u+7P8Wg3VXte8cHbNwdzNtXHTfYyTcgZXC4xJN2akZt4pdR531mXyP2kFxmKtAEmW6bNpvV
- oNnkgZVWvoT4BHLloLzA62JUEgFJA/9dHilAVS3Ezv5ECB02Lt2vNNzMvPlyNbxBhWnrb6VC
- mFMCRg9bOK2io1zYb8C4gEpJ33wl8hEBxOWfCOEEKesAUCjViosNvxqGNtGWjk5p1O2QBWE2
- D6u5+itACQRqhmmgNl+dK6Of2yGG9GxOYWozIELEfL9ZB4xQ7A2tDFR0Zs1HQW5kcmVhcyBI
- YXJ0bWFubiAod2VpbCBkZXIgUmVjaG5lciBuZXUgaGVpc3N0KSA8YW5kcmVhc0BkdWFsYy5t
- YXlhLm9yZz7CYAQTEQIAIAUCTMsY3gIbAwYLCQgHAwIEFQIIAwQWAgMBAh4BAheAAAoJEBhU
- mcTgYeNVT1QAoJ4cJ2jl6Jgmi+PmWCXPk4m8lgAGAKCjkxgK/PjE3+cNsLa/xEpReqYwRs7A
- TQQ8/77WEAQAqBBex8oxPC1srpaSFbq8NCM/Gy7SKucKsQPqG/De46WQESbmnMElVft2xCBC
- rOJ7E02k10h/twe0yQnNdXMJDMDM0w0EEyX9ljekIr3SFbXpU2S4wUl3C6CW2hizUgOyLsg0
- chpfGMB9+wiVycyjZahafoc14wuuDj5BqWEOCccAAwcD/14lh1PTPKx4hs7ITtFZh5TI6+5f
- xAWIBBUeQL+GEt+CKwyNc/hWp8YTPJ3SAedmDrEMX+2yPO95KeIfg6bnnIVvI/aTR/vJFsWK
- GKMx+KaKx+IEwuhCpNIMUASpJWRvVlo3lMIvqAMJIBj79uKq/X9fppblcJst29QVO6aWf3Gh
- wkYEGBECAAYFAjz/vtYACgkQGFSZxOBh41VBAgCfZRiPCQ+jNvdT5iR2fEblqTtBrF0An0nb
- M8B1Lpkm44214BbtIQKneVrYwkYEGBECAAYFAjz/vtcACgkQGFSZxOBh41UjjgCgoua1QYf+
- FcHpxrRgoioO3D7ddkUAnAkRf8FH9i94x8f6LfS4npozycQc
-Subject: Re: [PATCH v2 0/5] hwmon: k10temp driver improvements
-Message-ID: <c5d5aafb-282e-9ed1-ff1e-be6105446d39@01019freenet.de>
-Date:   Tue, 21 Jan 2020 07:27:49 +0100
+        Tue, 21 Jan 2020 01:37:05 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:37830 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbgAUGhF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 01:37:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=B9sbn3ZIPxGCRb4kMssJcIYm3pYGmTGnTR4AQBNaStE=; b=JlopErK1ZybSa25drlkDEVQGu
+        /MdSvAbUL7ANAJ3g3PWv9GISHEfMRwNCtWGt5RCmyO/G+aUMeTpAP9tVW18rlE3jQ9jGw+IO5O53t
+        nBxB8QG2jG5rN7ex7e9Naj4AwAmX8z0nBf3N1vYFKjHuRSJsVY0eKsCQCisrtmmmy7q61IFPs8hFy
+        de69uvjHYlkUz8McAgfj9SRpYiHKczNdpVduUwcjzVMmeB7dGW4RJnedeQb0PCY6wFjjohT311wel
+        L5cfC7wdQ3h9yqz4S3hFKI7IJbxZAnfovakiM3gp7jd3EPuldgeRa8vjPZesAVyGCF+kRU5WRwoPN
+        IN15FlBYg==;
+Received: from [2601:1c0:6280:3f0::ed68]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1itn9n-0000Kb-Uq; Tue, 21 Jan 2020 06:37:00 +0000
+Subject: Re: [PATCH v1 06/11] Documentation: pstore/blk: blkoops: create
+ document for pstore_blk
+To:     liaoweixiong <liaoweixiong@allwinnertech.com>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org
+References: <1579482233-2672-1-git-send-email-liaoweixiong@allwinnertech.com>
+ <1579482233-2672-7-git-send-email-liaoweixiong@allwinnertech.com>
+ <b9cd734b-8bb1-5e26-a7ed-fbc79ab2d958@infradead.org>
+ <c87bdf3a-f129-a2a7-40b2-2220f79b505a@allwinnertech.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <40d7f57a-119e-e51f-99a5-63e85ab5ab91@infradead.org>
+Date:   Mon, 20 Jan 2020 22:36:58 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <20200118172615.26329-1-linux@roeck-us.net>
+In-Reply-To: <c87bdf3a-f129-a2a7-40b2-2220f79b505a@allwinnertech.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originated-At: 2003:de:571b:df00:5054:ff:fe15:ac42!57682
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18.01.20 at 18:26 Guenter Roeck wrote:
-> This patch series implements various improvements for the k10temp driver.
+On 1/20/20 9:23 PM, liaoweixiong wrote:
+> hi Randy Dunlap,
+> 
+> On 2020/1/21 PM12:13, Randy Dunlap wrote:
+>> Hi,
+>>
+>> I have some documentation comments for you:
+>>
+>>
+>> On 1/19/20 5:03 PM, WeiXiong Liao wrote:
+>>> The document, at Documentation/admin-guide/pstore-block.rst, tells us
+>>> how to use pstore/blk and blkoops.
+>>>
+>>> Signed-off-by: WeiXiong Liao <liaoweixiong@allwinnertech.com>
+>>> ---
+>>>  Documentation/admin-guide/pstore-block.rst | 278 +++++++++++++++++++++++++++++
+>>>  MAINTAINERS                                |   1 +
+>>>  fs/pstore/Kconfig                          |   2 +
+>>>  3 files changed, 281 insertions(+)
+>>>  create mode 100644 Documentation/admin-guide/pstore-block.rst
+>>>
+>>> diff --git a/Documentation/admin-guide/pstore-block.rst b/Documentation/admin-guide/pstore-block.rst
+>>> new file mode 100644
+>>> index 000000000000..58418d429c55
+>>> --- /dev/null
+>>> +++ b/Documentation/admin-guide/pstore-block.rst
+>>> +
+>>> +
+>>> +dmesg_size
+>>> +~~~~~~~~~~
+>>> +
+>>> +The chunk size in bytes for dmesg(oops/panic). It **MUST** be a multiple of
+>>> +4096. If you don't need it, safely set it 0 or ignore it.
+>>
+>>                                       set it to 0 or ignore it.
+>>
+> 
+> I will fix it, thank you.
+> 
+>> The example above is:  blkoops.dmesg_size=64
+>> where 64 is not a multiple of 4096. (?)
+>>
+> 
+> The module parameter dmesg_size is in unit KB.
 
-Tested with Asus Prime X370-PRO / 1700X / Linux 5.4.x
-
-Tested-By: Andreas Hartmann <andihartmann@01019freenet.de>
-
-Idle:
-
-it8665-isa-0290
-Adapter: ISA adapter
-in0:          +0.88 V  (min =  +1.27 V, max =  +2.00 V)
-in1:          +2.52 V  (min =  +2.76 V, max =  +2.55 V)
-in2:          +2.05 V  (min =  +1.23 V, max =  +0.16 V)
-in3:          +2.01 V  (min =  +1.53 V, max =  +2.25 V)
-in4:          +0.03 V  (min =  +2.67 V, max =  +2.43 V)
-in5:          +0.03 V  (min =  +2.39 V, max =  +1.21 V)
-in6:          +0.03 V  (min =  +1.67 V, max =  +0.56 V)
-3VSB:         +3.31 V  (min =  +2.46 V, max =  +5.43 V)
-Vbat:         +3.25 V
-+3.3V:        +3.31 V
-Fan CPU:      594 RPM  (min =   10 RPM)
-Fan back:     380 RPM  (min =   11 RPM)
-Fan front:    415 RPM  (min =   12 RPM)
-fan5:           0 RPM  (min =   -1 RPM)  ALARM
-fan6:           0 RPM  (min =   -1 RPM)  ALARM
-CPU:          +28.0°C  (low  = +112.0°C, high =  -5.0°C)
-Motherboard:  +30.0°C  (low  = -33.0°C, high = -18.0°C)  sensor = thermistor
-temp3:        +29.0°C  (low  =  -1.0°C, high = -105.0°C)  sensor = thermistor
-temp4:        +29.0°C  (low  = -74.0°C, high = +126.0°C)  sensor = thermistor
-temp5:        +29.0°C  (low  = -49.0°C, high = +127.0°C)  sensor = thermistor
-temp6:        +29.0°C  (low  = -82.0°C, high = -79.0°C)  sensor = thermistor
-intrusion0:  ALARM
-
-k10temp-pci-00c3
-Adapter: PCI adapter
-Vcore:        +0.90 V
-Vsoc:         +0.90 V
-CPU:          +28.6°C  (high = +70.0°C)
-Tctl:         +48.6°C
-Icore:        +5.20 A
-Isoc:         +7.21 A
-
-
-Load:
-
-it8665-isa-0290
-Adapter: ISA adapter
-in0:          +1.38 V  (min =  +1.27 V, max =  +2.00 V)
-in1:          +2.52 V  (min =  +2.76 V, max =  +2.55 V)
-in2:          +2.04 V  (min =  +1.23 V, max =  +0.16 V)
-in3:          +2.01 V  (min =  +1.53 V, max =  +2.25 V)
-in4:          +0.03 V  (min =  +2.67 V, max =  +2.43 V)
-in5:          +0.03 V  (min =  +2.39 V, max =  +1.21 V)
-in6:          +0.03 V  (min =  +1.67 V, max =  +0.56 V)
-3VSB:         +3.33 V  (min =  +2.46 V, max =  +5.43 V)
-Vbat:         +3.25 V
-+3.3V:        +3.33 V
-Fan CPU:      798 RPM  (min =   10 RPM)
-Fan back:     481 RPM  (min =   11 RPM)
-Fan front:    460 RPM  (min =   12 RPM)
-fan5:           0 RPM  (min =   -1 RPM)  ALARM
-fan6:           0 RPM  (min =   -1 RPM)  ALARM
-CPU:          +43.0°C  (low  = +112.0°C, high =  -5.0°C)
-Motherboard:  +30.0°C  (low  = -33.0°C, high = -18.0°C)  sensor = thermistor
-temp3:        +33.0°C  (low  =  -1.0°C, high = -105.0°C)  sensor = thermistor
-temp4:        +33.0°C  (low  = -74.0°C, high = +126.0°C)  sensor = thermistor
-temp5:        +33.0°C  (low  = -49.0°C, high = +127.0°C)  sensor = thermistor
-temp6:        +33.0°C  (low  = -82.0°C, high = -79.0°C)  sensor = thermistor
-intrusion0:  ALARM
-
-k10temp-pci-00c3
-Adapter: PCI adapter
-Vcore:        +1.30 V
-Vsoc:         +0.90 V
-CPU:          +49.5°C  (high = +70.0°C)
-Tctl:         +69.5°C
-Icore:       +77.94 A
-Isoc:         +9.02 A
+I didn't see that documented anywhere.
 
 
-it8665-isa-0290
-Adapter: ISA adapter
-in0:          +1.36 V  (min =  +1.27 V, max =  +2.00 V)
-in1:          +2.52 V  (min =  +2.76 V, max =  +2.55 V)
-in2:          +2.04 V  (min =  +1.23 V, max =  +0.16 V)
-in3:          +2.00 V  (min =  +1.53 V, max =  +2.25 V)
-in4:          +0.03 V  (min =  +2.67 V, max =  +2.43 V)
-in5:          +0.03 V  (min =  +2.39 V, max =  +1.21 V)
-in6:          +0.03 V  (min =  +1.67 V, max =  +0.56 V)
-3VSB:         +3.33 V  (min =  +2.46 V, max =  +5.43 V)
-Vbat:         +3.25 V
-+3.3V:        +3.33 V
-Fan CPU:     1044 RPM  (min =   10 RPM)
-Fan back:     722 RPM  (min =   11 RPM)
-Fan front:    633 RPM  (min =   12 RPM)
-fan5:           0 RPM  (min =   -1 RPM)  ALARM
-fan6:           0 RPM  (min =   -1 RPM)  ALARM
-CPU:          +49.0°C  (low  = +112.0°C, high =  -5.0°C)
-Motherboard:  +30.0°C  (low  = -33.0°C, high = -18.0°C)  sensor = thermistor
-temp3:        +39.0°C  (low  =  -1.0°C, high = -105.0°C)  sensor = thermistor
-temp4:        +39.0°C  (low  = -74.0°C, high = +126.0°C)  sensor = thermistor
-temp5:        +39.0°C  (low  = -49.0°C, high = +127.0°C)  sensor = thermistor
-temp6:        +39.0°C  (low  = -82.0°C, high = -79.0°C)  sensor = thermistor
-intrusion0:  ALARM
+>>> +Normally the number of bytes written should be returned, while for error,
+>>> +negative number should be returned.
+>>> +
+>>> +panic_write (for block device)
+>>> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>> +
+>>> +It's much similar to panic_write for non-block device, but panic_write for
+>>> +block device writes alignment to SECTOR_SIZE, that's why the parameters are
+>>
+>>                 writes only aligned sectors of SECTOR_SIZE  (??)
+>>
+> 
+> How about this?
+> 
+> It's much similar to panic_write for non-block device, but the position and
+> data size of panic_write for block device must be aligned to SECTOR_SIZE,
+> that's why the parameters are @sects and @start_sect. Block device driver
+> should register it by ``blkoops_register_blkdev``.
 
-k10temp-pci-00c3
-Adapter: PCI adapter
-Vcore:        +1.30 V
-Vsoc:         +0.90 V
-CPU:          +52.1°C  (high = +70.0°C)
-Tctl:         +72.1°C
-Icore:       +78.98 A
-Isoc:         +9.02 A
+OK.
+
+>>> +@sects and @start_sect. Block device driver should register it by
+>>> +``blkoops_register_blkdev``.
+>>> +
+>>> +The parameter @start_sect is the relative position of the block device and
+>>> +partition. If block driver requires absolute position for panic_write,
+>>> +``blkoops_blkdev_info`` will be helpful, which can provide the absolute
+>>> +position of the block device (or partition) on the whole disk/flash.
+>>> +
+>>> +Normally zero should be returned, otherwise it indicates an error.
+>>> +
+>>> +Compression and header
+>>> +----------------------
+>>> +
+>>> +Block device is large enough for uncompressed dmesg data. Actually we do not
+>>> +recommend data compression because pstore/blk will insert some information into
+>>> +the first line of dmesg data. For example::
+>>> +
+>>> +        Panic: Total 16 times
+>>> +
+>>> +It means that it's the 16th times panic log since the first booting. Sometimes
+>>
+>>                                time of a panic log since ...
+>>
+> 
+> Should it be like this?
+> It means the time of a panic log since the first booting.
+
+That sounds like clock time, not the number of instances or occurrences.
+
+> 
+>>> +the oops|panic occurs since burning is very important for embedded device to
+>>
+>>                                ^^^^^^^ huh??
+>>
+> 
+> How about this?
+> 
+> Sometimes the number of occurrences of oops|panic since the first
+> booting is important
+> to judge whether the system is stable.
+
+OK.
+
+>>> +judge whether the system is stable.
+>>> +
+>>> +The following line is inserted by pstore filesystem. For example::
+>>> +
+>>> +        Oops#2 Part1
+>>> +
+>>> +It means that it's the 2nd times oops log on last booting.
+>>
+>>                           2nd time of an oops log on the last boot. (?)
+>>
+> 
+> How about this?
+> 
+> It means that it's OOPS for the 2nd time on the last boot.
+
+OK. It's an oops counter.
+
+>>> +#. Just use CPU to transfer.
+>>> +   Do not use DMA to transfer unless you are sure that DMA will not keep lock.
+>>> +#. Operate register directly.
+>>
+>>       Don't know what that means.
+>>
+> 
+> How about this?
+> 
+> #. Control registers directly.
+>     Please control registers directly rather than use Linux kernel
+> resources.
+
+OK.
+
+>     Do I/O map while initializing rather than wait until a panic occurs.
+> 
+>>> +   Try not to use Linux kernel resources. Do I/O map while initializing rather
+>>> +   than waiting until the panic.
 
 
-=> I can see slight differences regarding CPU temperature and Vcore between it8665 and k10temp - especially on high load (kernel compile).
+-- 
+~Randy
 
-
-Thanks
-Andreas
