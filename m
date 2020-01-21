@@ -2,84 +2,80 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91225C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 23:34:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B52C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 23:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D1EE24125
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 23:34:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2886D24655
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 23:34:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728928AbgAUXeB (ORCPT
+        id S1728750AbgAUXel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 18:34:01 -0500
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:46418 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbgAUXeA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 18:34:00 -0500
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by kvm5.telegraphics.com.au (Postfix) with ESMTP id 9E474272D8;
-        Tue, 21 Jan 2020 18:33:54 -0500 (EST)
-Date:   Wed, 22 Jan 2020 10:33:53 +1100 (AEDT)
-From:   Finn Thain <fthain@telegraphics.com.au>
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-cc:     "David S. Miller" <davem@davemloft.net>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Chris Zankel <chris@zankel.net>,
-        Laurent Vivier <laurent@vivier.eu>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net v2 01/12] net/sonic: Add mutual exclusion for accessing
- shared state
-In-Reply-To: <0113c00f-3f77-8324-95a8-31dd6f64fa6a@gmail.com>
-Message-ID: <alpine.LNX.2.21.1.2001221021590.8@nippy.intranet>
-References: <cover.1579641728.git.fthain@telegraphics.com.au> <d7c6081de558e2fe5693a35bb735724411134cb5.1579641728.git.fthain@telegraphics.com.au> <0113c00f-3f77-8324-95a8-31dd6f64fa6a@gmail.com>
+        Tue, 21 Jan 2020 18:34:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44958 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725933AbgAUXel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 18:34:41 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20A0E24125;
+        Tue, 21 Jan 2020 23:34:40 +0000 (UTC)
+Date:   Tue, 21 Jan 2020 18:34:38 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] trace/kprobe: remove MAX_KPROBE_CMDLINE_SIZE
+Message-ID: <20200121183438.635b0ff7@gandalf.local.home>
+In-Reply-To: <1579586075-45132-1-git-send-email-alex.shi@linux.alibaba.com>
+References: <1579586075-45132-1-git-send-email-alex.shi@linux.alibaba.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 Jan 2020, Eric Dumazet wrote:
+Masami,
 
-> On 1/21/20 1:22 PM, Finn Thain wrote:
-> > The netif_stop_queue() call in sonic_send_packet() races with the
-> > netif_wake_queue() call in sonic_interrupt(). This causes issues
-> > like "NETDEV WATCHDOG: eth0 (macsonic): transmit queue 0 timed out".
-> > Fix this by disabling interrupts when accessing tx_skb[] and next_tx.
-> > Update a comment to clarify the synchronization properties.
-> > 
-> > Fixes: efcce839360f ("[PATCH] macsonic/jazzsonic network drivers update")
-> > Tested-by: Stan Johnson <userm57@yahoo.com>
-> > Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-> 
-> > @@ -284,9 +287,16 @@ static irqreturn_t sonic_interrupt(int irq, void *dev_id)
-> >  	struct net_device *dev = dev_id;
-> >  	struct sonic_local *lp = netdev_priv(dev);
-> >  	int status;
-> > +	unsigned long flags;
-> > +
-> > +	spin_lock_irqsave(&lp->lock, flags);
-> 
-> 
-> This is a hard irq handler, no need to block hard irqs.
-> 
-> spin_lock() here is enough.
-> 
+With your new bootconfig work, will you be utilizing
+MAX_KPROBE_CMDLINE_SIZE, or should it be removed?
 
-Well, yes, assuming we're dealing with SMP [1]. Probably just disabling 
-pre-emption is all that will ever be needed.
+-- Steve
 
-Anyway, the real problem solved by disabling irqs is that macsonic must 
-avoid re-entrance of sonic_interrupt(). [2]
 
-[1]
-https://lore.kernel.org/netdev/alpine.LNX.2.21.1.2001211026190.8@nippy.intranet/T/#m0523c8b2a26a410ed56889d9230c37ba1160d40a
+On Tue, 21 Jan 2020 13:54:35 +0800
+Alex Shi <alex.shi@linux.alibaba.com> wrote:
 
-[2]
-https://lore.kernel.org/netdev/alpine.LNX.2.21.1.2001211026190.8@nippy.intranet/T/#m1c8ca580d2b45e61a628d17839978d0bd5aaf061
+> This limitation are never lunched from introduce commit 970988e19eb0
+> ("tracing/kprobe: Add kprobe_event= boot parameter")
+> 
+> Could we remove it if no intention to implement it?
+> 
+> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+> Cc: Steven Rostedt <rostedt@goodmis.org> 
+> Cc: Ingo Molnar <mingo@redhat.com> 
+> Cc: linux-kernel@vger.kernel.org 
+> ---
+>  kernel/trace/trace_kprobe.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+> index 7f890262c8a3..eafa90d0f760 100644
+> --- a/kernel/trace/trace_kprobe.c
+> +++ b/kernel/trace/trace_kprobe.c
+> @@ -22,7 +22,6 @@
+>  
+>  #define KPROBE_EVENT_SYSTEM "kprobes"
+>  #define KRETPROBE_MAXACTIVE_MAX 4096
+> -#define MAX_KPROBE_CMDLINE_SIZE 1024
+>  
+>  /* Kprobe early definition from command line */
+>  static char kprobe_boot_events_buf[COMMAND_LINE_SIZE] __initdata;
 
