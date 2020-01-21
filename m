@@ -7,106 +7,97 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C07D9C33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF7E8C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:06:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 876A524125
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:04:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97EA422522
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:06:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579629879;
-	bh=eWx9r3OgGFha93yD4HcPPTOU3j/WWgtWVraB0zKY4ks=;
+	s=default; t=1579629978;
+	bh=5DmORFaLpHXoOb8nSNoUw2XSXFV7s9+uAHzhfAW+vXU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=H9JOwMkbb+DEDg8ZiR5KGlVSjgzzc1Pg3cbx9g3d2ZUeRsVzMhDR0gmUspZKwgW6D
-	 6sB0MnfducIz/zJER872uOxa8JL9ctfqYhFCunX63i38iikklf97oXPGEK4mIXJ0d0
-	 ll8xCl79LCYxL4ZZiTmCz73fHljJQa5ej3q9N7ao=
+	b=ywLDB++W+TlD62T6jasmuDkqMZDsNRbXH+TzpES0pH9NxWi9V7HlfZ5ap0gKxOjJj
+	 wjLyLnsEijvCTpxru9zkfzW5fkKbJjpnxgouc5nky7j0/aWhuIf5M5Lhub82KO6Ont
+	 fVPvBbmtdgga5EC04Zr20z/q2ccBrJkWemM0cGj8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729253AbgAUSEj (ORCPT
+        id S1729273AbgAUSGR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 13:04:39 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:38555 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728829AbgAUSEi (ORCPT
+        Tue, 21 Jan 2020 13:06:17 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:46511 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728829AbgAUSGQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 13:04:38 -0500
-Received: by mail-oi1-f194.google.com with SMTP id l9so3444652oii.5;
-        Tue, 21 Jan 2020 10:04:38 -0800 (PST)
+        Tue, 21 Jan 2020 13:06:16 -0500
+Received: by mail-ot1-f68.google.com with SMTP id r9so3733789otp.13;
+        Tue, 21 Jan 2020 10:06:15 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5AOc1fVDSObIakXLqV48NhVm6z9cVbBEAMQpRuKiW50=;
-        b=mu0BSfSIm7zEE2Lc55hQxXG3Q60EEz3iM4Kxy5Vij9LAMf9KOBcfld2nlbTCheKGJA
-         x3yRkM44/ifHS1F0nr+EagFu9nINrVltIcNpcLdRvTtQkI1CZa35BpV9BvIfxHCMemJ8
-         yDE9AMdfMIiCR00geQZ3oW97FPQyS//AyNkc7+IRWU5tHbcoX73/jTaJmcTfE3G08u87
-         cPOkcBVsM/DSfLMm17DK3hfxP4AkpbteHWLPN5xlm2Ifz+2vcAtUH1mYvC5SITTX+aA/
-         A/k09na8six6Ieu4khiLvakNwAJNvAAWFcAdA2KG8XNkDRrpCCzrVPuNaKScI3r0yFUj
-         Rm2Q==
-X-Gm-Message-State: APjAAAXm4WEXWtk2Ez307aVqq59/XhZMEpoyQvi0zOqF4f6da7yKkLcW
-        YkZ2md0JAnxfqyCAAA1hSF10zTI=
-X-Google-Smtp-Source: APXvYqxJ2H+vZyDN3gmn4pC4D+ZcrNIsyxhR4/L25BmvN4Dqt/xngylC9DS3CsGIERCxiizPEYHg3w==
-X-Received: by 2002:aca:503:: with SMTP id 3mr3791581oif.24.1579629877653;
-        Tue, 21 Jan 2020 10:04:37 -0800 (PST)
+        bh=eEdfR3mTvJ+eThLvVUkTAKC1VIt3ekwfcE55oapGA0g=;
+        b=LJQcIRFOFL1henPfN30pYU2blVUjVE4vH+VdIq44x4dlWKs9l5swgiwUyfqg70rfmQ
+         lOMXuRzgeviG9XJPgn3KtU3qC41mRE9YZeHgdFsD7pDa6h/C0r1jFy4S9/s7CsGFd2Fx
+         P7812fKlVqTQHhCD9+gcjHCG3t7I96CwmBY+IobgizZm+faSDNMAb/QMbJWjr9juzEXW
+         2BGwxI690eQnBf6xyYyy1qTd03fd/md1ogMsstpVXkBdObJhw1RR0/apHuaYb99/ZxZH
+         i0oLBTUkDcNmK8DDhdWfgM54D7Ubot1haCyJfRTprPvZXfpASXiZmbb58ZlSRnlq88OX
+         OSuQ==
+X-Gm-Message-State: APjAAAX7yRbJgk0UItqfv9/imaXOn/qxvlpT2X8QO85aS18ZjEEMdUXG
+        Kwdj6qzGGlv995RQ/fGKzATR390=
+X-Google-Smtp-Source: APXvYqw/nM28s3ODhIW4dDHpgRmOwZrHuAp4V8T6pqn0hoLRvfdTkh3AxUNGHRWFC7FAGupJspgX/w==
+X-Received: by 2002:a9d:6849:: with SMTP id c9mr4766302oto.206.1579629975441;
+        Tue, 21 Jan 2020 10:06:15 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l17sm6793267otj.21.2020.01.21.10.04.36
+        by smtp.gmail.com with ESMTPSA id i20sm13698624otl.74.2020.01.21.10.06.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 10:04:37 -0800 (PST)
-Received: (nullmailer pid 7135 invoked by uid 1000);
-        Tue, 21 Jan 2020 18:04:36 -0000
-Date:   Tue, 21 Jan 2020 12:04:36 -0600
+        Tue, 21 Jan 2020 10:06:14 -0800 (PST)
+Received: (nullmailer pid 10136 invoked by uid 1000);
+        Tue, 21 Jan 2020 18:06:14 -0000
+Date:   Tue, 21 Jan 2020 12:06:14 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
-        bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org,
-        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
-        Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Subject: Re: [PATCH v2 04/19] dt-bindings: Add Qualcomm USB SuperSpeed PHY
- bindings
-Message-ID: <20200121180436.GA6701@bogus>
-References: <20200120163116.1197682-1-bryan.odonoghue@linaro.org>
- <20200120163116.1197682-5-bryan.odonoghue@linaro.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ekigwana@gmail.com, jic23@kernel.org,
+        lars@metafoo.de, Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: Re: [PATCH 2/3] dt-bindings: iio: frequency: Add docs for ADF4360 PLL
+Message-ID: <20200121180614.GA9314@bogus>
+References: <20200121112556.9867-1-alexandru.ardelean@analog.com>
+ <20200121112556.9867-2-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200120163116.1197682-5-bryan.odonoghue@linaro.org>
+In-Reply-To: <20200121112556.9867-2-alexandru.ardelean@analog.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jan 2020 16:31:01 +0000, Bryan O'Donoghue wrote:
-> From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+On Tue, 21 Jan 2020 13:25:55 +0200, Alexandru Ardelean wrote:
+> From: Edward Kigwana <ekigwana@gmail.com>
 > 
-> Binding description for Qualcomm's Synopsys 1.0.0 SuperSpeed phy
-> controller embedded in QCS404.
+> This change adds the device-tree bindings documentation for the ADF4360
+> family of PLLs.
 > 
-> Based on Sriharsha Allenki's <sallenki@codeaurora.org> original
-> definitions.
-> 
-> [bod: converted to yaml format]
-> 
-> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> Cc: Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> Signed-off-by: Edward Kigwana <ekigwana@gmail.com>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 > ---
->  .../devicetree/bindings/phy/qcom,usb-ss.yaml  | 75 +++++++++++++++++++
->  1 file changed, 75 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-ss.yaml
+>  .../bindings/iio/frequency/adi,adf4360.yaml   | 158 ++++++++++++++++++
+>  1 file changed, 158 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/frequency/adi,adf4360.yaml
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/qcom,usb-ss.example.dt.yaml: usb3-phy@78000: clock-names:2: 'sleep' was expected
+warning: no schema found in file: Documentation/devicetree/bindings/iio/frequency/adi,adf4360.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iio/frequency/adi,adf4360.yaml: ignoring, error parsing file
+Documentation/devicetree/bindings/iio/frequency/adi,adf4360.yaml:  while scanning a simple key
+  in "<unicode string>", line 98, column 5
+could not find expected ':'
+  in "<unicode string>", line 99, column 5
+Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/iio/frequency/adi,adf4360.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/iio/frequency/adi,adf4360.example.dts] Error 1
+Makefile:1263: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
-See https://patchwork.ozlabs.org/patch/1226060
+See https://patchwork.ozlabs.org/patch/1226401
 Please check and re-submit.
