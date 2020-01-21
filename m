@@ -2,169 +2,110 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E01A4C33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 02:34:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E484C32771
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 02:40:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACED522522
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 02:34:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="VJIt6MyK"
+	by mail.kernel.org (Postfix) with ESMTP id 089BB207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 02:40:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729085AbgAUCes (ORCPT
+        id S1729037AbgAUCkW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 21:34:48 -0500
-Received: from mailout4.samsung.com ([203.254.224.34]:22233 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726890AbgAUCer (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 21:34:47 -0500
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200121023443epoutp0476a76856d4df29e9848741c6faaa29cb~rxkKgBpdE2285222852epoutp04w
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 02:34:43 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200121023443epoutp0476a76856d4df29e9848741c6faaa29cb~rxkKgBpdE2285222852epoutp04w
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1579574083;
-        bh=ytyuKC3Vaj3EpWIHdeU7Z8cdnKoV6N5MeakWV4sXtIk=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=VJIt6MyKso2pVx9TnGLfwBsCWnuMLWneCaZeDsj+BL4fC+B2BUjumA4lWKaUqSY9G
-         eN4rH/7ISf52qTzHj4FF3eyDf84hxqdbg7q2L6+XoYmEadmBaQKVksr/luqaSrVLGi
-         8JELOIkEbkxRRYYaa0tzAoTFeMrOBTm0vVbkYTBE=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20200121023442epcas1p41268305eb429b9922c322b88fcd89f22~rxkJg5a-U0657906579epcas1p46;
-        Tue, 21 Jan 2020 02:34:42 +0000 (GMT)
-Received: from epsmges1p3.samsung.com (unknown [182.195.40.165]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 481t0d5ll4zMqYkZ; Tue, 21 Jan
-        2020 02:34:41 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        CB.9C.52419.143662E5; Tue, 21 Jan 2020 11:34:41 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200121023441epcas1p2d4bbc0d350fbb1f6cad140b932b1d917~rxkIEjHI30266402664epcas1p23;
-        Tue, 21 Jan 2020 02:34:41 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200121023441epsmtrp11d6e4ae4dfa611f73148564084643db0~rxkIDo2S31841618416epsmtrp1x;
-        Tue, 21 Jan 2020 02:34:41 +0000 (GMT)
-X-AuditID: b6c32a37-5b7ff7000001ccc3-c5-5e266341338e
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        20.AB.06569.043662E5; Tue, 21 Jan 2020 11:34:41 +0900 (KST)
-Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip1.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200121023440epsmtip11d8a475f58e79ed8dda32c196ed89aab~rxkH3LIIh1939219392epsmtip1X;
-        Tue, 21 Jan 2020 02:34:40 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     "'Al Viro'" <viro@zeniv.linux.org.uk>
-Cc:     <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <gregkh@linuxfoundation.org>, <valdis.kletnieks@vt.edu>,
-        <hch@lst.de>, <sj1557.seo@samsung.com>, <pali.rohar@gmail.com>,
-        <arnd@arndb.de>, "'Namjae Jeon'" <linkinjeon@gmail.com>
-In-Reply-To: <20200121014924.GI8904@ZenIV.linux.org.uk>
-Subject: RE: [PATCH v12 02/13] exfat: add super block operations
-Date:   Tue, 21 Jan 2020 11:34:40 +0900
-Message-ID: <005201d5d003$55325960$ff970c20$@samsung.com>
+        Mon, 20 Jan 2020 21:40:22 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:9224 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727829AbgAUCkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 21:40:21 -0500
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id A1E57BFC39A7165EE507;
+        Tue, 21 Jan 2020 10:40:19 +0800 (CST)
+Received: from [127.0.0.1] (10.74.221.148) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Tue, 21 Jan 2020
+ 10:40:12 +0800
+Subject: Re: [PATCH] net: optimize cmpxchg in ip_idents_reserve
+To:     Eric Dumazet <edumazet@google.com>
+References: <1579058620-26684-1-git-send-email-zhangshaokun@hisilicon.com>
+ <20200116.042722.153124126288244814.davem@davemloft.net>
+ <930faaff-4d18-452d-2e44-ef05b65dc858@gmail.com>
+ <1b3aaddf-22f5-1846-90f1-42e68583c1e4@gmail.com>
+ <430496fc-9f26-8cb4-91d8-505fda9af230@hisilicon.com>
+ <20200117123253.GC14879@hirez.programming.kicks-ass.net>
+ <5fd55696-e46c-4269-c106-79782efb0dd8@hisilicon.com>
+ <CANn89iJ02iFxGibdqO+YWVYX4q4J=W9vv7HOpMVqNK-qZvHcQw@mail.gmail.com>
+CC:     Peter Zijlstra <peterz@infradead.org>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        David Miller <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, <jinyuqi@huawei.com>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        "Hideaki YOSHIFUJI" <yoshfuji@linux-ipv6.org>,
+        <guoyang2@huawei.com>, Will Deacon <will@kernel.org>
+From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
+Message-ID: <5377f988-9855-8322-a459-26376f50ee34@hisilicon.com>
+Date:   Tue, 21 Jan 2020 10:40:11 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.1.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQGweyIxypJzru68cwvOK1cQ+ZOFYgKRp5m0AvjvcmoCRBuVtKgAmmug
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrEJsWRmVeSWpSXmKPExsWy7bCmrq5jslqcQd8XfYu/k46xWzQvXs9m
-        sXL1USaL63dvMVvs2XuSxeLyrjlsFhNP/2ay2PLvCKvFpfcfWCzO/z3O6sDl8fvXJEaPnbPu
-        snvsn7uG3WP3zQY2j74tqxg9Pm+S8zi0/Q2bx6Ynb5kCOKJybDJSE1NSixRS85LzUzLz0m2V
-        vIPjneNNzQwMdQ0tLcyVFPISc1NtlVx8AnTdMnOAjlRSKEvMKQUKBSQWFyvp29kU5ZeWpCpk
-        5BeX2CqlFqTkFBgaFOgVJ+YWl+al6yXn51oZGhgYmQJVJuRkLD+5lLngBG/F40s/mBoYm7m7
-        GDk5JARMJPbOucvaxcjFISSwg1HizNUNbF2MHEDOJ0aJlz4Q8W+MEtO/TWSEaZjRvoAFIrGX
-        UeLjyi9Q3S8ZJf79uccKUsUmoAtk72cDsUUENCX+z53ADFLELPCbUaJpcwMTSIJTwFxi+rpL
-        7CC2sICDxOSDt1lAbBYBVYlf+2aA1fAKWEpcnNDADGELSpyc+QSshllAXmL72znMECcpSPx8
-        uowVYpmbxNcnV9ghakQkZne2gS2WEFjELnFq5T4WiAYXiU/XN0P9Iyzx6vgWdghbSuJlfxs7
-        yP8SAtUSH/dDze9glHjx3RbCNpa4uX4DK0gJM9Bj63fpQ4QVJXb+nssIsZZP4t3XHlaIKbwS
-        HW1CECWqEn2XDjNB2NISXe0f2CcwKs1C8tgsJI/NQvLALIRlCxhZVjGKpRYU56anFhsWGCPH
-        9SZGcPrVMt/BuOGczyFGAQ5GJR5eh2mqcUKsiWXFlbmHGCU4mJVEeBc0AYV4UxIrq1KL8uOL
-        SnNSiw8xmgLDfSKzlGhyPjA35JXEG5oaGRsbW5iYmZuZGiuJ885wUYgTEkhPLEnNTk0tSC2C
-        6WPi4JRqYKw4b2oV1XLhnsnFq+KMTten/7lZpXHrjv3JPdPmxl3zmvR5Y/H2vjnvL+ystnl4
-        pOLrvVUMgucPZB+IiPG7ntj6ZVaf1p7/Hu3f31v8Tu25sustg/KB/C8L1p+uZGv0XMR6s/7A
-        j0usrfHppyUdfV/t9HB+LTWP4UOGXfxl2xSulx2bLeZl71msxFKckWioxVxUnAgA1AWn6tUD
-        AAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrDIsWRmVeSWpSXmKPExsWy7bCSnK5jslqcwf2PTBZ/Jx1jt2hevJ7N
-        YuXqo0wW1+/eYrbYs/cki8XlXXPYLCae/s1kseXfEVaLS+8/sFic/3uc1YHL4/evSYweO2fd
-        ZffYP3cNu8fumw1sHn1bVjF6fN4k53Fo+xs2j01P3jIFcERx2aSk5mSWpRbp2yVwZSw/uZS5
-        4ARvxeNLP5gaGJu5uxg5OSQETCRmtC9g6WLk4hAS2M0osezWVlaIhLTEsRNnmLsYOYBsYYnD
-        h4shap4zSsxed4oFpIZNQFfi35/9bCC2iICmxP+5E5hBipgFWpkkPq5aATZISOAJo8T7TVwg
-        NqeAucT0dZfYQWxhAQeJyQdvgw1iEVCV+LVvBhOIzStgKXFxQgMzhC0ocXLmExaQI5gF9CTa
-        NjKChJkF5CW2v53DDHGngsTPp8tYIW5wk/j65Ao7RI2IxOzONuYJjMKzkEyahTBpFpJJs5B0
-        LGBkWcUomVpQnJueW2xYYJSXWq5XnJhbXJqXrpecn7uJERyHWlo7GE+ciD/EKMDBqMTD6zBN
-        NU6INbGsuDL3EKMEB7OSCO+CJqAQb0piZVVqUX58UWlOavEhRmkOFiVxXvn8Y5FCAumJJanZ
-        qakFqUUwWSYOTqkGxrawL4s475l3amy+fXK54HKmdV/fTbhicvHuiW6mtwn9jisvieS5ZV+6
-        a/yi1vzivRf13/JeqtVbmjeG9doeMwphMJPv05rT03dk6fq/7UYRD84Z7ymdsXzWr6/B5vUT
-        ExcyCmr+k+bmu/pd+m6u5Y7Y4NV91naNb3ffXf5ZiX177WLeRhbl20osxRmJhlrMRcWJAAuI
-        uH2/AgAA
-X-CMS-MailID: 20200121023441epcas1p2d4bbc0d350fbb1f6cad140b932b1d917
-X-Msg-Generator: CA
+In-Reply-To: <CANn89iJ02iFxGibdqO+YWVYX4q4J=W9vv7HOpMVqNK-qZvHcQw@mail.gmail.com>
 Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.221.148]
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200121014933epcas1p22c54d6162bca6ebe14715542f034993b
-References: <20200120124428.17863-1-linkinjeon@gmail.com>
-        <20200120124428.17863-3-linkinjeon@gmail.com>
-        <CGME20200121014933epcas1p22c54d6162bca6ebe14715542f034993b@epcas1p2.samsung.com>
-        <20200121014924.GI8904@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > +static void exfat_put_super(struct super_block *sb) {
-> > +	struct exfat_sb_info *sbi = EXFAT_SB(sb);
-> > +
-> > +	mutex_lock(&sbi->s_lock);
-> > +	if (test_and_clear_bit(EXFAT_SB_DIRTY, &sbi->s_state))
-> > +		sync_blockdev(sb->s_bdev);
-> > +	exfat_set_vol_flags(sb, VOL_CLEAN);
-> > +	exfat_free_upcase_table(sb);
-> > +	exfat_free_bitmap(sb);
-> > +	mutex_unlock(&sbi->s_lock);
-> > +
-> > +	if (sbi->nls_io) {
-> > +		unload_nls(sbi->nls_io);
-> > +		sbi->nls_io = NULL;
-> > +	}
-> > +	exfat_free_iocharset(sbi);
-> > +	sb->s_fs_info = NULL;
-> > +	kfree(sbi);
-> > +}
+Hi Eric,
+
+On 2020/1/19 12:12, Eric Dumazet wrote:
+> On Sat, Jan 18, 2020 at 7:47 PM Shaokun Zhang
+> <zhangshaokun@hisilicon.com> wrote:
+>>
 > 
-> You need to RCU-delay freeing sbi and zeroing ->nls_io.  *Everything* used
-> by ->d_compare() and ->d_hash() needs that treatment.  RCU-mode pathwalk
-> can stray into a filesystem that has already been lazy-umounted and is
-> just one close() away from shutdown.  It's OK, as long as you make sure
-> that all structures used in methods that could be called in RCU mode (-
-> >d_compare(), ->d_hash(), rcu-case ->d_revalidate(), rcu-case -
-> >permission()) have destruction RCU-delayed.  Look at what VFAT is doing;
-> that's precisely the reason for that delayed_free() thing in there.
-Okay.
+>> We have used the atomic_add_return[1], but it makes the UBSAN unhappy followed
+>> by the comment.
+>> It seems that Eric also agreed to do it if some comments are added. I will do
+>> it later.
+>>
+>> Thanks,
+>> Shaokun
+>>
+>> [1] https://lkml.org/lkml/2019/7/26/217
+>>
 > 
-> > +static void exfat_destroy_inode(struct inode *inode) {
-> > +	kmem_cache_free(exfat_inode_cachep, EXFAT_I(inode)); }
+> In case you have missed it, we needed a proper analysis.
+> My feedback was quite simple :
 > 
-> No.  Again, that MUST be RCU-delayed; either put an explicit
-> call_rcu() here, or leave as-is, but make that ->free_inode().
-Okay.
+> <quote>
+> Have you first checked that current UBSAN versions will not complain anymore ?
+> </quote>
 > 
-> > +static void __exit exit_exfat_fs(void) {
-> > +	kmem_cache_destroy(exfat_inode_cachep);
-> > +	unregister_filesystem(&exfat_fs_type);
+> You never did this work, never replied to my question, and months
+
+Yeah, I'm not sure how to deal with the UBSAN issue and you said that some of
+you would work this.
+
+> later you come back
+> with a convoluted patch while we simply can proceed with a revert now
+
+After several months, we thought that we can do it like refcount_add_not_zero,
+so we submit this patch.
+
+> we are sure that linux kernels are compiled with the proper option.
 > 
-> ... and add rcu_barrier() here.
-Okay, I will fix them on next version.
-Thanks for review!!
+> As mentioned yesterday, no need for a comment.
+> Instead the changelog should be explaining why the revert is now safe.
 > 
-> > +	exfat_cache_shutdown();
+
+Ok, it is really needed to consider this.
+
+Thanks,
+Shaokun
+
+> .
+> 
 
