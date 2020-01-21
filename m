@@ -2,472 +2,343 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3AEFC33CB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 04:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B6B5C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 04:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA13B24672
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 04:13:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D64C924125
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 04:25:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uzi2bj+e"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="aG2kI59j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728783AbgAUENd (ORCPT
+        id S1728748AbgAUEZp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 23:13:33 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:47852 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727009AbgAUENd (ORCPT
+        Mon, 20 Jan 2020 23:25:45 -0500
+Received: from mail-qv1-f54.google.com ([209.85.219.54]:40190 "EHLO
+        mail-qv1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728093AbgAUEZo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 23:13:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=aEyKYWczfiwzsyTsuULb46jF1kC0IjqAfrFtPdfZPBI=; b=uzi2bj+e/pVMQehYBxlfP0pg0
-        1Nq854EicEHjngduLkM/FOOT5LSUAdrzZqFvNk5Etksb2uFOqRrTM98oVrUVX2zID2ilFI2zaE6q4
-        FsxqVkaQAx5N7NjRs0Hk6b3vw1QEthVMlaiNpvEOOvv0QBkh1E8ou6n3RrIEFBDTAbgP2cSi93gAR
-        k65ZI+rRqmw+NmfCJOghAHhxw0P99k745Bw2VMoYutFBYVtxeoOC2ssrpBR+pJso9EagNF/9Hq5mQ
-        ql7lXbVmNH0kuvnFIZOIxBTZWvaOcLcQMFm63YzLgub5qZmRMQiZAxE76pG0Aa19/zx5S1ByfgVPj
-        MhJ6Kasww==;
-Received: from [2601:1c0:6280:3f0::ed68]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1itkut-0003rO-EA; Tue, 21 Jan 2020 04:13:27 +0000
-Subject: Re: [PATCH v1 06/11] Documentation: pstore/blk: blkoops: create
- document for pstore_blk
-To:     WeiXiong Liao <liaoweixiong@allwinnertech.com>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org
-References: <1579482233-2672-1-git-send-email-liaoweixiong@allwinnertech.com>
- <1579482233-2672-7-git-send-email-liaoweixiong@allwinnertech.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <b9cd734b-8bb1-5e26-a7ed-fbc79ab2d958@infradead.org>
-Date:   Mon, 20 Jan 2020 20:13:26 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
-MIME-Version: 1.0
-In-Reply-To: <1579482233-2672-7-git-send-email-liaoweixiong@allwinnertech.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 20 Jan 2020 23:25:44 -0500
+Received: by mail-qv1-f54.google.com with SMTP id dp13so842223qvb.7
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 20:25:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:content-transfer-encoding:mime-version:subject:message-id:date
+         :cc:to;
+        bh=QT3ApTB5ulKAM4xXfMbMEmdXx1kHQ9/Rw8Gj549Qa5E=;
+        b=aG2kI59jKkV0Lu87eDSog4kITKgF/O7mFPpoUEAIHUwLc4Dq3USiX/DlywbkeNBz3J
+         YPfxiBMpHTj0uOFv7bfsU/rjPX9YhGes4X1M3TGrXRfErpKlbKatBkF7kkZ2K1D26VVo
+         aR8DT+GG2p++qZ4etZtmRdLMmuksXCNWvC5lwzy5voifktnyxHq023NWZ87bTCm6c0go
+         YH0pPgdktK+D8mRCTVmepCm7vh3JPsfV8RnMLeQ4JUpHjBcPYCYXtQigSVT6O0i2TbQ2
+         MnwsK8L94evTqT/OzvHSuNUeCgKWNhsCFL9HchtM8Ao/nV1+gW2pluP//nkSYv3bB4y/
+         FdsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:content-transfer-encoding:mime-version
+         :subject:message-id:date:cc:to;
+        bh=QT3ApTB5ulKAM4xXfMbMEmdXx1kHQ9/Rw8Gj549Qa5E=;
+        b=FT5FcdITIrgsuZMju/iyFS3lZXKYCIo1klHRBYiJgL+FlPWsgUdErt6rFTUdqc/swe
+         0S0+WLtjh57RXXuamzOVFgj0s37mdQ0dRRaROZrMPz1OfniBMnybNha+F1soFbcx4ZRC
+         jphJISyDi7HaGiwLaRqRgOhYPgMN9VNrX0SsL2de472Br4bq3XqmJ3hmhnfIY7ONoJHp
+         o42u5hc2IfSc0xKnyKI/Ia3kIKh4pofRVw2A/+u6Qgt3e7gUuEH2Q9lJh7PB/xcDu+0A
+         wAestLDB+QmVGMXAgt8L2LGZFJcpHNDZDPkEhV3Xoxc9jssMw9kJ0RcI+MLCRagdLaBA
+         5+tg==
+X-Gm-Message-State: APjAAAXRefrkUNiAe4EnmNjf7ndNfrvZ/Y6CzB3AesUDsuCEeHcrwODc
+        PbqiwejoY2c/0xVbG6vnk99JSw==
+X-Google-Smtp-Source: APXvYqz+IUgtSJcmKQIu6qGsUnBc+0d6GQfUdj58FZzsPb5HUbvc5rubXDDxBM9erPAo55l3tugrEw==
+X-Received: by 2002:ad4:51cc:: with SMTP id p12mr2978639qvq.113.1579580742981;
+        Mon, 20 Jan 2020 20:25:42 -0800 (PST)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id q5sm16590610qkf.14.2020.01.20.20.25.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 Jan 2020 20:25:42 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+Content-Type: text/plain;
+        charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
+Subject: Boot warning at rcu_check_gp_start_stall()
+Message-Id: <9F765463-9FA2-4E05-8390-D798A7C926A8@lca.pw>
+Date:   Mon, 20 Jan 2020 23:25:41 -0500
+Cc:     rcu@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+X-Mailer: Apple Mail (2.3608.40.2.2.4)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-I have some documentation comments for you:
-
-
-On 1/19/20 5:03 PM, WeiXiong Liao wrote:
-> The document, at Documentation/admin-guide/pstore-block.rst, tells us
-> how to use pstore/blk and blkoops.
-> 
-> Signed-off-by: WeiXiong Liao <liaoweixiong@allwinnertech.com>
-> ---
->  Documentation/admin-guide/pstore-block.rst | 278 +++++++++++++++++++++++++++++
->  MAINTAINERS                                |   1 +
->  fs/pstore/Kconfig                          |   2 +
->  3 files changed, 281 insertions(+)
->  create mode 100644 Documentation/admin-guide/pstore-block.rst
-> 
-> diff --git a/Documentation/admin-guide/pstore-block.rst b/Documentation/admin-guide/pstore-block.rst
-> new file mode 100644
-> index 000000000000..58418d429c55
-> --- /dev/null
-> +++ b/Documentation/admin-guide/pstore-block.rst
-> @@ -0,0 +1,278 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +Pstore block oops/panic logger
-> +==============================
-> +
-> +Introduction
-> +------------
-> +
-> +Pstore block (pstore/blk) is an oops/panic logger that writes its logs to a
-> +block device before the system crashes. It also supports non-block devices such
-> +as mtd device.
-> +
-> +There is a trapper named blkoops for pstore/blk, which makes pstore/blk be
-> +nicer to device drivers.
-> +
-> +Pstore block concepts
-> +---------------------
-> +
-> +Pstore/blk works as a zone manager as it cuts the block device or partition
-> +into several zones and stores data for different recorders. What device driver
-
-"What a device driver" or "What device drivers" should do ...
-
-> +should do is to provide read/write APIs.
-> +
-> +Pstore/blk begins at function ``blkz_register``. Besides, blkoops, a wrapper of
-> +pstore/blk, begins at function ``blkoops_register_blkdev`` for block device and
-> +``blkoops_register_device`` for non-block device, which is recommended instead
-> +of directly using pstore/blk.
-> +
-> +Blkoops provides efficient configuration mothod for pstore/blk, which divides
-
-                                            method
-
-> +all configurations of pstore/blk into two parts, configurations for user and
-> +configurations for driver.
-> +
-> +Configurations for user determine how pstore/blk works, such as pmsg_size,
-> +dmesg_size and so on. All of them support both kconfig and module parameters,
-> +but module parameters have priority over kconfig.
-> +
-> +Configurations for driver are all about block/non-block device, such as
-> +total_size of device and read/write operations. Device driver transfers a
-> +structure ``blkoops_device`` defined in *linux/blkoops.h*.
-> +
-> +Configurations for user
-> +-----------------------
-> +
-> +All of these configurations support both kconfig and module parameters, but
-> +module parameters have priority over kconfig.
-> +Here is an example for module parameters::
-> +
-> +        blkoops.blkdev=179:7 blkoops.dmesg_size=64 blkoops.dump_oops=1
-> +
-> +The detail of each configurations may be of interest to you.
-> +
-> +blkdev
-> +~~~~~~
-> +
-> +The block device to use. Most of the time, it is a partition of block device.
-> +It's fine to ignore it if you are not block device.
-
-                                 are not using a block device.
-
-> +
-> +It accepts the following variants:
-> +
-> +1. <hex_major><hex_minor> device number in hexadecimal represents itself; no
-> +   leading 0x, for example b302.
-> +#. /dev/<disk_name> represents the device number of disk
-> +#. /dev/<disk_name><decimal> represents the device number of partition - device
-> +   number of disk plus the partition number
-> +#. /dev/<disk_name>p<decimal> - same as the above; this form is used when disk
-> +   name of partitioned disk ends with a digit.
-> +#. PARTUUID=00112233-4455-6677-8899-AABBCCDDEEFF representing the unique id of
-
-                                                    represents
-
-> +   a partition if the partition table provides it. The UUID may be either an
-> +   EFI/GPT UUID, or refer to an MSDOS partition using the format SSSSSSSS-PP,
-> +   where SSSSSSSS is a zero-filled hex representation of the 32-bit
-> +   "NT disk signature", and PP is a zero-filled hex representation of the
-> +   1-based partition number.
-> +#. PARTUUID=<UUID>/PARTNROFF=<int> to select a partition in relation to a
-> +   partition with a known unique id.
-> +#. <major>:<minor> major and minor number of the device separated by a colon.
-> +
-> +dmesg_size
-> +~~~~~~~~~~
-> +
-> +The chunk size in bytes for dmesg(oops/panic). It **MUST** be a multiple of
-> +4096. If you don't need it, safely set it 0 or ignore it.
-
-                                      set it to 0 or ignore it.
-
-The example above is:  blkoops.dmesg_size=64
-where 64 is not a multiple of 4096. (?)
-
-> +
-> +NOTE that, the remaining space, except ``pmsg_size``, ``console_size``` and
-> +others, belongs to dmesg. It means that there are multiple chunks for dmesg.
-> +
-> +Pstore/blk will log to dmesg chunks one by one, and always overwrite the oldest
-> +chunk if there is no more free chunks.
-> +
-> +pmsg_size
-> +~~~~~~~~~
-> +
-> +The chunk size in bytes for pmsg. It **MUST** be a multiple of 4096. If you
-> +do not need it, safely set it 0 or ignore it.
-
-                          set it to 0 or ignore it.
-
-> +
-> +There is only one chunk for pmsg.
-> +
-> +Pmsg is a user space accessible pstore object. Writes to */dev/pmsg0* are
-> +appended to the chunk. On reboot the contents are available in
-> +/sys/fs/pstore/pmsg-pstore-blk-0.
-> +
-> +console_size
-> +~~~~~~~~~~~~
-> +
-> +The chunk size in bytes for console. It **MUST** be a multiple of 4096. If you
-> +do not need it, safely set it 0 or ignore it.
-
-                          set it to 0 or ignore it.
-
-> +
-> +There is only one chunk for console.
-> +
-> +All log of console will be appended to the chunk. On reboot the contents are
-> +available in /sys/fs/pstore/console-pstore-blk-0.
-> +
-> +ftrace_size
-> +~~~~~~~~~~~
-> +
-> +The chunk size in bytes for ftrace. It **MUST** be a multiple of 4096. If you
-> +do not need it, safely set it 0 or ignore it.
-> +
-> +There may be several chunks for ftrace, according to how many processors on
-> +your CPU. Each chunk size is equal to (ftrace_size / processors_count).
-
-That is confusing (to me). It seems like it handles CPU packages separately,
-so that a package that has 4 processors is collected together.
-But what if the system has multiple CPU packages?  how is that handled?
-
-> +
-> +All log of ftrace will be appended to the chunk. On reboot the contents are
-> +available in /sys/fs/pstore/ftrace-pstore-blk-[N], where N is the processor
-> +number.
-> +
-> +Persistent function tracing might be useful for debugging software or hardware
-> +related hangs. Here is an example of usage::
-> +
-> + # mount -t pstore pstore /sys/fs/pstore
-> + # mount -t debugfs debugfs /sys/kernel/debug/
-> + # echo 1 > /sys/kernel/debug/pstore/record_ftrace
-> + # reboot -f
-> + [...]
-> + # mount -t pstore pstore /sys/fs/pstore
-> + # tail /sys/fs/pstore/ftrace-pstore-blk-0
-> + CPU:0 ts:109860 c03a4310  c0063ebc  cpuidle_select <- cpu_startup_entry+0x1a8/0x1e0
-> + CPU:0 ts:109861 c03a5878  c03a4324  menu_select <- cpuidle_select+0x24/0x2c
-> + CPU:0 ts:109862 c00670e8  c03a589c  pm_qos_request <- menu_select+0x38/0x4cc
-> + CPU:0 ts:109863 c0092bbc  c03a5960  tick_nohz_get_sleep_length <- menu_select+0xfc/0x4cc
-> + CPU:0 ts:109865 c004b2f4  c03a59d4  get_iowait_load <- menu_select+0x170/0x4cc
-> + CPU:0 ts:109868 c0063b60  c0063ecc  call_cpuidle <- cpu_startup_entry+0x1b8/0x1e0
-> + CPU:0 ts:109869 c03a433c  c0063b94  cpuidle_enter <- call_cpuidle+0x44/0x48
-> + CPU:0 ts:109871 c03a4000  c03a4350  cpuidle_enter_state <- cpuidle_enter+0x24/0x28
-> + CPU:0 ts:109873 c0063ba8  c03a4090  sched_idle_set_state <- cpuidle_enter_state+0xa4/0x314
-> + CPU:0 ts:109874 c03a605c  c03a40b4  arm_enter_idle_state <- cpuidle_enter_state+0xc8/0x314
-> +
-> +dump_oops
-> +~~~~~~~~~
-> +
-> +Dumping both oopses and panics can be done by setting 1 (not zero) in the
-> +``dump_oops`` member while setting 0 in that variable dumps only the panics.
-> +
-> +Configurations for driver
-> +-------------------------
-> +
-> +Only device driver would care these configurations. Block device driver
-
-   Only a device driver cares about these configurations. A block device driver
-
-> +refers ``blkoops_register_blkdev`` while ``blkoops_register_device`` for
-
-   uses ...                           while a non-block device [driver] uses 
-   ``blkoops_register_device``.
-
-> +non-block device.
-> +
-> +The parameters of these two APIs may be of interest to you.
-> +
-> +major
-> +~~~~~
-> +
-> +It is only requested by block device which is registered by
-
-              required (?)
-
-> +``blkoops_register_blkdev``.  It's the major device number of registered
-> +devices, by which blkoops can get the matching driver for @blkdev.
-> +
-> +total_size
-> +~~~~~~~~~~
-> +
-> +It is only requested by non-block device which is registered by
-
-              required (?)
-
-> +``blkoops_register_device``.  It tells pstore/blk that the total size
-
-                                              drop:  that
-
-> +pstore/blk can use. It **MUST** be greater than 4096 and a multiple of 4096.
-
-not greater than or equal to 4096?
-
-> +
-> +If block device, blkoops can get size of block device/partition automatically.
-
-   For block devices, ...
-
-> +
-> +read/write
-> +~~~~~~~~~~
-> +
-> +It's generic read/write APIs for pstore/blk, which are requested by non-block
-
-                                                          required (?)
-
-> +device. The generic APIs are used for almost all data but except panic data,
-
-                                                drop:    but
-
-> +such as pmsg, console, oops and ftrace.
-> +
-> +The parameter @offset is the relative position of the device.
-
-I don't get that description. Can you improve it?
-
-> +
-> +Normally the number of bytes read/written should be returned, while for error,
-> +negative number will be returned. The following return numbers mean more:
-> +
-> +-EBUSY: pstore/blk should try again later.
-> +
-> +panic_write (for non-block device)
-> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> +
-> +It's a interface for panic recorder and will be used only when panic occurs.
-> +Non-block device driver registers it by ``blkoops_register_device``. If panic
-> +log is unnecessary, it's fine to ignore it.
-> +
-> +Note that pstore/blk will recover data from device while mounting pstore
-> +filesystem by default. If panic occurs but pstore/blk does not recover yet, the
-> +first zone of dmesg will be used.
-> +
-> +The parameter @offset is the relative position of the device.
-
-improve??
-
-> +
-> +Normally the number of bytes written should be returned, while for error,
-> +negative number should be returned.
-> +
-> +panic_write (for block device)
-> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> +
-> +It's much similar to panic_write for non-block device, but panic_write for
-> +block device writes alignment to SECTOR_SIZE, that's why the parameters are
-
-                writes only aligned sectors of SECTOR_SIZE  (??)
-
-> +@sects and @start_sect. Block device driver should register it by
-> +``blkoops_register_blkdev``.
-> +
-> +The parameter @start_sect is the relative position of the block device and
-> +partition. If block driver requires absolute position for panic_write,
-> +``blkoops_blkdev_info`` will be helpful, which can provide the absolute
-> +position of the block device (or partition) on the whole disk/flash.
-> +
-> +Normally zero should be returned, otherwise it indicates an error.
-> +
-> +Compression and header
-> +----------------------
-> +
-> +Block device is large enough for uncompressed dmesg data. Actually we do not
-> +recommend data compression because pstore/blk will insert some information into
-> +the first line of dmesg data. For example::
-> +
-> +        Panic: Total 16 times
-> +
-> +It means that it's the 16th times panic log since the first booting. Sometimes
-
-                               time of a panic log since ...
-
-> +the oops|panic occurs since burning is very important for embedded device to
-
-                               ^^^^^^^ huh??
-
-> +judge whether the system is stable.
-> +
-> +The following line is inserted by pstore filesystem. For example::
-> +
-> +        Oops#2 Part1
-> +
-> +It means that it's the 2nd times oops log on last booting.
-
-                          2nd time of an oops log on the last boot. (?)
-
-> +
-> +Reading the data
-> +----------------
-> +
-> +The dump data can be read from the pstore filesystem. The format for these
-> +files is ``dmesg-pstore-blk-[N]`` for dmesg(oops|panic), ``pmsg-pstore-blk-0``
-> +for pmsg and so on, where N is the record number. To delete a stored
-> +record from block device, simply unlink the respective pstore file. The
-> +timestamp of the dump file records the trigger time.
-> +
-> +Attentions in panic read/write APIs
-> +-----------------------------------
-> +
-> +If on panic, the kernel is not going to run for much longer. The tasks will not
-
-                                                        longer, the tasks will not
-
-> +be scheduled and the most kernel resources will be out of service. It
-
-             drop:  the
-
-> +looks like a single-threaded program running on a single-core computer.
-> +
-> +The following points require special attention for panic read/write APIs:
-> +
-> +1. Can **NOT** allocate any memory.
-> +   If you need memory, just allocate while the block driver is initializing
-> +   rather than waiting until the panic.
-> +#. Must be polled, **NOT** interrupt driven.
-> +   No task schedule any more. The block driver should delay to ensure the write
-> +   succeeds, but NOT sleep.
-> +#. Can **NOT** take any lock.
-> +   There is no other task, nor any share resource; you are safe to break all
-
-                                      shared
-
-> +   locks.
-> +#. Just use CPU to transfer.
-> +   Do not use DMA to transfer unless you are sure that DMA will not keep lock.
-> +#. Operate register directly.
-
-      Don't know what that means.
-
-> +   Try not to use Linux kernel resources. Do I/O map while initializing rather
-> +   than waiting until the panic.
-> +#. Reset your block device and controller if necessary.
-> +   If you are not sure the state of you block device and controller when panic,
-
-                         of the state of your block device and controller when a panic occurs,
-
-
-> +   you are safe to stop and reset them.
-> +
-> +Blkoops supports blkoops_blkdev_info(), which is defined in *linux/blkoops.h*,
-> +to get information of block device, such as the device number, sector count and
-> +start sector of the whole disk.
-
-
-HTH.
--- 
-~Randy
-
+Booting a server generates this warning on linux-next with this config,
+
+https://raw.githubusercontent.com/cailca/linux-mm/master/x86.config
+
+Does it ring any bell?
+
+[   96.714534] 0xffffffffff800000-0x0000000000000000           8M        =
+                       pmd
+[   96.872278] Dentry cache hash table entries: 8388608 (order: 14, =
+67108864 bytes, vmalloc)
+[   96.938599] Inode-cache hash table entries: 4194304 (order: 13, =
+33554432 bytes, vmalloc)
+[   96.955357] Mount-cache hash table entries: 131072 (order: 8, 1048576 =
+bytes, vmalloc)
+[   96.965514] Mountpoint-cache hash table entries: 131072 (order: 8, =
+1048576 bytes, vmalloc)
+[   96.994553] ------------[ cut here ]------------
+[   96.999922] WARNING: CPU: 0 PID: 0 at kernel/rcu/tree_stall.h:672 =
+rcu_check_gp_start_stall.isra.67+0x1ae/0x260
+[   97.004526] Modules linked in:
+[   97.004526] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G    B             =
+5.5.0-rc6-next-20200120+ #1
+[   97.004526] Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 =
+Gen10, BIOS A40 07/10/2019
+[   97.004526] RIP: 0010:rcu_check_gp_start_stall.isra.67+0x1ae/0x260
+[   97.004526] Code: 61 01 4c 01 e6 48 39 f2 78 58 be 04 00 00 00 48 c7 =
+c7 e0 24 b7 85 e8 71 0f 25 00 b8 01 00 00 00 87 05 66 32 7b 04 85 c0 75 =
+2f <0f> 0b 48 81 fb 40 13 9d 82 74 0c 48 c7 c7 40 13 9d 82 e8 2b 2a 8d
+[   97.004526] RSP: 0000:ffffc90000007e18 EFLAGS: 00010046
+[   97.004526] RAX: 0000000000000000 RBX: ffffffff829d1700 RCX: =
+ffffffff813bf26f
+[   97.004526] RDX: 0000000000000001 RSI: 0000000000000004 RDI: =
+ffffffff85b724e0
+[   97.004526] RBP: ffffc90000007e30 R08: fffffbfff0b6e49d R09: =
+fffffbfff0b6e49d
+[   97.004526] R10: fffffbfff0b6e49c R11: ffffffff85b724e3 R12: =
+0000000000001964
+[   97.004526] R13: 0000000000000246 R14: ffff888843045050 R15: =
+ffff888843045018
+[   97.004526] FS:  0000000000000000(0000) GS:ffff888843000000(0000) =
+knlGS:0000000000000000
+[   97.004526] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   97.004526] CR2: ffff8890779ff000 CR3: 0000000b7d212000 CR4: =
+00000000000406b0
+[   97.004526] Call Trace:
+[   97.004526]  <IRQ>
+[   97.004526]  rcu_core+0x22b/0xb80
+[   97.004526]  ? debug_lockdep_rcu_enabled+0x11/0x60
+[   97.004526]  ? call_timer_fn+0x4e0/0x4e0
+[   97.004526]  ? rcu_note_context_switch+0x3b0/0x3b0
+[   97.004526]  ? lock_downgrade+0x3c0/0x3c0
+[   97.004526]  ? rwlock_bug.part.1+0x60/0x60
+[   97.004526]  ? lockdep_hardirqs_on+0x16/0x2a0
+[   97.004526]  rcu_core_si+0xe/0x10
+[   97.004526]  __do_softirq+0x123/0x766
+[   97.004526]  ? do_raw_spin_unlock+0xa8/0x140
+[   97.004526]  irq_exit+0xd6/0xf0
+[   97.004526]  do_IRQ+0xa3/0x1e0
+[   97.004526]  common_interrupt+0xf/0xf
+[   97.004526]  </IRQ>
+[   97.004526] RIP: 0010:__asan_load8+0x0/0xa0
+[   97.004526] Code: e8 03 0f b6 04 30 84 c0 74 c2 38 d0 0f 9e c0 84 c0 =
+74 b9 ba 01 00 00 00 be 04 00 00 00 e8 c8 e3 ff ff 5d c3 66 0f 1f 44 00 =
+00 <55> 48 89 e5 48 8b 4d 08 e9 a3 d3 9f 01 48 b8 00 00 00 00 00 00 00
+[   97.004526] RSP: 0000:ffffffff82807af0 EFLAGS: 00000257 ORIG_RAX: =
+ffffffffffffffcf
+[   97.004526] RAX: ffffffff82f25840 RBX: ffffffff82f25840 RCX: =
+0000000000000028
+[   97.004526] RDX: 0000000000000000 RSI: 0000000000000000 RDI: =
+ffffffff82f25840
+[   97.004526] RBP: ffffffff82807b30 R08: 0000000000000000 R09: =
+0000000000000004
+[   97.004526] R10: ffff8890313c98fc R11: ffff8890313c98ff R12: =
+0000000000000000
+[   97.004526] R13: 0000000000000080 R14: 0000000000000028 R15: =
+0000000000000000
+[   97.004526]  ? _find_next_bit.constprop.1+0x4a/0x100
+[   97.004526]  find_next_bit+0x14/0x20
+[   97.004526]  cpumask_next+0x35/0x40
+[   97.004526]  pcpu_alloc+0x4bf/0xa40
+[   97.004526]  __alloc_percpu+0x15/0x20
+[   97.004526]  __percpu_init_rwsem+0x28/0xa0
+[   97.004526]  alloc_super+0x164/0x530
+[   97.004526]  sget_fc+0xb9/0x3a0
+[   97.004526]  ? compare_single+0x10/0x10
+[   97.004526]  ? ramfs_symlink+0xe0/0xe0
+[   97.004526]  vfs_get_super+0x4e/0x1a0
+[   97.004526]  ? vfs_parse_fs_string+0x110/0x110
+[   97.004526]  get_tree_nodev+0x16/0x20
+[   97.004526]  ramfs_get_tree+0x15/0x20
+[   97.004526]  vfs_get_tree+0x54/0x150
+[   97.004526]  fc_mount+0x14/0x60
+[   97.004526]  vfs_kern_mount.part.13+0x61/0xa0
+[   97.004526]  mnt_init+0x1b0/0x34a
+[   97.004526]  ? set_mphash_entries+0xa2/0xa2
+[   97.004526]  ? __percpu_counter_init+0x127/0x140
+[   97.004526]  vfs_caches_init+0xda/0xe6
+[   97.004526]  start_kernel+0x55d/0x5dc
+[   97.004526]  ? thread_stack_cache_init+0xb/0xb
+[   97.004526]  ? idt_setup_from_table+0xd9/0x130
+[   97.004526]  x86_64_start_reservations+0x24/0x26
+[   97.004526]  x86_64_start_kernel+0xf4/0xfb
+[   97.004526]  secondary_startup_64+0xb6/0xc0
+[   97.004526] irq event stamp: 16832
+[   97.004526] hardirqs last  enabled at (16831): [<ffffffff812a8399>] =
+switch_mm+0x49/0x60
+[   97.004526] hardirqs last disabled at (16832): [<ffffffff82fc0b52>] =
+efi_set_virtual_address_map+0x4a7/0x574
+[   97.004526] softirqs last  enabled at (15286): [<ffffffff82000447>] =
+__do_softirq+0x447/0x766
+[   97.004526] softirqs last disabled at (15279): [<ffffffff812d3ac6>] =
+irq_exit+0xd6/0xf0
+[   97.004526] ---[ end trace 33b25e8237e68c3c ]---
+[   97.004535] rcu: rcu_sched: wait state: RCU_GP_IDLE(0) ->state: =
+0x1ffff delta ->gp_activity 4294945934 ->gp_req_activity 8637 =
+->gp_wake_time 4294945934 ->gp_wake_seq 0 ->gp_seq -1200 ->gp_seq_needed =
+-1196 ->gp_flags 0x1
+[   97.014531] rcu:     rcu_node 0:127 ->gp_seq -1200 ->gp_seq_needed =
+-1196
+[   97.024538] rcu:     rcu_node 0:15 ->gp_seq -1200 ->gp_seq_needed =
+-1196
+[   97.034530] rcu:     cpu 1 ->gp_seq_needed 0
+[   97.039268] rcu:     cpu 2 ->gp_seq_needed 0
+[   97.044530] rcu:     cpu 3 ->gp_seq_needed 0
+[   97.049268] rcu:     cpu 4 ->gp_seq_needed 0
+[   97.054530] rcu:     cpu 5 ->gp_seq_needed 0
+[   97.059268] rcu:     cpu 6 ->gp_seq_needed 0
+[   97.064006] rcu:     cpu 7 ->gp_seq_needed 0
+[   97.064530] rcu:     cpu 8 ->gp_seq_needed 0
+[   97.069268] rcu:     cpu 9 ->gp_seq_needed 0
+[   97.074530] rcu:     cpu 10 ->gp_seq_needed 0
+[   97.079354] rcu:     cpu 11 ->gp_seq_needed 0
+[   97.084531] rcu:     cpu 12 ->gp_seq_needed 0
+[   97.089356] rcu:     cpu 13 ->gp_seq_needed 0
+[   97.094530] rcu:     cpu 14 ->gp_seq_needed 0
+[   97.099355] rcu:     cpu 15 ->gp_seq_needed 0
+[   97.192987] LVT offset 2 assigned for vector 0xf4
+[   97.194558] numa_add_cpu cpu 0 node 0: mask now 0
+[   97.194563] Last level iTLB entries: 4KB 1024, 2MB 1024, 4MB 512
+
+or this,
+
+[   96.807008] Inode-cache hash table entries: 4194304 (order: 13, =
+33554432 bytes, vmalloc)
+[   96.823729] Mount-cache hash table entries: 131072 (order: 8, 1048576 =
+bytes, vmalloc)
+[   96.827982] Mountpoint-cache hash table entries: 131072 (order: 8, =
+1048576 bytes, vmalloc)
+[   96.866430] ------------[ cut here ]------------
+[   96.871797] WARNING: CPU: 0 PID: 0 at kernel/rcu/tree_stall.h:672 =
+rcu_check_gp_start_stall.isra.67+0x1ae/0x260
+[   96.876402] Modules linked in:
+[   96.876402] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G    B             =
+5.5.0-rc6-next-20200120+ #1
+[   96.876402] Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 =
+Gen10, BIOS A40 07/10/2019
+[   96.876402] RIP: 0010:rcu_check_gp_start_stall.isra.67+0x1ae/0x260
+[   96.876402] Code: 61 01 4c 01 e6 48 39 f2 78 58 be 04 00 00 00 48 c7 =
+c7 e0 24 f7 b3 e8 71 0f 25 00 b8 01 00 00 00 87 05 66 32 7b 04 85 c0 75 =
+2f <0f> 0b 48 81 fb 40 13 dd b0 74 0c 48 c7 c7 40 13 dd b0 e8 8b 2b 8d
+[   96.876402] RSP: 0000:ffffc90000007e18 EFLAGS: 00010046
+[   96.876402] RAX: 0000000000000000 RBX: ffffffffb0dd1700 RCX: =
+ffffffffaf7bf26f
+[   96.876402] RDX: 0000000000000001 RSI: 0000000000000004 RDI: =
+ffffffffb3f724e0
+[   96.876402] RBP: ffffc90000007e30 R08: fffffbfff67ee49d R09: =
+fffffbfff67ee49d
+[   96.876402] R10: fffffbfff67ee49c R11: ffffffffb3f724e3 R12: =
+0000000000001964
+[   96.876402] R13: 0000000000000246 R14: ffff888843045050 R15: =
+ffff888843045018
+[   96.876402] FS:  0000000000000000(0000) GS:ffff888843000000(0000) =
+knlGS:0000000000000000
+[   96.876402] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   96.876402] CR2: ffff8890779ff000 CR3: 0000000b2a012000 CR4: =
+00000000000406b0
+[   96.876402] Call Trace:
+[   96.876402]  <IRQ>
+[   96.876402]  rcu_core+0x22b/0xb80
+[   96.876402]  ? debug_lockdep_rcu_enabled+0x11/0x60
+[   96.876402]  ? call_timer_fn+0x4e0/0x4e0
+[   96.876402]  ? rcu_note_context_switch+0x3b0/0x3b0
+[   96.876402]  ? lock_downgrade+0x3c0/0x3c0
+[   96.876402]  ? rwlock_bug.part.1+0x60/0x60
+[   96.876402]  ? lockdep_hardirqs_on+0x16/0x2a0
+[   96.876402]  rcu_core_si+0xe/0x10
+[   96.876402]  __do_softirq+0x123/0x766
+[   96.876402]  ? do_raw_spin_unlock+0xa8/0x140
+[   96.876402]  irq_exit+0xd6/0xf0
+[   96.876402]  do_IRQ+0xa3/0x1e0
+[   96.876402]  common_interrupt+0xf/0xf
+[   96.876402]  </IRQ>
+[   96.876402] RIP: 0010:_raw_spin_unlock_irqrestore+0x46/0x50
+[   96.876402] Code: 6a 6f ff 4c 89 e7 e8 69 fb 6f ff f6 c7 02 75 13 53 =
+9d e8 ad 4c 7f ff 65 ff 0d fe ef f8 4f 5b 41 5c 5d c3 e8 ec 4d 7f ff 53 =
+9d <eb> eb 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 55 65 ff 05 db ef f8
+[   96.876402] RSP: 0000:ffffffffb0c07ab0 EFLAGS: 00000246 ORIG_RAX: =
+ffffffffffffffcf
+[   96.876402] RAX: 0000000000000000 RBX: 0000000000000246 RCX: =
+ffffffffaf789c26
+[   96.876402] RDX: 0000000000000007 RSI: dffffc0000000000 RDI: =
+ffffffffb1329794
+[   96.876402] RBP: ffffffffb0c07ac0 R08: fffffbfff626282a R09: =
+fffffbfff626282a
+[   96.876402] R10: fffffbfff6262829 R11: ffffffffb131414b R12: =
+ffffffffb0f8a860
+[   96.876402] R13: ffffffffb0f8a980 R14: ffffffffb982af38 R15: =
+ffff888216688310
+[   96.876402]  ? lockdep_hardirqs_on+0x16/0x2a0
+[   96.876402]  create_object+0x4a2/0x540
+[   96.876402]  kmemleak_alloc_percpu+0xbd/0x150
+[   96.876402]  pcpu_alloc+0x50c/0xa40
+[   96.876402]  __alloc_percpu+0x15/0x20
+[   96.876402]  __percpu_init_rwsem+0x28/0xa0
+[   96.876402]  alloc_super+0x1ac/0x530
+[   96.876402]  sget_fc+0xb9/0x3a0
+[   96.876402]  ? compare_single+0x10/0x10
+[   96.876402]  ? ramfs_symlink+0xe0/0xe0
+[   96.876402]  vfs_get_super+0x4e/0x1a0
+[   96.876402]  ? vfs_parse_fs_string+0x110/0x110
+[   96.876402]  get_tree_nodev+0x16/0x20
+[   96.876402]  ramfs_get_tree+0x15/0x20
+[   96.876402]  vfs_get_tree+0x54/0x150
+[   96.876402]  fc_mount+0x14/0x60
+[   96.876402]  vfs_kern_mount.part.13+0x61/0xa0
+[   96.876402]  mnt_init+0x1b0/0x34a
+[   96.876402]  ? set_mphash_entries+0xa2/0xa2
+[   96.876402]  ? __percpu_counter_init+0x127/0x140
+[   96.876402]  vfs_caches_init+0xda/0xe6
+[   96.876402]  start_kernel+0x55d/0x5dc
+[   96.876402]  ? thread_stack_cache_init+0xb/0xb
+[   96.876402]  ? idt_setup_from_table+0xd9/0x130
+[   96.876402]  x86_64_start_reservations+0x24/0x26
+[   96.876402]  x86_64_start_kernel+0xf4/0xfb
+[   96.876402]  secondary_startup_64+0xb6/0xc0
+[   96.876402] irq event stamp: 16832
+[   96.876402] hardirqs last  enabled at (16831): [<ffffffffaf6a8399>] =
+switch_mm+0x49/0x60
+[   96.876402] hardirqs last disabled at (16832): [<ffffffffb13c0b52>] =
+efi_set_virtual_address_map+0x4a7/0x574
+[   96.876402] softirqs last  enabled at (15278): [<ffffffffb0400447>] =
+__do_softirq+0x447/0x766
+[   96.876402] softirqs last disabled at (15271): [<ffffffffaf6d3ac6>] =
+irq_exit+0xd6/0xf0
+[   96.876402] ---[ end trace 8c99b667a2f37d07 ]---
+[   96.876412] rcu: rcu_sched: wait state: RCU_GP_IDLE(0) ->state: =
+0x1ffff delta ->gp_activity 4294945938 ->gp_req_activity 8641 =
+->gp_wake_time 4294945938 ->gp_wake_seq 0 ->gp_seq -1200 ->gp_seq_needed =
+-1196 ->gp_flags 0x1
+[   96.886409] rcu:     rcu_node 0:127 ->gp_seq -1200 ->gp_seq_needed =
+-1196
+[   96.896408] rcu:     rcu_node 0:15 ->gp_seq -1200 ->gp_seq_needed =
+-1196
+[   96.906408] rcu:     cpu 1 ->gp_seq_needed 0
+[   96.911146] rcu:     cpu 2 ->gp_seq_needed 0
+[   96.916407] rcu:     cpu 3 ->gp_seq_needed 0
+[   96.921145] rcu:     cpu 4 ->gp_seq_needed 0
+[   96.926407] rcu:     cpu 5 ->gp_seq_needed 0
+[   96.931145] rcu:     cpu 6 ->gp_seq_needed 0
+[   96.936407] rcu:     cpu 7 ->gp_seq_needed 0
+[   96.941145] rcu:     cpu 8 ->gp_seq_needed 0
+[   96.946407] rcu:     cpu 9 ->gp_seq_needed 0
+[   96.951145] rcu:     cpu 10 ->gp_seq_needed 0
+[   96.956407] rcu:     cpu 11 ->gp_seq_needed 0
+[   96.961231] rcu:     cpu 12 ->gp_seq_needed 0
+[   96.966407] rcu:     cpu 13 ->gp_seq_needed 0
+[   96.971231] rcu:     cpu 14 ->gp_seq_needed 0
+[   96.976055] rcu:     cpu 15 ->gp_seq_needed 0
+[   97.064605] LVT offset 2 assigned for vector 0xf4
+[   97.066435] numa_add_cpu cpu 0 node 0: mask now 0
+[   97.066440] Last level iTLB entries: 4KB 1024, 2MB 1024, 4MB 512=
