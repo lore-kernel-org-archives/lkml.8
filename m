@@ -2,196 +2,84 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D421C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0680C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:06:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAF15217F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:05:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vEveYDGl"
+	by mail.kernel.org (Postfix) with ESMTP id C42ED24654
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:06:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729629AbgAUQFl (ORCPT
+        id S1729388AbgAUQGD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 11:05:41 -0500
-Received: from mail-wm1-f73.google.com ([209.85.128.73]:36899 "EHLO
-        mail-wm1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727817AbgAUQFk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 11:05:40 -0500
-Received: by mail-wm1-f73.google.com with SMTP id t4so800924wmf.2
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 08:05:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=rQnN5kw1tCui7wtVtPb4liBxMrcaouM2L/Dj3ZF7x/U=;
-        b=vEveYDGlq4RapLlWOaserIRgSK9CDsyfKU3vmnx8XdRv89p7akoY0T/V3FT18RGMDw
-         OnIRpz8GZABv+03aNv6SYWdpma0cOtw9nwvYssWK3KfbfLDiVatxE0ZU6mONsyJ2gVsi
-         uUph1vinxudveUkuNN+jZVXoh30xw79QZx/d492IQ/ZJsFu58ixFWPEECOIRa11zW598
-         4k41E4HwH4oJuUbSy/y9Vzf1ZfTjNMvyp9/8EXNCZcZ3zUHKkQro+p+EUuLpGaaGn5t3
-         bL84bLB/URIi83z+l9RZ5xR4S1qwN1Cfzc9oVp+rnNjvEL2wQ4NlOUKRJ+AqA2/tiu9+
-         5rMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=rQnN5kw1tCui7wtVtPb4liBxMrcaouM2L/Dj3ZF7x/U=;
-        b=BCN6u3c8Z/9muwqQho04zkcEOKXJcIbmGHxvRttBOQqcogVYlfDTHzD0CMv0ljZOGx
-         4iCBskvtjbpTvQ1yPs4pU5+bp/DIZPNIFqeTRvvRXiDBEXKSZnfRsXXAfIC6aGuEMmQr
-         Jmv7wRQIzXKZi0+FEm3eO5/iYcE1S//bULCCZH26DtUYBXoPlzIUARHrombxM1eJMY7o
-         v6ljUdjd1Hi1gJG/HklZHHSQuBydnYM+fjsIVgVvq22pCxUDqCc8vuIve1uUAWvwJFLu
-         BnLRl/+D7IO4YB3nsZ94qlG+MwZkEgjc+2lw4afTcSTY7nRZwy6+Lc9jA5h7BhVI9gF8
-         1t1w==
-X-Gm-Message-State: APjAAAUrxHtGWJ8iOYh/AHRk9BbtbiOU4xQQ8aArMvQnhdAVAbgOH36I
-        oybP8usVJAQfm6/5gpxqlEVHbAIKsg==
-X-Google-Smtp-Source: APXvYqzSYKwCpC+hKJKIhtUj8+J/YqJXlcIiLtIGbS/jcM8OFkz4phDJWMJlx1Zu6jZidhoMoTP5+XYtHA==
-X-Received: by 2002:a05:6000:50:: with SMTP id k16mr5659732wrx.145.1579622738696;
- Tue, 21 Jan 2020 08:05:38 -0800 (PST)
-Date:   Tue, 21 Jan 2020 17:05:12 +0100
-In-Reply-To: <20200121160512.70887-1-elver@google.com>
-Message-Id: <20200121160512.70887-5-elver@google.com>
-Mime-Version: 1.0
-References: <20200121160512.70887-1-elver@google.com>
-X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
-Subject: [PATCH v2 5/5] copy_to_user, copy_from_user: Use generic instrumented.h
-From:   Marco Elver <elver@google.com>
-To:     elver@google.com
-Cc:     paulmck@kernel.org, andreyknvl@google.com, glider@google.com,
-        dvyukov@google.com, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        will@kernel.org, peterz@infradead.org, boqun.feng@gmail.com,
-        arnd@arndb.de, viro@zeniv.linux.org.uk, dja@axtens.net,
-        christophe.leroy@c-s.fr, mpe@ellerman.id.au, mhiramat@kernel.org,
-        rostedt@goodmis.org, mingo@kernel.org,
-        christian.brauner@ubuntu.com, daniel@iogearbox.net,
-        keescook@chromium.org, cyphar@cyphar.com,
-        linux-arch@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 21 Jan 2020 11:06:03 -0500
+Received: from mga03.intel.com ([134.134.136.65]:36526 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727817AbgAUQGD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 11:06:03 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 08:01:20 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,346,1574150400"; 
+   d="scan'208";a="219998838"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga008.jf.intel.com with ESMTP; 21 Jan 2020 08:01:15 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id C2B0B29D; Tue, 21 Jan 2020 18:01:14 +0200 (EET)
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Lee Jones <lee.jones@linaro.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Mark Brown <broonie@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 02/38] platform/x86: intel_scu_ipcutil: Remove default y from Kconfig
+Date:   Tue, 21 Jan 2020 19:00:38 +0300
+Message-Id: <20200121160114.60007-3-mika.westerberg@linux.intel.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200121160114.60007-1-mika.westerberg@linux.intel.com>
+References: <20200121160114.60007-1-mika.westerberg@linux.intel.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This replaces the KASAN instrumentation with generic instrumentation,
-implicitly adding KCSAN instrumentation support.
+This driver is by no means essential for system to boot up so remove
+default y from it.
 
-For KASAN no functional change is intended.
-
-Suggested-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Marco Elver <elver@google.com>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
-v2:
-* Use updated instrumented.h, removing post-hooks for user-copies.
----
- include/linux/uaccess.h | 14 +++++++-------
- lib/usercopy.c          |  7 ++++---
- 2 files changed, 11 insertions(+), 10 deletions(-)
+ drivers/platform/x86/Kconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
-index 67f016010aad..8a215c5c1aed 100644
---- a/include/linux/uaccess.h
-+++ b/include/linux/uaccess.h
-@@ -2,9 +2,9 @@
- #ifndef __LINUX_UACCESS_H__
- #define __LINUX_UACCESS_H__
- 
-+#include <linux/instrumented.h>
- #include <linux/sched.h>
- #include <linux/thread_info.h>
--#include <linux/kasan-checks.h>
- 
- #define uaccess_kernel() segment_eq(get_fs(), KERNEL_DS)
- 
-@@ -58,7 +58,7 @@
- static __always_inline __must_check unsigned long
- __copy_from_user_inatomic(void *to, const void __user *from, unsigned long n)
- {
--	kasan_check_write(to, n);
-+	instrument_copy_from_user(to, from, n);
- 	check_object_size(to, n, false);
- 	return raw_copy_from_user(to, from, n);
- }
-@@ -67,7 +67,7 @@ static __always_inline __must_check unsigned long
- __copy_from_user(void *to, const void __user *from, unsigned long n)
- {
- 	might_fault();
--	kasan_check_write(to, n);
-+	instrument_copy_from_user(to, from, n);
- 	check_object_size(to, n, false);
- 	return raw_copy_from_user(to, from, n);
- }
-@@ -88,7 +88,7 @@ __copy_from_user(void *to, const void __user *from, unsigned long n)
- static __always_inline __must_check unsigned long
- __copy_to_user_inatomic(void __user *to, const void *from, unsigned long n)
- {
--	kasan_check_read(from, n);
-+	instrument_copy_to_user(to, from, n);
- 	check_object_size(from, n, true);
- 	return raw_copy_to_user(to, from, n);
- }
-@@ -97,7 +97,7 @@ static __always_inline __must_check unsigned long
- __copy_to_user(void __user *to, const void *from, unsigned long n)
- {
- 	might_fault();
--	kasan_check_read(from, n);
-+	instrument_copy_to_user(to, from, n);
- 	check_object_size(from, n, true);
- 	return raw_copy_to_user(to, from, n);
- }
-@@ -109,7 +109,7 @@ _copy_from_user(void *to, const void __user *from, unsigned long n)
- 	unsigned long res = n;
- 	might_fault();
- 	if (likely(access_ok(from, n))) {
--		kasan_check_write(to, n);
-+		instrument_copy_from_user(to, from, n);
- 		res = raw_copy_from_user(to, from, n);
- 	}
- 	if (unlikely(res))
-@@ -127,7 +127,7 @@ _copy_to_user(void __user *to, const void *from, unsigned long n)
- {
- 	might_fault();
- 	if (access_ok(to, n)) {
--		kasan_check_read(from, n);
-+		instrument_copy_to_user(to, from, n);
- 		n = raw_copy_to_user(to, from, n);
- 	}
- 	return n;
-diff --git a/lib/usercopy.c b/lib/usercopy.c
-index cbb4d9ec00f2..4bb1c5e7a3eb 100644
---- a/lib/usercopy.c
-+++ b/lib/usercopy.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
--#include <linux/uaccess.h>
- #include <linux/bitops.h>
-+#include <linux/instrumented.h>
-+#include <linux/uaccess.h>
- 
- /* out-of-line parts */
- 
-@@ -10,7 +11,7 @@ unsigned long _copy_from_user(void *to, const void __user *from, unsigned long n
- 	unsigned long res = n;
- 	might_fault();
- 	if (likely(access_ok(from, n))) {
--		kasan_check_write(to, n);
-+		instrument_copy_from_user(to, from, n);
- 		res = raw_copy_from_user(to, from, n);
- 	}
- 	if (unlikely(res))
-@@ -25,7 +26,7 @@ unsigned long _copy_to_user(void __user *to, const void *from, unsigned long n)
- {
- 	might_fault();
- 	if (likely(access_ok(to, n))) {
--		kasan_check_read(from, n);
-+		instrument_copy_to_user(to, from, n);
- 		n = raw_copy_to_user(to, from, n);
- 	}
- 	return n;
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 27d5b40fb717..dd4326736d11 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -997,7 +997,6 @@ config INTEL_SCU_IPC
+ config INTEL_SCU_IPC_UTIL
+ 	tristate "Intel SCU IPC utility driver"
+ 	depends on INTEL_SCU_IPC
+-	default y
+ 	---help---
+ 	  The IPC Util driver provides an interface with the SCU enabling
+ 	  low level access for debug work and updating the firmware. Say
 -- 
-2.25.0.341.g760bfbb309-goog
+2.24.1
 
