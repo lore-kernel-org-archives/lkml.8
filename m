@@ -6,118 +6,142 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD10C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 22:10:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8D71C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 22:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B27721835
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 22:10:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A68A521835
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 22:10:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729409AbgAUWKo (ORCPT
+        id S1729388AbgAUWKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 17:10:44 -0500
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:44792 "EHLO
+        Tue, 21 Jan 2020 17:10:43 -0500
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:44790 "EHLO
         kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728205AbgAUWKh (ORCPT
+        with ESMTP id S1729043AbgAUWKh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 21 Jan 2020 17:10:37 -0500
 Received: by kvm5.telegraphics.com.au (Postfix, from userid 502)
-        id AB6F8299AA; Tue, 21 Jan 2020 17:10:36 -0500 (EST)
+        id 4A79029994; Tue, 21 Jan 2020 17:10:36 -0500 (EST)
 To:     "David S. Miller" <davem@davemloft.net>
 Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Chris Zankel <chris@zankel.net>,
         Laurent Vivier <laurent@vivier.eu>,
         Geert Uytterhoeven <geert@linux-m68k.org>,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-Id: <b605d20bb6530e19f560f4d95951b64d7da9c056.1579641728.git.fthain@telegraphics.com.au>
+Message-Id: <e20133bf43ec6f5967a3330dacaf38f653bf3061.1579641728.git.fthain@telegraphics.com.au>
 In-Reply-To: <cover.1579641728.git.fthain@telegraphics.com.au>
 References: <cover.1579641728.git.fthain@telegraphics.com.au>
 From:   Finn Thain <fthain@telegraphics.com.au>
-Subject: [PATCH net v2 11/12] net/sonic: Fix CAM initialization
+Subject: [PATCH net v2 05/12] net/sonic: Fix receive buffer handling
 Date:   Wed, 22 Jan 2020 08:22:08 +1100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Section 4.3.1 of the datasheet says,
+The SONIC can sometimes advance its rx buffer pointer (RRP register)
+without advancing its rx descriptor pointer (CRDA register). As a result
+the index of the current rx descriptor may not equal that of the current
+rx buffer. The driver mistakenly assumes that they are always equal.
+This assumption leads to incorrect packet lengths and possible packet
+duplication. Avoid this by calling a new function to locate the buffer
+corresponding to a given descriptor.
 
-    This bit [TXP] must not be set if a Load CAM operation is in
-    progress (LCAM is set). The SONIC will lock up if both bits are
-    set simultaneously.
-
-Testing has shown that the driver sometimes attempts to set LCAM
-while TXP is set. Avoid this by waiting for command completion
-before and after giving the LCAM command.
-
-After issuing the Load CAM command, poll for !SONIC_CR_LCAM rather than
-SONIC_INT_LCD, because the SONIC_CR_TXP bit can't be used until
-!SONIC_CR_LCAM.
-
-When in reset mode, take the opportunity to reset the CAM Enable
-register.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Fixes: efcce839360f ("[PATCH] macsonic/jazzsonic network drivers update")
 Tested-by: Stan Johnson <userm57@yahoo.com>
 Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
 ---
- drivers/net/ethernet/natsemi/sonic.c | 21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+ drivers/net/ethernet/natsemi/sonic.c | 36 ++++++++++++++++++++++++----
+ drivers/net/ethernet/natsemi/sonic.h |  5 ++--
+ 2 files changed, 34 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/net/ethernet/natsemi/sonic.c b/drivers/net/ethernet/natsemi/sonic.c
-index 55660acf5ccc..b712cc6a2560 100644
+index 5ba705ad7d4e..3387f7bc1a80 100644
 --- a/drivers/net/ethernet/natsemi/sonic.c
 +++ b/drivers/net/ethernet/natsemi/sonic.c
-@@ -634,6 +634,8 @@ static void sonic_multicast_list(struct net_device *dev)
- 		    (netdev_mc_count(dev) > 15)) {
- 			rcr |= SONIC_RCR_AMC;
+@@ -408,6 +408,22 @@ static irqreturn_t sonic_interrupt(int irq, void *dev_id)
+ 	return IRQ_HANDLED;
+ }
+ 
++/* Return the array index corresponding to a given Receive Buffer pointer. */
++
++static inline int index_from_addr(struct sonic_local *lp, dma_addr_t addr,
++				  unsigned int last)
++{
++	unsigned int i = last;
++
++	do {
++		i = (i + 1) & SONIC_RRS_MASK;
++		if (addr == lp->rx_laddr[i])
++			return i;
++	} while (i != last);
++
++	return -ENOENT;
++}
++
+ /*
+  * We have a good packet(s), pass it/them up the network stack.
+  */
+@@ -427,6 +443,16 @@ static void sonic_rx(struct net_device *dev)
+ 
+ 		status = sonic_rda_get(dev, entry, SONIC_RD_STATUS);
+ 		if (status & SONIC_RCR_PRX) {
++			u32 addr = (sonic_rda_get(dev, entry,
++						  SONIC_RD_PKTPTR_H) << 16) |
++				   sonic_rda_get(dev, entry, SONIC_RD_PKTPTR_L);
++			int i = index_from_addr(lp, addr, entry);
++
++			if (i < 0) {
++				WARN_ONCE(1, "failed to find buffer!\n");
++				break;
++			}
++
+ 			/* Malloc up new buffer. */
+ 			new_skb = netdev_alloc_skb(dev, SONIC_RBSIZE + 2);
+ 			if (new_skb == NULL) {
+@@ -448,7 +474,7 @@ static void sonic_rx(struct net_device *dev)
+ 
+ 			/* now we have a new skb to replace it, pass the used one up the stack */
+ 			dma_unmap_single(lp->device, lp->rx_laddr[entry], SONIC_RBSIZE, DMA_FROM_DEVICE);
+-			used_skb = lp->rx_skb[entry];
++			used_skb = lp->rx_skb[i];
+ 			pkt_len = sonic_rda_get(dev, entry, SONIC_RD_PKTLEN);
+ 			skb_trim(used_skb, pkt_len);
+ 			used_skb->protocol = eth_type_trans(used_skb, dev);
+@@ -457,13 +483,13 @@ static void sonic_rx(struct net_device *dev)
+ 			lp->stats.rx_bytes += pkt_len;
+ 
+ 			/* and insert the new skb */
+-			lp->rx_laddr[entry] = new_laddr;
+-			lp->rx_skb[entry] = new_skb;
++			lp->rx_laddr[i] = new_laddr;
++			lp->rx_skb[i] = new_skb;
+ 
+ 			bufadr_l = (unsigned long)new_laddr & 0xffff;
+ 			bufadr_h = (unsigned long)new_laddr >> 16;
+-			sonic_rra_put(dev, entry, SONIC_RR_BUFADR_L, bufadr_l);
+-			sonic_rra_put(dev, entry, SONIC_RR_BUFADR_H, bufadr_h);
++			sonic_rra_put(dev, i, SONIC_RR_BUFADR_L, bufadr_l);
++			sonic_rra_put(dev, i, SONIC_RR_BUFADR_H, bufadr_h);
  		} else {
-+			unsigned long flags;
-+
- 			netif_dbg(lp, ifup, dev, "%s: mc_count %d\n", __func__,
- 				  netdev_mc_count(dev));
- 			sonic_set_cam_enable(dev, 1);  /* always enable our own address */
-@@ -647,9 +649,14 @@ static void sonic_multicast_list(struct net_device *dev)
- 				i++;
- 			}
- 			SONIC_WRITE(SONIC_CDC, 16);
--			/* issue Load CAM command */
- 			SONIC_WRITE(SONIC_CDP, lp->cda_laddr & 0xffff);
-+
-+			/* LCAM and TXP commands can't be used simultaneously */
-+			local_irq_save(flags);
-+			sonic_quiesce(dev, SONIC_CR_TXP);
- 			SONIC_WRITE(SONIC_CMD, SONIC_CR_LCAM);
-+			sonic_quiesce(dev, SONIC_CR_LCAM);
-+			local_irq_restore(flags);
+ 			/* This should only happen, if we enable accepting broken packets. */
  		}
- 	}
+diff --git a/drivers/net/ethernet/natsemi/sonic.h b/drivers/net/ethernet/natsemi/sonic.h
+index 9e4ff8dd032d..e6d47e45c5c2 100644
+--- a/drivers/net/ethernet/natsemi/sonic.h
++++ b/drivers/net/ethernet/natsemi/sonic.h
+@@ -275,8 +275,9 @@
+ #define SONIC_NUM_RDS   SONIC_NUM_RRS /* number of receive descriptors */
+ #define SONIC_NUM_TDS   16            /* number of transmit descriptors */
  
-@@ -675,6 +682,9 @@ static int sonic_init(struct net_device *dev)
- 	SONIC_WRITE(SONIC_ISR, 0x7fff);
- 	SONIC_WRITE(SONIC_CMD, SONIC_CR_RST);
+-#define SONIC_RDS_MASK  (SONIC_NUM_RDS-1)
+-#define SONIC_TDS_MASK  (SONIC_NUM_TDS-1)
++#define SONIC_RRS_MASK  (SONIC_NUM_RRS - 1)
++#define SONIC_RDS_MASK  (SONIC_NUM_RDS - 1)
++#define SONIC_TDS_MASK  (SONIC_NUM_TDS - 1)
  
-+	/* While in reset mode, clear CAM Enable register */
-+	SONIC_WRITE(SONIC_CE, 0);
-+
- 	/*
- 	 * clear software reset flag, disable receiver, clear and
- 	 * enable interrupts, then completely initialize the SONIC
-@@ -785,14 +795,7 @@ static int sonic_init(struct net_device *dev)
- 	 * load the CAM
- 	 */
- 	SONIC_WRITE(SONIC_CMD, SONIC_CR_LCAM);
--
--	i = 0;
--	while (i++ < 100) {
--		if (SONIC_READ(SONIC_ISR) & SONIC_INT_LCD)
--			break;
--	}
--	netif_dbg(lp, ifup, dev, "%s: CMD=%x, ISR=%x, i=%d\n", __func__,
--		  SONIC_READ(SONIC_CMD), SONIC_READ(SONIC_ISR), i);
-+	sonic_quiesce(dev, SONIC_CR_LCAM);
+ #define SONIC_RBSIZE	1520          /* size of one resource buffer */
  
- 	/*
- 	 * enable receiver, disable loopback
 -- 
 2.24.1
 
