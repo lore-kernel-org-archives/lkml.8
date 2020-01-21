@@ -2,139 +2,219 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA88C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:30:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3904C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:32:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50A762087E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:30:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WoEpqp79"
+	by mail.kernel.org (Postfix) with ESMTP id 95EF924655
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:32:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579631537;
+	bh=fUP5/RWXSr7dOUMtU3ZCu3YBy8YN4DtVCmL1+/lC/UU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pb/mdwOj1zkDIWBqUYWwrptLbkeMPWgkFJwUF/0SAiahtXwm2hzD7d5NDpSuX1bJR
+	 HDNrE9NO5662pEE0y2jUu/yeKueMDutAufp4CkqJGYzHzN+zN86A9wswjB7kOOCPRZ
+	 N8ZQWM6iGUrLcwU/7rlkY/3+ocsLaK0DDhpu/9Gg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729293AbgAUSaU (ORCPT
+        id S1729251AbgAUScQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 13:30:20 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:50779 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728186AbgAUSaU (ORCPT
+        Tue, 21 Jan 2020 13:32:16 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:37225 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728186AbgAUScQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 13:30:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579631419;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=n6ph8C+aXX0HI0FhHPqndGPmUHr5PUk3iM34mdtK754=;
-        b=WoEpqp79Jpao9qyUg3Uvvc4mQ4n9D8MEvA3+3z2MgM4dsuIZZk6KlSojelnpG8O+TGbQFs
-        RGTZkuPhSuQbKVM8sW0jDEzGTojGx50RohV1GspTrIK6KESh83e+R12JgYZ0Xo59XMEUkR
-        9U4Za2L+3Ldo/jV6+OjjjcHJzZfyC0E=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-203-uxQgXMv6MISRi-IAIju01Q-1; Tue, 21 Jan 2020 13:30:15 -0500
-X-MC-Unique: uxQgXMv6MISRi-IAIju01Q-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A2643800D4C;
-        Tue, 21 Jan 2020 18:30:12 +0000 (UTC)
-Received: from treble (ovpn-122-154.rdu2.redhat.com [10.10.122.154])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3115639A;
-        Tue, 21 Jan 2020 18:30:11 +0000 (UTC)
-Date:   Tue, 21 Jan 2020 12:30:09 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Julien Thierry <jthierry@redhat.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Peter Zijlstra <peterz@infradead.org>, raphael.gault@arm.com,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [RFC v5 00/57] objtool: Add support for arm64
-Message-ID: <20200121183009.253yh6aehvnvxoew@treble>
-References: <20200109160300.26150-1-jthierry@redhat.com>
- <20200112084258.GA44004@ubuntu-x2-xlarge-x86>
- <d5bf34f0-22cc-ba46-41b4-96a52d7acfa4@redhat.com>
- <20200121103101.GE11154@willie-the-truck>
- <CAKwvOd=_PqQWUvd_WZRpEr+T==3w6LpsHKBz3E9ybaQ0javVkw@mail.gmail.com>
- <20200121180632.GA13592@willie-the-truck>
+        Tue, 21 Jan 2020 13:32:16 -0500
+Received: by mail-pj1-f67.google.com with SMTP id m13so1997125pjb.2;
+        Tue, 21 Jan 2020 10:32:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=yvndSpP/NSgHluqgcBzNQ8DcumhrYSHKGx7ZpL0Xkkg=;
+        b=feBsVhrFKavcTHSNyEl6RKC+Qz5Xajkr2H4ffG+vzQ6fEayv/3W+yePz1Vbv2WsB7z
+         1AJ1GBB/Ya81kCybByEtAINJOR21f+gkBsnUo1Jfv7ZMUJEVZZcrNmd1oKoXM4iZu3lB
+         Ho3mb+wD3PvaTy5ODQb/mMxEPC1hViwBVJpNmbAJ2/JXheUaC7kFzMxsV6kYtMGDDXhc
+         29KZ+LmmUsSyC4lHmmML685aQadzq/V/wed/bOFJg0fvs26/cE9utfiVmwJ/Mh/jfE5/
+         Jy5tMqx+TVsp4NNldlrtXi2VyGSoxkX4H9e4vgyDaVXnh5rWwapDEiWv93dHwnLcpHBU
+         pT2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yvndSpP/NSgHluqgcBzNQ8DcumhrYSHKGx7ZpL0Xkkg=;
+        b=AIMpdIGuYOkr/Zc1D5WLzEj5KdEkHJIBhGwoaZewce4C29xoKL/hd/7sJOm4Tlzkhb
+         JmhHROJJBeVi8fhLSCQET7GOVFSqwFGXhV7UCqtYldGAktCtmJ7OUVKECHRBFqhTsCyt
+         DR3KOZ08p72pt1hBi6hYrEoLqgonIga5VsI6A/U2bcHbg5ZKYXD82sEUlZPawiD+0mpo
+         Q/78NGTW7IdNbeoDZbz5Xi2lRkzGaPxJ9VSLGmGaxZVvRrbHlzXvczv1e4Ky9LYkpEvD
+         bEvvzdmRGDAIAWW5MlOCZnOhT9drNkUSP2f5kTFwUUaCyZKizigG1QHSezUAWtTT6rcE
+         jICA==
+X-Gm-Message-State: APjAAAV3KB0V7F5MqCP0FaTIDvegGpz5X1RS9IZLtY49aimY/OGnUI6B
+        91m0akB5MqPh76R/1ceblUs=
+X-Google-Smtp-Source: APXvYqxYREi5pdtkVxLeB5fMNn8UAXj1H1VBRUK+T8tIL7ytUYbmXrBEmvU32LPQNTui8UDjhIAOLA==
+X-Received: by 2002:a17:902:a40c:: with SMTP id p12mr6739925plq.292.1579631535551;
+        Tue, 21 Jan 2020 10:32:15 -0800 (PST)
+Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
+        by smtp.gmail.com with ESMTPSA id e1sm44395865pfl.98.2020.01.21.10.32.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2020 10:32:14 -0800 (PST)
+Date:   Tue, 21 Jan 2020 10:32:12 -0800
+From:   Minchan Kim <minchan@kernel.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     sspatil@google.com, kirill@shutemov.name,
+        akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-api@vger.kernel.org,
+        oleksandr@redhat.com, surenb@google.com, timmurray@google.com,
+        dancol@google.com, sonnyrao@google.com, bgeffon@google.com,
+        hannes@cmpxchg.org, shakeelb@google.com, joaodias@google.com,
+        ktkhai@virtuozzo.com, christian.brauner@ubuntu.com,
+        sjpark@amazon.de
+Subject: Re: [PATCH v2 2/5] mm: introduce external memory hinting API
+Message-ID: <20200121183212.GF140922@google.com>
+References: <20200116235953.163318-1-minchan@kernel.org>
+ <20200116235953.163318-3-minchan@kernel.org>
+ <20200117115225.GV19428@dhcp22.suse.cz>
+ <20200117155837.bowyjpndfiym6cgs@box>
+ <20200117173239.GB140922@google.com>
+ <20200117212653.7uftw3lk35oykkmb@box>
+ <20200119161431.GA94410@google.com>
+ <20200120075825.GH18451@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200121180632.GA13592@willie-the-truck>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <20200120075825.GH18451@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 06:06:34PM +0000, Will Deacon wrote:
-> On Tue, Jan 21, 2020 at 09:08:29AM -0800, Nick Desaulniers wrote:
-> > On Tue, Jan 21, 2020 at 2:31 AM Will Deacon <will@kernel.org> wrote:
-> > >
-> > > On Mon, Jan 13, 2020 at 07:57:48AM +0000, Julien Thierry wrote:
-> > > > On 1/12/20 8:42 AM, Nathan Chancellor wrote:
-> > > > > The 0day bot reported a couple of issues with clang with this series;
-> > > > > the full report is available here (clang reports are only sent to our
-> > > > > mailing lists for manual triage for the time being):
-> > > > >
-> > > > > https://groups.google.com/d/msg/clang-built-linux/MJbl_xPxawg/mWjgDgZgBwAJ
-> > > > >
-> > > >
-> > > > Thanks, I'll have a look at those.
-> > > >
-> > > > > The first obvious issue is that this series appears to depend on a GCC
-> > > > > plugin? I'll be quite honest, objtool and everything it does is rather
-> > > > > over my head but I see this warning during configuration (allyesconfig):
-> > > > >
-> > > > > WARNING: unmet direct dependencies detected for GCC_PLUGIN_SWITCH_TABLES
-> > > > >    Depends on [n]: GCC_PLUGINS [=n] && ARM64 [=y]
-> > > > >      Selected by [y]:
-> > > > >        - ARM64 [=y] && STACK_VALIDATION [=y]
-> > > > >
-> > > > > Followed by the actual error:
-> > > > >
-> > > > > error: unable to load plugin
-> > > > > './scripts/gcc-plugins/arm64_switch_table_detection_plugin.so':
-> > > > > './scripts/gcc-plugins/arm64_switch_table_detection_plugin.so: cannot
-> > > > > open shared object file: No such file or directory'
-> > > > >
-> > > > > If this plugin is absolutely necessary and can't be implemented in
-> > > > > another way so that clang can be used, seems like STACK_VALIDATION
-> > > > > should only be selected on ARM64 when CONFIG_CC_IS_GCC is not zero.
-> > > > >
-> > > >
-> > > > So currently the plugin is necessary for proper validation. One option can
-> > > > be to just let objtool output false positives on files containing jump
-> > > > tables when the plugin cannot be used. But overall I guess it makes more
-> > > > sense to disable stack validation for non-gcc builds, for now.
-> > >
-> > > Alternatively, could we add '-fno-jump-tables' to the KBUILD_CFLAGS if
-> > > STACK_VALIDATION is selected but we're not using GCC? Is that sufficient
-> > > to prevent generation of these things?
+On Mon, Jan 20, 2020 at 08:58:25AM +0100, Michal Hocko wrote:
+> On Sun 19-01-20 08:14:31, sspatil@google.com wrote:
+> > On Sat, Jan 18, 2020 at 12:26:53AM +0300, Kirill A. Shutemov wrote:
+> > > On Fri, Jan 17, 2020 at 09:32:39AM -0800, Minchan Kim wrote:
+> > > > On Fri, Jan 17, 2020 at 06:58:37PM +0300, Kirill A. Shutemov wrote:
+> > > > > On Fri, Jan 17, 2020 at 12:52:25PM +0100, Michal Hocko wrote:
+> > > > > > On Thu 16-01-20 15:59:50, Minchan Kim wrote:
+> > > > > > > There is usecase that System Management Software(SMS) want to give
+> > > > > > > a memory hint like MADV_[COLD|PAGEEOUT] to other processes and
+> > > > > > > in the case of Android, it is the ActivityManagerService.
+> > > > > > > 
+> > > > > > > It's similar in spirit to madvise(MADV_WONTNEED), but the information
+> > > > > > > required to make the reclaim decision is not known to the app. Instead,
+> > > > > > > it is known to the centralized userspace daemon(ActivityManagerService),
+> > > > > > > and that daemon must be able to initiate reclaim on its own without
+> > > > > > > any app involvement.
+> > > > > > > 
+> > > > > > > To solve the issue, this patch introduces new syscall process_madvise(2).
+> > > > > > > It uses pidfd of an external processs to give the hint.
+> > > > > > > 
+> > > > > > >  int process_madvise(int pidfd, void *addr, size_t length, int advise,
+> > > > > > > 			unsigned long flag);
+> > > > > > > 
+> > > > > > > Since it could affect other process's address range, only privileged
+> > > > > > > process(CAP_SYS_PTRACE) or something else(e.g., being the same UID)
+> > > > > > > gives it the right to ptrace the process could use it successfully.
+> > > > > > > The flag argument is reserved for future use if we need to extend the
+> > > > > > > API.
+> > > > > > > 
+> > > > > > > I think supporting all hints madvise has/will supported/support to
+> > > > > > > process_madvise is rather risky. Because we are not sure all hints make
+> > > > > > > sense from external process and implementation for the hint may rely on
+> > > > > > > the caller being in the current context so it could be error-prone.
+> > > > > > > Thus, I just limited hints as MADV_[COLD|PAGEOUT] in this patch.
+> > > > > > > 
+> > > > > > > If someone want to add other hints, we could hear hear the usecase and
+> > > > > > > review it for each hint. It's more safe for maintainace rather than
+> > > > > > > introducing a buggy syscall but hard to fix it later.
+> > > > > > 
+> > > > > > I have brought this up when we discussed this in the past but there is
+> > > > > > no reflection on that here so let me bring that up again. 
+> > > > > > 
+> > > > > > I believe that the interface has an inherent problem that it is racy.
+> > > > > > The external entity needs to know the address space layout of the target
+> > > > > > process to do anyhing useful on it. The address space is however under
+> > > > > > the full control of the target process though and the external entity
+> > > > > > has no means to find out that the layout has changed. So
+> > > > > > time-to-check-time-to-act is an inherent problem.
+> > > > > > 
+> > > > > > This is a serious design flaw and it should be explained why it doesn't
+> > > > > > matter or how to use the interface properly to prevent that problem.
+> > > > > 
+> > > > > I agree, it looks flawed.
+> > > > > 
+> > > > > Also I don't see what System Management Software can generically do on
+> > > > > sub-process level. I mean how can it decide which part of address space is
+> > > > > less important than other.
+> > > > > 
+> > > > > I see how a manager can indicate that this process (or a group of
+> > > > > processes) is less important than other, but on per-addres-range basis?
+> > > > 
+> > > > For example, memory ranges shared by several processes or critical for the
+> > > > latency, we could avoid those ranges to be cold/pageout to prevent
+> > > > unncecessary CPU burning/paging.
+> > > 
+> > > Hmm.. I still don't see why any external entity has a better (or any)
+> > > knowledge about the matter. The process has to do this, no?
 > > 
-> > Surely we wouldn't want to replace jump tables with long chains of
-> > comparisons just because objtool couldn't validate jump tables without
-> > a GCC plugin for aarch64 for some reason, right?  objtool validation
-> > is valuable, but tying runtime performance to a GCC plugin used for
-> > validation seems bad.
+> > FWIW, I totally agree with the time-to-check-time-to-react problem. However,
+> > I'd like to clarify the ActivityManager/SystemServer case (I'll call it
+> > SystemServer from now on)
+> > 
+> > For Android, every application (including the special SystemServer) are forked
+> > from Zygote. The reason ofcourse is to share as many libraries and classes between
+> > the two as possible to benefit from the preloading during boot.
+> > 
+> > After applications start, (almost) all of the APIs  end up calling into this
+> > SystemServer process over IPC (binder) and back to the application.
+> > 
+> > In a fully running system, the SystemServer monitors every single process
+> > periodically to calculate their PSS / RSS and also decides which process is
+> > "important" to the user for interactivity.
+> > 
+> > So, because of how these processes start _and_ the fact that the SystemServer
+> > is looping to monitor each process, it does tend to *know* which address
+> > range of the application is not used / useful.
+> > 
+> > Besides, we can never rely on applications to clean things up themselves.
+> > We've had the "hey app1, the system is low on memory, please trim your
+> > memory usage down" notifications for a long time[1]. They rely on
+> > applications honoring the broadcasts and very few do.
+> > 
+> > So, if we want to avoid the inevitable killing of the application and
+> > restarting it, some way to be able to tell the OS about unimportant memory in
+> > these applications will be useful.
+
+Thanks for adding more useful description, Sandeep.
+
 > 
-> I'm only suggesting it if STACK_VALIDATION is selected. It's off by default,
-> and lives in Kconfig.debug. I'd prefer that to "cross your fingers are do
-> nothing differently", which is what the other option seems to be.
+> This is a useful information that should be a part of the changelog. I
 
-I don't know what the right answer is here, but keep in mind that
-objtool is on by default for x86, so don't be surprised if that
-eventually happens to arch64 too.
+I will incldue it in next respin.
 
-Short term it might be ok to disable jump tables with objtool enabled,
-or to disable objtool when clang is in use, but long term we'll need to
-figure out a better solution.
+> do see how the current form of the API might fit into Android model
+> without many problems. But we are not designing an API for a single
+> usecase, right? In a highly cooperative environments you can use ptrace
+> code injection as mentioned by Kirill. Or is there any fundamental
+> problem about that?
 
--- 
-Josh
+I replied it at Kirill's thread so let's discuss there.
 
+> 
+> The interface really has to be robust to future potential usecases.
+
+I do understand your concern but for me, it's chicken and egg problem.
+We usually do best effort to make something perfect as far as possible
+but we also don't do over-engineering without real usecase from the
+beginning.
+
+I already told you how we could synchronize among processes and potential
+way to be extended Daniel suggested(That's why current API has extra field
+for the cookie) even though we don't need it right now.
+
+If you want to suggest the other way, please explain why your idea is
+better and why we need it at this moment. I don't think that is a
+blocker for the progress of this API since we already have several ways
+to synchronize processes.
