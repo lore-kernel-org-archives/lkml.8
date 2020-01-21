@@ -2,112 +2,134 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FC7C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85E3AC33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:00:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD9AA217F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:56:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6613D217F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:00:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728680AbgAUI44 (ORCPT
+        id S1728708AbgAUJAD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 03:56:56 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36290 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725789AbgAUI4z (ORCPT
+        Tue, 21 Jan 2020 04:00:03 -0500
+Received: from bmailout2.hostsharing.net ([83.223.78.240]:33871 "EHLO
+        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbgAUJAD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 03:56:55 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00L8rBXT088013
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 03:56:55 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xmg5t6m6p-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 03:56:54 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <srikar@linux.vnet.ibm.com>;
-        Tue, 21 Jan 2020 08:55:08 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 21 Jan 2020 08:55:05 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00L8t4FU64159800
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 Jan 2020 08:55:04 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1ABB0AE055;
-        Tue, 21 Jan 2020 08:55:04 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C53B5AE053;
-        Tue, 21 Jan 2020 08:55:01 +0000 (GMT)
-Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Tue, 21 Jan 2020 08:55:01 +0000 (GMT)
-Date:   Tue, 21 Jan 2020 14:25:01 +0530
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Phil Auld <pauld@redhat.com>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <Morten.Rasmussen@arm.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Parth Shah <parth@linux.ibm.com>,
-        Rik van Riel <riel@surriel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] sched, fair: Allow a small load imbalance between low
- utilisation SD_NUMA domains v4
-Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-References: <20200114101319.GO3466@techsingularity.net>
- <20200117175631.GC20112@linux.vnet.ibm.com>
- <20200117215853.GS3466@techsingularity.net>
- <20200120080935.GD20112@linux.vnet.ibm.com>
- <20200120083354.GT3466@techsingularity.net>
- <20200120172706.GE20112@linux.vnet.ibm.com>
- <20200120182100.GU3466@techsingularity.net>
+        Tue, 21 Jan 2020 04:00:03 -0500
+X-Greylist: delayed 611 seconds by postgrey-1.27 at vger.kernel.org; Tue, 21 Jan 2020 04:00:01 EST
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 9A15028005389;
+        Tue, 21 Jan 2020 09:49:48 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 6406035EEC; Tue, 21 Jan 2020 09:49:48 +0100 (CET)
+Date:   Tue, 21 Jan 2020 09:49:48 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Ivan
+         =?iso-8859-15?B?pmmodO1rIC0gM0sgU29sdXRpb25zLCBzLiByLiBvLg==?= 
+        <sistik@3ksolutions.sk>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-serial@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: Re: [PATCH] tty: serial: amba-pl011: added RS485 support
+Message-ID: <20200121084948.7d6om2fgaa7ikmof@wunner.de>
+References: <20200106235203.27256-1-sistik@3ksolutions.sk>
+ <20200116132954.5tcxmezs5qhseiem@wunner.de>
+ <4e082c29-9a47-accc-425b-8d1854fb6ac6@3ksolutions.sk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-In-Reply-To: <20200120182100.GU3466@techsingularity.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-x-cbid: 20012108-0016-0000-0000-000002DF4B3D
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20012108-0017-0000-0000-00003341F1EC
-Message-Id: <20200121085501.GF20112@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-21_02:2020-01-20,2020-01-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- spamscore=0 suspectscore=0 bulkscore=0 phishscore=0 impostorscore=0
- priorityscore=1501 mlxscore=0 malwarescore=0 mlxlogscore=885 adultscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001210076
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4e082c29-9a47-accc-425b-8d1854fb6ac6@3ksolutions.sk>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Mel Gorman <mgorman@techsingularity.net> [2020-01-20 18:21:00]:
-
-> Understood. At the moment, I'm going to assume that the patch has zero
-> impact on your workload but confirmation that the other test programs
-> trigger no traces would be appreciated.
+On Fri, Jan 17, 2020 at 01:58:57AM +0100, Ivan ¦i¨tík - 3K Solutions, s. r. o. wrote:
+> On 16. 1. 2020 at 14:29 Lukas Wunner wrote:
+> > So I've implemented rs485 support for amba-pl011.c two years ago
+> > but the patches need a little more polishing before they can be
+> > upstreamed and I haven't gotten around to that yet.  I apologize
+> > that it meant you had to reinvent the wheel.
+> > You can find my implementation on this branch:
+> > https://github.com/RevolutionPi/linux/commits/revpi-4.19
+> > 
+> > Specifically this commit:
+> > https://github.com/RevolutionPi/linux/commit/0099313962a5
 > 
+> The wheel with octagonal shape is still not perfect. I made it more
+> smoother. Your implementation in recommended commit use an active
+> waiting (pl011_rs485_tx_start, pl011_rs485_tx_stop) and that could
+> cause lots of problems in upper layers of tty driver or application.
+> I think you forgot to implement possibility to start TX during
+> "delay after send", too.
 
-Yes, I confirm there were no traces when run with other test programs too.
+Are these delays ever set to a value > 0 in practice?  struct serial_rs485
+supports millisecond delays, but all RS485 transceivers I know of only
+require delays in the microsecond or nanosecond range.  It was likely
+a mistake that the delays were originally declared as millisecond values.
+However we can't easily change that now because it's ABI and thus set in
+stone.
 
-> -- 
-> Mel Gorman
-> SUSE Labs
+E.g. the MAXM22510 has a "Driver Enable to Output" delay of 2.540 usec.
+In practice no delay is necessary at all because the MMIO operations
+performed by the driver take longer:
 
--- 
-Thanks and Regards
-Srikar Dronamraju
+https://datasheets.maximintegrated.com/en/ds/MAXM22510-MAXM22511.pdf
 
+
+> > I took a completely different approach:  I converted amba-pl011.c
+> > to threaded interrupt handling using two kthreads, one for sending,
+> > one for receiving.  This allows simultaneous writing to and reading
+> > from the FIFO.  The driver keeps track of the FIFO fill level,
+> > which allows writing to the FIFO blindly.  The hardirq handler
+> > updates the fill level counter and wakes either of the IRQ threads.
+> 
+> I do not see any used thread in link:
+> https://github.com/RevolutionPi/linux/commit/0099313962a5
+> I am not kernel thread expert but I think that thread is not as
+> lightweight as hrtimer. According to my knowledge the hrtimer use some
+> kind of interrupt. Compare to this the kthread is created as thread
+> with all its scheduling structures. Did you implemented proper thread
+> shutdown? Has the thread right priority? There are many questions
+> like this...
+
+You're not seeing the conversion to threaded IRQ handling because it's
+in separate commits on the above-linked branch, e.g.
+
+serial: pl011: Use threaded interrupt for RX
+https://github.com/RevolutionPi/linux/commit/4f3a6e9ea335
+
+serial: pl011: Use threaded interrupt for TX
+https://github.com/RevolutionPi/linux/commit/fae65b5a2c5b
+
+I implemented threaded IRQ handling to maximize TX throughput
+and minimize RX FIFO overruns at high baudrates.  Additionally,
+threaded IRQ handling integrates more nicely with the realtime
+patch set.  So the ability to simply use msleep() for rs485 delays
+is merely a by-product.
+
+The IRQ threads run at RT priority -50 with SCHED_FIFO policy just
+as any other IRQ thread and user space may adjust that with chrt(1)
+if desired.
+
+Thanks,
+
+Lukas
