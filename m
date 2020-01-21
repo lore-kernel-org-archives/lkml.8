@@ -2,261 +2,132 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D6BC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 23:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E312C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 23:18:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E99824653
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 23:16:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="O79JN3kf"
+	by mail.kernel.org (Postfix) with ESMTP id 2AB5E24653
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 23:18:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbgAUXQV (ORCPT
+        id S1728890AbgAUXSf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 18:16:21 -0500
-Received: from mail-pg1-f175.google.com ([209.85.215.175]:44764 "EHLO
-        mail-pg1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727816AbgAUXQU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 18:16:20 -0500
-Received: by mail-pg1-f175.google.com with SMTP id x7so2335546pgl.11
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 15:16:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:from:cc:subject:to:user-agent:date;
-        bh=gk/+cR1Uh1x2DHe/9AsJJHsSZHNN3UqDGvYH0Xb+zh8=;
-        b=O79JN3kfznrn5eDqAjPiKLeDDyICkKbjMMxe1z4CkxRlkDvUL25WwtzsL8ATud3/0S
-         vIkxXjbW39ptw0hpyird4o0jXonSy2LL5ov8w4SvjmdmvVKMK3OEfiUeikilFqXoamkO
-         A8UZj9KyXGoRqivE5Z0YbU+yLPIi0wgQyo89E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:from:cc:subject:to
-         :user-agent:date;
-        bh=gk/+cR1Uh1x2DHe/9AsJJHsSZHNN3UqDGvYH0Xb+zh8=;
-        b=hHdOqJXoSt3iGkWvdwIkKhLO39s2EaNm5Zj12KckyjL/fTi5EKDrTPiycJ4KFAOSt7
-         MKs3pFw2aDXnObrrA0hz05b1QAkbNWI5GYMewze8n5S4wJY35eNaewLiz0ffXnnSXRrJ
-         NN/wNO/akB66Y4pRTO0IKKEM16FW5qkhGbqAeKzoAfSLAWBrxcInhrgddnz4ncNOun9n
-         Es4RcZIpzZUMT+LMKfC1/5Rs6wfDXycAZg4NJcqX/j9akeGO4nI73+OUkl5pX/bMYtxD
-         L5obVrNL8OUjXnSGtuT7tzSUpw7QwuwoESs0o/sDWG8/wyylAAYiMy86hhBhm+aJtsuO
-         b61g==
-X-Gm-Message-State: APjAAAUorOmPPafY6p4/3KQLYxvuQNTT6hEc0kkXobOIvt17ljKyqPrR
-        kDMKLy+0J7JvU5IC8Z/eEp6olg==
-X-Google-Smtp-Source: APXvYqzc5YyY9m9Z4aytEaUg9NesrLmumCIMVJQdqT2tTi4c8P468lTNoYuY+PzXEggedpkJhGWNrQ==
-X-Received: by 2002:a63:d66:: with SMTP id 38mr7812028pgn.233.1579648578855;
-        Tue, 21 Jan 2020 15:16:18 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id u20sm41961955pgf.29.2020.01.21.15.16.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 15:16:18 -0800 (PST)
-Message-ID: <5e278642.1c69fb81.5a8db.80b4@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Tue, 21 Jan 2020 18:18:35 -0500
+Received: from mga12.intel.com ([192.55.52.136]:57248 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728665AbgAUXSf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 18:18:35 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 15:18:34 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,347,1574150400"; 
+   d="scan'208";a="227493488"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga003.jf.intel.com with ESMTP; 21 Jan 2020 15:18:33 -0800
+Date:   Tue, 21 Jan 2020 15:18:33 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Paul Mackerras <paulus@ozlabs.org>, Marc Zyngier <maz@kernel.org>,
+        James Hogan <jhogan@kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Greg Kurz <groug@kaod.org>
+Subject: Re: [PATCH v2 12/45] KVM: PPC: Allocate vcpu struct in common PPC
+ code
+Message-ID: <20200121231833.GB12692@linux.intel.com>
+References: <20191218215530.2280-1-sean.j.christopherson@intel.com>
+ <20191218215530.2280-13-sean.j.christopherson@intel.com>
+ <20200120040412.GF14307@blackberry>
+ <fcd2aaf1-6f6e-303a-d7c6-f6b0c0a4555c@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1579621928-18619-1-git-send-email-harigovi@codeaurora.org>
-References: <1579621928-18619-1-git-send-email-harigovi@codeaurora.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Harigovindan P <harigovi@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        kalyan_t@codeaurora.org, nganji@codeaurora.org
-Subject: Re: [v1] arm64: dts: sc7180: add display dt nodes
-To:     Harigovindan P <harigovi@codeaurora.org>,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org
-User-Agent: alot/0.8.1
-Date:   Tue, 21 Jan 2020 15:16:17 -0800
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <fcd2aaf1-6f6e-303a-d7c6-f6b0c0a4555c@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Harigovindan P (2020-01-21 07:52:08)
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/q=
-com/sc7180.dtsi
-> old mode 100644
-> new mode 100755
-> index 8011c5f..963f5c1
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -1151,6 +1151,131 @@
->                         };
->                 };
-> =20
-> +               mdss: mdss@ae00000 {
+On Tue, Jan 21, 2020 at 12:05:00PM +0100, Paolo Bonzini wrote:
+> On 20/01/20 05:04, Paul Mackerras wrote:
+> > On Wed, Dec 18, 2019 at 01:54:57PM -0800, Sean Christopherson wrote:
+> >> Move allocation of all flavors of PPC vCPUs to common PPC code.  All
+> >> variants either allocate 'struct kvm_vcpu' directly, or require that
+> >> the embedded 'struct kvm_vcpu' member be located at offset 0, i.e.
+> >> guarantee that the allocation can be directly interpreted as a 'struct
+> >> kvm_vcpu' object.
+> >>
+> >> Remove the message from the build-time assertion regarding placement of
+> >> the struct, as compatibility with the arch usercopy region is no longer
+> >> the sole dependent on 'struct kvm_vcpu' being at offset zero.
+> >>
+> >> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > 
+> > This fails to compile for Book E configs:
+> > 
+> >   CC      arch/powerpc/kvm/e500.o
+> > /home/paulus/kernel/kvm/arch/powerpc/kvm/e500.c: In function ‘kvmppc_core_vcpu_create_e500’:
+> > /home/paulus/kernel/kvm/arch/powerpc/kvm/e500.c:464:9: error: return makes integer from pointer without a cast [-Werror=int-conversion]
+> >   return vcpu;
+> >          ^
+> > cc1: all warnings being treated as errors
+> > make[3]: *** [/home/paulus/kernel/kvm/scripts/Makefile.build:266: arch/powerpc/kvm/e500.o] Error 1
+> > 
+> > There is a "return vcpu" statement in kvmppc_core_vcpu_create_e500(),
+> > and another in kvmppc_core_vcpu_create_e500mc(), which both need to be
+> > changed to "return 0".
+> > 
+> > (By the way, I do appreciate you fixing the PPC code, even if there
+> > are some errors.)
+> 
+> Squashed:
 
-Is there a better node name for this? display-subsystem perhaps?
+Thanks for cleaning up after me, not having to rebase and resend this
+series made my day :-) 
 
-> +                       compatible =3D "qcom,sc7180-mdss";
-> +                       reg =3D <0 0x0ae00000 0 0x1000>;
-> +                       reg-names =3D "mdss";
-> +
-> +                       power-domains =3D <&dispcc MDSS_GDSC>;
-> +
-> +                       clocks =3D <&gcc GCC_DISP_AHB_CLK>,
-> +                                <&gcc GCC_DISP_HF_AXI_CLK>,
-> +                                <&dispcc DISP_CC_MDSS_MDP_CLK>;
-> +                       clock-names =3D "iface", "gcc_bus", "core";
-> +
-> +                       assigned-clocks =3D <&dispcc DISP_CC_MDSS_MDP_CLK=
->;
-> +                       assigned-clock-rates =3D <300000000>;
-> +
-> +                       interrupts =3D <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-> +                       interrupt-controller;
-> +                       #interrupt-cells =3D <1>;
-> +
-> +                       iommus =3D <&apps_smmu 0x800 0x2>;
-> +
-> +                       #address-cells =3D <2>;
-> +                       #size-cells =3D <2>;
-> +                       ranges;
-> +
-> +                       mdss_mdp: mdp@ae01000 {
-
-Is there a better node name for this? display-controller perhaps? Also,
-first reg property is supposed to be the one after the @ sign. In this
-case that would be ae00000.
-
-> +                               compatible =3D "qcom,sc7180-dpu";
-> +                               reg =3D <0 0x0ae00000 0 0x1000>,
-> +                                     <0 0x0ae01000 0 0x8f000>,
-> +                                     <0 0x0aeb0000 0 0x2008>,
-> +                                     <0 0x0af03000 0 0x16>;
-> +                               reg-names =3D "mdss","mdp", "vbif", "disp=
-_cc";
-
-                                                    ^
-Nitpick: Add a space here after the comma.
-
-> +
-> +                               clocks =3D <&dispcc DISP_CC_MDSS_AHB_CLK>,
-> +                                        <&dispcc DISP_CC_MDSS_ROT_CLK>,
-> +                                        <&dispcc DISP_CC_MDSS_MDP_LUT_CL=
-K>,
-> +                                        <&dispcc DISP_CC_MDSS_MDP_CLK>,
-> +                                        <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
-> +                               clock-names =3D "iface", "rot", "lut", "c=
-ore",
-> +                                               "vsync";
-
-Nitpick: Tabbing seems weird here. The clocks property is aligned but
-not the clock-names.
-
-> +                               assigned-clocks =3D <&dispcc DISP_CC_MDSS=
-_MDP_CLK>,
-> +                                                 <&dispcc DISP_CC_MDSS_V=
-SYNC_CLK>;
-> +                               assigned-clock-rates =3D <300000000>,
-> +                                                      <19200000>;
-> +
-> +                               interrupt-parent =3D <&mdss>;
-> +                               interrupts =3D <0 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +                               ports {
-> +                                       #address-cells =3D <1>;
-> +                                       #size-cells =3D <0>;
-> +
-> +                                       port@0 {
-> +                                               reg =3D <0>;
-> +                                               dpu_intf1_out: endpoint {
-> +                                                       remote-endpoint =
-=3D <&dsi0_in>;
-> +                                               };
-> +                                       };
-> +                               };
-> +                       };
-> +
-> +                       dsi0: qcom,mdss_dsi_ctrl0@ae94000 {
-
-Is there a better node name for this? dsi-controller perhaps?
-
-> +                               compatible =3D "qcom,mdss-dsi-ctrl";
-> +                               reg =3D <0 0x0ae94000 0 0x400>;
-> +                               reg-names =3D "dsi_ctrl";
-> +
-> +                               interrupt-parent =3D <&mdss>;
-> +                               interrupts =3D <4 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +                               clocks =3D <&dispcc DISP_CC_MDSS_BYTE0_CL=
-K>,
-> +                                       <&dispcc DISP_CC_MDSS_BYTE0_INTF_=
-CLK>,
-> +                                       <&dispcc DISP_CC_MDSS_PCLK0_CLK>,
-> +                                       <&dispcc DISP_CC_MDSS_ESC0_CLK>,
-> +                                       <&dispcc DISP_CC_MDSS_AHB_CLK>,
-> +                                       <&gcc GCC_DISP_HF_AXI_CLK>;
-> +                               clock-names =3D "byte",
-> +                                              "byte_intf",
-> +                                              "pixel",
-> +                                              "core",
-> +                                              "iface",
-> +                                              "bus";
-
-Nitpick: Tabbing is all of here too.
-
-> +
-> +                               phys =3D <&dsi0_phy>;
-> +                               phy-names =3D "dsi";
-> +
-> +                               #address-cells =3D <1>;
-> +                               #size-cells =3D <0>;
-> +
-> +                               ports {
-> +                                       #address-cells =3D <1>;
-> +                                       #size-cells =3D <0>;
-> +
-> +                                       port@0 {
-> +                                               reg =3D <0>;
-> +                                               dsi0_in: endpoint {
-> +                                                       remote-endpoint =
-=3D <&dpu_intf1_out>;
-> +                                               };
-> +                                       };
-> +
-> +                                       port@1 {
-> +                                               reg =3D <1>;
-> +                                               dsi0_out: endpoint {
-> +                                               };
-> +                                       };
-> +                               };
-> +                       };
-> +
-> +                       dsi0_phy: dsi-phy0@ae94400 {
-
-Just call it 'dsi-phy' or 'phy' please. The address differentiates it and
-the phandle can call it 0.
-
-> +                               compatible =3D "qcom,dsi-phy-10nm";
-> +                               reg =3D <0 0x0ae94400 0 0x200>,
-> +                                     <0 0x0ae94600 0 0x280>,
-> +                                     <0 0x0ae94a00 0 0x1e0>;
-> +                               reg-names =3D "dsi_phy",
-> +                                           "dsi_phy_lane",
-> +                                           "dsi_pll";
-> +
-> +                               #clock-cells =3D <1>;
-> +                               #phy-cells =3D <0>;
-> +
-> +                               clocks =3D <&dispcc DISP_CC_MDSS_AHB_CLK>;
-
-Do you need the XO or reference clk here too? So that the PLL can generate =
-a clk with
-the reference clk?
-
-> +                               clock-names =3D "iface";
-> +
-
-Nitpick: Why the extra newline? Please remove.
-
-> +                       };
-> +               };
-> +
->                 pdc: interrupt-controller@b220000 {
->                         compatible =3D "qcom,sc7180-pdc", "qcom,pdc";
->                         reg =3D <0 0x0b220000 0 0x30000>;
+> diff --git a/arch/powerpc/kvm/e500.c b/arch/powerpc/kvm/e500.c
+> index 96d9cde3d2e3..f5dd2c7adcd4 100644
+> --- a/arch/powerpc/kvm/e500.c
+> +++ b/arch/powerpc/kvm/e500.c
+> @@ -461,7 +461,7 @@ static int kvmppc_core_vcpu_create_e500(struct kvm *kvm, struct kvm_vcpu *vcpu,
+>  		goto uninit_tlb;
+>  	}
+>  
+> -	return vcpu;
+> +	return 0;
+>  
+>  uninit_tlb:
+>  	kvmppc_e500_tlb_uninit(vcpu_e500);
+> diff --git a/arch/powerpc/kvm/e500mc.c b/arch/powerpc/kvm/e500mc.c
+> index aea588f73bf7..7c0d392f667a 100644
+> --- a/arch/powerpc/kvm/e500mc.c
+> +++ b/arch/powerpc/kvm/e500mc.c
+> @@ -327,7 +327,7 @@ static int kvmppc_core_vcpu_create_e500mc(struct kvm *kvm, struct kvm_vcpu *vcpu
+>  		goto uninit_tlb;
+>  	}
+>  
+> -	return vcpu;
+> +	return 0;
+>  
+>  uninit_tlb:
+>  	kvmppc_e500_tlb_uninit(vcpu_e500);
+> 
+> 
