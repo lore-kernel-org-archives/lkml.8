@@ -2,90 +2,75 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24606C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 13:48:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B498C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 13:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECEB02070C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 13:48:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 438762070C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 13:48:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VQ2Gyazj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729316AbgAUNsP (ORCPT
+        id S1729154AbgAUNsw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 08:48:15 -0500
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:33746 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729195AbgAUNsN (ORCPT
+        Tue, 21 Jan 2020 08:48:52 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:49612 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728708AbgAUNsv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 08:48:13 -0500
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 7CD053C0579;
-        Tue, 21 Jan 2020 14:48:12 +0100 (CET)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 7gAHNuPTEEUS; Tue, 21 Jan 2020 14:48:06 +0100 (CET)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id E599C3C00C5;
-        Tue, 21 Jan 2020 14:48:06 +0100 (CET)
-Received: from lxhi-065.adit-jv.com (10.72.93.66) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 21 Jan
- 2020 14:48:06 +0100
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>,
-        Dirk Behme <dirk.behme@de.bosch.com>
-Subject: [PATCH] arm64: kbuild: remove compressed images on 'make ARCH=arm64 (dist)clean'
-Date:   Tue, 21 Jan 2020 14:47:39 +0100
-Message-ID: <20200121134739.22879-1-erosca@de.adit-jv.com>
-X-Mailer: git-send-email 2.25.0
+        Tue, 21 Jan 2020 08:48:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=eZRFLHsIXPNKN7m2gKwGNqmIbjCAilF0DyWkBc02k/Q=; b=VQ2GyazjXuHrCqFKzsJNA2QDs
+        P5nH0yFV/Hn6G9/KQmZg8eMTGBQAt8r3njxkVnwk8JOwgZY62zUX19a1eUrJLrQVXH72beBy3bYe9
+        zMau88tQQ/QPDHOA2F++2UHTujH+vU25sHFCbE2w72HYFRGpi5di1qhJcxrnlqF1huBv413LLaGlZ
+        pm76QGlCihYNBFN7VoTGyLVF4D6HCcpRmQP2QLx32d222SoJk+/Fbt9Qf+Uz98XotT++Pl0PAI7N/
+        4PtbFlyCHhkGiauiLTtDqDw+v2MZ7GiZ6nhZfSAqCy3k42D/l5M+jBufXwVejtghPYJUSd4EKQjHn
+        VbUacaoyg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1itttS-0002LK-WA; Tue, 21 Jan 2020 13:48:35 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id EACC73060ED;
+        Tue, 21 Jan 2020 14:46:51 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 185EF20983FC0; Tue, 21 Jan 2020 14:48:31 +0100 (CET)
+Date:   Tue, 21 Jan 2020 14:48:31 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alex Kogan <alex.kogan@oracle.com>
+Cc:     linux@armlinux.org.uk, mingo@redhat.com, will.deacon@arm.com,
+        arnd@arndb.de, longman@redhat.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        guohanjun@huawei.com, jglauber@marvell.com,
+        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
+        dave.dice@oracle.com
+Subject: Re: [PATCH v8 3/5] locking/qspinlock: Introduce CNA into the slow
+ path of qspinlock
+Message-ID: <20200121134831.GM14914@hirez.programming.kicks-ass.net>
+References: <20191230194042.67789-1-alex.kogan@oracle.com>
+ <20191230194042.67789-4-alex.kogan@oracle.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.72.93.66]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191230194042.67789-4-alex.kogan@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dirk Behme <dirk.behme@de.bosch.com>
+On Mon, Dec 30, 2019 at 02:40:40PM -0500, Alex Kogan wrote:
+> +#define try_clear_tail			cna_try_change_tail
 
-Since v4.3-rc1 commit 0723c05fb75e44 ("arm64: enable more compressed
-Image formats"), it is possible to build Image.{bz2,lz4,lzma,lzo}
-AArch64 images. However, the commit missed adding support for removing
-those images on 'make ARCH=arm64 (dist)clean'.
-
-Fix this by adding them to the target list.
-Make sure to match the order of the recipes in the makefile.
-
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
-Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
----
- arch/arm64/boot/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/Makefile b/arch/arm64/boot/Makefile
-index 1f012c506434..cd3414898d10 100644
---- a/arch/arm64/boot/Makefile
-+++ b/arch/arm64/boot/Makefile
-@@ -16,7 +16,7 @@
- 
- OBJCOPYFLAGS_Image :=-O binary -R .note -R .note.gnu.build-id -R .comment -S
- 
--targets := Image Image.gz
-+targets := Image Image.bz2 Image.gz Image.lz4 Image.lzma Image.lzo
- 
- $(obj)/Image: vmlinux FORCE
- 	$(call if_changed,objcopy)
--- 
-2.25.0
-
+That's inconsistent; please run
+'s/cna_try_change_tail/cna_try_clear_tail/g' on your patch.
