@@ -2,165 +2,143 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7BF0C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCEB6C33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:01:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B469521734
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:59:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE9A924656
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:01:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729253AbgAUS7r (ORCPT
+        id S1729205AbgAUTBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 13:59:47 -0500
-Received: from mx2.suse.de ([195.135.220.15]:60228 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728829AbgAUS7r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 13:59:47 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 514D1AE44;
-        Tue, 21 Jan 2020 18:59:45 +0000 (UTC)
-Date:   Tue, 21 Jan 2020 10:52:50 -0800
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Alexey Mateosyan <alexey.mateosyan@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Markus Elfring <elfring@users.sourceforge.net>,
-        Li Rongqing <lirongqing@baidu.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        David Howells <dhowells@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: mq_notify loose notification request on fork()
-Message-ID: <20200121185250.fk6nkcw5nqbkab5o@linux-p48b>
-References: <CACdZwvBEsS__hiWyMGina9R3A0PUbrCD5pV2+B9Bgy65joXj5g@mail.gmail.com>
+        Tue, 21 Jan 2020 14:01:43 -0500
+Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:44900 "EHLO
+        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728829AbgAUTBm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 14:01:42 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R881e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0ToInc38_1579633297;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0ToInc38_1579633297)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 22 Jan 2020 03:01:40 +0800
+Subject: Re: [PATCH] mm: move_pages: fix the return value if there are
+ not-migrated pages
+To:     Michal Hocko <mhocko@kernel.org>,
+        Wei Yang <richardw.yang@linux.intel.com>
+Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <1579325203-16405-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20200120130624.GD18451@dhcp22.suse.cz>
+ <20200120131744.GE18451@dhcp22.suse.cz> <20200121014416.GC1567@richard>
+ <20200121084040.GC29276@dhcp22.suse.cz>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <27b993f4-cc50-d5a9-1cda-89dd022aea16@linux.alibaba.com>
+Date:   Tue, 21 Jan 2020 11:01:30 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CACdZwvBEsS__hiWyMGina9R3A0PUbrCD5pV2+B9Bgy65joXj5g@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200121084040.GC29276@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Jan 2020, Alexey Mateosyan wrote:
 
->Reported bug on bugzilla  https://bugzilla.kernel.org/show_bug.cgi?id=206207
->Duplicating here:
+
+On 1/21/20 12:40 AM, Michal Hocko wrote:
+> On Tue 21-01-20 09:44:16, Wei Yang wrote:
+>> On Mon, Jan 20, 2020 at 02:17:44PM +0100, Michal Hocko wrote:
+>>> On Mon 20-01-20 14:06:26, Michal Hocko wrote:
+>>>> On Sat 18-01-20 13:26:43, Yang Shi wrote:
+>>>>> The do_move_pages_to_node() might return > 0 value, the number of pages
+>>>>> that are not migrated, then the value will be returned to userspace
+>>>>> directly.  But, move_pages() syscall would just return 0 or errno.  So,
+>>>>> we need reset the return value to 0 for such case as what pre-v4.17 did.
+>>>> The patch is wrong. migrate_pages returns the number of pages it
+>>>> _hasn't_ migrated or -errno. Yeah that semantic sucks but...
+>>>> So err != 0 is always an error. Except err > 0 doesn't really provide
+>>>> any useful information to the userspace. I cannot really remember what
+>>>> was the actual behavior before my rework because there were some gotchas
+>>>> hidden there.
+>>> OK, so I've double checked. do_move_page_to_node_array would carry the
+>>> error code over to do_pages_move and it would store the status stored
+>>> in the pm array. It contains page_to_nid(page) so the resulting code
+>>> indeed behaves properly before my change and this is a regression. I
+>> Thanks, I see the change.
+>>
+>>> have a very vague recollection that this has been brought up already.
+>>> <...looks in notes...>
+>>> Found it! The report is
+>>> http://lkml.kernel.org/r/0329efa0984b9b0252ef166abb4498c0795fab36.1535113317.git.jstancek@redhat.com
+>>> and my proposed workaround was http://lkml.kernel.org/r/20180829145537.GZ10223@dhcp22.suse.cz
+>> Well, the above two links return 404.
+> You are right. They are not archived for some reason. Anyway, the patch
+> I was proposing back then is below:
 >
->Bug is related to implementation of POSIX mqueues, specifically
->mq_notify syscall.\n
+> commit cfb88c266b645197135cde2905c2bfc82f6d82a9
+> Author: Michal Hocko <mhocko@suse.com>
+> Date:   Wed Nov 14 12:19:09 2018 +0100
 >
->The problem is: if we do subscription on notifications with help of
->mq_notify() syscall, and then do fork() and this fork() fail for some
->reason (for example there is pending signals for the parent process),
->then we loose the subscription on the notification.
+>      mm: fix do_pages_move error reporting
+>      
+>      a49bd4d71637 ("mm, numa: rework do_pages_move") has changed the way how
+>      we report error to layers above. As the changelog mentioned the semantic
+>      was quite unclear previously because the return 0 could mean both
+>      success and failure.
+>      
+>      The above mentioned commit didn't get all the way down to fix this
+>      completely because it doesn't report pages that we even haven't
+>      attempted to migrate and therefore we cannot simply say that the
+>      semantic is:
+>      - err < 0 - errno
+>      - err >= 0 number of non-migrated pages.
+>      
+>      Fixes: a49bd4d71637 ("mm, numa: rework do_pages_move")
+>      Signed-off-by: Michal Hocko <mhocko@suse.com>
+
+Thanks, Michal. But, it looks this patch still could return > 0 value 
+(the total number of non-migrated pages, including not even attempted 
+pages) too, but the problem we are trying to fix is to make 
+do_pages_move() return <= 0 value only since the man page of 
+move_pages() doesn't allow return > 0 value.
+
+And, by looking into the old code (v4.16), I spotted another problem. 
+The migrate_pages() would store the migration failure error code into 
+page_to_node->status. So, When do_move_page_to_node_array() returns > 0 
+value, the return value would be reset to 0 and the migration error 
+codes for non-migrated pages would be stored into status to return to 
+userspace. But, the rework removed this.
+
+I didn't dig into the intention of the rework, is it expected?
+
 >
->The root cause is: during copy_process() we duplicate opened file
->descriptors, and then if something goes wrong inside copy_process()
->(for example there is pending signals for the parent process) we do
->cleanup for the duplicated file descriptors via exit_files() which is
->finally calling filp_close() and flush(). From the other side, current
->implementation of ipc/mqueue.c implements file_operations.flush so
->that it removes notification for the current process, which is
->certainly not designed(desired) behavior.
->
->There is another case how to reproduce this behavior. Do fd =
->mq_open("my_queue"); mq_notify(fd, ...); and never do close(fd) to
->preserve notifications. Then if we open() and close() the queue file
->from the same process - we loose the notification request
->(subscription) for the still opened fd. I.e. current behavior is the
->first close() removes notification.
+> diff --git a/mm/migrate.c b/mm/migrate.c
+> index f7e4bfdc13b7..aa53ebc523eb 100644
+> --- a/mm/migrate.c
+> +++ b/mm/migrate.c
+> @@ -1615,8 +1615,16 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
+>   			goto out_flush;
+>   
+>   		err = do_move_pages_to_node(mm, &pagelist, current_node);
+> -		if (err)
+> +		if (err) {
+> +			/*
+> +			 * Possitive err means the number of failed pages to
+> +			 * migrate. Make sure to report the rest of the
+> +			 * nr_pages is not migrated as well.
+> +			 */
+> +			if (err > 0)
+> +				err += nr_pages - i - 1;
+>   			goto out;
+> +		}
+>   		if (i > start) {
+>   			err = store_status(status, start, current_node, i - start);
+>   			if (err)
 
-Is this a real issue? Do you have an actual reproducer? See below.
-
->
->If we do remove_notification() in file_ops.release instead of
->file_ops.flush in mqueue.c then this change fixes the described above
->fork() related problem. But this will change the behavior so that the
->last close() will remove the notifications.
-
-Right, we don't want to change any user-visible behavior; and only
-address the failed fork case.
-
-I guess mqueue_flush_file() really wants to be using the result of
-copy_process() task_struct pointer for its cleanup, instead of the
-parent 'current'. The following does this but adds a way of getting
-the pointer back from files_struct, perhaps you could test this?
-
-Alternatively we could 'hijack' the fl_owner_t id before performing
-f_op->flush() callback in filp_close() -- afaict no users actually
-use the fl_owner_t field during flush callback, then we could just
-restore it back to 'files' before dnotify_flush() etc paths, but I'm
-not certain and is rather hacky to begin with.
-
-Thanks,
-Davidlohr
-
---------8<--------------------------------------------------------
-diff --git a/fs/file.c b/fs/file.c
-index 2f4fcf985079..70e5fe1c70d5 100644
---- a/fs/file.c
-+++ b/fs/file.c
-@@ -440,6 +440,7 @@ void exit_files(struct task_struct *tsk)
- 
- 	if (files) {
- 		task_lock(tsk);
-+		files->tsk = NULL;
- 		tsk->files = NULL;
- 		task_unlock(tsk);
- 		put_files_struct(files);
-diff --git a/include/linux/fdtable.h b/include/linux/fdtable.h
-index f07c55ea0c22..29f906157b73 100644
---- a/include/linux/fdtable.h
-+++ b/include/linux/fdtable.h
-@@ -55,6 +55,7 @@ struct files_struct {
- 
- 	struct fdtable __rcu *fdt;
- 	struct fdtable fdtab;
-+	struct task_struct *tsk;
-   /*
-    * written part on a separate cache line in SMP
-    */
-diff --git a/ipc/mqueue.c b/ipc/mqueue.c
-index 3d920ff15c80..22300f0fb35a 100644
---- a/ipc/mqueue.c
-+++ b/ipc/mqueue.c
-@@ -17,6 +17,7 @@
- #include <linux/init.h>
- #include <linux/pagemap.h>
- #include <linux/file.h>
-+#include <linux/fdtable.h>
- #include <linux/mount.h>
- #include <linux/fs_context.h>
- #include <linux/namei.h>
-@@ -589,10 +590,12 @@ static ssize_t mqueue_read_file(struct file *filp, char __user *u_data,
- static int mqueue_flush_file(struct file *filp, fl_owner_t id)
- {
- 	struct mqueue_inode_info *info = MQUEUE_I(file_inode(filp));
-+	struct files_struct *files = id;
- 
- 	spin_lock(&info->lock);
--	if (task_tgid(current) == info->notify_owner)
-+	if (task_tgid(files->tsk) == info->notify_owner) {
- 		remove_notification(info);
-+	}
- 
- 	spin_unlock(&info->lock);
- 	return 0;
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 2508a4f238a3..8a85858db9f5 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -1467,6 +1467,7 @@ static int copy_files(unsigned long clone_flags, struct task_struct *tsk)
- 	if (!newf)
- 		goto out;
- 
-+	newf->tsk = tsk;
- 	tsk->files = newf;
- 	error = 0;
- out:
