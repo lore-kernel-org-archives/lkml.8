@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89AA7C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D5FC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:01:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6621924687
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:01:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59AB424691
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:01:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729624AbgAUQBn (ORCPT
+        id S1729637AbgAUQBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 11:01:43 -0500
-Received: from mga09.intel.com ([134.134.136.24]:62805 "EHLO mga09.intel.com"
+        Tue, 21 Jan 2020 11:01:45 -0500
+Received: from mga07.intel.com ([134.134.136.100]:18291 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729431AbgAUQBb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 11:01:31 -0500
+        id S1729501AbgAUQBd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 11:01:33 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 08:01:30 -0800
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 08:01:32 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,346,1574150400"; 
-   d="scan'208";a="228885563"
+   d="scan'208";a="221744525"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga006.jf.intel.com with ESMTP; 21 Jan 2020 08:01:26 -0800
+  by fmsmga008.fm.intel.com with ESMTP; 21 Jan 2020 08:01:29 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id E6389D0F; Tue, 21 Jan 2020 18:01:15 +0200 (EET)
+        id 3CBF91182; Tue, 21 Jan 2020 18:01:16 +0200 (EET)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Darren Hart <dvhart@infradead.org>,
@@ -46,9 +46,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Mark Brown <broonie@kernel.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 27/38] mfd: intel_soc_pmic_bxtwc: Convert to use new SCU IPC API
-Date:   Tue, 21 Jan 2020 19:01:03 +0300
-Message-Id: <20200121160114.60007-28-mika.westerberg@linux.intel.com>
+Subject: [PATCH v4 35/38] platform/x86: intel_pmc_ipc: Switch to use driver->dev_groups
+Date:   Tue, 21 Jan 2020 19:01:11 +0300
+Message-Id: <20200121160114.60007-36-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200121160114.60007-1-mika.westerberg@linux.intel.com>
 References: <20200121160114.60007-1-mika.westerberg@linux.intel.com>
@@ -59,95 +59,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the Intel Broxton Whiskey Cover PMIC driver to use the new SCU
-IPC API. This allows us to get rid of the PMC IPC implementation which
-is now covered in SCU IPC driver.
+The driver core provides support for adding additional attributes for
+devices via new ->dev_groups member of struct device_driver. Convert the
+driver to use that instead of adding the attributes manually.
 
-Also move PMIC specific IPC message constants to the PMIC driver from
-the intel_pmc_ipc.h header.
-
+Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- arch/x86/include/asm/intel_pmc_ipc.h |  3 ---
- drivers/mfd/intel_soc_pmic_bxtwc.c   | 22 +++++++++++++++-------
- 2 files changed, 15 insertions(+), 10 deletions(-)
+ drivers/platform/x86/intel_pmc_ipc.c | 21 ++++++---------------
+ 1 file changed, 6 insertions(+), 15 deletions(-)
 
-diff --git a/arch/x86/include/asm/intel_pmc_ipc.h b/arch/x86/include/asm/intel_pmc_ipc.h
-index e6da1ce26256..b438a488f613 100644
---- a/arch/x86/include/asm/intel_pmc_ipc.h
-+++ b/arch/x86/include/asm/intel_pmc_ipc.h
-@@ -3,9 +3,6 @@
- #define  _ASM_X86_INTEL_PMC_IPC_H_
+diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+index eb4d65768531..c006609ef74b 100644
+--- a/drivers/platform/x86/intel_pmc_ipc.c
++++ b/drivers/platform/x86/intel_pmc_ipc.c
+@@ -253,6 +253,11 @@ static const struct attribute_group intel_ipc_group = {
+ 	.attrs = intel_ipc_attrs,
+ };
  
- /* Commands */
--#define PMC_IPC_PMIC_ACCESS		0xFF
--#define		PMC_IPC_PMIC_ACCESS_READ	0x0
--#define		PMC_IPC_PMIC_ACCESS_WRITE	0x1
- #define PMC_IPC_USB_PWR_CTRL		0xF0
- #define PMC_IPC_PMIC_BLACKLIST_SEL	0xEF
- #define PMC_IPC_PHY_CONFIG		0xEE
-diff --git a/drivers/mfd/intel_soc_pmic_bxtwc.c b/drivers/mfd/intel_soc_pmic_bxtwc.c
-index 739cfb5b69fe..60aba2a1561c 100644
---- a/drivers/mfd/intel_soc_pmic_bxtwc.c
-+++ b/drivers/mfd/intel_soc_pmic_bxtwc.c
-@@ -15,7 +15,7 @@
- #include <linux/mfd/intel_soc_pmic_bxtwc.h>
- #include <linux/module.h>
- 
--#include <asm/intel_pmc_ipc.h>
-+#include <asm/intel_scu_ipc.h>
- 
- /* PMIC device registers */
- #define REG_ADDR_MASK		0xFF00
-@@ -58,6 +58,10 @@
- /* Whiskey Cove PMIC share same ACPI ID between different platforms */
- #define BROXTON_PMIC_WC_HRV	4
- 
-+#define PMC_PMIC_ACCESS		0xFF
-+#define PMC_PMIC_READ		0x0
-+#define PMC_PMIC_WRITE		0x1
++static const struct attribute_group *intel_ipc_groups[] = {
++	&intel_ipc_group,
++	NULL
++};
 +
- enum bxtwc_irqs {
- 	BXTWC_PWRBTN_LVL1_IRQ = 0,
- 	BXTWC_TMU_LVL1_IRQ,
-@@ -288,9 +292,9 @@ static int regmap_ipc_byte_reg_read(void *context, unsigned int reg,
- 
- 	ipc_in[0] = reg;
- 	ipc_in[1] = i2c_addr;
--	ret = intel_pmc_ipc_command(PMC_IPC_PMIC_ACCESS,
--			PMC_IPC_PMIC_ACCESS_READ,
--			ipc_in, sizeof(ipc_in), (u32 *)ipc_out, 1);
-+	ret = intel_scu_ipc_dev_command(pmic->scu, PMC_PMIC_ACCESS,
-+					PMC_PMIC_READ, ipc_in, sizeof(ipc_in),
-+					ipc_out, sizeof(ipc_out));
- 	if (ret) {
- 		dev_err(pmic->dev, "Failed to read from PMIC\n");
+ static struct resource punit_res_array[] = {
+ 	/* Punit BIOS */
+ 	{
+@@ -597,28 +602,13 @@ static int ipc_plat_probe(struct platform_device *pdev)
  		return ret;
-@@ -321,9 +325,9 @@ static int regmap_ipc_byte_reg_write(void *context, unsigned int reg,
- 	ipc_in[0] = reg;
- 	ipc_in[1] = i2c_addr;
- 	ipc_in[2] = val;
--	ret = intel_pmc_ipc_command(PMC_IPC_PMIC_ACCESS,
--			PMC_IPC_PMIC_ACCESS_WRITE,
--			ipc_in, sizeof(ipc_in), NULL, 0);
-+	ret = intel_scu_ipc_dev_command(pmic->scu, PMC_PMIC_ACCESS,
-+					PMC_PMIC_WRITE, ipc_in, sizeof(ipc_in),
-+					NULL, 0);
- 	if (ret) {
- 		dev_err(pmic->dev, "Failed to write to PMIC\n");
- 		return ret;
-@@ -457,6 +461,10 @@ static int bxtwc_probe(struct platform_device *pdev)
- 	dev_set_drvdata(&pdev->dev, pmic);
- 	pmic->dev = &pdev->dev;
+ 	}
  
-+	pmic->scu = devm_intel_scu_ipc_dev_get(&pdev->dev);
-+	if (!pmic->scu)
-+		return -EPROBE_DEFER;
-+
- 	pmic->regmap = devm_regmap_init(&pdev->dev, NULL, pmic,
- 					&bxtwc_regmap_config);
- 	if (IS_ERR(pmic->regmap)) {
+-	ret = sysfs_create_group(&pdev->dev.kobj, &intel_ipc_group);
+-	if (ret) {
+-		dev_err(&pdev->dev, "Failed to create sysfs group %d\n",
+-			ret);
+-		goto err_devs;
+-	}
+-
+ 	ipcdev.has_gcr_regs = true;
+ 
+ 	return 0;
+-
+-err_devs:
+-	platform_device_unregister(ipcdev.tco_dev);
+-	platform_device_unregister(ipcdev.punit_dev);
+-	platform_device_unregister(ipcdev.telemetry_dev);
+-
+-	return ret;
+ }
+ 
+ static int ipc_plat_remove(struct platform_device *pdev)
+ {
+-	sysfs_remove_group(&pdev->dev.kobj, &intel_ipc_group);
+ 	platform_device_unregister(ipcdev.tco_dev);
+ 	platform_device_unregister(ipcdev.punit_dev);
+ 	platform_device_unregister(ipcdev.telemetry_dev);
+@@ -632,6 +622,7 @@ static struct platform_driver ipc_plat_driver = {
+ 	.driver = {
+ 		.name = "pmc-ipc-plat",
+ 		.acpi_match_table = ACPI_PTR(ipc_acpi_ids),
++		.dev_groups = intel_ipc_groups,
+ 	},
+ };
+ 
 -- 
 2.24.1
 
