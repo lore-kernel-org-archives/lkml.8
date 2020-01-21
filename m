@@ -2,174 +2,275 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC3C5C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85EADC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:41:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3B9E24655
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:40:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579599628;
-	bh=VgJ+Vrsu4/FV5/6PAsTdWdGxtgPUJliPeEo6bRmPSso=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OKa0LuOLx6CN5cR0OGU1TJ58pgFgTKIiQzkDno+dx5PURMau+KDTRsz2f/xtGMkpV
-	 6tiodkdaAVM5+Ws89sxga6GiQ6VmTy5Da7oDL+RkBlpycTwmhgvwpRcOZ+4MUjgql5
-	 BCTBG2pZ9oorlr1D/4v5+BvU4uISyKjgBrHvTXUg=
+	by mail.kernel.org (Postfix) with ESMTP id 52AAF2253D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:41:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hZZVSc8K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728978AbgAUJk1 (ORCPT
+        id S1729199AbgAUJlu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 04:40:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47866 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727220AbgAUJk1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 04:40:27 -0500
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 21 Jan 2020 04:41:50 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43543 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728512AbgAUJls (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 04:41:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579599707;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=jTqvJDIcTrY113uWw5YXK41fhJwgqvlsVFz5t0ig+QY=;
+        b=hZZVSc8KAIFScH8yXHeileAPvV2I5UF/B4tmQB8wgRGghXbkxTcLB6Eht3xkHB8g1r6HUw
+        Ty8b15K2VMRSzF5Yz1ZOlJ9TgsJ34U/CS8ngn5l0Fd6cxgmi7SBj4WQ9iSzq2Mc5BCXNo5
+        JJiJL8qE2cfi1PcFGu1MyTLKIg0ylqE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-227-Ao7DZCFKMUuELGaw65FIEw-1; Tue, 21 Jan 2020 04:41:43 -0500
+X-MC-Unique: Ao7DZCFKMUuELGaw65FIEw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C82D217F4;
-        Tue, 21 Jan 2020 09:40:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579599625;
-        bh=VgJ+Vrsu4/FV5/6PAsTdWdGxtgPUJliPeEo6bRmPSso=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GXUjcOC3q1e2ijdq7CvubBXfpev13jxYEqdLM8xXSThcO47M5bx29bmBsvYNzYxq7
-         ZCEP1xeIeR18Hb9kQbX1LqfKYvPFOBhRzG9nTa310pSXrXCKU6f/mSXLFKCNFCTv+/
-         5azhWFions6A06XsEpk/l/tjjehiG+IgEkKRmO9I=
-Date:   Tue, 21 Jan 2020 10:40:23 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Gregory Clement <gregory.clement@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: No master_xfer_atomic for i2c-mv64xxx.c
-Message-ID: <20200121094023.jywheey6sjsgrr44@gilmour.lan>
-References: <da0061d1-917f-d807-a7ac-05d302d88565@gmail.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 73B3618B639A;
+        Tue, 21 Jan 2020 09:41:40 +0000 (UTC)
+Received: from [10.72.12.103] (ovpn-12-103.pek2.redhat.com [10.72.12.103])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C6FFD19C6A;
+        Tue, 21 Jan 2020 09:41:22 +0000 (UTC)
+Subject: Re: [PATCH 3/5] vDPA: introduce vDPA bus
+To:     "Tian, Kevin" <kevin.tian@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Cc:     "mst@redhat.com" <mst@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "Bie, Tiwei" <tiwei.bie@intel.com>,
+        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
+        "Liang, Cunming" <cunming.liang@intel.com>,
+        "Wang, Zhihong" <zhihong.wang@intel.com>,
+        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
+        "Wang, Xiao W" <xiao.w.wang@intel.com>,
+        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
+        "Zhu, Lingshan" <lingshan.zhu@intel.com>,
+        "eperezma@redhat.com" <eperezma@redhat.com>,
+        "lulu@redhat.com" <lulu@redhat.com>,
+        Parav Pandit <parav@mellanox.com>,
+        "stefanha@redhat.com" <stefanha@redhat.com>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "hch@infradead.org" <hch@infradead.org>,
+        "aadam@redhat.com" <aadam@redhat.com>,
+        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Shahaf Shuler <shahafs@mellanox.com>,
+        "hanand@xilinx.com" <hanand@xilinx.com>,
+        "mhabets@solarflare.com" <mhabets@solarflare.com>
+References: <20200116124231.20253-1-jasowang@redhat.com>
+ <20200116124231.20253-4-jasowang@redhat.com>
+ <20200116152209.GH20978@mellanox.com>
+ <03cfbcc2-fef0-c9d8-0b08-798b2a293b8c@redhat.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D73EBA4@SHSMSX104.ccr.corp.intel.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <f27d59b7-1c91-5870-55f5-e21311fcef99@redhat.com>
+Date:   Tue, 21 Jan 2020 17:41:21 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ri2cc3wayxbar2zz"
-Content-Disposition: inline
-In-Reply-To: <da0061d1-917f-d807-a7ac-05d302d88565@gmail.com>
+In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D73EBA4@SHSMSX104.ccr.corp.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---ri2cc3wayxbar2zz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 2020/1/21 =E4=B8=8B=E5=8D=884:40, Tian, Kevin wrote:
+>> From: Jason Wang <jasowang@redhat.com>
+>> Sent: Friday, January 17, 2020 11:03 AM
+>>
+>>
+>> On 2020/1/16 =E4=B8=8B=E5=8D=8811:22, Jason Gunthorpe wrote:
+>>> On Thu, Jan 16, 2020 at 08:42:29PM +0800, Jason Wang wrote:
+>>>> vDPA device is a device that uses a datapath which complies with the
+>>>> virtio specifications with vendor specific control path. vDPA device=
+s
+>>>> can be both physically located on the hardware or emulated by
+>>>> software. vDPA hardware devices are usually implemented through PCIE
+>>>> with the following types:
+>>>>
+>>>> - PF (Physical Function) - A single Physical Function
+>>>> - VF (Virtual Function) - Device that supports single root I/O
+>>>>     virtualization (SR-IOV). Its Virtual Function (VF) represents a
+>>>>     virtualized instance of the device that can be assigned to diffe=
+rent
+>>>>     partitions
+>>>> - VDEV (Virtual Device) - With technologies such as Intel Scalable
+>>>>     IOV, a virtual device composed by host OS utilizing one or more
+>>>>     ADIs.
+> the concept of VDEV includes both software bits and ADIs. If you
+> only take about hardware types, using ADI is more accurate.
 
-Hi Florian,
 
-On Sat, Jan 18, 2020 at 08:21:43PM -0800, Florian Fainelli wrote:
-> Happy new year to all of you!
+Ok.
 
-Happy new year to you too ;)
 
-> On a lamobo R1 (A20) the trace below can be seen by typing "halt"
-> which makes us try to perform an i2c transaction in atomic context
-> by the X-powers AXP20x driver while the i2c-mv64xxx.c driver does
-> not support it.
 >
-> I am not familiar enough with this i2c controller to suggest a way to
-> refactor it such that it would easily gain master_xfer_atomic support.
-> Is this something you could look at?
+>>>> - SF (Sub function) - Vendor specific interface to slice the Physica=
+l
+>>>>     Function to multiple sub functions that can be assigned to diffe=
+rent
+>>>>     partitions as virtual devices.
+>>> I really hope we don't end up with two different ways to spell this
+>>> same thing.
+>>
+>> I think you meant ADI vs SF. It looks to me that ADI is limited to the
+>> scope of scalable IOV but SF not.
+> ADI is just a term for minimally assignable resource in Scalable IOV.
+> 'assignable' implies several things, e.g. the resource can be independe=
+ntly
+> mapped to/accessed by user space or guest, DMAs between two
+> ADIs are isolated, operating one ADI doesn't affecting another ADI,
+> etc.  I'm not clear about  other vendor specific interfaces, but suppos=
+ing
+> they need match the similar requirements. Then do we really want to
+> differentiate ADI vs. SF? What about merging them with ADI as just
+> one example of finer-grained slicing?
+
+
+I think so. That what Jason G want as well.
+
+Thanks
+
+
 >
-> Thanks!
->
-> [ 1617.999014] reboot: Power down
-> [ 1618.002111] ------------[ cut here ]------------
-> [ 1618.006752] WARNING: CPU: 0 PID: 2427 at drivers/i2c/i2c-core.h:41
-> i2c_transfer+0x108/0x144
-> [ 1618.015092] No atomic I2C transfer handler for 'i2c-0'
-> [ 1618.020222] Modules linked in: pppoe ppp_async pppox ppp_generic slhc
-> crc_ccitt cmac
-> [ 1618.027987] CPU: 0 PID: 2427 Comm: procd Not tainted 5.5.0-rc5+ #0
-> [ 1618.034158] Hardware name: Allwinner sun7i (A20) Family
-> [ 1618.039376] Backtrace:
-> [ 1618.041837] [<c0238488>] (dump_backtrace) from [<c0238710>]
-> (show_stack+0x20/0x24)
-> [ 1618.049400]  r7:00000029 r6:60000093 r5:00000000 r4:c10a197c
-> [ 1618.055061] [<c02386f0>] (show_stack) from [<c096ae4c>]
-> (dump_stack+0x9c/0xb0)
-> [ 1618.062282] [<c096adb0>] (dump_stack) from [<c0252548>]
-> (__warn+0xe0/0x108)
-> [ 1618.069237]  r7:00000029 r6:00000009 r5:c075d948 r4:c0aefafc
-> [ 1618.074895] [<c0252468>] (__warn) from [<c0252944>]
-> (warn_slowpath_fmt+0x94/0x9c)
-> [ 1618.082369]  r7:c075d948 r6:00000029 r5:c0aefafc r4:c0aefbc0
-> [ 1618.088026] [<c02528b4>] (warn_slowpath_fmt) from [<c075d948>]
-> (i2c_transfer+0x108/0x144)
-> [ 1618.096195]  r8:00000032 r7:c10a93e4 r6:00000001 r5:ea32fd3c r4:ea945ca8
-> [ 1618.102892] [<c075d840>] (i2c_transfer) from [<c075d9d0>]
-> (i2c_transfer_buffer_flags+0x4c/0x5c)
-> [ 1618.111579]  r6:eb3c6501 r5:00000001 r4:00000002
-> [ 1618.116199] [<c075d984>] (i2c_transfer_buffer_flags) from
-> [<c0675658>] (regmap_i2c_write+0x24/0x40)
-> [ 1618.125229]  r4:00000002
-> [ 1618.127768] [<c0675634>] (regmap_i2c_write) from [<c06703d8>]
-> (_regmap_raw_write_impl+0x72c/0x908)
-> [ 1618.136713]  r5:00000001 r4:ea8d9c00
-> [ 1618.140291] [<c066fcac>] (_regmap_raw_write_impl) from [<c0670630>]
-> (_regmap_bus_raw_write+0x7c/0xa0)
-> [ 1618.149501]  r10:00000058 r9:ea32e000 r8:fee1dead r7:00000080
-> r6:00000032 r5:c066be98
-> [ 1618.157319]  r4:ea8d9c00
-> [ 1618.159857] [<c06705b4>] (_regmap_bus_raw_write) from [<c066fa08>]
-> (_regmap_write+0x7c/0x164)
-> [ 1618.168371]  r7:ea8d9c00 r6:00000080 r5:00000032 r4:ea8d9c00
-> [ 1618.174029] [<c066f98c>] (_regmap_write) from [<c0671294>]
-> (regmap_write+0x4c/0x6c)
-> [ 1618.181679]  r9:ea32e000 r8:fee1dead r7:0002e574 r6:00000080
-> r5:00000032 r4:ea8d9c00
-> [ 1618.189420] [<c0671248>] (regmap_write) from [<c067d0ac>]
-> (axp20x_power_off+0x3c/0x48)
-> [ 1618.197328]  r7:0002e574 r6:28121969 r5:c1004e90 r4:4321fedc
-> [ 1618.202985] [<c067d070>] (axp20x_power_off) from [<c023605c>]
-> (machine_power_off+0x34/0x38)
-> [ 1618.211332] [<c0236028>] (machine_power_off) from [<c027850c>]
-> (kernel_power_off+0x7c/0x80)
-> [ 1618.219676] [<c0278490>] (kernel_power_off) from [<c02786a0>]
-> (__do_sys_reboot+0x190/0x1f4)
-> [ 1618.228019] [<c0278510>] (__do_sys_reboot) from [<c0278774>]
-> (sys_reboot+0x18/0x1c)
-> [ 1618.235669]  r8:c0201324 r7:00000058 r6:b6f69010 r5:becbbe2c r4:00000000
-> [ 1618.242366] [<c027875c>] (sys_reboot) from [<c0201120>]
-> (ret_fast_syscall+0x0/0x4c)
-> [ 1618.250013] Exception stack(0xea32ffa8 to 0xea32fff0)
-> [ 1618.255062] ffa0:                   00000000 becbbe2c fee1dead
-> 28121969 4321fedc 0002e574
-> [ 1618.263231] ffc0: 00000000 becbbe2c b6f69010 00000058 ffffffff
-> 00000000 0000201d 00000001
-> [ 1618.271398] ffe0: 0002de54 becbbd5c 0001ac8c b6f8e408
-> [ 1618.276443] ---[ end trace 526da779414c6638 ]---
+>>
+>>>> @@ -0,0 +1,2 @@
+>>>> +# SPDX-License-Identifier: GPL-2.0
+>>>> +obj-$(CONFIG_VDPA) +=3D vdpa.o
+>>>> diff --git a/drivers/virtio/vdpa/vdpa.c b/drivers/virtio/vdpa/vdpa.c
+>>>> new file mode 100644
+>>>> index 000000000000..2b0e4a9f105d
+>>>> +++ b/drivers/virtio/vdpa/vdpa.c
+>>>> @@ -0,0 +1,141 @@
+>>>> +// SPDX-License-Identifier: GPL-2.0-only
+>>>> +/*
+>>>> + * vDPA bus.
+>>>> + *
+>>>> + * Copyright (c) 2019, Red Hat. All rights reserved.
+>>>> + *     Author: Jason Wang <jasowang@redhat.com>
+>>> 2020 tests days
+>>
+>> Will fix.
+>>
+>>
+>>>> + *
+>>>> + */
+>>>> +
+>>>> +#include <linux/module.h>
+>>>> +#include <linux/idr.h>
+>>>> +#include <linux/vdpa.h>
+>>>> +
+>>>> +#define MOD_VERSION  "0.1"
+>>> I think module versions are discouraged these days
+>>
+>> Will remove.
+>>
+>>
+>>>> +#define MOD_DESC     "vDPA bus"
+>>>> +#define MOD_AUTHOR   "Jason Wang <jasowang@redhat.com>"
+>>>> +#define MOD_LICENSE  "GPL v2"
+>>>> +
+>>>> +static DEFINE_IDA(vdpa_index_ida);
+>>>> +
+>>>> +struct device *vdpa_get_parent(struct vdpa_device *vdpa)
+>>>> +{
+>>>> +	return vdpa->dev.parent;
+>>>> +}
+>>>> +EXPORT_SYMBOL(vdpa_get_parent);
+>>>> +
+>>>> +void vdpa_set_parent(struct vdpa_device *vdpa, struct device *paren=
+t)
+>>>> +{
+>>>> +	vdpa->dev.parent =3D parent;
+>>>> +}
+>>>> +EXPORT_SYMBOL(vdpa_set_parent);
+>>>> +
+>>>> +struct vdpa_device *dev_to_vdpa(struct device *_dev)
+>>>> +{
+>>>> +	return container_of(_dev, struct vdpa_device, dev);
+>>>> +}
+>>>> +EXPORT_SYMBOL_GPL(dev_to_vdpa);
+>>>> +
+>>>> +struct device *vdpa_to_dev(struct vdpa_device *vdpa)
+>>>> +{
+>>>> +	return &vdpa->dev;
+>>>> +}
+>>>> +EXPORT_SYMBOL_GPL(vdpa_to_dev);
+>>> Why these trivial assessors? Seems unnecessary, or should at least be
+>>> static inlines in a header
+>>
+>> Will fix.
+>>
+>>
+>>>> +int register_vdpa_device(struct vdpa_device *vdpa)
+>>>> +{
+>>> Usually we want to see symbols consistently prefixed with vdpa_*, is
+>>> there a reason why register/unregister are swapped?
+>>
+>> I follow the name from virtio. I will switch to vdpa_*.
+>>
+>>
+>>>> +	int err;
+>>>> +
+>>>> +	if (!vdpa_get_parent(vdpa))
+>>>> +		return -EINVAL;
+>>>> +
+>>>> +	if (!vdpa->config)
+>>>> +		return -EINVAL;
+>>>> +
+>>>> +	err =3D ida_simple_get(&vdpa_index_ida, 0, 0, GFP_KERNEL);
+>>>> +	if (err < 0)
+>>>> +		return -EFAULT;
+>>>> +
+>>>> +	vdpa->dev.bus =3D &vdpa_bus;
+>>>> +	device_initialize(&vdpa->dev);
+>>> IMHO device_initialize should not be called inside something called
+>>> register, toooften we find out that the caller drivers need the devic=
+e
+>>> to be initialized earlier, ie to use the kref, or something.
+>>>
+>>> I find the best flow is to have some init function that does the
+>>> device_initialize and sets the device_name that the driver can call
+>>> early.
+>>
+>> Ok, will do.
+>>
+>>
+>>> Shouldn't there be a device/driver matching process of some kind?
+>>
+>> The question is what do we want do match here.
+>>
+>> 1) "virtio" vs "vhost", I implemented matching method for this in mdev
+>> series, but it looks unnecessary for vDPA device driver to know about
+>> this. Anyway we can use sysfs driver bind/unbind to switch drivers
+>> 2) virtio device id and vendor id. I'm not sure we need this consider
+>> the two drivers so far (virtio/vhost) are all bus drivers.
+>>
+>> Thanks
+>>
+>>
+>>> Jason
+>>>
 
-Is that on every reboot?
-
-However, I'm not entirely sure how we could implement it without
-sleeping. The controller is basically a state machine that triggers an
-interrupt on each state change, so you first set the address, get an
-interrupt, then set the direction, then you get an interrupt, etc.
-
-I guess we could implement it using polling, but I'm not sure if
-that's wise in an interrupt context either.
-
-Maxime
-
---ri2cc3wayxbar2zz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXibHBwAKCRDj7w1vZxhR
-xed3AQDW98W0fhDteKz/9jBs4zA1M/HReTMmE/nSSDc3j9xl4AEA2f79EAP6nRnf
-qq8Yym9sFmc671FrxOQSpEBvO2L2nQE=
-=oMXB
------END PGP SIGNATURE-----
-
---ri2cc3wayxbar2zz--
