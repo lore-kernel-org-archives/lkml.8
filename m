@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D8C4C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D421C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:05:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 144F024654
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:05:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAF15217F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:05:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BBeNCO/V"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vEveYDGl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729537AbgAUQFi (ORCPT
+        id S1729629AbgAUQFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 11:05:38 -0500
-Received: from mail-wm1-f74.google.com ([209.85.128.74]:51392 "EHLO
-        mail-wm1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727817AbgAUQFh (ORCPT
+        Tue, 21 Jan 2020 11:05:41 -0500
+Received: from mail-wm1-f73.google.com ([209.85.128.73]:36899 "EHLO
+        mail-wm1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727817AbgAUQFk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 11:05:37 -0500
-Received: by mail-wm1-f74.google.com with SMTP id n17so527450wmk.1
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 08:05:36 -0800 (PST)
+        Tue, 21 Jan 2020 11:05:40 -0500
+Received: by mail-wm1-f73.google.com with SMTP id t4so800924wmf.2
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 08:05:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=Elct5+lKhC9X7zT8nF9IWixwmqUVlFcvw9suDwdwDnE=;
-        b=BBeNCO/VePLcTSLzcCCeGgXVEkSWlMwTu3VbXvcGfhP1iPUsbRj5KE87tzjUQN40gL
-         qtcdybbE++t9eKqYrrZWmKpyQMxtWRYUW9igsu7VTcyQVTrKfmvNkcGXC9rGR+ngubcL
-         fxwrGSmifI0FAwTwskPPs6jeSV3KUkdmEiNO/kcqwe1mI/W+4vFVTqZpVs7+4OCSxdaP
-         0jcEdTQYzAyCAU6gAP4dogHCCMkX93XgLOl/6ZUeQGgMUQly3r5uStCuZFK1ONTR/Ant
-         GUGtmCUqytt+ikLWZGbPo4raVo0CxNDZT/VPf4QDfZSatR7VYZ75efKSQnNqvV/nfIji
-         4CHA==
+        bh=rQnN5kw1tCui7wtVtPb4liBxMrcaouM2L/Dj3ZF7x/U=;
+        b=vEveYDGlq4RapLlWOaserIRgSK9CDsyfKU3vmnx8XdRv89p7akoY0T/V3FT18RGMDw
+         OnIRpz8GZABv+03aNv6SYWdpma0cOtw9nwvYssWK3KfbfLDiVatxE0ZU6mONsyJ2gVsi
+         uUph1vinxudveUkuNN+jZVXoh30xw79QZx/d492IQ/ZJsFu58ixFWPEECOIRa11zW598
+         4k41E4HwH4oJuUbSy/y9Vzf1ZfTjNMvyp9/8EXNCZcZ3zUHKkQro+p+EUuLpGaaGn5t3
+         bL84bLB/URIi83z+l9RZ5xR4S1qwN1Cfzc9oVp+rnNjvEL2wQ4NlOUKRJ+AqA2/tiu9+
+         5rMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=Elct5+lKhC9X7zT8nF9IWixwmqUVlFcvw9suDwdwDnE=;
-        b=SuQ15O9KXYY8cVbNvKzu4TjMA2mOw0KWxPEC7hqb07oMcGQD4EyyUrRW2HNhprRZv9
-         R3wjmF7/ENld4isJhG9CwqbQ1Y6xGGN9/RGgySTozX6cTr/MquoAeLSPlGNwf7PqMDJT
-         iW6GkvGQj1Y41c93SzxKt3iLvbFWl7oLlPkytqMm10wBPSIW1J7GaCXgCpACUW6x+Zl4
-         hD4tUi7tyAcvlJ+fLss3TnTPukNiOvsVLjZZOhmU9uHecQaDy3vKSJAq/PmDzHVmN+7Z
-         1k2qmCVujr7d4+wbPVdu9h4PEyyDDfX+MFc+u55KHbYJs5cv0XTTP+iysFBmUzgPkZAN
-         w2gg==
-X-Gm-Message-State: APjAAAWn9XTcCmtnnthzJhA21SW9GYNogiVzl3BgbrNjh9zRd2qh/sF/
-        yAIh226nEEZoMh9U72i0bE1TOd7mjg==
-X-Google-Smtp-Source: APXvYqwi0h8m0qrPFFmbHFrsPfWgG1hho+4RJvofexg3tlhh4RJCdi83g9YTl/d38pRcvILCYcFUDlObMA==
-X-Received: by 2002:a05:6000:11c5:: with SMTP id i5mr6021320wrx.102.1579622735534;
- Tue, 21 Jan 2020 08:05:35 -0800 (PST)
-Date:   Tue, 21 Jan 2020 17:05:11 +0100
+        bh=rQnN5kw1tCui7wtVtPb4liBxMrcaouM2L/Dj3ZF7x/U=;
+        b=BCN6u3c8Z/9muwqQho04zkcEOKXJcIbmGHxvRttBOQqcogVYlfDTHzD0CMv0ljZOGx
+         4iCBskvtjbpTvQ1yPs4pU5+bp/DIZPNIFqeTRvvRXiDBEXKSZnfRsXXAfIC6aGuEMmQr
+         Jmv7wRQIzXKZi0+FEm3eO5/iYcE1S//bULCCZH26DtUYBXoPlzIUARHrombxM1eJMY7o
+         v6ljUdjd1Hi1gJG/HklZHHSQuBydnYM+fjsIVgVvq22pCxUDqCc8vuIve1uUAWvwJFLu
+         BnLRl/+D7IO4YB3nsZ94qlG+MwZkEgjc+2lw4afTcSTY7nRZwy6+Lc9jA5h7BhVI9gF8
+         1t1w==
+X-Gm-Message-State: APjAAAUrxHtGWJ8iOYh/AHRk9BbtbiOU4xQQ8aArMvQnhdAVAbgOH36I
+        oybP8usVJAQfm6/5gpxqlEVHbAIKsg==
+X-Google-Smtp-Source: APXvYqzSYKwCpC+hKJKIhtUj8+J/YqJXlcIiLtIGbS/jcM8OFkz4phDJWMJlx1Zu6jZidhoMoTP5+XYtHA==
+X-Received: by 2002:a05:6000:50:: with SMTP id k16mr5659732wrx.145.1579622738696;
+ Tue, 21 Jan 2020 08:05:38 -0800 (PST)
+Date:   Tue, 21 Jan 2020 17:05:12 +0100
 In-Reply-To: <20200121160512.70887-1-elver@google.com>
-Message-Id: <20200121160512.70887-4-elver@google.com>
+Message-Id: <20200121160512.70887-5-elver@google.com>
 Mime-Version: 1.0
 References: <20200121160512.70887-1-elver@google.com>
 X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
-Subject: [PATCH v2 4/5] iov_iter: Use generic instrumented.h
+Subject: [PATCH v2 5/5] copy_to_user, copy_from_user: Use generic instrumented.h
 From:   Marco Elver <elver@google.com>
 To:     elver@google.com
 Cc:     paulmck@kernel.org, andreyknvl@google.com, glider@google.com,
@@ -77,7 +77,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This replaces the kasan instrumentation with generic instrumentation,
+This replaces the KASAN instrumentation with generic instrumentation,
 implicitly adding KCSAN instrumentation support.
 
 For KASAN no functional change is intended.
@@ -88,46 +88,108 @@ Signed-off-by: Marco Elver <elver@google.com>
 v2:
 * Use updated instrumented.h, removing post-hooks for user-copies.
 ---
- lib/iov_iter.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ include/linux/uaccess.h | 14 +++++++-------
+ lib/usercopy.c          |  7 ++++---
+ 2 files changed, 11 insertions(+), 10 deletions(-)
 
-diff --git a/lib/iov_iter.c b/lib/iov_iter.c
-index fb29c02c6a3c..614b6999d2da 100644
---- a/lib/iov_iter.c
-+++ b/lib/iov_iter.c
-@@ -8,6 +8,7 @@
- #include <linux/splice.h>
- #include <net/checksum.h>
- #include <linux/scatterlist.h>
+diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
+index 67f016010aad..8a215c5c1aed 100644
+--- a/include/linux/uaccess.h
++++ b/include/linux/uaccess.h
+@@ -2,9 +2,9 @@
+ #ifndef __LINUX_UACCESS_H__
+ #define __LINUX_UACCESS_H__
+ 
 +#include <linux/instrumented.h>
+ #include <linux/sched.h>
+ #include <linux/thread_info.h>
+-#include <linux/kasan-checks.h>
  
- #define PIPE_PARANOIA /* for now */
+ #define uaccess_kernel() segment_eq(get_fs(), KERNEL_DS)
  
-@@ -138,7 +139,7 @@
- static int copyout(void __user *to, const void *from, size_t n)
+@@ -58,7 +58,7 @@
+ static __always_inline __must_check unsigned long
+ __copy_from_user_inatomic(void *to, const void __user *from, unsigned long n)
  {
+-	kasan_check_write(to, n);
++	instrument_copy_from_user(to, from, n);
+ 	check_object_size(to, n, false);
+ 	return raw_copy_from_user(to, from, n);
+ }
+@@ -67,7 +67,7 @@ static __always_inline __must_check unsigned long
+ __copy_from_user(void *to, const void __user *from, unsigned long n)
+ {
+ 	might_fault();
+-	kasan_check_write(to, n);
++	instrument_copy_from_user(to, from, n);
+ 	check_object_size(to, n, false);
+ 	return raw_copy_from_user(to, from, n);
+ }
+@@ -88,7 +88,7 @@ __copy_from_user(void *to, const void __user *from, unsigned long n)
+ static __always_inline __must_check unsigned long
+ __copy_to_user_inatomic(void __user *to, const void *from, unsigned long n)
+ {
+-	kasan_check_read(from, n);
++	instrument_copy_to_user(to, from, n);
+ 	check_object_size(from, n, true);
+ 	return raw_copy_to_user(to, from, n);
+ }
+@@ -97,7 +97,7 @@ static __always_inline __must_check unsigned long
+ __copy_to_user(void __user *to, const void *from, unsigned long n)
+ {
+ 	might_fault();
+-	kasan_check_read(from, n);
++	instrument_copy_to_user(to, from, n);
+ 	check_object_size(from, n, true);
+ 	return raw_copy_to_user(to, from, n);
+ }
+@@ -109,7 +109,7 @@ _copy_from_user(void *to, const void __user *from, unsigned long n)
+ 	unsigned long res = n;
+ 	might_fault();
+ 	if (likely(access_ok(from, n))) {
+-		kasan_check_write(to, n);
++		instrument_copy_from_user(to, from, n);
+ 		res = raw_copy_from_user(to, from, n);
+ 	}
+ 	if (unlikely(res))
+@@ -127,7 +127,7 @@ _copy_to_user(void __user *to, const void *from, unsigned long n)
+ {
+ 	might_fault();
  	if (access_ok(to, n)) {
 -		kasan_check_read(from, n);
 +		instrument_copy_to_user(to, from, n);
  		n = raw_copy_to_user(to, from, n);
  	}
  	return n;
-@@ -147,7 +148,7 @@ static int copyout(void __user *to, const void *from, size_t n)
- static int copyin(void *to, const void __user *from, size_t n)
- {
- 	if (access_ok(from, n)) {
+diff --git a/lib/usercopy.c b/lib/usercopy.c
+index cbb4d9ec00f2..4bb1c5e7a3eb 100644
+--- a/lib/usercopy.c
++++ b/lib/usercopy.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+-#include <linux/uaccess.h>
+ #include <linux/bitops.h>
++#include <linux/instrumented.h>
++#include <linux/uaccess.h>
+ 
+ /* out-of-line parts */
+ 
+@@ -10,7 +11,7 @@ unsigned long _copy_from_user(void *to, const void __user *from, unsigned long n
+ 	unsigned long res = n;
+ 	might_fault();
+ 	if (likely(access_ok(from, n))) {
 -		kasan_check_write(to, n);
 +		instrument_copy_from_user(to, from, n);
- 		n = raw_copy_from_user(to, from, n);
+ 		res = raw_copy_from_user(to, from, n);
  	}
- 	return n;
-@@ -639,7 +640,7 @@ EXPORT_SYMBOL(_copy_to_iter);
- static int copyout_mcsafe(void __user *to, const void *from, size_t n)
+ 	if (unlikely(res))
+@@ -25,7 +26,7 @@ unsigned long _copy_to_user(void __user *to, const void *from, unsigned long n)
  {
- 	if (access_ok(to, n)) {
+ 	might_fault();
+ 	if (likely(access_ok(to, n))) {
 -		kasan_check_read(from, n);
 +		instrument_copy_to_user(to, from, n);
- 		n = copy_to_user_mcsafe((__force void *) to, from, n);
+ 		n = raw_copy_to_user(to, from, n);
  	}
  	return n;
 -- 
