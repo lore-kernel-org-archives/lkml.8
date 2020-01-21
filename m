@@ -2,158 +2,98 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A78B9C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 12:00:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A087BC33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 12:02:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7812821569
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 12:00:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7843E2253D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 12:02:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YQF+nryI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DfQ8Yf58"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729437AbgAUL77 (ORCPT
+        id S1729508AbgAUMCB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 06:59:59 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:39732 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726052AbgAUL77 (ORCPT
+        Tue, 21 Jan 2020 07:02:01 -0500
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:42237 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728829AbgAUMCA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 06:59:59 -0500
-Received: by mail-ed1-f66.google.com with SMTP id t17so2694772eds.6;
-        Tue, 21 Jan 2020 03:59:57 -0800 (PST)
+        Tue, 21 Jan 2020 07:02:00 -0500
+Received: by mail-vs1-f67.google.com with SMTP id b79so1534009vsd.9
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 04:02:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=jSiX5zz2vTnaHZTIQllFhI97EGPFguXdFsKsb3rblZU=;
-        b=YQF+nryIbreDYQKsT+Vq6cVYKB1amnD6IVTr+9uTtsF+yqoC3cfr4Z9t6vm3CGzgg1
-         Rod6OvZ4ZO7hP1kac7Su+H8AmWibUMZ5SAJPijfaKgw9US5cVTDn7KWlyJxEJ5nEsosR
-         yKkDmcMrUUSvJC97OpqSQ8ZvWxTAJtgb/htEkobsRFkYu/lcqPWl5jHhfbFLYW8G103L
-         cu2owgWO9EynKOvZQmbtA4NkcUpC+THGqQiH9Un8VhxbiEpHqFALTYbSOhj7OjsMf11J
-         fxPkAO79PugLl4Xfzk3WCljXb1zt8YjZBfSmX32gMYYzusJjJPfXFO0UvUMfiyTahVzD
-         6XYw==
+        bh=WlDPGUCXlEVeTcZhHawX07d2lxqh/Mdp7/s77E+/zJk=;
+        b=DfQ8Yf58JeljkgTbS9a3cao8ML5+qV3DAnHkunbr6P8ZYoE8SUvNa1Rf0hVrg43uKJ
+         kqX0jYwwVIB8lTLwl8EbNxpWl1YtOU3tCQOMd1IX7BfJ0T+LwkxMPMll8T6cmu0ah5rq
+         NNLC5WfsRD5iyXp1L9pfxQu9gdjwVUdO1glJ1maM+uYHzZAXRpIqt4PAib1HaoDkODN0
+         jcm3IlJ5gksSzosGgVcDcYW16DhgnzTqWvQO9CCv9B/kcJbh91U4vGPQUeYd3qDbo2V0
+         xgZv0VOsjmkqWYX+6LdS0cyPzdLRxiFD5rWCijz6aSl1+wlg2PAjECRYhAiHRs0CdPBO
+         cZkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=jSiX5zz2vTnaHZTIQllFhI97EGPFguXdFsKsb3rblZU=;
-        b=A8Y1NpSLoaegheqNS2UWxgyVWGs6MSAI4RlMsK/Bml9qFaAmBJnURXXbGQkrj/nKzX
-         REoyg6PB+bNdkhzUtL3dX8EiaqJTJ+ybBjAbQZpp65t2oU/thZghcpES4NDDmhhn2R/Y
-         XJLaA6WJfxQ/qxhvZ01ovuc9vy9JxgOrPYFyr/M7wpMlKaIIPxsSw2179Pvo3r3pQ3Nn
-         fMuxis+0i0B7Nt3Hnko9xseg8OTEc728zS21YccZPcc9t6AwPFPIIR4cUwavNtErjFSr
-         h6KVY4mabDPMrYILBr06DTSp5XGiUCeA0RhBETcP7KrP6VBxdMa3CI9yoQh1mF+xtamr
-         iwvQ==
-X-Gm-Message-State: APjAAAVPXz1gq6BpUP7RnomuCTmuHRoIUQ2H3Lhb5l/YR7+DwrNkZBWo
-        kmYIbGkJBF/pCo/IHnwCPTEibBW9rsDI2KdozAo=
-X-Google-Smtp-Source: APXvYqxcFMRXWdad6Y1h3Chdzl/WPDJb1l2gynDLkt+Yf+IZ7vOD0hP5KCX5RWVNMnIGdpPCR6KEIodoncuVQA3mijI=
-X-Received: by 2002:aa7:ce13:: with SMTP id d19mr3426381edv.296.1579607997278;
- Tue, 21 Jan 2020 03:59:57 -0800 (PST)
+        bh=WlDPGUCXlEVeTcZhHawX07d2lxqh/Mdp7/s77E+/zJk=;
+        b=kGjwfSqbjUF8kz9Zvsq4NYTFenPrV57Us6UiUFtw54/PbLQG4VeCwcwjFfyC5G4A7S
+         FQtLBxrKPDCDqCdvZc9QZvMli0Ep6ZFXiRbjpwpSqivT4ah+4IAPqgYtxgCE5tbPJ3E6
+         KjDEJLpu3P3RonFPvsdEaQ5F2HGa0exxWw6tkhASPRV3jH+No4yEl2kunQ9uhBNevh2Z
+         WJS/0Wo0Qmbd+ImRhlPZhVp0s4XHMAMsaryCOkbxnOHvIhthmRPFL4TfkBV2N3qyYgJj
+         FVAQva72yqDNM0VSj2wHxAFErwnMvEf6rfE+nRzh4yBkq3vcT0hiTeUF5be+4ZDLAU/K
+         IzYQ==
+X-Gm-Message-State: APjAAAWoDkeHfmmaEI6uPNY8yqyFVdkk50FF1Cg+EZ5H+5JYj2jrQz+V
+        LusRylaL/CStPL0sQuUlQA96tVA656yO7l/Ia/dOPw==
+X-Google-Smtp-Source: APXvYqz2LEHuJMC+X8IU73bToBskn+ELWXDHBTXmfrBQoD8n5OvOsFOieWKumRukn3ny3dcoDaCxoZahX5z/weTMUNA=
+X-Received: by 2002:a67:cd96:: with SMTP id r22mr2417118vsl.165.1579608119447;
+ Tue, 21 Jan 2020 04:01:59 -0800 (PST)
 MIME-Version: 1.0
-References: <20200113055951.8718-1-hslester96@gmail.com> <20200121092350.466f62a8@litschi.hi.pengutronix.de>
-In-Reply-To: <20200121092350.466f62a8@litschi.hi.pengutronix.de>
-From:   Chuhong Yuan <hslester96@gmail.com>
-Date:   Tue, 21 Jan 2020 19:59:46 +0800
-Message-ID: <CANhBUQ25dp5kt3EGijLUC1LEjQon5wS8MHJqEiBNcAXSLdvjQw@mail.gmail.com>
-Subject: Re: [PATCH v3] media: allegro: add missed checks in allegro_open()
-To:     Michael Tretter <m.tretter@pengutronix.de>
-Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>
+References: <cover.1578560282.git.benchuanggli@gmail.com> <CACT4zj9B8BSebZgf5-nc3zGYhsAGQ6gTRvfFf9r1DBB_mpRtHA@mail.gmail.com>
+In-Reply-To: <CACT4zj9B8BSebZgf5-nc3zGYhsAGQ6gTRvfFf9r1DBB_mpRtHA@mail.gmail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 21 Jan 2020 13:01:22 +0100
+Message-ID: <CAPDyKFpVN1w7sRbcSAOezVYAkq0pq6kCFo0gjT3TO4FVqDCe=A@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 0/6] Add support UHS-II for GL9755
+To:     Ben Chuang <benchuanggli@gmail.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        greg.tu@genesyslogic.com.tw,
+        Ben Chuang <ben.chuang@genesyslogic.com.tw>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 4:23 PM Michael Tretter
-<m.tretter@pengutronix.de> wrote:
+On Tue, 21 Jan 2020 at 10:37, Ben Chuang <benchuanggli@gmail.com> wrote:
 >
-> On Mon, 13 Jan 2020 13:59:51 +0800, Chuhong Yuan wrote:
-> > allegro_open() misses checks for v4l2_m2m_ctx_init() and results of
-> > v4l2_ctrl_new* calls.
-> > Add checks and error handlers to fix the problems.
-> >
-> > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> > ---
-> > Changes in v3:
-> >   - Make code cleaner.
-> >   - Add a check for handler->error.
-> >
-> >  .../staging/media/allegro-dvt/allegro-core.c  | 24 +++++++++++++++----
-> >  1 file changed, 20 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/staging/media/allegro-dvt/allegro-core.c b/drivers/staging/media/allegro-dvt/allegro-core.c
-> > index 6f0cd0784786..e86001e42963 100644
-> > --- a/drivers/staging/media/allegro-dvt/allegro-core.c
-> > +++ b/drivers/staging/media/allegro-dvt/allegro-core.c
-> > @@ -2270,15 +2270,12 @@ static int allegro_open(struct file *file)
-> >       struct allegro_channel *channel = NULL;
-> >       struct v4l2_ctrl_handler *handler;
-> >       u64 mask;
-> > +     int ret;
-> >
-> >       channel = kzalloc(sizeof(*channel), GFP_KERNEL);
-> >       if (!channel)
-> >               return -ENOMEM;
-> >
-> > -     v4l2_fh_init(&channel->fh, vdev);
-> > -     file->private_data = &channel->fh;
-> > -     v4l2_fh_add(&channel->fh);
-> > -
-> >       init_completion(&channel->completion);
-> >
-> >       channel->dev = dev;
-> > @@ -2328,6 +2325,11 @@ static int allegro_open(struct file *file)
-> >                       V4L2_CID_MIN_BUFFERS_FOR_OUTPUT,
-> >                       1, 32,
-> >                       1, 1);
-> > +     if (handler->error != 0) {
-> > +             ret = handler->error;
-> > +             goto error;
-> > +     }
-> > +
-> >       channel->fh.ctrl_handler = handler;
-> >
-> >       channel->mcu_channel_id = -1;
-> > @@ -2341,7 +2343,21 @@ static int allegro_open(struct file *file)
-> >       channel->fh.m2m_ctx = v4l2_m2m_ctx_init(dev->m2m_dev, channel,
-> >                                               allegro_queue_init);
-> >
-> > +     if (IS_ERR(channel->fh.m2m_ctx)) {
-> > +             ret = PTR_ERR(channel->fh.m2m_ctx);
-> > +             goto error;
-> > +     }
-> > +
-> > +     v4l2_fh_init(&channel->fh, vdev);
+> Hi Uffe and Adrian,
 >
-> This call sets channel->fh.ctrl_handler to vdev->ctrl_handler, which
-> has previously been overriden by the driver to handler. Therefore, this
-> patch breaks all controls. I think we should initialize channel->fh
-> before setting any fields of this struct.
+> On Thu, Jan 9, 2020 at 5:13 PM Ben Chuang <benchuanggli@gmail.com> wrote:
+> >
+> > Hi Uffe and Adrian,
+> >
+> > These patches support UHS-II and fix GL9755 UHS-II compatibility.
+> >
+> > The parts of UHS-II are based on [1][2] and porting to Linux 5.5-rc5.
+> > I have seen that Uffe comment that splitting the UHS-II parts into smaller
+> > patches. Other than splitting into small patches, could you give me some
+> > suggestions for refactoring/splitting files?
+> >
+> > Best regards,
+> > Ben
 >
+> Gentle Ping, Any comments?
 
-I'm not very clear about this issue.
-In my second version, Hans replied that init could be moved before return 0.
-I have sent this mail to him.
+I coming to this, but I need some additional time. In any case, thanks
+for posting this and for pinging!
 
-> Michael
->
-> > +     file->private_data = &channel->fh;
-> > +     v4l2_fh_add(&channel->fh);
-> > +
-> >       return 0;
-> > +
-> > +error:
-> > +     v4l2_ctrl_handler_free(handler);
-> > +     kfree(channel);
-> > +     return ret;
-> >  }
-> >
-> >  static int allegro_release(struct file *file)
+[...]
+
+Kind regards
+Uffe
