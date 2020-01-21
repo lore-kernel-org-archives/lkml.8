@@ -2,160 +2,83 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1DCDC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3119CC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B541F20661
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:30:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0555020661
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:34:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728783AbgAUIat convert rfc822-to-8bit (ORCPT
+        id S1728139AbgAUIeC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 03:30:49 -0500
-Received: from relay-b01.edpnet.be ([212.71.1.221]:58701 "EHLO
-        relay-b01.edpnet.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726911AbgAUIas (ORCPT
+        Tue, 21 Jan 2020 03:34:02 -0500
+Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:47809 "EHLO
+        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725890AbgAUIeC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 03:30:48 -0500
-X-ASG-Debug-ID: 1579595444-0a7ff5137c3b1e810001-xx1T2L
-Received: from zotac.vandijck-laurijssen.be ([77.109.89.38]) by relay-b01.edpnet.be with ESMTP id jSHJfcOBIiAaokUu; Tue, 21 Jan 2020 09:30:44 +0100 (CET)
-X-Barracuda-Envelope-From: dev.kurt@vandijck-laurijssen.be
-X-Barracuda-Effective-Source-IP: UNKNOWN[77.109.89.38]
-X-Barracuda-Apparent-Source-IP: 77.109.89.38
-Received: from x1.vandijck-laurijssen.be (74.250-240-81.adsl-static.isp.belgacom.be [81.240.250.74])
-        by zotac.vandijck-laurijssen.be (Postfix) with ESMTPSA id AEFB2C67EEC;
-        Tue, 21 Jan 2020 09:30:44 +0100 (CET)
-Date:   Tue, 21 Jan 2020 09:30:35 +0100
-From:   Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
-To:     Oliver Hartkopp <socketcan@hartkopp.net>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        o.rempel@pengutronix.de,
-        syzbot <syzbot+c3ea30e1e2485573f953@syzkaller.appspotmail.com>,
-        David Miller <davem@davemloft.net>, linux-can@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: general protection fault in can_rx_register
-Message-ID: <20200121083035.GD14537@x1.vandijck-laurijssen.be>
-X-ASG-Orig-Subj: Re: general protection fault in can_rx_register
-Mail-Followup-To: Oliver Hartkopp <socketcan@hartkopp.net>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>, o.rempel@pengutronix.de,
-        syzbot <syzbot+c3ea30e1e2485573f953@syzkaller.appspotmail.com>,
-        David Miller <davem@davemloft.net>, linux-can@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-References: <00000000000030dddb059c562a3f@google.com>
- <55ad363b-1723-28aa-78b1-8aba5565247e@hartkopp.net>
- <20200120091146.GD11138@x1.vandijck-laurijssen.be>
- <CACT4Y+a+GusEA1Gs+z67uWjtwBRp_s7P4Wd_SMmgpCREnDu3kg@mail.gmail.com>
- <8332ec7f-2235-fdf6-9bda-71f789c57b37@hartkopp.net>
- <2a676c0e-20f2-61b5-c72b-f51947bafc7d@hartkopp.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <2a676c0e-20f2-61b5-c72b-f51947bafc7d@hartkopp.net>
-User-Agent: Mutt/1.5.22 (2013-10-16)
-X-Barracuda-Connect: UNKNOWN[77.109.89.38]
-X-Barracuda-Start-Time: 1579595444
-X-Barracuda-URL: https://212.71.1.221:443/cgi-mod/mark.cgi
-X-Virus-Scanned: by bsmtpd at edpnet.be
-X-Barracuda-Scan-Msg-Size: 3259
-X-Barracuda-BRTS-Status: 1
-X-Barracuda-Bayes: SPAM GLOBAL 0.9309 1.0000 3.5604
-X-Barracuda-Spam-Score: 3.56
-X-Barracuda-Spam-Status: No, SCORE=3.56 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=7.0 tests=
-X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.79477
-        Rule breakdown below
-         pts rule name              description
-        ---- ---------------------- --------------------------------------------------
+        Tue, 21 Jan 2020 03:34:02 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R941e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07417;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0ToHWnsP_1579595638;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0ToHWnsP_1579595638)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 21 Jan 2020 16:33:58 +0800
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Yury Norov <yury.norov@gmail.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        "Tobin C. Harding" <tobin@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH] lib/bitmap: remove expect_eq_u32_array
+Date:   Tue, 21 Jan 2020 16:33:45 +0800
+Message-Id: <1579595625-250942-1-git-send-email-alex.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On ma, 20 jan 2020 23:35:16 +0100, Oliver Hartkopp wrote:
-> Answering myself ...
-> 
-> On 20/01/2020 23.02, Oliver Hartkopp wrote:
-> 
-> >
-> >Added some code to check whether dev->ml_priv is NULL:
-> >
-> >~/linux$ git diff
-> >diff --git a/net/can/af_can.c b/net/can/af_can.c
-> >index 128d37a4c2e0..6fb4ae4c359e 100644
-> >--- a/net/can/af_can.c
-> >+++ b/net/can/af_can.c
-> >@@ -463,6 +463,10 @@ int can_rx_register(struct net *net, struct
-> >net_device *dev, canid_t can_id,
-> >         spin_lock_bh(&net->can.rcvlists_lock);
-> >
-> >         dev_rcv_lists = can_dev_rcv_lists_find(net, dev);
-> >+       if (!dev_rcv_lists) {
-> >+               pr_err("dev_rcv_lists == NULL! %p\n", dev);
-> >+               goto out_unlock;
-> >+       }
-> >         rcv_list = can_rcv_list_find(&can_id, &mask, dev_rcv_lists);
-> >
-> >         rcv->can_id = can_id;
-> >@@ -479,6 +483,7 @@ int can_rx_register(struct net *net, struct net_device
-> >*dev, canid_t can_id,
-> >         rcv_lists_stats->rcv_entries++;
-> >         rcv_lists_stats->rcv_entries_max =
-> >max(rcv_lists_stats->rcv_entries_max,
-> >
-> >rcv_lists_stats->rcv_entries);
-> >+out_unlock:
-> >         spin_unlock_bh(&net->can.rcvlists_lock);
-> >
-> >         return err;
-> >
-> >And the output (after some time) is:
-> >
-> >[  758.505841] netlink: 'crash': attribute type 1 has an invalid length.
-> >[  758.508045] bond7148: (slave vxcan1): The slave device specified does
-> >not support setting the MAC address
-> >[  758.508057] bond7148: (slave vxcan1): Error -22 calling dev_set_mtu
-> >[  758.532025] bond10413: (slave vxcan1): The slave device specified does
-> >not support setting the MAC address
-> >[  758.532043] bond10413: (slave vxcan1): Error -22 calling dev_set_mtu
-> >[  758.532254] dev_rcv_lists == NULL! 000000006b9d257f
-> >[  758.547392] netlink: 'crash': attribute type 1 has an invalid length.
-> >[  758.549310] bond7145: (slave vxcan1): The slave device specified does
-> >not support setting the MAC address
-> >[  758.549313] bond7145: (slave vxcan1): Error -22 calling dev_set_mtu
-> >[  758.550464] netlink: 'crash': attribute type 1 has an invalid length.
-> >[  758.552301] bond7146: (slave vxcan1): The slave device specified does
-> >not support setting the MAC address
-> >
-> >So we can see that we get a ml_priv pointer which is NULL which should not
-> >be possible due to this:
-> >
-> >https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/net/can/dev.c#n743
-> 
-> This reference doesn't point to the right code as vxcan has its own handling
-> do assign ml_priv in vxcan.c .
-> 
-> >Btw. the variable 'size' is set two times at the top of alloc_candev_mqs()
-> >depending on echo_skb_max. This looks wrong.
-> 
-> No. It looks right as I did not get behind the ALIGN() macro at first sight.
-> 
-> But it is still open why dev->ml_priv is not set correctly in vxcan.c as all
-> the settings for .priv_size and in vxcan_setup look fine.
+expect_eq_u32_array isn't used from commit 3aa56885e516 ("bitmap:
+replace bitmap_{from,to}_u32array").
+And EXP2_IN_BITS are never used. so better to remove them.
 
-Maybe I got completely lost:
-Shouldn't can_ml_priv and vxcan_priv not be similar?
-Where is the dev_rcv_lists in the vxcan case?
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Andrew Morton <akpm@linux-foundation.org> 
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com> 
+Cc: Linus Walleij <linus.walleij@linaro.org> 
+Cc: Yury Norov <yury.norov@gmail.com> 
+Cc: William Breathitt Gray <vilhelm.gray@gmail.com> 
+Cc: "Tobin C. Harding" <tobin@kernel.org> 
+Cc: linux-kernel@vger.kernel.org 
+---
+ lib/test_bitmap.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-> 
-> Best regards,
-> Oliver
+diff --git a/lib/test_bitmap.c b/lib/test_bitmap.c
+index e14a15ac250b..0d344ae494a9 100644
+--- a/lib/test_bitmap.c
++++ b/lib/test_bitmap.c
+@@ -170,7 +170,6 @@ static bool __init __check_eq_clump8(const char *srcfile, unsigned int line,
+ #define expect_eq_uint(...)		__expect_eq(uint, ##__VA_ARGS__)
+ #define expect_eq_bitmap(...)		__expect_eq(bitmap, ##__VA_ARGS__)
+ #define expect_eq_pbl(...)		__expect_eq(pbl, ##__VA_ARGS__)
+-#define expect_eq_u32_array(...)	__expect_eq(u32_array, ##__VA_ARGS__)
+ #define expect_eq_clump8(...)		__expect_eq(clump8, ##__VA_ARGS__)
+ 
+ static void __init test_zero_clear(void)
+@@ -270,8 +269,6 @@ static void __init test_copy(void)
+ 	expect_eq_pbl("0-108,128-1023", bmap2, 1024);
+ }
+ 
+-#define EXP2_IN_BITS	(sizeof(exp2) * 8)
+-
+ static void __init test_replace(void)
+ {
+ 	unsigned int nbits = 64;
+-- 
+1.8.3.1
+
