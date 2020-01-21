@@ -2,155 +2,503 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A3CC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A47C33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 434C5217F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:12:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="XNXkH6Sc"
+	by mail.kernel.org (Postfix) with ESMTP id 586B4217F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:13:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729154AbgAUOMN (ORCPT
+        id S1729246AbgAUONR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 09:12:13 -0500
-Received: from mail-eopbgr80058.outbound.protection.outlook.com ([40.107.8.58]:54286
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727508AbgAUOMN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 09:12:13 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nV+xZ2xxbNyiaDV5Tzs8zPgEh0ev2Yz1BzHFWJ+WzIXJt/+Ju7suACgf8bh1FBBBNph2HJjzXOlOTundKZo62VF8+xOHHbcJeWQbQMpE79DyYToRc1LwMj1DJ4sl1EqjzUCKs3lWePyhqIyDftRc9DKxT4RAMm1UQOvpLjdpleOL0Df/Njr6ALKvBnNK9JX2fusOO9SagQNW/UMtkbkovDkZfupHDUVmYukWCKdC04PwLjSVhgenHOFUQxo8oJB7oVBd/tay2MlrsZvZN4h2yrQlTpFFp1wURNsRrEVyUPsxtSP/yy64I4y39fP+oVcBGU28CdzbtBJvf7XZ34RyBQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JgSIX5Rej5Ob9G+61C5OGPSNuPeBILHSNLndvnJWpCI=;
- b=m0iil/UFUo/T7urjLhc2jMvYETCMVi7LmVfJTiTKkVWBS0jadNciIZhGY7kIxEEzu9EH5r6zsrggT5Kj3ezxm2dfRLDZ3fq9DHHG/E5bwFR0SuDGoaShGbYqqr+eykB1f1/dxPtAqzVxjDD4QENKfBxAcCootu2P+D+uGaomLXt1CHUe0qMNIUvdImy0/O9APr36gs7dd3H9S+ITItyDN4VruDkYABZMZDEDxxlWCucs9furtv3b8N1N5p7J2qPiMPyhZ5Atpsr+PQ+hwRNDk3mYO7RdTI/jqKKlFDCkK4bWYhsiHTEVGg6+MURJB+i/hmD+zEC2ZXnK8ndu7RbgSg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JgSIX5Rej5Ob9G+61C5OGPSNuPeBILHSNLndvnJWpCI=;
- b=XNXkH6ScmAcQgV4/Cphx55LdWCvdAyjmofAygO6R5GC2MYGFphhw0nHyY5EfVT+EVjW9oMfKIzhPogLr+JnIzp5JQHjiaiIIltNe5fTz3N2sIr+f/DBuW+VCHbVRlBkpFirJbvredPY2cjxz0hnrtuX9YHKYXXZnWsGrocZbRrU=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
- VI1PR05MB6126.eurprd05.prod.outlook.com (20.178.205.92) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.23; Tue, 21 Jan 2020 14:12:05 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1c00:7925:d5c6:d60d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1c00:7925:d5c6:d60d%7]) with mapi id 15.20.2644.027; Tue, 21 Jan 2020
- 14:12:05 +0000
-Received: from mlx.ziepe.ca (12.231.255.114) by SN4PR0701CA0039.namprd07.prod.outlook.com (2603:10b6:803:2d::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.18 via Frontend Transport; Tue, 21 Jan 2020 14:12:05 +0000
-Received: from jgg by jggl.ziepe.ca with local (Exim 4.90_1)    (envelope-from <jgg@mellanox.com>)      id 1ituG8-00033E-CM; Tue, 21 Jan 2020 10:12:00 -0400
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-CC:     Jason Wang <jasowang@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "tiwei.bie@intel.com" <tiwei.bie@intel.com>,
-        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
-        "cunming.liang@intel.com" <cunming.liang@intel.com>,
-        "zhihong.wang@intel.com" <zhihong.wang@intel.com>,
-        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
-        "xiao.w.wang@intel.com" <xiao.w.wang@intel.com>,
-        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
-        "lingshan.zhu@intel.com" <lingshan.zhu@intel.com>,
-        "eperezma@redhat.com" <eperezma@redhat.com>,
-        "lulu@redhat.com" <lulu@redhat.com>,
-        Parav Pandit <parav@mellanox.com>,
-        "kevin.tian@intel.com" <kevin.tian@intel.com>,
-        "stefanha@redhat.com" <stefanha@redhat.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "aadam@redhat.com" <aadam@redhat.com>,
-        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Shahaf Shuler <shahafs@mellanox.com>,
-        "hanand@xilinx.com" <hanand@xilinx.com>,
-        "mhabets@solarflare.com" <mhabets@solarflare.com>
-Subject: Re: [PATCH 3/5] vDPA: introduce vDPA bus
-Thread-Topic: [PATCH 3/5] vDPA: introduce vDPA bus
-Thread-Index: AQHVzGqUgTlkW8H4N0+zRVK4Lh0XAKftaJqAgADD3wCAALX/gIAEm9kAgABdJwCAAESHAIABEKoA
-Date:   Tue, 21 Jan 2020 14:12:05 +0000
-Message-ID: <20200121141200.GC12330@mellanox.com>
-References: <20200116124231.20253-1-jasowang@redhat.com>
- <20200116124231.20253-4-jasowang@redhat.com>
- <20200116152209.GH20978@mellanox.com>
- <03cfbcc2-fef0-c9d8-0b08-798b2a293b8c@redhat.com>
- <20200117135435.GU20978@mellanox.com>
- <20200120071406-mutt-send-email-mst@kernel.org>
- <20200120175050.GC3891@mellanox.com>
- <20200120164916-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20200120164916-mutt-send-email-mst@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN4PR0701CA0039.namprd07.prod.outlook.com
- (2603:10b6:803:2d::28) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [12.231.255.114]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: fc192fcb-d9e4-47f8-e8bf-08d79e7be4d2
-x-ms-traffictypediagnostic: VI1PR05MB6126:|VI1PR05MB6126:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR05MB612633D15B57B70EBD5E9DDCCF0D0@VI1PR05MB6126.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0289B6431E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(396003)(376002)(136003)(346002)(199004)(189003)(26005)(81156014)(86362001)(7416002)(6916009)(71200400001)(52116002)(8936002)(186003)(1076003)(478600001)(33656002)(4744005)(81166006)(8676002)(2616005)(5660300002)(4326008)(9746002)(66556008)(36756003)(66476007)(66946007)(9786002)(64756008)(66446008)(54906003)(2906002)(316002)(24400500001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6126;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: AkQT1Jvn7vb1mlkKQ70NhJBVP3lvAQ1BXMCNDIrqYDYT1ifl6hcQBTBYKgHwfm0770Ulz3HgleTHxUaSBR8Ze77cOcICPhIrqhQ0Ak10NJrI0M87xygRwjl7aKyIKLSXM0trdhG7hEC0ilDoS7EPcNFSkM3gZH5AyZ40d7KHt7EJCRmzXUGqJuZdiScwUx4xn5VJdxNCYl2A48vioe5zGX8zrDkUhSkf8ZWuNwsjY5hFPZ9att+KzlCyOs4/7wb3nSlpdMckMxZ5JyJwzV83m9AX8eWPV23jDbahkw44z4iflUM2GPz6bqwKfET82zyYBKMSCqtuVXKWNwPVtWOq/Bk7ASks/UUOTI61fjSLZxug3abbEeWdIvgx4iGTu8K86h9C9ztxzkaowPgO580Q8lMmGXHrSHmIir0ihLD6RHBPKmWginE2NgpQxeMVV477bezBDlAJ/JGheyFHOigoSmMFgj2fEtVK9jSzfn2cKxgadf1ThjaoqBngjn76lQJl
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <94EE7557C61D6249B42BBC493D5A18F4@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 21 Jan 2020 09:13:17 -0500
+Received: from mail.manjaro.org ([176.9.38.148]:55100 "EHLO manjaro.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729162AbgAUONQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 09:13:16 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by manjaro.org (Postfix) with ESMTP id D66FD37E1762;
+        Tue, 21 Jan 2020 15:13:13 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at manjaro.org
+Received: from manjaro.org ([127.0.0.1])
+        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 15c4yKmLzXHI; Tue, 21 Jan 2020 15:13:06 +0100 (CET)
+Subject: Re: [PATCH 2/2] arm64: dts: rockchip: Add initial support for
+ Pinebook Pro
+To:     Emmanuel Vadot <manu@freebsd.org>, heiko@sntech.de,
+        pbrobinson@gmail.com
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, andy.yan@rock-chips.com,
+        robin.murphy@arm.com, nick@khadas.com, kever.yang@rock-chips.com,
+        m.reichl@fivetechno.de, aballier@gentoo.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200116225617.6318-1-manu@freebsd.org>
+ <20200116225617.6318-2-manu@freebsd.org>
+From:   Tobias Schramm <t.schramm@manjaro.org>
+Autocrypt: addr=tobias@t-sys.eu; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <477e2602-d740-5954-5573-87db5fd83888@manjaro.org>
+Date:   Tue, 21 Jan 2020 15:13:06 +0100
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fc192fcb-d9e4-47f8-e8bf-08d79e7be4d2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jan 2020 14:12:05.5056
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: aV75+HY1W3XMM5wwesld8kaLEunXJ6LpK1HZEnE3lxjdvZvWvYWRIbX9sAfZCZ7YeWiWtH82yIMu5IIBnhJtsw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6126
+In-Reply-To: <20200116225617.6318-2-manu@freebsd.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US-large
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 04:56:06PM -0500, Michael S. Tsirkin wrote:
-> > For vfio? vfio is the only thing I am aware doing
-> > that, and this is not vfio..
->=20
-> vfio is not doing anything. anyone can use a combination
-> of unbind and driver_override to attach a driver to a device.
->=20
-> It's not a great interface but it's there without any code,
-> and it will stay there without maintainance overhead
-> if we later add a nicer one.
+Hi,
 
-Well, it is not a great interface, and it is only really used in
-normal cases by vfio.
+I do strongly oppose merging this DTS. It is missing several device
+components (for example the eDP panel and the lid switch) and the power
+supply setup does not reflect the implementation in the device at all.
+Also some control/irq GPIOs are incorrect. See comments below.
 
-I don't think it is a good idea to design new subsystems with that
-idea in mind, particularly since detatching the vdpa driver would not
-trigger destruction of the underlying dynamic resource (ie the SF).
+The schematic of the Pinebook Pro can be found here:
+http://files.pine64.org/doc/PinebookPro/pinebookpro_v2.1_mainboard_schematic.pdf
 
-We need a way to trigger that destruction..
+I'm currently planning on submitting a DTS with correct power supply and
+GPIO setup as well as more supported hardware components late February.
+Unfortunately I won't get around to doing it any sooner.
 
-Jason=20
+Current state of the DTS can be found here:
+https://gitlab.manjaro.org/tsys/linux-pinebook-pro/blob/v5.5-rc7/arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts
+
+
+> From: Peter Robinson <pbrobinson@gmail.com>
+> 
+
+> +	gpio-keys {
+> +		compatible = "gpio-keys";
+> +		autorepeat;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pwrbtn>;
+> +
+> +		power {
+> +			debounce-interval = <100>;
+> +			gpios = <&gpio0 RK_PA5 GPIO_ACTIVE_LOW>;
+> +			label = "GPIO Key Power";
+> +			linux,code = <KEY_POWER>;
+> +			wakeup-source;
+> +		};
+
+Missing lid switch
+> +	};
+> +
+> +	leds {
+> +		status = "okay";
+> +		compatible = "gpio-leds";
+> +
+> +		work-led {
+> +			label = "work";
+> +			gpios = <&gpio0 RK_PB3 GPIO_ACTIVE_HIGH>;
+> +		};
+> +
+> +		standby-led {
+> +			label = "standby";
+> +			gpios = <&gpio0 RK_PA2 GPIO_ACTIVE_HIGH>;
+> +		};
+> +	};
+> +
+> +	vcc1v8_s3: vcca1v8_s3: vcc1v8-s3 {
+vcc1v8_s3 and vcca1v8_s3 are not the same. They are powered from
+different vin supplies.
+
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc1v8_s3";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <1800000>;
+> +		vin-supply = <&vcc_1v8>;
+> +	};
+> +
+> +	dc_12v: dc-12v {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "dc_12v";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <12000000>;
+> +		regulator-max-microvolt = <12000000>;
+> +	};
+There is no primary 12 V supply on the Pinebook Pro
+
+> +
+> +	vcc3v3_sys: vcc3v3-sys {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc3v3_sys";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		vin-supply = <&vcc_sys>;
+> +	};
+> +
+> +	vcc5v0_host: vcc5v0-host-regulator {
+> +		compatible = "regulator-fixed";
+> +		gpio = <&gpio4 RK_PD2 GPIO_ACTIVE_HIGH>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&host_vbus_drv>;
+> +		regulator-name = "vcc5v0_host";
+> +	};
+> +
+> +	vcc5v0_usb3_host: vcc5v0-usb3-host-regulator {
+> +		compatible = "regulator-fixed";
+> +		enable-active-high;
+> +		gpio = <&gpio1 RK_PB5 GPIO_ACTIVE_HIGH>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&host_usb3_drv>;
+> +		regulator-name = "vcc5v0_usb3_host";
+> +		regulator-always-on;
+> +	};
+> +
+> +	vcc3v3_s0: vcc3v3-s0-regulator {
+> +		compatible = "regulator-fixed";
+> +		enable-active-high;
+> +		gpio = <&gpio1 RK_PC6 GPIO_ACTIVE_HIGH>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&lcdvcc_en>;
+> +		regulator-name = "vcc3v3_s0";
+> +		regulator-always-on;
+> +	};
+> +
+> +	vcc_sys: vcc-sys {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc_sys";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		vin-supply = <&dc_12v>;
+> +	};
+> +The main system voltage is not 5 V and it is not powered by a 12 V rail
+
+> +	vdd_log: vdd-log {
+> +		compatible = "pwm-regulator";
+> +		pwms = <&pwm2 0 25000 1>;
+> +		pwm-supply = <&vcc_sys>;
+> +		regulator-name = "vdd_log";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-init-microvolt = <950000>;
+> +		regulator-min-microvolt = <800000>;
+> +		regulator-max-microvolt = <1400000>;
+> +	};
+> +};
+> +
+
+Regulators for backlight, 0.9 V rail, USB-C power out and SD card power
+are missing
+
+Also most regulator names do not match the names of the power rails in
+the schematic
+
+> +&cpu_l0 {
+> +	cpu-supply = <&vdd_cpu_l>;
+> +};
+> +
+> +&cpu_l1 {
+> +	cpu-supply = <&vdd_cpu_l>;
+> +};
+> +
+> +&cpu_l2 {
+> +	cpu-supply = <&vdd_cpu_l>;
+> +};
+> +
+> +&cpu_l3 {
+> +	cpu-supply = <&vdd_cpu_l>;
+> +};
+> +
+> +&emmc_phy {
+> +	status = "okay";
+> +};
+> +
+> +&i2c0 {
+> +	clock-frequency = <400000>;
+> +	i2c-scl-rising-time-ns = <168>;
+> +	i2c-scl-falling-time-ns = <4>;
+> +	status = "okay";
+> +
+> +	rk808: pmic@1b {
+> +		compatible = "rockchip,rk808";
+> +		reg = <0x1b>;
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <21 IRQ_TYPE_LEVEL_LOW>;
+Interrupt GPIO is not correct, should be 10. This will stop the RTC from
+working correctly.
+
+> +		#clock-cells = <1>;
+> +		clock-output-names = "xin32k", "rk808-clkout2";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pmic_int_l>;
+> +		rockchip,system-power-controller;
+> +		wakeup-source;
+> +
+> +		vcc1-supply = <&vcc_sys>;
+> +		vcc2-supply = <&vcc_sys>;
+> +		vcc3-supply = <&vcc_sys>;
+> +		vcc4-supply = <&vcc_sys>;
+> +		vcc6-supply = <&vcc_sys>;
+> +		vcc7-supply = <&vcc_sys>;
+> +		vcc8-supply = <&vcc3v3_sys>;
+> +		vcc9-supply = <&vcc_sys>;
+> +		vcc10-supply = <&vcc_sys>;
+> +		vcc11-supply = <&vcc_sys>;
+> +		vcc12-supply = <&vcc3v3_sys>;
+> +		vddio-supply = <&vcc_1v8>;
+vddio-supply is not vcc_1v8 but vcc_3v0
+
+> +
+> +		regulators {
+> +			vdd_center: DCDC_REG1 {
+> +				regulator-name = "vdd_center";
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <750000>;
+> +				regulator-max-microvolt = <1350000>;
+> +				regulator-ramp-delay = <6001>;
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			vdd_cpu_l: DCDC_REG2 {
+> +				regulator-name = "vdd_cpu_l";
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <750000>;
+> +				regulator-max-microvolt = <1350000>;
+> +				regulator-ramp-delay = <6001>;
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			vcc_ddr: DCDC_REG3 {
+> +				regulator-name = "vcc_ddr";
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +				};
+> +			};
+> +
+> +			vcc_1v8: DCDC_REG4 {
+> +				regulator-name = "vcc_1v8";
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <1800000>;
+> +				};
+> +			};
+> +
+> +			vcc1v8_dvp: LDO_REG1 {
+> +				regulator-name = "vcc1v8_dvp";
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			vcc3v0_touch: LDO_REG2 {
+> +				regulator-name = "vcc3v0_touch";
+> +				regulator-min-microvolt = <3000000>;
+> +				regulator-max-microvolt = <3000000>;
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <3000000>;
+> +				};
+> +			};
+> +
+> +			vcc1v8_pmu: LDO_REG3 {
+> +				regulator-name = "vcc1v8_pmu";
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <1800000>;
+> +				};
+> +			};
+> +
+> +			vcc_sdio: LDO_REG4 {
+> +				regulator-name = "vcc_sdio";
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <3300000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <3300000>;
+> +				};
+> +			};
+> +
+> +			vcca3v0_codec: LDO_REG5 {
+> +				regulator-name = "vcca3v0_codec";
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <3000000>;
+> +				regulator-max-microvolt = <3000000>;
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			vcc_1v5: LDO_REG6 {
+> +				regulator-name = "vcc_1v5";
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <1500000>;
+> +				regulator-max-microvolt = <1500000>;
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <1500000>;
+> +				};
+> +			};
+> +
+> +			vcca1v8_codec: LDO_REG7 {
+> +				regulator-name = "vcca1v8_codec";
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			vcc_3v0: LDO_REG8 {
+> +				regulator-name = "vcc_3v0";
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <3000000>;
+> +				regulator-max-microvolt = <3000000>;
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <3000000>;
+> +				};
+> +			};
+> +
+> +			vcc3v3_s3: SWITCH_REG1 {
+> +				regulator-name = "vcc3v3_s3";
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			switch_reg2: SWITCH_REG2 {
+> +				regulator-name = "SWITCH_REG2";
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	vdd_cpu_b: regulator@40 {
+> +		compatible = "silergy,syr827";
+> +		reg = <0x40>;
+> +		fcs,suspend-voltage-selector = <1>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&vsel1_gpio>;
+> +		vsel-gpios = <&gpio1 RK_PC1 GPIO_ACTIVE_HIGH>;
+> +		regulator-compatible = "fan53555-reg";
+> +		regulator-name = "vdd_cpu_b";
+> +		regulator-min-microvolt = <712500>;
+> +		regulator-max-microvolt = <1500000>;
+> +		regulator-ramp-delay = <1000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		vin-supply = <&vcc_sys>;
+> +
+> +		regulator-state-mem {
+> +			regulator-off-in-suspend;
+> +		};
+> +	};
+> +
+> +	vdd_gpu: regulator@41 {
+> +		compatible = "silergy,syr828";
+> +		reg = <0x41>;
+> +		fcs,suspend-voltage-selector = <1>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&vsel2_gpio>;
+> +		vsel-gpios = <&gpio1 RK_PB6 GPIO_ACTIVE_HIGH>;
+> +		regulator-compatible = "fan53555-reg";
+> +		regulator-name = "vdd_gpu";
+> +		regulator-min-microvolt = <712500>;
+> +		regulator-max-microvolt = <1500000>;
+> +		regulator-ramp-delay = <1000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		vin-supply = <&vcc_sys>;
+> +
+> +		regulator-state-mem {
+> +			regulator-off-in-suspend;
+> +		};
+> +	};
+> +
+> +};
+
+Additionally there a quite a few components missing. This includes the
+aforementioned lid switch and eDP panel but there are also a battery
+gauge, two chargers, a es8316 audio codec, two speaker amplifiers and a
+BT/WiFi module.
+
+Best regards,
+
+Tobias
+
