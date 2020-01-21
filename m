@@ -2,114 +2,189 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE7EC33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D11A2C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8553E217F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:38:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8DDE217F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:39:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I4Il4xqb"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ED4FbTQW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729208AbgAUJiC (ORCPT
+        id S1729224AbgAUJjm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 04:38:02 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46821 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727962AbgAUJiC (ORCPT
+        Tue, 21 Jan 2020 04:39:42 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:31397 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725789AbgAUJjl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 04:38:02 -0500
-Received: by mail-wr1-f67.google.com with SMTP id z7so2289924wrl.13
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 01:38:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+M730A48Aqh4pFSc6/yOGVnR2p3jp3qMHztEPqPnpzo=;
-        b=I4Il4xqb/mQRJaa0qSSl+Y25gZ18e057wP1tdP0lh2yLeaVpX0hadSOR4cl/LQpB3Q
-         tyaDpcGYEDRokttwYZKiVcZfJVF8EHoSYV8AeT5Pk8Cx7E9Px1VKdhTcXR1aAUSJd42D
-         xFOr6MeGSxv5TF/P/YEky3SS2IZFj68f7cxUiU1OZ4UxuYB744pGOuVT1Fv5ZBgPKRCQ
-         7lN+SeGd90TfRO9gjPQRhJKb/pkMVZLlA3k0gUeRo6+ZVDTta1IW1eGaQBVEL1GveVLC
-         n0vz510kYT0OpN/IyanOQzCHQTHpjRTMgbVeaY/5N811ccD6PckCAVfLKOa3fN1tAM5n
-         aJ0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+M730A48Aqh4pFSc6/yOGVnR2p3jp3qMHztEPqPnpzo=;
-        b=axMqLRJnYpSfiu4kC6BnxENka1YcbBbouljpGodbNSSmOKGmWKCaWynWdqfrYqFLkP
-         P9X2IQk/ySCVYTLSJImc2yVfr36O5lyAlCXZnfDaGbGCAR5E0Z7/jMjBSC7X14bvOWCp
-         xkwrLRdsURanvg4lJkOCBocaq2074no1m1EIpG/X7O20zXxBIjlETxY5qw/kPjuSwxeQ
-         V06PAx17VF7WU/YijYiGfsD1lPEjX3i62wQybTrzybHrkyF3HUdIrq0PKeJDhri7DM7x
-         UFnSCFjpktJR2sU4pGLp+toXZw3TAgqB9dikuvgboa8EAVutcpYUItONis17jkEjm9sg
-         D2pg==
-X-Gm-Message-State: APjAAAXvRYDODKys7Q0YdPCgX0i2REPO0Te6dytguvIPvpzEdcW9e8UE
-        S7MOuWMguDpkuRNsgFu7vdnD9b1t4aeAI1nO
-X-Google-Smtp-Source: APXvYqzNPRBGH9fYa6XMUb9Kcbd+L9DaQWdS1c4YXNu4dlR3oazpTgiDZXxcGp6bVMzhgy2FLbeDYg==
-X-Received: by 2002:adf:dfc2:: with SMTP id q2mr4336811wrn.251.1579599479951;
-        Tue, 21 Jan 2020 01:37:59 -0800 (PST)
-Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
-        by smtp.gmail.com with ESMTPSA id u22sm54210033wru.30.2020.01.21.01.37.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 01:37:59 -0800 (PST)
-Date:   Tue, 21 Jan 2020 09:37:55 +0000
-From:   Quentin Perret <qperret@google.com>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com, Morten.Rasmussen@arm.com, Chris.Redpath@arm.com,
-        ionela.voinescu@arm.com, javi.merino@arm.com,
-        cw00.choi@samsung.com, b.zolnierkie@samsung.com, rjw@rjwysocki.net,
-        sudeep.holla@arm.com, viresh.kumar@linaro.org, nm@ti.com,
-        sboyd@kernel.org, rui.zhang@intel.com, amit.kucheria@verdurent.com,
-        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
-        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, kernel-team@android.com
-Subject: Re: [PATCH 1/4] PM / EM: and devices to Energy Model
-Message-ID: <20200121093755.GA157387@google.com>
-References: <20200116152032.11301-1-lukasz.luba@arm.com>
- <20200116152032.11301-2-lukasz.luba@arm.com>
- <20200117105437.GA211774@google.com>
- <40587d98-0e8d-cbac-dbf5-d26501d47a8c@arm.com>
- <20200120150918.GA164543@google.com>
- <8332c4ac-2a7d-1e2d-76e9-7c979a666257@arm.com>
- <b02da0ed-9e0b-36db-9813-daa334cbf2ba@arm.com>
- <c9910c74-ab47-0c78-a1c7-4f3978e1dd09@arm.com>
+        Tue, 21 Jan 2020 04:39:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579599579;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=kgGWPH2qJri2TmOIIhSVNudNErzIIx6+vIt4WpsZSc0=;
+        b=ED4FbTQWIZubDh/R7oZQk/dP5a1CLmdltW5vznES9p4rDlIbC8cMPiUcj8t3+cWXTEETTD
+        maFivL+L+yUa86QWBkeL8mAwHO/6aH8WqR3cYiGak+MhX2cy1yXoos2+RuLCvDS9vWHFTG
+        GuxL2mG1kHQYCcQeuhJ0lOI/qdUqb4c=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-167-vlmfGg1DMDiWOGcO6XPaqw-1; Tue, 21 Jan 2020 04:39:37 -0500
+X-MC-Unique: vlmfGg1DMDiWOGcO6XPaqw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D0E7C8010DC;
+        Tue, 21 Jan 2020 09:39:33 +0000 (UTC)
+Received: from [10.72.12.103] (ovpn-12-103.pek2.redhat.com [10.72.12.103])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8CE6419C6A;
+        Tue, 21 Jan 2020 09:39:17 +0000 (UTC)
+Subject: Re: [PATCH 0/5] vDPA support
+To:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "mst@redhat.com" <mst@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Cc:     "Bie, Tiwei" <tiwei.bie@intel.com>,
+        "jgg@mellanox.com" <jgg@mellanox.com>,
+        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
+        "Liang, Cunming" <cunming.liang@intel.com>,
+        "Wang, Zhihong" <zhihong.wang@intel.com>,
+        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
+        "Wang, Xiao W" <xiao.w.wang@intel.com>,
+        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
+        "Zhu, Lingshan" <lingshan.zhu@intel.com>,
+        "eperezma@redhat.com" <eperezma@redhat.com>,
+        "lulu@redhat.com" <lulu@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "stefanha@redhat.com" <stefanha@redhat.com>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "hch@infradead.org" <hch@infradead.org>,
+        "aadam@redhat.com" <aadam@redhat.com>,
+        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
+        "jiri@mellanox.com" <jiri@mellanox.com>,
+        "shahafs@mellanox.com" <shahafs@mellanox.com>,
+        "hanand@xilinx.com" <hanand@xilinx.com>,
+        "mhabets@solarflare.com" <mhabets@solarflare.com>
+References: <20200116124231.20253-1-jasowang@redhat.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D73EC6B@SHSMSX104.ccr.corp.intel.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <0185b91a-f984-681e-b7c0-af8eca81d053@redhat.com>
+Date:   Tue, 21 Jan 2020 17:39:15 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c9910c74-ab47-0c78-a1c7-4f3978e1dd09@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D73EC6B@SHSMSX104.ccr.corp.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday 21 Jan 2020 at 10:10:16 (+0100), Dietmar Eggemann wrote:
-> True. But then we hard-code that a CPU device performance domain can
-> only be a frequency domain (which is true today).
-> 
-> The task scheduler (build_perf_domains()) and thermal are already using
-> cpufreq_cpu_get() to access the cpufreq policy. Now the EM framework
-> would too for CPU devices. I assume that could work with a couple of
-> adaptations in Documentation/power/energy-model.rst.
 
-Agreed, and if one day we have a real use case where the pd mask and the
-cpufreq policy mask need to be different, we'll do the necessary
-changes. But until then I don't see a reason to object to Lukasz'
-proposal. So +1 from me.
+On 2020/1/21 =E4=B8=8B=E5=8D=884:44, Tian, Kevin wrote:
+>> From: Jason Wang
+>> Sent: Thursday, January 16, 2020 8:42 PM
+>>
+>> Hi all:
+>>
+>> Based on the comments and discussion for mdev based hardware virtio
+>> offloading support[1]. A different approach to support vDPA device is
+>> proposed in this series.
+> Can you point to the actual link which triggered the direction change?
+> A quick glimpse in that thread doesn't reveal such information...
 
-Thanks,
-Quentin
+
+Right, please see this link, the actual discussion happens on the thread=20
+of virtual-bus for some reasons...
+
+https://patchwork.ozlabs.org/patch/1195895/
+
+Thanks
+
+
+>
+>> Instead of leveraging VFIO/mdev which may not work for some
+>> vendors. This series tries to introduce a dedicated vDPA bus and
+>> leverage vhost for userspace drivers. This help for the devices that
+>> are not fit for VFIO and may reduce the conflict when try to propose a
+>> bus template for virtual devices in [1].
+>>
+>> The vDPA support is split into following parts:
+>>
+>> 1) vDPA core (bus, device and driver abstraction)
+>> 2) virtio vDPA transport for kernel virtio driver to control vDPA
+>>     device
+>> 3) vhost vDPA bus driver for userspace vhost driver to control vDPA
+>>     device
+>> 4) vendor vDPA drivers
+>> 5) management API
+>>
+>> Both 1) and 2) are included in this series. Tiwei will work on part
+>> 3). For 4), Ling Shan will work and post IFCVF driver. For 5) we leave
+>> it to vendor to implement, but it's better to come into an agreement
+>> for management to create/configure/destroy vDPA device.
+>>
+>> The sample driver is kept but renamed to vdap_sim. An on-chip IOMMU
+>> implementation is added to sample device to make it work for both
+>> kernel virtio driver and userspace vhost driver. It implements a sysfs
+>> based management API, but it can switch to any other (e.g devlink) if
+>> necessary.
+>>
+>> Please refer each patch for more information.
+>>
+>> Comments are welcomed.
+>>
+>> [1] https://lkml.org/lkml/2019/11/18/261
+>>
+>> Jason Wang (5):
+>>    vhost: factor out IOTLB
+>>    vringh: IOTLB support
+>>    vDPA: introduce vDPA bus
+>>    virtio: introduce a vDPA based transport
+>>    vdpasim: vDPA device simulator
+>>
+>>   MAINTAINERS                    |   2 +
+>>   drivers/vhost/Kconfig          |   7 +
+>>   drivers/vhost/Kconfig.vringh   |   1 +
+>>   drivers/vhost/Makefile         |   2 +
+>>   drivers/vhost/net.c            |   2 +-
+>>   drivers/vhost/vhost.c          | 221 +++------
+>>   drivers/vhost/vhost.h          |  36 +-
+>>   drivers/vhost/vhost_iotlb.c    | 171 +++++++
+>>   drivers/vhost/vringh.c         | 434 +++++++++++++++++-
+>>   drivers/virtio/Kconfig         |  15 +
+>>   drivers/virtio/Makefile        |   2 +
+>>   drivers/virtio/vdpa/Kconfig    |  26 ++
+>>   drivers/virtio/vdpa/Makefile   |   3 +
+>>   drivers/virtio/vdpa/vdpa.c     | 141 ++++++
+>>   drivers/virtio/vdpa/vdpa_sim.c | 796
+>> +++++++++++++++++++++++++++++++++
+>>   drivers/virtio/virtio_vdpa.c   | 400 +++++++++++++++++
+>>   include/linux/vdpa.h           | 191 ++++++++
+>>   include/linux/vhost_iotlb.h    |  45 ++
+>>   include/linux/vringh.h         |  36 ++
+>>   19 files changed, 2327 insertions(+), 204 deletions(-)
+>>   create mode 100644 drivers/vhost/vhost_iotlb.c
+>>   create mode 100644 drivers/virtio/vdpa/Kconfig
+>>   create mode 100644 drivers/virtio/vdpa/Makefile
+>>   create mode 100644 drivers/virtio/vdpa/vdpa.c
+>>   create mode 100644 drivers/virtio/vdpa/vdpa_sim.c
+>>   create mode 100644 drivers/virtio/virtio_vdpa.c
+>>   create mode 100644 include/linux/vdpa.h
+>>   create mode 100644 include/linux/vhost_iotlb.h
+>>
+>> --
+>> 2.19.1
+
