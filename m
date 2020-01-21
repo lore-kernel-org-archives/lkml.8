@@ -7,99 +7,86 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F7FBC33CAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 22:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F4AC33CAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 22:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F8C024125
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 22:00:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BC2624125
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 22:00:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579644042;
-	bh=jjd2W55JSywcf78Gs8efzi1YR2Q4ypi+HLytDtUj1NE=;
+	s=default; t=1579644048;
+	bh=+0e41r4X45rHgBl2CxkV5kzTLK9zurmVlZ04NxbAUUU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=E3drY/H5mWctopMKdP1ukYVCTG8NnJd/CWy2YI+TxqbNg41n9rN5SiteVuuccrdZ3
-	 Gi618qwOlac3AQZVzLngw7Reel493DOUtQ6ADSfAfXom+Iu7/CV6tE409I04Q9mQLR
-	 eFMyPtiAVfYP9ezY8qPqpBAap89wWZ2T4Qt9+YQQ=
+	b=U27+R8mW/wC77/h/rX7k/SPppJjQIuXanvjikcMuXOOJQmA0vcYSj3DGQDTbnNb/V
+	 nkLkbvM2FFkNK83Z8sOMJd9Vz3KEEYb0SL42xcepYdlBe2LIqp0O+xmdpyPToky0/j
+	 iCLlcl8+2UTTD6vhstdHPlghWweqw76yJXEFEB6w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728984AbgAUWAl (ORCPT
+        id S1729073AbgAUWAs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 17:00:41 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:37244 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727847AbgAUWAl (ORCPT
+        Tue, 21 Jan 2020 17:00:48 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:37623 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727847AbgAUWAr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 17:00:41 -0500
-Received: by mail-ot1-f68.google.com with SMTP id k14so4444559otn.4;
-        Tue, 21 Jan 2020 14:00:40 -0800 (PST)
+        Tue, 21 Jan 2020 17:00:47 -0500
+Received: by mail-oi1-f195.google.com with SMTP id z64so4158490oia.4;
+        Tue, 21 Jan 2020 14:00:46 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YR+Zx3t0R9EtJawzXHJuAJ023/cuhAooUF5TnzNGC0s=;
-        b=Oc+jRRcUlG7fvjhGZa1/ptuvAOYN7VQvXPKg0qX2NHvHg8WfEK99GQAJRhbc7HHSaH
-         ukjkZh2UuZqvBlOML7iESAj4NR74bFyWf7lMHsoHI8MpGUhkBOZPQ9F1lfNGQdRNYsXp
-         0yKvIfjNp2gAFUX8l+Y+MjlG0X/GaKAOP0+ZdSGe5vq1OiyMDDJVGE8IdJmhO1yt49be
-         DGDc1X0Sb5flMwiajBj8Rb4Rpn7XdsMOFeMq3F2e8822GA5y0+tn0zDzGPBrKmOKIe+W
-         0NAZ3ayFq3jRXYeheftJwrkW4nVp+uc7yCOSZJ+CLU/uvlokiZgoISwwQJQx7TArknvs
-         w5uQ==
-X-Gm-Message-State: APjAAAUu+NEKmWhSUdZc/F957TzckkZzwEYl6f8QDkAc2vJ4L+ptYlnJ
-        2uv0mNwOwKGYvwG/L2JT2VUkQoo=
-X-Google-Smtp-Source: APXvYqxcLtKqgiW0rjqOQtnpGB4zMIDBsBFxY3KVfQ8Uv1rKit0T2fEj2ciq1t+IrUPzAInLx3dGkw==
-X-Received: by 2002:a9d:588d:: with SMTP id x13mr5021535otg.6.1579644040203;
-        Tue, 21 Jan 2020 14:00:40 -0800 (PST)
+        bh=p2Aap5NFUqMa77n/+b3hDbspOjP5JJgkLK77uRQX50E=;
+        b=my9OeU7Jnu4ZR2GkAxzppgxkn9Eje108fXeJaadpBRU19HAmI2YTJuV0P8uO4bZMJK
+         ih8fxJofshbTBUSrNKVQRWX6iXWqg5MPjZJycKcCwruhO9l5cE1ZYfVC5uLcdAMcAO0H
+         A5yVxPdNQ2LD4nJ7uPuY6jL0NFRTEhUCKNqGv1lulQl0U+QSsqfLifgYqSqVw6n9OQ/j
+         yGM/lemk5Zohf2SPj9bmpKs2oW7nwlxJm/PuUr2Wmt98H3p5Z6XGY5wOZF3+MJ3pQ6eZ
+         2JFUXELKdDnrpvmSvSbzoGHCuJPaWzAuyZpfuv4vGO1cqoXOyKnx8cq7naYXXe/mXgdt
+         eHUA==
+X-Gm-Message-State: APjAAAXopIVsfomYa55usnTfpT14pkJHcmpSFalGrRDfX+TcyEB+Jk4M
+        9zro6V0zrl/dPb4CIOzgfg==
+X-Google-Smtp-Source: APXvYqxKBYMeO352fDo1BAP8tkycFEuGstxKeRhGS0pwBdWJpiC1n2wUfiMqntTT/6xQkubrVGgV4w==
+X-Received: by 2002:aca:3241:: with SMTP id y62mr4611216oiy.31.1579644046532;
+        Tue, 21 Jan 2020 14:00:46 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 15sm9071739otv.20.2020.01.21.14.00.38
+        by smtp.gmail.com with ESMTPSA id n2sm12341870oia.58.2020.01.21.14.00.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 14:00:39 -0800 (PST)
-Received: (nullmailer pid 13825 invoked by uid 1000);
-        Tue, 21 Jan 2020 22:00:38 -0000
-Date:   Tue, 21 Jan 2020 16:00:38 -0600
+        Tue, 21 Jan 2020 14:00:46 -0800 (PST)
+Received: (nullmailer pid 13995 invoked by uid 1000);
+        Tue, 21 Jan 2020 22:00:45 -0000
+Date:   Tue, 21 Jan 2020 16:00:45 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Jian Hu <jian.hu@amlogic.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jian Hu <jian.hu@amlogic.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Rob Herring <robh@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Chandle Zou <chandle.zou@amlogic.com>,
-        linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v7 1/5] dt-bindings: clock: meson: add A1 PLL clock
- controller bindings
-Message-ID: <20200121220038.GA13566@bogus>
-References: <20200120034937.128600-1-jian.hu@amlogic.com>
- <20200120034937.128600-2-jian.hu@amlogic.com>
+        Linux-imx@nxp.com
+Subject: Re: [PATCH V2 1/3] dt-bindings: clock: Convert i.MX8MQ to json-schema
+Message-ID: <20200121220045.GB13566@bogus>
+References: <1578965167-31588-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200120034937.128600-2-jian.hu@amlogic.com>
+In-Reply-To: <1578965167-31588-1-git-send-email-Anson.Huang@nxp.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jan 2020 11:49:33 +0800, Jian Hu wrote:
-> Add the documentation to support Amlogic A1 PLL clock driver,
-> and add A1 PLL clock controller bindings.
+On Tue, 14 Jan 2020 09:26:05 +0800, Anson Huang wrote:
+> Convert the i.MX8MQ clock binding to DT schema format using json-schema
 > 
-> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
->  .../bindings/clock/amlogic,a1-pll-clkc.yaml   | 52 +++++++++++++++++++
->  include/dt-bindings/clock/a1-pll-clkc.h       | 16 ++++++
->  2 files changed, 68 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
->  create mode 100644 include/dt-bindings/clock/a1-pll-clkc.h
+> Changes since V1:
+> 	- Correct the compatible string, should be "fsl,imx8mq-ccm";
+> ---
+>  .../devicetree/bindings/clock/imx8mq-clock.txt     | 20 ------
+>  .../devicetree/bindings/clock/imx8mq-clock.yaml    | 72 ++++++++++++++++++++++
+>  2 files changed, 72 insertions(+), 20 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/clock/imx8mq-clock.txt
+>  create mode 100644 Documentation/devicetree/bindings/clock/imx8mq-clock.yaml
 > 
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
-
-If a tag was not added on purpose, please state why and what changed.
+Reviewed-by: Rob Herring <robh@kernel.org>
