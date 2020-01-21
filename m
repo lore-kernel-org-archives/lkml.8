@@ -4,117 +4,87 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DD81C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D227C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:56:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B47B20882
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:55:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A82420882
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:56:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729359AbgAUJzp (ORCPT
+        id S1729316AbgAUJ4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 04:55:45 -0500
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:47189 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728797AbgAUJzp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 04:55:45 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R631e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07484;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0ToHe2sg_1579600542;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0ToHe2sg_1579600542)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 21 Jan 2020 17:55:42 +0800
-Subject: Re: [PATCH] pcmcia/cm4000: remove useless variable tmp
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Harald Welte <laforge@gnumonks.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1579596599-258299-1-git-send-email-alex.shi@linux.alibaba.com>
- <CAK8P3a0LJETeKbQvs-EeQ1cF84gVO3JS75SOZYD0F+puWhi9=w@mail.gmail.com>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <37f03cf9-5666-7561-13f6-2ff72e936b7a@linux.alibaba.com>
-Date:   Tue, 21 Jan 2020 17:53:53 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.3.1
+        Tue, 21 Jan 2020 04:56:11 -0500
+Received: from foss.arm.com ([217.140.110.172]:40396 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728797AbgAUJ4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 04:56:11 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DB75E1FB;
+        Tue, 21 Jan 2020 01:56:10 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6C87D3F6C4;
+        Tue, 21 Jan 2020 01:56:07 -0800 (PST)
+Subject: Re: [Patch v3 3/3] iommu: avoid taking iova_rbtree_lock twice
+To:     Cong Wang <xiyou.wangcong@gmail.com>,
+        iommu@lists.linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, joro@8bytes.org,
+        John Garry <john.garry@huawei.com>
+References: <20191218043951.10534-1-xiyou.wangcong@gmail.com>
+ <20191218043951.10534-4-xiyou.wangcong@gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <2ff1002c-28b3-a863-49d2-3eab5b5ea778@arm.com>
+Date:   Tue, 21 Jan 2020 09:56:06 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a0LJETeKbQvs-EeQ1cF84gVO3JS75SOZYD0F+puWhi9=w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191218043951.10534-4-xiyou.wangcong@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-在 2020/1/21 下午5:08, Arnd Bergmann 写道:
-> On Tue, Jan 21, 2020 at 9:50 AM Alex Shi <alex.shi@linux.alibaba.com> wrote:
->>
->> No one care the value of 'tmp' in func cmm_write. better to remove it.
+On 18/12/2019 4:39 am, Cong Wang wrote:
+> Both find_iova() and __free_iova() take iova_rbtree_lock,
+> there is no reason to take and release it twice inside
+> free_iova().
 > 
-> Hi Alex,
+> Fold them into one critical section by calling the unlock
+> versions instead.
+
+Makes sense to me.
+
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: John Garry <john.garry@huawei.com>
+> Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+> ---
+>   drivers/iommu/iova.c | 8 ++++++--
+>   1 file changed, 6 insertions(+), 2 deletions(-)
 > 
->> @@ -1146,7 +1145,7 @@ static ssize_t cmm_write(struct file *filp, const char __user *buf,
->>         set_cardparameter(dev);
->>
->>         /* dummy read, reset flag procedure received */
->> -       tmp = inb(REG_FLAGS1(iobase));
->> +       inb(REG_FLAGS1(iobase));
+> diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
+> index 184d4c0e20b5..f46f8f794678 100644
+> --- a/drivers/iommu/iova.c
+> +++ b/drivers/iommu/iova.c
+> @@ -390,10 +390,14 @@ EXPORT_SYMBOL_GPL(__free_iova);
+>   void
+>   free_iova(struct iova_domain *iovad, unsigned long pfn)
+>   {
+> -	struct iova *iova = find_iova(iovad, pfn);
+> +	unsigned long flags;
+> +	struct iova *iova;
+>   
+> +	spin_lock_irqsave(&iovad->iova_rbtree_lock, flags);
+> +	iova = private_find_iova(iovad, pfn);
+>   	if (iova)
+> -		__free_iova(iovad, iova);
+> +		private_free_iova(iovad, iova);
+> +	spin_unlock_irqrestore(&iovad->iova_rbtree_lock, flags);
+>   
+>   }
+>   EXPORT_SYMBOL_GPL(free_iova);
 > 
-> I think this may cause warnings on some architectures, when inb() is a macro
-> that just turns into a pointer dereference. You could write it as
-> 
->      (void)inb(REG_FLAGS1(iobase));
-> 
-> which would not warn anywhere.
-> 
->       Arnd
-> 
-
-Thanks a lot Arnd!
-
-
-From 9e54770c6911ae7da7d2f74774bbef019e459bc9 Mon Sep 17 00:00:00 2001
-From: Alex Shi <alex.shi@linux.alibaba.com>
-Date: Fri, 17 Jan 2020 09:10:47 +0800
-Subject: [PATCH v2] pcmcia/cm4000: remove useless variable tmp
-
-No one care the value of 'tmp' in func cmm_write. better to remove it.
-
-Arnd Bergmann pointed just remove may cause warning in some arch where 
-inb is macro, and suggest add a cast '(void)' for this. Thanks!
-
-Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Harald Welte <laforge@gnumonks.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org
----
- drivers/char/pcmcia/cm4000_cs.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/char/pcmcia/cm4000_cs.c b/drivers/char/pcmcia/cm4000_cs.c
-index 15bf585af5d3..0f55bed6c71f 100644
---- a/drivers/char/pcmcia/cm4000_cs.c
-+++ b/drivers/char/pcmcia/cm4000_cs.c
-@@ -1048,7 +1048,6 @@ static ssize_t cmm_write(struct file *filp, const char __user *buf,
- 	struct cm4000_dev *dev = filp->private_data;
- 	unsigned int iobase = dev->p_dev->resource[0]->start;
- 	unsigned short s;
--	unsigned char tmp;
- 	unsigned char infolen;
- 	unsigned char sendT0;
- 	unsigned short nsend;
-@@ -1146,7 +1145,7 @@ static ssize_t cmm_write(struct file *filp, const char __user *buf,
- 	set_cardparameter(dev);
- 
- 	/* dummy read, reset flag procedure received */
--	tmp = inb(REG_FLAGS1(iobase));
-+	(void)inb(REG_FLAGS1(iobase));
- 
- 	dev->flags1 = 0x20	/* T_Active */
- 	    | (sendT0)
--- 
-1.8.3.1
-
