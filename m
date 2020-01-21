@@ -2,129 +2,473 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6A1C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B22F8C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:22:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B4C3217F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:22:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92A63217F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:22:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729316AbgAUOV7 (ORCPT
+        id S1729332AbgAUOWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 09:21:59 -0500
-Received: from relay.sw.ru ([185.231.240.75]:38308 "EHLO relay.sw.ru"
+        Tue, 21 Jan 2020 09:22:14 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:32990 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729030AbgAUOV7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 09:21:59 -0500
-Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1ituOd-0000iX-C4; Tue, 21 Jan 2020 17:20:47 +0300
-Subject: Re: [PATCH v4 6/7] dm: Directly disable max_allocate_sectors for now
-To:     Mike Snitzer <snitzer@redhat.com>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        martin.petersen@oracle.com, bob.liu@oracle.com, axboe@kernel.dk,
-        agk@redhat.com, dm-devel@redhat.com, song@kernel.org,
-        tytso@mit.edu, adilger.kernel@dilger.ca,
-        Chaitanya.Kulkarni@wdc.com, darrick.wong@oracle.com,
-        ming.lei@redhat.com, osandov@fb.com, jthumshirn@suse.de,
-        minwoo.im.dev@gmail.com, damien.lemoal@wdc.com,
-        andrea.parri@amarulasolutions.com, hare@suse.com, tj@kernel.org,
-        ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
-        bvanassche@acm.org, dhowells@redhat.com, asml.silence@gmail.com
-References: <157960325642.108120.13626623438131044304.stgit@localhost.localdomain>
- <157960337238.108120.18048939587162465175.stgit@localhost.localdomain>
- <20200121122458.GA9365@redhat.com>
- <f7e0fb38-a894-da33-c46b-e192ed907ee0@virtuozzo.com>
- <619a7a14-44e6-eca7-c1ea-3f04abeee53d@virtuozzo.com>
- <20200121134840.GA9944@redhat.com>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <a19d5957-9aaa-b518-5855-e5fa2b5d3b22@virtuozzo.com>
-Date:   Tue, 21 Jan 2020 17:20:46 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1727508AbgAUOWN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 09:22:13 -0500
+Received: from ip092042140082.rev.nessus.at ([92.42.140.82] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1ituPT-000404-Bh; Tue, 21 Jan 2020 15:21:39 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Tobias Schramm <t.schramm@manjaro.org>
+Cc:     Emmanuel Vadot <manu@freebsd.org>, pbrobinson@gmail.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, andy.yan@rock-chips.com,
+        robin.murphy@arm.com, nick@khadas.com, kever.yang@rock-chips.com,
+        m.reichl@fivetechno.de, aballier@gentoo.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] arm64: dts: rockchip: Add initial support for Pinebook Pro
+Date:   Tue, 21 Jan 2020 15:21:38 +0100
+Message-ID: <3785040.Baxn5HRXxd@phil>
+In-Reply-To: <477e2602-d740-5954-5573-87db5fd83888@manjaro.org>
+References: <20200116225617.6318-1-manu@freebsd.org> <20200116225617.6318-2-manu@freebsd.org> <477e2602-d740-5954-5573-87db5fd83888@manjaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20200121134840.GA9944@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21.01.2020 16:48, Mike Snitzer wrote:
-> On Tue, Jan 21 2020 at  8:33am -0500,
-> Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
-> 
->> On 21.01.2020 15:36, Kirill Tkhai wrote:
->>> On 21.01.2020 15:24, Mike Snitzer wrote:
->>>> On Tue, Jan 21 2020 at  5:42am -0500,
->>>> Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
->>>>
->>>>> Since dm inherits limits from underlining block devices,
->>>>> this patch directly disables max_allocate_sectors for dm
->>>>> till full allocation support is implemented.
->>>>>
->>>>> This prevents high-level primitives (generic_make_request_checks(),
->>>>> __blkdev_issue_write_zeroes(), ...) from sending REQ_ALLOCATE
->>>>> requests.
->>>>>
->>>>> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
->>>>> ---
->>>>>  drivers/md/dm-table.c |    2 ++
->>>>>  drivers/md/md.h       |    1 +
->>>>>  2 files changed, 3 insertions(+)
->>>>
->>>> You're mixing DM and MD changes in the same patch.
->>>>
->>>> But I'm wondering if it might be best to set this default for stacking
->>>> devices in blk_set_stacking_limits()?
->>>>
->>>> And then it is up to each stacking driver to override as needed.
->>>
->>> Hm. Sound like a good idea. This "lim->max_allocate_sectors = 0" in blk_set_stacking_limits()
->>> should work for dm's dm_calculate_queue_limits(), since it calls blk_stack_limits(), which is:
->>>
->>> 	t->max_allocate_sectors = min(t->max_allocate_sectors,
->>> 				      b->max_allocate_sectors);
->>>
->>> Could you please tell is this fix is also enough for md?
->>
->> It looks like it's enough since queue defaults are set in md_alloc()->blk_set_stacking_limits().
->> In case of we set "max_allocate_sectors = 0", in further it can be changed only manually,
->> but nobody does this.
-> 
-> Yes, it will work to disable this capability for MD and DM.
-> 
-> But if/when a stacked device _dooes_ want to support this then it'll be
-> awkward to override this stacking default to allow blk_stack_limits()
-> to properly stack up this limit.  blk_limits are extremely fiddley so
-> this isn't necessarily new.  But by explicitly defaulting to 0 and then
-> having blk_stack_limits use min() for this limit: it results in stacking
-> drivers needing to clumsily unwind the default.  E.g. DM will need to
-> tweak its blk_stack_limits() related code to allow override that
-> actually _does_  stack up the underlying devices' capability (and not
-> just impose its own limit that ignores the underlying devices).
-> 
-> So I'm not convinced this is the right way to go (be it the v4 approach
-> you took or the cleaner use of blk_set_stacking_limits I suggested).
+Hi,
 
-Is there a strong vision about the way we should go? Or you leave this choose
-up to me?
+Am Dienstag, 21. Januar 2020, 15:13:06 CET schrieb Tobias Schramm:
+> I do strongly oppose merging this DTS. It is missing several device
+> components (for example the eDP panel and the lid switch) and the power
+> supply setup does not reflect the implementation in the device at all.
+> Also some control/irq GPIOs are incorrect. See comments below.
+> 
+> The schematic of the Pinebook Pro can be found here:
+> http://files.pine64.org/doc/PinebookPro/pinebookpro_v2.1_mainboard_schematic.pdf
+> 
+> I'm currently planning on submitting a DTS with correct power supply and
+> GPIO setup as well as more supported hardware components late February.
+> Unfortunately I won't get around to doing it any sooner.
+> 
+> Current state of the DTS can be found here:
+> https://gitlab.manjaro.org/tsys/linux-pinebook-pro/blob/v5.5-rc7/arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts
 
-> And to be clear, I'm interested in having DM thinp support this
-> capability to preallocate blocks.
+I really like power trees that match the actual schematics, so I'm all
+for it ;-) . I don't have a Pinebook Pro myself, so won't be comparing
+the power-tree to the schematics myself though.
 
-My opinion is it would be better to not mix several subsystem related
-support in a single patch set. Both of the approaches (v4 or that you
-suggested) do not prevents us to implement allocation support in next
-patch series. After we have the base functionality enabled, we may add
-support in other subsystems and drivers one by one with more focus
-on the subsystem specificities and with the best possible attention.
+As for timing, it's too late for 5.6 anyway, so you have time until
+around 5.6-rc5 gets released so around 8 weeks.
 
-Regards,
-Kirill
+The other parts you can coordinate between you ;-)
+
+
+Heiko
+
+> > From: Peter Robinson <pbrobinson@gmail.com>
+> > 
+> 
+> > +	gpio-keys {
+> > +		compatible = "gpio-keys";
+> > +		autorepeat;
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&pwrbtn>;
+> > +
+> > +		power {
+> > +			debounce-interval = <100>;
+> > +			gpios = <&gpio0 RK_PA5 GPIO_ACTIVE_LOW>;
+> > +			label = "GPIO Key Power";
+> > +			linux,code = <KEY_POWER>;
+> > +			wakeup-source;
+> > +		};
+> 
+> Missing lid switch
+> > +	};
+> > +
+> > +	leds {
+> > +		status = "okay";
+> > +		compatible = "gpio-leds";
+> > +
+> > +		work-led {
+> > +			label = "work";
+> > +			gpios = <&gpio0 RK_PB3 GPIO_ACTIVE_HIGH>;
+> > +		};
+> > +
+> > +		standby-led {
+> > +			label = "standby";
+> > +			gpios = <&gpio0 RK_PA2 GPIO_ACTIVE_HIGH>;
+> > +		};
+> > +	};
+> > +
+> > +	vcc1v8_s3: vcca1v8_s3: vcc1v8-s3 {
+> vcc1v8_s3 and vcca1v8_s3 are not the same. They are powered from
+> different vin supplies.
+> 
+> > +		compatible = "regulator-fixed";
+> > +		regulator-name = "vcc1v8_s3";
+> > +		regulator-always-on;
+> > +		regulator-boot-on;
+> > +		regulator-min-microvolt = <1800000>;
+> > +		regulator-max-microvolt = <1800000>;
+> > +		vin-supply = <&vcc_1v8>;
+> > +	};
+> > +
+> > +	dc_12v: dc-12v {
+> > +		compatible = "regulator-fixed";
+> > +		regulator-name = "dc_12v";
+> > +		regulator-always-on;
+> > +		regulator-boot-on;
+> > +		regulator-min-microvolt = <12000000>;
+> > +		regulator-max-microvolt = <12000000>;
+> > +	};
+> There is no primary 12 V supply on the Pinebook Pro
+> 
+> > +
+> > +	vcc3v3_sys: vcc3v3-sys {
+> > +		compatible = "regulator-fixed";
+> > +		regulator-name = "vcc3v3_sys";
+> > +		regulator-always-on;
+> > +		regulator-boot-on;
+> > +		regulator-min-microvolt = <3300000>;
+> > +		regulator-max-microvolt = <3300000>;
+> > +		vin-supply = <&vcc_sys>;
+> > +	};
+> > +
+> > +	vcc5v0_host: vcc5v0-host-regulator {
+> > +		compatible = "regulator-fixed";
+> > +		gpio = <&gpio4 RK_PD2 GPIO_ACTIVE_HIGH>;
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&host_vbus_drv>;
+> > +		regulator-name = "vcc5v0_host";
+> > +	};
+> > +
+> > +	vcc5v0_usb3_host: vcc5v0-usb3-host-regulator {
+> > +		compatible = "regulator-fixed";
+> > +		enable-active-high;
+> > +		gpio = <&gpio1 RK_PB5 GPIO_ACTIVE_HIGH>;
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&host_usb3_drv>;
+> > +		regulator-name = "vcc5v0_usb3_host";
+> > +		regulator-always-on;
+> > +	};
+> > +
+> > +	vcc3v3_s0: vcc3v3-s0-regulator {
+> > +		compatible = "regulator-fixed";
+> > +		enable-active-high;
+> > +		gpio = <&gpio1 RK_PC6 GPIO_ACTIVE_HIGH>;
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&lcdvcc_en>;
+> > +		regulator-name = "vcc3v3_s0";
+> > +		regulator-always-on;
+> > +	};
+> > +
+> > +	vcc_sys: vcc-sys {
+> > +		compatible = "regulator-fixed";
+> > +		regulator-name = "vcc_sys";
+> > +		regulator-always-on;
+> > +		regulator-boot-on;
+> > +		regulator-min-microvolt = <5000000>;
+> > +		regulator-max-microvolt = <5000000>;
+> > +		vin-supply = <&dc_12v>;
+> > +	};
+> > +The main system voltage is not 5 V and it is not powered by a 12 V rail
+> 
+> > +	vdd_log: vdd-log {
+> > +		compatible = "pwm-regulator";
+> > +		pwms = <&pwm2 0 25000 1>;
+> > +		pwm-supply = <&vcc_sys>;
+> > +		regulator-name = "vdd_log";
+> > +		regulator-always-on;
+> > +		regulator-boot-on;
+> > +		regulator-init-microvolt = <950000>;
+> > +		regulator-min-microvolt = <800000>;
+> > +		regulator-max-microvolt = <1400000>;
+> > +	};
+> > +};
+> > +
+> 
+> Regulators for backlight, 0.9 V rail, USB-C power out and SD card power
+> are missing
+> 
+> Also most regulator names do not match the names of the power rails in
+> the schematic
+> 
+> > +&cpu_l0 {
+> > +	cpu-supply = <&vdd_cpu_l>;
+> > +};
+> > +
+> > +&cpu_l1 {
+> > +	cpu-supply = <&vdd_cpu_l>;
+> > +};
+> > +
+> > +&cpu_l2 {
+> > +	cpu-supply = <&vdd_cpu_l>;
+> > +};
+> > +
+> > +&cpu_l3 {
+> > +	cpu-supply = <&vdd_cpu_l>;
+> > +};
+> > +
+> > +&emmc_phy {
+> > +	status = "okay";
+> > +};
+> > +
+> > +&i2c0 {
+> > +	clock-frequency = <400000>;
+> > +	i2c-scl-rising-time-ns = <168>;
+> > +	i2c-scl-falling-time-ns = <4>;
+> > +	status = "okay";
+> > +
+> > +	rk808: pmic@1b {
+> > +		compatible = "rockchip,rk808";
+> > +		reg = <0x1b>;
+> > +		interrupt-parent = <&gpio1>;
+> > +		interrupts = <21 IRQ_TYPE_LEVEL_LOW>;
+> Interrupt GPIO is not correct, should be 10. This will stop the RTC from
+> working correctly.
+> 
+> > +		#clock-cells = <1>;
+> > +		clock-output-names = "xin32k", "rk808-clkout2";
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&pmic_int_l>;
+> > +		rockchip,system-power-controller;
+> > +		wakeup-source;
+> > +
+> > +		vcc1-supply = <&vcc_sys>;
+> > +		vcc2-supply = <&vcc_sys>;
+> > +		vcc3-supply = <&vcc_sys>;
+> > +		vcc4-supply = <&vcc_sys>;
+> > +		vcc6-supply = <&vcc_sys>;
+> > +		vcc7-supply = <&vcc_sys>;
+> > +		vcc8-supply = <&vcc3v3_sys>;
+> > +		vcc9-supply = <&vcc_sys>;
+> > +		vcc10-supply = <&vcc_sys>;
+> > +		vcc11-supply = <&vcc_sys>;
+> > +		vcc12-supply = <&vcc3v3_sys>;
+> > +		vddio-supply = <&vcc_1v8>;
+> vddio-supply is not vcc_1v8 but vcc_3v0
+> 
+> > +
+> > +		regulators {
+> > +			vdd_center: DCDC_REG1 {
+> > +				regulator-name = "vdd_center";
+> > +				regulator-always-on;
+> > +				regulator-boot-on;
+> > +				regulator-min-microvolt = <750000>;
+> > +				regulator-max-microvolt = <1350000>;
+> > +				regulator-ramp-delay = <6001>;
+> > +				regulator-state-mem {
+> > +					regulator-off-in-suspend;
+> > +				};
+> > +			};
+> > +
+> > +			vdd_cpu_l: DCDC_REG2 {
+> > +				regulator-name = "vdd_cpu_l";
+> > +				regulator-always-on;
+> > +				regulator-boot-on;
+> > +				regulator-min-microvolt = <750000>;
+> > +				regulator-max-microvolt = <1350000>;
+> > +				regulator-ramp-delay = <6001>;
+> > +				regulator-state-mem {
+> > +					regulator-off-in-suspend;
+> > +				};
+> > +			};
+> > +
+> > +			vcc_ddr: DCDC_REG3 {
+> > +				regulator-name = "vcc_ddr";
+> > +				regulator-always-on;
+> > +				regulator-boot-on;
+> > +				regulator-state-mem {
+> > +					regulator-on-in-suspend;
+> > +				};
+> > +			};
+> > +
+> > +			vcc_1v8: DCDC_REG4 {
+> > +				regulator-name = "vcc_1v8";
+> > +				regulator-always-on;
+> > +				regulator-boot-on;
+> > +				regulator-min-microvolt = <1800000>;
+> > +				regulator-max-microvolt = <1800000>;
+> > +				regulator-state-mem {
+> > +					regulator-on-in-suspend;
+> > +					regulator-suspend-microvolt = <1800000>;
+> > +				};
+> > +			};
+> > +
+> > +			vcc1v8_dvp: LDO_REG1 {
+> > +				regulator-name = "vcc1v8_dvp";
+> > +				regulator-always-on;
+> > +				regulator-boot-on;
+> > +				regulator-min-microvolt = <1800000>;
+> > +				regulator-max-microvolt = <1800000>;
+> > +				regulator-state-mem {
+> > +					regulator-off-in-suspend;
+> > +				};
+> > +			};
+> > +
+> > +			vcc3v0_touch: LDO_REG2 {
+> > +				regulator-name = "vcc3v0_touch";
+> > +				regulator-min-microvolt = <3000000>;
+> > +				regulator-max-microvolt = <3000000>;
+> > +				regulator-state-mem {
+> > +					regulator-on-in-suspend;
+> > +					regulator-suspend-microvolt = <3000000>;
+> > +				};
+> > +			};
+> > +
+> > +			vcc1v8_pmu: LDO_REG3 {
+> > +				regulator-name = "vcc1v8_pmu";
+> > +				regulator-always-on;
+> > +				regulator-boot-on;
+> > +				regulator-min-microvolt = <1800000>;
+> > +				regulator-max-microvolt = <1800000>;
+> > +				regulator-state-mem {
+> > +					regulator-on-in-suspend;
+> > +					regulator-suspend-microvolt = <1800000>;
+> > +				};
+> > +			};
+> > +
+> > +			vcc_sdio: LDO_REG4 {
+> > +				regulator-name = "vcc_sdio";
+> > +				regulator-always-on;
+> > +				regulator-boot-on;
+> > +				regulator-min-microvolt = <3300000>;
+> > +				regulator-max-microvolt = <3300000>;
+> > +				regulator-state-mem {
+> > +					regulator-on-in-suspend;
+> > +					regulator-suspend-microvolt = <3300000>;
+> > +				};
+> > +			};
+> > +
+> > +			vcca3v0_codec: LDO_REG5 {
+> > +				regulator-name = "vcca3v0_codec";
+> > +				regulator-always-on;
+> > +				regulator-boot-on;
+> > +				regulator-min-microvolt = <3000000>;
+> > +				regulator-max-microvolt = <3000000>;
+> > +				regulator-state-mem {
+> > +					regulator-off-in-suspend;
+> > +				};
+> > +			};
+> > +
+> > +			vcc_1v5: LDO_REG6 {
+> > +				regulator-name = "vcc_1v5";
+> > +				regulator-always-on;
+> > +				regulator-boot-on;
+> > +				regulator-min-microvolt = <1500000>;
+> > +				regulator-max-microvolt = <1500000>;
+> > +				regulator-state-mem {
+> > +					regulator-on-in-suspend;
+> > +					regulator-suspend-microvolt = <1500000>;
+> > +				};
+> > +			};
+> > +
+> > +			vcca1v8_codec: LDO_REG7 {
+> > +				regulator-name = "vcca1v8_codec";
+> > +				regulator-always-on;
+> > +				regulator-boot-on;
+> > +				regulator-min-microvolt = <1800000>;
+> > +				regulator-max-microvolt = <1800000>;
+> > +				regulator-state-mem {
+> > +					regulator-off-in-suspend;
+> > +				};
+> > +			};
+> > +
+> > +			vcc_3v0: LDO_REG8 {
+> > +				regulator-name = "vcc_3v0";
+> > +				regulator-always-on;
+> > +				regulator-boot-on;
+> > +				regulator-min-microvolt = <3000000>;
+> > +				regulator-max-microvolt = <3000000>;
+> > +				regulator-state-mem {
+> > +					regulator-on-in-suspend;
+> > +					regulator-suspend-microvolt = <3000000>;
+> > +				};
+> > +			};
+> > +
+> > +			vcc3v3_s3: SWITCH_REG1 {
+> > +				regulator-name = "vcc3v3_s3";
+> > +				regulator-always-on;
+> > +				regulator-boot-on;
+> > +				regulator-state-mem {
+> > +					regulator-off-in-suspend;
+> > +				};
+> > +			};
+> > +
+> > +			switch_reg2: SWITCH_REG2 {
+> > +				regulator-name = "SWITCH_REG2";
+> > +				regulator-state-mem {
+> > +					regulator-off-in-suspend;
+> > +				};
+> > +			};
+> > +		};
+> > +	};
+> > +
+> > +	vdd_cpu_b: regulator@40 {
+> > +		compatible = "silergy,syr827";
+> > +		reg = <0x40>;
+> > +		fcs,suspend-voltage-selector = <1>;
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&vsel1_gpio>;
+> > +		vsel-gpios = <&gpio1 RK_PC1 GPIO_ACTIVE_HIGH>;
+> > +		regulator-compatible = "fan53555-reg";
+> > +		regulator-name = "vdd_cpu_b";
+> > +		regulator-min-microvolt = <712500>;
+> > +		regulator-max-microvolt = <1500000>;
+> > +		regulator-ramp-delay = <1000>;
+> > +		regulator-always-on;
+> > +		regulator-boot-on;
+> > +		vin-supply = <&vcc_sys>;
+> > +
+> > +		regulator-state-mem {
+> > +			regulator-off-in-suspend;
+> > +		};
+> > +	};
+> > +
+> > +	vdd_gpu: regulator@41 {
+> > +		compatible = "silergy,syr828";
+> > +		reg = <0x41>;
+> > +		fcs,suspend-voltage-selector = <1>;
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&vsel2_gpio>;
+> > +		vsel-gpios = <&gpio1 RK_PB6 GPIO_ACTIVE_HIGH>;
+> > +		regulator-compatible = "fan53555-reg";
+> > +		regulator-name = "vdd_gpu";
+> > +		regulator-min-microvolt = <712500>;
+> > +		regulator-max-microvolt = <1500000>;
+> > +		regulator-ramp-delay = <1000>;
+> > +		regulator-always-on;
+> > +		regulator-boot-on;
+> > +		vin-supply = <&vcc_sys>;
+> > +
+> > +		regulator-state-mem {
+> > +			regulator-off-in-suspend;
+> > +		};
+> > +	};
+> > +
+> > +};
+> 
+> Additionally there a quite a few components missing. This includes the
+> aforementioned lid switch and eDP panel but there are also a battery
+> gauge, two chargers, a es8316 audio codec, two speaker amplifiers and a
+> BT/WiFi module.
+> 
+> Best regards,
+> 
+> Tobias
+> 
+> 
+
+
+
+
