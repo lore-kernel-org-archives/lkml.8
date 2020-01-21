@@ -2,473 +2,150 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B22F8C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20CF2C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:23:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92A63217F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:22:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F23652070C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:23:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729332AbgAUOWO (ORCPT
+        id S1729340AbgAUOXF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 09:22:14 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:32990 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727508AbgAUOWN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 09:22:13 -0500
-Received: from ip092042140082.rev.nessus.at ([92.42.140.82] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1ituPT-000404-Bh; Tue, 21 Jan 2020 15:21:39 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Tobias Schramm <t.schramm@manjaro.org>
-Cc:     Emmanuel Vadot <manu@freebsd.org>, pbrobinson@gmail.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, andy.yan@rock-chips.com,
-        robin.murphy@arm.com, nick@khadas.com, kever.yang@rock-chips.com,
-        m.reichl@fivetechno.de, aballier@gentoo.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] arm64: dts: rockchip: Add initial support for Pinebook Pro
-Date:   Tue, 21 Jan 2020 15:21:38 +0100
-Message-ID: <3785040.Baxn5HRXxd@phil>
-In-Reply-To: <477e2602-d740-5954-5573-87db5fd83888@manjaro.org>
-References: <20200116225617.6318-1-manu@freebsd.org> <20200116225617.6318-2-manu@freebsd.org> <477e2602-d740-5954-5573-87db5fd83888@manjaro.org>
+        Tue, 21 Jan 2020 09:23:05 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:44227 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727508AbgAUOXE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 09:23:04 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ituQm-0007TS-GA; Tue, 21 Jan 2020 15:23:00 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ituQl-0008Sh-BZ; Tue, 21 Jan 2020 15:22:59 +0100
+Date:   Tue, 21 Jan 2020 15:22:59 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-kernel@vger.kernel.org, kernel@pengutronix.de
+Subject: About rounding in the PWM framework [Was: Re: [PATCH v5] gpio:
+ pca953x: Add Maxim MAX7313 PWM support]
+Message-ID: <20200121142259.c56h2dpxtiha6xp6@pengutronix.de>
+References: <20200107133130.1338-1-miquel.raynal@bootlin.com>
+ <20200120121329.GC206171@ulmo>
+ <20200120134137.54dc307e@xps13>
+ <20200120141944.GD206171@ulmo>
+ <20200120144457.eznywc423ehw6kuc@pengutronix.de>
+ <20200121125607.GA899558@ulmo>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200121125607.GA899558@ulmo>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hello Thierry,
 
-Am Dienstag, 21. Januar 2020, 15:13:06 CET schrieb Tobias Schramm:
-> I do strongly oppose merging this DTS. It is missing several device
-> components (for example the eDP panel and the lid switch) and the power
-> supply setup does not reflect the implementation in the device at all.
-> Also some control/irq GPIOs are incorrect. See comments below.
+On Tue, Jan 21, 2020 at 01:56:07PM +0100, Thierry Reding wrote:
+> On Mon, Jan 20, 2020 at 03:44:57PM +0100, Uwe Kleine-König wrote:
+> > Yeah, it's something like clk_round_rate that I want in the end. And to
+> > make it actually workable the IMHO only sane approach is to allow
+> > rounding in one direction without limit. And as pwm_apply_state() should
+> > be consistent with pwm_round_state() the former must round without
+> > limit, too.
 > 
-> The schematic of the Pinebook Pro can be found here:
-> http://files.pine64.org/doc/PinebookPro/pinebookpro_v2.1_mainboard_schematic.pdf
+> Agreed on the point that both pwm_round_state() and pwm_apply_state()
+> should do the same rounding. In fact, in most cases I'd expect drivers
+> to implement the bulk of ->apply() and ->round() in the same function
+> that basically constructs the new state that will be applied to the
+> hardware in ->apply() but will be returned from ->round().
 > 
-> I'm currently planning on submitting a DTS with correct power supply and
-> GPIO setup as well as more supported hardware components late February.
-> Unfortunately I won't get around to doing it any sooner.
-> 
-> Current state of the DTS can be found here:
-> https://gitlab.manjaro.org/tsys/linux-pinebook-pro/blob/v5.5-rc7/arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts
+> I'm not so sure about rounding without limit, though. I think it makes
+> sense to allow rounding to happen if you can match things closely enough
+> for it not to matter in most cases.
 
-I really like power trees that match the actual schematics, so I'm all
-for it ;-) . I don't have a Pinebook Pro myself, so won't be comparing
-the power-tree to the schematics myself though.
+The problem is to define "close enough". And if we can agree on some
+definition, I wouldn't want to implement this policy in each and every
+driver. That's why I think implementing something easy like "always
+round down" is the right way for the lowlevel drivers. Allowing to round
+in both directions makes working with pwm_round_rate quite a bit more
+difficult, as does imposing a limit.
 
-As for timing, it's too late for 5.6 anyway, so you have time until
-around 5.6-rc5 gets released so around 8 weeks.
+With that the PWM core could implement a policy uniformly for all
+lowlevel drivers in a single place. You could even implement an API
+function that picks the available period that is nearest to the
+requested value.
 
-The other parts you can coordinate between you ;-)
+> Strictly speaking we're already breaking use-cases that require a
+> fixed period because there's currently no way for consumers to
+> determine what the exact state is that is going to get applied.
+> Consumers could read back the state, but we already know that that
+> doesn't yield the correct result for some drivers.
 
+Currently this is true for all drivers as the core caches the value that
+was last set and a driver cannot give any feedback.
 
-Heiko
+> Also, in practice, for the large majority of use-cases the exact period
+> doesn't matter as long as the actual numbers are close enough to the
+> requested values and the duty cycle/period ratio is about the same as
+> what was requested.
 
-> > From: Peter Robinson <pbrobinson@gmail.com>
+Can you describe which policy you think should be implemented in
+pwm_apply_state()?
+
+> [...]
+> That still means that we'll be ignoring mismatches between fixed-period
+> producers and variable-period consumers. Allowing producers to overwrite
+> whatever is passed in (without potentially being able to get anywhere
+> near the requested values) is making it too easy to get things wrong,
+> don't you think?
+
+A sharp knife is a great tool. Of course you can hurt yourself or others
+with it. But does that convince you to cut your vegetables with a
+dull-edged knife?
+
+> > > However, ignoring period settings because the controller supports only a
+> > > fixed period seems a bit of an extreme.
 > > 
+> > So the setting I want is:
+> > 
+> > 	if (request.period < HW_PERIOD)
+> > 		fail();
+> > 		
+> > and with the reasoning above, that's the only sensible thing (apart from
+> > the revered policy of rounding up and so failing for requested periods
+> > that are bigger than the implementable period).
 > 
-> > +	gpio-keys {
-> > +		compatible = "gpio-keys";
-> > +		autorepeat;
-> > +		pinctrl-names = "default";
-> > +		pinctrl-0 = <&pwrbtn>;
-> > +
-> > +		power {
-> > +			debounce-interval = <100>;
-> > +			gpios = <&gpio0 RK_PA5 GPIO_ACTIVE_LOW>;
-> > +			label = "GPIO Key Power";
-> > +			linux,code = <KEY_POWER>;
-> > +			wakeup-source;
-> > +		};
-> 
-> Missing lid switch
-> > +	};
-> > +
-> > +	leds {
-> > +		status = "okay";
-> > +		compatible = "gpio-leds";
-> > +
-> > +		work-led {
-> > +			label = "work";
-> > +			gpios = <&gpio0 RK_PB3 GPIO_ACTIVE_HIGH>;
-> > +		};
-> > +
-> > +		standby-led {
-> > +			label = "standby";
-> > +			gpios = <&gpio0 RK_PA2 GPIO_ACTIVE_HIGH>;
-> > +		};
-> > +	};
-> > +
-> > +	vcc1v8_s3: vcca1v8_s3: vcc1v8-s3 {
-> vcc1v8_s3 and vcca1v8_s3 are not the same. They are powered from
-> different vin supplies.
-> 
-> > +		compatible = "regulator-fixed";
-> > +		regulator-name = "vcc1v8_s3";
-> > +		regulator-always-on;
-> > +		regulator-boot-on;
-> > +		regulator-min-microvolt = <1800000>;
-> > +		regulator-max-microvolt = <1800000>;
-> > +		vin-supply = <&vcc_1v8>;
-> > +	};
-> > +
-> > +	dc_12v: dc-12v {
-> > +		compatible = "regulator-fixed";
-> > +		regulator-name = "dc_12v";
-> > +		regulator-always-on;
-> > +		regulator-boot-on;
-> > +		regulator-min-microvolt = <12000000>;
-> > +		regulator-max-microvolt = <12000000>;
-> > +	};
-> There is no primary 12 V supply on the Pinebook Pro
-> 
-> > +
-> > +	vcc3v3_sys: vcc3v3-sys {
-> > +		compatible = "regulator-fixed";
-> > +		regulator-name = "vcc3v3_sys";
-> > +		regulator-always-on;
-> > +		regulator-boot-on;
-> > +		regulator-min-microvolt = <3300000>;
-> > +		regulator-max-microvolt = <3300000>;
-> > +		vin-supply = <&vcc_sys>;
-> > +	};
-> > +
-> > +	vcc5v0_host: vcc5v0-host-regulator {
-> > +		compatible = "regulator-fixed";
-> > +		gpio = <&gpio4 RK_PD2 GPIO_ACTIVE_HIGH>;
-> > +		pinctrl-names = "default";
-> > +		pinctrl-0 = <&host_vbus_drv>;
-> > +		regulator-name = "vcc5v0_host";
-> > +	};
-> > +
-> > +	vcc5v0_usb3_host: vcc5v0-usb3-host-regulator {
-> > +		compatible = "regulator-fixed";
-> > +		enable-active-high;
-> > +		gpio = <&gpio1 RK_PB5 GPIO_ACTIVE_HIGH>;
-> > +		pinctrl-names = "default";
-> > +		pinctrl-0 = <&host_usb3_drv>;
-> > +		regulator-name = "vcc5v0_usb3_host";
-> > +		regulator-always-on;
-> > +	};
-> > +
-> > +	vcc3v3_s0: vcc3v3-s0-regulator {
-> > +		compatible = "regulator-fixed";
-> > +		enable-active-high;
-> > +		gpio = <&gpio1 RK_PC6 GPIO_ACTIVE_HIGH>;
-> > +		pinctrl-names = "default";
-> > +		pinctrl-0 = <&lcdvcc_en>;
-> > +		regulator-name = "vcc3v3_s0";
-> > +		regulator-always-on;
-> > +	};
-> > +
-> > +	vcc_sys: vcc-sys {
-> > +		compatible = "regulator-fixed";
-> > +		regulator-name = "vcc_sys";
-> > +		regulator-always-on;
-> > +		regulator-boot-on;
-> > +		regulator-min-microvolt = <5000000>;
-> > +		regulator-max-microvolt = <5000000>;
-> > +		vin-supply = <&dc_12v>;
-> > +	};
-> > +The main system voltage is not 5 V and it is not powered by a 12 V rail
-> 
-> > +	vdd_log: vdd-log {
-> > +		compatible = "pwm-regulator";
-> > +		pwms = <&pwm2 0 25000 1>;
-> > +		pwm-supply = <&vcc_sys>;
-> > +		regulator-name = "vdd_log";
-> > +		regulator-always-on;
-> > +		regulator-boot-on;
-> > +		regulator-init-microvolt = <950000>;
-> > +		regulator-min-microvolt = <800000>;
-> > +		regulator-max-microvolt = <1400000>;
-> > +	};
-> > +};
-> > +
-> 
-> Regulators for backlight, 0.9 V rail, USB-C power out and SD card power
-> are missing
-> 
-> Also most regulator names do not match the names of the power rails in
-> the schematic
-> 
-> > +&cpu_l0 {
-> > +	cpu-supply = <&vdd_cpu_l>;
-> > +};
-> > +
-> > +&cpu_l1 {
-> > +	cpu-supply = <&vdd_cpu_l>;
-> > +};
-> > +
-> > +&cpu_l2 {
-> > +	cpu-supply = <&vdd_cpu_l>;
-> > +};
-> > +
-> > +&cpu_l3 {
-> > +	cpu-supply = <&vdd_cpu_l>;
-> > +};
-> > +
-> > +&emmc_phy {
-> > +	status = "okay";
-> > +};
-> > +
-> > +&i2c0 {
-> > +	clock-frequency = <400000>;
-> > +	i2c-scl-rising-time-ns = <168>;
-> > +	i2c-scl-falling-time-ns = <4>;
-> > +	status = "okay";
-> > +
-> > +	rk808: pmic@1b {
-> > +		compatible = "rockchip,rk808";
-> > +		reg = <0x1b>;
-> > +		interrupt-parent = <&gpio1>;
-> > +		interrupts = <21 IRQ_TYPE_LEVEL_LOW>;
-> Interrupt GPIO is not correct, should be 10. This will stop the RTC from
-> working correctly.
-> 
-> > +		#clock-cells = <1>;
-> > +		clock-output-names = "xin32k", "rk808-clkout2";
-> > +		pinctrl-names = "default";
-> > +		pinctrl-0 = <&pmic_int_l>;
-> > +		rockchip,system-power-controller;
-> > +		wakeup-source;
-> > +
-> > +		vcc1-supply = <&vcc_sys>;
-> > +		vcc2-supply = <&vcc_sys>;
-> > +		vcc3-supply = <&vcc_sys>;
-> > +		vcc4-supply = <&vcc_sys>;
-> > +		vcc6-supply = <&vcc_sys>;
-> > +		vcc7-supply = <&vcc_sys>;
-> > +		vcc8-supply = <&vcc3v3_sys>;
-> > +		vcc9-supply = <&vcc_sys>;
-> > +		vcc10-supply = <&vcc_sys>;
-> > +		vcc11-supply = <&vcc_sys>;
-> > +		vcc12-supply = <&vcc3v3_sys>;
-> > +		vddio-supply = <&vcc_1v8>;
-> vddio-supply is not vcc_1v8 but vcc_3v0
-> 
-> > +
-> > +		regulators {
-> > +			vdd_center: DCDC_REG1 {
-> > +				regulator-name = "vdd_center";
-> > +				regulator-always-on;
-> > +				regulator-boot-on;
-> > +				regulator-min-microvolt = <750000>;
-> > +				regulator-max-microvolt = <1350000>;
-> > +				regulator-ramp-delay = <6001>;
-> > +				regulator-state-mem {
-> > +					regulator-off-in-suspend;
-> > +				};
-> > +			};
-> > +
-> > +			vdd_cpu_l: DCDC_REG2 {
-> > +				regulator-name = "vdd_cpu_l";
-> > +				regulator-always-on;
-> > +				regulator-boot-on;
-> > +				regulator-min-microvolt = <750000>;
-> > +				regulator-max-microvolt = <1350000>;
-> > +				regulator-ramp-delay = <6001>;
-> > +				regulator-state-mem {
-> > +					regulator-off-in-suspend;
-> > +				};
-> > +			};
-> > +
-> > +			vcc_ddr: DCDC_REG3 {
-> > +				regulator-name = "vcc_ddr";
-> > +				regulator-always-on;
-> > +				regulator-boot-on;
-> > +				regulator-state-mem {
-> > +					regulator-on-in-suspend;
-> > +				};
-> > +			};
-> > +
-> > +			vcc_1v8: DCDC_REG4 {
-> > +				regulator-name = "vcc_1v8";
-> > +				regulator-always-on;
-> > +				regulator-boot-on;
-> > +				regulator-min-microvolt = <1800000>;
-> > +				regulator-max-microvolt = <1800000>;
-> > +				regulator-state-mem {
-> > +					regulator-on-in-suspend;
-> > +					regulator-suspend-microvolt = <1800000>;
-> > +				};
-> > +			};
-> > +
-> > +			vcc1v8_dvp: LDO_REG1 {
-> > +				regulator-name = "vcc1v8_dvp";
-> > +				regulator-always-on;
-> > +				regulator-boot-on;
-> > +				regulator-min-microvolt = <1800000>;
-> > +				regulator-max-microvolt = <1800000>;
-> > +				regulator-state-mem {
-> > +					regulator-off-in-suspend;
-> > +				};
-> > +			};
-> > +
-> > +			vcc3v0_touch: LDO_REG2 {
-> > +				regulator-name = "vcc3v0_touch";
-> > +				regulator-min-microvolt = <3000000>;
-> > +				regulator-max-microvolt = <3000000>;
-> > +				regulator-state-mem {
-> > +					regulator-on-in-suspend;
-> > +					regulator-suspend-microvolt = <3000000>;
-> > +				};
-> > +			};
-> > +
-> > +			vcc1v8_pmu: LDO_REG3 {
-> > +				regulator-name = "vcc1v8_pmu";
-> > +				regulator-always-on;
-> > +				regulator-boot-on;
-> > +				regulator-min-microvolt = <1800000>;
-> > +				regulator-max-microvolt = <1800000>;
-> > +				regulator-state-mem {
-> > +					regulator-on-in-suspend;
-> > +					regulator-suspend-microvolt = <1800000>;
-> > +				};
-> > +			};
-> > +
-> > +			vcc_sdio: LDO_REG4 {
-> > +				regulator-name = "vcc_sdio";
-> > +				regulator-always-on;
-> > +				regulator-boot-on;
-> > +				regulator-min-microvolt = <3300000>;
-> > +				regulator-max-microvolt = <3300000>;
-> > +				regulator-state-mem {
-> > +					regulator-on-in-suspend;
-> > +					regulator-suspend-microvolt = <3300000>;
-> > +				};
-> > +			};
-> > +
-> > +			vcca3v0_codec: LDO_REG5 {
-> > +				regulator-name = "vcca3v0_codec";
-> > +				regulator-always-on;
-> > +				regulator-boot-on;
-> > +				regulator-min-microvolt = <3000000>;
-> > +				regulator-max-microvolt = <3000000>;
-> > +				regulator-state-mem {
-> > +					regulator-off-in-suspend;
-> > +				};
-> > +			};
-> > +
-> > +			vcc_1v5: LDO_REG6 {
-> > +				regulator-name = "vcc_1v5";
-> > +				regulator-always-on;
-> > +				regulator-boot-on;
-> > +				regulator-min-microvolt = <1500000>;
-> > +				regulator-max-microvolt = <1500000>;
-> > +				regulator-state-mem {
-> > +					regulator-on-in-suspend;
-> > +					regulator-suspend-microvolt = <1500000>;
-> > +				};
-> > +			};
-> > +
-> > +			vcca1v8_codec: LDO_REG7 {
-> > +				regulator-name = "vcca1v8_codec";
-> > +				regulator-always-on;
-> > +				regulator-boot-on;
-> > +				regulator-min-microvolt = <1800000>;
-> > +				regulator-max-microvolt = <1800000>;
-> > +				regulator-state-mem {
-> > +					regulator-off-in-suspend;
-> > +				};
-> > +			};
-> > +
-> > +			vcc_3v0: LDO_REG8 {
-> > +				regulator-name = "vcc_3v0";
-> > +				regulator-always-on;
-> > +				regulator-boot-on;
-> > +				regulator-min-microvolt = <3000000>;
-> > +				regulator-max-microvolt = <3000000>;
-> > +				regulator-state-mem {
-> > +					regulator-on-in-suspend;
-> > +					regulator-suspend-microvolt = <3000000>;
-> > +				};
-> > +			};
-> > +
-> > +			vcc3v3_s3: SWITCH_REG1 {
-> > +				regulator-name = "vcc3v3_s3";
-> > +				regulator-always-on;
-> > +				regulator-boot-on;
-> > +				regulator-state-mem {
-> > +					regulator-off-in-suspend;
-> > +				};
-> > +			};
-> > +
-> > +			switch_reg2: SWITCH_REG2 {
-> > +				regulator-name = "SWITCH_REG2";
-> > +				regulator-state-mem {
-> > +					regulator-off-in-suspend;
-> > +				};
-> > +			};
-> > +		};
-> > +	};
-> > +
-> > +	vdd_cpu_b: regulator@40 {
-> > +		compatible = "silergy,syr827";
-> > +		reg = <0x40>;
-> > +		fcs,suspend-voltage-selector = <1>;
-> > +		pinctrl-names = "default";
-> > +		pinctrl-0 = <&vsel1_gpio>;
-> > +		vsel-gpios = <&gpio1 RK_PC1 GPIO_ACTIVE_HIGH>;
-> > +		regulator-compatible = "fan53555-reg";
-> > +		regulator-name = "vdd_cpu_b";
-> > +		regulator-min-microvolt = <712500>;
-> > +		regulator-max-microvolt = <1500000>;
-> > +		regulator-ramp-delay = <1000>;
-> > +		regulator-always-on;
-> > +		regulator-boot-on;
-> > +		vin-supply = <&vcc_sys>;
-> > +
-> > +		regulator-state-mem {
-> > +			regulator-off-in-suspend;
-> > +		};
-> > +	};
-> > +
-> > +	vdd_gpu: regulator@41 {
-> > +		compatible = "silergy,syr828";
-> > +		reg = <0x41>;
-> > +		fcs,suspend-voltage-selector = <1>;
-> > +		pinctrl-names = "default";
-> > +		pinctrl-0 = <&vsel2_gpio>;
-> > +		vsel-gpios = <&gpio1 RK_PB6 GPIO_ACTIVE_HIGH>;
-> > +		regulator-compatible = "fan53555-reg";
-> > +		regulator-name = "vdd_gpu";
-> > +		regulator-min-microvolt = <712500>;
-> > +		regulator-max-microvolt = <1500000>;
-> > +		regulator-ramp-delay = <1000>;
-> > +		regulator-always-on;
-> > +		regulator-boot-on;
-> > +		vin-supply = <&vcc_sys>;
-> > +
-> > +		regulator-state-mem {
-> > +			regulator-off-in-suspend;
-> > +		};
-> > +	};
-> > +
-> > +};
-> 
-> Additionally there a quite a few components missing. This includes the
-> aforementioned lid switch and eDP panel but there are also a battery
-> gauge, two chargers, a es8316 audio codec, two speaker amplifiers and a
-> BT/WiFi module.
-> 
-> Best regards,
-> 
-> Tobias
-> 
-> 
+> But that's just as arbitrary as anything else. request.period ==
+> HW_PERIOD - 1 might be an entirely fine setting in many cases.
 
+Ack. Technically it's arbitrary as anything else, exactly my point. But
+among the many arbitrary policies it is I think one of the very few that
+can easily be worked with and allows to let a consumer make an informed
+choice without jumping through more hoops than necessary.
 
+Best regards
+Uwe
 
-
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
