@@ -2,129 +2,67 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C840C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2677BC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:25:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CB472253D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:23:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF00624654
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:25:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579595101;
+	bh=zY45NEgiqUBkPrHoNMe1qF5eSC8mEb3WAY9umCc1y6M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wdhs7KdHg9qay+x9K6goDQpKhwtrRr/nQoxjsY9PjmRdDFI0sj1AXXfG0+7fK2j5W
+	 pRC9y2shSIQtdapemqZsn+0uXjBQlutmUjcpZTqa4FTon4aFJSa/wcgQVcO6PWDadx
+	 pBH7eXBPF/iBeur3FW311AEYXbtkWrVoaiq5NyRc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728139AbgAUIX6 (ORCPT
+        id S1728682AbgAUIZA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 03:23:58 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:40125 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbgAUIX6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 03:23:58 -0500
-Received: from litschi.hi.pengutronix.de ([2001:67c:670:100:feaa:14ff:fe6a:8db5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <m.tretter@pengutronix.de>)
-        id 1itopE-0007Mk-S7; Tue, 21 Jan 2020 09:23:52 +0100
-Date:   Tue, 21 Jan 2020 09:23:50 +0100
-From:   Michael Tretter <m.tretter@pengutronix.de>
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        Tue, 21 Jan 2020 03:25:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54710 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725789AbgAUIZA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 03:25:00 -0500
+Received: from localhost (unknown [171.76.119.14])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D66DB2253D;
+        Tue, 21 Jan 2020 08:24:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579595099;
+        bh=zY45NEgiqUBkPrHoNMe1qF5eSC8mEb3WAY9umCc1y6M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SxnR/tY1kzR2qIRQw72aVrJ3GJw+9YAQifeVXQPKNE3ObpVIpooSaQ+9Ejj9wCzbS
+         7QfvmNcJ6BolG6r+B6T5hFoVpL2XnaoyVXiAJcFOA3Xaa1zwp3NlifStNBHHmQEBhS
+         K9dYAvuPIQYYioWxd476TXmICFHMF3chlukuaIIo=
+Date:   Tue, 21 Jan 2020 13:54:53 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Chen Zhou <chenzhou10@huawei.com>
+Cc:     dan.j.williams@intel.com, peng.ma@nxp.com, wen.he_1@nxp.com,
+        jiaheng.fan@nxp.com, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] media: allegro: add missed checks in allegro_open()
-Message-ID: <20200121092350.466f62a8@litschi.hi.pengutronix.de>
-In-Reply-To: <20200113055951.8718-1-hslester96@gmail.com>
-References: <20200113055951.8718-1-hslester96@gmail.com>
-Organization: Pengutronix
-X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Subject: Re: [PATCH -next] dmaengine: fsl-qdma: fix duplicated argument to &&
+Message-ID: <20200121082453.GD2841@vkoul-mobl>
+References: <20200120125843.34398-1-chenzhou10@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:feaa:14ff:fe6a:8db5
-X-SA-Exim-Mail-From: m.tretter@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200120125843.34398-1-chenzhou10@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Jan 2020 13:59:51 +0800, Chuhong Yuan wrote:
-> allegro_open() misses checks for v4l2_m2m_ctx_init() and results of
-> v4l2_ctrl_new* calls.
-> Add checks and error handlers to fix the problems.
-> 
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> ---
-> Changes in v3:
->   - Make code cleaner.
->   - Add a check for handler->error.
-> 
->  .../staging/media/allegro-dvt/allegro-core.c  | 24 +++++++++++++++----
->  1 file changed, 20 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/staging/media/allegro-dvt/allegro-core.c b/drivers/staging/media/allegro-dvt/allegro-core.c
-> index 6f0cd0784786..e86001e42963 100644
-> --- a/drivers/staging/media/allegro-dvt/allegro-core.c
-> +++ b/drivers/staging/media/allegro-dvt/allegro-core.c
-> @@ -2270,15 +2270,12 @@ static int allegro_open(struct file *file)
->  	struct allegro_channel *channel = NULL;
->  	struct v4l2_ctrl_handler *handler;
->  	u64 mask;
-> +	int ret;
->  
->  	channel = kzalloc(sizeof(*channel), GFP_KERNEL);
->  	if (!channel)
->  		return -ENOMEM;
->  
-> -	v4l2_fh_init(&channel->fh, vdev);
-> -	file->private_data = &channel->fh;
-> -	v4l2_fh_add(&channel->fh);
-> -
->  	init_completion(&channel->completion);
->  
->  	channel->dev = dev;
-> @@ -2328,6 +2325,11 @@ static int allegro_open(struct file *file)
->  			V4L2_CID_MIN_BUFFERS_FOR_OUTPUT,
->  			1, 32,
->  			1, 1);
-> +	if (handler->error != 0) {
-> +		ret = handler->error;
-> +		goto error;
-> +	}
-> +
->  	channel->fh.ctrl_handler = handler;
->  
->  	channel->mcu_channel_id = -1;
-> @@ -2341,7 +2343,21 @@ static int allegro_open(struct file *file)
->  	channel->fh.m2m_ctx = v4l2_m2m_ctx_init(dev->m2m_dev, channel,
->  						allegro_queue_init);
->  
-> +	if (IS_ERR(channel->fh.m2m_ctx)) {
-> +		ret = PTR_ERR(channel->fh.m2m_ctx);
-> +		goto error;
-> +	}
-> +
-> +	v4l2_fh_init(&channel->fh, vdev);
+On 20-01-20, 20:58, Chen Zhou wrote:
+> There is duplicated argument to && in function fsl_qdma_free_chan_resources,
+> which looks like a typo, pointer fsl_queue->desc_pool also needs NULL check,
+> fix it.
+> Detected with coccinelle.
 
-This call sets channel->fh.ctrl_handler to vdev->ctrl_handler, which
-has previously been overriden by the driver to handler. Therefore, this
-patch breaks all controls. I think we should initialize channel->fh
-before setting any fields of this struct.
+Applied, thanks
 
-Michael
-
-> +	file->private_data = &channel->fh;
-> +	v4l2_fh_add(&channel->fh);
-> +
->  	return 0;
-> +
-> +error:
-> +	v4l2_ctrl_handler_free(handler);
-> +	kfree(channel);
-> +	return ret;
->  }
->  
->  static int allegro_release(struct file *file)
+-- 
+~Vinod
