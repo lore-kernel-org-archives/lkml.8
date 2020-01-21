@@ -2,90 +2,106 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C930C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C347C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47345207E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:45:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EE5822314
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:46:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="nhcjsZOo"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OzeW8bYu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729232AbgAUPpf (ORCPT
+        id S1729332AbgAUPqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 10:45:35 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:38970 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728852AbgAUPpe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 10:45:34 -0500
-Received: from zn.tnic (p200300EC2F0B04001968D368394CA6AD.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:400:1968:d368:394c:a6ad])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id EB1D21EC0CAB;
-        Tue, 21 Jan 2020 16:45:32 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1579621533;
+        Tue, 21 Jan 2020 10:46:00 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:59659 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729165AbgAUPp7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 10:45:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579621558;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=m40QvzilE3eF+M3My9lK3d81i3eaU7exLqJm718/IaY=;
-        b=nhcjsZOo7gv7nuHIu/UG8GW1acu3YBpIJrBFFUneSl19Mdo6fG9ccpb1x3zk6Pv5psYxA+
-        ywUIRIsCafF1czHRj+l6pfVUn0ZEpAbr5zU04kJNzXyULe2KDFSASLxuNSiE5KcittNW7x
-        /3MCFV7HFTAgLt0PBhoVwtK3qFoc6pA=
-Date:   Tue, 21 Jan 2020 16:45:28 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Marco Elver <elver@google.com>, Qian Cai <cai@lca.pw>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -next] x86/mm/pat: silence a data race in cpa_4k_install
-Message-ID: <20200121154528.GK7808@zn.tnic>
-References: <20200121151503.2934-1-cai@lca.pw>
- <CANpmjNPR+mbadR0DDKGUhTkaXJi=vsHmhvq3+Rz0Hrx=E9V_Qg@mail.gmail.com>
- <20200121152853.GI7808@zn.tnic>
- <44A4276D-5530-4DAA-8FC7-753D03ADD2F3@lca.pw>
- <CANpmjNO7mTEMc6pvpVVXdu2r6cMg_N8QkRffEHHG-WNFXE4CjA@mail.gmail.com>
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=X4V9D6y2Lif4i/Bl6mgnfeFczMOxy2sAL0UfSmHDkVo=;
+        b=OzeW8bYuAKEgom0xLx2Di74U+k1L95/BkI3zk37R8HXXAI6idL0uJOvxySUe0auygoTNK7
+        YZ5/NGm0t879LGF5tfakM3umgrm1nt9MI95SxHiQUjZEVqIV7uEq2bb5uM396hqHLYiNHJ
+        ijqFCKnZFkCYnKyNjNtoD/T6TPmU1IE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-367-6I1zfnugNnqKXYuU_fxsGg-1; Tue, 21 Jan 2020 10:45:54 -0500
+X-MC-Unique: 6I1zfnugNnqKXYuU_fxsGg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 774E68045C0;
+        Tue, 21 Jan 2020 15:45:51 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4C488860F8;
+        Tue, 21 Jan 2020 15:45:49 +0000 (UTC)
+Subject: Re: [PATCH v8 4/5] locking/qspinlock: Introduce starvation avoidance
+ into CNA
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Alex Kogan <alex.kogan@oracle.com>
+Cc:     linux@armlinux.org.uk, mingo@redhat.com, will.deacon@arm.com,
+        arnd@arndb.de, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        guohanjun@huawei.com, jglauber@marvell.com,
+        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
+        dave.dice@oracle.com
+References: <20191230194042.67789-1-alex.kogan@oracle.com>
+ <20191230194042.67789-5-alex.kogan@oracle.com>
+ <20200121132949.GL14914@hirez.programming.kicks-ass.net>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <cfdf635d-be2e-9d4b-c4ca-6bcbddc6868f@redhat.com>
+Date:   Tue, 21 Jan 2020 10:45:48 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
+In-Reply-To: <20200121132949.GL14914@hirez.programming.kicks-ass.net>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CANpmjNO7mTEMc6pvpVVXdu2r6cMg_N8QkRffEHHG-WNFXE4CjA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 04:36:49PM +0100, Marco Elver wrote:
-> Isn't the intent "x86/mm/pat: Mark intentional data race" ?  The fact
-> that KCSAN no longer shows the warning is a side-effect.  At least
-> that's how I see it.
+On 1/21/20 8:29 AM, Peter Zijlstra wrote:
+> On Mon, Dec 30, 2019 at 02:40:41PM -0500, Alex Kogan wrote:
+>
+>> +/*
+>> + * Controls the threshold for the number of intra-node lock hand-offs before
+>> + * the NUMA-aware variant of spinlock is forced to be passed to a thread on
+>> + * another NUMA node. By default, the chosen value provides reasonable
+>> + * long-term fairness without sacrificing performance compared to a lock
+>> + * that does not have any fairness guarantees. The default setting can
+>> + * be changed with the "numa_spinlock_threshold" boot option.
+>> + */
+>> +int intra_node_handoff_threshold __ro_after_init = 1 << 16;
+> There is a distinct lack of quantitative data to back up that
+> 'reasonable' claim there.
+>
+> Where is the table of inter-node latencies observed for the various
+> values tested, and on what criteria is this number deemed reasonable?
+>
+> To me, 64k lock hold times seems like a giant number, entirely outside
+> of reasonable.
 
-Perhaps because you've been dealing with KCSAN for so long. :-)
+I actually had similar question before, but having the capability of
+changing the default with boot time parameter alleviate some of my
+concern. I will certainly like to see actual data on how different
+values will affect the performance of the code.
 
-The main angle here, IMO, is that this "fix" is being done solely for
-KCSAN. Or is there another reason to "fix" intentional data races? At
-least I don't see one. And the text says
+Cheers,
+Longman
 
-"This will generate a lot of noise on a debug kernel with
-debug_pagealloc with KCSAN enabled which could render the system
-unusable."
-
-So yes, I think it should say something about making KCSAN happy.
-
-Oh, and while at it I'd prefer it if it did the __no_kcsan function
-annotation instead of the data_race() thing.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
