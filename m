@@ -6,59 +6,58 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA23C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 791B0C33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B797824656
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:51:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49A8E20882
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:52:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="nUOfHjOz"
+	dkim=pass (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="k5YqhzWs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729317AbgAUJvK (ORCPT
+        id S1729346AbgAUJv7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 04:51:10 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:36452 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728797AbgAUJvH (ORCPT
+        Tue, 21 Jan 2020 04:51:59 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:40177 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727220AbgAUJv7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 04:51:07 -0500
-Received: by mail-wr1-f66.google.com with SMTP id z3so2419344wru.3
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 01:51:03 -0800 (PST)
+        Tue, 21 Jan 2020 04:51:59 -0500
+Received: by mail-wm1-f66.google.com with SMTP id t14so2238094wmi.5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 01:51:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=monstr-eu.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=ZI0atwJ3s6X/StOieAcUPING7QLdESS+gVuKdESoeM8=;
-        b=nUOfHjOz93uo00Ul9JjHIYcdpXRpD91FGhXKiI3DbvxV2BO2aWgkLtnZjTUxfmDW2I
-         5wIjUPAD3CzImoTZMmLQ0tdqq7owN/2wAWIgtyc1Slp/tQJa7ONrJG/tX1IOk2iNx3ps
-         zKOatbgNJTJ9Wm869mOIX92Ypbuo/2KCMP+cN2yU1ZftTtlMXsr31wiBQDonV/Y81i/C
-         JlegtyqVzaVGNXZ5PRRX9N0NLM/lLz0bw9imTqJpvFskBb6jf4N7D4CntVRBplsZ8sof
-         T4Zz0YfiHYja9NZzcrxHfnDGnqq+jK+w7KXA9sMdIN2/gSWsULahN+ko5SxdZQZBxuKP
-         ouug==
+        bh=gS+im0irDRkIpBOIxh0kBgop9pZ/8UFs7AEVh7IT1XM=;
+        b=k5YqhzWsmtaevRKLBveGSXHbJ+jS0UE3AFL+ggoEmJDPmMezqWJu4cYFv87tGVqj1+
+         dA+glBi8pVmrnGoBNcRJjao98GtsyfevEnG4moYXuiFut5o3a+Th2CTdKJYxEo/g28xR
+         7lna9Hc4cOwnz9Ia8i7waKKBLTmZMbizpEEbu7DajHLURDWm/usKN3i+5Ot+2ukBGxVk
+         L38OMFDC2sBrKu9d16AXkmAf/6dxx9Y1jKGVvSDqkUV7+BGKnRvpGc4UkWzokq3jU4HQ
+         oG4HArkTB/Rg6zeZo5S71GD2HAph9pGjJZSUdwga24jTgxv7ZCFNtEjjbRn1kQmWyCpe
+         Mw8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ZI0atwJ3s6X/StOieAcUPING7QLdESS+gVuKdESoeM8=;
-        b=BbXiOe6/yzyDK8QoD7LqV07NOUnizdJUOgH7Sjdzlq4BzvP4BgG5OgpQ+lnN3kHs2N
-         /xAofITSUKDmyBamgf+OQn4gjFSjMv282aM9k7h3oNadtYJQoUg0d2SnPQ1jofUnSHcA
-         jvT2vUsdGd/R2l6M/Licx9nbQiQQQFubJtsyrVkEfpipfrkQKGK7Y6Axsf+pCOyZ0Ml/
-         9VbofSvm2zF+QN8ofhb0scBE+AJcyzNDr7m+SGM3p3Xvkkn4lQYx1JcTCv2JWA/2rYHH
-         t8XBEl710o5/Rc6lwBhVzVqjnfSedOHIJuDDIeX59XnhyoJNCMLXZ6iv+ZCEmY9rTxea
-         eyGQ==
-X-Gm-Message-State: APjAAAXDe8zxYz7LnGD00bGbmEsXTD9QYtia7hsDnxDz2pc1hzKzO8Mp
-        dpiMuyhRVCFJp4tH5Lpr6fa7S85k9uIs8DZPT4wSzQ==
-X-Google-Smtp-Source: APXvYqxAKCqSHMRYwdAc4+G8YAFujr0n0Lp3fm9R3/wAR6Pi012ThbAAQo6Ca5vAsTFhTl5nyeRAizZaA/Jf2zrnUbU=
-X-Received: by 2002:a5d:530e:: with SMTP id e14mr4242678wrv.250.1579600262652;
- Tue, 21 Jan 2020 01:51:02 -0800 (PST)
+        bh=gS+im0irDRkIpBOIxh0kBgop9pZ/8UFs7AEVh7IT1XM=;
+        b=Cl3QtT8UzUxOw4PqwTsz+kY0mVzk8ZgT9WYRrjG6i43JDbMQChA4SsIiyK1hyHqRT4
+         0LYKowWzxnXv3HP8OXr6xpiL5KRNj6jDlJVLjpXJF5hCZfRbuFaFAMH1ln6Ij9yICo0/
+         l986IzbLgJRlzzlfmhjc1Cij5E8L2axGCEepVt416geCHoPBvL5LUPa94ofknkRebE1K
+         2ZTOQq/haXbRt+bxwCARlPR17+4SOuwVOYB9B8vbFF95/3A3p0wuRoaYBFizwbEARrH/
+         30YQ6uU1t9fJNAqM2vRXQL1ERVdTWqjjP36oNtsMGT89myOIDB9vu1/M1fMvlMY1fG9p
+         fLvw==
+X-Gm-Message-State: APjAAAXfR+mjKMz5Y93was/64BwGAskTy8/UJMCcsgislEbv6VBzuS5X
+        FBpp+nK1fedGJBofoQXLZ8ZLjYs2QEPpTJeacAbumEkN9zU=
+X-Google-Smtp-Source: APXvYqySBjrfH9msv3yjAVX+psBOoVmoNSdn5FqtxTiOBRmWLSLdQtHhiPdrzBOO1B3Jh6WxpM6urcMjW7D6vYtdHgA=
+X-Received: by 2002:a1c:6406:: with SMTP id y6mr3604057wmb.144.1579600316779;
+ Tue, 21 Jan 2020 01:51:56 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1578578535.git.michal.simek@xilinx.com>
-In-Reply-To: <cover.1578578535.git.michal.simek@xilinx.com>
+References: <cover.1578577931.git.michal.simek@xilinx.com>
+In-Reply-To: <cover.1578577931.git.michal.simek@xilinx.com>
 From:   Michal Simek <monstr@monstr.eu>
-Date:   Tue, 21 Jan 2020 10:50:50 +0100
-Message-ID: <CAHTX3dJZ+fsHKpen=wtw2g2fPWq1FZwKmvn5mWJpE7m3ZJSM7Q@mail.gmail.com>
-Subject: Re: [PATCH 0/7] arm64: zynqmp: Enable iio-hwmon based on iio ina226
- driver with labels
+Date:   Tue, 21 Jan 2020 10:51:45 +0100
+Message-ID: <CAHTX3dL-rO9h=+5A2QS7r1aWi+bOdkEmZQHXAmGB=TnSJrVdeg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/8] arm64: zynqmp: Various DT fixes
 To:     linux-arm <linux-arm-kernel@lists.infradead.org>,
         git <git@xilinx.com>
 Cc:     Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
@@ -78,41 +77,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=C4=8Dt 9. 1. 2020 v 15:02 odes=C3=ADlatel Michal Simek <michal.simek@xilin=
+=C4=8Dt 9. 1. 2020 v 14:52 odes=C3=ADlatel Michal Simek <michal.simek@xilin=
 x.com> napsal:
 >
 > Hi,
 >
-> the patch 2c3d0c9ffd24 ("iio: core: Add optional symbolic label to device=
- attributes")
-> added support for labelling IIO devices that's why I can enable iio based
-> ina226 driver with label property.
+> I am sending various DT fixes which have been found over the xilinx
+> release.
+> 1-2 patches are fixing reported description issues
+> 3-8 patches are actual fixes.
 >
 > Thanks,
 > Michal
 >
+> Changes in v2:
+> - Add missing patch
+> - Add missing patch
 >
 > Michal Simek (7):
->   arm64: zynqmp: Enable iio-hwmon for ina226 on zcu100
->   arm64: zynqmp: Enable iio-hwmon for ina226 on zcu111
->   arm64: zynqmp: Add label property to all ina226 on zcu111
->   arm64: zynqmp: Enable iio-hwmon for ina226 on zcu102
->   arm64: zynqmp: Add label property to all ina226 on zcu102
->   arm64: zynqmp: Enable iio-hwmon for ina226 on zcu106
->   arm64: zynqmp: Add label property to all ina226 on zcu106
+>   arm64: zynqmp: Use ethernet-phy as node name for ethernet phys
+>   arm64: zynqmp: Remove addition number in node name
+>   arm64: zynqmp: Fix address for tca6416_u97 chip on zcu104
+>   arm64: zynqmp: Turn comment to gpio-line-names
+>   arm64: zynqmp: Setup clock-output-names for si570 chips
+>   arm64: zynqmp: Remove broken-cd from zcu100-revC
+>   arm64: zynqmp: Setup default number of chipselects for zcu100
 >
->  .../boot/dts/xilinx/zynqmp-zcu100-revC.dts    |   8 +-
->  .../boot/dts/xilinx/zynqmp-zcu102-revA.dts    | 145 +++++++++++++++---
->  .../boot/dts/xilinx/zynqmp-zcu106-revA.dts    | 145 +++++++++++++++---
->  .../boot/dts/xilinx/zynqmp-zcu111-revA.dts    | 113 ++++++++++++--
->  4 files changed, 360 insertions(+), 51 deletions(-)
+> Venkatesh Yadav Abbarapu (1):
+>   arm64: zynqmp: Fix the si570 clock frequency on zcu111
+>
+>  .../dts/xilinx/zynqmp-zc1751-xm015-dc1.dts    |  2 +-
+>  .../dts/xilinx/zynqmp-zc1751-xm016-dc2.dts    |  6 +--
+>  .../dts/xilinx/zynqmp-zc1751-xm017-dc3.dts    |  2 +-
+>  .../dts/xilinx/zynqmp-zc1751-xm019-dc5.dts    |  2 +-
+>  .../boot/dts/xilinx/zynqmp-zcu100-revC.dts    |  3 +-
+>  .../boot/dts/xilinx/zynqmp-zcu102-revA.dts    | 47 +++++--------------
+>  .../boot/dts/xilinx/zynqmp-zcu102-revB.dts    |  4 +-
+>  .../boot/dts/xilinx/zynqmp-zcu104-revA.dts    |  6 +--
+>  .../boot/dts/xilinx/zynqmp-zcu106-revA.dts    |  4 +-
+>  .../boot/dts/xilinx/zynqmp-zcu111-revA.dts    |  6 ++-
+>  10 files changed, 32 insertions(+), 50 deletions(-)
 >
 > --
 > 2.24.0
 >
 
-Applied.
-M
+Applied all.
+
+Thanks,
+Michal
 
 
 --=20
