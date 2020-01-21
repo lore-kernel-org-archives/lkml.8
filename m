@@ -2,137 +2,94 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB1ACC32771
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 00:14:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC903C32771
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 00:31:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA27E24650
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 00:14:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B367B22522
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 00:31:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="cdURJ4B2"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jboX1vLX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728816AbgAUAOC (ORCPT
+        id S1728778AbgAUAbv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 19:14:02 -0500
-Received: from gateway32.websitewelcome.com ([192.185.145.113]:26512 "EHLO
-        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727009AbgAUAOA (ORCPT
+        Mon, 20 Jan 2020 19:31:51 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:32896 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727009AbgAUAbu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 19:14:00 -0500
-X-Greylist: delayed 1231 seconds by postgrey-1.27 at vger.kernel.org; Mon, 20 Jan 2020 19:14:00 EST
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway32.websitewelcome.com (Postfix) with ESMTP id 7277C141ADEF
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 17:53:28 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id tgrIiZbYB9jb7tgrIigbNb; Mon, 20 Jan 2020 17:53:28 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=xxAzhTqbOqe1BRFg2/D6CHH4pUnAKV9fRR68rERoFdo=; b=cdURJ4B2sUTFx/0XYpxi8YfVRe
-        ZluDtH1/J/eWhM4ZhDHvMayLsFgRrnBpF37tElMKjlhiQrMOBiVi2RJuy5LJmCgE6XlVZ2WuM3/8j
-        6cv2Ru7V6SCeZoJqvGgXnR1ZiGoR2Jq47TiCkZnHys2Hdu9rI0B0nte+GQuCxcHal1ec9O4A+jw70
-        smaPrztSNaecMnmYzyHWMqDzBSv3Ua7ztO45zm5FmaWaOhvME8xLNAJZhRxk/v8d9XS+SSSWn9iRX
-        n8jMvpVJjCaQ7yy/td1V3yeCDupgun+USnAgjDw0nS+YvtU+8NFMaa03OXcN0cF7Crg3AAlhH+dov
-        VnKCp1AQ==;
-Received: from 187-162-252-62.static.axtel.net ([187.162.252.62]:44974 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1itgrH-003oDh-72; Mon, 20 Jan 2020 17:53:27 -0600
-Date:   Mon, 20 Jan 2020 17:53:26 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Clemens Ladisch <clemens@ladisch.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] char: hpet: Use flexible-array member
-Message-ID: <20200120235326.GA29231@embeddedor.com>
+        Mon, 20 Jan 2020 19:31:50 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00L0SieN094871;
+        Tue, 21 Jan 2020 00:31:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=Iy4fL51A+NYkWKG8FmQJwyST5BlxKE/BFBYDFY4BYvU=;
+ b=jboX1vLXcsuXGZMveW8jthffcnNIiKjO/OtbcbNz97quOrv8xDvgmlllfUrxrlmpxXmu
+ dJL/w9HhfbY1kt5ObxpXwNmxbdHn9Pck+nwbAF/kokPjGwuf0row/c6JQghm5aLMF4lE
+ iQ+N0a9IHZZHsBtIwf+Usiw+viGFeRtHuqEPqYGhKt/KZpoO5vS5HyoKaQXN26ZX6tX4
+ espnq0vJuuAT9wgehETDssgZ6L5XlUcDMzlgHGjUaVQL3r4/B9KNQaXum1rh3H3k41Zq
+ FAtGwUf7sAH/M6VwF6dqsj7p7pgRfwiavPYGRsi8TVrA8A+fhJTAuHDT+80fu1LiWWYz aA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2xksyq1ute-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Jan 2020 00:31:44 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00L0STdA121816;
+        Tue, 21 Jan 2020 00:31:43 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2xnpea3528-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Jan 2020 00:31:43 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00L0VgCG028374;
+        Tue, 21 Jan 2020 00:31:42 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 20 Jan 2020 16:31:42 -0800
+To:     John Garry <john.garry@huawei.com>
+Cc:     <jejb@linux.vnet.ibm.com>, <martin.petersen@oracle.com>,
+        <linux-scsi@vger.kernel.org>, <linuxarm@huawei.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/7] hisi_sas: Misc patches
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <1579522957-4393-1-git-send-email-john.garry@huawei.com>
+Date:   Mon, 20 Jan 2020 19:31:38 -0500
+In-Reply-To: <1579522957-4393-1-git-send-email-john.garry@huawei.com> (John
+        Garry's message of "Mon, 20 Jan 2020 20:22:30 +0800")
+Message-ID: <yq136c9k5ud.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.252.62
-X-Source-L: No
-X-Exim-ID: 1itgrH-003oDh-72
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-252-62.static.axtel.net (embeddedor) [187.162.252.62]:44974
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 7
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9506 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001210001
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9506 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001210001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Old code in the kernel uses 1-byte and 0-byte arrays to indicate the
-presence of a "variable length array":
 
-struct something {
-    int length;
-    u8 data[1];
-};
+John,
 
-struct something *instance;
+> This series introduces some misc patches for the driver for the v5.6
+> cycle.
 
-instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
-instance->length = size;
-memcpy(instance->data, source, size);
+Applied to 5.6/scsi-queue, thanks!
 
-There is also 0-byte arrays. Both cases pose confusion for things like
-sizeof(), CONFIG_FORTIFY_SOURCE, etc.[1] Instead, the preferred mechanism
-to declare variable-length types such as the one above is a flexible array
-member[2] which need to be the last member of a structure and empty-sized:
-
-struct something {
-        int stuff;
-        u8 data[];
-};
-
-Also, by making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-unadvertenly introduced[3] to the codebase from now on.
-
-[1] https://github.com/KSPP/linux/issues/21
-[2] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/char/hpet.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/char/hpet.c b/drivers/char/hpet.c
-index 9ac6671bb514..aed2c45f7968 100644
---- a/drivers/char/hpet.c
-+++ b/drivers/char/hpet.c
-@@ -110,7 +110,7 @@ struct hpets {
- 	unsigned long hp_delta;
- 	unsigned int hp_ntimer;
- 	unsigned int hp_which;
--	struct hpet_dev hp_dev[1];
-+	struct hpet_dev hp_dev[];
- };
- 
- static struct hpets *hpets;
 -- 
-2.23.0
-
+Martin K. Petersen	Oracle Linux Engineering
