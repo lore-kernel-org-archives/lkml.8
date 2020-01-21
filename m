@@ -2,125 +2,187 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69617C33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 02:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C824C32771
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 03:04:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F1A62253D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 02:54:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="avovgtiM"
+	by mail.kernel.org (Postfix) with ESMTP id 0967B2253D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 03:04:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729076AbgAUCy6 (ORCPT
+        id S1729100AbgAUDEm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 21:54:58 -0500
-Received: from mail-eopbgr140052.outbound.protection.outlook.com ([40.107.14.52]:42564
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        Mon, 20 Jan 2020 22:04:42 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:51212 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726890AbgAUCy6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 21:54:58 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PYOYMSYXS2A5HJ3qESDiT6J9SsrFvZznWAf8aYyAuE5ujgIGIxO/WC5kPZH5uQLWn7hHQ0hWJO/p6N2ljYJeOdbOCn5Crhqz9iGQbzbSD9nciHou/nJAp5OLawEJb6dAw6KcL3LvN5flIendyUR5rcdYTMhI+FqeTx/vHLdj1V1160WCZrGMP/7ti14w/xv03tUaU8cyYYFcXfPjqCz9WsjtXNIZL5UBOA2tyQoOAqG7cOc6lsK0N40RQmPdxMG8SNiVki+mW5mX+knXh9rvK4HA8fVqEhvzgIwtPVy3LO1DKF4xNp65J4lCLQBEX2XxOrmedZHrVLkQ0rqmwP3f7w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lwanQaKuIqWPH2ibQ40M65rFvlSkyygrZQ0nB5kHfik=;
- b=YeKpEMZLq2vvFIuyR6Xmc7o4J/WKVpglHqXDH4qWi/3225AoxVLcSZF4LbKmDtPPuTRm0NgCzRy1wsS6FwUyk128mLufd7Mga9RsrwdWs8U1m+mF4e0MwIVpB4gsWgfA3TRg2+Sjrob3MXLW6QrEqzdaJeH3dHpgNroCtj90mkS4iBA4+MGagKniVnvV22GwdNcOAOgi3QAJhtLRj56f2am42r+RQk/D6zhtgHmNp+QqKkqVhcWSO494avnIdWiyxc80P+Bb1KCfmVH92QMuK1pUBjxb3BphEWSFDGiUgciDJhg/WKv9MEJCZ/h1dRpgVsKXrmPY3xeRtpH3dU4lUA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lwanQaKuIqWPH2ibQ40M65rFvlSkyygrZQ0nB5kHfik=;
- b=avovgtiMO6sDBp26qIjx1l4er2cGOLTr9efxgAuHC+Ffwh4o4AhHJhJx2FlFyAsfUxfYF5FB86W2Z0qjn81ZnOrZNcqV4xiWXDuy7TEbzinHEiZ2AskrLhFInLoICXtBkf1UfuseBbAWyL6QzARImxzwWlDD2Qej9WLT9zLoB4I=
-Received: from VI1PR04MB4431.eurprd04.prod.outlook.com (20.177.55.205) by
- VI1PR04MB5584.eurprd04.prod.outlook.com (20.178.123.74) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.19; Tue, 21 Jan 2020 02:54:55 +0000
-Received: from VI1PR04MB4431.eurprd04.prod.outlook.com
- ([fe80::751a:cffd:6e67:e05d]) by VI1PR04MB4431.eurprd04.prod.outlook.com
- ([fe80::751a:cffd:6e67:e05d%7]) with mapi id 15.20.2644.026; Tue, 21 Jan 2020
- 02:54:55 +0000
-From:   Peng Ma <peng.ma@nxp.com>
-To:     Chen Zhou <chenzhou10@huawei.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>
-CC:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH -next] dmaengine: fsl-qdma: fix duplicated argument to &&
-Thread-Topic: [PATCH -next] dmaengine: fsl-qdma: fix duplicated argument to &&
-Thread-Index: AQHVz5IYyfo46j7pF0OQYf9kiJHCJqf0az4g
-Date:   Tue, 21 Jan 2020 02:54:54 +0000
-Message-ID: <VI1PR04MB44314C51FA4C397F352C14C8ED0D0@VI1PR04MB4431.eurprd04.prod.outlook.com>
-References: <20200120125843.34398-1-chenzhou10@huawei.com>
-In-Reply-To: <20200120125843.34398-1-chenzhou10@huawei.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.ma@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: eaf18be5-ada2-461a-b816-08d79e1d4b42
-x-ms-traffictypediagnostic: VI1PR04MB5584:
-x-microsoft-antispam-prvs: <VI1PR04MB5584EA48BA189705CB521C35ED0D0@VI1PR04MB5584.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3173;
-x-forefront-prvs: 0289B6431E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(136003)(39860400002)(396003)(376002)(189003)(199004)(52536014)(316002)(54906003)(186003)(110136005)(478600001)(5660300002)(33656002)(71200400001)(2906002)(44832011)(6506007)(64756008)(9686003)(81156014)(86362001)(81166006)(4326008)(66476007)(66946007)(66446008)(66556008)(8676002)(76116006)(8936002)(55016002)(26005)(7696005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5584;H:VI1PR04MB4431.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: /SrIS0aEefi4qmO1g4SNIKBDv0qA/GVHNwWvn3lEwIOzDGyEb8wsai7Aq2n7qisxKAKC4GVfOZooS4q6zRaB19GdRQlxaM8PCDqSqtAqO6lwINazpaR5QRrNtBUfgh8pr4W63GXweTaSxbRkTkVoSV9cNEN3X0SDXjgMnURJzWRup6c8ohXHTyka83ud4mbHyzwPNRCdzNhX/lxGSnhdwGHZLbSm7kWdL5NdSAfZyd3aqpU+E8ciyvL8NLieRbmsSTOiP4l6Po+gYkQFXob9l3lbUbf9L0VQzwPxCJSksKCYeTK/JLyrIDhCPNVs6coAS1y0KS72EzoiqYd1OTzb11VuL09UJaO+m6kBjJpvAK4Eqkx0VaUsFpPnQwrqKO0/sxxeWuZP3kgu3Z+5xD2lyHh0CfhN4McV4e8usssKmVQFgccWuxMlRuyrkeO0id4d
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        id S1726890AbgAUDEl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 22:04:41 -0500
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id B9C9885FE9B03B652C53;
+        Tue, 21 Jan 2020 11:04:39 +0800 (CST)
+Received: from localhost (10.173.223.234) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Tue, 21 Jan 2020
+ 11:04:33 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <pkshih@realtek.com>, <kvalo@codeaurora.org>,
+        <davem@davemloft.net>, <bernd.edlinger@hotmail.de>,
+        <yuehaibing@huawei.com>, <Larry.Finger@lwfinger.net>
+CC:     <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] rtlwifi: rtl8723ae: remove unused variables
+Date:   Tue, 21 Jan 2020 11:04:28 +0800
+Message-ID: <20200121030428.14760-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eaf18be5-ada2-461a-b816-08d79e1d4b42
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jan 2020 02:54:54.7769
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Nca7fMP+TArXe3jkX7828Z6fvVtUFXInNz8JjJCT8mvyB9ZTbH7tXWXUv9WgeCD5
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5584
+Content-Type: text/plain
+X-Originating-IP: [10.173.223.234]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IENoZW4gWmhvdSA8Y2hlbnpo
-b3UxMEBodWF3ZWkuY29tPg0KPlNlbnQ6IDIwMjDE6jHUwjIwyNUgMjA6NTkNCj5UbzogZGFuLmou
-d2lsbGlhbXNAaW50ZWwuY29tOyB2a291bEBrZXJuZWwub3JnDQo+Q2M6IFBlbmcgTWEgPHBlbmcu
-bWFAbnhwLmNvbT47IFdlbiBIZSA8d2VuLmhlXzFAbnhwLmNvbT47DQo+amlhaGVuZy5mYW5Abnhw
-LmNvbTsgZG1hZW5naW5lQHZnZXIua2VybmVsLm9yZzsNCj5saW51eC1rZXJuZWxAdmdlci5rZXJu
-ZWwub3JnOyBjaGVuemhvdTEwQGh1YXdlaS5jb20NCj5TdWJqZWN0OiBbUEFUQ0ggLW5leHRdIGRt
-YWVuZ2luZTogZnNsLXFkbWE6IGZpeCBkdXBsaWNhdGVkIGFyZ3VtZW50IHRvICYmDQo+DQo+VGhl
-cmUgaXMgZHVwbGljYXRlZCBhcmd1bWVudCB0byAmJiBpbiBmdW5jdGlvbiBmc2xfcWRtYV9mcmVl
-X2NoYW5fcmVzb3VyY2VzLA0KPndoaWNoIGxvb2tzIGxpa2UgYSB0eXBvLCBwb2ludGVyIGZzbF9x
-dWV1ZS0+ZGVzY19wb29sIGFsc28gbmVlZHMgTlVMTCBjaGVjaywNCj5maXggaXQuDQo+RGV0ZWN0
-ZWQgd2l0aCBjb2NjaW5lbGxlLg0KPg0KV2hhdCBkb2VzIHRoZSAiIGNvY2NpbmVsbGUgIiBtZWFu
-IGhlcmU/DQoNCj5GaXhlczogYjA5MjUyOWUwYWEwICgiZG1hZW5naW5lOiBmc2wtcWRtYTogQWRk
-IHFETUEgY29udHJvbGxlciBkcml2ZXIgZm9yDQo+TGF5ZXJzY2FwZSBTb0NzIikNCj5TaWduZWQt
-b2ZmLWJ5OiBDaGVuIFpob3UgPGNoZW56aG91MTBAaHVhd2VpLmNvbT4NCj4tLS0NCj4gZHJpdmVy
-cy9kbWEvZnNsLXFkbWEuYyB8IDIgKy0NCj4gMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCsp
-LCAxIGRlbGV0aW9uKC0pDQo+DQo+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvZG1hL2ZzbC1xZG1hLmMg
-Yi9kcml2ZXJzL2RtYS9mc2wtcWRtYS5jIGluZGV4DQo+ODk3OTIwOC4uOTVjYzAyNSAxMDA2NDQN
-Cj4tLS0gYS9kcml2ZXJzL2RtYS9mc2wtcWRtYS5jDQo+KysrIGIvZHJpdmVycy9kbWEvZnNsLXFk
-bWEuYw0KPkBAIC0zMDQsNyArMzA0LDcgQEAgc3RhdGljIHZvaWQgZnNsX3FkbWFfZnJlZV9jaGFu
-X3Jlc291cmNlcyhzdHJ1Y3QNCj5kbWFfY2hhbiAqY2hhbikNCj4NCj4gCXZjaGFuX2RtYV9kZXNj
-X2ZyZWVfbGlzdCgmZnNsX2NoYW4tPnZjaGFuLCAmaGVhZCk7DQo+DQo+LQlpZiAoIWZzbF9xdWV1
-ZS0+Y29tcF9wb29sICYmICFmc2xfcXVldWUtPmNvbXBfcG9vbCkNCj4rCWlmICghZnNsX3F1ZXVl
-LT5jb21wX3Bvb2wgJiYgIWZzbF9xdWV1ZS0+ZGVzY19wb29sKQ0KPiAJCXJldHVybjsNCj4NCkhp
-IENoZW4sDQoNClRoYW5rcyB2ZXJ5IG11Y2ggZm9yIHlvdXIgcGF0Y2gsIEl0IGlzIHJlYWxseSBu
-ZWVkIHRvIGNoZWNrIGNvbXBfcG9vbCBhbmQgZGVzY19wb29sIGhlcmUuDQpSZXZpZXdlZC1ieTog
-UGVuZyBNYSA8cGVuZy5tYUBueHAuY29tPg0KVGVzdGVkLWJ5OiBQZW5nIE1hIDxwZW5nLm1hQG54
-cC5jb20+DQoNCkJSLA0KUGVuZw0KPiAJbGlzdF9mb3JfZWFjaF9lbnRyeV9zYWZlKGNvbXBfdGVt
-cCwgX2NvbXBfdGVtcCwNCj4tLQ0KPjIuNy40DQoNCg==
+drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c:16:18:
+ warning: ofdmswing_table defined but not used [-Wunused-const-variable=]
+drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c:56:17:
+ warning: cckswing_table_ch1ch13 defined but not used [-Wunused-const-variable=]
+drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c:92:17:
+ warning: cckswing_table_ch14 defined but not used [-Wunused-const-variable=]
+
+These variable is never used, so remove them.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ .../net/wireless/realtek/rtlwifi/rtl8723ae/dm.c    | 112 ---------------------
+ 1 file changed, 112 deletions(-)
+
+diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c
+index d8260c7..c61a92d 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c
++++ b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c
+@@ -13,118 +13,6 @@
+ #include "fw.h"
+ #include "hal_btc.h"
+ 
+-static const u32 ofdmswing_table[OFDM_TABLE_SIZE] = {
+-	0x7f8001fe,
+-	0x788001e2,
+-	0x71c001c7,
+-	0x6b8001ae,
+-	0x65400195,
+-	0x5fc0017f,
+-	0x5a400169,
+-	0x55400155,
+-	0x50800142,
+-	0x4c000130,
+-	0x47c0011f,
+-	0x43c0010f,
+-	0x40000100,
+-	0x3c8000f2,
+-	0x390000e4,
+-	0x35c000d7,
+-	0x32c000cb,
+-	0x300000c0,
+-	0x2d4000b5,
+-	0x2ac000ab,
+-	0x288000a2,
+-	0x26000098,
+-	0x24000090,
+-	0x22000088,
+-	0x20000080,
+-	0x1e400079,
+-	0x1c800072,
+-	0x1b00006c,
+-	0x19800066,
+-	0x18000060,
+-	0x16c0005b,
+-	0x15800056,
+-	0x14400051,
+-	0x1300004c,
+-	0x12000048,
+-	0x11000044,
+-	0x10000040,
+-};
+-
+-static const u8 cckswing_table_ch1ch13[CCK_TABLE_SIZE][8] = {
+-	{0x36, 0x35, 0x2e, 0x25, 0x1c, 0x12, 0x09, 0x04},
+-	{0x33, 0x32, 0x2b, 0x23, 0x1a, 0x11, 0x08, 0x04},
+-	{0x30, 0x2f, 0x29, 0x21, 0x19, 0x10, 0x08, 0x03},
+-	{0x2d, 0x2d, 0x27, 0x1f, 0x18, 0x0f, 0x08, 0x03},
+-	{0x2b, 0x2a, 0x25, 0x1e, 0x16, 0x0e, 0x07, 0x03},
+-	{0x28, 0x28, 0x22, 0x1c, 0x15, 0x0d, 0x07, 0x03},
+-	{0x26, 0x25, 0x21, 0x1b, 0x14, 0x0d, 0x06, 0x03},
+-	{0x24, 0x23, 0x1f, 0x19, 0x13, 0x0c, 0x06, 0x03},
+-	{0x22, 0x21, 0x1d, 0x18, 0x11, 0x0b, 0x06, 0x02},
+-	{0x20, 0x20, 0x1b, 0x16, 0x11, 0x08, 0x05, 0x02},
+-	{0x1f, 0x1e, 0x1a, 0x15, 0x10, 0x0a, 0x05, 0x02},
+-	{0x1d, 0x1c, 0x18, 0x14, 0x0f, 0x0a, 0x05, 0x02},
+-	{0x1b, 0x1a, 0x17, 0x13, 0x0e, 0x09, 0x04, 0x02},
+-	{0x1a, 0x19, 0x16, 0x12, 0x0d, 0x09, 0x04, 0x02},
+-	{0x18, 0x17, 0x15, 0x11, 0x0c, 0x08, 0x04, 0x02},
+-	{0x17, 0x16, 0x13, 0x10, 0x0c, 0x08, 0x04, 0x02},
+-	{0x16, 0x15, 0x12, 0x0f, 0x0b, 0x07, 0x04, 0x01},
+-	{0x14, 0x14, 0x11, 0x0e, 0x0b, 0x07, 0x03, 0x02},
+-	{0x13, 0x13, 0x10, 0x0d, 0x0a, 0x06, 0x03, 0x01},
+-	{0x12, 0x12, 0x0f, 0x0c, 0x09, 0x06, 0x03, 0x01},
+-	{0x11, 0x11, 0x0f, 0x0c, 0x09, 0x06, 0x03, 0x01},
+-	{0x10, 0x10, 0x0e, 0x0b, 0x08, 0x05, 0x03, 0x01},
+-	{0x0f, 0x0f, 0x0d, 0x0b, 0x08, 0x05, 0x03, 0x01},
+-	{0x0e, 0x0e, 0x0c, 0x0a, 0x08, 0x05, 0x02, 0x01},
+-	{0x0d, 0x0d, 0x0c, 0x0a, 0x07, 0x05, 0x02, 0x01},
+-	{0x0d, 0x0c, 0x0b, 0x09, 0x07, 0x04, 0x02, 0x01},
+-	{0x0c, 0x0c, 0x0a, 0x09, 0x06, 0x04, 0x02, 0x01},
+-	{0x0b, 0x0b, 0x0a, 0x08, 0x06, 0x04, 0x02, 0x01},
+-	{0x0b, 0x0a, 0x09, 0x08, 0x06, 0x04, 0x02, 0x01},
+-	{0x0a, 0x0a, 0x09, 0x07, 0x05, 0x03, 0x02, 0x01},
+-	{0x0a, 0x09, 0x08, 0x07, 0x05, 0x03, 0x02, 0x01},
+-	{0x09, 0x09, 0x08, 0x06, 0x05, 0x03, 0x01, 0x01},
+-	{0x09, 0x08, 0x07, 0x06, 0x04, 0x03, 0x01, 0x01}
+-};
+-
+-static const u8 cckswing_table_ch14[CCK_TABLE_SIZE][8] = {
+-	{0x36, 0x35, 0x2e, 0x1b, 0x00, 0x00, 0x00, 0x00},
+-	{0x33, 0x32, 0x2b, 0x19, 0x00, 0x00, 0x00, 0x00},
+-	{0x30, 0x2f, 0x29, 0x18, 0x00, 0x00, 0x00, 0x00},
+-	{0x2d, 0x2d, 0x17, 0x17, 0x00, 0x00, 0x00, 0x00},
+-	{0x2b, 0x2a, 0x25, 0x15, 0x00, 0x00, 0x00, 0x00},
+-	{0x28, 0x28, 0x24, 0x14, 0x00, 0x00, 0x00, 0x00},
+-	{0x26, 0x25, 0x21, 0x13, 0x00, 0x00, 0x00, 0x00},
+-	{0x24, 0x23, 0x1f, 0x12, 0x00, 0x00, 0x00, 0x00},
+-	{0x22, 0x21, 0x1d, 0x11, 0x00, 0x00, 0x00, 0x00},
+-	{0x20, 0x20, 0x1b, 0x10, 0x00, 0x00, 0x00, 0x00},
+-	{0x1f, 0x1e, 0x1a, 0x0f, 0x00, 0x00, 0x00, 0x00},
+-	{0x1d, 0x1c, 0x18, 0x0e, 0x00, 0x00, 0x00, 0x00},
+-	{0x1b, 0x1a, 0x17, 0x0e, 0x00, 0x00, 0x00, 0x00},
+-	{0x1a, 0x19, 0x16, 0x0d, 0x00, 0x00, 0x00, 0x00},
+-	{0x18, 0x17, 0x15, 0x0c, 0x00, 0x00, 0x00, 0x00},
+-	{0x17, 0x16, 0x13, 0x0b, 0x00, 0x00, 0x00, 0x00},
+-	{0x16, 0x15, 0x12, 0x0b, 0x00, 0x00, 0x00, 0x00},
+-	{0x14, 0x14, 0x11, 0x0a, 0x00, 0x00, 0x00, 0x00},
+-	{0x13, 0x13, 0x10, 0x0a, 0x00, 0x00, 0x00, 0x00},
+-	{0x12, 0x12, 0x0f, 0x09, 0x00, 0x00, 0x00, 0x00},
+-	{0x11, 0x11, 0x0f, 0x09, 0x00, 0x00, 0x00, 0x00},
+-	{0x10, 0x10, 0x0e, 0x08, 0x00, 0x00, 0x00, 0x00},
+-	{0x0f, 0x0f, 0x0d, 0x08, 0x00, 0x00, 0x00, 0x00},
+-	{0x0e, 0x0e, 0x0c, 0x07, 0x00, 0x00, 0x00, 0x00},
+-	{0x0d, 0x0d, 0x0c, 0x07, 0x00, 0x00, 0x00, 0x00},
+-	{0x0d, 0x0c, 0x0b, 0x06, 0x00, 0x00, 0x00, 0x00},
+-	{0x0c, 0x0c, 0x0a, 0x06, 0x00, 0x00, 0x00, 0x00},
+-	{0x0b, 0x0b, 0x0a, 0x06, 0x00, 0x00, 0x00, 0x00},
+-	{0x0b, 0x0a, 0x09, 0x05, 0x00, 0x00, 0x00, 0x00},
+-	{0x0a, 0x0a, 0x09, 0x05, 0x00, 0x00, 0x00, 0x00},
+-	{0x0a, 0x09, 0x08, 0x05, 0x00, 0x00, 0x00, 0x00},
+-	{0x09, 0x09, 0x08, 0x05, 0x00, 0x00, 0x00, 0x00},
+-	{0x09, 0x08, 0x07, 0x04, 0x00, 0x00, 0x00, 0x00}
+-};
+-
+ static u8 rtl8723e_dm_initial_gain_min_pwdb(struct ieee80211_hw *hw)
+ {
+ 	struct rtl_priv *rtlpriv = rtl_priv(hw);
+-- 
+2.7.4
+
+
