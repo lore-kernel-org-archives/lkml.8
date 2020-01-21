@@ -2,343 +2,130 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F23AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 11:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45DF4C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 11:10:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 344692253D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 11:10:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ha8M5PVu"
+	by mail.kernel.org (Postfix) with ESMTP id 22A1B2253D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 11:10:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729334AbgAULK1 (ORCPT
+        id S1729396AbgAULKj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 06:10:27 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24294 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729219AbgAULK0 (ORCPT
+        Tue, 21 Jan 2020 06:10:39 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:58151 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726473AbgAULKi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 06:10:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579605024;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=b+8SEynOpND7/2OBN6UhZ1dWTPpNnOZVE/3Iwbxj2v4=;
-        b=Ha8M5PVulIjIGQ4c0lugC5b7r9f/DnxvrcwibSk3zRLFREDAognjs7Z0JhI9Ub11srnEKm
-        dYp865RUMpVB+EvzwMpZdqt3wFWIiMMszPOEo4J/R63CqkZYQ0suuIY7cF0ar3CHBNajA/
-        Cl4lcNxe1y/fBWFKwA0uTdBzeyKaZnA=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-404-NjWUO13rMVyNXIGV196ewA-1; Tue, 21 Jan 2020 06:10:23 -0500
-X-MC-Unique: NjWUO13rMVyNXIGV196ewA-1
-Received: by mail-wr1-f69.google.com with SMTP id y7so1166104wrm.3
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 03:10:22 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=b+8SEynOpND7/2OBN6UhZ1dWTPpNnOZVE/3Iwbxj2v4=;
-        b=LzEtUc/707/HEIoHbEcqtxDq6iGZ/AM3eOiolTz6ZKu5VsTpq0j18GgGKPBd7Epr7o
-         c63SVyAAHuxYVyoCgAbnZOP+lPmBEEkyE3mhTT2XKIAF00zr/L3WnLyddJxxxCpdEksp
-         pQdiOF2T/SIgKzXZuaryI89o+2LYUN4HdQRv2AbnhLJ8FRQ+xT3ggPCqLDyMpApnddTN
-         AdTPIDZzXeNfDcKvzj4j3oV9p8nb/9Xw63Ki9eepwL9ufNSBiBEbGwnmgm9zfRCqMoSB
-         At/qCXr0rnnXKcd3rO/X4tSp21vE7MGI0xyxi8fT+tKXY40zHctlEatB7FEiaP0ntewI
-         MFag==
-X-Gm-Message-State: APjAAAWjoEPLjHCx64HpFQgUCXtusDEqEwwWEvBh5LZd/06AOoNWA0ZZ
-        XMVnyVJEuAMUZo2A+dU25lqL9bZhEmcJl6UnX/Ad/mLzkfso/vND8li+D4f8Bo/0hIsxKIyKWJv
-        TmBSlDbM8ON3GjZf10QCrMbkz
-X-Received: by 2002:a5d:410e:: with SMTP id l14mr4467838wrp.238.1579605021670;
-        Tue, 21 Jan 2020 03:10:21 -0800 (PST)
-X-Google-Smtp-Source: APXvYqx6E/9G43mRcTFxNByexE6om9v7EsDQr/EzOq9zF2S7o8d+bSE4jR9kEXjwDaInyR8pb4D2Yg==
-X-Received: by 2002:a5d:410e:: with SMTP id l14mr4467801wrp.238.1579605021317;
-        Tue, 21 Jan 2020 03:10:21 -0800 (PST)
-Received: from shalem.localdomain (2001-1c00-0c0c-fe00-7e79-4dac-39d0-9c14.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:7e79:4dac:39d0:9c14])
-        by smtp.gmail.com with ESMTPSA id j12sm56198260wrw.54.2020.01.21.03.10.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jan 2020 03:10:20 -0800 (PST)
-Subject: Re: [PATCH v11 02/10] efi: Add embedded peripheral firmware support
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Peter Jones <pjones@redhat.com>,
-        Dave Olsthoorn <dave@bewaar.me>, X86 ML <x86@kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>
-References: <20200111145703.533809-1-hdegoede@redhat.com>
- <20200111145703.533809-3-hdegoede@redhat.com>
- <CALCETrUz4gdVOH=5X+MkB56ST=DNcHKicRST1j1ff0kU1yXWzw@mail.gmail.com>
- <9b5b8304-74bc-4e5c-5030-98bd6e12eaf0@redhat.com>
- <CALCETrWtf3iEdZS8zu=k60cnZtokbxRaH5dfkWoM7JokkhAL2w@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <a2d34c73-6a83-94a0-94a3-dcbbf68b25ff@redhat.com>
-Date:   Tue, 21 Jan 2020 12:10:19 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 21 Jan 2020 06:10:38 -0500
+Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1itrQE-0002Xf-PZ; Tue, 21 Jan 2020 12:10:14 +0100
+Message-ID: <8409fd7ad6b83da75c914a71accf522953a460a0.camel@pengutronix.de>
+Subject: Re: Issues with "PCI/LINK: Report degraded links via link bandwidth
+ notification"
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     "Alex G." <mr.nuke.me@gmail.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Alexandru Gagniuc <alex_gagniuc@dellteam.com>,
+        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     Jan Vesely <jano.vesely@gmail.com>, Lukas Wunner <lukas@wunner.de>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Austin Bolen <austin_bolen@dell.com>,
+        Shyam Iyer <Shyam_Iyer@dell.com>,
+        Sinan Kaya <okaya@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 21 Jan 2020 12:10:08 +0100
+In-Reply-To: <b9764896-102c-84cb-32ea-c2a122b6f0db@gmail.com>
+References: <20200120023326.GA149019@google.com>
+         <b9764896-102c-84cb-32ea-c2a122b6f0db@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-In-Reply-To: <CALCETrWtf3iEdZS8zu=k60cnZtokbxRaH5dfkWoM7JokkhAL2w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+On Mo, 2020-01-20 at 10:01 -0600, Alex G. wrote:
+> 
+> On 1/19/20 8:33 PM, Bjorn Helgaas wrote:
+> > [+cc NVMe, GPU driver folks]
+> > 
+> > On Wed, Jan 15, 2020 at 04:10:08PM -0600, Bjorn Helgaas wrote:
+> > > I think we have a problem with link bandwidth change notifications
+> > > (see https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/pcie/bw_notification.c).
+> > > 
+> > > Here's a recent bug report where Jan reported "_tons_" of these
+> > > notifications on an nvme device:
+> > > https://bugzilla.kernel.org/show_bug.cgi?id=206197
+> > > 
+> > > There was similar discussion involving GPU drivers at
+> > > https://lore.kernel.org/r/20190429185611.121751-2-helgaas@kernel.org
+> > > 
+> > > The current solution is the CONFIG_PCIE_BW config option, which
+> > > disables the messages completely.  That option defaults to "off" (no
+> > > messages), but even so, I think it's a little problematic.
+> > > 
+> > > Users are not really in a position to figure out whether it's safe to
+> > > enable.  All they can do is experiment and see whether it works with
+> > > their current mix of devices and drivers.
+> > > 
+> > > I don't think it's currently useful for distros because it's a
+> > > compile-time switch, and distros cannot predict what system configs
+> > > will be used, so I don't think they can enable it.
+> > > 
+> > > Does anybody have proposals for making it smarter about distinguishing
+> > > real problems from intentional power management, or maybe interfaces
+> > > drivers could use to tell us when we should ignore bandwidth changes?
+> > 
+> > NVMe, GPU folks, do your drivers or devices change PCIe link
+> > speed/width for power saving or other reasons?  When CONFIG_PCIE_BW=y,
+> > the PCI core interprets changes like that as problems that need to be
+> > reported.
+> > 
+> > If drivers do change link speed/width, can you point me to where
+> > that's done?  Would it be feasible to add some sort of PCI core
+> > interface so the driver could say "ignore" or "pay attention to"
+> > subsequent link changes?
+> > 
+> > Or maybe there would even be a way to move the link change itself into
+> > the PCI core, so the core would be aware of what's going on?
+> 
+> Funny thing is, I was going to suggest an in-kernel API for this.
+>    * Driver requests lower link speed 'X'
+>    * Link management interrupt fires
+>    * If link speed is at or above 'X' then do not report it.
+> I think an "ignore" flag would defeat the purpose of having link 
+> bandwidth reporting in the first place. If some drivers set it, and 
+> others don't, then it would be inconsistent enough to not be useful.
+> 
+> A second suggestion is, if there is a way to ratelimit these messages on 
+> a per-downstream port basis.
 
-On 17-01-2020 21:06, Andy Lutomirski wrote:
->> On Jan 14, 2020, at 4:25 AM, Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> ﻿Hi Andy,
->>
-> 
->> Even if we get more use of this the chances of 1 device model using
->> more then 1 embedded fw are small. Where as if we first map the
->> EFI_BOOT_SERVICES_CODE segment before doing the DMI match then we
->> do this for all EFI_BOOT_SERVICES_CODE segments on all hardware.
->> The current implementation is very much optimized to do as little
->> work as possible when there is no DMI match, which will be true
->> on almost all devices out there.
-> 
-> Fine with me.
-> 
-> 
->> If we hit firmware which is not 8 byte aligned, then yes that would be
->> a good idea, but for now I feel that that would just cause a slowdown
->> in the scanning without any benefits.
->>
-> 
-> It would shorten the code and remove a comment :). Also, a good memmem
-> implementation should be very fast, potentially faster than your loop.
-> I suspect the latter is only true in user code where SSE would get
-> used, but still.
-> 
-> it would also be unfortunate if some firmware update switches to
-> 4-byte alignment and touchscreens stop working with no explanation.
+Both AMD and Nvidia GPUs have embedded controllers, which are
+responsible for the power management. IIRC those controllers can
+autonomously initiate PCIe link speed changes depending on measured bus
+load. So there is no way for the driver to signal the requested bus
+speed to the PCIe core.
 
-So I was thinking sure, fine lets replace the loop with memmem,
-but the kernel has no memmem, it has memscan but that takes an
-int to search for, and reducing the prefix to an int seems likely
-to cause more false positives and unnecessary sha256summing.
-
-So I believe it is best to keep this as is for now, we can always
-change the alignment requirement later, now that we use memcmp
-to check the prefix changing it is just a matter of changing the
-i += 8 to e.g. i += 4.
+I guess for the GPU usecase the best we can do is to have the driver
+opt-out of the link bandwidth notifications, as the driver knows that
+there is some autonomous entity on the endpoint mucking with the link
+parameters.
 
 Regards,
-
-Hans
-
-
->>>> +
->>>> +               sha256_init(&sctx);
->>>> +               sha256_update(&sctx, map + i, desc->length);
->>>> +               sha256_final(&sctx, sha256);
->>>> +               if (memcmp(sha256, desc->sha256, 32) == 0)
->>>> +                       break;
->>>> +       }
->>>> +       if ((i + desc->length) > size) {
->>>> +               memunmap(map);
->>>> +               return -ENOENT;
->>>> +       }
->>>> +
->>>> +       pr_info("Found EFI embedded fw '%s'\n", desc->name);
->>>> +
->>> It might be nice to also log which EFI section it was in?
->>
->> The EFI sections do not have names, so all I could is log
->> the section number which does not really feel useful?
->>
->>>> +       fw = kmalloc(sizeof(*fw), GFP_KERNEL);
->>>> +       if (!fw) {
->>>> +               memunmap(map);
->>>> +               return -ENOMEM;
->>>> +       }
->>>> +
->>>> +       fw->data = kmemdup(map + i, desc->length, GFP_KERNEL);
->>>> +       memunmap(map);
->>>> +       if (!fw->data) {
->>>> +               kfree(fw);
->>>> +               return -ENOMEM;
->>>> +       }
->>>> +
->>>> +       fw->name = desc->name;
->>>> +       fw->length = desc->length;
->>>> +       list_add(&fw->list, &efi_embedded_fw_list);
->>>> +
->>> If you actually copy the firmware name instead of just a pointer to
->>> it, then you could potentially free the list of EFI firmwares.
->>
->> If we move to having a separate dmi_system_id table for this then
->> that would be true. ATM the dmi_system_id from
->> drivers/platform/x86/touchscreen_dmi.c
->> is not freed as it is referenced from a bus-notifier.
->>
->>> Why are you copying the firmware into linear (kmemdup) memory here
->>
->> The kmemdup is because the EFI_BOOT_SERVICES_CODE section is
->> free-ed almost immediately after we run.
->>
->>> just to copy it to vmalloc space down below...
->>
->> The vmalloc is because the efi_get_embedded_fw() function is
->> a helper for later implementing firmware_Request_platform
->> which returns a struct firmware *fw and release_firmware()
->> uses vfree() to free the firmware contents.
->>
->> I guess we could have efi_get_embedded_fw() return an const u8 *
->> and have the firmware code do the vmalloc + memcpy but it boils
->> down to the same thing.
->>
->>
->>>> +       return 0;
->>>> +}
->>>> +
->>>> +void __init efi_check_for_embedded_firmwares(void)
->>>> +{
->>>> +       const struct efi_embedded_fw_desc *fw_desc;
->>>> +       const struct dmi_system_id *dmi_id;
->>>> +       efi_memory_desc_t *md;
->>>> +       int i, r;
->>>> +
->>>> +       for (i = 0; embedded_fw_table[i]; i++) {
->>>> +               dmi_id = dmi_first_match(embedded_fw_table[i]);
->>>> +               if (!dmi_id)
->>>> +                       continue;
->>>> +
->>>> +               fw_desc = dmi_id->driver_data;
->>>> +
->>>> +               /*
->>>> +                * In some drivers the struct driver_data contains may contain
->>>> +                * other driver specific data after the fw_desc struct; and
->>>> +                * the fw_desc struct itself may be empty, skip these.
->>>> +                */
->>>> +               if (!fw_desc->name)
->>>> +                       continue;
->>>> +
->>>> +               for_each_efi_memory_desc(md) {
->>>> +                       if (md->type != EFI_BOOT_SERVICES_CODE)
->>>> +                               continue;
->>>> +
->>>> +                       r = efi_check_md_for_embedded_firmware(md, fw_desc);
->>>> +                       if (r == 0)
->>>> +                               break;
->>>> +               }
->>>> +       }
->>>> +
->>>> +       checked_for_fw = true;
->>>> +}
->>> Have you measured how long this takes on a typical system per matching DMI id?
->>
->> I originally wrote this approx. 18 months ago, it has been on hold for a while
->> since it needed a sha256 method which would work before subsys_initcall-s
->> run so I couldn't use the standard crypto_alloc_shash() stuff. In the end
->> I ended up merging the duplicate purgatory and crypto/sha256_generic.c
->> generic C SHA256 implementation into a set of new directly callable lib
->> functions in lib/crypto/sha256.c, just so that I could move forward with
->> this...
->>
->> Anyways the reason for this background info is that because this is a while
->> ago I do not remember exactly how, but yes I did measure this (but not
->> very scientifically) and there was no discernible difference in boot
->> to init (from the initrd) with this in place vs without this.
->>
->>>> +
->>>> +int efi_get_embedded_fw(const char *name, void **data, size_t *size)
->>>> +{
->>>> +       struct efi_embedded_fw *iter, *fw = NULL;
->>>> +       void *buf = *data;
->>>> +
->>>> +       if (!checked_for_fw) {
->>> WARN_ON_ONCE?  A stack dump would be quite nice here.
->>
->> As discussed when this check was added (discussion in v7 of
->> the set I guess, check added in v8) we can also hit this without
->> it being a bug, e.g. when booted through kexec the whole
->> efi_check_for_embedded_firmwares() call we be skipped, hence the
->> pr_warn.
->>
->>
->>>> +       buf = vmalloc(fw->length);
->>>> +       if (!buf)
->>>> +               return -ENOMEM;
->>>> +
->>>> +       memcpy(buf, fw->data, fw->length);
->>>> +       *size = fw->length;
->>>> +       *data = buf;
->>> See above.  What's vmalloc() for?  Where's the vfree()?
->>
->> See above for my answer. I'm fine with moving this into the
->> firmware code, since that is where the matching vfree is, please
->> let me know how you want to proceed with this.
->>
->>> BTW, it would be very nice to have a straightforward way
->>> (/sys/kernel/debug/efi_firmware/[name]?) to dump all found firmwares.
->>
->> That is an interesting idea, we could add a subsys_init call or
->> some such to add this to debugfs (efi_check_for_embedded_firmwares runs
->> too early).
->>
->> But given how long this patch-set has been in the making I would really
->> like to get this (or at least the first 2 patches as a start) upstream,
->> so for now I would like to keep the changes to a minimum. Are you ok
->> with me adding the debugfs support with a follow-up patch ?
->>
->> Let me also reply to your summary comment elsewhere in the thread here:
->>
->>> Early in boot, you check a bunch of firmware descriptors, bundled with
->>> drivers, to search EFI code and data for firmware before you free said
->>> code and data.  You catalogue it by name.  Later on, you use this list
->>> as a fallback, again catalogued by name.  I think it would be rather
->>> nicer if you simply had a list in a single file containing all these
->>> descriptors rather than commingling it with the driver's internal dmi
->>> data.  This gets rid of all the ifdeffery and module issues.  It also
->>> avoids any potential nastiness when you have a dmi entry that contains
->>> driver_data that points into the driver when the driver is a module.
->>>
->>> And you can mark the entire list __initdata.  And you can easily (now
->>> or later on) invert the code flow so you map each EFI region exactly
->>> once and then search for all the firmware in it.
->>
->> I believe we have mostly discussed this above. At least for the
->> X86 touchscreen case, which is the only user of this for now, I
->> believe that re-using the table from drivers/platform/x86/touchscreen_dmi.c
->> is better as it avoids duplication of DMI strings and it keeps all
->> the info in one place (also avoiding churn in 2 files / 2 different
->> trees when new models are added).
->>
->> I agree that when looking at this as a generic mechanism which may be
->> used elsewhere, your suggestion makes a lot of sense. But even though
->> this is very much written so that it can be used as a generic mechanism
->> I'm not sure if other users will appear. So for now, with only the X86
->> touchscreen use-case actually using this I believe the current
->> implementation is best, but I'm definitely open to changing this around
->> if more users show up.
->>
->> Regards,
->>
->> Hans
->>
-> 
+Lucas
 
