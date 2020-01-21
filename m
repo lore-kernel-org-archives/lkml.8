@@ -2,140 +2,161 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 350A5C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C9CEC33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CD8B22314
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:09:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579622997;
-	bh=R1eEXnFyip2fv+0SKvdc1gYFUwou2ZbCerOxCchGwKs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=DIFro+59VORPjhjjeSRZCOwNMC8MoqI+ugcgQKpo3SFTjrM8jE4S79YtF812oUdWE
-	 oyi5xsMcOyv6bsFUAwTjAZUS+ZENkBUItzV8UgHSfZF0WLFF6ZJkLs3dunmspcExAJ
-	 w8qClyWB3RtzP8nWUSvcXgRjU/pOu2hUBl/kgmVo=
+	by mail.kernel.org (Postfix) with ESMTP id 144BF217F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:10:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729235AbgAUQJ4 convert rfc822-to-8bit (ORCPT
+        id S1729336AbgAUQKL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 11:09:56 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:35365 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726555AbgAUQJ4 (ORCPT
+        Tue, 21 Jan 2020 11:10:11 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:50579 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726555AbgAUQKL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 11:09:56 -0500
-Received: by mail-oi1-f195.google.com with SMTP id k4so3065190oik.2;
-        Tue, 21 Jan 2020 08:09:55 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=WN3HnFcBCL605feigra+tO+syYiJ3DTCVagEeBtU1zE=;
-        b=pY4OHNDSoG/gfHQ3/qw2TD+J856e/Wn44+XpHnemeKDgaqkXMcwLSOtQ/dpIvDDDca
-         ERFtnEP2fx44/QU3K0VQvPC1AM5mBMLxQwaohYKuwtPm78pLPTFFE7q1isROpOp5nvKX
-         30IJDN4D7g5xCuhD/UXfW7+qd+SwFinlxl1sOwij2CzNDZ7kExlbameD0U4iPzDGDYry
-         pDlenB/+gaWWHCOQZsATobEKXhPrWRxwtk9q28HODwy+Lt4UzU4L8l7b9PYe3MYIOoLn
-         sxwfB5YT0JZ00Bb+OxS/LGNO5by2al81nCcgouhVrV97lQ2UIsx4bXvihBrvvlW7ih63
-         srww==
-X-Gm-Message-State: APjAAAV8FBC5bdbZdbGgMK6GzfMvm5p8vYbVAPY4LMPHvmz9gaJ9HLik
-        8/1mvUZNIKYmRtVcui17jM2oHr/WXj36wql+yhU=
-X-Google-Smtp-Source: APXvYqyFb+SVqk9VpuQeRnX96Fhq2Tj/z5ocFPbgiTRYbyNkL8iXSmsSj+ocij4JKF0ClJaAcyrt26a2HU5ddNAJ9aE=
-X-Received: by 2002:a54:4e96:: with SMTP id c22mr3615375oiy.110.1579622995229;
- Tue, 21 Jan 2020 08:09:55 -0800 (PST)
-MIME-Version: 1.0
-References: <20200121134157.20396-1-sakari.ailus@linux.intel.com> <20200121134157.20396-7-sakari.ailus@linux.intel.com>
-In-Reply-To: <20200121134157.20396-7-sakari.ailus@linux.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 21 Jan 2020 17:09:44 +0100
-Message-ID: <CAJZ5v0iJXUjK0n7mkqxagX9FtOmMsLqVMmU2xpQOLSb0aBWSMA@mail.gmail.com>
-Subject: Re: [PATCH v4 6/6] Documentation: ACPI: Document probe-low-power _DSD property
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     linux-i2c <linux-i2c@vger.kernel.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Bingbu Cao <bingbu.cao@intel.com>, linux-media@vger.kernel.org,
-        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
-        Hyungwoo Yang <hyungwoo.yang@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Mani, Rajmohan" <rajmohan.mani@intel.com>,
-        Tomasz Figa <tfiga@chromium.org>
+        Tue, 21 Jan 2020 11:10:11 -0500
+Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1itw6K-00023c-2Z; Tue, 21 Jan 2020 17:10:00 +0100
+Message-ID: <1971902c68ff805ee0b4a66f558afe06e6edf0c5.camel@pengutronix.de>
+Subject: Re: [PATCH] drm/etnaviv: only reject timeouts with tv_nsec >= 2
+ seconds
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Guido =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     Russell King <linux+etnaviv@armlinux.org.uk>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Sam Ravnborg <sam@ravnborg.org>, Rob Herring <robh@kernel.org>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 21 Jan 2020 17:09:56 +0100
+In-Reply-To: <20200121125546.GA71415@bogon.m.sigxcpu.org>
+References: <20200121114553.2667556-1-arnd@arndb.de>
+         <20200121125546.GA71415@bogon.m.sigxcpu.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.30.5-1.1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 2:41 PM Sakari Ailus
-<sakari.ailus@linux.intel.com> wrote:
->
-> Document the probe-low-power _DSD property and how it is used with I²C
-> drivers.
->
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> ---
->  .../acpi/dsd/probe-low-power.rst              | 28 +++++++++++++++++++
->  Documentation/firmware-guide/acpi/index.rst   |  1 +
->  2 files changed, 29 insertions(+)
->  create mode 100644 Documentation/firmware-guide/acpi/dsd/probe-low-power.rst
->
-> diff --git a/Documentation/firmware-guide/acpi/dsd/probe-low-power.rst b/Documentation/firmware-guide/acpi/dsd/probe-low-power.rst
-> new file mode 100644
-> index 0000000000000..e0343ffefe071
-> --- /dev/null
-> +++ b/Documentation/firmware-guide/acpi/dsd/probe-low-power.rst
-> @@ -0,0 +1,28 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +======================================
-> +Probing I²C devices in low power state
-> +======================================
-> +
-> +Introduction
-> +============
-> +
-> +In some cases it may be preferred to leave certain devices powered off for
-> +the entire system bootup if powering on these devices has adverse side
-> +effects, beyond just powering on the said device. The _DSD property
-> +"probe-low-power" has been defined for this purpose.
+Hi Guido,
 
-Well, if you say "has been defined", you need to provide a pointer to
-the definition document (a specification of some sort or similar).
+On Di, 2020-01-21 at 13:55 +0100, Guido Günther wrote:
+> Hi,
+> On Tue, Jan 21, 2020 at 12:45:25PM +0100, Arnd Bergmann wrote:
+> > As Guido Günther reported, get_abs_timeout() in the etnaviv user space
+> > sometimes passes timeouts with nanosecond values larger than 1000000000,
+> > which gets rejected after my first patch.
+> > 
+> > To avoid breaking this, while also not allowing completely arbitrary
+> > values, set the limit to 1999999999 and use set_normalized_timespec64()
+> > to get the correct format before comparing it.
+> 
+> I'm seeing values up to 5 seconds so I need
+> 
+>      if (args->timeout.tv_nsec > (5 * NSEC_PER_SEC))
+> 
+> to unbreak rendering. Which seems to match what mesa's get_abs_timeout()
+> does and how it's invoked.
 
-> +
-> +How it works
-> +============
-> +
-> +The property "probe-low-power" boolean property may be used to tell Linux
-> +that the I²C framework should instruct the kernel ACPI framework to leave
-> +the device in the low power state. If the driver indicates its support for
-> +this in its struct i2c_driver.probe_low_power field and the
-> +"probe-low-power" property is present, the device will not be powered on
-> +for probe.
-> +
-> +The downside is that as the device is not powered on, even if there's a
-> +problem with the device, the driver likely probes just fine but the first
-> +user will find out the device doesn't work, instead of a failure at probe
-> +time. This feature should thus be used sparingly.
-> diff --git a/Documentation/firmware-guide/acpi/index.rst b/Documentation/firmware-guide/acpi/index.rst
-> index ad3b5afdae77e..4e4ac675c0ff8 100644
-> --- a/Documentation/firmware-guide/acpi/index.rst
-> +++ b/Documentation/firmware-guide/acpi/index.rst
-> @@ -11,6 +11,7 @@ ACPI Support
->     dsd/graph
->     dsd/data-node-references
->     dsd/leds
-> +   dsd/probe-low-power
->     enumeration
->     osi
->     method-customizing
-> --
-> 2.20.1
->
+I have not tested this myself yet, only looked at the code. From the
+code I quoted earlier, I don't see how we end up with 5 * NSEC_PER_SEC
+in the tv_nsec member, even if the timeout passed to get_abs_timeout()
+is 5 seconds.
+
+Regards,
+Lucas
+
+>    with that:
+> 
+> Tested-by: Guido Günther <agx@sigxcpu.org>
+> 
+> Cheers,
+>  -- Guido
+> 
+> > This also addresses the off-by-1 glitch reported by Ben Hutchings.
+> > 
+> > Fixes: 172a216ff334 ("drm/etnaviv: reject timeouts with tv_nsec >= NSEC_PER_SEC")
+> > Cc: Guido Günther <agx@sigxcpu.org>
+> > Link: https://patchwork.kernel.org/patch/11291089/
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > ---
+> >  drivers/gpu/drm/etnaviv/etnaviv_drv.c | 10 +++++++---
+> >  drivers/gpu/drm/etnaviv/etnaviv_drv.h |  6 ++----
+> >  2 files changed, 9 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/etnaviv/etnaviv_drv.c b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
+> > index 3eb0f9223bea..d94740c123d3 100644
+> > --- a/drivers/gpu/drm/etnaviv/etnaviv_drv.c
+> > +++ b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
+> > @@ -292,7 +292,11 @@ static int etnaviv_ioctl_gem_cpu_prep(struct drm_device *dev, void *data,
+> >  	if (args->op & ~(ETNA_PREP_READ | ETNA_PREP_WRITE | ETNA_PREP_NOSYNC))
+> >  		return -EINVAL;
+> >  
+> > -	if (args->timeout.tv_nsec > NSEC_PER_SEC)
+> > +	/*
+> > +	 * existing user space passes non-normalized timespecs, but never
+> > +	 * more than 2 seconds worth of nanoseconds
+> > +	 */
+> > +	if (args->timeout.tv_nsec >= (2 * NSEC_PER_SEC))
+> >  		return -EINVAL;
+> >  
+> >  	obj = drm_gem_object_lookup(file, args->handle);
+> > @@ -358,7 +362,7 @@ static int etnaviv_ioctl_wait_fence(struct drm_device *dev, void *data,
+> >  	if (args->flags & ~(ETNA_WAIT_NONBLOCK))
+> >  		return -EINVAL;
+> >  
+> > -	if (args->timeout.tv_nsec > NSEC_PER_SEC)
+> > +	if (args->timeout.tv_nsec >= (2 * NSEC_PER_SEC))
+> >  		return -EINVAL;
+> >  
+> >  	if (args->pipe >= ETNA_MAX_PIPES)
+> > @@ -412,7 +416,7 @@ static int etnaviv_ioctl_gem_wait(struct drm_device *dev, void *data,
+> >  	if (args->flags & ~(ETNA_WAIT_NONBLOCK))
+> >  		return -EINVAL;
+> >  
+> > -	if (args->timeout.tv_nsec > NSEC_PER_SEC)
+> > +	if (args->timeout.tv_nsec >= (2 * NSEC_PER_SEC))
+> >  		return -EINVAL;
+> >  
+> >  	if (args->pipe >= ETNA_MAX_PIPES)
+> > diff --git a/drivers/gpu/drm/etnaviv/etnaviv_drv.h b/drivers/gpu/drm/etnaviv/etnaviv_drv.h
+> > index efc656efeb0f..3e47050af706 100644
+> > --- a/drivers/gpu/drm/etnaviv/etnaviv_drv.h
+> > +++ b/drivers/gpu/drm/etnaviv/etnaviv_drv.h
+> > @@ -109,12 +109,10 @@ static inline size_t size_vstruct(size_t nelem, size_t elem_size, size_t base)
+> >  static inline unsigned long etnaviv_timeout_to_jiffies(
+> >  	const struct drm_etnaviv_timespec *timeout)
+> >  {
+> > -	struct timespec64 ts, to = {
+> > -		.tv_sec = timeout->tv_sec,
+> > -		.tv_nsec = timeout->tv_nsec,
+> > -	};
+> > +	struct timespec64 ts, to;
+> >  
+> >  	ktime_get_ts64(&ts);
+> > +	set_normalized_timespec64(&to, timeout->tv_sec, timeout->tv_nsec);
+> >  
+> >  	/* timeouts before "now" have already expired */
+> >  	if (timespec64_compare(&to, &ts) <= 0)
+> > -- 
+> > 2.25.0
+> > 
+
