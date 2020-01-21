@@ -2,81 +2,127 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4385C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1282EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:34:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B43C124125
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:33:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D265B20882
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:34:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Wu6mRIJr"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="fvEOfJkZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729127AbgAUPdk (ORCPT
+        id S1729147AbgAUPei (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 10:33:40 -0500
-Received: from mail-qt1-f171.google.com ([209.85.160.171]:40581 "EHLO
-        mail-qt1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727508AbgAUPdk (ORCPT
+        Tue, 21 Jan 2020 10:34:38 -0500
+Received: from gateway23.websitewelcome.com ([192.185.49.124]:21679 "EHLO
+        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727508AbgAUPeh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 10:33:40 -0500
-Received: by mail-qt1-f171.google.com with SMTP id v25so2906391qto.7
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 07:33:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=yQSao6a+Ppy+4IZJ+9ifO0X+dGmBtWenG0uMva+ys4Q=;
-        b=Wu6mRIJrRHilWp4LN+ydNPxuYoUG0Uc1A3WXEnAsSL8sKN5yWIYvwcLak7AafqmgjA
-         tsJcOMNHDTiEw6xRCt0InkdWJuH70RuxHOyjyNHWILN6/q896hgQgE9qrrDo+rrUdXzr
-         MjhnMiAMHUJ3fdlb5tThbxR4Cw2upgniAmPQQMRlM9MeP3R/8XLGK01ZnD61Abtl6gVo
-         pN2D8rriMl06+chDE5Nzm4J2HqLndwUjR8qDJNtrB5J8ky1q+zNkXRuqge5lA8TLnna7
-         eegGpA0SYbV5G+raQ5Jvjl7s7ygXws+oLijR0GkKFeOkYjdRZYke7CCrSLP858zojU3m
-         58Yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=yQSao6a+Ppy+4IZJ+9ifO0X+dGmBtWenG0uMva+ys4Q=;
-        b=UZgKV03fyl+TQgDS15jYiqTfb0uOey0Du+LwTdu3TOKBL7WedMmqnHi5zMRL5bv6FS
-         b1lsg9QMHC1T88Gqwk+LQfTN06ErCCai4dB+sDA4GA8sS1lseGMGuht3ZqGvIx4dKP5K
-         Yw9O59QBBWGfou+Xq+ezC46vmjI0e4JdIdEIgO5fgU82HWsnwP613yfZ/3alcBTb2FXx
-         9man1x8jjk/3DNkRyadB5KFDIc7XKvu86mGxtbxN/eZ3TSMO21UCggdJc2N8XBkNCovd
-         ELsz55EOju1+MiBqMArw+TrrP2r4phhLVAF+6O85ZwzKByoHvWrxnjIER2dL+3MiQe3t
-         aFLA==
-X-Gm-Message-State: APjAAAWqBskSEZI/nZLP4honO6UPjW9r9+OPLDTCHYVHgmqH1bxn6XX0
-        h6QX/ilB7xlWgpI1wwsVaAWlrA==
-X-Google-Smtp-Source: APXvYqyw4EDF8dlsXzfOhK/eO2nnxB+7zMS3dQiMJb675hngPd+nQbABTuj7xAqrgkIBU7KXGKV1Iw==
-X-Received: by 2002:ac8:70d3:: with SMTP id g19mr713587qtp.209.1579620819357;
-        Tue, 21 Jan 2020 07:33:39 -0800 (PST)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id x34sm19503703qtd.20.2020.01.21.07.33.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 Jan 2020 07:33:38 -0800 (PST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
-Subject: Re: [PATCH -next] x86/mm/pat: silence a data race in cpa_4k_install
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <20200121152853.GI7808@zn.tnic>
-Date:   Tue, 21 Jan 2020 10:33:37 -0500
-Cc:     Marco Elver <elver@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <44A4276D-5530-4DAA-8FC7-753D03ADD2F3@lca.pw>
-References: <20200121151503.2934-1-cai@lca.pw>
- <CANpmjNPR+mbadR0DDKGUhTkaXJi=vsHmhvq3+Rz0Hrx=E9V_Qg@mail.gmail.com>
- <20200121152853.GI7808@zn.tnic>
-To:     Borislav Petkov <bp@alien8.de>
-X-Mailer: Apple Mail (2.3608.40.2.2.4)
+        Tue, 21 Jan 2020 10:34:37 -0500
+X-Greylist: delayed 1360 seconds by postgrey-1.27 at vger.kernel.org; Tue, 21 Jan 2020 10:34:37 EST
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway23.websitewelcome.com (Postfix) with ESMTP id B8901B6F8
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 09:11:56 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id tvC8ij98O32AdtvC8isvap; Tue, 21 Jan 2020 09:11:56 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:Subject:From:References:Cc:To:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=gjlJV5wKgFb1He4YAJ98M6BrY00AixE+NrUX1UsbNIw=; b=fvEOfJkZ8t80xXesNrBzteOmSm
+        dLK86Al1z7aBZr5QuSzw5E2Sd56HwP5EWlOQvYY2GGI3vx1CV9NOiaCzNxXukQTZfxZ+1fBMnX7Bc
+        VQm47yQKAqiAY4NFI4ZSCQ29j15BAJJfxBxkWRYC/YQ0TyCdGSUY7w+eJWX2pRxIBwb265VdoVuRd
+        9jXnEzXB0/0w4qvRuCsbvW75vRUWWkSCkyoXkB1/JtJziAbIYGz6RTzvd26RTIllyMHJxlcTxTIrS
+        yKxYura7kOSXPR+6j2oWaVtqdvsq634pvp38TMIpukwy6jR97FZX2pCFC92z8M3HWFOUQPWhkZADg
+        Af+1Lg8w==;
+Received: from [189.152.234.38] (port=52988 helo=[192.168.43.131])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1itvC8-000TSh-CI; Tue, 21 Jan 2020 09:11:56 -0600
+To:     Mikael Magnusson <mikachu@gmail.com>
+Cc:     gregkh@linuxfoundation.org, jslaby@suse.com,
+        linux-kernel@vger.kernel.org
+References: <957960eb-118f-21c7-8901-50f54d65d7cb@embeddedor.com>
+ <20200121150053.31457-1-mikachu@gmail.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Subject: Re: [PATCH] tty: n_hdlc: Use flexible-array member
+Message-ID: <995ff17c-81e2-15ad-c776-f07c8d61385b@embeddedor.com>
+Date:   Tue, 21 Jan 2020 09:14:15 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <20200121150053.31457-1-mikachu@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.152.234.38
+X-Source-L: No
+X-Exim-ID: 1itvC8-000TSh-CI
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.131]) [189.152.234.38]:52988
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 4
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -84,19 +130,74 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-> On Jan 21, 2020, at 10:28 AM, Borislav Petkov <bp@alien8.de> wrote:
->=20
-> On Tue, Jan 21, 2020 at 04:19:22PM +0100, Marco Elver wrote:
->> Could you remove the verbatim copy of my email? Maybe something like:
->>=20
->> "Increments to cpa_4k_install may happen concurrently, as detected by =
-KCSAN:
->>=20
->> <....... the stack traces ......>
->=20
-> ... and drop the stack traces and fix your subject to say what you're
-> actually "fixing".
+On 1/21/20 09:00, Mikael Magnusson wrote:
+> Gustavo Silva wrote:
+>> On 1/20/20 23:54, Jiri Slaby wrote:
+>>> On 21. 01. 20, 0:45, Gustavo A. R. Silva wrote:
+>>>> diff --git a/drivers/tty/n_hdlc.c b/drivers/tty/n_hdlc.c
+>>>> index 98361acd3053..b5499ca8757e 100644
+>>>> --- a/drivers/tty/n_hdlc.c
+>>>> +++ b/drivers/tty/n_hdlc.c
+>>>> @@ -115,7 +115,7 @@
+>>>>  struct n_hdlc_buf {
+>>>>    struct list_head  list_item;
+>>>>    int     count;
+>>>> -  char      buf[1];
+>>>> +  char      buf[];
+>>>>  };
+>>>>  
+>>>>  #define N_HDLC_BUF_SIZE (sizeof(struct n_hdlc_buf) + maxframe)
+>>>
+>>> Have you checked, that you don't have to "+ 1" here now?
+>>>
+>>
+>> Yep. That's not necessary.
+>>
+>> _In terms of memory allocation_, zero-length/one-element arrays and flexible-array
+>> members work exactly the same way.
+> 
+> This is not true, but maybe it's still not necessary in this particular code, I didn't examine it.
+> 
 
-Does this title work for you?
+I should have said _in terms of dynamic memory allocation_.
 
-x86/mm/pat: silence an data race for KCSAN=
+Your example is correct:
+
+"... a one-element array always occupies at least as much space as a single object of the type."[1]
+
+But the above does not affect on the current code.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+
+Thanks
+--
+Gustavo
+
+> Consider the following:
+> #include <stdio.h>
+> 
+> struct flex {
+>   int count;
+>   char buf[PRE];
+>   char flex[];
+> };
+> 
+> struct one {
+>   int count;
+>   char buf[PRE];
+>   char one[1];
+> };
+> 
+> void main() {
+>   printf("%ld %ld\n", sizeof(struct flex), sizeof(struct one));
+> }
+> 
+> --snip--
+> 
+> % gcc -o siz siz.c -std=c99 -DPRE=7 && ./siz
+> 12 12
+> % gcc -o siz siz.c -std=c99 -DPRE=8 && ./siz
+> 12 16
+> 
+> Since all the preceding stuff in the struct in the patch is aligned, then the [1] will definitely add something to the sizeof count.
+> 
