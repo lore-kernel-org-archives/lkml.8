@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2EE0C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:41:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C3DC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 799F722314
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:41:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17A7A2253D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:41:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="chTWIakN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b9fivagN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729378AbgAUPlR (ORCPT
+        id S1729246AbgAUPlI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 10:41:17 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40291 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729308AbgAUPlL (ORCPT
+        Tue, 21 Jan 2020 10:41:08 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:50910 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729130AbgAUPlH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 10:41:11 -0500
+        Tue, 21 Jan 2020 10:41:07 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579621270;
+        s=mimecast20190719; t=1579621266;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=z+b6V5HeDud0yNsGLpuh/dUUx85IomN3FAlI0ft8ea0=;
-        b=chTWIakNG7d/m224OHjgHBM6Q60L+KD4DmTv1kCsP/Q1IoKYG4of8YaNfTTk/ZaDZZsD3q
-        eJYnHxR7p4lyA0vVVUbXRXWFOE2uDE5Njkl9mbOr3VFWkfY1UsZier2OZJXyfEaOr/I6oe
-        O8gH1bG/hcqpUtaC+O+u4AoqaQGLiyY=
+        bh=IcawgmeP/9SOelURBigSUicEKZ7h4SFbJprPzNN3llY=;
+        b=b9fivagNU436Yq8qN+4PQoYdwTWHUN4A4xDQQ45Ea6QA8nldbm3CauFmak47HWGXyUXn73
+        EeZP2b3oMa+v5+p8xaVfN9xL2G/M3x/HRy2Rf/S6GKH4TYa0ccUUs7uuWf9ZaqcsU/DMYJ
+        xlxRr3ofPkaS2ZnFjgLTtTZohyzust4=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-253-_02OV-LvPEyVIJO_q3NS6w-1; Tue, 21 Jan 2020 10:41:08 -0500
-X-MC-Unique: _02OV-LvPEyVIJO_q3NS6w-1
+ us-mta-231-PoLucfwkPBuQOhLUs96oVg-1; Tue, 21 Jan 2020 10:41:01 -0500
+X-MC-Unique: PoLucfwkPBuQOhLUs96oVg-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6217B18C35C1;
-        Tue, 21 Jan 2020 15:41:07 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D82188EB474;
+        Tue, 21 Jan 2020 15:40:58 +0000 (UTC)
 Received: from llong.com (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 95DB46025F;
-        Tue, 21 Jan 2020 15:41:04 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2E3A260FC1;
+        Tue, 21 Jan 2020 15:40:58 +0000 (UTC)
 From:   Waiman Long <longman@redhat.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Will Deacon <will.deacon@arm.com>
 Cc:     linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
         Waiman Long <longman@redhat.com>
-Subject: [PATCH v4 7/7] locking/lockdep: Add a fast path for chain_hlocks allocation
-Date:   Tue, 21 Jan 2020 10:40:09 -0500
-Message-Id: <20200121154009.11993-8-longman@redhat.com>
+Subject: [PATCH v4 2/7] locking/lockdep: Display irq_context names in /proc/lockdep_chains
+Date:   Tue, 21 Jan 2020 10:40:04 -0500
+Message-Id: <20200121154009.11993-3-longman@redhat.com>
 In-Reply-To: <20200121154009.11993-1-longman@redhat.com>
 References: <20200121154009.11993-1-longman@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
@@ -60,71 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When alloc_chain_hlocks() is called, the most likely scenario is
-to allocate from the primordial chain block which holds the whole
-chain_hlocks[] array initially. It is the primordial chain block if its
-size is bigger than MAX_LOCK_DEPTH. As long as the number of entries left
-after splitting is still bigger than MAX_CHAIN_BUCKETS it will remain
-in bucket 0. By splitting out a sub-block at the end, we only need to
-adjust the size without changing any of the existing linkage information.
-This optimized fast path can reduce the latency of allocation requests.
-
-This patch does change the order by which chain_hlocks entries are
-allocated. The original code allocates entries from the beginning of
-the array. Now it will be allocated from the end of the array backward.
+Currently, the irq_context field of a lock chains displayed in
+/proc/lockdep_chains is just a number. It is likely that many people
+may not know what a non-zero number means. To make the information more
+useful, print the actual irq names ("softirq" and "hardirq") instead.
 
 Signed-off-by: Waiman Long <longman@redhat.com>
 ---
- kernel/locking/lockdep.c | 24 ++++++++++++++++++++----
- 1 file changed, 20 insertions(+), 4 deletions(-)
+ kernel/locking/lockdep_proc.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 6d0f6a256d63..12148bb6d2c1 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -2702,15 +2702,19 @@ static inline int chain_block_size(int offset)
- 	return (chain_hlocks[offset + 2] << 16) | chain_hlocks[offset + 3];
- }
+diff --git a/kernel/locking/lockdep_proc.c b/kernel/locking/lockdep_proc.c
+index dadb7b7fba37..5e64a6ec09c2 100644
+--- a/kernel/locking/lockdep_proc.c
++++ b/kernel/locking/lockdep_proc.c
+@@ -128,6 +128,13 @@ static int lc_show(struct seq_file *m, void *v)
+ 	struct lock_chain *chain = v;
+ 	struct lock_class *class;
+ 	int i;
++	static const char * const irq_strs[] = {
++		[0]			     = "0",
++		[LOCK_CHAIN_HARDIRQ_CONTEXT] = "hardirq",
++		[LOCK_CHAIN_SOFTIRQ_CONTEXT] = "softirq",
++		[LOCK_CHAIN_SOFTIRQ_CONTEXT|
++		 LOCK_CHAIN_HARDIRQ_CONTEXT] = "hardirq|softirq",
++	};
  
-+static inline void init_chain_block_size(int offset, int size)
-+{
-+	chain_hlocks[offset + 2] = size >> 16;
-+	chain_hlocks[offset + 3] = (u16)size;
-+}
-+
- static inline void init_chain_block(int offset, int next, int bucket, int size)
- {
- 	chain_hlocks[offset] = (next >> 16) | CHAIN_BLK_FLAG;
- 	chain_hlocks[offset + 1] = (u16)next;
+ 	if (v == SEQ_START_TOKEN) {
+ 		if (nr_chain_hlocks > MAX_LOCKDEP_CHAIN_HLOCKS)
+@@ -136,7 +143,7 @@ static int lc_show(struct seq_file *m, void *v)
+ 		return 0;
+ 	}
  
--	if (bucket == 0) {
--		chain_hlocks[offset + 2] = size >> 16;
--		chain_hlocks[offset + 3] = (u16)size;
--	}
-+	if (bucket == 0)
-+		init_chain_block_size(offset, size);
- }
+-	seq_printf(m, "irq_context: %d\n", chain->irq_context);
++	seq_printf(m, "irq_context: %s\n", irq_strs[chain->irq_context]);
  
- static inline void add_chain_block(int offset, int size)
-@@ -2810,6 +2814,18 @@ static int alloc_chain_hlocks(int req)
- 			return curr;
- 		}
- 
-+		/*
-+		 * Fast path: splitting out a sub-block at the end of the
-+		 * primordial chain block.
-+		 */
-+		if (likely((size > MAX_LOCK_DEPTH) &&
-+			   (size - req > MAX_CHAIN_BUCKETS))) {
-+			size -= req;
-+			nr_free_chain_hlocks -= req;
-+			init_chain_block_size(curr, size);
-+			return curr + size;
-+		}
-+
- 		if (size > max_size) {
- 			max_prev = prev;
- 			max_curr = curr;
+ 	for (i = 0; i < chain->depth; i++) {
+ 		class = lock_chain_get_class(chain, i);
 -- 
 2.18.1
 
