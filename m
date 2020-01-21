@@ -2,105 +2,81 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A589C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 22:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6411EC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 22:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 672F524656
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 22:11:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3959024656
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 22:11:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729489AbgAUWLX (ORCPT
+        id S1729106AbgAUWKg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 17:11:23 -0500
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:44792 "EHLO
+        Tue, 21 Jan 2020 17:10:36 -0500
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:44722 "EHLO
         kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729064AbgAUWKh (ORCPT
+        with ESMTP id S1728139AbgAUWKg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 17:10:37 -0500
+        Tue, 21 Jan 2020 17:10:36 -0500
 Received: by kvm5.telegraphics.com.au (Postfix, from userid 502)
-        id 5C724299A4; Tue, 21 Jan 2020 17:10:36 -0500 (EST)
+        id DDD5229980; Tue, 21 Jan 2020 17:10:35 -0500 (EST)
+Message-Id: <cover.1579641728.git.fthain@telegraphics.com.au>
+From:   Finn Thain <fthain@telegraphics.com.au>
+Subject: [PATCH net v2 00/12] Fixes for SONIC ethernet driver
+Date:   Wed, 22 Jan 2020 08:22:08 +1100
 To:     "David S. Miller" <davem@davemloft.net>
 Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Chris Zankel <chris@zankel.net>,
         Laurent Vivier <laurent@vivier.eu>,
         Geert Uytterhoeven <geert@linux-m68k.org>,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-Id: <960febac5aedee833195d0270ca1cde5d81a5d43.1579641728.git.fthain@telegraphics.com.au>
-In-Reply-To: <cover.1579641728.git.fthain@telegraphics.com.au>
-References: <cover.1579641728.git.fthain@telegraphics.com.au>
-From:   Finn Thain <fthain@telegraphics.com.au>
-Subject: [PATCH net v2 06/12] net/sonic: Avoid needless receive descriptor EOL
- flag updates
-Date:   Wed, 22 Jan 2020 08:22:08 +1100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The while loop in sonic_rx() traverses the rx descriptor ring. It stops
-when it reaches a descriptor that the SONIC has not used. Each iteration
-advances the EOL flag so the SONIC can keep using more descriptors.
-Therefore, the while loop has no definite termination condition.
+Hi David,
 
-The algorithm described in the National Semiconductor literature is quite
-different. It consumes descriptors up to the one with its EOL flag set
-(which will also have its "in use" flag set). All freed descriptors are
-then returned to the ring at once, by adjusting the EOL flags (and link
-pointers).
+Various SONIC driver problems have become apparent over the years,
+including tx watchdog timeouts, lost packets and duplicated packets.
 
-Adopt the algorithm from datasheet as it's simpler, terminates quickly
-and avoids a lot of pointless descriptor EOL flag changes.
+The problems are mostly caused by bugs in buffer handling, locking and
+(re-)initialization code.
 
-Fixes: efcce839360f ("[PATCH] macsonic/jazzsonic network drivers update")
-Tested-by: Stan Johnson <userm57@yahoo.com>
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+This patch series resolves these problems.
+
+This series has been tested on National Semiconductor hardware (macsonic),
+qemu-system-m68k (macsonic) and qemu-system-mips64el (jazzsonic).
+
+The emulated dp8393x device used in QEMU also has bugs.
+I have fixed the bugs that I know of in a series of patches at,
+https://github.com/fthain/qemu/commits/sonic
 ---
- drivers/net/ethernet/natsemi/sonic.c | 21 +++++++++++++++------
- 1 file changed, 15 insertions(+), 6 deletions(-)
+Changed since v1:
+ - Minor revisions as described in commit logs.
+ - Deferred net-next patches.
 
-diff --git a/drivers/net/ethernet/natsemi/sonic.c b/drivers/net/ethernet/natsemi/sonic.c
-index 3387f7bc1a80..431a6e46c08c 100644
---- a/drivers/net/ethernet/natsemi/sonic.c
-+++ b/drivers/net/ethernet/natsemi/sonic.c
-@@ -432,6 +432,7 @@ static void sonic_rx(struct net_device *dev)
- 	struct sonic_local *lp = netdev_priv(dev);
- 	int status;
- 	int entry = lp->cur_rx;
-+	int prev_entry = lp->eol_rx;
- 
- 	while (sonic_rda_get(dev, entry, SONIC_RD_IN_USE) == 0) {
- 		struct sk_buff *used_skb;
-@@ -512,13 +513,21 @@ static void sonic_rx(struct net_device *dev)
- 		/*
- 		 * give back the descriptor
- 		 */
--		sonic_rda_put(dev, entry, SONIC_RD_LINK,
--			sonic_rda_get(dev, entry, SONIC_RD_LINK) | SONIC_EOL);
- 		sonic_rda_put(dev, entry, SONIC_RD_IN_USE, 1);
--		sonic_rda_put(dev, lp->eol_rx, SONIC_RD_LINK,
--			sonic_rda_get(dev, lp->eol_rx, SONIC_RD_LINK) & ~SONIC_EOL);
--		lp->eol_rx = entry;
--		lp->cur_rx = entry = (entry + 1) & SONIC_RDS_MASK;
-+
-+		prev_entry = entry;
-+		entry = (entry + 1) & SONIC_RDS_MASK;
-+	}
-+
-+	lp->cur_rx = entry;
-+
-+	if (prev_entry != lp->eol_rx) {
-+		/* Advance the EOL flag to put descriptors back into service */
-+		sonic_rda_put(dev, prev_entry, SONIC_RD_LINK, SONIC_EOL |
-+			      sonic_rda_get(dev, prev_entry, SONIC_RD_LINK));
-+		sonic_rda_put(dev, lp->eol_rx, SONIC_RD_LINK, ~SONIC_EOL &
-+			      sonic_rda_get(dev, lp->eol_rx, SONIC_RD_LINK));
-+		lp->eol_rx = prev_entry;
- 	}
- 	/*
- 	 * If any worth-while packets have been received, netif_rx()
+
+Finn Thain (12):
+  net/sonic: Add mutual exclusion for accessing shared state
+  net/sonic: Clear interrupt flags immediately
+  net/sonic: Use MMIO accessors
+  net/sonic: Fix interface error stats collection
+  net/sonic: Fix receive buffer handling
+  net/sonic: Avoid needless receive descriptor EOL flag updates
+  net/sonic: Improve receive descriptor status flag check
+  net/sonic: Fix receive buffer replenishment
+  net/sonic: Quiesce SONIC before re-initializing descriptor memory
+  net/sonic: Fix command register usage
+  net/sonic: Fix CAM initialization
+  net/sonic: Prevent tx watchdog timeout
+
+ drivers/net/ethernet/natsemi/sonic.c | 380 ++++++++++++++++-----------
+ drivers/net/ethernet/natsemi/sonic.h |  44 +++-
+ 2 files changed, 262 insertions(+), 162 deletions(-)
+
 -- 
 2.24.1
 
