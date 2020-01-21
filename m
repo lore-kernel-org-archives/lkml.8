@@ -2,245 +2,248 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14368C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 11:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F786C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 11:26:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C29B52253D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 11:19:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Vb0WGLXh"
+	by mail.kernel.org (Postfix) with ESMTP id 3631222522
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 11:26:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729093AbgAULTY (ORCPT
+        id S1729113AbgAUL01 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 06:19:24 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:45745 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726473AbgAULTX (ORCPT
+        Tue, 21 Jan 2020 06:26:27 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:42174 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728655AbgAUL00 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 06:19:23 -0500
-Received: by mail-lf1-f68.google.com with SMTP id 203so1908477lfa.12
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 03:19:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=P/ic5+n5uGCQMeDE82Zq0ugvRV76i5K0H3wOcF/QnkA=;
-        b=Vb0WGLXhjrzTZ1Z+QqbgHWhvHW9MOQyEPoaBLDx96Oc+Oe1VNoaqQdRItmuvPuEt8V
-         6W2nMsxbZa9dXca31K4mKYOiv3vf9c+2T9bR8Cx748Z4vKkVpN+w0E5RsW/0SSuWnWb4
-         warJcxkJT117Yx5JBbQyrw+YFgKTHuWLbctPITsXfpmlMySZDUM+xZQuiQALlDtXwLGw
-         uAipiG4VE/GgIMXpM0RyUghlZLSewMZT8G9LBCnxsuMPgYGALJIry3+A/0Ci/EqWUU/m
-         ct5e0KwgnEuzCMLWakm+ZANkRy/Pvnyg2htH6gwzmEoVLS3XPg9vGezjNNY1CcFtvemU
-         Nkjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=P/ic5+n5uGCQMeDE82Zq0ugvRV76i5K0H3wOcF/QnkA=;
-        b=oXtKW4ifEIvhPLPxVsANjm7gRYfCsVNKmO733Pa9T1InD2bGcSlmeszqXSw6++Ku6X
-         VAa1Sm429fOk5tlW9VHlUgl+yPrmn21h7J6MhKnY+MDm6ex/9f9JXw6Z3ITjds9QOzUw
-         gZf4i5NevkhW0ZprQ6Bpi9v0F0r9Ud1SUfCeiCt31isZULK2Kdfe9CXQMsKF0ePS40Rx
-         IiJdGZEzEyo9++ynuleZGjXhd5Y+HSO2t9eMoQW1MEC3TgiBKOJzuegrjUssitPlkefe
-         68YXOI311Udz6pFdOQ9wNXBZm0ABZlZhqVE00fo58dpjHeyS2I23brigRr/8yoOvtKmn
-         UWow==
-X-Gm-Message-State: APjAAAWARpZktegllDx1IMreOTy6n/FrWEi5ez8DaCDic66gjklwPCHs
-        5XFILxrmEZDxudGhlU6dcXiesxEaB7FxK7BTQUV1jZw=
-X-Google-Smtp-Source: APXvYqxQSB6nJ983YD+cMHSXIDjA7H0iHateMacg8gk3QtOnUm7GNKi89jCQ4DPmSWn9YcHnVFkAVEV+eicIKERlKak=
-X-Received: by 2002:ac2:43af:: with SMTP id t15mr2498104lfl.154.1579605560661;
- Tue, 21 Jan 2020 03:19:20 -0800 (PST)
+        Tue, 21 Jan 2020 06:26:26 -0500
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00LBBf46028942;
+        Tue, 21 Jan 2020 06:26:10 -0500
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2xkyta7610-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 Jan 2020 06:26:10 -0500
+Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 00LBQ8Sl010616
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Tue, 21 Jan 2020 06:26:08 -0500
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Tue, 21 Jan
+ 2020 03:26:06 -0800
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Tue, 21 Jan 2020 06:26:06 -0500
+Received: from saturn.ad.analog.com ([10.48.65.124])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 00LBQ1e8009439;
+        Tue, 21 Jan 2020 06:26:04 -0500
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <ekigwana@gmail.com>, <jic23@kernel.org>, <lars@metafoo.de>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH 2/3] dt-bindings: iio: frequency: Add docs for ADF4360 PLL
+Date:   Tue, 21 Jan 2020 13:25:55 +0200
+Message-ID: <20200121112556.9867-2-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200121112556.9867-1-alexandru.ardelean@analog.com>
+References: <20200121112556.9867-1-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
-References: <20191229164830.62144-1-asteinhauser@google.com> <87o8uy2boh.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <87o8uy2boh.fsf@nanos.tec.linutronix.de>
-From:   Anthony Steinhauser <asteinhauser@google.com>
-Date:   Tue, 21 Jan 2020 03:19:09 -0800
-Message-ID: <CAN_oZf2Umdqk6Z649bam7wLk50=zrOemuk00PFn0Hhg6KTWhXw@mail.gmail.com>
-Subject: Re: [PATCH] Return ENXIO instead of EPERM when speculation control is unimplemented
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com, bp@alien8.de
-Content-Type: multipart/mixed; boundary="00000000000054a46f059ca494c3"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-21_03:2020-01-21,2020-01-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 phishscore=0 mlxlogscore=999 mlxscore=0 suspectscore=0
+ impostorscore=0 spamscore=0 malwarescore=0 adultscore=0 priorityscore=1501
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001210096
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---00000000000054a46f059ca494c3
-Content-Type: text/plain; charset="UTF-8"
+From: Edward Kigwana <ekigwana@gmail.com>
 
-You're right, Thomas,
-thanks for pointing that out. Please, see attached a corrected version.
+This change adds the device-tree bindings documentation for the ADF4360
+family of PLLs.
 
-On Mon, Jan 20, 2020 at 11:02 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> Anthony,
->
-> Anthony Steinhauser <asteinhauser@google.com> writes:
-> >               return "";
-> >
-> >       switch (spectre_v2_user) {
-> > -     case SPECTRE_V2_USER_NONE:
-> > +     case SPECTRE_V2_USER_UNAVAILABLE:
-> > +             return ", STIBP: unavailable";
->
-> Shouldn't this for correctness differentiate between the case where the
-> STIBP mitigation feature is not available and the case where STIBP is
-> not used because SMT is not possible?
->
-> Thanks,
->
->         tglx
+Signed-off-by: Edward Kigwana <ekigwana@gmail.com>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ .../bindings/iio/frequency/adi,adf4360.yaml   | 158 ++++++++++++++++++
+ 1 file changed, 158 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/frequency/adi,adf4360.yaml
 
---00000000000054a46f059ca494c3
-Content-Type: text/x-patch; charset="US-ASCII"; 
-	name="0001-Return-ENXIO-instead-of-EPERM-when-speculation-contr.patch"
-Content-Disposition: attachment; 
-	filename="0001-Return-ENXIO-instead-of-EPERM-when-speculation-contr.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_k5nsc2ze0>
-X-Attachment-Id: f_k5nsc2ze0
+diff --git a/Documentation/devicetree/bindings/iio/frequency/adi,adf4360.yaml b/Documentation/devicetree/bindings/iio/frequency/adi,adf4360.yaml
+new file mode 100644
+index 000000000000..95d9a49be607
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/frequency/adi,adf4360.yaml
+@@ -0,0 +1,158 @@
++# SPDX-License-Identifier: GPL-2.0
++# Copyright 2019-2020 Edward Kigwana
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/frequency/adi,adf4360.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Analog Devices ADF4360 PLL device driver
++
++maintainers:
++  - Lars-Peter Clausen <lars@metafoo.de>
++  - Edward Kigwana <ekigwana@gmail.com>
++
++description: |
++  Bindings for the Analog Devices ADF4360 family of clock generator phase-locked
++  loop (PLL) devices with an integrated voltage-controlled oscillator (VCO).
++  Each of the parts in the family supports a specific frequency range.
++  Datasheets can be found here:
++  https://www.analog.com/media/en/technical-documentation/data-sheets/ADF4360-0.pdf
++  https://www.analog.com/media/en/technical-documentation/data-sheets/ADF4360-1.pdf
++  https://www.analog.com/media/en/technical-documentation/data-sheets/ADF4360-2.pdf
++  https://www.analog.com/media/en/technical-documentation/data-sheets/ADF4360-3.pdf
++  https://www.analog.com/media/en/technical-documentation/data-sheets/ADF4360-4.pdf
++  https://www.analog.com/media/en/technical-documentation/data-sheets/ADF4360-5.pdf
++  https://www.analog.com/media/en/technical-documentation/data-sheets/ADF4360-6.pdf
++  https://www.analog.com/media/en/technical-documentation/data-sheets/ADF4360-7.pdf
++  https://www.analog.com/media/en/technical-documentation/data-sheets/ADF4360-8.pdf
++  https://www.analog.com/media/en/technical-documentation/data-sheets/ADF4360-9.pdf
++
++properties:
++  compatible:
++    enum:
++      - adi,adf4360-0
++      - adi,adf4360-1
++      - adi,adf4360-2
++      - adi,adf4360-3
++      - adi,adf4360-4
++      - adi,adf4360-5
++      - adi,adf4360-6
++      - adi,adf4360-7
++      - adi,adf4360-8
++      - adi,adf4360-9
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    description: phandle to external reference clock.
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: clkin
++
++  '#clock-cells':
++    const: 0
++
++  adi,loop-filter-pfd-frequency-hz:
++    description: |
++      The phase-frequency-detector frequency that the external loop filter was
++      designed for.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++    maxItems: 1
++
++  adi,loop-filter-charger-pump-current-microamp:
++    description: |
++      The charge pump current that the external loop filter was designed for.
++      The provided value is clamped to the closest enumerated value.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - enum: [310, 620, 930, 1250, 1560, 1870, 2180, 2500]
++    maxItems: 1
++
++  adi,vco-minimum-frequency-hz:
++    description: |
++      Required for ADF4360-7, ADF4360-8 and ADF4360-9. Minimum VCO frequency
++      that can be supported by the tuning range set by the external inductor.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++    maxItems: 1
++
++  adi,vco-maximum-frequency-hz:
++    description: |
++      Required for ADF4360-7, ADF4360-8 and ADF4360-9. Maximum VCO frequency
++      that can be supported by the tuning range set by the external inductor.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++    maxItems: 1
++
++  adi,loop-filter-inverting:
++    description: Indicates that the external loop filter is an inverting filter.
++    type: boolean
++    maxItems: 1
++
++  adi,power-up-frequency-hz:
++    description: |
++    PLL tunes to the set frequency on probe or defaults to either the minimum
++    for the part or value set using adi,vco-minimum-frequency-hz.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++    maxItems: 1
++
++  adi,vdd-supply:
++    description: |
++      vdd supply is used to enable or disable chip when regulator power down
++      mode is set. Other power down modes are used to mitigate the case of a
++      shared regulator.
++    maxItems: 1
++
++  adi,enable-gpios:
++    description: |
++      Chip enable gpio is used to enable or disable chip when chip enable power
++      down mode is set.
++    maxItems: 1
++
++  adi,muxout-gpios:
++    description: |
++      MUX out gpio is used to detect chip and test pll lock state on read when
++      muxout control is set to lock detect.
++    maxItems: 1
++
++  adi,power-out-level-microamp:
++    description: |
++      Chip support setting of output power level. This property is optional.
++      If it is not provided by default 11000 uA will be set.
++    allOf:
++      - enum: [3500, 5000, 7500, 11000]
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - adi,loop-filter-charge-pump-current
++  - adi,loop-filter-pfd-frequency-hz
++
++examples:
++  - |
++    spi0 {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      pll@0 {
++        compatible = "adi,adf4360-7";
++        reg = <0>;
++        spi-max-frequency = <2000000>;
++        clocks = <&ref_clock>;
++        #clock-cells = <0>;
++        clock-output-names = "adf4360-7";
++
++        adi,loop-filter-charge-pump-current = <5>;
++        adi,loop-filter-pfd-frequency-hz = <2500000>;
++        adi,vco-minimum-frequency-hz = <700000000>;
++        adi,vco-maximum-frequency-hz = <840000000>;
++      };
++   };
++...
+-- 
+2.20.1
 
-RnJvbSA1NjExNTlhMzU4ZTkxY2U0OTU5ZjA2ODM2YjBhYTYxNDdmOGRkMzQ2IE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBBbnRob255IFN0ZWluaGF1c2VyIDxhc3RlaW5oYXVzZXJAZ29v
-Z2xlLmNvbT4KRGF0ZTogVHVlLCAyMSBKYW4gMjAyMCAwMzowOToxMSAtMDgwMApTdWJqZWN0OiBb
-UEFUQ0hdIFJldHVybiBFTlhJTyBpbnN0ZWFkIG9mIEVQRVJNIHdoZW4gc3BlY3VsYXRpb24gY29u
-dHJvbCBpcwogdW5pbXBsZW1lbnRlZAoKQWNjb3JkaW5nIHRvIHRoZSBkb2N1bWVudGF0aW9uLCB0
-aGUgUFJfR0VUX1NQRUNVTEFUSU9OX0NUUkwgY2FsbCBzaG91bGQKcmV0dXJuIEVOWElPIHdoZW4g
-dGhlIGNvbnRyb2wgb2YgdGhlIHNlbGVjdGVkIHNwZWN1bGF0aW9uIG1pc2ZlYXR1cmUgaXMKbm90
-IHBvc3NpYmxlLiBFUEVSTSBzaG91bGQgYmUgcmV0dXJuZWQgb25seSB3aGVuIHRoZSBzcGVjdWxh
-dGlvbiB3YXMKZGlzYWJsZWQgd2l0aCBQUl9TUEVDX0ZPUkNFX0RJU0FCTEUgYW5kIGNhbGxlciB0
-cmllZCB0byBlbmFibGUgaXQgYWdhaW4uCgpJbnN0ZWFkLCB0aGUgY3VycmVudCBpbXBsZW1lbnRh
-dGlvbiByZXR1cm5zIEVQRVJNIHdoZW4gdGhlIGNvbnRyb2wgb2YKaW5kaXJlY3QgYnJhbmNoIHNw
-ZWN1bGF0aW9uIGlzIG5vdCBwb3NzaWJsZSBiZWNhdXNlIGl0IGlzIHVuaW1wbGVtZW50ZWQgYnkK
-dGhlIENQVS4gVGhpcyBiZWhhdmlvciBpcyBvYnZpb3VzbHkgbm90IGNvbXBhdGlibGUgd2l0aCB0
-aGUgY3VycmVudApkb2N1bWVudGF0aW9uLiBFTlhJTyBzaG91bGQgYmUgcmV0dXJuZWQgaW4gdGhp
-cyBjYXNlLgoKVGhpcyBjaGFuZ2UgaXM6CjEpIEV4cGxpY2l0bHkgZG9jdW1lbnQgdGhhdCB0aGUg
-RVBFUk0gcmV0dXJuIHZhbHVlIGFwcGxpZXMgYWxzbyB0byBjYXNlcwp3aGVuIHRoZSBzcGVjdWxh
-dGl2ZSBiZWhhdmlvciBpcyBmb3JjZWQgZnJvbSB0aGUgYm9vdCBjb21tYW5kIGxpbmUgYW5kIHRo
-ZQpjYWxsZXIgdHJpZXMgdG8gY2hhbmdlIGl0LgoyKSBEaXN0aW5ndWlzaGluZyBiZXR3ZWVuIHRo
-ZSBzcGVjdWxhdGlvbiBjb250cm9sIGJlaW5nIHVuaW1wbGVtZW50ZWQgYW5kCmJlaW5nIGRpc2Fi
-bGVkLCByZXR1cm5pbmcgRU5YSU8gaW4gdGhlIGZpcnN0IGNhc2UgYW5kIEVQRVJNIGluIHRoZSBz
-ZWNvbmQKY2FzZS4KClNpZ25lZC1vZmYtYnk6IEFudGhvbnkgU3RlaW5oYXVzZXIgPGFzdGVpbmhh
-dXNlckBnb29nbGUuY29tPgotLS0KIERvY3VtZW50YXRpb24vdXNlcnNwYWNlLWFwaS9zcGVjX2N0
-cmwucnN0IHwgIDYgKystCiBhcmNoL3g4Ni9pbmNsdWRlL2FzbS9ub3NwZWMtYnJhbmNoLmggICAg
-ICB8ICA0ICstCiBhcmNoL3g4Ni9rZXJuZWwvY3B1L2J1Z3MuYyAgICAgICAgICAgICAgICB8IDQ5
-ICsrKysrKysrKysrKysrKysrLS0tLS0tCiAzIGZpbGVzIGNoYW5nZWQsIDQzIGluc2VydGlvbnMo
-KyksIDE2IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vdXNlcnNwYWNl
-LWFwaS9zcGVjX2N0cmwucnN0IGIvRG9jdW1lbnRhdGlvbi91c2Vyc3BhY2UtYXBpL3NwZWNfY3Ry
-bC5yc3QKaW5kZXggN2RkZDhmNjY3NDU5Li4yM2ZhM2U5MzM3Y2YgMTAwNjQ0Ci0tLSBhL0RvY3Vt
-ZW50YXRpb24vdXNlcnNwYWNlLWFwaS9zcGVjX2N0cmwucnN0CisrKyBiL0RvY3VtZW50YXRpb24v
-dXNlcnNwYWNlLWFwaS9zcGVjX2N0cmwucnN0CkBAIC04Myw4ICs4MywxMCBAQCBFUkFOR0UgIGFy
-ZzMgaXMgaW5jb3JyZWN0LCBpLmUuIGl0J3MgbmVpdGhlciBQUl9TUEVDX0VOQUJMRSBub3IKIEVO
-WElPICAgQ29udHJvbCBvZiB0aGUgc2VsZWN0ZWQgc3BlY3VsYXRpb24gbWlzZmVhdHVyZSBpcyBu
-b3QgcG9zc2libGUuCiAgICAgICAgIFNlZSBQUl9HRVRfU1BFQ1VMQVRJT05fQ1RSTC4KIAotRVBF
-Uk0gICBTcGVjdWxhdGlvbiB3YXMgZGlzYWJsZWQgd2l0aCBQUl9TUEVDX0ZPUkNFX0RJU0FCTEUg
-YW5kIGNhbGxlcgotICAgICAgICB0cmllZCB0byBlbmFibGUgaXQgYWdhaW4uCitFUEVSTSAgIENh
-bGxlciB0cmllZCB0byBlbmFibGUgc3BlY3VsYXRpb24gd2hlbiBpdCB3YXMgZGlzYWJsZWQgd2l0
-aAorICAgICAgICBQUl9TUEVDX0ZPUkNFX0RJU0FCTEUgb3IgZm9yY2UtZGlzYWJsZWQgb24gdGhl
-IGJvb3QgY29tbWFuZCBsaW5lLgorICAgICAgICBDYWxsZXIgdHJpZWQgdG8gZGlzYWJsZSBzcGVj
-dWxhdGlvbiB3aGVuIGl0IHdhcyBmb3JjZS1lbmFibGVkIG9uCisgICAgICAgIHRoZSBib290IGNv
-bW1hbmQgbGluZS4KID09PT09PT0gPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KIAogU3BlY3VsYXRpb24gbWlzZmVhdHVyZSBj
-b250cm9scwpkaWZmIC0tZ2l0IGEvYXJjaC94ODYvaW5jbHVkZS9hc20vbm9zcGVjLWJyYW5jaC5o
-IGIvYXJjaC94ODYvaW5jbHVkZS9hc20vbm9zcGVjLWJyYW5jaC5oCmluZGV4IDVjMjRhN2IzNTE2
-Ni4uOGIwNGVjNmNmMmRhIDEwMDY0NAotLS0gYS9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9ub3NwZWMt
-YnJhbmNoLmgKKysrIGIvYXJjaC94ODYvaW5jbHVkZS9hc20vbm9zcGVjLWJyYW5jaC5oCkBAIC0y
-MjAsNyArMjIwLDkgQEAgZW51bSBzcGVjdHJlX3YyX21pdGlnYXRpb24gewogCiAvKiBUaGUgaW5k
-aXJlY3QgYnJhbmNoIHNwZWN1bGF0aW9uIGNvbnRyb2wgdmFyaWFudHMgKi8KIGVudW0gc3BlY3Ry
-ZV92Ml91c2VyX21pdGlnYXRpb24gewotCVNQRUNUUkVfVjJfVVNFUl9OT05FLAorCVNQRUNUUkVf
-VjJfVVNFUl9VTkFWQUlMQUJMRSwKKwlTUEVDVFJFX1YyX1VTRVJfRElTQUJMRUQsCisJU1BFQ1RS
-RV9WMl9VU0VSX1NNVF9JTVBPU1NJQkxFLAogCVNQRUNUUkVfVjJfVVNFUl9TVFJJQ1QsCiAJU1BF
-Q1RSRV9WMl9VU0VSX1NUUklDVF9QUkVGRVJSRUQsCiAJU1BFQ1RSRV9WMl9VU0VSX1BSQ1RMLApk
-aWZmIC0tZ2l0IGEvYXJjaC94ODYva2VybmVsL2NwdS9idWdzLmMgYi9hcmNoL3g4Ni9rZXJuZWwv
-Y3B1L2J1Z3MuYwppbmRleCA4YmY2NDg5OWY1NmEuLjZjOGMwMTZkYmE2MSAxMDA2NDQKLS0tIGEv
-YXJjaC94ODYva2VybmVsL2NwdS9idWdzLmMKKysrIGIvYXJjaC94ODYva2VybmVsL2NwdS9idWdz
-LmMKQEAgLTQ4OSw3ICs0ODksNyBAQCBzdGF0aWMgZW51bSBzcGVjdHJlX3YyX21pdGlnYXRpb24g
-c3BlY3RyZV92Ml9lbmFibGVkIF9fcm9fYWZ0ZXJfaW5pdCA9CiAJU1BFQ1RSRV9WMl9OT05FOwog
-CiBzdGF0aWMgZW51bSBzcGVjdHJlX3YyX3VzZXJfbWl0aWdhdGlvbiBzcGVjdHJlX3YyX3VzZXIg
-X19yb19hZnRlcl9pbml0ID0KLQlTUEVDVFJFX1YyX1VTRVJfTk9ORTsKKwlTUEVDVFJFX1YyX1VT
-RVJfVU5BVkFJTEFCTEU7CiAKICNpZmRlZiBDT05GSUdfUkVUUE9MSU5FCiBzdGF0aWMgYm9vbCBz
-cGVjdHJlX3YyX2JhZF9tb2R1bGU7CkBAIC01NDAsNyArNTQwLDggQEAgZW51bSBzcGVjdHJlX3Yy
-X3VzZXJfY21kIHsKIH07CiAKIHN0YXRpYyBjb25zdCBjaGFyICogY29uc3Qgc3BlY3RyZV92Ml91
-c2VyX3N0cmluZ3NbXSA9IHsKLQlbU1BFQ1RSRV9WMl9VU0VSX05PTkVdCQkJPSAiVXNlciBzcGFj
-ZTogVnVsbmVyYWJsZSIsCisJW1NQRUNUUkVfVjJfVVNFUl9VTkFWQUlMQUJMRV0gICAgICAgICAg
-ID0gIlVzZXIgc3BhY2U6IFZ1bG5lcmFibGU6IFNUSUJQIHVuYXZhaWxhYmxlIiwKKwlbU1BFQ1RS
-RV9WMl9VU0VSX0RJU0FCTEVEXSAgICAgICAgICAgICAgPSAiVXNlciBzcGFjZTogVnVsbmVyYWJs
-ZTogU1RJQlAgZGlzYWJsZWQiLAogCVtTUEVDVFJFX1YyX1VTRVJfU1RSSUNUXQkJPSAiVXNlciBz
-cGFjZTogTWl0aWdhdGlvbjogU1RJQlAgcHJvdGVjdGlvbiIsCiAJW1NQRUNUUkVfVjJfVVNFUl9T
-VFJJQ1RfUFJFRkVSUkVEXQk9ICJVc2VyIHNwYWNlOiBNaXRpZ2F0aW9uOiBTVElCUCBhbHdheXMt
-b24gcHJvdGVjdGlvbiIsCiAJW1NQRUNUUkVfVjJfVVNFUl9QUkNUTF0JCQk9ICJVc2VyIHNwYWNl
-OiBNaXRpZ2F0aW9uOiBTVElCUCB2aWEgcHJjdGwiLApAQCAtNjAyLDcgKzYwMyw3IEBAIHNwZWN0
-cmVfdjJfcGFyc2VfdXNlcl9jbWRsaW5lKGVudW0gc3BlY3RyZV92Ml9taXRpZ2F0aW9uX2NtZCB2
-Ml9jbWQpCiBzdGF0aWMgdm9pZCBfX2luaXQKIHNwZWN0cmVfdjJfdXNlcl9zZWxlY3RfbWl0aWdh
-dGlvbihlbnVtIHNwZWN0cmVfdjJfbWl0aWdhdGlvbl9jbWQgdjJfY21kKQogewotCWVudW0gc3Bl
-Y3RyZV92Ml91c2VyX21pdGlnYXRpb24gbW9kZSA9IFNQRUNUUkVfVjJfVVNFUl9OT05FOworCWVu
-dW0gc3BlY3RyZV92Ml91c2VyX21pdGlnYXRpb24gbW9kZSA9IFNQRUNUUkVfVjJfVVNFUl9VTkFW
-QUlMQUJMRTsKIAlib29sIHNtdF9wb3NzaWJsZSA9IElTX0VOQUJMRUQoQ09ORklHX1NNUCk7CiAJ
-ZW51bSBzcGVjdHJlX3YyX3VzZXJfY21kIGNtZDsKIApAQCAtNjE2LDYgKzYxNyw3IEBAIHNwZWN0
-cmVfdjJfdXNlcl9zZWxlY3RfbWl0aWdhdGlvbihlbnVtIHNwZWN0cmVfdjJfbWl0aWdhdGlvbl9j
-bWQgdjJfY21kKQogCWNtZCA9IHNwZWN0cmVfdjJfcGFyc2VfdXNlcl9jbWRsaW5lKHYyX2NtZCk7
-CiAJc3dpdGNoIChjbWQpIHsKIAljYXNlIFNQRUNUUkVfVjJfVVNFUl9DTURfTk9ORToKKwkJbW9k
-ZSA9IFNQRUNUUkVfVjJfVVNFUl9ESVNBQkxFRDsKIAkJZ290byBzZXRfbW9kZTsKIAljYXNlIFNQ
-RUNUUkVfVjJfVVNFUl9DTURfRk9SQ0U6CiAJCW1vZGUgPSBTUEVDVFJFX1YyX1VTRVJfU1RSSUNU
-OwpAQCAtNjcyLDExICs2NzQsMTQgQEAgc3BlY3RyZV92Ml91c2VyX3NlbGVjdF9taXRpZ2F0aW9u
-KGVudW0gc3BlY3RyZV92Ml9taXRpZ2F0aW9uX2NtZCB2Ml9jbWQpCiAJCXJldHVybjsKIAogCS8q
-Ci0JICogSWYgU01UIGlzIG5vdCBwb3NzaWJsZSBvciBTVElCUCBpcyBub3QgYXZhaWxhYmxlIGNs
-ZWFyIHRoZSBTVElCUAorCSAqIElmIFNNVCBpcyBub3QgcG9zc2libGUgb3IgU1RJQlAgaXMgbm90
-IGF2YWlsYWJsZSByZXNldCB0aGUgU1RJQlAKIAkgKiBtb2RlLgogCSAqLwotCWlmICghc210X3Bv
-c3NpYmxlIHx8ICFib290X2NwdV9oYXMoWDg2X0ZFQVRVUkVfU1RJQlApKQotCQltb2RlID0gU1BF
-Q1RSRV9WMl9VU0VSX05PTkU7CisJaWYgKCFzbXRfcG9zc2libGUpCisJCW1vZGUgPSBTUEVDVFJF
-X1YyX1VTRVJfU01UX0lNUE9TU0lCTEU7CisJZWxzZSBpZiAoIWJvb3RfY3B1X2hhcyhYODZfRkVB
-VFVSRV9TVElCUCkpCisJCW1vZGUgPSBTUEVDVFJFX1YyX1VTRVJfVU5BVkFJTEFCTEU7CisKIHNl
-dF9tb2RlOgogCXNwZWN0cmVfdjJfdXNlciA9IG1vZGU7CiAJLyogT25seSBwcmludCB0aGUgU1RJ
-QlAgbW9kZSB3aGVuIFNNVCBwb3NzaWJsZSAqLwpAQCAtOTE1LDcgKzkyMCw5IEBAIHZvaWQgY3B1
-X2J1Z3Nfc210X3VwZGF0ZSh2b2lkKQogCW11dGV4X2xvY2soJnNwZWNfY3RybF9tdXRleCk7CiAK
-IAlzd2l0Y2ggKHNwZWN0cmVfdjJfdXNlcikgewotCWNhc2UgU1BFQ1RSRV9WMl9VU0VSX05PTkU6
-CisJY2FzZSBTUEVDVFJFX1YyX1VTRVJfRElTQUJMRUQ6CisJY2FzZSBTUEVDVFJFX1YyX1VTRVJf
-VU5BVkFJTEFCTEU6CisJY2FzZSBTUEVDVFJFX1YyX1VTRVJfU01UX0lNUE9TU0lCTEU6CiAJCWJy
-ZWFrOwogCWNhc2UgU1BFQ1RSRV9WMl9VU0VSX1NUUklDVDoKIAljYXNlIFNQRUNUUkVfVjJfVVNF
-Ul9TVFJJQ1RfUFJFRkVSUkVEOgpAQCAtMTE1Nyw4ICsxMTY0LDEyIEBAIHN0YXRpYyBpbnQgaWJf
-cHJjdGxfc2V0KHN0cnVjdCB0YXNrX3N0cnVjdCAqdGFzaywgdW5zaWduZWQgbG9uZyBjdHJsKQog
-ewogCXN3aXRjaCAoY3RybCkgewogCWNhc2UgUFJfU1BFQ19FTkFCTEU6Ci0JCWlmIChzcGVjdHJl
-X3YyX3VzZXIgPT0gU1BFQ1RSRV9WMl9VU0VSX05PTkUpCisJCWlmIChzcGVjdHJlX3YyX3VzZXIg
-PT0gU1BFQ1RSRV9WMl9VU0VSX1VOQVZBSUxBQkxFIHx8CisJCSAgICBzcGVjdHJlX3YyX3VzZXIg
-PT0gU1BFQ1RSRV9WMl9VU0VSX0RJU0FCTEVEKQogCQkJcmV0dXJuIDA7CisKKwkJaWYgKHNwZWN0
-cmVfdjJfdXNlciA9PSBTUEVDVFJFX1YyX1VTRVJfU01UX0lNUE9TU0lCTEUpCisJCQlyZXR1cm4g
-LUVOWElPOwogCQkvKgogCQkgKiBJbmRpcmVjdCBicmFuY2ggc3BlY3VsYXRpb24gaXMgYWx3YXlz
-IGRpc2FibGVkIGluIHN0cmljdAogCQkgKiBtb2RlLgpAQCAtMTE3MywxMiArMTE4NCwxNyBAQCBz
-dGF0aWMgaW50IGliX3ByY3RsX3NldChzdHJ1Y3QgdGFza19zdHJ1Y3QgKnRhc2ssIHVuc2lnbmVk
-IGxvbmcgY3RybCkKIAljYXNlIFBSX1NQRUNfRk9SQ0VfRElTQUJMRToKIAkJLyoKIAkJICogSW5k
-aXJlY3QgYnJhbmNoIHNwZWN1bGF0aW9uIGlzIGFsd2F5cyBhbGxvd2VkIHdoZW4KLQkJICogbWl0
-aWdhdGlvbiBpcyBmb3JjZSBkaXNhYmxlZC4KKwkJICogbWl0aWdhdGlvbiBpcyB1bmF2YWlsYWJs
-ZSBvciBmb3JjZSBkaXNhYmxlZC4KIAkJICovCi0JCWlmIChzcGVjdHJlX3YyX3VzZXIgPT0gU1BF
-Q1RSRV9WMl9VU0VSX05PTkUpCisJCWlmIChzcGVjdHJlX3YyX3VzZXIgPT0gU1BFQ1RSRV9WMl9V
-U0VSX1VOQVZBSUxBQkxFKQorCQkJcmV0dXJuIC1FTlhJTzsKKworCQlpZiAoc3BlY3RyZV92Ml91
-c2VyID09IFNQRUNUUkVfVjJfVVNFUl9ESVNBQkxFRCkKIAkJCXJldHVybiAtRVBFUk07CisKIAkJ
-aWYgKHNwZWN0cmVfdjJfdXNlciA9PSBTUEVDVFJFX1YyX1VTRVJfU1RSSUNUIHx8Ci0JCSAgICBz
-cGVjdHJlX3YyX3VzZXIgPT0gU1BFQ1RSRV9WMl9VU0VSX1NUUklDVF9QUkVGRVJSRUQpCisJCSAg
-ICBzcGVjdHJlX3YyX3VzZXIgPT0gU1BFQ1RSRV9WMl9VU0VSX1NUUklDVF9QUkVGRVJSRUQgfHwK
-KwkJICAgIHNwZWN0cmVfdjJfdXNlciA9PSBTUEVDVFJFX1YyX1VTRVJfU01UX0lNUE9TU0lCTEUp
-CiAJCQlyZXR1cm4gMDsKIAkJdGFza19zZXRfc3BlY19pYl9kaXNhYmxlKHRhc2spOwogCQlpZiAo
-Y3RybCA9PSBQUl9TUEVDX0ZPUkNFX0RJU0FCTEUpCkBAIC0xMjQxLDcgKzEyNTcsOCBAQCBzdGF0
-aWMgaW50IGliX3ByY3RsX2dldChzdHJ1Y3QgdGFza19zdHJ1Y3QgKnRhc2spCiAJCXJldHVybiBQ
-Ul9TUEVDX05PVF9BRkZFQ1RFRDsKIAogCXN3aXRjaCAoc3BlY3RyZV92Ml91c2VyKSB7Ci0JY2Fz
-ZSBTUEVDVFJFX1YyX1VTRVJfTk9ORToKKwljYXNlIFNQRUNUUkVfVjJfVVNFUl9VTkFWQUlMQUJM
-RToKKwljYXNlIFNQRUNUUkVfVjJfVVNFUl9ESVNBQkxFRDoKIAkJcmV0dXJuIFBSX1NQRUNfRU5B
-QkxFOwogCWNhc2UgU1BFQ1RSRV9WMl9VU0VSX1BSQ1RMOgogCWNhc2UgU1BFQ1RSRV9WMl9VU0VS
-X1NFQ0NPTVA6CkBAIC0xMjUyLDYgKzEyNjksNyBAQCBzdGF0aWMgaW50IGliX3ByY3RsX2dldChz
-dHJ1Y3QgdGFza19zdHJ1Y3QgKnRhc2spCiAJCXJldHVybiBQUl9TUEVDX1BSQ1RMIHwgUFJfU1BF
-Q19FTkFCTEU7CiAJY2FzZSBTUEVDVFJFX1YyX1VTRVJfU1RSSUNUOgogCWNhc2UgU1BFQ1RSRV9W
-Ml9VU0VSX1NUUklDVF9QUkVGRVJSRUQ6CisJY2FzZSBTUEVDVFJFX1YyX1VTRVJfU01UX0lNUE9T
-U0lCTEU6CiAJCXJldHVybiBQUl9TUEVDX0RJU0FCTEU7CiAJZGVmYXVsdDoKIAkJcmV0dXJuIFBS
-X1NQRUNfTk9UX0FGRkVDVEVEOwpAQCAtMTQ5NSw4ICsxNTEzLDEzIEBAIHN0YXRpYyBjaGFyICpz
-dGlicF9zdGF0ZSh2b2lkKQogCQlyZXR1cm4gIiI7CiAKIAlzd2l0Y2ggKHNwZWN0cmVfdjJfdXNl
-cikgewotCWNhc2UgU1BFQ1RSRV9WMl9VU0VSX05PTkU6CisJY2FzZSBTUEVDVFJFX1YyX1VTRVJf
-VU5BVkFJTEFCTEU6CisJCXJldHVybiAiLCBTVElCUDogdW5hdmFpbGFibGUiOworCWNhc2UgU1BF
-Q1RSRV9WMl9VU0VSX0RJU0FCTEVEOgogCQlyZXR1cm4gIiwgU1RJQlA6IGRpc2FibGVkIjsKKwkv
-KiBEbyBub3QgZGlzcGxheSBTVElCUCBzdGF0ZSBpZiBTTVQgaXMgbm90IHBvc3NpYmxlLiAqLwor
-CWNhc2UgU1BFQ1RSRV9WMl9VU0VSX1NNVF9JTVBPU1NJQkxFOgorCQlyZXR1cm4gIiI7CiAJY2Fz
-ZSBTUEVDVFJFX1YyX1VTRVJfU1RSSUNUOgogCQlyZXR1cm4gIiwgU1RJQlA6IGZvcmNlZCI7CiAJ
-Y2FzZSBTUEVDVFJFX1YyX1VTRVJfU1RSSUNUX1BSRUZFUlJFRDoKLS0gCjIuMjUuMC4zNDEuZzc2
-MGJmYmIzMDktZ29vZwoK
---00000000000054a46f059ca494c3--
