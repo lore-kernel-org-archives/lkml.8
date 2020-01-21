@@ -2,87 +2,120 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8ECBC33CAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 20:26:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 537E9C33CAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 20:26:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E67824125
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 20:26:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 278DF24125
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 20:26:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PHdZxySB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728855AbgAUU0I (ORCPT
+        id S1729112AbgAUU0t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 15:26:08 -0500
-Received: from fieldses.org ([173.255.197.46]:37712 "EHLO fieldses.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726926AbgAUU0I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 15:26:08 -0500
-Received: by fieldses.org (Postfix, from userid 2815)
-        id B65C71C15; Tue, 21 Jan 2020 15:26:07 -0500 (EST)
-Date:   Tue, 21 Jan 2020 15:26:07 -0500
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] locked: remove nlmsvc_decode_norep/grantedres
-Message-ID: <20200121202607.GB25691@fieldses.org>
-References: <1579595682-251483-1-git-send-email-alex.shi@linux.alibaba.com>
+        Tue, 21 Jan 2020 15:26:49 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34295 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729022AbgAUU0t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 15:26:49 -0500
+Received: by mail-ot1-f65.google.com with SMTP id a15so4223513otf.1;
+        Tue, 21 Jan 2020 12:26:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=huthel+GYazN/w+4NQrVBhFyJ8fOofBu6y0OM4VOExE=;
+        b=PHdZxySBOGJu7nX6RrERvEBIImUuFC/XREChIwjJBVH6I3HeBwsIte6IjFrJ9ELLa1
+         Qg5xgcZjhbOF1bAOKsO7Zr707BmrE/UC6dye60kLEGB2AjjhtUwItD4ab1EF5u7dZkQH
+         C6KwCyaugo88wM1E0+V3xUQr6LocpLkh0DaAC6jRm0S/BzVb9J5CLpb68ZHuIK2h5Ho7
+         Ejg5fWMGFDypMLYYaXUQyGcwFz4eofDNZuHoNtAOPbGwXHSCwUqrrvVjblJaUPRxfLjj
+         N9fF7KNdh3zm3B0Qw4FGBokbMD/EgMI8kYr8A/0xw/kZsivJ0byKuSwul60o0coObFUI
+         aaSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=huthel+GYazN/w+4NQrVBhFyJ8fOofBu6y0OM4VOExE=;
+        b=eJsJ9s8cbigBVRgBtnfMi1GyV0JBQvmGGXVDLV7ld95uz16cKBVImvZq8Js84lHntX
+         fUjhULa9EIsVD16NGoWvBfdmGa8WPYrpB8o4k5ZgVi0SpTa+64LEIwRLxmsCpQ8/pITZ
+         CJIcZqoSiBjFhb3D2OKduZVU0aZ9KX5y334OHTgmeguOOYGnTg/ZJK4YdR/8E1xEvHPv
+         70Ql1LTWJzaPNLRhdsdxfeniZtfRlWmGT+Yo2Y0pHtetFnGUBzx4vFx409vBXKHoM4/Q
+         UXccYYZkwigff9BJ9FK5BtPk7KSpJhiQzJRLyGmCeo1txZa1zOPwZvePZ8/DM/Jtg7+C
+         dgZw==
+X-Gm-Message-State: APjAAAVIGlNTmPsaI7iWhE7PQU+oJSzxC+/No6c48ytzm6zd4a7vGrjD
+        XIKqfoOIsWhoRjQYPQsL9qXUEjLXrs1J+nHZvi+hgjTH
+X-Google-Smtp-Source: APXvYqxVkIScTalyju4KUbjWgD8VE3P18faAzgbh803zzoaKztEzIC61Wcs20g50NLKutuaplTw4pq6DW7NdAMgnvFU=
+X-Received: by 2002:a9d:6b03:: with SMTP id g3mr4900385otp.200.1579638408335;
+ Tue, 21 Jan 2020 12:26:48 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1579595682-251483-1-git-send-email-alex.shi@linux.alibaba.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20200113084005.849071-1-vkoul@kernel.org> <CANcMJZC1w+J=cdp0OiR5XDn9fFSPht70Jaf9F5S5BryFxVXVoQ@mail.gmail.com>
+ <CAAd0S9Aaw8G+=EivfC-g4Lt3Xf_kpjFh6WwQk2E8pFxJUmteKQ@mail.gmail.com> <20200121064608.GA2841@vkoul-mobl>
+In-Reply-To: <20200121064608.GA2841@vkoul-mobl>
+From:   Christian Lamparter <chunkeey@gmail.com>
+Date:   Tue, 21 Jan 2020 21:26:34 +0100
+Message-ID: <CAAd0S9Dd7Ygx7TgV3E_A6z29efG7jsE1-xy48_cHotroWuk_ZA@mail.gmail.com>
+Subject: Re: [PATCH v6 0/5] usb: xhci: Add support for Renesas USB controllers
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        USB list <linux-usb@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 04:34:42PM +0800, Alex Shi wrote:
-> These 2 macros are never used after first git commit Linux-2.6.12-rc2.
-> So guess better to remove them.
+Hello,
 
-I'm not fond of these macros.  If we're going to doing anything to them,
-I'd rather just get rid of the entirely (including the PROC macro) and
-write out the initialization of nlmsvc_procedures.  Yes, it'd probably
-add another 80 or so lines to the file, but it'd be readable without
-referring to the macro definitions.  And it would be less confusing to
-people who grep for the users of the various proc/encode/decode methods
-and can't find them.
+On Tue, Jan 21, 2020 at 7:46 AM Vinod Koul <vkoul@kernel.org> wrote:
+>
+> hey Christian,
+>
+> On 13-01-20, 21:33, Christian Lamparter wrote:
+> > On Mon, Jan 13, 2020 at 9:10 PM John Stultz <john.stultz@linaro.org> wrote:
+> > >
+> > > On Mon, Jan 13, 2020 at 12:42 AM Vinod Koul <vkoul@kernel.org> wrote:
+> > > >
+> > > > This series add support for Renesas USB controllers uPD720201 and uPD720202.
+> > > > These require firmware to be loaded and in case devices have ROM those can
+> > > > also be programmed if empty. If ROM is programmed, it runs from ROM as well.
+> > > >
+> > > > This includes two patches from Christian which supported these controllers
+> > > > w/o ROM and later my patches for ROM support and multiple firmware versions,
+> > > > debugfs hook for rom erase and export of xhci-pci functions.
+> > > >
+> > >
+> > > Thanks so much for updating these! They are working ok for me in my
+> > > testing on db845c.
+> > >
+> > > Tested-by: John Stultz <john.stultz@linaro.org>
+> >
+> > Nice! I'll definitely give this series another try on my WNDR4700 too
+> > (PowerPC Arch)
+> > this weekend.
+> >
+> > and from me: Thanks!
+>
+> Did you get around to test these?
 
---b.
+Not yet, I was too optimistic that I could get current linux-usb with the
+patches running on the WNDR4700 (due to APM82181) over the
+weekend. Do you think that It still counts, if I'm going with 5.4.11 on
+OpenWrt instead? Because then I just swap out the old patches from
+my OpenWrt APM821XX branch:
+<https://git.openwrt.org/?p=openwrt/staging/chunkeey.git;a=commit;h=4dd6f62a36a3724f0363d639cd9e29e04d7b62c0>
 
-> 
-> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-> Cc: "J. Bruce Fields" <bfields@fieldses.org> 
-> Cc: Chuck Lever <chuck.lever@oracle.com> 
-> Cc: Trond Myklebust <trond.myklebust@hammerspace.com> 
-> Cc: Anna Schumaker <anna.schumaker@netapp.com> 
-> Cc: linux-nfs@vger.kernel.org 
-> Cc: linux-kernel@vger.kernel.org 
-> ---
->  fs/lockd/svcproc.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/fs/lockd/svcproc.c b/fs/lockd/svcproc.c
-> index d0bb7a6bf005..8b7565c71863 100644
-> --- a/fs/lockd/svcproc.c
-> +++ b/fs/lockd/svcproc.c
-> @@ -534,12 +534,10 @@ static __be32 nlmsvc_proc_cancel_msg(struct svc_rqst *rqstp)
->   */
->  
->  #define nlmsvc_encode_norep	nlmsvc_encode_void
-> -#define nlmsvc_decode_norep	nlmsvc_decode_void
->  #define nlmsvc_decode_testres	nlmsvc_decode_void
->  #define nlmsvc_decode_lockres	nlmsvc_decode_void
->  #define nlmsvc_decode_unlockres	nlmsvc_decode_void
->  #define nlmsvc_decode_cancelres	nlmsvc_decode_void
-> -#define nlmsvc_decode_grantedres	nlmsvc_decode_void
->  
->  #define nlmsvc_proc_none	nlmsvc_proc_null
->  #define nlmsvc_proc_test_res	nlmsvc_proc_null
-> -- 
-> 1.8.3.1
+and don't have to figure out what broke with linux-usb on the APM821xx.
+
+Cheers,
+Christian
