@@ -7,31 +7,31 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06BA6C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 07:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A8CC33CB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 07:34:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF7FB21734
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 07:34:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2041F21734
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 07:34:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728760AbgAUHeY (ORCPT
+        id S1728896AbgAUHe1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 02:34:24 -0500
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:41937 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727453AbgAUHeX (ORCPT
+        Tue, 21 Jan 2020 02:34:27 -0500
+Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:51053 "EHLO
+        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727453AbgAUHe0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 02:34:23 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R991e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0ToHExQp_1579592060;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0ToHExQp_1579592060)
+        Tue, 21 Jan 2020 02:34:26 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0ToHCg0j_1579592053;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0ToHCg0j_1579592053)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 21 Jan 2020 15:34:20 +0800
+          Tue, 21 Jan 2020 15:34:13 +0800
 From:   Alex Shi <alex.shi@linux.alibaba.com>
 Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
         David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] btrfs: remove unused actions
-Date:   Tue, 21 Jan 2020 15:34:19 +0800
-Message-Id: <1579592059-86386-1-git-send-email-alex.shi@linux.alibaba.com>
+Subject: [PATCH] btrfs/raid56: remove unused actions
+Date:   Tue, 21 Jan 2020 15:34:10 +0800
+Message-Id: <1579592050-86280-1-git-send-email-alex.shi@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -39,8 +39,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Seems no one care ret and features in func btrfs_sysfs_feature_update,
-so better to remove them.
+No one care p_stripe in its functions. Guess it's safe to remove.
 
 Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
 Cc: Chris Mason <clm@fb.com> 
@@ -49,36 +48,38 @@ Cc: David Sterba <dsterba@suse.com>
 Cc: linux-btrfs@vger.kernel.org 
 Cc: linux-kernel@vger.kernel.org 
 ---
- fs/btrfs/sysfs.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ fs/btrfs/raid56.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-diff --git a/fs/btrfs/sysfs.c b/fs/btrfs/sysfs.c
-index 5ebbe8a5ee76..93f870727aa7 100644
---- a/fs/btrfs/sysfs.c
-+++ b/fs/btrfs/sysfs.c
-@@ -1148,13 +1148,10 @@ void btrfs_sysfs_feature_update(struct btrfs_fs_info *fs_info,
- {
- 	struct btrfs_fs_devices *fs_devs;
- 	struct kobject *fsid_kobj;
--	u64 features;
--	int ret;
+diff --git a/fs/btrfs/raid56.c b/fs/btrfs/raid56.c
+index a8e53c8e7b01..fbee5681e690 100644
+--- a/fs/btrfs/raid56.c
++++ b/fs/btrfs/raid56.c
+@@ -1196,7 +1196,6 @@ static noinline void finish_rmw(struct btrfs_raid_bio *rbio)
+ 	int nr_data = rbio->nr_data;
+ 	int stripe;
+ 	int pagenr;
+-	int p_stripe = -1;
+ 	int q_stripe = -1;
+ 	struct bio_list bio_list;
+ 	struct bio *bio;
+@@ -1204,14 +1203,10 @@ static noinline void finish_rmw(struct btrfs_raid_bio *rbio)
  
- 	if (!fs_info)
- 		return;
+ 	bio_list_init(&bio_list);
  
--	features = get_features(fs_info, set);
- 	ASSERT(bit & supported_feature_masks[set]);
+-	if (rbio->real_stripes - rbio->nr_data == 1) {
+-		p_stripe = rbio->real_stripes - 1;
+-	} else if (rbio->real_stripes - rbio->nr_data == 2) {
+-		p_stripe = rbio->real_stripes - 2;
++	if (rbio->real_stripes - rbio->nr_data == 2)
+ 		q_stripe = rbio->real_stripes - 1;
+-	} else {
++	else
+ 		BUG();
+-	}
  
- 	fs_devs = fs_info->fs_devices;
-@@ -1168,7 +1165,7 @@ void btrfs_sysfs_feature_update(struct btrfs_fs_info *fs_info,
- 	 * to use sysfs_update_group but some refactoring is needed first.
- 	 */
- 	sysfs_remove_group(fsid_kobj, &btrfs_feature_attr_group);
--	ret = sysfs_create_group(fsid_kobj, &btrfs_feature_attr_group);
-+	sysfs_create_group(fsid_kobj, &btrfs_feature_attr_group);
- }
- 
- int __init btrfs_init_sysfs(void)
+ 	/* at this point we either have a full stripe,
+ 	 * or we've read the full stripe from the drive.
 -- 
 1.8.3.1
 
