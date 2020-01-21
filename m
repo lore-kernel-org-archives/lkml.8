@@ -2,90 +2,98 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA6AC33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:28:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A48FCC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B74A824653
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:28:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579624093;
-	bh=4UzYHa5pCOLLzLuPE1hryDQE3ptPI+2K4hzDi4WMV8I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kn4lPMlesBZVWtui/ms6/r3afW+I73Ew2cY/m0izzAgs/AJgZdjOKiVeQPydCGn0G
-	 85q/DZXFsk+B/+Pk3VMRO9Xb1iwWIaUiNJFXrlslAoN9ZwfYTyFgP0y92Q3mQmu4FQ
-	 mw75Mnja5xRRg15cCERvsAla8EBcN4b7zzvwudOY=
+	by mail.kernel.org (Postfix) with ESMTP id 78B41206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:30:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CkU8pzFd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729164AbgAUQ2N (ORCPT
+        id S1729121AbgAUQaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 11:28:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57850 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726555AbgAUQ2M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 11:28:12 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 21 Jan 2020 11:30:20 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:51124 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726555AbgAUQaU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 11:30:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579624218;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=mxflqPtTzg3Ku1VbkLyyrn7MV7M3mR8q27sY9MnBA2o=;
+        b=CkU8pzFdFImRSWI76gxeNkQ65ju4U28Zz+B7r6t3DkRDyWjkJhTtGUUupgr1QecMRrkXac
+        EyOmoPwwBzxQwkcOaMXpA0WjwQMCicxv9KN/awcZ+ajDuDbKSqjIDJPrXeTHRS9sLPoe5n
+        c5yrZcg/l5ll20kE8VSQZSbP02umpv8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-90-6-u4abFTOKCN3lU35lN2Fg-1; Tue, 21 Jan 2020 11:30:16 -0500
+X-MC-Unique: 6-u4abFTOKCN3lU35lN2Fg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C974F2253D;
-        Tue, 21 Jan 2020 16:28:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579624092;
-        bh=4UzYHa5pCOLLzLuPE1hryDQE3ptPI+2K4hzDi4WMV8I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nbuen1xxYtJQ5ZQ+shM1vR4MWtLxWW0evvSoj9FtIWiafJ0Fggop0gK0zzej8goLk
-         K+Du1bkTw7AenIcCgjxoOO1DjmeCVy2/ax/2nIcO8y8godcKmeasCNY4Hq068joF2i
-         3+yMuFEdwJBXOa26meWZDeAD9P8nqTihrjwi29Rc=
-Date:   Tue, 21 Jan 2020 16:28:07 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Eugeniu Rosca <erosca@de.adit-jv.com>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        stable@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>,
-        Dirk Behme <dirk.behme@de.bosch.com>
-Subject: Re: [PATCH v2] arm64: kbuild: remove compressed images on 'make
- ARCH=arm64 (dist)clean'
-Message-ID: <20200121162806.GA13501@willie-the-truck>
-References: <20200121155439.1061-1-erosca@de.adit-jv.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 09BCB101FEAF;
+        Tue, 21 Jan 2020 16:30:14 +0000 (UTC)
+Received: from treble (ovpn-122-154.rdu2.redhat.com [10.10.122.154])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 08DCA48;
+        Tue, 21 Jan 2020 16:30:12 +0000 (UTC)
+Date:   Tue, 21 Jan 2020 10:30:11 -0600
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Julien Thierry <jthierry@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        peterz@infradead.org, raphael.gault@arm.com,
+        catalin.marinas@arm.com, will@kernel.org
+Subject: Re: [RFC v5 04/57] objtool: check: Ignore empty alternative groups
+Message-ID: <20200121163011.tk5koyg24gzuhoaa@treble>
+References: <20200109160300.26150-1-jthierry@redhat.com>
+ <20200109160300.26150-5-jthierry@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200121155439.1061-1-erosca@de.adit-jv.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200109160300.26150-5-jthierry@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 04:54:39PM +0100, Eugeniu Rosca wrote:
-> From: Dirk Behme <dirk.behme@de.bosch.com>
+On Thu, Jan 09, 2020 at 04:02:07PM +0000, Julien Thierry wrote:
+> Atlernative section can contain entries for alternatives with no
+> instructions. Objtool will currently crash when handling such an entry.
 > 
-> Since v4.3-rc1 commit 0723c05fb75e44 ("arm64: enable more compressed
-> Image formats"), it is possible to build Image.{bz2,lz4,lzma,lzo}
-> AArch64 images. However, the commit missed adding support for removing
-> those images on 'make ARCH=arm64 (dist)clean'.
+> Just skip that entry, but still give a warning to discourage useless
+> entries.
 > 
-> Fix this by adding them to the target list.
-> Make sure to match the order of the recipes in the makefile.
-> 
-> Cc: stable@vger.kernel.org # v4.3+
-> Fixes: 0723c05fb75e44 ("arm64: enable more compressed Image formats")
-> Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
-> Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-> Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> 
+> Signed-off-by: Julien Thierry <jthierry@redhat.com>
 > ---
-> v2:
->  - Added 'Fixes:', 'Cc: stable' and 'Reviewed-by' tags
-> ---
->  arch/arm64/boot/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  tools/objtool/check.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+> index 5968e6f08891..27e5380e0e0b 100644
+> --- a/tools/objtool/check.c
+> +++ b/tools/objtool/check.c
+> @@ -866,6 +866,13 @@ static int add_special_section_alts(struct objtool_file *file)
+>  		}
+>  
+>  		if (special_alt->group) {
+> +			if (!special_alt->orig_len) {
+> +				WARN("empty alternative entry at %s+0x%lx",
+> +				     orig_insn->sec->name,
+> +				     orig_insn->offset);
+> +				continue;
+> +			}
+> +
 
-Thanks, I'll pick this up.
+I think WARN_FUNC() can be used here instead.
 
-Will
+-- 
+Josh
+
