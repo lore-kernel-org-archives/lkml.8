@@ -2,208 +2,87 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0AB6C33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 20:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8ECBC33CAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 20:26:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94FA024125
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 20:22:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JJ6RbdUF"
+	by mail.kernel.org (Postfix) with ESMTP id 7E67824125
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 20:26:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729187AbgAUUWr (ORCPT
+        id S1728855AbgAUU0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 15:22:47 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38742 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727383AbgAUUWr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 15:22:47 -0500
-Received: by mail-ot1-f67.google.com with SMTP id z9so4196303oth.5;
-        Tue, 21 Jan 2020 12:22:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=T8Xur6qqCtnBykcJTa+ysumESp+avbgNbYl7ls55uQs=;
-        b=JJ6RbdUFCvqmK35XRUlEzA7y0e4ke3xb7l9mPGxndekHZeGOzocYIdvy5l0M9I2x8a
-         LS+PRX5y6Lm3XsxYVt7RHYQ0nFBo2NMN5uFt2fvIgmYkag9cy+E7e2cMZHbVzNpwYeoo
-         oUjocd1nZAnqyTaUpVDciZUKbo6yrPbEzM4HficIQDmy5RW56INs1fQ4vNubF5pl0rUr
-         L35F2l4qlV/xwodEtMRUTohfKREZ/6DT6hZZhoiH6k3oyYM/aeJEnI7ZaGReBw0DIj+C
-         gSpHCN8KfLpkU+rPxU5om8nQOyUSjjJu07clq9xzlSBmNsiPAvvASrED8ETb8GY1Zq8m
-         Ox8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references;
-        bh=T8Xur6qqCtnBykcJTa+ysumESp+avbgNbYl7ls55uQs=;
-        b=g2jqK51KLiiwlQGdtW8T1r6t0ongif8TDtk43uKO3VWbrRjFbLiic9qn1NEWGIrnIa
-         ttOkmM/Eapdt2QPp0TUHUS6xhmtucUKpp2kzmuXr12CUucjJam7Tuxm6eQK1PAVZdZo5
-         9+EEe2+GfcK8uIoK6AiuFi3N5YH/ATZ9HCf3zVwOSnYwtniDspwCSuPBXVVo51I8sPN4
-         nCtOcP0xeXpnWviK0sl+0irGzVdGzUcxHMe5Lgc5hQmIqNBxGFlTsbXOkk87zOdgi5Q4
-         bP3w09Gbw5acmfa6O/Qm2EHM5biVEJwSJlYOLaPTA+mBXcDggY270B65KHRqhr5UhKEC
-         SRGA==
-X-Gm-Message-State: APjAAAXZMBOOkKKs4TRQTQUbGK1tt6TP48kLNMgssGvUbhYdp6YFiyXm
-        /uq5wDhlY03MrFxxZGgqVwQ=
-X-Google-Smtp-Source: APXvYqxOJFVAzDFUdZgDAPWj9sfeSHFWXVn2Auf6+QXRPnSPFFUS0SL6v7w1pdwCb0jRj38fVx0IrQ==
-X-Received: by 2002:a9d:7d81:: with SMTP id j1mr4921311otn.267.1579638165778;
-        Tue, 21 Jan 2020 12:22:45 -0800 (PST)
-Received: from localhost.localdomain (ip24-56-44-135.ph.ph.cox.net. [24.56.44.135])
-        by smtp.gmail.com with ESMTPSA id j20sm13870325otp.24.2020.01.21.12.22.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 Jan 2020 12:22:45 -0800 (PST)
-From:   Matthew Cover <werekraken@gmail.com>
-X-Google-Original-From: Matthew Cover <matthew.cover@stackpath.com>
-To:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Shuah Khan <shuah@kernel.org>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Matthew Cover <matthew.cover@stackpath.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Andrey Ignatov <rdna@fb.com>,
-        Lorenz Bauer <lmb@cloudflare.com>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH bpf-next v2 2/2] selftests/bpf: test references to nf_conn
-Date:   Tue, 21 Jan 2020 13:22:33 -0700
-Message-Id: <20200121202233.26583-1-matthew.cover@stackpath.com>
-X-Mailer: git-send-email 2.15.2 (Apple Git-101.1)
-In-Reply-To: <20200121202038.26490-1-matthew.cover@stackpath.com>
-References: <20200121202038.26490-1-matthew.cover@stackpath.com>
+        Tue, 21 Jan 2020 15:26:08 -0500
+Received: from fieldses.org ([173.255.197.46]:37712 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726926AbgAUU0I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 15:26:08 -0500
+Received: by fieldses.org (Postfix, from userid 2815)
+        id B65C71C15; Tue, 21 Jan 2020 15:26:07 -0500 (EST)
+Date:   Tue, 21 Jan 2020 15:26:07 -0500
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] locked: remove nlmsvc_decode_norep/grantedres
+Message-ID: <20200121202607.GB25691@fieldses.org>
+References: <1579595682-251483-1-git-send-email-alex.shi@linux.alibaba.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1579595682-251483-1-git-send-email-alex.shi@linux.alibaba.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make sure that returning a struct nf_conn * reference invokes
-the reference tracking machinery in the verifier.
+On Tue, Jan 21, 2020 at 04:34:42PM +0800, Alex Shi wrote:
+> These 2 macros are never used after first git commit Linux-2.6.12-rc2.
+> So guess better to remove them.
 
-Signed-off-by: Matthew Cover <matthew.cover@stackpath.com>
----
- tools/testing/selftests/bpf/test_verifier.c        | 18 ++++++++
- .../testing/selftests/bpf/verifier/ref_tracking.c  | 48 ++++++++++++++++++++++
- 2 files changed, 66 insertions(+)
+I'm not fond of these macros.  If we're going to doing anything to them,
+I'd rather just get rid of the entirely (including the PROC macro) and
+write out the initialization of nlmsvc_procedures.  Yes, it'd probably
+add another 80 or so lines to the file, but it'd be readable without
+referring to the macro definitions.  And it would be less confusing to
+people who grep for the users of the various proc/encode/decode methods
+and can't find them.
 
-diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/testing/selftests/bpf/test_verifier.c
-index 87eaa49..7569db2 100644
---- a/tools/testing/selftests/bpf/test_verifier.c
-+++ b/tools/testing/selftests/bpf/test_verifier.c
-@@ -294,6 +294,24 @@ static void bpf_fill_scale(struct bpf_test *self)
- 	}
- }
- 
-+/* BPF_CT_LOOKUP contains 13 instructions, if you need to fix up maps */
-+#define BPF_CT_LOOKUP(func)						\
-+	/* struct bpf_nf_conntrack_tuple tuple = {} */			\
-+	BPF_MOV64_IMM(BPF_REG_2, 0),					\
-+	BPF_STX_MEM(BPF_W, BPF_REG_10, BPF_REG_2, -8),			\
-+	BPF_STX_MEM(BPF_DW, BPF_REG_10, BPF_REG_2, -16),		\
-+	BPF_STX_MEM(BPF_DW, BPF_REG_10, BPF_REG_2, -24),		\
-+	BPF_STX_MEM(BPF_DW, BPF_REG_10, BPF_REG_2, -32),		\
-+	BPF_STX_MEM(BPF_DW, BPF_REG_10, BPF_REG_2, -40),		\
-+	BPF_STX_MEM(BPF_DW, BPF_REG_10, BPF_REG_2, -48),		\
-+	/* ct = func(ctx, &tuple, sizeof tuple, 0, 0) */		\
-+	BPF_MOV64_REG(BPF_REG_2, BPF_REG_10),				\
-+	BPF_ALU64_IMM(BPF_ADD, BPF_REG_2, -48),				\
-+	BPF_MOV64_IMM(BPF_REG_3, sizeof(struct bpf_nf_conntrack_tuple)),\
-+	BPF_MOV64_IMM(BPF_REG_4, 0),					\
-+	BPF_MOV64_IMM(BPF_REG_5, 0),					\
-+	BPF_EMIT_CALL(BPF_FUNC_ ## func)
-+
- /* BPF_SK_LOOKUP contains 13 instructions, if you need to fix up maps */
- #define BPF_SK_LOOKUP(func)						\
- 	/* struct bpf_sock_tuple tuple = {} */				\
-diff --git a/tools/testing/selftests/bpf/verifier/ref_tracking.c b/tools/testing/selftests/bpf/verifier/ref_tracking.c
-index 604b461..de5c550a 100644
---- a/tools/testing/selftests/bpf/verifier/ref_tracking.c
-+++ b/tools/testing/selftests/bpf/verifier/ref_tracking.c
-@@ -21,6 +21,17 @@
- 	.result = REJECT,
- },
- {
-+	"reference tracking: leak potential reference to nf_conn",
-+	.insns = {
-+	BPF_CT_LOOKUP(ct_lookup_tcp),
-+	BPF_MOV64_REG(BPF_REG_6, BPF_REG_0), /* leak reference */
-+	BPF_EXIT_INSN(),
-+	},
-+	.prog_type = BPF_PROG_TYPE_SCHED_CLS,
-+	.errstr = "Unreleased reference",
-+	.result = REJECT,
-+},
-+{
- 	"reference tracking: leak potential reference on stack",
- 	.insns = {
- 	BPF_SK_LOOKUP(sk_lookup_tcp),
-@@ -72,6 +83,17 @@
- 	.result = REJECT,
- },
- {
-+	"reference tracking: zero potential reference to nf_conn",
-+	.insns = {
-+	BPF_CT_LOOKUP(ct_lookup_tcp),
-+	BPF_MOV64_IMM(BPF_REG_0, 0), /* leak reference */
-+	BPF_EXIT_INSN(),
-+	},
-+	.prog_type = BPF_PROG_TYPE_SCHED_CLS,
-+	.errstr = "Unreleased reference",
-+	.result = REJECT,
-+},
-+{
- 	"reference tracking: copy and zero potential references",
- 	.insns = {
- 	BPF_SK_LOOKUP(sk_lookup_tcp),
-@@ -113,6 +135,20 @@
- 	.result = REJECT,
- },
- {
-+	"reference tracking: release reference to nf_conn without check",
-+	.insns = {
-+	BPF_CT_LOOKUP(ct_lookup_tcp),
-+	/* reference in r0 may be NULL */
-+	BPF_MOV64_REG(BPF_REG_1, BPF_REG_0),
-+	BPF_MOV64_IMM(BPF_REG_2, 0),
-+	BPF_EMIT_CALL(BPF_FUNC_ct_release),
-+	BPF_EXIT_INSN(),
-+	},
-+	.prog_type = BPF_PROG_TYPE_SCHED_CLS,
-+	.errstr = "type=nf_conn_or_null expected=nf_conn",
-+	.result = REJECT,
-+},
-+{
- 	"reference tracking: release reference",
- 	.insns = {
- 	BPF_SK_LOOKUP(sk_lookup_tcp),
-@@ -137,6 +173,18 @@
- 	.result = ACCEPT,
- },
- {
-+	"reference tracking: release reference to nf_conn",
-+	.insns = {
-+	BPF_CT_LOOKUP(ct_lookup_tcp),
-+	BPF_MOV64_REG(BPF_REG_1, BPF_REG_0),
-+	BPF_JMP_IMM(BPF_JEQ, BPF_REG_0, 0, 1),
-+	BPF_EMIT_CALL(BPF_FUNC_ct_release),
-+	BPF_EXIT_INSN(),
-+	},
-+	.prog_type = BPF_PROG_TYPE_SCHED_CLS,
-+	.result = ACCEPT,
-+},
-+{
- 	"reference tracking: release reference 2",
- 	.insns = {
- 	BPF_SK_LOOKUP(sk_lookup_tcp),
--- 
-1.8.3.1
+--b.
 
+> 
+> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+> Cc: "J. Bruce Fields" <bfields@fieldses.org> 
+> Cc: Chuck Lever <chuck.lever@oracle.com> 
+> Cc: Trond Myklebust <trond.myklebust@hammerspace.com> 
+> Cc: Anna Schumaker <anna.schumaker@netapp.com> 
+> Cc: linux-nfs@vger.kernel.org 
+> Cc: linux-kernel@vger.kernel.org 
+> ---
+>  fs/lockd/svcproc.c | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/fs/lockd/svcproc.c b/fs/lockd/svcproc.c
+> index d0bb7a6bf005..8b7565c71863 100644
+> --- a/fs/lockd/svcproc.c
+> +++ b/fs/lockd/svcproc.c
+> @@ -534,12 +534,10 @@ static __be32 nlmsvc_proc_cancel_msg(struct svc_rqst *rqstp)
+>   */
+>  
+>  #define nlmsvc_encode_norep	nlmsvc_encode_void
+> -#define nlmsvc_decode_norep	nlmsvc_decode_void
+>  #define nlmsvc_decode_testres	nlmsvc_decode_void
+>  #define nlmsvc_decode_lockres	nlmsvc_decode_void
+>  #define nlmsvc_decode_unlockres	nlmsvc_decode_void
+>  #define nlmsvc_decode_cancelres	nlmsvc_decode_void
+> -#define nlmsvc_decode_grantedres	nlmsvc_decode_void
+>  
+>  #define nlmsvc_proc_none	nlmsvc_proc_null
+>  #define nlmsvc_proc_test_res	nlmsvc_proc_null
+> -- 
+> 1.8.3.1
