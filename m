@@ -2,183 +2,216 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D78C33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F19D4C33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:29:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ECF82087E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:27:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C372024655
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:29:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579631350;
+	bh=qPFExtTt5h+kOuG3+TkRFE3BfIRxdJRVf2QDJvNewII=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=D5S/9XnVAqiSPe+dIiHMY+tbZ+WqcViB+pBfcuKMVLKSDTCxGKXXqrtf/0gSHGxdK
+	 SZ258QFQqSsFOOZyM/5VczLqoEg9qK+Ft0UFDkCnuNGN96MRBWYcLGFFk1xRxkt6sY
+	 LcTpFRofCJ03TQprLJR1YQQJ4u9mshk45cHgZ7e0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729359AbgAUS1x (ORCPT
+        id S1729224AbgAUS3J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 13:27:53 -0500
-Received: from mga18.intel.com ([134.134.136.126]:29552 "EHLO mga18.intel.com"
+        Tue, 21 Jan 2020 13:29:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728186AbgAUS1x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 13:27:53 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 10:27:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,346,1574150400"; 
-   d="scan'208";a="228946136"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga006.jf.intel.com with ESMTP; 21 Jan 2020 10:27:52 -0800
-Received: from [10.252.13.111] (abudanko-mobl.ccr.corp.intel.com [10.252.13.111])
-        by linux.intel.com (Postfix) with ESMTP id 76FDE58033E;
-        Tue, 21 Jan 2020 10:27:42 -0800 (PST)
-Subject: Re: [PATCH v5 01/10] capabilities: introduce CAP_PERFMON to kernel
- and user space
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
-        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "james.bottomley@hansenpartnership.com" 
-        <james.bottomley@hansenpartnership.com>,
-        Serge Hallyn <serge@hallyn.com>,
-        James Morris <jmorris@namei.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Lionel Landwerlin <lionel.g.landwerlin@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        oprofile-list@lists.sf.net, Andy Lutomirski <luto@amacapital.net>
-References: <0548c832-7f4b-dc4c-8883-3f2b6d351a08@linux.intel.com>
- <9b77124b-675d-5ac7-3741-edec575bd425@linux.intel.com>
- <64cab472-806e-38c4-fb26-0ffbee485367@tycho.nsa.gov>
- <05297eff-8e14-ccdf-55a4-870c64516de8@linux.intel.com>
- <CAADnVQK-JzK-GUk4KOozn4c1xr=7TiCpB9Fi0QDC9nE6iVn8iQ@mail.gmail.com>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <537bdb28-c9e4-f44f-d665-25250065a6bb@linux.intel.com>
-Date:   Tue, 21 Jan 2020 21:27:41 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1729080AbgAUS3J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 13:29:09 -0500
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CF052087E;
+        Tue, 21 Jan 2020 18:29:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579631348;
+        bh=qPFExtTt5h+kOuG3+TkRFE3BfIRxdJRVf2QDJvNewII=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Kf7V4o/oSwcgA2ETVwf8yAyvu9oUNRxUT2OOYfIA8UQv10ZpVh8+S/3FOGZUyCJLT
+         VkXxDTwUgx/hHXrJzsLqgH4OmBwUsSQXnXI2p1/4PlyUQ6qhu+3pOmOPT/c0PkioHD
+         jS2rKawudvFLVieooIfngZTEOtm5B/FGnz2UDraA=
+Date:   Tue, 21 Jan 2020 19:29:05 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Stefan Mavrodiev <stefan@olimex.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:DRM DRIVERS FOR ALLWINNER A10" 
+        <dri-devel@lists.freedesktop.org>, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v2 2/2] drm: sun4i: hdmi: Add support for sun4i HDMI
+ encoder audio
+Message-ID: <20200121182905.pxs72ojqx5fz2gi3@gilmour.lan>
+References: <20200120123326.30743-1-stefan@olimex.com>
+ <20200120123326.30743-3-stefan@olimex.com>
 MIME-Version: 1.0
-In-Reply-To: <CAADnVQK-JzK-GUk4KOozn4c1xr=7TiCpB9Fi0QDC9nE6iVn8iQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="uoqfuck44v3rmnkh"
+Content-Disposition: inline
+In-Reply-To: <20200120123326.30743-3-stefan@olimex.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 21.01.2020 20:55, Alexei Starovoitov wrote:
-> On Tue, Jan 21, 2020 at 9:31 AM Alexey Budankov
-> <alexey.budankov@linux.intel.com> wrote:
->>
->>
->> On 21.01.2020 17:43, Stephen Smalley wrote:
->>> On 1/20/20 6:23 AM, Alexey Budankov wrote:
->>>>
->>>> Introduce CAP_PERFMON capability designed to secure system performance
->>>> monitoring and observability operations so that CAP_PERFMON would assist
->>>> CAP_SYS_ADMIN capability in its governing role for perf_events, i915_perf
->>>> and other performance monitoring and observability subsystems.
->>>>
->>>> CAP_PERFMON intends to harden system security and integrity during system
->>>> performance monitoring and observability operations by decreasing attack
->>>> surface that is available to a CAP_SYS_ADMIN privileged process [1].
->>>> Providing access to system performance monitoring and observability
->>>> operations under CAP_PERFMON capability singly, without the rest of
->>>> CAP_SYS_ADMIN credentials, excludes chances to misuse the credentials and
->>>> makes operation more secure.
->>>>
->>>> CAP_PERFMON intends to take over CAP_SYS_ADMIN credentials related to
->>>> system performance monitoring and observability operations and balance
->>>> amount of CAP_SYS_ADMIN credentials following the recommendations in the
->>>> capabilities man page [1] for CAP_SYS_ADMIN: "Note: this capability is
->>>> overloaded; see Notes to kernel developers, below."
->>>>
->>>> Although the software running under CAP_PERFMON can not ensure avoidance
->>>> of related hardware issues, the software can still mitigate these issues
->>>> following the official embargoed hardware issues mitigation procedure [2].
->>>> The bugs in the software itself could be fixed following the standard
->>>> kernel development process [3] to maintain and harden security of system
->>>> performance monitoring and observability operations.
->>>>
->>>> [1] http://man7.org/linux/man-pages/man7/capabilities.7.html
->>>> [2] https://www.kernel.org/doc/html/latest/process/embargoed-hardware-issues.html
->>>> [3] https://www.kernel.org/doc/html/latest/admin-guide/security-bugs.html
->>>>
->>>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
->>>> ---
->>>>   include/linux/capability.h          | 12 ++++++++++++
->>>>   include/uapi/linux/capability.h     |  8 +++++++-
->>>>   security/selinux/include/classmap.h |  4 ++--
->>>>   3 files changed, 21 insertions(+), 3 deletions(-)
->>>>
->>>> diff --git a/include/linux/capability.h b/include/linux/capability.h
->>>> index ecce0f43c73a..8784969d91e1 100644
->>>> --- a/include/linux/capability.h
->>>> +++ b/include/linux/capability.h
->>>> @@ -251,6 +251,18 @@ extern bool privileged_wrt_inode_uidgid(struct user_namespace *ns, const struct
->>>>   extern bool capable_wrt_inode_uidgid(const struct inode *inode, int cap);
->>>>   extern bool file_ns_capable(const struct file *file, struct user_namespace *ns, int cap);
->>>>   extern bool ptracer_capable(struct task_struct *tsk, struct user_namespace *ns);
->>>> +static inline bool perfmon_capable(void)
->>>> +{
->>>> +    struct user_namespace *ns = &init_user_ns;
->>>> +
->>>> +    if (ns_capable_noaudit(ns, CAP_PERFMON))
->>>> +        return ns_capable(ns, CAP_PERFMON);
->>>> +
->>>> +    if (ns_capable_noaudit(ns, CAP_SYS_ADMIN))
->>>> +        return ns_capable(ns, CAP_SYS_ADMIN);
->>>> +
->>>> +    return false;
->>>> +}
->>>
->>> Why _noaudit()?  Normally only used when a permission failure is non-fatal to the operation.  Otherwise, we want the audit message.
->>
->> Some of ideas from v4 review.
-> 
-> well, in the requested changes form v4 I wrote:
-> return capable(CAP_PERFMON);
-> instead of
-> return false;
+--uoqfuck44v3rmnkh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Aww, indeed. I was concerning exactly about it when updating the patch
-and simply put false, missing the fact that capable() also logs.
++Mark
 
-I suppose the idea is originally from here [1].
-BTW, Has it already seen any _more optimal_ implementation?
-Anyway, original or optimized version could be reused for CAP_PERFMON.
+On Mon, Jan 20, 2020 at 02:33:26PM +0200, Stefan Mavrodiev wrote:
+> Add HDMI audio support for the sun4i-hdmi encoder, used on
+> the older Allwinner chips - A10, A20, A31.
+>
+> Most of the code is based on the BSP implementation. In it
+> dditional formats are supported (S20_3LE and S24_LE), however
+> there where some problems with them and only S16_LE is left.
 
-~Alexey
+What are those problems?
 
-[1] https://patchwork.ozlabs.org/patch/1159243/
+> Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
+> ---
 
-> 
-> That's what Andy suggested earlier for CAP_BPF.
-> I think that should resolve Stephen's concern.
-> 
+> +static int sun4i_hdmi_audio_probe(struct platform_device *pdev)
+> +{
+> +	struct snd_soc_card *card = &sun4i_hdmi_audio_card;
+> +	struct snd_soc_dai_link_component *comp;
+> +	struct snd_soc_dai_link *link;
+> +	struct device *dev = &pdev->dev;
+> +	struct sun4i_hdmi_audio *priv;
+> +	int ret;
+> +
+> +	ret = devm_snd_dmaengine_pcm_register(dev,
+> +					      &sun4i_hdmi_audio_pcm_config, 0);
+> +	if (ret) {
+> +		dev_err(dev, "Failed registering PCM DMA component\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = devm_snd_soc_register_component(dev,
+> +					      &sun4i_hdmi_audio_component,
+> +					      &sun4i_hdmi_audio_dai, 1);
+> +	if (ret) {
+> +		dev_err(dev, "Failed registering DAI component\n");
+> +		return ret;
+> +	}
+> +
+> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	priv->hdmi = dev->parent;
+> +	dev->of_node = dev->parent->of_node;
+> +
+> +	link = devm_kzalloc(dev, sizeof(*link), GFP_KERNEL);
+> +	if (!link)
+> +		return -ENOMEM;
+> +
+> +	comp = devm_kzalloc(dev, sizeof(*comp) * 3, GFP_KERNEL);
+> +	if (!comp)
+> +		return -ENOMEM;
+> +
+> +	link->cpus = &comp[0];
+> +	link->codecs = &comp[1];
+> +	link->platforms = &comp[2];
+> +
+> +	link->num_cpus = 1;
+> +	link->num_codecs = 1;
+> +	link->num_platforms = 1;
+> +
+> +	link->playback_only = 1;
+> +
+> +	link->name = "SUN4I-HDMI";
+> +	link->stream_name = "SUN4I-HDMI PCM";
+> +
+> +	link->codecs->name = dev_name(dev);
+> +	link->codecs->dai_name	= sun4i_hdmi_audio_dai.name;
+> +
+> +	link->cpus->dai_name = dev_name(dev);
+> +
+> +	link->platforms->name = dev_name(dev);
+> +
+> +	link->dai_fmt = SND_SOC_DAIFMT_I2S;
+> +
+> +	card->dai_link = link;
+> +	card->num_links = 1;
+> +	card->dev = dev;
+> +
+> +	snd_soc_card_set_drvdata(card, priv);
+> +	return devm_snd_soc_register_card(dev, card);
+> +}
+> +
+> +static int sun4i_hdmi_audio_remove(struct platform_device *pdev)
+> +{
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver sun4i_hdmi_audio_driver = {
+> +	.probe	= sun4i_hdmi_audio_probe,
+> +	.remove	= sun4i_hdmi_audio_remove,
+> +	.driver	= {
+> +		.name = DRIVER_NAME,
+> +	},
+> +};
+> +module_platform_driver(sun4i_hdmi_audio_driver);
+> +
+> +MODULE_AUTHOR("Stefan Mavrodiev <stefan@olimex.com");
+> +MODULE_DESCRIPTION("Allwinner A10 HDMI Audio driver");
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_ALIAS("platform:" DRIVER_NAME);
+
+Sorry if I wasn't clear enough in the previous mail, I didn't suggest
+to do a driver, this will open another can of worm (as kbuild already
+pointed out), but to create a new device, and pass that new device to
+ASoC's functions.
+
+I tried that, and failed, so I guess it's not an option either.
+
+Mark, our issue here is that we have a driver tied to a device that is
+an HDMI encoder. Obviously, we'll want to register into DRM, which is
+what we were doing so far, with the usual case where at remove /
+unbind time, in order to free the resources, we just retrieve our
+pointer to our private structure using the device's drvdata.
+
+Now, snd_soc_register_card also sets that pointer to the card we try
+to register, which is problematic. It seems that it's used to handle
+suspend / resume automatically, which in this case would be also not
+really fit for us (or rather, we would need to do more that just
+suspend the audio part).
+
+Is there anyway we can have that kind of setup? I believe vc4 is in a
+similar situation, but they worked around it by storing the data they
+want to access in a global pointer, but that only works for one device
+which doesn't really suit us either.
+
+Any suggestions?
+Thanks!
+Maxime
+
+--uoqfuck44v3rmnkh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXidC8QAKCRDj7w1vZxhR
+xdhjAQDAc/yNp70ZVKdve6593LTwm1iFX5zjlIF0vAXCTIfazQD/bIxCUQXdVxow
+tvphlLwx2z01SmLI341xYHBiu+FtEQI=
+=c05y
+-----END PGP SIGNATURE-----
+
+--uoqfuck44v3rmnkh--
