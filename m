@@ -7,33 +7,30 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C86E8C33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D1A5C33CB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:34:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CA8520661
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:34:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09FCC20661
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:34:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728779AbgAUIeK (ORCPT
+        id S1728826AbgAUIeM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 03:34:10 -0500
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:41239 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726920AbgAUIeI (ORCPT
+        Tue, 21 Jan 2020 03:34:12 -0500
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:49444 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726920AbgAUIeM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 03:34:08 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04396;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0ToHWnva_1579595645;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0ToHWnva_1579595645)
+        Tue, 21 Jan 2020 03:34:12 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0ToHX9tq_1579595649;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0ToHX9tq_1579595649)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 21 Jan 2020 16:34:06 +0800
+          Tue, 21 Jan 2020 16:34:09 +0800
 From:   Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Richard Fontana <rfontana@redhat.com>,
-        Armijn Hemel <armijn@tjaldur.nl>, linux-kernel@vger.kernel.org
-Subject: [PATCH] lib/ida: remove abandoned macros
-Date:   Tue, 21 Jan 2020 16:34:05 +0800
-Message-Id: <1579595645-251250-1-git-send-email-alex.shi@linux.alibaba.com>
+Cc:     Dmitry Kasatkin <dmitry.kasatkin@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] lib/mpi: remove unused macro A_LIMB_1
+Date:   Tue, 21 Jan 2020 16:34:07 +0800
+Message-Id: <1579595647-251293-1-git-send-email-alex.shi@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -41,39 +38,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-3 IDA_ started macros aren't used from commit f32f004cddf8 ("ida: Convert
-to XArray"). so better to remove them.
+This macro isn't used from commit 7cf4206a99d1 ("Remove unused code from
+MPI library"). so better to remove it.
 
 Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org> 
-Cc: Thomas Gleixner <tglx@linutronix.de> 
-Cc: Richard Fontana <rfontana@redhat.com> 
-Cc: Armijn Hemel <armijn@tjaldur.nl> 
+Cc: Dmitry Kasatkin <dmitry.kasatkin@intel.com>
 Cc: linux-kernel@vger.kernel.org 
 ---
- lib/radix-tree.c | 8 --------
- 1 file changed, 8 deletions(-)
+ lib/mpi/mpi-bit.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/lib/radix-tree.c b/lib/radix-tree.c
-index c8fa1d274530..2ee6ae3b0ade 100644
---- a/lib/radix-tree.c
-+++ b/lib/radix-tree.c
-@@ -56,14 +56,6 @@
- #define IDR_PRELOAD_SIZE	(IDR_MAX_PATH * 2 - 1)
+diff --git a/lib/mpi/mpi-bit.c b/lib/mpi/mpi-bit.c
+index 503537e08436..18030a01494f 100644
+--- a/lib/mpi/mpi-bit.c
++++ b/lib/mpi/mpi-bit.c
+@@ -21,8 +21,6 @@
+ #include "mpi-internal.h"
+ #include "longlong.h"
  
- /*
-- * The IDA is even shorter since it uses a bitmap at the last level.
-- */
--#define IDA_INDEX_BITS		(8 * sizeof(int) - 1 - ilog2(IDA_BITMAP_BITS))
--#define IDA_MAX_PATH		(DIV_ROUND_UP(IDA_INDEX_BITS, \
--						RADIX_TREE_MAP_SHIFT))
--#define IDA_PRELOAD_SIZE	(IDA_MAX_PATH * 2 - 1)
+-#define A_LIMB_1 ((mpi_limb_t) 1)
 -
--/*
-  * Per-cpu pool of preloaded nodes
-  */
- struct radix_tree_preload {
+ /****************
+  * Sometimes we have MSL (most significant limbs) which are 0;
+  * this is for some reasons not good, so this function removes them.
 -- 
 1.8.3.1
 
