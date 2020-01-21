@@ -2,100 +2,75 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7310BC33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD49BC33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 464F92051A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:45:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFB822051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:47:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729199AbgAURp6 (ORCPT
+        id S1729199AbgAURrH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 12:45:58 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:36082 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728186AbgAURp5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 12:45:57 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1itxax-0000jZ-CC; Tue, 21 Jan 2020 18:45:43 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 8020A1008BE; Tue, 21 Jan 2020 18:45:42 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Vipul Kumar <vipulk0511@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, Stable <stable@vger.kernel.org>,
-        Srikanth Krishnakar <Srikanth_Krishnakar@mentor.com>,
-        Cedric Hombourger <Cedric_Hombourger@mentor.com>,
-        Vipul Kumar <vipulk0511@gmail.com>, x86@kernel.org,
-        Bin Gao <bin.gao@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Len Brown <len.brown@intel.com>,
-        Vipul Kumar <vipul_kumar@mentor.com>
-Subject: Re: [v3] x86/tsc: Unset TSC_KNOWN_FREQ and TSC_RELIABLE flags on Intel Bay Trail SoC
-In-Reply-To: <1579617717-4098-1-git-send-email-vipulk0511@gmail.com>
-References: <1579617717-4098-1-git-send-email-vipulk0511@gmail.com>
-Date:   Tue, 21 Jan 2020 18:45:42 +0100
-Message-ID: <87eevs7lfd.fsf@nanos.tec.linutronix.de>
+        Tue, 21 Jan 2020 12:47:07 -0500
+Received: from mga12.intel.com ([192.55.52.136]:32281 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728829AbgAURrG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 12:47:06 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 09:46:56 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,346,1574150400"; 
+   d="scan'208";a="227406516"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by orsmga003.jf.intel.com with ESMTP; 21 Jan 2020 09:46:55 -0800
+Subject: Re: [PATCH v4 0/9] idxd driver for Intel Data Streaming Accelerator
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dan.j.williams@intel.com, tony.luck@intel.com, jing.lin@intel.com,
+        ashok.raj@intel.com, sanjay.k.kumar@intel.com, megha.dey@intel.com,
+        jacob.jun.pan@intel.com, yi.l.liu@intel.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, fenghua.yu@intel.com, hpa@zytor.com
+References: <157842940405.27241.1146722525082010210.stgit@djiang5-desk3.ch.intel.com>
+ <20200121091558.GF2841@vkoul-mobl>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <4d619880-af1c-dc29-acdb-ff935f9f662c@intel.com>
+Date:   Tue, 21 Jan 2020 10:46:55 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <20200121091558.GF2841@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vipul,
-
-Vipul Kumar <vipulk0511@gmail.com> writes:
-
-> commit f3a02ecebed7 ("x86/tsc: Set TSC_KNOWN_FREQ and TSC_RELIABLE
-> flags on Intel Atom SoCs"), is setting TSC_KNOWN_FREQ and TSC_RELIABLE
-> flags for Soc's which is causing time drift on Valleyview/Bay trail Soc.
-
-This lacks any form of information what the difference is. I asked about
-that before and got no answer.
-
-> This patch introduces a new macro to skip these flags.
-
-git grep 'This patch' Documentation/process/submitting-patches.rst
-
-> Signed-off-by: Vipul Kumar <vipul_kumar@mentor.com>
-> Cc: stable@vger.kernel.org
-
-That stable tag is useless as you already have identied the commit which
-is "Fixed" by your patch.
-
->  
-> +config X86_FEATURE_TSC_UNKNOWN_FREQ
-> +	bool "Support to skip tsc known frequency flag"
-> +	help
-> +	  Include support to skip X86_FEATURE_TSC_KNOWN_FREQ flag
-> +
-> +	  X86_FEATURE_TSC_KNOWN_FREQ flag is causing time-drift on Valleyview/
-> +	  Baytrail SoC.
-> +	  By selecting this option, user can skip X86_FEATURE_TSC_KNOWN_FREQ
-> +	  flag to use refine tsc freq calibration.
-
-This is exactly the same problem as before. How does anyone aside of you
-know whether to enable this or not?
-
-And if someone enables this option then _ALL_ platforms which utilize
-cpu_khz_from_msr() are affected. How is that any different from your
-previous approach? This works on local kernels where you build for a
-specific platform and you know exactly what you're doing, but not for
-general consumption. What should a distro do with this option?
-
-Thanks,
-
-        tglx
 
 
+On 1/21/20 2:15 AM, Vinod Koul wrote:
+> Hi Dave,
+> 
+> On 07-01-20, 13:40, Dave Jiang wrote:
+>> v4:
+>> Borislav:
+>> - Merge unused __iowrite512() into iosubmit_cmds512().
+>> - Fix various comments for iosubmit_cmds512() patch.
+>> Vinod:
+>> - Drop dmanegine request API and supporting code
+>> - Update to use existing dmaengine API
+> 
+> This looks okay to me but needs a rebase on top of dmaengine-next,
+> Peters patches applied earlier move code around a bit
+
+Not a problem. I will get on that. Thanks!
+
+> 
+> Thanks
+> 
