@@ -2,56 +2,78 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17678C33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:03:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE9BEC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB12D217F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:03:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AFD5217F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:03:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Tdr6xS9f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729952AbgAUQDG (ORCPT
+        id S1729963AbgAUQDI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 11:03:06 -0500
-Received: from mga12.intel.com ([192.55.52.136]:22455 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729137AbgAUQBV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 11:01:21 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 08:01:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,346,1574150400"; 
-   d="scan'208";a="215582450"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga007.jf.intel.com with ESMTP; 21 Jan 2020 08:01:15 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id D3A9834C; Tue, 21 Jan 2020 18:01:14 +0200 (EET)
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Lee Jones <lee.jones@linaro.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Tue, 21 Jan 2020 11:03:08 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:56402 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729504AbgAUQDF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 11:03:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579622583;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=R93kv0W0ESiBmPn+Fcdbi6eCG8MLqbjSKamhdoxhulg=;
+        b=Tdr6xS9f8G0CbYZX9ciRlmIeVf+jNQNQynchgMPpyfk6/hporBnwBWbVhbzXxe/fXGHrlx
+        zSh9OMLk2UW9+KzWMu5/b1H47VbyANavjCpDFjlp7gzdxReYgrETntjRAXFWagOmateigw
+        5ZknbEvF+GB2ilpC5z7pK5TiHT9/1SA=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-373-_gcyxaBqO327POIqDM-lJA-1; Tue, 21 Jan 2020 11:03:01 -0500
+X-MC-Unique: _gcyxaBqO327POIqDM-lJA-1
+Received: by mail-wr1-f70.google.com with SMTP id o6so1502868wrp.8
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 08:03:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=R93kv0W0ESiBmPn+Fcdbi6eCG8MLqbjSKamhdoxhulg=;
+        b=b6wv43b204dQD6FQh2UkQ/fvjB9u7BtDAMTiE7/9OFXeVYhd7SqTcIhijJstkQaw/1
+         CHR0mccHVSbUHCn8ZPGSXBnwcGFEjhaDizWgaiS1mYE372e9TyUyr561BsZT9p708z2t
+         7cLsBeaDdcv+CV7hcbH4Pr/sSW+8joFjCBvjEc8QbqjgsRI1tXQt6kdKS/Tbe0Q4pOti
+         2nN8vYzCTJMKIE8Zax3dBABJInuoldROGopM6IU1SNWZws28RXx7QHnVLO2yZrXP6BQ6
+         d86gzz4G/0McOGXha1iYiY/mtFvxnqVl4aK1n9gHhe8NGBSJ5KYjh10CQHbAWppLvxXE
+         yFQg==
+X-Gm-Message-State: APjAAAVra3lj7yqylkYAGuOmBLKvGgOimEjUtpVWhaLgjIkGCW64ePyd
+        /PkhpWxujt0JX4X0P6ms2Bsd5/VCdzAqPNay3mGmQ8ihigHqIX2FKWUsJChaY7DtpOv7/YsKmZE
+        50Gnm4OZ73AayUPWGO0ArUaiI
+X-Received: by 2002:adf:f1cb:: with SMTP id z11mr5729610wro.375.1579622580562;
+        Tue, 21 Jan 2020 08:03:00 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzMHt2H+ShpdzeVhVrpHI6paJyzrz7FPhvqP5WICGqAsGn0xpsokZgxOLpYQcmGqfYCMCMYHQ==
+X-Received: by 2002:adf:f1cb:: with SMTP id z11mr5729584wro.375.1579622580321;
+        Tue, 21 Jan 2020 08:03:00 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id c4sm4349792wml.7.2020.01.21.08.02.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2020 08:02:59 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     x86@kernel.org
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Mark Brown <broonie@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 03/38] platform/x86: intel_scu_ipc: Add constants for register offsets
-Date:   Tue, 21 Jan 2020 19:00:39 +0300
-Message-Id: <20200121160114.60007-4-mika.westerberg@linux.intel.com>
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Tyler Hicks <tyhicks@canonical.com>,
+        Waiman Long <longman@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH RFC] x86/speculation: Clarify Spectre-v2 mitigation when STIBP/IBPB features are unsupported
+Date:   Tue, 21 Jan 2020 17:02:57 +0100
+Message-Id: <20200121160257.302999-1-vkuznets@redhat.com>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200121160114.60007-1-mika.westerberg@linux.intel.com>
-References: <20200121160114.60007-1-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -59,86 +81,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This makes the code more readable. These are taken from intel_pmc_ipc.c
-which implements the same thing.
+When STIBP/IBPB features are not supported (no microcode update,
+AWS/Azure/... instances deliberately hiding SPEC_CTRL for performance
+reasons,...) /sys/devices/system/cpu/vulnerabilities/spectre_v2 looks like
 
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+  Mitigation: Full generic retpoline, STIBP: disabled, RSB filling
+
+and this looks imperfect. In particular, STIBP is 'disabled' and 'IBPB'
+is not mentioned while both features are just not supported. Also, for
+STIBP the 'disabled' state (SPECTRE_V2_USER_NONE) can represent both
+the absence of hardware support and deliberate user's choice
+(spectre_v2_user=off)
+
+Make the following adjustments:
+- Output 'unsupported' for both STIBP/IBPB when there's no support in
+  hardware.
+- Output 'unneeded' for STIBP when SMT is disabled/missing (and this
+  switch_to_cond_stibp is off).
+
+RFC. Some tools out there may be looking at this information so by
+changing the output we're breaking them. Also, it may make sense to
+separate kernel and userspace protections and switch to something like
+
+  Mitigation: Kernel: Full generic retpoline, RSB filling; Userspace:
+   Vulnerable
+
+for the above mentioned case.
+
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 ---
- drivers/platform/x86/intel_scu_ipc.c | 22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+ Documentation/admin-guide/hw-vuln/spectre.rst | 3 +++
+ arch/x86/kernel/cpu/bugs.c                    | 9 +++++++--
+ 2 files changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-index cdab916fbf92..a8be5bcb9832 100644
---- a/drivers/platform/x86/intel_scu_ipc.c
-+++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -99,11 +99,15 @@ struct intel_scu_ipc_dev {
+diff --git a/Documentation/admin-guide/hw-vuln/spectre.rst b/Documentation/admin-guide/hw-vuln/spectre.rst
+index e05e581af5cf..2b8a42d0c57b 100644
+--- a/Documentation/admin-guide/hw-vuln/spectre.rst
++++ b/Documentation/admin-guide/hw-vuln/spectre.rst
+@@ -385,6 +385,7 @@ The possible values in this file are:
+     an x86 only feature. For more details see below.
  
- static struct intel_scu_ipc_dev  ipcdev; /* Only one for now */
+   ===================   ========================================================
++  'IBPB: unsupported'   IBPB is not supported by hardware
+   'IBPB: disabled'      IBPB unused
+   'IBPB: always-on'     Use IBPB on all tasks
+   'IBPB: conditional'   Use IBPB on SECCOMP or indirect branch restricted tasks
+@@ -396,6 +397,8 @@ The possible values in this file are:
+     only feature. For more details see below.
  
-+#define IPC_STATUS		0x04
-+#define IPC_STATUS_ERR		BIT(1)
-+#define IPC_STATUS_BUSY		BIT(0)
-+
- /*
-- * IPC Read Buffer (Read Only):
-- * 16 byte buffer for receiving data from SCU, if IPC command
-- * processing results in response data
-+ * IPC Write/Read Buffers:
-+ * 16 byte buffer for sending and receiving data to and from SCU.
-  */
-+#define IPC_WRITE_BUFFER	0x80
- #define IPC_READ_BUFFER		0x90
+   ====================  ========================================================
++  'STIBP: unsupported'  STIBP is not supported by hardware
++  'STIBP: unneeded'     STIBP is not needed because SMT is disabled
+   'STIBP: disabled'     STIBP unused
+   'STIBP: forced'       Use STIBP on all tasks
+   'STIBP: conditional'  Use STIBP on SECCOMP or indirect branch restricted tasks
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index 8bf64899f56a..d72a36fe042b 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -1496,7 +1496,10 @@ static char *stibp_state(void)
  
- #define IPC_I2C_CNTRL_ADDR	0
-@@ -135,7 +139,7 @@ static inline void ipc_command(struct intel_scu_ipc_dev *scu, u32 cmd)
-  */
- static inline void ipc_data_writel(struct intel_scu_ipc_dev *scu, u32 data, u32 offset)
- {
--	writel(data, scu->ipc_base + 0x80 + offset);
-+	writel(data, scu->ipc_base + IPC_WRITE_BUFFER + offset);
+ 	switch (spectre_v2_user) {
+ 	case SPECTRE_V2_USER_NONE:
+-		return ", STIBP: disabled";
++		if (boot_cpu_has(X86_FEATURE_STIBP))
++			return ", STIBP: disabled";
++		else
++			return ", STIBP: unsupported";
+ 	case SPECTRE_V2_USER_STRICT:
+ 		return ", STIBP: forced";
+ 	case SPECTRE_V2_USER_STRICT_PREFERRED:
+@@ -1505,6 +1508,8 @@ static char *stibp_state(void)
+ 	case SPECTRE_V2_USER_SECCOMP:
+ 		if (static_key_enabled(&switch_to_cond_stibp))
+ 			return ", STIBP: conditional";
++		else
++			return ", STIBP: unneeded";
+ 	}
+ 	return "";
+ }
+@@ -1518,7 +1523,7 @@ static char *ibpb_state(void)
+ 			return ", IBPB: conditional";
+ 		return ", IBPB: disabled";
+ 	}
+-	return "";
++	return ", IBPB: unsupported";
  }
  
- /*
-@@ -147,7 +151,7 @@ static inline void ipc_data_writel(struct intel_scu_ipc_dev *scu, u32 data, u32
-  */
- static inline u8 ipc_read_status(struct intel_scu_ipc_dev *scu)
- {
--	return __raw_readl(scu->ipc_base + 0x04);
-+	return __raw_readl(scu->ipc_base + IPC_STATUS);
- }
- 
- /* Read ipc byte data */
-@@ -169,17 +173,17 @@ static inline int busy_loop(struct intel_scu_ipc_dev *scu)
- 	u32 loop_count = 100000;
- 
- 	/* break if scu doesn't reset busy bit after huge retry */
--	while ((status & BIT(0)) && --loop_count) {
-+	while ((status & IPC_STATUS_BUSY) && --loop_count) {
- 		udelay(1); /* scu processing time is in few u secods */
- 		status = ipc_read_status(scu);
- 	}
- 
--	if (status & BIT(0)) {
-+	if (status & IPC_STATUS_BUSY) {
- 		dev_err(scu->dev, "IPC timed out");
- 		return -ETIMEDOUT;
- 	}
- 
--	if (status & BIT(1))
-+	if (status & IPC_STATUS_ERR)
- 		return -EIO;
- 
- 	return 0;
-@@ -196,7 +200,7 @@ static inline int ipc_wait_for_interrupt(struct intel_scu_ipc_dev *scu)
- 	}
- 
- 	status = ipc_read_status(scu);
--	if (status & BIT(1))
-+	if (status & IPC_STATUS_ERR)
- 		return -EIO;
- 
- 	return 0;
+ static ssize_t cpu_show_common(struct device *dev, struct device_attribute *attr,
 -- 
 2.24.1
 
