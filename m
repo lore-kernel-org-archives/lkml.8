@@ -2,89 +2,86 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D096FC33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F9C3C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A250424654
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:04:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEF3324125
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:04:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579597445;
+	bh=0H0bh1Jo/UYT268NBP9XJ/xrV/lNAdl64vvZCHXIpWU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lNxq1uorxHET35puL8+g+tOD5AaFNjffL8iRnpiKLni9br8t3k5xqfq+yGTNqjl6r
+	 apTrxXL34EBYIMv195F+Nxy6zHdTHqwB3WOuh7ZXPCjrYrxTLmoOVWUNmE/J4acRp1
+	 0WRDKPt8RkupiTtJblldT/cVwQxH8vVWJ+LqlFVE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728977AbgAUJEF (ORCPT
+        id S1728779AbgAUJEC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 04:04:05 -0500
-Received: from mx2.suse.de ([195.135.220.15]:53556 "EHLO mx2.suse.de"
+        Tue, 21 Jan 2020 04:04:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727220AbgAUJED (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 04:04:03 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 0F6E8BA7E;
+        id S1727360AbgAUJEC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 04:04:02 -0500
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B318217F4;
         Tue, 21 Jan 2020 09:04:01 +0000 (UTC)
-Date:   Tue, 21 Jan 2020 10:03:59 +0100
-From:   Jean Delvare <jdelvare@suse.de>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Dave Young <dyoung@redhat.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        kexec@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v1 2/2] firmware: dmi_scan: Pass dmi_entry_point to
- kexec'ed kernel
-Message-ID: <20200121100359.6125498c@endymion>
-In-Reply-To: <CAHp75Veb02m3tU9tzZe912ZmX5mdaYkZ90DD67FVERJS15VsXw@mail.gmail.com>
-References: <20161202195416.58953-1-andriy.shevchenko@linux.intel.com>
-        <20161202195416.58953-3-andriy.shevchenko@linux.intel.com>
-        <20161215122856.7d24b7a8@endymion>
-        <20161216023213.GA4505@dhcp-128-65.nay.redhat.com>
-        <1481890738.9552.70.camel@linux.intel.com>
-        <20161216143330.69e9c8ee@endymion>
-        <20161217105721.GB6922@dhcp-128-65.nay.redhat.com>
-        <20200120121927.GJ32742@smile.fi.intel.com>
-        <87a76i9ksr.fsf@x220.int.ebiederm.org>
-        <20200120224204.4e5cc0df@endymion>
-        <CAHp75Veb02m3tU9tzZe912ZmX5mdaYkZ90DD67FVERJS15VsXw@mail.gmail.com>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579597441;
+        bh=0H0bh1Jo/UYT268NBP9XJ/xrV/lNAdl64vvZCHXIpWU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1KWMsrnqW/cswbFn9+0WcD81L2LSztxIrowKZN9mQBc0XgGK/rtvvFp/2lwyIlSAF
+         RakyBoq4cYNF1jTtQNoy90XRMpcpVgIkQc48g4BTNIAHVWjeSYFi+OM+SCpD+XZlSJ
+         W4vL7hdPmGsfFRhiU9tX/JPKW9JPfX/Tg/ztA340=
+Date:   Tue, 21 Jan 2020 10:03:58 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [PATCH 1/9] arm64: dts: allwinner: Enable button wakeup on
+ Orange Pi PC2
+Message-ID: <20200121090358.6mbrbhabtg6gkhpx@gilmour.lan>
+References: <20200119163104.13274-1-samuel@sholland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="c7ftjrc3bbfqytxr"
+Content-Disposition: inline
+In-Reply-To: <20200119163104.13274-1-samuel@sholland.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jan 2020 23:55:43 +0200, Andy Shevchenko wrote:
-> On Mon, Jan 20, 2020 at 11:44 PM Jean Delvare <jdelvare@suse.de> wrote:
-> >
-> > On Mon, 20 Jan 2020 10:04:04 -0600, Eric W. Biederman wrote:  
-> > > Second.  I looked at your test results and they don't directly make
-> > > sense.  dmidecode bypasses the kernel completely or it did last time
-> > > I looked so I don't know why you would be using that to test if
-> > > something in the kernel is working.  
-> >
-> > That must have been long ago. A recent version of dmidecode (>= 3.0)
-> > running on a recent kernel  
-> > (>= d7f96f97c4031fa4ffdb7801f9aae23e96170a6f, v4.2) will read the DMI  
-> > data from /sys/firmware/dmi/tables, so it is very much relying on the
-> > kernel doing the right thing. If not, it will still try to fallback to
-> > reading from /dev/mem directly on certain architectures. You can force
-> > that old method with --no-sysfs.
-> >
-> > Hope that helps,  
-> 
-> I don't understand how it possible can help for in-kernel code, like
-> DMI quirks in a drivers.
 
-OK, just ignore me then, probably I misunderstood the point made by
-Eric.
+--c7ftjrc3bbfqytxr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
--- 
-Jean Delvare
-SUSE L3 Support
+On Sun, Jan 19, 2020 at 10:30:56AM -0600, Samuel Holland wrote:
+> The Orange Pi PC2 features a GPIO button. As the button is connected to
+> Port L (pin PL3), it can be used as a wakeup source. Enable this.
+>
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
+
+Applied, thanks!
+Maxime
+
+--c7ftjrc3bbfqytxr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXia+fgAKCRDj7w1vZxhR
+xRkVAP943gYCXiKg93jTbLbHeiSAWTJCK7Vv7DiW+3NyES0zmQD+OHcexubzHhjo
+SLUbywQHwdDXWublL3xrFtyl1lb0WAo=
+=+s0l
+-----END PGP SIGNATURE-----
+
+--c7ftjrc3bbfqytxr--
