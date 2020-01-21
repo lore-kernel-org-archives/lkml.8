@@ -2,136 +2,96 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF3E5C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 21:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05AD6C33CAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 21:46:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A1A224125
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 21:45:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFD2E24125
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 21:46:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nLNluw+J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729143AbgAUVpe (ORCPT
+        id S1729191AbgAUVqb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 16:45:34 -0500
-Received: from outgoing2.flk.host-h.net ([188.40.0.84]:48971 "EHLO
-        outgoing2.flk.host-h.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728799AbgAUVpe (ORCPT
+        Tue, 21 Jan 2020 16:46:31 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:38111 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728799AbgAUVqa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 16:45:34 -0500
-Received: from www31.flk1.host-h.net ([188.40.1.173])
-        by antispam3-flk1.host-h.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <justin.swartz@risingedge.co.za>)
-        id 1iu1Ku-0001yg-7h; Tue, 21 Jan 2020 23:45:25 +0200
-Received: from roundcubeweb1.flk1.host-h.net ([138.201.244.33] helo=webmail9.konsoleh.co.za)
-        by www31.flk1.host-h.net with esmtpa (Exim 4.89)
-        (envelope-from <justin.swartz@risingedge.co.za>)
-        id 1iu1Kt-0004Vc-Ev; Tue, 21 Jan 2020 23:45:23 +0200
+        Tue, 21 Jan 2020 16:46:30 -0500
+Received: by mail-qt1-f195.google.com with SMTP id c24so3994796qtp.5;
+        Tue, 21 Jan 2020 13:46:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XhrdhaIEG5bafgeKHJLWIBPWKeJ3SArX4MAGPufEfhY=;
+        b=nLNluw+JdlS4hiqmbBx0wnwY6jECy1KDzcqoPn4SByuikWs8s2/h9bX5c0vuhieChM
+         sWadJBUNCPWX2cxHMDRp5P4oBY/TwRReKlwm5xVrk9VWGNuSScEYEZ6BeehDIx7FIlyI
+         lYMMYvfliv3btcou7DKkjiPxI3lRAxGlMROHvE86DTpV5fBVevNZM/DTfY0j9mRrSQcx
+         MqKMMApt4ApIDasho/rPjCKFcEa2NZLmpFgvNPXN/jx36oYRsLdSMCUJabWDDfIdtcXL
+         cWLeEXBMTgxd0vjxaPnjCb5nklUf939AVrzCeysnhVw+RkBSHcr4cp4e34ZnAAT8nl7R
+         ssPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XhrdhaIEG5bafgeKHJLWIBPWKeJ3SArX4MAGPufEfhY=;
+        b=Lnh/p9XN9Wc/854/km63gLRNG+CpP8qxF152rSqo1ZZtSqLXadBORA45JpxGOyCQeU
+         mcmLvksNC5ygntzS5TdVbWV8M9UcDe1afL8gl08rpT0DYe6IvDSsUQAUTy1pf3cTwQdV
+         jwb8nrDOg9ttx11WVoLKIcg11IWNvPsI+oxG0xlK+sjzav5tmYzz+1DVxJVfFTOBIReh
+         m1vE6jbOBHzKn2VOGpRTr9qZ/cWikTc1TJ7YWKJut9mtHUnihomvCbZgCnRydFTJ+nZr
+         JPsaBPDYnRFWlpewuDolkMUnZBzJYR6vwok5F7mdtIP/g3B5/8d+Pu5Z8TOQUtMhH2Kk
+         EJ8g==
+X-Gm-Message-State: APjAAAUBHQKYAgNIOzZzlAmz9IoE97MWc3OKI3dE5WEE3orEvOE5Dvq+
+        fUCwFHHktfasjrVjaPRJTml1Hc4niaxdmyJipTE=
+X-Google-Smtp-Source: APXvYqz3Ule+p0b80zk0GkVM2vtekmrqltyACG++ZoO8vuFUfRLQewDmv3T8n59LAHhIJ9YRd77ym1kBX+lZW9u174g=
+X-Received: by 2002:ac8:5457:: with SMTP id d23mr6473744qtq.93.1579643189445;
+ Tue, 21 Jan 2020 13:46:29 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 21 Jan 2020 23:45:23 +0200
-From:   Justin Swartz <justin.swartz@risingedge.co.za>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     devicetree@vger.kernel.org, heiko@sntech.de,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
-        robh+dt@kernel.org
-Subject: Re: [PATCH v2 1/2] ARM: dts: rockchip: add rga node for rk322x
-Organization: Rising Edge Consulting (Pty) Ltd.
-In-Reply-To: <7d85210b-e554-d875-0615-c2e93a264b5b@gmail.com>
-References: <20200121201146.18038-2-justin.swartz@risingedge.co.za>
- <7d85210b-e554-d875-0615-c2e93a264b5b@gmail.com>
-Message-ID: <d2661596ca26a4b8041a9fac7ee61593@risingedge.co.za>
-X-Sender: justin.swartz@risingedge.co.za
-User-Agent: Roundcube Webmail/1.2.3
-X-Authenticated-Sender: justin.swartz@risingedge.co.za
-X-Virus-Scanned: Clear
-X-Originating-IP: 188.40.1.173
-X-SpamExperts-Domain: risingedge.co.za
-X-SpamExperts-Username: 
-Authentication-Results: host-h.net; auth=pass (login) smtp.auth=@risingedge.co.za
-X-SpamExperts-Outgoing-Class: ham
-X-SpamExperts-Outgoing-Evidence: Combined (0.07)
-X-Recommended-Action: accept
-X-Filter-ID: Mvzo4OR0dZXEDF/gcnlw0fKZ8wcD78QFAaYhvfMzLIKpSDasLI4SayDByyq9LIhVIjj3L/PxiS7u
- W7QBiFbhO0TNWdUk1Ol2OGx3IfrIJKyP9eGNFz9TW9u+Jt8z2T3K9N8RgbelEU3z4k5cN6Fx7gF4
- IxdPpqe03Ke3W55CSgGipX77xU2/OO3DievkIHLPfxKns5/jA/jb0AB/j1tpH5/cd7uPDhKhWGZM
- n/d4/07rfhJgg4j+T1FAIbCdkgBZfCzdNGNoLjYW00m5NbCHvBeT5wQmTgARe2GQxmQnRbjM24OD
- 2qGt6TVUNM5e7f/l8Qrx+iUTedVmWsVl8JiUwdcWVa3aRmI0WtgQJ6NhkUG1fr3z7O1ewfolpqk2
- 9AXTfJkhAT2xwGkQ4rYFSsz8y8l2BJ9SVPTxAsXbMIYTBf07+VDP+4gu9MM0P8MwqJbtxxmkpCtD
- oIUeLHY6xjiNGnzj5ZBolYt3lOJtwiLNmx2pKRVnMrHZos0/M6pU0hfymyBYx1qtDaSiXo0xo2LM
- mUL1Z4FithJQbhPXqfOZuDjnjAAPbecZ+Mi6985HXYGYwlzK01+6b05+4Lv/pcVBKbSIAO62+V2p
- H7ZPpEG6bBjHHjcTvuwcWprgtdAKuxeqzv2BE9ufKeYEt2P7UPu8FYh90mU5ltygBte98Lr3o1L6
- PRFBPTGx1Ut6/5oByZyEBYORon1HyENyISfTHOtpKTVgw9yWWIEWQ/ZfK1AKScQjMOukFP3P4kFf
- oa8491sqVkDREtHj5EdIfRWQU1iQcN9fxN2oReTDHAyOynaY0CkMg0bLHYOUd2k/FP4GZ8aMLaoD
- dgTYDNJYOqlsNiYINBaq6FA+N87m5dPuP1bu7yrY5Qx4fJOk03R5fJtf/Dv/oTkmxux7nkDlcqo4
- 0fvNe6qOBRNkqxqaHyOluuELaV8fK+PYMsT3XdL8lKcxk4qNMd+wV+SvLBUi20FCqfORF1Uwgn3x
- dHPlIKTREtTpKWlKTq/OlMObqOptAlx2sHDvpbjylqmC5Mk1B2fFLLRq9AM3V/uXrKlq++rODlln
- NUDihjA708Lg3Y2gXyaf+rIt2G7p5aZhaonSvSgNc8r+HPe3kEEhe4Xl2ceCgkDvM9qMaV6CJSmg
- U8pftbLkxChMcbUnuWly1fKGgusHp5Yiz+nQvc0qoAtxzv3f8GtQSFsBkqIPpf8+LdgXwjxPOBMx
- sdiFdDCFcQsgFkL4G7F2Av2/exi5Ms9gyaqIruy7eYaKVAcye5FPIQnr8/7he/iizki9qqiuW3Bk
- 5C+gdmOiVTCThXc0JQjVu0w41Mrtp0JBN8rqB+cgngTSjDAt8hSY
-X-Report-Abuse-To: spam@antispammaster.host-h.net
+References: <20200121150431.GA240246@chrisdown.name> <CAEf4BzZj4PEamHktYLHqHrau0_pkr_q-J85MPCzFbe7mtLQ_+Q@mail.gmail.com>
+ <20200121202916.GA204956@chrisdown.name>
+In-Reply-To: <20200121202916.GA204956@chrisdown.name>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 21 Jan 2020 13:46:18 -0800
+Message-ID: <CAEf4BzZ5wR_jTEbwYVU-z3ZBP+06p9ZTOeF_DNxqe_nQW493CA@mail.gmail.com>
+Subject: Re: [PATCH] bpf: btf: Always output invariant hit in pahole DWARF to
+ BTF transform
+To:     Chris Down <chris@chrisdown.name>
+Cc:     bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Johan,
+On Tue, Jan 21, 2020 at 12:29 PM Chris Down <chris@chrisdown.name> wrote:
+>
+> Andrii Nakryiko writes:
+> >> --- a/scripts/link-vmlinux.sh
+> >> +++ b/scripts/link-vmlinux.sh
+> >> @@ -108,13 +108,15 @@ gen_btf()
+> >>         local bin_arch
+> >>
+> >>         if ! [ -x "$(command -v ${PAHOLE})" ]; then
+> >> -               info "BTF" "${1}: pahole (${PAHOLE}) is not available"
+> >> +               printf 'BTF: %s: pahole (%s) is not available\n' \
+> >> +                       "${1}" "${PAHOLE}" >&2
+> >
+> >any reason not to use echo instead of printf? would be more minimal change
+>
+> I generally avoid using echo because it has a bunch of portability gotchas
+> which printf mostly doesn't have. If you'd prefer echo, that's fine though,
+> just let me know and I can send v2.
 
-On 2020-01-21 23:34, Johan Jonker wrote:
-
-> Hi Justin,
-> 
-> rga is now inserted above vpu_mmu.
-> Please check the address.
-> 
-> rga:       rga@20060000 {
-> vpu_mmu: iommu@20020800 {
-> 
-> Should go between vop_mmu and iep_mmu.
-> 
-> vop_mmu: iommu@20053f00 {
-> rga:       rga@20060000 {
-> iep_mmu: iommu@20070800 {
-
-Thanks!
-
->> Add a node to define the presence of RGA, a 2D raster graphic
->> acceleration unit.
->> 
->> Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
->> ---
->> arch/arm/boot/dts/rk322x.dtsi | 11 +++++++++++
->> 1 file changed, 11 insertions(+)
->> 
->> diff --git a/arch/arm/boot/dts/rk322x.dtsi 
->> b/arch/arm/boot/dts/rk322x.dtsi
->> index 340ed6ccb..efa733207 100644
->> --- a/arch/arm/boot/dts/rk322x.dtsi
->> +++ b/arch/arm/boot/dts/rk322x.dtsi
->> @@ -566,6 +566,17 @@
->> status = "disabled";
->> };
->> 
->> +    rga: rga@20060000 {
->> +        compatible = "rockchip,rk3228-rga", "rockchip,rk3288-rga";
->> +        reg = <0x20060000 0x1000>;
->> +        interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
->> +        clocks = <&cru ACLK_RGA>, <&cru HCLK_RGA>, <&cru SCLK_RGA>;
->> +        clock-names = "aclk", "hclk", "sclk";
->> +        resets = <&cru SRST_RGA>, <&cru SRST_RGA_A>, <&cru 
->> SRST_RGA_H>;
->> +        reset-names = "core", "axi", "ahb";
->> +        status = "disabled";
->> +    };
->> +
->> vpu_mmu: iommu@20020800 {
->> compatible = "rockchip,iommu";
->> reg = <0x20020800 0x100>;
->> --
->> 2.11.0
+The rest of the script is using echo for errors, so let's stick to it
+for consistency. Thanks!
