@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AEFEC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E52D5C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E06F924672
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:40:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B901E24672
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:40:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729393AbgAUOkE (ORCPT
+        id S1729424AbgAUOkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 09:40:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56142 "EHLO mail.kernel.org"
+        Tue, 21 Jan 2020 09:40:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728916AbgAUOj7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 09:39:59 -0500
+        id S1727255AbgAUOj6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 09:39:58 -0500
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CF9624125;
-        Tue, 21 Jan 2020 14:39:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1C4E24653;
+        Tue, 21 Jan 2020 14:39:57 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.93)
         (envelope-from <rostedt@goodmis.org>)
-        id 1ituhB-000dyY-1A; Tue, 21 Jan 2020 09:39:57 -0500
-Message-Id: <20200121143956.921051524@goodmis.org>
+        id 1ituhA-000dx0-Il; Tue, 21 Jan 2020 09:39:56 -0500
+Message-Id: <20200121143956.452375431@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Tue, 21 Jan 2020 09:38:51 -0500
+Date:   Tue, 21 Jan 2020 09:38:48 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        stable@vger.kernel.org, Tom Zanuss <zanussi@kernel.org>
-Subject: [for-linus][PATCH 4/5] tracing: Fix histogram code when expression has same var as value
+        Changbin Du <changbin.du@gmail.com>
+Subject: [for-linus][PATCH 1/5] tracing: xen: Ordered comparison of function pointers
 References: <20200121143847.609307852@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -44,133 +44,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+From: Changbin Du <changbin.du@gmail.com>
 
-While working on a tool to convert SQL syntex into the histogram language of
-the kernel, I discovered the following bug:
+Just as commit 0566e40ce7 ("tracing: initcall: Ordered comparison of
+function pointers"), this patch fixes another remaining one in xen.h
+found by clang-9.
 
- # echo 'first u64 start_time u64 end_time pid_t pid u64 delta' >> synthetic_events
- # echo 'hist:keys=pid:start=common_timestamp' > events/sched/sched_waking/trigger
- # echo 'hist:keys=next_pid:delta=common_timestamp-$start,start2=$start:onmatch(sched.sched_waking).trace(first,$start2,common_timestamp,next_pid,$delta)' > events/sched/sched_switch/trigger
+In file included from arch/x86/xen/trace.c:21:
+In file included from ./include/trace/events/xen.h:475:
+In file included from ./include/trace/define_trace.h:102:
+In file included from ./include/trace/trace_events.h:473:
+./include/trace/events/xen.h:69:7: warning: ordered comparison of function \
+pointers ('xen_mc_callback_fn_t' (aka 'void (*)(void *)') and 'xen_mc_callback_fn_t') [-Wordered-compare-function-pointers]
+                    __field(xen_mc_callback_fn_t, fn)
+                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./include/trace/trace_events.h:421:29: note: expanded from macro '__field'
+                                ^
+./include/trace/trace_events.h:407:6: note: expanded from macro '__field_ext'
+                                 is_signed_type(type), filter_type);    \
+                                 ^
+./include/linux/trace_events.h:554:44: note: expanded from macro 'is_signed_type'
+                                              ^
 
-Would not display any histograms in the sched_switch histogram side.
-
-But if I were to swap the location of
-
-  "delta=common_timestamp-$start" with "start2=$start"
-
-Such that the last line had:
-
- # echo 'hist:keys=next_pid:start2=$start,delta=common_timestamp-$start:onmatch(sched.sched_waking).trace(first,$start2,common_timestamp,next_pid,$delta)' > events/sched/sched_switch/trigger
-
-The histogram works as expected.
-
-What I found out is that the expressions clear out the value once it is
-resolved. As the variables are resolved in the order listed, when
-processing:
-
-  delta=common_timestamp-$start
-
-The $start is cleared. When it gets to "start2=$start", it errors out with
-"unresolved symbol" (which is silent as this happens at the location of the
-trace), and the histogram is dropped.
-
-When processing the histogram for variable references, instead of adding a
-new reference for a variable used twice, use the same reference. That way,
-not only is it more efficient, but the order will no longer matter in
-processing of the variables.
-
-From Tom Zanussi:
-
- "Just to clarify some more about what the problem was is that without
-  your patch, we would have two separate references to the same variable,
-  and during resolve_var_refs(), they'd both want to be resolved
-  separately, so in this case, since the first reference to start wasn't
-  part of an expression, it wouldn't get the read-once flag set, so would
-  be read normally, and then the second reference would do the read-once
-  read and also be read but using read-once.  So everything worked and
-  you didn't see a problem:
-
-   from: start2=$start,delta=common_timestamp-$start
-
-  In the second case, when you switched them around, the first reference
-  would be resolved by doing the read-once, and following that the second
-  reference would try to resolve and see that the variable had already
-  been read, so failed as unset, which caused it to short-circuit out and
-  not do the trigger action to generate the synthetic event:
-
-   to: delta=common_timestamp-$start,start2=$start
-
-  With your patch, we only have the single resolution which happens
-  correctly the one time it's resolved, so this can't happen."
-
-Link: https://lore.kernel.org/r/20200116154216.58ca08eb@gandalf.local.home
-
-Cc: stable@vger.kernel.org
-Fixes: 067fe038e70f6 ("tracing: Add variable reference handling to hist triggers")
-Reviewed-by: Tom Zanuss <zanussi@kernel.org>
-Tested-by: Tom Zanussi <zanussi@kernel.org>
+Fixes: c796f213a6934 ("xen/trace: add multicall tracing")
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/trace/trace_events_hist.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ include/trace/events/xen.h | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index d33b046f985a..6ac35b9e195d 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -116,6 +116,7 @@ struct hist_field {
- 	struct ftrace_event_field	*field;
- 	unsigned long			flags;
- 	hist_field_fn_t			fn;
-+	unsigned int			ref;
- 	unsigned int			size;
- 	unsigned int			offset;
- 	unsigned int                    is_signed;
-@@ -2427,8 +2428,16 @@ static int contains_operator(char *str)
- 	return field_op;
- }
- 
-+static void get_hist_field(struct hist_field *hist_field)
-+{
-+	hist_field->ref++;
-+}
-+
- static void __destroy_hist_field(struct hist_field *hist_field)
- {
-+	if (--hist_field->ref > 1)
-+		return;
-+
- 	kfree(hist_field->var.name);
- 	kfree(hist_field->name);
- 	kfree(hist_field->type);
-@@ -2470,6 +2479,8 @@ static struct hist_field *create_hist_field(struct hist_trigger_data *hist_data,
- 	if (!hist_field)
- 		return NULL;
- 
-+	hist_field->ref = 1;
-+
- 	hist_field->hist_data = hist_data;
- 
- 	if (flags & HIST_FIELD_FL_EXPR || flags & HIST_FIELD_FL_ALIAS)
-@@ -2665,6 +2676,17 @@ static struct hist_field *create_var_ref(struct hist_trigger_data *hist_data,
- {
- 	unsigned long flags = HIST_FIELD_FL_VAR_REF;
- 	struct hist_field *ref_field;
-+	int i;
-+
-+	/* Check if the variable already exists */
-+	for (i = 0; i < hist_data->n_var_refs; i++) {
-+		ref_field = hist_data->var_refs[i];
-+		if (ref_field->var.idx == var_field->var.idx &&
-+		    ref_field->var.hist_data == var_field->hist_data) {
-+			get_hist_field(ref_field);
-+			return ref_field;
-+		}
-+	}
- 
- 	ref_field = create_hist_field(var_field->hist_data, NULL, flags, NULL);
- 	if (ref_field) {
+diff --git a/include/trace/events/xen.h b/include/trace/events/xen.h
+index 9a0e8af21310..a5ccfa67bc5c 100644
+--- a/include/trace/events/xen.h
++++ b/include/trace/events/xen.h
+@@ -66,7 +66,11 @@ TRACE_EVENT(xen_mc_callback,
+ 	    TP_PROTO(xen_mc_callback_fn_t fn, void *data),
+ 	    TP_ARGS(fn, data),
+ 	    TP_STRUCT__entry(
+-		    __field(xen_mc_callback_fn_t, fn)
++		    /*
++		     * Use field_struct to avoid is_signed_type()
++		     * comparison of a function pointer.
++		     */
++		    __field_struct(xen_mc_callback_fn_t, fn)
+ 		    __field(void *, data)
+ 		    ),
+ 	    TP_fast_assign(
 -- 
 2.24.1
 
