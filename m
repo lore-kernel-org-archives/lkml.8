@@ -2,84 +2,52 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FDF2C33CB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 03:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B0BBC33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 03:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ECFF2253D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 03:39:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E0rGhZJT"
+	by mail.kernel.org (Postfix) with ESMTP id 154972253D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 03:40:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728748AbgAUDjb (ORCPT
+        id S1728779AbgAUDkp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 22:39:31 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:40153 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726935AbgAUDjb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 22:39:31 -0500
-Received: by mail-qv1-f66.google.com with SMTP id dp13so809395qvb.7;
-        Mon, 20 Jan 2020 19:39:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zdgsz84FvwJzIN/En/yZAdV4WDABHd4kiHJoyghAqMA=;
-        b=E0rGhZJTc7LrntC7wA6B/ETc1nRH8YtUrXlz+Pgq0AHx/c9KXbI4UCuv5Cxtxo0IYP
-         04KOPPEaVLUD4VgkLT2R5TUn4Nn2eXygh/WPH0fIhFtQpmcQ6ZsCtKqAIe2KHUllEpx1
-         FQIwhUmuUiA3uxr7eQwyevTVy5fDFV3kfx/JuQ+Wj8n7N/8rWv2qupGBqnrsMoa0E0+a
-         G/yYs9DiMOZwZFDdfMnSI6CweIQxxrPl73jZEgg9IYLTR43pgFBTLMwbkBNmBhFsnVOC
-         TKRylTPKHDXRz6Dh2MIhFRj0oBRMsb7edt4B2VYYzsLv2Js69qqDeN2WMzwQXI9ROUN4
-         jhXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zdgsz84FvwJzIN/En/yZAdV4WDABHd4kiHJoyghAqMA=;
-        b=TLvabdMefNcSBXnQtp7Pnu8ckGyfVFIfI4xaM5jPg+GzKd++GM4CzeJ0qUOW3puv4W
-         /C5AGtjwE2lGFrXrw6yk7Vw+BVlDu5NW3kdtT4AT7ece63TlysbrMl2S543t/zWUxTg+
-         bFucE+nxm57pU1ixIPeyL0dBk/f+Gx/Jbt4fviRn6RYN/yehN9xJ/9xFo5tpYyntp3i7
-         dMEwGzwiYrfuaMoAam0Ng0DiEtGp+HBLc8SOMV42a6YdLn2KxQTB/EYzUTcpYzbu+sXj
-         JQHfF/gby9bX6zgeM5OajQsETO9tRFPsQuinC9vkyLzJJKUwGWiNAF0/zN4dg1CObojr
-         ijvg==
-X-Gm-Message-State: APjAAAVwFPot1jpsaYv7WFrAy0fbA4iyOt+oM0JouUU0wSffrOQ5Pq7r
-        CXAG4hXhess8w1piY8YvweQ=
-X-Google-Smtp-Source: APXvYqwUfj2YD1sGgvoN79oBFVUE/pV8wx0UGCxlDZ/Nx1621wSd4zo48zzZYlwvfg+oU3rr8oP2AQ==
-X-Received: by 2002:ad4:4f45:: with SMTP id eu5mr2948932qvb.235.1579577969907;
-        Mon, 20 Jan 2020 19:39:29 -0800 (PST)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id d3sm18165079qtp.25.2020.01.20.19.39.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 Jan 2020 19:39:29 -0800 (PST)
-Subject: Re: [RFC PATCH 0/3] Add device tree build information
-From:   Frank Rowand <frowand.list@gmail.com>
-To:     Steve McIntyre <steve.mcintyre@linaro.org>
-Cc:     Alexandre Torgue <alexandre.torgue@st.com>, robh+dt@kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        david@gibson.dropbear.id.au, sjg@chromium.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, devicetree-compiler@vger.kernel.org
-References: <20200113181625.3130-1-alexandre.torgue@st.com>
- <f21ad44d-f119-2035-b4ee-16b3619879af@gmail.com>
- <233e0a5f-d38f-908c-5ca7-66ee87d0fcae@st.com>
- <7cfd0bc0-13fd-98ea-9bfd-6cfbbfd77b6d@gmail.com>
- <220e3aea-b273-417a-69c9-059236c888af@st.com>
- <a1233cd8-e73a-82d7-74bf-69109d1a0a07@gmail.com>
- <20200120182837.GO3697@linaro.org>
- <f09ce50c-6721-c9d3-4f27-3f98a2d0b183@gmail.com>
-Message-ID: <e8cdbcaa-800b-18db-11ec-3d8df9da68b5@gmail.com>
-Date:   Mon, 20 Jan 2020 21:39:28 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 20 Jan 2020 22:40:45 -0500
+Received: from foss.arm.com ([217.140.110.172]:37984 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726935AbgAUDko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 22:40:44 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2C9BB31B;
+        Mon, 20 Jan 2020 19:40:44 -0800 (PST)
+Received: from [10.162.16.78] (p8cg001049571a15.blr.arm.com [10.162.16.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0DF413F6C4;
+        Mon, 20 Jan 2020 19:40:41 -0800 (PST)
+Subject: Re: [PATCH v4] mm/mempolicy,hugetlb: Checking hstate for hugetlbfs
+ page in vma_migratable
+To:     Michal Hocko <mhocko@kernel.org>,
+        Li Xinhai <lixinhai.lxh@gmail.com>
+Cc:     n-horiguchi <n-horiguchi@ah.jp.nec.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        akpm <akpm@linux-foundation.org>,
+        torvalds <torvalds@linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+References: <1579147885-23511-1-git-send-email-lixinhai.lxh@gmail.com>
+ <20200116095614.GO19428@dhcp22.suse.cz> <20200116215032206994102@gmail.com>
+ <20200116151803.GV19428@dhcp22.suse.cz> <20200116233817972969139@gmail.com>
+ <20200117111629898234212@gmail.com> <20200118111121432688303@gmail.com>
+ <20200120101202.GU18451@dhcp22.suse.cz> <20200120233723466954346@gmail.com>
+ <20200120160500.GM18451@dhcp22.suse.cz>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <3cef881e-8685-4917-1784-286dc3b11bf6@arm.com>
+Date:   Tue, 21 Jan 2020 09:12:04 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <f09ce50c-6721-c9d3-4f27-3f98a2d0b183@gmail.com>
+In-Reply-To: <20200120160500.GM18451@dhcp22.suse.cz>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -88,47 +56,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/20/20 9:20 PM, Frank Rowand wrote:
-> On 1/20/20 12:28 PM, Steve McIntyre wrote:
->> Hi Frank!
->>
->> Thanks for the link back to the previous discussion, it's very
->> helpful.
->>
->> On Mon, Jan 20, 2020 at 10:14:22AM -0600, Frank Rowand wrote:
->>> On 1/20/20 4:56 AM, Alexandre Torgue wrote:
->>
->> ...
->>
->>>> and the date). There are no "dtb versions", and "absolute/relative"
->>>> path which created concerns. One remaining concern is "reproducible
->>>
->>> Here is an example of the info from one of my builds:
->>>
->>>   From Linux 5.5.0-rc2-dirty by frowand the Mon Jan 20 09:50:58 CST 2020.
->>>
->>> The information 'Linux 5.5.0-rc2-dirty' is precisely what was most objected
->>> to in my proposal.
->>
->> ACK. :-( I'm surprised to see so much push-back on what looks like a
->> simple piece of information here.
-> 
-> Me too.
-> 
-> 
->>
->> I've had users *specifically* asking for this kind of identification
->> so that they can verify the version of the DTB they're using at
->> runtime. Right now it can be a guessing game, which does not help
->> people trying to debug problems.
->>
->> Cheers,
->>
-> 
-> If the information was reported as debug information via pr_debug(),
-> would that work for your use case?  Or would the users' kernels
-> not have debug enabled in the configuration?
 
-And even pr_debug() might not be sufficient since the property
-value is available via /proc/device-tree if the proc file
-system is enabled.
+
+On 01/20/2020 09:35 PM, Michal Hocko wrote:
+> On Mon 20-01-20 23:37:25, Li Xinhai wrote:
+> [...]
+>> Changelog is updated as below, thanks for comments:
+>> ---
+>> mm/mempolicy: Checking hugepage migration is supported by arch in vma_migratable
+>>
+>> vma_migratable() is called to check if pages in vma can be migrated
+>> before go ahead to further actions. Currently it is used in below code
+>> path:
+>> - task_numa_work
+>> - mbind
+>> - move_pages
+>>
+>> For hugetlb mapping, whether vma is migratable or not is determined by:
+>> - CONFIG_ARCH_ENABLE_HUGEPAGE_MIGRATION
+>> - arch_hugetlb_migration_supported
+>>
+>> Issue: current code only checks for CONFIG_ARCH_ENABLE_HUGEPAGE_MIGRATION,
+>> which express less accurate semantics of vma_migratable(). (note that
+>> current code in vma_migratable don't cause failure or bug because
+>> unmap_and_move_huge_page() will catch unsupported hugepage and handle it
+>> properly)
+>>
+>> This patch checks the two factors for impoveing code logic and
+>> robustness. It will enable early bail out of hugepage migration procedure,
+>> but because currently all architecture supporting hugepage migration is able
+>> to support all page size, we would not see performance gain with this patch
+>> applied.
+> 
+> This looks definitely better than the original one. I hope it is more
+> clear to you what I meant by a better description for the justification.
+> I would just add that the no code should use
+> CONFIG_ARCH_ENABLE_HUGEPAGE_MIGRATION directly and use
+> arch_hugetlb_migration_supported instead. This will be the case after
+> this patch.
+
+As I have mentioned previously on the other thread, there might be an case
+to keep the existing code (just added with a comment) which will preserve
+the performance. But the proposed method will do it the right way and also
+get rid of CONFIG_ARCH_ENABLE_HUGEPAGE_MIGRATION here. Its OK either way.
+
+> 
+> Please keep in mind that changelogs are really important and growing in
+> importance as the code gets more complicated over time. It is much more
+> easier to see what the patch does because reading diffs and the code is
+> easy but the lack of motivation is what people usually fighting with.
+> 
