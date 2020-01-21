@@ -2,78 +2,118 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3858CC33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 22:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5630C33CAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 22:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F4C524125
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 22:48:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB18D24656
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 22:53:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="nq4aFWpu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727816AbgAUWss (ORCPT
+        id S1727141AbgAUWxY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 17:48:48 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:35976 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725876AbgAUWss (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 17:48:48 -0500
-Received: from mail.linser.at ([80.109.168.170] helo=phil.Hitronhub.home)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1iu2KA-0005xB-3m; Tue, 21 Jan 2020 23:48:42 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     hjc@rock-chips.com
-Cc:     dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        miquel.raynal@bootlin.com,
-        christoph.muellner@theobroma-systems.com, heiko@sntech.de,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Subject: [PATCH] drm/rockchip: rgb: don't count non-existent devices when determining subdrivers
-Date:   Tue, 21 Jan 2020 23:48:28 +0100
-Message-Id: <20200121224828.4070067-1-heiko@sntech.de>
-X-Mailer: git-send-email 2.24.1
+        Tue, 21 Jan 2020 17:53:24 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:33276 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725876AbgAUWxY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 17:53:24 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id C1C9052A;
+        Tue, 21 Jan 2020 23:53:21 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1579647201;
+        bh=+o9lAebGcfIPvu6BwlMSFfOT4pdXPhZxgEAsy4SNm2E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nq4aFWpuAjtBfYJ8ciGIrsSYLe2oU+g5nTBkSi/7WHs22iD/iSDNauv5gn19he62S
+         qUPdeLcyTH/uZojPqjxZV4KNVbGBMwNbZR0HdjB1ciQLxMs/lcjLxBj+hh2Ydq9pT3
+         p9wFPeq8MIE1hZVJlaSX4Ez83OSqRgw1rjRGVeSI=
+Date:   Wed, 22 Jan 2020 00:53:05 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-media@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [PATCH RESEND RESEND] media: uvc: Avoid cyclic entity chains due
+ to malformed USB descriptors
+Message-ID: <20200121225305.GL5003@pendragon.ideasonboard.com>
+References: <20191108154838.21487-1-will@kernel.org>
+ <20191108155503.GB15731@pendragon.ideasonboard.com>
+ <20191216121651.GA12947@willie-the-truck>
+ <CAAeHK+xdVmEFtK78bWd2Odn0uBynqnt5UT9jZJFvqGL=_9NU2w@mail.gmail.com>
+ <20191218114137.GA15505@willie-the-truck>
+ <20191218122324.GB17086@kroah.com>
+ <CAAeHK+xyv-x6ejwcqNAn=5eKoBYPkJsN=SgJLHJ1ey=6v+YyyA@mail.gmail.com>
+ <20191218165153.GC17876@pendragon.ideasonboard.com>
+ <20200121190142.GB13592@willie-the-truck>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200121190142.GB13592@willie-the-truck>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Hi Will,
 
-rockchip_drm_endpoint_is_subdriver() may also return error codes.
-For example if the target-node is in the disabled state, so no
-platform-device is getting created for it.
+On Tue, Jan 21, 2020 at 07:01:42PM +0000, Will Deacon wrote:
+> On Wed, Dec 18, 2019 at 06:51:53PM +0200, Laurent Pinchart wrote:
+> > On Wed, Dec 18, 2019 at 01:46:00PM +0100, Andrey Konovalov wrote:
+> > > On Wed, Dec 18, 2019 at 1:23 PM Greg Kroah-Hartman wrote:
+> > > > On Wed, Dec 18, 2019 at 11:41:38AM +0000, Will Deacon wrote:
+> > > >> On Mon, Dec 16, 2019 at 02:17:52PM +0100, Andrey Konovalov wrote:
+> > > >>> On Mon, Dec 16, 2019 at 1:16 PM Will Deacon <will@kernel.org> wrote:
+> > > >>>> On Fri, Nov 08, 2019 at 05:55:03PM +0200, Laurent Pinchart wrote:
+> > > >>>>> Thank you for the patch.
+> > > >>>>>
+> > > >>>>> I'm sorry for the delay, and will have to ask you to be a bit more
+> > > >>>>> patient I'm afraid. I will leave tomorrow for a week without computer
+> > > >>>>> access and will only be able to go through my backlog when I will be
+> > > >>>>> back on the 17th.
+> > > >>>>
+> > > >>>> Gentle reminder on this, now you've been back a month ;)
+> > > >>>
+> > > >>> I think we now have a reproducer for this issue that syzbot just reported:
+> > > >>>
+> > > >>> https://syzkaller.appspot.com/bug?extid=0a5c96772a9b26f2a876
+> > > >>>
+> > > >>> You can try you patch on it :)
+> > > >>
+> > > >> Oh wow, I *really* like the raw USB gadget thingy you have to reproduce
+> > > >> these! I also really like that this patch fixes the issue. Logs below.
+> > > 
+> > > Thanks! An easier way to test the patch would be to issue a syz test
+> > > command, but I'm glad you managed to set up raw gadget manually and it
+> > > worked for you.
+> > > 
+> > > >
+> > > > Ok, that's a good poke for me to go review that raw gadget code to see
+> > > > if it can be merged upstream :)
+> > > 
+> > > Looking forward to it! =)
+> > 
+> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > 
+> > and merged in my tree. I'm so sorry for the way too long delay.
+> 
+> Please can you send this upstream and/or put it in linux-next? I can't see
+> it anywhere at the moment :(
 
-In that case current code would count that as external rgb device,
-which in turn would make probing the rockchip-drm device fail.
+I've now sent the pull request. Seems I failed the schedule from A to Z
+with this patch. I'm extremely sorry :-(
 
-So only count the target as rgb device if the function actually
-returns 0.
-
-Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
----
- drivers/gpu/drm/rockchip/rockchip_rgb.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/rockchip/rockchip_rgb.c b/drivers/gpu/drm/rockchip/rockchip_rgb.c
-index ae730275a34f..79a7e60633e0 100644
---- a/drivers/gpu/drm/rockchip/rockchip_rgb.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_rgb.c
-@@ -98,7 +98,8 @@ struct rockchip_rgb *rockchip_rgb_init(struct device *dev,
- 		if (of_property_read_u32(endpoint, "reg", &endpoint_id))
- 			endpoint_id = 0;
- 
--		if (rockchip_drm_endpoint_is_subdriver(endpoint) > 0)
-+		/* if subdriver (> 0) or error case (< 0), ignore entry */
-+		if (rockchip_drm_endpoint_is_subdriver(endpoint) != 0)
- 			continue;
- 
- 		child_count++;
 -- 
-2.24.1
+Regards,
 
+Laurent Pinchart
