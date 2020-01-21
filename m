@@ -2,128 +2,126 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE4C9C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:04:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECFFFC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA7C62465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:04:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C015624655
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:04:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RIR8TO7s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729697AbgAUQER (ORCPT
+        id S1729715AbgAUQEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 11:04:17 -0500
-Received: from mga18.intel.com ([134.134.136.126]:18424 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729613AbgAUQEL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 11:04:11 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 08:01:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,346,1574150400"; 
-   d="scan'208";a="374630194"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga004.jf.intel.com with ESMTP; 21 Jan 2020 08:01:26 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 13C2BF50; Tue, 21 Jan 2020 18:01:16 +0200 (EET)
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Lee Jones <lee.jones@linaro.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Mark Brown <broonie@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 30/38] platform/x86: intel_pmc_ipc: Drop intel_pmc_ipc_command()
-Date:   Tue, 21 Jan 2020 19:01:06 +0300
-Message-Id: <20200121160114.60007-31-mika.westerberg@linux.intel.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200121160114.60007-1-mika.westerberg@linux.intel.com>
-References: <20200121160114.60007-1-mika.westerberg@linux.intel.com>
+        Tue, 21 Jan 2020 11:04:25 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:36831 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729413AbgAUQEY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 11:04:24 -0500
+Received: by mail-lf1-f66.google.com with SMTP id f24so2731173lfh.3;
+        Tue, 21 Jan 2020 08:04:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=4QElD4aLgqnxIJYOw+6hd85zSf1XDYHPFQQs8FVOpM4=;
+        b=RIR8TO7sH4q9qS6/bFOYNX7/b+ZDX2vFNdHP/g+lQB6/t8sLVO/BG/dOQK5bd4YkS9
+         3xUOVihE7L7weX1mW9pVZHpPTX8Khtm0hc+BXfTytT5F6A9ZEuKkwliKQoxHbgU87YJz
+         eX0bCZH4JjFHyBoGPnUoH4r8Sjk6zc8Xe0dqe1P8OzP2eqyNAV8wSMLwz6Rbw03UBNxZ
+         mUv81d8q3O1kvCcYE0pKMEnUypCOUgKMrAVfIIOHRyM3drDIDLC1lXDWx0jwKYQMnxIl
+         CyOrsEwX5FoRyQGI29X3DrN31rN3VnpxB2XPF1kT0orssRzlu3C6xD4QruxVxdNql7V5
+         Oj8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4QElD4aLgqnxIJYOw+6hd85zSf1XDYHPFQQs8FVOpM4=;
+        b=pfkdj2wTBfYmVoIf5MMw8Vp4NDYk9E6kLEoJdR6RnQ9RYbgSPhvNhoE1n9kzRBRZnO
+         G+29Ykb+2csykuQS2AVPgI73eGRgcinpiFomkf7kZePIcxVNxiugyAli+MUw7F8Zx1cP
+         6CxnlzRYwmOWA5Acc8V1GUVLhfqSbTHrYrTbTStY+xk6AzQxRrAlhCJsVu6yvRemtrhy
+         HmGRNppnGz2gpoPKCl8zh/3hufzXI3JNx1NM+VFJGLp2OR5ZfFHxTNgObMrJRFhA9JrW
+         oXDNVfSYnBn6EyRGFvwce1Ypz4pb0z9hlAQm5tb4PAKE+6eRCdL10Xs0AGlo4RGWDRyR
+         QexA==
+X-Gm-Message-State: APjAAAWysPhimv0kKf8RC5fgs2lqIiHmCOYdgIr6sJk8ppMYgb6w0Obr
+        gDCm+jGGXyHDix+Y38iAlRY=
+X-Google-Smtp-Source: APXvYqy7EtDOd9lxlMN59AeictrAoxR0wB9a8lavz+2thaHFgaRugWz3ll5Ecy/t12c/eutcaI9siw==
+X-Received: by 2002:a19:550d:: with SMTP id n13mr2212655lfe.48.1579622661898;
+        Tue, 21 Jan 2020 08:04:21 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id f8sm1936176lfc.22.2020.01.21.08.04.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jan 2020 08:04:21 -0800 (PST)
+Subject: Re: [alsa-devel] [PATCH 2/9] ASoC: tegra: add support for CIF
+ programming
+To:     Sameer Pujar <spujar@nvidia.com>, perex@perex.cz, tiwai@suse.com,
+        robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        atalambedu@nvidia.com, linux-kernel@vger.kernel.org,
+        lgirdwood@gmail.com, jonathanh@nvidia.com, viswanathl@nvidia.com,
+        sharadg@nvidia.com, broonie@kernel.org, thierry.reding@gmail.com,
+        linux-tegra@vger.kernel.org, rlokhande@nvidia.com,
+        mkumard@nvidia.com, dramesh@nvidia.com
+References: <1579530198-13431-1-git-send-email-spujar@nvidia.com>
+ <1579530198-13431-3-git-send-email-spujar@nvidia.com>
+ <d01ed171-d949-19b2-3390-ee30eada2779@gmail.com>
+ <a8409b81-7c6b-37a9-81fd-772eb2eca185@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <229def08-6bd4-30d7-056b-92329e48c699@gmail.com>
+Date:   Tue, 21 Jan 2020 19:04:20 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
+In-Reply-To: <a8409b81-7c6b-37a9-81fd-772eb2eca185@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that all callers have been converted over to the SCU IPC API we can
-drop intel_pmc_ipc_command().
+21.01.2020 07:41, Sameer Pujar пишет:
+> 
+> On 1/20/2020 9:28 PM, Dmitry Osipenko wrote:
+>> External email: Use caution opening links or attachments
+>>
+>>
+>> Hello Sameer,
+>>
+>> 20.01.2020 17:23, Sameer Pujar пишет:
+>>
+>> [snip]
+>>
+>>> Tegra30 and Tegra124 have an identical CIF programming helper function.
+>> [snip]
+>>
+>>> -#define TEGRA124_AUDIOCIF_CTRL_FIFO_THRESHOLD_SHIFT  24
+>>> -#define TEGRA124_AUDIOCIF_CTRL_FIFO_THRESHOLD_MASK_US        0x3f
+>>> -#define TEGRA124_AUDIOCIF_CTRL_FIFO_THRESHOLD_MASK  
+>>> (TEGRA124_AUDIOCIF_CTRL_FIFO_THRESHOLD_MASK_US <<
+>>> TEGRA124_AUDIOCIF_CTRL_FIFO_THRESHOLD_SHIFT)
+>>> -
+>>> -/* Channel count minus 1 */
+>>> -#define TEGRA30_AUDIOCIF_CTRL_AUDIO_CHANNELS_SHIFT   24
+>>> -#define TEGRA30_AUDIOCIF_CTRL_AUDIO_CHANNELS_MASK_US 7
+>>> -#define TEGRA30_AUDIOCIF_CTRL_AUDIO_CHANNELS_MASK   
+>>> (TEGRA30_AUDIOCIF_CTRL_AUDIO_CHANNELS_MASK_US <<
+>>> TEGRA30_AUDIOCIF_CTRL_AUDIO_CHANNELS_SHIFT)
+>> The AUDIOCIF_CTRL bitfields are not the same on T30 and T124, why are
+>> you claiming that programming is identical? Have you actually tried to
+>> test these patches on T30?
+> 
+> Oh yes! seems like I overlooked the macro values. Thanks for pointing
+> this. I will retain separate CIF function for Tegra30.
+> I do not have a Tegra30 board with me and hence could not test anything
+> specific to it apart from build sanity.
+> If someone can help me test I would really appreciate.
+> 
 
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- arch/x86/include/asm/intel_pmc_ipc.h |  8 --------
- drivers/platform/x86/intel_pmc_ipc.c | 20 --------------------
- 2 files changed, 28 deletions(-)
-
-diff --git a/arch/x86/include/asm/intel_pmc_ipc.h b/arch/x86/include/asm/intel_pmc_ipc.h
-index ddc964b9c78c..22848df5faaf 100644
---- a/arch/x86/include/asm/intel_pmc_ipc.h
-+++ b/arch/x86/include/asm/intel_pmc_ipc.h
-@@ -27,19 +27,11 @@
- 
- #if IS_ENABLED(CONFIG_INTEL_PMC_IPC)
- 
--int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
--		u32 *out, u32 outlen);
- int intel_pmc_s0ix_counter_read(u64 *data);
- int intel_pmc_gcr_read64(u32 offset, u64 *data);
- 
- #else
- 
--static inline int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
--		u32 *out, u32 outlen)
--{
--	return -EINVAL;
--}
--
- static inline int intel_pmc_s0ix_counter_read(u64 *data)
- {
- 	return -EINVAL;
-diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-index 4d9c9fd082ad..6970ca2eab77 100644
---- a/drivers/platform/x86/intel_pmc_ipc.c
-+++ b/drivers/platform/x86/intel_pmc_ipc.c
-@@ -194,26 +194,6 @@ static int update_no_reboot_bit(void *priv, bool set)
- 				    PMC_CFG_NO_REBOOT_MASK, value);
- }
- 
--/**
-- * intel_pmc_ipc_command() -  IPC command with input/output data
-- * @cmd:	IPC command code.
-- * @sub:	IPC command sub type.
-- * @in:		input data of this IPC command.
-- * @inlen:	input data length in bytes.
-- * @out:	output data of this IPC command.
-- * @outlen:	output data length in dwords.
-- *
-- * Send an IPC command to PMC with input/output data.
-- *
-- * Return:	an IPC error code or 0 on success.
-- */
--int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
--			  u32 *out, u32 outlen)
--{
--	return intel_scu_ipc_dev_command(NULL, cmd, sub, in, inlen, out, outlen);
--}
--EXPORT_SYMBOL_GPL(intel_pmc_ipc_command);
--
- static int ipc_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- {
- 	struct intel_pmc_ipc_dev *pmc = &ipcdev;
--- 
-2.24.1
-
+I'll help with the testing once all obvious problems will be fixed.
