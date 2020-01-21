@@ -2,134 +2,160 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9AB2C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:22:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA4D9C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE780206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:22:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CBE5206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:23:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aJ5Ozt/W"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="gFTk7nIS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729255AbgAURWD (ORCPT
+        id S1729191AbgAURXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 12:22:03 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36177 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728186AbgAURWD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 12:22:03 -0500
-Received: by mail-ot1-f66.google.com with SMTP id m2so3663634otq.3
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 09:22:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lnnBSB/7F1DqkynwG4soN8UnncCnmRgHmiv4BugYM2Q=;
-        b=aJ5Ozt/WoQVqWBg9nszl7nn+QO8qzJ7/0SYJdKIz39o4evxGwkmBpJzx0F02Z6n4TJ
-         sA0EU/u73T/YZ8Hd3xsyhAu7nO6kP6arcnO8C4t1Aa4hRaprAC7PZ7M+AX2wNMLW1IDl
-         Kga1/wlYwkF7ClEuvlfyBYX0EprNOCvkIXyuakIjFrgGQROA0adWbDS3wbyiRHxOjajA
-         eQUnWDQ6kY5KdiLjBsd8Jd1lGJSaQ8t6y9z08JXrAruSFBYukOSxRj0wR9gBTLIXRD/J
-         CzkExcAGMl3vty7AL/ANv0XP7ZgQcJsA4z3i7RcoSTTg+Yr2Y9WapiUc6KSpEtqjXKLd
-         TvlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lnnBSB/7F1DqkynwG4soN8UnncCnmRgHmiv4BugYM2Q=;
-        b=pLtTI301KaYe6nXB8ezCz8mSe30HeawqHk0OrisrS7kxZrkTvPl5EXHgobVCThhoP9
-         07GNTlLkXY57IRSr9JL6p7vBKbNtv+5p3PPjg7/MiXxm4hOv5JR8eVfXNjX1CqcyaopW
-         Ovnp7FI2P/9qAs/Ckbc9ffCo+Oa+zn/NusQvPbJRisWXdUANmiYGv7CAAY3O9pF5RuTv
-         eSqCsa35xoCL/+VyvUm6wocEbScEhsam8nxtdxJ3jpHbXg1n+eM5OPNlmuaRuro8FY0t
-         1hNWD5p1Z35GEMfSgroUSByxSHGS2p0QL8+2ZjAivk8ZQicx/lLhtqDmiLeGO5cqYVtN
-         0Pjw==
-X-Gm-Message-State: APjAAAX4MK8J1JDBeLL5vXZgEwKksN/8VmxrjGWKZ+fjFVOCGsj2lMTC
-        4A/zGmCZFD+VBJrUogECnXi3Kc4SHn5hq6GUbOQ=
-X-Google-Smtp-Source: APXvYqxhSdmxZTm2RkROSVHhkFHYy/2nkaycOk6cWKNZai7VHc/dUdyL6kgV25LWnepB+Y6eUl58p7ECVzy8LpTzV9c=
-X-Received: by 2002:a9d:53c4:: with SMTP id i4mr4630029oth.48.1579627322449;
- Tue, 21 Jan 2020 09:22:02 -0800 (PST)
+        Tue, 21 Jan 2020 12:23:02 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:43999 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728186AbgAURXC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 12:23:02 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 482FjS293hz9v1S7;
+        Tue, 21 Jan 2020 18:22:52 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=gFTk7nIS; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 1oAV2srf0Lba; Tue, 21 Jan 2020 18:22:52 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 482FjS108jz9v1S6;
+        Tue, 21 Jan 2020 18:22:52 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1579627372; bh=sMXDwBt01Cd62ThXPHiPled8Rp8cKUezeik7kezRUaM=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=gFTk7nISCQ6YwsCKDldBxyRo17VC7Hwqw3vyPk4sgmpHuazFD4jPGwVeCNwEOB0d5
+         Yx9uk840B7OHaR+LWAKROZLvdNjI5p+YMY1m72edZxhkBhjzjXAoF5WGg6tYJ0bGZD
+         4LDwC4Pm55Z4zK4eLh3yHS28M9G8E7TWNFdKao+I=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id CE1B28B7E6;
+        Tue, 21 Jan 2020 18:22:53 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id lslBuyCx9qG5; Tue, 21 Jan 2020 18:22:53 +0100 (CET)
+Received: from po14934vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id EB55A8B776;
+        Tue, 21 Jan 2020 18:22:52 +0100 (CET)
+Subject: GCC bug ? Re: [PATCH v2 10/10] powerpc/32s: Implement Kernel
+ Userspace Access Protection
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, ruscur@russell.cc,
+        Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <cover.1552292207.git.christophe.leroy@c-s.fr>
+ <a2847248a92cb1641b1740fa121c5a30593ae662.1552292207.git.christophe.leroy@c-s.fr>
+ <87ftqfu7j1.fsf@concordia.ellerman.id.au>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <a008a182-f1db-073c-7d38-27bfd1fd8676@c-s.fr>
+Date:   Tue, 21 Jan 2020 17:22:32 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-References: <20191218043951.10534-1-xiyou.wangcong@gmail.com>
- <20191218043951.10534-2-xiyou.wangcong@gmail.com> <db1c7741-e280-7930-1659-2ca43e8aac15@arm.com>
-In-Reply-To: <db1c7741-e280-7930-1659-2ca43e8aac15@arm.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Tue, 21 Jan 2020 09:21:50 -0800
-Message-ID: <CAM_iQpUmRKfiQ-P3G-PkRuumXqxN4TPuZtuqoT3+AFjhnkSwQQ@mail.gmail.com>
-Subject: Re: [Patch v3 1/3] iommu: avoid unnecessary magazine allocations
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        John Garry <john.garry@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <87ftqfu7j1.fsf@concordia.ellerman.id.au>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 3:11 AM Robin Murphy <robin.murphy@arm.com> wrote:
->
-> On 18/12/2019 4:39 am, Cong Wang wrote:
-> > The IOVA cache algorithm implemented in IOMMU code does not
-> > exactly match the original algorithm described in the paper
-> > "Magazines and Vmem: Extending the Slab Allocator to Many
-> > CPUs and Arbitrary Resources".
-> >
-> > Particularly, it doesn't need to free the loaded empty magazine
-> > when trying to put it back to global depot. To make it work, we
-> > have to pre-allocate magazines in the depot and only recycle them
-> > when all of them are full.
-> >
-> > Before this patch, rcache->depot[] contains either full or
-> > freed entries, after this patch, it contains either full or
-> > empty (but allocated) entries.
->
-> How much additional memory overhead does this impose (particularly on
-> systems that may have many domains mostly used for large, long-term
-> mappings)? I'm wary that trying to micro-optimise for the "churn network
-> packets as fast as possible" case may penalise every other case,
-> potentially quite badly. Lower-end embedded systems are using IOMMUs in
-> front of their GPUs, video codecs, etc. precisely because they *don't*
-> have much memory to spare (and thus need to scrape together large
-> buffers out of whatever pages they can find).
 
-The calculation is not complicated: 32 * 6 * 129 * 8 = 198144 bytes,
-which is roughly 192K, per domain.
 
->
-> But on the other hand, if we were to go down this route, then why is
-> there any dynamic allocation/freeing left at all? Once both the depot
-> and the rcaches are preallocated, then AFAICS it would make more sense
-> to rework the overflow case in __iova_rcache_insert() to just free the
-> IOVAs and swap the empty mag around rather than destroying and
-> recreating it entirely.
+On 04/18/2019 06:55 AM, Michael Ellerman wrote:
+> Christophe Leroy <christophe.leroy@c-s.fr> writes:
+>> diff --git a/arch/powerpc/include/asm/book3s/32/kup.h b/arch/powerpc/include/asm/book3s/32/kup.h
+>> index 5f97c742ca71..b3560b2de435 100644
+>> --- a/arch/powerpc/include/asm/book3s/32/kup.h
+>> +++ b/arch/powerpc/include/asm/book3s/32/kup.h
+>> @@ -37,6 +37,113 @@
+> ...
+>> +
+>> +static inline void allow_user_access(void __user *to, const void __user *from, u32 size)
+>> +{
+>> +	u32 addr = (__force u32)to;
+>> +	u32 end = min(addr + size, TASK_SIZE);
+>> +
+>> +	if (!addr || addr >= TASK_SIZE || !size)
+>> +		return;
+>> +
+>> +	current->thread.kuap = (addr & 0xf0000000) | ((((end - 1) >> 28) + 1) & 0xf);
+>> +	kuap_update_sr(mfsrin(addr) & ~SR_KS, addr, end);	/* Clear Ks */
+>> +}
+> 
+> When rebasing on my v6 I changed the above to:
+> 
+> static inline void allow_user_access(void __user *to, const void __user *from, u32 size)
+> {
+> 	u32 addr, end;
+> 
+> 	if (__builtin_constant_p(to) && to == NULL)
+> 		return;
 
-It's due to the algorithm requires a swap(), which can't be done with
-statically allocated magzine. I had the same thought initially but gave it
-up quickly when realized this.
+Look like the above doesn't work: gcc bug ?
 
-If you are suggesting to change the algorithm, it is not a goal of this
-patchset. I do have plan to search for a better algorithm as the IOMMU
-performance still sucks (comparing to no IOMMU) after this patchset,
-but once again, I do not want to change it in this patchset.
+#define NULL (void*)0
 
-(My ultimate goal is to find a spinlock-free algorithm, otherwise there is
-no way to make it close to no-IOMMU performance.)
+static inline int f1(void *to)
+{
+	if (__builtin_constant_p(to) && to == NULL)
+		return 3;
+	return 5;
+}
 
->
-> Perhaps there's a reasonable compromise wherein we don't preallocate,
-> but still 'free' empty magazines back to the depot, such that busy
-> domains will quickly reach a steady-state. In fact, having now dug up
-> the paper at this point of writing this reply, that appears to be what
-> fig. 3.1b describes anyway - I don't see any mention of preallocating
-> the depot.
+int g1(void)
+{
+	return f1(NULL);
+}
 
-That paper missed a lot of things, it doesn't even recommend a size
-of a depot or percpu cache. For implementation, we still have to
-think about those details, including whether to preallocate memory.
+static inline int f2(int x)
+{
+	if (__builtin_constant_p(x) && x == 0)
+		return 7;
+	return 9;
+}
 
-Thanks.
+int g2(void)
+{
+	return f2(0);
+}
+
+
+
+toto.o:     file format elf32-powerpc
+
+
+Disassembly of section .text:
+
+00000000 <g1>:
+    0:	38 60 00 05 	li      r3,5
+    4:	4e 80 00 20 	blr
+
+00000008 <g2>:
+    8:	38 60 00 07 	li      r3,7
+    c:	4e 80 00 20 	blr
+
+
+
+It works for the int const, but not for the pointer const:
+
+g1() should return 3, not 5. GCC bug ?
+
+Christophe
