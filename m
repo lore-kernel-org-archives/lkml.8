@@ -2,96 +2,92 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A05C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 22:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C81C1C33CAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 22:22:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 550D4217F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 22:21:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C8A724653
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 22:22:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579645342;
+	bh=d97/IBZtg9IT3MppVd9usNpNw3epuKqXkUTb86TDSD4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qtcXtd1WO7RgtT3YkMfjGnKXtWT2h4ODm14XjFqjT07/RPTQfTaPjPydj9rPSPKMl
+	 M8qwUwUpZo6zUMZxOVpwbLE4qKkgSK8TTZZBHQVPoVd7qkhizFe0sddqOAyZ6S73+5
+	 GeHTAuIXU74a78h+X/1CtDSQxC740/xi0LtQBzEY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729122AbgAUWVK (ORCPT
+        id S1729049AbgAUWWV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 17:21:10 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:35644 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728811AbgAUWVK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 17:21:10 -0500
-Received: from mail.linser.at ([80.109.168.170] helo=phil.Hitronhub.home)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1iu1tT-0005o8-EX; Tue, 21 Jan 2020 23:21:07 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     linux-rockchip@lists.infradead.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        miquel.raynal@bootlin.com,
-        christoph.muellner@theobroma-systems.com, heiko@sntech.de,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Subject: [PATCH] arm64: dts: rockchip: fix px30 lvds ports
-Date:   Tue, 21 Jan 2020 23:20:55 +0100
-Message-Id: <20200121222055.4068166-2-heiko@sntech.de>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200121222055.4068166-1-heiko@sntech.de>
-References: <20200121222055.4068166-1-heiko@sntech.de>
+        Tue, 21 Jan 2020 17:22:21 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:34747 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728139AbgAUWWV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 17:22:21 -0500
+Received: by mail-oi1-f195.google.com with SMTP id l136so4229441oig.1;
+        Tue, 21 Jan 2020 14:22:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qQ3ESJiwe24A1xRRFdOQ68BgNu0jHa+2w0EJEUQi0CQ=;
+        b=eEpHeoG0e8ktLhNa1jtFubcJGrUpTDQDhtJZLV26rOaTa0kEEjuigzqAgHhO0AS4RP
+         Ai9AhDYgaeyeljOfRD3QXXOVYvgRpRNiitPYF0Lml1avoxJvz2aEYutnbG9rsXid37Uq
+         nRMEXTUhDdjHAcG3dhE9DRYxj8cUo2r0TjH+lM3SWkaadPfTkRlciHV+fxROhshFHQrW
+         HBKT7z87ALcqghsbRJPRO9awsbA4fIwCu6nnRSuy+H+kyO1+xmdB4E3gbQjmzzMME9Ik
+         sikglUHgT9Bhm69TPL/3pVfnHnPKxI2ynPm2IH5uZRGbxEtboayieJ9jjIuZe6lCEyDF
+         y9Hg==
+X-Gm-Message-State: APjAAAVC0KLq8ZyEgM37WGvVVfawf0Wy92df9t7uXbsrRcccYM1f/Xtr
+        dTE/hU7bwI/MeELYZBDpJg==
+X-Google-Smtp-Source: APXvYqxtTBp1m0NoVYXgYISnqaA0oCc25esO/7iHUU9wqcKpSAWyGjQXwz90q4B5a30iOmY5CpuOCw==
+X-Received: by 2002:a05:6808:1c6:: with SMTP id x6mr4687242oic.49.1579645340281;
+        Tue, 21 Jan 2020 14:22:20 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id m185sm12426354oia.26.2020.01.21.14.22.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2020 14:22:19 -0800 (PST)
+Received: (nullmailer pid 11864 invoked by uid 1000);
+        Tue, 21 Jan 2020 22:22:18 -0000
+Date:   Tue, 21 Jan 2020 16:22:18 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     gregkh@linuxfoundation.org, mark.rutland@arm.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, fabrice.gasnier@st.com,
+        erwan.leray@st.com
+Subject: Re: [PATCH 2/2] dt-bindings: serial: Convert STM32 UART to
+ json-schema
+Message-ID: <20200121222218.GA9196@bogus>
+References: <20200114123329.3792-1-benjamin.gaignard@st.com>
+ <20200114123329.3792-3-benjamin.gaignard@st.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200114123329.3792-3-benjamin.gaignard@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+On Tue, Jan 14, 2020 at 01:33:29PM +0100, Benjamin Gaignard wrote:
+> Convert STM32 UART bindings to json-schema.
+> 
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> ---
+>  .../devicetree/bindings/serial/st,stm32-uart.yaml  | 80 ++++++++++++++++++++++
+>  .../devicetree/bindings/serial/st,stm32-usart.txt  | 57 ---------------
+>  2 files changed, 80 insertions(+), 57 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/serial/st,stm32-uart.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/serial/st,stm32-usart.txt
 
-The lvds controller has two ports. port@0 for the connection
-to the display controller(s) and port@1 for the connection to
-the panel, so should have a ports node covering the port@x nodes.
+Looks fine. Will pick up when you respin patch 1.
 
-Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
----
- arch/arm64/boot/dts/rockchip/px30.dtsi | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot/dts/rockchip/px30.dtsi
-index 9b1c92132007..37e014444214 100644
---- a/arch/arm64/boot/dts/rockchip/px30.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
-@@ -421,19 +421,24 @@ lvds: lvds {
- 			rockchip,output = "lvds";
- 			status = "disabled";
- 
--			port@0 {
--				reg = <0>;
-+			ports {
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 
--				lvds_vopb_in: endpoint@0 {
-+				port@0 {
- 					reg = <0>;
--					remote-endpoint = <&vopb_out_lvds>;
--				};
--
--				lvds_vopl_in: endpoint@1 {
--					reg = <1>;
--					remote-endpoint = <&vopl_out_lvds>;
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					lvds_vopb_in: endpoint@0 {
-+						reg = <0>;
-+						remote-endpoint = <&vopb_out_lvds>;
-+					};
-+
-+					lvds_vopl_in: endpoint@1 {
-+						reg = <1>;
-+						remote-endpoint = <&vopl_out_lvds>;
-+					};
- 				};
- 			};
- 		};
--- 
-2.24.1
-
+Rob
