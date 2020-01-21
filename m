@@ -7,41 +7,43 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7485CC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57AC6C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B932206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:29:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 206B72253D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:29:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579627744;
-	bh=cVVVG3LcU8AlGGgiouFRNnJHszYmYRkNwl5nMatz09c=;
+	s=default; t=1579627758;
+	bh=em697fVDTeockMoBJxEPnvAXXBccb222+UWwRhxqUvo=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=cntWKJ8VVM5T7eYwVdidABQM7IjZgg2OwnFfEdSV0GY+UC5uxdD8ST5aScx3YRVKU
-	 fbQ6TUth1r0hjgXXhBxvJDuIEN4abaR570L1hRzcgMQF//Mz5lMh5hTaEdGMyLAUY/
-	 zGFOS86Pgn6MmZjvupJavHsSIFobQvlivopM+FJk=
+	b=GWHzMAwKmJ4/GI7nIDIRDJ3sjbdrcFcBcpckilxwhUXcgpMkrJsBgjg9hDV0K1/gx
+	 R2D5Uz/745m/GepmWu5Qj6Kfnb+SHoG7TX0xIbgpfuJfASF9g9BXluv/K3l9iV//Yo
+	 gisETNGIOfw3DtSvErTfUjQWEWABDXR1RxaoS8fE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729271AbgAUR3D (ORCPT
+        id S1729308AbgAUR3R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 12:29:03 -0500
-Received: from foss.arm.com ([217.140.110.172]:46528 "EHLO foss.arm.com"
+        Tue, 21 Jan 2020 12:29:17 -0500
+Received: from foss.arm.com ([217.140.110.172]:46556 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728186AbgAUR3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 12:29:02 -0500
+        id S1728186AbgAUR3R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 12:29:17 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 56D5D328;
-        Tue, 21 Jan 2020 09:29:01 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A3A17328;
+        Tue, 21 Jan 2020 09:29:16 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C94B63F6C4;
-        Tue, 21 Jan 2020 09:29:00 -0800 (PST)
-Date:   Tue, 21 Jan 2020 17:28:59 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 20E3B3F6C4;
+        Tue, 21 Jan 2020 09:29:15 -0800 (PST)
+Date:   Tue, 21 Jan 2020 17:29:14 +0000
 From:   Mark Brown <broonie@kernel.org>
-To:     Sameer Pujar <spujar@nvidia.com>
-Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        perex@perex.cz, tiwai@suse.com
-Subject: Applied "ASoC: soc-pcm: crash in snd_soc_dapm_new_dai" to the asoc tree
-In-Reply-To: <1579443563-12287-1-git-send-email-spujar@nvidia.com>
-Message-Id: <applied-1579443563-12287-1-git-send-email-spujar@nvidia.com>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: Applied "spi: pxa2xx: Avoid touching SSCR0_SSE on MMP2" to the spi tree
+In-Reply-To: <20200118094031.327373-1-lkundrak@v3.sk>
+Message-Id: <applied-20200118094031.327373-1-lkundrak@v3.sk>
 X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -50,11 +52,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: soc-pcm: crash in snd_soc_dapm_new_dai
+   spi: pxa2xx: Avoid touching SSCR0_SSE on MMP2
 
-has been applied to the asoc tree at
+has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.5
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -75,50 +77,169 @@ to this mail.
 Thanks,
 Mark
 
-From af4bac11531fbc0b5955fdccbe3f5ea265cd7374 Mon Sep 17 00:00:00 2001
-From: Sameer Pujar <spujar@nvidia.com>
-Date: Sun, 19 Jan 2020 19:49:23 +0530
-Subject: [PATCH] ASoC: soc-pcm: crash in snd_soc_dapm_new_dai
+From 29d7e05c5f75fc2ebf3608743b6809aa0ff56800 Mon Sep 17 00:00:00 2001
+From: Lubomir Rintel <lkundrak@v3.sk>
+Date: Sat, 18 Jan 2020 10:40:31 +0100
+Subject: [PATCH] spi: pxa2xx: Avoid touching SSCR0_SSE on MMP2
 
-Crash happens in snd_soc_dapm_new_dai() when substream->private_data
-access is made and substream is NULL here. This is seen for DAIs where
-only playback or capture stream is defined. This seems to be happening
-for codec2codec DAI link.
+A read from a Winbond W25Q32FV SPI NOR memory chip on my MMP2 returns
+wrong data.
 
-Both playback and capture are 0 during soc_new_pcm(). This is probably
-happening because cpu_dai and codec_dai are both validated either for
-SNDRV_PCM_STREAM_PLAYBACK or SNDRV_PCM_STREAM_CAPTURE.
+It seems like SSE doesn't do the right thing on MMP2 at all. After
+enabling the SPI port back again, the FIFO reads return garbage. Things
+can be brought back to order by telling the PMU to reset the block.
 
-Shouldn't be playback = 1 when,
- - playback stream is available for codec_dai AND
- - capture stream is available for cpu_dai
+Here's a good transaction with said chip:
 
-and vice-versa for capture = 1?
+  # busybox devmem 0xd4035000 32 0x00001987 # SSCR0
+  # echo 0 >/sys/class/gpio/gpio46/value    # (assert CS)
+  # busybox devmem 0xd4035010 32 0x0000009f # SSDR (read ID command)
+  # busybox devmem 0xd4035010 32 0x00000000 # SSDR
+  # busybox devmem 0xd4035010 32 0x00000000 # SSDR
+  # busybox devmem 0xd4035010 32 0x00000000 # SSDR
+  # busybox devmem 0xd4035010 32 0x00000000 # SSDR
+  # busybox devmem 0xd4035010 32 0x00000000 # SSDR
+  # busybox devmem 0xd4035010 32 0x00000000 # SSDR
+  # busybox devmem 0xd4035010               # SSDR
+  0x000000ff
+  # busybox devmem 0xd4035010               # SSDR
+  0x000000ef                                # Correct response
+  # busybox devmem 0xd4035010               # SSDR
+  0x00000040
+  # busybox devmem 0xd4035010               # SSDR
+  0x00000016
+  # busybox devmem 0xd4035010               # SSDR
+  0x00000000
+  # busybox devmem 0xd4035010               # SSDR
+  0x00000000
+  # busybox devmem 0xd4035010               # SSDR
+  0x00000000
+  # echo 1 >/sys/class/gpio/gpio46/value # (deassert CS)
+  #
 
-Signed-off-by: Sameer Pujar <spujar@nvidia.com>
-Link: https://lore.kernel.org/r/1579443563-12287-1-git-send-email-spujar@nvidia.com
+Flipping off an on SSE, then running another transaction:
+
+  # busybox devmem 0xd4035000 32 0x00001907 # SSCR0, SSE off
+  # busybox devmem 0xd4035000 32 0x00001987 # SSCR0, SSE on
+  # echo 0 >/sys/class/gpio/gpio46/value    # (assert CS)
+  # busybox devmem 0xd4035010 32 0x0000009f # SSDR (read ID command)
+  # busybox devmem 0xd4035010 32 0x00000000 # SSDR
+  # busybox devmem 0xd4035010 32 0x00000000 # SSDR
+  # busybox devmem 0xd4035010 32 0x00000000 # SSDR
+  # busybox devmem 0xd4035010 32 0x00000000 # SSDR
+  # busybox devmem 0xd4035010 32 0x00000000 # SSDR
+  # busybox devmem 0xd4035010 32 0x00000000 # SSDR
+  # busybox devmem 0xd4035010               # SSDR
+  0x000000ff
+  # busybox devmem 0xd4035010               # SSDR
+  0x000000ff                                # Garbage!
+  # busybox devmem 0xd4035010               # SSDR
+  0x000000ff                                # Oh no
+  # busybox devmem 0xd4035010               # SSDR
+  0x000000ff
+  # busybox devmem 0xd4035010               # SSDR
+  0x000000ff
+  # busybox devmem 0xd4035010               # SSDR
+  0x000000ff
+  # busybox devmem 0xd4035010               # SSDR
+  0x000000ff
+  # echo 1 >/sys/class/gpio/gpio46/value # (deassert CS)
+  #
+
+Sometimes the response is not just ones, but something that looks like
+bits of a response from a previous transaction.
+
+I can't see a fix other than not touching the SSE altogether after the
+device is first brought up.
+
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Link: https://lore.kernel.org/r/20200118094031.327373-1-lkundrak@v3.sk
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/soc-pcm.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/spi/spi-pxa2xx.c | 28 +++++++++++++++++-----------
+ 1 file changed, 17 insertions(+), 11 deletions(-)
 
-diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
-index b78f6ff2b1d3..f70bec7815ee 100644
---- a/sound/soc/soc-pcm.c
-+++ b/sound/soc/soc-pcm.c
-@@ -2916,10 +2916,10 @@ int soc_new_pcm(struct snd_soc_pcm_runtime *rtd, int num)
+diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
+index 8114d3289fdc..0408782c7ed0 100644
+--- a/drivers/spi/spi-pxa2xx.c
++++ b/drivers/spi/spi-pxa2xx.c
+@@ -461,6 +461,16 @@ int pxa2xx_spi_flush(struct driver_data *drv_data)
+ 	return limit;
+ }
  
- 		for_each_rtd_codec_dai(rtd, i, codec_dai) {
- 			if (snd_soc_dai_stream_valid(codec_dai, SNDRV_PCM_STREAM_PLAYBACK) &&
--			    snd_soc_dai_stream_valid(cpu_dai,   SNDRV_PCM_STREAM_PLAYBACK))
-+			    snd_soc_dai_stream_valid(cpu_dai,   SNDRV_PCM_STREAM_CAPTURE))
- 				playback = 1;
- 			if (snd_soc_dai_stream_valid(codec_dai, SNDRV_PCM_STREAM_CAPTURE) &&
--			    snd_soc_dai_stream_valid(cpu_dai,   SNDRV_PCM_STREAM_CAPTURE))
-+			    snd_soc_dai_stream_valid(cpu_dai,   SNDRV_PCM_STREAM_PLAYBACK))
- 				capture = 1;
- 		}
++static void pxa2xx_spi_off(struct driver_data *drv_data)
++{
++	/* On MMP, disabling SSE seems to corrupt the rx fifo */
++	if (drv_data->ssp_type == MMP2_SSP)
++		return;
++
++	pxa2xx_spi_write(drv_data, SSCR0,
++			 pxa2xx_spi_read(drv_data, SSCR0) & ~SSCR0_SSE);
++}
++
+ static int null_writer(struct driver_data *drv_data)
+ {
+ 	u8 n_bytes = drv_data->n_bytes;
+@@ -587,8 +597,7 @@ static void int_error_stop(struct driver_data *drv_data, const char* msg)
+ 	if (!pxa25x_ssp_comp(drv_data))
+ 		pxa2xx_spi_write(drv_data, SSTO, 0);
+ 	pxa2xx_spi_flush(drv_data);
+-	pxa2xx_spi_write(drv_data, SSCR0,
+-			 pxa2xx_spi_read(drv_data, SSCR0) & ~SSCR0_SSE);
++	pxa2xx_spi_off(drv_data);
  
+ 	dev_err(&drv_data->pdev->dev, "%s\n", msg);
+ 
+@@ -686,8 +695,7 @@ static irqreturn_t interrupt_transfer(struct driver_data *drv_data)
+ 
+ static void handle_bad_msg(struct driver_data *drv_data)
+ {
+-	pxa2xx_spi_write(drv_data, SSCR0,
+-			 pxa2xx_spi_read(drv_data, SSCR0) & ~SSCR0_SSE);
++	pxa2xx_spi_off(drv_data);
+ 	pxa2xx_spi_write(drv_data, SSCR1,
+ 			 pxa2xx_spi_read(drv_data, SSCR1) & ~drv_data->int_cr1);
+ 	if (!pxa25x_ssp_comp(drv_data))
+@@ -1062,7 +1070,8 @@ static int pxa2xx_spi_transfer_one(struct spi_controller *controller,
+ 	    || (pxa2xx_spi_read(drv_data, SSCR1) & change_mask)
+ 	    != (cr1 & change_mask)) {
+ 		/* stop the SSP, and update the other bits */
+-		pxa2xx_spi_write(drv_data, SSCR0, cr0 & ~SSCR0_SSE);
++		if (drv_data->ssp_type != MMP2_SSP)
++			pxa2xx_spi_write(drv_data, SSCR0, cr0 & ~SSCR0_SSE);
+ 		if (!pxa25x_ssp_comp(drv_data))
+ 			pxa2xx_spi_write(drv_data, SSTO, chip->timeout);
+ 		/* first set CR1 without interrupt and service enables */
+@@ -1118,8 +1127,7 @@ static int pxa2xx_spi_slave_abort(struct spi_controller *controller)
+ 	if (!pxa25x_ssp_comp(drv_data))
+ 		pxa2xx_spi_write(drv_data, SSTO, 0);
+ 	pxa2xx_spi_flush(drv_data);
+-	pxa2xx_spi_write(drv_data, SSCR0,
+-			 pxa2xx_spi_read(drv_data, SSCR0) & ~SSCR0_SSE);
++	pxa2xx_spi_off(drv_data);
+ 
+ 	dev_dbg(&drv_data->pdev->dev, "transfer aborted\n");
+ 
+@@ -1135,8 +1143,7 @@ static void pxa2xx_spi_handle_err(struct spi_controller *controller,
+ 	struct driver_data *drv_data = spi_controller_get_devdata(controller);
+ 
+ 	/* Disable the SSP */
+-	pxa2xx_spi_write(drv_data, SSCR0,
+-			 pxa2xx_spi_read(drv_data, SSCR0) & ~SSCR0_SSE);
++	pxa2xx_spi_off(drv_data);
+ 	/* Clear and disable interrupts and service requests */
+ 	write_SSSR_CS(drv_data, drv_data->clear_sr);
+ 	pxa2xx_spi_write(drv_data, SSCR1,
+@@ -1161,8 +1168,7 @@ static int pxa2xx_spi_unprepare_transfer(struct spi_controller *controller)
+ 	struct driver_data *drv_data = spi_controller_get_devdata(controller);
+ 
+ 	/* Disable the SSP now */
+-	pxa2xx_spi_write(drv_data, SSCR0,
+-			 pxa2xx_spi_read(drv_data, SSCR0) & ~SSCR0_SSE);
++	pxa2xx_spi_off(drv_data);
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
