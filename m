@@ -2,207 +2,214 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24EBEC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:47:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C161DC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9C9321835
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:47:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="Ti0zP5gd"
+	by mail.kernel.org (Postfix) with ESMTP id 9665B21835
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:47:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728748AbgAUTrF (ORCPT
+        id S1729016AbgAUTrK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 14:47:05 -0500
-Received: from mail.efficios.com ([167.114.26.124]:39528 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726229AbgAUTrE (ORCPT
+        Tue, 21 Jan 2020 14:47:10 -0500
+Received: from mail-io1-f70.google.com ([209.85.166.70]:44813 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728760AbgAUTrK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 14:47:04 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 1916D253772;
-        Tue, 21 Jan 2020 14:47:02 -0500 (EST)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id jRqVdpN1xZ5t; Tue, 21 Jan 2020 14:47:01 -0500 (EST)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 9F9B0253771;
-        Tue, 21 Jan 2020 14:47:01 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 9F9B0253771
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1579636021;
-        bh=E94cVXKf+7yBhWNrnINyP+aFkmnjtYMO3cEcciVVmD4=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=Ti0zP5gdtHGlRjpE8NgSONpmGaMpDbXDucjZ4ML2d/FtC2sEeXRAh28boRfu3uS6h
-         jPNXgQrerGWi0PzeywmkrIQp65Q6FFreLXhYnnBnszrN9/GVy2/0D4tkS5vZGWyBoA
-         C8ig/tUIZz4Xoaddw/f9NUCJAO91qpbRyg+vmQQEuJf/pt+Eo3OxZMMMiKqNceggc6
-         c3vvJ/Z+21Oe8LxX4BuzVlAmmINPYvp+QyKs+ZSUHcUR0dCV/+/L+FoPdrA63oFGU2
-         dCATtZlTJk9mIDHutTp/5hGYYLJ5P0QY7keTfbMVqEFscLs6Q7hDlZKVpwizR2FPs3
-         1ivD13gTc8irw==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id RiHK1mtuRx4U; Tue, 21 Jan 2020 14:47:01 -0500 (EST)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 803732538C3;
-        Tue, 21 Jan 2020 14:47:01 -0500 (EST)
-Date:   Tue, 21 Jan 2020 14:47:01 -0500 (EST)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Jann Horn <jannh@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Joel Fernandes <joelaf@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Watson <davejwatson@fb.com>,
-        Will Deacon <will.deacon@arm.com>, shuah <shuah@kernel.org>,
-        Andi Kleen <andi@firstfloor.org>,
-        linux-kselftest <linux-kselftest@vger.kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Chris Lameter <cl@linux.com>,
-        Russell King <linux@arm.linux.org.uk>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        Paul Turner <pjt@google.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        rostedt <rostedt@goodmis.org>, Ben Maurer <bmaurer@fb.com>,
-        linux-api <linux-api@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>
-Message-ID: <430172781.596271.1579636021412.JavaMail.zimbra@efficios.com>
-In-Reply-To: <CAG48ez2bQdoT9y7HkyU06DTazysUDdPdJe+gyV-NxgQA7JWQVQ@mail.gmail.com>
-References: <20200121160312.26545-1-mathieu.desnoyers@efficios.com> <CAG48ez2bQdoT9y7HkyU06DTazysUDdPdJe+gyV-NxgQA7JWQVQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v1] pin_on_cpu: Introduce thread CPU pinning system
- call
+        Tue, 21 Jan 2020 14:47:10 -0500
+Received: by mail-io1-f70.google.com with SMTP id t17so2432202ioi.11
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 11:47:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=4Qooo+yLtW0hSQ6uqVOv6DJWezkkHSW9eCGuSjzIwDc=;
+        b=LBaSaapxLuyCndwW9V6KEf+OomGkRcDlFW0Jx5lVm5z+/93J/Z8YHKKVH6sUvKiDsC
+         /njza4xG6BYdzb9j/r6sMjc4gVjPCnP2W7t6XDb1oga+OPNSrf7WSXYubWBhUUy2RmvL
+         kPehbeXRe1dcKlqJyNrVTccA95N6/Fvu7Q6MK+6v4C+6gOg6z1/9NtNtepY5Bsr/geop
+         kNUU1CaBKGTLPmZi/w4aTXNiaWhx/fu/1OgNEP1UZhtW6LCbLirX/L9KK7yvczxQlmgp
+         hpStCrNjKyYUbgrIAd2pQXcOPVUzlgX2QYXMPRj+xNqjh8fgsCklMxjz4LGmHOQos+4e
+         Q5xg==
+X-Gm-Message-State: APjAAAUM3mnzPFR2pA0FhYrE1yOnBFTG9fRwf0IWDXhFoeKWgyvBVhmw
+        xpA9StAu+ToFfGOUaVQMCsJSrrSApqyK8KbUSLxlncbK/rla
+X-Google-Smtp-Source: APXvYqxjBUYzytiRZkLP4ZQ7IzU6IAWTLSThIj2ySVZIM9q+LA+jnsD+iegJuM/XMYH0/b01krW1mR687e/R6G8jwAzSVVUkjhpu
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3895 (ZimbraWebClient - FF72 (Linux)/8.8.15_GA_3895)
-Thread-Topic: pin_on_cpu: Introduce thread CPU pinning system call
-Thread-Index: SUS+RZAe0aLWPsHzRvXWGarIM8oqwA==
+X-Received: by 2002:a92:d608:: with SMTP id w8mr4810833ilm.95.1579636029090;
+ Tue, 21 Jan 2020 11:47:09 -0800 (PST)
+Date:   Tue, 21 Jan 2020 11:47:09 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000006370ef059cabac14@google.com>
+Subject: KASAN: slab-out-of-bounds Read in __nla_put_nohdr
+From:   syzbot <syzbot+5af9a90dad568aa9f611@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, xiyou.wangcong@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Jan 21, 2020, at 12:20 PM, Jann Horn jannh@google.com wrote:
+Hello,
 
-> On Tue, Jan 21, 2020 at 5:13 PM Mathieu Desnoyers
-> <mathieu.desnoyers@efficios.com> wrote:
->> There is an important use-case which is not possible with the
->> "rseq" (Restartable Sequences) system call, which was left as
->> future work.
->>
->> That use-case is to modify user-space per-cpu data structures
->> belonging to specific CPUs which may be brought offline and
->> online again by CPU hotplug. This can be used by memory
->> allocators to migrate free memory pools when CPUs are brought
->> offline, or by ring buffer consumers to target specific per-CPU
->> buffers, even when CPUs are brought offline.
->>
->> A few rather complex prior attempts were made to solve this.
->> Those were based on in-kernel interpreters (cpu_opv, do_on_cpu).
->> That complexity was generally frowned upon, even by their author.
->>
->> This patch fulfills this use-case in a refreshingly simple way:
->> it introduces a "pin_on_cpu" system call, which allows user-space
->> threads to pin themselves on a specific CPU (which needs to be
->> present in the thread's allowed cpu mask), and then clear this
->> pinned state.
-> [...]
->> For instance, this allows implementing this userspace library API
->> for incrementing a per-cpu counter for a specific cpu number
->> received as parameter:
->>
->> static inline __attribute__((always_inline))
->> int percpu_addv(intptr_t *v, intptr_t count, int cpu)
->> {
->>         int ret;
->>
->>         ret = rseq_addv(v, count, cpu);
->> check:
->>         if (rseq_unlikely(ret)) {
->>                 pin_on_cpu_set(cpu);
->>                 ret = rseq_addv(v, count, percpu_current_cpu());
->>                 pin_on_cpu_clear();
->>                 goto check;
->>         }
->>         return 0;
->> }
-> 
-> What does userspace have to do if the set of allowed CPUs switches all
-> the time? For example, on Android, if you first open Chrome and then
-> look at its allowed CPUs, Chrome is allowed to use all CPU cores
-> because it's running in the foreground:
-> 
-> walleye:/ # ps -AZ | grep 'android.chrome$'
-> u:r:untrusted_app:s0:c145,c256,c512,c768 u0_a145 7845 805 1474472
-> 197868 SyS_epoll_wait f09c0194 S com.android.chrome
-> walleye:/ # grep cpuset /proc/7845/cgroup; grep Cpus_allowed_list
-> /proc/7845/status
-> 3:cpuset:/top-app
-> Cpus_allowed_list: 0-7
-> 
-> But if you then switch to the home screen, the application is moved
-> into a different cgroup, and is restricted to two CPU cores:
-> 
-> walleye:/ # grep cpuset /proc/7845/cgroup; grep Cpus_allowed_list
-> /proc/7845/status
-> 3:cpuset:/background
-> Cpus_allowed_list: 0-1
+syzbot found the following crash on:
 
-Then at that point, pin_on_cpu() would only be allowed to pin on
-CPUs 0 and 1.
+HEAD commit:    80892772 hsr: Fix a compilation error
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=1718e46ee00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d9290aeb7e6cf1c4
+dashboard link: https://syzkaller.appspot.com/bug?extid=5af9a90dad568aa9f611
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1043f521e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10fb5521e00000
 
-> At the same time, I also wonder whether it is a good idea to allow
-> userspace to stay active on a CPU even after the task has been told to
-> move to another CPU core - that's probably not exactly a big deal, but
-> seems suboptimal to me.
+Bisection is inconclusive: the bug happens on the oldest tested release.
 
-Do you mean the following scenario for a given task ?
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1084280de00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=1284280de00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1484280de00000
 
-1) set affinity to CPU 0,1,2
-2) pin on CPU 2
-3) set affinity to CPU 0,1
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+5af9a90dad568aa9f611@syzkaller.appspotmail.com
 
-In the patch I propose here, step (3) is forbidden by this added check in
-__set_cpus_allowed_ptr, which is used by sched_setaffinity(2):
+IPVS: ftp: loaded support on port[0] = 21
+==================================================================
+BUG: KASAN: slab-out-of-bounds in memcpy include/linux/string.h:380 [inline]
+BUG: KASAN: slab-out-of-bounds in __nla_put_nohdr+0x46/0x50 lib/nlattr.c:815
+Read of size 12 at addr ffff888096ff0780 by task syz-executor696/9507
 
-+       /* Prevent removing the currently pinned CPU from the allowed cpu mask. */
-+       if (is_pinned_task(p) && !cpumask_test_cpu(p->pinned_cpu, new_mask)) {
-+               ret = -EINVAL;
-+               goto out;
-+       }
+CPU: 0 PID: 9507 Comm: syz-executor696 Not tainted 5.5.0-rc6-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x197/0x210 lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
+ __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
+ kasan_report+0x12/0x20 mm/kasan/common.c:639
+ check_memory_region_inline mm/kasan/generic.c:185 [inline]
+ check_memory_region+0x134/0x1a0 mm/kasan/generic.c:192
+ memcpy+0x24/0x50 mm/kasan/common.c:125
+ memcpy include/linux/string.h:380 [inline]
+ __nla_put_nohdr+0x46/0x50 lib/nlattr.c:815
+ nla_put_nohdr+0xf9/0x140 lib/nlattr.c:881
+ tcf_em_tree_dump+0x67e/0x960 net/sched/ematch.c:471
+ basic_dump+0x379/0x690 net/sched/cls_basic.c:308
+ tcf_fill_node+0x58b/0x970 net/sched/cls_api.c:1814
+ tfilter_notify+0x134/0x290 net/sched/cls_api.c:1840
+ tc_new_tfilter+0xc18/0x2590 net/sched/cls_api.c:2108
+ rtnetlink_rcv_msg+0x824/0xaf0 net/core/rtnetlink.c:5415
+ netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
+ rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5442
+ netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+ netlink_unicast+0x58c/0x7d0 net/netlink/af_netlink.c:1328
+ netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
+ sock_sendmsg_nosec net/socket.c:639 [inline]
+ sock_sendmsg+0xd7/0x130 net/socket.c:659
+ ____sys_sendmsg+0x753/0x880 net/socket.c:2330
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2384
+ __sys_sendmsg+0x105/0x1d0 net/socket.c:2417
+ __do_sys_sendmsg net/socket.c:2426 [inline]
+ __se_sys_sendmsg net/socket.c:2424 [inline]
+ __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2424
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x440dd9
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b 10 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffd12f770f8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00000000004a25b0 RCX: 0000000000440dd9
+RDX: 0000000000000000 RSI: 00000000200001c0 RDI: 0000000000000003
+RBP: 00000000006cc018 R08: 0000000120080522 R09: 0000000120080522
+R10: 0000000120080522 R11: 0000000000000246 R12: 00000000004022e0
+R13: 0000000000402370 R14: 0000000000000000 R15: 0000000000000000
+
+Allocated by task 9507:
+ save_stack+0x23/0x90 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ __kasan_kmalloc mm/kasan/common.c:513 [inline]
+ __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:486
+ kasan_kmalloc+0x9/0x10 mm/kasan/common.c:527
+ __do_kmalloc mm/slab.c:3656 [inline]
+ __kmalloc_track_caller+0x15f/0x760 mm/slab.c:3671
+ kmemdup+0x27/0x60 mm/util.c:127
+ kmemdup include/linux/string.h:453 [inline]
+ em_nbyte_change+0xd6/0x150 net/sched/em_nbyte.c:32
+ tcf_em_validate net/sched/ematch.c:241 [inline]
+ tcf_em_tree_validate net/sched/ematch.c:359 [inline]
+ tcf_em_tree_validate+0x9b5/0xf3c net/sched/ematch.c:300
+ basic_set_parms net/sched/cls_basic.c:157 [inline]
+ basic_change+0x513/0x14a0 net/sched/cls_basic.c:219
+ tc_new_tfilter+0xbbd/0x2590 net/sched/cls_api.c:2104
+ rtnetlink_rcv_msg+0x824/0xaf0 net/core/rtnetlink.c:5415
+ netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
+ rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5442
+ netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+ netlink_unicast+0x58c/0x7d0 net/netlink/af_netlink.c:1328
+ netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
+ sock_sendmsg_nosec net/socket.c:639 [inline]
+ sock_sendmsg+0xd7/0x130 net/socket.c:659
+ ____sys_sendmsg+0x753/0x880 net/socket.c:2330
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2384
+ __sys_sendmsg+0x105/0x1d0 net/socket.c:2417
+ __do_sys_sendmsg net/socket.c:2426 [inline]
+ __se_sys_sendmsg net/socket.c:2424 [inline]
+ __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2424
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 4365:
+ save_stack+0x23/0x90 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ kasan_set_free_info mm/kasan/common.c:335 [inline]
+ __kasan_slab_free+0x102/0x150 mm/kasan/common.c:474
+ kasan_slab_free+0xe/0x10 mm/kasan/common.c:483
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x10a/0x2c0 mm/slab.c:3757
+ tomoyo_check_open_permission+0x19e/0x3e0 security/tomoyo/file.c:786
+ tomoyo_file_open security/tomoyo/tomoyo.c:319 [inline]
+ tomoyo_file_open+0xa9/0xd0 security/tomoyo/tomoyo.c:314
+ security_file_open+0x71/0x300 security/security.c:1497
+ do_dentry_open+0x37a/0x1380 fs/open.c:784
+ vfs_open+0xa0/0xd0 fs/open.c:914
+ do_last fs/namei.c:3356 [inline]
+ path_openat+0x118b/0x3180 fs/namei.c:3473
+ do_filp_open+0x1a1/0x280 fs/namei.c:3503
+ do_sys_open+0x3fe/0x5d0 fs/open.c:1097
+ __do_sys_open fs/open.c:1115 [inline]
+ __se_sys_open fs/open.c:1110 [inline]
+ __x64_sys_open+0x7e/0xc0 fs/open.c:1110
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff888096ff0780
+ which belongs to the cache kmalloc-32 of size 32
+The buggy address is located 0 bytes inside of
+ 32-byte region [ffff888096ff0780, ffff888096ff07a0)
+The buggy address belongs to the page:
+page:ffffea00025bfc00 refcount:1 mapcount:0 mapping:ffff8880aa4001c0 index:0xffff888096ff0fc1
+raw: 00fffe0000000200 ffffea000253ec08 ffff8880aa401238 ffff8880aa4001c0
+raw: ffff888096ff0fc1 ffff888096ff0000 0000000100000030 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff888096ff0680: 00 00 fc fc fc fc fc fc fb fb fb fb fc fc fc fc
+ ffff888096ff0700: fb fb fb fb fc fc fc fc fb fb fb fb fc fc fc fc
+>ffff888096ff0780: 04 fc fc fc fc fc fc fc fb fb fb fb fc fc fc fc
+                   ^
+ ffff888096ff0800: 00 00 00 00 fc fc fc fc 00 00 00 00 fc fc fc fc
+ ffff888096ff0880: 00 00 00 00 fc fc fc fc 00 00 fc fc fc fc fc fc
+==================================================================
 
 
-> I'm wondering whether it might be possible to rework this mechanism
-> such that, instead of moving the current task onto a target CPU, it
-> prevents all *other* threads of the current process from running on
-> that CPU (either entirely or in user mode). That might be the easiest
-> way to take care of issues like CPU hotplugging and changing cpusets
-> all at once? The only potential issue I see with that approach would
-> be that you wouldn't be able to use it for inter-process
-> communication; and I have no idea whether this would be good or bad
-> performance-wise.
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Firstly, inter-process communication over shared memory is one of my use-cases
-(for lttng-ust's ring buffer).
-
-I'm not convinced that applying constraints on all other threads belonging to
-the current process would be easier or faster than migrating the current thread
-over to the target CPU. I'm unsure how those additional constraints would
-fit with other threads already having their own cpu affinity masks (which
-could generate an empty cpumask by adding an extra constraint).
-
-Thanks for the feedback!
-
-Mathieu
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
