@@ -2,189 +2,142 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F81C33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 235FBC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:17:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C70124125
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:17:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579616236;
-	bh=eGP8z6dxRF+W8utN64emYHnd98d13UH+DfvCNXZYpbs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=KbqB1SBOVsncmyZyu4tHLYI6L5ZWDBqdoSXtQe2luhc6EPyunrYeGYSP8x33jjQH2
-	 rHWYjkpCdj84hsJanbb2HVcDpL1iWZr9BI6P2YHyByqRyupPFvV2nMeJuAPU4jOilU
-	 RFoiuVUpGo83EAY0N6SH5FJwrOjNefGW/66BDkYs=
+	by mail.kernel.org (Postfix) with ESMTP id E90E622314
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:17:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O7yRA6K4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729378AbgAUORP (ORCPT
+        id S1729095AbgAUOR5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 09:17:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44274 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726968AbgAUORP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 09:17:15 -0500
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 375D02087E;
-        Tue, 21 Jan 2020 14:17:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579616234;
-        bh=eGP8z6dxRF+W8utN64emYHnd98d13UH+DfvCNXZYpbs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=c22eyzSNHY9dnn++zti3b8e+NUbi3X6N4cx3YafkTKPC/QYJR9gCHla3sKAoq8exI
-         sD6SQ96r4j2pM9OcN9VGUk9UdefZ+bIwiRM85+79oMDyeopexe8rimq4v9Ac+TLcCE
-         u+aSjnd+zRJ320sQUc+MpMiLybHnLjdUhYjnw2zc=
-Date:   Tue, 21 Jan 2020 08:17:12 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        ashok.raj@intel.com, jacob.jun.pan@intel.com, kevin.tian@intel.com,
-        Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [RFC PATCH 2/4] PCI: Add "pci=iommu_passthrough=" parameter for
- iommu passthrough
-Message-ID: <20200121141712.GA94911@google.com>
+        Tue, 21 Jan 2020 09:17:57 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25706 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727255AbgAUOR5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 09:17:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579616276;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=weYoN+US5pU0ArR581BNHqxlBCJqtsz9O4P+flr6fqg=;
+        b=O7yRA6K45XDRe+NlK+2+QxgfD18wWIvicEtKiD9qkOSbeoC6pMSPSnjGYTyX0EpzB3UC56
+        5XVI2PwjorVDFI2D6Hmw0FKOubNSJFtBYW+SlUs+SSff3ETkFbY1GiUsjFuv9a2sWp9MXQ
+        JV5CLPCOHpZODCI4e7i8dgFJhyLTtsM=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-363-0nTs8gmsPH-jI1AQ1Kz4WQ-1; Tue, 21 Jan 2020 09:17:54 -0500
+X-MC-Unique: 0nTs8gmsPH-jI1AQ1Kz4WQ-1
+Received: by mail-qk1-f197.google.com with SMTP id m13so1808796qka.9
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 06:17:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=weYoN+US5pU0ArR581BNHqxlBCJqtsz9O4P+flr6fqg=;
+        b=mz6xKm7/zO5RMUmXaNkF8poMzEvV0JpRd4sqzaCUbhJfMiucB8eO+K+X7Jtiw8KCDj
+         mRDu0UYKmSc65IM1wPVr20vjpeZuAWV/WH8zNe43IbeQfwQpORoyG5HL7w1XBZFMhnCP
+         6NSKd0bKbQz+1+LBg+G+4D3/HuOfwF1VWbRrShpY0msgXdu2zA7o6BUtGngN/T9ObXgo
+         ZHPKQjAC9UxTP1eLrq2EsjjbsbO3pNGv67ETAIx86r23e2l1A+UxHihzMyovx5BM0ZbL
+         ZoLIqIbTFKTtm/4gCwd0NSL//YU8ha7KNXrNoWCM0P0FuX6JpLOCLcit+EEILE4x8Z1R
+         /rxg==
+X-Gm-Message-State: APjAAAXuS30mihRNEfkgLODoxuP2yGlvBVs7K4lMPIbcl4yh70J+ZDbw
+        dE80nYF177wPZS/Dp8UKbEXlix5qkID94fWnCG4aHL6yAGMSFwMz7RgompOpxyKncaS3Czb6mY9
+        oAMHvCLMMh8ysLMxnJgMWrVAi
+X-Received: by 2002:a37:ad0e:: with SMTP id f14mr4590867qkm.213.1579616274074;
+        Tue, 21 Jan 2020 06:17:54 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwj1pwuzC/egPO4VzjPyAoce9o3J4cQVep1NUGRibBObTVNFPOqxPxAnfDJfRf0s0obsdxWcg==
+X-Received: by 2002:a37:ad0e:: with SMTP id f14mr4590813qkm.213.1579616273755;
+        Tue, 21 Jan 2020 06:17:53 -0800 (PST)
+Received: from redhat.com (bzq-79-179-85-180.red.bezeqint.net. [79.179.85.180])
+        by smtp.gmail.com with ESMTPSA id u4sm17072928qkh.59.2020.01.21.06.17.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2020 06:17:53 -0800 (PST)
+Date:   Tue, 21 Jan 2020 09:17:45 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Jason Wang <jasowang@redhat.com>,
+        Shahaf Shuler <shahafs@mellanox.com>,
+        Rob Miller <rob.miller@broadcom.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Netdev <netdev@vger.kernel.org>,
+        "Bie, Tiwei" <tiwei.bie@intel.com>,
+        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
+        "Liang, Cunming" <cunming.liang@intel.com>,
+        "Wang, Zhihong" <zhihong.wang@intel.com>,
+        "Wang, Xiao W" <xiao.w.wang@intel.com>,
+        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
+        "Zhu, Lingshan" <lingshan.zhu@intel.com>,
+        "eperezma@redhat.com" <eperezma@redhat.com>,
+        "lulu@redhat.com" <lulu@redhat.com>,
+        Parav Pandit <parav@mellanox.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "stefanha@redhat.com" <stefanha@redhat.com>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "hch@infradead.org" <hch@infradead.org>,
+        Ariel Adam <aadam@redhat.com>,
+        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "hanand@xilinx.com" <hanand@xilinx.com>,
+        "mhabets@solarflare.com" <mhabets@solarflare.com>
+Subject: Re: [PATCH 3/5] vDPA: introduce vDPA bus
+Message-ID: <20200121091636-mutt-send-email-mst@kernel.org>
+References: <239b042c-2d9e-0eec-a1ef-b03b7e2c5419@redhat.com>
+ <CAJPjb1+fG9L3=iKbV4Vn13VwaeDZZdcfBPvarogF_Nzhk+FnKg@mail.gmail.com>
+ <AM0PR0502MB379553984D0D55FDE25426F6C3330@AM0PR0502MB3795.eurprd05.prod.outlook.com>
+ <d69918ca-8af4-44b2-9652-633530d4c113@redhat.com>
+ <20200120174933.GB3891@mellanox.com>
+ <2a324cec-2863-58f4-c58a-2414ee32c930@redhat.com>
+ <20200121004047-mutt-send-email-mst@kernel.org>
+ <b9ad744e-c4cd-82f9-f56a-1ecc185e9cd7@redhat.com>
+ <20200121031506-mutt-send-email-mst@kernel.org>
+ <20200121140456.GA12330@mellanox.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200101052648.14295-3-baolu.lu@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200121140456.GA12330@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc linux-pci, thread at https://lore.kernel.org/r/20200101052648.14295-1-baolu.lu@linux.intel.com]
-
-On Wed, Jan 01, 2020 at 01:26:46PM +0800, Lu Baolu wrote:
-> The new parameter takes a list of devices separated by a semicolon.
-> Each device specified will have its iommu_passthrough bit in struct
-> device set. This is very similar to the existing 'disable_acs_redir'
-> parameter.
-
-Almost all of this patchset is in drivers/iommu.  Should the parameter
-be "iommu ..." instead of "pci=iommu_passthrough=..."?
-
-There is already an "iommu.passthrough=" argument.  Would this fit
-better there?  Since the iommu_passthrough bit is generic, it seems
-like you anticipate similar situations for non-PCI devices.
-
-> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-> ---
->  .../admin-guide/kernel-parameters.txt         |  5 +++
->  drivers/pci/pci.c                             | 34 +++++++++++++++++++
->  drivers/pci/pci.h                             |  1 +
->  drivers/pci/probe.c                           |  2 ++
->  4 files changed, 42 insertions(+)
+On Tue, Jan 21, 2020 at 02:05:04PM +0000, Jason Gunthorpe wrote:
+> On Tue, Jan 21, 2020 at 03:15:43AM -0500, Michael S. Tsirkin wrote:
+> > > This sounds more flexible e.g driver may choose to implement static mapping
+> > > one through commit. But a question here, it looks to me this still requires
+> > > the DMA to be synced with at least commit here. Otherwise device may get DMA
+> > > fault? Or device is expected to be paused DMA during begin?
+> > > 
+> > > Thanks
+> > 
+> > For example, commit might switch one set of tables for another,
+> > without need to pause DMA.
 > 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index ade4e6ec23e0..d3edc2cb6696 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -3583,6 +3583,11 @@
->  				may put more devices in an IOMMU group.
->  		force_floating	[S390] Force usage of floating interrupts.
->  		nomio		[S390] Do not use MIO instructions.
-> +		iommu_passthrough=<pci_dev>[; ...]
-> +				Specify one or more PCI devices (in the format
-> +				specified above) separated by semicolons.
-> +				Each device specified will bypass IOMMU DMA
-> +				translation.
->  
->  	pcie_aspm=	[PCIE] Forcibly enable or disable PCIe Active State Power
->  			Management.
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 90dbd7c70371..05bf3f4acc36 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -6401,6 +6401,37 @@ void __weak pci_fixup_cardbus(struct pci_bus *bus)
->  }
->  EXPORT_SYMBOL(pci_fixup_cardbus);
->  
-> +static const char *iommu_passthrough_param;
-> +bool pci_iommu_passthrough_match(struct pci_dev *dev)
-> +{
-> +	int ret = 0;
-> +	const char *p = iommu_passthrough_param;
-> +
-> +	if (!p)
-> +		return false;
-> +
-> +	while (*p) {
-> +		ret = pci_dev_str_match(dev, p, &p);
-> +		if (ret < 0) {
-> +			pr_info_once("PCI: Can't parse iommu_passthrough parameter: %s\n",
-> +				     iommu_passthrough_param);
-> +
-> +			break;
-> +		} else if (ret == 1) {
-> +			pci_info(dev, "PCI: IOMMU passthrough\n");
-> +			return true;
-> +		}
-> +
-> +		if (*p != ';' && *p != ',') {
-> +			/* End of param or invalid format */
-> +			break;
-> +		}
-> +		p++;
-> +	}
-> +
-> +	return false;
-> +}
-> +
->  static int __init pci_setup(char *str)
->  {
->  	while (str) {
-> @@ -6462,6 +6493,8 @@ static int __init pci_setup(char *str)
->  				pci_add_flags(PCI_SCAN_ALL_PCIE_DEVS);
->  			} else if (!strncmp(str, "disable_acs_redir=", 18)) {
->  				disable_acs_redir_param = str + 18;
-> +			} else if (!strncmp(str, "iommu_passthrough=", 18)) {
-> +				iommu_passthrough_param = str + 18;
->  			} else {
->  				pr_err("PCI: Unknown option `%s'\n", str);
->  			}
-> @@ -6486,6 +6519,7 @@ static int __init pci_realloc_setup_params(void)
->  	resource_alignment_param = kstrdup(resource_alignment_param,
->  					   GFP_KERNEL);
->  	disable_acs_redir_param = kstrdup(disable_acs_redir_param, GFP_KERNEL);
-> +	iommu_passthrough_param = kstrdup(iommu_passthrough_param, GFP_KERNEL);
->  
->  	return 0;
->  }
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index a0a53bd05a0b..95f6af06aba6 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -288,6 +288,7 @@ void pci_reassigndev_resource_alignment(struct pci_dev *dev);
->  void pci_disable_bridge_window(struct pci_dev *dev);
->  struct pci_bus *pci_bus_get(struct pci_bus *bus);
->  void pci_bus_put(struct pci_bus *bus);
-> +bool pci_iommu_passthrough_match(struct pci_dev *dev);
->  
->  /* PCIe link information */
->  #define PCIE_SPEED2STR(speed) \
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 512cb4312ddd..4c571ee75621 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2404,6 +2404,8 @@ void pci_device_add(struct pci_dev *dev, struct pci_bus *bus)
->  
->  	dev->state_saved = false;
->  
-> +	dev->dev.iommu_passthrough = pci_iommu_passthrough_match(dev);
-> +
->  	pci_init_capabilities(dev);
->  
->  	/*
-> -- 
-> 2.17.1
+> I'm not aware of any hardware that can do something like this
+> completely atomically..
+
+FWIW VTD can do this atomically.
+
+> Any mapping change API has to be based around add/remove regions
+> without any active DMA (ie active DMA is a guest error the guest can
+> be crashed if it does this)
 > 
+> Jason
+
+Right, lots of cases are well served by only changing parts of
+mapping that aren't in active use. Memory hotplug is such a case.
+That's not the same as a completely static mapping.
+
+-- 
+MST
+
