@@ -2,41 +2,41 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B37EC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 12:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B41C33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 12:43:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2904824654
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 12:43:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4864524654
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 12:43:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbgAUMnJ (ORCPT
+        id S1730028AbgAUMnH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 07:43:09 -0500
-Received: from rtits2.realtek.com ([211.75.126.72]:54713 "EHLO
+        Tue, 21 Jan 2020 07:43:07 -0500
+Received: from rtits2.realtek.com ([211.75.126.72]:54708 "EHLO
         rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729968AbgAUMnF (ORCPT
+        with ESMTP id S1729928AbgAUMnD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 07:43:05 -0500
+        Tue, 21 Jan 2020 07:43:03 -0500
 Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID 00LCh1k0011023, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id 00LCh1k0011023
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID 00LCgxoP011018, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (smtpsrv.realtek.com[172.21.6.18])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id 00LCgxoP011018
         (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 21 Jan 2020 20:43:01 +0800
+        Tue, 21 Jan 2020 20:42:59 +0800
 Received: from fc30.localdomain (172.21.177.138) by RTITCASV01.realtek.com.tw
  (172.21.6.18) with Microsoft SMTP Server id 14.3.468.0; Tue, 21 Jan 2020
- 20:42:59 +0800
+ 20:42:57 +0800
 From:   Hayes Wang <hayeswang@realtek.com>
 To:     <netdev@vger.kernel.org>
 CC:     <nic_swsd@realtek.com>, <linux-kernel@vger.kernel.org>,
         <linux-usb@vger.kernel.org>, <pmalani@chromium.org>,
         <grundler@chromium.org>, Hayes Wang <hayeswang@realtek.com>
-Subject: [PATCH net 8/9] r8152: avoid the MCU to clear the lanwake
-Date:   Tue, 21 Jan 2020 20:40:34 +0800
-Message-ID: <1394712342-15778-346-Taiwan-albertk@realtek.com>
+Subject: [PATCH net 7/9] r8152: don't enable U1U2 with USB_SPEED_HIGH for RTL8153B
+Date:   Tue, 21 Jan 2020 20:40:33 +0800
+Message-ID: <1394712342-15778-345-Taiwan-albertk@realtek.com>
 X-Mailer: Microsoft Office Outlook 11
 In-Reply-To: <1394712342-15778-338-Taiwan-albertk@realtek.com>
 References: <1394712342-15778-338-Taiwan-albertk@realtek.com>
@@ -49,113 +49,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Avoid the MCU to clear the lanwake after suspending. It may cause the
-WOL fail. Disable LANWAKE_CLR_EN before suspending. Besides,enable it
-and reset the lanwake status when resuming or initializing.
+For certain platforms, it causes USB reset periodically.
 
 Signed-off-by: Hayes Wang <hayeswang@realtek.com>
 ---
- drivers/net/usb/r8152.c | 33 +++++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+ drivers/net/usb/r8152.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-index 73256dfe77d7..0998b9587943 100644
+index 958c7c342bfb..73256dfe77d7 100644
 --- a/drivers/net/usb/r8152.c
 +++ b/drivers/net/usb/r8152.c
-@@ -68,6 +68,7 @@
- #define PLA_LED_FEATURE		0xdd92
- #define PLA_PHYAR		0xde00
- #define PLA_BOOT_CTRL		0xe004
-+#define PLA_LWAKE_CTRL_REG	0xe007
- #define PLA_GPHY_INTR_IMR	0xe022
- #define PLA_EEE_CR		0xe040
- #define PLA_EEEP_CR		0xe080
-@@ -95,6 +96,7 @@
- #define PLA_TALLYCNT		0xe890
- #define PLA_SFF_STS_7		0xe8de
- #define PLA_PHYSTATUS		0xe908
-+#define PLA_CONFIG6		0xe90a /* CONFIG6 */
- #define PLA_BP_BA		0xfc26
- #define PLA_BP_0		0xfc28
- #define PLA_BP_1		0xfc2a
-@@ -300,6 +302,9 @@
- #define LINK_ON_WAKE_EN		0x0010
- #define LINK_OFF_WAKE_EN	0x0008
- 
-+/* PLA_CONFIG6 */
-+#define LANWAKE_CLR_EN		BIT(0)
-+
- /* PLA_CONFIG5 */
- #define BWF_EN			0x0040
- #define MWF_EN			0x0020
-@@ -356,6 +361,9 @@
- /* PLA_BOOT_CTRL */
- #define AUTOLOAD_DONE		0x0002
- 
-+/* PLA_LWAKE_CTRL_REG */
-+#define LANWAKE_PIN		BIT(7)
-+
- /* PLA_SUSPEND_FLAG */
- #define LINK_CHG_EVENT		BIT(0)
- 
-@@ -4967,6 +4975,8 @@ static void rtl8152_down(struct r8152 *tp)
- 
- static void rtl8153_up(struct r8152 *tp)
- {
-+	u32 ocp_data;
-+
- 	if (test_bit(RTL8152_UNPLUG, &tp->flags))
- 		return;
- 
-@@ -4974,6 +4984,15 @@ static void rtl8153_up(struct r8152 *tp)
- 	r8153_u2p3en(tp, false);
- 	r8153_aldps_en(tp, false);
- 	r8153_first_init(tp);
-+
-+	ocp_data = ocp_read_byte(tp, MCU_TYPE_PLA, PLA_CONFIG6);
-+	ocp_data |= LANWAKE_CLR_EN;
-+	ocp_write_byte(tp, MCU_TYPE_PLA, PLA_CONFIG6, ocp_data);
-+
-+	ocp_data = ocp_read_byte(tp, MCU_TYPE_PLA, PLA_LWAKE_CTRL_REG);
-+	ocp_data &= ~LANWAKE_PIN;
-+	ocp_write_byte(tp, MCU_TYPE_PLA, PLA_LWAKE_CTRL_REG, ocp_data);
-+
- 	r8153_aldps_en(tp, true);
- 
- 	switch (tp->version) {
-@@ -4992,11 +5011,17 @@ static void rtl8153_up(struct r8152 *tp)
- 
- static void rtl8153_down(struct r8152 *tp)
- {
-+	u32 ocp_data;
-+
- 	if (test_bit(RTL8152_UNPLUG, &tp->flags)) {
- 		rtl_drop_queued_tx(tp);
- 		return;
+@@ -3390,7 +3390,8 @@ static void rtl8153b_runtime_enable(struct r8152 *tp, bool enable)
+ 		r8153b_ups_en(tp, false);
+ 		r8153_queue_wake(tp, false);
+ 		rtl_runtime_suspend_enable(tp, false);
+-		r8153b_u1u2en(tp, true);
++		if (tp->udev->speed != USB_SPEED_HIGH)
++			r8153b_u1u2en(tp, true);
  	}
+ }
  
-+	ocp_data = ocp_read_byte(tp, MCU_TYPE_PLA, PLA_CONFIG6);
-+	ocp_data &= ~LANWAKE_CLR_EN;
-+	ocp_write_byte(tp, MCU_TYPE_PLA, PLA_CONFIG6, ocp_data);
+@@ -5023,7 +5024,9 @@ static void rtl8153b_up(struct r8152 *tp)
+ 	ocp_write_word(tp, MCU_TYPE_PLA, PLA_MAC_PWR_CTRL3, ocp_data);
+ 
+ 	r8153_aldps_en(tp, true);
+-	r8153b_u1u2en(tp, true);
 +
- 	r8153_u1u2en(tp, false);
- 	r8153_u2p3en(tp, false);
- 	r8153_power_cut_en(tp, false);
-@@ -5457,6 +5482,14 @@ static void r8153_init(struct r8152 *tp)
- 	r8153_mac_clk_spd(tp, false);
++	if (tp->udev->speed != USB_SPEED_HIGH)
++		r8153b_u1u2en(tp, true);
+ }
+ 
+ static void rtl8153b_down(struct r8152 *tp)
+@@ -5526,7 +5529,9 @@ static void r8153b_init(struct r8152 *tp)
+ 		ocp_data &= ~CUR_LINK_OK;
+ 	ocp_data |= POLL_LINK_CHG;
+ 	ocp_write_word(tp, MCU_TYPE_PLA, PLA_EXTRA_STATUS, ocp_data);
+-	r8153b_u1u2en(tp, true);
++
++	if (tp->udev->speed != USB_SPEED_HIGH)
++		r8153b_u1u2en(tp, true);
  	usb_enable_lpm(tp->udev);
  
-+	ocp_data = ocp_read_byte(tp, MCU_TYPE_PLA, PLA_CONFIG6);
-+	ocp_data |= LANWAKE_CLR_EN;
-+	ocp_write_byte(tp, MCU_TYPE_PLA, PLA_CONFIG6, ocp_data);
-+
-+	ocp_data = ocp_read_byte(tp, MCU_TYPE_PLA, PLA_LWAKE_CTRL_REG);
-+	ocp_data &= ~LANWAKE_PIN;
-+	ocp_write_byte(tp, MCU_TYPE_PLA, PLA_LWAKE_CTRL_REG, ocp_data);
-+
- 	/* rx aggregation */
- 	ocp_data = ocp_read_word(tp, MCU_TYPE_USB, USB_USB_CTRL);
- 	ocp_data &= ~(RX_AGG_DISABLE | RX_ZERO_EN);
+ 	/* MAC clock speed down */
 -- 
 2.21.0
 
