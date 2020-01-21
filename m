@@ -2,103 +2,96 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA32C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:01:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 284D7C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:02:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0466C24125
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:01:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA39324125
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:02:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579629722;
+	bh=fZiA77TLUSjSX6AGszvtoHtqoxgQKsDAHPSz6OKpLdo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cvDg5WV9sjzuJuDbnGt/kXsvWvL8LPVMk9dR5GnOnmQBJwz28w8ZV7NSX0eQIkw+N
+	 HOVrMTQG9pNysxcJau9mE6C0Y57OVwIydGZ9yoyLITnsjwWghhO83yd8ZFro0TQ5k3
+	 RdGKEPrImboNnYnS2SX262qbtzQPyY+BEXkxGZFM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729360AbgAUSBu (ORCPT
+        id S1729393AbgAUSCB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 13:01:50 -0500
-Received: from mail.suchdamage.org ([52.9.186.167]:40058 "EHLO
-        mail.suchdamage.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729080AbgAUSBt (ORCPT
+        Tue, 21 Jan 2020 13:02:01 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:34423 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729080AbgAUSCA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 13:01:49 -0500
-X-Greylist: delayed 446 seconds by postgrey-1.27 at vger.kernel.org; Tue, 21 Jan 2020 13:01:49 EST
-Received: from localhost (localhost [127.0.0.1])
-        by mail.suchdamage.org (Postfix) with ESMTP id 5E9192F536;
-        Tue, 21 Jan 2020 12:54:23 -0500 (EST)
-Received: from mail.suchdamage.org ([127.0.0.1])
-        by localhost (mail.suchdamage.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id WfyCN7mdvcTx; Tue, 21 Jan 2020 12:54:22 -0500 (EST)
-Received: from carter-zimmerman.suchdamage.org (c-24-147-244-250.hsd1.ma.comcast.net [24.147.244.250])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "laptop", Issuer "laptop" (not verified))
-        (Authenticated sender: hartmans-laptop)
-        by mail.suchdamage.org (Postfix) with ESMTPSA;
-        Tue, 21 Jan 2020 12:54:22 -0500 (EST)
-Received: by carter-zimmerman.suchdamage.org (Postfix, from userid 8042)
-        id 8EB97C3B78; Tue, 21 Jan 2020 12:54:21 -0500 (EST)
-From:   Sam Hartman <hartmans@debian.org>
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     Sam Hartman <hartmans@debian.org>,
-        Zhenzhong Duan <zhenzhong.duan@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: Question about dynamic minor number of misc device
-References: <CAFH1YnOad7aVjoX_PR6mLqT=pXQjpBW9ZDHkKYzNkeistFkA4A@mail.gmail.com>
-        <CAK8P3a3DwaZnRff7CCrJoSxP_MeVUn1S6nRd+hb5rHnv9dBgLQ@mail.gmail.com>
-        <CAFH1YnMDL1gBNT4vr+C=eGGoCYJvkVDnoXUVN8OL9Xs3668Z+Q@mail.gmail.com>
-        <CAK8P3a0aFr546fF+=LDm3rwZ-sK-xC8VLYTZjOEn+o6fVixRHg@mail.gmail.com>
-        <20200120221323.GJ15860@mit.edu>
-        <CAK8P3a2aLxAgjp2_Vb0bKw-0PMVRXKtFw=2giF0MY6hgAQpQRg@mail.gmail.com>
-        <20200121163110.GK15860@mit.edu>
-Date:   Tue, 21 Jan 2020 12:54:21 -0500
-In-Reply-To: <20200121163110.GK15860@mit.edu> (Theodore Y. Ts'o's message of
-        "Tue, 21 Jan 2020 11:31:10 -0500")
-Message-ID: <tslh80o3dbm.fsf@suchdamage.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Tue, 21 Jan 2020 13:02:00 -0500
+Received: by mail-oi1-f195.google.com with SMTP id l136so3452526oig.1;
+        Tue, 21 Jan 2020 10:02:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6/QK3q9NCXm+bnCLIspTgs5FXLWf1OX2s+9532Imp1Q=;
+        b=lNEhaJ0iu0GREHNynfcbm6/n1jXIdrdYOXjKlG9A7bWAf31fpW4r8Zu2q/lFgoRDG3
+         IeBGz68x5tlbfXsZWO7jb7BOZTiwlpkCIqz9ixX6B8vJeAwjDz7Ff/5UBeYw7UtVBodw
+         a0mrp1YD4B++wbWF4CQLrgTUHyO6o38aVjesZLzwBLr9eVB/dNdYaht1Kb12CGTJhLqm
+         u67cRGAbLGxzgAzs/bTTFUXd0f4I7ynDG/pxD6//rp7bBg3LwRIf2asObf4BnxCz7SjD
+         Et+amYMZGUDhARIO04zUsazAQ6ly61s7odLSJTLAS80Vwn9lMYyv/XWfE/+BFLspYJij
+         5AmQ==
+X-Gm-Message-State: APjAAAW7xRFEQv7tiS4GooPu+lRhaPio+y6RI9nwNsDiWFYnn3kXeVHr
+        28LIKbVRZ2C2SMJhkCIs0w==
+X-Google-Smtp-Source: APXvYqxDXrKf5Kwy/DOlvRO4xmWfgKDz7oKWNV+bJKDYSK9C+HDRXw27pcPVs5UUIatIALYzQ2/QyQ==
+X-Received: by 2002:aca:3cd7:: with SMTP id j206mr2460188oia.142.1579629719880;
+        Tue, 21 Jan 2020 10:01:59 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id y13sm13663899otk.40.2020.01.21.10.01.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2020 10:01:59 -0800 (PST)
+Received: (nullmailer pid 3058 invoked by uid 1000);
+        Tue, 21 Jan 2020 18:01:58 -0000
+Date:   Tue, 21 Jan 2020 12:01:58 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Konrad Kociolek <konrad@cadence.com>
+Cc:     Konrad Kociolek <konrad@cadence.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] spi: Add dt-bindings schema for Cadence XSPI
+ controller driver
+Message-ID: <20200121180158.GA2461@bogus>
+References: <20200120125443.9523-1-konrad@cadence.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200120125443.9523-1-konrad@cadence.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->>>>> "Theodore" == Theodore Y Ts'o <tytso@mit.edu> writes:
+On Mon, 20 Jan 2020 13:54:31 +0100, Konrad Kociolek wrote:
+> Add dt-bindings documentation for Cadence XSPI controller to support
+> SPI based flash memories.
+> 
+> Signed-off-by: Konrad Kociolek <konrad@cadence.com>
+> ---
+>  .../devicetree/bindings/spi/cdns,xspi.yaml         | 164 +++++++++++++++++++++
+>  1 file changed, 164 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/spi/cdns,xspi.yaml
+> 
 
-    Theodore> Sam,
+My bot found errors running 'make dt_binding_check' on your patch:
 
-    Theodore> Would you happen to know how commonly used the speakup system would be
-    Theodore> --- in particular, on non-udev systems where changing the minor number
-    Theodore> of the device node might break some folks?  Does your hardware system
-    Theodore> use speakup, or some other interface?
+Documentation/devicetree/bindings/spi/cdns,xspi.yaml: $id: path/filename 'spi/cadence,xspi.yaml' doesn't match actual filename
+Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/spi/cdns,xspi.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/spi/cdns,xspi.example.dts] Error 1
+Makefile:1263: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
-Speakup is used by things like the Debian Installer in speech mode.
-I'd assume D-I uses udev.
-
-However Speakup is also likely to be used by blind people who prefer
-older environments--no GUI, no pulseaudio, that sort of thing.
-No udev is kind of pushing that mindset to the extreme though.
-Speakup is not typically used without a keyboard or similar, so you're
-not going to see it on embedded systems.
-
-
-
-
-
-    Theodore> Also, who would be the best people to reach out at the
-    Theodore> linux-speakup.org project to verify what the potential impact might be
-    Theodore> of making this change.  It looks like some of the web pages are a bit
-    Theodore> dated, so I wasn't sure what's up to date.
-
-I might ask on debian-accessibility@lists.debian.org.
-My recollection is that the upstream is not very energetic, and that the
-distros keep speakup working because it's quite important for some
-people.
-We broke it on hda_intel for the original Buster release and that
-certainly generated lots of user feedback.
-
-debian-accessibility is Debian specific.  There is the more general
-blinux-l@lists.redhat.com (blind linux users), but that lists tends to
-be so user focused that you might not get good feedback to a question
-like this.
-
---Sam
+See https://patchwork.ozlabs.org/patch/1225933
+Please check and re-submit.
