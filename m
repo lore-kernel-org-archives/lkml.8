@@ -2,69 +2,65 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F8E3C33CB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 07:13:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D841BC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 07:21:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FF1B24125
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 07:13:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A53D324125
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 07:21:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="pFlzyxHo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728741AbgAUHNj convert rfc822-to-8bit (ORCPT
+        id S1728904AbgAUHVc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 02:13:39 -0500
-Received: from mga02.intel.com ([134.134.136.20]:1221 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725789AbgAUHNj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 02:13:39 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 23:13:38 -0800
-X-IronPort-AV: E=Sophos;i="5.70,345,1574150400"; 
-   d="scan'208";a="219856969"
-Received: from joloughl-mobl.ger.corp.intel.com (HELO localhost) ([10.252.11.51])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 23:13:35 -0800
-Content-Type: text/plain; charset="utf-8"
+        Tue, 21 Jan 2020 02:21:32 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:3173 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725789AbgAUHVc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 02:21:32 -0500
+X-UUID: 57ebe05eca894da19a48dfaa0779a4d8-20200121
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=AEp2wHIess4/ILGCkyl2C/BzMPPTKjrRdre9MKipK4A=;
+        b=pFlzyxHoxin/bt5RDOzjvzkDtI+4Rf0KnsBwG18KSG6HL/HJhoHQVn2arRg9HmnPzbd8UqqUMQ9fp53QytaJlXnGJbH6Jg6IMjV6g4uhkke7+K0fzNpzGxz8gH/ycSI/NusvnsctyT73alUh9mzhzizPg/+OGwo4oBYi5+NDGME=;
+X-UUID: 57ebe05eca894da19a48dfaa0779a4d8-20200121
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
+        (envelope-from <yong.mao@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1738107707; Tue, 21 Jan 2020 15:21:27 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 21 Jan 2020 15:20:53 +0800
+Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 21 Jan 2020 15:19:12 +0800
+From:   Yong Mao <yong.mao@mediatek.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+CC:     Chaotian Jing <chaotian.jing@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-mmc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <srv_heupstream@mediatek.com>
+Subject: [PATCH] mmc: mediatek: fix SDIO irq issue
+Date:   Tue, 21 Jan 2020 15:20:57 +0800
+Message-ID: <1579591258-30940-1-git-send-email-yong.mao@mediatek.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200121083424.66d98dc5@canb.auug.org.au>
-References: <20200121083424.66d98dc5@canb.auug.org.au>
-Subject: Re: linux-next: build failure after merge of the drm-intel-fixes tree
-From:   Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Matthew Auld <matthew.auld@intel.com>
-To:     DRI <dri-devel@lists.freedesktop.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Date:   Tue, 21 Jan 2020 09:13:24 +0200
-Message-ID: <157959080456.6877.8085345204229334781@jlahtine-desk.ger.corp.intel.com>
-User-Agent: alot/0.8.1
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Stephen Rothwell (2020-01-20 23:34:24)
-> Hi all,
-> 
-> After merging the drm-intel-fixes tree, today's linux-next build (x86_64
-> allmodconfig) failed like this:
-> 
-> 
-> Caused by commit
-> 
->   d8fcca47e195 ("drm/i915/userptr: fix size calculation")
-> 
-> I have reverted that commit for today.
+eW9uZyBtYW8gKDEpOg0KICBtbWM6IG1lZGlhdGVrOiBmaXggU0RJTyBpcnEgaXNzdWUNCg0KIGRy
+aXZlcnMvbW1jL2hvc3QvbXRrLXNkLmMgfCAzOCArKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKw0KIDEgZmlsZSBjaGFuZ2VkLCAzOCBpbnNlcnRpb25zKCspDQoNCi0tIA0KMi4y
+NC4xDQo=
 
-It was a missing git add while fixing a cherry-pick and is now fixed.
-
-Regards, Joonas
