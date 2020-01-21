@@ -2,165 +2,106 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A083C33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A45DAC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7049322314
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:55:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nAZN5wPU"
+	by mail.kernel.org (Postfix) with ESMTP id 78801207E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:57:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729208AbgAUOz0 (ORCPT
+        id S1729154AbgAUO5B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 09:55:26 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:33478 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727255AbgAUOz0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 09:55:26 -0500
-Received: by mail-ot1-f68.google.com with SMTP id b18so3181175otp.0;
-        Tue, 21 Jan 2020 06:55:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=JgWyHFx4DXLB+RWjYOGV034XoPPQDPd6XzHn420fcvE=;
-        b=nAZN5wPUP+AM+Rsbi2j/IPM4Ti4Q/3O8/f6MxlJMP3Yb02sCkRkprGqNiK0WIh/I1X
-         Dj6ztcpmxIXxZfs+084Ps5TkXrLyDnhQZaFBs/vnssqV5cNJ3RE/bWKr6YoZvGSFat/c
-         /4wi//wO0ZVLqCNIZ5V25i4IZzyRgdJ4sgUCqmhk7t57vd88MzlQIcy6jD9FESqIWP/v
-         oudgj3KMqSnEpGbXGRVmTntv6Wnn2+17GBXr25HGYsRCFVpfF+r9V2iL8QOjSW3vFPcL
-         0liFM4dxwpkOp8jZpEL19y/d/or42DmQUtB7pa0PPIuWwM/UXrbDAI4+I2px+5jNcdW/
-         gvbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JgWyHFx4DXLB+RWjYOGV034XoPPQDPd6XzHn420fcvE=;
-        b=Sffy+fS+S47pJzRgW6WtkG0x0fgajx7kS3Cmfe3+P/HvudweekOGTL2RoKdNa852xo
-         npodCoCK63Aq6R+95+VlN2jLgHB5blrLrW629O/snvs7Dv1dUFAtLgR3uYm36g4DVkz9
-         jRVQ7iTyotHgsTRu2NnGS8qLmEsNEjDm2ezAWinjTeV9PUHljhjrX5ar/UYdrQehXumV
-         oDr/NvthGW3hkKXqrDYmWIZzyioaI631JDDC5Vam+w4zyrDQH4O1kjQe3JEjhXWHv2mT
-         Z7RWqfBFrKTGU1uqcgaDECMKd3MrcA0WBxaRaZsX1gbEm5GfTXHoc23Wf9jWqN+l1ExG
-         WYbQ==
-X-Gm-Message-State: APjAAAXhCDm6G/zCD+DnEIC5moAXGwnI3iIYHxPlS/xFIYLoCl+WR+4n
-        dPWOceJbp2ZApATQf24bU4O4T47JH56pww==
-X-Google-Smtp-Source: APXvYqyW6VsneCoGztSNubvE+lqcPqWo8gAIXD7mqMafuwj939/LThcO2TLsSXfwTjkBwSrYxC0IOA==
-X-Received: by 2002:a05:6830:1e11:: with SMTP id s17mr3804210otr.343.1579618524452;
-        Tue, 21 Jan 2020 06:55:24 -0800 (PST)
-Received: from nuclearis2-1.gtech (c-98-195-139-126.hsd1.tx.comcast.net. [98.195.139.126])
-        by smtp.gmail.com with ESMTPSA id i2sm13491855oth.39.2020.01.21.06.55.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jan 2020 06:55:23 -0800 (PST)
-Subject: Re: Issues with "PCI/LINK: Report degraded links via link bandwidth
- notification"
-To:     Lucas Stach <l.stach@pengutronix.de>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Alexandru Gagniuc <alex_gagniuc@dellteam.com>,
-        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     Jan Vesely <jano.vesely@gmail.com>, Lukas Wunner <lukas@wunner.de>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Austin Bolen <austin_bolen@dell.com>,
-        Shyam Iyer <Shyam_Iyer@dell.com>,
-        Sinan Kaya <okaya@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200120023326.GA149019@google.com>
- <b9764896-102c-84cb-32ea-c2a122b6f0db@gmail.com>
- <8409fd7ad6b83da75c914a71accf522953a460a0.camel@pengutronix.de>
-From:   "Alex G." <mr.nuke.me@gmail.com>
-Message-ID: <a93f9610-3e78-147d-34b1-d2f7adc31efe@gmail.com>
-Date:   Tue, 21 Jan 2020 08:55:22 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Tue, 21 Jan 2020 09:57:01 -0500
+Received: from foss.arm.com ([217.140.110.172]:44364 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727255AbgAUO5B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 09:57:01 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C0F0330E;
+        Tue, 21 Jan 2020 06:57:00 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D725C3F52E;
+        Tue, 21 Jan 2020 06:56:59 -0800 (PST)
+Subject: Re: [PATCH] arm64: dts: rockchip: fix px30 lvds ports
+To:     Heiko Stuebner <heiko@sntech.de>,
+        linux-rockchip@lists.infradead.org
+Cc:     Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        linux-kernel@vger.kernel.org, miquel.raynal@bootlin.com,
+        linux-arm-kernel@lists.infradead.org,
+        christoph.muellner@theobroma-systems.com
+References: <20200121134510.3893487-1-heiko@sntech.de>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <1cd15d49-3c4f-6da2-4d4f-0414dd6d6adc@arm.com>
+Date:   Tue, 21 Jan 2020 14:56:58 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <8409fd7ad6b83da75c914a71accf522953a460a0.camel@pengutronix.de>
+In-Reply-To: <20200121134510.3893487-1-heiko@sntech.de>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/21/20 5:10 AM, Lucas Stach wrote:
-> On Mo, 2020-01-20 at 10:01 -0600, Alex G. wrote:
->>
->> On 1/19/20 8:33 PM, Bjorn Helgaas wrote:
->>> [+cc NVMe, GPU driver folks]
->>>
->>> On Wed, Jan 15, 2020 at 04:10:08PM -0600, Bjorn Helgaas wrote:
->>>> I think we have a problem with link bandwidth change notifications
->>>> (see https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/pcie/bw_notification.c).
->>>>
->>>> Here's a recent bug report where Jan reported "_tons_" of these
->>>> notifications on an nvme device:
->>>> https://bugzilla.kernel.org/show_bug.cgi?id=206197
->>>>
->>>> There was similar discussion involving GPU drivers at
->>>> https://lore.kernel.org/r/20190429185611.121751-2-helgaas@kernel.org
->>>>
->>>> The current solution is the CONFIG_PCIE_BW config option, which
->>>> disables the messages completely.  That option defaults to "off" (no
->>>> messages), but even so, I think it's a little problematic.
->>>>
->>>> Users are not really in a position to figure out whether it's safe to
->>>> enable.  All they can do is experiment and see whether it works with
->>>> their current mix of devices and drivers.
->>>>
->>>> I don't think it's currently useful for distros because it's a
->>>> compile-time switch, and distros cannot predict what system configs
->>>> will be used, so I don't think they can enable it.
->>>>
->>>> Does anybody have proposals for making it smarter about distinguishing
->>>> real problems from intentional power management, or maybe interfaces
->>>> drivers could use to tell us when we should ignore bandwidth changes?
->>>
->>> NVMe, GPU folks, do your drivers or devices change PCIe link
->>> speed/width for power saving or other reasons?  When CONFIG_PCIE_BW=y,
->>> the PCI core interprets changes like that as problems that need to be
->>> reported.
->>>
->>> If drivers do change link speed/width, can you point me to where
->>> that's done?  Would it be feasible to add some sort of PCI core
->>> interface so the driver could say "ignore" or "pay attention to"
->>> subsequent link changes?
->>>
->>> Or maybe there would even be a way to move the link change itself into
->>> the PCI core, so the core would be aware of what's going on?
->>
->> Funny thing is, I was going to suggest an in-kernel API for this.
->>     * Driver requests lower link speed 'X'
->>     * Link management interrupt fires
->>     * If link speed is at or above 'X' then do not report it.
->> I think an "ignore" flag would defeat the purpose of having link
->> bandwidth reporting in the first place. If some drivers set it, and
->> others don't, then it would be inconsistent enough to not be useful.
->>
->> A second suggestion is, if there is a way to ratelimit these messages on
->> a per-downstream port basis.
+On 21/01/2020 1:45 pm, Heiko Stuebner wrote:
+> From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 > 
-> Both AMD and Nvidia GPUs have embedded controllers, which are
-> responsible for the power management. IIRC those controllers can
-> autonomously initiate PCIe link speed changes depending on measured bus
-> load. So there is no way for the driver to signal the requested bus
-> speed to the PCIe core.
+> The lvds controller has two ports. port@0 for the connection
+> to the display controller(s) and port@1 for the connection to
+> the panel, so should have a ports node covering the port@x nodes.
 > 
-> I guess for the GPU usecase the best we can do is to have the driver
-> opt-out of the link bandwidth notifications, as the driver knows that
-> there is some autonomous entity on the endpoint mucking with the link
-> parameters.
+> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> ---
+>   arch/arm64/boot/dts/rockchip/px30.dtsi | 23 ++++++++++++++---------
+>   1 file changed, 14 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot/dts/rockchip/px30.dtsi
+> index 9b1c92132007..37e014444214 100644
+> --- a/arch/arm64/boot/dts/rockchip/px30.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
+> @@ -421,19 +421,24 @@ lvds: lvds {
+>   			rockchip,output = "lvds";
+>   			status = "disabled";
 
-I'm confused. Are you saying that the autonomous mechanism is causing a 
-link bandwidth notification?
+FWIW, the main node's "#{address,size}-cells" properties above here 
+should now be unnecessary too.
 
-Alex
+Robin.
+
+>   
+> -			port@0 {
+> -				reg = <0>;
+> +			ports {
+>   				#address-cells = <1>;
+>   				#size-cells = <0>;
+>   
+> -				lvds_vopb_in: endpoint@0 {
+> +				port@0 {
+>   					reg = <0>;
+> -					remote-endpoint = <&vopb_out_lvds>;
+> -				};
+> -
+> -				lvds_vopl_in: endpoint@1 {
+> -					reg = <1>;
+> -					remote-endpoint = <&vopl_out_lvds>;
+> +					#address-cells = <1>;
+> +					#size-cells = <0>;
+> +
+> +					lvds_vopb_in: endpoint@0 {
+> +						reg = <0>;
+> +						remote-endpoint = <&vopb_out_lvds>;
+> +					};
+> +
+> +					lvds_vopl_in: endpoint@1 {
+> +						reg = <1>;
+> +						remote-endpoint = <&vopl_out_lvds>;
+> +					};
+>   				};
+>   			};
+>   		};
+> 
