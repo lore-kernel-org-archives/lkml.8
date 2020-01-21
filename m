@@ -2,77 +2,73 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F27C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:18:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C85C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E443B2253D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:18:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579619912;
-	bh=CtK3JLf0Ca51+J8hJt7LWVIKavo/FjuD+bA7WxkQPnM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=r5eejnIVxiJ9dh1VPeCMN88byMj0m//Uck+5CZWEJUmhxUD1CjDJTWCy8zkLi4DwN
-	 SgFQejU8FWBTgZFHmnjbaeGpQVexJft1m98p1+nuRynmGTQWBGlDD82e8UV4GVbalD
-	 UG+AdofRBNrCxJLe5dyv+kXQonYexPddDzl9cQOM=
+	by mail.kernel.org (Postfix) with ESMTP id 619162465B
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:18:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729085AbgAUPSb (ORCPT
+        id S1729138AbgAUPSu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 10:18:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52662 "EHLO mail.kernel.org"
+        Tue, 21 Jan 2020 10:18:50 -0500
+Received: from mga05.intel.com ([192.55.52.43]:15949 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727508AbgAUPSa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 10:18:30 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7C3921569;
-        Tue, 21 Jan 2020 15:18:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579619910;
-        bh=CtK3JLf0Ca51+J8hJt7LWVIKavo/FjuD+bA7WxkQPnM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=f+U0QlGv/bdGpsxGtHX1GaxiJvKWSpeobAKeO03bfnKHEAbFOkkRQKadJqUtcPmBR
-         /6WJ2ikdWHpJmjl+WJ4ot+roUJiQo6RWpMQygypOZGHASvlgpP6GW+Qi0nfKc4L6VU
-         k8qJBdBdmJyshGMhVQZG6jcP19F0rzd0ruFm9qCk=
-Date:   Tue, 21 Jan 2020 15:18:23 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
-        catalin.marinas@arm.com, mark.rutland@arm.com, david@redhat.com,
-        cai@lca.pw, logang@deltatee.com, cpandya@codeaurora.org,
-        arunks@codeaurora.org, dan.j.williams@intel.com,
-        mgorman@techsingularity.net, osalvador@suse.de,
-        ard.biesheuvel@arm.com, steve.capper@arm.com, broonie@kernel.org,
-        valentin.schneider@arm.com, Robin.Murphy@arm.com,
-        steven.price@arm.com, suzuki.poulose@arm.com, ira.weiny@intel.com
-Subject: Re: [PATCH V12 0/2] arm64/mm: Enable memory hot remove
-Message-ID: <20200121151822.GA13306@willie-the-truck>
-References: <1579157135-10360-1-git-send-email-anshuman.khandual@arm.com>
+        id S1729096AbgAUPSt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 10:18:49 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 07:18:49 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,346,1574150400"; 
+   d="scan'208";a="250286962"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga004.fm.intel.com with ESMTP; 21 Jan 2020 07:18:48 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id B1DDF34C; Tue, 21 Jan 2020 17:18:47 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>
+Subject: [PATCH v1] lib/test_bitmap: Make use of EXP2_IN_BITS
+Date:   Tue, 21 Jan 2020 17:18:47 +0200
+Message-Id: <20200121151847.75223-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1579157135-10360-1-git-send-email-anshuman.khandual@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 12:15:33PM +0530, Anshuman Khandual wrote:
-> This series enables memory hot remove functionality on arm64 platform. This
-> is based on Linux 5.5-rc6 and particularly deals with a problem caused when
-> boot memory is attempted to be removed.
+The commit 30544ed5de43 ("lib/bitmap: introduce bitmap_replace() helper")
+introduced some new test cases to the test_bitmap.c module. Among these
+it also introduced an (unused) definition. Let's make use of EXP2_IN_BITS.
 
-Unfortunately, this results in a conflict with mainline since the arm64
--next branches are based on -rc3 and there was a fix merged after that
-(feee6b298916 ("mm/memory_hotplug: shrink zones when offlining memory"))
-which changes the type of __remove_pages().
+Reported-by: Alex Shi <alex.shi@linux.alibaba.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ lib/test_bitmap.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-So I think I'll leave this for 5.7.
+diff --git a/lib/test_bitmap.c b/lib/test_bitmap.c
+index 61ed71c1daba..6b13150667f5 100644
+--- a/lib/test_bitmap.c
++++ b/lib/test_bitmap.c
+@@ -278,6 +278,8 @@ static void __init test_replace(void)
+ 	unsigned int nlongs = DIV_ROUND_UP(nbits, BITS_PER_LONG);
+ 	DECLARE_BITMAP(bmap, 1024);
+ 
++	BUILD_BUG_ON(EXP2_IN_BITS < nbits * 2);
++
+ 	bitmap_zero(bmap, 1024);
+ 	bitmap_replace(bmap, &exp2[0 * nlongs], &exp2[1 * nlongs], exp2_to_exp3_mask, nbits);
+ 	expect_eq_bitmap(bmap, exp3_0_1, nbits);
+-- 
+2.24.1
 
-Will
