@@ -2,144 +2,131 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D75EC33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB71C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:15:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E68421569
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:14:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEA5221569
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:15:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="A/HGba76"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729130AbgAUPOT (ORCPT
+        id S1729154AbgAUPPS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 10:14:19 -0500
-Received: from relay.sw.ru ([185.231.240.75]:40918 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727059AbgAUPOT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 10:14:19 -0500
-Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1itvDk-0001Vx-Rr; Tue, 21 Jan 2020 18:13:37 +0300
-Subject: Re: [PATCH v4 6/7] dm: Directly disable max_allocate_sectors for now
-To:     Mike Snitzer <snitzer@redhat.com>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        martin.petersen@oracle.com, bob.liu@oracle.com, axboe@kernel.dk,
-        agk@redhat.com, dm-devel@redhat.com, song@kernel.org,
-        tytso@mit.edu, adilger.kernel@dilger.ca,
-        Chaitanya.Kulkarni@wdc.com, darrick.wong@oracle.com,
-        ming.lei@redhat.com, osandov@fb.com, jthumshirn@suse.de,
-        minwoo.im.dev@gmail.com, damien.lemoal@wdc.com,
-        andrea.parri@amarulasolutions.com, hare@suse.com, tj@kernel.org,
-        ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
-        bvanassche@acm.org, dhowells@redhat.com, asml.silence@gmail.com
-References: <157960325642.108120.13626623438131044304.stgit@localhost.localdomain>
- <157960337238.108120.18048939587162465175.stgit@localhost.localdomain>
- <20200121122458.GA9365@redhat.com>
- <f7e0fb38-a894-da33-c46b-e192ed907ee0@virtuozzo.com>
- <619a7a14-44e6-eca7-c1ea-3f04abeee53d@virtuozzo.com>
- <20200121134840.GA9944@redhat.com>
- <a19d5957-9aaa-b518-5855-e5fa2b5d3b22@virtuozzo.com>
- <20200121144310.GA10055@redhat.com>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <2b393b74-952e-10ff-9f2c-4ea19cf74f88@virtuozzo.com>
-Date:   Tue, 21 Jan 2020 18:13:36 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 21 Jan 2020 10:15:18 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:40570 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729017AbgAUPPR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 10:15:17 -0500
+Received: by mail-qt1-f196.google.com with SMTP id v25so2852613qto.7
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 07:15:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iCABmZHVYBWeM3x/9LF0rRDKV5M0z2Qq/OvnHxMUOnc=;
+        b=A/HGba76wHkPknW1GKgRIqNBVwG5zyTkQH7PuT7hAi6eTUL7rOTdmDBsXcPF5O/OzP
+         EiPoUNheQgsKjZVBcYicFr0kAXofexSOhcX0Tu/64ZPgy8cDPYo2bZrUH7UWMAB49bMk
+         OA+TLw5gfgIIxRdG92zjXeIyZcYgMmfydJfpnVDQteKU/+G2LaIbila9XEouic0zuaTZ
+         RacfXMp4ahEQWpRgnwlOlnmU/sdbU7LSbz5FY2vSEOPosFf9cAks4YiT08CKQ5E/RFoO
+         IDmhl/zWZFEwt05D4qiQfPaJy7rfoUGhXPcyyLgpifx/bHP8ufd4/5bVNuTxn43KSfTc
+         6WNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iCABmZHVYBWeM3x/9LF0rRDKV5M0z2Qq/OvnHxMUOnc=;
+        b=OPYaRM0IHekTxEnZ2xh1faKrFR0vFuTsp3XX9U73dnm6VRx7IZ0WpMmRf4CGTuo5ad
+         GPci+9OjEIlJopl8v9DDXEWH4oZXdGu/Opx0Tz7kd8DO9fiyJNPW1uhXCUvmpP2NFJKd
+         d5h83W8a/nr7jV/QYSi1ZYc5eMFWvZ3FnlBN//ti5lQiWcBSP3ktSDIfiuvjZiN7JNSp
+         kwbJ9yocjYRw4uO44SSqCxA/Vg5a4cagZwPqr6HknfoWijh3Z6+AI97ls+XsuFQsrbs1
+         HwKb3A+kZUhprN4ATvbpwzfFPB+PoG/BUu5MECTz+T+/Rr/wjB7Na+Ihpy3XwukPYLBb
+         lidw==
+X-Gm-Message-State: APjAAAU7ZB9ilVaQIDkCHBgpqIZxIOdLdya5PcY6BktBbcLB2XWDwBqr
+        t1jJJLKxF2/dGm9NG0m/eepjUA==
+X-Google-Smtp-Source: APXvYqyT9doGgTQsZctVtpUAYuDJghszszwC8XZh/ZQvCLlBD7OEWSe5BHS69p0ts3ILwpRinO7sUw==
+X-Received: by 2002:aed:3ea7:: with SMTP id n36mr4962611qtf.258.1579619716573;
+        Tue, 21 Jan 2020 07:15:16 -0800 (PST)
+Received: from ovpn-123-97.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id x11sm17523438qkf.50.2020.01.21.07.15.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 Jan 2020 07:15:15 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de
+Cc:     dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        elver@google.com, x86@kernel.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH -next] x86/mm/pat: silence a data race in cpa_4k_install
+Date:   Tue, 21 Jan 2020 10:15:03 -0500
+Message-Id: <20200121151503.2934-1-cai@lca.pw>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
 MIME-Version: 1.0
-In-Reply-To: <20200121144310.GA10055@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21.01.2020 17:43, Mike Snitzer wrote:
-> On Tue, Jan 21 2020 at  9:20am -0500,
-> Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
-> 
->> On 21.01.2020 16:48, Mike Snitzer wrote:
->>> On Tue, Jan 21 2020 at  8:33am -0500,
->>> Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
->>>
->>>> On 21.01.2020 15:36, Kirill Tkhai wrote:
->>>>> On 21.01.2020 15:24, Mike Snitzer wrote:
->>>>>> On Tue, Jan 21 2020 at  5:42am -0500,
->>>>>> Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
->>>>>>
->>>>>>> Since dm inherits limits from underlining block devices,
->>>>>>> this patch directly disables max_allocate_sectors for dm
->>>>>>> till full allocation support is implemented.
->>>>>>>
->>>>>>> This prevents high-level primitives (generic_make_request_checks(),
->>>>>>> __blkdev_issue_write_zeroes(), ...) from sending REQ_ALLOCATE
->>>>>>> requests.
->>>>>>>
->>>>>>> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
->>>>>>> ---
->>>>>>>  drivers/md/dm-table.c |    2 ++
->>>>>>>  drivers/md/md.h       |    1 +
->>>>>>>  2 files changed, 3 insertions(+)
->>>>>>
->>>>>> You're mixing DM and MD changes in the same patch.
->>>>>>
->>>>>> But I'm wondering if it might be best to set this default for stacking
->>>>>> devices in blk_set_stacking_limits()?
->>>>>>
->>>>>> And then it is up to each stacking driver to override as needed.
->>>>>
->>>>> Hm. Sound like a good idea. This "lim->max_allocate_sectors = 0" in blk_set_stacking_limits()
->>>>> should work for dm's dm_calculate_queue_limits(), since it calls blk_stack_limits(), which is:
->>>>>
->>>>> 	t->max_allocate_sectors = min(t->max_allocate_sectors,
->>>>> 				      b->max_allocate_sectors);
->>>>>
->>>>> Could you please tell is this fix is also enough for md?
->>>>
->>>> It looks like it's enough since queue defaults are set in md_alloc()->blk_set_stacking_limits().
->>>> In case of we set "max_allocate_sectors = 0", in further it can be changed only manually,
->>>> but nobody does this.
->>>
->>> Yes, it will work to disable this capability for MD and DM.
->>>
->>> But if/when a stacked device _dooes_ want to support this then it'll be
->>> awkward to override this stacking default to allow blk_stack_limits()
->>> to properly stack up this limit.  blk_limits are extremely fiddley so
->>> this isn't necessarily new.  But by explicitly defaulting to 0 and then
->>> having blk_stack_limits use min() for this limit: it results in stacking
->>> drivers needing to clumsily unwind the default.  E.g. DM will need to
->>> tweak its blk_stack_limits() related code to allow override that
->>> actually _does_  stack up the underlying devices' capability (and not
->>> just impose its own limit that ignores the underlying devices).
->>>
->>> So I'm not convinced this is the right way to go (be it the v4 approach
->>> you took or the cleaner use of blk_set_stacking_limits I suggested).
->>
->> Is there a strong vision about the way we should go? Or you leave this choose
->> up to me?
-> 
-> I don't have time to work through it at the moment (e.g. implementing
-> dm-thinp support to know what the block core code should be) so I'll
-> just defer to you on a disabling it for now.
-> 
->>> And to be clear, I'm interested in having DM thinp support this
->>> capability to preallocate blocks.
->>
->> My opinion is it would be better to not mix several subsystem related
->> support in a single patch set. Both of the approaches (v4 or that you
->> suggested) do not prevents us to implement allocation support in next
->> patch series. After we have the base functionality enabled, we may add
->> support in other subsystems and drivers one by one with more focus
->> on the subsystem specificities and with the best possible attention.
-> 
-> Yeah, I'm aware nothing is ever set in stone.
-> 
-> Setting to 0 in blk_set_stacking_limits() is OK for now.
+Macro Elver mentioned,
 
-I get your point. Thanks for the suggestion and comments, Mike.
+"Yes. I was finally able to reproduce this data race on linux-next (my
+system doesn't crash though, maybe not enough cores?). Here is a trace
+with line numbers:
 
-Kirill
+read to 0xffffffffaa59a000 of 8 bytes by interrupt on cpu 7:
+cpa_inc_4k_install arch/x86/mm/pat/set_memory.c:131 [inline]
+__change_page_attr+0x10cf/0x1840 arch/x86/mm/pat/set_memory.c:1514
+__change_page_attr_set_clr+0xce/0x490 arch/x86/mm/pat/set_memory.c:1636
+__set_pages_np+0xc4/0xf0 arch/x86/mm/pat/set_memory.c:2148
+__kernel_map_pages+0xb0/0xc8 arch/x86/mm/pat/set_memory.c:2178
+kernel_map_pages include/linux/mm.h:2719 [inline]
+<snip>
+
+write to 0xffffffffaa59a000 of 8 bytes by task 1 on cpu 6:
+cpa_inc_4k_install arch/x86/mm/pat/set_memory.c:131 [inline]
+__change_page_attr+0x10ea/0x1840 arch/x86/mm/pat/set_memory.c:1514
+__change_page_attr_set_clr+0xce/0x490 arch/x86/mm/pat/set_memory.c:1636
+__set_pages_p+0xc4/0xf0 arch/x86/mm/pat/set_memory.c:2129
+__kernel_map_pages+0x2e/0xc8 arch/x86/mm/pat/set_memory.c:2176
+kernel_map_pages include/linux/mm.h:2719 [inline]
+<snip>
+
+Both accesses are due to the same "cpa_4k_install++" in
+cpa_inc_4k_install. Now you can see that a data race here could be
+potentially undesirable: depending on compiler optimizations or how
+x86 executes a non-LOCK'd increment, you may lose increments, corrupt
+the counter, etc. Since this counter only seems to be used for
+printing some stats, this data race itself is unlikely to cause harm
+to the system though."
+
+This will generate a lot of noise on a debug kernel with debug_pagealloc
+with KCSAN enabled which could render the system unusable. Silence it by
+using the data_race() macro.
+
+Suggested-by: Macro Elver <elver@google.com>
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ arch/x86/mm/pat/set_memory.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
+index 20823392f4f2..a5c35e57905e 100644
+--- a/arch/x86/mm/pat/set_memory.c
++++ b/arch/x86/mm/pat/set_memory.c
+@@ -128,7 +128,7 @@ static inline void cpa_inc_2m_checked(void)
+ 
+ static inline void cpa_inc_4k_install(void)
+ {
+-	cpa_4k_install++;
++	data_race(cpa_4k_install++);
+ }
+ 
+ static inline void cpa_inc_lp_sameprot(int level)
+-- 
+2.21.0 (Apple Git-122.2)
+
