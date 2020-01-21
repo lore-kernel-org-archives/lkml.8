@@ -2,114 +2,137 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1445DC33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F27F5C33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE30C24655
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:48:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C836824655
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:51:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jZW+7CkL"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TxRHhCib"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729184AbgAUSst (ORCPT
+        id S1728829AbgAUSvN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 13:48:49 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:44485 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728901AbgAUSss (ORCPT
+        Tue, 21 Jan 2020 13:51:13 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:40258 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728186AbgAUSvN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 13:48:48 -0500
-Received: by mail-qt1-f196.google.com with SMTP id w8so3471257qts.11
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 10:48:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Gcjbt/f2IWl06GbS/u53lANqReBi2slHilk3OT8D7PQ=;
-        b=jZW+7CkLrHEnzQEQRabNc7ECI23liTIsyvT7iRYK8lxCiDma7OFjrpsSR6sClkAbmC
-         12LrjCGO/T13qtko/pkOdnPEE7UcKCU/8OCub2N0x6gBl2pPK2yyI0sdp/nY3f3Y0Smo
-         1mhItqjj20ORVcfbMUl6k2J9NI3CbtSvP1kmuGZoMzhwiBHd5SjZDcEIL4g+um/R4+w+
-         w0zLN/sdx7EG9vPmlPJFL8mcpCLMnYjHQ91FEnH1HfTvQqlfzYp+Iz3P1ggltPaafznw
-         7MtSVDzQFcImBKkZ9OqrBzyQqwXX6Xej7ngm6dFqcyY0l9vsPF8LDjTR6qhGcq/AVDyE
-         JdYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Gcjbt/f2IWl06GbS/u53lANqReBi2slHilk3OT8D7PQ=;
-        b=BxoZWWLK2et00C2lH9oFdlcKehjVJOhqb7uc6R6FtkF/kGCXR2U1vn5g+tSKAt6wa1
-         /HQhuYPEz7D/3Bs5Lqj8LjnosUDWjj0kx3PHSi6TnUt2HZ/1W1aIxjTpsJ6I8+xvmOjJ
-         8outEQAWm7oc9XrgKfTvRiqzcsJkD2Tm2PsPdq8/NMeoKzcmnGw2KtDbONA90SqQhMaZ
-         HMwizrZlMaKgc1YHDvAAK1ZH8h6S/E40lO8Kv4ZjXlzM7MrZUNhSHv+knLA0V91ug4xU
-         RfRr6zool4fkArSrHZuYpD90hjha8U99sisPrghXhYB/3mAQLrVSQsCReJpUkQXH3dv+
-         RejA==
-X-Gm-Message-State: APjAAAU5MdHgqGHijETWwBIPR6Rl/yGikWS1zLRFDfDrBwIBti6+I6Sf
-        hsKWuUIjWhmfvoBxt8QOnugFmCGRr6E81T4CcXw=
-X-Google-Smtp-Source: APXvYqyWi/C1DQePOtb0Gxc6V7Ze34ZYUTXa7cphunXNt0w1icdGaKitimVOcgcZehrEAruCzz/mmNRFDTxM48RTWsk=
-X-Received: by 2002:ac8:337c:: with SMTP id u57mr5873302qta.42.1579632527734;
- Tue, 21 Jan 2020 10:48:47 -0800 (PST)
+        Tue, 21 Jan 2020 13:51:13 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00LImcsQ009200;
+        Tue, 21 Jan 2020 18:51:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=f6ft9tle0RFZKhACFekrVTFG0KAq5griDIXNsdbXFDs=;
+ b=TxRHhCibOlH2/ma9Ipo+Q1WBFLuQRf1qCSyLLimmT1NqWMh7UFMkL+GxGY5iYsQRdOuw
+ SFVEpMtEdVpjjlz4Fx5B+d27z5fpIj4s91wvbQVwPETAyZ8mRaN6+7+VlvZCEsp+T212
+ JXhhPQWlfrcC2PW+x54j6BZTArq1kTkQ8xnUp/FhYSYmCgfpvrud8EqKpX3NzgJhd9p8
+ Kt3kXVgYthEoK1hgLNRbG3aMQbzZtQTObJLtP6JR9MHxAMNqXA52W5vFc2TP7vrXs0kB
+ 029K/1pTOASVeiCdea1r7kRtMP8sA4xZsjc6YffBtAscNSlfegSpEEAfJVVnTJ2vk3H+ uA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2xktnr6x8h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Jan 2020 18:51:03 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00LImIMt029574;
+        Tue, 21 Jan 2020 18:51:02 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2xnpfpj9f4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Jan 2020 18:51:02 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00LIp0IS011563;
+        Tue, 21 Jan 2020 18:51:01 GMT
+Received: from [192.168.1.206] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 21 Jan 2020 10:51:00 -0800
+Subject: Re: [PATCH v10 4/8] hugetlb: disable region_add file_region
+ coalescing
+To:     Mina Almasry <almasrymina@google.com>, rientjes@google.com,
+        shakeelb@google.com
+Cc:     shuah@kernel.org, gthelen@google.com, akpm@linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org,
+        aneesh.kumar@linux.vnet.ibm.com
+References: <20200115012651.228058-1-almasrymina@google.com>
+ <20200115012651.228058-4-almasrymina@google.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <f7a07154-fba3-7ad7-7a6b-161e660a37c1@oracle.com>
+Date:   Tue, 21 Jan 2020 10:50:59 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200119163104.13274-1-samuel@sholland.org> <20200119163104.13274-3-samuel@sholland.org>
- <20200121090539.mgswdzfharrfy5ad@gilmour.lan>
-In-Reply-To: <20200121090539.mgswdzfharrfy5ad@gilmour.lan>
-From:   Vasily Khoruzhick <anarsoul@gmail.com>
-Date:   Tue, 21 Jan 2020 10:49:37 -0800
-Message-ID: <CA+E=qVcdza_E17_=r+0eZ2UexCYah35jt8=v+uFTLHx3+BvHSg@mail.gmail.com>
-Subject: Re: [PATCH 3/9] arm64: dts: allwinner: pinebook: Remove unused AXP803 regulators
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Samuel Holland <samuel@sholland.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        arm-linux <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200115012651.228058-4-almasrymina@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9507 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001210140
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9507 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001210140
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 1:05 AM Maxime Ripard <mripard@kernel.org> wrote:
->
-> On Sun, Jan 19, 2020 at 10:30:58AM -0600, Samuel Holland wrote:
-> > The Pinebook does not use the CSI bus on the A64. In fact it does not
-> > use GPIO port E for anything at all. Thus the following regulators are
-> > not used and do not need voltages set:
-> >
-> >  - ALDO1: Connected to VCC-PE only
-> >  - DLDO3: Not connected
-> >  - ELDO3: Not connected
-> >
-> > Signed-off-by: Samuel Holland <samuel@sholland.org>
-> > ---
-> >  .../boot/dts/allwinner/sun50i-a64-pinebook.dts   | 16 +---------------
-> >  1 file changed, 1 insertion(+), 15 deletions(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-> > index ff32ca1a495e..8e7ce6ad28dd 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-> > @@ -202,9 +202,7 @@
-> >  };
-> >
-> >  &reg_aldo1 {
-> > -     regulator-min-microvolt = <2800000>;
-> > -     regulator-max-microvolt = <2800000>;
-> > -     regulator-name = "vcc-csi";
-> > +     regulator-name = "vcc-pe";
-> >  };
->
-> If it's connected to PE, I'd expect the voltage to be at 3.3v?
+On 1/14/20 5:26 PM, Mina Almasry wrote:
+> A follow up patch in this series adds hugetlb cgroup uncharge info the
+> file_region entries in resv->regions. The cgroup uncharge info may
+> differ for different regions, so they can no longer be coalesced at
+> region_add time. So, disable region coalescing in region_add in this
+> patch.
+> 
+> Behavior change:
+> 
+> Say a resv_map exists like this [0->1], [2->3], and [5->6].
+> 
+> Then a region_chg/add call comes in region_chg/add(f=0, t=5).
+> 
+> Old code would generate resv->regions: [0->5], [5->6].
+> New code would generate resv->regions: [0->1], [1->2], [2->3], [3->5],
+> [5->6].
+> 
+> Special care needs to be taken to handle the resv->adds_in_progress
+> variable correctly. In the past, only 1 region would be added for every
+> region_chg and region_add call. But now, each call may add multiple
+> regions, so we can no longer increment adds_in_progress by 1 in region_chg,
+> or decrement adds_in_progress by 1 after region_add or region_abort. Instead,
+> region_chg calls add_reservation_in_range() to count the number of regions
+> needed and allocates those, and that info is passed to region_add and
+> region_abort to decrement adds_in_progress correctly.
+> 
+> We've also modified the assumption that region_add after region_chg
+> never fails. region_chg now pre-allocates at least 1 region for
+> region_add. If region_add needs more regions than region_chg has
+> allocated for it, then it may fail.
 
-Commit message says that PE is not used, so we don't need to set it at all.
+Some time back we briefly discussed an optimization to coalesce file
+region entries if they were from the same cgroup.  At the time, the
+thought was that such an optimization could wait.  For large mappings,
+known users will reserve the entire area.  Smaller mappings such as
+those in the commit log are not the common case and are mentioned mostly
+to illustrate what the code must handle.
 
-> Maxime
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+However, I just remembered that for private mappings file region entries
+are allocated at page fault time: one per page.  Since we are no longer
+coalescing, there will be one file region struct for each page in a
+private mapping.  Is that correct?
+
+I honestly do not know how common private mappings are today.  But,
+this would cause excessive overhead for any large private mapping.
+
+-- 
+Mike Kravetz
