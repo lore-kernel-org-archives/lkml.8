@@ -2,152 +2,114 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62083C33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:37:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE7EC33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38C7B217F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:37:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8553E217F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:38:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g9QszvYY"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I4Il4xqb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729165AbgAUJhE (ORCPT
+        id S1729208AbgAUJiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 04:37:04 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:38741 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbgAUJhE (ORCPT
+        Tue, 21 Jan 2020 04:38:02 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46821 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727962AbgAUJiC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 04:37:04 -0500
-Received: by mail-ed1-f67.google.com with SMTP id i16so2320875edr.5;
-        Tue, 21 Jan 2020 01:37:03 -0800 (PST)
+        Tue, 21 Jan 2020 04:38:02 -0500
+Received: by mail-wr1-f67.google.com with SMTP id z7so2289924wrl.13
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 01:38:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AjbOfycbMXADN0Mq2KkmMGoMuT5PMUjYvWEFyCEUP7Y=;
-        b=g9QszvYY6IuYcBoSfX0lEEAuAU6/IaT4deJUh02a+H8d2rChHKE6LmeXDdHjtzW4ph
-         LIgLC/ZdzpZtsESBwuC9w4klE90HBy2fksU9wr8gsSpg0bajrh1KZsbn2jRie7Q+Y5SJ
-         a1hmJSMnUL/Cxul+qG2kjQhmu2fFF/dWy56rox3MfYgrJ2Djy+PkKGXu9swQlpABWdlK
-         zpPfnMVD3Gv8WoUUbgfTHQUwAdzjZBcUJ4YVqq9pHVxn36VDTKnhz0for33CuLYr2ZJs
-         3+VyqVkNu0AgwZ3nu/bEt3/gkODkZ2edEcfpIl3cIQAbA0FP4tYrbbZef4bCI85S6Vbk
-         oawA==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+M730A48Aqh4pFSc6/yOGVnR2p3jp3qMHztEPqPnpzo=;
+        b=I4Il4xqb/mQRJaa0qSSl+Y25gZ18e057wP1tdP0lh2yLeaVpX0hadSOR4cl/LQpB3Q
+         tyaDpcGYEDRokttwYZKiVcZfJVF8EHoSYV8AeT5Pk8Cx7E9Px1VKdhTcXR1aAUSJd42D
+         xFOr6MeGSxv5TF/P/YEky3SS2IZFj68f7cxUiU1OZ4UxuYB744pGOuVT1Fv5ZBgPKRCQ
+         7lN+SeGd90TfRO9gjPQRhJKb/pkMVZLlA3k0gUeRo6+ZVDTta1IW1eGaQBVEL1GveVLC
+         n0vz510kYT0OpN/IyanOQzCHQTHpjRTMgbVeaY/5N811ccD6PckCAVfLKOa3fN1tAM5n
+         aJ0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AjbOfycbMXADN0Mq2KkmMGoMuT5PMUjYvWEFyCEUP7Y=;
-        b=DwfkuAk4mzhZa2NDNNcfcdEoZgJR1xkfTCoYmsz98sPAkSpJvuzBZ3M8GtIaQUV0KX
-         k4jJkuXuLN6AT/siuQMEf2dFvf8hpbWtSoXZVof9wI7hEtJfgXm4FoPMElVXOJKqhcjM
-         V8SrO9QfgYXL8rZmz6AsjeM+OzEk3bnqehh9CyPsKUyc3cGXSNPKtOApdPY5nSYUMcVW
-         DpV8i1jHf42UuePXkWiOSy1RW5JNy1FuWQyBohK5QG2YSiPDjicUrZXrOp4KJsb5HJQA
-         dTMxvHlKKPlN9d9DlbT/bXgPAqFgM7fkok+Cc1zovFGACPujtO9U7NwyZWgqm1YmaLHr
-         mcyg==
-X-Gm-Message-State: APjAAAX4BxPwgr4zWm4gyz39gcS17IMDu8qK4SnhsUYVV2/7bIcGk387
-        c+KzCHFu+mRybe58pmtz0mCa/MFrMv+QN4tk0Fs=
-X-Google-Smtp-Source: APXvYqw0v0yzEPKMmKN0yxJabc8zTANNBDVY4v8l+JGTZ7upPwUupD05k1F85YJCpnGd4rZGKL62nxjw7AJsQEQg/sY=
-X-Received: by 2002:a17:906:7c47:: with SMTP id g7mr3479180ejp.281.1579599422453;
- Tue, 21 Jan 2020 01:37:02 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+M730A48Aqh4pFSc6/yOGVnR2p3jp3qMHztEPqPnpzo=;
+        b=axMqLRJnYpSfiu4kC6BnxENka1YcbBbouljpGodbNSSmOKGmWKCaWynWdqfrYqFLkP
+         P9X2IQk/ySCVYTLSJImc2yVfr36O5lyAlCXZnfDaGbGCAR5E0Z7/jMjBSC7X14bvOWCp
+         xkwrLRdsURanvg4lJkOCBocaq2074no1m1EIpG/X7O20zXxBIjlETxY5qw/kPjuSwxeQ
+         V06PAx17VF7WU/YijYiGfsD1lPEjX3i62wQybTrzybHrkyF3HUdIrq0PKeJDhri7DM7x
+         UFnSCFjpktJR2sU4pGLp+toXZw3TAgqB9dikuvgboa8EAVutcpYUItONis17jkEjm9sg
+         D2pg==
+X-Gm-Message-State: APjAAAXvRYDODKys7Q0YdPCgX0i2REPO0Te6dytguvIPvpzEdcW9e8UE
+        S7MOuWMguDpkuRNsgFu7vdnD9b1t4aeAI1nO
+X-Google-Smtp-Source: APXvYqzNPRBGH9fYa6XMUb9Kcbd+L9DaQWdS1c4YXNu4dlR3oazpTgiDZXxcGp6bVMzhgy2FLbeDYg==
+X-Received: by 2002:adf:dfc2:: with SMTP id q2mr4336811wrn.251.1579599479951;
+        Tue, 21 Jan 2020 01:37:59 -0800 (PST)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id u22sm54210033wru.30.2020.01.21.01.37.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2020 01:37:59 -0800 (PST)
+Date:   Tue, 21 Jan 2020 09:37:55 +0000
+From:   Quentin Perret <qperret@google.com>
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-imx@nxp.com, Morten.Rasmussen@arm.com, Chris.Redpath@arm.com,
+        ionela.voinescu@arm.com, javi.merino@arm.com,
+        cw00.choi@samsung.com, b.zolnierkie@samsung.com, rjw@rjwysocki.net,
+        sudeep.holla@arm.com, viresh.kumar@linaro.org, nm@ti.com,
+        sboyd@kernel.org, rui.zhang@intel.com, amit.kucheria@verdurent.com,
+        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
+        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh@kernel.org,
+        matthias.bgg@gmail.com, steven.price@arm.com,
+        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
+        airlied@linux.ie, daniel@ffwll.ch, kernel-team@android.com
+Subject: Re: [PATCH 1/4] PM / EM: and devices to Energy Model
+Message-ID: <20200121093755.GA157387@google.com>
+References: <20200116152032.11301-1-lukasz.luba@arm.com>
+ <20200116152032.11301-2-lukasz.luba@arm.com>
+ <20200117105437.GA211774@google.com>
+ <40587d98-0e8d-cbac-dbf5-d26501d47a8c@arm.com>
+ <20200120150918.GA164543@google.com>
+ <8332c4ac-2a7d-1e2d-76e9-7c979a666257@arm.com>
+ <b02da0ed-9e0b-36db-9813-daa334cbf2ba@arm.com>
+ <c9910c74-ab47-0c78-a1c7-4f3978e1dd09@arm.com>
 MIME-Version: 1.0
-References: <cover.1578560282.git.benchuanggli@gmail.com>
-In-Reply-To: <cover.1578560282.git.benchuanggli@gmail.com>
-From:   Ben Chuang <benchuanggli@gmail.com>
-Date:   Tue, 21 Jan 2020 17:36:51 +0800
-Message-ID: <CACT4zj9B8BSebZgf5-nc3zGYhsAGQ6gTRvfFf9r1DBB_mpRtHA@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 0/6] Add support UHS-II for GL9755
-To:     Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     linux-mmc <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        greg.tu@genesyslogic.com.tw,
-        Ben Chuang <ben.chuang@genesyslogic.com.tw>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c9910c74-ab47-0c78-a1c7-4f3978e1dd09@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Uffe and Adrian,
+On Tuesday 21 Jan 2020 at 10:10:16 (+0100), Dietmar Eggemann wrote:
+> True. But then we hard-code that a CPU device performance domain can
+> only be a frequency domain (which is true today).
+> 
+> The task scheduler (build_perf_domains()) and thermal are already using
+> cpufreq_cpu_get() to access the cpufreq policy. Now the EM framework
+> would too for CPU devices. I assume that could work with a couple of
+> adaptations in Documentation/power/energy-model.rst.
 
-On Thu, Jan 9, 2020 at 5:13 PM Ben Chuang <benchuanggli@gmail.com> wrote:
->
-> Hi Uffe and Adrian,
->
-> These patches support UHS-II and fix GL9755 UHS-II compatibility.
->
-> The parts of UHS-II are based on [1][2] and porting to Linux 5.5-rc5.
-> I have seen that Uffe comment that splitting the UHS-II parts into smaller
-> patches. Other than splitting into small patches, could you give me some
-> suggestions for refactoring/splitting files?
->
-> Best regards,
-> Ben
+Agreed, and if one day we have a real use case where the pd mask and the
+cpufreq policy mask need to be different, we'll do the necessary
+changes. But until then I don't see a reason to object to Lukasz'
+proposal. So +1 from me.
 
-Gentle Ping, Any comments?
-
-Best regards,
-Ben
-
->
-> References:
-> 1. [RFC,1/2] mmc: core: support UHS-II in core stack.
->    (https://patchwork.kernel.org/patch/5544441/)
-> 2. [RFC,2/2] mmc: sdhci: support UHS-II in SDHCI host.
->    (https://patchwork.kernel.org/patch/5544451/)
->
-> v2:
->   - base on Linux v5.5-rc5
->
-> Ben Chuang (6):
->   mmc: Add UHS-II support in public headers
->   mmc: core: Add UHS-II support in core layer
->   mmc: host: Add UHS-II support in host layer
->   mmc: uhs2: Introduce a uhs2_post_attach_sd function
->   mmc: sdhci-uhs2: Introduce a uhs2_pre_detect_init function
->   mmc: sdhci-pci-gli: Fix power/reset/ZC/timeout for GL9755 UHS-II mode
->
->  drivers/mmc/core/Makefile                  |   3 +-
->  drivers/mmc/core/block.c                   |   7 +-
->  drivers/mmc/core/bus.c                     |   5 +-
->  drivers/mmc/core/core.c                    |  65 +-
->  drivers/mmc/core/core.h                    |   3 +-
->  drivers/mmc/core/regulator.c               |  14 +
->  drivers/mmc/core/sd.c                      |  27 +-
->  drivers/mmc/core/sd_ops.c                  |  12 +
->  drivers/mmc/core/uhs2.c                    | 995 +++++++++++++++++++++
->  drivers/mmc/core/uhs2.h                    |  23 +
->  drivers/mmc/host/Makefile                  |   1 +
->  drivers/mmc/host/{sdhci.c => sdhci-core.c} | 285 +++++-
->  drivers/mmc/host/sdhci-milbeaut.c          |   4 +-
->  drivers/mmc/host/sdhci-of-arasan.c         |   4 +-
->  drivers/mmc/host/sdhci-of-at91.c           |   4 +-
->  drivers/mmc/host/sdhci-omap.c              |   2 +-
->  drivers/mmc/host/sdhci-pci-core.c          |   4 +-
->  drivers/mmc/host/sdhci-pci-gli.c           | 361 +++++++-
->  drivers/mmc/host/sdhci-pxav3.c             |   4 +-
->  drivers/mmc/host/sdhci-uhs2.c              | 754 ++++++++++++++++
->  drivers/mmc/host/sdhci-uhs2.h              |  34 +
->  drivers/mmc/host/sdhci-xenon.c             |   4 +-
->  drivers/mmc/host/sdhci.h                   | 286 +++++-
->  drivers/mmc/host/sdhci_am654.c             |   4 +-
->  include/linux/mmc/card.h                   |   1 +
->  include/linux/mmc/core.h                   |   6 +
->  include/linux/mmc/host.h                   |  31 +
->  include/linux/mmc/uhs2.h                   | 270 ++++++
->  28 files changed, 3137 insertions(+), 76 deletions(-)
->  create mode 100644 drivers/mmc/core/uhs2.c
->  create mode 100644 drivers/mmc/core/uhs2.h
->  rename drivers/mmc/host/{sdhci.c => sdhci-core.c} (94%)
->  create mode 100644 drivers/mmc/host/sdhci-uhs2.c
->  create mode 100644 drivers/mmc/host/sdhci-uhs2.h
->  create mode 100644 include/linux/mmc/uhs2.h
->
->
-> base-commit: c79f46a282390e0f5b306007bf7b11a46d529538
-> --
-> 2.24.1
->
+Thanks,
+Quentin
