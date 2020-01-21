@@ -2,122 +2,88 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9EF3C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E54C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B87152051A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:47:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F23362051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:50:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xy60esaQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729246AbgAURr6 (ORCPT
+        id S1729186AbgAURuJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 12:47:58 -0500
-Received: from foss.arm.com ([217.140.110.172]:46800 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728186AbgAURr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 12:47:57 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BA1BA30E;
-        Tue, 21 Jan 2020 09:47:56 -0800 (PST)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5145A3F6C4;
-        Tue, 21 Jan 2020 09:47:54 -0800 (PST)
-Date:   Tue, 21 Jan 2020 17:47:52 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Eiichi Tsukata <devel@etsukata.com>,
-        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        Nadav Amit <namit@vmware.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 01/14] smp: Create a new function to shutdown nonboot
- cpus
-Message-ID: <20200121174751.5opyyjwxfnwdgcev@e107158-lin.cambridge.arm.com>
-References: <20191125112754.25223-1-qais.yousef@arm.com>
- <20191125112754.25223-2-qais.yousef@arm.com>
- <20200121170350.GC18808@shell.armlinux.org.uk>
+        Tue, 21 Jan 2020 12:50:09 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:50702 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728186AbgAURuJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 12:50:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579629007;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ae5Z+En0sqtjb39dBwdtiY6FkcMFIgmXM3FcN+xtsjE=;
+        b=Xy60esaQvChiTQVbz1eOkL9QNyn5Qwa96n/F1QNqOn3YdobEO/GpxcUeiMk3qDGr/iO7nO
+        MpXAmBKDoDo6XLvavCnNZLFsaRLufJSIXW/nX/D2DFSboNCoL0Fz46GlKTDUPbfPVazcWZ
+        BUD5gRUnpXe/Q994luOX91LbEB5putw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-295-ozcYZBHiPnaFXzkGo2UiIg-1; Tue, 21 Jan 2020 12:50:06 -0500
+X-MC-Unique: ozcYZBHiPnaFXzkGo2UiIg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CDD5C18B5FA2;
+        Tue, 21 Jan 2020 17:50:04 +0000 (UTC)
+Received: from treble (ovpn-122-154.rdu2.redhat.com [10.10.122.154])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9FA1E8BE2F;
+        Tue, 21 Jan 2020 17:50:03 +0000 (UTC)
+Date:   Tue, 21 Jan 2020 11:50:01 -0600
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Julien Thierry <jthierry@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, raphael.gault@arm.com,
+        catalin.marinas@arm.com, will@kernel.org
+Subject: Re: [RFC v5 00/57] objtool: Add support for arm64
+Message-ID: <20200121175001.5jltrjuxrjklq5o2@treble>
+References: <20200109160300.26150-1-jthierry@redhat.com>
+ <20200120150711.GD14897@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200121170350.GC18808@shell.armlinux.org.uk>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <20200120150711.GD14897@hirez.programming.kicks-ass.net>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/21/20 17:03, Russell King - ARM Linux admin wrote:
-> On Mon, Nov 25, 2019 at 11:27:41AM +0000, Qais Yousef wrote:
-> > +void smp_shutdown_nonboot_cpus(unsigned int primary_cpu)
-> > +{
-> > +	unsigned int cpu;
-> > +
-> > +	if (!cpu_online(primary_cpu)) {
-> > +		pr_info("Attempting to shutdodwn nonboot cpus while boot cpu is offline!\n");
-> > +		cpu_online(primary_cpu);
-
-Eh, that should be cpu_up(primary_cpu)!
-
-Which I have to say I'm not if is the right thing to do.
-migrate_to_reboot_cpu() picks the first online cpu if reboot_cpu (assumed 0) is
-offline
-
-migrate_to_reboot_cpu():
- 225         /* Make certain the cpu I'm about to reboot on is online */
- 226         if (!cpu_online(cpu))
- 227                 cpu = cpumask_first(cpu_online_mask);
-
-> > +	}
-> > +
-> > +	for_each_present_cpu(cpu) {
-> > +		if (cpu == primary_cpu)
-> > +			continue;
-> > +		if (cpu_online(cpu))
-> > +			cpu_down(cpu);
-> > +	}
+On Mon, Jan 20, 2020 at 04:07:11PM +0100, Peter Zijlstra wrote:
+> On Thu, Jan 09, 2020 at 04:02:03PM +0000, Julien Thierry wrote:
+> > In the mean time, any feedback on the current state is appreciated.
+> > 
+> > * Patches 1 to 18 adapts the current objtool code to make it easier to
+> >   support new architectures.
 > 
-> How does this avoid racing with userspace attempting to restart CPUs
-> that have already been taken down by this function?
+> In the interrest of moving things along; I've looked through these
+> and 1-14,16 look good to me, 17,18 hurt my brain.
+> 
+> Josh, what say you?
 
-This is meant to be called from machine_shutdown() only.
+Agreed.
 
-But you've got a point.
+Julien, thanks a lot for splitting these up nicely.  If you post 1-14
+(updated based on the recent comments), we can look at merging those
+sooner.
 
-The previous logic that used disable_nonboot_cpus(), which in turn called
-freeze_secondary_cpus() didn't hold hotplug lock. So I assumed the higher level
-logic of machine_shutdown() ensures that hotplug lock is held to synchronize
-with potential other hotplug operations.
+15-18 also hurt my brain -- probably a symptom of the existing fragile
+mess -- so I'll need to spend more time staring at them.
 
-But I can see now that it doesn't.
+-- 
+Josh
 
-With this series that migrates users to use device_{online,offline}, holding
-the lock_device_hotplug() should protect against such races.
-
-Worth noting that this an existing problem in the code and not something
-I introduced, of course it makes sense to fix it properly as part of this
-series.
-
-I'm not sure how the other archs deal with this TBH.
-
-Thanks for having a look!
-
-Cheers
-
---
-Qais Yousef
