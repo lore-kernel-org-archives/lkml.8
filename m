@@ -2,144 +2,165 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E0FC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:58:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7BF0C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:59:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D933A21734
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:58:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KS4/gjFX"
+	by mail.kernel.org (Postfix) with ESMTP id B469521734
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:59:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729207AbgAUS6i (ORCPT
+        id S1729253AbgAUS7r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 13:58:38 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:39915 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728829AbgAUS6h (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 13:58:37 -0500
-Received: by mail-ot1-f68.google.com with SMTP id 77so3930647oty.6;
-        Tue, 21 Jan 2020 10:58:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wImdtgcbSrkhoSK27g0eKsb6+1rafcjtO7KTRZ4V1r4=;
-        b=KS4/gjFX8RLU8xw4Y4jb2dGqfyRzE2ih7bElbeuJuLfIBYj0cdvYQ2A62tLh22gkLj
-         ZewJmJrScTrzwLNyDuu6CBbRVsFppVFTDiOjh3MtRKu3Yr/fY0nk8FV05Spuy9YSCUpF
-         FlzKYGAA/jm+yPm1FihgD4gVwHDI4JZGseRtSQsmyAW5xRtWRvBEZqkKf7TTFlNr8xgi
-         LSeZwTjHudUO/VemOFNN+3y8OnKKo4+BV/CdJ66rZPqddQ8bDFrZjT46NDOsXCkYsLlW
-         3/HiTGDtU1uZFxeZQiPu8dnTQJLB6e7vfIPrQne8QYHksXd8H3ZUqPUsnUT18QARO3dn
-         RtuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wImdtgcbSrkhoSK27g0eKsb6+1rafcjtO7KTRZ4V1r4=;
-        b=PjbKefEwzqfrhlkWJAoP+KW39I1HFGsFVPsW/XclwS+9BvokNo/p0qveni4sFkhYUm
-         6jGb6ky/+dKuR1s2kXMQUGVi18+IUBC63l79nAMUmSSOWSEro2Hq233gWugHNsSBLEXK
-         0vInxnrBBK8E0o2Q8bNl9evHj+B5N600ngvJxazsqP41QgTVT0dFSyQ2jZ2sJ1MY9B0/
-         6l0nL0HCtjBeZB0sn00ZBh2nt9UAQtyWsNzf3F3ypztzp5HbTfZxB1hjE5ZEsxhphe7T
-         lwJHU/7d008p2rApBjieM1enX32WYOEm3SDqNzViJjFIJ1BZP5aPw8QDXB5y8t8/WfZF
-         jBsw==
-X-Gm-Message-State: APjAAAWAk9eoq7ICuPM5kmhwYq90MgvXi/M5J4wEIKma6p42BOAXDUaJ
-        V3pwKjkN90X93LliyG6Srsc=
-X-Google-Smtp-Source: APXvYqxUL4vHfUywEsR6K6TIQFtq146ZLrDQHka57ywFVBZtGEG1vQCHfTH2ti0F01Kkd+dROS4QQg==
-X-Received: by 2002:a05:6830:1e16:: with SMTP id s22mr4692577otr.340.1579633116712;
-        Tue, 21 Jan 2020 10:58:36 -0800 (PST)
-Received: from ubuntu-x2-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id l82sm12233220oib.41.2020.01.21.10.58.35
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 21 Jan 2020 10:58:36 -0800 (PST)
-Date:   Tue, 21 Jan 2020 11:58:34 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        Michael Reed <mdr@sgi.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH] scsi: qla1280: Fix a use of QLA_64BIT_PTR
-Message-ID: <20200121185834.GA3941@ubuntu-x2-xlarge-x86>
-References: <20200120190021.26460-1-natechancellor@gmail.com>
- <CAKwvOd=30bpBXqrT6LfwDb+YrTcGtTg5NL34dpc3Vkfe11KvFQ@mail.gmail.com>
+        Tue, 21 Jan 2020 13:59:47 -0500
+Received: from mx2.suse.de ([195.135.220.15]:60228 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728829AbgAUS7r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 13:59:47 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 514D1AE44;
+        Tue, 21 Jan 2020 18:59:45 +0000 (UTC)
+Date:   Tue, 21 Jan 2020 10:52:50 -0800
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Alexey Mateosyan <alexey.mateosyan@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Markus Elfring <elfring@users.sourceforge.net>,
+        Li Rongqing <lirongqing@baidu.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Kees Cook <keescook@chromium.org>,
+        David Howells <dhowells@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: mq_notify loose notification request on fork()
+Message-ID: <20200121185250.fk6nkcw5nqbkab5o@linux-p48b>
+References: <CACdZwvBEsS__hiWyMGina9R3A0PUbrCD5pV2+B9Bgy65joXj5g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <CAKwvOd=30bpBXqrT6LfwDb+YrTcGtTg5NL34dpc3Vkfe11KvFQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CACdZwvBEsS__hiWyMGina9R3A0PUbrCD5pV2+B9Bgy65joXj5g@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 10:43:06AM -0800, Nick Desaulniers wrote:
-> On Mon, Jan 20, 2020 at 11:00 AM Nathan Chancellor
-> <natechancellor@gmail.com> wrote:
-> >
-> > Clang warns:
-> >
-> > ../drivers/scsi/qla1280.c:1702:5: warning: 'QLA_64BIT_PTR' is not
-> > defined, evaluates to 0 [-Wundef]
-> > if QLA_64BIT_PTR
-> >     ^
-> > 1 warning generated.
-> >
-> > The rest of this driver uses #ifdef QLA_64BIT_PTR, do the same thing at
-> > this site to remove this warning.
-> >
-> > Fixes: ba304e5b4498 ("scsi: qla1280: Fix dma firmware download, if dma address is 64bit")
-> 
-> ^ The above SHA is valid only in linux-next. Won't it change when
-> merged into mainline?
+On Tue, 14 Jan 2020, Alexey Mateosyan wrote:
 
-Not unless Martin rebases his tree (in which case, this patch should
-just be folded into the original one).
+>Reported bug on bugzilla  https://bugzilla.kernel.org/show_bug.cgi?id=206207
+>Duplicating here:
+>
+>Bug is related to implementation of POSIX mqueues, specifically
+>mq_notify syscall.\n
+>
+>The problem is: if we do subscription on notifications with help of
+>mq_notify() syscall, and then do fork() and this fork() fail for some
+>reason (for example there is pending signals for the parent process),
+>then we loose the subscription on the notification.
+>
+>The root cause is: during copy_process() we duplicate opened file
+>descriptors, and then if something goes wrong inside copy_process()
+>(for example there is pending signals for the parent process) we do
+>cleanup for the duplicated file descriptors via exit_files() which is
+>finally calling filp_close() and flush(). From the other side, current
+>implementation of ipc/mqueue.c implements file_operations.flush so
+>that it removes notification for the current process, which is
+>certainly not designed(desired) behavior.
+>
+>There is another case how to reproduce this behavior. Do fd =
+>mq_open("my_queue"); mq_notify(fd, ...); and never do close(fd) to
+>preserve notifications. Then if we open() and close() the queue file
+>from the same process - we loose the notification request
+>(subscription) for the still opened fd. I.e. current behavior is the
+>first close() removes notification.
 
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/843
-> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> 
-> Thanks for the patch.
-> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Is this a real issue? Do you have an actual reproducer? See below.
 
-Thanks for the review :)
+>
+>If we do remove_notification() in file_ops.release instead of
+>file_ops.flush in mqueue.c then this change fixes the described above
+>fork() related problem. But this will change the behavior so that the
+>last close() will remove the notifications.
 
-> > ---
-> >  drivers/scsi/qla1280.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/scsi/qla1280.c b/drivers/scsi/qla1280.c
-> > index 607cbddcdd14..3337cd341d21 100644
-> > --- a/drivers/scsi/qla1280.c
-> > +++ b/drivers/scsi/qla1280.c
-> > @@ -1699,7 +1699,7 @@ qla1280_load_firmware_pio(struct scsi_qla_host *ha)
-> >         return err;
-> >  }
-> >
-> > -#if QLA_64BIT_PTR
-> > +#ifdef QLA_64BIT_PTR
-> 
-> Thomas should test this, as it implies the previous patch was NEVER
-> using the "true case" values, making it in effect a
-> no-functional-change (NFC).
+Right, we don't want to change any user-visible behavior; and only
+address the failed fork case.
 
-QLA_64BIT_PTR is defined to 1 when CONFIG_ARCH_DMA_ADDR_T_64BIT is set
-so the true should have always worked, unless I am misunderstanding what
-you are saying. The false case should have also worked because it is
-still evaluated to 0 but it throws the warning to make sure that was
-intended (again, as I understand it).
+I guess mqueue_flush_file() really wants to be using the result of
+copy_process() task_struct pointer for its cleanup, instead of the
+parent 'current'. The following does this but adds a way of getting
+the pointer back from files_struct, perhaps you could test this?
 
-> >  #define LOAD_CMD       MBC_LOAD_RAM_A64_ROM
-> >  #define DUMP_CMD       MBC_DUMP_RAM_A64_ROM
-> >  #define CMD_ARGS       (BIT_7 | BIT_6 | BIT_4 | BIT_3 | BIT_2 | BIT_1 | BIT_0)
-> > --
-> -- 
-> Thanks,
-> ~Nick Desaulniers
+Alternatively we could 'hijack' the fl_owner_t id before performing
+f_op->flush() callback in filp_close() -- afaict no users actually
+use the fl_owner_t field during flush callback, then we could just
+restore it back to 'files' before dnotify_flush() etc paths, but I'm
+not certain and is rather hacky to begin with.
+
+Thanks,
+Davidlohr
+
+--------8<--------------------------------------------------------
+diff --git a/fs/file.c b/fs/file.c
+index 2f4fcf985079..70e5fe1c70d5 100644
+--- a/fs/file.c
++++ b/fs/file.c
+@@ -440,6 +440,7 @@ void exit_files(struct task_struct *tsk)
+ 
+ 	if (files) {
+ 		task_lock(tsk);
++		files->tsk = NULL;
+ 		tsk->files = NULL;
+ 		task_unlock(tsk);
+ 		put_files_struct(files);
+diff --git a/include/linux/fdtable.h b/include/linux/fdtable.h
+index f07c55ea0c22..29f906157b73 100644
+--- a/include/linux/fdtable.h
++++ b/include/linux/fdtable.h
+@@ -55,6 +55,7 @@ struct files_struct {
+ 
+ 	struct fdtable __rcu *fdt;
+ 	struct fdtable fdtab;
++	struct task_struct *tsk;
+   /*
+    * written part on a separate cache line in SMP
+    */
+diff --git a/ipc/mqueue.c b/ipc/mqueue.c
+index 3d920ff15c80..22300f0fb35a 100644
+--- a/ipc/mqueue.c
++++ b/ipc/mqueue.c
+@@ -17,6 +17,7 @@
+ #include <linux/init.h>
+ #include <linux/pagemap.h>
+ #include <linux/file.h>
++#include <linux/fdtable.h>
+ #include <linux/mount.h>
+ #include <linux/fs_context.h>
+ #include <linux/namei.h>
+@@ -589,10 +590,12 @@ static ssize_t mqueue_read_file(struct file *filp, char __user *u_data,
+ static int mqueue_flush_file(struct file *filp, fl_owner_t id)
+ {
+ 	struct mqueue_inode_info *info = MQUEUE_I(file_inode(filp));
++	struct files_struct *files = id;
+ 
+ 	spin_lock(&info->lock);
+-	if (task_tgid(current) == info->notify_owner)
++	if (task_tgid(files->tsk) == info->notify_owner) {
+ 		remove_notification(info);
++	}
+ 
+ 	spin_unlock(&info->lock);
+ 	return 0;
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 2508a4f238a3..8a85858db9f5 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -1467,6 +1467,7 @@ static int copy_files(unsigned long clone_flags, struct task_struct *tsk)
+ 	if (!newf)
+ 		goto out;
+ 
++	newf->tsk = tsk;
+ 	tsk->files = newf;
+ 	error = 0;
+ out:
