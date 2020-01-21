@@ -2,111 +2,84 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B72C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 280D8C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76C2624656
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:16:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579623394;
-	bh=QeSKKD6PfrbbZOwfYV8hICQ+MCLi4jauPz7wyQelez8=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=K1rl6LCohhsDbWAF5SYSVsNJb6vG5za1MuKclrCrAbH2Xexvbqa95Y62Rg99tO5mS
-	 4Ts893u35H85vzRfQdfG1DZWdfrIGO5EN5EHoRbkMFJ0tdVPJYZEh8lchbzG/F3Vog
-	 oHXD6yOUtHFQQ2Cz7HolP9Lkm3yP4gXgyg2g1ixE=
+	by mail.kernel.org (Postfix) with ESMTP id 048FB217F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:18:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729277AbgAUQQd (ORCPT
+        id S1729536AbgAUQSD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 11:16:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48542 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726555AbgAUQQd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 11:16:33 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCD43217F4;
-        Tue, 21 Jan 2020 16:16:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579623392;
-        bh=QeSKKD6PfrbbZOwfYV8hICQ+MCLi4jauPz7wyQelez8=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=Il7G75GLGL9BYlH35+SMX/L6VBP/oLIMGiRkoA99QP49hy6FgnqV7/3fGSwKEVz4T
-         gn7tnHJmIaly9Ua5+BSqlpRJS3e3S/uyuC7G8BCbJK2VPnaKShgTYsuAONkYPko1Ix
-         94CNdGU/2JGEwDWIXc+3suGyu7MgSWaUF5YA8XuI=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id A677E3520DC0; Tue, 21 Jan 2020 08:16:32 -0800 (PST)
-Date:   Tue, 21 Jan 2020 08:16:32 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Marco Elver <elver@google.com>, andreyknvl@google.com,
-        glider@google.com, dvyukov@google.com, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        will@kernel.org, boqun.feng@gmail.com, arnd@arndb.de,
-        viro@zeniv.linux.org.uk, christophe.leroy@c-s.fr, dja@axtens.net,
-        mpe@ellerman.id.au, rostedt@goodmis.org, mhiramat@kernel.org,
-        mingo@kernel.org, christian.brauner@ubuntu.com,
-        daniel@iogearbox.net, cyphar@cyphar.com, keescook@chromium.org,
-        linux-arch@vger.kernel.org
-Subject: Re: [PATCH 3/5] asm-generic, kcsan: Add KCSAN instrumentation for
- bitops
-Message-ID: <20200121161632.GV2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200120141927.114373-1-elver@google.com>
- <20200120141927.114373-3-elver@google.com>
- <20200120144048.GB14914@hirez.programming.kicks-ass.net>
- <20200120162725.GE2935@paulmck-ThinkPad-P72>
- <20200120165223.GC14914@hirez.programming.kicks-ass.net>
- <20200120202359.GF2935@paulmck-ThinkPad-P72>
- <20200121091501.GF14914@hirez.programming.kicks-ass.net>
- <20200121142109.GQ2935@paulmck-ThinkPad-P72>
- <20200121144716.GQ14879@hirez.programming.kicks-ass.net>
+        Tue, 21 Jan 2020 11:18:03 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:40797 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726555AbgAUQSC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 11:18:02 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1itwE2-00080m-0h; Tue, 21 Jan 2020 16:17:58 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-iio@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] iio: st_sensors: handle memory allocation failure to fix null pointer dereference
+Date:   Tue, 21 Jan 2020 16:17:57 +0000
+Message-Id: <20200121161757.1498082-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200121144716.GQ14879@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 03:47:16PM +0100, Peter Zijlstra wrote:
-> On Tue, Jan 21, 2020 at 06:21:09AM -0800, Paul E. McKenney wrote:
-> > On Tue, Jan 21, 2020 at 10:15:01AM +0100, Peter Zijlstra wrote:
-> > > On Mon, Jan 20, 2020 at 12:23:59PM -0800, Paul E. McKenney wrote:
-> > > > We also don't have __atomic_read() and __atomic_set(), yet atomic_read()
-> > > > and atomic_set() are considered to be non-racy, right?
-> > > 
-> > > What is racy? :-) You can make data races with atomic_{read,set}() just
-> > > fine.
-> > 
-> > Like "fairness", lots of definitions of "racy".  ;-)
-> > 
-> > > Anyway, traditionally we call the read-modify-write stuff atomic, not
-> > > the trivial load-store stuff. The only reason we care about the
-> > > load-store stuff in the first place is because C compilers are shit.
-> > > 
-> > > atomic_read() / test_bit() are just a load, all we need is the C
-> > > compiler not to be an ass and split it. Yes, we've invented the term
-> > > single-copy atomicity for that, but that doesn't make it more or less of
-> > > a load.
-> > > 
-> > > And exactly because it is just a load, there is no __test_bit(), which
-> > > would be the exact same load.
-> > 
-> > Very good!  Shouldn't KCSAN then define test_bit() as non-racy just as
-> > for atomic_read()?
-> 
-> Sure it does; but my comment was aimed at the gripe that test_bit()
-> lives in the non-atomic bitops header. That is arguably entirely
-> correct.
+From: Colin Ian King <colin.king@canonical.com>
 
-Fair enough!
+A null pointer deference on pdata can occur if the allocation of
+pdata fails.  Fix this by adding a null pointer check and handle
+the -ENOMEM failure in the caller.
 
-							Thanx, Paul
+Addresses-Coverity: ("Dereference null return value")
+Fixes: 3ce85cc4fbb7 ("iio: st_sensors: get platform data from device tree")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/iio/common/st_sensors/st_sensors_core.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/iio/common/st_sensors/st_sensors_core.c b/drivers/iio/common/st_sensors/st_sensors_core.c
+index e051edbc43c1..0e35ff06f9af 100644
+--- a/drivers/iio/common/st_sensors/st_sensors_core.c
++++ b/drivers/iio/common/st_sensors/st_sensors_core.c
+@@ -328,6 +328,8 @@ static struct st_sensors_platform_data *st_sensors_dev_probe(struct device *dev,
+ 		return NULL;
+ 
+ 	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata)
++		return ERR_PTR(-ENOMEM);
+ 	if (!device_property_read_u32(dev, "st,drdy-int-pin", &val) && (val <= 2))
+ 		pdata->drdy_int_pin = (u8) val;
+ 	else
+@@ -371,6 +373,8 @@ int st_sensors_init_sensor(struct iio_dev *indio_dev,
+ 
+ 	/* If OF/DT pdata exists, it will take precedence of anything else */
+ 	of_pdata = st_sensors_dev_probe(indio_dev->dev.parent, pdata);
++	if (IS_ERR(of_pdata))
++		return PTR_ERR(of_pdata);
+ 	if (of_pdata)
+ 		pdata = of_pdata;
+ 
+-- 
+2.24.0
+
