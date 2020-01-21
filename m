@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 489D7C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F489C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:01:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DB3524673
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:01:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F00352253D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:01:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729464AbgAUQBb (ORCPT
+        id S1729557AbgAUQBh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 11:01:31 -0500
-Received: from mga09.intel.com ([134.134.136.24]:62805 "EHLO mga09.intel.com"
+        Tue, 21 Jan 2020 11:01:37 -0500
+Received: from mga07.intel.com ([134.134.136.100]:18265 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729347AbgAUQB0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 11:01:26 -0500
+        id S1729378AbgAUQB3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 11:01:29 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 08:01:25 -0800
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 08:01:28 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,346,1574150400"; 
-   d="scan'208";a="228885497"
+   d="scan'208";a="221744508"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga006.jf.intel.com with ESMTP; 21 Jan 2020 08:01:21 -0800
+  by fmsmga008.fm.intel.com with ESMTP; 21 Jan 2020 08:01:24 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 477C662B; Tue, 21 Jan 2020 18:01:15 +0200 (EET)
+        id 5EC1770A; Tue, 21 Jan 2020 18:01:15 +0200 (EET)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Darren Hart <dvhart@infradead.org>,
@@ -46,9 +46,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Mark Brown <broonie@kernel.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 13/38] platform/x86: intel_scu_ipc: Reformat kernel-doc comments of exported functions
-Date:   Tue, 21 Jan 2020 19:00:49 +0300
-Message-Id: <20200121160114.60007-14-mika.westerberg@linux.intel.com>
+Subject: [PATCH v4 15/38] platform/x86: intel_mid_powerbtn: Convert to use new SCU IPC API
+Date:   Tue, 21 Jan 2020 19:00:51 +0300
+Message-Id: <20200121160114.60007-16-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200121160114.60007-1-mika.westerberg@linux.intel.com>
 References: <20200121160114.60007-1-mika.westerberg@linux.intel.com>
@@ -59,198 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Format kernel-doc comments of the exported functions to follow the
-typical format that does not have tab indentation. Also capitalize
-parameter descriptions and add a missing period.
-
-No functional changes intended.
+This converts the power button driver to use the new SCU IPC API where
+the SCU IPC instance is passed to the functions.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/platform/x86/intel_scu_ipc.c | 112 +++++++++++++--------------
- 1 file changed, 55 insertions(+), 57 deletions(-)
+ drivers/platform/x86/intel_mid_powerbtn.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-index a5ca1aae9547..518b044d8ecb 100644
---- a/drivers/platform/x86/intel_scu_ipc.c
-+++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -220,14 +220,14 @@ static int pwr_reg_rdwr(u16 *addr, u8 *data, u32 count, u32 op, u32 id)
+diff --git a/drivers/platform/x86/intel_mid_powerbtn.c b/drivers/platform/x86/intel_mid_powerbtn.c
+index 6f436836fe50..1fdcdef1d89f 100644
+--- a/drivers/platform/x86/intel_mid_powerbtn.c
++++ b/drivers/platform/x86/intel_mid_powerbtn.c
+@@ -46,6 +46,7 @@ struct mid_pb_ddata {
+ 	unsigned short mirqlvl1_addr;
+ 	unsigned short pbstat_addr;
+ 	u8 pbstat_mask;
++	struct intel_scu_ipc_dev *scu;
+ 	int (*setup)(struct mid_pb_ddata *ddata);
+ };
+ 
+@@ -55,7 +56,8 @@ static int mid_pbstat(struct mid_pb_ddata *ddata, int *value)
+ 	int ret;
+ 	u8 pbstat;
+ 
+-	ret = intel_scu_ipc_ioread8(ddata->pbstat_addr, &pbstat);
++	ret = intel_scu_ipc_dev_ioread8(ddata->scu, ddata->pbstat_addr,
++					&pbstat);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -67,14 +69,15 @@ static int mid_pbstat(struct mid_pb_ddata *ddata, int *value)
+ 
+ static int mid_irq_ack(struct mid_pb_ddata *ddata)
+ {
+-	return intel_scu_ipc_update_register(ddata->mirqlvl1_addr, 0, MSIC_PWRBTNM);
++	return intel_scu_ipc_dev_update(ddata->scu, ddata->mirqlvl1_addr, 0,
++					MSIC_PWRBTNM);
  }
  
- /**
-- *	intel_scu_ipc_ioread8		-	read a word via the SCU
-- *	@addr: register on SCU
-- *	@data: return pointer for read byte
-+ * intel_scu_ipc_ioread8		-	read a word via the SCU
-+ * @addr: Register on SCU
-+ * @data: Return pointer for read byte
-  *
-- *	Read a single register. Returns 0 on success or an error code. All
-- *	locking between SCU accesses is handled for the caller.
-+ * Read a single register. Returns %0 on success or an error code. All
-+ * locking between SCU accesses is handled for the caller.
-  *
-- *	This function may sleep.
-+ * This function may sleep.
-  */
- int intel_scu_ipc_ioread8(u16 addr, u8 *data)
+ static int mrfld_setup(struct mid_pb_ddata *ddata)
  {
-@@ -236,14 +236,14 @@ int intel_scu_ipc_ioread8(u16 addr, u8 *data)
- EXPORT_SYMBOL(intel_scu_ipc_ioread8);
+ 	/* Unmask the PBIRQ and MPBIRQ on Tangier */
+-	intel_scu_ipc_update_register(BCOVE_PBIRQ, 0, MSIC_PWRBTNM);
+-	intel_scu_ipc_update_register(BCOVE_PBIRQMASK, 0, MSIC_PWRBTNM);
++	intel_scu_ipc_dev_update(ddata->scu, BCOVE_PBIRQ, 0, MSIC_PWRBTNM);
++	intel_scu_ipc_dev_update(ddata->scu, BCOVE_PBIRQMASK, 0, MSIC_PWRBTNM);
  
- /**
-- *	intel_scu_ipc_iowrite8		-	write a byte via the SCU
-- *	@addr: register on SCU
-- *	@data: byte to write
-+ * intel_scu_ipc_iowrite8		-	write a byte via the SCU
-+ * @addr: Register on SCU
-+ * @data: Byte to write
-  *
-- *	Write a single register. Returns 0 on success or an error code. All
-- *	locking between SCU accesses is handled for the caller.
-+ * Write a single register. Returns %0 on success or an error code. All
-+ * locking between SCU accesses is handled for the caller.
-  *
-- *	This function may sleep.
-+ * This function may sleep.
-  */
- int intel_scu_ipc_iowrite8(u16 addr, u8 data)
- {
-@@ -252,17 +252,17 @@ int intel_scu_ipc_iowrite8(u16 addr, u8 data)
- EXPORT_SYMBOL(intel_scu_ipc_iowrite8);
+ 	return 0;
+ }
+@@ -161,6 +164,10 @@ static int mid_pb_probe(struct platform_device *pdev)
+ 			return error;
+ 	}
  
- /**
-- *	intel_scu_ipc_readvv		-	read a set of registers
-- *	@addr: register list
-- *	@data: bytes to return
-- *	@len: length of array
-+ * intel_scu_ipc_readvv		-	read a set of registers
-+ * @addr: Register list
-+ * @data: Bytes to return
-+ * @len: Length of array
-  *
-- *	Read registers. Returns 0 on success or an error code. All
-- *	locking between SCU accesses is handled for the caller.
-+ * Read registers. Returns %0 on success or an error code. All locking
-+ * between SCU accesses is handled for the caller.
-  *
-- *	The largest array length permitted by the hardware is 5 items.
-+ * The largest array length permitted by the hardware is 5 items.
-  *
-- *	This function may sleep.
-+ * This function may sleep.
-  */
- int intel_scu_ipc_readv(u16 *addr, u8 *data, int len)
- {
-@@ -271,18 +271,17 @@ int intel_scu_ipc_readv(u16 *addr, u8 *data, int len)
- EXPORT_SYMBOL(intel_scu_ipc_readv);
- 
- /**
-- *	intel_scu_ipc_writev		-	write a set of registers
-- *	@addr: register list
-- *	@data: bytes to write
-- *	@len: length of array
-+ * intel_scu_ipc_writev		-	write a set of registers
-+ * @addr: Register list
-+ * @data: Bytes to write
-+ * @len: Length of array
-  *
-- *	Write registers. Returns 0 on success or an error code. All
-- *	locking between SCU accesses is handled for the caller.
-+ * Write registers. Returns %0 on success or an error code. All locking
-+ * between SCU accesses is handled for the caller.
-  *
-- *	The largest array length permitted by the hardware is 5 items.
-- *
-- *	This function may sleep.
-+ * The largest array length permitted by the hardware is 5 items.
-  *
-+ * This function may sleep.
-  */
- int intel_scu_ipc_writev(u16 *addr, u8 *data, int len)
- {
-@@ -291,19 +290,18 @@ int intel_scu_ipc_writev(u16 *addr, u8 *data, int len)
- EXPORT_SYMBOL(intel_scu_ipc_writev);
- 
- /**
-- *	intel_scu_ipc_update_register	-	r/m/w a register
-- *	@addr: register address
-- *	@bits: bits to update
-- *	@mask: mask of bits to update
-+ * intel_scu_ipc_update_register	-	r/m/w a register
-+ * @addr: Register address
-+ * @bits: Bits to update
-+ * @mask: Mask of bits to update
-  *
-- *	Read-modify-write power control unit register. The first data argument
-- *	must be register value and second is mask value
-- *	mask is a bitmap that indicates which bits to update.
-- *	0 = masked. Don't modify this bit, 1 = modify this bit.
-- *	returns 0 on success or an error code.
-+ * Read-modify-write power control unit register. The first data argument
-+ * must be register value and second is mask value mask is a bitmap that
-+ * indicates which bits to update. %0 = masked. Don't modify this bit, %1 =
-+ * modify this bit. returns %0 on success or an error code.
-  *
-- *	This function may sleep. Locking between SCU accesses is handled
-- *	for the caller.
-+ * This function may sleep. Locking between SCU accesses is handled
-+ * for the caller.
-  */
- int intel_scu_ipc_update_register(u16 addr, u8 bits, u8 mask)
- {
-@@ -313,16 +311,16 @@ int intel_scu_ipc_update_register(u16 addr, u8 bits, u8 mask)
- EXPORT_SYMBOL(intel_scu_ipc_update_register);
- 
- /**
-- *	intel_scu_ipc_simple_command	-	send a simple command
-- *	@cmd: command
-- *	@sub: sub type
-+ * intel_scu_ipc_simple_command	-	send a simple command
-+ * @cmd: Command
-+ * @sub: Sub type
-  *
-- *	Issue a simple command to the SCU. Do not use this interface if
-- *	you must then access data as any data values may be overwritten
-- *	by another SCU access by the time this function returns.
-+ * Issue a simple command to the SCU. Do not use this interface if you must
-+ * then access data as any data values may be overwritten by another SCU
-+ * access by the time this function returns.
-  *
-- *	This function may sleep. Locking for SCU accesses is handled for
-- *	the caller.
-+ * This function may sleep. Locking for SCU accesses is handled for the
-+ * caller.
-  */
- int intel_scu_ipc_simple_command(int cmd, int sub)
- {
-@@ -342,16 +340,16 @@ int intel_scu_ipc_simple_command(int cmd, int sub)
- EXPORT_SYMBOL(intel_scu_ipc_simple_command);
- 
- /**
-- *	intel_scu_ipc_command	-	command with data
-- *	@cmd: command
-- *	@sub: sub type
-- *	@in: input data
-- *	@inlen: input length in dwords
-- *	@out: output data
-- *	@outlein: output length in dwords
-+ * intel_scu_ipc_command	-	command with data
-+ * @cmd: Command
-+ * @sub: Sub type
-+ * @in: Input data
-+ * @inlen: Input length in dwords
-+ * @out: Output data
-+ * @outlen: Output length in dwords
-  *
-- *	Issue a command to the SCU which involves data transfers. Do the
-- *	data copies under the lock but leave it for the caller to interpret
-+ * Issue a command to the SCU which involves data transfers. Do the
-+ * data copies under the lock but leave it for the caller to interpret.
-  */
- int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
- 			  u32 *out, int outlen)
++	ddata->scu = devm_intel_scu_ipc_dev_get(&pdev->dev);
++	if (!ddata->scu)
++		return -EPROBE_DEFER;
++
+ 	error = devm_request_threaded_irq(&pdev->dev, irq, NULL, mid_pb_isr,
+ 					  IRQF_ONESHOT, DRIVER_NAME, ddata);
+ 	if (error) {
 -- 
 2.24.1
 
