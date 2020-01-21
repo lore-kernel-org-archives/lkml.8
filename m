@@ -6,170 +6,117 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97DC8C33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:55:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A5CCC33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:56:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 667ED24653
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:55:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E50B621569
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:56:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579625712;
-	bh=75JxfrRYmFAuuUXop1QjvTzzFdm4EwZS+OABKQYY3Rw=;
+	s=default; t=1579625812;
+	bh=DsUGJHSRTvQGz2HgmbujUvc63xbfSEF706bxM2jCMkE=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=XrUwnFK3ZVdzBjKkq8/Dh7aDwsPi2JDrPICTuUm1Xf33b87DnQsCj6tBr3uywh36I
-	 YawQj8BNVqN5QUX002RockiRVu6UDH60PMup9tEzMUbQsSYR2byRUOxw0mN/bANpH+
-	 RWCY/4ZXtwVFlDf7W0qjhZLT5bdP7KMFKZLCDci0=
+	b=UdTW8vbFH9LK13/LjNy7sSRfpTQSlMoM6Gel356t3jdmS3OPX5J/jELtsmGIZfZKr
+	 QIB9CxzsoFUSah+/aK2+wqp5UVNH3lK1cY5BRXPnj/AdZhgCzKTn3zlTjmEXb5ryeH
+	 6bJMV+kFW+hwoe1x2D742GoA7BH0NHhaaK7Ccqns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729134AbgAUQzL (ORCPT
+        id S1729159AbgAUQ4v convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 11:55:11 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:39161 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726555AbgAUQzL (ORCPT
+        Tue, 21 Jan 2020 11:56:51 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:44113 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726555AbgAUQ4v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 11:55:11 -0500
-Received: by mail-oi1-f196.google.com with SMTP id z2so3206748oih.6;
-        Tue, 21 Jan 2020 08:55:10 -0800 (PST)
+        Tue, 21 Jan 2020 11:56:51 -0500
+Received: by mail-oi1-f193.google.com with SMTP id d62so3179433oia.11;
+        Tue, 21 Jan 2020 08:56:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YOvmrPQfd4U+qe0npdLRSLPDRxtxwmXyCEJF2rCC57c=;
-        b=aUxl7/f2Y7WmzIKKQfxr4ej+2RjkUStKIU4kvQVes/B7NkbmszbBOTJgdIT5831egG
-         DSe5MIEWNhF131GVHqa8BOd149pxnFgyOZQLJQe3FgddWCtAI131nhIZnqLfNNY5eBqq
-         k1mNEQwK+BwBxZs/dvZCrcCe8lUp5Dojw4APd/7mcBUYoJRYZq4RQM28f691wtrAtLhT
-         4PXtgvPE7wpgxbBiHsTisSf12/iTj73V3c764gUcotjnIdZ4KDlqhF0wTxZBi9zoZ4vk
-         jDii8kwmHiwcrLhaMhPJ2j/58RXhJnaBm8fi3fOq/ZCpOsj9K2wz8nEiCyCgXQyYeuJ3
-         lIcg==
-X-Gm-Message-State: APjAAAXDMG7a1CKZsznlJo6sl4McUtnTTwzCQB47F0UsxwBnms6YkwhN
-        mJ4zrTjQ7mpB2vTqNOVHCJPFashrcZzrdt+KOH4hIj9Q
-X-Google-Smtp-Source: APXvYqzxhaTNpRA+5QY5lrzk0qTtFHFllDefpDwTO21p0OhCoMM91mHZwlny6DTxv1uDaOC3GQXhW9wqrgPPbogY/54=
-X-Received: by 2002:a54:4e96:: with SMTP id c22mr3770244oiy.110.1579625710490;
- Tue, 21 Jan 2020 08:55:10 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=L48dqKCWqUM40uiIIvW7gNnbpv7oxB/Hh4H4mqqlPcE=;
+        b=W8dAF/1C7IWuwNsJrxxbXrJ1eHsVyu5teK4sqN7LgP1WVbuX+i8P3ESJoBh8q6CYAa
+         kW3qDjB+HszxVthFlfIqjs8gJeAYBet4Yb2PGSDJ5hV9EV0BRvnSE8jOuDPaJ9vlO+ef
+         3fbZRsN+DTZhrIHO9+Be6jsZ1tMZJ9Zhm+snbEXfEFYbq68tpKIbN/I2QWEH+nGGX7RF
+         OK9txUVV9fuu7wsGyZHxkoanEYx3RVbdgoarpbHm3XuvTlx8fuCD4TrnGdwmpHnIvNEX
+         KaVVcLPraHvjeE/uo3CLgH4uDOBqvh9Pz0KrlMUW9KvcegHAFnbD/BkSOnkzBy7ZzGtj
+         /Qyw==
+X-Gm-Message-State: APjAAAVPgmZUiZZqc08+/iHKkhKpoSeVIF2mcrDYYgCkEbr8itStG8Cm
+        7DbMP5/30S+sD8pUmrX9Gu+RfUsTiT7wumssEp0CpA==
+X-Google-Smtp-Source: APXvYqyPmBDzNEz7+Zh6YxhQJWlleEoCehXnih04KMLq9z2SKftc/FZQrx4589Dqi/vJU/ZbqAYZSamTVF6BS4uWuAM=
+X-Received: by 2002:a05:6808:1c5:: with SMTP id x5mr3750017oic.57.1579625810328;
+ Tue, 21 Jan 2020 08:56:50 -0800 (PST)
 MIME-Version: 1.0
-References: <1579568452-27253-1-git-send-email-chanho.min@lge.com>
-In-Reply-To: <1579568452-27253-1-git-send-email-chanho.min@lge.com>
+References: <20200121134157.20396-1-sakari.ailus@linux.intel.com>
+ <20200121134157.20396-7-sakari.ailus@linux.intel.com> <CAJZ5v0iJXUjK0n7mkqxagX9FtOmMsLqVMmU2xpQOLSb0aBWSMA@mail.gmail.com>
+ <20200121161856.GZ5440@paasikivi.fi.intel.com>
+In-Reply-To: <20200121161856.GZ5440@paasikivi.fi.intel.com>
 From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 21 Jan 2020 17:54:58 +0100
-Message-ID: <CAJZ5v0hP4S3+8yNZkbWAUaQof_ikar+w3F8Li6zvPSJcKif3NQ@mail.gmail.com>
-Subject: Re: [PATCH] PM / sleep: fix use-after-free on async resume
-To:     Chanho Min <chanho.min@lge.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
+Date:   Tue, 21 Jan 2020 17:56:39 +0100
+Message-ID: <CAJZ5v0ho8ry7iTXBTxHMjwcqT+EGT2mRy2rmp+o7rmG0apYimQ@mail.gmail.com>
+Subject: Re: [PATCH v4 6/6] Documentation: ACPI: Document probe-low-power _DSD property
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Bingbu Cao <bingbu.cao@intel.com>, linux-media@vger.kernel.org,
+        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
+        Hyungwoo Yang <hyungwoo.yang@intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Arnd Bergmann <arnd@arndb.de>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Daewoong Kim <daewoong00.kim@lge.com>,
-        Seokjoo Lee <seokjoo.lee@lge.com>,
-        Lee Gunho <gunho.lee@lge.com>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Mani, Rajmohan" <rajmohan.mani@intel.com>,
+        Tomasz Figa <tfiga@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 2:31 AM Chanho Min <chanho.min@lge.com> wrote:
+On Tue, Jan 21, 2020 at 5:19 PM Sakari Ailus
+<sakari.ailus@linux.intel.com> wrote:
 >
-> Some device can be released during suspend (e.g. usb disconnection).
-> But, Its child device still use dev->parent's lock in dpm_wait().
-> It can be ocurred use-after-free as bellows. This is happened during
-> usb resume in practice.
+> On Tue, Jan 21, 2020 at 05:09:44PM +0100, Rafael J. Wysocki wrote:
+> > On Tue, Jan 21, 2020 at 2:41 PM Sakari Ailus
+> > <sakari.ailus@linux.intel.com> wrote:
+> > >
+> > > Document the probe-low-power _DSD property and how it is used with I²C
+> > > drivers.
+> > >
+> > > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > > ---
+> > >  .../acpi/dsd/probe-low-power.rst              | 28 +++++++++++++++++++
+> > >  Documentation/firmware-guide/acpi/index.rst   |  1 +
+> > >  2 files changed, 29 insertions(+)
+> > >  create mode 100644 Documentation/firmware-guide/acpi/dsd/probe-low-power.rst
+> > >
+> > > diff --git a/Documentation/firmware-guide/acpi/dsd/probe-low-power.rst b/Documentation/firmware-guide/acpi/dsd/probe-low-power.rst
+> > > new file mode 100644
+> > > index 0000000000000..e0343ffefe071
+> > > --- /dev/null
+> > > +++ b/Documentation/firmware-guide/acpi/dsd/probe-low-power.rst
+> > > @@ -0,0 +1,28 @@
+> > > +.. SPDX-License-Identifier: GPL-2.0
+> > > +
+> > > +======================================
+> > > +Probing I²C devices in low power state
+> > > +======================================
+> > > +
+> > > +Introduction
+> > > +============
+> > > +
+> > > +In some cases it may be preferred to leave certain devices powered off for
+> > > +the entire system bootup if powering on these devices has adverse side
+> > > +effects, beyond just powering on the said device. The _DSD property
+> > > +"probe-low-power" has been defined for this purpose.
+> >
+> > Well, if you say "has been defined", you need to provide a pointer to
+> > the definition document (a specification of some sort or similar).
+>
+> How about:
+>
+> s/has been defined/is used/
 
-In that case the resume of the child is going to be carried out after
-its parent has gone away, which is generally incorrect..
-
-> device hierarchy: "1-1" <- "1-1:1.2" <- "ep83"
->
-> <parent>                <child>
-> device_resume("1-1:1.2")
-> dpm_wait("1-1")
->                         device_resume("ep_83");
->                         dpm_wait("1-1:1.2");
->  usb_disconnect
->   put_device("1-1:1.2")
->
-> put_device("1-1:1.2")
->  usb_release_interface
->  kfree(intf) <- "1-1:1.2"'s struct device is freed
->
->                          wait_for_common
->                          do {
->                          ...
->                          spin_lock_irq(&x->wait.lock); <- "1-1:1-2"'s lock
->                          } while (!x->done && timeout);
->
-> This is call stack of the system hang caused by freed lock value in practice.
->
-> Call trace:
-> [<ffffffc000ef59a8>] _raw_spin_lock_irq+0x38/0x80
-> [<ffffffc000ef2dac>] wait_for_common+0x12c/0x140
-> [<ffffffc000ef2dd4>] wait_for_completion+0x14/0x20
-> [<ffffffc000480c1c>] dpm_wait+0x5c/0xb0
-> [<ffffffc0004813d8>] device_resume+0x78/0x320
-> [<ffffffc000481ed4>] async_resume+0x24/0xe0
-> [<ffffffc0000c671c>] async_run_entry_fn+0x54/0x158
-> [<ffffffc0000bd720>] process_one_work+0x1e8/0x4b0
-> [<ffffffc0000bdb10>] worker_thread+0x128/0x4b8
-> [<ffffffc0000c3a14>] kthread+0x10c/0x110
-> [<ffffffc00008ddd0>] ret_from_fork+0x10/0x40
->
-> To prevent such use-after-free, dpm_wait_for_parent() keeps parent's reference
-> using get/put_device even if it is disconnected.
->
-> Signed-off-by: Chanho Min <chanho.min@lge.com>
-> Signed-off-by: Daewoong Kim <daewoong00.kim@lge.com>
-> ---
->  drivers/base/power/main.c | 22 +++++++++++++++++++---
->  1 file changed, 19 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
-> index f946511..95a7499 100644
-> --- a/drivers/base/power/main.c
-> +++ b/drivers/base/power/main.c
-> @@ -234,13 +234,29 @@ static void initcall_debug_report(struct device *dev, ktime_t calltime,
->   * @dev: Device to wait for.
->   * @async: If unset, wait only if the device's power.async_suspend flag is set.
->   */
-> +static void _dpm_wait(struct device *dev, bool async)
-> +{
-> +       if (async || (pm_async_enabled && dev->power.async_suspend))
-> +               wait_for_completion(&dev->power.completion);
-> +}
-> +
->  static void dpm_wait(struct device *dev, bool async)
->  {
->         if (!dev)
->                 return;
->
-> -       if (async || (pm_async_enabled && dev->power.async_suspend))
-> -               wait_for_completion(&dev->power.completion);
-> +       _dpm_wait(dev, async);
-> +}
-> +
-> +static void dpm_wait_for_parent(struct device *dev, bool async)
-> +{
-> +       if (dev && dev->parent) {
-> +               struct device *dev_p = dev->parent;
-> +
-
-This is racy, because the parent may have gone away already before the
-get_device() below.
-
-> +               get_device(dev_p);
-> +               _dpm_wait(dev_p, async);
-> +               put_device(dev_p);
-> +       }
->  }
->
->  static int dpm_wait_fn(struct device *dev, void *async_ptr)
-> @@ -277,7 +293,7 @@ static void dpm_wait_for_suppliers(struct device *dev, bool async)
->
->  static void dpm_wait_for_superior(struct device *dev, bool async)
->  {
-> -       dpm_wait(dev->parent, async);
-> +       dpm_wait_for_parent(dev, async);
->         dpm_wait_for_suppliers(dev, async);
->  }
->
-> --
-
-Something a bit more sophisticated is needed here, let me think about that.
+I would say "Linux recognizes the ... that can be used for this purpose."
