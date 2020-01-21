@@ -2,150 +2,112 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D6BC33CB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2200C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B772B2253D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:21:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DD5E2253D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:22:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="om3HH/h1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KqwMFQ7K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728779AbgAUIVX (ORCPT
+        id S1728609AbgAUIW3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 03:21:23 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:57055 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbgAUIVW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 03:21:22 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4821hb2t7rz9txkq;
-        Tue, 21 Jan 2020 09:21:19 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=om3HH/h1; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 51BydYp8UKfd; Tue, 21 Jan 2020 09:21:19 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4821hb1p5vz9v0yr;
-        Tue, 21 Jan 2020 09:21:19 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1579594879; bh=oGUF+BNPGftCGW3dISgEIF2yqNvo6BJ3zmTHJ4nPG3s=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=om3HH/h1IIoLi1XQBnSo1OU3BjcuIrUa1xNZFjufyFWs1+fdxZUPsFEUiVXhYzobi
-         KhErHAyC//pTb+n4I82rNwPuGjsHUugx1eAdR2HaaJZPmsp4K/8zQSv8jF4j5ncZzp
-         6vU1RBtDhUr4z+m33RJ3n6MSuCQiG+yanG5JbDPo=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2C2A48B7DB;
-        Tue, 21 Jan 2020 09:21:20 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id LAV7Ig-UZZ_C; Tue, 21 Jan 2020 09:21:20 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 729648B7D9;
-        Tue, 21 Jan 2020 09:21:18 +0100 (CET)
-Subject: Re: [PATCH] powerpc/sysdev: fix compile errors
-To:     =?UTF-8?B?546L5paH6JmO?= <wenhu.wang@vivo.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>
-Cc:     Kate Stewart <kstewart@linuxfoundation.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, wangwenhu <wenhu.pku@gmail.com>,
-        Paul Mackerras <paulus@samba.org>, trivial@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev@lists.ozlabs.org, lonehugo@hotmail.com
-References: <ANcAOwAACK7otVnG7VF8E4rQ.3.1579589949706.Hmail.wenhu.wang@vivo.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <a0cbb0cd-263b-0a14-04a8-bb5e40b3181e@c-s.fr>
-Date:   Tue, 21 Jan 2020 09:21:18 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Tue, 21 Jan 2020 03:22:29 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:43391 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726729AbgAUIW3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 03:22:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579594948;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=r+IXOERPobSolwbB9kBamtcVjIIwqZJdbh46pfHcqy8=;
+        b=KqwMFQ7KQXa9ENwMb4yuD9jvRqXNjEm2aFXLSc1e/7wT9i06Q3pub6fkPP2IItHz+sZ1qf
+        /+o3BzK96IGDNb/BwwBw4Yge/Udc6naIl1QbsgQKqb7M4cgYH6mVFXwqFBaHSXPzfSho+v
+        AFPDmvUqm+N8oeiOzGcsQyiiz/xjJtc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-123-BA4uRMB3OyePd8PxTjtYMA-1; Tue, 21 Jan 2020 03:22:27 -0500
+X-MC-Unique: BA4uRMB3OyePd8PxTjtYMA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 167FC184AD2A;
+        Tue, 21 Jan 2020 08:22:25 +0000 (UTC)
+Received: from blackfin.pond.sub.org (ovpn-116-131.ams2.redhat.com [10.36.116.131])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5BB1F8BE23;
+        Tue, 21 Jan 2020 08:22:22 +0000 (UTC)
+Received: by blackfin.pond.sub.org (Postfix, from userid 1000)
+        id CD4741138600; Tue, 21 Jan 2020 09:22:20 +0100 (CET)
+From:   Markus Armbruster <armbru@redhat.com>
+To:     zhenwei pi <pizhenwei@bytedance.com>
+Cc:     pbonzini@redhat.com, yelu@bytedance.com, libvir-list@redhat.com,
+        gregkh@linuxfoundation.org, qemu-devel@nongnu.org,
+        linux-kernel@vger.kernel.org, mprivozn@redhat.com
+Subject: Re: [PATCH 1/2] pvpanic: introduce crashloaded for pvpanic
+References: <20200110100634.491936-1-pizhenwei@bytedance.com>
+        <20200110100634.491936-2-pizhenwei@bytedance.com>
+Date:   Tue, 21 Jan 2020 09:22:20 +0100
+In-Reply-To: <20200110100634.491936-2-pizhenwei@bytedance.com> (zhenwei pi's
+        message of "Fri, 10 Jan 2020 18:06:33 +0800")
+Message-ID: <87h80pi5hf.fsf@dusky.pond.sub.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <ANcAOwAACK7otVnG7VF8E4rQ.3.1579589949706.Hmail.wenhu.wang@vivo.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+zhenwei pi <pizhenwei@bytedance.com> writes:
 
+> Add bit 1 for pvpanic. This bit means that guest hits a panic, but
+> guest wants to handle error by itself. Typical case: Linux guest runs
+> kdump in panic. It will help us to separate the abnormal reboot from
+> normal operation.
+>
+> Signed-off-by: zhenwei pi <pizhenwei@bytedance.com>
+> ---
+>  docs/specs/pvpanic.txt | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+>
+> diff --git a/docs/specs/pvpanic.txt b/docs/specs/pvpanic.txt
+> index c7bbacc778..bdea68a430 100644
+> --- a/docs/specs/pvpanic.txt
+> +++ b/docs/specs/pvpanic.txt
+> @@ -16,8 +16,12 @@ pvpanic exposes a single I/O port, by default 0x505. On read, the bits
+>  recognized by the device are set. Software should ignore bits it doesn't
+>  recognize. On write, the bits not recognized by the device are ignored.
+>  Software should set only bits both itself and the device recognize.
 
-Le 21/01/2020 à 07:59, 王文虎 a écrit :
-> 发件人：Andrew Donnellan <ajd@linux.ibm.com>
-> 发送日期：2020-01-21 14:13:07
-> 收件人：wangwenhu <wenhu.pku@gmail.com>,Benjamin Herrenschmidt <benh@kernel.crashing.org>,Paul Mackerras <paulus@samba.org>,Michael Ellerman <mpe@ellerman.id.au>,Kate Stewart <kstewart@linuxfoundation.org>,Greg Kroah-Hartman <gregkh@linuxfoundation.org>,Richard Fontana <rfontana@redhat.com>,Thomas Gleixner <tglx@linutronix.de>,linuxppc-dev@lists.ozlabs.org,linux-kernel@vger.kernel.org
-> 抄送人：trivial@kernel.org,lonehugo@hotmail.com,wenhu.wang@vivo.com
-> 主题：Re: [PATCH] powerpc/sysdev: fix compile errors>On 21/1/20 4:31 pm, wangwenhu wrote:
->>> From: wangwenhu <wenhu.wang@vivo.com>
->>>
->>> Include arch/powerpc/include/asm/io.h into fsl_85xx_cache_sram.c to
->>> fix the implicit declaration compile errors when building Cache-Sram.
->>>
->>> arch/powerpc/sysdev/fsl_85xx_cache_sram.c: In function ‘instantiate_cache_sram’:
->>> arch/powerpc/sysdev/fsl_85xx_cache_sram.c:97:26: error: implicit declaration of function ‘ioremap_coherent’; did you mean ‘bitmap_complement’? [-Werror=implicit-function-declaration]
->>>     cache_sram->base_virt = ioremap_coherent(cache_sram->base_phys,
->>>                             ^~~~~~~~~~~~~~~~
->>>                             bitmap_complement
->>> arch/powerpc/sysdev/fsl_85xx_cache_sram.c:97:24: error: assignment makes pointer from integer without a cast [-Werror=int-conversion]
->>>     cache_sram->base_virt = ioremap_coherent(cache_sram->base_phys,
->>>                           ^
->>> arch/powerpc/sysdev/fsl_85xx_cache_sram.c:123:2: error: implicit declaration of function ‘iounmap’; did you mean ‘roundup’? [-Werror=implicit-function-declaration]
->>>     iounmap(cache_sram->base_virt);
->>>     ^~~~~~~
->>>     roundup
->>> cc1: all warnings being treated as errors
->>>
->>> Signed-off-by: wangwenhu <wenhu.wang@vivo.com>
->>
->> How long has this code been broken for?
-> 
-> It's been broken almost 15 months since the commit below:
-> "commit aa91796ec46339f2ed53da311bd3ea77a3e4dfe1
+Guest software, I presume.
 
-Can you then add a Fixes: tag ?
+> -Currently, only bit 0 is recognized, setting it indicates a guest panic
+> -has happened.
+> +
+> +Bit Definition
+> +--------------
+> +bit 0: setting it indicates a guest panic has happened.
+> +bit 1: named crashloaded. setting it indicates a guest panic and run
+> +       kexec to handle error by guest itself.
 
-Thanks
-Christophe
+Suggest to scratch "named crashloaded."
 
-> Author: Christophe Leroy <christophe.leroy@c-s.fr>
-> Date:   Tue Oct 9 13:51:41 2018 +0000
-> 
->      powerpc: don't use ioremap_prot() nor __ioremap() unless really needed."
-> 
-> And we are working on it now for further development.
-> 
->>
->>> ---
->>>    arch/powerpc/sysdev/fsl_85xx_cache_sram.c | 1 +
->>>    1 file changed, 1 insertion(+)
->>>
->>> diff --git a/arch/powerpc/sysdev/fsl_85xx_cache_sram.c b/arch/powerpc/sysdev/fsl_85xx_cache_sram.c
->>> index f6c665dac725..29b6868eff7d 100644
->>> --- a/arch/powerpc/sysdev/fsl_85xx_cache_sram.c
->>> +++ b/arch/powerpc/sysdev/fsl_85xx_cache_sram.c
->>> @@ -17,6 +17,7 @@
->>>    #include <linux/of_platform.h>
->>>    #include <asm/pgtable.h>
->>>    #include <asm/fsl_85xx_cache_sram.h>
->>> +#include <asm/io.h>
->>>
->>>    #include "fsl_85xx_cache_ctlr.h"
->>>
->>
->> -- 
->> Andrew Donnellan              OzLabs, ADL Canberra
->> ajd@linux.ibm.com             IBM Australia Limited
->>
-> 
-> Wenhu
-> 
+The whole file is rather terse.  I figure that's okay as along as
+there's just "guest panicked", because "kernel panic" is obvious enough.
+The addition of "panicked, handling with kexec" makes it less obvious.
+The commit message provides a bit more guidance.  Could that be worked
+into this file?
+
+>  
+>  ACPI Interface
+>  --------------
+
