@@ -2,100 +2,111 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CBCDC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 361A7C33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7B8F206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:51:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D0B024655
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:53:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579629218;
+	bh=jSqnb8251iB+PaUjwL/WFnS37zciALpQsGn4VLiEZOM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=f+kQVhW0LF7Uu/3PpVQDwBEgIHDayj8usbqa4f5UbdSgHfxRiFelIqSXwssPzJdWI
+	 u7mPcA1tfvDXNo8D7HFsLWQ0c/LBCYtgPKqCummj/oxUZVC+YdPCXJTN6r1HVo13qO
+	 kExWyGSwpUN05IaN0ZIkrMqUzdl/9S69fdSt6dH0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729253AbgAURv6 (ORCPT
+        id S1729259AbgAURxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 12:51:58 -0500
-Received: from mga17.intel.com ([192.55.52.151]:25439 "EHLO mga17.intel.com"
+        Tue, 21 Jan 2020 12:53:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728186AbgAURv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 12:51:58 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 09:51:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,346,1574150400"; 
-   d="scan'208";a="250332231"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga004.fm.intel.com with ESMTP; 21 Jan 2020 09:51:53 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1itxgv-0001Av-UP; Tue, 21 Jan 2020 19:51:53 +0200
-Date:   Tue, 21 Jan 2020 19:51:53 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Mark Brown <broonie@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 34/38] platform/x86: intel_pmc_ipc: Propagate error
- from kstrtoul()
-Message-ID: <20200121175153.GB32742@smile.fi.intel.com>
-References: <20200121160114.60007-1-mika.westerberg@linux.intel.com>
- <20200121160114.60007-35-mika.westerberg@linux.intel.com>
+        id S1728186AbgAURxh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 12:53:37 -0500
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66C4720882;
+        Tue, 21 Jan 2020 17:53:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579629216;
+        bh=jSqnb8251iB+PaUjwL/WFnS37zciALpQsGn4VLiEZOM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=pssvT+PNFm+V3NvPNyFH+RbfyYZF5MO2gKEGEnsd0K1kGLLSzzSQr2WAaFqWFlWXY
+         aHO7HW+SWWV7htzelymF29D+hVY70A3cWLPyP46zOG8QNDg/OsPxGOZbMo6IQ7yesV
+         2eqyFQXlAJZbovUdFWJ3wU4SGj16jqPUjA0Vi8r4=
+Received: by mail-qk1-f182.google.com with SMTP id 21so3607035qky.4;
+        Tue, 21 Jan 2020 09:53:36 -0800 (PST)
+X-Gm-Message-State: APjAAAW2bHa4BicuauCnSmK36hnbDUumROoDLhpV4XT7JhYV7/y0zK0+
+        jcQVDmiHlSlg+NvLD8RL2oFEZ1DDfgtFZKA/pw==
+X-Google-Smtp-Source: APXvYqzHLixt8IrlgT/au2K+GmxkDhCwSit+HjQFs08D+Z88/At71jstGFhsanilwAJ1+GPhBTdil9wNxv/SeT9soW8=
+X-Received: by 2002:a05:620a:135b:: with SMTP id c27mr5331728qkl.119.1579629215564;
+ Tue, 21 Jan 2020 09:53:35 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200121160114.60007-35-mika.westerberg@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <4fbf026a-4878-cd65-55f7-7d992782b331@gmail.com> <20200116233939.GI27148@zn.tnic>
+In-Reply-To: <20200116233939.GI27148@zn.tnic>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 21 Jan 2020 11:53:23 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKqC_xm9rrHYaO87BtEv=-ji080p_G8axFduqu1mcqHCA@mail.gmail.com>
+Message-ID: <CAL_JsqKqC_xm9rrHYaO87BtEv=-ji080p_G8axFduqu1mcqHCA@mail.gmail.com>
+Subject: Re: [PATCH v9 1/2] dt-bindings: edac: arm-dmc520.txt
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Shiping Ji <shiping.linux@gmail.com>,
+        James Morse <james.morse@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, hangl@microsoft.com,
+        Lei Wang <lewan@microsoft.com>, ruizhao@microsoft.com,
+        shji@microsoft.com, Scott Branden <scott.branden@broadcom.com>,
+        Yuqing Shen <yuqing.shen@broadcom.com>,
+        Ray Jui <ray.jui@broadcom.com>, wangglei@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 07:01:10PM +0300, Mika Westerberg wrote:
-> kstrtoul() already returns negative error if the input was not valid so
-> return it directly.
+On Thu, Jan 16, 2020 at 5:39 PM Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Wed, Jan 15, 2020 at 06:32:27AM -0800, Shiping Ji wrote:
+> > This is the device tree bindings for new EDAC driver dmc520_edac.c.
+> >
+> > Signed-off-by: Shiping Ji <shiping.linux@gmail.com>
+> > Signed-off-by: Lei Wang <leiwang_git@outlook.com>
+> > Reviewed-by: James Morse <james.morse@arm.com>
+>
+> So for this patch, v2 had Rui Zhao as an author:
+>
+> https://lkml.kernel.org/r/BN7PR08MB5572B3388B2D7DC8F6C7F285AE4C0@BN7PR08MB5572.namprd08.prod.outlook.com
+>
+> v3 got Lei as an author:
+>
+> https://lkml.kernel.org/r/CY1PR0401MB1244062C1738B09D6100F202860A0@CY1PR0401MB1244.namprd04.prod.outlook.com
+>
+> and now it is you.
+>
+> So when you send next time, think about who's going to be the author.
+>
+> > +     line numbers. The valid interrupt names are the followings:
+>
+> WARNING: 'followings' may be misspelled - perhaps 'following'?
+> #51: FILE: Documentation/devicetree/bindings/edac/arm-dmc520.txt:10:
+> +     line numbers. The valid interrupt names are the followings:
+>
+> Please integrate scripts/checkpatch.pl into your patch creation
+> workflow. Some of the warnings/errors *actually* make sense.
+>
+> Also, this patch throws this other checkpatch warning:
+>
+> WARNING: DT bindings should be in DT schema format. See: Documentation/devicetree/writing-schema.rst
+>
+> but since Rob reviewed it, I'm going to assume checkpatch is wrong here.
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Would be happy for a schema, but not going to ask for that on a v9.
 
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> ---
->  drivers/platform/x86/intel_pmc_ipc.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-> index f912f2a40512..eb4d65768531 100644
-> --- a/drivers/platform/x86/intel_pmc_ipc.c
-> +++ b/drivers/platform/x86/intel_pmc_ipc.c
-> @@ -226,8 +226,9 @@ static ssize_t intel_pmc_ipc_northpeak_store(struct device *dev,
->  	int subcmd;
->  	int ret;
->  
-> -	if (kstrtoul(buf, 0, &val))
-> -		return -EINVAL;
-> +	ret = kstrtoul(buf, 0, &val);
-> +	if (ret)
-> +		return ret;
->  
->  	if (val)
->  		subcmd = 1;
-> -- 
-> 2.24.1
-> 
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Rob
