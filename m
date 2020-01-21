@@ -2,193 +2,152 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A02BC32771
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 02:20:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F7EC33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 02:30:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE7672253D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 02:20:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BCA522522
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 02:30:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bt0+NcVb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729030AbgAUCUU (ORCPT
+        id S1728904AbgAUCac (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 21:20:20 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:34316 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728093AbgAUCUT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 21:20:19 -0500
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 9B8EE16B131EA39C95F9;
-        Tue, 21 Jan 2020 10:20:14 +0800 (CST)
-Received: from localhost (10.173.223.234) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Tue, 21 Jan 2020
- 10:20:05 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <pkshih@realtek.com>, <kvalo@codeaurora.org>,
-        <davem@davemloft.net>, <yuehaibing@huawei.com>,
-        <Larry.Finger@lwfinger.net>
-CC:     <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] rtlwifi: rtl8192ee: remove unused variables
-Date:   Tue, 21 Jan 2020 10:19:24 +0800
-Message-ID: <20200121021924.18792-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Mon, 20 Jan 2020 21:30:32 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39222 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726890AbgAUCac (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 21:30:32 -0500
+Received: by mail-pg1-f195.google.com with SMTP id 4so631892pgd.6;
+        Mon, 20 Jan 2020 18:30:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UQyPAfqAyljHnvWhswSI0j0AaXOWbrBUiwjxd8hEWfs=;
+        b=Bt0+NcVbtyhKoPbU4w5EMFNOUoCclOtmzhRCrfG710xvJdFahXj+BqwWCMP/+lV/p6
+         0TaEc3sDfjQdNoO6/tedQTBn1Uj6EaA7podeyfC4qC1a8FWIMEalPpdrnjDWH4yy0fV2
+         EfnM1agj8iFckuwtSZu5jU/2/R2kklzvWNwO2vrw7BupLSYORiFi8Aatvmjlnr3aT3dz
+         zK43sFEqi90gQX49hYRG0FfWj8Tozkcl8H/XefzMQg+JVxyHsrOOGc4uIZUkRoPR8XB0
+         MixxWHbh1yvr+5sgn3eKONCeOTDYr2d6O8b5UmQuMTWn8Ua7ef3cd07oKfFWO0/yc/zh
+         W5cQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=UQyPAfqAyljHnvWhswSI0j0AaXOWbrBUiwjxd8hEWfs=;
+        b=AFRQIpwZ7UcUKttFL5QfG541ovbNUt2Az9btdNC3KS5rzIxTMiKslt11blykdZMfcx
+         uG9dZdOkJg/K5umFwIsAZvP5ioOD4CWt+5aq+yeTnpgowjyKiuEdR2DbnicwczIeRdK0
+         KM8vVn5v8bM0YdCN3dmtAMJS5dYfUZ+jKjJG8Wv9FlxIikzpeMPio775torNPPWae0wO
+         Z3qbtg8geVOo3/TA9Fm1mBcJAzO1JEGencRh0JSA3exW8k/2wMeuM6jS4RI82M3gL0ir
+         nMO3o5+bEacdBfuhHnfGpcnUn8xcz4acABw3y17Li4ENkjS/pD3G5Yc3qspL/pOz1Chj
+         HnNA==
+X-Gm-Message-State: APjAAAUVwd3NrlUYC7eQwCXlxk1I0+ML/bKEW2tt67GzIUAnoZQvzbDS
+        F2WthzAe7Zlc8o7u9aImwhwuqM1t
+X-Google-Smtp-Source: APXvYqwIk9UQhVc9EWq9JS2v2Hzscp7+O/f9asgIn1QReUfPblnnZ9VX/CJrpK9D0nmctwWk5QO/pA==
+X-Received: by 2002:a63:5525:: with SMTP id j37mr2902151pgb.180.1579573831257;
+        Mon, 20 Jan 2020 18:30:31 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id p21sm40123272pfn.103.2020.01.20.18.30.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 20 Jan 2020 18:30:30 -0800 (PST)
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     linux-hwmon@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Clemens Ladisch <clemens@ladisch.de>,
+        Jean Delvare <jdelvare@suse.com>,
+        Brad Campbell <lists2009@fnarfbargle.com>,
+        =?UTF-8?q?Ondrej=20=C4=8Cerman?= <ocerman@sda1.eu>,
+        Bernhard Gebetsberger <bernhard.gebetsberger@gmx.at>,
+        Holger Kiehl <Holger.Kiehl@dwd.de>,
+        Michael Larabel <michael@phoronix.com>,
+        Jonathan McDowell <noodles@earth.li>,
+        Ken Moffat <zarniwhoop73@googlemail.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Darren Salt <devspam@moreofthesa.me.uk>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH v3 0/5] hwmon: k10temp driver improvements
+Date:   Mon, 20 Jan 2020 18:30:22 -0800
+Message-Id: <20200121023027.2081-1-linux@roeck-us.net>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.173.223.234]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drivers/net/wireless/realtek/rtlwifi/rtl8192ee/dm.c:15:18:
- warning: ofdmswing_table defined but not used [-Wunused-const-variable=]
-drivers/net/wireless/realtek/rtlwifi/rtl8192ee/dm.c:61:17:
- warning: cckswing_table_ch1ch13 defined but not used [-Wunused-const-variable=]
-drivers/net/wireless/realtek/rtlwifi/rtl8192ee/dm.c:97:17:
- warning: cckswing_table_ch14 defined but not used [-Wunused-const-variable=]
+This patch series implements various improvements for the k10temp driver.
 
-These variable is never used, so remove them.
+Patch 1/5 introduces the use of bit operations.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Patch 2/5 converts the driver to use the devm_hwmon_device_register_with_info
+API. This not only simplifies the code and reduces its size, it also
+makes the code easier to maintain and enhance. 
+
+Patch 3/5 adds support for reporting Core Complex Die (CCD) temperatures
+on Zen2 (Ryzen and Threadripper) CPUs (note that reporting is incomplete
+for Threadripper CPUs - it is known that additional temperature sensors
+exist, but the register locations are unknown).
+
+Patch 4/5 adds support for reporting core and SoC current and voltage
+information on Ryzen CPUs (note: voltage and current measurements for
+Threadripper and EPYC CPUs are known to exist, but register locations
+are unknown, and values are therefore not reported at this time).
+
+Patch 5/5 removes the maximum temperature from Tdie for Ryzen CPUs.
+It is inaccurate, misleading, and it just doesn't make sense to report
+wrong information.
+
+With all patches in place, output on Ryzen 3900X CPUs looks as follows
+(with the system under load).
+
+k10temp-pci-00c3
+Adapter: PCI adapter
+Vcore:        +1.36 V
+Vsoc:         +1.18 V
+Tdie:         +86.8°C
+Tctl:         +86.8°C
+Tccd1:        +80.0°C
+Tccd2:        +81.8°C
+Icore:       +44.14 A
+Isoc:        +13.83 A
+
+The voltage and current information is limited to Ryzen CPUs. Voltage
+and current reporting on Threadripper and EPYC CPUs is different, and the
+reported information is either incomplete or wrong. Exclude it for the time
+being; it can always be added if/when more information becomes available.
+
+Tested with the following Ryzen CPUs:
+    1300X A user with this CPU in the system reported somewhat unexpected
+          values for Vcore; it isn't entirely if at all clear why that is
+          the case. Overall this does not warrant holding up the series.
+    1600
+    1800X
+    2200G
+    2400G
+    2700
+    2700X
+    2950X
+    3600X
+    3800X
+    3900X
+    3950X
+    3970X
+    EPYC 7302
+    EPYC 7742
+
+Many thanks to everyone who helped to test this series.
+
 ---
- .../net/wireless/realtek/rtlwifi/rtl8192ee/dm.c    | 118 ---------------------
- 1 file changed, 118 deletions(-)
+v2: Added Tested-by: tags as received.
+    Don't display voltage and current information for Threadripper and EPYC.
+    Stop displaying the fixed (and wrong) maximum temperature of 70 degrees C
+    for Tdie on model 17h/18h CPUs.
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192ee/dm.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192ee/dm.c
-index 648f910..551aa86 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8192ee/dm.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192ee/dm.c
-@@ -12,124 +12,6 @@
- #include "fw.h"
- #include "trx.h"
- 
--static const u32 ofdmswing_table[OFDM_TABLE_SIZE] = {
--	0x7f8001fe,		/* 0, +6.0dB */
--	0x788001e2,		/* 1, +5.5dB */
--	0x71c001c7,		/* 2, +5.0dB */
--	0x6b8001ae,		/* 3, +4.5dB */
--	0x65400195,		/* 4, +4.0dB */
--	0x5fc0017f,		/* 5, +3.5dB */
--	0x5a400169,		/* 6, +3.0dB */
--	0x55400155,		/* 7, +2.5dB */
--	0x50800142,		/* 8, +2.0dB */
--	0x4c000130,		/* 9, +1.5dB */
--	0x47c0011f,		/* 10, +1.0dB */
--	0x43c0010f,		/* 11, +0.5dB */
--	0x40000100,		/* 12, +0dB */
--	0x3c8000f2,		/* 13, -0.5dB */
--	0x390000e4,		/* 14, -1.0dB */
--	0x35c000d7,		/* 15, -1.5dB */
--	0x32c000cb,		/* 16, -2.0dB */
--	0x300000c0,		/* 17, -2.5dB */
--	0x2d4000b5,		/* 18, -3.0dB */
--	0x2ac000ab,		/* 19, -3.5dB */
--	0x288000a2,		/* 20, -4.0dB */
--	0x26000098,		/* 21, -4.5dB */
--	0x24000090,		/* 22, -5.0dB */
--	0x22000088,		/* 23, -5.5dB */
--	0x20000080,		/* 24, -6.0dB */
--	0x1e400079,		/* 25, -6.5dB */
--	0x1c800072,		/* 26, -7.0dB */
--	0x1b00006c,		/* 27. -7.5dB */
--	0x19800066,		/* 28, -8.0dB */
--	0x18000060,		/* 29, -8.5dB */
--	0x16c0005b,		/* 30, -9.0dB */
--	0x15800056,		/* 31, -9.5dB */
--	0x14400051,		/* 32, -10.0dB */
--	0x1300004c,		/* 33, -10.5dB */
--	0x12000048,		/* 34, -11.0dB */
--	0x11000044,		/* 35, -11.5dB */
--	0x10000040,		/* 36, -12.0dB */
--	0x0f00003c,		/* 37, -12.5dB */
--	0x0e400039,		/* 38, -13.0dB */
--	0x0d800036,		/* 39, -13.5dB */
--	0x0cc00033,		/* 40, -14.0dB */
--	0x0c000030,		/* 41, -14.5dB */
--	0x0b40002d,		/* 42, -15.0dB */
--};
--
--static const u8 cckswing_table_ch1ch13[CCK_TABLE_SIZE][8] = {
--	{0x36, 0x35, 0x2e, 0x25, 0x1c, 0x12, 0x09, 0x04}, /* 0, +0dB */
--	{0x33, 0x32, 0x2b, 0x23, 0x1a, 0x11, 0x08, 0x04}, /* 1, -0.5dB */
--	{0x30, 0x2f, 0x29, 0x21, 0x19, 0x10, 0x08, 0x03}, /* 2, -1.0dB */
--	{0x2d, 0x2d, 0x27, 0x1f, 0x18, 0x0f, 0x08, 0x03}, /* 3, -1.5dB */
--	{0x2b, 0x2a, 0x25, 0x1e, 0x16, 0x0e, 0x07, 0x03}, /* 4, -2.0dB */
--	{0x28, 0x28, 0x22, 0x1c, 0x15, 0x0d, 0x07, 0x03}, /* 5, -2.5dB */
--	{0x26, 0x25, 0x21, 0x1b, 0x14, 0x0d, 0x06, 0x03}, /* 6, -3.0dB */
--	{0x24, 0x23, 0x1f, 0x19, 0x13, 0x0c, 0x06, 0x03}, /* 7, -3.5dB */
--	{0x22, 0x21, 0x1d, 0x18, 0x11, 0x0b, 0x06, 0x02}, /* 8, -4.0dB */
--	{0x20, 0x20, 0x1b, 0x16, 0x11, 0x08, 0x05, 0x02}, /* 9, -4.5dB */
--	{0x1f, 0x1e, 0x1a, 0x15, 0x10, 0x0a, 0x05, 0x02}, /* 10, -5.0dB */
--	{0x1d, 0x1c, 0x18, 0x14, 0x0f, 0x0a, 0x05, 0x02}, /* 11, -5.5dB */
--	{0x1b, 0x1a, 0x17, 0x13, 0x0e, 0x09, 0x04, 0x02}, /* 12, -6.0dB */
--	{0x1a, 0x19, 0x16, 0x12, 0x0d, 0x09, 0x04, 0x02}, /* 13, -6.5dB */
--	{0x18, 0x17, 0x15, 0x11, 0x0c, 0x08, 0x04, 0x02}, /* 14, -7.0dB */
--	{0x17, 0x16, 0x13, 0x10, 0x0c, 0x08, 0x04, 0x02}, /* 15, -7.5dB */
--	{0x16, 0x15, 0x12, 0x0f, 0x0b, 0x07, 0x04, 0x01}, /* 16, -8.0dB */
--	{0x14, 0x14, 0x11, 0x0e, 0x0b, 0x07, 0x03, 0x02}, /* 17, -8.5dB */
--	{0x13, 0x13, 0x10, 0x0d, 0x0a, 0x06, 0x03, 0x01}, /* 18, -9.0dB */
--	{0x12, 0x12, 0x0f, 0x0c, 0x09, 0x06, 0x03, 0x01}, /* 19, -9.5dB */
--	{0x11, 0x11, 0x0f, 0x0c, 0x09, 0x06, 0x03, 0x01}, /* 20, -10.0dB */
--	{0x10, 0x10, 0x0e, 0x0b, 0x08, 0x05, 0x03, 0x01}, /* 21, -10.5dB */
--	{0x0f, 0x0f, 0x0d, 0x0b, 0x08, 0x05, 0x03, 0x01}, /* 22, -11.0dB */
--	{0x0e, 0x0e, 0x0c, 0x0a, 0x08, 0x05, 0x02, 0x01}, /* 23, -11.5dB */
--	{0x0d, 0x0d, 0x0c, 0x0a, 0x07, 0x05, 0x02, 0x01}, /* 24, -12.0dB */
--	{0x0d, 0x0c, 0x0b, 0x09, 0x07, 0x04, 0x02, 0x01}, /* 25, -12.5dB */
--	{0x0c, 0x0c, 0x0a, 0x09, 0x06, 0x04, 0x02, 0x01}, /* 26, -13.0dB */
--	{0x0b, 0x0b, 0x0a, 0x08, 0x06, 0x04, 0x02, 0x01}, /* 27, -13.5dB */
--	{0x0b, 0x0a, 0x09, 0x08, 0x06, 0x04, 0x02, 0x01}, /* 28, -14.0dB */
--	{0x0a, 0x0a, 0x09, 0x07, 0x05, 0x03, 0x02, 0x01}, /* 29, -14.5dB */
--	{0x0a, 0x09, 0x08, 0x07, 0x05, 0x03, 0x02, 0x01}, /* 30, -15.0dB */
--	{0x09, 0x09, 0x08, 0x06, 0x05, 0x03, 0x01, 0x01}, /* 31, -15.5dB */
--	{0x09, 0x08, 0x07, 0x06, 0x04, 0x03, 0x01, 0x01}  /* 32, -16.0dB */
--};
--
--static const u8 cckswing_table_ch14[CCK_TABLE_SIZE][8] = {
--	{0x36, 0x35, 0x2e, 0x1b, 0x00, 0x00, 0x00, 0x00}, /* 0, +0dB */
--	{0x33, 0x32, 0x2b, 0x19, 0x00, 0x00, 0x00, 0x00}, /* 1, -0.5dB */
--	{0x30, 0x2f, 0x29, 0x18, 0x00, 0x00, 0x00, 0x00}, /* 2, -1.0dB */
--	{0x2d, 0x2d, 0x17, 0x17, 0x00, 0x00, 0x00, 0x00}, /* 3, -1.5dB */
--	{0x2b, 0x2a, 0x25, 0x15, 0x00, 0x00, 0x00, 0x00}, /* 4, -2.0dB */
--	{0x28, 0x28, 0x24, 0x14, 0x00, 0x00, 0x00, 0x00}, /* 5, -2.5dB */
--	{0x26, 0x25, 0x21, 0x13, 0x00, 0x00, 0x00, 0x00}, /* 6, -3.0dB */
--	{0x24, 0x23, 0x1f, 0x12, 0x00, 0x00, 0x00, 0x00}, /* 7, -3.5dB */
--	{0x22, 0x21, 0x1d, 0x11, 0x00, 0x00, 0x00, 0x00}, /* 8, -4.0dB */
--	{0x20, 0x20, 0x1b, 0x10, 0x00, 0x00, 0x00, 0x00}, /* 9, -4.5dB */
--	{0x1f, 0x1e, 0x1a, 0x0f, 0x00, 0x00, 0x00, 0x00}, /* 10, -5.0dB */
--	{0x1d, 0x1c, 0x18, 0x0e, 0x00, 0x00, 0x00, 0x00}, /* 11, -5.5dB */
--	{0x1b, 0x1a, 0x17, 0x0e, 0x00, 0x00, 0x00, 0x00}, /* 12, -6.0dB */
--	{0x1a, 0x19, 0x16, 0x0d, 0x00, 0x00, 0x00, 0x00}, /* 13, -6.5dB */
--	{0x18, 0x17, 0x15, 0x0c, 0x00, 0x00, 0x00, 0x00}, /* 14, -7.0dB */
--	{0x17, 0x16, 0x13, 0x0b, 0x00, 0x00, 0x00, 0x00}, /* 15, -7.5dB */
--	{0x16, 0x15, 0x12, 0x0b, 0x00, 0x00, 0x00, 0x00}, /* 16, -8.0dB */
--	{0x14, 0x14, 0x11, 0x0a, 0x00, 0x00, 0x00, 0x00}, /* 17, -8.5dB */
--	{0x13, 0x13, 0x10, 0x0a, 0x00, 0x00, 0x00, 0x00}, /* 18, -9.0dB */
--	{0x12, 0x12, 0x0f, 0x09, 0x00, 0x00, 0x00, 0x00}, /* 19, -9.5dB */
--	{0x11, 0x11, 0x0f, 0x09, 0x00, 0x00, 0x00, 0x00}, /* 20, -10.0dB */
--	{0x10, 0x10, 0x0e, 0x08, 0x00, 0x00, 0x00, 0x00}, /* 21, -10.5dB */
--	{0x0f, 0x0f, 0x0d, 0x08, 0x00, 0x00, 0x00, 0x00}, /* 22, -11.0dB */
--	{0x0e, 0x0e, 0x0c, 0x07, 0x00, 0x00, 0x00, 0x00}, /* 23, -11.5dB */
--	{0x0d, 0x0d, 0x0c, 0x07, 0x00, 0x00, 0x00, 0x00}, /* 24, -12.0dB */
--	{0x0d, 0x0c, 0x0b, 0x06, 0x00, 0x00, 0x00, 0x00}, /* 25, -12.5dB */
--	{0x0c, 0x0c, 0x0a, 0x06, 0x00, 0x00, 0x00, 0x00}, /* 26, -13.0dB */
--	{0x0b, 0x0b, 0x0a, 0x06, 0x00, 0x00, 0x00, 0x00}, /* 27, -13.5dB */
--	{0x0b, 0x0a, 0x09, 0x05, 0x00, 0x00, 0x00, 0x00}, /* 28, -14.0dB */
--	{0x0a, 0x0a, 0x09, 0x05, 0x00, 0x00, 0x00, 0x00}, /* 29, -14.5dB */
--	{0x0a, 0x09, 0x08, 0x05, 0x00, 0x00, 0x00, 0x00}, /* 30, -15.0dB */
--	{0x09, 0x09, 0x08, 0x05, 0x00, 0x00, 0x00, 0x00}, /* 31, -15.5dB */
--	{0x09, 0x08, 0x07, 0x04, 0x00, 0x00, 0x00, 0x00}  /* 32, -16.0dB */
--};
--
- static void rtl92ee_dm_false_alarm_counter_statistics(struct ieee80211_hw *hw)
- {
- 	u32 ret_value;
--- 
-2.7.4
-
-
+v3: Added more Tested-by: tags
+    Added detection for 3970X, and report Tccd1 for this CPU.
