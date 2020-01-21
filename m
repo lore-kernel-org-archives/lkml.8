@@ -2,178 +2,197 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D88C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:00:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE07C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2772321569
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:00:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579622400;
-	bh=ryf1s+gQkLfUmVXGBywSimmGcdpJgK+HxZZJfSBIFhA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=n1YCbOMrBS2sipF1T0ArZtO7C8A/wb79U9gHVeDCPQ2SHjsgXZk1d0iELuny3iSm/
-	 fo/rzL8g0jKg8rt1UzN+46HSaR7iLVA7GodHULRUWmV/8S36x7lyY+0+qZcMQveFu1
-	 TOB6PKM2G1qZA7hW4O58T+0+3tQjCFqMEGWBRifg=
+	by mail.kernel.org (Postfix) with ESMTP id 845D224654
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:00:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="zoinFZ0m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729205AbgAUP77 (ORCPT
+        id S1729210AbgAUQAJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 10:59:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40928 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728852AbgAUP77 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 10:59:59 -0500
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADE6B21569;
-        Tue, 21 Jan 2020 15:59:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579622397;
-        bh=ryf1s+gQkLfUmVXGBywSimmGcdpJgK+HxZZJfSBIFhA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=EhsEHuxDhVOLCiO1c7kh12A+l2iwiN/13+hO4LTeGIvXKRDRuaxsOicJ6oOPUFfDb
-         Glz7zIZlaURfw/ONUFMCKP7zO2FoHAQCimn+hedNDRiHqGoQWze21cK/nOR8vFdKAN
-         Rhg8ITcOa+hLH7VCYmc7rARBIcyb3veYEq5gycIA=
-Received: by mail-qt1-f172.google.com with SMTP id c24so3002255qtp.5;
-        Tue, 21 Jan 2020 07:59:57 -0800 (PST)
-X-Gm-Message-State: APjAAAV3NSd3hGwoIkkfpmk9ubk9fpbIfmKn96JivlCPEpZFkvfWxAQz
-        2jSeT7p2f1zJfQoi58LB8shVYWx9Cu6tZzMoyw==
-X-Google-Smtp-Source: APXvYqyhEHRvR0Nvy8KWtOPte04rNrGpogJKTbMYfC57yAr3m8dtvfb8qRkQZAniz9MpperHjlzEEBK/uxyyndNsOTI=
-X-Received: by 2002:ac8:1415:: with SMTP id k21mr5218660qtj.300.1579622396814;
- Tue, 21 Jan 2020 07:59:56 -0800 (PST)
+        Tue, 21 Jan 2020 11:00:09 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:35155 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729030AbgAUQAJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 11:00:09 -0500
+Received: by mail-pf1-f195.google.com with SMTP id i23so1719561pfo.2
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 08:00:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=RGHqVegSf46OSrC+vq5Pv4eGAqLOtAwhyN30PfSx9gU=;
+        b=zoinFZ0mYrahd5Hl1dR/pT8vt/qq41K+qA8Hu0uEzs6mlFAFNlvnAch12rsopzsna0
+         MNXC+r7/nPCC9+9CUKJwbajVlDzmdO6Qgu+H3wuh85tZslqyxdccc4VrsLuTqhRfyDyd
+         MGVpXxoWhYOpTRPzk6Z62zIvWWq9vGnpCkB/mRCo54/h0TzeVtku4lgq589YqsBHdkbJ
+         dnHSE4oCmvIZnG4aEQ3l4mcwVPt9P7qoGGUTGBqLcU8WjhYHGZFAjN9MF1ZnenLyrxVD
+         VMWieaMITU5HC9uhCOAsCsHkG3XVRElBFX2UKbnzLw9BhbBEG3q0JF9z3KxmQ6wWDu4Q
+         GiaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=RGHqVegSf46OSrC+vq5Pv4eGAqLOtAwhyN30PfSx9gU=;
+        b=SHTXJziGh3WPzp7pTvlsIvO+irheY/TeY075VHxVZi6H3WqaniCcKRUwKyITLwCyDz
+         Iojab/amx/VaOV4PSNW3j/lNtkVTpuxT5l34vurxb6uArEFxz+fat6DefYZEL5itRkri
+         /MkLLcC5W1GvuDYAEBM72Ek6YmIicvVPmOtEquIIBOY7YWTqt6POvowqAbmgB5Gne9BY
+         7Xwum9dJhQQdautpM7ZiLyYeNsp9SOLUtQV8KBnkYXV3GRnER5XFyM/D/gSlERHBdTXB
+         tC50Ejaj63HPyJBENSk+uAZoqnC09XK2Hi2N/4D8ZqXyMB9HykUPlXI56kDJkU188KED
+         97fw==
+X-Gm-Message-State: APjAAAXX2dPfe8n3DppMqI1QFPe/M2cPaFhCf5TjHd49ANLTryCnpWIX
+        iIldwEwM+pWGOYttvajd8bnILQ==
+X-Google-Smtp-Source: APXvYqxuVoSpYzHo96UzVZPSuSADBuFnCVj4+LOj72UvgSuwSuN2rKsj1LKEx0Md+mb4O0Cvw/uxpQ==
+X-Received: by 2002:a62:8782:: with SMTP id i124mr5101047pfe.22.1579622408512;
+        Tue, 21 Jan 2020 08:00:08 -0800 (PST)
+Received: from localhost ([2620:10d:c090:180::f3e0])
+        by smtp.gmail.com with ESMTPSA id o98sm4261120pjb.15.2020.01.21.08.00.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2020 08:00:07 -0800 (PST)
+Date:   Tue, 21 Jan 2020 11:00:05 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org,
+        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
+        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
+        yang.shi@linux.alibaba.com, willy@infradead.org,
+        shakeelb@google.com, Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Roman Gushchin <guro@fb.com>,
+        Chris Down <chris@chrisdown.name>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vlastimil Babka <vbabka@suse.cz>, Qian Cai <cai@lca.pw>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        swkhack <swkhack@gmail.com>,
+        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Colin Ian King <colin.king@canonical.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Yafang Shao <laoar.shao@gmail.com>
+Subject: Re: [PATCH v8 03/10] mm/lru: replace pgdat lru_lock with lruvec lock
+Message-ID: <20200121160005.GA69293@cmpxchg.org>
+References: <1579143909-156105-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1579143909-156105-4-git-send-email-alex.shi@linux.alibaba.com>
+ <20200116215222.GA64230@cmpxchg.org>
+ <9ee80b68-a78f-714a-c727-1f6d2b4f87ea@linux.alibaba.com>
 MIME-Version: 1.0
-References: <20200113181625.3130-1-alexandre.torgue@st.com>
- <20200113181625.3130-2-alexandre.torgue@st.com> <20200116005741.GB54439@umbus>
- <d2594b79-a45d-dcac-3642-90016a1408b8@st.com> <20200117090937.GU54439@umbus>
- <CAL_JsqKTsX9efYDMjGahFDxj0cEfzozeNrY1Nq1bECzgOZGqdQ@mail.gmail.com> <20200119063916.GD54439@umbus>
-In-Reply-To: <20200119063916.GD54439@umbus>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 21 Jan 2020 09:59:44 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+-O0cpw9YtVGAjFWstu-=uXVgK0ccgyRj+bjR93gPriw@mail.gmail.com>
-Message-ID: <CAL_Jsq+-O0cpw9YtVGAjFWstu-=uXVgK0ccgyRj+bjR93gPriw@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/3] dtc: Add dtb build information option
-To:     David Gibson <david@gibson.dropbear.id.au>
-Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Simon Glass <sjg@chromium.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Devicetree Compiler <devicetree-compiler@vger.kernel.org>,
-        Steve McIntyre <steve.mcintyre@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9ee80b68-a78f-714a-c727-1f6d2b4f87ea@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 19, 2020 at 12:41 AM David Gibson
-<david@gibson.dropbear.id.au> wrote:
->
-> On Fri, Jan 17, 2020 at 08:43:23AM -0600, Rob Herring wrote:
-> > On Fri, Jan 17, 2020 at 6:26 AM David Gibson
-> > <david@gibson.dropbear.id.au> wrote:
-> > >
-> > > On Thu, Jan 16, 2020 at 09:58:23AM +0100, Alexandre Torgue wrote:
-> > > > Hi David
-> > > >
-> > > > On 1/16/20 1:57 AM, David Gibson wrote:
-> > > > > On Mon, Jan 13, 2020 at 07:16:23PM +0100, Alexandre Torgue wrote:
-> > > > > > This commit adds the possibility to add build information for a DTB.
-> > > > > > Build information can be: build date, DTS version, "who built the DTB"
-> > > > > > (same kind of information that we get in Linux with the Linux banner).
-> > > > > >
-> > > > > > To do this, an extra option "-B" using an information file as argument
-> > > > > > has been added. If this option is used, input device tree is appended with
-> > > > > > a new string property "Build-info". This property is built with information
-> > > > > > found in information file given as argument. This file has to be generated
-> > > > > > by user and shouldn't exceed 256 bytes.
-> > > > > >
-> > > > > > Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
-> > > > >
-> > > > > At the very least, this patch of the series will need to be sent to
-> > > > > upstream dtc first.
-> > > >
-> > > > Ok sorry. I thought that sending all the series would give more
-> > > > information.
-> > >
-> > > That's fair enough, but in order to merge, you'll need to post against
-> > > upstream dtc.
-> > >
-> > > > > I'm also not terribly clear on what you're trying to accomplish here,
-> > > > > and why it's useful.
-> > > >
-> > > > Let's take Kernel boot at example (but could be extend to other DTB "users"
-> > > > like U-Boot). When Linux kernel booting we get a log that gives useful
-> > > > information about kernel image: source version, build date, people who built
-> > > > the kernel image, compiler version. This information is useful for debug and
-> > > > support. The aim is to get same kind of information but for the DTB.
-> > > >
-> > > > > Since you're doing this specifically for use with dtbs built in the
-> > > > > kernel build, could you just use a:
-> > > > >     Build-info = /incbin/ "build-info.txt";
-> > > > > in each of the in-kernel .dts files?
-> > > >
-> > > > My first idea was to not modify all existing .dts files. Adding an extra
-> > > > option in dtc is (for me) the softer way to do it. I mean, compile
-> > > > information should come through compiler without modify .dts files outside
-> > > > from dtc. In this way it will be easy to everybody using dtc (inside our
-> > > > outside Linux tree) to add dtb build info (even if they don't how to write a
-> > > > dts file).
-> > >
-> > > But you're not really having this information coming from the
-> > > compiler.  Instead you're adding a compiler option that just force
-> > > includes another file into the generated tree, and it's up to your
-> > > build scripts to put something useful into that file.
-> > >
-> > > I don't really see that as preferable to modifying the .dts files.
-> > >
-> > > I also dislike the fact that the option as proposed is much more
-> > > general than the name suggests, but also very similar too, but much
-> > > more specific than the existing /incbin/ option.
-> > >
-> > > What might be better would be to have a dtc option which force appends
-> > > an extra .dts to the mail .dts compiled.  You can then put an overlay
-> > > template in that file, something like:
-> > >
-> > > &{/} {
-> > >         linux,build-info = /incbin/ "build-info.txt;
-> > > }
-> >
-> > I like this suggestion either as an include another dts file or an
-> > overlay.
->
-> Sorry, to be clear what I'm talking about here is just including
-> another dts file, and using the compile-type overlay syntax.  This is
-> not the same as .dtbo style runtime overlays (though the final result
-> is about the same in this case).
+On Mon, Jan 20, 2020 at 08:58:09PM +0800, Alex Shi wrote:
+> 
+> 
+> 在 2020/1/17 上午5:52, Johannes Weiner 写道:
+> 
+> > You simply cannot serialize on page->mem_cgroup->lruvec when
+> > page->mem_cgroup isn't stable. You need to serialize on the page
+> > itself, one way or another, to make this work.
+> > 
+> > 
+> > So here is a crazy idea that may be worth exploring:
+> > 
+> > Right now, pgdat->lru_lock protects both PageLRU *and* the lruvec's
+> > linked list.
+> > 
+> > Can we make PageLRU atomic and use it to stabilize the lru_lock
+> > instead, and then use the lru_lock only serialize list operations?
+> > 
+> 
+> Hi Johannes,
+> 
+> I am trying to figure out the solution of atomic PageLRU, but is 
+> blocked by the following sitations, when PageLRU and lru list was protected
+> together under lru_lock, the PageLRU could be a indicator if page on lru list
+> But now seems it can't be the indicator anymore.
+> Could you give more clues of stabilization usage of PageLRU?
 
-Ah, okay. That's probably easier to implement.
+There are two types of PageLRU checks: optimistic and deterministic.
 
-> > The latter could be useful as a way to maintain current dtb
-> > files while splitting the source files into base and overlay dts
-> > files.
-> >
-> > But no, let's not prepend this with 'linux'. It's not a property
-> > specific for Linux to consume.
->
-> It's not really about who consumes it.  It's about defining a
-> namespace for the new property to exist in, since it's not part of a
-> relevant standard (if we wanted to make it such, we should pin down
-> what goes in there with much more precision).
+The check in activate_page() for example is optimistic and the result
+unstable, but that's okay, because if we miss a page here and there
+it's not the end of the world.
 
-I can't think of any cases of the 'linux' prefix not being about who
-consumes it. And we often end up dropping 'linux' because it turns out
-to not be Linux specific. I don't care to see u-boot,build-info,
-freebsd,build-info, etc. when a given dtb can only have 1 of those.
+But the check in __activate_page() is deterministic, because we need
+to be sure before del_page_from_lru_list(). Currently it's made
+deterministic by testing under the lock: whoever acquires the lock
+first gets to touch the LRU state. The same can be done with an atomic
+TestClearPagLRU: whoever clears the flag first gets to touch the LRU
+state (the lock is then only acquired to not corrupt the linked list,
+in case somebody adds or removes a different page at the same time).
 
-My intent is this property name is added to the DT spec, but I don't
-agree we should define what's in it beyond a string. It is information
-that is useful for humans identifying what the dtb was built from.
+I.e. in my proposal, if you want to get a stable read of PageLRU, you
+have to clear it atomically. But AFAICS, everybody who currently does
+need a stable read either already clears it or can easily be converted
+to clear it and then set it again (like __activate_page and friends).
 
-Rob
+> __page_cache_release/release_pages/compaction            __pagevec_lru_add
+> if (TestClearPageLRU(page))                              if (!PageLRU())
+>                                                                 lruvec_lock();
+>                                                                 list_add();
+>         			                                lruvec_unlock();
+>         			                                SetPageLRU() //position 1
+>         lock_page_lruvec_irqsave(page, &flags);
+>         del_page_from_lru_list(page, lruvec, ..);
+>         unlock_page_lruvec_irqrestore(lruvec, flags);
+>                                                                 SetPageLRU() //position 2
+
+Hm, that's not how __pagevec_lru_add() looks. In fact,
+__pagevec_lru_add_fn() has a BUG_ON(PageLRU).
+
+That's because only one thread can own the isolation state at a time.
+
+If PageLRU is set, only one thread can claim it. Right now, whoever
+takes the lock first and clears it wins. When we replace it with
+TestClearPageLRU, it's the same thing: only one thread can win.
+
+And you cannot set PageLRU, unless you own it. Either you isolated the
+page using TestClearPageLRU, or you allocated a new page.
+
+So you can have multiple threads trying to isolate a page from the LRU
+list, hence the atomic testclear. But no two threads should ever be
+racing to add a page to the LRU list, because only one thread can own
+the isolation state.
+
+With the atomic PageLRU flag, the sequence would be this:
+
+__pagevec_lru_add:
+
+  BUG_ON(PageLRU()) // Caller *must* own the isolation state
+
+  lruvec_lock()     // The lruvec is stable, because changing
+                    // page->mem_cgroup requires owning the
+                    // isolation state (PageLRU) and we own it
+
+  list_add()        // Linked list protected by lru_lock
+
+  lruvec_unlock()
+
+  SetPageLRU()      // The page has been added to the linked
+                    // list, give up our isolation state. Once
+                    // this flag becomes visible, other threads
+                    // can isolate the page from the LRU list
