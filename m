@@ -2,137 +2,83 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 703C9C33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:19:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2833EC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5029624125
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:19:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 041312467A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:19:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729335AbgAUQTD (ORCPT
+        id S1729456AbgAUQTR convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 11:19:03 -0500
-Received: from mga12.intel.com ([192.55.52.136]:24252 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726555AbgAUQTD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 11:19:03 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 08:19:02 -0800
-X-IronPort-AV: E=Sophos;i="5.70,346,1574150400"; 
-   d="scan'208";a="399712222"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 08:18:58 -0800
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id 4392B2072F; Tue, 21 Jan 2020 18:18:56 +0200 (EET)
-Date:   Tue, 21 Jan 2020 18:18:56 +0200
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     linux-i2c <linux-i2c@vger.kernel.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Bingbu Cao <bingbu.cao@intel.com>, linux-media@vger.kernel.org,
-        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
-        Hyungwoo Yang <hyungwoo.yang@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Mani, Rajmohan" <rajmohan.mani@intel.com>,
-        Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH v4 6/6] Documentation: ACPI: Document probe-low-power
- _DSD property
-Message-ID: <20200121161856.GZ5440@paasikivi.fi.intel.com>
-References: <20200121134157.20396-1-sakari.ailus@linux.intel.com>
- <20200121134157.20396-7-sakari.ailus@linux.intel.com>
- <CAJZ5v0iJXUjK0n7mkqxagX9FtOmMsLqVMmU2xpQOLSb0aBWSMA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0iJXUjK0n7mkqxagX9FtOmMsLqVMmU2xpQOLSb0aBWSMA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 21 Jan 2020 11:19:17 -0500
+Received: from coyote.holtmann.net ([212.227.132.17]:58591 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726555AbgAUQTQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 11:19:16 -0500
+Received: from marcel-macpro.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
+        by mail.holtmann.org (Postfix) with ESMTPSA id CF07BCECE3;
+        Tue, 21 Jan 2020 17:28:33 +0100 (CET)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
+Subject: Re: [PATCH] net/bluetooth: remove __get_channel/dir
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <1579596583-258090-1-git-send-email-alex.shi@linux.alibaba.com>
+Date:   Tue, 21 Jan 2020 17:19:14 +0100
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <8CA3EF63-F688-48B2-A21D-16FDBC809EDE@holtmann.org>
+References: <1579596583-258090-1-git-send-email-alex.shi@linux.alibaba.com>
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+X-Mailer: Apple Mail (2.3608.40.2.2.4)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 05:09:44PM +0100, Rafael J. Wysocki wrote:
-> On Tue, Jan 21, 2020 at 2:41 PM Sakari Ailus
-> <sakari.ailus@linux.intel.com> wrote:
-> >
-> > Document the probe-low-power _DSD property and how it is used with I²C
-> > drivers.
-> >
-> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > ---
-> >  .../acpi/dsd/probe-low-power.rst              | 28 +++++++++++++++++++
-> >  Documentation/firmware-guide/acpi/index.rst   |  1 +
-> >  2 files changed, 29 insertions(+)
-> >  create mode 100644 Documentation/firmware-guide/acpi/dsd/probe-low-power.rst
-> >
-> > diff --git a/Documentation/firmware-guide/acpi/dsd/probe-low-power.rst b/Documentation/firmware-guide/acpi/dsd/probe-low-power.rst
-> > new file mode 100644
-> > index 0000000000000..e0343ffefe071
-> > --- /dev/null
-> > +++ b/Documentation/firmware-guide/acpi/dsd/probe-low-power.rst
-> > @@ -0,0 +1,28 @@
-> > +.. SPDX-License-Identifier: GPL-2.0
-> > +
-> > +======================================
-> > +Probing I²C devices in low power state
-> > +======================================
-> > +
-> > +Introduction
-> > +============
-> > +
-> > +In some cases it may be preferred to leave certain devices powered off for
-> > +the entire system bootup if powering on these devices has adverse side
-> > +effects, beyond just powering on the said device. The _DSD property
-> > +"probe-low-power" has been defined for this purpose.
+Hi Alex,
+
+> These 2 macros are never used from first git commit Linux-2.6.12-rc2. So
+> better to remove them.
 > 
-> Well, if you say "has been defined", you need to provide a pointer to
-> the definition document (a specification of some sort or similar).
-
-How about:
-
-s/has been defined/is used/
-
+> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+> Cc: Marcel Holtmann <marcel@holtmann.org> 
+> Cc: Johan Hedberg <johan.hedberg@gmail.com> 
+> Cc: "David S. Miller" <davem@davemloft.net> 
+> Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com> 
+> Cc: linux-bluetooth@vger.kernel.org 
+> Cc: netdev@vger.kernel.org 
+> Cc: linux-kernel@vger.kernel.org 
+> ---
+> net/bluetooth/rfcomm/core.c | 2 --
+> 1 file changed, 2 deletions(-)
 > 
-> > +
-> > +How it works
-> > +============
-> > +
-> > +The property "probe-low-power" boolean property may be used to tell Linux
-> > +that the I²C framework should instruct the kernel ACPI framework to leave
-> > +the device in the low power state. If the driver indicates its support for
-> > +this in its struct i2c_driver.probe_low_power field and the
-> > +"probe-low-power" property is present, the device will not be powered on
-> > +for probe.
-> > +
-> > +The downside is that as the device is not powered on, even if there's a
-> > +problem with the device, the driver likely probes just fine but the first
-> > +user will find out the device doesn't work, instead of a failure at probe
-> > +time. This feature should thus be used sparingly.
-> > diff --git a/Documentation/firmware-guide/acpi/index.rst b/Documentation/firmware-guide/acpi/index.rst
-> > index ad3b5afdae77e..4e4ac675c0ff8 100644
-> > --- a/Documentation/firmware-guide/acpi/index.rst
-> > +++ b/Documentation/firmware-guide/acpi/index.rst
-> > @@ -11,6 +11,7 @@ ACPI Support
-> >     dsd/graph
-> >     dsd/data-node-references
-> >     dsd/leds
-> > +   dsd/probe-low-power
-> >     enumeration
-> >     osi
-> >     method-customizing
-> > --
-> > 2.20.1
-> >
+> diff --git a/net/bluetooth/rfcomm/core.c b/net/bluetooth/rfcomm/core.c
+> index 3a9e9d9670be..825adff79f13 100644
+> --- a/net/bluetooth/rfcomm/core.c
+> +++ b/net/bluetooth/rfcomm/core.c
+> @@ -73,8 +73,6 @@ static struct rfcomm_session *rfcomm_session_create(bdaddr_t *src,
+> 
+> /* ---- RFCOMM frame parsing macros ---- */
+> #define __get_dlci(b)     ((b & 0xfc) >> 2)
+> -#define __get_channel(b)  ((b & 0xf8) >> 3)
+> -#define __get_dir(b)      ((b & 0x04) >> 2)
+> #define __get_type(b)     ((b & 0xef))
+> 
+> #define __test_ea(b)      ((b & 0x01))
 
--- 
-Sakari Ailus
+it seems we are also not using __dir macro either.
+
+Regards
+
+Marcel
+
