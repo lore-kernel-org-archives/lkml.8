@@ -2,556 +2,269 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A13C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:32:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8CF9C33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEEF924653
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:32:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZDwNg6lk"
+	by mail.kernel.org (Postfix) with ESMTP id 942B621569
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:36:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729508AbgAUOc0 (ORCPT
+        id S1729184AbgAUOgZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 09:32:26 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35726 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728992AbgAUOcX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 09:32:23 -0500
-Received: by mail-wr1-f68.google.com with SMTP id g17so3477513wro.2
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 06:32:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=k3sVQxFN9Jt4vZYxvCH5I4zJetCqBCSztJTvthu9bDk=;
-        b=ZDwNg6lkgAofDtTf4YmV3wzBHeoRWwk44Ita5Sw6pJugWuO+ycqpbPP8rQAsOtrRBX
-         FA9mFeMkyW8OeEEYZ45mPf8Lw9m7SzUAVyRrLE9+FmJU+N9lHAU+9f1YqsNesWmbxG0k
-         byes1QMC+z0zVhm5RurL/MO6DAkW5hSM5xJ39bNylC0dxHMLVOkpLEWfxeBBqoNvOrnw
-         Ye6lCM4bdsrNkuctLS15yDWnhAqWabZgpRhIJA8qeZ6sHk2UYyu+br4CRoWzFC5+LJ94
-         8vmlzhFRsi97ONJqkBpMkOACxLZVw4DcmaXtA+wqtafh8oMXoX/hqTxUZpGkpi47NEqD
-         bEjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references;
-        bh=k3sVQxFN9Jt4vZYxvCH5I4zJetCqBCSztJTvthu9bDk=;
-        b=f9BZzOzm+YJB57uaMN/oG/Zw7u3kGO6yAgCREWC8zqBkDY6KAs3LqsxW+rSkQZGEPI
-         SzfeYcz+NBx3Ep4rM/cdrP55qLKf+v6jLXOKB1mCzgiB13oRfSFbTA/gV+IrL///EyB8
-         4wV3zTfAdF6jg4TqV6d4fhSS/XCD4EYV+HHYrnLxIewg3RLQnEEmfqA4xoutNkQWWfoX
-         n/szypA+AHk741HabEV6gVJEaQQRDMPJ8zfiVmRVbVyIgm8u+H8EnoIRn4mFHU+kTvOG
-         WmFWzfe/WQZOOjRtbARYYpIrF53UfEz3GlNhdBjYfl40TEq6B4q4Hi13i4k2t+THL2ET
-         yEvA==
-X-Gm-Message-State: APjAAAX0jXKs1NpmDCt4jr8KcL1aGrjxvYE3mgATsRrknZG9S4t7RV2S
-        yemHQ3iWM5df+9wUboNe3iM=
-X-Google-Smtp-Source: APXvYqzdkYCRQpsDwAOkJcDDv5Rg9uCF5l895NTMvUl9TehindAQTkm+WcovDHuIwOCYso3EA42sCA==
-X-Received: by 2002:adf:e58b:: with SMTP id l11mr5559237wrm.402.1579617141285;
-        Tue, 21 Jan 2020 06:32:21 -0800 (PST)
-Received: from localhost.localdomain ([197.254.95.38])
-        by smtp.googlemail.com with ESMTPSA id g2sm52781284wrw.76.2020.01.21.06.32.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 06:32:20 -0800 (PST)
-From:   Wambui Karuga <wambui.karugax@gmail.com>
-To:     jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 6/6] drm/i915/hdcp: conversion to struct drm_device based logging macros
-Date:   Tue, 21 Jan 2020 17:31:55 +0300
-Message-Id: <20200121143155.20856-7-wambui.karugax@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200121143155.20856-1-wambui.karugax@gmail.com>
-References: <20200121143155.20856-1-wambui.karugax@gmail.com>
+        Tue, 21 Jan 2020 09:36:25 -0500
+Received: from foss.arm.com ([217.140.110.172]:44048 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726968AbgAUOgY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 09:36:24 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 817BA30E;
+        Tue, 21 Jan 2020 06:36:23 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DBD9E3F52E;
+        Tue, 21 Jan 2020 06:36:20 -0800 (PST)
+Subject: Re: [PATCH v3 2/5] iommu/arm-smmu: Add support for split pagetables
+To:     Jordan Crouse <jcrouse@codeaurora.org>,
+        iommu@lists.linux-foundation.org
+Cc:     will@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Joerg Roedel <joro@8bytes.org>
+References: <1576514271-15687-1-git-send-email-jcrouse@codeaurora.org>
+ <1576514271-15687-3-git-send-email-jcrouse@codeaurora.org>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <a38fe02a-4f84-f032-8c9d-4ecf72a87a55@arm.com>
+Date:   Tue, 21 Jan 2020 14:36:19 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <1576514271-15687-3-git-send-email-jcrouse@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Converts various instances of the printk based logging macros in
-i915/display/intel_hdcp.c with the struct drm_device based macros using
-coccinelle. The script matches based on the existence of an existing
-struct drm_i915_private device:
-@rule1@
-identifier fn, T;
-@@
+On 16/12/2019 4:37 pm, Jordan Crouse wrote:
+> Add support to enable split pagetables (TTBR1) if the supporting driver
+> requests it via the DOMAIN_ATTR_SPLIT_TABLES flag. When enabled, the driver
+> will set up the TTBR0 and TTBR1 regions and program the default domain
+> pagetable on TTBR1.
+> 
+> After attaching the device, the value of he domain attribute can
+> be queried to see if the split pagetables were successfully programmed.
+> Furthermore the domain geometry will be updated so that the caller can
+> determine the active region for the pagetable that was programmed.
+> 
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> ---
+> 
+>   drivers/iommu/arm-smmu.c | 40 +++++++++++++++++++++++++++++++++++-----
+>   drivers/iommu/arm-smmu.h | 45 +++++++++++++++++++++++++++++++++++++++------
+>   2 files changed, 74 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> index c106406..7b59116 100644
+> --- a/drivers/iommu/arm-smmu.c
+> +++ b/drivers/iommu/arm-smmu.c
+> @@ -538,9 +538,17 @@ static void arm_smmu_init_context_bank(struct arm_smmu_domain *smmu_domain,
+>   			cb->ttbr[0] = pgtbl_cfg->arm_v7s_cfg.ttbr;
+>   			cb->ttbr[1] = 0;
+>   		} else {
+> -			cb->ttbr[0] = pgtbl_cfg->arm_lpae_s1_cfg.ttbr;
+> -			cb->ttbr[0] |= FIELD_PREP(TTBRn_ASID, cfg->asid);
+> -			cb->ttbr[1] = FIELD_PREP(TTBRn_ASID, cfg->asid);
+> +			if (pgtbl_cfg->quirks & IO_PGTABLE_QUIRK_ARM_TTBR1) {
+> +				cb->ttbr[0] = FIELD_PREP(TTBRn_ASID, cfg->asid);
+> +				cb->ttbr[1] = pgtbl_cfg->arm_lpae_s1_cfg.ttbr;
+> +				cb->ttbr[1] |=
+> +					FIELD_PREP(TTBRn_ASID, cfg->asid);
+> +			} else {
+> +				cb->ttbr[0] = pgtbl_cfg->arm_lpae_s1_cfg.ttbr;
+> +				cb->ttbr[0] |=
+> +					FIELD_PREP(TTBRn_ASID, cfg->asid);
+> +				cb->ttbr[1] = FIELD_PREP(TTBRn_ASID, cfg->asid);
+> +			}
+>   		}
+>   	} else {
+>   		cb->ttbr[0] = pgtbl_cfg->arm_lpae_s2_cfg.vttbr;
+> @@ -651,6 +659,7 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+>   	enum io_pgtable_fmt fmt;
+>   	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
+>   	struct arm_smmu_cfg *cfg = &smmu_domain->cfg;
+> +	u32 quirks = 0;
+>   
+>   	mutex_lock(&smmu_domain->init_mutex);
+>   	if (smmu_domain->smmu)
+> @@ -719,6 +728,8 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+>   		oas = smmu->ipa_size;
+>   		if (cfg->fmt == ARM_SMMU_CTX_FMT_AARCH64) {
+>   			fmt = ARM_64_LPAE_S1;
+> +			if (smmu_domain->split_pagetables)
+> +				quirks |= IO_PGTABLE_QUIRK_ARM_TTBR1;
+>   		} else if (cfg->fmt == ARM_SMMU_CTX_FMT_AARCH32_L) {
+>   			fmt = ARM_32_LPAE_S1;
+>   			ias = min(ias, 32UL);
+> @@ -788,6 +799,7 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+>   		.coherent_walk	= smmu->features & ARM_SMMU_FEAT_COHERENT_WALK,
+>   		.tlb		= smmu_domain->flush_ops,
+>   		.iommu_dev	= smmu->dev,
+> +		.quirks		= quirks,
+>   	};
+>   
+>   	if (smmu_domain->non_strict)
+> @@ -801,8 +813,15 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+>   
+>   	/* Update the domain's page sizes to reflect the page table format */
+>   	domain->pgsize_bitmap = pgtbl_cfg.pgsize_bitmap;
+> -	domain->geometry.aperture_end = (1UL << ias) - 1;
+> -	domain->geometry.force_aperture = true;
+> +
+> +	if (pgtbl_cfg.quirks & IO_PGTABLE_QUIRK_ARM_TTBR1) {
+> +		domain->geometry.aperture_start = ~((1ULL << ias) - 1);
 
-fn(...,struct drm_i915_private *T,...) {
-<+...
-(
--DRM_INFO(
-+drm_info(&T->drm,
-...)
-|
--DRM_ERROR(
-+drm_err(&T->drm,
-...)
-|
--DRM_WARN(
-+drm_warn(&T->drm,
-...)
-|
--DRM_DEBUG(
-+drm_dbg(&T->drm,
-...)
-|
--DRM_DEBUG_DRIVER(
-+drm_dbg(&T->drm,
-...)
-|
--DRM_DEBUG_KMS(
-+drm_dbg_kms(&T->drm,
-...)
-|
--DRM_DEBUG_ATOMIC(
-+drm_dbg_atomic(&T->drm,
-...)
-)
-...+>
-}
+AKA "~0UL << ias", if I'm not mistaken ;)
 
-@rule2@
-identifier fn, T;
-@@
+> +		domain->geometry.aperture_end = ~0UL;
+> +	} else {
+> +		domain->geometry.aperture_end = (1UL << ias) - 1;
+> +		domain->geometry.force_aperture = true;
+> +		smmu_domain->split_pagetables = false;
+> +	}
+>   
+>   	/* Initialise the context bank with our page table cfg */
+>   	arm_smmu_init_context_bank(smmu_domain, &pgtbl_cfg);
+> @@ -1484,6 +1503,9 @@ static int arm_smmu_domain_get_attr(struct iommu_domain *domain,
+>   		case DOMAIN_ATTR_NESTING:
+>   			*(int *)data = (smmu_domain->stage == ARM_SMMU_DOMAIN_NESTED);
+>   			return 0;
+> +		case DOMAIN_ATTR_SPLIT_TABLES:
+> +			*(int *)data = smmu_domain->split_pagetables;
+> +			return 0;
+>   		default:
+>   			return -ENODEV;
+>   		}
+> @@ -1524,6 +1546,14 @@ static int arm_smmu_domain_set_attr(struct iommu_domain *domain,
+>   			else
+>   				smmu_domain->stage = ARM_SMMU_DOMAIN_S1;
+>   			break;
+> +		case DOMAIN_ATTR_SPLIT_TABLES:
+> +			if (smmu_domain->smmu) {
+> +				ret = -EPERM;
+> +				goto out_unlock;
+> +			}
+> +			if (*(int *)data)
+> +				smmu_domain->split_pagetables = true;
 
-fn(...) {
-...
-struct drm_i915_private *T = ...;
-<+...
-(
--DRM_INFO(
-+drm_info(&T->drm,
-...)
-|
--DRM_ERROR(
-+drm_err(&T->drm,
-...)
-|
--DRM_WARN(
-+drm_warn(&T->drm,
-...)
-|
--DRM_DEBUG(
-+drm_dbg(&T->drm,
-...)
-|
--DRM_DEBUG_KMS(
-+drm_dbg_kms(&T->drm,
-...)
-|
--DRM_DEBUG_DRIVER(
-+drm_dbg(&T->drm,
-...)
-|
--DRM_DEBUG_ATOMIC(
-+drm_dbg_atomic(&T->drm,
-...)
-)
-...+>
-}
+I still like the idea of passing the actual split point here, but as it 
+is I think this sets the scene perfectly for coming back and doing that 
+later.
 
-New checkpatch warnings were addressed manually.
+> +			break;
+>   		default:
+>   			ret = -ENODEV;
+>   		}
+> diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
+> index afab9de..68526cc 100644
+> --- a/drivers/iommu/arm-smmu.h
+> +++ b/drivers/iommu/arm-smmu.h
+> @@ -177,6 +177,16 @@ enum arm_smmu_cbar_type {
+>   #define TCR_IRGN0			GENMASK(9, 8)
+>   #define TCR_T0SZ			GENMASK(5, 0)
+>   
+> +#define TCR_TG1				GENMASK(31, 30)
+> +
+> +#define TG0_4K				0
+> +#define TG0_64K				1
+> +#define TG0_16K				2
+> +
+> +#define TG1_16K				1
+> +#define TG1_4K				2
+> +#define TG1_64K				3
+> +
+>   #define ARM_SMMU_CB_CONTEXTIDR		0x34
+>   #define ARM_SMMU_CB_S1_MAIR0		0x38
+>   #define ARM_SMMU_CB_S1_MAIR1		0x3c
+> @@ -329,16 +339,39 @@ struct arm_smmu_domain {
+>   	struct mutex			init_mutex; /* Protects smmu pointer */
+>   	spinlock_t			cb_lock; /* Serialises ATS1* ops and TLB syncs */
+>   	struct iommu_domain		domain;
+> +	bool				split_pagetables;
+>   };
+>   
+> +static inline u32 arm_smmu_lpae_tcr_tg(struct io_pgtable_cfg *cfg)
+> +{
+> +	u32 val;
+> +
+> +	if (!(cfg->quirks & IO_PGTABLE_QUIRK_ARM_TTBR1))
+> +		return FIELD_PREP(TCR_TG0, cfg->arm_lpae_s1_cfg.tcr.tg);
+> +
+> +	val = FIELD_PREP(TCR_TG1, cfg->arm_lpae_s1_cfg.tcr.tg);
+> +
+> +	if (cfg->arm_lpae_s1_cfg.tcr.tg == TG1_4K)
+> +		val |= FIELD_PREP(TCR_TG0, TG0_4K);
+> +	else if (cfg->arm_lpae_s1_cfg.tcr.tg == TG1_16K)
+> +		val |= FIELD_PREP(TCR_TG0, TG0_16K);
+> +	else
+> +		val |= FIELD_PREP(TCR_TG0, TG0_64K);
+> +
+> +	return val;
+> +}
 
-Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
----
- drivers/gpu/drm/i915/display/intel_hdcp.c | 138 +++++++++++++---------
- 1 file changed, 81 insertions(+), 57 deletions(-)
+This is all a bit ugly - I'd really like to rely on the real values from 
+both io_pgtable instances if at all possible...
 
-diff --git a/drivers/gpu/drm/i915/display/intel_hdcp.c b/drivers/gpu/drm/i915/display/intel_hdcp.c
-index 0fdbd39f6641..01acf6c5d04d 100644
---- a/drivers/gpu/drm/i915/display/intel_hdcp.c
-+++ b/drivers/gpu/drm/i915/display/intel_hdcp.c
-@@ -217,8 +217,9 @@ static int intel_hdcp_load_keys(struct drm_i915_private *dev_priv)
- 		ret = sandybridge_pcode_write(dev_priv,
- 					      SKL_PCODE_LOAD_HDCP_KEYS, 1);
- 		if (ret) {
--			DRM_ERROR("Failed to initiate HDCP key load (%d)\n",
--			          ret);
-+			drm_err(&dev_priv->drm,
-+				"Failed to initiate HDCP key load (%d)\n",
-+				ret);
- 			return ret;
- 		}
- 	} else {
-@@ -245,7 +246,7 @@ static int intel_write_sha_text(struct drm_i915_private *dev_priv, u32 sha_text)
- {
- 	I915_WRITE(HDCP_SHA_TEXT, sha_text);
- 	if (intel_de_wait_for_set(dev_priv, HDCP_REP_CTL, HDCP_SHA1_READY, 1)) {
--		DRM_ERROR("Timed out waiting for SHA1 ready\n");
-+		drm_err(&dev_priv->drm, "Timed out waiting for SHA1 ready\n");
- 		return -ETIMEDOUT;
- 	}
- 	return 0;
-@@ -270,7 +271,8 @@ u32 intel_hdcp_get_repeater_ctl(struct drm_i915_private *dev_priv,
- 			return HDCP_TRANSD_REP_PRESENT |
- 			       HDCP_TRANSD_SHA1_M0;
- 		default:
--			DRM_ERROR("Unknown transcoder %d\n", cpu_transcoder);
-+			drm_err(&dev_priv->drm, "Unknown transcoder %d\n",
-+				cpu_transcoder);
- 			return -EINVAL;
- 		}
- 	}
-@@ -287,7 +289,7 @@ u32 intel_hdcp_get_repeater_ctl(struct drm_i915_private *dev_priv,
- 	case PORT_E:
- 		return HDCP_DDIE_REP_PRESENT | HDCP_DDIE_SHA1_M0;
- 	default:
--		DRM_ERROR("Unknown port %d\n", port);
-+		drm_err(&dev_priv->drm, "Unknown port %d\n", port);
- 		return -EINVAL;
- 	}
- }
-@@ -762,25 +764,26 @@ static int _intel_hdcp_disable(struct intel_connector *connector)
- 	enum transcoder cpu_transcoder = hdcp->cpu_transcoder;
- 	int ret;
- 
--	DRM_DEBUG_KMS("[%s:%d] HDCP is being disabled...\n",
--		      connector->base.name, connector->base.base.id);
-+	drm_dbg_kms(&dev_priv->drm, "[%s:%d] HDCP is being disabled...\n",
-+		    connector->base.name, connector->base.base.id);
- 
- 	hdcp->hdcp_encrypted = false;
- 	I915_WRITE(HDCP_CONF(dev_priv, cpu_transcoder, port), 0);
- 	if (intel_de_wait_for_clear(dev_priv,
- 				    HDCP_STATUS(dev_priv, cpu_transcoder, port),
- 				    ~0, ENCRYPT_STATUS_CHANGE_TIMEOUT_MS)) {
--		DRM_ERROR("Failed to disable HDCP, timeout clearing status\n");
-+		drm_err(&dev_priv->drm,
-+			"Failed to disable HDCP, timeout clearing status\n");
- 		return -ETIMEDOUT;
- 	}
- 
- 	ret = hdcp->shim->toggle_signalling(intel_dig_port, false);
- 	if (ret) {
--		DRM_ERROR("Failed to disable HDCP signalling\n");
-+		drm_err(&dev_priv->drm, "Failed to disable HDCP signalling\n");
- 		return ret;
- 	}
- 
--	DRM_DEBUG_KMS("HDCP is disabled\n");
-+	drm_dbg_kms(&dev_priv->drm, "HDCP is disabled\n");
- 	return 0;
- }
- 
-@@ -790,11 +793,11 @@ static int _intel_hdcp_enable(struct intel_connector *connector)
- 	struct drm_i915_private *dev_priv = connector->base.dev->dev_private;
- 	int i, ret, tries = 3;
- 
--	DRM_DEBUG_KMS("[%s:%d] HDCP is being enabled...\n",
--		      connector->base.name, connector->base.base.id);
-+	drm_dbg_kms(&dev_priv->drm, "[%s:%d] HDCP is being enabled...\n",
-+		    connector->base.name, connector->base.base.id);
- 
- 	if (!hdcp_key_loadable(dev_priv)) {
--		DRM_ERROR("HDCP key Load is not possible\n");
-+		drm_err(&dev_priv->drm, "HDCP key Load is not possible\n");
- 		return -ENXIO;
- 	}
- 
-@@ -805,7 +808,8 @@ static int _intel_hdcp_enable(struct intel_connector *connector)
- 		intel_hdcp_clear_keys(dev_priv);
- 	}
- 	if (ret) {
--		DRM_ERROR("Could not load HDCP keys, (%d)\n", ret);
-+		drm_err(&dev_priv->drm, "Could not load HDCP keys, (%d)\n",
-+			ret);
- 		return ret;
- 	}
- 
-@@ -817,13 +821,14 @@ static int _intel_hdcp_enable(struct intel_connector *connector)
- 			return 0;
- 		}
- 
--		DRM_DEBUG_KMS("HDCP Auth failure (%d)\n", ret);
-+		drm_dbg_kms(&dev_priv->drm, "HDCP Auth failure (%d)\n", ret);
- 
- 		/* Ensuring HDCP encryption and signalling are stopped. */
- 		_intel_hdcp_disable(connector);
- 	}
- 
--	DRM_DEBUG_KMS("HDCP authentication failed (%d tries/%d)\n", tries, ret);
-+	drm_dbg_kms(&dev_priv->drm,
-+		    "HDCP authentication failed (%d tries/%d)\n", tries, ret);
- 	return ret;
- }
- 
-@@ -854,10 +859,11 @@ static int intel_hdcp_check_link(struct intel_connector *connector)
- 	}
- 
- 	if (WARN_ON(!intel_hdcp_in_use(dev_priv, cpu_transcoder, port))) {
--		DRM_ERROR("%s:%d HDCP link stopped encryption,%x\n",
--			  connector->base.name, connector->base.base.id,
--			  I915_READ(HDCP_STATUS(dev_priv, cpu_transcoder,
--						port)));
-+		drm_err(&dev_priv->drm,
-+			"%s:%d HDCP link stopped encryption,%x\n",
-+			connector->base.name, connector->base.base.id,
-+			I915_READ(HDCP_STATUS(dev_priv, cpu_transcoder,
-+					      port)));
- 		ret = -ENXIO;
- 		hdcp->value = DRM_MODE_CONTENT_PROTECTION_DESIRED;
- 		schedule_work(&hdcp->prop_work);
-@@ -872,12 +878,13 @@ static int intel_hdcp_check_link(struct intel_connector *connector)
- 		goto out;
- 	}
- 
--	DRM_DEBUG_KMS("[%s:%d] HDCP link failed, retrying authentication\n",
--		      connector->base.name, connector->base.base.id);
-+	drm_dbg_kms(&dev_priv->drm,
-+		    "[%s:%d] HDCP link failed, retrying authentication\n",
-+		    connector->base.name, connector->base.base.id);
- 
- 	ret = _intel_hdcp_disable(connector);
- 	if (ret) {
--		DRM_ERROR("Failed to disable hdcp (%d)\n", ret);
-+		drm_err(&dev_priv->drm, "Failed to disable hdcp (%d)\n", ret);
- 		hdcp->value = DRM_MODE_CONTENT_PROTECTION_DESIRED;
- 		schedule_work(&hdcp->prop_work);
- 		goto out;
-@@ -885,7 +892,7 @@ static int intel_hdcp_check_link(struct intel_connector *connector)
- 
- 	ret = _intel_hdcp_enable(connector);
- 	if (ret) {
--		DRM_ERROR("Failed to enable hdcp (%d)\n", ret);
-+		drm_err(&dev_priv->drm, "Failed to enable hdcp (%d)\n", ret);
- 		hdcp->value = DRM_MODE_CONTENT_PROTECTION_DESIRED;
- 		schedule_work(&hdcp->prop_work);
- 		goto out;
-@@ -944,7 +951,8 @@ hdcp2_prepare_ake_init(struct intel_connector *connector,
- 
- 	ret = comp->ops->initiate_hdcp2_session(comp->mei_dev, data, ake_data);
- 	if (ret)
--		DRM_DEBUG_KMS("Prepare_ake_init failed. %d\n", ret);
-+		drm_dbg_kms(&dev_priv->drm, "Prepare_ake_init failed. %d\n",
-+			    ret);
- 	mutex_unlock(&dev_priv->hdcp_comp_mutex);
- 
- 	return ret;
-@@ -974,7 +982,8 @@ hdcp2_verify_rx_cert_prepare_km(struct intel_connector *connector,
- 							 rx_cert, paired,
- 							 ek_pub_km, msg_sz);
- 	if (ret < 0)
--		DRM_DEBUG_KMS("Verify rx_cert failed. %d\n", ret);
-+		drm_dbg_kms(&dev_priv->drm, "Verify rx_cert failed. %d\n",
-+			    ret);
- 	mutex_unlock(&dev_priv->hdcp_comp_mutex);
- 
- 	return ret;
-@@ -998,7 +1007,7 @@ static int hdcp2_verify_hprime(struct intel_connector *connector,
- 
- 	ret = comp->ops->verify_hprime(comp->mei_dev, data, rx_hprime);
- 	if (ret < 0)
--		DRM_DEBUG_KMS("Verify hprime failed. %d\n", ret);
-+		drm_dbg_kms(&dev_priv->drm, "Verify hprime failed. %d\n", ret);
- 	mutex_unlock(&dev_priv->hdcp_comp_mutex);
- 
- 	return ret;
-@@ -1023,7 +1032,8 @@ hdcp2_store_pairing_info(struct intel_connector *connector,
- 
- 	ret = comp->ops->store_pairing_info(comp->mei_dev, data, pairing_info);
- 	if (ret < 0)
--		DRM_DEBUG_KMS("Store pairing info failed. %d\n", ret);
-+		drm_dbg_kms(&dev_priv->drm, "Store pairing info failed. %d\n",
-+			    ret);
- 	mutex_unlock(&dev_priv->hdcp_comp_mutex);
- 
- 	return ret;
-@@ -1048,7 +1058,8 @@ hdcp2_prepare_lc_init(struct intel_connector *connector,
- 
- 	ret = comp->ops->initiate_locality_check(comp->mei_dev, data, lc_init);
- 	if (ret < 0)
--		DRM_DEBUG_KMS("Prepare lc_init failed. %d\n", ret);
-+		drm_dbg_kms(&dev_priv->drm, "Prepare lc_init failed. %d\n",
-+			    ret);
- 	mutex_unlock(&dev_priv->hdcp_comp_mutex);
- 
- 	return ret;
-@@ -1073,7 +1084,8 @@ hdcp2_verify_lprime(struct intel_connector *connector,
- 
- 	ret = comp->ops->verify_lprime(comp->mei_dev, data, rx_lprime);
- 	if (ret < 0)
--		DRM_DEBUG_KMS("Verify L_Prime failed. %d\n", ret);
-+		drm_dbg_kms(&dev_priv->drm, "Verify L_Prime failed. %d\n",
-+			    ret);
- 	mutex_unlock(&dev_priv->hdcp_comp_mutex);
- 
- 	return ret;
-@@ -1097,7 +1109,8 @@ static int hdcp2_prepare_skey(struct intel_connector *connector,
- 
- 	ret = comp->ops->get_session_key(comp->mei_dev, data, ske_data);
- 	if (ret < 0)
--		DRM_DEBUG_KMS("Get session key failed. %d\n", ret);
-+		drm_dbg_kms(&dev_priv->drm, "Get session key failed. %d\n",
-+			    ret);
- 	mutex_unlock(&dev_priv->hdcp_comp_mutex);
- 
- 	return ret;
-@@ -1126,7 +1139,8 @@ hdcp2_verify_rep_topology_prepare_ack(struct intel_connector *connector,
- 							 rep_topology,
- 							 rep_send_ack);
- 	if (ret < 0)
--		DRM_DEBUG_KMS("Verify rep topology failed. %d\n", ret);
-+		drm_dbg_kms(&dev_priv->drm,
-+			    "Verify rep topology failed. %d\n", ret);
- 	mutex_unlock(&dev_priv->hdcp_comp_mutex);
- 
- 	return ret;
-@@ -1151,7 +1165,7 @@ hdcp2_verify_mprime(struct intel_connector *connector,
- 
- 	ret = comp->ops->verify_mprime(comp->mei_dev, data, stream_ready);
- 	if (ret < 0)
--		DRM_DEBUG_KMS("Verify mprime failed. %d\n", ret);
-+		drm_dbg_kms(&dev_priv->drm, "Verify mprime failed. %d\n", ret);
- 	mutex_unlock(&dev_priv->hdcp_comp_mutex);
- 
- 	return ret;
-@@ -1174,7 +1188,8 @@ static int hdcp2_authenticate_port(struct intel_connector *connector)
- 
- 	ret = comp->ops->enable_hdcp_authentication(comp->mei_dev, data);
- 	if (ret < 0)
--		DRM_DEBUG_KMS("Enable hdcp auth failed. %d\n", ret);
-+		drm_dbg_kms(&dev_priv->drm, "Enable hdcp auth failed. %d\n",
-+			    ret);
- 	mutex_unlock(&dev_priv->hdcp_comp_mutex);
- 
- 	return ret;
-@@ -1536,8 +1551,9 @@ static int hdcp2_enable_encryption(struct intel_connector *connector)
- 	if (hdcp->shim->toggle_signalling) {
- 		ret = hdcp->shim->toggle_signalling(intel_dig_port, true);
- 		if (ret) {
--			DRM_ERROR("Failed to enable HDCP signalling. %d\n",
--				  ret);
-+			drm_err(&dev_priv->drm,
-+				"Failed to enable HDCP signalling. %d\n",
-+				ret);
- 			return ret;
- 		}
- 	}
-@@ -1582,13 +1598,14 @@ static int hdcp2_disable_encryption(struct intel_connector *connector)
- 				      LINK_ENCRYPTION_STATUS,
- 				      ENCRYPT_STATUS_CHANGE_TIMEOUT_MS);
- 	if (ret == -ETIMEDOUT)
--		DRM_DEBUG_KMS("Disable Encryption Timedout");
-+		drm_dbg_kms(&dev_priv->drm, "Disable Encryption Timedout");
- 
- 	if (hdcp->shim->toggle_signalling) {
- 		ret = hdcp->shim->toggle_signalling(intel_dig_port, false);
- 		if (ret) {
--			DRM_ERROR("Failed to disable HDCP signalling. %d\n",
--				  ret);
-+			drm_err(&dev_priv->drm,
-+				"Failed to disable HDCP signalling. %d\n",
-+				ret);
- 			return ret;
- 		}
- 	}
-@@ -1691,9 +1708,10 @@ static int intel_hdcp2_check_link(struct intel_connector *connector)
- 	}
- 
- 	if (WARN_ON(!intel_hdcp2_in_use(dev_priv, cpu_transcoder, port))) {
--		DRM_ERROR("HDCP2.2 link stopped the encryption, %x\n",
--			  I915_READ(HDCP2_STATUS(dev_priv, cpu_transcoder,
--						 port)));
-+		drm_err(&dev_priv->drm,
-+			"HDCP2.2 link stopped the encryption, %x\n",
-+			I915_READ(HDCP2_STATUS(dev_priv, cpu_transcoder,
-+					       port)));
- 		ret = -ENXIO;
- 		hdcp->value = DRM_MODE_CONTENT_PROTECTION_DESIRED;
- 		schedule_work(&hdcp->prop_work);
-@@ -1713,25 +1731,29 @@ static int intel_hdcp2_check_link(struct intel_connector *connector)
- 		if (hdcp->value == DRM_MODE_CONTENT_PROTECTION_UNDESIRED)
- 			goto out;
- 
--		DRM_DEBUG_KMS("HDCP2.2 Downstream topology change\n");
-+		drm_dbg_kms(&dev_priv->drm,
-+			    "HDCP2.2 Downstream topology change\n");
- 		ret = hdcp2_authenticate_repeater_topology(connector);
- 		if (!ret) {
- 			hdcp->value = DRM_MODE_CONTENT_PROTECTION_ENABLED;
- 			schedule_work(&hdcp->prop_work);
- 			goto out;
- 		}
--		DRM_DEBUG_KMS("[%s:%d] Repeater topology auth failed.(%d)\n",
--			      connector->base.name, connector->base.base.id,
--			      ret);
-+		drm_dbg_kms(&dev_priv->drm,
-+			    "[%s:%d] Repeater topology auth failed.(%d)\n",
-+			    connector->base.name, connector->base.base.id,
-+			    ret);
- 	} else {
--		DRM_DEBUG_KMS("[%s:%d] HDCP2.2 link failed, retrying auth\n",
--			      connector->base.name, connector->base.base.id);
-+		drm_dbg_kms(&dev_priv->drm,
-+			    "[%s:%d] HDCP2.2 link failed, retrying auth\n",
-+			    connector->base.name, connector->base.base.id);
- 	}
- 
- 	ret = _intel_hdcp2_disable(connector);
- 	if (ret) {
--		DRM_ERROR("[%s:%d] Failed to disable hdcp2.2 (%d)\n",
--			  connector->base.name, connector->base.base.id, ret);
-+		drm_err(&dev_priv->drm,
-+			"[%s:%d] Failed to disable hdcp2.2 (%d)\n",
-+			connector->base.name, connector->base.base.id, ret);
- 		hdcp->value = DRM_MODE_CONTENT_PROTECTION_DESIRED;
- 		schedule_work(&hdcp->prop_work);
- 		goto out;
-@@ -1739,9 +1761,10 @@ static int intel_hdcp2_check_link(struct intel_connector *connector)
- 
- 	ret = _intel_hdcp2_enable(connector);
- 	if (ret) {
--		DRM_DEBUG_KMS("[%s:%d] Failed to enable hdcp2.2 (%d)\n",
--			      connector->base.name, connector->base.base.id,
--			      ret);
-+		drm_dbg_kms(&dev_priv->drm,
-+			    "[%s:%d] Failed to enable hdcp2.2 (%d)\n",
-+			    connector->base.name, connector->base.base.id,
-+			    ret);
- 		hdcp->value = DRM_MODE_CONTENT_PROTECTION_DESIRED;
- 		schedule_work(&hdcp->prop_work);
- 		goto out;
-@@ -1772,7 +1795,7 @@ static int i915_hdcp_component_bind(struct device *i915_kdev,
- {
- 	struct drm_i915_private *dev_priv = kdev_to_i915(i915_kdev);
- 
--	DRM_DEBUG("I915 HDCP comp bind\n");
-+	drm_dbg(&dev_priv->drm, "I915 HDCP comp bind\n");
- 	mutex_lock(&dev_priv->hdcp_comp_mutex);
- 	dev_priv->hdcp_master = (struct i915_hdcp_comp_master *)data;
- 	dev_priv->hdcp_master->mei_dev = mei_kdev;
-@@ -1786,7 +1809,7 @@ static void i915_hdcp_component_unbind(struct device *i915_kdev,
- {
- 	struct drm_i915_private *dev_priv = kdev_to_i915(i915_kdev);
- 
--	DRM_DEBUG("I915 HDCP comp unbind\n");
-+	drm_dbg(&dev_priv->drm, "I915 HDCP comp unbind\n");
- 	mutex_lock(&dev_priv->hdcp_comp_mutex);
- 	dev_priv->hdcp_master = NULL;
- 	mutex_unlock(&dev_priv->hdcp_comp_mutex);
-@@ -1854,7 +1877,7 @@ static inline int initialize_hdcp_port_data(struct intel_connector *connector,
- 					sizeof(struct hdcp2_streamid_type),
- 					GFP_KERNEL);
- 	if (!data->streams) {
--		DRM_ERROR("Out of Memory\n");
-+		drm_err(&dev_priv->drm, "Out of Memory\n");
- 		return -ENOMEM;
- 	}
- 
-@@ -1888,7 +1911,8 @@ void intel_hdcp_component_init(struct drm_i915_private *dev_priv)
- 	ret = component_add_typed(dev_priv->drm.dev, &i915_hdcp_component_ops,
- 				  I915_COMPONENT_HDCP);
- 	if (ret < 0) {
--		DRM_DEBUG_KMS("Failed at component add(%d)\n", ret);
-+		drm_dbg_kms(&dev_priv->drm, "Failed at component add(%d)\n",
-+			    ret);
- 		mutex_lock(&dev_priv->hdcp_comp_mutex);
- 		dev_priv->hdcp_comp_added = false;
- 		mutex_unlock(&dev_priv->hdcp_comp_mutex);
--- 
-2.17.1
+> +
+>   static inline u32 arm_smmu_lpae_tcr(struct io_pgtable_cfg *cfg)
+>   {
+> -	return TCR_EPD1 |
+> -	       FIELD_PREP(TCR_TG0, cfg->arm_lpae_s1_cfg.tcr.tg) |
+> -	       FIELD_PREP(TCR_SH0, cfg->arm_lpae_s1_cfg.tcr.sh) |
+> -	       FIELD_PREP(TCR_ORGN0, cfg->arm_lpae_s1_cfg.tcr.orgn) |
+> -	       FIELD_PREP(TCR_IRGN0, cfg->arm_lpae_s1_cfg.tcr.irgn) |
+> -	       FIELD_PREP(TCR_T0SZ, cfg->arm_lpae_s1_cfg.tcr.tsz);
+> +	u32 tcr = FIELD_PREP(TCR_SH0, cfg->arm_lpae_s1_cfg.tcr.sh) |
+> +		FIELD_PREP(TCR_ORGN0, cfg->arm_lpae_s1_cfg.tcr.orgn) |
+> +		FIELD_PREP(TCR_IRGN0, cfg->arm_lpae_s1_cfg.tcr.irgn) |
+> +		FIELD_PREP(TCR_T0SZ, cfg->arm_lpae_s1_cfg.tcr.tsz);
+> +
+> +	if (!(cfg->quirks & IO_PGTABLE_QUIRK_ARM_TTBR1))
+> +		return tcr | TCR_EPD1 | arm_smmu_lpae_tcr_tg(cfg);
+> +
+> +	return tcr | (tcr << 16) | arm_smmu_lpae_tcr_tg(cfg);
 
+...especially here - leaving TTBR0 enabled but pointing to 
+who-knows-what until someone fills it in at some arbitrary point in the 
+future seems rather scary.
+
+I'm looking at iommu_aux_attach_device() and friends, and it appears 
+pretty achievable to hook that up in a workable manner, even if it's 
+just routed straight through to the impl to only work within 
+qcom-specific parameters to begin with. I figure the first 
+aux_attach_dev sanity-checks that the main domain is using TTBR1 with a 
+compatible split, sets TTBR0 and updates the merged TCR value at that 
+point. For subsequent calls it shouldn't need to do much more than 
+sanity-check that a new aux domain has the same parameters as the 
+existing one(s) (and again, such checks could potentially even start out 
+as just "this is OK by construction" comments). I guess we'd probably 
+want a count of the number of 'live' aux domains so we can simply 
+disable TTBR0 on the final aux_detach_dev without having to keep 
+detailed track of whatever the GPU has actually context switched in the 
+hardware. Can you see any holes in that idea?
+
+I haven't thought it through in detail, but it also feels like between 
+aux_attach_dev and/or the TTBR1 quirk in attach_dev there ought to be 
+enough information to influence the context bank allocation or shuffle 
+any existing domains such that you can ensure that the right thing ends 
+up in magic context 0 when it needs to be. That could be a pretty neat 
+and robust way to finally put that to bed.
+
+Robin.
+
+>   }
+>   
+>   static inline u32 arm_smmu_lpae_tcr2(struct io_pgtable_cfg *cfg)
+> 
