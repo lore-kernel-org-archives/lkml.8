@@ -7,97 +7,82 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4021EC33CAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 23:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 481D9C33CAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 23:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1716724653
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 23:13:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 140D224653
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 23:13:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579648393;
-	bh=vOOvfaBkUsxOjHrx9gKADSHIfn9WlXE/OyKwBqXD4IA=;
+	s=default; t=1579648436;
+	bh=adsRNWlLaUzmTJga28Xuu0hoRORtgM8a6oj8I935emc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kiPUoJZB3pxTFBLp2s23exM0OB9L2InvpbgVjOvvzP5I0eD5gpWQYUW9Gx7Maof1r
-	 0XwM/FOlIIPf6Gof8XaW9z49y90+rGEeCkd51pWlo/MrOAyEIEknlJgirqAmH0dEsQ
-	 xaLeWiuT/+itffQ9eDvr/7isWj83hLwuz2swLxQQ=
+	b=JTFjBxm89lb1h5ox2hNpt3dd2dHAaAmnbK84WZ0RwJGmDCJ3/6NIvpbHr76l6JPki
+	 GbZf9QOb+m8k3g2aoC1JuNHC1q0yNpfFifpyH1IzEJvlBPhRdIPu500+tnRpFxmBxg
+	 6g/ODB0w8++0QPET6D8s1LgyCHrezF6XLfRMNASA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727847AbgAUXNM (ORCPT
+        id S1728797AbgAUXNz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 18:13:12 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:35849 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbgAUXNM (ORCPT
+        Tue, 21 Jan 2020 18:13:55 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:39161 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbgAUXNy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 18:13:12 -0500
-Received: by mail-ot1-f67.google.com with SMTP id m2so4624091otq.3;
-        Tue, 21 Jan 2020 15:13:11 -0800 (PST)
+        Tue, 21 Jan 2020 18:13:54 -0500
+Received: by mail-oi1-f193.google.com with SMTP id z2so4331079oih.6;
+        Tue, 21 Jan 2020 15:13:54 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ooI0TC2R0RPnixxhz1OoqRc6n/Cpz0oN4+WUYyVQIJQ=;
-        b=CGba/AGft6uyQb4xAt8nAoEH2ZFMFcztqdYDKFdVInE4HS3SBC4PrhwlNN8Zp6ADx6
-         hPNWlAd8NpxW6te0TP/516LVo+3UHXGBQ5J73qN+eh5OqRo4NHGl7mpfHzZEWGXcR/3i
-         gZ90CqxOKoNGatOi/QQ/Kn4lIPsMotHBGJmwQmCrz8Qn8/DXabNGB1pmlvXEFEpRrSKl
-         bZjVg11/spkdN7dG1519N3XIU8Kw4es67tP2PUUtXvfvbloQ9eV74vXfiZehX31KMz1R
-         9EDSMIpWfhDiMEIMe3cwNglJt8hXEh/f8ygwuXMzQNs88G/tz0GVm8MTzXn5NC2QU8oQ
-         XKQg==
-X-Gm-Message-State: APjAAAU6NBW2bKP01Qsrza3atBhSf5Dy2RonN4LqhvzMYZALsTxRDwmJ
-        ZMrBhf1crLDLUwcW575vYQ==
-X-Google-Smtp-Source: APXvYqyPBzxIhoP3H+P9LqIiK3hX3lZ5SBs7l9OTqvE4gQGrbgUrEC2A1vykW7mfrIfYpBNwc/eCWQ==
-X-Received: by 2002:a9d:3cf:: with SMTP id f73mr5553811otf.11.1579648391091;
-        Tue, 21 Jan 2020 15:13:11 -0800 (PST)
+        bh=Yoe9RCA76HbcFOdQvkXisQfr/vhkA3pWkuRzb90Sz2E=;
+        b=pjQSZALPDL8K7gYo2GU3+CfP5Hlnc/rpE1iZAwBbrCr7fb0CaQ+avgVneBzam9nJFX
+         P4ON2zxUlmbV6nH4hhtIxHy/Ismp+0eWK+TUtfy3UQjwUKpHfNRiBAGkhNUeV9PtR3Yv
+         jUGO4LDgcpMk4zkWioNZHwSdE1sS8H9UA17klZUyqCpQsvvZ3BDh4LjohybWMYWAhQpe
+         DaedAoEFI6V9iobvrvfti0rEQ/3eb3WhclnXCVXv19Vkr9jZlzr4VNny+jbbikw6nD4b
+         fncC81MYeBHlMfkH112gkbFWkDZiS6YvdO+PJDJiEujFASpTkuJEGt+M4StwtEME+dng
+         HctA==
+X-Gm-Message-State: APjAAAX6ryX8tYBN8BsrpsHSDYGhFqmnXQlTkHfYsGzoXUHeGG3CKvK7
+        y51x+1xgi/nTO6/uYWzlNQ==
+X-Google-Smtp-Source: APXvYqyMUTxp4+ieA6YgbtAvJpjT4mngt+/qpQ1WR/3sJEY3T7+Jz5uSsa6kIeckZ1T36zeCXr4HUg==
+X-Received: by 2002:a05:6808:9b4:: with SMTP id e20mr4581998oig.37.1579648433821;
+        Tue, 21 Jan 2020 15:13:53 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 67sm12497977oid.30.2020.01.21.15.13.09
+        by smtp.gmail.com with ESMTPSA id f3sm13968302otl.38.2020.01.21.15.13.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 15:13:10 -0800 (PST)
-Received: (nullmailer pid 17419 invoked by uid 1000);
-        Tue, 21 Jan 2020 23:13:09 -0000
-Date:   Tue, 21 Jan 2020 17:13:09 -0600
+        Tue, 21 Jan 2020 15:13:53 -0800 (PST)
+Received: (nullmailer pid 18478 invoked by uid 1000);
+        Tue, 21 Jan 2020 23:13:52 -0000
+Date:   Tue, 21 Jan 2020 17:13:52 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc:     robh+dt@kernel.org, jic23@kernel.org, alexandre.torgue@st.com,
-        mark.rutland@arm.com, mcoquelin.stm32@gmail.com, lars@metafoo.de,
-        knaack.h@gmx.de, pmeerw@pmeerw.net, fabrice.gasnier@st.com,
-        olivier.moysan@st.com, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] dt-bindings: iio: adc: stm32-adc: convert bindings to
- json-schema
-Message-ID: <20200121231309.GA17359@bogus>
-References: <1579095941-18648-1-git-send-email-fabrice.gasnier@st.com>
+To:     Tomer Maimon <tmaimon77@gmail.com>
+Cc:     broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        avifishman70@gmail.com, tali.perry1@gmail.com, venture@google.com,
+        yuenn@google.com, benjaminfair@google.com,
+        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
+        Tomer Maimon <tmaimon77@gmail.com>
+Subject: Re: [PATCH v1 3/4] dt-binding: spi: add NPCM PSPI reset binding
+Message-ID: <20200121231352.GA18418@bogus>
+References: <20200115162301.235926-1-tmaimon77@gmail.com>
+ <20200115162301.235926-4-tmaimon77@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1579095941-18648-1-git-send-email-fabrice.gasnier@st.com>
+In-Reply-To: <20200115162301.235926-4-tmaimon77@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Jan 2020 14:45:41 +0100, Fabrice Gasnier wrote:
-> Convert the STM32 ADC binding to DT schema format using json-schema
+On Wed, 15 Jan 2020 18:23:00 +0200, Tomer Maimon wrote:
+> Add NPCM Peripheral SPI reset binding documentation,
+> Removing unnecessary aliases use.
 > 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
 > ---
-> Changes in V3:
-> - Fix minimum and maximum syntax for uint32-array properties as pointed
->   out by Rob.
-> - update example to better show this syntax e.g. st,adc-channels = <0 1>;
-> 
-> Changes in V2:
-> - Take almost all of Rob suggestions (removed reg generic description,
->   added minItems, maxItems, st,max-clk-rate-hz range, drop some pipes,
->   simplify clock-names, remove unneeded allOfs)
-> - For now, keep all in one file despite there are lots of if/thens in the
->   bindings
-> ---
->  .../devicetree/bindings/iio/adc/st,stm32-adc.txt   | 149 -------
->  .../devicetree/bindings/iio/adc/st,stm32-adc.yaml  | 458 +++++++++++++++++++++
->  2 files changed, 458 insertions(+), 149 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/st,stm32-adc.yaml
+>  .../devicetree/bindings/spi/nuvoton,npcm-pspi.txt    | 12 ++----------
+>  1 file changed, 2 insertions(+), 10 deletions(-)
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
