@@ -2,138 +2,111 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4503C33CB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 07:52:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E036C33CB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 07:55:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90B4824653
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 07:52:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E919F24654
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 07:55:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579593342;
+	bh=ctHy3qaqeSqwZviUpkYQlV4bYIKMDgmfasvDstEMY8Q=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ceYoPEK/7/HtgPM5onfN4C6lmM7DpDywfvk5Tpw0KsV8+ZcV+XBeWA94AM+MP11lC
+	 4AkU/N9YAV0Up3IXTS/Ixh04kKbhm5l8cys1BcqYEr6zmj9X/8Wwds3apkXIWdxJ7v
+	 iu53wq5rNDy6PFlQqcSirRBtXctGAeEkf0+o39Lo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728783AbgAUHwC (ORCPT
+        id S1727969AbgAUHzl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 02:52:02 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:35267 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726911AbgAUHwB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 02:52:01 -0500
-Received: by mail-oi1-f194.google.com with SMTP id k4so1742404oik.2;
-        Mon, 20 Jan 2020 23:52:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MDgz85X+/B08T8yz6srovuNqFf4QQmdWLURf7KUyCg4=;
-        b=DX7yvMs6jtv6wWHAQqV+zTc3NJwn9ypoxqilXVkC8KM0zva8i489rLvnu93IhQ/RzV
-         +rGcycDLij8o201FCJRtTWiO5tbv0tIJ4LtPnIyUE8zxIGU5XVemCPuXtdFCDCKYPx1j
-         cBBMVi4eIVgmibt8YNwRO1gIm0ulZjHZ0b+bGhvqLvfLu01dHwb951mdKK+srQ0Nm7u2
-         qIcdNDAfu7wHVlUUoB+pgiAnPW9yGGB+em4S6zg6zqUKxgwBsfR7xBelB+pc45zZYgzr
-         VgYO2IkHpJfG4Ae3QR+NWALbhHmAIsBgm5IpColswbBkYr83XPvHZbq52L49lMKvQ/IO
-         YAmA==
-X-Gm-Message-State: APjAAAULxKMm6KGbIK3HmGbf5F1QVxWBx/wrXkcllt9pB7CVWUPK2QbM
-        CpWSEf3TP5sTjlLXXOdY1vUDs1urXBIYOR/YL9g=
-X-Google-Smtp-Source: APXvYqyEbiPJtyFwuk87U9zx0TmCGKo8t1J113p1j6w4+uDnAhXGqiiKQtaWsyvl7UxuVjAHkm7/BGrTOtclPJ+xaoc=
-X-Received: by 2002:aca:1a06:: with SMTP id a6mr1990188oia.148.1579593120705;
- Mon, 20 Jan 2020 23:52:00 -0800 (PST)
+        Tue, 21 Jan 2020 02:55:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53048 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725789AbgAUHzl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 02:55:41 -0500
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FB0924654;
+        Tue, 21 Jan 2020 07:55:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579593340;
+        bh=ctHy3qaqeSqwZviUpkYQlV4bYIKMDgmfasvDstEMY8Q=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=w4JJoR+w7PYdOF/z/PneWxlemCgFf0UREZXNwYKBzZhiXmrdqwjjbbCSCTJhdw38y
+         sV+KjRcRbIqeEcDFtRrHYwZ2gOiwcbdL8JEMBLUpttPRxGvQnR5kc8hwnhdk2RU+KJ
+         /05K0U00dWGgSsO9+xW//uSWmoaBz0SpkqE+TBm0=
+Received: by mail-lj1-f172.google.com with SMTP id o13so1712298ljg.4;
+        Mon, 20 Jan 2020 23:55:40 -0800 (PST)
+X-Gm-Message-State: APjAAAVLFLfWu5FnMloYO8DY30nxfryaBs8CE12XToCJGBPCpC2A2lxr
+        DXxc9gx+9s8CtZgRihq7KSiLJ99+p9ZejJskxiU=
+X-Google-Smtp-Source: APXvYqzf2rJJ28+KITUl7Ht3WzvzQdEkYVOkARkFyeGRkAdXU82TnDKKOs2vWavqEk8n66tDsNVSvyHsKzW4hG1JYLM=
+X-Received: by 2002:a2e:9015:: with SMTP id h21mr16052410ljg.69.1579593338381;
+ Mon, 20 Jan 2020 23:55:38 -0800 (PST)
 MIME-Version: 1.0
-References: <201911151357.A9MjGImg%lkp@intel.com> <CAMuHMdX6-jb1W8uC2_237m8ctCpsnGp=JCxqt8pCWVqNXHmkVg@mail.gmail.com>
- <CAJZ5v0i4nezntZJRSpv-LOwE_ZkE5Vr+YHkwJ8tX5GgG64gB=Q@mail.gmail.com> <22577568.Kaohy42qHH@kreacher>
-In-Reply-To: <22577568.Kaohy42qHH@kreacher>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 21 Jan 2020 08:51:49 +0100
-Message-ID: <CAMuHMdVDmdhEQKkkw9Ap5nSwMNH-jGb1TcMRgoQjPk44RwdY5w@mail.gmail.com>
-Subject: Re: drivers/acpi/processor_thermal.c:66:1: warning: the frame size of
- 2160 bytes is larger than 2048 bytes
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+References: <20200107143058.7f821056@canb.auug.org.au> <CAJKOXPcVnjT1R4dvZ+xBdZ2mQ-XS385YEv33Q++qh3K5aw6OjA@mail.gmail.com>
+ <20200121172823.62617483@canb.auug.org.au>
+In-Reply-To: <20200121172823.62617483@canb.auug.org.au>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Tue, 21 Jan 2020 08:55:27 +0100
+X-Gmail-Original-Message-ID: <CAJKOXPdUhCfrq1xSvPGjAOZDr29YGTK2j_fYSGJ9xchFDE=cmQ@mail.gmail.com>
+Message-ID: <CAJKOXPdUhCfrq1xSvPGjAOZDr29YGTK2j_fYSGJ9xchFDE=cmQ@mail.gmail.com>
+Subject: Re: linux-next: build warnings after merge of the usb tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Wolfram Sang <wsa@the-dreams.de>
+Cc:     Greg KH <greg@kroah.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
+        Kishon Vijay Abraham I <kishon@ti.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rafael,
-
-On Tue, Jan 21, 2020 at 1:40 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> On Monday, January 20, 2020 11:16:12 AM CET Rafael J. Wysocki wrote:
-> > On Fri, Jan 17, 2020 at 4:51 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > On Fri, Nov 15, 2019 at 6:23 AM kbuild test robot <lkp@intel.com> wrote:
-> > > > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> > > > head:   96b95eff4a591dbac582c2590d067e356a18aacb
-> > > > commit: 3000ce3c52f8b8db093e4dc649cd172390f71137 cpufreq: Use per-policy frequency QoS
-> > > > date:   4 weeks ago
-> > > > config: ia64-randconfig-a001-20191115 (attached as .config)
-> > > > compiler: ia64-linux-gcc (GCC) 7.4.0
-> > > > reproduce:
-> > > >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-> > > >         chmod +x ~/bin/make.cross
-> > > >         git checkout 3000ce3c52f8b8db093e4dc649cd172390f71137
-> > > >         # save the attached .config to linux build tree
-> > > >         GCC_VERSION=7.4.0 make.cross ARCH=ia64
-> > > >
-> > > > If you fix the issue, kindly add following tag
-> > > > Reported-by: kbuild test robot <lkp@intel.com>
-> > >
-> > > Seeing similar warnings on arm64, so this triggered my attention.
-> > >
-> > > > --
-> > > >    drivers/cpufreq/cpufreq.c: In function 'refresh_frequency_limits.part.33':
-> > > > >> drivers/cpufreq/cpufreq.c:1116:1: warning: the frame size of 2160 bytes is larger than 2048 bytes [-Wframe-larger-than=]
-> > >
-> > > |       struct cpufreq_policy new_policy;
-> > >
-> > > That's a large struct on the stack...
-> > >
-> > > |       if (!policy_is_inactive(policy)) {
-> > > |               new_policy = *policy;
-> > >
-> > > Let's make a copy?
-> > > How well does this work, given struct cpufreq_policy contains a
-> > > work_struct, list_head, kobject, completion, semaphore, spinlock_t,
-> > > wait_queue_head_t, and two notifier_blocks, which are all objects you
-> > > cannot just copy and reuse?
-> > >
-> > > |               pr_debug("updating policy for CPU %u\n", policy->cpu);
-> > > |
-> > > |               cpufreq_set_policy(policy, &new_policy);
-> > >
-> > > If cpufreq_set_policy() uses only a few fields from new_policy,
-> >
-> > That's really the case.
-> >
-> > > it might be a good idea to extract those into its own structure.
-> >
-> > Or organize the code differently.
-> >
-> > This is old code that hasn't been change, but I'll look at it since it
-> > is problematic.
+On Tue, 21 Jan 2020 at 07:28, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 >
-> So what about the patch below (untested)?
+> Hi all,
 >
-> It should be mostly self-explanatory, and the point is basically that
-> cpufreq_set_policy() gets the limits values from freq QoS, so it only
-> needs to get the new governor/policy value from the caller and more
-> data need to be passed to the driver's ->verify() callback.
+> On Tue, 7 Jan 2020 09:06:01 +0100 Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> >
+> > On Tue, 7 Jan 2020 at 04:31, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> > >
+> > > After merging the usb tree, today's linux-next build (x86_64 allmodconfig)
+> > > produced these warnings:
+> > >
+> > > WARNING: unmet direct dependencies detected for I2C_S3C2410
+> > >   Depends on [n]: I2C [=y] && HAS_IOMEM [=y] && HAVE_S3C2410_I2C [=n]
+> > >   Selected by [m]:
+> > >   - PHY_EXYNOS5250_SATA [=m] && (SOC_EXYNOS5250 || COMPILE_TEST [=y]) && HAS_IOMEM [=y] && OF [=y]
+> > >
+> > > WARNING: unmet direct dependencies detected for I2C_S3C2410
+> > >   Depends on [n]: I2C [=y] && HAS_IOMEM [=y] && HAVE_S3C2410_I2C [=n]
+> > >   Selected by [m]:
+> > >   - PHY_EXYNOS5250_SATA [=m] && (SOC_EXYNOS5250 || COMPILE_TEST [=y]) && HAS_IOMEM [=y] && OF [=y]
+> > >
+> > > WARNING: unmet direct dependencies detected for I2C_S3C2410
+> > >   Depends on [n]: I2C [=y] && HAS_IOMEM [=y] && HAVE_S3C2410_I2C [=n]
+> > >   Selected by [m]:
+> > >   - PHY_EXYNOS5250_SATA [=m] && (SOC_EXYNOS5250 || COMPILE_TEST [=y]) && HAS_IOMEM [=y] && OF [=y]
+> > >
+> > > Introduced by commit
+> > >
+> > >   203b7ee14d3a ("phy: Enable compile testing for some of drivers")
+> >
+> > The fix is here:
+> > https://lore.kernel.org/lkml/CAMuHMdUXJo3=x32xbfSUXs3O3JHaFpfxt0mHupEb+vzi=5+S4g@mail.gmail.com/
+> > i2c: Enable compile testing for some of drivers
+> > Although I need to send v2 of it.
+>
+> I am still seeing these warnings.
 
-Thanks, LGTM!
-No Rb, as I'm not that familiar with the code, and only browsed through
-the core parts.
+v2 is here:
+https://lore.kernel.org/linux-arm-kernel/1578384779-15487-1-git-send-email-krzk@kernel.org/T/#t
 
-I can confirm it gets rids of the -Wframe-larger-than warnings on arm64,
-though.
+Can someone review and/or pick it up?
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Best regards,
+Krzysztof
