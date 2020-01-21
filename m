@@ -7,30 +7,30 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 138AAC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2212C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:57:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1B2A20882
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:57:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E3BC24656
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:57:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729473AbgAUJ5t (ORCPT
+        id S1729516AbgAUJ5z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 04:57:49 -0500
-Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:10340 "EHLO
-        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728794AbgAUJ5r (ORCPT
+        Tue, 21 Jan 2020 04:57:55 -0500
+Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:49313 "EHLO
+        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729238AbgAUJ5f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 04:57:47 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R741e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0ToHfB4z_1579600654;
-Received: from localhost(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0ToHfB4z_1579600654)
+        Tue, 21 Jan 2020 04:57:35 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07417;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0ToHep6T_1579600652;
+Received: from localhost(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0ToHep6T_1579600652)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 21 Jan 2020 17:57:34 +0800
+          Tue, 21 Jan 2020 17:57:33 +0800
 From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
 To:     herbert@gondor.apana.org.au, davem@davemloft.net
 Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 6/6] crypto: proc - simplify the c_show function
-Date:   Tue, 21 Jan 2020 17:57:18 +0800
-Message-Id: <20200121095718.52404-7-tianjia.zhang@linux.alibaba.com>
+Subject: [PATCH 4/6] crypto: testmgr - support test with different ciphertext per encryption
+Date:   Tue, 21 Jan 2020 17:57:16 +0800
+Message-Id: <20200121095718.52404-5-tianjia.zhang@linux.alibaba.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200121095718.52404-1-tianjia.zhang@linux.alibaba.com>
 References: <20200121095718.52404-1-tianjia.zhang@linux.alibaba.com>
@@ -39,26 +39,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The path with the CRYPTO_ALG_LARVAL flag has jumped to the end before
+Some asymmetric algorithms will get different ciphertext after
+each encryption, such as SM2, and let testmgr support the testing
+of such algorithms.
+
+In struct akcipher_testvec, set c and c_size to be empty, skip
+the comparison of the ciphertext, and compare the decrypted
+plaintext with m to achieve the test purpose.
 
 Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
 ---
- crypto/proc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ crypto/testmgr.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/crypto/proc.c b/crypto/proc.c
-index 7b91557adccb..08d8c2bc7e62 100644
---- a/crypto/proc.c
-+++ b/crypto/proc.c
-@@ -60,7 +60,7 @@ static int c_show(struct seq_file *m, void *p)
- 		goto out;
+diff --git a/crypto/testmgr.c b/crypto/testmgr.c
+index 82513b6b0abd..db9b5ac878e7 100644
+--- a/crypto/testmgr.c
++++ b/crypto/testmgr.c
+@@ -3741,7 +3741,7 @@ static int test_akcipher_one(struct crypto_akcipher *tfm,
+ 		pr_err("alg: akcipher: %s test failed. err %d\n", op, err);
+ 		goto free_all;
  	}
- 	
--	switch (alg->cra_flags & (CRYPTO_ALG_TYPE_MASK | CRYPTO_ALG_LARVAL)) {
-+	switch (alg->cra_flags & CRYPTO_ALG_TYPE_MASK) {
- 	case CRYPTO_ALG_TYPE_CIPHER:
- 		seq_printf(m, "type         : cipher\n");
- 		seq_printf(m, "blocksize    : %u\n", alg->cra_blocksize);
+-	if (!vecs->siggen_sigver_test) {
++	if (!vecs->siggen_sigver_test && c) {
+ 		if (req->dst_len != c_size) {
+ 			pr_err("alg: akcipher: %s test failed. Invalid output len\n",
+ 			       op);
+@@ -3772,6 +3772,11 @@ static int test_akcipher_one(struct crypto_akcipher *tfm,
+ 		goto free_all;
+ 	}
+ 
++	if (!vecs->siggen_sigver_test && !c) {
++		c = outbuf_enc;
++		c_size = req->dst_len;
++	}
++
+ 	op = vecs->siggen_sigver_test ? "sign" : "decrypt";
+ 	if (WARN_ON(c_size > PAGE_SIZE))
+ 		goto free_all;
 -- 
 2.17.1
 
