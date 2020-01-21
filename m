@@ -2,176 +2,135 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 826C0C33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEFD4C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A7062465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:28:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="rpybvopk"
+	by mail.kernel.org (Postfix) with ESMTP id C2E6420882
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:29:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579627740;
+	bh=ls4cIuwNcDsMXa05CiyE5RLIby/vaOqPwzDthRS6StU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=IHp2ExrO9f/ZuKxv47UntTbUYMmB0GWN0el5GS/1zoFmMDf7UT7nNIhj9jh7uwR43
+	 aMnllZ6gZHb9+hsT3O86EnNnWx8FIgkAWtGfFraViXDiV8AZY6yyjEA0lXQ4pHsUxM
+	 j3JZm/nWbR7eHzXJTmEoA+z0LS5bFAcsTwEQ+5wo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729180AbgAUR2e (ORCPT
+        id S1729210AbgAUR3A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 12:28:34 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:56564 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728186AbgAUR2e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 12:28:34 -0500
-Received: from nramas-ThinkStation-P520.corp.microsoft.com (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 9297920B4798;
-        Tue, 21 Jan 2020 09:28:33 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9297920B4798
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1579627713;
-        bh=Yrzpkvb87TbXLvF9TfCIuBMOL56A/1WZiADnLtuAVf4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=rpybvopkl+F0IZf7mLfyeDg5aeqQ1l1WbjT924CGZqpvc2RopdEIY6sFCtGvnd6Zo
-         u0nwMqv4trWmeJz5tGTxoJQ8UMzkWmEaJWwy8mMwWCODikEf6KEW8kvJj6kbPewS0q
-         L+U4Z6+8UOArHu24c0vRXec2Rz1EnXH8ajn5yeTo=
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-To:     zohar@linux.ibm.com, linux-integrity@vger.kernel.org
-Cc:     sashal@kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] IMA: Use delayed work to free queued keys
-Date:   Tue, 21 Jan 2020 09:28:29 -0800
-Message-Id: <20200121172829.15152-1-nramas@linux.microsoft.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 21 Jan 2020 12:29:00 -0500
+Received: from foss.arm.com ([217.140.110.172]:46508 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728186AbgAUR27 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 12:28:59 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D2A5130E;
+        Tue, 21 Jan 2020 09:28:58 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 52D533F6C4;
+        Tue, 21 Jan 2020 09:28:58 -0800 (PST)
+Date:   Tue, 21 Jan 2020 17:28:56 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
+        John Stultz <john.stultz@linaro.org>, john.stultz@linaro.org,
+        lars@metafoo.de, lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, perex@perex.cz, tiwai@suse.com
+Subject: Applied "ASoC: soc-generic-dmaengine-pcm: Fix error handling" to the asoc tree
+In-Reply-To: <1579505286-32085-1-git-send-email-shengjiu.wang@nxp.com>
+Message-Id: <applied-1579505286-32085-1-git-send-email-shengjiu.wang@nxp.com>
+X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A timer is used to free queued keys if a custom IMA policy is not
-loaded within 5 minutes after IMA subsystem is initialized. Timer
-handler is called in interrupt context. Due to this a spinlock has
-to be used to synchronize access to critical section. A mutex cannot
-be used since a mutex can sleep.
+The patch
 
-This patch uses a delayed work to free queued keys. Since a delayed
-work handler is called in process context a mutex can be used.
+   ASoC: soc-generic-dmaengine-pcm: Fix error handling
 
-Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Fixes: 8f5d2d06f217 ("IMA: Defined timer to free queued keys")
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 130128098a4e5ce9a0dfbdf9a7e27a43579901fd Mon Sep 17 00:00:00 2001
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
+Date: Mon, 20 Jan 2020 15:28:06 +0800
+Subject: [PATCH] ASoC: soc-generic-dmaengine-pcm: Fix error handling
+
+Remove the return value checking, that is to align with the code
+before adding snd_dmaengine_pcm_refine_runtime_hwparams function.
+
+Otherwise it causes a regression on the HiKey board:
+
+[   17.721424] hi6210_i2s f7118000.i2s: ASoC: can't open component f7118000.i2s: -6
+
+Fixes: e957204e732b ("ASoC: pcm_dmaengine: Extract snd_dmaengine_pcm_refine_runtime_hwparams")
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Reported-by: John Stultz <john.stultz@linaro.org>
+Link: https://lore.kernel.org/r/1579505286-32085-1-git-send-email-shengjiu.wang@nxp.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- security/integrity/ima/ima_asymmetric_keys.c | 33 ++++++++++----------
- 1 file changed, 16 insertions(+), 17 deletions(-)
+ sound/soc/soc-generic-dmaengine-pcm.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/security/integrity/ima/ima_asymmetric_keys.c b/security/integrity/ima/ima_asymmetric_keys.c
-index 381f51708e7b..fa1bdd54a9ff 100644
---- a/security/integrity/ima/ima_asymmetric_keys.c
-+++ b/security/integrity/ima/ima_asymmetric_keys.c
-@@ -11,7 +11,7 @@
+diff --git a/sound/soc/soc-generic-dmaengine-pcm.c b/sound/soc/soc-generic-dmaengine-pcm.c
+index a428ff393ea2..2b5f3b1b062b 100644
+--- a/sound/soc/soc-generic-dmaengine-pcm.c
++++ b/sound/soc/soc-generic-dmaengine-pcm.c
+@@ -117,7 +117,6 @@ dmaengine_pcm_set_runtime_hwparams(struct snd_soc_component *component,
+ 	struct dma_chan *chan = pcm->chan[substream->stream];
+ 	struct snd_dmaengine_dai_dma_data *dma_data;
+ 	struct snd_pcm_hardware hw;
+-	int ret;
  
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 	if (pcm->config && pcm->config->pcm_hardware)
+ 		return snd_soc_set_runtime_hwparams(substream,
+@@ -138,12 +137,15 @@ dmaengine_pcm_set_runtime_hwparams(struct snd_soc_component *component,
+ 	if (pcm->flags & SND_DMAENGINE_PCM_FLAG_NO_RESIDUE)
+ 		hw.info |= SNDRV_PCM_INFO_BATCH;
  
--#include <linux/timer.h>
-+#include <linux/workqueue.h>
- #include <keys/asymmetric-type.h>
- #include "ima.h"
+-	ret = snd_dmaengine_pcm_refine_runtime_hwparams(substream,
+-							dma_data,
+-							&hw,
+-							chan);
+-	if (ret)
+-		return ret;
++	/**
++	 * FIXME: Remove the return value check to align with the code
++	 * before adding snd_dmaengine_pcm_refine_runtime_hwparams
++	 * function.
++	 */
++	snd_dmaengine_pcm_refine_runtime_hwparams(substream,
++						  dma_data,
++						  &hw,
++						  chan);
  
-@@ -24,37 +24,37 @@ static bool ima_process_keys;
- /*
-  * To synchronize access to the list of keys that need to be measured
-  */
--static DEFINE_SPINLOCK(ima_keys_lock);
-+static DEFINE_MUTEX(ima_keys_lock);
- static LIST_HEAD(ima_keys);
- 
- /*
-  * If custom IMA policy is not loaded then keys queued up
-- * for measurement should be freed. This timer is used
-+ * for measurement should be freed. This worker is used
-  * for handling this scenario.
-  */
- static long ima_key_queue_timeout = 300000; /* 5 Minutes */
--static struct timer_list ima_key_queue_timer;
-+static void ima_keys_handler(struct work_struct *work);
-+static DECLARE_DELAYED_WORK(ima_keys_delayed_work, ima_keys_handler);
- static bool timer_expired;
- 
- /*
-- * This timer callback function frees keys that may still be
-+ * This worker function frees keys that may still be
-  * queued up in case custom IMA policy was not loaded.
-  */
--static void ima_timer_handler(struct timer_list *timer)
-+static void ima_keys_handler(struct work_struct *work)
- {
- 	timer_expired = true;
- 	ima_process_queued_keys();
+ 	return snd_soc_set_runtime_hwparams(substream, &hw);
  }
- 
- /*
-- * This function sets up a timer to free queued keys in case
-+ * This function sets up a worker to free queued keys in case
-  * custom IMA policy was never loaded.
-  */
- void ima_init_key_queue(void)
- {
--	timer_setup(&ima_key_queue_timer, ima_timer_handler, 0);
--	mod_timer(&ima_key_queue_timer,
--		  jiffies + msecs_to_jiffies(ima_key_queue_timeout));
-+	schedule_delayed_work(&ima_keys_delayed_work,
-+			      msecs_to_jiffies(ima_key_queue_timeout));
- }
- 
- static void ima_free_key_entry(struct ima_key_entry *entry)
-@@ -103,18 +103,17 @@ static bool ima_queue_key(struct key *keyring, const void *payload,
- {
- 	bool queued = false;
- 	struct ima_key_entry *entry;
--	unsigned long flags;
- 
- 	entry = ima_alloc_key_entry(keyring, payload, payload_len);
- 	if (!entry)
- 		return false;
- 
--	spin_lock_irqsave(&ima_keys_lock, flags);
-+	mutex_lock(&ima_keys_lock);
- 	if (!ima_process_keys) {
- 		list_add_tail(&entry->list, &ima_keys);
- 		queued = true;
- 	}
--	spin_unlock_irqrestore(&ima_keys_lock, flags);
-+	mutex_unlock(&ima_keys_lock);
- 
- 	if (!queued)
- 		ima_free_key_entry(entry);
-@@ -132,7 +131,6 @@ void ima_process_queued_keys(void)
- {
- 	struct ima_key_entry *entry, *tmp;
- 	bool process = false;
--	unsigned long flags;
- 
- 	if (ima_process_keys)
- 		return;
-@@ -143,17 +141,18 @@ void ima_process_queued_keys(void)
- 	 * First one setting the ima_process_keys flag to true will
- 	 * process the queued keys.
- 	 */
--	spin_lock_irqsave(&ima_keys_lock, flags);
-+	mutex_lock(&ima_keys_lock);
- 	if (!ima_process_keys) {
- 		ima_process_keys = true;
- 		process = true;
- 	}
--	spin_unlock_irqrestore(&ima_keys_lock, flags);
-+	mutex_unlock(&ima_keys_lock);
- 
- 	if (!process)
- 		return;
- 
--	del_timer(&ima_key_queue_timer);
-+	if (!timer_expired)
-+		cancel_delayed_work_sync(&ima_keys_delayed_work);
- 
- 	list_for_each_entry_safe(entry, tmp, &ima_keys, list) {
- 		if (!timer_expired)
 -- 
-2.17.1
+2.20.1
 
