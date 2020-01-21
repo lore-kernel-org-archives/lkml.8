@@ -2,122 +2,104 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 753B1C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 10:25:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 241B6C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 10:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B5C424125
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 10:25:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA6432253D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 10:25:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WwHvZOpn"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="R+13RLUC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729634AbgAUKZE (ORCPT
+        id S1729674AbgAUKZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 05:25:04 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:46640 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728792AbgAUKZD (ORCPT
+        Tue, 21 Jan 2020 05:25:13 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:42917 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728792AbgAUKZM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 05:25:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579602301;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=aCi48PVWkDA8UrXfSnL/5YO1GyZMOjomyxZveXaEvec=;
-        b=WwHvZOpnY0H3PNYv0oKS3hnvVT2syxRnfRtbnTMCjbxOn//7iO7JtFz1cJe5vplJ0kRzAJ
-        E6GMYn9TMp6lsn02a4XOf9C2s8OOeJQkttTmPsFiFhPBkjoGGHF1KWWTp3/UJ8ufJJmvHw
-        JX6V4mWC8jbM3FAtc9yPLT1eeC8afMw=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-357-4YyIf6U2PvaQXFaSzuWgzg-1; Tue, 21 Jan 2020 05:24:59 -0500
-X-MC-Unique: 4YyIf6U2PvaQXFaSzuWgzg-1
-Received: by mail-wm1-f72.google.com with SMTP id 18so439080wmp.0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 02:24:59 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=aCi48PVWkDA8UrXfSnL/5YO1GyZMOjomyxZveXaEvec=;
-        b=pB62aJjtpSVinPbcC349Wsab4d8S1u6E462kdfrPRnu+TyD0UUI1k/y7f5IBW+BoXO
-         tMkKEpa4tdIi4AphYDhphGVhVIUGm3P9my5Q2bHp9WeROMS7Olymwx+em82WPTqisswX
-         QJX/6GdyzJy2fmjUCeoB4rgCbdnf2zwuzRDsKeFGolKkqEUwDfnfjxtDh5ABdjWB0Eta
-         93HEo9qWaVc8b2gS8YD0kfEVjha7ryfjm39Fcw07mBlSp+CvztE6XqTTGRwmvEbtVtRj
-         rylq4ORAfDdWlY2cDvAtOK7pdNCcBEf8ycZ+f+9jXN+AIDpMMhc7a2kACH5itvcuGl44
-         Qb0w==
-X-Gm-Message-State: APjAAAUrVtcncMoi79wJgP+TOB7b0LwXZBvC3CNOFQ/keYXyKiwLW07B
-        wo1ZcaGvxqPIbo4HTrXEjdHexKxyYuuvrgNvRUYn8qX+V0O7HaB1i/mw6c7pVDEr4nc2O0CR4+8
-        Yy9UZ1FPbQRlzUCrT/8FauIYc
-X-Received: by 2002:a05:600c:2c7:: with SMTP id 7mr3522411wmn.87.1579602298806;
-        Tue, 21 Jan 2020 02:24:58 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwwbUM3KKi/8PzBPn0yJAulXWiBEnPnllYFTZSqZ130XUc0JnR6nrnpLeUYhWl6VLYPSf8ejA==
-X-Received: by 2002:a05:600c:2c7:: with SMTP id 7mr3522380wmn.87.1579602298497;
-        Tue, 21 Jan 2020 02:24:58 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:b509:fc01:ee8a:ca8a? ([2001:b07:6468:f312:b509:fc01:ee8a:ca8a])
-        by smtp.gmail.com with ESMTPSA id c17sm51703396wrr.87.2020.01.21.02.24.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jan 2020 02:24:57 -0800 (PST)
-Subject: Re: [PATCH v3 12/21] KVM: X86: Implement ring-based dirty memory
- tracking
-To:     Peter Xu <peterx@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Yan Zhao <yan.y.zhao@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Kevin Kevin <kevin.tian@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Lei Cao <lei.cao@stratus.com>
-References: <20200109145729.32898-1-peterx@redhat.com>
- <20200109145729.32898-13-peterx@redhat.com>
- <20200109110110-mutt-send-email-mst@kernel.org>
- <20200109191514.GD36997@xz-x1>
- <22bcd5fc-338c-6b72-2bda-47ba38d7e8ef@redhat.com>
- <20200119051145-mutt-send-email-mst@kernel.org>
- <20200120072915.GD380565@xz-x1>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <4e75a275-6687-2efc-0595-9b993ec300be@redhat.com>
+        Tue, 21 Jan 2020 05:25:12 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00LAOGnd001924;
+        Tue, 21 Jan 2020 11:25:01 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
+ date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=STMicroelectronics;
+ bh=8VtkAU/3/Eya8/Y2tSkFqLBiFUUFksXVES1B9OIae6E=;
+ b=R+13RLUCi0WA0J+MwaQz1rN31hUF2xJIEkt8p0Q0lbqR9Uas0yl1tqrwCWRWSQ1mdTeO
+ w7ib7QOab0PbqOQQXLa9O/uVRuqsy7wO0UEGmJTuI2jgXPzV/1t5SC0x69bopFmuq2dU
+ pOE8oYpo5ZhgKeLLOxJMm4QiJkrVytEiIp+gR7SzPxScZaG02bVKwNCBKJKRCQn4Kw1m
+ qswpbPooQIX/Di+tlKiME5apbrrIvpgslHAFnisUqnW2fQ+DeFP2WgnRE36NEGfHpslR
+ HOvoR62+EYh3gm9TO3mA444a2pyorUkWfDp83I5sUbKTdKWSHEHQyOnEPL59pswMJotw 5w== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xkrp263dk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 Jan 2020 11:25:01 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E14C9100034;
+        Tue, 21 Jan 2020 11:24:59 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D0EDA2B1886;
+        Tue, 21 Jan 2020 11:24:59 +0100 (CET)
+Received: from localhost (10.75.127.47) by SFHDAG6NODE1.st.com (10.75.127.16)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 Jan 2020 11:24:59
+ +0100
+From:   Yannick Fertre <yannick.fertre@st.com>
+To:     Yannick Fertre <yannick.fertre@st.com>,
+        Philippe Cornu <philippe.cornu@st.com>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] drm/bridge/synopsys: dsi: missing post disable
 Date:   Tue, 21 Jan 2020 11:24:56 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+Message-ID: <1579602296-7683-1-git-send-email-yannick.fertre@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <20200120072915.GD380565@xz-x1>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG6NODE1.st.com
+ (10.75.127.16)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-21_02:2020-01-21,2020-01-21 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/01/20 08:29, Peter Xu wrote:
->>>
->>>    00b (invalid GFN) ->
->>>      01b (valid gfn published by kernel, which is dirty) ->
->>>        1*b (gfn dirty page collected by userspace) ->
->>>          00b (gfn reset by kernel, so goes back to invalid gfn)
->>> That is 10b and 11b are equivalent.  The kernel doesn't read that bit if
->>> userspace has collected the page.
-> Yes "1*b" is good too (IMHO as long as we can define three states for
-> an entry).  However do you want me to change to that?  Note that I
-> still think we need to read the rest of the field (in this case,
-> "slot" and "gfn") besides the two bits to do re-protect.  Should we
-> trust that unconditionally if writable?
+From: Yannick Fertré <yannick.fertre@st.com>
 
-I think that userspace would only hurt itself if they do so.  As long as
-the kernel has a trusted copy of the indices, it's okay.
+Sometime the post_disable function is missing (not registered).
 
-We have plenty of bits--x86 limits GFNs to 40 bits (52 bits maximum
-physical address).  However, even on other architectures GFNs are
-limited to address space size - page shift (64-12).
+Signed-off-by: Yannick Fertré <yannick.fertre@st.com>
+---
+ drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Paolo
+diff --git a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
+index b18351b..12823ae 100644
+--- a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
++++ b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
+@@ -824,7 +824,8 @@ static void dw_mipi_dsi_bridge_post_disable(struct drm_bridge *bridge)
+ 	 * This needs to be fixed in the drm_bridge framework and the API
+ 	 * needs to be updated to manage our own call chains...
+ 	 */
+-	dsi->panel_bridge->funcs->post_disable(dsi->panel_bridge);
++	if (dsi->panel_bridge->funcs->post_disable)
++		dsi->panel_bridge->funcs->post_disable(dsi->panel_bridge);
+ 
+ 	if (phy_ops->power_off)
+ 		phy_ops->power_off(dsi->plat_data->priv_data);
+-- 
+2.7.4
 
