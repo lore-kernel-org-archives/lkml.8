@@ -2,264 +2,181 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65966C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1991FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:26:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C49924655
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:25:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6C2E2465B
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:26:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=rubrik.com header.i=@rubrik.com header.b="kzMd5TI+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UOeT3DQO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728767AbgAUTZz (ORCPT
+        id S1728925AbgAUT0T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 14:25:55 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:53500 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727383AbgAUTZz (ORCPT
+        Tue, 21 Jan 2020 14:26:19 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:35555 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727383AbgAUT0S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 14:25:55 -0500
-Received: by mail-pj1-f67.google.com with SMTP id n96so1840860pjc.3
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 11:25:54 -0800 (PST)
+        Tue, 21 Jan 2020 14:26:18 -0500
+Received: by mail-ed1-f67.google.com with SMTP id f8so4217601edv.2;
+        Tue, 21 Jan 2020 11:26:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rubrik.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=Ffs7u/vaz6jPgdfSMxQPxBNiO/l+JjyfYJKr49RqCIg=;
-        b=kzMd5TI+z8l9WO4YnkNm5puXNaIDsVPl8l8WJtSIa6T8DWXDVkKhaJrDqFk8YH0oML
-         AOq8DY2KWvOWfIWHmyt3Ur4jfYxE+2D0SwY0pOuzXOSz3C5T7msBaW0DfxNdhtj2cr82
-         TGd3UMMJvZFsr4QC5gG5MyEi3oHtgfXupPjtI=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=e6fuAiNj5LjVAniJFmeMA4RYt70Fcb4nvwAnRr9Y7RE=;
+        b=UOeT3DQObK7HZ/S782GxpJyPPk5HEqH5gv4oW07m95qEmbopU0YuJBMxldQNlhDqv7
+         posHzyudkkkoRV1B0xcI1AWZWr8LvWnXOi6S3Wna3DySI8qcKaxGEHsyPKXi3QV4VvMD
+         iKQCV1kAkwnb9v357RXsVFwR61+dWeSWjDaqQj8rybO7VFkQNeZ+a5+Hn9ZCtp3H8dyF
+         jyhBaLAWqpGNeUPlYcEE4G1Nx7zCsFc2S3zyI2uPgtLWbnpQQLwBoTePTybZY/dWoECL
+         HduwpPNtfiw+tYGyHAk95a2wXvJWWJt6LHxDpLL0lfzZ8IAq8j+z8EGrv7+fthlIuUh9
+         tyhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Ffs7u/vaz6jPgdfSMxQPxBNiO/l+JjyfYJKr49RqCIg=;
-        b=tuhVz4oG77x99qHJYULkmlvWpynPYPsnto/Zo0MGhTil/iIn+0fCQyv5MAfnQ8qgzb
-         bzdJJ8oxvJpp2xCQMcSGfydMUL3HATM9UhVFeyPOH3iXrU67UPbNp32eZWYuv8XG7sr5
-         2GSnmZh+KCWuZRKOMsNQQTIxahdi0rFoGIvtmgGZ3WG9Ir3xdeEMzvNxn2E9xSULM9SX
-         GQSIy62TSlCfXdzzorR+20JAQFPoXqf8xC5RUonIOkLcoo4G15HRr/tg293UOqztNx9p
-         g8z5cMebQX17KiTnaUfIoQrokgejTKdvY3RGeeVna4zyrfZAPukYzs3tNLcBEL6zH2uO
-         AHhQ==
-X-Gm-Message-State: APjAAAWeGQK6kejgiOb+AhLQXJc77r2akGAZLEzroQneDkue0lvArhRz
-        jjSRfSdbPyIh7O2Ql0AJKR8I
-X-Google-Smtp-Source: APXvYqxA5BE8jNAkt9e0dwyVQUAiWMRBpXWumExm+XZI97ZforcTfydL/yMlqll1+DOnr3jtml2YNg==
-X-Received: by 2002:a17:90a:21d1:: with SMTP id q75mr4684pjc.0.1579634754312;
-        Tue, 21 Jan 2020 11:25:54 -0800 (PST)
-Received: from fa2cb4acc48b.colo.rubrik.com ([4.7.92.14])
-        by smtp.gmail.com with ESMTPSA id i23sm43243855pfo.11.2020.01.21.11.25.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 11:25:53 -0800 (PST)
-From:   "muraliraja.muniraju" <muraliraja.muniraju@rubrik.com>
-Cc:     axboe@kernel.dk,
-        "muraliraja.muniraju" <muraliraja.muniraju@rubrik.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] Adding multiple workers to the loop device.
-Date:   Tue, 21 Jan 2020 19:25:38 +0000
-Message-Id: <20200121192540.51642-1-muraliraja.muniraju@rubrik.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=e6fuAiNj5LjVAniJFmeMA4RYt70Fcb4nvwAnRr9Y7RE=;
+        b=YI7MHFVUW+h9qf0TW57Ongb3uG6JLMYhsB+7CB84xnXZNnNBBN5SCfbgrSWe3WKOIl
+         yrrTtYrV/7MPIzEEnn/bgpcXfTf8cS8GTW/ra9SPpr0qkJwM3y2W1IiC0J7U7CVsRTR5
+         xx3SSXFTcNqle6PwAcWkMPCMtZxSdv3HIkEm+JOyNFyPkZSW3Rp8xA6VFUGnCjsrTJuA
+         ZpapzcrCMzaGRAqXbUmE895HPhnDw7dv14d/xNMkb7fB1oa7brYY520vDHWJSPGjjoPY
+         68ml0wWl3gx1BnbrwD2c22Kf/hljYpEHWSoJ/iQdNUFGcFT6Oih/YurYl+XKzLBVZJ6K
+         /o5g==
+X-Gm-Message-State: APjAAAWeITVPzENw0WseXqA1F0b8bdrgnlU7cLj9a1ghIdqusQcP5Ac7
+        CGTG4tafjvBHdkWEbECURIWOscaNPI6QkO/+EaPQ54Gg
+X-Google-Smtp-Source: APXvYqxYx48yBMYim+zYTuQWYYqPdoFgpoBaKGn78ItcIIk6re9pHLXosJEpBQhwJBJV65R0erxv/RkqZN0C0VV7zfg=
+X-Received: by 2002:a17:906:19d8:: with SMTP id h24mr3298246ejd.166.1579634776098;
+ Tue, 21 Jan 2020 11:26:16 -0800 (PST)
+MIME-Version: 1.0
+References: <20200121111813.REPOST.1.I92c66a35fb13f368095b05287bdabdbe88ca6922@changeid>
+In-Reply-To: <20200121111813.REPOST.1.I92c66a35fb13f368095b05287bdabdbe88ca6922@changeid>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Tue, 21 Jan 2020 11:26:05 -0800
+Message-ID: <CAF6AEGtBwcFqe9nfohz8D5mo_V1mfR84bBtEUPmnkO2cjeDrfw@mail.gmail.com>
+Subject: Re: [REPOST PATCH] drm/msm: Set dma maximum segment size for mdss
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     saiprakash.ranjan@codeaurora.org,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>, Sean Paul <sean@poorly.run>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Daniel Vetter <daniel@ffwll.ch>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current loop device implementation has a single kthread worker and
-drains one request at a time to completion. If the underneath device is
-slow then this reduces the concurrency significantly. To help in these
-cases, adding multiple loop workers increases the concurrency. Also to
-retain the old behaviour the default number of loop workers is 1 and can
-be tuned via the ioctl.
----
- drivers/block/loop.c      | 68 +++++++++++++++++++++++++++++++++------
- drivers/block/loop.h      |  9 ++++--
- include/uapi/linux/loop.h |  1 +
- 3 files changed, 67 insertions(+), 11 deletions(-)
+On Tue, Jan 21, 2020 at 11:19 AM Douglas Anderson <dianders@chromium.org> wrote:
+>
+> From: Sean Paul <seanpaul@chromium.org>
+>
+> Turning on CONFIG_DMA_API_DEBUG_SG results in the following error:
+>
+> [   12.078665] msm ae00000.mdss: DMA-API: mapping sg segment longer than device claims to support [len=3526656] [max=65536]
+> [   12.089870] WARNING: CPU: 6 PID: 334 at /mnt/host/source/src/third_party/kernel/v4.19/kernel/dma/debug.c:1301 debug_dma_map_sg+0x1dc/0x318
+> [   12.102655] Modules linked in: joydev
+> [   12.106442] CPU: 6 PID: 334 Comm: frecon Not tainted 4.19.0 #2
+> [   12.112450] Hardware name: Google Cheza (rev3+) (DT)
+> [   12.117566] pstate: 60400009 (nZCv daif +PAN -UAO)
+> [   12.122506] pc : debug_dma_map_sg+0x1dc/0x318
+> [   12.126995] lr : debug_dma_map_sg+0x1dc/0x318
+> [   12.131487] sp : ffffff800cc3ba80
+> [   12.134913] x29: ffffff800cc3ba80 x28: 0000000000000000
+> [   12.140395] x27: 0000000000000004 x26: 0000000000000004
+> [   12.145868] x25: ffffff8008e55b18 x24: 0000000000000000
+> [   12.151337] x23: 00000000ffffffff x22: ffffff800921c000
+> [   12.156809] x21: ffffffc0fa75b080 x20: ffffffc0f7195090
+> [   12.162280] x19: ffffffc0f1c53280 x18: 0000000000000000
+> [   12.167749] x17: 0000000000000000 x16: 0000000000000000
+> [   12.173218] x15: 0000000000000000 x14: 0720072007200720
+> [   12.178689] x13: 0720072007200720 x12: 0720072007200720
+> [   12.184161] x11: 0720072007200720 x10: 0720072007200720
+> [   12.189641] x9 : ffffffc0f1fc6b60 x8 : 0000000000000000
+> [   12.195110] x7 : ffffff8008132ce0 x6 : 0000000000000000
+> [   12.200585] x5 : 0000000000000000 x4 : ffffff8008134734
+> [   12.206058] x3 : ffffff800cc3b830 x2 : ffffffc0f1fc6240
+> [   12.211532] x1 : 25045a74f48a7400 x0 : 25045a74f48a7400
+> [   12.217006] Call trace:
+> [   12.219535]  debug_dma_map_sg+0x1dc/0x318
+> [   12.223671]  get_pages+0x19c/0x20c
+> [   12.227177]  msm_gem_fault+0x64/0xfc
+> [   12.230874]  __do_fault+0x3c/0x140
+> [   12.234383]  __handle_mm_fault+0x70c/0xdb8
+> [   12.238603]  handle_mm_fault+0xac/0xc4
+> [   12.242473]  do_page_fault+0x1bc/0x3d4
+> [   12.246342]  do_translation_fault+0x54/0x88
+> [   12.250652]  do_mem_abort+0x60/0xf0
+> [   12.254250]  el0_da+0x20/0x24
+> [   12.257317] irq event stamp: 67260
+> [   12.260828] hardirqs last  enabled at (67259): [<ffffff8008132d0c>] console_unlock+0x214/0x608
+> [   12.269693] hardirqs last disabled at (67260): [<ffffff8008080e0c>] do_debug_exception+0x5c/0x178
+> [   12.278820] softirqs last  enabled at (67256): [<ffffff8008081664>] __do_softirq+0x4d4/0x520
+> [   12.287510] softirqs last disabled at (67249): [<ffffff80080be574>] irq_exit+0xa8/0x100
+> [   12.295742] ---[ end trace e63cfc40c313ffab ]---
+>
+> The root of the problem is that the default segment size for sgt is
+> (UINT_MAX & PAGE_MASK), and the default segment size for device dma is
+> 64K. As such, if you compare the 2, you would deduce that the sg segment
+> will overflow the device's capacity. In reality, the hardware can
+> accommodate the larger sg segments, it's just not initializing its max
+> segment properly. This patch initializes the max segment size for the
+> mdss device, which gets rid of that pesky warning.
+>
+> Reported-by: Stephen Boyd <swboyd@chromium.org>
+> Signed-off-by: Sean Paul <seanpaul@chromium.org>
+> Tested-by: Stephen Boyd <swboyd@chromium.org>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> This patch has been floating in the ether for over a year [1].  I know
+> next to nothing about it, but I'm told it's still useful so I'm
+> helpfully reposting it.  Please enjoy.
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 739b372a5112..97ec9485140c 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -793,6 +793,13 @@ static ssize_t loop_attr_backing_file_show(struct loop_device *lo, char *buf)
- 	return ret;
- }
- 
-+static ssize_t loop_attr_num_loop_workers_show(struct loop_device *lo,
-+						char *buf)
-+{
-+	return sprintf(buf, "%llu\n",
-+			(unsigned long long)lo->num_loop_workers);
-+}
-+
- static ssize_t loop_attr_offset_show(struct loop_device *lo, char *buf)
- {
- 	return sprintf(buf, "%llu\n", (unsigned long long)lo->lo_offset);
-@@ -830,6 +837,7 @@ LOOP_ATTR_RO(sizelimit);
- LOOP_ATTR_RO(autoclear);
- LOOP_ATTR_RO(partscan);
- LOOP_ATTR_RO(dio);
-+LOOP_ATTR_RO(num_loop_workers);
- 
- static struct attribute *loop_attrs[] = {
- 	&loop_attr_backing_file.attr,
-@@ -838,6 +846,7 @@ static struct attribute *loop_attrs[] = {
- 	&loop_attr_autoclear.attr,
- 	&loop_attr_partscan.attr,
- 	&loop_attr_dio.attr,
-+	&loop_attr_num_loop_workers.attr,
- 	NULL,
- };
- 
-@@ -889,10 +898,19 @@ static void loop_config_discard(struct loop_device *lo)
- 	blk_queue_flag_set(QUEUE_FLAG_DISCARD, q);
- }
- 
-+static void loop_queue_cleanup(struct loop_device *lo, int num_workers)
-+{
-+	int i;
-+
-+	for (i = 0; i < num_workers; i++)
-+		kthread_flush_worker(&(lo->workers[i]));
-+	for (i = 0; i < num_workers; i++)
-+		kthread_stop(lo->worker_tasks[i]);
-+}
-+
- static void loop_unprepare_queue(struct loop_device *lo)
- {
--	kthread_flush_worker(&lo->worker);
--	kthread_stop(lo->worker_task);
-+	loop_queue_cleanup(lo, lo->num_loop_workers);
- }
- 
- static int loop_kthread_worker_fn(void *worker_ptr)
-@@ -903,13 +921,22 @@ static int loop_kthread_worker_fn(void *worker_ptr)
- 
- static int loop_prepare_queue(struct loop_device *lo)
- {
--	kthread_init_worker(&lo->worker);
--	lo->worker_task = kthread_run(loop_kthread_worker_fn,
--			&lo->worker, "loop%d", lo->lo_number);
--	if (IS_ERR(lo->worker_task))
--		return -ENOMEM;
--	set_user_nice(lo->worker_task, MIN_NICE);
-+	int i = 0;
-+
-+	for (i = 0; i < lo->num_loop_workers; i++) {
-+		kthread_init_worker(&(lo->workers[i]));
-+		lo->worker_tasks[i] = kthread_run(
-+				loop_kthread_worker_fn, &(lo->workers[i]),
-+				"loop%d(%d)", lo->lo_number, i);
-+		if (IS_ERR((lo->worker_tasks[i])))
-+			goto err;
-+		set_user_nice(lo->worker_tasks[i], MIN_NICE);
-+	}
- 	return 0;
-+err:
-+	// Cleanup the previous indices, 0 to i-1
-+	loop_queue_cleanup(lo, i);
-+	return -ENOMEM;
- }
- 
- static void loop_update_rotational(struct loop_device *lo)
-@@ -1529,6 +1556,16 @@ static int loop_set_dio(struct loop_device *lo, unsigned long arg)
- 	return error;
- }
- 
-+static int loop_set_num_workers(struct loop_device *lo, unsigned long arg)
-+{
-+	if (lo->lo_state != Lo_unbound)
-+		return -ENXIO;
-+	if (arg < 1 || arg > MAX_LOOP_WORKER_THREADS)
-+		return -EINVAL;
-+	lo->num_loop_workers = arg;
-+	return 0;
-+}
-+
- static int loop_set_block_size(struct loop_device *lo, unsigned long arg)
- {
- 	int err = 0;
-@@ -1584,6 +1621,9 @@ static int lo_simple_ioctl(struct loop_device *lo, unsigned int cmd,
- 	case LOOP_SET_BLOCK_SIZE:
- 		err = loop_set_block_size(lo, arg);
- 		break;
-+	case LOOP_SET_WORKERS:
-+		err = loop_set_num_workers(lo, arg);
-+		break;
- 	default:
- 		err = lo->ioctl ? lo->ioctl(lo, cmd, arg) : -EINVAL;
- 	}
-@@ -1907,6 +1947,7 @@ static blk_status_t loop_queue_rq(struct blk_mq_hw_ctx *hctx,
- 	struct request *rq = bd->rq;
- 	struct loop_cmd *cmd = blk_mq_rq_to_pdu(rq);
- 	struct loop_device *lo = rq->q->queuedata;
-+	unsigned int inx;
- 
- 	blk_mq_start_request(rq);
- 
-@@ -1932,7 +1973,14 @@ static blk_status_t loop_queue_rq(struct blk_mq_hw_ctx *hctx,
- 	} else
- #endif
- 		cmd->css = NULL;
--	kthread_queue_work(&lo->worker, &cmd->work);
-+
-+	// Round robin the incoming requests across multiple threads
-+	// by having a monitorically increasing number indexing
-+	// by modulo number of workers.
-+	inx = lo->current_queue_inx;
-+	inx = inx % lo->num_loop_workers;
-+	kthread_queue_work(&lo->workers[inx], &cmd->work);
-+	lo->current_queue_inx += 1;
- 
- 	return BLK_STS_OK;
- }
-@@ -2014,6 +2062,8 @@ static int loop_add(struct loop_device **l, int i)
- 	lo->tag_set.cmd_size = sizeof(struct loop_cmd);
- 	lo->tag_set.flags = BLK_MQ_F_SHOULD_MERGE;
- 	lo->tag_set.driver_data = lo;
-+	lo->num_loop_workers = DEFAULT_LOOP_WORKERS;
-+	lo->current_queue_inx = 0;
- 
- 	err = blk_mq_alloc_tag_set(&lo->tag_set);
- 	if (err)
-diff --git a/drivers/block/loop.h b/drivers/block/loop.h
-index af75a5ee4094..09d1cc4f9b6b 100644
---- a/drivers/block/loop.h
-+++ b/drivers/block/loop.h
-@@ -26,6 +26,9 @@ enum {
- 
- struct loop_func_table;
- 
-+#define MAX_LOOP_WORKER_THREADS 8
-+#define DEFAULT_LOOP_WORKERS 1
-+
- struct loop_device {
- 	int		lo_number;
- 	atomic_t	lo_refcnt;
-@@ -54,8 +57,10 @@ struct loop_device {
- 
- 	spinlock_t		lo_lock;
- 	int			lo_state;
--	struct kthread_worker	worker;
--	struct task_struct	*worker_task;
-+	struct kthread_worker	workers[MAX_LOOP_WORKER_THREADS];
-+	struct task_struct	*worker_tasks[MAX_LOOP_WORKER_THREADS];
-+	unsigned int		current_queue_inx;
-+	int			num_loop_workers;
- 	bool			use_dio;
- 	bool			sysfs_inited;
- 
-diff --git a/include/uapi/linux/loop.h b/include/uapi/linux/loop.h
-index 080a8df134ef..a1b689832bb4 100644
---- a/include/uapi/linux/loop.h
-+++ b/include/uapi/linux/loop.h
-@@ -90,6 +90,7 @@ struct loop_info64 {
- #define LOOP_SET_CAPACITY	0x4C07
- #define LOOP_SET_DIRECT_IO	0x4C08
- #define LOOP_SET_BLOCK_SIZE	0x4C09
-+#define LOOP_SET_WORKERS	0x4C0A
- 
- /* /dev/loop-control interface */
- #define LOOP_CTL_ADD		0x4C80
--- 
-2.17.1
+This looks like the right thing to do.. sorry I overlooked the patch
+first time around
 
+Reviewed-by: Rob Clark <robdclark@gmail.com>
+
+(since I've already sent PR for msm-next, could we pick this up via drm-misc?)
+
+BR,
+-R
+
+
+>
+> [1] https://lore.kernel.org/r/20181106213239.52133-1-sean@poorly.run
+>
+>  drivers/gpu/drm/msm/msm_drv.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+> index c26219c7a49f..e4b750b0c2d3 100644
+> --- a/drivers/gpu/drm/msm/msm_drv.c
+> +++ b/drivers/gpu/drm/msm/msm_drv.c
+> @@ -441,6 +441,14 @@ static int msm_drm_init(struct device *dev, struct drm_driver *drv)
+>         if (ret)
+>                 goto err_msm_uninit;
+>
+> +       if (!dev->dma_parms) {
+> +               dev->dma_parms = devm_kzalloc(dev, sizeof(*dev->dma_parms),
+> +                                             GFP_KERNEL);
+> +               if (!dev->dma_parms)
+> +                       return -ENOMEM;
+> +       }
+> +       dma_set_max_seg_size(dev, DMA_BIT_MASK(32));
+> +
+>         msm_gem_shrinker_init(ddev);
+>
+>         switch (get_mdp_ver(pdev)) {
+> --
+> 2.25.0.341.g760bfbb309-goog
+>
