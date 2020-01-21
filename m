@@ -2,151 +2,116 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B18B0C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7903EC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82A8C22314
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:39:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D4F3207E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:41:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ndp7Y68g"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P4QFKjs5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729152AbgAUPj6 (ORCPT
+        id S1729162AbgAUPlC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 10:39:58 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:34476 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727508AbgAUPj6 (ORCPT
+        Tue, 21 Jan 2020 10:41:02 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:23775 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727817AbgAUPlC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 10:39:58 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00LFcpUq013067;
-        Tue, 21 Jan 2020 15:39:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=eQ4ik+FTutWCXRnK1enaA7jtow4c1d1i8Ndq/T4zYAI=;
- b=Ndp7Y68gPe+ml2WETz8GRmm7ySYkYQI0NldiFD/VFx3eOhu2KOhRQJ2/rtID7DxKaUiF
- V1hFJQ02DSIO0dBiXRER6K0C+1rw6ALZcMNLl03KL7CUYUmlH3M+2i3srS3GwsUGl9nf
- oS2iPLNMGx1dPrL0JdDQHd+hxwrqeUjLRCmKLacBsoPY3Uypu9HEft9cP4FTQ79m2zHm
- xyT4max28qK6ZvBEl8M0aMENvPC644cSJCL2CCNrEZpo0iZ1xfZoN3q4oNpH5lNp3AQK
- 5DJ+KXsmyYXeE5IzoderN7nI407zhhSvJqSQFWwYfkrRoztrzwkQtdbiCiM5/fY+/qQC lA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2xksyq5rv1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 Jan 2020 15:39:24 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00LFcV90056940;
-        Tue, 21 Jan 2020 15:39:24 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2xnpfp7rte-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 Jan 2020 15:39:24 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00LFdFaW019191;
-        Tue, 21 Jan 2020 15:39:17 GMT
-Received: from kadam (/10.175.179.252)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 21 Jan 2020 07:39:14 -0800
-Date:   Tue, 21 Jan 2020 18:39:04 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     syzbot <syzbot+3967c1caf256f4d5aefe@syzkaller.appspotmail.com>
-Cc:     alsa-devel@alsa-project.org, davem@davemloft.net,
-        dccp@vger.kernel.org, gerrit@erg.abdn.ac.uk,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        perex@perex.cz, syzkaller-bugs@googlegroups.com, tiwai@suse.com,
-        tiwai@suse.de, Eric Dumazet <edumazet@google.com>
-Subject: Re: KASAN: use-after-free Read in ccid_hc_tx_delete
-Message-ID: <20200121153904.GA9856@kadam>
-References: <000000000000de3c7705746dcbb7@google.com>
- <0000000000002c243a0597dc8d9d@google.com>
- <20191121201433.GD617@kadam>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191121201433.GD617@kadam>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9506 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001210125
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9506 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001210125
+        Tue, 21 Jan 2020 10:41:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579621260;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=we4/gBiw30cw44IUPofotNch7liSotXMYbfdkk3pq5k=;
+        b=P4QFKjs5NEzLoALZ8yc+Kk7mhm458TgDenuvzE7CA7vBLU6Qmi7o14NszNlWSGYnQAlnoe
+        ESjSxgLqVXNEL9uFRGpfbBG1NGhAYBDU695qd/HVxVxPZRFtiOei71lAHctKzf//sR6MQi
+        942Ggqvp+vco0qsKMspwv5FRPSg0Nws=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-128--fTGTJA7NIab3tZg8Ld9Ng-1; Tue, 21 Jan 2020 10:40:58 -0500
+X-MC-Unique: -fTGTJA7NIab3tZg8Ld9Ng-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 348158F7894;
+        Tue, 21 Jan 2020 15:40:57 +0000 (UTC)
+Received: from llong.com (dhcp-17-59.bos.redhat.com [10.18.17.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D026060E1C;
+        Tue, 21 Jan 2020 15:40:53 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>
+Cc:     linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
+        Waiman Long <longman@redhat.com>
+Subject: [PATCH v4 0/7] locking/lockdep: Reuse zapped chain_hlocks entries
+Date:   Tue, 21 Jan 2020 10:40:02 -0500
+Message-Id: <20200121154009.11993-1-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 11:14:33PM +0300, Dan Carpenter wrote:
-> On Thu, Nov 21, 2019 at 07:00:00AM -0800, syzbot wrote:
-> > syzbot has bisected this bug to:
-> > 
-> > commit f04684b4d85d6371126f476d3268ebf6a0bd57cf
-> > Author: Dan Carpenter <dan.carpenter@oracle.com>
-> > Date:   Thu Jun 21 08:07:21 2018 +0000
-> > 
-> >     ALSA: lx6464es: Missing error code in snd_lx6464es_create()
-> > 
-> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10dd11cae00000
-> > start commit:   eb6cf9f8 Merge tag 'arm64-fixes' of git://git.kernel.org/p..
-> > git tree:       upstream
-> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=12dd11cae00000
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=14dd11cae00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=c8970c89a0efbb23
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=3967c1caf256f4d5aefe
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11022ccd400000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=124581db400000
-> > 
-> > Reported-by: syzbot+3967c1caf256f4d5aefe@syzkaller.appspotmail.com
-> > Fixes: f04684b4d85d ("ALSA: lx6464es: Missing error code in
-> > snd_lx6464es_create()")
-> > 
-> > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-> 
-> This crash isn't related to my commit, it's seems something specific to
-> DCCP.
-> 
-> My guess is that the fix is probably something like this.  The old sk
-> and the new sk re-use the same newdp->dccps_hc_rx/tx_ccid pointers.
-> The first sk destructor frees it and that causes a use after free when
-> the second destructor tries to free it.
-> 
-> But I don't know DCCP code at all so I might be totally off and I
-> haven't tested this at all...  It was just easier to write a patch than
-> to try to explain in words.  Maybe we should clone the ccid instead of
-> setting it to NULL.  Or I might be completely wrong.
-> 
-> ---
->  net/dccp/minisocks.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/net/dccp/minisocks.c b/net/dccp/minisocks.c
-> index 25187528c308..4cbfcccbbbbb 100644
-> --- a/net/dccp/minisocks.c
-> +++ b/net/dccp/minisocks.c
-> @@ -98,6 +98,8 @@ struct sock *dccp_create_openreq_child(const struct sock *sk,
->  		newdp->dccps_timestamp_echo = dreq->dreq_timestamp_echo;
->  		newdp->dccps_timestamp_time = dreq->dreq_timestamp_time;
->  		newicsk->icsk_rto	    = DCCP_TIMEOUT_INIT;
-> +		newdp->dccps_hc_rx_ccid     = NULL;
-> +		newdp->dccps_hc_tx_ccid     = NULL;
->  
->  		INIT_LIST_HEAD(&newdp->dccps_featneg);
->  		/*
+ v4:
+  - Fix build errors reported by kbuild test robot.
+  - Adopt the single chain block allocator code suggested by PeterZ which
+    combine the last 3 patches of v3 series.
+  - Add another patch to introduce a fast path in the chain block
+    allocator.
+  - In patch 1, move the inc_chains() out of CONFIG_TRACE_IRQFLAGS
+    conditional compilation block.
 
-Could someone take a look at this?  It seem like a pretty serious bug
-but DCCP is not very actively maintained and a lot of distributions
-disable it.
+ v3:
+  - Move the bug fix patches to the beginning of the series.
+  - Include a number of changes as suggested by PeterZ.
+  - Increase MAX_CHAIN_BUCKETS from 8 to 10 to reduce the chance of using
+    the unsized list.
+  - Add patch 7 to add a lockdep_early_init() call.
+  - Add patch 8 to allocate chain hlocks by splitting large chain block
+    as a last resort.
 
-regards,
-dan carpenter
+ v2:
+  - Revamp the chain_hlocks reuse patch to store the freed chain_hlocks
+    information in the chain_hlocks entries themselves avoiding the
+    need of a separate set of tracking structures. This, however,
+    requires a minimum allocation size of at least 2. Thanks to PeterZ
+    for his review and inspiring this change.
+  - Remove the leakage counter as it is no longer applicable.
+  - Add patch 6 to make the output of /proc/lockdep_chains more readable.
+
+It was found that when running a workload that kept on adding lock
+classes and then zapping them repetitively, the system will eventually
+run out of chain_hlocks[] entries even though there were still plenty
+of other lockdep data buffers available.
+
+  [ 4318.443670] BUG: MAX_LOCKDEP_CHAIN_HLOCKS too low!
+  [ 4318.444809] turning off the locking correctness validator.
+
+In order to fix this problem, we have to make chain_hlocks[] entries
+reusable just like other lockdep arrays. Besides that, the patchset
+also adds some zapped class and chain_hlocks counters to be tracked by
+/proc/lockdep_stats. It also fixes leakage in the irq context counters
+and makes the output of /proc/lockdep_chains more readable.
+
+Waiman Long (7):
+  locking/lockdep: Decrement irq context counters when removing lock
+    chain
+  locking/lockdep: Display irq_context names in /proc/lockdep_chains
+  locking/lockdep: Track number of zapped classes
+  locking/lockdep: Throw away all lock chains with zapped class
+  locking/lockdep: Track number of zapped lock chains
+  locking/lockdep: Reuse freed chain_hlocks entries
+  locking/lockdep: Add a fast path for chain_hlocks allocation
+
+ kernel/locking/lockdep.c           | 335 ++++++++++++++++++++++++-----
+ kernel/locking/lockdep_internals.h |  13 +-
+ kernel/locking/lockdep_proc.c      |  26 ++-
+ 3 files changed, 309 insertions(+), 65 deletions(-)
+
+-- 
+2.18.1
+
