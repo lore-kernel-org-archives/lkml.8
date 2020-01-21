@@ -2,120 +2,92 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 537E9C33CAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 20:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68AABC33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 20:29:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 278DF24125
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 20:26:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CF0F24125
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 20:29:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PHdZxySB"
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="XrBNnqp7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729112AbgAUU0t (ORCPT
+        id S1728855AbgAUU3U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 15:26:49 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34295 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729022AbgAUU0t (ORCPT
+        Tue, 21 Jan 2020 15:29:20 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:34734 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727829AbgAUU3U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 15:26:49 -0500
-Received: by mail-ot1-f65.google.com with SMTP id a15so4223513otf.1;
-        Tue, 21 Jan 2020 12:26:48 -0800 (PST)
+        Tue, 21 Jan 2020 15:29:20 -0500
+Received: by mail-wm1-f67.google.com with SMTP id s144so42984wme.1
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 12:29:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=huthel+GYazN/w+4NQrVBhFyJ8fOofBu6y0OM4VOExE=;
-        b=PHdZxySBOGJu7nX6RrERvEBIImUuFC/XREChIwjJBVH6I3HeBwsIte6IjFrJ9ELLa1
-         Qg5xgcZjhbOF1bAOKsO7Zr707BmrE/UC6dye60kLEGB2AjjhtUwItD4ab1EF5u7dZkQH
-         C6KwCyaugo88wM1E0+V3xUQr6LocpLkh0DaAC6jRm0S/BzVb9J5CLpb68ZHuIK2h5Ho7
-         Ejg5fWMGFDypMLYYaXUQyGcwFz4eofDNZuHoNtAOPbGwXHSCwUqrrvVjblJaUPRxfLjj
-         N9fF7KNdh3zm3B0Qw4FGBokbMD/EgMI8kYr8A/0xw/kZsivJ0byKuSwul60o0coObFUI
-         aaSw==
+        d=chrisdown.name; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=4v06OcVu6AWGAgREkUN+nJOIVq296IIoZLXUePQ8oZc=;
+        b=XrBNnqp79Hr/DOZDtYgis7af+OtRIktTWNbtDXG8Y3/Qb8GRB3slWN5aPD9R7pTrKH
+         JBnhybcpF1QDwrQadEzEW2ochphAXfVTSrRSEQouPnd0SbFrgughr7vA4JaBSnGSvqHG
+         ICHqKKYVbqVzzNqFxuuHSutNnHmbBzCGww49E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=huthel+GYazN/w+4NQrVBhFyJ8fOofBu6y0OM4VOExE=;
-        b=eJsJ9s8cbigBVRgBtnfMi1GyV0JBQvmGGXVDLV7ld95uz16cKBVImvZq8Js84lHntX
-         fUjhULa9EIsVD16NGoWvBfdmGa8WPYrpB8o4k5ZgVi0SpTa+64LEIwRLxmsCpQ8/pITZ
-         CJIcZqoSiBjFhb3D2OKduZVU0aZ9KX5y334OHTgmeguOOYGnTg/ZJK4YdR/8E1xEvHPv
-         70Ql1LTWJzaPNLRhdsdxfeniZtfRlWmGT+Yo2Y0pHtetFnGUBzx4vFx409vBXKHoM4/Q
-         UXccYYZkwigff9BJ9FK5BtPk7KSpJhiQzJRLyGmCeo1txZa1zOPwZvePZ8/DM/Jtg7+C
-         dgZw==
-X-Gm-Message-State: APjAAAVIGlNTmPsaI7iWhE7PQU+oJSzxC+/No6c48ytzm6zd4a7vGrjD
-        XIKqfoOIsWhoRjQYPQsL9qXUEjLXrs1J+nHZvi+hgjTH
-X-Google-Smtp-Source: APXvYqxVkIScTalyju4KUbjWgD8VE3P18faAzgbh803zzoaKztEzIC61Wcs20g50NLKutuaplTw4pq6DW7NdAMgnvFU=
-X-Received: by 2002:a9d:6b03:: with SMTP id g3mr4900385otp.200.1579638408335;
- Tue, 21 Jan 2020 12:26:48 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4v06OcVu6AWGAgREkUN+nJOIVq296IIoZLXUePQ8oZc=;
+        b=gLx2Q+fAg3GZyO+XpEAFSjOf9q4JYIC8iL+8OmXW72g2tXj0BW2EKQnky7TzBH0Ynv
+         QB9ymznt5EK+cfaapFtNBP7LeoheeejpEqM7PzKpi5EQVmK/xIovlgvscXFlYyr/cqur
+         rbHnyqDFBbdh9I4L80EoIsgPBer95Kvb68yVFlF2gOQB7A8+EiRKSG4fSQYiGIYmQkzt
+         /EoyxHx2CzTZKcKCmaHNkPTWizvV8+msyd7eLzCo4jqXv5KJLH8MrMNT6qXsoZXYNG+d
+         5GJaBpCp3YZGJUASBNeJ7N0FK3UKMY0yOXR+jP2Tkam4L6wxetYav3QvFGYesY0mysY8
+         Elkg==
+X-Gm-Message-State: APjAAAVA1B+89A2AvFlG6qoTawJl65QD1KA51YSM67uqkxauOQ4QXx18
+        9uvYKdvoZRnBeYWJwMd+pVppRw==
+X-Google-Smtp-Source: APXvYqzXKlscNyzgyDBzjygHPG9zXc5qiNK6Ib4TKhvYN1HXHb/DAgBd7X6W185JcEtce4e4RPF1Ow==
+X-Received: by 2002:a05:600c:22d3:: with SMTP id 19mr193695wmg.92.1579638557788;
+        Tue, 21 Jan 2020 12:29:17 -0800 (PST)
+Received: from localhost ([2620:10d:c092:180::1:db6c])
+        by smtp.gmail.com with ESMTPSA id z187sm775841wme.16.2020.01.21.12.29.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2020 12:29:17 -0800 (PST)
+Date:   Tue, 21 Jan 2020 20:29:16 +0000
+From:   Chris Down <chris@chrisdown.name>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>
+Subject: Re: [PATCH] bpf: btf: Always output invariant hit in pahole DWARF to
+ BTF transform
+Message-ID: <20200121202916.GA204956@chrisdown.name>
+References: <20200121150431.GA240246@chrisdown.name>
+ <CAEf4BzZj4PEamHktYLHqHrau0_pkr_q-J85MPCzFbe7mtLQ_+Q@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200113084005.849071-1-vkoul@kernel.org> <CANcMJZC1w+J=cdp0OiR5XDn9fFSPht70Jaf9F5S5BryFxVXVoQ@mail.gmail.com>
- <CAAd0S9Aaw8G+=EivfC-g4Lt3Xf_kpjFh6WwQk2E8pFxJUmteKQ@mail.gmail.com> <20200121064608.GA2841@vkoul-mobl>
-In-Reply-To: <20200121064608.GA2841@vkoul-mobl>
-From:   Christian Lamparter <chunkeey@gmail.com>
-Date:   Tue, 21 Jan 2020 21:26:34 +0100
-Message-ID: <CAAd0S9Dd7Ygx7TgV3E_A6z29efG7jsE1-xy48_cHotroWuk_ZA@mail.gmail.com>
-Subject: Re: [PATCH v6 0/5] usb: xhci: Add support for Renesas USB controllers
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        USB list <linux-usb@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAEf4BzZj4PEamHktYLHqHrau0_pkr_q-J85MPCzFbe7mtLQ_+Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-On Tue, Jan 21, 2020 at 7:46 AM Vinod Koul <vkoul@kernel.org> wrote:
+Andrii Nakryiko writes:
+>> --- a/scripts/link-vmlinux.sh
+>> +++ b/scripts/link-vmlinux.sh
+>> @@ -108,13 +108,15 @@ gen_btf()
+>>         local bin_arch
+>>
+>>         if ! [ -x "$(command -v ${PAHOLE})" ]; then
+>> -               info "BTF" "${1}: pahole (${PAHOLE}) is not available"
+>> +               printf 'BTF: %s: pahole (%s) is not available\n' \
+>> +                       "${1}" "${PAHOLE}" >&2
 >
-> hey Christian,
->
-> On 13-01-20, 21:33, Christian Lamparter wrote:
-> > On Mon, Jan 13, 2020 at 9:10 PM John Stultz <john.stultz@linaro.org> wrote:
-> > >
-> > > On Mon, Jan 13, 2020 at 12:42 AM Vinod Koul <vkoul@kernel.org> wrote:
-> > > >
-> > > > This series add support for Renesas USB controllers uPD720201 and uPD720202.
-> > > > These require firmware to be loaded and in case devices have ROM those can
-> > > > also be programmed if empty. If ROM is programmed, it runs from ROM as well.
-> > > >
-> > > > This includes two patches from Christian which supported these controllers
-> > > > w/o ROM and later my patches for ROM support and multiple firmware versions,
-> > > > debugfs hook for rom erase and export of xhci-pci functions.
-> > > >
-> > >
-> > > Thanks so much for updating these! They are working ok for me in my
-> > > testing on db845c.
-> > >
-> > > Tested-by: John Stultz <john.stultz@linaro.org>
-> >
-> > Nice! I'll definitely give this series another try on my WNDR4700 too
-> > (PowerPC Arch)
-> > this weekend.
-> >
-> > and from me: Thanks!
->
-> Did you get around to test these?
+>any reason not to use echo instead of printf? would be more minimal change
 
-Not yet, I was too optimistic that I could get current linux-usb with the
-patches running on the WNDR4700 (due to APM82181) over the
-weekend. Do you think that It still counts, if I'm going with 5.4.11 on
-OpenWrt instead? Because then I just swap out the old patches from
-my OpenWrt APM821XX branch:
-<https://git.openwrt.org/?p=openwrt/staging/chunkeey.git;a=commit;h=4dd6f62a36a3724f0363d639cd9e29e04d7b62c0>
-
-and don't have to figure out what broke with linux-usb on the APM821xx.
-
-Cheers,
-Christian
+I generally avoid using echo because it has a bunch of portability gotchas 
+which printf mostly doesn't have. If you'd prefer echo, that's fine though, 
+just let me know and I can send v2.
