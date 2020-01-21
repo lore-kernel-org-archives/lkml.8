@@ -2,180 +2,98 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D189C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29621C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25ABE24125
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:37:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iruQMEZf"
+	by mail.kernel.org (Postfix) with ESMTP id 080A924125
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:38:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729191AbgAUShv (ORCPT
+        id S1729251AbgAUSi0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 13:37:51 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:34545 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729121AbgAUShu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 13:37:50 -0500
-Received: by mail-pj1-f65.google.com with SMTP id s94so1181348pjc.1
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 10:37:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=d/edO9aJPoxq9g8rnEO2HYdRuntyLYALCbAy7vUg4MQ=;
-        b=iruQMEZf6Rqj00alf/sWYoU7wkexznSITdkZFHLCdtwuvZyqJZN14M2f00bK3OG/jZ
-         TcGu+AZd3rNmcwoRjdcZjDJTr28RaE320khkTPwfgEi1dDHYLiqpmSLT+uTwphGwUhiS
-         OuIDqJlRtbswf+u4oyh5BPcmzke1DWQiWHxeo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=d/edO9aJPoxq9g8rnEO2HYdRuntyLYALCbAy7vUg4MQ=;
-        b=ccaWLJWcvr4CoKlv9v5BFWdNM4P2iuY1AlAbEo2gigkaiORUsU++V5bpi7KMQ5UlJx
-         Qe7S12qf4Mof60icOm699lpM4e8cKrxm/pqzHdVokDSiER8xYNujTWDbPY6VBMSIeyDC
-         oRehWDqmRRRSjGlOSoQDCwdn+eG1dwtfhafmfAXRgR9aFnEF4/8gZa9rSPj9fVI3/euf
-         i2QwBzJjgvroz61jYmopPZVgLvOlamVaZMHQivRuEIGhf0UfoJnNmW22l0/dfpyls1x2
-         VWOOSm+tNzw5YTBAqbeDIJBldVt0TLTboeSsWNIqT7vYdQP+fUhWSgkyTxtJMIOuKMLc
-         H8Bg==
-X-Gm-Message-State: APjAAAXPFfUdO6sZ0Vm0vm6TAB/TJxQUJ7oJUo9CUjZXLg2bc4PqKNKL
-        kk93o5PB8d2ekmFTNwSjmdrU4w==
-X-Google-Smtp-Source: APXvYqxUpWf2jqEZGnl6npXNAnSrYtJCmXM6P+Qy21YZI5vfC7PE4b+UpLRr+pn4bVOqnayAn8+svg==
-X-Received: by 2002:a17:90b:142:: with SMTP id em2mr7014885pjb.4.1579631869791;
-        Tue, 21 Jan 2020 10:37:49 -0800 (PST)
-Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id i23sm43182250pfo.11.2020.01.21.10.37.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 10:37:49 -0800 (PST)
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH] spmi: pmic-arb: Set lockdep class for hierarchical irq domains
-Date:   Tue, 21 Jan 2020 10:37:48 -0800
-Message-Id: <20200121183748.68662-1-swboyd@chromium.org>
-X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
+        Tue, 21 Jan 2020 13:38:26 -0500
+Received: from foss.arm.com ([217.140.110.172]:47354 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729081AbgAUSiZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 13:38:25 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2BD521FB;
+        Tue, 21 Jan 2020 10:38:25 -0800 (PST)
+Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EB3F93F6C4;
+        Tue, 21 Jan 2020 10:38:23 -0800 (PST)
+Date:   Tue, 21 Jan 2020 18:38:18 +0000
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        cristian.marussi@arm.com, Peng Fan <peng.fan@nxp.com>,
+        peter.hilber@opensynergy.com,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH V3] firmware: arm_scmi: Make scmi core independent of the
+ transport type
+Message-ID: <20200121183818.GA11522@bogus>
+References: <4b74f1b6c1f9653241a1b5754525e230b3d76a3f.1579595093.git.viresh.kumar@linaro.org>
+ <CAK8P3a0fWf-wd8exJa+_UL9n0bQ26W6wd0iQH32osM1Q+cLu_w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a0fWf-wd8exJa+_UL9n0bQ26W6wd0iQH32osM1Q+cLu_w@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I see the following lockdep splat in the qcom pinctrl driver when
-attempting to suspend the device.
+On Tue, Jan 21, 2020 at 04:11:11PM +0100, Arnd Bergmann wrote:
+> On Tue, Jan 21, 2020 at 9:27 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> >
+> > The SCMI specification is fairly independent of the transport protocol,
+> > which can be a simple mailbox (already implemented) or anything else.
+> > The current Linux implementation however is very much dependent on the
+> > mailbox transport layer.
+> >
+> > This patch makes the SCMI core code (driver.c) independent of the
+> > mailbox transport layer and moves all mailbox related code to a new
+> > file: mailbox.c.
+> >
+> > We can now implement more transport protocols to transport SCMI
+> > messages.
+> >
+> > The transport protocols just need to provide struct scmi_transport_ops,
+> > with its version of the callbacks to enable exchange of SCMI messages.
+> >
+> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> > ---
+> > @Sudeep: Can you please help me getting this tested?
+> >
 
- WARNING: possible recursive locking detected
- 5.4.11 #3 Tainted: G        W
- --------------------------------------------
- cat/3074 is trying to acquire lock:
- ffffff81f49804c0 (&irq_desc_lock_class){-.-.}, at: __irq_get_desc_lock+0x64/0x94
+Sure(I may need to rebase on top of -next to test on top of what's queued
+for v5.6)
 
- but task is already holding lock:
- ffffff81f1cc10c0 (&irq_desc_lock_class){-.-.}, at: __irq_get_desc_lock+0x64/0x94
+> > V2->V3:
+> > - Added more ops to the structure to read/write/memcpy data
+> > - Payload is moved to mailbox.c and is handled in transport specific way
+> >   now. This resulted in lots of changes.
+>
+> This addresses the comments I had about the implementation.
+>
 
- other info that might help us debug this:
-  Possible unsafe locking scenario:
+Thanks for review and all the suggestions Arnd.
 
-        CPU0
-        ----
-   lock(&irq_desc_lock_class);
-   lock(&irq_desc_lock_class);
+> It's still hard for me to judge whether this is a good abstraction as
+> long as there is only one backend in the framework, but I see nothing
+> immediately wrong with it either.
+>
 
-  *** DEADLOCK ***
+Peter and Peng(both in cc) is trying out virtio and smc/hvc based transport
+respectively. Hopefully they will raise concerns(if any) with the abstraction.
 
-  May be due to missing lock nesting notation
-
- 6 locks held by cat/3074:
-  #0: ffffff81f01d9420 (sb_writers#7){.+.+}, at: vfs_write+0xd0/0x1a4
-  #1: ffffff81bd7d2080 (&of->mutex){+.+.}, at: kernfs_fop_write+0x12c/0x1fc
-  #2: ffffff81f4c322f0 (kn->count#337){.+.+}, at: kernfs_fop_write+0x134/0x1fc
-  #3: ffffffe411a41d60 (system_transition_mutex){+.+.}, at: pm_suspend+0x108/0x348
-  #4: ffffff81f1c5e970 (&dev->mutex){....}, at: __device_suspend+0x168/0x41c
-  #5: ffffff81f1cc10c0 (&irq_desc_lock_class){-.-.}, at: __irq_get_desc_lock+0x64/0x94
-
- stack backtrace:
- CPU: 5 PID: 3074 Comm: cat Tainted: G        W         5.4.11 #3
- Hardware name: Google Cheza (rev3+) (DT)
- Call trace:
-  dump_backtrace+0x0/0x174
-  show_stack+0x20/0x2c
-  dump_stack+0xc8/0x124
-  __lock_acquire+0x460/0x2388
-  lock_acquire+0x1cc/0x210
-  _raw_spin_lock_irqsave+0x64/0x80
-  __irq_get_desc_lock+0x64/0x94
-  irq_set_irq_wake+0x40/0x144
-  qpnpint_irq_set_wake+0x28/0x34
-  set_irq_wake_real+0x40/0x5c
-  irq_set_irq_wake+0x70/0x144
-  pm8941_pwrkey_suspend+0x34/0x44
-  platform_pm_suspend+0x34/0x60
-  dpm_run_callback+0x64/0xcc
-  __device_suspend+0x310/0x41c
-  dpm_suspend+0xf8/0x298
-  dpm_suspend_start+0x84/0xb4
-  suspend_devices_and_enter+0xbc/0x620
-  pm_suspend+0x210/0x348
-  state_store+0xb0/0x108
-  kobj_attr_store+0x14/0x24
-  sysfs_kf_write+0x4c/0x64
-  kernfs_fop_write+0x15c/0x1fc
-  __vfs_write+0x54/0x18c
-  vfs_write+0xe4/0x1a4
-  ksys_write+0x7c/0xe4
-  __arm64_sys_write+0x20/0x2c
-  el0_svc_common+0xa8/0x160
-  el0_svc_handler+0x7c/0x98
-  el0_svc+0x8/0xc
-
-Set a lockdep class when we map the irq so that irq_set_wake() doesn't
-warn about a lockdep bug that doesn't exist.
-
-Fixes: 12a9eeaebba3 ("spmi: pmic-arb: convert to v2 irq interfaces to support hierarchical IRQ chips")
-Cc: Douglas Anderson <dianders@chromium.org>
-Cc: Brian Masney <masneyb@onstation.org>
-Cc: Lina Iyer <ilina@codeaurora.org>
-Cc: Maulik Shah <mkshah@codeaurora.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
----
- drivers/spmi/spmi-pmic-arb.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/spmi/spmi-pmic-arb.c b/drivers/spmi/spmi-pmic-arb.c
-index 97acc2ba2912..de844b412110 100644
---- a/drivers/spmi/spmi-pmic-arb.c
-+++ b/drivers/spmi/spmi-pmic-arb.c
-@@ -731,6 +731,7 @@ static int qpnpint_irq_domain_translate(struct irq_domain *d,
- 	return 0;
- }
- 
-+static struct lock_class_key qpnpint_irq_lock_class, qpnpint_irq_request_class;
- 
- static void qpnpint_irq_domain_map(struct spmi_pmic_arb *pmic_arb,
- 				   struct irq_domain *domain, unsigned int virq,
-@@ -746,6 +747,9 @@ static void qpnpint_irq_domain_map(struct spmi_pmic_arb *pmic_arb,
- 	else
- 		handler = handle_level_irq;
- 
-+
-+	irq_set_lockdep_class(virq, &qpnpint_irq_lock_class,
-+			      &qpnpint_irq_request_class);
- 	irq_domain_set_info(domain, virq, hwirq, &pmic_arb_irqchip, pmic_arb,
- 			    handler, NULL, NULL);
- }
--- 
-Sent by a computer, using git, on the internet
-
+--
+Regards,
+Sudeep
