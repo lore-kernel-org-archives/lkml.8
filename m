@@ -2,83 +2,97 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7054CC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 10:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DAF0C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 11:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03C8624125
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 10:59:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70A1720882
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 11:00:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="YAhc267x"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qqbRpNcL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729117AbgAUK72 (ORCPT
+        id S1729017AbgAULAx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 05:59:28 -0500
-Received: from conuserg-07.nifty.com ([210.131.2.74]:61576 "EHLO
-        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728682AbgAUK72 (ORCPT
+        Tue, 21 Jan 2020 06:00:53 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45359 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727255AbgAULAx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 05:59:28 -0500
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id 00LAx2Et000324;
-        Tue, 21 Jan 2020 19:59:03 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 00LAx2Et000324
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1579604343;
-        bh=O0rwpxOwq8LxYhFm+t57LbOcUgdP5n3Hsdr+/zEidLU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=YAhc267xJhnOyYuuqDdZx1vZOB3t4vc0AdoWxOa6r4ahRcpFOB/PpD5f3ygjN2IXp
-         /EB14JcIhE8A64LBaI8+ZuRZrQqAvYwFW7S5hajGSxfujlyVKMfYlVeijBjhZZ9EPI
-         WWS1l4IsoE49V+R9oDi5YKM9Zqg3gNy+Gdk/ob6q40BQ/jVC5Q7G6M9y04jPc99YoI
-         NVpNY/K+aZph3kk4ifFM8eKr5vRZIf4G/AT3gRU1lCaPDZUPPLRrBUe/wjjQXsGoOU
-         rsgcxkH6OikTgeKM+O/u7ZJ4MgcKY6cuz26sr4JZS7KbpAP64pFWwCHHhEFR4c6TrW
-         nObHI2LhMQi8w==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-mmc@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] mmc: sdhci-cadence: remove unneeded 'inline' marker
-Date:   Tue, 21 Jan 2020 19:58:58 +0900
-Message-Id: <20200121105858.13325-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 21 Jan 2020 06:00:53 -0500
+Received: by mail-wr1-f65.google.com with SMTP id j42so2605192wrj.12;
+        Tue, 21 Jan 2020 03:00:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=1yHO78BlmD5ePF7vR6G6f3SYtNqfwsMJwSdjTduHry8=;
+        b=qqbRpNcLc+Hp9q2HHXLmzIqC+zsFFJMfWtlb69Hk9/vjCrnU2ql5Qwq2CMgIdQUxon
+         46Fpn1KwV1EXe2WaOp6JJCs8E6I03QzDKCigqQe2HseeRpJk0Xhl//evdoBU//rN9uJc
+         t8CzqxjItvYXPnf/ttUf6iO/xn7EjfiQE2skV1RD68PICHwQYe6kRaG5K2PFyiZeVCaR
+         NXc/SvbN0uOoCuW7mwOlM9mD5XGy6dRLy9wcMKPc4PhInPTpxUb1pHHVaQ5KgDA+DCwx
+         bUYl0NTrJQRe5RgtEadrjqtXXo6iLtkrEKxJHoHKLpr7li8CWkdNeAq29IH9E6JQ1+lt
+         KkKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=1yHO78BlmD5ePF7vR6G6f3SYtNqfwsMJwSdjTduHry8=;
+        b=XqAbCTJeMd2jDBbOZ15laDQaRNRlITrzBuroPqzulqknj1sQn9l6h9iEum9YnJ1CbO
+         AX9wX1Hf1c99Z1TLL6pFRKzCijy71kw+qBRb+qRZOpmyfC6vXDRBrUkd2KKMuw6mt8Qg
+         GmbWLXGhQuuBZLNdLJaHsoTZhRddCbsCveY+59H5Sze0iJoFY9Po132Y3xZ1z0z/vbuU
+         tYcRihBdqxmUBw5s6d+wep4m/QgrAbXoAl/h7i4mipwREmUVqRrvOa1m9M3iRvKZ0Z0c
+         t61wz44esJvBLLFU1hs13imH0SGVdqkh5lnQdq01rEe4e6SJBPkVnELppoLYBOu/4h4w
+         UPkA==
+X-Gm-Message-State: APjAAAWUlr+wRRJkgifGdCj+GShwfcnbnhyqvaK5nyeFl7pxGSBwQR5o
+        a1wCzC2BPUz1WsOzgVFIyl0=
+X-Google-Smtp-Source: APXvYqyHts9oIQp+L9m14UxOXzol1XEhlCbUwKMiRBQmIvCbb8SXYmjeyMR1B7fxUn3Im8JOdEh8pA==
+X-Received: by 2002:adf:dfc2:: with SMTP id q2mr4750352wrn.251.1579604451026;
+        Tue, 21 Jan 2020 03:00:51 -0800 (PST)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id u22sm54596665wru.30.2020.01.21.03.00.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2020 03:00:50 -0800 (PST)
+Date:   Tue, 21 Jan 2020 12:00:49 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Namjae Jeon <linkinjeon@gmail.com>,
+        Gabriel Krisman Bertazi <krisman@collabora.com>
+Subject: Re: vfat: Broken case-insensitive support for UTF-8
+Message-ID: <20200121110049.4upreexmv5kxwp5n@pali>
+References: <20200119221455.bac7dc55g56q2l4r@pali>
+ <87sgkan57p.fsf@mail.parknet.co.jp>
+ <20200120173215.GF15860@mit.edu>
+ <87eevt4ga5.fsf@mail.parknet.co.jp>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87eevt4ga5.fsf@mail.parknet.co.jp>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'static inline' in .c files does not make much sense because
-functions may or may not be inlined irrespective of the 'inline'
-marker. It is just a hint.
+On Tuesday 21 January 2020 12:52:50 OGAWA Hirofumi wrote:
+> BTW, VFAT has to store the both of shortname (codepage) and longname
+> (UTF16), and using both names to open a file. So Windows should be using
+> current locale codepage to make shortname even latest Windows for VFAT.
 
-This function is quite small, so very likely to be inlined by the
-compiler's optimization (-O2 or -Os), but it is up to the compiler
-after all.
+fastfat.sys stores into shortnames only 7bit characters. Which is same
+in all OEM codepages. Non-7bit are replaced by underline or shortened by
+"~N" syntax. According to source code of fastfat.sys it has some
+registry option to allow usage also of full 8bit OEM codepage.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+So default behavior seems to be safe.
 
- drivers/mmc/host/sdhci-cadence.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/mmc/host/sdhci-cadence.c b/drivers/mmc/host/sdhci-cadence.c
-index ae0ec27dd7cc..5827d3751b81 100644
---- a/drivers/mmc/host/sdhci-cadence.c
-+++ b/drivers/mmc/host/sdhci-cadence.c
-@@ -158,7 +158,7 @@ static int sdhci_cdns_phy_init(struct sdhci_cdns_priv *priv)
- 	return 0;
- }
- 
--static inline void *sdhci_cdns_priv(struct sdhci_host *host)
-+static void *sdhci_cdns_priv(struct sdhci_host *host)
- {
- 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
- 
 -- 
-2.17.1
-
+Pali Rohár
+pali.rohar@gmail.com
