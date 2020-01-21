@@ -2,202 +2,137 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0CC9C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:25:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 213A6C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:26:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C0562070C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:25:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E855D2070C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:26:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="osTc3U0a"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SkNEywdQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729140AbgAUOZ0 (ORCPT
+        id S1729154AbgAUO0f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 09:25:26 -0500
-Received: from gateway31.websitewelcome.com ([192.185.143.4]:26726 "EHLO
-        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727255AbgAUOZ0 (ORCPT
+        Tue, 21 Jan 2020 09:26:35 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31229 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726968AbgAUO0e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 09:25:26 -0500
-Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id 2C42729157
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 08:25:25 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id tuT6iIPNwkeyDtuT6iLZCP; Tue, 21 Jan 2020 08:25:25 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:Subject:From:References:Cc:To:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Q9f/a3dOUx1ra0gYtY2AlrWZkTvH/SNxvHh3zLiP0O4=; b=osTc3U0aFPpciau3uQa39MMa5R
-        cNJhly5Pw7GDXHG3Yypk8+XLbKXnjhr4/CFsq5NBvVttFQCSk7idouBjmbIwcqtIdvvo6+9yea8Tj
-        yLhcWUODv2F1KduhpYBFLYm46hocoMtjVnM6d0jAz0XMWEU0jD8i9z2eRCCPkIVcYhvRSm6XLYAWS
-        upeduTHD1CF0oJb6QvtktcM9K1yo4NwmRmLLNuoI21M1o0P403Wwb1RGOhCCU71O+mQX9Hvvb9yDr
-        0pdT/cnnDMdCHncknJuKOTOlH9eFsSw+ACHKhgEEiztPKIIK7aG/dxIk+ZtQmLzkw0+a/kfeJO1+1
-        XKQXIn8Q==;
-Received: from [189.152.234.38] (port=47574 helo=[192.168.43.131])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1ituT5-004KmR-SA; Tue, 21 Jan 2020 08:25:23 -0600
-To:     Jiri Slaby <jslaby@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org
-References: <20200120234528.GA26790@embeddedor.com>
- <a1bfbaaf-7a96-ab44-85fd-1bb8b4e6b06f@suse.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Subject: Re: [PATCH] tty: n_hdlc: Use flexible-array member
-Message-ID: <957960eb-118f-21c7-8901-50f54d65d7cb@embeddedor.com>
-Date:   Tue, 21 Jan 2020 08:27:41 -0600
+        Tue, 21 Jan 2020 09:26:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579616793;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=wB7oBUxPFMMo41Dhy/A6/q8IlRImdTJH/qsnmSwn8s8=;
+        b=SkNEywdQxA2MNtBg974Sn0ZydviqoFf7LucDrjpzy39Tsk8ub9HgZig3tiUC1+XV8YjbVC
+        dTZMVC1+cXJQ0Y9JvlxcvsQVNTw2JT79hjDojprlb9ehkrPWMN4i5j+ONb6/mm5FEXWbh0
+        xgCF491KvV5JkAxjJhjWm2briBhiIR8=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-326-UMC63w-4Nh27IvYyCBP84w-1; Tue, 21 Jan 2020 09:26:31 -0500
+X-MC-Unique: UMC63w-4Nh27IvYyCBP84w-1
+Received: by mail-wr1-f72.google.com with SMTP id u18so1370425wrn.11
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 06:26:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wB7oBUxPFMMo41Dhy/A6/q8IlRImdTJH/qsnmSwn8s8=;
+        b=O5buA5WJUaXlN1ukUfr38iJjXA7GexYaUPlZ+owX2lFuZJ1yN9sP0qv36Sc54oNYO5
+         wXpFZw7Uk1OJSJQ4UY6RsB6H1St59Ztp2KMES9/xBNiFQxNJxABsC+QRfPTj8hfaqcnN
+         6/UslfXQbGUttULL26IuXhAx0Q+aKjLju7OMfNSUprIp+Zo6LMq8ZRbjDE9Rij52PVoV
+         G6i81QBky6vsrKDuYtCER0Pz5G4pWMgKTPX8eXzdxCBCj5KObgfUAVwyVPPoHgkjG4lu
+         sJ3kUBgiRXO7SMRAjPSD9F6W+fYnCqigVUuWB3NdNw2LeknikajxphYRUaRQK/+a0T2P
+         yn8A==
+X-Gm-Message-State: APjAAAVZbbKf7i5G/2q/BK5XFet4brOMXJRt/pPwow6VLEEVbgMpQE1n
+        Y+lF7Tpi1fikn7PWRl7fRAqBeYh73Y/r2QpIoHG7ROuEHwDNc56Rq9dl2vfUnXr7+2kS7AMTlBF
+        miN7EPVJS7FlAWFKlh+OZzXzi
+X-Received: by 2002:a5d:6089:: with SMTP id w9mr5614971wrt.228.1579616790220;
+        Tue, 21 Jan 2020 06:26:30 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxWjz4Oe+H/gSHDnoSQ5o2pah30WIinDPbt454AQ/QK4v/OQZOFatnXxkc9zEh4soAyNb9f2w==
+X-Received: by 2002:a5d:6089:: with SMTP id w9mr5614921wrt.228.1579616789896;
+        Tue, 21 Jan 2020 06:26:29 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:b509:fc01:ee8a:ca8a? ([2001:b07:6468:f312:b509:fc01:ee8a:ca8a])
+        by smtp.gmail.com with ESMTPSA id q68sm4727432wme.14.2020.01.21.06.26.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jan 2020 06:26:29 -0800 (PST)
+Subject: Re: [PATCH 05/14] x86/mm: Introduce lookup_address_in_mm()
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paul Mackerras <paulus@ozlabs.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        kvm-ppc@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        syzbot+c9d1fb51ac9d0d10c39d@syzkaller.appspotmail.com,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Barret Rhoden <brho@google.com>,
+        David Hildenbrand <david@redhat.com>,
+        Jason Zeng <jason.zeng@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>
+References: <20200108202448.9669-1-sean.j.christopherson@intel.com>
+ <20200108202448.9669-6-sean.j.christopherson@intel.com>
+ <871rs8batm.fsf@nanos.tec.linutronix.de>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <175cef39-1e0e-d1b7-69bc-95a3a2a651a7@redhat.com>
+Date:   Tue, 21 Jan 2020 15:26:28 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <a1bfbaaf-7a96-ab44-85fd-1bb8b4e6b06f@suse.com>
-Content-Type: text/plain; charset=iso-8859-2
+In-Reply-To: <871rs8batm.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.152.234.38
-X-Source-L: No
-X-Exim-ID: 1ituT5-004KmR-SA
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.131]) [189.152.234.38]:47574
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 3
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 1/20/20 23:54, Jiri Slaby wrote:
-> On 21. 01. 20, 0:45, Gustavo A. R. Silva wrote:
->> Old code in the kernel uses 1-byte and 0-byte arrays to indicate the
->> presence of a "variable length array":
->>
->> struct something {
->>     int length;
->>     u8 data[1];
->> };
->>
->> struct something *instance;
->>
->> instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
->> instance->length = size;
->> memcpy(instance->data, source, size);
->>
->> There is also 0-byte arrays. Both cases pose confusion for things like
->> sizeof(), CONFIG_FORTIFY_SOURCE, etc.[1] Instead, the preferred mechanism
->> to declare variable-length types such as the one above is a flexible array
->> member[2] which need to be the last member of a structure and empty-sized:
->>
->> struct something {
->>         int stuff;
->>         u8 data[];
->> };
->>
->> Also, by making use of the mechanism above, we will get a compiler warning
->> in case the flexible array does not occur last in the structure, which
->> will help us prevent some kind of undefined behavior bugs from being
->> unadvertenly introduced[3] to the codebase from now on.
->>
->> [1] https://github.com/KSPP/linux/issues/21
->> [2] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
->> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
->> ---
->>  drivers/tty/n_hdlc.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/tty/n_hdlc.c b/drivers/tty/n_hdlc.c
->> index 98361acd3053..b5499ca8757e 100644
->> --- a/drivers/tty/n_hdlc.c
->> +++ b/drivers/tty/n_hdlc.c
->> @@ -115,7 +115,7 @@
->>  struct n_hdlc_buf {
->>  	struct list_head  list_item;
->>  	int		  count;
->> -	char		  buf[1];
->> +	char		  buf[];
->>  };
->>  
->>  #define	N_HDLC_BUF_SIZE	(sizeof(struct n_hdlc_buf) + maxframe)
+On 09/01/20 22:04, Thomas Gleixner wrote:
+> Sean Christopherson <sean.j.christopherson@intel.com> writes:
 > 
-> Have you checked, that you don't have to "+ 1" here now?
+>> diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
+>> index b5e49e6bac63..400ac8da75e8 100644
+>> --- a/arch/x86/include/asm/pgtable_types.h
+>> +++ b/arch/x86/include/asm/pgtable_types.h
+>> @@ -561,6 +561,10 @@ static inline void update_page_count(int level, unsigned long pages) { }
+>>  extern pte_t *lookup_address(unsigned long address, unsigned int *level);
+>>  extern pte_t *lookup_address_in_pgd(pgd_t *pgd, unsigned long address,
+>>  				    unsigned int *level);
+>> +
+>> +struct mm_struct;
+>> +pte_t *lookup_address_in_mm(struct mm_struct *mm, unsigned long address,
+>> +			    unsigned int *level);
 > 
-
-Yep. That's not necessary.
-
-_In terms of memory allocation_, zero-length/one-element arrays and flexible-array
-members work exactly the same way.
-
+> Please keep the file consistent and use extern even if not required.
+> 
 > Other than that:
-> Acked-by: Jiri Slaby <jslaby@suse.cz>
+> 
+> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
 > 
 
-Thanks!
---
-Gustavo
+Adjusted, thanks for the review.
 
+Paolo
 
