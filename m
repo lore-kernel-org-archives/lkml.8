@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB696C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E40BC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:01:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADEF122314
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:01:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3980922314
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:01:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729273AbgAUOBE (ORCPT
+        id S1729499AbgAUOBc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 09:01:04 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:46056 "EHLO huawei.com"
+        Tue, 21 Jan 2020 09:01:32 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:46026 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729187AbgAUOBB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 09:01:01 -0500
+        id S1728186AbgAUOBA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 09:01:00 -0500
 Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 958CB80426FF5DF4520E;
+        by Forcepoint Email with ESMTP id 7C6434BEF500F9348F8D;
         Tue, 21 Jan 2020 22:00:58 +0800 (CST)
 Received: from localhost.localdomain.localdomain (10.175.113.25) by
  DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 21 Jan 2020 22:00:50 +0800
+ 14.3.439.0; Tue, 21 Jan 2020 22:00:44 +0800
 From:   Chen Zhou <chenzhou10@huawei.com>
 To:     <alexander.deucher@amd.com>, <christian.koenig@amd.com>,
         <David1.Zhou@amd.com>, <airlied@linux.ie>, <daniel@ffwll.ch>
@@ -32,9 +32,9 @@ CC:     <tao.zhou1@amd.com>, <Hawking.Zhang@amd.com>,
         <Felix.Kuehling@amd.com>, <amd-gfx@lists.freedesktop.org>,
         <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
         <chenzhou10@huawei.com>
-Subject: [PATCH -next 06/14] drm/amdgpu: remove unnecessary conversion to bool in athub_v1_0.c
-Date:   Tue, 21 Jan 2020 21:55:32 +0800
-Message-ID: <20200121135540.165798-7-chenzhou10@huawei.com>
+Subject: [PATCH -next 03/14] drm/amdgpu: remove unnecessary conversion to bool in navi10_ih.c
+Date:   Tue, 21 Jan 2020 21:55:29 +0800
+Message-ID: <20200121135540.165798-4-chenzhou10@huawei.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200121135540.165798-1-chenzhou10@huawei.com>
 References: <20200121135540.165798-1-chenzhou10@huawei.com>
@@ -50,32 +50,27 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Fixes coccicheck warning:
 
-./drivers/gpu/drm/amd/amdgpu/athub_v1_0.c:77:40-45: WARNING:
-	conversion to bool not needed here
-./drivers/gpu/drm/amd/amdgpu/athub_v1_0.c:79:40-45: WARNING:
+./drivers/gpu/drm/amd/amdgpu/navi10_ih.c:429:40-45: WARNING:
 	conversion to bool not needed here
 
 Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
 ---
- drivers/gpu/drm/amd/amdgpu/athub_v1_0.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/navi10_ih.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/athub_v1_0.c b/drivers/gpu/drm/amd/amdgpu/athub_v1_0.c
-index d9cc746..847ca9b 100644
---- a/drivers/gpu/drm/amd/amdgpu/athub_v1_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/athub_v1_0.c
-@@ -74,9 +74,9 @@ int athub_v1_0_set_clockgating(struct amdgpu_device *adev,
- 	case CHIP_VEGA20:
- 	case CHIP_RAVEN:
- 		athub_update_medium_grain_clock_gating(adev,
+diff --git a/drivers/gpu/drm/amd/amdgpu/navi10_ih.c b/drivers/gpu/drm/amd/amdgpu/navi10_ih.c
+index f737ce4..cf557a42 100644
+--- a/drivers/gpu/drm/amd/amdgpu/navi10_ih.c
++++ b/drivers/gpu/drm/amd/amdgpu/navi10_ih.c
+@@ -426,7 +426,7 @@ static int navi10_ih_set_clockgating_state(void *handle,
+ 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
+ 
+ 	navi10_ih_update_clockgating_state(adev,
 -				state == AMD_CG_STATE_GATE ? true : false);
 +				state == AMD_CG_STATE_GATE);
- 		athub_update_medium_grain_light_sleep(adev,
--				state == AMD_CG_STATE_GATE ? true : false);
-+				state == AMD_CG_STATE_GATE);
- 		break;
- 	default:
- 		break;
+ 	return 0;
+ }
+ 
 -- 
 2.7.4
 
