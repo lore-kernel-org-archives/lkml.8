@@ -2,86 +2,156 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45204C33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 12:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 968CDC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 12:49:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C28A21734
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 12:49:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69BCD2064C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 12:49:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r55YOKxK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729367AbgAUMta (ORCPT
+        id S1729541AbgAUMte (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 07:49:30 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:57296 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726968AbgAUMt3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 07:49:29 -0500
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 14596C7C8A9241831D23;
-        Tue, 21 Jan 2020 20:49:27 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Tue, 21 Jan 2020
- 20:49:16 +0800
-From:   Sun Ke <sunke32@huawei.com>
-To:     <josef@toxicpanda.com>, <axboe@kernel.dk>, <sunke32@huawei.com>,
-        <mchristi@redhat.com>
-CC:     <linux-block@vger.kernel.org>, <nbd@other.debian.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] nbd: add a flush_workqueue in nbd_start_device
-Date:   Tue, 21 Jan 2020 20:48:13 +0800
-Message-ID: <20200121124813.13332-1-sunke32@huawei.com>
-X-Mailer: git-send-email 2.17.2
+        Tue, 21 Jan 2020 07:49:34 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:32839 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726968AbgAUMte (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 07:49:34 -0500
+Received: by mail-pj1-f67.google.com with SMTP id u63so981634pjb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 04:49:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QSX3p7g/5+mGyY0QbppVn7Dy3rth1hiQMkYqW3UKtds=;
+        b=r55YOKxKOjaGqMzpf9rvWrfHzXFrtKq54xZ8ZzKZz1tZHG4xSG/F51ZBV3dq9Wk69H
+         RJSYJfopA9X1NU6lvr1ibkGo36C3YbtKms0oS3DWTE8eHI0tUVTDqOCrv0Ke3UypAmkm
+         xbr/7cfk35tSzR7c+OhOixYeLDlg0Fu8WDZXrsUxY7P3AA2rjnQRWAckuhe46ST6nCVC
+         pHDXke+7++2GLBxqFOf4Trj6FvBDJgZlxSNlbcJNpcrjALVR68JgIv/V1qTwezkRaK4s
+         s4XryJ5AXaufZIdbF3dAlBPjZS1HzShnIFxwKBsGoMt28sPpRo3ime+JC9DkLEp6Mzta
+         GGbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QSX3p7g/5+mGyY0QbppVn7Dy3rth1hiQMkYqW3UKtds=;
+        b=dUt1Uzg5kblawXQVVfHmuCcS9eAhFfRR7CDl6wGvIXiju1oFsWqCPtsvqZcjqwiuLT
+         aKxTlJEelh9z9zGuWf50nPZuxH6nOkZH+EJZTCgA2p+EZ/meUWhrQp8KBQF5hUVufWEb
+         P5bsGRpk3bW/sGQl6QOJAm0lCFhNl/iWCSCAH4/wYbH55PEeWlBM/4Y5d4UJ4Wv9Pwsw
+         pPU9bB/0xMGbKl9iUw9xANXlZhN/KjqIps8HyXqSM00uB3Ox1C4PYWGdBw46BTDtHq+2
+         M6sdSZwvZc3KK2EEFtx3QhsThNhAjE2upiLbxE1tK/6CwfSCf85Z/DT6WN1prE0STYcv
+         qphA==
+X-Gm-Message-State: APjAAAXjCnm/P9mOWfVzCi9JPC9Mtr3upDThIJN7Flo0rAHsU2Ke3gsT
+        sMYN0e0l3OoO2c3HZSAEZ0Q=
+X-Google-Smtp-Source: APXvYqyIgR5gRAKdFCfwzwpL3gmf4F8fFRm0thwpdBo9umSnXXwdljZ2jUZHu2uDPrRHEhaIz1yO4Q==
+X-Received: by 2002:a17:902:b08e:: with SMTP id p14mr5446473plr.323.1579610973429;
+        Tue, 21 Jan 2020 04:49:33 -0800 (PST)
+Received: from localhost.localdomain ([146.196.37.201])
+        by smtp.googlemail.com with ESMTPSA id g67sm44536999pfb.66.2020.01.21.04.49.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2020 04:49:32 -0800 (PST)
+From:   Amol Grover <frextrite@gmail.com>
+To:     Jessica Yu <jeyu@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Amol Grover <frextrite@gmail.com>
+Subject: [PATCH] kernel: module: Pass lockdep expression to RCU lists
+Date:   Tue, 21 Jan 2020 18:17:46 +0530
+Message-Id: <20200121124745.14864-1-frextrite@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When kzalloc fail, may cause trying to destroy the
-workqueue from inside the workqueue.
+modules is traversed using list_for_each_entry_rcu outside an
+RCU read-side critical section but under the protection
+of module_mutex or with preemption disabled.
 
-If num_connections is m (2 < m), and NO.1 ~ NO.n
-(1 < n < m) kzalloc are successful. The NO.(n + 1)
-failed. Then, nbd_start_device will return ENOMEM
-to nbd_start_device_ioctl, and nbd_start_device_ioctl
-will return immediately without running flush_workqueue.
-However, we still have n recv threads. If nbd_release
-run first, recv threads may have to drop the last
-config_refs and try to destroy the workqueue from
-inside the workqueue.
+Hence, add corresponding lockdep expression to silence false-positive
+lockdep warnings, and harden RCU lists.
 
-To fix it, add a flush_workqueue in nbd_start_device.
+list_for_each_entry_rcu when traversed inside a preempt disabled
+section, doesn't need an explicit lockdep expression since it is
+implicitly checked for.
 
-Fixes: e9e006f5fcf2 ("nbd: fix max number of supported devs")
-Signed-off-by: Sun Ke <sunke32@huawei.com>
+Add macro for the corresponding lockdep expression.
+
+Signed-off-by: Amol Grover <frextrite@gmail.com>
 ---
- drivers/block/nbd.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ kernel/module.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index b4607dd96185..dd1f8c2c6169 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -1264,7 +1264,12 @@ static int nbd_start_device(struct nbd_device *nbd)
+diff --git a/kernel/module.c b/kernel/module.c
+index b56f3224b161..2425f58159dd 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -84,6 +84,8 @@
+  * 3) module_addr_min/module_addr_max.
+  * (delete and add uses RCU list operations). */
+ DEFINE_MUTEX(module_mutex);
++#define module_mutex_held() \
++	lockdep_is_held(&module_mutex)
+ EXPORT_SYMBOL_GPL(module_mutex);
+ static LIST_HEAD(modules);
  
- 		args = kzalloc(sizeof(*args), GFP_KERNEL);
- 		if (!args) {
--			sock_shutdown(nbd);
-+			if (i == 0)
-+				sock_shutdown(nbd);
-+			else {
-+				sock_shutdown(nbd);
-+				flush_workqueue(nbd->recv_workq);
-+			}
- 			return -ENOMEM;
- 		}
- 		sk_set_memalloc(config->socks[i]->sock->sk);
+@@ -214,7 +216,7 @@ static struct module *mod_find(unsigned long addr)
+ {
+ 	struct module *mod;
+ 
+-	list_for_each_entry_rcu(mod, &modules, list) {
++	list_for_each_entry_rcu(mod, &modules, list, module_mutex_held()) {
+ 		if (within_module(addr, mod))
+ 			return mod;
+ 	}
+@@ -448,7 +450,7 @@ bool each_symbol_section(bool (*fn)(const struct symsearch *arr,
+ 	if (each_symbol_in_section(arr, ARRAY_SIZE(arr), NULL, fn, data))
+ 		return true;
+ 
+-	list_for_each_entry_rcu(mod, &modules, list) {
++	list_for_each_entry_rcu(mod, &modules, list, module_mutex_held()) {
+ 		struct symsearch arr[] = {
+ 			{ mod->syms, mod->syms + mod->num_syms, mod->crcs,
+ 			  NOT_GPL_ONLY, false },
+@@ -616,7 +618,7 @@ static struct module *find_module_all(const char *name, size_t len,
+ 
+ 	module_assert_mutex_or_preempt();
+ 
+-	list_for_each_entry_rcu(mod, &modules, list) {
++	list_for_each_entry_rcu(mod, &modules, list, module_mutex_held()) {
+ 		if (!even_unformed && mod->state == MODULE_STATE_UNFORMED)
+ 			continue;
+ 		if (strlen(mod->name) == len && !memcmp(mod->name, name, len))
+@@ -2040,7 +2042,7 @@ void set_all_modules_text_rw(void)
+ 		return;
+ 
+ 	mutex_lock(&module_mutex);
+-	list_for_each_entry_rcu(mod, &modules, list) {
++	list_for_each_entry_rcu(mod, &modules, list, module_mutex_held()) {
+ 		if (mod->state == MODULE_STATE_UNFORMED)
+ 			continue;
+ 
+@@ -2059,7 +2061,7 @@ void set_all_modules_text_ro(void)
+ 		return;
+ 
+ 	mutex_lock(&module_mutex);
+-	list_for_each_entry_rcu(mod, &modules, list) {
++	list_for_each_entry_rcu(mod, &modules, list, module_mutex_held()) {
+ 		/*
+ 		 * Ignore going modules since it's possible that ro
+ 		 * protection has already been disabled, otherwise we'll
 -- 
-2.17.2
+2.24.1
 
