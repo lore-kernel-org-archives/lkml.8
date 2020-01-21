@@ -2,202 +2,167 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1282EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93639C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D265B20882
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:34:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69D6E24125
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:34:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="fvEOfJkZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lvsQrUsO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729147AbgAUPei (ORCPT
+        id S1729184AbgAUPeo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 10:34:38 -0500
-Received: from gateway23.websitewelcome.com ([192.185.49.124]:21679 "EHLO
-        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727508AbgAUPeh (ORCPT
+        Tue, 21 Jan 2020 10:34:44 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:57050 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727508AbgAUPeo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 10:34:37 -0500
-X-Greylist: delayed 1360 seconds by postgrey-1.27 at vger.kernel.org; Tue, 21 Jan 2020 10:34:37 EST
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway23.websitewelcome.com (Postfix) with ESMTP id B8901B6F8
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 09:11:56 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id tvC8ij98O32AdtvC8isvap; Tue, 21 Jan 2020 09:11:56 -0600
-X-Authority-Reason: nr=8
+        Tue, 21 Jan 2020 10:34:44 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:Subject:From:References:Cc:To:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=gjlJV5wKgFb1He4YAJ98M6BrY00AixE+NrUX1UsbNIw=; b=fvEOfJkZ8t80xXesNrBzteOmSm
-        dLK86Al1z7aBZr5QuSzw5E2Sd56HwP5EWlOQvYY2GGI3vx1CV9NOiaCzNxXukQTZfxZ+1fBMnX7Bc
-        VQm47yQKAqiAY4NFI4ZSCQ29j15BAJJfxBxkWRYC/YQ0TyCdGSUY7w+eJWX2pRxIBwb265VdoVuRd
-        9jXnEzXB0/0w4qvRuCsbvW75vRUWWkSCkyoXkB1/JtJziAbIYGz6RTzvd26RTIllyMHJxlcTxTIrS
-        yKxYura7kOSXPR+6j2oWaVtqdvsq634pvp38TMIpukwy6jR97FZX2pCFC92z8M3HWFOUQPWhkZADg
-        Af+1Lg8w==;
-Received: from [189.152.234.38] (port=52988 helo=[192.168.43.131])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1itvC8-000TSh-CI; Tue, 21 Jan 2020 09:11:56 -0600
-To:     Mikael Magnusson <mikachu@gmail.com>
-Cc:     gregkh@linuxfoundation.org, jslaby@suse.com,
-        linux-kernel@vger.kernel.org
-References: <957960eb-118f-21c7-8901-50f54d65d7cb@embeddedor.com>
- <20200121150053.31457-1-mikachu@gmail.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Subject: Re: [PATCH] tty: n_hdlc: Use flexible-array member
-Message-ID: <995ff17c-81e2-15ad-c776-f07c8d61385b@embeddedor.com>
-Date:   Tue, 21 Jan 2020 09:14:15 -0600
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=vA3uUy3GrF8RYVPYOTynNZKRmmcxfIVUNw9zl1QYAEI=; b=lvsQrUsO5T59sixx/qC96PxtO
+        ZcwZGmusAGkrzdC/8G9yEFW27ewMBeAAOTc831iHAZfqx4PgzHaI7410ncfix8I74I2qkyUPKMxTo
+        dO6KG76adZRu7OBvg67WItfWHjTOHcp0ChxgZ5+ayi/EukK3cxO8qToC7fbd1qjev1sfb/xbqseZp
+        ry7Q3Oi2QzLRtfHTocUZWjYMR5kwmXnxSY9g6qChRQbYLVM5aZjOO8ySGre3+z+fe+Zo/PAXjYKsG
+        JJTzGa5dfc3sfWOM0S7cconEixjBW4lxUWNGDC141a+kXcznVaDoGKCsnfiLP5iyIGr36doj7qBLf
+        EBIu3ClsQ==;
+Received: from [2601:1c0:6280:3f0::ed68]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1itvY8-00077j-7k; Tue, 21 Jan 2020 15:34:40 +0000
+Subject: Re: [PATCH v1 06/11] Documentation: pstore/blk: blkoops: create
+ document for pstore_blk
+To:     liaoweixiong <liaoweixiong@allwinnertech.com>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org
+References: <1579482233-2672-1-git-send-email-liaoweixiong@allwinnertech.com>
+ <1579482233-2672-7-git-send-email-liaoweixiong@allwinnertech.com>
+ <b9cd734b-8bb1-5e26-a7ed-fbc79ab2d958@infradead.org>
+ <c87bdf3a-f129-a2a7-40b2-2220f79b505a@allwinnertech.com>
+ <40d7f57a-119e-e51f-99a5-63e85ab5ab91@infradead.org>
+ <3337f687-a668-c058-178b-a1438641c519@allwinnertech.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <597e2b49-667a-490e-91b6-641ca25401d8@infradead.org>
+Date:   Tue, 21 Jan 2020 07:34:38 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <20200121150053.31457-1-mikachu@gmail.com>
+In-Reply-To: <3337f687-a668-c058-178b-a1438641c519@allwinnertech.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.152.234.38
-X-Source-L: No
-X-Exim-ID: 1itvC8-000TSh-CI
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.131]) [189.152.234.38]:52988
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 4
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 1/21/20 09:00, Mikael Magnusson wrote:
-> Gustavo Silva wrote:
->> On 1/20/20 23:54, Jiri Slaby wrote:
->>> On 21. 01. 20, 0:45, Gustavo A. R. Silva wrote:
->>>> diff --git a/drivers/tty/n_hdlc.c b/drivers/tty/n_hdlc.c
->>>> index 98361acd3053..b5499ca8757e 100644
->>>> --- a/drivers/tty/n_hdlc.c
->>>> +++ b/drivers/tty/n_hdlc.c
->>>> @@ -115,7 +115,7 @@
->>>>  struct n_hdlc_buf {
->>>>    struct list_head  list_item;
->>>>    int     count;
->>>> -  char      buf[1];
->>>> +  char      buf[];
->>>>  };
->>>>  
->>>>  #define N_HDLC_BUF_SIZE (sizeof(struct n_hdlc_buf) + maxframe)
+On 1/21/20 12:19 AM, liaoweixiong wrote:
+> hi Randy Dunlap,
+> 
+> On 2020/1/21 2:36 PM, Randy Dunlap wrote:
+>> On 1/20/20 9:23 PM, liaoweixiong wrote:
+>>> hi Randy Dunlap,
 >>>
->>> Have you checked, that you don't have to "+ 1" here now?
+>>> On 2020/1/21 PM12:13, Randy Dunlap wrote:
+>>>> Hi,
+>>>>
+>>>> I have some documentation comments for you:
+>>>>
+>>>>
+>>>> On 1/19/20 5:03 PM, WeiXiong Liao wrote:
+>>>>> The document, at Documentation/admin-guide/pstore-block.rst, tells us
+>>>>> how to use pstore/blk and blkoops.
+>>>>>
+>>>>> Signed-off-by: WeiXiong Liao <liaoweixiong@allwinnertech.com>
+>>>>> ---
+>>>>>   Documentation/admin-guide/pstore-block.rst | 278 +++++++++++++++++++++++++++++
+>>>>>   MAINTAINERS                                |   1 +
+>>>>>   fs/pstore/Kconfig                          |   2 +
+>>>>>   3 files changed, 281 insertions(+)
+>>>>>   create mode 100644 Documentation/admin-guide/pstore-block.rst
+>>>>>
+>>>>> diff --git a/Documentation/admin-guide/pstore-block.rst b/Documentation/admin-guide/pstore-block.rst
+>>>>> new file mode 100644
+>>>>> index 000000000000..58418d429c55
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/admin-guide/pstore-block.rst
+>>>>> +
+>>>>> +
+>>>>> +dmesg_size
+>>>>> +~~~~~~~~~~
+>>>>> +
+>>>>> +The chunk size in bytes for dmesg(oops/panic). It **MUST** be a multiple of
+>>>>> +4096. If you don't need it, safely set it 0 or ignore it.
+>>>>
+>>>>                                        set it to 0 or ignore it.
+>>>>
 >>>
+>>> I will fix it, thank you.
+>>>
+>>>> The example above is:  blkoops.dmesg_size=64
+>>>> where 64 is not a multiple of 4096. (?)
+>>>>
+>>>
+>>> The module parameter dmesg_size is in unit KB.
 >>
->> Yep. That's not necessary.
+>> I didn't see that documented anywhere.
 >>
->> _In terms of memory allocation_, zero-length/one-element arrays and flexible-array
->> members work exactly the same way.
 > 
-> This is not true, but maybe it's still not necessary in this particular code, I didn't examine it.
+> Oh, sorry, that is my oversight. It seems that not only the other size introductions but also introductions on Kconfig should be corrected. Thank you very much and is the following modification OK?
 > 
+> The chunk size in KB for dmesg(oops/panic). It **MUST** be a multiple of 4.
 
-I should have said _in terms of dynamic memory allocation_.
+OK.
 
-Your example is correct:
 
-"... a one-element array always occupies at least as much space as a single object of the type."[1]
+>>>>> +Compression and header
+>>>>> +----------------------
+>>>>> +
+>>>>> +Block device is large enough for uncompressed dmesg data. Actually we do not
+>>>>> +recommend data compression because pstore/blk will insert some information into
+>>>>> +the first line of dmesg data. For example::
+>>>>> +
+>>>>> +        Panic: Total 16 times
+>>>>> +
+>>>>> +It means that it's the 16th times panic log since the first booting. Sometimes
+>>>>
+>>>>                                 time of a panic log since ...
+>>>>
+>>>
+>>> Should it be like this?
+>>> It means the time of a panic log since the first booting.
+>>
+>> That sounds like clock time, not the number of instances or occurrences.
+>>
+> 
+> It is an oops/panic counter too. How about this?
+> 
+> It means that it's OOPS/PANIC for the 16th time since the first booting.
 
-But the above does not affect on the current code.
+                                                  since the last booting {or boot}.
 
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+thanks.
+-- 
+~Randy
 
-Thanks
---
-Gustavo
-
-> Consider the following:
-> #include <stdio.h>
-> 
-> struct flex {
->   int count;
->   char buf[PRE];
->   char flex[];
-> };
-> 
-> struct one {
->   int count;
->   char buf[PRE];
->   char one[1];
-> };
-> 
-> void main() {
->   printf("%ld %ld\n", sizeof(struct flex), sizeof(struct one));
-> }
-> 
-> --snip--
-> 
-> % gcc -o siz siz.c -std=c99 -DPRE=7 && ./siz
-> 12 12
-> % gcc -o siz siz.c -std=c99 -DPRE=8 && ./siz
-> 12 16
-> 
-> Since all the preceding stuff in the struct in the patch is aligned, then the [1] will definitely add something to the sizeof count.
-> 
