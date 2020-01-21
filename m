@@ -2,275 +2,133 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85EADC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 338BCC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:43:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52AAF2253D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:41:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0776A2253D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:43:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hZZVSc8K"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="COv6U9Q8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729199AbgAUJlu (ORCPT
+        id S1729225AbgAUJm7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 04:41:50 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43543 "EHLO
+        Tue, 21 Jan 2020 04:42:59 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:53576 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728512AbgAUJls (ORCPT
+        by vger.kernel.org with ESMTP id S1725789AbgAUJm6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 04:41:48 -0500
+        Tue, 21 Jan 2020 04:42:58 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579599707;
+        s=mimecast20190719; t=1579599777;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=jTqvJDIcTrY113uWw5YXK41fhJwgqvlsVFz5t0ig+QY=;
-        b=hZZVSc8KAIFScH8yXHeileAPvV2I5UF/B4tmQB8wgRGghXbkxTcLB6Eht3xkHB8g1r6HUw
-        Ty8b15K2VMRSzF5Yz1ZOlJ9TgsJ34U/CS8ngn5l0Fd6cxgmi7SBj4WQ9iSzq2Mc5BCXNo5
-        JJiJL8qE2cfi1PcFGu1MyTLKIg0ylqE=
+        bh=K987eRXStBj7o6ahrrhqOlaQjkmh1rp+yWaYe+czY78=;
+        b=COv6U9Q8ph5GqeHEfO0dK7E1wpO3bVD02qLuXqFFmdehh18YVMlqVQGQj8y5gS1OUd1a+y
+        BmU42SKmOVC7aZDr4EA0Fv+BuhfAGtIIyf+2dyVmoGDYjEtz/5o9G9DvOA1UjUkyntrhO5
+        vakXazo9mc9G1nIVXGGq/D4I3mv+5YA=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-227-Ao7DZCFKMUuELGaw65FIEw-1; Tue, 21 Jan 2020 04:41:43 -0500
-X-MC-Unique: Ao7DZCFKMUuELGaw65FIEw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+ us-mta-149-mJf7OJNLMKWa2WvGcmEVzQ-1; Tue, 21 Jan 2020 04:42:52 -0500
+X-MC-Unique: mJf7OJNLMKWa2WvGcmEVzQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 73B3618B639A;
-        Tue, 21 Jan 2020 09:41:40 +0000 (UTC)
-Received: from [10.72.12.103] (ovpn-12-103.pek2.redhat.com [10.72.12.103])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C6FFD19C6A;
-        Tue, 21 Jan 2020 09:41:22 +0000 (UTC)
-Subject: Re: [PATCH 3/5] vDPA: introduce vDPA bus
-To:     "Tian, Kevin" <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Cc:     "mst@redhat.com" <mst@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "Bie, Tiwei" <tiwei.bie@intel.com>,
-        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
-        "Liang, Cunming" <cunming.liang@intel.com>,
-        "Wang, Zhihong" <zhihong.wang@intel.com>,
-        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
-        "Wang, Xiao W" <xiao.w.wang@intel.com>,
-        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
-        "Zhu, Lingshan" <lingshan.zhu@intel.com>,
-        "eperezma@redhat.com" <eperezma@redhat.com>,
-        "lulu@redhat.com" <lulu@redhat.com>,
-        Parav Pandit <parav@mellanox.com>,
-        "stefanha@redhat.com" <stefanha@redhat.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "aadam@redhat.com" <aadam@redhat.com>,
-        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Shahaf Shuler <shahafs@mellanox.com>,
-        "hanand@xilinx.com" <hanand@xilinx.com>,
-        "mhabets@solarflare.com" <mhabets@solarflare.com>
-References: <20200116124231.20253-1-jasowang@redhat.com>
- <20200116124231.20253-4-jasowang@redhat.com>
- <20200116152209.GH20978@mellanox.com>
- <03cfbcc2-fef0-c9d8-0b08-798b2a293b8c@redhat.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D73EBA4@SHSMSX104.ccr.corp.intel.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <f27d59b7-1c91-5870-55f5-e21311fcef99@redhat.com>
-Date:   Tue, 21 Jan 2020 17:41:21 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E41C28010C5;
+        Tue, 21 Jan 2020 09:42:50 +0000 (UTC)
+Received: from krava (unknown [10.43.17.48])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id DAC935C1BB;
+        Tue, 21 Jan 2020 09:42:48 +0000 (UTC)
+Date:   Tue, 21 Jan 2020 10:42:46 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephane Eranian <eranian@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>
+Subject: Re: [PATCH 4/9] perf tools: Maintain cgroup hierarchy
+Message-ID: <20200121094246.GA707582@krava>
+References: <20200107133501.327117-1-namhyung@kernel.org>
+ <20200107133501.327117-5-namhyung@kernel.org>
+ <20200108215235.GA12995@krava>
+ <CAM9d7cifgLKbu5KM+QF6ZK9DGbN=8g1oj+vzU3HcTfrUQHP5jg@mail.gmail.com>
+ <CAM9d7chWNyFx6vBNZZea7exiwKhU+cwTY-Yaf2_cSXoJ1jSgcQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D73EBA4@SHSMSX104.ccr.corp.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAM9d7chWNyFx6vBNZZea7exiwKhU+cwTY-Yaf2_cSXoJ1jSgcQ@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jan 20, 2020 at 10:57:47PM +0900, Namhyung Kim wrote:
+> Hi Jiri,
+> 
+> On Thu, Jan 9, 2020 at 9:51 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > Hi Jiri,
+> >
+> > On Thu, Jan 9, 2020 at 6:52 AM Jiri Olsa <jolsa@redhat.com> wrote:
+> > >
+> > > On Tue, Jan 07, 2020 at 10:34:56PM +0900, Namhyung Kim wrote:
+> > > > Each cgroup is kept in the global cgroup_tree sorted by the cgroup id.
+> > > > Hist entries have cgroup id can compare it directly and later it can
+> > > > be used to find a group name using this tree.
+> > > >
+> > > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > > > ---
+> > > >  tools/perf/util/cgroup.c  | 72 +++++++++++++++++++++++++++++++++++++++
+> > > >  tools/perf/util/cgroup.h  | 15 +++++---
+> > > >  tools/perf/util/machine.c |  7 ++++
+> > > >  tools/perf/util/session.c |  4 +++
+> > > >  4 files changed, 94 insertions(+), 4 deletions(-)
+> > > >
+> > > > diff --git a/tools/perf/util/cgroup.c b/tools/perf/util/cgroup.c
+> > > > index 4881d4af3381..4e8ef1db0c94 100644
+> > > > --- a/tools/perf/util/cgroup.c
+> > > > +++ b/tools/perf/util/cgroup.c
+> > > > @@ -13,6 +13,8 @@
+> > > >
+> > > >  int nr_cgroups;
+> > > >
+> > > > +static struct rb_root cgroup_tree = RB_ROOT;
+> > >
+> > > I think we shoud carry that in 'struct perf_env'
+> >
+> > OK, will move.
+> 
+> So I tried this but then realized that it's hard to get the perf_env later
+> when it needs to convert a cgroup id to name (ie. in sort_entry.se_snprintf).
+> I also checked maybe I can resolve it when a hist entry is added,
+> but it doesn't have the pointer there too.
 
-On 2020/1/21 =E4=B8=8B=E5=8D=884:40, Tian, Kevin wrote:
->> From: Jason Wang <jasowang@redhat.com>
->> Sent: Friday, January 17, 2020 11:03 AM
->>
->>
->> On 2020/1/16 =E4=B8=8B=E5=8D=8811:22, Jason Gunthorpe wrote:
->>> On Thu, Jan 16, 2020 at 08:42:29PM +0800, Jason Wang wrote:
->>>> vDPA device is a device that uses a datapath which complies with the
->>>> virtio specifications with vendor specific control path. vDPA device=
-s
->>>> can be both physically located on the hardware or emulated by
->>>> software. vDPA hardware devices are usually implemented through PCIE
->>>> with the following types:
->>>>
->>>> - PF (Physical Function) - A single Physical Function
->>>> - VF (Virtual Function) - Device that supports single root I/O
->>>>     virtualization (SR-IOV). Its Virtual Function (VF) represents a
->>>>     virtualized instance of the device that can be assigned to diffe=
-rent
->>>>     partitions
->>>> - VDEV (Virtual Device) - With technologies such as Intel Scalable
->>>>     IOV, a virtual device composed by host OS utilizing one or more
->>>>     ADIs.
-> the concept of VDEV includes both software bits and ADIs. If you
-> only take about hardware types, using ADI is more accurate.
+looks like there might be a path for standard report where hists
+are part of evsel object:
 
+  'struct hist_entry' via ->hists to  'struct hists'
+  hists_to_evsel(hists) to 'struct evsel'
+  'struct evsel' via ->evlist to 'struct evlist'
+  and there you have evlist->env ;-)
 
-Ok.
+however I was wondering if we could add 'machine' pointer
+to the hist object, that would make that simpler ;-)
 
+not sure about the way.. would be nice if that'd work for
+both evsel hists and standalone ones like in c2c
 
->
->>>> - SF (Sub function) - Vendor specific interface to slice the Physica=
-l
->>>>     Function to multiple sub functions that can be assigned to diffe=
-rent
->>>>     partitions as virtual devices.
->>> I really hope we don't end up with two different ways to spell this
->>> same thing.
->>
->> I think you meant ADI vs SF. It looks to me that ADI is limited to the
->> scope of scalable IOV but SF not.
-> ADI is just a term for minimally assignable resource in Scalable IOV.
-> 'assignable' implies several things, e.g. the resource can be independe=
-ntly
-> mapped to/accessed by user space or guest, DMAs between two
-> ADIs are isolated, operating one ADI doesn't affecting another ADI,
-> etc.  I'm not clear about  other vendor specific interfaces, but suppos=
-ing
-> they need match the similar requirements. Then do we really want to
-> differentiate ADI vs. SF? What about merging them with ADI as just
-> one example of finer-grained slicing?
+but maybe just some init helper that sets the pointer early on
+might do the job
 
-
-I think so. That what Jason G want as well.
-
-Thanks
-
-
->
->>
->>>> @@ -0,0 +1,2 @@
->>>> +# SPDX-License-Identifier: GPL-2.0
->>>> +obj-$(CONFIG_VDPA) +=3D vdpa.o
->>>> diff --git a/drivers/virtio/vdpa/vdpa.c b/drivers/virtio/vdpa/vdpa.c
->>>> new file mode 100644
->>>> index 000000000000..2b0e4a9f105d
->>>> +++ b/drivers/virtio/vdpa/vdpa.c
->>>> @@ -0,0 +1,141 @@
->>>> +// SPDX-License-Identifier: GPL-2.0-only
->>>> +/*
->>>> + * vDPA bus.
->>>> + *
->>>> + * Copyright (c) 2019, Red Hat. All rights reserved.
->>>> + *     Author: Jason Wang <jasowang@redhat.com>
->>> 2020 tests days
->>
->> Will fix.
->>
->>
->>>> + *
->>>> + */
->>>> +
->>>> +#include <linux/module.h>
->>>> +#include <linux/idr.h>
->>>> +#include <linux/vdpa.h>
->>>> +
->>>> +#define MOD_VERSION  "0.1"
->>> I think module versions are discouraged these days
->>
->> Will remove.
->>
->>
->>>> +#define MOD_DESC     "vDPA bus"
->>>> +#define MOD_AUTHOR   "Jason Wang <jasowang@redhat.com>"
->>>> +#define MOD_LICENSE  "GPL v2"
->>>> +
->>>> +static DEFINE_IDA(vdpa_index_ida);
->>>> +
->>>> +struct device *vdpa_get_parent(struct vdpa_device *vdpa)
->>>> +{
->>>> +	return vdpa->dev.parent;
->>>> +}
->>>> +EXPORT_SYMBOL(vdpa_get_parent);
->>>> +
->>>> +void vdpa_set_parent(struct vdpa_device *vdpa, struct device *paren=
-t)
->>>> +{
->>>> +	vdpa->dev.parent =3D parent;
->>>> +}
->>>> +EXPORT_SYMBOL(vdpa_set_parent);
->>>> +
->>>> +struct vdpa_device *dev_to_vdpa(struct device *_dev)
->>>> +{
->>>> +	return container_of(_dev, struct vdpa_device, dev);
->>>> +}
->>>> +EXPORT_SYMBOL_GPL(dev_to_vdpa);
->>>> +
->>>> +struct device *vdpa_to_dev(struct vdpa_device *vdpa)
->>>> +{
->>>> +	return &vdpa->dev;
->>>> +}
->>>> +EXPORT_SYMBOL_GPL(vdpa_to_dev);
->>> Why these trivial assessors? Seems unnecessary, or should at least be
->>> static inlines in a header
->>
->> Will fix.
->>
->>
->>>> +int register_vdpa_device(struct vdpa_device *vdpa)
->>>> +{
->>> Usually we want to see symbols consistently prefixed with vdpa_*, is
->>> there a reason why register/unregister are swapped?
->>
->> I follow the name from virtio. I will switch to vdpa_*.
->>
->>
->>>> +	int err;
->>>> +
->>>> +	if (!vdpa_get_parent(vdpa))
->>>> +		return -EINVAL;
->>>> +
->>>> +	if (!vdpa->config)
->>>> +		return -EINVAL;
->>>> +
->>>> +	err =3D ida_simple_get(&vdpa_index_ida, 0, 0, GFP_KERNEL);
->>>> +	if (err < 0)
->>>> +		return -EFAULT;
->>>> +
->>>> +	vdpa->dev.bus =3D &vdpa_bus;
->>>> +	device_initialize(&vdpa->dev);
->>> IMHO device_initialize should not be called inside something called
->>> register, toooften we find out that the caller drivers need the devic=
-e
->>> to be initialized earlier, ie to use the kref, or something.
->>>
->>> I find the best flow is to have some init function that does the
->>> device_initialize and sets the device_name that the driver can call
->>> early.
->>
->> Ok, will do.
->>
->>
->>> Shouldn't there be a device/driver matching process of some kind?
->>
->> The question is what do we want do match here.
->>
->> 1) "virtio" vs "vhost", I implemented matching method for this in mdev
->> series, but it looks unnecessary for vDPA device driver to know about
->> this. Anyway we can use sysfs driver bind/unbind to switch drivers
->> 2) virtio device id and vendor id. I'm not sure we need this consider
->> the two drivers so far (virtio/vhost) are all bus drivers.
->>
->> Thanks
->>
->>
->>> Jason
->>>
+jirka
 
