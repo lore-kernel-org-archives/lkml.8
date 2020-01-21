@@ -2,95 +2,102 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E00BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39765C33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BDF6207E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C75B24653
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:37:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="O8ypNryA"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fh+L/HgW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729154AbgAUPg5 (ORCPT
+        id S1729191AbgAUPhC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 10:36:57 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:59042 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727817AbgAUPg5 (ORCPT
+        Tue, 21 Jan 2020 10:37:02 -0500
+Received: from mail-oi1-f178.google.com ([209.85.167.178]:43259 "EHLO
+        mail-oi1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727817AbgAUPhB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 10:36:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=A2Jl2bLHZhl7wIlCaLkS8vYGcnAwtZe/zKKDWk316Z0=; b=O8ypNryAqkVOOcR5KkTRtyOQ0
-        MCrTL2KY6noTexMRlTYtRKHeguvWokumk4A7tO8qrdo1y5cOonXRgPEzrzcysvD6CSyc62hJ5sdEb
-        KQbuDKOv3jA3W1Rta99+2+Udf2uU+B1HHk3+kMvAoPIuzcL5La8dCvzACWGwVIxzDbu0krATbH5XL
-        bufhzWJ48Bwjr8H/6pBlcuQBlZWdaLx8oA1QQvT1aZoSNk8XkH/9tMsgjg/WAgz40VFKsb38Biywj
-        8fvE/zKO7azHt08wvmIbi7/jdzGDEuFxT1HSVgtqiYtfz6oi3ornGddMAfoQ3AbYgKgAvA3kEiCwh
-        DDeXmC2ag==;
-Received: from [2601:1c0:6280:3f0::ed68]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1itvaK-0000MG-MK; Tue, 21 Jan 2020 15:36:56 +0000
-Subject: Re: [PATCH v2] cpuidle: fix kernel doc warnings
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>, rjw@rjwysocki.net,
-        daniel.lezcano@linaro.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200121082758.8808-1-benjamin.gaignard@st.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <4c2b0c6f-c0d7-5866-44cf-e32d84c4261a@infradead.org>
-Date:   Tue, 21 Jan 2020 07:36:55 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Tue, 21 Jan 2020 10:37:01 -0500
+Received: by mail-oi1-f178.google.com with SMTP id p125so2901527oif.10
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 07:37:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RmViYAa1rRPt72/wIccYehar/+HNwKCjcTf+igUl6VA=;
+        b=fh+L/HgWv3D9ttnggU6JGqSQStDK5h3ktOJkYmdzLKBOJ9Iqsa+rnenXs+L7x9noRb
+         yMJZgzsETDV0BK+WrUpmkr8t8pLkm/0XpC4tPvC88sMPcN30eVKswEi9iIY8M1OOedSx
+         r6Ux/4FHN44flxoqAmMDp+172AbujOl8cYd9hXmQDpvmNOaAG/HZVSAyAd+QWunblMIE
+         dCyDRMzerFinT5IJe3xbo/pr58qOHuZ9TTe8P6Vkm2Asvz/aqqFLTZ+3x1L8hvwq0LDJ
+         AYndPKkW/Y/T9tjiN2/8CTbyHu/VMWEGbj70+my8Y//1mLgdiH+BNz6c631UisVP+T1A
+         gaTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RmViYAa1rRPt72/wIccYehar/+HNwKCjcTf+igUl6VA=;
+        b=lk5apzTLjPXG5zbg7wKdUrTmV2gph/Wvq1RTL+ci6HrPVMRh75csfFAAUpzxPyBmD+
+         mZpJqnXNbrcal1SS/t82jiBgaMhqyPQQsP99yQHa4rQr94V+oc8RTl9NF8UqYaj4L4Jy
+         DzONMlPa6Esg6wz1HvnOMWyN/XZCA3QiOmoQqA11QuzGy2khjV3p3RZFdrRbDispeSLU
+         p6fCmHuuK055cM1lGn5nMP289flTgAtyx/fdN9z2MQAdgZ5HHTj6ZpsFX0mhyATlBXas
+         uUV2HT5XC6+hxvCyBatdV+izJPiawuRLp3LPr8vU5XwWa78Hc5HI20uC8/j/5Svtmt5A
+         PpdA==
+X-Gm-Message-State: APjAAAVnzvcHBo1rirjdEIq/oY8b73YDbviEQaBRRNXJO6PJV41Zz/XY
+        Vi2WSefHTjDYv4YJWQJDKUZ1B0tHdlAhSD4TPg5YXQ==
+X-Google-Smtp-Source: APXvYqxDYp2UrR+9SpJuK4r2uuLGqMJPe2AdBEeH8RoVdrYxxO67IpVFxAeZLnpSAHJhlfxNbzI2+d8IgMfl6/Rwz1Q=
+X-Received: by 2002:a05:6808:8d5:: with SMTP id k21mr3542611oij.121.1579621020494;
+ Tue, 21 Jan 2020 07:37:00 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200121082758.8808-1-benjamin.gaignard@st.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200121151503.2934-1-cai@lca.pw> <CANpmjNPR+mbadR0DDKGUhTkaXJi=vsHmhvq3+Rz0Hrx=E9V_Qg@mail.gmail.com>
+ <20200121152853.GI7808@zn.tnic> <44A4276D-5530-4DAA-8FC7-753D03ADD2F3@lca.pw>
+In-Reply-To: <44A4276D-5530-4DAA-8FC7-753D03ADD2F3@lca.pw>
+From:   Marco Elver <elver@google.com>
+Date:   Tue, 21 Jan 2020 16:36:49 +0100
+Message-ID: <CANpmjNO7mTEMc6pvpVVXdu2r6cMg_N8QkRffEHHG-WNFXE4CjA@mail.gmail.com>
+Subject: Re: [PATCH -next] x86/mm/pat: silence a data race in cpa_4k_install
+To:     Qian Cai <cai@lca.pw>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/21/20 12:27 AM, Benjamin Gaignard wrote:
-> Fix cpuidle_find_deepest_state() kernel documentation to avoid warnings when compiling with W=1.
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+On Tue, 21 Jan 2020 at 16:33, Qian Cai <cai@lca.pw> wrote:
+>
+>
+>
+> > On Jan 21, 2020, at 10:28 AM, Borislav Petkov <bp@alien8.de> wrote:
+> >
+> > On Tue, Jan 21, 2020 at 04:19:22PM +0100, Marco Elver wrote:
+> >> Could you remove the verbatim copy of my email? Maybe something like:
+> >>
+> >> "Increments to cpa_4k_install may happen concurrently, as detected by KCSAN:
+> >>
+> >> <....... the stack traces ......>
+> >
+> > ... and drop the stack traces and fix your subject to say what you're
+> > actually "fixing".
+>
+> Does this title work for you?
+>
+> x86/mm/pat: silence an data race for KCSAN
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
+Isn't the intent "x86/mm/pat: Mark intentional data race" ?  The fact
+that KCSAN no longer shows the warning is a side-effect.  At least
+that's how I see it.
 
-Thanks.
-
-> ---
-> CC: rdunlap@infradead.org
-> version 2:
-> - fix the comment done by Randy
->  drivers/cpuidle/cpuidle.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
-> index 33d19c8eb027..19c6dee88921 100644
-> --- a/drivers/cpuidle/cpuidle.c
-> +++ b/drivers/cpuidle/cpuidle.c
-> @@ -121,6 +121,9 @@ void cpuidle_use_deepest_state(u64 latency_limit_ns)
->   * cpuidle_find_deepest_state - Find the deepest available idle state.
->   * @drv: cpuidle driver for the given CPU.
->   * @dev: cpuidle device for the given CPU.
-> + * @latency_limit_ns: Idle state exit latency limit
-> + *
-> + * Return: the index of the deepest available idle state.
->   */
->  int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
->  			       struct cpuidle_device *dev,
-> 
-
-
--- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Thanks,
+-- Marco
