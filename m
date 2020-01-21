@@ -2,229 +2,232 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB131C33CB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A837C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:21:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F71E21734
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:19:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E1502253D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:21:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728668AbgAUITg (ORCPT
+        id S1728708AbgAUIVX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 03:19:36 -0500
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:57398 "EHLO
-        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725789AbgAUITg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 03:19:36 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07455563|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.222157-0.0182336-0.75961;DS=CONTINUE|ham_system_inform|0.0500038-0.00267614-0.94732;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03297;MF=liaoweixiong@allwinnertech.com;NM=1;PH=DS;RN=17;RT=17;SR=0;TI=SMTPD_---.Gff7Z1N_1579594766;
-Received: from 192.168.31.122(mailfrom:liaoweixiong@allwinnertech.com fp:SMTPD_---.Gff7Z1N_1579594766)
-          by smtp.aliyun-inc.com(10.147.42.197);
-          Tue, 21 Jan 2020 16:19:27 +0800
-Subject: Re: [PATCH v1 06/11] Documentation: pstore/blk: blkoops: create
- document for pstore_blk
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org
-References: <1579482233-2672-1-git-send-email-liaoweixiong@allwinnertech.com>
- <1579482233-2672-7-git-send-email-liaoweixiong@allwinnertech.com>
- <b9cd734b-8bb1-5e26-a7ed-fbc79ab2d958@infradead.org>
- <c87bdf3a-f129-a2a7-40b2-2220f79b505a@allwinnertech.com>
- <40d7f57a-119e-e51f-99a5-63e85ab5ab91@infradead.org>
-From:   liaoweixiong <liaoweixiong@allwinnertech.com>
-Message-ID: <3337f687-a668-c058-178b-a1438641c519@allwinnertech.com>
-Date:   Tue, 21 Jan 2020 16:19:26 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 21 Jan 2020 03:21:23 -0500
+Received: from mga07.intel.com ([134.134.136.100]:55315 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725789AbgAUIVW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 03:21:22 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 00:21:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,345,1574150400"; 
+   d="scan'208";a="215459015"
+Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.16])
+  by orsmga007.jf.intel.com with ESMTP; 21 Jan 2020 00:21:19 -0800
+Date:   Tue, 21 Jan 2020 03:12:07 -0500
+From:   Yan Zhao <yan.y.zhao@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>
+Subject: Re: [PATCH v2 2/2] drm/i915/gvt: subsitute kvm_read/write_guest with
+ vfio_dma_rw
+Message-ID: <20200121081207.GE1759@joy-OptiPlex-7040>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <20200115034132.2753-1-yan.y.zhao@intel.com>
+ <20200115035455.12417-1-yan.y.zhao@intel.com>
+ <20200115130651.29d7e9e0@w520.home>
+ <20200116054941.GB1759@joy-OptiPlex-7040>
+ <20200116083729.40983f38@w520.home>
+ <20200119100637.GD1759@joy-OptiPlex-7040>
+ <20200120130157.0ee7042d@w520.home>
 MIME-Version: 1.0
-In-Reply-To: <40d7f57a-119e-e51f-99a5-63e85ab5ab91@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200120130157.0ee7042d@w520.home>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hi Randy Dunlap,
+On Tue, Jan 21, 2020 at 04:01:57AM +0800, Alex Williamson wrote:
+> On Sun, 19 Jan 2020 05:06:37 -0500
+> Yan Zhao <yan.y.zhao@intel.com> wrote:
+> 
+> > On Thu, Jan 16, 2020 at 11:37:29PM +0800, Alex Williamson wrote:
+> > > On Thu, 16 Jan 2020 00:49:41 -0500
+> > > Yan Zhao <yan.y.zhao@intel.com> wrote:
+> > >   
+> > > > On Thu, Jan 16, 2020 at 04:06:51AM +0800, Alex Williamson wrote:  
+> > > > > On Tue, 14 Jan 2020 22:54:55 -0500
+> > > > > Yan Zhao <yan.y.zhao@intel.com> wrote:
+> > > > >     
+> > > > > > As a device model, it is better to read/write guest memory using vfio
+> > > > > > interface, so that vfio is able to maintain dirty info of device IOVAs.
+> > > > > > 
+> > > > > > Compared to kvm interfaces kvm_read/write_guest(), vfio_dma_rw() has ~600
+> > > > > > cycles more overhead on average.
+> > > > > > 
+> > > > > > -------------------------------------
+> > > > > > |    interface     | avg cpu cycles |
+> > > > > > |-----------------------------------|
+> > > > > > | kvm_write_guest  |     1554       |
+> > > > > > | ----------------------------------|
+> > > > > > | kvm_read_guest   |     707        |
+> > > > > > |-----------------------------------|
+> > > > > > | vfio_dma_rw(w)   |     2274       |
+> > > > > > |-----------------------------------|
+> > > > > > | vfio_dma_rw(r)   |     1378       |
+> > > > > > -------------------------------------    
+> > > > > 
+> > > > > In v1 you had:
+> > > > > 
+> > > > > -------------------------------------
+> > > > > |    interface     | avg cpu cycles |
+> > > > > |-----------------------------------|
+> > > > > | kvm_write_guest  |     1546       |
+> > > > > | ----------------------------------|
+> > > > > | kvm_read_guest   |     686        |
+> > > > > |-----------------------------------|
+> > > > > | vfio_iova_rw(w)  |     2233       |
+> > > > > |-----------------------------------|
+> > > > > | vfio_iova_rw(r)  |     1262       |
+> > > > > -------------------------------------
+> > > > > 
+> > > > > So the kvm numbers remained within +0.5-3% while the vfio numbers are
+> > > > > now +1.8-9.2%.  I would have expected the algorithm change to at least
+> > > > > not be worse for small accesses and be better for accesses crossing
+> > > > > page boundaries.  Do you know what happened?
+> > > > >    
+> > > > I only tested the 4 interfaces in GVT's environment, where most of the
+> > > > guest memory accesses are less than one page.
+> > > > And the different fluctuations should be caused by the locks.
+> > > > vfio_dma_rw contends locks with other vfio accesses which are assumed to
+> > > > be abundant in the case of GVT.  
+> > > 
+> > > Hmm, so maybe it's time to convert vfio_iommu.lock from a mutex to a
+> > > rwsem?  Thanks,
+> > >   
+> > 
+> > hi Alex
+> > I tested your rwsem patches at (https://lkml.org/lkml/2020/1/16/1869).
+> > They works without any runtime error at my side. :) 
+> > However, I found out that the previous fluctuation may be because I didn't
+> > take read/write counts in to account.
+> > For example. though the two tests have different avg read/write cycles,
+> > their average cycles are almost the same.
+> >  ______________________________________________________________________
+> > |        | avg read |            | avg write |            |            |
+> > |        | cycles   | read cnt   | cycles    | write cnt  | avg cycles |
+> > |----------------------------------------------------------------------|
+> > | test 1 |   1339   | 29,587,120 |  2258     | 17,098,364 |    1676    |
+> > | test 2 |   1340   | 28,454,262 |  2238     | 16,501,788 |    1670    |
+> >  ----------------------------------------------------------------------
+> > 
+> > After measuring the exact read/write cnt and cycles of a specific workload,
+> > I get below findings:
+> > 
+> > (1) with single VM running glmark2 inside.
+> > glmark2: 40M+ read+write cnt, among which 63% is read.
+> > among reads, 48% is of PAGE_SIZE, the rest is less than a page.
+> > among writes, 100% is less than a page.
+> > 
+> >  __________________________________________________
+> > |       cycles         | read | write |  avg | inc |
+> > |--------------------------------------------------|
+> > | kvm_read/write_page  |  694 |  1506 |  993 |  /  |
+> > |--------------------------------------------------|
+> > |  vfio_dma_rw(mutex)  | 1340 |  2248 | 1673 | 680 |
+> > |--------------------------------------------------|
+> > | vfio_dma_rw(rwsem r) | 1323 |  2198 | 1645 | 653 |
+> >  ---------------------------------------------------
+> > 
+> > so vfio_dma_rw generally has 650+ more cycles per each read/write.
+> > While kvm->srcu is of 160 cycles on average with one vm is running, the
+> > cycles spending on locks for vfio_dma_rw spread like this:
+> >  ___________________________
+> > |        cycles       | avg |
+> > |---------------------------|
+> > |     iommu->lock     | 117 |
+> > |---------------------------|
+> > |   vfio.group_lock   | 108 |
+> > |---------------------------|
+> > | group->unbound_lock | 114 |
+> > |---------------------------|
+> > |  group->device_lock | 115 |
+> > |---------------------------|
+> > |     group->mutex    | 113 |
+> >  ---------------------------
+> > 
+> > I measured the cycles for a mutex without any contention is 104 cycles
+> > on average (including time for get_cycles() and measured in the same way
+> > as other locks). So the contention of a single lock in a single vm
+> > environment is light. probably because there's a vgpu lock hold in GVT already.
+> > 
+> > (2) with two VMs each running glmark2 inside.
+> > The contention increases a little.
+> > 
+> >  ___________________________________________________
+> > |       cycles         | read | write |  avg | inc  |
+> > |---------------------------------------------------|
+> > | kvm_read/write_page  | 1035 |  1832 | 1325 |  /   |
+> > |---------------------------------------------------|
+> > |  vfio_dma_rw(mutex)  | 2104 |  2886 | 2390 | 1065 |
+> > |---------------------------------------------------|
+> > | vfio_dma_rw(rwsem r) | 1965 |  2778 | 2260 | 935  |
+> >  ---------------------------------------------------
+> > 
+> > 
+> >  -----------------------------------------------
+> > |     avg cycles       |   one VM   |  two VMs  |
+> > |-----------------------------------------------|
+> > |  iommu lock (mutex)  |     117    |   150     |
+> > |-----------------------------------|-----------|
+> > | iommu lock (rwsem r) |     117    |   156     |
+> > |-----------------------------------|-----------|
+> > |   kvm->srcu          |     160    |   213     |
+> >  -----------------------------------------------
+> > 
+> > In the kvm case, avg cycles increased 332 cycles, while kvm->srcu only costed
+> > 213 cycles. The rest 109 cycles may be spent on atomic operations.
+> > But I didn't measure them, as get_cycles() operation itself would influence final
+> > cycles by ~20 cycles.
+> 
+> It seems like we need to extend the vfio external user interface so
+> that GVT-g can hold the group and container user references across
+> multiple calls.  For instance if we had a
+> vfio_group_get_external_user_from_dev() (based on
+> vfio_group_get_external_user()) then i915 could get an opaque
+> vfio_group pointer which it could use to call vfio_group_dma_rw() which
+> would leave us with only the iommu rw_sem locking.  i915 would release
+> the reference with vfio_group_put_external_user() when the device is
+> released.  The same could be done with the pin pages interface to
+> streamline that as well.  Thoughts?  Thanks,
+>
+hi Alex,
+it works!
+now the average vfio_dma_rw cycles can reduced to 1198. 
+one thing I want to propose is that, in sight of dma->task is always user
+space process, instead of calling get_task_mm(dma->task), can we just use
+"mmget_not_zero(dma->task->mm)"? in this way, the avg cycles can
+further reduce to 1051.
 
-On 2020/1/21 2:36 PM, Randy Dunlap wrote:
-> On 1/20/20 9:23 PM, liaoweixiong wrote:
->> hi Randy Dunlap,
->>
->> On 2020/1/21 PM12:13, Randy Dunlap wrote:
->>> Hi,
->>>
->>> I have some documentation comments for you:
->>>
->>>
->>> On 1/19/20 5:03 PM, WeiXiong Liao wrote:
->>>> The document, at Documentation/admin-guide/pstore-block.rst, tells us
->>>> how to use pstore/blk and blkoops.
->>>>
->>>> Signed-off-by: WeiXiong Liao <liaoweixiong@allwinnertech.com>
->>>> ---
->>>>   Documentation/admin-guide/pstore-block.rst | 278 +++++++++++++++++++++++++++++
->>>>   MAINTAINERS                                |   1 +
->>>>   fs/pstore/Kconfig                          |   2 +
->>>>   3 files changed, 281 insertions(+)
->>>>   create mode 100644 Documentation/admin-guide/pstore-block.rst
->>>>
->>>> diff --git a/Documentation/admin-guide/pstore-block.rst b/Documentation/admin-guide/pstore-block.rst
->>>> new file mode 100644
->>>> index 000000000000..58418d429c55
->>>> --- /dev/null
->>>> +++ b/Documentation/admin-guide/pstore-block.rst
->>>> +
->>>> +
->>>> +dmesg_size
->>>> +~~~~~~~~~~
->>>> +
->>>> +The chunk size in bytes for dmesg(oops/panic). It **MUST** be a multiple of
->>>> +4096. If you don't need it, safely set it 0 or ignore it.
->>>
->>>                                        set it to 0 or ignore it.
->>>
->>
->> I will fix it, thank you.
->>
->>> The example above is:  blkoops.dmesg_size=64
->>> where 64 is not a multiple of 4096. (?)
->>>
->>
->> The module parameter dmesg_size is in unit KB.
-> 
-> I didn't see that documented anywhere.
-> 
-
-Oh, sorry, that is my oversight. It seems that not only the other size 
-introductions but also introductions on Kconfig should be corrected. 
-Thank you very much and is the following modification OK?
-
-The chunk size in KB for dmesg(oops/panic). It **MUST** be a multiple of 4.
+Thanks
+Yan
 
 > 
->>>> +Normally the number of bytes written should be returned, while for error,
->>>> +negative number should be returned.
->>>> +
->>>> +panic_write (for block device)
->>>> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->>>> +
->>>> +It's much similar to panic_write for non-block device, but panic_write for
->>>> +block device writes alignment to SECTOR_SIZE, that's why the parameters are
->>>
->>>                  writes only aligned sectors of SECTOR_SIZE  (??)
->>>
->>
->> How about this?
->>
->> It's much similar to panic_write for non-block device, but the position and
->> data size of panic_write for block device must be aligned to SECTOR_SIZE,
->> that's why the parameters are @sects and @start_sect. Block device driver
->> should register it by ``blkoops_register_blkdev``.
-> 
-> OK.
-> 
->>>> +@sects and @start_sect. Block device driver should register it by
->>>> +``blkoops_register_blkdev``.
->>>> +
->>>> +The parameter @start_sect is the relative position of the block device and
->>>> +partition. If block driver requires absolute position for panic_write,
->>>> +``blkoops_blkdev_info`` will be helpful, which can provide the absolute
->>>> +position of the block device (or partition) on the whole disk/flash.
->>>> +
->>>> +Normally zero should be returned, otherwise it indicates an error.
->>>> +
->>>> +Compression and header
->>>> +----------------------
->>>> +
->>>> +Block device is large enough for uncompressed dmesg data. Actually we do not
->>>> +recommend data compression because pstore/blk will insert some information into
->>>> +the first line of dmesg data. For example::
->>>> +
->>>> +        Panic: Total 16 times
->>>> +
->>>> +It means that it's the 16th times panic log since the first booting. Sometimes
->>>
->>>                                 time of a panic log since ...
->>>
->>
->> Should it be like this?
->> It means the time of a panic log since the first booting.
-> 
-> That sounds like clock time, not the number of instances or occurrences.
-> 
-
-It is an oops/panic counter too. How about this?
-
-It means that it's OOPS/PANIC for the 16th time since the first booting.
-
->>
->>>> +the oops|panic occurs since burning is very important for embedded device to
->>>
->>>                                 ^^^^^^^ huh??
->>>
->>
->> How about this?
->>
->> Sometimes the number of occurrences of oops|panic since the first
->> booting is important
->> to judge whether the system is stable.
-> 
-> OK.
-> 
->>>> +judge whether the system is stable.
->>>> +
->>>> +The following line is inserted by pstore filesystem. For example::
->>>> +
->>>> +        Oops#2 Part1
->>>> +
->>>> +It means that it's the 2nd times oops log on last booting.
->>>
->>>                            2nd time of an oops log on the last boot. (?)
->>>
->>
->> How about this?
->>
->> It means that it's OOPS for the 2nd time on the last boot.
-> 
-> OK. It's an oops counter.
-> 
->>>> +#. Just use CPU to transfer.
->>>> +   Do not use DMA to transfer unless you are sure that DMA will not keep lock.
->>>> +#. Operate register directly.
->>>
->>>        Don't know what that means.
->>>
->>
->> How about this?
->>
->> #. Control registers directly.
->>      Please control registers directly rather than use Linux kernel
->> resources.
-> 
-> OK.
-> 
->>      Do I/O map while initializing rather than wait until a panic occurs.
->>
->>>> +   Try not to use Linux kernel resources. Do I/O map while initializing rather
->>>> +   than waiting until the panic.
-> 
-> 
+> _______________________________________________
+> intel-gvt-dev mailing list
+> intel-gvt-dev@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/intel-gvt-dev
