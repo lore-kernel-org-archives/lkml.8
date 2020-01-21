@@ -6,94 +6,148 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34BBBC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 20:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28036C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 20:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 100A4207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 20:15:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC8E420882
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 20:20:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729031AbgAUUPf (ORCPT
+        id S1728827AbgAUUUB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 15:15:35 -0500
-Received: from outgoing2.flk.host-h.net ([188.40.0.84]:46807 "EHLO
-        outgoing2.flk.host-h.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727813AbgAUUPd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 15:15:33 -0500
-Received: from www31.flk1.host-h.net ([188.40.1.173])
-        by antispam3-flk1.host-h.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <justin.swartz@risingedge.co.za>)
-        id 1itzvs-0003FU-Nq; Tue, 21 Jan 2020 22:15:29 +0200
-Received: from [130.255.73.16] (helo=v01.28459.vpscontrol.net)
-        by www31.flk1.host-h.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <justin.swartz@risingedge.co.za>)
-        id 1itzvq-0005QX-6M; Tue, 21 Jan 2020 22:15:26 +0200
-From:   Justin Swartz <justin.swartz@risingedge.co.za>
-To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Justin Swartz <justin.swartz@risingedge.co.za>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/2] Add rga to rk322x device tree
-Date:   Tue, 21 Jan 2020 20:11:44 +0000
-Message-Id: <20200121201146.18038-1-justin.swartz@risingedge.co.za>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200120194158.25357-1-justin.swartz@risingedge.co.za>
-References: <20200120194158.25357-1-justin.swartz@risingedge.co.za>
-X-Authenticated-Sender: justin.swartz@risingedge.co.za
-X-Virus-Scanned: Clear
-X-Originating-IP: 188.40.1.173
-X-SpamExperts-Domain: risingedge.co.za
-X-SpamExperts-Username: 
-Authentication-Results: host-h.net; auth=pass (login) smtp.auth=@risingedge.co.za
-X-SpamExperts-Outgoing-Class: ham
-X-SpamExperts-Outgoing-Evidence: Combined (0.06)
-X-Recommended-Action: accept
-X-Filter-ID: Mvzo4OR0dZXEDF/gcnlw0fKZ8wcD78QFAaYhvfMzLIKpSDasLI4SayDByyq9LIhVdr+zTt2/yQ1x
- IruVAJ5peETNWdUk1Ol2OGx3IfrIJKyP9eGNFz9TW9u+Jt8z2T3K7uDjV/sFUXQr+CDrNQuIHgQg
- mAX8Bxy/iUu0ThNZg0jxJtcVJProrT987X1VDPOqN+OoDzRTdku7DidYUZdNf38Sp7Of4wP429AA
- f49baR+f3He7jw4SoVhmTJ/3eP9ORQWVx8ds1M4qmk3/bYr2p8zbg4Paoa3pNVQ0zl7t/+UfQLYB
- qEPnp1U88kqVD8AM2G81dFO0E3gi+MOI1foZYzDggRXhpvoPtF3cVkniFXU3qJSqpdJudO6+rkiw
- E5i8Wl78Q18OeOfsy4h7jF1Uv9lnibl3vcBqVmvQB4A18adaTucTE2YvaeyInkKW0OM3AVXirbLu
- Jjy3NtnGWLbnBGfrUBEXB2fYGLNieGQuoHtJvp0r29Rf3ZjFwL+MhHEWw/0qBlNDp8uABz3dkWV+
- ttWGem52QLIiDo2hv5/Q58JTycYLFeAN4+MGwnsp7SkU6CLbyF0Zq4b1/7rjUzETJrWks4pbbQJq
- 6gWopI3ep45X19ZysgQ+31LcAX8eoFXAhohfegXGH2GIVQVglJFbK771YV8YbC29CtmpcTqTfSIf
- CWq9oj7OiT8GwpAriB+3/81I3rvR8KJ2fK9jiDYgijyqqY0rATpzHKGfmtNsYTr4SmDZ/bGW8xZC
- RRs6ZD24UhFcZZEpLhnBCwImTQNvxaLyCc35VA7RvW/HGiGqxL09Cymermt8NAa/gGopT3kKfO4C
- gvcKmV0o9jYzsFpuc43pp/LzIs3ornuRuAAdgrkq+6l7ZLNYJcf7Z6PCydDzoYZgInuDxgFOs7AZ
- TwbwMaed1BaNkB2/QnXFItfl/CXkDYQeTEdGNrE4RyP/xb0k38NrFoXSENXH6UXfnav35JPA4YfM
- 6tBkXsqvKY6zoLLTPpuFqUUQz+mM8JAD4ECWNo09vb0YLIRnK477e9Xake5PIWKjIXX7qe2zOXoS
- fowRX9eprEl/4oYc0/Buoij3nqMBwBI4GUhKFNzgZNzUMGbjO41FyBEqIaDudcVplPE6wCr6GXU1
- lCw88ijyus1sGnWknJqS8gGhNQxpB5P3qu7c1xMljx2PG/R+pKBSKy8hXOgvE1zSS7XUhkYEQYeb
- 3jR5NeVaJQBh0uawl0Cg8j+knAzOA9mmoJvkuhKHiekUuskYaI6ERCKp8gXWqnT9kLHhStr5fiGK
- 7KncpWELuTEvuGslKTrRIXcXpFg5ivY=
-X-Report-Abuse-To: spam@antispammaster.host-h.net
+        Tue, 21 Jan 2020 15:20:01 -0500
+Received: from mga06.intel.com ([134.134.136.31]:7221 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726926AbgAUUUA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 15:20:00 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 12:19:59 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,347,1574150400"; 
+   d="scan'208";a="307313001"
+Received: from yyu32-desk.sc.intel.com ([143.183.136.51])
+  by orsmga001.jf.intel.com with ESMTP; 21 Jan 2020 12:19:58 -0800
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Rik van Riel <riel@surriel.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Subject: [PATCH v2 0/8] Support XSAVES supervisor states
+Date:   Tue, 21 Jan 2020 12:18:35 -0800
+Message-Id: <20200121201843.12047-1-yu-cheng.yu@intel.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset aims to enable use of Rockchip's RGA, a 2D raster
-graphic acceleration unit, on rk322x based devices.
+Changes from v1 to v2:
 
-Changes in v2:
-  - Remove unnecessary "rockchip,rk3228-rga" device tree compatibility
-    string patch, as advised by Ezequiel Garcia.
+- Split out small changes to:
+    https://lkml.kernel.org/r/20191212210855.19260-1-yu-cheng.yu@intel.com/
 
-  - Use both "rockchip,rk3228-rga" and "rockchip,rk3288-rga" in the
-    rga node's compatibility property, as suggested by Heiko Stuebner.
+- Fix an issue in patch #4, where fpu__clear_user_states() drops
+  supervisor xstates.
 
-Justin Swartz (2):
-  ARM: dts: rockchip: add rga node for rk322x
-  ARM: dts: rockchip: enable rga for rk3229-xms6
+- Add three patches:
+    Patch #6: Update sanitize_restored_xstate() for supervisor xstates.
+    Patch #7: Update copy_kernel_to_xregs_err() to use XRSTORS when
+              supervisor xstates are present.
+    Patch #8: Update __fpu__restore_sig() to preserve supervisor xstates.
 
- arch/arm/boot/dts/rk3229-xms6.dts |  4 ++++
- arch/arm/boot/dts/rk322x.dtsi     | 11 +++++++++++
- 2 files changed, 15 insertions(+)
+Also make some small changes in response to comments.  More details are in
+each patch's commit log.
+
+There are two types of XSAVE-managed states (xstates): user and supervisor.
+This series introduces the supervisor xstate support in preparation for new
+features that will make use of supervisor xstates.
+
+This series has been separated for ease of review from the series that add
+supervisor xstate features [3].
+
+In current and near future generations of Intel processors there are three
+classes of objects that can be managed as supervisor xstates:
+
+- Processor Trace (PT):
+    Linux already supports PT, but PT xstates are not saved to the FPU
+    context and not context-switched by the kernel.  There are no plans to
+    integrate PT into XSAVES supervisor states.
+
+- ENQCMD Process Address Space ID (MSR_IA32_PASID):
+    ENQCMD is a new instruction and will be introduced shortly in a
+    separate series [2].
+
+- Control-flow Enforcement Technology (CET):
+    CET is being reviewed on the LKML [1] [3].
+
+Supervisor xstates can be accessed only from the kernel (PL-0) with XSAVES/
+XRSTORS instructions.  They cannot be accessed with other XSAVE*/XRSTOR*
+instructions.  MSR_IA32_XSS sets enabled supervisor xstates, while XCR0
+sets enabled user xstates.
+
+This series separates the two xstate types by declaring new macros for each
+type.  The kernel finds all available features during system initialization
+and stores them in xfeatures_mask_all.  It then retrieves perspective
+xstate type with xfeatures_mask_supervisor()/xfeatures_mask_user() for
+handling signals and PTRACE.
+
+[1] Detailed information on supervisor xstates can be found in "Intel 64
+    and IA-32 Architectures Software Developer's Manual":
+
+    https://software.intel.com/en-us/download/intel-64-and-ia-32-
+    architectures-sdm-combined-volumes-1-2a-2b-2c-2d-3a-3b-3c-3d-and-4
+
+[2] Detailed information on the ENQCMD instruction and MSR_IA32_PASID can
+    be found in "Intel Architecture Instruction Set Extensions and Future
+    Features Programming Reference":
+
+    https://software.intel.com/sites/default/files/managed/c5/15/
+    architecture-instruction-set-extensions-programming-reference.pdf
+
+[3] CET patches:
+
+    https://lkml.kernel.org/r/20190813205225.12032-1-yu-cheng.yu@intel.com/
+    https://lkml.kernel.org/r/20190813205359.12196-1-yu-cheng.yu@intel.com/
+
+Fenghua Yu (3):
+  x86/fpu/xstate: Define new macros for supervisor and user xstates
+  x86/fpu/xstate: Define new functions for clearing fpregs and xstates
+  x86/fpu/xstate: Rename validate_xstate_header() to
+    validate_xstate_header_from_user()
+
+Yu-cheng Yu (5):
+  x86/fpu/xstate: Separate user and supervisor xfeatures mask
+  x86/fpu/xstate: Introduce XSAVES supervisor states
+  x86/fpu/xstate: Update sanitize_restored_xstate() for supervisor
+    xstates
+  x86/fpu/xstate: Update copy_kernel_to_xregs_err() for XSAVES
+    supervisor states
+  x86/fpu/xstate: Restore supervisor xstates for __fpu__restore_sig()
+
+ arch/x86/include/asm/fpu/internal.h |  10 ++-
+ arch/x86/include/asm/fpu/xstate.h   |  51 +++++++++----
+ arch/x86/kernel/fpu/core.c          |  41 ++++++++---
+ arch/x86/kernel/fpu/init.c          |   3 +-
+ arch/x86/kernel/fpu/regset.c        |   2 +-
+ arch/x86/kernel/fpu/signal.c        |  80 ++++++++++++++------
+ arch/x86/kernel/fpu/xstate.c        | 109 ++++++++++++++++------------
+ arch/x86/kernel/process.c           |   2 +-
+ arch/x86/kernel/signal.c            |   2 +-
+ 9 files changed, 198 insertions(+), 102 deletions(-)
 
 -- 
-2.11.0
+2.21.0
 
