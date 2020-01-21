@@ -2,127 +2,229 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A468C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB131C33CB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C64724654
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:19:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Cy/hTHQF"
+	by mail.kernel.org (Postfix) with ESMTP id 8F71E21734
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:19:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727847AbgAUITa (ORCPT
+        id S1728668AbgAUITg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 03:19:30 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:44279 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbgAUITa (ORCPT
+        Tue, 21 Jan 2020 03:19:36 -0500
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:57398 "EHLO
+        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725789AbgAUITg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 03:19:30 -0500
-Received: by mail-oi1-f195.google.com with SMTP id d62so1747374oia.11
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 00:19:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ey/QLiL0E7ZncvQZ6vH/REg2blahZXkYqesU/itcw2I=;
-        b=Cy/hTHQFH8EH5SSxNZiC748uoA9RQruI6O8Y5xazgevPHJ348y4gif900l9XDiszWG
-         7VvP4cH5Dw3JPv+Y41Ax0sKIcT6NAjtFQ2F8l8nznvR/mOTz2DIvoAgr+2GljwfyvE/k
-         SesQsCbOnQRzqafyKsLd8xA3Ow0/MjnqeVHmTewG7cK9B6O/zjp9x16H8Zsyfqej3h0A
-         si9kg3FderQpZt1n5Ad9i7lOLTSquYgLzuQbAL8AoCp9Vk1VdlOPphCMP79lTdGSVimi
-         qXFLsyI5vsYJ2HRZTUCasxxI6bKTR5m+0Y/H7hN4XNGMB86W4WUIfwWB9RlKaB7TCv0N
-         h/6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ey/QLiL0E7ZncvQZ6vH/REg2blahZXkYqesU/itcw2I=;
-        b=hlaz0QhA75c2VpBZkhOw94qq/ud27kgIhrYgC+xa1dN/G+Xc/FVrXnMX0KIogWYlGu
-         2l4Xjk2jJWD1LAFcyNluG3YDksoaogRJKtQYQprpNcIT2Y5UOrKSCU5R+iD7v6Tszf+F
-         dYZ0T7JWil39Az6lSMHqvdM14CAJ+i26MvP549U7pioV4AmFFFQxZf95TKs9+ELON6p4
-         bTio+vgh5ztohr7x4GSwkE8FExeJ8oFii3ORq8lL8C2Z2Sug7ZOKJKWT35gk+T49Hf+l
-         bD8TFEstxeREo1l4nbDMKq/AnAwa8EqEJh/hDQi2nuKcloEPe5Y7YUGvDWCxGK9qwQ+A
-         EaTg==
-X-Gm-Message-State: APjAAAVzkShkHvwicPkGliTzhphBamfxWpHZyJiJ8TagyA915Q6HXEh8
-        lPqroASSBRcHGbqbiIVQQNH0MiuEb5sCBeosq4xj3RZxOqE=
-X-Google-Smtp-Source: APXvYqyzlNBzubrP1uBT8vF5UbLa++xXFjbT5RhwN9gpV9cyX8LyH6QKomYIVCkA14mbOENSJN3o3Vx3hM0odypO6JU=
-X-Received: by 2002:aca:b183:: with SMTP id a125mr2169350oif.83.1579594769148;
- Tue, 21 Jan 2020 00:19:29 -0800 (PST)
+        Tue, 21 Jan 2020 03:19:36 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07455563|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.222157-0.0182336-0.75961;DS=CONTINUE|ham_system_inform|0.0500038-0.00267614-0.94732;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03297;MF=liaoweixiong@allwinnertech.com;NM=1;PH=DS;RN=17;RT=17;SR=0;TI=SMTPD_---.Gff7Z1N_1579594766;
+Received: from 192.168.31.122(mailfrom:liaoweixiong@allwinnertech.com fp:SMTPD_---.Gff7Z1N_1579594766)
+          by smtp.aliyun-inc.com(10.147.42.197);
+          Tue, 21 Jan 2020 16:19:27 +0800
+Subject: Re: [PATCH v1 06/11] Documentation: pstore/blk: blkoops: create
+ document for pstore_blk
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org
+References: <1579482233-2672-1-git-send-email-liaoweixiong@allwinnertech.com>
+ <1579482233-2672-7-git-send-email-liaoweixiong@allwinnertech.com>
+ <b9cd734b-8bb1-5e26-a7ed-fbc79ab2d958@infradead.org>
+ <c87bdf3a-f129-a2a7-40b2-2220f79b505a@allwinnertech.com>
+ <40d7f57a-119e-e51f-99a5-63e85ab5ab91@infradead.org>
+From:   liaoweixiong <liaoweixiong@allwinnertech.com>
+Message-ID: <3337f687-a668-c058-178b-a1438641c519@allwinnertech.com>
+Date:   Tue, 21 Jan 2020 16:19:26 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200121041200.2260-1-cai@lca.pw> <20200121072744.GA7808@zn.tnic>
-In-Reply-To: <20200121072744.GA7808@zn.tnic>
-From:   Marco Elver <elver@google.com>
-Date:   Tue, 21 Jan 2020 09:19:18 +0100
-Message-ID: <CANpmjNPFRCRg9wnFwyJpZVg8Urb9HAdZ++e3xbh1LXPjgAs4kw@mail.gmail.com>
-Subject: Re: [PATCH -next] x86/mm/pat: fix a data race in cpa_inc_4k_install
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Qian Cai <cai@lca.pw>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <40d7f57a-119e-e51f-99a5-63e85ab5ab91@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 Jan 2020 at 08:27, Borislav Petkov <bp@alien8.de> wrote:
->
-> On Mon, Jan 20, 2020 at 11:12:00PM -0500, Qian Cai wrote:
-> > diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-> > index 20823392f4f2..31e4a73ae70e 100644
-> > --- a/arch/x86/mm/pat/set_memory.c
-> > +++ b/arch/x86/mm/pat/set_memory.c
-> > @@ -128,7 +128,7 @@ static inline void cpa_inc_2m_checked(void)
-> >
-> >  static inline void cpa_inc_4k_install(void)
-> >  {
-> > -     cpa_4k_install++;
-> > +     WRITE_ONCE(cpa_4k_install, READ_ONCE(cpa_4k_install) + 1);
+hi Randy Dunlap,
 
-As I said in my email that you also copied to the message, this is
-just a stats counter. For the general case, I think we reached
-consensus that such accesses should intentionally remain data races:
-  https://lore.kernel.org/linux-fsdevel/CAHk-=wg5CkOEF8DTez1Qu0XTEFw_oHhxN98bDnFqbY7HL5AB2g@mail.gmail.com/T/#u
+On 2020/1/21 2:36 PM, Randy Dunlap wrote:
+> On 1/20/20 9:23 PM, liaoweixiong wrote:
+>> hi Randy Dunlap,
+>>
+>> On 2020/1/21 PM12:13, Randy Dunlap wrote:
+>>> Hi,
+>>>
+>>> I have some documentation comments for you:
+>>>
+>>>
+>>> On 1/19/20 5:03 PM, WeiXiong Liao wrote:
+>>>> The document, at Documentation/admin-guide/pstore-block.rst, tells us
+>>>> how to use pstore/blk and blkoops.
+>>>>
+>>>> Signed-off-by: WeiXiong Liao <liaoweixiong@allwinnertech.com>
+>>>> ---
+>>>>   Documentation/admin-guide/pstore-block.rst | 278 +++++++++++++++++++++++++++++
+>>>>   MAINTAINERS                                |   1 +
+>>>>   fs/pstore/Kconfig                          |   2 +
+>>>>   3 files changed, 281 insertions(+)
+>>>>   create mode 100644 Documentation/admin-guide/pstore-block.rst
+>>>>
+>>>> diff --git a/Documentation/admin-guide/pstore-block.rst b/Documentation/admin-guide/pstore-block.rst
+>>>> new file mode 100644
+>>>> index 000000000000..58418d429c55
+>>>> --- /dev/null
+>>>> +++ b/Documentation/admin-guide/pstore-block.rst
+>>>> +
+>>>> +
+>>>> +dmesg_size
+>>>> +~~~~~~~~~~
+>>>> +
+>>>> +The chunk size in bytes for dmesg(oops/panic). It **MUST** be a multiple of
+>>>> +4096. If you don't need it, safely set it 0 or ignore it.
+>>>
+>>>                                        set it to 0 or ignore it.
+>>>
+>>
+>> I will fix it, thank you.
+>>
+>>> The example above is:  blkoops.dmesg_size=64
+>>> where 64 is not a multiple of 4096. (?)
+>>>
+>>
+>> The module parameter dmesg_size is in unit KB.
+> 
+> I didn't see that documented anywhere.
+> 
 
-Either you can use the data_race() macro, making this
-'data_race(cpa_4k_install++)' -- this effectively documents the
-intentional data race --
+Oh, sorry, that is my oversight. It seems that not only the other size 
+introductions but also introductions on Kconfig should be corrected. 
+Thank you very much and is the following modification OK?
 
-or just blacklist the entire file by putting
-  KCSAN_SANITIZE_set_memory.o := n
-into the Makefile.
+The chunk size in KB for dmesg(oops/panic). It **MUST** be a multiple of 4.
 
-[ Note that there are 2 more ways to blacklist:
-  - __no_kcsan function attribute, for blacklisting entire functions.
-  - KCSAN_SANITIZE :=n in the Makefile, blacklisting all compilation
-units in the Makefile. ]
+> 
+>>>> +Normally the number of bytes written should be returned, while for error,
+>>>> +negative number should be returned.
+>>>> +
+>>>> +panic_write (for block device)
+>>>> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>>> +
+>>>> +It's much similar to panic_write for non-block device, but panic_write for
+>>>> +block device writes alignment to SECTOR_SIZE, that's why the parameters are
+>>>
+>>>                  writes only aligned sectors of SECTOR_SIZE  (??)
+>>>
+>>
+>> How about this?
+>>
+>> It's much similar to panic_write for non-block device, but the position and
+>> data size of panic_write for block device must be aligned to SECTOR_SIZE,
+>> that's why the parameters are @sects and @start_sect. Block device driver
+>> should register it by ``blkoops_register_blkdev``.
+> 
+> OK.
+> 
+>>>> +@sects and @start_sect. Block device driver should register it by
+>>>> +``blkoops_register_blkdev``.
+>>>> +
+>>>> +The parameter @start_sect is the relative position of the block device and
+>>>> +partition. If block driver requires absolute position for panic_write,
+>>>> +``blkoops_blkdev_info`` will be helpful, which can provide the absolute
+>>>> +position of the block device (or partition) on the whole disk/flash.
+>>>> +
+>>>> +Normally zero should be returned, otherwise it indicates an error.
+>>>> +
+>>>> +Compression and header
+>>>> +----------------------
+>>>> +
+>>>> +Block device is large enough for uncompressed dmesg data. Actually we do not
+>>>> +recommend data compression because pstore/blk will insert some information into
+>>>> +the first line of dmesg data. For example::
+>>>> +
+>>>> +        Panic: Total 16 times
+>>>> +
+>>>> +It means that it's the 16th times panic log since the first booting. Sometimes
+>>>
+>>>                                 time of a panic log since ...
+>>>
+>>
+>> Should it be like this?
+>> It means the time of a panic log since the first booting.
+> 
+> That sounds like clock time, not the number of instances or occurrences.
+> 
 
-I leave it to you what makes more sense. I don't know if there are
-other data races lurking here, since cpa_4k_install is not the only
-stats counter.
+It is an oops/panic counter too. How about this?
 
-> >  }
-> >
-> >  static inline void cpa_inc_lp_sameprot(int level)
-> > --
->
-> Fix a data race, says your subject?
->
-> If it had to be honest, it probably should say "Make the code ugly
-> because the next tool can't handle it".
->
-> Frankly, I'm not a fan of all this "change the kernel to fix the tool"
-> attitude.
+It means that it's OOPS/PANIC for the 16th time since the first booting.
 
-I commented on better ways dealing with this, since this is just stats counting.
-
-Thanks,
--- Marco
+>>
+>>>> +the oops|panic occurs since burning is very important for embedded device to
+>>>
+>>>                                 ^^^^^^^ huh??
+>>>
+>>
+>> How about this?
+>>
+>> Sometimes the number of occurrences of oops|panic since the first
+>> booting is important
+>> to judge whether the system is stable.
+> 
+> OK.
+> 
+>>>> +judge whether the system is stable.
+>>>> +
+>>>> +The following line is inserted by pstore filesystem. For example::
+>>>> +
+>>>> +        Oops#2 Part1
+>>>> +
+>>>> +It means that it's the 2nd times oops log on last booting.
+>>>
+>>>                            2nd time of an oops log on the last boot. (?)
+>>>
+>>
+>> How about this?
+>>
+>> It means that it's OOPS for the 2nd time on the last boot.
+> 
+> OK. It's an oops counter.
+> 
+>>>> +#. Just use CPU to transfer.
+>>>> +   Do not use DMA to transfer unless you are sure that DMA will not keep lock.
+>>>> +#. Operate register directly.
+>>>
+>>>        Don't know what that means.
+>>>
+>>
+>> How about this?
+>>
+>> #. Control registers directly.
+>>      Please control registers directly rather than use Linux kernel
+>> resources.
+> 
+> OK.
+> 
+>>      Do I/O map while initializing rather than wait until a panic occurs.
+>>
+>>>> +   Try not to use Linux kernel resources. Do I/O map while initializing rather
+>>>> +   than waiting until the panic.
+> 
+> 
