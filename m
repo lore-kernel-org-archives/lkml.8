@@ -2,96 +2,206 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 284D7C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BDDCC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA39324125
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:02:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579629722;
-	bh=fZiA77TLUSjSX6AGszvtoHtqoxgQKsDAHPSz6OKpLdo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cvDg5WV9sjzuJuDbnGt/kXsvWvL8LPVMk9dR5GnOnmQBJwz28w8ZV7NSX0eQIkw+N
-	 HOVrMTQG9pNysxcJau9mE6C0Y57OVwIydGZ9yoyLITnsjwWghhO83yd8ZFro0TQ5k3
-	 RdGKEPrImboNnYnS2SX262qbtzQPyY+BEXkxGZFM=
+	by mail.kernel.org (Postfix) with ESMTP id 0D96024125
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:02:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729393AbgAUSCB (ORCPT
+        id S1729424AbgAUSCh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 13:02:01 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34423 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729080AbgAUSCA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 13:02:00 -0500
-Received: by mail-oi1-f195.google.com with SMTP id l136so3452526oig.1;
-        Tue, 21 Jan 2020 10:02:00 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6/QK3q9NCXm+bnCLIspTgs5FXLWf1OX2s+9532Imp1Q=;
-        b=lNEhaJ0iu0GREHNynfcbm6/n1jXIdrdYOXjKlG9A7bWAf31fpW4r8Zu2q/lFgoRDG3
-         IeBGz68x5tlbfXsZWO7jb7BOZTiwlpkCIqz9ixX6B8vJeAwjDz7Ff/5UBeYw7UtVBodw
-         a0mrp1YD4B++wbWF4CQLrgTUHyO6o38aVjesZLzwBLr9eVB/dNdYaht1Kb12CGTJhLqm
-         u67cRGAbLGxzgAzs/bTTFUXd0f4I7ynDG/pxD6//rp7bBg3LwRIf2asObf4BnxCz7SjD
-         Et+amYMZGUDhARIO04zUsazAQ6ly61s7odLSJTLAS80Vwn9lMYyv/XWfE/+BFLspYJij
-         5AmQ==
-X-Gm-Message-State: APjAAAW7xRFEQv7tiS4GooPu+lRhaPio+y6RI9nwNsDiWFYnn3kXeVHr
-        28LIKbVRZ2C2SMJhkCIs0w==
-X-Google-Smtp-Source: APXvYqxDXrKf5Kwy/DOlvRO4xmWfgKDz7oKWNV+bJKDYSK9C+HDRXw27pcPVs5UUIatIALYzQ2/QyQ==
-X-Received: by 2002:aca:3cd7:: with SMTP id j206mr2460188oia.142.1579629719880;
-        Tue, 21 Jan 2020 10:01:59 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id y13sm13663899otk.40.2020.01.21.10.01.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 10:01:59 -0800 (PST)
-Received: (nullmailer pid 3058 invoked by uid 1000);
-        Tue, 21 Jan 2020 18:01:58 -0000
-Date:   Tue, 21 Jan 2020 12:01:58 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Konrad Kociolek <konrad@cadence.com>
-Cc:     Konrad Kociolek <konrad@cadence.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] spi: Add dt-bindings schema for Cadence XSPI
- controller driver
-Message-ID: <20200121180158.GA2461@bogus>
-References: <20200120125443.9523-1-konrad@cadence.com>
+        Tue, 21 Jan 2020 13:02:37 -0500
+Received: from mx2.suse.de ([195.135.220.15]:38472 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729273AbgAUSCh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 13:02:37 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 184BAAEC1;
+        Tue, 21 Jan 2020 18:02:34 +0000 (UTC)
+Date:   Tue, 21 Jan 2020 19:02:31 +0100
+From:   Jean Delvare <jdelvare@suse.de>
+To:     Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     linux-doc@vger.kernel.org, linux-i2c@vger.kernel.org,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 21/26] docs: i2c: instantiating-devices: rearrange
+ static instatiation
+Message-ID: <20200121190231.6e88bbdc@endymion>
+In-Reply-To: <20200105225012.11701-21-luca@lucaceresoli.net>
+References: <20200105224006.10321-1-luca@lucaceresoli.net>
+        <20200105225012.11701-1-luca@lucaceresoli.net>
+        <20200105225012.11701-21-luca@lucaceresoli.net>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200120125443.9523-1-konrad@cadence.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jan 2020 13:54:31 +0100, Konrad Kociolek wrote:
-> Add dt-bindings documentation for Cadence XSPI controller to support
-> SPI based flash memories.
+On Sun,  5 Jan 2020 23:50:07 +0100, Luca Ceresoli wrote:
+> Among the "static" instantiation methods the "board file" method is
+> described first. Move it as last, since it is being replaced by the other
+> methods.
 > 
-> Signed-off-by: Konrad Kociolek <konrad@cadence.com>
+> Also fix subsubsection heading syntax and remove the "Method 1[abc]"
+> prefix as the subsubsection structure clarifies the logical hierarchy.
+> 
+> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
 > ---
->  .../devicetree/bindings/spi/cdns,xspi.yaml         | 164 +++++++++++++++++++++
->  1 file changed, 164 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/cdns,xspi.yaml
+>  Documentation/i2c/instantiating-devices.rst | 98 ++++++++++++---------
+>  1 file changed, 54 insertions(+), 44 deletions(-)
 > 
+> diff --git a/Documentation/i2c/instantiating-devices.rst b/Documentation/i2c/instantiating-devices.rst
+> index 5debaafef64d..cbcafb36b417 100644
+> --- a/Documentation/i2c/instantiating-devices.rst
+> +++ b/Documentation/i2c/instantiating-devices.rst
+> @@ -9,54 +9,27 @@ reason, the kernel code must instantiate I2C devices explicitly. There are
+>  several ways to achieve this, depending on the context and requirements.
+>  
+>  
+> -Method 1a: Declare the I2C devices by bus number
+> -------------------------------------------------
+> +Method 1: Declare the I2C devices statically
+> +--------------------------------------------
+>  
+>  This method is appropriate when the I2C bus is a system bus as is the case
+> -for many embedded systems. On such systems, each I2C bus has a number
+> -which is known in advance. It is thus possible to pre-declare the I2C
+> -devices which live on this bus. This is done with an array of struct
+> -i2c_board_info which is registered by calling i2c_register_board_info().
+> +for many embedded systems. On such systems, each I2C bus has a number which
+> +is known in advance. It is thus possible to pre-declare the I2C devices
+> +which live on this bus.
+>  
+> -Example (from omap2 h4)::
+> +This information is provided to the kernel in a different way on different
+> +architectures: device tree, ACPI or board files.
+>  
+> -  static struct i2c_board_info h4_i2c_board_info[] __initdata = {
+> -	{
+> -		I2C_BOARD_INFO("isp1301_omap", 0x2d),
+> -		.irq		= OMAP_GPIO_IRQ(125),
+> -	},
+> -	{	/* EEPROM on mainboard */
+> -		I2C_BOARD_INFO("24c01", 0x52),
+> -		.platform_data	= &m24c01,
+> -	},
+> -	{	/* EEPROM on cpu card */
+> -		I2C_BOARD_INFO("24c01", 0x57),
+> -		.platform_data	= &m24c01,
+> -	},
+> -  };
+> -
+> -  static void __init omap_h4_init(void)
+> -  {
+> -	(...)
+> -	i2c_register_board_info(1, h4_i2c_board_info,
+> -			ARRAY_SIZE(h4_i2c_board_info));
+> -	(...)
+> -  }
+> -
+> -The above code declares 3 devices on I2C bus 1, including their respective
+> -addresses and custom data needed by their drivers. When the I2C bus in
+> -question is registered, the I2C devices will be instantiated automatically
+> -by i2c-core.
+> +When the I2C bus in question is registered, the I2C devices will be
+> +instantiated automatically by i2c-core. The devices will be automatically
+> +unbound and destroyed when the I2C bus they sit on goes away (if ever).
+>  
+> -The devices will be automatically unbound and destroyed when the I2C bus
+> -they sit on goes away (if ever.)
+>  
+> +Declare the I2C devices via devicetree
+> +^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>  
+> -Method 1b: Declare the I2C devices via devicetree
+> --------------------------------------------------
+> -
+> -This method has the same implications as method 1a. The declaration of I2C
+> -devices is here done via devicetree as subnodes of the master controller.
+> +On platforms using devicetree the declaration of I2C devices is done in
 
-My bot found errors running 'make dt_binding_check' on your patch:
+I suggest adding a comma between "devicetree" and "the" to make the
+sentence easier to read.
 
-Documentation/devicetree/bindings/spi/cdns,xspi.yaml: $id: path/filename 'spi/cadence,xspi.yaml' doesn't match actual filename
-Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/spi/cdns,xspi.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/spi/cdns,xspi.example.dts] Error 1
-Makefile:1263: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+> +subnodes of the master controller.
+>  
+>  Example::
+>  
+> @@ -81,14 +54,51 @@ Here, two devices are attached to the bus using a speed of 100kHz. For
+>  additional properties which might be needed to set up the device, please refer
+>  to its devicetree documentation in Documentation/devicetree/bindings/.
+>  
+> -
+> -Method 1c: Declare the I2C devices via ACPI
+> --------------------------------------------
+> +Declare the I2C devices via ACPI
+> +^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>  
+>  ACPI can also describe I2C devices. There is special documentation for this
+>  which is currently located at :doc:`../firmware-guide/acpi/enumeration` .
+>  
+>  
+> +Declare the I2C devices in board files
+> +^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> +
+> +In many embedded architectures devicetree has replaced the old hardware
 
-See https://patchwork.ozlabs.org/patch/1225933
-Please check and re-submit.
+Same here between "architectures" and "devicetree".
+
+> +description based on board files, but the latter are still used in old
+> +code. Instantiating I2C devices via board files is done with an array of
+> +struct i2c_board_info which is registered by calling
+> +i2c_register_board_info().
+> +
+> +Example (from omap2 h4)::
+> +
+> +  static struct i2c_board_info h4_i2c_board_info[] __initdata = {
+> +	{
+> +		I2C_BOARD_INFO("isp1301_omap", 0x2d),
+> +		.irq		= OMAP_GPIO_IRQ(125),
+> +	},
+> +	{	/* EEPROM on mainboard */
+> +		I2C_BOARD_INFO("24c01", 0x52),
+> +		.platform_data	= &m24c01,
+> +	},
+> +	{	/* EEPROM on cpu card */
+> +		I2C_BOARD_INFO("24c01", 0x57),
+> +		.platform_data	= &m24c01,
+> +	},
+> +  };
+> +
+> +  static void __init omap_h4_init(void)
+> +  {
+> +	(...)
+> +	i2c_register_board_info(1, h4_i2c_board_info,
+> +			ARRAY_SIZE(h4_i2c_board_info));
+> +	(...)
+> +  }
+> +
+> +The above code declares 3 devices on I2C bus 1, including their respective
+> +addresses and custom data needed by their drivers.
+> +
+> +
+>  Method 2: Instantiate the devices explicitly
+>  --------------------------------------------
+>  
+
+
+You have some inconsistency in your spacing between subsections, some
+have 1 blank line before while some have 2. I think 1 is enough. At any
+rate it should be consistent.
+
+Reviewed-by: Jean Delvare <jdelvare@suse.de>
+
+-- 
+Jean Delvare
+SUSE L3 Support
