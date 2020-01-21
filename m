@@ -2,242 +2,264 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7948EC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF5DC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:44:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44A0C207E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:44:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579621468;
-	bh=9+SqA3IKcvFv3ypoDeMjmD58qS3Q4mBVAGNFZGev1l8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=FvyWrEz/a1pe512HmrxkHeetWHK5PQArMMqdJ7JKaHpg0I7kzJacMrSPVpCtH7pXX
-	 ZxTSx4mqIV4LPwZhfjhgmuvMkbo1nW7tawooR2IlW87mDWdfjBaj4cJ95Jn5jZLX0M
-	 3+hPNsMsm8Kt9DoFNuBW2YwEwjP9vZQmjra3sUc8=
+	by mail.kernel.org (Postfix) with ESMTP id F1DDC207E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:44:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="POAKap40"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729366AbgAUPo1 (ORCPT
+        id S1728992AbgAUPo1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 21 Jan 2020 10:44:27 -0500
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:44971 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729017AbgAUPo0 (ORCPT
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:52129 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729096AbgAUPoZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 10:44:26 -0500
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id 00LFi5Mr030302;
-        Wed, 22 Jan 2020 00:44:06 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 00LFi5Mr030302
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1579621446;
-        bh=ZtcJE4J/VnghOLG5BqGNTkLhqnSDrYqFSMA9B/PJv3k=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=22uMx27sxZ4iLBL3b5a2GCT1vzgo36uJ/LkCdpC+Q7rUalnLH5X93rBvfJ6r+Pom6
-         0o/uI4mds34zlVe9kLrre0jf42OJ0h6Gzs6WuXnE3PqgqJiehf0iyvPKh61HIb9reM
-         BK6m+Iaq+nXKGZa35YP1Knxk4wopevX6IhVA76h5v+ep8FbEuU2JO402pv2ViHJIt9
-         7Iud1SK2G/mcT+9GzKuU/rxMhwmetJtvRMMv3bXSnuBWDiS8fgTXfAPaC8RNTslYjI
-         ucrY32VBEYpSntsGXkqvTxzJ+9NFzMU9NSQRABiXCmgOsiY6dsEFA/WyMc11os2pwG
-         p7Az2qT9YUBVA==
-X-Nifty-SrcIP: [209.85.222.44]
-Received: by mail-ua1-f44.google.com with SMTP id y3so1163058uae.3;
-        Tue, 21 Jan 2020 07:44:06 -0800 (PST)
-X-Gm-Message-State: APjAAAUIX/hzPtjGqxcamIsKsUBtz/8JnpF32BOlP7pCQ7YfG0RAouv5
-        MCZ3SpbQ/fB7pbbHEmABw4EupSw5tXLktnGUuuA=
-X-Google-Smtp-Source: APXvYqxKN7+aDx4+rhRRBTGSg5TMBpRLbtTObTQdzxulxrRZeJxHYNHdH9TfFK4spH3h0GZVhCOVCIk1jgp5oP8+2Vg=
-X-Received: by 2002:ab0:7049:: with SMTP id v9mr3149137ual.95.1579621444684;
- Tue, 21 Jan 2020 07:44:04 -0800 (PST)
+        Tue, 21 Jan 2020 10:44:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579621463;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=aGpIqNbCvMcpdr0cjmLt5ZmO+ZAY0ko49nTUnYtu3aY=;
+        b=POAKap409ruTdH0E9g6sxGgO6nnpTw2X1GW+PLdwapzwmRL5ajWCpnkC7JpmXBnYv69Fjp
+        K232q7FJ15Ia3h+Q8+5tjhTICYLV8CZoPhZqbwXRZWU+eEoAUslUMMJ4rrSc8bxORLxHNy
+        3RVjXVFGWPKd6x5Cy6VX1b3c9jIuWaE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-159-Ama62vsxPCS7wfmPuYKoyA-1; Tue, 21 Jan 2020 10:44:19 -0500
+X-MC-Unique: Ama62vsxPCS7wfmPuYKoyA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DBE64107ACC7;
+        Tue, 21 Jan 2020 15:44:17 +0000 (UTC)
+Received: from localhost (ovpn-117-223.ams2.redhat.com [10.36.117.223])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5537C1001B0B;
+        Tue, 21 Jan 2020 15:44:13 +0000 (UTC)
+Date:   Tue, 21 Jan 2020 15:44:12 +0000
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Stefano Garzarella <sgarzare@redhat.com>,
+        David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jorgen Hansen <jhansen@vmware.com>,
+        Jason Wang <jasowang@redhat.com>, kvm <kvm@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        linux-hyperv@vger.kernel.org, Dexuan Cui <decui@microsoft.com>
+Subject: Re: [PATCH net-next 1/3] vsock: add network namespace support
+Message-ID: <20200121154412.GC641751@stefanha-x1.localdomain>
+References: <20200120.100610.546818167633238909.davem@davemloft.net>
+ <20200120101735.uyh4o64gb4njakw5@steredhat>
+ <20200120060601-mutt-send-email-mst@kernel.org>
+ <CAGxU2F6VH8Eb5UH_9KjN6MONbZEo1D7EHAiocVVus6jW55BJDg@mail.gmail.com>
+ <20200120110319-mutt-send-email-mst@kernel.org>
+ <CAGxU2F5=DQJ56sH4BUqp_7rvaXSF9bFHp4QkpLApJQK0bmd4MA@mail.gmail.com>
+ <20200120170120-mutt-send-email-mst@kernel.org>
+ <CAGxU2F4uW7FNe5xC0sb3Xxr_GABSXuu1Z9n5M=Ntq==T7MaaVw@mail.gmail.com>
+ <20200121135907.GA641751@stefanha-x1.localdomain>
+ <20200121093104-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
-References: <cover.1579248206.git.michal.simek@xilinx.com> <0274919c5e3b134df19d943f99cb7e84e5135ccd.1579248206.git.michal.simek@xilinx.com>
-In-Reply-To: <0274919c5e3b134df19d943f99cb7e84e5135ccd.1579248206.git.michal.simek@xilinx.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 22 Jan 2020 00:43:28 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARdiTxajZcXH0g7t6nEis-1ebv7Ta6wBdgGgS6O29O7+A@mail.gmail.com>
-Message-ID: <CAK7LNARdiTxajZcXH0g7t6nEis-1ebv7Ta6wBdgGgS6O29O7+A@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] asm-generic: Make dma-contiguous.h a mandatory
- include/asm header
-To:     Michal Simek <michal.simek@xilinx.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Simek <monstr@monstr.eu>, git@xilinx.com,
-        Christoph Hellwig <hch@lst.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        linux-mips@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "open list:SIFIVE DRIVERS" <linux-riscv@lists.infradead.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>, X86 ML <x86@kernel.org>,
-        Guo Ren <guoren@kernel.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Wesley Terpstra <wesley@sifive.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        linux-xtensa@linux-xtensa.org, "H. Peter Anvin" <hpa@zytor.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Chris Zankel <chris@zankel.net>,
-        Ingo Molnar <mingo@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        James Hogan <jhogan@kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200121093104-mutt-send-email-mst@kernel.org>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="GZVR6ND4mMseVXL/"
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi.
+--GZVR6ND4mMseVXL/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 17, 2020 at 5:03 PM Michal Simek <michal.simek@xilinx.com> wrote:
->
-> dma-continuguous.h is generic for all architectures except arm32 which has
-> its own version.
+On Tue, Jan 21, 2020 at 09:31:42AM -0500, Michael S. Tsirkin wrote:
+> On Tue, Jan 21, 2020 at 01:59:07PM +0000, Stefan Hajnoczi wrote:
+> > On Tue, Jan 21, 2020 at 10:07:06AM +0100, Stefano Garzarella wrote:
+> > > On Mon, Jan 20, 2020 at 11:02 PM Michael S. Tsirkin <mst@redhat.com> =
+wrote:
+> > > > On Mon, Jan 20, 2020 at 05:53:39PM +0100, Stefano Garzarella wrote:
+> > > > > On Mon, Jan 20, 2020 at 5:04 PM Michael S. Tsirkin <mst@redhat.co=
+m> wrote:
+> > > > > > On Mon, Jan 20, 2020 at 02:58:01PM +0100, Stefano Garzarella wr=
+ote:
+> > > > > > > On Mon, Jan 20, 2020 at 1:03 PM Michael S. Tsirkin <mst@redha=
+t.com> wrote:
+> > > > > > > > On Mon, Jan 20, 2020 at 11:17:35AM +0100, Stefano Garzarell=
+a wrote:
+> > > > > > > > > On Mon, Jan 20, 2020 at 10:06:10AM +0100, David Miller wr=
+ote:
+> > > > > > > > > > From: Stefano Garzarella <sgarzare@redhat.com>
+> > > > > > > > > > Date: Thu, 16 Jan 2020 18:24:26 +0100
+> > > > > > > > > >
+> > > > > > > > > > > This patch adds 'netns' module param to enable this n=
+ew feature
+> > > > > > > > > > > (disabled by default), because it changes vsock's beh=
+avior with
+> > > > > > > > > > > network namespaces and could break existing applicati=
+ons.
+> > > > > > > > > >
+> > > > > > > > > > Sorry, no.
+> > > > > > > > > >
+> > > > > > > > > > I wonder if you can even design a legitimate, reasonabl=
+e, use case
+> > > > > > > > > > where these netns changes could break things.
+> > > > > > > > >
+> > > > > > > > > I forgot to mention the use case.
+> > > > > > > > > I tried the RFC with Kata containers and we found that Ka=
+ta shim-v1
+> > > > > > > > > doesn't work (Kata shim-v2 works as is) because there are=
+ the following
+> > > > > > > > > processes involved:
+> > > > > > > > > - kata-runtime (runs in the init_netns) opens /dev/vhost-=
+vsock and
+> > > > > > > > >   passes it to qemu
+> > > > > > > > > - kata-shim (runs in a container) wants to talk with the =
+guest but the
+> > > > > > > > >   vsock device is assigned to the init_netns and kata-shi=
+m runs in a
+> > > > > > > > >   different netns, so the communication is not allowed
+> > > > > > > > > But, as you said, this could be a wrong design, indeed th=
+ey already
+> > > > > > > > > found a fix, but I was not sure if others could have the =
+same issue.
+> > > > > > > > >
+> > > > > > > > > In this case, do you think it is acceptable to make this =
+change in
+> > > > > > > > > the vsock's behavior with netns and ask the user to chang=
+e the design?
+> > > > > > > >
+> > > > > > > > David's question is what would be a usecase that's broken
+> > > > > > > > (as opposed to fixed) by enabling this by default.
+> > > > > > >
+> > > > > > > Yes, I got that. Thanks for clarifying.
+> > > > > > > I just reported a broken example that can be fixed with a dif=
+ferent
+> > > > > > > design (due to the fact that before this series, vsock device=
+s were
+> > > > > > > accessible to all netns).
+> > > > > > >
+> > > > > > > >
+> > > > > > > > If it does exist, you need a way for userspace to opt-in,
+> > > > > > > > module parameter isn't that.
+> > > > > > >
+> > > > > > > Okay, but I honestly can't find a case that can't be solved.
+> > > > > > > So I don't know whether to add an option (ioctl, sysfs ?) or =
+wait for
+> > > > > > > a real case to come up.
+> > > > > > >
+> > > > > > > I'll try to see better if there's any particular case where w=
+e need
+> > > > > > > to disable netns in vsock.
+> > > > > > >
+> > > > > > > Thanks,
+> > > > > > > Stefano
+> > > > > >
+> > > > > > Me neither. so what did you have in mind when you wrote:
+> > > > > > "could break existing applications"?
+> > > > >
+> > > > > I had in mind:
+> > > > > 1. the Kata case. It is fixable (the fix is not merged on kata), =
+but
+> > > > >    older versions will not work with newer Linux.
+> > > >
+> > > > meaning they will keep not working, right?
+> > >=20
+> > > Right, I mean without this series they work, with this series they wo=
+rk
+> > > only if the netns support is disabled or with a patch proposed but no=
+t
+> > > merged in kata.
+> > >=20
+> > > >
+> > > > > 2. a single process running on init_netns that wants to communica=
+te with
+> > > > >    VMs handled by VMMs running in different netns, but this case =
+can be
+> > > > >    solved opening the /dev/vhost-vsock in the same netns of the p=
+rocess
+> > > > >    that wants to communicate with the VMs (init_netns in this cas=
+e), and
+> > > > >    passig it to the VMM.
+> > > >
+> > > > again right now they just don't work, right?
+> > >=20
+> > > Right, as above.
+> > >=20
+> > > What do you recommend I do?
+> >=20
+> > Existing userspace applications must continue to work.
+> >=20
+> > Guests are fine because G2H transports are always in the initial networ=
+k
+> > namespace.
+> >=20
+> > On the host side we have a real case where Kata Containers and other
+> > vsock users break.  Existing applications run in other network
+> > namespaces and assume they can communicate over vsock (it's only
+> > available in the initial network namespace by default).
+> >=20
+> > It seems we cannot isolate new network namespaces from the initial
+> > network namespace by default because it will break existing
+> > applications.  That's a bummer.
+> >=20
+> > There is one solution that maintains compatibility:
+> >=20
+> > Introduce a per-namespace vsock isolation flag that can only transition
+> > from false to true.  Once it becomes true it cannot be reset to false
+> > anymore (for security).
+> >=20
+> > When vsock isolation is false the initial network namespace is used for
+> > <CID, port> addressing.
+> >=20
+> > When vsock isolation is true the current namespace is used for <CID,
+> > port> addressing.
+> >=20
+> > I guess the vsock isolation flag would be set via a rtnetlink message,
+> > but I haven't checked.
+> >=20
+> > The upshot is: existing software doesn't benefit from namespaces for
+> > vsock isolation but it continues to work!  New software makes 1 special
+> > call after creating the namespace to opt in to vsock isolation.
+> >=20
+> > This approach is secure because whoever sets up namespaces can
+> > transition the flag from false to true and know that it can never be
+> > reset to false anymore.
+> >=20
+> > Does this make sense to everyone?
+> >=20
+> > Stefan
+>=20
+> Anything wrong with a separate device? whoever opens it decides
+> whether netns will work ...
 
+Your idea is better.  I think a separate device is the way to go.
 
+Stefan
 
-Currently, <asm/dma-contiguous.h> is present
-for only architectures that select HAVE_DMA_CONTIGUOUS.
+--GZVR6ND4mMseVXL/
+Content-Type: application/pgp-signature; name="signature.asc"
 
-After this commit, the other architectures will end
-up with generating the unused header.
+-----BEGIN PGP SIGNATURE-----
 
-That would not be a big deal, but
-it could be mentioned in the commit message?
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl4nHEwACgkQnKSrs4Gr
+c8gkWwf/WeCAFZA1kVaNgYa9wb5dO/ZohzbFkQbRphAk6cwcdO9bkkOoly99gEGb
+zrr+mXxKZvzG+U4bsc3D9bLQr1UQ8GiD1YPBslgyTDZ72X1dWu2/11lPabgdTxhZ
+SOFycWHK6sVsKUEA4Jiq7bwHqOzIez5cA+EOF3bmZCju1kcAFptyNpAnvopZt5AY
+ZzEIqTDSm8p/GCVJmaJE4JzkzJM5mFzCSH73QeW0IGoUJ6C6ZbyvAOmXtEnFifwt
+WxK4ok5OubA9Eadoo3x9tcr16to11ZV2aXVroS6Q96DCP8Vc3FHepAzEhgbjBw+O
+bHtQCEDC6+JB3SWCmoWoX7qSts4OWg==
+=HgEd
+-----END PGP SIGNATURE-----
 
+--GZVR6ND4mMseVXL/--
 
-
-> Similar change was done for msi.h by commit a1b39bae16a6
-> ("asm-generic: Make msi.h a mandatory include/asm header")
->
-> Suggested-by: Christoph Hellwig <hch@infradead.org>
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> ---
->
-> Changes in v2:
-> - New patch suggested by Christoph
->
->  arch/arm64/include/asm/Kbuild  | 1 -
->  arch/csky/include/asm/Kbuild   | 1 -
->  arch/mips/include/asm/Kbuild   | 1 -
->  arch/riscv/include/asm/Kbuild  | 1 -
->  arch/s390/include/asm/Kbuild   | 1 -
->  arch/x86/include/asm/Kbuild    | 1 -
->  arch/xtensa/include/asm/Kbuild | 1 -
->
->  include/asm-generic/Kbuild     | 1 +
->  8 files changed, 1 insertion(+), 7 deletions(-)
->
-> diff --git a/arch/arm64/include/asm/Kbuild b/arch/arm64/include/asm/Kbuild
-> index bd23f87d6c55..d3077c991962 100644
-> --- a/arch/arm64/include/asm/Kbuild
-> +++ b/arch/arm64/include/asm/Kbuild
-> @@ -3,7 +3,6 @@ generic-y += bugs.h
->  generic-y += delay.h
->  generic-y += div64.h
->  generic-y += dma.h
-> -generic-y += dma-contiguous.h
->  generic-y += dma-mapping.h
->  generic-y += early_ioremap.h
->  generic-y += emergency-restart.h
-> diff --git a/arch/csky/include/asm/Kbuild b/arch/csky/include/asm/Kbuild
-> index 4d4754e6bf89..bc15a26c782f 100644
-> --- a/arch/csky/include/asm/Kbuild
-> +++ b/arch/csky/include/asm/Kbuild
-> @@ -7,7 +7,6 @@ generic-y += delay.h
->  generic-y += device.h
->  generic-y += div64.h
->  generic-y += dma.h
-> -generic-y += dma-contiguous.h
->  generic-y += dma-mapping.h
->  generic-y += emergency-restart.h
->  generic-y += exec.h
-> diff --git a/arch/mips/include/asm/Kbuild b/arch/mips/include/asm/Kbuild
-> index 61b0fc2026e6..179403ae5837 100644
-> --- a/arch/mips/include/asm/Kbuild
-> +++ b/arch/mips/include/asm/Kbuild
-> @@ -6,7 +6,6 @@ generated-y += syscall_table_64_n64.h
->  generated-y += syscall_table_64_o32.h
->  generic-y += current.h
->  generic-y += device.h
-> -generic-y += dma-contiguous.h
->  generic-y += emergency-restart.h
->  generic-y += export.h
->  generic-y += irq_work.h
-> diff --git a/arch/riscv/include/asm/Kbuild b/arch/riscv/include/asm/Kbuild
-> index 1efaeddf1e4b..ec0ca8c6ab64 100644
-> --- a/arch/riscv/include/asm/Kbuild
-> +++ b/arch/riscv/include/asm/Kbuild
-> @@ -7,7 +7,6 @@ generic-y += div64.h
->  generic-y += extable.h
->  generic-y += flat.h
->  generic-y += dma.h
-> -generic-y += dma-contiguous.h
->  generic-y += dma-mapping.h
->  generic-y += emergency-restart.h
->  generic-y += exec.h
-> diff --git a/arch/s390/include/asm/Kbuild b/arch/s390/include/asm/Kbuild
-> index 2531f673f099..1832ae6442ef 100644
-> --- a/arch/s390/include/asm/Kbuild
-> +++ b/arch/s390/include/asm/Kbuild
-> @@ -7,7 +7,6 @@ generated-y += unistd_nr.h
->  generic-y += asm-offsets.h
->  generic-y += cacheflush.h
->  generic-y += device.h
-> -generic-y += dma-contiguous.h
->  generic-y += dma-mapping.h
->  generic-y += div64.h
->  generic-y += emergency-restart.h
-> diff --git a/arch/x86/include/asm/Kbuild b/arch/x86/include/asm/Kbuild
-> index 8b52bc5ddf69..ea34464d6221 100644
-> --- a/arch/x86/include/asm/Kbuild
-> +++ b/arch/x86/include/asm/Kbuild
-> @@ -7,7 +7,6 @@ generated-y += unistd_32_ia32.h
->  generated-y += unistd_64_x32.h
->  generated-y += xen-hypercalls.h
->
-> -generic-y += dma-contiguous.h
->  generic-y += early_ioremap.h
->  generic-y += export.h
->  generic-y += mcs_spinlock.h
-> diff --git a/arch/xtensa/include/asm/Kbuild b/arch/xtensa/include/asm/Kbuild
-> index 3acc31e55e02..271917c24b7f 100644
-> --- a/arch/xtensa/include/asm/Kbuild
-> +++ b/arch/xtensa/include/asm/Kbuild
-> @@ -4,7 +4,6 @@ generic-y += bug.h
->  generic-y += compat.h
->  generic-y += device.h
->  generic-y += div64.h
-> -generic-y += dma-contiguous.h
->  generic-y += dma-mapping.h
->  generic-y += emergency-restart.h
->  generic-y += exec.h
-> diff --git a/include/asm-generic/Kbuild b/include/asm-generic/Kbuild
-> index ddfee1bd9dc1..cd17d50697cc 100644
-> --- a/include/asm-generic/Kbuild
-> +++ b/include/asm-generic/Kbuild
-> @@ -4,5 +4,6 @@
->  # (This file is not included when SRCARCH=um since UML borrows several
->  # asm headers from the host architecutre.)
->
-> +mandatory-y += dma-contiguous.h
->  mandatory-y += msi.h
->  mandatory-y += simd.h
-> --
-> 2.25.0
->
-
-
--- 
-Best Regards
-Masahiro Yamada
