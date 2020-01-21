@@ -2,134 +2,148 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 464CFC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DDA5C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:58:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1977521569
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:58:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CMjx9T7P"
+	by mail.kernel.org (Postfix) with ESMTP id EF1A924653
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:58:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729281AbgAUQ6A (ORCPT
+        id S1729317AbgAUQ6O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 11:58:00 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:45201 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729191AbgAUQ56 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 11:57:58 -0500
-Received: by mail-lf1-f68.google.com with SMTP id 203so2842066lfa.12;
-        Tue, 21 Jan 2020 08:57:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=13rfNwxyiR9yuh7eK/7sBMvhz8O70v72cEL2FYuVuuw=;
-        b=CMjx9T7PtY1kfCg2UepPrVQ1Hpe7hOMZU/pLX4viCwRLqN/qlrwhwyJUAuQPjE73ha
-         MX/QAp600urA0KcCNWXi70P5jCWzwjVxgQdgQA704meGkw9BBq6HfJljGniXS3/tV6Sh
-         rXBfa93dOG1XoDH6wLQCKUghxqXlCcCanLsdxNZZstCtE6HheuASHqU29T6tw3SVtPWU
-         r8F+INeCbTbPEWEn1Rq/XwxUg6AB3TLDfVXIoSjfBUZopXm3iLKOE9u19hdcshXffCr2
-         FJnK3dgh+wGWAq6lTe7pFuGusnmjcTf1NzYb6LY0QsEIthGl1F4d0fdSgUlCbUWnLjOk
-         tqoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=13rfNwxyiR9yuh7eK/7sBMvhz8O70v72cEL2FYuVuuw=;
-        b=CSxAA09tZzsnRQuA+RjcP+hJRetplg6bHbM6OVmglOz0ze9IRk6ctQNByVHm7f3jBU
-         cBaiOONoo2/dEnuDVa+HOY6aPkDFKsWxtQtVR+4CtYiqhfw7JWqIqMwH5/9AkwisKZzZ
-         65i+ls1ekhtnKjpKTYLrRm6sRuR+DOBAaGyYzkK61zAt7gvSFRa1iginDAqPApM4xdHt
-         +HZ4RDNdymslV8NY0zwW79ObWxWZw2eQc/nCnlf9j01x0AnVGaPEB8wVTFGQSR9a9BGf
-         jQWqMCO+YRBVz8LrMLtn1mCvfX/ZCbTJAeqduggdMTfCPwnxEmtZViJBpropbDP+6hNN
-         Hs0Q==
-X-Gm-Message-State: APjAAAVLfWc56mWRMtnMpiTxBf58q2WQJ8Q5L4zQMTxqN1kZsk6muzmG
-        +SwmRBk9/EngQyMMQtxcgyGp6V5S
-X-Google-Smtp-Source: APXvYqz8y+exlJhNtla7NozdORcCyX05vAJjJeIxAxEhtNFlCSv1FCczCahSTpmAE+gzeqg/mFl3pg==
-X-Received: by 2002:ac2:5216:: with SMTP id a22mr3177132lfl.18.1579625875608;
-        Tue, 21 Jan 2020 08:57:55 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id r20sm19173224lfi.91.2020.01.21.08.57.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jan 2020 08:57:55 -0800 (PST)
-Subject: Re: [PATCH v8 22/22] clk: tegra: Remove audio clocks configuration
- from clock driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, broonie@kernel.org,
-        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
-        sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, spujar@nvidia.com,
-        josephl@nvidia.com, daniel.lezcano@linaro.org,
-        mmaddireddy@nvidia.com, markz@nvidia.com,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1578986667-16041-1-git-send-email-skomatineni@nvidia.com>
- <1578986667-16041-23-git-send-email-skomatineni@nvidia.com>
- <d69fe7a8-71cc-c560-a567-f89b936753ad@gmail.com>
- <9765b723-33af-9863-72c9-8094203c8cb8@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <f2506b91-0199-f2a5-ea8c-ace7b651b443@gmail.com>
-Date:   Tue, 21 Jan 2020 19:57:53 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Tue, 21 Jan 2020 11:58:14 -0500
+Received: from foss.arm.com ([217.140.110.172]:45910 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726714AbgAUQ6N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 11:58:13 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1CF8230E;
+        Tue, 21 Jan 2020 08:58:13 -0800 (PST)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1CD3A3F6C4;
+        Tue, 21 Jan 2020 08:58:12 -0800 (PST)
+Date:   Tue, 21 Jan 2020 16:58:09 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 03/14] arm: arm64: Don't use disable_nonboot_cpus()
+Message-ID: <20200121165809.3kk3xauky4vjp5ni@e107158-lin.cambridge.arm.com>
+References: <20191125112754.25223-1-qais.yousef@arm.com>
+ <20191125112754.25223-4-qais.yousef@arm.com>
+ <20200121165030.xksivf6mrhsaynq2@e107158-lin.cambridge.arm.com>
+ <20200121165321.GH25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <9765b723-33af-9863-72c9-8094203c8cb8@nvidia.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <20200121165321.GH25745@shell.armlinux.org.uk>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-21.01.2020 19:19, Sowjanya Komatineni пишет:
+On 01/21/20 16:53, Russell King - ARM Linux admin wrote:
+> On Tue, Jan 21, 2020 at 04:50:31PM +0000, Qais Yousef wrote:
+> > On 11/25/19 11:27, Qais Yousef wrote:
+> > > disable_nonboot_cpus() is not safe to use when doing machine_down(),
+> > > because it relies on freeze_secondary_cpus() which in return is
+> > > a suspend/resume related freeze and could abort if the logic detects any
+> > > pending activities that can prevent finishing the offlining process.
+> > > 
+> > > Beside disable_nonboot_cpus() is dependent on CONFIG_PM_SLEEP_SMP which
+> > > is an othogonal config to rely on to ensure this function works
+> > > correctly.
+> > > 
+> > > Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+> > > CC: Russell King <linux@armlinux.org.uk>
+> > > CC: Catalin Marinas <catalin.marinas@arm.com>
+> > > CC: Will Deacon <will@kernel.org>
+> > > CC: linux-arm-kernel@lists.infradead.org
+> > > CC: linux-kernel@vger.kernel.org
+> > > ---
+> > 
+> > Ping :)
+> > 
+> > I'm missing ACKs on this patch and patch 4 for arm64. Hopefully none should be
+> > controversial.
 > 
-> On 1/19/20 7:04 AM, Dmitry Osipenko wrote:
->> External email: Use caution opening links or attachments
->>
->>
->> 14.01.2020 10:24, Sowjanya Komatineni пишет:
->>
->> [snip]
->>
->>> diff --git a/drivers/clk/tegra/clk-tegra30.c
->>> b/drivers/clk/tegra/clk-tegra30.c
->>> index 5732fdbe20db..53d1c48532ae 100644
->>> --- a/drivers/clk/tegra/clk-tegra30.c
->>> +++ b/drivers/clk/tegra/clk-tegra30.c
->>> @@ -1221,9 +1221,8 @@ static struct tegra_clk_init_table init_table[]
->>> __initdata = {
->>>        { TEGRA30_CLK_UARTC, TEGRA30_CLK_PLL_P, 408000000, 0 },
->>>        { TEGRA30_CLK_UARTD, TEGRA30_CLK_PLL_P, 408000000, 0 },
->>>        { TEGRA30_CLK_UARTE, TEGRA30_CLK_PLL_P, 408000000, 0 },
->>> -     { TEGRA30_CLK_PLL_A, TEGRA30_CLK_CLK_MAX, 564480000, 1 },
->>> -     { TEGRA30_CLK_PLL_A_OUT0, TEGRA30_CLK_CLK_MAX, 11289600, 1 },
->>> -     { TEGRA30_CLK_EXTERN1, TEGRA30_CLK_PLL_A_OUT0, 0, 1 },
->>> +     { TEGRA30_CLK_PLL_A, TEGRA30_CLK_CLK_MAX, 564480000, 0 },
->>> +     { TEGRA30_CLK_PLL_A_OUT0, TEGRA30_CLK_CLK_MAX, 11289600, 0 },
->>>        { TEGRA30_CLK_I2S0, TEGRA30_CLK_PLL_A_OUT0, 11289600, 0 },
->>>        { TEGRA30_CLK_I2S1, TEGRA30_CLK_PLL_A_OUT0, 11289600, 0 },
->>>        { TEGRA30_CLK_I2S2, TEGRA30_CLK_PLL_A_OUT0, 11289600, 0 },
->>>
->> What about to use the assigned-clock-rates in device-tree and thus to
->> remove those PLL_A entries?
-> 
-> Yes clock rates can be used and also PLL rate is set based on sample
-> rate during hw_params. So this can be removed.
-> 
-> But PLLA clock rates are not related to this patch series and also
-> changing this needs audio function testing across all platforms and
-> currently we don't have audio functional tests in place for older
-> platforms.
-> 
-> All audio clocks proper fixes and cleanup b/w clock driver and audio
-> driver will be done separately.
+> ARM and ARM64 are maintained separately, so you can't submit a single
+> patch covering both.  Sorry.
 
-If there are real plans to make sound driver to drive the PLLA rate,
-then indeed should be fine to keep it as-is for now.
+Sure I'd be happy to split.
+
+It was just a single line change and I expected Thomas to pick the whole series
+up, so I didn't think there'd be an issue in combining them up since they're
+identical.
+
+Do I take it you have no objection to the code change itself and just would
+like to see this split up?
+
+Thanks
+
+--
+Qais Yousef
+
+> 
+> > 
+> > Thanks!
+> > 
+> > --
+> > Qais Yousef
+> > 
+> > >  arch/arm/kernel/reboot.c    | 4 ++--
+> > >  arch/arm64/kernel/process.c | 4 ++--
+> > >  2 files changed, 4 insertions(+), 4 deletions(-)
+> > > 
+> > > diff --git a/arch/arm/kernel/reboot.c b/arch/arm/kernel/reboot.c
+> > > index bb18ed0539f4..58ad1a70f770 100644
+> > > --- a/arch/arm/kernel/reboot.c
+> > > +++ b/arch/arm/kernel/reboot.c
+> > > @@ -88,11 +88,11 @@ void soft_restart(unsigned long addr)
+> > >   * to execute e.g. a RAM-based pin loop is not sufficient. This allows the
+> > >   * kexec'd kernel to use any and all RAM as it sees fit, without having to
+> > >   * avoid any code or data used by any SW CPU pin loop. The CPU hotplug
+> > > - * functionality embodied in disable_nonboot_cpus() to achieve this.
+> > > + * functionality embodied in smp_shutdown_nonboot_cpus() to achieve this.
+> > >   */
+> > >  void machine_shutdown(void)
+> > >  {
+> > > -	disable_nonboot_cpus();
+> > > +	smp_shutdown_nonboot_cpus(0);
+> > >  }
+> > >  
+> > >  /*
+> > > diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
+> > > index 71f788cd2b18..3bcc9bfc581e 100644
+> > > --- a/arch/arm64/kernel/process.c
+> > > +++ b/arch/arm64/kernel/process.c
+> > > @@ -141,11 +141,11 @@ void arch_cpu_idle_dead(void)
+> > >   * to execute e.g. a RAM-based pin loop is not sufficient. This allows the
+> > >   * kexec'd kernel to use any and all RAM as it sees fit, without having to
+> > >   * avoid any code or data used by any SW CPU pin loop. The CPU hotplug
+> > > - * functionality embodied in disable_nonboot_cpus() to achieve this.
+> > > + * functionality embodied in smpt_shutdown_nonboot_cpus() to achieve this.
+> > >   */
+> > >  void machine_shutdown(void)
+> > >  {
+> > > -	disable_nonboot_cpus();
+> > > +	smp_shutdown_nonboot_cpus(0);
+> > >  }
+> > >  
+> > >  /*
+> > > -- 
+> > > 2.17.1
+> > > 
+> > 
+> 
+> -- 
+> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+> According to speedtest.net: 11.9Mbps down 500kbps up
