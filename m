@@ -2,131 +2,194 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A126C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B1ECC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 318B9206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:33:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="IG+eWre8"
+	by mail.kernel.org (Postfix) with ESMTP id 13D7B206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:35:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729259AbgAUQdq (ORCPT
+        id S1729253AbgAUQfy convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 11:33:46 -0500
-Received: from mout.web.de ([212.227.15.3]:37675 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726968AbgAUQdq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 11:33:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1579624409;
-        bh=vkUMqMpSzQWOv5pE1yPpsgTJ0TCaAleQhLOhszH9RKE=;
-        h=X-UI-Sender-Class:Cc:Subject:From:To:Date;
-        b=IG+eWre8/eVD3hdJl6Cm6n98ehw26rmR71cdSjAmLw50tqen4gJR4APHN6xo9NxEU
-         TuebV/NHdwOs7QuNImEfjFksN0EpsGG9ewQ27y2acRBWymr9yNeSWuaEYTrmkIG90o
-         3ppWDsdfK01E9HiUXrzGxXgSj82MeLNZdgDeOOXM=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.49.33.93]) by smtp.web.de (mrweb001
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0Mg7Zl-1jEe6v3ADV-00NT1v; Tue, 21
- Jan 2020 17:33:28 +0100
-Cc:     linux-kernel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        =?UTF-8?Q?Valdis_Kl=c4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        linkinjeon@gmail.com
-Subject: Re: [PATCH v13 11/13] exfat: add Kconfig and Makefile
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-To:     Namjae Jeon <namjae.jeon@samsung.com>,
-        linux-fsdevel@vger.kernel.org
-Message-ID: <44d81272-60c9-72fa-60df-20282c370a7a@web.de>
-Date:   Tue, 21 Jan 2020 17:33:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Provags-ID: V03:K1:Y+PS0ccMxadJlzOXUYMJtQPr8NqZAA65HUWxMTCKqUKeZoA4HCS
- fezep9iJ1B8CLt4oB1Rp4yGQlYbkorl444OTCoae/VF9hEkY1w7DV4a+llFarBI5h58VtPo
- YcYnS5d3ZbAWKCLoTTmdFbgdn6IAjqHzYgRZWV9u44l1F7YvdToyn8hNjAZecFlolVrGyAt
- 0uYpYI7x0herbiBML0dBQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:BW3bOvImGXU=:FPRnOMCeSaqMGlIAhwgQFF
- ttgS6BlnPvH9iaZ5WW+qk9a9rNR+RJURqrc4RTa6ZUp9utxTMWn2mDXQN7kBmKHYp5r4aZLBS
- CKbsxqAhJKi3f9E8Uxmh4c5ZnDq7lCnZv3t6jwW6XgAoNztRbrqLNe8qvIZxz7TgBi9N6xWCb
- 8RrxU+p1rLmCQnalzsqMiuV/nBHdoQ5FoYBo1y2Ou7Tfu59xP2G8SRKIxJGlYUhj2r2mpwcF1
- Q0XBSaDYSJDO8Mr3x4ZUOByZA7Dcmaq3uX31ApMZE8a28O1yYZKANq+94MqvKUw4s+mzLyQlM
- EYM81IGABpxa+7zggDyTMT/TAM6Yy0sDF509OnPIYfbhUwrJFPKImUfwWLv7liehPLBmDRQcP
- 6lqtzZDR8mK6r61Cczst8Q/00s/J63I1Onl3Cwg2Nr+F/BrJk02Kv9WXuNn/kkI5/OZeVbhga
- DwZBC8Niq5J0Gru3Q+ioU3BnwJhcZ11YJG47rvKeZXvQudjjLTUoTAeFo8IIi30sYG05HI37V
- o3yKJdYBR1YssnvaaRRtPVpoJH88nuvr4JT4/6lDhkM/CTxVcJA7Lsoa3MaqfepXBged7/bNb
- 4B9gPQK2fvui/RqAy7ZbbvSUkZQ4M+zghjWB2fKNv4stVCKG8FVv7S03aRQ3lTcKXJ6zb0UPI
- FPgewWr8fdW6nUXnvzpDP8BMCtLptla8AQQYfpuN0epznm0h3QBsqIF53rUCal0sNID7NozmP
- /0vM1drcBuI0sLFhGP4kxAznV63fY7iZr2cdF//XSuGJsrN1M985bjuk4XOrNGLoS9wO5opNv
- 24d8riQYxQIB+zbyBV4Y+DfEKRjmJ6j8qzljVDroQeFlTPrWbrKb9+5MdSZbbOhoZJpeFBxXv
- u/uMTDPxi+QBcVr2G7VDiRvtFEgxOSKZ0TyAQSTHMPtXfnV668AbL3dNAHLScfb2GbFpGW+gL
- 5HAXWcejzL1V6HnSZm8DtPbYfQR6YC5WDLJpdFbwC5ygw8SNVi/ZVCv7BvPEzFynJbVFIHiGy
- 1y2W4aVCTpmMOWygO92uu+0JIBZmZdMl1KtqxMyrN2X2eCMDk5nLUh4nyyTbNFW9WtAQkTVqm
- 87/gUcoi+0EiVSbOAPPVOMHhUbUNMUMUD8q+59F/he5T5AWMSIVplcexiJyx4bFfDpwH06M1r
- VJ0P23rYw1WSncnvlNs/Ug4m7T2Cw3cI2mee77HmRy3m9b1lauqaItMR0dN3nkTX1Ag9W9WqR
- omPKVcIR+FIcFmBCC
+        Tue, 21 Jan 2020 11:35:54 -0500
+Received: from coyote.holtmann.net ([212.227.132.17]:58810 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726714AbgAUQfy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 11:35:54 -0500
+Received: from marcel-macpro.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 00A92CECE3;
+        Tue, 21 Jan 2020 17:45:10 +0100 (CET)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
+Subject: Re: [RFC PATCH 1/2] Bluetooth: Add mgmt op set_wake_capable
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20200117132623.RFC.1.I797e2f4cb824299043e771f3ab9cef86ee09f4db@changeid>
+Date:   Tue, 21 Jan 2020 17:35:51 +0100
+Cc:     Luiz Augusto von Dentz <luiz.dentz@gmail.com>, alainm@chromium.org,
+        linux-bluetooth@vger.kernel.org,
+        chromeos-bluetooth-upstreaming@chromium.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <ACAE240C-345B-43F9-B6C8-8967AF436CE9@holtmann.org>
+References: <20200117212705.57436-1-abhishekpandit@chromium.org>
+ <20200117132623.RFC.1.I797e2f4cb824299043e771f3ab9cef86ee09f4db@changeid>
+To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+X-Mailer: Apple Mail (2.3608.40.2.2.4)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +	  converting between the encoding is used for user visible filename and
-> +	  UTF-16 character that exfat filesystem use, and can be overridden with
+Hi Abhishek,
 
-I would imagine an other wording fine-tuning here than the replacement of a dot
-by a comma.
+> When the system is suspended, only some connected Bluetooth devices
+> cause user input that should wake the system (mostly HID devices). Add
+> a list to keep track of devices that can wake the system and add
+> a management API to let userspace tell the kernel whether a device is
+> wake capable or not.
+> 
+> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> ---
+> 
+> include/net/bluetooth/hci_core.h |  1 +
+> include/net/bluetooth/mgmt.h     |  7 ++++++
+> net/bluetooth/hci_core.c         |  1 +
+> net/bluetooth/mgmt.c             | 42 ++++++++++++++++++++++++++++++++
+> 4 files changed, 51 insertions(+)
+> 
+> diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
+> index 89ecf0a80aa1..ce4bebcb0265 100644
+> --- a/include/net/bluetooth/hci_core.h
+> +++ b/include/net/bluetooth/hci_core.h
+> @@ -394,6 +394,7 @@ struct hci_dev {
+> 	struct list_head	mgmt_pending;
+> 	struct list_head	blacklist;
+> 	struct list_head	whitelist;
+> +	struct list_head	wakeable;
+> 	struct list_head	uuids;
+> 	struct list_head	link_keys;
+> 	struct list_head	long_term_keys;
+> diff --git a/include/net/bluetooth/mgmt.h b/include/net/bluetooth/mgmt.h
+> index a90666af05bd..283ba5320bdb 100644
+> --- a/include/net/bluetooth/mgmt.h
+> +++ b/include/net/bluetooth/mgmt.h
+> @@ -671,6 +671,13 @@ struct mgmt_cp_set_blocked_keys {
+> } __packed;
+> #define MGMT_OP_SET_BLOCKED_KEYS_SIZE 2
+> 
+> +#define MGMT_OP_SET_WAKE_CAPABLE	0x0047
+> +#define MGMT_SET_WAKE_CAPABLE_SIZE	8
+> +struct mgmt_cp_set_wake_capable {
+> +	struct mgmt_addr_info addr;
+> +	u8 wake_capable;
+> +} __packed;
+> +
 
-Regards,
-Markus
+please also send a patch for doc/mgmt-api.txt describing these opcodes. I would also like to have the discussion if it might be better to add an extra Action parameter to Add Device. We want to differentiate between allow incoming connection that allows to wakeup and the one that doesn’t.
+
+Another option is to create an Add Extended Device command. Main reason here is that I don’t want to end up in the situation where you have to add a device and then send another 10 commands to set its features.
+
+> #define MGMT_EV_CMD_COMPLETE		0x0001
+> struct mgmt_ev_cmd_complete {
+> 	__le16	opcode;
+> diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+> index 1ca7508b6ca7..7057b9b65173 100644
+> --- a/net/bluetooth/hci_core.c
+> +++ b/net/bluetooth/hci_core.c
+> @@ -3299,6 +3299,7 @@ struct hci_dev *hci_alloc_dev(void)
+> 	INIT_LIST_HEAD(&hdev->mgmt_pending);
+> 	INIT_LIST_HEAD(&hdev->blacklist);
+> 	INIT_LIST_HEAD(&hdev->whitelist);
+> +	INIT_LIST_HEAD(&hdev->wakeable);
+> 	INIT_LIST_HEAD(&hdev->uuids);
+> 	INIT_LIST_HEAD(&hdev->link_keys);
+> 	INIT_LIST_HEAD(&hdev->long_term_keys);
+> diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
+> index 0dc610faab70..95092130f16c 100644
+> --- a/net/bluetooth/mgmt.c
+> +++ b/net/bluetooth/mgmt.c
+> @@ -106,7 +106,10 @@ static const u16 mgmt_commands[] = {
+> 	MGMT_OP_START_LIMITED_DISCOVERY,
+> 	MGMT_OP_READ_EXT_INFO,
+> 	MGMT_OP_SET_APPEARANCE,
+> +	MGMT_OP_GET_PHY_CONFIGURATION,
+> +	MGMT_OP_SET_PHY_CONFIGURATION,
+
+These are unrelated to this patch.
+
+> 	MGMT_OP_SET_BLOCKED_KEYS,
+> +	MGMT_OP_SET_WAKE_CAPABLE,
+> };
+> 
+> static const u16 mgmt_events[] = {
+> @@ -4663,6 +4666,37 @@ static int set_fast_connectable(struct sock *sk, struct hci_dev *hdev,
+> 	return err;
+> }
+> 
+> +static int set_wake_capable(struct sock *sk, struct hci_dev *hdev, void *data,
+> +			    u16 len)
+> +{
+> +	int err;
+> +	u8 status;
+> +	struct mgmt_cp_set_wake_capable *cp = data;
+> +	u8 addr_type = cp->addr.type == BDADDR_BREDR ?
+> +			       cp->addr.type :
+> +			       le_addr_type(cp->addr.type);
+> +
+> +	BT_DBG("Set wake capable %pMR (type 0x%x) = 0x%x\n", &cp->addr.bdaddr,
+> +	       addr_type, cp->wake_capable);
+> +
+> +	if (cp->wake_capable)
+> +		err = hci_bdaddr_list_add(&hdev->wakeable, &cp->addr.bdaddr,
+> +					  addr_type);
+> +	else
+> +		err = hci_bdaddr_list_del(&hdev->wakeable, &cp->addr.bdaddr,
+> +					  addr_type);
+> +
+> +	if (!err || err == -EEXIST || err == -ENOENT)
+> +		status = MGMT_STATUS_SUCCESS;
+> +	else
+> +		status = MGMT_STATUS_FAILED;
+> +
+> +	err = mgmt_cmd_complete(sk, hdev->id, MGMT_OP_SET_WAKE_CAPABLE, status,
+> +				cp, sizeof(*cp));
+> +
+> +	return err;
+> +}
+> +
+> static void set_bredr_complete(struct hci_dev *hdev, u8 status, u16 opcode)
+> {
+> 	struct mgmt_pending_cmd *cmd;
+> @@ -5791,6 +5825,13 @@ static int remove_device(struct sock *sk, struct hci_dev *hdev,
+> 			err = hci_bdaddr_list_del(&hdev->whitelist,
+> 						  &cp->addr.bdaddr,
+> 						  cp->addr.type);
+> +
+> +			/* Don't check result since it either succeeds or device
+> +			 * wasn't there (not wakeable or invalid params as
+> +			 * covered by deleting from whitelist).
+> +			 */
+> +			hci_bdaddr_list_del(&hdev->wakeable, &cp->addr.bdaddr,
+> +					    cp->addr.type);
+> 			if (err) {
+> 				err = mgmt_cmd_complete(sk, hdev->id,
+> 							MGMT_OP_REMOVE_DEVICE,
+> @@ -6990,6 +7031,7 @@ static const struct hci_mgmt_handler mgmt_handlers[] = {
+> 	{ set_phy_configuration,   MGMT_SET_PHY_CONFIGURATION_SIZE },
+> 	{ set_blocked_keys,	   MGMT_OP_SET_BLOCKED_KEYS_SIZE,
+> 						HCI_MGMT_VAR_LEN },
+> +	{ set_wake_capable,	   MGMT_SET_WAKE_CAPABLE_SIZE },
+> };
+> 
+
+Regards
+
+Marcel
+
