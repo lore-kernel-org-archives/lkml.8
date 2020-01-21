@@ -2,101 +2,126 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC181C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:52:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4514C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A116A217F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:52:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A87324656
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:52:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pyD7oMxb"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="LfmAYBdF";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="LfmAYBdF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728896AbgAUTwX (ORCPT
+        id S1729031AbgAUTwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 14:52:23 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38211 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727383AbgAUTwV (ORCPT
+        Tue, 21 Jan 2020 14:52:34 -0500
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:34568 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727383AbgAUTwe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 14:52:21 -0500
-Received: by mail-wm1-f66.google.com with SMTP id u2so4540761wmc.3
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 11:52:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=zxuX1UtB2iSvDZIxFVQFKZTyCjRelb+xJCXnYV6RwPY=;
-        b=pyD7oMxb+h4jKCDHx8Zxqa3r8SpQmJ2Xi0xv8kpJVM4SCmmSXBcI+Z6rw5qTjx4OMx
-         z/xAs+8vfuVthEGaOJ8rIWttOdK4Uz21k39epbl9VGqHZAEd8djy5bShH3OIl9Pyv3o8
-         hT7lYK6/ARsKY+p3BiDduq4Nr2qio+HG+8JbHXOtaWhkyvT2tJmARM/6TJloPkJxjfEt
-         vNInaIUlgP5GwGog2HwymKIsXXlAIvVUvL+OW2DCZYxDfWr4c/oj8uO4PY9Rkx3ac3za
-         Px8ubbN0YxfyEEaiN3/DnmxizpwTA6dCqLh+7rSLrP8Gg9CcyoLrY0k2avYiuUaW1Go6
-         yLdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=zxuX1UtB2iSvDZIxFVQFKZTyCjRelb+xJCXnYV6RwPY=;
-        b=q1DzGauVq6pYFkOpYAiPTkYCAxwO1S2vQONinUTJNUx5SmEV5U7zqLqQGwdOAqHsS9
-         Vp3wLAgcUzXaz7B7Hixip1UrkzQacKwb6S7XYJstngA4Sb8SW0kHJn4WCSSSwb6ytBRI
-         V1ir+HwDpnhdChfwtWmxPUHm8YNjbTDiw2rxEH9HT+CqOOq/8zsdqgtcrmSBNJZKeaZ3
-         QVzDjZ2F1nLXY3Lgl6bafP1rgIqsUvzAdC3A8Q64gFW1Nko3J+AZR5q6mxuJ1OcxGIJs
-         oM1gs86BRCvqp/k7y0y9UjtxyVZwxsF93VMTTMVG0aWuPpnZNvofJjtHt/toYWgzb/my
-         IPcg==
-X-Gm-Message-State: APjAAAWKBTap7ezvLFHCmkfDF3o/klPFiJHtD5o1j6dw6F+HHPCz2k4M
-        p3c6BBrA0+RWbRo3duaCCG0NtzB1
-X-Google-Smtp-Source: APXvYqx5Yx5lfcaSIVQJgA5csyaAkbauM0CYPILqYoYnpAt60f+UEz9SBSMVAtMbVmDNrGfVDa98NQ==
-X-Received: by 2002:a05:600c:20f:: with SMTP id 15mr61254wmi.128.1579636339537;
-        Tue, 21 Jan 2020 11:52:19 -0800 (PST)
-Received: from linux ([2001:7c7:212a:d400:8c86:9345:7668:6b83])
-        by smtp.gmail.com with ESMTPSA id s15sm50254070wrp.4.2020.01.21.11.52.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 11:52:19 -0800 (PST)
-Date:   Tue, 21 Jan 2020 20:52:18 +0100
-From:   Sandesh Kenjana Ashok <sandeshkenjanaashok@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: mt7621-pinctrl: Align code by cleanup long lines
-Message-ID: <20200121195218.GA10666@SandeshPC>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Tue, 21 Jan 2020 14:52:34 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id DB1108EE180;
+        Tue, 21 Jan 2020 11:52:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1579636353;
+        bh=M85fHEK3EDsUo/Rv6a9VBeWoJ6p5EGcRxfPwIERa8tw=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=LfmAYBdFolmGBonfM4Y/tZQqZMPvpmHmwAV5x0Mi6HiiAvkPVchq2Q7z5MG9n9xTJ
+         aPKt99MjtpYkN1/MS1prvVVDV52uFM18rPOU/XYKRn/mIhxhwPgn9w2mjpNQzV7fqm
+         Q1g1YWtTqKxivuM7ZCosEmzHeNGcI55OD9O/hdxo=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id nlBuNbZXxagS; Tue, 21 Jan 2020 11:52:33 -0800 (PST)
+Received: from jarvis.lan (unknown [50.35.76.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 072468EE0C9;
+        Tue, 21 Jan 2020 11:52:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1579636353;
+        bh=M85fHEK3EDsUo/Rv6a9VBeWoJ6p5EGcRxfPwIERa8tw=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=LfmAYBdFolmGBonfM4Y/tZQqZMPvpmHmwAV5x0Mi6HiiAvkPVchq2Q7z5MG9n9xTJ
+         aPKt99MjtpYkN1/MS1prvVVDV52uFM18rPOU/XYKRn/mIhxhwPgn9w2mjpNQzV7fqm
+         Q1g1YWtTqKxivuM7ZCosEmzHeNGcI55OD9O/hdxo=
+Message-ID: <1579636351.3390.35.camel@HansenPartnership.com>
+Subject: Re: [PATCH] IMA: Turn IMA_MEASURE_ASYMMETRIC_KEYS off by default
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        linux-integrity@vger.kernel.org
+Cc:     sashal@kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 21 Jan 2020 11:52:31 -0800
+In-Reply-To: <1579634035.5125.311.camel@linux.ibm.com>
+References: <20200121171302.4935-1-nramas@linux.microsoft.com>
+         <1579628090.3390.28.camel@HansenPartnership.com>
+         <1579634035.5125.311.camel@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cleanup lines over 80 characters in pinctrl-rt2880.c.
-Issue found by checkpatch.pl
+On Tue, 2020-01-21 at 14:13 -0500, Mimi Zohar wrote:
+> On Tue, 2020-01-21 at 09:34 -0800, James Bottomley wrote:
+> > On Tue, 2020-01-21 at 09:13 -0800, Lakshmi Ramasubramanian wrote:
+> > > Enabling IMA and ASYMMETRIC_PUBLIC_KEY_SUBTYPE configs will
+> > > automatically enable the IMA hook to measure asymmetric keys.
+> > > Keys created or updated early in the boot process are queued up
+> > > whether or not a custom IMA policy is provided. Although the
+> > > queued keys will be freed if a custom IMA policy is not loaded
+> > > within 5 minutes, it could still cause significant performance
+> > > impact on smaller systems.
+> > 
+> > What exactly do you expect distributions to do with this?  I can
+> > tell you that most of them will take the default option, so this
+> > gets set to N and you may as well not have got the patches upstream
+> > because you won't be able to use them in any distro with this
+> > setting.
+> > 
+> > > This patch turns the config IMA_MEASURE_ASYMMETRIC_KEYS off by
+> > > default.  Since a custom IMA policy that defines key measurement
+> > > is required to measure keys, systems that require key measurement
+> > > can enable this config option in addition to providing a custom
+> > > IMA policy.
+> > 
+> > Well, no they can't ... it's rather rare nowadays for people to
+> > build their own kernels.  The vast majority of Linux consumers take
+> > what the distros give them.  Think carefully before you decide a
+> > config option is the solution to this problem.
+> 
+> James, up until now IMA could be configured, but there wouldn't be
+> any performance penalty for enabling IMA until a policy was loaded.
+>  With IMA and asymmetric keys enabled, whether or not an IMA policy
+> is loaded, certificates will be queued.
+> 
+> My concern is:
+> - changing the expected behavior
 
-Signed-off-by: Sandesh Kenjana Ashok <sandeshkenjanaashok@gmail.com>
----
- drivers/staging/mt7621-pinctrl/pinctrl-rt2880.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+In general config options for this are a really bad idea because if the
+tools only cope with one setting, no-one should ever use the other and
+if they work with everything there's no need for the option.
 
-diff --git a/drivers/staging/mt7621-pinctrl/pinctrl-rt2880.c b/drivers/staging/mt7621-pinctrl/pinctrl-rt2880.c
-index d0f06790d38f..254d4eb88f5f 100644
---- a/drivers/staging/mt7621-pinctrl/pinctrl-rt2880.c
-+++ b/drivers/staging/mt7621-pinctrl/pinctrl-rt2880.c
-@@ -159,8 +159,8 @@ static int rt2880_pmx_group_enable(struct pinctrl_dev *pctrldev,
- }
- 
- static int rt2880_pmx_group_gpio_request_enable(struct pinctrl_dev *pctrldev,
--						struct pinctrl_gpio_range *range,
--						unsigned int pin)
-+					struct pinctrl_gpio_range *range,
-+					unsigned int pin)
- {
- 	struct rt2880_priv *p = pinctrl_dev_get_drvdata(pctrldev);
- 
--- 
-2.17.1
+> - really small devices/sensors being able to queue certificates
+
+seems like the answer to this one would be don't queue.  I realise it's
+after the submit design, but what about measuring when the key is added
+if there's a policy otherwise measure the keyring when the policy is
+added ... that way no queueing.
+
+> This change permits disabling queueing certificates.  Whether the
+> default should be "disabled" is a separate question.  I'm open to
+> comments/suggestions.
+
+I'm just giving the general rule of thumb for boolean config options. 
+If it's default Y there likely shouldn't be a config option and if it's
+default N the feature should likely not be in the kernel at all.
+
 
