@@ -2,105 +2,55 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04DF5C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D75EC33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C909E24125
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:12:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d03V+NNb"
+	by mail.kernel.org (Postfix) with ESMTP id 7E68421569
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:14:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729154AbgAUPM4 (ORCPT
+        id S1729130AbgAUPOT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 10:12:56 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:53150 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727508AbgAUPMz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 10:12:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579619575;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bu/iMoYfYBgd5jXQviUDjY/CFaD1fKEaBQDIzi7DS7k=;
-        b=d03V+NNbwDAzbtz9CSnilOjPjOhh3OLD5C2Hd9nY014CwZUOgl1CR+DuZJinDiMw8o/6Kf
-        IqFT4b8zqmg/WqdbEpSpXqqnAWyngWuLBnevXOe33oTNfaemXM6ulRkKtABlXC3RFosHCi
-        MLB+n22AES15BjXHpD4ofD9LZ/0CZnw=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-275-aCQTMdZINduxr8ANYKlSyA-1; Tue, 21 Jan 2020 10:12:51 -0500
-X-MC-Unique: aCQTMdZINduxr8ANYKlSyA-1
-Received: by mail-wr1-f69.google.com with SMTP id z14so1456959wrs.4
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 07:12:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=bu/iMoYfYBgd5jXQviUDjY/CFaD1fKEaBQDIzi7DS7k=;
-        b=nzhE6kLy+OzR//A6X1nfXwr6HPzOgIfQCYz306AeGWbmVeHgC4P56jeuMAoHdiwsTZ
-         o1iWYI/JDuHQJOVTRJDr1aajNGjIz9FYLzk96upjF9fPC4SZqh6zdfCXdVI2bbfo72Tq
-         yiSEf279TuL3bUp5LFaHk+8tNMMIwafgTiZ2gPnrYjHIPJg2SVEoRizmAV4mJrcRRumg
-         cMEYDBHxx1hvqAh4Cl+Vc1VvODvzKB6mc0QnqLRAiTmrQMbuMnSiRmk5XD1Ot0nWDIKK
-         L7b1CYkPo/6zSAo7sMtewNntoE2cihLz6AXXdJk1Y7oFAcN10L17jGuweo8Y0zdCcAEW
-         Isnw==
-X-Gm-Message-State: APjAAAX3+dgZGlPieP3MrBxg4U9rIRhQPewVlsVnGtl5NZmUP3v9lshl
-        tirJxQifC7BTZ4WOsYi6mW9MDWEgh5zwgmelLdIl0E/hzP4bjPTn1VTGhLonoSBAZBlU+zSpw9z
-        lNosl5dKJuq/Dn4qCVuqF1Z/H
-X-Received: by 2002:a1c:1dd7:: with SMTP id d206mr5000199wmd.5.1579619569960;
-        Tue, 21 Jan 2020 07:12:49 -0800 (PST)
-X-Google-Smtp-Source: APXvYqx3W9/IFqNtFmh53Y8FuFyZdMe+4NHjz+xYUeI++YvzTVDVuRT0IkPp6ekS3qHgnEBSwWauFA==
-X-Received: by 2002:a1c:1dd7:: with SMTP id d206mr5000170wmd.5.1579619569664;
-        Tue, 21 Jan 2020 07:12:49 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:b509:fc01:ee8a:ca8a? ([2001:b07:6468:f312:b509:fc01:ee8a:ca8a])
-        by smtp.gmail.com with ESMTPSA id b16sm54711240wrj.23.2020.01.21.07.12.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jan 2020 07:12:49 -0800 (PST)
-Subject: Re: [PATCH 12/14] KVM: x86/mmu: Fold max_mapping_level() into
- kvm_mmu_hugepage_adjust()
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paul Mackerras <paulus@ozlabs.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        kvm-ppc@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        syzbot+c9d1fb51ac9d0d10c39d@syzkaller.appspotmail.com,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Barret Rhoden <brho@google.com>,
-        David Hildenbrand <david@redhat.com>,
-        Jason Zeng <jason.zeng@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>
-References: <20200108202448.9669-1-sean.j.christopherson@intel.com>
- <20200108202448.9669-13-sean.j.christopherson@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <52cf5d90-5e65-4878-b214-7e1809224688@redhat.com>
-Date:   Tue, 21 Jan 2020 16:12:46 +0100
+        Tue, 21 Jan 2020 10:14:19 -0500
+Received: from relay.sw.ru ([185.231.240.75]:40918 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727059AbgAUPOT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 10:14:19 -0500
+Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1itvDk-0001Vx-Rr; Tue, 21 Jan 2020 18:13:37 +0300
+Subject: Re: [PATCH v4 6/7] dm: Directly disable max_allocate_sectors for now
+To:     Mike Snitzer <snitzer@redhat.com>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        martin.petersen@oracle.com, bob.liu@oracle.com, axboe@kernel.dk,
+        agk@redhat.com, dm-devel@redhat.com, song@kernel.org,
+        tytso@mit.edu, adilger.kernel@dilger.ca,
+        Chaitanya.Kulkarni@wdc.com, darrick.wong@oracle.com,
+        ming.lei@redhat.com, osandov@fb.com, jthumshirn@suse.de,
+        minwoo.im.dev@gmail.com, damien.lemoal@wdc.com,
+        andrea.parri@amarulasolutions.com, hare@suse.com, tj@kernel.org,
+        ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
+        bvanassche@acm.org, dhowells@redhat.com, asml.silence@gmail.com
+References: <157960325642.108120.13626623438131044304.stgit@localhost.localdomain>
+ <157960337238.108120.18048939587162465175.stgit@localhost.localdomain>
+ <20200121122458.GA9365@redhat.com>
+ <f7e0fb38-a894-da33-c46b-e192ed907ee0@virtuozzo.com>
+ <619a7a14-44e6-eca7-c1ea-3f04abeee53d@virtuozzo.com>
+ <20200121134840.GA9944@redhat.com>
+ <a19d5957-9aaa-b518-5855-e5fa2b5d3b22@virtuozzo.com>
+ <20200121144310.GA10055@redhat.com>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <2b393b74-952e-10ff-9f2c-4ea19cf74f88@virtuozzo.com>
+Date:   Tue, 21 Jan 2020 18:13:36 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200108202448.9669-13-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <20200121144310.GA10055@redhat.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -108,52 +58,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/01/20 21:24, Sean Christopherson wrote:
-> -	level = host_pfn_mapping_level(vcpu, gfn, pfn);
-> +	slot = kvm_vcpu_gfn_to_memslot(vcpu, gfn);
-> +	if (!memslot_valid_for_gpte(slot, true))
-> +		return PT_PAGE_TABLE_LEVEL;
-
-Following up on my remark to patch 7, this can also use
-gfn_to_memslot_dirty_bitmap.
-
-Paolo
-
-> +
-> +	max_level = min(max_level, kvm_x86_ops->get_lpage_level());
-> +	for ( ; max_level > PT_PAGE_TABLE_LEVEL; max_level--) {
-> +		if (!__mmu_gfn_lpage_is_disallowed(gfn, max_level, slot))
-> +			break;
-> +	}
-> +
-> +	if (max_level == PT_PAGE_TABLE_LEVEL)
-> +		return PT_PAGE_TABLE_LEVEL;
-> +
-> +	level = host_pfn_mapping_level(vcpu, gfn, pfn, slot);
->  	if (level == PT_PAGE_TABLE_LEVEL)
->  		return level;
->  
-> @@ -4182,8 +4172,6 @@ static int direct_page_fault(struct kvm_vcpu *vcpu, gpa_t gpa, u32 error_code,
->  	if (lpage_disallowed)
->  		max_level = PT_PAGE_TABLE_LEVEL;
->  
-> -	max_level = max_mapping_level(vcpu, gfn, max_level);
-> -
->  	if (fast_page_fault(vcpu, gpa, error_code))
->  		return RET_PF_RETRY;
->  
-> diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
-> index 0560982eda8b..ea174d85700a 100644
-> --- a/arch/x86/kvm/mmu/paging_tmpl.h
-> +++ b/arch/x86/kvm/mmu/paging_tmpl.h
-> @@ -817,8 +817,6 @@ static int FNAME(page_fault)(struct kvm_vcpu *vcpu, gpa_t addr, u32 error_code,
->  	else
->  		max_level = walker.level;
->  
-> -	max_level = max_mapping_level(vcpu, walker.gfn, max_level);
-> -
->  	mmu_seq = vcpu->kvm->mmu_notifier_seq;
->  	smp_rmb();
->  
+On 21.01.2020 17:43, Mike Snitzer wrote:
+> On Tue, Jan 21 2020 at  9:20am -0500,
+> Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
 > 
+>> On 21.01.2020 16:48, Mike Snitzer wrote:
+>>> On Tue, Jan 21 2020 at  8:33am -0500,
+>>> Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+>>>
+>>>> On 21.01.2020 15:36, Kirill Tkhai wrote:
+>>>>> On 21.01.2020 15:24, Mike Snitzer wrote:
+>>>>>> On Tue, Jan 21 2020 at  5:42am -0500,
+>>>>>> Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+>>>>>>
+>>>>>>> Since dm inherits limits from underlining block devices,
+>>>>>>> this patch directly disables max_allocate_sectors for dm
+>>>>>>> till full allocation support is implemented.
+>>>>>>>
+>>>>>>> This prevents high-level primitives (generic_make_request_checks(),
+>>>>>>> __blkdev_issue_write_zeroes(), ...) from sending REQ_ALLOCATE
+>>>>>>> requests.
+>>>>>>>
+>>>>>>> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+>>>>>>> ---
+>>>>>>>  drivers/md/dm-table.c |    2 ++
+>>>>>>>  drivers/md/md.h       |    1 +
+>>>>>>>  2 files changed, 3 insertions(+)
+>>>>>>
+>>>>>> You're mixing DM and MD changes in the same patch.
+>>>>>>
+>>>>>> But I'm wondering if it might be best to set this default for stacking
+>>>>>> devices in blk_set_stacking_limits()?
+>>>>>>
+>>>>>> And then it is up to each stacking driver to override as needed.
+>>>>>
+>>>>> Hm. Sound like a good idea. This "lim->max_allocate_sectors = 0" in blk_set_stacking_limits()
+>>>>> should work for dm's dm_calculate_queue_limits(), since it calls blk_stack_limits(), which is:
+>>>>>
+>>>>> 	t->max_allocate_sectors = min(t->max_allocate_sectors,
+>>>>> 				      b->max_allocate_sectors);
+>>>>>
+>>>>> Could you please tell is this fix is also enough for md?
+>>>>
+>>>> It looks like it's enough since queue defaults are set in md_alloc()->blk_set_stacking_limits().
+>>>> In case of we set "max_allocate_sectors = 0", in further it can be changed only manually,
+>>>> but nobody does this.
+>>>
+>>> Yes, it will work to disable this capability for MD and DM.
+>>>
+>>> But if/when a stacked device _dooes_ want to support this then it'll be
+>>> awkward to override this stacking default to allow blk_stack_limits()
+>>> to properly stack up this limit.  blk_limits are extremely fiddley so
+>>> this isn't necessarily new.  But by explicitly defaulting to 0 and then
+>>> having blk_stack_limits use min() for this limit: it results in stacking
+>>> drivers needing to clumsily unwind the default.  E.g. DM will need to
+>>> tweak its blk_stack_limits() related code to allow override that
+>>> actually _does_  stack up the underlying devices' capability (and not
+>>> just impose its own limit that ignores the underlying devices).
+>>>
+>>> So I'm not convinced this is the right way to go (be it the v4 approach
+>>> you took or the cleaner use of blk_set_stacking_limits I suggested).
+>>
+>> Is there a strong vision about the way we should go? Or you leave this choose
+>> up to me?
+> 
+> I don't have time to work through it at the moment (e.g. implementing
+> dm-thinp support to know what the block core code should be) so I'll
+> just defer to you on a disabling it for now.
+> 
+>>> And to be clear, I'm interested in having DM thinp support this
+>>> capability to preallocate blocks.
+>>
+>> My opinion is it would be better to not mix several subsystem related
+>> support in a single patch set. Both of the approaches (v4 or that you
+>> suggested) do not prevents us to implement allocation support in next
+>> patch series. After we have the base functionality enabled, we may add
+>> support in other subsystems and drivers one by one with more focus
+>> on the subsystem specificities and with the best possible attention.
+> 
+> Yeah, I'm aware nothing is ever set in stone.
+> 
+> Setting to 0 in blk_set_stacking_limits() is OK for now.
 
+I get your point. Thanks for the suggestion and comments, Mike.
+
+Kirill
