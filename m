@@ -2,108 +2,101 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE4FEC33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC181C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B347B24655
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:52:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A116A217F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:52:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="qUR3604K"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pyD7oMxb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728776AbgAUTwV (ORCPT
+        id S1728896AbgAUTwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 14:52:21 -0500
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:10390 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727360AbgAUTwV (ORCPT
+        Tue, 21 Jan 2020 14:52:23 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38211 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727383AbgAUTwV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 21 Jan 2020 14:52:21 -0500
+Received: by mail-wm1-f66.google.com with SMTP id u2so4540761wmc.3
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 11:52:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1579636341; x=1611172341;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=XmzH6UUhf2fq7wRQ6JDGuAiXl76NE0nd9fhU95gyxxs=;
-  b=qUR3604KmaGylsWJv41ZjQNQJDSgE+7kaDFHtMOr7vQxKvEmsFYfu0YD
-   GyG5f55Y4wO5FYj7bRnYH5EtQ9FXOKnfnKWvdogPbaDCMSP+ml4W2/tY4
-   x7/hqgBu3dmQ6js57OOE4MOtqmJmgx41CORriPml0Zh+DKAAT4LANHehy
-   c=;
-IronPort-SDR: cUrWtJYzh5SkjSAWnROiY1GCaVFVcrwkJBLQYslWMGOqBtqCnoh+iGPltozsC/AFszrvhLxt4b
- VZ6W6RyVqaPQ==
-X-IronPort-AV: E=Sophos;i="5.70,347,1574121600"; 
-   d="scan'208";a="20200140"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-4ff6265a.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 21 Jan 2020 19:52:09 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2b-4ff6265a.us-west-2.amazon.com (Postfix) with ESMTPS id 9F5ECA05E3;
-        Tue, 21 Jan 2020 19:52:07 +0000 (UTC)
-Received: from EX13D11UWB002.ant.amazon.com (10.43.161.20) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 21 Jan 2020 19:52:07 +0000
-Received: from EX13D01UWB002.ant.amazon.com (10.43.161.136) by
- EX13D11UWB002.ant.amazon.com (10.43.161.20) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 21 Jan 2020 19:52:07 +0000
-Received: from EX13D01UWB002.ant.amazon.com ([10.43.161.136]) by
- EX13d01UWB002.ant.amazon.com ([10.43.161.136]) with mapi id 15.00.1367.000;
- Tue, 21 Jan 2020 19:52:07 +0000
-From:   "Singh, Balbir" <sblbir@amazon.com>
-To:     "hch@lst.de" <hch@lst.de>
-CC:     "Sangaraju, Someswarudu" <ssomesh@amazon.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "mst@redhat.com" <mst@redhat.com>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "Chaitanya.Kulkarni@wdc.com" <Chaitanya.Kulkarni@wdc.com>
-Subject: Re: [resend v1 4/5] drivers/nvme/host/core.c: Convert to use
- disk_set_capacity
-Thread-Topic: [resend v1 4/5] drivers/nvme/host/core.c: Convert to use
- disk_set_capacity
-Thread-Index: AQHVwUG1iZmE8Pm/G0CenFe4gZ349afc0u0AgAQUfoCAFL6VAA==
-Date:   Tue, 21 Jan 2020 19:52:06 +0000
-Message-ID: <40580ebc0991c4ffc3be67d60aeaf269703854ac.camel@amazon.com>
-References: <20200102075315.22652-1-sblbir@amazon.com>
-         <20200102075315.22652-5-sblbir@amazon.com>
-         <BYAPR04MB57490FFCC025A88F4D97D40A86220@BYAPR04MB5749.namprd04.prod.outlook.com>
-         <1b88bedc6d5435fa7154f3356fa3f1a3e6888ded.camel@amazon.com>
-         <20200108150447.GC10975@lst.de>
-In-Reply-To: <20200108150447.GC10975@lst.de>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.160.8]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6425CB2DE728D54BA14C729788634425@amazon.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=zxuX1UtB2iSvDZIxFVQFKZTyCjRelb+xJCXnYV6RwPY=;
+        b=pyD7oMxb+h4jKCDHx8Zxqa3r8SpQmJ2Xi0xv8kpJVM4SCmmSXBcI+Z6rw5qTjx4OMx
+         z/xAs+8vfuVthEGaOJ8rIWttOdK4Uz21k39epbl9VGqHZAEd8djy5bShH3OIl9Pyv3o8
+         hT7lYK6/ARsKY+p3BiDduq4Nr2qio+HG+8JbHXOtaWhkyvT2tJmARM/6TJloPkJxjfEt
+         vNInaIUlgP5GwGog2HwymKIsXXlAIvVUvL+OW2DCZYxDfWr4c/oj8uO4PY9Rkx3ac3za
+         Px8ubbN0YxfyEEaiN3/DnmxizpwTA6dCqLh+7rSLrP8Gg9CcyoLrY0k2avYiuUaW1Go6
+         yLdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=zxuX1UtB2iSvDZIxFVQFKZTyCjRelb+xJCXnYV6RwPY=;
+        b=q1DzGauVq6pYFkOpYAiPTkYCAxwO1S2vQONinUTJNUx5SmEV5U7zqLqQGwdOAqHsS9
+         Vp3wLAgcUzXaz7B7Hixip1UrkzQacKwb6S7XYJstngA4Sb8SW0kHJn4WCSSSwb6ytBRI
+         V1ir+HwDpnhdChfwtWmxPUHm8YNjbTDiw2rxEH9HT+CqOOq/8zsdqgtcrmSBNJZKeaZ3
+         QVzDjZ2F1nLXY3Lgl6bafP1rgIqsUvzAdC3A8Q64gFW1Nko3J+AZR5q6mxuJ1OcxGIJs
+         oM1gs86BRCvqp/k7y0y9UjtxyVZwxsF93VMTTMVG0aWuPpnZNvofJjtHt/toYWgzb/my
+         IPcg==
+X-Gm-Message-State: APjAAAWKBTap7ezvLFHCmkfDF3o/klPFiJHtD5o1j6dw6F+HHPCz2k4M
+        p3c6BBrA0+RWbRo3duaCCG0NtzB1
+X-Google-Smtp-Source: APXvYqx5Yx5lfcaSIVQJgA5csyaAkbauM0CYPILqYoYnpAt60f+UEz9SBSMVAtMbVmDNrGfVDa98NQ==
+X-Received: by 2002:a05:600c:20f:: with SMTP id 15mr61254wmi.128.1579636339537;
+        Tue, 21 Jan 2020 11:52:19 -0800 (PST)
+Received: from linux ([2001:7c7:212a:d400:8c86:9345:7668:6b83])
+        by smtp.gmail.com with ESMTPSA id s15sm50254070wrp.4.2020.01.21.11.52.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2020 11:52:19 -0800 (PST)
+Date:   Tue, 21 Jan 2020 20:52:18 +0100
+From:   Sandesh Kenjana Ashok <sandeshkenjanaashok@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: mt7621-pinctrl: Align code by cleanup long lines
+Message-ID: <20200121195218.GA10666@SandeshPC>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTAxLTA4IGF0IDE2OjA0ICswMTAwLCBoY2hAbHN0LmRlIHdyb3RlOg0KPiBP
-biBNb24sIEphbiAwNiwgMjAyMCBhdCAxMjo0NjoyNkFNICswMDAwLCBTaW5naCwgQmFsYmlyIHdy
-b3RlOg0KPiA+IE9uIFNhdCwgMjAyMC0wMS0wNCBhdCAyMjoyNyArMDAwMCwgQ2hhaXRhbnlhIEt1
-bGthcm5pIHdyb3RlOg0KPiA+ID4gUXVpY2sgcXVlc3Rpb24gaGVyZSBpZiB1c2VyIGV4ZWN1dGVz
-IG52bWUgbnMtcmVzY2FuIC9kZXYvbnZtZTENCj4gPiA+IHdpbGwgZm9sbG93aW5nIGNvZGUgcmVz
-dWx0IGluIHRyaWdnZXJpbmcgdWV2ZW50KHMpIGZvcg0KPiA+ID4gdGhlIG5hbWVzcGFjZShzKCBm
-b3Igd2hpY2ggdGhlcmUgaXMgbm8gY2hhbmdlIGluIHRoZSBzaXplID8NCj4gPiA+IA0KPiA+ID4g
-SWYgc28gaXMgdGhhdCBhbiBleHBlY3RlZCBiZWhhdmlvciA/DQo+ID4gPiANCj4gPiANCj4gPiBN
-eSBvbGQgY29kZSBoYWQgYSBjaGVjayB0byBzZWUgaWYgb2xkX2NhcGFjaXR5ICE9IG5ld19jYXBh
-Y2l0eSBhcyB3ZWxsLg0KPiA+IEkgY2FuIHJlZG8gdGhvc2UgYml0cyBpZiBuZWVkZWQuDQo+ID4g
-DQo+ID4gVGhlIGV4cGVjdGVkIGJlaGF2aW91ciBpcyBub3QgY2xlYXIsIGJ1dCB0aGUgZnVuY3Rp
-b25hbGl0eSBpcyBub3QgYnJva2VuLA0KPiA+IHVzZXINCj4gPiBzcGFjZSBzaG91bGQgYmUgYWJs
-ZSB0byBkZWFsIHdpdGggYSByZXNpemUgZXZlbnQgd2hlcmUgdGhlIHByZXZpb3VzDQo+ID4gY2Fw
-YWNpdHkNCj4gPiA9PSBuZXcgY2FwYWNpdHkgSU1ITy4NCj4gDQo+IEkgdGhpbmsgaXQgbWFrZXMg
-c2Vuc2UgdG8gbm90IGJvdGhlciB3aXRoIGEgbm90aWZpY2F0aW9uIHVubGVzcyB0aGVyZQ0KPiBp
-cyBhbiBhY3R1YWwgY2hhbmdlLg0KDQpbU29ycnkgZm9yIHRoZSBkZWxheWVkIHJlc3BvbnNlLCBq
-dXN0IGJhY2sgZnJvbSBMQ0FdDQoNCkFncmVlZCENCg0KQmFsYmlyIFNpbmdoDQo=
+Cleanup lines over 80 characters in pinctrl-rt2880.c.
+Issue found by checkpatch.pl
+
+Signed-off-by: Sandesh Kenjana Ashok <sandeshkenjanaashok@gmail.com>
+---
+ drivers/staging/mt7621-pinctrl/pinctrl-rt2880.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/staging/mt7621-pinctrl/pinctrl-rt2880.c b/drivers/staging/mt7621-pinctrl/pinctrl-rt2880.c
+index d0f06790d38f..254d4eb88f5f 100644
+--- a/drivers/staging/mt7621-pinctrl/pinctrl-rt2880.c
++++ b/drivers/staging/mt7621-pinctrl/pinctrl-rt2880.c
+@@ -159,8 +159,8 @@ static int rt2880_pmx_group_enable(struct pinctrl_dev *pctrldev,
+ }
+ 
+ static int rt2880_pmx_group_gpio_request_enable(struct pinctrl_dev *pctrldev,
+-						struct pinctrl_gpio_range *range,
+-						unsigned int pin)
++					struct pinctrl_gpio_range *range,
++					unsigned int pin)
+ {
+ 	struct rt2880_priv *p = pinctrl_dev_get_drvdata(pctrldev);
+ 
+-- 
+2.17.1
+
