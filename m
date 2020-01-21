@@ -2,165 +2,208 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URI_HEX autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BCB6C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 20:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0AB6C33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 20:22:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AF6B24125
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 20:22:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94FA024125
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 20:22:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JJ6RbdUF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729140AbgAUUWg (ORCPT
+        id S1729187AbgAUUWr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 15:22:36 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:42960 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727383AbgAUUWg (ORCPT
+        Tue, 21 Jan 2020 15:22:47 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:38742 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727383AbgAUUWr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 15:22:36 -0500
-Received: by mail-oi1-f194.google.com with SMTP id 18so3857122oin.9;
-        Tue, 21 Jan 2020 12:22:35 -0800 (PST)
+        Tue, 21 Jan 2020 15:22:47 -0500
+Received: by mail-ot1-f67.google.com with SMTP id z9so4196303oth.5;
+        Tue, 21 Jan 2020 12:22:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:in-reply-to:references;
+        bh=T8Xur6qqCtnBykcJTa+ysumESp+avbgNbYl7ls55uQs=;
+        b=JJ6RbdUFCvqmK35XRUlEzA7y0e4ke3xb7l9mPGxndekHZeGOzocYIdvy5l0M9I2x8a
+         LS+PRX5y6Lm3XsxYVt7RHYQ0nFBo2NMN5uFt2fvIgmYkag9cy+E7e2cMZHbVzNpwYeoo
+         oUjocd1nZAnqyTaUpVDciZUKbo6yrPbEzM4HficIQDmy5RW56INs1fQ4vNubF5pl0rUr
+         L35F2l4qlV/xwodEtMRUTohfKREZ/6DT6hZZhoiH6k3oyYM/aeJEnI7ZaGReBw0DIj+C
+         gSpHCN8KfLpkU+rPxU5om8nQOyUSjjJu07clq9xzlSBmNsiPAvvASrED8ETb8GY1Zq8m
+         Ox8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cZEBIs9b/D6MpJDmgXVh+a+pNQ+8lRhkPW5Xjr/bZzI=;
-        b=FF65bbuxrcmDcGLcEgLrJVxf+BAEth1uCsQkECHjDcRh4LKxGysrkyR1Ftq+mbvXWL
-         lD4If9ckpRh2X71jsIZqqGsQYEHIR0KMsaNCdqBbuSDfPtsoFIGezLiybbUSmjqBAQ37
-         MxczFBOj4BGEHTn3GEk+fc2r+aJPaCJKSLi9Si2rEdEOS4lcmy5pU2vuVyWecZlMaPY/
-         CkPTJ97c5qHQrJNb4xzLiC5yRwhHNyUSYpA0YGG7MCzR65s2lnFoXFQzT7hRTJGte9JA
-         /P5VGHRQSTDLk20jFpQGX5lxWtjfdK4wjVk85OXoS83LnYx/OMVi1T81fdtF9VL/8U6I
-         58/A==
-X-Gm-Message-State: APjAAAXbYloCwPrgwcHvB+1utJeNYVX3l/JWOPMKaKSXUQ9/fR3biVMG
-        kyu9JIbfpiISpXRWNK9QVLr/QfV79HUTRx+x5f0=
-X-Google-Smtp-Source: APXvYqwubKqGRO1njuwFqZQUOdNwgQBOAElyxDeGLkv4mm4wk4RuckT0fyzipRUXM8UWy84MuLDtgzJUpQHmGvqJvvk=
-X-Received: by 2002:a05:6808:292:: with SMTP id z18mr4138361oic.131.1579638155224;
- Tue, 21 Jan 2020 12:22:35 -0800 (PST)
-MIME-Version: 1.0
-References: <20200117153056.31363-1-geert+renesas@glider.be>
- <d2b669e7-a5d4-20ec-5b54-103b71df7407@ti.com> <CAMuHMdVzQCWvH-LJ9ME5dRyafudZBHQLaJQzkSCPnughv_q2aA@mail.gmail.com>
- <1cdc4f71-f365-8c9e-4634-408c59e6a3f9@ti.com> <CAMuHMdU=-Eo29=DQmq96OegdYAvW7Vw9PpgNWSTfjDWVF5jd-A@mail.gmail.com>
- <f7bbb132-1278-7030-7f40-b89733bcbd83@ti.com>
-In-Reply-To: <f7bbb132-1278-7030-7f40-b89733bcbd83@ti.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 21 Jan 2020 21:22:23 +0100
-Message-ID: <CAMuHMdXDiwTomiKp8Kaw0NvMNpg78-M88F0mNTWBOz5MLE4LtQ@mail.gmail.com>
-Subject: Re: [PATCH v2] dmaengine: Create symlinks between DMA channels and slaves
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references;
+        bh=T8Xur6qqCtnBykcJTa+ysumESp+avbgNbYl7ls55uQs=;
+        b=g2jqK51KLiiwlQGdtW8T1r6t0ongif8TDtk43uKO3VWbrRjFbLiic9qn1NEWGIrnIa
+         ttOkmM/Eapdt2QPp0TUHUS6xhmtucUKpp2kzmuXr12CUucjJam7Tuxm6eQK1PAVZdZo5
+         9+EEe2+GfcK8uIoK6AiuFi3N5YH/ATZ9HCf3zVwOSnYwtniDspwCSuPBXVVo51I8sPN4
+         nCtOcP0xeXpnWviK0sl+0irGzVdGzUcxHMe5Lgc5hQmIqNBxGFlTsbXOkk87zOdgi5Q4
+         bP3w09Gbw5acmfa6O/Qm2EHM5biVEJwSJlYOLaPTA+mBXcDggY270B65KHRqhr5UhKEC
+         SRGA==
+X-Gm-Message-State: APjAAAXZMBOOkKKs4TRQTQUbGK1tt6TP48kLNMgssGvUbhYdp6YFiyXm
+        /uq5wDhlY03MrFxxZGgqVwQ=
+X-Google-Smtp-Source: APXvYqxOJFVAzDFUdZgDAPWj9sfeSHFWXVn2Auf6+QXRPnSPFFUS0SL6v7w1pdwCb0jRj38fVx0IrQ==
+X-Received: by 2002:a9d:7d81:: with SMTP id j1mr4921311otn.267.1579638165778;
+        Tue, 21 Jan 2020 12:22:45 -0800 (PST)
+Received: from localhost.localdomain (ip24-56-44-135.ph.ph.cox.net. [24.56.44.135])
+        by smtp.gmail.com with ESMTPSA id j20sm13870325otp.24.2020.01.21.12.22.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 Jan 2020 12:22:45 -0800 (PST)
+From:   Matthew Cover <werekraken@gmail.com>
+X-Google-Original-From: Matthew Cover <matthew.cover@stackpath.com>
+To:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Shuah Khan <shuah@kernel.org>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Matthew Cover <matthew.cover@stackpath.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Andrey Ignatov <rdna@fb.com>,
+        Lorenz Bauer <lmb@cloudflare.com>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH bpf-next v2 2/2] selftests/bpf: test references to nf_conn
+Date:   Tue, 21 Jan 2020 13:22:33 -0700
+Message-Id: <20200121202233.26583-1-matthew.cover@stackpath.com>
+X-Mailer: git-send-email 2.15.2 (Apple Git-101.1)
+In-Reply-To: <20200121202038.26490-1-matthew.cover@stackpath.com>
+References: <20200121202038.26490-1-matthew.cover@stackpath.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 1:06 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
-> On 20/01/2020 12.51, Geert Uytterhoeven wrote:
-> > On Mon, Jan 20, 2020 at 11:16 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
-> >> On 20/01/2020 11.01, Geert Uytterhoeven wrote:
-> >>> On Fri, Jan 17, 2020 at 9:08 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
-> >>>> On 1/17/20 5:30 PM, Geert Uytterhoeven wrote:
-> >>>>> Currently it is not easy to find out which DMA channels are in use, and
-> >>>>> which slave devices are using which channels.
-> >>>>>
-> >>>>> Fix this by creating two symlinks between the DMA channel and the actual
-> >>>>> slave device when a channel is requested:
-> >>>>>   1. A "slave" symlink from DMA channel to slave device,
-> >>>>
-> >>>> Have you considered similar link name as on the slave device:
-> >>>> slave:<name>
-> >>>>
-> >>>> That way it would be easier to grasp which channel is used for what
-> >>>> purpose by only looking under /sys/class/dma/ and no need to check the
-> >>>> slave device.
-> >>>
-> >>> Would this really provide more information?
-> >>> The device name is already provided in the target of the symlink:
-> >>>
-> >>> root@koelsch:~# readlink
-> >>> /sys/devices/platform/soc/e6720000.dma-controller/dma/dma1chan2/slave
-> >>> ../../../ee140000.sd
-> >>
-> >> e6720000.dma-controller/dma/dma1chan2/slave -> ../../../ee140000.sd
-> >> e6720000.dma-controller/dma/dma1chan3/slave -> ../../../ee140000.sd
-> >>
-> >> It is hard to tell which one is the tx and RX channel without looking
-> >> under the ee140000.sd:
-> >>
-> >> ee140000.sd/dma:rx -> ../e6720000.dma-controller/dma/dma1chan3
-> >> ee140000.sd/dma:tx -> ../e6720000.dma-controller/dma/dma1chan2
-> >
-> > Oh, you meant the name of the channel, not the name of the device.
-> > My mistake.
-> >
-> > As this name is a property of the slave device, not of the DMA channel,
-> > I don't think it belongs under dma*chan*.
->
-> Right, but it gives me only half the information I need to be a link useful.
-> I know that device X is using two channels but I need to check the
-> device X's directory to know which channel is used for what purpose.
->
-> >> Another option would be to not have symlinks, but a debugfs file where
-> >> this information can be extracted and would only compiled if debugfs is
-> >> enabled.
-> >
-> > Like /proc/interrupts?
->
-> More like /sys/kernel/debug/gpio
->
-> > That brings the complexity of traversing all channels etc.
->
-> Sure, but only when the file is read.
-> You can add
-> #ifdef CONFIG_DEBUG_FS
-> #endif
->
-> around the slave_device and name in struct dma_chan {}
->
-> and when user reads the file you print out something like this:
-> cat /sys/kernel/debug/dmaengine
->
-> e6700000.dma-controller:
-> dma0chan0               e6e20000.spi:tx
-> dma0chan1               e6e20000.spi:rx
-> dma0chan2               ee100000.sd:tx
-> dma0chan3               ee100000.sd:rx
-> ...
-> dma0chan14              non slave
-> ...
->
-> e6720000.dma-controller:
-> dma1chan0               e6b10000.spi:tx
-> dma1chan1               e6b10000.spi:rx
-> ...
->
-> This way we will have all the information in one place, easy to look up
-> and you don't need to manage symlinks dynamically, just check all
-> channels if they have slave_device/name when they are in_use (in_use w/o
-> slave_device is 'non slave')
->
-> Some drivers are requesting and releasing the DMA channel per transfer
-> or when they are opened/closed or other variations.
->
-> > What do other people think?
+Make sure that returning a struct nf_conn * reference invokes
+the reference tracking machinery in the verifier.
 
-Vinod: do you have some guidance for your minions? ;-)
+Signed-off-by: Matthew Cover <matthew.cover@stackpath.com>
+---
+ tools/testing/selftests/bpf/test_verifier.c        | 18 ++++++++
+ .../testing/selftests/bpf/verifier/ref_tracking.c  | 48 ++++++++++++++++++++++
+ 2 files changed, 66 insertions(+)
 
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/testing/selftests/bpf/test_verifier.c
+index 87eaa49..7569db2 100644
+--- a/tools/testing/selftests/bpf/test_verifier.c
++++ b/tools/testing/selftests/bpf/test_verifier.c
+@@ -294,6 +294,24 @@ static void bpf_fill_scale(struct bpf_test *self)
+ 	}
+ }
+ 
++/* BPF_CT_LOOKUP contains 13 instructions, if you need to fix up maps */
++#define BPF_CT_LOOKUP(func)						\
++	/* struct bpf_nf_conntrack_tuple tuple = {} */			\
++	BPF_MOV64_IMM(BPF_REG_2, 0),					\
++	BPF_STX_MEM(BPF_W, BPF_REG_10, BPF_REG_2, -8),			\
++	BPF_STX_MEM(BPF_DW, BPF_REG_10, BPF_REG_2, -16),		\
++	BPF_STX_MEM(BPF_DW, BPF_REG_10, BPF_REG_2, -24),		\
++	BPF_STX_MEM(BPF_DW, BPF_REG_10, BPF_REG_2, -32),		\
++	BPF_STX_MEM(BPF_DW, BPF_REG_10, BPF_REG_2, -40),		\
++	BPF_STX_MEM(BPF_DW, BPF_REG_10, BPF_REG_2, -48),		\
++	/* ct = func(ctx, &tuple, sizeof tuple, 0, 0) */		\
++	BPF_MOV64_REG(BPF_REG_2, BPF_REG_10),				\
++	BPF_ALU64_IMM(BPF_ADD, BPF_REG_2, -48),				\
++	BPF_MOV64_IMM(BPF_REG_3, sizeof(struct bpf_nf_conntrack_tuple)),\
++	BPF_MOV64_IMM(BPF_REG_4, 0),					\
++	BPF_MOV64_IMM(BPF_REG_5, 0),					\
++	BPF_EMIT_CALL(BPF_FUNC_ ## func)
++
+ /* BPF_SK_LOOKUP contains 13 instructions, if you need to fix up maps */
+ #define BPF_SK_LOOKUP(func)						\
+ 	/* struct bpf_sock_tuple tuple = {} */				\
+diff --git a/tools/testing/selftests/bpf/verifier/ref_tracking.c b/tools/testing/selftests/bpf/verifier/ref_tracking.c
+index 604b461..de5c550a 100644
+--- a/tools/testing/selftests/bpf/verifier/ref_tracking.c
++++ b/tools/testing/selftests/bpf/verifier/ref_tracking.c
+@@ -21,6 +21,17 @@
+ 	.result = REJECT,
+ },
+ {
++	"reference tracking: leak potential reference to nf_conn",
++	.insns = {
++	BPF_CT_LOOKUP(ct_lookup_tcp),
++	BPF_MOV64_REG(BPF_REG_6, BPF_REG_0), /* leak reference */
++	BPF_EXIT_INSN(),
++	},
++	.prog_type = BPF_PROG_TYPE_SCHED_CLS,
++	.errstr = "Unreleased reference",
++	.result = REJECT,
++},
++{
+ 	"reference tracking: leak potential reference on stack",
+ 	.insns = {
+ 	BPF_SK_LOOKUP(sk_lookup_tcp),
+@@ -72,6 +83,17 @@
+ 	.result = REJECT,
+ },
+ {
++	"reference tracking: zero potential reference to nf_conn",
++	.insns = {
++	BPF_CT_LOOKUP(ct_lookup_tcp),
++	BPF_MOV64_IMM(BPF_REG_0, 0), /* leak reference */
++	BPF_EXIT_INSN(),
++	},
++	.prog_type = BPF_PROG_TYPE_SCHED_CLS,
++	.errstr = "Unreleased reference",
++	.result = REJECT,
++},
++{
+ 	"reference tracking: copy and zero potential references",
+ 	.insns = {
+ 	BPF_SK_LOOKUP(sk_lookup_tcp),
+@@ -113,6 +135,20 @@
+ 	.result = REJECT,
+ },
+ {
++	"reference tracking: release reference to nf_conn without check",
++	.insns = {
++	BPF_CT_LOOKUP(ct_lookup_tcp),
++	/* reference in r0 may be NULL */
++	BPF_MOV64_REG(BPF_REG_1, BPF_REG_0),
++	BPF_MOV64_IMM(BPF_REG_2, 0),
++	BPF_EMIT_CALL(BPF_FUNC_ct_release),
++	BPF_EXIT_INSN(),
++	},
++	.prog_type = BPF_PROG_TYPE_SCHED_CLS,
++	.errstr = "type=nf_conn_or_null expected=nf_conn",
++	.result = REJECT,
++},
++{
+ 	"reference tracking: release reference",
+ 	.insns = {
+ 	BPF_SK_LOOKUP(sk_lookup_tcp),
+@@ -137,6 +173,18 @@
+ 	.result = ACCEPT,
+ },
+ {
++	"reference tracking: release reference to nf_conn",
++	.insns = {
++	BPF_CT_LOOKUP(ct_lookup_tcp),
++	BPF_MOV64_REG(BPF_REG_1, BPF_REG_0),
++	BPF_JMP_IMM(BPF_JEQ, BPF_REG_0, 0, 1),
++	BPF_EMIT_CALL(BPF_FUNC_ct_release),
++	BPF_EXIT_INSN(),
++	},
++	.prog_type = BPF_PROG_TYPE_SCHED_CLS,
++	.result = ACCEPT,
++},
++{
+ 	"reference tracking: release reference 2",
+ 	.insns = {
+ 	BPF_SK_LOOKUP(sk_lookup_tcp),
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+1.8.3.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
