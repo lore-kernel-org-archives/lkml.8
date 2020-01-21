@@ -2,185 +2,107 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34CF0C33CAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 22:20:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D73C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 22:21:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B9E9217F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 22:20:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579645211;
-	bh=3uzcw75p8PScJ1WChjuOQmCS2ZpxerDxdL48GCpXnp0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Em93liRiIm1es7AwNO0Kmq1J+eX3aOq2FUoC26t45MCkm7oCDlml6ms8Jl3HEpB0c
-	 KxvPOQSJUiUARymp5daWUWDcKZE7e/lyfTxtTV2IHTLTs/lGUU0hSty37tjE2Kg1FR
-	 x0Y4ldJQ7B4eEh/WbyHeHYcgCj5goAJCbLvEFhg0=
+	by mail.kernel.org (Postfix) with ESMTP id 0E78124655
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 22:21:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729180AbgAUWUK (ORCPT
+        id S1729212AbgAUWVK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 17:20:10 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:39590 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728760AbgAUWUK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 17:20:10 -0500
-Received: by mail-oi1-f195.google.com with SMTP id z2so4206589oih.6;
-        Tue, 21 Jan 2020 14:20:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JYjL5Dj4sHium7MXkG5wUfXThgHrFk9aKNPtUfH5UZc=;
-        b=LuxAJOSCVwPh9i2HOnCZn3xqV3Yt7+t5+U5WeARTAVgEXTkTJGsdLJubR03kpvyKnK
-         Op9kdntraDRJO1nEeC1Ae/XbWPqwXN5Bbm11MKsx600vlwLxFzgJ8zDGywzFxHApWMxJ
-         6V8pGLqG7+aE6gVvlsOJO2zC/phOg3uvMkdp8bd4/aplnKl1A05QpuOI+hjQIO38BL+F
-         n8B9cT1KH7TLo/rHoxoOFPjrdcJ1Fc4KMJF5sDnSHFlIRoNyqu3F6fSoSQB7Hqx5a+3D
-         NNeunCl61djJoq3Cb17Q3S+Ph9aRxe7YkCp8oUHVLb9X7+FjAHlYsUNvPpfJ0VaNBa5n
-         jWYw==
-X-Gm-Message-State: APjAAAWLAVXMzruSKEKtGBIWlVh/8IknN23L8F82o6qJXfN44fKBV/Oj
-        Jj3mJ6D5g5rCeNiQX8f4bw==
-X-Google-Smtp-Source: APXvYqyA0cFBVl5WxqRWUAajmwQG24um1yPraaZ5cnlqeSKW61xBpYW8L1xuloSvzFgFL8RaFKDW6w==
-X-Received: by 2002:aca:5588:: with SMTP id j130mr4595173oib.122.1579645208961;
-        Tue, 21 Jan 2020 14:20:08 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id d7sm12406255oic.46.2020.01.21.14.20.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 14:20:08 -0800 (PST)
-Received: (nullmailer pid 8896 invoked by uid 1000);
-        Tue, 21 Jan 2020 22:20:07 -0000
-Date:   Tue, 21 Jan 2020 16:20:07 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     gregkh@linuxfoundation.org, mark.rutland@arm.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, fabrice.gasnier@st.com,
-        erwan.leray@st.com
-Subject: Re: [PATCH 1/2] dt-bindings: serial: Convert rs485 bindings to
- json-schema
-Message-ID: <20200121222007.GA1686@bogus>
-References: <20200114123329.3792-1-benjamin.gaignard@st.com>
- <20200114123329.3792-2-benjamin.gaignard@st.com>
+        Tue, 21 Jan 2020 17:21:10 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:35638 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728609AbgAUWVK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 17:21:10 -0500
+Received: from mail.linser.at ([80.109.168.170] helo=phil.Hitronhub.home)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1iu1tS-0005o8-S1; Tue, 21 Jan 2020 23:21:06 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     linux-rockchip@lists.infradead.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        miquel.raynal@bootlin.com,
+        christoph.muellner@theobroma-systems.com, heiko@sntech.de,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Subject: [PATCH v2] arm64: dts: rockchip: fix px30 lvds ports
+Date:   Tue, 21 Jan 2020 23:20:54 +0100
+Message-Id: <20200121222055.4068166-1-heiko@sntech.de>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200114123329.3792-2-benjamin.gaignard@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 01:33:28PM +0100, Benjamin Gaignard wrote:
-> Convert rs485 binding to yaml style file.
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
->  Documentation/devicetree/bindings/serial/rs485.txt | 32 +--------------
->  .../devicetree/bindings/serial/rs485.yaml          | 45 ++++++++++++++++++++++
->  2 files changed, 46 insertions(+), 31 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/serial/rs485.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/serial/rs485.txt b/Documentation/devicetree/bindings/serial/rs485.txt
-> index b92592dff6dd..a7fe93efc4a5 100644
-> --- a/Documentation/devicetree/bindings/serial/rs485.txt
-> +++ b/Documentation/devicetree/bindings/serial/rs485.txt
-> @@ -1,31 +1 @@
-> -* RS485 serial communications
-> -
-> -The RTS signal is capable of automatically controlling line direction for
-> -the built-in half-duplex mode.
-> -The properties described hereafter shall be given to a half-duplex capable
-> -UART node.
-> -
-> -Optional properties:
-> -- rs485-rts-delay: prop-encoded-array <a b> where:
-> -  * a is the delay between rts signal and beginning of data sent in milliseconds.
-> -      it corresponds to the delay before sending data.
-> -  * b is the delay between end of data sent and rts signal in milliseconds
-> -      it corresponds to the delay after sending data and actual release of the line.
-> -  If this property is not specified, <0 0> is assumed.
-> -- rs485-rts-active-low: drive RTS low when sending (default is high).
-> -- linux,rs485-enabled-at-boot-time: empty property telling to enable the rs485
-> -  feature at boot time. It can be disabled later with proper ioctl.
-> -- rs485-rx-during-tx: empty property that enables the receiving of data even
-> -  while sending data.
-> -
-> -RS485 example for Atmel USART:
-> -	usart0: serial@fff8c000 {
-> -		compatible = "atmel,at91sam9260-usart";
-> -		reg = <0xfff8c000 0x4000>;
-> -		interrupts = <7>;
-> -		atmel,use-dma-rx;
-> -		atmel,use-dma-tx;
-> -		linux,rs485-enabled-at-boot-time;
-> -		rs485-rts-delay = <0 200>;		// in milliseconds
-> -	};
-> -
-> +See rs485.yaml
-> diff --git a/Documentation/devicetree/bindings/serial/rs485.yaml b/Documentation/devicetree/bindings/serial/rs485.yaml
-> new file mode 100644
-> index 000000000000..65c6a98969a8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/serial/rs485.yaml
-> @@ -0,0 +1,45 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/serial/rs485.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: RS485 serial communications Bindings
-> +
-> +description: The RTS signal is capable of automatically controlling
-> +             line direction for the built-in half-duplex mode.
-> +             The properties described hereafter shall be given to a
-> +             half-duplex capable UART node.
-> +
-> +maintainers:
-> +  -  Rob Herring <robh@kernel.org>
-> +
-> +properties:
-> +  rs485-rts-delay:
-> +    description: prop-encoded-array <a b>
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32-matrix
-> +      - items:
-> +          items:
-> +            - description:
-> +                Delay between rts signal and beginning of data sent in milliseconds.
-> +                It corresponds to the delay before sending data.
-> +              $ref: "/schemas/types.yaml#/definitions/uint32"
+From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 
-This is not correct. The types only apply to whole properties.
+The lvds controller has two ports. port@0 for the connection
+to the display controller(s) and port@1 for the connection to
+the panel, so should have a ports node covering the port@x nodes.
 
-Is there a maximum? Seems like 1 sec would be more than anyone would 
-ever want?
+Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+---
+changes in v2:
+- added review from Miquel
+- removed global #address+size-cells from lvds as suggested by Robin Murphy
 
-> +              default: 0
-> +            - description:
-> +                Delay between end of data sent and rts signal in milliseconds.
-> +                It corresponds to the delay after sending data and actual release of the line.
-> +              $ref: "/schemas/types.yaml#/definitions/uint32"
-> +              default: 0
-> +
-> +  rs485-rts-active-low:
-> +    description: drive RTS low when sending (default is high).
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +
-> +  linux,rs485-enabled-at-boot-time:
-> +    description: enables the rs485 feature at boot time. It can be disabled later with proper ioctl.
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +
-> +  rs485-rx-during-tx:
-> +   description: enables the receiving of data even while sending data.
-> +   $ref: /schemas/types.yaml#/definitions/flag
-> -- 
-> 2.15.0
-> 
+ arch/arm64/boot/dts/rockchip/px30.dtsi | 25 ++++++++++++++-----------
+ 1 file changed, 14 insertions(+), 11 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot/dts/rockchip/px30.dtsi
+index 9b1c92132007..82bf39a8dbcc 100644
+--- a/arch/arm64/boot/dts/rockchip/px30.dtsi
++++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
+@@ -413,27 +413,30 @@ io_domains: io-domains {
+ 
+ 		lvds: lvds {
+ 			compatible = "rockchip,px30-lvds";
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+ 			phys = <&dsi_dphy>;
+ 			phy-names = "dphy";
+ 			rockchip,grf = <&grf>;
+ 			rockchip,output = "lvds";
+ 			status = "disabled";
+ 
+-			port@0 {
+-				reg = <0>;
++			ports {
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 
+-				lvds_vopb_in: endpoint@0 {
++				port@0 {
+ 					reg = <0>;
+-					remote-endpoint = <&vopb_out_lvds>;
+-				};
+-
+-				lvds_vopl_in: endpoint@1 {
+-					reg = <1>;
+-					remote-endpoint = <&vopl_out_lvds>;
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					lvds_vopb_in: endpoint@0 {
++						reg = <0>;
++						remote-endpoint = <&vopb_out_lvds>;
++					};
++
++					lvds_vopl_in: endpoint@1 {
++						reg = <1>;
++						remote-endpoint = <&vopl_out_lvds>;
++					};
+ 				};
+ 			};
+ 		};
+-- 
+2.24.1
+
