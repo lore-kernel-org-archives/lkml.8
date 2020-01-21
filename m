@@ -2,153 +2,184 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB8AAC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:10:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F15DC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFC1522522
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:10:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="CHjGe4+n"
+	by mail.kernel.org (Postfix) with ESMTP id 173C82465B
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:11:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579630279;
+	bh=njSzAM5BVoktu+NVLcIvRfWaT7QxAsiNOcXypmAdjB0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zFEo0QHL+nswlgL9ydR77ZxGrxQhuwLDyBQanAHeMOO4B2z4zTlWJoFKMc+bi2DY9
+	 uqG4Ofg673gLDLiM4hIOAEgk/wTdUdRWbjgZY8tHNeDgw8n7ZVD9/fV3ogQznEkhJP
+	 kFC+gKeDEYA3G1mRRJymRzl72Gmz3ri5xgROgz88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729259AbgAUSKJ (ORCPT
+        id S1729281AbgAUSLS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 13:10:09 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:55058 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728186AbgAUSKI (ORCPT
+        Tue, 21 Jan 2020 13:11:18 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35510 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728186AbgAUSLS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 13:10:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=FTbjmTPewhmuZeI4RXiIzCWj8QRQqw5GhRQOtHVv+dc=; b=CHjGe4+nP671nkSnHLv1XH8kc
-        t//WmmqJb7tD1MqKGKVq0gRrITiatPK5VqYD8ukB2rLZGmP2qmwe4HhQidekE2c5Mv2JJAbhIdBfv
-        5jV3xc8yRSsgiqmjGzMdjT7eykoxcGa2cSLhavfrMvYwzgN5iKiij1oWThcs7AEB4Z1wpc6X5Z5jw
-        iU3sN/wYSVgi3wsYuTlD92rt2mYk802LhCk2kGEGHNQnEppUqYwrnRx5B1uiSaZLRcQPunKaVUgVj
-        KoSFCXL78XQtQP8iqImB7pY1QCSpuruZLF/zhvke/hwYuwWwp77kb5G/lf4knIITcx2ijShNz2pdR
-        ULStvBuCg==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:37284)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1itxy3-0006Q1-1Q; Tue, 21 Jan 2020 18:09:35 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1itxxy-00042T-5z; Tue, 21 Jan 2020 18:09:30 +0000
-Date:   Tue, 21 Jan 2020 18:09:30 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Eiichi Tsukata <devel@etsukata.com>,
-        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        Nadav Amit <namit@vmware.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 01/14] smp: Create a new function to shutdown nonboot
- cpus
-Message-ID: <20200121180930.GJ25745@shell.armlinux.org.uk>
-References: <20191125112754.25223-1-qais.yousef@arm.com>
- <20191125112754.25223-2-qais.yousef@arm.com>
- <20200121170350.GC18808@shell.armlinux.org.uk>
- <20200121174751.5opyyjwxfnwdgcev@e107158-lin.cambridge.arm.com>
+        Tue, 21 Jan 2020 13:11:18 -0500
+Received: by mail-pf1-f196.google.com with SMTP id i23so1903852pfo.2;
+        Tue, 21 Jan 2020 10:11:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=RZ+UzF1ke9VKh6CSTY/ooI3vzWKiS8jZf7sDVSihHD4=;
+        b=NEFX/ezysY8snsP6VwgBPghhixLPcadjK8oX5390jYlUyypNu5b/NtrWPgM8jPKgKo
+         ZYNjJeCNesZwyzi2bx96bBjOqUOTTlWhBT6lp/fEDzrlq0ifFrL0gfRriLISXIeWkeea
+         PhqMc7Mgk3CT+qm/hbcBoj9YoaFtuOyw26szMr5QS8vSDIROS8D76NvrU2TjDOWbmqWn
+         0g0CzOvdPkkJlFf29WjCfuofnqqaN0pmSRFeD+8T9Pg2VG0rKrpqmRu/wV5IzMT7+F9U
+         MjcOhkH5b9amo2LQdXTP4KU6jirr+/CWk0FFQAqDuqPvwYGY4LH1aRTPGv0jDDerymb9
+         2eRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RZ+UzF1ke9VKh6CSTY/ooI3vzWKiS8jZf7sDVSihHD4=;
+        b=B58Ai3h3GggtlqVAO23HabMO7L/FacK+HJ7I/wyg/0qR2z9flU1y2e1Q7dh2Dj+grW
+         QrNsosw2IVOI15JvB8jBUbGmOgvQMDkYN0JptCNxPB2pEzWEe2ckxpEglg2iY8HfBvRD
+         cyNy4PeaJ77D/MGCK3S7ypIRmuPfE12tUZtLkuYI/RumtLrRQUKMwWV1b+m2jurj0vLe
+         f/0gb5y+hOudlRodfAbt7YrNzpRhprYzLYnKY1xS2X1kKAFJVpfpR8Sr+RwcT9bXZZbT
+         Tzqez/hoDPTrkp3h33HNDMZwQSQtNt70JG6aJEuhXF3mzlhqeZX0MU/8Z8tcEtnMp1Ni
+         EdUA==
+X-Gm-Message-State: APjAAAUDFOonu/MH7HRlG4BolhpXHWFWQZn+JafVtytZUnBx2LGwV8S8
+        Vpfxiw29BA+m8XEs77YH/os=
+X-Google-Smtp-Source: APXvYqwjymOoEv8Ry2p1p8dCMolpdzxYn1+qfp4noIIgwqrM4twhYUXGvrTZzkbYodH1/ny+0fD11g==
+X-Received: by 2002:aa7:9111:: with SMTP id 17mr5827628pfh.163.1579630277160;
+        Tue, 21 Jan 2020 10:11:17 -0800 (PST)
+Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
+        by smtp.gmail.com with ESMTPSA id i11sm122167pjg.0.2020.01.21.10.11.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2020 10:11:15 -0800 (PST)
+Date:   Tue, 21 Jan 2020 10:11:13 -0800
+From:   Minchan Kim <minchan@kernel.org>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
+        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>, ktkhai@virtuozzo.com,
+        christian.brauner@ubuntu.com, sjpark@amazon.de
+Subject: Re: [PATCH v2 2/5] mm: introduce external memory hinting API
+Message-ID: <20200121181113.GE140922@google.com>
+References: <20200116235953.163318-1-minchan@kernel.org>
+ <20200116235953.163318-3-minchan@kernel.org>
+ <20200117115225.GV19428@dhcp22.suse.cz>
+ <20200117155837.bowyjpndfiym6cgs@box>
+ <20200117173239.GB140922@google.com>
+ <20200117212653.7uftw3lk35oykkmb@box>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200121174751.5opyyjwxfnwdgcev@e107158-lin.cambridge.arm.com>
+In-Reply-To: <20200117212653.7uftw3lk35oykkmb@box>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 05:47:52PM +0000, Qais Yousef wrote:
-> On 01/21/20 17:03, Russell King - ARM Linux admin wrote:
-> > On Mon, Nov 25, 2019 at 11:27:41AM +0000, Qais Yousef wrote:
-> > > +void smp_shutdown_nonboot_cpus(unsigned int primary_cpu)
-> > > +{
-> > > +	unsigned int cpu;
-> > > +
-> > > +	if (!cpu_online(primary_cpu)) {
-> > > +		pr_info("Attempting to shutdodwn nonboot cpus while boot cpu is offline!\n");
-> > > +		cpu_online(primary_cpu);
-> 
-> Eh, that should be cpu_up(primary_cpu)!
-> 
-> Which I have to say I'm not if is the right thing to do.
-> migrate_to_reboot_cpu() picks the first online cpu if reboot_cpu (assumed 0) is
-> offline
-> 
-> migrate_to_reboot_cpu():
->  225         /* Make certain the cpu I'm about to reboot on is online */
->  226         if (!cpu_online(cpu))
->  227                 cpu = cpumask_first(cpu_online_mask);
-> 
-> > > +	}
-> > > +
-> > > +	for_each_present_cpu(cpu) {
-> > > +		if (cpu == primary_cpu)
-> > > +			continue;
-> > > +		if (cpu_online(cpu))
-> > > +			cpu_down(cpu);
-> > > +	}
+On Sat, Jan 18, 2020 at 12:26:53AM +0300, Kirill A. Shutemov wrote:
+> On Fri, Jan 17, 2020 at 09:32:39AM -0800, Minchan Kim wrote:
+> > On Fri, Jan 17, 2020 at 06:58:37PM +0300, Kirill A. Shutemov wrote:
+> > > On Fri, Jan 17, 2020 at 12:52:25PM +0100, Michal Hocko wrote:
+> > > > On Thu 16-01-20 15:59:50, Minchan Kim wrote:
+> > > > > There is usecase that System Management Software(SMS) want to give
+> > > > > a memory hint like MADV_[COLD|PAGEEOUT] to other processes and
+> > > > > in the case of Android, it is the ActivityManagerService.
+> > > > > 
+> > > > > It's similar in spirit to madvise(MADV_WONTNEED), but the information
+> > > > > required to make the reclaim decision is not known to the app. Instead,
+> > > > > it is known to the centralized userspace daemon(ActivityManagerService),
+> > > > > and that daemon must be able to initiate reclaim on its own without
+> > > > > any app involvement.
+> > > > > 
+> > > > > To solve the issue, this patch introduces new syscall process_madvise(2).
+> > > > > It uses pidfd of an external processs to give the hint.
+> > > > > 
+> > > > >  int process_madvise(int pidfd, void *addr, size_t length, int advise,
+> > > > > 			unsigned long flag);
+> > > > > 
+> > > > > Since it could affect other process's address range, only privileged
+> > > > > process(CAP_SYS_PTRACE) or something else(e.g., being the same UID)
+> > > > > gives it the right to ptrace the process could use it successfully.
+> > > > > The flag argument is reserved for future use if we need to extend the
+> > > > > API.
+> > > > > 
+> > > > > I think supporting all hints madvise has/will supported/support to
+> > > > > process_madvise is rather risky. Because we are not sure all hints make
+> > > > > sense from external process and implementation for the hint may rely on
+> > > > > the caller being in the current context so it could be error-prone.
+> > > > > Thus, I just limited hints as MADV_[COLD|PAGEOUT] in this patch.
+> > > > > 
+> > > > > If someone want to add other hints, we could hear hear the usecase and
+> > > > > review it for each hint. It's more safe for maintainace rather than
+> > > > > introducing a buggy syscall but hard to fix it later.
+> > > > 
+> > > > I have brought this up when we discussed this in the past but there is
+> > > > no reflection on that here so let me bring that up again. 
+> > > > 
+> > > > I believe that the interface has an inherent problem that it is racy.
+> > > > The external entity needs to know the address space layout of the target
+> > > > process to do anyhing useful on it. The address space is however under
+> > > > the full control of the target process though and the external entity
+> > > > has no means to find out that the layout has changed. So
+> > > > time-to-check-time-to-act is an inherent problem.
+> > > > 
+> > > > This is a serious design flaw and it should be explained why it doesn't
+> > > > matter or how to use the interface properly to prevent that problem.
+> > > 
+> > > I agree, it looks flawed.
+> > > 
+> > > Also I don't see what System Management Software can generically do on
+> > > sub-process level. I mean how can it decide which part of address space is
+> > > less important than other.
+> > > 
+> > > I see how a manager can indicate that this process (or a group of
+> > > processes) is less important than other, but on per-addres-range basis?
 > > 
-> > How does this avoid racing with userspace attempting to restart CPUs
-> > that have already been taken down by this function?
+> > For example, memory ranges shared by several processes or critical for the
+> > latency, we could avoid those ranges to be cold/pageout to prevent
+> > unncecessary CPU burning/paging.
 > 
-> This is meant to be called from machine_shutdown() only.
-> 
-> But you've got a point.
-> 
-> The previous logic that used disable_nonboot_cpus(), which in turn called
-> freeze_secondary_cpus() didn't hold hotplug lock. So I assumed the higher level
-> logic of machine_shutdown() ensures that hotplug lock is held to synchronize
-> with potential other hotplug operations.
+> Hmm.. I still don't see why any external entity has a better (or any)
+> knowledge about the matter. The process has to do this, no?
 
-freeze_secondary_cpus() takes the CPU maps lock while it takes CPUs
-down, and then disables cpu hotplug by incrementing
-cpu_hotplug_disabled.  Incrementing that prevents cpu_up() and
-cpu_down() being used, thereby preventing userspace from changing the
-online state of any CPU in the system.
+I think Sandeep already gave enough information in other thread.
 
-> But I can see now that it doesn't.
 > 
-> With this series that migrates users to use device_{online,offline}, holding
-> the lock_device_hotplug() should protect against such races.
+> > I also think people don't want to give an KSM hint to non-mergeable area.
 > 
-> Worth noting that this an existing problem in the code and not something
-> I introduced, of course it makes sense to fix it properly as part of this
-> series.
-> 
-> I'm not sure how the other archs deal with this TBH.
-> 
-> Thanks for having a look!
-> 
-> Cheers
-> 
-> --
-> Qais Yousef
-> 
+> And how the manager knows which data is mergable?
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Oleksandr, could you say your thought why you need address range based
+API?
+
+> 
+> If you are intimate enough with the process' internal state feel free to
+> inject syscall into the process with ptrace. Why bother with half-measures?
+
+Concern is we want to act the hint in caller's context, not calle because
+calle is usually very limited in cpuset/cgroups or even freezed state so
+they couldn't act by themselves quick enough, which makes many problems.
+One of efforts to solve the issue was "Expedited memory reclaim"
+
+	https://lwn.net/Articles/785709/
+
+That could be also a good candidate for process_madvise API.
