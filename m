@@ -4,32 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88AA0C33CB8
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC0FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:34:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6706C20661
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:34:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14D6A20661
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:34:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728890AbgAUIeP (ORCPT
+        id S1728925AbgAUIes (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 03:34:15 -0500
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:38077 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726920AbgAUIeO (ORCPT
+        Tue, 21 Jan 2020 03:34:48 -0500
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:35987 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726920AbgAUIes (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 03:34:14 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R461e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0ToHWnxt_1579595652;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0ToHWnxt_1579595652)
+        Tue, 21 Jan 2020 03:34:48 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R831e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04428;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0ToHWo6T_1579595684;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0ToHWo6T_1579595684)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 21 Jan 2020 16:34:12 +0800
+          Tue, 21 Jan 2020 16:34:45 +0800
 From:   Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Nick Terrell <terrelln@fb.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] lib/xxhash: remove used macros
-Date:   Tue, 21 Jan 2020 16:34:11 +0800
-Message-Id: <1579595651-251348-1-git-send-email-alex.shi@linux.alibaba.com>
+Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] locked: remove nlmsvc_decode_norep/grantedres
+Date:   Tue, 21 Jan 2020 16:34:42 +0800
+Message-Id: <1579595682-251483-1-git-send-email-alex.shi@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -37,33 +41,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-XXH_CPU_LITTLE_ENDIAN defined but never used, looks like it's needed. so
-remove it.
+These 2 macros are never used after first git commit Linux-2.6.12-rc2.
+So guess better to remove them.
 
 Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Nick Terrell <terrelln@fb.com>
+Cc: "J. Bruce Fields" <bfields@fieldses.org> 
+Cc: Chuck Lever <chuck.lever@oracle.com> 
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com> 
+Cc: Anna Schumaker <anna.schumaker@netapp.com> 
+Cc: linux-nfs@vger.kernel.org 
 Cc: linux-kernel@vger.kernel.org 
 ---
- lib/xxhash.c | 6 ------
- 1 file changed, 6 deletions(-)
+ fs/lockd/svcproc.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/lib/xxhash.c b/lib/xxhash.c
-index aa61e2a3802f..d1561828a0f1 100644
---- a/lib/xxhash.c
-+++ b/lib/xxhash.c
-@@ -52,12 +52,6 @@
- #define xxh_rotl32(x, r) ((x << r) | (x >> (32 - r)))
- #define xxh_rotl64(x, r) ((x << r) | (x >> (64 - r)))
+diff --git a/fs/lockd/svcproc.c b/fs/lockd/svcproc.c
+index d0bb7a6bf005..8b7565c71863 100644
+--- a/fs/lockd/svcproc.c
++++ b/fs/lockd/svcproc.c
+@@ -534,12 +534,10 @@ static __be32 nlmsvc_proc_cancel_msg(struct svc_rqst *rqstp)
+  */
  
--#ifdef __LITTLE_ENDIAN
--# define XXH_CPU_LITTLE_ENDIAN 1
--#else
--# define XXH_CPU_LITTLE_ENDIAN 0
--#endif
--
- /*-*************************************
-  * Constants
-  **************************************/
+ #define nlmsvc_encode_norep	nlmsvc_encode_void
+-#define nlmsvc_decode_norep	nlmsvc_decode_void
+ #define nlmsvc_decode_testres	nlmsvc_decode_void
+ #define nlmsvc_decode_lockres	nlmsvc_decode_void
+ #define nlmsvc_decode_unlockres	nlmsvc_decode_void
+ #define nlmsvc_decode_cancelres	nlmsvc_decode_void
+-#define nlmsvc_decode_grantedres	nlmsvc_decode_void
+ 
+ #define nlmsvc_proc_none	nlmsvc_proc_null
+ #define nlmsvc_proc_test_res	nlmsvc_proc_null
 -- 
 1.8.3.1
 
