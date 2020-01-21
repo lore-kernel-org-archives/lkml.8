@@ -2,160 +2,130 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30138C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 20:55:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB33DC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 21:04:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 024E821734
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 20:55:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Q4U19iIq"
+	by mail.kernel.org (Postfix) with ESMTP id 7D8A621734
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 21:04:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729031AbgAUUzQ (ORCPT
+        id S1728927AbgAUVEL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 15:55:16 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:39550 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728741AbgAUUzP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 15:55:15 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00LKhosb128897;
-        Tue, 21 Jan 2020 20:54:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=097qPjqdtLQ/u66QFt3FxKMZ7mao/EVAbbQjFNVYa14=;
- b=Q4U19iIqSyGgLf5SGthY7IKajJE5vk6hjt4L/JH8/cr3D5Cx+68VRLb01YBXLrPSfHWH
- mzgi458Q12OJJJdqeJSV+b84dhCdlKDAd+/EnV1kVk9igTMpp2Xpgt8xaCvsBcJ0DsdX
- DrVCwfRhUnvozWJSLy8Nm1DpskaD3XpzR7Az56cup1Apu6WAJgkC10vX8dqL31+z/HPb
- yYEjSK3cu7Gyt/+P27HtBzgysZLYCNbk/xmQILMXDRb5x1dyXxNCoxo/gqeoKoRGwayp
- Ipg/bBGAm4qC61wXvW82vCX5U5GTeNwWh1l00O11cCGy02wscx0WoxY6SUF1xQI7VxsK 7Q== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2xkseufvcy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 Jan 2020 20:54:11 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00LKiPUf139141;
-        Tue, 21 Jan 2020 20:54:11 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2xnsj5bx6j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 Jan 2020 20:54:11 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00LKs7er001986;
-        Tue, 21 Jan 2020 20:54:07 GMT
-Received: from Konrads-MacBook-Pro.local (/10.74.98.244)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 21 Jan 2020 12:54:07 -0800
-Date:   Tue, 21 Jan 2020 15:54:03 -0500
-From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-To:     Ashish Kalra <ashish.kalra@amd.com>
-Cc:     Konrad Rzeszutek Wilk <konrad@darnok.org>, hch@lst.de,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, luto@kernel.org, peterz@infradead.org,
-        dave.hansen@linux-intel.com, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, brijesh.singh@amd.com,
-        Thomas.Lendacky@amd.com
-Subject: Re: [PATCH v2] swiotlb: Adjust SWIOTBL bounce buffer size for SEV
- guests.
-Message-ID: <20200121205403.GC75374@Konrads-MacBook-Pro.local>
-References: <20191209231346.5602-1-Ashish.Kalra@amd.com>
- <20191220015245.GA7010@localhost.localdomain>
- <20200121200947.GA24884@ashkalra_ubuntu_server>
+        Tue, 21 Jan 2020 16:04:11 -0500
+Received: from mga06.intel.com ([134.134.136.31]:9889 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727829AbgAUVEL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 16:04:11 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 13:04:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,347,1574150400"; 
+   d="scan'208";a="280731336"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga001.fm.intel.com with ESMTP; 21 Jan 2020 13:04:05 -0800
+Date:   Tue, 21 Jan 2020 13:04:05 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Ben Gardon <bgardon@google.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [PATCH] KVM: x86: fix overlap between SPTE_MMIO_MASK and
+ generation
+Message-ID: <20200121210405.GA12692@linux.intel.com>
+References: <1579623061-47141-1-git-send-email-pbonzini@redhat.com>
+ <CANgfPd8fq7pWe00fKm7QEiOAVFuubSQ-jJxEM1sCKzqJk9rSzw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200121200947.GA24884@ashkalra_ubuntu_server>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9507 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001210156
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9507 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001210156
+In-Reply-To: <CANgfPd8fq7pWe00fKm7QEiOAVFuubSQ-jJxEM1sCKzqJk9rSzw@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 08:09:47PM +0000, Ashish Kalra wrote:
-> On Thu, Dec 19, 2019 at 08:52:45PM -0500, Konrad Rzeszutek Wilk wrote:
-> > On Mon, Dec 09, 2019 at 11:13:46PM +0000, Ashish Kalra wrote:
-> > > From: Ashish Kalra <ashish.kalra@amd.com>
-> > > 
-> > > For SEV, all DMA to and from guest has to use shared
-> > > (un-encrypted) pages. SEV uses SWIOTLB to make this happen
-> > > without requiring changes to device drivers. However,
-> > > depending on workload being run, the default 64MB of SWIOTLB
-> > > might not be enough and SWIOTLB may run out of buffers to
-> > > use for DMA, resulting in I/O errors.
-> > > 
-> > > Increase the default size of SWIOTLB for SEV guests using
-> > > a minimum value of 128MB and a maximum value of 512MB,
-> > > determining on amount of provisioned guest memory.
-> > > 
-> > > The SWIOTLB default size adjustment is added as an
-> > > architecture specific interface/callback to allow
-> > > architectures such as those supporting memory encryption
-> > > to adjust/expand SWIOTLB size for their use.
-> > 
-> > What if this was made dynamic? That is if there is a memory
-> > pressure you end up expanding the SWIOTLB dynamically?
+On Tue, Jan 21, 2020 at 09:24:07AM -0800, Ben Gardon wrote:
+> On Tue, Jan 21, 2020 at 8:11 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+> >
+> > The SPTE_MMIO_MASK overlaps with the bits used to track MMIO
+> > generation number.  A high enough generation number would overwrite the
+> > SPTE_SPECIAL_MASK region and cause the MMIO SPTE to be misinterpreted;
+> > likewise, setting bits 52 and 53 would also cause an incorrect generation
+> > number to be read from the PTE.
+> >
+> > Fixes: 6eeb4ef049e7 ("KVM: x86: assign two bits to track SPTE kinds")
+> > Reported-by: Ben Gardon <bgardon@google.com>
+> > Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> > ---
+> >  arch/x86/kvm/mmu/mmu.c | 9 ++++++---
+> >  1 file changed, 6 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> > index 57e4dbddba72..e34ca43d9166 100644
+> > --- a/arch/x86/kvm/mmu/mmu.c
+> > +++ b/arch/x86/kvm/mmu/mmu.c
+> > @@ -418,22 +418,25 @@ static inline bool is_access_track_spte(u64 spte)
+> >   * requires a full MMU zap).  The flag is instead explicitly queried when
+> >   * checking for MMIO spte cache hits.
+> >   */
+> > -#define MMIO_SPTE_GEN_MASK             GENMASK_ULL(18, 0)
+> > +#define MMIO_SPTE_GEN_MASK             GENMASK_ULL(17, 0)
 > 
-> As of now we want to keep it as simple as possible and more
-> like a stop-gap arrangement till something more elegant is
-> available.
+> I see you're shifting the MMIO high gen mask region to avoid having to
+> shift it by 2. Looking at the SDM, I believe using bit 62 for the
+> generation number is safe, but I don't recall why it wasn't used
+> before.
 
-That is nice. But past experience has shown that stop-gap arrangments
-end up being the defacto solution.
+This patch does use bit 62, see MMIO_SPTE_GEN_HIGH_END below.  It's bit
+63 that is being avoided because it would collide with NX and EPT suppress
+#VE.
 
+> >
+> >  #define MMIO_SPTE_GEN_LOW_START                3
+> >  #define MMIO_SPTE_GEN_LOW_END          11
+> >  #define MMIO_SPTE_GEN_LOW_MASK         GENMASK_ULL(MMIO_SPTE_GEN_LOW_END, \
+> >                                                     MMIO_SPTE_GEN_LOW_START)
+> >
+> > -#define MMIO_SPTE_GEN_HIGH_START       52
+> > -#define MMIO_SPTE_GEN_HIGH_END         61
+> > +/* Leave room for SPTE_SPECIAL_MASK.  */
+> > +#define MMIO_SPTE_GEN_HIGH_START       54
+> > +#define MMIO_SPTE_GEN_HIGH_END         62
+> >  #define MMIO_SPTE_GEN_HIGH_MASK                GENMASK_ULL(MMIO_SPTE_GEN_HIGH_END, \
+> >                                                     MMIO_SPTE_GEN_HIGH_START)
+> > +
+> >  static u64 generation_mmio_spte_mask(u64 gen)
+> >  {
+> >         u64 mask;
+> >
+> >         WARN_ON(gen & ~MMIO_SPTE_GEN_MASK);
+> > +       BUILD_BUG_ON(MMIO_SPTE_GEN_HIGH_START < PT64_SECOND_AVAIL_BITS_SHIFT);
 > 
-> > 
-> >> Also is it worth doing this calculation based on memory or
-> >> more on the # of PCI devices + their MMIO ranges size?
-> 
-> Additional memory calculations based on # of PCI devices and
-> their memory ranges will make it more complicated with so
-> many other permutations and combinations to explore, it is
-> essential to keep this patch as simple as possible by 
-> adjusting the bounce buffer size simply by determining it
-> from the amount of provisioned guest memory.
+> Would it be worth defining the MMIO_SPTE_GEN masks, SPTE_SPECIAL_MASK,
+> SPTE_AD masks, and SPTE_MMIO_MASK in terms of
+> PT64_SECOND_AVAIL_BITS_SHIFT? It seems like that might be a more
+> robust assertion here.
 
-Please rework the patch to:
+That was Paolo's original proposal, I (successfully) lobbied for using a
+BUILG_BUG_ON so that bugs result in a build failure instead of random
+runtime issues, e.g. if PT64_SECOND_AVAIL_BITS_SHIFT was changed to a value
+that caused the MMIO gen to overlap NX or even shift beyond bit 63.
 
- - Use a log solution instead of the multiplication.
-   Feel free to cap it at a sensible value.
+https://lkml.kernel.org/r/20191212002902.GM5044@linux.intel.com
 
- - Also the code depends on SWIOTLB calling in to the
-   adjust_swiotlb_default_size which looks wrong.
+> Alternatively, BUILD_BUG_ON((MMIO_SPTE_GEN_HIGH_MASK |
+> MMIO_SPTE_GEN_LOW_MASK) & SPTE_(MMIO and/or SPECIAL)_MASK)
 
-   You should not adjust io_tlb_nslabs from swiotlb_size_or_default.
-   That function's purpose is to report a value.
+Or add both BUILD_BUG_ONs.
 
- - Make io_tlb_nslabs be visible outside of the SWIOTLB code.
-
- - Can you utilize the IOMMU_INIT APIs and have your own detect which would
-   modify the io_tlb_nslabs (and set swiotbl=1?).
-
-   Actually you seem to be piggybacking on pci_swiotlb_detect_4gb - so
-   perhaps add in this code ? Albeit it really should be in it's own
-   file, not in arch/x86/kernel/pci-swiotlb.c
-
- - Tweak the code in the swiotlb code to make sure it can deal
-   with io_tlb_nslabs being modified outside of the code at
-   the start. It should have no trouble, but only testing will
-   tell for sure.
-
-> 
-> Thanks,
-> Ashish
+> >
+> >         mask = (gen << MMIO_SPTE_GEN_LOW_START) & MMIO_SPTE_GEN_LOW_MASK;
+> >         mask |= (gen << MMIO_SPTE_GEN_HIGH_START) & MMIO_SPTE_GEN_HIGH_MASK;
+> > --
+> > 1.8.3.1
+> >
