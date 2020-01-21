@@ -2,260 +2,56 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA405C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:44:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF3ACC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89A492253D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:44:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TJpn6ykw"
+	by mail.kernel.org (Postfix) with ESMTP id 9C98624676
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:46:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729157AbgAUJoU (ORCPT
+        id S1729045AbgAUJqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 04:44:20 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:33109 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728794AbgAUJoU (ORCPT
+        Tue, 21 Jan 2020 04:46:39 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:35854 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbgAUJqi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 04:44:20 -0500
-Received: by mail-oi1-f196.google.com with SMTP id q81so2000166oig.0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 01:44:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HBcIIfisjpHPiUGpBDs8d1gs27EtkgCyjibCW2LJEj4=;
-        b=TJpn6ykwqB4Vn0EAKwJqzsYZixKHikBAzb5djqAgU4H0a4U82v15ofay2fp9I2zjv0
-         rFLu8FZZLQvVjoVPJYts8cwSdEFHEe/C6AkGTEh1javqW7yO0B1/U+GCQyWocx7Si555
-         lkBE/oxL0/+jSUxCkUXCI9x9ATvdKRF40GfIUgw2VPpkQDmgbI54e7d+KhuQmIhXWWdt
-         6/43BN6pIoabijuDCDQPNqJ3/xgyqLvvt13h4kJRKTM9iC+mn10XQL0Wf2XNTDu4HAk5
-         ibVvupmClDfK1XmTtFy5fjpUWeNN8RA6cqi+AJO9RdBs/XqauDivcOAB0E/Z8TMtHPjx
-         OQkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HBcIIfisjpHPiUGpBDs8d1gs27EtkgCyjibCW2LJEj4=;
-        b=qed8XWT+aLp089FHcoJXczDcIJEz5tot/8GSIyxGGQxfXdYbO45qqKUdf4ah+8UV9w
-         aNNxECFW1EBwPFvfj1YYLd6kyFq6a6K7qcNJCnePZll0AKnJM878MLDS5fywSlkIxy+5
-         +EvPhD1bGYqElRPhYgOAn29VFL/bpBMYcZ6J+c5ozAbLL5b/ItdX9ELrSeUBWMA+mtrU
-         gwclYn1cTV9sFSVi0k4lWUOpisRthTishnSDAXN600psoMakmzA1thTjKitWj9K2CP4o
-         qyv892zXWMT7+1wsQjNLVZokGrNWdK6Xawx9OWkaXxsXdgQEepGPOYqIGiNASD+kH1qL
-         OH8A==
-X-Gm-Message-State: APjAAAXliKMtouf+Q4UpeyhslAyb4VKVZudoR4gVeMGNJTAv9t9RmfYS
-        +H7Lh5mm1r4+S3dAwPO4Kmcgju4SVVWLxbF8MBYBwA==
-X-Google-Smtp-Source: APXvYqwBDo7cc0K8uN2ZqwjLs+PJgLgUkGJKSeXtEYuyEFDEVd7xRwW/2gVSkgwP14IWiZZTMpevPZ8zcLLMF268nvc=
-X-Received: by 2002:aca:b183:: with SMTP id a125mr2373497oif.83.1579599858446;
- Tue, 21 Jan 2020 01:44:18 -0800 (PST)
-MIME-Version: 1.0
-References: <20200120141927.114373-1-elver@google.com> <CACT4Y+bnRoKinPopVqyxj4av6_xa_OUN0wwnidpO3dX3iYq_gg@mail.gmail.com>
- <CACT4Y+YuTT6kZ-AkgU0c1o09qmQdFWr4_Sds4jaDg-Va6g6jkA@mail.gmail.com>
- <CACT4Y+acrXkA-ixjQXqNf1EC=fpgTWf3Rcevxxon0DfrPdD-UQ@mail.gmail.com>
- <CANpmjNNcXUF-=Y-hmry9-xEoNpJd0WH+fOcJJM6kv2eRm5v-kg@mail.gmail.com>
- <CACT4Y+bD3cNxfaWOuhHz338MoVoaHpw-E8+b7v6mo_ir2KD46Q@mail.gmail.com>
- <CANpmjNN-8CLN9v7MehNUXy=iEXOfFHwpAUEPivGM573EQqmCZw@mail.gmail.com> <CACT4Y+bgLy=AiCdLauBaSi_Q1gQsqQ08hr1-ipz60k+WFdmiuA@mail.gmail.com>
-In-Reply-To: <CACT4Y+bgLy=AiCdLauBaSi_Q1gQsqQ08hr1-ipz60k+WFdmiuA@mail.gmail.com>
-From:   Marco Elver <elver@google.com>
-Date:   Tue, 21 Jan 2020 10:44:06 +0100
-Message-ID: <CANpmjNPCGM9V++Vq_UtLJoLbzLdVfgJg0kWAkK=E+829may9Uw@mail.gmail.com>
-Subject: Re: [PATCH 1/5] include/linux: Add instrumented.h infrastructure
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Daniel Axtens <dja@axtens.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Daniel Borkmann <daniel@iogearbox.net>, cyphar@cyphar.com,
-        Kees Cook <keescook@chromium.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 21 Jan 2020 04:46:38 -0500
+Received: from localhost (82-95-191-104.ip.xs4all.nl [82.95.191.104])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id C5A1115BBD4F6;
+        Tue, 21 Jan 2020 01:46:36 -0800 (PST)
+Date:   Tue, 21 Jan 2020 10:46:35 +0100 (CET)
+Message-Id: <20200121.104635.663739014554850228.davem@davemloft.net>
+To:     wenyang@linux.alibaba.com
+Cc:     edumazet@google.com, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tcp_bbr: improve arithmetic division in bbr_update_bw()
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200120100456.45609-1-wenyang@linux.alibaba.com>
+References: <20200120100456.45609-1-wenyang@linux.alibaba.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 21 Jan 2020 01:46:38 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jan 2020 at 17:39, Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> On Mon, Jan 20, 2020 at 5:25 PM Marco Elver <elver@google.com> wrote:
-> > > > > > > > This adds instrumented.h, which provides generic wrappers for memory
-> > > > > > > > access instrumentation that the compiler cannot emit for various
-> > > > > > > > sanitizers. Currently this unifies KASAN and KCSAN instrumentation. In
-> > > > > > > > future this will also include KMSAN instrumentation.
-> > > > > > > >
-> > > > > > > > Note that, copy_{to,from}_user require special instrumentation,
-> > > > > > > > providing hooks before and after the access, since we may need to know
-> > > > > > > > the actual bytes accessed (currently this is relevant for KCSAN, and is
-> > > > > > > > also relevant in future for KMSAN).
-> > > > > > > >
-> > > > > > > > Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> > > > > > > > Signed-off-by: Marco Elver <elver@google.com>
-> > > > > > > > ---
-> > > > > > > >  include/linux/instrumented.h | 153 +++++++++++++++++++++++++++++++++++
-> > > > > > > >  1 file changed, 153 insertions(+)
-> > > > > > > >  create mode 100644 include/linux/instrumented.h
-> > > > > > > >
-> > > > > > > > diff --git a/include/linux/instrumented.h b/include/linux/instrumented.h
-> > > > > > > > new file mode 100644
-> > > > > > > > index 000000000000..9f83c8520223
-> > > > > > > > --- /dev/null
-> > > > > > > > +++ b/include/linux/instrumented.h
-> > > > > > > > @@ -0,0 +1,153 @@
-> > > > > > > > +/* SPDX-License-Identifier: GPL-2.0 */
-> > > > > > > > +
-> > > > > > > > +/*
-> > > > > > > > + * This header provides generic wrappers for memory access instrumentation that
-> > > > > > > > + * the compiler cannot emit for: KASAN, KCSAN.
-> > > > > > > > + */
-> > > > > > > > +#ifndef _LINUX_INSTRUMENTED_H
-> > > > > > > > +#define _LINUX_INSTRUMENTED_H
-> > > > > > > > +
-> > > > > > > > +#include <linux/compiler.h>
-> > > > > > > > +#include <linux/kasan-checks.h>
-> > > > > > > > +#include <linux/kcsan-checks.h>
-> > > > > > > > +#include <linux/types.h>
-> > > > > > > > +
-> > > > > > > > +/**
-> > > > > > > > + * instrument_read - instrument regular read access
-> > > > > > > > + *
-> > > > > > > > + * Instrument a regular read access. The instrumentation should be inserted
-> > > > > > > > + * before the actual read happens.
-> > > > > > > > + *
-> > > > > > > > + * @ptr address of access
-> > > > > > > > + * @size size of access
-> > > > > > > > + */
-> > > > > > >
-> > > > > > > Based on offline discussion, that's what we add for KMSAN:
-> > > > > > >
-> > > > > > > > +static __always_inline void instrument_read(const volatile void *v, size_t size)
-> > > > > > > > +{
-> > > > > > > > +       kasan_check_read(v, size);
-> > > > > > > > +       kcsan_check_read(v, size);
-> > > > > > >
-> > > > > > > KMSAN: nothing
-> > > > > >
-> > > > > > KMSAN also has instrumentation in
-> > > > > > copy_to_user_page/copy_from_user_page. Do we need to do anything for
-> > > > > > KASAN/KCSAN for these functions?
-> > > >
-> > > > copy_to_user_page/copy_from_user_page can be instrumented with
-> > > > instrument_copy_{to,from}_user_. I prefer keeping this series with no
-> > > > functional change intended for KASAN at least.
-> > > >
-> > > > > There is also copy_user_highpage.
-> > > > >
-> > > > > And ioread/write8/16/32_rep: do we need any instrumentation there. It
-> > > > > seems we want both KSAN and KCSAN too. One may argue that KCSAN
-> > > > > instrumentation there is to super critical at this point, but KASAN
-> > > > > instrumentation is important, if anything to prevent silent memory
-> > > > > corruptions. How do we instrument there? I don't see how it maps to
-> > > > > any of the existing instrumentation functions.
-> > > >
-> > > > These should be able to use the regular instrument_{read,write}. I
-> > > > prefer keeping this series with no functional change intended for
-> > > > KASAN at least.
-> > >
-> > > instrument_{read,write} will not contain any KMSAN instrumentation,
-> > > which means we will effectively remove KMSAN instrumentation, which is
-> > > weird because we instrumented these functions because of KMSAN in the
-> > > first place...
+From: Wen Yang <wenyang@linux.alibaba.com>
+Date: Mon, 20 Jan 2020 18:04:56 +0800
 
-I missed this. Yes, you're right.
+> do_div() does a 64-by-32 division. Use div64_long() instead of it
+> if the divisor is long, to avoid truncation to 32-bit.
+> And as a nice side effect also cleans up the function a bit.
+> 
+> Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
 
-> > > > > There is also kmsan_check_skb/kmsan_handle_dma/kmsan_handle_urb that
-> > > > > does not seem to map to any of the instrumentation functions.
-> > > >
-> > > > For now, I would rather that there are some one-off special
-> > > > instrumentation, like for KMSAN. Coming up with a unified interface
-> > > > here that, without the use-cases even settled, seems hard to justify.
-> > > > Once instrumentation for these have settled, unifying the interface
-> > > > would have better justification.
-> > >
-> > > I would assume they may also require an annotation that checks the
-> > > memory region under all 3 tools and we don't have such annotation
-> > > (same as the previous case and effectively copy_to_user). I would
-> > > expect such annotation will be used in more places once we start
-> > > looking for more opportunities.
-> >
-> > Agreed, I'm certainly not against adding these. We may need to
-> > introduce 'instrument_dma_' etc. However, would it be reasonable to do
-> > this in a separate follow-up patch-series, to avoid stalling bitops
-> > instrumentation?  Assuming that the 8 hooks in instrumented.h right
-> > now are reasonable, and such future changes add new hooks, I think
-> > that would be the more pragmatic approach.
->
-> I think it would be a wrong direction. Just like this change does not
-> introduce all of instrument_test_and_set_bit,
-> instrument___clear_bit_unlock, instrument_copyin,
-> instrument_copyout_mcsafe, instrument_atomic_andnot, .... All of these
-> can be grouped into a very small set of cases with respect to what
-> type of memory access they do from the point of view of sanitizers.
-> And we introduce instrumentation for these _types_ of accesses, rather
-> than application functions (we don't care much if the access is for
-> atomic operations, copy to/from user, usb, dma, skb or something
-> else). It seems that our set of instrumentation annotations can't
-> handle some very basic cases...
-
-With the ioread/write, dma, skb, urb, user-copy cases in mind, it just
-appears to me that attempting to find a minimal unifying set of
-instrumentation hooks might lead us in circles, given we only have the
-following options:
-
-1. Do not introduce 'instrumented.h', and drop this series. With KMSAN
-in mind, this is what I mentioned I preferred in the first place, and
-just add a few dozen lines in each place we need to instrument. Yes,
-yes, it's not as convenient, but at least we'll know it'll be correct
-without having to reason about all cases and all sanitizers all at
-once (with KMSAN not being in any kernel tree even).
-
-2. This patch series, keeping 'instrumented.h', but only keep what we
-use right now. This is knowing we'll likely have to add a number of
-special cases (user-copy, ioread/write, etc) for now. Again,
-KASAN/KCSAN probably want the same thing, but I don't know how much
-conflict there will be with KMSAN after all is said and done. We will
-incrementally add what is required, with unifying things later. This
-will also satisfy Arnd's constraint of no empty functions:
-http://lkml.kernel.org/r/CAK8P3a32sVU4umk2FLnWnMGMQxThvMHAKxVM+G4X-hMgpBsXMA@mail.gmail.com
-
-3. Try to find a minimal set of instrumentation hooks that cater to
-all tools (KASAN, KCSAN, KMSAN). Without even having all
-instrumentation (without the 'instrumented.h' infrastructure) in
-place, I feel this will not be too successful. I think we can do this
-once we have instrumentation for all tools, in all places. Then
-unifying all of them should be a non-functional-change refactor.
-Essentially, this option depends on (1).
-
-However, now we have some constraints which are difficult to satisfy
-all at once:
-1. Essentially we were told to avoid (1), based on Arnd's suggestion
-to simplify the instrumentation. Therefore we thought (2) would be a
-good idea.
-2. Now that we know what (2) looks like, it seems you prefer (3),
-because we should also cater to KMSAN with this patch series.
-3. No unused hooks.
-
-Given we have a KMSAN<-(1)<-(3) dependency, but we were told to avoid
-(1), empty functions, and KMSAN hasn't yet landed, we can't reasonably
-do (3). Since you dislike (2), we're stuck.
-
-Any options I missed?
-
-Thanks,
--- Marco
+Applied, thank you.
