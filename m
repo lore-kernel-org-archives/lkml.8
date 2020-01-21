@@ -2,80 +2,99 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F849C33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:33:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B6AC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:34:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66B8A24655
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:33:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE6EC24677
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:34:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729096AbgAUJd5 (ORCPT
+        id S1729240AbgAUJeQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 04:33:57 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:45102 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727220AbgAUJd5 (ORCPT
+        Tue, 21 Jan 2020 04:34:16 -0500
+Received: from michel.telenet-ops.be ([195.130.137.88]:60598 "EHLO
+        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728741AbgAUJeQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 04:33:57 -0500
-Received: by mail-ot1-f68.google.com with SMTP id 59so2300193otp.12;
-        Tue, 21 Jan 2020 01:33:57 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Qj5VbwsxDuvi6Lzh2JzA8IRCPYG3njmnwC8KpSoN7Fo=;
-        b=Q9ddjvG4F10/oPJhrPZSLZPl6xpzubsP5a8MauU8U0mMqPWquJJzUAabI9Gl3b6rL6
-         VCPEgd+xdTbYILya/UjEreEu1bXHZMZzWq2k0/vMxEOstyNG1hmY4DNgPzwtstZxKBae
-         gacOGmoHEevTWHZsU3ed1U+9UlkjdUmfBRa5M69t5XEZ7FDiLNDME5VaZ2N6/3bNLwaE
-         nNyVVzckUOZ6pLkpnDREzzpZIAiSUu8FzqVsTC/zqrPvsMWMZIUyKtR09BNXJQRWGL5A
-         ZS56toNZyLztXImgxOP/jRi1NBgUfPgIkSCizYvkJDdQiiF50XNUhX+NZTWEsNIZ0a4w
-         yyqA==
-X-Gm-Message-State: APjAAAVRYtFmDCsBBdA27Lq6xXIES/c+Ayavn98j4Em3bOVLKGtwwHYP
-        7H1VgBT2JIFor5ZeXSsf8zCtlGAn0AJUZ8lZHr4=
-X-Google-Smtp-Source: APXvYqxhBfAirvha1jNyHcG9Wj357aKqFNFvum/Vm4ne3rqK1ZgfHgEvQ8rv4ewYeH7Yc9GdPstY3m6KPf+b0CnOlwk=
-X-Received: by 2002:a9d:dc1:: with SMTP id 59mr2869459ots.250.1579599236621;
- Tue, 21 Jan 2020 01:33:56 -0800 (PST)
-MIME-Version: 1.0
-References: <20200117152933.31175-1-geert+renesas@glider.be> <20200121092303.GI2841@vkoul-mobl>
-In-Reply-To: <20200121092303.GI2841@vkoul-mobl>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 21 Jan 2020 10:33:45 +0100
-Message-ID: <CAMuHMdW39YMNixAkCKZexE2QZNxy5HoMGNtMGtRJ5n5rR-3FHA@mail.gmail.com>
-Subject: Re: [PATCH 0/3] dmaengine: Miscellaneous cleanups
+        Tue, 21 Jan 2020 04:34:16 -0500
+Received: from ramsan ([84.195.182.253])
+        by michel.telenet-ops.be with bizsmtp
+        id sxaD2100K5USYZQ06xaD88; Tue, 21 Jan 2020 10:34:14 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1itpvI-0008IS-9Y; Tue, 21 Jan 2020 10:34:12 +0100
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1itpuM-0007Su-2f; Tue, 21 Jan 2020 10:33:14 +0100
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Vinod Koul <vkoul@kernel.org>
 Cc:     Dan Williams <dan.j.williams@intel.com>,
         Lars-Peter Clausen <lars@metafoo.de>,
         Matt Porter <mporter@konsulko.com>,
         Arnd Bergmann <arnd@arndb.de>, dmaengine@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2 2/3] dmaengine: Remove dma_request_slave_channel_compat() wrapper
+Date:   Tue, 21 Jan 2020 10:33:10 +0100
+Message-Id: <20200121093311.28639-3-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200121093311.28639-1-geert+renesas@glider.be>
+References: <20200121093311.28639-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vinod,
+At its original introduction, dma_request_slave_channel_compat() used a
+wrapper, to accommodate filter functions that modify the mask passed.
+Filter functions can no longer modify masks, and the mask parameter was
+made const in commit a53e28da574a40bc ("dma: Make the 'mask' parameter
+of __dma_request_channel const") consecutively.
 
-On Tue, Jan 21, 2020 at 10:23 AM Vinod Koul <vkoul@kernel.org> wrote:
-> On 17-01-20, 16:29, Geert Uytterhoeven wrote:
-> > This patch series contains a few miscellaneous cleanups for the DMA
-> > engine code and API.
->
-> This looks good, thanks for the cleanup. But it fails to apply, can you
-> please rebase and resend
+Hence remove the wrapper, and rename __dma_request_slave_channel_compat()
+to dma_request_slave_channel_compat(), to get rid of one more function
+name starting with a double underscore.
 
-Done.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+---
+v2:
+  - Add Acked-by,
+  - Rebase on top of today's slave-dma/next.
+---
+ include/linux/dmaengine.h | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index 62225d46908bdb23..230d50ef7360ecee 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -1526,11 +1526,9 @@ struct dma_chan *dma_get_slave_channel(struct dma_chan *chan);
+ struct dma_chan *dma_get_any_slave_channel(struct dma_device *device);
+ #define dma_request_channel(mask, x, y) \
+ 	__dma_request_channel(&(mask), x, y, NULL)
+-#define dma_request_slave_channel_compat(mask, x, y, dev, name) \
+-	__dma_request_slave_channel_compat(&(mask), x, y, dev, name)
+ 
+ static inline struct dma_chan
+-*__dma_request_slave_channel_compat(const dma_cap_mask_t *mask,
++*dma_request_slave_channel_compat(const dma_cap_mask_t mask,
+ 				  dma_filter_fn fn, void *fn_param,
+ 				  struct device *dev, const char *name)
+ {
+@@ -1543,7 +1541,7 @@ static inline struct dma_chan
+ 	if (!fn || !fn_param)
+ 		return NULL;
+ 
+-	return __dma_request_channel(mask, fn, fn_param, NULL);
++	return __dma_request_channel(&mask, fn, fn_param, NULL);
+ }
+ 
+ static inline char *
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.17.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
