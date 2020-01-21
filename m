@@ -2,84 +2,103 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60BB2C33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:00:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA32C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:01:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F8FF24656
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:00:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Ke+o3F8J"
+	by mail.kernel.org (Postfix) with ESMTP id 0466C24125
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:01:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729359AbgAUSA5 (ORCPT
+        id S1729360AbgAUSBu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 13:00:57 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:39816 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729080AbgAUSA4 (ORCPT
+        Tue, 21 Jan 2020 13:01:50 -0500
+Received: from mail.suchdamage.org ([52.9.186.167]:40058 "EHLO
+        mail.suchdamage.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729080AbgAUSBt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 13:00:56 -0500
-Received: from [10.137.112.108] (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id F394D20B4798;
-        Tue, 21 Jan 2020 10:00:55 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com F394D20B4798
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1579629656;
-        bh=rEbmD/ZAcgYTqg5lv22gHg3BuIS3XcVwAuyZ8ZucRnY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Ke+o3F8JNJKUXLW8G/r7NY15sJb0k8OJM9cH1u8tH7ydq01p/8XTMiTadGcYv3rUa
-         2tbdZzpRJxsThyHa+kheNH82qgi/wgWn1w7/aohJqryUVu5MVMUM9kjGPsgrFHMe7z
-         RQPun7nIlFwFKrJQhM6JNZT4TNq9OUZ0rfkEO2Vk=
-Subject: Re: [PATCH] IMA: Turn IMA_MEASURE_ASYMMETRIC_KEYS off by default
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        zohar@linux.ibm.com, linux-integrity@vger.kernel.org
-Cc:     sashal@kernel.org, linux-kernel@vger.kernel.org
-References: <20200121171302.4935-1-nramas@linux.microsoft.com>
- <1579628090.3390.28.camel@HansenPartnership.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <47a0ef08-3142-3e7c-a136-784767ba8370@linux.microsoft.com>
-Date:   Tue, 21 Jan 2020 10:00:51 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 21 Jan 2020 13:01:49 -0500
+X-Greylist: delayed 446 seconds by postgrey-1.27 at vger.kernel.org; Tue, 21 Jan 2020 13:01:49 EST
+Received: from localhost (localhost [127.0.0.1])
+        by mail.suchdamage.org (Postfix) with ESMTP id 5E9192F536;
+        Tue, 21 Jan 2020 12:54:23 -0500 (EST)
+Received: from mail.suchdamage.org ([127.0.0.1])
+        by localhost (mail.suchdamage.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id WfyCN7mdvcTx; Tue, 21 Jan 2020 12:54:22 -0500 (EST)
+Received: from carter-zimmerman.suchdamage.org (c-24-147-244-250.hsd1.ma.comcast.net [24.147.244.250])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "laptop", Issuer "laptop" (not verified))
+        (Authenticated sender: hartmans-laptop)
+        by mail.suchdamage.org (Postfix) with ESMTPSA;
+        Tue, 21 Jan 2020 12:54:22 -0500 (EST)
+Received: by carter-zimmerman.suchdamage.org (Postfix, from userid 8042)
+        id 8EB97C3B78; Tue, 21 Jan 2020 12:54:21 -0500 (EST)
+From:   Sam Hartman <hartmans@debian.org>
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     Sam Hartman <hartmans@debian.org>,
+        Zhenzhong Duan <zhenzhong.duan@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: Question about dynamic minor number of misc device
+References: <CAFH1YnOad7aVjoX_PR6mLqT=pXQjpBW9ZDHkKYzNkeistFkA4A@mail.gmail.com>
+        <CAK8P3a3DwaZnRff7CCrJoSxP_MeVUn1S6nRd+hb5rHnv9dBgLQ@mail.gmail.com>
+        <CAFH1YnMDL1gBNT4vr+C=eGGoCYJvkVDnoXUVN8OL9Xs3668Z+Q@mail.gmail.com>
+        <CAK8P3a0aFr546fF+=LDm3rwZ-sK-xC8VLYTZjOEn+o6fVixRHg@mail.gmail.com>
+        <20200120221323.GJ15860@mit.edu>
+        <CAK8P3a2aLxAgjp2_Vb0bKw-0PMVRXKtFw=2giF0MY6hgAQpQRg@mail.gmail.com>
+        <20200121163110.GK15860@mit.edu>
+Date:   Tue, 21 Jan 2020 12:54:21 -0500
+In-Reply-To: <20200121163110.GK15860@mit.edu> (Theodore Y. Ts'o's message of
+        "Tue, 21 Jan 2020 11:31:10 -0500")
+Message-ID: <tslh80o3dbm.fsf@suchdamage.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <1579628090.3390.28.camel@HansenPartnership.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/21/20 9:34 AM, James Bottomley wrote:
+>>>>> "Theodore" == Theodore Y Ts'o <tytso@mit.edu> writes:
 
-> What exactly do you expect distributions to do with this?  I can tell
-> you that most of them will take the default option, so this gets set to
-> N and you may as well not have got the patches upstream because you
-> won't be able to use them in any distro with this setting.
+    Theodore> Sam,
 
-I agree - distros that are not sure or don't care about key measurement 
-are anyway not going to choose this option. Only those that really care 
-will opt in.
+    Theodore> Would you happen to know how commonly used the speakup system would be
+    Theodore> --- in particular, on non-udev systems where changing the minor number
+    Theodore> of the device node might break some folks?  Does your hardware system
+    Theodore> use speakup, or some other interface?
 
-My goal is to not burden the vast majority of the users with this 
-additional overhead if they don't need it - particularly, small systems 
-such as embedded devices, etc.
+Speakup is used by things like the Debian Installer in speech mode.
+I'd assume D-I uses udev.
 
-> 
-> Well, no they can't ... it's rather rare nowadays for people to build
-> their own kernels.  The vast majority of Linux consumers take what the
-> distros give them.  Think carefully before you decide a config option
-> is the solution to this problem.
-> 
-> James
-> 
-If you have suggestions for how I can handle it in a different way 
-(other than config option), I'll be happy to try it out.
+However Speakup is also likely to be used by blind people who prefer
+older environments--no GUI, no pulseaudio, that sort of thing.
+No udev is kind of pushing that mindset to the extreme though.
+Speakup is not typically used without a keyboard or similar, so you're
+not going to see it on embedded systems.
 
-thanks,
-  -lakshmi
+
+
+
+
+    Theodore> Also, who would be the best people to reach out at the
+    Theodore> linux-speakup.org project to verify what the potential impact might be
+    Theodore> of making this change.  It looks like some of the web pages are a bit
+    Theodore> dated, so I wasn't sure what's up to date.
+
+I might ask on debian-accessibility@lists.debian.org.
+My recollection is that the upstream is not very energetic, and that the
+distros keep speakup working because it's quite important for some
+people.
+We broke it on hda_intel for the original Buster release and that
+certainly generated lots of user feedback.
+
+debian-accessibility is Debian specific.  There is the more general
+blinux-l@lists.redhat.com (blind linux users), but that lists tends to
+be so user focused that you might not get good feedback to a question
+like this.
+
+--Sam
