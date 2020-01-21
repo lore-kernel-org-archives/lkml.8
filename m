@@ -2,121 +2,124 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A5CCC33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:56:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54208C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E50B621569
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:56:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579625812;
-	bh=DsUGJHSRTvQGz2HgmbujUvc63xbfSEF706bxM2jCMkE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=UdTW8vbFH9LK13/LjNy7sSRfpTQSlMoM6Gel356t3jdmS3OPX5J/jELtsmGIZfZKr
-	 QIB9CxzsoFUSah+/aK2+wqp5UVNH3lK1cY5BRXPnj/AdZhgCzKTn3zlTjmEXb5ryeH
-	 6bJMV+kFW+hwoe1x2D742GoA7BH0NHhaaK7Ccqns=
+	by mail.kernel.org (Postfix) with ESMTP id 2E75121569
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:57:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729159AbgAUQ4v convert rfc822-to-8bit (ORCPT
+        id S1729255AbgAUQ55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 11:56:51 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:44113 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726555AbgAUQ4v (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 11:56:51 -0500
-Received: by mail-oi1-f193.google.com with SMTP id d62so3179433oia.11;
-        Tue, 21 Jan 2020 08:56:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=L48dqKCWqUM40uiIIvW7gNnbpv7oxB/Hh4H4mqqlPcE=;
-        b=W8dAF/1C7IWuwNsJrxxbXrJ1eHsVyu5teK4sqN7LgP1WVbuX+i8P3ESJoBh8q6CYAa
-         kW3qDjB+HszxVthFlfIqjs8gJeAYBet4Yb2PGSDJ5hV9EV0BRvnSE8jOuDPaJ9vlO+ef
-         3fbZRsN+DTZhrIHO9+Be6jsZ1tMZJ9Zhm+snbEXfEFYbq68tpKIbN/I2QWEH+nGGX7RF
-         OK9txUVV9fuu7wsGyZHxkoanEYx3RVbdgoarpbHm3XuvTlx8fuCD4TrnGdwmpHnIvNEX
-         KaVVcLPraHvjeE/uo3CLgH4uDOBqvh9Pz0KrlMUW9KvcegHAFnbD/BkSOnkzBy7ZzGtj
-         /Qyw==
-X-Gm-Message-State: APjAAAVPgmZUiZZqc08+/iHKkhKpoSeVIF2mcrDYYgCkEbr8itStG8Cm
-        7DbMP5/30S+sD8pUmrX9Gu+RfUsTiT7wumssEp0CpA==
-X-Google-Smtp-Source: APXvYqyPmBDzNEz7+Zh6YxhQJWlleEoCehXnih04KMLq9z2SKftc/FZQrx4589Dqi/vJU/ZbqAYZSamTVF6BS4uWuAM=
-X-Received: by 2002:a05:6808:1c5:: with SMTP id x5mr3750017oic.57.1579625810328;
- Tue, 21 Jan 2020 08:56:50 -0800 (PST)
+        Tue, 21 Jan 2020 11:57:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35494 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729081AbgAUQ55 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 11:57:57 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0C5921569;
+        Tue, 21 Jan 2020 16:57:55 +0000 (UTC)
+Date:   Tue, 21 Jan 2020 11:57:54 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Tom Zanussi <zanussi@kernel.org>
+Cc:     artem.bityutskiy@linux.intel.com, mhiramat@kernel.org,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Subject: Re: [PATCH v2 06/12] tracing: Add synthetic event command
+ generation functions
+Message-ID: <20200121115754.01efcdfd@gandalf.local.home>
+In-Reply-To: <c731007e4b528f8bcd40d2864979597bd5d91183.1578688120.git.zanussi@kernel.org>
+References: <cover.1578688120.git.zanussi@kernel.org>
+        <c731007e4b528f8bcd40d2864979597bd5d91183.1578688120.git.zanussi@kernel.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200121134157.20396-1-sakari.ailus@linux.intel.com>
- <20200121134157.20396-7-sakari.ailus@linux.intel.com> <CAJZ5v0iJXUjK0n7mkqxagX9FtOmMsLqVMmU2xpQOLSb0aBWSMA@mail.gmail.com>
- <20200121161856.GZ5440@paasikivi.fi.intel.com>
-In-Reply-To: <20200121161856.GZ5440@paasikivi.fi.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 21 Jan 2020 17:56:39 +0100
-Message-ID: <CAJZ5v0ho8ry7iTXBTxHMjwcqT+EGT2mRy2rmp+o7rmG0apYimQ@mail.gmail.com>
-Subject: Re: [PATCH v4 6/6] Documentation: ACPI: Document probe-low-power _DSD property
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Bingbu Cao <bingbu.cao@intel.com>, linux-media@vger.kernel.org,
-        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
-        Hyungwoo Yang <hyungwoo.yang@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Mani, Rajmohan" <rajmohan.mani@intel.com>,
-        Tomasz Figa <tfiga@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 5:19 PM Sakari Ailus
-<sakari.ailus@linux.intel.com> wrote:
->
-> On Tue, Jan 21, 2020 at 05:09:44PM +0100, Rafael J. Wysocki wrote:
-> > On Tue, Jan 21, 2020 at 2:41 PM Sakari Ailus
-> > <sakari.ailus@linux.intel.com> wrote:
-> > >
-> > > Document the probe-low-power _DSD property and how it is used with I²C
-> > > drivers.
-> > >
-> > > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > > ---
-> > >  .../acpi/dsd/probe-low-power.rst              | 28 +++++++++++++++++++
-> > >  Documentation/firmware-guide/acpi/index.rst   |  1 +
-> > >  2 files changed, 29 insertions(+)
-> > >  create mode 100644 Documentation/firmware-guide/acpi/dsd/probe-low-power.rst
-> > >
-> > > diff --git a/Documentation/firmware-guide/acpi/dsd/probe-low-power.rst b/Documentation/firmware-guide/acpi/dsd/probe-low-power.rst
-> > > new file mode 100644
-> > > index 0000000000000..e0343ffefe071
-> > > --- /dev/null
-> > > +++ b/Documentation/firmware-guide/acpi/dsd/probe-low-power.rst
-> > > @@ -0,0 +1,28 @@
-> > > +.. SPDX-License-Identifier: GPL-2.0
-> > > +
-> > > +======================================
-> > > +Probing I²C devices in low power state
-> > > +======================================
-> > > +
-> > > +Introduction
-> > > +============
-> > > +
-> > > +In some cases it may be preferred to leave certain devices powered off for
-> > > +the entire system bootup if powering on these devices has adverse side
-> > > +effects, beyond just powering on the said device. The _DSD property
-> > > +"probe-low-power" has been defined for this purpose.
-> >
-> > Well, if you say "has been defined", you need to provide a pointer to
-> > the definition document (a specification of some sort or similar).
->
-> How about:
->
-> s/has been defined/is used/
+On Fri, 10 Jan 2020 14:35:12 -0600
+Tom Zanussi <zanussi@kernel.org> wrote:
 
-I would say "Linux recognizes the ... that can be used for this purpose."
+> Add functions used to generate synthetic event commands, built on top
+> of the dynevent_cmd interface.
+> 
+> gen_synth_cmd() is used to create a synthetic event command using a
+> variable arg list and gen_synth_cmd_array() does the same thing but
+> using an array of field descriptors.  add_synth_field() and
+> add_synth_fields() can be used to add single fields one by one or as a
+> group.  Once all desired fields are added, create_dynevent() is used
+> to actually execute the command and create the event.
+> 
+> create_synth_event() does everything, including creating the event, in
+> a single call.
+> 
+> Signed-off-by: Tom Zanussi <zanussi@kernel.org>
+> ---
+>  include/linux/trace_events.h     |  30 ++++
+>  kernel/trace/trace_events_hist.c | 325 ++++++++++++++++++++++++++++++++++++++-
+>  2 files changed, 352 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+> index bf4cc2e56125..4228407d4736 100644
+> --- a/include/linux/trace_events.h
+> +++ b/include/linux/trace_events.h
+> @@ -409,6 +409,36 @@ extern int create_dynevent(struct dynevent_cmd *cmd);
+>  
+>  extern int delete_synth_event(const char *name);
+>  
+> +extern void synth_dynevent_cmd_init(struct dynevent_cmd *cmd,
+> +				    char *buf, int maxlen);
+> +
+> +extern int __gen_synth_cmd(struct dynevent_cmd *cmd, const char *name,
+> +			   struct module *mod, ...);
+> +
+> +#define gen_synth_cmd(cmd, name, mod, ...)	\
+> +	__gen_synth_cmd(cmd, name, mod, ## __VA_ARGS__, NULL)
+> +
+> +struct synth_field_desc {
+> +	const char *type;
+> +	const char *name;
+> +};
+> +
+> +extern int gen_synth_cmd_array(struct dynevent_cmd *cmd, const char *name,
+> +			       struct module *mod,
+> +			       struct synth_field_desc *fields,
+> +			       unsigned int n_fields);
+> +extern int create_synth_event(const char *name,
+> +			      struct synth_field_desc *fields,
+> +			      unsigned int n_fields, struct module *mod);
+> +
+> +
+> +extern int add_synth_field(struct dynevent_cmd *cmd,
+> +			   const char *type,
+> +			   const char *name);
+> +extern int add_synth_fields(struct dynevent_cmd *cmd,
+> +			    struct synth_field_desc *fields,
+> +			    unsigned int n_fields);
+
+As these are in a global header and globally visible, let's rename them
+to be more name space aware.
+
+Have them all start with "synth_event_".
+
+synth_event_gen_cmd_array()
+synth_event_create()
+synth_event_add_field()
+synth_event_add_fields()
+
+Makes it easier to grep for synth_event functions too.
+
+-- Steve
+
+
+> +
+>  /*
+>   * Event file flags:
+>   *  ENABLED	  - The event is enabled
