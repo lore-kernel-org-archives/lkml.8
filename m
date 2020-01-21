@@ -2,111 +2,106 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE108C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A102C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:01:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DFAB21569
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:00:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579622456;
-	bh=jcUtpBfpcuoVb3yGRhb6I1wWPmt7SejDo8TDVLq4ckU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ZjC/qA6M9xkjtCJLg9O+wiAPuMAFGaZ/QGiffBYuoizj6nSdMDFiaBz1VnR60vM64
-	 IUx8Ps1eV8HcYJUosOhyO+KnoTiWIbtiowDi1B4AHmTPgIgiuuXMXnw2jYdNXJdqN9
-	 D6r6IiC/XYV9I65IiuCVP5rB+fXAmIaClGW0QSP8=
+	by mail.kernel.org (Postfix) with ESMTP id 6771A217F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:01:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729096AbgAUQAz (ORCPT
+        id S1729342AbgAUQBV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 11:00:55 -0500
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:65434 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727817AbgAUQAz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 11:00:55 -0500
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id 00LG0WWL004396;
-        Wed, 22 Jan 2020 01:00:32 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 00LG0WWL004396
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1579622433;
-        bh=UkZRS9NcTgc/pE2ZU+XPobTZ8euQfmozs1NIKmVtgB8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=pqq079j450i4kskTg34a6jXtvAm6UrFOje8O2rL51BsamArKYevluCjjjrjrwo4MO
-         IdcRHNUesdrL1bktgbNyc69Qh9Df1rUE4l62+CEoKSHWHeTtqtSzYvU+ZUvS1mWarO
-         gfGSKDFwX9553uC4fPsjIltwnKAPIuoFVfEGVgvlCnZEj6aZW18s3a6ScpwotBSGql
-         SS7vn54wOVxV1OCgldGwlYq+NqPi576XhRy3741pIRUg12KBrlbgguOCQNelbvxwDk
-         GaROZmNovid+1tJ3dWNAPrWJjXwzSX0Q6KLLC/dXrToTA4YDB/dhDN6l9rwyt41kKb
-         6xeDE7GO3ZTGw==
-X-Nifty-SrcIP: [209.85.217.49]
-Received: by mail-vs1-f49.google.com with SMTP id g15so2151976vsf.1;
-        Tue, 21 Jan 2020 08:00:32 -0800 (PST)
-X-Gm-Message-State: APjAAAULUAB/d01SzMMU2ZibxaLqnvaF4iS9DwIC/Hvr1P1EAFEZvDiK
-        MTpSpKdrcii59YDZTjlC4qQkftlNeqsTy0l662U=
-X-Google-Smtp-Source: APXvYqw5/xpKMwJ3Dni5RStdI/powNXLAkzCtS2BwVu0JOoQYeux1KW50NlZujdmVRzGgkinqYdNY6Sz30xA7gfj8lY=
-X-Received: by 2002:a67:f8ca:: with SMTP id c10mr3210302vsp.54.1579622431647;
- Tue, 21 Jan 2020 08:00:31 -0800 (PST)
+        Tue, 21 Jan 2020 11:01:21 -0500
+Received: from mga06.intel.com ([134.134.136.31]:53110 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729121AbgAUQBU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 11:01:20 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 08:01:20 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,346,1574150400"; 
+   d="scan'208";a="227374462"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga003.jf.intel.com with ESMTP; 21 Jan 2020 08:01:15 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id DC9F63CF; Tue, 21 Jan 2020 18:01:14 +0200 (EET)
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Lee Jones <lee.jones@linaro.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Mark Brown <broonie@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 04/38] platform/x86: intel_scu_ipc: Remove Lincroft support
+Date:   Tue, 21 Jan 2020 19:00:40 +0300
+Message-Id: <20200121160114.60007-5-mika.westerberg@linux.intel.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200121160114.60007-1-mika.westerberg@linux.intel.com>
+References: <20200121160114.60007-1-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
-References: <20200104150238.19834-1-masahiroy@kernel.org>
-In-Reply-To: <20200104150238.19834-1-masahiroy@kernel.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 22 Jan 2020 00:59:54 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATS33-TfoGajRCT3nAAZ+AcfVmO4GorxRTNPk9z8mBcHA@mail.gmail.com>
-Message-ID: <CAK7LNATS33-TfoGajRCT3nAAZ+AcfVmO4GorxRTNPk9z8mBcHA@mail.gmail.com>
-Subject: Re: [PATCH v2 00/13] initramfs: a lot of cleanups
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Greg Thelen <gthelen@google.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 5, 2020 at 12:03 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
->
->
-> Masahiro Yamada (13):
->   initramfs: replace klibcdirs in Makefile with FORCE
->   gen_initramfs_list.sh: remove unused variable 'default_list'
->   gen_initramfs_list.sh: fix the tool name in the comment
->   initramfs: rename gen_initramfs_list.sh to gen_initramfs.sh
->   initramfs: remove redundant dependency on BLK_DEV_INITRD
->   initramfs: make compression options not depend on INITRAMFS_SOURCE
->   initramfs: make initramfs compression choice non-optional
->   initramfs: specify $(src)/gen_initramfs.sh as a prerequisite in
->     Makefile
->   initramfs: generate dependency list and cpio at the same time
->   initramfs: add default_cpio_list, and delete -d option support
->   gen_initramfs.sh: always output cpio even without -o option
->   initramfs: refactor the initramfs build rules
->   gen_initramfs.sh: remove intermediate cpio_list on errors
+Moorestown support was removed years ago with by the commit 1a8359e411eb
+("x86/mid: Remove Intel Moorestown"). Lincroft is the CPU side chip of
+Moorestown and not supported anymore so remove the code from the driver.
 
-All, applied to linux-kbuild.
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/platform/x86/intel_scu_ipc.c | 8 --------
+ 1 file changed, 8 deletions(-)
 
+diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
+index a8be5bcb9832..6c44fe5e55b5 100644
+--- a/drivers/platform/x86/intel_scu_ipc.c
++++ b/drivers/platform/x86/intel_scu_ipc.c
+@@ -58,7 +58,6 @@
+ #define IPC_RWBUF_SIZE    20		/* IPC Read buffer Size */
+ #define IPC_IOC	          0x100		/* IPC command register IOC bit */
+ 
+-#define PCI_DEVICE_ID_LINCROFT		0x082a
+ #define PCI_DEVICE_ID_PENWELL		0x080e
+ #define PCI_DEVICE_ID_CLOVERVIEW	0x08ea
+ #define PCI_DEVICE_ID_TANGIER		0x11a0
+@@ -70,12 +69,6 @@ struct intel_scu_ipc_pdata_t {
+ 	u8 irq_mode;
+ };
+ 
+-static const struct intel_scu_ipc_pdata_t intel_scu_ipc_lincroft_pdata = {
+-	.i2c_base = 0xff12b000,
+-	.i2c_len = 0x10,
+-	.irq_mode = 0,
+-};
+-
+ /* Penwell and Cloverview */
+ static const struct intel_scu_ipc_pdata_t intel_scu_ipc_penwell_pdata = {
+ 	.i2c_base = 0xff12b000,
+@@ -677,7 +670,6 @@ static int ipc_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ #define SCU_DEVICE(id, pdata)	{PCI_VDEVICE(INTEL, id), (kernel_ulong_t)&pdata}
+ 
+ static const struct pci_device_id pci_ids[] = {
+-	SCU_DEVICE(PCI_DEVICE_ID_LINCROFT,	intel_scu_ipc_lincroft_pdata),
+ 	SCU_DEVICE(PCI_DEVICE_ID_PENWELL,	intel_scu_ipc_penwell_pdata),
+ 	SCU_DEVICE(PCI_DEVICE_ID_CLOVERVIEW,	intel_scu_ipc_penwell_pdata),
+ 	SCU_DEVICE(PCI_DEVICE_ID_TANGIER,	intel_scu_ipc_tangier_pdata),
+-- 
+2.24.1
 
->  usr/.gitignore                                |   8 +-
->  usr/Kconfig                                   |  26 ---
->  usr/Makefile                                  |  97 ++++++----
->  usr/default_cpio_list                         |   6 +
->  ...gen_initramfs_list.sh => gen_initramfs.sh} | 167 +++++-------------
->  usr/initramfs_data.S                          |   5 +-
->  6 files changed, 112 insertions(+), 197 deletions(-)
->  create mode 100644 usr/default_cpio_list
->  rename usr/{gen_initramfs_list.sh => gen_initramfs.sh} (53%)
->
-> --
-> 2.17.1
->
-
-
---
-Best Regards
-Masahiro Yamada
