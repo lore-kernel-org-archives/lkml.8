@@ -2,142 +2,106 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23DC1C33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:05:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B14C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:06:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF96C21569
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:05:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579619138;
-	bh=ZipuNGCTBSu38FXFqjUfvBa1esJyOnZj1CxEHVnqEwU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=hbg3t1nQS+LyTvNxBo2t1OEK7WQHP5sg/U7NNkpTYtCPm24YIzDUmCpIx8+R4+S73
-	 RrGdgpK7RoILtcdAT+y/83JLk36P6NQsPcwY9bevEvCFh50WONtWy7/xHTOYpX1PmX
-	 Qz8JnU1kCOq2wYXqo2E9FMZRmQejyel5sBGGJPA0=
+	by mail.kernel.org (Postfix) with ESMTP id 17BCF24655
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:06:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="P/Gk+XxY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729137AbgAUPFh (ORCPT
+        id S1729157AbgAUPGX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 10:05:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42696 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727059AbgAUPFh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 10:05:37 -0500
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72C6D21569;
-        Tue, 21 Jan 2020 15:05:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579619136;
-        bh=ZipuNGCTBSu38FXFqjUfvBa1esJyOnZj1CxEHVnqEwU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=PtbYcQvcLfgPPJFqYK8wAxFKdnWOOzRqJKEbKKqhM8cGSImD5VvPzxDYnkgnuC0HL
-         mYa6R7sxRYhBP6xpnxsF+qRUQ2QgomqN/xBrsH7ElxiWHyBkSeMuez/Yy+xCUKnMga
-         zuFu/5jXVv4TCA7ry6rgFjUNEYkj66bk55hfbrlI=
-Received: by mail-lj1-f175.google.com with SMTP id w1so3144510ljh.5;
-        Tue, 21 Jan 2020 07:05:36 -0800 (PST)
-X-Gm-Message-State: APjAAAUZI/RLKaRhDy1sJ9LidtcD3G4jNi8OtoV9EO79TdC+saQEXD57
-        bj5NLUPJhMCiEHRuYYBHvl+P63bnWFDuGoL2Ev8=
-X-Google-Smtp-Source: APXvYqyyP7mlbRDitUaS+MHQ51rqYNoNjvIigwyRLg/5leOsqJaMz5djTTK8rZOatcjbiHNge19/xgqyQu+FoQYoosY=
-X-Received: by 2002:a2e:89d0:: with SMTP id c16mr16637414ljk.228.1579619134609;
- Tue, 21 Jan 2020 07:05:34 -0800 (PST)
+        Tue, 21 Jan 2020 10:06:23 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:37956 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727508AbgAUPGX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 10:06:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=TYcI2J8+m5fI6D2lTz5Hy7Lgm04gjVpXRrOJfqIDEpY=; b=P/Gk+XxY85kqGawYZuTlwb04D
+        lJPsnSqZ6Q0IsXXYe8eEu8+4wzk8p9J3AoLaCLSgDQO83C0s0WrdmDfzBnXUxPhX0YMlRpvvGT2vv
+        N1fCR1C4Ef7KxqIkCEnmS1fUfg8uZ04aI+ekCBtcZwq+jl1giiMZ4nOD6Fa4gVyEH2G2RB954uAaD
+        juntudQbuI5dTwiJubdvFwbm+F60uBajhdR237MkYoNOz890xcaTvuLrlwXrt1NMobwF5/N6QiW92
+        8xPojBIKC0Yw7Qs/kvZglBJei9iqYTuRYQdmc7FEL8jY7BAC+FivaNDinOre4MNUoLD62sHJIgngD
+        RYIi/6V3Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1itv6V-0004uo-9L; Tue, 21 Jan 2020 15:06:07 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DF71F305D3F;
+        Tue, 21 Jan 2020 16:04:25 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 11A8E20983FC2; Tue, 21 Jan 2020 16:06:05 +0100 (CET)
+Date:   Tue, 21 Jan 2020 16:06:05 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <thoiland@redhat.com>,
+        Jean-Tsung Hsiao <jhsiao@redhat.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [for-linus][PATCH 2/5] tracing/uprobe: Fix double perf_event
+ linking on multiprobe uprobe
+Message-ID: <20200121150605.GT14879@hirez.programming.kicks-ass.net>
+References: <20200121143847.609307852@goodmis.org>
+ <20200121143956.600928887@goodmis.org>
+ <20200121145009.GR14879@hirez.programming.kicks-ass.net>
+ <bd3126fff15641098af2a4ac2164f3c4@AcuMS.aculab.com>
 MIME-Version: 1.0
-References: <1579603800-25146-1-git-send-email-majun258@linux.alibaba.com>
-In-Reply-To: <1579603800-25146-1-git-send-email-majun258@linux.alibaba.com>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Tue, 21 Jan 2020 23:05:23 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTRp-9ivwnjQ5Xcni6z4h7j3VRJ3LmbVzLysF-osehoAJQ@mail.gmail.com>
-Message-ID: <CAJF2gTRp-9ivwnjQ5Xcni6z4h7j3VRJ3LmbVzLysF-osehoAJQ@mail.gmail.com>
-Subject: Re: [PATCH] csky: Fix the compile error when enable ck860
-To:     MaJun <majun258@linux.alibaba.com>
-Cc:     mj145409@alibaba-inc.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-csky@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bd3126fff15641098af2a4ac2164f3c4@AcuMS.aculab.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi MaJun,
+On Tue, Jan 21, 2020 at 02:59:35PM +0000, David Laight wrote:
+> From: Peter Zijlstra
+> > Sent: 21 January 2020 14:50
+> > On Tue, Jan 21, 2020 at 09:38:49AM -0500, Steven Rostedt wrote:
+> > > diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
+> > > index 4ee703728aec..03e4e180058d 100644
+> > > --- a/kernel/trace/trace_probe.h
+> > > +++ b/kernel/trace/trace_probe.h
+> > > @@ -230,6 +230,7 @@ struct trace_probe_event {
+> > >  	struct trace_event_call		call;
+> > >  	struct list_head 		files;
+> > >  	struct list_head		probes;
+> > > +	char				data[0];
+> > >  };
+> > 
+> > Note that this relies on pure 'luck'. If you stick anything <4 bytes in
+> > between the list_head and the data member it'll come unstuck real fast.
+> 
+> Can you fix it by adding an unnamed struct as in:
 
-On Tue, Jan 21, 2020 at 8:25 PM MaJun <majun258@linux.alibaba.com> wrote:
->
-> There is a compile error when ck860 processor is choosed.
-> To fix this compile error, the FPU config should be disabled.
->
-> Signed-off-by: MaJun <majun258@linux.alibaba.com>
-> ---
->  arch/csky/Kconfig           | 2 +-
->  arch/csky/configs/defconfig | 7 -------
-Kconfig and defconfig should be separate patches.
+The trivial fix is like I suggested in the other thread:
 
->  2 files changed, 1 insertion(+), 8 deletions(-)
->
-> diff --git a/arch/csky/Kconfig b/arch/csky/Kconfig
-> index 3973847..f6ad4c6 100644
-> --- a/arch/csky/Kconfig
-> +++ b/arch/csky/Kconfig
-> @@ -154,7 +154,7 @@ config CPU_CK860
->         select CPU_HAS_TLBI
->         select CPU_HAS_CACHEV2
->         select CPU_HAS_LDSTEX
-> -       select CPU_HAS_FPUV2
-> +       select CPU_HAS_FPUV2 if CPU_HAS_FPU
-Not right.
+	struct trace_uprobe_filter filters[0];
 
-config CPU_HAS_FPUV2
-         depends on CPU_HAS_FPU
-         bool
-How ?
-
->  endchoice
->
->  choice
-> diff --git a/arch/csky/configs/defconfig b/arch/csky/configs/defconfig
-> index 7ef4289..ad9591c 100644
-> --- a/arch/csky/configs/defconfig
-> +++ b/arch/csky/configs/defconfig
-> @@ -10,9 +10,6 @@ CONFIG_BSD_PROCESS_ACCT=y
->  CONFIG_BSD_PROCESS_ACCT_V3=y
->  CONFIG_MODULES=y
->  CONFIG_MODULE_UNLOAD=y
-> -CONFIG_DEFAULT_DEADLINE=y
-> -CONFIG_CPU_CK807=y
-> -CONFIG_CPU_HAS_FPU=y
->  CONFIG_NET=y
->  CONFIG_PACKET=y
->  CONFIG_UNIX=y
-> @@ -27,10 +24,7 @@ CONFIG_SERIAL_NONSTANDARD=y
->  CONFIG_SERIAL_8250=y
->  CONFIG_SERIAL_8250_CONSOLE=y
->  CONFIG_SERIAL_OF_PLATFORM=y
-> -CONFIG_TTY_PRINTK=y
->  # CONFIG_VGA_CONSOLE is not set
-> -CONFIG_CSKY_MPTIMER=y
-> -CONFIG_GX6605S_TIMER=y
->  CONFIG_PM_DEVFREQ=y
->  CONFIG_DEVFREQ_GOV_SIMPLE_ONDEMAND=y
->  CONFIG_DEVFREQ_GOV_PERFORMANCE=y
-> @@ -56,6 +50,5 @@ CONFIG_CRAMFS=y
->  CONFIG_ROMFS_FS=y
->  CONFIG_NFS_FS=y
->  CONFIG_PRINTK_TIME=y
-> -CONFIG_DEBUG_INFO=y
->  CONFIG_DEBUG_FS=y
->  CONFIG_MAGIC_SYSRQ=y
-> --
-> 1.8.3.1
->
-Agree about defconfig
-
--- 
-Best Regards
- Guo Ren
-
-ML: https://lore.kernel.org/linux-csky/
+The alternative that Masami-San suggested should also work.
