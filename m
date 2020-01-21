@@ -5,167 +5,230 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85324C33CAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 07:00:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8CD0C33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 07:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B2BC24125
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 07:00:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B07492253D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 07:05:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="h5GGTdll"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="s/8kj1l7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728916AbgAUHAc (ORCPT
+        id S1728811AbgAUHFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 02:00:32 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:37412 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbgAUHAb (ORCPT
+        Tue, 21 Jan 2020 02:05:23 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:45364 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbgAUHFX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 02:00:31 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00L70RBA026879;
-        Tue, 21 Jan 2020 01:00:27 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579590027;
-        bh=UQBJCDZRnfhIDDJNLa9n5i9Wb+4Tvw6qRjtCAg/LL6E=;
-        h=From:To:CC:Subject:Date;
-        b=h5GGTdllqZQpx4QHql7o+6NsUE5IZDdZC01LWHwp5nSdOSpf92eLybPClG9wsD7QJ
-         ED6esDlH/kTh5UzYI8b8GE/dKdKBQxFZufyA6+1UlAdP/wZTJuRgHa9kuf7TqhtsNg
-         ktfOyd5dJ4xZKL9AJ9nkn1gZvAM35xb56uZutp9g=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00L70RvO123473
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 21 Jan 2020 01:00:27 -0600
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 21
- Jan 2020 01:00:25 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 21 Jan 2020 01:00:25 -0600
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00L70NgB111713;
-        Tue, 21 Jan 2020 01:00:24 -0600
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <vkoul@kernel.org>
-CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dan.j.williams@intel.com>, <grygorii.strashko@ti.com>
-Subject: [PATCH] dmaengine: ti: k3-psil: Fix warnings with C=1 and W=1
-Date:   Tue, 21 Jan 2020 09:01:04 +0200
-Message-ID: <20200121070104.4393-1-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.25.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Tue, 21 Jan 2020 02:05:23 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200121070521euoutp0218e5e50de91459f5c00fe348da581857~r1QcnFjO72351723517euoutp02b
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 07:05:21 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200121070521euoutp0218e5e50de91459f5c00fe348da581857~r1QcnFjO72351723517euoutp02b
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1579590321;
+        bh=jz6YdJe+9oiv3h/P57nB26DlekL22/ed76FQBVgaSrY=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=s/8kj1l7tfs2HhdCctTtxpgpPHXDVKLe1BqaH/X3xHeuwYn266LNYVFpurUt0klUP
+         8G430K+qe/QDCh1GQwG3qpQApxcn5lbGj3TLLeKTtZ5PruCm0vIo/m1RFnY7YPeChQ
+         Q0PootTQZfF/W1y+PWUaW7prKeK/avWkAtDu0OHI=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200121070520eucas1p1661b2a62ef7419e85b38bb21dcf6e19f~r1QcLwOsC0793607936eucas1p1M;
+        Tue, 21 Jan 2020 07:05:20 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id C5.57.60679.0B2A62E5; Tue, 21
+        Jan 2020 07:05:20 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200121070520eucas1p29587eed877efcf6e6b9433440f3c10da~r1Qb1Vxbf3176231762eucas1p23;
+        Tue, 21 Jan 2020 07:05:20 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200121070520eusmtrp28b76c75abbbe60b93670cba358a3f8f2~r1Qb0rSk31202912029eusmtrp2C;
+        Tue, 21 Jan 2020 07:05:20 +0000 (GMT)
+X-AuditID: cbfec7f4-0e5ff7000001ed07-e8-5e26a2b00467
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id DF.45.07950.0B2A62E5; Tue, 21
+        Jan 2020 07:05:20 +0000 (GMT)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200121070519eusmtip2238a581f3dbd3c7f444f819c61f486ec~r1QbcZOYR2994429944eusmtip2Q;
+        Tue, 21 Jan 2020 07:05:19 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCH v2] ARM: dts: exynos: Add GPU thermal zone cooling maps for
+ Odroid XU3/XU4/HC1
+Date:   Tue, 21 Jan 2020 08:05:10 +0100
+Message-Id: <20200121070510.31520-1-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrAIsWRmVeSWpSXmKPExsWy7djPc7obFqnFGcx5JGWxccZ6VovrX56z
+        Wpw/v4Hd4vKuOWwWM87vY7JYe+QuuwObx6ZVnWwefVtWMXp83iQXwBzFZZOSmpNZllqkb5fA
+        lbH+51vmgocSFXMf7GNtYPwq2MXIySEhYCLxuOEDcxcjF4eQwApGiek/t7NBOF8YJe6sv8UM
+        UiUk8JlR4tgDEZiOtqa/UEXLGSWeT/zAAtdxsO0MO0gVm4ChRNfbLjYQW0TAWaJhaiMTSBGz
+        wDZGidcLZoIVCQskSJyesIaxi5GDg0VAVaJtJlg9r4CtxOMntxkhtslLrN5wAOw+CYEDbBJt
+        d14yQyRcJLZObWaHsIUlXh3fAmXLSPzfOZ8JoqGZUeLhubXsEE4Po8TlphlQY60l7pz7xQay
+        mVlAU2L9Ln2IsKNE1+OP7CBhCQE+iRtvwYHEDGRO2jadGSLMK9HRJgRRrSYx6/g6uLUHL1yC
+        Os1DYv2v9eyQkIuV2HLmBdMERrlZCLsWMDKuYhRPLS3OTU8tNspLLdcrTswtLs1L10vOz93E
+        CIz30/+Of9nBuOtP0iFGAQ5GJR7eF5NV44RYE8uKK3MPMUpwMCuJ8C5oAgrxpiRWVqUW5ccX
+        leakFh9ilOZgURLnNV70MlZIID2xJDU7NbUgtQgmy8TBKdXAqFbiK+J9cvuRpcLrGN5vcdsl
+        elRld1yFzxr9rcm6msUTfns+upTwqiaiWsPkiNf71O7+ebtYVBzWzTQ0FJwpzbvmXf3N9XO3
+        mLvq2CbZXj60yuiczQJ7/+bPfQrpx0T7k6bbfvVOiDb0Drq+tZ6tUeb3k6T1hlkFPzpq6jeF
+        sYVyyJsI3ctTYinOSDTUYi4qTgQAgyVECfMCAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrGLMWRmVeSWpSXmKPExsVy+t/xe7obFqnFGcw9yWGxccZ6VovrX56z
+        Wpw/v4Hd4vKuOWwWM87vY7JYe+QuuwObx6ZVnWwefVtWMXp83iQXwBylZ1OUX1qSqpCRX1xi
+        qxRtaGGkZ2hpoWdkYqlnaGwea2VkqqRvZ5OSmpNZllqkb5egl7H+51vmgocSFXMf7GNtYPwq
+        2MXIySEhYCLR1vSXrYuRi0NIYCmjxNHZE1khEjISJ6c1QNnCEn+udUEVfWKUWH3/LCNIgk3A
+        UKLrLUiCk0NEwFXi0IpeZpAiZoEdjBLdLRfYQRLCAnESZ1o/snQxcnCwCKhKtM0Eq+cVsJV4
+        /OQ2I8QCeYnVGw4wT2DkWcDIsIpRJLW0ODc9t9hIrzgxt7g0L10vOT93EyMwzLYd+7llB2PX
+        u+BDjAIcjEo8vA7TVOOEWBPLiitzDzFKcDArifAuaAIK8aYkVlalFuXHF5XmpBYfYjQF2j2R
+        WUo0OR8YA3kl8YamhuYWlobmxubGZhZK4rwdAgdjhATSE0tSs1NTC1KLYPqYODilGhgP6Dak
+        ztq690m/2co9felvKg9oPFdKDs45zPytqvvK3vlKJZMaTZMdlgksW5RtbHbxWPpaA8HP1/nm
+        layKnBM58Uzo8rkpeVK2R23543ZmTLT306sq52/5bMq36FyQ7TW5GSv3n9q1aWnrRUf28mdO
+        pY4fGbt4Pprsnx7FmbRSf8NLQ3+mlg4lluKMREMt5qLiRABVraLlSQIAAA==
+X-CMS-MailID: 20200121070520eucas1p29587eed877efcf6e6b9433440f3c10da
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200121070520eucas1p29587eed877efcf6e6b9433440f3c10da
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200121070520eucas1p29587eed877efcf6e6b9433440f3c10da
+References: <CGME20200121070520eucas1p29587eed877efcf6e6b9433440f3c10da@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes the following warnings:
-drivers/dma/ti/k3-psil-j721e.c:62:16: warning: symbol 'j721e_src_ep_map' was not declared. Should it be static?
-drivers/dma/ti/k3-psil-j721e.c:172:16: warning: symbol 'j721e_dst_ep_map' was not declared. Should it be static?
-drivers/dma/ti/k3-psil-j721e.c:216:20: warning: symbol 'j721e_ep_map' was not declared. Should it be static?
-  CC      drivers/dma/ti/k3-psil-j721e.o
-drivers/dma/ti/k3-psil-am654.c:52:16: warning: symbol 'am654_src_ep_map' was not declared. Should it be static?
-drivers/dma/ti/k3-psil-am654.c:127:16: warning: symbol 'am654_dst_ep_map' was not declared. Should it be static?
-drivers/dma/ti/k3-psil-am654.c:169:20: warning: symbol 'am654_ep_map' was not declared. Should it be static?
+Add trip points and cooling maps for GPU thermal zone for Odroid
+XU3/XU4/HC1 boards. Trip points are based on the CPU thermal zone for the
+those boards.
 
-Reported-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 ---
-Hi Vinod,
+v2:
+- removed polling-delay related properties for HC1 as requested by Krzysztof
+--
+ arch/arm/boot/dts/exynos5422-odroidhc1.dts    | 30 ++++++++++
+ .../boot/dts/exynos5422-odroidxu3-common.dtsi | 59 +++++++++++++++++++
+ 2 files changed, 89 insertions(+)
 
-Thanks for catching it!
-
-This is on top of the v8 series.
-
-Regards,
-Peter
-
- drivers/dma/ti/k3-psil-am654.c | 4 ++--
- drivers/dma/ti/k3-psil-j721e.c | 4 ++--
- drivers/dma/ti/k3-psil-priv.h  | 4 ++++
- drivers/dma/ti/k3-psil.c       | 3 ---
- 4 files changed, 8 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/dma/ti/k3-psil-am654.c b/drivers/dma/ti/k3-psil-am654.c
-index 7da9242b6114..a896a15908cf 100644
---- a/drivers/dma/ti/k3-psil-am654.c
-+++ b/drivers/dma/ti/k3-psil-am654.c
-@@ -49,7 +49,7 @@
- 	}
+diff --git a/arch/arm/boot/dts/exynos5422-odroidhc1.dts b/arch/arm/boot/dts/exynos5422-odroidhc1.dts
+index f163206265bb..812659260278 100644
+--- a/arch/arm/boot/dts/exynos5422-odroidhc1.dts
++++ b/arch/arm/boot/dts/exynos5422-odroidhc1.dts
+@@ -215,6 +215,36 @@
+ 				};
+ 			};
+ 		};
++		gpu_thermal: gpu-thermal {
++			thermal-sensors = <&tmu_gpu 0>;
++			trips {
++				gpu_alert0: gpu-alert-0 {
++					temperature = <70000>;
++					hysteresis = <10000>;
++					type = "active";
++				};
++				gpu_alert1: gpu-alert-1 {
++					temperature = <85000>;
++					hysteresis = <10000>;
++					type = "active";
++				};
++				gpu_crit0: gpu-crit-0 {
++					temperature = <120000>;
++					hysteresis = <0>;
++					type = "critical";
++				};
++			};
++			cooling-maps {
++				map0 {
++					trip = <&gpu_alert0>;
++					cooling-device = <&gpu 0 2>;
++				};
++				map1 {
++					trip = <&gpu_alert1>;
++					cooling-device = <&gpu 3 6>;
++				};
++			};
++		};
+ 	};
  
- /* PSI-L source thread IDs, used for RX (DMA_DEV_TO_MEM) */
--struct psil_ep am654_src_ep_map[] = {
-+static struct psil_ep am654_src_ep_map[] = {
- 	/* SA2UL */
- 	PSIL_SA2UL(0x4000, 0),
- 	PSIL_SA2UL(0x4001, 0),
-@@ -124,7 +124,7 @@ struct psil_ep am654_src_ep_map[] = {
  };
- 
- /* PSI-L destination thread IDs, used for TX (DMA_MEM_TO_DEV) */
--struct psil_ep am654_dst_ep_map[] = {
-+static struct psil_ep am654_dst_ep_map[] = {
- 	/* SA2UL */
- 	PSIL_SA2UL(0xc000, 1),
- 	PSIL_SA2UL(0xc001, 1),
-diff --git a/drivers/dma/ti/k3-psil-j721e.c b/drivers/dma/ti/k3-psil-j721e.c
-index a609d496fddd..e3cfd5f66842 100644
---- a/drivers/dma/ti/k3-psil-j721e.c
-+++ b/drivers/dma/ti/k3-psil-j721e.c
-@@ -59,7 +59,7 @@
- 	}
- 
- /* PSI-L source thread IDs, used for RX (DMA_DEV_TO_MEM) */
--struct psil_ep j721e_src_ep_map[] = {
-+static struct psil_ep j721e_src_ep_map[] = {
- 	/* SA2UL */
- 	PSIL_SA2UL(0x4000, 0),
- 	PSIL_SA2UL(0x4001, 0),
-@@ -169,7 +169,7 @@ struct psil_ep j721e_src_ep_map[] = {
+diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+index 1865a708b49f..5da2d81e3be2 100644
+--- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
++++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+@@ -357,6 +357,65 @@
+ 				};
+ 			};
+ 		};
++		gpu_thermal: gpu-thermal {
++			thermal-sensors = <&tmu_gpu 0>;
++			polling-delay-passive = <250>;
++			polling-delay = <0>;
++			trips {
++				gpu_alert0: gpu-alert-0 {
++					temperature = <50000>;
++					hysteresis = <5000>;
++					type = "active";
++				};
++				gpu_alert1: gpu-alert-1 {
++					temperature = <60000>;
++					hysteresis = <5000>;
++					type = "active";
++				};
++				gpu_alert2: gpu-alert-2 {
++					temperature = <70000>;
++					hysteresis = <5000>;
++					type = "active";
++				};
++				gpu_crit0: gpu-crit-0 {
++					temperature = <120000>;
++					hysteresis = <0>;
++					type = "critical";
++				};
++				gpu_alert3: gpu-alert-3 {
++					temperature = <70000>;
++					hysteresis = <10000>;
++					type = "passive";
++				};
++				gpu_alert4: gpu-alert-4 {
++					temperature = <85000>;
++					hysteresis = <10000>;
++					type = "passive";
++				};
++			};
++			cooling-maps {
++				map0 {
++					trip = <&gpu_alert0>;
++					cooling-device = <&fan0 0 1>;
++				};
++				map1 {
++					trip = <&gpu_alert1>;
++					cooling-device = <&fan0 1 2>;
++				};
++				map2 {
++					trip = <&gpu_alert2>;
++					cooling-device = <&fan0 2 3>;
++				};
++				map3 {
++					trip = <&gpu_alert3>;
++					cooling-device = <&gpu 0 2>;
++				};
++				map4 {
++					trip = <&gpu_alert4>;
++					cooling-device = <&gpu 3 6>;
++				};
++			};
++		};
+ 	};
  };
- 
- /* PSI-L destination thread IDs, used for TX (DMA_MEM_TO_DEV) */
--struct psil_ep j721e_dst_ep_map[] = {
-+static struct psil_ep j721e_dst_ep_map[] = {
- 	/* SA2UL */
- 	PSIL_SA2UL(0xc000, 1),
- 	PSIL_SA2UL(0xc001, 1),
-diff --git a/drivers/dma/ti/k3-psil-priv.h b/drivers/dma/ti/k3-psil-priv.h
-index f74420653d8a..a1f389ca371e 100644
---- a/drivers/dma/ti/k3-psil-priv.h
-+++ b/drivers/dma/ti/k3-psil-priv.h
-@@ -36,4 +36,8 @@ struct psil_ep_map {
- 
- struct psil_endpoint_config *psil_get_ep_config(u32 thread_id);
- 
-+/* SoC PSI-L endpoint maps */
-+extern struct psil_ep_map am654_ep_map;
-+extern struct psil_ep_map j721e_ep_map;
-+
- #endif /* K3_PSIL_PRIV_H_ */
-diff --git a/drivers/dma/ti/k3-psil.c b/drivers/dma/ti/k3-psil.c
-index 9314cf9a52e4..d7b965049ccb 100644
---- a/drivers/dma/ti/k3-psil.c
-+++ b/drivers/dma/ti/k3-psil.c
-@@ -12,9 +12,6 @@
- 
- #include "k3-psil-priv.h"
- 
--extern struct psil_ep_map am654_ep_map;
--extern struct psil_ep_map j721e_ep_map;
--
- static DEFINE_MUTEX(ep_map_mutex);
- static struct psil_ep_map *soc_ep_map;
  
 -- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.17.1
 
