@@ -2,84 +2,113 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20332C33CB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 04:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DABD7C33CB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 04:41:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAF43217F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 04:41:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFF4D217F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 04:41:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="EnKysQf2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728794AbgAUElC (ORCPT
+        id S1728863AbgAUElZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 23:41:02 -0500
-Received: from mail-io1-f69.google.com ([209.85.166.69]:44384 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728042AbgAUElB (ORCPT
+        Mon, 20 Jan 2020 23:41:25 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:16995 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728042AbgAUElZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 23:41:01 -0500
-Received: by mail-io1-f69.google.com with SMTP id t17so960418ioi.11
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 20:41:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=NCHvuKVSBxRHeizGAyp94YLEyZNHqgNg1esxuxlJg/o=;
-        b=RUPsUvOJaE1E/5sh5D4rM9rsG/V+QpPjWk616iiaM8FN1v0ZXWPa7OLRs3oNwtLk7s
-         EGNJFjWbiCn21fgoE3KfaGkltBpqoGIaG4ne3S6w8Zu34BuRn7sN4qLMX5D8lMZSdme0
-         2Cs6J/NvwGd4K3wuNZbQADQRWqkjVwLNNRQvY8jaWKMcC5foXpsMLOlyr9hzwzygDgK3
-         zaNPYnqNQH8Qf7qanKo9X7uN/VQeVK7+HUbXzQt8cu6jATxcNOSuOuYT5VM6i8tJwA7J
-         aPTixds9mwCRqw7oyDxZ8W/tTycJNVwITtYZJiQ62f2A+MUyd2OjuUEupeLlwJfoIkVG
-         tIuQ==
-X-Gm-Message-State: APjAAAVXOudtODOMtnULUzOh6MhhE8/YdUAma8rMB16ESacDc8Glvj9C
-        OdCgghka5+9Dgh9PTFYo2dHWqZsZioG0tsOkGL0/1zqKAWRp
-X-Google-Smtp-Source: APXvYqzJrudOM5ZqIhdp6/vUqAJPKgAZHJimMJnIa4tHcx71IDDXqV6DGIP5tIwdhQNRHsKr47nmu6rr4NtsU6zWdZOvYEY4ROX2
+        Mon, 20 Jan 2020 23:41:25 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e2680e50000>; Mon, 20 Jan 2020 20:41:09 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 20 Jan 2020 20:41:24 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 20 Jan 2020 20:41:24 -0800
+Received: from [10.24.44.92] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 Jan
+ 2020 04:41:19 +0000
+Subject: Re: [alsa-devel] [PATCH 2/9] ASoC: tegra: add support for CIF
+ programming
+To:     Dmitry Osipenko <digetx@gmail.com>, <perex@perex.cz>,
+        <tiwai@suse.com>, <robh+dt@kernel.org>
+CC:     <devicetree@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <atalambedu@nvidia.com>, <linux-kernel@vger.kernel.org>,
+        <lgirdwood@gmail.com>, <jonathanh@nvidia.com>,
+        <viswanathl@nvidia.com>, <sharadg@nvidia.com>,
+        <broonie@kernel.org>, <thierry.reding@gmail.com>,
+        <linux-tegra@vger.kernel.org>, <rlokhande@nvidia.com>,
+        <mkumard@nvidia.com>, <dramesh@nvidia.com>
+References: <1579530198-13431-1-git-send-email-spujar@nvidia.com>
+ <1579530198-13431-3-git-send-email-spujar@nvidia.com>
+ <d01ed171-d949-19b2-3390-ee30eada2779@gmail.com>
+From:   Sameer Pujar <spujar@nvidia.com>
+Message-ID: <a8409b81-7c6b-37a9-81fd-772eb2eca185@nvidia.com>
+Date:   Tue, 21 Jan 2020 10:11:16 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:4d2:: with SMTP id f18mr2062010ils.54.1579581661230;
- Mon, 20 Jan 2020 20:41:01 -0800 (PST)
-Date:   Mon, 20 Jan 2020 20:41:01 -0800
-In-Reply-To: <000000000000bb0378059c865fdf@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000cfbeb5059c9f036d@google.com>
-Subject: Re: KASAN: use-after-free Read in bitmap_ip_destroy
-From:   syzbot <syzbot+8b5f151de2f35100bbc5@syzkaller.appspotmail.com>
-To:     a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
-        coreteam@netfilter.org, davem@davemloft.net,
-        florent.fourcot@wifirst.fr, fw@strlen.de, jeremy@azazel.net,
-        johannes.berg@intel.com, kadlec@netfilter.org,
-        linux-kernel@vger.kernel.org, lipeng321@huawei.com,
-        mareklindner@neomailbox.ch, netdev@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, pablo@netfilter.org,
-        sw@simonwunderlich.de, syzkaller-bugs@googlegroups.com,
-        tanhuazhong@huawei.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <d01ed171-d949-19b2-3390-ee30eada2779@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-GB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1579581669; bh=GRt9U4PodCr86yU5eOb42L+DV/cuxomWCgBuTVfGcsY=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=EnKysQf2VsOESTATJ6csnBbQLyGt6UD8fN0ZDiNDa5pHNJZPSq756z+cvYTNkkbUR
+         UJFZvBvLGpXkRtSCG6VeBOwje4GuJ/bIGrtWbWabJb0ytEuAMf6OEmXj9QY1+i7Eij
+         wY3N0EifVoSVE7jDcRa9T6gakYcJnbOGb/VyUmy/kYDYFVL/KDJo0Tj7LpzUecg/G4
+         m4FUDbKigHjs669jxNj15+GX06SaH0850lcGpK38nDe6IjhcTKbqFbvm4D3L1wwk2R
+         cgEfj67npqikvcgyjnrnyOpigqYZ37U+8rY75ZlUoykyl7mmLnBsNDuOc931gti59l
+         QbwzC5wDwFsQQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
 
-commit 354d0fab649d47045517cf7cae03d653a4dcb3b8
-Author: Peng Li <lipeng321@huawei.com>
-Date:   Thu Jul 4 14:04:26 2019 +0000
+On 1/20/2020 9:28 PM, Dmitry Osipenko wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> Hello Sameer,
+>
+> 20.01.2020 17:23, Sameer Pujar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>
+> [snip]
+>
+>> Tegra30 and Tegra124 have an identical CIF programming helper function.
+> [snip]
+>
+>> -#define TEGRA124_AUDIOCIF_CTRL_FIFO_THRESHOLD_SHIFT  24
+>> -#define TEGRA124_AUDIOCIF_CTRL_FIFO_THRESHOLD_MASK_US        0x3f
+>> -#define TEGRA124_AUDIOCIF_CTRL_FIFO_THRESHOLD_MASK   (TEGRA124_AUDIOCIF=
+_CTRL_FIFO_THRESHOLD_MASK_US << TEGRA124_AUDIOCIF_CTRL_FIFO_THRESHOLD_SHIFT=
+)
+>> -
+>> -/* Channel count minus 1 */
+>> -#define TEGRA30_AUDIOCIF_CTRL_AUDIO_CHANNELS_SHIFT   24
+>> -#define TEGRA30_AUDIOCIF_CTRL_AUDIO_CHANNELS_MASK_US 7
+>> -#define TEGRA30_AUDIOCIF_CTRL_AUDIO_CHANNELS_MASK    (TEGRA30_AUDIOCIF_=
+CTRL_AUDIO_CHANNELS_MASK_US << TEGRA30_AUDIOCIF_CTRL_AUDIO_CHANNELS_SHIFT)
+> The AUDIOCIF_CTRL bitfields are not the same on T30 and T124, why are
+> you claiming that programming is identical? Have you actually tried to
+> test these patches on T30?
 
-    net: hns3: add default value for tc_size and tc_offset
+Oh yes! seems like I overlooked the macro values. Thanks for pointing=20
+this. I will retain separate CIF function for Tegra30.
+I do not have a Tegra30 board with me and hence could not test anything=20
+specific to it apart from build sanity.
+If someone can help me test I would really appreciate.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15cc0685e00000
-start commit:   8f8972a3 Merge tag 'mtd/fixes-for-5.5-rc7' of git://git.ke..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=17cc0685e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=13cc0685e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=cfbb8fa33f49f9f3
-dashboard link: https://syzkaller.appspot.com/bug?extid=8b5f151de2f35100bbc5
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12e22559e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16056faee00000
-
-Reported-by: syzbot+8b5f151de2f35100bbc5@syzkaller.appspotmail.com
-Fixes: 354d0fab649d ("net: hns3: add default value for tc_size and tc_offset")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
