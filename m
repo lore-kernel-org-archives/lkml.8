@@ -2,117 +2,164 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D9BAC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 10:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F51C33CB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 10:14:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08DC020882
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 10:14:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59AB024680
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 10:14:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ChmW7+hA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729352AbgAUKON (ORCPT
+        id S1729423AbgAUKOQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 05:14:13 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2288 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727220AbgAUKOM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 05:14:12 -0500
-Received: from lhreml704-cah.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 3F14B58FB758E2E8A7C0;
-        Tue, 21 Jan 2020 10:14:09 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml704-cah.china.huawei.com (10.201.108.45) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 21 Jan 2020 10:14:08 +0000
-Received: from [127.0.0.1] (10.202.226.43) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 21 Jan
- 2020 10:14:08 +0000
-Subject: Re: [RFC PATCH 0/4] iommu: Per-group default domain type
-To:     Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-CC:     <kevin.tian@intel.com>, <ashok.raj@intel.com>,
-        <linux-kernel@vger.kernel.org>, <iommu@lists.linux-foundation.org>,
-        <jacob.jun.pan@intel.com>, Robin Murphy <robin.murphy@arm.com>,
-        "Christoph Hellwig" <hch@lst.de>,
-        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
-References: <20200101052648.14295-1-baolu.lu@linux.intel.com>
- <ba7a7e6a-8b23-fca0-a8bb-72c4dbfa8390@huawei.com>
- <f417cd0b-1bf7-7da2-3a64-b8b74b03da02@linux.intel.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <0fbcbd62-cf8a-1c3c-c702-f9bf59497867@huawei.com>
-Date:   Tue, 21 Jan 2020 10:14:07 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Tue, 21 Jan 2020 05:14:16 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:24074 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727220AbgAUKOQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 05:14:16 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00LA7m7m015244;
+        Tue, 21 Jan 2020 11:14:01 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
+ date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=aeYoT+FbX2uK00Gipe/mKHNPFAN0KIzPJU70uie272A=;
+ b=ChmW7+hAhBko1pQ9BTS2bhY1LjykTUkISaGS7PWDj5KLriquSRvz+s+M9dw1XZP/Uuzb
+ W7CtFP0PqYWrVGROSZpfw5W/vGGSpE/dQdPeVNzsgTWB5Fwq82pP6YkToiY7+0yQH4PI
+ B0yBhCj64+gE4+LFQPIQX+mQ0us1e3rwNJkuGAnvvKsDx4nvR409uthMq1eRux7dud4a
+ wMUwrdG+97ASDBha3lKKmSghRi0T7JC64Ro0XNi8PC2ct0z621WBZR5G0fntCYFy9ERj
+ 7Kwn9vBT0F+k1fc/Vjiq5qZ9Q6WhtMQXMsKgjZJY92tt9suJwiV/cgPM7l0LEhZ3ak22 pw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xkr1dx2p6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 Jan 2020 11:14:01 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D20EC100038;
+        Tue, 21 Jan 2020 11:13:55 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7F0332B1872;
+        Tue, 21 Jan 2020 11:13:55 +0100 (CET)
+Received: from localhost (10.75.127.44) by SFHDAG6NODE1.st.com (10.75.127.16)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 Jan 2020 11:13:54
+ +0100
+From:   Yannick Fertre <yannick.fertre@st.com>
+To:     Yannick Fertre <yannick.fertre@st.com>,
+        Philippe Cornu <philippe.cornu@st.com>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] drm/stm: ltdc: add number of interrupts
+Date:   Tue, 21 Jan 2020 11:13:52 +0100
+Message-ID: <1579601632-7001-1-git-send-email-yannick.fertre@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <f417cd0b-1bf7-7da2-3a64-b8b74b03da02@linux.intel.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.43]
-X-ClientProxiedBy: lhreml741-chm.china.huawei.com (10.201.108.191) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG3NODE3.st.com (10.75.127.9) To SFHDAG6NODE1.st.com
+ (10.75.127.16)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-21_02:2020-01-21,2020-01-21 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/01/2020 00:43, Lu Baolu wrote:
->>> An IOMMU group represents the smallest set of devices that are 
->>> considered
->>> to be isolated. All devices belonging to an IOMMU group share a default
->>> domain for DMA APIs. There are two types of default domain: 
->>> IOMMU_DOMAIN_DMA
->>> and IOMMU_DOMAIN_IDENTITY. The former means IOMMU translation, while the
->>> latter means IOMMU by-pass.
->>>
->>> Currently, the default domain type for the IOMMU groups is determined
->>> globally. All IOMMU groups use a single default domain type. The global
->>> default domain type can be adjusted by kernel build configuration or
->>> kernel parameters.
->>>
->>> More and more users are looking forward to a fine grained default domain
->>> type. For example, with the global default domain type set to 
->>> translation,
->>> the OEM verndors or end users might want some trusted and fast-speed 
->>> devices
->>> to bypass IOMMU for performance gains. On the other hand, with global
->>> default domain type set to by-pass, some devices with limited system
->>> memory addressing capability might want IOMMU translation to remove the
->>> bounce buffer overhead.
->>
->> Hi Lu Baolu,
->>
->> Do you think that it would be a more common usecase to want 
->> kernel-managed devices to be passthrough for performance reasons and 
->> some select devices to be in DMA domain, like those with limited 
->> address cap or whose drivers request huge amounts of memory?
->>
->> I just think it would be more manageable to set kernel commandline 
->> parameters for this, i.e. those select few which want DMA domain.
->>
+The number of interrupts depends on the ltdc version.
+Don't try to get interrupt which not exist, avoiding
+kernel warning messages.
 
-Hi Baolu,
+Signed-off-by: Yannick Fertre <yannick.fertre@st.com>
+---
+ drivers/gpu/drm/stm/ltdc.c | 30 +++++++++++++++---------------
+ drivers/gpu/drm/stm/ltdc.h |  1 +
+ 2 files changed, 16 insertions(+), 15 deletions(-)
 
-> 
-> It's just two sides of a coin. Currently, iommu subsystem make DMA
-> domain by default, that's the reason why I selected to let user set
-> which devices are willing to use identity domains.
-> 
-
-OK, understood.
-
-There was an alternate solution here which would allow per-group type to 
-be updated via sysfs:
-
-https://lore.kernel.org/linux-iommu/cover.1566353521.git.sai.praneeth.prakhya@intel.com/
-
-Any idea what happened to that?
-
-Cheers,
-John
+diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
+index c2815e8..58092b0 100644
+--- a/drivers/gpu/drm/stm/ltdc.c
++++ b/drivers/gpu/drm/stm/ltdc.c
+@@ -1146,12 +1146,14 @@ static int ltdc_get_caps(struct drm_device *ddev)
+ 		ldev->caps.pad_max_freq_hz = 90000000;
+ 		if (ldev->caps.hw_version == HWVER_10200)
+ 			ldev->caps.pad_max_freq_hz = 65000000;
++		ldev->caps.nb_irq = 2;
+ 		break;
+ 	case HWVER_20101:
+ 		ldev->caps.reg_ofs = REG_OFS_4;
+ 		ldev->caps.pix_fmt_hw = ltdc_pix_fmt_a1;
+ 		ldev->caps.non_alpha_only_l1 = false;
+ 		ldev->caps.pad_max_freq_hz = 150000000;
++		ldev->caps.nb_irq = 4;
+ 		break;
+ 	default:
+ 		return -ENODEV;
+@@ -1251,13 +1253,21 @@ int ltdc_load(struct drm_device *ddev)
+ 	reg_clear(ldev->regs, LTDC_IER,
+ 		  IER_LIE | IER_RRIE | IER_FUIE | IER_TERRIE);
+ 
+-	for (i = 0; i < MAX_IRQ; i++) {
++	ret = ltdc_get_caps(ddev);
++	if (ret) {
++		DRM_ERROR("hardware identifier (0x%08x) not supported!\n",
++			  ldev->caps.hw_version);
++		goto err;
++	}
++
++	DRM_DEBUG_DRIVER("ltdc hw version 0x%08x\n", ldev->caps.hw_version);
++
++	for (i = 0; i < ldev->caps.nb_irq; i++) {
+ 		irq = platform_get_irq(pdev, i);
+-		if (irq == -EPROBE_DEFER)
++		if (irq < 0) {
++			ret = irq;
+ 			goto err;
+-
+-		if (irq < 0)
+-			continue;
++		}
+ 
+ 		ret = devm_request_threaded_irq(dev, irq, ltdc_irq,
+ 						ltdc_irq_thread, IRQF_ONESHOT,
+@@ -1268,16 +1278,6 @@ int ltdc_load(struct drm_device *ddev)
+ 		}
+ 	}
+ 
+-
+-	ret = ltdc_get_caps(ddev);
+-	if (ret) {
+-		DRM_ERROR("hardware identifier (0x%08x) not supported!\n",
+-			  ldev->caps.hw_version);
+-		goto err;
+-	}
+-
+-	DRM_DEBUG_DRIVER("ltdc hw version 0x%08x\n", ldev->caps.hw_version);
+-
+ 	/* Add endpoints panels or bridges if any */
+ 	for (i = 0; i < MAX_ENDPOINTS; i++) {
+ 		if (panel[i]) {
+diff --git a/drivers/gpu/drm/stm/ltdc.h b/drivers/gpu/drm/stm/ltdc.h
+index a1ad0ae..310e87f 100644
+--- a/drivers/gpu/drm/stm/ltdc.h
++++ b/drivers/gpu/drm/stm/ltdc.h
+@@ -19,6 +19,7 @@ struct ltdc_caps {
+ 	const u32 *pix_fmt_hw;	/* supported pixel formats */
+ 	bool non_alpha_only_l1; /* non-native no-alpha formats on layer 1 */
+ 	int pad_max_freq_hz;	/* max frequency supported by pad */
++	int nb_irq;		/* number of hardware interrupts */
+ };
+ 
+ #define LTDC_MAX_LAYER	4
+-- 
+2.7.4
 
