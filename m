@@ -2,192 +2,152 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E81CC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B2BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3C0924125
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:40:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 483D924654
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:40:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579596045;
+	bh=sqQztT5PMwHNimkY6DwlodVmkiQKGhuoosJFMIzlJ4s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=omcgpeVKF8EaMkK5B8/GcPJ9SuzCSyGGAsDPPC74CCzjx7k5XeX3m80pMS3Id71ed
+	 Mzwy/a46m6eRClR367yaVQtlg8R1NSUfzNu8Mi0V0K+l3cT2FzrneziJZm3YbMX6qN
+	 tMDTTwt6FZrA4PRcStZ88cvTDzr5QutKQwKTWDLI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728925AbgAUIkL (ORCPT
+        id S1728927AbgAUIko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 03:40:11 -0500
-Received: from mga04.intel.com ([192.55.52.120]:18252 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728093AbgAUIkL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 03:40:11 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 00:40:10 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,345,1574150400"; 
-   d="scan'208";a="426980307"
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-  by fmsmga006.fm.intel.com with ESMTP; 21 Jan 2020 00:40:10 -0800
-Received: from fmsmsx120.amr.corp.intel.com (10.18.124.208) by
- FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 21 Jan 2020 00:40:09 -0800
-Received: from shsmsx105.ccr.corp.intel.com (10.239.4.158) by
- fmsmsx120.amr.corp.intel.com (10.18.124.208) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 21 Jan 2020 00:40:09 -0800
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.197]) by
- SHSMSX105.ccr.corp.intel.com ([169.254.11.28]) with mapi id 14.03.0439.000;
- Tue, 21 Jan 2020 16:40:07 +0800
-From:   "Tian, Kevin" <kevin.tian@intel.com>
-To:     Jason Wang <jasowang@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-CC:     "mst@redhat.com" <mst@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "Bie, Tiwei" <tiwei.bie@intel.com>,
-        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
-        "Liang, Cunming" <cunming.liang@intel.com>,
-        "Wang, Zhihong" <zhihong.wang@intel.com>,
-        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
-        "Wang, Xiao W" <xiao.w.wang@intel.com>,
-        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
-        "Zhu, Lingshan" <lingshan.zhu@intel.com>,
-        "eperezma@redhat.com" <eperezma@redhat.com>,
-        "lulu@redhat.com" <lulu@redhat.com>,
-        Parav Pandit <parav@mellanox.com>,
-        "stefanha@redhat.com" <stefanha@redhat.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "aadam@redhat.com" <aadam@redhat.com>,
-        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Shahaf Shuler <shahafs@mellanox.com>,
-        "hanand@xilinx.com" <hanand@xilinx.com>,
-        "mhabets@solarflare.com" <mhabets@solarflare.com>
-Subject: RE: [PATCH 3/5] vDPA: introduce vDPA bus
-Thread-Topic: [PATCH 3/5] vDPA: introduce vDPA bus
-Thread-Index: AQHVzGqWKPTi/OFGjEKwu/LvhcJvQafs4oEAgADD3ACAByi08A==
-Date:   Tue, 21 Jan 2020 08:40:07 +0000
-Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D73EBA4@SHSMSX104.ccr.corp.intel.com>
-References: <20200116124231.20253-1-jasowang@redhat.com>
- <20200116124231.20253-4-jasowang@redhat.com>
- <20200116152209.GH20978@mellanox.com>
- <03cfbcc2-fef0-c9d8-0b08-798b2a293b8c@redhat.com>
-In-Reply-To: <03cfbcc2-fef0-c9d8-0b08-798b2a293b8c@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMzU2MDNiODYtZmY4MC00MDZjLTg2NGYtOWNkZWZjNWFlZmEwIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiaHNIbmwxWVBLb1A1M1prQ0hNdmtzSW51VUVLNitwcldLTnJJK2lSNUE4RG42d2VDQlpEbUhoNmhPa0F3K1ZvbCJ9
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 21 Jan 2020 03:40:44 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:32847 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727255AbgAUIko (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 03:40:44 -0500
+Received: by mail-wm1-f66.google.com with SMTP id d139so1591605wmd.0;
+        Tue, 21 Jan 2020 00:40:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mlOECQ7CcQkzAwbpkxm8GkUs0tDU/ThJ8gW1i6BlUtI=;
+        b=GmESNmmxJe1Xalyt4uWbfMS8TvPJG4siJNsHMacKmFQRSnZc+WoL1J/Z4d7dDO7UIR
+         38PpiXPnuTQqOEaZuDrswCtBBXHzoOYp11hXrVoABP4q6hs+qAj8vVMcJ9OICHHeNzag
+         H/W8Em2Y1oVzTSXsf+uUn/NUExGYFaiV2rr0GuU5/AfINDvlIYPkgloehiFTidUDTPCQ
+         ISkqESHQoZ7IGT8RT2KiuP7cepeNKREkcTNRx6OsyrnyZ15ILDaBJaq3nQEp6Z5D3XTQ
+         rHl6oL7apaCXepW0RQ0VPN9iH7kJhRpF7+WvqirERaupMSHPT6vk60adJNVpmUNJZvhc
+         UzUA==
+X-Gm-Message-State: APjAAAX/srXfHU0OP+3vK1Bac1eJpLzDury7lgSkm+SAv/BE9waEaML+
+        tf75td5pexHrfe8zNfgpR9M=
+X-Google-Smtp-Source: APXvYqxmo87LjwWCnCYhoNAvperR/n4gqhmQOwBxDxX5GOh/KMVdsccSINDsGl9fzEDtrfht0x7yYw==
+X-Received: by 2002:a7b:c8cd:: with SMTP id f13mr3116009wml.18.1579596042020;
+        Tue, 21 Jan 2020 00:40:42 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id q3sm2855681wmc.47.2020.01.21.00.40.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2020 00:40:41 -0800 (PST)
+Date:   Tue, 21 Jan 2020 09:40:40 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Wei Yang <richardw.yang@linux.intel.com>
+Cc:     Yang Shi <yang.shi@linux.alibaba.com>, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] mm: move_pages: fix the return value if there are
+ not-migrated pages
+Message-ID: <20200121084040.GC29276@dhcp22.suse.cz>
+References: <1579325203-16405-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20200120130624.GD18451@dhcp22.suse.cz>
+ <20200120131744.GE18451@dhcp22.suse.cz>
+ <20200121014416.GC1567@richard>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200121014416.GC1567@richard>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBKYXNvbiBXYW5nIDxqYXNvd2FuZ0ByZWRoYXQuY29tPg0KPiBTZW50OiBGcmlkYXks
-IEphbnVhcnkgMTcsIDIwMjAgMTE6MDMgQU0NCj4gDQo+IA0KPiBPbiAyMDIwLzEvMTYg5LiL5Y2I
-MTE6MjIsIEphc29uIEd1bnRob3JwZSB3cm90ZToNCj4gPiBPbiBUaHUsIEphbiAxNiwgMjAyMCBh
-dCAwODo0MjoyOVBNICswODAwLCBKYXNvbiBXYW5nIHdyb3RlOg0KPiA+PiB2RFBBIGRldmljZSBp
-cyBhIGRldmljZSB0aGF0IHVzZXMgYSBkYXRhcGF0aCB3aGljaCBjb21wbGllcyB3aXRoIHRoZQ0K
-PiA+PiB2aXJ0aW8gc3BlY2lmaWNhdGlvbnMgd2l0aCB2ZW5kb3Igc3BlY2lmaWMgY29udHJvbCBw
-YXRoLiB2RFBBIGRldmljZXMNCj4gPj4gY2FuIGJlIGJvdGggcGh5c2ljYWxseSBsb2NhdGVkIG9u
-IHRoZSBoYXJkd2FyZSBvciBlbXVsYXRlZCBieQ0KPiA+PiBzb2Z0d2FyZS4gdkRQQSBoYXJkd2Fy
-ZSBkZXZpY2VzIGFyZSB1c3VhbGx5IGltcGxlbWVudGVkIHRocm91Z2ggUENJRQ0KPiA+PiB3aXRo
-IHRoZSBmb2xsb3dpbmcgdHlwZXM6DQo+ID4+DQo+ID4+IC0gUEYgKFBoeXNpY2FsIEZ1bmN0aW9u
-KSAtIEEgc2luZ2xlIFBoeXNpY2FsIEZ1bmN0aW9uDQo+ID4+IC0gVkYgKFZpcnR1YWwgRnVuY3Rp
-b24pIC0gRGV2aWNlIHRoYXQgc3VwcG9ydHMgc2luZ2xlIHJvb3QgSS9PDQo+ID4+ICAgIHZpcnR1
-YWxpemF0aW9uIChTUi1JT1YpLiBJdHMgVmlydHVhbCBGdW5jdGlvbiAoVkYpIHJlcHJlc2VudHMg
-YQ0KPiA+PiAgICB2aXJ0dWFsaXplZCBpbnN0YW5jZSBvZiB0aGUgZGV2aWNlIHRoYXQgY2FuIGJl
-IGFzc2lnbmVkIHRvIGRpZmZlcmVudA0KPiA+PiAgICBwYXJ0aXRpb25zDQo+ID4+IC0gVkRFViAo
-VmlydHVhbCBEZXZpY2UpIC0gV2l0aCB0ZWNobm9sb2dpZXMgc3VjaCBhcyBJbnRlbCBTY2FsYWJs
-ZQ0KPiA+PiAgICBJT1YsIGEgdmlydHVhbCBkZXZpY2UgY29tcG9zZWQgYnkgaG9zdCBPUyB1dGls
-aXppbmcgb25lIG9yIG1vcmUNCj4gPj4gICAgQURJcy4NCg0KdGhlIGNvbmNlcHQgb2YgVkRFViBp
-bmNsdWRlcyBib3RoIHNvZnR3YXJlIGJpdHMgYW5kIEFESXMuIElmIHlvdQ0Kb25seSB0YWtlIGFi
-b3V0IGhhcmR3YXJlIHR5cGVzLCB1c2luZyBBREkgaXMgbW9yZSBhY2N1cmF0ZS4NCg0KPiA+PiAt
-IFNGIChTdWIgZnVuY3Rpb24pIC0gVmVuZG9yIHNwZWNpZmljIGludGVyZmFjZSB0byBzbGljZSB0
-aGUgUGh5c2ljYWwNCj4gPj4gICAgRnVuY3Rpb24gdG8gbXVsdGlwbGUgc3ViIGZ1bmN0aW9ucyB0
-aGF0IGNhbiBiZSBhc3NpZ25lZCB0byBkaWZmZXJlbnQNCj4gPj4gICAgcGFydGl0aW9ucyBhcyB2
-aXJ0dWFsIGRldmljZXMuDQo+ID4gSSByZWFsbHkgaG9wZSB3ZSBkb24ndCBlbmQgdXAgd2l0aCB0
-d28gZGlmZmVyZW50IHdheXMgdG8gc3BlbGwgdGhpcw0KPiA+IHNhbWUgdGhpbmcuDQo+IA0KPiAN
-Cj4gSSB0aGluayB5b3UgbWVhbnQgQURJIHZzIFNGLiBJdCBsb29rcyB0byBtZSB0aGF0IEFESSBp
-cyBsaW1pdGVkIHRvIHRoZQ0KPiBzY29wZSBvZiBzY2FsYWJsZSBJT1YgYnV0IFNGIG5vdC4NCg0K
-QURJIGlzIGp1c3QgYSB0ZXJtIGZvciBtaW5pbWFsbHkgYXNzaWduYWJsZSByZXNvdXJjZSBpbiBT
-Y2FsYWJsZSBJT1YuIA0KJ2Fzc2lnbmFibGUnIGltcGxpZXMgc2V2ZXJhbCB0aGluZ3MsIGUuZy4g
-dGhlIHJlc291cmNlIGNhbiBiZSBpbmRlcGVuZGVudGx5IA0KbWFwcGVkIHRvL2FjY2Vzc2VkIGJ5
-IHVzZXIgc3BhY2Ugb3IgZ3Vlc3QsIERNQXMgYmV0d2VlbiB0d28NCkFESXMgYXJlIGlzb2xhdGVk
-LCBvcGVyYXRpbmcgb25lIEFESSBkb2Vzbid0IGFmZmVjdGluZyBhbm90aGVyIEFESSwNCmV0Yy4g
-IEknbSBub3QgY2xlYXIgYWJvdXQgIG90aGVyIHZlbmRvciBzcGVjaWZpYyBpbnRlcmZhY2VzLCBi
-dXQgc3VwcG9zaW5nDQp0aGV5IG5lZWQgbWF0Y2ggdGhlIHNpbWlsYXIgcmVxdWlyZW1lbnRzLiBU
-aGVuIGRvIHdlIHJlYWxseSB3YW50IHRvDQpkaWZmZXJlbnRpYXRlIEFESSB2cy4gU0Y/IFdoYXQg
-YWJvdXQgbWVyZ2luZyB0aGVtIHdpdGggQURJIGFzIGp1c3QNCm9uZSBleGFtcGxlIG9mIGZpbmVy
-LWdyYWluZWQgc2xpY2luZz8NCg0KPiANCj4gDQo+ID4NCj4gPj4gQEAgLTAsMCArMSwyIEBADQo+
-ID4+ICsjIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wDQo+ID4+ICtvYmotJChDT05G
-SUdfVkRQQSkgKz0gdmRwYS5vDQo+ID4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3ZpcnRpby92ZHBh
-L3ZkcGEuYyBiL2RyaXZlcnMvdmlydGlvL3ZkcGEvdmRwYS5jDQo+ID4+IG5ldyBmaWxlIG1vZGUg
-MTAwNjQ0DQo+ID4+IGluZGV4IDAwMDAwMDAwMDAwMC4uMmIwZTRhOWYxMDVkDQo+ID4+ICsrKyBi
-L2RyaXZlcnMvdmlydGlvL3ZkcGEvdmRwYS5jDQo+ID4+IEBAIC0wLDAgKzEsMTQxIEBADQo+ID4+
-ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMC1vbmx5DQo+ID4+ICsvKg0KPiA+
-PiArICogdkRQQSBidXMuDQo+ID4+ICsgKg0KPiA+PiArICogQ29weXJpZ2h0IChjKSAyMDE5LCBS
-ZWQgSGF0LiBBbGwgcmlnaHRzIHJlc2VydmVkLg0KPiA+PiArICogICAgIEF1dGhvcjogSmFzb24g
-V2FuZyA8amFzb3dhbmdAcmVkaGF0LmNvbT4NCj4gPiAyMDIwIHRlc3RzIGRheXMNCj4gDQo+IA0K
-PiBXaWxsIGZpeC4NCj4gDQo+IA0KPiA+DQo+ID4+ICsgKg0KPiA+PiArICovDQo+ID4+ICsNCj4g
-Pj4gKyNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4NCj4gPj4gKyNpbmNsdWRlIDxsaW51eC9pZHIu
-aD4NCj4gPj4gKyNpbmNsdWRlIDxsaW51eC92ZHBhLmg+DQo+ID4+ICsNCj4gPj4gKyNkZWZpbmUg
-TU9EX1ZFUlNJT04gICIwLjEiDQo+ID4gSSB0aGluayBtb2R1bGUgdmVyc2lvbnMgYXJlIGRpc2Nv
-dXJhZ2VkIHRoZXNlIGRheXMNCj4gDQo+IA0KPiBXaWxsIHJlbW92ZS4NCj4gDQo+IA0KPiA+DQo+
-ID4+ICsjZGVmaW5lIE1PRF9ERVNDICAgICAidkRQQSBidXMiDQo+ID4+ICsjZGVmaW5lIE1PRF9B
-VVRIT1IgICAiSmFzb24gV2FuZyA8amFzb3dhbmdAcmVkaGF0LmNvbT4iDQo+ID4+ICsjZGVmaW5l
-IE1PRF9MSUNFTlNFICAiR1BMIHYyIg0KPiA+PiArDQo+ID4+ICtzdGF0aWMgREVGSU5FX0lEQSh2
-ZHBhX2luZGV4X2lkYSk7DQo+ID4+ICsNCj4gPj4gK3N0cnVjdCBkZXZpY2UgKnZkcGFfZ2V0X3Bh
-cmVudChzdHJ1Y3QgdmRwYV9kZXZpY2UgKnZkcGEpDQo+ID4+ICt7DQo+ID4+ICsJcmV0dXJuIHZk
-cGEtPmRldi5wYXJlbnQ7DQo+ID4+ICt9DQo+ID4+ICtFWFBPUlRfU1lNQk9MKHZkcGFfZ2V0X3Bh
-cmVudCk7DQo+ID4+ICsNCj4gPj4gK3ZvaWQgdmRwYV9zZXRfcGFyZW50KHN0cnVjdCB2ZHBhX2Rl
-dmljZSAqdmRwYSwgc3RydWN0IGRldmljZSAqcGFyZW50KQ0KPiA+PiArew0KPiA+PiArCXZkcGEt
-PmRldi5wYXJlbnQgPSBwYXJlbnQ7DQo+ID4+ICt9DQo+ID4+ICtFWFBPUlRfU1lNQk9MKHZkcGFf
-c2V0X3BhcmVudCk7DQo+ID4+ICsNCj4gPj4gK3N0cnVjdCB2ZHBhX2RldmljZSAqZGV2X3RvX3Zk
-cGEoc3RydWN0IGRldmljZSAqX2RldikNCj4gPj4gK3sNCj4gPj4gKwlyZXR1cm4gY29udGFpbmVy
-X29mKF9kZXYsIHN0cnVjdCB2ZHBhX2RldmljZSwgZGV2KTsNCj4gPj4gK30NCj4gPj4gK0VYUE9S
-VF9TWU1CT0xfR1BMKGRldl90b192ZHBhKTsNCj4gPj4gKw0KPiA+PiArc3RydWN0IGRldmljZSAq
-dmRwYV90b19kZXYoc3RydWN0IHZkcGFfZGV2aWNlICp2ZHBhKQ0KPiA+PiArew0KPiA+PiArCXJl
-dHVybiAmdmRwYS0+ZGV2Ow0KPiA+PiArfQ0KPiA+PiArRVhQT1JUX1NZTUJPTF9HUEwodmRwYV90
-b19kZXYpOw0KPiA+IFdoeSB0aGVzZSB0cml2aWFsIGFzc2Vzc29ycz8gU2VlbXMgdW5uZWNlc3Nh
-cnksIG9yIHNob3VsZCBhdCBsZWFzdCBiZQ0KPiA+IHN0YXRpYyBpbmxpbmVzIGluIGEgaGVhZGVy
-DQo+IA0KPiANCj4gV2lsbCBmaXguDQo+IA0KPiANCj4gPg0KPiA+PiAraW50IHJlZ2lzdGVyX3Zk
-cGFfZGV2aWNlKHN0cnVjdCB2ZHBhX2RldmljZSAqdmRwYSkNCj4gPj4gK3sNCj4gPiBVc3VhbGx5
-IHdlIHdhbnQgdG8gc2VlIHN5bWJvbHMgY29uc2lzdGVudGx5IHByZWZpeGVkIHdpdGggdmRwYV8q
-LCBpcw0KPiA+IHRoZXJlIGEgcmVhc29uIHdoeSByZWdpc3Rlci91bnJlZ2lzdGVyIGFyZSBzd2Fw
-cGVkPw0KPiANCj4gDQo+IEkgZm9sbG93IHRoZSBuYW1lIGZyb20gdmlydGlvLiBJIHdpbGwgc3dp
-dGNoIHRvIHZkcGFfKi4NCj4gDQo+IA0KPiA+DQo+ID4+ICsJaW50IGVycjsNCj4gPj4gKw0KPiA+
-PiArCWlmICghdmRwYV9nZXRfcGFyZW50KHZkcGEpKQ0KPiA+PiArCQlyZXR1cm4gLUVJTlZBTDsN
-Cj4gPj4gKw0KPiA+PiArCWlmICghdmRwYS0+Y29uZmlnKQ0KPiA+PiArCQlyZXR1cm4gLUVJTlZB
-TDsNCj4gPj4gKw0KPiA+PiArCWVyciA9IGlkYV9zaW1wbGVfZ2V0KCZ2ZHBhX2luZGV4X2lkYSwg
-MCwgMCwgR0ZQX0tFUk5FTCk7DQo+ID4+ICsJaWYgKGVyciA8IDApDQo+ID4+ICsJCXJldHVybiAt
-RUZBVUxUOw0KPiA+PiArDQo+ID4+ICsJdmRwYS0+ZGV2LmJ1cyA9ICZ2ZHBhX2J1czsNCj4gPj4g
-KwlkZXZpY2VfaW5pdGlhbGl6ZSgmdmRwYS0+ZGV2KTsNCj4gPiBJTUhPIGRldmljZV9pbml0aWFs
-aXplIHNob3VsZCBub3QgYmUgY2FsbGVkIGluc2lkZSBzb21ldGhpbmcgY2FsbGVkDQo+ID4gcmVn
-aXN0ZXIsIHRvb29mdGVuIHdlIGZpbmQgb3V0IHRoYXQgdGhlIGNhbGxlciBkcml2ZXJzIG5lZWQg
-dGhlIGRldmljZQ0KPiA+IHRvIGJlIGluaXRpYWxpemVkIGVhcmxpZXIsIGllIHRvIHVzZSB0aGUg
-a3JlZiwgb3Igc29tZXRoaW5nLg0KPiA+DQo+ID4gSSBmaW5kIHRoZSBiZXN0IGZsb3cgaXMgdG8g
-aGF2ZSBzb21lIGluaXQgZnVuY3Rpb24gdGhhdCBkb2VzIHRoZQ0KPiA+IGRldmljZV9pbml0aWFs
-aXplIGFuZCBzZXRzIHRoZSBkZXZpY2VfbmFtZSB0aGF0IHRoZSBkcml2ZXIgY2FuIGNhbGwNCj4g
-PiBlYXJseS4NCj4gDQo+IA0KPiBPaywgd2lsbCBkby4NCj4gDQo+IA0KPiA+DQo+ID4gU2hvdWxk
-bid0IHRoZXJlIGJlIGEgZGV2aWNlL2RyaXZlciBtYXRjaGluZyBwcm9jZXNzIG9mIHNvbWUga2lu
-ZD8NCj4gDQo+IA0KPiBUaGUgcXVlc3Rpb24gaXMgd2hhdCBkbyB3ZSB3YW50IGRvIG1hdGNoIGhl
-cmUuDQo+IA0KPiAxKSAidmlydGlvIiB2cyAidmhvc3QiLCBJIGltcGxlbWVudGVkIG1hdGNoaW5n
-IG1ldGhvZCBmb3IgdGhpcyBpbiBtZGV2DQo+IHNlcmllcywgYnV0IGl0IGxvb2tzIHVubmVjZXNz
-YXJ5IGZvciB2RFBBIGRldmljZSBkcml2ZXIgdG8ga25vdyBhYm91dA0KPiB0aGlzLiBBbnl3YXkg
-d2UgY2FuIHVzZSBzeXNmcyBkcml2ZXIgYmluZC91bmJpbmQgdG8gc3dpdGNoIGRyaXZlcnMNCj4g
-MikgdmlydGlvIGRldmljZSBpZCBhbmQgdmVuZG9yIGlkLiBJJ20gbm90IHN1cmUgd2UgbmVlZCB0
-aGlzIGNvbnNpZGVyDQo+IHRoZSB0d28gZHJpdmVycyBzbyBmYXIgKHZpcnRpby92aG9zdCkgYXJl
-IGFsbCBidXMgZHJpdmVycy4NCj4gDQo+IFRoYW5rcw0KPiANCj4gDQo+ID4NCj4gPiBKYXNvbg0K
-PiA+DQoNCg==
+On Tue 21-01-20 09:44:16, Wei Yang wrote:
+> On Mon, Jan 20, 2020 at 02:17:44PM +0100, Michal Hocko wrote:
+> >On Mon 20-01-20 14:06:26, Michal Hocko wrote:
+> >> On Sat 18-01-20 13:26:43, Yang Shi wrote:
+> >> > The do_move_pages_to_node() might return > 0 value, the number of pages
+> >> > that are not migrated, then the value will be returned to userspace
+> >> > directly.  But, move_pages() syscall would just return 0 or errno.  So,
+> >> > we need reset the return value to 0 for such case as what pre-v4.17 did.
+> >> 
+> >> The patch is wrong. migrate_pages returns the number of pages it
+> >> _hasn't_ migrated or -errno. Yeah that semantic sucks but...
+> >> So err != 0 is always an error. Except err > 0 doesn't really provide
+> >> any useful information to the userspace. I cannot really remember what
+> >> was the actual behavior before my rework because there were some gotchas
+> >> hidden there.
+> >
+> >OK, so I've double checked. do_move_page_to_node_array would carry the
+> >error code over to do_pages_move and it would store the status stored
+> >in the pm array. It contains page_to_nid(page) so the resulting code
+> >indeed behaves properly before my change and this is a regression. I
+> 
+> Thanks, I see the change.
+> 
+> >have a very vague recollection that this has been brought up already.
+> ><...looks in notes...>
+> >Found it! The report is
+> >http://lkml.kernel.org/r/0329efa0984b9b0252ef166abb4498c0795fab36.1535113317.git.jstancek@redhat.com
+> >and my proposed workaround was http://lkml.kernel.org/r/20180829145537.GZ10223@dhcp22.suse.cz
+> 
+> Well, the above two links return 404.
+
+You are right. They are not archived for some reason. Anyway, the patch
+I was proposing back then is below:
+
+commit cfb88c266b645197135cde2905c2bfc82f6d82a9
+Author: Michal Hocko <mhocko@suse.com>
+Date:   Wed Nov 14 12:19:09 2018 +0100
+
+    mm: fix do_pages_move error reporting
+    
+    a49bd4d71637 ("mm, numa: rework do_pages_move") has changed the way how
+    we report error to layers above. As the changelog mentioned the semantic
+    was quite unclear previously because the return 0 could mean both
+    success and failure.
+    
+    The above mentioned commit didn't get all the way down to fix this
+    completely because it doesn't report pages that we even haven't
+    attempted to migrate and therefore we cannot simply say that the
+    semantic is:
+    - err < 0 - errno
+    - err >= 0 number of non-migrated pages.
+    
+    Fixes: a49bd4d71637 ("mm, numa: rework do_pages_move")
+    Signed-off-by: Michal Hocko <mhocko@suse.com>
+
+diff --git a/mm/migrate.c b/mm/migrate.c
+index f7e4bfdc13b7..aa53ebc523eb 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -1615,8 +1615,16 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
+ 			goto out_flush;
+ 
+ 		err = do_move_pages_to_node(mm, &pagelist, current_node);
+-		if (err)
++		if (err) {
++			/*
++			 * Possitive err means the number of failed pages to
++			 * migrate. Make sure to report the rest of the
++			 * nr_pages is not migrated as well.
++			 */
++			if (err > 0)
++				err += nr_pages - i - 1;
+ 			goto out;
++		}
+ 		if (i > start) {
+ 			err = store_status(status, start, current_node, i - start);
+ 			if (err)
+-- 
+Michal Hocko
+SUSE Labs
