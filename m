@@ -2,128 +2,96 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 061B7C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:55:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B78B1C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:55:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCE4121569
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:55:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579622103;
-	bh=Xi29VL+aRZgC9t1zmCeT0p4UGkkaURcz9MOn3QgVPOA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=JayBG3lDhfeYdcWuX3d84jatl404I+Qh3fIG/cDRW1sHCAy1AMgDW9BM64z2S85i8
-	 BIW4vLfJtxae2l1HG7LykxEHUmKP+o8wZXYzWdQ6oiWC/sQ/lVS73sC1lyjICzj17E
-	 2aknb6ArPUBhv74SLCXwrKPbMduT+bMFVlgtJiB4=
+	by mail.kernel.org (Postfix) with ESMTP id 97AE3217F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:55:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729205AbgAUPzC (ORCPT
+        id S1729262AbgAUPzF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 10:55:02 -0500
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:47878 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729081AbgAUPzC (ORCPT
+        Tue, 21 Jan 2020 10:55:05 -0500
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:34898 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729096AbgAUPzD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 10:55:02 -0500
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 00LFsjCx026239;
-        Wed, 22 Jan 2020 00:54:45 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 00LFsjCx026239
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1579622086;
-        bh=XcM8hwdOFSg2hY05tKp4+ZerG8dirnX+x/EnjTmei7U=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=HOttlFCxKUHUS3QQhft+gR1yh5ApFydDfUA74O858kpqGMBZuwhoU2TRiDa7viJDN
-         T0YdGgyUDIlyMclVwAwVucCNQAUpkuYp3mQLIiGtRpe4W9P48tEogy1rR1x8KZeSCs
-         OWJ2rCws1cUKtBcF0huZ8h8I9bZmULgJQ7TeJDvp0qwIT4L3DF7VYucqLf9AfZQQD0
-         4MXgMQhi59s1GWz+sUMOcpZweejWirbyHxBHLPM+prfe5++Nkb89onmJDLmRudGMvC
-         Q/BpGGaEfN6LqMxwyCcp3ap4z7Wn/SHApclvPNXP2JZbRaN7AZBb1gWY3IjCOPhMBb
-         ql/wb9ieFZVhQ==
-X-Nifty-SrcIP: [209.85.217.46]
-Received: by mail-vs1-f46.google.com with SMTP id p6so2090441vsj.11;
-        Tue, 21 Jan 2020 07:54:45 -0800 (PST)
-X-Gm-Message-State: APjAAAWZ5OmQB9DH22h1uterE8datDNFrtv0L4gl1uzR+JACsPZ6M7kv
-        NBEFw9bKolSlHSNi/+rqZRgsPHCxdTTa1fKh6A0=
-X-Google-Smtp-Source: APXvYqzimgj1k+UanmIO2Yl/8BmDDebyeC2VypYf7mojdWt9FnKycDESIAGbRvDXGOsDTCXOv+N4C05M31ODVcgtxBE=
-X-Received: by 2002:a05:6102:190:: with SMTP id r16mr3090095vsq.215.1579622084742;
- Tue, 21 Jan 2020 07:54:44 -0800 (PST)
+        Tue, 21 Jan 2020 10:55:03 -0500
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id C93473C04C1;
+        Tue, 21 Jan 2020 16:55:00 +0100 (CET)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id mElhgqLIX9qL; Tue, 21 Jan 2020 16:54:52 +0100 (CET)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id B3FD33C00C5;
+        Tue, 21 Jan 2020 16:54:52 +0100 (CET)
+Received: from lxhi-065.adit-jv.com (10.72.93.66) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 21 Jan
+ 2020 16:54:52 +0100
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+CC:     <stable@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>,
+        Dirk Behme <dirk.behme@de.bosch.com>
+Subject: [PATCH v2] arm64: kbuild: remove compressed images on 'make ARCH=arm64 (dist)clean'
+Date:   Tue, 21 Jan 2020 16:54:39 +0100
+Message-ID: <20200121155439.1061-1-erosca@de.adit-jv.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-References: <20200117161822.106635-1-helgaas@kernel.org>
-In-Reply-To: <20200117161822.106635-1-helgaas@kernel.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 22 Jan 2020 00:54:08 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAT4kVw1iE7zSypJ1wLnrrEEfRRd5YfH4m6aeXymF_2BfA@mail.gmail.com>
-Message-ID: <CAK7LNAT4kVw1iE7zSypJ1wLnrrEEfRRd5YfH4m6aeXymF_2BfA@mail.gmail.com>
-Subject: Re: [PATCH v2] kconfig: fix documentation typos
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.72.93.66]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 18, 2020 at 1:18 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> From: Bjorn Helgaas <bhelgaas@google.com>
->
-> Fix a couple typos in kconfig-language documentation.
->
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> ---
+From: Dirk Behme <dirk.behme@de.bosch.com>
 
-Applied to linux-kbuild.
-Thanks.
+Since v4.3-rc1 commit 0723c05fb75e44 ("arm64: enable more compressed
+Image formats"), it is possible to build Image.{bz2,lz4,lzma,lzo}
+AArch64 images. However, the commit missed adding support for removing
+those images on 'make ARCH=arm64 (dist)clean'.
 
+Fix this by adding them to the target list.
+Make sure to match the order of the recipes in the makefile.
 
->  Documentation/kbuild/kconfig-language.rst | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
->
-> diff --git a/Documentation/kbuild/kconfig-language.rst b/Documentation/kbuild/kconfig-language.rst
-> index 74bef19f69f0..0148ae82446e 100644
-> --- a/Documentation/kbuild/kconfig-language.rst
-> +++ b/Documentation/kbuild/kconfig-language.rst
-> @@ -594,7 +594,8 @@ The two different resolutions for b) can be tested in the sample Kconfig file
->  Documentation/kbuild/Kconfig.recursion-issue-02.
->
->  Below is a list of examples of prior fixes for these types of recursive issues;
-> -all errors appear to involve one or more select's and one or more "depends on".
-> +all errors appear to involve one or more "select" statements and one or more
-> +"depends on".
->
->  ============    ===================================
->  commit          fix
-> @@ -656,7 +657,7 @@ the use of the xconfig configurator [1]_. Work should be done to confirm if
->  the deduced semantics matches our intended Kconfig design goals.
->
->  Having well defined semantics can be useful for tools for practical
-> -evaluation of depenencies, for instance one such use known case was work to
-> +evaluation of dependencies, for instance one such case was work to
->  express in boolean abstraction of the inferred semantics of Kconfig to
->  translate Kconfig logic into boolean formulas and run a SAT solver on this to
->  find dead code / features (always inactive), 114 dead features were found in
-> @@ -683,7 +684,7 @@ abstraction the inferred semantics of Kconfig to translate Kconfig logic into
->  boolean formulas and run a SAT solver on it [5]_. Another known related project
->  is CADOS [6]_ (former VAMOS [7]_) and the tools, mainly undertaker [8]_, which
->  has been introduced first with [9]_.  The basic concept of undertaker is to
-> -exract variability models from Kconfig, and put them together with a
-> +extract variability models from Kconfig and put them together with a
->  propositional formula extracted from CPP #ifdefs and build-rules into a SAT
->  solver in order to find dead code, dead files, and dead symbols. If using a SAT
->  solver is desirable on Kconfig one approach would be to evaluate repurposing
-> --
-> 2.25.0.341.g760bfbb309-goog
->
+Cc: stable@vger.kernel.org # v4.3+
+Fixes: 0723c05fb75e44 ("arm64: enable more compressed Image formats")
+Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
+Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
+---
+v2:
+ - Added 'Fixes:', 'Cc: stable' and 'Reviewed-by' tags
+---
+ arch/arm64/boot/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/arch/arm64/boot/Makefile b/arch/arm64/boot/Makefile
+index 1f012c506434..cd3414898d10 100644
+--- a/arch/arm64/boot/Makefile
++++ b/arch/arm64/boot/Makefile
+@@ -16,7 +16,7 @@
+ 
+ OBJCOPYFLAGS_Image :=-O binary -R .note -R .note.gnu.build-id -R .comment -S
+ 
+-targets := Image Image.gz
++targets := Image Image.bz2 Image.gz Image.lz4 Image.lzma Image.lzo
+ 
+ $(obj)/Image: vmlinux FORCE
+ 	$(call if_changed,objcopy)
 -- 
-Best Regards
-Masahiro Yamada
+2.25.0
+
