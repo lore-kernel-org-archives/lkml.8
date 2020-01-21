@@ -2,260 +2,153 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B6A7C33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB8AAC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:10:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D960022522
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:09:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFC1522522
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:10:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="B8/lGSiO"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="CHjGe4+n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729165AbgAUSJx (ORCPT
+        id S1729259AbgAUSKJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 13:09:53 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:46002 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728829AbgAUSJw (ORCPT
+        Tue, 21 Jan 2020 13:10:09 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:55058 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728186AbgAUSKI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 13:09:52 -0500
-Received: by mail-pl1-f195.google.com with SMTP id b22so1656109pls.12
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 10:09:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=EH1XhKHweKZm1qt/YkQUqWJniFdYwz0fW4qgVOl66fI=;
-        b=B8/lGSiO0lgQrhN0fvWf+dwD02G694b7a6WLkZSWklgWoQJhnRIU7O79Ks15f7KHHn
-         J0WSRN2kKyx1k4/x79uu2Ds3K829n1L+rch56RKVzm0q5GU/REM+aWGhOKSLkgbp3obm
-         KKPMcMrhJG2TVQpOAhM1AqP7dym4sF8zqjikA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=EH1XhKHweKZm1qt/YkQUqWJniFdYwz0fW4qgVOl66fI=;
-        b=RMez7LHEQSXNEqgXh4i4GyFEXcaj+Rq8aeZNTTwACw1rXkdf3aOQaYXZr8OvIP0d2k
-         wptP99txJuHLzmOedvDXhgiHQgrmGqAsu6pxY4JFna8TgcQ+TiSk7UsOefuWNMIeHz/p
-         R5nh++67q0Yw3gc57IW+hSM9JrhKHP5Mhd3cQbXWkKpW8sxuZtC30N6AxVFpO4GNHR+y
-         fQHf8oHTInbbhbrzXs+/eChW7iebXj5nnCrLd2TSR1HXTeA9N8zphZ0hknphCxzbs8Jn
-         eh5ZsfSOhPDwtcsxR5EzrS1iJNRMarMIiB6B3Msq4d/mP7u26Gc+PxUTc6uxfDVRyL5C
-         RpCQ==
-X-Gm-Message-State: APjAAAUz1h0TDpsM90U18cWNxfjqWBIT2Lno1pBD+NAVkjlBuRl2MHs0
-        V3G/5wLJwoyNqD9c88q1q+t/H9bX9ZBRsA==
-X-Google-Smtp-Source: APXvYqztU4jLIKUa7KoTfYL8ZQxCHagt5sn8qt1lFvrFfIeAeTUxJtTHrItPzQlMjhthuXJ+PkOOUw==
-X-Received: by 2002:a17:90a:660d:: with SMTP id l13mr6676756pjj.23.1579630191887;
-        Tue, 21 Jan 2020 10:09:51 -0800 (PST)
-Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id r62sm45504446pfc.89.2020.01.21.10.09.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 10:09:51 -0800 (PST)
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH] pinctrl: qcom: Don't lock around irq_set_irq_wake()
-Date:   Tue, 21 Jan 2020 10:09:50 -0800
-Message-Id: <20200121180950.36959-1-swboyd@chromium.org>
-X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
+        Tue, 21 Jan 2020 13:10:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=FTbjmTPewhmuZeI4RXiIzCWj8QRQqw5GhRQOtHVv+dc=; b=CHjGe4+nP671nkSnHLv1XH8kc
+        t//WmmqJb7tD1MqKGKVq0gRrITiatPK5VqYD8ukB2rLZGmP2qmwe4HhQidekE2c5Mv2JJAbhIdBfv
+        5jV3xc8yRSsgiqmjGzMdjT7eykoxcGa2cSLhavfrMvYwzgN5iKiij1oWThcs7AEB4Z1wpc6X5Z5jw
+        iU3sN/wYSVgi3wsYuTlD92rt2mYk802LhCk2kGEGHNQnEppUqYwrnRx5B1uiSaZLRcQPunKaVUgVj
+        KoSFCXL78XQtQP8iqImB7pY1QCSpuruZLF/zhvke/hwYuwWwp77kb5G/lf4knIITcx2ijShNz2pdR
+        ULStvBuCg==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:37284)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1itxy3-0006Q1-1Q; Tue, 21 Jan 2020 18:09:35 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1itxxy-00042T-5z; Tue, 21 Jan 2020 18:09:30 +0000
+Date:   Tue, 21 Jan 2020 18:09:30 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Eiichi Tsukata <devel@etsukata.com>,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Nadav Amit <namit@vmware.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 01/14] smp: Create a new function to shutdown nonboot
+ cpus
+Message-ID: <20200121180930.GJ25745@shell.armlinux.org.uk>
+References: <20191125112754.25223-1-qais.yousef@arm.com>
+ <20191125112754.25223-2-qais.yousef@arm.com>
+ <20200121170350.GC18808@shell.armlinux.org.uk>
+ <20200121174751.5opyyjwxfnwdgcev@e107158-lin.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200121174751.5opyyjwxfnwdgcev@e107158-lin.cambridge.arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We don't need to hold the local pinctrl lock here to set irq wake on the
-summary irq line. Doing so only leads to lockdep warnings instead of
-protecting us from anything. Remove the locking.
+On Tue, Jan 21, 2020 at 05:47:52PM +0000, Qais Yousef wrote:
+> On 01/21/20 17:03, Russell King - ARM Linux admin wrote:
+> > On Mon, Nov 25, 2019 at 11:27:41AM +0000, Qais Yousef wrote:
+> > > +void smp_shutdown_nonboot_cpus(unsigned int primary_cpu)
+> > > +{
+> > > +	unsigned int cpu;
+> > > +
+> > > +	if (!cpu_online(primary_cpu)) {
+> > > +		pr_info("Attempting to shutdodwn nonboot cpus while boot cpu is offline!\n");
+> > > +		cpu_online(primary_cpu);
+> 
+> Eh, that should be cpu_up(primary_cpu)!
+> 
+> Which I have to say I'm not if is the right thing to do.
+> migrate_to_reboot_cpu() picks the first online cpu if reboot_cpu (assumed 0) is
+> offline
+> 
+> migrate_to_reboot_cpu():
+>  225         /* Make certain the cpu I'm about to reboot on is online */
+>  226         if (!cpu_online(cpu))
+>  227                 cpu = cpumask_first(cpu_online_mask);
+> 
+> > > +	}
+> > > +
+> > > +	for_each_present_cpu(cpu) {
+> > > +		if (cpu == primary_cpu)
+> > > +			continue;
+> > > +		if (cpu_online(cpu))
+> > > +			cpu_down(cpu);
+> > > +	}
+> > 
+> > How does this avoid racing with userspace attempting to restart CPUs
+> > that have already been taken down by this function?
+> 
+> This is meant to be called from machine_shutdown() only.
+> 
+> But you've got a point.
+> 
+> The previous logic that used disable_nonboot_cpus(), which in turn called
+> freeze_secondary_cpus() didn't hold hotplug lock. So I assumed the higher level
+> logic of machine_shutdown() ensures that hotplug lock is held to synchronize
+> with potential other hotplug operations.
 
- WARNING: possible circular locking dependency detected
- 5.4.11 #2 Tainted: G        W
- ------------------------------------------------------
- cat/3083 is trying to acquire lock:
- ffffff81f4fa58c0 (&irq_desc_lock_class){-.-.}, at: __irq_get_desc_lock+0x64/0x94
+freeze_secondary_cpus() takes the CPU maps lock while it takes CPUs
+down, and then disables cpu hotplug by incrementing
+cpu_hotplug_disabled.  Incrementing that prevents cpu_up() and
+cpu_down() being used, thereby preventing userspace from changing the
+online state of any CPU in the system.
 
- but task is already holding lock:
- ffffff81f4880c18 (&pctrl->lock){-.-.}, at: msm_gpio_irq_set_wake+0x48/0x7c
+> But I can see now that it doesn't.
+> 
+> With this series that migrates users to use device_{online,offline}, holding
+> the lock_device_hotplug() should protect against such races.
+> 
+> Worth noting that this an existing problem in the code and not something
+> I introduced, of course it makes sense to fix it properly as part of this
+> series.
+> 
+> I'm not sure how the other archs deal with this TBH.
+> 
+> Thanks for having a look!
+> 
+> Cheers
+> 
+> --
+> Qais Yousef
+> 
 
- which lock already depends on the new lock.
-
- the existing dependency chain (in reverse order) is:
-
- -> #1 (&pctrl->lock){-.-.}:
-        _raw_spin_lock_irqsave+0x64/0x80
-        msm_gpio_irq_ack+0x68/0xf4
-        __irq_do_set_handler+0xe0/0x180
-        __irq_set_handler+0x60/0x9c
-        irq_domain_set_info+0x90/0xb4
-        gpiochip_hierarchy_irq_domain_alloc+0x110/0x200
-        __irq_domain_alloc_irqs+0x130/0x29c
-        irq_create_fwspec_mapping+0x1f0/0x300
-        irq_create_of_mapping+0x70/0x98
-        of_irq_get+0xa4/0xd4
-        spi_drv_probe+0x4c/0xb0
-        really_probe+0x138/0x3f0
-        driver_probe_device+0x70/0x140
-        __device_attach_driver+0x9c/0x110
-        bus_for_each_drv+0x88/0xd0
-        __device_attach+0xb0/0x160
-        device_initial_probe+0x20/0x2c
-        bus_probe_device+0x34/0x94
-        device_add+0x35c/0x3f0
-        spi_add_device+0xbc/0x194
-        of_register_spi_devices+0x2c8/0x408
-        spi_register_controller+0x57c/0x6fc
-        spi_geni_probe+0x260/0x328
-        platform_drv_probe+0x90/0xb0
-        really_probe+0x138/0x3f0
-        driver_probe_device+0x70/0x140
-        device_driver_attach+0x4c/0x6c
-        __driver_attach+0xcc/0x154
-        bus_for_each_dev+0x84/0xcc
-        driver_attach+0x2c/0x38
-        bus_add_driver+0x108/0x1fc
-        driver_register+0x64/0xf8
-        __platform_driver_register+0x4c/0x58
-        spi_geni_driver_init+0x1c/0x24
-        do_one_initcall+0x1a4/0x3e8
-        do_initcall_level+0xb4/0xcc
-        do_basic_setup+0x30/0x48
-        kernel_init_freeable+0x124/0x1a8
-        kernel_init+0x14/0x100
-        ret_from_fork+0x10/0x18
-
- -> #0 (&irq_desc_lock_class){-.-.}:
-        __lock_acquire+0xeb4/0x2388
-        lock_acquire+0x1cc/0x210
-        _raw_spin_lock_irqsave+0x64/0x80
-        __irq_get_desc_lock+0x64/0x94
-        irq_set_irq_wake+0x40/0x144
-        msm_gpio_irq_set_wake+0x5c/0x7c
-        set_irq_wake_real+0x40/0x5c
-        irq_set_irq_wake+0x70/0x144
-        cros_ec_rtc_suspend+0x38/0x4c
-        platform_pm_suspend+0x34/0x60
-        dpm_run_callback+0x64/0xcc
-        __device_suspend+0x310/0x41c
-        dpm_suspend+0xf8/0x298
-        dpm_suspend_start+0x84/0xb4
-        suspend_devices_and_enter+0xbc/0x620
-        pm_suspend+0x210/0x348
-        state_store+0xb0/0x108
-        kobj_attr_store+0x14/0x24
-        sysfs_kf_write+0x4c/0x64
-        kernfs_fop_write+0x15c/0x1fc
-        __vfs_write+0x54/0x18c
-        vfs_write+0xe4/0x1a4
-        ksys_write+0x7c/0xe4
-        __arm64_sys_write+0x20/0x2c
-        el0_svc_common+0xa8/0x160
-        el0_svc_handler+0x7c/0x98
-        el0_svc+0x8/0xc
-
- other info that might help us debug this:
-
-  Possible unsafe locking scenario:
-
-        CPU0                    CPU1
-        ----                    ----
-   lock(&pctrl->lock);
-                                lock(&irq_desc_lock_class);
-                                lock(&pctrl->lock);
-   lock(&irq_desc_lock_class);
-
-  *** DEADLOCK ***
-
- 7 locks held by cat/3083:
-  #0: ffffff81f06d1420 (sb_writers#7){.+.+}, at: vfs_write+0xd0/0x1a4
-  #1: ffffff81c8935680 (&of->mutex){+.+.}, at: kernfs_fop_write+0x12c/0x1fc
-  #2: ffffff81f4c322f0 (kn->count#337){.+.+}, at: kernfs_fop_write+0x134/0x1fc
-  #3: ffffffe89a641d60 (system_transition_mutex){+.+.}, at: pm_suspend+0x108/0x348
-  #4: ffffff81f190e970 (&dev->mutex){....}, at: __device_suspend+0x168/0x41c
-  #5: ffffff81f183d8c0 (lock_class){-.-.}, at: __irq_get_desc_lock+0x64/0x94
-  #6: ffffff81f4880c18 (&pctrl->lock){-.-.}, at: msm_gpio_irq_set_wake+0x48/0x7c
-
- stack backtrace:
- CPU: 4 PID: 3083 Comm: cat Tainted: G        W         5.4.11 #2
- Hardware name: Google Cheza (rev3+) (DT)
- Call trace:
-  dump_backtrace+0x0/0x174
-  show_stack+0x20/0x2c
-  dump_stack+0xc8/0x124
-  print_circular_bug+0x2ac/0x2c4
-  check_noncircular+0x1a0/0x1a8
-  __lock_acquire+0xeb4/0x2388
-  lock_acquire+0x1cc/0x210
-  _raw_spin_lock_irqsave+0x64/0x80
-  __irq_get_desc_lock+0x64/0x94
-  irq_set_irq_wake+0x40/0x144
-  msm_gpio_irq_set_wake+0x5c/0x7c
-  set_irq_wake_real+0x40/0x5c
-  irq_set_irq_wake+0x70/0x144
-  cros_ec_rtc_suspend+0x38/0x4c
-  platform_pm_suspend+0x34/0x60
-  dpm_run_callback+0x64/0xcc
-  __device_suspend+0x310/0x41c
-  dpm_suspend+0xf8/0x298
-  dpm_suspend_start+0x84/0xb4
-  suspend_devices_and_enter+0xbc/0x620
-  pm_suspend+0x210/0x348
-  state_store+0xb0/0x108
-  kobj_attr_store+0x14/0x24
-  sysfs_kf_write+0x4c/0x64
-  kernfs_fop_write+0x15c/0x1fc
-  __vfs_write+0x54/0x18c
-  vfs_write+0xe4/0x1a4
-  ksys_write+0x7c/0xe4
-  __arm64_sys_write+0x20/0x2c
-  el0_svc_common+0xa8/0x160
-  el0_svc_handler+0x7c/0x98
-  el0_svc+0x8/0xc
-
-Fixes: f365be092572 ("pinctrl: Add Qualcomm TLMM driver")
-Cc: Douglas Anderson <dianders@chromium.org>
-Cc: Brian Masney <masneyb@onstation.org>
-Cc: Lina Iyer <ilina@codeaurora.org>
-Cc: Maulik Shah <mkshah@codeaurora.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
----
- drivers/pinctrl/qcom/pinctrl-msm.c | 5 -----
- 1 file changed, 5 deletions(-)
-
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-index 5d6f9f61ce02..9a8daa256a32 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-@@ -960,7 +960,6 @@ static int msm_gpio_irq_set_wake(struct irq_data *d, unsigned int on)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
- 	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
--	unsigned long flags;
- 
- 	/*
- 	 * While they may not wake up when the TLMM is powered off,
-@@ -971,12 +970,8 @@ static int msm_gpio_irq_set_wake(struct irq_data *d, unsigned int on)
- 	if (d->parent_data)
- 		irq_chip_set_wake_parent(d, on);
- 
--	raw_spin_lock_irqsave(&pctrl->lock, flags);
--
- 	irq_set_irq_wake(pctrl->irq, on);
- 
--	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
--
- 	return 0;
- }
- 
 -- 
-Sent by a computer, using git, on the internet
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
