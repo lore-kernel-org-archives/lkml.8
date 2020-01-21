@@ -2,59 +2,59 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F7EC33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 02:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD870C33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 02:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BCA522522
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 02:30:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 931D222522
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 02:30:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bt0+NcVb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jhRBqmGW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728904AbgAUCac (ORCPT
+        id S1729031AbgAUCaj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 21:30:32 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:39222 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726890AbgAUCac (ORCPT
+        Mon, 20 Jan 2020 21:30:39 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:36322 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726890AbgAUCai (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 21:30:32 -0500
-Received: by mail-pg1-f195.google.com with SMTP id 4so631892pgd.6;
-        Mon, 20 Jan 2020 18:30:31 -0800 (PST)
+        Mon, 20 Jan 2020 21:30:38 -0500
+Received: by mail-pl1-f193.google.com with SMTP id a6so655194plm.3;
+        Mon, 20 Jan 2020 18:30:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UQyPAfqAyljHnvWhswSI0j0AaXOWbrBUiwjxd8hEWfs=;
-        b=Bt0+NcVbtyhKoPbU4w5EMFNOUoCclOtmzhRCrfG710xvJdFahXj+BqwWCMP/+lV/p6
-         0TaEc3sDfjQdNoO6/tedQTBn1Uj6EaA7podeyfC4qC1a8FWIMEalPpdrnjDWH4yy0fV2
-         EfnM1agj8iFckuwtSZu5jU/2/R2kklzvWNwO2vrw7BupLSYORiFi8Aatvmjlnr3aT3dz
-         zK43sFEqi90gQX49hYRG0FfWj8Tozkcl8H/XefzMQg+JVxyHsrOOGc4uIZUkRoPR8XB0
-         MixxWHbh1yvr+5sgn3eKONCeOTDYr2d6O8b5UmQuMTWn8Ua7ef3cd07oKfFWO0/yc/zh
-         W5cQ==
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=nsYKoT1BpY0kUNRQePG66qpdiEA4oi0keuUWKmcNOtI=;
+        b=jhRBqmGW1xtgmUKcHugKxEGxLlWOlem2RDuiZSGEqU1r55YLB8bDC459bdovaUb1Er
+         F6z2KdOcwJSv9x9+sKOEFM1lNgVIWfkQhsl/XoyowJcr3EfnmCWux2FNk6KjHWZztSYR
+         UYsaCKEogJZv3//b8W7pVkBfNeFM0qPvNrLu6qrTfHkbE6yz4rKJ9e6dziYJE6vC5MDh
+         kG9DRmTN/uuQ0BBrPqdJukXG25UwUx+l2bcHryO41szwGl9j8wHFQTqFj7wsPQ3GcpFj
+         osHyMgsZ+9ExAXofWRwnrgaOfx8oRuLbI5dUy1TIcmvM3oGKqycb5LZNrInDvRNfiRD8
+         9mxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=UQyPAfqAyljHnvWhswSI0j0AaXOWbrBUiwjxd8hEWfs=;
-        b=AFRQIpwZ7UcUKttFL5QfG541ovbNUt2Az9btdNC3KS5rzIxTMiKslt11blykdZMfcx
-         uG9dZdOkJg/K5umFwIsAZvP5ioOD4CWt+5aq+yeTnpgowjyKiuEdR2DbnicwczIeRdK0
-         KM8vVn5v8bM0YdCN3dmtAMJS5dYfUZ+jKjJG8Wv9FlxIikzpeMPio775torNPPWae0wO
-         Z3qbtg8geVOo3/TA9Fm1mBcJAzO1JEGencRh0JSA3exW8k/2wMeuM6jS4RI82M3gL0ir
-         nMO3o5+bEacdBfuhHnfGpcnUn8xcz4acABw3y17Li4ENkjS/pD3G5Yc3qspL/pOz1Chj
-         HnNA==
-X-Gm-Message-State: APjAAAUVwd3NrlUYC7eQwCXlxk1I0+ML/bKEW2tt67GzIUAnoZQvzbDS
-        F2WthzAe7Zlc8o7u9aImwhwuqM1t
-X-Google-Smtp-Source: APXvYqwIk9UQhVc9EWq9JS2v2Hzscp7+O/f9asgIn1QReUfPblnnZ9VX/CJrpK9D0nmctwWk5QO/pA==
-X-Received: by 2002:a63:5525:: with SMTP id j37mr2902151pgb.180.1579573831257;
-        Mon, 20 Jan 2020 18:30:31 -0800 (PST)
+         :in-reply-to:references;
+        bh=nsYKoT1BpY0kUNRQePG66qpdiEA4oi0keuUWKmcNOtI=;
+        b=BxW/AXGTZ4DLwXHJLclT6VQ8Dfxf40ElmKWgH+d2/1SyIH2p2imHMpqZFIGUCTheLQ
+         hKmnWubU3c1MXZgYGYoy/aXLZaYnyLT/Vb8It4qEopz5OEz8SNYo1/9JcL19KEXyC4gd
+         CTxxNQfNuzoeKUJKM1oX5gRyTeS6FaXlYJdkfHtYz7XCZlfmqqqOqeGQaLqSVpAca3/6
+         IiXfqrxe+bBFbO+4Ex0QMt6fNJ9pK8ymVabONETUX21w2Pdf6E5bQiGPoVQ2kyxCLxem
+         SCBoeogcz+D9IxPadvcQ0Dl97TvcQuzrCtwnzO5Rcm5FM531OQSj3knJu4S8SNz2uKSL
+         EUHQ==
+X-Gm-Message-State: APjAAAVbzHjkU/YZGjyy/NupTJb9j6AUfNBV6xI2UPYr/Xl72qhR43vG
+        Yg0fvb6AvvRcjG5+svYK+OG284ey
+X-Google-Smtp-Source: APXvYqxISNary6tTU/LmG524YDQnM6JO9UU0gNEyDyrVaQh+lxsme2pAabDfHldryk4LfPx8Gp5xkw==
+X-Received: by 2002:a17:90a:804a:: with SMTP id e10mr2583574pjw.41.1579573837651;
+        Mon, 20 Jan 2020 18:30:37 -0800 (PST)
 Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id p21sm40123272pfn.103.2020.01.20.18.30.30
+        by smtp.gmail.com with ESMTPSA id n4sm38310219pgg.88.2020.01.20.18.30.36
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 20 Jan 2020 18:30:30 -0800 (PST)
+        Mon, 20 Jan 2020 18:30:37 -0800 (PST)
 From:   Guenter Roeck <linux@roeck-us.net>
 To:     linux-hwmon@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, Clemens Ladisch <clemens@ladisch.de>,
@@ -69,85 +69,98 @@ Cc:     linux-kernel@vger.kernel.org, Clemens Ladisch <clemens@ladisch.de>,
         Sebastian Reichel <sebastian.reichel@collabora.com>,
         Darren Salt <devspam@moreofthesa.me.uk>,
         Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH v3 0/5] hwmon: k10temp driver improvements
-Date:   Mon, 20 Jan 2020 18:30:22 -0800
-Message-Id: <20200121023027.2081-1-linux@roeck-us.net>
+Subject: [PATCH v3 1/5] hwmon: (k10temp) Use bitops
+Date:   Mon, 20 Jan 2020 18:30:23 -0800
+Message-Id: <20200121023027.2081-2-linux@roeck-us.net>
 X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200121023027.2081-1-linux@roeck-us.net>
+References: <20200121023027.2081-1-linux@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series implements various improvements for the k10temp driver.
+Using bitops makes bit masks and shifts easier to read.
 
-Patch 1/5 introduces the use of bit operations.
-
-Patch 2/5 converts the driver to use the devm_hwmon_device_register_with_info
-API. This not only simplifies the code and reduces its size, it also
-makes the code easier to maintain and enhance. 
-
-Patch 3/5 adds support for reporting Core Complex Die (CCD) temperatures
-on Zen2 (Ryzen and Threadripper) CPUs (note that reporting is incomplete
-for Threadripper CPUs - it is known that additional temperature sensors
-exist, but the register locations are unknown).
-
-Patch 4/5 adds support for reporting core and SoC current and voltage
-information on Ryzen CPUs (note: voltage and current measurements for
-Threadripper and EPYC CPUs are known to exist, but register locations
-are unknown, and values are therefore not reported at this time).
-
-Patch 5/5 removes the maximum temperature from Tdie for Ryzen CPUs.
-It is inaccurate, misleading, and it just doesn't make sense to report
-wrong information.
-
-With all patches in place, output on Ryzen 3900X CPUs looks as follows
-(with the system under load).
-
-k10temp-pci-00c3
-Adapter: PCI adapter
-Vcore:        +1.36 V
-Vsoc:         +1.18 V
-Tdie:         +86.8°C
-Tctl:         +86.8°C
-Tccd1:        +80.0°C
-Tccd2:        +81.8°C
-Icore:       +44.14 A
-Isoc:        +13.83 A
-
-The voltage and current information is limited to Ryzen CPUs. Voltage
-and current reporting on Threadripper and EPYC CPUs is different, and the
-reported information is either incomplete or wrong. Exclude it for the time
-being; it can always be added if/when more information becomes available.
-
-Tested with the following Ryzen CPUs:
-    1300X A user with this CPU in the system reported somewhat unexpected
-          values for Vcore; it isn't entirely if at all clear why that is
-          the case. Overall this does not warrant holding up the series.
-    1600
-    1800X
-    2200G
-    2400G
-    2700
-    2700X
-    2950X
-    3600X
-    3800X
-    3900X
-    3950X
-    3970X
-    EPYC 7302
-    EPYC 7742
-
-Many thanks to everyone who helped to test this series.
-
+Tested-by: Brad Campbell <lists2009@fnarfbargle.com>
+Tested-by: Bernhard Gebetsberger <bernhard.gebetsberger@gmx.at>
+Tested-by: Holger Kiehl <holger.kiehl@dwd.de>
+Tested-by: Michael Larabel <michael@phoronix.com>
+Tested-by: Jonathan McDowell <noodles@earth.li>
+Tested-by: Ken Moffat <zarniwhoop73@googlemail.com>
+Tested-by: Darren Salt <devspam@moreofthesa.me.uk>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 ---
-v2: Added Tested-by: tags as received.
-    Don't display voltage and current information for Threadripper and EPYC.
-    Stop displaying the fixed (and wrong) maximum temperature of 70 degrees C
-    for Tdie on model 17h/18h CPUs.
+ drivers/hwmon/k10temp.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-v3: Added more Tested-by: tags
-    Added detection for 3970X, and report Tccd1 for this CPU.
+diff --git a/drivers/hwmon/k10temp.c b/drivers/hwmon/k10temp.c
+index 5c1dddde193c..8807d7da68db 100644
+--- a/drivers/hwmon/k10temp.c
++++ b/drivers/hwmon/k10temp.c
+@@ -5,6 +5,7 @@
+  * Copyright (c) 2009 Clemens Ladisch <clemens@ladisch.de>
+  */
+ 
++#include <linux/bitops.h>
+ #include <linux/err.h>
+ #include <linux/hwmon.h>
+ #include <linux/hwmon-sysfs.h>
+@@ -31,22 +32,22 @@ static DEFINE_MUTEX(nb_smu_ind_mutex);
+ #endif
+ 
+ /* CPUID function 0x80000001, ebx */
+-#define CPUID_PKGTYPE_MASK	0xf0000000
++#define CPUID_PKGTYPE_MASK	GENMASK(31, 28)
+ #define CPUID_PKGTYPE_F		0x00000000
+ #define CPUID_PKGTYPE_AM2R2_AM3	0x10000000
+ 
+ /* DRAM controller (PCI function 2) */
+ #define REG_DCT0_CONFIG_HIGH		0x094
+-#define  DDR3_MODE			0x00000100
++#define  DDR3_MODE			BIT(8)
+ 
+ /* miscellaneous (PCI function 3) */
+ #define REG_HARDWARE_THERMAL_CONTROL	0x64
+-#define  HTC_ENABLE			0x00000001
++#define  HTC_ENABLE			BIT(0)
+ 
+ #define REG_REPORTED_TEMPERATURE	0xa4
+ 
+ #define REG_NORTHBRIDGE_CAPABILITIES	0xe8
+-#define  NB_CAP_HTC			0x00000400
++#define  NB_CAP_HTC			BIT(10)
+ 
+ /*
+  * For F15h M60h and M70h, REG_HARDWARE_THERMAL_CONTROL
+@@ -60,6 +61,9 @@ static DEFINE_MUTEX(nb_smu_ind_mutex);
+ /* F17h M01h Access througn SMN */
+ #define F17H_M01H_REPORTED_TEMP_CTRL_OFFSET	0x00059800
+ 
++#define CUR_TEMP_SHIFT				21
++#define CUR_TEMP_RANGE_SEL_MASK			BIT(19)
++
+ struct k10temp_data {
+ 	struct pci_dev *pdev;
+ 	void (*read_htcreg)(struct pci_dev *pdev, u32 *regval);
+@@ -129,7 +133,7 @@ static unsigned int get_raw_temp(struct k10temp_data *data)
+ 	u32 regval;
+ 
+ 	data->read_tempreg(data->pdev, &regval);
+-	temp = (regval >> 21) * 125;
++	temp = (regval >> CUR_TEMP_SHIFT) * 125;
+ 	if (regval & data->temp_adjust_mask)
+ 		temp -= 49000;
+ 	return temp;
+@@ -312,7 +316,7 @@ static int k10temp_probe(struct pci_dev *pdev,
+ 		data->read_htcreg = read_htcreg_nb_f15;
+ 		data->read_tempreg = read_tempreg_nb_f15;
+ 	} else if (boot_cpu_data.x86 == 0x17 || boot_cpu_data.x86 == 0x18) {
+-		data->temp_adjust_mask = 0x80000;
++		data->temp_adjust_mask = CUR_TEMP_RANGE_SEL_MASK;
+ 		data->read_tempreg = read_tempreg_nb_f17;
+ 		data->show_tdie = true;
+ 	} else {
+-- 
+2.17.1
+
