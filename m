@@ -2,127 +2,197 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D749EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C357CC33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:16:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6AD522522
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:08:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90CAA21734
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:15:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YxB/bbIr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YSlJP+Ou"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbgAUIIo (ORCPT
+        id S1728139AbgAUIP6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 03:08:44 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:56802 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725890AbgAUIIo (ORCPT
+        Tue, 21 Jan 2020 03:15:58 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27063 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725890AbgAUIP5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 03:08:44 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00L88bcl012886;
-        Tue, 21 Jan 2020 08:08:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=JokcTFeEjvvq9Vxxb4wYvQgUwTXVTIvxWBKr0alh1Jc=;
- b=YxB/bbIrZAJGeDGXg+zMWRsC40uHGOzqMvZVCRwlBNsCG1ixv2mFPW+h1xjHN3+Ib+x9
- 3FiELGyRhB4zAfSqmu88OxOqPTu3pzd8PkGUOOesvjwwaBpPDSxLxUxLTlm8IjlAD0hZ
- SJmQfsdOqcM+czuehY6jeCvdCkXZlCTn/14u9tXri0LfPZCirOPrkItt/IFbkr43fhbs
- m7YbR4KUqFj9ggIY5wr1gh5lyeEjn4YB1wwATuf5iZmi43ZrRHpzh5RrtszYUrLrGi4k
- G3eRXvenJcJCcmEfszq7SmuNSuRthRQ5HMFlfLe6hUR9bc9rBOakjwJF71U1kMvmpCUN TA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2xksyq36ef-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 Jan 2020 08:08:37 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00L88Fqo074370;
-        Tue, 21 Jan 2020 08:08:37 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2xnpfnhqpf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 Jan 2020 08:08:37 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00L88aYj018372;
-        Tue, 21 Jan 2020 08:08:36 GMT
-Received: from kadam (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 21 Jan 2020 00:08:35 -0800
-Date:   Tue, 21 Jan 2020 11:13:06 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Vladimir Stankovic <vladimir.stankovic@displaylink.com>
-Cc:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        Petar Kovacevic <petar.kovacevic@displaylink.com>,
-        Nikola Simic <nikola.simic@displaylink.com>,
+        Tue, 21 Jan 2020 03:15:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579594555;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=LDZZx/Gnj5ZRM82WjxYSmYyaFueti+mk2d2ohpv+jeI=;
+        b=YSlJP+OuHEsfvx0Qe2cYsmzBSL9sRbJbG8j7AbIn0+2OeG0juRr6le7jYZxtUzeiJy8HHd
+        eg3dC25id+/aPD4QYhaa8CibBHkMpDfOUD3cuXPbNR1uY6Z22bgboDlzByLy4qq4KL+LOI
+        g6y84rSSPPqNypEbuTwxt8lTiMDSF6o=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-166-I2I5HWkwPueoJdmkX5RYng-1; Tue, 21 Jan 2020 03:15:54 -0500
+X-MC-Unique: I2I5HWkwPueoJdmkX5RYng-1
+Received: by mail-qv1-f71.google.com with SMTP id f16so1110744qvr.7
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 00:15:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=LDZZx/Gnj5ZRM82WjxYSmYyaFueti+mk2d2ohpv+jeI=;
+        b=FTn4MynfR80Dn9kcYRHRheuSo4ulWm4T+VF3C7SBhxGmrFb7fiGyhesyS6cGNCLwgM
+         iycnkbruuqX3Oni6ML81xFRE7eaV2OQ5QlAe7PZs1K/mfNG5MdRvBjTlyC4piMBFk1sQ
+         S79pv7B1M7R6ognpOBEy64HKIahJigMUQueD8frE86PYrMcgy2Gpo2V/YV0n8bPNT0dl
+         f62GMPibmdlVlF9s81XGArjIbQHEf8wUWBIKXiteKsHEAdh25wUouyB2sr6/ite0JTmk
+         qJOo9XKEuqPIl0Zpxdz8EowNjLqShOjkLNY6z27xnxwUPCu3DS2cUI+MRMWzh/8C7p1V
+         kEwA==
+X-Gm-Message-State: APjAAAV1rKkRz0xjZMWO/Z4j+aiLO6qqU+DDyMll7+cNJ9L2djtf0ymW
+        NC8bchVG0zNXByUnlulxI6UAGFb5BnVoknzm9K7zzuAq8OjKFFm028xsUoqJIGGIBMNFU9hjFnv
+        eXlTsJ7iKKZXi4yMuyR5OplMR
+X-Received: by 2002:a37:4792:: with SMTP id u140mr3527888qka.100.1579594553677;
+        Tue, 21 Jan 2020 00:15:53 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxdkjBVx/UGOKVK94Xs4SyAvooIxcojAHiVS5/OG5oUdaH/4DoRhuXXCGIK/jBUqS0IK043lw==
+X-Received: by 2002:a37:4792:: with SMTP id u140mr3527856qka.100.1579594553353;
+        Tue, 21 Jan 2020 00:15:53 -0800 (PST)
+Received: from redhat.com (bzq-79-179-85-180.red.bezeqint.net. [79.179.85.180])
+        by smtp.gmail.com with ESMTPSA id z3sm18825316qtm.5.2020.01.21.00.15.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2020 00:15:52 -0800 (PST)
+Date:   Tue, 21 Jan 2020 03:15:43 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     Jason Gunthorpe <jgg@mellanox.com>,
+        Shahaf Shuler <shahafs@mellanox.com>,
+        Rob Miller <rob.miller@broadcom.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marko Miljkovic <marko.miljkovic@displaylink.com>,
-        Stefan Lugonjic <stefan.lugonjic@displaylink.com>
-Subject: Re: staging: Add MA USB Host driver
-Message-ID: <20200121081306.GG21151@kadam>
-References: <VI1PR10MB19659B32E563620B4D63AF1A91320@VI1PR10MB1965.EURPRD10.PROD.OUTLOOK.COM>
- <VI1PR10MB1965A077526FE296608D5B1191320@VI1PR10MB1965.EURPRD10.PROD.OUTLOOK.COM>
- <VI1PR10MB19658F2B6FDAD88FAA05546591320@VI1PR10MB1965.EURPRD10.PROD.OUTLOOK.COM>
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Netdev <netdev@vger.kernel.org>,
+        "Bie, Tiwei" <tiwei.bie@intel.com>,
+        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
+        "Liang, Cunming" <cunming.liang@intel.com>,
+        "Wang, Zhihong" <zhihong.wang@intel.com>,
+        "Wang, Xiao W" <xiao.w.wang@intel.com>,
+        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
+        "Zhu, Lingshan" <lingshan.zhu@intel.com>,
+        "eperezma@redhat.com" <eperezma@redhat.com>,
+        "lulu@redhat.com" <lulu@redhat.com>,
+        Parav Pandit <parav@mellanox.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "stefanha@redhat.com" <stefanha@redhat.com>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "hch@infradead.org" <hch@infradead.org>,
+        Ariel Adam <aadam@redhat.com>,
+        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "hanand@xilinx.com" <hanand@xilinx.com>,
+        "mhabets@solarflare.com" <mhabets@solarflare.com>
+Subject: Re: [PATCH 3/5] vDPA: introduce vDPA bus
+Message-ID: <20200121031506-mutt-send-email-mst@kernel.org>
+References: <20200116124231.20253-4-jasowang@redhat.com>
+ <20200117070324-mutt-send-email-mst@kernel.org>
+ <239b042c-2d9e-0eec-a1ef-b03b7e2c5419@redhat.com>
+ <CAJPjb1+fG9L3=iKbV4Vn13VwaeDZZdcfBPvarogF_Nzhk+FnKg@mail.gmail.com>
+ <AM0PR0502MB379553984D0D55FDE25426F6C3330@AM0PR0502MB3795.eurprd05.prod.outlook.com>
+ <d69918ca-8af4-44b2-9652-633530d4c113@redhat.com>
+ <20200120174933.GB3891@mellanox.com>
+ <2a324cec-2863-58f4-c58a-2414ee32c930@redhat.com>
+ <20200121004047-mutt-send-email-mst@kernel.org>
+ <b9ad744e-c4cd-82f9-f56a-1ecc185e9cd7@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <VI1PR10MB19658F2B6FDAD88FAA05546591320@VI1PR10MB1965.EURPRD10.PROD.OUTLOOK.COM>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9506 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001210069
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9506 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001210069
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b9ad744e-c4cd-82f9-f56a-1ecc185e9cd7@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 09:30:43AM +0000, Vladimir Stankovic wrote:
-> +int mausb_enqueue_event_from_user(uint8_t madev_addr, uint32_t all_events)
-> +{
-> +	unsigned long flags;
-> +	uint16_t num_of_completed,
-> +		 num_of_events;
-> +	struct mausb_device *dev;
-> +
-> +	spin_lock_irqsave(&mss.lock, flags);
-> +	dev = mausb_get_dev_from_addr_unsafe(madev_addr);
-> +
-> +	if (!dev) {
-> +		spin_unlock_irqrestore(&mss.lock, flags);
-> +		return 0;
-> +	}
-> +
-> +	spin_lock_irqsave(&dev->num_of_user_events_lock, flags);
-> +	num_of_completed = (uint16_t)all_events +
-> +			   (uint16_t)dev->num_of_user_events;
-> +	num_of_events	 = (all_events >> (8 * sizeof(num_of_events))) +
-> +		(dev->num_of_user_events >> (8 * sizeof(num_of_events)));
-> +	dev->num_of_user_events  = num_of_completed;
-> +	dev->num_of_user_events |= (uint32_t)num_of_events <<
-> +		(8 * sizeof(num_of_events));
+On Tue, Jan 21, 2020 at 04:00:38PM +0800, Jason Wang wrote:
+> 
+> On 2020/1/21 下午1:47, Michael S. Tsirkin wrote:
+> > On Tue, Jan 21, 2020 at 12:00:57PM +0800, Jason Wang wrote:
+> > > On 2020/1/21 上午1:49, Jason Gunthorpe wrote:
+> > > > On Mon, Jan 20, 2020 at 04:43:53PM +0800, Jason Wang wrote:
+> > > > > This is similar to the design of platform IOMMU part of vhost-vdpa. We
+> > > > > decide to send diffs to platform IOMMU there. If it's ok to do that in
+> > > > > driver, we can replace set_map with incremental API like map()/unmap().
+> > > > > 
+> > > > > Then driver need to maintain rbtree itself.
+> > > > I think we really need to see two modes, one where there is a fixed
+> > > > translation without dynamic vIOMMU driven changes and one that
+> > > > supports vIOMMU.
+> > > 
+> > > I think in this case, you meant the method proposed by Shahaf that sends
+> > > diffs of "fixed translation" to device?
+> > > 
+> > > It would be kind of tricky to deal with the following case for example:
+> > > 
+> > > old map [4G, 16G) new map [4G, 8G)
+> > > 
+> > > If we do
+> > > 
+> > > 1) flush [4G, 16G)
+> > > 2) add [4G, 8G)
+> > > 
+> > > There could be a window between 1) and 2).
+> > > 
+> > > It requires the IOMMU that can do
+> > > 
+> > > 1) remove [8G, 16G)
+> > > 2) flush [8G, 16G)
+> > > 3) change [4G, 8G)
+> > > 
+> > > ....
+> > Basically what I had in mind is something like qemu memory api
+> > 
+> > 0. begin
+> > 1. remove [8G, 16G)
+> > 2. add [4G, 8G)
+> > 3. commit
+> 
+> 
+> This sounds more flexible e.g driver may choose to implement static mapping
+> one through commit. But a question here, it looks to me this still requires
+> the DMA to be synced with at least commit here. Otherwise device may get DMA
+> fault? Or device is expected to be paused DMA during begin?
+> 
+> Thanks
 
-I might be missing something.  Why can't we just declare two struct
-members instead of doing these bit shifts to fit two values into
-dev->num_of_user_events?
+For example, commit might switch one set of tables for another,
+without need to pause DMA.
 
-> +	spin_unlock_irqrestore(&dev->num_of_user_events_lock, flags);
-> +	queue_work(dev->workq, &dev->work);
-> +	spin_unlock_irqrestore(&mss.lock, flags);
-> +
-> +	return 0;
-> +}
+> 
+> > 
+> > Anyway, I'm fine with a one-shot API for now, we can
+> > improve it later.
+> > 
+> > > > There are different optimization goals in the drivers for these two
+> > > > configurations.
+> > > > 
+> > > > > > If the first one, then I think memory hotplug is a heavy flow
+> > > > > > regardless. Do you think the extra cycles for the tree traverse
+> > > > > > will be visible in any way?
+> > > > > I think if the driver can pause the DMA during the time for setting up new
+> > > > > mapping, it should be fine.
+> > > > This is very tricky for any driver if the mapping change hits the
+> > > > virtio rings. :(
+> > > > 
+> > > > Even a IOMMU using driver is going to have problems with that..
+> > > > 
+> > > > Jason
+> > > 
+> > > Or I wonder whether ATS/PRI can help here. E.g during I/O page fault,
+> > > driver/device can wait for the new mapping to be set and then replay the
+> > > DMA.
+> > > 
+> > > Thanks
+> > > 
+> > 
 
-regards,
-dan carpenter
