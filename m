@@ -2,331 +2,145 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86BD8C33CA1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 00:12:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8CE2C33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 00:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48BF724125
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 00:12:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E98D24125
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 00:13:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rdcc+GT6"
+	dkim=pass (1024-bit key) header.d=opengear.com header.i=@opengear.com header.b="1CC5YenG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728827AbgAUAMS (ORCPT
+        id S1728709AbgAUAN7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 19:12:18 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:33960 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727045AbgAUAMS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 19:12:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
-        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=/xyBHgymRZRvhSHMvOWw7LfxJCtVwSQxHsdSyQIdU00=; b=rdcc+GT6zN4uITp6N+pSOpGnp
-        LJIvp5dhopJE6rtzO/ALvUWkZqEyigRk19UeQ6pM34gFQL3WeRsH8OJAQSqLc/JVzAndu97jg2+98
-        mlTQ7sOGryVdZrlCbgLyMiLEPyjaMH20DGOimX18q/uo/h+HwQJpQa1Iqo8DSd5oCCBXac1FIn6Ja
-        8vUnuAp7P021FExtoKraEEsw0RZg3/7b0KKq1jkesgSEd86dL4LfkByBVgU9gv36VmJqZ+fdaTPyS
-        /cXO9ElYnD72icGCm37V2KGng+976ZMi0yPv9tCKwRr1dDzFDJoKTaFK7Yzse//RIv5aV1Rw5rrSP
-        N3YZbMNbg==;
-Received: from [2603:3004:32:9a00::c7a3]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ith9R-0007ts-C6; Tue, 21 Jan 2020 00:12:13 +0000
-Subject: Re: [PATCH v7 2/2] sched/numa: documentation for per-cgroup numa,
- statistics
-To:     =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Jonathan Corbet <corbet@lwn.net>
-References: <743eecad-9556-a241-546b-c8a66339840e@linux.alibaba.com>
- <207ef46c-672c-27c8-2012-735bd692a6de@linux.alibaba.com>
- <040def80-9c38-4bcc-e4a8-8a0d10f131ed@linux.alibaba.com>
- <25cf7ef5-e37e-7578-eea7-29ad0b76c4ea@linux.alibaba.com>
- <443641e7-f968-0954-5ff6-3b7e7fed0e83@linux.alibaba.com>
- <d2c4cace-623a-9317-c957-807e3875aa4a@linux.alibaba.com>
- <a95a7e05-ad60-b9ee-ca39-f46c8e08887d@linux.alibaba.com>
- <628ab349-af6e-10a5-af56-2e30ab178539@linux.alibaba.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <6ece8405-650c-69a0-09eb-e7f1f84c0c3f@infradead.org>
-Date:   Mon, 20 Jan 2020 16:12:12 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Mon, 20 Jan 2020 19:13:59 -0500
+Received: from mail-mw2nam10on2052.outbound.protection.outlook.com ([40.107.94.52]:6337
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727009AbgAUAN6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 19:13:58 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=L/+uU96IaiIOvxTz3Flb4VYzvMsLHxt+S+c3l1AbXf85Jf6eRmNCejHXHFaVP96MLGfAlX8KItNgx5+V98oCpfpH0egvG7oDhoQ9zqTdk7+UIfjLsC0G1uJSeDcVZfaZsAHWECXDPJcDnKlL6Uti2V6z2KQmIdOhjxz5226tjKwe5QZhCigmtVRW6QIZyuK2ACgBKVx2kbVRTDvS3fU9cnPXssQU27Lg4bexzdX91MXDI7ILnuI8iKOyDW8C1YcjWrQ3HA+KsXvk0cuDgJcBUmEefX0Q4EGrEEsY3uRr7UdbQ4A7bKLMI4M7u7p0NOq7m1H9vg115lon+lKBoCynNQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IBW8s0Q5/7/NchBOB41g3fhl06+di8ZHaGXNaWBwmaY=;
+ b=KweUGbNXQ837UwrjErDvyDJJYNG8SsjCNSVsh7TdTgbnKi95LhyD77tqeE93mR0nD8dAU5oxNEfcpjd2WMhAOWwS4FIpE7gzQIY+xKkdovGGR/CDDReQugHlZ+7YXuEFMMWx3eL8MjDtSFI6YyAbuAptdLFSunWZfJssQGMMw6pcKTvgfUiBiqalTRA2WHBWhw0y3w9yJhqnRgxAxMs7sUZyC4SWEaX9C0TVRLu2wPtuNwnTrVZw9mRm71wRLRC7EZQxKMrqSiHCgcO3dm1bmhnUCM9mMm46PfxSU8kjMJC68Yl4ElfERl9gsXyPRq9TrUXrIX4aseMtcU8WHB5ilA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 60.241.24.90) smtp.rcpttodomain=baylibre.com smtp.mailfrom=opengear.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=opengear.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=opengear.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IBW8s0Q5/7/NchBOB41g3fhl06+di8ZHaGXNaWBwmaY=;
+ b=1CC5YenGJ89RAtY9EtVn6xAOZ8U816Iy1sZkDpg3UNpzd2J80ff77MfzEfQGSWqZmjcZ8pB/w4mTAr7XMDoWb+ct74CkH9i7PXl8hww+PkUcI9XQU2NoVIjVoqGiJyKCnoBoyPHjpa2HmK4w/N1QAToGkzk+CvMfYvxn6kNjkxk=
+Received: from BN8PR15CA0038.namprd15.prod.outlook.com (2603:10b6:408:80::15)
+ by CY4PR15MB1365.namprd15.prod.outlook.com (2603:10b6:903:fd::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.24; Tue, 21 Jan
+ 2020 00:13:56 +0000
+Received: from CO1NAM04FT051.eop-NAM04.prod.protection.outlook.com
+ (2a01:111:f400:7e4d::209) by BN8PR15CA0038.outlook.office365.com
+ (2603:10b6:408:80::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.18 via Frontend
+ Transport; Tue, 21 Jan 2020 00:13:55 +0000
+Authentication-Results: spf=pass (sender IP is 60.241.24.90)
+ smtp.mailfrom=opengear.com; baylibre.com; dkim=none (message not signed)
+ header.d=none;baylibre.com; dmarc=pass action=none header.from=opengear.com;
+Received-SPF: Pass (protection.outlook.com: domain of opengear.com designates
+ 60.241.24.90 as permitted sender) receiver=protection.outlook.com;
+ client-ip=60.241.24.90; helo=postman.bne.opengear.com;
+Received: from postman.bne.opengear.com (60.241.24.90) by
+ CO1NAM04FT051.mail.protection.outlook.com (10.152.90.255) with Microsoft SMTP
+ Server id 15.20.2644.19 via Frontend Transport; Tue, 21 Jan 2020 00:13:54
+ +0000
+Received: from galangal.danc.bne.opengear.com (danc.bne.opengear.com [192.168.254.90])
+        by postman.bne.opengear.com (Postfix) with ESMTPS id C8900DEBA6;
+        Tue, 21 Jan 2020 10:13:51 +1000 (AEST)
+Received: by galangal.danc.bne.opengear.com (Postfix, from userid 1090)
+        id B059F42945E4; Tue, 21 Jan 2020 10:13:51 +1000 (AEST)
+From:   Dan Callaghan <dan.callaghan@opengear.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org (open list:GPIO SUBSYSTEM),
+        linux-kernel@vger.kernel.org (open list)
+Cc:     Dan Callaghan <dan.callaghan@opengear.com>
+Subject: [PATCH RESEND] gpiolib: hold gpio devices lock until ->descs array is initialised
+Date:   Tue, 21 Jan 2020 10:12:17 +1000
+Message-Id: <20200121001216.15964-1-dan.callaghan@opengear.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <628ab349-af6e-10a5-af56-2e30ab178539@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
+X-Forefront-Antispam-Report: CIP:60.241.24.90;IPV:;CTRY:AU;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(39840400004)(346002)(136003)(199004)(189003)(6266002)(478600001)(70586007)(26005)(2906002)(186003)(4326008)(6666004)(356004)(5660300002)(110136005)(1076003)(8936002)(42186006)(2616005)(8676002)(316002)(246002)(107886003)(336012)(7636002)(426003)(70206006)(36756003)(44832011);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR15MB1365;H:postman.bne.opengear.com;FPR:;SPF:Pass;LANG:en;PTR:brisbane.opengear.com;A:1;MX:1;
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c2e074d8-fdb9-482f-28a1-08d79e06cd70
+X-MS-TrafficTypeDiagnostic: CY4PR15MB1365:|CY4PR15MB1365:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <CY4PR15MB1365B07DF78E037362A06B2CB80D0@CY4PR15MB1365.namprd15.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-Forefront-PRVS: 0289B6431E
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: dkkSLTHfi1RYYAE7HtzXJaUNTxfJc/R/qezPpyzbgSmXKGiUJGF/QJlDdcYZfe58bvOAxizepA0gH8pxFUnjx7ksU+Z76fiuT9ylRDurBogRTeEiHfsPC50cNBNM/ccdOwN3MHTwcR3Cp8ywVusMv5QzJTZsU6uFKnalBEBfscx+4E/YPyVce7WpXM0j0RQy4oa132Bz/jbDyf0SCv0ObnOstJYn65gePU2KIn/9Vs83+pkNbBYZmooN+HukJzIQ54auB26rJrGfjCSwQrBhWA20CMAm0NFknBHZqvsBD9QgHpzeRdu6ppzjN+B2qmXWk7NAOeiHZNO/GTWCXcLHk4bJcAa/JodwyX6u4JiN6Mus4EoVbCqh6cmJUY0z8Zhbzcgo217A/3ufcimuMVsQDytF2Mnquf6H7iHlgGCJQ4h9UV67tcM/Y9NAMYNDnVxr
+X-OriginatorOrg: opengear.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jan 2020 00:13:54.6093
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c2e074d8-fdb9-482f-28a1-08d79e06cd70
+X-MS-Exchange-CrossTenant-Id: a6251c26-d21f-4164-a225-1f4eaebf5f9a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a6251c26-d21f-4164-a225-1f4eaebf5f9a;Ip=[60.241.24.90];Helo=[postman.bne.opengear.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR15MB1365
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+If a driver consuming the GPIO chip is being probed at the same time as
+the GPIO driver is registering the chip, it is possible for the
+consuming driver to see the ->descs array in an uninitialised state.
+For example, the gpio-keys-polled driver can fail like this:
 
-Documentation edits below...
+    kernel: gpiod_request: invalid GPIO (no device)
+    kernel: gpio-keys-polled PRP0001:07: failed to get gpio: -22
+    kernel: gpio-keys-polled: probe of PRP0001:07 failed with error -22
 
-On 1/18/20 10:09 PM, 王贇 wrote:
-> Add the description for 'numa_locality', also a new doc to explain
-> the details on how to deal with the per-cgroup numa statistics.
-> 
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Michal Koutný <mkoutny@suse.com>
-> Cc: Mel Gorman <mgorman@suse.de>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: Iurii Zaikin <yzaikin@google.com>
-> Cc: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
-> ---
->  Documentation/admin-guide/cg-numa-stat.rst      | 178 ++++++++++++++++++++++++
->  Documentation/admin-guide/index.rst             |   1 +
->  Documentation/admin-guide/kernel-parameters.txt |   4 +
->  Documentation/admin-guide/sysctl/kernel.rst     |   9 ++
->  init/Kconfig                                    |   2 +
->  5 files changed, 194 insertions(+)
->  create mode 100644 Documentation/admin-guide/cg-numa-stat.rst
-> 
-> diff --git a/Documentation/admin-guide/cg-numa-stat.rst b/Documentation/admin-guide/cg-numa-stat.rst
-> new file mode 100644
-> index 000000000000..30ebe5d6404f
-> --- /dev/null
-> +++ b/Documentation/admin-guide/cg-numa-stat.rst
-> @@ -0,0 +1,178 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +===============================
-> +Per-cgroup NUMA statistics
-> +===============================
-> +
-> +Background
-> +----------
-> +
-> +On NUMA platforms, remote memory accessing always has a performance penalty.
-> +Although we have NUMA balancing working hard to maximize the access locality,
-> +there are still situations it can't help.
-> +
-> +This could happen in modern production environment. When a large number of
-> +cgroups are used to classify and control resources, this creates a complex
-> +configuration for memory policy, CPUs and NUMA nodes. In such cases NUMA
-> +balancing could end up with the wrong memory policy or exhausted local NUMA
-> +node, which would lead to low percentage of local page accesses.
-> +
-> +We need to detect such cases, figure out which workloads from which cgroup
-> +have introduced the issues, then we get chance to do adjustment to avoid
-> +performance degradation.
-> +
-> +However, there are no hardware counters for per-task local/remote accessing
-> +info, we don't know how many remote page accesses have occurred for a
-> +particular task.
-> +
-> +NUMA Locality
-> +-------------
-> +
-> +Fortunately, we have NUMA Balancing which scans task's mapping and triggers
-> +page fault periodically, giving us the opportunity to record per-task page
-> +accessing info, when the CPU fall into PF is from the same node of pages, we
-> +consider task as doing local page accessing, otherwise the remote page
-> +accessing, we call these two counter the locality info.
+This patch makes gpiochip_add() hold the lock protecting gpio_devices
+until it has finished setting desc->gdev on the newly inserted list
+entry.
 
-                                counters
+Signed-off-by: Dan Callaghan <dan.callaghan@opengear.com>
+---
+Resending this one because I failed to cc the maintainers on the 
+original posting, sorry about that.
 
-> +
-> +On each tick, we acquire the locality info of current task on that CPU, update
-> +the increments into its cgroup, becoming the group locality info.
-> +
-> +By "echo 1 > /proc/sys/kernel/numa_locality" at runtime or adding boot parameter
-> +'numa_locality', we will enable the accounting of per-cgroup NUMA locality info,
-> +the 'cpu.numa_stat' entry of CPU cgroup will show statistics::
-> +
-> +  page_access local=NR_LOCAL_PAGE_ACCESS remote=NR_REMOTE_PAGE_ACCESS
-> +
-> +We define 'NUMA locality' as::
-> +
-> +  NR_LOCAL_PAGE_ACCESS * 100 / (NR_LOCAL_PAGE_ACCESS + NR_REMOTE_PAGE_ACCESS)
-> +
-> +This per-cgroup percentage number helps to represent the NUMA Balancing behavior.
-> +
-> +Note that the accounting is hierarchical, which means the NUMA locality info for
-> +a given group represent not only the workload of this group, but also the
+ drivers/gpio/gpiolib.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-                 represents
-
-> +workloads of all its descendants.
-> +
-> +For example the 'cpu.numa_stat' shows::
-> +
-> +  page_access local=129909383 remote=18265810
-> +
-> +The NUMA locality calculated as::
-> +
-> +  129909383 * 100 / (129909383 + 18265810) = 87.67
-> +
-> +Thus we know the workload of this group and its descendants have totally done
-> +129909383 times of local page accessing and 18265810 times of remotes, locality
-> +is 87.67% which imply most of the memory access are local.
-
-                   implies
-
-> +
-> +NUMA Consumption
-> +----------------
-> +
-> +There are also other cgroup entry help us to estimate NUMA efficiency, which is
-
-                               entries which help us to estimate NUMA efficiency. They are
-
-> +'cpuacct.usage_percpu' and 'memory.numa_stat'.
-> +
-> +By reading 'cpuacct.usage_percpu' we will get per-cpu runtime (in nanoseconds)
-> +info (in hierarchy) as::
-> +
-> +  CPU_0_RUNTIME CPU_1_RUNTIME CPU_2_RUNTIME ... CPU_X_RUNTIME
-> +
-> +Combined with the info from::
-> +
-> +  cat /sys/devices/system/node/nodeX/cpulist
-> +
-> +We would be able to accumulate the runtime of CPUs into NUMA nodes, to get the
-> +per-cgroup node runtime info.
-> +
-> +By reading 'memory.numa_stat' we will get per-cgroup node memory consumption
-> +info as::
-> +
-> +  total=TOTAL_MEM N0=MEM_ON_NODE0 N1=MEM_ON_NODE1 ... NX=MEM_ON_NODEX
-> +
-> +Together we call these the per-cgroup NUMA consumption info, tell us how many
-
-                                                                telling us
-
-> +resources a particular workload has consumed, on a particular NUMA node.
-> +
-> +Monitoring
-> +----------
-> +
-> +By monitoring the increments of locality info, we can easily know whether NUMA
-> +Balancing is working well for a particular workload.
-> +
-> +For example we take a 5 seconds sample period, then on each sampling we have::
-> +
-> +  local_diff = last_nr_local_page_access - nr_local_page_access
-> +  remote_diff = last_nr_remote_page_access - nr_remote_page_access
-> +
-> +and we get the locality in this period as::
-> +
-> +  locality = local_diff * 100 / (local_diff + remote_diff)
-> +
-> +We can plot a line for locality, when the line close to 100% things are good,
-
-                          locality. When the line is close to 100%, things are good;
-
-> +when getting close to 0% something is wrong, we can pick a proper watermark to
-
-                                         wrong. We can pick
-
-> +trigger warning message.
-> +
-> +You may want to drop the data if the local/remote_diff is too small, which
-> +implies there are not many available pages for NUMA Balancing to scan, ignoring
-> +would be fine since most likely the workload is insensitive to NUMA, or the
-> +memory topology is already good enough.
-> +
-> +Monitoring root group helps you control the overall situation, while you may
-> +also want to monitor all the leaf groups which contain the workloads, this
-> +helps to catch the mouse.
-> +
-> +Try to put your workload into also the cpuacct & memory cgroup, when NUMA
-> +Balancing is disabled or locality becomes too small, we may want to monitor
-> +the per-node runtime & memory info to see if the node consumption meet the
-> +requirements.
-> +
-> +For NUMA node X on each sampling we have::
-> +
-> +  runtime_X_diff = runtime_X - last_runtime_X
-> +  runtime_all_diff = runtime_all - last_runtime_all
-> +
-> +  runtime_percent_X = runtime_X_diff * 100 / runtime_all_diff
-> +  memory_percent_X = memory_X * 100 / memory_all
-> +
-> +These two percentages are usually matched on each node, workload should execute
-> +mostly on the node that contains most of its memory, but it's not guaranteed.
-> +
-> +The workload may only access a small part of its memory, in such cases although
-> +the majority of memory are remotely, locality could still be good.
-
-                          are remote,
-
-> +
-> +Thus to tell if things are fine or not depends on the understanding of system
-> +resource deployment, however, if you find node X got 100% memory percent but 0%
-> +runtime percent, definitely something is wrong.
-> +
-> +Troubleshooting
-> +---------------
-> +
-> +After identifying which workload introduced the bad locality, check:
-> +
-> +1). Is the workload bound to a particular NUMA node?
-> +2). Has any NUMA node run out of resources?
-> +
-> +There are several ways to bind task's memory with a NUMA node, the strict way
-> +like the MPOL_BIND memory policy or 'cpuset.mems' will limit the memory
-> +node where to allocate pages. In this situation, admin should make sure the
-> +task is allowed to run on the CPUs of that NUMA node, and make sure there are
-> +available CPU resource there.
-
-                 resources
-
-> +
-> +There are also ways to bind task's CPU with a NUMA node, like 'cpuset.cpus' or
-> +sched_setaffinity() syscall. In this situation, NUMA Balancing help to migrate
-
-                                                                  helps
-
-> +pages into that node, admin should make sure there are available memory there.
-
-                                                      is
-
-> +
-> +Admin could try to rebind or unbind the NUMA node to erase the damage, make a
-> +change then observe the statistics to see if things get better until the
-> +situation is acceptable.
-> +
-> +Highlights
-> +----------
-> +
-> +For some tasks, NUMA Balancing may be found to be unnecessary to scan pages,
-> +and locality could always be 0 or small number, don't pay attention to them
-> +since they most likely insensitive to NUMA.
-> +
-> +There is no accounting until the option is turned on, so enable it in advance
-> +if you want to have the whole history.
-> +
-> +We have per-task migfailed counter to tell how many page migration has been
-
-                                                            migrations have   {drop: been}
-
-> +failed for a particular task, you will find it in /proc/PID/sched entry.
-
-                           task; you
-
-
-HTH.
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 78a16e42f222..33c72fb12bb5 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1495,11 +1495,11 @@ int gpiochip_add_data_with_key(struct gpio_chip *chip, void *data,
+ 		goto err_free_label;
+ 	}
+ 
+-	spin_unlock_irqrestore(&gpio_lock, flags);
+-
+ 	for (i = 0; i < chip->ngpio; i++)
+ 		gdev->descs[i].gdev = gdev;
+ 
++	spin_unlock_irqrestore(&gpio_lock, flags);
++
+ #ifdef CONFIG_PINCTRL
+ 	INIT_LIST_HEAD(&gdev->pin_ranges);
+ #endif
 -- 
-~Randy
+2.21.0
+
