@@ -2,118 +2,130 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCDF2C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:49:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93DBCC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F42D207E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:49:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579621766;
-	bh=JWaCjq1+9R4XS6VK+eYCcMP6UfiyC1ck6vUIFyf4UK4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=n2rK6L7YlSo7i9nTngaZBuA0rJOpFRUk44HcFQyQAR6qtyfIZ0S31sXbtnwO/Ukvd
-	 +EV92b8bhXgX7aRER9HruKR5NJtthI82yzujPHtLeQvbhJESFIyg02rlb8ZbcaO6NX
-	 tbww9KzKQawCl7qwY8yBKz5VbB9831Qukc2GC8P0=
+	by mail.kernel.org (Postfix) with ESMTP id 6F8C122314
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:50:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729190AbgAUPt0 (ORCPT
+        id S1729190AbgAUPu0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 10:49:26 -0500
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:51283 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726714AbgAUPt0 (ORCPT
+        Tue, 21 Jan 2020 10:50:26 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:39888 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726714AbgAUPu0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 10:49:26 -0500
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id 00LFmxvB032152;
-        Wed, 22 Jan 2020 00:48:59 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 00LFmxvB032152
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1579621740;
-        bh=QNy0J9485PLVj/lWu2K2Q/r3Oo4wCpQoR9+3n4LqspA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=pmhsxpcLCJkot4Y/dFz2ZHYTHsnzNrxvgpbuVoOtozHdZPefPl0qiowRemdbE9WP6
-         a4ChluKbuYL8aFy2q+ewNPlHOXIFeqOpCX9tK4GlTSZJ1sxG/dBmf3nRYDFPEgT2U5
-         vywe1Dq8sL9mWetSRCl/52lbhv9d2gAboKBmeD0iW7h++15Dp7GvdovWHO8EjoaA1g
-         vg8Ef/6vBbonRRUcmGSeTojyfaja1QzBAUd75k3DFXEFXyJRjiHyU26+zB7wdAkVsX
-         XPFf+PFW+A2PiyQ1NWKIZhN70iQcmBSD/dHp3wb575QFFEtP6rXnbzFtrKJHAJ+PXc
-         v5K8mUFvPXrow==
-X-Nifty-SrcIP: [209.85.217.46]
-Received: by mail-vs1-f46.google.com with SMTP id v12so2109484vsv.5;
-        Tue, 21 Jan 2020 07:48:59 -0800 (PST)
-X-Gm-Message-State: APjAAAXly78N/wTIkV+fSJX2r0AAKoVawqu2RTNXQ/+jSYFyGsXSeCHf
-        C9R7SSqTFYQxty73bcfEm3Qq9mwOuSUT67m0wCk=
-X-Google-Smtp-Source: APXvYqxh9HCpa/NiNQMPWap5CNoXnetuXPH667PmUfNWUH3xezMWQjnmUZ7bRtA6AwhifZrYF9d9G2Urt4VhxrLAxK0=
-X-Received: by 2002:a05:6102:2334:: with SMTP id b20mr3167894vsa.155.1579621738736;
- Tue, 21 Jan 2020 07:48:58 -0800 (PST)
+        Tue, 21 Jan 2020 10:50:26 -0500
+Received: from [154.119.55.246] (helo=localhost.localdomain)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1itvnM-0004D0-5C; Tue, 21 Jan 2020 15:50:24 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tejun Heo <tj@kernel.org>
+Cc:     Oleg Nesterov <oleg@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH v5 0/6] clone3 & cgroups: allow spawning processes into cgroups
+Date:   Tue, 21 Jan 2020 16:48:38 +0100
+Message-Id: <20200121154844.411-1-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-References: <20200115162529.11089-1-masahiroy@kernel.org>
-In-Reply-To: <20200115162529.11089-1-masahiroy@kernel.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 22 Jan 2020 00:48:22 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATj0X-F+9p_M40BXVH3XdpoRcy_Rwk7NGL5au2EKS4gjQ@mail.gmail.com>
-Message-ID: <CAK7LNATj0X-F+9p_M40BXVH3XdpoRcy_Rwk7NGL5au2EKS4gjQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/7] builddeb: remove unneeded files in hdrobjfiles for
- headers package
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Ben Hutchings <ben@decadent.org.uk>,
-        Riku Voipio <riku.voipio@linaro.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 1:26 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
->  - We do not need tools/objtool/fixdep or tools/objtool/sync-check.sh
->    for building external modules. Including tools/objtool/objtool is
->    enough.
->
->  - gcc-common.h is a check-in file. I do not see any point to search
->    for it in objtree.
->
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
->
-> Changes in v2: None
+Hey Tejun,
+
+This is v5 of the promised series to enable spawning processes into a
+target cgroup different from the parent's cgroup.
+
+/* v1 */
+Link: https://lore.kernel.org/r/20191218173516.7875-1-christian.brauner@ubuntu.com
+
+/* v2 */
+Link: https://lore.kernel.org/r/20191223061504.28716-1-christian.brauner@ubuntu.com
+Rework locking and remove unneeded helper functions. Please see
+individual patch changelogs for details.
+With this I've been able to run the cgroup selftests and stress tests in
+loops for a long time without any regressions or deadlocks; lockdep and
+kasan did not complain either.
+
+/* v3 */
+Link: https://lore.kernel.org/r/20200117002143.15559-1-christian.brauner@ubuntu.com
+Split preliminary work into separate patches.
+See changelog of individual commits.
+
+/* v4 */
+Link: https://lore.kernel.org/r/20200117181219.14542-1-christian.brauner@ubuntu.com
+Verify that we have write access to the target cgroup. This is usually
+done by the vfs but since we aren't going through the vfs with
+CLONE_INTO_CGROUP we need to do it ourselves.
+
+/* v5 */
+Don't pass down the parent task_struct as argument, just use current
+directly. Put kargs->cset on error.
+
+With this cgroup migration will be a lot easier, and accounting will be
+more exact. It also allows for nice features such as creating a frozen
+process by spawning it into a frozen cgroup.
+The code simplifies container creation and exec logic quite a bit as
+well.
+
+I've tried to contain all core changes for this features in
+kernel/cgroup/* to avoid exposing cgroup internals. This has mostly
+worked.
+When a new process is supposed to be spawned in a cgroup different from
+the parent's then we briefly acquire the cgroup mutex right before
+fork()'s point of no return and drop it once the child process has been
+attached to the tasklist and to its css_set. This is done to ensure that
+the cgroup isn't removed behind our back. The cgroup mutex is _only_
+held in this case; the usual case, where the child is created in the
+same cgroup as the parent does not acquire it since the cgroup can't be
+removed.
+
+The series already comes with proper testing. Once we've decided that
+this approach is good I'll expand the test-suite even more.
+
+The branch can be found in the following locations:
+[1]: kernel.org: https://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git/log/?h=clone_into_cgroup
+[2]: github.com: https://github.com/brauner/linux/tree/clone_into_cgroup
+[3]: gitlab.com: https://gitlab.com/brauner/linux/commits/clone_into_cgroup
+
+Thanks!
+Christian
+
+Christian Brauner (6):
+  cgroup: unify attach permission checking
+  cgroup: add cgroup_get_from_file() helper
+  cgroup: refactor fork helpers
+  cgroup: add cgroup_may_write() helper
+  clone3: allow spawning processes into cgroups
+  selftests/cgroup: add tests for cloning into cgroups
+
+ include/linux/cgroup-defs.h                   |   6 +-
+ include/linux/cgroup.h                        |  20 +-
+ include/linux/sched/task.h                    |   4 +
+ include/uapi/linux/sched.h                    |   5 +
+ kernel/cgroup/cgroup.c                        | 297 ++++++++++++++----
+ kernel/cgroup/pids.c                          |  15 +-
+ kernel/fork.c                                 |  19 +-
+ tools/testing/selftests/cgroup/Makefile       |   6 +-
+ tools/testing/selftests/cgroup/cgroup_util.c  | 126 ++++++++
+ tools/testing/selftests/cgroup/cgroup_util.h  |   4 +
+ tools/testing/selftests/cgroup/test_core.c    |  64 ++++
+ .../selftests/clone3/clone3_selftests.h       |  19 +-
+ 12 files changed, 501 insertions(+), 84 deletions(-)
 
 
-Series, applied to linux-kbuild.
-
-
->
->  scripts/package/builddeb | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/scripts/package/builddeb b/scripts/package/builddeb
-> index b60388051c7f..eb067d6f1370 100755
-> --- a/scripts/package/builddeb
-> +++ b/scripts/package/builddeb
-> @@ -170,11 +170,11 @@ done
->  (cd $srctree; find arch/$SRCARCH -name module.lds -o -name Kbuild.platforms -o -name Platform) >> "$objtree/debian/hdrsrcfiles"
->  (cd $srctree; find $(find arch/$SRCARCH -name include -o -name scripts -type d) -type f) >> "$objtree/debian/hdrsrcfiles"
->  if is_enabled CONFIG_STACK_VALIDATION; then
-> -       (cd $objtree; find tools/objtool -type f -executable) >> "$objtree/debian/hdrobjfiles"
-> +       echo tools/objtool/objtool >> "$objtree/debian/hdrobjfiles"
->  fi
->  (cd $objtree; find arch/$SRCARCH/include Module.symvers include scripts -type f) >> "$objtree/debian/hdrobjfiles"
->  if is_enabled CONFIG_GCC_PLUGINS; then
-> -       (cd $objtree; find scripts/gcc-plugins -name \*.so -o -name gcc-common.h) >> "$objtree/debian/hdrobjfiles"
-> +       (cd $objtree; find scripts/gcc-plugins -name \*.so) >> "$objtree/debian/hdrobjfiles"
->  fi
->  destdir=$kernel_headers_dir/usr/src/linux-headers-$version
->  mkdir -p "$destdir"
-> --
-> 2.17.1
->
-
-
+base-commit: b3a987b0264d3ddbb24293ebff10eddfc472f653
 -- 
-Best Regards
-Masahiro Yamada
+2.25.0
+
