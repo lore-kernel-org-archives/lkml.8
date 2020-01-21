@@ -2,132 +2,111 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1BD8C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:16:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B72C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:16:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E978217F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:16:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76C2624656
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:16:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579623394;
+	bh=QeSKKD6PfrbbZOwfYV8hICQ+MCLi4jauPz7wyQelez8=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=K1rl6LCohhsDbWAF5SYSVsNJb6vG5za1MuKclrCrAbH2Xexvbqa95Y62Rg99tO5mS
+	 4Ts893u35H85vzRfQdfG1DZWdfrIGO5EN5EHoRbkMFJ0tdVPJYZEh8lchbzG/F3Vog
+	 oHXD6yOUtHFQQ2Cz7HolP9Lkm3yP4gXgyg2g1ixE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729355AbgAUQQF (ORCPT
+        id S1729277AbgAUQQd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 11:16:05 -0500
-Received: from mga18.intel.com ([134.134.136.126]:19468 "EHLO mga18.intel.com"
+        Tue, 21 Jan 2020 11:16:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728829AbgAUQQF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 11:16:05 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 08:16:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,346,1574150400"; 
-   d="scan'208";a="374634490"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga004.jf.intel.com with ESMTP; 21 Jan 2020 08:16:04 -0800
-Received: from [10.125.249.87] (rsudarik-mobl.ccr.corp.intel.com [10.125.249.87])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726555AbgAUQQd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 11:16:33 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id C80C35803C5;
-        Tue, 21 Jan 2020 08:16:00 -0800 (PST)
-Subject: =?UTF-8?Q?Re=3a_=5bPATCH_v4_2/2=5d_perf_x86=3a_Exposing_an_Uncore_u?=
- =?UTF-8?Q?nit_to_PMON_for_Intel_Xeon=c2=ae_server_platform?=
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        Andi Kleen <ak@linux.intel.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org,
-        linux-kernel@vger.kernel.org, eranian@google.com,
-        bgregg@netflix.com, kan.liang@linux.intel.com,
-        alexander.antonov@intel.com
-References: <20200117133759.5729-1-roman.sudarikov@linux.intel.com>
- <20200117133759.5729-3-roman.sudarikov@linux.intel.com>
- <20200117141944.GC1856891@kroah.com>
- <20200117162357.GK302770@tassilo.jf.intel.com>
- <20200117165406.GA1937954@kroah.com>
-From:   "Sudarikov, Roman" <roman.sudarikov@linux.intel.com>
-Message-ID: <f62a14a4-4fea-84f7-4cab-8bef74cf9e8a@linux.intel.com>
-Date:   Tue, 21 Jan 2020 19:15:56 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        by mail.kernel.org (Postfix) with ESMTPSA id CCD43217F4;
+        Tue, 21 Jan 2020 16:16:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579623392;
+        bh=QeSKKD6PfrbbZOwfYV8hICQ+MCLi4jauPz7wyQelez8=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=Il7G75GLGL9BYlH35+SMX/L6VBP/oLIMGiRkoA99QP49hy6FgnqV7/3fGSwKEVz4T
+         gn7tnHJmIaly9Ua5+BSqlpRJS3e3S/uyuC7G8BCbJK2VPnaKShgTYsuAONkYPko1Ix
+         94CNdGU/2JGEwDWIXc+3suGyu7MgSWaUF5YA8XuI=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id A677E3520DC0; Tue, 21 Jan 2020 08:16:32 -0800 (PST)
+Date:   Tue, 21 Jan 2020 08:16:32 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Marco Elver <elver@google.com>, andreyknvl@google.com,
+        glider@google.com, dvyukov@google.com, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+        will@kernel.org, boqun.feng@gmail.com, arnd@arndb.de,
+        viro@zeniv.linux.org.uk, christophe.leroy@c-s.fr, dja@axtens.net,
+        mpe@ellerman.id.au, rostedt@goodmis.org, mhiramat@kernel.org,
+        mingo@kernel.org, christian.brauner@ubuntu.com,
+        daniel@iogearbox.net, cyphar@cyphar.com, keescook@chromium.org,
+        linux-arch@vger.kernel.org
+Subject: Re: [PATCH 3/5] asm-generic, kcsan: Add KCSAN instrumentation for
+ bitops
+Message-ID: <20200121161632.GV2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200120141927.114373-1-elver@google.com>
+ <20200120141927.114373-3-elver@google.com>
+ <20200120144048.GB14914@hirez.programming.kicks-ass.net>
+ <20200120162725.GE2935@paulmck-ThinkPad-P72>
+ <20200120165223.GC14914@hirez.programming.kicks-ass.net>
+ <20200120202359.GF2935@paulmck-ThinkPad-P72>
+ <20200121091501.GF14914@hirez.programming.kicks-ass.net>
+ <20200121142109.GQ2935@paulmck-ThinkPad-P72>
+ <20200121144716.GQ14879@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20200117165406.GA1937954@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200121144716.GQ14879@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17.01.2020 19:54, Greg KH wrote:
-> On Fri, Jan 17, 2020 at 08:23:57AM -0800, Andi Kleen wrote:
->>> I thought I was nice and gentle last time and said that this was a
->>> really bad idea and you would fix it up.  That didn't happen, so I am
->>> being explicit here, THIS IS NOT AN ACCEPTABLE FILE OUTPUT FOR A SYSFS
->>> FILE.
->> Could you suggest how such a 1:N mapping should be expressed instead in
->> sysfs?
-> I have yet to figure out what it is you all are trying to express here
-> given a lack of Documentation/ABI/ file :)
->
-> But again, sysfs is ONE VALUE PER FILE.  You have a list of items here,
-> that is bounded only by the number of devices in the system at the
-> moment.  That number will go up in time, as we all know.  So this is
-> just not going to work at all as-is.
->
-> greg k-h
+On Tue, Jan 21, 2020 at 03:47:16PM +0100, Peter Zijlstra wrote:
+> On Tue, Jan 21, 2020 at 06:21:09AM -0800, Paul E. McKenney wrote:
+> > On Tue, Jan 21, 2020 at 10:15:01AM +0100, Peter Zijlstra wrote:
+> > > On Mon, Jan 20, 2020 at 12:23:59PM -0800, Paul E. McKenney wrote:
+> > > > We also don't have __atomic_read() and __atomic_set(), yet atomic_read()
+> > > > and atomic_set() are considered to be non-racy, right?
+> > > 
+> > > What is racy? :-) You can make data races with atomic_{read,set}() just
+> > > fine.
+> > 
+> > Like "fairness", lots of definitions of "racy".  ;-)
+> > 
+> > > Anyway, traditionally we call the read-modify-write stuff atomic, not
+> > > the trivial load-store stuff. The only reason we care about the
+> > > load-store stuff in the first place is because C compilers are shit.
+> > > 
+> > > atomic_read() / test_bit() are just a load, all we need is the C
+> > > compiler not to be an ass and split it. Yes, we've invented the term
+> > > single-copy atomicity for that, but that doesn't make it more or less of
+> > > a load.
+> > > 
+> > > And exactly because it is just a load, there is no __test_bit(), which
+> > > would be the exact same load.
+> > 
+> > Very good!  Shouldn't KCSAN then define test_bit() as non-racy just as
+> > for atomic_read()?
+> 
+> Sure it does; but my comment was aimed at the gripe that test_bit()
+> lives in the non-atomic bitops header. That is arguably entirely
+> correct.
 
-Hi Greg,
+Fair enough!
 
-Technically, the motivation behind this patch is to enable Linux perf tool
-to attribute IO traffic to IO device.
-
-Currently, perf tool provides interface to configure IO PMUs only 
-without any
-context.
-
-Understanding IIO stack concept to find which IIO stack that particular
-IO device is connected to, or to identify an IIO PMON block to program
-for monitoring specific IIO stack assumes a lot of implicit knowledge
-about given Intel server platform architecture.
-
-
-Please consider the following mapping schema:
-
-1. new "mapping" directory is to be added under each uncore_iio_N directory
-2. that "mapping" directory is supposed to contain symlinks named "dieN"
-which are pointed to corresponding root bus.
-Below is how it looks like for 2S machine:
-
-# ll uncore_iio_0/mapping/
-lrwxrwxrwx 1 root root 0 Jan 20 23:55 die0 -> 
-../../pci0000:00/pci_bus/0000:00
-lrwxrwxrwx 1 root root 0 Jan 20 23:55 die1 -> 
-../../pci0000:80/pci_bus/0000:80
-
-# ll uncore_iio_1/mapping/
-lrwxrwxrwx 1 root root 0 Jan 20 23:55 die0 -> 
-../../pci0000:17/pci_bus/0000:17
-lrwxrwxrwx 1 root root 0 Jan 20 23:55 die1 -> 
-../../pci0000:85/pci_bus/0000:85
-
-# ll uncore_iio_2/mapping/
-lrwxrwxrwx 1 root root 0 Jan 20 23:55 die0 -> 
-../../pci0000:3a/pci_bus/0000:3a
-lrwxrwxrwx 1 root root 0 Jan 20 23:55 die1 -> 
-../../pci0000:ae/pci_bus/0000:ae
-
-# ll uncore_iio_3/mapping/
-lrwxrwxrwx 1 root root 0 Jan 20 23:55 die0 -> 
-../../pci0000:5d/pci_bus/0000:5d
-lrwxrwxrwx 1 root root 0 Jan 20 23:55 die1 -> 
-../../pci0000:d7/pci_bus/0000:d7
-
-
-Thanks,
-Roman
-
+							Thanx, Paul
