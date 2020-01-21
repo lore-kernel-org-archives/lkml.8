@@ -2,98 +2,70 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CCADC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 22:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C487C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 22:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D815524655
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 22:11:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D92A124655
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 22:14:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729530AbgAUWLa (ORCPT
+        id S1728925AbgAUWOw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 17:11:30 -0500
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:44734 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728609AbgAUWKh (ORCPT
+        Tue, 21 Jan 2020 17:14:52 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:53156 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728139AbgAUWOv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 17:10:37 -0500
-Received: by kvm5.telegraphics.com.au (Postfix, from userid 502)
-        id 233FE29988; Tue, 21 Jan 2020 17:10:36 -0500 (EST)
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Chris Zankel <chris@zankel.net>,
-        Laurent Vivier <laurent@vivier.eu>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-Id: <8a9a2a9bd56de82328b20e5234c56e48889eb016.1579641728.git.fthain@telegraphics.com.au>
-In-Reply-To: <cover.1579641728.git.fthain@telegraphics.com.au>
-References: <cover.1579641728.git.fthain@telegraphics.com.au>
-From:   Finn Thain <fthain@telegraphics.com.au>
-Subject: [PATCH net v2 03/12] net/sonic: Use MMIO accessors
-Date:   Wed, 22 Jan 2020 08:22:08 +1100
+        Tue, 21 Jan 2020 17:14:51 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iu1nL-000IWy-7c; Tue, 21 Jan 2020 22:14:47 +0000
+Date:   Tue, 21 Jan 2020 22:14:47 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Namjae Jeon <linkinjeon@gmail.com>,
+        Gabriel Krisman Bertazi <krisman@collabora.com>
+Subject: Re: vfat: Broken case-insensitive support for UTF-8
+Message-ID: <20200121221447.GD23230@ZenIV.linux.org.uk>
+References: <20200119221455.bac7dc55g56q2l4r@pali>
+ <87sgkan57p.fsf@mail.parknet.co.jp>
+ <20200120110438.ak7jpyy66clx5v6x@pali>
+ <875zh6pc0f.fsf@mail.parknet.co.jp>
+ <20200120214046.f6uq7rlih7diqahz@pali>
+ <20200120224625.GE8904@ZenIV.linux.org.uk>
+ <20200120235745.hzza3fkehlmw5s45@pali>
+ <20200121000701.GG8904@ZenIV.linux.org.uk>
+ <20200121203405.7g7gisb3q55u2y2f@pali>
+ <20200121213625.GB23230@ZenIV.linux.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200121213625.GB23230@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver accesses descriptor memory which is simultaneously accessed by
-the chip, so the compiler must not be allowed to re-order CPU accesses.
-sonic_buf_get() used 'volatile' to prevent that. sonic_buf_put() should
-have done so too but was overlooked.
+On Tue, Jan 21, 2020 at 09:36:25PM +0000, Al Viro wrote:
+> On Tue, Jan 21, 2020 at 09:34:05PM +0100, Pali Rohár wrote:
+> 
+> > This is a great idea to get FAT equivalence classes. Thank you!
+> > 
+> > Now I quickly tried it... and it failed. FAT has restriction for number
+> > of files in a directory, so I would have to do it in more clever way,
+> > e.g prepare N directories and then try to create/open file for each
+> > single-point string in every directory until it success or fail in every
+> > one.
+> 
+> IIRC, the limitation in root directory was much harder than in
+> subdirectories...  Not sure, though - it had been a long time since
+> I had to touch *FAT for any reasons...
 
-Fixes: efcce839360f ("[PATCH] macsonic/jazzsonic network drivers update")
-Tested-by: Stan Johnson <userm57@yahoo.com>
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
----
- drivers/net/ethernet/natsemi/sonic.h | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/net/ethernet/natsemi/sonic.h b/drivers/net/ethernet/natsemi/sonic.h
-index f9506863e9d1..fb160dfdf4ca 100644
---- a/drivers/net/ethernet/natsemi/sonic.h
-+++ b/drivers/net/ethernet/natsemi/sonic.h
-@@ -345,30 +345,30 @@ static void sonic_msg_init(struct net_device *dev);
-    as far as we can tell. */
- /* OpenBSD calls this "SWO".  I'd like to think that sonic_buf_put()
-    is a much better name. */
--static inline void sonic_buf_put(void* base, int bitmode,
-+static inline void sonic_buf_put(u16 *base, int bitmode,
- 				 int offset, __u16 val)
- {
- 	if (bitmode)
- #ifdef __BIG_ENDIAN
--		((__u16 *) base + (offset*2))[1] = val;
-+		__raw_writew(val, base + (offset * 2) + 1);
- #else
--		((__u16 *) base + (offset*2))[0] = val;
-+		__raw_writew(val, base + (offset * 2) + 0);
- #endif
- 	else
--	 	((__u16 *) base)[offset] = val;
-+		__raw_writew(val, base + (offset * 1) + 0);
- }
- 
--static inline __u16 sonic_buf_get(void* base, int bitmode,
-+static inline __u16 sonic_buf_get(u16 *base, int bitmode,
- 				  int offset)
- {
- 	if (bitmode)
- #ifdef __BIG_ENDIAN
--		return ((volatile __u16 *) base + (offset*2))[1];
-+		return __raw_readw(base + (offset * 2) + 1);
- #else
--		return ((volatile __u16 *) base + (offset*2))[0];
-+		return __raw_readw(base + (offset * 2) + 0);
- #endif
- 	else
--		return ((volatile __u16 *) base)[offset];
-+		return __raw_readw(base + (offset * 1) + 0);
- }
- 
- /* Inlines that you should actually use for reading/writing DMA buffers */
--- 
-2.24.1
-
+Interesting...  FWIW, Linux vfat happily creates 65536 files in root
+directory.  What are the native limits?
