@@ -2,194 +2,116 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B1ECC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:35:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5327C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13D7B206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:35:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A753B217F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:37:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VlYZOAJt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729253AbgAUQfy convert rfc822-to-8bit (ORCPT
+        id S1729246AbgAUQh4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 11:35:54 -0500
-Received: from coyote.holtmann.net ([212.227.132.17]:58810 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726714AbgAUQfy (ORCPT
+        Tue, 21 Jan 2020 11:37:56 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46906 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729080AbgAUQhz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 11:35:54 -0500
-Received: from marcel-macpro.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 00A92CECE3;
-        Tue, 21 Jan 2020 17:45:10 +0100 (CET)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
-Subject: Re: [RFC PATCH 1/2] Bluetooth: Add mgmt op set_wake_capable
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20200117132623.RFC.1.I797e2f4cb824299043e771f3ab9cef86ee09f4db@changeid>
-Date:   Tue, 21 Jan 2020 17:35:51 +0100
-Cc:     Luiz Augusto von Dentz <luiz.dentz@gmail.com>, alainm@chromium.org,
-        linux-bluetooth@vger.kernel.org,
-        chromeos-bluetooth-upstreaming@chromium.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <ACAE240C-345B-43F9-B6C8-8967AF436CE9@holtmann.org>
-References: <20200117212705.57436-1-abhishekpandit@chromium.org>
- <20200117132623.RFC.1.I797e2f4cb824299043e771f3ab9cef86ee09f4db@changeid>
-To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-X-Mailer: Apple Mail (2.3608.40.2.2.4)
+        Tue, 21 Jan 2020 11:37:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579624674;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=abtmIMJm04CNK0z3Gup9HgLlCssSlhpt5m2hBJjGsNQ=;
+        b=VlYZOAJtX1F5DKzpJkDVBuG150ngoiormNDlHuUuDTW+iWRR6pX8O0y4HYyn27/5jnrXiK
+        MKIRcirpvEakzt8xoMVFOfD3rf37PYezqaXMO4tDbJZUu4K0mbubicJwFL0/fwDx5OIXIk
+        AT57kOe/v88cpZ1kZtlqfikddph4YDU=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-205-4NcSvj2hPyCPOsShpi4Cpw-1; Tue, 21 Jan 2020 11:37:52 -0500
+X-MC-Unique: 4NcSvj2hPyCPOsShpi4Cpw-1
+Received: by mail-wr1-f69.google.com with SMTP id c6so1564499wrm.18
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 08:37:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=abtmIMJm04CNK0z3Gup9HgLlCssSlhpt5m2hBJjGsNQ=;
+        b=odIWNYHL6Oj4R53Zxx5Vilt8R0pXI0TsAg5KPRDiud+8870Iq6C3+ARqrhrLwfTv2Z
+         +dM7Qt2czt16YX5kpGP4Z5uKMhj4QsSweN98TH0JoPjqjQTs2xVtluGxD1ZZIh7I6W4o
+         ZTaHcLzzMMyQszO8CHv2n/DLsXa/inTLiPnqio6TRgYQEsxqEDj0kUCGxI313Se3kh2H
+         9sO4cjOZEjUpaLFGFZ2s2t7A6JD6BDD1OCnM35CwZ3qQkRcubLlvirO7DPelp0D/6Qaz
+         7D2zPMU6HrmvkwD+kqFBhBZ6bccBDfxxLXZjTmSHj9/55BoBuku39g0ToqoZL2ihVKU2
+         WZZw==
+X-Gm-Message-State: APjAAAWDGBXnLyTTEUdfSr23lVcKsptZoN7w3xkLq/mn9q8FydMC1lNh
+        SzSc4XyOcC9UmYxfB/KqVl0SyHOu9RShdW+LHrTVZ3W6T/bGLiA6Xna5tSWA7Vt9ANP0swUc/Gk
+        d7N5pi0QO0GXS+vFu1ePbD8xJ
+X-Received: by 2002:a1c:2355:: with SMTP id j82mr5012327wmj.135.1579624671071;
+        Tue, 21 Jan 2020 08:37:51 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzFcLJHP5VCbWnoFVzJPWaritQLFg2yRWXQXM6+awZuDF3lGaFzhf0XxVGrw2rCcAXhcivCKQ==
+X-Received: by 2002:a1c:2355:: with SMTP id j82mr5012320wmj.135.1579624670914;
+        Tue, 21 Jan 2020 08:37:50 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id g9sm53310585wro.67.2020.01.21.08.37.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2020 08:37:50 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Waiman Long <longman@redhat.com>, x86@kernel.org
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Tyler Hicks <tyhicks@canonical.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH RFC] x86/speculation: Clarify Spectre-v2 mitigation when STIBP/IBPB features are unsupported
+In-Reply-To: <20c1c0f2-046e-eb77-d655-75f62ebafcb2@redhat.com>
+References: <20200121160257.302999-1-vkuznets@redhat.com> <20c1c0f2-046e-eb77-d655-75f62ebafcb2@redhat.com>
+Date:   Tue, 21 Jan 2020 17:37:49 +0100
+Message-ID: <87sgk8epeq.fsf@vitty.brq.redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Abhishek,
+Waiman Long <longman@redhat.com> writes:
 
-> When the system is suspended, only some connected Bluetooth devices
-> cause user input that should wake the system (mostly HID devices). Add
-> a list to keep track of devices that can wake the system and add
-> a management API to let userspace tell the kernel whether a device is
-> wake capable or not.
-> 
-> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> ---
-> 
-> include/net/bluetooth/hci_core.h |  1 +
-> include/net/bluetooth/mgmt.h     |  7 ++++++
-> net/bluetooth/hci_core.c         |  1 +
-> net/bluetooth/mgmt.c             | 42 ++++++++++++++++++++++++++++++++
-> 4 files changed, 51 insertions(+)
-> 
-> diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
-> index 89ecf0a80aa1..ce4bebcb0265 100644
-> --- a/include/net/bluetooth/hci_core.h
-> +++ b/include/net/bluetooth/hci_core.h
-> @@ -394,6 +394,7 @@ struct hci_dev {
-> 	struct list_head	mgmt_pending;
-> 	struct list_head	blacklist;
-> 	struct list_head	whitelist;
-> +	struct list_head	wakeable;
-> 	struct list_head	uuids;
-> 	struct list_head	link_keys;
-> 	struct list_head	long_term_keys;
-> diff --git a/include/net/bluetooth/mgmt.h b/include/net/bluetooth/mgmt.h
-> index a90666af05bd..283ba5320bdb 100644
-> --- a/include/net/bluetooth/mgmt.h
-> +++ b/include/net/bluetooth/mgmt.h
-> @@ -671,6 +671,13 @@ struct mgmt_cp_set_blocked_keys {
-> } __packed;
-> #define MGMT_OP_SET_BLOCKED_KEYS_SIZE 2
-> 
-> +#define MGMT_OP_SET_WAKE_CAPABLE	0x0047
-> +#define MGMT_SET_WAKE_CAPABLE_SIZE	8
-> +struct mgmt_cp_set_wake_capable {
-> +	struct mgmt_addr_info addr;
-> +	u8 wake_capable;
-> +} __packed;
-> +
+> On 1/21/20 11:02 AM, Vitaly Kuznetsov wrote:
+>> When STIBP/IBPB features are not supported (no microcode update,
+>> AWS/Azure/... instances deliberately hiding SPEC_CTRL for performance
+>> reasons,...) /sys/devices/system/cpu/vulnerabilities/spectre_v2 looks like
+>>
+>>   Mitigation: Full generic retpoline, STIBP: disabled, RSB filling
+>>
+>> and this looks imperfect. In particular, STIBP is 'disabled' and 'IBPB'
+>> is not mentioned while both features are just not supported. Also, for
+>> STIBP the 'disabled' state (SPECTRE_V2_USER_NONE) can represent both
+>> the absence of hardware support and deliberate user's choice
+>> (spectre_v2_user=off)
+>>
+>> Make the following adjustments:
+>> - Output 'unsupported' for both STIBP/IBPB when there's no support in
+>>   hardware.
+>> - Output 'unneeded' for STIBP when SMT is disabled/missing (and this
+>>   switch_to_cond_stibp is off).
+>
+> I support outputting "unsupported" when the microcode doesn't support
+> it. However, I am not sure if "unneeded" is really necessary or not.
+> STIBP is not needed when SMT is disabled or when Enhanced IBRS is
+> available and used. Your patch handles the first case, but not the
+> second. I think it may be easier to just leave it out in case it is not
+> needed.
 
-please also send a patch for doc/mgmt-api.txt describing these opcodes. I would also like to have the discussion if it might be better to add an extra Action parameter to Add Device. We want to differentiate between allow incoming connection that allows to wakeup and the one that doesn’t.
+Makes sense. Or, alternatively, we can output 'unneeded' in both cases
+to make things explicit and  to distinguish it from the current state of
+IBPB where missing means 'unsupported by hardware'.
 
-Another option is to create an Add Extended Device command. Main reason here is that I don’t want to end up in the situation where you have to add a device and then send another 10 commands to set its features.
-
-> #define MGMT_EV_CMD_COMPLETE		0x0001
-> struct mgmt_ev_cmd_complete {
-> 	__le16	opcode;
-> diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-> index 1ca7508b6ca7..7057b9b65173 100644
-> --- a/net/bluetooth/hci_core.c
-> +++ b/net/bluetooth/hci_core.c
-> @@ -3299,6 +3299,7 @@ struct hci_dev *hci_alloc_dev(void)
-> 	INIT_LIST_HEAD(&hdev->mgmt_pending);
-> 	INIT_LIST_HEAD(&hdev->blacklist);
-> 	INIT_LIST_HEAD(&hdev->whitelist);
-> +	INIT_LIST_HEAD(&hdev->wakeable);
-> 	INIT_LIST_HEAD(&hdev->uuids);
-> 	INIT_LIST_HEAD(&hdev->link_keys);
-> 	INIT_LIST_HEAD(&hdev->long_term_keys);
-> diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
-> index 0dc610faab70..95092130f16c 100644
-> --- a/net/bluetooth/mgmt.c
-> +++ b/net/bluetooth/mgmt.c
-> @@ -106,7 +106,10 @@ static const u16 mgmt_commands[] = {
-> 	MGMT_OP_START_LIMITED_DISCOVERY,
-> 	MGMT_OP_READ_EXT_INFO,
-> 	MGMT_OP_SET_APPEARANCE,
-> +	MGMT_OP_GET_PHY_CONFIGURATION,
-> +	MGMT_OP_SET_PHY_CONFIGURATION,
-
-These are unrelated to this patch.
-
-> 	MGMT_OP_SET_BLOCKED_KEYS,
-> +	MGMT_OP_SET_WAKE_CAPABLE,
-> };
-> 
-> static const u16 mgmt_events[] = {
-> @@ -4663,6 +4666,37 @@ static int set_fast_connectable(struct sock *sk, struct hci_dev *hdev,
-> 	return err;
-> }
-> 
-> +static int set_wake_capable(struct sock *sk, struct hci_dev *hdev, void *data,
-> +			    u16 len)
-> +{
-> +	int err;
-> +	u8 status;
-> +	struct mgmt_cp_set_wake_capable *cp = data;
-> +	u8 addr_type = cp->addr.type == BDADDR_BREDR ?
-> +			       cp->addr.type :
-> +			       le_addr_type(cp->addr.type);
-> +
-> +	BT_DBG("Set wake capable %pMR (type 0x%x) = 0x%x\n", &cp->addr.bdaddr,
-> +	       addr_type, cp->wake_capable);
-> +
-> +	if (cp->wake_capable)
-> +		err = hci_bdaddr_list_add(&hdev->wakeable, &cp->addr.bdaddr,
-> +					  addr_type);
-> +	else
-> +		err = hci_bdaddr_list_del(&hdev->wakeable, &cp->addr.bdaddr,
-> +					  addr_type);
-> +
-> +	if (!err || err == -EEXIST || err == -ENOENT)
-> +		status = MGMT_STATUS_SUCCESS;
-> +	else
-> +		status = MGMT_STATUS_FAILED;
-> +
-> +	err = mgmt_cmd_complete(sk, hdev->id, MGMT_OP_SET_WAKE_CAPABLE, status,
-> +				cp, sizeof(*cp));
-> +
-> +	return err;
-> +}
-> +
-> static void set_bredr_complete(struct hci_dev *hdev, u8 status, u16 opcode)
-> {
-> 	struct mgmt_pending_cmd *cmd;
-> @@ -5791,6 +5825,13 @@ static int remove_device(struct sock *sk, struct hci_dev *hdev,
-> 			err = hci_bdaddr_list_del(&hdev->whitelist,
-> 						  &cp->addr.bdaddr,
-> 						  cp->addr.type);
-> +
-> +			/* Don't check result since it either succeeds or device
-> +			 * wasn't there (not wakeable or invalid params as
-> +			 * covered by deleting from whitelist).
-> +			 */
-> +			hci_bdaddr_list_del(&hdev->wakeable, &cp->addr.bdaddr,
-> +					    cp->addr.type);
-> 			if (err) {
-> 				err = mgmt_cmd_complete(sk, hdev->id,
-> 							MGMT_OP_REMOVE_DEVICE,
-> @@ -6990,6 +7031,7 @@ static const struct hci_mgmt_handler mgmt_handlers[] = {
-> 	{ set_phy_configuration,   MGMT_SET_PHY_CONFIGURATION_SIZE },
-> 	{ set_blocked_keys,	   MGMT_OP_SET_BLOCKED_KEYS_SIZE,
-> 						HCI_MGMT_VAR_LEN },
-> +	{ set_wake_capable,	   MGMT_SET_WAKE_CAPABLE_SIZE },
-> };
-> 
-
-Regards
-
-Marcel
+-- 
+Vitaly
 
