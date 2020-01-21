@@ -2,116 +2,97 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E14BC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BED52C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B52921569
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:59:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88B3C24653
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:59:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579625968;
+	bh=+/7HSaPBqAYTyz8ljc8cV2qfTTuIl2JH/xQ/I9zg5I4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=c/40mhf0fluMmL0MVfQrLKfTMhtwZN6ESJBFTUgHBWucbPcjyzNeCuQMmB7Eou/xT
+	 Xr15E0eTkXZryM9ODX6wptkOFwvyUMX1yaqoCZk0EhKPHTWKnIfy7PTIACPLS1EE/h
+	 u9Y+BTpZ0V4ZqFu0jQHTPxZH6qqjxGNuCuwwyhrM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729335AbgAUQ7G (ORCPT
+        id S1729353AbgAUQ71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 11:59:06 -0500
-Received: from mga03.intel.com ([134.134.136.65]:40890 "EHLO mga03.intel.com"
+        Tue, 21 Jan 2020 11:59:27 -0500
+Received: from foss.arm.com ([217.140.110.172]:45946 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726555AbgAUQ7F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 11:59:05 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 08:59:04 -0800
-X-IronPort-AV: E=Sophos;i="5.70,346,1574150400"; 
-   d="scan'208";a="220972505"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 08:59:00 -0800
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id A543C206AB; Tue, 21 Jan 2020 18:58:28 +0200 (EET)
-Date:   Tue, 21 Jan 2020 18:58:28 +0200
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     linux-i2c <linux-i2c@vger.kernel.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Bingbu Cao <bingbu.cao@intel.com>, linux-media@vger.kernel.org,
-        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
-        Hyungwoo Yang <hyungwoo.yang@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Mani, Rajmohan" <rajmohan.mani@intel.com>,
-        Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH v4 6/6] Documentation: ACPI: Document probe-low-power
- _DSD property
-Message-ID: <20200121165828.GA5440@paasikivi.fi.intel.com>
-References: <20200121134157.20396-1-sakari.ailus@linux.intel.com>
- <20200121134157.20396-7-sakari.ailus@linux.intel.com>
- <CAJZ5v0iJXUjK0n7mkqxagX9FtOmMsLqVMmU2xpQOLSb0aBWSMA@mail.gmail.com>
- <20200121161856.GZ5440@paasikivi.fi.intel.com>
- <CAJZ5v0ho8ry7iTXBTxHMjwcqT+EGT2mRy2rmp+o7rmG0apYimQ@mail.gmail.com>
+        id S1729246AbgAUQ71 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 11:59:27 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 38E9230E;
+        Tue, 21 Jan 2020 08:59:27 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ABA9D3F6C4;
+        Tue, 21 Jan 2020 08:59:26 -0800 (PST)
+Date:   Tue, 21 Jan 2020 16:59:25 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Ravulapati Vishnu vardhan rao 
+        <Vishnuvardhanrao.Ravulapati@amd.com>
+Cc:     Alexander.Deucher@amd.com, Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ASoC: amd: Fix for Subsequent Playback issue.
+Message-ID: <20200121165925.GH4656@sirena.org.uk>
+References: <1579603421-24571-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="fmEUq8M7S0s+Fl0V"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0ho8ry7iTXBTxHMjwcqT+EGT2mRy2rmp+o7rmG0apYimQ@mail.gmail.com>
+In-Reply-To: <1579603421-24571-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+X-Cookie: You too can wear a nose mitten.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 05:56:39PM +0100, Rafael J. Wysocki wrote:
-> On Tue, Jan 21, 2020 at 5:19 PM Sakari Ailus
-> <sakari.ailus@linux.intel.com> wrote:
-> >
-> > On Tue, Jan 21, 2020 at 05:09:44PM +0100, Rafael J. Wysocki wrote:
-> > > On Tue, Jan 21, 2020 at 2:41 PM Sakari Ailus
-> > > <sakari.ailus@linux.intel.com> wrote:
-> > > >
-> > > > Document the probe-low-power _DSD property and how it is used with I²C
-> > > > drivers.
-> > > >
-> > > > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > > > ---
-> > > >  .../acpi/dsd/probe-low-power.rst              | 28 +++++++++++++++++++
-> > > >  Documentation/firmware-guide/acpi/index.rst   |  1 +
-> > > >  2 files changed, 29 insertions(+)
-> > > >  create mode 100644 Documentation/firmware-guide/acpi/dsd/probe-low-power.rst
-> > > >
-> > > > diff --git a/Documentation/firmware-guide/acpi/dsd/probe-low-power.rst b/Documentation/firmware-guide/acpi/dsd/probe-low-power.rst
-> > > > new file mode 100644
-> > > > index 0000000000000..e0343ffefe071
-> > > > --- /dev/null
-> > > > +++ b/Documentation/firmware-guide/acpi/dsd/probe-low-power.rst
-> > > > @@ -0,0 +1,28 @@
-> > > > +.. SPDX-License-Identifier: GPL-2.0
-> > > > +
-> > > > +======================================
-> > > > +Probing I²C devices in low power state
-> > > > +======================================
-> > > > +
-> > > > +Introduction
-> > > > +============
-> > > > +
-> > > > +In some cases it may be preferred to leave certain devices powered off for
-> > > > +the entire system bootup if powering on these devices has adverse side
-> > > > +effects, beyond just powering on the said device. The _DSD property
-> > > > +"probe-low-power" has been defined for this purpose.
-> > >
-> > > Well, if you say "has been defined", you need to provide a pointer to
-> > > the definition document (a specification of some sort or similar).
-> >
-> > How about:
-> >
-> > s/has been defined/is used/
-> 
-> I would say "Linux recognizes the ... that can be used for this purpose."
 
-Ack; I'll use this in v5.
+--fmEUq8M7S0s+Fl0V
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
--- 
-Sakari Ailus
+On Tue, Jan 21, 2020 at 04:13:35PM +0530, Ravulapati Vishnu vardhan rao wrote:
+
+> If we play audio back to back, which kills one playback
+> and immediately start another, we can hear clicks.
+> This patch fixes the issue.
+
+>  	/* Disable ACP irq, when the current stream is being closed and
+>  	 * another stream is also not active.
+>  	 */
+> +	kfree(rtd);
+
+This free looks like a separate change which seems good and useful but
+should be in a separate patch?
+
+--fmEUq8M7S0s+Fl0V
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4nLewACgkQJNaLcl1U
+h9B1+gf8CwB3aqHMAKHEgAHRutMujXPYif+JPjkD1gl9Cp8EFmrOkjwAO8ADVa3U
+IhZonqAQvpX8nuRp2yq+GMTn0M3wKQHrZ8SZzFoY2az5dujgpV9shBrcSRAQa+vM
+rnYexlnHXPlr/FFYHhcSlqPFgglHcZLJUIuioBk3OxoPrlXxnAcbhBP9zCpSZex3
+mMwT3vlLmOTlhHkBhWNDGH7l3z5dd8N43iFMNCQP8zMEwggCkEPC4IYrLidXVORb
+YE7fkOtRgRKJQhDjKN7QaH8XRSbbGdGK+9FthNOJXteCkp/VkU2ne7Mt0etqKDa/
+ulqij1ZBM43yKQAhB8WIdYCQIw7oYw==
+=m2Ma
+-----END PGP SIGNATURE-----
+
+--fmEUq8M7S0s+Fl0V--
