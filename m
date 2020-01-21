@@ -2,156 +2,509 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B259EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 13:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D119C33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 13:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8558324680
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 13:42:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08E8B24125
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 13:42:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729256AbgAUNmJ (ORCPT
+        id S1729274AbgAUNmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 08:42:09 -0500
-Received: from mga17.intel.com ([192.55.52.151]:4186 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728982AbgAUNlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 08:41:45 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 05:41:44 -0800
-X-IronPort-AV: E=Sophos;i="5.70,346,1574150400"; 
-   d="scan'208";a="307199828"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 05:41:40 -0800
-Received: from punajuuri.localdomain (punajuuri.localdomain [192.168.240.130])
-        by paasikivi.fi.intel.com (Postfix) with ESMTP id BE67F20435;
-        Tue, 21 Jan 2020 15:41:38 +0200 (EET)
-Received: from sailus by punajuuri.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@linux.intel.com>)
-        id 1ittn3-0005Jn-5L; Tue, 21 Jan 2020 15:41:57 +0200
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     linux-i2c@vger.kernel.org
-Cc:     Wolfram Sang <wsa@the-dreams.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-acpi@vger.kernel.org, Bingbu Cao <bingbu.cao@intel.com>,
-        linux-media@vger.kernel.org,
-        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
-        Hyungwoo Yang <hyungwoo.yang@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rajmohan.mani@intel.com, Tomasz Figa <tfiga@chromium.org>
-Subject: [PATCH v4 0/6] Support running driver's probe for a device powered off
-Date:   Tue, 21 Jan 2020 15:41:51 +0200
-Message-Id: <20200121134157.20396-1-sakari.ailus@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 21 Jan 2020 08:42:22 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:48804 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728916AbgAUNmV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 08:42:21 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: koike)
+        with ESMTPSA id EAFE427E5C9
+Subject: Re: [PATCH v4] media: vimc: Enable set resolution at the scaler src
+ pad
+To:     Pedro Terra Delboni <pirate@terraco.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lkcamp@lists.libreplanetbr.org,
+        Gabriela Bittencourt <gabrielabittencourt00@gmail.com>,
+        Gabriel Francisco Mandaji <gfmandaji@gmail.com>
+References: <20191229194214.4592-1-pirate@terraco.de>
+ <5b0227ba-dd3d-abb9-073f-2b778310cf44@collabora.com>
+ <b8a8da93-f36f-6401-75dc-f5cb66a0fa89@collabora.com>
+ <CAHKDPP-waoonVmxJ4CMysmCPj50Bt+mtBiD9tvSPcv-=qXTKVA@mail.gmail.com>
+ <f45fcab2-b3dd-94ec-4691-12000df1f76e@collabora.com>
+ <16b7cf85-f4a6-d1a8-f917-ddd4f8d9a9ce@xs4all.nl>
+ <CAHKDPP8qRN32jsJjtt92pohTLH_wxpvnEpZcdBjdYAv253CQaA@mail.gmail.com>
+From:   Helen Koike <helen.koike@collabora.com>
+Autocrypt: addr=helen.koike@collabora.com; keydata=
+ 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
+Message-ID: <99372b94-241c-f0d2-b1db-c4fa3d423018@collabora.com>
+Date:   Tue, 21 Jan 2020 10:42:10 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHKDPP8qRN32jsJjtt92pohTLH_wxpvnEpZcdBjdYAv253CQaA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
-
-These patches enable calling (and finishing) a driver's probe function
-without powering on the respective device on busses where the practice is
-to power on the device for probe. While it generally is a driver's job to
-check the that the device is there, there are cases where it might be
-undesirable. (In this case it stems from a combination of hardware design
-and user expectations; see below.) The downside with this change is that
-if there is something wrong with the device, it will only be found at the
-time the device is used. In this case (the camera sensors + EEPROM in a
-sensor) I don't see any tangible harm from that though.
-
-An indication both from the driver and the firmware is required to allow
-the device's power state to remain off during probe (see the first patch).
 
 
-The use case is such that there is a privacy LED next to an integrated
-user-facing laptop camera, and this LED is there to signal the user that
-the camera is recording a video or capturing images. That LED also happens
-to be wired to one of the power supplies of the camera, so whenever you
-power on the camera, the LED will be lit, whether images are captured from
-the camera --- or not. There's no way to implement this differently
-without additional software control (allowing of which is itself a
-hardware design decision) on most CSI-2-connected camera sensors as they
-simply have no pin to signal the camera streaming state.
+On 1/17/20 7:56 PM, Pedro Terra Delboni wrote:
+> Sorry to keep bumping this thread, but while doing some testing I got
+> confused with the following:
+> The documentation mentions that the scaler should be reset whenever
+> the sink format is set.
+> Does this mean that I should reset it independently if the sink set
+> changes the dimensions?
+> For example: if I change the pixels from RGB to another format, should
+> that also reset the source dimensions?
 
-This is also what happens during driver probe: the camera will be powered
-on by the I²C subsystem calling dev_pm_domain_attach() and the device is
-already powered on when the driver's own probe function is called. To the
-user this visible during the boot process as a blink of the privacy LED,
-suggesting that the camera is recording without the user having used an
-application to do that. From the end user's point of view the behaviour is
-not expected and for someone unfamiliar with internal workings of a
-computer surely seems quite suspicious --- even if images are not being
-actually captured.
+Confusing indeed.
 
-I've tested these on Linux-next, Bartosz's at24/for-next, Wolfram's
-i2c/for-next as well as Linux media master today; the patches apply to all
-without trouble.
+My understanding is:
+If you make any changes in the sink pad that would affect the scaling
+ratio, then you should adjust the source pad to make a scaling ration
+1:1.
+So, if you only change the pixel format, it shouldn't reset the scaling
+ratio.
 
+> 
+> Another thing that got me confused was:
+> At by the functions names, setting the crop dimensions is not
+> considered changing the pad format, it's considered setting a
+> selection.
+> Should I also update the set_selection function to propagate the
+> changes to the source pad?
 
-since v3 <URL:https://lore.kernel.org/linux-acpi/20200109154529.19484-1-sakari.ailus@linux.intel.com/T/#t>:
+Following my understanding above, yes.
 
-- Rework the 2nd patch based on Rafael's comments
+> Otherwise, by changing the crop (without changing the sink format)
+> will cause the scaling to behave in the same way it would if we didn't
+> propagate the sink properties to the source.
+> 
+> So:
+> Should I check if the set_fmt is actually changing the sink dimensions
+> in order to propagate them to the source?
 
-	- Rework description of the ACPI low power state helper function,
-	  according to Rafael's text.
+Following my understanding above, yes.
 
-	- Rename and rework the same function as
-	  acpi_dev_state_low_power().
+> Should I also propagate the dimensions when setting the sink crop?
 
-	- Reflect the changes in commit message as well.
+Following my understanding above, yes.
 
-- Added a patch to document the probe-low-power _DSD property.
+I wonder now how other drivers are doing this.
 
-since v2 <URL:https://patchwork.kernel.org/cover/11114255/>:
+At least, I'm sure the driver rkisp1 is not doing the right thing
+and needs to be corrected.
 
-- Remove extra CONFIG_PM ifdefs; these are not needed.
+Thanks
+Helen
 
-- Move the checks for power state hints from drivers/base/dd.c to
-  drivers/i2c/i2c-base-core.c; these are I²C devices anyway.
-
-- Move the probe_low_power field from struct device_driver to struct
-  i2c_driver.
-
-since v1:
-
-- Rename probe_powered_off struct device field as probe_low_power and
-  reflect the similar naming to the patches overall.
-
-- Work with CONFIG_PM disabled, too.
-
-Rajmohan Mani (1):
-  media: i2c: imx319: Support probe while the device is off
-
-Sakari Ailus (5):
-  i2c: Allow driver to manage the device's power state during probe
-  ACPI: Add a convenience function to tell a device is in low power
-    state
-  ov5670: Support probe whilst the device is in a low power state
-  at24: Support probing while off
-  Documentation: ACPI: Document probe-low-power _DSD property
-
- .../acpi/dsd/probe-low-power.rst              | 28 +++++++++++++++++
- Documentation/firmware-guide/acpi/index.rst   |  1 +
- drivers/acpi/device_pm.c                      | 31 +++++++++++++++++++
- drivers/i2c/i2c-core-base.c                   | 15 +++++++--
- drivers/media/i2c/imx319.c                    | 23 ++++++++------
- drivers/media/i2c/ov5670.c                    | 23 ++++++++------
- drivers/misc/eeprom/at24.c                    | 31 +++++++++++++------
- include/linux/acpi.h                          |  5 +++
- include/linux/i2c.h                           |  3 ++
- 9 files changed, 129 insertions(+), 31 deletions(-)
- create mode 100644 Documentation/firmware-guide/acpi/dsd/probe-low-power.rst
-
--- 
-2.20.1
-
+> 
+> Sorry for the long email!
+> Thanks for the attention that you've all been giving us so far!
+> 
+> On Wed, Jan 15, 2020 at 11:51 AM Hans Verkuil <hverkuil-cisco@xs4all.nl> wrote:
+>>
+>> On 1/10/20 6:26 PM, Helen Koike wrote:
+>>>
+>>>
+>>> On 1/10/20 3:21 PM, Pedro Terra Delboni wrote:
+>>>> Hello!
+>>>>
+>>>> On Wed, Jan 1, 2020 at 7:10 AM Dafna Hirschfeld
+>>>> <dafna.hirschfeld@collabora.com> wrote:
+>>>>>
+>>>>> Hi,
+>>>>>
+>>>>>
+>>>>> On 30.12.19 14:59, Helen Koike wrote:
+>>>>>> Hi,
+>>>>>>
+>>>>>> Thanks for the patch, just minor comments below.
+>>>>>>
+>>>>>> On 12/29/19 5:42 PM, Pedro Terra wrote:
+>>>>>>> Modify the scaler subdevice to accept setting the resolution of the source
+>>>>>>> pad (previously the source resolution would always be 3 times the sink for
+>>>>>>> both dimensions). Now any resolution can be set at src (even smaller ones)
+>>>>>>> and the sink video will be scaled to match it.
+>>>>>>>
+>>>>>>> Test example: With the vimc module up (using the default vimc topology)
+>>>>>>> media-ctl -d /dev/media0 -V '"Sensor A":0[fmt:SBGGR8_1X8/640x480]'
+>>>>>>> media-ctl -d /dev/media0 -V '"Debayer A":0[fmt:SBGGR8_1X8/640x480]'
+>>>>>>> media-ctl -d /dev/media0 -V '"Scaler":0[fmt:RGB888_1X24/640x480]'
+>>>>>>> media-ctl -d /dev/media0 -V '"Scaler":0[crop:(100,50)/400x150]'
+>>>>>>> media-ctl -d /dev/media0 -V '"Scaler":1[fmt:RGB888_1X24/300x700]'
+>>>>>>> v4l2-ctl -d /dev/video2 -v width=300,height=700
+>>>>>>> v4l2-ctl -d /dev/video0 -v pixelformat=BA81
+>>>>>>> v4l2-ctl --stream-mmap --stream-count=10 -d /dev/video2 \
+>>>>>>>      --stream-to=test.raw
+>>>>>>> ffplay -loglevel warning -v info -f rawvideo -pixel_format rgb24 \
+>>>>>>>      -video_size "300x700" test.raw
+>>>>>>>
+>>>>>>> Co-developed-by: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+>>>>>>> Signed-off-by: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+>>>>>>> Co-developed-by: Gabriel Francisco Mandaji <gfmandaji@gmail.com>
+>>>>>>> Signed-off-by: Gabriel Francisco Mandaji <gfmandaji@gmail.com>
+>>>>>>> Signed-off-by: Pedro "pirate" Terra <pirate@terraco.de>
+>>>>>>>
+>>>>>>> ---
+>>>>>>>
+>>>>>>> Changes in V4:
+>>>>>>> * Rebased with media/master
+>>>>>>> * Scaling is now compatible with crop
+>>>>>>> * Updated test example at the commit message
+>>>>>>> * Add vimc prefix to the pad enumeration
+>>>>>>>
+>>>>>>> Changes in V3:
+>>>>>>> * Corrections suggested by Hans:
+>>>>>>>      - Default scaling factor is now 1 (we removed the define and
+>>>>>>>        set the source format equals the sink).
+>>>>>>>      - Removed SCA_COUNT (enum that represents the number of pads)
+>>>>>>>        as there always 2
+>>>>>>>      - Swapped the per byte pixel copy to memcpy.
+>>>>>>> * Corrections suggested by Dafna:
+>>>>>>>      - Removed from the documentation the old scaler parameter which
+>>>>>>>        isn't necessary anymore.
+>>>>>>> * Added a thank you note at the end of the email
+>>>>>>>
+>>>>>>> Changes in V2:
+>>>>>>> * Patch was not sent to media list mail for some reason (even though it
+>>>>>>> was on the Cc list), trying again.
+>>>>>>> * Updating documentation.
+>>>>>>>
+>>>>>>> Hello!
+>>>>>>> This code is the result of friends getting together with too much
+>>>>>>> coffee, sugar and beer trying to get started with some kernel coding.
+>>>>>>> Please, don't go easy on us! s2
+>>>>>>>
+>>>>>>> Running
+>>>>>>> /usr/local/bin/v4l2-compliance -m /dev/media0
+>>>>>>> Gave the following result:
+>>>>>>> v4l2-compliance SHA: b393a5408383b7341883857dfda78537f2f85ef6, 64 bits
+>>>>>>> Grand Total for vimc device /dev/media0: 451, Succeeded: 451, Failed: 0, Warnings: 0
+>>>>>>> ---
+>>>>>>>   Documentation/media/v4l-drivers/vimc.rst  |  21 +-
+>>>>>>>   drivers/media/platform/vimc/vimc-scaler.c | 248 +++++++---------------
+>>>>>>>   2 files changed, 87 insertions(+), 182 deletions(-)
+>>>>>>>
+>>>>>>> diff --git a/Documentation/media/v4l-drivers/vimc.rst b/Documentation/media/v4l-drivers/vimc.rst
+>>>>>>> index 8f5d7f8d83bb..af04ebbd4fa1 100644
+>>>>>>> --- a/Documentation/media/v4l-drivers/vimc.rst
+>>>>>>> +++ b/Documentation/media/v4l-drivers/vimc.rst
+>>>>>>> @@ -61,9 +61,11 @@ vimc-debayer:
+>>>>>>>      * 1 Pad source
+>>>>>>>
+>>>>>>>   vimc-scaler:
+>>>>>>> -    Scale up the image by a factor of 3. E.g.: a 640x480 image becomes a
+>>>>>>> -        1920x1440 image. (this value can be configured, see at
+>>>>>>> -        `Module options`_).
+>>>>>>> +    Re-size the image to meet the source pad resolution. E.g.: if the sync pad
+>>>>>>> +is configured to 360x480 and the source to 1280x720, the image will be stretched
+>>>>>>> +to fit the source resolution. Works for any resolution within the vimc
+>>>>>>> +limitations (even shrinking the image if necessary).
+>>>>>>> +
+>>>>>>>      Exposes:
+>>>>>>>
+>>>>>>>      * 1 Pad sink
+>>>>>>> @@ -76,19 +78,6 @@ vimc-capture:
+>>>>>>>      * 1 Pad sink
+>>>>>>>      * 1 Pad source
+>>>>>>>
+>>>>>>> -
+>>>>>>> -Module options
+>>>>>>> ---------------
+>>>>>>> -
+>>>>>>> -Vimc has a module parameter to configure the driver.
+>>>>>>> -
+>>>>>>> -* ``sca_mult=<unsigned int>``
+>>>>>>> -
+>>>>>>> -        Image size multiplier factor to be used to multiply both width and
+>>>>>>> -        height, so the image size will be ``sca_mult^2`` bigger than the
+>>>>>>> -        original one. Currently, only supports scaling up (the default value
+>>>>>>> -        is 3).
+>>>>>>> -
+>>>>>>>   Source code documentation
+>>>>>>>   -------------------------
+>>>>>>>
+>>>>>>> diff --git a/drivers/media/platform/vimc/vimc-scaler.c b/drivers/media/platform/vimc/vimc-scaler.c
+>>>>>>> index e2e551bc3ded..785009b7ac9e 100644
+>>>>>>> --- a/drivers/media/platform/vimc/vimc-scaler.c
+>>>>>>> +++ b/drivers/media/platform/vimc/vimc-scaler.c
+>>>>>>> @@ -6,6 +6,7 @@
+>>>>>>>    */
+>>>>>>>
+>>>>>>>   #include <linux/moduleparam.h>
+>>>>>>> +#include <linux/string.h>
+>>>>>>>   #include <linux/vmalloc.h>
+>>>>>>>   #include <linux/v4l2-mediabus.h>
+>>>>>>>   #include <media/v4l2-rect.h>
+>>>>>>> @@ -13,11 +14,11 @@
+>>>>>>>
+>>>>>>>   #include "vimc-common.h"
+>>>>>>>
+>>>>>>> -static unsigned int sca_mult = 3;
+>>>>>>> -module_param(sca_mult, uint, 0000);
+>>>>>>> -MODULE_PARM_DESC(sca_mult, " the image size multiplier");
+>>>>>>> -
+>>>>>>> -#define MAX_ZOOM    8
+>>>>>>> +/* Pad identifier */
+>>>>>>> +enum vimc_sca_pad {
+>>>>>>> +    VIMC_SCA_SINK = 0,
+>>>>>>> +    VIMC_SCA_SRC = 1,
+>>>>>>> +};
+>>>>>>>
+>>>>>>>   #define VIMC_SCA_FMT_WIDTH_DEFAULT  640
+>>>>>>>   #define VIMC_SCA_FMT_HEIGHT_DEFAULT 480
+>>>>>>> @@ -25,14 +26,11 @@ MODULE_PARM_DESC(sca_mult, " the image size multiplier");
+>>>>>>>   struct vimc_sca_device {
+>>>>>>>      struct vimc_ent_device ved;
+>>>>>>>      struct v4l2_subdev sd;
+>>>>>>> -    /* NOTE: the source fmt is the same as the sink
+>>>>>>> -     * with the width and hight multiplied by mult
+>>>>>>> -     */
+>>>>>>> -    struct v4l2_mbus_framefmt sink_fmt;
+>>>>>>>      struct v4l2_rect crop_rect;
+>>>>>>> +    /* Frame format for both sink and src pad */
+>>>>>>> +    struct v4l2_mbus_framefmt fmt[2];
+>>>>>>>      /* Values calculated when the stream starts */
+>>>>>>>      u8 *src_frame;
+>>>>>>> -    unsigned int src_line_size;
+>>>>>>>      unsigned int bpp;
+>>>>>>>      struct media_pad pads[2];
+>>>>>>>   };
+>>>>>>> @@ -90,17 +88,15 @@ static int vimc_sca_init_cfg(struct v4l2_subdev *sd,
+>>>>>>>      struct v4l2_rect *r;
+>>>>>>>      unsigned int i;
+>>>>>>>
+>>>>>>> -    mf = v4l2_subdev_get_try_format(sd, cfg, 0);
+>>>>>>> +    mf = v4l2_subdev_get_try_format(sd, cfg, VIMC_SCA_SINK);
+>>>>>>>      *mf = sink_fmt_default;
+>>>>>>>
+>>>>>>> -    r = v4l2_subdev_get_try_crop(sd, cfg, 0);
+>>>>>>> +    r = v4l2_subdev_get_try_crop(sd, cfg, VIMC_SCA_SINK);
+>>>>>>>      *r = crop_rect_default;
+>>>>>>>
+>>>>>>>      for (i = 1; i < sd->entity.num_pads; i++) {
+>>>>>>>              mf = v4l2_subdev_get_try_format(sd, cfg, i);
+>>>>>>>              *mf = sink_fmt_default;
+>>>>>>> -            mf->width = mf->width * sca_mult;
+>>>>>>> -            mf->height = mf->height * sca_mult;
+>>>>>>>      }
+>>>>>>>
+>>>>>>>      return 0;
+>>>>>>> @@ -137,14 +133,8 @@ static int vimc_sca_enum_frame_size(struct v4l2_subdev *sd,
+>>>>>>>
+>>>>>>>      fse->min_width = VIMC_FRAME_MIN_WIDTH;
+>>>>>>>      fse->min_height = VIMC_FRAME_MIN_HEIGHT;
+>>>>>>> -
+>>>>>>> -    if (VIMC_IS_SINK(fse->pad)) {
+>>>>>>> -            fse->max_width = VIMC_FRAME_MAX_WIDTH;
+>>>>>>> -            fse->max_height = VIMC_FRAME_MAX_HEIGHT;
+>>>>>>> -    } else {
+>>>>>>> -            fse->max_width = VIMC_FRAME_MAX_WIDTH * MAX_ZOOM;
+>>>>>>> -            fse->max_height = VIMC_FRAME_MAX_HEIGHT * MAX_ZOOM;
+>>>>>>> -    }
+>>>>>>> +    fse->max_width = VIMC_FRAME_MAX_WIDTH;
+>>>>>>> +    fse->max_height = VIMC_FRAME_MAX_HEIGHT;
+>>>>>>>
+>>>>>>>      return 0;
+>>>>>>>   }
+>>>>>>> @@ -154,95 +144,73 @@ static int vimc_sca_get_fmt(struct v4l2_subdev *sd,
+>>>>>>>                          struct v4l2_subdev_format *format)
+>>>>>>>   {
+>>>>>>>      struct vimc_sca_device *vsca = v4l2_get_subdevdata(sd);
+>>>>>>> -    struct v4l2_rect *crop_rect;
+>>>>>>>
+>>>>>>> -    /* Get the current sink format */
+>>>>>>> -    if (format->which == V4L2_SUBDEV_FORMAT_TRY) {
+>>>>>>> -            format->format = *v4l2_subdev_get_try_format(sd, cfg, 0);
+>>>>>>> -            crop_rect = v4l2_subdev_get_try_crop(sd, cfg, 0);
+>>>>>>> -    } else {
+>>>>>>> -            format->format = vsca->sink_fmt;
+>>>>>>> -            crop_rect = &vsca->crop_rect;
+>>>>>>> -    }
+>>>>>>> -
+>>>>>>> -    /* Scale the frame size for the source pad */
+>>>>>>> -    if (VIMC_IS_SRC(format->pad)) {
+>>>>>>> -            format->format.width = crop_rect->width * sca_mult;
+>>>>>>> -            format->format.height = crop_rect->height * sca_mult;
+>>>>>>> -    }
+>>>>>>> +    if (format->which == V4L2_SUBDEV_FORMAT_TRY)
+>>>>>>> +            format->format = *v4l2_subdev_get_try_format(sd, cfg,
+>>>>>>> +                                                         format->pad);
+>>>>>>> +    else
+>>>>>>> +            format->format = vsca->fmt[format->pad];
+>>>>>>>
+>>>>>>>      return 0;
+>>>>>>>   }
+>>>>>>>
+>>>>>>> -static void vimc_sca_adjust_sink_fmt(struct v4l2_mbus_framefmt *fmt)
+>>>>>>> +static void vimc_sca_adjust_fmt(struct v4l2_mbus_framefmt *fmt[], __u32 pad)
+>>>>>>>   {
+>>>>>>> -    const struct vimc_pix_map *vpix;
+>>>>>>> +    if (pad == VIMC_SCA_SINK) {
+>>>>>>> +            const struct vimc_pix_map *vpix;
+>>>>>>>
+>>>>>>> -    /* Only accept code in the pix map table in non bayer format */
+>>>>>>> -    vpix = vimc_pix_map_by_code(fmt->code);
+>>>>>>> -    if (!vpix || vpix->bayer)
+>>>>>>> -            fmt->code = sink_fmt_default.code;
+>>>>>>> +            /* Only accept code in the pix map table in non bayer format */
+>>>>>>> +            vpix = vimc_pix_map_by_code(fmt[VIMC_SCA_SINK]->code);
+>>>>>>> +            if (!vpix || vpix->bayer)
+>>>>>>> +                    fmt[VIMC_SCA_SINK]->code = sink_fmt_default.code;
+>>>>>>> +            if (fmt[VIMC_SCA_SINK]->field == V4L2_FIELD_ANY)
+>>>>>>> +                    fmt[VIMC_SCA_SINK]->field = sink_fmt_default.field;
+>>>>>>>
+>>>>>>> -    fmt->width = clamp_t(u32, fmt->width, VIMC_FRAME_MIN_WIDTH,
+>>>>>>> +            vimc_colorimetry_clamp(fmt[VIMC_SCA_SINK]);
+>>>>>>> +    }
+>>>>>>> +
+>>>>>>> +    fmt[pad]->width = clamp_t(u32, fmt[pad]->width, VIMC_FRAME_MIN_WIDTH,
+>>>>>>>                           VIMC_FRAME_MAX_WIDTH) & ~1;
+>>>>>>
+>>>>>> Could you fix the alignment here?
+>>>>>> For some reason checkpatch doesn't catch this :(
+>>>>>>
+>>>>>>> -    fmt->height = clamp_t(u32, fmt->height, VIMC_FRAME_MIN_HEIGHT,
+>>>>>>> +    fmt[pad]->height = clamp_t(u32, fmt[pad]->height, VIMC_FRAME_MIN_HEIGHT,
+>>>>>>>                            VIMC_FRAME_MAX_HEIGHT) & ~1;
+>>>>>>
+>>>>>> Also here.
+>>>>>>
+>>>>>>>
+>>>>>>> -    if (fmt->field == V4L2_FIELD_ANY)
+>>>>>>> -            fmt->field = sink_fmt_default.field;
+>>>>>>> -
+>>>>>>> -    vimc_colorimetry_clamp(fmt);
+>>>>>>> +    /* Assure src pad attributes besides dimensions are the same as sink */
+>>>>>>> +    fmt[VIMC_SCA_SRC]->code = fmt[VIMC_SCA_SINK]->code;
+>>>>>>> +    fmt[VIMC_SCA_SRC]->field = fmt[VIMC_SCA_SINK]->field;
+>>>>>>> +    fmt[VIMC_SCA_SRC]->colorspace = fmt[VIMC_SCA_SINK]->colorspace;
+>>>>>>
+>>>>>> Ideally we should propagate all the other fields to src. Maybe save width and height to
+>>>>>> a tmp var, assing the whole sink fmt to src, and restore width and height.
+>>>>>>
+>>>>> Acctually according to the subdevices documentation, when changing the
+>>>>> sink format, the width and height of the src format should reset to the
+>>>>> same values:
+>>>>>
+>>>>> ""
+>>>>> -  Sub-devices that scale frames using variable scaling factors should
+>>>>>     reset the scale factors to default values when sink pads formats are
+>>>>>     modified. If the 1:1 scaling ratio is supported, this means that
+>>>>>     source pads formats should be reset to the sink pads formats.
+>>>>> ""
+>>>>
+>>>> I have a small question: Should I worry about the crop? I believe that
+>>>> in the current
+>>>> implementation setting the sink does not necessarily reset the crop zone.
+>>>> Should we reset to the sink resolution or to the one determined by the crop?
+>>>> With that said, the way we implemented the scaller, setting a crop
+>>>> does not affect the
+>>>> source resolution (it retains the sink dimensions), should we change this too?
+>>>
+>>> From the docs, it seems that the idea is to keep 1:1 scaling ration, so if you
+>>> have crop in the sink, then the source pad should have dimentions of the crop.
+>>
+>> Correct.
+>>
+>>>
+>>> At least that is my understanding, and the docs should be updated to make it more
+>>> clear.
+>>
+>> Patches are welcome :-)
+>>
+>>>
+>>> I would like to hear other people's opinions on this.
+>>
+>> I agree with you, this is my understanding as well.
+>>
+>> Regards,
+>>
+>>         Hans
