@@ -2,76 +2,86 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D58DC33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 12:47:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45204C33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 12:49:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 546972064C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 12:47:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C28A21734
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 12:49:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729163AbgAUMr6 (ORCPT
+        id S1729367AbgAUMta (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 07:47:58 -0500
-Received: from mga09.intel.com ([134.134.136.24]:43890 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726968AbgAUMr6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 07:47:58 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 04:47:57 -0800
-X-IronPort-AV: E=Sophos;i="5.70,346,1574150400"; 
-   d="scan'208";a="215526871"
-Received: from mdemarse-mobl.amr.corp.intel.com (HELO [10.254.201.205]) ([10.254.201.205])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 21 Jan 2020 04:47:56 -0800
-Subject: Re: [PATCH] IB/opa_vnic: Spelling correction of 'erorr' to 'error'
-To:     Dillon Brock <dab9861@gmail.com>
-Cc:     Niranjana Vishwanathapura <niranjana.vishwanathapura@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200118162542.15188-1-dab9861@gmail.com>
-From:   Dennis Dalessandro <dennis.dalessandro@intel.com>
-Message-ID: <961cb826-e173-ff44-ee23-06012138a185@intel.com>
-Date:   Tue, 21 Jan 2020 07:47:54 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Tue, 21 Jan 2020 07:49:30 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:57296 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726968AbgAUMt3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 07:49:29 -0500
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 14596C7C8A9241831D23;
+        Tue, 21 Jan 2020 20:49:27 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Tue, 21 Jan 2020
+ 20:49:16 +0800
+From:   Sun Ke <sunke32@huawei.com>
+To:     <josef@toxicpanda.com>, <axboe@kernel.dk>, <sunke32@huawei.com>,
+        <mchristi@redhat.com>
+CC:     <linux-block@vger.kernel.org>, <nbd@other.debian.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] nbd: add a flush_workqueue in nbd_start_device
+Date:   Tue, 21 Jan 2020 20:48:13 +0800
+Message-ID: <20200121124813.13332-1-sunke32@huawei.com>
+X-Mailer: git-send-email 2.17.2
 MIME-Version: 1.0
-In-Reply-To: <20200118162542.15188-1-dab9861@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/18/2020 11:25 AM, Dillon Brock wrote:
-> Correcting a minor spelling mistake in the comments.
-> 
-> Signed-off-by: Dillon Brock <dab9861@gmail.com>
-> ---
->   drivers/infiniband/ulp/opa_vnic/opa_vnic_encap.h | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/infiniband/ulp/opa_vnic/opa_vnic_encap.h b/drivers/infiniband/ulp/opa_vnic/opa_vnic_encap.h
-> index e4c9bf2ef7e2..4480092c68e0 100644
-> --- a/drivers/infiniband/ulp/opa_vnic/opa_vnic_encap.h
-> +++ b/drivers/infiniband/ulp/opa_vnic/opa_vnic_encap.h
-> @@ -358,7 +358,7 @@ struct opa_veswport_summary_counters {
->    * @rx_drop_state: received packets in non-forwarding port state
->    * @rx_logic: other receive errors
->    *
-> - * All the above are counters of corresponding erorr conditions.
-> + * All the above are counters of corresponding error conditions.
->    */
->   struct opa_veswport_error_counters {
->   	__be16  vp_instance;
-> 
+When kzalloc fail, may cause trying to destroy the
+workqueue from inside the workqueue.
 
-Thanks for the touch up.
+If num_connections is m (2 < m), and NO.1 ~ NO.n
+(1 < n < m) kzalloc are successful. The NO.(n + 1)
+failed. Then, nbd_start_device will return ENOMEM
+to nbd_start_device_ioctl, and nbd_start_device_ioctl
+will return immediately without running flush_workqueue.
+However, we still have n recv threads. If nbd_release
+run first, recv threads may have to drop the last
+config_refs and try to destroy the workqueue from
+inside the workqueue.
 
-Acked-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+To fix it, add a flush_workqueue in nbd_start_device.
+
+Fixes: e9e006f5fcf2 ("nbd: fix max number of supported devs")
+Signed-off-by: Sun Ke <sunke32@huawei.com>
+---
+ drivers/block/nbd.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index b4607dd96185..dd1f8c2c6169 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -1264,7 +1264,12 @@ static int nbd_start_device(struct nbd_device *nbd)
+ 
+ 		args = kzalloc(sizeof(*args), GFP_KERNEL);
+ 		if (!args) {
+-			sock_shutdown(nbd);
++			if (i == 0)
++				sock_shutdown(nbd);
++			else {
++				sock_shutdown(nbd);
++				flush_workqueue(nbd->recv_workq);
++			}
+ 			return -ENOMEM;
+ 		}
+ 		sk_set_memalloc(config->socks[i]->sock->sk);
+-- 
+2.17.2
+
