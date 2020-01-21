@@ -2,118 +2,135 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D5EC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08FE2C33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FC4C24656
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0C8B24655
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:06:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y7V3uRh4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729288AbgAUTFq convert rfc822-to-8bit (ORCPT
+        id S1729361AbgAUTGU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 14:05:46 -0500
-Received: from mout.kundenserver.de ([212.227.126.187]:59401 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729081AbgAUTFq (ORCPT
+        Tue, 21 Jan 2020 14:06:20 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:42840 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728829AbgAUTGT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 14:05:46 -0500
-Received: from mail-qk1-f179.google.com ([209.85.222.179]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MJWgK-1jDhaK2DCy-00JqZz for <linux-kernel@vger.kernel.org>; Tue, 21 Jan
- 2020 20:05:44 +0100
-Received: by mail-qk1-f179.google.com with SMTP id v195so3692498qkb.11
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 11:05:44 -0800 (PST)
-X-Gm-Message-State: APjAAAXjnlpVaOOngHd2BX/VfCuLgpkhTECWffP0s0OJbOyAy9mdKIQY
-        Khr1czL8Sy1J1/l/dvMaT8baVaThS0VrPpsgQtA=
-X-Google-Smtp-Source: APXvYqyaU3sy6AGbEoXLdnq29+FzpVOuAwUblCu5Mbol7hW7VGm2ZUaPtrW+mhS1VdIaACj0BnK5vyn61lQKFxY8lNk=
-X-Received: by 2002:a05:620a:a5b:: with SMTP id j27mr6089006qka.286.1579633543424;
- Tue, 21 Jan 2020 11:05:43 -0800 (PST)
+        Tue, 21 Jan 2020 14:06:19 -0500
+Received: by mail-qk1-f195.google.com with SMTP id q15so3125393qke.9;
+        Tue, 21 Jan 2020 11:06:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=h9l4pccApU6icRLlOza3B0ImHsVOwXrkyewWhbtE6M8=;
+        b=Y7V3uRh4VCQUOCckTPU9FlDtZ7lj354vAGW71DSl9e+k6dD8wek9fSEh8U7SgWn3Y9
+         cMKNDy7lu5Zu6IarlWw+aUo9vAT+I/aYUJ/kI+LRa3DZOw2fn1T8emIXi+Vdo9Twj9Yo
+         kappk8Ny8E63YBwb4RAT+aJAnxjbw3pqkj2xNBVtrZxrBJgAtpJqavFkhwvwHTMtrOLl
+         jYt6CSrnXzlk9U/P4IERjPTidx9nlA3ys+bPiQ9pIjGfpB4GFQsoQ/9MwsCgZ9jhP0HX
+         3aszLnFhXb7/UTHVwAiWEj+GIwvgdjbs8m3gOEgEic7U+o63nxMQHY/hj65nTDcjavHS
+         5ktA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=h9l4pccApU6icRLlOza3B0ImHsVOwXrkyewWhbtE6M8=;
+        b=MI3XB9i7g/ZjOD/sL4e2g8uhIoLaTZhhk4E0H+ebfakWtlKDuCSBasu3GOvu5U+Nq0
+         HUnwEZ8DHm3Ckakhkein+PL34r3kDAM+YBTLJIPv5pMsvb8vrrlEHw0hPhQHhEc+Y2uS
+         ArHnQhnmot8nlr8Gbjwy4oZMI+gwv9Hn0XcLKrHdNHKpK7RUwvltgKcoFmsJgchc5dmi
+         4ivuzcaj7NxuPKlU6o9E5ZCG1HDzATjmc1wuve5NL92jSSxbTwPGpLSqmgJIxGU/g2ke
+         CebYNwGt+yzczYd3umK66Ep5X13Uh5fdFB08fv6unmbgFA6pOOOIBPuMfVIO5WHcSVGO
+         eexw==
+X-Gm-Message-State: APjAAAVfWe5SvSx/6x7iaGbF+wzHGMfmjMgO5jauSQa7X7jSJPvlBtMQ
+        2c+F0X87NAvd2wfsRIZ14EByd4Jf/Oq7aIrmdy4=
+X-Google-Smtp-Source: APXvYqy2audXzA+YxzidLA6ObNy6ejjEuNrh3Hh1Vkla+z2riht/2+VeIe7+aEry1RV/NNRLNT8cWC9LmJK+Y062G5g=
+X-Received: by 2002:a37:e408:: with SMTP id y8mr6013574qkf.39.1579633578497;
+ Tue, 21 Jan 2020 11:06:18 -0800 (PST)
 MIME-Version: 1.0
-References: <20200121114553.2667556-1-arnd@arndb.de> <20200121125546.GA71415@bogon.m.sigxcpu.org>
- <1971902c68ff805ee0b4a66f558afe06e6edf0c5.camel@pengutronix.de>
-In-Reply-To: <1971902c68ff805ee0b4a66f558afe06e6edf0c5.camel@pengutronix.de>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 21 Jan 2020 20:05:27 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2E__zHPPEL37JwK=uHb_v-=C+-+zGaL3XoW5PZ+BUN5g@mail.gmail.com>
-Message-ID: <CAK8P3a2E__zHPPEL37JwK=uHb_v-=C+-+zGaL3XoW5PZ+BUN5g@mail.gmail.com>
-Subject: Re: [PATCH] drm/etnaviv: only reject timeouts with tv_nsec >= 2 seconds
-To:     Lucas Stach <l.stach@pengutronix.de>
-Cc:     =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Sam Ravnborg <sam@ravnborg.org>, Rob Herring <robh@kernel.org>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        The etnaviv authors <etnaviv@lists.freedesktop.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200121150431.GA240246@chrisdown.name>
+In-Reply-To: <20200121150431.GA240246@chrisdown.name>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 21 Jan 2020 11:06:07 -0800
+Message-ID: <CAEf4BzZj4PEamHktYLHqHrau0_pkr_q-J85MPCzFbe7mtLQ_+Q@mail.gmail.com>
+Subject: Re: [PATCH] bpf: btf: Always output invariant hit in pahole DWARF to
+ BTF transform
+To:     Chris Down <chris@chrisdown.name>
+Cc:     bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Provags-ID: V03:K1:A7s4Lt5X0zCzndHl88Iw7InqVkh84eNdaRaOzFUIVnRgzU4tPMO
- UjFnTXDSvB7wk/J/g4RhL0QsmHhCZ8LbOZeuHIKE8m5EGVMHYVeSNhNVpl79m8Hy0/Vr1N4
- q60HMFaA5IusYnUXqGw+z6YVEvMRqZJpMM9t0eawCfqeh9a1uahlGkHwn5n3DWQxZZ3RCyF
- zZZk0Qy/OuRB9G7MLTI4w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Pym50AB6Nlo=:4xJilspjlsRR2I9O+dfSpE
- Cm+Z22oJDloqugpzfpIT/HdIAR8Ruyd6+FZJvtKcADfzpPniO3jwdUfmDbA2I4oHAJ3GBiyKF
- d6sK5EDNY7Wb25FrvITK7BlKm9VJrUrX3dODQP0ekY9yUE64aASaDRYK4gz4piAbLuzRZCW+O
- RLmOlZ4jHgIBhxJNucG22wA8qXzqv7NBupqOfKE7UDeXHFzX4zFiSVHFphUmFN6RWfqQ3NqkW
- hyRsd28h/2wCOv0N78VL5tTnocTQu6jg6DEuH9WCPQ9FH1x6m71rag34g5nJs5fBHJp+t8a+T
- VUI+E+dc+YqmeLCaWMtJhL3ZMypHLVpiLpYXF2UmLGeoOkQ8k2/LF+GPQZl8xT6Oan+M895fS
- E+qSyvIYjqoAYSfZZC//h4jKnja5dMaRlcAw30WPjk/vTTJJ69TgLdTdUNbhvJmy0IWAsBLgU
- 1+hfzMAQ56nvPSSMbZ+PY7297jh7uz4hBzfAsNp69gX9d0y7AMcvh1rJfmy7hkbWcxD9BZGZu
- E+yKoI0dZ3TDrsYYzq0BChxrCZ4HKnLljuF8kWyp78v0kGJwH5EmT9koJ+UlgsQAvR2apffEE
- j+V/TQG53mUvmrrKVvxXHqg6cxWhZ+QLaUXHhZP3fMEqXNYf6AvpSUhfZXqMczJRByoZ4pNsJ
- rFVdWOQRPVtT3juCEsMdlt1v3G4wGs0YBNMe+7iLueE7VptHR8sJ/s7Fv477GA/EIt0iTufx7
- DAM8ixHkIkaQAxhxZBwHEx+FzVP2mG+8IGtw63Jx4LWdzH5hndD6/YYDRUG9dLT8ONN5DvIln
- 6Crr6bsQshQphxwjJ+ncHZJDftZ8KUOa3f29/wxSlALfIeQiLKdNw5zVFYMxVRB3bhwJ+7Ysq
- spQZB/Br1WPcrtQadgyA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 5:10 PM Lucas Stach <l.stach@pengutronix.de> wrote:
+On Tue, Jan 21, 2020 at 7:05 AM Chris Down <chris@chrisdown.name> wrote:
 >
-> Hi Guido,
+> When trying to compile with CONFIG_DEBUG_INFO_BTF enabled, I got this
+> error:
 >
-> On Di, 2020-01-21 at 13:55 +0100, Guido Günther wrote:
-> > Hi,
-> > On Tue, Jan 21, 2020 at 12:45:25PM +0100, Arnd Bergmann wrote:
-> > > As Guido Günther reported, get_abs_timeout() in the etnaviv user space
-> > > sometimes passes timeouts with nanosecond values larger than 1000000000,
-> > > which gets rejected after my first patch.
-> > >
-> > > To avoid breaking this, while also not allowing completely arbitrary
-> > > values, set the limit to 1999999999 and use set_normalized_timespec64()
-> > > to get the correct format before comparing it.
-> >
-> > I'm seeing values up to 5 seconds so I need
-> >
-> >      if (args->timeout.tv_nsec > (5 * NSEC_PER_SEC))
-> >
-> > to unbreak rendering. Which seems to match what mesa's get_abs_timeout()
-> > does and how it's invoked.
+>     % make -s
+>     Failed to generate BTF for vmlinux
+>     Try to disable CONFIG_DEBUG_INFO_BTF
+>     make[3]: *** [vmlinux] Error 1
 >
-> I have not tested this myself yet, only looked at the code. From the
-> code I quoted earlier, I don't see how we end up with 5 * NSEC_PER_SEC
-> in the tv_nsec member, even if the timeout passed to get_abs_timeout()
-> is 5 seconds.
+> Compiling again without -s shows the true error (that pahole is
+> missing), but since this is fatal, we should show the error
+> unconditionally on stderr as well, not silence it using the `info`
+> function. With this patch:
+>
+>     % make -s
+>     BTF: .tmp_vmlinux.btf: pahole (pahole) is not available
+>     Failed to generate BTF for vmlinux
+>     Try to disable CONFIG_DEBUG_INFO_BTF
+>     make[3]: *** [vmlinux] Error 1
+>
+> Signed-off-by: Chris Down <chris@chrisdown.name>
+> Cc: Stanislav Fomichev <sdf@google.com>
+> Cc: Andrii Nakryiko <andriin@fb.com>
+> Cc: John Fastabend <john.fastabend@gmail.com>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> Cc: bpf@vger.kernel.org
+> Cc: kernel-team@fb.com
+> ---
+>  scripts/link-vmlinux.sh | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+>
+> diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
+> index c287ad9b3a67..c8e9f49903a0 100755
+> --- a/scripts/link-vmlinux.sh
+> +++ b/scripts/link-vmlinux.sh
+> @@ -108,13 +108,15 @@ gen_btf()
+>         local bin_arch
+>
+>         if ! [ -x "$(command -v ${PAHOLE})" ]; then
+> -               info "BTF" "${1}: pahole (${PAHOLE}) is not available"
+> +               printf 'BTF: %s: pahole (%s) is not available\n' \
+> +                       "${1}" "${PAHOLE}" >&2
 
-I can think of two different ways you'd end up with around five seconds here:
+any reason not to use echo instead of printf? would be more minimal change
 
-a) you have a completely arbitrary 32-bit number through truncation,
-    which is up to 4.2 seconds
-b) you have the same kind of 32-bit number, but add up to another 999999999
-    nanoseconds, so you get up to 5.2 seconds in the 64-bit field.
-
-It could of course be something completely different. If this works correctly
-today, we may need to allow any 64-bit input for the nanoseconds and do
-an expensive 64-bit div/mod in the kernel for normalization rather than the
-cheaper set_normalized_timespec64() from my patch.
-
-        Arnd
+>                 return 1
+>         fi
+>
+>         pahole_ver=$(${PAHOLE} --version | sed -E 's/v([0-9]+)\.([0-9]+)/\1\2/')
+>         if [ "${pahole_ver}" -lt "113" ]; then
+> -               info "BTF" "${1}: pahole version $(${PAHOLE} --version) is too old, need at least v1.13"
+> +               printf 'BTF: %s: pahole version %s is too old, need at least v1.13\n' \
+> +                       "${1}" "$(${PAHOLE} --version)" >&2
+>                 return 1
+>         fi
+>
+> --
+> 2.25.0
+>
