@@ -2,174 +2,129 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 049A6C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E74C33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0932217F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:08:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2843B22314
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:09:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="mSCeZlDd"
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="U0aT5pb5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729129AbgAUOIG (ORCPT
+        id S1729152AbgAUOJa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 09:08:06 -0500
-Received: from mail-eopbgr10055.outbound.protection.outlook.com ([40.107.1.55]:56567
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727817AbgAUOIF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 09:08:05 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=O3+Tah1ok+DnBXhl8wuDQ7njNX6Ho0BLu8wLddK7Sa4okN96AQeDwwuXy00c8JlE1h2SoRxoaEOJAwE5/41goQUqEL9VH+ebutofdl+KgLP1QO/gLAaMpKspDUdDrfLu7vOdsgqIyRrSxyMcgzkwk9CFiWH1axfbbBC3krbaP8jJIThHNuUqPjCQmn/tWoxFXHAzL1PnEwv87I9ESCnwureIJ5mOfemb7MvHcAepx1HfMU3r1A29W07q2d/MZwUP2Zu69yTJdSFusQqh8paMzxiTR7Vd4uSpovO1aSW3BQwhZbYAGo0yrygb6+EisDAKzAqo1BxAbvkTgGd40K2ycQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NZY0HXOflSA6ogq/reDfCaMlevs6iJQM5GeBmBjWTXs=;
- b=OLbb75QoWSyC8Wm5LLvvmbPBW+QLm1iigSCOP6i4ZfT6R/1G/kQpcT6T9mi/NOFeGjeWCjAPd6Nqcvop5qDyau3uLn/mleCmPPqpYJJr1qPXJzI2M8LEm8dbXZB55tvwP/hpQ2mwUlQup+tKiIgJJwXgkSwTyXuTyaPWDdCi/9KSHalzKhL53F2WHSjWoaZtug2j94I/QG/vGRvWuquF4WoFvS8JsGjmOAyYkKOb38353JjPwBHkAiLxatFlrhLkIj8PYixYd+K3YqR7JltRQjKK22mv+Jd/S0xPck8EohNvmwYnSMfJQrhK8GYYZlSCf6fBeehPh1L/Hr/KHWLSFA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NZY0HXOflSA6ogq/reDfCaMlevs6iJQM5GeBmBjWTXs=;
- b=mSCeZlDdPHh/4vyg/DsZMcwqF+PdL6pixBhROVCbMXgfHSA9j7+ickC/IoNTTsCIthBS/ujNJZ0J3BpMTwuyE4ojeYZsxcmfPzH1VbaEu1pjC+KN2xysfplQm0J7m7APn4rPyDrNX7D01GA5MOkMUCi5vEw/AkzShyOjHUZKQ7s=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
- VI1PR05MB4512.eurprd05.prod.outlook.com (52.133.14.10) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.22; Tue, 21 Jan 2020 14:07:59 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1c00:7925:d5c6:d60d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1c00:7925:d5c6:d60d%7]) with mapi id 15.20.2644.027; Tue, 21 Jan 2020
- 14:07:59 +0000
-Received: from mlx.ziepe.ca (12.231.255.114) by SN4PR0701CA0026.namprd07.prod.outlook.com (2603:10b6:803:2d::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.19 via Frontend Transport; Tue, 21 Jan 2020 14:07:59 +0000
-Received: from jgg by jggl.ziepe.ca with local (Exim 4.90_1)    (envelope-from <jgg@mellanox.com>)      id 1ituCB-00032N-4c; Tue, 21 Jan 2020 10:07:55 -0400
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-CC:     Shahaf Shuler <shahafs@mellanox.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Rob Miller <rob.miller@broadcom.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Netdev <netdev@vger.kernel.org>,
-        "Bie, Tiwei" <tiwei.bie@intel.com>,
-        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
-        "Liang, Cunming" <cunming.liang@intel.com>,
-        "Wang, Zhihong" <zhihong.wang@intel.com>,
-        "Wang, Xiao W" <xiao.w.wang@intel.com>,
-        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
-        "Zhu, Lingshan" <lingshan.zhu@intel.com>,
-        "eperezma@redhat.com" <eperezma@redhat.com>,
-        "lulu@redhat.com" <lulu@redhat.com>,
-        Parav Pandit <parav@mellanox.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "stefanha@redhat.com" <stefanha@redhat.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "hch@infradead.org" <hch@infradead.org>,
-        Ariel Adam <aadam@redhat.com>,
-        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "hanand@xilinx.com" <hanand@xilinx.com>,
-        "mhabets@solarflare.com" <mhabets@solarflare.com>
-Subject: Re: [PATCH 3/5] vDPA: introduce vDPA bus
-Thread-Topic: [PATCH 3/5] vDPA: introduce vDPA bus
-Thread-Index: AQHVzGqUgTlkW8H4N0+zRVK4Lh0XAKfuxkEAgAAbnwCAAAWygIACz0CAgAGL1YCAAJh1gIAAMuaAgAAJaICAARgbgA==
-Date:   Tue, 21 Jan 2020 14:07:59 +0000
-Message-ID: <20200121140755.GB12330@mellanox.com>
-References: <20200116124231.20253-1-jasowang@redhat.com>
- <20200116124231.20253-4-jasowang@redhat.com>
- <20200117070324-mutt-send-email-mst@kernel.org>
- <239b042c-2d9e-0eec-a1ef-b03b7e2c5419@redhat.com>
- <CAJPjb1+fG9L3=iKbV4Vn13VwaeDZZdcfBPvarogF_Nzhk+FnKg@mail.gmail.com>
- <AM0PR0502MB379553984D0D55FDE25426F6C3330@AM0PR0502MB3795.eurprd05.prod.outlook.com>
- <d69918ca-8af4-44b2-9652-633530d4c113@redhat.com>
- <20200120174933.GB3891@mellanox.com>
- <AM0PR0502MB3795C92485338180FC8059CFC3320@AM0PR0502MB3795.eurprd05.prod.outlook.com>
- <20200120162449-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20200120162449-mutt-send-email-mst@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN4PR0701CA0026.namprd07.prod.outlook.com
- (2603:10b6:803:2d::24) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [12.231.255.114]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: acf5f34e-40fd-4f16-9a8c-08d79e7b5218
-x-ms-traffictypediagnostic: VI1PR05MB4512:|VI1PR05MB4512:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR05MB45124D5F3CAE60D41E3BB1B4CF0D0@VI1PR05MB4512.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0289B6431E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(396003)(376002)(346002)(366004)(199004)(189003)(478600001)(86362001)(81156014)(8676002)(8936002)(81166006)(9746002)(36756003)(66946007)(64756008)(66556008)(66446008)(66476007)(7416002)(2906002)(316002)(6916009)(186003)(71200400001)(5660300002)(4326008)(26005)(52116002)(9786002)(1076003)(33656002)(2616005)(54906003)(24400500001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4512;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: uOjUywRNc0A/0nWqKzv/w8C+ug80ncUf9xZKqaS4rUWiD+LCgPOpAq153IlkPKUW1W9PWpZj8rwsD9B42iwA6aFSIyaoDsmAgm3urrqOxkduuYuwo3vXEk5fjtQPlmIBayLic88ovB50cgjh/DfZSJmDBoO6ZSwrctT+s6Y29GsCSzcWO9UsKDIINNujmxU6bEde0PTSjWQdfZisoTrB8D1zhyuC1890D6gD7e1qIrFi2fRpYFzlLyKFk0JbTO8IyNqHtE7GTeWWHgREd0OgB4L2xAWz42u/hdeQ3FrCSsW1kPoV0vqlgZoVezgGdUP7fFRXtSkR7LDEAJnOmRBeMiJn4JBV+1cPDsvLaplu+vQF8OZtrr63hypIR6fMLk+P0OMjk9ZA5S+eAsYQOXr+Lkg4c8ViDoTmf1LXUpYlV1aZlBeQRGnH01S3sT+UPdazGIQemgBM3POm0La9O7+haEIukSolQTqf9LgIAAqATB1NrxMSgiZffrHP6Gp5dSYH
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <DA8054F3EAA1074B8B36A071C759522B@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 21 Jan 2020 09:09:30 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:46860 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727817AbgAUOJ3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 09:09:29 -0500
+Received: by mail-qk1-f196.google.com with SMTP id r14so2717112qke.13
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 06:09:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=MXMAlZrf6RWqgu1sZHLz9u+/Sa6aM/FrrOMx7Y5CS+U=;
+        b=U0aT5pb5FoHZj5lISYTKH5SvegT1CwAlwWnXDVcU6MVD4WJMBL4/fWmH1qaQ2YSwUV
+         eUXDAKu0ADfvrB0kuVG3ZhJ0AFq553As9ukd2UrMxzPtIK+LiURUpvHSl4wYJIKZLBZ5
+         WMwphxiW4auh9oesjHPDimGLxo8R9n5B0fbppZnIpAFIXoR3uJjUew7y4/89ys4+beRZ
+         QkR7UWQNR0zBXPk/LXNixzs7s7gxbAsWgNl9mMzREHTzbL9lrXbV8PbBvAg1vqP4sr8/
+         fiTKtismOtboFx20pNHqT6F4HVs5/5aEcnHto8mWtBPrHQfh/bp8eMbnR7b94ejl/g3z
+         KTYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MXMAlZrf6RWqgu1sZHLz9u+/Sa6aM/FrrOMx7Y5CS+U=;
+        b=CrQP3bsS1sY7m7N7St4dtI2WsAXEPjEi1yolhaY5LW/v9qQ6hWV3aRp53urG0VafHV
+         VVAX3E05tUaNj0SxZmBNWn8yYRPVlMIcUSVjoR5VYi6yELBScnc0GP5yYb8dgvdSlUJL
+         YEK9kwYKsPZyjAlHFgQQvN4YHA1XV2Xhxc/J6+4AymqrBASKdYxeIqz3QR6uIbKxdijO
+         QkyQHNwYzCf9wd2jD/CQqpkRsCLJgn5/5GJaDK8OR1HOsTynb78PRew76q0IBVoTGQ45
+         X4XHUgSUMLOCY2kAlSMW4h8orDlGmi0r2qjaQzzW8EPYUpCtI0o7VWC05Ssud/cW60F1
+         WjOA==
+X-Gm-Message-State: APjAAAVkwRGTO/UbScGuOzZP89VBbtVhJWx4PiSxNfEz/HZwOgAPNdXd
+        kwk6bCOJNbHejmrZkZ1OFYXVyHTtgSqw6Q==
+X-Google-Smtp-Source: APXvYqzbepHCf8odvOuFZORhg4stdqBChkK/lRhRxCuHcOGffbvJ/jV9yysnaPWYPxVgZaBof9w8Sw==
+X-Received: by 2002:a37:b783:: with SMTP id h125mr4507737qkf.75.1579615768137;
+        Tue, 21 Jan 2020 06:09:28 -0800 (PST)
+Received: from ?IPv6:2620:10d:c0a8:1102:ce0:3629:8daa:1271? ([2620:10d:c091:480::822a])
+        by smtp.gmail.com with ESMTPSA id r28sm19712087qtr.3.2020.01.21.06.09.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jan 2020 06:09:27 -0800 (PST)
+Subject: Re: [v2] nbd: fix potential NULL pointer fault in nbd_genl_disconnect
+To:     Sun Ke <sunke32@huawei.com>, axboe@kernel.dk, mchristi@redhat.com
+Cc:     linux-block@vger.kernel.org, nbd@other.debian.org,
+        linux-kernel@vger.kernel.org
+References: <20200120124549.27648-1-sunke32@huawei.com>
+From:   Josef Bacik <josef@toxicpanda.com>
+Message-ID: <8bb961fe-3412-9c3c-ad9b-54d446e90bf0@toxicpanda.com>
+Date:   Tue, 21 Jan 2020 09:09:26 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.4.1
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: acf5f34e-40fd-4f16-9a8c-08d79e7b5218
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jan 2020 14:07:59.3113
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: r3DzMNMycWf7/ozGh2jSMLYD45/MXQhC94LNiWOZzGprK9HQyZ7VTnoiuvi2bEFNGvMoaNiu0LMcgNaSrixtDg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4512
+In-Reply-To: <20200120124549.27648-1-sunke32@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 04:25:23PM -0500, Michael S. Tsirkin wrote:
-> On Mon, Jan 20, 2020 at 08:51:43PM +0000, Shahaf Shuler wrote:
-> > Monday, January 20, 2020 7:50 PM, Jason Gunthorpe:
-> > > Subject: Re: [PATCH 3/5] vDPA: introduce vDPA bus
-> > >=20
-> > > On Mon, Jan 20, 2020 at 04:43:53PM +0800, Jason Wang wrote:
-> > > > This is similar to the design of platform IOMMU part of vhost-vdpa.=
- We
-> > > > decide to send diffs to platform IOMMU there. If it's ok to do that=
- in
-> > > > driver, we can replace set_map with incremental API like map()/unma=
-p().
-> > > >
-> > > > Then driver need to maintain rbtree itself.
-> > >=20
-> > > I think we really need to see two modes, one where there is a fixed
-> > > translation without dynamic vIOMMU driven changes and one that suppor=
-ts
-> > > vIOMMU.
-> > >=20
-> > > There are different optimization goals in the drivers for these two
-> > > configurations.
-> >=20
-> > +1.
-> > It will be best to have one API for static config (i.e. mapping can be
-> > set only before virtio device gets active), and one API for dynamic
-> > changes that can be set after the virtio device is active.=20
->=20
-> Frankly I don't see when we'd use the static one.
-> Memory hotplug is enabled for most guests...
+On 1/20/20 7:45 AM, Sun Ke wrote:
+> Open /dev/nbdX first, the config_refs will be 1 and
+> the pointers in nbd_device are still null. Disconnect
+> /dev/nbdX, then reference a null recv_workq. The
+> protection by config_refs in nbd_genl_disconnect is useless.
+> 
+> To fix it, just add a check for a non null task_recv in
+> nbd_genl_disconnect.
+> 
+> Signed-off-by: Sun Ke <sunke32@huawei.com>
+> ---
+> v1 -> v2:
+> 
+> add an omitted mutex_unlock.
+> ---
+>   drivers/block/nbd.c | 4 ++++
+>   1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+> index b4607dd96185..668bc9cb92ed 100644
+> --- a/drivers/block/nbd.c
+> +++ b/drivers/block/nbd.c
+> @@ -2008,6 +2008,10 @@ static int nbd_genl_disconnect(struct sk_buff *skb, struct genl_info *info)
+>   		       index);
+>   		return -EINVAL;
+>   	}
+> +	if (!nbd->task_recv) {
+> +		mutex_unlock(&nbd_index_mutex);
+> +		return -EINVAL;
+> +	}
+>   	if (!refcount_inc_not_zero(&nbd->refs)) {
+>   		mutex_unlock(&nbd_index_mutex);
+>   		printk(KERN_ERR "nbd: device at index %d is going down\n",
+> 
 
-If someone wants to run a full performance application, like dpdk,
-then they may wish to trade memory hotplug in that VM for more
-performance.
+This doesn't even really protect us, we need to have the nbd->config_lock held 
+here to make sure it's ok.  The IOCTL path is safe because it creates the device 
+on open so it's sure to exist by the time we get to the disconnect, we don't 
+have that for genl_disconnect.  So I'd add the config_mutex before getting the 
+config_ref, and then do the check, something like
 
-Perhaps Shahaf can quantify the performance delta?
+mutex_lock(&nbd->config_lock);
+if (!refcount_inc_not_zero(&nbd->refs)) {
+}
+if (!nbd->recv_workq) {
+}
+mutex_unlock(&nbd->config_lock);
 
-Jason
+Thanks,
+
+Josef
