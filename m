@@ -6,68 +6,73 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA175C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:41:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19B10C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:42:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E36722314
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:41:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF0422253D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:42:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579621303;
-	bh=WX5uBua3UM4vxvRCI/rg0QKKPfvNZyvLT/tIaNLdY/Y=;
+	s=default; t=1579621368;
+	bh=XFxVdvoPAuJ1iwI987V6w4EhmdrR0YxBJZYSGNu2ljE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YYSLJs+zSBYxx9PH+tguU64OJQvrqCozHw050brMbzdOwQIGAo5jXwLzaBpdjAZqT
-	 TtnihQ1yuOz8kh1hX4UOYfWs8y9AHoytUGV1gqJaS7bYhKR9lOr9pftId+55cVKCO4
-	 lcjnzHVywTdzNfwS3P9z4pr4JcutOmBrPSSi8hQs=
+	b=ZLLarddSeAqTCyK+LsXMX49pkml6YyYKg9LSokbabPrQt5RUNnzyhldcBHQHaUUaT
+	 RADEG2Gq2w8TA8GZOMKt/IsO4CqTQmJiyrCnv/qDTO581IXDrBfNIisiussBoglb0L
+	 PGH2GXxlTB/Popsq1QOTf23Zucx/ggnYP/GuxD8s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729423AbgAUPlm (ORCPT
+        id S1729165AbgAUPms (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 10:41:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34492 "EHLO mail.kernel.org"
+        Tue, 21 Jan 2020 10:42:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729043AbgAUPlm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 10:41:42 -0500
+        id S1727817AbgAUPmr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 10:42:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 407B3207E0;
-        Tue, 21 Jan 2020 15:41:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAEC6207E0;
+        Tue, 21 Jan 2020 15:42:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579621301;
-        bh=WX5uBua3UM4vxvRCI/rg0QKKPfvNZyvLT/tIaNLdY/Y=;
+        s=default; t=1579621367;
+        bh=XFxVdvoPAuJ1iwI987V6w4EhmdrR0YxBJZYSGNu2ljE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vy8cWKcnSObFqaB6ykvi32eq74hI84H0YfTilsIWjDJqHohpet281Q3EAvp8E5ObN
-         7cqrWOeijNgemEOV6xeegC0rWbEqLZOEEcaR1I9kl6quiMqZyWh8RS2FLSCeFtnK/4
-         fkzGkrmGB9CduAD1sZKTHOilX/L4tglA819YU2dU=
-Date:   Tue, 21 Jan 2020 16:41:39 +0100
+        b=x/tQI8lJofEWRICGoADMClZDO4s5h3meL46SM30o72NslG0+c00XU00B5a4sfczEG
+         Yp/NiX5Ao0K38QGigKcNMhNqgh5tsF6ALo9iLinCiB1LVr260lX5hHdk9ZWWWh6Mu3
+         fmCtibKLMFcllf39Ri4O5GzPkuJ4HiAFosZXjVPY=
+Date:   Tue, 21 Jan 2020 16:42:45 +0100
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     "Ooi, Joyce" <joyce.ooi@intel.com>
-Cc:     "Loh, Tien Hock" <tien.hock.loh@intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "See, Chin Liang" <chin.liang.see@intel.com>,
-        "Tan, Ley Foon" <ley.foon.tan@intel.com>
-Subject: Re: [PATCH] MAINTAINERS: Replace Tien Hock Loh as Altera PIO
- maintainer
-Message-ID: <20200121154139.GA588670@kroah.com>
-References: <20200103170155.100743-1-joyce.ooi@intel.com>
- <SN6PR11MB2750CD8233FF8F14B006B343BD390@SN6PR11MB2750.namprd11.prod.outlook.com>
- <BL0PR11MB289899043DC031AE4DB21AA8F20D0@BL0PR11MB2898.namprd11.prod.outlook.com>
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Zhenzhong Duan <zhenzhong.duan@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: Question about dynamic minor number of misc device
+Message-ID: <20200121154245.GB588670@kroah.com>
+References: <CAFH1YnOad7aVjoX_PR6mLqT=pXQjpBW9ZDHkKYzNkeistFkA4A@mail.gmail.com>
+ <CAK8P3a3DwaZnRff7CCrJoSxP_MeVUn1S6nRd+hb5rHnv9dBgLQ@mail.gmail.com>
+ <CAFH1YnMDL1gBNT4vr+C=eGGoCYJvkVDnoXUVN8OL9Xs3668Z+Q@mail.gmail.com>
+ <CAK8P3a0aFr546fF+=LDm3rwZ-sK-xC8VLYTZjOEn+o6fVixRHg@mail.gmail.com>
+ <20200120221323.GJ15860@mit.edu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <BL0PR11MB289899043DC031AE4DB21AA8F20D0@BL0PR11MB2898.namprd11.prod.outlook.com>
+In-Reply-To: <20200120221323.GJ15860@mit.edu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 08:06:23AM +0000, Ooi, Joyce wrote:
-> Hi Greg,
+On Mon, Jan 20, 2020 at 05:13:23PM -0500, Theodore Y. Ts'o wrote:
+> > - FLASH_MINOR move and rename to avoid conflict
+> > - change speakup to dynamic minors
+> > - support for high dynamic minor numbers if you are really motivated
+> >   (probably nobody needs these)
 > 
-> Can you please add my name to the maintainer list if there is no concern? Thanks.
+> Are we sure that reassigning minor device number conflits isn't going
+> to break systems?  Especially those on random, older, architectures
+> they might not be using udev.
 
-Why me?  I am not the gpio maintainer...
+Note, I do not think udev has been in charge of creating /dev/ nodes for
+well over 10 years now, that is up to devtmpfs.
 
+thanks,
+
+greg k-h
