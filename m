@@ -2,135 +2,89 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AEDAC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 10:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D9B3C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 10:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E494320882
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 10:09:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iNHLk9So"
+	by mail.kernel.org (Postfix) with ESMTP id 7CD7520882
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 10:14:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729372AbgAUKJB (ORCPT
+        id S1729191AbgAUKOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 05:09:01 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36288 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729291AbgAUKJA (ORCPT
+        Tue, 21 Jan 2020 05:14:08 -0500
+Received: from mout.kundenserver.de ([212.227.17.13]:45691 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727220AbgAUKOI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 05:09:00 -0500
-Received: by mail-wr1-f65.google.com with SMTP id z3so2484583wru.3
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 02:08:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8os47Jh+iH/mWhGJOKaN0Ikowvgw7Dsg6piAesimf+8=;
-        b=iNHLk9Soh1BgMmomizmi4fIcor2oN/NsBEzYcXn39v8n4anlIoYM5pz+LSafgd8Spu
-         f+S7jCQINFEBJ4GDG4xVgihL44c++E/0Tg7Shs1Ps4QiMQ+Do8ke4XZtb91mtCCPSb17
-         8jgPfcy7ylRBXPBUjDLzy7qpdgFjobOdmL+AyehNXUbus45Wmkzcz9npQK6FoRh2lfld
-         RgloPfjLJuxfGsc3KMrRsmMDzHu36mcWyIeIyYDOEtja0RuhZt+1QHUg64Sy4nQtummn
-         SwblUn6R1sIWp1O85xu9BZGrKNkVu0yj2lUWmC2wFXq9newsw22roQLk7hwpoD5DrjFT
-         RJtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8os47Jh+iH/mWhGJOKaN0Ikowvgw7Dsg6piAesimf+8=;
-        b=sZNfeeZf/z4okzrfzyGYG+G6P4P1o0OEMBjch65i8j4ZBT1tma9wNvEoAg40m9Nzy7
-         XuHtowVwtYFroCH+qUsyWfbqeuigb/9v9e0fJmXP34ZoEGDiCs9yq0bO4w/yLOTFMPdY
-         5pdmZKrpl5atX+vvwH94Jx2veH6w18zm7DQWS9DUPo4AOZsuqyS7YwcevxaZNDPLEYpd
-         FXruZN4N0iGpOzLTi6suV93C58nDDq8TrTppKbLz55AQ0EdqQeRFEKn59EBRpNcQm4LV
-         wKs5eLwCLCFuG2xzCpUVClTwExW/QfNamHACPTzmTPr+toaZCmrMUsGw0YsoSynJtzs8
-         AReA==
-X-Gm-Message-State: APjAAAVpVDrlvs2dwYqlASfcNwsX2R+JAmnZrcPv5Fdmvlv9xVqBCgXn
-        VOe2xYGyiMijyDwL0uqLUwGeNQ==
-X-Google-Smtp-Source: APXvYqzMOzjFtDVGl6edwO/7tSb9RrQo9+Hb9CFGAJn1i1sGI47f1x+xTj047nTS+b5NOSYS7F4xnw==
-X-Received: by 2002:adf:fcc4:: with SMTP id f4mr4493720wrs.247.1579601338751;
-        Tue, 21 Jan 2020 02:08:58 -0800 (PST)
-Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
-        by smtp.gmail.com with ESMTPSA id u18sm51454016wrt.26.2020.01.21.02.08.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 02:08:58 -0800 (PST)
-Date:   Tue, 21 Jan 2020 10:08:54 +0000
-From:   Quentin Perret <qperret@google.com>
-To:     Lukasz Luba <lukasz.luba@arm.com>
-Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com, Morten.Rasmussen@arm.com, Chris.Redpath@arm.com,
-        ionela.voinescu@arm.com, javi.merino@arm.com,
-        cw00.choi@samsung.com, b.zolnierkie@samsung.com, rjw@rjwysocki.net,
-        sudeep.holla@arm.com, viresh.kumar@linaro.org, nm@ti.com,
-        sboyd@kernel.org, rui.zhang@intel.com, amit.kucheria@verdurent.com,
-        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
-        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, patrick.bellasi@matbug.net
-Subject: Re: [PATCH 1/4] PM / EM: and devices to Energy Model
-Message-ID: <20200121100854.GB157387@google.com>
-References: <20200116152032.11301-1-lukasz.luba@arm.com>
- <20200116152032.11301-2-lukasz.luba@arm.com>
- <17b77e0c-9455-0479-d37b-c57717c784c7@arm.com>
- <20200120152804.GB164543@google.com>
- <453034e5-f7b9-20f7-4e26-5d0d7164edd1@arm.com>
+        Tue, 21 Jan 2020 05:14:08 -0500
+Received: from mail-qv1-f53.google.com ([209.85.219.53]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MQuLB-1jEPfd42tT-00Nvvu for <linux-kernel@vger.kernel.org>; Tue, 21 Jan
+ 2020 11:14:07 +0100
+Received: by mail-qv1-f53.google.com with SMTP id y8so1161632qvk.6
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 02:14:06 -0800 (PST)
+X-Gm-Message-State: APjAAAUj8RLkfXzoadJLiG5zQFf5w95fsf51lS2Bx7wNp2gmG7EAqxnb
+        +mqflYHocKsqkppRTu5Lda8h9dRvJud0gxXScMc=
+X-Google-Smtp-Source: APXvYqwfwCFea1IWv9LIK/SM8f8WXdlKMOlTnsHlnRMXe9L0NQXcEkNBWRfAaf0eq0AWZ6EaBabUhBmdmUjx2VZ3f3s=
+X-Received: by 2002:a0c:bd20:: with SMTP id m32mr3979167qvg.197.1579601645899;
+ Tue, 21 Jan 2020 02:14:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <453034e5-f7b9-20f7-4e26-5d0d7164edd1@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1579596599-258299-1-git-send-email-alex.shi@linux.alibaba.com>
+ <CAK8P3a0LJETeKbQvs-EeQ1cF84gVO3JS75SOZYD0F+puWhi9=w@mail.gmail.com> <37f03cf9-5666-7561-13f6-2ff72e936b7a@linux.alibaba.com>
+In-Reply-To: <37f03cf9-5666-7561-13f6-2ff72e936b7a@linux.alibaba.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 21 Jan 2020 11:13:49 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2u5maFAB_tFX+3BdZFgPFqdKhDPNAuQrsjfVc3wzSYdg@mail.gmail.com>
+Message-ID: <CAK8P3a2u5maFAB_tFX+3BdZFgPFqdKhDPNAuQrsjfVc3wzSYdg@mail.gmail.com>
+Subject: Re: [PATCH] pcmcia/cm4000: remove useless variable tmp
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Harald Welte <laforge@gnumonks.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:t9Z5y7AtUl8d/yB569Wk5NHQ8AD1EeBWrURBLOL/AqdLfguzNyp
+ TzGcSt/bEQ18HI1YQ/ugV7Moci6pnAYztCuBB0qmbsvK6JCHi6ezOgqF/PLuH6vBUOYMEui
+ iJ6uQn/MhEhGEVuPpB8UxFPsBPtWEKlCXCbKJT3fnTsPZP6Tcn9ON/60BJ6XgpC+KM5r0LX
+ 2QlL765PoUGwz8ej1kI6Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:fSfuhm00C90=:grRjbDsin1eJv9oxIoCFcd
+ rvGh6oIMBw0hY2lux8MyRzYCSktGfsgXw4wqFfaGm2xi6J33iS5SxNdPh+7oTxo63E0Z1b3TL
+ 8M3aLT7gFmBwWvRpczh6aGvRRGUZkjQGE5To5KvFX+JQyueHr34y216y0j5KGsnpvYUpvpq7E
+ rRZYHzfsUEAgqnBk/Q3/uf75gGEqR8LOzMuDvCK0+c3rfsDGH0olOi5BLURaFUET14xvKelGm
+ z19X3q7wSrze8cEvi5HfdLrr5xvVzZnWP2CY8mC0fOxtyQjd5HPjcRfdH81r/KfM5frqkf386
+ GsCyVes5AUWmVwhhRXJDwiHwMY4g15cmW2E2YdjN3qS2hVOPpch+jbfbph8cGC1NFxGNmjKrl
+ gUGw8QHYXVJiJFLrnYZuuFda9vI3mMPjhVASPzOI8YFgKasblqffhxLwl3rHgCpe26Ox+GR0W
+ UaMpEGGiGySvYS3/1+S5U48FU47N7P25sAi7RKskT7MWZx8gz2CLn659wbnjwtggysTirfjtN
+ CY7iNvT61Stx1FZeOA29nPhK29HjTZIHbe8cCakoTbZIt0J3MrirDmRZERo92LQN1HHe8L4ai
+ HVZvZH0C51j12BAjBxtWCFBaj90LU4z5Gnq4T//hLXBO8KUWr67hTYUupJhZ1aHBLlxgRCQvt
+ nU21OaehaGCwyudMIrqIGi0BP93nW5L2E//7FyuINefSJKvGIVEbXdEJU15gusn/GbEXBxPBu
+ LTdJUtUISXbuf9sF83WjmEzvgsIPbApgCAkASOJjMSW6NMqAkc7vh4k1iLv87n1oTHuH7nWUE
+ 8QooNv8evtG6lPFY6SITJz8x34fSYFbtdgdFgdJGXSjfhBHcrvwBZ0oksJhwnCzBckxdIE39G
+ 1qKz0aKk/UvfUlQirT7g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday 20 Jan 2020 at 16:20:49 (+0000), Lukasz Luba wrote:
-> On 1/20/20 3:28 PM, Quentin Perret wrote:
-> > Agreed, this looks a bit confusing. It should be trivial to make
-> > em_dev_get() (or whatever we end up calling it) work for CPUs too,
-> > though. And we could always have a em_cpu_get(int cpu) API that is a
-> > basically a wrapper around em_dev_get() for convenience.
-> 
-> The problem not only here is that we have a CPU index 'int cpu'
-> and if we ask for device like:
-> 
-> struct device *dev = get_cpu_device(cpu);
-> 
-> It might be not the same device that was used during the
-> registration, when we had i.e. 4 CPUs for the same policy:
+On Tue, Jan 21, 2020 at 10:55 AM Alex Shi <alex.shi@linux.alibaba.com> wrote:
+
 >
-> int cpu_id = cpumask_first(policy->cpus);
-> struct device *cpu_dev = get_cpu_device(cpu_id);
-> em_register_perf_domain(cpu_dev, nr_opp, &em_cb);
-> 
-> That's why the em_cpu_get() is different than em_get_pd(), mainly by:
-> if (cpumask_test_cpu(cpu, em_span_cpus(em_pd)))
-> 
-> It won't be simple wrapper, let me think how it could be handled
-> differently than it is now.
+> From 9e54770c6911ae7da7d2f74774bbef019e459bc9 Mon Sep 17 00:00:00 2001
+> From: Alex Shi <alex.shi@linux.alibaba.com>
+> Date: Fri, 17 Jan 2020 09:10:47 +0800
+> Subject: [PATCH v2] pcmcia/cm4000: remove useless variable tmp
+>
+> No one care the value of 'tmp' in func cmm_write. better to remove it.
+>
+> Arnd Bergmann pointed just remove may cause warning in some arch where
+> inb is macro, and suggest add a cast '(void)' for this. Thanks!
+>
+> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+> Cc: Harald Welte <laforge@gnumonks.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: linux-kernel@vger.kernel.org
 
-Right so I suppose the easiest solution would be to do the opposite of
-my first suggestion. That is, make em_get_pd() call em_cpu_get() if the
-device is a CPU device, or proceed to the PD list iteration for other
-devices. And em_cpu_get() can remain as you originally suggested (that
-is, iterate over the PDs and test the mask).
-
-That should ensure em_get_pd() always works, em_cpu_get() is still there
-handy for the scheduler and such, and the two EM lookup functions (for
-CPUs or for devices) are kept cleanly separated.
-
-Thoughts ?
-
-Thanks,
-Quentin
+Acked-by: Arnd Bergmann <arnd@arndb.de>
