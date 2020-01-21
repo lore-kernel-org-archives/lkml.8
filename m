@@ -2,211 +2,110 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ABABC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 11:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C2BC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 11:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE1F524655
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 11:35:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05F2824653
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 11:36:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="H2m6sw8g"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SDIpZhKQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729152AbgAULfw (ORCPT
+        id S1729235AbgAULg5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 06:35:52 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:53506 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726052AbgAULfw (ORCPT
+        Tue, 21 Jan 2020 06:36:57 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:44038 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726052AbgAULg4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 06:35:52 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00LBXNBK034296;
-        Tue, 21 Jan 2020 11:35:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=O5LftPvaGtM67EfFxPIbJZyTLJGrdDk4vCyyoTH8rgs=;
- b=H2m6sw8gKZMIJjcwFJ8L4Up2uDvY1FZUjbYrLIzoo0QE3/WrQMP4QRK3pQJzrz8mD5GB
- Ralso39tSUuxT/sTVrTBISgrKdlhwh5oNQAUc0UgGyrKjRejK1+lDK8909OPMvNYRkm7
- W1TSUq20A9ubTEMRgNeKNN640QJ4GIF18YeoLeoS9XiAenPd+pVGbPcpOzFfC/62sdsR
- Vtr+9MYuCv7Q7k5qkBsssPz4xhjhl5lU0fYLmxbxvDb6jSyQNdW413HWNBKVuXv+QV3+
- rijTEHWbninGWsAJfZVRNKfp35Z3DS67crc09zTUZTSjL2Jq84B9zILkfrUh2Mpp3WrS XA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2xkseucgkr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 Jan 2020 11:35:30 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00LBY2BF182316;
-        Tue, 21 Jan 2020 11:35:30 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2xnsj4drrn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 Jan 2020 11:35:26 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00LBWk3f024105;
-        Tue, 21 Jan 2020 11:32:46 GMT
-Received: from kadam (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 21 Jan 2020 03:32:45 -0800
-Date:   Tue, 21 Jan 2020 14:32:36 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     syzbot <syzbot+29125d208b3dae9a7019@syzkaller.appspotmail.com>,
-        pablo@netfilter.org
-Cc:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
-        kadlec@netfilter.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: KASAN: use-after-free Read in __nf_tables_abort
-Message-ID: <20200121113235.GA1847@kadam>
-References: <000000000000367175059c90b6bf@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000367175059c90b6bf@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9506 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=758
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001210098
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9506 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=820 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001210098
+        Tue, 21 Jan 2020 06:36:56 -0500
+Received: by mail-pl1-f196.google.com with SMTP id d9so1212168plo.11
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 03:36:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=mSKpRLLmbCG6NNfebkoa+LCU9XJGFgAItRsjHqAjc1o=;
+        b=SDIpZhKQNyx4xuef9Gkz5k0dDHQ8mQBmax4z8lK8mYTkm/PzS4JtLMfCgPsR87nNwp
+         /TiTYHJOymsTuXIbLHcuc9VifK9a1JZBRYMAeLUE9gVO8T6d4ivMlwOslF8DSP86KxuG
+         QfaT18YZ5oml6I467FIO92SmiEbsgUXXrNBgyzeihf+wcKCzB2yS4STqWj7PPyJ2uAzT
+         Mxo9Fxk0SEI4kOPXyfhTBclYWQhTxSCqzzgQgmmgjVTjumQXCv0d9rs9f/2Y8I7HFmCA
+         CA+OF+BOfOS/LHAFTzHPFv7puRU4yDvGpIg2uWR9tzB8VYE1AUEGol/MQrJkpILRtX+/
+         Uwhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=mSKpRLLmbCG6NNfebkoa+LCU9XJGFgAItRsjHqAjc1o=;
+        b=lWk6L2TacmP4ORwZKa/BWLQCXjMTFY0n6qQtjWy1U+TnCGkq+Tc6JTnvXaGoaQVF4H
+         NsyewLViWDyVcWiSV27BmCzn/FcaO+VB0vNCigFaPcVyq1v9u0TZTtcBhkcjKAg9cbgG
+         j9tyZZBAEdjzTQw1qm9QoKoxQqW3NVuLD+m+7MmPPDoZAtEYOfJFiTIaIltD2Apr4DVK
+         Mwzy9GfmmeQeEBtP6gmJDo7ZeMg/VSWNGWysEYTTttN+YXNo1I/gsjM/8ws1QMNWFZ4l
+         ZGx/SzSEwCy6wz5tdGghmpe/CHCZLeWz6N+XFNGVJQ0bH9nuAHYwNs+kDx4Ll16eeQWO
+         o6/w==
+X-Gm-Message-State: APjAAAVvMwilxtfxMNUOIV31ri5R1kN9pOz4Cx/IaE2TDn1Otwn+MYqX
+        bVUOmssqO7yqD0EpKN45uxycRitB
+X-Google-Smtp-Source: APXvYqwGP9+tBT7zQvy1Ma71uI4Uyo6azGWeXHha8tYl+uCoAHxIuHwMnVT/y8uMGG0bxcivo4KBQA==
+X-Received: by 2002:a17:90a:200d:: with SMTP id n13mr5038407pjc.16.1579606616331;
+        Tue, 21 Jan 2020 03:36:56 -0800 (PST)
+Received: from huyue2.ccdomain.com ([103.29.143.67])
+        by smtp.gmail.com with ESMTPSA id z29sm42971824pge.21.2020.01.21.03.36.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 Jan 2020 03:36:55 -0800 (PST)
+From:   Yue Hu <zbestahu@gmail.com>
+To:     minchan@kernel.org, ngupta@vflare.org,
+        sergey.senozhatsky.work@gmail.com
+Cc:     linux-kernel@vger.kernel.org, huyue2@yulong.com
+Subject: [PATCH] zram: do not set ZRAM_IDLE bit for idlepage writeback in writeback_store()
+Date:   Tue, 21 Jan 2020 19:35:57 +0800
+Message-Id: <20200121113557.11608-1-zbestahu@gmail.com>
+X-Mailer: git-send-email 2.17.1.windows.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I think I see the problem, but I'm not sure how you want to fix it...
+From: Yue Hu <huyue2@yulong.com>
 
-net/netfilter/nf_tables_api.c
-   942  static int nf_tables_newtable(struct net *net, struct sock *nlsk,
-   943                                struct sk_buff *skb, const struct nlmsghdr *nlh,
-   944                                const struct nlattr * const nla[],
-   945                                struct netlink_ext_ack *extack)
-   946  {
-   947          const struct nfgenmsg *nfmsg = nlmsg_data(nlh);
-   948          u8 genmask = nft_genmask_next(net);
-   949          int family = nfmsg->nfgen_family;
-   950          const struct nlattr *attr;
-   951          struct nft_table *table;
-   952          u32 flags = 0;
-   953          struct nft_ctx ctx;
-   954          int err;
-   955  
-   956          lockdep_assert_held(&net->nft.commit_mutex);
-   957          attr = nla[NFTA_TABLE_NAME];
-   958          table = nft_table_lookup(net, attr, family, genmask);
-                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-This is looking up table in net->nft.tables
+Currently, we will call zram_set_flag() to set ZRAM_IDLE bit even for
+idlepage writeback. That is pointless. Let's set it only for hugepage mode.
 
-   959          if (IS_ERR(table)) {
-   960                  if (PTR_ERR(table) != -ENOENT)
-   961                          return PTR_ERR(table);
-   962          } else {
-   963                  if (nlh->nlmsg_flags & NLM_F_EXCL) {
-   964                          NL_SET_BAD_ATTR(extack, attr);
-   965                          return -EEXIST;
-   966                  }
-   967                  if (nlh->nlmsg_flags & NLM_F_REPLACE)
-   968                          return -EOPNOTSUPP;
-   969  
-   970                  nft_ctx_init(&ctx, net, skb, nlh, family, table, NULL, nla);
-   971                  return nf_tables_updtable(&ctx);
-                               ^^^^^^^^^^^^^^^^^^^^^^^
-Then it adds it to &ctx->net->nft.commit_list
+Signed-off-by: Yue Hu <huyue2@yulong.com>
+---
+ drivers/block/zram/zram_drv.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-   972          }
-   973  
-   974          if (nla[NFTA_TABLE_FLAGS]) {
-   975                  flags = ntohl(nla_get_be32(nla[NFTA_TABLE_FLAGS]));
-   976                  if (flags & ~NFT_TABLE_F_DORMANT)
-   977                          return -EINVAL;
-   978          }
-   979  
-   980          err = -ENOMEM;
-   981          table = kzalloc(sizeof(*table), GFP_KERNEL);
-   982          if (table == NULL)
-   983                  goto err_kzalloc;
-   984  
-   985          table->name = nla_strdup(attr, GFP_KERNEL);
-   986          if (table->name == NULL)
-   987                  goto err_strdup;
-   988  
-   989          err = rhltable_init(&table->chains_ht, &nft_chain_ht_params);
-   990          if (err)
-   991                  goto err_chain_ht;
-   992  
-   993          INIT_LIST_HEAD(&table->chains);
-   994          INIT_LIST_HEAD(&table->sets);
-   995          INIT_LIST_HEAD(&table->objects);
-   996          INIT_LIST_HEAD(&table->flowtables);
-   997          table->family = family;
-   998          table->flags = flags;
-   999          table->handle = ++table_handle;
-  1000  
-  1001          nft_ctx_init(&ctx, net, skb, nlh, family, table, NULL, nla);
-  1002          err = nft_trans_table_add(&ctx, NFT_MSG_NEWTABLE);
-                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Added to ctx->net->nft.commit_list
+diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
+index 4285e75..eef5767 100644
+--- a/drivers/block/zram/zram_drv.c
++++ b/drivers/block/zram/zram_drv.c
+@@ -689,16 +689,18 @@ static ssize_t writeback_store(struct device *dev,
+ 		if (mode == IDLE_WRITEBACK &&
+ 			  !zram_test_flag(zram, index, ZRAM_IDLE))
+ 			goto next;
+-		if (mode == HUGE_WRITEBACK &&
+-			  !zram_test_flag(zram, index, ZRAM_HUGE))
+-			goto next;
++		if (mode == HUGE_WRITEBACK) {
++			if (!zram_test_flag(zram, index, ZRAM_HUGE))
++				goto next;
++			/* Need for hugepage writeback racing */
++			zram_set_flag(zram, index, ZRAM_IDLE);
++		}
++
+ 		/*
+ 		 * Clearing ZRAM_UNDER_WB is duty of caller.
+ 		 * IOW, zram_free_page never clear it.
+ 		 */
+ 		zram_set_flag(zram, index, ZRAM_UNDER_WB);
+-		/* Need for hugepage writeback racing */
+-		zram_set_flag(zram, index, ZRAM_IDLE);
+ 		zram_slot_unlock(zram, index);
+ 		if (zram_bvec_read(zram, &bvec, index, 0, NULL)) {
+ 			zram_slot_lock(zram, index);
+-- 
+1.9.1
 
-  1003          if (err < 0)
-  1004                  goto err_trans;
-  1005  
-  1006          list_add_tail_rcu(&table->list, &net->nft.tables);
-                                                ^^^^^^^^^^^^^^^^
-Added to net->nft.tables
-
-  1007          return 0;
-  1008  err_trans:
-  1009          rhltable_destroy(&table->chains_ht);
-  1010  err_chain_ht:
-  1011          kfree(table->name);
-  1012  err_strdup:
-  1013          kfree(table);
-
-net/netfilter/nf_tables_api.c
-  6995  static void nf_tables_commit_release(struct net *net)
-  6996  {
-  6997          struct nft_trans *trans;
-  6998  
-  6999          /* all side effects have to be made visible.
-  7000           * For example, if a chain named 'foo' has been deleted, a
-  7001           * new transaction must not find it anymore.
-  7002           *
-  7003           * Memory reclaim happens asynchronously from work queue
-  7004           * to prevent expensive synchronize_rcu() in commit phase.
-  7005           */
-  7006          if (list_empty(&net->nft.commit_list)) {
-  7007                  mutex_unlock(&net->nft.commit_mutex);
-  7008                  return;
-  7009          }
-  7010  
-  7011          trans = list_last_entry(&net->nft.commit_list,
-  7012                                  struct nft_trans, list);
-  7013          get_net(trans->ctx.net);
-  7014          WARN_ON_ONCE(trans->put_net);
-  7015  
-  7016          trans->put_net = true;
-  7017          spin_lock(&nf_tables_destroy_list_lock);
-  7018          list_splice_tail_init(&net->nft.commit_list, &nf_tables_destroy_list);
-                                       ^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^
-This starts the process of freeing everything from net->nft.commit_list,
-but we need to delete it from the net->nft.tables list as well.
-
-  7019          spin_unlock(&nf_tables_destroy_list_lock);
-  7020  
-  7021          mutex_unlock(&net->nft.commit_mutex);
-  7022  
-  7023          schedule_work(&trans_destroy_work);
-  7024  }
-
-regards,
-dan carpenter
