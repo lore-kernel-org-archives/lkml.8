@@ -2,92 +2,118 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29CF6C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 13:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A81BDC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 13:39:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF42E24125
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 13:34:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C53C2070C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 13:39:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="deQzd0AB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728898AbgAUNel (ORCPT
+        id S1728935AbgAUNjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 08:34:41 -0500
-Received: from relay.sw.ru ([185.231.240.75]:34688 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726920AbgAUNel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 08:34:41 -0500
-Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1ittfD-0007u7-5X; Tue, 21 Jan 2020 16:33:51 +0300
-Subject: Re: [PATCH v4 6/7] dm: Directly disable max_allocate_sectors for now
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-To:     Mike Snitzer <snitzer@redhat.com>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        martin.petersen@oracle.com, bob.liu@oracle.com, axboe@kernel.dk,
-        agk@redhat.com, dm-devel@redhat.com, song@kernel.org,
-        tytso@mit.edu, adilger.kernel@dilger.ca,
-        Chaitanya.Kulkarni@wdc.com, darrick.wong@oracle.com,
-        ming.lei@redhat.com, osandov@fb.com, jthumshirn@suse.de,
-        minwoo.im.dev@gmail.com, damien.lemoal@wdc.com,
-        andrea.parri@amarulasolutions.com, hare@suse.com, tj@kernel.org,
-        ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
-        bvanassche@acm.org, dhowells@redhat.com, asml.silence@gmail.com
-References: <157960325642.108120.13626623438131044304.stgit@localhost.localdomain>
- <157960337238.108120.18048939587162465175.stgit@localhost.localdomain>
- <20200121122458.GA9365@redhat.com>
- <f7e0fb38-a894-da33-c46b-e192ed907ee0@virtuozzo.com>
-Message-ID: <619a7a14-44e6-eca7-c1ea-3f04abeee53d@virtuozzo.com>
-Date:   Tue, 21 Jan 2020 16:33:50 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 21 Jan 2020 08:39:08 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:31408 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728733AbgAUNjI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 08:39:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579613947;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=UNaqdG/kf6Aak5iOvVnZKMEuLm98y8RF9EOYvq0J7S8=;
+        b=deQzd0AB7BvlABP/IjcZDIDeh1ZRhS1f2h4zAQszEPm1XemrlQ/7+IKExOP5/OdgKfOZjw
+        cWE2kbmGQkuxlDn8kb8FGZ5srzpgyrKnsMNanpDrHJNK5colLpZ1Uo3bBqKeOuFE4Rp4Ki
+        vRVvedyqaNZMxckUHkFWVqtizcLur04=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-79-uPOuSdQYOmil2C_jhNcbZQ-1; Tue, 21 Jan 2020 08:39:04 -0500
+X-MC-Unique: uPOuSdQYOmil2C_jhNcbZQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CA6D0800D48;
+        Tue, 21 Jan 2020 13:39:02 +0000 (UTC)
+Received: from blackfin.pond.sub.org (ovpn-116-131.ams2.redhat.com [10.36.116.131])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 14E641001DE1;
+        Tue, 21 Jan 2020 13:39:00 +0000 (UTC)
+Received: by blackfin.pond.sub.org (Postfix, from userid 1000)
+        id ABC0E1138600; Tue, 21 Jan 2020 14:38:58 +0100 (CET)
+From:   Markus Armbruster <armbru@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     zhenwei pi <pizhenwei@bytedance.com>, yelu@bytedance.com,
+        libvir-list@redhat.com, gregkh@linuxfoundation.org,
+        qemu-devel@nongnu.org, linux-kernel@vger.kernel.org,
+        mprivozn@redhat.com
+Subject: Re: [PATCH 1/2] pvpanic: introduce crashloaded for pvpanic
+References: <20200110100634.491936-1-pizhenwei@bytedance.com>
+        <20200110100634.491936-2-pizhenwei@bytedance.com>
+        <87h80pi5hf.fsf@dusky.pond.sub.org>
+        <247586dd-576a-a0c9-9c43-5d9a310a4ddc@redhat.com>
+Date:   Tue, 21 Jan 2020 14:38:58 +0100
+In-Reply-To: <247586dd-576a-a0c9-9c43-5d9a310a4ddc@redhat.com> (Paolo
+        Bonzini's message of "Tue, 21 Jan 2020 11:50:53 +0100")
+Message-ID: <87sgk9c4jx.fsf@dusky.pond.sub.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <f7e0fb38-a894-da33-c46b-e192ed907ee0@virtuozzo.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21.01.2020 15:36, Kirill Tkhai wrote:
-> On 21.01.2020 15:24, Mike Snitzer wrote:
->> On Tue, Jan 21 2020 at  5:42am -0500,
->> Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
->>
->>> Since dm inherits limits from underlining block devices,
->>> this patch directly disables max_allocate_sectors for dm
->>> till full allocation support is implemented.
->>>
->>> This prevents high-level primitives (generic_make_request_checks(),
->>> __blkdev_issue_write_zeroes(), ...) from sending REQ_ALLOCATE
->>> requests.
->>>
->>> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
->>> ---
->>>  drivers/md/dm-table.c |    2 ++
->>>  drivers/md/md.h       |    1 +
->>>  2 files changed, 3 insertions(+)
->>
->> You're mixing DM and MD changes in the same patch.
->>
->> But I'm wondering if it might be best to set this default for stacking
->> devices in blk_set_stacking_limits()?
->>
->> And then it is up to each stacking driver to override as needed.
-> 
-> Hm. Sound like a good idea. This "lim->max_allocate_sectors = 0" in blk_set_stacking_limits()
-> should work for dm's dm_calculate_queue_limits(), since it calls blk_stack_limits(), which is:
-> 
-> 	t->max_allocate_sectors = min(t->max_allocate_sectors,
-> 				      b->max_allocate_sectors);
-> 
-> Could you please tell is this fix is also enough for md?
+Paolo Bonzini <pbonzini@redhat.com> writes:
 
-It looks like it's enough since queue defaults are set in md_alloc()->blk_set_stacking_limits().
-In case of we set "max_allocate_sectors = 0", in further it can be changed only manually,
-but nobody does this.
+> On 21/01/20 09:22, Markus Armbruster wrote:
+>> zhenwei pi <pizhenwei@bytedance.com> writes:
+>> 
+>>> Add bit 1 for pvpanic. This bit means that guest hits a panic, but
+>>> guest wants to handle error by itself. Typical case: Linux guest runs
+>>> kdump in panic. It will help us to separate the abnormal reboot from
+>>> normal operation.
+>>>
+>>> Signed-off-by: zhenwei pi <pizhenwei@bytedance.com>
+>>> ---
+>>>  docs/specs/pvpanic.txt | 8 ++++++--
+>>>  1 file changed, 6 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/docs/specs/pvpanic.txt b/docs/specs/pvpanic.txt
+>>> index c7bbacc778..bdea68a430 100644
+>>> --- a/docs/specs/pvpanic.txt
+>>> +++ b/docs/specs/pvpanic.txt
+>>> @@ -16,8 +16,12 @@ pvpanic exposes a single I/O port, by default 0x505. On read, the bits
+>>>  recognized by the device are set. Software should ignore bits it doesn't
+>>>  recognize. On write, the bits not recognized by the device are ignored.
+>>>  Software should set only bits both itself and the device recognize.
+>> 
+>> Guest software, I presume.
+>> 
+>>> -Currently, only bit 0 is recognized, setting it indicates a guest panic
+>>> -has happened.
+>>> +
+>>> +Bit Definition
+>>> +--------------
+>>> +bit 0: setting it indicates a guest panic has happened.
+>>> +bit 1: named crashloaded. setting it indicates a guest panic and run
+>>> +       kexec to handle error by guest itself.
+>> 
+>> Suggest to scratch "named crashloaded."
+>
+> bit 1: a guest panic has happened and will be handled by the guest;
+>        the host should record it or report it, but should not affect
+>        the execution of the guest.
+>
+> ?
+>
+> Paolo
+
+Works for me, thanks!
+
