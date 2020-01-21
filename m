@@ -2,138 +2,105 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A0DC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E38C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D0CF24655
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:43:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579632214;
-	bh=PFfpAVd2TNsL/dheeDPli6fd1fy1Nwnh7wO20FPeP9M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=j8n151G7+hIcaNpuScMI5BuAH5xuDZuO1ukkAuyQTkLgUtxke835cHozTRrH+Vg4k
-	 jfjP5/V+Ulwrnhjt2YBCZ8gSN+KOUeTiBFphFCL3EZbbC5HYXG4Uebe7+xdbMNXX22
-	 +DxudC/u/nvJQflUrk1FLUSf0d2nDdccvSkOq/SY=
+	by mail.kernel.org (Postfix) with ESMTP id D09BD20678
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:46:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hsvLm3FS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729335AbgAUSnd (ORCPT
+        id S1729205AbgAUSqR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 13:43:33 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41195 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728186AbgAUSnd (ORCPT
+        Tue, 21 Jan 2020 13:46:17 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:45901 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728901AbgAUSqR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 13:43:33 -0500
-Received: by mail-pf1-f196.google.com with SMTP id w62so1929816pfw.8;
-        Tue, 21 Jan 2020 10:43:33 -0800 (PST)
+        Tue, 21 Jan 2020 13:46:17 -0500
+Received: by mail-ed1-f65.google.com with SMTP id v28so4013267edw.12;
+        Tue, 21 Jan 2020 10:46:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=TJ+7aT9JrT35zrniT4wJhBHLpa2gWNRqolwPFRdXNl8=;
-        b=qwnADoKDat/YhCRnaZl4Dg02qquO4O5tRj7h87WizvuQzcgFVEzYdaUmyepd5QxIGU
-         14bhP/TmITwP/o1pyJ6r+hYcpYMfm/O/HFpxkhcF8ERmQ91rIyCuMNDipDC/jdc5dgX6
-         fzywdiU6BqqEwQ8FKxgqsveg3J+FC1PyqeWWnh9Cb3poznc9hbOffB8YTjWuVB19U6Hl
-         6qBAMnwRE195EBDUaU9B/0sQbzket/zlXZ62HceirL41G2aioBLTjWkQ1gyqsw7ZJTlX
-         FW3djklbwl4sIF6g71klJZsJw5pQtEGEC19z1LyvoB6814XyAFviTq8lHnIqowW3n4L7
-         ho6Q==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Yc0IP3XS/A/MF2SKNkD0xb3ocUvgaUcyJ5PYh1S4XEg=;
+        b=hsvLm3FSNOomINeqzZ/xklDiLcUduPd78vmEQ6qHk3y1dKVsPck+EnftcAtN1iEIEV
+         SQrgMj2lFc5H+RdAheIfqmH/rKm7P7NzsC1VYv8APNfdq9/GoMNZWUP+hIyVZy02AaaA
+         VpXVKXf4k/nWBG4ZaW5uOPdvI4fXuedN3Y03swDTOlNxIuMyp6PqsN1pdCWsQEiLkw7C
+         NnMlyBHlVB80drsW61y+1oIyvwu3eVPJQRBsatMUkYAB5zIwDbXkBELKVP7oPr21UxX6
+         zYcn3uHnykU2QNzQuebHsDoK5+QXAiPVrCBoQzKLiB7r4Q+2JQtsr6DPRvpPu+Gu1E6w
+         VATg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TJ+7aT9JrT35zrniT4wJhBHLpa2gWNRqolwPFRdXNl8=;
-        b=MElUNuy7wD/9MVvBsQwSlerHLeaPJKY1TlbxixJ8H7X+rNlbp9tpBvVim3ANdMjmV1
-         fWMbCMAQi2PysEq/Sk0L2BN0b/Z6VLaz+tO+uGRMdnxgeao5Sdpk323iKHDxjnmY/6Kz
-         KwL92d3h1HvS+rm15xGf8UaCB/wa46oIW8W4F6NY630vnJmpfSDfOa1KONcpA1PHmefn
-         +E4W3VobtS5k6SEYFuUF6FFdZvjUxq7QrW880YiQJizSprr7vKeTT1htIVp8U5JHLLLo
-         FDOcLB40trkEISxP5sHSG71MR24hcr9sMeuSEOeExL7nP0A8+59yZoWgzScysxYUvUEN
-         4Wdg==
-X-Gm-Message-State: APjAAAXAYP0YaZwLAnrhsFZ0mqQkFTjXva004PzwqjzIU8kUMihpl0Qn
-        SXHoc+3os6JkUYgcNM+izeY=
-X-Google-Smtp-Source: APXvYqy6RfD+/6cAJ0+WEpdhy0U/Bt3izVp6T3pODtKsa6rEmIHQdIGbDEjrEZgYJ8KJBrXDBtFceA==
-X-Received: by 2002:aa7:864a:: with SMTP id a10mr5913530pfo.233.1579632212761;
-        Tue, 21 Jan 2020 10:43:32 -0800 (PST)
-Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id o7sm46611619pfg.138.2020.01.21.10.43.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 10:43:31 -0800 (PST)
-Date:   Tue, 21 Jan 2020 10:43:29 -0800
-From:   Minchan Kim <minchan@kernel.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
-        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>, christian.brauner@ubuntu.com,
-        sjpark@amazon.de
-Subject: Re: [PATCH v2 2/5] mm: introduce external memory hinting API
-Message-ID: <20200121184329.GG140922@google.com>
-References: <20200116235953.163318-1-minchan@kernel.org>
- <20200116235953.163318-3-minchan@kernel.org>
- <20200117115225.GV19428@dhcp22.suse.cz>
- <f57fb198-4070-d3b4-b6bd-43b29ff40a2c@virtuozzo.com>
- <20200120112722.GY18451@dhcp22.suse.cz>
- <20200120123935.onlls7enjtzenbvt@box>
- <20200120132405.GF18451@dhcp22.suse.cz>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Yc0IP3XS/A/MF2SKNkD0xb3ocUvgaUcyJ5PYh1S4XEg=;
+        b=FLSnjkb9oRWahy1E87hesf+3V1CMwYc2rl9aiQIhGiEOJf7Yst+YLGreC4o1fVOwXg
+         0U3UzPvvw1K9ienKri4X1E5uO2N39zvxP24AH/RzLSC/Scpuy//z3GVsvYIGjTAYVyFB
+         K9CHPZAqH8CRgciLRh8xlSk+mvMaXNj7q9txo1y9jnGUSPrKysVnlt6EHJBHYJ6KEe63
+         sfZmpH1ev+8WMZPl9tAEH0M6ZFgJ1w8oo1SSuR500cZYd4pWhHaOvCHd/XHfmnco0FcS
+         adTtY7w/4GLSfGJIuB6vy1um6hUANpf42UbeWmM/VKXR2CBSg7p582y/kRWFcybZg61s
+         eZTA==
+X-Gm-Message-State: APjAAAVzs9l1/ftubZpso9BhlQHMUYmNnehYfT6LWwT5+AOKJWQLGKAR
+        Fi2aMaqBpqocqieMv7i0whI=
+X-Google-Smtp-Source: APXvYqwcgcgDplAyYwb3Xj91MUH46aidLOBTjN9PuBERrHhJk98x6VpN1ATV4R5SNXb9KMui8W9g8g==
+X-Received: by 2002:a17:906:114e:: with SMTP id i14mr5750317eja.358.1579632374944;
+        Tue, 21 Jan 2020 10:46:14 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id w12sm1441106edq.94.2020.01.21.10.46.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jan 2020 10:46:14 -0800 (PST)
+Subject: Re: [PATCH] serial: 8250_tegra: Create Tegra specific 8250 driver
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-tegra@vger.kernel.org, Jeff Brasen <jbrasen@nvidia.com>
+References: <20200120160149.29072-1-jonathanh@nvidia.com>
+ <f02faa4c-5838-15d2-1b76-75c17fcc0d9d@gmail.com>
+ <714eb00b-bb49-9536-ce9c-8928941edef3@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <176b695b-6790-ff26-8c32-a3920639e6ca@gmail.com>
+Date:   Tue, 21 Jan 2020 21:46:11 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200120132405.GF18451@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <714eb00b-bb49-9536-ce9c-8928941edef3@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 02:24:05PM +0100, Michal Hocko wrote:
-> On Mon 20-01-20 15:39:35, Kirill A. Shutemov wrote:
-> > On Mon, Jan 20, 2020 at 12:27:22PM +0100, Michal Hocko wrote:
-> > > On Mon 20-01-20 13:24:35, Kirill Tkhai wrote:
-> [...]
-> > > > Even two threads on common memory need a synchronization
-> > > > to manage mappings in a sane way. Managing memory from two processes
-> > > > is the same in principle, and the only difference is that another level
-> > > > of synchronization is required.
-> > > 
-> > > Well, not really. The operation might simply attempt to perform an
-> > > operation on a specific memory area and get a failure if it doesn't
-> > > reference the same object anymore. What I think we need is some form of
-> > > a handle to operate on. In the past we have discussed several
-> > > directions. I was proposing /proc/self/map_anon/ (analogous to
-> > > map_files) where you could inspect anonymous memory and get a file
-> > > handle for it. madvise would then operate on the fd and then there
-> > > shouldn't be a real problem to revalidate that the object is still
-> > > valid. But there was no general enthusiasm about that approach. There
-> > > are likely some land mines on the way.
-> > 
-> > Converting anon memory to file-backed is bad idea and going to backfire.
+21.01.2020 21:34, Jon Hunter пишет:
 > 
-> I didn't mean to convert. I meant to expose that information via proc
-> the same way we do for file backed mappings. That shouldn't really
-> require to re-design the way how anonymous vma work IMO. But I haven't
-> tried that so there might be many gotchas there.
+> On 21/01/2020 16:31, Dmitry Osipenko wrote:
+>> Hello Jon,
+>>
+>> 20.01.2020 19:01, Jon Hunter пишет:
+>>
+>> [snip]
+>>
+>>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>> +	if (!res)
+>>> +		return -ENODEV;
+>>> +
+>>> +	port->membase = devm_ioremap(&pdev->dev, res->start,
+>>> +				     resource_size(res));
+>>
+>> devm_platform_ioremap_resource()
 > 
-> There are obvious things to think about though. Such fd cannot be sent
-> to other processes (SCM stuff), mmap of the file would have to be
-> disallowed and many others I am not aware of. I am not even pushing this
-> direction because I am not convinced about how viable it is myself. But
-> it would sound like a nice extension of the existing mechanism we have
-> and a file based madvise sounds attractive to me as well because we
-> already have that.
+> That would be ideal, but we cannot. The driver needs the res structure
+> as well later on.
 
-I am not a fan of fd based approach but I already reserved last argument
-of the API as extendable field so we could use the field as "fd" when we
-really need that kinds of fine-grained synchronization model if it's not
-enough with SGISTOP, freezer and so.
+Oh, indeed.
