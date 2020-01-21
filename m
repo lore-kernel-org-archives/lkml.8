@@ -2,128 +2,96 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19523C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 987D4C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:00:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED2EF2465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:00:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71DAF24125
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:00:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579629633;
+	bh=f63fWL0gfswfCgDyROI3UH+hAceNmDOuei+FtTK247s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HnZaZQtduHgRTavi8x9KhAOIWEkDB71Tr7f1nMTl7Dj72KC0uWhBUogTKvZLa1Oq6
+	 MxrzHnLRtuVoCZ367+Ra7uJoucffN+Ga67C4+iOvegASZ/Zg11M396vW0dHDhqVAf2
+	 bpkVBJHaa0M5DRegmhP+OCnieaKVvNVH3Rtx0Sog=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729224AbgAUSAX (ORCPT
+        id S1729279AbgAUSAc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 13:00:23 -0500
-Received: from mga09.intel.com ([134.134.136.24]:10991 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728829AbgAUSAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 13:00:22 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 10:00:22 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,346,1574150400"; 
-   d="scan'208";a="374663571"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga004.jf.intel.com with ESMTP; 21 Jan 2020 10:00:15 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1itxp1-0001Ib-2w; Tue, 21 Jan 2020 20:00:15 +0200
-Date:   Tue, 21 Jan 2020 20:00:15 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Mark Brown <broonie@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 36/38] platform/x86: intel_telemetry: Add
- telemetry_get_pltdata()
-Message-ID: <20200121180015.GC32742@smile.fi.intel.com>
-References: <20200121160114.60007-1-mika.westerberg@linux.intel.com>
- <20200121160114.60007-37-mika.westerberg@linux.intel.com>
+        Tue, 21 Jan 2020 13:00:32 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:44903 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728829AbgAUSAc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 13:00:32 -0500
+Received: by mail-oi1-f196.google.com with SMTP id d62so3396803oia.11;
+        Tue, 21 Jan 2020 10:00:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SoGNpAAYd8DkgVCg9hs0SkAVcBA4n3ThwNDs+CIvNyk=;
+        b=t+ezNWbDC5rg1Nq+ExG1kGjBJcafOCVblECPp0CIoK76CAGe8Eh6yi0npLrNWcDY8+
+         oJgsLkJpwJLYOM7Y2B9fqbA4D1T651YKEeKvT1kkTUcM7uHyGHr8mxWz7VCQAT4ycPMb
+         wJA2MAVJE2Vx6fgsFnsp2yIKTbMzQCSaibqT7uqb12udcksObCTNCLpdHUbXH0C0bgQK
+         jFlavRPNv43pVt/j2Xx9eOAmYbjEdiqORWFA3XLLWtadvIhMsttw3BwrjE2Yzg1UnScY
+         0Jgni9ixVNGXfVn9Z4utvb9ekvJ5Y9Kov0+qUvab/TF6Duuse+eNdotZ/e6TKzFwsPJP
+         qN4Q==
+X-Gm-Message-State: APjAAAUYzYZkibj7sBeXwWMPsCoys4N5XcPDaKMugGvx+zMSiYcA4GHt
+        ghdPtagfJ29TPp6roAC2fg==
+X-Google-Smtp-Source: APXvYqxV/jfzDtlEscsmucJbThOSjtw0N+fNnRo93t5V2zWaWVxVOSgi81r7XVL1s+pZoFyxAk9rlg==
+X-Received: by 2002:aca:e146:: with SMTP id y67mr3739978oig.93.1579629631200;
+        Tue, 21 Jan 2020 10:00:31 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id s83sm12139907oif.33.2020.01.21.10.00.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2020 10:00:30 -0800 (PST)
+Received: (nullmailer pid 362 invoked by uid 1000);
+        Tue, 21 Jan 2020 18:00:29 -0000
+Date:   Tue, 21 Jan 2020 12:00:29 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Logan Shaw <logan.shaw@alliedtelesis.co.nz>
+Cc:     linux@roeck-us.net, jdelvare@suse.com, robh+dt@kernel.org,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Joshua.Scott@alliedtelesis.co.nz,
+        Chris.Packham@alliedtelesis.co.nz, logan.shaw@alliedtelesis.co.nz
+Subject: Re: [PATCH v4 2/2] hwmon: (adt7475) Added attenuator bypass support
+Message-ID: <20200121180029.GA32498@bogus>
+References: <20200120001703.9927-1-logan.shaw@alliedtelesis.co.nz>
+ <20200120001703.9927-3-logan.shaw@alliedtelesis.co.nz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200121160114.60007-37-mika.westerberg@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200120001703.9927-3-logan.shaw@alliedtelesis.co.nz>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 07:01:12PM +0300, Mika Westerberg wrote:
-> Add new function that allows telemetry modules to get pointer to the
-> platform specific configuration. This is needed to allow the telemetry
-> debugfs module to fetch PMC IPC instance in the subsequent patch.
-
-One comment below.
-After addressing,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
+On Mon, 20 Jan 2020 13:17:03 +1300, Logan Shaw wrote:
 > 
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Added a new file documenting the adt7475 devicetree and added the four
+> new properties to it.
+> 
+> Signed-off-by: Logan Shaw <logan.shaw@alliedtelesis.co.nz>
 > ---
->  arch/x86/include/asm/intel_telemetry.h      |  1 +
->  drivers/platform/x86/intel_telemetry_core.c | 12 ++++++++++++
->  2 files changed, 13 insertions(+)
-> 
-> diff --git a/arch/x86/include/asm/intel_telemetry.h b/arch/x86/include/asm/intel_telemetry.h
-> index e19deb776003..1335565c43b5 100644
-> --- a/arch/x86/include/asm/intel_telemetry.h
-> +++ b/arch/x86/include/asm/intel_telemetry.h
-> @@ -99,6 +99,7 @@ int telemetry_set_pltdata(const struct telemetry_core_ops *ops,
->  int telemetry_clear_pltdata(void);
->  
->  int telemetry_pltconfig_valid(void);
-> +struct telemetry_plt_config *telemetry_get_pltdata(void);
->  
->  int telemetry_get_evtname(enum telemetry_unit telem_unit,
->  			  const char **name, int len);
-> diff --git a/drivers/platform/x86/intel_telemetry_core.c b/drivers/platform/x86/intel_telemetry_core.c
-> index d4040bb222b4..e11b79d1b3a7 100644
-> --- a/drivers/platform/x86/intel_telemetry_core.c
-> +++ b/drivers/platform/x86/intel_telemetry_core.c
-> @@ -369,6 +369,18 @@ int telemetry_pltconfig_valid(void)
->  }
->  EXPORT_SYMBOL_GPL(telemetry_pltconfig_valid);
->  
-> +/**
-> + * telemetry_get_pltdata() - Return telemetry platform config
-> + *
-> + * May be used by other telemetry modules to get platform specific
-> + * configuration.
-> + */
-> +struct telemetry_plt_config *telemetry_get_pltdata(void)
-> +{
-> +	return telm_core_conf.plt_config;
-> +}
-> +EXPORT_SYMBOL_GPL(telemetry_get_pltdata);
-
-Effectively this may replace telemetry_pltconfig_valid().
-
-> +
->  static inline int telemetry_get_pssevtname(enum telemetry_unit telem_unit,
->  					   const char **name, int len)
->  {
-> -- 
-> 2.24.1
+> ---
+>  .../devicetree/bindings/hwmon/adt7475.yaml    | 90 +++++++++++++++++++
+>  1 file changed, 90 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/adt7475.yaml
 > 
 
--- 
-With Best Regards,
-Andy Shevchenko
+My bot found errors running 'make dt_binding_check' on your patch:
 
+Documentation/devicetree/bindings/hwmon/adt7475.example.dts:19.11-24: Warning (reg_format): /example-0/hwmon@2e:reg: property has invalid length (4 bytes) (#address-cells == 1, #size-cells == 1)
+Documentation/devicetree/bindings/hwmon/adt7475.example.dt.yaml: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/hwmon/adt7475.example.dt.yaml: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/hwmon/adt7475.example.dt.yaml: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
 
+See https://patchwork.ozlabs.org/patch/1225573
+Please check and re-submit.
