@@ -4,34 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A8CC33CB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 07:34:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C31BBC33CB8
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 07:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2041F21734
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 07:34:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FB6A21734
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 07:34:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728896AbgAUHe1 (ORCPT
+        id S1728978AbgAUHea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 02:34:27 -0500
-Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:51053 "EHLO
-        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727453AbgAUHe0 (ORCPT
+        Tue, 21 Jan 2020 02:34:30 -0500
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:46475 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728767AbgAUHe2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 02:34:26 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0ToHCg0j_1579592053;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0ToHCg0j_1579592053)
+        Tue, 21 Jan 2020 02:34:28 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0ToHCIF1_1579592063;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0ToHCIF1_1579592063)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 21 Jan 2020 15:34:13 +0800
+          Tue, 21 Jan 2020 15:34:23 +0800
 From:   Alex Shi <alex.shi@linux.alibaba.com>
 Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] btrfs/raid56: remove unused actions
-Date:   Tue, 21 Jan 2020 15:34:10 +0800
-Message-Id: <1579592050-86280-1-git-send-email-alex.shi@linux.alibaba.com>
+        David Sterba <dsterba@suse.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] btrfs: remove unused macro BTRFS_FEAT_ATTR_COMPAT
+Date:   Tue, 21 Jan 2020 15:34:22 +0800
+Message-Id: <1579592062-86448-1-git-send-email-alex.shi@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -39,47 +46,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No one care p_stripe in its functions. Guess it's safe to remove.
+Which is never used after it was introduced. Better to remove it?
 
 Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
 Cc: Chris Mason <clm@fb.com> 
 Cc: Josef Bacik <josef@toxicpanda.com> 
 Cc: David Sterba <dsterba@suse.com> 
+Cc: Peter Zijlstra <peterz@infradead.org> 
+Cc: Ingo Molnar <mingo@redhat.com> 
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org> 
+Cc: Mark Rutland <mark.rutland@arm.com> 
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com> 
+Cc: Jiri Olsa <jolsa@redhat.com> 
+Cc: Namhyung Kim <namhyung@kernel.org> 
 Cc: linux-btrfs@vger.kernel.org 
 Cc: linux-kernel@vger.kernel.org 
 ---
- fs/btrfs/raid56.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ fs/btrfs/sysfs.c        | 2 --
+ kernel/events/uprobes.c | 1 -
+ 2 files changed, 3 deletions(-)
 
-diff --git a/fs/btrfs/raid56.c b/fs/btrfs/raid56.c
-index a8e53c8e7b01..fbee5681e690 100644
---- a/fs/btrfs/raid56.c
-+++ b/fs/btrfs/raid56.c
-@@ -1196,7 +1196,6 @@ static noinline void finish_rmw(struct btrfs_raid_bio *rbio)
- 	int nr_data = rbio->nr_data;
- 	int stripe;
- 	int pagenr;
--	int p_stripe = -1;
- 	int q_stripe = -1;
- 	struct bio_list bio_list;
- 	struct bio *bio;
-@@ -1204,14 +1203,10 @@ static noinline void finish_rmw(struct btrfs_raid_bio *rbio)
+diff --git a/fs/btrfs/sysfs.c b/fs/btrfs/sysfs.c
+index 5ebbe8a5ee76..22f78dbfc783 100644
+--- a/fs/btrfs/sysfs.c
++++ b/fs/btrfs/sysfs.c
+@@ -60,8 +60,6 @@ struct raid_kobject {
+ #define BTRFS_FEAT_ATTR_PTR(_name)					     \
+ 	(&btrfs_attr_features_##_name.kobj_attr.attr)
  
- 	bio_list_init(&bio_list);
+-#define BTRFS_FEAT_ATTR_COMPAT(name, feature) \
+-	BTRFS_FEAT_ATTR(name, FEAT_COMPAT, BTRFS_FEATURE_COMPAT, feature)
+ #define BTRFS_FEAT_ATTR_COMPAT_RO(name, feature) \
+ 	BTRFS_FEAT_ATTR(name, FEAT_COMPAT_RO, BTRFS_FEATURE_COMPAT_RO, feature)
+ #define BTRFS_FEAT_ATTR_INCOMPAT(name, feature) \
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index ece7e13f6e4a..977cac2574cb 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -31,7 +31,6 @@
+ #include <linux/uprobes.h>
  
--	if (rbio->real_stripes - rbio->nr_data == 1) {
--		p_stripe = rbio->real_stripes - 1;
--	} else if (rbio->real_stripes - rbio->nr_data == 2) {
--		p_stripe = rbio->real_stripes - 2;
-+	if (rbio->real_stripes - rbio->nr_data == 2)
- 		q_stripe = rbio->real_stripes - 1;
--	} else {
-+	else
- 		BUG();
--	}
+ #define UINSNS_PER_PAGE			(PAGE_SIZE/UPROBE_XOL_SLOT_BYTES)
+-#define MAX_UPROBE_XOL_SLOTS		UINSNS_PER_PAGE
  
- 	/* at this point we either have a full stripe,
- 	 * or we've read the full stripe from the drive.
+ static struct rb_root uprobes_tree = RB_ROOT;
+ /*
 -- 
 1.8.3.1
 
