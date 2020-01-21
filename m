@@ -2,126 +2,68 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4514C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:52:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A2C0C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:55:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A87324656
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:52:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="LfmAYBdF";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="LfmAYBdF"
+	by mail.kernel.org (Postfix) with ESMTP id 71D2E217F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:55:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729031AbgAUTwe (ORCPT
+        id S1728899AbgAUTzd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 14:52:34 -0500
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:34568 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727383AbgAUTwe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 14:52:34 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id DB1108EE180;
-        Tue, 21 Jan 2020 11:52:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1579636353;
-        bh=M85fHEK3EDsUo/Rv6a9VBeWoJ6p5EGcRxfPwIERa8tw=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=LfmAYBdFolmGBonfM4Y/tZQqZMPvpmHmwAV5x0Mi6HiiAvkPVchq2Q7z5MG9n9xTJ
-         aPKt99MjtpYkN1/MS1prvVVDV52uFM18rPOU/XYKRn/mIhxhwPgn9w2mjpNQzV7fqm
-         Q1g1YWtTqKxivuM7ZCosEmzHeNGcI55OD9O/hdxo=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id nlBuNbZXxagS; Tue, 21 Jan 2020 11:52:33 -0800 (PST)
-Received: from jarvis.lan (unknown [50.35.76.230])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 072468EE0C9;
-        Tue, 21 Jan 2020 11:52:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1579636353;
-        bh=M85fHEK3EDsUo/Rv6a9VBeWoJ6p5EGcRxfPwIERa8tw=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=LfmAYBdFolmGBonfM4Y/tZQqZMPvpmHmwAV5x0Mi6HiiAvkPVchq2Q7z5MG9n9xTJ
-         aPKt99MjtpYkN1/MS1prvVVDV52uFM18rPOU/XYKRn/mIhxhwPgn9w2mjpNQzV7fqm
-         Q1g1YWtTqKxivuM7ZCosEmzHeNGcI55OD9O/hdxo=
-Message-ID: <1579636351.3390.35.camel@HansenPartnership.com>
-Subject: Re: [PATCH] IMA: Turn IMA_MEASURE_ASYMMETRIC_KEYS off by default
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        linux-integrity@vger.kernel.org
-Cc:     sashal@kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 21 Jan 2020 11:52:31 -0800
-In-Reply-To: <1579634035.5125.311.camel@linux.ibm.com>
-References: <20200121171302.4935-1-nramas@linux.microsoft.com>
-         <1579628090.3390.28.camel@HansenPartnership.com>
-         <1579634035.5125.311.camel@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
+        Tue, 21 Jan 2020 14:55:33 -0500
+Received: from gate.crashing.org ([63.228.1.57]:58169 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726926AbgAUTzd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 14:55:33 -0500
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 00LJt2oG006385;
+        Tue, 21 Jan 2020 13:55:02 -0600
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id 00LJt16T006382;
+        Tue, 21 Jan 2020 13:55:01 -0600
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Tue, 21 Jan 2020 13:55:01 -0600
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, ruscur@russell.cc,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: GCC bug ? Re: [PATCH v2 10/10] powerpc/32s: Implement Kernel Userspace Access Protection
+Message-ID: <20200121195501.GJ3191@gate.crashing.org>
+References: <cover.1552292207.git.christophe.leroy@c-s.fr> <a2847248a92cb1641b1740fa121c5a30593ae662.1552292207.git.christophe.leroy@c-s.fr> <87ftqfu7j1.fsf@concordia.ellerman.id.au> <a008a182-f1db-073c-7d38-27bfd1fd8676@c-s.fr>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a008a182-f1db-073c-7d38-27bfd1fd8676@c-s.fr>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-01-21 at 14:13 -0500, Mimi Zohar wrote:
-> On Tue, 2020-01-21 at 09:34 -0800, James Bottomley wrote:
-> > On Tue, 2020-01-21 at 09:13 -0800, Lakshmi Ramasubramanian wrote:
-> > > Enabling IMA and ASYMMETRIC_PUBLIC_KEY_SUBTYPE configs will
-> > > automatically enable the IMA hook to measure asymmetric keys.
-> > > Keys created or updated early in the boot process are queued up
-> > > whether or not a custom IMA policy is provided. Although the
-> > > queued keys will be freed if a custom IMA policy is not loaded
-> > > within 5 minutes, it could still cause significant performance
-> > > impact on smaller systems.
-> > 
-> > What exactly do you expect distributions to do with this?  I can
-> > tell you that most of them will take the default option, so this
-> > gets set to N and you may as well not have got the patches upstream
-> > because you won't be able to use them in any distro with this
-> > setting.
-> > 
-> > > This patch turns the config IMA_MEASURE_ASYMMETRIC_KEYS off by
-> > > default.  Since a custom IMA policy that defines key measurement
-> > > is required to measure keys, systems that require key measurement
-> > > can enable this config option in addition to providing a custom
-> > > IMA policy.
-> > 
-> > Well, no they can't ... it's rather rare nowadays for people to
-> > build their own kernels.  The vast majority of Linux consumers take
-> > what the distros give them.  Think carefully before you decide a
-> > config option is the solution to this problem.
-> 
-> James, up until now IMA could be configured, but there wouldn't be
-> any performance penalty for enabling IMA until a policy was loaded.
->  With IMA and asymmetric keys enabled, whether or not an IMA policy
-> is loaded, certificates will be queued.
-> 
-> My concern is:
-> - changing the expected behavior
+On Tue, Jan 21, 2020 at 05:22:32PM +0000, Christophe Leroy wrote:
+> g1() should return 3, not 5.
 
-In general config options for this are a really bad idea because if the
-tools only cope with one setting, no-one should ever use the other and
-if they work with everything there's no need for the option.
+What makes you say that?
 
-> - really small devices/sensors being able to queue certificates
+"A return of 0 does not indicate that the
+ value is _not_ a constant, but merely that GCC cannot prove it is a
+ constant with the specified value of the '-O' option."
 
-seems like the answer to this one would be don't queue.  I realise it's
-after the submit design, but what about measuring when the key is added
-if there's a policy otherwise measure the keyring when the policy is
-added ... that way no queueing.
+(And the rules it uses for this are *not* the same as C "constant
+expressions" or C "integer constant expression" or C "arithmetic
+constant expression" or anything like that -- which should be already
+obvious from that it changes with different -Ox).
 
-> This change permits disabling queueing certificates.  Whether the
-> default should be "disabled" is a separate question.  I'm open to
-> comments/suggestions.
-
-I'm just giving the general rule of thumb for boolean config options. 
-If it's default Y there likely shouldn't be a config option and if it's
-default N the feature should likely not be in the kernel at all.
+You can use builtin_constant_p to have the compiler do something better
+if the compiler feels like it, but not anything more.  Often people
+want stronger guarantees, but when they see how much less often it then
+returns "true", they do not want that either.
 
 
+Segher
