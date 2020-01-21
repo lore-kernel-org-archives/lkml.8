@@ -2,218 +2,109 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C636C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6DD3C33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53BD7206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:23:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="eG+XPRzq"
+	by mail.kernel.org (Postfix) with ESMTP id B8E0C2253D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:24:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729255AbgAURX4 (ORCPT
+        id S1729274AbgAURYG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 12:23:56 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39499 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729113AbgAURX4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 12:23:56 -0500
-Received: by mail-wr1-f68.google.com with SMTP id y11so4169257wrt.6
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 09:23:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version;
-        bh=qulnROX80EQfKAAAdi+58//mX5ebVC1xGhbdWeXljF8=;
-        b=eG+XPRzqZ6F4FmKkHJAHP7CO4l7BZ/6BzcAqbm2s8SSy6AGDVp+wczEGbXiWb1iJrF
-         Qel8TreGnPjZz8PUCYkTC4w3bpZrvq14Te2kY9eKJjYdYs9OKTlRsPOaYb8aVn3OFn2m
-         8i/m6y6AhASt6vHlvmwxUINw4oLnuf9zpJ25d0aMoMs/1BiDVPVBaUcmDTy6tHSSpuqN
-         I+/L6N5zkTNiF5VxEIju3XoRsRyhOKys1YQrLc/gedSp9HHhZSrJ+79xczPT9EcTosSD
-         QdD2EsKS16F8ivI0zBotGeSgd5Z+xtBoOU6Uh7Ogew341LgTJs5I/MBo3Dh3lyqwhGLi
-         ILdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version;
-        bh=qulnROX80EQfKAAAdi+58//mX5ebVC1xGhbdWeXljF8=;
-        b=Gz2rBmsyuU3VLXdFtydHZXoo4970qxyDyFScXr8pKzjtJ3n07YqlPQBNvG6tgIpL3A
-         FMwymE7kH4+kNCwn6Prg0SInfr3UiK3Nacnd+MqLSFjLxRL5AAOwDAoKLObfxU4jIwin
-         toURhn2OCaFqz0Vz8uKkf9oatIVqBQpMioIQBLbFLV2+2MU4ImvX+YU267Tjr6XsuCtk
-         Ft77yiYyIlnqrvmk9PahqtPL+GVoeJ8gyotaC9NNeywp553YWT3JyeYRhpeyI3R+FdLC
-         +A1Llt7nxro/mQCv44SvukZ/csmZ4t+1cf57vRAW1Mu4rz1HLiOTXpquZGuBLMuAV0yp
-         n4JQ==
-X-Gm-Message-State: APjAAAV92TQ9DrjE/p9JOD96Lwq02jJc6nUPFh456xbtZyP/TsHGDQn7
-        5bSPNF2wKzKcsZyt3+Y1YJCWTQ==
-X-Google-Smtp-Source: APXvYqwUr3/YtOFR0+Q8ydmqs0w6X6w2Ly6cdHXfv3xa7K7S7JB/WxuwUXO9y+ENpSp33UCBQnBQfQ==
-X-Received: by 2002:a5d:5273:: with SMTP id l19mr6609447wrc.175.1579627433651;
-        Tue, 21 Jan 2020 09:23:53 -0800 (PST)
-Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id v14sm52906783wrm.28.2020.01.21.09.23.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 09:23:52 -0800 (PST)
-From:   Julien Masson <jmasson@baylibre.com>
-To:     Kevin Hilman <khilman@baylibre.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org,
-        Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org,
-        Julien Masson <jmasson@baylibre.com>
-Subject: [PATCH v3] tty: serial: meson_uart: Add support for kernel debugger
-Date:   Tue, 21 Jan 2020 18:22:52 +0100
-Message-ID: <867e1klo48.fsf@julienm-fedora-R90NQGV9.i-did-not-set--mail-host-address--so-tickle-me>
+        Tue, 21 Jan 2020 12:24:06 -0500
+Received: from mga09.intel.com ([134.134.136.24]:7131 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728186AbgAURYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 12:24:05 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 09:24:04 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,346,1574150400"; 
+   d="scan'208";a="250323755"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga004.fm.intel.com with ESMTP; 21 Jan 2020 09:24:02 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1itxFz-0000qC-1l; Tue, 21 Jan 2020 19:24:03 +0200
+Date:   Tue, 21 Jan 2020 19:24:03 +0200
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Jean Delvare <jdelvare@suse.de>, Dave Young <dyoung@redhat.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        kexec@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH v1 2/2] firmware: dmi_scan: Pass dmi_entry_point to
+ kexec'ed kernel
+Message-ID: <20200121172403.GA32742@smile.fi.intel.com>
+References: <20161216023213.GA4505@dhcp-128-65.nay.redhat.com>
+ <1481890738.9552.70.camel@linux.intel.com>
+ <20161216143330.69e9c8ee@endymion>
+ <20161217105721.GB6922@dhcp-128-65.nay.redhat.com>
+ <20200120121927.GJ32742@smile.fi.intel.com>
+ <87a76i9ksr.fsf@x220.int.ebiederm.org>
+ <20200120224204.4e5cc0df@endymion>
+ <CAHp75Veb02m3tU9tzZe912ZmX5mdaYkZ90DD67FVERJS15VsXw@mail.gmail.com>
+ <20200121100359.6125498c@endymion>
+ <87zheg93io.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87zheg93io.fsf@x220.int.ebiederm.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kgdb invokes the poll_put_char and poll_get_char when communicating
-with the host. This patch implement the serial polling hooks for the
-meson_uart to be used for KGDB debugging over serial line.
+On Tue, Jan 21, 2020 at 10:29:35AM -0600, Eric W. Biederman wrote:
+> Jean Delvare <jdelvare@suse.de> writes:
+> 
+> > On Mon, 20 Jan 2020 23:55:43 +0200, Andy Shevchenko wrote:
+> >> On Mon, Jan 20, 2020 at 11:44 PM Jean Delvare <jdelvare@suse.de> wrote:
+> >> >
+> >> > On Mon, 20 Jan 2020 10:04:04 -0600, Eric W. Biederman wrote:  
+> >> > > Second.  I looked at your test results and they don't directly make
+> >> > > sense.  dmidecode bypasses the kernel completely or it did last time
+> >> > > I looked so I don't know why you would be using that to test if
+> >> > > something in the kernel is working.  
+> >> >
+> >> > That must have been long ago. A recent version of dmidecode (>= 3.0)
+> >> > running on a recent kernel  
+> >> > (>= d7f96f97c4031fa4ffdb7801f9aae23e96170a6f, v4.2) will read the DMI  
+> >> > data from /sys/firmware/dmi/tables, so it is very much relying on the
+> >> > kernel doing the right thing. If not, it will still try to fallback to
+> >> > reading from /dev/mem directly on certain architectures. You can force
+> >> > that old method with --no-sysfs.
+> >> >
+> >> > Hope that helps,  
+> >> 
+> >> I don't understand how it possible can help for in-kernel code, like
+> >> DMI quirks in a drivers.
+> >
+> > OK, just ignore me then, probably I misunderstood the point made by
+> > Eric.
+> 
+> No.  I just haven't dived into this area of code in a long time.
+> 
+> It seems a little indirect to use dmidecode as the test to see if the
+> kernel has the pointer to the dmitables, but with the knowledge you
+> provided it seems like a perfectly valid test.
 
-Signed-off-by: Julien Masson <jmasson@baylibre.com>
----
+In any case that doesn't work. See my response to Ard.
 
-Changes since v2 [1]:
-* Increase UART timeout to 10 ms
-  -> For some reasons the previous value (1ms) is now too low with recent kernel.
-     It made KGDB hang when printing long string for example.
-     By setting this timeout to 10 ms, we avoid this kind of issue.
-
-Changes since v1 [0]:
-* Use readl_poll_timeout_atomic instead of looping with read + cpu_relax
-  -> read every 5 usecs during 1 msec
-* add some comments
-
-
-* Test environment:
-Board: "Le Potato"
-https://libre.computer/products/boards/aml-s905x-cc/
-
-Kernel Tree:
-https://git.kernel.org/pub/scm/linux/kernel/git/khilman/linux-amlogic.git
-
-Kernel command line arguments:
-kgdboc=ttyAML0,115200 kgdbretry=4 nokaslr kgdbcon
-
-Kernel modules:
-CONFIG_DEBUG_INFO=y
-CONFIG_DEBUG_KERNEL=y
-CONFIG_FRAME_POINTER=y
-CONFIG_KGDB=y
-CONFIG_KGDB_SERIAL_CONSOLE=y
-
-WARNING: for single step instruction I had to adapt/apply this patch:
-https://lore.kernel.org/patchwork/patch/562423/
-
-
-[0]: https://patchwork.kernel.org/patch/10792397/
-[1]: https://patchwork.kernel.org/patch/10801583/
-
- drivers/tty/serial/meson_uart.c | 65 +++++++++++++++++++++++++++++++++
- 1 file changed, 65 insertions(+)
-
-diff --git a/drivers/tty/serial/meson_uart.c b/drivers/tty/serial/meson_uart.c
-index fbc5bc022a39..b79c6d64bfb2 100644
---- a/drivers/tty/serial/meson_uart.c
-+++ b/drivers/tty/serial/meson_uart.c
-@@ -14,6 +14,7 @@
- #include <linux/delay.h>
- #include <linux/init.h>
- #include <linux/io.h>
-+#include <linux/iopoll.h>
- #include <linux/module.h>
- #include <linux/kernel.h>
- #include <linux/of.h>
-@@ -76,6 +77,8 @@
- #define AML_UART_PORT_OFFSET		6
- #define AML_UART_DEV_NAME		"ttyAML"
- 
-+#define AML_UART_POLL_USEC		5
-+#define AML_UART_TIMEOUT_USEC		10000
- 
- static struct uart_driver meson_uart_driver;
- 
-@@ -427,6 +430,64 @@ static void meson_uart_config_port(struct uart_port *port, int flags)
- 	}
- }
- 
-+#ifdef CONFIG_CONSOLE_POLL
-+/*
-+ * Console polling routines for writing and reading from the uart while
-+ * in an interrupt or debug context (i.e. kgdb).
-+ */
-+
-+static int meson_uart_poll_get_char(struct uart_port *port)
-+{
-+	u32 c;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&port->lock, flags);
-+
-+	if (readl(port->membase + AML_UART_STATUS) & AML_UART_RX_EMPTY)
-+		c = NO_POLL_CHAR;
-+	else
-+		c = readl(port->membase + AML_UART_RFIFO);
-+
-+	spin_unlock_irqrestore(&port->lock, flags);
-+
-+	return c;
-+}
-+
-+static void meson_uart_poll_put_char(struct uart_port *port, unsigned char c)
-+{
-+	unsigned long flags;
-+	u32 reg;
-+	int ret;
-+
-+	spin_lock_irqsave(&port->lock, flags);
-+
-+	/* Wait until FIFO is empty or timeout */
-+	ret = readl_poll_timeout_atomic(port->membase + AML_UART_STATUS, reg,
-+					reg & AML_UART_TX_EMPTY,
-+					AML_UART_POLL_USEC,
-+					AML_UART_TIMEOUT_USEC);
-+	if (ret == -ETIMEDOUT) {
-+		dev_err(port->dev, "Timeout waiting for UART TX EMPTY\n");
-+		goto out;
-+	}
-+
-+	/* Write the character */
-+	writel(c, port->membase + AML_UART_WFIFO);
-+
-+	/* Wait until FIFO is empty or timeout */
-+	ret = readl_poll_timeout_atomic(port->membase + AML_UART_STATUS, reg,
-+					reg & AML_UART_TX_EMPTY,
-+					AML_UART_POLL_USEC,
-+					AML_UART_TIMEOUT_USEC);
-+	if (ret == -ETIMEDOUT)
-+		dev_err(port->dev, "Timeout waiting for UART TX EMPTY\n");
-+
-+out:
-+	spin_unlock_irqrestore(&port->lock, flags);
-+}
-+
-+#endif /* CONFIG_CONSOLE_POLL */
-+
- static const struct uart_ops meson_uart_ops = {
- 	.set_mctrl      = meson_uart_set_mctrl,
- 	.get_mctrl      = meson_uart_get_mctrl,
-@@ -442,6 +503,10 @@ static const struct uart_ops meson_uart_ops = {
- 	.request_port	= meson_uart_request_port,
- 	.release_port	= meson_uart_release_port,
- 	.verify_port	= meson_uart_verify_port,
-+#ifdef CONFIG_CONSOLE_POLL
-+	.poll_get_char	= meson_uart_poll_get_char,
-+	.poll_put_char	= meson_uart_poll_put_char,
-+#endif
- };
- 
- #ifdef CONFIG_SERIAL_MESON_CONSOLE
 -- 
-2.21.1
+With Best Regards,
+Andy Shevchenko
+
 
