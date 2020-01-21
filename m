@@ -2,169 +2,82 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF7C4C33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CDABC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC9E32253D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:21:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Hqck99Ij"
+	by mail.kernel.org (Postfix) with ESMTP id EFBB2206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:21:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729130AbgAURVP (ORCPT
+        id S1729191AbgAURV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 12:21:15 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:33195 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728186AbgAURVP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 12:21:15 -0500
-Received: by mail-oi1-f196.google.com with SMTP id q81so3330146oig.0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 09:21:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=q5QgG9WnPTL3nteIJEXmB0Es5EWve1SbvFBsjUgPlKU=;
-        b=Hqck99IjyucVajmKBNg5n6iwdy1Ba0Mz2Hv7kvqwVGnr1C5wiqxxGa6DCxk+QAHJMw
-         cXceKiYFoYrkDPegt/RiLyqFE5RrUbXQmskCI624CSUZwIkdsYeR7ozgCXW/2NkqjUky
-         zg5KXfgHjVYYDDWNfVZ+wcouy7tJQ8JJJ4ATWB9qwFy0TrYv28pZxxpkNpETf5xjLwjF
-         k+H6lk6iR3rq1X88xVaAVMLnUBS2zqYVoBub6hlkuDBppV1PkIgYMt+ELbbvNGUory2d
-         sR/mOkrzrP4IaEbwArJZYpYycJ7S5WK2drEdwQXGv8OQlFmyEPsHKxNi7GI/RXlpY2/f
-         mSRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=q5QgG9WnPTL3nteIJEXmB0Es5EWve1SbvFBsjUgPlKU=;
-        b=PxdNV37YudsVKEdzFhwZFa+QlM3Gz5g7Cntg9r+TKmhUutZXq3z9NHdD4wP6MeOkYb
-         3cVGRc8daKrRdyg6wSwTE8XRfjQBbzWldZkUn0FOxtI0PVervnTMBWqR6A1W+Nk9qHda
-         1R8qVlpqott1UTHrvpuB3k3Qja1tcrv0uGtINdLDiMMSTjJRjJHUzrWt/1i7j9A5+LQ9
-         ww2q29R0kPKNf6KJPedzyiMvYNigGLH2wBbGRvqkxvtauO4Yd9qH2+CLlG7zbOt2V5/f
-         O5Yvtn684ggUkvkEZ7T4iO+OhEl0j8fw23UBTaimA+FtP/QWOqBevK0jL73+WpPkp0ik
-         ewCw==
-X-Gm-Message-State: APjAAAU8VzTXgsqap9hbsd6BZpSfFN9tQH47lwIWja63w1Jssrrdo61X
-        0LYB93Glax7wCD+FzqB6rZUXycBrNt70VMPHrcKdywL4lDE=
-X-Google-Smtp-Source: APXvYqy/cHUnTgqn2AvhCUymfYtPS40fUfd4xCVnC3WQvi+Po8Vm5Fie2sP6ED7bhcqYTLpTOVe/2NqjYrJ36UAvcqo=
-X-Received: by 2002:aca:4a08:: with SMTP id x8mr3813040oia.39.1579627274088;
- Tue, 21 Jan 2020 09:21:14 -0800 (PST)
-MIME-Version: 1.0
-References: <20200121160312.26545-1-mathieu.desnoyers@efficios.com>
-In-Reply-To: <20200121160312.26545-1-mathieu.desnoyers@efficios.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Tue, 21 Jan 2020 18:20:47 +0100
-Message-ID: <CAG48ez2bQdoT9y7HkyU06DTazysUDdPdJe+gyV-NxgQA7JWQVQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v1] pin_on_cpu: Introduce thread CPU pinning system call
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Tue, 21 Jan 2020 12:21:57 -0500
+Received: from mga14.intel.com ([192.55.52.115]:42667 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728186AbgAURV5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 12:21:57 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 09:21:47 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,346,1574150400"; 
+   d="scan'208";a="280170210"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 21 Jan 2020 09:21:42 -0800
+Received: by lahna (sSMTP sendmail emulation); Tue, 21 Jan 2020 19:21:41 +0200
+Date:   Tue, 21 Jan 2020 19:21:41 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Lee Jones <lee.jones@linaro.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Joel Fernandes <joelaf@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Watson <davejwatson@fb.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Andi Kleen <andi@firstfloor.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>, Chris Lameter <cl@linux.com>,
-        Russell King <linux@arm.linux.org.uk>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        Paul Turner <pjt@google.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Maurer <bmaurer@fb.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>
-Content-Type: text/plain; charset="UTF-8"
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 00/38] platform/x86: Rework intel_scu_ipc and
+ intel_pmc_ipc drivers
+Message-ID: <20200121172141.GB2665@lahna.fi.intel.com>
+References: <20200121160114.60007-1-mika.westerberg@linux.intel.com>
+ <20200121162157.GD4656@sirena.org.uk>
+ <20200121163312.GZ2665@lahna.fi.intel.com>
+ <20200121164515.GG4656@sirena.org.uk>
+ <20200121170022.GA2665@lahna.fi.intel.com>
+ <20200121170656.GI4656@sirena.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200121170656.GI4656@sirena.org.uk>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 5:13 PM Mathieu Desnoyers
-<mathieu.desnoyers@efficios.com> wrote:
-> There is an important use-case which is not possible with the
-> "rseq" (Restartable Sequences) system call, which was left as
-> future work.
->
-> That use-case is to modify user-space per-cpu data structures
-> belonging to specific CPUs which may be brought offline and
-> online again by CPU hotplug. This can be used by memory
-> allocators to migrate free memory pools when CPUs are brought
-> offline, or by ring buffer consumers to target specific per-CPU
-> buffers, even when CPUs are brought offline.
->
-> A few rather complex prior attempts were made to solve this.
-> Those were based on in-kernel interpreters (cpu_opv, do_on_cpu).
-> That complexity was generally frowned upon, even by their author.
->
-> This patch fulfills this use-case in a refreshingly simple way:
-> it introduces a "pin_on_cpu" system call, which allows user-space
-> threads to pin themselves on a specific CPU (which needs to be
-> present in the thread's allowed cpu mask), and then clear this
-> pinned state.
-[...]
-> For instance, this allows implementing this userspace library API
-> for incrementing a per-cpu counter for a specific cpu number
-> received as parameter:
->
-> static inline __attribute__((always_inline))
-> int percpu_addv(intptr_t *v, intptr_t count, int cpu)
-> {
->         int ret;
->
->         ret = rseq_addv(v, count, cpu);
-> check:
->         if (rseq_unlikely(ret)) {
->                 pin_on_cpu_set(cpu);
->                 ret = rseq_addv(v, count, percpu_current_cpu());
->                 pin_on_cpu_clear();
->                 goto check;
->         }
->         return 0;
-> }
+On Tue, Jan 21, 2020 at 05:06:56PM +0000, Mark Brown wrote:
+> On Tue, Jan 21, 2020 at 07:00:22PM +0200, Mika Westerberg wrote:
+> 
+> > OK, thanks for the clarification. I guess in this case we can probably
+> > just live without using it, if that's fine for Lee and others. The new
+> > MFD driver itself is ~500 lines so not sure how much regmap would help
+> > there, and we only expose two simple functions for the subdevices both
+> > dealing with 64-bit registers.
+> 
+> The usual motivation is all the diagnostic infrastructure you get with
+> regmap - tracepoints for I/O and the ability to dump the register map in
+> debugfs mainly.
 
-What does userspace have to do if the set of allowed CPUs switches all
-the time? For example, on Android, if you first open Chrome and then
-look at its allowed CPUs, Chrome is allowed to use all CPU cores
-because it's running in the foreground:
+Right.
 
-walleye:/ # ps -AZ | grep 'android.chrome$'
-u:r:untrusted_app:s0:c145,c256,c512,c768 u0_a145 7845 805 1474472
-197868 SyS_epoll_wait f09c0194 S com.android.chrome
-walleye:/ # grep cpuset /proc/7845/cgroup; grep Cpus_allowed_list
-/proc/7845/status
-3:cpuset:/top-app
-Cpus_allowed_list: 0-7
-
-But if you then switch to the home screen, the application is moved
-into a different cgroup, and is restricted to two CPU cores:
-
-walleye:/ # grep cpuset /proc/7845/cgroup; grep Cpus_allowed_list
-/proc/7845/status
-3:cpuset:/background
-Cpus_allowed_list: 0-1
-
-At the same time, I also wonder whether it is a good idea to allow
-userspace to stay active on a CPU even after the task has been told to
-move to another CPU core - that's probably not exactly a big deal, but
-seems suboptimal to me.
-
-
-I'm wondering whether it might be possible to rework this mechanism
-such that, instead of moving the current task onto a target CPU, it
-prevents all *other* threads of the current process from running on
-that CPU (either entirely or in user mode). That might be the easiest
-way to take care of issues like CPU hotplugging and changing cpusets
-all at once? The only potential issue I see with that approach would
-be that you wouldn't be able to use it for inter-process
-communication; and I have no idea whether this would be good or bad
-performance-wise.
+Here we are talking about a "map" of two registers so probably not worth
+the added trouble ;-)
