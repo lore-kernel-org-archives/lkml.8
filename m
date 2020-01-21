@@ -2,378 +2,270 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE23C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 12:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 204C3C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 12:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACD842051A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 12:56:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCA29217F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 12:57:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nxIoL1Bu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a5d0e5FL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbgAUM4O (ORCPT
+        id S1728904AbgAUM5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 07:56:14 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35281 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727817AbgAUM4O (ORCPT
+        Tue, 21 Jan 2020 07:57:40 -0500
+Received: from mail-pl1-f182.google.com ([209.85.214.182]:44561 "EHLO
+        mail-pl1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726918AbgAUM5j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 07:56:14 -0500
-Received: by mail-wm1-f66.google.com with SMTP id p17so2900902wmb.0;
-        Tue, 21 Jan 2020 04:56:11 -0800 (PST)
+        Tue, 21 Jan 2020 07:57:39 -0500
+Received: by mail-pl1-f182.google.com with SMTP id d9so1296703plo.11;
+        Tue, 21 Jan 2020 04:57:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=IiN883AU5YV27YKHLNqbmjRW3uBFRPsqg2MySW+oPwA=;
-        b=nxIoL1Bu1W+yeapASfdE1FuTg6OUt4aCtwTEpQzVTs2K2aJrx1I2wN4dTPPuGrpJFZ
-         TF3PeQYD/OoB9hUROz9SP63hOayvn9jsAdKB4h8wVrWHeaSj5Pw5MvcE++2xzV4aS7A4
-         rK7gmDn+pcJ+tZsAZtlGTSEw3MVTd9ll9JT1yU6JQCMQCulWQZP3oOjMV+0HDgk5DbUG
-         boVVSHJydP8J9/GMQYEvP5zVF8JoVBYr4kx0BhGRaAffTibSheJ6mJ3AeQluCJ9Nb3Jn
-         yHv+YJrJDK4NC31LU/NcWbdobxw6iYwPuFMectrTjVKwU1fF/YoHYRZLAHbl5uK4d2zj
-         Yz1Q==
+        h=from:to:cc:subject:date:message-id;
+        bh=uUXcGfeY5AWUYunvWE8Bf44nS0LbxI+FQR3R1dFLpWE=;
+        b=a5d0e5FL+uV06ISkOtyjDcX77miHmQmMR9/lfWdlZoqOBzNqmAh17H4bflHnFNSYdw
+         q698Rst0zTMWH+JbVeVTnFnPdLavmCPnlCf3ZG7thiJQ2Osef3ascgwW9K0HxLmHSawr
+         EJ5CZine3CCKGu7mBSgfpE59Fu5URgq5hTtZ3irMtXjWCymyZz9cV23wn94OScJ08Cbd
+         nS7k/+5OBVVWNpwo+bzV7DDn2q3gZKFF3Zxjvgt1LS5WXHmjbLg36ntZNY55psihEbaJ
+         gvPBvRlj81Sf2KY60u2ePzP7a0fT22ilUWt1xUlXGHpcQl0j4NV/bfP3Q4Bi7hB4e+yQ
+         n02g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IiN883AU5YV27YKHLNqbmjRW3uBFRPsqg2MySW+oPwA=;
-        b=VIvt1TMPI+aSdhcfKsYWHcto3MyV5R0vX2acii5ixLtQ/PFRCm1mjre0voMvDW/Xhq
-         Te2joiKhQVrWeAAee14F3MnT8UHWhbrH/W8XorwcRzD6GwvZymPF1z23Roq5Ud1s4NfC
-         w77yx9NavPhJ4bzttLwm1Nphb8Z9kN965eRM/UCoTuwzvtgaKQJgT1Gr/4cdnZQFBN+4
-         9zfa+GUmX8ZHxFrfX6EhkiYsIaRC5+JKHecRHyCI4SbN3+i+b6umU4QgX7OeaNAN73mh
-         zNX/E6Zqc0uYRgkq64CvM/QpGX8jPkr+So9W0Oc1lFJW+K0KVL92v5mdz92pArllfLFY
-         8ORw==
-X-Gm-Message-State: APjAAAXp4urYzLIw+wEsdWqt1Le2U/yjfx4Bmwi4spDASHw2zZsnZCVA
-        FnKoea35VIfnf0oxFkDo47E=
-X-Google-Smtp-Source: APXvYqwUwVLqWxMZoXwTUKcJcgXit9yAZes0BUJdNB2GHNve7obgL7QtffcAY3+ORojFyFJJyVRqgA==
-X-Received: by 2002:a1c:4857:: with SMTP id v84mr4211618wma.8.1579611370417;
-        Tue, 21 Jan 2020 04:56:10 -0800 (PST)
-Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
-        by smtp.gmail.com with ESMTPSA id q11sm52755072wrp.24.2020.01.21.04.56.08
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=uUXcGfeY5AWUYunvWE8Bf44nS0LbxI+FQR3R1dFLpWE=;
+        b=oIEBMP8SwqKfrgXVTsSDSyXG3eRw9WwJgiPvc8tH5fW+lPb5EKYYXIsVHg4h93Isvc
+         GzIBifGkvjQ7G+StfKmRX2Po2WndIoKzgousxUes8WMIKx+/K6wyEstj5bEAP1GoImhi
+         l3tPQ+RNxIHGkqQYpcaxbrsZDWJ/tHZhXruZTv0ViUwmK68m2Om00EcqCEX1NDUoDGSK
+         +Yp6/YFGXdzfh+BTqLcseQRlPF1S2uoYqYW/XotLYKT3LZBPLr03fpyH9vl7D0Uiqu5M
+         2zTJgWaLKyjFzgdmPFYV3Ov80FKAQ6+H11im/+4B81hYC9cTyhcTW53r5iK0moZBQoUq
+         sSYQ==
+X-Gm-Message-State: APjAAAWR6KhHd9O/1hky0VkBZiry7VmxLM6YvSwy97urW/tbGKJXjoXy
+        LLboaJyoD9I7LtoJBqfMsWQ9Enmr
+X-Google-Smtp-Source: APXvYqwNmZ5qw+3k+snewKXN54F/exQ4laGBAxnZFxAj6QfmS6x9eOmze0DASsy3yweiE98IVABSQg==
+X-Received: by 2002:a17:902:740c:: with SMTP id g12mr5524364pll.166.1579611458275;
+        Tue, 21 Jan 2020 04:57:38 -0800 (PST)
+Received: from localhost.localdomain ([221.146.116.86])
+        by smtp.gmail.com with ESMTPSA id v4sm43130132pfn.181.2020.01.21.04.57.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 04:56:08 -0800 (PST)
-Date:   Tue, 21 Jan 2020 13:56:07 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5] gpio: pca953x: Add Maxim MAX7313 PWM support
-Message-ID: <20200121125607.GA899558@ulmo>
-References: <20200107133130.1338-1-miquel.raynal@bootlin.com>
- <20200120121329.GC206171@ulmo>
- <20200120134137.54dc307e@xps13>
- <20200120141944.GD206171@ulmo>
- <20200120144457.eznywc423ehw6kuc@pengutronix.de>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="EVF5PPMfhYS0aIcm"
-Content-Disposition: inline
-In-Reply-To: <20200120144457.eznywc423ehw6kuc@pengutronix.de>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+        Tue, 21 Jan 2020 04:57:37 -0800 (PST)
+From:   Namjae Jeon <linkinjeon@gmail.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
+        sj1557.seo@samsung.com, pali.rohar@gmail.com, arnd@arndb.de,
+        namjae.jeon@samsung.com, viro@zeniv.linux.org.uk,
+        Namjae Jeon <linkinjeon@gmail.com>
+Subject: [PATCH v13 00/13] add the latest exfat driver
+Date:   Tue, 21 Jan 2020 21:57:14 +0900
+Message-Id: <20200121125727.24260-1-linkinjeon@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Namjae Jeon <namjae.jeon@samsung.com>
 
---EVF5PPMfhYS0aIcm
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This adds the latest Samsung exfat driver to fs/exfat. This is an
+implementation of the Microsoft exFAT specification. Previous versions
+of this shipped with millions of Android phones, and a random previous
+snaphot has been merged in drivers/staging/.
 
-On Mon, Jan 20, 2020 at 03:44:57PM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> Hello Thierry,
->=20
-> On Mon, Jan 20, 2020 at 03:19:44PM +0100, Thierry Reding wrote:
-> > On Mon, Jan 20, 2020 at 01:41:37PM +0100, Miquel Raynal wrote:
-> > > Hi Thierry,
-> > >=20
-> > > Thanks for reviewing,
-> > >=20
-> > > > > +static bool max7313_pwm_reg_is_accessible(struct device *dev, un=
-signed int reg)
-> > > > > +{
-> > > > > +	struct pca953x_chip *chip =3D dev_get_drvdata(dev);
-> > > > > +	unsigned int bank_sz =3D chip->driver_data & PCA_GPIO_MASK;
-> > > > > +
-> > > > > +	if (reg >=3D MAX7313_MASTER && reg < (MAX7313_INTENSITY + bank_=
-sz))
-> > > > > +		return true;
-> > > > > +
-> > > > > +	return false;
-> > > > > +}
-> > > > > +
-> > > > >  static bool pca953x_readable_register(struct device *dev, unsign=
-ed int reg)
-> > > > >  {
-> > > > >  	struct pca953x_chip *chip =3D dev_get_drvdata(dev);
-> > > > >  	u32 bank;
-> > > > > =20
-> > > > > +	if ((chip->driver_data & MAX_PWM) &&
-> > > > > +	    max7313_pwm_reg_is_accessible(dev, reg))
-> > > > > +		return true; =20
-> > > >=20
-> > > > This doesn't look correct. The MAX_PWM flag doesn't signify that all
-> > > > GPIOs are used in PWM mode, right? So the above check would return =
-true
-> > > > even if you're trying to access GPIO registers on a chip that has P=
-WM
-> > > > support.
-> > >=20
-> > > Not exactly: this part returns true only if we are using a chip with
-> > > PWM and we are accessing PWM registers.
-> > >=20
-> > > Otherwise, for instance if we are accessing GPIO registers, this will
-> > > not return anything.
-> > >=20
-> > > >=20
-> > > > I think you still want to proceed with the checks below if reg does=
-n't
-> > > > match any of the PWM related registers.
-> > >=20
-> > > This is precisely what we do here. See the
-> > > max7313_pwm_reg_is_accessible helper above: only the PWM registers are
-> > > checked, I suppose this is the part you missed.
-> >=20
-> > No idea what I missed, but on a second look, yes, you're absolutely
-> > right.
-> >=20
-> > > > So it'd be something more along
-> > > > these lines:
-> > > >=20
-> > > > 	if ((chip->driver_data & MAX_PWM) &&
-> > > > 	    !max7313_pwm_reg_is_accessible(dev, reg))
-> > > > 		return false;
-> > > >=20
-> > > > > +
-> > > > >  	if (PCA_CHIP_TYPE(chip->driver_data) =3D=3D PCA953X_TYPE) {
-> > > > >  		bank =3D PCA953x_BANK_INPUT | PCA953x_BANK_OUTPUT |
-> > > > >  		       PCA953x_BANK_POLARITY | PCA953x_BANK_CONFIG;
-> > > > > @@ -267,6 +318,10 @@ static bool pca953x_writeable_register(struc=
-t device *dev, unsigned int reg)
-> > > > >  	struct pca953x_chip *chip =3D dev_get_drvdata(dev);
-> > > > >  	u32 bank;
-> > > > > =20
-> > > > > +	if ((chip->driver_data & MAX_PWM) &&
-> > > > > +	    max7313_pwm_reg_is_accessible(dev, reg))
-> > > > > +		return true; =20
-> > > >=20
-> > > > Same here.
-> > > >=20
-> > > > > +
-> > > > >  	if (PCA_CHIP_TYPE(chip->driver_data) =3D=3D PCA953X_TYPE) {
-> > > > >  		bank =3D PCA953x_BANK_OUTPUT | PCA953x_BANK_POLARITY |
-> > > > >  			PCA953x_BANK_CONFIG;
-> > > > > @@ -855,6 +910,335 @@ static int device_pca957x_init(struct pca95=
-3x_chip *chip, u32 invert)
-> > > > >  	return ret;
-> > > > >  }
-> > > > > =20
-> > >=20
-> > > [...]
-> > >=20
-> > > > > +static void max7313_pwm_free(struct pwm_chip *chip,
-> > > > > +			     struct pwm_device *pwm)
-> > > > > +{
-> > > > > +	struct max7313_pwm_data *data =3D pwm_get_chip_data(pwm);
-> > > > > +
-> > > > > +	gpiochip_free_own_desc(data->desc);
-> > > > > +	kfree(data);
-> > > > > +}
-> > > > > +
-> > > > > +static int max7313_pwm_apply(struct pwm_chip *chip,
-> > > > > +			     struct pwm_device *pwm,
-> > > > > +			     const struct pwm_state *state)
-> > > > > +{
-> > > > > +	struct max7313_pwm *max_pwm =3D to_max7313_pwm(chip);
-> > > > > +	struct pca953x_chip *pca_chip =3D to_pca953x(max_pwm);
-> > > > > +	unsigned int intensity, active;
-> > > > > +	int ret =3D 0;
-> > > > > +
-> > > > > +	if (!state->enabled ||
-> > > > > +	    state->period < PWM_PERIOD_NS || =20
-> > > >=20
-> > > > I think you should actually make this a !=3D so that you refuse any
-> > > > attempt to change the period, since you can't do it anyway.
-> > >=20
-> > > Actually we discussed this with Uwe, see the below snippet:
-> > >=20
-> > > ---8<---
-> > > > > > +	if (state->period !=3D PWM_PERIOD_NS ||
-> > > > > > +	    state->polarity !=3D PWM_POLARITY_NORMAL)
-> > > > > > +		return -EINVAL;   =20
-> > > > >=20
-> > > > > The check for period is too strong. Anything bigger than PWM_PERI=
-OD_NS
-> > > > > is acceptable, too. (The policy I'd like to see is: Provide the b=
-iggest
-> > > > > period possible not bigger than the requested policy.) =20
-> > > >=20
-> > > > I don't understand, what is this parameter supposed to mean? the pe=
-riod
-> > > > cannot be changed, it is ruled by an internal oscillator. In this c=
-ase
-> > > > any period bigger than the actual period cannot be physically achie=
-ved.
-> > > > If we derive ratios with a bigger period than possible, why not
-> > > > allowing it for lower periods too? =20
-> > >=20
-> > > Yes, I understood that the period is fixed for your PWM. However
-> > > consider a consumer who would prefer a different period. If you decli=
-ne
-> > > all requests unless state->period =3D=3D PWM_PERIOD_NS the consumer h=
-as no
-> > > guide to determine that unless all periods are tested. If however ask=
-ing
-> > > for period =3D 2s results in getting 31.25 ms this allows the consume=
-r to
-> > > assume that no period setting between 2s and 31.25 ms is possible. And
-> > > so the usual policy to implement is as stated in my previous mail.
-> > > --->8---
-> >=20
-> > I think I understand what Uwe is getting at, but I don't think we should
-> > lie to consumers. It's true that in some cases the drivers will silently
-> > use a slightly different period if they can't match the one requested,
-> > but I don't think that's a good thing. Most of the time in those drivers
-> > the computed period that the controller can support is "close enough".
-> >=20
-> > But in this case the controller doesn't support anything other than the
-> > one period, so I don't think accepting anything other than that is good
-> > for any consumer.
-> >=20
-> > Also, typically this doesn't really matter because this will have been
-> > defined in device tree and if the device tree has the wrong period, then
-> > this should already be caught before the buggy DTS is upstreamed.
-> >=20
-> > So, I agree that the current situation is not ideal and perhaps we
-> > should enforce stronger requirements for accuracy. I suspect that a good
-> > solution would be for the drivers to report back the state that would've
-> > been applied without actually applying it (kind of like the semantics of
-> > clk_round_rate() from the common clock framework). That would give users
-> > a good way of checking whether the supported parameters are within the
-> > desired range before applying them. For consumers that don't care all
-> > that much about precision, they can feel free to ignore any differences
-> > between what they asked and what they got, and most of the time that
-> > will be fine.
->=20
-> Yeah, it's something like clk_round_rate that I want in the end. And to
-> make it actually workable the IMHO only sane approach is to allow
-> rounding in one direction without limit. And as pwm_apply_state() should
-> be consistent with pwm_round_state() the former must round without
-> limit, too.
+Compared to the sdfat driver shipped on the phones the following changes
+have been made:
 
-Agreed on the point that both pwm_round_state() and pwm_apply_state()
-should do the same rounding. In fact, in most cases I'd expect drivers
-to implement the bulk of ->apply() and ->round() in the same function
-that basically constructs the new state that will be applied to the
-hardware in ->apply() but will be returned from ->round().
+ - the support for vfat has been removed as that is already supported
+   by fs/fat
+ - driver has been renamed to exfat
+ - the code has been refactored and clean up to fully integrate into
+   the upstream Linux version and follow the Linux coding style
+ - metadata operations like create, lookup and readdir have been further
+   optimized
+ - various major and minor bugs have been fixed
 
-I'm not so sure about rounding without limit, though. I think it makes
-sense to allow rounding to happen if you can match things closely enough
-for it not to matter in most cases. Strictly speaking we're already
-breaking use-cases that require a fixed period because there's currently
-no way for consumers to determine what the exact state is that is going
-to get applied. Consumers could read back the state, but we already know
-that that doesn't yield the correct result for some drivers.
+We plan to treat this version as the future upstream for the code base
+once merged, and all new features and bug fixes will go upstream first.
 
-Also, in practice, for the large majority of use-cases the exact period
-doesn't matter as long as the actual numbers are close enough to the
-requested values and the duty cycle/period ratio is about the same as
-what was requested.
+v13:
+ - rcu-delay unloading nls, freeing upcase table and sbi.
+ - Switch to ->free_inode().
+ - Push rcu_barrier() from deactivate_locked_super() to filesystems.
+ - Remove unused variables in exfat_sb_info structure.
 
-Similarily, the period will typically come from DT or board files, and
-will usually be a value that was hand-picked and would typically match
-some value that the hardware supports. And if it isn't a supported
-value, it's usually close enough because it was tested to work by who
-ever submitted the DT or board file patch.
+v12:
+ - Merge the #12 patch into the #11 patch.
+ - Remove an incorrect comment about time_offset mount option.
 
-That said, I think allowing a driver to clamp any given period to the
-one and only period that it supports isn't right. There's no way that
-the controller can get close to the requested value unless it matches
-the fixed period. If we silently ignore that restriction, we're just
-going to make it very simple to write DT content that's completely
-bogus, yet will still work because we effectively ignore it.
+v11:
+ - Use current_time instead of ktime_get_real_ts64.
+ - Add i_crtime in exfat inode.
+ - Drop the clamping min/max timestamp.
+ - Merge exfat_init_file_entry into exfat_init_dir_entry.
+ - Initialize the msec fields in exfat_init_dir_entry.
+ - Change timestamps written to disk always get stored in UTC instead of
+   active timezone.
+ - Update EXFAT_DEFAULT_IOCHARSET description in Kconfig.
+ - exfat_get/set_entry_time() take a time_ms argument.
 
-> And if you want to require that a consumer of a PWM that only supports a
-> single period setting passes that period, how do you want to handle the
-> situation if this period happens to be 2000/3 ns. Is it ok to pass
-> .period =3D 666? Is it ok to pass 667?
+v10:
+ - Make PBR structures as packed structure.
+ - Fix build error on 32 bit system.
+ - Change L suffix of UNIX_SECS_2108 macro with LL suffix to work
+   on both 32/64bit system.
+ - Rework exfat time handling.
+ - Don't warp exfat specification URLs.
+ - Add _FS suffix to config name.
+ - Remove case_sensitive mount option.
+ - iocharset=utf8 mount option work as utf8 option.
+ - Rename the misleading nls names to corresponding ones.
+ - Fix wrong header guard name of exfat_fs.h.
+ - Remove the unneeded braces of macros in exfat_fs.h.
+ - Move the ondisk values to exfat_raw.h
+ - Put the operators at the previous line in exfat_cluster_to_sector().
+ - Braces of EXFAT_DELETE macro would outside the ~.
+ - Directly use exfat dentry field name.
+ - Add EXFAT_CLUSTERS_UNTRACKED macro.
+ - Remove both sets of inner braces in exfat_set_vol_flags().
+ - Replace is_reserved_cluster() with an explicit check
+   for EXFAT_EOF_CLUSTER.
+ - Initialize superblock s_time_gran/max/min.
+ - Clean-up exfat_bmap and exfat_get_block().
+ - Fix wrong boundlen to avoid potential buffer overflow
+   in exfat_convert_char_to_ucs2().
+ - Process length value as 1 when conversion is failed.
+ - Replace union exfat_timezone with masking the valid bit.
+ - Change exfat_cmp_uniname() with exfat_uniname_ncmp().
+ - Remove struct exfat_timestamp.
+ - Add atime update support.
+ - Add time_offset mount option.
+ - Remove unneeded CLUSTER_32 macro.
+ - Process utf16 surrogate pair as one character.
+ - Rename MUST_ZERO_LEN to PBR64_RESERVED_LEN.
+ - Simplify is_exfat function by just using memchr_inv().
+ - Remove __exfat_init_name_hash.
+ - Remove exfat_striptail_len.
+ - Split dentry ops for the utf8 vs non-utf8 cases.
 
-That seems like a bit of an artificial example. I suspect that a
-consumer that supports 666 ns as period will run just fine when run with
-a period of 667 ns. So it's ultimately up to the consumer driver to make
-use of the pwm_round_state() (or whatever the name will end up to be)
-and apply whatever error margins it can deal with before rejecting any
-given state.
+v9:
+ - Add support time zone.
+ - Fix data past EOF resulting from fsx testsuite.
+ - Remove obsolete comments in __exfat_resolve_path().
+ - Remove unused file attributes macros.
+ - Remove unneeded #if BITS_PER_LONG.
 
-Also, these kinds of disconnects are very unlikely to happen in practice
-because board designs usually get tested for this kind of compatibility
-before they are produced. If some PWM consumer requires one specific
-period, then the corresponding PWM producer would have been picked to be
-compatible with that.
+v8:
+ - Rearrange the function grouping in exfat_fs.h
+   (exfat_count_dir_entries, exfat_get_dentry, exfat_get_dentry_set,
+    exfat_find_location).
+ - Mark exfat_extract_uni_name(), exfat_get_uniname_from_ext_entry() and
+   exfat_mirror_bh() as static.
 
-> > In many cases it doesn't matter because the period is defined in DT and
-> > is hand-picked to be among the ones supported by the controller, or the
-> > small differences between the period in DT and the closest one supported
-> > by the controller is not significant and things will just work.
->=20
-> In my eyes to get a uniform behaviour of the PWM framework independant
-> of the backend used, it must not be the driver who decides if a request
-> is "close enough". We need a defined policy. And then it is obvious to
-> me that this policy must be implemented in a way that it is in fact the
-> consumer who has to decide which settings are ok and which are not. And
-> then rounding without limit is the easiest to work with.
+v7:
+ - Add the helpers macros for bitmap and fat entry to improve readability.
+ - Rename exfat_test_bitmap to exfat_find_free_bitmap.
+ - Merge exfat_get_num_entries into exfat_calc_num_entries.
+ - Add EXFAT_DATA_CLUSTERS and EXFAT_RESERVED_CLUSTERS macro.
+ - Add the macros for EXFAT BIOS block(JUMP_BOOT_LEN, OEM_NAME_LEN,
+   MUST_BE_ZERO_LEN).
+ - Add the macros for EXFAT entry type (IS_EXFAT_CRITICAL_PRI,
+   IS_EXFAT_BENIGN_PRI, IS_EXFAT_CRITICAL_SEC).
+ - Add EXFAT_FILE_NAME_LEN macro.
+ - Change the data type of is_dir with bool in __exfat_write_inode().
+ - Change the data type of sync with bool in exfat_set_vol_flags().
+ - Merge __exfat_set_vol_flags into exfat_set_vol_flags.
+ - Fix wrong statfs->f_namelen.
 
-That still means that we'll be ignoring mismatches between fixed-period
-producers and variable-period consumers. Allowing producers to overwrite
-whatever is passed in (without potentially being able to get anywhere
-near the requested values) is making it too easy to get things wrong,
-don't you think?
+v6:
+ - Fix always false comparison due to limited range of allow_utime's data
+   type.
+ - Move bh into loop in exfat_find_dir_entry().
+ - Move entry_uniname and unichar variables into
+   an if "entry_type == TYPE_EXTEND" branch.
 
-> > However, ignoring period settings because the controller supports only a
-> > fixed period seems a bit of an extreme.
->=20
-> So the setting I want is:
->=20
-> 	if (request.period < HW_PERIOD)
-> 		fail();
-> 	=09
-> and with the reasoning above, that's the only sensible thing (apart from
-> the revered policy of rounding up and so failing for requested periods
-> that are bigger than the implementable period).
+v5:
+ - Remove a blank line between the message and the error code in
+   exfat_load_upcase_table.
+ - Move brelse to the end of the while loop and rename release_bh label
+   to free_table in exfat_load_upcase_table.
+ - Move an error code assignment after a failed function call.
+ - Rename labels and directly return instead of goto.
+ - Improve the exception handling in exfat_get_dentry_set().
+ - Remove ->d_time leftover.
+ - fix boolreturn.cocci warnings.
 
-But that's just as arbitrary as anything else. request.period =3D=3D
-HW_PERIOD - 1 might be an entirely fine setting in many cases.
+v4:
+ - Declare ALLOC_FAT_CHAIN and ALLOC_NO_FAT_CHAIN macros.
+ - Rename labels with proper name.
+ - Remove blank lines.
+ - Remove pointer check for bh.
+ - Move ep into loop in exfat_load_bitmap().
+ - Replace READ/WRITE_ONCE() with test_and_clear_bit() and set_bit().
+ - Change exfat_allow_set_time return type with bool.
 
-Thierry
+v3:
+ - fix wrong sbi->s_dirt set.
 
---EVF5PPMfhYS0aIcm
-Content-Type: application/pgp-signature; name="signature.asc"
+v2:
+ - Check the bitmap count up to the total clusters.
+ - Rename goto labels in several places.
+ - Change time mode type with enumeration.
+ - Directly return error instead of goto at first error check.
+ - Combine seq_printf calls into a single one.
 
------BEGIN PGP SIGNATURE-----
+Namjae Jeon (13):
+  exfat: add in-memory and on-disk structures and headers
+  exfat: add super block operations
+  exfat: add inode operations
+  exfat: add directory operations
+  exfat: add file operations
+  exfat: add fat entry operations
+  exfat: add bitmap operations
+  exfat: add exfat cache
+  exfat: add misc operations
+  exfat: add nls operations
+  exfat: add Kconfig and Makefile
+  MAINTAINERS: add exfat filesystem
+  staging: exfat: make staging/exfat and fs/exfat mutually exclusive
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl4m9OMACgkQ3SOs138+
-s6EgxQ/8DgcDkaVjw+mAYDnu71Hg5kAFirW0JxQ4Mlloheba34/VEFfybNG5Pm6f
-BJJ2PdZYckZS4irb58qHpeNm1bqKx20OtprpIUEBb3m5KlaAhw2xV1c9Wy+C5cET
-YZVrC16vL6kDNEdlA5bYgmpQnwiN3Pzkf/ggvYn74ZM0rl5SBZkQAP+g9aDYoxMt
-NUKIIgu8AnabjfL/QpLdMOM5H439PqZyDrFhQR83CjJ/kTJPrvDS4yjZvQJG/AsX
-Q6+A+zVDYQx5bM/acptM96arC7HCW5iNiR1SMR2PmNQF5K2T/XH2z5Qz+u0fXlix
-Pwfqt2zG3oPk3CK3XlfJtlibbWsjHyYwJgANPRUprPL871lJTUmBlUqgNuGeyY9W
-EHfC71e/gw89uyYgU0jL6M6P3uKmZych2nqFlv2ZOWnxYoef2wocoRD61KyLMbYi
-42cuWvkr7btUnC9DP6BJlD9HjWL0RS9R0rvfaicasZMPEFOs8G5qCZmZH5yL7t72
-YeG0IgEwn8xz3uFBOQEFwYyubr7P60TXkOgEb4pzUiPmh1hc+fSGD9Uk6z7pKVtH
-oMqOcFfBCnobRbZ31uI/D7bG0qFmXE6zK+ZFFu3KU7Tx0jr8gX6RpRHDt9kcGUfi
-T9+ldOHfTBnwB1GT5lXpUyPLEDAxEWmrwNo6Ayq6/mG8OXnX8oM=
-=r7Gg
------END PGP SIGNATURE-----
+ MAINTAINERS                   |    7 +
+ drivers/staging/exfat/Kconfig |    2 +-
+ fs/Kconfig                    |    3 +-
+ fs/Makefile                   |    1 +
+ fs/exfat/Kconfig              |   21 +
+ fs/exfat/Makefile             |    8 +
+ fs/exfat/balloc.c             |  280 +++++++
+ fs/exfat/cache.c              |  325 ++++++++
+ fs/exfat/dir.c                | 1238 ++++++++++++++++++++++++++++
+ fs/exfat/exfat_fs.h           |  519 ++++++++++++
+ fs/exfat/exfat_raw.h          |  184 +++++
+ fs/exfat/fatent.c             |  463 +++++++++++
+ fs/exfat/file.c               |  360 ++++++++
+ fs/exfat/inode.c              |  671 +++++++++++++++
+ fs/exfat/misc.c               |  163 ++++
+ fs/exfat/namei.c              | 1448 +++++++++++++++++++++++++++++++++
+ fs/exfat/nls.c                |  831 +++++++++++++++++++
+ fs/exfat/super.c              |  728 +++++++++++++++++
+ 18 files changed, 7250 insertions(+), 2 deletions(-)
+ create mode 100644 fs/exfat/Kconfig
+ create mode 100644 fs/exfat/Makefile
+ create mode 100644 fs/exfat/balloc.c
+ create mode 100644 fs/exfat/cache.c
+ create mode 100644 fs/exfat/dir.c
+ create mode 100644 fs/exfat/exfat_fs.h
+ create mode 100644 fs/exfat/exfat_raw.h
+ create mode 100644 fs/exfat/fatent.c
+ create mode 100644 fs/exfat/file.c
+ create mode 100644 fs/exfat/inode.c
+ create mode 100644 fs/exfat/misc.c
+ create mode 100644 fs/exfat/namei.c
+ create mode 100644 fs/exfat/nls.c
+ create mode 100644 fs/exfat/super.c
 
---EVF5PPMfhYS0aIcm--
+-- 
+2.17.1
+
