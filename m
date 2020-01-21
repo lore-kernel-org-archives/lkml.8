@@ -2,74 +2,125 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 078F9C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 13:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C576C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 13:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8C6C21569
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 13:20:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E56B217F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 13:31:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="wumgBDv6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729052AbgAUNUw (ORCPT
+        id S1728898AbgAUNbE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 08:20:52 -0500
-Received: from mga18.intel.com ([134.134.136.126]:7017 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbgAUNUw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 08:20:52 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 05:20:51 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,346,1574150400"; 
-   d="scan'208";a="399661878"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga005.jf.intel.com with ESMTP; 21 Jan 2020 05:20:49 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ittSc-0006R7-VA; Tue, 21 Jan 2020 15:20:50 +0200
-Date:   Tue, 21 Jan 2020 15:20:50 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Yury Norov <yury.norov@gmail.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        "Tobin C. Harding" <tobin@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] lib/bitmap: remove expect_eq_u32_array
-Message-ID: <20200121132050.GT32742@smile.fi.intel.com>
-References: <1579595625-250942-1-git-send-email-alex.shi@linux.alibaba.com>
+        Tue, 21 Jan 2020 08:31:04 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:43374 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbgAUNbE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 08:31:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=sQsNUT1I6E8QItPKtSDNxr8kzUBb8jOWCVawdbMbuhs=; b=wumgBDv6cNBhEJASXpiGDNAAA
+        fIjFViuZ/mfovC47v2shUCqKUf1OHOHGHCqlPOvQ1A7JID+0E02moRI0efYbudsqlBXR/o+B+mGN5
+        mxIMenqLi4lcXgHyX6fCzBEzOsMdRXvfiIht1UCcGvWIe/7idW3F02/5yuTujrnLupRkFDzhwre64
+        0e3Tb0KiaEV35OILtmALggkTSogvX2c4NUq6SAxjY4o624HXSoftOhLihn9/jnyMmejE86xuOmlNz
+        d4dQ2iYkRLOzMPuMT9CR6NFW2DiezhfzlklTPofyQ86qCl400zrucJA1Mux8uWyHG3//ShnZLO7TL
+        y5ils314w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ittbO-0006Ql-0z; Tue, 21 Jan 2020 13:29:54 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B9A1F3043C9;
+        Tue, 21 Jan 2020 14:28:10 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D89C520983FD9; Tue, 21 Jan 2020 14:29:49 +0100 (CET)
+Date:   Tue, 21 Jan 2020 14:29:49 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alex Kogan <alex.kogan@oracle.com>
+Cc:     linux@armlinux.org.uk, mingo@redhat.com, will.deacon@arm.com,
+        arnd@arndb.de, longman@redhat.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        guohanjun@huawei.com, jglauber@marvell.com,
+        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
+        dave.dice@oracle.com
+Subject: Re: [PATCH v8 4/5] locking/qspinlock: Introduce starvation avoidance
+ into CNA
+Message-ID: <20200121132949.GL14914@hirez.programming.kicks-ass.net>
+References: <20191230194042.67789-1-alex.kogan@oracle.com>
+ <20191230194042.67789-5-alex.kogan@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1579595625-250942-1-git-send-email-alex.shi@linux.alibaba.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20191230194042.67789-5-alex.kogan@oracle.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 04:33:45PM +0800, Alex Shi wrote:
-> expect_eq_u32_array isn't used from commit 3aa56885e516 ("bitmap:
-> replace bitmap_{from,to}_u32array").
-> And EXP2_IN_BITS are never used. so better to remove them.
+On Mon, Dec 30, 2019 at 02:40:41PM -0500, Alex Kogan wrote:
 
-I think better "fix" will be to add test cases.
-See the commit message in the
+> +/*
+> + * Controls the threshold for the number of intra-node lock hand-offs before
+> + * the NUMA-aware variant of spinlock is forced to be passed to a thread on
+> + * another NUMA node. By default, the chosen value provides reasonable
+> + * long-term fairness without sacrificing performance compared to a lock
+> + * that does not have any fairness guarantees. The default setting can
+> + * be changed with the "numa_spinlock_threshold" boot option.
+> + */
+> +int intra_node_handoff_threshold __ro_after_init = 1 << 16;
 
-commit 3aa56885e51683a19c8aa71739fd279b3f501cd7
-Author: Yury Norov <ynorov@caviumnetworks.com>
-Date:   Tue Feb 6 15:38:06 2018 -0800
+There is a distinct lack of quantitative data to back up that
+'reasonable' claim there.
 
-    bitmap: replace bitmap_{from,to}_u32array
+Where is the table of inter-node latencies observed for the various
+values tested, and on what criteria is this number deemed reasonable?
 
--- 
-With Best Regards,
-Andy Shevchenko
+To me, 64k lock hold times seems like a giant number, entirely outside
+of reasonable.
 
+> +
+>  static void __init cna_init_nodes_per_cpu(unsigned int cpu)
+>  {
+>  	struct mcs_spinlock *base = per_cpu_ptr(&qnodes[0].mcs, cpu);
+> @@ -97,6 +109,11 @@ static int __init cna_init_nodes(void)
+>  }
+>  early_initcall(cna_init_nodes);
+>  
+> +static __always_inline void cna_init_node(struct mcs_spinlock *node)
+> +{
+> +	((struct cna_node *)node)->intra_count = 0;
+> +}
+> +
+>  /* this function is called only when the primary queue is empty */
+>  static inline bool cna_try_change_tail(struct qspinlock *lock, u32 val,
+>  				       struct mcs_spinlock *node)
+> @@ -233,7 +250,9 @@ __always_inline u32 cna_pre_scan(struct qspinlock *lock,
+>  {
+>  	struct cna_node *cn = (struct cna_node *)node;
+>  
+> -	cn->pre_scan_result = cna_scan_main_queue(node, node);
+> +	cn->pre_scan_result =
+> +		cn->intra_count == intra_node_handoff_threshold ?
+> +			FLUSH_SECONDARY_QUEUE : cna_scan_main_queue(node, node);
+
+Because:
+
+	if (cn->intra_count < intra_node_handoff_threshold)
+		cn->pre_scan_result = cna_scan_main_queue(node, node);
+	else
+		cn->pre_scan_result = FLUSH_SECONDARY_QUEUE;
+
+was too readable?
 
