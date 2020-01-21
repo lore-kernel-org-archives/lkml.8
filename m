@@ -4,37 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EFC9C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47342C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0CB322522
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:42:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2873B24125
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:42:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729027AbgAUImb (ORCPT
+        id S1729117AbgAUImf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 03:42:31 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10114 "EHLO huawei.com"
+        Tue, 21 Jan 2020 03:42:35 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:10118 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726920AbgAUImb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 03:42:31 -0500
+        id S1729028AbgAUImd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 03:42:33 -0500
 Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id CA9BF432EBA6D1B25098;
+        by Forcepoint Email with ESMTP id DCB27D6787B3046631CE;
         Tue, 21 Jan 2020 16:42:29 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 21 Jan 2020 16:42:20 +0800
+ 14.3.439.0; Tue, 21 Jan 2020 16:42:22 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <huangdaode@huawei.com>, <linuxarm@huawei.com>, <kuba@kernel.org>,
-        Yunsheng Lin <linyunsheng@huawei.com>,
+        Guojia Liao <liaoguojia@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 1/9] net: hns3: limit the error logging in the hns3_clean_tx_ring()
-Date:   Tue, 21 Jan 2020 16:42:05 +0800
-Message-ID: <1579596133-54842-2-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 4/9] net: hns3: move duplicated macro definition into header
+Date:   Tue, 21 Jan 2020 16:42:08 +0800
+Message-ID: <1579596133-54842-5-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1579596133-54842-1-git-send-email-tanhuazhong@huawei.com>
 References: <1579596133-54842-1-git-send-email-tanhuazhong@huawei.com>
@@ -47,35 +47,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunsheng Lin <linyunsheng@huawei.com>
+From: Guojia Liao <liaoguojia@huawei.com>
 
-The error log printed by netdev_err() in the hns3_clean_tx_ring()
-may spam the kernel log.
+Macro HCLGE_GET_DFX_REG_TYPE_CNT in hclge_dbg_get_dfx_bd_num()
+and macro HCLGE_DFX_REG_BD_NUM in hclge_get_dfx_reg_bd_num()
+have the same meaning, so just defines HCLGE_GET_DFX_REG_TYPE_CNT
+in hclge_main.h.
 
-This patch uses hns3_rl_err() to ratelimit the error log in the
-hns3_clean_tx_ring().
-
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+Signed-off-by: Guojia Liao <liaoguojia@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c | 2 --
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 4 +---
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h    | 2 ++
+ 3 files changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 914a763..f579028 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -2540,8 +2540,8 @@ void hns3_clean_tx_ring(struct hns3_enet_ring *ring)
- 	rmb(); /* Make sure head is ready before touch any data */
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
+index f3d4cbd..67fad80 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
+@@ -73,8 +73,6 @@ static struct hclge_dbg_reg_type_info hclge_dbg_reg_info[] = {
  
- 	if (unlikely(!is_valid_clean_head(ring, head))) {
--		netdev_err(netdev, "wrong head (%d, %d-%d)\n", head,
--			   ring->next_to_use, ring->next_to_clean);
-+		hns3_rl_err(netdev, "wrong head (%d, %d-%d)\n", head,
-+			    ring->next_to_use, ring->next_to_clean);
+ static int hclge_dbg_get_dfx_bd_num(struct hclge_dev *hdev, int offset)
+ {
+-#define HCLGE_GET_DFX_REG_TYPE_CNT	4
+-
+ 	struct hclge_desc desc[HCLGE_GET_DFX_REG_TYPE_CNT];
+ 	int entries_per_desc;
+ 	int index;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 76e8aa4..8e007b7 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -10204,10 +10204,8 @@ static int hclge_get_dfx_reg_bd_num(struct hclge_dev *hdev,
+ 				    int *bd_num_list,
+ 				    u32 type_num)
+ {
+-#define HCLGE_DFX_REG_BD_NUM	4
+-
+ 	u32 entries_per_desc, desc_index, index, offset, i;
+-	struct hclge_desc desc[HCLGE_DFX_REG_BD_NUM];
++	struct hclge_desc desc[HCLGE_GET_DFX_REG_TYPE_CNT];
+ 	int ret;
  
- 		u64_stats_update_begin(&ring->syncp);
- 		ring->stats.io_err_cnt++;
+ 	ret = hclge_query_bd_num_cmd_send(hdev, desc);
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+index 1c1d6b3..f78cbb4c 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+@@ -139,6 +139,8 @@
+ #define HCLGE_PHY_MDIX_STATUS_B		6
+ #define HCLGE_PHY_SPEED_DUP_RESOLVE_B	11
+ 
++#define HCLGE_GET_DFX_REG_TYPE_CNT	4
++
+ /* Factor used to calculate offset and bitmap of VF num */
+ #define HCLGE_VF_NUM_PER_CMD           64
+ 
 -- 
 2.7.4
 
