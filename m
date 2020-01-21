@@ -2,142 +2,117 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 372B5C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF30C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:11:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F14B5206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:11:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EBsH58uX"
+	by mail.kernel.org (Postfix) with ESMTP id 9D9C124655
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:11:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729157AbgAURLN (ORCPT
+        id S1729255AbgAURLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 12:11:13 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34938 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728829AbgAURLN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 12:11:13 -0500
-Received: by mail-wr1-f68.google.com with SMTP id g17so4144201wro.2
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 09:11:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ZGs+4DUJDSvBqJ//fVqMbttGqRoxAKV0f+ErvAbm5L8=;
-        b=EBsH58uX53UDW9/nRW8udKKKe06jKEr+n8gx6G9QSL2/NkKdjeoB1bVKUP6O/x3ouq
-         cTuUJxlAHY5gB1+bQaH0jRnZtsfVFtunbtbfIspa/qvNnhkdCnLlq/zmIMUQN05k1DDG
-         q+2M++veTbrYCoMSPp8GUjGatjIR2yq4peoPTH1U3X1y5nbegNcANqKY37WwRQM90+6M
-         xu2TVvJo6hrsAneOloOPEw01LAQk3lB+2RXhKTeZmVGrV5j7dNi+GjcilaACOkvK+ac9
-         SheTyjSLBZEoulkJdX9aGjip+T9fcLoaOtpf1XiEsfb9T0+56H8sqtuUxEdhNfUO8TmB
-         kACQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZGs+4DUJDSvBqJ//fVqMbttGqRoxAKV0f+ErvAbm5L8=;
-        b=mP/k8L0ARQ+fgo8c2CbhTe97R4C6cya7Zm6Kl3FLXMJuQgwA7uGjiOhISI6OAxYFFv
-         SXh7TmoiAsJYH/5B4QExNRwmDzWLZUUlC++b0QcGEVvaRhtvGy3OvtETT0uZDLSsI4Ix
-         RLY4idhPnB7wD4RNwD5isW4siuocHqR/Lc6UJfnk+m+0jDS/EMAS7xGfItUu6yogPiO/
-         GCZqdtpFUaw+Tq9iuBcsUQOSVoX3rLW/WiAZhpa+T9YLrWw5xtpbvBiQNkrlTiebsdJX
-         UDUVCy+DXvOWqDl8cs2orPfu1s8lqoLQkFqqt/Jm6bJP6gnmmMe9uCMFSkHR5+qK9TbQ
-         mRiQ==
-X-Gm-Message-State: APjAAAVifl8weU9e9Fz4TLaWBqULe8Oml6OEb8RC4ogYYTTAIvZswUB9
-        /PUctPD86WAKW4UkBnhywc5uyA==
-X-Google-Smtp-Source: APXvYqxOw+/RCexAIK0/PEftnp59kp31SffdYzOIBv9fhO0Pd8QkKlcd4t1De7O+sOSBJ2kmnvIsaQ==
-X-Received: by 2002:a5d:5491:: with SMTP id h17mr6324330wrv.374.1579626671678;
-        Tue, 21 Jan 2020 09:11:11 -0800 (PST)
-Received: from cheddar.halon.org.uk (cheddar.halon.org.uk. [93.93.131.118])
-        by smtp.gmail.com with ESMTPSA id z83sm33634wmg.2.2020.01.21.09.11.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 21 Jan 2020 09:11:11 -0800 (PST)
-Received: from bsmtp by cheddar.halon.org.uk with local-bsmtp (Exim 4.89)
-        (envelope-from <steve.mcintyre@linaro.org>)
-        id 1itx3W-000263-Qo; Tue, 21 Jan 2020 17:11:10 +0000
-Received: from steve by tack.einval.org with local (Exim 4.92)
-        (envelope-from <steve.mcintyre@linaro.org>)
-        id 1itx3I-0001fB-Ld; Tue, 21 Jan 2020 17:10:56 +0000
-Date:   Tue, 21 Jan 2020 17:10:56 +0000
-From:   Steve McIntyre <steve.mcintyre@linaro.org>
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     Alexandre Torgue <alexandre.torgue@st.com>, robh+dt@kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        david@gibson.dropbear.id.au, sjg@chromium.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, devicetree-compiler@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [RFC PATCH 0/3] Add device tree build information
-Message-ID: <20200121171048.GF6796@tack.einval.com>
-References: <20200113181625.3130-1-alexandre.torgue@st.com>
- <f21ad44d-f119-2035-b4ee-16b3619879af@gmail.com>
- <233e0a5f-d38f-908c-5ca7-66ee87d0fcae@st.com>
- <7cfd0bc0-13fd-98ea-9bfd-6cfbbfd77b6d@gmail.com>
- <220e3aea-b273-417a-69c9-059236c888af@st.com>
- <a1233cd8-e73a-82d7-74bf-69109d1a0a07@gmail.com>
- <20200120182837.GO3697@linaro.org>
- <f09ce50c-6721-c9d3-4f27-3f98a2d0b183@gmail.com>
+        Tue, 21 Jan 2020 12:11:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41048 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728829AbgAURLa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 12:11:30 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 457E2206A2;
+        Tue, 21 Jan 2020 17:11:26 +0000 (UTC)
+Date:   Tue, 21 Jan 2020 12:11:24 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     lukasz.luba@arm.com
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-imx@nxp.com, Morten.Rasmussen@arm.com,
+        Dietmar.Eggemann@arm.com, Chris.Redpath@arm.com,
+        ionela.voinescu@arm.com, javi.merino@arm.com,
+        cw00.choi@samsung.com, b.zolnierkie@samsung.com, rjw@rjwysocki.net,
+        sudeep.holla@arm.com, viresh.kumar@linaro.org, nm@ti.com,
+        sboyd@kernel.org, rui.zhang@intel.com, amit.kucheria@verdurent.com,
+        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        qperret@google.com, bsegall@google.com, mgorman@suse.de,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
+        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh@kernel.org,
+        matthias.bgg@gmail.com, steven.price@arm.com,
+        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
+        airlied@linux.ie, daniel@ffwll.ch, patrick.bellasi@matbug.net
+Subject: Re: [PATCH 3/4] thermal: devfreq_cooling: Refactor code and switch
+ to use Energy Model
+Message-ID: <20200121121124.1a1f3175@gandalf.local.home>
+In-Reply-To: <20200116152032.11301-4-lukasz.luba@arm.com>
+References: <20200116152032.11301-1-lukasz.luba@arm.com>
+        <20200116152032.11301-4-lukasz.luba@arm.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f09ce50c-6721-c9d3-4f27-3f98a2d0b183@gmail.com>
-X-attached: none
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-wibble: sender_address steve.mcintyre@linaro.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Adding lakml to the CC list ]
+On Thu, 16 Jan 2020 15:20:31 +0000
+lukasz.luba@arm.com wrote:
 
-On Mon, Jan 20, 2020 at 09:20:55PM -0600, Frank Rowand wrote:
->On 1/20/20 12:28 PM, Steve McIntyre wrote:
->> On Mon, Jan 20, 2020 at 10:14:22AM -0600, Frank Rowand wrote:
->>> On 1/20/20 4:56 AM, Alexandre Torgue wrote:
->>>
->>> Here is an example of the info from one of my builds:
->>>
->>>   From Linux 5.5.0-rc2-dirty by frowand the Mon Jan 20 09:50:58 CST 2020.
->>>
->>> The information 'Linux 5.5.0-rc2-dirty' is precisely what was most objected
->>> to in my proposal.
->> 
->> ACK. :-( I'm surprised to see so much push-back on what looks like a
->> simple piece of information here.
->
->Me too.
+> diff --git a/include/trace/events/thermal.h b/include/trace/events/thermal.h
+> index 135e5421f003..8a5f04888abd 100644
+> --- a/include/trace/events/thermal.h
+> +++ b/include/trace/events/thermal.h
+> @@ -153,31 +153,30 @@ TRACE_EVENT(thermal_power_cpu_limit,
+>  TRACE_EVENT(thermal_power_devfreq_get_power,
+>  	TP_PROTO(struct thermal_cooling_device *cdev,
+>  		 struct devfreq_dev_status *status, unsigned long freq,
+> -		u32 dynamic_power, u32 static_power, u32 power),
+> +		u32 power),
+>  
+> -	TP_ARGS(cdev, status,  freq, dynamic_power, static_power, power),
+> +	TP_ARGS(cdev, status,  freq, power),
+>  
+>  	TP_STRUCT__entry(
+>  		__string(type,         cdev->type    )
+>  		__field(unsigned long, freq          )
+> -		__field(u32,           load          )
+> -		__field(u32,           dynamic_power )
+> -		__field(u32,           static_power  )
+> +		__field(u32,           busy_time)
+> +		__field(u32,           total_time)
+>  		__field(u32,           power)
+>  	),
+>  
+>  	TP_fast_assign(
+>  		__assign_str(type, cdev->type);
+>  		__entry->freq = freq;
+> -		__entry->load = (100 * status->busy_time) / status->total_time;
+> -		__entry->dynamic_power = dynamic_power;
+> -		__entry->static_power = static_power;
+> +		__entry->busy_time = status->busy_time;
+> +		__entry->total_time = status->total_time;
+>  		__entry->power = power;
+>  	),
+>  
+> -	TP_printk("type=%s freq=%lu load=%u dynamic_power=%u static_power=%u power=%u",
+> +	TP_printk("type=%s freq=%lu load=%u power=%u",
+>  		__get_str(type), __entry->freq,
+> -		__entry->load, __entry->dynamic_power, __entry->static_power,
+> +		__entry->total_time == 0 ? 0 :
+> +			(100 * __entry->busy_time) / __entry->total_time,
+>  		__entry->power)
+>  );
+>  
 
-So, looking at the comments back on the old thread...
+Tracing updates look fine to me. Having the division on the output
+makes more sense.
 
-Alexandre is proposing somthing slightly different here: a patch to
-add a simple string to allow for a description of where the DTB came
-from. The particular example he uses here fills in build details from
-the Linux repo, but it could just as easily be filled in as part of a
-U-Boot build, or the build of a DTB included with EDK2, or whatever
-other firmware might include it. It might be useful to also add
-similar debug output into U-Boot, or for that matter any other
-DT-using project.
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org> # for tracing code
 
-As Rob says later, it's simply information for humans to help identify
-where a DTB came from. Nothing more.
-
->> I've had users *specifically* asking for this kind of identification
->> so that they can verify the version of the DTB they're using at
->> runtime. Right now it can be a guessing game, which does not help
->> people trying to debug problems.
->
->If the information was reported as debug information via pr_debug(),
->would that work for your use case?  Or would the users' kernels
->not have debug enabled in the configuration?
-
-Quite possibly not - I'm not 100% sure to be honest. :-/
-
--- 
-Steve McIntyre                                steve.mcintyre@linaro.org
-<http://www.linaro.org/> Linaro.org | Open source software for ARM SoCs
-
+-- Steve
