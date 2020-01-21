@@ -2,807 +2,253 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB343C33CB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 03:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 211B4C33CB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 03:36:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 790022073D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 03:36:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1E192073D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 03:36:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="InFmM+1C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728748AbgAUDf7 (ORCPT
+        id S1728847AbgAUDgP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 22:35:59 -0500
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:33908 "EHLO
-        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727009AbgAUDf7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 22:35:59 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.257809-0.0171984-0.724993;DS=CONTINUE|ham_system_inform|0.041768-0.000336577-0.957895;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03299;MF=liaoweixiong@allwinnertech.com;NM=1;PH=DS;RN=16;RT=16;SR=0;TI=SMTPD_---.GfZ0IwR_1579577749;
-Received: from 172.16.10.102(mailfrom:liaoweixiong@allwinnertech.com fp:SMTPD_---.GfZ0IwR_1579577749)
-          by smtp.aliyun-inc.com(10.147.40.44);
-          Tue, 21 Jan 2020 11:35:50 +0800
-Subject: Re: [PATCH v1 11/11] mtd: new support oops logger based on pstore/blk
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org
-References: <1579482233-2672-1-git-send-email-liaoweixiong@allwinnertech.com>
- <1579482233-2672-12-git-send-email-liaoweixiong@allwinnertech.com>
- <20200120110306.32e53fd8@xps13>
-From:   liaoweixiong <liaoweixiong@allwinnertech.com>
-Message-ID: <27226590-379c-8784-f461-f5d701015611@allwinnertech.com>
-Date:   Tue, 21 Jan 2020 11:36:00 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20200120110306.32e53fd8@xps13>
-Content-Type: text/plain; charset=utf-8
+        Mon, 20 Jan 2020 22:36:15 -0500
+Received: from mail-eopbgr1310107.outbound.protection.outlook.com ([40.107.131.107]:56832
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726935AbgAUDgO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 22:36:14 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aIIFu24Iv30EMcFuDpgrsyIE7mWSQ368vM0T/sD25ffJetRSaWbioIjNP5zSDRfoWffk+GeEDwlXGlRI9rF/eKEu6IHJXOdUkVoQXyGzS1AsD0ULLLmzUal0c8jTHklzpZ5qVwDy+iT75Lx1YTiYO4Bo2INPKag/4iWmQvjmfodw6mM1gOM9oRK1k13nc1bU8LnrPrTqG1rzBjeg2Hu/cYRco15/yWpJ+23NKz1sj4sUKw4eFTR8KHc13psOxr4mnSqmxwLq9h9T0BXR7jFRms0WcZKV3sJCpGZBCRFUoXK+MxLtTJmNEFa0d/R+XboZ0jRAViVl+OWdI4kuQbP0hg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TP/3mk/bODhY852DjyVOYytCk3cirB3Sv/bKv3+OEKk=;
+ b=mSCNcDQzG8sSIeoBdy4k4UHAAsFTXfzbNB6S0Ajfh7hIV5UkFUSO3x0MzeW75dEa9zdmtK9/JdGWTPbiwE2ErLPnfSqInNWQ5G1dZNjlzCguRTSN0gLr98YWxo9SxtiPOQY0zZsEKxiLrc6QY5Vkmbxg/5RLxNP2eBxt/m37ciZ/0AVPDsKWaXVGBCAAVhoC9dN9aF6nei/h5+QBZpKpIq9RjTH0HNE8MYHQkl4anMskygrmtd5GHhNl5Z/0fzZNs4ihPLe0rpU3MmwBzxjKA3Uluko3zuiFwDJpFdwHSiueE6xE3e42EtfEJFrxnH7D/TtwyIbfCnkuBhOrqRiEdw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TP/3mk/bODhY852DjyVOYytCk3cirB3Sv/bKv3+OEKk=;
+ b=InFmM+1CACyHyaRcne7GytW2e6cfpqYxY+Vn1jtLh6PsMQN64HjTz+t7EoItaBQPSsUTe8rMJBsqOsIb0aHbtFllIfOqsF+JLdjwsv8AWrZi7wiRZE+AXhWQiTQ/EhjY0yg3i2zTKqifLJjrmW55IXGQ/OMgpqEPb7GceqMl9po=
+Received: from SG2P153MB0349.APCP153.PROD.OUTLOOK.COM (52.132.233.84) by
+ SG2P153MB0320.APCP153.PROD.OUTLOOK.COM (52.132.232.211) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2686.7; Tue, 21 Jan 2020 03:36:06 +0000
+Received: from SG2P153MB0349.APCP153.PROD.OUTLOOK.COM
+ ([fe80::e8e6:3ff5:1354:c16c]) by SG2P153MB0349.APCP153.PROD.OUTLOOK.COM
+ ([fe80::e8e6:3ff5:1354:c16c%4]) with mapi id 15.20.2686.008; Tue, 21 Jan 2020
+ 03:36:06 +0000
+From:   Tianyu Lan <Tianyu.Lan@microsoft.com>
+To:     Michael Kelley <mikelley@microsoft.com>,
+        "lantianyu1986@gmail.com" <lantianyu1986@gmail.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>
+CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        vkuznets <vkuznets@redhat.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH V3] x86/Hyper-V: Balloon up according to request page
+ number
+Thread-Topic: [PATCH V3] x86/Hyper-V: Balloon up according to request page
+ number
+Thread-Index: AQHVz9cTzM+cFKZdRE2yL0gSmnrbEKf0d83g
+Date:   Tue, 21 Jan 2020 03:36:05 +0000
+Message-ID: <SG2P153MB034973B6258618608EBA371F920D0@SG2P153MB0349.APCP153.PROD.OUTLOOK.COM>
+References: <20200120084149.4791-1-Tianyu.Lan@microsoft.com>
+ <MW2PR2101MB10529ECBC84A6BA130FB9134D7320@MW2PR2101MB1052.namprd21.prod.outlook.com>
+In-Reply-To: <MW2PR2101MB10529ECBC84A6BA130FB9134D7320@MW2PR2101MB1052.namprd21.prod.outlook.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-01-20T21:17:47.6293435Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=9b695f0e-65e6-4cff-8fef-9ee6a6ee20b4;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Tianyu.Lan@microsoft.com; 
+x-originating-ip: [167.220.255.119]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 4514a93f-fda1-4f39-8c8e-08d79e230c6e
+x-ms-traffictypediagnostic: SG2P153MB0320:|SG2P153MB0320:|SG2P153MB0320:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <SG2P153MB0320546816D0B5BFC1549940920D0@SG2P153MB0320.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:2733;
+x-forefront-prvs: 0289B6431E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(39860400002)(366004)(346002)(376002)(136003)(199004)(189003)(52536014)(478600001)(2906002)(76116006)(4326008)(5660300002)(8990500004)(33656002)(10290500003)(8676002)(316002)(26005)(8936002)(54906003)(6506007)(110136005)(7696005)(71200400001)(66946007)(186003)(53546011)(81156014)(81166006)(55016002)(86362001)(9686003)(66476007)(66446008)(66556008)(64756008);DIR:OUT;SFP:1102;SCL:1;SRVR:SG2P153MB0320;H:SG2P153MB0349.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: nYWH2GroTWKN+nUMELHBoWsmZ7Rslip+GvmrZdpPnF2ESuVldDfqEJqgUy08DI8faRDe7oVOd/Zaq5JQij0uYpH2z2AUwyiUogRrfAsFQfUKUTttICcrh7wbW30FGuJWeUYWBtjHzttXQ4CT4vPnTGFZWrtR9+f6MTMthZr6ftV0327z/7S53B2qH2vWq24LbBqILatMgzkN0Oo+CpLfshs9qv8b6K5VHfSD30xOaJh6veJNpkmfsk+BaGb5lO6iNZHvw6bN3vYNZI3DSW+iW+fjmbLJqIwUqjiJVRa922vY52hCTZ+OtxmHsiM2PAHHBX0pfrzj49j9PdV7nXLyRhgogYugQ9Beml2aShtdup36a7Ke1fjL42ybcAR8AF9tzRi2LVV4eAGLzk2X7/KPF9VFHw6iggDIQLwr9BpGvfSuGz5umoi8UaS5nSPfNBfA
+x-ms-exchange-antispam-messagedata: o8WXlF8QCk5vqn8XkU/sxlzRphCT2UjyInuKytlaYcGlx4A2JZCeMh8Nil6L0mKKp7zO2i0paKeatCFmBv3kpv7pSTDywyiVfOFhw3eVKJU4yo6eNpoVtmntng+KyCnPyWehjF0NqpDNxFp7tEuEnA==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4514a93f-fda1-4f39-8c8e-08d79e230c6e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jan 2020 03:36:06.0632
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tWEyMLs8Ld0oERAz6gL83IeQbzH+uivGQQyEasL/urcCjSt1nwiAdcZyxSJ/uC8Wws6q5P+OSY5IKk3zTA8DWQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2P153MB0320
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hi Miquel Raynal,
+> From: Michael Kelley <mikelley@microsoft.com>
+> Sent: Tuesday, January 21, 2020 5:18 AM
+> To: lantianyu1986@gmail.com; KY Srinivasan <kys@microsoft.com>; Haiyang
+> Zhang <haiyangz@microsoft.com>; Stephen Hemminger
+> <sthemmin@microsoft.com>; sashal@kernel.org
+> Cc: Tianyu Lan <Tianyu.Lan@microsoft.com>; linux-hyperv@vger.kernel.org;
+> linux-kernel@vger.kernel.org; vkuznets <vkuznets@redhat.com>;
+> stable@vger.kernel.org
+> Subject: RE: [PATCH V3] x86/Hyper-V: Balloon up according to request page
+> number
+>=20
+> From: Tianyu Lan <Tianyu.Lan@microsoft.com> Sent: Monday, January 20,
+> 2020 12:42 AM
+> >
+> > Current code has assumption that balloon request memory size aligns
+> > with 2MB. But actually Hyper-V doesn't guarantee such alignment. When
+> > balloon driver receives non-aligned balloon request, it produces
+> > warning and balloon up more memory than requested in order to keep 2MB
+> alignment.
+> > Remove the warning and balloon up memory according to actual requested
+> > memory size.
+> >
+> > Fixes: f6712238471a ("hv: hv_balloon: avoid memory leak on alloc_error
+> > of 2MB memory
+> > block")
+> > Cc: stable@vger.kernel.org
+> > Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> > Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> > ---
+> > Change since v2:
+> >     - Remove check between request page number and alloc_unit
+> >     in the alloc_balloon_pages() because it's redundant with
+> >     new change.
+> >     - Remove the "continue" just follwoing alloc_unit switch
+> >      from 2MB to 4K in order to avoid skipping allocated
+> >      memory.
+> >
+> > Change since v1:
+> >     - Change logic of switching alloc_unit from 2MB to 4KB
+> >     in the balloon_up() to avoid redundant iteration when
+> >     handle non-aligned page request.
+> >     - Remove 2MB alignment operation and comment in balloon_up()
+> > ---
+> >  drivers/hv/hv_balloon.c | 17 ++++-------------
+> >  1 file changed, 4 insertions(+), 13 deletions(-)
+> >
+> > diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c index
+> > 7f3e7ab22d5d..73092a7a3345 100644
+> > --- a/drivers/hv/hv_balloon.c
+> > +++ b/drivers/hv/hv_balloon.c
+> > @@ -1681,10 +1681,7 @@ static unsigned int alloc_balloon_pages(struct
+> > hv_dynmem_device *dm,
+> >  	unsigned int i, j;
+> >  	struct page *pg;
+> >
+> > -	if (num_pages < alloc_unit)
+> > -		return 0;
+> > -
+> > -	for (i =3D 0; (i * alloc_unit) < num_pages; i++) {
+> > +	for (i =3D 0; i < num_pages / alloc_unit; i++) {
+> >  		if (bl_resp->hdr.size + sizeof(union dm_mem_page_range) >
+> >  			HV_HYP_PAGE_SIZE)
+> >  			return i * alloc_unit;
+> > @@ -1722,7 +1719,7 @@ static unsigned int alloc_balloon_pages(struct
+> > hv_dynmem_device *dm,
+> >
+> >  	}
+> >
+> > -	return num_pages;
+> > +	return i * alloc_unit;
+> >  }
+> >
+> >  static void balloon_up(union dm_msg_info *msg_info) @@ -1737,9
+> > +1734,6 @@ static void balloon_up(union dm_msg_info *msg_info)
+> >  	long avail_pages;
+> >  	unsigned long floor;
+> >
+> > -	/* The host balloons pages in 2M granularity. */
+> > -	WARN_ON_ONCE(num_pages % PAGES_IN_2M !=3D 0);
+> > -
+> >  	/*
+> >  	 * We will attempt 2M allocations. However, if we fail to
+> >  	 * allocate 2M chunks, we will go back to PAGE_SIZE allocations.
+> > @@ -1749,14 +1743,13 @@ static void balloon_up(union dm_msg_info
+> *msg_info)
+> >  	avail_pages =3D si_mem_available();
+> >  	floor =3D compute_balloon_floor();
+> >
+> > -	/* Refuse to balloon below the floor, keep the 2M granularity. */
+> > +	/* Refuse to balloon below the floor. */
+> >  	if (avail_pages < num_pages || avail_pages - num_pages < floor) {
+> >  		pr_warn("Balloon request will be partially fulfilled. %s\n",
+> >  			avail_pages < num_pages ? "Not enough memory." :
+> >  			"Balloon floor reached.");
+> >
+> >  		num_pages =3D avail_pages > floor ? (avail_pages - floor) : 0;
+> > -		num_pages -=3D num_pages % PAGES_IN_2M;
+> >  	}
+> >
+> >  	while (!done) {
+> > @@ -1770,10 +1763,8 @@ static void balloon_up(union dm_msg_info
+> *msg_info)
+> >  		num_ballooned =3D alloc_balloon_pages(&dm_device,
+> num_pages,
+> >  						    bl_resp, alloc_unit);
+> >
+> > -		if (alloc_unit !=3D 1 && num_ballooned =3D=3D 0) {
+> > +		if (alloc_unit !=3D 1 && num_ballooned !=3D num_pages)
+> >  			alloc_unit =3D 1;
+> > -			continue;
+> > -		}
+>=20
+> I don't think removing the "continue" works either.   Suppose the request=
+ed
+> size is 1 Mbyte.   With an alloc_unit of 2M, alloc_balloon_pages() will r=
+eturn
+> zero.  The code above will set alloc_unit to 1, which is correct.  But wi=
+thout the
+> "continue", the code below will mark "done" as true, and we won't loop ba=
+ck
+> around to try again with alloc_unit set to 1.
+>=20
+> I think the original code needs to stay as is.
 
-On 2020/1/20 PM 6:03, Miquel Raynal wrote:
-> Hi WeiXiong,
-> 
-> WeiXiong Liao <liaoweixiong@allwinnertech.com> wrote on Mon, 20 Jan
-> 2020 09:03:53 +0800:
-> 
->> It's the last one of a series of patches for adaptive to MTD device.
->>
->> The mtdpstore is similar to mtdoops but more powerful. It bases on
->> pstore/blk, aims to store panic and oops log to a flash partition,
-> 
->                                            logs?
-> 
+Yes,  you are right. Will revert the change in the next version. Thanks.
 
-I will fix it. Thanks.
+>=20
+> Michael
+>=20
+> >
+> >  		if (num_ballooned =3D=3D 0 || num_ballooned =3D=3D num_pages) {
+> >  			pr_debug("Ballooned %u out of %u requested
+> pages.\n",
+> > --
+> > 2.14.5
 
->> where it can be read back as files after mounting pstore filesystem.
->>
->> The pstore/blk and blkoops, a wrapper for pstore/blk, are designed for
->> block device at the very beginning, but now, compatible to not only
->> block device. After this series of patches, pstore/blk can also work
->> for MTD device. To make it work, 'blkdev' on kconfig or module
->> parameter of blkoops should be set as mtd device name or mtd number.
->> See more about pstore/blk and blkoops on:
->>     Documentation/admin-guide/pstore-block.rst
->>
->> Why do we need mtdpstore?
->> 1. repetitive jobs between pstore and mtdoops
->>    Both of pstore and mtdoops do the same jobs that store panic/oops log.
->>    They have much similar logic that register to kmsg dumper and store
->>    log to several chunks one by one.
->> 2. do what a driver should do
->>    To me, a driver should provide methods instead of policies. What MTD
->>    should do is to provide read/write/erase operations, geting rid of codes
->>    about chunk management, kmsg dumper and configuration.
->> 3. enhanced feature
->>    Not only store log, but also show it as files.
->>    Not only log, but also trigger time and trigger count.
->>    Not only panic/oops log, but also log recorder for pmsg, console and
->>    ftrace in the future.
->>
->> Signed-off-by: WeiXiong Liao <liaoweixiong@allwinnertech.com>
->> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> I don't thing the test robot has a meaning here.
-> 
-
-I do not know what meaning the test rebot tag has, but i was suggested
-from kbuild test rebot to do so. How should i do to it ? Drop the tag or
-keep the tag or other?
-The email from kbuild test rebot said that:
-
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-
->> ---
->>  drivers/mtd/Kconfig     |  10 +
->>  drivers/mtd/Makefile    |   1 +
->>  drivers/mtd/mtdpstore.c | 530 ++++++++++++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 541 insertions(+)
->>  create mode 100644 drivers/mtd/mtdpstore.c
->>
->> diff --git a/drivers/mtd/Kconfig b/drivers/mtd/Kconfig
->> index 42d401ea60ee..a6e59495a738 100644
->> --- a/drivers/mtd/Kconfig
->> +++ b/drivers/mtd/Kconfig
->> @@ -170,6 +170,16 @@ config MTD_OOPS
->>  	  buffer in a flash partition where it can be read back at some
->>  	  later point.
->>  
->> +config MTD_PSTORE
->> +	tristate "Log panic/oops to an MTD buffer base on pstore"
-> 
->                                                   based
-> 
-
-I will fix it. Thanks.
-
->> +	depends on PSTORE_BLKOOPS
->> +	help
->> +	  This enables panic and oops messages to be logged to a circular
->> +	  buffer in a flash partition where it can be read back as files after
->> +	  mounting pstore filesystem.
->> +
->> +	  If unsure, say N.
->> +
->>  config MTD_SWAP
->>  	tristate "Swap on MTD device support"
->>  	depends on MTD && SWAP
->> diff --git a/drivers/mtd/Makefile b/drivers/mtd/Makefile
->> index 56cc60ccc477..593d0593a038 100644
->> --- a/drivers/mtd/Makefile
->> +++ b/drivers/mtd/Makefile
->> @@ -20,6 +20,7 @@ obj-$(CONFIG_RFD_FTL)		+= rfd_ftl.o
->>  obj-$(CONFIG_SSFDC)		+= ssfdc.o
->>  obj-$(CONFIG_SM_FTL)		+= sm_ftl.o
->>  obj-$(CONFIG_MTD_OOPS)		+= mtdoops.o
->> +obj-$(CONFIG_MTD_PSTORE)	+= mtdpstore.o
->>  obj-$(CONFIG_MTD_SWAP)		+= mtdswap.o
->>  
->>  nftl-objs		:= nftlcore.o nftlmount.o
->> diff --git a/drivers/mtd/mtdpstore.c b/drivers/mtd/mtdpstore.c
->> new file mode 100644
->> index 000000000000..ab4acd3a9011
->> --- /dev/null
->> +++ b/drivers/mtd/mtdpstore.c
->> @@ -0,0 +1,530 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * MTD Oops/Panic loger for pstore/blk
->> + *
->> + * Copyright (C) 2019 WeiXiong Liao <liaoweixiong@gallwinnertech.com>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
->> + * GNU General Public License for more details.
-> 
-> The license text is not needed since you added SPDX tag.
-> 
-
-I will fix it. Thanks.
-
->> + *
->> + */
->> +#define pr_fmt(fmt) "mtdoops-pstore: " fmt
->> +
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/blkoops.h>
->> +#include <linux/mtd/mtd.h>
->> +#include <linux/bitops.h>
->> +
->> +/* Maximum MTD partition size */
->> +#define MTDPSTORE_MAX_MTD_SIZE (8 * 1024 * 1024)
-> 
->                                   SZ_8M
-> 
-
-I will fix it. Thanks.
-
->> +
->> +static struct mtdpstore_context {
->> +	int index;
->> +	struct blkoops_info bo_info;
->> +	struct blkoops_device bo_dev;
->> +	struct mtd_info *mtd;
->> +	unsigned long *rmmap;		/* removed bit map */
->> +	unsigned long *usedmap;		/* used bit map */
->> +	/*
->> +	 * used for panic write
->> +	 * As there are no block_isbad for panic case, we should keep this
->> +	 * status before panic to ensure panic_write not failed.
->> +	 */
->> +	unsigned long *badmap;		/* bad block bit map */
->> +} oops_cxt;
->> +
->> +static int mtdpstore_block_isbad(struct mtdpstore_context *cxt, loff_t off)
->> +{
->> +	int ret;
->> +	struct mtd_info *mtd = cxt->mtd;
->> +	u64 blknum = div_u64(off, mtd->erasesize);
->> +
->> +	if (test_bit(blknum, cxt->badmap))
->> +		return true;
->> +	ret = mtd_block_isbad(mtd, off);
->> +	if (ret < 0) {
->> +		pr_err("mtd_block_isbad failed, aborting\n");
->> +		return ret;
->> +	} else if (ret > 0) {
->> +		set_bit(blknum, cxt->badmap);
->> +		return true;
->> +	}
->> +	return false;
->> +}
->> +
->> +static inline int mtdpstore_panic_block_isbad(struct mtdpstore_context *cxt,
->> +		loff_t off)
->> +{
->> +	struct mtd_info *mtd = cxt->mtd;
->> +	u64 blknum = div_u64(off, mtd->erasesize);
->> +
->> +	return test_bit(blknum, cxt->badmap);
->> +}
->> +
->> +static inline void mtdpstore_mark_used(struct mtdpstore_context *cxt,
->> +		loff_t off)
->> +{
->> +	u64 zonenum = div_u64(off, cxt->bo_info.dmesg_size);
->> +
->> +	pr_debug("mark zone %llu used\n", zonenum);
->> +	set_bit(zonenum, cxt->usedmap);
->> +}
->> +
->> +static inline void mtdpstore_mark_unused(struct mtdpstore_context *cxt,
->> +		loff_t off)
->> +{
->> +	u64 zonenum = div_u64(off, cxt->bo_info.dmesg_size);
->> +
->> +	pr_debug("mark zone %llu unused\n", zonenum);
->> +	clear_bit(zonenum, cxt->usedmap);
->> +}
->> +
->> +static inline void mtdpstore_block_mark_unused(struct mtdpstore_context *cxt,
->> +		loff_t off)
->> +{
->> +	u64 zonenum = div_u64(off, cxt->bo_info.dmesg_size);
->> +	u32 zonecnt = cxt->mtd->erasesize / cxt->bo_info.dmesg_size;
->> +
->> +	while (zonecnt > 0) {
->> +		pr_debug("mark zone %llu unused\n", zonenum);
->> +		clear_bit(zonenum, cxt->usedmap);
->> +		zonenum++;
->> +		zonecnt--;
->> +	}
->> +}
->> +
->> +static inline int mtdpstore_is_used(struct mtdpstore_context *cxt, loff_t off)
->> +{
->> +	u64 zonenum = div_u64(off, cxt->bo_info.dmesg_size);
->> +	u64 blknum = div_u64(off, cxt->mtd->erasesize);
->> +
->> +	if (test_bit(blknum, cxt->badmap))
->> +		return true;
->> +	return test_bit(zonenum, cxt->usedmap);
->> +}
->> +
->> +static int mtdpstore_block_is_used(struct mtdpstore_context *cxt,
->> +		loff_t off)
->> +{
->> +	u64 zonenum = div_u64(off, cxt->bo_info.dmesg_size);
->> +	u32 zonecnt = cxt->mtd->erasesize / cxt->bo_info.dmesg_size;
->> +
->> +	while (zonecnt > 0) {
->> +		if (test_bit(zonenum, cxt->usedmap))
->> +			return true;
->> +		zonenum++;
->> +		zonecnt--;
->> +	}
->> +	return false;
->> +}
->> +
->> +static int mtdpstore_is_empty(struct mtdpstore_context *cxt, char *buf,
->> +		size_t size)
->> +{
->> +	struct mtd_info *mtd = cxt->mtd;
->> +	size_t sz;
->> +	int i;
->> +
->> +	sz = min_t(uint32_t, size, mtd->writesize / 4);
->> +	for (i = 0; i < sz; i++) {
->> +		if (buf[i] != (char)0xFF)
->> +			return false;
->> +	}
->> +	return true;
->> +}
->> +
->> +static void mtdpstore_mark_removed(struct mtdpstore_context *cxt, loff_t off)
->> +{
->> +	u64 zonenum = div_u64(off, cxt->bo_info.dmesg_size);
->> +
->> +	pr_debug("mark zone %llu removed\n", zonenum);
->> +	set_bit(zonenum, cxt->rmmap);
->> +}
->> +
->> +static void mtdpstore_block_clear_removed(struct mtdpstore_context *cxt,
->> +		loff_t off)
->> +{
->> +	u64 zonenum = div_u64(off, cxt->bo_info.dmesg_size);
->> +	u32 zonecnt = cxt->mtd->erasesize / cxt->bo_info.dmesg_size;
->> +
->> +	while (zonecnt > 0) {
->> +		clear_bit(zonenum, cxt->rmmap);
->> +		zonenum++;
->> +		zonecnt--;
->> +	}
->> +}
->> +
->> +static int mtdpstore_block_is_removed(struct mtdpstore_context *cxt,
->> +		loff_t off)
->> +{
->> +	u64 zonenum = div_u64(off, cxt->bo_info.dmesg_size);
->> +	u32 zonecnt = cxt->mtd->erasesize / cxt->bo_info.dmesg_size;
->> +
->> +	while (zonecnt > 0) {
->> +		if (test_bit(zonenum, cxt->rmmap))
->> +			return true;
->> +		zonenum++;
->> +		zonecnt--;
->> +	}
->> +	return false;
->> +}
->> +
->> +static int mtdpstore_erase_do(struct mtdpstore_context *cxt, loff_t off)
->> +{
->> +	struct erase_info erase;
->> +	int ret;
->> +
->> +	pr_debug("try to erase off 0x%llx\n", off);
->> +	erase.len = cxt->mtd->erasesize;
->> +	erase.addr = off;
->> +	ret = mtd_erase(cxt->mtd, &erase);
->> +	if (!ret)
->> +		mtdpstore_block_clear_removed(cxt, off);
->> +	else
->> +		pr_err("erase of region [0x%llx, 0x%llx] on \"%s\" failed\n",
->> +		       (unsigned long long)erase.addr,
->> +		       (unsigned long long)erase.len, cxt->bo_info.device);
->> +	return ret;
->> +}
->> +
->> +/*
->> + * called while removing file
->> + *
->> + * Avoiding over erasing, do erase only when all zones are removed or unused.
->> + * Ensure to remove when unregister by reading, erasing and wrtiing back.
->> + */
->> +static ssize_t mtdpstore_erase(size_t size, loff_t off)
->> +{
->> +	struct mtdpstore_context *cxt = &oops_cxt;
->> +
->> +	if (mtdpstore_block_isbad(cxt, off))
->> +		return -EIO;
->> +
->> +	mtdpstore_mark_unused(cxt, off);
->> +
->> +	if (likely(mtdpstore_block_is_used(cxt, off))) {
->> +		mtdpstore_mark_removed(cxt, off);
->> +		return 0;
->> +	}
->> +
->> +	/* all zones are unused, erase it */
->> +	off = ALIGN_DOWN(off, cxt->mtd->erasesize);
->> +	return mtdpstore_erase_do(cxt, off);
->> +}
->> +
->> +/*
->> + * What is securety for mtdpstore?
-> 
->               security
-> 
-
-I will fix it. Thanks.
-
->> + * As there is no erase for panic case, we should ensure at least one zone
->> + * is writable. Otherwise, panic write will be failed.
-> 
->                                           will fail.
-> 
-I will fix it. Thanks.
-
->> + * If zone is used, write operation will return -ENEXT, which means that
->> + * pstore/blk will try one by one until get a empty zone. So, it's no need
-> 
->                                            it gets an empty zone. So it
->                                            is not needed to ...
->     
-
-I will fix it. Thanks.
-
->> + * to ensure next zone is empty, but at least one.
-> 
->                the
-> 
-
-I will fix it. Thanks.
-
->> + */
->> +static int mtdpstore_security(struct mtdpstore_context *cxt, loff_t off)
->> +{
->> +	int ret = 0, i;
->> +	u32 zonenum = (u32)div_u64(off, cxt->bo_info.dmesg_size);
->> +	u32 zonecnt = (u32)div_u64(cxt->mtd->size, cxt->bo_info.dmesg_size);
->> +	u32 blkcnt = (u32)div_u64(cxt->mtd->size, cxt->mtd->erasesize);
->> +	u32 erasesize = cxt->mtd->erasesize;
->> +
->> +	for (i = 0; i < zonecnt; i++) {
->> +		u32 num = (zonenum + i) % zonecnt;
->> +
->> +		/* found empty zone */
->> +		if (!test_bit(num, cxt->usedmap))
->> +			return 0;
->> +	}
->> +
->> +	/* If there is no any empty zone, we have no way but to do erase */
->> +	off = ALIGN_DOWN(off, erasesize);
->> +	while (blkcnt--) {
->> +		div64_u64_rem(off + erasesize, cxt->mtd->size, (u64 *)&off);
->> +
->> +		if (mtdpstore_block_isbad(cxt, off))
->> +			continue;
->> +
->> +		ret = mtdpstore_erase_do(cxt, off);
->> +		if (!ret) {
->> +			mtdpstore_block_mark_unused(cxt, off);
->> +			break;
->> +		}
->> +	}
->> +
->> +	if (ret)
->> +		pr_err("all blocks bad!\n");
->> +	pr_debug("end security\n");
->> +	return ret;
->> +}
->> +
->> +static ssize_t mtdpstore_write(const char *buf, size_t size, loff_t off)
->> +{
->> +	struct mtdpstore_context *cxt = &oops_cxt;
->> +	size_t retlen;
->> +	int ret;
->> +
->> +	if (mtdpstore_block_isbad(cxt, off))
->> +		return -ENEXT;
->> +
->> +	/* zone is used, please try next one */
->> +	if (mtdpstore_is_used(cxt, off))
->> +		return -ENEXT;
->> +
->> +	pr_debug("try to write off 0x%llx size %zu\n", off, size);
->> +	ret = mtd_write(cxt->mtd, off, size, &retlen, (u_char *)buf);
->> +	if (ret < 0 || retlen != size) {
->> +		pr_err("write failure at %lld (%zu of %zu written), err %d\n",
->> +				off, retlen, size, ret);
->> +		return -EIO;
->> +	}
->> +	mtdpstore_mark_used(cxt, off);
->> +
->> +	mtdpstore_security(cxt, off);
->> +	return retlen;
->> +}
->> +
->> +/*
->> + * All zones will be read as pstore/blk will read zone one by one when do
->> + * recover.
->> + */
->> +static ssize_t mtdpstore_read(char *buf, size_t size, loff_t off)
->> +{
->> +	struct mtdpstore_context *cxt = &oops_cxt;
->> +	size_t retlen;
->> +	int ret;
->> +
->> +	if (mtdpstore_block_isbad(cxt, off))
->> +		return -ENEXT;
->> +
->> +	pr_debug("try to read off 0x%llx size %zu\n", off, size);
->> +	ret = mtd_read(cxt->mtd, off, size, &retlen, (u_char *)buf);
->> +	if ((ret < 0 && !mtd_is_bitflip(ret)) || size != retlen)  {
-> 
-> IIRC size != retlen does not mean it failed, but that you should
-> continue reading after retlen bytes, no?
-> 
-
-Yes, you are right. I will fix it. Thanks.
-
-> Also, mtd_is_bitflip() does not mean that you are reading a false
-> buffer, but that the data has been corrected as it contained bitflips.
-> mtd_is_eccerr() however, would be meaningful.
-> 
-
-Sure I know mtd_is_bitflip() does not mean failure, but I do not think
-mtd_is_eccerr() should be here since the codes are ret < 0 and NOT
-mtd_is_bitflip().
-
->> +		pr_err("read failure at %lld (%zu of %zu read), err %d\n",
->> +				off, retlen, size, ret);
->> +		return -EIO;
->> +	}
->> +
->> +	if (mtdpstore_is_empty(cxt, buf, size))
->> +		mtdpstore_mark_unused(cxt, off);
->> +	else
->> +		mtdpstore_mark_used(cxt, off);
->> +
->> +	mtdpstore_security(cxt, off);
->> +	return retlen;
->> +}
->> +
->> +static ssize_t mtdpstore_panic_write(const char *buf, size_t size, loff_t off)
->> +{
->> +	struct mtdpstore_context *cxt = &oops_cxt;
->> +	size_t retlen;
->> +	int ret;
->> +
->> +	if (mtdpstore_panic_block_isbad(cxt, off))
->> +		return -ENEXT;
->> +
->> +	/* zone is used, please try next one */
->> +	if (mtdpstore_is_used(cxt, off))
->> +		return -ENEXT;
->> +
->> +	ret = mtd_panic_write(cxt->mtd, off, size, &retlen, (u_char *)buf);
->> +	if (ret < 0 || size != retlen) {
->> +		pr_err("panic write failure at %lld (%zu of %zu read), err %d\n",
->> +				off, retlen, size, ret);
->> +		return -EIO;
->> +	}
->> +	mtdpstore_mark_used(cxt, off);
->> +
->> +	return retlen;
->> +}
->> +
->> +static void mtdpstore_notify_add(struct mtd_info *mtd)
->> +{
->> +	int ret;
->> +	struct mtdpstore_context *cxt = &oops_cxt;
->> +	struct blkoops_info *info = &cxt->bo_info;
->> +	unsigned long longcnt;
->> +
->> +	if (!strcmp(mtd->name, info->device))
->> +		cxt->index = mtd->index;
->> +
->> +	if (mtd->index != cxt->index || cxt->index < 0)
->> +		return;
->> +
->> +	pr_debug("found matching MTD device %s\n", mtd->name);
->> +
->> +	if (mtd->size < info->dmesg_size * 2) {
->> +		pr_err("MTD partition %d not big enough\n", mtd->index);
->> +		return;
->> +	}
->> +	if (mtd->erasesize < info->dmesg_size) {
->> +		pr_err("eraseblock size of MTD partition %d too small\n",
->> +				mtd->index);
-> 
-> What is the usual size of dmesg? Could this check be too limiting?
-> 
-
-The size must be aligned to 4096, which is limited by blkoops. The
-default value is 64K. If it is larger than erasesize, some errors will occur
-since mtdpstore is designed on it.
-
->> +		return;
->> +	}
->> +	if (unlikely(info->dmesg_size % mtd->writesize)) {
->> +		pr_err("record size %lu KB must align to write size %d KB\n",
->> +				info->dmesg_size / 1024,
->> +				mtd->writesize / 1024);
-> 
-> This condition is weird, why would you check this?
-> 
-
-pstore/blk will write 'record_size' dmesg log at one time.
-Since each write data must be aligned to 'writesize' for flash, I am not
-sure
-all flash drivers are compatible with misaligned data, that's why i
-check this.
-
->> +		return;
->> +	}
->> +	if (unlikely(mtd->size > MTDPSTORE_MAX_MTD_SIZE)) {
->> +		pr_err("mtd%d is too large (limit is %d MiB)\n",
->> +				mtd->index,
->> +				MTDPSTORE_MAX_MTD_SIZE / 1024 / 1024);
-> 
-> Same question? I could understand that it is easier to manage blocks
-> knowing their maximum number though.
-> 
-
-It refers to mtdoops.
-
->> +		return;
->> +	}
->> +
->> +	longcnt = BITS_TO_LONGS(div_u64(mtd->size, info->dmesg_size));
->> +	cxt->rmmap = kcalloc(longcnt, sizeof(long), GFP_KERNEL);
->> +	cxt->usedmap = kcalloc(longcnt, sizeof(long), GFP_KERNEL);
->> +
->> +	longcnt = BITS_TO_LONGS(div_u64(mtd->size, mtd->erasesize));
->> +	cxt->badmap = kcalloc(longcnt, sizeof(long), GFP_KERNEL);
->> +
->> +	cxt->bo_dev.total_size = mtd->size;
->> +	/* just support dmesg right now */
->> +	cxt->bo_dev.flags = BLKOOPS_DEV_SUPPORT_DMESG;
->> +	cxt->bo_dev.read = mtdpstore_read;
->> +	cxt->bo_dev.write = mtdpstore_write;
->> +	cxt->bo_dev.erase = mtdpstore_erase;
->> +	cxt->bo_dev.panic_write = mtdpstore_panic_write;
->> +
->> +	ret = blkoops_register_device(&cxt->bo_dev);
->> +	if (ret) {
->> +		pr_err("mtd%d register to blkoops failed\n", mtd->index);
->> +		return;
->> +	}
->> +	cxt->mtd = mtd;
->> +	pr_info("Attached to MTD device %d\n", mtd->index);
->> +}
->> +
->> +static int mtdpstore_flush_removed_do(struct mtdpstore_context *cxt,
->> +		loff_t off, size_t size)
->> +{
->> +	struct mtd_info *mtd = cxt->mtd;
->> +	u_char *buf;
->> +	int ret;
->> +	size_t retlen;
->> +	struct erase_info erase;
->> +
->> +	buf = kmalloc(mtd->erasesize, GFP_KERNEL);
->> +	if (!buf)
->> +		return -ENOMEM;
->> +
->> +	/* 1st. read to cache */
->> +	ret = mtd_read(mtd, off, mtd->erasesize, &retlen, buf);
->> +	if (ret || retlen != mtd->erasesize)
->> +		goto free;
->> +
->> +	/* 2nd. erase block */
->> +	erase.len = mtd->erasesize;
->> +	erase.addr = off;
->> +	ret = mtd_erase(mtd, &erase);
->> +	if (ret)
->> +		goto free;
->> +
->> +	/* 3rd. write back */
->> +	while (size) {
->> +		unsigned int zonesize = cxt->bo_info.dmesg_size;
->> +
->> +		/* remove must clear used bit */
->> +		if (mtdpstore_is_used(cxt, off))
->> +			mtd_write(mtd, off, zonesize, &retlen, buf);
-> 
-> Besides the fact that should definitely check the write return code, I
-> don't understand what you do in this function. What does
-> flush_removed_do mean?
-> 
-
-When user remove one log file on pstore filesystem, mtdpstore should do
-something to ensure log file removed. If the whole block is no longer used,
-it is nice to erase the block. However, if the block still contains
-valid log,
-what mtdpstore can do is to erase and write the valid log back.
-That is what flush_removed_do() do.
-
-In case of repeated erase when users remove several log files, mtdpstore
-do remove jobs when exit.
-
-Besides, mtdpstore do not check the return code to ensure write back valid
-log as much as possible.
-
->> +
->> +		off += zonesize;
->> +		size -= min_t(unsigned int, zonesize, size);
->> +	}
->> +
->> +free:
->> +	kfree(buf);
->> +	return ret;
->> +}
->> +
->> +static int mtdpstore_flush_removed(struct mtdpstore_context *cxt)
->> +{
->> +	struct mtd_info *mtd = cxt->mtd;
->> +	int ret;
->> +	loff_t off;
->> +	u32 blkcnt = (u32)div_u64(mtd->size, mtd->erasesize);
->> +
->> +	for (off = 0; blkcnt > 0; blkcnt--, off += mtd->erasesize) {
->> +		ret = mtdpstore_block_is_removed(cxt, off);
->> +		if (!ret) {
->> +			off += mtd->erasesize;
->> +			continue;
->> +		}
->> +
->> +		ret = mtdpstore_flush_removed_do(cxt, off, mtd->erasesize);
->> +		if (ret)
->> +			return ret;
->> +	}
->> +	return 0;
->> +}
->> +
->> +static void mtdpstore_notify_remove(struct mtd_info *mtd)
->> +{
->> +	struct mtdpstore_context *cxt = &oops_cxt;
->> +
->> +	if (mtd->index != cxt->index || cxt->index < 0)
->> +		return;
->> +
->> +	mtdpstore_flush_removed(cxt);
->> +
->> +	blkoops_unregister_device(&cxt->bo_dev);
->> +	kfree(cxt->badmap);
->> +	kfree(cxt->usedmap);
->> +	kfree(cxt->rmmap);
->> +	cxt->mtd = NULL;
->> +	cxt->index = -1;
->> +}
->> +
->> +static struct mtd_notifier mtdpstore_notifier = {
->> +	.add	= mtdpstore_notify_add,
->> +	.remove	= mtdpstore_notify_remove,
->> +};
->> +
->> +static int __init mtdpstore_init(void)
->> +{
->> +	int ret;
->> +	struct mtdpstore_context *cxt = &oops_cxt;
->> +	struct blkoops_info *info = &cxt->bo_info;
->> +
->> +	ret = blkoops_info(info);
->> +	if (unlikely(ret))
->> +		return ret;
->> +
->> +	if (strlen(info->device) == 0) {
->> +		pr_err("mtd device must be supplied\n");
->> +		return -EINVAL;
->> +	}
->> +	if (!info->dmesg_size) {
->> +		pr_err("no recorder enabled\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	/* Setup the MTD device to use */
->> +	ret = kstrtoint((char *)info->device, 0, &cxt->index);
->> +	if (ret)
->> +		cxt->index = -1;
->> +
->> +	register_mtd_user(&mtdpstore_notifier);
->> +	return 0;
->> +}
->> +module_init(mtdpstore_init);
->> +
->> +static void __exit mtdpstore_exit(void)
->> +{
->> +	unregister_mtd_user(&mtdpstore_notifier);
->> +}
->> +module_exit(mtdpstore_exit);
->> +
->> +MODULE_LICENSE("GPL");
->> +MODULE_AUTHOR("WeiXiong Liao <liaoweixiong@allwinnertech.com>");
->> +MODULE_DESCRIPTION("MTD Oops/Panic console logger/driver");
-> 
-> 
-> 
-> 
-> Thanks,
-> Miquèl
-> 
-
-I will collect more suggestions and submit the new version at one time.
-
--- 
-liaoweixiong
