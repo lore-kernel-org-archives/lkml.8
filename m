@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA511C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 13:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42BDDC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 13:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA2342070C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 13:41:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 200F42070C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 13:42:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729235AbgAUNly (ORCPT
+        id S1729081AbgAUNlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 08:41:54 -0500
-Received: from mga02.intel.com ([134.134.136.20]:28735 "EHLO mga02.intel.com"
+        Tue, 21 Jan 2020 08:41:45 -0500
+Received: from mga05.intel.com ([192.55.52.43]:8602 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729159AbgAUNlt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 08:41:49 -0500
+        id S1728978AbgAUNlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 08:41:45 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 05:41:49 -0800
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 05:41:43 -0800
 X-IronPort-AV: E=Sophos;i="5.70,346,1574150400"; 
-   d="scan'208";a="275304981"
+   d="scan'208";a="427053491"
 Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 05:41:45 -0800
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 05:41:40 -0800
 Received: from punajuuri.localdomain (punajuuri.localdomain [192.168.240.130])
-        by paasikivi.fi.intel.com (Postfix) with ESMTP id 9EA1620B1D;
-        Tue, 21 Jan 2020 15:41:39 +0200 (EET)
+        by paasikivi.fi.intel.com (Postfix) with ESMTP id ECCAC20ABD;
+        Tue, 21 Jan 2020 15:41:38 +0200 (EET)
 Received: from sailus by punajuuri.localdomain with local (Exim 4.92)
         (envelope-from <sakari.ailus@linux.intel.com>)
-        id 1ittn4-0005K5-1c; Tue, 21 Jan 2020 15:41:58 +0200
+        id 1ittn3-0005Jt-Ef; Tue, 21 Jan 2020 15:41:57 +0200
 From:   Sakari Ailus <sakari.ailus@linux.intel.com>
 To:     linux-i2c@vger.kernel.org
 Cc:     Wolfram Sang <wsa@the-dreams.de>,
@@ -45,76 +45,95 @@ Cc:     Wolfram Sang <wsa@the-dreams.de>,
         Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         rajmohan.mani@intel.com, Tomasz Figa <tfiga@chromium.org>
-Subject: [PATCH v4 6/6] Documentation: ACPI: Document probe-low-power _DSD property
-Date:   Tue, 21 Jan 2020 15:41:57 +0200
-Message-Id: <20200121134157.20396-7-sakari.ailus@linux.intel.com>
+Subject: [PATCH v4 2/6] ACPI: Add a convenience function to tell a device is in low power state
+Date:   Tue, 21 Jan 2020 15:41:53 +0200
+Message-Id: <20200121134157.20396-3-sakari.ailus@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200121134157.20396-1-sakari.ailus@linux.intel.com>
 References: <20200121134157.20396-1-sakari.ailus@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document the probe-low-power _DSD property and how it is used with I²C
-drivers.
+Add a convenience function to tell whether a device is in low power state,
+primarily for use in drivers' probe or remove functions on busses where
+the custom is to power on the device for the duration of both.
 
+Returns false on non-ACPI systems.
+
+Suggested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- .../acpi/dsd/probe-low-power.rst              | 28 +++++++++++++++++++
- Documentation/firmware-guide/acpi/index.rst   |  1 +
- 2 files changed, 29 insertions(+)
- create mode 100644 Documentation/firmware-guide/acpi/dsd/probe-low-power.rst
+ drivers/acpi/device_pm.c | 31 +++++++++++++++++++++++++++++++
+ include/linux/acpi.h     |  5 +++++
+ 2 files changed, 36 insertions(+)
 
-diff --git a/Documentation/firmware-guide/acpi/dsd/probe-low-power.rst b/Documentation/firmware-guide/acpi/dsd/probe-low-power.rst
-new file mode 100644
-index 0000000000000..e0343ffefe071
---- /dev/null
-+++ b/Documentation/firmware-guide/acpi/dsd/probe-low-power.rst
-@@ -0,0 +1,28 @@
-+.. SPDX-License-Identifier: GPL-2.0
+diff --git a/drivers/acpi/device_pm.c b/drivers/acpi/device_pm.c
+index 5e4a8860a9c0c..d3174c6edf915 100644
+--- a/drivers/acpi/device_pm.c
++++ b/drivers/acpi/device_pm.c
+@@ -1348,4 +1348,35 @@ int acpi_dev_pm_attach(struct device *dev, bool power_on)
+ 	return 1;
+ }
+ EXPORT_SYMBOL_GPL(acpi_dev_pm_attach);
 +
-+======================================
-+Probing I²C devices in low power state
-+======================================
++/**
++ * acpi_dev_state_low_power - Check the current ACPI power state of a device.
++ * @dev: Physical device the ACPI power state of which to check
++ *
++ * On a system without ACPI, return false. On a system with ACPI, return true if
++ * the current ACPI power state of the device is not D0, or false otherwise.
++ *
++ * Note that the power state of a device is not well-defined after it has been
++ * passed to acpi_device_set_power() and before that function returns, so it is
++ * not valid to ask for the ACPI power state of the device in that time frame.
++ */
++bool acpi_dev_state_low_power(struct device *dev)
++{
++	struct acpi_device *adev = ACPI_COMPANION(dev);
++	int power_state;
++	int ret;
 +
-+Introduction
-+============
++	if (!adev)
++		return false;
 +
-+In some cases it may be preferred to leave certain devices powered off for
-+the entire system bootup if powering on these devices has adverse side
-+effects, beyond just powering on the said device. The _DSD property
-+"probe-low-power" has been defined for this purpose.
++	ret = acpi_device_get_power(adev, &power_state);
++	if (ret) {
++		dev_dbg(dev, "Cannot obtain power state (%d)\n", ret);
++		return false;
++	}
 +
-+How it works
-+============
++	return power_state != ACPI_STATE_D0;
++}
++EXPORT_SYMBOL_GPL(acpi_dev_state_low_power);
 +
-+The property "probe-low-power" boolean property may be used to tell Linux
-+that the I²C framework should instruct the kernel ACPI framework to leave
-+the device in the low power state. If the driver indicates its support for
-+this in its struct i2c_driver.probe_low_power field and the
-+"probe-low-power" property is present, the device will not be powered on
-+for probe.
-+
-+The downside is that as the device is not powered on, even if there's a
-+problem with the device, the driver likely probes just fine but the first
-+user will find out the device doesn't work, instead of a failure at probe
-+time. This feature should thus be used sparingly.
-diff --git a/Documentation/firmware-guide/acpi/index.rst b/Documentation/firmware-guide/acpi/index.rst
-index ad3b5afdae77e..4e4ac675c0ff8 100644
---- a/Documentation/firmware-guide/acpi/index.rst
-+++ b/Documentation/firmware-guide/acpi/index.rst
-@@ -11,6 +11,7 @@ ACPI Support
-    dsd/graph
-    dsd/data-node-references
-    dsd/leds
-+   dsd/probe-low-power
-    enumeration
-    osi
-    method-customizing
+ #endif /* CONFIG_PM */
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index 0f37a7d5fa774..aa666da311444 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -926,6 +926,7 @@ int acpi_dev_resume(struct device *dev);
+ int acpi_subsys_runtime_suspend(struct device *dev);
+ int acpi_subsys_runtime_resume(struct device *dev);
+ int acpi_dev_pm_attach(struct device *dev, bool power_on);
++bool acpi_dev_state_low_power(struct device *dev);
+ #else
+ static inline int acpi_dev_runtime_suspend(struct device *dev) { return 0; }
+ static inline int acpi_dev_runtime_resume(struct device *dev) { return 0; }
+@@ -935,6 +936,10 @@ static inline int acpi_dev_pm_attach(struct device *dev, bool power_on)
+ {
+ 	return 0;
+ }
++static inline bool acpi_dev_state_low_power(struct device *dev)
++{
++	return false;
++}
+ #endif
+ 
+ #if defined(CONFIG_ACPI) && defined(CONFIG_PM_SLEEP)
 -- 
 2.20.1
 
