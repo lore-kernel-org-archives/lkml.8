@@ -2,173 +2,161 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE9BEC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8023CC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AFD5217F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:03:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Tdr6xS9f"
+	by mail.kernel.org (Postfix) with ESMTP id 52483217F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:03:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579622593;
+	bh=XDn7I1ARvz0R96k2z7bgcXzrNrZP35tkDx8H9+RZA3s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=nbuEwQ1mWP7K1ajV/NmY8vDFoMeMvp5tw4m8zCVIAkKbpFafTdBcESJQj9p6kN/qh
+	 hw9cSOzwNIoHDiymvl9X/hNwzMI4Gd2lCZeVOTPWzHgUefU1OI3JcvhBS7qXKCSnD/
+	 xCt3PN8s7Ch8ye9DwHjxTUFXQt1LiVFgFLeAi+k8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729963AbgAUQDI (ORCPT
+        id S1729982AbgAUQDM convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 11:03:08 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:56402 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729504AbgAUQDF (ORCPT
+        Tue, 21 Jan 2020 11:03:12 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:45847 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729937AbgAUQDE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 11:03:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579622583;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=R93kv0W0ESiBmPn+Fcdbi6eCG8MLqbjSKamhdoxhulg=;
-        b=Tdr6xS9f8G0CbYZX9ciRlmIeVf+jNQNQynchgMPpyfk6/hporBnwBWbVhbzXxe/fXGHrlx
-        zSh9OMLk2UW9+KzWMu5/b1H47VbyANavjCpDFjlp7gzdxReYgrETntjRAXFWagOmateigw
-        5ZknbEvF+GB2ilpC5z7pK5TiHT9/1SA=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-373-_gcyxaBqO327POIqDM-lJA-1; Tue, 21 Jan 2020 11:03:01 -0500
-X-MC-Unique: _gcyxaBqO327POIqDM-lJA-1
-Received: by mail-wr1-f70.google.com with SMTP id o6so1502868wrp.8
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 08:03:01 -0800 (PST)
+        Tue, 21 Jan 2020 11:03:04 -0500
+Received: by mail-ot1-f65.google.com with SMTP id 59so3336383otp.12;
+        Tue, 21 Jan 2020 08:03:04 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=R93kv0W0ESiBmPn+Fcdbi6eCG8MLqbjSKamhdoxhulg=;
-        b=b6wv43b204dQD6FQh2UkQ/fvjB9u7BtDAMTiE7/9OFXeVYhd7SqTcIhijJstkQaw/1
-         CHR0mccHVSbUHCn8ZPGSXBnwcGFEjhaDizWgaiS1mYE372e9TyUyr561BsZT9p708z2t
-         7cLsBeaDdcv+CV7hcbH4Pr/sSW+8joFjCBvjEc8QbqjgsRI1tXQt6kdKS/Tbe0Q4pOti
-         2nN8vYzCTJMKIE8Zax3dBABJInuoldROGopM6IU1SNWZws28RXx7QHnVLO2yZrXP6BQ6
-         d86gzz4G/0McOGXha1iYiY/mtFvxnqVl4aK1n9gHhe8NGBSJ5KYjh10CQHbAWppLvxXE
-         yFQg==
-X-Gm-Message-State: APjAAAVra3lj7yqylkYAGuOmBLKvGgOimEjUtpVWhaLgjIkGCW64ePyd
-        /PkhpWxujt0JX4X0P6ms2Bsd5/VCdzAqPNay3mGmQ8ihigHqIX2FKWUsJChaY7DtpOv7/YsKmZE
-        50Gnm4OZ73AayUPWGO0ArUaiI
-X-Received: by 2002:adf:f1cb:: with SMTP id z11mr5729610wro.375.1579622580562;
-        Tue, 21 Jan 2020 08:03:00 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzMHt2H+ShpdzeVhVrpHI6paJyzrz7FPhvqP5WICGqAsGn0xpsokZgxOLpYQcmGqfYCMCMYHQ==
-X-Received: by 2002:adf:f1cb:: with SMTP id z11mr5729584wro.375.1579622580321;
-        Tue, 21 Jan 2020 08:03:00 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id c4sm4349792wml.7.2020.01.21.08.02.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 08:02:59 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Tyler Hicks <tyhicks@canonical.com>,
-        Waiman Long <longman@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH RFC] x86/speculation: Clarify Spectre-v2 mitigation when STIBP/IBPB features are unsupported
-Date:   Tue, 21 Jan 2020 17:02:57 +0100
-Message-Id: <20200121160257.302999-1-vkuznets@redhat.com>
-X-Mailer: git-send-email 2.24.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=3uhVIJum8giozCbBAOAWfX0RCY6W6sw6Ypl8FcWQYgw=;
+        b=gjnBgvKuRoIHcy/7hapOzadDpTWIpf9+Eq/Y08/QYvaBjHphHnnuUgtDOSHLg38EZu
+         P4QwcAdxFv4WO/DU5wWV/TWEncKxhCtf2Nk2v+QABtmBWrHlh0XKyinQP94WQNzdPOnH
+         eU5YJ31FSo1SG35pvOvEdO/UZt78wnJ5XQMcIBQEmoguSSgu2Th2E84MSIhbecTBYfh4
+         siOzoKI9xlLFL3Hzs+9dXA6rODGNAagp34WKpO87Ppv3Fvj9kOn37Z5cICRY1Vtxa64+
+         xcLUMsBxFyWs9AIw7nYD++0Xe3Vaz6SMBAwPyDD1EkcEJpklZrHMBWIOmnoqDnWKJ319
+         KzZQ==
+X-Gm-Message-State: APjAAAVKj4tHv25eq1NeDsk+XHXcQCrJtrZx8QWGEjUa3l3sBM3A/NRA
+        djcGwCd89fkssadXC4sxey3FSRMGMyAyZx7n1Tw=
+X-Google-Smtp-Source: APXvYqw6XT5EzbITnd9lPUjkFNyWUErkpjeaTNijKjeAsb/nf2EtB/i7hY+Prsk+BHDYhDqQd3i9Wde9kUjQ1TdRaCg=
+X-Received: by 2002:a05:6830:4b9:: with SMTP id l25mr4157514otd.266.1579622583933;
+ Tue, 21 Jan 2020 08:03:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200109154529.19484-1-sakari.ailus@linux.intel.com>
+ <20200109154529.19484-3-sakari.ailus@linux.intel.com> <CAJZ5v0hfGateSt-_EBuyHqLYi5NR4PUFB=wDF+Gu+9-tFXuohg@mail.gmail.com>
+ <20200121090946.GX5440@paasikivi.fi.intel.com>
+In-Reply-To: <20200121090946.GX5440@paasikivi.fi.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 21 Jan 2020 17:02:52 +0100
+Message-ID: <CAJZ5v0gEO_QesTg2oqA-9dYbPJ5Gsm5H8wvSRQTLeww0o2vx3g@mail.gmail.com>
+Subject: Re: [PATCH v3 2/5] ACPI: Add a convenience function to tell a device
+ is suspended in probe
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Mani, Rajmohan" <rajmohan.mani@intel.com>,
+        Tomasz Figa <tfiga@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When STIBP/IBPB features are not supported (no microcode update,
-AWS/Azure/... instances deliberately hiding SPEC_CTRL for performance
-reasons,...) /sys/devices/system/cpu/vulnerabilities/spectre_v2 looks like
+On Tue, Jan 21, 2020 at 10:09 AM Sakari Ailus
+<sakari.ailus@linux.intel.com> wrote:
+>
+> Hi Rafael,
+>
+> Thank you for the review.
+>
+> On Mon, Jan 13, 2020 at 11:41:12AM +0100, Rafael J. Wysocki wrote:
+> > On Thu, Jan 9, 2020 at 4:44 PM Sakari Ailus
+> > <sakari.ailus@linux.intel.com> wrote:
+> > >
+> > > Add a convenience function to tell whether a device is suspended for probe
+> > > or remove, for busses where the custom is that drivers don't need to
+> > > resume devices in probe, or suspend them in their remove handlers.
+> > >
+> > > Returns false on non-ACPI systems.
+> > >
+> > > Suggested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > > ---
+> > >  drivers/acpi/device_pm.c | 35 +++++++++++++++++++++++++++++++++++
+> > >  include/linux/acpi.h     |  5 +++++
+> > >  2 files changed, 40 insertions(+)
+> > >
+> > > diff --git a/drivers/acpi/device_pm.c b/drivers/acpi/device_pm.c
+> > > index 5e4a8860a9c0c..87393020276d8 100644
+> > > --- a/drivers/acpi/device_pm.c
+> > > +++ b/drivers/acpi/device_pm.c
+> > > @@ -1348,4 +1348,39 @@ int acpi_dev_pm_attach(struct device *dev, bool power_on)
+> > >         return 1;
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(acpi_dev_pm_attach);
+> > > +
+> > > +/**
+> > > + * acpi_dev_low_power_state_probe - Tell if a device is in a low power state
+> >
+> > "Check the current ACPI power state of a device."
+>
+> Sounds good.
+>
+> >
+> > > + *                                 during probe
+> >
+> > Why is this limited to probe?
+>
+> Well.. that was the purpose. It could be used at other times, too, I guess,
+> but most of the time runtime PM is the right interface for doing that.
 
-  Mitigation: Full generic retpoline, STIBP: disabled, RSB filling
+PM-runtime is a layer above this one.
 
-and this looks imperfect. In particular, STIBP is 'disabled' and 'IBPB'
-is not mentioned while both features are just not supported. Also, for
-STIBP the 'disabled' state (SPECTRE_V2_USER_NONE) can represent both
-the absence of hardware support and deliberate user's choice
-(spectre_v2_user=off)
+It is mostly about the coordination between devices, reference
+counting etc which this is about device power states.
 
-Make the following adjustments:
-- Output 'unsupported' for both STIBP/IBPB when there's no support in
-  hardware.
-- Output 'unneeded' for STIBP when SMT is disabled/missing (and this
-  switch_to_cond_stibp is off).
+> >
+> > The function actually checks whether or not the ACPI power state of
+> > the device is low-power at the call time (except that it is a bit racy
+> > with respect to _set_power(), so it may not work as expected if called
+> > in parallel with that one).
+> >
+> > Maybe drop the "probe" part of the name (actually, I would call this
+> > function acpi_dev_state_low_power()) and add a paragraph about the
+> > potential race with _set_power() to the description?
+>
+> Agreed, I'll use the text you provided below.
+>
+> >
+> > > + * @dev: The device
+> >
+> > "Physical device the ACPI power state of which to check".
+>
+> Ok.
+>
+> >
+> > > + *
+> > > + * Tell whether a given device is in a low power state during the driver's probe
+> > > + * or remove operation.
+> > > + *
+> > > + * Drivers of devices on certain busses such as I涎 can generally assume (on
+> > > + * ACPI based systems) that the devices they control are powered on without
+> > > + * driver having to do anything about it. Using struct
+> > > + * device_driver.probe_low_power and "probe-low-power" property, this can be
+> > > + * negated and the driver has full control of the device power management.
+> >
+> > The above information belongs somewhere else in my view.
+>
+> How about putting it to the DSD ReST property documentation, perhaps with a
+> little bit more context? I can add another patch for that.
 
-RFC. Some tools out there may be looking at this information so by
-changing the output we're breaking them. Also, it may make sense to
-separate kernel and userspace protections and switch to something like
-
-  Mitigation: Kernel: Full generic retpoline, RSB filling; Userspace:
-   Vulnerable
-
-for the above mentioned case.
-
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
- Documentation/admin-guide/hw-vuln/spectre.rst | 3 +++
- arch/x86/kernel/cpu/bugs.c                    | 9 +++++++--
- 2 files changed, 10 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/admin-guide/hw-vuln/spectre.rst b/Documentation/admin-guide/hw-vuln/spectre.rst
-index e05e581af5cf..2b8a42d0c57b 100644
---- a/Documentation/admin-guide/hw-vuln/spectre.rst
-+++ b/Documentation/admin-guide/hw-vuln/spectre.rst
-@@ -385,6 +385,7 @@ The possible values in this file are:
-     an x86 only feature. For more details see below.
- 
-   ===================   ========================================================
-+  'IBPB: unsupported'   IBPB is not supported by hardware
-   'IBPB: disabled'      IBPB unused
-   'IBPB: always-on'     Use IBPB on all tasks
-   'IBPB: conditional'   Use IBPB on SECCOMP or indirect branch restricted tasks
-@@ -396,6 +397,8 @@ The possible values in this file are:
-     only feature. For more details see below.
- 
-   ====================  ========================================================
-+  'STIBP: unsupported'  STIBP is not supported by hardware
-+  'STIBP: unneeded'     STIBP is not needed because SMT is disabled
-   'STIBP: disabled'     STIBP unused
-   'STIBP: forced'       Use STIBP on all tasks
-   'STIBP: conditional'  Use STIBP on SECCOMP or indirect branch restricted tasks
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index 8bf64899f56a..d72a36fe042b 100644
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -1496,7 +1496,10 @@ static char *stibp_state(void)
- 
- 	switch (spectre_v2_user) {
- 	case SPECTRE_V2_USER_NONE:
--		return ", STIBP: disabled";
-+		if (boot_cpu_has(X86_FEATURE_STIBP))
-+			return ", STIBP: disabled";
-+		else
-+			return ", STIBP: unsupported";
- 	case SPECTRE_V2_USER_STRICT:
- 		return ", STIBP: forced";
- 	case SPECTRE_V2_USER_STRICT_PREFERRED:
-@@ -1505,6 +1508,8 @@ static char *stibp_state(void)
- 	case SPECTRE_V2_USER_SECCOMP:
- 		if (static_key_enabled(&switch_to_cond_stibp))
- 			return ", STIBP: conditional";
-+		else
-+			return ", STIBP: unneeded";
- 	}
- 	return "";
- }
-@@ -1518,7 +1523,7 @@ static char *ibpb_state(void)
- 			return ", IBPB: conditional";
- 		return ", IBPB: disabled";
- 	}
--	return "";
-+	return ", IBPB: unsupported";
- }
- 
- static ssize_t cpu_show_common(struct device *dev, struct device_attribute *attr,
--- 
-2.24.1
-
+Yes, something like that.
