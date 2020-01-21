@@ -2,125 +2,92 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C576C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 13:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29CF6C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 13:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E56B217F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 13:31:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="wumgBDv6"
+	by mail.kernel.org (Postfix) with ESMTP id EF42E24125
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 13:34:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728898AbgAUNbE (ORCPT
+        id S1728898AbgAUNel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 08:31:04 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:43374 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725890AbgAUNbE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 08:31:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=sQsNUT1I6E8QItPKtSDNxr8kzUBb8jOWCVawdbMbuhs=; b=wumgBDv6cNBhEJASXpiGDNAAA
-        fIjFViuZ/mfovC47v2shUCqKUf1OHOHGHCqlPOvQ1A7JID+0E02moRI0efYbudsqlBXR/o+B+mGN5
-        mxIMenqLi4lcXgHyX6fCzBEzOsMdRXvfiIht1UCcGvWIe/7idW3F02/5yuTujrnLupRkFDzhwre64
-        0e3Tb0KiaEV35OILtmALggkTSogvX2c4NUq6SAxjY4o624HXSoftOhLihn9/jnyMmejE86xuOmlNz
-        d4dQ2iYkRLOzMPuMT9CR6NFW2DiezhfzlklTPofyQ86qCl400zrucJA1Mux8uWyHG3//ShnZLO7TL
-        y5ils314w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ittbO-0006Ql-0z; Tue, 21 Jan 2020 13:29:54 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B9A1F3043C9;
-        Tue, 21 Jan 2020 14:28:10 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D89C520983FD9; Tue, 21 Jan 2020 14:29:49 +0100 (CET)
-Date:   Tue, 21 Jan 2020 14:29:49 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alex Kogan <alex.kogan@oracle.com>
-Cc:     linux@armlinux.org.uk, mingo@redhat.com, will.deacon@arm.com,
-        arnd@arndb.de, longman@redhat.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        guohanjun@huawei.com, jglauber@marvell.com,
-        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
-        dave.dice@oracle.com
-Subject: Re: [PATCH v8 4/5] locking/qspinlock: Introduce starvation avoidance
- into CNA
-Message-ID: <20200121132949.GL14914@hirez.programming.kicks-ass.net>
-References: <20191230194042.67789-1-alex.kogan@oracle.com>
- <20191230194042.67789-5-alex.kogan@oracle.com>
+        Tue, 21 Jan 2020 08:34:41 -0500
+Received: from relay.sw.ru ([185.231.240.75]:34688 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726920AbgAUNel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 08:34:41 -0500
+Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1ittfD-0007u7-5X; Tue, 21 Jan 2020 16:33:51 +0300
+Subject: Re: [PATCH v4 6/7] dm: Directly disable max_allocate_sectors for now
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+To:     Mike Snitzer <snitzer@redhat.com>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        martin.petersen@oracle.com, bob.liu@oracle.com, axboe@kernel.dk,
+        agk@redhat.com, dm-devel@redhat.com, song@kernel.org,
+        tytso@mit.edu, adilger.kernel@dilger.ca,
+        Chaitanya.Kulkarni@wdc.com, darrick.wong@oracle.com,
+        ming.lei@redhat.com, osandov@fb.com, jthumshirn@suse.de,
+        minwoo.im.dev@gmail.com, damien.lemoal@wdc.com,
+        andrea.parri@amarulasolutions.com, hare@suse.com, tj@kernel.org,
+        ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
+        bvanassche@acm.org, dhowells@redhat.com, asml.silence@gmail.com
+References: <157960325642.108120.13626623438131044304.stgit@localhost.localdomain>
+ <157960337238.108120.18048939587162465175.stgit@localhost.localdomain>
+ <20200121122458.GA9365@redhat.com>
+ <f7e0fb38-a894-da33-c46b-e192ed907ee0@virtuozzo.com>
+Message-ID: <619a7a14-44e6-eca7-c1ea-3f04abeee53d@virtuozzo.com>
+Date:   Tue, 21 Jan 2020 16:33:50 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191230194042.67789-5-alex.kogan@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <f7e0fb38-a894-da33-c46b-e192ed907ee0@virtuozzo.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 30, 2019 at 02:40:41PM -0500, Alex Kogan wrote:
+On 21.01.2020 15:36, Kirill Tkhai wrote:
+> On 21.01.2020 15:24, Mike Snitzer wrote:
+>> On Tue, Jan 21 2020 at  5:42am -0500,
+>> Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+>>
+>>> Since dm inherits limits from underlining block devices,
+>>> this patch directly disables max_allocate_sectors for dm
+>>> till full allocation support is implemented.
+>>>
+>>> This prevents high-level primitives (generic_make_request_checks(),
+>>> __blkdev_issue_write_zeroes(), ...) from sending REQ_ALLOCATE
+>>> requests.
+>>>
+>>> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+>>> ---
+>>>  drivers/md/dm-table.c |    2 ++
+>>>  drivers/md/md.h       |    1 +
+>>>  2 files changed, 3 insertions(+)
+>>
+>> You're mixing DM and MD changes in the same patch.
+>>
+>> But I'm wondering if it might be best to set this default for stacking
+>> devices in blk_set_stacking_limits()?
+>>
+>> And then it is up to each stacking driver to override as needed.
+> 
+> Hm. Sound like a good idea. This "lim->max_allocate_sectors = 0" in blk_set_stacking_limits()
+> should work for dm's dm_calculate_queue_limits(), since it calls blk_stack_limits(), which is:
+> 
+> 	t->max_allocate_sectors = min(t->max_allocate_sectors,
+> 				      b->max_allocate_sectors);
+> 
+> Could you please tell is this fix is also enough for md?
 
-> +/*
-> + * Controls the threshold for the number of intra-node lock hand-offs before
-> + * the NUMA-aware variant of spinlock is forced to be passed to a thread on
-> + * another NUMA node. By default, the chosen value provides reasonable
-> + * long-term fairness without sacrificing performance compared to a lock
-> + * that does not have any fairness guarantees. The default setting can
-> + * be changed with the "numa_spinlock_threshold" boot option.
-> + */
-> +int intra_node_handoff_threshold __ro_after_init = 1 << 16;
-
-There is a distinct lack of quantitative data to back up that
-'reasonable' claim there.
-
-Where is the table of inter-node latencies observed for the various
-values tested, and on what criteria is this number deemed reasonable?
-
-To me, 64k lock hold times seems like a giant number, entirely outside
-of reasonable.
-
-> +
->  static void __init cna_init_nodes_per_cpu(unsigned int cpu)
->  {
->  	struct mcs_spinlock *base = per_cpu_ptr(&qnodes[0].mcs, cpu);
-> @@ -97,6 +109,11 @@ static int __init cna_init_nodes(void)
->  }
->  early_initcall(cna_init_nodes);
->  
-> +static __always_inline void cna_init_node(struct mcs_spinlock *node)
-> +{
-> +	((struct cna_node *)node)->intra_count = 0;
-> +}
-> +
->  /* this function is called only when the primary queue is empty */
->  static inline bool cna_try_change_tail(struct qspinlock *lock, u32 val,
->  				       struct mcs_spinlock *node)
-> @@ -233,7 +250,9 @@ __always_inline u32 cna_pre_scan(struct qspinlock *lock,
->  {
->  	struct cna_node *cn = (struct cna_node *)node;
->  
-> -	cn->pre_scan_result = cna_scan_main_queue(node, node);
-> +	cn->pre_scan_result =
-> +		cn->intra_count == intra_node_handoff_threshold ?
-> +			FLUSH_SECONDARY_QUEUE : cna_scan_main_queue(node, node);
-
-Because:
-
-	if (cn->intra_count < intra_node_handoff_threshold)
-		cn->pre_scan_result = cna_scan_main_queue(node, node);
-	else
-		cn->pre_scan_result = FLUSH_SECONDARY_QUEUE;
-
-was too readable?
-
+It looks like it's enough since queue defaults are set in md_alloc()->blk_set_stacking_limits().
+In case of we set "max_allocate_sectors = 0", in further it can be changed only manually,
+but nobody does this.
