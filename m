@@ -2,120 +2,98 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B6EC33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7DB0C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:16:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51220217F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD2B521835
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:16:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z1RfHvzA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729008AbgAUTOD (ORCPT
+        id S1728682AbgAUTQs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 14:14:03 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:59428 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728609AbgAUTOD (ORCPT
+        Tue, 21 Jan 2020 14:16:48 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:33064 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726229AbgAUTQr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 14:14:03 -0500
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00LJ7JLp007958
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 14:14:01 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xp3u68bjj-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 14:14:01 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Tue, 21 Jan 2020 19:13:59 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 21 Jan 2020 19:13:57 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00LJDuIZ56754334
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 Jan 2020 19:13:56 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B21C811C05B;
-        Tue, 21 Jan 2020 19:13:56 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1341F11C04C;
-        Tue, 21 Jan 2020 19:13:56 +0000 (GMT)
-Received: from dhcp-9-31-103-231.watson.ibm.com (unknown [9.31.103.231])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 21 Jan 2020 19:13:55 +0000 (GMT)
-Subject: Re: [PATCH] IMA: Turn IMA_MEASURE_ASYMMETRIC_KEYS off by default
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        linux-integrity@vger.kernel.org
-Cc:     sashal@kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 21 Jan 2020 14:13:55 -0500
-In-Reply-To: <1579628090.3390.28.camel@HansenPartnership.com>
-References: <20200121171302.4935-1-nramas@linux.microsoft.com>
-         <1579628090.3390.28.camel@HansenPartnership.com>
+        Tue, 21 Jan 2020 14:16:47 -0500
+Received: by mail-lf1-f67.google.com with SMTP id n25so3291201lfl.0;
+        Tue, 21 Jan 2020 11:16:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yH4ULRCvH4cIDF7hD9SOh0HJDCpz6O0XU2vMhvkwdOE=;
+        b=Z1RfHvzAJPA/StIKZHDEekvQyA0VUlR1vmzUjSrVy0rGP1l702BDP+NRdzLf/mbFkj
+         /25wksgnCFXLuFH3meS2QWhOtOLmA7ZFYl9R/wvQwi1UoZN70mg+peRJ565Dq3/0GmBZ
+         hiE1Wxs9KqVV3+msNPh6H3dQK3AiLXRl670WQTcNp3v/qQg+WRtkEoOkmDLix0voBC30
+         Q6+puIlj1cO68FdcbwN8+y0nYyMV19SstBVcXCr0lgZPzauVp273AqUQzfcua/w++cIh
+         fma7F+ml8F66/yipQB6c2MdQzcoZQ7jXwS8j5ADncUcZkHBEv/7g7ke/dL7KchEwFdaa
+         jFYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yH4ULRCvH4cIDF7hD9SOh0HJDCpz6O0XU2vMhvkwdOE=;
+        b=LVwavKy2j87GnoleWH0KKedQNoJpEZ1AWmDssfWEe4ofajHc7r/LORKISKck7Qx4Ac
+         bexNI6WrTsbf/1i5aqUMpV+srxhcQO0A3SmGXdX8aNtKxq0Gt3t5sOgR1D4DT0L/O9Bn
+         G/tvd7/wf779yJQtiY9SWtT08mnrDTjCfbvWrS7QGAjrjnM630V5Q4sZmGRhMhr/q/fw
+         kMAoXvvBx2s1Zi8GJJQBliouWkiPt97JUBcM6BwIO3nmvUSNPYElq+uRpc+wIMYBaukv
+         rIub/E7ywihWkYRqs8uKdr9fQ8yw7TC5W4nJDI/AUmEdBtUU6jD+wCDZFgcl/aLADy/L
+         31MA==
+X-Gm-Message-State: APjAAAVaTMjLx6lisv6HUTJ1feV3C+sM4fIskqMipCGCbaYHJu1HAOxn
+        TvnkHFUbzkQK07u7JzuaS/+VcBrLd5dRwOjIuE8=
+X-Google-Smtp-Source: APXvYqxBYVgdpErMAXSCI8pmoUIGY/wO9CBLiGd4fNVY01TGZK0ZF/ly0kg8E6SVOc6FFy6MoRusPEJoH8+GoAsAgys=
+X-Received: by 2002:a05:6512:4c6:: with SMTP id w6mr3497249lfq.157.1579634205243;
+ Tue, 21 Jan 2020 11:16:45 -0800 (PST)
+MIME-Version: 1.0
+References: <00000000000031a8d7059c27c540@google.com> <00000000000048111c059cab1695@google.com>
+In-Reply-To: <00000000000048111c059cab1695@google.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Tue, 21 Jan 2020 11:16:33 -0800
+Message-ID: <CAADnVQ+jS2C=TxPvyKJmoj7HENCZVr3O_N1tHQ4uTewPDUu0_A@mail.gmail.com>
+Subject: Re: general protection fault in free_verifier_state (3)
+To:     syzbot <syzbot+b296579ba5015704d9fa@syzkaller.appspotmail.com>
+Cc:     Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Yonghong Song <yhs@fb.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20012119-0012-0000-0000-0000037F727F
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20012119-0013-0000-0000-000021BBB361
-Message-Id: <1579634035.5125.311.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.634
- definitions=2020-01-21_06:2020-01-21,2020-01-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
- adultscore=0 mlxlogscore=999 lowpriorityscore=0 mlxscore=0 spamscore=0
- malwarescore=0 priorityscore=1501 impostorscore=0 suspectscore=3
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001210143
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-01-21 at 09:34 -0800, James Bottomley wrote:
-> On Tue, 2020-01-21 at 09:13 -0800, Lakshmi Ramasubramanian wrote:
-> > Enabling IMA and ASYMMETRIC_PUBLIC_KEY_SUBTYPE configs will
-> > automatically enable the IMA hook to measure asymmetric keys. Keys
-> > created or updated early in the boot process are queued up whether
-> > or not a custom IMA policy is provided. Although the queued keys will
-> > be freed if a custom IMA policy is not loaded within 5 minutes, it
-> > could still cause significant performance impact on smaller systems.
-> 
-> What exactly do you expect distributions to do with this?  I can tell
-> you that most of them will take the default option, so this gets set to
-> N and you may as well not have got the patches upstream because you
-> won't be able to use them in any distro with this setting.
-> 
-> > This patch turns the config IMA_MEASURE_ASYMMETRIC_KEYS off by
-> > default.  Since a custom IMA policy that defines key measurement is
-> > required to measure keys, systems that require key measurement can
-> > enable this config option in addition to providing a custom IMA
-> > policy.
-> 
-> Well, no they can't ... it's rather rare nowadays for people to build
-> their own kernels.  The vast majority of Linux consumers take what the
-> distros give them.  Think carefully before you decide a config option
-> is the solution to this problem.
+On Tue, Jan 21, 2020 at 11:05 AM syzbot
+<syzbot+b296579ba5015704d9fa@syzkaller.appspotmail.com> wrote:
+>
+> syzbot has found a reproducer for the following crash on:
+>
+> HEAD commit:    2e3a94aa bpf: Fix memory leaks in generic update/delete ba..
+> git tree:       bpf-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=15aefc6ee00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=a736c99e9fe5a676
+> dashboard link: https://syzkaller.appspot.com/bug?extid=b296579ba5015704d9fa
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10a4280de00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1411544ee00000
 
-James, up until now IMA could be configured, but there wouldn't be any
-performance penalty for enabling IMA until a policy was loaded.  With
-IMA and asymmetric keys enabled, whether or not an IMA policy is
-loaded, certificates will be queued.
-
-My concern is:
-- changing the expected behavior
-- really small devices/sensors being able to queue certificates
-
-This change permits disabling queueing certificates.  Whether the
-default should be "disabled" is a separate question.  I'm open to
-comments/suggestions.
-
-Mimi
-
+Since it's in the verifier I'm guessing it's related to some of my
+earlier patches.
+I'll try to take a look soon.
