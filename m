@@ -2,77 +2,107 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3046C33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E9ABC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9E6921569
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:47:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0601B21569
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:48:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bwKVHF7s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729080AbgAUOrs (ORCPT
+        id S1729191AbgAUOsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 09:47:48 -0500
-Received: from foss.arm.com ([217.140.110.172]:44246 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726968AbgAUOrr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 09:47:47 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4EECE30E;
-        Tue, 21 Jan 2020 06:47:47 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5EBF93F52E;
-        Tue, 21 Jan 2020 06:47:46 -0800 (PST)
-Subject: Re: [PATCH v3 2/5] iommu/arm-smmu: Add support for split pagetables
-To:     Jordan Crouse <jcrouse@codeaurora.org>,
-        iommu@lists.linux-foundation.org
-Cc:     will@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Joerg Roedel <joro@8bytes.org>
-References: <1576514271-15687-1-git-send-email-jcrouse@codeaurora.org>
- <1576514271-15687-3-git-send-email-jcrouse@codeaurora.org>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <03d68ca6-254d-227f-e428-b85f6f4d7981@arm.com>
-Date:   Tue, 21 Jan 2020 14:47:44 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 21 Jan 2020 09:48:15 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:44236 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726968AbgAUOsP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 09:48:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=uyryvzrOJVnY2Rp4qJ6rxjhfB8x1mJVRx6ecxsTZGfA=; b=bwKVHF7soQKI2IrooaVefjguG
+        fiAGC74P3bvssr0+css1C8EDCghS7r8UidTgSfsCcsr7l9MJtQOBGEztGXa+draot+IJe1QsvNUWm
+        ooyuPGZu7ltO1acjhyi9PTgOZgKMhjfDCTAsoatpnl18p88qhPu6Jw06F9KBUyv45wlBW4yWwNqwf
+        qQUW6g192epkfBVw2EcZj1iaUt2shzGMxi7C4M24doGP/9t+u8zmdVnImpXEgvqjV/4AzBqRIpC5v
+        /cN7vv8avgOlqsmMtRk9CNvAThOodw2QTHJ0HW3GkIngZk5JmjpHEyfUwikqFK1R7crtZdrOPJlKM
+        5nYFbT79Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ituoJ-0007N0-GP; Tue, 21 Jan 2020 14:47:19 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1CE8E30067C;
+        Tue, 21 Jan 2020 15:45:37 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 35E7C20983E32; Tue, 21 Jan 2020 15:47:16 +0100 (CET)
+Date:   Tue, 21 Jan 2020 15:47:16 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Marco Elver <elver@google.com>, andreyknvl@google.com,
+        glider@google.com, dvyukov@google.com, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+        will@kernel.org, boqun.feng@gmail.com, arnd@arndb.de,
+        viro@zeniv.linux.org.uk, christophe.leroy@c-s.fr, dja@axtens.net,
+        mpe@ellerman.id.au, rostedt@goodmis.org, mhiramat@kernel.org,
+        mingo@kernel.org, christian.brauner@ubuntu.com,
+        daniel@iogearbox.net, cyphar@cyphar.com, keescook@chromium.org,
+        linux-arch@vger.kernel.org
+Subject: Re: [PATCH 3/5] asm-generic, kcsan: Add KCSAN instrumentation for
+ bitops
+Message-ID: <20200121144716.GQ14879@hirez.programming.kicks-ass.net>
+References: <20200120141927.114373-1-elver@google.com>
+ <20200120141927.114373-3-elver@google.com>
+ <20200120144048.GB14914@hirez.programming.kicks-ass.net>
+ <20200120162725.GE2935@paulmck-ThinkPad-P72>
+ <20200120165223.GC14914@hirez.programming.kicks-ass.net>
+ <20200120202359.GF2935@paulmck-ThinkPad-P72>
+ <20200121091501.GF14914@hirez.programming.kicks-ass.net>
+ <20200121142109.GQ2935@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-In-Reply-To: <1576514271-15687-3-git-send-email-jcrouse@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200121142109.GQ2935@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Oh, one more thing...
+On Tue, Jan 21, 2020 at 06:21:09AM -0800, Paul E. McKenney wrote:
+> On Tue, Jan 21, 2020 at 10:15:01AM +0100, Peter Zijlstra wrote:
+> > On Mon, Jan 20, 2020 at 12:23:59PM -0800, Paul E. McKenney wrote:
+> > > We also don't have __atomic_read() and __atomic_set(), yet atomic_read()
+> > > and atomic_set() are considered to be non-racy, right?
+> > 
+> > What is racy? :-) You can make data races with atomic_{read,set}() just
+> > fine.
+> 
+> Like "fairness", lots of definitions of "racy".  ;-)
+> 
+> > Anyway, traditionally we call the read-modify-write stuff atomic, not
+> > the trivial load-store stuff. The only reason we care about the
+> > load-store stuff in the first place is because C compilers are shit.
+> > 
+> > atomic_read() / test_bit() are just a load, all we need is the C
+> > compiler not to be an ass and split it. Yes, we've invented the term
+> > single-copy atomicity for that, but that doesn't make it more or less of
+> > a load.
+> > 
+> > And exactly because it is just a load, there is no __test_bit(), which
+> > would be the exact same load.
+> 
+> Very good!  Shouldn't KCSAN then define test_bit() as non-racy just as
+> for atomic_read()?
 
-On 16/12/2019 4:37 pm, Jordan Crouse wrote:
-[...]
-> @@ -651,6 +659,7 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
->   	enum io_pgtable_fmt fmt;
->   	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
->   	struct arm_smmu_cfg *cfg = &smmu_domain->cfg;
-> +	u32 quirks = 0;
->   
->   	mutex_lock(&smmu_domain->init_mutex);
->   	if (smmu_domain->smmu)
-> @@ -719,6 +728,8 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
->   		oas = smmu->ipa_size;
->   		if (cfg->fmt == ARM_SMMU_CTX_FMT_AARCH64) {
->   			fmt = ARM_64_LPAE_S1;
-> +			if (smmu_domain->split_pagetables)
-> +				quirks |= IO_PGTABLE_QUIRK_ARM_TTBR1;
-
-To avoid me forgetting and questioning it again in future, I'd recommend 
-sticking a comment somewhere near here that we don't reduce cfg->ias in 
-this case because we're currently assuming SEP_UPSTREAM.
-
-Robin.
-
->   		} else if (cfg->fmt == ARM_SMMU_CTX_FMT_AARCH32_L) {
->   			fmt = ARM_32_LPAE_S1;
->   			ias = min(ias, 32UL);
+Sure it does; but my comment was aimed at the gripe that test_bit()
+lives in the non-atomic bitops header. That is arguably entirely
+correct.
