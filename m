@@ -2,104 +2,158 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D9BEC33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04DF5C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D20321569
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:11:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C909E24125
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:12:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d03V+NNb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729207AbgAUPLa (ORCPT
+        id S1729154AbgAUPM4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 10:11:30 -0500
-Received: from mout.kundenserver.de ([212.227.126.130]:52933 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727255AbgAUPLa (ORCPT
+        Tue, 21 Jan 2020 10:12:56 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:53150 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727508AbgAUPMz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 10:11:30 -0500
-Received: from mail-qk1-f174.google.com ([209.85.222.174]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MEmMt-1iqvRj0xgZ-00GJ8B for <linux-kernel@vger.kernel.org>; Tue, 21 Jan
- 2020 16:11:28 +0100
-Received: by mail-qk1-f174.google.com with SMTP id c16so2997825qko.6
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 07:11:28 -0800 (PST)
-X-Gm-Message-State: APjAAAWFksoEaDPVMrns8Y3K8Unek/TRpajSIIbwCZJUBUDjLvMefW4+
-        9rthb+fENfCbHZVtVpK+D1Knj7gKzUfzbTePU1Q=
-X-Google-Smtp-Source: APXvYqzi6p95hHekGtgpHUuq99FRYZcaopKwXcC72TbiR1kO/b+K0GTaMvWpR985L8t471EI9eZkxsPcBlxx6hhL0gE=
-X-Received: by 2002:a05:620a:cef:: with SMTP id c15mr5026356qkj.352.1579619487171;
- Tue, 21 Jan 2020 07:11:27 -0800 (PST)
+        Tue, 21 Jan 2020 10:12:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579619575;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=bu/iMoYfYBgd5jXQviUDjY/CFaD1fKEaBQDIzi7DS7k=;
+        b=d03V+NNbwDAzbtz9CSnilOjPjOhh3OLD5C2Hd9nY014CwZUOgl1CR+DuZJinDiMw8o/6Kf
+        IqFT4b8zqmg/WqdbEpSpXqqnAWyngWuLBnevXOe33oTNfaemXM6ulRkKtABlXC3RFosHCi
+        MLB+n22AES15BjXHpD4ofD9LZ/0CZnw=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-275-aCQTMdZINduxr8ANYKlSyA-1; Tue, 21 Jan 2020 10:12:51 -0500
+X-MC-Unique: aCQTMdZINduxr8ANYKlSyA-1
+Received: by mail-wr1-f69.google.com with SMTP id z14so1456959wrs.4
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 07:12:50 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bu/iMoYfYBgd5jXQviUDjY/CFaD1fKEaBQDIzi7DS7k=;
+        b=nzhE6kLy+OzR//A6X1nfXwr6HPzOgIfQCYz306AeGWbmVeHgC4P56jeuMAoHdiwsTZ
+         o1iWYI/JDuHQJOVTRJDr1aajNGjIz9FYLzk96upjF9fPC4SZqh6zdfCXdVI2bbfo72Tq
+         yiSEf279TuL3bUp5LFaHk+8tNMMIwafgTiZ2gPnrYjHIPJg2SVEoRizmAV4mJrcRRumg
+         cMEYDBHxx1hvqAh4Cl+Vc1VvODvzKB6mc0QnqLRAiTmrQMbuMnSiRmk5XD1Ot0nWDIKK
+         L7b1CYkPo/6zSAo7sMtewNntoE2cihLz6AXXdJk1Y7oFAcN10L17jGuweo8Y0zdCcAEW
+         Isnw==
+X-Gm-Message-State: APjAAAX3+dgZGlPieP3MrBxg4U9rIRhQPewVlsVnGtl5NZmUP3v9lshl
+        tirJxQifC7BTZ4WOsYi6mW9MDWEgh5zwgmelLdIl0E/hzP4bjPTn1VTGhLonoSBAZBlU+zSpw9z
+        lNosl5dKJuq/Dn4qCVuqF1Z/H
+X-Received: by 2002:a1c:1dd7:: with SMTP id d206mr5000199wmd.5.1579619569960;
+        Tue, 21 Jan 2020 07:12:49 -0800 (PST)
+X-Google-Smtp-Source: APXvYqx3W9/IFqNtFmh53Y8FuFyZdMe+4NHjz+xYUeI++YvzTVDVuRT0IkPp6ekS3qHgnEBSwWauFA==
+X-Received: by 2002:a1c:1dd7:: with SMTP id d206mr5000170wmd.5.1579619569664;
+        Tue, 21 Jan 2020 07:12:49 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:b509:fc01:ee8a:ca8a? ([2001:b07:6468:f312:b509:fc01:ee8a:ca8a])
+        by smtp.gmail.com with ESMTPSA id b16sm54711240wrj.23.2020.01.21.07.12.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jan 2020 07:12:49 -0800 (PST)
+Subject: Re: [PATCH 12/14] KVM: x86/mmu: Fold max_mapping_level() into
+ kvm_mmu_hugepage_adjust()
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paul Mackerras <paulus@ozlabs.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        kvm-ppc@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        syzbot+c9d1fb51ac9d0d10c39d@syzkaller.appspotmail.com,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Barret Rhoden <brho@google.com>,
+        David Hildenbrand <david@redhat.com>,
+        Jason Zeng <jason.zeng@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>
+References: <20200108202448.9669-1-sean.j.christopherson@intel.com>
+ <20200108202448.9669-13-sean.j.christopherson@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <52cf5d90-5e65-4878-b214-7e1809224688@redhat.com>
+Date:   Tue, 21 Jan 2020 16:12:46 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-References: <4b74f1b6c1f9653241a1b5754525e230b3d76a3f.1579595093.git.viresh.kumar@linaro.org>
-In-Reply-To: <4b74f1b6c1f9653241a1b5754525e230b3d76a3f.1579595093.git.viresh.kumar@linaro.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 21 Jan 2020 16:11:11 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a0fWf-wd8exJa+_UL9n0bQ26W6wd0iQH32osM1Q+cLu_w@mail.gmail.com>
-Message-ID: <CAK8P3a0fWf-wd8exJa+_UL9n0bQ26W6wd0iQH32osM1Q+cLu_w@mail.gmail.com>
-Subject: Re: [PATCH V3] firmware: arm_scmi: Make scmi core independent of the
- transport type
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        cristian.marussi@arm.com, Peng Fan <peng.fan@nxp.com>,
-        peter.hilber@opensynergy.com,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:u92ie38gqw+Syq8n9l1eIBd6Axi1BiuveWcduSSZI7f9Uh3l4ff
- IHKXwCl+DH7acDzJSp1egCmMQHKr/aUeagiz9EPlARn2urbA5u8lEjKtHReentBjvgdxPUj
- gAMx+QHUDbnd/bdomvSxdumd1y6qV3JNrw6E5LGZeJoUFrPAnFzhrCnIQLyLRkDC0PzG4ZR
- ylQ+tS2ofpGBGVcAZElMw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Z8+o8rI+DHk=:+1Ho0OMHdJ1ClSJY8xb+fk
- zCn1IohjOAxNfU12sbTzx0g7yA4qhMki0XbaMxq7l/jaqH1MLwjJ7vDJKupKxqrmUoczvVCLL
- DlCVM9RyKhmA1GA1tq0Bl+yLO4z5/Bom/UGlpFjb1Y7ZxZzxGZH+CcuMiwA72WfbHzsf3/iNj
- hcY7wFPHbVhClTILredsFb0IococOrWyUVNZ6s2NtvPRaKbk4lOH/2w7ATvA1BpeUbwiWcLpr
- o1hr1/RQ7cCp1RkcXH+EeKnlQ+EtWMplhlrPxsPsTDApH3P6OV2ksJeK4odeyAMHGtfffvFHu
- 4YykxlD4xUhNf62ot7NovUhVYhwr9Upx1A0XTwfCiCI6wjM3+VGNRu1Lujk53p5H6v9FZs4kj
- 7fZ8+1E0A2n07aECPY7laUjuaItddy8N2odnke/N2lGBwOmwcjgbqc82j5r6yQh/o1TUXnAqa
- mXivwGbPS3nnNMiyaCiH//wIKIOPrZ92wbjKO/eR+a/5jWErURGKSGKMvM4UdRpycrG0l7gZY
- DY4ygAsGqd6k1mWD+UmhCIaa9AoLNI7u9prjnSH/CeuIUJTsaktUqM33Tk1QxO8EMCDXHK434
- Z/TeD/2Mwe3DovNCgd8unADUhnTdS0UrF/NtJWziN9H7+gej1Z0nCFyHCIYG65yyJ2l6WpCuc
- Xwsa4OlKCwZJbVd8Kf9s/1HnnquSpgSjFQhkJMqHnRhaWqbT1g1uN3RPIYXB2VrhlD3qCojCm
- bfOy3phTOsN4Gi0b6T1jREqZRBb5cX2zi5+hq29UhIjSwOoWbo7vGLn8Q9GVntzhMH73bAr7x
- J0CdVtAYbBeVMp8TgSdMHcXMvGCtOHCX1ZaBM6a2kK033zTLX4=
+In-Reply-To: <20200108202448.9669-13-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 9:27 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> The SCMI specification is fairly independent of the transport protocol,
-> which can be a simple mailbox (already implemented) or anything else.
-> The current Linux implementation however is very much dependent on the
-> mailbox transport layer.
->
-> This patch makes the SCMI core code (driver.c) independent of the
-> mailbox transport layer and moves all mailbox related code to a new
-> file: mailbox.c.
->
-> We can now implement more transport protocols to transport SCMI
-> messages.
->
-> The transport protocols just need to provide struct scmi_transport_ops,
-> with its version of the callbacks to enable exchange of SCMI messages.
->
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
-> @Sudeep: Can you please help me getting this tested?
->
-> V2->V3:
-> - Added more ops to the structure to read/write/memcpy data
-> - Payload is moved to mailbox.c and is handled in transport specific way
->   now. This resulted in lots of changes.
+On 08/01/20 21:24, Sean Christopherson wrote:
+> -	level = host_pfn_mapping_level(vcpu, gfn, pfn);
+> +	slot = kvm_vcpu_gfn_to_memslot(vcpu, gfn);
+> +	if (!memslot_valid_for_gpte(slot, true))
+> +		return PT_PAGE_TABLE_LEVEL;
 
-This addresses the comments I had about the implementation.
+Following up on my remark to patch 7, this can also use
+gfn_to_memslot_dirty_bitmap.
 
-It's still hard for me to judge whether this is a good abstraction as
-long as there is only one backend in the framework, but I see nothing
-immediately wrong with it either.
+Paolo
 
-       Arnd
+> +
+> +	max_level = min(max_level, kvm_x86_ops->get_lpage_level());
+> +	for ( ; max_level > PT_PAGE_TABLE_LEVEL; max_level--) {
+> +		if (!__mmu_gfn_lpage_is_disallowed(gfn, max_level, slot))
+> +			break;
+> +	}
+> +
+> +	if (max_level == PT_PAGE_TABLE_LEVEL)
+> +		return PT_PAGE_TABLE_LEVEL;
+> +
+> +	level = host_pfn_mapping_level(vcpu, gfn, pfn, slot);
+>  	if (level == PT_PAGE_TABLE_LEVEL)
+>  		return level;
+>  
+> @@ -4182,8 +4172,6 @@ static int direct_page_fault(struct kvm_vcpu *vcpu, gpa_t gpa, u32 error_code,
+>  	if (lpage_disallowed)
+>  		max_level = PT_PAGE_TABLE_LEVEL;
+>  
+> -	max_level = max_mapping_level(vcpu, gfn, max_level);
+> -
+>  	if (fast_page_fault(vcpu, gpa, error_code))
+>  		return RET_PF_RETRY;
+>  
+> diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
+> index 0560982eda8b..ea174d85700a 100644
+> --- a/arch/x86/kvm/mmu/paging_tmpl.h
+> +++ b/arch/x86/kvm/mmu/paging_tmpl.h
+> @@ -817,8 +817,6 @@ static int FNAME(page_fault)(struct kvm_vcpu *vcpu, gpa_t addr, u32 error_code,
+>  	else
+>  		max_level = walker.level;
+>  
+> -	max_level = max_mapping_level(vcpu, walker.gfn, max_level);
+> -
+>  	mmu_seq = vcpu->kvm->mmu_notifier_seq;
+>  	smp_rmb();
+>  
+> 
+
