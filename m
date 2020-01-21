@@ -2,123 +2,118 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12345C33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:05:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D5EC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDF892465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:05:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ImkOggh0"
+	by mail.kernel.org (Postfix) with ESMTP id 6FC4C24656
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:05:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729251AbgAUTFZ (ORCPT
+        id S1729288AbgAUTFq convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 14:05:25 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41940 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729121AbgAUTFY (ORCPT
+        Tue, 21 Jan 2020 14:05:46 -0500
+Received: from mout.kundenserver.de ([212.227.126.187]:59401 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729081AbgAUTFq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 14:05:24 -0500
-Received: by mail-pf1-f196.google.com with SMTP id w62so1957827pfw.8
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 11:05:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Pa59fYCDlAe6Tpwao7wMVi6YpE63nP24dCm06l2iicc=;
-        b=ImkOggh07bXyDGZ5/RZe49clFsRhDpDFfmsQ2CJ63cUE/5jBCzcy5pNKeRTQ8ES55B
-         mM3tBSmTjGO/z562nUCoeaJZaBO3v1e/uEoLtxVhRzIaWkx1FqFQcKBqVZXeTr1lrl5K
-         mPR+YrzSRr0zPuKGgzTgzxboWVJ+td5/fYjJE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Pa59fYCDlAe6Tpwao7wMVi6YpE63nP24dCm06l2iicc=;
-        b=XRMI+61NPt7Xim8EJo1PcNj9bfe1qh/zIo/BppTtCmDw5IKrHcEpntNrKMufGLZrAI
-         wiJPzkKDIWQbq7IUMuRoT4YuLjDD10E+IGGbK1K+XcC4NSPO0CLnLXOvFT3TbrbkJuZI
-         +jvX2i8ExlUILfWWcegIVN2wSySSzzWQ5kkD4gXp8ihKkK/BtfJ4+V/65fRNuxXEfknx
-         fwuzHesRgkVJkG53TTtfvaWqpOHIKK2+xJzvZ2gyjowzvVb2a7z6GBhcZ+TEIcNdvFBF
-         +s5qJnr9c/RBr4z45ohezaFDSTzw+CvCVY5eUcZ1zpuPUlqlSeXFcpjAmQua9WwhxrQN
-         S6oA==
-X-Gm-Message-State: APjAAAVsKT5NQMdxBn9aVFwRXMgjPL/Z4SdSZSWsSENTEO1cM/jkR043
-        5s0gLrWzGKf4M1osfbex3NLrgw==
-X-Google-Smtp-Source: APXvYqxm51yEBdJrV3LGqLaPvhqBlzgHVrjIRyZodBwEGeiX8FCB2IV12uXzvx5oAHAAFK+2KrrOPQ==
-X-Received: by 2002:a63:4850:: with SMTP id x16mr7279208pgk.334.1579633524281;
-        Tue, 21 Jan 2020 11:05:24 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id 80sm44717385pfw.123.2020.01.21.11.05.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jan 2020 11:05:23 -0800 (PST)
-Date:   Tue, 21 Jan 2020 11:05:21 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     swboyd@chromium.org, agross@kernel.org, david.brown@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org, ulf.hansson@linaro.org
-Subject: Re: [PATCH v2 0/6] Add RSC power domain support
-Message-ID: <20200121190521.GT89495@google.com>
-References: <20190823081703.17325-1-mkshah@codeaurora.org>
+        Tue, 21 Jan 2020 14:05:46 -0500
+Received: from mail-qk1-f179.google.com ([209.85.222.179]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MJWgK-1jDhaK2DCy-00JqZz for <linux-kernel@vger.kernel.org>; Tue, 21 Jan
+ 2020 20:05:44 +0100
+Received: by mail-qk1-f179.google.com with SMTP id v195so3692498qkb.11
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 11:05:44 -0800 (PST)
+X-Gm-Message-State: APjAAAXjnlpVaOOngHd2BX/VfCuLgpkhTECWffP0s0OJbOyAy9mdKIQY
+        Khr1czL8Sy1J1/l/dvMaT8baVaThS0VrPpsgQtA=
+X-Google-Smtp-Source: APXvYqyaU3sy6AGbEoXLdnq29+FzpVOuAwUblCu5Mbol7hW7VGm2ZUaPtrW+mhS1VdIaACj0BnK5vyn61lQKFxY8lNk=
+X-Received: by 2002:a05:620a:a5b:: with SMTP id j27mr6089006qka.286.1579633543424;
+ Tue, 21 Jan 2020 11:05:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190823081703.17325-1-mkshah@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200121114553.2667556-1-arnd@arndb.de> <20200121125546.GA71415@bogon.m.sigxcpu.org>
+ <1971902c68ff805ee0b4a66f558afe06e6edf0c5.camel@pengutronix.de>
+In-Reply-To: <1971902c68ff805ee0b4a66f558afe06e6edf0c5.camel@pengutronix.de>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 21 Jan 2020 20:05:27 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2E__zHPPEL37JwK=uHb_v-=C+-+zGaL3XoW5PZ+BUN5g@mail.gmail.com>
+Message-ID: <CAK8P3a2E__zHPPEL37JwK=uHb_v-=C+-+zGaL3XoW5PZ+BUN5g@mail.gmail.com>
+Subject: Re: [PATCH] drm/etnaviv: only reject timeouts with tv_nsec >= 2 seconds
+To:     Lucas Stach <l.stach@pengutronix.de>
+Cc:     =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Sam Ravnborg <sam@ravnborg.org>, Rob Herring <robh@kernel.org>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        The etnaviv authors <etnaviv@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Provags-ID: V03:K1:A7s4Lt5X0zCzndHl88Iw7InqVkh84eNdaRaOzFUIVnRgzU4tPMO
+ UjFnTXDSvB7wk/J/g4RhL0QsmHhCZ8LbOZeuHIKE8m5EGVMHYVeSNhNVpl79m8Hy0/Vr1N4
+ q60HMFaA5IusYnUXqGw+z6YVEvMRqZJpMM9t0eawCfqeh9a1uahlGkHwn5n3DWQxZZ3RCyF
+ zZZk0Qy/OuRB9G7MLTI4w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Pym50AB6Nlo=:4xJilspjlsRR2I9O+dfSpE
+ Cm+Z22oJDloqugpzfpIT/HdIAR8Ruyd6+FZJvtKcADfzpPniO3jwdUfmDbA2I4oHAJ3GBiyKF
+ d6sK5EDNY7Wb25FrvITK7BlKm9VJrUrX3dODQP0ekY9yUE64aASaDRYK4gz4piAbLuzRZCW+O
+ RLmOlZ4jHgIBhxJNucG22wA8qXzqv7NBupqOfKE7UDeXHFzX4zFiSVHFphUmFN6RWfqQ3NqkW
+ hyRsd28h/2wCOv0N78VL5tTnocTQu6jg6DEuH9WCPQ9FH1x6m71rag34g5nJs5fBHJp+t8a+T
+ VUI+E+dc+YqmeLCaWMtJhL3ZMypHLVpiLpYXF2UmLGeoOkQ8k2/LF+GPQZl8xT6Oan+M895fS
+ E+qSyvIYjqoAYSfZZC//h4jKnja5dMaRlcAw30WPjk/vTTJJ69TgLdTdUNbhvJmy0IWAsBLgU
+ 1+hfzMAQ56nvPSSMbZ+PY7297jh7uz4hBzfAsNp69gX9d0y7AMcvh1rJfmy7hkbWcxD9BZGZu
+ E+yKoI0dZ3TDrsYYzq0BChxrCZ4HKnLljuF8kWyp78v0kGJwH5EmT9koJ+UlgsQAvR2apffEE
+ j+V/TQG53mUvmrrKVvxXHqg6cxWhZ+QLaUXHhZP3fMEqXNYf6AvpSUhfZXqMczJRByoZ4pNsJ
+ rFVdWOQRPVtT3juCEsMdlt1v3G4wGs0YBNMe+7iLueE7VptHR8sJ/s7Fv477GA/EIt0iTufx7
+ DAM8ixHkIkaQAxhxZBwHEx+FzVP2mG+8IGtw63Jx4LWdzH5hndD6/YYDRUG9dLT8ONN5DvIln
+ 6Crr6bsQshQphxwjJ+ncHZJDftZ8KUOa3f29/wxSlALfIeQiLKdNw5zVFYMxVRB3bhwJ+7Ysq
+ spQZB/Br1WPcrtQadgyA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maulik,
+On Tue, Jan 21, 2020 at 5:10 PM Lucas Stach <l.stach@pengutronix.de> wrote:
+>
+> Hi Guido,
+>
+> On Di, 2020-01-21 at 13:55 +0100, Guido Günther wrote:
+> > Hi,
+> > On Tue, Jan 21, 2020 at 12:45:25PM +0100, Arnd Bergmann wrote:
+> > > As Guido Günther reported, get_abs_timeout() in the etnaviv user space
+> > > sometimes passes timeouts with nanosecond values larger than 1000000000,
+> > > which gets rejected after my first patch.
+> > >
+> > > To avoid breaking this, while also not allowing completely arbitrary
+> > > values, set the limit to 1999999999 and use set_normalized_timespec64()
+> > > to get the correct format before comparing it.
+> >
+> > I'm seeing values up to 5 seconds so I need
+> >
+> >      if (args->timeout.tv_nsec > (5 * NSEC_PER_SEC))
+> >
+> > to unbreak rendering. Which seems to match what mesa's get_abs_timeout()
+> > does and how it's invoked.
+>
+> I have not tested this myself yet, only looked at the code. From the
+> code I quoted earlier, I don't see how we end up with 5 * NSEC_PER_SEC
+> in the tv_nsec member, even if the timeout passed to get_abs_timeout()
+> is 5 seconds.
 
-What is the status of this series? It seems it hasn't been updated since
-you sent it in August last year. Do you plan to send a v3 in the near future
-to address the outstanding comments?
+I can think of two different ways you'd end up with around five seconds here:
 
-Thanks
+a) you have a completely arbitrary 32-bit number through truncation,
+    which is up to 4.2 seconds
+b) you have the same kind of 32-bit number, but add up to another 999999999
+    nanoseconds, so you get up to 5.2 seconds in the 64-bit field.
 
-Matthias
+It could of course be something completely different. If this works correctly
+today, we may need to allow any 64-bit input for the nanoseconds and do
+an expensive 64-bit div/mod in the kernel for normalization rather than the
+cheaper set_normalized_timespec64() from my patch.
 
-On Fri, Aug 23, 2019 at 01:46:57PM +0530, Maulik Shah wrote:
-> Changes in v2:
-> - Add Stephen's Reviewed-By to the first three patches
-> - Addressed Stephen's comments on fourth patch
-> - Include changes to connect rpmh domain to cpuidle and genpds
-> 
-> Resource State Coordinator (RSC) is responsible for powering off/lowering
-> the requirements from CPU subsystem for the associated hardware like buses,
-> clocks, and regulators when all CPUs and cluster is powered down.
-> 
-> RSC power domain uses last-man activities provided by genpd framework based on
-> Ulf Hansoon's patch series[1], when the cluster of CPUs enter deepest idle
-> states. As a part of domain poweroff, RSC can lower resource state requirements
-> by flushing the cached sleep and wake state votes for resources.
-> 
-> Dependencies:
-> 
-> [1] https://lkml.org/lkml/2019/5/13/839
-> 
-> Maulik Shah (6):
->   drivers: qcom: rpmh: fix macro to accept NULL argument
->   drivers: qcom: rpmh: remove rpmh_flush export
->   dt-bindings: soc: qcom: Add RSC power domain specifier
->   drivers: qcom: rpmh-rsc: Add RSC power domain support
->   arm64: dts: Convert to the hierarchical CPU topology layout for sdm845
->   arm64: dts: Add rsc power domain for sdm845
-> 
->  .../devicetree/bindings/soc/qcom/rpmh-rsc.txt |   8 ++
->  arch/arm64/boot/dts/qcom/sdm845.dtsi          | 105 +++++++++++++-----
->  drivers/soc/qcom/rpmh-internal.h              |   3 +
->  drivers/soc/qcom/rpmh-rsc.c                   |  84 ++++++++++++++
->  drivers/soc/qcom/rpmh.c                       |  22 ++--
->  include/soc/qcom/rpmh.h                       |   5 -
->  6 files changed, 185 insertions(+), 42 deletions(-)
-> 
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, hosted by The Linux Foundation.
-> 
+        Arnd
