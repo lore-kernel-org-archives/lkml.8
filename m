@@ -2,201 +2,93 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E886C33CAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 20:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 142CFC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 20:49:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDBBE217F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 20:46:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579639569;
-	bh=8i54OlJYbQvHLGVM4fus5+jNJN9K2eL3sYVtcr2pzgY=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=d2jvoUchMsG/Sev5XImUyHwBYP4eYT7ncVy6QjONrXf3veD2xFPB0i3XHh2kcFBjS
-	 UOUm68vhDOOAYK2FRPXdz7N6lQnU0EnvMMi+CmDILUDxaU5KIRfFgF/Unr2don/yFS
-	 tlRmwYCH2djM4JcjS51NT0aG0Pbc9CKV7bhDuf5I=
+	by mail.kernel.org (Postfix) with ESMTP id D7E82217F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 20:49:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TMX1B8aJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728927AbgAUUqI (ORCPT
+        id S1728896AbgAUUte (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 15:46:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48302 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727360AbgAUUqI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 15:46:08 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42DB2217F4;
-        Tue, 21 Jan 2020 20:46:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579639566;
-        bh=8i54OlJYbQvHLGVM4fus5+jNJN9K2eL3sYVtcr2pzgY=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=FSFH6R+EVdnTMyNXXQbeDztzJyp66UKPrX7Z9/GJAZFcJ4qee/Vi5rGiZIskfpTOW
-         BOFdrsqWiEX4AGU6ye76S0plMt9TFat5ScIYzlkvfZgw3la6JXmQpKV3OSpE25vsaA
-         vieB24keAXfQUOgVjvta11hdR9hzgNrOja33/7Ak=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 177BE3520DC0; Tue, 21 Jan 2020 12:46:06 -0800 (PST)
-Date:   Tue, 21 Jan 2020 12:46:06 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     rcu@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: Boot warning at rcu_check_gp_start_stall()
-Message-ID: <20200121204606.GZ2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200121141923.GP2935@paulmck-ThinkPad-P72>
- <A230E332-07D0-40A8-A034-33ADB4BFB767@lca.pw>
- <20200121161533.GT2935@paulmck-ThinkPad-P72>
- <6A6B0325-64C4-4470-91B4-37104CF8DA1A@lca.pw>
+        Tue, 21 Jan 2020 15:49:34 -0500
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:33876 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728596AbgAUUtd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 15:49:33 -0500
+Received: by mail-vk1-f193.google.com with SMTP id w67so1337220vkf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 12:49:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EBEGZV2vj1MH0BvdgXGZZpVTB7oeQn2dvK8l+QN95lQ=;
+        b=TMX1B8aJ0mdwyfWvhX3zw7IXUIZkSTpKbZyScUvStUxTx7Q9NKUZgT4sgEcmjjrk9P
+         2nWvtVgAI4y13hFYT0QIelOR0ot1cS9WHWuxz0H09Ufx1/J8l3vCTMoXRTejA2iZxByt
+         eTrt6dXm8H8h/06oBVvjTXLs7kgKY1Sdpq/Sk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EBEGZV2vj1MH0BvdgXGZZpVTB7oeQn2dvK8l+QN95lQ=;
+        b=kgjTjPQFzDfAGqELlCuvYANF0gMaU+ODFMovb8h6Vak29EokEZuKZY7+AzSvofKYYC
+         VUzW8O8bcg1CZYFjvNX5BoK6VmnkJtDkFbxtO99RMZs1tYV9j4E9kZe7EJ/nHKL7JHiv
+         kLpsIVHBVqaLFg1ogGJ37DZiQQd5/DBKDHAZYoJu91myLe8luqJsj2or/xQ0MFlfzsl7
+         gcg1hSKIatN7/+cLO2blvgKzpqntamu7CjEqSNPhcdrP9v1bqRedJ+41v/+wByGDWQeG
+         WXsw8BAKiKQtCxsEDrjMnX6m7Z1mp/V5PmYUYuy4qk4zgx1hT5okiPXxf9avl9mXnsNj
+         axJg==
+X-Gm-Message-State: APjAAAWnif8V79WLbeGIBSfsNu57TcAoPKcN7qR4LiYRLXnxt7028qnL
+        CPl+X0Rno8BvBS2bVEw9Nypgi8g6u5c=
+X-Google-Smtp-Source: APXvYqx06ZCc6lUXUo0fp8GdjbvDbe0CDyzta6OD1u6NbErYN8X4ifnPxFq39ped6OsB+Rjyjh9GMg==
+X-Received: by 2002:a1f:c158:: with SMTP id r85mr4170353vkf.33.1579639772635;
+        Tue, 21 Jan 2020 12:49:32 -0800 (PST)
+Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com. [209.85.217.41])
+        by smtp.gmail.com with ESMTPSA id x5sm9171261vso.12.2020.01.21.12.49.31
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jan 2020 12:49:31 -0800 (PST)
+Received: by mail-vs1-f41.google.com with SMTP id x123so2821318vsc.2
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 12:49:31 -0800 (PST)
+X-Received: by 2002:a67:e342:: with SMTP id s2mr473558vsm.198.1579639771288;
+ Tue, 21 Jan 2020 12:49:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6A6B0325-64C4-4470-91B4-37104CF8DA1A@lca.pw>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200121171806.9933-1-swboyd@chromium.org>
+In-Reply-To: <20200121171806.9933-1-swboyd@chromium.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 21 Jan 2020 12:49:18 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=UAvQYemJonDhs3d700XYP7o5shgTwyMo1exzRCaapkXA@mail.gmail.com>
+Message-ID: <CAD=FV=UAvQYemJonDhs3d700XYP7o5shgTwyMo1exzRCaapkXA@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: qcom: sdm845: Disable pwrkey on Cheza
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 02:09:05PM -0500, Qian Cai wrote:
-> > On Jan 21, 2020, at 11:15 AM, Paul E. McKenney <paulmck@kernel.org> wrote:
-> > On Tue, Jan 21, 2020 at 09:37:13AM -0500, Qian Cai wrote:
-> >>> On Jan 21, 2020, at 9:19 AM, Paul E. McKenney <paulmck@kernel.org> wrote:
-> >>> 
-> >>> One approach would be to boot with rcupdate.rcu_cpu_stall_timeout=300,
-> >>> which would allow more time.
-> >> 
-> >> It works for me if once that warning triggered,  give a bit information about adjusting the parameter when debugging options are on to suppress the warning due to expected long boot.
-> > 
-> > Indeed.  300 seconds as shown above is currently the maximum, but
-> > please let me know if it needs to be increased.  This module parameter
-> > is writable after boot via sysfs, so maybe that could be part of the
-> > workaround.
-> > 
-> >>> Longer term, I could suppress this warning during boot when
-> >>> CONFIG_EFI_PGT_DUMP=y, but that sounds quite specific.  Alternatively,
-> >>> I could provide a Kconfig option that suppressed this during boot
-> >>> that was selected by whatever long-running boot-time Kconfig option
-> >>> needed it.  Yet another approach would be for long-running operations
-> >>> like efi_dump_pagetable() to suppress stalls on entry and re-enable them
-> >>> upon exit.
-> >>> 
-> >>> Thoughts?
-> >> 
-> >> None of the options sounds particularly better for me because there could come up with other options may trigger this, memtest comes in mind, for example. Then, it is a bit of pain to maintain of unknown.
-> > 
-> > I was afraid of that.  ;-)
-> > 
-> > Could you please send me the full dmesg up to that point?  No promises,
-> > but it might well be that I can make some broad-spectrum adjustment
-> > within RCU.  Only one way to find out…
-> 
-> https://cailca.github.io/files/dmesg.txt
+Hi,
 
-Interesting.
+On Tue, Jan 21, 2020 at 9:18 AM Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> We don't use the power key from the PMIC on Cheza. Disable this node so
+> that we don't probe the driver for this device.
+>
+> Cc: Douglas Anderson <dianders@chromium.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+>  arch/arm64/boot/dts/qcom/pm8998.dtsi       | 2 +-
+>  arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi | 4 ++++
+>  2 files changed, 5 insertions(+), 1 deletion(-)
 
-Does the following (very lightly tested) patch help?
-
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
-commit fb21277f8f1c5cc40a8d41da2db4b0c499459821
-Author: Paul E. McKenney <paulmck@kernel.org>
-Date:   Tue Jan 21 12:30:22 2020 -0800
-
-    rcu: Don't flag non-starting GPs before GP kthread is running
-    
-    Currently rcu_check_gp_start_stall() complains if a grace period takes
-    too long to start, where "too long" is roughly one RCU CPU stall-warning
-    interval.  This has worked well, but there are some debugging Kconfig
-    options (such as CONFIG_EFI_PGT_DUMP=y) that can make booting take a
-    very long time, so much so that the stall-warning interval has expired
-    before RCU's grace-period kthread has even been spawned.
-    
-    This commit therefore resets the rcu_state.gp_req_activity and
-    rcu_state.gp_activity timestamps just before the grace-period kthread
-    is spawned, and modifies the checks and adds ordering to ensure that
-    if rcu_check_gp_start_stall() sees that the grace-period kthread
-    has been spawned, that it will also see the resets applied to the
-    rcu_state.gp_req_activity and rcu_state.gp_activity timestamps.
-    
-    Reported-by: Qian Cai <cai@lca.pw>
-    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 04718bc..d9d619d 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -1209,7 +1209,7 @@ static bool rcu_start_this_gp(struct rcu_node *rnp_start, struct rcu_data *rdp,
- 	trace_rcu_this_gp(rnp, rdp, gp_seq_req, TPS("Startedroot"));
- 	WRITE_ONCE(rcu_state.gp_flags, rcu_state.gp_flags | RCU_GP_FLAG_INIT);
- 	WRITE_ONCE(rcu_state.gp_req_activity, jiffies);
--	if (!rcu_state.gp_kthread) {
-+	if (!READ_ONCE(rcu_state.gp_kthread)) {
- 		trace_rcu_this_gp(rnp, rdp, gp_seq_req, TPS("NoGPkthread"));
- 		goto unlock_out;
- 	}
-@@ -1259,10 +1259,10 @@ static bool rcu_future_gp_cleanup(struct rcu_node *rnp)
-  */
- static void rcu_gp_kthread_wake(void)
- {
--	if ((current == rcu_state.gp_kthread &&
-+	if ((current == READ_ONCE(rcu_state.gp_kthread) &&
- 	     !in_irq() && !in_serving_softirq()) ||
- 	    !READ_ONCE(rcu_state.gp_flags) ||
--	    !rcu_state.gp_kthread)
-+	    !READ_ONCE(rcu_state.gp_kthread))
- 		return;
- 	WRITE_ONCE(rcu_state.gp_wake_time, jiffies);
- 	WRITE_ONCE(rcu_state.gp_wake_seq, READ_ONCE(rcu_state.gp_seq));
-@@ -3619,7 +3619,10 @@ static int __init rcu_spawn_gp_kthread(void)
- 	}
- 	rnp = rcu_get_root();
- 	raw_spin_lock_irqsave_rcu_node(rnp, flags);
--	rcu_state.gp_kthread = t;
-+	WRITE_ONCE(rcu_state.gp_activity, jiffies);
-+	WRITE_ONCE(rcu_state.gp_req_activity, jiffies);
-+	// Reset .gp_activity and .gp_req_activity before setting .gp_kthread.
-+	smp_store_release(&rcu_state.gp_kthread, t);  /* ^^^ */
- 	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
- 	wake_up_process(t);
- 	rcu_spawn_nocb_kthreads();
-diff --git a/kernel/rcu/tree_stall.h b/kernel/rcu/tree_stall.h
-index 476458c..75f6e9f 100644
---- a/kernel/rcu/tree_stall.h
-+++ b/kernel/rcu/tree_stall.h
-@@ -578,6 +578,7 @@ void show_rcu_gp_kthreads(void)
- 	unsigned long jw;
- 	struct rcu_data *rdp;
- 	struct rcu_node *rnp;
-+	struct task_struct *t = READ_ONCE(rcu_state.gp_kthread);
- 
- 	j = jiffies;
- 	ja = j - READ_ONCE(rcu_state.gp_activity);
-@@ -585,8 +586,7 @@ void show_rcu_gp_kthreads(void)
- 	jw = j - READ_ONCE(rcu_state.gp_wake_time);
- 	pr_info("%s: wait state: %s(%d) ->state: %#lx delta ->gp_activity %lu ->gp_req_activity %lu ->gp_wake_time %lu ->gp_wake_seq %ld ->gp_seq %ld ->gp_seq_needed %ld ->gp_flags %#x\n",
- 		rcu_state.name, gp_state_getname(rcu_state.gp_state),
--		rcu_state.gp_state,
--		rcu_state.gp_kthread ? rcu_state.gp_kthread->state : 0x1ffffL,
-+		rcu_state.gp_state, t ? t->state : 0x1ffffL,
- 		ja, jr, jw, (long)READ_ONCE(rcu_state.gp_wake_seq),
- 		(long)READ_ONCE(rcu_state.gp_seq),
- 		(long)READ_ONCE(rcu_get_root()->gp_seq_needed),
-@@ -633,7 +633,8 @@ static void rcu_check_gp_start_stall(struct rcu_node *rnp, struct rcu_data *rdp,
- 
- 	if (!IS_ENABLED(CONFIG_PROVE_RCU) || rcu_gp_in_progress() ||
- 	    ULONG_CMP_GE(READ_ONCE(rnp_root->gp_seq),
--	    		 READ_ONCE(rnp_root->gp_seq_needed)))
-+	    		 READ_ONCE(rnp_root->gp_seq_needed)) ||
-+	    !smp_load_acquire(&rcu_state.gp_kthread))
- 		return;
- 	j = jiffies; /* Expensive access, and in common case don't get here. */
- 	if (time_before(j, READ_ONCE(rcu_state.gp_req_activity) + gpssdelay) ||
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
