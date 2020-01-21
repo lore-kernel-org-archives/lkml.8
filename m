@@ -2,124 +2,109 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05354C33CAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6CFCC33CAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:57:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3EC8217F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:57:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAA0D24655
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:57:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="HA7b8DlP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729122AbgAUT5M (ORCPT
+        id S1729147AbgAUT5Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 14:57:12 -0500
-Received: from mail-il1-f197.google.com ([209.85.166.197]:55714 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727829AbgAUT5K (ORCPT
+        Tue, 21 Jan 2020 14:57:24 -0500
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:46319 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727383AbgAUT5X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 14:57:10 -0500
-Received: by mail-il1-f197.google.com with SMTP id p8so2976158ilp.22
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 11:57:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Na+0RlDjz+USmrX/lnYIn3IXaqN3eGHx5d+CcmxDSfw=;
-        b=JAlfTt9tLTlHVYbbKWSUJ/xK9Ed438eLcXDreJd7zClIRsAqu/XNWecKHh1bRaH4CD
-         wPntcVarKfwHjnumsDstvT4GftgMgMAl43c0tnup5SRIBO13asqBYEi81duVcBO2XKy8
-         LGVJxkOjcG50Xyo69X8NBZ3DMNK61LPIA7NqZ0IJDgXsAT+2PLS67AWlppxIqFZEHcgE
-         xzrxeBXpO8c+Hv5sH8/Jx71b5dDDpA3JZ+EQvm7g7UGhxZmOU7yWV55U5mr39x/yerC/
-         22jyWbm8xNEoeZhKJkiAwHSV0a+2D9QLGcPgI2CXCq9X/4TaO2GSJiZFWlkrHP34tvuF
-         zwWA==
-X-Gm-Message-State: APjAAAUaqSfMOJ8CyC0/i/KS54sN5arV13oZ8zGqo4dB1SuqRBAqMoAf
-        OsBBiB29PEfmnAfmCkt2RVCs93HsaL9xez6Zm3xv0TCEbLkN
-X-Google-Smtp-Source: APXvYqzHKTdCXBMX0jBeRbPRbRY+ALjXzg9J04Y3NuOJkVKKtwwqCljRZoKvKqYX8YYEt2H5NhdCDSddo87YSau6iPRhLSxkrtrX
+        Tue, 21 Jan 2020 14:57:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1579636643; x=1611172643;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=2AM9PR3Tvgu7t+SfNKaHveu2VLV9169Zlv+ZZ4N0qpA=;
+  b=HA7b8DlPnUOmZA9DIOUODnU04DHXGby0dzXoe2753OOaWi1TJwRZ+jLX
+   4X19yilgzzGP6frkWBbM33gBK7JXzkfp1P/VALClm+ep10yZEbP3CFWa3
+   5DINg/eE5D3kHFDvY/1dMa7Xg+/g9J8HZCjvJ2i3zbbP2atohPwsvJWAS
+   w=;
+IronPort-SDR: lY544I0KRAUsk4zKrPAMJmf3DphIrhLymowpbI89rShMVyOxxuTd5Dv3rwxoF3PoPih7muUPU3
+ ObTngVwRiScA==
+X-IronPort-AV: E=Sophos;i="5.70,347,1574121600"; 
+   d="scan'208";a="14090811"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1a-7d76a15f.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 21 Jan 2020 19:57:23 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1a-7d76a15f.us-east-1.amazon.com (Postfix) with ESMTPS id DF83CA2743;
+        Tue, 21 Jan 2020 19:57:19 +0000 (UTC)
+Received: from EX13D11UWB004.ant.amazon.com (10.43.161.90) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 21 Jan 2020 19:57:19 +0000
+Received: from EX13D01UWB002.ant.amazon.com (10.43.161.136) by
+ EX13D11UWB004.ant.amazon.com (10.43.161.90) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 21 Jan 2020 19:57:19 +0000
+Received: from EX13D01UWB002.ant.amazon.com ([10.43.161.136]) by
+ EX13d01UWB002.ant.amazon.com ([10.43.161.136]) with mapi id 15.00.1367.000;
+ Tue, 21 Jan 2020 19:57:19 +0000
+From:   "Singh, Balbir" <sblbir@amazon.com>
+To:     "hch@lst.de" <hch@lst.de>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "Sangaraju, Someswarudu" <ssomesh@amazon.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "mst@redhat.com" <mst@redhat.com>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "Chaitanya.Kulkarni@wdc.com" <Chaitanya.Kulkarni@wdc.com>
+Subject: Re: [resend v1 1/5] block/genhd: Notify udev about capacity change
+Thread-Topic: [resend v1 1/5] block/genhd: Notify udev about capacity change
+Thread-Index: AQHVxdHjydawp/BwQkuXvP0PUEOjWqfg3jQAgBTAIAA=
+Date:   Tue, 21 Jan 2020 19:57:18 +0000
+Message-ID: <a1a36b7163c10fd6c9450ba631f26b9ce23dc3f7.camel@amazon.com>
+References: <20200102075315.22652-1-sblbir@amazon.com>
+         <20200102075315.22652-2-sblbir@amazon.com> <yq1ftgs2b6g.fsf@oracle.com>
+         <d1635bae908b59fb4fd7de7c90ffbd5b73de7542.camel@amazon.com>
+         <yq17e221vvt.fsf@oracle.com> <20200108150428.GB10975@lst.de>
+In-Reply-To: <20200108150428.GB10975@lst.de>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.160.48]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <AB767E631009EE4F8B8589D586BA62FF@amazon.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-Received: by 2002:a5e:8813:: with SMTP id l19mr4458172ioj.261.1579636629982;
- Tue, 21 Jan 2020 11:57:09 -0800 (PST)
-Date:   Tue, 21 Jan 2020 11:57:09 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000346dcd059cabd0b5@google.com>
-Subject: WARNING: suspicious RCU usage in find_set_and_id
-From:   syzbot <syzbot+fc69d7cb21258ab4ae4d@syzkaller.appspotmail.com>
-To:     coreteam@netfilter.org, davem@davemloft.net,
-        florent.fourcot@wifirst.fr, fw@strlen.de, jeremy@azazel.net,
-        johannes.berg@intel.com, kadlec@netfilter.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, pablo@netfilter.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    ab7541c3 Merge tag 'fuse-fixes-5.5-rc7' of git://git.kerne..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=154ca959e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=cfbb8fa33f49f9f3
-dashboard link: https://syzkaller.appspot.com/bug?extid=fc69d7cb21258ab4ae4d
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12dcb0d6e00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+fc69d7cb21258ab4ae4d@syzkaller.appspotmail.com
-
-=============================
-WARNING: suspicious RCU usage
-5.5.0-rc6-syzkaller #0 Not tainted
------------------------------
-net/netfilter/ipset/ip_set_core.c:1001 suspicious rcu_dereference_protected() usage!
-
-other info that might help us debug this:
-
-
-rcu_scheduler_active = 2, debug_locks = 1
-1 lock held by syz-executor.0/8783:
- #0: ffff8880a681c5d8 (nlk_cb_mutex-NETFILTER){+.+.}, at: netlink_dump+0x75/0x1170 net/netlink/af_netlink.c:2199
-
-stack backtrace:
-CPU: 1 PID: 8783 Comm: syz-executor.0 Not tainted 5.5.0-rc6-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1fb/0x318 lib/dump_stack.c:118
- lockdep_rcu_suspicious+0x156/0x1c0 kernel/locking/lockdep.c:5435
- find_set_and_id+0x140/0x2f0 net/netfilter/ipset/ip_set_core.c:1001
- dump_init net/netfilter/ipset/ip_set_core.c:1506 [inline]
- ip_set_dump_start+0x7c5/0x1800 net/netfilter/ipset/ip_set_core.c:1541
- netlink_dump+0x4ed/0x1170 net/netlink/af_netlink.c:2244
- netlink_recvmsg+0x659/0xfb0 net/netlink/af_netlink.c:2000
- sock_recvmsg_nosec net/socket.c:873 [inline]
- sock_recvmsg net/socket.c:891 [inline]
- __sys_recvfrom+0x328/0x4b0 net/socket.c:2042
- __do_sys_recvfrom net/socket.c:2060 [inline]
- __se_sys_recvfrom net/socket.c:2056 [inline]
- __x64_sys_recvfrom+0xe5/0x100 net/socket.c:2056
- do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45aff9
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fc45d1a6c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002d
-RAX: ffffffffffffffda RBX: 00007fc45d1a76d4 RCX: 000000000045aff9
-RDX: 36ff0824c68970de RSI: 0000000000000000 RDI: 0000000000000003
-RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000226
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 000000000000085c R14: 00000000004c9852 R15: 000000000075bf2c
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+T24gV2VkLCAyMDIwLTAxLTA4IGF0IDE2OjA0ICswMTAwLCBoY2hAbHN0LmRlIHdyb3RlOg0KPiBP
+biBUdWUsIEphbiAwNywgMjAyMCBhdCAxMDoxNTozNFBNIC0wNTAwLCBNYXJ0aW4gSy4gUGV0ZXJz
+ZW4gd3JvdGU6DQo+ID4gDQo+ID4gQmFsYmlyLA0KPiA+IA0KPiA+ID4gSSBkaWQgdGhpcyB0byBh
+dm9pZCBoYXZpbmcgdG8gZW5mb3JjZSB0aGF0IHNldF9jYXBhY2l0eSgpIGltcGxpZWQgYQ0KPiA+
+ID4gbm90aWZpY2F0aW9uLiBMYXJnZWx5IHRvIGNvbnRyb2wgdGhlIGltcGFjdCBvZiB0aGUgY2hh
+bmdlIGJ5IGRlZmF1bHQuDQo+ID4gDQo+ID4gV2hhdCBJIHRob3VnaHQuIEknbSBPSyB3aXRoIHNl
+dF9jYXBhY2l0eV9hbmRfbm90aWZ5KCksIGJ0dy4NCj4gDQo+IFRvIHNvbWUgZXh0ZW50IGl0IG1p
+Z2h0IG1ha2Ugc2Vuc2UgdG8gYWx3YXlzIG5vdGlmeSBmcm9tIHNldF9jYXBhY2l0eQ0KPiBhbmQg
+aGF2ZSBhIHNldF9jYXBhY2l0eV9ub25vdGlmeSBpZiB3ZSBkb24ndCB3YW50IHRvIG5vdGlmeSwg
+YXMgaW4NCj4gZ2VuZXJhbCB3ZSBwcm9iYWJseSBzaG91bGQgbm90aWZ5IHVubGVzcyB3ZSBoYXZl
+IGEgZ29vZCByZWFzb24gbm90IHRvLg0KDQpJIGFtIG5vdCBzdXJlIGlmIHRoaXMgaXMgdGhlIHJp
+Z2h0IHBhdGgsIHNpbmNlIHdpdGggdGhlIG5ldyBpbnRlcmZhY2UsIHdlJ2xsDQpub3cgaGF2ZSBy
+ZXZhbGlkYXRlIGRpc2sgYml0cyBidWlsdCBpbnRvIHRoZSBmdW5jdGlvbiAoc2VlIHRoZSBjb21t
+ZW50cyBmcm9tDQpCb2IgZWFybGllcikuIEknZCBiZSBoYXBwaWVyIGNvbnZlcnRpbmcgaW50ZXJm
+YWNlcyBhIGZldyBhdCBhIHRpbWUsIEEgcXVpY2sNCmdyZXAgZm91bmQgb3ZlciAxMDAgcmVmZXJl
+bmNlcyBhbmQgSSBhbSBub3QgZXZlbiBzdXJlIGhvdyBtYW55IG9mIHRoZW0gYXJlDQpyZXNpemFi
+bGUgd2l0aG91dCBob3RwbHVnIGluL291dCBvbiB0aGUgZmx5LiBIZW5jZSwgSSBsaW1pdGVkIG15
+c2VsZiB0byB0aGUNCnNtYWxsIHN1YnNldCwgSSBjb3VsZCBjb25zaWRlciBleHBhbmRpbmcgaXQg
+bGF0ZXIgYmFzZWQgb24gdGhlIG5lZWQgYW5kIHRoZWlyDQphYmlsaXR5IHRvIHJlc2l6ZSBvbiB0
+aGUgZmx5DQoNCkJhbGJpciBTaW5naC4NCg==
