@@ -7,138 +7,66 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F677C32771
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 01:31:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33E06C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 01:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E9EC22527
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 01:31:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12F5124125
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 01:33:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728896AbgAUBa7 (ORCPT
+        id S1728898AbgAUBda (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 20:30:59 -0500
-Received: from lgeamrelo11.lge.com ([156.147.23.51]:47973 "EHLO
-        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727009AbgAUBa7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 20:30:59 -0500
-X-Greylist: delayed 1799 seconds by postgrey-1.27 at vger.kernel.org; Mon, 20 Jan 2020 20:30:57 EST
-Received: from unknown (HELO lgeamrelo04.lge.com) (156.147.1.127)
-        by 156.147.23.51 with ESMTP; 21 Jan 2020 10:00:55 +0900
-X-Original-SENDERIP: 156.147.1.127
-X-Original-MAILFROM: chanho.min@lge.com
-Received: from unknown (HELO localhost.localdomain) (10.178.31.96)
-        by 156.147.1.127 with ESMTP; 21 Jan 2020 10:00:55 +0900
-X-Original-SENDERIP: 10.178.31.96
-X-Original-MAILFROM: chanho.min@lge.com
-From:   Chanho Min <chanho.min@lge.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Daewoong Kim <daewoong00.kim@lge.com>,
-        Seokjoo Lee <seokjoo.lee@lge.com>,
-        Lee Gunho <gunho.lee@lge.com>, Chanho Min <chanho.min@lge.com>
-Subject: [PATCH] PM / sleep: fix use-after-free on async resume
-Date:   Tue, 21 Jan 2020 10:00:52 +0900
-Message-Id: <1579568452-27253-1-git-send-email-chanho.min@lge.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 20 Jan 2020 20:33:30 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:9221 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727009AbgAUBd3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 20:33:29 -0500
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id DF10D2200792A4E24220;
+        Tue, 21 Jan 2020 09:33:26 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 21 Jan 2020 09:33:18 +0800
+From:   Chen Zhou <chenzhou10@huawei.com>
+To:     <b.zolnierkie@samsung.com>, <axboe@kernel.dk>
+CC:     <linux-ide@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <chenzhou10@huawei.com>
+Subject: [PATCH -next] ata: pata_macio: fix comparing pointer to 0
+Date:   Tue, 21 Jan 2020 09:28:27 +0800
+Message-ID: <20200121012827.1036-1-chenzhou10@huawei.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some device can be released during suspend (e.g. usb disconnection).
-But, Its child device still use dev->parent's lock in dpm_wait().
-It can be ocurred use-after-free as bellows. This is happened during
-usb resume in practice.
+Fixes coccicheck warning:
 
-device hierarchy: "1-1" <- "1-1:1.2" <- "ep83"
+./drivers/ata/pata_macio.c:982:31-32:
+	WARNING comparing pointer to 0, suggest !E
 
-<parent>		<child>
-device_resume("1-1:1.2")
-dpm_wait("1-1")
-			device_resume("ep_83");
-			dpm_wait("1-1:1.2");
- usb_disconnect
-  put_device("1-1:1.2")
+Compare pointer-typed values to NULL rather than 0.
 
-put_device("1-1:1.2")
- usb_release_interface
- kfree(intf) <- "1-1:1.2"'s struct device is freed
-
-			 wait_for_common
-			 do {
-			 ...
-			 spin_lock_irq(&x->wait.lock); <- "1-1:1-2"'s lock
-			 } while (!x->done && timeout);
-
-This is call stack of the system hang caused by freed lock value in practice.
-
-Call trace:
-[<ffffffc000ef59a8>] _raw_spin_lock_irq+0x38/0x80
-[<ffffffc000ef2dac>] wait_for_common+0x12c/0x140
-[<ffffffc000ef2dd4>] wait_for_completion+0x14/0x20
-[<ffffffc000480c1c>] dpm_wait+0x5c/0xb0
-[<ffffffc0004813d8>] device_resume+0x78/0x320
-[<ffffffc000481ed4>] async_resume+0x24/0xe0
-[<ffffffc0000c671c>] async_run_entry_fn+0x54/0x158
-[<ffffffc0000bd720>] process_one_work+0x1e8/0x4b0
-[<ffffffc0000bdb10>] worker_thread+0x128/0x4b8
-[<ffffffc0000c3a14>] kthread+0x10c/0x110
-[<ffffffc00008ddd0>] ret_from_fork+0x10/0x40
-
-To prevent such use-after-free, dpm_wait_for_parent() keeps parent's reference
-using get/put_device even if it is disconnected.
-
-Signed-off-by: Chanho Min <chanho.min@lge.com>
-Signed-off-by: Daewoong Kim <daewoong00.kim@lge.com>
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
 ---
- drivers/base/power/main.c | 22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+ drivers/ata/pata_macio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
-index f946511..95a7499 100644
---- a/drivers/base/power/main.c
-+++ b/drivers/base/power/main.c
-@@ -234,13 +234,29 @@ static void initcall_debug_report(struct device *dev, ktime_t calltime,
-  * @dev: Device to wait for.
-  * @async: If unset, wait only if the device's power.async_suspend flag is set.
-  */
-+static void _dpm_wait(struct device *dev, bool async)
-+{
-+	if (async || (pm_async_enabled && dev->power.async_suspend))
-+		wait_for_completion(&dev->power.completion);
-+}
-+
- static void dpm_wait(struct device *dev, bool async)
- {
- 	if (!dev)
- 		return;
+diff --git a/drivers/ata/pata_macio.c b/drivers/ata/pata_macio.c
+index 1bfd015..e47a282 100644
+--- a/drivers/ata/pata_macio.c
++++ b/drivers/ata/pata_macio.c
+@@ -979,7 +979,7 @@ static void pata_macio_invariants(struct pata_macio_priv *priv)
+ 	priv->aapl_bus_id =  bidp ? *bidp : 0;
  
--	if (async || (pm_async_enabled && dev->power.async_suspend))
--		wait_for_completion(&dev->power.completion);
-+	_dpm_wait(dev, async);
-+}
-+
-+static void dpm_wait_for_parent(struct device *dev, bool async)
-+{
-+	if (dev && dev->parent) {
-+		struct device *dev_p = dev->parent;
-+
-+		get_device(dev_p);
-+		_dpm_wait(dev_p, async);
-+		put_device(dev_p);
-+	}
- }
- 
- static int dpm_wait_fn(struct device *dev, void *async_ptr)
-@@ -277,7 +293,7 @@ static void dpm_wait_for_suppliers(struct device *dev, bool async)
- 
- static void dpm_wait_for_superior(struct device *dev, bool async)
- {
--	dpm_wait(dev->parent, async);
-+	dpm_wait_for_parent(dev, async);
- 	dpm_wait_for_suppliers(dev, async);
+ 	/* Fixup missing Apple bus ID in case of media-bay */
+-	if (priv->mediabay && bidp == 0)
++	if (priv->mediabay && !bidp)
+ 		priv->aapl_bus_id = 1;
  }
  
 -- 
