@@ -5,739 +5,900 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC1E9C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 11:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D8BC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 11:12:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 601C124125
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 11:11:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAE0F24125
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 11:12:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="axH/GoHM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IsWsPpZb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729486AbgAULL4 (ORCPT
+        id S1729504AbgAULMN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 06:11:56 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22732 "EHLO
+        Tue, 21 Jan 2020 06:12:13 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46450 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729413AbgAULLy (ORCPT
+        with ESMTP id S1728682AbgAULMN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 06:11:54 -0500
+        Tue, 21 Jan 2020 06:12:13 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579605112;
+        s=mimecast20190719; t=1579605131;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=QKqg0qIuNTWeOPp5PQFP1u+dmbGkLpoIFnrni/uLk+I=;
-        b=axH/GoHMvDmwoKrU1RUgfKeqeGE7VdemwMBDXWVxal4Q6sjTzyaeHlY2aEl1bQt0LT0Abz
-        Ig9VzmhCaE7G5ccSHT8csKpwd2Fc2MG8P/6El1gdSQ+4XMREXEw09mMK8FtT8x+OoMLT4T
-        eECSt6dvVeQxc4jiBHWnp1xhCKoPBT0=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-113-dKtKQ-kOOEehgFLttLH23A-1; Tue, 21 Jan 2020 06:11:49 -0500
-X-MC-Unique: dKtKQ-kOOEehgFLttLH23A-1
-Received: by mail-wr1-f71.google.com with SMTP id u18so1151664wrn.11
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 03:11:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QKqg0qIuNTWeOPp5PQFP1u+dmbGkLpoIFnrni/uLk+I=;
-        b=S6qipePKLPjNF4hOvRwpgkGZyi0VvZjPWW26elviquv4v/lKgAhBbE53OGvs4W4vAB
-         nkXlRR8tYzuT6WoiW23jzP0AZ7YGKw03Uz+W4kiXLW886EnkwkzINGlqp5Zc9Kx49iWr
-         tSzVpSPRb49w+bpA2BnkVPD2tKZYwHDbX8Q8lOUPTFzfI/ntqvLOMKyv6O/BRYT6GtVg
-         Cri8hehQcQ5D+JIZ7Pde55TlbT+Ng2QCWoZ2953MBeaI/Dq1E0xkshrCXgDRMYz4NNF9
-         HT787yfhqgnvpm42jOG3xZ9q353v6p7v11MYDeuShvSbdu8R9WHPvbBCzMOJa5mHDVw2
-         Regg==
-X-Gm-Message-State: APjAAAVXMMmUWVjcHZpWZqIktIn/S0gFwoOZy140f98D2f+LlYAUz7N+
-        FnnZTI8wdgBFMlAk1bho2Bagr5grhOr83JSNDfXOV8F2R5YVrUr3skJHTpJ2j6h5kL3BLmL0EIS
-        JzIEOTmFWM7YcgREmCa0RLWs0
-X-Received: by 2002:a5d:608e:: with SMTP id w14mr4604245wrt.256.1579605107798;
-        Tue, 21 Jan 2020 03:11:47 -0800 (PST)
-X-Google-Smtp-Source: APXvYqz6wv6glJfLdvRz2/MrzIMcWR6iiQ2XVXsN7rhTv5buGbe6Ah+4Zx7xVSaVcVV6Aohg7Au65w==
-X-Received: by 2002:a5d:608e:: with SMTP id w14mr4604203wrt.256.1579605107280;
-        Tue, 21 Jan 2020 03:11:47 -0800 (PST)
-Received: from [192.168.1.81] (host81-140-166-164.range81-140.btcentralplus.com. [81.140.166.164])
-        by smtp.gmail.com with ESMTPSA id v22sm3380325wml.11.2020.01.21.03.11.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jan 2020 03:11:46 -0800 (PST)
-From:   Julien Thierry <jthierry@redhat.com>
-Subject: Re: [POC 02/23] livepatch: Split livepatch modules per livepatched
- object
-To:     Petr Mladek <pmladek@suse.com>, Jiri Kosina <jikos@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>
-Cc:     Joe Lawrence <joe.lawrence@redhat.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Nicolai Stange <nstange@suse.de>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200117150323.21801-1-pmladek@suse.com>
- <20200117150323.21801-3-pmladek@suse.com>
-Message-ID: <af90531e-219c-3515-1dc8-d86191902ea4@redhat.com>
-Date:   Tue, 21 Jan 2020 11:11:45 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        bh=lJ99z68icIoWn5glkcATt2qP8sc99pWTofNPSObJOoo=;
+        b=IsWsPpZbq5hSJzrCQ3P44fgIFkVtgJ5YCSF5jQ7VE69FXUxqFWnucmNzvWzGBYOdDwmOkD
+        MVHmIsQ4lQIOBgyfKwj/lirnAJBq8h60JYV+0FdFvBCrnlTprI97PbObAO8INkajEEE+U1
+        f4QGocQRsnneUFSh3tWGanwgRXjSgkY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-264-0Uf5CjSJP5C3XBNHbmOnSQ-1; Tue, 21 Jan 2020 06:12:10 -0500
+X-MC-Unique: 0Uf5CjSJP5C3XBNHbmOnSQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0C796800D53;
+        Tue, 21 Jan 2020 11:12:09 +0000 (UTC)
+Received: from [10.36.117.108] (ovpn-117-108.ams2.redhat.com [10.36.117.108])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B2D6060BE0;
+        Tue, 21 Jan 2020 11:12:06 +0000 (UTC)
+Subject: Re: [PATCH] selftests: KVM: AMD Nested SVM test infrastructure
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     thuth@redhat.com, drjones@redhat.com, eric.auger.pro@gmail.com,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        pbonzini@redhat.com
+References: <20200117173753.21434-1-eric.auger@redhat.com>
+ <87pnfeflgb.fsf@vitty.brq.redhat.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <a288001b-56a6-363b-18c0-18a1e1876ccc@redhat.com>
+Date:   Tue, 21 Jan 2020 12:12:05 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <20200117150323.21801-3-pmladek@suse.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+In-Reply-To: <87pnfeflgb.fsf@vitty.brq.redhat.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Petr,
+Hi Vitaly,
 
-On 1/17/20 3:03 PM, Petr Mladek wrote:
-> One livepatch module allows to fix vmlinux and any number of modules
-> while providing some guarantees defined by the consistency model.
+On 1/20/20 11:53 AM, Vitaly Kuznetsov wrote:
+> Eric Auger <eric.auger@redhat.com> writes:
 > 
-> The patched modules can be loaded at any time: before, during,
-> or after the livepatch module gets loaded. They can even get
-> removed and loaded again. This variety of scenarios bring some
-> troubles. For example, some livepatch symbols could be relocated
-> only after the related module gets loaded. These changes need
-> to get cleared when the module gets unloaded so that it can
-> get eventually loaded again.
+>> Add the basic infrastructure needed to test AMD nested SVM.
+>> This is largely copied from the KVM unit test infrastructure.
+>> Three very basic tests come along, executed in sequence.
+>>
+>> Signed-off-by: Eric Auger <eric.auger@redhat.com>
 > 
-> As a result some functionality needs to be duplicated by
-> the livepatching code. Some elf sections need to be preserved
-> even when they normally can be removed during the module load.
-> Architecture specific code is involved which makes harder
-> adding support for new architectures and the maintainace.
+> Thanks a lot for doing this!
 > 
-> The solution is to split the livepatch module per livepatched
-> object (vmlinux or module). Then both livepatch module and
-> the livepatched modules could get loaded and removed at the
-> same time.
+>>
+>> ---
+>>
+>> Given the amount of code taken from KVM unit test, I would be
+>> more than happy to transfer any authorship. Please let me know.
 > 
-> This require many changes in the livepatch subsystem, module
-> loader, sample livepatches and livepatches needed for selftests.
+> Oh come on, AMD and Intel are borrowing each other ideas and I'm yet to
+> see 'This feature was inspired by the competitor's ...' in either of the
+> SDMs :-))
+;-)
 > 
-> The bad news is that bisection will not work by definition.
-> The good news is that it allows to do the changes in smaller
-> steps.
+>> ---
+>>  tools/testing/selftests/kvm/Makefile          |   3 +-
+>>  .../selftests/kvm/include/x86_64/svm.h        | 390 ++++++++++++++++++
+>>  tools/testing/selftests/kvm/lib/x86_64/svm.c  | 211 ++++++++++
+>>  tools/testing/selftests/kvm/x86_64/svm_test.c | 127 ++++++
 > 
-> The first step allows to split the existing sample and testing
-> modules so that they can be later user. It is done by
-> the following changes:
+> I'd suggest to split this into two patches: infra and the new
+> test. Infra can probably also be split.
+sure
 > 
-> 1. struct klp_patch:
+>>  4 files changed, 730 insertions(+), 1 deletion(-)
+>>  create mode 100644 tools/testing/selftests/kvm/include/x86_64/svm.h
+>>  create mode 100644 tools/testing/selftests/kvm/lib/x86_64/svm.c
+>>  create mode 100644 tools/testing/selftests/kvm/x86_64/svm_test.c
+>>
+>> diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
+>> index 3138a916574a..ea2f8bcf729e 100644
+>> --- a/tools/testing/selftests/kvm/Makefile
+>> +++ b/tools/testing/selftests/kvm/Makefile
+>> @@ -8,7 +8,7 @@ KSFT_KHDR_INSTALL := 1
+>>  UNAME_M := $(shell uname -m)
+>>  
+>>  LIBKVM = lib/assert.c lib/elf.c lib/io.c lib/kvm_util.c lib/sparsebit.c
+>> -LIBKVM_x86_64 = lib/x86_64/processor.c lib/x86_64/vmx.c lib/x86_64/ucall.c
+>> +LIBKVM_x86_64 = lib/x86_64/processor.c lib/x86_64/vmx.c lib/x86_64/svm.c lib/x86_64/ucall.c
+>>  LIBKVM_aarch64 = lib/aarch64/processor.c lib/aarch64/ucall.c
+>>  LIBKVM_s390x = lib/s390x/processor.c lib/s390x/ucall.c
+>>  
+>> @@ -26,6 +26,7 @@ TEST_GEN_PROGS_x86_64 += x86_64/vmx_dirty_log_test
+>>  TEST_GEN_PROGS_x86_64 += x86_64/vmx_set_nested_state_test
+>>  TEST_GEN_PROGS_x86_64 += x86_64/vmx_tsc_adjust_test
+>>  TEST_GEN_PROGS_x86_64 += x86_64/xss_msr_test
+>> +TEST_GEN_PROGS_x86_64 += x86_64/svm_test
+>>  TEST_GEN_PROGS_x86_64 += clear_dirty_log_test
+>>  TEST_GEN_PROGS_x86_64 += dirty_log_test
+>>  TEST_GEN_PROGS_x86_64 += kvm_create_max_vcpus
+>> diff --git a/tools/testing/selftests/kvm/include/x86_64/svm.h b/tools/testing/selftests/kvm/include/x86_64/svm.h
+>> new file mode 100644
+>> index 000000000000..12c23961f73a
+>> --- /dev/null
+>> +++ b/tools/testing/selftests/kvm/include/x86_64/svm.h
+>> @@ -0,0 +1,390 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-only */
+>> +/*
+>> + * tools/testing/selftests/kvm/include/x86_64/svm.h
+>> + * Header for nested SVM testing
+>> + * Largely copied from KVM unit test svm.h
+>> + *
+>> + * Copyright (C) 2020, Red Hat, Inc.
+>> + */
+>> +
+>> +#ifndef SELFTEST_KVM_SVM_H
+>> +#define SELFTEST_KVM_SVM_H
+>> +
+>> +#include <stdint.h>
+>> +#include "processor.h"
+>> +
+>> +#define CPUID_SVM_BIT		2
+>> +#define CPUID_SVM		(1 << 2)
 > 
->    + Add "patch_name" and "obj_names" to match all the related
->      livepatch modules.
+> BIT_ULL(CPUID_SVM_BIT) ?
 > 
->    + Replace "objs" array with a pointer to a single struct object.
+>> +
+>> +enum {
+>> +	INTERCEPT_INTR,
+>> +	INTERCEPT_NMI,
+>> +	INTERCEPT_SMI,
+>> +	INTERCEPT_INIT,
+>> +	INTERCEPT_VINTR,
+>> +	INTERCEPT_SELECTIVE_CR0,
+>> +	INTERCEPT_STORE_IDTR,
+>> +	INTERCEPT_STORE_GDTR,
+>> +	INTERCEPT_STORE_LDTR,
+>> +	INTERCEPT_STORE_TR,
+>> +	INTERCEPT_LOAD_IDTR,
+>> +	INTERCEPT_LOAD_GDTR,
+>> +	INTERCEPT_LOAD_LDTR,
+>> +	INTERCEPT_LOAD_TR,
+>> +	INTERCEPT_RDTSC,
+>> +	INTERCEPT_RDPMC,
+>> +	INTERCEPT_PUSHF,
+>> +	INTERCEPT_POPF,
+>> +	INTERCEPT_CPUID,
+>> +	INTERCEPT_RSM,
+>> +	INTERCEPT_IRET,
+>> +	INTERCEPT_INTn,
+>> +	INTERCEPT_INVD,
+>> +	INTERCEPT_PAUSE,
+>> +	INTERCEPT_HLT,
+>> +	INTERCEPT_INVLPG,
+>> +	INTERCEPT_INVLPGA,
+>> +	INTERCEPT_IOIO_PROT,
+>> +	INTERCEPT_MSR_PROT,
+>> +	INTERCEPT_TASK_SWITCH,
+>> +	INTERCEPT_FERR_FREEZE,
+>> +	INTERCEPT_SHUTDOWN,
+>> +	INTERCEPT_VMRUN,
+>> +	INTERCEPT_VMMCALL,
+>> +	INTERCEPT_VMLOAD,
+>> +	INTERCEPT_VMSAVE,
+>> +	INTERCEPT_STGI,
+>> +	INTERCEPT_CLGI,
+>> +	INTERCEPT_SKINIT,
+>> +	INTERCEPT_RDTSCP,
+>> +	INTERCEPT_ICEBP,
+>> +	INTERCEPT_WBINVD,
+>> +	INTERCEPT_MONITOR,
+>> +	INTERCEPT_MWAIT,
+>> +	INTERCEPT_MWAIT_COND,
+>> +};
+>> +
+>> +struct __attribute__ ((__packed__)) vmcb_control_area {
+>> +	u16 intercept_cr_read;
+>> +	u16 intercept_cr_write;
+>> +	u16 intercept_dr_read;
+>> +	u16 intercept_dr_write;
+>> +	u32 intercept_exceptions;
+>> +	u64 intercept;
+>> +	u8 reserved_1[42];
+>> +	u16 pause_filter_count;
+>> +	u64 iopm_base_pa;
+>> +	u64 msrpm_base_pa;
+>> +	u64 tsc_offset;
+>> +	u32 asid;
+>> +	u8 tlb_ctl;
+>> +	u8 reserved_2[3];
+>> +	u32 int_ctl;
+>> +	u32 int_vector;
+>> +	u32 int_state;
+>> +	u8 reserved_3[4];
+>> +	u32 exit_code;
+>> +	u32 exit_code_hi;
+>> +	u64 exit_info_1;
+>> +	u64 exit_info_2;
+>> +	u32 exit_int_info;
+>> +	u32 exit_int_info_err;
+>> +	u64 nested_ctl;
+>> +	u8 reserved_4[16];
+>> +	u32 event_inj;
+>> +	u32 event_inj_err;
+>> +	u64 nested_cr3;
+>> +	u64 lbr_ctl;
+>> +	u64 reserved_5;
+>> +	u64 next_rip;
+>> +	u8 reserved_6[816];
+>> +};
+>> +
+>> +struct regs {
+>> +	u64 rax;
+>> +	u64 rbx;
+>> +	u64 rcx;
+>> +	u64 rdx;
+>> +	u64 cr2;
+>> +	u64 rbp;
+>> +	u64 rsi;
+>> +	u64 rdi;
+>> +	u64 r8;
+>> +	u64 r9;
+>> +	u64 r10;
+>> +	u64 r11;
+>> +	u64 r12;
+>> +	u64 r13;
+>> +	u64 r14;
+>> +	u64 r15;
+>> +	u64 rflags;
+>> +};
 > 
->    + move "mod" to struct object.
+> This structure is not svm specific, I'd suggest to move it to a common
+> header ('x86_gp_regs'?)
+OK
 > 
-> 2. struct klp_object:
+>> +
+>> +#define TLB_CONTROL_DO_NOTHING 0
+>> +#define TLB_CONTROL_FLUSH_ALL_ASID 1
+>> +
+>> +#define V_TPR_MASK 0x0f
+>> +
+>> +#define V_IRQ_SHIFT 8
+>> +#define V_IRQ_MASK (1 << V_IRQ_SHIFT)
+>> +
+>> +#define V_INTR_PRIO_SHIFT 16
+>> +#define V_INTR_PRIO_MASK (0x0f << V_INTR_PRIO_SHIFT)
+>> +
+>> +#define V_IGN_TPR_SHIFT 20
+>> +#define V_IGN_TPR_MASK (1 << V_IGN_TPR_SHIFT)
+>> +
+>> +#define V_INTR_MASKING_SHIFT 24
+>> +#define V_INTR_MASKING_MASK (1 << V_INTR_MASKING_SHIFT)
+>> +
+>> +#define SVM_INTERRUPT_SHADOW_MASK 1
+>> +
+>> +#define SVM_IOIO_STR_SHIFT 2
+>> +#define SVM_IOIO_REP_SHIFT 3
+>> +#define SVM_IOIO_SIZE_SHIFT 4
+>> +#define SVM_IOIO_ASIZE_SHIFT 7
+>> +
+>> +#define SVM_IOIO_TYPE_MASK 1
+>> +#define SVM_IOIO_STR_MASK (1 << SVM_IOIO_STR_SHIFT)
+>> +#define SVM_IOIO_REP_MASK (1 << SVM_IOIO_REP_SHIFT)
+>> +#define SVM_IOIO_SIZE_MASK (7 << SVM_IOIO_SIZE_SHIFT)
+>> +#define SVM_IOIO_ASIZE_MASK (7 << SVM_IOIO_ASIZE_SHIFT)
+>> +
+>> +#define SVM_VM_CR_VALID_MASK	0x001fULL
+>> +#define SVM_VM_CR_SVM_LOCK_MASK 0x0008ULL
+>> +#define SVM_VM_CR_SVM_DIS_MASK  0x0010ULL
+>> +
+>> +struct __attribute__ ((__packed__)) vmcb_seg {
+>> +	u16 selector;
+>> +	u16 attrib;
+>> +	u32 limit;
+>> +	u64 base;
+>> +};
+>> +
+>> +struct __attribute__ ((__packed__)) vmcb_save_area {
+>> +	struct vmcb_seg es;
+>> +	struct vmcb_seg cs;
+>> +	struct vmcb_seg ss;
+>> +	struct vmcb_seg ds;
+>> +	struct vmcb_seg fs;
+>> +	struct vmcb_seg gs;
+>> +	struct vmcb_seg gdtr;
+>> +	struct vmcb_seg ldtr;
+>> +	struct vmcb_seg idtr;
+>> +	struct vmcb_seg tr;
+>> +	u8 reserved_1[43];
+>> +	u8 cpl;
+>> +	u8 reserved_2[4];
+>> +	u64 efer;
+>> +	u8 reserved_3[112];
+>> +	u64 cr4;
+>> +	u64 cr3;
+>> +	u64 cr0;
+>> +	u64 dr7;
+>> +	u64 dr6;
+>> +	u64 rflags;
+>> +	u64 rip;
+>> +	u8 reserved_4[88];
+>> +	u64 rsp;
+>> +	u8 reserved_5[24];
+>> +	u64 rax;
+>> +	u64 star;
+>> +	u64 lstar;
+>> +	u64 cstar;
+>> +	u64 sfmask;
+>> +	u64 kernel_gs_base;
+>> +	u64 sysenter_cs;
+>> +	u64 sysenter_esp;
+>> +	u64 sysenter_eip;
+>> +	u64 cr2;
+>> +	u8 reserved_6[32];
+>> +	u64 g_pat;
+>> +	u64 dbgctl;
+>> +	u64 br_from;
+>> +	u64 br_to;
+>> +	u64 last_excp_from;
+>> +	u64 last_excp_to;
+>> +};
+>> +
+>> +struct __attribute__ ((__packed__)) vmcb {
+>> +	struct vmcb_control_area control;
+>> +	struct vmcb_save_area save;
+>> +};
+>> +
+>> +#define SVM_CPUID_FEATURE_SHIFT 2
+>> +#define SVM_CPUID_FUNC 0x8000000a
+>> +
+>> +#define SVM_VM_CR_SVM_DISABLE 4
+>> +
+>> +#define SVM_SELECTOR_S_SHIFT 4
+>> +#define SVM_SELECTOR_DPL_SHIFT 5
+>> +#define SVM_SELECTOR_P_SHIFT 7
+>> +#define SVM_SELECTOR_AVL_SHIFT 8
+>> +#define SVM_SELECTOR_L_SHIFT 9
+>> +#define SVM_SELECTOR_DB_SHIFT 10
+>> +#define SVM_SELECTOR_G_SHIFT 11
+>> +
+>> +#define SVM_SELECTOR_TYPE_MASK (0xf)
+>> +#define SVM_SELECTOR_S_MASK (1 << SVM_SELECTOR_S_SHIFT)
+>> +#define SVM_SELECTOR_DPL_MASK (3 << SVM_SELECTOR_DPL_SHIFT)
+>> +#define SVM_SELECTOR_P_MASK (1 << SVM_SELECTOR_P_SHIFT)
+>> +#define SVM_SELECTOR_AVL_MASK (1 << SVM_SELECTOR_AVL_SHIFT)
+>> +#define SVM_SELECTOR_L_MASK (1 << SVM_SELECTOR_L_SHIFT)
+>> +#define SVM_SELECTOR_DB_MASK (1 << SVM_SELECTOR_DB_SHIFT)
+>> +#define SVM_SELECTOR_G_MASK (1 << SVM_SELECTOR_G_SHIFT)
+>> +
+>> +#define SVM_SELECTOR_WRITE_MASK (1 << 1)
+>> +#define SVM_SELECTOR_READ_MASK SVM_SELECTOR_WRITE_MASK
+>> +#define SVM_SELECTOR_CODE_MASK (1 << 3)
+>> +
+>> +#define INTERCEPT_CR0_MASK 1
+>> +#define INTERCEPT_CR3_MASK (1 << 3)
+>> +#define INTERCEPT_CR4_MASK (1 << 4)
+>> +#define INTERCEPT_CR8_MASK (1 << 8)
+>> +
+>> +#define INTERCEPT_DR0_MASK 1
+>> +#define INTERCEPT_DR1_MASK (1 << 1)
+>> +#define INTERCEPT_DR2_MASK (1 << 2)
+>> +#define INTERCEPT_DR3_MASK (1 << 3)
+>> +#define INTERCEPT_DR4_MASK (1 << 4)
+>> +#define INTERCEPT_DR5_MASK (1 << 5)
+>> +#define INTERCEPT_DR6_MASK (1 << 6)
+>> +#define INTERCEPT_DR7_MASK (1 << 7)
+>> +
+>> +#define SVM_EVTINJ_VEC_MASK 0xff
+>> +
+>> +#define SVM_EVTINJ_TYPE_SHIFT 8
+>> +#define SVM_EVTINJ_TYPE_MASK (7 << SVM_EVTINJ_TYPE_SHIFT)
+>> +
+>> +#define SVM_EVTINJ_TYPE_INTR (0 << SVM_EVTINJ_TYPE_SHIFT)
+>> +#define SVM_EVTINJ_TYPE_NMI (2 << SVM_EVTINJ_TYPE_SHIFT)
+>> +#define SVM_EVTINJ_TYPE_EXEPT (3 << SVM_EVTINJ_TYPE_SHIFT)
+>> +#define SVM_EVTINJ_TYPE_SOFT (4 << SVM_EVTINJ_TYPE_SHIFT)
+>> +
+>> +#define SVM_EVTINJ_VALID (1 << 31)
+>> +#define SVM_EVTINJ_VALID_ERR (1 << 11)
+>> +
+>> +#define SVM_EXITINTINFO_VEC_MASK SVM_EVTINJ_VEC_MASK
+>> +#define SVM_EXITINTINFO_TYPE_MASK SVM_EVTINJ_TYPE_MASK
+>> +
+>> +#define	SVM_EXITINTINFO_TYPE_INTR SVM_EVTINJ_TYPE_INTR
+>> +#define	SVM_EXITINTINFO_TYPE_NMI SVM_EVTINJ_TYPE_NMI
+>> +#define	SVM_EXITINTINFO_TYPE_EXEPT SVM_EVTINJ_TYPE_EXEPT
+>> +#define	SVM_EXITINTINFO_TYPE_SOFT SVM_EVTINJ_TYPE_SOFT
+>> +
+>> +#define SVM_EXITINTINFO_VALID SVM_EVTINJ_VALID
+>> +#define SVM_EXITINTINFO_VALID_ERR SVM_EVTINJ_VALID_ERR
+>> +
+>> +#define SVM_EXITINFOSHIFT_TS_REASON_IRET 36
+>> +#define SVM_EXITINFOSHIFT_TS_REASON_JMP 38
+>> +#define SVM_EXITINFOSHIFT_TS_HAS_ERROR_CODE 44
+>> +
+>> +#define	SVM_EXIT_READ_CR0	0x000
+>> +#define	SVM_EXIT_READ_CR3	0x003
+>> +#define	SVM_EXIT_READ_CR4	0x004
+>> +#define	SVM_EXIT_READ_CR8	0x008
+>> +#define	SVM_EXIT_WRITE_CR0	0x010
+>> +#define	SVM_EXIT_WRITE_CR3	0x013
+>> +#define	SVM_EXIT_WRITE_CR4	0x014
+>> +#define	SVM_EXIT_WRITE_CR8	0x018
+>> +#define	SVM_EXIT_READ_DR0	0x020
+>> +#define	SVM_EXIT_READ_DR1	0x021
+>> +#define	SVM_EXIT_READ_DR2	0x022
+>> +#define	SVM_EXIT_READ_DR3	0x023
+>> +#define	SVM_EXIT_READ_DR4	0x024
+>> +#define	SVM_EXIT_READ_DR5	0x025
+>> +#define	SVM_EXIT_READ_DR6	0x026
+>> +#define	SVM_EXIT_READ_DR7	0x027
+>> +#define	SVM_EXIT_WRITE_DR0	0x030
+>> +#define	SVM_EXIT_WRITE_DR1	0x031
+>> +#define	SVM_EXIT_WRITE_DR2	0x032
+>> +#define	SVM_EXIT_WRITE_DR3	0x033
+>> +#define	SVM_EXIT_WRITE_DR4	0x034
+>> +#define	SVM_EXIT_WRITE_DR5	0x035
+>> +#define	SVM_EXIT_WRITE_DR6	0x036
+>> +#define	SVM_EXIT_WRITE_DR7	0x037
+>> +#define SVM_EXIT_EXCP_BASE      0x040
+>> +#define SVM_EXIT_INTR		0x060
+>> +#define SVM_EXIT_NMI		0x061
+>> +#define SVM_EXIT_SMI		0x062
+>> +#define SVM_EXIT_INIT		0x063
+>> +#define SVM_EXIT_VINTR		0x064
+>> +#define SVM_EXIT_CR0_SEL_WRITE	0x065
+>> +#define SVM_EXIT_IDTR_READ	0x066
+>> +#define SVM_EXIT_GDTR_READ	0x067
+>> +#define SVM_EXIT_LDTR_READ	0x068
+>> +#define SVM_EXIT_TR_READ	0x069
+>> +#define SVM_EXIT_IDTR_WRITE	0x06a
+>> +#define SVM_EXIT_GDTR_WRITE	0x06b
+>> +#define SVM_EXIT_LDTR_WRITE	0x06c
+>> +#define SVM_EXIT_TR_WRITE	0x06d
+>> +#define SVM_EXIT_RDTSC		0x06e
+>> +#define SVM_EXIT_RDPMC		0x06f
+>> +#define SVM_EXIT_PUSHF		0x070
+>> +#define SVM_EXIT_POPF		0x071
+>> +#define SVM_EXIT_CPUID		0x072
+>> +#define SVM_EXIT_RSM		0x073
+>> +#define SVM_EXIT_IRET		0x074
+>> +#define SVM_EXIT_SWINT		0x075
+>> +#define SVM_EXIT_INVD		0x076
+>> +#define SVM_EXIT_PAUSE		0x077
+>> +#define SVM_EXIT_HLT		0x078
+>> +#define SVM_EXIT_INVLPG		0x079
+>> +#define SVM_EXIT_INVLPGA	0x07a
+>> +#define SVM_EXIT_IOIO		0x07b
+>> +#define SVM_EXIT_MSR		0x07c
+>> +#define SVM_EXIT_TASK_SWITCH	0x07d
+>> +#define SVM_EXIT_FERR_FREEZE	0x07e
+>> +#define SVM_EXIT_SHUTDOWN	0x07f
+>> +#define SVM_EXIT_VMRUN		0x080
+>> +#define SVM_EXIT_VMMCALL	0x081
+>> +#define SVM_EXIT_VMLOAD		0x082
+>> +#define SVM_EXIT_VMSAVE		0x083
+>> +#define SVM_EXIT_STGI		0x084
+>> +#define SVM_EXIT_CLGI		0x085
+>> +#define SVM_EXIT_SKINIT		0x086
+>> +#define SVM_EXIT_RDTSCP		0x087
+>> +#define SVM_EXIT_ICEBP		0x088
+>> +#define SVM_EXIT_WBINVD		0x089
+>> +#define SVM_EXIT_MONITOR	0x08a
+>> +#define SVM_EXIT_MWAIT		0x08b
+>> +#define SVM_EXIT_MWAIT_COND	0x08c
+>> +#define SVM_EXIT_NPF		0x400
+>> +
+>> +#define SVM_EXIT_ERR		-1
+>> +
+>> +#define SVM_CR0_SELECTIVE_MASK (X86_CR0_TS | X86_CR0_MP)
+>> +
+>> +struct svm_test_data;
+>> +
+>> +struct test {
+>> +	const char *name;
+>> +	bool (*supported)(void);
+>> +	void (*l1_custom_setup)(struct svm_test_data *svm);
+>> +	void (*l2_guest_code)(struct svm_test_data *svm);
+>> +	int expected_exit_code;
+>> +	bool (*l1_check_result)(struct svm_test_data *svm);
+>> +	bool (*finished)(struct svm_test_data *svm);
+>> +	ulong scratch;
+>> +};
+>> +
+>> +struct svm_test_data {
+>> +	void *vmcb_hva;
+>> +	uint64_t vmcb_gpa;
+>> +	struct vmcb *vmcb;
+>> +
+>> +	void *save_area_hva;
+>> +	uint64_t save_area_gpa;
+>> +	struct vmcb_save_area *save_area;
+>> +
+>> +	struct test *test;
+>> +};
+>> +
+>> +extern struct regs regs;
+>> +
+>> +struct svm_test_data *vcpu_alloc_svm(struct kvm_vm *vm, vm_vaddr_t *p_svm_gva);
+>> +void generic_svm_setup(struct svm_test_data *svm, void *guest_rip, void *guest_rsp);
+>> +void run_guest(struct vmcb *vmcb, uint64_t vmcb_gpa);
+>> +void nested_svm_check_supported(void);
+>> +
+>> +#endif /* SELFTEST_KVM_SVM_H */
+>> diff --git a/tools/testing/selftests/kvm/lib/x86_64/svm.c b/tools/testing/selftests/kvm/lib/x86_64/svm.c
+>> new file mode 100644
+>> index 000000000000..acb04ca4e757
+>> --- /dev/null
+>> +++ b/tools/testing/selftests/kvm/lib/x86_64/svm.c
+>> @@ -0,0 +1,211 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * tools/testing/selftests/kvm/lib/x86_64/svm.c
+>> + * Helpers used for nested SVM testing
+>> + * Largely inspired from KVM unit test svm.c
+>> + *
+>> + * Copyright (C) 2020, Red Hat, Inc.
+>> + */
+>> +
+>> +#include "test_util.h"
+>> +#include "kvm_util.h"
+>> +#include "../kvm_util_internal.h"
+>> +#include "processor.h"
+>> +#include "svm.h"
+>> +
+>> +struct regs regs;
+>> +
+>> +/* Allocate memory regions for nested SVM tests.
+>> + *
+>> + * Input Args:
+>> + *   vm - The VM to allocate guest-virtual addresses in.
+>> + *
+>> + * Output Args:
+>> + *   p_svm_gva - The guest virtual address for the struct svm_test_data.
+>> + *
+>> + * Return:
+>> + *   Pointer to structure with the addresses of the SVM areas.
+>> + */
+>> +struct svm_test_data *
+>> +vcpu_alloc_svm(struct kvm_vm *vm, vm_vaddr_t *p_svm_gva)
+>> +{
+>> +	vm_vaddr_t svm_gva = vm_vaddr_alloc(vm, getpagesize(),
+>> +					    0x10000, 0, 0);
+>> +	struct svm_test_data *svm = addr_gva2hva(vm, svm_gva);
+>> +
+>> +	svm->vmcb = (void *)vm_vaddr_alloc(vm, getpagesize(),
+>> +					   0x10000, 0, 0);
+>> +	svm->vmcb_hva = addr_gva2hva(vm, (uintptr_t)svm->vmcb);
+>> +	svm->vmcb_gpa = addr_gva2gpa(vm, (uintptr_t)svm->vmcb);
+>> +
+>> +	svm->save_area = (void *)vm_vaddr_alloc(vm, getpagesize(),
+>> +						0x10000, 0, 0);
+>> +	svm->save_area_hva = addr_gva2hva(vm, (uintptr_t)svm->save_area);
+>> +	svm->save_area_gpa = addr_gva2gpa(vm, (uintptr_t)svm->save_area);
+>> +
+>> +	*p_svm_gva = svm_gva;
+>> +	return svm;
+>> +}
+>> +
+>> +struct descriptor_table_ptr {
+>> +	u16 limit;
+>> +	ulong base;
+>> +} __attribute__((packed));
+>> +
+>> +static inline void sgdt(struct descriptor_table_ptr *ptr)
+>> +{
+>> +	asm volatile ("sgdt %0" : "=m"(*ptr));
+>> +}
+>> +
+>> +static inline void sidt(struct descriptor_table_ptr *ptr)
+>> +{
+>> +	asm volatile ("sidt %0" : "=m"(*ptr));
+>> +}
+>> +
+>> +static void vmcb_set_seg(struct vmcb_seg *seg, u16 selector,
+>> +			 u64 base, u32 limit, u32 attr)
+>> +{
+>> +	seg->selector = selector;
+>> +	seg->attrib = attr;
+>> +	seg->limit = limit;
+>> +	seg->base = base;
+>> +}
+>> +
+>> +static inline u16 read_cs(void)
+>> +{
+>> +	u16 val;
+>> +
+>> +	asm volatile ("mov %%cs, %0" : "=mr"(val));
+>> +	return val;
+>> +}
+>> +
+>> +static inline u16 read_ds(void)
+>> +{
+>> +	u16 val;
+>> +
+>> +	asm volatile ("mov %%ds, %0" : "=mr"(val));
+>> +	return val;
+>> +}
+>> +
+>> +static inline u16 read_es(void)
+>> +{
+>> +	u16 val;
+>> +
+>> +	asm volatile ("mov %%es, %0" : "=mr"(val));
+>> +	return val;
+>> +}
+>> +
+>> +static inline u16 read_ss(void)
+>> +{
+>> +	unsigned int val;
+>> +
+>> +	asm volatile ("mov %%ss, %0" : "=mr"(val));
+>> +	return val;
+>> +}
+>> +
+>> +void generic_svm_setup(struct svm_test_data *svm, void *guest_rip, void *guest_rsp)
+>> +{
+>> +	struct vmcb *vmcb = svm->vmcb;
+>> +	uint64_t vmcb_gpa = svm->vmcb_gpa;
+>> +	struct vmcb_save_area *save = &vmcb->save;
+>> +	struct vmcb_control_area *ctrl = &vmcb->control;
+>> +	u32 data_seg_attr = 3 | SVM_SELECTOR_S_MASK | SVM_SELECTOR_P_MASK
+>> +	      | SVM_SELECTOR_DB_MASK | SVM_SELECTOR_G_MASK;
+>> +	u32 code_seg_attr = 9 | SVM_SELECTOR_S_MASK | SVM_SELECTOR_P_MASK
+>> +		| SVM_SELECTOR_L_MASK | SVM_SELECTOR_G_MASK;
+>> +	struct descriptor_table_ptr desc_table_ptr;
+>> +	uint64_t efer;
+>> +
+>> +	efer = rdmsr(MSR_EFER);
+>> +	wrmsr(MSR_EFER, efer | EFER_SVME);
+>> +	wrmsr(MSR_VM_HSAVE_PA, svm->save_area_gpa);
+>> +
+>> +	memset(vmcb, 0, sizeof(*vmcb));
+>> +	asm volatile ("vmsave %0" : : "a" (vmcb_gpa) : "memory");
+>> +	vmcb_set_seg(&save->es, read_es(), 0, -1U, data_seg_attr);
+>> +	vmcb_set_seg(&save->cs, read_cs(), 0, -1U, code_seg_attr);
+>> +	vmcb_set_seg(&save->ss, read_ss(), 0, -1U, data_seg_attr);
+>> +	vmcb_set_seg(&save->ds, read_ds(), 0, -1U, data_seg_attr);
+>> +	sgdt(&desc_table_ptr);
+>> +	vmcb_set_seg(&save->gdtr, 0,
+>> +		     desc_table_ptr.base, desc_table_ptr.limit, 0);
+>> +	sidt(&desc_table_ptr);
+>> +	vmcb_set_seg(&save->idtr, 0,
+>> +		     desc_table_ptr.base, desc_table_ptr.limit, 0);
+>> +
+>> +	ctrl->asid = 1;
+>> +	save->cpl = 0;
+>> +	save->efer = rdmsr(MSR_EFER);
+>> +	asm volatile ("mov %%cr4, %0" : "=r"(save->cr4) : : "memory");
+>> +	asm volatile ("mov %%cr3, %0" : "=r"(save->cr3) : : "memory");
+>> +	asm volatile ("mov %%cr0, %0" : "=r"(save->cr0) : : "memory");
+>> +	asm volatile ("mov %%dr7, %0" : "=r"(save->dr7));
+>> +	asm volatile ("mov %%dr6, %0" : "=r"(save->dr6));
+>> +	asm volatile ("mov %%cr2, %0" : "=r"(save->cr2) : : "memory");
+>> +	save->g_pat = rdmsr(MSR_IA32_CR_PAT);
+>> +	save->dbgctl = rdmsr(MSR_IA32_DEBUGCTLMSR);
+>> +	ctrl->intercept = (1ULL << INTERCEPT_VMRUN) |
+>> +				(1ULL << INTERCEPT_VMMCALL);
+>> +
+>> +	vmcb->save.rip = (ulong)guest_rip;
+>> +	vmcb->save.rsp = (ulong)guest_rsp;
+>> +	regs.rdi = (ulong)svm;
+>> +}
+>> +
+>> +#define SAVE_GPR_C                              \
+>> +	"xchg %%rbx, regs+0x8\n\t"              \
+>> +	"xchg %%rcx, regs+0x10\n\t"             \
+>> +	"xchg %%rdx, regs+0x18\n\t"             \
+>> +	"xchg %%rbp, regs+0x28\n\t"             \
+>> +	"xchg %%rsi, regs+0x30\n\t"             \
+>> +	"xchg %%rdi, regs+0x38\n\t"             \
+>> +	"xchg %%r8, regs+0x40\n\t"              \
+>> +	"xchg %%r9, regs+0x48\n\t"              \
+>> +	"xchg %%r10, regs+0x50\n\t"             \
+>> +	"xchg %%r11, regs+0x58\n\t"             \
+>> +	"xchg %%r12, regs+0x60\n\t"             \
+>> +	"xchg %%r13, regs+0x68\n\t"             \
+>> +	"xchg %%r14, regs+0x70\n\t"             \
+>> +	"xchg %%r15, regs+0x78\n\t"
+>> +
+>> +#define LOAD_GPR_C      SAVE_GPR_C
+>> +
+>> +/*
+>> + * selftests do not use interrupts so we dropped clgi/sti/cli/stgi
+>> + * for now
+>> + */
+>> +void run_guest(struct vmcb *vmcb, uint64_t vmcb_gpa)
+>> +{
+>> +	asm volatile (
+>> +		"vmload\n\t"
+>> +		"vmload %[vmcb_gpa]\n\t"
+>> +		"mov regs+0x80, %%r15\n\t"  // rflags
+>> +		"mov %%r15, 0x170(%[vmcb])\n\t"
+>> +		"mov regs, %%r15\n\t"       // rax
+>> +		"mov %%r15, 0x1f8(%[vmcb])\n\t"
+>> +		LOAD_GPR_C
+>> +		"vmrun %[vmcb_gpa]\n\t"
+>> +		SAVE_GPR_C
+>> +		"mov 0x170(%[vmcb]), %%r15\n\t"  // rflags
+>> +		"mov %%r15, regs+0x80\n\t"
+>> +		"mov 0x1f8(%[vmcb]), %%r15\n\t"  // rax
+>> +		"mov %%r15, regs\n\t"
+>> +		"vmsave %[vmcb_gpa]\n\t"
+>> +		: : [vmcb] "r" (vmcb), [vmcb_gpa] "r" (vmcb_gpa)
+>> +		: "rbx", "rcx", "rdx", "rsi",
+>> +		  "r8", "r9", "r10", "r11", "r12", "r13", "r14", "r15",
+>> +		  "memory");
+>> +
+>> +}
+>> +
+>> +void nested_svm_check_supported(void)
+>> +{
+>> +	struct kvm_cpuid_entry2 *entry =
+>> +		kvm_get_supported_cpuid_entry(0x80000001);
+>> +
+>> +	if (!(entry->ecx & CPUID_SVM)) {
+>> +		fprintf(stderr, "nested SVM not enabled, skipping test\n");
+>> +		exit(KSFT_SKIP);
+>> +	}
+>> +}
+>> +
+>> diff --git a/tools/testing/selftests/kvm/x86_64/svm_test.c b/tools/testing/selftests/kvm/x86_64/svm_test.c
+>> new file mode 100644
+>> index 000000000000..d46af36d5aae
+>> --- /dev/null
+>> +++ b/tools/testing/selftests/kvm/x86_64/svm_test.c
+>> @@ -0,0 +1,127 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * svm_test
+>> + *
+>> + * Copyright (C) 2020, Red Hat, Inc.
+>> + *
+>> + * Nested SVM testing
+>> + *
+>> + * The main executes several nested SVM tests
+>> + */
+>> +
+>> +#include "test_util.h"
+>> +#include "kvm_util.h"
+>> +#include "processor.h"
+>> +#include "svm.h"
+>> +
+>> +#include <string.h>
+>> +#include <sys/ioctl.h>
+>> +
+>> +#include "kselftest.h"
+>> +#include <linux/kernel.h>
+>> +
+>> +#define VCPU_ID		5
+>> +
+>> +/* The virtual machine object. */
+>> +static struct kvm_vm *vm;
+>> +
+>> +static void l2_vmcall(struct svm_test_data *svm)
+>> +{
+>> +	__asm__ __volatile__("vmcall");
+>> +}
+>> +
+>> +static void l2_vmrun(struct svm_test_data *svm)
+>> +{
+>> +	__asm__ __volatile__("vmrun");
+>> +}
+>> +
+>> +static void l2_cr3_read(struct svm_test_data *svm)
+>> +{
+>> +	asm volatile ("mov %%cr3, %0" : "=r"(svm->test->scratch) : : "memory");
+>> +}
+>> +static void prepare_cr3_intercept(struct svm_test_data *svm)
+>> +{
+>> +	svm->vmcb->control.intercept_cr_read |= 1 << 3;
+>> +}
+>> +
+>> +static struct test tests[] = {
+>> +	/* name, supported, custom setup, l2 code, exit code, custom check, finished */
+>> +	{"vmmcall", NULL, NULL, l2_vmcall, SVM_EXIT_VMMCALL},
+>> +	{"vmrun", NULL, NULL, l2_vmrun, SVM_EXIT_VMRUN},
+>> +	{"CR3 read intercept", NULL, prepare_cr3_intercept, l2_cr3_read, SVM_EXIT_READ_CR3},
+>> +};
 > 
->    + Add "patch_name" to match all the related livepatch modules.
+> selftests are usualy not that well structured :-) E.g. we don't have
+> sub-tests and a way to specify which one to run so there is a single
+> flow when everything is being executed. I'd suggest to keep things as
+> simple as possibe (especially in the basic 'svm' test).
+In this case the differences between the tests is very tiny. One line on
+L2 and one line on L1 to check the exit status. I wondered whether it
+deserves to have separate test files for that. I did not intend to run
+the subtests separately nor to add many more subtests but rather saw all
+of them as a single basic test. More complex tests would be definitively
+separate.
+
+But if the consensus is to keep each tests separate, I will do.
+
+Thanks
+
+Eric
 > 
->    + "mod" points to the livepatch module instead of the livepatched
->      one. The pointer to the livepatched module was used only to
->      detect whether it was loaded. It will be always loaded
->      with related livepatch module now.
+>> +
+>> +static void l1_guest_code(struct svm_test_data *svm)
+>> +{
+>> +	#define L2_GUEST_STACK_SIZE 64
+>> +	unsigned long l2_guest_stack[L2_GUEST_STACK_SIZE];
+>> +	struct vmcb *vmcb = svm->vmcb;
+>> +
+>> +	/* Prepare for L2 execution. */
+>> +	generic_svm_setup(svm, svm->test->l2_guest_code,
+>> +			  &l2_guest_stack[L2_GUEST_STACK_SIZE]);
+>> +	if (svm->test->l1_custom_setup)
+>> +		svm->test->l1_custom_setup(svm);
+>> +
+>> +	run_guest(vmcb, svm->vmcb_gpa);
+>> +	do {
+>> +		run_guest(vmcb, svm->vmcb_gpa);
+>> +		if (!svm->test->finished)
+>> +			break;
+>> +	} while (!svm->test->finished(svm));
+>> +
+>> +	GUEST_ASSERT(vmcb->control.exit_code ==
+>> +			svm->test->expected_exit_code);
+>> +	GUEST_DONE();
+>> +}
+>> +
+>> +int main(int argc, char *argv[])
+>> +{
+>> +	vm_vaddr_t svm_gva;
+>> +	int i;
+>> +
+>> +	nested_svm_check_supported();
+>> +
+>> +
+>> +	for (i = 0; i < ARRAY_SIZE(tests); i++) {
+>> +		struct svm_test_data *svm;
+>> +
+>> +		vm = vm_create_default(VCPU_ID, 0, (void *) l1_guest_code);
+>> +		vcpu_set_cpuid(vm, VCPU_ID, kvm_get_supported_cpuid());
+>> +
+>> +		/* Allocate VMX pages and shared descriptors (svm_pages). */
+>> +		svm = vcpu_alloc_svm(vm, &svm_gva);
+>> +		svm->test = &tests[i];
+>> +		vcpu_args_set(vm, VCPU_ID, 1, svm_gva);
+>> +
+>> +		printf("Execute test %s\n", svm->test->name);
+>> +
+>> +		for (;;) {
+>> +			volatile struct kvm_run *run = vcpu_state(vm, VCPU_ID);
+>> +			struct ucall uc;
+>> +
+>> +			vcpu_run(vm, VCPU_ID);
+>> +			TEST_ASSERT(run->exit_reason == KVM_EXIT_IO,
+>> +				    "Got exit_reason other than KVM_EXIT_IO: %u (%s)\n",
+>> +				    run->exit_reason,
+>> +				    exit_reason_str(run->exit_reason));
+>> +
+>> +			switch (get_ucall(vm, VCPU_ID, &uc)) {
+>> +			case UCALL_ABORT:
+>> +				TEST_ASSERT(false, "%s",
+>> +					    (const char *)uc.args[0]);
+>> +				/* NOT REACHED */
+>> +			case UCALL_SYNC:
+>> +				break;
+>> +			case UCALL_DONE:
+>> +				goto done;
+>> +			default:
+>> +				TEST_ASSERT(false,
+>> +					    "Unknown ucall 0x%x.", uc.cmd);
+>> +			}
+>> +		}
+>> +done:
+>> +		kvm_vm_free(vm);
+>> +	}
+>> +	return 0;
+>> +}
 > 
-> 3. klp_find_object_module() and klp_is_object_loaded() are no longer
->     needed. Livepatch module is loaded only when the related livepatched
->     module is loaded.
-> 
-> 4. Add klp_add_object() function that will need to initialize
->     struct object, link it into the related struct klp_patch,
->     and patch the functions. It will get implemented later.
-> 
-> The livepatches for modules are put into separate source files
-> that define only struct klp_object() and call the new klp_add_object()
-> in the init() callback. The name of the module follows the pattern:
-> 
->    <patch_name>__<object_name>
-> 
-
-Is that a requirement? Or is it just the convention followed for the 
-current tests?
-
-> Signed-off-by: Petr Mladek <pmladek@suse.com>
-> ---
->   arch/x86/kernel/livepatch.c                        |   5 +-
->   include/linux/livepatch.h                          |  20 +--
->   kernel/livepatch/core.c                            | 139 +++++++-----------
->   kernel/livepatch/core.h                            |   5 -
->   kernel/livepatch/transition.c                      |  14 +-
->   lib/livepatch/Makefile                             |   2 +
->   lib/livepatch/test_klp_atomic_replace.c            |  18 ++-
->   lib/livepatch/test_klp_callbacks_demo.c            |  90 ++++++------
->   lib/livepatch/test_klp_callbacks_demo.h            |  11 ++
->   lib/livepatch/test_klp_callbacks_demo2.c           |  62 ++++++---
->   lib/livepatch/test_klp_callbacks_demo2.h           |  11 ++
->   ...t_klp_callbacks_demo__test_klp_callbacks_busy.c |  50 +++++++
->   ...st_klp_callbacks_demo__test_klp_callbacks_mod.c |  42 ++++++
->   lib/livepatch/test_klp_livepatch.c                 |  18 ++-
->   lib/livepatch/test_klp_state.c                     |  53 ++++---
->   lib/livepatch/test_klp_state2.c                    |  53 ++++---
->   samples/livepatch/Makefile                         |   4 +
->   samples/livepatch/livepatch-callbacks-demo.c       |  90 ++++++------
->   samples/livepatch/livepatch-callbacks-demo.h       |  11 ++
->   ...h-callbacks-demo__livepatch-callbacks-busymod.c |  54 +++++++
->   ...patch-callbacks-demo__livepatch-callbacks-mod.c |  46 ++++++
->   samples/livepatch/livepatch-sample.c               |  18 ++-
->   samples/livepatch/livepatch-shadow-fix1.c          | 120 ++--------------
->   .../livepatch-shadow-fix1__livepatch-shadow-mod.c  | 155 +++++++++++++++++++++
->   samples/livepatch/livepatch-shadow-fix2.c          |  92 ++----------
->   .../livepatch-shadow-fix2__livepatch-shadow-mod.c  | 127 +++++++++++++++++
->   .../testing/selftests/livepatch/test-callbacks.sh  |  16 +--
->   27 files changed, 841 insertions(+), 485 deletions(-)
->   create mode 100644 lib/livepatch/test_klp_callbacks_demo.h
->   create mode 100644 lib/livepatch/test_klp_callbacks_demo2.h
->   create mode 100644 lib/livepatch/test_klp_callbacks_demo__test_klp_callbacks_busy.c
->   create mode 100644 lib/livepatch/test_klp_callbacks_demo__test_klp_callbacks_mod.c
->   create mode 100644 samples/livepatch/livepatch-callbacks-demo.h
->   create mode 100644 samples/livepatch/livepatch-callbacks-demo__livepatch-callbacks-busymod.c
->   create mode 100644 samples/livepatch/livepatch-callbacks-demo__livepatch-callbacks-mod.c
->   create mode 100644 samples/livepatch/livepatch-shadow-fix1__livepatch-shadow-mod.c
->   create mode 100644 samples/livepatch/livepatch-shadow-fix2__livepatch-shadow-mod.c
-> 
-> diff --git a/arch/x86/kernel/livepatch.c b/arch/x86/kernel/livepatch.c
-> index 6a68e41206e7..728b44eaa168 100644
-> --- a/arch/x86/kernel/livepatch.c
-> +++ b/arch/x86/kernel/livepatch.c
-> @@ -9,8 +9,7 @@
->   #include <asm/text-patching.h>
->   
->   /* Apply per-object alternatives. Based on x86 module_finalize() */
-> -void arch_klp_init_object_loaded(struct klp_patch *patch,
-> -				 struct klp_object *obj)
-> +void arch_klp_init_object_loaded(struct klp_object *obj)
->   {
->   	int cnt;
->   	struct klp_modinfo *info;
-> @@ -20,7 +19,7 @@ void arch_klp_init_object_loaded(struct klp_patch *patch,
->   	char sec_objname[MODULE_NAME_LEN];
->   	char secname[KSYM_NAME_LEN];
->   
-> -	info = patch->mod->klp_info;
-> +	info = obj->mod->klp_info;
->   	objname = obj->name ? obj->name : "vmlinux";
->   
->   	/* See livepatch core code for BUILD_BUG_ON() explanation */
-> diff --git a/include/linux/livepatch.h b/include/linux/livepatch.h
-> index e894e74905f3..a4567c17a9f2 100644
-> --- a/include/linux/livepatch.h
-> +++ b/include/linux/livepatch.h
-> @@ -105,19 +105,21 @@ struct klp_callbacks {
->   /**
->    * struct klp_object - kernel object structure for live patching
->    * @name:	module name (or NULL for vmlinux)
-> + * @patch_name:	module name for  vmlinux
-> + * @mod:	reference to the live patch module for this object
->    * @funcs:	function entries for functions to be patched in the object
->    * @callbacks:	functions to be executed pre/post (un)patching
->    * @kobj:	kobject for sysfs resources
->    * @func_list:	dynamic list of the function entries
->    * @node:	list node for klp_patch obj_list
-> - * @mod:	kernel module associated with the patched object
-> - *		(NULL for vmlinux)
->    * @dynamic:    temporary object for nop functions; dynamically allocated
->    * @patched:	the object's funcs have been added to the klp_ops list
->    */
->   struct klp_object {
->   	/* external */
->   	const char *name;
-> +	const char *patch_name;
-> +	struct module *mod;
->   	struct klp_func *funcs;
->   	struct klp_callbacks callbacks;
->   
-> @@ -125,7 +127,6 @@ struct klp_object {
->   	struct kobject kobj;
->   	struct list_head func_list;
->   	struct list_head node;
-> -	struct module *mod;
->   	bool dynamic;
->   	bool patched;
->   };
-> @@ -144,8 +145,9 @@ struct klp_state {
->   
->   /**
->    * struct klp_patch - patch structure for live patching
-> - * @mod:	reference to the live patch module
-> - * @objs:	object entries for kernel objects to be patched
-> + * @patch_name: livepatch name; same for related livepatch against other objects
-
-You forgot to add that to the structure.
-
-> + * @objs:	object entry for vmlinux object
-
-Nit: s/objs/obj/
-
-> + * @obj_names:	names of modules synchronously livepatched with this patch
-
-Not sure I understand the purpose of this. Is it to check that the 
-klp_object that will get linked to this patch are part of a 
-pre-established set?
-
->    * @states:	system states that can get modified
->    * @replace:	replace all actively used patches
->    * @list:	list node for global list of actively used patches
-> @@ -158,9 +160,9 @@ struct klp_state {
->    */
->   struct klp_patch {
->   	/* external */
-> -	struct module *mod;
-> -	struct klp_object *objs;
->   	struct klp_state *states;
-> +	struct klp_object *obj;
-> +	char **obj_names;
->   	bool replace;
->   
->   	/* internal */
-> @@ -194,9 +196,9 @@ struct klp_patch {
->   	list_for_each_entry(func, &obj->func_list, node)
->   
->   int klp_enable_patch(struct klp_patch *);
-> +int klp_add_object(struct klp_object *);
->   
-> -void arch_klp_init_object_loaded(struct klp_patch *patch,
-> -				 struct klp_object *obj);
-> +void arch_klp_init_object_loaded(struct klp_object *obj);
->   
->   /* Called from the module loader during module coming/going states */
->   int klp_module_coming(struct module *mod);
-> diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
-> index c3512e7e0801..bb62c5407b75 100644
-> --- a/kernel/livepatch/core.c
-> +++ b/kernel/livepatch/core.c
-> @@ -49,34 +49,6 @@ static bool klp_is_module(struct klp_object *obj)
->   	return obj->name;
->   }
->   
-> -/* sets obj->mod if object is not vmlinux and module is found */
-> -static void klp_find_object_module(struct klp_object *obj)
-> -{
-> -	struct module *mod;
-> -
-> -	if (!klp_is_module(obj))
-> -		return;
-> -
-> -	mutex_lock(&module_mutex);
-> -	/*
-> -	 * We do not want to block removal of patched modules and therefore
-> -	 * we do not take a reference here. The patches are removed by
-> -	 * klp_module_going() instead.
-> -	 */
-> -	mod = find_module(obj->name);
-> -	/*
-> -	 * Do not mess work of klp_module_coming() and klp_module_going().
-> -	 * Note that the patch might still be needed before klp_module_going()
-> -	 * is called. Module functions can be called even in the GOING state
-> -	 * until mod->exit() finishes. This is especially important for
-> -	 * patches that modify semantic of the functions.
-> -	 */
-> -	if (mod && mod->klp_alive)
-> -		obj->mod = mod;
-> -
-> -	mutex_unlock(&module_mutex);
-> -}
-> -
->   static bool klp_initialized(void)
->   {
->   	return !!klp_root_kobj;
-> @@ -246,18 +218,16 @@ static int klp_resolve_symbols(Elf_Shdr *relasec, struct module *pmod)
->   	return 0;
->   }
->   
-> -static int klp_write_object_relocations(struct module *pmod,
-> -					struct klp_object *obj)
-> +static int klp_write_object_relocations(struct klp_object *obj)
->   {
->   	int i, cnt, ret = 0;
->   	const char *objname, *secname;
->   	char sec_objname[MODULE_NAME_LEN];
-> +	struct module *pmod;
->   	Elf_Shdr *sec;
->   
-> -	if (WARN_ON(!klp_is_object_loaded(obj)))
-> -		return -EINVAL;
-> -
->   	objname = klp_is_module(obj) ? obj->name : "vmlinux";
-> +	pmod = obj->mod;
->   
->   	/* For each klp relocation section */
->   	for (i = 1; i < pmod->klp_info->hdr.e_shnum; i++) {
-> @@ -419,8 +389,8 @@ static void klp_free_object_dynamic(struct klp_object *obj)
->   
->   static void klp_init_func_early(struct klp_object *obj,
->   				struct klp_func *func);
-> -static void klp_init_object_early(struct klp_patch *patch,
-> -				  struct klp_object *obj);
-> +static int klp_init_object_early(struct klp_patch *patch,
-> +				 struct klp_object *obj);
->   
->   static struct klp_object *klp_alloc_object_dynamic(const char *name,
->   						   struct klp_patch *patch)
-> @@ -662,7 +632,7 @@ static void klp_free_patch_finish(struct klp_patch *patch)
->   
->   	/* Put the module after the last access to struct klp_patch. */
->   	if (!patch->forced)
-> -		module_put(patch->mod);
-> +		module_put(patch->obj->mod);
->   }
->   
->   /*
-> @@ -725,30 +695,28 @@ static int klp_init_func(struct klp_object *obj, struct klp_func *func)
->   }
->   
->   /* Arches may override this to finish any remaining arch-specific tasks */
-> -void __weak arch_klp_init_object_loaded(struct klp_patch *patch,
-> -					struct klp_object *obj)
-> +void __weak arch_klp_init_object_loaded(struct klp_object *obj)
->   {
->   }
->   
->   /* parts of the initialization that is done only when the object is loaded */
-> -static int klp_init_object_loaded(struct klp_patch *patch,
-> -				  struct klp_object *obj)
-> +static int klp_init_object_loaded(struct klp_object *obj)
->   {
->   	struct klp_func *func;
->   	int ret;
->   
->   	mutex_lock(&text_mutex);
->   
-> -	module_disable_ro(patch->mod);
-> -	ret = klp_write_object_relocations(patch->mod, obj);
-> +	module_disable_ro(obj->mod);
-> +	ret = klp_write_object_relocations(obj);
->   	if (ret) {
-> -		module_enable_ro(patch->mod, true);
-> +		module_enable_ro(obj->mod, true);
->   		mutex_unlock(&text_mutex);
->   		return ret;
->   	}
->   
-> -	arch_klp_init_object_loaded(patch, obj);
-> -	module_enable_ro(patch->mod, true);
-> +	arch_klp_init_object_loaded(obj);
-> +	module_enable_ro(obj->mod, true);
->   
->   	mutex_unlock(&text_mutex);
->   
-> @@ -792,11 +760,8 @@ static int klp_init_object(struct klp_patch *patch, struct klp_object *obj)
->   		return -EINVAL;
->   
->   	obj->patched = false;
-> -	obj->mod = NULL;
->   
-> -	klp_find_object_module(obj);
-> -
-> -	name = klp_is_module(obj) ? obj->name : "vmlinux";
-> +	name = obj->name ? obj->name : "vmlinux";
->   	ret = kobject_add(&obj->kobj, &patch->kobj, "%s", name);
->   	if (ret)
->   		return ret;
-> @@ -807,8 +772,7 @@ static int klp_init_object(struct klp_patch *patch, struct klp_object *obj)
->   			return ret;
->   	}
->   
-> -	if (klp_is_object_loaded(obj))
-> -		ret = klp_init_object_loaded(patch, obj);
-> +	ret = klp_init_object_loaded(obj);
->   
->   	return ret;
->   }
-> @@ -820,20 +784,34 @@ static void klp_init_func_early(struct klp_object *obj,
->   	list_add_tail(&func->node, &obj->func_list);
->   }
->   
-> -static void klp_init_object_early(struct klp_patch *patch,
-> +static int klp_init_object_early(struct klp_patch *patch,
->   				  struct klp_object *obj)
->   {
-> +	struct klp_func *func;
-> +
-> +	if (!obj->funcs)
-> +		return -EINVAL;
-> +
->   	INIT_LIST_HEAD(&obj->func_list);
->   	kobject_init(&obj->kobj, &klp_ktype_object);
->   	list_add_tail(&obj->node, &patch->obj_list);
-> +
-> +	klp_for_each_func_static(obj, func) {
-> +		klp_init_func_early(obj, func);
-> +	}
-> +
-> +	if (obj->dynamic || try_module_get(obj->mod))
-> +		return 0;
-> +
-> +	return -ENODEV;
->   }
->   
->   static int klp_init_patch_early(struct klp_patch *patch)
->   {
-> -	struct klp_object *obj;
-> -	struct klp_func *func;
-> +	struct klp_object *obj = patch->obj;
->   
-> -	if (!patch->objs)
-> +	/* Main patch module is always for vmlinux */
-> +	if (obj->name)
->   		return -EINVAL;
->   
->   	INIT_LIST_HEAD(&patch->list);
-> @@ -844,21 +822,7 @@ static int klp_init_patch_early(struct klp_patch *patch)
->   	INIT_WORK(&patch->free_work, klp_free_patch_work_fn);
->   	init_completion(&patch->finish);
->   
-> -	klp_for_each_object_static(patch, obj) {
-
-I think we can get rid of klp_for_each_object_static(), no? Now the 
-klp_patch is only associated to a single klp_object, so everything will 
-be dynamic. Is this correct?
-
-> -		if (!obj->funcs)
-> -			return -EINVAL;
-> -
-> -		klp_init_object_early(patch, obj);
-> -
-> -		klp_for_each_func_static(obj, func) {
-> -			klp_init_func_early(obj, func);
-> -		}
-> -	}
-> -
-> -	if (!try_module_get(patch->mod))
-> -		return -ENODEV;
-> -
-> -	return 0;
-> +	return klp_init_object_early(patch, obj);
->   }
->   
->   static int klp_init_patch(struct klp_patch *patch)
-> @@ -866,7 +830,7 @@ static int klp_init_patch(struct klp_patch *patch)
->   	struct klp_object *obj;
->   	int ret;
->   
-> -	ret = kobject_add(&patch->kobj, klp_root_kobj, "%s", patch->mod->name);
-> +	ret = kobject_add(&patch->kobj, klp_root_kobj, "%s", patch->obj->mod->name);
->   	if (ret)
->   		return ret;
->   
-> @@ -887,6 +851,12 @@ static int klp_init_patch(struct klp_patch *patch)
->   	return 0;
->   }
->   
-> +int klp_add_object(struct klp_object *obj)
-> +{
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(klp_add_object);
-> +
->   static int __klp_disable_patch(struct klp_patch *patch)
->   {
->   	struct klp_object *obj;
-> @@ -930,7 +900,7 @@ static int __klp_enable_patch(struct klp_patch *patch)
->   	if (WARN_ON(patch->enabled))
->   		return -EINVAL;
->   
-> -	pr_notice("enabling patch '%s'\n", patch->mod->name);
-> +	pr_notice("enabling patch '%s'\n", patch->obj->patch_name);
->   
->   	klp_init_transition(patch, KLP_PATCHED);
->   
-> @@ -944,9 +914,6 @@ static int __klp_enable_patch(struct klp_patch *patch)
->   	smp_wmb();
->   
->   	klp_for_each_object(patch, obj) {
-> -		if (!klp_is_object_loaded(obj))
-> -			continue;
-> -
->   		ret = klp_pre_patch_callback(obj);
->   		if (ret) {
->   			pr_warn("pre-patch callback failed for object '%s'\n",
-> @@ -968,7 +935,7 @@ static int __klp_enable_patch(struct klp_patch *patch)
->   
->   	return 0;
->   err:
-> -	pr_warn("failed to enable patch '%s'\n", patch->mod->name);
-> +	pr_warn("failed to enable patch '%s'\n", patch->obj->patch_name);
->   
->   	klp_cancel_transition();
->   	return ret;
-> @@ -991,12 +958,12 @@ int klp_enable_patch(struct klp_patch *patch)
->   {
->   	int ret;
->   
-> -	if (!patch || !patch->mod)
-> +	if (!patch || !patch->obj || !patch->obj->mod)
->   		return -EINVAL;
->   
-> -	if (!is_livepatch_module(patch->mod)) {
-> +	if (!is_livepatch_module(patch->obj->mod)) {
->   		pr_err("module %s is not marked as a livepatch module\n",
-> -		       patch->mod->name);
-> +		       patch->obj->patch_name);
-
-Shouldn't that be "patch->obj->mod->name" ?
-
->   		return -EINVAL;
->   	}
->   
-> @@ -1012,7 +979,7 @@ int klp_enable_patch(struct klp_patch *patch)
->   
->   	if (!klp_is_patch_compatible(patch)) {
->   		pr_err("Livepatch patch (%s) is not compatible with the already installed livepatches.\n",
-> -			patch->mod->name);
-> +			patch->obj->mod->name);
->   		mutex_unlock(&klp_mutex);
->   		return -EINVAL;
->   	}
-> @@ -1119,7 +1086,7 @@ static void klp_cleanup_module_patches_limited(struct module *mod,
->   				klp_pre_unpatch_callback(obj);
->   
->   			pr_notice("reverting patch '%s' on unloading module '%s'\n",
-> -				  patch->mod->name, obj->mod->name);
-> +				  patch->obj->patch_name, obj->name);
->   			klp_unpatch_object(obj);
->   
->   			klp_post_unpatch_callback(obj);
-> @@ -1154,15 +1121,15 @@ int klp_module_coming(struct module *mod)
->   
->   			obj->mod = mod;
->   
-> -			ret = klp_init_object_loaded(patch, obj);
-> +			ret = klp_init_object_loaded(obj);
->   			if (ret) {
->   				pr_warn("failed to initialize patch '%s' for module '%s' (%d)\n",
-> -					patch->mod->name, obj->mod->name, ret);
-> +					patch->obj->patch_name, obj->name, ret);
->   				goto err;
->   			}
->   
->   			pr_notice("applying patch '%s' to loading module '%s'\n",
-> -				  patch->mod->name, obj->mod->name);
-> +				  patch->obj->patch_name, obj->name);
->   
->   			ret = klp_pre_patch_callback(obj);
->   			if (ret) {
-> @@ -1174,7 +1141,7 @@ int klp_module_coming(struct module *mod)
->   			ret = klp_patch_object(obj);
->   			if (ret) {
->   				pr_warn("failed to apply patch '%s' to module '%s' (%d)\n",
-> -					patch->mod->name, obj->mod->name, ret);
-> +					patch->obj->patch_name, obj->name, ret);
->   
->   				klp_post_unpatch_callback(obj);
->   				goto err;
-> @@ -1197,7 +1164,7 @@ int klp_module_coming(struct module *mod)
->   	 * error to the module loader.
->   	 */
->   	pr_warn("patch '%s' failed for module '%s', refusing to load module '%s'\n",
-> -		patch->mod->name, obj->mod->name, obj->mod->name);
-> +		patch->obj->patch_name, obj->name, obj->name);
->   	mod->klp_alive = false;
->   	obj->mod = NULL;
->   	klp_cleanup_module_patches_limited(mod, patch);
-> diff --git a/kernel/livepatch/core.h b/kernel/livepatch/core.h
-> index 38209c7361b6..01980cc0509b 100644
-> --- a/kernel/livepatch/core.h
-> +++ b/kernel/livepatch/core.h
-> @@ -18,11 +18,6 @@ void klp_free_replaced_patches_async(struct klp_patch *new_patch);
->   void klp_unpatch_replaced_patches(struct klp_patch *new_patch);
->   void klp_discard_nops(struct klp_patch *new_patch);
->   
-> -static inline bool klp_is_object_loaded(struct klp_object *obj)
-> -{
-> -	return !obj->name || obj->mod;
-> -}
-> -
->   static inline int klp_pre_patch_callback(struct klp_object *obj)
->   {
->   	int ret = 0;
-> diff --git a/kernel/livepatch/transition.c b/kernel/livepatch/transition.c
-> index f6310f848f34..78e3280560cd 100644
-> --- a/kernel/livepatch/transition.c
-> +++ b/kernel/livepatch/transition.c
-> @@ -74,7 +74,7 @@ static void klp_complete_transition(void)
->   	unsigned int cpu;
->   
->   	pr_debug("'%s': completing %s transition\n",
-> -		 klp_transition_patch->mod->name,
-> +		 klp_transition_patch->obj->patch_name,
->   		 klp_target_state == KLP_PATCHED ? "patching" : "unpatching");
->   
->   	if (klp_transition_patch->replace && klp_target_state == KLP_PATCHED) {
-> @@ -120,15 +120,13 @@ static void klp_complete_transition(void)
->   	}
->   
->   	klp_for_each_object(klp_transition_patch, obj) {
-> -		if (!klp_is_object_loaded(obj))
-> -			continue;
->   		if (klp_target_state == KLP_PATCHED)
->   			klp_post_patch_callback(obj);
->   		else if (klp_target_state == KLP_UNPATCHED)
->   			klp_post_unpatch_callback(obj);
->   	}
->   
-> -	pr_notice("'%s': %s complete\n", klp_transition_patch->mod->name,
-> +	pr_notice("'%s': %s complete\n", klp_transition_patch->obj->patch_name,
->   		  klp_target_state == KLP_PATCHED ? "patching" : "unpatching");
->   
->   	klp_target_state = KLP_UNDEFINED;
-> @@ -147,7 +145,7 @@ void klp_cancel_transition(void)
->   		return;
->   
->   	pr_debug("'%s': canceling patching transition, going to unpatch\n",
-> -		 klp_transition_patch->mod->name);
-> +		 klp_transition_patch->obj->patch_name);
->   
->   	klp_target_state = KLP_UNPATCHED;
->   	klp_complete_transition();
-> @@ -468,7 +466,7 @@ void klp_start_transition(void)
->   	WARN_ON_ONCE(klp_target_state == KLP_UNDEFINED);
->   
->   	pr_notice("'%s': starting %s transition\n",
-> -		  klp_transition_patch->mod->name,
-> +		  klp_transition_patch->obj->patch_name,
-
-Isn't the transition per livepatched module rather than per-patch now?
-If so, would it make more sense to display also the name of the module 
-being patched/unpatched?
-
->   		  klp_target_state == KLP_PATCHED ? "patching" : "unpatching");
->   
->   	/*
-> @@ -519,7 +517,7 @@ void klp_init_transition(struct klp_patch *patch, int state)
->   	 */
->   	klp_target_state = state;
->   
-> -	pr_debug("'%s': initializing %s transition\n", patch->mod->name,
-> +	pr_debug("'%s': initializing %s transition\n", patch->obj->patch_name,
-
-Ditto.
-
->   		 klp_target_state == KLP_PATCHED ? "patching" : "unpatching");
->   
->   	/*
-> @@ -581,7 +579,7 @@ void klp_reverse_transition(void)
->   	struct task_struct *g, *task;
->   
->   	pr_debug("'%s': reversing transition from %s\n",
-> -		 klp_transition_patch->mod->name,
-> +		 klp_transition_patch->obj->patch_name,
-
-Ditto.
-
->   		 klp_target_state == KLP_PATCHED ? "patching to unpatching" :
->   						   "unpatching to patching");
->   
-
-[...]
-
-Cheers,
-
--- 
-Julien Thierry
 
