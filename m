@@ -2,114 +2,88 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB6DC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 12:17:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A982C33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 12:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3A882073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 12:17:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JE/hK63h"
+	by mail.kernel.org (Postfix) with ESMTP id E7CC42073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 12:18:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579609099;
+	bh=Yyd+FLIHbRrh3jsQMDM0yDT3z9LFpjQTJAsHQj5LPOY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=L/ta85CFMgzcgfT0bqhudd/3uDpX4IhyNe5g3JYi4A7/o1ols7+K7ICb2IaX803By
+	 DcMDjpUEHYDCcDwDbtjqnUNURaPT4XgOX/OwrU9V13gBEml//74md6lMqsCrtsAQH1
+	 tv3Ev9tVI9gclldjdhTkECpeMJ4rIekpgA7Yw920=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729583AbgAUMRe (ORCPT
+        id S1729603AbgAUMSS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 07:17:34 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:50114 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729459AbgAUMRd (ORCPT
+        Tue, 21 Jan 2020 07:18:18 -0500
+Received: from mail-ed1-f54.google.com ([209.85.208.54]:38283 "EHLO
+        mail-ed1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728655AbgAUMSR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 07:17:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579609053;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=++aOhMKuJnCXz0lh4xlX2vreaMatcfxy2SRwFiY0O7M=;
-        b=JE/hK63hum/v7nJGsONjVCH0C5u0lGAFyhZYRH7RoAlCPsSs3PcPbH7JidqZQFmYQON+N1
-        VuTqlmyZQHSL/5AfxHJv0plyRjDA7LIVXBRoT4g/OYCMQXJpj/059lBbJhWyIJzIUg6VUt
-        yEH3AWtmN0k7jVpnK4WIP1mZwN54zmM=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-59-KKbzqII0MdWn6GDeo2mRYA-1; Tue, 21 Jan 2020 07:17:31 -0500
-X-MC-Unique: KKbzqII0MdWn6GDeo2mRYA-1
-Received: by mail-wr1-f70.google.com with SMTP id v17so1216397wrm.17
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 04:17:31 -0800 (PST)
+        Tue, 21 Jan 2020 07:18:17 -0500
+Received: by mail-ed1-f54.google.com with SMTP id i16so2753183edr.5;
+        Tue, 21 Jan 2020 04:18:16 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=++aOhMKuJnCXz0lh4xlX2vreaMatcfxy2SRwFiY0O7M=;
-        b=s8tbLuaakIdpiX1yMO9dA6XG24mvzcwL9upwyCNPPOm54pKSeOYRG7dHd2vKuR6oGJ
-         KULPY896Co2l+kEhd8YhcNuesNpy8wgZBXSf5tcZlkeXmsRAAtKyTw9jMq0/1+ZF46uV
-         GOwLtBsRoUYfdtP9U2MiCpc8NyYzlzw4L2PDR7UFkh/IK+v3Iqbpz00QzFEPzTci/HLc
-         +YrWG4H+2vIxII00DTSAXWxzX6ZFJsCgup4H4OyumWYZza5hx9rfU/NmrykGcJ5lWVdn
-         HXS/6gdNliPb4kJ7lpPFVYJV4pFR2JQRsqX9KtmwSQJusyzUDde+s7RO/va3c3bR0Ou6
-         BTiQ==
-X-Gm-Message-State: APjAAAVlUuN9CWqKYFxZFdBWGKnHf9HxlHMZeUn32ZqtKZ0WiONLcam9
-        aK0+8H3Rysu4IGqe9C+8OU60H7MwBOEtXNg1K10dmKw+tenaULSBCzCv1thZ8Ujqm0udNPXHFUH
-        ro28FvTG/1scOJs71CqDG8BeK
-X-Received: by 2002:a1c:7d8b:: with SMTP id y133mr4172641wmc.165.1579609050523;
-        Tue, 21 Jan 2020 04:17:30 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwh3izfydfXQQHoAxmjudVBVICUhx93cIF7FIn9lfmUPgTUiP3yymysVQ/I9JAl5sJ9yJ4zlw==
-X-Received: by 2002:a1c:7d8b:: with SMTP id y133mr4172612wmc.165.1579609050230;
-        Tue, 21 Jan 2020 04:17:30 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:b509:fc01:ee8a:ca8a? ([2001:b07:6468:f312:b509:fc01:ee8a:ca8a])
-        by smtp.gmail.com with ESMTPSA id f1sm53644157wro.85.2020.01.21.04.17.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jan 2020 04:17:29 -0800 (PST)
-Subject: Re: [PATCH] KVM: VMX: remove duplicated segment cache clear
-To:     Miaohe Lin <linmiaohe@huawei.com>, rkrcmar@redhat.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org
-References: <20200121151518.27530-1-linmiaohe@huawei.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <c43b3126-64c8-216c-41e3-14417ced0175@redhat.com>
-Date:   Tue, 21 Jan 2020 13:17:29 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=SnG0TTyxgyt1zcjYn/1DgFM/Ap/My5QEMUd9Nz/FdQc=;
+        b=sXugVgZSjxSRARRjYDNsgNbTVBDzCJHTRryWUR68wPzT/Hebga8QIvg7mel+hsckDY
+         yfkZBnpK6DFr+jlAasf2zXFyAuLfoYsCO3rClv88iw9f7CWLlAVNVSvThZExy0aLO20C
+         RJ5gyj9/Ki4Ma45+OVtyqcQyWX/NtqSOXoMAmqjtXc3m8HC8V/FriefXZ8hHGphj4R5A
+         vG4fMvdj0RBvxk13dqInbZIo5/mQEB2BPtrin3j1gIatwM3dN9pfLWPhgybtNSbhnJmP
+         sfNlJJTyEIo65X7gQi7gwbrZRrKPfF8hnp9qiukhoNwkGIUM/T5r+oIFbyoEcujXO7sk
+         ntsg==
+X-Gm-Message-State: APjAAAWjTxCEtlFgpSZFMEijTI4sIK+1OUBJx0y6GVD8571aoRkTkhvO
+        P7d08wYGLKokcjuyVd5OQaEswWod
+X-Google-Smtp-Source: APXvYqxx2iaNPGTqZVW60KypS1ijtsKo2jYdA4u8I5swXCGUf+ubu04YZWD3F/ALLpq/zWxVztK/dg==
+X-Received: by 2002:a17:906:4d87:: with SMTP id s7mr3940129eju.221.1579609095691;
+        Tue, 21 Jan 2020 04:18:15 -0800 (PST)
+Received: from pi3 ([194.230.155.229])
+        by smtp.googlemail.com with ESMTPSA id n24sm1375491edr.30.2020.01.21.04.18.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2020 04:18:15 -0800 (PST)
+Date:   Tue, 21 Jan 2020 13:18:13 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v2] ARM: dts: exynos: Add GPU thermal zone cooling maps
+ for Odroid XU3/XU4/HC1
+Message-ID: <20200121121813.GA25629@pi3>
+References: <CGME20200121070520eucas1p29587eed877efcf6e6b9433440f3c10da@eucas1p2.samsung.com>
+ <20200121070510.31520-1-m.szyprowski@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <20200121151518.27530-1-linmiaohe@huawei.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200121070510.31520-1-m.szyprowski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/01/20 16:15, Miaohe Lin wrote:
-> vmx_set_segment() clears segment cache unconditionally, so we should not
-> clear it again by calling vmx_segment_cache_clear().
+On Tue, Jan 21, 2020 at 08:05:10AM +0100, Marek Szyprowski wrote:
+> Add trip points and cooling maps for GPU thermal zone for Odroid
+> XU3/XU4/HC1 boards. Trip points are based on the CPU thermal zone for the
+> those boards.
 > 
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 > ---
->  arch/x86/kvm/vmx/vmx.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index b5a0c2e05825..b32236e6b513 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -2688,8 +2688,6 @@ static void enter_pmode(struct kvm_vcpu *vcpu)
->  
->  	vmx->rmode.vm86_active = 0;
->  
-> -	vmx_segment_cache_clear(vmx);
-> -
->  	vmx_set_segment(vcpu, &vmx->rmode.segs[VCPU_SREG_TR], VCPU_SREG_TR);
->  
->  	flags = vmcs_readl(GUEST_RFLAGS);
-> 
+> v2:
+> - removed polling-delay related properties for HC1 as requested by Krzysztof
+> --
 
-Queued, thanks.
+Thanks, it looks good. It is however too late in the cycle and I will
+not be sending one more dts pull (probably only one mach/soc). I'll
+apply it after merge window.
 
-Paolo
+Best regards,
+Krzysztof
 
