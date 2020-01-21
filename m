@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F51C33CB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 10:14:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A53C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 10:14:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59AB024680
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 10:14:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48B0B24653
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 10:14:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ChmW7+hA"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="kvcb/h3l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729423AbgAUKOQ (ORCPT
+        id S1729464AbgAUKOV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 05:14:16 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:24074 "EHLO
+        Tue, 21 Jan 2020 05:14:21 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:24102 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727220AbgAUKOQ (ORCPT
+        by vger.kernel.org with ESMTP id S1727220AbgAUKOU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 05:14:16 -0500
+        Tue, 21 Jan 2020 05:14:20 -0500
 Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00LA7m7m015244;
-        Tue, 21 Jan 2020 11:14:01 +0100
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00LA7mnA015236;
+        Tue, 21 Jan 2020 11:14:13 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
  date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=aeYoT+FbX2uK00Gipe/mKHNPFAN0KIzPJU70uie272A=;
- b=ChmW7+hAhBko1pQ9BTS2bhY1LjykTUkISaGS7PWDj5KLriquSRvz+s+M9dw1XZP/Uuzb
- W7CtFP0PqYWrVGROSZpfw5W/vGGSpE/dQdPeVNzsgTWB5Fwq82pP6YkToiY7+0yQH4PI
- B0yBhCj64+gE4+LFQPIQX+mQ0us1e3rwNJkuGAnvvKsDx4nvR409uthMq1eRux7dud4a
- wMUwrdG+97ASDBha3lKKmSghRi0T7JC64Ro0XNi8PC2ct0z621WBZR5G0fntCYFy9ERj
- 7Kwn9vBT0F+k1fc/Vjiq5qZ9Q6WhtMQXMsKgjZJY92tt9suJwiV/cgPM7l0LEhZ3ak22 pw== 
+ bh=fDNwiFZy5CZXyHgGGVM3ojrT2gDVM3TeYsu274+e8sk=;
+ b=kvcb/h3lu7vWmL9lvSxH0sm7BiUsG94BYCNDhj1TbPVhaT1jq9iL0Pixr+riZJXA30H1
+ HKpYFQKiAaSXqgURAQAdjXBsN2PRQwcHbNHFH0QY/n/FxECQS3RYHSK1+dwxU44m0e23
+ 6xUYuLO0jNgmaqs2rZMpfXrpyJchzeWzb7TZG3Dn8SefPmJcC+rSOVA+jO454IqSKwKq
+ xC8Efn4kXkCDewkVMtMWpqc+9O77kHuX29CH/5DGsJ/HaCU2fZIgZ9MvKJ+4vIRZWkqy
+ CBZn+HE9EthdiJF2iaduoCbjGYq8MyR5BHJU2L0zaI3EwFQXXXmXXYcxVqkuSLC6aZGO rQ== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xkr1dx2p6-1
+        by mx07-00178001.pphosted.com with ESMTP id 2xkr1dx2q1-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jan 2020 11:14:01 +0100
+        Tue, 21 Jan 2020 11:14:13 +0100
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D20EC100038;
-        Tue, 21 Jan 2020 11:13:55 +0100 (CET)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CA87110002A;
+        Tue, 21 Jan 2020 11:14:12 +0100 (CET)
 Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7F0332B1872;
-        Tue, 21 Jan 2020 11:13:55 +0100 (CET)
-Received: from localhost (10.75.127.44) by SFHDAG6NODE1.st.com (10.75.127.16)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 Jan 2020 11:13:54
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id BAC9F2B1872;
+        Tue, 21 Jan 2020 11:14:12 +0100 (CET)
+Received: from localhost (10.75.127.45) by SFHDAG6NODE1.st.com (10.75.127.16)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 Jan 2020 11:14:11
  +0100
 From:   Yannick Fertre <yannick.fertre@st.com>
 To:     Yannick Fertre <yannick.fertre@st.com>,
@@ -59,13 +59,13 @@ To:     Yannick Fertre <yannick.fertre@st.com>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH] drm/stm: ltdc: add number of interrupts
-Date:   Tue, 21 Jan 2020 11:13:52 +0100
-Message-ID: <1579601632-7001-1-git-send-email-yannick.fertre@st.com>
+Subject: [PATCH] drm/stm: ltdc: check crtc state before enabling LIE
+Date:   Tue, 21 Jan 2020 11:14:10 +0100
+Message-ID: <1579601650-7055-1-git-send-email-yannick.fertre@st.com>
 X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.75.127.44]
+X-Originating-IP: [10.75.127.45]
 X-ClientProxiedBy: SFHDAG3NODE3.st.com (10.75.127.9) To SFHDAG6NODE1.st.com
  (10.75.127.16)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
@@ -75,91 +75,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The number of interrupts depends on the ltdc version.
-Don't try to get interrupt which not exist, avoiding
-kernel warning messages.
+Following investigations of a hardware bug, the LIE interrupt
+can occur while the display controller is not activated.
+LIE interrupt (vblank) don't have to be set if the CRTC is not
+enabled.
 
 Signed-off-by: Yannick Fertre <yannick.fertre@st.com>
 ---
- drivers/gpu/drm/stm/ltdc.c | 30 +++++++++++++++---------------
- drivers/gpu/drm/stm/ltdc.h |  1 +
- 2 files changed, 16 insertions(+), 15 deletions(-)
+ drivers/gpu/drm/stm/ltdc.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
-index c2815e8..58092b0 100644
+index c2815e8..ea654c7 100644
 --- a/drivers/gpu/drm/stm/ltdc.c
 +++ b/drivers/gpu/drm/stm/ltdc.c
-@@ -1146,12 +1146,14 @@ static int ltdc_get_caps(struct drm_device *ddev)
- 		ldev->caps.pad_max_freq_hz = 90000000;
- 		if (ldev->caps.hw_version == HWVER_10200)
- 			ldev->caps.pad_max_freq_hz = 65000000;
-+		ldev->caps.nb_irq = 2;
- 		break;
- 	case HWVER_20101:
- 		ldev->caps.reg_ofs = REG_OFS_4;
- 		ldev->caps.pix_fmt_hw = ltdc_pix_fmt_a1;
- 		ldev->caps.non_alpha_only_l1 = false;
- 		ldev->caps.pad_max_freq_hz = 150000000;
-+		ldev->caps.nb_irq = 4;
- 		break;
- 	default:
- 		return -ENODEV;
-@@ -1251,13 +1253,21 @@ int ltdc_load(struct drm_device *ddev)
- 	reg_clear(ldev->regs, LTDC_IER,
- 		  IER_LIE | IER_RRIE | IER_FUIE | IER_TERRIE);
+@@ -648,9 +648,14 @@ static const struct drm_crtc_helper_funcs ltdc_crtc_helper_funcs = {
+ static int ltdc_crtc_enable_vblank(struct drm_crtc *crtc)
+ {
+ 	struct ltdc_device *ldev = crtc_to_ltdc(crtc);
++	struct drm_crtc_state *state = crtc->state;
  
--	for (i = 0; i < MAX_IRQ; i++) {
-+	ret = ltdc_get_caps(ddev);
-+	if (ret) {
-+		DRM_ERROR("hardware identifier (0x%08x) not supported!\n",
-+			  ldev->caps.hw_version);
-+		goto err;
-+	}
+ 	DRM_DEBUG_DRIVER("\n");
+-	reg_set(ldev->regs, LTDC_IER, IER_LIE);
 +
-+	DRM_DEBUG_DRIVER("ltdc hw version 0x%08x\n", ldev->caps.hw_version);
-+
-+	for (i = 0; i < ldev->caps.nb_irq; i++) {
- 		irq = platform_get_irq(pdev, i);
--		if (irq == -EPROBE_DEFER)
-+		if (irq < 0) {
-+			ret = irq;
- 			goto err;
--
--		if (irq < 0)
--			continue;
-+		}
++	if (state->enable)
++		reg_set(ldev->regs, LTDC_IER, IER_LIE);
++	else
++		return -EPERM;
  
- 		ret = devm_request_threaded_irq(dev, irq, ltdc_irq,
- 						ltdc_irq_thread, IRQF_ONESHOT,
-@@ -1268,16 +1278,6 @@ int ltdc_load(struct drm_device *ddev)
- 		}
- 	}
- 
--
--	ret = ltdc_get_caps(ddev);
--	if (ret) {
--		DRM_ERROR("hardware identifier (0x%08x) not supported!\n",
--			  ldev->caps.hw_version);
--		goto err;
--	}
--
--	DRM_DEBUG_DRIVER("ltdc hw version 0x%08x\n", ldev->caps.hw_version);
--
- 	/* Add endpoints panels or bridges if any */
- 	for (i = 0; i < MAX_ENDPOINTS; i++) {
- 		if (panel[i]) {
-diff --git a/drivers/gpu/drm/stm/ltdc.h b/drivers/gpu/drm/stm/ltdc.h
-index a1ad0ae..310e87f 100644
---- a/drivers/gpu/drm/stm/ltdc.h
-+++ b/drivers/gpu/drm/stm/ltdc.h
-@@ -19,6 +19,7 @@ struct ltdc_caps {
- 	const u32 *pix_fmt_hw;	/* supported pixel formats */
- 	bool non_alpha_only_l1; /* non-native no-alpha formats on layer 1 */
- 	int pad_max_freq_hz;	/* max frequency supported by pad */
-+	int nb_irq;		/* number of hardware interrupts */
- };
- 
- #define LTDC_MAX_LAYER	4
+ 	return 0;
+ }
 -- 
 2.7.4
 
