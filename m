@@ -2,75 +2,137 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B498C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 13:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C33E2C33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 13:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 438762070C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 13:48:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A9832070C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 13:48:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VQ2Gyazj"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VXtV+cC/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729154AbgAUNsw (ORCPT
+        id S1729238AbgAUNs6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 08:48:52 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:49612 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728708AbgAUNsv (ORCPT
+        Tue, 21 Jan 2020 08:48:58 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49913 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728708AbgAUNs6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 08:48:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=eZRFLHsIXPNKN7m2gKwGNqmIbjCAilF0DyWkBc02k/Q=; b=VQ2GyazjXuHrCqFKzsJNA2QDs
-        P5nH0yFV/Hn6G9/KQmZg8eMTGBQAt8r3njxkVnwk8JOwgZY62zUX19a1eUrJLrQVXH72beBy3bYe9
-        zMau88tQQ/QPDHOA2F++2UHTujH+vU25sHFCbE2w72HYFRGpi5di1qhJcxrnlqF1huBv413LLaGlZ
-        pm76QGlCihYNBFN7VoTGyLVF4D6HCcpRmQP2QLx32d222SoJk+/Fbt9Qf+Uz98XotT++Pl0PAI7N/
-        4PtbFlyCHhkGiauiLTtDqDw+v2MZ7GiZ6nhZfSAqCy3k42D/l5M+jBufXwVejtghPYJUSd4EKQjHn
-        VbUacaoyg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1itttS-0002LK-WA; Tue, 21 Jan 2020 13:48:35 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id EACC73060ED;
-        Tue, 21 Jan 2020 14:46:51 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 185EF20983FC0; Tue, 21 Jan 2020 14:48:31 +0100 (CET)
-Date:   Tue, 21 Jan 2020 14:48:31 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alex Kogan <alex.kogan@oracle.com>
-Cc:     linux@armlinux.org.uk, mingo@redhat.com, will.deacon@arm.com,
-        arnd@arndb.de, longman@redhat.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        guohanjun@huawei.com, jglauber@marvell.com,
-        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
-        dave.dice@oracle.com
-Subject: Re: [PATCH v8 3/5] locking/qspinlock: Introduce CNA into the slow
- path of qspinlock
-Message-ID: <20200121134831.GM14914@hirez.programming.kicks-ass.net>
-References: <20191230194042.67789-1-alex.kogan@oracle.com>
- <20191230194042.67789-4-alex.kogan@oracle.com>
+        Tue, 21 Jan 2020 08:48:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579614534;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=5sry8glaf+2eDUM7x4dnclmuXsj6ELrKrtRIG9vYSZo=;
+        b=VXtV+cC/l0X4NcShyX55iJu8dipc39kgu5OYrIFZZ1vNysCMXtumh+WVEl/TfVJ/NMQzts
+        8LQeRzwWZolBykFvvdpYl9lChyIo3vtuc+1l4yfN3nsEdQpSsBKOARZMH7G4ft7pGI+PY5
+        1DYsY9mg5r4fIkKX//rCAfqtRN3GghY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-350-X16t49KjNWKuSIvbi2LOzg-1; Tue, 21 Jan 2020 08:48:50 -0500
+X-MC-Unique: X16t49KjNWKuSIvbi2LOzg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 20246107ACC4;
+        Tue, 21 Jan 2020 13:48:47 +0000 (UTC)
+Received: from localhost (unknown [10.18.25.174])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 77D6C7DB5D;
+        Tue, 21 Jan 2020 13:48:41 +0000 (UTC)
+Date:   Tue, 21 Jan 2020 08:48:40 -0500
+From:   Mike Snitzer <snitzer@redhat.com>
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        martin.petersen@oracle.com, bob.liu@oracle.com, axboe@kernel.dk,
+        agk@redhat.com, dm-devel@redhat.com, song@kernel.org,
+        tytso@mit.edu, adilger.kernel@dilger.ca,
+        Chaitanya.Kulkarni@wdc.com, darrick.wong@oracle.com,
+        ming.lei@redhat.com, osandov@fb.com, jthumshirn@suse.de,
+        minwoo.im.dev@gmail.com, damien.lemoal@wdc.com,
+        andrea.parri@amarulasolutions.com, hare@suse.com, tj@kernel.org,
+        ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
+        bvanassche@acm.org, dhowells@redhat.com, asml.silence@gmail.com
+Subject: Re: [PATCH v4 6/7] dm: Directly disable max_allocate_sectors for now
+Message-ID: <20200121134840.GA9944@redhat.com>
+References: <157960325642.108120.13626623438131044304.stgit@localhost.localdomain>
+ <157960337238.108120.18048939587162465175.stgit@localhost.localdomain>
+ <20200121122458.GA9365@redhat.com>
+ <f7e0fb38-a894-da33-c46b-e192ed907ee0@virtuozzo.com>
+ <619a7a14-44e6-eca7-c1ea-3f04abeee53d@virtuozzo.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191230194042.67789-4-alex.kogan@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <619a7a14-44e6-eca7-c1ea-3f04abeee53d@virtuozzo.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 30, 2019 at 02:40:40PM -0500, Alex Kogan wrote:
-> +#define try_clear_tail			cna_try_change_tail
+On Tue, Jan 21 2020 at  8:33am -0500,
+Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
 
-That's inconsistent; please run
-'s/cna_try_change_tail/cna_try_clear_tail/g' on your patch.
+> On 21.01.2020 15:36, Kirill Tkhai wrote:
+> > On 21.01.2020 15:24, Mike Snitzer wrote:
+> >> On Tue, Jan 21 2020 at  5:42am -0500,
+> >> Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+> >>
+> >>> Since dm inherits limits from underlining block devices,
+> >>> this patch directly disables max_allocate_sectors for dm
+> >>> till full allocation support is implemented.
+> >>>
+> >>> This prevents high-level primitives (generic_make_request_checks(),
+> >>> __blkdev_issue_write_zeroes(), ...) from sending REQ_ALLOCATE
+> >>> requests.
+> >>>
+> >>> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+> >>> ---
+> >>>  drivers/md/dm-table.c |    2 ++
+> >>>  drivers/md/md.h       |    1 +
+> >>>  2 files changed, 3 insertions(+)
+> >>
+> >> You're mixing DM and MD changes in the same patch.
+> >>
+> >> But I'm wondering if it might be best to set this default for stacking
+> >> devices in blk_set_stacking_limits()?
+> >>
+> >> And then it is up to each stacking driver to override as needed.
+> > 
+> > Hm. Sound like a good idea. This "lim->max_allocate_sectors = 0" in blk_set_stacking_limits()
+> > should work for dm's dm_calculate_queue_limits(), since it calls blk_stack_limits(), which is:
+> > 
+> > 	t->max_allocate_sectors = min(t->max_allocate_sectors,
+> > 				      b->max_allocate_sectors);
+> > 
+> > Could you please tell is this fix is also enough for md?
+> 
+> It looks like it's enough since queue defaults are set in md_alloc()->blk_set_stacking_limits().
+> In case of we set "max_allocate_sectors = 0", in further it can be changed only manually,
+> but nobody does this.
+
+Yes, it will work to disable this capability for MD and DM.
+
+But if/when a stacked device _dooes_ want to support this then it'll be
+awkward to override this stacking default to allow blk_stack_limits()
+to properly stack up this limit.  blk_limits are extremely fiddley so
+this isn't necessarily new.  But by explicitly defaulting to 0 and then
+having blk_stack_limits use min() for this limit: it results in stacking
+drivers needing to clumsily unwind the default.  E.g. DM will need to
+tweak its blk_stack_limits() related code to allow override that
+actually _does_  stack up the underlying devices' capability (and not
+just impose its own limit that ignores the underlying devices).
+
+So I'm not convinced this is the right way to go (be it the v4 approach
+you took or the cleaner use of blk_set_stacking_limits I suggested).
+
+And to be clear, I'm interested in having DM thinp support this
+capability to preallocate blocks.
+
+Mike
+
