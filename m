@@ -2,85 +2,113 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BDF6C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D48F6C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 441272253D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:38:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA82522525
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:38:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X9PZg8HO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pv+3PsrH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729293AbgAUQh7 (ORCPT
+        id S1729346AbgAUQiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 11:37:59 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:37923 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729080AbgAUQh5 (ORCPT
+        Tue, 21 Jan 2020 11:38:02 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:44614 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729080AbgAUQiB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 11:37:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579624677;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Yf4F2Q+jP5jpb9BsV98BXepooKGbqCkOI9lfShBlAeQ=;
-        b=X9PZg8HO1/T0iLnm2bUaCaf46MVsQELz/8OFLSL3xgR0PJ5VBWgmtkAA+QnmLXNqzSVc6E
-        t/eXu1Wob6OO7Pk2kdhnUZlmocHH6W7nPybuCxBAvBTJAkt49efynWkUlP2vcV6ftT6RlI
-        Ax3dtQU8rOFjCxDorkHaPk/tdqaQtHY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-113-VrUfivWiNLS7ip51Icjx2g-1; Tue, 21 Jan 2020 11:37:52 -0500
-X-MC-Unique: VrUfivWiNLS7ip51Icjx2g-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AB33C2F2E;
-        Tue, 21 Jan 2020 16:37:50 +0000 (UTC)
-Received: from treble (ovpn-122-154.rdu2.redhat.com [10.10.122.154])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 309105C1BB;
-        Tue, 21 Jan 2020 16:37:49 +0000 (UTC)
-Date:   Tue, 21 Jan 2020 10:37:47 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Julien Thierry <jthierry@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        peterz@infradead.org, raphael.gault@arm.com,
-        catalin.marinas@arm.com, will@kernel.org
-Subject: Re: [RFC v5 08/57] objtool: Make ORC support optional
-Message-ID: <20200121163747.kbasjd2wn4q44vcf@treble>
-References: <20200109160300.26150-1-jthierry@redhat.com>
- <20200109160300.26150-9-jthierry@redhat.com>
+        Tue, 21 Jan 2020 11:38:01 -0500
+Received: by mail-lj1-f193.google.com with SMTP id q8so3456519ljj.11;
+        Tue, 21 Jan 2020 08:38:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=DBI+jODin8/dMS+5H2zNTFg95Djh8pY+zf0IHmhXRG8=;
+        b=Pv+3PsrHCYaOFbnWFHFI+7cKpgoY60PPXChSB7KMOjkNfyybXkzqpywC1uqhg4SYs6
+         LXdorsv+aABlBBDFLFpGHM3SyT4v/qNyddTJhnxM42bRp7umH9J/Hzr8awqVI5W747Cv
+         fmEJwt289q5EgAN40rDHZ36mZQfjCzWQhqxA89hVnOf2CwwTGBCUpOXg3AkkpRSTHzbo
+         99YGkvbzcHz/+kGbK6g8nKKDGQrpiHsKA5LVPbR4rh2TyAyJJtQ3E2mBddwwLnc8YNid
+         rgQ8eqZcJoSNSeAY/r1Qttw8cuYshy+5pQyPn+C74CVrOxzu5/eR/ZSyqElHcEaYNVD4
+         AH8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=DBI+jODin8/dMS+5H2zNTFg95Djh8pY+zf0IHmhXRG8=;
+        b=sntdV7HXiXKmHRbFkMUSLwF4yINxqUlrZNv/wNkPyGHkD0JXA8vfNT+5m3il2RoLUk
+         uWzaewZE4n0kk0xGpOWRhzgbRf60r6w+giokfeQeAqnLaoJYZY0yTQdp9hSUH5uQvD8R
+         wCYG/xGUjOA3KPb4wbWnEUj5HTbvlnzOso+Lbz0Tev6FelQjU1aZV0A9EhJnpCXemSAV
+         +0ys0+2fenUeDhktmKHH59OZZ5L+fevmMlbnzwEmwsjcD/rNSTbGr/Ak/9ONAoO1BCbP
+         ZSnHDcqu2Lj0/RoUnT8bAb+rVmPMLdCSQf6YZhr9XsNrBUAs3X3VBJesRyE3eFdenSyH
+         F48A==
+X-Gm-Message-State: APjAAAUuxWQnZoTbGbi195E9lV4moiTtzSl9YEZMjgsrJi9/bIsZ6eDe
+        qhOwpAAtZunvVIFtv5NqxjU=
+X-Google-Smtp-Source: APXvYqy8D1Ip80IsabWyLUnIo2JOJ5Xg28dG3ICjm1MLwvisIb0LgBo+OfgL8zsWMq2eY1CiqGdeZA==
+X-Received: by 2002:a2e:3a13:: with SMTP id h19mr17101772lja.16.1579624679207;
+        Tue, 21 Jan 2020 08:37:59 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id f8sm1984854lfc.22.2020.01.21.08.37.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jan 2020 08:37:58 -0800 (PST)
+Subject: Re: [PATCH] serial: 8250_tegra: Create Tegra specific 8250 driver
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-tegra@vger.kernel.org, Jeff Brasen <jbrasen@nvidia.com>
+References: <20200120160149.29072-1-jonathanh@nvidia.com>
+ <f02faa4c-5838-15d2-1b76-75c17fcc0d9d@gmail.com>
+Message-ID: <788ba1e1-0b00-ee89-dd65-56aba7cb3f19@gmail.com>
+Date:   Tue, 21 Jan 2020 19:37:57 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
+In-Reply-To: <f02faa4c-5838-15d2-1b76-75c17fcc0d9d@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200109160300.26150-9-jthierry@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 04:02:11PM +0000, Julien Thierry wrote:
-> diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
-> index d2a19b0bc05a..24d653e0b6ec 100644
-> --- a/tools/objtool/Makefile
-> +++ b/tools/objtool/Makefile
-> @@ -6,6 +6,10 @@ ifeq ($(ARCH),x86_64)
->  ARCH := x86
->  endif
->  
-> +ifeq ($(ARCH),x86)
-> +OBJTOOL_ORC := y
-> +endif
+21.01.2020 19:31, Dmitry Osipenko пишет:
+> Hello Jon,
+> 
+> 20.01.2020 19:01, Jon Hunter пишет:
+> 
+> [snip]
+> 
+>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +	if (!res)
+>> +		return -ENODEV;
+>> +
+>> +	port->membase = devm_ioremap(&pdev->dev, res->start,
+>> +				     resource_size(res));
+> 
+> devm_platform_ioremap_resource()
+> 
+>> +	if (!port->membase)
+>> +		return -ENOMEM;
+>> +
+>> +	port->mapbase = res->start;
+>> +	port->mapsize = resource_size(res);
+>> +
+>> +	uart->rst = devm_reset_control_get_optional_shared(&pdev->dev, NULL);
+> 
+> Why reset is shared? It shall not be shared at least on T20/30/124/210..
+> 
+> [snip]
+> 
 
-I think this should check SRCARCH instead, a la:
-
-  https://lkml.kernel.org/r/d5d11370ae116df6c653493acd300ec3d7f5e925.1579543924.git.jpoimboe@redhat.com
-
--- 
-Josh
-
+Actually, looks like use of a shared reset for a not-really-shared reset
+should be fine.
