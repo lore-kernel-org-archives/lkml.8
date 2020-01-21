@@ -2,86 +2,92 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E31C33CA1
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 01:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20816C32771
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 01:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56C3D22522
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 01:45:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E036522522
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 01:49:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728988AbgAUBpA (ORCPT
+        id S1728921AbgAUBt2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 20:45:00 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:9222 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728512AbgAUBpA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 20:45:00 -0500
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id AD32333EE0431CDAE50B;
-        Tue, 21 Jan 2020 09:44:57 +0800 (CST)
-Received: from [127.0.0.1] (10.173.220.183) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Tue, 21 Jan 2020
- 09:44:47 +0800
-Subject: Re: [PATCH V3] brd: check and limit max_part par
-To:     Ming Lei <ming.lei@redhat.com>
-CC:     Jens Axboe <axboe@kernel.dk>, <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mingfangsen <mingfangsen@huawei.com>, Guiyao <guiyao@huawei.com>,
-        zhangsaisai <zhangsaisai@huawei.com>,
-        "wubo (T)" <wubo40@huawei.com>
-References: <c8236e55-f64f-ef40-b394-8b7e86ce50df@huawei.com>
- <20200115022725.GA14585@ming.t460p>
- <ce5823ea-2183-90df-05b0-c02d1f654be3@huawei.com>
- <20200120225858.GB19571@ming.t460p>
-From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Message-ID: <1378f7d0-7166-a860-03cd-523cef8ea14b@huawei.com>
-Date:   Tue, 21 Jan 2020 09:44:46 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 20 Jan 2020 20:49:28 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:57968 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728512AbgAUBt1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 20:49:27 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1itifU-00CNBW-Pd; Tue, 21 Jan 2020 01:49:25 +0000
+Date:   Tue, 21 Jan 2020 01:49:24 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Namjae Jeon <linkinjeon@gmail.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
+        sj1557.seo@samsung.com, pali.rohar@gmail.com, arnd@arndb.de,
+        namjae.jeon@samsung.com
+Subject: Re: [PATCH v12 02/13] exfat: add super block operations
+Message-ID: <20200121014924.GI8904@ZenIV.linux.org.uk>
+References: <20200120124428.17863-1-linkinjeon@gmail.com>
+ <20200120124428.17863-3-linkinjeon@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200120225858.GB19571@ming.t460p>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.173.220.183]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200120124428.17863-3-linkinjeon@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jan 20, 2020 at 09:44:17PM +0900, Namjae Jeon wrote:
 
+> +static void exfat_put_super(struct super_block *sb)
+> +{
+> +	struct exfat_sb_info *sbi = EXFAT_SB(sb);
+> +
+> +	mutex_lock(&sbi->s_lock);
+> +	if (test_and_clear_bit(EXFAT_SB_DIRTY, &sbi->s_state))
+> +		sync_blockdev(sb->s_bdev);
+> +	exfat_set_vol_flags(sb, VOL_CLEAN);
+> +	exfat_free_upcase_table(sb);
+> +	exfat_free_bitmap(sb);
+> +	mutex_unlock(&sbi->s_lock);
+> +
+> +	if (sbi->nls_io) {
+> +		unload_nls(sbi->nls_io);
+> +		sbi->nls_io = NULL;
+> +	}
+> +	exfat_free_iocharset(sbi);
+> +	sb->s_fs_info = NULL;
+> +	kfree(sbi);
+> +}
 
-On 2020/1/21 6:58, Ming Lei wrote:
-> On Mon, Jan 20, 2020 at 09:14:50PM +0800, Zhiqiang Liu wrote:
->>>> +static inline void brd_check_and_reset_par(void)
->>>> +{
->>>> +       if (unlikely(!rd_nr))
->>>> +               rd_nr = 1;
->>>> +
->>>> +       if (unlikely(!max_part))
->>>> +               max_part = 1;
->>>
->>> Another limit is that 'max_part' needs to be divided exactly by (1U <<
->>> MINORBITS), something like:
->>>
->>> 	max_part = 1UL << fls(max_part)
->>
->> Do we have to limit that 'max_part' needs to be divided exactly by (1U <<
->>> MINORBITS)? As your suggestion, the i * max_part is larger than MINORMASK,
->> we can allocate from extended devt.
-> 
-> Exact dividing is for reserving same minors for all disks with
-> RAMDISK_MAJOR, otherwise there is still chance to get same dev_t when
-> adding partitions.
-> 
-> Extended devt is for covering more disks, not related with 'max_part'.
-> 
+You need to RCU-delay freeing sbi and zeroing ->nls_io.  *Everything* 
+used by ->d_compare() and ->d_hash() needs that treatment.  RCU-mode
+pathwalk can stray into a filesystem that has already been lazy-umounted
+and is just one close() away from shutdown.  It's OK, as long as you
+make sure that all structures used in methods that could be called
+in RCU mode (->d_compare(), ->d_hash(), rcu-case ->d_revalidate(),
+rcu-case ->permission()) have destruction RCU-delayed.  Look at
+what VFAT is doing; that's precisely the reason for that delayed_free()
+thing in there.
 
-Thank you very much.
-I will change that as you said.
+> +static void exfat_destroy_inode(struct inode *inode)
+> +{
+> +	kmem_cache_free(exfat_inode_cachep, EXFAT_I(inode));
+> +}
 
+No.  Again, that MUST be RCU-delayed; either put an explicit
+call_rcu() here, or leave as-is, but make that ->free_inode().
 
+> +static void __exit exit_exfat_fs(void)
+> +{
+> +	kmem_cache_destroy(exfat_inode_cachep);
+> +	unregister_filesystem(&exfat_fs_type);
+
+... and add rcu_barrier() here.
+
+> +	exfat_cache_shutdown();
