@@ -2,67 +2,116 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4492C33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 05:54:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A5AC33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 05:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C16DE22314
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 05:54:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5527F22314
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 05:54:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbgAUFyk (ORCPT
+        id S1728931AbgAUFym (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 00:54:40 -0500
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:52347 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725916AbgAUFyj (ORCPT
+        Tue, 21 Jan 2020 00:54:42 -0500
+Received: from baldur.buserror.net ([165.227.176.147]:51896 "EHLO
+        baldur.buserror.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728847AbgAUFyj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 21 Jan 2020 00:54:39 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0ToH3SVv_1579586077;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0ToH3SVv_1579586077)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 21 Jan 2020 13:54:37 +0800
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] trace/kprobe: remove MAX_KPROBE_CMDLINE_SIZE
-Date:   Tue, 21 Jan 2020 13:54:35 +0800
-Message-Id: <1579586075-45132-1-git-send-email-alex.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-To:     unlisted-recipients:; (no To-header on input)
+Received: from [2601:449:8480:af0:12bf:48ff:fe84:c9a0]
+        by baldur.buserror.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <oss@buserror.net>)
+        id 1itmQK-0006oP-A0; Mon, 20 Jan 2020 23:50:00 -0600
+Message-ID: <0948b2f469c5e9d9241477e7f0cba677bbcd1780.camel@buserror.net>
+From:   Scott Wood <oss@buserror.net>
+To:     =?UTF-8?Q?=E7=8E=8B=E6=96=87=E8=99=8E?= <wenhu.wang@vivo.com>
+Cc:     wangwenhu <wenhu.pku@gmail.com>,
+        Kumar Gala <galak@kernel.crashing.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        trivial@kernel.org, Rai Harninder <harninder.rai@nxp.com>
+Date:   Mon, 20 Jan 2020 23:49:59 -0600
+In-Reply-To: <AFAA8AA0CH7o6kMJF-XfXKq9.3.1579584019640.Hmail.wenhu.wang@vivo.com>
+References: <AFAA8AA0CH7o6kMJF-XfXKq9.3.1579584019640.Hmail.wenhu.wang@vivo.com>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2601:449:8480:af0:12bf:48ff:fe84:c9a0
+X-SA-Exim-Rcpt-To: wenhu.wang@vivo.com, wenhu.pku@gmail.com, galak@kernel.crashing.org, benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, trivial@kernel.org, harninder.rai@nxp.com
+X-SA-Exim-Mail-From: oss@buserror.net
+Subject: Re: [PATCH] powerpc/Kconfig: Make FSL_85XX_CACHE_SRAM configurable
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on baldur.buserror.net)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This limitation are never lunched from introduce commit 970988e19eb0
-("tracing/kprobe: Add kprobe_event= boot parameter")
+On Tue, 2020-01-21 at 13:20 +0800, 王文虎 wrote:
+> From: Scott Wood <oss@buserror.net>
+> Date: 2020-01-21 11:25:25
+> To:  wangwenhu <wenhu.pku@gmail.com>,Kumar Gala <galak@kernel.crashing.org>,
+> Benjamin Herrenschmidt <benh@kernel.crashing.org>,Paul Mackerras <
+> paulus@samba.org>,Michael Ellerman <mpe@ellerman.id.au>,
+> linuxppc-dev@lists.ozlabs.org,linux-kernel@vger.kernel.org
+> Cc:  trivial@kernel.org,wenhu.wang@vivo.com,Rai Harninder <
+> harninder.rai@nxp.com>
+> Subject: Re: [PATCH] powerpc/Kconfig: Make FSL_85XX_CACHE_SRAM
+> configurable>On Mon, 2020-01-20 at 06:43 -0800, wangwenhu wrote:
+> > > From: wangwenhu <wenhu.wang@vivo.com>
+> > > 
+> > > When generating .config file with menuconfig on Freescale BOOKE
+> > > SOC, FSL_85XX_CACHE_SRAM is not configurable for the lack of
+> > > description in the Kconfig field, which makes it impossible
+> > > to support L2Cache-Sram driver. Add a description to make it
+> > > configurable.
+> > > 
+> > > Signed-off-by: wangwenhu <wenhu.wang@vivo.com>
+> > 
+> > The intent was that drivers using the SRAM API would select the
+> > symbol.  What
+> > is the use case for selecting it manually?
+> > 
+> 
+> With a repository of multiple products(meaning different defconfigs) and
+> multiple
+> developers, the Kconfigs of the Kernel Source Tree change frequently. So the
+> "make menuconfig"
+> process is needed for defconfigs' re-generating or updating for the
+> complexity of dependencies
+> between different features defined in the Kconfigs.
 
-Could we remove it if no intention to implement it?
+That doesn't answer my question of how the SRAM code would be useful other
+than to some other driver that uses the API (which would use "select").  There
+is no userspace API.  You could use the kernel command line to configure the
+SRAM but you need to get the address of it for it to be useful.
 
-Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Steven Rostedt <rostedt@goodmis.org> 
-Cc: Ingo Molnar <mingo@redhat.com> 
-Cc: linux-kernel@vger.kernel.org 
----
- kernel/trace/trace_kprobe.c | 1 -
- 1 file changed, 1 deletion(-)
+> > Since this code was added almost ten years ago and there are still no (in-
+> > tree?) users of the API, we should just remove the sram code (unless this
+> > prods someone to submit such a user very soon).
+> > 
+> 
+> Yes, pretty long a time. But we DO really use the API now for
+> PPCE500/Freescale SoC.
 
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index 7f890262c8a3..eafa90d0f760 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -22,7 +22,6 @@
- 
- #define KPROBE_EVENT_SYSTEM "kprobes"
- #define KRETPROBE_MAXACTIVE_MAX 4096
--#define MAX_KPROBE_CMDLINE_SIZE 1024
- 
- /* Kprobe early definition from command line */
- static char kprobe_boot_events_buf[COMMAND_LINE_SIZE] __initdata;
--- 
-1.8.3.1
+I do not see any users in the kernel tree.  Are you talking about out-of-tree
+code, or something that you've submitted or will submit soon?  Or are you
+accessing it via /dev/mem?
+
+> Like sometimes we need to reset the whole RAM, then the L2-Cache would be
+> used as
+> SRAM for backup using. Since it is useful for us now, a re-consideration is
+> recommanded.
+
+Where is the code that would do this?
+
+-Scott
+> 
 
