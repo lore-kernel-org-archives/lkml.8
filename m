@@ -2,100 +2,139 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6076C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 11:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E1CC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 11:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD42120882
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 11:45:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="qUXNszkr"
+	by mail.kernel.org (Postfix) with ESMTP id E6B9120882
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 11:46:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729147AbgAULpf (ORCPT
+        id S1729314AbgAULqV convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 06:45:35 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:32855 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726052AbgAULpf (ORCPT
+        Tue, 21 Jan 2020 06:46:21 -0500
+Received: from mout.kundenserver.de ([212.227.126.187]:35923 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726052AbgAULqU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 06:45:35 -0500
-Received: by mail-qt1-f193.google.com with SMTP id d5so2336700qto.0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 03:45:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=2RAq65fE1p08MEyXCEbcjOGodQ3rvsuPnBMUCzsOXfs=;
-        b=qUXNszkrfraMVH0sN6CssRY3CrV5i+a6z/l/iPyFXKM/8qQ+nZF4SmPIVj7nc8xi5K
-         Cg97C6gB5Z2+rLZgSMY+ThXdzHxVfecADR654yef5v22MaZprnpqp6X2DJaqq0/SKCIb
-         gqU5Wg8+AVJLoZYrR1fBMxsE3OnjiC8DEXP36TivLOWwT8LCboWHo7fGmXDb7EY7weqG
-         bfy5kLd7BxFpI+dQ4LOkz3kF8Rwl4oe7P8G958Exlo3j9sL4EuGhVK+xD6pk2X5p42e1
-         142xtY9WcoWGAu5objVL+6SJM11kjdO14P5U+nfjaI39YfEjkqAFy5JnstrQeayFrUqg
-         0dnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=2RAq65fE1p08MEyXCEbcjOGodQ3rvsuPnBMUCzsOXfs=;
-        b=tlJ8CWfd/XNh3bl9rSBrEAFkUQ939K00WPaS7GWBOVfW0wl1O7dnD+gtXIavVwH0PO
-         TaUnp4JHtYZL0CAa3iRBcs26Q7tP2jTyKGZ4agLX3I2qVtU/NdjnMa9dJacP9oI5ERLW
-         Z/2TPicuqbqgYBNAvx0LFcHgUCV6Ja+NhSZtud4KbBHdgD7ciefduVNs4gW474QmMylV
-         IQL8lll6+Zme3eDa5qWHAfm0MJ8JIoY2kKzHZIv6mnhB6ho+t4kXbT9gaVjzNPHVZSM1
-         ZHykLMrXHw235NuE/McNEAOO7CMHxCy6KPH9B6jF5DYFWQDYwkZBrAkb7kzeIHBFeU9c
-         rgew==
-X-Gm-Message-State: APjAAAUqMRxjRsU8CqMpk97jaaqTfMOCwP/4mFeiDAPg3g1NvJ0lXa8G
-        z3Bn1r1HnQEXGPbqZ31LT/S/fw==
-X-Google-Smtp-Source: APXvYqxKEeM+44Nc7BAN0DXttf0/JeAGaenDL9DVvgOTKS/vfhm8fetjaInkx0TGeZ119e12MTEjaw==
-X-Received: by 2002:ac8:730c:: with SMTP id x12mr4085646qto.186.1579607134345;
-        Tue, 21 Jan 2020 03:45:34 -0800 (PST)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id u52sm19538008qta.23.2020.01.21.03.45.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jan 2020 03:45:33 -0800 (PST)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: Boot warning at rcu_check_gp_start_stall()
-Date:   Tue, 21 Jan 2020 06:45:32 -0500
-Message-Id: <D7FEEB19-B519-4AC6-ABA4-250200E2A4E9@lca.pw>
-References: <20200121050941.GO2935@paulmck-ThinkPad-P72>
-Cc:     rcu@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200121050941.GO2935@paulmck-ThinkPad-P72>
-To:     paulmck@kernel.org
-X-Mailer: iPhone Mail (17C54)
+        Tue, 21 Jan 2020 06:46:20 -0500
+Received: from mail-qv1-f42.google.com ([209.85.219.42]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MV2Sk-1j0ukv0vQs-00S3nR for <linux-kernel@vger.kernel.org>; Tue, 21 Jan
+ 2020 12:46:19 +0100
+Received: by mail-qv1-f42.google.com with SMTP id y8so1259460qvk.6
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 03:46:19 -0800 (PST)
+X-Gm-Message-State: APjAAAVttoVmBLTrUHTVAfYnoIEDiVPAdj9bHUjGnSsfwcMzHUUaTAW0
+        1s8WowqXMqipFWg0W2hOFrT5kJTEJxPCFAJjIK8=
+X-Google-Smtp-Source: APXvYqyxZGlIFCBF780+KS/2bkfvq0hP+a0/hThj2asG4RwHxIFlbrU9wtbrUp8O1361oVkawD1TQHBg3rBp7/M4I3g=
+X-Received: by 2002:a0c:e7c7:: with SMTP id c7mr4350634qvo.222.1579607178086;
+ Tue, 21 Jan 2020 03:46:18 -0800 (PST)
+MIME-Version: 1.0
+References: <20191213204936.3643476-1-arnd@arndb.de> <20191213205417.3871055-4-arnd@arndb.de>
+ <20200117154726.GA328525@bogon.m.sigxcpu.org> <aaf2f587a61dee42c25805c3fe7916bed4dbd0c3.camel@pengutronix.de>
+ <CAK8P3a3hyDeskg0ix=1+yNihqacZ5rqsXaHbRsBfPt7zFr8EOw@mail.gmail.com> <8d86fcb526ee14c7e6c80a787db645192c2c7c33.camel@pengutronix.de>
+In-Reply-To: <8d86fcb526ee14c7e6c80a787db645192c2c7c33.camel@pengutronix.de>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 21 Jan 2020 12:46:01 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a0tKt_ZfAPnPKbaOQ9j3A+kS0LypeGA46epdyQw-knitA@mail.gmail.com>
+Message-ID: <CAK8P3a0tKt_ZfAPnPKbaOQ9j3A+kS0LypeGA46epdyQw-knitA@mail.gmail.com>
+Subject: Re: [PATCH v2 13/24] drm/etnaviv: reject timeouts with tv_nsec >= NSEC_PER_SEC
+To:     Lucas Stach <l.stach@pengutronix.de>
+Cc:     =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        The etnaviv authors <etnaviv@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Provags-ID: V03:K1:KBPpsYpnrBSGOdCwCE4yT4gNfvFTP/DIyrZDD00LB+G6/iaNwQs
+ ntl1BvH3NIoSTPYU5TmFoGHnj3D3EUg8Wcy9CmWlumLul798VkaHzl8Re+vcJz/Tq1bec7P
+ SE80JdS3fXvgaeJKRnG057tOQNr76wN8/Je/3/nKn/0MjaU7zPOxKt1EWwvCLwfMIN9Nyzi
+ Uy/Uj+nwj/K+1z1mpY8Og==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:cBEZqDmt+Mo=:vedcsuiFNF4ab6FJwf4/q7
+ 5WJJ9HMFXCkH4zHL26l3/gq/SUdzGZ1Tb320w1ejIBTupd09skVK3UPDmaylLWeoHrQ8KxdfF
+ hbYQLhvDQujxWZcknq4LzkzBprqLeWVp9Xcq54R3E/WRhofe9+Gotkq2VYDdRm7B1LIF8vWb4
+ 2KjS4D1a2dElMln6qsgEaQVBqMvG9NViPVnEQkjhMnX7T57V1iY9ohErBS8l0JyHylVbtk3O0
+ 2d6214LMWcjCGR5n/oc9kIVrblhZjmddZnK6XedqbjkXz+KBkAL5Jz6XPyWNxiANAdYvffaYv
+ wFBbU8iQsKKscbU4KG21BvkKP+jtyEQYSx+VSfwK5TMpGYSjnaAZmpEaPFdTvm1HmUD+DIJ2u
+ mmiYG38SKfRB1xSOabTYkK5M6J2eS/oGcOeNfR7Mn8IOcOy8FBQ6QNfRs2HIEcrL9wdq34g67
+ v/Wlri3thoSp6exZHRQpoXUq1M8IVoSH1lj4/DZBOKkflL2ZnvyR7C2lumELvyK6JaeoqIlps
+ huUIRn/Tn2CD4eooXorACvYg8GOIYqrXTPwpanlWJBT05Wo6emfp/A+EaFVECoPGXRfx0dKL3
+ kTy1wTXyILLKAVLJuIbNFDE1Unh3koDag+pEZ8e5+nnA5Z1hzub4BMCxecwlp5RZiGZlcLCnq
+ CnDTlUp9rVlTkQwHG+pq9HEI5i9hy1WLc+vibNQ9ePegBaoc8KymZS/9kFCTs2ChUhXgoVCjn
+ YGqiW6AQZmD1zSoGageZuRQIpHtaWJ7YZmaP8LwSrdlgXyL/tOIdnUnQmZiOjS8WV0ZBhNjMF
+ DfKLMxlhkZV/DHvVrJljq+6j/Y5fAVraEZmviUbnuH/s6YFHXx3lvjXomynbJQaA9ONxrzilc
+ +VZ4Zu1vTpvA0c6kupOA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jan 21, 2020 at 11:22 AM Lucas Stach <l.stach@pengutronix.de> wrote:
+>
+> On Mo, 2020-01-20 at 19:47 +0100, Arnd Bergmann wrote:
+> > On Mon, Jan 20, 2020 at 6:48 PM Lucas Stach <l.stach@pengutronix.de> wrote:
+> > > On Fr, 2020-01-17 at 16:47 +0100, Guido Günther wrote:
+> > > > This breaks rendering here on arm64/gc7000 due to
+> > > >
+> > > > ioctl(6, DRM_IOCTL_ETNAVIV_GEM_CPU_PREP or DRM_IOCTL_MSM_GEM_CPU_PREP, 0xfffff7888680) = -1 EINVAL (Invalid argument)
+> > > > ioctl(6, DRM_IOCTL_ETNAVIV_GEM_CPU_FINI or DRM_IOCTL_QXL_CLIENTCAP, 0xfffff78885e0) = 0
+> > > > ioctl(6, DRM_IOCTL_ETNAVIV_GEM_CPU_PREP or DRM_IOCTL_MSM_GEM_CPU_PREP, 0xfffff7888680) = -1 EINVAL (Invalid argument)
+> > > > ioctl(6, DRM_IOCTL_ETNAVIV_GEM_CPU_FINI or DRM_IOCTL_QXL_CLIENTCAP, 0xfffff78885e0) = 0
+> > > > ioctl(6, DRM_IOCTL_ETNAVIV_GEM_CPU_PREP or DRM_IOCTL_MSM_GEM_CPU_PREP, 0xfffff7888680) = -1 EINVAL (Invalid argument)
+> > > > ioctl(6, DRM_IOCTL_ETNAVIV_GEM_CPU_FINI or DRM_IOCTL_QXL_CLIENTCAP, 0xfffff78885e0) = 0
+> > > >
+> > > > This is due to
+> > > >
+> > > >     get_abs_timeout(&req.timeout, 5000000000);
+> > > >
+> > > > in etna_bo_cpu_prep which can exceed NSEC_PER_SEC.
+> > > >
+> > > > Should i send a patch to revert that change since it breaks existing userspace?
+> > >
+> > > No need to revert. This patch has not been applied to the etnaviv tree
+> > > yet, I guess it's just in one of Arnds branches feeding into -next.
+> > >
+> > > That part of userspace is pretty dumb, as it misses to renormalize
+> > > tv_nsec when it overflows the second boundary. So if what I see is
+> > > correct it should be enough to allow 2 * NSEC_PER_SEC, which should
+> > > both reject broken large timeout and keep existing userspace working.
+> >
+> > Ah, so it's never more than 2 billion nanoseconds in known user space?
+> > I can definitely change my patch (actually add one on top) to allow that
+> > and handle it as before, or alternatively accept any 64-bit nanosecond value
+> > as arm64 already did, but make it less inefficient to handle.
+>
+> So the broken userspace code looks like this:
+>
+> static inline void get_abs_timeout(struct drm_etnaviv_timespec *tv, uint64_t ns)
+> {
+>         struct timespec t;
+>         uint32_t s = ns / 1000000000;
+>         clock_gettime(CLOCK_MONOTONIC, &t);
+>         tv->tv_sec = t.tv_sec + s;
+>         tv->tv_nsec = t.tv_nsec + ns - (s * 1000000000);
+> }
+>
+> Which means it _tries_ to do the right thing by putting the billion
+> part into the tv_sec member and only the remaining ns part is added to
+> tv_nsec, but then it fails to propagate a tv_nsec overflow over
+> NSEC_PER_SEC into tv_sec.
+>
+> Which means the tv_nsec should never be more than 2 * NSEC_PER_SEC in
+> known userspace. I would prefer if we could make the interface as
+> strict as possible (i.e. no arbitrary large numbers in tv_nsec), while
+> keeping this specific corner case working.
 
+I've added a patch on top of my 2038 branch, please have a look at that.
 
-> On Jan 21, 2020, at 12:09 AM, Paul E. McKenney <paulmck@kernel.org> wrote:=
-
->=20
-> This is what you get when a grace period has been requested, but does
-> not start within 21 seconds or so.  The "->state: 0x1ffff" is a new one
-> on me -- that normally happens only before RCU's grace-period kthread
-> has been spawned.  But by 97 seconds after boot, it should definitely
-> already be up and running.
->=20
-> Is the system responsive at this point?
-
-Yes, it works fine.
-
->=20
-> Except...  Why is it taking 96 seconds for the system to get to the point
-> where it prints "Dentry cache hash table entries:"?  That happens at 0.139=
-
-> seconds on my laptop.  And at about the same time on a much larger system.=
-
->=20
-> I could easily imagine that all sorts of things would break when boot
-> takes that long.
-
-I suppose the kernel has CONFIG_EFI_PGT_DUMP=3Dy, so it takes a while to run=
- just before rcu_check_gp_start_stall().=
+      Arnd
