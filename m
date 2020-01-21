@@ -2,149 +2,100 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35008C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 21:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F33EFC33CAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 22:00:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A99424125
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 21:51:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C68CC24676
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 22:00:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579643473;
-	bh=Q/WqaUfa9uWxT2ZsGFqxVCk6JPHHeGGuttvncY994CM=;
+	s=default; t=1579644026;
+	bh=P/+ckVRgWJMmP9w6Czxx3b7DFq7Aq7ngM/q+vur1db0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Da2jrr0zpzAUM4dB6Fa6f5lBDhFie93nXw0tFORxEZV5fK2YFPze35sY990ZoNIav
-	 iGyIduD3lOEB4CLzCAz8sIqnNmLe4Wl2iBQPEyScvIM+aQtv2WSNQDSJpdlWeqeUa8
-	 KS5dfzYM5FEvAyERRKA60TA7jGXAN665HYEFOZEA=
+	b=KHHIQ3w+oV3iGasFqjeJ7Ns3478LCd6//LYTrSNpKq+UjEqcSW7sge1Rwtp10B3wu
+	 3QlY1MS1JAXMoK46HGN0Y+6cj3iQEesHc5WgaFeARmtONeMT0jg7Xy2ui5X7oe+PH0
+	 maVu+7WXE92jrubroopmd35WhhUed1GnOfTh+aoU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729182AbgAUVvM (ORCPT
+        id S1728831AbgAUWA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 16:51:12 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:41621 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728827AbgAUVvM (ORCPT
+        Tue, 21 Jan 2020 17:00:26 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:46045 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727847AbgAUWAZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 16:51:12 -0500
-Received: by mail-oi1-f194.google.com with SMTP id i1so4114328oie.8;
-        Tue, 21 Jan 2020 13:51:11 -0800 (PST)
+        Tue, 21 Jan 2020 17:00:25 -0500
+Received: by mail-oi1-f193.google.com with SMTP id n16so4124573oie.12;
+        Tue, 21 Jan 2020 14:00:25 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AEQJRf11+YL9JXYSw6iHmQvhDVGvtOeS/QzZTm+s+dQ=;
-        b=CjnY07CdXfT6Gm1dCxUDz/1qKHwjnrkOPqO5H+8FjMr/zNErX7oMznmDTH5ok8SpMG
-         UOHgtTXuVMJ6To+BHaRFmZaAlRIbzf1Gy+HvQm3SEXEul8x7l/7ZIn60lSvCrEJamOyK
-         Hg8L1ZDMn2zQnl+axkRme7zYzaioC7Hbl6YfQGg3C8AeL3Ak3yJ/go5f5+O6YUhCOppA
-         EEe136tX7v1sy2Pec4GhDaUMYa+DKdZqLLmcTppZ38YTpUQvCIG+Nkm0Edpo9KZYttJ4
-         8tr9NLqgBYqjLhLeqYh8MKoiw6xhMqb+TXfBZm5ZGKTQiFx1myPzNRSF9Xn9ah2vFd97
-         OOHQ==
-X-Gm-Message-State: APjAAAXsRPx/9aRZ1vcRCp1fCZ7aMulTNAL74rooeSMN0DXtRildiRtl
-        KZoGwLe8018ETbkGGiXZTg==
-X-Google-Smtp-Source: APXvYqxt+cM62E+IOf/zYUPLo7beaXVus7wbv8PxvBfk1MeN6W4PybVQtCjZ0vKTYkCKN5s+jFsOCg==
-X-Received: by 2002:aca:59c2:: with SMTP id n185mr4708096oib.170.1579643471112;
-        Tue, 21 Jan 2020 13:51:11 -0800 (PST)
+        bh=KLk2O/IKuSbiV0tR8rjrjmOXKw++jN6rlAX6P6oLFbI=;
+        b=UUxvAKptw65tGmDmD8AtJPVrv5HawYbrlhLhi2IMgqjbRdRRi4ykJr4SD6Pg9V2SZ/
+         KqjuN/0xSRpb4CxIHdvim1F+/BJzvhlIbmrmp2P6rDY4vvPl95dv6WxbclBJNTPWLf0w
+         7kF0OmnQCG7N2nPpXe85Cer3o8i4T7dy1vuei5xoktrI7OVKAzFncqchN8LLC8eCWNV9
+         XP9MsIHi0kvIimGcLoa2GJ9CPzO8M/jS0EzOcz3Jy9esz7YrexFvOhDVTkaobBfQDg6h
+         07JMPaWshDWmr2W2Y1fAVLzRmBq96DDq3fJJblPxmE3nJhTR5J0KOgTVP/O6R0fupeyH
+         IQHg==
+X-Gm-Message-State: APjAAAVJF+y769pH+j1VTwq8fG3k2+CyuEDzPhrA4/32NEz/eeVHgSRp
+        y1QLz/porBBc2EjCvIA8sw==
+X-Google-Smtp-Source: APXvYqyrJcCLm65IFp9RrnaNPk0Kj24N9+PbvJbLGG+xddxwNzL2Rmb4y7wEB7BGH5EV0QhX139X+w==
+X-Received: by 2002:aca:c74e:: with SMTP id x75mr4769148oif.140.1579644024678;
+        Tue, 21 Jan 2020 14:00:24 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id k17sm4031953otl.45.2020.01.21.13.51.09
+        by smtp.gmail.com with ESMTPSA id 69sm13989543oth.17.2020.01.21.14.00.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 13:51:10 -0800 (PST)
-Received: (nullmailer pid 509 invoked by uid 1000);
-        Tue, 21 Jan 2020 21:51:09 -0000
-Date:   Tue, 21 Jan 2020 15:51:09 -0600
+        Tue, 21 Jan 2020 14:00:23 -0800 (PST)
+Received: (nullmailer pid 13395 invoked by uid 1000);
+        Tue, 21 Jan 2020 22:00:22 -0000
+Date:   Tue, 21 Jan 2020 16:00:22 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Andre Przywara <andre.przywara@arm.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Robert Hancock <hancock@sedsystems.ca>, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH 14/14] net: axienet: Update devicetree binding
- documentation
-Message-ID: <20200121215109.GA26808@bogus>
-References: <20200110115415.75683-1-andre.przywara@arm.com>
- <20200110115415.75683-15-andre.przywara@arm.com>
+To:     Olivier Moysan <olivier.moysan@st.com>
+Cc:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        alsa-devel@alsa-project.org, robh@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-kernel@vger.kernel.org, olivier.moysan@st.com
+Subject: Re: [PATCH v3] ASoC: dt-bindings: stm32: convert spdfirx to
+ json-schema
+Message-ID: <20200121220022.GA12737@bogus>
+References: <20200117170352.16040-1-olivier.moysan@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200110115415.75683-15-andre.przywara@arm.com>
+In-Reply-To: <20200117170352.16040-1-olivier.moysan@st.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 11:54:15AM +0000, Andre Przywara wrote:
-> This adds documentation about the newly introduced, optional
-> "xlnx,addrwidth" property to the binding documentation.
+On Fri, 17 Jan 2020 18:03:52 +0100, Olivier Moysan wrote:
+> Convert the STM32 SPDIFRX bindings to DT schema format using json-schema.
 > 
-> While at it, clarify the wording on some properties, replace obsolete
-> .txt file references with their new .yaml counterparts, and add a more
-> modern example, using the axistream-connected property.
-> 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
 > ---
->  .../bindings/net/xilinx_axienet.txt           | 57 ++++++++++++++++---
->  1 file changed, 50 insertions(+), 7 deletions(-)
+> Changes in v2:
+> - Add "additionalProperties: false"
+> - Also change minItems to 2 for dmas property, as both DMAs are required.
 > 
-> diff --git a/Documentation/devicetree/bindings/net/xilinx_axienet.txt b/Documentation/devicetree/bindings/net/xilinx_axienet.txt
-> index 7360617cdedb..78c278c5200f 100644
-> --- a/Documentation/devicetree/bindings/net/xilinx_axienet.txt
-> +++ b/Documentation/devicetree/bindings/net/xilinx_axienet.txt
-> @@ -12,7 +12,8 @@ sent and received through means of an AXI DMA controller. This driver
->  includes the DMA driver code, so this driver is incompatible with AXI DMA
->  driver.
->  
-> -For more details about mdio please refer phy.txt file in the same directory.
-> +For more details about mdio please refer to the ethernet-phy.yaml file in
-> +the same directory.
->  
->  Required properties:
->  - compatible	: Must be one of "xlnx,axi-ethernet-1.00.a",
-> @@ -27,14 +28,14 @@ Required properties:
->  		  instead, and only the Ethernet core interrupt is optionally
->  		  specified here.
->  - phy-handle	: Should point to the external phy device.
-> -		  See ethernet.txt file in the same directory.
-> -- xlnx,rxmem	: Set to allocated memory buffer for Rx/Tx in the hardware
-> +		  See the ethernet-controller.yaml file in the same directory.
-> +- xlnx,rxmem	: Size of the RXMEM buffer in the hardware, in bytes.
->  
->  Optional properties:
-> -- phy-mode	: See ethernet.txt
-> +- phy-mode	: See ethernet-controller.yaml.
->  - xlnx,phy-type	: Deprecated, do not use, but still accepted in preference
->  		  to phy-mode.
-> -- xlnx,txcsum	: 0 or empty for disabling TX checksum offload,
-> +- xlnx,txcsum	: 0 for disabling TX checksum offload (default if omitted),
->  		  1 to enable partial TX checksum offload,
->  		  2 to enable full TX checksum offload
->  - xlnx,rxcsum	: Same values as xlnx,txcsum but for RX checksum offload
-> @@ -48,10 +49,20 @@ Optional properties:
->  		       If this is specified, the DMA-related resources from that
->  		       device (DMA registers and DMA TX/RX interrupts) rather
->  		       than this one will be used.
-> - - mdio		: Child node for MDIO bus. Must be defined if PHY access is
-> +- mdio		: Child node for MDIO bus. Must be defined if PHY access is
->  		  required through the core's MDIO interface (i.e. always,
->  		  unless the PHY is accessed through a different bus).
->  
-> +Required properties for axistream-connected subnode:
-> +- reg		: Address and length of the AXI DMA controller MMIO space.
-> +- interrupts	: A list of 2 interrupts: TX DMA and RX DMA, in that order.
-> +
-> +Optional properties for axistream-connected subnode:
-> +- xlnx,addrwidth: Specifies the configured address width of the DMA. Newer
-> +		  versions of the IP allow setting this to a value between
-> +		  32 and 64. Defaults to 32 bits if not specified.
+> Changes in v3:
+> - Drop minItems/maxItems for dmas property, remove ref to stm32-dma.txt.
+> ---
+>  .../bindings/sound/st,stm32-spdifrx.txt       | 56 -------------
+>  .../bindings/sound/st,stm32-spdifrx.yaml      | 80 +++++++++++++++++++
+>  2 files changed, 80 insertions(+), 56 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
+>  create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-spdifrx.yaml
+> 
 
-I think this should be expressed using dma-ranges. This is exactly the 
-purpose of dma-ranges and we shouldn't need a device specific property 
-for this sort of thing.
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
 
-Rob
+If a tag was not added on purpose, please state why and what changed.
