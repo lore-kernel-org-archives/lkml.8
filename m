@@ -2,116 +2,119 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E20DC33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 11:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75791C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 11:51:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19B6D20882
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 11:47:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2890224125
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 11:51:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=earth.li header.i=@earth.li header.b="g+zbBuyT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729526AbgAULrR (ORCPT
+        id S1729370AbgAULv3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 06:47:17 -0500
-Received: from mga17.intel.com ([192.55.52.151]:61041 "EHLO mga17.intel.com"
+        Tue, 21 Jan 2020 06:51:29 -0500
+Received: from the.earth.li ([46.43.34.31]:55934 "EHLO the.earth.li"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729416AbgAULrR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 06:47:17 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 03:47:16 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,345,1574150400"; 
-   d="scan'208";a="228796761"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga006.jf.intel.com with ESMTP; 21 Jan 2020 03:47:16 -0800
-Received: from [10.226.38.27] (unknown [10.226.38.27])
-        by linux.intel.com (Postfix) with ESMTP id 6FBE95802A3;
-        Tue, 21 Jan 2020 03:47:14 -0800 (PST)
-Subject: Re: [PATCH v6 0/2] spi: cadence-quadpsi: Add support for the Cadence
- QSPI controller
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-To:     Vignesh Raghavendra <vigneshr@ti.com>, broonie@kernel.org,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     robh+dt@kernel.org, dan.carpenter@oracle.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
-References: <20191230074102.50982-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <860aecbc-22d3-c9ce-3570-44115d6e81b2@ti.com>
- <1aa6033a-c9e1-579b-0916-25037c07654d@linux.intel.com>
-Message-ID: <3118e6d5-84f3-cbcf-6a42-761b0d23cb72@linux.intel.com>
-Date:   Tue, 21 Jan 2020 19:47:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        id S1726052AbgAULv3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 06:51:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
+         s=the; h=In-Reply-To:Content-Type:MIME-Version:Message-ID:Subject:Cc:To:From
+        :Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=AAEYZ5l+6EsdfFyEk6eyVbCSR6S07xGq0ivSUA0K/TA=; b=g+zbBuyTh3t9Dh6l786dXbpAaO
+        +AW1o6Sg7h2W/6FgPSuptpOxL1Oiq1AuxCoEdwYdJkcKgIOb4Chobuakey4xeOFsJClDUdd2V9IjZ
+        NpWxDViywfLHGshlRymHItIa3FnT8DUyVrtumzFtdNmbIn+4VuLF5fiyQShbyxvE6pFYVs2geZInq
+        E1HX66cRP7HY9wNt4iir8hZdWi3BCsovkFyHNs/tUeSvjzIKghrNlbTZcZShxfpt4V53PmMYSBg1D
+        IqgpDnMvUQIwmxj45iyfaER4dTYkJV8RqeonhnF1aiglnLMv89W+dzMpNV3XIbzmUNTL4CE5LBZvr
+        RewyvvZw==;
+Received: from noodles by the.earth.li with local (Exim 4.92)
+        (envelope-from <noodles@earth.li>)
+        id 1its45-0005YM-2e; Tue, 21 Jan 2020 11:51:25 +0000
+Date:   Tue, 21 Jan 2020 11:51:25 +0000
+From:   Jonathan McDowell <noodles@earth.li>
+To:     andriy.shevchenko@linux.intel.com
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 5/9] x86/quirks: Convert DMI matching to use a table
+Message-ID: <20200121115124.GA16758@earth.li>
 MIME-Version: 1.0
-In-Reply-To: <1aa6033a-c9e1-579b-0916-25037c07654d@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200120160801.53089-6-andriy.shevchenko@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+In article <20200120160801.53089-6-andriy.shevchenko@linux.intel.com> you wrote:
+> In order to extend the DMI based quirks, convert them to a table.
 
-On 15/1/2020 2:21 PM, Ramuthevar, Vadivel MuruganX wrote:
-> Hi,
->
-> On 15/1/2020 2:13 PM, Vignesh Raghavendra wrote:
->> Hi,
->>
->> On 12/30/2019 1:11 PM, Ramuthevar,Vadivel MuruganX wrote:
->>> Add support for the Cadence QSPI controller. This controller is
->>> present in the Intel Lightning Mountain(LGM) SoCs, Altera and TI SoCs.
->>> This driver has been tested on the Intel LGM SoCs.
->>>
->>> This driver does not support generic SPI and also the implementation
->>> only supports spi-mem interface to replace the existing driver in
->>> mtd/spi-nor/cadence-quadspi.c, the existing driver only support SPI-NOR
->>> flash memory.
->>>
->>
->>
->> I am finally able to get spi-mem based cadence-quaspi driver working on
->> TI platforms with DMA and DAC mode. I have also incorporated changes to
->> disable DAC and autopolling for your intel SoC:
->
-> Thanks! a lot for the confirmation, with your changes it is working on 
-> TI platform.
->
->> https://github.com/r-vignesh/linux/commits/qspi
->>
->> (Top two patches are of interest)
->>
->> I have tested both DAC and INDAC mode with s25fl flash and everything
->> seems to be fine. Could you re test the driver on your SoC? 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  arch/x86/kernel/quirks.c | 33 +++++++++++++++++++++++++++++++--
+>  1 file changed, 31 insertions(+), 2 deletions(-)
 
-while re-testing QSPI_NOR/NAND both didn't work, after few changes from 
-patchV6 followed by your changes,
+> diff --git a/arch/x86/kernel/quirks.c b/arch/x86/kernel/quirks.c
+> index 6c122f35508a..78846a8dc88b 100644
+> --- a/arch/x86/kernel/quirks.c
+> +++ b/arch/x86/kernel/quirks.c
+> @@ -658,8 +658,37 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x2083, quirk_intel_purley_xeon_ras
+>  bool x86_apple_machine;
+>  EXPORT_SYMBOL(x86_apple_machine);
+>  
+> +static const struct dmi_system_id x86_machine_table[] __initconst = {
+> +	{
+> +		.ident = "x86 Apple Macintosh",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
+> +		},
+> +		.driver_data = &x86_apple_machine,
+> +	},
+> +	{
+> +		.ident = "x86 Apple Macintosh",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Computer, Inc."),
+> +		},
+> +		.driver_data = &x86_apple_machine,
+> +	},
+> +	{}
+> +};
+> +
+> +static void __init early_platfrom_detect_quirk(void)
 
-now QSPI-NOR started working,  soon will be sending updated patch 
-version which includes your changes as well as my changes
+"platform"
 
-without affecting both the platforms(TI and Intel).
+> +{
+> +	const struct dmi_system_id *id;
+> +
+> +	id = dmi_first_match(x86_machine_table);
+> +	if (!id)
+> +		return;
+> +
+> +	printk(KERN_DEBUG "Detected %s platform\n", id->ident);
+> +	*((bool *)id->driver_data) = true;
+> +}
+> +
+>  void __init early_platform_quirks(void)
+>  {
+> -	x86_apple_machine = dmi_match(DMI_SYS_VENDOR, "Apple Inc.") ||
+> -			    dmi_match(DMI_SYS_VENDOR, "Apple Computer, Inc.");
+> +	early_platfrom_detect_quirk();
 
-BTW,  Have you tested QSPI-NAND on your platform ? with our patches.
+As above.
 
-Thanks! for your review and support.
+>  }
 
-Regards
-Vadivel
->> Feel free to
->> fold it into your series if everything works.
-> sure, I will test on Intel SoC with your changes .
->
-> Regards
-> Vadivel
->> Regards
->> Vignesh
->>
->>
->>
+J.
+
+-- 
+If I follow you home, will you keep me?
+This .sig brought to you by the letter C and the number  9
+Product of the Republic of HuggieTag
