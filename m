@@ -2,187 +2,58 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5C4AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C53F4C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2E6122522
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:01:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZuU1J5pT"
+	by mail.kernel.org (Postfix) with ESMTP id 98D7D22522
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:01:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728139AbgAUIBC (ORCPT
+        id S1728741AbgAUIBT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 03:01:02 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:55957 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725789AbgAUIBC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 03:01:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579593660;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=LFJhchaBLZH9C5ENtjBAtVm2hXUIBMF4njoRuoiz0/s=;
-        b=ZuU1J5pTWJZmnl+GJZwB4zp05fOvBewgkLJDKfNxnwrX41uhV5VAcpnEcDbfiY+C6TrLBX
-        kDX6yus/mUAjbwqVMzj/6NkXGdvhuTsv65j+gCaf6l+bM51prFIHEsmMFZmvx9nRMwEiUf
-        htqqxKL/2saeLg99hkUugHdRlSenUbw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-154-8Kk2CU-6MI2Wx8TUBDCoiA-1; Tue, 21 Jan 2020 03:00:59 -0500
-X-MC-Unique: 8Kk2CU-6MI2Wx8TUBDCoiA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D45E718AAFA4;
-        Tue, 21 Jan 2020 08:00:56 +0000 (UTC)
-Received: from [10.72.12.103] (ovpn-12-103.pek2.redhat.com [10.72.12.103])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 82AF85D9E2;
-        Tue, 21 Jan 2020 08:00:39 +0000 (UTC)
-Subject: Re: [PATCH 3/5] vDPA: introduce vDPA bus
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Jason Gunthorpe <jgg@mellanox.com>,
-        Shahaf Shuler <shahafs@mellanox.com>,
-        Rob Miller <rob.miller@broadcom.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Netdev <netdev@vger.kernel.org>,
-        "Bie, Tiwei" <tiwei.bie@intel.com>,
-        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
-        "Liang, Cunming" <cunming.liang@intel.com>,
-        "Wang, Zhihong" <zhihong.wang@intel.com>,
-        "Wang, Xiao W" <xiao.w.wang@intel.com>,
-        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
-        "Zhu, Lingshan" <lingshan.zhu@intel.com>,
-        "eperezma@redhat.com" <eperezma@redhat.com>,
-        "lulu@redhat.com" <lulu@redhat.com>,
-        Parav Pandit <parav@mellanox.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "stefanha@redhat.com" <stefanha@redhat.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "hch@infradead.org" <hch@infradead.org>,
-        Ariel Adam <aadam@redhat.com>,
-        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "hanand@xilinx.com" <hanand@xilinx.com>,
-        "mhabets@solarflare.com" <mhabets@solarflare.com>
-References: <20200116124231.20253-1-jasowang@redhat.com>
- <20200116124231.20253-4-jasowang@redhat.com>
- <20200117070324-mutt-send-email-mst@kernel.org>
- <239b042c-2d9e-0eec-a1ef-b03b7e2c5419@redhat.com>
- <CAJPjb1+fG9L3=iKbV4Vn13VwaeDZZdcfBPvarogF_Nzhk+FnKg@mail.gmail.com>
- <AM0PR0502MB379553984D0D55FDE25426F6C3330@AM0PR0502MB3795.eurprd05.prod.outlook.com>
- <d69918ca-8af4-44b2-9652-633530d4c113@redhat.com>
- <20200120174933.GB3891@mellanox.com>
- <2a324cec-2863-58f4-c58a-2414ee32c930@redhat.com>
- <20200121004047-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <b9ad744e-c4cd-82f9-f56a-1ecc185e9cd7@redhat.com>
-Date:   Tue, 21 Jan 2020 16:00:38 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 21 Jan 2020 03:01:19 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:9225 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726920AbgAUIBS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 03:01:18 -0500
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 0EEFC3FAE20A2F252500;
+        Tue, 21 Jan 2020 16:01:16 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 21 Jan
+ 2020 16:01:09 +0800
+Subject: Re: [PATCH v2 1/2] erofs: fold in postsubmit_is_all_bypassed()
+To:     Gao Xiang <gaoxiang25@huawei.com>, <linux-erofs@lists.ozlabs.org>
+CC:     <linux-kernel@vger.kernel.org>, Miao Xie <miaoxie@huawei.com>
+References: <20200120085709.10320-1-hsiangkao@aol.com>
+ <20200121064747.138987-1-gaoxiang25@huawei.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <b785e844-7120-09b0-6b21-14bd5d878034@huawei.com>
+Date:   Tue, 21 Jan 2020 16:01:09 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20200121004047-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200121064747.138987-1-gaoxiang25@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020/1/21 14:47, Gao Xiang wrote:
+> No need to introduce such separated helper since
+> cache strategy compile configs were changed into
+> runtime options instead in v5.4. No logic changes.
+> 
+> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 
-On 2020/1/21 =E4=B8=8B=E5=8D=881:47, Michael S. Tsirkin wrote:
-> On Tue, Jan 21, 2020 at 12:00:57PM +0800, Jason Wang wrote:
->> On 2020/1/21 =E4=B8=8A=E5=8D=881:49, Jason Gunthorpe wrote:
->>> On Mon, Jan 20, 2020 at 04:43:53PM +0800, Jason Wang wrote:
->>>> This is similar to the design of platform IOMMU part of vhost-vdpa. =
-We
->>>> decide to send diffs to platform IOMMU there. If it's ok to do that =
-in
->>>> driver, we can replace set_map with incremental API like map()/unmap=
-().
->>>>
->>>> Then driver need to maintain rbtree itself.
->>> I think we really need to see two modes, one where there is a fixed
->>> translation without dynamic vIOMMU driven changes and one that
->>> supports vIOMMU.
->>
->> I think in this case, you meant the method proposed by Shahaf that sen=
-ds
->> diffs of "fixed translation" to device?
->>
->> It would be kind of tricky to deal with the following case for example=
-:
->>
->> old map [4G, 16G) new map [4G, 8G)
->>
->> If we do
->>
->> 1) flush [4G, 16G)
->> 2) add [4G, 8G)
->>
->> There could be a window between 1) and 2).
->>
->> It requires the IOMMU that can do
->>
->> 1) remove [8G, 16G)
->> 2) flush [8G, 16G)
->> 3) change [4G, 8G)
->>
->> ....
-> Basically what I had in mind is something like qemu memory api
->
-> 0. begin
-> 1. remove [8G, 16G)
-> 2. add [4G, 8G)
-> 3. commit
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
 
-
-This sounds more flexible e.g driver may choose to implement static=20
-mapping one through commit. But a question here, it looks to me this=20
-still requires the DMA to be synced with at least commit here. Otherwise=20
-device may get DMA fault? Or device is expected to be paused DMA during=20
-begin?
-
-Thanks
-
-
->
-> Anyway, I'm fine with a one-shot API for now, we can
-> improve it later.
->
->>> There are different optimization goals in the drivers for these two
->>> configurations.
->>>
->>>>> If the first one, then I think memory hotplug is a heavy flow
->>>>> regardless. Do you think the extra cycles for the tree traverse
->>>>> will be visible in any way?
->>>> I think if the driver can pause the DMA during the time for setting =
-up new
->>>> mapping, it should be fine.
->>> This is very tricky for any driver if the mapping change hits the
->>> virtio rings. :(
->>>
->>> Even a IOMMU using driver is going to have problems with that..
->>>
->>> Jason
->>
->> Or I wonder whether ATS/PRI can help here. E.g during I/O page fault,
->> driver/device can wait for the new mapping to be set and then replay t=
-he
->> DMA.
->>
->> Thanks
->>
->
-
+Thanks,
