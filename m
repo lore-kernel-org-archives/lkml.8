@@ -2,39 +2,41 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A60FDC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E0DDC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:42:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 818FE22522
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:42:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3BA022522
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:42:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729096AbgAUImd (ORCPT
+        id S1729146AbgAUImj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 03:42:33 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:47718 "EHLO huawei.com"
+        Tue, 21 Jan 2020 03:42:39 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:10115 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727969AbgAUImb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 03:42:31 -0500
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id F0B8BBC162D6B6F1ED93;
+        id S1727847AbgAUIme (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 03:42:34 -0500
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id CEF07EE49FC211532070;
         Tue, 21 Jan 2020 16:42:29 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 21 Jan 2020 16:42:20 +0800
+ 14.3.439.0; Tue, 21 Jan 2020 16:42:21 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <huangdaode@huawei.com>, <linuxarm@huawei.com>, <kuba@kernel.org>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 0/9] net: hns3: misc updates for -net-next
-Date:   Tue, 21 Jan 2020 16:42:04 +0800
-Message-ID: <1579596133-54842-1-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 3/9] net: hns3: set VF's default reset_type to HNAE3_NONE_RESET
+Date:   Tue, 21 Jan 2020 16:42:07 +0800
+Message-ID: <1579596133-54842-4-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1579596133-54842-1-git-send-email-tanhuazhong@huawei.com>
+References: <1579596133-54842-1-git-send-email-tanhuazhong@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.69.192.56]
@@ -44,49 +46,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series includes some misc updates for the HNS3 ethernet driver.
+reset_type means what kind of reset the driver is handling now,
+so after initializing or reset, the reset_type of VF should be
+set to HNAE3_NONE_RESET, otherwise, this unknown default value
+may be a little misleading when the device is running.
 
-[patch 1] adds a limitation for the error log in the
-hns3_clean_tx_ring().
-[patch 2] adds a check for pfmemalloc flag before reusing pages
-since these pages may be used some special case.
-[patch 3] assigns a default reset type 'HNAE3_NONE_RESET' to
-VF's reset_type after initializing or reset.
-[patch 4] unifies macro HCLGE_DFX_REG_TYPE_CNT's definition into
-header file.
-[patch 5] refines the parameter 'size' of snprintf() in the
-hns3_init_module().
-[patch 6] rewrites a debug message in hclge_put_vector().
-[patch 7~9] adds some cleanups related to coding style.
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+---
+ drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Guangbin Huang (1):
-  net: hns3: delete unnecessary blank line and space for cleanup
-
-Guojia Liao (2):
-  net: hns3: move duplicated macro definition into header
-  net: hns3: refine the input parameter 'size' for snprintf()
-
-Huazhong Tan (3):
-  net: hns3: set VF's default reset_type to HNAE3_NONE_RESET
-  net: hns3: remove redundant print on ENOMEM
-  net: hns3: cleanup some coding style issue
-
-Yonglong Liu (1):
-  net: hns3: rewrite a log in hclge_put_vector()
-
-Yunsheng Lin (2):
-  net: hns3: limit the error logging in the hns3_clean_tx_ring()
-  net: hns3: do not reuse pfmemalloc pages
-
- drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c |  6 +-
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c    | 22 +++---
- .../ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c |  2 -
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c |  6 +-
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 91 +++++++---------------
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |  2 +
- .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  | 37 ++++-----
- 7 files changed, 59 insertions(+), 107 deletions(-)
-
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+index b26b8ad..2a472b0 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+@@ -1862,6 +1862,7 @@ static void hclgevf_reset_service_task(struct hclgevf_dev *hdev)
+ 		hclgevf_reset_task_schedule(hdev);
+ 	}
+ 
++	hdev->reset_type = HNAE3_NONE_RESET;
+ 	clear_bit(HCLGEVF_STATE_RST_HANDLING, &hdev->state);
+ 	up(&hdev->reset_sem);
+ }
+@@ -2742,6 +2743,7 @@ static int hclgevf_init_hdev(struct hclgevf_dev *hdev)
+ 
+ 	hclgevf_state_init(hdev);
+ 	hdev->reset_level = HNAE3_VF_FUNC_RESET;
++	hdev->reset_type = HNAE3_NONE_RESET;
+ 
+ 	ret = hclgevf_misc_irq_init(hdev);
+ 	if (ret) {
 -- 
 2.7.4
 
