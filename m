@@ -7,66 +7,65 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43996C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86195C33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:23:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19A3E2465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:23:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DCC120678
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:23:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OkVCGz+b"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HoAKMG0w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729049AbgAUTXL (ORCPT
+        id S1728609AbgAUTXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 14:23:11 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:41779 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727816AbgAUTXL (ORCPT
+        Tue, 21 Jan 2020 14:23:15 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:43649 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728776AbgAUTXM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 14:23:11 -0500
-Received: by mail-lj1-f194.google.com with SMTP id h23so4033791ljc.8
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 11:23:09 -0800 (PST)
+        Tue, 21 Jan 2020 14:23:12 -0500
+Received: by mail-lf1-f65.google.com with SMTP id 9so3251934lfq.10
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 11:23:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=YKI7RZmx8WIsu/1jkmDBgBIbsrKWimA13AS/a7z41jM=;
-        b=OkVCGz+bGet4DPAM/foAEd9BMUu/jrSmT5bD+lpif+woa/1qtYAWKeuae3GN1TXxFC
-         fN0PjCyqJxDQXlc+HzwCvn72zC4m1voNdy8vYPK0I2oa076DFfMzYlcS3h8Z7dEUCVhr
-         sYhona6mMCuJpDxIy1Tjb8BqMVtEPGCLKgWhM=
+        bh=8rCcwlzRHHVYg3hiCBv7NmxGLfftNkVC0+svQxkapXc=;
+        b=HoAKMG0wQ2wIiKTC05L+Bn7mtOknDgXQI4PO9uIp4w2SGyA4WKzyeicjM+2gCmY1jr
+         vp7Mvfiy1LQGZhgbceOZp21oRkuxUd4XkR1DsidRJ+8vvN8/hSyc9kwfO3vsE4cQ1Lnu
+         C9t8CGrIJFnHRmoI4O30boqJZqDvvlnB7z7GY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=YKI7RZmx8WIsu/1jkmDBgBIbsrKWimA13AS/a7z41jM=;
-        b=i+6XI06q8Rda9kmrOPQRk/41kTRmiv8t5qSBIJrwA9nGoDYoQ9mU1TxE0IBtiqA8K/
-         oUO3nIop8iAGmsPYmzdZUxBJdW10tSg2Q3eh+J9VaWS2Z59Y+Rsie/lQ1M8Dj8CVYOwR
-         Dp8YVf2tgQD5+tlmcLtW+TzFIoRaJeLrcoCPlzgwmkBLcHiLXr3qXkiSUcnatbMH6iPE
-         1gd0o3QmCuV5iF1+SvfdMIfwgnyvHUt97Wo4zxqiuUl3y/OryITRyf8oabzP9M+T93K5
-         1DYtt5DYQFapyVVFvyUUy1ICn5OsaNhQXxJHTLIe8jD07GDfj+OQ3a1/AyBkZJ7yCyzQ
-         t22g==
-X-Gm-Message-State: APjAAAUSpg5ul1IOoFYDaOIamzr5hwrP2YRNxBiA04W0MW56hl/yEUKS
-        SuePQyx8VUidjMCnZslIjyoM0+LKa84=
-X-Google-Smtp-Source: APXvYqwVETQ8RMmzinQpYCHCh8fcBXWJ2rhQ1DQXdFnPiLFuCdNEoOq7Asz4bkJFBrc22OubRRvHUg==
-X-Received: by 2002:a2e:5304:: with SMTP id h4mr17998766ljb.75.1579634588198;
-        Tue, 21 Jan 2020 11:23:08 -0800 (PST)
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com. [209.85.208.173])
-        by smtp.gmail.com with ESMTPSA id s4sm19549117ljd.94.2020.01.21.11.23.07
+        bh=8rCcwlzRHHVYg3hiCBv7NmxGLfftNkVC0+svQxkapXc=;
+        b=qeY201tcqDanezTyO5EsHa60p1nyy+9XeonaBBxcE3aA07ZvaskTsbY1qfheK1R5Zo
+         FsWrtGXP7Q3nrO6gfD36K1TPhVu0k+Q4Q37x7pQneHqW3+sGTo3JfPiu2lKBOXvK7WSC
+         sqeKktplkEvW4+ZtUkc5p/7cf4GXgkdcpvlG5ztkGgdkKPxYVKY4Id+ZQHN127WeOXMt
+         G780QSqhQtgcJQI/mJmbY0TuM9u0n2Jo3Ey9XikrhA5VZZBw0nACfHnqOtzbaSBG6/NQ
+         4r2Qw/cBBsBibCi8leJkmxjMlcesS9RSzMHSfv6VozugZmMRqSd785lpNvtcNzzP6c2i
+         Q4Zw==
+X-Gm-Message-State: APjAAAU0Yig0WA0+AO/xmMGI354VAflnM1/iTI1t+t4HEgbUCsjDsTTp
+        Q9QcPDFXqzTLE6gQRfErKxM9u21HXII=
+X-Google-Smtp-Source: APXvYqzppbWoRepa/Fgc7nUGeGVPBeq4Ldm0HD2pd+S7Jph7d6PqCNEOwILt0sK/3OGII35QRw3AkQ==
+X-Received: by 2002:a05:6512:2035:: with SMTP id s21mr3191308lfs.99.1579634590235;
+        Tue, 21 Jan 2020 11:23:10 -0800 (PST)
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
+        by smtp.gmail.com with ESMTPSA id p15sm19366566lfo.88.2020.01.21.11.23.08
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jan 2020 11:23:07 -0800 (PST)
-Received: by mail-lj1-f173.google.com with SMTP id m26so3989416ljc.13
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 11:23:07 -0800 (PST)
-X-Received: by 2002:a2e:b4cf:: with SMTP id r15mr15921775ljm.52.1579634586588;
- Tue, 21 Jan 2020 11:23:06 -0800 (PST)
+        Tue, 21 Jan 2020 11:23:09 -0800 (PST)
+Received: by mail-lj1-f177.google.com with SMTP id y4so4021923ljj.9
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 11:23:08 -0800 (PST)
+X-Received: by 2002:a2e:87ca:: with SMTP id v10mr3453604ljj.253.1579634587850;
+ Tue, 21 Jan 2020 11:23:07 -0800 (PST)
 MIME-Version: 1.0
-References: <20200117135130.3605-1-sibis@codeaurora.org> <20200117135130.3605-3-sibis@codeaurora.org>
-In-Reply-To: <20200117135130.3605-3-sibis@codeaurora.org>
+References: <20200117135130.3605-1-sibis@codeaurora.org> <20200117135130.3605-4-sibis@codeaurora.org>
+In-Reply-To: <20200117135130.3605-4-sibis@codeaurora.org>
 From:   Evan Green <evgreen@chromium.org>
-Date:   Tue, 21 Jan 2020 11:22:30 -0800
-X-Gmail-Original-Message-ID: <CAE=gft4Erwjgvj18DuiJaTEUz=1DwzSBtiCTU0QuoGO1+kzsNg@mail.gmail.com>
-Message-ID: <CAE=gft4Erwjgvj18DuiJaTEUz=1DwzSBtiCTU0QuoGO1+kzsNg@mail.gmail.com>
-Subject: Re: [PATCH 2/4] remoteproc: qcom: q6v5-mss: Improve readability
- across clk handling
+Date:   Tue, 21 Jan 2020 11:22:31 -0800
+X-Gmail-Original-Message-ID: <CAE=gft6WN52R1BckbgK9XCTB8TTY5Z6mh3QooceHTTtzVUmFLw@mail.gmail.com>
+Message-ID: <CAE=gft6WN52R1BckbgK9XCTB8TTY5Z6mh3QooceHTTtzVUmFLw@mail.gmail.com>
+Subject: Re: [PATCH 3/4] remoteproc: qcom: q6v5-mss: Rename boot status timeout
 To:     Sibi Sankar <sibis@codeaurora.org>
 Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
         Philipp Zabel <p.zabel@pengutronix.de>,
@@ -83,18 +82,8 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Fri, Jan 17, 2020 at 5:51 AM Sibi Sankar <sibis@codeaurora.org> wrote:
 >
-> Define CLKEN and CLKOFF for improving readability of Q6SS clock
-> handling.
+> Rename the FSM timeout on SC7180 to BOOT_STATUS_TIMEOUT_US.
 >
 > Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-
-It took me awhile to wrap my head around how this new define,
-Q6SS_CBCR_TIMEOUT_US, sometimes replaces HALT_CHECK_MAX_LOOPS and
-sometimes replaces SLEEP_CHECK_MAX_LOOPS. I guess they're conceptually
-different but set to the same value for now? And you've fixed up a
-place where the wrong one was used? If you thought the distinction was
-meaningless I'd also be fine merging these two defines into one.
-Either way, assuming the above is intentional, this looks ok to me.
-Thanks for renaming that define.
 
 Reviewed-by: Evan Green <evgreen@chromium.org>
