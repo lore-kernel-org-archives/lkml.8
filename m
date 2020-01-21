@@ -7,30 +7,30 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 675C5C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:49:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C890C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:49:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4774624655
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:49:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54D7824653
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:49:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725890AbgAUIt0 (ORCPT
+        id S1729154AbgAUItb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 03:49:26 -0500
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:34246 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728512AbgAUItY (ORCPT
+        Tue, 21 Jan 2020 03:49:31 -0500
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:60386 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728512AbgAUIt2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 03:49:24 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0ToHVM-7_1579596562;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0ToHVM-7_1579596562)
+        Tue, 21 Jan 2020 03:49:28 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R781e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0ToHY-sz_1579596565;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0ToHY-sz_1579596565)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 21 Jan 2020 16:49:22 +0800
+          Tue, 21 Jan 2020 16:49:26 +0800
 From:   Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Dave Kleikamp <shaggy@kernel.org>,
-        jfs-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Subject: [PATCH] fs/jfs: remove unused MAXL2PAGES
-Date:   Tue, 21 Jan 2020 16:49:20 +0800
-Message-Id: <1579596560-257920-1-git-send-email-alex.shi@linux.alibaba.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] fs/select: remove __COMPAT_NFDBITS
+Date:   Tue, 21 Jan 2020 16:49:24 +0800
+Message-Id: <1579596564-257998-1-git-send-email-alex.shi@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -38,28 +38,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No one use it from Linux-2.6.12-rc2, so better to remove it.
+No one use this macro after commit 464d62421cb8 ("select: switch
+compat_{get,put}_fd_set() to compat_{get,put}_bitmap()")
+so remove it.
 
 Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Dave Kleikamp <shaggy@kernel.org> 
-Cc: jfs-discussion@lists.sourceforge.net 
+Cc: Alexander Viro <viro@zeniv.linux.org.uk> 
+Cc: linux-fsdevel@vger.kernel.org 
 Cc: linux-kernel@vger.kernel.org 
 ---
- fs/jfs/jfs_dmap.c | 1 -
+ fs/select.c | 1 -
  1 file changed, 1 deletion(-)
 
-diff --git a/fs/jfs/jfs_dmap.c b/fs/jfs/jfs_dmap.c
-index caade185e568..7dfcab2a2da6 100644
---- a/fs/jfs/jfs_dmap.c
-+++ b/fs/jfs/jfs_dmap.c
-@@ -4027,7 +4027,6 @@ static int dbGetL2AGSize(s64 nblocks)
-  */
- #define MAXL0PAGES	(1 + LPERCTL)
- #define MAXL1PAGES	(1 + LPERCTL * MAXL0PAGES)
--#define MAXL2PAGES	(1 + LPERCTL * MAXL1PAGES)
+diff --git a/fs/select.c b/fs/select.c
+index 11d0285d46b7..f2f4fbcf0c93 100644
+--- a/fs/select.c
++++ b/fs/select.c
+@@ -1130,7 +1130,6 @@ static long do_restart_poll(struct restart_block *restart_block)
+ #endif
+ 
+ #ifdef CONFIG_COMPAT
+-#define __COMPAT_NFDBITS       (8 * sizeof(compat_ulong_t))
  
  /*
-  * convert number of map pages to the zero origin top dmapctl level
+  * Ooo, nasty.  We need here to frob 32-bit unsigned longs to
 -- 
 1.8.3.1
 
