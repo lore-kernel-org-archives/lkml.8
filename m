@@ -2,165 +2,161 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97976C33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:19:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB32FC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E3B121835
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:19:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mo3JH4Ss"
+	by mail.kernel.org (Postfix) with ESMTP id 7D26E2465A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:20:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579634424;
+	bh=lpKOGmf37IZ9e6kBsCphLahpjYOCoibPrMeilGiefw4=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=RJRJkNOF+vytxdKE5x9kGtfZGkgpNFevo/TE+sxeQ6I3q8wT5YSPtrSdnw+o9n7rf
+	 RQV9B/SJCRKveosS+JzQ/R4biPqictLCi7lf351Ys5w2IWdSbrz3VaDRsi/znWIalp
+	 hpaZcdOH0nvTlGnKtFiwMx/LlVQVDZ4fLqdJgwbs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728596AbgAUTTZ (ORCPT
+        id S1728827AbgAUTUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 14:19:25 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:35060 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727360AbgAUTTZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 14:19:25 -0500
-Received: by mail-pf1-f195.google.com with SMTP id i23so1993272pfo.2
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 11:19:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=aqRmMWrZ2O6AQaqMT6b2P7oahNOZhsaTo9RvQSMwDMk=;
-        b=mo3JH4SseKHbVUnb9l+e/2t25z5zoMH0yyv2CYN61032Qsypr4/063jVln69dYTgFE
-         NKdRgbhhDRJXhhyJ9xQodzx/Ph/j7H9lDZ/o1f+kDYviMVLkrCMfIgg01BTAL7wJe0TW
-         W2pMcpMJNnkwDiA/67EHdMDhVEF6e60L20UEE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=aqRmMWrZ2O6AQaqMT6b2P7oahNOZhsaTo9RvQSMwDMk=;
-        b=nunu+BePXvl7JYuabDARxa8hb2O1HEDedVAWTF4TBSRGUHvPW10u43Ia7ibiUDOYYV
-         IM7VvCpP5+n78Y4jxtiGNYA+kB5FgdmZBOfxJDIBbfx8GW4HG7gtfO3zeM7cxwVUKFVc
-         f7o0LYI8VhQHQURxEPiOta7H4a0lDLUaFt3OHaKVu0Qua868nDJ3R9wuPPty8DPu/0EP
-         S6ED7/F5+HCdC1uf5YgS0jedaFNkxXV4rDUqU4h4jVvcbwzA1KHnFk05S7IXqcBFmp8Q
-         6enqFoT8pz8IZ+tjUxpu8TTmVQQOi/QTSrZga7i5hstUAmf4YY8cRN8/dPNfnHi5yslQ
-         GzyQ==
-X-Gm-Message-State: APjAAAWa1Jt6Uo6sXWFQnrYvh6gsdgv4Rt2be9Vsv6t4LC2XVYF34P03
-        YsfIfuXlMIBc6udymvvQL5AkAQ==
-X-Google-Smtp-Source: APXvYqxYUXNBBxAHz3BQUbedFm4ESJRvljKeyTxsiakxKmCyPYaL8oztIYtPYLhvqyKKllweLSR2Mw==
-X-Received: by 2002:a63:b50a:: with SMTP id y10mr7131998pge.104.1579634364327;
-        Tue, 21 Jan 2020 11:19:24 -0800 (PST)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id 2sm41606601pgo.79.2020.01.21.11.19.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 11:19:23 -0800 (PST)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     saiprakash.ranjan@codeaurora.org, mka@chromium.org,
-        Stephen Boyd <swboyd@chromium.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Sean Paul <sean@poorly.run>, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        David Airlie <airlied@linux.ie>,
-        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>
-Subject: [REPOST PATCH] drm/msm: Set dma maximum segment size for mdss
-Date:   Tue, 21 Jan 2020 11:18:48 -0800
-Message-Id: <20200121111813.REPOST.1.I92c66a35fb13f368095b05287bdabdbe88ca6922@changeid>
-X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 21 Jan 2020 14:20:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59220 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726926AbgAUTUX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 14:20:23 -0500
+Received: from tzanussi-mobl (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B2D621835;
+        Tue, 21 Jan 2020 19:20:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579634422;
+        bh=lpKOGmf37IZ9e6kBsCphLahpjYOCoibPrMeilGiefw4=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=1G7sQylnpwG0YbJCu3/TwJmQFNfc3oRSpI9aryUIo/6RbrzA09IZTbGEe7vwYrCnf
+         ONI3AVP8jd+yTjvMsfXu+rOWeE/oZoiLaf7ZRMmPbhHc/0JGgwXJxcjvB+zw1Vz9x/
+         HInZKvfNAeytRZqHHUZXtbQXicTJ3yrhplvmkgbg=
+Message-ID: <1579634420.19595.1.camel@kernel.org>
+Subject: Re: [PATCH v2 06/12] tracing: Add synthetic event command
+ generation functions
+From:   Tom Zanussi <zanussi@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     artem.bityutskiy@linux.intel.com, mhiramat@kernel.org,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Date:   Tue, 21 Jan 2020 13:20:20 -0600
+In-Reply-To: <20200121115754.01efcdfd@gandalf.local.home>
+References: <cover.1578688120.git.zanussi@kernel.org>
+         <c731007e4b528f8bcd40d2864979597bd5d91183.1578688120.git.zanussi@kernel.org>
+         <20200121115754.01efcdfd@gandalf.local.home>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.1-1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Paul <seanpaul@chromium.org>
+Hi Steve,
 
-Turning on CONFIG_DMA_API_DEBUG_SG results in the following error:
+On Tue, 2020-01-21 at 11:57 -0500, Steven Rostedt wrote:
+> On Fri, 10 Jan 2020 14:35:12 -0600
+> Tom Zanussi <zanussi@kernel.org> wrote:
+> 
+> > Add functions used to generate synthetic event commands, built on
+> > top
+> > of the dynevent_cmd interface.
+> > 
+> > gen_synth_cmd() is used to create a synthetic event command using a
+> > variable arg list and gen_synth_cmd_array() does the same thing but
+> > using an array of field descriptors.  add_synth_field() and
+> > add_synth_fields() can be used to add single fields one by one or
+> > as a
+> > group.  Once all desired fields are added, create_dynevent() is
+> > used
+> > to actually execute the command and create the event.
+> > 
+> > create_synth_event() does everything, including creating the event,
+> > in
+> > a single call.
+> > 
+> > Signed-off-by: Tom Zanussi <zanussi@kernel.org>
+> > ---
+> >  include/linux/trace_events.h     |  30 ++++
+> >  kernel/trace/trace_events_hist.c | 325
+> > ++++++++++++++++++++++++++++++++++++++-
+> >  2 files changed, 352 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/include/linux/trace_events.h
+> > b/include/linux/trace_events.h
+> > index bf4cc2e56125..4228407d4736 100644
+> > --- a/include/linux/trace_events.h
+> > +++ b/include/linux/trace_events.h
+> > @@ -409,6 +409,36 @@ extern int create_dynevent(struct dynevent_cmd
+> > *cmd);
+> >  
+> >  extern int delete_synth_event(const char *name);
+> >  
+> > +extern void synth_dynevent_cmd_init(struct dynevent_cmd *cmd,
+> > +				    char *buf, int maxlen);
+> > +
+> > +extern int __gen_synth_cmd(struct dynevent_cmd *cmd, const char
+> > *name,
+> > +			   struct module *mod, ...);
+> > +
+> > +#define gen_synth_cmd(cmd, name, mod, ...)	\
+> > +	__gen_synth_cmd(cmd, name, mod, ## __VA_ARGS__, NULL)
+> > +
+> > +struct synth_field_desc {
+> > +	const char *type;
+> > +	const char *name;
+> > +};
+> > +
+> > +extern int gen_synth_cmd_array(struct dynevent_cmd *cmd, const
+> > char *name,
+> > +			       struct module *mod,
+> > +			       struct synth_field_desc *fields,
+> > +			       unsigned int n_fields);
+> > +extern int create_synth_event(const char *name,
+> > +			      struct synth_field_desc *fields,
+> > +			      unsigned int n_fields, struct module
+> > *mod);
+> > +
+> > +
+> > +extern int add_synth_field(struct dynevent_cmd *cmd,
+> > +			   const char *type,
+> > +			   const char *name);
+> > +extern int add_synth_fields(struct dynevent_cmd *cmd,
+> > +			    struct synth_field_desc *fields,
+> > +			    unsigned int n_fields);
+> 
+> As these are in a global header and globally visible, let's rename
+> them
+> to be more name space aware.
+> 
+> Have them all start with "synth_event_".
+> 
+> synth_event_gen_cmd_array()
+> synth_event_create()
+> synth_event_add_field()
+> synth_event_add_fields()
+> 
+> Makes it easier to grep for synth_event functions too.
+> 
 
-[   12.078665] msm ae00000.mdss: DMA-API: mapping sg segment longer than device claims to support [len=3526656] [max=65536]
-[   12.089870] WARNING: CPU: 6 PID: 334 at /mnt/host/source/src/third_party/kernel/v4.19/kernel/dma/debug.c:1301 debug_dma_map_sg+0x1dc/0x318
-[   12.102655] Modules linked in: joydev
-[   12.106442] CPU: 6 PID: 334 Comm: frecon Not tainted 4.19.0 #2
-[   12.112450] Hardware name: Google Cheza (rev3+) (DT)
-[   12.117566] pstate: 60400009 (nZCv daif +PAN -UAO)
-[   12.122506] pc : debug_dma_map_sg+0x1dc/0x318
-[   12.126995] lr : debug_dma_map_sg+0x1dc/0x318
-[   12.131487] sp : ffffff800cc3ba80
-[   12.134913] x29: ffffff800cc3ba80 x28: 0000000000000000
-[   12.140395] x27: 0000000000000004 x26: 0000000000000004
-[   12.145868] x25: ffffff8008e55b18 x24: 0000000000000000
-[   12.151337] x23: 00000000ffffffff x22: ffffff800921c000
-[   12.156809] x21: ffffffc0fa75b080 x20: ffffffc0f7195090
-[   12.162280] x19: ffffffc0f1c53280 x18: 0000000000000000
-[   12.167749] x17: 0000000000000000 x16: 0000000000000000
-[   12.173218] x15: 0000000000000000 x14: 0720072007200720
-[   12.178689] x13: 0720072007200720 x12: 0720072007200720
-[   12.184161] x11: 0720072007200720 x10: 0720072007200720
-[   12.189641] x9 : ffffffc0f1fc6b60 x8 : 0000000000000000
-[   12.195110] x7 : ffffff8008132ce0 x6 : 0000000000000000
-[   12.200585] x5 : 0000000000000000 x4 : ffffff8008134734
-[   12.206058] x3 : ffffff800cc3b830 x2 : ffffffc0f1fc6240
-[   12.211532] x1 : 25045a74f48a7400 x0 : 25045a74f48a7400
-[   12.217006] Call trace:
-[   12.219535]  debug_dma_map_sg+0x1dc/0x318
-[   12.223671]  get_pages+0x19c/0x20c
-[   12.227177]  msm_gem_fault+0x64/0xfc
-[   12.230874]  __do_fault+0x3c/0x140
-[   12.234383]  __handle_mm_fault+0x70c/0xdb8
-[   12.238603]  handle_mm_fault+0xac/0xc4
-[   12.242473]  do_page_fault+0x1bc/0x3d4
-[   12.246342]  do_translation_fault+0x54/0x88
-[   12.250652]  do_mem_abort+0x60/0xf0
-[   12.254250]  el0_da+0x20/0x24
-[   12.257317] irq event stamp: 67260
-[   12.260828] hardirqs last  enabled at (67259): [<ffffff8008132d0c>] console_unlock+0x214/0x608
-[   12.269693] hardirqs last disabled at (67260): [<ffffff8008080e0c>] do_debug_exception+0x5c/0x178
-[   12.278820] softirqs last  enabled at (67256): [<ffffff8008081664>] __do_softirq+0x4d4/0x520
-[   12.287510] softirqs last disabled at (67249): [<ffffff80080be574>] irq_exit+0xa8/0x100
-[   12.295742] ---[ end trace e63cfc40c313ffab ]---
+OK, will do.
 
-The root of the problem is that the default segment size for sgt is
-(UINT_MAX & PAGE_MASK), and the default segment size for device dma is
-64K. As such, if you compare the 2, you would deduce that the sg segment
-will overflow the device's capacity. In reality, the hardware can
-accommodate the larger sg segments, it's just not initializing its max
-segment properly. This patch initializes the max segment size for the
-mdss device, which gets rid of that pesky warning.
+Thanks,
 
-Reported-by: Stephen Boyd <swboyd@chromium.org>
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
-Tested-by: Stephen Boyd <swboyd@chromium.org>
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-This patch has been floating in the ether for over a year [1].  I know
-next to nothing about it, but I'm told it's still useful so I'm
-helpfully reposting it.  Please enjoy.
+Tom
 
-[1] https://lore.kernel.org/r/20181106213239.52133-1-sean@poorly.run
-
- drivers/gpu/drm/msm/msm_drv.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-index c26219c7a49f..e4b750b0c2d3 100644
---- a/drivers/gpu/drm/msm/msm_drv.c
-+++ b/drivers/gpu/drm/msm/msm_drv.c
-@@ -441,6 +441,14 @@ static int msm_drm_init(struct device *dev, struct drm_driver *drv)
- 	if (ret)
- 		goto err_msm_uninit;
- 
-+	if (!dev->dma_parms) {
-+		dev->dma_parms = devm_kzalloc(dev, sizeof(*dev->dma_parms),
-+					      GFP_KERNEL);
-+		if (!dev->dma_parms)
-+			return -ENOMEM;
-+	}
-+	dma_set_max_seg_size(dev, DMA_BIT_MASK(32));
-+
- 	msm_gem_shrinker_init(ddev);
- 
- 	switch (get_mdp_ver(pdev)) {
--- 
-2.25.0.341.g760bfbb309-goog
-
+> -- Steve
+> 
+> 
+> > +
+> >  /*
+> >   * Event file flags:
+> >   *  ENABLED	  - The event is enabled
