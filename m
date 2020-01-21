@@ -2,95 +2,111 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30CF6C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 13:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 679B0C33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 13:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02A6424655
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 13:50:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3354022314
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 13:51:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RjMIrq2w"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZMPp1uqt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729261AbgAUNuv (ORCPT
+        id S1729044AbgAUNvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 08:50:51 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:50982 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728932AbgAUNuv (ORCPT
+        Tue, 21 Jan 2020 08:51:52 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:48406 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728708AbgAUNvw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 08:50:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=RjUsqeJUUzUJuJcmpsSdcYGm0XwgRf/1551aZ5zeO3s=; b=RjMIrq2wAUkcmRdiBmTy7NcGK
-        5QtEMlFa32lozP7Jb5nLiZb/2904F3amrncL046uY2/QkmsePy6eurlt328MwWZKdQ2MTm6aSsOld
-        0PM2OZ1zHHsw1Bdaww8cj3JNqZ0OfTTISC6bQHl87U8NmJkpTdagE0u8DUyctShmE+P0zfp5tBtvm
-        q0ZZqPYaPpTS1y03H5Ph0uOipV2nAOynqXDrnR2CTalgWzkMjXtJMZPSMKQwl0Afxol6nc33q/jhF
-        SLxM/Eu3xVqnqxqC/ADaWa4BL5Va1Wybr+spaCET+wNzsBv12luA4HBkhkIeUrWPGmEEZXLdO+qtW
-        WYzq6t+TQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ittvR-0003vU-1M; Tue, 21 Jan 2020 13:50:37 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C7F8C305D3F;
-        Tue, 21 Jan 2020 14:48:55 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E9BBA20983FC0; Tue, 21 Jan 2020 14:50:34 +0100 (CET)
-Date:   Tue, 21 Jan 2020 14:50:34 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alex Kogan <alex.kogan@oracle.com>
-Cc:     linux@armlinux.org.uk, mingo@redhat.com, will.deacon@arm.com,
-        arnd@arndb.de, longman@redhat.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        guohanjun@huawei.com, jglauber@marvell.com,
-        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
-        dave.dice@oracle.com, bristot@redhat.com
-Subject: Re: [PATCH v8 4/5] locking/qspinlock: Introduce starvation avoidance
- into CNA
-Message-ID: <20200121135034.GA14946@hirez.programming.kicks-ass.net>
-References: <20191230194042.67789-1-alex.kogan@oracle.com>
- <20191230194042.67789-5-alex.kogan@oracle.com>
- <20200121132949.GL14914@hirez.programming.kicks-ass.net>
+        Tue, 21 Jan 2020 08:51:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579614710;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=z+thaj6fraaz5u5SaFmzmpY7g+fCANo2RPX6WMKeeTI=;
+        b=ZMPp1uqtgTQth73vjAEIqAHmizbUZ+LewsWKm5rR+WSoiohLmj/GRK/Q9cbz2+pJub7DAO
+        mVyROobwefLAuYdjRsNGL9T+nZh7iLotL0B0Lb+Qd4slXHQZEstVow7AjnCiYL9DzuORzS
+        O6nIdRGnD5P1obmPUQkhKrlg+CtYNG0=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-242-9F5BZdGhNkqLNiP0zckk1A-1; Tue, 21 Jan 2020 08:51:49 -0500
+X-MC-Unique: 9F5BZdGhNkqLNiP0zckk1A-1
+Received: by mail-wr1-f72.google.com with SMTP id h30so1340176wrh.5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 05:51:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=z+thaj6fraaz5u5SaFmzmpY7g+fCANo2RPX6WMKeeTI=;
+        b=JsE7xanH1ekOFBDKYuz7KRtIZjLlnn2rlOwWos/frU4Aue8+Yh01+Mm2lcDakeNH0J
+         LBaN9FVFOh6YhY+9KL6xdt7cl/zud283WWE0ekA1PjzngSszHZsWHjZz7PrdFcV1/L+S
+         tXAAYp/Q4OsBI0Il0wV104ZrSCNCx57XjMgjvdyjsD16dp0LPQTM8ntYsCfFx7B2Ouzs
+         hqGm7OZtcs0ekS91UV+KHos5+sT6vZ9Ei+Lw88BJ5YT8LjAIrkcElXtv65DKsW792oFH
+         a+BkYKrueM7Z8hgdTg4u6i3T8zCrk+KjvK21kYiNnGFDmbqjJbllf+5e9ikpvsQFHGSR
+         bmxA==
+X-Gm-Message-State: APjAAAXjcGOGdhhVb0seKou5bRY3ruBFsq5ce1jb6p13dBc+zErtuRxl
+        6mp/Rp2GLm3LyHia98D3vIm6sCr9+syBVSsVrwjSye4EzdSobDO3u5O+fADnGr0m+9+LfiWVkc0
+        F1WyscZLU6IVsjfPkC7YxL5Tw
+X-Received: by 2002:a1c:9602:: with SMTP id y2mr4430222wmd.23.1579614708118;
+        Tue, 21 Jan 2020 05:51:48 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzUB73EGquW6vCktv8qGYr2Nk6qQyraAwTN0+HO2LIZ8PeFcJM3D2gQr9or8mDGO1aiJknCuw==
+X-Received: by 2002:a1c:9602:: with SMTP id y2mr4430206wmd.23.1579614707814;
+        Tue, 21 Jan 2020 05:51:47 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:b509:fc01:ee8a:ca8a? ([2001:b07:6468:f312:b509:fc01:ee8a:ca8a])
+        by smtp.gmail.com with ESMTPSA id q3sm53733831wrn.33.2020.01.21.05.51.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jan 2020 05:51:47 -0800 (PST)
+Subject: Re: [PATCH 0/3] KVM: Clean up guest/host cache read/write code
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jim Mattson <jmattson@google.com>,
+        Andrew Honig <ahonig@google.com>,
+        Barret Rhoden <brho@google.com>
+References: <20200109235620.6536-1-sean.j.christopherson@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <50f1d58a-5ac8-be1f-9c31-a49e699f362b@redhat.com>
+Date:   Tue, 21 Jan 2020 14:51:47 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200121132949.GL14914@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200109235620.6536-1-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 02:29:49PM +0100, Peter Zijlstra wrote:
-> On Mon, Dec 30, 2019 at 02:40:41PM -0500, Alex Kogan wrote:
+On 10/01/20 00:56, Sean Christopherson wrote:
+> Minor cleanup to fix the underlying crustiness that led to an uninitialized
+> variable warning reported by Barret.
 > 
-> > +/*
-> > + * Controls the threshold for the number of intra-node lock hand-offs before
-> > + * the NUMA-aware variant of spinlock is forced to be passed to a thread on
-> > + * another NUMA node. By default, the chosen value provides reasonable
-> > + * long-term fairness without sacrificing performance compared to a lock
-> > + * that does not have any fairness guarantees. The default setting can
-> > + * be changed with the "numa_spinlock_threshold" boot option.
-> > + */
-> > +int intra_node_handoff_threshold __ro_after_init = 1 << 16;
+> The first two patches are tagged with Fixes:, but I don't know that they're
+> actually worth backporting to stable.  Functionally, everthing works, it's
+> just a bit weird and AFAICT not what is intended.  It might be preferable
+> to take Barret's patch[*] first and only mark that for stable, as it fixes
+> the immediate issue without revamping __kvm_gfn_to_hva_cache_init().
 > 
-> There is a distinct lack of quantitative data to back up that
-> 'reasonable' claim there.
+> [*] https://lkml.kernel.org/r/20200109195855.17353-1-brho@google.com
 > 
-> Where is the table of inter-node latencies observed for the various
-> values tested, and on what criteria is this number deemed reasonable?
+> Sean Christopherson (3):
+>   KVM: Check for a bad hva before dropping into the ghc slow path
+>   KVM: Clean up __kvm_gfn_to_hva_cache_init() and its callers
+>   KVM: Return immediately if __kvm_gfn_to_hva_cache_init() fails
 > 
-> To me, 64k lock hold times seems like a giant number, entirely outside
-> of reasonable.
+>  virt/kvm/kvm_main.c | 45 ++++++++++++++++++++++++++-------------------
+>  1 file changed, 26 insertions(+), 19 deletions(-)
+> 
 
-Daniel, IIRC you just did a paper on constructing worst case latencies
-from measuring pieces. Do you have data on average lock hold times?
+Queued, thanks.
+
+Paolo
+
