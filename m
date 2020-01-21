@@ -2,99 +2,124 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 621DDC33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:56:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F34F8C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:57:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BFE024655
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:56:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AFneFU8t"
+	by mail.kernel.org (Postfix) with ESMTP id CC55124655
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:57:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579629452;
+	bh=N1ByJboh9etCauJIpBnoIxPYjFw6LrjcIDQeMUgD/0I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=OMtf4dpM0aFOkflFMP4zTSGzupiwNu45FHLituD6iJQpJPY7VClhSHGG22Oxfm1UH
+	 GDogEe5WBOC4H0iJdcLRxhY60gh12V6MIz/BIY4qkl9aX4OBlumPnMEglrvZuNa69I
+	 EBAA+pnwb6DOhjKSZ3iXHxprA1qEEPD08vfXfT9E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729262AbgAUR4T (ORCPT
+        id S1729271AbgAUR5c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 12:56:19 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:42312 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728186AbgAUR4T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 12:56:19 -0500
-Received: by mail-pl1-f194.google.com with SMTP id p9so1645179plk.9;
-        Tue, 21 Jan 2020 09:56:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+7UcIYyupUrT8UqdxAteZ1t6SxPyW7FNiWE6g1e+Uv0=;
-        b=AFneFU8tAym4plBbE3InWVUlktNscK05ah9eYmr0DAdE4uVt0eTf6ci/Lze8YwFscS
-         Yo+xartsefE6e+d2YjyWuvh5AiWVNh+1XiKKLeyIV75G/vYO7grsQ2S7fHMY9VDmrwLq
-         ZbqP+b/hf4LnBvYkHk6Muv1atfQc+csSQ7Z/Jp1xcnbTxSOWGaKkyviEwq7nOnVne+UP
-         IdguyqsifpLz1gkpSE2NyCWWrzRMVqPwE9XT7u0EHUoqd0c5RLt2ZpT7s2nPqfsMxHFJ
-         GTEoc9sNOr+ITUAWqrpAHkRRoA4+g3bPmC2B3VUyzyzVQPyGMDeeQs4lO0OUMpzNCaE4
-         NFww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+7UcIYyupUrT8UqdxAteZ1t6SxPyW7FNiWE6g1e+Uv0=;
-        b=Y1BvCaW/sxBRQ0n/IW8faZkBpxASaDD4mOYowH9c/95cfOI8peOSIEW0Z6R/d+/gcz
-         MGvG+PD5ZLl9ymt/gxApN+WCtRyau1auyJyJX9TXYE5eoM1gJXplcZylAAM9bxyA/eei
-         NREzd1zr3vibNB/sHaApSGFqixYFLKO8/L3VASQwZoti6wNTxIua5QIwxj7KCeCMj0wd
-         0GEWqA8Ih//YEDx9c0DICesUyeH03jFVRBUEjnjWoJCEgGaJ/sohwcMEiMts4colOzB7
-         jb+3lMWLSHpBuCIVU2Lgf6YGu/n3vVdwnpgTDqYjuzgTH30ZYq6wXWLNGgmalnBZywO5
-         ehlw==
-X-Gm-Message-State: APjAAAVCr2sWTgfpLygif8CFWHbBgduWNsKcsg4azoKjpmjlntg5Ant/
-        sL+AHl7quBjm+I+JYhUsFDQ=
-X-Google-Smtp-Source: APXvYqzF3Luq7je6jNzK1lpqgZmnNfY1NSaU0MalFpmd0APMREaWtHVxWlb7Ns7PUC8OMAHl2iwR2A==
-X-Received: by 2002:a17:902:ab95:: with SMTP id f21mr6430870plr.336.1579629378476;
-        Tue, 21 Jan 2020 09:56:18 -0800 (PST)
-Received: from ?IPv6:2001:4898:d8:28:140e:bf9b:65a6:dd72? ([2001:4898:80e8:8:941d:bf9b:65a6:dd72])
-        by smtp.gmail.com with ESMTPSA id fa21sm76780pjb.17.2020.01.21.09.56.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jan 2020 09:56:17 -0800 (PST)
-Subject: Re: [PATCH v9 1/2] dt-bindings: edac: arm-dmc520.txt
-To:     Rob Herring <robh+dt@kernel.org>, Borislav Petkov <bp@alien8.de>
-Cc:     James Morse <james.morse@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, hangl@microsoft.com,
-        Lei Wang <lewan@microsoft.com>, ruizhao@microsoft.com,
-        shji@microsoft.com, Scott Branden <scott.branden@broadcom.com>,
-        Yuqing Shen <yuqing.shen@broadcom.com>,
-        Ray Jui <ray.jui@broadcom.com>, wangglei@gmail.com
-References: <4fbf026a-4878-cd65-55f7-7d992782b331@gmail.com>
- <20200116233939.GI27148@zn.tnic>
- <CAL_JsqKqC_xm9rrHYaO87BtEv=-ji080p_G8axFduqu1mcqHCA@mail.gmail.com>
-From:   Shiping Ji <shiping.linux@gmail.com>
-Message-ID: <0723718a-f359-77b2-f66c-dd531cb19952@gmail.com>
-Date:   Tue, 21 Jan 2020 09:56:15 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 21 Jan 2020 12:57:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60552 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728186AbgAUR5c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 12:57:32 -0500
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9A9A24655;
+        Tue, 21 Jan 2020 17:57:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579629451;
+        bh=N1ByJboh9etCauJIpBnoIxPYjFw6LrjcIDQeMUgD/0I=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=qos0rbbiJj3cgXk//m1aSZmk9oIDKZ3rgaN9BM/PN8+gxyZACjeaa5Ix+gapZTu8s
+         4+pFOS1KisXJErzfyisirnX3Ov1ARIfrRxu4xSpB8HtWo1JfgXPjDoSgECUcbHgOZR
+         6Ico5ulbmJ/LWoXHPQ/RQZty0L1Am9v9kwbBmP+E=
+Received: by mail-qk1-f181.google.com with SMTP id q15so2884562qke.9;
+        Tue, 21 Jan 2020 09:57:30 -0800 (PST)
+X-Gm-Message-State: APjAAAWPLZmVxVL/uvk0TPHPwCUhHlE5jVhpOpeXv+wFR7iCLEDr+spY
+        vw5yAAqb6L96aT36J01AJ6rgM4acrNNwFDwzbw==
+X-Google-Smtp-Source: APXvYqyRmUYoX+Rv5wUpjNRs1vQFxqO3DHQ3ad4AHZ0Q+B/L9k1IDRQlZN802njJ44dzDDj2PCkQc+TLozLvMqX3he8=
+X-Received: by 2002:a05:620a:135b:: with SMTP id c27mr5347069qkl.119.1579629450069;
+ Tue, 21 Jan 2020 09:57:30 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqKqC_xm9rrHYaO87BtEv=-ji080p_G8axFduqu1mcqHCA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200108111830.8482-1-rogerq@ti.com> <20200108111830.8482-3-rogerq@ti.com>
+ <20200115014724.GA20772@bogus> <1c55f0a8-99e3-934f-e8b8-d090df06a12e@ti.com>
+In-Reply-To: <1c55f0a8-99e3-934f-e8b8-d090df06a12e@ti.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 21 Jan 2020 11:57:18 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLfJDN2LnqWHehFiM-SQyeqQAk2wjoKRbBiPy4tc5OkMQ@mail.gmail.com>
+Message-ID: <CAL_JsqLfJDN2LnqWHehFiM-SQyeqQAk2wjoKRbBiPy4tc5OkMQ@mail.gmail.com>
+Subject: Re: [PATCH 2/5] arm64: dts: ti: k3-j721e-main: Add serdes_ln_ctrl
+ node to select SERDES lane mux
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        Nishanth Menon <nm@ti.com>, Sekhar Nori <nsekhar@ti.com>,
+        Vignesh R <vigneshr@ti.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/21/2020 9:53 AM, Rob Herring wrote:
+On Mon, Jan 20, 2020 at 11:10 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>
+> Hi Rob,
+>
+> On 15/01/20 7:17 AM, Rob Herring wrote:
+> > On Wed, Jan 08, 2020 at 01:18:27PM +0200, Roger Quadros wrote:
+> >> From: Kishon Vijay Abraham I <kishon@ti.com>
+> >>
+> >> Add serdes_ln_ctrl node used for selecting SERDES lane mux.
+> >>
+> >> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> >> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+> >> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> >> ---
+> >>  arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 26 +++++++++++
+> >>  include/dt-bindings/mux/mux-j721e-wiz.h   | 53 +++++++++++++++++++++++
+> >>  2 files changed, 79 insertions(+)
+> >>  create mode 100644 include/dt-bindings/mux/mux-j721e-wiz.h
+> >>
+> >> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+> >> index 24cb78db28e4..6741c1e67f50 100644
+> >> --- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+> >> +++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+> >> @@ -5,6 +5,8 @@
+> >>   * Copyright (C) 2016-2019 Texas Instruments Incorporated - http://www.ti.com/
+> >>   */
+> >>  #include <dt-bindings/phy/phy.h>
+> >> +#include <dt-bindings/mux/mux.h>
+> >> +#include <dt-bindings/mux/mux-j721e-wiz.h>
+> >>
+> >>  &cbass_main {
+> >>      msmc_ram: sram@70000000 {
+> >> @@ -19,6 +21,30 @@
+> >>              };
+> >>      };
+> >>
+> >> +    scm_conf: scm_conf@100000 {
+> >
+> > Don't use '_' in node names.
+>
+> Okay.
+> >
+> >> +            compatible = "syscon", "simple-mfd";
+> >
+> > Needs a specific compatible especially since the child node doesn't have
+> > one.
+>
+> Child node has "mmio-mux" as compatible no? Are you referring to
+> something else here?
 
-> Would be happy for a schema, but not going to ask for that on a v9.
+I'm referring to exactly what I quoted, but that's also a generic
+compatible, so you'd never be able to match any of this block to a
+specific driver or handle any quirks.
 
-I drafted the schema, do you have some tools/instrutions to validate against the DTS? I want to make sure the schema is indeed correct.
-
-Thanks!
-
--- 
-Best regards,
-Shiping Ji
+Rob
