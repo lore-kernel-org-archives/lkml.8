@@ -3,172 +3,109 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85050C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 10:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E766C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 10:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 460CF24125
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 10:22:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41FBB24125
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 10:22:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="J6SJMaCt"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="iz8vTKO+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729652AbgAUKWP (ORCPT
+        id S1729659AbgAUKWs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 05:22:15 -0500
-Received: from mail-bn7nam10on2041.outbound.protection.outlook.com ([40.107.92.41]:51649
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728792AbgAUKV4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 05:21:56 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KxHZhQctCZSzxkeNkwqQaacQ5HJIit/+++78TtoKlQ5z3Bgoz2jsPqHBdR+OaAgOn1BXrm30YZUDN+3IowrkpRHR3W2+QAvuzNFs3d2zsUXTJyH/uNTd15IgcNfJWDkxu5Vdzdh1ydBvKiTxGDsWypQFepv9MiijpWM8wvlXuXYI/Psw5FiLmnUyVY+XzfBBaWCLjq5ajq4dISEbN51rDu3uYUA4dwO3Xqnb8Ww7TsnWlY6iUUOSvCNr9IEbxIhFQhmbQxNA55k34nT1b0YCmGU0pTJgi8X7UW05FK7XRISIQhnJMmEPoaAAnk6wBSoaonSzPMBfssuPC3jVknfzbA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=r9sux/EuVdMHy0oMMXxWoYsD/dE07fqnc/P+Rq9MVBs=;
- b=RPF7oxgq+q+ey1tEglqya3/8I6eGPWt7yOxKMly3t8Y9QDGhcn2Q5ZwR+FQqjvZkszUMGO1A0kfO4IbybarJCMZN8RyCBpMp1ToJbUMB6c/hartotY3bj5ePKNNCuSacCDp4nlOUxUViGWInZ2IZT7YOSv90LCmhPyfdnibBvK/5kVO1JhALJ+oLtnbvheCPGA5OoDeP6iBrlPqxBt6K8M+LxHweXl1dCO7YmTGEjkO3HpUyqnyOH7JQwgSmydQd1CWbVk5WHJ4MmIcLy70gL7SRjwS4NltezqWpC4jngKEPVzYXK1tO2bpEZ2bcfGZkjxDlvWyPjDyYUGWprioWbg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=r9sux/EuVdMHy0oMMXxWoYsD/dE07fqnc/P+Rq9MVBs=;
- b=J6SJMaCtJIE4P0Pc5Hga3a2Fpxj0N7MXgk3WUp7B2oX5ySq536OnaQbqpoFLYO1aDm9t5EMTIXd4370oc7cU5w7+5LyyxiW/D/sGqkzyhOoH+KfYJVgYu92qeDtCiP4FnYcnAtscXh5sw34DoduIvAaqdKJ1nv9RbOcu3w+NY3M=
-Received: from DM6PR02CA0084.namprd02.prod.outlook.com (2603:10b6:5:1f4::25)
- by CH2PR02MB6055.namprd02.prod.outlook.com (2603:10b6:610:3::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.21; Tue, 21 Jan
- 2020 10:21:52 +0000
-Received: from CY1NAM02FT025.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::200) by DM6PR02CA0084.outlook.office365.com
- (2603:10b6:5:1f4::25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.19 via Frontend
- Transport; Tue, 21 Jan 2020 10:21:52 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT025.mail.protection.outlook.com (10.152.75.148) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2644.19
- via Frontend Transport; Tue, 21 Jan 2020 10:21:52 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <manish.narani@xilinx.com>)
-        id 1itqfQ-0000zC-5N; Tue, 21 Jan 2020 02:21:52 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <manish.narani@xilinx.com>)
-        id 1itqfL-0003Rc-1U; Tue, 21 Jan 2020 02:21:47 -0800
-Received: from xsj-pvapsmtp01 (mailman.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 00LALgTX001397;
-        Tue, 21 Jan 2020 02:21:42 -0800
-Received: from [172.23.64.106] (helo=xhdvnc125.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <mnarani@xilinx.com>)
-        id 1itqfF-0003Pn-Qm; Tue, 21 Jan 2020 02:21:42 -0800
-Received: by xhdvnc125.xilinx.com (Postfix, from userid 16987)
-        id 0E4A6121DAE; Tue, 21 Jan 2020 15:51:41 +0530 (IST)
-From:   Manish Narani <manish.narani@xilinx.com>
-To:     michal.simek@xilinx.com, adrian.hunter@intel.com,
-        ulf.hansson@linaro.org, jolly.shah@xilinx.com,
-        rajan.vaja@xilinx.com, nava.manne@xilinx.com,
-        manish.narani@xilinx.com, tejas.patel@xilinx.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org
-Subject: [PATCH 2/4] firmware: xilinx: Add DLL reset support
-Date:   Tue, 21 Jan 2020 15:51:33 +0530
-Message-Id: <1579602095-30060-3-git-send-email-manish.narani@xilinx.com>
-X-Mailer: git-send-email 2.1.1
-In-Reply-To: <1579602095-30060-1-git-send-email-manish.narani@xilinx.com>
-References: <1579602095-30060-1-git-send-email-manish.narani@xilinx.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(136003)(376002)(396003)(199004)(189003)(26005)(336012)(8936002)(70206006)(70586007)(8676002)(2906002)(81156014)(5660300002)(186003)(81166006)(36756003)(4326008)(356004)(6666004)(478600001)(6636002)(6266002)(316002)(44832011)(42186006)(2616005)(426003);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6055;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
+        Tue, 21 Jan 2020 05:22:48 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:43037 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727220AbgAUKWr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 05:22:47 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00LAI5KJ023923;
+        Tue, 21 Jan 2020 11:22:37 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
+ date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=B3TTFS6TV+4qGCCLZoDEuyQWL8QSogcND8mYP28OXXo=;
+ b=iz8vTKO+yoxfwOZAs+1AMYyzsilnTsGUYNvdN2QWDxGqyG1ept7I8vIbbRFZ8D7hm6jh
+ 8YNirqrauCV5gR5JF+iTPIYpKeSCCjbe5Q7Ujl5PAlLop7CFm7z8zuiEXmCAXVFQNl/v
+ Qd2gbJSgDLNcG6t48c/dmQukDDSSZygZn5RwEYl9xW813lyHc52TB0WXi2AoH0KOfYux
+ ZxuffcTYVIRLWEqGvPa1cacCBJl0yHRD7zF58mvqZ+GyhS6JTdDv8JDCsifb+sSnb7aJ
+ SdrHXG4tcll79g6wtuHuMbU2EeVDFJOd2sFTraofZL+ChO2hpxG2ca7+okhHGqv12+Bc 4w== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xkrp26338-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 Jan 2020 11:22:37 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3BC6D10002A;
+        Tue, 21 Jan 2020 11:22:36 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2B6102B187E;
+        Tue, 21 Jan 2020 11:22:36 +0100 (CET)
+Received: from localhost (10.75.127.45) by SFHDAG6NODE1.st.com (10.75.127.16)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 Jan 2020 11:22:35
+ +0100
+From:   Yannick Fertre <yannick.fertre@st.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Yannick Fertre <yannick.fertre@st.com>,
+        Etienne Carriere <etienne.carriere@st.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        <linux-media@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Philippe Cornu <philippe.cornu@st.com>
+Subject: [PATCH] media: platform: stm32: defer probe for auxiliary clock
+Date:   Tue, 21 Jan 2020 11:22:32 +0100
+Message-ID: <1579602152-7432-1-git-send-email-yannick.fertre@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
 Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 20333428-a169-4a5c-fe38-08d79e5bbbdb
-X-MS-TrafficTypeDiagnostic: CH2PR02MB6055:
-X-Microsoft-Antispam-PRVS: <CH2PR02MB6055258EC641218F57AEABB8C10D0@CH2PR02MB6055.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:792;
-X-Forefront-PRVS: 0289B6431E
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: +gS4WjdkwYMsoFD9+RTIPq2Hp8n0DFBXbEFRQCP95VMpTkZxJtRMVcTgu1dLmmahrKRizXJ/FhcwA6KNP3VWMu9IjA3N50pxwW8/tJp1rDn5q/PFXePjMg5lrU+7X3kQRMmpDNuE0+Ck6IvywZE15wut4cC6cDma9Aez3jfngJqAvHqxRv2DXEu+cfpe568c9kn5GSV/zDkG3pD6jiJCEf1HbTS/sQv5Tg4KI6tQwyhQZdUKSxcZaIWoe/W6vY4gv4RLHzkVqkmGnlGrYf6hCP9WahYZGuLApHV0EH3Q0RYvUY1eJdmrZEphjLotllMEe6UwHrDSE8FZuaidVJYKnnuskUS494T4iPNW63hlMeYCLHCJPBERrogLcI4/Oz2K97g63qEPh9rI4rCfOuEOGfqxjWhTFm+v+Riomc8R70nduJ1TdR2j2G9Cp2Oln+3q
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jan 2020 10:21:52.5892
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 20333428-a169-4a5c-fe38-08d79e5bbbdb
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6055
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG6NODE1.st.com
+ (10.75.127.16)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-21_02:2020-01-21,2020-01-21 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SD DLL resets are required for some of the operations on ZynqMP platform.
-Add DLL reset support in ZynqMP firmware driver for SD DLL reset.
+From: Etienne Carriere <etienne.carriere@st.com>
 
-Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+Change stm32-cec driver to defer probe when auxiliary clock
+"hdmi-cec" is registered in the system not has not been probed yet.
+
+Signed-off-by: Etienne Carriere <etienne.carriere@st.com>
 ---
- drivers/firmware/xilinx/zynqmp.c     | 1 +
- include/linux/firmware/xlnx-zynqmp.h | 9 ++++++++-
- 2 files changed, 9 insertions(+), 1 deletion(-)
+ drivers/media/platform/stm32/stm32-cec.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
-index 89eb198cee5e..165ec0f1e10a 100644
---- a/drivers/firmware/xilinx/zynqmp.c
-+++ b/drivers/firmware/xilinx/zynqmp.c
-@@ -469,6 +469,7 @@ static int zynqmp_pm_clock_getparent(u32 clock_id, u32 *parent_id)
- static inline int zynqmp_is_valid_ioctl(u32 ioctl_id)
- {
- 	switch (ioctl_id) {
-+	case IOCTL_SD_DLL_RESET:
- 	case IOCTL_SET_SD_TAPDELAY:
- 	case IOCTL_SET_PLL_FRAC_MODE:
- 	case IOCTL_GET_PLL_FRAC_MODE:
-diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
-index e41ad9e37136..01a6d972b8a8 100644
---- a/include/linux/firmware/xlnx-zynqmp.h
-+++ b/include/linux/firmware/xlnx-zynqmp.h
-@@ -92,7 +92,8 @@ enum pm_ret_status {
- };
+diff --git a/drivers/media/platform/stm32/stm32-cec.c b/drivers/media/platform/stm32/stm32-cec.c
+index 8a86b2c..543c9ec 100644
+--- a/drivers/media/platform/stm32/stm32-cec.c
++++ b/drivers/media/platform/stm32/stm32-cec.c
+@@ -302,10 +302,14 @@ static int stm32_cec_probe(struct platform_device *pdev)
+ 	}
  
- enum pm_ioctl_id {
--	IOCTL_SET_SD_TAPDELAY = 7,
-+	IOCTL_SD_DLL_RESET = 6,
-+	IOCTL_SET_SD_TAPDELAY,
- 	IOCTL_SET_PLL_FRAC_MODE,
- 	IOCTL_GET_PLL_FRAC_MODE,
- 	IOCTL_SET_PLL_FRAC_DATA,
-@@ -262,6 +263,12 @@ enum tap_delay_type {
- 	PM_TAPDELAY_OUTPUT,
- };
- 
-+enum dll_reset_type {
-+	PM_DLL_RESET_ASSERT,
-+	PM_DLL_RESET_RELEASE,
-+	PM_DLL_RESET_PULSE,
-+};
+ 	cec->clk_hdmi_cec = devm_clk_get(&pdev->dev, "hdmi-cec");
++	if (IS_ERR(cec->clk_hdmi_cec) &&
++	    PTR_ERR(cec->clk_hdmi_cec) == -EPROBE_DEFER)
++			return -EPROBE_DEFER;
 +
- /**
-  * struct zynqmp_pm_query_data - PM query data
-  * @qid:	query ID
+ 	if (!IS_ERR(cec->clk_hdmi_cec)) {
+ 		ret = clk_prepare(cec->clk_hdmi_cec);
+ 		if (ret) {
+-			dev_err(&pdev->dev, "Unable to prepare hdmi-cec clock\n");
++			dev_err(&pdev->dev, "Can't prepare hdmi-cec clock\n");
+ 			return ret;
+ 		}
+ 	}
 -- 
-2.17.1
+2.7.4
 
