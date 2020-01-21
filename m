@@ -2,212 +2,111 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7CC2C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D46BEC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E90422522
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:39:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA16F22522
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:39:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="ogeQ32MO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728708AbgAUIjH (ORCPT
+        id S1728456AbgAUIjR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 03:39:07 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:37870 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725890AbgAUIjH (ORCPT
+        Tue, 21 Jan 2020 03:39:17 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:34035 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728093AbgAUIjQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 03:39:07 -0500
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00L8bjhT015309;
-        Tue, 21 Jan 2020 03:38:23 -0500
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2xkyta6tbx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jan 2020 03:38:22 -0500
-Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 00L8cKQ0049903
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Tue, 21 Jan 2020 03:38:21 -0500
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Tue, 21 Jan
- 2020 00:38:19 -0800
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Tue, 21 Jan 2020 03:38:18 -0500
-Received: from btogorean-pc.ad.analog.com ([10.48.65.146])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 00L8Sm9a001010;
-        Tue, 21 Jan 2020 03:38:14 -0500
-From:   Bogdan Togorean <bogdan.togorean@analog.com>
-To:     <dri-devel@lists.freedesktop.org>
-CC:     <airlied@linux.ie>, <daniel@ffwll.ch>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <a.hajda@samsung.com>,
-        <narmstrong@baylibre.com>, <Laurent.pinchart@ideasonboard.com>,
-        <jonas@kwiboo.se>, <jernej.skrabec@siol.net>,
-        <gregkh@linuxfoundation.org>, <tglx@linutronix.de>,
-        <sam@ravnborg.org>, <alexander.deucher@amd.com>,
-        <matt.redfearn@thinci.com>, <robdclark@chromium.org>,
-        <wsa+renesas@sang-engineering.com>, <linux-kernel@vger.kernel.org>,
-        Bogdan Togorean <bogdan.togorean@analog.com>
-Subject: [PATCH v4 1/3] drm: bridge: adv7511: Remove DRM_I2C_ADV7533 Kconfig
-Date:   Tue, 21 Jan 2020 10:27:20 +0200
-Message-ID: <20200121082719.27972-2-bogdan.togorean@analog.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200121082719.27972-1-bogdan.togorean@analog.com>
-References: <20200121082719.27972-1-bogdan.togorean@analog.com>
+        Tue, 21 Jan 2020 03:39:16 -0500
+Received: by mail-lf1-f65.google.com with SMTP id l18so1571180lfc.1
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 00:39:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=hsNWoes18WxCFqI2xo+zG2UAVBdbnLW1RdahXtCWkN4=;
+        b=ogeQ32MOdjzdgAmxRr2eY6wFvxsdi2q0zPB1rFdofpYEO51IIsVHTP/MpXts48N+Hu
+         4iZtIN1cDXQuFYvBGceJ5W03NNZraJNYMDKMSvJOsV+lneWXcfyzASCoSAqZQihD2yEM
+         QdR/SJOIEFHL8SXJ581I6hl5NpDqF6nH7lxfCZQmjvsmwfc9zvkQiN3Xw/YMv82SD2f2
+         Ev5dOkK0Dl59TsTdsxmED6+cxcIYkHOvcHdM5IM1NU2kwzezkUMm6G8LimxsPNcxSP/d
+         5hJm2EW0ST6IRLKF9J/typuxf8l7gKRBMVHY/PbUh5iEVxcNkVDOrrSBubvTbYNahV9K
+         /Sxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hsNWoes18WxCFqI2xo+zG2UAVBdbnLW1RdahXtCWkN4=;
+        b=jzvfrhdKSGXAqpcLfppI9/Gh7YMJkO6zl/haQ8NwYltNDjsPFfQol776aYfdM4cvD6
+         qEUGdYWZuqKSGntS2EbGEQmvaEVIuEQTQGBhDOjs4TRtMs+whAg23BIleeJCma+aeBRG
+         ZuPL28Ldvp6YzvTzbi7SghROOJZH7gfzWWVOStIMcHsWOFm9A2toIBRL8YiVSnQ70rdB
+         r2u5uTDsR9AzZQY4TpzxQvz3FKJ/WaLa/BPwX8ueEjUW/0PdfWn9/WCQwr43spFV22Xa
+         qiALF7Edxzrp9avg7P73HPKCG27STVPcPuGR7LCo8WqHfD67UdVRsI4EpgIbxosDghCA
+         WrIQ==
+X-Gm-Message-State: APjAAAWenl8o8hG7tTj4jYtjjA+AYUbJhaQLNEBCjzupCcuH3aMEJnFl
+        X3WYoMHHA3M8lyHaYVmT2Prd5D4jNjz+bA==
+X-Google-Smtp-Source: APXvYqwKhPhYL0ooaJpzntwbDv2rsPpjcDAD4+2ocnxH+WdV/2FygoMaU5dMv0QJe5KSTwUYfqw3Ow==
+X-Received: by 2002:ac2:43c6:: with SMTP id u6mr2027596lfl.191.1579595953303;
+        Tue, 21 Jan 2020 00:39:13 -0800 (PST)
+Received: from ?IPv6:2a00:1fa0:4257:4d38:8de3:4197:be8e:7729? ([2a00:1fa0:4257:4d38:8de3:4197:be8e:7729])
+        by smtp.gmail.com with ESMTPSA id b1sm21197686ljp.72.2020.01.21.00.39.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jan 2020 00:39:12 -0800 (PST)
+Subject: Re: [PATCH -next] drivers: net: declance: fix comparing pointer to 0
+To:     Chen Zhou <chenzhou10@huawei.com>, davem@davemloft.net,
+        mhabets@solarflare.com, kuba@kernel.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200121013553.15252-1-chenzhou10@huawei.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <40eb3815-f677-c2fd-3e67-4b39bb332f48@cogentembedded.com>
+Date:   Tue, 21 Jan 2020 11:39:05 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-21_02:2020-01-20,2020-01-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 phishscore=0 mlxlogscore=999 mlxscore=0 suspectscore=1
- impostorscore=0 spamscore=0 malwarescore=0 adultscore=0 priorityscore=1501
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001210073
+In-Reply-To: <20200121013553.15252-1-chenzhou10@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit remove DRM_I2C_ADV7533 resulting a simpler driver and less
-choices in Kconfig.
+Hello!
 
-Signed-off-by: Bogdan Togorean <bogdan.togorean@analog.com>
----
- drivers/gpu/drm/bridge/adv7511/Kconfig       | 11 +-----
- drivers/gpu/drm/bridge/adv7511/Makefile      |  3 +-
- drivers/gpu/drm/bridge/adv7511/adv7511.h     | 39 --------------------
- drivers/gpu/drm/bridge/adv7511/adv7511_drv.c |  4 --
- 4 files changed, 3 insertions(+), 54 deletions(-)
+On 21.01.2020 4:35, Chen Zhou wrote:
 
-diff --git a/drivers/gpu/drm/bridge/adv7511/Kconfig b/drivers/gpu/drm/bridge/adv7511/Kconfig
-index 8a56ff81f4fb..a7fe07117345 100644
---- a/drivers/gpu/drm/bridge/adv7511/Kconfig
-+++ b/drivers/gpu/drm/bridge/adv7511/Kconfig
-@@ -4,8 +4,9 @@ config DRM_I2C_ADV7511
- 	depends on OF
- 	select DRM_KMS_HELPER
- 	select REGMAP_I2C
-+	select DRM_MIPI_DSI
- 	help
--	  Support for the Analog Device ADV7511(W) and ADV7513 HDMI encoders.
-+	  Support for the Analog Device ADV7511(W)/13/33 HDMI encoders.
- 
- config DRM_I2C_ADV7511_AUDIO
- 	bool "ADV7511 HDMI Audio driver"
-@@ -15,14 +16,6 @@ config DRM_I2C_ADV7511_AUDIO
- 	  Support the ADV7511 HDMI Audio interface. This is used in
- 	  conjunction with the AV7511  HDMI driver.
- 
--config DRM_I2C_ADV7533
--	bool "ADV7533 encoder"
--	depends on DRM_I2C_ADV7511
--	select DRM_MIPI_DSI
--	default y
--	help
--	  Support for the Analog Devices ADV7533 DSI to HDMI encoder.
--
- config DRM_I2C_ADV7511_CEC
- 	bool "ADV7511/33 HDMI CEC driver"
- 	depends on DRM_I2C_ADV7511
-diff --git a/drivers/gpu/drm/bridge/adv7511/Makefile b/drivers/gpu/drm/bridge/adv7511/Makefile
-index b46ebeb35fd4..d8ceb534b51f 100644
---- a/drivers/gpu/drm/bridge/adv7511/Makefile
-+++ b/drivers/gpu/drm/bridge/adv7511/Makefile
-@@ -1,6 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0-only
--adv7511-y := adv7511_drv.o
-+adv7511-y := adv7511_drv.o adv7533.o
- adv7511-$(CONFIG_DRM_I2C_ADV7511_AUDIO) += adv7511_audio.o
- adv7511-$(CONFIG_DRM_I2C_ADV7511_CEC) += adv7511_cec.o
--adv7511-$(CONFIG_DRM_I2C_ADV7533) += adv7533.o
- obj-$(CONFIG_DRM_I2C_ADV7511) += adv7511.o
-diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511.h b/drivers/gpu/drm/bridge/adv7511/adv7511.h
-index 52b2adfdc877..12552d54931b 100644
---- a/drivers/gpu/drm/bridge/adv7511/adv7511.h
-+++ b/drivers/gpu/drm/bridge/adv7511/adv7511.h
-@@ -393,7 +393,6 @@ static inline int adv7511_cec_init(struct device *dev, struct adv7511 *adv7511)
- }
- #endif
- 
--#ifdef CONFIG_DRM_I2C_ADV7533
- void adv7533_dsi_power_on(struct adv7511 *adv);
- void adv7533_dsi_power_off(struct adv7511 *adv);
- void adv7533_mode_set(struct adv7511 *adv, const struct drm_display_mode *mode);
-@@ -402,44 +401,6 @@ int adv7533_patch_cec_registers(struct adv7511 *adv);
- int adv7533_attach_dsi(struct adv7511 *adv);
- void adv7533_detach_dsi(struct adv7511 *adv);
- int adv7533_parse_dt(struct device_node *np, struct adv7511 *adv);
--#else
--static inline void adv7533_dsi_power_on(struct adv7511 *adv)
--{
--}
--
--static inline void adv7533_dsi_power_off(struct adv7511 *adv)
--{
--}
--
--static inline void adv7533_mode_set(struct adv7511 *adv,
--				    const struct drm_display_mode *mode)
--{
--}
--
--static inline int adv7533_patch_registers(struct adv7511 *adv)
--{
--	return -ENODEV;
--}
--
--static inline int adv7533_patch_cec_registers(struct adv7511 *adv)
--{
--	return -ENODEV;
--}
--
--static inline int adv7533_attach_dsi(struct adv7511 *adv)
--{
--	return -ENODEV;
--}
--
--static inline void adv7533_detach_dsi(struct adv7511 *adv)
--{
--}
--
--static inline int adv7533_parse_dt(struct device_node *np, struct adv7511 *adv)
--{
--	return -ENODEV;
--}
--#endif
- 
- #ifdef CONFIG_DRM_I2C_ADV7511_AUDIO
- int adv7511_audio_init(struct device *dev, struct adv7511 *adv7511);
-diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-index 9e13e466e72c..34df29d79e2b 100644
---- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-+++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-@@ -1266,9 +1266,7 @@ static const struct i2c_device_id adv7511_i2c_ids[] = {
- 	{ "adv7511", ADV7511 },
- 	{ "adv7511w", ADV7511 },
- 	{ "adv7513", ADV7511 },
--#ifdef CONFIG_DRM_I2C_ADV7533
- 	{ "adv7533", ADV7533 },
--#endif
- 	{ }
- };
- MODULE_DEVICE_TABLE(i2c, adv7511_i2c_ids);
-@@ -1277,9 +1275,7 @@ static const struct of_device_id adv7511_of_ids[] = {
- 	{ .compatible = "adi,adv7511", .data = (void *)ADV7511 },
- 	{ .compatible = "adi,adv7511w", .data = (void *)ADV7511 },
- 	{ .compatible = "adi,adv7513", .data = (void *)ADV7511 },
--#ifdef CONFIG_DRM_I2C_ADV7533
- 	{ .compatible = "adi,adv7533", .data = (void *)ADV7533 },
--#endif
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, adv7511_of_ids);
--- 
-2.24.1
+> Fixes coccicheck warning:
+> 
+> ./drivers/net/ethernet/amd/declance.c:611:14-15:
+> 	WARNING comparing pointer to 0
+> 
+> Compare pointer-typed values to NULL rather than 0.
 
+    I don't see NULL in the patch -- you used ! instead.
+
+> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+> ---
+>   drivers/net/ethernet/amd/declance.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/amd/declance.c b/drivers/net/ethernet/amd/declance.c
+> index 6592a2d..7282ce5 100644
+> --- a/drivers/net/ethernet/amd/declance.c
+> +++ b/drivers/net/ethernet/amd/declance.c
+> @@ -608,7 +608,7 @@ static int lance_rx(struct net_device *dev)
+>   			len = (*rds_ptr(rd, mblength, lp->type) & 0xfff) - 4;
+>   			skb = netdev_alloc_skb(dev, len + 2);
+>   
+> -			if (skb == 0) {
+> +			if (!skb) {
+>   				dev->stats.rx_dropped++;
+>   				*rds_ptr(rd, mblength, lp->type) = 0;
+>   				*rds_ptr(rd, rmd1, lp->type) =
+
+MBR, Sergei
