@@ -2,213 +2,261 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F8C6C33CAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 23:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D6BC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 23:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9ECF24653
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 23:16:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579648575;
-	bh=ayi0AQkHboqVmNH7AQabmgfP8IUvSerrd/s8Dg6irxY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Wt/3S+WRkI521gQUI18gmMvkD134gQSvEeKn/URW4ILNZk9N8WEsvQnHO8QbI7+PA
-	 YfqfjIXS96E+VY3p/Dt0ncxa+WhW1Ols6x+GCbX54rD27mrmGhclJW85+jix7C+58l
-	 l5fYOnES1bylElFp7UBoJDWbS4+iv4qfx0T1WA58=
+	by mail.kernel.org (Postfix) with ESMTP id 6E99824653
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 23:16:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="O79JN3kf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbgAUXQO (ORCPT
+        id S1728709AbgAUXQV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 18:16:14 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:38780 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbgAUXQO (ORCPT
+        Tue, 21 Jan 2020 18:16:21 -0500
+Received: from mail-pg1-f175.google.com ([209.85.215.175]:44764 "EHLO
+        mail-pg1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727816AbgAUXQU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 18:16:14 -0500
-Received: by mail-ot1-f68.google.com with SMTP id z9so4616672oth.5;
-        Tue, 21 Jan 2020 15:16:13 -0800 (PST)
+        Tue, 21 Jan 2020 18:16:20 -0500
+Received: by mail-pg1-f175.google.com with SMTP id x7so2335546pgl.11
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 15:16:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:from:cc:subject:to:user-agent:date;
+        bh=gk/+cR1Uh1x2DHe/9AsJJHsSZHNN3UqDGvYH0Xb+zh8=;
+        b=O79JN3kfznrn5eDqAjPiKLeDDyICkKbjMMxe1z4CkxRlkDvUL25WwtzsL8ATud3/0S
+         vIkxXjbW39ptw0hpyird4o0jXonSy2LL5ov8w4SvjmdmvVKMK3OEfiUeikilFqXoamkO
+         A8UZj9KyXGoRqivE5Z0YbU+yLPIi0wgQyo89E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/onuDQImRyHyeU+wg0RFJ08EsMO/XYMDEqGXXxAGX/0=;
-        b=HJxAsjy0AgIAYJKRPoKyRiz9QTJqm+jX7vWKnFqkTzekhjLSAEsu0N/aK9t8nMjuxe
-         jgyzcjxFw8uZDaQyynFG4H/8b7MkFal561CmRJxLF645yGkgYPSIdvkb3xEvW7mo2ORC
-         Iol7yMt1mIs7XRxvMx2FabtejDyqrZgxcirnQh7y0BrJo2/nZYlD1S9YNWSMd4xAdDLH
-         dmwggtX0yIStHzvb91iTdEo9ZF6iNsdLMmI6lvwrdteuB6Kw9pu4oBJlZno4DpYxgLWA
-         3y6spyil3ChjtqQ1W+4TsbF4gurZ3UoE8RYZ+ItkBDG2jKeGBcZyEiHfeiuGTTKxtRYQ
-         8/Bg==
-X-Gm-Message-State: APjAAAV3S6h9PLpPSiWmlhzG8etOEAotHOYJdxF9mXeluLQBIGRqC4jk
-        /gYEzx1LrcabZ/2UusRTVg==
-X-Google-Smtp-Source: APXvYqxOlNxNPRDh0FtKVnyQTJJgPAUPOTjgcHJlh3jVqJyPvy6CPuylJEEv98kBW1xxBPmh2ODgOA==
-X-Received: by 2002:a05:6830:1442:: with SMTP id w2mr5512997otp.143.1579648573545;
-        Tue, 21 Jan 2020 15:16:13 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id r23sm12462343oij.38.2020.01.21.15.16.12
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:from:cc:subject:to
+         :user-agent:date;
+        bh=gk/+cR1Uh1x2DHe/9AsJJHsSZHNN3UqDGvYH0Xb+zh8=;
+        b=hHdOqJXoSt3iGkWvdwIkKhLO39s2EaNm5Zj12KckyjL/fTi5EKDrTPiycJ4KFAOSt7
+         MKs3pFw2aDXnObrrA0hz05b1QAkbNWI5GYMewze8n5S4wJY35eNaewLiz0ffXnnSXRrJ
+         NN/wNO/akB66Y4pRTO0IKKEM16FW5qkhGbqAeKzoAfSLAWBrxcInhrgddnz4ncNOun9n
+         Es4RcZIpzZUMT+LMKfC1/5Rs6wfDXycAZg4NJcqX/j9akeGO4nI73+OUkl5pX/bMYtxD
+         L5obVrNL8OUjXnSGtuT7tzSUpw7QwuwoESs0o/sDWG8/wyylAAYiMy86hhBhm+aJtsuO
+         b61g==
+X-Gm-Message-State: APjAAAUorOmPPafY6p4/3KQLYxvuQNTT6hEc0kkXobOIvt17ljKyqPrR
+        kDMKLy+0J7JvU5IC8Z/eEp6olg==
+X-Google-Smtp-Source: APXvYqzc5YyY9m9Z4aytEaUg9NesrLmumCIMVJQdqT2tTi4c8P468lTNoYuY+PzXEggedpkJhGWNrQ==
+X-Received: by 2002:a63:d66:: with SMTP id 38mr7812028pgn.233.1579648578855;
+        Tue, 21 Jan 2020 15:16:18 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id u20sm41961955pgf.29.2020.01.21.15.16.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 15:16:12 -0800 (PST)
-Received: (nullmailer pid 21706 invoked by uid 1000);
-        Tue, 21 Jan 2020 23:16:11 -0000
-Date:   Tue, 21 Jan 2020 17:16:11 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Bin Liu <b-liu@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/5] dt-bindings: usb: Convert jz4740-musb doc to YAML
-Message-ID: <20200121231611.GA19164@bogus>
-References: <20200115220008.91445-1-paul@crapouillou.net>
- <20200115220008.91445-2-paul@crapouillou.net>
+        Tue, 21 Jan 2020 15:16:18 -0800 (PST)
+Message-ID: <5e278642.1c69fb81.5a8db.80b4@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200115220008.91445-2-paul@crapouillou.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1579621928-18619-1-git-send-email-harigovi@codeaurora.org>
+References: <1579621928-18619-1-git-send-email-harigovi@codeaurora.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Harigovindan P <harigovi@codeaurora.org>,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        kalyan_t@codeaurora.org, nganji@codeaurora.org
+Subject: Re: [v1] arm64: dts: sc7180: add display dt nodes
+To:     Harigovindan P <harigovi@codeaurora.org>,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org
+User-Agent: alot/0.8.1
+Date:   Tue, 21 Jan 2020 15:16:17 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 07:00:04PM -0300, Paul Cercueil wrote:
-> Convert ingenic,jz4740-musb.txt to ingenic,musb.yaml, and add the
-> new ingenic,jz4770-musb compatible string in the process.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
->  .../bindings/usb/ingenic,jz4740-musb.txt      | 32 ---------
->  .../devicetree/bindings/usb/ingenic,musb.yaml | 72 +++++++++++++++++++
->  2 files changed, 72 insertions(+), 32 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/usb/ingenic,jz4740-musb.txt
->  create mode 100644 Documentation/devicetree/bindings/usb/ingenic,musb.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/ingenic,jz4740-musb.txt b/Documentation/devicetree/bindings/usb/ingenic,jz4740-musb.txt
-> deleted file mode 100644
-> index 16808721f3ff..000000000000
-> --- a/Documentation/devicetree/bindings/usb/ingenic,jz4740-musb.txt
-> +++ /dev/null
-> @@ -1,32 +0,0 @@
-> -Ingenic JZ4740 MUSB driver
-> -
-> -Required properties:
-> -
-> -- compatible: Must be "ingenic,jz4740-musb"
-> -- reg: Address range of the UDC register set
-> -- interrupts: IRQ number related to the UDC hardware
-> -- interrupt-names: must be "mc"
-> -- clocks: phandle to the "udc" clock
-> -- clock-names: must be "udc"
-> -- phys: phandle to the USB PHY
-> -
-> -Example:
-> -
-> -usb_phy: usb-phy@0 {
-> -	compatible = "usb-nop-xceiv";
-> -	#phy-cells = <0>;
-> -};
-> -
-> -udc: usb@13040000 {
-> -	compatible = "ingenic,jz4740-musb";
-> -	reg = <0x13040000 0x10000>;
-> -
-> -	interrupt-parent = <&intc>;
-> -	interrupts = <24>;
-> -	interrupt-names = "mc";
-> -
-> -	clocks = <&cgu JZ4740_CLK_UDC>;
-> -	clock-names = "udc";
-> -
-> -	phys = <&usb_phy>;
-> -};
-> diff --git a/Documentation/devicetree/bindings/usb/ingenic,musb.yaml b/Documentation/devicetree/bindings/usb/ingenic,musb.yaml
-> new file mode 100644
-> index 000000000000..f8902ee83e56
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/ingenic,musb.yaml
-> @@ -0,0 +1,72 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/usb/ingenic,musb.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Ingenic JZ47xx USB IP DT bindings
-> +
-> +maintainers:
-> +  - Paul Cercueil <paul@crapouillou.net>
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: '^usb@.*'
-> +
-> +  compatible:
-> +    oneOf:
-> +      - const: ingenic,jz4770-musb
-> +      - const: ingenic,jz4740-musb
+Quoting Harigovindan P (2020-01-21 07:52:08)
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/q=
+com/sc7180.dtsi
+> old mode 100644
+> new mode 100755
+> index 8011c5f..963f5c1
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -1151,6 +1151,131 @@
+>                         };
+>                 };
+> =20
+> +               mdss: mdss@ae00000 {
 
-'enum' is preferred over a oneOf + const.
+Is there a better node name for this? display-subsystem perhaps?
 
-Otherwise,
+> +                       compatible =3D "qcom,sc7180-mdss";
+> +                       reg =3D <0 0x0ae00000 0 0x1000>;
+> +                       reg-names =3D "mdss";
+> +
+> +                       power-domains =3D <&dispcc MDSS_GDSC>;
+> +
+> +                       clocks =3D <&gcc GCC_DISP_AHB_CLK>,
+> +                                <&gcc GCC_DISP_HF_AXI_CLK>,
+> +                                <&dispcc DISP_CC_MDSS_MDP_CLK>;
+> +                       clock-names =3D "iface", "gcc_bus", "core";
+> +
+> +                       assigned-clocks =3D <&dispcc DISP_CC_MDSS_MDP_CLK=
+>;
+> +                       assigned-clock-rates =3D <300000000>;
+> +
+> +                       interrupts =3D <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
+> +                       interrupt-controller;
+> +                       #interrupt-cells =3D <1>;
+> +
+> +                       iommus =3D <&apps_smmu 0x800 0x2>;
+> +
+> +                       #address-cells =3D <2>;
+> +                       #size-cells =3D <2>;
+> +                       ranges;
+> +
+> +                       mdss_mdp: mdp@ae01000 {
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Is there a better node name for this? display-controller perhaps? Also,
+first reg property is supposed to be the one after the @ sign. In this
+case that would be ae00000.
+
+> +                               compatible =3D "qcom,sc7180-dpu";
+> +                               reg =3D <0 0x0ae00000 0 0x1000>,
+> +                                     <0 0x0ae01000 0 0x8f000>,
+> +                                     <0 0x0aeb0000 0 0x2008>,
+> +                                     <0 0x0af03000 0 0x16>;
+> +                               reg-names =3D "mdss","mdp", "vbif", "disp=
+_cc";
+
+                                                    ^
+Nitpick: Add a space here after the comma.
 
 > +
-> +  reg:
-> +    maxItems: 1
+> +                               clocks =3D <&dispcc DISP_CC_MDSS_AHB_CLK>,
+> +                                        <&dispcc DISP_CC_MDSS_ROT_CLK>,
+> +                                        <&dispcc DISP_CC_MDSS_MDP_LUT_CL=
+K>,
+> +                                        <&dispcc DISP_CC_MDSS_MDP_CLK>,
+> +                                        <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
+> +                               clock-names =3D "iface", "rot", "lut", "c=
+ore",
+> +                                               "vsync";
+
+Nitpick: Tabbing seems weird here. The clocks property is aligned but
+not the clock-names.
+
+> +                               assigned-clocks =3D <&dispcc DISP_CC_MDSS=
+_MDP_CLK>,
+> +                                                 <&dispcc DISP_CC_MDSS_V=
+SYNC_CLK>;
+> +                               assigned-clock-rates =3D <300000000>,
+> +                                                      <19200000>;
 > +
-> +  clocks:
-> +    maxItems: 1
+> +                               interrupt-parent =3D <&mdss>;
+> +                               interrupts =3D <0 IRQ_TYPE_LEVEL_HIGH>;
 > +
-> +  clock-names:
-> +    items:
-> +      - const: udc
+> +                               ports {
+> +                                       #address-cells =3D <1>;
+> +                                       #size-cells =3D <0>;
 > +
-> +  interrupts:
-> +    maxItems: 1
+> +                                       port@0 {
+> +                                               reg =3D <0>;
+> +                                               dpu_intf1_out: endpoint {
+> +                                                       remote-endpoint =
+=3D <&dsi0_in>;
+> +                                               };
+> +                                       };
+> +                               };
+> +                       };
 > +
-> +  interrupt-names:
-> +    items:
-> +      - const: mc
+> +                       dsi0: qcom,mdss_dsi_ctrl0@ae94000 {
+
+Is there a better node name for this? dsi-controller perhaps?
+
+> +                               compatible =3D "qcom,mdss-dsi-ctrl";
+> +                               reg =3D <0 0x0ae94000 0 0x400>;
+> +                               reg-names =3D "dsi_ctrl";
 > +
-> +  phys:
-> +    description: PHY specifier for the USB PHY
+> +                               interrupt-parent =3D <&mdss>;
+> +                               interrupts =3D <4 IRQ_TYPE_LEVEL_HIGH>;
 > +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - interrupts
-> +  - interrupt-names
-> +  - phys
+> +                               clocks =3D <&dispcc DISP_CC_MDSS_BYTE0_CL=
+K>,
+> +                                       <&dispcc DISP_CC_MDSS_BYTE0_INTF_=
+CLK>,
+> +                                       <&dispcc DISP_CC_MDSS_PCLK0_CLK>,
+> +                                       <&dispcc DISP_CC_MDSS_ESC0_CLK>,
+> +                                       <&dispcc DISP_CC_MDSS_AHB_CLK>,
+> +                                       <&gcc GCC_DISP_HF_AXI_CLK>;
+> +                               clock-names =3D "byte",
+> +                                              "byte_intf",
+> +                                              "pixel",
+> +                                              "core",
+> +                                              "iface",
+> +                                              "bus";
+
+Nitpick: Tabbing is all of here too.
+
 > +
-> +additionalProperties: false
+> +                               phys =3D <&dsi0_phy>;
+> +                               phy-names =3D "dsi";
 > +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/jz4740-cgu.h>
-> +    usb_phy: usb-phy@0 {
-> +      compatible = "usb-nop-xceiv";
-> +      #phy-cells = <0>;
-> +    };
+> +                               #address-cells =3D <1>;
+> +                               #size-cells =3D <0>;
 > +
-> +    udc: usb@13040000 {
-> +      compatible = "ingenic,jz4740-musb";
-> +      reg = <0x13040000 0x10000>;
+> +                               ports {
+> +                                       #address-cells =3D <1>;
+> +                                       #size-cells =3D <0>;
 > +
-> +      interrupt-parent = <&intc>;
-> +      interrupts = <24>;
-> +      interrupt-names = "mc";
+> +                                       port@0 {
+> +                                               reg =3D <0>;
+> +                                               dsi0_in: endpoint {
+> +                                                       remote-endpoint =
+=3D <&dpu_intf1_out>;
+> +                                               };
+> +                                       };
 > +
-> +      clocks = <&cgu JZ4740_CLK_UDC>;
-> +      clock-names = "udc";
+> +                                       port@1 {
+> +                                               reg =3D <1>;
+> +                                               dsi0_out: endpoint {
+> +                                               };
+> +                                       };
+> +                               };
+> +                       };
 > +
-> +      phys = <&usb_phy>;
-> +    };
-> -- 
-> 2.24.1
-> 
+> +                       dsi0_phy: dsi-phy0@ae94400 {
+
+Just call it 'dsi-phy' or 'phy' please. The address differentiates it and
+the phandle can call it 0.
+
+> +                               compatible =3D "qcom,dsi-phy-10nm";
+> +                               reg =3D <0 0x0ae94400 0 0x200>,
+> +                                     <0 0x0ae94600 0 0x280>,
+> +                                     <0 0x0ae94a00 0 0x1e0>;
+> +                               reg-names =3D "dsi_phy",
+> +                                           "dsi_phy_lane",
+> +                                           "dsi_pll";
+> +
+> +                               #clock-cells =3D <1>;
+> +                               #phy-cells =3D <0>;
+> +
+> +                               clocks =3D <&dispcc DISP_CC_MDSS_AHB_CLK>;
+
+Do you need the XO or reference clk here too? So that the PLL can generate =
+a clk with
+the reference clk?
+
+> +                               clock-names =3D "iface";
+> +
+
+Nitpick: Why the extra newline? Please remove.
+
+> +                       };
+> +               };
+> +
+>                 pdc: interrupt-controller@b220000 {
+>                         compatible =3D "qcom,sc7180-pdc", "qcom,pdc";
+>                         reg =3D <0 0x0b220000 0 0x30000>;
