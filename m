@@ -2,124 +2,79 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF18CC33CB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 06:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D52F3C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 06:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C626124656
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 06:14:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JTYYbWWD"
+	by mail.kernel.org (Postfix) with ESMTP id A645E21734
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 06:19:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728776AbgAUGOd (ORCPT
+        id S1728779AbgAUGTb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 01:14:33 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:50870 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbgAUGOc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 01:14:32 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00L69BAe157535;
-        Tue, 21 Jan 2020 06:14:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=/qzG8cVh/rpF6yH6YERpeOBRx7eeia2tnSf+GgPT6IE=;
- b=JTYYbWWDhenZG8I7zkVpSLKsqWXMPSyCtgd68u1DQeXaCd6J5DdPizjWY4Ecw7ppmoOP
- z0FiquchfcL94QlsAVI/PTlN6fpdgULf2puepSFD2Cokdtjs5kDg1wBAgKR6bKtmhiTz
- c7dxj66aif2jOgZksQdkeS5qUqCy9+MZhv7T6ZSYn8bci7Q0AwR8KwcJ1tfvHSIoiwSY
- XS/mwFJqrdnb0m4xVCY8sJnevAJ0SRIB9QHeEQtN39hyp5BVdLs+0XNQiJqQw4AN2/Jb
- iLEUbinOB0VBRbsTNsbl5jsy08qPimfYDBJL2Ac98TWoGmCp73jpQHfDuO2TjQr0c+YS +g== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2xkseuawe9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 Jan 2020 06:14:11 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00L699lq079053;
-        Tue, 21 Jan 2020 06:14:11 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2xnsa7y05k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 Jan 2020 06:14:11 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00L6E9rS026928;
-        Tue, 21 Jan 2020 06:14:09 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 20 Jan 2020 22:14:09 -0800
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        martin.petersen@oracle.com, axboe@kernel.dk, tytso@mit.edu,
-        adilger.kernel@dilger.ca, Chaitanya.Kulkarni@wdc.com,
-        darrick.wong@oracle.com, ming.lei@redhat.com, osandov@fb.com,
-        jthumshirn@suse.de, minwoo.im.dev@gmail.com, damien.lemoal@wdc.com,
-        andrea.parri@amarulasolutions.com, hare@suse.com, tj@kernel.org,
-        ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
-        bvanassche@acm.org, dhowells@redhat.com, asml.silence@gmail.com
-Subject: Re: [PATCH block v2 2/3] block: Add support for REQ_NOZERO flag
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <157917805422.88675.6477661554332322975.stgit@localhost.localdomain>
-        <157917816325.88675.16481772163916741596.stgit@localhost.localdomain>
-Date:   Tue, 21 Jan 2020 01:14:05 -0500
-In-Reply-To: <157917816325.88675.16481772163916741596.stgit@localhost.localdomain>
-        (Kirill Tkhai's message of "Thu, 16 Jan 2020 15:36:03 +0300")
-Message-ID: <yq14kwpibf6.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9506 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=997
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001210054
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9506 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001210054
+        Tue, 21 Jan 2020 01:19:31 -0500
+Received: from mga02.intel.com ([134.134.136.20]:62547 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726052AbgAUGTa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 01:19:30 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 22:19:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,344,1574150400"; 
+   d="scan'208";a="278301056"
+Received: from hyperv-sh3.bj.intel.com ([10.240.193.95])
+  by fmsmga001.fm.intel.com with ESMTP; 20 Jan 2020 22:19:27 -0800
+From:   Jing Liu <jing2.liu@linux.intel.com>
+To:     virtio-dev@lists.oasis-open.org
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        qemu-devel@nongnu.org, Jing Liu <jing2.liu@linux.intel.com>
+Subject: [virtio-dev] [PATCH v2 0/5] virtio-mmio enhancement
+Date:   Tue, 21 Jan 2020 21:54:28 +0800
+Message-Id: <1579614873-21907-1-git-send-email-jing2.liu@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The current virtio over MMIO has some limitations that impact the performance.
+It only supports single legacy, dedicated interrupt and one virtqueue
+notification register for all virtqueues which cause performance penalties.
 
-Kirill,
+To address such limitations, we proposed to update virtio-mmio spec with
+two new feature bits to support MSI interrupt and enhancing notification mechanism.
 
-> +	if (flags & BLKDEV_ZERO_NOUNMAP)
-> +		req_flags |= REQ_NOUNMAP;
-> +	if (flags & BLKDEV_ZERO_ALLOCATE)
-> +		req_flags |= REQ_NOZERO|REQ_NOUNMAP;
+For keeping virtio-mmio simple as it was, and considering practical usages, this
+provides two kinds of mapping mode for device: MSI non-sharing mode and MSI sharing mode.
+MSI non-sharng mode indicates a fixed static vector and event relationship specified
+in spec, which can simplify the setup process and reduce vmexit, fitting for
+a high interrupt rate request.
+MSI sharing mode indicates a dynamic mapping, which is more like PCI does, fitting
+for a non-high interrupt rate request.
 
-I find there is some dissonance between using BLKDEV_ZERO_ALLOCATE to
-describe this operation in one case and REQ_NOZERO in the other.
+Change Log:
+v1->v2:
+* Change version update to feature bit
+* Add mask/unmask support
+* Add two MSI sharing/non-sharing modes
+* Change MSI registers layout and bits
 
-I understand why not zeroing is important in your case. However, I think
-the allocation aspect is semantically more important. Also, in the case
-of SCSI, the allocated blocks will typically appear zeroed. So from that
-perspective REQ_NOZERO doesn't really make sense. I would really prefer
-to use REQ_ALLOCATE to describe this operation. I agree that "do not
-write every block" is important too. I just don't have a good suggestion
-for how to express that as an additional qualifier to REQ_ALLOCATE_?.
+Jing Liu (5):
+  virtio-mmio: Add feature bit for MMIO notification
+  virtio-mmio: Enhance queue notification support
+  virtio-mmio: Add feature bit for MMIO MSI
+  virtio-mmio: Introduce MSI details
+  virtio-mmio: MSI vector and event mapping
 
-Also, adding to the confusion: In the context of SCSI, ANCHOR requires
-UNMAP. So my head hurts a bit when I read REQ_NOZERO|REQ_NOUNMAP and
-have to translate that into ANCHOR|UNMAP.
-
-Longer term, I think we should consider introducing REQ_OP_SINGLE_RANGE
-or something like that as an umbrella operation that can be used to
-describe zeroing, allocating, and other things that operate on a single
-LBA range with no payload. Thus removing both the writiness and the
-zeroness from the existing REQ_OP_WRITE_ZEROES conduit.
-
-Naming issues aside, your patch looks fine. I'll try to rebase my SCSI
-patches on top of your series to see how things fit.
+ content.tex | 286 ++++++++++++++++++++++++++++++++++++++++++++++++++++++------
+ msi-state.c |   5 ++
+ 2 files changed, 262 insertions(+), 29 deletions(-)
+ create mode 100644 msi-state.c
 
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.7.4
+
