@@ -2,221 +2,80 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 120ECC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 20:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 927EEC33CAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 20:38:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCC2A2070C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 20:36:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5679B217F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 20:38:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lYMW2yUn"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="eZhJmakm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729106AbgAUUgD (ORCPT
+        id S1728899AbgAUUir (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 15:36:03 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:45510 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728596AbgAUUgC (ORCPT
+        Tue, 21 Jan 2020 15:38:47 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:39004 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727383AbgAUUiq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 15:36:02 -0500
-Received: by mail-ot1-f67.google.com with SMTP id 59so4181667otp.12
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 12:36:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AjmyNrJxYMj9hx1pEuIb5xYTG+vY8gWyJHwqNS1wCUw=;
-        b=lYMW2yUnqU+zx4ieWubcOjSROpxN401Tpbrn63gqgQ4x6brvwtQf7WG/yzoS5AsTRI
-         WfzTFKvIH2QF+P+nH4Vc0B4YYLANVU0PI19pHWWP78vCzJ8jXCep86AuuKqS/TkOYJ28
-         hxgriH4/k2QXkoKHO31Jun2sDkQahURBWm0aQ6TEM+yFi9xFJd2vU9hDC2cLVpyzz8aY
-         u4n4IrbFv/Zhj1cUWps5ugGdUybSqNl3GTv+mHXDESyjyV5pN9+TaOW7NvfK5pUHK2iB
-         RMeeEtXec/MxQnYQpAahMSSAaODYLL15L2jpd2DdsAEmtOZ0JxhXMGneRH5UlzCbFQrj
-         xopQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AjmyNrJxYMj9hx1pEuIb5xYTG+vY8gWyJHwqNS1wCUw=;
-        b=YOEZcVJcYgBDwdgFtCBGpWzK6MYxCH4L52GMJfnzVAboV8XM0YWrZu1kflyGjv+0aO
-         zEVhdClTAsxshc4H+VIJ2y5gGeKPK9566fUCW4bndlxPmecglLlrEf4obGTsopGQ7eV8
-         G5reOjmdwfmYNUXXkb6CtFNmuvwRNyU3NftP/e1RieGDa7p9IvWVEDvmTMgUSzAC1cNg
-         gxJdUroYWrSCKBqOBUOjMr/GpU0T18upRIOs055MDYP3CJRuTSxdEdfOjJ5kPJCX/EIf
-         fE9cJzUNItgEIMW6CKOzrFEUtMgyMxe10eGQbSYweXaYhuTtldwAtCgJ+DmtCSdtKn7H
-         /0zg==
-X-Gm-Message-State: APjAAAUtgMlrUuSzVfVN8Y6+hlyli96HebReg5YnuOtrLxCe/RzghMrZ
-        lRD8J5npG1NagmNUS1j2OAq8iN1k5oxkaWdswFfJGg==
-X-Google-Smtp-Source: APXvYqwgXs7czsJCQcE0FxmXxjGa8yZWNEpRlzR0wER2hE9bDkrrsFEakgj5celusSdyT2BSRWkeNs0W3jvW/Er/wP0=
-X-Received: by 2002:a9d:5f13:: with SMTP id f19mr5029900oti.180.1579638961077;
- Tue, 21 Jan 2020 12:36:01 -0800 (PST)
+        Tue, 21 Jan 2020 15:38:46 -0500
+Received: from [10.137.112.111] (unknown [131.107.147.111])
+        by linux.microsoft.com (Postfix) with ESMTPSA id E32BA2008819;
+        Tue, 21 Jan 2020 12:38:45 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E32BA2008819
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1579639126;
+        bh=39hRDfcQoedGytqRqIp/6T1ZCaQPsUpXvrhCIte/taw=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=eZhJmakmz0bsFphuCLNYJ7RtxE+ijV4PfcNO94/c7nk1lWIBY5xF+b+pGNIz8ANta
+         ZVVcFf3bdyrBRSdA1LQwXQhOcjlcEK2yaPIC0BmcNh6aTOleO0ElMu0iR9TdkmI36O
+         zlgZiqHYC5tzGODOOaTLotQpBq3cUGqb0sQk/7Zw=
+Subject: Re: [PATCH] IMA: Turn IMA_MEASURE_ASYMMETRIC_KEYS off by default
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        linux-integrity@vger.kernel.org
+Cc:     sashal@kernel.org, linux-kernel@vger.kernel.org
+References: <20200121171302.4935-1-nramas@linux.microsoft.com>
+ <1579628090.3390.28.camel@HansenPartnership.com>
+ <1579634035.5125.311.camel@linux.ibm.com>
+ <1579636351.3390.35.camel@HansenPartnership.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <ac6c559e-2d68-afcb-d316-6ac49a570831@linux.microsoft.com>
+Date:   Tue, 21 Jan 2020 12:38:58 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-References: <20200121160312.26545-1-mathieu.desnoyers@efficios.com>
- <CAG48ez2bQdoT9y7HkyU06DTazysUDdPdJe+gyV-NxgQA7JWQVQ@mail.gmail.com> <430172781.596271.1579636021412.JavaMail.zimbra@efficios.com>
-In-Reply-To: <430172781.596271.1579636021412.JavaMail.zimbra@efficios.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Tue, 21 Jan 2020 21:35:33 +0100
-Message-ID: <CAG48ez2Z5CesMfandNK+S32Rrgp_QGQHqQ1Fpd5-YTsCWGfHeg@mail.gmail.com>
-Subject: Re: [RFC PATCH v1] pin_on_cpu: Introduce thread CPU pinning system call
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Joel Fernandes <joelaf@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Watson <davejwatson@fb.com>,
-        Will Deacon <will.deacon@arm.com>, shuah <shuah@kernel.org>,
-        Andi Kleen <andi@firstfloor.org>,
-        linux-kselftest <linux-kselftest@vger.kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Chris Lameter <cl@linux.com>,
-        Russell King <linux@arm.linux.org.uk>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        Paul Turner <pjt@google.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        rostedt <rostedt@goodmis.org>, Ben Maurer <bmaurer@fb.com>,
-        linux-api <linux-api@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1579636351.3390.35.camel@HansenPartnership.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 8:47 PM Mathieu Desnoyers
-<mathieu.desnoyers@efficios.com> wrote:
->
-> ----- On Jan 21, 2020, at 12:20 PM, Jann Horn jannh@google.com wrote:
->
-> > On Tue, Jan 21, 2020 at 5:13 PM Mathieu Desnoyers
-> > <mathieu.desnoyers@efficios.com> wrote:
-> >> There is an important use-case which is not possible with the
-> >> "rseq" (Restartable Sequences) system call, which was left as
-> >> future work.
-> >>
-> >> That use-case is to modify user-space per-cpu data structures
-> >> belonging to specific CPUs which may be brought offline and
-> >> online again by CPU hotplug. This can be used by memory
-> >> allocators to migrate free memory pools when CPUs are brought
-> >> offline, or by ring buffer consumers to target specific per-CPU
-> >> buffers, even when CPUs are brought offline.
-> >>
-> >> A few rather complex prior attempts were made to solve this.
-> >> Those were based on in-kernel interpreters (cpu_opv, do_on_cpu).
-> >> That complexity was generally frowned upon, even by their author.
-> >>
-> >> This patch fulfills this use-case in a refreshingly simple way:
-> >> it introduces a "pin_on_cpu" system call, which allows user-space
-> >> threads to pin themselves on a specific CPU (which needs to be
-> >> present in the thread's allowed cpu mask), and then clear this
-> >> pinned state.
-> > [...]
-> >> For instance, this allows implementing this userspace library API
-> >> for incrementing a per-cpu counter for a specific cpu number
-> >> received as parameter:
-> >>
-> >> static inline __attribute__((always_inline))
-> >> int percpu_addv(intptr_t *v, intptr_t count, int cpu)
-> >> {
-> >>         int ret;
-> >>
-> >>         ret = rseq_addv(v, count, cpu);
-> >> check:
-> >>         if (rseq_unlikely(ret)) {
-> >>                 pin_on_cpu_set(cpu);
-> >>                 ret = rseq_addv(v, count, percpu_current_cpu());
-> >>                 pin_on_cpu_clear();
-> >>                 goto check;
-> >>         }
-> >>         return 0;
-> >> }
-> >
-> > What does userspace have to do if the set of allowed CPUs switches all
-> > the time? For example, on Android, if you first open Chrome and then
-> > look at its allowed CPUs, Chrome is allowed to use all CPU cores
-> > because it's running in the foreground:
-> >
-> > walleye:/ # ps -AZ | grep 'android.chrome$'
-> > u:r:untrusted_app:s0:c145,c256,c512,c768 u0_a145 7845 805 1474472
-> > 197868 SyS_epoll_wait f09c0194 S com.android.chrome
-> > walleye:/ # grep cpuset /proc/7845/cgroup; grep Cpus_allowed_list
-> > /proc/7845/status
-> > 3:cpuset:/top-app
-> > Cpus_allowed_list: 0-7
-> >
-> > But if you then switch to the home screen, the application is moved
-> > into a different cgroup, and is restricted to two CPU cores:
-> >
-> > walleye:/ # grep cpuset /proc/7845/cgroup; grep Cpus_allowed_list
-> > /proc/7845/status
-> > 3:cpuset:/background
-> > Cpus_allowed_list: 0-1
->
-> Then at that point, pin_on_cpu() would only be allowed to pin on
-> CPUs 0 and 1.
+On 1/21/2020 11:52 AM, James Bottomley wrote:
 
-Which means that you can't actually reliably use pin_on_cpu_set() to
-manipulate percpu data structures since you have to call it with the
-assumption that it might randomly fail at any time, right? And then
-userspace needs to code a fallback path that somehow halts all the
-threads with thread-directed signals or something?
-Especially if the task trying to use pin_on_cpu_set() isn't allowed to
-pin to the target CPU, but all the other tasks using the shared data
-structure are allowed to do that. Or if the CPU you want to pin to is
-always removed from your affinity mask immediately before
-pin_on_cpu_set() and added back immediately afterwards.
+>> - really small devices/sensors being able to queue certificates
+> 
+> seems like the answer to this one would be don't queue.  I realise it's
+> after the submit design, but what about measuring when the key is added
+> if there's a policy otherwise measure the keyring when the policy is
+> added ... that way no queueing.
 
-> > At the same time, I also wonder whether it is a good idea to allow
-> > userspace to stay active on a CPU even after the task has been told to
-> > move to another CPU core - that's probably not exactly a big deal, but
-> > seems suboptimal to me.
->
-> Do you mean the following scenario for a given task ?
->
-> 1) set affinity to CPU 0,1,2
-> 2) pin on CPU 2
-> 3) set affinity to CPU 0,1
->
-> In the patch I propose here, step (3) is forbidden by this added check in
-> __set_cpus_allowed_ptr, which is used by sched_setaffinity(2):
->
-> +       /* Prevent removing the currently pinned CPU from the allowed cpu mask. */
-> +       if (is_pinned_task(p) && !cpumask_test_cpu(p->pinned_cpu, new_mask)) {
-> +               ret = -EINVAL;
-> +               goto out;
-> +       }
+Without the "deferred key processing" changes, only keys added at 
+runtime were measured (if policy permitted).
 
-How does that interact with things like cgroups? What happens when
-root tries to move a process from the cpuset:/top-app cgroup to the
-cpuset:/background cgroup? Does that also just throw an error code?
+"deferred key processing" enabled queuing keys added early in the boot 
+process and measured them when the policy is loaded.
 
-> > I'm wondering whether it might be possible to rework this mechanism
-> > such that, instead of moving the current task onto a target CPU, it
-> > prevents all *other* threads of the current process from running on
-> > that CPU (either entirely or in user mode). That might be the easiest
-> > way to take care of issues like CPU hotplugging and changing cpusets
-> > all at once? The only potential issue I see with that approach would
-> > be that you wouldn't be able to use it for inter-process
-> > communication; and I have no idea whether this would be good or bad
-> > performance-wise.
->
-> Firstly, inter-process communication over shared memory is one of my use-cases
-> (for lttng-ust's ring buffer).
->
-> I'm not convinced that applying constraints on all other threads belonging to
-> the current process would be easier or faster than migrating the current thread
-> over to the target CPU. I'm unsure how those additional constraints would
-> fit with other threads already having their own cpu affinity masks (which
-> could generate an empty cpumask by adding an extra constraint).
+We can make this (the queuing) optional through a config, but leave the 
+runtime key measurement auto-enabled (as is the config 
+IMA_MEASURE_ASYMMETRIC_KEYS now).
 
-Hm - is an empty cpumask a problem here? If one task is in the middle
-of a critical section for performing maintenance on a percpu data
-structure, isn't it a nice design property to exclude concurrent
-access from other tasks to that data structure automatically (by
-preventing those tasks by running on that CPU)? That way the
-(presumably rarely-executed) update path doesn't have to be
-rseq-reentrancy-safe.
+  -lakshmi
+
