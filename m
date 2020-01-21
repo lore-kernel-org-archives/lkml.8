@@ -2,127 +2,112 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 089F9C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49684C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:11:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D032C21569
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:11:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F599217F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:11:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DvWqyFeX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o8ADRwsz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729380AbgAUQLL (ORCPT
+        id S1729437AbgAUQLN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 11:11:11 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:24372 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729238AbgAUQLK (ORCPT
+        Tue, 21 Jan 2020 11:11:13 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39879 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726555AbgAUQLL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 11:11:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579623069;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=heVKG+KSMzawq2hC2KgTNTV1AZM6QZ5629QiClM/r1A=;
-        b=DvWqyFeXCIVWIQfTa6O7EDCPLTdyr2SpUsYk90z6zYMD8GekQWRK7ypH10El6l+/4Z0A7+
-        F2G+klwk1qN3woOZ5U6X5sAm1eDB/G+ONAjg7w2RR+gnjOVpOP6zhJqgmOQc9jkmshQUdS
-        fQ/DH7wgt+zRO1gaKVtntuZo9Mr3aiQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-298-2Vtp-qc_OfeKGDhAjMVAfQ-1; Tue, 21 Jan 2020 11:11:02 -0500
-X-MC-Unique: 2Vtp-qc_OfeKGDhAjMVAfQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5A4B4113784C;
-        Tue, 21 Jan 2020 16:11:00 +0000 (UTC)
-Received: from treble (ovpn-122-154.rdu2.redhat.com [10.10.122.154])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9C81E2898C;
-        Tue, 21 Jan 2020 16:10:47 +0000 (UTC)
-Date:   Tue, 21 Jan 2020 10:10:45 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Jessica Yu <jeyu@kernel.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, live-patching@vger.kernel.org,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
-Message-ID: <20200121161045.dhihqibnpyrk2lsu@treble>
-References: <20191015135634.GK2328@hirez.programming.kicks-ass.net>
- <alpine.LSU.2.21.1910151611000.13169@pobox.suse.cz>
- <88bab814-ea24-ece9-2bc0-7a1e10a62f12@redhat.com>
- <20191015153120.GA21580@linux-8ccs>
- <7e9c7dd1-809e-f130-26a3-3d3328477437@redhat.com>
- <20191015182705.1aeec284@gandalf.local.home>
- <20191016074217.GL2328@hirez.programming.kicks-ass.net>
- <20191021150549.bitgqifqk2tbd3aj@treble>
- <20200120165039.6hohicj5o52gdghu@treble>
- <alpine.LSU.2.21.2001210922060.6036@pobox.suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <alpine.LSU.2.21.2001210922060.6036@pobox.suse.cz>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+        Tue, 21 Jan 2020 11:11:11 -0500
+Received: by mail-wm1-f66.google.com with SMTP id 20so3714930wmj.4;
+        Tue, 21 Jan 2020 08:11:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:subject:date:message-id;
+        bh=0r9HTQo0HlkDjaCMRvg6avAGNtQXXo1BGS+PSpMF/rg=;
+        b=o8ADRwszU8umz6tgcM1h3UdSiPzo+mhb6aukx2pasJOBSGTU3zMsRqdHVJfIWBiqX1
+         Bfw46uRQ2EmUosxSyJeoOPjE5Hxwdf0sSEo7MiU1EBQMaHEVDpHLVWgmIIVzcsyZB8tr
+         91Rwk0x9EFfNnh4Df39hN9XK1G+loTMHr7mq0xldzz655I3T3j84pQwX7cjkxHTsOexB
+         laYIDvmaqat3QODRpUAaJs1lwcVK+YCf+DccwGh6qKa4OjXfgQ7TgrHYAlZOkqIZJRO/
+         eq115/iNAA/75Cq/VpNQ1/c4KQuFg/rVaXbSPH6r9KSTuR7YMdWIliJKgUu+TKGkappr
+         D8Bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:subject:date:message-id;
+        bh=0r9HTQo0HlkDjaCMRvg6avAGNtQXXo1BGS+PSpMF/rg=;
+        b=feRnbM+KNpzjrtdUJdVg3oRubF7NyQT5eaTFsrb8Qz3/MRNHggFvsHF1hCADNYCt9Q
+         Lv272LMEg8GcMO07AVeb4k/15MIojcSCa0pBt5ul+7EFdy56C9AtUOrTuOWOSAJMzwxL
+         BsnaHm6wtCZNYTymLH8gOiLML6LEC380s81cb88GrvUqaTsJrah5f5ulQw8nIARGzCcQ
+         bDePtEvT/8NhTcfQEITOw+cBdXdUU2ZS3C5dcA6IWLWOrVfbv7ue6Qc2gEinGOfgjdHV
+         T4GJF4duHKuH6HWECgsjpVVO+nC6n9ZunXN2aUFNESbSOJnmmk2OR0dRWaw7/HbnEPgm
+         eHMQ==
+X-Gm-Message-State: APjAAAXYW8N8wiG4XU4i8g5Tva+/FETD2l7054wx/AjmH4tdTZe6QaXb
+        44sWRLM9StBlY9yC8MJSH+tYJ9vZ
+X-Google-Smtp-Source: APXvYqzVexiF8edJY6JhT2eTC61P3ZXm04IQoJfkwi4v0wI6o/A9Rh/EFnhCXkqXNUYu13FSve02nw==
+X-Received: by 2002:a05:600c:298:: with SMTP id 24mr4931157wmk.141.1579623068933;
+        Tue, 21 Jan 2020 08:11:08 -0800 (PST)
+Received: from 640k.lan ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id l6sm4648584wmf.21.2020.01.21.08.11.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 Jan 2020 08:11:08 -0800 (PST)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: [PATCH] KVM: x86: inline memslot_valid_for_gpte
+Date:   Tue, 21 Jan 2020 17:11:07 +0100
+Message-Id: <1579623067-47221-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 09:35:28AM +0100, Miroslav Benes wrote:
-> On Mon, 20 Jan 2020, Josh Poimboeuf wrote:
-> 
-> > On Mon, Oct 21, 2019 at 10:05:49AM -0500, Josh Poimboeuf wrote:
-> > > On Wed, Oct 16, 2019 at 09:42:17AM +0200, Peter Zijlstra wrote:
-> > > > > which are not compatible with livepatching. GCC upstream now has
-> > > > > -flive-patching option, which disables all those interfering optimizations.
-> > > > 
-> > > > Which, IIRC, has a significant performance impact and should thus really
-> > > > not be used...
-> > > > 
-> > > > If distros ship that crap, I'm going to laugh at them the next time they
-> > > > want a single digit performance improvement because *important*.
-> > > 
-> > > I have a crazy plan to try to use objtool to detect function changes at
-> > > a binary level, which would hopefully allow us to drop this flag.
-> > > 
-> > > But regardless, I wonder if we enabled this flag prematurely.  We still
-> > > don't have a reasonable way to use it for creating source-based live
-> > > patches upstream, and it should really be optional for CONFIG_LIVEPATCH,
-> > > since kpatch-build doesn't need it.
-> > 
-> > I also just discovered that -flive-patching is responsible for all those
-> > "unreachable instruction" objtool warnings which Randy has been
-> > dutifully bugging me about over the last several months.  For some
-> > reason it subtly breaks GCC implicit noreturn detection for local
-> > functions.
-> 
-> Ugh, that is unfortunate. Have you reported it?
+The function now has a single caller, so there is no point
+in keeping it separate.
 
-Not yet (but I plan to).
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/x86/kvm/mmu/mmu.c | 17 ++++-------------
+ 1 file changed, 4 insertions(+), 13 deletions(-)
 
-> > At this point, I only see downsides of -flive-patching, at least until
-> > we actually have real upstream code which needs it.
-> 
-> Can you explain this? The option makes GCC to avoid optimizations which 
-> are difficult to detect and would make live patching unsafe. I consider it 
-> useful as it is, so if you shared the other downsides and what you meant 
-> by real upstream code, we could discuss it.
-
-Only SLES needs it right?  Why inflict it on other livepatch users?  By
-"real upstream code" I mean there's no (documented) way to create live
-patches using the method which relies on this flag.  So I don't see any
-upstream benefits for having it enabled.
-
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 7a17591b28d2..497c9384acf9 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -1267,17 +1267,6 @@ static void unaccount_huge_nx_page(struct kvm *kvm, struct kvm_mmu_page *sp)
+ 	list_del(&sp->lpage_disallowed_link);
+ }
+ 
+-static inline bool memslot_valid_for_gpte(struct kvm_memory_slot *slot,
+-					  bool no_dirty_log)
+-{
+-	if (!slot || slot->flags & KVM_MEMSLOT_INVALID)
+-		return false;
+-	if (no_dirty_log && slot->dirty_bitmap)
+-		return false;
+-
+-	return true;
+-}
+-
+ static struct kvm_memory_slot *
+ gfn_to_memslot_dirty_bitmap(struct kvm_vcpu *vcpu, gfn_t gfn,
+ 			    bool no_dirty_log)
+@@ -1285,8 +1274,10 @@ static inline bool memslot_valid_for_gpte(struct kvm_memory_slot *slot,
+ 	struct kvm_memory_slot *slot;
+ 
+ 	slot = kvm_vcpu_gfn_to_memslot(vcpu, gfn);
+-	if (!memslot_valid_for_gpte(slot, no_dirty_log))
+-		slot = NULL;
++	if (!slot || slot->flags & KVM_MEMSLOT_INVALID)
++		return NULL;
++	if (no_dirty_log && slot->dirty_bitmap)
++		return NULL;
+ 
+ 	return slot;
+ }
 -- 
-Josh
+1.8.3.1
 
