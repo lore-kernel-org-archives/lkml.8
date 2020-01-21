@@ -2,76 +2,130 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C0E7C33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 03:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 187F2C33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 03:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 550E4206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 03:30:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDEE42073D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 03:33:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jDGbw4I2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728779AbgAUDaG (ORCPT
+        id S1728803AbgAUDdJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 22:30:06 -0500
-Received: from baldur.buserror.net ([165.227.176.147]:51656 "EHLO
-        baldur.buserror.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726935AbgAUDaG (ORCPT
+        Mon, 20 Jan 2020 22:33:09 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:25271 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727009AbgAUDdJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 22:30:06 -0500
-Received: from [2601:449:8480:af0:12bf:48ff:fe84:c9a0]
-        by baldur.buserror.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <oss@buserror.net>)
-        id 1itkAR-0005jP-1X; Mon, 20 Jan 2020 21:25:27 -0600
-Message-ID: <bd0fa23b900fe967a8c3c11abd1ba9a47cec474f.camel@buserror.net>
-From:   Scott Wood <oss@buserror.net>
-To:     wangwenhu <wenhu.pku@gmail.com>,
-        Kumar Gala <galak@kernel.crashing.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc:     trivial@kernel.org, wenhu.wang@vivo.com,
-        Rai Harninder <harninder.rai@nxp.com>
-Date:   Mon, 20 Jan 2020 21:25:25 -0600
-In-Reply-To: <20200120144327.20800-1-wenhu.pku@gmail.com>
-References: <20200120144327.20800-1-wenhu.pku@gmail.com>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2601:449:8480:af0:12bf:48ff:fe84:c9a0
-X-SA-Exim-Rcpt-To: wenhu.pku@gmail.com, galak@kernel.crashing.org, benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, trivial@kernel.org, wenhu.wang@vivo.com, harninder.rai@nxp.com
-X-SA-Exim-Mail-From: oss@buserror.net
-Subject: Re: [PATCH] powerpc/Kconfig: Make FSL_85XX_CACHE_SRAM configurable
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on baldur.buserror.net)
+        Mon, 20 Jan 2020 22:33:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579577587;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=eZ9hoh4EXoAUSSoaNodF/53MT2MqP0i4YheKRaQPqJ0=;
+        b=jDGbw4I2SK2BgOroGeQINVP4J8nlLqhr6RrJ8fpAMNp3CnjESfEsO5vby4g3jQAcZlNrT2
+        1Ue4uusDG3T6njGq920JYpXTshYHahpgTXl+ORcMC+etJsp3wQq+QVyPjtqXSHQEo+YS6d
+        D/k8J4PhP+K6ZV3ZUnmM/g+qHLYo/H4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-322-IXrE8Sy2N--LpvrBi-r7Rg-1; Mon, 20 Jan 2020 22:33:05 -0500
+X-MC-Unique: IXrE8Sy2N--LpvrBi-r7Rg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9F6FD107ACC4;
+        Tue, 21 Jan 2020 03:33:02 +0000 (UTC)
+Received: from [10.72.12.208] (ovpn-12-208.pek2.redhat.com [10.72.12.208])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3646D5C290;
+        Tue, 21 Jan 2020 03:32:44 +0000 (UTC)
+Subject: Re: [PATCH 3/5] vDPA: introduce vDPA bus
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Shahaf Shuler <shahafs@mellanox.com>,
+        Rob Miller <rob.miller@broadcom.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Netdev <netdev@vger.kernel.org>,
+        "Bie, Tiwei" <tiwei.bie@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
+        "Liang, Cunming" <cunming.liang@intel.com>,
+        "Wang, Zhihong" <zhihong.wang@intel.com>,
+        "Wang, Xiao W" <xiao.w.wang@intel.com>,
+        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
+        "Zhu, Lingshan" <lingshan.zhu@intel.com>,
+        "eperezma@redhat.com" <eperezma@redhat.com>,
+        "lulu@redhat.com" <lulu@redhat.com>,
+        Parav Pandit <parav@mellanox.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "stefanha@redhat.com" <stefanha@redhat.com>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "hch@infradead.org" <hch@infradead.org>,
+        Ariel Adam <aadam@redhat.com>,
+        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "hanand@xilinx.com" <hanand@xilinx.com>,
+        "mhabets@solarflare.com" <mhabets@solarflare.com>
+References: <20200116124231.20253-1-jasowang@redhat.com>
+ <20200116124231.20253-4-jasowang@redhat.com>
+ <20200117070324-mutt-send-email-mst@kernel.org>
+ <239b042c-2d9e-0eec-a1ef-b03b7e2c5419@redhat.com>
+ <CAJPjb1+fG9L3=iKbV4Vn13VwaeDZZdcfBPvarogF_Nzhk+FnKg@mail.gmail.com>
+ <AM0PR0502MB379553984D0D55FDE25426F6C3330@AM0PR0502MB3795.eurprd05.prod.outlook.com>
+ <20200119045849-mutt-send-email-mst@kernel.org>
+ <d4e7fc56-c9d8-f01f-1504-dd49d5658037@redhat.com>
+ <20200120070710-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <f5860f7e-f6c1-5bc7-53f5-c4badddfdfe4@redhat.com>
+Date:   Tue, 21 Jan 2020 11:32:43 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200120070710-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-01-20 at 06:43 -0800, wangwenhu wrote:
-> From: wangwenhu <wenhu.wang@vivo.com>
-> 
-> When generating .config file with menuconfig on Freescale BOOKE
-> SOC, FSL_85XX_CACHE_SRAM is not configurable for the lack of
-> description in the Kconfig field, which makes it impossible
-> to support L2Cache-Sram driver. Add a description to make it
-> configurable.
-> 
-> Signed-off-by: wangwenhu <wenhu.wang@vivo.com>
 
-The intent was that drivers using the SRAM API would select the symbol.  What
-is the use case for selecting it manually?
+On 2020/1/20 =E4=B8=8B=E5=8D=888:09, Michael S. Tsirkin wrote:
+> On Mon, Jan 20, 2020 at 04:44:34PM +0800, Jason Wang wrote:
+>> On 2020/1/19 =E4=B8=8B=E5=8D=885:59, Michael S. Tsirkin wrote:
+>>> On Sun, Jan 19, 2020 at 09:07:09AM +0000, Shahaf Shuler wrote:
+>>>>> Technically, we can keep the incremental API
+>>>>> here and let the vendor vDPA drivers to record the full mapping
+>>>>> internally which may slightly increase the complexity of vendor dri=
+ver.
+>>>> What will be the trigger for the driver to know it received the last=
+ mapping on this series and it can now push it to the on-chip IOMMU?
+>>> Some kind of invalidate API?
+>>>
+>> The problem is how to deal with the case of vIOMMU. When vIOMMU is ena=
+bling
+>> there's no concept of last mapping.
+>>
+>> Thanks
+> Most IOMMUs have a translation cache so have an invalidate API too.
 
-Since this code was added almost ten years ago and there are still no (in-
-tree?) users of the API, we should just remove the sram code (unless this
-prods someone to submit such a user very soon).
 
--Scott
+Ok, then I get you.
 
+But in this case, when vIOMMU is enabled, each new map became a "last=20
+mapping".
+
+Thanks
+
+>
 
