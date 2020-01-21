@@ -2,140 +2,91 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E463C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 12:28:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8231C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 12:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 472D121734
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 12:28:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ericsson.com header.i=@ericsson.com header.b="uQZ9u/Lb"
+	by mail.kernel.org (Postfix) with ESMTP id B099020882
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 12:30:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579609819;
+	bh=7zVSCo4bHkZ8rsiPtQ9fANUwzfp54VRfaomswFoeaTc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=W88P0PfY7dmQqFojPqXj+W2GVHqIU4ttKULzI3j5Wf7Yeex4Ymgpu9Kn3lfMtOJWh
+	 rStaPe1KV5RkOOWBejzSEbZm1bR/d4RmfcVqCyjpaJlpPM14EJ9paBgHDJ99UF9KST
+	 nnX3yK+m2rONkmfhfUpvZP5/1/GKePQBmGmAnHFs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729609AbgAUM26 (ORCPT
+        id S1729449AbgAUMaS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 07:28:58 -0500
-Received: from mail-eopbgr60060.outbound.protection.outlook.com ([40.107.6.60]:50149
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727059AbgAUM25 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 07:28:57 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=O/RJqwU4Ot0p37+Of0wWys5R4DAPitlhlIuL8WRBY2Sd8jKwoGCzyIGUB4etr/0rRoisjH56tiAS+i43N6kkA4oqTBYKwmn8j8wrwUi4s46qpYzZfMcMfqq3h9+E3HoCaBj8RG3oQPJ+3qS2ScajyWHzIYl4g5oU3ha/W3HvsFNIRiNrfGJ2I6PHtvz9ErIardH0sE9XmNgTW6dewd2A/i7eXC+AT7KZkj8Ej1DamAwoRH8cD2yYoIPinG6uajEdU8GDT+uI5fvfV+zW7wvIoCYtD9oQN3qTORJJZv7aKTgee8yI22ObVlqkWXgrIeybmwqjOP/4K8Wn2yKam3Gs7g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=y2UYLLE5fewWsJAFXrc4Tsgk0uji42uHaNZ+AH8Gih8=;
- b=PQGhwqCrf4OjFwJzD0W6c2NWAEwLEk4YzHLShrQvwVvVcqnGrhkQG4PgRuEIAUUkwDi30D7897vz5tp0/APLY9zzwyEe1mF5lHEL+u0VKjBLkJX8O8+sMajCzLIBSqSfEkFonZSQZ0pPDSkAc8h7PcKjuDSCgYUHqK4QKQT4VCsvzwSvNJy4iGnZ+tbHqlwam9NFBCfh8Jt20Cb56BZWRkBe1AXzqnsHAFv3Bv0apPrmj2FtRqPqtACdC5DDtNExColSeuqkz5x7TuM6dNsfogVg+mxThT9w3d8Atr13AN9mXISTFoXKia5NY4yTCcQkX3PZSWMMaSHSa8KUG3tKjQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 192.176.1.74) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=ericsson.com;
- dmarc=pass (p=reject sp=none pct=100) action=none header.from=ericsson.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ericsson.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=y2UYLLE5fewWsJAFXrc4Tsgk0uji42uHaNZ+AH8Gih8=;
- b=uQZ9u/LbpU7t8VrDSOmCf+ppOzHPehfGYJzjOlhPzvIMW7Sb/6DhzbTmSOeaiEjHndoto7nlBpL0swRHHP0tH4QlyiUdvs0dYcM4aPzNMVjfZd9CqN7grjp1Qn0gW7zelDygx4RJJxSU5U5k01OhhuxWaFQH7u0XCdpfejc9Moo=
-Received: from AM4PR07CA0016.eurprd07.prod.outlook.com (2603:10a6:205:1::29)
- by VI1PR07MB3360.eurprd07.prod.outlook.com (2603:10a6:802:1c::26) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.15; Tue, 21 Jan
- 2020 12:28:55 +0000
-Received: from AM5EUR02FT023.eop-EUR02.prod.protection.outlook.com
- (2a01:111:f400:7e1e::204) by AM4PR07CA0016.outlook.office365.com
- (2603:10a6:205:1::29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.12 via Frontend
- Transport; Tue, 21 Jan 2020 12:28:55 +0000
-Authentication-Results: spf=pass (sender IP is 192.176.1.74)
- smtp.mailfrom=ericsson.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=pass action=none
- header.from=ericsson.com;
-Received-SPF: Pass (protection.outlook.com: domain of ericsson.com designates
- 192.176.1.74 as permitted sender) receiver=protection.outlook.com;
- client-ip=192.176.1.74; helo=oa.msg.ericsson.com;
-Received: from oa.msg.ericsson.com (192.176.1.74) by
- AM5EUR02FT023.mail.protection.outlook.com (10.152.8.166) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.20.2644.19 via Frontend Transport; Tue, 21 Jan 2020 12:28:54 +0000
-Received: from ESESSMB504.ericsson.se (153.88.183.165) by
- ESESBMR506.ericsson.se (153.88.183.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Tue, 21 Jan 2020 13:28:54 +0100
-Received: from ESESBMB502.ericsson.se (153.88.183.169) by
- ESESSMB504.ericsson.se (153.88.183.41) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Tue, 21 Jan 2020 13:28:53 +0100
-Received: from [159.107.143.214] (153.88.183.153) by
- smtp.internal.ericsson.com (153.88.183.185) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Tue, 21 Jan 2020 13:28:53 +0100
-From:   =?UTF-8?Q?Zolt=c3=a1n_Kiss_Z?= <zoltan.z.kiss@ericsson.com>
-Organization: Ericsson AB
-To:     <linux-kernel@vger.kernel.org>
-Subject: [perf] periodic performance monitoring interrupts causing heavy
- delays
-Message-ID: <c72df5db-914f-0e9b-5b63-d8164817b360@ericsson.com>
-Date:   Tue, 21 Jan 2020 13:28:53 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 21 Jan 2020 07:30:18 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:56264 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728741AbgAUMaS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 07:30:18 -0500
+Received: by mail-wm1-f68.google.com with SMTP id q9so2752434wmj.5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 04:30:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+jANiQwDgpGHM04JQ+o8U8xuaAXHe7Za6seI5Varxfk=;
+        b=O3gtok8NI5RmT1Z+MgIen6BN0PCuJ+ze1Qu9XSeW52HB/RcimMxMiRM7hU+hrG0Ymb
+         R1nLMyVbmurdzu7RdAjARX1CqeINQe0yWL3hH+JqvvEg2flNqK9J98atq4HQcxe0OzFS
+         6h5hkQ6yc013tjAkzGfu/YE87dfNRfgF+Z6ZK3ZwgXxlrxlMBY2xcsT1/oitH042djc7
+         MEopp6opD+QrTWVoUiXyt6tiuBTo/sjOi/zWCmvpry8apDRd02XdH9jbYAbstkghDyMP
+         eIicK13trjcot91z+0MOsZ98LGHfDk8a6+coLKObXM0sRoS5agsnJHDPZxxAS+nBx5HK
+         WXKw==
+X-Gm-Message-State: APjAAAXaWFbLKjV0SX4F3NS0WuEqGK2WTwTlcw7ijLK7M0bk1EdAS01P
+        oeXleDKBh9n7v2BWMyjJffY=
+X-Google-Smtp-Source: APXvYqwcgA5nH5ammvhK9QPI3vKZPJ/FB3PT9taDyX6TYfo+yLOQMxpMVDw/ptedKlkvAhF5z+yl/Q==
+X-Received: by 2002:a1c:dc08:: with SMTP id t8mr4140274wmg.139.1579609815924;
+        Tue, 21 Jan 2020 04:30:15 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id i5sm53094340wrv.34.2020.01.21.04.30.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2020 04:30:15 -0800 (PST)
+Date:   Tue, 21 Jan 2020 13:30:14 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Scott Cheloha <cheloha@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        nathanl@linux.ibm.com, ricklind@linux.vnet.ibm.com,
+        Scott Cheloha <cheloha@linux.ibm.com>,
+        Donald Dutile <ddutile@redhat.com>
+Subject: Re: [PATCH v4] drivers/base/memory.c: cache blocks in radix tree to
+ accelerate lookup
+Message-ID: <20200121123014.GK29276@dhcp22.suse.cz>
+References: <20191217193238-1-cheloha@linux.vnet.ibm.com>
+ <20200109212516.17849-1-cheloha@linux.vnet.ibm.com>
+ <181caae3-ffb8-c745-a4c9-1aef93ea6dd5@redhat.com>
+ <20200116152214.GX19428@dhcp22.suse.cz>
+ <765a07fe-47e9-fe3d-716a-44d9ee4a5e99@redhat.com>
+ <fe92b4f0-0cd7-c705-1ed9-239175689051@redhat.com>
+ <20200117093514.GO19428@dhcp22.suse.cz>
+ <2df18523-e410-bcfb-478e-6a7579608196@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
-X-Forefront-Antispam-Report: CIP:192.176.1.74;IPV:;CTRY:SE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(346002)(396003)(39860400002)(189003)(199004)(186003)(26005)(36916002)(356004)(316002)(16576012)(956004)(70586007)(336012)(5660300002)(70206006)(426003)(2616005)(36756003)(86362001)(31696002)(246002)(31686004)(6706004)(7636002)(6916009)(2906002)(8936002)(966005)(8676002)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR07MB3360;H:oa.msg.ericsson.com;FPR:;SPF:Pass;LANG:en;PTR:office365.se.ericsson.net;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 0d757d02-e3eb-4683-fe94-08d79e6d7b0f
-X-MS-TrafficTypeDiagnostic: VI1PR07MB3360:
-X-Microsoft-Antispam-PRVS: <VI1PR07MB33601B9CCF2BF888BBFD8DE9D30D0@VI1PR07MB3360.eurprd07.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 0289B6431E
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: aPA3gAIW3Y874M3oRcg/UAA2wNuOmQbu8wRcny1BLMWQomgFz5pC+nZMCArXpzZN+S0+w1hQ8t1e74xjf6e7J6FnQSNKOfITIOJAgCoxky/24qzOJAMFpwP1YQ1DvNi60lLQ32AEs01Nf+7mDrLxNhkAk809hSq9izBeOc8EVb9K3iUX57ool5mCkuUdA7ZJ5i4sF0aw2VsmmnNTm9eAJblowQMNLvXUiyFu1adVzA4lCXDV/RLvTqm3rvEkyQIaxn2t2j/MM5b0XufIy61S+d8Pna6Cw9QxT7RC7aBUEmKpBDiXgLI2hIVAfwC2DGFcZ61kp8veFGOjSVJ55klC0P94S7QLItuioEbcDiocrxudGg0s6czZ2zkyKZVpJBK3vTxdnYXHnh2b97kcappU5t9dBSg7jNn2IBwTyOzPCtkfMcv630j9HjIC2XZ+Z/VOhQ+hg/jsJNX9rFXCmS+vizoaPiF4kPqHQ48DmGdqSJvhgdgFsjAzrbr/oR1/kPmk540BpNI4TJZVABy8cfICQg==
-X-OriginatorOrg: ericsson.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jan 2020 12:28:54.8833
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0d757d02-e3eb-4683-fe94-08d79e6d7b0f
-X-MS-Exchange-CrossTenant-Id: 92e84ceb-fbfd-47ab-be52-080c6b87953f
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=92e84ceb-fbfd-47ab-be52-080c6b87953f;Ip=[192.176.1.74];Helo=[oa.msg.ericsson.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR07MB3360
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2df18523-e410-bcfb-478e-6a7579608196@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon 20-01-20 10:15:32, David Hildenbrand wrote:
+[...]
+> Ping Scott. Will you resend a cleanup like this as a proper patch or
+> shall I?
 
-I'm running some benchmarking on a Dell Poweredge R630 server (Xeon 
-E5-2650 v4 Broadwell) with Ubuntu 18.04 (4.15.0-62 kernel). The 
-application is busy looping on core's reserved with isolcpus. However 
-every 5 seconds there is a ~1 ms glitch where my cores seem to be 
-stopped. After checking interrupts it seems these glitches coincide with 
-an NMI and a "Performance monitoring interrupt" on all the busy looping 
-cores, while the idle ones doesn't receive it. I was not running perf 
-during these occasions, but the below post suggests that there is still 
-some kernel perf activity in the background which causes these interrupts:
-
-https://serverfault.com/questions/714648/how-to-disable-perf-subsystem-in-linux-kernel
-
-I can also see these "perf interrupt took too long" messages even when I 
-never started perf by myself since the last reboot. I've tried to adjust 
-the /proc/sys/kernel/perf_* knobs, without any luck.
-
-The above post suggests that these periodic interrupts cannot be 
-disabled in any way, and I would like to figure out if this is really 
-the case, and if yes, why? A 1 ms glitch in every 5 seconds is quite 
-unacceptable not just because of benchmarking noise, but also for 
-latency sensitive applications like mine.
-Also, I couldn't find any info about these periodic perf background jobs 
-generating the interrupts, could anyone point me to at least some 
-function names where I could start digging, so I could verify if indeed 
-these glitches are due to perf?
-
-Thanks,
-
-Zoltan Kiss
+Maybe just fold it into the orignal patch which is already sitting in
+mmotm?
+-- 
+Michal Hocko
+SUSE Labs
