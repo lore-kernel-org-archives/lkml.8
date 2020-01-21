@@ -2,134 +2,108 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A36ACC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8760CC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:30:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCABE2073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:29:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b="b1iFSSOK"
+	by mail.kernel.org (Postfix) with ESMTP id 5A1C52465A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:30:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728831AbgAUT3O (ORCPT
+        id S1729098AbgAUTaX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 14:29:14 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.50]:23612 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726926AbgAUT3O (ORCPT
+        Tue, 21 Jan 2020 14:30:23 -0500
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:60186 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727383AbgAUTaX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 14:29:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1579634949;
-        s=strato-dkim-0002; d=hartkopp.net;
-        h=In-Reply-To:Date:Message-ID:From:References:To:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=vPvdJUwPaxhFdaK3SDi9GFlbWcswk6F/jC/SrfgsGSc=;
-        b=b1iFSSOKCN93TIsyFGO5yH0M5cBxN1ZvdBP0ug46xQvJFV9i3pDECxYaay5Jog39v1
-        0F4lYGWIZqf0Ku7C95svG+bDSKh49lDs/X58MDJJ7jYixoDil4R2HxOadvM3pURpgS/d
-        vIUHA5nx8/nzdSx1xpiZ/JiLM2NnnhCUrC19ycmCvUOMCUj+GPhHcYQcbsRaFsDkVcN3
-        vPPOSxmFgzTMjXrxh6JlpPovD0LRuFUsWVRdQznPSliszMGw+g0rA941Zdssq9aPVpyZ
-        TJb3GcnhEfpYrb/kmqRWvLc3xkwSrVhCmJ+ooFCaaTUdmaqLnpORYtSGlsta1/4slzt9
-        8x3Q==
-X-RZG-AUTH: ":P2MHfkW8eP4Mre39l357AZT/I7AY/7nT2yrDxb8mjG14FZxedJy6qgO1o3PMaViOoLMJV8h5kyA="
-X-RZG-CLASS-ID: mo00
-Received: from [192.168.40.177]
-        by smtp.strato.de (RZmta 46.1.5 DYNA|AUTH)
-        with ESMTPSA id t040cew0LJSv5f3
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Tue, 21 Jan 2020 20:28:57 +0100 (CET)
-Subject: Re: general protection fault in can_rx_register
-To:     Dmitry Vyukov <dvyukov@google.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        o.rempel@pengutronix.de,
-        syzbot <syzbot+c3ea30e1e2485573f953@syzkaller.appspotmail.com>,
-        David Miller <davem@davemloft.net>, linux-can@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
-References: <00000000000030dddb059c562a3f@google.com>
- <55ad363b-1723-28aa-78b1-8aba5565247e@hartkopp.net>
- <20200120091146.GD11138@x1.vandijck-laurijssen.be>
- <CACT4Y+a+GusEA1Gs+z67uWjtwBRp_s7P4Wd_SMmgpCREnDu3kg@mail.gmail.com>
- <8332ec7f-2235-fdf6-9bda-71f789c57b37@hartkopp.net>
- <2a676c0e-20f2-61b5-c72b-f51947bafc7d@hartkopp.net>
- <20200121083035.GD14537@x1.vandijck-laurijssen.be>
- <20200121185407.GA13462@x1.vandijck-laurijssen.be>
-From:   Oliver Hartkopp <socketcan@hartkopp.net>
-Message-ID: <a04209c8-747b-6116-d915-21c285f48730@hartkopp.net>
-Date:   Tue, 21 Jan 2020 20:28:51 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 21 Jan 2020 14:30:23 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07484;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0ToJ3e.._1579635010;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0ToJ3e.._1579635010)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 22 Jan 2020 03:30:19 +0800
+Subject: Re: [Patch v2] mm/migrate.c: also overwrite error when it is bigger
+ than zero
+To:     Wei Yang <richardw.yang@linux.intel.com>
+Cc:     akpm@linux-foundation.org, jhubbard@nvidia.com, vbabka@suse.cz,
+        cl@linux.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        mhocko@kernel.org
+References: <20200119065753.21694-1-richardw.yang@linux.intel.com>
+ <20200121015326.GE1567@richard>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <6fc3e936-eed0-eb18-ecd8-36dcc4c51218@linux.alibaba.com>
+Date:   Tue, 21 Jan 2020 11:30:03 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200121185407.GA13462@x1.vandijck-laurijssen.be>
+In-Reply-To: <20200121015326.GE1567@richard>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kurt,
-
-On 21/01/2020 19.54, Kurt Van Dijck wrote:
-> On di, 21 jan 2020 09:30:35 +0100, Kurt Van Dijck wrote:
->> On ma, 20 jan 2020 23:35:16 +0100, Oliver Hartkopp wrote:
 
 
->>> But it is still open why dev->ml_priv is not set correctly in vxcan.c as all
->>> the settings for .priv_size and in vxcan_setup look fine.
+On 1/20/20 5:53 PM, Wei Yang wrote:
+> On Sun, Jan 19, 2020 at 02:57:53PM +0800, Wei Yang wrote:
+>> If we get here after successfully adding page to list, err would be
+>> 1 to indicate the page is queued in the list.
 >>
->> Maybe I got completely lost:
->> Shouldn't can_ml_priv and vxcan_priv not be similar?
->> Where is the dev_rcv_lists in the vxcan case?
-> 
-> I indeed got completely lost. vxcan_priv & can_ml_priv form together the
-> private part. I continue looking
+>> Current code has two problems:
+>>
+>>   * on success, 0 is not returned
+>>   * on error, if add_page_for_migratioin() return 1, and the following err1
+>>     from do_move_pages_to_node() is set, the err1 is not returned since err
+>>     is 1
+>>
+>> And these behaviors break the user interface.
+>>
+>> Fixes: e0153fc2c760 ("mm: move_pages: return valid node id in status if the
+>> page is already on the target node").
+>> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+>>
+>> ---
+>> v2:
+>>   * put more words to explain the error case
+>> ---
+>> mm/migrate.c | 2 +-
+>> 1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/mm/migrate.c b/mm/migrate.c
+>> index 86873b6f38a7..430fdccc733e 100644
+>> --- a/mm/migrate.c
+>> +++ b/mm/migrate.c
+>> @@ -1676,7 +1676,7 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
+>> 	err1 = do_move_pages_to_node(mm, &pagelist, current_node);
+>> 	if (!err1)
+>> 		err1 = store_status(status, start, current_node, i - start);
+>> -	if (!err)
+>> +	if (err >= 0)
+>> 		err = err1;
+> Ok, as mentioned by Yang and Michal, only err == 0 means no error.
 
-I added some more debug output:
+I think Michal means do_move_pages_to_node() only, 
+add_page_for_migration() returns 1 on purpose.
 
-@@ -463,6 +463,10 @@ int can_rx_register(struct net *net, struct 
-net_device *dev, canid_t can_id,
-         spin_lock_bh(&net->can.rcvlists_lock);
+But, actually the syscall may still return > 0 value since err1 might be 
+ > 0. Anyway, this is another regression. The patch itself looks correct 
+to me.
 
-         dev_rcv_lists = can_dev_rcv_lists_find(net, dev);
-+       if (!dev_rcv_lists) {
-+               pr_err("dev_rcv_lists == NULL! %p (%s)\n", dev, dev->name);
-+               goto out_unlock;
-+       }
-         rcv_list = can_rcv_list_find(&can_id, &mask, dev_rcv_lists);
-
-         rcv->can_id = can_id;
+Acked-by: Yang Shi <yang.shi@linux.alibaba.com>
 
 
-and the output becomes:
+>
+> Sounds this regression should be fixed in another place. Let me send out
+> another patch.
+>
+>> out:
+>> 	return err;
+>> -- 
+>> 2.17.1
 
-[ 1814.644087] bond5130: (slave vxcan1): The slave device specified does 
-not support setting the MAC address
-[ 1814.644106] bond5130: (slave vxcan1): Error -22 calling dev_set_mtu
-[ 1814.648867] bond5128: (slave vxcan1): The slave device specified does 
-not support setting the MAC address
-[ 1814.648904] bond5128: (slave vxcan1): Error -22 calling dev_set_mtu
-[ 1814.649124] dev_rcv_lists == NULL! 000000008e41fb06 (bond5128)
-[ 1814.696420] bond5129: (slave vxcan1): The slave device specified does 
-not support setting the MAC address
-[ 1814.696438] bond5129: (slave vxcan1): Error -22 calling dev_set_mtu
-
-So it's not the vxcan1 netdev that causes the issue but (sporadically!!) 
-the bonding netdev.
-
-Interesting enough that the bonding device bond5128 obviously passes the
-
-        if (dev && dev->type != ARPHRD_CAN)
-                 return -ENODEV;
-test.
-
-?!?
-
-Regards,
-Oliver
