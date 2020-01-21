@@ -2,122 +2,126 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C015C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 23:56:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D303FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 23:57:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4805920704
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 23:56:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B515F20704
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 23:57:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727847AbgAUX4J convert rfc822-to-8bit (ORCPT
+        id S1728708AbgAUX5Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 18:56:09 -0500
-Received: from mail-il1-f199.google.com ([209.85.166.199]:44795 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbgAUX4J (ORCPT
+        Tue, 21 Jan 2020 18:57:24 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:36365 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725876AbgAUX5X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 18:56:09 -0500
-Received: by mail-il1-f199.google.com with SMTP id h87so3429898ild.11
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 15:56:08 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to
-         :content-transfer-encoding;
-        bh=FP19rMCZrA8aEYztsjM0/NcqndOiX+PGABvAiUHnfqc=;
-        b=hAuZ6HzYytj83JBpQNb8biS7OrDiG72ARoWmobFg0jjM3+ykqjd4ZEw4O+Mv1yTeJk
-         oDEUOgHKTubVGg2FC5tiOL0Uyz8+Sc9Nw/XUXvVXPeR2xltUPBBAsq68hYSDZscLONAl
-         gcRtOvQ9kHhknj3Xjrsu9Bcqj1Wj2L70PUKBimijKMRwkOjFrx6fbX9TWPAtYfNpwYg0
-         ynyIBCWEq7SV32EPv1mgKflX/eMDLiMXk0/5wSp3JJRNMKzBjW19disAkJR8P6Bdu5xh
-         +XsjjyQx5edaCjIZkyD0IDhweMWXauzQDh7E5yI+8h768W2wZ3gvwdTAagG3EM6FzvdA
-         lXrA==
-X-Gm-Message-State: APjAAAVm68W1JHQxr20BFqiXxZYYhZqwEz9yi3Mm27Xh14li3hv4iiMF
-        A66NXuoNa0l2y4rMR3vtV57YRUZmrGAImzHIMThTPXVgyyMi
-X-Google-Smtp-Source: APXvYqymwTKfclatTuAPFNQc//9Mq4Cfj0YLxr8Id5jOR9C12eseDN6UMCR/SfcMmBZfnlnza7ruT/x8kczjuGhPyumIcvUsEo6K
+        Tue, 21 Jan 2020 18:57:23 -0500
+Received: from localhost ([127.0.0.1] helo=vostro.local)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1iu3O9-0006uj-7Y; Wed, 22 Jan 2020 00:56:53 +0100
+From:   John Ogness <john.ogness@linutronix.de>
+To:     Eugeniu Rosca <erosca@de.adit-jv.com>
+Cc:     <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        Sanjeev Chugh <sanjeev_chugh@mentor.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Daniel Wang <wonderfly@google.com>,
+        Dean Jenkins <dean_jenkins@mentor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dirk Behme <dirk.behme@de.bosch.com>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Jiri Slaby <jslaby@suse.com>,
+        Peter Feiner <pfeiner@google.com>,
+        <linux-serial@vger.kernel.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: Re: [RFC PATCH v1 00/25] printk: new implementation
+References: <20190212143003.48446-1-john.ogness@linutronix.de>
+        <20200120230522.GA23636@lxhi-065.adit-jv.com>
+Date:   Wed, 22 Jan 2020 00:56:48 +0100
+In-Reply-To: <20200120230522.GA23636@lxhi-065.adit-jv.com> (Eugeniu Rosca's
+        message of "Tue, 21 Jan 2020 00:05:22 +0100")
+Message-ID: <87v9p4mkhr.fsf@linutronix.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
 MIME-Version: 1.0
-X-Received: by 2002:a6b:731a:: with SMTP id e26mr4920571ioh.254.1579650968613;
- Tue, 21 Jan 2020 15:56:08 -0800 (PST)
-Date:   Tue, 21 Jan 2020 15:56:08 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000da7a79059caf2656@google.com>
-Subject: WARNING in __proc_create (2)
-From:   syzbot <syzbot+b904ba7c947a37b4b291@syzkaller.appspotmail.com>
-To:     dhowells@redhat.com, linux-afs@lists.infradead.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hello Eugeniu,
 
-syzbot found the following crash on:
+On 2020-01-21, Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
+> This [1] is a fairly old thread, but I only recently stumbled upon it,
+> while co-investigating below audio distortions [2] on R-Car3 ARM64
+> boards, which can be reproduced by stressing [3] the serial console.
+>
+> The investigation started a few months ago, when users reported audio
+> drops during the first seconds of system startup. Only after a few
+> weeks it became clear (thanks to some people in Cc) that the
+> distortions were contributed by the above-average serial console load
+> during the early boot. Once understood, we were able to come up with a
+> synthetic test [2-3].
+>
+> I thought it would be interesting to share below reproduction matrix,
+> in order to contrast vanilla to linux-rt-devel [4], as well as to
+> compare various preemption models.
+>  
+>                            | Ser.console  Ser.console
+>                            | stressed     at rest or disabled
+>       --------------------------------------------
+>       v5.5-rc6 (PREEMPT=y) | distorted    clean
+>     v5.4.5-rt3 (PREEMPT=y) | distorted    clean
+>  v5.4.5-rt3 (PREEMPT_RT=y) | clean        clean
+>
+> My feeling is that the results probably do not surprise linux-rt
+> people.
+>
+> My first question is, should there be any improvement in the case of
+> v5.4.5-rt3 (PREEMPT=y), which I do not sense? I would expect so, based
+> on the cover letter of this series (pointing out the advantages of the
+> redesigned printk mechanism).
 
-HEAD commit:    d96d875e Merge tag 'fixes_for_v5.5-rc8' of git://git.kerne..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=13b7b80de00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=83c00afca9cf5153
-dashboard link: https://syzkaller.appspot.com/bug?extid=b904ba7c947a37b4b291
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12c96185e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14f859c9e00000
+The problem you are reporting is not the problem that the printk rework
+is trying to solve.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+b904ba7c947a37b4b291@syzkaller.appspotmail.com
+In your chart, v5.4.5-rt3 (PREEMPT_RT=y) is the only configuration that
+is _not_ disabling hardware interrupts during UART activity. I would
+guess your problem is due to interrupts being disabled for unacceptable
+lengths of time. You need a low-latency system, so PREEMPT_RT=y _is_ the
+correct (and only) solution if a verbose serial console is a must.
 
-------------[ cut here ]------------
-name '��/]uwo,"�c�ac�����[�$�5x~�s�&�tw}���z�cp('
-WARNING: CPU: 0 PID: 3489 at fs/proc/generic.c:178 __xlate_proc_name fs/proc/generic.c:178 [inline]
-WARNING: CPU: 0 PID: 3489 at fs/proc/generic.c:178 xlate_proc_name fs/proc/generic.c:194 [inline]
-WARNING: CPU: 0 PID: 3489 at fs/proc/generic.c:178 __proc_create+0x25a/0xb60 fs/proc/generic.c:387
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 3489 Comm: kworker/0:8 Not tainted 5.5.0-rc7-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: afs afs_manage_cell
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1fb/0x318 lib/dump_stack.c:118
- panic+0x264/0x7a9 kernel/panic.c:221
- __warn+0x209/0x210 kernel/panic.c:582
- report_bug+0x1b6/0x2f0 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:174 [inline]
- do_error_trap+0xda/0x440 arch/x86/kernel/traps.c:267
- do_invalid_op+0x36/0x40 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:__xlate_proc_name fs/proc/generic.c:178 [inline]
-RIP: 0010:xlate_proc_name fs/proc/generic.c:194 [inline]
-RIP: 0010:__proc_create+0x25a/0xb60 fs/proc/generic.c:387
-Code: 07 00 00 49 89 c6 e8 f5 48 94 ff e9 56 fe ff ff e8 eb 48 94 ff 48 8b 75 b8 45 31 ed 48 c7 c7 39 52 e1 88 31 c0 e8 36 55 66 ff <0f> 0b 48 c7 c7 88 43 11 89 e8 08 de 1a 06 e9 bc 00 00 00 e8 be 48
-RSP: 0018:ffffc9000b617a90 EFLAGS: 00010246
-RAX: d5e5b65e165c9c00 RBX: 0000000000000005 RCX: ffff88809bb3e140
-RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
-RBP: ffffc9000b617b00 R08: ffffffff815f9d24 R09: fffffbfff13cd11e
-R10: fffffbfff13cd11e R11: 0000000000000000 R12: dffffc0000000000
-R13: 0000000000000000 R14: 0000000000000002 R15: 0000000000000000
- proc_mkdir_data+0x8b/0x150 fs/proc/generic.c:473
- proc_net_mkdir include/linux/proc_fs.h:139 [inline]
- afs_proc_cell_setup+0x9d/0x150 fs/afs/proc.c:610
- afs_activate_cell fs/afs/cell.c:591 [inline]
- afs_manage_cell+0x750/0x1500 fs/afs/cell.c:673
- process_one_work+0x7f5/0x10d0 kernel/workqueue.c:2264
- worker_thread+0xbbc/0x1630 kernel/workqueue.c:2410
- kthread+0x332/0x350 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+The printk rework focusses on making printk non-interfering by
+decoupling console printing from printk() callers. However, the console
+printing itself will still do just as much interrupt disabling as
+before. That is driver-related, not printk-related.
 
+> And the other question is, how would you, generally speaking, tackle
+> the problem, given that backporting the linux-rt patches is *not* an
+> option and enabling serial console is a must?
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+The linux-rt patches (which include this printk rework) *are* being
+ported to mainline now. My recommendation is to continue using the
+linux-rt patches (with PREEMPT_RT=y) until PREEMPT_RT is available
+mainline.
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+John Ogness
+
+> [1] https://lore.kernel.org/lkml/20190212143003.48446-1-john.ogness@linutronix.de/
+> [2] H3ULCB> speaker-test -f24_LE -c2 -t wav -Dplughw:rcarsound -b 4000
+>     https://vocaroo.com/9NV98mMgdjX
+> [3] https://github.com/erosca/linux/tree/stress-serial
+> [4] https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git/
