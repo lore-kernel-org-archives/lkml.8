@@ -6,61 +6,57 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F302EC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46059C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5860206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:07:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A353206A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:08:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579626420;
-	bh=a2HLQ4r+m6XgAaQ7rRdk9QRf1WK+fkPWNFq8ecE1QKU=;
+	s=default; t=1579626496;
+	bh=kan10pdGZIkAx1c1W7zvJtSM+irGyICRH5RK1O89bmA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=P5vtdmIOvf3euI4xtMcGGCqE8VvNDaeRQfG05JUksarjNoA4l3kTwhGpGncoavFwz
-	 WoPJZvN9s/14Vb0EYjjfsRd32VCKa/L3agO+OXsCgUrDe53ZNlCwxISWp5b7Qc4c7E
-	 u3sANLUB5tygmXI8VUld1H0lYuXnlqvY4Yjnm0Yo=
+	b=exKQcIiRbDArIjajW9QDIld3ny2e3CQ5dt8ywOSFS2h4Z9EcPHzVyCZmlplwsuZTv
+	 MChcTs6cexxG95HDnmmkTS4FISW4+xGHbAz8uOOhxgfRTyST2My9s+yB2gPNxPO2fv
+	 g3lrsdFBQsMNTDg+UEcUUyfz17D3kRiaxUqxbo6E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729164AbgAURHA (ORCPT
+        id S1729190AbgAURIP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 12:07:00 -0500
-Received: from foss.arm.com ([217.140.110.172]:46040 "EHLO foss.arm.com"
+        Tue, 21 Jan 2020 12:08:15 -0500
+Received: from foss.arm.com ([217.140.110.172]:46072 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726714AbgAURG7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 12:06:59 -0500
+        id S1726714AbgAURIO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 12:08:14 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DC40F30E;
-        Tue, 21 Jan 2020 09:06:58 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 03ACA30E;
+        Tue, 21 Jan 2020 09:08:14 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3190E3F6C4;
-        Tue, 21 Jan 2020 09:06:58 -0800 (PST)
-Date:   Tue, 21 Jan 2020 17:06:56 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7211A3F6C4;
+        Tue, 21 Jan 2020 09:08:13 -0800 (PST)
+Date:   Tue, 21 Jan 2020 17:08:11 +0000
 From:   Mark Brown <broonie@kernel.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 00/38] platform/x86: Rework intel_scu_ipc and
- intel_pmc_ipc drivers
-Message-ID: <20200121170656.GI4656@sirena.org.uk>
-References: <20200121160114.60007-1-mika.westerberg@linux.intel.com>
- <20200121162157.GD4656@sirena.org.uk>
- <20200121163312.GZ2665@lahna.fi.intel.com>
- <20200121164515.GG4656@sirena.org.uk>
- <20200121170022.GA2665@lahna.fi.intel.com>
+To:     "RAVULAPATI, VISHNU VARDHAN RAO" 
+        <Vishnuvardhanrao.Ravulapati@amd.com>
+Cc:     "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        "Mukunda, Vijendar" <Vijendar.Mukunda@amd.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ASoC: amd: Fix for Subsequent Playback issue.
+Message-ID: <20200121170811.GJ4656@sirena.org.uk>
+References: <1579603421-24571-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+ <20200121165925.GH4656@sirena.org.uk>
+ <DM6PR12MB3868B9744A40D41450155534E70D0@DM6PR12MB3868.namprd12.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="pe+tqlI1iYzVj1X/"
+        protocol="application/pgp-signature"; boundary="k1BdFSKqAqVdu8k/"
 Content-Disposition: inline
-In-Reply-To: <20200121170022.GA2665@lahna.fi.intel.com>
+In-Reply-To: <DM6PR12MB3868B9744A40D41450155534E70D0@DM6PR12MB3868.namprd12.prod.outlook.com>
 X-Cookie: You too can wear a nose mitten.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -69,35 +65,37 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---pe+tqlI1iYzVj1X/
+--k1BdFSKqAqVdu8k/
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, Jan 21, 2020 at 07:00:22PM +0200, Mika Westerberg wrote:
+On Tue, Jan 21, 2020 at 05:03:43PM +0000, RAVULAPATI, VISHNU VARDHAN RAO wrote:
 
-> OK, thanks for the clarification. I guess in this case we can probably
-> just live without using it, if that's fine for Lee and others. The new
-> MFD driver itself is ~500 lines so not sure how much regmap would help
-> there, and we only expose two simple functions for the subdevices both
-> dealing with 64-bit registers.
+> > +     kfree(rtd);
 
-The usual motivation is all the diagnostic infrastructure you get with
-regmap - tracepoints for I/O and the ability to dump the register map in
-debugfs mainly.
+> This free looks like a separate change which seems good and useful but
+> should be in a separate patch?
 
---pe+tqlI1iYzVj1X/
+> No Mark,
+
+> That is part of the fix. please let this be included in this patch.
+
+In what way is it part of the fix?  This at least needs some sort of
+explanation somewhere, the changelog at least if not the code.
+
+--k1BdFSKqAqVdu8k/
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4nL7AACgkQJNaLcl1U
-h9CYXQf5ARVExYEyXhd/b8vqn9kwQ5n79Izrai7EPKOa/3PxMUBu1546nympiQTk
-AyGalWpOBNIMs0/CqVxUcytTvcVSVBJ80dN6XA3ZcYqaYVLB603cgxrXDgarnh6k
-TjA/vMZFJklxeOUM4OmTDQHgKKt1gj0v7Bs5mNxUNJbYKfxksrWoM94S/Ywx5nke
-A/fmlnV4WkO5x2fVh2A7oHV5HqTuK2+C9bYXsEzSky8Vza88PhTBeBxZ/MXugndy
-xOugKpkM04hYZBv/c1/CD86T4fZisCMZeBJ+TIJHE4q7q4PylFJ1ZKZm8lWAnQnC
-iHOUsYkSPtNk98Sw4/1cz3UYEe2w8g==
-=lI9Q
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4nL/oACgkQJNaLcl1U
+h9DmOwf/R4GKNHq0vWy03y4TCcrfj3Qty8T3/Tj3C/59WeAe9C1dbCHMrv0qrOg2
+em7HOBX5PNR8V+SlAwiZUVLVADuyimVqYowdn+FhLpCFECEe7DsBXFdgMFADdq6C
+4fFiY0LOi75NFjv+ERMTt5WVU8YSX7irTv/E8Xlb3iySeeYsFQCu71/DXIp4Rwlu
+JBqFQVspWAJhoZpcyNRkHssx81Tnw7ebGFk2KQWGAoEL1Q49vGsSHrcMFMF5vnWc
+pOlm70Vs+qR5oSYE3iR8FfY+NLwZDnO3yAmzPP1nhZ4S1iZYWLhQ4NYO/b/j7wCi
+3skMtLFMJZImXBafHotySP/koVG/gw==
+=vEOZ
 -----END PGP SIGNATURE-----
 
---pe+tqlI1iYzVj1X/--
+--k1BdFSKqAqVdu8k/--
