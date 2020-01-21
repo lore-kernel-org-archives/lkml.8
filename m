@@ -2,130 +2,201 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27DCEC33CAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 20:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E886C33CAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 20:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E500D217F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 20:44:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="fWtfwC3W"
+	by mail.kernel.org (Postfix) with ESMTP id EDBBE217F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 20:46:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579639569;
+	bh=8i54OlJYbQvHLGVM4fus5+jNJN9K2eL3sYVtcr2pzgY=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=d2jvoUchMsG/Sev5XImUyHwBYP4eYT7ncVy6QjONrXf3veD2xFPB0i3XHh2kcFBjS
+	 UOUm68vhDOOAYK2FRPXdz7N6lQnU0EnvMMi+CmDILUDxaU5KIRfFgF/Unr2don/yFS
+	 tlRmwYCH2djM4JcjS51NT0aG0Pbc9CKV7bhDuf5I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729130AbgAUUoJ (ORCPT
+        id S1728927AbgAUUqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 15:44:09 -0500
-Received: from mail-eopbgr30071.outbound.protection.outlook.com ([40.107.3.71]:3552
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729043AbgAUUoI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 15:44:08 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lsw5dJiVXvL8G83EnvgP3aOh70t+HlfZj8yM6MbDGy7QTVRAfuxpF9fQeh3iTj+8OAxai8tsK/8uaYmhFgdYABtF+RFVlOza/pv2GDq2RUcE5fyfnZRuTB02bijnmeiNr+0Vkfpd+osDAkqqd7aZT72T+O4o8CgfsqarjpbFtOuuhRL8qB8hl3IGHk8gYsMwtYjUjBbVl+OPRUitc51Dc186eteZJ1iN5BY+SLSX+9NmnK8Z3trd66YiodSNuTAC+mtljACRmRBsUHoHC2BEfdPCOsKhzw6X4GbMYENQO3tbHS4Q/13qVW1YilVXwlzNB4hdzn4rNNOrQFfyDh92uA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZKMxq/Tr9J1OA9pbR76MTW/quUEcazlgZ2v5wGRWwvE=;
- b=NEOMZQ24iV9Jar6Yh82RSmhFXyDJ8bQPS8FG6sGMwH62kbI4kkQv9E9p6aZvkLUv3MEivmSI1+8UekEYdaCYjSnHszQY58AyjfvrzgZlNO7eZbdjUiqssmcFjQO6mOJnrjG7k/ftOPENMt+4+fAFeGARZTdOQTMkGXNpEI4LX29+fOVhcDn1ib+LEx3A4S9ljqbvXfuh0lXHD8DSGy8TkmEdUls470uSLJiDExrVD14VSumh8nCp2fgAw8bJp4NMYjp5C4J0QhExCOAKrhQ2NsXLpepKjIzh+PSs2h3z9GdnJi9JmcmYbDmvAXbeW5hmD9ThLub/RmLsEMbtzT0zDQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZKMxq/Tr9J1OA9pbR76MTW/quUEcazlgZ2v5wGRWwvE=;
- b=fWtfwC3WyZnHzieK9avlnDSWNcXDo9uMIKBmaYCcqmJIzTgZxXvEt9/IxugKfCytaPOHPiW2BdkE3AqUF+zXPQmUg7Z1TXluSgwN+9zc3FmYvperi5oFR4GnpdoU3z3mP8QHHNSPlSQzNJraWCD98tosIlHPh6UNZ+jQ6RSggCA=
-Received: from VI1PR05MB5102.eurprd05.prod.outlook.com (20.177.51.151) by
- VI1PR05MB4381.eurprd05.prod.outlook.com (52.133.13.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.25; Tue, 21 Jan 2020 20:44:02 +0000
-Received: from VI1PR05MB5102.eurprd05.prod.outlook.com
- ([fe80::d830:96fc:e928:c096]) by VI1PR05MB5102.eurprd05.prod.outlook.com
- ([fe80::d830:96fc:e928:c096%6]) with mapi id 15.20.2644.027; Tue, 21 Jan 2020
- 20:44:02 +0000
-From:   Saeed Mahameed <saeedm@mellanox.com>
-To:     "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        Oz Shlomo <ozsh@mellanox.com>,
-        Paul Blakey <paulb@mellanox.com>,
-        Mark Bloch <markb@mellanox.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "chenwandun@huawei.com" <chenwandun@huawei.com>,
-        "leon@kernel.org" <leon@kernel.org>
-Subject: Re: [PATCH next] net/mlx5: make the symbol 'ESW_POOLS' static
-Thread-Topic: [PATCH next] net/mlx5: make the symbol 'ESW_POOLS' static
-Thread-Index: AQHVz4z4hjZDf32jQkufw0C47aSDGKfzne6AgAH5/AA=
-Date:   Tue, 21 Jan 2020 20:44:02 +0000
-Message-ID: <0e4bd8d1346c5393c2986c0ed5b02661feb0b0c1.camel@mellanox.com>
-References: <20200120124153.32354-1-chenwandun@huawei.com>
-         <846abf8c-8c81-a054-9f89-4ad56b104d99@mellanox.com>
-In-Reply-To: <846abf8c-8c81-a054-9f89-4ad56b104d99@mellanox.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.34.3 (3.34.3-1.fc31) 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=saeedm@mellanox.com; 
-x-originating-ip: [209.116.155.178]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c1b03b75-9020-4846-02da-08d79eb2a653
-x-ms-traffictypediagnostic: VI1PR05MB4381:|VI1PR05MB4381:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR05MB438190546A29BF72B1DA92F1BE0D0@VI1PR05MB4381.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3276;
-x-forefront-prvs: 0289B6431E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(376002)(39860400002)(396003)(346002)(189003)(199004)(91956017)(81166006)(66446008)(81156014)(66556008)(86362001)(8676002)(66476007)(66946007)(8936002)(64756008)(76116006)(2616005)(53546011)(6506007)(26005)(186003)(316002)(110136005)(5660300002)(36756003)(6486002)(478600001)(2906002)(6512007)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4381;H:VI1PR05MB5102.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: +/AP64FkntWUjhqLTNJIObLAYeVCfUFF628+vddCWB4zzWHotPwERD5EYSnKqOf3j46fTie8vjg8ypAsaabSxEMMkh/uJatn/PgTEP0xIbQw4gim6TMzcVP2BLPcqOGxs2Cx41OT1NsJxaViJAHyDp+iJbLeg9qth44VdTc16vBwaEZ851SsTC84jI/k4j0QPLNiaa0JL8vzXZWNByeqhSLrdNCow658UsgE4qqnhOC+O9lE6SvvQCMayRnSFFF4J2FmSEwnHvnverh+KvvWLoRSwNp2to5vY/NMCl03ioOlDrIy4qTGXXtfhAwJ26Qkm4oCAD3IlvhRg7oNS5rDz3E4yFt69jmAcIWzAFmYDSFzBgSlWrh/v955lpThb5fhIc2XKYUBEbkHWtJVs3JekaneqDplVfDmBj9idlRbcsOIAIfKV2hpLqXk8/lhiPx+
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <B4D1103943658140B36224D3E5BAC88A@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 21 Jan 2020 15:46:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48302 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727360AbgAUUqI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 15:46:08 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42DB2217F4;
+        Tue, 21 Jan 2020 20:46:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579639566;
+        bh=8i54OlJYbQvHLGVM4fus5+jNJN9K2eL3sYVtcr2pzgY=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=FSFH6R+EVdnTMyNXXQbeDztzJyp66UKPrX7Z9/GJAZFcJ4qee/Vi5rGiZIskfpTOW
+         BOFdrsqWiEX4AGU6ye76S0plMt9TFat5ScIYzlkvfZgw3la6JXmQpKV3OSpE25vsaA
+         vieB24keAXfQUOgVjvta11hdR9hzgNrOja33/7Ak=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 177BE3520DC0; Tue, 21 Jan 2020 12:46:06 -0800 (PST)
+Date:   Tue, 21 Jan 2020 12:46:06 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     rcu@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: Boot warning at rcu_check_gp_start_stall()
+Message-ID: <20200121204606.GZ2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200121141923.GP2935@paulmck-ThinkPad-P72>
+ <A230E332-07D0-40A8-A034-33ADB4BFB767@lca.pw>
+ <20200121161533.GT2935@paulmck-ThinkPad-P72>
+ <6A6B0325-64C4-4470-91B4-37104CF8DA1A@lca.pw>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c1b03b75-9020-4846-02da-08d79eb2a653
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jan 2020 20:44:02.6990
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 4LZSxsntqOpj4rrqj8ueaoWE1NB5tQu4ItYiuku80dxIRLsZ3+miHxffrJuHYRSAumqYasIeA4tEN2e6a/8yHQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4381
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6A6B0325-64C4-4470-91B4-37104CF8DA1A@lca.pw>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTAxLTIwIGF0IDE0OjMzICswMDAwLCBQYXVsIEJsYWtleSB3cm90ZToNCj4g
-T24gMS8yMC8yMDIwIDI6NDEgUE0sIENoZW4gV2FuZHVuIHdyb3RlOg0KPiA+IEZpeCB0aGUgZm9s
-bG93aW5nIHNwYXJzZSB3YXJuaW5nOg0KPiA+IGRyaXZlcnMvbmV0L2V0aGVybmV0L21lbGxhbm94
-L21seDUvY29yZS9lc3dpdGNoX29mZmxvYWRzX2NoYWlucy5jOjMNCj4gPiA1OjIwOiB3YXJuaW5n
-OiBzeW1ib2wgJ0VTV19QT09MUycgd2FzIG5vdCBkZWNsYXJlZC4gU2hvdWxkIGl0IGJlDQo+ID4g
-c3RhdGljPw0KPiA+IA0KPiA+IEZpeGVzOiAzOWFjMjM3Y2UwMDkgKCJuZXQvbWx4NTogRS1Td2l0
-Y2gsIFJlZmFjdG9yIGNoYWlucyBhbmQNCj4gPiBwcmlvcml0aWVzIikNCj4gPiBTaWduZWQtb2Zm
-LWJ5OiBDaGVuIFdhbmR1biA8Y2hlbndhbmR1bkBodWF3ZWkuY29tPg0KPiA+IC0tLQ0KPiA+ICAg
-Li4uL2V0aGVybmV0L21lbGxhbm94L21seDUvY29yZS9lc3dpdGNoX29mZmxvYWRzX2NoYWlucy5j
-IHwgOA0KPiA+ICsrKystLS0tDQo+ID4gICAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCsp
-LCA0IGRlbGV0aW9ucygtKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQNCj4gPiBhL2RyaXZlcnMvbmV0
-L2V0aGVybmV0L21lbGxhbm94L21seDUvY29yZS9lc3dpdGNoX29mZmxvYWRzX2NoYWlucy5jDQo+
-ID4gYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxsYW5veC9tbHg1L2NvcmUvZXN3aXRjaF9vZmZs
-b2Fkc19jaGFpbnMuYw0KPiA+IGluZGV4IDNhNjBlYjUzNjBiZC4uYzVhNDQ2ZTI5NWFhIDEwMDY0
-NA0KPiA+IC0tLQ0KPiA+IGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9jb3Jl
-L2Vzd2l0Y2hfb2ZmbG9hZHNfY2hhaW5zLmMNCj4gPiArKysNCj4gPiBiL2RyaXZlcnMvbmV0L2V0
-aGVybmV0L21lbGxhbm94L21seDUvY29yZS9lc3dpdGNoX29mZmxvYWRzX2NoYWlucy5jDQo+ID4g
-QEAgLTMyLDEwICszMiwxMCBAQA0KPiA+ICAgICogcG9vbHMuDQo+ID4gICAgKi8NCj4gPiAgICNk
-ZWZpbmUgRVNXX1NJWkUgKDE2ICogMTAyNCAqIDEwMjQpDQo+ID4gLWNvbnN0IHVuc2lnbmVkIGlu
-dCBFU1dfUE9PTFNbXSA9IHsgNCAqIDEwMjQgKiAxMDI0LA0KPiA+IC0JCQkJICAgMSAqIDEwMjQg
-KiAxMDI0LA0KPiA+IC0JCQkJICAgNjQgKiAxMDI0LA0KPiA+IC0JCQkJICAgNCAqIDEwMjQsIH07
-DQo+ID4gK3N0YXRpYyBjb25zdCB1bnNpZ25lZCBpbnQgRVNXX1BPT0xTW10gPSB7IDQgKiAxMDI0
-ICogMTAyNCwNCj4gPiArCQkJCQkgIDEgKiAxMDI0ICogMTAyNCwNCj4gPiArCQkJCQkgIDY0ICog
-MTAyNCwNCj4gPiArCQkJCQkgIDQgKiAxMDI0LCB9Ow0KPiA+ICAgDQo+ID4gICBzdHJ1Y3QgbWx4
-NV9lc3dfY2hhaW5zX3ByaXYgew0KPiA+ICAgCXN0cnVjdCByaGFzaHRhYmxlIGNoYWluc19odDsN
-Cj4gDQo+IEFja2VkLWJ5OiBQYXVsIEJsYWtleSA8cGF1bGJAbWVsbGFub3guY29tPg0KPiANCg0K
-QXBwbGllZCB0byBuZXQtbmV4dC1tbHg1LA0KDQpUaGFua3MhDQo=
+On Tue, Jan 21, 2020 at 02:09:05PM -0500, Qian Cai wrote:
+> > On Jan 21, 2020, at 11:15 AM, Paul E. McKenney <paulmck@kernel.org> wrote:
+> > On Tue, Jan 21, 2020 at 09:37:13AM -0500, Qian Cai wrote:
+> >>> On Jan 21, 2020, at 9:19 AM, Paul E. McKenney <paulmck@kernel.org> wrote:
+> >>> 
+> >>> One approach would be to boot with rcupdate.rcu_cpu_stall_timeout=300,
+> >>> which would allow more time.
+> >> 
+> >> It works for me if once that warning triggered,  give a bit information about adjusting the parameter when debugging options are on to suppress the warning due to expected long boot.
+> > 
+> > Indeed.  300 seconds as shown above is currently the maximum, but
+> > please let me know if it needs to be increased.  This module parameter
+> > is writable after boot via sysfs, so maybe that could be part of the
+> > workaround.
+> > 
+> >>> Longer term, I could suppress this warning during boot when
+> >>> CONFIG_EFI_PGT_DUMP=y, but that sounds quite specific.  Alternatively,
+> >>> I could provide a Kconfig option that suppressed this during boot
+> >>> that was selected by whatever long-running boot-time Kconfig option
+> >>> needed it.  Yet another approach would be for long-running operations
+> >>> like efi_dump_pagetable() to suppress stalls on entry and re-enable them
+> >>> upon exit.
+> >>> 
+> >>> Thoughts?
+> >> 
+> >> None of the options sounds particularly better for me because there could come up with other options may trigger this, memtest comes in mind, for example. Then, it is a bit of pain to maintain of unknown.
+> > 
+> > I was afraid of that.  ;-)
+> > 
+> > Could you please send me the full dmesg up to that point?  No promises,
+> > but it might well be that I can make some broad-spectrum adjustment
+> > within RCU.  Only one way to find out…
+> 
+> https://cailca.github.io/files/dmesg.txt
+
+Interesting.
+
+Does the following (very lightly tested) patch help?
+
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+commit fb21277f8f1c5cc40a8d41da2db4b0c499459821
+Author: Paul E. McKenney <paulmck@kernel.org>
+Date:   Tue Jan 21 12:30:22 2020 -0800
+
+    rcu: Don't flag non-starting GPs before GP kthread is running
+    
+    Currently rcu_check_gp_start_stall() complains if a grace period takes
+    too long to start, where "too long" is roughly one RCU CPU stall-warning
+    interval.  This has worked well, but there are some debugging Kconfig
+    options (such as CONFIG_EFI_PGT_DUMP=y) that can make booting take a
+    very long time, so much so that the stall-warning interval has expired
+    before RCU's grace-period kthread has even been spawned.
+    
+    This commit therefore resets the rcu_state.gp_req_activity and
+    rcu_state.gp_activity timestamps just before the grace-period kthread
+    is spawned, and modifies the checks and adds ordering to ensure that
+    if rcu_check_gp_start_stall() sees that the grace-period kthread
+    has been spawned, that it will also see the resets applied to the
+    rcu_state.gp_req_activity and rcu_state.gp_activity timestamps.
+    
+    Reported-by: Qian Cai <cai@lca.pw>
+    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 04718bc..d9d619d 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -1209,7 +1209,7 @@ static bool rcu_start_this_gp(struct rcu_node *rnp_start, struct rcu_data *rdp,
+ 	trace_rcu_this_gp(rnp, rdp, gp_seq_req, TPS("Startedroot"));
+ 	WRITE_ONCE(rcu_state.gp_flags, rcu_state.gp_flags | RCU_GP_FLAG_INIT);
+ 	WRITE_ONCE(rcu_state.gp_req_activity, jiffies);
+-	if (!rcu_state.gp_kthread) {
++	if (!READ_ONCE(rcu_state.gp_kthread)) {
+ 		trace_rcu_this_gp(rnp, rdp, gp_seq_req, TPS("NoGPkthread"));
+ 		goto unlock_out;
+ 	}
+@@ -1259,10 +1259,10 @@ static bool rcu_future_gp_cleanup(struct rcu_node *rnp)
+  */
+ static void rcu_gp_kthread_wake(void)
+ {
+-	if ((current == rcu_state.gp_kthread &&
++	if ((current == READ_ONCE(rcu_state.gp_kthread) &&
+ 	     !in_irq() && !in_serving_softirq()) ||
+ 	    !READ_ONCE(rcu_state.gp_flags) ||
+-	    !rcu_state.gp_kthread)
++	    !READ_ONCE(rcu_state.gp_kthread))
+ 		return;
+ 	WRITE_ONCE(rcu_state.gp_wake_time, jiffies);
+ 	WRITE_ONCE(rcu_state.gp_wake_seq, READ_ONCE(rcu_state.gp_seq));
+@@ -3619,7 +3619,10 @@ static int __init rcu_spawn_gp_kthread(void)
+ 	}
+ 	rnp = rcu_get_root();
+ 	raw_spin_lock_irqsave_rcu_node(rnp, flags);
+-	rcu_state.gp_kthread = t;
++	WRITE_ONCE(rcu_state.gp_activity, jiffies);
++	WRITE_ONCE(rcu_state.gp_req_activity, jiffies);
++	// Reset .gp_activity and .gp_req_activity before setting .gp_kthread.
++	smp_store_release(&rcu_state.gp_kthread, t);  /* ^^^ */
+ 	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+ 	wake_up_process(t);
+ 	rcu_spawn_nocb_kthreads();
+diff --git a/kernel/rcu/tree_stall.h b/kernel/rcu/tree_stall.h
+index 476458c..75f6e9f 100644
+--- a/kernel/rcu/tree_stall.h
++++ b/kernel/rcu/tree_stall.h
+@@ -578,6 +578,7 @@ void show_rcu_gp_kthreads(void)
+ 	unsigned long jw;
+ 	struct rcu_data *rdp;
+ 	struct rcu_node *rnp;
++	struct task_struct *t = READ_ONCE(rcu_state.gp_kthread);
+ 
+ 	j = jiffies;
+ 	ja = j - READ_ONCE(rcu_state.gp_activity);
+@@ -585,8 +586,7 @@ void show_rcu_gp_kthreads(void)
+ 	jw = j - READ_ONCE(rcu_state.gp_wake_time);
+ 	pr_info("%s: wait state: %s(%d) ->state: %#lx delta ->gp_activity %lu ->gp_req_activity %lu ->gp_wake_time %lu ->gp_wake_seq %ld ->gp_seq %ld ->gp_seq_needed %ld ->gp_flags %#x\n",
+ 		rcu_state.name, gp_state_getname(rcu_state.gp_state),
+-		rcu_state.gp_state,
+-		rcu_state.gp_kthread ? rcu_state.gp_kthread->state : 0x1ffffL,
++		rcu_state.gp_state, t ? t->state : 0x1ffffL,
+ 		ja, jr, jw, (long)READ_ONCE(rcu_state.gp_wake_seq),
+ 		(long)READ_ONCE(rcu_state.gp_seq),
+ 		(long)READ_ONCE(rcu_get_root()->gp_seq_needed),
+@@ -633,7 +633,8 @@ static void rcu_check_gp_start_stall(struct rcu_node *rnp, struct rcu_data *rdp,
+ 
+ 	if (!IS_ENABLED(CONFIG_PROVE_RCU) || rcu_gp_in_progress() ||
+ 	    ULONG_CMP_GE(READ_ONCE(rnp_root->gp_seq),
+-	    		 READ_ONCE(rnp_root->gp_seq_needed)))
++	    		 READ_ONCE(rnp_root->gp_seq_needed)) ||
++	    !smp_load_acquire(&rcu_state.gp_kthread))
+ 		return;
+ 	j = jiffies; /* Expensive access, and in common case don't get here. */
+ 	if (time_before(j, READ_ONCE(rcu_state.gp_req_activity) + gpssdelay) ||
