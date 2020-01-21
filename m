@@ -2,89 +2,120 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F67FC33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 05:29:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E979EC33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 05:33:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EC572465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 05:29:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B089C24653
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 05:33:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iVnEndIv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727383AbgAUF3A (ORCPT
+        id S1727800AbgAUFdC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 00:29:00 -0500
-Received: from m176148.mail.qiye.163.com ([59.111.176.148]:63367 "EHLO
-        m176148.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbgAUF27 (ORCPT
+        Tue, 21 Jan 2020 00:33:02 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:39343 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbgAUFdC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 00:28:59 -0500
-X-Greylist: delayed 515 seconds by postgrey-1.27 at vger.kernel.org; Tue, 21 Jan 2020 00:28:59 EST
-Received: from vivo.com (wm-8.qy.internal [127.0.0.1])
-        by m176148.mail.qiye.163.com (Hmail) with ESMTP id A650F1A37B5;
-        Tue, 21 Jan 2020 13:20:19 +0800 (CST)
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-Message-ID: <AFAA8AA0CH7o6kMJF-XfXKq9.3.1579584019640.Hmail.wenhu.wang@vivo.com>
-To:     Scott Wood <oss@buserror.net>
-Cc:     wangwenhu <wenhu.pku@gmail.com>,
-        Kumar Gala <galak@kernel.crashing.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Tue, 21 Jan 2020 00:33:02 -0500
+Received: by mail-pj1-f67.google.com with SMTP id e11so888683pjt.4
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 21:33:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TBmFapcCP51v12ZDGyzoq6lMJzVpI9tiiDOrivNq+Hg=;
+        b=iVnEndIvNGIyZOZ9RqjwdHY9uDVvwBw4JJKU2ax6fZjyC66osU5fz8+e3ZQYYU0NEE
+         /sXWEs4x7EMZoOBdyeh4115F08CiB9HGKEa92/u2jNiSy2gSuSsDe6ydMLLcvpNeMBgb
+         SaLnIsJJEGr1HmOxSviZU00da9gwohbe0woK8muvcOZwwHAdd2XEC8HgHYNxZZOCnO6g
+         dKINdFN6JesG5erfBKiQXSXrTHYkyTfgPoJtILG6h2ITvJQT+hUhKP27578b+kXrBnY2
+         8EwwPwfPI/gvoue/1h8csWrXhKnDy0hd/49wXWZ6JPcjmRCyRhuA41Fj7t9X8s8+XAUU
+         /o9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TBmFapcCP51v12ZDGyzoq6lMJzVpI9tiiDOrivNq+Hg=;
+        b=JXta24dSBQzTg79TsV89EWt42Da+x2dET2W8YeHE7Cncg/Vd5x9lCYbac1fogTb2Rx
+         TJo6vg+j5Co8pOI6Ff3H8mffF2LAtp4Q/DzOGJ2LNRshGr/fUkjfPMz3Wu/536cL1vNe
+         wNAFRZPrVfK0PjY8vL2RIC5jhcrSU4NFZkUnjxht4IHhhdfeIBYdzpGQ0HC+vOjBRzmS
+         PMvke6uK8h8QQFrp8jPd5Q2BEaV3QBmCp1HC73Sl/lt8Jl7etIOD6rkaW0o65mLghZjQ
+         IJ10mVSni/7uaS4acJdOvtHBiAqunqI8+Yul3AsHF61Gq1smBu6DdAn8i6jKOUDgFt6m
+         /ZxA==
+X-Gm-Message-State: APjAAAUzme1jt3kAlUXl8cMi+djLKnfoNFSIspDPUwU1K6nEU4sy0/7A
+        7fbZ6GdlOPxTrY048oZ0ZEs=
+X-Google-Smtp-Source: APXvYqwKroEhv0VaxPVuiMrNnT6axI9f0V6DunSlymxW6i94xrEU3F5J8TuYo3jxshWCQYteKZDAKQ==
+X-Received: by 2002:a17:90a:c301:: with SMTP id g1mr3290728pjt.88.1579584782048;
+        Mon, 20 Jan 2020 21:33:02 -0800 (PST)
+Received: from ubuntu.localdomain ([218.189.25.99])
+        by smtp.gmail.com with ESMTPSA id b1sm31501216pfp.44.2020.01.20.21.32.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jan 2020 21:33:01 -0800 (PST)
+From:   wangwenhu <wenhu.pku@gmail.com>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        trivial@kernel.org, Rai Harninder <harninder.rai@nxp.com>
-Subject: =?UTF-8?B?UmU6W1BBVENIXSBwb3dlcnBjL0tjb25maWc6IE1ha2UgRlNMXzg1WFhfQ0FDSEVfU1JBTSBjb25maWd1cmFibGU=?=
-X-Priority: 3
-X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
-X-Originating-IP: 58.251.74.227
-In-Reply-To: <bd0fa23b900fe967a8c3c11abd1ba9a47cec474f.camel@buserror.net>
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        wangwenhu <wenhu.pku@gmail.com>, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Cc:     trivial@kernel.org, lonehugo@hotmail.com, wenhu.wang@vivo.com
+Subject: [PATCH] powerpc/sysdev: fix compile errors
+Date:   Mon, 20 Jan 2020 21:31:13 -0800
+Message-Id: <20200121053114.89676-1-wenhu.pku@gmail.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Received: from wenhu.wang@vivo.com( [58.251.74.227) ] by ajax-webmail ( [127.0.0.1] ) ; Tue, 21 Jan 2020 13:20:19 +0800 (GMT+08:00)
-From:   =?UTF-8?B?546L5paH6JmO?= <wenhu.wang@vivo.com>
-Date:   Tue, 21 Jan 2020 13:20:19 +0800 (GMT+08:00)
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVCSktCQkJMTE9CSElDTVlXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kJHlYWEh9ZQUhNSktMQkpPSEhPN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
-        WUc6PTo6Qzo6SzgzTBRNEDYxPVYjHSMwCkJVSFVKTkxCTkNPS0lKQkJDVTMWGhIXVQweFRMOVQwa
-        FRw7DRINFFUYFBZFWVdZEgtZQVlOQ1VJTkpVTE9VSUlMWVdZCAFZQU9MQ0I3Bg++
-X-HM-Tid: 0a6fc68b5ce59394kuwsa650f1a37b5
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogU2NvdHQgV29vZCA8b3NzQGJ1c2Vycm9yLm5ldD4KRGF0ZTogMjAyMC0wMS0yMSAxMToy
-NToyNQpUbzogIHdhbmd3ZW5odSA8d2VuaHUucGt1QGdtYWlsLmNvbT4sS3VtYXIgR2FsYSA8Z2Fs
-YWtAa2VybmVsLmNyYXNoaW5nLm9yZz4sQmVuamFtaW4gSGVycmVuc2NobWlkdCA8YmVuaEBrZXJu
-ZWwuY3Jhc2hpbmcub3JnPixQYXVsIE1hY2tlcnJhcyA8cGF1bHVzQHNhbWJhLm9yZz4sTWljaGFl
-bCBFbGxlcm1hbiA8bXBlQGVsbGVybWFuLmlkLmF1PixsaW51eHBwYy1kZXZAbGlzdHMub3psYWJz
-Lm9yZyxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnCkNjOiAgdHJpdmlhbEBrZXJuZWwub3Jn
-LHdlbmh1LndhbmdAdml2by5jb20sUmFpIEhhcm5pbmRlciA8aGFybmluZGVyLnJhaUBueHAuY29t
-PgpTdWJqZWN0OiBSZTogW1BBVENIXSBwb3dlcnBjL0tjb25maWc6IE1ha2UgRlNMXzg1WFhfQ0FD
-SEVfU1JBTSBjb25maWd1cmFibGU+T24gTW9uLCAyMDIwLTAxLTIwIGF0IDA2OjQzIC0wODAwLCB3
-YW5nd2VuaHUgd3JvdGU6Cj4+IEZyb206IHdhbmd3ZW5odSA8d2VuaHUud2FuZ0B2aXZvLmNvbT4K
-Pj4gCj4+IFdoZW4gZ2VuZXJhdGluZyAuY29uZmlnIGZpbGUgd2l0aCBtZW51Y29uZmlnIG9uIEZy
-ZWVzY2FsZSBCT09LRQo+PiBTT0MsIEZTTF84NVhYX0NBQ0hFX1NSQU0gaXMgbm90IGNvbmZpZ3Vy
-YWJsZSBmb3IgdGhlIGxhY2sgb2YKPj4gZGVzY3JpcHRpb24gaW4gdGhlIEtjb25maWcgZmllbGQs
-IHdoaWNoIG1ha2VzIGl0IGltcG9zc2libGUKPj4gdG8gc3VwcG9ydCBMMkNhY2hlLVNyYW0gZHJp
-dmVyLiBBZGQgYSBkZXNjcmlwdGlvbiB0byBtYWtlIGl0Cj4+IGNvbmZpZ3VyYWJsZS4KPj4gCj4+
-IFNpZ25lZC1vZmYtYnk6IHdhbmd3ZW5odSA8d2VuaHUud2FuZ0B2aXZvLmNvbT4KPgo+VGhlIGlu
-dGVudCB3YXMgdGhhdCBkcml2ZXJzIHVzaW5nIHRoZSBTUkFNIEFQSSB3b3VsZCBzZWxlY3QgdGhl
-IHN5bWJvbC4gIFdoYXQKPmlzIHRoZSB1c2UgY2FzZSBmb3Igc2VsZWN0aW5nIGl0IG1hbnVhbGx5
-Pwo+CgpXaXRoIGEgcmVwb3NpdG9yeSBvZiBtdWx0aXBsZSBwcm9kdWN0cyhtZWFuaW5nIGRpZmZl
-cmVudCBkZWZjb25maWdzKSBhbmQgbXVsdGlwbGUKZGV2ZWxvcGVycywgdGhlIEtjb25maWdzIG9m
-IHRoZSBLZXJuZWwgU291cmNlIFRyZWUgY2hhbmdlIGZyZXF1ZW50bHkuIFNvIHRoZSAibWFrZSBt
-ZW51Y29uZmlnIgpwcm9jZXNzIGlzIG5lZWRlZCBmb3IgZGVmY29uZmlncycgcmUtZ2VuZXJhdGlu
-ZyBvciB1cGRhdGluZyBmb3IgdGhlIGNvbXBsZXhpdHkgb2YgZGVwZW5kZW5jaWVzCmJldHdlZW4g
-ZGlmZmVyZW50IGZlYXR1cmVzIGRlZmluZWQgaW4gdGhlIEtjb25maWdzLgoKPlNpbmNlIHRoaXMg
-Y29kZSB3YXMgYWRkZWQgYWxtb3N0IHRlbiB5ZWFycyBhZ28gYW5kIHRoZXJlIGFyZSBzdGlsbCBu
-byAoaW4tCj50cmVlPykgdXNlcnMgb2YgdGhlIEFQSSwgd2Ugc2hvdWxkIGp1c3QgcmVtb3ZlIHRo
-ZSBzcmFtIGNvZGUgKHVubGVzcyB0aGlzCj5wcm9kcyBzb21lb25lIHRvIHN1Ym1pdCBzdWNoIGEg
-dXNlciB2ZXJ5IHNvb24pLgo+CgpZZXMsIHByZXR0eSBsb25nIGEgdGltZS4gQnV0IHdlIERPIHJl
-YWxseSB1c2UgdGhlIEFQSSBub3cgZm9yIFBQQ0U1MDAvRnJlZXNjYWxlIFNvQy4KTGlrZSBzb21l
-dGltZXMgd2UgbmVlZCB0byByZXNldCB0aGUgd2hvbGUgUkFNLCB0aGVuIHRoZSBMMi1DYWNoZSB3
-b3VsZCBiZSB1c2VkIGFzClNSQU0gZm9yIGJhY2t1cCB1c2luZy4gU2luY2UgaXQgaXMgdXNlZnVs
-IGZvciB1cyBub3csIGEgcmUtY29uc2lkZXJhdGlvbiBpcyByZWNvbW1hbmRlZC4KCj4tU2NvdHQK
-Pgo+CgotLQpXZW5odQp2aXZvDQoNCg==
+From: wangwenhu <wenhu.wang@vivo.com>
+
+Include arch/powerpc/include/asm/io.h into fsl_85xx_cache_sram.c to
+fix the implicit declaration compile errors when building Cache-Sram.
+
+arch/powerpc/sysdev/fsl_85xx_cache_sram.c: In function ‘instantiate_cache_sram’:
+arch/powerpc/sysdev/fsl_85xx_cache_sram.c:97:26: error: implicit declaration of function ‘ioremap_coherent’; did you mean ‘bitmap_complement’? [-Werror=implicit-function-declaration]
+  cache_sram->base_virt = ioremap_coherent(cache_sram->base_phys,
+                          ^~~~~~~~~~~~~~~~
+                          bitmap_complement
+arch/powerpc/sysdev/fsl_85xx_cache_sram.c:97:24: error: assignment makes pointer from integer without a cast [-Werror=int-conversion]
+  cache_sram->base_virt = ioremap_coherent(cache_sram->base_phys,
+                        ^
+arch/powerpc/sysdev/fsl_85xx_cache_sram.c:123:2: error: implicit declaration of function ‘iounmap’; did you mean ‘roundup’? [-Werror=implicit-function-declaration]
+  iounmap(cache_sram->base_virt);
+  ^~~~~~~
+  roundup
+cc1: all warnings being treated as errors
+
+Signed-off-by: wangwenhu <wenhu.wang@vivo.com>
+---
+ arch/powerpc/sysdev/fsl_85xx_cache_sram.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/powerpc/sysdev/fsl_85xx_cache_sram.c b/arch/powerpc/sysdev/fsl_85xx_cache_sram.c
+index f6c665dac725..29b6868eff7d 100644
+--- a/arch/powerpc/sysdev/fsl_85xx_cache_sram.c
++++ b/arch/powerpc/sysdev/fsl_85xx_cache_sram.c
+@@ -17,6 +17,7 @@
+ #include <linux/of_platform.h>
+ #include <asm/pgtable.h>
+ #include <asm/fsl_85xx_cache_sram.h>
++#include <asm/io.h>
+ 
+ #include "fsl_85xx_cache_ctlr.h"
+ 
+-- 
+2.17.1
+
