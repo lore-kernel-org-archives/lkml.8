@@ -2,101 +2,102 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA32C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE7EFC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF58124125
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:51:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D26124125
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:51:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QN0UAwl5"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="FSED5JXe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729541AbgAUPvE (ORCPT
+        id S1729497AbgAUPvB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 10:51:04 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22615 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729153AbgAUPvD (ORCPT
+        Tue, 21 Jan 2020 10:51:01 -0500
+Received: from mail-qt1-f174.google.com ([209.85.160.174]:37446 "EHLO
+        mail-qt1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729153AbgAUPvB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 10:51:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579621862;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=eMIlB257RM/m/+0lsubXpXw7AZgmiGqc6GHCz5AcBZA=;
-        b=QN0UAwl5AehrxT0vXfV7O8ChRla+XexGcTmoR9VVvRfz0od0nUUyDPzXfAjoyWIvGJAVXX
-        oposf+cPH3kb2bl6JwghodVDKRPoEsH0YGyZ/eXN4s4AvF8yQXO5xo5kR/hXAttHGY339Y
-        iUxdDToc/xuD6byI7RvNqVWXMBpyDDM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-356-rcG6IqFPOdWH8joOKQsrfQ-1; Tue, 21 Jan 2020 10:50:59 -0500
-X-MC-Unique: rcG6IqFPOdWH8joOKQsrfQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7248618B5FA0;
-        Tue, 21 Jan 2020 15:50:57 +0000 (UTC)
-Received: from localhost (ovpn-117-223.ams2.redhat.com [10.36.117.223])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8A3CC845C7;
-        Tue, 21 Jan 2020 15:50:54 +0000 (UTC)
-Date:   Tue, 21 Jan 2020 15:50:53 +0000
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jorgen Hansen <jhansen@vmware.com>,
-        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-hyperv@vger.kernel.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Dexuan Cui <decui@microsoft.com>
-Subject: Re: [PATCH net-next 0/3] vsock: support network namespace
-Message-ID: <20200121155053.GD641751@stefanha-x1.localdomain>
-References: <20200116172428.311437-1-sgarzare@redhat.com>
-MIME-Version: 1.0
-In-Reply-To: <20200116172428.311437-1-sgarzare@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="F8dlzb82+Fcn6AgP"
-Content-Disposition: inline
+        Tue, 21 Jan 2020 10:51:01 -0500
+Received: by mail-qt1-f174.google.com with SMTP id w47so2984755qtk.4
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 07:51:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:date:subject:message-id
+         :cc:to;
+        bh=TSx1IacjA36C7gRcUNqAiUk52Ru2xAt6jsIMGDeM5kc=;
+        b=FSED5JXeH7JMEFRDifhZbjZ4BjsiEodHmzWcTAdNLBgEJ0gWI+N0lPPP1IPNqXHf4S
+         zDWOcuNV/9WBBka7TdArzN2hfkxuq2A4VqDhgo2uEG77umIYL1kmlo/JLHcrz8Thdeeq
+         xd56xjAmYkHad1d7vpAPWP25Fi7hLSgpsWpPl7G8sXOK7Xy/Vki3ZAf/EqjTXwT98ESU
+         8HVY0YhlpVn88LP8e+mx6vwCyKkJJMF/IYczprzhSKDCKUjDwQbki+cfTqOUlCEU4xG3
+         GubVElkTj5l0Caa6j/0wWqWd5UBqQ+BT29Z/oEiQIetZXlCMqhnIOTQbx+I86bY//l1C
+         Dt5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version:date
+         :subject:message-id:cc:to;
+        bh=TSx1IacjA36C7gRcUNqAiUk52Ru2xAt6jsIMGDeM5kc=;
+        b=RJv/G6T+YI6xIOZxv+mEJiIseEA6ipxUjZHPbBy+nWCDKaMGgi4VVM9ve3bgP95fvz
+         xf94UpZhCU1d5SJ0UCyniyzh2BoUoxPhH4Fg58hQzCnlkOH+ry0ME+KtqjVK3yC4J+CK
+         QUFvSeVpgMhOa4434ByLCTOLHHzRI2yZK2cqTx4h9fMZdrCj/RsIekcQhA3/L0dDkHnM
+         VWyryvFdrm8806J43+Nbh6QWyuCN9sxsh86gZA8ZUXecwEtDUPzNOFZ7hq6+6L7f/RBO
+         YUrNwsmVS1NQHrQxTT/Xyod59m7DgLs+af7PcxnsxHKq6AKPSooVzzefRM3goA6fwJU0
+         rmpQ==
+X-Gm-Message-State: APjAAAWkSoNft6KqL9orGf7/hzsIljEmC2tN9XgD05fqWwxg1aMGUdMz
+        GEUmhd6BnYUeD7nCIwmft7r/RF3B+BUdjA==
+X-Google-Smtp-Source: APXvYqwaCrYcu9GXaMWjCpD9zq1ed1F/qgV/p031Oq8MDLRDLZBsg6KywZCQBNkdHctFIqUqr+XJtA==
+X-Received: by 2002:ac8:7356:: with SMTP id q22mr5067604qtp.162.1579621858159;
+        Tue, 21 Jan 2020 07:50:58 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id t3sm19740433qtc.8.2020.01.21.07.50.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jan 2020 07:50:57 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Date:   Tue, 21 Jan 2020 10:50:56 -0500
+Subject: Re: [PATCH -next] x86/mm/pat: silence a data race in cpa_4k_install
+Message-Id: <388BB7AF-C7AB-4F0D-B79A-A43097C12E62@lca.pw>
+Cc:     Marco Elver <elver@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+To:     Borislav Petkov <bp@alien8.de>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---F8dlzb82+Fcn6AgP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-What should vsock_dev_do_ioctl() IOCTL_VM_SOCKETS_GET_LOCAL_CID return?
-The answer is probably dependent on the caller's network namespace.
 
-Ultimately we may need per-namespace transports.  Imagine assigning a
-G2H transport to a specific network namespace.
+> On Jan 21, 2020, at 10:45 AM, Borislav Petkov <bp@alien8.de> wrote:
+>=20
+> Perhaps because you've been dealing with KCSAN for so long. :-)
+>=20
+> The main angle here, IMO, is that this "fix" is being done solely for
+> KCSAN. Or is there another reason to "fix" intentional data races? At
+> least I don't see one. And the text says
+>=20
+> "This will generate a lot of noise on a debug kernel with
+> debug_pagealloc with KCSAN enabled which could render the system
+> unusable."
+>=20
+> So yes, I think it should say something about making KCSAN happy.
+>=20
+> Oh, and while at it I'd prefer it if it did the __no_kcsan function
+> annotation instead of the data_race() thing.
 
-vsock_stream_connect() needs to be namespace-aware so that other
-namespaces cannot use the G2H transport to send a connection
-establishment packet.
+Or the patch title could be =E2=80=9Cplay KCSAN well with debug_pagealloc=E2=
+=80=9D?
 
---F8dlzb82+Fcn6AgP
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl4nHd0ACgkQnKSrs4Gr
-c8jZrQf/TRB2zBeMXsyYPUoUt2OUY/g4u8e60E+RzcZ4/AxMVlcoaGKuKtNk4DzL
-Z+owz+Skn/cI4fcj0XUJrs8/O9Oqwtng0PXbIUE2sUxgd+xkB9j/zMpnwUwAHejI
-M67cUcW7U6bo91TkPyp6hhjurVeMTqhxs2FYiDXuOWYxEAJwK+Rot5714FbNqujY
-A7/lzlRk8GtJRI5OtH+IQaaE3y7DXzYZafwt/Vkr+LJHGSDtLoImGiziGgj/F4YB
-SHxT1+d5fu9xiugvjiQFsA8l6uZjOQSQUXLbjLk3bRWRtRVV9Oa64pufh8B5yI0J
-MEc1knCZqHNXlMS7KlHgjY7zhJcsnw==
-=lL1o
------END PGP SIGNATURE-----
-
---F8dlzb82+Fcn6AgP--
-
+I am fine with __no_kcsan as well. I just need to retest the whole thing fir=
+st.=
