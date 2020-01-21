@@ -2,227 +2,151 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF29BC33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:37:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B18B0C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0F46207E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:37:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82A8C22314
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:39:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ndp7Y68g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729232AbgAUPhd (ORCPT
+        id S1729152AbgAUPj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 10:37:33 -0500
-Received: from mga02.intel.com ([134.134.136.20]:37228 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727817AbgAUPhd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 10:37:33 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 07:37:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,346,1574150400"; 
-   d="scan'208";a="221738007"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga008.fm.intel.com with ESMTP; 21 Jan 2020 07:37:29 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1itvas-0007hw-Hr; Tue, 21 Jan 2020 17:37:30 +0200
-Date:   Tue, 21 Jan 2020 17:37:30 +0200
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Dave Young <dyoung@redhat.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Kexec Mailing List <kexec@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean Delvare <jdelvare@suse.de>
-Subject: Re: [PATCH v1 2/2] firmware: dmi_scan: Pass dmi_entry_point to
- kexec'ed kernel
-Message-ID: <20200121153730.GZ32742@smile.fi.intel.com>
-References: <20161202195416.58953-3-andriy.shevchenko@linux.intel.com>
- <20161215122856.7d24b7a8@endymion>
- <20161216023213.GA4505@dhcp-128-65.nay.redhat.com>
- <1481890738.9552.70.camel@linux.intel.com>
- <20161216143330.69e9c8ee@endymion>
- <20161217105721.GB6922@dhcp-128-65.nay.redhat.com>
- <20200120121927.GJ32742@smile.fi.intel.com>
- <87a76i9ksr.fsf@x220.int.ebiederm.org>
- <CAHp75VdjwWfqHtJ3n-UK_n5nzpgcpERbM+_9-Z3FrjJx7nHQzQ@mail.gmail.com>
- <CAKv+Gu-sVSWNYHEjzjOfbEryOR_XruwH=qQphq4uTXMLPK18tw@mail.gmail.com>
+        Tue, 21 Jan 2020 10:39:58 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:34476 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727508AbgAUPj6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 10:39:58 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00LFcpUq013067;
+        Tue, 21 Jan 2020 15:39:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=eQ4ik+FTutWCXRnK1enaA7jtow4c1d1i8Ndq/T4zYAI=;
+ b=Ndp7Y68gPe+ml2WETz8GRmm7ySYkYQI0NldiFD/VFx3eOhu2KOhRQJ2/rtID7DxKaUiF
+ V1hFJQ02DSIO0dBiXRER6K0C+1rw6ALZcMNLl03KL7CUYUmlH3M+2i3srS3GwsUGl9nf
+ oS2iPLNMGx1dPrL0JdDQHd+hxwrqeUjLRCmKLacBsoPY3Uypu9HEft9cP4FTQ79m2zHm
+ xyT4max28qK6ZvBEl8M0aMENvPC644cSJCL2CCNrEZpo0iZ1xfZoN3q4oNpH5lNp3AQK
+ 5DJ+KXsmyYXeE5IzoderN7nI407zhhSvJqSQFWwYfkrRoztrzwkQtdbiCiM5/fY+/qQC lA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2xksyq5rv1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Jan 2020 15:39:24 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00LFcV90056940;
+        Tue, 21 Jan 2020 15:39:24 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2xnpfp7rte-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Jan 2020 15:39:24 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00LFdFaW019191;
+        Tue, 21 Jan 2020 15:39:17 GMT
+Received: from kadam (/10.175.179.252)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 21 Jan 2020 07:39:14 -0800
+Date:   Tue, 21 Jan 2020 18:39:04 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     syzbot <syzbot+3967c1caf256f4d5aefe@syzkaller.appspotmail.com>
+Cc:     alsa-devel@alsa-project.org, davem@davemloft.net,
+        dccp@vger.kernel.org, gerrit@erg.abdn.ac.uk,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        perex@perex.cz, syzkaller-bugs@googlegroups.com, tiwai@suse.com,
+        tiwai@suse.de, Eric Dumazet <edumazet@google.com>
+Subject: Re: KASAN: use-after-free Read in ccid_hc_tx_delete
+Message-ID: <20200121153904.GA9856@kadam>
+References: <000000000000de3c7705746dcbb7@google.com>
+ <0000000000002c243a0597dc8d9d@google.com>
+ <20191121201433.GD617@kadam>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKv+Gu-sVSWNYHEjzjOfbEryOR_XruwH=qQphq4uTXMLPK18tw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191121201433.GD617@kadam>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9506 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001210125
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9506 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001210125
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 12:18:03AM +0100, Ard Biesheuvel wrote:
-> On Mon, 20 Jan 2020 at 23:31, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> > On Mon, Jan 20, 2020 at 9:28 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
-> > > Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
-> > > > On Sat, Dec 17, 2016 at 06:57:21PM +0800, Dave Young wrote:
-
-...
-
-> > > > Can we apply these patches for now until you will find better
-> > > > solution?
-> > >
-> > > Not a chance.  The patches don't apply to any kernel in the git history.
-> > >
-> > > Which may be part of your problem.  You are or at least were running
-> > > with code that has not been merged upstream.
-> >
-> > It's done against linux-next.
-> > Applied clearly. (Not the version in this more than yearly old series
-> > of course, that's why I told I can resend)
-> >
-> > > > P.S. I may resend them rebased on recent vanilla.
-> > >
-> > > Second.  I looked at your test results and they don't directly make
-> > > sense.  dmidecode bypasses the kernel completely or it did last time
-> > > I looked so I don't know why you would be using that to test if
-> > > something in the kernel is working.
-> > >
-> > > However dmidecode failing suggests that the actual problem is something
-> > > in the first kernel is stomping the dmi tables.
-> >
-> > See below.
-> >
-> > > Adding a command line option won't fix stomped tables.
-> >
-> > It provides a mechanism, which seems to be absent, to the second
-> > kernel to know where to look for SMBIOS tables.
-> >
-> > > So what I would suggest is:
-> > > a) Verify that dmidecode works before kexec.
-> >
-> > Yes, it does.
-> >
-> > > b) Test to see if dmidecode works after kexec.
-> >
-> > No, it doesn't.
-> >
-> > > c) Once (a) shows that dmidecode works and (b) shows that dmidecode
-> > >    fails figure out what is stomping your dmi tables during or before
-> > >    kexec and that is what should get fixed.
-> >
-> > The problem here as I can see it that EFI and kexec protocols are not
-> > friendly to each other.
-> > I'm not an expert in either. That's why I'm asking for possible
-> > solutions. And this needs to be done in kernel to allow drivers to
-> > work.
-> >
-> > Does the
-> >
-> > commit 4996c02306a25def1d352ec8e8f48895bbc7dea9
-> > Author: Takao Indoh <indou.takao@jp.fujitsu.com>
-> > Date:   Thu Jul 14 18:05:21 2011 -0400
-> >
-> >     ACPI: introduce "acpi_rsdp=" parameter for kdump
-> >
-> > description shed a light on this?
-> >
-> > > Now using a non-efi method of dmi detection relies on the
-> > > tables being between 0xF0000 and 0x10000. AKA the last 64K
-> > > of the first 1MiB of memory.  You might check to see if your
-> > > dmi tables are in that address range.
-> >
-> > # dmidecode --no-sysfs
-> > # dmidecode 3.2
-> > Scanning /dev/mem for entry point.
-> > # No SMBIOS nor DMI entry point found, sorry.
-> >
-> > === with patch applied ===
-> > # dmidecode
-> > ...
-> >         Release Date: 03/10/2015
-> > ...
-> >
-> > >
-> > > Otherwise I suspect the good solution is to give efi it's own page
-> > > tables in the kernel and switch to it whenever efi functions are called.
-> > >
-> >
-> > > But on 32bit the Linux kernel has historically been just fine directly
-> > > accessing the hardware, and ignoring efi and all of the other BIOS's.
-> >
-> > It seems not only for 32-bit Linux kernel anymore. MS Surface 3 runs
-> > 64-bit code.
-> >
-> > > So if that doesn't work on Intel Galileo that is probably a firmware
-> > > problem.
-> >
-> > It's not only about Galileo anymore.
-> >
+On Thu, Nov 21, 2019 at 11:14:33PM +0300, Dan Carpenter wrote:
+> On Thu, Nov 21, 2019 at 07:00:00AM -0800, syzbot wrote:
+> > syzbot has bisected this bug to:
+> > 
+> > commit f04684b4d85d6371126f476d3268ebf6a0bd57cf
+> > Author: Dan Carpenter <dan.carpenter@oracle.com>
+> > Date:   Thu Jun 21 08:07:21 2018 +0000
+> > 
+> >     ALSA: lx6464es: Missing error code in snd_lx6464es_create()
+> > 
+> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10dd11cae00000
+> > start commit:   eb6cf9f8 Merge tag 'arm64-fixes' of git://git.kernel.org/p..
+> > git tree:       upstream
+> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=12dd11cae00000
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=14dd11cae00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=c8970c89a0efbb23
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=3967c1caf256f4d5aefe
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11022ccd400000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=124581db400000
+> > 
+> > Reported-by: syzbot+3967c1caf256f4d5aefe@syzkaller.appspotmail.com
+> > Fixes: f04684b4d85d ("ALSA: lx6464es: Missing error code in
+> > snd_lx6464es_create()")
+> > 
+> > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 > 
-> Looking at the x86 kexec EFI code, it seems that it has special
-> handling for the legacy SMBIOS table address, but not for the SMBIOS3
-> table address, which was introduced to accommodate SMBIOS tables
-> living in memory that is not 32-bit addressable.
+> This crash isn't related to my commit, it's seems something specific to
+> DCCP.
 > 
-> Could anyone check whether these systems provide SMBIOS 3.0 tables,
-> and whether their address gets virtually remapped at ExitBootServices?
+> My guess is that the fix is probably something like this.  The old sk
+> and the new sk re-use the same newdp->dccps_hc_rx/tx_ccid pointers.
+> The first sk destructor frees it and that causes a use after free when
+> the second destructor tries to free it.
+> 
+> But I don't know DCCP code at all so I might be totally off and I
+> haven't tested this at all...  It was just easier to write a patch than
+> to try to explain in words.  Maybe we should clone the ccid instead of
+> setting it to NULL.  Or I might be completely wrong.
+> 
+> ---
+>  net/dccp/minisocks.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/net/dccp/minisocks.c b/net/dccp/minisocks.c
+> index 25187528c308..4cbfcccbbbbb 100644
+> --- a/net/dccp/minisocks.c
+> +++ b/net/dccp/minisocks.c
+> @@ -98,6 +98,8 @@ struct sock *dccp_create_openreq_child(const struct sock *sk,
+>  		newdp->dccps_timestamp_echo = dreq->dreq_timestamp_echo;
+>  		newdp->dccps_timestamp_time = dreq->dreq_timestamp_time;
+>  		newicsk->icsk_rto	    = DCCP_TIMEOUT_INIT;
+> +		newdp->dccps_hc_rx_ccid     = NULL;
+> +		newdp->dccps_hc_tx_ccid     = NULL;
+>  
+>  		INIT_LIST_HEAD(&newdp->dccps_featneg);
+>  		/*
 
-On Microsoft Surface 3 tablet:
+Could someone take a look at this?  It seem like a pretty serious bug
+but DCCP is not very actively maintained and a lot of distributions
+disable it.
 
-=== First kernel ===
-
-# uname -a
-
-(Previously reported issue on)
-Linux buildroot 4.13.0+ #39 SMP Tue Sep 5 14:58:23 EEST 2017 x86_64 GNU/Linux
-
-(Updated today to)
-Linux buildroot 5.4.0+ #2 SMP Tue Nov 26 15:36:31 EET 2019 x86_64 GNU/Linux
-
-# ls -l /sys/firmware/dmi/tables/
-total 0
--r--------    1 root     root           825 Jan 21 15:41 DMI
--r--------    1 root     root            31 Jan 21 15:41 smbios_entry_point
-
-# od -Ax -tx1 /sys/firmware/dmi/tables/smbios_entry_point
-000000 5f 53 4d 5f 0f 1f 02 08 6a 00 00 00 00 00 00 00
-000010 5f 44 4d 49 5f e0 39 03 00 40 5b 7b 0f 00 27
-00001f
-
-# dmesg | grep -i dmi
-[    0.000000] DMI: Microsoft Corporation Surface 3/Surface 3, BIOS 1.50410.78 03/10/2015
-[    0.403058] ACPI: Added _OSI(Linux-Lenovo-NV-HDMI-Audio)
-
-# dmesg | grep -i smb
-[    0.000000] efi:  ESRT=0x7b7c6c98  ACPI=0x7ad5a000  ACPI 2.0=0x7ad5a000  SMBIOS=0x7b5f7d18
-[    0.000000] SMBIOS 2.8 present.
-
-=== kexec'ed kernel ===
-# uname -a
-(in both cases, see above `uname -a`, the same version)
-Linux buildroot 5.5.0-rc7+ #161 SMP Tue Jan 21 15:50:02 EET 2020 x86_64 GNU/Linux
-
-# dmidecode
-# dmidecode 3.2
-	Scanning /dev/mem for entry point.
-# No SMBIOS nor DMI entry point found, sorry.
-
-# dmidecode --no-sysfs
-# dmidecode 3.2
-	Scanning /dev/mem for entry point.
-# No SMBIOS nor DMI entry point found, sorry.
-
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+regards,
+dan carpenter
