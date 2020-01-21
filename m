@@ -2,111 +2,125 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E036C33CB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 07:55:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08109C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 07:56:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E919F24654
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 07:55:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579593342;
-	bh=ctHy3qaqeSqwZviUpkYQlV4bYIKMDgmfasvDstEMY8Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ceYoPEK/7/HtgPM5onfN4C6lmM7DpDywfvk5Tpw0KsV8+ZcV+XBeWA94AM+MP11lC
-	 4AkU/N9YAV0Up3IXTS/Ixh04kKbhm5l8cys1BcqYEr6zmj9X/8Wwds3apkXIWdxJ7v
-	 iu53wq5rNDy6PFlQqcSirRBtXctGAeEkf0+o39Lo=
+	by mail.kernel.org (Postfix) with ESMTP id D89D822522
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 07:56:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbgAUHzl (ORCPT
+        id S1728205AbgAUH45 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 02:55:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53048 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725789AbgAUHzl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 02:55:41 -0500
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FB0924654;
-        Tue, 21 Jan 2020 07:55:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579593340;
-        bh=ctHy3qaqeSqwZviUpkYQlV4bYIKMDgmfasvDstEMY8Q=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=w4JJoR+w7PYdOF/z/PneWxlemCgFf0UREZXNwYKBzZhiXmrdqwjjbbCSCTJhdw38y
-         sV+KjRcRbIqeEcDFtRrHYwZ2gOiwcbdL8JEMBLUpttPRxGvQnR5kc8hwnhdk2RU+KJ
-         /05K0U00dWGgSsO9+xW//uSWmoaBz0SpkqE+TBm0=
-Received: by mail-lj1-f172.google.com with SMTP id o13so1712298ljg.4;
-        Mon, 20 Jan 2020 23:55:40 -0800 (PST)
-X-Gm-Message-State: APjAAAVLFLfWu5FnMloYO8DY30nxfryaBs8CE12XToCJGBPCpC2A2lxr
-        DXxc9gx+9s8CtZgRihq7KSiLJ99+p9ZejJskxiU=
-X-Google-Smtp-Source: APXvYqzf2rJJ28+KITUl7Ht3WzvzQdEkYVOkARkFyeGRkAdXU82TnDKKOs2vWavqEk8n66tDsNVSvyHsKzW4hG1JYLM=
-X-Received: by 2002:a2e:9015:: with SMTP id h21mr16052410ljg.69.1579593338381;
- Mon, 20 Jan 2020 23:55:38 -0800 (PST)
+        Tue, 21 Jan 2020 02:56:57 -0500
+Received: from mout.kundenserver.de ([212.227.126.130]:34765 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbgAUH44 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 02:56:56 -0500
+Received: from mail-qk1-f176.google.com ([209.85.222.176]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MrQN5-1jN4gy1L1j-00oVpR for <linux-kernel@vger.kernel.org>; Tue, 21 Jan
+ 2020 08:56:55 +0100
+Received: by mail-qk1-f176.google.com with SMTP id x129so1804996qke.8
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 23:56:55 -0800 (PST)
+X-Gm-Message-State: APjAAAWtYuRWYftvoxM0Q9pnIOkIRr9Ox23ymBFxDj78bM6AN/2YTdda
+        LypIvFKlPKgKKU7e6kYtqNzrk4vg/2DelfsWAT8=
+X-Google-Smtp-Source: APXvYqz4tiDJoI2migNnImA2omna2zj+7OgcgTO5jqY48X4PjHVty245HTtfMAVLuNHgqnoCcyHNuiGdUN5ZOP4kl94=
+X-Received: by 2002:a37:2f02:: with SMTP id v2mr3229598qkh.3.1579593414178;
+ Mon, 20 Jan 2020 23:56:54 -0800 (PST)
 MIME-Version: 1.0
-References: <20200107143058.7f821056@canb.auug.org.au> <CAJKOXPcVnjT1R4dvZ+xBdZ2mQ-XS385YEv33Q++qh3K5aw6OjA@mail.gmail.com>
- <20200121172823.62617483@canb.auug.org.au>
-In-Reply-To: <20200121172823.62617483@canb.auug.org.au>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Tue, 21 Jan 2020 08:55:27 +0100
-X-Gmail-Original-Message-ID: <CAJKOXPdUhCfrq1xSvPGjAOZDr29YGTK2j_fYSGJ9xchFDE=cmQ@mail.gmail.com>
-Message-ID: <CAJKOXPdUhCfrq1xSvPGjAOZDr29YGTK2j_fYSGJ9xchFDE=cmQ@mail.gmail.com>
-Subject: Re: linux-next: build warnings after merge of the usb tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Wolfram Sang <wsa@the-dreams.de>
-Cc:     Greg KH <greg@kroah.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>
+References: <CAFH1YnOad7aVjoX_PR6mLqT=pXQjpBW9ZDHkKYzNkeistFkA4A@mail.gmail.com>
+ <CAK8P3a3DwaZnRff7CCrJoSxP_MeVUn1S6nRd+hb5rHnv9dBgLQ@mail.gmail.com>
+ <CAFH1YnMDL1gBNT4vr+C=eGGoCYJvkVDnoXUVN8OL9Xs3668Z+Q@mail.gmail.com>
+ <CAK8P3a0aFr546fF+=LDm3rwZ-sK-xC8VLYTZjOEn+o6fVixRHg@mail.gmail.com> <20200120221323.GJ15860@mit.edu>
+In-Reply-To: <20200120221323.GJ15860@mit.edu>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 21 Jan 2020 08:56:37 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2aLxAgjp2_Vb0bKw-0PMVRXKtFw=2giF0MY6hgAQpQRg@mail.gmail.com>
+Message-ID: <CAK8P3a2aLxAgjp2_Vb0bKw-0PMVRXKtFw=2giF0MY6hgAQpQRg@mail.gmail.com>
+Subject: Re: Question about dynamic minor number of misc device
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     Zhenzhong Duan <zhenzhong.duan@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:UcYfFRlinOqwCjCCYDRzvoYlDPafztP3ta4y9slIdqm2BtQ8Mtk
+ Lhp5V7Ve2x7fahWEBguMbjl9B9tSfOSdfq1dxkh0DnzO/CKQSJAvccm//s5yKKSjWK+cxfW
+ uv41vNAKiGTzcZ7J7nAtkFKPx1A9lKxeajsssmEOv99iCjjkrD4VN8FHP1wmPyfyzaMbKIB
+ ezgRLlhqUezCfF9f4juSg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:tmR6Eac6mUY=:ej3nGrtUr/oiI8d3CFxebz
+ 08Mm+FUmhHmaCjg7Rb53ecpIDQe1vYQr8W/Hc2g3Ryb7JSyu5teN20jxl8Syt5tb4GmynWhBG
+ hpd7KFiCsPM9Dx5GaMbwKXXySZqEI8dBgeB0wAhRadgD3HmXt4E8N9okFOvxRtfVUwEH08fse
+ GoxdoxfCOmqax/RGdTGEDGM6TvXlH63aEwIKLt/RzsP2TYGkoDX/lAwc5DuEaZ9D75W8uVf6K
+ fCzF27QQn73lmYeVp9NY6a2jH0w/TSTiJyIyleaU79EL5TgLwcUE0wWM0NThl17MP60rx0Akd
+ 6HjU46KUTQVekFIqVKtVfaTmxipZfyH7YqJ5v3hVqZrB63vwezl+G6/kKPAmRcDJBn4xjkj7T
+ qquSO+YkxO+a99GUZocIiZ7fdyxzv3+tUwYZU5mlX9dghDMVxg3DYGSRYaDSy1ib31phyWjpS
+ 1wKi4427kF1wOTQYyVfHfVSuwQyo5PmTY4g/XTEVREsp3CtPzzMd+pw/qLgwqE1OMyuNJyhdW
+ F1pRaR8JllHBPO1neLg5y+7G2p26T35ITC6eIrzBWWS3+CBaqIUfyF6dHYMtfkcCAD3g3ajdF
+ SYiKy0zXE9z/PsR9CoxUjrSbRfbRejgrUP7N3xxjbQzHHTieGFl0Y3yQsnEvVQqjis8CtC/I8
+ I7nrfWY4UuBm/ROOjNwJiebNPDefnkT8keNhyh86HXXJsRkTH+VzpHO667Dor/Dhdd9vs5oHF
+ UMRafpjwX7B3u00DbUuSjgl0+SKgRPNdhE9y1B2pkdoEWC+j14VlqFEkM6SClyA1PVbc6FtgH
+ X1R6axf4nCP5AC+QDf2dYhhbwBuwcuHhizqx7/SVUAk+kg8wiAZvp8HSNyiv5kzPDtPDIMkie
+ v6yIlgyvTGu3RLWH+XOA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 Jan 2020 at 07:28, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+On Mon, Jan 20, 2020 at 11:13 PM Theodore Y. Ts'o <tytso@mit.edu> wrote:
 >
-> Hi all,
->
-> On Tue, 7 Jan 2020 09:06:01 +0100 Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> On Mon, Jan 20, 2020 at 11:59:32AM +0100, Arnd Bergmann wrote:
+> > On Mon, Jan 20, 2020 at 11:26 AM Zhenzhong Duan
+> > <zhenzhong.duan@gmail.com> wrote:
+> > > On Mon, Jan 20, 2020 at 6:03 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > > > On Mon, Jan 20, 2020 at 9:33 AM Zhenzhong Duan <zhenzhong.duan@gmail.com> wrote:
+> > > > On a  related note, I checked for drivers that call misc_register()
+> > > > with a minor number that is not defined in include/linux/misc.h
+> > > > and found a bunch, including some that have conflicting numbers,
+> > > > conflicting names  or numbers from the dynamic range:
+> > > >
+> > > > drivers/staging/speakup/devsynth.c:#define SYNTH_MINOR 25
+> > > > drivers/staging/speakup/speakup_soft.c:#define SOFTSYNTH_MINOR 26 /*
+> > > > drivers/staging/speakup/speakup_soft.c:#define SOFTSYNTHU_MINOR 27 /*
+> > > > drivers/macintosh/via-pmu.c:#define PMU_MINOR           154
+> > > > drivers/macintosh/ans-lcd.h:#define ANSLCD_MINOR                156
+> > > > drivers/auxdisplay/charlcd.c:#define LCD_MINOR          156
+> > > > drivers/char/applicom.c:#define AC_MINOR 157
+> > > > drivers/char/nwbutton.h:#define BUTTON_MINOR 158
+> > > > arch/arm/include/asm/nwflash.h:#define FLASH_MINOR               160
+> > > > drivers/sbus/char/envctrl.c:#define ENVCTRL_MINOR       162
+> > > > drivers/sbus/char/flash.c:#define FLASH_MINOR   152
+> > > > drivers/sbus/char/uctrl.c:#define UCTRL_MINOR   174
+> > > > drivers/char/toshiba.c:#define TOSH_MINOR_DEV 181
+> > > > arch/um/drivers/random.c:#define RNG_MISCDEV_MINOR
+> > > > drivers/auxdisplay/panel.c:#define KEYPAD_MINOR         185
+> > > > drivers/video/fbdev/pxa3xx-gcu.c:#define MISCDEV_MINOR  197
+> > > > kernel/power/user.c:#define SNAPSHOT_MINOR      231
+> > > > drivers/parisc/eisa_eeprom.c:#define    EISA_EEPROM_MINOR 241
+> > > >
+> > > > If you would like to help clean that up, you are definitely welcome
+> > > > to send patches.
+> > >
+> > > Ok, should that be a patch for all drivers or seperate patch for each driver?
 > >
-> > On Tue, 7 Jan 2020 at 04:31, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> > >
-> > > After merging the usb tree, today's linux-next build (x86_64 allmodconfig)
-> > > produced these warnings:
-> > >
-> > > WARNING: unmet direct dependencies detected for I2C_S3C2410
-> > >   Depends on [n]: I2C [=y] && HAS_IOMEM [=y] && HAVE_S3C2410_I2C [=n]
-> > >   Selected by [m]:
-> > >   - PHY_EXYNOS5250_SATA [=m] && (SOC_EXYNOS5250 || COMPILE_TEST [=y]) && HAS_IOMEM [=y] && OF [=y]
-> > >
-> > > WARNING: unmet direct dependencies detected for I2C_S3C2410
-> > >   Depends on [n]: I2C [=y] && HAS_IOMEM [=y] && HAVE_S3C2410_I2C [=n]
-> > >   Selected by [m]:
-> > >   - PHY_EXYNOS5250_SATA [=m] && (SOC_EXYNOS5250 || COMPILE_TEST [=y]) && HAS_IOMEM [=y] && OF [=y]
-> > >
-> > > WARNING: unmet direct dependencies detected for I2C_S3C2410
-> > >   Depends on [n]: I2C [=y] && HAS_IOMEM [=y] && HAVE_S3C2410_I2C [=n]
-> > >   Selected by [m]:
-> > >   - PHY_EXYNOS5250_SATA [=m] && (SOC_EXYNOS5250 || COMPILE_TEST [=y]) && HAS_IOMEM [=y] && OF [=y]
-> > >
-> > > Introduced by commit
-> > >
-> > >   203b7ee14d3a ("phy: Enable compile testing for some of drivers")
+> > I think one patch to move the ones with unique names would be fine,
+> > but then separate patches for
 > >
-> > The fix is here:
-> > https://lore.kernel.org/lkml/CAMuHMdUXJo3=x32xbfSUXs3O3JHaFpfxt0mHupEb+vzi=5+S4g@mail.gmail.com/
-> > i2c: Enable compile testing for some of drivers
-> > Although I need to send v2 of it.
+> > - FLASH_MINOR move and rename to avoid conflict
+> > - change speakup to dynamic minors
+> > - support for high dynamic minor numbers if you are really motivated
+> >   (probably nobody needs these)
 >
-> I am still seeing these warnings.
+> Are we sure that reassigning minor device number conflits isn't going
+> to break systems?  Especially those on random, older, architectures
+> they might not be using udev.
 
-v2 is here:
-https://lore.kernel.org/linux-arm-kernel/1578384779-15487-1-git-send-email-krzk@kernel.org/T/#t
+To clarify: the only numbers that I think should be changed to dynamic
+allocation are for drivers/staging/speakup. While this is a fairly old
+subsystem, I would expect that it being staging means we can be a
+little more progressive with the changes.
 
-Can someone review and/or pick it up?
-
-Best regards,
-Krzysztof
+      Arnd
