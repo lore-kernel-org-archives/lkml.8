@@ -2,112 +2,142 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49684C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61695C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F599217F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 335F52253D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:12:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o8ADRwsz"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Fk/VjSwG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729437AbgAUQLN (ORCPT
+        id S1729108AbgAUQMs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 11:11:13 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39879 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726555AbgAUQLL (ORCPT
+        Tue, 21 Jan 2020 11:12:48 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:44689 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726968AbgAUQMs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 11:11:11 -0500
-Received: by mail-wm1-f66.google.com with SMTP id 20so3714930wmj.4;
-        Tue, 21 Jan 2020 08:11:09 -0800 (PST)
+        Tue, 21 Jan 2020 11:12:48 -0500
+Received: by mail-oi1-f195.google.com with SMTP id d62so3022142oia.11
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 08:12:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:subject:date:message-id;
-        bh=0r9HTQo0HlkDjaCMRvg6avAGNtQXXo1BGS+PSpMF/rg=;
-        b=o8ADRwszU8umz6tgcM1h3UdSiPzo+mhb6aukx2pasJOBSGTU3zMsRqdHVJfIWBiqX1
-         Bfw46uRQ2EmUosxSyJeoOPjE5Hxwdf0sSEo7MiU1EBQMaHEVDpHLVWgmIIVzcsyZB8tr
-         91Rwk0x9EFfNnh4Df39hN9XK1G+loTMHr7mq0xldzz655I3T3j84pQwX7cjkxHTsOexB
-         laYIDvmaqat3QODRpUAaJs1lwcVK+YCf+DccwGh6qKa4OjXfgQ7TgrHYAlZOkqIZJRO/
-         eq115/iNAA/75Cq/VpNQ1/c4KQuFg/rVaXbSPH6r9KSTuR7YMdWIliJKgUu+TKGkappr
-         D8Bw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=t0oGkq5Pa6BFHnIeKryyeGImhC+iJMmb3104WkR55ys=;
+        b=Fk/VjSwGo6GnY3If9r3BBaqW1BeNkMxKbSCn5mjEMyVclU3rQ3/ne2lWpRcEMJgza4
+         jIYmyAjNm8MrTni/EjaAfJt95jEF/+6hOhSxUbyKVnI7PffuAMOrDaeKXIMEbq40Fnno
+         Bws0lgNoPJJFPANsvWWyZRRtS9BdKjOJg88OIvvyeVTMJwFu2WYMVV7jOKkt7XlyKmYX
+         DhS+DaOzT2wNmQF4Z2uKwzBVpfNnpn4NkF4z21jx2FplBKqiiTTKeSP9f0dTv7mdEp2b
+         d6VrVr68fT7x0jmDN1KlV4NWZUNUXqDEVhV00y7RJ7pNcGmSVoJ9oX/xMQSf5qGoEARN
+         rg/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:subject:date:message-id;
-        bh=0r9HTQo0HlkDjaCMRvg6avAGNtQXXo1BGS+PSpMF/rg=;
-        b=feRnbM+KNpzjrtdUJdVg3oRubF7NyQT5eaTFsrb8Qz3/MRNHggFvsHF1hCADNYCt9Q
-         Lv272LMEg8GcMO07AVeb4k/15MIojcSCa0pBt5ul+7EFdy56C9AtUOrTuOWOSAJMzwxL
-         BsnaHm6wtCZNYTymLH8gOiLML6LEC380s81cb88GrvUqaTsJrah5f5ulQw8nIARGzCcQ
-         bDePtEvT/8NhTcfQEITOw+cBdXdUU2ZS3C5dcA6IWLWOrVfbv7ue6Qc2gEinGOfgjdHV
-         T4GJF4duHKuH6HWECgsjpVVO+nC6n9ZunXN2aUFNESbSOJnmmk2OR0dRWaw7/HbnEPgm
-         eHMQ==
-X-Gm-Message-State: APjAAAXYW8N8wiG4XU4i8g5Tva+/FETD2l7054wx/AjmH4tdTZe6QaXb
-        44sWRLM9StBlY9yC8MJSH+tYJ9vZ
-X-Google-Smtp-Source: APXvYqzVexiF8edJY6JhT2eTC61P3ZXm04IQoJfkwi4v0wI6o/A9Rh/EFnhCXkqXNUYu13FSve02nw==
-X-Received: by 2002:a05:600c:298:: with SMTP id 24mr4931157wmk.141.1579623068933;
-        Tue, 21 Jan 2020 08:11:08 -0800 (PST)
-Received: from 640k.lan ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id l6sm4648584wmf.21.2020.01.21.08.11.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 Jan 2020 08:11:08 -0800 (PST)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: [PATCH] KVM: x86: inline memslot_valid_for_gpte
-Date:   Tue, 21 Jan 2020 17:11:07 +0100
-Message-Id: <1579623067-47221-1-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=t0oGkq5Pa6BFHnIeKryyeGImhC+iJMmb3104WkR55ys=;
+        b=rlIwdo34tkUuu2qbRua2YzxkRkIzPGvLDuyjm6+4rsjkpDyoQFKPM16qqytSO+Qz/z
+         4EhMwtK+LyAktDhvEkNgOCvHdGUFfNa0PoCY8ouMnZxler0uC3EydkRmDgNcSyBQYXsh
+         DUlvBK/dF/h+6milSP6fA/go0UD8q0rjEQRLpvBcQOjBJn+AgezLVtkMkoKZOkfntDGZ
+         cEKAHd0tSLvCSFZ6kvJiK8bOSC12cKtChbH4RRuD7VXo5SMCj6KU7A01JOiAsuvdtFwv
+         8QnzN0JOz4Y5p2oW/g3cI58FnRsZwq5tfcRLB00A6JH+H7PwZs6e5F7b2KKNvt5qjCMe
+         94dA==
+X-Gm-Message-State: APjAAAW0aqgPneruNc/nXGlEZYzNIekeLnmoHKgApKSeihkuD6RbLD6a
+        uope2WnwwueW/TIZ+gjKDtLfe8J9+jIlfjItwe9cYw==
+X-Google-Smtp-Source: APXvYqwqMngfefQgGxQ3H4Pw5AafxYDK/vfOwxFn9yLaQb9nfiuyLLjnlS286+QldnFKWDZc87i2Y3UTkGFU5aPJZcI=
+X-Received: by 2002:aca:b183:: with SMTP id a125mr3673714oif.83.1579623167224;
+ Tue, 21 Jan 2020 08:12:47 -0800 (PST)
+MIME-Version: 1.0
+References: <20200115165749.145649-1-elver@google.com> <CAK8P3a3b=SviUkQw7ZXZF85gS1JO8kzh2HOns5zXoEJGz-+JiQ@mail.gmail.com>
+ <CANpmjNOpTYnF3ssqrE_s+=UA-2MpfzzdrXoyaifb3A55_mc0uA@mail.gmail.com>
+ <CAK8P3a3WywSsahH2vtZ_EOYTWE44YdN+Pj6G8nt_zrL3sckdwQ@mail.gmail.com>
+ <CANpmjNMk2HbuvmN1RaZ=8OV+tx9qZwKyRySONDRQar6RCGM1SA@mail.gmail.com>
+ <CAK8P3a066Knr-KC2v4M8Dr1phr0Gbb2KeZZLQ7Ana0fkrgPDPg@mail.gmail.com>
+ <CANpmjNO395-atZXu_yEArZqAQ+ib3Ack-miEhA9msJ6_eJsh4g@mail.gmail.com>
+ <CANpmjNOH1h=txXnd1aCXTN8THStLTaREcQpzd5QvoXz_3r=8+A@mail.gmail.com>
+ <CAK8P3a0p9Y8080T-RR2pp-p2_A0FBae7zB-kSq09sMZ_X7AOhw@mail.gmail.com>
+ <CANpmjNOUTed6FT8X0bUSc1tGBh3jrEJ0DRpQwBfoPF5ah8Wrhw@mail.gmail.com> <CAK8P3a32sVU4umk2FLnWnMGMQxThvMHAKxVM+G4X-hMgpBsXMA@mail.gmail.com>
+In-Reply-To: <CAK8P3a32sVU4umk2FLnWnMGMQxThvMHAKxVM+G4X-hMgpBsXMA@mail.gmail.com>
+From:   Marco Elver <elver@google.com>
+Date:   Tue, 21 Jan 2020 17:12:35 +0100
+Message-ID: <CANpmjNMe4a8O9ztaVCVym36au9jaaCooUorYnFd0egUQSfn7gQ@mail.gmail.com>
+Subject: Re: [PATCH -rcu] asm-generic, kcsan: Add KCSAN instrumentation for bitops
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        christophe leroy <christophe.leroy@c-s.fr>,
+        Daniel Axtens <dja@axtens.net>,
+        linux-arch <linux-arch@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function now has a single caller, so there is no point
-in keeping it separate.
+On Mon, 20 Jan 2020 at 20:03, Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Mon, Jan 20, 2020 at 4:11 PM Marco Elver <elver@google.com> wrote:
+> > On Mon, 20 Jan 2020 at 15:40, Arnd Bergmann <arnd@arndb.de> wrote:
+> > > On Mon, Jan 20, 2020 at 3:23 PM Marco Elver <elver@google.com> wrote:
+> > > > On Fri, 17 Jan 2020 at 14:14, Marco Elver <elver@google.com> wrote:
+> > > > > On Fri, 17 Jan 2020 at 13:25, Arnd Bergmann <arnd@arndb.de> wrote:
+> > > > > > On Wed, Jan 15, 2020 at 9:50 PM Marco Elver <elver@google.com> wrote:
+> > >
+> > > > > > If you can't find any, I would prefer having the simpler interface
+> > > > > > with just one set of annotations.
+> > > > >
+> > > > > That's fair enough. I'll prepare a v2 series that first introduces the
+> > > > > new header, and then applies it to the locations that seem obvious
+> > > > > candidates for having both checks.
+> > > >
+> > > > I've sent a new patch series which introduces instrumented.h:
+> > > >    http://lkml.kernel.org/r/20200120141927.114373-1-elver@google.com
+> > >
+> > > Looks good to me, feel free to add
+> > >
+> > > Acked-by: Arnd Bergmann <arnd@arndb.de>
+> > >
+> > > if you are merging this through your own tree or someone else's,
+> > > or let me know if I should put it into the asm-generic git tree.
+> >
+> > Thank you!  It seems there is still some debate around the user-copy
+> > instrumentation.
+> >
+> > The main question we have right now is if we should add pre/post hooks
+> > for them. Although in the version above I added KCSAN checks after the
+> > user-copies, it seems maybe we want it before. I personally don't have
+> > a strong preference, and wanted to err on the side of being more
+> > conservative.
+> >
+> > If I send a v2, and it now turns out we do all the instrumentation
+> > before the user-copies for KASAN and KCSAN, then we have a bunch of
+> > empty hooks. However, for KMSAN we need the post-hook, at least for
+> > copy_from_user. Do you mind a bunch of empty functions to provide
+> > pre/post hooks for user-copies? Could the post-hooks be generally
+> > useful for something else?
+>
+> I'd prefer not to add any empty hooks, let's do that once they
+> are actually used.
 
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/mmu/mmu.c | 17 ++++-------------
- 1 file changed, 4 insertions(+), 13 deletions(-)
+I hope I found a solution to the various constraints:
+http://lkml.kernel.org/r/20200121160512.70887-1-elver@google.com
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 7a17591b28d2..497c9384acf9 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -1267,17 +1267,6 @@ static void unaccount_huge_nx_page(struct kvm *kvm, struct kvm_mmu_page *sp)
- 	list_del(&sp->lpage_disallowed_link);
- }
- 
--static inline bool memslot_valid_for_gpte(struct kvm_memory_slot *slot,
--					  bool no_dirty_log)
--{
--	if (!slot || slot->flags & KVM_MEMSLOT_INVALID)
--		return false;
--	if (no_dirty_log && slot->dirty_bitmap)
--		return false;
--
--	return true;
--}
--
- static struct kvm_memory_slot *
- gfn_to_memslot_dirty_bitmap(struct kvm_vcpu *vcpu, gfn_t gfn,
- 			    bool no_dirty_log)
-@@ -1285,8 +1274,10 @@ static inline bool memslot_valid_for_gpte(struct kvm_memory_slot *slot,
- 	struct kvm_memory_slot *slot;
- 
- 	slot = kvm_vcpu_gfn_to_memslot(vcpu, gfn);
--	if (!memslot_valid_for_gpte(slot, no_dirty_log))
--		slot = NULL;
-+	if (!slot || slot->flags & KVM_MEMSLOT_INVALID)
-+		return NULL;
-+	if (no_dirty_log && slot->dirty_bitmap)
-+		return NULL;
- 
- 	return slot;
- }
--- 
-1.8.3.1
+I removed your Acks from the patches that were changed in v2. Please
+have another look.
 
+Re tree: Once people are happy with the patches, since this depends on
+KCSAN it'll probably have to go through Paul's -rcu tree, since KCSAN
+is not yet in mainline (currently only in -rcu, -tip, and -next).
+
+Thanks,
+-- Marco
