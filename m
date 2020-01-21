@@ -2,161 +2,153 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 388FFC33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 04:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2EBDC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 04:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEDE222522
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 04:03:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hOIkeJgi"
+	by mail.kernel.org (Postfix) with ESMTP id A3AFD24654
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 04:04:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728760AbgAUEBZ (ORCPT
+        id S1728776AbgAUEEx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 23:01:25 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:52892 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727144AbgAUEBY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 23:01:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579579283;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0WT8Dbo3sKexQYJiDHR6PfmDQ2T2bkeXH3HUb+VfaA4=;
-        b=hOIkeJgiMW6l9w8xoorqDXrUjlfTzSYUEbnRmN6ccbH/mkM31gXbCyBPB8ZAEpgHd1+Ohx
-        YweAHYg+zbWD9Sa2OKnGgkRzI+tK6O94Hp3rMwis5IsFiyWNprn62iOp4XCd/B5yUBGugI
-        lSoG8jEtpR0Tmlrs/XrwXLDNTlZcLmQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-138-s5fqSIo-McyvyGrkMjC0hg-1; Mon, 20 Jan 2020 23:01:20 -0500
-X-MC-Unique: s5fqSIo-McyvyGrkMjC0hg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B76351034B48;
-        Tue, 21 Jan 2020 04:01:17 +0000 (UTC)
-Received: from [10.72.12.208] (ovpn-12-208.pek2.redhat.com [10.72.12.208])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9815919C58;
-        Tue, 21 Jan 2020 04:00:58 +0000 (UTC)
-Subject: Re: [PATCH 3/5] vDPA: introduce vDPA bus
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Shahaf Shuler <shahafs@mellanox.com>,
-        Rob Miller <rob.miller@broadcom.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
+        Mon, 20 Jan 2020 23:04:53 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:49314 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727009AbgAUEEx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 23:04:53 -0500
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 6F144E91CBE44BAC7734;
+        Tue, 21 Jan 2020 12:04:51 +0800 (CST)
+Received: from [127.0.0.1] (10.173.220.183) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Tue, 21 Jan 2020
+ 12:04:43 +0800
+To:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>
+CC:     <linux-block@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Netdev <netdev@vger.kernel.org>,
-        "Bie, Tiwei" <tiwei.bie@intel.com>,
-        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
-        "Liang, Cunming" <cunming.liang@intel.com>,
-        "Wang, Zhihong" <zhihong.wang@intel.com>,
-        "Wang, Xiao W" <xiao.w.wang@intel.com>,
-        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
-        "Zhu, Lingshan" <lingshan.zhu@intel.com>,
-        "eperezma@redhat.com" <eperezma@redhat.com>,
-        "lulu@redhat.com" <lulu@redhat.com>,
-        Parav Pandit <parav@mellanox.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "stefanha@redhat.com" <stefanha@redhat.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "hch@infradead.org" <hch@infradead.org>,
-        Ariel Adam <aadam@redhat.com>,
-        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "hanand@xilinx.com" <hanand@xilinx.com>,
-        "mhabets@solarflare.com" <mhabets@solarflare.com>
-References: <20200116124231.20253-1-jasowang@redhat.com>
- <20200116124231.20253-4-jasowang@redhat.com>
- <20200117070324-mutt-send-email-mst@kernel.org>
- <239b042c-2d9e-0eec-a1ef-b03b7e2c5419@redhat.com>
- <CAJPjb1+fG9L3=iKbV4Vn13VwaeDZZdcfBPvarogF_Nzhk+FnKg@mail.gmail.com>
- <AM0PR0502MB379553984D0D55FDE25426F6C3330@AM0PR0502MB3795.eurprd05.prod.outlook.com>
- <d69918ca-8af4-44b2-9652-633530d4c113@redhat.com>
- <20200120174933.GB3891@mellanox.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <2a324cec-2863-58f4-c58a-2414ee32c930@redhat.com>
-Date:   Tue, 21 Jan 2020 12:00:57 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mingfangsen <mingfangsen@huawei.com>, Guiyao <guiyao@huawei.com>,
+        <wubo40@huawei.comwubo>, Louhongxiang <louhongxiang@huawei.com>
+From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Subject: [PATCH V4] brd: check and limit max_part par
+Message-ID: <76ad8074-c2ba-4bb3-3e8b-3a4925999964@huawei.com>
+Date:   Tue, 21 Jan 2020 12:04:41 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20200120174933.GB3891@mellanox.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.220.183]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 2020/1/21 =E4=B8=8A=E5=8D=881:49, Jason Gunthorpe wrote:
-> On Mon, Jan 20, 2020 at 04:43:53PM +0800, Jason Wang wrote:
->> This is similar to the design of platform IOMMU part of vhost-vdpa. We
->> decide to send diffs to platform IOMMU there. If it's ok to do that in
->> driver, we can replace set_map with incremental API like map()/unmap()=
-.
->>
->> Then driver need to maintain rbtree itself.
-> I think we really need to see two modes, one where there is a fixed
-> translation without dynamic vIOMMU driven changes and one that
-> supports vIOMMU.
+In brd_init func, rd_nr num of brd_device are firstly allocated
+and add in brd_devices, then brd_devices are traversed to add each
+brd_device by calling add_disk func. When allocating brd_device,
+the disk->first_minor is set to i * max_part, if rd_nr * max_part
+is larger than MINORMASK, two different brd_device may have the same
+devt, then only one of them can be successfully added.
+when rmmod brd.ko, it will cause oops when calling brd_exit.
 
+Follow those steps:
+  # modprobe brd rd_nr=3 rd_size=102400 max_part=1048576
+  # rmmod brd
+then, the oops will appear.
 
-I think in this case, you meant the method proposed by Shahaf that sends=20
-diffs of "fixed translation" to device?
+Oops log:
+[  726.613722] Call trace:
+[  726.614175]  kernfs_find_ns+0x24/0x130
+[  726.614852]  kernfs_find_and_get_ns+0x44/0x68
+[  726.615749]  sysfs_remove_group+0x38/0xb0
+[  726.616520]  blk_trace_remove_sysfs+0x1c/0x28
+[  726.617320]  blk_unregister_queue+0x98/0x100
+[  726.618105]  del_gendisk+0x144/0x2b8
+[  726.618759]  brd_exit+0x68/0x560 [brd]
+[  726.619501]  __arm64_sys_delete_module+0x19c/0x2a0
+[  726.620384]  el0_svc_common+0x78/0x130
+[  726.621057]  el0_svc_handler+0x38/0x78
+[  726.621738]  el0_svc+0x8/0xc
+[  726.622259] Code: aa0203f6 aa0103f7 aa1e03e0 d503201f (7940e260)
 
-It would be kind of tricky to deal with the following case for example:
+Here, we add brd_check_and_reset_par func to check and limit max_part par.
 
-old map [4G, 16G) new map [4G, 8G)
+--
+V3->V4:(suggested by Ming Lei)
+ - remove useless change
+ - add one limit of max_part
 
-If we do
+V2->V3: (suggested by Ming Lei)
+ - clear .minors when running out of consecutive minor space in brd_alloc
+ - remove limit of rd_nr
 
-1) flush [4G, 16G)
-2) add [4G, 8G)
+V1->V2: add more checks in brd_check_par_valid as suggested by Ming Lei.
 
-There could be a window between 1) and 2).
+Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+---
+ drivers/block/brd.c | 27 +++++++++++++++++++++++----
+ 1 file changed, 23 insertions(+), 4 deletions(-)
 
-It requires the IOMMU that can do
+diff --git a/drivers/block/brd.c b/drivers/block/brd.c
+index df8103dd40ac..4684f95e3369 100644
+--- a/drivers/block/brd.c
++++ b/drivers/block/brd.c
+@@ -389,11 +389,12 @@ static struct brd_device *brd_alloc(int i)
+ 	 *  is harmless)
+ 	 */
+ 	blk_queue_physical_block_size(brd->brd_queue, PAGE_SIZE);
+-	disk = brd->brd_disk = alloc_disk(max_part);
++	disk = brd->brd_disk = alloc_disk(((i * max_part) & ~MINORMASK) ?
++			0 : max_part);
+ 	if (!disk)
+ 		goto out_free_queue;
+ 	disk->major		= RAMDISK_MAJOR;
+-	disk->first_minor	= i * max_part;
++	disk->first_minor	= i * disk->minors;
+ 	disk->fops		= &brd_fops;
+ 	disk->private_data	= brd;
+ 	disk->queue		= brd->brd_queue;
+@@ -468,6 +469,25 @@ static struct kobject *brd_probe(dev_t dev, int *part, void *data)
+ 	return kobj;
+ }
 
-1) remove [8G, 16G)
-2) flush [8G, 16G)
-3) change [4G, 8G)
++static inline void brd_check_and_reset_par(void)
++{
++	if (unlikely(!max_part))
++		max_part = 1;
++
++	if (max_part > DISK_MAX_PARTS) {
++		pr_info("brd: max_part can't be larger than %d, reset max_part = %d.\n",
++			DISK_MAX_PARTS, DISK_MAX_PARTS);
++		max_part = DISK_MAX_PARTS;
++	}
++
++	/*
++	 * make sure 'max_part' can be divided exactly by (1U << MINORBITS),
++	 * otherwise, it is possiable to get same dev_t when adding partitions.
++	 */
++	if ((1U << MINORBITS) % max_part != 0)
++		max_part = 1UL << fls(max_part);
++}
++
+ static int __init brd_init(void)
+ {
+ 	struct brd_device *brd, *next;
+@@ -491,8 +511,7 @@ static int __init brd_init(void)
+ 	if (register_blkdev(RAMDISK_MAJOR, "ramdisk"))
+ 		return -EIO;
 
-....
+-	if (unlikely(!max_part))
+-		max_part = 1;
++	brd_check_and_reset_par();
 
->
-> There are different optimization goals in the drivers for these two
-> configurations.
->
->>> If the first one, then I think memory hotplug is a heavy flow
->>> regardless. Do you think the extra cycles for the tree traverse
->>> will be visible in any way?
->> I think if the driver can pause the DMA during the time for setting up=
- new
->> mapping, it should be fine.
-> This is very tricky for any driver if the mapping change hits the
-> virtio rings. :(
->
-> Even a IOMMU using driver is going to have problems with that..
->
-> Jason
-
-
-Or I wonder whether ATS/PRI can help here. E.g during I/O page fault,=20
-driver/device can wait for the new mapping to be set and then replay the=20
-DMA.
-
-Thanks
-
->
+ 	for (i = 0; i < rd_nr; i++) {
+ 		brd = brd_alloc(i);
+-- 
+2.19.1
 
