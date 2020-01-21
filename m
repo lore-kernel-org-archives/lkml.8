@@ -2,88 +2,119 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A296AC33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 12:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 387FBC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 12:42:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AE6924654
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 12:37:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 100CA24653
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 12:42:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729613AbgAUMhm (ORCPT
+        id S1729708AbgAUMmw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 07:37:42 -0500
-Received: from relay.sw.ru ([185.231.240.75]:33024 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727059AbgAUMhm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 07:37:42 -0500
-Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1itsm0-0007Qx-N2; Tue, 21 Jan 2020 15:36:48 +0300
-Subject: Re: [PATCH v4 6/7] dm: Directly disable max_allocate_sectors for now
-To:     Mike Snitzer <snitzer@redhat.com>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        martin.petersen@oracle.com, bob.liu@oracle.com, axboe@kernel.dk,
-        agk@redhat.com, dm-devel@redhat.com, song@kernel.org,
-        tytso@mit.edu, adilger.kernel@dilger.ca,
-        Chaitanya.Kulkarni@wdc.com, darrick.wong@oracle.com,
-        ming.lei@redhat.com, osandov@fb.com, jthumshirn@suse.de,
-        minwoo.im.dev@gmail.com, damien.lemoal@wdc.com,
-        andrea.parri@amarulasolutions.com, hare@suse.com, tj@kernel.org,
-        ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
-        bvanassche@acm.org, dhowells@redhat.com, asml.silence@gmail.com
-References: <157960325642.108120.13626623438131044304.stgit@localhost.localdomain>
- <157960337238.108120.18048939587162465175.stgit@localhost.localdomain>
- <20200121122458.GA9365@redhat.com>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <f7e0fb38-a894-da33-c46b-e192ed907ee0@virtuozzo.com>
-Date:   Tue, 21 Jan 2020 15:36:47 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 21 Jan 2020 07:42:52 -0500
+Received: from rtits2.realtek.com ([211.75.126.72]:54691 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729274AbgAUMmv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 07:42:51 -0500
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID 00LCglR3010994, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (smtpsrv.realtek.com[172.21.6.18])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id 00LCglR3010994
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Tue, 21 Jan 2020 20:42:47 +0800
+Received: from fc30.localdomain (172.21.177.138) by RTITCASV01.realtek.com.tw
+ (172.21.6.18) with Microsoft SMTP Server id 14.3.468.0; Tue, 21 Jan 2020
+ 20:42:45 +0800
+From:   Hayes Wang <hayeswang@realtek.com>
+To:     <netdev@vger.kernel.org>
+CC:     <nic_swsd@realtek.com>, <linux-kernel@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <pmalani@chromium.org>,
+        <grundler@chromium.org>, Hayes Wang <hayeswang@realtek.com>
+Subject: [PATCH net 1/9] r8152: fix runtime resume for linking change
+Date:   Tue, 21 Jan 2020 20:40:27 +0800
+Message-ID: <1394712342-15778-339-Taiwan-albertk@realtek.com>
+X-Mailer: Microsoft Office Outlook 11
+In-Reply-To: <1394712342-15778-338-Taiwan-albertk@realtek.com>
+References: <1394712342-15778-338-Taiwan-albertk@realtek.com>
 MIME-Version: 1.0
-In-Reply-To: <20200121122458.GA9365@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [172.21.177.138]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21.01.2020 15:24, Mike Snitzer wrote:
-> On Tue, Jan 21 2020 at  5:42am -0500,
-> Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
-> 
->> Since dm inherits limits from underlining block devices,
->> this patch directly disables max_allocate_sectors for dm
->> till full allocation support is implemented.
->>
->> This prevents high-level primitives (generic_make_request_checks(),
->> __blkdev_issue_write_zeroes(), ...) from sending REQ_ALLOCATE
->> requests.
->>
->> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
->> ---
->>  drivers/md/dm-table.c |    2 ++
->>  drivers/md/md.h       |    1 +
->>  2 files changed, 3 insertions(+)
-> 
-> You're mixing DM and MD changes in the same patch.
-> 
-> But I'm wondering if it might be best to set this default for stacking
-> devices in blk_set_stacking_limits()?
-> 
-> And then it is up to each stacking driver to override as needed.
+Fix the runtime resume doesn't work normally for linking change.
 
-Hm. Sound like a good idea. This "lim->max_allocate_sectors = 0" in blk_set_stacking_limits()
-should work for dm's dm_calculate_queue_limits(), since it calls blk_stack_limits(), which is:
+1. Reset the settings and status of runtime suspend.
+2. Sync the linking status.
+3. Poll the linking change.
 
-	t->max_allocate_sectors = min(t->max_allocate_sectors,
-				      b->max_allocate_sectors);
+Signed-off-by: Hayes Wang <hayeswang@realtek.com>
+---
+ drivers/net/usb/r8152.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-Could you please tell is this fix is also enough for md?
+diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
+index 031cb8fff909..115559707683 100644
+--- a/drivers/net/usb/r8152.c
++++ b/drivers/net/usb/r8152.c
+@@ -365,8 +365,10 @@
+ #define DEBUG_LTSSM		0x0082
+ 
+ /* PLA_EXTRA_STATUS */
++#define CUR_LINK_OK		BIT(15)
+ #define U3P3_CHECK_EN		BIT(7)	/* RTL_VER_05 only */
+ #define LINK_CHANGE_FLAG	BIT(8)
++#define POLL_LINK_CHG		BIT(0)
+ 
+ /* USB_USB2PHY */
+ #define USB2PHY_SUSPEND		0x0001
+@@ -5387,6 +5389,16 @@ static void r8153_init(struct r8152 *tp)
+ 		else
+ 			ocp_data |= DYNAMIC_BURST;
+ 		ocp_write_byte(tp, MCU_TYPE_USB, USB_CSR_DUMMY1, ocp_data);
++
++		r8153_queue_wake(tp, false);
++
++		ocp_data = ocp_read_word(tp, MCU_TYPE_PLA, PLA_EXTRA_STATUS);
++		if (rtl8152_get_speed(tp) & LINK_STATUS)
++			ocp_data |= CUR_LINK_OK;
++		else
++			ocp_data &= ~CUR_LINK_OK;
++		ocp_data |= POLL_LINK_CHG;
++		ocp_write_word(tp, MCU_TYPE_PLA, PLA_EXTRA_STATUS, ocp_data);
+ 	}
+ 
+ 	ocp_data = ocp_read_byte(tp, MCU_TYPE_USB, USB_CSR_DUMMY2);
+@@ -5416,6 +5428,7 @@ static void r8153_init(struct r8152 *tp)
+ 	ocp_write_word(tp, MCU_TYPE_USB, USB_CONNECT_TIMER, 0x0001);
+ 
+ 	r8153_power_cut_en(tp, false);
++	rtl_runtime_suspend_enable(tp, false);
+ 	r8153_u1u2en(tp, true);
+ 	r8153_mac_clk_spd(tp, false);
+ 	usb_enable_lpm(tp->udev);
+@@ -5484,6 +5497,14 @@ static void r8153b_init(struct r8152 *tp)
+ 	r8153b_ups_en(tp, false);
+ 	r8153_queue_wake(tp, false);
+ 	rtl_runtime_suspend_enable(tp, false);
++
++	ocp_data = ocp_read_word(tp, MCU_TYPE_PLA, PLA_EXTRA_STATUS);
++	if (rtl8152_get_speed(tp) & LINK_STATUS)
++		ocp_data |= CUR_LINK_OK;
++	else
++		ocp_data &= ~CUR_LINK_OK;
++	ocp_data |= POLL_LINK_CHG;
++	ocp_write_word(tp, MCU_TYPE_PLA, PLA_EXTRA_STATUS, ocp_data);
+ 	r8153b_u1u2en(tp, true);
+ 	usb_enable_lpm(tp->udev);
+ 
+-- 
+2.21.0
 
-Kirill
