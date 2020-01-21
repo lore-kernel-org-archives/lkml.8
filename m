@@ -2,123 +2,76 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F603C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29146C33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:24:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72EFD217F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:24:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579620275;
-	bh=7VkYr9NSHgXJNId+ZkFnO6kM3gMQsAHlVVEEAr5S5iE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=pB0vlIAAgO3b9nRxvBgselbHgY3UuID6QcLtitK2Y721L02u1p7yBwQ8opOjaqGHi
-	 nBvH2LU94w5Ot/j/d4EH2Umx2cSVFonqU4NL1WUCX7vMki7LHVuUOTEtWMsSIj4XIh
-	 ODEb78NIPZH1Up1WvXMhFnKUcRC1/vfO2QXilq04=
+	by mail.kernel.org (Postfix) with ESMTP id 0073B2465A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:24:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729159AbgAUPYe (ORCPT
+        id S1729199AbgAUPYl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 10:24:34 -0500
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:50360 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727508AbgAUPYe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 10:24:34 -0500
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 00LFOMvC020513
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 00:24:22 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 00LFOMvC020513
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1579620263;
-        bh=hT4cfrVYUNJPdXLZYNW8nx8XfS2S9IHAEXWJB9a5qQs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=M4yK3QiNsYp2WtgSLE2CSMBYuT65r8bdKaGgNUoH9A3GwxOCqXfrqgvCedtc4cHuW
-         U2Ndj5mItH2ouvZh3Xy293mYrqIy+5dlbn4FlmQE6litXXljm91rDXlm6OVnjpVktA
-         eXCNb9WLqUxMT2bcO+8z3KlaAjqovFNQGltKW7Mb//jkBNypFcevW2TVu782EaHopk
-         0B37JO6L7ImHPZMyFaVpSs47VyQSS3AMrGiIS2A5PQIpaZkSnV9N6ZN/LzHAbs4GJl
-         ClV5OZ5HXoI41Jh9jodXw5+eJPU6lHmg6UPJghFgMpSg+TfLTzfV4sooSp4X+/oS6T
-         wT5btMazsdpxQ==
-X-Nifty-SrcIP: [209.85.222.46]
-Received: by mail-ua1-f46.google.com with SMTP id 73so1125554uac.6
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 07:24:22 -0800 (PST)
-X-Gm-Message-State: APjAAAWRTJnIYKYmnmhmN/YuxxHB8d6tCPYVWIY4ByZLEqRrC7ABUk1X
-        kwj5EtCOE04ZmvPENIiWbh1Hc5EIRoUxzHmyA7Q=
-X-Google-Smtp-Source: APXvYqyVG2I15i8f1wNhUebZbsH9RXVtwMlz5AWZnFTIjvszireuTZHsziwZJOZYG1kUq0zCfifxuyjcHdP3rerRO7Q=
-X-Received: by 2002:ab0:6509:: with SMTP id w9mr3190475uam.121.1579620261607;
- Tue, 21 Jan 2020 07:24:21 -0800 (PST)
+        Tue, 21 Jan 2020 10:24:41 -0500
+Received: from mga06.intel.com ([134.134.136.31]:50642 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727508AbgAUPYl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 10:24:41 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 07:24:40 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,346,1574150400"; 
+   d="scan'208";a="220949034"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga007.fm.intel.com with ESMTP; 21 Jan 2020 07:24:37 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1itvOL-0007Xj-PW; Tue, 21 Jan 2020 17:24:33 +0200
+Date:   Tue, 21 Jan 2020 17:24:33 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Vipul Kumar <vipulk0511@gmail.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, Stable <stable@vger.kernel.org>,
+        Srikanth Krishnakar <Srikanth_Krishnakar@mentor.com>,
+        Cedric Hombourger <Cedric_Hombourger@mentor.com>,
+        x86@kernel.org, Bin Gao <bin.gao@linux.intel.com>,
+        Len Brown <len.brown@intel.com>,
+        Vipul Kumar <vipul_kumar@mentor.com>
+Subject: Re: [v3] x86/tsc: Unset TSC_KNOWN_FREQ and TSC_RELIABLE flags on
+ Intel Bay Trail SoC
+Message-ID: <20200121152433.GW32742@smile.fi.intel.com>
+References: <1579617717-4098-1-git-send-email-vipulk0511@gmail.com>
 MIME-Version: 1.0
-References: <20200121134739.22879-1-erosca@de.adit-jv.com>
-In-Reply-To: <20200121134739.22879-1-erosca@de.adit-jv.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 22 Jan 2020 00:23:45 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASm=7P3cJ=SB3hmPjqWTii1Lv2pf3p0xc-hx0XNTdaJHw@mail.gmail.com>
-Message-ID: <CAK7LNASm=7P3cJ=SB3hmPjqWTii1Lv2pf3p0xc-hx0XNTdaJHw@mail.gmail.com>
-Subject: Re: [PATCH] arm64: kbuild: remove compressed images on 'make
- ARCH=arm64 (dist)clean'
-To:     Eugeniu Rosca <erosca@de.adit-jv.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>,
-        Dirk Behme <dirk.behme@de.bosch.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1579617717-4098-1-git-send-email-vipulk0511@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi.
+On Tue, Jan 21, 2020 at 08:11:57PM +0530, Vipul Kumar wrote:
+> From: Vipul Kumar <vipul_kumar@mentor.com>
+> 
+> commit f3a02ecebed7 ("x86/tsc: Set TSC_KNOWN_FREQ and TSC_RELIABLE
+> flags on Intel Atom SoCs"), is setting TSC_KNOWN_FREQ and TSC_RELIABLE
+> flags for Soc's which is causing time drift on Valleyview/Bay trail Soc.
+> 
+> This patch introduces a new macro to skip these flags.
 
-On Tue, Jan 21, 2020 at 10:48 PM Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
->
-> From: Dirk Behme <dirk.behme@de.bosch.com>
->
-> Since v4.3-rc1 commit 0723c05fb75e44 ("arm64: enable more compressed
-> Image formats"), it is possible to build Image.{bz2,lz4,lzma,lzo}
-> AArch64 images. However, the commit missed adding support for removing
-> those images on 'make ARCH=arm64 (dist)clean'.
->
-> Fix this by adding them to the target list.
-> Make sure to match the order of the recipes in the makefile.
->
-> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-
-Please change Cc with my
-
-Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-
-
-Thanks.
-
-
-> Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
-> Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-> ---
->  arch/arm64/boot/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm64/boot/Makefile b/arch/arm64/boot/Makefile
-> index 1f012c506434..cd3414898d10 100644
-> --- a/arch/arm64/boot/Makefile
-> +++ b/arch/arm64/boot/Makefile
-> @@ -16,7 +16,7 @@
->
->  OBJCOPYFLAGS_Image :=-O binary -R .note -R .note.gnu.build-id -R .comment -S
->
-> -targets := Image Image.gz
-> +targets := Image Image.bz2 Image.gz Image.lz4 Image.lzma Image.lzo
->
->  $(obj)/Image: vmlinux FORCE
->         $(call if_changed,objcopy)
-> --
-> 2.25.0
->
-
+I guess commit message still needs to provide the measurements
+for the both with and without the option being selected.
 
 -- 
-Best Regards
-Masahiro Yamada
+With Best Regards,
+Andy Shevchenko
+
+
