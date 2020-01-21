@@ -2,134 +2,191 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6620AC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E38C33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3781A24125
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:04:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB06424125
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:05:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="vNK7Q4Z+"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="3mEBoGSE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729099AbgAUJEy (ORCPT
+        id S1728896AbgAUJFe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 04:04:54 -0500
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:59959 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbgAUJEx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 04:04:53 -0500
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200121090452euoutp02de15a580a4a3c88ac4934f072f1d9a20~r24zlGvqp0281302813euoutp02T
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 09:04:52 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200121090452euoutp02de15a580a4a3c88ac4934f072f1d9a20~r24zlGvqp0281302813euoutp02T
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1579597492;
-        bh=ceIWUcRTC3WbPS2ZAn6jS028UDFnxpbxzFO6J2f0dt0=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=vNK7Q4Z+t44twjN2sg21tAfoeUbQWb+NLBFoOAd04sJM733qg6OiwGQOF8e26UrZV
-         peSwCqibPeMhC68qjKdelPQNZKBYBJAPCiAlhm6+3lhua8LKuf7C333/4TG3o5TdwP
-         Wv9JGfEeviSiAGiy8+Q3MhLnpbkHuEQOHfl7yNm0=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200121090451eucas1p145b6d099fbc7ebb9a0bb1e883d5ea16c~r24zFx7Kt1929019290eucas1p1_;
-        Tue, 21 Jan 2020 09:04:51 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 09.04.60698.3BEB62E5; Tue, 21
-        Jan 2020 09:04:51 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200121090451eucas1p1969908f90e0b96d36ffebeeb66130550~r24yq8Mso2047920479eucas1p1o;
-        Tue, 21 Jan 2020 09:04:51 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200121090451eusmtrp1ea79911e616a2f1d6fb2516120c48915~r24yqEVW_2107521075eusmtrp1W;
-        Tue, 21 Jan 2020 09:04:51 +0000 (GMT)
-X-AuditID: cbfec7f5-a29ff7000001ed1a-2f-5e26beb31b2a
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id F9.25.07950.3BEB62E5; Tue, 21
-        Jan 2020 09:04:51 +0000 (GMT)
-Received: from [106.120.51.74] (unknown [106.120.51.74]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200121090450eusmtip208148c50eefbb7f28d109cee6aa95206~r24x0cGzj1135211352eusmtip2E;
-        Tue, 21 Jan 2020 09:04:50 +0000 (GMT)
-Subject: Re: [PATCH v4 2/3] drm: bridge: adv7511: Add support for ADV7535
-To:     Bogdan Togorean <bogdan.togorean@analog.com>,
-        dri-devel@lists.freedesktop.org
-Cc:     airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org,
-        mark.rutland@arm.com, narmstrong@baylibre.com,
-        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
-        jernej.skrabec@siol.net, gregkh@linuxfoundation.org,
-        tglx@linutronix.de, sam@ravnborg.org, alexander.deucher@amd.com,
-        matt.redfearn@thinci.com, robdclark@chromium.org,
-        wsa+renesas@sang-engineering.com, linux-kernel@vger.kernel.org
-From:   Andrzej Hajda <a.hajda@samsung.com>
-Message-ID: <7079d373-0a76-7071-50de-13ed828a4d97@samsung.com>
-Date:   Tue, 21 Jan 2020 10:04:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
-        Thunderbird/68.2.2
+        Tue, 21 Jan 2020 04:05:34 -0500
+Received: from mail-bn8nam11on2074.outbound.protection.outlook.com ([40.107.236.74]:10494
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725789AbgAUJFe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 04:05:34 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WthuX3mO1mPY68rMmm9Is2SuWRHXUdbxmjp2JZ955tNM9QL5LDqULY3ZAD3d2BKBalBGE1jTQGYpMfhAb8Bkx66h5Wl+zcXzNs6OJ0nJf7yEjArZ3w7nZ4jdo9eaVXXrNLJW6IeSoUXrRihYM+X0yK9tsGrom9alK3l6AJwhxAtSIUchTiQpATgF5sdJV734oVH4aZdt6dFpaxjbV6QjcVPHbRwtMe0zYew6PaaCknno9AzKEQLgrzgBnEH9FCDe3AiWSYvm+69EFZALoNYJK3DsAum+SJDjEio/T0pyO1kdghslfgS8wcCLrRKPFiMuwdfx0L9tfVGv/kRmQDXv/w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=deChP9NF5tLKERidR+k0NSvfOmM0q1/HE7fS2MLHRhg=;
+ b=Xzr7/iPv50ELpGYdzd2JxOd3DR+g/98vVmG36jjTGu2VLVr9TV4oTB/7j7/3OGuf//RJvVL53F8vgTuQIXmFDcRoWCH7j51kr5TRhvlGUksGD5PLTMU2lzXP/MlHSJPUab5e7zMOostx3C/ZclTjXByMVIbhdBlQ3fTK09aS6aZO/VShXBufWKlYCSeMhzQGRC5fd4DDnCb7gW4pFElOkUhdRw0453z9KG3C1e1E0F3MsJShDWmv6BJ6BCTJdvol16ebhniUJ0Oiqweg0oHF5TDB8n+Ka3OnjyHE9JIv/sWf8m7X3PkmoWs+fAA72TzqEdZ126GYhA8br+MYdXph6g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=deChP9NF5tLKERidR+k0NSvfOmM0q1/HE7fS2MLHRhg=;
+ b=3mEBoGSE6uLN6E7AC5i10X+0kbwQalyw9qNEh6x1g6q6p8pWS9O12NupFotBx0SjqDxAQDrqpAHDrzMIhDDNAgKYyxUSP1IfFBRJdV8sQj+gry23qyE4rt4eApY72eMfUvPWaocGhsKw/O0H3sqx3wtPf2nY8ra6mv1+DCZSFpc=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Sanju.Mehta@amd.com; 
+Received: from MN2PR12MB3455.namprd12.prod.outlook.com (20.178.244.22) by
+ MN2PR12MB4048.namprd12.prod.outlook.com (52.135.49.8) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.19; Tue, 21 Jan 2020 09:05:30 +0000
+Received: from MN2PR12MB3455.namprd12.prod.outlook.com
+ ([fe80::1900:6cb7:12ff:11c]) by MN2PR12MB3455.namprd12.prod.outlook.com
+ ([fe80::1900:6cb7:12ff:11c%4]) with mapi id 15.20.2644.027; Tue, 21 Jan 2020
+ 09:05:30 +0000
+From:   Sanjay R Mehta <Sanju.Mehta@amd.com>
+To:     vkoul@kernel.org, gregkh@linuxfoundation.org,
+        dan.j.williams@intel.com, Thomas.Lendacky@amd.com,
+        Shyam-sundar.S-k@amd.com, Nehal-bakulchandra.Shah@amd.com
+Cc:     robh@kernel.org, mchehab+samsung@kernel.org, davem@davemloft.net,
+        Jonathan.Cameron@huawei.com, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, Sanjay R Mehta <sanju.mehta@amd.com>
+Subject: [PATCH v3 0/3] Add AMD PassThru DMA Engine driver
+Date:   Tue, 21 Jan 2020 03:04:51 -0600
+Message-Id: <1579597494-60348-1-git-send-email-Sanju.Mehta@amd.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MA1PR01CA0152.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:71::22) To MN2PR12MB3455.namprd12.prod.outlook.com
+ (2603:10b6:208:d0::22)
 MIME-Version: 1.0
-In-Reply-To: <20200121082719.27972-3-bogdan.togorean@analog.com>
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SfUhTURzlvvv29jSXr2XuRx9Eg4KCrNDgRhIGUU8i6Jso+lj5UHFq7LXK
-        IFzZyixHtdLSMsuFQxS/muUsSynNVivNTQvDUKm01CSnLbJye0b+d875nd/HuVwWK7OYmWx8
-        0iFBl6TRqplAuqrB+2pxZe2CPUvPW1aQTGcTRbI6amTkpPEyJn+qLmLS6hlkSFpBKUNco72Y
-        NH110eTsRYucvLFfZ8idtmaK2DvzKVJv2kXc3m5MjA+fyInVa0OksuIKJibnuiglb2wZY/g+
-        12q+OK8Y8YPtRjmfa2im+Ycj+TSfm35NxlcUnWX4ZxdaKH7A6ZTz90Y+yPhHN4rlfOe5Roq3
-        ZLkY/uOtUpp/nGmmNyp3BkbGCNr4w4Juyap9gXEZD1IOllNH7e96sQH9RBkogAUuAqxuM5WB
-        AlklZ0Xg9tZNkGEEBe/PTJDvCEZG08cJ628500BLeiECx/Oncon0I/AayuW+udO5aLC4yxkf
-        DuG2gGfI7O/AnAnDcMkJ7Csw3EIYq3zrNym4VfDbVCbzYZqbDw5nF+XDM7gd0NPaLZM806Dp
-        Wg/twwFcFIx9fuEPgbm5kGbLxRJWwbuem/6zgXvNQo2jgZaSroGXb34wEp4OfY135RKeDQ7z
-        +QlPKnRaT2GpOR2BrawaS4WV0OH8yfjy4/GrS+1LJHk11JVVyKRnmQrt/dOkG6bCpapsLMkK
-        SD+tlNzzoPOlbWKgCu689jAXkDpnUrKcSWlyJqXJ+b83H9FFSCXoxcRYQQxPEo6EiZpEUZ8U
-        G3YgObECjf9Wx+9Gz31U+2t/PeJYpA5SRGXN36OUaQ6LKYn1CFisDlHknxyXFDGalGOCLnmv
-        Tq8VxHo0i6XVKkX47d7dSi5Wc0hIEISDgu5flWIDZhrQzm1TCvKuJkeGjdbmPf0odi9ANv2O
-        byUDlxOCWuM9VERjnzF06YbukfXZVTXJm9Z+Lr7iae0aiiuMtdhCQ+ra3Is6ml1zow/oNwex
-        wWbz9YTwoC+berWFaTr7cHYcNpi0j4dSrc+On1Md+R6a19Xv2PopZXtwxvLCP3O+fqq+bQ1W
-        02KcZtkirBM1fwHJcjYqqQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrBKsWRmVeSWpSXmKPExsVy+t/xe7qb96nFGXz6JmvRe+4kk8W0O7tZ
-        LZpapzBb/N82kdniytf3bBbNi9ezWVz9/pLZ4uSbqywWnROXsFtc3jWHzWLp9YtMFrvuL2Cy
-        ONQXbXHt52Nmi9a9R9gtVvzcymixedNUZou+c+4OQh6tl/6yeby66uixZt4aRo/3N1rZPWY3
-        XGTx2PttAYvH7I6ZrB6bVnWyeZyYcInJ4925c+we2789YPXYP3cNu8f97uNMHkumXWXzeLZw
-        PYvHgd7JLAFCUXo2RfmlJakKGfnFJbZK0YYWRnqGlhZ6RiaWeobG5rFWRqZK+nY2Kak5mWWp
-        Rfp2CXoZXXsqCzYyVey69ZK5gfEXYxcjB4eEgIlE+zGWLkYuDiGBpYwSd9b/ZO5i5ASKi0vs
-        nv8WyhaW+HOtiw2i6DWjxP+FB9lBEsICnhJLrm1kA7FFBIIlPv69ARZnFuhjljj7SxWi4SSj
-        xLO+/UwgCTYBTYm/m2+CNfAK2En869vACmKzCKhKnD73CKxGVCBC4u3vm6wQNYISJ2c+YQGx
-        OQUcJP6+OMMIsUBd4s+8S8wQtrxE89bZULa4xK0n85kmMArNQtI+C0nLLCQts5C0LGBkWcUo
-        klpanJueW2ykV5yYW1yal66XnJ+7iRGYSrYd+7llB2PXu+BDjAIcjEo8vA7TVOOEWBPLiitz
-        DzFKcDArifAuaAIK8aYkVlalFuXHF5XmpBYfYjQFem4is5Rocj4wzeWVxBuaGppbWBqaG5sb
-        m1koifN2CByMERJITyxJzU5NLUgtgulj4uCUamBUK/oQMUVox+QTIkWOnMm3vYI8f/n/2faW
-        ravMdf6VjeYv/my9tsNs2eGdTD9kXp4/FxnesMVxT5va051y7Vqz35ytTty4YJFd30KD0Puv
-        vdnW2UubutsxPirkXvNSVvqUwoseAW3OB5t7Pr09vn7D0zNun8QFm5tVH3Su8439fWCy5ca7
-        2ra1SizFGYmGWsxFxYkAdjyGjDsDAAA=
-X-CMS-MailID: 20200121090451eucas1p1969908f90e0b96d36ffebeeb66130550
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200121084119eucas1p10ef66cb65ac2a11b1f9da6eba49ee168
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200121084119eucas1p10ef66cb65ac2a11b1f9da6eba49ee168
-References: <20200121082719.27972-1-bogdan.togorean@analog.com>
-        <CGME20200121084119eucas1p10ef66cb65ac2a11b1f9da6eba49ee168@eucas1p1.samsung.com>
-        <20200121082719.27972-3-bogdan.togorean@analog.com>
+Received: from sanjuamdntb2.amd.com (165.204.156.251) by MA1PR01CA0152.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:71::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2644.18 via Frontend Transport; Tue, 21 Jan 2020 09:05:27 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [165.204.156.251]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 452d6187-dcc3-445e-c8c8-08d79e51108b
+X-MS-TrafficTypeDiagnostic: MN2PR12MB4048:|MN2PR12MB4048:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MN2PR12MB40488BC93D7F551816642529E50D0@MN2PR12MB4048.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 0289B6431E
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(346002)(366004)(376002)(39860400002)(199004)(189003)(7696005)(52116002)(6486002)(6666004)(8676002)(81166006)(2906002)(81156014)(8936002)(5660300002)(316002)(186003)(66476007)(66556008)(16526019)(2616005)(26005)(956004)(478600001)(66946007)(36756003)(86362001)(966005)(4326008)(6636002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB4048;H:MN2PR12MB3455.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: dLNhFE380PrgFdy7McI7I1fJqjf7pmG6YuvX7ddCxaq4UwzBWyWUnMwrmK8khQaizetuiWjccBU9/lqKdiC6T8VKe//idSKeYryLpE6hakgLKF5ccK9PoLow384ivhx31ccFbtZRQ1lcuM6C2KjEeD3D6xWy9k4Qe+KS2seLhGHk/1uI+FDWBrBxUdbYiXK03C5dQ2XfP+pO/G9AqQkjYNCGObaOb59rT2/8YdeXAVe8GYozTMut4kEKzkAOYzCdvpxsWunErN5sKklkg0o1wgkiJdCkyZbZHO7Fbbso+M8+4cNy7VpHcolq+BoOOmhYhNHKDdgqRpv/QV0+7ZlqGpckCzdkKGy4HaOfhnSxOgbmiEO1fJtoczA08XwKzjBpAwuCSZA1FWPQ0mq3Czc7TwEzB+UnUak7jo1XswkM0iVyHjSjAB/epZ54xEj9I/obePiHtwbDw/fM1waEvwQ+EeBjj8nFxhBf6E3Fj057dTcr0PCRcnVWx0JwRd+QxFRr3RDJrFsyjv5OEPSyXLGO1w==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 452d6187-dcc3-445e-c8c8-08d79e51108b
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jan 2020 09:05:30.5719
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: NH/uGkispAgNMjGcdyxzv0EDwKp6q4CyNMzVpsWsSRMD58PEM+yCXJAE5otPp6pDiEdems1QskAkYCTz2Tv2jQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4048
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21.01.2020 09:27, Bogdan Togorean wrote:
-> ADV7535 is a DSI to HDMI bridge chip like ADV7533 but it allows
-> 1080p@60Hz. v1p2 is fixed to 1.8V on ADV7535.
->
-> Signed-off-by: Bogdan Togorean <bogdan.togorean@analog.com>
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+From: Sanjay R Mehta <sanju.mehta@amd.com>
 
- --
-Regards
-Andrzej
+This patch series adds support for AMD PassThru DMA Engine which
+performs high bandwidth memory-to-memory and IO copy operation and
+performs DMA transfer through queue based descriptor management.
+
+AMD Processor has multiple ptdma device instances and each engine has
+single queue. The driver also adds support for for multiple PTDMA
+instances, each device will get an unique identifier and uniquely
+named resources.
+
+v3:
+	- Fixed the sparse warnings.
+
+v2:
+	- Added controller description in cover letter
+	- Removed "default m" from Kconfig
+	- Replaced low_address() and high_address() functions with kernel
+	  API's lower_32_bits & upper_32_bits().
+	- Removed the BH handler function pt_core_irq_bh() and instead
+	  handling transaction in irq handler itself.
+	- Moved presetting of command queue registers into new function
+	  "init_cmdq_regs()"
+	- Removed the kernel thread dependency to submit transaction.
+	- Increased the hardware command queue size to 32 and adding it
+	  as a module parameter.
+	- Removed backlog command queue handling mechanism.
+	- Removed software command queue handling and instead submitting
+	  transaction command directly to
+	  hardware command queue.
+	- Added tasklet structure variable in "struct pt_device".
+	  This is used to invoke pt_do_cmd_complete() upon receiving interrupt
+	  for command completion.
+	- pt_core_perform_passthru() function parameters are modified and it is
+	  now used to submit command directly to hardware from dmaengine framework.
+	- Removed below structures, enums, macros and functions, as these values are
+	  constants. Making command submission simple,
+	   - Removed "union pt_function"  and several macros like PT_VERSION,
+	     PT_BYTESWAP, PT_CMD_* etc..
+	   - enum pt_passthru_bitwise, enum pt_passthru_byteswap, enum pt_memtype
+	     struct pt_dma_info, struct pt_data, struct pt_mem, struct pt_passthru_op,
+	     struct pt_op,
+	   - Removed functions -> pt_cmd_queue_thread() pt_run_passthru_cmd(),
+	     pt_run_cmd(), pt_dev_init(), pt_dequeue_cmd(), pt_do_cmd_backlog(),
+	     pt_enqueue_cmd(),
+	- Below functions, stuctures and variables moved from ptdma-ops.c
+	   - Moved function pt_alloc_struct() to ptdma-pci.c as its used only there.
+	   - Moved "struct pt_tasklet_data" structure to ptdma.h
+	   - Moved functions pt_do_cmd_complete(), pt_present(), pt_get_device(),
+	     pt_add_device(), pt_del_device(), pt_log_error() and its dependent
+	     static variables pt_unit_lock, pt_units, pt_rr_lock, pt_rr, pt_error_codes,
+	     pt_ordinal  to ptdma-dev.c as they are used only in that file.
+
+Links of the review comments for v2:
+1. https://lkml.org/lkml/2019/12/27/630
+2. https://lkml.org/lkml/2020/1/3/23
+3. https://lkml.org/lkml/2020/1/3/314
+4. https://lkml.org/lkml/2020/1/10/100
+
+
+Links of the review comments for v1:
+
+1. https://lkml.org/lkml/2019/9/24/490
+2. https://lkml.org/lkml/2019/9/24/399
+3. https://lkml.org/lkml/2019/9/24/862
+4. https://lkml.org/lkml/2019/9/24/122
+
+Sanjay R Mehta (3):
+  dmaengine: ptdma: Initial driver for the AMD PassThru DMA engine
+  dmaengine: ptdma: Register pass-through engine as a DMA resource
+  dmaengine: ptdma: Add debugfs entries for PTDMA information
+
+ MAINTAINERS                         |   6 +
+ drivers/dma/Kconfig                 |   2 +
+ drivers/dma/Makefile                |   1 +
+ drivers/dma/ptdma/Kconfig           |   7 +
+ drivers/dma/ptdma/Makefile          |  12 +
+ drivers/dma/ptdma/ptdma-debugfs.c   | 237 ++++++++++++
+ drivers/dma/ptdma/ptdma-dev.c       | 448 +++++++++++++++++++++++
+ drivers/dma/ptdma/ptdma-dmaengine.c | 704 ++++++++++++++++++++++++++++++++++++
+ drivers/dma/ptdma/ptdma-pci.c       | 269 ++++++++++++++
+ drivers/dma/ptdma/ptdma.h           | 378 +++++++++++++++++++
+ 10 files changed, 2064 insertions(+)
+ create mode 100644 drivers/dma/ptdma/Kconfig
+ create mode 100644 drivers/dma/ptdma/Makefile
+ create mode 100644 drivers/dma/ptdma/ptdma-debugfs.c
+ create mode 100644 drivers/dma/ptdma/ptdma-dev.c
+ create mode 100644 drivers/dma/ptdma/ptdma-dmaengine.c
+ create mode 100644 drivers/dma/ptdma/ptdma-pci.c
+ create mode 100644 drivers/dma/ptdma/ptdma.h
+
+-- 
+2.7.4
 
