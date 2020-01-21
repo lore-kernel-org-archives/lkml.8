@@ -2,132 +2,145 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E312C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 23:18:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 431DEC33CAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 23:21:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AB5E24653
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 23:18:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19E3F24125
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 23:21:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579648891;
+	bh=PcDGSBc03nNrHQx/+YwvFCWzgmskHdp6L9IrYGnse7g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tXuxD8ULZygj/g5s7K/+LiaQur8y8U/lPE8Dzn8VmopvAI56to33bAW9gVeGNOyzH
+	 h6VE62BmWvxsjUPcOsWa6O7E4gS00VKFTrLUiOu7LdktjSiesFDcDhz9WQPhY+T9ca
+	 Yhny3KopH6IKZNwa51gg/JuA414a4gzzPD3XhXGU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728890AbgAUXSf (ORCPT
+        id S1726970AbgAUXVa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 18:18:35 -0500
-Received: from mga12.intel.com ([192.55.52.136]:57248 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728665AbgAUXSf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 18:18:35 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 15:18:34 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,347,1574150400"; 
-   d="scan'208";a="227493488"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga003.jf.intel.com with ESMTP; 21 Jan 2020 15:18:33 -0800
-Date:   Tue, 21 Jan 2020 15:18:33 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Paul Mackerras <paulus@ozlabs.org>, Marc Zyngier <maz@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Greg Kurz <groug@kaod.org>
-Subject: Re: [PATCH v2 12/45] KVM: PPC: Allocate vcpu struct in common PPC
- code
-Message-ID: <20200121231833.GB12692@linux.intel.com>
-References: <20191218215530.2280-1-sean.j.christopherson@intel.com>
- <20191218215530.2280-13-sean.j.christopherson@intel.com>
- <20200120040412.GF14307@blackberry>
- <fcd2aaf1-6f6e-303a-d7c6-f6b0c0a4555c@redhat.com>
+        Tue, 21 Jan 2020 18:21:30 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:33571 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726584AbgAUXVa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 18:21:30 -0500
+Received: by mail-ot1-f66.google.com with SMTP id b18so4646969otp.0;
+        Tue, 21 Jan 2020 15:21:29 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=b2BXYpfDPDVNcyG1ziQ8Rflzz+weHKCKYw4Qh7CsVWE=;
+        b=Qs987i/+wMf2yi2sBTl1nCUULNYHxN7MQyeO2K8rszWPkxmH+syxG+0OVD49meIiE8
+         67tujD1RgXW23gDVYJRmZeORvhiB2XpIvc0EzTUXpwh5/TQkZEqueCoDpFIzqUbFHKm4
+         HMQ+o1K6ZJh13MY6rqHRCrk0X2yVhHB1lsFEFNgR4s3fdiv/aRwKQhoTeBOc1D7kbl/C
+         X0vgY4fBcqvmrMf4k8zg41CTTR+d0DFK4upK84IlugI9e4c9JG+o8d5Rp6xDZtOQcEXQ
+         /iMpRmF0QsbP2Ue00i3DhVrr1Gd1Dv3IU6PBxzk63g3lMHylbc80//aoVnEoKCAWPIRH
+         yajQ==
+X-Gm-Message-State: APjAAAXK8PSKMuXxmoiubjoWzAm7DS6MMh2NhD+iBO+FbhJAP5BinK5P
+        51dN0ct27CCrircA4//b9Q==
+X-Google-Smtp-Source: APXvYqytAEUvtzJujZe8GWtr4e6O/z3bPHvI6P3e8CzKdbUqWFIB7E7b8Ba8QvUU5rjNmAUkw9qENA==
+X-Received: by 2002:a05:6830:1d4c:: with SMTP id p12mr5576747oth.198.1579648889363;
+        Tue, 21 Jan 2020 15:21:29 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id e13sm12591350oie.0.2020.01.21.15.21.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2020 15:21:28 -0800 (PST)
+Received: (nullmailer pid 29220 invoked by uid 1000);
+        Tue, 21 Jan 2020 23:21:27 -0000
+Date:   Tue, 21 Jan 2020 17:21:27 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] dt-bindings: soc: imx: add binding doc for aips bus
+Message-ID: <20200121232127.GA21925@bogus>
+References: <1579154877-13210-1-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <fcd2aaf1-6f6e-303a-d7c6-f6b0c0a4555c@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1579154877-13210-1-git-send-email-peng.fan@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 12:05:00PM +0100, Paolo Bonzini wrote:
-> On 20/01/20 05:04, Paul Mackerras wrote:
-> > On Wed, Dec 18, 2019 at 01:54:57PM -0800, Sean Christopherson wrote:
-> >> Move allocation of all flavors of PPC vCPUs to common PPC code.  All
-> >> variants either allocate 'struct kvm_vcpu' directly, or require that
-> >> the embedded 'struct kvm_vcpu' member be located at offset 0, i.e.
-> >> guarantee that the allocation can be directly interpreted as a 'struct
-> >> kvm_vcpu' object.
-> >>
-> >> Remove the message from the build-time assertion regarding placement of
-> >> the struct, as compatibility with the arch usercopy region is no longer
-> >> the sole dependent on 'struct kvm_vcpu' being at offset zero.
-> >>
-> >> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > 
-> > This fails to compile for Book E configs:
-> > 
-> >   CC      arch/powerpc/kvm/e500.o
-> > /home/paulus/kernel/kvm/arch/powerpc/kvm/e500.c: In function ‘kvmppc_core_vcpu_create_e500’:
-> > /home/paulus/kernel/kvm/arch/powerpc/kvm/e500.c:464:9: error: return makes integer from pointer without a cast [-Werror=int-conversion]
-> >   return vcpu;
-> >          ^
-> > cc1: all warnings being treated as errors
-> > make[3]: *** [/home/paulus/kernel/kvm/scripts/Makefile.build:266: arch/powerpc/kvm/e500.o] Error 1
-> > 
-> > There is a "return vcpu" statement in kvmppc_core_vcpu_create_e500(),
-> > and another in kvmppc_core_vcpu_create_e500mc(), which both need to be
-> > changed to "return 0".
-> > 
-> > (By the way, I do appreciate you fixing the PPC code, even if there
-> > are some errors.)
+On Thu, Jan 16, 2020 at 06:12:12AM +0000, Peng Fan wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> Squashed:
-
-Thanks for cleaning up after me, not having to rebase and resend this
-series made my day :-) 
-
-> diff --git a/arch/powerpc/kvm/e500.c b/arch/powerpc/kvm/e500.c
-> index 96d9cde3d2e3..f5dd2c7adcd4 100644
-> --- a/arch/powerpc/kvm/e500.c
-> +++ b/arch/powerpc/kvm/e500.c
-> @@ -461,7 +461,7 @@ static int kvmppc_core_vcpu_create_e500(struct kvm *kvm, struct kvm_vcpu *vcpu,
->  		goto uninit_tlb;
->  	}
->  
-> -	return vcpu;
-> +	return 0;
->  
->  uninit_tlb:
->  	kvmppc_e500_tlb_uninit(vcpu_e500);
-> diff --git a/arch/powerpc/kvm/e500mc.c b/arch/powerpc/kvm/e500mc.c
-> index aea588f73bf7..7c0d392f667a 100644
-> --- a/arch/powerpc/kvm/e500mc.c
-> +++ b/arch/powerpc/kvm/e500mc.c
-> @@ -327,7 +327,7 @@ static int kvmppc_core_vcpu_create_e500mc(struct kvm *kvm, struct kvm_vcpu *vcpu
->  		goto uninit_tlb;
->  	}
->  
-> -	return vcpu;
-> +	return 0;
->  
->  uninit_tlb:
->  	kvmppc_e500_tlb_uninit(vcpu_e500);
+> Add binding doc for fsl,aips-bus
 > 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>  .../devicetree/bindings/soc/imx/fsl,aips-bus.yaml  | 38 ++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/imx/fsl,aips-bus.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/imx/fsl,aips-bus.yaml b/Documentation/devicetree/bindings/soc/imx/fsl,aips-bus.yaml
+> new file mode 100644
+> index 000000000000..73ce1b7fc306
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/imx/fsl,aips-bus.yaml
+> @@ -0,0 +1,38 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/soc/imx/fsl,aips-bus.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: i.MX AHB to IP Bridge
+> +
+> +maintainers:
+> +  - Peng Fan <peng.fan@nxp.com>
+> +
+> +description: |
+> +  This particular peripheral is designed as the bridge between
+> +  AHB bus and peripherals with the lower bandwidth IP Slave (IPS)
+> +  buses.
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - const: fsl,aips-bus
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    bus@30000000 {
+> +      compatible = "fsl,aips-bus", "simple-bus";
+
+'make dt_binding_check' should be failing for you because this doesn't 
+match the schema. You need to add 'simple-bus'. However doing so will 
+make this schema match on any node with 'simple-bus'. See 'select' in 
+various arm,primecell schemas for how to avoid this problem.
+
+Rob
+
+> +      reg = <0x30000000 0x400000>;
+> +      #address-cells = <1>;
+> +      #size-cells = <1>;
+> +      ranges;
+> +    };
+> +...
+> -- 
+> 2.16.4
 > 
