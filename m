@@ -1,143 +1,122 @@
-Return-Path: <SRS0=vnT4=3J=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D788C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 23:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F367C33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 00:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2CB2206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 Jan 2020 23:57:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vYHX8bSY"
+	by mail.kernel.org (Postfix) with ESMTP id 7445424125
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 00:01:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579564860;
+	bh=TL8+hTSU7hnDRNLe87x5EES6PdrZ165vhPZ0MkxtH7w=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=0TghFMes1m7JcpbIbUq7neLBw2ICabR3qGDbmAW11Sa/w4G+Ed255ZkL7vGQKEbjR
+	 0KKQfq2eg30Qp5YRrGDcIDP45qjvcf+hggBoU4hw09vaYckpB43u8gB9l+S3EB+89U
+	 DqFabGg3r4CPVhk7hOZRiGB+Eltyb+m++bvnfaH8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728682AbgATX5t (ORCPT
+        id S1728741AbgAUAA7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 18:57:49 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33038 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727009AbgATX5s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 18:57:48 -0500
-Received: by mail-wr1-f65.google.com with SMTP id b6so1364472wrq.0;
-        Mon, 20 Jan 2020 15:57:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5QYZIUaddkQAqu0RUP+KLHfCsCgj864Qo1r0sEum0F0=;
-        b=vYHX8bSYfpWC+sYRQLUDopiHu8VErwVl3RCNxpygJ3Hu+xVXKheoTzrFHlqIMG7ryP
-         nMhuut3hGGyUEXuqCLVX7q3H1Ta48QbPNbySiS0LfmLQ7v8BI+xYJk1C1knpyqI+1wG8
-         cgk0sVa27Jzg4bMjJqYvKiuGdl1XuIQBVuHoGGcR1XrMi3IcX0LeFgJ/Ifc38+8v4UnO
-         rMH45V7GlvUDuzF7kUJ81Hma4CUiRz0YVMeZjKMLsn2w/HMlXFQ59daweicYt355pPO8
-         cuTXCf0XxIrJkaVTtu8hu3if+5dqd8bUBmLiEH4G0/YrMglQ+shDL8ivVt/1WwNttYuO
-         cz/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5QYZIUaddkQAqu0RUP+KLHfCsCgj864Qo1r0sEum0F0=;
-        b=aKXIou/4h+CfMBOiIU/+E/2A7LDFGIcnkVhaYzrJh6DPhPDELJ3griGVPSWIDzrFv1
-         frFuyZC6aSenUUpAteKAw0gEZo5HrzY9D0CNhGzk0xYLcRSGVHJBGBLa3GWvASGR0Qhq
-         5mrBaog3cZdTeb5eySFI2R1y62uRJzfSUE2Y3ucJ9vMISDKyrK1rolWsjo/eDW05ODTw
-         bbZS4e810jWpHNQ0Kkhx+3wVl9crJbc6KEGNDrKtX7ReYsphuOcwz4DZ28XEEUdf4fwx
-         lcnEj7flggvY6ynAKi1GhsPbKTLUZc6t8UWIcgZ5zLb/vQkALQV6RmSmme8AvGnumnWH
-         o1aQ==
-X-Gm-Message-State: APjAAAXs7d35RSOIw+I3aNlfRw8xOoikUPooemV+B3qdvSD1aITYQdVc
-        /YbB+fEOuqWvTWhjNKxeaOk=
-X-Google-Smtp-Source: APXvYqzx43G3GKSHcSQouLLAY0ppr3ZdgpRR3uIAPEsu23DNu0OHoKOMHuni5nlIH25QcD0ymIZrAQ==
-X-Received: by 2002:a5d:5283:: with SMTP id c3mr1976002wrv.148.1579564666799;
-        Mon, 20 Jan 2020 15:57:46 -0800 (PST)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id q14sm1306850wmj.14.2020.01.20.15.57.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 15:57:46 -0800 (PST)
-Date:   Tue, 21 Jan 2020 00:57:45 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Namjae Jeon <linkinjeon@gmail.com>,
-        Gabriel Krisman Bertazi <krisman@collabora.com>
-Subject: Re: vfat: Broken case-insensitive support for UTF-8
-Message-ID: <20200120235745.hzza3fkehlmw5s45@pali>
-References: <20200119221455.bac7dc55g56q2l4r@pali>
- <87sgkan57p.fsf@mail.parknet.co.jp>
- <20200120110438.ak7jpyy66clx5v6x@pali>
- <875zh6pc0f.fsf@mail.parknet.co.jp>
- <20200120214046.f6uq7rlih7diqahz@pali>
- <20200120224625.GE8904@ZenIV.linux.org.uk>
+        Mon, 20 Jan 2020 19:00:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36976 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727009AbgAUAA7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 19:00:59 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB61C22527;
+        Tue, 21 Jan 2020 00:00:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579564858;
+        bh=TL8+hTSU7hnDRNLe87x5EES6PdrZ165vhPZ0MkxtH7w=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=B3m2tFnN8sclNa990iPCP6BKZEo+QP6mX6mcW1I8tZxdj1fuV0nFEY4IGCTWjV3WJ
+         OlaaNeX6URKcr3F3H/xx1O3IDKWUOnrL3OiXV3mGJpCRmB3PqBoLj26KCVnEQjdPRq
+         A9A+97FTG+oG/guc93qspT2KDwGDNUH/DQ/BQ1cs=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 9C7DF3522745; Mon, 20 Jan 2020 16:00:58 -0800 (PST)
+Date:   Mon, 20 Jan 2020 16:00:58 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Amol Grover <frextrite@gmail.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+Subject: Re: [PATCH] rculist: Add brackets around cond argument in
+ __list_check_rcu macro
+Message-ID: <20200121000058.GI2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200118165417.12325-1-frextrite@gmail.com>
+ <20200119021425.GH244899@google.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="eehs7cllwbppgvtc"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200120224625.GE8904@ZenIV.linux.org.uk>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200119021425.GH244899@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Jan 18, 2020 at 09:14:25PM -0500, Joel Fernandes wrote:
+> On Sat, Jan 18, 2020 at 10:24:18PM +0530, Amol Grover wrote:
+> > Passing a complex lockdep condition to __list_check_rcu results
+> > in false positive lockdep splat due to incorrect expression
+> > evaluation.
+> > 
+> > For example, a lockdep check condition `cond1 || cond2` is
+> > evaluated as `!cond1 || cond2 && !rcu_read_lock_any_held()`
+> > which, according to operator precedence, evaluates to
+> > `!cond1 || (cond2 && !rcu_read_lock_any_held())`.
+> > This would result in a lockdep splat when cond1 is false
+> > and cond2 is true which is logically incorrect.
+> > 
+> > Signed-off-by: Amol Grover <frextrite@gmail.com>
+> 
+> Good catch!
+> 
+> Acked-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
---eehs7cllwbppgvtc
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Queued for v5.7, thank you both!
 
-On Monday 20 January 2020 22:46:25 Al Viro wrote:
-> On Mon, Jan 20, 2020 at 10:40:46PM +0100, Pali Roh=C3=A1r wrote:
->=20
-> > Ok, I did some research. It took me it longer as I thought as lot of
-> > stuff is undocumented and hard to find all relevant information.
-> >=20
-> > So... fastfat.sys is using ntos function RtlUpcaseUnicodeString() which
-> > takes UTF-16 string and returns upper case UTF-16 string. There is no
-> > mapping table in fastfat.sys driver itself.
->=20
-> Er...  Surely it's OK to just tabulate that function on 65536 values
-> and see how could that be packed into something more compact?
+							Thanx, Paul
 
-It is OK, but too complicated. That function is in nt kernel. So you
-need to build a new kernel module and also decide where to put output of
-that function. It is a long time since I did some nt kernel hacking and
-nowadays you need to download 10GB+ of Visual Studio code, then addons
-for building kernel modules, figure out how to write and compile simple
-kernel module via Visual Studio, write ini install file, try to load it
-and then you even fail as recent Windows kernels refuse to load kernel
-modules which are not signed...
-
-So it was easier to me to look at different sources (WRK, ReactOS, Wine,
-github, OSR forums, ...) and figure out what is RtlUpcaseUnicodeString()
-doing here.
-
-> Whatever
-> the license of that function might be, this should fall under
-> interoperability exceptions...
->=20
-> Actually, I wouldn't be surprised if f(x) - x would turn out to be consta=
-nt
-> on large enough intervals to provide sufficiently compact representation.=
-=2E.
->=20
-> What am I missing here?
-
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---eehs7cllwbppgvtc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EARECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXiY+dwAKCRCL8Mk9A+RD
-UjV6AJ93GUeZYXGcsHMDO4i2IJLY4TDovwCfTnlZ00Tl1jxorBEPiFSGFcSiebE=
-=T55m
------END PGP SIGNATURE-----
-
---eehs7cllwbppgvtc--
+> thanks,
+> 
+>  - Joel
+> 
+> 
+> > ---
+> >  include/linux/rculist.h | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/include/linux/rculist.h b/include/linux/rculist.h
+> > index 4158b7212936..dce491f0b354 100644
+> > --- a/include/linux/rculist.h
+> > +++ b/include/linux/rculist.h
+> > @@ -50,9 +50,9 @@ static inline void INIT_LIST_HEAD_RCU(struct list_head *list)
+> >  #define __list_check_rcu(dummy, cond, extra...)				\
+> >  	({								\
+> >  	check_arg_count_one(extra);					\
+> > -	RCU_LOCKDEP_WARN(!cond && !rcu_read_lock_any_held(),		\
+> > +	RCU_LOCKDEP_WARN(!(cond) && !rcu_read_lock_any_held(),		\
+> >  			 "RCU-list traversed in non-reader section!");	\
+> > -	 })
+> > +	})
+> >  #else
+> >  #define __list_check_rcu(dummy, cond, extra...)				\
+> >  	({ check_arg_count_one(extra); })
+> > -- 
+> > 2.24.1
+> > 
