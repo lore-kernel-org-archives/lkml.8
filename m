@@ -2,113 +2,106 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 099FAC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D661BC33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD63C2253D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:14:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD5EA217F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:14:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QesSCW9L"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="COMnqp80"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729212AbgAUQOJ (ORCPT
+        id S1729316AbgAUQOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 11:14:09 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46060 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728904AbgAUQOJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 11:14:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579623248;
+        Tue, 21 Jan 2020 11:14:18 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:43886 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728904AbgAUQOR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 11:14:17 -0500
+Received: from zn.tnic (p200300EC2F0B04005DFF86DD2C9B2FA6.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:400:5dff:86dd:2c9b:2fa6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5D4311EC0C82;
+        Tue, 21 Jan 2020 17:14:16 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1579623256;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=IqGKWE4vljjAcPx0vpPhn72zDnBvqdvK17Xs6yePlDY=;
-        b=QesSCW9LAOUG9wOBSlOL30XGeFCwGoX2yrhb9l6eS+HzrbU2phsRRKANeDwyvzapLUmSR6
-        fq6BXjA019FgGiXrR3VWp7gL3VaUPCsr+coyNrYzS1liPyrSLijqMUb7AZX7HlD1g4S9cg
-        4FMSMd9j1an558A+sdhi7W2mliLmx+M=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-47-uPVloHShM7ORF9CbFbrLBw-1; Tue, 21 Jan 2020 11:14:05 -0500
-X-MC-Unique: uPVloHShM7ORF9CbFbrLBw-1
-Received: by mail-wr1-f70.google.com with SMTP id r2so1519363wrp.7
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 08:14:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=IqGKWE4vljjAcPx0vpPhn72zDnBvqdvK17Xs6yePlDY=;
-        b=JoEEGTVp/ZiVyBZNfoVyzBMULGYa3OLU9+dSnrEMCPZuuyKIrR2/6G2MnJzc+t2SGm
-         zAdQrXZvZrL0/ZF3ias7M7CTm62pAugmd3eWmnQg2TJVuIUZh9pfT9NyWHx9btLgRI98
-         E2CZ6QAK7QtLyYE49TBndGrPdXzJIjQyJJ2z0Sx1RocS/nHs7mGIQ3DmbrDWgqmLLUWk
-         TB+GhYBIwEkJNP1HV5wfxK05ZOEYDTNOqosGHeZ89XrM+JdzEE9YDV94jrDdbDkDUcRE
-         l1TF4295KEUFMyBbF6L6tRYmd5RSMwO5/PFex0Rxr8bFrfgiTKs41Y//P4qj+7OkaGgN
-         fZgA==
-X-Gm-Message-State: APjAAAXm5rlogO32ux6wYlNCAzIa63aevsuQRoLVJ08fK7d7fyEAi1BV
-        qn+zHzRL7r9zPdfQWlwY3eUm5/aZYYf2YUhtgw61Bt6BlnA6eycUdwYJnN7R4ujuEq+0suiH8jq
-        v/ad2J2Bn1wDpBI/y1hF6+eB1
-X-Received: by 2002:a05:600c:cd:: with SMTP id u13mr4971796wmm.24.1579623244197;
-        Tue, 21 Jan 2020 08:14:04 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyLcl/lYmcft/LqZTO4NiEq6Lyk5s/oCPqY3EBAJJlr/q/iZw7reeRokvq1TEUD+WfWoLmTWA==
-X-Received: by 2002:a05:600c:cd:: with SMTP id u13mr4971768wmm.24.1579623243901;
-        Tue, 21 Jan 2020 08:14:03 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:b509:fc01:ee8a:ca8a? ([2001:b07:6468:f312:b509:fc01:ee8a:ca8a])
-        by smtp.gmail.com with ESMTPSA id t8sm53079354wrp.69.2020.01.21.08.14.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jan 2020 08:14:03 -0800 (PST)
-Subject: Re: [PATCH v3 09/21] KVM: X86: Don't track dirty for
- KVM_SET_[TSS_ADDR|IDENTITY_MAP_ADDR]
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Peter Xu <peterx@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Yan Zhao <yan.y.zhao@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Kevin Kevin <kevin.tian@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
-References: <20200109145729.32898-1-peterx@redhat.com>
- <20200109145729.32898-10-peterx@redhat.com>
- <20200121155657.GA7923@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <c2f556fa-8562-f2d3-37a0-220af33732cd@redhat.com>
-Date:   Tue, 21 Jan 2020 17:14:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=xZz0Fg5CoEy6kLuVioKwcLAJmKwf0QEyyMcuqrMgQMw=;
+        b=COMnqp80spr3Ypa6XeFuS921Gag6Z3I2vBkFaXdnKFjafRrABF/7x3EihNLFXKV8y6T47Z
+        XNYgZMwfdgiUXtrnwatiugq0pMpM9JBTPN+08ugsrND32IwOxIM5VDX3RrO6orBqc38xSd
+        KK8dltxPxMZ7wwd6e7dK3DgpK3Re0EA=
+Date:   Tue, 21 Jan 2020 17:14:12 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Tyler Hicks <tyhicks@canonical.com>,
+        Waiman Long <longman@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH RFC] x86/speculation: Clarify Spectre-v2 mitigation when
+ STIBP/IBPB features are unsupported
+Message-ID: <20200121161412.GL7808@zn.tnic>
+References: <20200121160257.302999-1-vkuznets@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200121155657.GA7923@linux.intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200121160257.302999-1-vkuznets@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/01/20 16:56, Sean Christopherson wrote:
-> This code also needs to be tested by doing unrestricted_guest=0 when
-> loading kvm_intel, because it's obviously broken.
+On Tue, Jan 21, 2020 at 05:02:57PM +0100, Vitaly Kuznetsov wrote:
+> When STIBP/IBPB features are not supported (no microcode update,
+> AWS/Azure/... instances deliberately hiding SPEC_CTRL for performance
+> reasons,...) /sys/devices/system/cpu/vulnerabilities/spectre_v2 looks like
+> 
+>   Mitigation: Full generic retpoline, STIBP: disabled, RSB filling
+> 
+> and this looks imperfect. In particular, STIBP is 'disabled' and 'IBPB'
+> is not mentioned while both features are just not supported. Also, for
+> STIBP the 'disabled' state (SPECTRE_V2_USER_NONE) can represent both
+> the absence of hardware support and deliberate user's choice
+> (spectre_v2_user=off)
+> 
+> Make the following adjustments:
+> - Output 'unsupported' for both STIBP/IBPB when there's no support in
+>   hardware.
+> - Output 'unneeded' for STIBP when SMT is disabled/missing (and this
+>   switch_to_cond_stibp is off).
+> 
+> RFC. Some tools out there may be looking at this information so by
+> changing the output we're breaking them. Also, it may make sense to
+> separate kernel and userspace protections and switch to something like
+> 
+>   Mitigation: Kernel: Full generic retpoline, RSB filling; Userspace:
+>    Vulnerable
+> 
+> for the above mentioned case.
+> 
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
+>  Documentation/admin-guide/hw-vuln/spectre.rst | 3 +++
+>  arch/x86/kernel/cpu/bugs.c                    | 9 +++++++--
+>  2 files changed, 10 insertions(+), 2 deletions(-)
 
-... as I had just found out after starting tests on kvm/queue.  Unqueued
-this patch.
+There's another attempt to fix similar aspects of this whole deal going
+on ATM:
 
-Paolo
+https://lkml.kernel.org/r/20191229164830.62144-1-asteinhauser@google.com
 
-> __x86_set_memory_region()
-> takes an "unsigned long *", interpreted as a "pointer to a usersepace
-> address", i.e. a "void __user **".  But the callers are treating the param
-> as a "unsigned long in userpace", e.g. init_rmode_identity_map() declares
-> uaddr as an "unsigned long *", when really it should be declaring a
-> straight "unsigned long" and passing "&uaddr".  The only thing that saves
-> KVM from dereferencing a bad pointer in __x86_set_memory_region() is that
-> uaddr is initialized to NULL 
+-- 
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
