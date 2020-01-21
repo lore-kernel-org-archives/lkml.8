@@ -2,192 +2,112 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8185C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:52:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82451C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D6C421569
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:52:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 558AB21569
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:54:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579622073;
+	bh=eLla5PgPTBhkhiWBU9xspgVzaPUJWxxslQ9KJnP4Pik=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=EpTR7utjlF5ZmmkZh+QD9YFE3VtdlT4MJ0+s2wfArozrO/0v8lecfB7Jb2/477uvC
+	 dnb+VjfhfFrhhhkCZF6Z1Pgzf7BX+fC1zpomDtG7i8BsPI4ms/i2vA/ZJwbbRvWOyQ
+	 QHiXpUVxzncGzBxO/yWjXz3JATwYTkdxd2EoF5KA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729232AbgAUPwg (ORCPT
+        id S1729162AbgAUPyc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 10:52:36 -0500
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:65260 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728186AbgAUPwf (ORCPT
+        Tue, 21 Jan 2020 10:54:32 -0500
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:47304 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726714AbgAUPyc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 10:52:35 -0500
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 21 Jan 2020 21:22:32 +0530
-Received: from harigovi-linux.qualcomm.com ([10.204.66.157])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 21 Jan 2020 21:22:12 +0530
-Received: by harigovi-linux.qualcomm.com (Postfix, from userid 2332695)
-        id 5306B2762; Tue, 21 Jan 2020 21:22:11 +0530 (IST)
-From:   Harigovindan P <harigovi@codeaurora.org>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     Harigovindan P <harigovi@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        kalyan_t@codeaurora.org, nganji@codeaurora.org
-Subject: [v1] arm64: dts: sc7180: add display dt nodes
-Date:   Tue, 21 Jan 2020 21:22:08 +0530
-Message-Id: <1579621928-18619-1-git-send-email-harigovi@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Tue, 21 Jan 2020 10:54:32 -0500
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id 00LFsQ4j026151;
+        Wed, 22 Jan 2020 00:54:26 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 00LFsQ4j026151
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1579622066;
+        bh=JU3pN3c8/XRG815QK0vLDCcMaIT7EtAG3kyh7/ARG3E=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=yKKH+AeLbu8JFDV44NEghqZT+z/w3kaAPOyagqmxcGzqJNf9nUgD4kSKTues2PG7S
+         4BaSm2WAIgcRTI93BzSI2+fieLD4MlL45usBqDcQtj97k3vviZxoZ9aLxvmw+DUnOr
+         u1JjRm6sBB6Hc4NHcwwLZRlBCtA3JtT8xvR0c6HwsNjWk/r+b7Z5swxWyxrmjQGsAo
+         YFNb7WQvgyYbpaEcagsGuZFGlG+yV0pYa2AE9VylW1RkxKBujaaWQTZ8KKPdCtgJTM
+         HHaZjI8vy1CDdpnxEytdzFsFGJCdiNOuLDk7bW1ImhKQVPNsO9hOv1OX6pQXommQ0V
+         Io8w4rdDANXYw==
+X-Nifty-SrcIP: [209.85.217.53]
+Received: by mail-vs1-f53.google.com with SMTP id y125so2119075vsb.6;
+        Tue, 21 Jan 2020 07:54:26 -0800 (PST)
+X-Gm-Message-State: APjAAAUmeEhOc2m8PKXhUZEUpEw9zGfyXs8hA5Wfcz8T/v24LPP1B+or
+        ds/1o38QwfUVo/OPAd7YgOl/uXfZpmuMheJkJO8=
+X-Google-Smtp-Source: APXvYqxe5wIDBnscwpBHbBYvMLy4c73hBL0sW2LyaAUR5vLuA1z5eh7PxsXGFpQzh3WPrSpVGR2iZU5tc4/W7wdpzXM=
+X-Received: by 2002:a05:6102:2334:: with SMTP id b20mr3183118vsa.155.1579622065327;
+ Tue, 21 Jan 2020 07:54:25 -0800 (PST)
+MIME-Version: 1.0
+References: <e026b0d7a2eceaa1745a001baa9f950ce546addb.1579025325.git.mirq-linux@rere.qmqm.pl>
+In-Reply-To: <e026b0d7a2eceaa1745a001baa9f950ce546addb.1579025325.git.mirq-linux@rere.qmqm.pl>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 22 Jan 2020 00:53:49 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASOLPkhk8CFN9Awbh8xav-bxLmDcc=eR7r4vN+NUKKUeg@mail.gmail.com>
+Message-ID: <CAK7LNASOLPkhk8CFN9Awbh8xav-bxLmDcc=eR7r4vN+NUKKUeg@mail.gmail.com>
+Subject: Re: [PATCH v2] builddeb: allow selection of .deb compressor
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Ben Hutchings <ben@decadent.org.uk>,
+        Riku Voipio <riku.voipio@linaro.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add display, DSI hardware DT nodes for sc7180.
+On Wed, Jan 15, 2020 at 3:11 AM Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.=
+qmqm.pl> wrote:
+>
+> Select deb compression using KDEB_COMPRESS make variable. This allows to
+> use gzip compression for local or test builds, and that's way faster
+> than now-default xz compression.
+>
+> Signed-off-by: Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl>
+> ---
 
-Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 125 +++++++++++++++++++++++++++++++++++
- 1 file changed, 125 insertions(+)
- mode change 100644 => 100755 arch/arm64/boot/dts/qcom/sc7180.dtsi
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-old mode 100644
-new mode 100755
-index 8011c5f..963f5c1
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -1151,6 +1151,131 @@
- 			};
- 		};
- 
-+		mdss: mdss@ae00000 {
-+			compatible = "qcom,sc7180-mdss";
-+			reg = <0 0x0ae00000 0 0x1000>;
-+			reg-names = "mdss";
-+
-+			power-domains = <&dispcc MDSS_GDSC>;
-+
-+			clocks = <&gcc GCC_DISP_AHB_CLK>,
-+				 <&gcc GCC_DISP_HF_AXI_CLK>,
-+				 <&dispcc DISP_CC_MDSS_MDP_CLK>;
-+			clock-names = "iface", "gcc_bus", "core";
-+
-+			assigned-clocks = <&dispcc DISP_CC_MDSS_MDP_CLK>;
-+			assigned-clock-rates = <300000000>;
-+
-+			interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+
-+			iommus = <&apps_smmu 0x800 0x2>;
-+
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+
-+			mdss_mdp: mdp@ae01000 {
-+				compatible = "qcom,sc7180-dpu";
-+				reg = <0 0x0ae00000 0 0x1000>,
-+				      <0 0x0ae01000 0 0x8f000>,
-+				      <0 0x0aeb0000 0 0x2008>,
-+				      <0 0x0af03000 0 0x16>;
-+				reg-names = "mdss","mdp", "vbif", "disp_cc";
-+
-+				clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>,
-+					 <&dispcc DISP_CC_MDSS_ROT_CLK>,
-+					 <&dispcc DISP_CC_MDSS_MDP_LUT_CLK>,
-+					 <&dispcc DISP_CC_MDSS_MDP_CLK>,
-+					 <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
-+				clock-names = "iface", "rot", "lut", "core",
-+						"vsync";
-+				assigned-clocks = <&dispcc DISP_CC_MDSS_MDP_CLK>,
-+						  <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
-+				assigned-clock-rates = <300000000>,
-+						       <19200000>;
-+
-+				interrupt-parent = <&mdss>;
-+				interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-+
-+				ports {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					port@0 {
-+						reg = <0>;
-+						dpu_intf1_out: endpoint {
-+							remote-endpoint = <&dsi0_in>;
-+						};
-+					};
-+				};
-+			};
-+
-+			dsi0: qcom,mdss_dsi_ctrl0@ae94000 {
-+				compatible = "qcom,mdss-dsi-ctrl";
-+				reg = <0 0x0ae94000 0 0x400>;
-+				reg-names = "dsi_ctrl";
-+
-+				interrupt-parent = <&mdss>;
-+				interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
-+
-+				clocks = <&dispcc DISP_CC_MDSS_BYTE0_CLK>,
-+					<&dispcc DISP_CC_MDSS_BYTE0_INTF_CLK>,
-+					<&dispcc DISP_CC_MDSS_PCLK0_CLK>,
-+					<&dispcc DISP_CC_MDSS_ESC0_CLK>,
-+					<&dispcc DISP_CC_MDSS_AHB_CLK>,
-+					<&gcc GCC_DISP_HF_AXI_CLK>;
-+				clock-names = "byte",
-+                                              "byte_intf",
-+                                              "pixel",
-+                                              "core",
-+                                              "iface",
-+                                              "bus";
-+
-+				phys = <&dsi0_phy>;
-+				phy-names = "dsi";
-+
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				ports {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					port@0 {
-+						reg = <0>;
-+						dsi0_in: endpoint {
-+							remote-endpoint = <&dpu_intf1_out>;
-+						};
-+					};
-+
-+					port@1 {
-+						reg = <1>;
-+						dsi0_out: endpoint {
-+						};
-+					};
-+				};
-+			};
-+
-+			dsi0_phy: dsi-phy0@ae94400 {
-+				compatible = "qcom,dsi-phy-10nm";
-+				reg = <0 0x0ae94400 0 0x200>,
-+				      <0 0x0ae94600 0 0x280>,
-+				      <0 0x0ae94a00 0 0x1e0>;
-+				reg-names = "dsi_phy",
-+					    "dsi_phy_lane",
-+					    "dsi_pll";
-+
-+				#clock-cells = <1>;
-+				#phy-cells = <0>;
-+
-+				clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>;
-+				clock-names = "iface";
-+
-+			};
-+		};
-+
- 		pdc: interrupt-controller@b220000 {
- 			compatible = "qcom,sc7180-pdc", "qcom,pdc";
- 			reg = <0 0x0b220000 0 0x30000>;
--- 
-2.7.4
+Applied to linux-kbuild.
+Thanks.
 
+>  v2: rename KPKG_COMPRESS to KDEB_COMPRESS as suggested by Masahiro Yamad=
+a
+> ---
+>  scripts/package/builddeb | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/scripts/package/builddeb b/scripts/package/builddeb
+> index c4c580f547ef..b68aaeece7c9 100755
+> --- a/scripts/package/builddeb
+> +++ b/scripts/package/builddeb
+> @@ -43,7 +43,7 @@ create_package() {
+>
+>         # Create the package
+>         dpkg-gencontrol -p$pname -P"$pdir"
+> -       dpkg --build "$pdir" ..
+> +       dpkg-deb ${KDEB_COMPRESS:+-Z$KDEB_COMPRESS} --build "$pdir" ..
+>  }
+>
+>  version=3D$KERNELRELEASE
+> --
+> 2.20.1
+>
+
+
+--=20
+Best Regards
+Masahiro Yamada
