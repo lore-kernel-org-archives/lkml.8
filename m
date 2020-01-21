@@ -2,187 +2,117 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C824C32771
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 03:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA4AC32771
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 03:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0967B2253D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 03:04:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3673F22522
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 03:09:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="oW3qFX6l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729100AbgAUDEm (ORCPT
+        id S1729050AbgAUDJk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 22:04:42 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:51212 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726890AbgAUDEl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 22:04:41 -0500
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id B9C9885FE9B03B652C53;
-        Tue, 21 Jan 2020 11:04:39 +0800 (CST)
-Received: from localhost (10.173.223.234) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Tue, 21 Jan 2020
- 11:04:33 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <pkshih@realtek.com>, <kvalo@codeaurora.org>,
-        <davem@davemloft.net>, <bernd.edlinger@hotmail.de>,
-        <yuehaibing@huawei.com>, <Larry.Finger@lwfinger.net>
-CC:     <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] rtlwifi: rtl8723ae: remove unused variables
-Date:   Tue, 21 Jan 2020 11:04:28 +0800
-Message-ID: <20200121030428.14760-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Mon, 20 Jan 2020 22:09:40 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:37639 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728778AbgAUDJk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 22:09:40 -0500
+Received: by mail-ot1-f66.google.com with SMTP id k14so1682649otn.4
+        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 19:09:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zzgAN7AcFUKo31VzGca5wqU7jl5yRWzRRc+tIT8IsdI=;
+        b=oW3qFX6l83ZPQ5G+hzzgXNelFpIMqlQxZNmoDJwHEETifAbTlPlyCkKOG/yDY6znYu
+         eq+wXWMOKkn3fK14gRz7UFjvSx4GuJk+LPCb1DrJune8B8chnaQ553KHRGJaT9T21cE6
+         jBkp5CXNJjdaDhDB7fqCe/e5O3HuPplIhnB9gL2iRSn/l1VOhSAPY4LJ/YeJI35pajl4
+         5P3P6lxIGDRCxpHvJrssmgEZQJUqCQkdHOC4tDTEyZeQaSoRb11zEfDqjyRkkaZhYs+W
+         Q/3mvi/8xpCiv3ZHgRNo7CFBberN8G34sdZnmz0QKqXZI0N0CzmeRyE8geQxIKMxVcYP
+         JbWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zzgAN7AcFUKo31VzGca5wqU7jl5yRWzRRc+tIT8IsdI=;
+        b=TX5ldrv781xzfHuo0+yvgyqJT47Z77exUSxbvmj5PMkIQ1IZrqxhizUbf7G7k+Xuqo
+         A46kX3y0BaciryxB/DM1MWQUo8swbZDl4gSA9FIsQmpmHaGXnqKnSgoXyRWtHzeI9d8J
+         2S3R4MI8+UQjHZQJh/GjD2YBVakUsFwicxSNGAAdXMVQcqIHCqlMonnwV2R6ROm+s1Wt
+         QWSkc5ZIG14teDvH8yzJ7PbrCJEwlGWBg/avPdvRa08TdSOeanxfHP8DGpwN+P/8zXgh
+         oJQsRIDp+ji2f/leVek0POcUmTpLv+oEAWwaRunHaFL3MiSI3hyQkv59DGrdi2z/Vcg1
+         wdAQ==
+X-Gm-Message-State: APjAAAUzbLHrGdr9xnwMgLrcCVNJ8y+icyuMY7iKYs9G6LEm7XnYORl2
+        d/SGMs2QS9cJfwAjrPn2joFcEskW83OI3HXl3xhEJzXg
+X-Google-Smtp-Source: APXvYqyWPPBlFl8k77ykQtRhabA6jR2wpAyFXUn7yE9w3Z0qz05h9scPEucgncq36HL8MGc82zVafvBeR8O9Z99ZFJ8=
+X-Received: by 2002:a9d:68cc:: with SMTP id i12mr1984867oto.207.1579576179419;
+ Mon, 20 Jan 2020 19:09:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.173.223.234]
-X-CFilter-Loop: Reflected
+References: <157954696789.2239526.17707265517154476652.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <157954697957.2239526.17206272633668977957.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <87pnfdd20d.fsf@linux.ibm.com>
+In-Reply-To: <87pnfdd20d.fsf@linux.ibm.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 20 Jan 2020 19:09:26 -0800
+Message-ID: <CAPcyv4gjuk1OOnT2oobXXKS-d5DMFqrwbb-LCbG+0aexh_83sw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/6] mm/numa: Skip NUMA_NO_NODE and online nodes in numa_map_to_online_node()
+To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>, X86 ML <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c:16:18:
- warning: ofdmswing_table defined but not used [-Wunused-const-variable=]
-drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c:56:17:
- warning: cckswing_table_ch1ch13 defined but not used [-Wunused-const-variable=]
-drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c:92:17:
- warning: cckswing_table_ch14 defined but not used [-Wunused-const-variable=]
+On Mon, Jan 20, 2020 at 5:36 PM Aneesh Kumar K.V
+<aneesh.kumar@linux.ibm.com> wrote:
+>
+> Dan Williams <dan.j.williams@intel.com> writes:
+>
+> > Update numa_map_to_online_node() to stop falling back to numa node 0
+> > when the input is NUMA_NO_NODE. Also, skip the lookup if @node is
+> > online. This makes the routine compatible with other arch node mapping
+> > routines.
+> >
+> > Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+> > Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+> > Link: https://lore.kernel.org/r/157401275716.43284.13185549705765009174.stgit@dwillia2-desk3.amr.corp.intel.com
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > ---
+> >  mm/mempolicy.c |    4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+> > index 4cff069279f6..30d76db718bf 100644
+> > --- a/mm/mempolicy.c
+> > +++ b/mm/mempolicy.c
+> > @@ -137,8 +137,8 @@ int numa_map_to_online_node(int node)
+> >  {
+> >       int min_node;
+> >
+> > -     if (node == NUMA_NO_NODE)
+> > -             node = 0;
+> > +     if (node == NUMA_NO_NODE || node_online(node))
+> > +             return node;
+> >
+> >       min_node = node;
+> >       if (!node_online(node)) {
+>
+>
+> The above if condition will always be true?
 
-These variable is never used, so remove them.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- .../net/wireless/realtek/rtlwifi/rtl8723ae/dm.c    | 112 ---------------------
- 1 file changed, 112 deletions(-)
-
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c
-index d8260c7..c61a92d 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/dm.c
-@@ -13,118 +13,6 @@
- #include "fw.h"
- #include "hal_btc.h"
- 
--static const u32 ofdmswing_table[OFDM_TABLE_SIZE] = {
--	0x7f8001fe,
--	0x788001e2,
--	0x71c001c7,
--	0x6b8001ae,
--	0x65400195,
--	0x5fc0017f,
--	0x5a400169,
--	0x55400155,
--	0x50800142,
--	0x4c000130,
--	0x47c0011f,
--	0x43c0010f,
--	0x40000100,
--	0x3c8000f2,
--	0x390000e4,
--	0x35c000d7,
--	0x32c000cb,
--	0x300000c0,
--	0x2d4000b5,
--	0x2ac000ab,
--	0x288000a2,
--	0x26000098,
--	0x24000090,
--	0x22000088,
--	0x20000080,
--	0x1e400079,
--	0x1c800072,
--	0x1b00006c,
--	0x19800066,
--	0x18000060,
--	0x16c0005b,
--	0x15800056,
--	0x14400051,
--	0x1300004c,
--	0x12000048,
--	0x11000044,
--	0x10000040,
--};
--
--static const u8 cckswing_table_ch1ch13[CCK_TABLE_SIZE][8] = {
--	{0x36, 0x35, 0x2e, 0x25, 0x1c, 0x12, 0x09, 0x04},
--	{0x33, 0x32, 0x2b, 0x23, 0x1a, 0x11, 0x08, 0x04},
--	{0x30, 0x2f, 0x29, 0x21, 0x19, 0x10, 0x08, 0x03},
--	{0x2d, 0x2d, 0x27, 0x1f, 0x18, 0x0f, 0x08, 0x03},
--	{0x2b, 0x2a, 0x25, 0x1e, 0x16, 0x0e, 0x07, 0x03},
--	{0x28, 0x28, 0x22, 0x1c, 0x15, 0x0d, 0x07, 0x03},
--	{0x26, 0x25, 0x21, 0x1b, 0x14, 0x0d, 0x06, 0x03},
--	{0x24, 0x23, 0x1f, 0x19, 0x13, 0x0c, 0x06, 0x03},
--	{0x22, 0x21, 0x1d, 0x18, 0x11, 0x0b, 0x06, 0x02},
--	{0x20, 0x20, 0x1b, 0x16, 0x11, 0x08, 0x05, 0x02},
--	{0x1f, 0x1e, 0x1a, 0x15, 0x10, 0x0a, 0x05, 0x02},
--	{0x1d, 0x1c, 0x18, 0x14, 0x0f, 0x0a, 0x05, 0x02},
--	{0x1b, 0x1a, 0x17, 0x13, 0x0e, 0x09, 0x04, 0x02},
--	{0x1a, 0x19, 0x16, 0x12, 0x0d, 0x09, 0x04, 0x02},
--	{0x18, 0x17, 0x15, 0x11, 0x0c, 0x08, 0x04, 0x02},
--	{0x17, 0x16, 0x13, 0x10, 0x0c, 0x08, 0x04, 0x02},
--	{0x16, 0x15, 0x12, 0x0f, 0x0b, 0x07, 0x04, 0x01},
--	{0x14, 0x14, 0x11, 0x0e, 0x0b, 0x07, 0x03, 0x02},
--	{0x13, 0x13, 0x10, 0x0d, 0x0a, 0x06, 0x03, 0x01},
--	{0x12, 0x12, 0x0f, 0x0c, 0x09, 0x06, 0x03, 0x01},
--	{0x11, 0x11, 0x0f, 0x0c, 0x09, 0x06, 0x03, 0x01},
--	{0x10, 0x10, 0x0e, 0x0b, 0x08, 0x05, 0x03, 0x01},
--	{0x0f, 0x0f, 0x0d, 0x0b, 0x08, 0x05, 0x03, 0x01},
--	{0x0e, 0x0e, 0x0c, 0x0a, 0x08, 0x05, 0x02, 0x01},
--	{0x0d, 0x0d, 0x0c, 0x0a, 0x07, 0x05, 0x02, 0x01},
--	{0x0d, 0x0c, 0x0b, 0x09, 0x07, 0x04, 0x02, 0x01},
--	{0x0c, 0x0c, 0x0a, 0x09, 0x06, 0x04, 0x02, 0x01},
--	{0x0b, 0x0b, 0x0a, 0x08, 0x06, 0x04, 0x02, 0x01},
--	{0x0b, 0x0a, 0x09, 0x08, 0x06, 0x04, 0x02, 0x01},
--	{0x0a, 0x0a, 0x09, 0x07, 0x05, 0x03, 0x02, 0x01},
--	{0x0a, 0x09, 0x08, 0x07, 0x05, 0x03, 0x02, 0x01},
--	{0x09, 0x09, 0x08, 0x06, 0x05, 0x03, 0x01, 0x01},
--	{0x09, 0x08, 0x07, 0x06, 0x04, 0x03, 0x01, 0x01}
--};
--
--static const u8 cckswing_table_ch14[CCK_TABLE_SIZE][8] = {
--	{0x36, 0x35, 0x2e, 0x1b, 0x00, 0x00, 0x00, 0x00},
--	{0x33, 0x32, 0x2b, 0x19, 0x00, 0x00, 0x00, 0x00},
--	{0x30, 0x2f, 0x29, 0x18, 0x00, 0x00, 0x00, 0x00},
--	{0x2d, 0x2d, 0x17, 0x17, 0x00, 0x00, 0x00, 0x00},
--	{0x2b, 0x2a, 0x25, 0x15, 0x00, 0x00, 0x00, 0x00},
--	{0x28, 0x28, 0x24, 0x14, 0x00, 0x00, 0x00, 0x00},
--	{0x26, 0x25, 0x21, 0x13, 0x00, 0x00, 0x00, 0x00},
--	{0x24, 0x23, 0x1f, 0x12, 0x00, 0x00, 0x00, 0x00},
--	{0x22, 0x21, 0x1d, 0x11, 0x00, 0x00, 0x00, 0x00},
--	{0x20, 0x20, 0x1b, 0x10, 0x00, 0x00, 0x00, 0x00},
--	{0x1f, 0x1e, 0x1a, 0x0f, 0x00, 0x00, 0x00, 0x00},
--	{0x1d, 0x1c, 0x18, 0x0e, 0x00, 0x00, 0x00, 0x00},
--	{0x1b, 0x1a, 0x17, 0x0e, 0x00, 0x00, 0x00, 0x00},
--	{0x1a, 0x19, 0x16, 0x0d, 0x00, 0x00, 0x00, 0x00},
--	{0x18, 0x17, 0x15, 0x0c, 0x00, 0x00, 0x00, 0x00},
--	{0x17, 0x16, 0x13, 0x0b, 0x00, 0x00, 0x00, 0x00},
--	{0x16, 0x15, 0x12, 0x0b, 0x00, 0x00, 0x00, 0x00},
--	{0x14, 0x14, 0x11, 0x0a, 0x00, 0x00, 0x00, 0x00},
--	{0x13, 0x13, 0x10, 0x0a, 0x00, 0x00, 0x00, 0x00},
--	{0x12, 0x12, 0x0f, 0x09, 0x00, 0x00, 0x00, 0x00},
--	{0x11, 0x11, 0x0f, 0x09, 0x00, 0x00, 0x00, 0x00},
--	{0x10, 0x10, 0x0e, 0x08, 0x00, 0x00, 0x00, 0x00},
--	{0x0f, 0x0f, 0x0d, 0x08, 0x00, 0x00, 0x00, 0x00},
--	{0x0e, 0x0e, 0x0c, 0x07, 0x00, 0x00, 0x00, 0x00},
--	{0x0d, 0x0d, 0x0c, 0x07, 0x00, 0x00, 0x00, 0x00},
--	{0x0d, 0x0c, 0x0b, 0x06, 0x00, 0x00, 0x00, 0x00},
--	{0x0c, 0x0c, 0x0a, 0x06, 0x00, 0x00, 0x00, 0x00},
--	{0x0b, 0x0b, 0x0a, 0x06, 0x00, 0x00, 0x00, 0x00},
--	{0x0b, 0x0a, 0x09, 0x05, 0x00, 0x00, 0x00, 0x00},
--	{0x0a, 0x0a, 0x09, 0x05, 0x00, 0x00, 0x00, 0x00},
--	{0x0a, 0x09, 0x08, 0x05, 0x00, 0x00, 0x00, 0x00},
--	{0x09, 0x09, 0x08, 0x05, 0x00, 0x00, 0x00, 0x00},
--	{0x09, 0x08, 0x07, 0x04, 0x00, 0x00, 0x00, 0x00}
--};
--
- static u8 rtl8723e_dm_initial_gain_min_pwdb(struct ieee80211_hw *hw)
- {
- 	struct rtl_priv *rtlpriv = rtl_priv(hw);
--- 
-2.7.4
-
-
+No, not for the node_offline case, and that's typically what callers
+are passing.
+>
+> -aneesh
