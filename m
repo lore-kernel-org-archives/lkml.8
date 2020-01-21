@@ -2,222 +2,170 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77068C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C4BC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42C2124655
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:31:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF6C924653
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 14:32:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NnNnaQaa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UawKJfnu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729275AbgAUObw (ORCPT
+        id S1729347AbgAUOcE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 09:31:52 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20573 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728992AbgAUObw (ORCPT
+        Tue, 21 Jan 2020 09:32:04 -0500
+Received: from mail-wm1-f54.google.com ([209.85.128.54]:55357 "EHLO
+        mail-wm1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728992AbgAUOcD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 09:31:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579617111;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=9mF7S/CElHcPOzBiJE5ZLHPm54JjJRyvMZy7fUQh3+o=;
-        b=NnNnaQaanfumYsmNsvScvYmoGERSc4ePxHlyig0UHJ1P1D3dhk4bXBzs0pqqjNGXqE6JfU
-        Xn3JUYgB16+sdJmtErsByX83oCpeK2LNXYZ44fvRhcQTuIz2m9wW8gl8zKK3HyTEPMwreV
-        p1NtqbblBECAY2/2Ye55pI5DmVpUQrE=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-37-kkVtd8nDPDCgzWTCJoFYVQ-1; Tue, 21 Jan 2020 09:31:49 -0500
-X-MC-Unique: kkVtd8nDPDCgzWTCJoFYVQ-1
-Received: by mail-qt1-f198.google.com with SMTP id k27so1994810qtu.12
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 06:31:49 -0800 (PST)
+        Tue, 21 Jan 2020 09:32:03 -0500
+Received: by mail-wm1-f54.google.com with SMTP id q9so3165272wmj.5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 06:32:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id;
+        bh=qLpfOk1ZTqYL3sl9pfEhz5Xx/erysYZDRTRJ2cdP8Hs=;
+        b=UawKJfnuMSQgmUuHc3aPKzKnMhPeh32MiDDtA1GqSTiPHgrZqlxPPnezQNpJqfH2kO
+         qq0AFTkqn9nh5EgVIQ/LuhMo40HGyycLx04fxID+ibRHqomNZkKdRnOktrcwz9bmF1rt
+         FM45IuWtshnWJ9wa6goei9ZjsqKlc4iub0sJC8udVzyN+NsnF+SbWBTqG3GbqUOFVxce
+         clAq4A5RmVY2WV88UOsowKBgwBkqPAZFFxBeq9QedPjPxFabHXnJW8JoUZaxO2nDzr5n
+         VMDZN2NdsGICnukAG7E4EwJSTYfSc41iS3cVZky05MvBM5h6HusiFaKLgQLHqbUiwtJa
+         oYMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9mF7S/CElHcPOzBiJE5ZLHPm54JjJRyvMZy7fUQh3+o=;
-        b=X/rtDL3eEUNz5usEU0uAqd379NkYHxUrEr0zTO9RnprQI67IellVlkuaWqkDLnIF7c
-         LGAcXTuDCQgpPKJMZuEmq54ClBJugFOTfSwZ3iWji9YsY7HLNdfSDvgx1Dqp711Tilb9
-         u7Y+SMfguPsiEUUOv8S9MZlVSWX1/9kxDkDeiTHtdo98yZM98DW+yY2k97dZLNKyZfwH
-         Z8xMN3/O1TpQb+AwQkO2RAptyvc9BFu4ODYEFwuEPynOZ7+bw+oEg9iAuU3bJ42ORD4G
-         fWy05WquflggDUmWPjX5oaLDU84DAep2oRqhMFluxB4pPrqG11SdLA8w7WFBM31zRCOz
-         Ww2g==
-X-Gm-Message-State: APjAAAWD4zJTJ8OLHRqB3Oxe0P3sNlzAbVGp+wJwcJhOjtv7uLe6bmKG
-        QCdSlpgY+TMyZ+96Zku8FOdy/8VqiefjYA1J1abclYcwP+utj0eVBLuIk8gUL+qL4rVdNKOe9l3
-        V07d6J4kvgaZTyl/GFmQwHfe5
-X-Received: by 2002:ac8:461a:: with SMTP id p26mr4497798qtn.317.1579617108767;
-        Tue, 21 Jan 2020 06:31:48 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwrIvrhaYu107gr5LRu833/t8f+udWCCk91EWLM5wPQlcLIaM9dNSDXl+N4W9nnEJsWqmVhTQ==
-X-Received: by 2002:ac8:461a:: with SMTP id p26mr4497751qtn.317.1579617108435;
-        Tue, 21 Jan 2020 06:31:48 -0800 (PST)
-Received: from redhat.com (bzq-79-179-85-180.red.bezeqint.net. [79.179.85.180])
-        by smtp.gmail.com with ESMTPSA id h13sm142713qtu.23.2020.01.21.06.31.44
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=qLpfOk1ZTqYL3sl9pfEhz5Xx/erysYZDRTRJ2cdP8Hs=;
+        b=dIX49qdkPzPkugc0/9DwXg5yaRkR/YfZCk0Xr+fZCpWBp/cx1OrNJ+2U30W0ApS8Tx
+         GSCJJdYJWq0niGP1PmBYnlxdpBgNJ3fdxdouxZghXDTCpbEEP1ivtcDVOfnmCoxypPS0
+         m2Imw+Ych8ADUzYtB8/eFtje97fvIjKk0v7iR0eWLHs8un1zf9GKfIZLQmMIOYMF7+jq
+         a8Em4jgj1WE4oGLv5//n+SX0c3nO6JHWtHgFDxWysyDzpSo9btKZPo1kOUyTMvRciJE0
+         7h/PYI6RHBQwrZtHe5c9SR9I7zLKto9Hzyx4waLu1L7ws/8FbkEkcY1+XVGiipavoMc/
+         X5Xg==
+X-Gm-Message-State: APjAAAWAbFqkvRuehV5oYv5u5pAcj+pXoYPYeijQUJNd967qkKlMvq8m
+        2/0TsWMFOQ1Ztfr9xTz9Ays=
+X-Google-Smtp-Source: APXvYqykAUt3BlKLSt2mxqLiNoLsqzzasnLDS1vsGFedEPdhJTbCnJ2DtQ7kzs7LImsKq1sqx+9jyA==
+X-Received: by 2002:a05:600c:2c53:: with SMTP id r19mr4680841wmg.39.1579617121769;
+        Tue, 21 Jan 2020 06:32:01 -0800 (PST)
+Received: from localhost.localdomain ([197.254.95.38])
+        by smtp.googlemail.com with ESMTPSA id g2sm52781284wrw.76.2020.01.21.06.31.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 06:31:47 -0800 (PST)
-Date:   Tue, 21 Jan 2020 09:31:42 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Stefan Hajnoczi <stefanha@redhat.com>
-Cc:     Stefano Garzarella <sgarzare@redhat.com>,
-        David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jorgen Hansen <jhansen@vmware.com>,
-        Jason Wang <jasowang@redhat.com>, kvm <kvm@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        linux-hyperv@vger.kernel.org, Dexuan Cui <decui@microsoft.com>
-Subject: Re: [PATCH net-next 1/3] vsock: add network namespace support
-Message-ID: <20200121093104-mutt-send-email-mst@kernel.org>
-References: <20200116172428.311437-2-sgarzare@redhat.com>
- <20200120.100610.546818167633238909.davem@davemloft.net>
- <20200120101735.uyh4o64gb4njakw5@steredhat>
- <20200120060601-mutt-send-email-mst@kernel.org>
- <CAGxU2F6VH8Eb5UH_9KjN6MONbZEo1D7EHAiocVVus6jW55BJDg@mail.gmail.com>
- <20200120110319-mutt-send-email-mst@kernel.org>
- <CAGxU2F5=DQJ56sH4BUqp_7rvaXSF9bFHp4QkpLApJQK0bmd4MA@mail.gmail.com>
- <20200120170120-mutt-send-email-mst@kernel.org>
- <CAGxU2F4uW7FNe5xC0sb3Xxr_GABSXuu1Z9n5M=Ntq==T7MaaVw@mail.gmail.com>
- <20200121135907.GA641751@stefanha-x1.localdomain>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200121135907.GA641751@stefanha-x1.localdomain>
+        Tue, 21 Jan 2020 06:32:01 -0800 (PST)
+From:   Wambui Karuga <wambui.karugax@gmail.com>
+To:     jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/6] conversion to struct drm_device logging macros. 
+Date:   Tue, 21 Jan 2020 17:31:49 +0300
+Message-Id: <20200121143155.20856-1-wambui.karugax@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 01:59:07PM +0000, Stefan Hajnoczi wrote:
-> On Tue, Jan 21, 2020 at 10:07:06AM +0100, Stefano Garzarella wrote:
-> > On Mon, Jan 20, 2020 at 11:02 PM Michael S. Tsirkin <mst@redhat.com> wrote:
-> > > On Mon, Jan 20, 2020 at 05:53:39PM +0100, Stefano Garzarella wrote:
-> > > > On Mon, Jan 20, 2020 at 5:04 PM Michael S. Tsirkin <mst@redhat.com> wrote:
-> > > > > On Mon, Jan 20, 2020 at 02:58:01PM +0100, Stefano Garzarella wrote:
-> > > > > > On Mon, Jan 20, 2020 at 1:03 PM Michael S. Tsirkin <mst@redhat.com> wrote:
-> > > > > > > On Mon, Jan 20, 2020 at 11:17:35AM +0100, Stefano Garzarella wrote:
-> > > > > > > > On Mon, Jan 20, 2020 at 10:06:10AM +0100, David Miller wrote:
-> > > > > > > > > From: Stefano Garzarella <sgarzare@redhat.com>
-> > > > > > > > > Date: Thu, 16 Jan 2020 18:24:26 +0100
-> > > > > > > > >
-> > > > > > > > > > This patch adds 'netns' module param to enable this new feature
-> > > > > > > > > > (disabled by default), because it changes vsock's behavior with
-> > > > > > > > > > network namespaces and could break existing applications.
-> > > > > > > > >
-> > > > > > > > > Sorry, no.
-> > > > > > > > >
-> > > > > > > > > I wonder if you can even design a legitimate, reasonable, use case
-> > > > > > > > > where these netns changes could break things.
-> > > > > > > >
-> > > > > > > > I forgot to mention the use case.
-> > > > > > > > I tried the RFC with Kata containers and we found that Kata shim-v1
-> > > > > > > > doesn't work (Kata shim-v2 works as is) because there are the following
-> > > > > > > > processes involved:
-> > > > > > > > - kata-runtime (runs in the init_netns) opens /dev/vhost-vsock and
-> > > > > > > >   passes it to qemu
-> > > > > > > > - kata-shim (runs in a container) wants to talk with the guest but the
-> > > > > > > >   vsock device is assigned to the init_netns and kata-shim runs in a
-> > > > > > > >   different netns, so the communication is not allowed
-> > > > > > > > But, as you said, this could be a wrong design, indeed they already
-> > > > > > > > found a fix, but I was not sure if others could have the same issue.
-> > > > > > > >
-> > > > > > > > In this case, do you think it is acceptable to make this change in
-> > > > > > > > the vsock's behavior with netns and ask the user to change the design?
-> > > > > > >
-> > > > > > > David's question is what would be a usecase that's broken
-> > > > > > > (as opposed to fixed) by enabling this by default.
-> > > > > >
-> > > > > > Yes, I got that. Thanks for clarifying.
-> > > > > > I just reported a broken example that can be fixed with a different
-> > > > > > design (due to the fact that before this series, vsock devices were
-> > > > > > accessible to all netns).
-> > > > > >
-> > > > > > >
-> > > > > > > If it does exist, you need a way for userspace to opt-in,
-> > > > > > > module parameter isn't that.
-> > > > > >
-> > > > > > Okay, but I honestly can't find a case that can't be solved.
-> > > > > > So I don't know whether to add an option (ioctl, sysfs ?) or wait for
-> > > > > > a real case to come up.
-> > > > > >
-> > > > > > I'll try to see better if there's any particular case where we need
-> > > > > > to disable netns in vsock.
-> > > > > >
-> > > > > > Thanks,
-> > > > > > Stefano
-> > > > >
-> > > > > Me neither. so what did you have in mind when you wrote:
-> > > > > "could break existing applications"?
-> > > >
-> > > > I had in mind:
-> > > > 1. the Kata case. It is fixable (the fix is not merged on kata), but
-> > > >    older versions will not work with newer Linux.
-> > >
-> > > meaning they will keep not working, right?
-> > 
-> > Right, I mean without this series they work, with this series they work
-> > only if the netns support is disabled or with a patch proposed but not
-> > merged in kata.
-> > 
-> > >
-> > > > 2. a single process running on init_netns that wants to communicate with
-> > > >    VMs handled by VMMs running in different netns, but this case can be
-> > > >    solved opening the /dev/vhost-vsock in the same netns of the process
-> > > >    that wants to communicate with the VMs (init_netns in this case), and
-> > > >    passig it to the VMM.
-> > >
-> > > again right now they just don't work, right?
-> > 
-> > Right, as above.
-> > 
-> > What do you recommend I do?
-> 
-> Existing userspace applications must continue to work.
-> 
-> Guests are fine because G2H transports are always in the initial network
-> namespace.
-> 
-> On the host side we have a real case where Kata Containers and other
-> vsock users break.  Existing applications run in other network
-> namespaces and assume they can communicate over vsock (it's only
-> available in the initial network namespace by default).
-> 
-> It seems we cannot isolate new network namespaces from the initial
-> network namespace by default because it will break existing
-> applications.  That's a bummer.
-> 
-> There is one solution that maintains compatibility:
-> 
-> Introduce a per-namespace vsock isolation flag that can only transition
-> from false to true.  Once it becomes true it cannot be reset to false
-> anymore (for security).
-> 
-> When vsock isolation is false the initial network namespace is used for
-> <CID, port> addressing.
-> 
-> When vsock isolation is true the current namespace is used for <CID,
-> port> addressing.
-> 
-> I guess the vsock isolation flag would be set via a rtnetlink message,
-> but I haven't checked.
-> 
-> The upshot is: existing software doesn't benefit from namespaces for
-> vsock isolation but it continues to work!  New software makes 1 special
-> call after creating the namespace to opt in to vsock isolation.
-> 
-> This approach is secure because whoever sets up namespaces can
-> transition the flag from false to true and know that it can never be
-> reset to false anymore.
-> 
-> Does this make sense to everyone?
-> 
-> Stefan
+This series continues the ongoing conversion to the new struct
+drm_device based logging macros for debug in i915. This series was done
+using the coccinelle script:
+@rule1@
+identifier fn, T;
+@@
 
-Anything wrong with a separate device? whoever opens it decides
-whether netns will work ...
+fn(...,struct drm_i915_private *T,...) {
+<+...
+(
+-DRM_INFO(
++drm_info(&T->drm,
+...)
+|
+-DRM_ERROR(
++drm_err(&T->drm,
+...)
+|
+-DRM_WARN(
++drm_warn(&T->drm,
+...)
+|
+-DRM_DEBUG(
++drm_dbg(&T->drm,
+...)
+|
+-DRM_DEBUG_DRIVER(
++drm_dbg(&T->drm,
+...)
+|
+-DRM_DEBUG_KMS(
++drm_dbg_kms(&T->drm,
+...)
+|
+-DRM_DEBUG_ATOMIC(
++drm_dbg_atomic(&T->drm,
+...)
+)
+...+>
+}
+
+@rule2@
+identifier fn, T;
+@@
+
+fn(...) {
+...
+struct drm_i915_private *T = ...;
+<+...
+(
+-DRM_INFO(
++drm_info(&T->drm,
+...)
+|
+-DRM_ERROR(
++drm_err(&T->drm,
+...)
+|
+-DRM_WARN(
++drm_warn(&T->drm,
+...)
+|
+-DRM_DEBUG(
++drm_dbg(&T->drm,
+...)
+|
+-DRM_DEBUG_KMS(
++drm_dbg_kms(&T->drm,
+...)
+|
+-DRM_DEBUG_DRIVER(
++drm_dbg(&T->drm,
+...)
+|
+-DRM_DEBUG_ATOMIC(
++drm_dbg_atomic(&T->drm,
+...)
+)
+...+>
+}
+
+Wambui Karuga (6):
+  drm/i915/dsi: conversion to struct drm_device log macros
+  drm/i915/ddi: convert to struct drm_device log macros.
+  drm/i915/power: convert to struct drm_device macros in
+    display/intel_display_power.c
+  drm/i915/dp: conversion to struct drm_device logging macros.
+  drm/i915/opregion: conversion to struct drm_device logging macros.
+  drm/i915/hdcp: conversion to struct drm_device based logging macros
+
+ drivers/gpu/drm/i915/display/icl_dsi.c        |  82 ++--
+ drivers/gpu/drm/i915/display/intel_ddi.c      |  98 +++--
+ .../drm/i915/display/intel_display_power.c    | 177 +++++----
+ drivers/gpu/drm/i915/display/intel_dp.c       | 349 ++++++++++--------
+ drivers/gpu/drm/i915/display/intel_hdcp.c     | 138 ++++---
+ drivers/gpu/drm/i915/display/intel_opregion.c | 134 ++++---
+ 6 files changed, 572 insertions(+), 406 deletions(-)
 
 -- 
-MST
+2.17.1
 
