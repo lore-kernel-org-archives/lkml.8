@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C3DC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:41:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E46C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17A7A2253D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:41:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 499DC2253D
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:41:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b9fivagN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PsxwomDZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729246AbgAUPlI (ORCPT
+        id S1729399AbgAUPl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 10:41:08 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:50910 "EHLO
+        Tue, 21 Jan 2020 10:41:27 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:52274 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729130AbgAUPlH (ORCPT
+        by vger.kernel.org with ESMTP id S1729134AbgAUPlI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 10:41:07 -0500
+        Tue, 21 Jan 2020 10:41:08 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579621266;
+        s=mimecast20190719; t=1579621267;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=IcawgmeP/9SOelURBigSUicEKZ7h4SFbJprPzNN3llY=;
-        b=b9fivagNU436Yq8qN+4PQoYdwTWHUN4A4xDQQ45Ea6QA8nldbm3CauFmak47HWGXyUXn73
-        EeZP2b3oMa+v5+p8xaVfN9xL2G/M3x/HRy2Rf/S6GKH4TYa0ccUUs7uuWf9ZaqcsU/DMYJ
-        xlxRr3ofPkaS2ZnFjgLTtTZohyzust4=
+        bh=O4fMQuuLJ4Zxk9yp8TR1ZLzCVyiowFu0EbTITCxjsys=;
+        b=PsxwomDZou2ENibllcGCpR5G4M0Hxp6+HwrPZOaFXotFebRJtOgn9bOnz89EZVN7ifdXTi
+        XyubEtN8R4ZuMQ2TQ3SH4yF1D9o6qm6gzNS1K47eWYanSE4J0bqoyrHCFF++EJqZ8hwSs3
+        yVe9P4fjvnIWtlELnhSzfPypgxTMrm8=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-231-PoLucfwkPBuQOhLUs96oVg-1; Tue, 21 Jan 2020 10:41:01 -0500
-X-MC-Unique: PoLucfwkPBuQOhLUs96oVg-1
+ us-mta-60-ENd9thZNMwSnSLkGe27x9Q-1; Tue, 21 Jan 2020 10:41:01 -0500
+X-MC-Unique: ENd9thZNMwSnSLkGe27x9Q-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D82188EB474;
-        Tue, 21 Jan 2020 15:40:58 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B294A18B9FCD;
+        Tue, 21 Jan 2020 15:40:59 +0000 (UTC)
 Received: from llong.com (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2E3A260FC1;
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0768460E1C;
         Tue, 21 Jan 2020 15:40:58 +0000 (UTC)
 From:   Waiman Long <longman@redhat.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
@@ -49,9 +49,9 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         Will Deacon <will.deacon@arm.com>
 Cc:     linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
         Waiman Long <longman@redhat.com>
-Subject: [PATCH v4 2/7] locking/lockdep: Display irq_context names in /proc/lockdep_chains
-Date:   Tue, 21 Jan 2020 10:40:04 -0500
-Message-Id: <20200121154009.11993-3-longman@redhat.com>
+Subject: [PATCH v4 3/7] locking/lockdep: Track number of zapped classes
+Date:   Tue, 21 Jan 2020 10:40:05 -0500
+Message-Id: <20200121154009.11993-4-longman@redhat.com>
 In-Reply-To: <20200121154009.11993-1-longman@redhat.com>
 References: <20200121154009.11993-1-longman@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
@@ -60,43 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, the irq_context field of a lock chains displayed in
-/proc/lockdep_chains is just a number. It is likely that many people
-may not know what a non-zero number means. To make the information more
-useful, print the actual irq names ("softirq" and "hardirq") instead.
+The whole point of the lockdep dynamic key patch is to allow unused
+locks to be removed from the lockdep data buffers so that existing
+buffer space can be reused. However, there is no way to find out how
+many unused locks are zapped and so we don't know if the zapping process
+is working properly.
+
+Add a new nr_zapped_classes counter to track that and show it in
+/proc/lockdep_stats.
 
 Signed-off-by: Waiman Long <longman@redhat.com>
 ---
- kernel/locking/lockdep_proc.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ kernel/locking/lockdep.c           | 2 ++
+ kernel/locking/lockdep_internals.h | 1 +
+ kernel/locking/lockdep_proc.c      | 6 ++++++
+ 3 files changed, 9 insertions(+)
 
-diff --git a/kernel/locking/lockdep_proc.c b/kernel/locking/lockdep_proc.c
-index dadb7b7fba37..5e64a6ec09c2 100644
---- a/kernel/locking/lockdep_proc.c
-+++ b/kernel/locking/lockdep_proc.c
-@@ -128,6 +128,13 @@ static int lc_show(struct seq_file *m, void *v)
- 	struct lock_chain *chain = v;
- 	struct lock_class *class;
- 	int i;
-+	static const char * const irq_strs[] = {
-+		[0]			     = "0",
-+		[LOCK_CHAIN_HARDIRQ_CONTEXT] = "hardirq",
-+		[LOCK_CHAIN_SOFTIRQ_CONTEXT] = "softirq",
-+		[LOCK_CHAIN_SOFTIRQ_CONTEXT|
-+		 LOCK_CHAIN_HARDIRQ_CONTEXT] = "hardirq|softirq",
-+	};
- 
- 	if (v == SEQ_START_TOKEN) {
- 		if (nr_chain_hlocks > MAX_LOCKDEP_CHAIN_HLOCKS)
-@@ -136,7 +143,7 @@ static int lc_show(struct seq_file *m, void *v)
- 		return 0;
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 056f1ee1db53..48e8510529a7 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -147,6 +147,7 @@ static DECLARE_BITMAP(list_entries_in_use, MAX_LOCKDEP_ENTRIES);
+ #define KEYHASH_SIZE		(1UL << KEYHASH_BITS)
+ static struct hlist_head lock_keys_hash[KEYHASH_SIZE];
+ unsigned long nr_lock_classes;
++unsigned long nr_zapped_classes;
+ #ifndef CONFIG_DEBUG_LOCKDEP
+ static
+ #endif
+@@ -4881,6 +4882,7 @@ static void zap_class(struct pending_free *pf, struct lock_class *class)
  	}
  
--	seq_printf(m, "irq_context: %d\n", chain->irq_context);
-+	seq_printf(m, "irq_context: %s\n", irq_strs[chain->irq_context]);
+ 	remove_class_from_lock_chains(pf, class);
++	nr_zapped_classes++;
+ }
  
- 	for (i = 0; i < chain->depth; i++) {
- 		class = lock_chain_get_class(chain, i);
+ static void reinit_class(struct lock_class *class)
+diff --git a/kernel/locking/lockdep_internals.h b/kernel/locking/lockdep_internals.h
+index a525368b8cf6..76db80446a32 100644
+--- a/kernel/locking/lockdep_internals.h
++++ b/kernel/locking/lockdep_internals.h
+@@ -130,6 +130,7 @@ extern const char *__get_key_name(const struct lockdep_subclass_key *key,
+ struct lock_class *lock_chain_get_class(struct lock_chain *chain, int i);
+ 
+ extern unsigned long nr_lock_classes;
++extern unsigned long nr_zapped_classes;
+ extern unsigned long nr_list_entries;
+ long lockdep_next_lockchain(long i);
+ unsigned long lock_chain_count(void);
+diff --git a/kernel/locking/lockdep_proc.c b/kernel/locking/lockdep_proc.c
+index 5e64a6ec09c2..bd853848832b 100644
+--- a/kernel/locking/lockdep_proc.c
++++ b/kernel/locking/lockdep_proc.c
+@@ -343,6 +343,12 @@ static int lockdep_stats_show(struct seq_file *m, void *v)
+ 	seq_printf(m, " debug_locks:                   %11u\n",
+ 			debug_locks);
+ 
++	/*
++	 * Zappped classes and lockdep data buffers reuse statistics.
++	 */
++	seq_puts(m, "\n");
++	seq_printf(m, " zapped classes:                %11lu\n",
++			nr_zapped_classes);
+ 	return 0;
+ }
+ 
 -- 
 2.18.1
 
