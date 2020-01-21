@@ -2,101 +2,237 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D7BC33CB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 11:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EE3FC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 11:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A8BC22522
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 11:26:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 486A024653
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 11:27:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iHKF+M55"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729361AbgAUL0h (ORCPT
+        id S1729399AbgAUL1Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 06:26:37 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:42492 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728741AbgAUL00 (ORCPT
+        Tue, 21 Jan 2020 06:27:24 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:54310 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728741AbgAUL1X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 06:26:26 -0500
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00LBPNQD028287;
-        Tue, 21 Jan 2020 06:26:10 -0500
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2xkvrbfc1t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jan 2020 06:26:09 -0500
-Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 00LBQ8in010617
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Tue, 21 Jan 2020 06:26:08 -0500
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Tue, 21 Jan
- 2020 06:26:07 -0500
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Tue, 21 Jan 2020 06:26:07 -0500
-Received: from saturn.ad.analog.com ([10.48.65.124])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 00LBQ1e9009439;
-        Tue, 21 Jan 2020 06:26:05 -0500
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <ekigwana@gmail.com>, <jic23@kernel.org>, <lars@metafoo.de>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH 3/3] MAINTAINERS: add entry for ADF4360 PLL driver
-Date:   Tue, 21 Jan 2020 13:25:56 +0200
-Message-ID: <20200121112556.9867-3-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200121112556.9867-1-alexandru.ardelean@analog.com>
-References: <20200121112556.9867-1-alexandru.ardelean@analog.com>
+        Tue, 21 Jan 2020 06:27:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579606042;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4wLiGpMD42LOuU4kjzIpcVPiYqHbfTqMgURbNbtZMwA=;
+        b=iHKF+M55zZdIE3IK9lByl1uM2VYEsEQWETRieAU6Ga2etWtYqVN+FYFYubO34B7PSGgivb
+        EA/vOV+W1tnXUt0BenQRikZo2XFAfEA3vOSOSy7cHojXgKEx4MsvaFc0DoIGARsAZjsaEM
+        6gSxcOUJ8BWx98tw4O4I3zLkWc2dkW4=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-422-swv82KA8Mma6n3l8sW8OZg-1; Tue, 21 Jan 2020 06:27:21 -0500
+X-MC-Unique: swv82KA8Mma6n3l8sW8OZg-1
+Received: by mail-wr1-f72.google.com with SMTP id j4so1177750wrs.13
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 03:27:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4wLiGpMD42LOuU4kjzIpcVPiYqHbfTqMgURbNbtZMwA=;
+        b=irQf/AN+IkObLiiSZRPWsa66d117qSIfzXymNwAUanhbpB+dVMqXVYWRMhSErvEEML
+         Urjms2zYUHo1xGfzdjbdNLRprTKPtGtlSVFw/dFkrt7W0Tv8b2/hgT5DZRkfDbdWbezo
+         yyy1wntwKfE5FM/kTU7y8h6D0v3jcY2jD+LvivYlGENJQnGF5GvbV1mYHdjExPhf7J3C
+         Pxway0MZ2BdUkBy5CfNeKOWaM9W8qQRkderqezNVwoUI4XWb+p+1baJjw4o8hLhttBRp
+         wh1y9ERDss8arqlfKfRu7PbzSJHq2QZ7tql/ZTOC2cxf1adN+5Ff3vY9865sA4knmt/+
+         ozTg==
+X-Gm-Message-State: APjAAAU0ZMZWt38EMmyaScq9PiA6PAguFkUekixE3+ehyyj30jB0H71/
+        8KuCKj69bnlkqYTDZvPf46cYJtU6B2Ra54BvupjuY+JvmZHZb+W/7sAi88Cu03TPKia3lPlgr8J
+        GdIAj9VOnXG5YaZbGZOck02xh
+X-Received: by 2002:a5d:620b:: with SMTP id y11mr4699931wru.230.1579606039769;
+        Tue, 21 Jan 2020 03:27:19 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwzYu8JVEWTNn9Ir2TT0p2JoqpSNxpMZYoGI1bRoT37e/sljDk8LeKuy40yzk+swjn3q2vw3A==
+X-Received: by 2002:a5d:620b:: with SMTP id y11mr4699903wru.230.1579606039565;
+        Tue, 21 Jan 2020 03:27:19 -0800 (PST)
+Received: from [192.168.1.81] (host81-140-166-164.range81-140.btcentralplus.com. [81.140.166.164])
+        by smtp.gmail.com with ESMTPSA id p15sm3329320wma.40.2020.01.21.03.27.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jan 2020 03:27:19 -0800 (PST)
+Subject: Re: [POC 03/23] livepatch: Better checks of struct klp_object
+ definition
+To:     Petr Mladek <pmladek@suse.com>, Jiri Kosina <jikos@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>
+Cc:     Joe Lawrence <joe.lawrence@redhat.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        Nicolai Stange <nstange@suse.de>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200117150323.21801-1-pmladek@suse.com>
+ <20200117150323.21801-4-pmladek@suse.com>
+From:   Julien Thierry <jthierry@redhat.com>
+Message-ID: <a5327513-a208-a3c1-cbff-5e978a21b230@redhat.com>
+Date:   Tue, 21 Jan 2020 11:27:17 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-21_03:2020-01-21,2020-01-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- lowpriorityscore=0 suspectscore=0 mlxscore=0 malwarescore=0
- impostorscore=0 adultscore=0 phishscore=0 bulkscore=0 clxscore=1015
- priorityscore=1501 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1910280000 definitions=main-2001210097
+In-Reply-To: <20200117150323.21801-4-pmladek@suse.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Edward Kigwana <ekigwana@gmail.com>
+Hi Petr,
 
-Add entry in the MAINTAINERS file for the ADF4360 PLL driver.
+On 1/17/20 3:03 PM, Petr Mladek wrote:
+> The number of user defined fields increased in struct klp_object after
+> spliting per-object livepatches. It was sometimes unclear why exactly
+> the module could not get loded when returned -EINVAL.
+> 
+> Add more checks for the split modules and write useful error
+> messages on particular errors.
+> 
+> Signed-off-by: Petr Mladek <pmladek@suse.com>
+> ---
+>   kernel/livepatch/core.c | 91 ++++++++++++++++++++++++++++++++++++++++++++-----
+>   1 file changed, 82 insertions(+), 9 deletions(-)
+> 
+> diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
+> index bb62c5407b75..ec7ffc7db3a7 100644
+> --- a/kernel/livepatch/core.c
+> +++ b/kernel/livepatch/core.c
+> @@ -756,9 +756,6 @@ static int klp_init_object(struct klp_patch *patch, struct klp_object *obj)
+>   	int ret;
+>   	const char *name;
+>   
+> -	if (klp_is_module(obj) && strlen(obj->name) >= MODULE_NAME_LEN)
+> -		return -EINVAL;
+> -
+>   	obj->patched = false;
+>   
+>   	name = obj->name ? obj->name : "vmlinux";
+> @@ -851,8 +848,86 @@ static int klp_init_patch(struct klp_patch *patch)
+>   	return 0;
+>   }
+>   
+> +static int klp_check_module_name(struct klp_object *obj, bool is_module)
+> +{
+> +	char mod_name[MODULE_NAME_LEN];
+> +	const char *expected_name;
+> +
+> +	if (is_module) {
+> +		snprintf(mod_name, sizeof(mod_name), "%s__%s",
+> +			 obj->patch_name, obj->name);
+> +		expected_name = mod_name;
+> +	} else {
+> +		expected_name = obj->patch_name;
+> +	}
+> +
+> +	if (strcmp(expected_name, obj->mod->name)) {
 
-Signed-off-by: Edward Kigwana <ekigwana@gmail.com>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- MAINTAINERS | 8 ++++++++
- 1 file changed, 8 insertions(+)
+I'm not sure I understand the point of enforcing this.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e699fe378e71..d7a404084ad9 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -462,6 +462,14 @@ ADDRESS SPACE LAYOUT RANDOMIZATION (ASLR)
- M:	Jiri Kosina <jikos@kernel.org>
- S:	Maintained
- 
-+ADF4360 PLL DRIVER
-+M:	Edward Kigwana <ekigwana@gmail.com>
-+W:	http://ez.analog.com/community/linux-device-drivers
-+L:	linux-iio@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/iio/frequency/adi,adf4360.yaml
-+F:	drivers/iio/frequency/adf4360.c
-+
- ADF7242 IEEE 802.15.4 RADIO DRIVER
- M:	Michael Hennerich <michael.hennerich@analog.com>
- W:	https://wiki.analog.com/ADF7242
+> +		pr_err("The module name %s does not match with obj->patch_name and obj->name. The expected name is: %s\n",
+> +		       obj->mod->name, expected_name);
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int klp_check_object(struct klp_object *obj, bool is_module)
+> +{
+> +
+> +	if (!obj->mod)
+> +		return -EINVAL;
+> +
+> +	if (!is_livepatch_module(obj->mod)) {
+> +		pr_err("module %s is not marked as a livepatch module\n",
+> +		       obj->mod->name);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (!obj->patch_name) {
+> +		pr_err("module %s does not have set obj->patch_name\n",
+> +		       obj->mod->name);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (strlen(obj->patch_name) >= MODULE_NAME_LEN) {
+> +		pr_err("module %s has too long obj->patch_name\n",
+> +		       obj->mod->name);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (is_module) {
+> +		if (!obj->name) {
+> +			pr_err("module %s does not have set obj->name\n",
+> +			       obj->mod->name);
+> +			return -EINVAL;
+> +		}
+> +		if (strlen(obj->name) >= MODULE_NAME_LEN) {
+> +			pr_err("module %s has too long obj->name\n",
+> +			       obj->mod->name);
+> +			return -EINVAL;
+> +		}
+> +	} else if (obj->name) {
+> +		pr_err("module %s for vmlinux must not have set obj->name\n",
+> +		       obj->mod->name);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (!obj->funcs) {
+> +		pr_err("module %s does not have set obj->funcs\n",
+> +		       obj->mod->name);
+> +		return -EINVAL;
+> +	}
+> +
+> +	return klp_check_module_name(obj, is_module);
+> +}
+> +
+>   int klp_add_object(struct klp_object *obj)
+>   {
+> +	int ret;
+> +
+> +	ret = klp_check_object(obj, true);
+> +	if (ret)
+> +		return ret;
+> +
+>   	return 0;
+>   }
+>   EXPORT_SYMBOL_GPL(klp_add_object);
+> @@ -958,14 +1033,12 @@ int klp_enable_patch(struct klp_patch *patch)
+>   {
+>   	int ret;
+>   
+> -	if (!patch || !patch->obj || !patch->obj->mod)
+> +	if (!patch || !patch->obj)
+>   		return -EINVAL;
+>   
+> -	if (!is_livepatch_module(patch->obj->mod)) {
+> -		pr_err("module %s is not marked as a livepatch module\n",
+> -		       patch->obj->patch_name);
+> -		return -EINVAL;
+> -	}
+> +	ret = klp_check_object(patch->obj, false);
+> +	if (ret)
+> +		return ret;
+>   
+>   	if (!klp_initialized())
+>   		return -ENODEV;
+> 
+
+Otherwise this looks good to me.
+
+Cheers,
+
 -- 
-2.20.1
+Julien Thierry
 
