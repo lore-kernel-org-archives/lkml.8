@@ -2,76 +2,121 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F320C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:29:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D84D7C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:32:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 355A7217F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:29:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="oQLFfvbg"
+	by mail.kernel.org (Postfix) with ESMTP id A94A724125
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:32:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579620737;
+	bh=XH2P7QzLSGLLTUA6GkGmA2dArtRNJfmjRQRRA7h56y8=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=crk7W4P+R1BcV0qw2z7DHJMPiXf4lsGEHsn5Obr/LsTg12E5OihR+kQ2pV+OR3AQm
+	 a59xYRSJeAdCNoPkdHJWM9WX5U1vDHTBStjL7yci3P0ZdQKnLWrgJVcjXI8QSXu/cC
+	 5SH6fE36YaqUpZBW5dR9AdFKZmnKKlsHexJjs8Q8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729138AbgAUP3C (ORCPT
+        id S1729140AbgAUPcQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 10:29:02 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:36308 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727508AbgAUP3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 10:29:02 -0500
-Received: from zn.tnic (p200300EC2F0B04001968D368394CA6AD.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:400:1968:d368:394c:a6ad])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D8E341EC045C;
-        Tue, 21 Jan 2020 16:29:00 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1579620541;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=6y5TIWmgQrQ+KXfFCFI2F/8j7NBQMvB/7z0s7cAgzgI=;
-        b=oQLFfvbgKCydpAmIBQg1afn73trDMTjKEgfBj3YztJm0HfveIFt/SPB/zv4Lku7Lg8wFWJ
-        qgCvIM/dFugZ1O8/MnUlmVADy74ZMiZo0S78shLxg4tRdRcCg5/jqe0U7NrrIMXll7FSaK
-        kqiJ37Kb43b+UOH5yP1m9Wgv0AnwAKg=
-Date:   Tue, 21 Jan 2020 16:28:53 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Marco Elver <elver@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -next] x86/mm/pat: silence a data race in cpa_4k_install
-Message-ID: <20200121152853.GI7808@zn.tnic>
-References: <20200121151503.2934-1-cai@lca.pw>
- <CANpmjNPR+mbadR0DDKGUhTkaXJi=vsHmhvq3+Rz0Hrx=E9V_Qg@mail.gmail.com>
+        Tue, 21 Jan 2020 10:32:16 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:40530 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727508AbgAUPcQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 10:32:16 -0500
+Received: by mail-il1-f195.google.com with SMTP id c4so2674347ilo.7
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 07:32:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=QuY0WDhZX4kxz2cZdcfoWX6pS1PqJixvjT3hklrb4bg=;
+        b=L+6DmM/kq/25mWwwyfuJL5puz+XC8sQxXxmq4SEsjcjIrwPeY2MlaTK+KdFs0tUjpx
+         e9TsO6QoiGoo8N8SYntD/DxXCbi1YZvH7iN2RdjPK7Wc4cGsN53XBYakvS9cUL9SAqI/
+         RwQuKwy2Lk20eL6NfyGHqSaKkBLw3YLyu6U7w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=QuY0WDhZX4kxz2cZdcfoWX6pS1PqJixvjT3hklrb4bg=;
+        b=n9PtVdgy8wLj/wT0eRkwgD1RkxjUVzcCewQkQ5hCc6HHVqF1zfGmanuZHkgSLxT2t2
+         VzHfwMBpzqS8q93MlZplOsbJdHJ0R5gSxW9Fy16Y+DJixGUMToPcevg3limMe11kjbcK
+         kuNLc/1Qqblsn8jhlzaG+hju+ek22VrRriZk619paUJglb384fTxjGm6KZa3tJhj/pPH
+         wt8YEEvDPqV0KFIVKmnOrM4+HGFJN54elqhnxyD5kEkPOfnkfs9YaJCzhNFrhZlSKIcv
+         so1g4Xpuycjztm3cq1eZqqls6Xjm+36JMxfmO36q/LV1D8nwJf5iZAEyZzIeQCq/50eO
+         ORAQ==
+X-Gm-Message-State: APjAAAXRyhGoB7u/hDMhSKM+vwpBD5yBBaD03NDH5pwcFDdKxFue9ge7
+        5VhI6OFQz5ebRMtp5RgzLBTFfQ==
+X-Google-Smtp-Source: APXvYqz1a7VeH+whoGCCHkXj0ItYcUpJAraf63WTQVy3Nt9rZk1Rr6eVt72xptU5ReCjjNvMp5HCSA==
+X-Received: by 2002:a05:6e02:c83:: with SMTP id b3mr4035768ile.29.1579620735950;
+        Tue, 21 Jan 2020 07:32:15 -0800 (PST)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id r14sm13344854ilg.59.2020.01.21.07.32.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jan 2020 07:32:15 -0800 (PST)
+Subject: Re: [PATCH] iommu: amd: Fix IOMMU perf counter clobbering during init
+To:     Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        Joerg Roedel <joro@8bytes.org>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <20200114151220.29578-1-skhan@linuxfoundation.org>
+ <20200117100829.GE15760@8bytes.org>
+ <42c0a806-9947-1401-9754-8aa88bd7062f@amd.com>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <24a46b0f-33d7-5f94-661a-80f035213892@linuxfoundation.org>
+Date:   Tue, 21 Jan 2020 08:32:14 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CANpmjNPR+mbadR0DDKGUhTkaXJi=vsHmhvq3+Rz0Hrx=E9V_Qg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <42c0a806-9947-1401-9754-8aa88bd7062f@amd.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 04:19:22PM +0100, Marco Elver wrote:
-> Could you remove the verbatim copy of my email? Maybe something like:
+On 1/20/20 7:10 PM, Suravee Suthikulpanit wrote:
+> On 1/17/2020 5:08 PM, Joerg Roedel wrote:
+>> Adding Suravee, who wrote the IOMMU Perf Counter code.
+>>
+>> On Tue, Jan 14, 2020 at 08:12:20AM -0700, Shuah Khan wrote:
+>>> init_iommu_perf_ctr() clobbers the register when it checks write access
+>>> to IOMMU perf counters and fails to restore when they are writable.
+>>>
+>>> Add save and restore to fix it.
+>>>
+>>> Signed-off-by: Shuah Khan<skhan@linuxfoundation.org>
+>>> ---
+>>>   drivers/iommu/amd_iommu_init.c | 22 ++++++++++++++++------
+>>>   1 file changed, 16 insertions(+), 6 deletions(-)
+>> Suravee, can you please review this patch?
+>>
 > 
-> "Increments to cpa_4k_install may happen concurrently, as detected by KCSAN:
+> This looks ok. Does this fix certain issues? Or is this just for sanity.
+
+I didn't notice any problems. Counters aren't writable on my system.
+However, it certainly looks like a bog since registers aren't restored
+like in other places in this file where such checks are done on other
+registers.
+
+I see 2 banks and 4 counters on my system. Is it sufficient to check
+the first bank and first counter? In other words, if the first one
+isn't writable, are all counters non-writable?
+
+Should we read the config first and then, try to see if any of the
+counters are writable? I have a patch that does that, I can send it
+out for review.
+
 > 
-> <....... the stack traces ......>
+> Reviewed-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Thanks for the review.
 
-... and drop the stack traces and fix your subject to say what you're
-actually "fixing".
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+thanks,
+-- Shuah
