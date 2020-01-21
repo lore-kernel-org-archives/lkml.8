@@ -2,73 +2,124 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C801C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61BA0C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A23722522
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:30:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38C5722522
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:32:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rtcJ+LQl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729074AbgAUJaC (ORCPT
+        id S1729080AbgAUJcF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 04:30:02 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10121 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727220AbgAUJaB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 04:30:01 -0500
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 77E63953C003BFDE2BD5;
-        Tue, 21 Jan 2020 17:29:59 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 21 Jan 2020 17:29:48 +0800
-From:   Chen Zhou <chenzhou10@huawei.com>
-To:     <davem@davemloft.net>, <mhabets@solarflare.com>, <kuba@kernel.org>,
-        <sergei.shtylyov@cogentembedded.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <chenzhou10@huawei.com>
-Subject: [PATCH -next v2] drivers: net: declance: fix comparing pointer to 0
-Date:   Tue, 21 Jan 2020 17:24:55 +0800
-Message-ID: <20200121092455.82983-1-chenzhou10@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 21 Jan 2020 04:32:05 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37762 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728712AbgAUJcE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 04:32:04 -0500
+Received: by mail-wm1-f68.google.com with SMTP id f129so2188361wmf.2
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 01:32:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=imtrsyE4PqkfOuBH2bEU5/ycShpe5DgMQpGEtomyMa0=;
+        b=rtcJ+LQlDZ/dhGfo9Iu5OJd4+HKMy2yzD9iSGdalzOoIEncUjzsz5/aNNTd5RjsSc8
+         zO8R7IWeVumQmIJtNgo4RVZt7gUhd5yZRRBQqVDryoKs8BU04+PpGfSZJNvnjsH/62yj
+         utNq7GGLPGyTxTb1yb3mltp6nzJAjgAWU6qQKOTamwB12SgQZpUurDCVdShHDY4zSwRt
+         27hnYDJCXhMMgdvO1mW+7T9xCr4uphzvbjrusTEF0ylfATpdKENfYomQu6F+lwzn6RUS
+         UpDbh4WVRvpRmqp5fb/B2A+GM9Tidwg6k1/Hgf4wLH/tybPmLM/Hd8ve+be8A6ZldBH9
+         pQLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=imtrsyE4PqkfOuBH2bEU5/ycShpe5DgMQpGEtomyMa0=;
+        b=QsLgEeDdpWkuurr66DARhyAY3cxGvch4nS5qL5iTru/V9NgtSCAY9bGElVbd59Vf4A
+         1HD65Xc88ybtpbXAfV7PzbFSJNWReSJu0Npw1aW9L7NrX0YAyNd2JsT7qTmQel5OWm0Q
+         cOjMOtahoC+Y3/KFDrSZ57JrXBvKTwwOMewuhixbGHXmfEKJEgkDF41AACTEhzYsqPp3
+         kf8ehxw9axEjwU2ipFD9AVaxDyzISR/SwdT6/gPA/0z2xLuGH1UJFNnMm2F0417BjpEr
+         xyTUSINd67sADRdf27zhSgdREYC/vruZlaXvHM4qGOjBzJxsrDiav2swusawgAY0O+1Q
+         15Xw==
+X-Gm-Message-State: APjAAAWhOSyRW1+dIiknFfSxf0UOymjZhuLKL8x7BGAS9YCQ2Og8dA8S
+        1uFkv3pBS0QqTXkz/kmfa/V9ng==
+X-Google-Smtp-Source: APXvYqxXLTNXCnqXFHWAqOhNn4BqFUdupPBlV6/fm+9Ho9HF0rYCv/gYw3ZqBCY91j9ikIx2kYRjiw==
+X-Received: by 2002:a1c:a584:: with SMTP id o126mr3199652wme.163.1579599122625;
+        Tue, 21 Jan 2020 01:32:02 -0800 (PST)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id g7sm51210925wrq.21.2020.01.21.01.32.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2020 01:32:01 -0800 (PST)
+Date:   Tue, 21 Jan 2020 09:31:58 +0000
+From:   Quentin Perret <qperret@google.com>
+To:     Lukasz Luba <lukasz.luba@arm.com>
+Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-imx@nxp.com, Morten.Rasmussen@arm.com, Chris.Redpath@arm.com,
+        ionela.voinescu@arm.com, javi.merino@arm.com,
+        cw00.choi@samsung.com, b.zolnierkie@samsung.com, rjw@rjwysocki.net,
+        sudeep.holla@arm.com, viresh.kumar@linaro.org, nm@ti.com,
+        sboyd@kernel.org, rui.zhang@intel.com, amit.kucheria@verdurent.com,
+        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
+        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh@kernel.org,
+        matthias.bgg@gmail.com, steven.price@arm.com,
+        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
+        airlied@linux.ie, daniel@ffwll.ch, kernel-team@android.com
+Subject: Re: [PATCH 1/4] PM / EM: and devices to Energy Model
+Message-ID: <20200121093158.GA154455@google.com>
+References: <20200116152032.11301-1-lukasz.luba@arm.com>
+ <20200116152032.11301-2-lukasz.luba@arm.com>
+ <20200117105437.GA211774@google.com>
+ <40587d98-0e8d-cbac-dbf5-d26501d47a8c@arm.com>
+ <20200120150918.GA164543@google.com>
+ <8332c4ac-2a7d-1e2d-76e9-7c979a666257@arm.com>
+ <b02da0ed-9e0b-36db-9813-daa334cbf2ba@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b02da0ed-9e0b-36db-9813-daa334cbf2ba@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes coccicheck warning:
+On Monday 20 Jan 2020 at 18:38:41 (+0000), Lukasz Luba wrote:
+> I think we could avoid this additional argument 'cpumask'. I have
+> checked the cpufreq_cpu_get function, which should do be good for this:
+> 
+> ---------->8-------------------------
+> static int _get_sharing_cpus(struct device *cpu_dev, struct cpumask *span)
+> {
+>         struct cpufreq_policy *policy;
+> 
+>         policy = cpufreq_cpu_get(cpu_dev->id);
+>         if (policy) {
+>                 cpumask_copy(span, policy->cpus);
 
-./drivers/net/ethernet/amd/declance.c:611:14-15:
-	WARNING comparing pointer to 0
+That should be with 'policy->related_cpus', but yes if the policy
+cpumasks have been populated this approach is OK I think.
 
-Replace "skb == 0" with "!skb".
+>                 cpufreq_cpu_put(policy);
+>                 return 0;
+>         } else {
+>                 return -EINVAL;
+>         }
+> }
+> --------------------------8<-------------------------------
 
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
----
- drivers/net/ethernet/amd/declance.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/amd/declance.c b/drivers/net/ethernet/amd/declance.c
-index 6592a2d..7282ce5 100644
---- a/drivers/net/ethernet/amd/declance.c
-+++ b/drivers/net/ethernet/amd/declance.c
-@@ -608,7 +608,7 @@ static int lance_rx(struct net_device *dev)
- 			len = (*rds_ptr(rd, mblength, lp->type) & 0xfff) - 4;
- 			skb = netdev_alloc_skb(dev, len + 2);
- 
--			if (skb == 0) {
-+			if (!skb) {
- 				dev->stats.rx_dropped++;
- 				*rds_ptr(rd, mblength, lp->type) = 0;
- 				*rds_ptr(rd, rmd1, lp->type) =
--- 
-2.7.4
-
+Thanks,
+Quentin
