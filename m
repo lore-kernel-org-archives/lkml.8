@@ -2,63 +2,107 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71CA2C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 10:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB00C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 10:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FC8E24653
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 10:42:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAF1E22522
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 10:42:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729612AbgAUKmD (ORCPT
+        id S1729654AbgAUKml (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 05:42:03 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:36160 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728831AbgAUKmD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 05:42:03 -0500
-Received: from localhost (82-95-191-104.ip.xs4all.nl [82.95.191.104])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 4684F15BF7DCF;
-        Tue, 21 Jan 2020 02:42:01 -0800 (PST)
-Date:   Tue, 21 Jan 2020 11:41:59 +0100 (CET)
-Message-Id: <20200121.114159.2274824592420675035.davem@davemloft.net>
-To:     ms@dev.tdt.de
-Cc:     kubakici@wp.pl, khc@pm.waw.pl, linux-x25@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] wan/hdlc_x25: fix skb handling
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200121060034.30554-2-ms@dev.tdt.de>
-References: <20200121060034.30554-1-ms@dev.tdt.de>
-        <20200121060034.30554-2-ms@dev.tdt.de>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Tue, 21 Jan 2020 05:42:41 -0500
+Received: from relay.sw.ru ([185.231.240.75]:57226 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728831AbgAUKml (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 05:42:41 -0500
+Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104] helo=localhost.localdomain)
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1itqzP-0006P9-Ja; Tue, 21 Jan 2020 13:42:31 +0300
+Subject: [PATCH v4 2/7] block: Pass op_flags into blk_queue_get_max_sectors()
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        martin.petersen@oracle.com, bob.liu@oracle.com, axboe@kernel.dk,
+        agk@redhat.com, snitzer@redhat.com, dm-devel@redhat.com,
+        song@kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca,
+        Chaitanya.Kulkarni@wdc.com, darrick.wong@oracle.com,
+        ming.lei@redhat.com, osandov@fb.com, jthumshirn@suse.de,
+        minwoo.im.dev@gmail.com, damien.lemoal@wdc.com,
+        andrea.parri@amarulasolutions.com, hare@suse.com, tj@kernel.org,
+        ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
+        chaitanya.kulkarni@wdc.com, bvanassche@acm.org,
+        dhowells@redhat.com, asml.silence@gmail.com, ktkhai@virtuozzo.com
+Date:   Tue, 21 Jan 2020 13:42:31 +0300
+Message-ID: <157960335141.108120.13282906580976004888.stgit@localhost.localdomain>
+In-Reply-To: <157960325642.108120.13626623438131044304.stgit@localhost.localdomain>
+References: <157960325642.108120.13626623438131044304.stgit@localhost.localdomain>
+User-Agent: StGit/0.19
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 21 Jan 2020 02:42:02 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Schiller <ms@dev.tdt.de>
-Date: Tue, 21 Jan 2020 07:00:34 +0100
+This preparation patch changes argument type, and now
+the function takes full op_flags instead of just op code.
 
->  o call skb_reset_network_header() before hdlc->xmit()
->  o change skb proto to HDLC (0x0019) before hdlc->xmit()
->  o call dev_queue_xmit_nit() before hdlc->xmit()
-> 
-> This changes make it possible to trace (tcpdump) outgoing layer2
-> (ETH_P_HDLC) packets
-> 
-> Additionally call skb_reset_network_header() after each skb_push() /
-> skb_pull().
-> 
-> Signed-off-by: Martin Schiller <ms@dev.tdt.de>
+Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+---
+ block/blk-core.c       |    4 ++--
+ include/linux/blkdev.h |    8 +++++---
+ 2 files changed, 7 insertions(+), 5 deletions(-)
 
-Applied to net-next
+diff --git a/block/blk-core.c b/block/blk-core.c
+index 50a5de025d5e..ac2634bcda1f 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -1250,10 +1250,10 @@ EXPORT_SYMBOL(submit_bio);
+ static int blk_cloned_rq_check_limits(struct request_queue *q,
+ 				      struct request *rq)
+ {
+-	if (blk_rq_sectors(rq) > blk_queue_get_max_sectors(q, req_op(rq))) {
++	if (blk_rq_sectors(rq) > blk_queue_get_max_sectors(q, rq->cmd_flags)) {
+ 		printk(KERN_ERR "%s: over max size limit. (%u > %u)\n",
+ 			__func__, blk_rq_sectors(rq),
+-			blk_queue_get_max_sectors(q, req_op(rq)));
++			blk_queue_get_max_sectors(q, rq->cmd_flags));
+ 		return -EIO;
+ 	}
+ 
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index 0f1127d0b043..23a5850f35f6 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -989,8 +989,10 @@ static inline struct bio_vec req_bvec(struct request *rq)
+ }
+ 
+ static inline unsigned int blk_queue_get_max_sectors(struct request_queue *q,
+-						     int op)
++						     unsigned int op_flags)
+ {
++	int op = op_flags & REQ_OP_MASK;
++
+ 	if (unlikely(op == REQ_OP_DISCARD || op == REQ_OP_SECURE_ERASE))
+ 		return min(q->limits.max_discard_sectors,
+ 			   UINT_MAX >> SECTOR_SHIFT);
+@@ -1029,10 +1031,10 @@ static inline unsigned int blk_rq_get_max_sectors(struct request *rq,
+ 	if (!q->limits.chunk_sectors ||
+ 	    req_op(rq) == REQ_OP_DISCARD ||
+ 	    req_op(rq) == REQ_OP_SECURE_ERASE)
+-		return blk_queue_get_max_sectors(q, req_op(rq));
++		return blk_queue_get_max_sectors(q, rq->cmd_flags);
+ 
+ 	return min(blk_max_size_offset(q, offset),
+-			blk_queue_get_max_sectors(q, req_op(rq)));
++			blk_queue_get_max_sectors(q, rq->cmd_flags));
+ }
+ 
+ static inline unsigned int blk_rq_count_bios(struct request *rq)
+
+
