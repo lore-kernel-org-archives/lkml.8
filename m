@@ -2,276 +2,127 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6488C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:03:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E2DC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A1D521569
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:03:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7949A21569
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:04:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="lqbjIQov"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729123AbgAUPDA (ORCPT
+        id S1729221AbgAUPEe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 10:03:00 -0500
-Received: from mga05.intel.com ([192.55.52.43]:14629 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727255AbgAUPDA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 10:03:00 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 07:02:56 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,346,1574150400"; 
-   d="scan'208";a="220942721"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga007.fm.intel.com with ESMTP; 21 Jan 2020 07:02:55 -0800
-Received: from [10.251.23.105] (kliang2-mobl.ccr.corp.intel.com [10.251.23.105])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 0FB2F5803C5;
-        Tue, 21 Jan 2020 07:02:53 -0800 (PST)
-Subject: Re: [RESEND PATCH V5 1/2] perf/core: Add new branch sample type for
- HW index of raw branch records
-To:     Stephane Eranian <eranian@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        vitaly.slobodskoy@intel.com, pavel.gerasimov@intel.com,
-        Andi Kleen <ak@linux.intel.com>
-References: <20200116155757.19624-1-kan.liang@linux.intel.com>
- <20200116155757.19624-2-kan.liang@linux.intel.com>
- <CABPqkBQT159soMpnwf_phMx54asgdte5HApwhBz=Hpbx9y0aTg@mail.gmail.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <9e06729d-36cf-9af8-b551-eb467f1cc725@linux.intel.com>
-Date:   Tue, 21 Jan 2020 10:02:52 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Tue, 21 Jan 2020 10:04:34 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38215 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726968AbgAUPEe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 10:04:34 -0500
+Received: by mail-wr1-f65.google.com with SMTP id y17so3583497wrh.5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 07:04:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chrisdown.name; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=3fX8yqVdokeUbIrwEfgnVCmcXTtAwRGxuX8ZNd4rp/U=;
+        b=lqbjIQovQBhxj+xtgVpB8uPL58iOhyecjOyhwTyWj62vfntLi4PpGJ6VfGKjJ2QUnK
+         JMumsdiQl5V6T7LB2vFENkf8ojE07zTSr/3BJxxB/9O7BC4rZwYKSzfyCvx7JknD3GMV
+         Ea2K+iKl2ejNEzovb915Aw97aYSA1UGVo51PM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=3fX8yqVdokeUbIrwEfgnVCmcXTtAwRGxuX8ZNd4rp/U=;
+        b=dA8W0F+JESjhVfP5/hFzg+1di5L6sBgRwc92q1yR3d7+jZMMEV3y6mEnXHsjkP3KpH
+         R10MqHz7oE36vJ5qEJknW8RLH51S1wLCkgoGyv5rByiuUJz5afbo9tYk6L5/z7ZfIyH2
+         ktpedTOc8AZHGBC575lpPeoViDOvZtj2dnAoHpYEVz7UB0MZC42y7I+JR9pMbksARgu2
+         jyLU2zAg1ha/YeM1yGB09f6m0vwCflCG279jmyL+qzsdvcS9vIuTimtRgpMsJPUT8pQ0
+         MNlyUqByHnkfTcRqIGSHO7zvmRLC+6Ku3n+ZACo/+IJ+6aUX3pZocFpHgAjie1uSWnku
+         NSRg==
+X-Gm-Message-State: APjAAAUX/q9+ek8PnzR9pEOKzKB5TTX4B8ik6uo5GUBiGjklTftBK5N+
+        rngz0x5xLJdycYBnhZaIe5Op2g==
+X-Google-Smtp-Source: APXvYqw/n/eK5Xu7u+qMpNfuL8mmr6BDT1kDRYsC9l5O4JsvXRyvkzv097K0+46FPQDNAoOyCpapCg==
+X-Received: by 2002:a5d:4d8d:: with SMTP id b13mr5816499wru.6.1579619072431;
+        Tue, 21 Jan 2020 07:04:32 -0800 (PST)
+Received: from localhost ([2620:10d:c092:180::1:db6c])
+        by smtp.gmail.com with ESMTPSA id s15sm49352115wrp.4.2020.01.21.07.04.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2020 07:04:31 -0800 (PST)
+Date:   Tue, 21 Jan 2020 15:04:31 +0000
+From:   Chris Down <chris@chrisdown.name>
+To:     bpf@vger.kernel.org, netdev@vger.kernel.org
+Cc:     Stanislav Fomichev <sdf@google.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com
+Subject: [PATCH] bpf: btf: Always output invariant hit in pahole DWARF to BTF
+ transform
+Message-ID: <20200121150431.GA240246@chrisdown.name>
 MIME-Version: 1.0
-In-Reply-To: <CABPqkBQT159soMpnwf_phMx54asgdte5HApwhBz=Hpbx9y0aTg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+When trying to compile with CONFIG_DEBUG_INFO_BTF enabled, I got this
+error:
 
+    % make -s
+    Failed to generate BTF for vmlinux
+    Try to disable CONFIG_DEBUG_INFO_BTF
+    make[3]: *** [vmlinux] Error 1
 
-On 1/21/2020 4:32 AM, Stephane Eranian wrote:
-> On Thu, Jan 16, 2020 at 7:59 AM <kan.liang@linux.intel.com> wrote:
->>
->> From: Kan Liang <kan.liang@linux.intel.com>
->>
->> The low level index of raw branch records is very useful for
->> reconstructing the call stack. For example, in Intel LBR call stack mode,
->> the depth of reconstructed LBR call stack limits to the number of LBR
->> registers. With the HW index information, perf tool may stitch the
->> stacks of two samples. The reconstructed LBR call stack can break the HW
->> limitation.
->>
->> Add a new branch sample type to retrieve the low level index of raw
->> branch records. Only need to save the index for the most recent branch
->> aka entries[0]. Others can be calculated by the max number of HW
->> supported branch records later in perf tool.
->>
-> You need to define what the low level index is about w.r.t. the branch_entries[]
-> abstraction. You need to say it is a value between -1 (unknown) and max depth
-> (which can be retrieved in /sys/devices/cpu/caps/branches). It returns the index
-> in the underlying hardware buffer of the most recently captured taken branch
-> which is always saved in branch_entries[0]. As such, it is not necessary to
-> process branches in order. It may be used in certain modes to stitch
-> together multiple
-> BRANCH_STACK records in call stack mode.
+Compiling again without -s shows the true error (that pahole is
+missing), but since this is fatal, we should show the error
+unconditionally on stderr as well, not silence it using the `info`
+function. With this patch:
 
-Thanks Stephane. I will change the description based on your suggestion.
+    % make -s
+    BTF: .tmp_vmlinux.btf: pahole (pahole) is not available
+    Failed to generate BTF for vmlinux
+    Try to disable CONFIG_DEBUG_INFO_BTF
+    make[3]: *** [vmlinux] Error 1
 
-Add a new branch sample type to retrieve low level index of raw branch 
-records. The low level index is the index in the underlying hardware 
-buffer of the most recently captured taken branch which is always saved 
-in branch_entries[0]. The low level index is between -1 (unknown) and 
-max depth which can be retrieved in /sys/devices/cpu/caps/branches.
-It may be used in certain modes to stitch together multiple BRANCH_STACK 
-records in call stack mode.
+Signed-off-by: Chris Down <chris@chrisdown.name>
+Cc: Stanislav Fomichev <sdf@google.com>
+Cc: Andrii Nakryiko <andriin@fb.com>
+Cc: John Fastabend <john.fastabend@gmail.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Cc: bpf@vger.kernel.org
+Cc: kernel-team@fb.com
+---
+ scripts/link-vmlinux.sh | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
+diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
+index c287ad9b3a67..c8e9f49903a0 100755
+--- a/scripts/link-vmlinux.sh
++++ b/scripts/link-vmlinux.sh
+@@ -108,13 +108,15 @@ gen_btf()
+ 	local bin_arch
+ 
+ 	if ! [ -x "$(command -v ${PAHOLE})" ]; then
+-		info "BTF" "${1}: pahole (${PAHOLE}) is not available"
++		printf 'BTF: %s: pahole (%s) is not available\n' \
++			"${1}" "${PAHOLE}" >&2
+ 		return 1
+ 	fi
+ 
+ 	pahole_ver=$(${PAHOLE} --version | sed -E 's/v([0-9]+)\.([0-9]+)/\1\2/')
+ 	if [ "${pahole_ver}" -lt "113" ]; then
+-		info "BTF" "${1}: pahole version $(${PAHOLE} --version) is too old, need at least v1.13"
++		printf 'BTF: %s: pahole version %s is too old, need at least v1.13\n' \
++			"${1}" "$(${PAHOLE} --version)" >&2
+ 		return 1
+ 	fi
+ 
+-- 
+2.25.0
 
-Thanks,
-Kan
-
-> 
->>
->> If we don't know the order of raw branch records, the hw_idx should be
->> -1ULL. This patch sets -1ULL for all architectures for now. It can be
->> changed later if needed.
->>
->> Only when the new branch sample type is set, the HW index information is
->> dumped into the PERF_SAMPLE_BRANCH_STACK output.
->> Perf tool should check the attr.branch_sample_type, and apply the
->> corresponding format for PERF_SAMPLE_BRANCH_STACK samples.
->> Otherwise, some user case may be broken. For example, users may parse a
->> perf.data, which include the new branch sample type, with an old version
->> perf tool (without the check). Users probably get incorrect information
->> without any warning.
->>
->> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
->> ---
->>   arch/powerpc/perf/core-book3s.c |  1 +
->>   arch/x86/events/intel/lbr.c     |  3 +++
->>   include/linux/perf_event.h      | 12 ++++++++++++
->>   include/uapi/linux/perf_event.h | 10 +++++++++-
->>   kernel/events/core.c            | 11 +++++++++++
->>   5 files changed, 36 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/powerpc/perf/core-book3s.c b/arch/powerpc/perf/core-book3s.c
->> index 48604625ab31..fe7de222229a 100644
->> --- a/arch/powerpc/perf/core-book3s.c
->> +++ b/arch/powerpc/perf/core-book3s.c
->> @@ -524,6 +524,7 @@ static void power_pmu_bhrb_read(struct perf_event *event, struct cpu_hw_events *
->>                  }
->>          }
->>          cpuhw->bhrb_stack.nr = u_index;
->> +       cpuhw->bhrb_stack.hw_idx = -1ULL;
->>          return;
->>   }
->>
->> diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
->> index 534c76606049..7639e2097101 100644
->> --- a/arch/x86/events/intel/lbr.c
->> +++ b/arch/x86/events/intel/lbr.c
->> @@ -585,6 +585,7 @@ static void intel_pmu_lbr_read_32(struct cpu_hw_events *cpuc)
->>                  cpuc->lbr_entries[i].reserved   = 0;
->>          }
->>          cpuc->lbr_stack.nr = i;
->> +       cpuc->lbr_stack.hw_idx = -1ULL;
->>   }
->>
->>   /*
->> @@ -680,6 +681,7 @@ static void intel_pmu_lbr_read_64(struct cpu_hw_events *cpuc)
->>                  out++;
->>          }
->>          cpuc->lbr_stack.nr = out;
->> +       cpuc->lbr_stack.hw_idx = -1ULL;
->>   }
->>
->>   void intel_pmu_lbr_read(void)
->> @@ -1120,6 +1122,7 @@ void intel_pmu_store_pebs_lbrs(struct pebs_lbr *lbr)
->>          int i;
->>
->>          cpuc->lbr_stack.nr = x86_pmu.lbr_nr;
->> +       cpuc->lbr_stack.hw_idx = -1ULL;
->>          for (i = 0; i < x86_pmu.lbr_nr; i++) {
->>                  u64 info = lbr->lbr[i].info;
->>                  struct perf_branch_entry *e = &cpuc->lbr_entries[i];
->> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
->> index 011dcbdbccc2..554621d99864 100644
->> --- a/include/linux/perf_event.h
->> +++ b/include/linux/perf_event.h
->> @@ -93,14 +93,26 @@ struct perf_raw_record {
->>   /*
->>    * branch stack layout:
->>    *  nr: number of taken branches stored in entries[]
->> + *  hw_idx: The low level index of raw branch records
->> + *          for the most recent branch.
->> + *          -1ULL means invalid.
->>    *
->>    * Note that nr can vary from sample to sample
->>    * branches (to, from) are stored from most recent
->>    * to least recent, i.e., entries[0] contains the most
->>    * recent branch.
->> + * The entries[] is an abstraction of raw branch records,
->> + * which may not be stored in age order in HW, e.g. Intel LBR.
->> + * The hw_idx is to expose the low level index of raw
->> + * branch record for the most recent branch aka entries[0].
->> + * For the architectures whose raw branch records are
->> + * already stored in age order, the hw_idx should be 0.
->> + * If we don't know the order of raw branch records,
->> + * the hw_idx should be -1ULL.
->>    */
->>   struct perf_branch_stack {
->>          __u64                           nr;
->> +       __u64                           hw_idx;
->>          struct perf_branch_entry        entries[0];
->>   };
->>
->> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
->> index bb7b271397a6..14110837b130 100644
->> --- a/include/uapi/linux/perf_event.h
->> +++ b/include/uapi/linux/perf_event.h
->> @@ -180,6 +180,8 @@ enum perf_branch_sample_type_shift {
->>
->>          PERF_SAMPLE_BRANCH_TYPE_SAVE_SHIFT      = 16, /* save branch type */
->>
->> +       PERF_SAMPLE_BRANCH_HW_INDEX_SHIFT       = 17, /* save low level index of raw branch records */
->> +
->>          PERF_SAMPLE_BRANCH_MAX_SHIFT            /* non-ABI */
->>   };
->>
->> @@ -207,6 +209,8 @@ enum perf_branch_sample_type {
->>          PERF_SAMPLE_BRANCH_TYPE_SAVE    =
->>                  1U << PERF_SAMPLE_BRANCH_TYPE_SAVE_SHIFT,
->>
->> +       PERF_SAMPLE_BRANCH_HW_INDEX     = 1U << PERF_SAMPLE_BRANCH_HW_INDEX_SHIFT,
->> +
->>          PERF_SAMPLE_BRANCH_MAX          = 1U << PERF_SAMPLE_BRANCH_MAX_SHIFT,
->>   };
->>
->> @@ -849,7 +853,11 @@ enum perf_event_type {
->>           *        char                  data[size];}&& PERF_SAMPLE_RAW
->>           *
->>           *      { u64                   nr;
->> -        *        { u64 from, to, flags } lbr[nr];} && PERF_SAMPLE_BRANCH_STACK
->> +        *        { u64 from, to, flags } lbr[nr];
->> +        *
->> +        *        # only available if PERF_SAMPLE_BRANCH_HW_INDEX is set
->> +        *        u64                   hw_idx;
->> +        *      } && PERF_SAMPLE_BRANCH_STACK
->>           *
->>           *      { u64                   abi; # enum perf_sample_regs_abi
->>           *        u64                   regs[weight(mask)]; } && PERF_SAMPLE_REGS_USER
->> diff --git a/kernel/events/core.c b/kernel/events/core.c
->> index cfd89b4a02d8..4be3ba12333f 100644
->> --- a/kernel/events/core.c
->> +++ b/kernel/events/core.c
->> @@ -6391,6 +6391,11 @@ static void perf_output_read(struct perf_output_handle *handle,
->>                  perf_output_read_one(handle, event, enabled, running);
->>   }
->>
->> +static inline bool perf_sample_save_hw_index(struct perf_event *event)
->> +{
->> +       return event->attr.branch_sample_type & PERF_SAMPLE_BRANCH_HW_INDEX;
->> +}
->> +
->>   void perf_output_sample(struct perf_output_handle *handle,
->>                          struct perf_event_header *header,
->>                          struct perf_sample_data *data,
->> @@ -6480,6 +6485,8 @@ void perf_output_sample(struct perf_output_handle *handle,
->>
->>                          perf_output_put(handle, data->br_stack->nr);
->>                          perf_output_copy(handle, data->br_stack->entries, size);
->> +                       if (perf_sample_save_hw_index(event))
->> +                               perf_output_put(handle, data->br_stack->hw_idx);
->>                  } else {
->>                          /*
->>                           * we always store at least the value of nr
->> @@ -6667,7 +6674,11 @@ void perf_prepare_sample(struct perf_event_header *header,
->>                  if (data->br_stack) {
->>                          size += data->br_stack->nr
->>                                * sizeof(struct perf_branch_entry);
->> +
->> +                       if (perf_sample_save_hw_index(event))
->> +                               size += sizeof(u64);
->>                  }
->> +
->>                  header->size += size;
->>          }
->>
->> --
->> 2.17.1
->>
