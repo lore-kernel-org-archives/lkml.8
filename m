@@ -2,161 +2,220 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8023CC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F89C33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:03:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52483217F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:03:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579622593;
-	bh=XDn7I1ARvz0R96k2z7bgcXzrNrZP35tkDx8H9+RZA3s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=nbuEwQ1mWP7K1ajV/NmY8vDFoMeMvp5tw4m8zCVIAkKbpFafTdBcESJQj9p6kN/qh
-	 hw9cSOzwNIoHDiymvl9X/hNwzMI4Gd2lCZeVOTPWzHgUefU1OI3JcvhBS7qXKCSnD/
-	 xCt3PN8s7Ch8ye9DwHjxTUFXQt1LiVFgFLeAi+k8=
+	by mail.kernel.org (Postfix) with ESMTP id ACFBC217F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:03:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oSkJmsMP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729982AbgAUQDM convert rfc822-to-8bit (ORCPT
+        id S1729991AbgAUQDX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 11:03:12 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:45847 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729937AbgAUQDE (ORCPT
+        Tue, 21 Jan 2020 11:03:23 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:33375 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729030AbgAUQDW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 11:03:04 -0500
-Received: by mail-ot1-f65.google.com with SMTP id 59so3336383otp.12;
-        Tue, 21 Jan 2020 08:03:04 -0800 (PST)
+        Tue, 21 Jan 2020 11:03:22 -0500
+Received: by mail-lf1-f65.google.com with SMTP id n25so2750186lfl.0;
+        Tue, 21 Jan 2020 08:03:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=qjcDJDT5ZhsuJU+cktfSQ3R47ar0BoE5LFZ4QYOhvk4=;
+        b=oSkJmsMPFvlrGrBgt/E7oyZ7wGMURN57NLfvXkRGUfFsMcqdMQxLpm2Bz38hClF7Ln
+         ShLcsQB78iaEi+nE1RjpRnLjH6+ka2Y4If1K8tbkLYtT5lV1/3zFNNRLyAGrURJlyE8W
+         mMWg/hkKqaT3aoM++ZzTwhHFPcyy2/ecRP8Pv0g+7JIPrbDTLEheR0JiAzwV+e/Ur0dr
+         pNYHzfUgFTYMjXWYop3hoUUsMJaPNO2kbYZsDkzP0HxdYKy4xccXnf2fuvYcjwD6enz3
+         e12I1oL1VSsvUHi56JrA6kwd0pTVkYNmlVysL/n3hJ8Hn0w/lswn6moIte9zZJRUJxrc
+         U39w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=3uhVIJum8giozCbBAOAWfX0RCY6W6sw6Ypl8FcWQYgw=;
-        b=gjnBgvKuRoIHcy/7hapOzadDpTWIpf9+Eq/Y08/QYvaBjHphHnnuUgtDOSHLg38EZu
-         P4QwcAdxFv4WO/DU5wWV/TWEncKxhCtf2Nk2v+QABtmBWrHlh0XKyinQP94WQNzdPOnH
-         eU5YJ31FSo1SG35pvOvEdO/UZt78wnJ5XQMcIBQEmoguSSgu2Th2E84MSIhbecTBYfh4
-         siOzoKI9xlLFL3Hzs+9dXA6rODGNAagp34WKpO87Ppv3Fvj9kOn37Z5cICRY1Vtxa64+
-         xcLUMsBxFyWs9AIw7nYD++0Xe3Vaz6SMBAwPyDD1EkcEJpklZrHMBWIOmnoqDnWKJ319
-         KzZQ==
-X-Gm-Message-State: APjAAAVKj4tHv25eq1NeDsk+XHXcQCrJtrZx8QWGEjUa3l3sBM3A/NRA
-        djcGwCd89fkssadXC4sxey3FSRMGMyAyZx7n1Tw=
-X-Google-Smtp-Source: APXvYqw6XT5EzbITnd9lPUjkFNyWUErkpjeaTNijKjeAsb/nf2EtB/i7hY+Prsk+BHDYhDqQd3i9Wde9kUjQ1TdRaCg=
-X-Received: by 2002:a05:6830:4b9:: with SMTP id l25mr4157514otd.266.1579622583933;
- Tue, 21 Jan 2020 08:03:03 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qjcDJDT5ZhsuJU+cktfSQ3R47ar0BoE5LFZ4QYOhvk4=;
+        b=IWurWOO84AIDRfvjE0Clt4ROTHoK/gnoLL3i75iJKNROY+QzC5pendzZdlYg2rgFDh
+         Efw8BJFST08KhPo3iyTs8/nZwPWOjSIf8m2Pa+9DZIUqOdT5eAf1iapljzbW0EKC40GO
+         Z7PhyK+Hf4K10TehkubO8w0u4EXFpzxUF4fBTTnEIw1q0LUDF0FnHnaMMTXTRdQBtfeG
+         GE4cBTuesumIKdvDGevOIE9xIkH5syotBV73OKY1jPSEcKxv2NKcGIHI7LPtb4w7faOu
+         s70i02KgGDaeOLHu9rkdx/APfGSj4uxi7qcrlI997OvxpemXmXtQ0xCaqMt9S3iDXKKg
+         3p1g==
+X-Gm-Message-State: APjAAAVA0I7BsiuyrEEj2nzK0ji+e49o3yzk2r+BIs6udgdsnLZAottF
+        kBOS2kRcBd2aLTAW7BoLVQU=
+X-Google-Smtp-Source: APXvYqzclMF2A4gK1qZbpXyXqercR78rGBMYz+1kp1LUvr0QDXRGPs35zL7ilE/pQbIxRvtkvvNXRA==
+X-Received: by 2002:ac2:515b:: with SMTP id q27mr2939168lfd.119.1579622599111;
+        Tue, 21 Jan 2020 08:03:19 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id w16sm19566502lfc.1.2020.01.21.08.03.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jan 2020 08:03:18 -0800 (PST)
+Subject: Re: [alsa-devel] [PATCH 4/9] ASoC: tegra: add Tegra210 based I2S
+ driver
+To:     Sameer Pujar <spujar@nvidia.com>, perex@perex.cz, tiwai@suse.com,
+        robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        atalambedu@nvidia.com, linux-kernel@vger.kernel.org,
+        lgirdwood@gmail.com, jonathanh@nvidia.com, viswanathl@nvidia.com,
+        sharadg@nvidia.com, broonie@kernel.org, thierry.reding@gmail.com,
+        linux-tegra@vger.kernel.org, rlokhande@nvidia.com,
+        mkumard@nvidia.com, dramesh@nvidia.com
+References: <1579530198-13431-1-git-send-email-spujar@nvidia.com>
+ <1579530198-13431-5-git-send-email-spujar@nvidia.com>
+ <a440d105-8db9-ecf1-3718-e58804ce14b8@gmail.com>
+ <0c571858-d72c-97c2-2d6a-ead6fdde06eb@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <444731da-c4cd-8578-a732-c803eef31ef0@gmail.com>
+Date:   Tue, 21 Jan 2020 19:03:15 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-References: <20200109154529.19484-1-sakari.ailus@linux.intel.com>
- <20200109154529.19484-3-sakari.ailus@linux.intel.com> <CAJZ5v0hfGateSt-_EBuyHqLYi5NR4PUFB=wDF+Gu+9-tFXuohg@mail.gmail.com>
- <20200121090946.GX5440@paasikivi.fi.intel.com>
-In-Reply-To: <20200121090946.GX5440@paasikivi.fi.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 21 Jan 2020 17:02:52 +0100
-Message-ID: <CAJZ5v0gEO_QesTg2oqA-9dYbPJ5Gsm5H8wvSRQTLeww0o2vx3g@mail.gmail.com>
-Subject: Re: [PATCH v3 2/5] ACPI: Add a convenience function to tell a device
- is suspended in probe
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Mani, Rajmohan" <rajmohan.mani@intel.com>,
-        Tomasz Figa <tfiga@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <0c571858-d72c-97c2-2d6a-ead6fdde06eb@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 10:09 AM Sakari Ailus
-<sakari.ailus@linux.intel.com> wrote:
->
-> Hi Rafael,
->
-> Thank you for the review.
->
-> On Mon, Jan 13, 2020 at 11:41:12AM +0100, Rafael J. Wysocki wrote:
-> > On Thu, Jan 9, 2020 at 4:44 PM Sakari Ailus
-> > <sakari.ailus@linux.intel.com> wrote:
-> > >
-> > > Add a convenience function to tell whether a device is suspended for probe
-> > > or remove, for busses where the custom is that drivers don't need to
-> > > resume devices in probe, or suspend them in their remove handlers.
-> > >
-> > > Returns false on non-ACPI systems.
-> > >
-> > > Suggested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > > ---
-> > >  drivers/acpi/device_pm.c | 35 +++++++++++++++++++++++++++++++++++
-> > >  include/linux/acpi.h     |  5 +++++
-> > >  2 files changed, 40 insertions(+)
-> > >
-> > > diff --git a/drivers/acpi/device_pm.c b/drivers/acpi/device_pm.c
-> > > index 5e4a8860a9c0c..87393020276d8 100644
-> > > --- a/drivers/acpi/device_pm.c
-> > > +++ b/drivers/acpi/device_pm.c
-> > > @@ -1348,4 +1348,39 @@ int acpi_dev_pm_attach(struct device *dev, bool power_on)
-> > >         return 1;
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(acpi_dev_pm_attach);
-> > > +
-> > > +/**
-> > > + * acpi_dev_low_power_state_probe - Tell if a device is in a low power state
-> >
-> > "Check the current ACPI power state of a device."
->
-> Sounds good.
->
-> >
-> > > + *                                 during probe
-> >
-> > Why is this limited to probe?
->
-> Well.. that was the purpose. It could be used at other times, too, I guess,
-> but most of the time runtime PM is the right interface for doing that.
+21.01.2020 17:21, Sameer Pujar пишет:
 
-PM-runtime is a layer above this one.
+[snip]
 
-It is mostly about the coordination between devices, reference
-counting etc which this is about device power states.
+>>> +static int tegra210_i2s_put_control(struct snd_kcontrol *kcontrol,
+>>> +     struct snd_ctl_elem_value *ucontrol)
+>> Checkpatch should complain about the wrong indentation here.
+> 
+> I had run checkpatch before sending the patch, below is the result.
+> -----
+> WARNING: added, moved or deleted file(s), does MAINTAINERS need updating?
+> #70:
+> new file mode 100644
+> 
+> total: 0 errors, 1 warnings, 1103 lines checked
+> 
+> NOTE: For some of the reported defects, checkpatch may be able to
+>       mechanically convert to the typical style using --fix or
+> --fix-inplace.
+> -----
 
-> >
-> > The function actually checks whether or not the ACPI power state of
-> > the device is low-power at the call time (except that it is a bit racy
-> > with respect to _set_power(), so it may not work as expected if called
-> > in parallel with that one).
-> >
-> > Maybe drop the "probe" part of the name (actually, I would call this
-> > function acpi_dev_state_low_power()) and add a paragraph about the
-> > potential race with _set_power() to the description?
->
-> Agreed, I'll use the text you provided below.
->
-> >
-> > > + * @dev: The device
-> >
-> > "Physical device the ACPI power state of which to check".
->
-> Ok.
->
-> >
-> > > + *
-> > > + * Tell whether a given device is in a low power state during the driver's probe
-> > > + * or remove operation.
-> > > + *
-> > > + * Drivers of devices on certain busses such as I涎 can generally assume (on
-> > > + * ACPI based systems) that the devices they control are powered on without
-> > > + * driver having to do anything about it. Using struct
-> > > + * device_driver.probe_low_power and "probe-low-power" property, this can be
-> > > + * negated and the driver has full control of the device power management.
-> >
-> > The above information belongs somewhere else in my view.
->
-> How about putting it to the DSD ReST property documentation, perhaps with a
-> little bit more context? I can add another patch for that.
+Using 'checkpatch --strict':
 
-Yes, something like that.
+CHECK: Alignment should match open parenthesis
+#2693: FILE: sound/soc/tegra/tegra210_i2s.c:362:
++static int tegra210_i2s_put_control(struct snd_kcontrol *kcontrol,
++       struct snd_ctl_elem_value *ucontrol
+
+[snip]
+
+>>> +
+>>> +     } else if (strstr(kcontrol->id.name, "Playback Audio Bit Format"))
+>>> +             i2s->audio_fmt_override[I2S_RX_PATH] = value;
+>>> +     else if (strstr(kcontrol->id.name, "Capture Audio Bit Format"))
+>>> +             i2s->audio_fmt_override[I2S_TX_PATH] = value;
+>>> +     else if (strstr(kcontrol->id.name, "Client Bit Format"))
+>>> +             i2s->client_fmt_override = value;
+>>> +     else if (strstr(kcontrol->id.name, "Playback Audio Channels"))
+>>> +             i2s->audio_ch_override[I2S_RX_PATH] = value;
+>>> +     else if (strstr(kcontrol->id.name, "Capture Audio Channels"))
+>>> +             i2s->audio_ch_override[I2S_TX_PATH] = value;
+>>> +     else if (strstr(kcontrol->id.name, "Client Channels"))
+>>> +             i2s->client_ch_override = value;
+>>> +     else if (strstr(kcontrol->id.name, "Capture Stereo To Mono"))
+>>> +             i2s->stereo_to_mono[I2S_TX_PATH] = value;
+>>> +     else if (strstr(kcontrol->id.name, "Capture Mono To Stereo"))
+>>> +             i2s->mono_to_stereo[I2S_TX_PATH] = value;
+>>> +     else if (strstr(kcontrol->id.name, "Playback Stereo To Mono"))
+>>> +             i2s->stereo_to_mono[I2S_RX_PATH] = value;
+>>> +     else if (strstr(kcontrol->id.name, "Playback Mono To Stereo"))
+>>> +             i2s->mono_to_stereo[I2S_RX_PATH] = value;
+>>> +     else if (strstr(kcontrol->id.name, "Playback FIFO Threshold"))
+>>> +             i2s->rx_fifo_th = value;
+>>> +     else if (strstr(kcontrol->id.name, "BCLK Ratio"))
+>>> +             i2s->bclk_ratio = value;
+>> I'm pretty sure that checkpatch should complain about the missing
+>> brackets, they should make code's indentation uniform and thus easier to
+>> read. Same for all other occurrences in the code.
+> 
+> same as above
+
+CHECK: braces {} should be used on all arms of this statement
+#2699: FILE: sound/soc/tegra/tegra210_i2s.c:368:
++       if (strstr(kcontrol->id.name, "Loopback")) {
+[...]
++       } else if (strstr(kcontrol->id.name, "Sample Rate"))
+[...]
++       else if (strstr(kcontrol->id.name, "FSYNC Width")) {
+[...]
++       } else if (strstr(kcontrol->id.name, "Playback Audio Bit Format"))
+[...]
++       else if (strstr(kcontrol->id.name, "Capture Audio Bit Format"))
+[...]
++       else if (strstr(kcontrol->id.name, "Client Bit Format"))
+[...]
++       else if (strstr(kcontrol->id.name, "Playback Audio Channels"))
+[...]
++       else if (strstr(kcontrol->id.name, "Capture Audio Channels"))
+[...]
++       else if (strstr(kcontrol->id.name, "Client Channels"))
+[...]
++       else if (strstr(kcontrol->id.name, "Capture Stereo To Mono"))
+[...]
++       else if (strstr(kcontrol->id.name, "Capture Mono To Stereo"))
+[...]
++       else if (strstr(kcontrol->id.name, "Playback Stereo To Mono"))
+[...]
++       else if (strstr(kcontrol->id.name, "Playback Mono To Stereo"))
+[...]
++       else if (strstr(kcontrol->id.name, "Playback FIFO Threshold"))
+[...]
++       else if (strstr(kcontrol->id.name, "BCLK Ratio"))
+[...]
+
+[snip]
+
+>>> +     pm_runtime_enable(dev);
+>> Error checking?
+> 
+> return type for above is void()
+
+Ok
+
+>>> +     return 0;
+>>> +}
+>>> +
+>>> +static int tegra210_i2s_remove(struct platform_device *pdev)
+>>> +{
+>>> +     pm_runtime_disable(&pdev->dev);
+>>> +     if (!pm_runtime_status_suspended(&pdev->dev))
+>>> +             tegra210_i2s_runtime_suspend(&pdev->dev);
+>> This breaks device's RPM refcounting if it was disabled in the active
+>> state. This code should be removed. At most you could warn about the
+>> unxpected RPM state here, but it shouldn't be necessary.
+> 
+> I guess this was added for safety and explicit suspend keeps clock
+> disabled.
+> Not sure if ref-counting of the device matters when runtime PM is
+> disabled and device is removed.
+> I see few drivers using this way.
+
+It should matter (if I'm not missing something) because RPM should be in
+a wrecked state once you'll try to re-load the driver's module. Likely
+that those few other drivers are wrong.
+
+[snip]
+
+> 
+>>> +     int rx_fifo_th;
+>> Could rx_fifo_th be negative?
+> 
+> rx_fifo_th itself does not take negative values, explicit typecasting> is avoided in "if" condition by declaring this as "int"
+Explicit typecasting isn't needed for integers.
