@@ -2,147 +2,94 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD41C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D61A2C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:48:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7FAC24655
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:47:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C2EA24655
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:48:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cy2ZL6bi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729106AbgAUTrQ (ORCPT
+        id S1729129AbgAUTsN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 14:47:16 -0500
-Received: from relay-b02.edpnet.be ([212.71.1.222]:40771 "EHLO
-        relay-b02.edpnet.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728760AbgAUTrQ (ORCPT
+        Tue, 21 Jan 2020 14:48:13 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:34501 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728596AbgAUTsN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 14:47:16 -0500
-X-ASG-Debug-ID: 1579636032-0a7b8d6ce022f8c60001-xx1T2L
-Received: from zotac.vandijck-laurijssen.be ([77.109.89.38]) by relay-b02.edpnet.be with ESMTP id F17EWZrY6NujMrjn; Tue, 21 Jan 2020 20:47:12 +0100 (CET)
-X-Barracuda-Envelope-From: dev.kurt@vandijck-laurijssen.be
-X-Barracuda-Effective-Source-IP: UNKNOWN[77.109.89.38]
-X-Barracuda-Apparent-Source-IP: 77.109.89.38
-Received: from x1.vandijck-laurijssen.be (x1.vandijck-laurijssen.be [IPv6:fd01::1a1d:eaff:fe02:d339])
-        by zotac.vandijck-laurijssen.be (Postfix) with ESMTPSA id A3C57C6ABC7;
-        Tue, 21 Jan 2020 20:47:12 +0100 (CET)
-Date:   Tue, 21 Jan 2020 20:47:11 +0100
-From:   Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
-To:     Oliver Hartkopp <socketcan@hartkopp.net>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        o.rempel@pengutronix.de,
-        syzbot <syzbot+c3ea30e1e2485573f953@syzkaller.appspotmail.com>,
-        David Miller <davem@davemloft.net>, linux-can@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: general protection fault in can_rx_register
-Message-ID: <20200121194711.GD13462@x1.vandijck-laurijssen.be>
-X-ASG-Orig-Subj: Re: general protection fault in can_rx_register
-Mail-Followup-To: Oliver Hartkopp <socketcan@hartkopp.net>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>, o.rempel@pengutronix.de,
-        syzbot <syzbot+c3ea30e1e2485573f953@syzkaller.appspotmail.com>,
-        David Miller <davem@davemloft.net>, linux-can@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-References: <00000000000030dddb059c562a3f@google.com>
- <55ad363b-1723-28aa-78b1-8aba5565247e@hartkopp.net>
- <20200120091146.GD11138@x1.vandijck-laurijssen.be>
- <CACT4Y+a+GusEA1Gs+z67uWjtwBRp_s7P4Wd_SMmgpCREnDu3kg@mail.gmail.com>
- <8332ec7f-2235-fdf6-9bda-71f789c57b37@hartkopp.net>
- <2a676c0e-20f2-61b5-c72b-f51947bafc7d@hartkopp.net>
- <20200121083035.GD14537@x1.vandijck-laurijssen.be>
- <20200121185407.GA13462@x1.vandijck-laurijssen.be>
- <a04209c8-747b-6116-d915-21c285f48730@hartkopp.net>
+        Tue, 21 Jan 2020 14:48:13 -0500
+Received: by mail-pf1-f194.google.com with SMTP id i6so2030404pfc.1
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 11:48:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6S1l36NbAZVh9wLCgsbOly2e7bEjrTaiZ7L36rQuzeg=;
+        b=cy2ZL6biivpAGorQ6u1DBqUyqW1vq4oF8EcL47Rhrtk7aKkXYB28+a9WqoAI4OzzmN
+         kgt+QLtwUQqkUawa39RUC8iSJ+GLUPqpt9pg1tnJu5EkvIxWkHe4ydtYCZR605wRu9Yh
+         ShPld/Rf86RKNpFwptmk3WdZm4uCtSQZrd8E8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6S1l36NbAZVh9wLCgsbOly2e7bEjrTaiZ7L36rQuzeg=;
+        b=N/fNiN0tZdhOFNSgvCZDhQCIi0964ZAczHMTnXTP3OrnAsIZK2VoWMywEGG09CICnA
+         wlZYh6WtV/sxJv0fDemKs6oeE9T/bZcP8+3TuCxcCZrZxYvENJpGtuoziRQdmNv/qgHU
+         qGa19je2XgUAcGoVHM7Ez8z0gAtRjFKQO+8H7AApPlArGOIKeMVMlOX674vnLDbeILMy
+         8Y4wK7WPk4KqyvnzJNkyRzVRhwZWqw9ObBJUVVs7KxfXDGQz+v3oVd6CCys5rb9sx8z9
+         7MF4Qa0Vi7LVBcEn27h//AXlBSj0Ef5py7pXm6L3cnvCmKU/snGCk8QrMXa2qsQcoS1P
+         35Ow==
+X-Gm-Message-State: APjAAAWr/KXYS27wDIIcgjqM/d5WaI9Zk68tv+MO398v10aUYDWyhbyI
+        aA/1U7Lpc7WGomUs9e2U7HgIzFaRhdzmXw==
+X-Google-Smtp-Source: APXvYqzxf3iITbl6NWb1XnDzqWrM8ve1PChmz4DB6L5e/DnnX3uGZfia9wzwQijKQI1mom6nJsBUcQ==
+X-Received: by 2002:aa7:9315:: with SMTP id 21mr6280169pfj.162.1579636092638;
+        Tue, 21 Jan 2020 11:48:12 -0800 (PST)
+Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id u7sm44004674pfh.128.2020.01.21.11.48.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2020 11:48:12 -0800 (PST)
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>
+Subject: [PATCH v2 0/3] Fix alarmtimer suspend failure
+Date:   Tue, 21 Jan 2020 11:48:08 -0800
+Message-Id: <20200121194811.145644-1-swboyd@chromium.org>
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <a04209c8-747b-6116-d915-21c285f48730@hartkopp.net>
-User-Agent: Mutt/1.5.22 (2013-10-16)
-X-Barracuda-Connect: UNKNOWN[77.109.89.38]
-X-Barracuda-Start-Time: 1579636032
-X-Barracuda-URL: https://212.71.1.222:443/cgi-mod/mark.cgi
-X-Virus-Scanned: by bsmtpd at edpnet.be
-X-Barracuda-Scan-Msg-Size: 2374
-X-Barracuda-BRTS-Status: 1
-X-Barracuda-Bayes: SPAM GLOBAL 0.9757 1.0000 4.0624
-X-Barracuda-Spam-Score: 4.06
-X-Barracuda-Spam-Status: No, SCORE=4.06 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=7.0 tests=
-X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.79488
-        Rule breakdown below
-         pts rule name              description
-        ---- ---------------------- --------------------------------------------------
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On di, 21 jan 2020 20:28:51 +0100, Oliver Hartkopp wrote:
-> Hi Kurt,
-> 
-> On 21/01/2020 19.54, Kurt Van Dijck wrote:
-> >On di, 21 jan 2020 09:30:35 +0100, Kurt Van Dijck wrote:
-> >>On ma, 20 jan 2020 23:35:16 +0100, Oliver Hartkopp wrote:
-> 
-> 
-> >>>But it is still open why dev->ml_priv is not set correctly in vxcan.c as all
-> >>>the settings for .priv_size and in vxcan_setup look fine.
-> >>
-> >>Maybe I got completely lost:
-> >>Shouldn't can_ml_priv and vxcan_priv not be similar?
-> >>Where is the dev_rcv_lists in the vxcan case?
-> >
-> >I indeed got completely lost. vxcan_priv & can_ml_priv form together the
-> >private part. I continue looking
-> 
-> I added some more debug output:
-> 
-> @@ -463,6 +463,10 @@ int can_rx_register(struct net *net, struct net_device
-> *dev, canid_t can_id,
->         spin_lock_bh(&net->can.rcvlists_lock);
-> 
->         dev_rcv_lists = can_dev_rcv_lists_find(net, dev);
-> +       if (!dev_rcv_lists) {
-> +               pr_err("dev_rcv_lists == NULL! %p (%s)\n", dev, dev->name);
-> +               goto out_unlock;
-> +       }
->         rcv_list = can_rcv_list_find(&can_id, &mask, dev_rcv_lists);
-> 
->         rcv->can_id = can_id;
-> 
-> 
-> and the output becomes:
-> 
-> [ 1814.644087] bond5130: (slave vxcan1): The slave device specified does not
-> support setting the MAC address
-> [ 1814.644106] bond5130: (slave vxcan1): Error -22 calling dev_set_mtu
-> [ 1814.648867] bond5128: (slave vxcan1): The slave device specified does not
-> support setting the MAC address
-> [ 1814.648904] bond5128: (slave vxcan1): Error -22 calling dev_set_mtu
-> [ 1814.649124] dev_rcv_lists == NULL! 000000008e41fb06 (bond5128)
-> [ 1814.696420] bond5129: (slave vxcan1): The slave device specified does not
-> support setting the MAC address
-> [ 1814.696438] bond5129: (slave vxcan1): Error -22 calling dev_set_mtu
-> 
-> So it's not the vxcan1 netdev that causes the issue but (sporadically!!) the
-> bonding netdev.
-> 
-> Interesting enough that the bonding device bond5128 obviously passes the
-> 
->        if (dev && dev->type != ARPHRD_CAN)
->                 return -ENODEV;
-> test.
-> 
-> ?!?
-Did you consider my hypothesis I sent you (at 20h22 tonight)?
-I don't personally understand all the locks around networking, but your
-observation acks my theory of race condition.
+We recently ran into a suspend problem where the alarmtimer platform
+driver's suspend function fails because the RTC that it's trying
+to program is already suspended. This patch series fixes that problem
+by making the platform device a child of the RTC.
 
-> 
-> Regards,
-> Oliver
+The last two patches are non-critical changes to how we do the wakeup
+and some code cleanup.
+
+Changes from v1:
+ * Dropped first patch that got picked up
+ * Reworked second patch to autogenerate the device id and use IS_ERR()
+
+Stephen Boyd (3):
+  alarmtimer: Make alarmtimer platform device child of RTC device
+  alarmtimer: Use wakeup source from alarmtimer platform device
+  alarmtimer: Always export alarmtimer_get_rtcdev() and update docs
+
+ kernel/time/alarmtimer.c | 38 ++++++++++++++------------------------
+ 1 file changed, 14 insertions(+), 24 deletions(-)
+
+
+base-commit: bc80e6ad8ee12b0ee6c7d05faf1ebd3f2fb8f1e5
+-- 
+Sent by a computer, using git, on the internet
+
