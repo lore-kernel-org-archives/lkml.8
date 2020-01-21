@@ -2,90 +2,73 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F30C33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C801C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 635BE24125
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:27:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=seznam.cz header.i=@seznam.cz header.b="EeUMomcU"
+	by mail.kernel.org (Postfix) with ESMTP id 5A23722522
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:30:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729153AbgAUJ1k (ORCPT
+        id S1729074AbgAUJaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 04:27:40 -0500
-Received: from mxs2.seznam.cz ([77.75.76.125]:24951 "EHLO mxs2.seznam.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727360AbgAUJ1k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 04:27:40 -0500
-Received: from email.seznam.cz
-        by email-smtpc4a.ng.seznam.cz (email-smtpc4a.ng.seznam.cz [10.23.10.105])
-        id 7f9a8daecac1ecbc7f93687d;
-        Tue, 21 Jan 2020 10:26:27 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seznam.cz; s=beta;
-        t=1579598787; bh=B98H5CD1TrItHXF6OHCM5qRVUqCXcpTVW1s6/kNp8NM=;
-        h=Received:Reply-To:Subject:To:Cc:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=EeUMomcUvbdia5xMiMgS/ckb35431lCh8nixHcvjBtTu+akWDIIHtfpjIIqkdPWfO
-         mHb+mXIlplyVziMXDJTSotOecBLgAZQm8Bm+UXXuO7eqSsOTiYpsbTe2k1WfGVsqPR
-         f8b46TlZPtw0yCtNlo3bz7D7ITrE4H8W0THlTpVw=
-Received: from [77.75.76.48] (unknown-62-130.xilinx.com [149.199.62.130])
-        by email-relay18.ng.seznam.cz (Seznam SMTPD 1.3.108) with ESMTP;
-        Tue, 21 Jan 2020 10:26:14 +0100 (CET)  
-Reply-To: monstr@monstr.eu
-Subject: Re: [PATCH V4 0/4] Add Xilinx's ZynqMP AES-GCM driver support
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Kalyani Akula <kalyania@xilinx.com>
-Cc:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        git <git@xilinx.com>, Harsh Jain <harshj@xilinx.com>,
-        Sarat Chand Savitala <saratcha@xilinx.com>,
-        Mohan Marutirao Dhanawade <mohand@xilinx.com>
-References: <1574235842-7930-1-git-send-email-kalyani.akula@xilinx.com>
- <BN7PR02MB51241CCD25BD1269B4394D9AAF320@BN7PR02MB5124.namprd02.prod.outlook.com>
- <20200120075559.kra4dqdphbbnid5h@gondor.apana.org.au>
-From:   Michal Simek <monstr@seznam.cz>
-Message-ID: <1abdf222-9517-976e-b3d3-bfc1c92c4663@seznam.cz>
-Date:   Tue, 21 Jan 2020 10:26:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 21 Jan 2020 04:30:02 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:10121 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727220AbgAUJaB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 04:30:01 -0500
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 77E63953C003BFDE2BD5;
+        Tue, 21 Jan 2020 17:29:59 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 21 Jan 2020 17:29:48 +0800
+From:   Chen Zhou <chenzhou10@huawei.com>
+To:     <davem@davemloft.net>, <mhabets@solarflare.com>, <kuba@kernel.org>,
+        <sergei.shtylyov@cogentembedded.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <chenzhou10@huawei.com>
+Subject: [PATCH -next v2] drivers: net: declance: fix comparing pointer to 0
+Date:   Tue, 21 Jan 2020 17:24:55 +0800
+Message-ID: <20200121092455.82983-1-chenzhou10@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20200120075559.kra4dqdphbbnid5h@gondor.apana.org.au>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Herbert,
+Fixes coccicheck warning:
 
-On 20. 01. 20 8:55, Herbert Xu wrote:
-> On Mon, Jan 20, 2020 at 06:59:22AM +0000, Kalyani Akula wrote:
->> Hi Herbert,
->>
->> Any review comments on below patch set.
-> 
-> Please resubmit your patch series once you have acks for the
-> non-crypto bits ready.  Please also state how you want it to
-> be merged, i.e., whether only the crypto patch is meant  for
-> the crypto tree or whether it needs to go in as a whole.
+./drivers/net/ethernet/amd/declance.c:611:14-15:
+	WARNING comparing pointer to 0
 
-All these drivers which requires firmware interface extension can be
-added via your tree or I can take them via arm-soc tree with your ack.
+Replace "skb == 0" with "!skb".
 
-It is really up to you. I am happy to just ack patches out of crypto and
-feel free to take them via your tree.
-Or please let me know when you are done with review and I will take them.
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+---
+ drivers/net/ethernet/amd/declance.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Kalyani: Please fix that stuff I have reported and we are waiting for v5.
-
-Thanks,
-Michal
+diff --git a/drivers/net/ethernet/amd/declance.c b/drivers/net/ethernet/amd/declance.c
+index 6592a2d..7282ce5 100644
+--- a/drivers/net/ethernet/amd/declance.c
++++ b/drivers/net/ethernet/amd/declance.c
+@@ -608,7 +608,7 @@ static int lance_rx(struct net_device *dev)
+ 			len = (*rds_ptr(rd, mblength, lp->type) & 0xfff) - 4;
+ 			skb = netdev_alloc_skb(dev, len + 2);
+ 
+-			if (skb == 0) {
++			if (!skb) {
+ 				dev->stats.rx_dropped++;
+ 				*rds_ptr(rd, mblength, lp->type) = 0;
+ 				*rds_ptr(rd, rmd1, lp->type) =
+-- 
+2.7.4
 
