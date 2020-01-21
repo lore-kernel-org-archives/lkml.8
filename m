@@ -2,81 +2,103 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2212C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B965C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:59:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E3BC24656
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:57:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3997120882
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 09:59:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729516AbgAUJ5z (ORCPT
+        id S1729122AbgAUJ7y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 04:57:55 -0500
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:49313 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729238AbgAUJ5f (ORCPT
+        Tue, 21 Jan 2020 04:59:54 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51822 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728512AbgAUJ7y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 04:57:35 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07417;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0ToHep6T_1579600652;
-Received: from localhost(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0ToHep6T_1579600652)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 21 Jan 2020 17:57:33 +0800
-From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-To:     herbert@gondor.apana.org.au, davem@davemloft.net
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 4/6] crypto: testmgr - support test with different ciphertext per encryption
-Date:   Tue, 21 Jan 2020 17:57:16 +0800
-Message-Id: <20200121095718.52404-5-tianjia.zhang@linux.alibaba.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200121095718.52404-1-tianjia.zhang@linux.alibaba.com>
-References: <20200121095718.52404-1-tianjia.zhang@linux.alibaba.com>
+        Tue, 21 Jan 2020 04:59:54 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00L9xoTC155198
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 04:59:52 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2xmg3atfw8-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 04:59:51 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <srikar@linux.vnet.ibm.com>;
+        Tue, 21 Jan 2020 09:59:34 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 21 Jan 2020 09:59:30 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00L9wdat40632592
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Jan 2020 09:58:39 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DD75E4C04A;
+        Tue, 21 Jan 2020 09:59:29 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AA3374C044;
+        Tue, 21 Jan 2020 09:59:27 +0000 (GMT)
+Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Tue, 21 Jan 2020 09:59:27 +0000 (GMT)
+Date:   Tue, 21 Jan 2020 15:29:27 +0530
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Phil Auld <pauld@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <Morten.Rasmussen@arm.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Parth Shah <parth@linux.ibm.com>,
+        Rik van Riel <riel@surriel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] sched, fair: Allow a small load imbalance between low
+ utilisation SD_NUMA domains v4
+Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+References: <20200114101319.GO3466@techsingularity.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <20200114101319.GO3466@techsingularity.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+x-cbid: 20012109-0008-0000-0000-0000034B55AD
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20012109-0009-0000-0000-00004A6BBACA
+Message-Id: <20200121095927.GG20112@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-21_02:2020-01-21,2020-01-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 spamscore=0
+ impostorscore=0 phishscore=0 malwarescore=0 suspectscore=0
+ lowpriorityscore=0 adultscore=0 mlxscore=0 priorityscore=1501
+ mlxlogscore=976 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1910280000 definitions=main-2001210085
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some asymmetric algorithms will get different ciphertext after
-each encryption, such as SM2, and let testmgr support the testing
-of such algorithms.
+* Mel Gorman <mgorman@techsingularity.net> [2020-01-14 10:13:20]:
 
-In struct akcipher_testvec, set c and c_size to be empty, skip
-the comparison of the ciphertext, and compare the decrypted
-plaintext with m to achieve the test purpose.
+> Changelog since V3
+> o Allow a fixed imbalance a basic comparison with 2 tasks. This turned out to
+>   be as good or better than allowing an imbalance based on the group weight
+>   without worrying about potential spillover of the lower scheduler domains.
+> 
 
-Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
----
- crypto/testmgr.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
 
-diff --git a/crypto/testmgr.c b/crypto/testmgr.c
-index 82513b6b0abd..db9b5ac878e7 100644
---- a/crypto/testmgr.c
-+++ b/crypto/testmgr.c
-@@ -3741,7 +3741,7 @@ static int test_akcipher_one(struct crypto_akcipher *tfm,
- 		pr_err("alg: akcipher: %s test failed. err %d\n", op, err);
- 		goto free_all;
- 	}
--	if (!vecs->siggen_sigver_test) {
-+	if (!vecs->siggen_sigver_test && c) {
- 		if (req->dst_len != c_size) {
- 			pr_err("alg: akcipher: %s test failed. Invalid output len\n",
- 			       op);
-@@ -3772,6 +3772,11 @@ static int test_akcipher_one(struct crypto_akcipher *tfm,
- 		goto free_all;
- 	}
- 
-+	if (!vecs->siggen_sigver_test && !c) {
-+		c = outbuf_enc;
-+		c_size = req->dst_len;
-+	}
-+
- 	op = vecs->siggen_sigver_test ? "sign" : "decrypt";
- 	if (WARN_ON(c_size > PAGE_SIZE))
- 		goto free_all;
 -- 
-2.17.1
+Thanks and Regards
+Srikar Dronamraju
 
