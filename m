@@ -2,60 +2,60 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58056C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F062C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:21:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F1E4206A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:21:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1653122525
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:21:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="OJlRNvIR"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="D8GxvoTM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729259AbgAUQVy (ORCPT
+        id S1729387AbgAUQV4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 11:21:54 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43147 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729099AbgAUQVx (ORCPT
+        Tue, 21 Jan 2020 11:21:56 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34070 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729085AbgAUQVy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 11:21:53 -0500
-Received: by mail-wr1-f68.google.com with SMTP id d16so3891032wre.10
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 08:21:52 -0800 (PST)
+        Tue, 21 Jan 2020 11:21:54 -0500
+Received: by mail-wr1-f65.google.com with SMTP id t2so3949730wrr.1
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 08:21:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dCO/do5DHVfIQPCIyHYXgkWfu/2dYtkwXa9z13AszGQ=;
-        b=OJlRNvIRUumKavrqTqkq2pxczLISX8ldWDUJAeuIIQhMZeOw9Y2MClGMeefv0Hfh2r
-         ikAA8L56giqzS8koR7L7zNBo0Mt2okR86Pbcs3fwoiWl4w64mtPXzXiZdHc4px8e3McZ
-         kflG9BsgqWNTvG459jpg8x1p8hxU29+xUcsRpUek0rd7gk4poEATSW41BeDRimgSuzSY
-         Mfl2ingoJZYD+6iybmeCt8CqgdLoPZZLobXYOJNWBvmQoJ1KoyF3c1kV/JqumRfJgbRd
-         p4vA3pCaCyVkd68cNF6eSahA5W/uvAfYa7QqKbcOmFMzNnZi43Mb8WT9DkWRsyx3K6fy
-         cZjQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=c83oVOuqImIzXQyusYFsofs6lDjrmtrJIiJurwz27sw=;
+        b=D8GxvoTMOQgJS2L0yLABhKKzcjx3RI9HH6JWxyE4P9nV1BwoWiO04bRfOtLMz1PODH
+         seh04IQ7Pu60ulwxRjc6hyxFLo+gl7venIbx/pU66InLu/YulRjnaM3f7eEX7Fy54Ns7
+         ZdoK//AeAw9yub5TEn43LjdLvdx4e5vX527mg0N8O+rch6zt+57C10obLivW5M51deIe
+         WemzikzT3sJN3U3YocaDffFsY8rQH3rXYH+8+BFw141Mqc6tG9whYG3AqD4mwE6uWfU9
+         tREaQ831UcAXG2HdSPysYm1YOXezVZQDZ0x42ukqAOCCdkPtPrjbNpSiVVys9MCjyKg9
+         3/YQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dCO/do5DHVfIQPCIyHYXgkWfu/2dYtkwXa9z13AszGQ=;
-        b=t3gT74vaRWlTkHvwzB4K+ok5cfsZ1KQ8Jnw3mxxhyyc6loJYUKeQNx4RPRqE3W+feU
-         jINizSZePuVnDdqIuIV52krdhpl1qLxpC2VTyw1D6dmIbu6jCf/X/Mkotgoyl+AoQKug
-         yxF4aq+3DHcGma+UQ+PVceM/C7II4X4pGczzyw6vDsoE+pfEpsO7FkY1pAADINYxt7y5
-         DbC/5EIdsVynYSKTPHcmeE+32FmxQwyzg9izHP+ILT5wzJlyTK20R7Is6xIAfgASso9r
-         gAChDe9APWGk9XUO0IrwVap4gQTiDnocBQdRabhxWtkKaf1LX8o0HoJHpnvlHWDJr8xR
-         +D3g==
-X-Gm-Message-State: APjAAAWNwMrYqWu7uawH+wLTFzyKL5ikBm+dtijWQEaYKFSUcaL3fpA5
-        p9mQSOSOg8PusFYUNDtQttupUkJS7lg=
-X-Google-Smtp-Source: APXvYqxklianQ0ofvqLxYR2a2z3GpqfiPn0ws4Ah0pBX2gRuHgq2zU8pOLSmdyO7K+dsYPFgWCimaQ==
-X-Received: by 2002:adf:f789:: with SMTP id q9mr6331457wrp.103.1579623711462;
-        Tue, 21 Jan 2020 08:21:51 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=c83oVOuqImIzXQyusYFsofs6lDjrmtrJIiJurwz27sw=;
+        b=DezVoFkupmMK21O+wryGegbuH4ec/OXngyW5LNNsUYRi6WIAPiNNlO6lxm6cU4SXTs
+         gt75P9HUaTUOYhPyyAAz4PgO/7BZEYVl2yb5lafi51ObGBwNglRs/mc6yVxramRowoS7
+         sf8dcIa3rAzLzmBdtIvSOX3CgMIwloBW/008zvgL9Xo42JBo2rU4HliMF0Sk9TDrIibe
+         M3yXQnKKcDzxvjGv84p3Itjvyf+zzVDGkzqjoDFiJsQzP7T33uczUTLAGk9DCPduC/Uw
+         3nPfuR347tf61jIOH95SHmB+4rhzvCXQyLRgLyNQrKN5eeqCNcbNVLq3P9CAcZ5+Key9
+         39Qw==
+X-Gm-Message-State: APjAAAWuFvupIMa0L2IkGIVetWPzEjZSr8aeBoRxVIziOQf1w8G/iw9n
+        SDyw8DjoRwY9uYk+q9vZQjlaKzUbzzM=
+X-Google-Smtp-Source: APXvYqzv+PoYIaDtjKouci7MtJ3WSfyi/kOcDGlFoBlFJzHC+sxJytfWm0QSaIuHgif2iEMvCvR1sQ==
+X-Received: by 2002:a5d:6b47:: with SMTP id x7mr6187916wrw.277.1579623712652;
+        Tue, 21 Jan 2020 08:21:52 -0800 (PST)
 Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id k8sm52454388wrl.3.2020.01.21.08.21.50
+        by smtp.gmail.com with ESMTPSA id k8sm52454388wrl.3.2020.01.21.08.21.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 08:21:50 -0800 (PST)
+        Tue, 21 Jan 2020 08:21:51 -0800 (PST)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -63,10 +63,12 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Guenter Roeck <linux@roeck-us.net>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         linux-watchdog@vger.kernel.org
-Subject: [RFC 0/2] watchdog: Provide user control over WDOG_STOP_ON_REBOOT
-Date:   Tue, 21 Jan 2020 16:21:43 +0000
-Message-Id: <20200121162145.166334-1-dima@arista.com>
+Subject: [RFC 1/2] watchdog: Check WDOG_STOP_ON_REBOOT in reboot notifier
+Date:   Tue, 21 Jan 2020 16:21:44 +0000
+Message-Id: <20200121162145.166334-2-dima@arista.com>
 X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200121162145.166334-1-dima@arista.com>
+References: <20200121162145.166334-1-dima@arista.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,22 +76,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add WDIOS_RUN_ON_REBOOT and WDIOS_STOP_ON_REBOOT to control the
-watchdog's behavior over reboot.
+Many watchdog drivers use watchdog_stop_on_reboot() helper in order
+to stop the watchdog on system reboot. Unfortunately, this logic is
+coded in driver's probe function and doesn't allows user to decide what
+to do during shutdown/reboot.
 
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: Wim Van Sebroeck <wim@linux-watchdog.org>
-Cc: linux-watchdog@vger.kernel.org
+On the other side, Xen and Qemu watchdog drivers (xen_wdt and i6300esb)
+may be configured to either send NMI or turn off/reboot VM as
+the watchdog action. As the kernel may stuck at any state, sending NMIs
+can't reliably reboot the VM.
 
-Dmitry Safonov (2):
-  watchdog: Check WDOG_STOP_ON_REBOOT in reboot notifier
-  watchdog/uapi: Add WDIOS_{RUN,STOP}_ON_REBOOT
+At Arista, we benefited from the following set-up: the emulated watchdogs
+trigger VM reset and softdog is set to catch less severe conditions to
+generate vmcore. Just before reboot watchdog's timeout is increased
+to some good-enough value (3 mins). That keeps watchdog always running
+and guarantees that VM doesn't stuck.
 
- drivers/watchdog/watchdog_dev.c | 29 ++++++++++++++++++++---------
- include/linux/watchdog.h        |  6 ++++++
- include/uapi/linux/watchdog.h   |  3 ++-
- 3 files changed, 28 insertions(+), 10 deletions(-)
+As a preparation to move the watchdog's decision to stop on reboot or
+not in userspace, allow WDOG_STOP_ON_REBOOT to be set during runtime,
+not only on driver's probing. Always register reboot notifier and check
+WDOG_STOP_ON_REBOOT inside it (on actual reboot).
 
+Signed-off-by: Dmitry Safonov <dima@arista.com>
+---
+ drivers/watchdog/watchdog_dev.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
+index 4b2a85438478..8766dd93028f 100644
+--- a/drivers/watchdog/watchdog_dev.c
++++ b/drivers/watchdog/watchdog_dev.c
+@@ -1103,6 +1103,10 @@ static int watchdog_reboot_notifier(struct notifier_block *nb,
+ 	struct watchdog_device *wdd;
+ 
+ 	wdd = container_of(nb, struct watchdog_device, reboot_nb);
++
++	if (!test_bit(WDOG_STOP_ON_REBOOT, &wdd->status))
++		return NOTIFY_DONE;
++
+ 	if (code == SYS_DOWN || code == SYS_HALT) {
+ 		if (watchdog_active(wdd)) {
+ 			int ret;
+@@ -1139,16 +1143,13 @@ int watchdog_dev_register(struct watchdog_device *wdd)
+ 		return ret;
+ 	}
+ 
+-	if (test_bit(WDOG_STOP_ON_REBOOT, &wdd->status)) {
+-		wdd->reboot_nb.notifier_call = watchdog_reboot_notifier;
++	wdd->reboot_nb.notifier_call = watchdog_reboot_notifier;
+ 
+-		ret = devm_register_reboot_notifier(&wdd->wd_data->dev,
+-						    &wdd->reboot_nb);
+-		if (ret) {
+-			pr_err("watchdog%d: Cannot register reboot notifier (%d)\n",
+-			       wdd->id, ret);
+-			watchdog_dev_unregister(wdd);
+-		}
++	ret = devm_register_reboot_notifier(&wdd->wd_data->dev, &wdd->reboot_nb);
++	if (ret) {
++		pr_err("watchdog%d: Cannot register reboot notifier (%d)\n",
++				wdd->id, ret);
++		watchdog_dev_unregister(wdd);
+ 	}
+ 
+ 	return ret;
 -- 
 2.25.0
 
