@@ -2,665 +2,147 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0058AC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 10:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4DEC33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 10:58:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A789420882
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 10:57:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5395C24125
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 10:58:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QGPdisPq"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="RmbavHFS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729037AbgAUK5V (ORCPT
+        id S1729095AbgAUK6h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 05:57:21 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:44503 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726052AbgAUK5V (ORCPT
+        Tue, 21 Jan 2020 05:58:37 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:54566 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728682AbgAUK6g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 05:57:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579604238;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=8fy9LI88H3XFNuF554foB3KfI2ZcLsUGizEZDvRbpNo=;
-        b=QGPdisPqqT1umd4FZzH/ITAo8jcc7MgeOhzWRHXhbZvDjPSekTMH0R4oSY+N+k39Lz6t1o
-        iP/AAGTS5nOyJYPLM1hdpXjVnUC2ve7czLTex43vH9erg+6/8IU37HBHLDqdWCfEemKl1N
-        4C5vqpCHWX58oixSr3khtRDieJ/UqPE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-397-ibbJLSFtP0W6GISRpSYvGg-1; Tue, 21 Jan 2020 05:57:16 -0500
-X-MC-Unique: ibbJLSFtP0W6GISRpSYvGg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E56DF8010DE;
-        Tue, 21 Jan 2020 10:57:14 +0000 (UTC)
-Received: from ws.net.home (ovpn-204-202.brq.redhat.com [10.40.204.202])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9C4EA383;
-        Tue, 21 Jan 2020 10:57:13 +0000 (UTC)
-Date:   Tue, 21 Jan 2020 11:57:11 +0100
-From:   Karel Zak <kzak@redhat.com>
-To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        util-linux@vger.kernel.org
-Subject: [ANNOUNCE] util-linux v2.35
-Message-ID: <20200121105711.zzeeolydlivqnik7@ws.net.home>
+        Tue, 21 Jan 2020 05:58:36 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200121105835euoutp01285605858f5213026dcbca630dc55d8a~r4cF4XF4r1978419784euoutp01P
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 10:58:35 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200121105835euoutp01285605858f5213026dcbca630dc55d8a~r4cF4XF4r1978419784euoutp01P
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1579604315;
+        bh=CCXtL4ZaJCU0uf6vOaRECcOyWgMUoLBYKe30olA7sHg=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=RmbavHFSzSsSsEPiqqYhSzMP8Y1GKNdjuwyTS6THAnvxMm5Pvz752F2SO6NdTSSWJ
+         u+tdvrgMaSAQkbNQayoedEsA6e/xYNDzJTzOFQfeWxJAkE/rPGoIBFpEH9/YiCuodN
+         TdSl+80pcBRxOzKdRaFyullM6GGuomxgti4ogFe0=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200121105835eucas1p276d1c29c86d045d9e369e324ee511bb7~r4cFrWQiH2701927019eucas1p2s;
+        Tue, 21 Jan 2020 10:58:35 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 95.9C.60679.B59D62E5; Tue, 21
+        Jan 2020 10:58:35 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200121105834eucas1p262277e5d831ef8a054d9069aa7c5213e~r4cFY8qp_0767507675eucas1p2p;
+        Tue, 21 Jan 2020 10:58:34 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200121105834eusmtrp219550d81668a6801927bb2b71958b528~r4cFYWWpn2884128841eusmtrp2P;
+        Tue, 21 Jan 2020 10:58:34 +0000 (GMT)
+X-AuditID: cbfec7f4-0e5ff7000001ed07-0f-5e26d95bbbbe
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id C3.97.08375.A59D62E5; Tue, 21
+        Jan 2020 10:58:34 +0000 (GMT)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200121105834eusmtip2b87fdc273175b7e00c510474fb766d42~r4cFHN7Jw2149421494eusmtip2I;
+        Tue, 21 Jan 2020 10:58:34 +0000 (GMT)
+Subject: Re: [PATCH -next] ata: pata_macio: fix comparing pointer to 0
+To:     Chen Zhou <chenzhou10@huawei.com>
+Cc:     axboe@kernel.dk, linux-ide@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <ce9dbc1d-0f48-da24-af56-74a93f964e3a@samsung.com>
+Date:   Tue, 21 Jan 2020 11:58:32 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200121012827.1036-1-chenzhou10@huawei.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprAKsWRmVeSWpSXmKPExsWy7djP87rRN9XiDPoeMVusvtvPZnGh/SWr
+        xbEdj5gsLu+aw+bA4tFy5C2rx+WzpR6fN8kFMEdx2aSk5mSWpRbp2yVwZcxb3cNW8IO9omfN
+        S/YGxi1sXYycHBICJhIr/m5j7mLk4hASWMEosXLSOxYI5wujxLOuG+wQzmdGie51newwLVMm
+        L4NKLGeU2P/+KpTzllGi4ecMJpAqYQE3iR13GplBbBEBVYklfxaCdTML+EicmN/NCGKzCVhJ
+        TGxfBWbzCthJrHjQAlTDwcECVL96Bh9IWFQgQuLTg8OsECWCEidnPmEBKeEEan293wdiorjE
+        rSfzmSBseYntb+eAvSMh0M4usXxFDzPE0S4SvXPaoR4Qlnh1fAuULSPxfydIM0jDOkaJvx0v
+        oLq3M0osn/wPGkrWEnfO/WID2cwsoCmxfpc+RNhR4nBjB9hBEgJ8EjfeCkIcwScxadt0Zogw
+        r0RHmxBEtZrEhmUb2GDWdu1cyTyBUWkWks9mIXlnFpJ3ZiHsXcDIsopRPLW0ODc9tdgoL7Vc
+        rzgxt7g0L10vOT93EyMwnZz+d/zLDsZdf5IOMQpwMCrx8L6YrBonxJpYVlyZe4hRgoNZSYR3
+        QRNQiDclsbIqtSg/vqg0J7X4EKM0B4uSOK/xopexQgLpiSWp2ampBalFMFkmDk6pBkYJRtFD
+        UgdPsouyvTE+YBo7e/qliRz1Bvz3/3VWsks9nbd2miL7OWEzxYAKozpe/oRTlXM0F8v/nBxu
+        IVL+72T5n8jKOJ0qydBO7St969KCtl/MubmhQFpMRnKD/y5+zczlkle5V95bemNLWuv3RX8T
+        /EOVu3nntq4/5MOodv8wW8QxbjP3hUosxRmJhlrMRcWJAFuNXWEjAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrIIsWRmVeSWpSXmKPExsVy+t/xe7pRN9XiDF4d1rdYfbefzeJC+0tW
+        i2M7HjFZXN41h82BxaPlyFtWj8tnSz0+b5ILYI7SsynKLy1JVcjILy6xVYo2tDDSM7S00DMy
+        sdQzNDaPtTIyVdK3s0lJzcksSy3St0vQy5i3uoet4Ad7Rc+al+wNjFvYuhg5OSQETCSmTF7G
+        3sXIxSEksJRR4saN1cxdjBxACRmJ4+vLIGqEJf5c62KDqHnNKLHweBMrSEJYwE1ix51GZhBb
+        REBVYsmfhewgNrOAj8SJ+d2MEA29jBLtzyczgiTYBKwkJravArN5BewkVjxoYQdZxgLUvHoG
+        H0hYVCBC4vCOWVAlghInZz5hASnhBGp9vd8HYry6xJ95l5ghbHGJW0/mM0HY8hLb385hnsAo
+        NAtJ9ywkLbOQtMxC0rKAkWUVo0hqaXFuem6xoV5xYm5xaV66XnJ+7iZGYPRsO/Zz8w7GSxuD
+        DzEKcDAq8fA6TFONE2JNLCuuzD3EKMHBrCTCu6AJKMSbklhZlVqUH19UmpNafIjRFOi1icxS
+        osn5wMjOK4k3NDU0t7A0NDc2NzazUBLn7RA4GCMkkJ5YkpqdmlqQWgTTx8TBKdXAWBEvuJDp
+        7K6c2VdcH3IWnp3G5y/L1yObEj55XfiNhtJ3DhMLN1iy7fn72vHv0juGxv9OXfiivZHXb4HA
+        0T3bD6xuyznoJOcpfG1XSeZRlpO1b092bFvtuzqkvC9w0pTd+RVRPCvEfeUevLc4FHZX+caF
+        CY1qR9jiHe4suxCa8iBUbsbLyqtSb5VYijMSDbWYi4oTAcq9++i0AgAA
+X-CMS-MailID: 20200121105834eucas1p262277e5d831ef8a054d9069aa7c5213e
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200121013332eucas1p223fe0dd6da9ac002f3d5dd152d4ea7a8
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200121013332eucas1p223fe0dd6da9ac002f3d5dd152d4ea7a8
+References: <CGME20200121013332eucas1p223fe0dd6da9ac002f3d5dd152d4ea7a8@eucas1p2.samsung.com>
+        <20200121012827.1036-1-chenzhou10@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-The util-linux release v2.35 is available at
-=20
-  http://www.kernel.org/pub/linux/utils/util-linux/v2.35/
-=20
-Feedback and bug reports, as always, are welcomed.
-=20
-  Karel
+On 1/21/20 2:28 AM, Chen Zhou wrote:
+> Fixes coccicheck warning:
+> 
+> ./drivers/ata/pata_macio.c:982:31-32:
+> 	WARNING comparing pointer to 0, suggest !E
+> 
+> Compare pointer-typed values to NULL rather than 0.
+> 
+> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
 
+Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
 
-Util-linux 2.35 Release Notes
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D
-
-Release highlights
-------------------
-
-agetty(8) now provides a new command-line option --show-issue to print is=
-sue
-file(s) on the current terminal in the same way how it will be printed wh=
-en
-agetty(8) executed regularly.
-                            =20
-agetty(8) supports /run/issue and /usr/lib/issue files and directrories n=
-ow.
-                            =20
-dmesg(1) escapes unprintable and potentially unsafe characters by default=
-. The
-new command-line option --noescape disables this feature.
-                            =20
-kill(1) now uses pidfd kernel feature to implement a new command-line opt=
-ion
---timeout. The option allows sending a sequence of follow-up signals with
-defined timeouts without the possibility of race.      =20
-                            =20
-script(1) now used the same PTY code as su(1) --pty. script(1) has also b=
-een
-massively extended to support new logging features like log signals, stdi=
-n or
-additional session information. The new features are implemented by the n=
-ew
-timing file format. The changes are backwardly compatible, and the origin=
-al
-timing file format is still the default.=20
-                            =20
-scriptreplay(1) now allows to extract stdin or session summary from scrip=
-t(1)
-logs.
-                            =20
-scriptlive(1) this NEW COMMAND re-execute stdin log by a shell in PTY ses=
-sion.=20
-                            =20
-mount(8) and libmount now provides built-in dm-verity support if linked w=
-ith
-libcryptsetup. This new feature is EXPERIMENTAL and disabled by default; =
-use
---with-cryptsetup to enable.=20
-                            =20
-libmount now uses poll() syscall to verify /proc/self/mountinfo file cons=
-istence
-and it re-read the file if modified during previous read call. =20
-                            =20
-mount(8) now provides a new command-line option --target-prefix to mount,=
- for
-example, fstab to an alternative location. This feature is usable, for ex=
-ample,
-for chroots or containers.              =20
-                            =20
-mount(8) now allows to use -o together with --all, for example, "mount --=
-all
--o ro --target-prefix /foo" will mount real-only all filesystems from fst=
-ab to
-/foo.             =20
-                            =20
-lsblk(8) provides new columns FSVER (filesystem version) and PARTTYPENAME
-(human-readable partition type).
-                            =20
-lsblk(8) reads device properties from /dev/<devname> text file when execu=
-ted
-with --sysroot. This is usable for tests and dumps.
-                            =20
-sfdisk(8) uses progress bar for --move-data and data move is now signific=
-antly
-faster than in previous versions as it does not use fsync during the data=
- move
-(use --move-use-fsync to disable this feature).
-
-
-
-Changes between v2.34 and v2.35
--------------------------------
-
-agetty:
-   - Remove superfluous fflush()  [Stanislav Brabec]
-   - add --show-issue to review issue output  [Karel Zak]
-   - add support for /run/issue and /usr/lib/issue  [Karel Zak]
-   - keep freed issue file pointer zeroized  [Karel Zak]
-   - return proper value if compiled without ISSUEDIR support  [Patrick S=
-teinhardt]
-   - simplify code in dolog() preprocessor blocks  [Sami Kerola]
-bash-completion:
-   - (unshare) add --map-current-user  [Karel Zak]
-   - Add fallback for symlinks/images  [Kevin Locke]
-   - Add non-canonical device fallback  [Kevin Locke]
-   - Standardize fsck/mkfs file/device  [Kevin Locke]
-   - update for new script tools  [Karel Zak]
-   - update options  [Sami Kerola]
-   - update script, scriptlive, and scriptreplay files  [Sami Kerola]
-blkid:
-   - (man) add note about udev to --list-one  [Karel Zak]
-   - retport block size of a filesystem  [Mikulas Patocka]
-build-sys:
-   - .gitignore hwclock-parse-date.c  [Karel Zak]
-   - Include <stdlib.h> in ./configure wchar_t test  [Florian Weimer]
-   - add --with-cryptsetup to config-gen.d/all.conf  [Karel Zak]
-   - add UL_REQUIRES_ARCH()  [Karel Zak]
-   - add missing NR underscore to UL_CHECK_SYSCALL()  [Sami Kerola]
-   - add missing header  [Karel Zak]
-   - check for linux/capability.h  [Karel Zak]
-   - cleanup prefixed used for tests  [Karel Zak]
-   - fix UTIL_LINUX_PT_SGI_H macro [lgtm scan]  [Karel Zak]
-   - fix build  with pty  [Karel Zak]
-   - fix out-of-tree build for hwclock  [Karel Zak]
-   - fix typo  [Karel Zak]
-   - improve hwclock CMOS dependences  [Karel Zak]
-   - introduce $sysconfstaticdir  [Karel Zak]
-   - make scriptlive optional  [Samuel Thibault]
-   - release++ (v2.35-rc1)  [Karel Zak]
-   - release++ (v2.35-rc2)  [Karel Zak]
-   - remove duplicate includes  [Karel Zak]
-   - support 'none' for parallel tests  [Karel Zak]
-   - use parse-date() only for hwclock  [Karel Zak]
-cal:
-   - (man) make -w, -m and --iso relation more obvious  [Karel Zak]
-cfdisk:
-   - check mnt_table_parse_fstab() return code [coverity scan]  [Karel Za=
-k]
-chfn:
-   - don't append extra tailing commas  [Karel Zak]
-choom:
-   - improve docs  [Karel Zak]
-chsh:
-   - replace getpw unsafe functions with xgetpw  [Quentin Rameau]
-cleanup:
-   - Remove some spurious spaces  [Elliott Mitchell]
-colcrt:
-   - make seek to \n more robust  [Karel Zak]
-column:
-   - fix outputing empty column at the end of line  [Yousong Zhou]
-   - pass control struct to local_wcstok()  [Sami Kerola]
-cript:
-   - always use decimal point numbers in logs  [Karel Zak]
-disk-utils:
-   - docs  fix sfdisk(8) man page typo  [Matthew Krupcale]
-dmesg:
-   - add --noescape  [Karel Zak]
-   - do not stop on \0  [Karel Zak]
-   - fix output hex encoding  [Karel Zak]
-doc:
-   - howto-man-page.txt  Use font macros instead of font escapes  [Bjarni=
- Ingi Gislason]
-docs:
-   - Fix adjtime documentation  [Pierre Labastie]
-   - add GPLv3 text  [Karel Zak]
-   - add bjd-pfq to AUTHORS (rev.c co-author)  [Karel Zak]
-   - add irqtop to TODO  [Karel Zak]
-   - add non-signalfd PTY request to TODO  [Karel Zak]
-   - add sfdisk --dump and --backup improvements to TODO  [Karel Zak]
-   - add v2.35-ReleaseNotes  [Karel Zak]
-   - correct su.1 runuser reference from section 8 to 1  [Sami Kerola]
-   - fix mixtyped constant.  [Andrius =C5=A0tikonas]
-   - fix typos [fossies codespell scan]  [Karel Zak]
-   - remove implemented TODO items  [Karel Zak]
-   - try to find broken man references and fix them  [Sami Kerola]
-   - update AUTHORS file  [Karel Zak]
-   - update howto-tests.txt  [Karel Zak]
-   - update v2.35-ReleaseNotes  [Karel Zak]
-   - update year in libs docs  [Karel Zak]
-   - we have 2019 already  [Karel Zak]
-eject:
-   - use O_EXCL on default  [Karel Zak]
-fallocate:
-   - fallocate.1 List gfs2 as supporting punch-hole  [Andrew Price]
-fdformat:
-   - cast before lseek [lgtm scan]  [Karel Zak]
-fdisk:
-   - Correct handling of hybrid MBR  [Elliott Mitchell]
-   - add hint about --wipe to warning  [Karel Zak]
-   - cleanup wipe warning  [Karel Zak]
-   - fix quit dialog for non-libreadline version  [Karel Zak]
-   - make quit question more usable  [Karel Zak]
-   - use 'r' to return from MBR to GPT  [Karel Zak]
-fsfreeze:
-   - remove unnecessary condition [lgtm scan]  [Karel Zak]
-fstrim:
-   - fix systemd service protection  [Karel Zak]
-   - ignore non-directory mountpoints  [Karel Zak]
-hexdump:
-   - add header file guards [lgtm scan]  [Karel Zak]
-hwclock:
-   - add SPDX-License-Identifier(s)  [Karel Zak]
-   - report rtc open() errors on --verbose  [Karel Zak]
-   - use CMOS clock only if available  [Carlos Santos]
-include:
-   - add some missing licence stuff to header files  [Karel Zak]
-include/all-io:
-   - remove unnecessary condition [lgtm scan]  [Karel Zak]
-include/closestream:
-   - avoid close more than once  [Karel Zak]
-   - fix assignment to read-only standard streams  [Patrick Steinhardt]
-include/pidfd-utils:
-   - small cleanup  [Karel Zak]
-include/strutils:
-   - add strdup_between_structs()  [Karel Zak]
-   - add strrealloc()  [Karel Zak]
-include/xalloc:
-   - ensure xstrdup() and xstrndup() returns nonnull attribute  [Sami Ker=
-ola]
-   - reindent function bodies to unify indentation  [Sami Kerola]
-   - use multiline function declarations  [Sami Kerola]
-isosize:
-   - move ISO size functions into a shared header  [Daniel Drake]
-kill:
-   - add another ifdef  [Karel Zak]
-   - add missing ifdefs  [Karel Zak]
-   - deallocate follow_ups [assan]  [Karel Zak]
-   - make man page more informative about --timeout  [Karel Zak]
-   - report features on -V, add lish_header initialization  [Karel Zak]
-   - use pidfd system calls to implement --timeout option  [Sami Kerola]
-last:
-   - replace strncat() with more robust mem2strcpy()  [Sami Kerola]
-lib:
-   - add _PATH_TMP fallback  [Karel Zak]
-   - add missing license headers  [Karel Zak]
-lib/fileutils:
-   - add close_all_fds()  [Karel Zak]
-lib/loopdev.c:
-lib/path:
-   - add ul_path_stat(), fix absolute paths  [Karel Zak]
-   - fix missing header for `struct stat`  [Patrick Steinhardt]
-   - make sure ul_path_read_buffer() derminate result  [Karel Zak]
-lib/pty:
-   - allow use callback from mainloop  [Karel Zak]
-   - make sure we not use closed FD  [Karel Zak]
-   - reset mainloop timeout on signal  [Karel Zak]
-   - save sigmask, add API to free all resources  [Karel Zak]
-lib/pty-session:
-   - add generic PTY container code  [Karel Zak]
-   - add log callbacks  [Karel Zak]
-   - add loggin callback to code, follow return codes  [Karel Zak]
-   - fix compilation  [Karel Zak]
-   - improve debug messages  [Karel Zak]
-   - make wait_child callback optional  [Karel Zak]
-   - simplify example/test code  [Karel Zak]
-lib/pwdutils:
-   - add xgetpwuid  [Quentin Rameau]
-lib/randutils:
-   - re-licensing back to BSD  [Karel Zak]
-lib/timeutils:
-   - add %Y-%m-%dT%H %M %S to parse_timestamp()  [Karel Zak]
-lib/ttyutils:
-   - avoid checking same thing twice  [Sami Kerola]
-libblkid:
-   - (drbd) fix comment formatting  [Karel Zak]
-   - (drbd) simplify padding  [Karel Zak]
-   - (xfs) external log  check for regular xfs on more sectors  [Mauricio=
- Faria de Oliveira]
-   - (xfs) fix sector size calculation  [Karel Zak]
-   - (zfs) don't probe whole-disk areas covered by partitions  [Karel Zak=
-]
-   - Fix documentation in libblkid header  [John Baublitz]
-   - check for medium on CDMROMs probing  [Karel Zak]
-   - check number of test_blkid_save arguments correctly  [Sami Kerola]
-   - check status for the current CDROM slot  [Karel Zak]
-   - do not interpret NTFS as MBR  [Karel Zak]
-   - fix address sanitizer issues  [Sami Kerola]
-   - fix file descriptor leak in blkid_verify()  [Karel Zak]
-   - improve MD I/O size calculation [lgtm scan]  [Karel Zak]
-   - improve handling of ISO files with partition tables  [Daniel Drake]
-   - improve identification of ISO9660 partition  [Daniel Drake]
-   - improve vfat entries calculation [lgtm scan]  [Karel Zak]
-   - open device in nonblock mode.  [Michal Suchanek]
-   - remove unnecessary condition [lgtm scan]  [Karel Zak]
-   - udf  Fix reporting UDF 2.60 revision for Mac OS X disks  [Pali Roh=C3=
-=A1r]
-libdisk:
-   - write sample output to stdout  [Karel Zak]
-libfdisk:
-   - (MBR) use 0xEA partition type by BootLoaderSpecification  [Karel Zak=
-]
-   - (bsd) cast before ask [lgtm scan]  [Karel Zak]
-   - (docs) add notes about fdisk_enable_wipe()  [Karel Zak]
-   - (gpt) add GUID for APFS containers  [Ernesto A. Fern=C3=A1ndez]
-   - (gpt) cast number of entries [lgtm scan]  [Karel Zak]
-   - (gpt) fix hybrid MBR detection, fix 'w'  [Karel Zak]
-   - (script) support shortcuts in the type=3D field  [Karel Zak]
-   - Fix double free of *_chs strings in fdisk_partition  [Vojtech Trefny=
-]
-   - Space before first partition may not be aligned  [Evan Green]
-   - add fdisk_assign_device_by_fd()  [Karel Zak]
-   - add fdisk_script_set_table()  [Karel Zak]
-   - add sector-size to dump  [Karel Zak]
-   - cleanup fdisk_deassign_device() docs  [Karel Zak]
-   - consolidate strdup() use  [Karel Zak]
-   - don't use FAT as MBR  [Karel Zak]
-   - don't use NTFS as MBR  [Karel Zak]
-   - fix fdisk_script_get_table()  [Karel Zak]
-   - fix typos  [Marcos Mello]
-   - fix variable shadowing  [Sami Kerola]
-   - improve Sun partitions calculation [lgtm scan]  [Karel Zak]
-   - improve partition copy on resize  [Karel Zak]
-   - move GPT partition types to include/  [Karel Zak]
-   - refer to partx(8) rather than to kpartx(8)  [Karel Zak]
-   - use grain as small as possible  [Karel Zak]
-libfidk:
-   - (dos) fix tiny partitions calculation  [Karel Zak]
-libmount:
-   - (monitor) remove dead code [coverity scan]  [Karel Zak]
-   - Add libselinux dependency to pkgconfig file  [Masami Hiramatsu]
-   - Keep the mnt_tab info for the existent dest in mnt_copy_fs()  [Kevin=
- Hao]
-   - Recognize more FUSE pseudofs (avfsd, lxcfs, vmware-vmblock)  [Darsey=
- Litzenberger]
-   - add support for verity devices via libcryptsetup  [Luca Boccassi]
-   - add target prefix support  [Karel Zak]
-   - add verity to mount -V output  [Karel Zak]
-   - allow use -o together with --all  [Karel Zak]
-   - cleanup strdup() use in context, add reg.test  [Karel Zak]
-   - do not obscure return code when checking verity options  [Luca Bocca=
-ssi]
-   - don't access struct member, use API  [Karel Zak]
-   - don't use /proc/mounts fallback if filename specified  [Karel Zak]
-   - fix comment referring to passno field  [Patrick Steinhardt]
-   - fix free() call on error  [Karel Zak]
-   - fix mnt_context_next_remount()  [Karel Zak]
-   - fix potential null pointer dereference  [Sami Kerola]
-   - fix typo  [Karel Zak]
-   - fix typo in mnt_context_prepare_helper() [lgtm scan]  [Karel Zak]
-   - improve X-mount.mkdir for non-root users  [Karel Zak]
-   - improve mountinfo reliability  [Karel Zak]
-   - make sure optsmode is initialized  [Karel Zak]
-   - move context fs merge to separate function  [Karel Zak]
-   - save current FS setting as template  [Karel Zak]
-   - use fmemopen() in more robust way [coverity scan]  [Karel Zak]
-   - use strdup_between_structs()  [Karel Zak]
-   - use vsnprintf() in more robust way [coverity scan]  [Karel Zak]
-libsmartcols:
-   - cleanup and extend padding functionality  [Karel Zak]
-libuuid:
-   - add header file guard [lgtm scan]  [Karel Zak]
-login:
-   - reduce file-descriptors cleanup overhead  [Karel Zak]
-   - simplify string handling  [Sami Kerola]
-login-utils:
-   - add header file guards [lgtm scan]  [Karel Zak]
-losetup:
-   - Typo fix  [Stanislav Brabec]
-lsblk:
-   - add FSVER (filesystem version) column  [Karel Zak]
-   - add FSVER to --fs  [Karel Zak]
-   - add PARTTYPENAME column  [Karel Zak]
-   - fix -E segfault  [Karel Zak]
-   - force to print PKNAME for partition  [Karel Zak]
-   - never fallback to udev/blkid on --sysroot  [Karel Zak]
-   - on --sysroot read attributes from /dev/<devname> text file  [Karel Z=
-ak]
-   - read also GROUP,OWNER and MODE from dumps  [Karel Zak]
-   - update man description of -f / --fs for current columns  [Vladimir S=
-lavik]
-lscpu:
-   - (man) add note about cache sizes  [Karel Zak]
-   - Add HiSilicon aarch64 tsv110 cpupart  [John Garry]
-   - add a new columns to --cache  [Karel Zak]
-   - make code more readable [lgtm scan]  [Karel Zak]
-   - prefer memcpy() to manual pointer arithmetic  [Sami Kerola]
-   - top-level DMI function refactoring  [Karel Zak]
-lslogins:
-   - assume unterminated strings in wtmp/btmp [coverity scan]  [Karel Zak=
-]
-man:
-   - improve script and scriptreplay formatting style  [Sami Kerola]
-man pages:
-   - Add a comma after "e.g." and "i.e."  [Bjarni Ingi Gislason]
-   - Change a HYPHEN-MINUS (-) to a minus (\-) for options and numbers  [=
-Bjarni Ingi Gislason]
-   - Fix misuse of two-fonts macros  [Bjarni Ingi Gislason]
-   - Make the number of .RS/.RE equal  [Bjarni Ingi Gislason]
-misc:
-   - fix typos [codespell]  [Sami Kerola]
-   - replaces atexit(close_stdout) with new close_stdout_atexit()  [Karel=
- Zak]
-mkswap:
-   - cast before lseek [lgtm scan]  [Karel Zak]
-mount:
-   - (dm-verity) update man page  [Karel Zak]
-   - (man) document --target-prefix  [Karel Zak]
-   - (man) small typo fixes  [Merlin B=C3=BCge]
-   - add --target-prefix  [Karel Zak]
-   - add verity example to man page  [Karel Zak]
-   - no exit on EPERM, continue without suid  [Karel Zak]
-mountpoint:
-   - add --nofollow option  [Sami Kerola]
-nologin:
-   - Prevent error from su -c  [Stanislav Brabec]
-   - silently ignore well known shell command-line options  [Sami Kerola]
-partx:
-   - document -d vs. --nr and fix test  [Karel Zak]
-   - don't report ENXIO as error on -d  [Karel Zak]
-po:
-   - add pt.po (from translationproject.org)  [Pedro Albuquerque]
-   - merge changes  [Karel Zak]
-   - remove possibility to translate static option arguments  [Sami Kerol=
-a]
-   - update cs.po (from translationproject.org)  [Petr P=C3=ADsa=C5=99]
-   - update de.po (from translationproject.org)  [Mario Bl=C3=A4ttermann]
-   - update es.po (from translationproject.org)  [Antonio Ceballos Roa]
-   - update fr.po (from translationproject.org)  [Fr=C3=A9d=C3=A9ric Marc=
-hal]
-   - update hr.po (from translationproject.org)  [Bo=C5=BEidar Putanec]
-   - update ja.po (from translationproject.org)  [Takeshi Hamasaki]
-   - update pl.po (from translationproject.org)  [Jakub Bogusz]
-   - update pt.po (from translationproject.org)  [Pedro Albuquerque]
-   - update pt_BR.po (from translationproject.org)  [Rafael Fontenelle]
-   - update zh_CN.po (from translationproject.org)  [Boyuan Yang]
-po/update-potfiles:
-   - fallback to `find` when git doesn't work  [Jan Chren (rindeal)]
-renice:
-   - fix --help text  [Karel Zak]
-   - fix arguments description in --help  [Karel Zak]
-script:
-   - add --echo  [Karel Zak]
-   - add --log-in  [Karel Zak]
-   - add --logging-format  [Karel Zak]
-   - add debug messages around waitpid()  [Karel Zak]
-   - add missing exit()  [Karel Zak]
-   - add more information to timing log  [Karel Zak]
-   - add multistream timing file initialization  [Karel Zak]
-   - add note about --log-in and passwords  [Karel Zak]
-   - add option --log-out  [Karel Zak]
-   - add option --log-timing  [Karel Zak]
-   - allow to use the same log for more streams  [Karel Zak]
-   - cleanup info logging  [Karel Zak]
-   - cleanup logs freeing  [Karel Zak]
-   - cleanup usage  [Karel Zak]
-   - default to new format when new features expected  [Karel Zak]
-   - document SIGUSR1  [Karel Zak]
-   - fix ECHO use, improve shell exec  [Karel Zak]
-   - fix man page on --logging-format  [Karel Zak]
-   - fix signalfd use  [Karel Zak]
-   - fix typos [codespell]  [Sami Kerola]
-   - follow --logging-format on -t  [Karel Zak]
-   - listen to SIGUSR1, flush logs on the signal  [Karel Zak]
-   - log additional information  [Karel Zak]
-   - log file usage refactoring  [Karel Zak]
-   - make --help more readable  [Karel Zak]
-   - make optional argument more robust  [Karel Zak]
-   - remove unused variable  [Karel Zak]
-   - report also timing file, do it only once  [Karel Zak]
-   - support multi-stream logging  [Karel Zak]
-   - use lib/pty-session  [Karel Zak]
-   - write signals to timing file  [Karel Zak]
-scriptlive:
-   - add --command, cleanup shell exec  [Karel Zak]
-   - add man page  [Karel Zak]
-   - add new command to re-execute script(1) typescript  [Karel Zak]
-   - free resource at the and  [Karel Zak]
-   - keep ECHO flag, improve welcome message  [Karel Zak]
-   - remove unnecessary variables  [Karel Zak]
-   - run shell in PTY  [Karel Zak]
-   - terminate session at end of the log  [Karel Zak]
-   - translate error messages too  [Karel Zak]
-scriptreplay:
-   - (man) add missing --log-* oprions  [Karel Zak]
-   - (utils) detect empty steps  [Karel Zak]
-   - add --cr-mode  [Karel Zak]
-   - add --log-{in,out,io} options  [Karel Zak]
-   - add --stream  [Karel Zak]
-   - add --stream to the man page  [Karel Zak]
-   - add --summary  [Karel Zak]
-   - add -T, --log-timing  [Karel Zak]
-   - check for EOF  [Karel Zak]
-   - cleanup usage()  [Karel Zak]
-   - fix error path  [Karel Zak]
-   - fix io data log use  [Karel Zak]
-   - fix typo  [Karel Zak]
-   - make data log file optional for --summary  [Karel Zak]
-   - make sure timing file specified  [Karel Zak]
-   - move all utils to script-playutils.{c,h}  [Karel Zak]
-   - print info and signals  [Karel Zak]
-   - restrict header name size  [Karel Zak]
-   - rewrite to support new timing file format  [Karel Zak]
-   - skip unwanted steps  [Karel Zak]
-   - use struct timeval for delay  [Karel Zak]
-setpwnam:
-   - use more appropriate allocation size types  [Sami Kerola]
-setterm:
-   - cleanup usage() and man page  [Karel Zak]
-   - fix --clear  [Karel Zak]
-sfdisk:
-   - (--move-data) add simple progress bar  [Karel Zak]
-   - (--move-data) add speed to progress bar, don't use POSIX_FADV_DONTNE=
-ED  [Karel Zak]
-   - (--move-data) keep step size based on optimal I/O  [Karel Zak]
-   - (--move-data) make log optional  [Karel Zak]
-   - (man) add note about interactive mode)  [Karel Zak]
-   - (move-data) improve MiB/s progress bar  [Karel Zak]
-   - add --move-use-fsync, disable fsync() by default  [Karel Zak]
-   - add -J between mutually exclusive options  [Karel Zak]
-   - check fdisk_script_set_header() return code [coverity scan]  [Karel =
-Zak]
-   - make --no-act usable for --move-data too  [Karel Zak]
-   - mark --dump and --list-free as mutually exclusive  [Karel Zak]
-   - remove never read value [clang scan]  [Karel Zak]
-   - write all message to stdout  [Karel Zak]
-strutils:
-   - fix double free in strrealloc() [coverity scan]  [Karel Zak]
-su:
-   - (pty) remove unnecessary call  [Karel Zak]
-   - More descriptive error message on malformed user entry  [Jakub Hroze=
-k]
-   - fix error message  [Karel Zak]
-   - silence a useless warning  [Jouke Witteveen]
-   - use lib/pty-session.c code for --pty  [Karel Zak]
-sys-utils/manuals:
-   - Make the number of the paired macros ".RS" and ".RE" equal  [Bjarni =
-Ingi Gislason]
-term-utils:
-   - add header file guards [lgtm scan]  [Karel Zak]
-tests:
-   - (blkid) update regression tests (due to BLOCK_SIZE)  [Karel Zak]
-   - (chfn) force to bash  [Karel Zak]
-   - (col) avoid hardcoding of errno string  [Patrick Steinhardt]
-   - (colcrt) fix reliance on EILSEQ in POSIX locale  [Patrick Steinhardt=
-]
-   - (colcrt) use env to set locale  [Karel Zak]
-   - (column) use actually invalid multibytes to test encoding  [Patrick =
-Steinhardt]
-   - (fdisk) avoid hardcoding of errno string  [Patrick Steinhardt]
-   - (fdisk) make sure we use the same sizes for MD devices  [Karel Zak]
-   - (fdisk) update padding in output  [Karel Zak]
-   - (getopt) remove unwanted paths from error output  [Karel Zak]
-   - (libfdisk) remove reliance on buffer behaviour of standard streams  =
-[Patrick Steinhardt]
-   - (libmount) make X-* and x-* more robust  [Karel Zak]
-   - (libsmartcols) add padding tests  [Karel Zak]
-   - (lsblk) gather also udev attributes for new dumps  [Karel Zak]
-   - (sfdisk) update move output  [Karel Zak]
-   - Add test for current version (v5) of XFS filesystem  [Anatoly Pugach=
-ev]
-   - Skip fdisk/mbr-nondos-mode on Sparc as unsupported  [Karel Zak, Anat=
-oly Pugachev]
-   - add --parsable, remove TS_OPT_parsable  [Karel Zak]
-   - add missing 'ts_check_prog xz'  [Karel Zak]
-   - add mount --all tests  [Karel Zak]
-   - add new test for chfn gecos  [Radka Skvarilova]
-   - add remaining stderr outputs  [Karel Zak]
-   - add script and scriptlive replay  [Karel Zak]
-   - another prompt fix  [Karel Zak]
-   - commit add missing file  [Karel Zak]
-   - don't show diff for TS_KNOWN_FAIL  [Karel Zak]
-   - fix --unbuffered mode with ASAN  [Karel Zak]
-   - fixes blkid/md-raidX-whole on Sparc  [Anatoly Pugachev]
-   - improve unbuffer check  [Karel Zak]
-   - lscpu s390 nested virtualization  [Radka Skvarilova]
-   - make scriptlive output more portable  [Karel Zak]
-   - mark mdadm tests as TS_KNOWN_FAIL  [Karel Zak]
-   - mark scriptlive as KNOWN_FAILED  [Karel Zak]
-   - remove device name from blkdiscard output  [Karel Zak]
-   - remove option --posix  [Karel Zak]
-   - remove reliance on buffer behaviour of stderr/stdout streams  [Patri=
-ck Steinhardt]
-   - remove unbuffered ts_run feature  [Karel Zak]
-   - split stdout and stderr  [Karel Zak]
-   - upadet scriptlive output  [Karel Zak]
-   - update fdisk output  [Karel Zak]
-   - update sfdisk dumps  [Karel Zak]
-   - update sfdisk wipe output  [Karel Zak]
-   - use env and support both unbuffer/stdbuf  [Patrick Steinhardt]
-   - use subtests for mountpoint(1)  [Karel Zak]
-travis:
-   - don't call tests in parallel for root  [Karel Zak]
-   - fix sudo command line  [Karel Zak]
-   - force non-parallel for root  [Karel Zak]
-unshare:
-   - add --keep-caps option  [James Peach]
-   - add --map-current-user option  [James Peach]
-   - cleanup capabilities code [lgtm scan]  [Karel Zak]
-   - fix --map-current-user short option (-c)  [Matthew Harm Bekkema]
-verity:
-   - add new verity.roothashfile option  [Luca Boccassi]
-   - add support for Forward Error Correction options  [Luca Boccassi]
-   - ensure that hash_device and root_hash[_file] are passed together or =
-not at all  [Luca Boccassi]
-wdctl:
-   - add control struct  [Karel Zak]
-   - default to /dev/watchdog0  [Karel Zak]
-   - remove duplicate include of <unistd.h>  [Patrick Steinhardt]
-   - remove printing from main()  [Karel Zak]
-   - rename watch dog info struct  [Karel Zak]
-wipefs:
-   - Allow explicitly enable/disablement  [Sam Voss]
-
-- Allow explicitly enable/disablement  [Sam Voss]
+> ---
+>  drivers/ata/pata_macio.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/ata/pata_macio.c b/drivers/ata/pata_macio.c
+> index 1bfd015..e47a282 100644
+> --- a/drivers/ata/pata_macio.c
+> +++ b/drivers/ata/pata_macio.c
+> @@ -979,7 +979,7 @@ static void pata_macio_invariants(struct pata_macio_priv *priv)
+>  	priv->aapl_bus_id =  bidp ? *bidp : 0;
+>  
+>  	/* Fixup missing Apple bus ID in case of media-bay */
+> -	if (priv->mediabay && bidp == 0)
+> +	if (priv->mediabay && !bidp)
+>  		priv->aapl_bus_id = 1;
+>  }
+>  
 
