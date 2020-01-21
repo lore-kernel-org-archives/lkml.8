@@ -2,115 +2,129 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D0A2C33CAA
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B508CC33CB8
 	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 03:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFB2D24650
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 03:20:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8746024650
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 03:21:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="T5DUMBdx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tDAWKBVt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729073AbgAUDUv (ORCPT
+        id S1729095AbgAUDU7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 22:20:51 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:37625 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728904AbgAUDUu (ORCPT
+        Mon, 20 Jan 2020 22:20:59 -0500
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:38285 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728042AbgAUDU6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 22:20:50 -0500
-Received: by mail-il1-f193.google.com with SMTP id t8so1212247iln.4
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 19:20:50 -0800 (PST)
+        Mon, 20 Jan 2020 22:20:58 -0500
+Received: by mail-yw1-f65.google.com with SMTP id 10so847183ywv.5;
+        Mon, 20 Jan 2020 19:20:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xDcWE9EWGtVID/iKX16rez9xRzd/8Nb913yHk9dAMYM=;
-        b=T5DUMBdxwLNNZ2G6qr8/JwsZn+Orq7oGwZHKldGB2lBt2xpg9AjyfbW2/wzCP9PSdm
-         8CgNcUWgZa9614tn+w5aZLOx8tW88UzdZt/hmnm2yp/VClsrsP4l5QJfsoD6TuMd3dVE
-         fmzAtzVsPouElzps7mYBPOH0HVkeS+xtAjSn/dpf+iG+W6x45PGkjEw3Hlh+8p2QR/fP
-         bY7mC0S/30YPNLxD7TU3rd1Q7DEHzZ2vMbzHTpUOp0LnuxoIcqPaqpj0YWGSEVtJ8sfw
-         KEgK6inoc29l49Yf8u+JVxMYKU030evP3NCibeYe+ThDYnvdckvBF2hhyl/nEY+sNUI2
-         ms2w==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ZaIHc6pqnmPWDx7qq975a0b91T6rwGOHbUAFNlb8Q2w=;
+        b=tDAWKBVtK8elIgEhFfQUp6MqFnZDP/ZlYN/O6u1MhHhJ42hzW5+gupCqR/Q8gjdAlK
+         tMAWjrNdHg9C31RwDQHYKKGHBogXttELnSM7oDZtPdPUsLtFokmCb+mCsG+fUqeQb1HH
+         gtmQjNu0S8i2kFJGBajkbAWtB1UAc/wud5XyNmxxBQ3QVfAF4w07/IWUtGAzy2fFtTCX
+         CIohi5hWheiH5SOYQ/44lgWMl4sAl5miBhxf8cw3Fjo0Q8qb5pIV84emuNMulwqTTx3f
+         wiJLIFQ2Ryyb9/EgUIJ+2jzbN7FTLQebo/fODbq9YHao7tE3d2k4wsi629e3pEH3yiT3
+         Swww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xDcWE9EWGtVID/iKX16rez9xRzd/8Nb913yHk9dAMYM=;
-        b=C3d4Apsm2G4gnz+5LRHyPMD2aIkVC6pgu38+GG145QnG4xRtG8BvXYGsk5k/hmrEDl
-         IkW1zhTFyDWRZ6bnXonW7klYcHkTw4t7fNlA5EhinkW+UXXVJSlGialB0pqWE4+9N+CO
-         Mv5BhYQGGeTHnLM81b9yQgQSOzwJ9g8LZ7lL6LHGwMC7CCkptwDl4HFqokI3tD429t1A
-         x/QklOG2PTvzZv2DCRqIyBJkInnZiIjrfGwlCk0Ps4SRcWEAvN9phdLkYYWRxh91a3F/
-         67jc8p9XFwuBb5i2e1QdMPn6JuxDrADkbTJQOhoJadMzQsYDdZ6nGg9KSmsjgEodhl8V
-         8zqg==
-X-Gm-Message-State: APjAAAWYaKTsxmN/Nwouhla/ZK10qg6OpUD4eyuTsff6DP1hQQwLdzqJ
-        uz+jWnDD9aRGk9peQe99OPlu3oibuxSzgRH2/hwMBA==
-X-Google-Smtp-Source: APXvYqx9zjbvVKABtdD59999UxaHDFsXuScZSoky+6zJEAyheszYYxPT63r0lZj7p1c8DjDNzhyUxBooXqS0Fhwfkxk=
-X-Received: by 2002:a92:db49:: with SMTP id w9mr1812972ilq.277.1579576849943;
- Mon, 20 Jan 2020 19:20:49 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZaIHc6pqnmPWDx7qq975a0b91T6rwGOHbUAFNlb8Q2w=;
+        b=ad8nSrsMFFKe7W6Sdxz2oKE3cIFRWRGtER5zmzsJqgn9ogq0CxYLMJQsEMjaPsuhU+
+         /nrlbkUXaAJJ3kAWOAMZ6OZlRWPFGSw2mXlXvUw6UNKjTtz21pMq0NwvPnz0D1EtHB8j
+         rFe4WpgFR+PohXKuqm2DFj+YDmgEZIAOMJj49vlLGKpWlRMmQg0wricDJcn0IGQ3TbJQ
+         QoQfm9nGvwhyXkqwu7tfPTDjJjLAh3NxC1NXJuNT8yNnLzTc04GRy4hOhbAaG+LA4ksf
+         NIy9o4TYBHLPRo9hi24Z2cf3BLrUHNi8nA8Nul/P4Viz1y0gj90cuRjROcnpvK7gk6Ra
+         YtWA==
+X-Gm-Message-State: APjAAAXAWuxykH000zh6S7E0KghIpdQgllNqqAryo/KijUKmMZrJOebv
+        9lKamMU/mfMTVT9szdCKA6oS6iX9
+X-Google-Smtp-Source: APXvYqyB1kWMVOd1/04k3K1h71X8ksgxeQ4E1l2iPIuc/lLeHnGpI2/h0ku8ccNynm+AndyNqf64mA==
+X-Received: by 2002:a81:99d2:: with SMTP id q201mr1841317ywg.158.1579576856922;
+        Mon, 20 Jan 2020 19:20:56 -0800 (PST)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id a23sm16930605ywa.32.2020.01.20.19.20.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 Jan 2020 19:20:56 -0800 (PST)
+Subject: Re: [RFC PATCH 0/3] Add device tree build information
+To:     Steve McIntyre <steve.mcintyre@linaro.org>
+Cc:     Alexandre Torgue <alexandre.torgue@st.com>, robh+dt@kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        david@gibson.dropbear.id.au, sjg@chromium.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, devicetree-compiler@vger.kernel.org
+References: <20200113181625.3130-1-alexandre.torgue@st.com>
+ <f21ad44d-f119-2035-b4ee-16b3619879af@gmail.com>
+ <233e0a5f-d38f-908c-5ca7-66ee87d0fcae@st.com>
+ <7cfd0bc0-13fd-98ea-9bfd-6cfbbfd77b6d@gmail.com>
+ <220e3aea-b273-417a-69c9-059236c888af@st.com>
+ <a1233cd8-e73a-82d7-74bf-69109d1a0a07@gmail.com>
+ <20200120182837.GO3697@linaro.org>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <f09ce50c-6721-c9d3-4f27-3f98a2d0b183@gmail.com>
+Date:   Mon, 20 Jan 2020 21:20:55 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191220001517.105297-1-olof@lixom.net> <ff6dc8997083c5d8968df48cc191e5b9e8797618.camel@perches.com>
- <CAOesGMgxHGBdkdVOoWYpqSF-13iP3itJksCRL8QSiS0diL26dA@mail.gmail.com> <CALzJLG-L+0dgW=5AXAB8eMjAa3jaSHVaDLuDsSBf9ahqM0Ti-A@mail.gmail.com>
-In-Reply-To: <CALzJLG-L+0dgW=5AXAB8eMjAa3jaSHVaDLuDsSBf9ahqM0Ti-A@mail.gmail.com>
-From:   Olof Johansson <olof@lixom.net>
-Date:   Mon, 20 Jan 2020 19:20:38 -0800
-Message-ID: <CAOesGMhXHCz+ahs6whKsS32uECVry9Lk6BQxcvczPXgcoh6b6w@mail.gmail.com>
-Subject: Re: [PATCH] net/mlx5e: Fix printk format warning
-To:     Saeed Mahameed <saeedm@dev.mellanox.co.il>
-Cc:     Joe Perches <joe@perches.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        RDMA mailing list <linux-rdma@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200120182837.GO3697@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 1/20/20 12:28 PM, Steve McIntyre wrote:
+> Hi Frank!
+> 
+> Thanks for the link back to the previous discussion, it's very
+> helpful.
+> 
+> On Mon, Jan 20, 2020 at 10:14:22AM -0600, Frank Rowand wrote:
+>> On 1/20/20 4:56 AM, Alexandre Torgue wrote:
+> 
+> ...
+> 
+>>> and the date). There are no "dtb versions", and "absolute/relative"
+>>> path which created concerns. One remaining concern is "reproducible
+>>
+>> Here is an example of the info from one of my builds:
+>>
+>>   From Linux 5.5.0-rc2-dirty by frowand the Mon Jan 20 09:50:58 CST 2020.
+>>
+>> The information 'Linux 5.5.0-rc2-dirty' is precisely what was most objected
+>> to in my proposal.
+> 
+> ACK. :-( I'm surprised to see so much push-back on what looks like a
+> simple piece of information here.
 
-On Mon, Dec 30, 2019 at 8:35 PM Saeed Mahameed
-<saeedm@dev.mellanox.co.il> wrote:
->
-> On Sat, Dec 21, 2019 at 1:19 PM Olof Johansson <olof@lixom.net> wrote:
-> >
-> > On Thu, Dec 19, 2019 at 6:07 PM Joe Perches <joe@perches.com> wrote:
-> > >
-> > > On Thu, 2019-12-19 at 16:15 -0800, Olof Johansson wrote:
-> > > > Use "%zu" for size_t. Seen on ARM allmodconfig:
-> > > []
-> > > > diff --git a/drivers/net/ethernet/mellanox/mlx5/core/wq.c b/drivers/net/ethernet/mellanox/mlx5/core/wq.c
-> > > []
-> > > > @@ -89,7 +89,7 @@ void mlx5_wq_cyc_wqe_dump(struct mlx5_wq_cyc *wq, u16 ix, u8 nstrides)
-> > > >       len = nstrides << wq->fbc.log_stride;
-> > > >       wqe = mlx5_wq_cyc_get_wqe(wq, ix);
-> > > >
-> > > > -     pr_info("WQE DUMP: WQ size %d WQ cur size %d, WQE index 0x%x, len: %ld\n",
-> > > > +     pr_info("WQE DUMP: WQ size %d WQ cur size %d, WQE index 0x%x, len: %zu\n",
-> > > >               mlx5_wq_cyc_get_size(wq), wq->cur_sz, ix, len);
-> > > >       print_hex_dump(KERN_WARNING, "", DUMP_PREFIX_OFFSET, 16, 1, wqe, len, false);
-> > > >  }
-> > >
-> > > One might expect these 2 outputs to be at the same KERN_<LEVEL> too.
-> > > One is KERN_INFO the other KERN_WARNING
-> >
-> > Sure, but I'll leave that up to the driver maintainers to decide/fix
-> > -- I'm just addressing the type warning here.
->
-> Hi Olof, sorry for the delay, and thanks for the patch,
->
-> I will apply this to net-next-mlx5 and will submit to net-next myself.
-> we will fixup and address the warning level comment by Joe.
-
-This seems to still be pending, and the merge window is soon here. Any
-chance we can see it show up in linux-next soon?
+Me too.
 
 
-Thanks,
+> 
+> I've had users *specifically* asking for this kind of identification
+> so that they can verify the version of the DTB they're using at
+> runtime. Right now it can be a guessing game, which does not help
+> people trying to debug problems.
+> 
+> Cheers,
+> 
 
--Olof
+If the information was reported as debug information via pr_debug(),
+would that work for your use case?  Or would the users' kernels
+not have debug enabled in the configuration?
+
+-Frank
