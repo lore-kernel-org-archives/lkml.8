@@ -2,85 +2,119 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB541C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 07:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57443C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 07:28:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B41921734
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 07:27:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Ru9094CO"
+	by mail.kernel.org (Postfix) with ESMTP id 323F622522
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 07:28:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727360AbgAUH1w (ORCPT
+        id S1728093AbgAUH2C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 02:27:52 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:46184 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725789AbgAUH1w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 02:27:52 -0500
-Received: from zn.tnic (p200300EC2F0B040000195D609404E69E.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:400:19:5d60:9404:e69e])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 140D21EC0BE5;
-        Tue, 21 Jan 2020 08:27:51 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1579591671;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=t+PM6Oc2ij6AV8rno557RFMrsYc6NEDFWWH1fOYDxbk=;
-        b=Ru9094COIS6H4cYm2k/CmhM15ylnm/0gD/xCVLwxlZbUQNA4tiTSZR/5UI11n1l5dfPYUO
-        H8twfHgdCgxLOLH4LTGVbIm/9+q0tFG4GNUstyxOkkSJ1BYWG1ciYTcl/i6PZEdliImzIZ
-        qVuQy/MPdKLz4tzLRK0K+vE0BBKnYV0=
-Date:   Tue, 21 Jan 2020 08:27:44 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Qian Cai <cai@lca.pw>
-Cc:     tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-        luto@kernel.org, peterz@infradead.org, elver@google.com,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] x86/mm/pat: fix a data race in cpa_inc_4k_install
-Message-ID: <20200121072744.GA7808@zn.tnic>
-References: <20200121041200.2260-1-cai@lca.pw>
+        Tue, 21 Jan 2020 02:28:02 -0500
+Received: from 3.mo173.mail-out.ovh.net ([46.105.34.1]:42354 "EHLO
+        3.mo173.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbgAUH2C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 02:28:02 -0500
+X-Greylist: delayed 597 seconds by postgrey-1.27 at vger.kernel.org; Tue, 21 Jan 2020 02:28:01 EST
+Received: from player695.ha.ovh.net (unknown [10.108.54.119])
+        by mo173.mail-out.ovh.net (Postfix) with ESMTP id 6CFBA12D604
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 08:12:11 +0100 (CET)
+Received: from kaod.org (lns-bzn-46-82-253-208-248.adsl.proxad.net [82.253.208.248])
+        (Authenticated sender: groug@kaod.org)
+        by player695.ha.ovh.net (Postfix) with ESMTPSA id 478D9E528FFF;
+        Tue, 21 Jan 2020 07:11:28 +0000 (UTC)
+Date:   Tue, 21 Jan 2020 08:11:26 +0100
+From:   Greg Kurz <groug@kaod.org>
+To:     Andrew Donnellan <ajd@linux.ibm.com>
+Cc:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?UTF-8?B?Q8OpZHJpYw==?= Le Goater <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+Subject: Re: [PATCH v2 05/27] powerpc: Map & release OpenCAPI LPC memory
+Message-ID: <20200121081126.2f9c6972@bahia.lan>
+In-Reply-To: <f33979a2-a083-dd0e-3273-7ebff66d6385@linux.ibm.com>
+References: <20191203034655.51561-1-alastair@au1.ibm.com>
+        <20191203034655.51561-6-alastair@au1.ibm.com>
+        <f33979a2-a083-dd0e-3273-7ebff66d6385@linux.ibm.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200121041200.2260-1-cai@lca.pw>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Ovh-Tracer-Id: 11838274572983900498
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedugedrudejgddutdduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvffukfgjfhfogggtgfesthejredtredtvdenucfhrhhomhepifhrvghgucfmuhhriicuoehgrhhouhhgsehkrghougdrohhrgheqnecukfhppedtrddtrddtrddtpdekvddrvdehfedrvddtkedrvdegkeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrheileehrdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepghhrohhugheskhgrohgurdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 11:12:00PM -0500, Qian Cai wrote:
-> diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-> index 20823392f4f2..31e4a73ae70e 100644
-> --- a/arch/x86/mm/pat/set_memory.c
-> +++ b/arch/x86/mm/pat/set_memory.c
-> @@ -128,7 +128,7 @@ static inline void cpa_inc_2m_checked(void)
->  
->  static inline void cpa_inc_4k_install(void)
->  {
-> -	cpa_4k_install++;
-> +	WRITE_ONCE(cpa_4k_install, READ_ONCE(cpa_4k_install) + 1);
->  }
->  
->  static inline void cpa_inc_lp_sameprot(int level)
-> -- 
+On Tue, 21 Jan 2020 17:46:12 +1100
+Andrew Donnellan <ajd@linux.ibm.com> wrote:
 
-Fix a data race, says your subject?
+> On 3/12/19 2:46 pm, Alastair D'Silva wrote:
+> > From: Alastair D'Silva <alastair@d-silva.org>
+> > 
+> > This patch adds platform support to map & release LPC memory.
+> 
+> Might want to explain what LPC is.
+> 
+> Otherwise:
+> 
+> Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
+> 
+> > 
+> > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> > ---
+> >   arch/powerpc/include/asm/pnv-ocxl.h   |  2 ++
+> >   arch/powerpc/platforms/powernv/ocxl.c | 42 +++++++++++++++++++++++++++
+> >   2 files changed, 44 insertions(+)
+> > 
+> > diff --git a/arch/powerpc/include/asm/pnv-ocxl.h b/arch/powerpc/include/asm/pnv-ocxl.h
+> > index 7de82647e761..f8f8ffb48aa8 100644
+> > --- a/arch/powerpc/include/asm/pnv-ocxl.h
+> > +++ b/arch/powerpc/include/asm/pnv-ocxl.h
+> > @@ -32,5 +32,7 @@ extern int pnv_ocxl_spa_remove_pe_from_cache(void *platform_data, int pe_handle)
+> >   
+> >   extern int pnv_ocxl_alloc_xive_irq(u32 *irq, u64 *trigger_addr);
+> >   extern void pnv_ocxl_free_xive_irq(u32 irq);
+> > +extern u64 pnv_ocxl_platform_lpc_setup(struct pci_dev *pdev, u64 size);
+> > +extern void pnv_ocxl_platform_lpc_release(struct pci_dev *pdev);
+> 
+> nit: I don't think these need to be extern?
+> 
+> 
 
-If it had to be honest, it probably should say "Make the code ugly
-because the next tool can't handle it".
+And even if they were, as verified by checkpatch:
 
-Frankly, I'm not a fan of all this "change the kernel to fix the tool"
-attitude.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+"extern prototypes should be avoided in .h files"
