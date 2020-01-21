@@ -2,197 +2,111 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE07C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE108C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 845D224654
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:00:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="zoinFZ0m"
+	by mail.kernel.org (Postfix) with ESMTP id 9DFAB21569
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:00:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579622456;
+	bh=jcUtpBfpcuoVb3yGRhb6I1wWPmt7SejDo8TDVLq4ckU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ZjC/qA6M9xkjtCJLg9O+wiAPuMAFGaZ/QGiffBYuoizj6nSdMDFiaBz1VnR60vM64
+	 IUx8Ps1eV8HcYJUosOhyO+KnoTiWIbtiowDi1B4AHmTPgIgiuuXMXnw2jYdNXJdqN9
+	 D6r6IiC/XYV9I65IiuCVP5rB+fXAmIaClGW0QSP8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729210AbgAUQAJ (ORCPT
+        id S1729096AbgAUQAz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 11:00:09 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:35155 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729030AbgAUQAJ (ORCPT
+        Tue, 21 Jan 2020 11:00:55 -0500
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:65434 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727817AbgAUQAz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 11:00:09 -0500
-Received: by mail-pf1-f195.google.com with SMTP id i23so1719561pfo.2
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 08:00:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=RGHqVegSf46OSrC+vq5Pv4eGAqLOtAwhyN30PfSx9gU=;
-        b=zoinFZ0mYrahd5Hl1dR/pT8vt/qq41K+qA8Hu0uEzs6mlFAFNlvnAch12rsopzsna0
-         MNXC+r7/nPCC9+9CUKJwbajVlDzmdO6Qgu+H3wuh85tZslqyxdccc4VrsLuTqhRfyDyd
-         MGVpXxoWhYOpTRPzk6Z62zIvWWq9vGnpCkB/mRCo54/h0TzeVtku4lgq589YqsBHdkbJ
-         dnHSE4oCmvIZnG4aEQ3l4mcwVPt9P7qoGGUTGBqLcU8WjhYHGZFAjN9MF1ZnenLyrxVD
-         VMWieaMITU5HC9uhCOAsCsHkG3XVRElBFX2UKbnzLw9BhbBEG3q0JF9z3KxmQ6wWDu4Q
-         GiaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=RGHqVegSf46OSrC+vq5Pv4eGAqLOtAwhyN30PfSx9gU=;
-        b=SHTXJziGh3WPzp7pTvlsIvO+irheY/TeY075VHxVZi6H3WqaniCcKRUwKyITLwCyDz
-         Iojab/amx/VaOV4PSNW3j/lNtkVTpuxT5l34vurxb6uArEFxz+fat6DefYZEL5itRkri
-         /MkLLcC5W1GvuDYAEBM72Ek6YmIicvVPmOtEquIIBOY7YWTqt6POvowqAbmgB5Gne9BY
-         7Xwum9dJhQQdautpM7ZiLyYeNsp9SOLUtQV8KBnkYXV3GRnER5XFyM/D/gSlERHBdTXB
-         tC50Ejaj63HPyJBENSk+uAZoqnC09XK2Hi2N/4D8ZqXyMB9HykUPlXI56kDJkU188KED
-         97fw==
-X-Gm-Message-State: APjAAAXX2dPfe8n3DppMqI1QFPe/M2cPaFhCf5TjHd49ANLTryCnpWIX
-        iIldwEwM+pWGOYttvajd8bnILQ==
-X-Google-Smtp-Source: APXvYqxuVoSpYzHo96UzVZPSuSADBuFnCVj4+LOj72UvgSuwSuN2rKsj1LKEx0Md+mb4O0Cvw/uxpQ==
-X-Received: by 2002:a62:8782:: with SMTP id i124mr5101047pfe.22.1579622408512;
-        Tue, 21 Jan 2020 08:00:08 -0800 (PST)
-Received: from localhost ([2620:10d:c090:180::f3e0])
-        by smtp.gmail.com with ESMTPSA id o98sm4261120pjb.15.2020.01.21.08.00.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 08:00:07 -0800 (PST)
-Date:   Tue, 21 Jan 2020 11:00:05 -0500
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org,
-        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
-        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
-        yang.shi@linux.alibaba.com, willy@infradead.org,
-        shakeelb@google.com, Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Chris Down <chris@chrisdown.name>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vlastimil Babka <vbabka@suse.cz>, Qian Cai <cai@lca.pw>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        swkhack <swkhack@gmail.com>,
-        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Colin Ian King <colin.king@canonical.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-Subject: Re: [PATCH v8 03/10] mm/lru: replace pgdat lru_lock with lruvec lock
-Message-ID: <20200121160005.GA69293@cmpxchg.org>
-References: <1579143909-156105-1-git-send-email-alex.shi@linux.alibaba.com>
- <1579143909-156105-4-git-send-email-alex.shi@linux.alibaba.com>
- <20200116215222.GA64230@cmpxchg.org>
- <9ee80b68-a78f-714a-c727-1f6d2b4f87ea@linux.alibaba.com>
+        Tue, 21 Jan 2020 11:00:55 -0500
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id 00LG0WWL004396;
+        Wed, 22 Jan 2020 01:00:32 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 00LG0WWL004396
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1579622433;
+        bh=UkZRS9NcTgc/pE2ZU+XPobTZ8euQfmozs1NIKmVtgB8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=pqq079j450i4kskTg34a6jXtvAm6UrFOje8O2rL51BsamArKYevluCjjjrjrwo4MO
+         IdcRHNUesdrL1bktgbNyc69Qh9Df1rUE4l62+CEoKSHWHeTtqtSzYvU+ZUvS1mWarO
+         gfGSKDFwX9553uC4fPsjIltwnKAPIuoFVfEGVgvlCnZEj6aZW18s3a6ScpwotBSGql
+         SS7vn54wOVxV1OCgldGwlYq+NqPi576XhRy3741pIRUg12KBrlbgguOCQNelbvxwDk
+         GaROZmNovid+1tJ3dWNAPrWJjXwzSX0Q6KLLC/dXrToTA4YDB/dhDN6l9rwyt41kKb
+         6xeDE7GO3ZTGw==
+X-Nifty-SrcIP: [209.85.217.49]
+Received: by mail-vs1-f49.google.com with SMTP id g15so2151976vsf.1;
+        Tue, 21 Jan 2020 08:00:32 -0800 (PST)
+X-Gm-Message-State: APjAAAULUAB/d01SzMMU2ZibxaLqnvaF4iS9DwIC/Hvr1P1EAFEZvDiK
+        MTpSpKdrcii59YDZTjlC4qQkftlNeqsTy0l662U=
+X-Google-Smtp-Source: APXvYqw5/xpKMwJ3Dni5RStdI/powNXLAkzCtS2BwVu0JOoQYeux1KW50NlZujdmVRzGgkinqYdNY6Sz30xA7gfj8lY=
+X-Received: by 2002:a67:f8ca:: with SMTP id c10mr3210302vsp.54.1579622431647;
+ Tue, 21 Jan 2020 08:00:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9ee80b68-a78f-714a-c727-1f6d2b4f87ea@linux.alibaba.com>
+References: <20200104150238.19834-1-masahiroy@kernel.org>
+In-Reply-To: <20200104150238.19834-1-masahiroy@kernel.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 22 Jan 2020 00:59:54 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATS33-TfoGajRCT3nAAZ+AcfVmO4GorxRTNPk9z8mBcHA@mail.gmail.com>
+Message-ID: <CAK7LNATS33-TfoGajRCT3nAAZ+AcfVmO4GorxRTNPk9z8mBcHA@mail.gmail.com>
+Subject: Re: [PATCH v2 00/13] initramfs: a lot of cleanups
+To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Greg Thelen <gthelen@google.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 08:58:09PM +0800, Alex Shi wrote:
-> 
-> 
-> 在 2020/1/17 上午5:52, Johannes Weiner 写道:
-> 
-> > You simply cannot serialize on page->mem_cgroup->lruvec when
-> > page->mem_cgroup isn't stable. You need to serialize on the page
-> > itself, one way or another, to make this work.
-> > 
-> > 
-> > So here is a crazy idea that may be worth exploring:
-> > 
-> > Right now, pgdat->lru_lock protects both PageLRU *and* the lruvec's
-> > linked list.
-> > 
-> > Can we make PageLRU atomic and use it to stabilize the lru_lock
-> > instead, and then use the lru_lock only serialize list operations?
-> > 
-> 
-> Hi Johannes,
-> 
-> I am trying to figure out the solution of atomic PageLRU, but is 
-> blocked by the following sitations, when PageLRU and lru list was protected
-> together under lru_lock, the PageLRU could be a indicator if page on lru list
-> But now seems it can't be the indicator anymore.
-> Could you give more clues of stabilization usage of PageLRU?
+On Sun, Jan 5, 2020 at 12:03 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+>
+>
+> Masahiro Yamada (13):
+>   initramfs: replace klibcdirs in Makefile with FORCE
+>   gen_initramfs_list.sh: remove unused variable 'default_list'
+>   gen_initramfs_list.sh: fix the tool name in the comment
+>   initramfs: rename gen_initramfs_list.sh to gen_initramfs.sh
+>   initramfs: remove redundant dependency on BLK_DEV_INITRD
+>   initramfs: make compression options not depend on INITRAMFS_SOURCE
+>   initramfs: make initramfs compression choice non-optional
+>   initramfs: specify $(src)/gen_initramfs.sh as a prerequisite in
+>     Makefile
+>   initramfs: generate dependency list and cpio at the same time
+>   initramfs: add default_cpio_list, and delete -d option support
+>   gen_initramfs.sh: always output cpio even without -o option
+>   initramfs: refactor the initramfs build rules
+>   gen_initramfs.sh: remove intermediate cpio_list on errors
 
-There are two types of PageLRU checks: optimistic and deterministic.
+All, applied to linux-kbuild.
 
-The check in activate_page() for example is optimistic and the result
-unstable, but that's okay, because if we miss a page here and there
-it's not the end of the world.
 
-But the check in __activate_page() is deterministic, because we need
-to be sure before del_page_from_lru_list(). Currently it's made
-deterministic by testing under the lock: whoever acquires the lock
-first gets to touch the LRU state. The same can be done with an atomic
-TestClearPagLRU: whoever clears the flag first gets to touch the LRU
-state (the lock is then only acquired to not corrupt the linked list,
-in case somebody adds or removes a different page at the same time).
+>  usr/.gitignore                                |   8 +-
+>  usr/Kconfig                                   |  26 ---
+>  usr/Makefile                                  |  97 ++++++----
+>  usr/default_cpio_list                         |   6 +
+>  ...gen_initramfs_list.sh => gen_initramfs.sh} | 167 +++++-------------
+>  usr/initramfs_data.S                          |   5 +-
+>  6 files changed, 112 insertions(+), 197 deletions(-)
+>  create mode 100644 usr/default_cpio_list
+>  rename usr/{gen_initramfs_list.sh => gen_initramfs.sh} (53%)
+>
+> --
+> 2.17.1
+>
 
-I.e. in my proposal, if you want to get a stable read of PageLRU, you
-have to clear it atomically. But AFAICS, everybody who currently does
-need a stable read either already clears it or can easily be converted
-to clear it and then set it again (like __activate_page and friends).
 
-> __page_cache_release/release_pages/compaction            __pagevec_lru_add
-> if (TestClearPageLRU(page))                              if (!PageLRU())
->                                                                 lruvec_lock();
->                                                                 list_add();
->         			                                lruvec_unlock();
->         			                                SetPageLRU() //position 1
->         lock_page_lruvec_irqsave(page, &flags);
->         del_page_from_lru_list(page, lruvec, ..);
->         unlock_page_lruvec_irqrestore(lruvec, flags);
->                                                                 SetPageLRU() //position 2
-
-Hm, that's not how __pagevec_lru_add() looks. In fact,
-__pagevec_lru_add_fn() has a BUG_ON(PageLRU).
-
-That's because only one thread can own the isolation state at a time.
-
-If PageLRU is set, only one thread can claim it. Right now, whoever
-takes the lock first and clears it wins. When we replace it with
-TestClearPageLRU, it's the same thing: only one thread can win.
-
-And you cannot set PageLRU, unless you own it. Either you isolated the
-page using TestClearPageLRU, or you allocated a new page.
-
-So you can have multiple threads trying to isolate a page from the LRU
-list, hence the atomic testclear. But no two threads should ever be
-racing to add a page to the LRU list, because only one thread can own
-the isolation state.
-
-With the atomic PageLRU flag, the sequence would be this:
-
-__pagevec_lru_add:
-
-  BUG_ON(PageLRU()) // Caller *must* own the isolation state
-
-  lruvec_lock()     // The lruvec is stable, because changing
-                    // page->mem_cgroup requires owning the
-                    // isolation state (PageLRU) and we own it
-
-  list_add()        // Linked list protected by lru_lock
-
-  lruvec_unlock()
-
-  SetPageLRU()      // The page has been added to the linked
-                    // list, give up our isolation state. Once
-                    // this flag becomes visible, other threads
-                    // can isolate the page from the LRU list
+--
+Best Regards
+Masahiro Yamada
