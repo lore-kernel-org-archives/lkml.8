@@ -2,106 +2,67 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D22F2C33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 12:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C393C33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 12:43:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADAD324656
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 12:43:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A2D524655
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 12:43:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729799AbgAUMm4 (ORCPT
+        id S1729660AbgAUMmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 07:42:56 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:50626 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728898AbgAUMmx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 07:42:53 -0500
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 8B9C710EB62758289330
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 20:42:45 +0800 (CST)
-Received: from huawei.com (10.175.104.245) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Tue, 21 Jan 2020
- 20:42:33 +0800
-From:   l00520965 <liuchao173@huawei.com>
-To:     <tglx@linutronix.de>
-CC:     <linfeilong@huawei.com>, <hushiyuan@huawei.com>,
-        LiuChao <liuchao173@huawei.com>, <linux-kernel@vger.kernel.org>
-Subject: [RFC] irq: Skip printing irq when desc->action is null even if any_count is not zero
-Date:   Tue, 21 Jan 2020 21:09:59 +0800
-Message-ID: <20200121130959.22589-1-liuchao173@huawei.com>
-X-Mailer: git-send-email 2.19.1
+        Tue, 21 Jan 2020 07:42:51 -0500
+Received: from rtits2.realtek.com ([211.75.126.72]:54687 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729107AbgAUMmu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 07:42:50 -0500
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID 00LCgjM3010986, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (smtpsrv.realtek.com[172.21.6.18])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id 00LCgjM3010986
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Tue, 21 Jan 2020 20:42:45 +0800
+Received: from fc30.localdomain (172.21.177.138) by RTITCASV01.realtek.com.tw
+ (172.21.6.18) with Microsoft SMTP Server id 14.3.468.0; Tue, 21 Jan 2020
+ 20:42:43 +0800
+From:   Hayes Wang <hayeswang@realtek.com>
+To:     <netdev@vger.kernel.org>
+CC:     <nic_swsd@realtek.com>, <linux-kernel@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <pmalani@chromium.org>,
+        <grundler@chromium.org>, Hayes Wang <hayeswang@realtek.com>
+Subject: [PATCH net 0/9] r8152: serial fixes
+Date:   Tue, 21 Jan 2020 20:40:26 +0800
+Message-ID: <1394712342-15778-338-Taiwan-albertk@realtek.com>
+X-Mailer: Microsoft Office Outlook 11
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.104.245]
-X-CFilter-Loop: Reflected
+X-Originating-IP: [172.21.177.138]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: LiuChao <liuchao173@huawei.com>
+These patches are used to fix some issues for RTL8153.
 
-When desc->action is empty, there is no need to print out the irq and its'
-count in each cpu. The desc is not alloced in request_irq or freed in
-free_irq. So some PCI devices, such as rtl8139, uses request_irq and
-free_irq, which only modify the action of desc. So /proc/interrupts could
-be like this:
+Hayes Wang (9):
+  r8152: fix runtime resume for linking change
+  r8152: reset flow control patch when linking on for RTL8153B
+  r8152: get default setting of WOL before initializing
+  r8152: disable U2P3 for RTL8153B
+  r8152: Disable PLA MCU clock speed down
+  r8152: disable test IO for RTL8153B
+  r8152: don't enable U1U2 with USB_SPEED_HIGH for RTL8153B
+  r8152: avoid the MCU to clear the lanwake
+  r8152: disable DelayPhyPwrChg
 
-           CPU0       CPU1
-  2:      69397      69267     GICv3  27 Level     arch_timer
-  4:          0          0     GICv3  33 Level     uart-pl011
- 38:         46          0     GICv3  36 Level     ehci_hcd:usb1
- 39:         66          0     GICv3  37 Level
- 40:          0          0     GICv3  38 Level     virtio1
- 42:          0          0     GICv3  23 Level     arm-pmu
- 43:          0          0  ARMH0061:00   3 Edge      ACPI:Event
- 44:          1          0   ITS-MSI 32768 Edge      PCIe PME, pciehp
- 45:          0          0   ITS-MSI 32769 Edge      aerdrv
+ drivers/net/usb/r8152.c | 124 ++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 113 insertions(+), 11 deletions(-)
 
-Irqbalance gets the list of interrupts according to /proc/interrupts. In
-this case, irqbalance does not remove the interrupt from the balance list,
-and the last string in this line,which is Level, is used as irq_name.
-
-Or we can clear desc->kstat_irqs in each cpu in free_irq when desc->action
-is null?
-
-Signed-off-by: LiuChao <liuchao173@huawei.com>
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org
----
- kernel/irq/proc.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
-
-diff --git a/kernel/irq/proc.c b/kernel/irq/proc.c
-index cfc4f088a0e7..b27169e587f4 100644
---- a/kernel/irq/proc.c
-+++ b/kernel/irq/proc.c
-@@ -439,7 +439,7 @@ int show_interrupts(struct seq_file *p, void *v)
- {
- 	static int prec;
- 
--	unsigned long flags, any_count = 0;
-+	unsigned long flags;
- 	int i = *(loff_t *) v, j;
- 	struct irqaction *action;
- 	struct irq_desc *desc;
-@@ -466,11 +466,7 @@ int show_interrupts(struct seq_file *p, void *v)
- 	if (!desc)
- 		goto outsparse;
- 
--	if (desc->kstat_irqs)
--		for_each_online_cpu(j)
--			any_count |= *per_cpu_ptr(desc->kstat_irqs, j);
--
--	if ((!desc->action || irq_desc_is_chained(desc)) && !any_count)
-+	if (!desc->action || irq_desc_is_chained(desc))
- 		goto outsparse;
- 
- 	seq_printf(p, "%*d: ", prec, i);
 -- 
-2.19.1
+2.21.0
 
