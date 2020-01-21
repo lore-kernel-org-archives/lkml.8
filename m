@@ -2,69 +2,145 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC56C32771
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 01:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F677C32771
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 01:31:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6B2024125
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 01:22:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E9EC22527
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 01:31:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728982AbgAUBWs (ORCPT
+        id S1728896AbgAUBa7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 20:22:48 -0500
-Received: from mga09.intel.com ([134.134.136.24]:14818 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728668AbgAUBWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 20:22:48 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 17:22:47 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,344,1574150400"; 
-   d="scan'208";a="275166647"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by FMSMGA003.fm.intel.com with ESMTP; 20 Jan 2020 17:22:44 -0800
-Date:   Tue, 21 Jan 2020 09:22:56 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, yang.shi@linux.alibaba.com
-Subject: Re: [PATCH 8/8] mm/migrate.c: use break instead of goto out_flush
-Message-ID: <20200121012256.GB1567@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20200119030636.11899-1-richardw.yang@linux.intel.com>
- <20200119030636.11899-9-richardw.yang@linux.intel.com>
- <20200120100328.GS18451@dhcp22.suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200120100328.GS18451@dhcp22.suse.cz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Mon, 20 Jan 2020 20:30:59 -0500
+Received: from lgeamrelo11.lge.com ([156.147.23.51]:47973 "EHLO
+        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727009AbgAUBa7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 20:30:59 -0500
+X-Greylist: delayed 1799 seconds by postgrey-1.27 at vger.kernel.org; Mon, 20 Jan 2020 20:30:57 EST
+Received: from unknown (HELO lgeamrelo04.lge.com) (156.147.1.127)
+        by 156.147.23.51 with ESMTP; 21 Jan 2020 10:00:55 +0900
+X-Original-SENDERIP: 156.147.1.127
+X-Original-MAILFROM: chanho.min@lge.com
+Received: from unknown (HELO localhost.localdomain) (10.178.31.96)
+        by 156.147.1.127 with ESMTP; 21 Jan 2020 10:00:55 +0900
+X-Original-SENDERIP: 10.178.31.96
+X-Original-MAILFROM: chanho.min@lge.com
+From:   Chanho Min <chanho.min@lge.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Daewoong Kim <daewoong00.kim@lge.com>,
+        Seokjoo Lee <seokjoo.lee@lge.com>,
+        Lee Gunho <gunho.lee@lge.com>, Chanho Min <chanho.min@lge.com>
+Subject: [PATCH] PM / sleep: fix use-after-free on async resume
+Date:   Tue, 21 Jan 2020 10:00:52 +0900
+Message-Id: <1579568452-27253-1-git-send-email-chanho.min@lge.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 11:03:28AM +0100, Michal Hocko wrote:
->On Sun 19-01-20 11:06:36, Wei Yang wrote:
->> Label out_flush is just outside the loop, so break the loop is enough.
->
->I find the explicit label easier to follow than breaking out of the
->loop. Especially when there is another break out of the loop with a
->different label.
->
->While the patch is correct I find the resulting code worse readable.
->
+Some device can be released during suspend (e.g. usb disconnection).
+But, Its child device still use dev->parent's lock in dpm_wait().
+It can be ocurred use-after-free as bellows. This is happened during
+usb resume in practice.
 
-ok, as you wish.
+device hierarchy: "1-1" <- "1-1:1.2" <- "ep83"
 
+<parent>		<child>
+device_resume("1-1:1.2")
+dpm_wait("1-1")
+			device_resume("ep_83");
+			dpm_wait("1-1:1.2");
+ usb_disconnect
+  put_device("1-1:1.2")
 
+put_device("1-1:1.2")
+ usb_release_interface
+ kfree(intf) <- "1-1:1.2"'s struct device is freed
+
+			 wait_for_common
+			 do {
+			 ...
+			 spin_lock_irq(&x->wait.lock); <- "1-1:1-2"'s lock
+			 } while (!x->done && timeout);
+
+This is call stack of the system hang caused by freed lock value in practice.
+
+Call trace:
+[<ffffffc000ef59a8>] _raw_spin_lock_irq+0x38/0x80
+[<ffffffc000ef2dac>] wait_for_common+0x12c/0x140
+[<ffffffc000ef2dd4>] wait_for_completion+0x14/0x20
+[<ffffffc000480c1c>] dpm_wait+0x5c/0xb0
+[<ffffffc0004813d8>] device_resume+0x78/0x320
+[<ffffffc000481ed4>] async_resume+0x24/0xe0
+[<ffffffc0000c671c>] async_run_entry_fn+0x54/0x158
+[<ffffffc0000bd720>] process_one_work+0x1e8/0x4b0
+[<ffffffc0000bdb10>] worker_thread+0x128/0x4b8
+[<ffffffc0000c3a14>] kthread+0x10c/0x110
+[<ffffffc00008ddd0>] ret_from_fork+0x10/0x40
+
+To prevent such use-after-free, dpm_wait_for_parent() keeps parent's reference
+using get/put_device even if it is disconnected.
+
+Signed-off-by: Chanho Min <chanho.min@lge.com>
+Signed-off-by: Daewoong Kim <daewoong00.kim@lge.com>
+---
+ drivers/base/power/main.c | 22 +++++++++++++++++++---
+ 1 file changed, 19 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
+index f946511..95a7499 100644
+--- a/drivers/base/power/main.c
++++ b/drivers/base/power/main.c
+@@ -234,13 +234,29 @@ static void initcall_debug_report(struct device *dev, ktime_t calltime,
+  * @dev: Device to wait for.
+  * @async: If unset, wait only if the device's power.async_suspend flag is set.
+  */
++static void _dpm_wait(struct device *dev, bool async)
++{
++	if (async || (pm_async_enabled && dev->power.async_suspend))
++		wait_for_completion(&dev->power.completion);
++}
++
+ static void dpm_wait(struct device *dev, bool async)
+ {
+ 	if (!dev)
+ 		return;
+ 
+-	if (async || (pm_async_enabled && dev->power.async_suspend))
+-		wait_for_completion(&dev->power.completion);
++	_dpm_wait(dev, async);
++}
++
++static void dpm_wait_for_parent(struct device *dev, bool async)
++{
++	if (dev && dev->parent) {
++		struct device *dev_p = dev->parent;
++
++		get_device(dev_p);
++		_dpm_wait(dev_p, async);
++		put_device(dev_p);
++	}
+ }
+ 
+ static int dpm_wait_fn(struct device *dev, void *async_ptr)
+@@ -277,7 +293,7 @@ static void dpm_wait_for_suppliers(struct device *dev, bool async)
+ 
+ static void dpm_wait_for_superior(struct device *dev, bool async)
+ {
+-	dpm_wait(dev->parent, async);
++	dpm_wait_for_parent(dev, async);
+ 	dpm_wait_for_suppliers(dev, async);
+ }
+ 
 -- 
-Wei Yang
-Help you, Help me
+2.7.4
+
