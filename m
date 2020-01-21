@@ -2,311 +2,214 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 961CCC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:11:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C607C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 583EC2465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:11:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2113721569
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:12:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="gxOYsv09"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="v5n8SDqs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729288AbgAURLh (ORCPT
+        id S1729332AbgAURMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 12:11:37 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:52827 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728829AbgAURLh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 12:11:37 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1579626696; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=EPBfq3Cn0Ur34cIyveswNHADy+SSoohXu9of9oDtLQY=; b=gxOYsv09eGaHJ/D7rWiZOwPTyOrtMKmkoDBM7wlf2R78EyoZI5DIomdK4hRqWnMPKFroHDuc
- 37rXwkJmcofRaACnuNFsoh+1omLs4q7lQOectVdtzHz4MPh4Z3OCBOYOlvQdSQFEGe+450Nj
- M74zk+h7w1yUaSR79vku9XkHTwM=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e2730c4.7f658cf82298-smtp-out-n02;
- Tue, 21 Jan 2020 17:11:32 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id AF228C447A1; Tue, 21 Jan 2020 17:11:32 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 05A27C43383;
-        Tue, 21 Jan 2020 17:11:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 05A27C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Tue, 21 Jan 2020 10:11:29 -0700
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     iommu@lists.linux-foundation.org, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCH v3 2/5] iommu/arm-smmu: Add support for split pagetables
-Message-ID: <20200121171127.GA5025@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Robin Murphy <robin.murphy@arm.com>,
-        iommu@lists.linux-foundation.org, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Joerg Roedel <joro@8bytes.org>
-References: <1576514271-15687-1-git-send-email-jcrouse@codeaurora.org>
- <1576514271-15687-3-git-send-email-jcrouse@codeaurora.org>
- <a38fe02a-4f84-f032-8c9d-4ecf72a87a55@arm.com>
+        Tue, 21 Jan 2020 12:12:46 -0500
+Received: from mail-dm6nam12on2057.outbound.protection.outlook.com ([40.107.243.57]:64576
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729127AbgAURMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 12:12:46 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UzhNxmvmeNeb8AtTH5Cpn7AaohHWwGVZLiASDOYDbZAZIohSK0fA6QajSznCnR/q4oNCoYdJwFapyyqmOwjNtMZIMqEp8B+xmD4FkSHbGsmUqvi8lAuuBtrn95n1g5+hLfuJp5AkyZEke1LHTcB1E0vVk/dU6SUuvjDjx/dtrKthbfHC7ZQhtkO5EDCUKLCk566E+la25ZL0gdHoD6M6RJfb3bjtsWvwCf1IZcqX04IdKoegstaJkHQ74MH8nKZw0wLK6HMtxL8YLtGQu8NA8epg56+ViZjv3EIRaucymrh41HTFXMjawisUNVXrIkLZJEJ2rbKpjQiQq/pHq8jcAg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fQ9jl3gHkbXi56OnUNwvi82DsVWIu32UcC5tbtDrXGo=;
+ b=R3mVXkWobxao0ztVQ1MQnVpqCw74gVBe1EGkeOcLT9d3AoBzpR1Jf35BIuyv87xKDrYQfCypqDuq0e+v5ViWMEOtuzOX+GJQR8sFMWQB6uxFf2X9kJdOxR10uHhDnRg3Oh79I7TuZCIf1q0XLCKTHctX0BxS6loTFX3Dii8L2/3wI2c3u4SETt913erExZU0/THxDosnya7WsUxfBGq/E31DUapGnTvnI8cXbYU0BHS0C5I/11nQYbb2Ey+EZIjI76xTI9n2O2dt9RAF66whegbrClopuZjn0fN7YTjk/Ef9+yFS8uj7dhNdQt2gH46eG5ngdLH2RVRMBYOqdX6ATA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fQ9jl3gHkbXi56OnUNwvi82DsVWIu32UcC5tbtDrXGo=;
+ b=v5n8SDqsg/7YtBi+ExVdDEXh2o0dVqtxh06FzMs1pRPhd0wApWCponpUAryypblheyTIyQSZ8/NA9SGbba3rn5SgtGNx1ALbI1gckhWzgT2r5gT6YTLClQ6n31lW/FOVvkgKdThTSBP73BFHp9i5XZPTaiTvF8tiApN9zCXBqEU=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=kim.phillips@amd.com; 
+Received: from SN6PR12MB2845.namprd12.prod.outlook.com (52.135.106.33) by
+ SN6PR12MB2735.namprd12.prod.outlook.com (52.135.100.26) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.20; Tue, 21 Jan 2020 17:12:42 +0000
+Received: from SN6PR12MB2845.namprd12.prod.outlook.com
+ ([fe80::48af:8c71:edee:5bc]) by SN6PR12MB2845.namprd12.prod.outlook.com
+ ([fe80::48af:8c71:edee:5bc%7]) with mapi id 15.20.2644.026; Tue, 21 Jan 2020
+ 17:12:42 +0000
+From:   Kim Phillips <kim.phillips@amd.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        kim.phillips@amd.com
+Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Babu Moger <babu.moger@amd.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Frank van der Linden <fllinden@amazon.com>,
+        "H . Peter Anvin" <hpa@zytor.com>, Huang Rui <ray.huang@amd.com>,
+        Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>,
+        Jan Beulich <jbeulich@suse.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Luwei Kang <luwei.kang@intel.com>,
+        =?UTF-8?q?Martin=20Li=C5=A1ka?= <mliska@suse.cz>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: [PATCH 1/2 v2] perf/x86/amd: Add missing L2 misses event spec to AMD Family 17h's event map
+Date:   Tue, 21 Jan 2020 11:12:31 -0600
+Message-Id: <20200121171232.28839-1-kim.phillips@amd.com>
+X-Mailer: git-send-email 2.25.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: DM6PR17CA0022.namprd17.prod.outlook.com
+ (2603:10b6:5:1b3::35) To SN6PR12MB2845.namprd12.prod.outlook.com
+ (2603:10b6:805:75::33)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a38fe02a-4f84-f032-8c9d-4ecf72a87a55@arm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Received: from fritz.amd.com (165.204.77.1) by DM6PR17CA0022.namprd17.prod.outlook.com (2603:10b6:5:1b3::35) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.20 via Frontend Transport; Tue, 21 Jan 2020 17:12:40 +0000
+X-Mailer: git-send-email 2.25.0
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: b1a87a5d-007e-464a-a8ba-08d79e952047
+X-MS-TrafficTypeDiagnostic: SN6PR12MB2735:|SN6PR12MB2735:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN6PR12MB27357795DA2FA75C94DFC49A870D0@SN6PR12MB2735.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-Forefront-PRVS: 0289B6431E
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(346002)(366004)(396003)(39860400002)(189003)(199004)(54906003)(26005)(478600001)(66946007)(66556008)(36756003)(956004)(110136005)(8936002)(186003)(16526019)(66476007)(6666004)(81166006)(316002)(81156014)(86362001)(966005)(8676002)(1076003)(44832011)(4326008)(5660300002)(2616005)(52116002)(7696005)(2906002)(7416002)(6486002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2735;H:SN6PR12MB2845.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Pm4y4RsGgWYD/9xnzLj2fkS1Zrr7/uLXMRuJ1p3glE8hIJriwzhmvinPsBnZtxL+hl3TOMLlG4F+RF319o5/2qP4qMWHI7Gym1iOU3qXNosGF7W6R5NEqQ8NDrx/wX/G70DN7ontR8KRgJatpsPifVOt1t2poV1UcBRwcsVCKB7+FhWAvxThpXmzqksyp0AWB0IDz8uq47/OsPcROUdEa/zhFtH75PboUlLGscnW26BiKOdOnV50AVQLhtlFza+R0xBd+VUnk7j+Tac/CEV+tADb+/Cg/uuUcf/Q4rS+WUeerbj3ChS6ZiNOK1tSXMwIXyUIEgp8dZ6WjhvBOmDvSCsclC+AON9hhqJV6/zG6nkHzVxNwaCVYnWJVhMgwSDBHCjIPaigcJohecohZRLSs2wp8buNr3A79UfXzu2U/Yk70FnrBpi7VUPyw+MAABryhFPsxan/yJRObArKMGWtsy9w2pdFGrJulUWVwGwWulQTlEhkyjI7tftWvt3uKQfwsGr5owDE7YVPGSgcJ2xDUw==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b1a87a5d-007e-464a-a8ba-08d79e952047
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jan 2020 17:12:42.6686
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1nmD7zJDoqRB8TdUR56LcIhSmK973ofd1g2T0ZxXNrWAQgjFZUOP+Gj3itHzHFe0vjC67aj3tau2uJ7Tq2uQTQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2735
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 02:36:19PM +0000, Robin Murphy wrote:
-> On 16/12/2019 4:37 pm, Jordan Crouse wrote:
-> >Add support to enable split pagetables (TTBR1) if the supporting driver
-> >requests it via the DOMAIN_ATTR_SPLIT_TABLES flag. When enabled, the driver
-> >will set up the TTBR0 and TTBR1 regions and program the default domain
-> >pagetable on TTBR1.
-> >
-> >After attaching the device, the value of he domain attribute can
-> >be queried to see if the split pagetables were successfully programmed.
-> >Furthermore the domain geometry will be updated so that the caller can
-> >determine the active region for the pagetable that was programmed.
-> >
-> >Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-> >---
-> >
-> >  drivers/iommu/arm-smmu.c | 40 +++++++++++++++++++++++++++++++++++-----
-> >  drivers/iommu/arm-smmu.h | 45 +++++++++++++++++++++++++++++++++++++++------
-> >  2 files changed, 74 insertions(+), 11 deletions(-)
-> >
-> >diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-> >index c106406..7b59116 100644
-> >--- a/drivers/iommu/arm-smmu.c
-> >+++ b/drivers/iommu/arm-smmu.c
-> >@@ -538,9 +538,17 @@ static void arm_smmu_init_context_bank(struct arm_smmu_domain *smmu_domain,
-> >  			cb->ttbr[0] = pgtbl_cfg->arm_v7s_cfg.ttbr;
-> >  			cb->ttbr[1] = 0;
-> >  		} else {
-> >-			cb->ttbr[0] = pgtbl_cfg->arm_lpae_s1_cfg.ttbr;
-> >-			cb->ttbr[0] |= FIELD_PREP(TTBRn_ASID, cfg->asid);
-> >-			cb->ttbr[1] = FIELD_PREP(TTBRn_ASID, cfg->asid);
-> >+			if (pgtbl_cfg->quirks & IO_PGTABLE_QUIRK_ARM_TTBR1) {
-> >+				cb->ttbr[0] = FIELD_PREP(TTBRn_ASID, cfg->asid);
-> >+				cb->ttbr[1] = pgtbl_cfg->arm_lpae_s1_cfg.ttbr;
-> >+				cb->ttbr[1] |=
-> >+					FIELD_PREP(TTBRn_ASID, cfg->asid);
-> >+			} else {
-> >+				cb->ttbr[0] = pgtbl_cfg->arm_lpae_s1_cfg.ttbr;
-> >+				cb->ttbr[0] |=
-> >+					FIELD_PREP(TTBRn_ASID, cfg->asid);
-> >+				cb->ttbr[1] = FIELD_PREP(TTBRn_ASID, cfg->asid);
-> >+			}
-> >  		}
-> >  	} else {
-> >  		cb->ttbr[0] = pgtbl_cfg->arm_lpae_s2_cfg.vttbr;
-> >@@ -651,6 +659,7 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
-> >  	enum io_pgtable_fmt fmt;
-> >  	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
-> >  	struct arm_smmu_cfg *cfg = &smmu_domain->cfg;
-> >+	u32 quirks = 0;
-> >  	mutex_lock(&smmu_domain->init_mutex);
-> >  	if (smmu_domain->smmu)
-> >@@ -719,6 +728,8 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
-> >  		oas = smmu->ipa_size;
-> >  		if (cfg->fmt == ARM_SMMU_CTX_FMT_AARCH64) {
-> >  			fmt = ARM_64_LPAE_S1;
-> >+			if (smmu_domain->split_pagetables)
-> >+				quirks |= IO_PGTABLE_QUIRK_ARM_TTBR1;
-> >  		} else if (cfg->fmt == ARM_SMMU_CTX_FMT_AARCH32_L) {
-> >  			fmt = ARM_32_LPAE_S1;
-> >  			ias = min(ias, 32UL);
-> >@@ -788,6 +799,7 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
-> >  		.coherent_walk	= smmu->features & ARM_SMMU_FEAT_COHERENT_WALK,
-> >  		.tlb		= smmu_domain->flush_ops,
-> >  		.iommu_dev	= smmu->dev,
-> >+		.quirks		= quirks,
-> >  	};
-> >  	if (smmu_domain->non_strict)
-> >@@ -801,8 +813,15 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
-> >  	/* Update the domain's page sizes to reflect the page table format */
-> >  	domain->pgsize_bitmap = pgtbl_cfg.pgsize_bitmap;
-> >-	domain->geometry.aperture_end = (1UL << ias) - 1;
-> >-	domain->geometry.force_aperture = true;
-> >+
-> >+	if (pgtbl_cfg.quirks & IO_PGTABLE_QUIRK_ARM_TTBR1) {
-> >+		domain->geometry.aperture_start = ~((1ULL << ias) - 1);
-> 
-> AKA "~0UL << ias", if I'm not mistaken ;)
-> 
-> >+		domain->geometry.aperture_end = ~0UL;
-> >+	} else {
-> >+		domain->geometry.aperture_end = (1UL << ias) - 1;
-> >+		domain->geometry.force_aperture = true;
-> >+		smmu_domain->split_pagetables = false;
-> >+	}
-> >  	/* Initialise the context bank with our page table cfg */
-> >  	arm_smmu_init_context_bank(smmu_domain, &pgtbl_cfg);
-> >@@ -1484,6 +1503,9 @@ static int arm_smmu_domain_get_attr(struct iommu_domain *domain,
-> >  		case DOMAIN_ATTR_NESTING:
-> >  			*(int *)data = (smmu_domain->stage == ARM_SMMU_DOMAIN_NESTED);
-> >  			return 0;
-> >+		case DOMAIN_ATTR_SPLIT_TABLES:
-> >+			*(int *)data = smmu_domain->split_pagetables;
-> >+			return 0;
-> >  		default:
-> >  			return -ENODEV;
-> >  		}
-> >@@ -1524,6 +1546,14 @@ static int arm_smmu_domain_set_attr(struct iommu_domain *domain,
-> >  			else
-> >  				smmu_domain->stage = ARM_SMMU_DOMAIN_S1;
-> >  			break;
-> >+		case DOMAIN_ATTR_SPLIT_TABLES:
-> >+			if (smmu_domain->smmu) {
-> >+				ret = -EPERM;
-> >+				goto out_unlock;
-> >+			}
-> >+			if (*(int *)data)
-> >+				smmu_domain->split_pagetables = true;
-> 
-> I still like the idea of passing the actual split point here, but as it is I
-> think this sets the scene perfectly for coming back and doing that later.
-> 
-> >+			break;
-> >  		default:
-> >  			ret = -ENODEV;
-> >  		}
-> >diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
-> >index afab9de..68526cc 100644
-> >--- a/drivers/iommu/arm-smmu.h
-> >+++ b/drivers/iommu/arm-smmu.h
-> >@@ -177,6 +177,16 @@ enum arm_smmu_cbar_type {
-> >  #define TCR_IRGN0			GENMASK(9, 8)
-> >  #define TCR_T0SZ			GENMASK(5, 0)
-> >+#define TCR_TG1				GENMASK(31, 30)
-> >+
-> >+#define TG0_4K				0
-> >+#define TG0_64K				1
-> >+#define TG0_16K				2
-> >+
-> >+#define TG1_16K				1
-> >+#define TG1_4K				2
-> >+#define TG1_64K				3
-> >+
-> >  #define ARM_SMMU_CB_CONTEXTIDR		0x34
-> >  #define ARM_SMMU_CB_S1_MAIR0		0x38
-> >  #define ARM_SMMU_CB_S1_MAIR1		0x3c
-> >@@ -329,16 +339,39 @@ struct arm_smmu_domain {
-> >  	struct mutex			init_mutex; /* Protects smmu pointer */
-> >  	spinlock_t			cb_lock; /* Serialises ATS1* ops and TLB syncs */
-> >  	struct iommu_domain		domain;
-> >+	bool				split_pagetables;
-> >  };
-> >+static inline u32 arm_smmu_lpae_tcr_tg(struct io_pgtable_cfg *cfg)
-> >+{
-> >+	u32 val;
-> >+
-> >+	if (!(cfg->quirks & IO_PGTABLE_QUIRK_ARM_TTBR1))
-> >+		return FIELD_PREP(TCR_TG0, cfg->arm_lpae_s1_cfg.tcr.tg);
-> >+
-> >+	val = FIELD_PREP(TCR_TG1, cfg->arm_lpae_s1_cfg.tcr.tg);
-> >+
-> >+	if (cfg->arm_lpae_s1_cfg.tcr.tg == TG1_4K)
-> >+		val |= FIELD_PREP(TCR_TG0, TG0_4K);
-> >+	else if (cfg->arm_lpae_s1_cfg.tcr.tg == TG1_16K)
-> >+		val |= FIELD_PREP(TCR_TG0, TG0_16K);
-> >+	else
-> >+		val |= FIELD_PREP(TCR_TG0, TG0_64K);
-> >+
-> >+	return val;
-> >+}
-> 
-> This is all a bit ugly - I'd really like to rely on the real values from
-> both io_pgtable instances if at all possible...
-> 
-> >+
-> >  static inline u32 arm_smmu_lpae_tcr(struct io_pgtable_cfg *cfg)
-> >  {
-> >-	return TCR_EPD1 |
-> >-	       FIELD_PREP(TCR_TG0, cfg->arm_lpae_s1_cfg.tcr.tg) |
-> >-	       FIELD_PREP(TCR_SH0, cfg->arm_lpae_s1_cfg.tcr.sh) |
-> >-	       FIELD_PREP(TCR_ORGN0, cfg->arm_lpae_s1_cfg.tcr.orgn) |
-> >-	       FIELD_PREP(TCR_IRGN0, cfg->arm_lpae_s1_cfg.tcr.irgn) |
-> >-	       FIELD_PREP(TCR_T0SZ, cfg->arm_lpae_s1_cfg.tcr.tsz);
-> >+	u32 tcr = FIELD_PREP(TCR_SH0, cfg->arm_lpae_s1_cfg.tcr.sh) |
-> >+		FIELD_PREP(TCR_ORGN0, cfg->arm_lpae_s1_cfg.tcr.orgn) |
-> >+		FIELD_PREP(TCR_IRGN0, cfg->arm_lpae_s1_cfg.tcr.irgn) |
-> >+		FIELD_PREP(TCR_T0SZ, cfg->arm_lpae_s1_cfg.tcr.tsz);
-> >+
-> >+	if (!(cfg->quirks & IO_PGTABLE_QUIRK_ARM_TTBR1))
-> >+		return tcr | TCR_EPD1 | arm_smmu_lpae_tcr_tg(cfg);
-> >+
-> >+	return tcr | (tcr << 16) | arm_smmu_lpae_tcr_tg(cfg);
-> 
-> ...especially here - leaving TTBR0 enabled but pointing to who-knows-what
-> until someone fills it in at some arbitrary point in the future seems rather
-> scary.
-> 
-> I'm looking at iommu_aux_attach_device() and friends, and it appears pretty
-> achievable to hook that up in a workable manner, even if it's just routed
-> straight through to the impl to only work within qcom-specific parameters to
-> begin with. I figure the first aux_attach_dev sanity-checks that the main
-> domain is using TTBR1 with a compatible split, sets TTBR0 and updates the
-> merged TCR value at that point. For subsequent calls it shouldn't need to do
-> much more than sanity-check that a new aux domain has the same parameters as
-> the existing one(s) (and again, such checks could potentially even start out
-> as just "this is OK by construction" comments). I guess we'd probably want a
-> count of the number of 'live' aux domains so we can simply disable TTBR0 on
-> the final aux_detach_dev without having to keep detailed track of whatever
-> the GPU has actually context switched in the hardware. Can you see any holes
-> in that idea?
+Commit 3fe3331bb285 ("perf/x86/amd: Add event map for AMD Family 17h"),
+claimed L2 misses were unsupported, due to them not being found in its
+referenced documentation, whose link has now moved [1].
 
-Let me repeat this back just to be sure we're on the same page. When the quirk
-is enabled on the primary domain, we'll set up TTBR1 and leave TTBR0 disabled.
-Then, when the first aux domain is attached we will set up that io_ptgable
-to enable TTBR0 and then let the GPU do what the GPU does until the last aux is
-detached and we can switch off TTBR0 again.
+That old documentation listed PMCx064 unit mask bit 3 as:
 
-I like this. I'll have to do a bit more exploration because the original aux
-design assumed that we didn't need to touch the hardware and I'm not sure if
-there are any resource contention issues between the primary domain and the aux
-domain. Luckily, these should be solvable if they exist (and the original design
-didn't take into account the TLB flush problem so this was likely something we
-had to do anyway).
+    "LsRdBlkC: LS Read Block C S L X Change to X Miss."
 
-> I haven't thought it through in detail, but it also feels like between
-> aux_attach_dev and/or the TTBR1 quirk in attach_dev there ought to be enough
-> information to influence the context bank allocation or shuffle any existing
-> domains such that you can ensure that the right thing ends up in magic
-> context 0 when it needs to be. That could be a pretty neat and robust way to
-> finally put that to bed.
+and bit 0 as:
 
-I'll try to wrap my brain around this as well. Seems like we could do a magic
-swizzle of the SID mappings but I'm not sure how we could safely pull that off
-on an existing domain. Maybe I'm overthinking it.
+    "IcFillMiss: IC Fill Miss"
 
-I'll spin up a new copy of the TTBR1 quirk patch and revive the aux domain stuff
-and then we can go from there.
+We now have new public documentation [2] with improved descriptions, that
+clearly indicate what events those unit mask bits represent:
 
-Thanks,
-Jordan
+Bit 3 now clearly states:
 
-> Robin.
-> 
-> >  }
-> >  static inline u32 arm_smmu_lpae_tcr2(struct io_pgtable_cfg *cfg)
-> >
+    "LsRdBlkC: Data Cache Req Miss in L2 (all types)"
 
+and bit 0 is:
+
+    "IcFillMiss: Instruction Cache Req Miss in L2."
+
+So we can now add support for L2 misses in perf's genericised events as
+PMCx064 with both the above unit masks.
+
+[1] The commit's original documentation reference, "Processor Programming
+    Reference (PPR) for AMD Family 17h Model 01h, Revision B1 Processors",
+    originally available here:
+
+        https://www.amd.com/system/files/TechDocs/54945_PPR_Family_17h_Models_00h-0Fh.pdf
+
+    is now available here:
+
+        https://developer.amd.com/wordpress/media/2017/11/54945_PPR_Family_17h_Models_00h-0Fh.pdf
+
+[2] "Processor Programming Reference (PPR) for Family 17h Model 31h,
+    Revision B0 Processors", available here:
+
+	https://developer.amd.com/wp-content/resources/55803_0.54-PUB.pdf
+
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Babu Moger <babu.moger@amd.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: Frank van der Linden <fllinden@amazon.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Huang Rui <ray.huang@amd.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
+Cc: Jan Beulich <jbeulich@suse.com>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Luwei Kang <luwei.kang@intel.com>
+Cc: Martin Liška <mliska@suse.cz>
+Cc: Matt Fleming <matt@codeblueprint.co.uk>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: x86@kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org
+Reported-by: Babu Moger <babu.moger@amd.com>
+Tested-by: Babu Moger <babu.moger@amd.com>
+Fixes: 3fe3331bb285 ("perf/x86/amd: Add event map for AMD Family 17h")
+Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+---
+v2: no changes.
+
+ arch/x86/events/amd/core.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+index 1f22b6bbda68..39eb276d0277 100644
+--- a/arch/x86/events/amd/core.c
++++ b/arch/x86/events/amd/core.c
+@@ -250,6 +250,7 @@ static const u64 amd_f17h_perfmon_event_map[PERF_COUNT_HW_MAX] =
+ 	[PERF_COUNT_HW_CPU_CYCLES]		= 0x0076,
+ 	[PERF_COUNT_HW_INSTRUCTIONS]		= 0x00c0,
+ 	[PERF_COUNT_HW_CACHE_REFERENCES]	= 0xff60,
++	[PERF_COUNT_HW_CACHE_MISSES]		= 0x0964,
+ 	[PERF_COUNT_HW_BRANCH_INSTRUCTIONS]	= 0x00c2,
+ 	[PERF_COUNT_HW_BRANCH_MISSES]		= 0x00c3,
+ 	[PERF_COUNT_HW_STALLED_CYCLES_FRONTEND]	= 0x0287,
 -- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.25.0
+
