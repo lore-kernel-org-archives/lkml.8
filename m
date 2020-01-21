@@ -2,124 +2,138 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71496C33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A0DC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:43:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48ABC20678
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:43:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YXYL1i2Z"
+	by mail.kernel.org (Postfix) with ESMTP id 8D0CF24655
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:43:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579632214;
+	bh=PFfpAVd2TNsL/dheeDPli6fd1fy1Nwnh7wO20FPeP9M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=j8n151G7+hIcaNpuScMI5BuAH5xuDZuO1ukkAuyQTkLgUtxke835cHozTRrH+Vg4k
+	 jfjP5/V+Ulwrnhjt2YBCZ8gSN+KOUeTiBFphFCL3EZbbC5HYXG4Uebe7+xdbMNXX22
+	 +DxudC/u/nvJQflUrk1FLUSf0d2nDdccvSkOq/SY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729316AbgAUSnU (ORCPT
+        id S1729335AbgAUSnd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 13:43:20 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:37064 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729164AbgAUSnT (ORCPT
+        Tue, 21 Jan 2020 13:43:33 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41195 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728186AbgAUSnd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 13:43:19 -0500
-Received: by mail-pl1-f195.google.com with SMTP id c23so1713567plz.4
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 10:43:19 -0800 (PST)
+        Tue, 21 Jan 2020 13:43:33 -0500
+Received: by mail-pf1-f196.google.com with SMTP id w62so1929816pfw.8;
+        Tue, 21 Jan 2020 10:43:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VyNyygHT0l+kavkO9RtMQ33c7cwt2wna2HwrRhI5FxM=;
-        b=YXYL1i2Zu+Kmd+DM6BsyfSf0A0TRgIpvmoa77QHgXaGEdkKOo2X8DmDZS6ccgM7zwV
-         VhzZ0RxnhAkdvD4TswbyBm+EKAXR2a9HN+9zLZsOJmhmlb4IeJXNU53+/3U/ywXAn7K/
-         JPy2t79RZ+AV69zBi8Sn5Z/cNfUoR6tisDgaEAewshgtsK0fcQBQlaMSiUSijpdJObPA
-         uTU1GUBinLJqD+PQyyJ3x+fMUaKnuSjDq40/jvzCNI0JQs5tGIEnBOzv8ld7KXjpmLl7
-         9psdC7GxXDBcBCyc++2VST6uzjliowiSEIfG07MrJ+bYhLUZWCgzos64iCWEfmRrd+Zy
-         PXOQ==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TJ+7aT9JrT35zrniT4wJhBHLpa2gWNRqolwPFRdXNl8=;
+        b=qwnADoKDat/YhCRnaZl4Dg02qquO4O5tRj7h87WizvuQzcgFVEzYdaUmyepd5QxIGU
+         14bhP/TmITwP/o1pyJ6r+hYcpYMfm/O/HFpxkhcF8ERmQ91rIyCuMNDipDC/jdc5dgX6
+         fzywdiU6BqqEwQ8FKxgqsveg3J+FC1PyqeWWnh9Cb3poznc9hbOffB8YTjWuVB19U6Hl
+         6qBAMnwRE195EBDUaU9B/0sQbzket/zlXZ62HceirL41G2aioBLTjWkQ1gyqsw7ZJTlX
+         FW3djklbwl4sIF6g71klJZsJw5pQtEGEC19z1LyvoB6814XyAFviTq8lHnIqowW3n4L7
+         ho6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VyNyygHT0l+kavkO9RtMQ33c7cwt2wna2HwrRhI5FxM=;
-        b=P/Nlw4VC+qNLjNqQGjnu6Qq/lsOrKtDNXoVu47ky+6c8vIIojEda/6LNNXc80ax7OC
-         hlQdsKIBx2XSFsBXk30ttGzsqWn21hOreDm/PffdrX8xYqN3cIEp/g+KY5/9gp+3+41V
-         QzGY3bfM5bqfQ6IxSa0kLStGiOHyUrS5Eg3C35CHE9xBix7Ahd6Jh5sfIBqIMHK64Cn1
-         KJTTtIDlGonQmnZMZvk2/Z8Efpb6Q7H7AuPX7uke/t8AbKyoXz8/dzpK7l27QZ33Obl4
-         Vf53fdn1F+W40xx4fmXAYga5LG+s3KeWqCBn4W+kNQbvLcItw5xCcC+rt8h6189WYNQk
-         hZtA==
-X-Gm-Message-State: APjAAAXw5JA0S16J6gueqHxQ47HJmokRW1DjBTKuu09GRmaTiEH4O8fs
-        qhLl4TM5/Vd5a2CP4TAvCj5UEYYSZQU8nx/Ru4fyKSIK
-X-Google-Smtp-Source: APXvYqwiZkriIgCJLYOs6RDGkJ/is8QK3xA7WBM0igc/p+n+EzZmnn720fWnjNl9Sx+ncWxStz1rCejOnnVrvyu4CX0=
-X-Received: by 2002:a17:902:6948:: with SMTP id k8mr6664939plt.223.1579632198484;
- Tue, 21 Jan 2020 10:43:18 -0800 (PST)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TJ+7aT9JrT35zrniT4wJhBHLpa2gWNRqolwPFRdXNl8=;
+        b=MElUNuy7wD/9MVvBsQwSlerHLeaPJKY1TlbxixJ8H7X+rNlbp9tpBvVim3ANdMjmV1
+         fWMbCMAQi2PysEq/Sk0L2BN0b/Z6VLaz+tO+uGRMdnxgeao5Sdpk323iKHDxjnmY/6Kz
+         KwL92d3h1HvS+rm15xGf8UaCB/wa46oIW8W4F6NY630vnJmpfSDfOa1KONcpA1PHmefn
+         +E4W3VobtS5k6SEYFuUF6FFdZvjUxq7QrW880YiQJizSprr7vKeTT1htIVp8U5JHLLLo
+         FDOcLB40trkEISxP5sHSG71MR24hcr9sMeuSEOeExL7nP0A8+59yZoWgzScysxYUvUEN
+         4Wdg==
+X-Gm-Message-State: APjAAAXAYP0YaZwLAnrhsFZ0mqQkFTjXva004PzwqjzIU8kUMihpl0Qn
+        SXHoc+3os6JkUYgcNM+izeY=
+X-Google-Smtp-Source: APXvYqy6RfD+/6cAJ0+WEpdhy0U/Bt3izVp6T3pODtKsa6rEmIHQdIGbDEjrEZgYJ8KJBrXDBtFceA==
+X-Received: by 2002:aa7:864a:: with SMTP id a10mr5913530pfo.233.1579632212761;
+        Tue, 21 Jan 2020 10:43:32 -0800 (PST)
+Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
+        by smtp.gmail.com with ESMTPSA id o7sm46611619pfg.138.2020.01.21.10.43.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2020 10:43:31 -0800 (PST)
+Date:   Tue, 21 Jan 2020 10:43:29 -0800
+From:   Minchan Kim <minchan@kernel.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
+        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>, christian.brauner@ubuntu.com,
+        sjpark@amazon.de
+Subject: Re: [PATCH v2 2/5] mm: introduce external memory hinting API
+Message-ID: <20200121184329.GG140922@google.com>
+References: <20200116235953.163318-1-minchan@kernel.org>
+ <20200116235953.163318-3-minchan@kernel.org>
+ <20200117115225.GV19428@dhcp22.suse.cz>
+ <f57fb198-4070-d3b4-b6bd-43b29ff40a2c@virtuozzo.com>
+ <20200120112722.GY18451@dhcp22.suse.cz>
+ <20200120123935.onlls7enjtzenbvt@box>
+ <20200120132405.GF18451@dhcp22.suse.cz>
 MIME-Version: 1.0
-References: <20200120190021.26460-1-natechancellor@gmail.com>
-In-Reply-To: <20200120190021.26460-1-natechancellor@gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 21 Jan 2020 10:43:06 -0800
-Message-ID: <CAKwvOd=30bpBXqrT6LfwDb+YrTcGtTg5NL34dpc3Vkfe11KvFQ@mail.gmail.com>
-Subject: Re: [PATCH] scsi: qla1280: Fix a use of QLA_64BIT_PTR
-To:     Nathan Chancellor <natechancellor@gmail.com>,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Cc:     Michael Reed <mdr@sgi.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200120132405.GF18451@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 11:00 AM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> Clang warns:
->
-> ../drivers/scsi/qla1280.c:1702:5: warning: 'QLA_64BIT_PTR' is not
-> defined, evaluates to 0 [-Wundef]
-> if QLA_64BIT_PTR
->     ^
-> 1 warning generated.
->
-> The rest of this driver uses #ifdef QLA_64BIT_PTR, do the same thing at
-> this site to remove this warning.
->
-> Fixes: ba304e5b4498 ("scsi: qla1280: Fix dma firmware download, if dma address is 64bit")
+On Mon, Jan 20, 2020 at 02:24:05PM +0100, Michal Hocko wrote:
+> On Mon 20-01-20 15:39:35, Kirill A. Shutemov wrote:
+> > On Mon, Jan 20, 2020 at 12:27:22PM +0100, Michal Hocko wrote:
+> > > On Mon 20-01-20 13:24:35, Kirill Tkhai wrote:
+> [...]
+> > > > Even two threads on common memory need a synchronization
+> > > > to manage mappings in a sane way. Managing memory from two processes
+> > > > is the same in principle, and the only difference is that another level
+> > > > of synchronization is required.
+> > > 
+> > > Well, not really. The operation might simply attempt to perform an
+> > > operation on a specific memory area and get a failure if it doesn't
+> > > reference the same object anymore. What I think we need is some form of
+> > > a handle to operate on. In the past we have discussed several
+> > > directions. I was proposing /proc/self/map_anon/ (analogous to
+> > > map_files) where you could inspect anonymous memory and get a file
+> > > handle for it. madvise would then operate on the fd and then there
+> > > shouldn't be a real problem to revalidate that the object is still
+> > > valid. But there was no general enthusiasm about that approach. There
+> > > are likely some land mines on the way.
+> > 
+> > Converting anon memory to file-backed is bad idea and going to backfire.
+> 
+> I didn't mean to convert. I meant to expose that information via proc
+> the same way we do for file backed mappings. That shouldn't really
+> require to re-design the way how anonymous vma work IMO. But I haven't
+> tried that so there might be many gotchas there.
+> 
+> There are obvious things to think about though. Such fd cannot be sent
+> to other processes (SCM stuff), mmap of the file would have to be
+> disallowed and many others I am not aware of. I am not even pushing this
+> direction because I am not convinced about how viable it is myself. But
+> it would sound like a nice extension of the existing mechanism we have
+> and a file based madvise sounds attractive to me as well because we
+> already have that.
 
-^ The above SHA is valid only in linux-next. Won't it change when
-merged into mainline?
-
-> Link: https://github.com/ClangBuiltLinux/linux/issues/843
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-
-Thanks for the patch.
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-
-> ---
->  drivers/scsi/qla1280.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/scsi/qla1280.c b/drivers/scsi/qla1280.c
-> index 607cbddcdd14..3337cd341d21 100644
-> --- a/drivers/scsi/qla1280.c
-> +++ b/drivers/scsi/qla1280.c
-> @@ -1699,7 +1699,7 @@ qla1280_load_firmware_pio(struct scsi_qla_host *ha)
->         return err;
->  }
->
-> -#if QLA_64BIT_PTR
-> +#ifdef QLA_64BIT_PTR
-
-Thomas should test this, as it implies the previous patch was NEVER
-using the "true case" values, making it in effect a
-no-functional-change (NFC).
-
->  #define LOAD_CMD       MBC_LOAD_RAM_A64_ROM
->  #define DUMP_CMD       MBC_DUMP_RAM_A64_ROM
->  #define CMD_ARGS       (BIT_7 | BIT_6 | BIT_4 | BIT_3 | BIT_2 | BIT_1 | BIT_0)
-> --
--- 
-Thanks,
-~Nick Desaulniers
+I am not a fan of fd based approach but I already reserved last argument
+of the API as extendable field so we could use the field as "fd" when we
+really need that kinds of fine-grained synchronization model if it's not
+enough with SGISTOP, freezer and so.
