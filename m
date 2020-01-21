@@ -2,205 +2,121 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F0FAC33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 01:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 964B0C32771
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 01:56:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9A6B2073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 01:53:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="IUMcFpRQ"
+	by mail.kernel.org (Postfix) with ESMTP id 70FFC2073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 01:56:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729030AbgAUBx3 (ORCPT
+        id S1728899AbgAUB4q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 20:53:29 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:33940 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726890AbgAUBx2 (ORCPT
+        Mon, 20 Jan 2020 20:56:46 -0500
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:45722 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726935AbgAUB4q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 20:53:28 -0500
-Received: by mail-qk1-f195.google.com with SMTP id d10so804726qke.1;
-        Mon, 20 Jan 2020 17:53:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DLwWB53t6sz09f9B1uK0zwEN9SxdL7h+I/vAqzXh1rs=;
-        b=IUMcFpRQ8vz/Oz098DsJ/MlfrAlkASfp0SYSePY2V0VNezU4rSDADZWDuogLY83ITE
-         6qOiftcsBHTGequV+QapUdKtSjbKt+Lu/mUFk4ZyU+XNjiuz67a5JUmyh7cgP3cDXB4u
-         h3CtmwJqCqQUK9zrwgIefdFvbNJZ8pnnLyo0s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DLwWB53t6sz09f9B1uK0zwEN9SxdL7h+I/vAqzXh1rs=;
-        b=RFVwYGJeImdSbgdeNHWPVDCP5OayzcCwJ35wPeUFJCEJfr6srXiJDKnSqXXvbcAwVE
-         A1Ayxnca7ojSDDmd8mS01uWYIJcCi+Tx+sjgN3mcRZ0l1jCfBNcBlFS93ccAIr3EO40Y
-         L69F9o/1p+2eZoniGI51w1dBewdLzHyvS31stD9J9tcf/Xnasvuro4v6MmfRZ/E0az2d
-         Ygtyeg2so8fp8cCVFeduOXXcovEHiwjxsSnkh8GOK7kv5QbBC5zQ9KU1qdjQEa461cRB
-         fOEnKGSWpl8FtNS+gGAugVWJKUklihxP+q7UDw4qaBf4uK7fqLaawCKssJ2V9JFPKnhR
-         sUCQ==
-X-Gm-Message-State: APjAAAXNbyniISMoW3E248uLxl3SyOmr97DcoN6Pitg6BuF1/mhoT5RF
-        7qtUx54zr7A1uA1nSYQVbhNER0tXYvrRZ/+8AwE=
-X-Google-Smtp-Source: APXvYqwu+C+7GEOmDwQMJ1OCXr0L1MJ1vO3XA/YvvHsO/1Pr4qqlLpiL2FeuSh8Rtqj95aStJGWL/5FEIAlw9Nv83x8=
-X-Received: by 2002:a37:a43:: with SMTP id 64mr36517qkk.292.1579571606933;
- Mon, 20 Jan 2020 17:53:26 -0800 (PST)
+        Mon, 20 Jan 2020 20:56:46 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04428;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0ToGEFrG_1579571799;
+Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0ToGEFrG_1579571799)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 21 Jan 2020 09:56:40 +0800
+Subject: [PATCH v8 0/2] sched/numa: introduce numa locality
+From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>
+References: <743eecad-9556-a241-546b-c8a66339840e@linux.alibaba.com>
+ <207ef46c-672c-27c8-2012-735bd692a6de@linux.alibaba.com>
+ <040def80-9c38-4bcc-e4a8-8a0d10f131ed@linux.alibaba.com>
+ <25cf7ef5-e37e-7578-eea7-29ad0b76c4ea@linux.alibaba.com>
+ <443641e7-f968-0954-5ff6-3b7e7fed0e83@linux.alibaba.com>
+ <d2c4cace-623a-9317-c957-807e3875aa4a@linux.alibaba.com>
+ <a95a7e05-ad60-b9ee-ca39-f46c8e08887d@linux.alibaba.com>
+Message-ID: <b9249375-fe8c-034e-c3bd-cacfe4e89658@linux.alibaba.com>
+Date:   Tue, 21 Jan 2020 09:56:39 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.1
 MIME-Version: 1.0
-References: <20200120150113.2565-1-linux@neuralgames.com>
-In-Reply-To: <20200120150113.2565-1-linux@neuralgames.com>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Tue, 21 Jan 2020 01:53:15 +0000
-Message-ID: <CACPK8XfuVN3Q=npEoOP-amQS0-wemxcx6LKaHHZEsBAHzq1wzA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] hwrng: Add support for ASPEED RNG
-To:     Oscar A Perez <linux@neuralgames.com>
-Cc:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <a95a7e05-ad60-b9ee-ca39-f46c8e08887d@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+v8:
+  * document edited
+v7:
+  * rebased on latest linux-next
+v6:
+  * fix compile failure when NUMA disabled
+v5:
+  * improved documentation
+v4:
+  * fix comments and improved documentation
+v3:
+  * simplified the locality concept & implementation
+v2:
+  * improved documentation
 
-On Mon, 20 Jan 2020 at 15:12, Oscar A Perez <linux@neuralgames.com> wrote:
->
-> This minimal driver adds support for the Hardware Random Number Generator
-> that comes with the AST2400/AST2500/AST2600 SOCs from AspeedTech.
->
-> The HRNG on these SOCs uses Ring Oscillators working together to generate
-> a stream of random bits that can be read by the platform via a 32bit data
-> register.
+Modern production environment could use hundreds of cgroup to control
+the resources for different workloads, along with the complicated
+resource binding.
 
-Thanks for the patch.
+On NUMA platforms where we have multiple nodes, things become even more
+complicated, we hope there are more local memory access to improve the
+performance, and NUMA Balancing keep working hard to achieve that,
+however, wrong memory policy or node binding could easily waste the
+effort, result a lot of remote page accessing.
 
-We've been using the timeriomem-rng driver for the past few years on
-aspeed hardware. You can see how that's set up by looking at
-arch/arm/boot/dts/aspeed-g{4,5,6}.dtsi
+We need to notice such problems, then we got chance to fix it before
+there are too much damages, however, there are no good monitoring
+approach yet to help catch the mouse who introduced the remote access.
 
-I suggest we continue to use the generic driver.
+This patch set is trying to fill in the missing pieces， by introduce
+the per-cgroup NUMA locality info, with this new statistics, we could
+achieve the daily monitoring on NUMA efficiency, to give warning when
+things going too wrong.
 
-Cheers,
+Please check the second patch for more details.
 
-Joel
+Michael Wang (2):
+  sched/numa: introduce per-cgroup NUMA locality info
+  sched/numa: documentation for per-cgroup numa statistics
 
+ Documentation/admin-guide/cg-numa-stat.rst      | 178 ++++++++++++++++++++++++
+ Documentation/admin-guide/index.rst             |   1 +
+ Documentation/admin-guide/kernel-parameters.txt |   4 +
+ Documentation/admin-guide/sysctl/kernel.rst     |   9 ++
+ include/linux/sched.h                           |  15 ++
+ include/linux/sched/sysctl.h                    |   6 +
+ init/Kconfig                                    |  11 ++
+ kernel/sched/core.c                             |  75 ++++++++++
+ kernel/sched/fair.c                             |  62 +++++++++
+ kernel/sched/sched.h                            |  12 ++
+ kernel/sysctl.c                                 |  11 ++
+ 11 files changed, 384 insertions(+)
+ create mode 100644 Documentation/admin-guide/cg-numa-stat.rst
 
+-- 
+2.14.4.44.g2045bb6
 
->
-> Signed-off-by: Oscar A Perez <linux@neuralgames.com>
-> ---
->  .../devicetree/bindings/rng/aspeed-rng.yaml   | 90 +++++++++++++++++++
->  1 file changed, 90 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rng/aspeed-rng.yaml
->
-> diff --git a/Documentation/devicetree/bindings/rng/aspeed-rng.yaml b/Documentation/devicetree/bindings/rng/aspeed-rng.yaml
-> new file mode 100644
-> index 000000000000..06070ebe1c33
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rng/aspeed-rng.yaml
-> @@ -0,0 +1,90 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/rng/aspeed-rng.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +
-> +title: Bindings for Aspeed Hardware Random Number Generator
-> +
-> +
-> +maintainers:
-> +  - Oscar A Perez <linux@neuralgames.com>
-> +
-> +
-> +description: |
-> +  The HRNG on the AST2400/AST2500/AST2600 SOCs from AspeedTech  uses four Ring
-> +  Oscillators working together to generate a stream of random bits that can be
-> +  read by the platform via a 32bit data register every one microsecond.
-> +  All the platform has to do is to provide to the driver the 'quality' entropy
-> +  value, the  'mode' in which the combining  ROs will generate the  stream  of
-> +  random bits and, the 'period' value that is used as a wait-time between reads
-> +  from the 32bit data register.
-> +
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - aspeed,ast2400-rng
-> +              - aspeed,ast2500-rng
-> +              - aspeed,ast2600-rng
-> +
-> +
-> +  reg:
-> +    description:
-> +      Base address and length of the register set of this block.
-> +      Currently 'reg' must be eight bytes wide and 32-bit aligned.
-> +
-> +    maxItems: 1
-> +
-> +
-> +  period:
-> +    description:
-> +      Wait time in microseconds to be used between reads.
-> +      The RNG on these Aspeed SOCs generates 32bit of random data
-> +      every one microsecond. Choose between 1 and n microseconds.
-> +
-> +    maxItems: 1
-> +
-> +
-> +  mode:
-> +    description:
-> +      One of the eight modes in which the four internal ROs (Ring
-> +      Oscillators)  are combined to generate a stream  of random
-> +      bits. The default mode is seven which is the default method
-> +      of combining RO random bits on these Aspeed SOCs.
-> +
-> +    maxItems: 1
-> +
-> +
-> +  quality:
-> +    description:
-> +      Estimated number of bits of entropy per 1024 bits read from
-> +      the RNG.  Note that the default quality is zero which stops
-> +      this HRNG from automatically filling the kernel's entropy
-> +      pool with data.
-> +
-> +    maxItems: 1
-> +
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - period
-> +  - quality
-> +
-> +
-> +examples:
-> +  - |
-> +    rng: hwrng@1e6e2074 {
-> +         compatible = "aspeed,ast2500-rng";
-> +         reg = <0x1e6e2074 0x8>;
-> +         period = <4>;
-> +         quality = <128>;
-> +         mode = <0x7>;
-> +    };
-> +
-> +
-> +...
-> --
-> 2.17.1
->
