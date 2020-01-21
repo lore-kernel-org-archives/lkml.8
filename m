@@ -2,98 +2,165 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7DB0C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97976C33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD2B521835
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:16:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E3B121835
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 19:19:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z1RfHvzA"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mo3JH4Ss"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728682AbgAUTQs (ORCPT
+        id S1728596AbgAUTTZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 14:16:48 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:33064 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726229AbgAUTQr (ORCPT
+        Tue, 21 Jan 2020 14:19:25 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:35060 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727360AbgAUTTZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 14:16:47 -0500
-Received: by mail-lf1-f67.google.com with SMTP id n25so3291201lfl.0;
-        Tue, 21 Jan 2020 11:16:46 -0800 (PST)
+        Tue, 21 Jan 2020 14:19:25 -0500
+Received: by mail-pf1-f195.google.com with SMTP id i23so1993272pfo.2
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 11:19:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yH4ULRCvH4cIDF7hD9SOh0HJDCpz6O0XU2vMhvkwdOE=;
-        b=Z1RfHvzAJPA/StIKZHDEekvQyA0VUlR1vmzUjSrVy0rGP1l702BDP+NRdzLf/mbFkj
-         /25wksgnCFXLuFH3meS2QWhOtOLmA7ZFYl9R/wvQwi1UoZN70mg+peRJ565Dq3/0GmBZ
-         hiE1Wxs9KqVV3+msNPh6H3dQK3AiLXRl670WQTcNp3v/qQg+WRtkEoOkmDLix0voBC30
-         Q6+puIlj1cO68FdcbwN8+y0nYyMV19SstBVcXCr0lgZPzauVp273AqUQzfcua/w++cIh
-         fma7F+ml8F66/yipQB6c2MdQzcoZQ7jXwS8j5ADncUcZkHBEv/7g7ke/dL7KchEwFdaa
-         jFYQ==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aqRmMWrZ2O6AQaqMT6b2P7oahNOZhsaTo9RvQSMwDMk=;
+        b=mo3JH4SseKHbVUnb9l+e/2t25z5zoMH0yyv2CYN61032Qsypr4/063jVln69dYTgFE
+         NKdRgbhhDRJXhhyJ9xQodzx/Ph/j7H9lDZ/o1f+kDYviMVLkrCMfIgg01BTAL7wJe0TW
+         W2pMcpMJNnkwDiA/67EHdMDhVEF6e60L20UEE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yH4ULRCvH4cIDF7hD9SOh0HJDCpz6O0XU2vMhvkwdOE=;
-        b=LVwavKy2j87GnoleWH0KKedQNoJpEZ1AWmDssfWEe4ofajHc7r/LORKISKck7Qx4Ac
-         bexNI6WrTsbf/1i5aqUMpV+srxhcQO0A3SmGXdX8aNtKxq0Gt3t5sOgR1D4DT0L/O9Bn
-         G/tvd7/wf779yJQtiY9SWtT08mnrDTjCfbvWrS7QGAjrjnM630V5Q4sZmGRhMhr/q/fw
-         kMAoXvvBx2s1Zi8GJJQBliouWkiPt97JUBcM6BwIO3nmvUSNPYElq+uRpc+wIMYBaukv
-         rIub/E7ywihWkYRqs8uKdr9fQ8yw7TC5W4nJDI/AUmEdBtUU6jD+wCDZFgcl/aLADy/L
-         31MA==
-X-Gm-Message-State: APjAAAVaTMjLx6lisv6HUTJ1feV3C+sM4fIskqMipCGCbaYHJu1HAOxn
-        TvnkHFUbzkQK07u7JzuaS/+VcBrLd5dRwOjIuE8=
-X-Google-Smtp-Source: APXvYqxBYVgdpErMAXSCI8pmoUIGY/wO9CBLiGd4fNVY01TGZK0ZF/ly0kg8E6SVOc6FFy6MoRusPEJoH8+GoAsAgys=
-X-Received: by 2002:a05:6512:4c6:: with SMTP id w6mr3497249lfq.157.1579634205243;
- Tue, 21 Jan 2020 11:16:45 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aqRmMWrZ2O6AQaqMT6b2P7oahNOZhsaTo9RvQSMwDMk=;
+        b=nunu+BePXvl7JYuabDARxa8hb2O1HEDedVAWTF4TBSRGUHvPW10u43Ia7ibiUDOYYV
+         IM7VvCpP5+n78Y4jxtiGNYA+kB5FgdmZBOfxJDIBbfx8GW4HG7gtfO3zeM7cxwVUKFVc
+         f7o0LYI8VhQHQURxEPiOta7H4a0lDLUaFt3OHaKVu0Qua868nDJ3R9wuPPty8DPu/0EP
+         S6ED7/F5+HCdC1uf5YgS0jedaFNkxXV4rDUqU4h4jVvcbwzA1KHnFk05S7IXqcBFmp8Q
+         6enqFoT8pz8IZ+tjUxpu8TTmVQQOi/QTSrZga7i5hstUAmf4YY8cRN8/dPNfnHi5yslQ
+         GzyQ==
+X-Gm-Message-State: APjAAAWa1Jt6Uo6sXWFQnrYvh6gsdgv4Rt2be9Vsv6t4LC2XVYF34P03
+        YsfIfuXlMIBc6udymvvQL5AkAQ==
+X-Google-Smtp-Source: APXvYqxYUXNBBxAHz3BQUbedFm4ESJRvljKeyTxsiakxKmCyPYaL8oztIYtPYLhvqyKKllweLSR2Mw==
+X-Received: by 2002:a63:b50a:: with SMTP id y10mr7131998pge.104.1579634364327;
+        Tue, 21 Jan 2020 11:19:24 -0800 (PST)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id 2sm41606601pgo.79.2020.01.21.11.19.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2020 11:19:23 -0800 (PST)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     saiprakash.ranjan@codeaurora.org, mka@chromium.org,
+        Stephen Boyd <swboyd@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Sean Paul <sean@poorly.run>, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        David Airlie <airlied@linux.ie>,
+        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>
+Subject: [REPOST PATCH] drm/msm: Set dma maximum segment size for mdss
+Date:   Tue, 21 Jan 2020 11:18:48 -0800
+Message-Id: <20200121111813.REPOST.1.I92c66a35fb13f368095b05287bdabdbe88ca6922@changeid>
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
 MIME-Version: 1.0
-References: <00000000000031a8d7059c27c540@google.com> <00000000000048111c059cab1695@google.com>
-In-Reply-To: <00000000000048111c059cab1695@google.com>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Tue, 21 Jan 2020 11:16:33 -0800
-Message-ID: <CAADnVQ+jS2C=TxPvyKJmoj7HENCZVr3O_N1tHQ4uTewPDUu0_A@mail.gmail.com>
-Subject: Re: general protection fault in free_verifier_state (3)
-To:     syzbot <syzbot+b296579ba5015704d9fa@syzkaller.appspotmail.com>
-Cc:     Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Yonghong Song <yhs@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 11:05 AM syzbot
-<syzbot+b296579ba5015704d9fa@syzkaller.appspotmail.com> wrote:
->
-> syzbot has found a reproducer for the following crash on:
->
-> HEAD commit:    2e3a94aa bpf: Fix memory leaks in generic update/delete ba..
-> git tree:       bpf-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=15aefc6ee00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=a736c99e9fe5a676
-> dashboard link: https://syzkaller.appspot.com/bug?extid=b296579ba5015704d9fa
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10a4280de00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1411544ee00000
+From: Sean Paul <seanpaul@chromium.org>
 
-Since it's in the verifier I'm guessing it's related to some of my
-earlier patches.
-I'll try to take a look soon.
+Turning on CONFIG_DMA_API_DEBUG_SG results in the following error:
+
+[   12.078665] msm ae00000.mdss: DMA-API: mapping sg segment longer than device claims to support [len=3526656] [max=65536]
+[   12.089870] WARNING: CPU: 6 PID: 334 at /mnt/host/source/src/third_party/kernel/v4.19/kernel/dma/debug.c:1301 debug_dma_map_sg+0x1dc/0x318
+[   12.102655] Modules linked in: joydev
+[   12.106442] CPU: 6 PID: 334 Comm: frecon Not tainted 4.19.0 #2
+[   12.112450] Hardware name: Google Cheza (rev3+) (DT)
+[   12.117566] pstate: 60400009 (nZCv daif +PAN -UAO)
+[   12.122506] pc : debug_dma_map_sg+0x1dc/0x318
+[   12.126995] lr : debug_dma_map_sg+0x1dc/0x318
+[   12.131487] sp : ffffff800cc3ba80
+[   12.134913] x29: ffffff800cc3ba80 x28: 0000000000000000
+[   12.140395] x27: 0000000000000004 x26: 0000000000000004
+[   12.145868] x25: ffffff8008e55b18 x24: 0000000000000000
+[   12.151337] x23: 00000000ffffffff x22: ffffff800921c000
+[   12.156809] x21: ffffffc0fa75b080 x20: ffffffc0f7195090
+[   12.162280] x19: ffffffc0f1c53280 x18: 0000000000000000
+[   12.167749] x17: 0000000000000000 x16: 0000000000000000
+[   12.173218] x15: 0000000000000000 x14: 0720072007200720
+[   12.178689] x13: 0720072007200720 x12: 0720072007200720
+[   12.184161] x11: 0720072007200720 x10: 0720072007200720
+[   12.189641] x9 : ffffffc0f1fc6b60 x8 : 0000000000000000
+[   12.195110] x7 : ffffff8008132ce0 x6 : 0000000000000000
+[   12.200585] x5 : 0000000000000000 x4 : ffffff8008134734
+[   12.206058] x3 : ffffff800cc3b830 x2 : ffffffc0f1fc6240
+[   12.211532] x1 : 25045a74f48a7400 x0 : 25045a74f48a7400
+[   12.217006] Call trace:
+[   12.219535]  debug_dma_map_sg+0x1dc/0x318
+[   12.223671]  get_pages+0x19c/0x20c
+[   12.227177]  msm_gem_fault+0x64/0xfc
+[   12.230874]  __do_fault+0x3c/0x140
+[   12.234383]  __handle_mm_fault+0x70c/0xdb8
+[   12.238603]  handle_mm_fault+0xac/0xc4
+[   12.242473]  do_page_fault+0x1bc/0x3d4
+[   12.246342]  do_translation_fault+0x54/0x88
+[   12.250652]  do_mem_abort+0x60/0xf0
+[   12.254250]  el0_da+0x20/0x24
+[   12.257317] irq event stamp: 67260
+[   12.260828] hardirqs last  enabled at (67259): [<ffffff8008132d0c>] console_unlock+0x214/0x608
+[   12.269693] hardirqs last disabled at (67260): [<ffffff8008080e0c>] do_debug_exception+0x5c/0x178
+[   12.278820] softirqs last  enabled at (67256): [<ffffff8008081664>] __do_softirq+0x4d4/0x520
+[   12.287510] softirqs last disabled at (67249): [<ffffff80080be574>] irq_exit+0xa8/0x100
+[   12.295742] ---[ end trace e63cfc40c313ffab ]---
+
+The root of the problem is that the default segment size for sgt is
+(UINT_MAX & PAGE_MASK), and the default segment size for device dma is
+64K. As such, if you compare the 2, you would deduce that the sg segment
+will overflow the device's capacity. In reality, the hardware can
+accommodate the larger sg segments, it's just not initializing its max
+segment properly. This patch initializes the max segment size for the
+mdss device, which gets rid of that pesky warning.
+
+Reported-by: Stephen Boyd <swboyd@chromium.org>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Tested-by: Stephen Boyd <swboyd@chromium.org>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+This patch has been floating in the ether for over a year [1].  I know
+next to nothing about it, but I'm told it's still useful so I'm
+helpfully reposting it.  Please enjoy.
+
+[1] https://lore.kernel.org/r/20181106213239.52133-1-sean@poorly.run
+
+ drivers/gpu/drm/msm/msm_drv.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+index c26219c7a49f..e4b750b0c2d3 100644
+--- a/drivers/gpu/drm/msm/msm_drv.c
++++ b/drivers/gpu/drm/msm/msm_drv.c
+@@ -441,6 +441,14 @@ static int msm_drm_init(struct device *dev, struct drm_driver *drv)
+ 	if (ret)
+ 		goto err_msm_uninit;
+ 
++	if (!dev->dma_parms) {
++		dev->dma_parms = devm_kzalloc(dev, sizeof(*dev->dma_parms),
++					      GFP_KERNEL);
++		if (!dev->dma_parms)
++			return -ENOMEM;
++	}
++	dma_set_max_seg_size(dev, DMA_BIT_MASK(32));
++
+ 	msm_gem_shrinker_init(ddev);
+ 
+ 	switch (get_mdp_ver(pdev)) {
+-- 
+2.25.0.341.g760bfbb309-goog
+
