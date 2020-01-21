@@ -2,92 +2,98 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 843DBC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 22:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CCADC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 22:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52FA524655
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 22:11:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="s/rSw8mv"
+	by mail.kernel.org (Postfix) with ESMTP id D815524655
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 22:11:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729536AbgAUWLb (ORCPT
+        id S1729530AbgAUWLa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 17:11:31 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:35915 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729064AbgAUWL1 (ORCPT
+        Tue, 21 Jan 2020 17:11:30 -0500
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:44734 "EHLO
+        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728609AbgAUWKh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 17:11:27 -0500
-Received: by mail-ed1-f67.google.com with SMTP id j17so4690490edp.3
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 14:11:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=x52RfIzWuhptiT6HtlO6I538NLkJPevuS3cIwYyZteg=;
-        b=s/rSw8mvL48WPMh/ngVylCpVlto/w/+l5lPClTNQgf8CDydp9BA5lDSfeI1kWU6uHG
-         +nNcYIO7Ec+B/37EzZnnAzaHWk8rXhIIWEpJrS4SBTW+VSPxVwoC0T2MgqNgkhyLq9ur
-         sXrxGR+rzlid5R924smwd9wb1o3y6PWF9nRCkdfDNO47lnYRCW+iMnf2QUZ7KLXiiF4g
-         ACFETfI7/6ZW/XcM55v/bWCZeS+noIhIpfUWyiWFshrbcEgv0qRlAoW+yD8F67NyYHGE
-         IsCiVkI+FbIHz5detETS+LDAYI+hWa5kFOUTYXZysK3vuocEt4A27ojjizGTd8MpNjX0
-         JUjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=x52RfIzWuhptiT6HtlO6I538NLkJPevuS3cIwYyZteg=;
-        b=TLYYeki8lUeFr7Gw7nDdXQH2QvjzvjngbAH8KSrNcrZKbcONuOnmOPivT9YYI+O+Pg
-         V+ASkD+I3b6fGknRIYGnviCFGhkIeYJIl1NPOO+GCsVLvHMR1hGVqALtet2uTKuRnaxk
-         NZtuhB8tCpOmaJB8dmbTTIAAlKfAVBsH+w9owcoZfQqUdbIbERJUxJ6ekPBFxFCham0L
-         l5V+DQL0bo04+FqHpfLQJtmXD8K+eB0dEh6kyBl/+lGJO6+2BEfEzQ427OGqpNPyA6co
-         W6phZ2nfDr2tFyR30ZHYNwOaZsz9A8uTQ6mnj2w1Y096ldfX2D3tsqj3h0UgQn4Yh1/o
-         8F8w==
-X-Gm-Message-State: APjAAAU8AoGI/8p+jm8F8S0orcpUk0EwYSSHYUxSQiuKqA03uSmJ+IeM
-        CMInbS3VJwB551h1OE2v+85Pi+5+FkWvoPyiqiU=
-X-Google-Smtp-Source: APXvYqy2Lvp66HQg3tF0U4y7uCLYIvj+NbcFeMsCn8O5mdlF4fZ8zrHwSodtdIlnVzrkNoyj9B2fqN0+7Jg90Y1Co7s=
-X-Received: by 2002:a05:6402:221c:: with SMTP id cq28mr342907edb.110.1579644686374;
- Tue, 21 Jan 2020 14:11:26 -0800 (PST)
-MIME-Version: 1.0
-References: <20200121103413.1337-1-geert+renesas@glider.be>
- <20200121103722.1781-1-geert+renesas@glider.be> <20200121103722.1781-12-geert+renesas@glider.be>
-In-Reply-To: <20200121103722.1781-12-geert+renesas@glider.be>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Tue, 21 Jan 2020 23:11:15 +0100
-Message-ID: <CAFBinCD=LTAT-HQ+wSSmLQux+W5Y6vBju6RQDwf_1t1FhZoXgw@mail.gmail.com>
-Subject: Re: [PATCH 12/20] ARM: meson: Drop unneeded select of COMMON_CLK
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        Kevin Hilman <khilman@baylibre.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 21 Jan 2020 17:10:37 -0500
+Received: by kvm5.telegraphics.com.au (Postfix, from userid 502)
+        id 233FE29988; Tue, 21 Jan 2020 17:10:36 -0500 (EST)
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Chris Zankel <chris@zankel.net>,
+        Laurent Vivier <laurent@vivier.eu>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-Id: <8a9a2a9bd56de82328b20e5234c56e48889eb016.1579641728.git.fthain@telegraphics.com.au>
+In-Reply-To: <cover.1579641728.git.fthain@telegraphics.com.au>
+References: <cover.1579641728.git.fthain@telegraphics.com.au>
+From:   Finn Thain <fthain@telegraphics.com.au>
+Subject: [PATCH net v2 03/12] net/sonic: Use MMIO accessors
+Date:   Wed, 22 Jan 2020 08:22:08 +1100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 12:47 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
->
-> Support for Amlogic Meson SoCs depends on ARCH_MULTI_V7, and thus on
-> ARCH_MULTIPLATFORM.
-> As the latter selects COMMON_CLK, there is no need for ARCH_MESON to
-> select COMMON_CLK.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+The driver accesses descriptor memory which is simultaneously accessed by
+the chip, so the compiler must not be allowed to re-order CPU accesses.
+sonic_buf_get() used 'volatile' to prevent that. sonic_buf_put() should
+have done so too but was overlooked.
 
-> Cc: Kevin Hilman <khilman@baylibre.com>
-> Cc: linux-amlogic@lists.infradead.org
-I assume that Kevin should take this through the linux-amlogic tree
-(instead of someone else applying the whole series directly to the
-arm-soc tree)?
+Fixes: efcce839360f ("[PATCH] macsonic/jazzsonic network drivers update")
+Tested-by: Stan Johnson <userm57@yahoo.com>
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+---
+ drivers/net/ethernet/natsemi/sonic.h | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
+diff --git a/drivers/net/ethernet/natsemi/sonic.h b/drivers/net/ethernet/natsemi/sonic.h
+index f9506863e9d1..fb160dfdf4ca 100644
+--- a/drivers/net/ethernet/natsemi/sonic.h
++++ b/drivers/net/ethernet/natsemi/sonic.h
+@@ -345,30 +345,30 @@ static void sonic_msg_init(struct net_device *dev);
+    as far as we can tell. */
+ /* OpenBSD calls this "SWO".  I'd like to think that sonic_buf_put()
+    is a much better name. */
+-static inline void sonic_buf_put(void* base, int bitmode,
++static inline void sonic_buf_put(u16 *base, int bitmode,
+ 				 int offset, __u16 val)
+ {
+ 	if (bitmode)
+ #ifdef __BIG_ENDIAN
+-		((__u16 *) base + (offset*2))[1] = val;
++		__raw_writew(val, base + (offset * 2) + 1);
+ #else
+-		((__u16 *) base + (offset*2))[0] = val;
++		__raw_writew(val, base + (offset * 2) + 0);
+ #endif
+ 	else
+-	 	((__u16 *) base)[offset] = val;
++		__raw_writew(val, base + (offset * 1) + 0);
+ }
+ 
+-static inline __u16 sonic_buf_get(void* base, int bitmode,
++static inline __u16 sonic_buf_get(u16 *base, int bitmode,
+ 				  int offset)
+ {
+ 	if (bitmode)
+ #ifdef __BIG_ENDIAN
+-		return ((volatile __u16 *) base + (offset*2))[1];
++		return __raw_readw(base + (offset * 2) + 1);
+ #else
+-		return ((volatile __u16 *) base + (offset*2))[0];
++		return __raw_readw(base + (offset * 2) + 0);
+ #endif
+ 	else
+-		return ((volatile __u16 *) base)[offset];
++		return __raw_readw(base + (offset * 1) + 0);
+ }
+ 
+ /* Inlines that you should actually use for reading/writing DMA buffers */
+-- 
+2.24.1
 
-Martin
