@@ -2,221 +2,139 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E02DAC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA88C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8A1F2465B
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:29:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579631382;
-	bh=51yKrmQlPgmeyaypex2fjkBrhPuOWZH0iB5oi4tqThI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AFu8q84A/ch7hP3CTa/v1tNUv/shq8zTgmwsTifGg0uKhfdieL/HDDrEtb2FJdC6C
-	 8EWfXSkcFjehydgUbRnLREQAnYnGFwxvXUuiyFgj4LEfRJwjIGyJS2Qob8w58sN8u5
-	 sZSq42r/VB6BYFeeQ3fDP7ynSoUBWrfMZitDxR9E=
+	by mail.kernel.org (Postfix) with ESMTP id 50A762087E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:30:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WoEpqp79"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729281AbgAUS3l (ORCPT
+        id S1729293AbgAUSaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 13:29:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60726 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728186AbgAUS3l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 13:29:41 -0500
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 21 Jan 2020 13:30:20 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:50779 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728186AbgAUSaU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 13:30:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579631419;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=n6ph8C+aXX0HI0FhHPqndGPmUHr5PUk3iM34mdtK754=;
+        b=WoEpqp79Jpao9qyUg3Uvvc4mQ4n9D8MEvA3+3z2MgM4dsuIZZk6KlSojelnpG8O+TGbQFs
+        RGTZkuPhSuQbKVM8sW0jDEzGTojGx50RohV1GspTrIK6KESh83e+R12JgYZ0Xo59XMEUkR
+        9U4Za2L+3Ldo/jV6+OjjjcHJzZfyC0E=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-203-uxQgXMv6MISRi-IAIju01Q-1; Tue, 21 Jan 2020 13:30:15 -0500
+X-MC-Unique: uxQgXMv6MISRi-IAIju01Q-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F99A2087E;
-        Tue, 21 Jan 2020 18:29:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579631379;
-        bh=51yKrmQlPgmeyaypex2fjkBrhPuOWZH0iB5oi4tqThI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eW95Fo3d5uqoxtpENcsNkgmzU63zFhMaZKv/F5WPZkVNdlGolI/KGuuQD6Yy4aJQq
-         V8kY9bvRwA+dJ8hUm4SrupskWqblO+Yd29STduEam1HvbJsehbxMNt2TpTkSSfPK56
-         Vh4YONOIomQ6fZ9oTBMv4+iaqWFAJqUARF9h1rsE=
-Date:   Tue, 21 Jan 2020 19:29:37 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Stefan Mavrodiev <stefan@olimex.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
-        <dmaengine@vger.kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:DRM DRIVERS FOR ALLWINNER A10" 
-        <dri-devel@lists.freedesktop.org>, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v2 2/2] drm: sun4i: hdmi: Add support for sun4i HDMI
- encoder audio
-Message-ID: <20200121182937.2ak72e4eklk4za2u@gilmour.lan>
-References: <20200120123326.30743-1-stefan@olimex.com>
- <20200120123326.30743-3-stefan@olimex.com>
- <20200121182905.pxs72ojqx5fz2gi3@gilmour.lan>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A2643800D4C;
+        Tue, 21 Jan 2020 18:30:12 +0000 (UTC)
+Received: from treble (ovpn-122-154.rdu2.redhat.com [10.10.122.154])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3115639A;
+        Tue, 21 Jan 2020 18:30:11 +0000 (UTC)
+Date:   Tue, 21 Jan 2020 12:30:09 -0600
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Julien Thierry <jthierry@redhat.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>, raphael.gault@arm.com,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [RFC v5 00/57] objtool: Add support for arm64
+Message-ID: <20200121183009.253yh6aehvnvxoew@treble>
+References: <20200109160300.26150-1-jthierry@redhat.com>
+ <20200112084258.GA44004@ubuntu-x2-xlarge-x86>
+ <d5bf34f0-22cc-ba46-41b4-96a52d7acfa4@redhat.com>
+ <20200121103101.GE11154@willie-the-truck>
+ <CAKwvOd=_PqQWUvd_WZRpEr+T==3w6LpsHKBz3E9ybaQ0javVkw@mail.gmail.com>
+ <20200121180632.GA13592@willie-the-truck>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="cag4omdmo5ru62iz"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200121182905.pxs72ojqx5fz2gi3@gilmour.lan>
+In-Reply-To: <20200121180632.GA13592@willie-the-truck>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jan 21, 2020 at 06:06:34PM +0000, Will Deacon wrote:
+> On Tue, Jan 21, 2020 at 09:08:29AM -0800, Nick Desaulniers wrote:
+> > On Tue, Jan 21, 2020 at 2:31 AM Will Deacon <will@kernel.org> wrote:
+> > >
+> > > On Mon, Jan 13, 2020 at 07:57:48AM +0000, Julien Thierry wrote:
+> > > > On 1/12/20 8:42 AM, Nathan Chancellor wrote:
+> > > > > The 0day bot reported a couple of issues with clang with this series;
+> > > > > the full report is available here (clang reports are only sent to our
+> > > > > mailing lists for manual triage for the time being):
+> > > > >
+> > > > > https://groups.google.com/d/msg/clang-built-linux/MJbl_xPxawg/mWjgDgZgBwAJ
+> > > > >
+> > > >
+> > > > Thanks, I'll have a look at those.
+> > > >
+> > > > > The first obvious issue is that this series appears to depend on a GCC
+> > > > > plugin? I'll be quite honest, objtool and everything it does is rather
+> > > > > over my head but I see this warning during configuration (allyesconfig):
+> > > > >
+> > > > > WARNING: unmet direct dependencies detected for GCC_PLUGIN_SWITCH_TABLES
+> > > > >    Depends on [n]: GCC_PLUGINS [=n] && ARM64 [=y]
+> > > > >      Selected by [y]:
+> > > > >        - ARM64 [=y] && STACK_VALIDATION [=y]
+> > > > >
+> > > > > Followed by the actual error:
+> > > > >
+> > > > > error: unable to load plugin
+> > > > > './scripts/gcc-plugins/arm64_switch_table_detection_plugin.so':
+> > > > > './scripts/gcc-plugins/arm64_switch_table_detection_plugin.so: cannot
+> > > > > open shared object file: No such file or directory'
+> > > > >
+> > > > > If this plugin is absolutely necessary and can't be implemented in
+> > > > > another way so that clang can be used, seems like STACK_VALIDATION
+> > > > > should only be selected on ARM64 when CONFIG_CC_IS_GCC is not zero.
+> > > > >
+> > > >
+> > > > So currently the plugin is necessary for proper validation. One option can
+> > > > be to just let objtool output false positives on files containing jump
+> > > > tables when the plugin cannot be used. But overall I guess it makes more
+> > > > sense to disable stack validation for non-gcc builds, for now.
+> > >
+> > > Alternatively, could we add '-fno-jump-tables' to the KBUILD_CFLAGS if
+> > > STACK_VALIDATION is selected but we're not using GCC? Is that sufficient
+> > > to prevent generation of these things?
+> > 
+> > Surely we wouldn't want to replace jump tables with long chains of
+> > comparisons just because objtool couldn't validate jump tables without
+> > a GCC plugin for aarch64 for some reason, right?  objtool validation
+> > is valuable, but tying runtime performance to a GCC plugin used for
+> > validation seems bad.
+> 
+> I'm only suggesting it if STACK_VALIDATION is selected. It's off by default,
+> and lives in Kconfig.debug. I'd prefer that to "cross your fingers are do
+> nothing differently", which is what the other option seems to be.
 
---cag4omdmo5ru62iz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I don't know what the right answer is here, but keep in mind that
+objtool is on by default for x86, so don't be surprised if that
+eventually happens to arch64 too.
 
-Actually Cc'ing this time..
+Short term it might be ok to disable jump tables with objtool enabled,
+or to disable objtool when clang is in use, but long term we'll need to
+figure out a better solution.
 
-On Tue, Jan 21, 2020 at 07:29:05PM +0100, Maxime Ripard wrote:
-> +Mark
->
-> On Mon, Jan 20, 2020 at 02:33:26PM +0200, Stefan Mavrodiev wrote:
-> > Add HDMI audio support for the sun4i-hdmi encoder, used on
-> > the older Allwinner chips - A10, A20, A31.
-> >
-> > Most of the code is based on the BSP implementation. In it
-> > dditional formats are supported (S20_3LE and S24_LE), however
-> > there where some problems with them and only S16_LE is left.
->
-> What are those problems?
->
-> > Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
-> > ---
->
-> > +static int sun4i_hdmi_audio_probe(struct platform_device *pdev)
-> > +{
-> > +	struct snd_soc_card *card = &sun4i_hdmi_audio_card;
-> > +	struct snd_soc_dai_link_component *comp;
-> > +	struct snd_soc_dai_link *link;
-> > +	struct device *dev = &pdev->dev;
-> > +	struct sun4i_hdmi_audio *priv;
-> > +	int ret;
-> > +
-> > +	ret = devm_snd_dmaengine_pcm_register(dev,
-> > +					      &sun4i_hdmi_audio_pcm_config, 0);
-> > +	if (ret) {
-> > +		dev_err(dev, "Failed registering PCM DMA component\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	ret = devm_snd_soc_register_component(dev,
-> > +					      &sun4i_hdmi_audio_component,
-> > +					      &sun4i_hdmi_audio_dai, 1);
-> > +	if (ret) {
-> > +		dev_err(dev, "Failed registering DAI component\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> > +	if (!priv)
-> > +		return -ENOMEM;
-> > +
-> > +	priv->hdmi = dev->parent;
-> > +	dev->of_node = dev->parent->of_node;
-> > +
-> > +	link = devm_kzalloc(dev, sizeof(*link), GFP_KERNEL);
-> > +	if (!link)
-> > +		return -ENOMEM;
-> > +
-> > +	comp = devm_kzalloc(dev, sizeof(*comp) * 3, GFP_KERNEL);
-> > +	if (!comp)
-> > +		return -ENOMEM;
-> > +
-> > +	link->cpus = &comp[0];
-> > +	link->codecs = &comp[1];
-> > +	link->platforms = &comp[2];
-> > +
-> > +	link->num_cpus = 1;
-> > +	link->num_codecs = 1;
-> > +	link->num_platforms = 1;
-> > +
-> > +	link->playback_only = 1;
-> > +
-> > +	link->name = "SUN4I-HDMI";
-> > +	link->stream_name = "SUN4I-HDMI PCM";
-> > +
-> > +	link->codecs->name = dev_name(dev);
-> > +	link->codecs->dai_name	= sun4i_hdmi_audio_dai.name;
-> > +
-> > +	link->cpus->dai_name = dev_name(dev);
-> > +
-> > +	link->platforms->name = dev_name(dev);
-> > +
-> > +	link->dai_fmt = SND_SOC_DAIFMT_I2S;
-> > +
-> > +	card->dai_link = link;
-> > +	card->num_links = 1;
-> > +	card->dev = dev;
-> > +
-> > +	snd_soc_card_set_drvdata(card, priv);
-> > +	return devm_snd_soc_register_card(dev, card);
-> > +}
-> > +
-> > +static int sun4i_hdmi_audio_remove(struct platform_device *pdev)
-> > +{
-> > +	return 0;
-> > +}
-> > +
-> > +static struct platform_driver sun4i_hdmi_audio_driver = {
-> > +	.probe	= sun4i_hdmi_audio_probe,
-> > +	.remove	= sun4i_hdmi_audio_remove,
-> > +	.driver	= {
-> > +		.name = DRIVER_NAME,
-> > +	},
-> > +};
-> > +module_platform_driver(sun4i_hdmi_audio_driver);
-> > +
-> > +MODULE_AUTHOR("Stefan Mavrodiev <stefan@olimex.com");
-> > +MODULE_DESCRIPTION("Allwinner A10 HDMI Audio driver");
-> > +MODULE_LICENSE("GPL v2");
-> > +MODULE_ALIAS("platform:" DRIVER_NAME);
->
-> Sorry if I wasn't clear enough in the previous mail, I didn't suggest
-> to do a driver, this will open another can of worm (as kbuild already
-> pointed out), but to create a new device, and pass that new device to
-> ASoC's functions.
->
-> I tried that, and failed, so I guess it's not an option either.
->
-> Mark, our issue here is that we have a driver tied to a device that is
-> an HDMI encoder. Obviously, we'll want to register into DRM, which is
-> what we were doing so far, with the usual case where at remove /
-> unbind time, in order to free the resources, we just retrieve our
-> pointer to our private structure using the device's drvdata.
->
-> Now, snd_soc_register_card also sets that pointer to the card we try
-> to register, which is problematic. It seems that it's used to handle
-> suspend / resume automatically, which in this case would be also not
-> really fit for us (or rather, we would need to do more that just
-> suspend the audio part).
->
-> Is there anyway we can have that kind of setup? I believe vc4 is in a
-> similar situation, but they worked around it by storing the data they
-> want to access in a global pointer, but that only works for one device
-> which doesn't really suit us either.
->
-> Any suggestions?
-> Thanks!
-> Maxime
+-- 
+Josh
 
---cag4omdmo5ru62iz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXidDEQAKCRDj7w1vZxhR
-xcfQAP9h+bAMOK6CttQGExCiUhHsu7AAwXShhNOzsQ0EX4W+5wD9HoQMFxRS3p4X
-/GofiUq7GHDK4SgSeA3DOZKvj2lQdwk=
-=ZXb2
------END PGP SIGNATURE-----
-
---cag4omdmo5ru62iz--
