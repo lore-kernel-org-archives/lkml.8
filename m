@@ -2,112 +2,104 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B070DC33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 04:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C77CC33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 04:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82690217F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 04:48:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EF8F24653
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 04:56:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="p5SDxcMW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728712AbgAUEsS (ORCPT
+        id S1728783AbgAUE4g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 Jan 2020 23:48:18 -0500
-Received: from foss.arm.com ([217.140.110.172]:38196 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727829AbgAUEsS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 Jan 2020 23:48:18 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CE70A31B;
-        Mon, 20 Jan 2020 20:48:17 -0800 (PST)
-Received: from [10.162.16.78] (p8cg001049571a15.blr.arm.com [10.162.16.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6A10B3F52E;
-        Mon, 20 Jan 2020 20:48:16 -0800 (PST)
-Subject: Re: [Patch v2 4/4] mm/page_alloc.c: extract commom part to check page
-To:     Wei Yang <richardw.yang@linux.intel.com>
-Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, rientjes@google.com
-References: <20200120030415.15925-1-richardw.yang@linux.intel.com>
- <20200120030415.15925-5-richardw.yang@linux.intel.com>
- <3987ae0f-cbfc-1066-c78f-c5c6efc570ed@arm.com>
- <20200120123621.GE18028@richard>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <c4abbe4d-6777-6c06-2a47-e01585b12745@arm.com>
-Date:   Tue, 21 Jan 2020 10:19:38 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 20 Jan 2020 23:56:36 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:33666 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728093AbgAUE4g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 Jan 2020 23:56:36 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00L4rMVV065996;
+        Tue, 21 Jan 2020 04:56:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=D3T06gwDNjBQHSf+WeTRUnSjC80olQKqYVFDvKvxLVs=;
+ b=p5SDxcMW3zP4iXZmJVcBOWw8Gao/u94hBkLgwt7GCNLMXXdvMs0XELG2uDeiEmXqwroP
+ wUJja5j5HFKZ8ANivcRVkxgcGkG4B3FoN2DsZY+bjZyGq3dSzh7WKpyGqaCGOva7m/Ki
+ AF79OMjl2s/SbLIwHL+mtkKSpCDmOJdaySEpaO4SnHR0IMlmjqOnyb+y945vXMnJoe7Z
+ 0XwvF1jQe3CzbSrWFVjgSJzQEkMVwDhdcz5mN8MJRXRIhSbNyU7pc42cJR+o56EyOo7Y
+ WSfpQD92iCz4dm+9b/tjRcg+JMTg565iMNtLwi0pODmXqO8kx8G9qvcWQPf30OLLAehC Zg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2xksyq2f2q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Jan 2020 04:56:29 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00L4rMFT044784;
+        Tue, 21 Jan 2020 04:56:28 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2xnpfn97qb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Jan 2020 04:56:28 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00L4uQ2f006166;
+        Tue, 21 Jan 2020 04:56:26 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 20 Jan 2020 20:56:26 -0800
+To:     hare@suse.de
+Cc:     Igor Druzhinin <igor.druzhinin@citrix.com>,
+        <fcoe-devel@open-fcoe.org>, <linux-scsi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>
+Subject: Re: [PATCH RESEND 0/2] Fixing libfc memory leaks
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <1579013000-14570-1-git-send-email-igor.druzhinin@citrix.com>
+Date:   Mon, 20 Jan 2020 23:56:24 -0500
+In-Reply-To: <1579013000-14570-1-git-send-email-igor.druzhinin@citrix.com>
+        (Igor Druzhinin's message of "Tue, 14 Jan 2020 14:43:18 +0000")
+Message-ID: <yq1pnfdif0n.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20200120123621.GE18028@richard>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9506 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=635
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001210042
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9506 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=697 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001210042
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+Hannes,
 
-On 01/20/2020 06:06 PM, Wei Yang wrote:
-> On Mon, Jan 20, 2020 at 12:13:38PM +0530, Anshuman Khandual wrote:
->>
->>
->> On 01/20/2020 08:34 AM, Wei Yang wrote:
->>> During free and new page, we did some check on the status of page
->>> struct. There is some common part, just extract them.
->>
->> Makes sense.
->>
->>>
->>> Besides this, this patch also rename two functions to keep the name
->>> convention, since free_pages_check_bad/free_pages_check are counterparts
->>> of check_new_page_bad/check_new_page.
->>
->> This probably should be in a different patch.
->>
-> 
-> In v1, they are in two separate patches. While David Suggest to merge it.
-> 
-> I am not sure whether my understanding is correct.
+> Could you take a look at those?
+> At least the first one causes noticeable memory decline over time
+> for some of our deployments.
+>
+> Igor Druzhinin (2):
+>   scsi: libfc: free response frame from GPN_ID
+>   scsi: libfc: drop extra rport reference in fc_rport_create()
+>
+>  drivers/scsi/libfc/fc_disc.c  | 2 ++
+>  drivers/scsi/libfc/fc_rport.c | 4 +++-
+>  2 files changed, 5 insertions(+), 1 deletion(-)
 
-Keeping code refactoring and renaming separate is always better
-but its okay, will leave it upto you.
+Please review!
 
-> 
->>>
->>> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
->>> ---
->>>  mm/page_alloc.c | 49 ++++++++++++++++++++++++-------------------------
->>>  1 file changed, 24 insertions(+), 25 deletions(-)
->>>
->>> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
->>> index a7b793c739fc..7f23cc836f90 100644
->>> --- a/mm/page_alloc.c
->>> +++ b/mm/page_alloc.c
->>> @@ -1025,36 +1025,44 @@ static inline bool page_expected_state(struct page *page,
->>>  	return true;
->>>  }
->>>  
->>> -static void free_pages_check_bad(struct page *page)
->>> +static inline int __check_page(struct page *page, int nr,
->>> +				const char **bad_reason)
->>
->> free and new page checks are in and out of the buddy allocator, hence
->> this common factored function should have a more relevant name.
-> 
-> Hmm... naming is really difficult. Do you have any suggestion?
-> 
-
-Probably something like bad_page_fetch_reasons() and also this helper
-can be expanded to include an additional argument 'bool free' which
-can test either PAGE_FLAGS_CHECK_AT_FREE or PAGE_FLAGS_CHECK_AT_PREP.
-This way bad_page_fetch_reasons() is where all possible reasons are
-evaluated including page->flags based and then final 'int nr' can be
-returned once and for all.
-
-bad_flags does not seem to be needed. Wondering what it adds more
-in bad_page() when page->flags gets printed universally through
-__dump_page(). In case it is still required, it can be derived
-from 'bad_reasons' evaluated in bad_page_fetch_reasons().
+-- 
+Martin K. Petersen	Oracle Linux Engineering
