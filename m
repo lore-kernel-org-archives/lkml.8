@@ -2,104 +2,84 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB59C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:00:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60BB2C33CAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C173E2465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:00:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579629652;
-	bh=JxsMGHlQ8K8P3LJ4xEZSbS0TerMr48G8ngBCyN92sV8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IMDTi37wNuSyDKRYGGJGOUCRDg5fMw8hniyuU9gU3B3qrcO/IjYAB6m7BkTBQDtQL
-	 0aFE1qcmPG+xxVs2hqCpcMWIo7CmEs+ZQ/1UWfHHdyRBfng/smzX7Ni1FZcaxCLV8Q
-	 SF0NE/37x/o1tC9LCHrseKkrICwlueMUheE023xg=
+	by mail.kernel.org (Postfix) with ESMTP id 2F8FF24656
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 18:00:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Ke+o3F8J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729332AbgAUSAw (ORCPT
+        id S1729359AbgAUSA5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 13:00:52 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:39237 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729080AbgAUSAv (ORCPT
+        Tue, 21 Jan 2020 13:00:57 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:39816 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729080AbgAUSA4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 13:00:51 -0500
-Received: by mail-oi1-f195.google.com with SMTP id z2so3433561oih.6;
-        Tue, 21 Jan 2020 10:00:51 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QHRMSNRShRtBYrUTeMfWPqqYtpJg6IFNDf8AuiA+bOc=;
-        b=n+LmMplYEYlLHgE+G4eaa1DcG7EVLz4Ey0pRlDITEjlK868k3jnp+nZ+WCkVTUmBmu
-         /O8b9CVjDtC1mvAARCBGWsgRXpCvmnY3wTpZWEBQBMTzThaYAwc20VfZsHMQon2VVg/O
-         vxPJhdty7QhEFE/RhgBwfERWR7NtWVb9YYlHMj1zWG7QS0vTk4Rin7fFGt/xxqWliT+V
-         ks0j/C9CdECiBw5I3+kez/Weskd8wqubkhwh23OsCFIDFzxnD1mCz9ZzPf/5mJIlrWo/
-         xY8s7oWEjzHDQ/MVd448cMJtNywIGtYngnwNQOlE6dpCewpv5rWYRNKNzxzeJDzDMU9i
-         qdmw==
-X-Gm-Message-State: APjAAAUx5NoMTsvwenYWrzAGu9sWnWnW9AHihVzaN16342WPkfm0WO+a
-        EK9C9l0Qe6MU9bYP3ojhkA==
-X-Google-Smtp-Source: APXvYqyzppaF7bza95PNQiTUkKlMxTicfaxYaeuVH01PjAK3i3op5l4C39g5wjarGMwofRV3547y0w==
-X-Received: by 2002:aca:5fc6:: with SMTP id t189mr4028320oib.166.1579629650685;
-        Tue, 21 Jan 2020 10:00:50 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l13sm13748338otq.78.2020.01.21.10.00.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 10:00:49 -0800 (PST)
-Received: (nullmailer pid 858 invoked by uid 1000);
-        Tue, 21 Jan 2020 18:00:48 -0000
-Date:   Tue, 21 Jan 2020 12:00:48 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     allen <allen.chen@ite.com.tw>
-Cc:     Allen Chen <allen.chen@ite.com.tw>,
-        Pi-Hsun Shih <pihsun@chromium.org>,
-        Jau-Chih Tseng <Jau-Chih.Tseng@ite.com.tw>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 3/4] dt-bindings: Add binding for IT6505.
-Message-ID: <20200121180048.GA407@bogus>
-References: <1579488364-13182-1-git-send-email-allen.chen@ite.com.tw>
- <1579488364-13182-4-git-send-email-allen.chen@ite.com.tw>
+        Tue, 21 Jan 2020 13:00:56 -0500
+Received: from [10.137.112.108] (unknown [131.107.174.108])
+        by linux.microsoft.com (Postfix) with ESMTPSA id F394D20B4798;
+        Tue, 21 Jan 2020 10:00:55 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com F394D20B4798
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1579629656;
+        bh=rEbmD/ZAcgYTqg5lv22gHg3BuIS3XcVwAuyZ8ZucRnY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Ke+o3F8JNJKUXLW8G/r7NY15sJb0k8OJM9cH1u8tH7ydq01p/8XTMiTadGcYv3rUa
+         2tbdZzpRJxsThyHa+kheNH82qgi/wgWn1w7/aohJqryUVu5MVMUM9kjGPsgrFHMe7z
+         RQPun7nIlFwFKrJQhM6JNZT4TNq9OUZ0rfkEO2Vk=
+Subject: Re: [PATCH] IMA: Turn IMA_MEASURE_ASYMMETRIC_KEYS off by default
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        zohar@linux.ibm.com, linux-integrity@vger.kernel.org
+Cc:     sashal@kernel.org, linux-kernel@vger.kernel.org
+References: <20200121171302.4935-1-nramas@linux.microsoft.com>
+ <1579628090.3390.28.camel@HansenPartnership.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <47a0ef08-3142-3e7c-a136-784767ba8370@linux.microsoft.com>
+Date:   Tue, 21 Jan 2020 10:00:51 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1579488364-13182-4-git-send-email-allen.chen@ite.com.tw>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1579628090.3390.28.camel@HansenPartnership.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jan 2020 10:44:33 +0800, allen wrote:
-> Add a DT binding documentation for IT6505.
+On 1/21/20 9:34 AM, James Bottomley wrote:
+
+> What exactly do you expect distributions to do with this?  I can tell
+> you that most of them will take the default option, so this gets set to
+> N and you may as well not have got the patches upstream because you
+> won't be able to use them in any distro with this setting.
+
+I agree - distros that are not sure or don't care about key measurement 
+are anyway not going to choose this option. Only those that really care 
+will opt in.
+
+My goal is to not burden the vast majority of the users with this 
+additional overhead if they don't need it - particularly, small systems 
+such as embedded devices, etc.
+
 > 
-> Acked-by: Sam Ravnborg <sam@ravnborg.org>
-> Signed-off-by: Allen Chen <allen.chen@ite.com.tw>
-> Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-> ---
->  .../bindings/display/bridge/ite,it6505.yaml        | 89 ++++++++++++++++++++++
->  1 file changed, 89 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
+> Well, no they can't ... it's rather rare nowadays for people to build
+> their own kernels.  The vast majority of Linux consumers take what the
+> distros give them.  Think carefully before you decide a config option
+> is the solution to this problem.
 > 
+> James
+> 
+If you have suggestions for how I can handle it in a different way 
+(other than config option), I'll be happy to try it out.
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-Error: Documentation/devicetree/bindings/display/bridge/ite,it6505.example.dts:19.31-32 syntax error
-FATAL ERROR: Unable to parse input tree
-scripts/Makefile.lib:300: recipe for target 'Documentation/devicetree/bindings/display/bridge/ite,it6505.example.dt.yaml' failed
-make[1]: *** [Documentation/devicetree/bindings/display/bridge/ite,it6505.example.dt.yaml] Error 1
-Makefile:1263: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
-
-See https://patchwork.ozlabs.org/patch/1225618
-Please check and re-submit.
+thanks,
+  -lakshmi
