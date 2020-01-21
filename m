@@ -2,109 +2,135 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6DD3C33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D12C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:24:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8E0C2253D
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:24:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44AF424655
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 17:24:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N8TlBVJ+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729274AbgAURYG (ORCPT
+        id S1729317AbgAURYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 12:24:06 -0500
-Received: from mga09.intel.com ([134.134.136.24]:7131 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728186AbgAURYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 12:24:05 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 09:24:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,346,1574150400"; 
-   d="scan'208";a="250323755"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga004.fm.intel.com with ESMTP; 21 Jan 2020 09:24:02 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1itxFz-0000qC-1l; Tue, 21 Jan 2020 19:24:03 +0200
-Date:   Tue, 21 Jan 2020 19:24:03 +0200
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Jean Delvare <jdelvare@suse.de>, Dave Young <dyoung@redhat.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        kexec@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v1 2/2] firmware: dmi_scan: Pass dmi_entry_point to
- kexec'ed kernel
-Message-ID: <20200121172403.GA32742@smile.fi.intel.com>
-References: <20161216023213.GA4505@dhcp-128-65.nay.redhat.com>
- <1481890738.9552.70.camel@linux.intel.com>
- <20161216143330.69e9c8ee@endymion>
- <20161217105721.GB6922@dhcp-128-65.nay.redhat.com>
- <20200120121927.GJ32742@smile.fi.intel.com>
- <87a76i9ksr.fsf@x220.int.ebiederm.org>
- <20200120224204.4e5cc0df@endymion>
- <CAHp75Veb02m3tU9tzZe912ZmX5mdaYkZ90DD67FVERJS15VsXw@mail.gmail.com>
- <20200121100359.6125498c@endymion>
- <87zheg93io.fsf@x220.int.ebiederm.org>
+        Tue, 21 Jan 2020 12:24:20 -0500
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:38974 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728186AbgAURYU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 12:24:20 -0500
+Received: by mail-vk1-f193.google.com with SMTP id t129so1122196vkg.6
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 09:24:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tmdQR2X4duHrdLuoSZ/99xX/Rb3XYACDrTpOQDSPPpk=;
+        b=N8TlBVJ+RMFuLiUDyVPR+fK0vFsRsKWj9y3/4PyfmN2wTHga8WAUwT9hKbEJx1on9V
+         SvRUI52PCTIHdKxIRNdClQosLyJJ0UQhkhEk+eGrvXKyPRyz4AX6C9V1970RYoJZE16A
+         /zkjiXW+SuelLVZtQYh02zwAJ3SQgPGM2oRZ//PkRpTb3o4/RVE/db1Su7P86+zKbtz1
+         4PLuBDedh50fkg8wg9Bz3P1P2iiaVq9izsWYAiSArq56jDESMXHk1lww89VpYQVCmOlp
+         /DfUlTujPrkMTB2NI1lqqZbnlCDYdMT3LLuS+FOOgjTREIfesBjVL24O1CLnZyHTpR/W
+         fD0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tmdQR2X4duHrdLuoSZ/99xX/Rb3XYACDrTpOQDSPPpk=;
+        b=OC8CsYMtXYeQY+bCTNl3MteyuB+NHdAVOBZiVtCO8vgr11LllOWbT8TwIAPXF1GFvB
+         j0obqa/NBbtP6FU2Cj5oB+jJrn5MEBooaFHApk4mAthDk5ZuaP/s8WfWZbM6jIzqMJGU
+         3GNGXUHsaebS/Z2UmsrBD1zixWkOEAqtHzX/eRTQxLGgxelAO3NI2cppTdp8kLVBjGGl
+         j1yqWRP2F/Gsk48B/2TjDsNFXYM0VZdoFzi5cD2FTyzf8cdjkg1+PGjtnrxGkWBfXqf+
+         2VOsQcRG8HKJpwKVG7WUtW2Adns8v9l/sOe9CGzXsvSyyVzTjLbVtMfEllk1HgrHzKYy
+         Winw==
+X-Gm-Message-State: APjAAAXsumEWjzV+mKkiT+LqarTSnjMJAxkf610obiAS8kV/f8277npQ
+        GDtGhQgoVF3P9lystaC52MUBQXWFVSvC3iuDu50mow==
+X-Google-Smtp-Source: APXvYqx2UBGD7SVo9IfIYzSF7rmUWtk38deKTni6PIDPPto8tFZLFhFMv7Tcu6XYMHG0ayL8XaGVVbosi7qBmrDNogo=
+X-Received: by 2002:a1f:434b:: with SMTP id q72mr3398984vka.53.1579627458543;
+ Tue, 21 Jan 2020 09:24:18 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87zheg93io.fsf@x220.int.ebiederm.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1579623061-47141-1-git-send-email-pbonzini@redhat.com>
+In-Reply-To: <1579623061-47141-1-git-send-email-pbonzini@redhat.com>
+From:   Ben Gardon <bgardon@google.com>
+Date:   Tue, 21 Jan 2020 09:24:07 -0800
+Message-ID: <CANgfPd8fq7pWe00fKm7QEiOAVFuubSQ-jJxEM1sCKzqJk9rSzw@mail.gmail.com>
+Subject: Re: [PATCH] KVM: x86: fix overlap between SPTE_MMIO_MASK and generation
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 10:29:35AM -0600, Eric W. Biederman wrote:
-> Jean Delvare <jdelvare@suse.de> writes:
-> 
-> > On Mon, 20 Jan 2020 23:55:43 +0200, Andy Shevchenko wrote:
-> >> On Mon, Jan 20, 2020 at 11:44 PM Jean Delvare <jdelvare@suse.de> wrote:
-> >> >
-> >> > On Mon, 20 Jan 2020 10:04:04 -0600, Eric W. Biederman wrote:  
-> >> > > Second.  I looked at your test results and they don't directly make
-> >> > > sense.  dmidecode bypasses the kernel completely or it did last time
-> >> > > I looked so I don't know why you would be using that to test if
-> >> > > something in the kernel is working.  
-> >> >
-> >> > That must have been long ago. A recent version of dmidecode (>= 3.0)
-> >> > running on a recent kernel  
-> >> > (>= d7f96f97c4031fa4ffdb7801f9aae23e96170a6f, v4.2) will read the DMI  
-> >> > data from /sys/firmware/dmi/tables, so it is very much relying on the
-> >> > kernel doing the right thing. If not, it will still try to fallback to
-> >> > reading from /dev/mem directly on certain architectures. You can force
-> >> > that old method with --no-sysfs.
-> >> >
-> >> > Hope that helps,  
-> >> 
-> >> I don't understand how it possible can help for in-kernel code, like
-> >> DMI quirks in a drivers.
-> >
-> > OK, just ignore me then, probably I misunderstood the point made by
-> > Eric.
-> 
-> No.  I just haven't dived into this area of code in a long time.
-> 
-> It seems a little indirect to use dmidecode as the test to see if the
-> kernel has the pointer to the dmitables, but with the knowledge you
-> provided it seems like a perfectly valid test.
+On Tue, Jan 21, 2020 at 8:11 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> The SPTE_MMIO_MASK overlaps with the bits used to track MMIO
+> generation number.  A high enough generation number would overwrite the
+> SPTE_SPECIAL_MASK region and cause the MMIO SPTE to be misinterpreted;
+> likewise, setting bits 52 and 53 would also cause an incorrect generation
+> number to be read from the PTE.
+>
+> Fixes: 6eeb4ef049e7 ("KVM: x86: assign two bits to track SPTE kinds")
+> Reported-by: Ben Gardon <bgardon@google.com>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>  arch/x86/kvm/mmu/mmu.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> index 57e4dbddba72..e34ca43d9166 100644
+> --- a/arch/x86/kvm/mmu/mmu.c
+> +++ b/arch/x86/kvm/mmu/mmu.c
+> @@ -418,22 +418,25 @@ static inline bool is_access_track_spte(u64 spte)
+>   * requires a full MMU zap).  The flag is instead explicitly queried when
+>   * checking for MMIO spte cache hits.
+>   */
+> -#define MMIO_SPTE_GEN_MASK             GENMASK_ULL(18, 0)
+> +#define MMIO_SPTE_GEN_MASK             GENMASK_ULL(17, 0)
 
-In any case that doesn't work. See my response to Ard.
+I see you're shifting the MMIO high gen mask region to avoid having to
+shift it by 2. Looking at the SDM, I believe using bit 62 for the
+generation number is safe, but I don't recall why it wasn't used
+before.
 
--- 
-With Best Regards,
-Andy Shevchenko
+>
+>  #define MMIO_SPTE_GEN_LOW_START                3
+>  #define MMIO_SPTE_GEN_LOW_END          11
+>  #define MMIO_SPTE_GEN_LOW_MASK         GENMASK_ULL(MMIO_SPTE_GEN_LOW_END, \
+>                                                     MMIO_SPTE_GEN_LOW_START)
+>
+> -#define MMIO_SPTE_GEN_HIGH_START       52
+> -#define MMIO_SPTE_GEN_HIGH_END         61
+> +/* Leave room for SPTE_SPECIAL_MASK.  */
+> +#define MMIO_SPTE_GEN_HIGH_START       54
+> +#define MMIO_SPTE_GEN_HIGH_END         62
+>  #define MMIO_SPTE_GEN_HIGH_MASK                GENMASK_ULL(MMIO_SPTE_GEN_HIGH_END, \
+>                                                     MMIO_SPTE_GEN_HIGH_START)
+> +
+>  static u64 generation_mmio_spte_mask(u64 gen)
+>  {
+>         u64 mask;
+>
+>         WARN_ON(gen & ~MMIO_SPTE_GEN_MASK);
+> +       BUILD_BUG_ON(MMIO_SPTE_GEN_HIGH_START < PT64_SECOND_AVAIL_BITS_SHIFT);
 
+Would it be worth defining the MMIO_SPTE_GEN masks, SPTE_SPECIAL_MASK,
+SPTE_AD masks, and SPTE_MMIO_MASK in terms of
+PT64_SECOND_AVAIL_BITS_SHIFT? It seems like that might be a more
+robust assertion here.
 
+Alternatively, BUILD_BUG_ON((MMIO_SPTE_GEN_HIGH_MASK |
+MMIO_SPTE_GEN_LOW_MASK) & SPTE_(MMIO and/or SPECIAL)_MASK)
+
+>
+>         mask = (gen << MMIO_SPTE_GEN_LOW_START) & MMIO_SPTE_GEN_LOW_MASK;
+>         mask |= (gen << MMIO_SPTE_GEN_HIGH_START) & MMIO_SPTE_GEN_HIGH_MASK;
+> --
+> 1.8.3.1
+>
