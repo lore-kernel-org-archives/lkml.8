@@ -2,120 +2,103 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E979EC33CAA
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 05:33:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28BDEC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 05:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B089C24653
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 05:33:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F10C124125
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 05:46:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iVnEndIv"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gcpbnat3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727800AbgAUFdC (ORCPT
+        id S1727523AbgAUFq0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 00:33:02 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:39343 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725890AbgAUFdC (ORCPT
+        Tue, 21 Jan 2020 00:46:26 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:48254 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbgAUFq0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 00:33:02 -0500
-Received: by mail-pj1-f67.google.com with SMTP id e11so888683pjt.4
-        for <linux-kernel@vger.kernel.org>; Mon, 20 Jan 2020 21:33:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TBmFapcCP51v12ZDGyzoq6lMJzVpI9tiiDOrivNq+Hg=;
-        b=iVnEndIvNGIyZOZ9RqjwdHY9uDVvwBw4JJKU2ax6fZjyC66osU5fz8+e3ZQYYU0NEE
-         /sXWEs4x7EMZoOBdyeh4115F08CiB9HGKEa92/u2jNiSy2gSuSsDe6ydMLLcvpNeMBgb
-         SaLnIsJJEGr1HmOxSviZU00da9gwohbe0woK8muvcOZwwHAdd2XEC8HgHYNxZZOCnO6g
-         dKINdFN6JesG5erfBKiQXSXrTHYkyTfgPoJtILG6h2ITvJQT+hUhKP27578b+kXrBnY2
-         8EwwPwfPI/gvoue/1h8csWrXhKnDy0hd/49wXWZ6JPcjmRCyRhuA41Fj7t9X8s8+XAUU
-         /o9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TBmFapcCP51v12ZDGyzoq6lMJzVpI9tiiDOrivNq+Hg=;
-        b=JXta24dSBQzTg79TsV89EWt42Da+x2dET2W8YeHE7Cncg/Vd5x9lCYbac1fogTb2Rx
-         TJo6vg+j5Co8pOI6Ff3H8mffF2LAtp4Q/DzOGJ2LNRshGr/fUkjfPMz3Wu/536cL1vNe
-         wNAFRZPrVfK0PjY8vL2RIC5jhcrSU4NFZkUnjxht4IHhhdfeIBYdzpGQ0HC+vOjBRzmS
-         PMvke6uK8h8QQFrp8jPd5Q2BEaV3QBmCp1HC73Sl/lt8Jl7etIOD6rkaW0o65mLghZjQ
-         IJ10mVSni/7uaS4acJdOvtHBiAqunqI8+Yul3AsHF61Gq1smBu6DdAn8i6jKOUDgFt6m
-         /ZxA==
-X-Gm-Message-State: APjAAAUzme1jt3kAlUXl8cMi+djLKnfoNFSIspDPUwU1K6nEU4sy0/7A
-        7fbZ6GdlOPxTrY048oZ0ZEs=
-X-Google-Smtp-Source: APXvYqwKroEhv0VaxPVuiMrNnT6axI9f0V6DunSlymxW6i94xrEU3F5J8TuYo3jxshWCQYteKZDAKQ==
-X-Received: by 2002:a17:90a:c301:: with SMTP id g1mr3290728pjt.88.1579584782048;
-        Mon, 20 Jan 2020 21:33:02 -0800 (PST)
-Received: from ubuntu.localdomain ([218.189.25.99])
-        by smtp.gmail.com with ESMTPSA id b1sm31501216pfp.44.2020.01.20.21.32.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2020 21:33:01 -0800 (PST)
-From:   wangwenhu <wenhu.pku@gmail.com>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        wangwenhu <wenhu.pku@gmail.com>, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Cc:     trivial@kernel.org, lonehugo@hotmail.com, wenhu.wang@vivo.com
-Subject: [PATCH] powerpc/sysdev: fix compile errors
-Date:   Mon, 20 Jan 2020 21:31:13 -0800
-Message-Id: <20200121053114.89676-1-wenhu.pku@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 21 Jan 2020 00:46:26 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00L5hPP7115698;
+        Tue, 21 Jan 2020 05:45:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=hnj5yygl8cYjbyZ6FFoRETqhejtQqC1ViqWe7gP+9h8=;
+ b=gcpbnat3hVcXfS+bN0SPTSfIILflFNoP/cb8gZhWPN7NA0MkcDSh/Ta8U5SbkfZT8EWu
+ v+RiYrgQvJNZAgIq9r4NkNKYR0wp0ST89TOL2BuHNuvg16mKJtTHOpotBAi6ZgIxxiyM
+ 0pzSfTd9debb31jsdlavvQ0haYCZzAAAAxdmOeTc0TYAOXevErMO+eU6poC2Mix33OB+
+ YFF8Pi1sBTNLIFuI8/2jO3AE0iwOIafKAAVuiNOy1s37qTV8GlDKFYddxfXZg1mQGrbV
+ egkBxPjacGF4Duzqbwwrs/fpIEZSUeliBkSqvolT02Ey5yLuqOZIXOOdBWbbAeZ9O3xN 3w== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2xktnr2g4m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Jan 2020 05:45:31 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00L5iV74122219;
+        Tue, 21 Jan 2020 05:45:31 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2xnsj3vsjb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Jan 2020 05:45:30 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00L5jPtc022123;
+        Tue, 21 Jan 2020 05:45:26 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 20 Jan 2020 21:45:25 -0800
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        martin.petersen@oracle.com, axboe@kernel.dk, tytso@mit.edu,
+        adilger.kernel@dilger.ca, Chaitanya.Kulkarni@wdc.com,
+        darrick.wong@oracle.com, ming.lei@redhat.com, osandov@fb.com,
+        jthumshirn@suse.de, minwoo.im.dev@gmail.com, damien.lemoal@wdc.com,
+        andrea.parri@amarulasolutions.com, hare@suse.com, tj@kernel.org,
+        ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
+        bvanassche@acm.org, dhowells@redhat.com, asml.silence@gmail.com
+Subject: Re: [PATCH block v2 1/3] block: Add @flags argument to bdev_write_zeroes_sectors()
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <157917805422.88675.6477661554332322975.stgit@localhost.localdomain>
+        <157917815798.88675.11900718803129164489.stgit@localhost.localdomain>
+Date:   Tue, 21 Jan 2020 00:45:21 -0500
+In-Reply-To: <157917815798.88675.11900718803129164489.stgit@localhost.localdomain>
+        (Kirill Tkhai's message of "Thu, 16 Jan 2020 15:35:58 +0300")
+Message-ID: <yq18sm1icr2.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9506 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=942
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001210050
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9506 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=996 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001210050
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: wangwenhu <wenhu.wang@vivo.com>
 
-Include arch/powerpc/include/asm/io.h into fsl_85xx_cache_sram.c to
-fix the implicit declaration compile errors when building Cache-Sram.
+Kirill,
 
-arch/powerpc/sysdev/fsl_85xx_cache_sram.c: In function ‘instantiate_cache_sram’:
-arch/powerpc/sysdev/fsl_85xx_cache_sram.c:97:26: error: implicit declaration of function ‘ioremap_coherent’; did you mean ‘bitmap_complement’? [-Werror=implicit-function-declaration]
-  cache_sram->base_virt = ioremap_coherent(cache_sram->base_phys,
-                          ^~~~~~~~~~~~~~~~
-                          bitmap_complement
-arch/powerpc/sysdev/fsl_85xx_cache_sram.c:97:24: error: assignment makes pointer from integer without a cast [-Werror=int-conversion]
-  cache_sram->base_virt = ioremap_coherent(cache_sram->base_phys,
-                        ^
-arch/powerpc/sysdev/fsl_85xx_cache_sram.c:123:2: error: implicit declaration of function ‘iounmap’; did you mean ‘roundup’? [-Werror=implicit-function-declaration]
-  iounmap(cache_sram->base_virt);
-  ^~~~~~~
-  roundup
-cc1: all warnings being treated as errors
+> This is a preparation for next patch, which introduces a new flag
+> BLKDEV_ZERO_ALLOCATE for calls, which need only allocation of blocks
+> and don't need actual blocks zeroing.
 
-Signed-off-by: wangwenhu <wenhu.wang@vivo.com>
----
- arch/powerpc/sysdev/fsl_85xx_cache_sram.c | 1 +
- 1 file changed, 1 insertion(+)
+Path of least resistance, I guess.
 
-diff --git a/arch/powerpc/sysdev/fsl_85xx_cache_sram.c b/arch/powerpc/sysdev/fsl_85xx_cache_sram.c
-index f6c665dac725..29b6868eff7d 100644
---- a/arch/powerpc/sysdev/fsl_85xx_cache_sram.c
-+++ b/arch/powerpc/sysdev/fsl_85xx_cache_sram.c
-@@ -17,6 +17,7 @@
- #include <linux/of_platform.h>
- #include <asm/pgtable.h>
- #include <asm/fsl_85xx_cache_sram.h>
-+#include <asm/io.h>
- 
- #include "fsl_85xx_cache_ctlr.h"
- 
+Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
+
 -- 
-2.17.1
-
+Martin K. Petersen	Oracle Linux Engineering
