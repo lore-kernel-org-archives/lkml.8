@@ -2,74 +2,178 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B6C4C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D88C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:00:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DCC321569
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 15:58:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2772321569
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 16:00:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579622400;
+	bh=ryf1s+gQkLfUmVXGBywSimmGcdpJgK+HxZZJfSBIFhA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=n1YCbOMrBS2sipF1T0ArZtO7C8A/wb79U9gHVeDCPQ2SHjsgXZk1d0iELuny3iSm/
+	 fo/rzL8g0jKg8rt1UzN+46HSaR7iLVA7GodHULRUWmV/8S36x7lyY+0+qZcMQveFu1
+	 TOB6PKM2G1qZA7hW4O58T+0+3tQjCFqMEGWBRifg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729162AbgAUP6y (ORCPT
+        id S1729205AbgAUP77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 10:58:54 -0500
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:34961 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729017AbgAUP6y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 10:58:54 -0500
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 9485E3C04C1;
-        Tue, 21 Jan 2020 16:58:52 +0100 (CET)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id nrM6_Rn9nnvl; Tue, 21 Jan 2020 16:58:47 +0100 (CET)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        Tue, 21 Jan 2020 10:59:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40928 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728852AbgAUP77 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 10:59:59 -0500
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 760973C00C5;
-        Tue, 21 Jan 2020 16:58:47 +0100 (CET)
-Received: from lxhi-065.adit-jv.com (10.72.93.66) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 21 Jan
- 2020 16:58:47 +0100
-Date:   Tue, 21 Jan 2020 16:58:44 +0100
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-CC:     Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>,
-        Dirk Behme <dirk.behme@de.bosch.com>
-Subject: Re: [PATCH] arm64: kbuild: remove compressed images on 'make
- ARCH=arm64 (dist)clean'
-Message-ID: <20200121155844.GA1284@lxhi-065.adit-jv.com>
-References: <20200121134739.22879-1-erosca@de.adit-jv.com>
- <CAK7LNASm=7P3cJ=SB3hmPjqWTii1Lv2pf3p0xc-hx0XNTdaJHw@mail.gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id ADE6B21569;
+        Tue, 21 Jan 2020 15:59:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579622397;
+        bh=ryf1s+gQkLfUmVXGBywSimmGcdpJgK+HxZZJfSBIFhA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=EhsEHuxDhVOLCiO1c7kh12A+l2iwiN/13+hO4LTeGIvXKRDRuaxsOicJ6oOPUFfDb
+         Glz7zIZlaURfw/ONUFMCKP7zO2FoHAQCimn+hedNDRiHqGoQWze21cK/nOR8vFdKAN
+         Rhg8ITcOa+hLH7VCYmc7rARBIcyb3veYEq5gycIA=
+Received: by mail-qt1-f172.google.com with SMTP id c24so3002255qtp.5;
+        Tue, 21 Jan 2020 07:59:57 -0800 (PST)
+X-Gm-Message-State: APjAAAV3NSd3hGwoIkkfpmk9ubk9fpbIfmKn96JivlCPEpZFkvfWxAQz
+        2jSeT7p2f1zJfQoi58LB8shVYWx9Cu6tZzMoyw==
+X-Google-Smtp-Source: APXvYqyhEHRvR0Nvy8KWtOPte04rNrGpogJKTbMYfC57yAr3m8dtvfb8qRkQZAniz9MpperHjlzEEBK/uxyyndNsOTI=
+X-Received: by 2002:ac8:1415:: with SMTP id k21mr5218660qtj.300.1579622396814;
+ Tue, 21 Jan 2020 07:59:56 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CAK7LNASm=7P3cJ=SB3hmPjqWTii1Lv2pf3p0xc-hx0XNTdaJHw@mail.gmail.com>
-X-Originating-IP: [10.72.93.66]
+References: <20200113181625.3130-1-alexandre.torgue@st.com>
+ <20200113181625.3130-2-alexandre.torgue@st.com> <20200116005741.GB54439@umbus>
+ <d2594b79-a45d-dcac-3642-90016a1408b8@st.com> <20200117090937.GU54439@umbus>
+ <CAL_JsqKTsX9efYDMjGahFDxj0cEfzozeNrY1Nq1bECzgOZGqdQ@mail.gmail.com> <20200119063916.GD54439@umbus>
+In-Reply-To: <20200119063916.GD54439@umbus>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 21 Jan 2020 09:59:44 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+-O0cpw9YtVGAjFWstu-=uXVgK0ccgyRj+bjR93gPriw@mail.gmail.com>
+Message-ID: <CAL_Jsq+-O0cpw9YtVGAjFWstu-=uXVgK0ccgyRj+bjR93gPriw@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/3] dtc: Add dtb build information option
+To:     David Gibson <david@gibson.dropbear.id.au>
+Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Simon Glass <sjg@chromium.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Devicetree Compiler <devicetree-compiler@vger.kernel.org>,
+        Steve McIntyre <steve.mcintyre@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Yamada-san,
+On Sun, Jan 19, 2020 at 12:41 AM David Gibson
+<david@gibson.dropbear.id.au> wrote:
+>
+> On Fri, Jan 17, 2020 at 08:43:23AM -0600, Rob Herring wrote:
+> > On Fri, Jan 17, 2020 at 6:26 AM David Gibson
+> > <david@gibson.dropbear.id.au> wrote:
+> > >
+> > > On Thu, Jan 16, 2020 at 09:58:23AM +0100, Alexandre Torgue wrote:
+> > > > Hi David
+> > > >
+> > > > On 1/16/20 1:57 AM, David Gibson wrote:
+> > > > > On Mon, Jan 13, 2020 at 07:16:23PM +0100, Alexandre Torgue wrote:
+> > > > > > This commit adds the possibility to add build information for a DTB.
+> > > > > > Build information can be: build date, DTS version, "who built the DTB"
+> > > > > > (same kind of information that we get in Linux with the Linux banner).
+> > > > > >
+> > > > > > To do this, an extra option "-B" using an information file as argument
+> > > > > > has been added. If this option is used, input device tree is appended with
+> > > > > > a new string property "Build-info". This property is built with information
+> > > > > > found in information file given as argument. This file has to be generated
+> > > > > > by user and shouldn't exceed 256 bytes.
+> > > > > >
+> > > > > > Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+> > > > >
+> > > > > At the very least, this patch of the series will need to be sent to
+> > > > > upstream dtc first.
+> > > >
+> > > > Ok sorry. I thought that sending all the series would give more
+> > > > information.
+> > >
+> > > That's fair enough, but in order to merge, you'll need to post against
+> > > upstream dtc.
+> > >
+> > > > > I'm also not terribly clear on what you're trying to accomplish here,
+> > > > > and why it's useful.
+> > > >
+> > > > Let's take Kernel boot at example (but could be extend to other DTB "users"
+> > > > like U-Boot). When Linux kernel booting we get a log that gives useful
+> > > > information about kernel image: source version, build date, people who built
+> > > > the kernel image, compiler version. This information is useful for debug and
+> > > > support. The aim is to get same kind of information but for the DTB.
+> > > >
+> > > > > Since you're doing this specifically for use with dtbs built in the
+> > > > > kernel build, could you just use a:
+> > > > >     Build-info = /incbin/ "build-info.txt";
+> > > > > in each of the in-kernel .dts files?
+> > > >
+> > > > My first idea was to not modify all existing .dts files. Adding an extra
+> > > > option in dtc is (for me) the softer way to do it. I mean, compile
+> > > > information should come through compiler without modify .dts files outside
+> > > > from dtc. In this way it will be easy to everybody using dtc (inside our
+> > > > outside Linux tree) to add dtb build info (even if they don't how to write a
+> > > > dts file).
+> > >
+> > > But you're not really having this information coming from the
+> > > compiler.  Instead you're adding a compiler option that just force
+> > > includes another file into the generated tree, and it's up to your
+> > > build scripts to put something useful into that file.
+> > >
+> > > I don't really see that as preferable to modifying the .dts files.
+> > >
+> > > I also dislike the fact that the option as proposed is much more
+> > > general than the name suggests, but also very similar too, but much
+> > > more specific than the existing /incbin/ option.
+> > >
+> > > What might be better would be to have a dtc option which force appends
+> > > an extra .dts to the mail .dts compiled.  You can then put an overlay
+> > > template in that file, something like:
+> > >
+> > > &{/} {
+> > >         linux,build-info = /incbin/ "build-info.txt;
+> > > }
+> >
+> > I like this suggestion either as an include another dts file or an
+> > overlay.
+>
+> Sorry, to be clear what I'm talking about here is just including
+> another dts file, and using the compile-type overlay syntax.  This is
+> not the same as .dtbo style runtime overlays (though the final result
+> is about the same in this case).
 
-On Wed, Jan 22, 2020 at 12:23:45AM +0900, Masahiro Yamada wrote:
-> Please change Cc with my
-> 
-> Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Ah, okay. That's probably easier to implement.
 
-Updated in https://lore.kernel.org/linux-arm-kernel/20200121155439.1061-1-erosca@de.adit-jv.com/
+> > The latter could be useful as a way to maintain current dtb
+> > files while splitting the source files into base and overlay dts
+> > files.
+> >
+> > But no, let's not prepend this with 'linux'. It's not a property
+> > specific for Linux to consume.
+>
+> It's not really about who consumes it.  It's about defining a
+> namespace for the new property to exist in, since it's not part of a
+> relevant standard (if we wanted to make it such, we should pin down
+> what goes in there with much more precision).
 
-Thank you for reviewing the patch.
+I can't think of any cases of the 'linux' prefix not being about who
+consumes it. And we often end up dropping 'linux' because it turns out
+to not be Linux specific. I don't care to see u-boot,build-info,
+freebsd,build-info, etc. when a given dtb can only have 1 of those.
 
--- 
-Best Regards
-Eugeniu Rosca
+My intent is this property name is added to the DT spec, but I don't
+agree we should define what's in it beyond a string. It is information
+that is useful for humans identifying what the dtb was built from.
+
+Rob
