@@ -2,98 +2,160 @@ Return-Path: <SRS0=3tRb=3K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA119C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1DCDC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:30:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BEE424125
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:29:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B541F20661
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 Jan 2020 08:30:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728794AbgAUI3q (ORCPT
+        id S1728783AbgAUIat convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 03:29:46 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:47804 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728655AbgAUI3p (ORCPT
+        Tue, 21 Jan 2020 03:30:49 -0500
+Received: from relay-b01.edpnet.be ([212.71.1.221]:58701 "EHLO
+        relay-b01.edpnet.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726911AbgAUIas (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 03:29:45 -0500
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00L8Re4d005791;
-        Tue, 21 Jan 2020 03:29:05 -0500
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2xkyta6spf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jan 2020 03:29:05 -0500
-Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 00L8T2vE052554
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Tue, 21 Jan 2020 03:29:03 -0500
-Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Tue, 21 Jan
- 2020 00:29:01 -0800
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Tue, 21 Jan 2020 00:29:00 -0800
-Received: from btogorean-pc.ad.analog.com ([10.48.65.146])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 00L8Sm9Z001010;
-        Tue, 21 Jan 2020 03:28:50 -0500
-From:   Bogdan Togorean <bogdan.togorean@analog.com>
-To:     <dri-devel@lists.freedesktop.org>
-CC:     <airlied@linux.ie>, <daniel@ffwll.ch>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <a.hajda@samsung.com>,
-        <narmstrong@baylibre.com>, <Laurent.pinchart@ideasonboard.com>,
-        <jonas@kwiboo.se>, <jernej.skrabec@siol.net>,
-        <gregkh@linuxfoundation.org>, <tglx@linutronix.de>,
-        <sam@ravnborg.org>, <alexander.deucher@amd.com>,
-        <matt.redfearn@thinci.com>, <robdclark@chromium.org>,
-        <wsa+renesas@sang-engineering.com>, <linux-kernel@vger.kernel.org>,
-        Bogdan Togorean <bogdan.togorean@analog.com>
-Subject: [PATCH v4 0/3] drm: bridge: adv7511: Add support for ADV7535
-Date:   Tue, 21 Jan 2020 10:27:18 +0200
-Message-ID: <20200121082719.27972-1-bogdan.togorean@analog.com>
-X-Mailer: git-send-email 2.24.1
+        Tue, 21 Jan 2020 03:30:48 -0500
+X-ASG-Debug-ID: 1579595444-0a7ff5137c3b1e810001-xx1T2L
+Received: from zotac.vandijck-laurijssen.be ([77.109.89.38]) by relay-b01.edpnet.be with ESMTP id jSHJfcOBIiAaokUu; Tue, 21 Jan 2020 09:30:44 +0100 (CET)
+X-Barracuda-Envelope-From: dev.kurt@vandijck-laurijssen.be
+X-Barracuda-Effective-Source-IP: UNKNOWN[77.109.89.38]
+X-Barracuda-Apparent-Source-IP: 77.109.89.38
+Received: from x1.vandijck-laurijssen.be (74.250-240-81.adsl-static.isp.belgacom.be [81.240.250.74])
+        by zotac.vandijck-laurijssen.be (Postfix) with ESMTPSA id AEFB2C67EEC;
+        Tue, 21 Jan 2020 09:30:44 +0100 (CET)
+Date:   Tue, 21 Jan 2020 09:30:35 +0100
+From:   Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
+To:     Oliver Hartkopp <socketcan@hartkopp.net>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        o.rempel@pengutronix.de,
+        syzbot <syzbot+c3ea30e1e2485573f953@syzkaller.appspotmail.com>,
+        David Miller <davem@davemloft.net>, linux-can@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: general protection fault in can_rx_register
+Message-ID: <20200121083035.GD14537@x1.vandijck-laurijssen.be>
+X-ASG-Orig-Subj: Re: general protection fault in can_rx_register
+Mail-Followup-To: Oliver Hartkopp <socketcan@hartkopp.net>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>, o.rempel@pengutronix.de,
+        syzbot <syzbot+c3ea30e1e2485573f953@syzkaller.appspotmail.com>,
+        David Miller <davem@davemloft.net>, linux-can@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+References: <00000000000030dddb059c562a3f@google.com>
+ <55ad363b-1723-28aa-78b1-8aba5565247e@hartkopp.net>
+ <20200120091146.GD11138@x1.vandijck-laurijssen.be>
+ <CACT4Y+a+GusEA1Gs+z67uWjtwBRp_s7P4Wd_SMmgpCREnDu3kg@mail.gmail.com>
+ <8332ec7f-2235-fdf6-9bda-71f789c57b37@hartkopp.net>
+ <2a676c0e-20f2-61b5-c72b-f51947bafc7d@hartkopp.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-21_02:2020-01-20,2020-01-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 phishscore=0 mlxlogscore=913 mlxscore=0 suspectscore=1
- impostorscore=0 spamscore=0 malwarescore=0 adultscore=0 priorityscore=1501
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001210072
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <2a676c0e-20f2-61b5-c72b-f51947bafc7d@hartkopp.net>
+User-Agent: Mutt/1.5.22 (2013-10-16)
+X-Barracuda-Connect: UNKNOWN[77.109.89.38]
+X-Barracuda-Start-Time: 1579595444
+X-Barracuda-URL: https://212.71.1.221:443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at edpnet.be
+X-Barracuda-Scan-Msg-Size: 3259
+X-Barracuda-BRTS-Status: 1
+X-Barracuda-Bayes: SPAM GLOBAL 0.9309 1.0000 3.5604
+X-Barracuda-Spam-Score: 3.56
+X-Barracuda-Spam-Status: No, SCORE=3.56 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=7.0 tests=
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.79477
+        Rule breakdown below
+         pts rule name              description
+        ---- ---------------------- --------------------------------------------------
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch-set add support for ADV7535 part in ADV7511 driver.
+On ma, 20 jan 2020 23:35:16 +0100, Oliver Hartkopp wrote:
+> Answering myself ...
+> 
+> On 20/01/2020 23.02, Oliver Hartkopp wrote:
+> 
+> >
+> >Added some code to check whether dev->ml_priv is NULL:
+> >
+> >~/linux$ git diff
+> >diff --git a/net/can/af_can.c b/net/can/af_can.c
+> >index 128d37a4c2e0..6fb4ae4c359e 100644
+> >--- a/net/can/af_can.c
+> >+++ b/net/can/af_can.c
+> >@@ -463,6 +463,10 @@ int can_rx_register(struct net *net, struct
+> >net_device *dev, canid_t can_id,
+> >         spin_lock_bh(&net->can.rcvlists_lock);
+> >
+> >         dev_rcv_lists = can_dev_rcv_lists_find(net, dev);
+> >+       if (!dev_rcv_lists) {
+> >+               pr_err("dev_rcv_lists == NULL! %p\n", dev);
+> >+               goto out_unlock;
+> >+       }
+> >         rcv_list = can_rcv_list_find(&can_id, &mask, dev_rcv_lists);
+> >
+> >         rcv->can_id = can_id;
+> >@@ -479,6 +483,7 @@ int can_rx_register(struct net *net, struct net_device
+> >*dev, canid_t can_id,
+> >         rcv_lists_stats->rcv_entries++;
+> >         rcv_lists_stats->rcv_entries_max =
+> >max(rcv_lists_stats->rcv_entries_max,
+> >
+> >rcv_lists_stats->rcv_entries);
+> >+out_unlock:
+> >         spin_unlock_bh(&net->can.rcvlists_lock);
+> >
+> >         return err;
+> >
+> >And the output (after some time) is:
+> >
+> >[  758.505841] netlink: 'crash': attribute type 1 has an invalid length.
+> >[  758.508045] bond7148: (slave vxcan1): The slave device specified does
+> >not support setting the MAC address
+> >[  758.508057] bond7148: (slave vxcan1): Error -22 calling dev_set_mtu
+> >[  758.532025] bond10413: (slave vxcan1): The slave device specified does
+> >not support setting the MAC address
+> >[  758.532043] bond10413: (slave vxcan1): Error -22 calling dev_set_mtu
+> >[  758.532254] dev_rcv_lists == NULL! 000000006b9d257f
+> >[  758.547392] netlink: 'crash': attribute type 1 has an invalid length.
+> >[  758.549310] bond7145: (slave vxcan1): The slave device specified does
+> >not support setting the MAC address
+> >[  758.549313] bond7145: (slave vxcan1): Error -22 calling dev_set_mtu
+> >[  758.550464] netlink: 'crash': attribute type 1 has an invalid length.
+> >[  758.552301] bond7146: (slave vxcan1): The slave device specified does
+> >not support setting the MAC address
+> >
+> >So we can see that we get a ml_priv pointer which is NULL which should not
+> >be possible due to this:
+> >
+> >https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/net/can/dev.c#n743
+> 
+> This reference doesn't point to the right code as vxcan has its own handling
+> do assign ml_priv in vxcan.c .
+> 
+> >Btw. the variable 'size' is set two times at the top of alloc_candev_mqs()
+> >depending on echo_skb_max. This looks wrong.
+> 
+> No. It looks right as I did not get behind the ALIGN() macro at first sight.
+> 
+> But it is still open why dev->ml_priv is not set correctly in vxcan.c as all
+> the settings for .priv_size and in vxcan_setup look fine.
 
-ADV7535 and ADV7533 are pin to pin compatible parts but ADV7535
-support TMDS clock upto 148.5Mhz and resolutions up to 1080p@60Hz.
+Maybe I got completely lost:
+Shouldn't can_ml_priv and vxcan_priv not be similar?
+Where is the dev_rcv_lists in the vxcan case?
 
----
-Changes in v4:
- - get out ADV7533 v1p2 voltage selection of this patch set
- - removal CONFIG_DRM_I2C_ADV7533 from Kconfig moved to new commit
-
-Bogdan Togorean (3):
-  drm: bridge: adv7511: Remove DRM_I2C_ADV7533 Kconfig
-  drm: bridge: adv7511: Add support for ADV7535
-  dt-bindings: drm: bridge: adv7511: Add ADV7535 support
-
- .../bindings/display/bridge/adi,adv7511.txt   | 23 ++++++-----
- drivers/gpu/drm/bridge/adv7511/Kconfig        | 13 ++----
- drivers/gpu/drm/bridge/adv7511/Makefile       |  3 +-
- drivers/gpu/drm/bridge/adv7511/adv7511.h      | 40 +------------------
- drivers/gpu/drm/bridge/adv7511/adv7511_drv.c  | 20 +++++-----
- 5 files changed, 26 insertions(+), 73 deletions(-)
-
--- 
-2.24.1
-
+> 
+> Best regards,
+> Oliver
