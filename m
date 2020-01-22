@@ -2,53 +2,56 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC836C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:52:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A31C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:52:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8179F2465A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:52:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D15082465A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:52:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686743;
-	bh=oW/nJSRnqwL4LFxYNywdLrAnqSiWfV1hujPdnbzAnjE=;
+	s=default; t=1579686746;
+	bh=Ei0WUn/7hawY4OURlT4CiEtiWn271M8zq9cHlqLxs1A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BC2ay/dUkT4dxrwEyMKGhLkjTyJlGeOTXvTGR4LzzVYznKG3LVpYuZgobshhis+lv
-	 UUgeBfKGBrERLew/RC8eW5qW+W4p/Hz1lXdyst7rBPBEZ658V29YosZrjbRwzjH4Qi
-	 IMI/Na4Ngg5q2/C6pqGdrLkTRybvNEcvUjm0jA0w=
+	b=z3opkzAQkgcfSdLAq12Rv0awhg9hs5kF/JURm/uj4m7XyvTtYhcVRLZE0PLuDBziU
+	 y+Rcx6BDEyN/uGQqCSiKv4iPXRSemarrkBdyI4de+GnCrRBRTvZlATF0cnA/tz1o5x
+	 kzU7OLnykK9npCeTbv+jvm05eEamsoexTLz/5Quc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732415AbgAVJwR (ORCPT
+        id S1731750AbgAVJgY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:52:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51936 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:36:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731815AbgAVJg2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:36:28 -0500
+        id S1729277AbgAVJgP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:36:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEEA720704;
-        Wed, 22 Jan 2020 09:36:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96AFF2467B;
+        Wed, 22 Jan 2020 09:36:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685787;
-        bh=oW/nJSRnqwL4LFxYNywdLrAnqSiWfV1hujPdnbzAnjE=;
+        s=default; t=1579685775;
+        bh=Ei0WUn/7hawY4OURlT4CiEtiWn271M8zq9cHlqLxs1A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vXa3wiHNYlO3beDhzq4pB1PqqcU6d80Hb9zUoGG3fWgGA95H5BKP9yzuFqfk7Q94e
-         5aZzBDP0iCbWqp0MV/hA1bfUO9dwAijhcoQMRZAyfShEx+Tp4hlKxM1VLeeoGWHnFs
-         NlrWgHATr4n4sefy9K8qBWrmIbE7Ayi8puKcWsHU=
+        b=viFjfIX/7vXpvloB27eWhcIzhzvcVqbFkjEwGWjZtFdFqS8oLVcHnHUknUC/QXgl2
+         KftOaxuSO0dOedeAS0UXVL9CuDccJZuuly0bhorI25uVe4S3MX64WRxSi78xEWZAsM
+         e2ugDzffuSqPSqKuUa6L8ii7VczLiLFHXTkYnMuk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+91bdd8eece0f6629ec8b@syzkaller.appspotmail.com,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 4.9 79/97] netfilter: arp_tables: init netns pointer in xt_tgdtor_param struct
-Date:   Wed, 22 Jan 2020 10:29:23 +0100
-Message-Id: <20200122092809.057782737@linuxfoundation.org>
+        stable@vger.kernel.org, Hiral Patel <hiralpat@cisco.com>,
+        Suma Ramars <sramars@cisco.com>,
+        Tom Tucker <tom@opengridcomputing.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Ewan D. Milne" <emilne@redhat.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 74/97] scsi: fnic: use kernels %pM format option to print MAC
+Date:   Wed, 22 Jan 2020 10:29:18 +0100
+Message-Id: <20200122092808.263950197@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092755.678349497@linuxfoundation.org>
 References: <20200122092755.678349497@linuxfoundation.org>
@@ -61,124 +64,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-commit 212e7f56605ef9688d0846db60c6c6ec06544095 upstream.
+[ Upstream commit 36fe90b0f0bdc9d030e88ba2153f3c8d6b6a5964 ]
 
-An earlier commit (1b789577f655060d98d20e,
-"netfilter: arp_tables: init netns pointer in xt_tgchk_param struct")
-fixed missing net initialization for arptables, but turns out it was
-incomplete.  We can get a very similar struct net NULL deref during
-error unwinding:
+Instead of supplying each byte through stack let's use %pM specifier.
 
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-RIP: 0010:xt_rateest_put+0xa1/0x440 net/netfilter/xt_RATEEST.c:77
- xt_rateest_tg_destroy+0x72/0xa0 net/netfilter/xt_RATEEST.c:175
- cleanup_entry net/ipv4/netfilter/arp_tables.c:509 [inline]
- translate_table+0x11f4/0x1d80 net/ipv4/netfilter/arp_tables.c:587
- do_replace net/ipv4/netfilter/arp_tables.c:981 [inline]
- do_arpt_set_ctl+0x317/0x650 net/ipv4/netfilter/arp_tables.c:1461
-
-Also init the netns pointer in xt_tgdtor_param struct.
-
-Fixes: add67461240c1d ("netfilter: add struct net * to target parameters")
-Reported-by: syzbot+91bdd8eece0f6629ec8b@syzkaller.appspotmail.com
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: Hiral Patel <hiralpat@cisco.com>
+Cc: Suma Ramars <sramars@cisco.com>
+Acked-by: Tom Tucker <tom@opengridcomputing.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Ewan D. Milne <emilne@redhat.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/netfilter/arp_tables.c |   19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ drivers/scsi/fnic/vnic_dev.c | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
 
---- a/net/ipv4/netfilter/arp_tables.c
-+++ b/net/ipv4/netfilter/arp_tables.c
-@@ -515,12 +515,13 @@ static inline int check_entry_size_and_h
- 	return 0;
+diff --git a/drivers/scsi/fnic/vnic_dev.c b/drivers/scsi/fnic/vnic_dev.c
+index 9795d6f3e197..ba69d6112fa1 100644
+--- a/drivers/scsi/fnic/vnic_dev.c
++++ b/drivers/scsi/fnic/vnic_dev.c
+@@ -499,10 +499,7 @@ void vnic_dev_add_addr(struct vnic_dev *vdev, u8 *addr)
+ 
+ 	err = vnic_dev_cmd(vdev, CMD_ADDR_ADD, &a0, &a1, wait);
+ 	if (err)
+-		printk(KERN_ERR
+-			"Can't add addr [%02x:%02x:%02x:%02x:%02x:%02x], %d\n",
+-			addr[0], addr[1], addr[2], addr[3], addr[4], addr[5],
+-			err);
++		pr_err("Can't add addr [%pM], %d\n", addr, err);
  }
  
--static inline void cleanup_entry(struct arpt_entry *e)
-+static void cleanup_entry(struct arpt_entry *e, struct net *net)
- {
- 	struct xt_tgdtor_param par;
- 	struct xt_entry_target *t;
+ void vnic_dev_del_addr(struct vnic_dev *vdev, u8 *addr)
+@@ -517,10 +514,7 @@ void vnic_dev_del_addr(struct vnic_dev *vdev, u8 *addr)
  
- 	t = arpt_get_target(e);
-+	par.net      = net;
- 	par.target   = t->u.kernel.target;
- 	par.targinfo = t->data;
- 	par.family   = NFPROTO_ARP;
-@@ -612,7 +613,7 @@ static int translate_table(struct net *n
- 		xt_entry_foreach(iter, entry0, newinfo->size) {
- 			if (i-- == 0)
- 				break;
--			cleanup_entry(iter);
-+			cleanup_entry(iter, net);
- 		}
- 		return ret;
- 	}
-@@ -939,7 +940,7 @@ static int __do_replace(struct net *net,
- 	/* Decrease module usage counts and free resource */
- 	loc_cpu_old_entry = oldinfo->entries;
- 	xt_entry_foreach(iter, loc_cpu_old_entry, oldinfo->size)
--		cleanup_entry(iter);
-+		cleanup_entry(iter, net);
- 
- 	xt_free_table_info(oldinfo);
- 	if (copy_to_user(counters_ptr, counters,
-@@ -1003,7 +1004,7 @@ static int do_replace(struct net *net, c
- 
-  free_newinfo_untrans:
- 	xt_entry_foreach(iter, loc_cpu_entry, newinfo->size)
--		cleanup_entry(iter);
-+		cleanup_entry(iter, net);
-  free_newinfo:
- 	xt_free_table_info(newinfo);
- 	return ret;
-@@ -1300,7 +1301,7 @@ static int compat_do_replace(struct net
- 
-  free_newinfo_untrans:
- 	xt_entry_foreach(iter, loc_cpu_entry, newinfo->size)
--		cleanup_entry(iter);
-+		cleanup_entry(iter, net);
-  free_newinfo:
- 	xt_free_table_info(newinfo);
- 	return ret;
-@@ -1527,7 +1528,7 @@ static int do_arpt_get_ctl(struct sock *
- 	return ret;
+ 	err = vnic_dev_cmd(vdev, CMD_ADDR_DEL, &a0, &a1, wait);
+ 	if (err)
+-		printk(KERN_ERR
+-			"Can't del addr [%02x:%02x:%02x:%02x:%02x:%02x], %d\n",
+-			addr[0], addr[1], addr[2], addr[3], addr[4], addr[5],
+-			err);
++		pr_err("Can't del addr [%pM], %d\n", addr, err);
  }
  
--static void __arpt_unregister_table(struct xt_table *table)
-+static void __arpt_unregister_table(struct net *net, struct xt_table *table)
- {
- 	struct xt_table_info *private;
- 	void *loc_cpu_entry;
-@@ -1539,7 +1540,7 @@ static void __arpt_unregister_table(stru
- 	/* Decrease module usage counts and free resources */
- 	loc_cpu_entry = private->entries;
- 	xt_entry_foreach(iter, loc_cpu_entry, private->size)
--		cleanup_entry(iter);
-+		cleanup_entry(iter, net);
- 	if (private->number > private->initial_entries)
- 		module_put(table_owner);
- 	xt_free_table_info(private);
-@@ -1579,7 +1580,7 @@ int arpt_register_table(struct net *net,
- 
- 	ret = nf_register_net_hooks(net, ops, hweight32(table->valid_hooks));
- 	if (ret != 0) {
--		__arpt_unregister_table(new_table);
-+		__arpt_unregister_table(net, new_table);
- 		*res = NULL;
- 	}
- 
-@@ -1594,7 +1595,7 @@ void arpt_unregister_table(struct net *n
- 			   const struct nf_hook_ops *ops)
- {
- 	nf_unregister_net_hooks(net, ops, hweight32(table->valid_hooks));
--	__arpt_unregister_table(table);
-+	__arpt_unregister_table(net, table);
- }
- 
- /* The built-in targets: standard (NULL) and error. */
+ int vnic_dev_notify_set(struct vnic_dev *vdev, u16 intr)
+-- 
+2.20.1
+
 
 
