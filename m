@@ -2,118 +2,99 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54906C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:57:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5985AC33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:57:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3515824672
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:57:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D22124672
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:57:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dnzCF34e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729146AbgAVG5a convert rfc822-to-8bit (ORCPT
+        id S1729152AbgAVG5l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 01:57:30 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:36794 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729130AbgAVG53 (ORCPT
+        Wed, 22 Jan 2020 01:57:41 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45315 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725924AbgAVG5l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 01:57:29 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iu9x1-00034q-DJ; Wed, 22 Jan 2020 07:57:19 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 1FB3B1C1A19;
-        Wed, 22 Jan 2020 07:57:19 +0100 (CET)
-Date:   Wed, 22 Jan 2020 06:57:18 -0000
-From:   "tip-bot2 for Shile Zhang" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/urgent] objtool: Fix ARCH=x86_64 build error
-Cc:     Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <d5d11370ae116df6c653493acd300ec3d7f5e925.1579543924.git.jpoimboe@redhat.com>
-References: <d5d11370ae116df6c653493acd300ec3d7f5e925.1579543924.git.jpoimboe@redhat.com>
+        Wed, 22 Jan 2020 01:57:41 -0500
+Received: by mail-pf1-f196.google.com with SMTP id 2so2863628pfg.12;
+        Tue, 21 Jan 2020 22:57:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MYul01GCq37ayThShJ9dZaDN18M/FwlRxDl1QupNebU=;
+        b=dnzCF34eyTR4XHrGflmfk99UgHH1ncq0JXUlqVGa8SKI91xQirSGUn6f8ydQYdA6rQ
+         bvAJBjhSG/qAbH4AZQQ6RyvwPBjVPAKjDn+i9XeeCiSdbWYLMp1lOtwKY2fYxZz21nKI
+         vF+lhMIQs6wHMe6KytTDLuJn/Li32hZUniHyCBqpyzXtKfI49xMqCxpJXhZVTOhyb9Ff
+         gjmlDu95gKdkd7MRcBeSEGBrr0H4DPQY4QgrjLwgl3fYem3tzEatpmB2ojgzxvs9rOhE
+         UnhRcjHzSigUZapD1Y/cOnyCzoF6VNvfDkKGZI8RBwXZ/2GdIv5cTKyBspdTMfTsDQoh
+         8YNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MYul01GCq37ayThShJ9dZaDN18M/FwlRxDl1QupNebU=;
+        b=lrxE0HZgaaZ4dwTAVsVXb537ARRh6diSEyHlgrHtDqwGwRmYE8JTElymayTOm04tY9
+         VNetj3eOawC4fgF809PGimK+YSaxUY+lAxzuYDpcOuMTD0rqSHQSRkA+VpRa2mhCh54f
+         JU3VgRe1Vmuu9PxKf7ZreSoreJ0WABY4NuuKMRFs0QmHVjPa+XV0Jiw3yQTZBCki/rMh
+         yujSdQC4UDP8K8iBf3DxOb60GQcJWc7oQ+YaZn62R0DRJZUrIMmp1V47+ZH0gjibAuMf
+         4HKoM0E+1yLA5rpJlyU6DZifl2KRhOTifBuc3SMHTLrOSxBiQKM2UfqiMrcb5tdB4p1m
+         2kFA==
+X-Gm-Message-State: APjAAAVrqmdXWjrlS74TCBnpwI9ZSszVLwdvjjLh+iXrY9GdP0cA3tAC
+        02y5q0oq54qL/1RcV7SPgwE=
+X-Google-Smtp-Source: APXvYqxjCexWKOScgRfZfKpFHyxyq43XkgznyZRFleu5ixWogr/GkiFAO/vChUmU23ICbwPFVTBGXg==
+X-Received: by 2002:a63:590e:: with SMTP id n14mr9404729pgb.10.1579676260432;
+        Tue, 21 Jan 2020 22:57:40 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id b19sm44632997pfo.56.2020.01.21.22.57.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2020 22:57:39 -0800 (PST)
+Date:   Tue, 21 Jan 2020 22:57:37 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Subject: Re: [PATCH] Input: add IOC3 serio driver
+Message-ID: <20200122065737.GG110084@dtor-ws>
+References: <20200115125951.3677-1-tbogendoerfer@suse.de>
 MIME-Version: 1.0
-Message-ID: <157967623889.396.5023943251678285610.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200115125951.3677-1-tbogendoerfer@suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the core/urgent branch of tip:
+Hi Thomas,
 
-Commit-ID:     8580bed7e751e6d4f17881e059daf3cb37ba4717
-Gitweb:        https://git.kernel.org/tip/8580bed7e751e6d4f17881e059daf3cb37ba4717
-Author:        Shile Zhang <shile.zhang@linux.alibaba.com>
-AuthorDate:    Mon, 20 Jan 2020 12:14:08 -06:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 22 Jan 2020 07:54:57 +01:00
+On Wed, Jan 15, 2020 at 01:59:50PM +0100, Thomas Bogendoerfer wrote:
+> +
+> +	platform_set_drvdata(pdev, d);
+> +	serio_register_port(d->kbd);
+> +	serio_register_port(d->aux);
+> +
+> +	ret = request_irq(irq, ioc3kbd_intr, IRQF_SHARED, "ioc3-kbd", d);
 
-objtool: Fix ARCH=x86_64 build error
+I just realized something - serio ports are registered asynchronously,
+and therefore may not be ready when you request IRQ which may fire
+immediately. To solve this issue serio core allows to specify start()
+method that is called after serio port has been registered. In this
+method you can set "exist" flag associated with either kbd or aux port,
+and check these flags in your interrupt routine before deciding whether
+you can forward the received data to appropriate port via
+serio_interrupt().
 
-Building objtool with ARCH=x86_64 fails with:
+Please see i8042_start() for example of use.
 
-   $make ARCH=x86_64 -C tools/objtool
-   ...
-     CC       arch/x86/decode.o
-   arch/x86/decode.c:10:22: fatal error: asm/insn.h: No such file or directory
-    #include <asm/insn.h>
-                         ^
-   compilation terminated.
-   mv: cannot stat ‘arch/x86/.decode.o.tmp’: No such file or directory
-   make[2]: *** [arch/x86/decode.o] Error 1
-   ...
+Thanks.
 
-The root cause is that the command-line variable 'ARCH' cannot be
-overridden.  It can be replaced by 'SRCARCH', which is defined in
-'tools/scripts/Makefile.arch'.
-
-Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-Link: https://lore.kernel.org/r/d5d11370ae116df6c653493acd300ec3d7f5e925.1579543924.git.jpoimboe@redhat.com
----
- tools/objtool/Makefile | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
-
-diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
-index d2a19b0..ee08aef 100644
---- a/tools/objtool/Makefile
-+++ b/tools/objtool/Makefile
-@@ -2,10 +2,6 @@
- include ../scripts/Makefile.include
- include ../scripts/Makefile.arch
- 
--ifeq ($(ARCH),x86_64)
--ARCH := x86
--endif
--
- # always use the host compiler
- HOSTAR	?= ar
- HOSTCC	?= gcc
-@@ -33,7 +29,7 @@ all: $(OBJTOOL)
- 
- INCLUDES := -I$(srctree)/tools/include \
- 	    -I$(srctree)/tools/arch/$(HOSTARCH)/include/uapi \
--	    -I$(srctree)/tools/arch/$(ARCH)/include
-+	    -I$(srctree)/tools/arch/$(SRCARCH)/include
- WARNINGS := $(EXTRA_WARNINGS) -Wno-switch-default -Wno-switch-enum -Wno-packed
- CFLAGS   := -Werror $(WARNINGS) $(KBUILD_HOSTCFLAGS) -g $(INCLUDES) $(LIBELF_FLAGS)
- LDFLAGS  += $(LIBELF_LIBS) $(LIBSUBCMD) $(KBUILD_HOSTLDFLAGS)
+-- 
+Dmitry
