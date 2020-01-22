@@ -2,136 +2,91 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C62D8C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:57:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 765B8C33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A626321835
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:57:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54D0A2465A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:59:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pRG9LBmd"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mf4ceQIH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729566AbgAVS57 (ORCPT
+        id S1728900AbgAVS7S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 13:57:59 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52467 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726796AbgAVS4Q (ORCPT
+        Wed, 22 Jan 2020 13:59:18 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46736 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725884AbgAVS7S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 13:56:16 -0500
-Received: by mail-wm1-f65.google.com with SMTP id p9so198056wmc.2
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 10:56:14 -0800 (PST)
+        Wed, 22 Jan 2020 13:59:18 -0500
+Received: by mail-pf1-f193.google.com with SMTP id n9so255258pff.13;
+        Wed, 22 Jan 2020 10:59:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=qsI/xaPXMqNdKm9K1igbwkE2PA4fRpWtUntr4tiEc9c=;
-        b=pRG9LBmdA77QlahXYh5Nus9tfRpUo5AFbdSWsL+0XT3QJab1WATu+dxyKUmFctjySd
-         cCVa6wsti27lRJxiioGev4IaUCPVhT+SayO6oRbsS3fiZ9PG8eRVpQYhLhGFA+2d26CR
-         9OkSiazpoxuBtrrdZdCqh4WXsrmLo/baSXWwLhI0pXU2F0kwnJCQDRlvrT8a/ChIZgot
-         KzzkbFTtuJlb/UPUa1jElGVzZUy4+YS1zMnqaZMzBTrCJcIF6YJKLvWwHr6Owl2YvX8K
-         WYf+7CVoqub8kXXef4++H/qZzFF+5BWVCyZlYRdEzqOs61AcuNSeb8pOAJrPtGqufF5e
-         97Pg==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HQxdX8PTl7oCMbkeLII63nN9RNrnV/YOss11w33YIf8=;
+        b=Mf4ceQIHyAGvwfiLFpIgmojwqAr6+OhF5VqI3zhC7ePPX8qWsjfsX/8DB9VSUyIpsb
+         pEr3pceCXKipTg2XL5qTQ2vo2jO60bQitjAv8wwmooOxzJRi9cgvCUzRitbSLXNBGO+9
+         /P/QZvI5SCgBUKdTp4y1QzI9XI+xFeAfJXyMM57Yc4Hmt2mMEehED0td6BeQ+YbGfc9S
+         bD+qi68mp/4/N51HqQJC1fzgXGmNCLnxlEjlEPQdbIZ7L3NvITTyjy8X+3IIszGetPzb
+         uY6jhepdQFrXSFd6Gb8yDUdJ4qXn3H9oZE0DROJlEjVeyffd+8PslEDsyvsI1b599Br+
+         TrZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=qsI/xaPXMqNdKm9K1igbwkE2PA4fRpWtUntr4tiEc9c=;
-        b=DxGYc743/wxfGXlwopJ3Ct+/l8nfJKYvpp1yci6Ary3fgxWlch+3svtd+157g8uSM5
-         6Egd51s2dOxTo3/KsjcWD9XJewXaMUX+oMh1LTLMdo6M8S0/cyo3Dx+hTxi3c54tNxUD
-         i5pD3vA6sH0GsCj4V5fJ0ucfGX5vLQphf9IzvG/DATrReBdMxqilataIyS/VONywO5Nt
-         LCJ/lhos6SXpNSnRaRQEAlNnjlktMRM1/fISmS/wNVNTE7ZMpQ/l2872o36aEB/xApuJ
-         /a4wnmjGKXRTIfS7qsY8lslmOLFcDg/AgMeY82GizW7gR99yalFLk39Qd2HmRMyyyUMm
-         Fo0Q==
-X-Gm-Message-State: APjAAAVpM4TFKVM5qRHlRveSAcjj39DFE+NBxaonkXnB33Oti9QZhTh/
-        44ogRSNf87Hcblz56ihUcyM2jA==
-X-Google-Smtp-Source: APXvYqz0IDlDRIP7S8I1GgGAZ46OxkvhlJ5Sti9+qcfPPbVXc+gCXCq1gA5S77046vns0gcYtT/wSw==
-X-Received: by 2002:a7b:cfc2:: with SMTP id f2mr4211199wmm.44.1579719374319;
-        Wed, 22 Jan 2020 10:56:14 -0800 (PST)
-Received: from localhost.localdomain ([176.61.57.127])
-        by smtp.gmail.com with ESMTPSA id q15sm58590390wrr.11.2020.01.22.10.56.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jan 2020 10:56:13 -0800 (PST)
-From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-To:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
-        bjorn.andersson@linaro.org
-Cc:     linux-kernel@vger.kernel.org,
-        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
-        Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Subject: [PATCH v3 01/19] dt-bindings: phy: remove qcom-dwc3-usb-phy
-Date:   Wed, 22 Jan 2020 18:55:52 +0000
-Message-Id: <20200122185610.131930-2-bryan.odonoghue@linaro.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200122185610.131930-1-bryan.odonoghue@linaro.org>
-References: <20200122185610.131930-1-bryan.odonoghue@linaro.org>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HQxdX8PTl7oCMbkeLII63nN9RNrnV/YOss11w33YIf8=;
+        b=pQBj01XZdsPm79phhTkYTeeVbQ5Clw8I7xtlqo2souB8rPyBFwkEG1JhTHFPmFyj+G
+         xECY/wlxgVtIBJwl8X6GhEMlMPmA4R4zKNeLTAfnA8rELdqRABUM0uJYDfYvUwyQgbWh
+         /JNPbJPNM5rNfp4Xd6U9t7N7F3ctIJ02hXSoNGjugSGV+VEUYZbhsOIw4Fs5Lg0+1WKw
+         79L64B9dOq2+eatpqEo4qA/L9lrsfj6Z5Q83o/8e6LhWObEmZrt10DnA3pe0trCg5vEM
+         PMczb81otVXzVGeemL9nm6o5KVt5IEkC1oPzqCq1USoH0nESmuv2h2Bj22ANZATs9Oap
+         Q3hg==
+X-Gm-Message-State: APjAAAVpXpR0Izm/UqhI4MaHyUK24ACtP3MXEd2tv8j2Bo7kRiMKNZv1
+        dTcdVjBv8EqVXOCZUVvl0CE=
+X-Google-Smtp-Source: APXvYqw6cm5OGqc+QD/QB6T5Q25CpnOFzxW545Nvuuzw+vPDYbWK+zakzkgPDkZZ03z+W/nHQ0CIug==
+X-Received: by 2002:a63:d14:: with SMTP id c20mr52583pgl.77.1579719549617;
+        Wed, 22 Jan 2020 10:59:09 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id x8sm48994926pfd.76.2020.01.22.10.59.07
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 22 Jan 2020 10:59:08 -0800 (PST)
+Date:   Wed, 22 Jan 2020 10:59:07 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.4 00/76] 4.4.211-stable review
+Message-ID: <20200122185907.GA20093@roeck-us.net>
+References: <20200122092751.587775548@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200122092751.587775548@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+On Wed, Jan 22, 2020 at 10:28:16AM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.211 release.
+> There are 76 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri, 24 Jan 2020 09:25:24 +0000.
+> Anything received after that time might be too late.
+> 
+Build results:
+	total: 170 pass: 170 fail: 0
+Qemu test results:
+	total: 326 pass: 326 fail: 0
 
-This binding is not used by any driver.
-
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Cc: Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>
-Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
----
- .../bindings/phy/qcom-dwc3-usb-phy.txt        | 37 -------------------
- 1 file changed, 37 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/phy/qcom-dwc3-usb-phy.txt
-
-diff --git a/Documentation/devicetree/bindings/phy/qcom-dwc3-usb-phy.txt b/Documentation/devicetree/bindings/phy/qcom-dwc3-usb-phy.txt
-deleted file mode 100644
-index a1697c27aecd..000000000000
---- a/Documentation/devicetree/bindings/phy/qcom-dwc3-usb-phy.txt
-+++ /dev/null
-@@ -1,37 +0,0 @@
--Qualcomm DWC3 HS AND SS PHY CONTROLLER
----------------------------------------
--
--DWC3 PHY nodes are defined to describe on-chip Synopsis Physical layer
--controllers.  Each DWC3 PHY controller should have its own node.
--
--Required properties:
--- compatible: should contain one of the following:
--	- "qcom,dwc3-hs-usb-phy" for High Speed Synopsis PHY controller
--	- "qcom,dwc3-ss-usb-phy" for Super Speed Synopsis PHY controller
--- reg: offset and length of the DWC3 PHY controller register set
--- #phy-cells: must be zero
--- clocks: a list of phandles and clock-specifier pairs, one for each entry in
--  clock-names.
--- clock-names: Should contain "ref" for the PHY reference clock
--
--Optional clocks:
--  "xo"		External reference clock
--
--Example:
--		phy@100f8800 {
--			compatible = "qcom,dwc3-hs-usb-phy";
--			reg = <0x100f8800 0x30>;
--			clocks = <&gcc USB30_0_UTMI_CLK>;
--			clock-names = "ref";
--			#phy-cells = <0>;
--
--		};
--
--		phy@100f8830 {
--			compatible = "qcom,dwc3-ss-usb-phy";
--			reg = <0x100f8830 0x30>;
--			clocks = <&gcc USB30_0_MASTER_CLK>;
--			clock-names = "ref";
--			#phy-cells = <0>;
--
--		};
--- 
-2.25.0
-
+Guenter
