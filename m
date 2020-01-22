@@ -7,53 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCBE6C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29DA8C33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 929262468F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:49:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E77F82467C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:49:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686558;
-	bh=RRVDSkHj/n/gGpkrhRw5hw97NpZbRgTO01K7YXq11PQ=;
+	s=default; t=1579686562;
+	bh=8RETVQuAXn2HyyP19HzJkh3vyAlFaWvJzhqQrOIOj0I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l4a0WCBJjMYP+EnsQ/hK8D2U+ZJKJKK6oTMeekXoN/9730Rd1YBXBmU8fRyu7KKHo
-	 9qSsmGUDzKuT0UM+yxG+TRjF7CHSKkLFFqoSItOd0wAQTXsUUkmCyc2hMlmPyjtJOk
-	 XWy4G9l/zHR92TKBdVC3tQz9CirDegUm9uTJ+vXc=
+	b=lRwDF7gGjL4ClqRaa0DnVSUhxv6lZJLsntuNHMBgh5DbdZMBoiHm+v1LrpNt73Hot
+	 Uv0/+6f3P0hh6G/19irHXdzeH/V+9wGLPyhKxjjx1kHohccP8hi1gEJh22a4ITf96l
+	 ZEEUug4MWPl6ciB7/AIr4qZeZn9s5/jEFUaRaEZk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387410AbgAVJkJ (ORCPT
+        id S1733115AbgAVJkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:40:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58578 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:40:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733311AbgAVJkF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:40:05 -0500
+        id S1733093AbgAVJkA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:40:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 305BC24686;
-        Wed, 22 Jan 2020 09:40:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41EF724684;
+        Wed, 22 Jan 2020 09:39:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686004;
-        bh=RRVDSkHj/n/gGpkrhRw5hw97NpZbRgTO01K7YXq11PQ=;
+        s=default; t=1579685999;
+        bh=8RETVQuAXn2HyyP19HzJkh3vyAlFaWvJzhqQrOIOj0I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vm5HXTywiVFCNGstJgzuFIVRCEUadKfyhE2IS0UWgaUo7jODouh432qawIACEYzXd
-         uizQ8aDKBDhG5RR1/ah6qCdbvVGYYjae0c06uucm6sio2mwtu6pB8Bttko5qen8yVB
-         dP+WNZX/bEhqu7CafCa74B96OvXIx/4Wz+7kqZzc=
+        b=ee+8nND/zhhqPbdoSG4T6N43ACwHqO4yU6Twn6Akadd+OcPFMYMjXd37Qf/EhLv89
+         pm5LB3Pje26i+UBaK4H/zXQkpeYFypQabEpJaq0PZ43v2z3aXNQRWjTrTwL04K+U0y
+         qMmcV0M0jtBb6UsmGkJG4GNdZaTRu+BScOPiIBiY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Thomas Willhalm <thomas.willhalm@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.vnet.ibm.com>,
-        "Bruggeman, Otto G" <otto.g.bruggeman@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 34/65] mm/huge_memory.c: thp: fix conflict of above-47bit hint address and PMD alignment
-Date:   Wed, 22 Jan 2020 10:29:19 +0100
-Message-Id: <20200122092755.716274773@linuxfoundation.org>
+Subject: [PATCH 4.14 32/65] USB: serial: io_edgeport: handle unbound ports on URB completion
+Date:   Wed, 22 Jan 2020 10:29:17 +0100
+Message-Id: <20200122092755.401719162@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092750.976732974@linuxfoundation.org>
 References: <20200122092750.976732974@linuxfoundation.org>
@@ -66,136 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kirill A. Shutemov <kirill@shutemov.name>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit 97d3d0f9a1cf132c63c0b8b8bd497b8a56283dd9 ]
+[ Upstream commit e37d1aeda737a20b1846a91a3da3f8b0f00cf690 ]
 
-Patch series "Fix two above-47bit hint address vs.  THP bugs".
+Check for NULL port data in the shared interrupt and bulk completion
+callbacks to avoid dereferencing a NULL pointer in case a device sends
+data for a port device which isn't bound to a driver (e.g. due to a
+malicious device having unexpected endpoints or after an allocation
+failure on port probe).
 
-The two get_unmapped_area() implementations have to be fixed to provide
-THP-friendly mappings if above-47bit hint address is specified.
-
-This patch (of 2):
-
-Filesystems use thp_get_unmapped_area() to provide THP-friendly
-mappings.  For DAX in particular.
-
-Normally, the kernel doesn't create userspace mappings above 47-bit,
-even if the machine allows this (such as with 5-level paging on x86-64).
-Not all user space is ready to handle wide addresses.  It's known that
-at least some JIT compilers use higher bits in pointers to encode their
-information.
-
-Userspace can ask for allocation from full address space by specifying
-hint address (with or without MAP_FIXED) above 47-bits.  If the
-application doesn't need a particular address, but wants to allocate
-from whole address space it can specify -1 as a hint address.
-
-Unfortunately, this trick breaks thp_get_unmapped_area(): the function
-would not try to allocate PMD-aligned area if *any* hint address
-specified.
-
-Modify the routine to handle it correctly:
-
- - Try to allocate the space at the specified hint address with length
-   padding required for PMD alignment.
- - If failed, retry without length padding (but with the same hint
-   address);
- - If the returned address matches the hint address return it.
- - Otherwise, align the address as required for THP and return.
-
-The user specified hint address is passed down to get_unmapped_area() so
-above-47bit hint address will be taken into account without breaking
-alignment requirements.
-
-Link: http://lkml.kernel.org/r/20191220142548.7118-2-kirill.shutemov@linux.intel.com
-Fixes: b569bab78d8d ("x86/mm: Prepare to expose larger address space to userspace")
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Reported-by: Thomas Willhalm <thomas.willhalm@intel.com>
-Tested-by: Dan Williams <dan.j.williams@intel.com>
-Cc: "Aneesh Kumar K . V" <aneesh.kumar@linux.vnet.ibm.com>
-Cc: "Bruggeman, Otto G" <otto.g.bruggeman@intel.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Cc: stable <stable@vger.kernel.org>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/huge_memory.c | 38 ++++++++++++++++++++++++--------------
- 1 file changed, 24 insertions(+), 14 deletions(-)
+ drivers/usb/serial/io_edgeport.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 6d835535946d..92915cc87549 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -502,13 +502,13 @@ void prep_transhuge_page(struct page *page)
- 	set_compound_page_dtor(page, TRANSHUGE_PAGE_DTOR);
- }
- 
--static unsigned long __thp_get_unmapped_area(struct file *filp, unsigned long len,
-+static unsigned long __thp_get_unmapped_area(struct file *filp,
-+		unsigned long addr, unsigned long len,
- 		loff_t off, unsigned long flags, unsigned long size)
- {
--	unsigned long addr;
- 	loff_t off_end = off + len;
- 	loff_t off_align = round_up(off, size);
--	unsigned long len_pad;
-+	unsigned long len_pad, ret;
- 
- 	if (off_end <= off_align || (off_end - off_align) < size)
- 		return 0;
-@@ -517,30 +517,40 @@ static unsigned long __thp_get_unmapped_area(struct file *filp, unsigned long le
- 	if (len_pad < len || (off + len_pad) < off)
- 		return 0;
- 
--	addr = current->mm->get_unmapped_area(filp, 0, len_pad,
-+	ret = current->mm->get_unmapped_area(filp, addr, len_pad,
- 					      off >> PAGE_SHIFT, flags);
--	if (IS_ERR_VALUE(addr))
-+
-+	/*
-+	 * The failure might be due to length padding. The caller will retry
-+	 * without the padding.
-+	 */
-+	if (IS_ERR_VALUE(ret))
- 		return 0;
- 
--	addr += (off - addr) & (size - 1);
--	return addr;
-+	/*
-+	 * Do not try to align to THP boundary if allocation at the address
-+	 * hint succeeds.
-+	 */
-+	if (ret == addr)
-+		return addr;
-+
-+	ret += (off - ret) & (size - 1);
-+	return ret;
- }
- 
- unsigned long thp_get_unmapped_area(struct file *filp, unsigned long addr,
- 		unsigned long len, unsigned long pgoff, unsigned long flags)
- {
-+	unsigned long ret;
- 	loff_t off = (loff_t)pgoff << PAGE_SHIFT;
- 
--	if (addr)
--		goto out;
- 	if (!IS_DAX(filp->f_mapping->host) || !IS_ENABLED(CONFIG_FS_DAX_PMD))
- 		goto out;
- 
--	addr = __thp_get_unmapped_area(filp, len, off, flags, PMD_SIZE);
--	if (addr)
--		return addr;
--
-- out:
-+	ret = __thp_get_unmapped_area(filp, addr, len, off, flags, PMD_SIZE);
-+	if (ret)
-+		return ret;
-+out:
- 	return current->mm->get_unmapped_area(filp, addr, len, pgoff, flags);
- }
- EXPORT_SYMBOL_GPL(thp_get_unmapped_area);
+diff --git a/drivers/usb/serial/io_edgeport.c b/drivers/usb/serial/io_edgeport.c
+index 8810de817095..3705b64ab948 100644
+--- a/drivers/usb/serial/io_edgeport.c
++++ b/drivers/usb/serial/io_edgeport.c
+@@ -720,7 +720,7 @@ static void edge_interrupt_callback(struct urb *urb)
+ 			if (txCredits) {
+ 				port = edge_serial->serial->port[portNumber];
+ 				edge_port = usb_get_serial_port_data(port);
+-				if (edge_port->open) {
++				if (edge_port && edge_port->open) {
+ 					spin_lock_irqsave(&edge_port->ep_lock,
+ 							  flags);
+ 					edge_port->txCredits += txCredits;
+@@ -1847,7 +1847,7 @@ static void process_rcvd_data(struct edgeport_serial *edge_serial,
+ 			if (rxLen && edge_serial->rxPort < serial->num_ports) {
+ 				port = serial->port[edge_serial->rxPort];
+ 				edge_port = usb_get_serial_port_data(port);
+-				if (edge_port->open) {
++				if (edge_port && edge_port->open) {
+ 					dev_dbg(dev, "%s - Sending %d bytes to TTY for port %d\n",
+ 						__func__, rxLen,
+ 						edge_serial->rxPort);
 -- 
 2.20.1
 
