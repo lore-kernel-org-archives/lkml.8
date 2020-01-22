@@ -2,155 +2,240 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E3BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACCAEC33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F63A2467A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:27:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KCjP0s0u"
+	by mail.kernel.org (Postfix) with ESMTP id 834C220678
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:27:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579699671;
+	bh=0s1L4NZLSb/p28c3fPgPLD6XN3jAQhqpj9KMFVolbOw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=jCfmRVo5LEEd2ZUOO1GDU2MNPg9rzk/CKXq7Bdc1Y96Ue3ZuwJIQbNq4Tp/ES3YAQ
+	 BN012mRtBRy2nE64pHa07idKznDD+WshmCbG5v+MJ4QBeBhWvIbc6kztsvw5RgnzWu
+	 eeVkr+k72d9o5yY9MNOOw5B2ELOXXFvV+8cyaW+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731809AbgAVN1t (ORCPT
+        id S1731321AbgAVN1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:27:49 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40603 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730133AbgAVN1r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:27:47 -0500
-Received: by mail-wr1-f66.google.com with SMTP id c14so7244469wrn.7
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 05:27:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=jxYjF1m7XVJ6yybgNC7PWK2OFBXviRpzBklnqTmBfrc=;
-        b=KCjP0s0u1syQwG7xSgBAkB7NM6G2zwgALAMpMu4MUwf57nzgUcuDYJveJ4U9g+6xYW
-         G6PKJc8TiUZCoUm7cCu4MQUE+8H19cfQwiZ4uC61vqiypTbUm/KMMsl8CDG/7qqQGjbG
-         yn0y4ljg3jMtahbG8BkbDkg1k4DhiYnrgytUdWXC7K8o1B/RP7lJfpPoHGlmep+KGpOo
-         DmR22mqQ3cKgZtb4G5hRfHvGt/IMLpUJPR0ANOa34je3lBDJdRQv5lpIf7pYlMVWOPyf
-         8eJ5Z0ROAIkZA0Iy+NltNxg8SeamFHZrXnrr0zY5ZfSfbtrh2DUDJ/LdiQtZve3Zcf/B
-         CaHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=jxYjF1m7XVJ6yybgNC7PWK2OFBXviRpzBklnqTmBfrc=;
-        b=M+N6KF8MgaRCT+GcUrN8EZ1lNy9yW/Sffy42T2Y0cWK6BmyR3LoBUm+Y/3QHuQBC4U
-         +DJYgOm5YhgsUGDvg0ATSMHr4756UTmXh1Bpb9Rv57khuwEVSfJ6xgcBbSWpDRkYSCCR
-         37TAxGqz1rICKczZoOF5oRdv5eO065FOQMqvMeEs8Opt050zN+bxkIjJF+tDKuL0eQX0
-         TGJePPhpyEj2MBwOJsQi/05d/ESrGJBZgc9PCCFKPZoN35tPSbFbTG95h6k3ysIpzD69
-         tOPPIMfRF130VXHvBo8H/Q9XInVXIuf5NCaIYFa+Tm3rys4O1ZeNsLPLzLE5hqdnbMB5
-         0tGA==
-X-Gm-Message-State: APjAAAVHkNWyPQRD5qwts5pjP/v8xhMt1NbJ9jA+qen4ZU4lEVyt/8ul
-        yhGr5kjJ2UK8nhyRY5Q84u4stQ==
-X-Google-Smtp-Source: APXvYqxRR7C7wAkzSx2A3Iw/Hy6BV0R2oBVkQXOxu3NbXbaRXGg2QsuNN71lzk4nBUNqTavF8LqBCQ==
-X-Received: by 2002:a5d:44ca:: with SMTP id z10mr11301374wrr.266.1579699664807;
-        Wed, 22 Jan 2020 05:27:44 -0800 (PST)
-Received: from dell ([2.27.35.227])
-        by smtp.gmail.com with ESMTPSA id p18sm4086602wmg.4.2020.01.22.05.27.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jan 2020 05:27:44 -0800 (PST)
-Date:   Wed, 22 Jan 2020 13:27:57 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Mark Brown <broonie@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 37/38] platform/x86: intel_pmc_ipc: Convert to MFD
-Message-ID: <20200122132757.GM15507@dell>
-References: <20200121160114.60007-1-mika.westerberg@linux.intel.com>
- <20200121160114.60007-38-mika.westerberg@linux.intel.com>
- <20200122123454.GL15507@dell>
- <20200122125300.GO2665@lahna.fi.intel.com>
+        Wed, 22 Jan 2020 08:27:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49390 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726103AbgAVN1q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:27:46 -0500
+Received: from localhost (unknown [84.241.205.26])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 891182467B;
+        Wed, 22 Jan 2020 13:27:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579699665;
+        bh=0s1L4NZLSb/p28c3fPgPLD6XN3jAQhqpj9KMFVolbOw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qHB9tReNBFPnhQgP9YoY5q+3yyu2TsfAIEjexiF60RN6KCIf8X65fkTM0zU4YAALh
+         Tm5KFBh7DpnRPL5IvbEgjrCNpf+JNThBBF96NczI5iGtbAFRDJXWTeIDebU0lw6KKp
+         pPeKLngI5dgZOClc5H1dzf6b2cUA9PpYGfTx4hiw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
+        James Smart <jsmart2021@gmail.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.4 212/222] scsi: lpfc: Fix hdwq sgl locks and irq handling
+Date:   Wed, 22 Jan 2020 10:29:58 +0100
+Message-Id: <20200122092848.874374835@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
+References: <20200122092833.339495161@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200122125300.GO2665@lahna.fi.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Jan 2020, Mika Westerberg wrote:
+From: James Smart <jsmart2021@gmail.com>
 
-> On Wed, Jan 22, 2020 at 12:34:54PM +0000, Lee Jones wrote:
-> > > +static int intel_pmc_probe(struct platform_device *pdev)
-> > > +{
-> > > +	struct intel_scu_ipc_pdata pdata = {};
-> > > +	struct intel_pmc_dev *pmc;
-> > > +	int ret;
-> > > +
-> > > +	pmc = devm_kzalloc(&pdev->dev, sizeof(*pmc), GFP_KERNEL);
-> > > +	if (!pmc)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	pmc->dev = &pdev->dev;
-> > > +	spin_lock_init(&pmc->gcr_lock);
-> > > +
-> > > +	ret = intel_pmc_get_resources(pdev, pmc, &pdata);
-> > > +	if (ret) {
-> > > +		dev_err(&pdev->dev, "Failed to request resources\n");
-> > > +		return ret;
-> > > +	}
-> > > +
-> > > +	pmc->scu = devm_intel_scu_ipc_register(&pdev->dev, &pdata);
-> > > +	if (IS_ERR(pmc->scu))
-> > > +		return PTR_ERR(pmc->scu);
-> > 
-> > *_register is better than *_probe.  If it was called that (or maybe
-> > *_init) initially I may have missed the issue altogether ...
-> > 
-> > However, I still think it the SCU IPC *device* needs to be a device
-> > driver and abide by the rules, ensuring it uses the device driver
-> > model/API.  As such, it should be registered and probed as a device.
-> 
-> Which type of device you suggest here? And which bus it should be
-> registered to? I think we can make this create a platform_device but
-> then we would need to do that from the PCI driver as well which seems
-> unnecessary since we already have the struct pci_dev.
+commit a4c21acca2be6729ecbe72eda9b08092725b0a77 upstream.
 
-What kind of device is it?
+Many of the sgl-per-hdwq paths are locking with spin_lock_irq() and
+spin_unlock_irq() and may unwittingly raising irq when it shouldn't. Hard
+deadlocks were seen around lpfc_scsi_prep_cmnd().
 
-Refrain from using platform device, unless it is one please.
+Fix by converting the locks to irqsave/irqrestore.
 
-> For instance in drivers/mfd/intel-lpss* we use similar approach (the
-> core part is library that gets called by probe drivers (ACPI, PCI). We
-> don't create any additional platform_devices.
+Fixes: d79c9e9d4b3d ("scsi: lpfc: Support dynamic unbounded SGL lists on G7 hardware.")
+Link: https://lore.kernel.org/r/20190922035906.10977-16-jsmart2021@gmail.com
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-That's different.  Here the *-acpi.c and *-pci.c are only used as
-registration hooks into the same device.  The semantics we're
-discussing are seemingly used to probe/init a different device in a
-separate subsystem.
+---
+ drivers/scsi/lpfc/lpfc_sli.c |   38 ++++++++++++++++++++++----------------
+ 1 file changed, 22 insertions(+), 16 deletions(-)
 
-> There is another twist. Ideally we would like to see the SCU IPC probed
-> and intialized before the MFD children so that we know the SCU IPC is
-> ready by the time the children devices are created. I guess we could
-> work it around by returning -EPROBE_DEFER but that does not feel right
-> to be honest.
+--- a/drivers/scsi/lpfc/lpfc_sli.c
++++ b/drivers/scsi/lpfc/lpfc_sli.c
+@@ -20414,8 +20414,9 @@ lpfc_get_sgl_per_hdwq(struct lpfc_hba *p
+ 	struct sli4_hybrid_sgl *allocated_sgl = NULL;
+ 	struct lpfc_sli4_hdw_queue *hdwq = lpfc_buf->hdwq;
+ 	struct list_head *buf_list = &hdwq->sgl_list;
++	unsigned long iflags;
+ 
+-	spin_lock_irq(&hdwq->hdwq_lock);
++	spin_lock_irqsave(&hdwq->hdwq_lock, iflags);
+ 
+ 	if (likely(!list_empty(buf_list))) {
+ 		/* break off 1 chunk from the sgl_list */
+@@ -20427,7 +20428,7 @@ lpfc_get_sgl_per_hdwq(struct lpfc_hba *p
+ 		}
+ 	} else {
+ 		/* allocate more */
+-		spin_unlock_irq(&hdwq->hdwq_lock);
++		spin_unlock_irqrestore(&hdwq->hdwq_lock, iflags);
+ 		tmp = kmalloc_node(sizeof(*tmp), GFP_ATOMIC,
+ 				   cpu_to_node(smp_processor_id()));
+ 		if (!tmp) {
+@@ -20449,7 +20450,7 @@ lpfc_get_sgl_per_hdwq(struct lpfc_hba *p
+ 			return NULL;
+ 		}
+ 
+-		spin_lock_irq(&hdwq->hdwq_lock);
++		spin_lock_irqsave(&hdwq->hdwq_lock, iflags);
+ 		list_add_tail(&tmp->list_node, &lpfc_buf->dma_sgl_xtra_list);
+ 	}
+ 
+@@ -20457,7 +20458,7 @@ lpfc_get_sgl_per_hdwq(struct lpfc_hba *p
+ 					struct sli4_hybrid_sgl,
+ 					list_node);
+ 
+-	spin_unlock_irq(&hdwq->hdwq_lock);
++	spin_unlock_irqrestore(&hdwq->hdwq_lock, iflags);
+ 
+ 	return allocated_sgl;
+ }
+@@ -20481,8 +20482,9 @@ lpfc_put_sgl_per_hdwq(struct lpfc_hba *p
+ 	struct sli4_hybrid_sgl *tmp = NULL;
+ 	struct lpfc_sli4_hdw_queue *hdwq = lpfc_buf->hdwq;
+ 	struct list_head *buf_list = &hdwq->sgl_list;
++	unsigned long iflags;
+ 
+-	spin_lock_irq(&hdwq->hdwq_lock);
++	spin_lock_irqsave(&hdwq->hdwq_lock, iflags);
+ 
+ 	if (likely(!list_empty(&lpfc_buf->dma_sgl_xtra_list))) {
+ 		list_for_each_entry_safe(list_entry, tmp,
+@@ -20495,7 +20497,7 @@ lpfc_put_sgl_per_hdwq(struct lpfc_hba *p
+ 		rc = -EINVAL;
+ 	}
+ 
+-	spin_unlock_irq(&hdwq->hdwq_lock);
++	spin_unlock_irqrestore(&hdwq->hdwq_lock, iflags);
+ 	return rc;
+ }
+ 
+@@ -20516,8 +20518,9 @@ lpfc_free_sgl_per_hdwq(struct lpfc_hba *
+ 	struct list_head *buf_list = &hdwq->sgl_list;
+ 	struct sli4_hybrid_sgl *list_entry = NULL;
+ 	struct sli4_hybrid_sgl *tmp = NULL;
++	unsigned long iflags;
+ 
+-	spin_lock_irq(&hdwq->hdwq_lock);
++	spin_lock_irqsave(&hdwq->hdwq_lock, iflags);
+ 
+ 	/* Free sgl pool */
+ 	list_for_each_entry_safe(list_entry, tmp,
+@@ -20529,7 +20532,7 @@ lpfc_free_sgl_per_hdwq(struct lpfc_hba *
+ 		kfree(list_entry);
+ 	}
+ 
+-	spin_unlock_irq(&hdwq->hdwq_lock);
++	spin_unlock_irqrestore(&hdwq->hdwq_lock, iflags);
+ }
+ 
+ /**
+@@ -20553,8 +20556,9 @@ lpfc_get_cmd_rsp_buf_per_hdwq(struct lpf
+ 	struct fcp_cmd_rsp_buf *allocated_buf = NULL;
+ 	struct lpfc_sli4_hdw_queue *hdwq = lpfc_buf->hdwq;
+ 	struct list_head *buf_list = &hdwq->cmd_rsp_buf_list;
++	unsigned long iflags;
+ 
+-	spin_lock_irq(&hdwq->hdwq_lock);
++	spin_lock_irqsave(&hdwq->hdwq_lock, iflags);
+ 
+ 	if (likely(!list_empty(buf_list))) {
+ 		/* break off 1 chunk from the list */
+@@ -20567,7 +20571,7 @@ lpfc_get_cmd_rsp_buf_per_hdwq(struct lpf
+ 		}
+ 	} else {
+ 		/* allocate more */
+-		spin_unlock_irq(&hdwq->hdwq_lock);
++		spin_unlock_irqrestore(&hdwq->hdwq_lock, iflags);
+ 		tmp = kmalloc_node(sizeof(*tmp), GFP_ATOMIC,
+ 				   cpu_to_node(smp_processor_id()));
+ 		if (!tmp) {
+@@ -20594,7 +20598,7 @@ lpfc_get_cmd_rsp_buf_per_hdwq(struct lpf
+ 		tmp->fcp_rsp = (struct fcp_rsp *)((uint8_t *)tmp->fcp_cmnd +
+ 				sizeof(struct fcp_cmnd));
+ 
+-		spin_lock_irq(&hdwq->hdwq_lock);
++		spin_lock_irqsave(&hdwq->hdwq_lock, iflags);
+ 		list_add_tail(&tmp->list_node, &lpfc_buf->dma_cmd_rsp_list);
+ 	}
+ 
+@@ -20602,7 +20606,7 @@ lpfc_get_cmd_rsp_buf_per_hdwq(struct lpf
+ 					struct fcp_cmd_rsp_buf,
+ 					list_node);
+ 
+-	spin_unlock_irq(&hdwq->hdwq_lock);
++	spin_unlock_irqrestore(&hdwq->hdwq_lock, iflags);
+ 
+ 	return allocated_buf;
+ }
+@@ -20627,8 +20631,9 @@ lpfc_put_cmd_rsp_buf_per_hdwq(struct lpf
+ 	struct fcp_cmd_rsp_buf *tmp = NULL;
+ 	struct lpfc_sli4_hdw_queue *hdwq = lpfc_buf->hdwq;
+ 	struct list_head *buf_list = &hdwq->cmd_rsp_buf_list;
++	unsigned long iflags;
+ 
+-	spin_lock_irq(&hdwq->hdwq_lock);
++	spin_lock_irqsave(&hdwq->hdwq_lock, iflags);
+ 
+ 	if (likely(!list_empty(&lpfc_buf->dma_cmd_rsp_list))) {
+ 		list_for_each_entry_safe(list_entry, tmp,
+@@ -20641,7 +20646,7 @@ lpfc_put_cmd_rsp_buf_per_hdwq(struct lpf
+ 		rc = -EINVAL;
+ 	}
+ 
+-	spin_unlock_irq(&hdwq->hdwq_lock);
++	spin_unlock_irqrestore(&hdwq->hdwq_lock, iflags);
+ 	return rc;
+ }
+ 
+@@ -20662,8 +20667,9 @@ lpfc_free_cmd_rsp_buf_per_hdwq(struct lp
+ 	struct list_head *buf_list = &hdwq->cmd_rsp_buf_list;
+ 	struct fcp_cmd_rsp_buf *list_entry = NULL;
+ 	struct fcp_cmd_rsp_buf *tmp = NULL;
++	unsigned long iflags;
+ 
+-	spin_lock_irq(&hdwq->hdwq_lock);
++	spin_lock_irqsave(&hdwq->hdwq_lock, iflags);
+ 
+ 	/* Free cmd_rsp buf pool */
+ 	list_for_each_entry_safe(list_entry, tmp,
+@@ -20676,5 +20682,5 @@ lpfc_free_cmd_rsp_buf_per_hdwq(struct lp
+ 		kfree(list_entry);
+ 	}
+ 
+-	spin_unlock_irq(&hdwq->hdwq_lock);
++	spin_unlock_irqrestore(&hdwq->hdwq_lock, iflags);
+ }
 
-That's precisely what -EPROBE_DEFER was designed for.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
