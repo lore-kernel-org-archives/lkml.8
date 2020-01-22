@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B0AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C02C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20EF42467E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BCBA24680
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:38:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685934;
-	bh=ww7v8HP4bT2dIJ+PNYY4ouiv91+eJiffjJuPz+myJbw=;
+	s=default; t=1579685937;
+	bh=VDbWkC6uBBEeg/HWkCoBcE5qjljz8RrZQ0zWHQnLLnE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yBAeYRsKl1zUL9poz231i8MVPy71D+7Mw1AA3nJj2AcKfa39mq28+XE2ijEsgaFd4
-	 hM8NyBy31vPq/V40QYFmv8jqZYmiz/aHT60unMDtX5TxvBfWJOQNJj5NAcgbLk6kLj
-	 8SRue4Y67yjP/GiEE/DeDIoq4lI8BVUDy9wgh1yQ=
+	b=Bytprxbma2Jilt7vEDcCef7/cHZIPFZSNw8Y3sldVEdkqOMx17Uy07vAughBSpQ48
+	 BbAOsfVAZGh7cR4BRLgKklJv3NLdZ74pf6Z86X0xf6NJO6hsxU+X9XBolEBskZv4X4
+	 bshf2rschMPxu27Em/MQxViE+SlkrKv5yQOdtX8M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733097AbgAVJix (ORCPT
+        id S1731934AbgAVJi4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:38:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55858 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:38:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733104AbgAVJir (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:38:47 -0500
+        id S1733111AbgAVJit (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:38:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 234292467B;
-        Wed, 22 Jan 2020 09:38:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 839EC2467B;
+        Wed, 22 Jan 2020 09:38:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685926;
-        bh=ww7v8HP4bT2dIJ+PNYY4ouiv91+eJiffjJuPz+myJbw=;
+        s=default; t=1579685929;
+        bh=VDbWkC6uBBEeg/HWkCoBcE5qjljz8RrZQ0zWHQnLLnE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E7c8tuenlmcPu/V9YFqZAakNJ7qxqysDPhVhQSvb+GfbOr/n9Za9LQt0CY+l/zE3q
-         fU0pWQk8xpzmH4I8TBgaz/hBFaAFtKCjPLN34V4qcwrm7/H93mTVKpE+J3YNa0NJkq
-         ylnEk62IaWXbTyNGXqFqUJ89Y66Sp0KsZWQNkUoE=
+        b=labauBqJBY8iP350DZdxpD0GGwGZArQ9ppCc++eR1gH/Q/za0wrH4Tp1eS2Cb/414
+         d1hjngQsY03SAOxMn/LiKlz4Pcpg8S5d3b6ADEV3uIXf3FUyXa0suEy/N9NXIl67rF
+         u59PIuhxiXURXpKlePG3OFfU64P1GuwZhH0FImeQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 4.14 39/65] NFC: pn533: fix bulk-message timeout
-Date:   Wed, 22 Jan 2020 10:29:24 +0100
-Message-Id: <20200122092756.519541147@linuxfoundation.org>
+        stable@vger.kernel.org, Sven Eckelmann <sven@narfation.org>,
+        Simon Wunderlich <sw@simonwunderlich.de>
+Subject: [PATCH 4.14 40/65] batman-adv: Fix DAT candidate selection on little endian systems
+Date:   Wed, 22 Jan 2020 10:29:25 +0100
+Message-Id: <20200122092756.698323689@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092750.976732974@linuxfoundation.org>
 References: <20200122092750.976732974@linuxfoundation.org>
@@ -59,38 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Sven Eckelmann <sven@narfation.org>
 
-commit a112adafcb47760feff959ee1ecd10b74d2c5467 upstream.
+commit 4cc4a1708903f404d2ca0dfde30e71e052c6cbc9 upstream.
 
-The driver was doing a synchronous uninterruptible bulk-transfer without
-using a timeout. This could lead to the driver hanging on probe due to a
-malfunctioning (or malicious) device until the device is physically
-disconnected. While sleeping in probe the driver prevents other devices
-connected to the same hub from being added to (or removed from) the bus.
+The distributed arp table is using a DHT to store and retrieve MAC address
+information for an IP address. This is done using unicast messages to
+selected peers. The potential peers are looked up using the IP address and
+the VID.
 
-An arbitrary limit of five seconds should be more than enough.
+While the IP address is always stored in big endian byte order, this is not
+the case of the VID. It can (depending on the host system) either be big
+endian or little endian. The host must therefore always convert it to big
+endian to ensure that all devices calculate the same peers for the same
+lookup data.
 
-Fixes: dbafc28955fa ("NFC: pn533: don't send USB data off of the stack")
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Fixes: be1db4f6615b ("batman-adv: make the Distributed ARP Table vlan aware")
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/nfc/pn533/usb.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/batman-adv/distributed-arp-table.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/nfc/pn533/usb.c
-+++ b/drivers/nfc/pn533/usb.c
-@@ -403,7 +403,7 @@ static int pn533_acr122_poweron_rdr(stru
- 		       cmd, sizeof(cmd), false);
+--- a/net/batman-adv/distributed-arp-table.c
++++ b/net/batman-adv/distributed-arp-table.c
+@@ -243,6 +243,7 @@ static u32 batadv_hash_dat(const void *d
+ 	u32 hash = 0;
+ 	const struct batadv_dat_entry *dat = data;
+ 	const unsigned char *key;
++	__be16 vid;
+ 	u32 i;
  
- 	rc = usb_bulk_msg(phy->udev, phy->out_urb->pipe, buffer, sizeof(cmd),
--			  &transferred, 0);
-+			  &transferred, 5000);
- 	kfree(buffer);
- 	if (rc || (transferred != sizeof(cmd))) {
- 		nfc_err(&phy->udev->dev,
+ 	key = (const unsigned char *)&dat->ip;
+@@ -252,7 +253,8 @@ static u32 batadv_hash_dat(const void *d
+ 		hash ^= (hash >> 6);
+ 	}
+ 
+-	key = (const unsigned char *)&dat->vid;
++	vid = htons(dat->vid);
++	key = (__force const unsigned char *)&vid;
+ 	for (i = 0; i < sizeof(dat->vid); i++) {
+ 		hash += key[i];
+ 		hash += (hash << 10);
 
 
