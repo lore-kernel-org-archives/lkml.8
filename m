@@ -2,182 +2,150 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72549C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 15:51:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D2EC47409
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 15:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45DCB217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 15:51:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22B5B24125
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 15:51:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726004AbgAVPvJ (ORCPT
+        id S1726204AbgAVPvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 22 Jan 2020 10:51:11 -0500
+Received: from mga14.intel.com ([192.55.52.115]:54041 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725802AbgAVPvJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 Jan 2020 10:51:09 -0500
-Received: from mail-io1-f72.google.com ([209.85.166.72]:55004 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725802AbgAVPvI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 10:51:08 -0500
-Received: by mail-io1-f72.google.com with SMTP id k25so2105550ios.21
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 07:51:08 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=oz0aXsHCjOMbmBxnBtJQMdHjycwqcbJ4fyUnOhk08pU=;
-        b=XJKMnIeH5/lO97l3kdZqqVeH9q4CocyLVyklRW/MmF9VYe/tH4jKJeVsTjK7uUpEHi
-         qj9CcE6NsVhGLfIjidLw7c86uPOE7k2kFF+U7BmycKtk9kneeYAIJWFoGUr++V9Wr3DM
-         zG/M2EzE4YoljD9rNtYNyMxnyOkVOQRuOKugCv5TV7tGjf+OZDNawqMssfyk5PA29prM
-         hEJ30xrFWioWNHRIOq0s8Hldw//KIGvOPI/dpSTTtth3QhVm+UbKqLBtwhEO72Dsq2u3
-         3JdcpLIJ9u+TN8ljwf75u1QOaHd+dreX6iVgacoqZI7DV0M/jbJjoDo2BO2J8iSwJBht
-         JB8g==
-X-Gm-Message-State: APjAAAVohZXI7Jlf89c04pu6SBHKtfFh0OKrwouHNXKbOSQbE6egK522
-        9C6VFjMI23+9TjIX8hN3UDt6VOYyzr6mbr3i2qqmU8rvE7x2
-X-Google-Smtp-Source: APXvYqwdMy7d9a8ubm5HisAzrL47OSq5SbRP4K6fvnj7jb3vxthnOBm3uYooNMcMWTi9WQKkSoPu+uDGsxTaC1RVB/dDH/yrtrnB
-MIME-Version: 1.0
-X-Received: by 2002:a92:b744:: with SMTP id c4mr8082698ilm.34.1579708268100;
- Wed, 22 Jan 2020 07:51:08 -0800 (PST)
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jan 2020 07:51:09 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,350,1574150400"; 
+   d="scan'208";a="425895201"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga005.fm.intel.com with ESMTP; 22 Jan 2020 07:51:09 -0800
 Date:   Wed, 22 Jan 2020 07:51:08 -0800
-In-Reply-To: <00000000000044bcb8059a0a577e@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000002b41f0059cbc7e2b@google.com>
-Subject: Re: KASAN: slab-out-of-bounds Read in vc_do_resize
-From:   syzbot <syzbot+c37a14770d51a085a520@syzkaller.appspotmail.com>
-To:     b.zolnierkie@samsung.com, daniel.vetter@ffwll.ch,
-        ghalat@redhat.com, gregkh@linuxfoundation.org, jslaby@suse.com,
-        linux-kernel@vger.kernel.org, nico@fluxnic.net,
-        okash.khawaja@gmail.com, oleksandr@redhat.com, sam@ravnborg.org,
-        syzkaller-bugs@googlegroups.com, textshell@uchuujin.de
-Content-Type: text/plain; charset="UTF-8"
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        Jim Mattson <jmattson@google.com>,
+        linux-kernel@vger.kernel.org, Liran Alon <liran.alon@oracle.com>,
+        Roman Kagan <rkagan@virtuozzo.com>
+Subject: Re: [PATCH RFC 2/3] x86/kvm/hyper-v: move VMX controls sanitization
+ out of nested_enable_evmcs()
+Message-ID: <20200122155108.GA7201@linux.intel.com>
+References: <20200115171014.56405-1-vkuznets@redhat.com>
+ <20200115171014.56405-3-vkuznets@redhat.com>
+ <6c4bdb57-08fb-2c2d-9234-b7efffeb72ed@redhat.com>
+ <20200122054724.GD18513@linux.intel.com>
+ <9c126d75-225b-3b1b-d97a-bcec1f189e02@redhat.com>
+ <87eevrsf3s.fsf@vitty.brq.redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87eevrsf3s.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+On Wed, Jan 22, 2020 at 04:08:55PM +0100, Vitaly Kuznetsov wrote:
+> Paolo Bonzini <pbonzini@redhat.com> writes:
+> 
+> > On 22/01/20 06:47, Sean Christopherson wrote:
+> >>> Yes, it most likely is and it would be nice if Microsoft fixed it, but I
+> >>> guess we're stuck with it for existing Windows versions.  Well, for one
+> >>> we found a bug in Hyper-V and not the converse. :)
+> >>>
+> >>> There is a problem with this approach, in that we're stuck with it
+> >>> forever due to live migration.  But I guess if in the future eVMCS v2
+> >>> adds an apic_address field we can limit the hack to eVMCS v1.  Another
+> >>> possibility is to use the quirks mechanism but it's overkill for now.
+> >>>
+> >>> Unless there are objections, I plan to apply these patches.
+> >> Doesn't applying this patch contradict your earlier opinion?  This patch
+> >> would still hide the affected controls from the guest because the host
+> >> controls enlightened_vmcs_enabled.
+> >
+> > It does.  Unfortunately the key sentence is "we're stuck with it for
+> > existing Windows versions". :(
 
-HEAD commit:    d96d875e Merge tag 'fixes_for_v5.5-rc8' of git://git.kerne..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=11554d85e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=83c00afca9cf5153
-dashboard link: https://syzkaller.appspot.com/bug?extid=c37a14770d51a085a520
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1659a721e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16aa59c9e00000
+Ah, I didn't understand what "it" referred to :-)
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+c37a14770d51a085a520@syzkaller.appspotmail.com
+> >> Rather than update vmx->nested.msrs or filter vmx_get_msr(), what about
+> >> manually adding eVMCS consistency checks on the disallowed bits and handle
+> >> SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES as a one-off case by simply
+> >> clearing it from the eVMCS?  Or alternatively, squashing all the disallowed
+> >> bits.
+> >
+> > Hmm, that is also a possibility.  It's a very hacky one, but I guess
+> > adding APIC virtualization to eVMCS would require bumping the version to
+> > 2.  Vitaly, what do you think?
+> 
+> As I already replied to Sean I like the idea to filter out unsupported
+> controls from eVMCS but unfortunately it doesn't work: Hyper-V actually
+> expects APIC virtualization to work when it enables
+> SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES (I have no idea how without
+> apic_access_addr field but). I checked and at least Hyper-V 2016 doesn't
+> boot (when >1 vCPU).
 
-==================================================================
-BUG: KASAN: slab-out-of-bounds in scr_memcpyw include/linux/vt_buffer.h:49 [inline]
-BUG: KASAN: slab-out-of-bounds in vc_do_resize+0xb5e/0x1af0 drivers/tty/vt/vt.c:1250
-Read of size 192 at addr ffff888095d34540 by task syz-executor536/9034
+Nice.
 
-CPU: 1 PID: 9034 Comm: syz-executor536 Not tainted 5.5.0-rc7-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1fb/0x318 lib/dump_stack.c:118
- print_address_description+0x74/0x5c0 mm/kasan/report.c:374
- __kasan_report+0x149/0x1c0 mm/kasan/report.c:506
- kasan_report+0x26/0x50 mm/kasan/common.c:639
- check_memory_region_inline mm/kasan/generic.c:182 [inline]
- check_memory_region+0x2b6/0x2f0 mm/kasan/generic.c:192
- memcpy+0x28/0x60 mm/kasan/common.c:125
- scr_memcpyw include/linux/vt_buffer.h:49 [inline]
- vc_do_resize+0xb5e/0x1af0 drivers/tty/vt/vt.c:1250
- vc_resize+0x4f/0x60 drivers/tty/vt/vt.c:1304
- fbcon_modechanged+0x701/0xdf0 drivers/video/fbdev/core/fbcon.c:2980
- fbcon_update_vcs+0x31/0x40 drivers/video/fbdev/core/fbcon.c:3038
- fb_set_var+0x8f5/0xdc0 drivers/video/fbdev/core/fbmem.c:1051
- do_fb_ioctl+0x55e/0x780 drivers/video/fbdev/core/fbmem.c:1104
- fb_ioctl+0xb9/0xf0 drivers/video/fbdev/core/fbmem.c:1180
- do_vfs_ioctl+0x6e2/0x19b0 fs/ioctl.c:47
- ksys_ioctl fs/ioctl.c:749 [inline]
- __do_sys_ioctl fs/ioctl.c:756 [inline]
- __se_sys_ioctl fs/ioctl.c:754 [inline]
- __x64_sys_ioctl+0xe3/0x120 fs/ioctl.c:754
- do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x446d49
-Code: e8 0c e8 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 5b 07 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fc010171db8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00000000006dbc48 RCX: 0000000000446d49
-RDX: 0000000020000000 RSI: 0000000000004601 RDI: 0000000000000004
-RBP: 00000000006dbc40 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc4c
-R13: 00007ffc8ab7313f R14: 00007fc0101729c0 R15: 0000000000000001
+I still don't see what we gain from applying this patch.  Once eVMCS is
+enabled by userspace, which presumably happens before the guest is launched,
+the guest will see the eVMCS-unfriendly controls as being unsupported, both
+for eVMCS and regular VMCS.  AFAICT, we're adding a fairly ugly hack to KVM
+just so that KVM can lie to userspace about what controls will be exposed to
+the guest.
 
-Allocated by task 9034:
- save_stack mm/kasan/common.c:72 [inline]
- set_track mm/kasan/common.c:80 [inline]
- __kasan_kmalloc+0x118/0x1c0 mm/kasan/common.c:513
- kasan_kmalloc+0x9/0x10 mm/kasan/common.c:527
- __do_kmalloc mm/slab.c:3656 [inline]
- __kmalloc+0x254/0x340 mm/slab.c:3665
- kmalloc include/linux/slab.h:561 [inline]
- kzalloc+0x21/0x40 include/linux/slab.h:670
- vc_do_resize+0x2af/0x1af0 drivers/tty/vt/vt.c:1187
- vc_resize+0x4f/0x60 drivers/tty/vt/vt.c:1304
- fbcon_modechanged+0x701/0xdf0 drivers/video/fbdev/core/fbcon.c:2980
- fbcon_update_vcs+0x31/0x40 drivers/video/fbdev/core/fbcon.c:3038
- fb_set_var+0x8f5/0xdc0 drivers/video/fbdev/core/fbmem.c:1051
- fbcon_resize+0x819/0x11f0 drivers/video/fbdev/core/fbcon.c:2222
- resize_screen drivers/tty/vt/vt.c:1126 [inline]
- vc_do_resize+0x478/0x1af0 drivers/tty/vt/vt.c:1205
- vc_resize+0x4f/0x60 drivers/tty/vt/vt.c:1304
- fbcon_modechanged+0x701/0xdf0 drivers/video/fbdev/core/fbcon.c:2980
- fbcon_update_vcs+0x31/0x40 drivers/video/fbdev/core/fbcon.c:3038
- fb_set_var+0x8f5/0xdc0 drivers/video/fbdev/core/fbmem.c:1051
- do_fb_ioctl+0x55e/0x780 drivers/video/fbdev/core/fbmem.c:1104
- fb_ioctl+0xb9/0xf0 drivers/video/fbdev/core/fbmem.c:1180
- do_vfs_ioctl+0x6e2/0x19b0 fs/ioctl.c:47
- ksys_ioctl fs/ioctl.c:749 [inline]
- __do_sys_ioctl fs/ioctl.c:756 [inline]
- __se_sys_ioctl fs/ioctl.c:754 [inline]
- __x64_sys_ioctl+0xe3/0x120 fs/ioctl.c:754
- do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Can we extend the API to use cap->args[1] to control whether or not the
+unsupported controls are removed from vmx->nested.msrs?  Userspace could
+pass '1' to leave the controls untouched and then surgically hide the
+controls that the guest is too dumb to know it shouldn't use by writing the
+appropriate MSRs.  Assuming existing userspace is expected/required to zero
+out args[1..3], this would be fully backwards compatible.
 
-Freed by task 8579:
- save_stack mm/kasan/common.c:72 [inline]
- set_track mm/kasan/common.c:80 [inline]
- kasan_set_free_info mm/kasan/common.c:335 [inline]
- __kasan_slab_free+0x12e/0x1e0 mm/kasan/common.c:474
- kasan_slab_free+0xe/0x10 mm/kasan/common.c:483
- __cache_free mm/slab.c:3426 [inline]
- kfree+0x10d/0x220 mm/slab.c:3757
- load_elf_binary+0x2c82/0x36d0 fs/binfmt_elf.c:1085
- search_binary_handler+0x190/0x5e0 fs/exec.c:1658
- exec_binprm fs/exec.c:1701 [inline]
- __do_execve_file+0x1565/0x1cc0 fs/exec.c:1821
- do_execveat_common fs/exec.c:1867 [inline]
- do_execve fs/exec.c:1884 [inline]
- __do_sys_execve fs/exec.c:1960 [inline]
- __se_sys_execve fs/exec.c:1955 [inline]
- __x64_sys_execve+0x94/0xb0 fs/exec.c:1955
- do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-The buggy address belongs to the object at ffff888095d34400
- which belongs to the cache kmalloc-512 of size 512
-The buggy address is located 320 bytes inside of
- 512-byte region [ffff888095d34400, ffff888095d34600)
-The buggy address belongs to the page:
-page:ffffea0002574d00 refcount:1 mapcount:0 mapping:ffff8880aa800a80 index:0x0
-raw: 00fffe0000000200 ffffea0002741f88 ffffea0002846a48 ffff8880aa800a80
-raw: 0000000000000000 ffff888095d34000 0000000100000004 0000000000000000
-page dumped because: kasan: bad access detected
+diff --git a/arch/x86/kvm/vmx/evmcs.c b/arch/x86/kvm/vmx/evmcs.c
+index 72359709cdc1..241a769be738 100644
+--- a/arch/x86/kvm/vmx/evmcs.c
++++ b/arch/x86/kvm/vmx/evmcs.c
+@@ -346,8 +346,8 @@ uint16_t nested_get_evmcs_version(struct kvm_vcpu *vcpu)
+        return 0;
+ }
 
-Memory state around the buggy address:
- ffff888095d34480: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffff888095d34500: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->ffff888095d34580: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-                   ^
- ffff888095d34600: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff888095d34680: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-==================================================================
+-int nested_enable_evmcs(struct kvm_vcpu *vcpu,
+-                       uint16_t *vmcs_version)
++int nested_enable_evmcs(struct kvm_vcpu *vcpu, uint16_t *vmcs_version,
++                       bool allow_unsupported_controls)
+ {
+        struct vcpu_vmx *vmx = to_vmx(vcpu);
+        bool evmcs_already_enabled = vmx->nested.enlightened_vmcs_enabled;
+@@ -358,7 +358,7 @@ int nested_enable_evmcs(struct kvm_vcpu *vcpu,
+                *vmcs_version = nested_get_evmcs_version(vcpu);
 
+        /* We don't support disabling the feature for simplicity. */
+-       if (evmcs_already_enabled)
++       if (evmcs_already_enabled || allow_unsupported_controls)
+                return 0;
+
+        vmx->nested.msrs.pinbased_ctls_high &= ~EVMCS1_UNSUPPORTED_PINCTRL;
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 0cccc52e2d0a..5e1b8d51277b 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -4005,7 +4005,8 @@ static int kvm_vcpu_ioctl_enable_cap(struct kvm_vcpu *vcpu,
+        case KVM_CAP_HYPERV_ENLIGHTENED_VMCS:
+                if (!kvm_x86_ops->nested_enable_evmcs)
+                        return -ENOTTY;
+-               r = kvm_x86_ops->nested_enable_evmcs(vcpu, &vmcs_version);
++               r = kvm_x86_ops->nested_enable_evmcs(vcpu, &vmcs_version,
++                                                    cap->args[1]);
+                if (!r) {
+                        user_ptr = (void __user *)(uintptr_t)cap->args[0];
+                        if (copy_to_user(user_ptr, &vmcs_version,
