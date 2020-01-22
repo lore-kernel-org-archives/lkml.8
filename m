@@ -2,98 +2,135 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C5FC32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 07:42:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94481C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 07:43:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF50924655
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 07:42:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6555124655
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 07:43:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579679027;
+	bh=/whmBYaC4rMnY2P9A7GfcDIpf7X1/9zZdmRFzlm610M=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=aWQETf4BMbKInEVOpUaVI9zS9YCAmHLaQ/FF4qzETtrEEx5mQKYDSF5mMHkpOXrhv
+	 yYzEBSCU8qAPTv7MxmCHKx41eA6l7WY5bM124DxkovsNbxNCfwMc+WvKeoqoRwY4UQ
+	 l+kyDEbSyXSHtwiGp9tHVK/ZwbwXCTLAVo8+Zg8g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728904AbgAVHmV (ORCPT
+        id S1728912AbgAVHnq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 02:42:21 -0500
-Received: from [167.172.186.51] ([167.172.186.51]:37734 "EHLO shell.v3.sk"
-        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725883AbgAVHmU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 02:42:20 -0500
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id F263EDF340;
-        Wed, 22 Jan 2020 07:42:27 +0000 (UTC)
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id JD6AL0fXdQgw; Wed, 22 Jan 2020 07:42:27 +0000 (UTC)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 593E1DFD93;
-        Wed, 22 Jan 2020 07:42:27 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at zimbra.v3.sk
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id jJ2e1UJDIMu1; Wed, 22 Jan 2020 07:42:27 +0000 (UTC)
-Received: from localhost (unknown [109.183.109.54])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id E5E38DF340;
-        Wed, 22 Jan 2020 07:42:26 +0000 (UTC)
-Date:   Wed, 22 Jan 2020 08:42:15 +0100
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Aditya Pakki <pakki001@umn.edu>
-Cc:     kjlu@umn.edu, Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Juergen Gross <jgross@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Allison Randal <allison@lohutok.net>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/platform/olpc: Fix the error handling of
- memblock_alloc failure
-Message-ID: <20200122074215.GA178804@furthur.local>
-References: <20200121232818.28018-1-pakki001@umn.edu>
+        Wed, 22 Jan 2020 02:43:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60462 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725883AbgAVHnq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 02:43:46 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C8A524655;
+        Wed, 22 Jan 2020 07:43:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579679025;
+        bh=/whmBYaC4rMnY2P9A7GfcDIpf7X1/9zZdmRFzlm610M=;
+        h=Date:From:To:Cc:Subject:From;
+        b=yb6xsOrGMvzG3Ptwiwt/om1+S/5rfFSIWAUUR4f6pNNliLpiYvtmiXhWU584zGew/
+         jYUHjCUYcFNzB1fHhY7G2jxFpxnPyiAa7+YfKOgXKE8FY4k/MDosdiCM9UBrEMua3s
+         GMvEFqwbJY+50BUM2pyEYrGCIcdNe8TSu1o3ixa8=
+Date:   Wed, 22 Jan 2020 08:43:43 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jason Baron <jbaron@akamai.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com
+Subject: [PATCH] dynamic_debug: allow to work if debugfs is disabled
+Message-ID: <20200122074343.GA2099098@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200121232818.28018-1-pakki001@umn.edu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 05:28:16PM -0600, Aditya Pakki wrote:
-> In case of an error in memblock_alloc, the code calls both panic and
-> BUG_ON. Revert the error handling to BUG_ON.
-> 
-> Fixes: 8a7f97b902f4 (add checks for the return value of memblock_alloc*())
-> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+With the realization that having debugfs enabled on "production" systems is
+generally not a good idea, debugfs is being disabled from more and more
+platforms over time.  However, the functionality of dynamic debugging still is
+needed at times, and since it relies on debugfs for its user api, having
+debugfs disabled also forces dynamic debug to be disabled.
 
-Reviewed-by: Lubomir Rintel <lkundrak@v3.sk>
+To get around this, move the "control" file for dynamic_debug to procfs IFF
+debugfs is disabled.  This lets people turn on debugging as needed at runtime
+for individual driverfs and subsystems.
 
-Thank you
-Lubo
+Reported-by: many different companies
+Cc: Jason Baron <jbaron@akamai.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ .../admin-guide/dynamic-debug-howto.rst         |  3 +++
+ lib/Kconfig.debug                               |  2 +-
+ lib/dynamic_debug.c                             | 17 ++++++++++++++---
+ 3 files changed, 18 insertions(+), 4 deletions(-)
 
-> ---
->  arch/x86/platform/olpc/olpc_dt.c | 3 ---
->  1 file changed, 3 deletions(-)
-> 
-> diff --git a/arch/x86/platform/olpc/olpc_dt.c b/arch/x86/platform/olpc/olpc_dt.c
-> index 26d1f6693789..92d5ce1232ab 100644
-> --- a/arch/x86/platform/olpc/olpc_dt.c
-> +++ b/arch/x86/platform/olpc/olpc_dt.c
-> @@ -137,9 +137,6 @@ void * __init prom_early_alloc(unsigned long size)
->  		 * wasted bootmem) and hand off chunks of it to callers.
->  		 */
->  		res = memblock_alloc(chunk_size, SMP_CACHE_BYTES);
-> -		if (!res)
-> -			panic("%s: Failed to allocate %zu bytes\n", __func__,
-> -			      chunk_size);
->  		BUG_ON(!res);
->  		prom_early_allocated += chunk_size;
->  		memset(res, 0, chunk_size);
-> -- 
-> 2.20.1
-> 
+diff --git a/Documentation/admin-guide/dynamic-debug-howto.rst b/Documentation/admin-guide/dynamic-debug-howto.rst
+index 252e5ef324e5..41f43a373a6a 100644
+--- a/Documentation/admin-guide/dynamic-debug-howto.rst
++++ b/Documentation/admin-guide/dynamic-debug-howto.rst
+@@ -54,6 +54,9 @@ If you make a mistake with the syntax, the write will fail thus::
+ 				<debugfs>/dynamic_debug/control
+   -bash: echo: write error: Invalid argument
+ 
++Note, for systems without 'debugfs' enabled, the control file can be
++also found in ``/proc/dynamic_debug/control``.
++
+ Viewing Dynamic Debug Behaviour
+ ===============================
+ 
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 5ffe144c9794..01d4add8b963 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -98,7 +98,7 @@ config DYNAMIC_DEBUG
+ 	bool "Enable dynamic printk() support"
+ 	default n
+ 	depends on PRINTK
+-	depends on DEBUG_FS
++	depends on (DEBUG_FS || PROC_FS)
+ 	help
+ 
+ 	  Compiles debug level messages into the kernel, which would not
+diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
+index c60409138e13..077b2d6623ac 100644
+--- a/lib/dynamic_debug.c
++++ b/lib/dynamic_debug.c
+@@ -993,13 +993,24 @@ static __initdata int ddebug_init_success;
+ 
+ static int __init dynamic_debug_init_debugfs(void)
+ {
+-	struct dentry *dir;
++	struct dentry *debugfs_dir;
++	struct proc_dir_entry *procfs_dir;
+ 
+ 	if (!ddebug_init_success)
+ 		return -ENODEV;
+ 
+-	dir = debugfs_create_dir("dynamic_debug", NULL);
+-	debugfs_create_file("control", 0644, dir, NULL, &ddebug_proc_fops);
++	/* Create the control file in debugfs if it is enabled */
++	if (debugfs_initialized) {
++		debugfs_dir = debugfs_create_dir("dynamic_debug", NULL);
++		debugfs_create_file("control", 0644, debugfs_dir, NULL,
++				    &ddebug_proc_fops);
++		return 0;
++	}
++
++	/* No debugfs so put it in procfs instead */
++	procfs_dir = proc_mkdir("dynamic_debug", NULL);
++	if (procfs_dir)
++		proc_create("control", 0x644, procfs_dir, &ddebug_proc_fops);
+ 
+ 	return 0;
+ }
+-- 
+2.25.0
+
