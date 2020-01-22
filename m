@@ -2,118 +2,83 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA32C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5574C33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0142D24685
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:12:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579698778;
-	bh=rF36Oz7wXrvLS/QAc8njrTJvSrYg9SsTB5g+8LbuheA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=dT0OTMCDV5hPR4hCB51eBetkeu6iqHZ1Rn0OicY6hTZ8G5LO20sVqqLsU8vtiCxN4
-	 azpVaPiN6xG5lqQQOphzjNj8V3KhWhyShxfFNxVd97FU+8EyxvcqZjKwvyvoJm3DbA
-	 7YOGhJ/MA1SruC5xCScEXP0dzko0wB76E6E7ujSo=
+	by mail.kernel.org (Postfix) with ESMTP id 7B3C620678
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:13:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729165AbgAVNM5 (ORCPT
+        id S1729199AbgAVNNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:12:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59898 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 08:13:23 -0500
+Received: from sauhun.de ([88.99.104.3]:40682 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727022AbgAVNM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:12:57 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8585B20678;
-        Wed, 22 Jan 2020 13:12:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579698776;
-        bh=rF36Oz7wXrvLS/QAc8njrTJvSrYg9SsTB5g+8LbuheA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=LZC22PoSaj/z5pRc6iN1xz6R0PhJMSUaC9G+vHh3R1q1i31rZRmlNd26EvmG8YbT+
-         KQlSs1Wux++EWx0OR5ypDezuXdhpFHiAr9BThDa/CwiA5qR56fvkViSL7nRHNtLAjC
-         fjoVvVN7PinQsm1wfBu/t0uPvgWpuQF6uTWJFMC8=
-Date:   Wed, 22 Jan 2020 22:12:40 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>, paulmck@kernel.org,
-        joel@joelfernandes.org,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
-Subject: Re: [RFT PATCH 04/13] kprobes: Make optimizer delay to 1 second
-Message-Id: <20200122221240.cef447446785f46862fee97a@kernel.org>
-In-Reply-To: <20200122071115.28e3c763@gandalf.local.home>
-References: <157918584866.29301.6941815715391411338.stgit@devnote2>
-        <157918589199.29301.4419459150054220408.stgit@devnote2>
-        <20200121192905.0f001c61@gandalf.local.home>
-        <20200122162317.0299cf722dd618147d97e89c@kernel.org>
-        <20200122071115.28e3c763@gandalf.local.home>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1726204AbgAVNNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:13:23 -0500
+Received: from localhost (p54B33378.dip0.t-ipconnect.de [84.179.51.120])
+        by pokefinder.org (Postfix) with ESMTPSA id B256B2C0713;
+        Wed, 22 Jan 2020 14:13:20 +0100 (CET)
+Date:   Wed, 22 Jan 2020 14:13:20 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Rishi Gupta <gupt21@gmail.com>
+Cc:     jikos@kernel.org, benjamin.tissoires@redhat.com,
+        wsa+renesas@sang-engineering.com, gregkh@linuxfoundation.org,
+        linux-i2c@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] HID: mcp2221: add usb to i2c-smbus host bridge driver
+Message-ID: <20200122131320.GA20984@ninjato>
+References: <1579581860-29560-1-git-send-email-gupt21@gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="3MwIy2ne0vdjdPXF"
+Content-Disposition: inline
+In-Reply-To: <1579581860-29560-1-git-send-email-gupt21@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Jan 2020 07:11:15 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> On Wed, 22 Jan 2020 16:23:17 +0900
-> Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> 
-> > On Tue, 21 Jan 2020 19:29:05 -0500
-> > Steven Rostedt <rostedt@goodmis.org> wrote:
-> > 
-> > > On Thu, 16 Jan 2020 23:44:52 +0900
-> > > Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> > >   
-> > > > Since the 5 jiffies delay for the optimizer is too
-> > > > short to wait for other probes, make it longer,
-> > > > like 1 second.  
-> > > 
-> > > Hi Masami,
-> > > 
-> > > Can you explain more *why* 5 jiffies is too short.  
-> > 
-> > Yes, I had introduced this 5 jiffies delay for multiple probe registration
-> > and unregistration like systemtap, which will use array-based interface to
-> > register/unregister. In that case, 5 jiffies will be enough for the delay
-> > to wait for other kprobe registration/unregsitration.
-> > 
-> > However, since perf and ftrace register/unregister probes one-by-one with
-> > RCU synchronization interval, the optimizer will be started before
-> > finishing to register/unregister all probes.
-> > And the optimizer locks kprobe_mutex a while -- RCU-tasks synchronization.
-> > Since the kprobe_mutex is also involved in disabling kprobes, this also
-> > stops probe-event disabling.
-> > 
-> > Maybe 5 jiffies is enough for adding/removing a few probe events, but
-> > not enough for dozens of probe events.
-> > 
-> 
-> Perhaps we should have a mechanism that can detect new probes being
-> added, and just continue to delay the optimization, instead of having
-> some arbitrary delay.
+--3MwIy2ne0vdjdPXF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yes, that is what [03/13] does :) 
-Anyway, it seems that the RCU-synchronization takes more than 5 jiffies.
-And in that case, [03/13] still doesn't work. That's why I added this patch
-after that.
+On Tue, Jan 21, 2020 at 10:14:20AM +0530, Rishi Gupta wrote:
+> MCP2221 is a USB HID to I2C/SMbus host bridge device. This
+> commit implements i2c and smbus host adapter support. 7-bit
+> address and i2c multi-message transaction is also supported.
+>=20
+> Signed-off-by: Rishi Gupta <gupt21@gmail.com>
 
-Thank you,
+My main concern is there are quite some limitations in mcp_i2c_xfer().
+Looking at them, I think we should just drop it. This seems to be an
+SMBus controller, not I2C. Or?
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+
+--3MwIy2ne0vdjdPXF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl4oSmwACgkQFA3kzBSg
+KbYUUQ//QRTq13acJjQ3rK7tv03qoLYBTDze3sLkt3dr/yc6ZTQAlXxHGEWdCAzE
+zGI4hOu0rpLt+Rm1KQsQo/FDgU7fy4BXSi9oe5zr5TPRctWVAV3MpcqRq0CIRDwP
+TcQ7QsXawtCRtwhlOOVzYMqK8DOkeXQncs0qT3ilqpruBA5gbmJanMyVpNU9hQMG
+i9fYTdYNBgnydG7TqvCA5Vn2hOQuwIJjt/vNFhDu5dum9koKe+K3P1Ns7TtqeCcA
+xB4YL0eQydWNrS0U0nKQoT8L7cwWOwQEa6Nk6zKLIsKRLFbYdQu0KpEBi+KEmzCC
+jXHL9B221rG6fvgDp0VaPCRrQzdexgu2tIAH2TQHVReK9+wZOFVIvz135Y3lj3sR
+TcORLIPjziA62yQwTWA839liZEYlAAyEcwOUL0U7w7TYMu49SJ0o79nj+Skw3kUt
+SwSqq9LLlWO7UJ09omKhikj3zgfBGz7e9V4dCUqZLcSntGEK3yDZBFqXwKGqT3sd
+GiAEZu6zocdiZxX5CdUQhJQmUMJHNqD/xYTS6PqKwIu/Kg9jffUgwylV+j4Pmbv5
+m/cetIceeRk3DXZ2RUCt0KZBg0UrwueiuBYetiETINRkgDlzNI9FjHYJROFN61ph
+ux8Dp4L2SaGrwScrrH+2fiQdpl3RBDNYG7L1ssJCLjXN6pW6jvI=
+=hhi+
+-----END PGP SIGNATURE-----
+
+--3MwIy2ne0vdjdPXF--
