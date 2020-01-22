@@ -2,52 +2,52 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB4EC32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 03:33:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B40C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 03:46:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA95B207E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 03:33:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1F8721835
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 03:46:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729138AbgAVDd5 (ORCPT
+        id S1729121AbgAVDq3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 22:33:57 -0500
-Received: from foss.arm.com ([217.140.110.172]:50860 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727141AbgAVDd4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 22:33:56 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2CD1C30E;
-        Tue, 21 Jan 2020 19:33:56 -0800 (PST)
-Received: from [10.163.1.202] (unknown [10.163.1.202])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 27E263F6C4;
-        Tue, 21 Jan 2020 19:33:42 -0800 (PST)
-Subject: Re: [PATCH V12 0/2] arm64/mm: Enable memory hot remove
+        Tue, 21 Jan 2020 22:46:29 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:51782 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728900AbgAVDq3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 22:46:29 -0500
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 6BF011888F5AB7914759;
+        Wed, 22 Jan 2020 11:46:27 +0800 (CST)
+Received: from [127.0.0.1] (10.173.221.31) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Wed, 22 Jan 2020
+ 11:46:18 +0800
+Subject: Re: [PATCH] arm64: mm: support setting page attributes for debug
+ situation
 To:     Will Deacon <will@kernel.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
-        catalin.marinas@arm.com, mark.rutland@arm.com, david@redhat.com,
-        cai@lca.pw, logang@deltatee.com, cpandya@codeaurora.org,
-        arunks@codeaurora.org, dan.j.williams@intel.com,
-        mgorman@techsingularity.net, osalvador@suse.de,
-        ard.biesheuvel@arm.com, steve.capper@arm.com, broonie@kernel.org,
-        valentin.schneider@arm.com, Robin.Murphy@arm.com,
-        steven.price@arm.com, suzuki.poulose@arm.com, ira.weiny@intel.com
-References: <1579157135-10360-1-git-send-email-anshuman.khandual@arm.com>
- <20200121151822.GA13306@willie-the-truck>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <3cbdc6f9-093d-975e-f960-68c274aa75a1@arm.com>
-Date:   Wed, 22 Jan 2020 09:05:03 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+CC:     <catalin.marinas@arm.com>, <anshuman.khandual@arm.com>,
+        <akpm@linux-foundation.org>, <willy@infradead.org>,
+        <ard.biesheuvel@arm.com>, <tglx@linutronix.de>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <hushiyuan@huawei.com>,
+        <linfeilong@huawei.com>
+References: <5a3ab728-b895-0930-9540-5e9c586e8858@huawei.com>
+ <20200116110914.GA16345@willie-the-truck>
+From:   Yunfeng Ye <yeyunfeng@huawei.com>
+Message-ID: <cc61e0d5-b1cb-51b4-8d33-5a339fe59f1b@huawei.com>
+Date:   Wed, 22 Jan 2020 11:46:06 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20200121151822.GA13306@willie-the-truck>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200116110914.GA16345@willie-the-truck>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.221.31]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -55,30 +55,28 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 01/21/2020 08:48 PM, Will Deacon wrote:
-> On Thu, Jan 16, 2020 at 12:15:33PM +0530, Anshuman Khandual wrote:
->> This series enables memory hot remove functionality on arm64 platform. This
->> is based on Linux 5.5-rc6 and particularly deals with a problem caused when
->> boot memory is attempted to be removed.
-
-Hello Will,
-
+On 2020/1/16 19:09, Will Deacon wrote:
+> On Fri, Jan 10, 2020 at 03:47:41PM +0800, yeyunfeng wrote:
+>> When rodata_full is set or pagealloc debug is enabled, block mappings or
+>> contiguou hints are no longer used for linear address area. Therefore,
+>> support setting page attributes in this case is useful for debugging
+>> memory corruption problems.
+>>
+>> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+>> ---
+>>  arch/arm64/mm/pageattr.c | 18 ++++++++++++++----
+>>  1 file changed, 14 insertions(+), 4 deletions(-)
 > 
-> Unfortunately, this results in a conflict with mainline since the arm64
-> -next branches are based on -rc3 and there was a fix merged after that
-> (feee6b298916 ("mm/memory_hotplug: shrink zones when offlining memory"))
-> which changes the type of __remove_pages().
-
-Right, that fix went in last couple of weeks.
-
+> Although I can kind of see what you're getting at, I'm not keen on merging
+> this without a user. If you're just referring to random debug hacks, then I
+> think this change could be part of those too.
 > 
-> So I think I'll leave this for 5.7.
+Ok, thanks, I think when pagealloc debug is enabled, it is better not limited
+to the vmap area only. and when kernel memory corruption problems happen, it's
+useful to call set_memory_ro() function to debug these problem.
 
-Just wondering if there is any chance this can still make it to 5.6
-or its already too late ?
-
-> 
 > Will
 > 
+> .
+> 
 
-- Anshuman
