@@ -2,167 +2,111 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D442C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE1CC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D3A52465A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:14:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62BB32465B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:15:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbgAVSO2 (ORCPT
+        id S1728609AbgAVSO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 13:14:28 -0500
-Received: from foss.arm.com ([217.140.110.172]:59402 "EHLO foss.arm.com"
+        Wed, 22 Jan 2020 13:14:59 -0500
+Received: from mga05.intel.com ([192.55.52.43]:59306 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725802AbgAVSO1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 13:14:27 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2582E1FB;
-        Wed, 22 Jan 2020 10:14:27 -0800 (PST)
-Received: from [10.1.195.43] (e107049-lin.cambridge.arm.com [10.1.195.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D0D3B3F6C4;
-        Wed, 22 Jan 2020 10:14:25 -0800 (PST)
-Subject: Re: [RFC PATCH v4 0/6] sched/cpufreq: Make schedutil energy aware
-To:     linux-kernel@vger.kernel.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org
-Cc:     dietmar.eggemann@arm.com, qperret@google.com,
-        linux-pm@vger.kernel.org
-References: <20200122173538.1142069-1-douglas.raillard@arm.com>
-From:   Douglas Raillard <douglas.raillard@arm.com>
-Organization: ARM
-Message-ID: <c49ca012-bb3e-580d-9b45-359caa67d7c1@arm.com>
-Date:   Wed, 22 Jan 2020 18:14:24 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        id S1725802AbgAVSO7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 13:14:59 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jan 2020 10:14:58 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,350,1574150400"; 
+   d="scan'208";a="229442235"
+Received: from ray.jf.intel.com (HELO [10.7.201.139]) ([10.7.201.139])
+  by orsmga006.jf.intel.com with ESMTP; 22 Jan 2020 10:14:58 -0800
+Subject: Re: [PATCH 0/3] [RFC] x86: start the MPX removal process
+To:     Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, luto@kernel.org
+References: <20190705175317.1B3C9C52@viggo.jf.intel.com>
+ <20200122130913.GA20584@zn.tnic>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <26980d2a-def2-6069-1687-5066f90eb749@intel.com>
+Date:   Wed, 22 Jan 2020 10:14:58 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200122173538.1142069-1-douglas.raillard@arm.com>
+In-Reply-To: <20200122130913.GA20584@zn.tnic>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB-large
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
+On 1/22/20 5:09 AM, Borislav Petkov wrote:
+> On Fri, Jul 05, 2019 at 10:53:17AM -0700, Dave Hansen wrote:
+>> This series is also available here, and will get some additional 0day
+>> testing to ensure no funkiness:
+>>
+>> 	git://git.kernel.org/pub/scm/linux/kernel/git/daveh/x86-mpx.git mpx-remove-201907
+>>
+>> While there's no rocket science in here, this is probably not ready
+>> to be pulled until 0day has the weekend to churn on it.
+> And whoops, half a year passed. :-)
+> > Should we try removing it again? This time I won't stop until it's gone.
 
-Since the v3 was posted a while ago, here is a short recap of the hanging
-comments:
+Here's an updated tree:
 
-* The boost margin was relative, but we came to the conclusion it would make
-  more sense to make it absolute (done in that v4).
+https://git.kernel.org/pub/scm/linux/kernel/git/daveh/x86-mpx.git/log/?h=mpx-remove-202001
 
-* The main remaining blur point was why defining boost=(util - util_est) makes
-  sense. The justification for that is that we use PELT-shaped signal to drive
-  the frequency, so using a PELT-shaped signal for the boost makes sense for the
-  same reasons.
-
-AFAIK there is no specific criteria to meet for frequency selection signal shape
-for anything else than periodic tasks (if we don't add other constraints on
-top), so (util - util_est)=(util - constant) seems as good as anything else.
-Especially since util is deemed to be a good fit in practice for frequency
-selection. Let me know if I missed anything on that front.
-
-
-v3 thread: https://lore.kernel.org/lkml/20191011134500.235736-1-douglas.raillard@arm.com/
-
-Cheers,
-Douglas
-
-On 1/22/20 5:35 PM, Douglas RAILLARD wrote:
-> Make schedutil cpufreq governor energy-aware.
-> 
-> - patch 1 introduces a function to retrieve a frequency given a base
->   frequency and an energy cost margin.
-> - patch 2 links Energy Model perf_domain to sugov_policy.
-> - patch 3 updates get_next_freq() to make use of the Energy Model.
-> - patch 4 adds sugov_cpu_ramp_boost() function.
-> - patch 5 updates sugov_update_(single|shared)() to make use of
->   sugov_cpu_ramp_boost().
-> - patch 6 introduces a tracepoint in get_next_freq() for
->   testing/debugging. Since it's not a trace event, it's not exposed to
->   userspace in a directly usable way, allowing for painless future
->   updates/removal.
-> 
-> The benefits of using the EM in schedutil are twofold:
-> 
-> 1) Selecting the highest possible frequency for a given cost. Some
->    platforms can have lower frequencies that are less efficient than
->    higher ones, in which case they should be skipped for most purposes.
->    They can still be useful to give more freedom to thermal throttling
->    mechanisms, but not under normal circumstances.
->    note: the EM framework will warn about such OPPs "hertz/watts ratio
->    non-monotonically decreasing"
-> 
-> 2) Driving the frequency selection with power in mind, in addition to
->    maximizing the utilization of the non-idle CPUs in the system.
-> 
-> Point 1) is implemented in "PM: Introduce em_pd_get_higher_freq()" and
-> enabled in schedutil by
-> "sched/cpufreq: Hook em_pd_get_higher_power() into get_next_freq()".
-> 
-> Point 2) is enabled in
-> "sched/cpufreq: Boost schedutil frequency ramp up". It allows using
-> higher frequencies when it is known that the true utilization of
-> currently running tasks is exceeding their previous stable point.
-> The benefits are:
-> 
-> * Boosting the frequency when the behavior of a runnable task changes,
->   leading to an increase in utilization. That shortens the frequency
->   ramp up duration, which in turns allows the utilization signal to
->   reach stable values quicker.  Since the allowed frequency boost is
->   bounded in energy, it will behave consistently across platforms,
->   regardless of the OPP cost range.
-> 
-> * The boost is only transient, and should not impact a lot the energy
->   consumed of workloads with very stable utilization signals.
-> 
-> This has been ligthly tested with a rtapp task ramping from 10% to 75%
-> utilisation on a big core.
-> 
-> v1 -> v2:
-> 
->   * Split the new sugov_cpu_ramp_boost() from the existing
->     sugov_cpu_is_busy() as they seem to seek a different goal.
-> 
->   * Implement sugov_cpu_ramp_boost() based on CFS util_avg and
->     util_est_enqueued signals, rather than using idle calls count.
->     This makes the ramp boost much more accurate in finding boost
->     opportunities, and give a "continuous" output rather than a boolean.
-> 
->   * Add EM_COST_MARGIN_SCALE=1024 to represent the
->     margin values of em_pd_get_higher_freq().
-> 
-> v2 -> v3:
-> 
->   * Check util_avg >= sg_cpu->util_avg in sugov_cpu_ramp_boost_update()
->     to avoid boosting when the utilization is decreasing.
-> 
->   * Add a tracepoint for testing. 
-> 
-> v3 -> v4:
-> 
->   * em_pd_get_higher_freq() now interprets the margin as absolute,
->     rather than relative to the cost of the base frequency.
-> 
->   * Modify misleading comment in em_pd_get_higher_freq() since min_freq
->     can actually be higher than the max available frequency in normal
->     operations.
-> 
-> Douglas RAILLARD (6):
->   PM: Introduce em_pd_get_higher_freq()
->   sched/cpufreq: Attach perf domain to sugov policy
->   sched/cpufreq: Hook em_pd_get_higher_power() into get_next_freq()
->   sched/cpufreq: Introduce sugov_cpu_ramp_boost
->   sched/cpufreq: Boost schedutil frequency ramp up
->   sched/cpufreq: Add schedutil_em_tp tracepoint
-> 
->  include/linux/energy_model.h     |  56 ++++++++++++++
->  include/trace/events/power.h     |   9 +++
->  kernel/sched/cpufreq_schedutil.c | 124 +++++++++++++++++++++++++++++--
->  3 files changed, 182 insertions(+), 7 deletions(-)
-> 
+Very lightly tested.
