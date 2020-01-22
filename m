@@ -4,55 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E30C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD61C33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:40:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 259B924684
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:40:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A14D24687
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:40:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686016;
-	bh=6peGELComVwPJobIqCDWWvnmKmDPtlCrb3OFIpVkbPg=;
+	s=default; t=1579686020;
+	bh=uekGNvBbb8iL4au83+tOTlq3z6PxAJJO3z4muAo2nhk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TxFpF1MsZ9kF9qpNc/KKEIquqHfStQdZOm1IkQuj0B7hZSAfwllPgpNWDAc4dirYf
-	 K68eRZkK5eqvN6aQcVGuMVij0DFs/G558v3TxY2t0EbZ8wmgCDwskJBM2zSaMOPoaC
-	 imqMfAm9c53QhSmy3+7IgMX8rHvViAIQYgbKI8rM=
+	b=k18ziiLDeR5UHu5HyJOlXb9lW5yu0AGEKsItovbw0G+un4lbGl7VEYw10O1MSsEnD
+	 Xi4uu4UEBkeTf7AP6DaTMUIJDqRPYz0aKl+eJ84VjNWzRJqLOdhZmiBauPqmRmf0F2
+	 4uyfITvX/5NC98vXSp3fOq6zzAPyK3Uh2FOP55x4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731399AbgAVJkP (ORCPT
+        id S2387438AbgAVJkT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:40:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58752 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:40:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732879AbgAVJkK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:40:10 -0500
+        id S2387426AbgAVJkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:40:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1AE524686;
-        Wed, 22 Jan 2020 09:40:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 620CB24687;
+        Wed, 22 Jan 2020 09:40:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686009;
-        bh=6peGELComVwPJobIqCDWWvnmKmDPtlCrb3OFIpVkbPg=;
+        s=default; t=1579686011;
+        bh=uekGNvBbb8iL4au83+tOTlq3z6PxAJJO3z4muAo2nhk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EIefOkZaC+qqRYB4NLF94tbvQWbpLbCnS1PUZW/V6y2TZgovw/b15oKggxNE8GbJp
-         9zrAwtth7mVwSIc9IQAWPkuUQUGIf9dV9r98/lRfFmwZW8MEHj2ojXDW6FatrRiWXi
-         2fjyIkM42bfDdbEZ1puKjX5elTXh9DtIPqZvyX1g=
+        b=tMCSW/W0zv2jUoVr/vNIO7bPW9t9aMKsNrdQM6SA+l+alTX94ZRdJWUy5EJsw5pcv
+         wwl/F+bubdrE0CjD0QhYbvfcBeNtN+El9TS30coS7oj4aK8biN54LRjb98vQ9P7zq2
+         aGs3IP4tH13+8bebTqk67cXJwf80Cqn5wA1DR0oQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        "Willhalm, Thomas" <thomas.willhalm@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Bruggeman, Otto G" <otto.g.bruggeman@intel.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.vnet.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 26/65] mm/shmem.c: thp, shmem: fix conflict of above-47bit hint address and PMD alignment
-Date:   Wed, 22 Jan 2020 10:29:11 +0100
-Message-Id: <20200122092754.541271857@linuxfoundation.org>
+        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.14 65/65] regulator: ab8500: Remove SYSCLKREQ from enum ab8505_regulator_id
+Date:   Wed, 22 Jan 2020 10:29:50 +0100
+Message-Id: <20200122092801.461725060@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092750.976732974@linuxfoundation.org>
 References: <20200122092750.976732974@linuxfoundation.org>
@@ -65,74 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kirill A. Shutemov <kirill@shutemov.name>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-commit 991589974d9c9ecb24ee3799ec8c415c730598a2 upstream.
+commit 458ea3ad033fc86e291712ce50cbe60c3428cf30 upstream.
 
-Shmem/tmpfs tries to provide THP-friendly mappings if huge pages are
-enabled.  But it doesn't work well with above-47bit hint address.
+Those regulators are not actually supported by the AB8500 regulator
+driver. There is no ab8500_regulator_info for them and no entry in
+ab8505_regulator_match.
 
-Normally, the kernel doesn't create userspace mappings above 47-bit,
-even if the machine allows this (such as with 5-level paging on x86-64).
-Not all user space is ready to handle wide addresses.  It's known that
-at least some JIT compilers use higher bits in pointers to encode their
-information.
+As such, they cannot be registered successfully, and looking them
+up in ab8505_regulator_match causes an out-of-bounds array read.
 
-Userspace can ask for allocation from full address space by specifying
-hint address (with or without MAP_FIXED) above 47-bits.  If the
-application doesn't need a particular address, but wants to allocate
-from whole address space it can specify -1 as a hint address.
-
-Unfortunately, this trick breaks THP alignment in shmem/tmp:
-shmem_get_unmapped_area() would not try to allocate PMD-aligned area if
-*any* hint address specified.
-
-This can be fixed by requesting the aligned area if the we failed to
-allocated at user-specified hint address.  The request with inflated
-length will also take the user-specified hint address.  This way we will
-not lose an allocation request from the full address space.
-
-[kirill@shutemov.name: fold in a fixup]
-  Link: http://lkml.kernel.org/r/20191223231309.t6bh5hkbmokihpfu@box
-Link: http://lkml.kernel.org/r/20191220142548.7118-3-kirill.shutemov@linux.intel.com
-Fixes: b569bab78d8d ("x86/mm: Prepare to expose larger address space to userspace")
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: "Willhalm, Thomas" <thomas.willhalm@intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: "Bruggeman, Otto G" <otto.g.bruggeman@intel.com>
-Cc: "Aneesh Kumar K . V" <aneesh.kumar@linux.vnet.ibm.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 547f384f33db ("regulator: ab8500: add support for ab8505")
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/20191106173125.14496-2-stephan@gerhold.net
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/shmem.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ include/linux/regulator/ab8500.h |    2 --
+ 1 file changed, 2 deletions(-)
 
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -2052,9 +2052,10 @@ unsigned long shmem_get_unmapped_area(st
- 	/*
- 	 * Our priority is to support MAP_SHARED mapped hugely;
- 	 * and support MAP_PRIVATE mapped hugely too, until it is COWed.
--	 * But if caller specified an address hint, respect that as before.
-+	 * But if caller specified an address hint and we allocated area there
-+	 * successfully, respect that as before.
- 	 */
--	if (uaddr)
-+	if (uaddr == addr)
- 		return addr;
+--- a/include/linux/regulator/ab8500.h
++++ b/include/linux/regulator/ab8500.h
+@@ -43,8 +43,6 @@ enum ab8505_regulator_id {
+ 	AB8505_LDO_ANAMIC2,
+ 	AB8505_LDO_AUX8,
+ 	AB8505_LDO_ANA,
+-	AB8505_SYSCLKREQ_2,
+-	AB8505_SYSCLKREQ_4,
+ 	AB8505_NUM_REGULATORS,
+ };
  
- 	if (shmem_huge != SHMEM_HUGE_FORCE) {
-@@ -2088,7 +2089,7 @@ unsigned long shmem_get_unmapped_area(st
- 	if (inflated_len < len)
- 		return addr;
- 
--	inflated_addr = get_area(NULL, 0, inflated_len, 0, flags);
-+	inflated_addr = get_area(NULL, uaddr, inflated_len, 0, flags);
- 	if (IS_ERR_VALUE(inflated_addr))
- 		return addr;
- 	if (inflated_addr & ~PAGE_MASK)
 
 
