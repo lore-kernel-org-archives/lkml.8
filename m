@@ -2,243 +2,148 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D068C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:10:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4DF6C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:10:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EAAA24655
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:10:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B74A821835
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:10:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iVrlchTL"
+	dkim=pass (1024-bit key) header.d=netapp.onmicrosoft.com header.i=@netapp.onmicrosoft.com header.b="p1Xttpmw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729100AbgAVTKN (ORCPT
+        id S1729016AbgAVTKy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 14:10:13 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:34001 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbgAVTKM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 14:10:12 -0500
-Received: by mail-lj1-f196.google.com with SMTP id z22so295288ljg.1
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 11:10:10 -0800 (PST)
+        Wed, 22 Jan 2020 14:10:54 -0500
+Received: from mail-eopbgr690088.outbound.protection.outlook.com ([40.107.69.88]:53486
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726004AbgAVTKx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 14:10:53 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nl/UfqygSS/LsTaGAOw2Pb9VIOe5vzmbERi4ULQThqp9vvnB1yE/x4s+KwTaJx7BuRMsIvjI/5ICTX0cAEMtzj5T5hV1K8UnB4ZTE7OI11L9OykOEwxJZmlIbR5BiOj6za9xN8C++uIPSHttG62SNG4bAXGMFTA0z8hrl/g+txxIB3a49kpvecFF8Jl2ukLT9gNuvyZNQSQSEcA3iY6XiQMwfit8hRo1OMebAEslyEp1FZ8fjkEmKANA9XUiLnq8lmqJz1HjO2lN0Uu9t3Vugh2uoWtk0zdPbCYbHtk8V0xl39HUmSSocVUWS9PAKA/HWER3F97PQYki0y9eHLNOeg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hxAtYX4/qv4J8zb6knexfRb3qu6KRoi+zLYOyEWU4ic=;
+ b=JOlp8j082E64133QE91pZaksafCRtyxG/sROV3divrhjfpDPm/ts+xDkTsBeVbZFx3Nr18Ii+U0Xf8JxslJZicpope56oxd0hnztrRexpzHiJjKOWryiPekio7Lv76PYKihoRWh80YBW1mCuOgcM+Vbnu42necpg8Vg4Ej7b4LSjznKMr2R19SQ5jxjCjyTuDPIyB9cH4VeBs6dtMZ3EG5EqCRZtcsZ018EJeh4Gl+gdyJMm2ckePNlrqU7sheHY2vNlx7bgVB43Dr4hZiv1Wi5HJz4LJCkDls6G6WZ5Q6oXhzQxiU4aeV0D5V0UmQO8JnKub0ZOaknUqpXPA67Y2g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=netapp.com; dmarc=pass action=none header.from=netapp.com;
+ dkim=pass header.d=netapp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vPRCyAuhv6MvH7lOVEnGwpZ6VZYmbly5SpGfPGCHS28=;
-        b=iVrlchTLfSXTK6dYiD8parogXIGI4Q2ZORX0agr/qP1LRr7ixYyqRkgYR3n1USDguX
-         CCbDtBrT1yWkz1w9CxBZ2zAwmVcTArj6zsCsiW1NfCpTzlfd1fjYTLc5jqWS8yat8Vuo
-         ZWON36Bodoybf0dIPHxpQgp0EtPwsD/4ht1S4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vPRCyAuhv6MvH7lOVEnGwpZ6VZYmbly5SpGfPGCHS28=;
-        b=d+9SQ7nr+wbf52BqAd1GsGirsXdUs96N9pBmt800Nds9koTnVtvaKMJQJCc3fDX5Df
-         dkHjHdChZQi7mzTugOJI3uszABlmb0uOnwGt6fclo/k7bINGKC1UZkUjZTLF8ZX7f7Cb
-         ZjKsrZBYmlOV+u5xZxPVnPYeB1/1DOAnXZ2WDQIANA35T9nHF9AHy4bMPJ/KYyeehBnc
-         x8tZVdxbIBIVDgN4xRrUx6rli9nnt2i83in5bGT9sqN7yqf3C6Y1Lne3oyR9ThVQmdll
-         pSETd4tzh+hGbHJ78PQ4AUu9xw/QVSO6bpDq++ZOmL+F/EbNsvoXDWU68yeld+rEUbPA
-         cnhg==
-X-Gm-Message-State: APjAAAXjuKH6vWkSaFztSPkvPd7gymFjkD655Ty57xvLjml9S83bUuhv
-        pA/h9rX5ZBzDn+KsnLjRh927LuRWvbo=
-X-Google-Smtp-Source: APXvYqwNNP32D4wF1gfVyddvKvQ52CqULljZUK5AqQETY7IUPXp5sH/MsAf/gWPbt9qIEwcGvhchoQ==
-X-Received: by 2002:a2e:7d0c:: with SMTP id y12mr20966403ljc.39.1579720209425;
-        Wed, 22 Jan 2020 11:10:09 -0800 (PST)
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
-        by smtp.gmail.com with ESMTPSA id q13sm24648568ljj.63.2020.01.22.11.10.08
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Jan 2020 11:10:08 -0800 (PST)
-Received: by mail-lf1-f46.google.com with SMTP id l18so461211lfc.1
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 11:10:08 -0800 (PST)
-X-Received: by 2002:ac2:523c:: with SMTP id i28mr2558095lfl.104.1579720207926;
- Wed, 22 Jan 2020 11:10:07 -0800 (PST)
+ d=netapp.onmicrosoft.com; s=selector1-netapp-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hxAtYX4/qv4J8zb6knexfRb3qu6KRoi+zLYOyEWU4ic=;
+ b=p1XttpmwzZi2X8G8hS1LhgE0MOiJYWLzW89zvGi1wKBDghAgsO3RCeU+JV+W4+cGfmarC2S71vR37umMvLPbClDlfyGxqA4eAYpmnBU7JyvNxdgzTDhRRyNnCX0iFj9gdDN/Zygv2AXdZngSfK2qpWgJhVaKu7uZX0uEyXfOoas=
+Received: from BL0PR06MB4370.namprd06.prod.outlook.com (10.167.241.142) by
+ BL0PR06MB4436.namprd06.prod.outlook.com (10.167.172.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.18; Wed, 22 Jan 2020 19:10:49 +0000
+Received: from BL0PR06MB4370.namprd06.prod.outlook.com
+ ([fe80::dd54:50fb:1e98:46a1]) by BL0PR06MB4370.namprd06.prod.outlook.com
+ ([fe80::dd54:50fb:1e98:46a1%6]) with mapi id 15.20.2644.027; Wed, 22 Jan 2020
+ 19:10:48 +0000
+From:   "Schumaker, Anna" <Anna.Schumaker@netapp.com>
+To:     "rmilkowski@gmail.com" <rmilkowski@gmail.com>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
+        "trondmy@hammerspace.com" <trondmy@hammerspace.com>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>
+Subject: Re: [PATCH v3] NFSv4.0: nfs4_do_fsinfo() should not do implicit lease
+ renewals
+Thread-Topic: [PATCH v3] NFSv4.0: nfs4_do_fsinfo() should not do implicit
+ lease renewals
+Thread-Index: AdW/I2auAYB5hyQWQDmn+e9BiY7hDAAA4KMABCT0qAAAZzrDgA==
+Date:   Wed, 22 Jan 2020 19:10:48 +0000
+Message-ID: <49e7b99bd1451a0dbb301915f655c73b3d9354df.camel@netapp.com>
+References: <025801d5bf24$aa242100$fe6c6300$@gmail.com>
+         <D82A1590-FAA3-47C5-B198-937ED88EF71C@oracle.com>
+         <084f01d5cfba$bc5c4d10$3514e730$@gmail.com>
+In-Reply-To: <084f01d5cfba$bc5c4d10$3514e730$@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.34.3 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Anna.Schumaker@netapp.com; 
+x-originating-ip: [68.42.68.242]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 65154a06-b3e8-44bf-c4cf-08d79f6eca90
+x-ms-traffictypediagnostic: BL0PR06MB4436:
+x-microsoft-antispam-prvs: <BL0PR06MB4436D467F03368DD8A64261AF80C0@BL0PR06MB4436.namprd06.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 029097202E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(136003)(376002)(346002)(366004)(199004)(189003)(36756003)(478600001)(54906003)(6486002)(6506007)(53546011)(110136005)(316002)(86362001)(6512007)(26005)(186003)(4326008)(2616005)(8676002)(8936002)(81156014)(81166006)(5660300002)(66446008)(71200400001)(64756008)(66476007)(66946007)(91956017)(76116006)(66556008)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:BL0PR06MB4436;H:BL0PR06MB4370.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: netapp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: UTcTvHQSVqv5waHU1JhKBJlO9fPePLWYibRJ0uk+o5CmdxV7+m2wI1BnuCYUyCgHcrVAetE+3F2E6WEh+3awMLIPWkSb3BZgjA6oXEOebavf9pi4qVYnyGfVAaWM5c4HUWTGL7uGDO0p06/8rKs1bDKndLeFGqRob0TfU0SY3fN6ldj8k/z4PZUFAbkYnJQQP1lt/GbhEZTcItIXaPpHPof0qBISoV9axIeAMoKMtlNA2azY1pRHvSiTyBTGN83G6Z3aAxPKEmUniFe9qs2JHZcOVUlo0aqHwQ1c1mRNgMkuqVsiix0bxaGC8NRnQ/yEAVm1lXoH7I+veQQqbByl8OfXILjN72GXQomhFH9QU16CYT2Ow477JFPxUJGqhllh/QBOeXGNBqmlGXHAJVWrfoAbrliitBQeWrwEXj+wfvcCQZ984ZXEDMef1JTd3s7e
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2025728EAE217242A7F6395DB5E25160@namprd06.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20200109211215.18930-1-sibis@codeaurora.org> <20200109211215.18930-3-sibis@codeaurora.org>
- <CAE=gft7ZUTiGrvsaqfrVv-bH3w75as7G1UJRn3aJs3ECqodpQg@mail.gmail.com>
- <dad8936ba4444c3377d777cbbb879dc3@codeaurora.org> <03f83755-bdcc-dc39-0eae-08414751be57@linaro.org>
- <CAE=gft6NMD7+Bt0ab8tnb8r2DjPkb2si7+0-R+f=SYk2YMCX0A@mail.gmail.com> <169aa5fbe68fb7163166d1789bbf1761@codeaurora.org>
-In-Reply-To: <169aa5fbe68fb7163166d1789bbf1761@codeaurora.org>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Wed, 22 Jan 2020 11:09:31 -0800
-X-Gmail-Original-Message-ID: <CAE=gft5483pptiytdfqpGbrpy4OkwRpJvGyDo5pC5YUQTaQjRQ@mail.gmail.com>
-Message-ID: <CAE=gft5483pptiytdfqpGbrpy4OkwRpJvGyDo5pC5YUQTaQjRQ@mail.gmail.com>
-Subject: Re: [PATCH v4 2/4] interconnect: qcom: Add OSM L3 interconnect
- provider support
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        David Dai <daidavid1@codeaurora.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: netapp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 65154a06-b3e8-44bf-c4cf-08d79f6eca90
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jan 2020 19:10:48.9434
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4b0911a0-929b-4715-944b-c03745165b3a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: m+wTT5ETTZFURL3a0jJHz8mn/CPJ2dOdMtikChs7WxfnEerOueCai25co9UbvVEZ8x0Za0A531f0jwzhsP6EeA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR06MB4436
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 10:05 AM Sibi Sankar <sibis@codeaurora.org> wrote:
->
-> On 2020-01-22 22:18, Evan Green wrote:
-> > On Wed, Jan 22, 2020 at 12:20 AM Georgi Djakov
-> > <georgi.djakov@linaro.org> wrote:
-> >>
-> >> On 1/22/20 08:45, Sibi Sankar wrote:
-> >> > Hey Evan,
-> >> >
-> >> > Thanks for the review!
-> >> >
-> >> > On 2020-01-22 03:03, Evan Green wrote:
-> >> >> On Thu, Jan 9, 2020 at 1:12 PM Sibi Sankar <sibis@codeaurora.org> wrote:
-> >> >>>
-> >> >>> On some Qualcomm SoCs, Operating State Manager (OSM) controls the
-> >> >>> resources of scaling L3 caches. Add a driver to handle bandwidth
-> >> >>> requests to OSM L3 from CPU on SDM845 SoCs.
-> >> >>>
-> >> >>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> >> >>> ---
-> >> >>>  drivers/interconnect/qcom/Kconfig  |   7 +
-> >> >>>  drivers/interconnect/qcom/Makefile |   2 +
-> >> >>>  drivers/interconnect/qcom/osm-l3.c | 267 +++++++++++++++++++++++++++++
-> >> >>>  3 files changed, 276 insertions(+)
-> >> >>>  create mode 100644 drivers/interconnect/qcom/osm-l3.c
-> >> >>>
-> >> >>> diff --git a/drivers/interconnect/qcom/Kconfig
-> >> >>> b/drivers/interconnect/qcom/Kconfig
-> >> >>> index a9bbbdf7400f9..b94d28e7bf700 100644
-> >> >>> --- a/drivers/interconnect/qcom/Kconfig
-> >> >>> +++ b/drivers/interconnect/qcom/Kconfig
-> >> >>> @@ -14,6 +14,13 @@ config INTERCONNECT_QCOM_MSM8974
-> >> >>>          This is a driver for the Qualcomm Network-on-Chip on msm8974-based
-> >> >>>          platforms.
-> >> >>>
-> >> >>> +config INTERCONNECT_QCOM_OSM_L3
-> >> >>> +       tristate "Qualcomm OSM L3 interconnect driver"
-> >> >>> +       depends on INTERCONNECT_QCOM || COMPILE_TEST
-> >> >>> +       help
-> >> >>> +         Say y here to support the Operating State Manager (OSM) interconnect
-> >> >>> +         driver which controls the scaling of L3 caches on Qualcomm SoCs.
-> >> >>> +
-> >> >>>  config INTERCONNECT_QCOM_QCS404
-> >> >>>         tristate "Qualcomm QCS404 interconnect driver"
-> >> >>>         depends on INTERCONNECT_QCOM
-> >> >>> diff --git a/drivers/interconnect/qcom/Makefile
-> >> >>> b/drivers/interconnect/qcom/Makefile
-> >> >>> index 55ec3c5c89dbd..89fecbd1257c7 100644
-> >> >>> --- a/drivers/interconnect/qcom/Makefile
-> >> >>> +++ b/drivers/interconnect/qcom/Makefile
-> >> >>> @@ -1,5 +1,6 @@
-> >> >>>  # SPDX-License-Identifier: GPL-2.0
-> >> >>>
-> >> >>> +icc-osm-l3-objs                                := osm-l3.o
-> >> >>>  qnoc-msm8974-objs                      := msm8974.o
-> >> >>>  qnoc-qcs404-objs                       := qcs404.o
-> >> >>>  qnoc-sc7180-objs                       := sc7180.o
-> >> >>> @@ -12,6 +13,7 @@ icc-smd-rpm-objs                      := smd-rpm.o
-> >> >>>  obj-$(CONFIG_INTERCONNECT_QCOM_BCM_VOTER) += icc-bcm-voter.o
-> >> >>>  obj-$(CONFIG_INTERCONNECT_QCOM_MSM8916) += qnoc-msm8916.o
-> >> >>>  obj-$(CONFIG_INTERCONNECT_QCOM_MSM8974) += qnoc-msm8974.o
-> >> >>> +obj-$(CONFIG_INTERCONNECT_QCOM_OSM_L3) += icc-osm-l3.o
-> >> >>>  obj-$(CONFIG_INTERCONNECT_QCOM_QCS404) += qnoc-qcs404.o
-> >> >>>  obj-$(CONFIG_INTERCONNECT_QCOM_RPMH) += icc-rpmh.o
-> >> >>>  obj-$(CONFIG_INTERCONNECT_QCOM_SC7180) += qnoc-sc7180.o
-> >> >>> diff --git a/drivers/interconnect/qcom/osm-l3.c
-> >> >>> b/drivers/interconnect/qcom/osm-l3.c
-> >> >>> new file mode 100644
-> >> >>> index 0000000000000..7fde53c70081e
-> >> >>> --- /dev/null
-> >> >>> +++ b/drivers/interconnect/qcom/osm-l3.c
-> >> >>> @@ -0,0 +1,267 @@
-> >> >>> +// SPDX-License-Identifier: GPL-2.0
-> >> >>> +/*
-> >> >>> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
-> >> >>> + *
-> >> >>> + */
-> >> >>> +
-> >> >>> +#include <dt-bindings/interconnect/qcom,osm-l3.h>
-> >> >>> +#include <linux/bitfield.h>
-> >> >>> +#include <linux/clk.h>
-> >> >>> +#include <linux/interconnect-provider.h>
-> >> >>> +#include <linux/io.h>
-> >> >>> +#include <linux/kernel.h>
-> >> >>> +#include <linux/module.h>
-> >> >>> +#include <linux/of_device.h>
-> >> >>> +#include <linux/of_platform.h>
-> >> >>> +#include <linux/platform_device.h>
-> >> >>> +
-> >> >>> +#define LUT_MAX_ENTRIES                        40U
-> >> >>> +#define LUT_SRC                                GENMASK(31, 30)
-> >> >>> +#define LUT_L_VAL                      GENMASK(7, 0)
-> >> >>> +#define LUT_ROW_SIZE                   32
-> >> >>> +#define CLK_HW_DIV                     2
-> >> >>> +
-> >> >>> +/* Register offsets */
-> >> >>> +#define REG_ENABLE                     0x0
-> >> >>> +#define REG_FREQ_LUT                   0x110
-> >> >>> +#define REG_PERF_STATE                 0x920
-> >> >>> +
-> >> >>> +#define OSM_L3_MAX_LINKS               1
-> >> >>> +#define SDM845_MAX_RSC_NODES           130
-> >> >>
-> >> >> I'm nervous this define is going to fall out of date with
-> >> >> qcom,sdm845.h. I'm worried someone will end up adding a few more nodes
-> >> >> that were always there but previously hidden from Linux. Can we put
-> >> >> this define in include/dt-bindings/interconnect/qcom,sdm845.h, so at
-> >> >> least when that happens they'll come face to face with this define?
-> >> >> The same comment goes for the SC7180 define in patch 4.
-> >> >
-> >> > Yeah both solution require manual
-> >> > intervention how about we just go
-> >> > with what I proposed below.
-> >> >
-> >> >>
-> >> >> On second thought, this trick only works once. Are we sure there
-> >> >> aren't going to be other drivers that might want to tag on
-> >> >> interconnect nodes as well? How about instead we just add the enum
-> >> >> values below in qcom,sdm845.h as defines?
-> >> >
-> >> > Georgi/Evan,
-> >> > Since qcom,sdm845.h is specific to
-> >> > bindings shouldn't I just create a
-> >> > .h file with all the enums so that
-> >> > it can used across all icc providers
-> >> > on SDM845?
-> >>
-> >> This sounds good to me, unless Evan has any objections.
-> >
-> > So is this a new .h file with all the node numbers from qcom,sdm845.h
-> > and your new couple of nodes here? That would be fine with me.
-> >
-> > Or is it a .h file with only your two new node numbers? My worry there
-> > is when there are two or three other drivers like this one, it will be
-> > difficult to follow the total order of nodes as "base provider', "L3
-> > driver", "new driver 1", "new driver 2".... any thoughts on how we
-> > might address that?
->
-> the relative provider numbers from
-> qcom,sdm845.h have no useful meaning
-> for other icc providers. However the
-> enum defined in the sdm845.c which are
-> the node ids are needed and should be
-> sufficient to add/link to any icc node
-> across icc providers. So introducing a
-> sdm845.h with all the enumbs global node
-> ids is what I am proposing to do.
-
-Sibi and
-I chatted
-offline. I
-am on
-board!
+SGkgUm9iZXJ0LA0KDQpPbiBNb24sIDIwMjAtMDEtMjAgYXQgMTc6NTUgKzAwMDAsIFJvYmVydCBN
+aWxrb3dza2kgd3JvdGU6DQo+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiBGcm9t
+OiBDaHVjayBMZXZlciA8Y2h1Y2subGV2ZXJAb3JhY2xlLmNvbT4NCj4gPiBTZW50OiAzMCBEZWNl
+bWJlciAyMDE5IDE1OjM3DQo+ID4gVG86IFJvYmVydCBNaWxrb3dza2kgPHJtaWxrb3dza2lAZ21h
+aWwuY29tPg0KPiA+IENjOiBMaW51eCBORlMgTWFpbGluZyBMaXN0IDxsaW51eC1uZnNAdmdlci5r
+ZXJuZWwub3JnPjsgVHJvbmQgTXlrbGVidXN0DQo+ID4gPHRyb25kLm15a2xlYnVzdEBoYW1tZXJz
+cGFjZS5jb20+OyBBbm5hIFNjaHVtYWtlcg0KPiA+IDxhbm5hLnNjaHVtYWtlckBuZXRhcHAuY29t
+PjsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZw0KPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0gg
+djNdIE5GU3Y0LjA6IG5mczRfZG9fZnNpbmZvKCkgc2hvdWxkIG5vdCBkbyBpbXBsaWNpdA0KPiA+
+IGxlYXNlIHJlbmV3YWxzDQo+ID4gDQo+ID4gDQo+ID4gDQo+ID4gPiBPbiBEZWMgMzAsIDIwMTks
+IGF0IDEwOjIwIEFNLCBSb2JlcnQgTWlsa293c2tpIDxybWlsa293c2tpQGdtYWlsLmNvbT4NCj4g
+PiB3cm90ZToNCj4gPiA+IEZyb206IFJvYmVydCBNaWxrb3dza2kgPHJtaWxrb3dza2lAZ21haWwu
+Y29tPg0KPiA+ID4gDQo+ID4gPiBDdXJyZW50bHksIGVhY2ggdGltZSBuZnM0X2RvX2ZzaW5mbygp
+IGlzIGNhbGxlZCBpdCB3aWxsIGRvIGFuIGltcGxpY2l0DQo+ID4gPiBORlM0IGxlYXNlIHJlbmV3
+YWwsIHdoaWNoIGlzIG5vdCBjb21wbGlhbnQgd2l0aCB0aGUgTkZTNA0KPiA+IHNwZWNpZmljYXRp
+b24uDQo+ID4gPiBUaGlzIGNhbiByZXN1bHQgaW4gYSBsZWFzZSBiZWluZyBleHBpcmVkIGJ5IGFu
+IE5GUyBzZXJ2ZXIuDQo+ID4gPiANCj4gPiA+IENvbW1pdCA4M2NhN2Y1YWIzMWYgKCJORlM6IEF2
+b2lkIFBVVFJPT1RGSCB3aGVuIG1hbmFnaW5nIGxlYXNlcyIpDQo+ID4gPiBpbnRyb2R1Y2VkIGlt
+cGxpY2l0IGNsaWVudCBsZWFzZSByZW5ld2FsIGluIG5mczRfZG9fZnNpbmZvKCksIHdoaWNoDQo+
+ID4gPiBjYW4gcmVzdWx0IGluIHRoZSBORlN2NC4wIGxlYXNlIHRvIGV4cGlyZSBvbiBhIHNlcnZl
+ciBzaWRlLCBhbmQNCj4gPiA+IHNlcnZlcnMgcmV0dXJuaW5nIE5GUzRFUlJfRVhQSVJFRCBvciBO
+RlM0RVJSX1NUQUxFX0NMSUVOVElELg0KPiA+ID4gDQo+ID4gPiBUaGlzIGNhbiBlYXNpbHkgYmUg
+cmVwcm9kdWNlZCBieSBmcmVxdWVudGx5IHVubW91bnRpbmcgYSBzdWItbW91bnQsDQo+ID4gPiB0
+aGVuIHN0YXQnaW5nIGl0IHRvIGdldCBpdCBtb3VudGVkIGFnYWluLCB3aGljaCB3aWxsIGRlbGF5
+IG9yIGV2ZW4NCj4gPiA+IGNvbXBsZXRlbHkgcHJldmVudCBjbGllbnQgZnJvbSBzZW5kaW5nIFJF
+TkVXIG9wZXJhdGlvbnMgaWYgbm8gb3RoZXINCj4gPiA+IE5GUyBvcGVyYXRpb25zIGFyZSBpc3N1
+ZWQuIEV2ZW50dWFsbHkgbmZzIHNlcnZlciB3aWxsIGV4cGlyZSBjbGllbnQncw0KPiA+ID4gbGVh
+c2UgYW5kIHJldHVybiBhbiBlcnJvciBvbiBmaWxlIGFjY2VzcyBvciBuZXh0IFJFTkVXLg0KPiA+
+ID4gDQo+ID4gPiBUaGlzIGNhbiBhbHNvIGhhcHBlbiB3aGVuIGEgc3ViLW1vdW50IGlzIGF1dG9t
+YXRpY2FsbHkgdW5tb3VudGVkIGR1ZQ0KPiA+ID4gdG8gaW5hY3Rpdml0eSAoYWZ0ZXIgbmZzX21v
+dW50cG9pbnRfZXhwaXJ5X3RpbWVvdXQpLCB0aGVuIGl0IGlzDQo+ID4gPiBtb3VudGVkIGFnYWlu
+IHZpYSBzdGF0KCkuIFRoaXMgY2FuIHJlc3VsdCBpbiBhIHNob3J0IHdpbmRvdyBkdXJpbmcNCj4g
+PiA+IHdoaWNoIGNsaWVudCdzIGxlYXNlIHdpbGwgZXhwaXJlIG9uIGEgc2VydmVyIGJ1dCBub3Qg
+b24gYSBjbGllbnQuDQo+ID4gPiBUaGlzIHNwZWNpZmljIGNhc2Ugd2FzIG9ic2VydmVkIG9uIHBy
+b2R1Y3Rpb24gc3lzdGVtcy4NCj4gPiA+IA0KPiA+ID4gVGhpcyBwYXRjaCBtYWtlcyBhbiBleHBs
+aWNpdCBsZWFzZSByZW5ld2FsIGluc3RlYWQgb2YgYW4gaW1wbGljaXQgb25lLA0KPiA+ID4gYnkg
+YWRkaW5nIFJFTkVXIHRvIGEgY29tcG91bmQgb3BlcmF0aW9uIGlzc3VlZCBieSBuZnM0X2RvX2Zz
+aW5mbygpLA0KPiA+ID4gc2ltaWxhcmx5IHRvIE5GU3Y0LjEgd2hpY2ggYWRkcyBTRVFVRU5DRSBv
+cGVyYXRpb24uDQo+ID4gPiANCj4gPiA+IEZpeGVzOiA4M2NhN2Y1YWIzMWYgKCJORlM6IEF2b2lk
+IFBVVFJPT1RGSCB3aGVuIG1hbmFnaW5nIGxlYXNlcyIpDQo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBS
+b2JlcnQgTWlsa293c2tpIDxybWlsa293c2tpQGdtYWlsLmNvbT4NCj4gPiANCj4gPiBSZXZpZXdl
+ZC1ieTogQ2h1Y2sgTGV2ZXIgPGNodWNrLmxldmVyQG9yYWNsZS5jb20+DQo+ID4gDQo+ID4gDQo+
+IA0KPiBIb3cgZG8gd2UgcHJvZ3Jlc3MgaXQgZnVydGhlcj8NCg0KVGhhbmtzIGZvciBmb2xsb3dp
+bmcgdXAhIEkgaGF2ZSB0aGUgcGF0Y2ggaW5jbHVkZWQgaW4gbXkgbGludXgtbmV4dCBicmFuY2gg
+Zm9yDQp0aGUgbmV4dCBtZXJnZSB3aW5kb3cuDQoNCkFubmENCg0KPiANCg==
