@@ -2,226 +2,98 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71CB7C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF375C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45EC420704
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:54:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686874;
-	bh=EVjgaJW8OE5sV1Q9fTEbc2fZ13z60TLkZJ4lEhs+L4k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dlX4bTgZwW4pPuMTBQBH8YrQ+0+U/PZYkL3+v5l4vY+CvIWvWzM8j8urUfoDlRe4o
-	 H7eclYAeRNqF68AUKWPL/v2XrgoMXengyFdWU3JR2ajJR7vd8MW0EjsXQu/yhBE2iQ
-	 9TcRMuZ3f4xh/oYatf/Jg+xrXK73kIV7R+adF86o=
+	by mail.kernel.org (Postfix) with ESMTP id C9D0524697
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:54:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731317AbgAVJyd (ORCPT
+        id S1730698AbgAVJdy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:54:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48094 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730039AbgAVJd7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:33:59 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DC3B24673;
-        Wed, 22 Jan 2020 09:33:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685635;
-        bh=EVjgaJW8OE5sV1Q9fTEbc2fZ13z60TLkZJ4lEhs+L4k=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RIWgB/TJ5pAf+dh2yvyBwY3MKr5wpmNYgVFqGWBpRycyo9DHotnY0Dj8obP9uPtFq
-         b1fsu4fL5klORFzhVPDVA7Lxs1DaG41aO/r69FA8tTC5t67Tqb/Vsl7yonY3gt0dIL
-         jcOomAjmX51hxic++pWv7pcIB6DbJL8upFV18f0g=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 4.9 07/97] arm64: mm: BUG on unsupported manipulations of live kernel mappings
-Date:   Wed, 22 Jan 2020 10:28:11 +0100
-Message-Id: <20200122092756.943196447@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200122092755.678349497@linuxfoundation.org>
-References: <20200122092755.678349497@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 22 Jan 2020 04:33:54 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:36079 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729668AbgAVJdt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:33:49 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iuCOK-0003Me-Dh; Wed, 22 Jan 2020 09:33:40 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Ping-Ke Shih <pkshih@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] rtlwifi: btcoex: fix spelling mistake "initilized" -> "initialized"
+Date:   Wed, 22 Jan 2020 09:33:40 +0000
+Message-Id: <20200122093340.2800226-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+From: Colin Ian King <colin.king@canonical.com>
 
-commit e98216b52176ba2bfa4bdb02f178f4d08832d465 upstream.
+There is a spelling mistake in one of the fields in the btc_coexist struct,
+fix it.
 
-Now that we take care not manipulate the live kernel page tables in a
-way that may lead to TLB conflicts, the case where a table mapping is
-replaced by a block mapping can no longer occur. So remove the handling
-of this at the PUD and PMD levels, and instead, BUG() on any occurrence
-of live kernel page table manipulations that modify anything other than
-the permission bits.
-
-Since mark_rodata_ro() is the only caller where the kernel mappings that
-are being manipulated are actually live, drop the various conditional
-flush_tlb_all() invocations, and add a single call to mark_rodata_ro()
-instead.
-
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- arch/arm64/mm/mmu.c |   70 +++++++++++++++++++++++++++++++---------------------
- 1 file changed, 43 insertions(+), 27 deletions(-)
+ .../net/wireless/realtek/rtlwifi/btcoexist/halbtc8192e2ant.c    | 2 +-
+ drivers/net/wireless/realtek/rtlwifi/btcoexist/halbtcoutsrc.c   | 2 +-
+ drivers/net/wireless/realtek/rtlwifi/btcoexist/halbtcoutsrc.h   | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -28,8 +28,6 @@
- #include <linux/memblock.h>
- #include <linux/fs.h>
- #include <linux/io.h>
--#include <linux/slab.h>
--#include <linux/stop_machine.h>
- 
- #include <asm/barrier.h>
- #include <asm/cputype.h>
-@@ -95,6 +93,17 @@ static phys_addr_t __init early_pgtable_
- 	return phys;
- }
- 
-+static bool pgattr_change_is_safe(u64 old, u64 new)
-+{
-+	/*
-+	 * The following mapping attributes may be updated in live
-+	 * kernel mappings without the need for break-before-make.
-+	 */
-+	static const pteval_t mask = PTE_PXN | PTE_RDONLY | PTE_WRITE;
-+
-+	return old  == 0 || new  == 0 || ((old ^ new) & ~mask) == 0;
-+}
-+
- static void alloc_init_pte(pmd_t *pmd, unsigned long addr,
- 				  unsigned long end, unsigned long pfn,
- 				  pgprot_t prot,
-@@ -115,8 +124,17 @@ static void alloc_init_pte(pmd_t *pmd, u
- 
- 	pte = pte_set_fixmap_offset(pmd, addr);
- 	do {
-+		pte_t old_pte = *pte;
-+
- 		set_pte(pte, pfn_pte(pfn, prot));
- 		pfn++;
-+
-+		/*
-+		 * After the PTE entry has been populated once, we
-+		 * only allow updates to the permission attributes.
-+		 */
-+		BUG_ON(!pgattr_change_is_safe(pte_val(old_pte), pte_val(*pte)));
-+
- 	} while (pte++, addr += PAGE_SIZE, addr != end);
- 
- 	pte_clear_fixmap();
-@@ -146,27 +164,27 @@ static void alloc_init_pmd(pud_t *pud, u
- 
- 	pmd = pmd_set_fixmap_offset(pud, addr);
- 	do {
-+		pmd_t old_pmd = *pmd;
-+
- 		next = pmd_addr_end(addr, end);
-+
- 		/* try section mapping first */
- 		if (((addr | next | phys) & ~SECTION_MASK) == 0 &&
- 		      allow_block_mappings) {
--			pmd_t old_pmd =*pmd;
- 			pmd_set_huge(pmd, phys, prot);
-+
- 			/*
--			 * Check for previous table entries created during
--			 * boot (__create_page_tables) and flush them.
-+			 * After the PMD entry has been populated once, we
-+			 * only allow updates to the permission attributes.
- 			 */
--			if (!pmd_none(old_pmd)) {
--				flush_tlb_all();
--				if (pmd_table(old_pmd)) {
--					phys_addr_t table = pmd_page_paddr(old_pmd);
--					if (!WARN_ON_ONCE(slab_is_available()))
--						memblock_free(table, PAGE_SIZE);
--				}
--			}
-+			BUG_ON(!pgattr_change_is_safe(pmd_val(old_pmd),
-+						      pmd_val(*pmd)));
- 		} else {
- 			alloc_init_pte(pmd, addr, next, __phys_to_pfn(phys),
- 				       prot, pgtable_alloc);
-+
-+			BUG_ON(pmd_val(old_pmd) != 0 &&
-+			       pmd_val(old_pmd) != pmd_val(*pmd));
- 		}
- 		phys += next - addr;
- 	} while (pmd++, addr = next, addr != end);
-@@ -204,33 +222,28 @@ static void alloc_init_pud(pgd_t *pgd, u
- 
- 	pud = pud_set_fixmap_offset(pgd, addr);
- 	do {
-+		pud_t old_pud = *pud;
-+
- 		next = pud_addr_end(addr, end);
- 
- 		/*
- 		 * For 4K granule only, attempt to put down a 1GB block
+diff --git a/drivers/net/wireless/realtek/rtlwifi/btcoexist/halbtc8192e2ant.c b/drivers/net/wireless/realtek/rtlwifi/btcoexist/halbtc8192e2ant.c
+index 3c96c320236c..658ff425c256 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/btcoexist/halbtc8192e2ant.c
++++ b/drivers/net/wireless/realtek/rtlwifi/btcoexist/halbtc8192e2ant.c
+@@ -862,7 +862,7 @@ static void btc8192e2ant_set_sw_rf_rx_lpf_corner(struct btc_coexist *btcoexist,
+ 		/* Resume RF Rx LPF corner
+ 		 * After initialized, we can use coex_dm->btRf0x1eBackup
  		 */
- 		if (use_1G_block(addr, next, phys) && allow_block_mappings) {
--			pud_t old_pud = *pud;
- 			pud_set_huge(pud, phys, prot);
+-		if (btcoexist->initilized) {
++		if (btcoexist->initialized) {
+ 			RT_TRACE(rtlpriv, COMP_BT_COEXIST, DBG_LOUD,
+ 				 "[BTCoex], Resume RF Rx LPF corner!!\n");
+ 			btcoexist->btc_set_rf_reg(btcoexist, BTC_RF_A, 0x1e,
+diff --git a/drivers/net/wireless/realtek/rtlwifi/btcoexist/halbtcoutsrc.c b/drivers/net/wireless/realtek/rtlwifi/btcoexist/halbtcoutsrc.c
+index 191dafd03189..a4940a3842de 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/btcoexist/halbtcoutsrc.c
++++ b/drivers/net/wireless/realtek/rtlwifi/btcoexist/halbtcoutsrc.c
+@@ -1461,7 +1461,7 @@ void exhalbtc_init_coex_dm(struct btc_coexist *btcoexist)
+ 			ex_btc8192e2ant_init_coex_dm(btcoexist);
+ 	}
  
- 			/*
--			 * If we have an old value for a pud, it will
--			 * be pointing to a pmd table that we no longer
--			 * need (from swapper_pg_dir).
--			 *
--			 * Look up the old pmd table and free it.
-+			 * After the PUD entry has been populated once, we
-+			 * only allow updates to the permission attributes.
- 			 */
--			if (!pud_none(old_pud)) {
--				flush_tlb_all();
--				if (pud_table(old_pud)) {
--					phys_addr_t table = pud_page_paddr(old_pud);
--					if (!WARN_ON_ONCE(slab_is_available()))
--						memblock_free(table, PAGE_SIZE);
--				}
--			}
-+			BUG_ON(!pgattr_change_is_safe(pud_val(old_pud),
-+						      pud_val(*pud)));
- 		} else {
- 			alloc_init_pmd(pud, addr, next, phys, prot,
- 				       pgtable_alloc, allow_block_mappings);
-+
-+			BUG_ON(pud_val(old_pud) != 0 &&
-+			       pud_val(old_pud) != pud_val(*pud));
- 		}
- 		phys += next - addr;
- 	} while (pud++, addr = next, addr != end);
-@@ -396,6 +409,9 @@ void mark_rodata_ro(void)
- 	section_size = (unsigned long)__init_begin - (unsigned long)__start_rodata;
- 	create_mapping_late(__pa(__start_rodata), (unsigned long)__start_rodata,
- 			    section_size, PAGE_KERNEL_RO);
-+
-+	/* flush the TLBs after updating live kernel mappings */
-+	flush_tlb_all();
+-	btcoexist->initilized = true;
++	btcoexist->initialized = true;
  }
  
- static void __init map_kernel_segment(pgd_t *pgd, void *va_start, void *va_end,
-
+ void exhalbtc_ips_notify(struct btc_coexist *btcoexist, u8 type)
+diff --git a/drivers/net/wireless/realtek/rtlwifi/btcoexist/halbtcoutsrc.h b/drivers/net/wireless/realtek/rtlwifi/btcoexist/halbtcoutsrc.h
+index 8c0a7fdbf200..a96a995dd850 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/btcoexist/halbtcoutsrc.h
++++ b/drivers/net/wireless/realtek/rtlwifi/btcoexist/halbtcoutsrc.h
+@@ -679,7 +679,7 @@ struct btc_coexist {
+ 	bool auto_report_2ant;
+ 	bool dbg_mode_1ant;
+ 	bool dbg_mode_2ant;
+-	bool initilized;
++	bool initialized;
+ 	bool stop_coex_dm;
+ 	bool manual_control;
+ 	struct btc_statistics statistics;
+-- 
+2.24.0
 
