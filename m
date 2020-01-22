@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0C8C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:41:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB3B2C33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F1BF24687
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:41:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF19224687
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:41:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686116;
-	bh=tAEX8k+O68fJuZfYx6mQBJTYLpBE2CrVhQuydpAimMg=;
+	s=default; t=1579686118;
+	bh=5KGiFtPDCtBNnlUpwuwCkTLUluovlgdstuOfe64TrN0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JFSet97MQjW6jY1pCAN6IVIna6qLPFP0mjuV3NM2BjU1U+T/fovR1MAsaMG/KBagR
-	 1OzggA6hiIVvZcDAW7WX3SwqJHQt2knuP6ma3cvcBZDz3R5fOhMZCBoPEnhdaf6avm
-	 Sgz7usbQGbNmc2T0aLhZKxOSpSz82FOZ8dBBCLaA=
+	b=1GDdsteYD7fUtxos11uNGRjGtqQ2X+34CJh8qnGA7o9x7bTyDBPk4QunHFN+80H7w
+	 t8fEhUdMO78BW/f+CxgjTohdUNtNzVrqO4z5v5mkOzBbZYqaJm+UvYUSTilVEln0m8
+	 Ox3kTs6i3D6i0I7N7CJIdJ1iUmf0KL55xbvbqXec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733292AbgAVJlz (ORCPT
+        id S2387495AbgAVJl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:41:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33208 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:41:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387617AbgAVJlr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:41:47 -0500
+        id S2387624AbgAVJlu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:41:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0EA724686;
-        Wed, 22 Jan 2020 09:41:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12E1B2467B;
+        Wed, 22 Jan 2020 09:41:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686107;
-        bh=tAEX8k+O68fJuZfYx6mQBJTYLpBE2CrVhQuydpAimMg=;
+        s=default; t=1579686109;
+        bh=5KGiFtPDCtBNnlUpwuwCkTLUluovlgdstuOfe64TrN0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sWT1jJQSzDAVvkMK9js/fyLGwVIpD1fDoBHHYU2S256O9B8mRA5F9J8zfkV8AmFrf
-         xfM2dgbdEfvzhZ2n9ipiWR0EE/SUhrw27+TEVUfIXchScPFmaQk0U4aEAYpId8TQd2
-         IUHO39VaHJYp/3kYCEG9mjtmw2qvYlM+n12DE/7k=
+        b=JqxmtY+ldXtHWWjliep7jkBTe0NEd/yVRmzkgx50ZCL8wmDHY0Lv4RCEA7yq355XI
+         mYrooXZOQNm+HCXAjzyYKThvUnXNnI7RRCX0vK5XykvFbhK8fFn8BUEqz9wkPy/V9Z
+         j10x6r51XEDXCV8MNL68i4cPn0ZdvdORkgrWYEr0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wenyang@linux.alibaba.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Qian Cai <cai@lca.pw>, Tejun Heo <tj@kernel.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 046/103] mm/page-writeback.c: avoid potential division by zero in wb_min_max_ratio()
-Date:   Wed, 22 Jan 2020 10:29:02 +0100
-Message-Id: <20200122092810.734690455@linuxfoundation.org>
+        stable@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        =?UTF-8?q?Daniel=20D=C3=ADaz?= <daniel.diaz@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: [PATCH 4.19 047/103] ARM: dts: imx6qdl: Add Engicam i.Core 1.5 MX6
+Date:   Wed, 22 Jan 2020 10:29:03 +0100
+Message-Id: <20200122092810.874280626@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
 References: <20200122092803.587683021@linuxfoundation.org>
@@ -62,79 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wenyang@linux.alibaba.com>
+From: Jacopo Mondi <jacopo@jmondi.org>
 
-commit 6d9e8c651dd979aa666bee15f086745f3ea9c4b3 upstream.
+commit 37c045d25e90038682b845de0a1db43c8301694d upstream.
 
-Patch series "use div64_ul() instead of div_u64() if the divisor is
-unsigned long".
+The 1.5 version of Engicam's i.Core MX6 CPU module features a different clock
+provider for the ethernet's PHY interface. Adjust the FEC ptp clock to
+reference CLK_ENET_REF clock source, and set SION bit of
+MX6QDL_PAD_GPIO_16__ENET_REF_CLK to adjust the input path of that pin.
 
-We were first inspired by commit b0ab99e7736a ("sched: Fix possible divide
-by zero in avg_atom () calculation"), then refer to the recently analyzed
-mm code, we found this suspicious place.
+The newly introduced imx6ql-icore-1.5.dtsi allows to collect in a single
+place differences between version '1.0' and '1.5' of the module.
 
- 201                 if (min) {
- 202                         min *= this_bw;
- 203                         do_div(min, tot_bw);
- 204                 }
-
-And we also disassembled and confirmed it:
-
-  /usr/src/debug/kernel-4.9.168-016.ali3000/linux-4.9.168-016.ali3000.alios7.x86_64/mm/page-writeback.c: 201
-  0xffffffff811c37da <__wb_calc_thresh+234>:      xor    %r10d,%r10d
-  0xffffffff811c37dd <__wb_calc_thresh+237>:      test   %rax,%rax
-  0xffffffff811c37e0 <__wb_calc_thresh+240>:      je 0xffffffff811c3800 <__wb_calc_thresh+272>
-  /usr/src/debug/kernel-4.9.168-016.ali3000/linux-4.9.168-016.ali3000.alios7.x86_64/mm/page-writeback.c: 202
-  0xffffffff811c37e2 <__wb_calc_thresh+242>:      imul   %r8,%rax
-  /usr/src/debug/kernel-4.9.168-016.ali3000/linux-4.9.168-016.ali3000.alios7.x86_64/mm/page-writeback.c: 203
-  0xffffffff811c37e6 <__wb_calc_thresh+246>:      mov    %r9d,%r10d    ---> truncates it to 32 bits here
-  0xffffffff811c37e9 <__wb_calc_thresh+249>:      xor    %edx,%edx
-  0xffffffff811c37eb <__wb_calc_thresh+251>:      div    %r10
-  0xffffffff811c37ee <__wb_calc_thresh+254>:      imul   %rbx,%rax
-  0xffffffff811c37f2 <__wb_calc_thresh+258>:      shr    $0x2,%rax
-  0xffffffff811c37f6 <__wb_calc_thresh+262>:      mul    %rcx
-  0xffffffff811c37f9 <__wb_calc_thresh+265>:      shr    $0x2,%rdx
-  0xffffffff811c37fd <__wb_calc_thresh+269>:      mov    %rdx,%r10
-
-This series uses div64_ul() instead of div_u64() if the divisor is
-unsigned long, to avoid truncation to 32-bit on 64-bit platforms.
-
-This patch (of 3):
-
-The variables 'min' and 'max' are unsigned long and do_div truncates
-them to 32 bits, which means it can test non-zero and be truncated to
-zero for division.  Fix this issue by using div64_ul() instead.
-
-Link: http://lkml.kernel.org/r/20200102081442.8273-2-wenyang@linux.alibaba.com
-Fixes: 693108a8a667 ("writeback: make bdi->min/max_ratio handling cgroup writeback aware")
-Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Qian Cai <cai@lca.pw>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
+Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
+Cc: Daniel Díaz <daniel.diaz@linaro.org>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/page-writeback.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/imx6qdl-icore-1.5.dtsi |   34 +++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
---- a/mm/page-writeback.c
-+++ b/mm/page-writeback.c
-@@ -200,11 +200,11 @@ static void wb_min_max_ratio(struct bdi_
- 	if (this_bw < tot_bw) {
- 		if (min) {
- 			min *= this_bw;
--			do_div(min, tot_bw);
-+			min = div64_ul(min, tot_bw);
- 		}
- 		if (max < 100) {
- 			max *= this_bw;
--			do_div(max, tot_bw);
-+			max = div64_ul(max, tot_bw);
- 		}
- 	}
- 
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6qdl-icore-1.5.dtsi
+@@ -0,0 +1,34 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Copyright (C) 2018 Jacopo Mondi <jacopo@jmondi.org>
++ */
++
++#include "imx6qdl-icore.dtsi"
++
++&iomuxc {
++	pinctrl_enet: enetgrp {
++		fsl,pins = <
++			MX6QDL_PAD_ENET_CRS_DV__ENET_RX_EN	0x1b0b0
++			MX6QDL_PAD_GPIO_16__ENET_REF_CLK	0x4001b0b0
++			MX6QDL_PAD_ENET_TX_EN__ENET_TX_EN	0x1b0b0
++			MX6QDL_PAD_ENET_RXD1__ENET_RX_DATA1	0x1b0b0
++			MX6QDL_PAD_ENET_RXD0__ENET_RX_DATA0	0x1b0b0
++			MX6QDL_PAD_ENET_TXD1__ENET_TX_DATA1	0x1b0b0
++			MX6QDL_PAD_ENET_TXD0__ENET_TX_DATA0	0x1b0b0
++			MX6QDL_PAD_ENET_MDC__ENET_MDC		0x1b0b0
++			MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x1b0b0
++			MX6QDL_PAD_GPIO_17__GPIO7_IO12		0x1b0b0
++		>;
++	};
++};
++
++&fec {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_enet>;
++	phy-reset-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
++	clocks = <&clks IMX6QDL_CLK_ENET>,
++		 <&clks IMX6QDL_CLK_ENET>,
++		 <&clks IMX6QDL_CLK_ENET_REF>;
++	phy-mode = "rmii";
++	status = "okay";
++};
 
 
