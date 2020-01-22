@@ -2,52 +2,54 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F9DDC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:21:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6134BC33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:22:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BAB524688
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:21:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2571A2468F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:22:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579699317;
-	bh=pLeF0alBcThh37xBzLw7dVki1tgMbE2L/olH00haWf8=;
+	s=default; t=1579699320;
+	bh=/eE6De9bd/obPBfI1sCrVlL2CEwXPM8wDtngzyOWKgk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RUjKRxqKgKM7xT9s84YlluvTRETktuX5+j5HAjd0WyAK348D3LIcgEbo0xSY2zmx+
-	 NfB0JsZ5aCvvb1oeFuw2WxrZeT5xI1N1+zXzEyaKm2yveIbR34gdSXHzGDbIvFi7es
-	 BOnKFHiKsYn5FPCEXBFPcq4jbLb/or+c7oCJRhnA=
+	b=lUV39vqck4wdWLGNDLxIYcp8hM/2WaR3i8b4lXqTeUjdg1UtRfF8UDsRnzl8QUCux
+	 V/FD7IU5dJ75wOombZuoB07tSchzESjctcpWRcU6EEXe9+55UW6YVHhqEY6d0VwCly
+	 SypKdTNTWpqnciRPkNeADjc5EbTDrb0avo9qYscg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729887AbgAVNV4 (ORCPT
+        id S1730396AbgAVNV7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:21:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39212 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 08:21:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730350AbgAVNVy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:21:54 -0500
+        id S1729440AbgAVNV5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:21:57 -0500
 Received: from localhost (unknown [84.241.205.26])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0474C2467C;
-        Wed, 22 Jan 2020 13:21:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A2A0205F4;
+        Wed, 22 Jan 2020 13:21:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579699313;
-        bh=pLeF0alBcThh37xBzLw7dVki1tgMbE2L/olH00haWf8=;
+        s=default; t=1579699316;
+        bh=/eE6De9bd/obPBfI1sCrVlL2CEwXPM8wDtngzyOWKgk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q4Izd10p9XjH29Rd+/EhVUavam7sJy5IHilvW84RUr/YHTTUYRhzFIib2xBZ+/eEi
-         BF/77HYx0ODl4a5irPP6BNyKmknnct0inFUxQc2RpVcFVmZq04cXDPG3JRTE6mAlR3
-         4weAutaEQ1rO4/R1kV35chAeioGH1JGLPaSNj6/U=
+        b=dwdJua+tS1HaR8T9Cz3r7+dmtvs4amvmmbjkGeewVeAAgiX/MRBOuMvM6lg7YfHRr
+         LU9qON7yWkUVzJOQ3rVCLZ2uC1pncLsVwIXj5OIsrxKaIdyX3YzW4tfoamH1rOSDV2
+         XV9y8Y+kD8E7hzPb75C2GIpYOzeCkFDMo+wCv4uc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Wilck <mwilck@suse.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.4 105/222] block: Fix the type of sts in bsg_queue_rq()
-Date:   Wed, 22 Jan 2020 10:28:11 +0100
-Message-Id: <20200122092841.257085936@linuxfoundation.org>
+        stable@vger.kernel.org, Harry Wentland <harry.wentland@amd.com>,
+        Mario Kleiner <mario.kleiner.de@gmail.com>,
+        Martin Leung <martin.leung@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 106/222] drm/amd/display: Reorder detect_edp_sink_caps before link settings read.
+Date:   Wed, 22 Jan 2020 10:28:12 +0100
+Message-Id: <20200122092841.327644984@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
 References: <20200122092833.339495161@linuxfoundation.org>
@@ -60,39 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Mario Kleiner <mario.kleiner.de@gmail.com>
 
-commit c44a4edb20938c85b64a256661443039f5bffdea upstream.
+[ Upstream commit 3b7c59754cc22760760a84ebddb8e0b1e8dd871b ]
 
-This patch fixes the following sparse warnings:
+read_current_link_settings_on_detect() on eDP 1.4+ may use the
+edp_supported_link_rates table which is set up by
+detect_edp_sink_caps(), so that function needs to be called first.
 
-block/bsg-lib.c:269:19: warning: incorrect type in initializer (different base types)
-block/bsg-lib.c:269:19:    expected int sts
-block/bsg-lib.c:269:19:    got restricted blk_status_t [usertype]
-block/bsg-lib.c:286:16: warning: incorrect type in return expression (different base types)
-block/bsg-lib.c:286:16:    expected restricted blk_status_t
-block/bsg-lib.c:286:16:    got int [assigned] sts
-
-Cc: Martin Wilck <mwilck@suse.com>
-Fixes: d46fe2cb2dce ("block: drop device references in bsg_queue_rq()")
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reviewed-by: Harry Wentland <harry.wentland@amd.com>
+Signed-off-by: Mario Kleiner <mario.kleiner.de@gmail.com>
+Cc: Martin Leung <martin.leung@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/bsg-lib.c |    2 +-
+ drivers/gpu/drm/amd/display/dc/core/dc_link.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/block/bsg-lib.c
-+++ b/block/bsg-lib.c
-@@ -266,7 +266,7 @@ static blk_status_t bsg_queue_rq(struct
- 	struct request *req = bd->rq;
- 	struct bsg_set *bset =
- 		container_of(q->tag_set, struct bsg_set, tag_set);
--	int sts = BLK_STS_IOERR;
-+	blk_status_t sts = BLK_STS_IOERR;
- 	int ret;
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+index 793aa8e8ec9a..c0f1c62c59b4 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+@@ -809,8 +809,8 @@ bool dc_link_detect(struct dc_link *link, enum dc_detect_reason reason)
+ 		}
  
- 	blk_mq_start_request(req);
+ 		case SIGNAL_TYPE_EDP: {
+-			read_edp_current_link_settings_on_detect(link);
+ 			detect_edp_sink_caps(link);
++			read_edp_current_link_settings_on_detect(link);
+ 			sink_caps.transaction_type =
+ 				DDC_TRANSACTION_TYPE_I2C_OVER_AUX;
+ 			sink_caps.signal = SIGNAL_TYPE_EDP;
+-- 
+2.20.1
+
 
 
