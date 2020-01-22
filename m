@@ -2,118 +2,243 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0214C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:09:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D068C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C568D2465B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:09:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EAAA24655
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:10:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iVrlchTL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729012AbgAVTJz (ORCPT
+        id S1729100AbgAVTKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 14:09:55 -0500
-Received: from mga09.intel.com ([134.134.136.24]:12402 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726004AbgAVTJz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 14:09:55 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jan 2020 11:09:48 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,350,1574150400"; 
-   d="scan'208";a="229464062"
-Received: from ray.jf.intel.com (HELO [10.7.201.139]) ([10.7.201.139])
-  by orsmga006.jf.intel.com with ESMTP; 22 Jan 2020 11:09:48 -0800
-Subject: Re: [PATCH] x86/pkeys: add check for pkey "overflow"
-To:     Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, alex.shi@linux.alibaba.com,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, bigeasy@linutronix.de,
-        pankaj.laxminarayan.bharadiya@intel.com, aubrey.li@linux.intel.com
-References: <20200122165346.AD4DA150@viggo.jf.intel.com>
- <20200122185111.GK2437@uranus>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <99b572a5-6a98-d22a-01f1-8bab60e96155@intel.com>
-Date:   Wed, 22 Jan 2020 11:09:47 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 22 Jan 2020 14:10:13 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:34001 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbgAVTKM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 14:10:12 -0500
+Received: by mail-lj1-f196.google.com with SMTP id z22so295288ljg.1
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 11:10:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vPRCyAuhv6MvH7lOVEnGwpZ6VZYmbly5SpGfPGCHS28=;
+        b=iVrlchTLfSXTK6dYiD8parogXIGI4Q2ZORX0agr/qP1LRr7ixYyqRkgYR3n1USDguX
+         CCbDtBrT1yWkz1w9CxBZ2zAwmVcTArj6zsCsiW1NfCpTzlfd1fjYTLc5jqWS8yat8Vuo
+         ZWON36Bodoybf0dIPHxpQgp0EtPwsD/4ht1S4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vPRCyAuhv6MvH7lOVEnGwpZ6VZYmbly5SpGfPGCHS28=;
+        b=d+9SQ7nr+wbf52BqAd1GsGirsXdUs96N9pBmt800Nds9koTnVtvaKMJQJCc3fDX5Df
+         dkHjHdChZQi7mzTugOJI3uszABlmb0uOnwGt6fclo/k7bINGKC1UZkUjZTLF8ZX7f7Cb
+         ZjKsrZBYmlOV+u5xZxPVnPYeB1/1DOAnXZ2WDQIANA35T9nHF9AHy4bMPJ/KYyeehBnc
+         x8tZVdxbIBIVDgN4xRrUx6rli9nnt2i83in5bGT9sqN7yqf3C6Y1Lne3oyR9ThVQmdll
+         pSETd4tzh+hGbHJ78PQ4AUu9xw/QVSO6bpDq++ZOmL+F/EbNsvoXDWU68yeld+rEUbPA
+         cnhg==
+X-Gm-Message-State: APjAAAXjuKH6vWkSaFztSPkvPd7gymFjkD655Ty57xvLjml9S83bUuhv
+        pA/h9rX5ZBzDn+KsnLjRh927LuRWvbo=
+X-Google-Smtp-Source: APXvYqwNNP32D4wF1gfVyddvKvQ52CqULljZUK5AqQETY7IUPXp5sH/MsAf/gWPbt9qIEwcGvhchoQ==
+X-Received: by 2002:a2e:7d0c:: with SMTP id y12mr20966403ljc.39.1579720209425;
+        Wed, 22 Jan 2020 11:10:09 -0800 (PST)
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
+        by smtp.gmail.com with ESMTPSA id q13sm24648568ljj.63.2020.01.22.11.10.08
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jan 2020 11:10:08 -0800 (PST)
+Received: by mail-lf1-f46.google.com with SMTP id l18so461211lfc.1
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 11:10:08 -0800 (PST)
+X-Received: by 2002:ac2:523c:: with SMTP id i28mr2558095lfl.104.1579720207926;
+ Wed, 22 Jan 2020 11:10:07 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200122185111.GK2437@uranus>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200109211215.18930-1-sibis@codeaurora.org> <20200109211215.18930-3-sibis@codeaurora.org>
+ <CAE=gft7ZUTiGrvsaqfrVv-bH3w75as7G1UJRn3aJs3ECqodpQg@mail.gmail.com>
+ <dad8936ba4444c3377d777cbbb879dc3@codeaurora.org> <03f83755-bdcc-dc39-0eae-08414751be57@linaro.org>
+ <CAE=gft6NMD7+Bt0ab8tnb8r2DjPkb2si7+0-R+f=SYk2YMCX0A@mail.gmail.com> <169aa5fbe68fb7163166d1789bbf1761@codeaurora.org>
+In-Reply-To: <169aa5fbe68fb7163166d1789bbf1761@codeaurora.org>
+From:   Evan Green <evgreen@chromium.org>
+Date:   Wed, 22 Jan 2020 11:09:31 -0800
+X-Gmail-Original-Message-ID: <CAE=gft5483pptiytdfqpGbrpy4OkwRpJvGyDo5pC5YUQTaQjRQ@mail.gmail.com>
+Message-ID: <CAE=gft5483pptiytdfqpGbrpy4OkwRpJvGyDo5pC5YUQTaQjRQ@mail.gmail.com>
+Subject: Re: [PATCH v4 2/4] interconnect: qcom: Add OSM L3 interconnect
+ provider support
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        David Dai <daidavid1@codeaurora.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/22/20 10:51 AM, Cyrill Gorcunov wrote:
->> +	/*
->> +	 * This code should only be called with valid 'pkey'
->> +	 * values originating from in-kernel users.  Complain
->> +	 * if a bad value is observed.
->> +	 */
->> +	WARN_ON_ONCE(pkey >= arch_max_pkey());
-> Should not we rather abort this operation and exit with EINVAL
-> or something similar instead of calling wrmsr with overflowed
-> value? IOW,
-> 
-> 	if (pkey >= arch_max_pkey()) {
-> 		WARN_ON_ONCE(1);
-> 		return -EINVAL;
-> 	}
+On Wed, Jan 22, 2020 at 10:05 AM Sibi Sankar <sibis@codeaurora.org> wrote:
+>
+> On 2020-01-22 22:18, Evan Green wrote:
+> > On Wed, Jan 22, 2020 at 12:20 AM Georgi Djakov
+> > <georgi.djakov@linaro.org> wrote:
+> >>
+> >> On 1/22/20 08:45, Sibi Sankar wrote:
+> >> > Hey Evan,
+> >> >
+> >> > Thanks for the review!
+> >> >
+> >> > On 2020-01-22 03:03, Evan Green wrote:
+> >> >> On Thu, Jan 9, 2020 at 1:12 PM Sibi Sankar <sibis@codeaurora.org> wrote:
+> >> >>>
+> >> >>> On some Qualcomm SoCs, Operating State Manager (OSM) controls the
+> >> >>> resources of scaling L3 caches. Add a driver to handle bandwidth
+> >> >>> requests to OSM L3 from CPU on SDM845 SoCs.
+> >> >>>
+> >> >>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> >> >>> ---
+> >> >>>  drivers/interconnect/qcom/Kconfig  |   7 +
+> >> >>>  drivers/interconnect/qcom/Makefile |   2 +
+> >> >>>  drivers/interconnect/qcom/osm-l3.c | 267 +++++++++++++++++++++++++++++
+> >> >>>  3 files changed, 276 insertions(+)
+> >> >>>  create mode 100644 drivers/interconnect/qcom/osm-l3.c
+> >> >>>
+> >> >>> diff --git a/drivers/interconnect/qcom/Kconfig
+> >> >>> b/drivers/interconnect/qcom/Kconfig
+> >> >>> index a9bbbdf7400f9..b94d28e7bf700 100644
+> >> >>> --- a/drivers/interconnect/qcom/Kconfig
+> >> >>> +++ b/drivers/interconnect/qcom/Kconfig
+> >> >>> @@ -14,6 +14,13 @@ config INTERCONNECT_QCOM_MSM8974
+> >> >>>          This is a driver for the Qualcomm Network-on-Chip on msm8974-based
+> >> >>>          platforms.
+> >> >>>
+> >> >>> +config INTERCONNECT_QCOM_OSM_L3
+> >> >>> +       tristate "Qualcomm OSM L3 interconnect driver"
+> >> >>> +       depends on INTERCONNECT_QCOM || COMPILE_TEST
+> >> >>> +       help
+> >> >>> +         Say y here to support the Operating State Manager (OSM) interconnect
+> >> >>> +         driver which controls the scaling of L3 caches on Qualcomm SoCs.
+> >> >>> +
+> >> >>>  config INTERCONNECT_QCOM_QCS404
+> >> >>>         tristate "Qualcomm QCS404 interconnect driver"
+> >> >>>         depends on INTERCONNECT_QCOM
+> >> >>> diff --git a/drivers/interconnect/qcom/Makefile
+> >> >>> b/drivers/interconnect/qcom/Makefile
+> >> >>> index 55ec3c5c89dbd..89fecbd1257c7 100644
+> >> >>> --- a/drivers/interconnect/qcom/Makefile
+> >> >>> +++ b/drivers/interconnect/qcom/Makefile
+> >> >>> @@ -1,5 +1,6 @@
+> >> >>>  # SPDX-License-Identifier: GPL-2.0
+> >> >>>
+> >> >>> +icc-osm-l3-objs                                := osm-l3.o
+> >> >>>  qnoc-msm8974-objs                      := msm8974.o
+> >> >>>  qnoc-qcs404-objs                       := qcs404.o
+> >> >>>  qnoc-sc7180-objs                       := sc7180.o
+> >> >>> @@ -12,6 +13,7 @@ icc-smd-rpm-objs                      := smd-rpm.o
+> >> >>>  obj-$(CONFIG_INTERCONNECT_QCOM_BCM_VOTER) += icc-bcm-voter.o
+> >> >>>  obj-$(CONFIG_INTERCONNECT_QCOM_MSM8916) += qnoc-msm8916.o
+> >> >>>  obj-$(CONFIG_INTERCONNECT_QCOM_MSM8974) += qnoc-msm8974.o
+> >> >>> +obj-$(CONFIG_INTERCONNECT_QCOM_OSM_L3) += icc-osm-l3.o
+> >> >>>  obj-$(CONFIG_INTERCONNECT_QCOM_QCS404) += qnoc-qcs404.o
+> >> >>>  obj-$(CONFIG_INTERCONNECT_QCOM_RPMH) += icc-rpmh.o
+> >> >>>  obj-$(CONFIG_INTERCONNECT_QCOM_SC7180) += qnoc-sc7180.o
+> >> >>> diff --git a/drivers/interconnect/qcom/osm-l3.c
+> >> >>> b/drivers/interconnect/qcom/osm-l3.c
+> >> >>> new file mode 100644
+> >> >>> index 0000000000000..7fde53c70081e
+> >> >>> --- /dev/null
+> >> >>> +++ b/drivers/interconnect/qcom/osm-l3.c
+> >> >>> @@ -0,0 +1,267 @@
+> >> >>> +// SPDX-License-Identifier: GPL-2.0
+> >> >>> +/*
+> >> >>> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+> >> >>> + *
+> >> >>> + */
+> >> >>> +
+> >> >>> +#include <dt-bindings/interconnect/qcom,osm-l3.h>
+> >> >>> +#include <linux/bitfield.h>
+> >> >>> +#include <linux/clk.h>
+> >> >>> +#include <linux/interconnect-provider.h>
+> >> >>> +#include <linux/io.h>
+> >> >>> +#include <linux/kernel.h>
+> >> >>> +#include <linux/module.h>
+> >> >>> +#include <linux/of_device.h>
+> >> >>> +#include <linux/of_platform.h>
+> >> >>> +#include <linux/platform_device.h>
+> >> >>> +
+> >> >>> +#define LUT_MAX_ENTRIES                        40U
+> >> >>> +#define LUT_SRC                                GENMASK(31, 30)
+> >> >>> +#define LUT_L_VAL                      GENMASK(7, 0)
+> >> >>> +#define LUT_ROW_SIZE                   32
+> >> >>> +#define CLK_HW_DIV                     2
+> >> >>> +
+> >> >>> +/* Register offsets */
+> >> >>> +#define REG_ENABLE                     0x0
+> >> >>> +#define REG_FREQ_LUT                   0x110
+> >> >>> +#define REG_PERF_STATE                 0x920
+> >> >>> +
+> >> >>> +#define OSM_L3_MAX_LINKS               1
+> >> >>> +#define SDM845_MAX_RSC_NODES           130
+> >> >>
+> >> >> I'm nervous this define is going to fall out of date with
+> >> >> qcom,sdm845.h. I'm worried someone will end up adding a few more nodes
+> >> >> that were always there but previously hidden from Linux. Can we put
+> >> >> this define in include/dt-bindings/interconnect/qcom,sdm845.h, so at
+> >> >> least when that happens they'll come face to face with this define?
+> >> >> The same comment goes for the SC7180 define in patch 4.
+> >> >
+> >> > Yeah both solution require manual
+> >> > intervention how about we just go
+> >> > with what I proposed below.
+> >> >
+> >> >>
+> >> >> On second thought, this trick only works once. Are we sure there
+> >> >> aren't going to be other drivers that might want to tag on
+> >> >> interconnect nodes as well? How about instead we just add the enum
+> >> >> values below in qcom,sdm845.h as defines?
+> >> >
+> >> > Georgi/Evan,
+> >> > Since qcom,sdm845.h is specific to
+> >> > bindings shouldn't I just create a
+> >> > .h file with all the enums so that
+> >> > it can used across all icc providers
+> >> > on SDM845?
+> >>
+> >> This sounds good to me, unless Evan has any objections.
+> >
+> > So is this a new .h file with all the node numbers from qcom,sdm845.h
+> > and your new couple of nodes here? That would be fine with me.
+> >
+> > Or is it a .h file with only your two new node numbers? My worry there
+> > is when there are two or three other drivers like this one, it will be
+> > difficult to follow the total order of nodes as "base provider', "L3
+> > driver", "new driver 1", "new driver 2".... any thoughts on how we
+> > might address that?
+>
+> the relative provider numbers from
+> qcom,sdm845.h have no useful meaning
+> for other icc providers. However the
+> enum defined in the sdm845.c which are
+> the node ids are needed and should be
+> sufficient to add/link to any icc node
+> across icc providers. So introducing a
+> sdm845.h with all the enumbs global node
+> ids is what I am proposing to do.
 
-I don't feel strongly about it.  The reason I didn't do that is to
-minimize the chance that this would cause any functional regression.
-
-It's not a huge chance, but I've certainly fat-fingered my share of
-off-by-one bugs.
+Sibi and
+I chatted
+offline. I
+am on
+board!
