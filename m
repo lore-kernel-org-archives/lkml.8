@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B138C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0C8C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:41:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D790324686
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:41:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F1BF24687
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:41:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686110;
-	bh=KtrrXu75MH7hnqgW0jWNdTGlsUOIMEfHf/hMtBgrmos=;
+	s=default; t=1579686116;
+	bh=tAEX8k+O68fJuZfYx6mQBJTYLpBE2CrVhQuydpAimMg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JRYozJPV63S6wWuMkav3sgDTApyhYhifJ4dP0cMgQoB+JJ5TQNKVI2Br0qE5LW9ub
-	 ONMDHXIK0d70M81mqLahJr6dC9XCelYygcAn+GiyR/FiLFEGkJS/En0ZsRG8epM8Sj
-	 +m5wIJR1AGWN4od4k7MclndWObfWeV276rJj9rV8=
+	b=JFSet97MQjW6jY1pCAN6IVIna6qLPFP0mjuV3NM2BjU1U+T/fovR1MAsaMG/KBagR
+	 1OzggA6hiIVvZcDAW7WX3SwqJHQt2knuP6ma3cvcBZDz3R5fOhMZCBoPEnhdaf6avm
+	 Sgz7usbQGbNmc2T0aLhZKxOSpSz82FOZ8dBBCLaA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729774AbgAVJlt (ORCPT
+        id S1733292AbgAVJlz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:41:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32946 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:41:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731380AbgAVJli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:41:38 -0500
+        id S2387617AbgAVJlr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:41:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B555B2468B;
-        Wed, 22 Jan 2020 09:41:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0EA724686;
+        Wed, 22 Jan 2020 09:41:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686097;
-        bh=KtrrXu75MH7hnqgW0jWNdTGlsUOIMEfHf/hMtBgrmos=;
+        s=default; t=1579686107;
+        bh=tAEX8k+O68fJuZfYx6mQBJTYLpBE2CrVhQuydpAimMg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wVLZ1cB8VutDOqPJKJuQ+8VURxOZsIg8i+gWOj4rbs8UzNhgb2n+Br3GZ4Rw8ftQK
-         RhRd1uQWEMDvFtioxINt3XDOhZu1TMC5GkfhjXw9VjZ14KDISWfzPYgOZgDiTW1fie
-         hSVCPqXlIVCDP9e+RWsHaK11qGmcA58e+fYnfACY=
+        b=sWT1jJQSzDAVvkMK9js/fyLGwVIpD1fDoBHHYU2S256O9B8mRA5F9J8zfkV8AmFrf
+         xfM2dgbdEfvzhZ2n9ipiWR0EE/SUhrw27+TEVUfIXchScPFmaQk0U4aEAYpId8TQd2
+         IUHO39VaHJYp/3kYCEG9mjtmw2qvYlM+n12DE/7k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 042/103] btrfs: rework arguments of btrfs_unlink_subvol
-Date:   Wed, 22 Jan 2020 10:28:58 +0100
-Message-Id: <20200122092810.213590198@linuxfoundation.org>
+        stable@vger.kernel.org, Wen Yang <wenyang@linux.alibaba.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Qian Cai <cai@lca.pw>, Tejun Heo <tj@kernel.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 046/103] mm/page-writeback.c: avoid potential division by zero in wb_min_max_ratio()
+Date:   Wed, 22 Jan 2020 10:29:02 +0100
+Message-Id: <20200122092810.734690455@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
 References: <20200122092803.587683021@linuxfoundation.org>
@@ -60,146 +62,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Wen Yang <wenyang@linux.alibaba.com>
 
-[ Upstream commit 045d3967b6920b663fc010ad414ade1b24143bd1 ]
+commit 6d9e8c651dd979aa666bee15f086745f3ea9c4b3 upstream.
 
-btrfs_unlink_subvol takes the name of the dentry and the root objectid
-based on what kind of inode this is, either a real subvolume link or a
-empty one that we inherited as a snapshot.  We need to fix how we unlink
-in the case for BTRFS_EMPTY_SUBVOL_DIR_OBJECTID in the future, so rework
-btrfs_unlink_subvol to just take the dentry and handle getting the right
-objectid given the type of inode this is.  There is no functional change
-here, simply pushing the work into btrfs_unlink_subvol() proper.
+Patch series "use div64_ul() instead of div_u64() if the divisor is
+unsigned long".
 
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+We were first inspired by commit b0ab99e7736a ("sched: Fix possible divide
+by zero in avg_atom () calculation"), then refer to the recently analyzed
+mm code, we found this suspicious place.
+
+ 201                 if (min) {
+ 202                         min *= this_bw;
+ 203                         do_div(min, tot_bw);
+ 204                 }
+
+And we also disassembled and confirmed it:
+
+  /usr/src/debug/kernel-4.9.168-016.ali3000/linux-4.9.168-016.ali3000.alios7.x86_64/mm/page-writeback.c: 201
+  0xffffffff811c37da <__wb_calc_thresh+234>:      xor    %r10d,%r10d
+  0xffffffff811c37dd <__wb_calc_thresh+237>:      test   %rax,%rax
+  0xffffffff811c37e0 <__wb_calc_thresh+240>:      je 0xffffffff811c3800 <__wb_calc_thresh+272>
+  /usr/src/debug/kernel-4.9.168-016.ali3000/linux-4.9.168-016.ali3000.alios7.x86_64/mm/page-writeback.c: 202
+  0xffffffff811c37e2 <__wb_calc_thresh+242>:      imul   %r8,%rax
+  /usr/src/debug/kernel-4.9.168-016.ali3000/linux-4.9.168-016.ali3000.alios7.x86_64/mm/page-writeback.c: 203
+  0xffffffff811c37e6 <__wb_calc_thresh+246>:      mov    %r9d,%r10d    ---> truncates it to 32 bits here
+  0xffffffff811c37e9 <__wb_calc_thresh+249>:      xor    %edx,%edx
+  0xffffffff811c37eb <__wb_calc_thresh+251>:      div    %r10
+  0xffffffff811c37ee <__wb_calc_thresh+254>:      imul   %rbx,%rax
+  0xffffffff811c37f2 <__wb_calc_thresh+258>:      shr    $0x2,%rax
+  0xffffffff811c37f6 <__wb_calc_thresh+262>:      mul    %rcx
+  0xffffffff811c37f9 <__wb_calc_thresh+265>:      shr    $0x2,%rdx
+  0xffffffff811c37fd <__wb_calc_thresh+269>:      mov    %rdx,%r10
+
+This series uses div64_ul() instead of div_u64() if the divisor is
+unsigned long, to avoid truncation to 32-bit on 64-bit platforms.
+
+This patch (of 3):
+
+The variables 'min' and 'max' are unsigned long and do_div truncates
+them to 32 bits, which means it can test non-zero and be truncated to
+zero for division.  Fix this issue by using div64_ul() instead.
+
+Link: http://lkml.kernel.org/r/20200102081442.8273-2-wenyang@linux.alibaba.com
+Fixes: 693108a8a667 ("writeback: make bdi->min/max_ratio handling cgroup writeback aware")
+Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Qian Cai <cai@lca.pw>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/btrfs/inode.c |   46 ++++++++++++++++++++--------------------------
- 1 file changed, 20 insertions(+), 26 deletions(-)
+ mm/page-writeback.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -4120,18 +4120,30 @@ out:
- }
- 
- static int btrfs_unlink_subvol(struct btrfs_trans_handle *trans,
--			       struct inode *dir, u64 objectid,
--			       const char *name, int name_len)
-+			       struct inode *dir, struct dentry *dentry)
- {
- 	struct btrfs_root *root = BTRFS_I(dir)->root;
-+	struct btrfs_inode *inode = BTRFS_I(d_inode(dentry));
- 	struct btrfs_path *path;
- 	struct extent_buffer *leaf;
- 	struct btrfs_dir_item *di;
- 	struct btrfs_key key;
-+	const char *name = dentry->d_name.name;
-+	int name_len = dentry->d_name.len;
- 	u64 index;
- 	int ret;
-+	u64 objectid;
- 	u64 dir_ino = btrfs_ino(BTRFS_I(dir));
- 
-+	if (btrfs_ino(inode) == BTRFS_FIRST_FREE_OBJECTID) {
-+		objectid = inode->root->root_key.objectid;
-+	} else if (btrfs_ino(inode) == BTRFS_EMPTY_SUBVOL_DIR_OBJECTID) {
-+		objectid = inode->location.objectid;
-+	} else {
-+		WARN_ON(1);
-+		return -EINVAL;
-+	}
-+
- 	path = btrfs_alloc_path();
- 	if (!path)
- 		return -ENOMEM;
-@@ -4373,8 +4385,7 @@ int btrfs_delete_subvolume(struct inode
- 
- 	btrfs_record_snapshot_destroy(trans, BTRFS_I(dir));
- 
--	ret = btrfs_unlink_subvol(trans, dir, dest->root_key.objectid,
--				  dentry->d_name.name, dentry->d_name.len);
-+	ret = btrfs_unlink_subvol(trans, dir, dentry);
- 	if (ret) {
- 		err = ret;
- 		btrfs_abort_transaction(trans, ret);
-@@ -4469,10 +4480,7 @@ static int btrfs_rmdir(struct inode *dir
- 		return PTR_ERR(trans);
- 
- 	if (unlikely(btrfs_ino(BTRFS_I(inode)) == BTRFS_EMPTY_SUBVOL_DIR_OBJECTID)) {
--		err = btrfs_unlink_subvol(trans, dir,
--					  BTRFS_I(inode)->location.objectid,
--					  dentry->d_name.name,
--					  dentry->d_name.len);
-+		err = btrfs_unlink_subvol(trans, dir, dentry);
- 		goto out;
+--- a/mm/page-writeback.c
++++ b/mm/page-writeback.c
+@@ -200,11 +200,11 @@ static void wb_min_max_ratio(struct bdi_
+ 	if (this_bw < tot_bw) {
+ 		if (min) {
+ 			min *= this_bw;
+-			do_div(min, tot_bw);
++			min = div64_ul(min, tot_bw);
+ 		}
+ 		if (max < 100) {
+ 			max *= this_bw;
+-			do_div(max, tot_bw);
++			max = div64_ul(max, tot_bw);
+ 		}
  	}
  
-@@ -9471,7 +9479,6 @@ static int btrfs_rename_exchange(struct
- 	u64 new_ino = btrfs_ino(BTRFS_I(new_inode));
- 	u64 old_idx = 0;
- 	u64 new_idx = 0;
--	u64 root_objectid;
- 	int ret;
- 	bool root_log_pinned = false;
- 	bool dest_log_pinned = false;
-@@ -9577,10 +9584,7 @@ static int btrfs_rename_exchange(struct
- 
- 	/* src is a subvolume */
- 	if (old_ino == BTRFS_FIRST_FREE_OBJECTID) {
--		root_objectid = BTRFS_I(old_inode)->root->root_key.objectid;
--		ret = btrfs_unlink_subvol(trans, old_dir, root_objectid,
--					  old_dentry->d_name.name,
--					  old_dentry->d_name.len);
-+		ret = btrfs_unlink_subvol(trans, old_dir, old_dentry);
- 	} else { /* src is an inode */
- 		ret = __btrfs_unlink_inode(trans, root, BTRFS_I(old_dir),
- 					   BTRFS_I(old_dentry->d_inode),
-@@ -9596,10 +9600,7 @@ static int btrfs_rename_exchange(struct
- 
- 	/* dest is a subvolume */
- 	if (new_ino == BTRFS_FIRST_FREE_OBJECTID) {
--		root_objectid = BTRFS_I(new_inode)->root->root_key.objectid;
--		ret = btrfs_unlink_subvol(trans, new_dir, root_objectid,
--					  new_dentry->d_name.name,
--					  new_dentry->d_name.len);
-+		ret = btrfs_unlink_subvol(trans, new_dir, new_dentry);
- 	} else { /* dest is an inode */
- 		ret = __btrfs_unlink_inode(trans, dest, BTRFS_I(new_dir),
- 					   BTRFS_I(new_dentry->d_inode),
-@@ -9797,7 +9798,6 @@ static int btrfs_rename(struct inode *ol
- 	struct inode *new_inode = d_inode(new_dentry);
- 	struct inode *old_inode = d_inode(old_dentry);
- 	u64 index = 0;
--	u64 root_objectid;
- 	int ret;
- 	u64 old_ino = btrfs_ino(BTRFS_I(old_inode));
- 	bool log_pinned = false;
-@@ -9905,10 +9905,7 @@ static int btrfs_rename(struct inode *ol
- 				BTRFS_I(old_inode), 1);
- 
- 	if (unlikely(old_ino == BTRFS_FIRST_FREE_OBJECTID)) {
--		root_objectid = BTRFS_I(old_inode)->root->root_key.objectid;
--		ret = btrfs_unlink_subvol(trans, old_dir, root_objectid,
--					old_dentry->d_name.name,
--					old_dentry->d_name.len);
-+		ret = btrfs_unlink_subvol(trans, old_dir, old_dentry);
- 	} else {
- 		ret = __btrfs_unlink_inode(trans, root, BTRFS_I(old_dir),
- 					BTRFS_I(d_inode(old_dentry)),
-@@ -9927,10 +9924,7 @@ static int btrfs_rename(struct inode *ol
- 		new_inode->i_ctime = current_time(new_inode);
- 		if (unlikely(btrfs_ino(BTRFS_I(new_inode)) ==
- 			     BTRFS_EMPTY_SUBVOL_DIR_OBJECTID)) {
--			root_objectid = BTRFS_I(new_inode)->location.objectid;
--			ret = btrfs_unlink_subvol(trans, new_dir, root_objectid,
--						new_dentry->d_name.name,
--						new_dentry->d_name.len);
-+			ret = btrfs_unlink_subvol(trans, new_dir, new_dentry);
- 			BUG_ON(new_inode->i_nlink == 0);
- 		} else {
- 			ret = btrfs_unlink_inode(trans, dest, BTRFS_I(new_dir),
 
 
