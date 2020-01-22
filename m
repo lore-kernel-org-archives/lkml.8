@@ -5,50 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A33B1C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6681BC33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 712E4205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:23:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32DB92467B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:23:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579699383;
-	bh=As0BFpKYdf8bREqme8P5/YpjihCcV/hXG3yG8sQOQCw=;
+	s=default; t=1579699388;
+	bh=WDHFmtGhG10YbiH7PL2Z0ayF3nFw7FCKt/ukbS1zEQo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mezE2CL6SssM+b1n1omkXbq3X5lILdH6GUn8DQ7W0OjXncVGYm29c7hc/BSXOo0ZL
-	 TXHCA3ix2Pdgv+9KdKtHtBnDaZDhrzgYdZwrhsHGwYz12XlhQHRAz5Qc5KtuR+Rbmy
-	 mwPUAGAYD3WVA9BiCVF9Zfpc+cIMBLIiV6dUDj7Q=
+	b=MPYOjenWHezCRYv1xtCQS4NLY0WF/kDVDZoi4As6MuvfmFaD3ahKfisHhbrREwJr6
+	 QRXcVmxcLxNH5Pe81xbsqFEVSjlS4nIU/pz2rdwqoseEngL8HXl6vdtXi9ofTQliy3
+	 sQq0xxw700AfYbT4y/XLjvCXpovVmcHnv4gA7NuY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729325AbgAVNWv (ORCPT
+        id S1730701AbgAVNXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:22:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40652 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 08:23:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729425AbgAVNWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:22:47 -0500
+        id S1729353AbgAVNXD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:23:03 -0500
 Received: from localhost (unknown [84.241.205.26])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C7432468D;
-        Wed, 22 Jan 2020 13:22:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A79822467B;
+        Wed, 22 Jan 2020 13:23:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579699367;
-        bh=As0BFpKYdf8bREqme8P5/YpjihCcV/hXG3yG8sQOQCw=;
+        s=default; t=1579699383;
+        bh=WDHFmtGhG10YbiH7PL2Z0ayF3nFw7FCKt/ukbS1zEQo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v6kLxPL+gaAoOJgZayM1q+SSKprAdO9ZbXaOUwcH4CX9DOFHtsX8P2id6ZtmERScl
-         h2jndKqZMQPdboAZZrg/Uleuj3bXkwaL3l/rQNRThFBeN6LpvD0I006DVKZsksnkL2
-         bsGr9O9yhPP2t1D7iKqRT1iJnj4g+S+dk9AWR4ds=
+        b=LTvcnFz9/3R0xIlM2Y0tAlo8JIipOQhQK6cUURFbP/VtejJacClZbna1RUxjMdw6q
+         4DwRCznNUfA6hTuzjrON+ryW0ZbOOkc1ViDmX7k1IcgR2tx9MGbu4BOU80hQJ87SOX
+         uiUxoxhPBnlja6UoqbSpG+tC/VHDjwQV1vqdIVQg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Wolfram Sang <wsa@the-dreams.de>
-Subject: [PATCH 5.4 123/222] i2c: iop3xx: Fix memory leak in probe error path
-Date:   Wed, 22 Jan 2020 10:28:29 +0100
-Message-Id: <20200122092842.556199913@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 5.4 128/222] netfilter: nft_tunnel: ERSPAN_VERSION must not be null
+Date:   Wed, 22 Jan 2020 10:28:34 +0100
+Message-Id: <20200122092842.914363198@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
 References: <20200122092833.339495161@linuxfoundation.org>
@@ -61,50 +59,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Kozlowski <krzk@kernel.org>
+From: Florian Westphal <fw@strlen.de>
 
-commit e64175776d06a8ceebbfd349d7e66a4a46ca39ef upstream.
+commit 9ec22d7c6c69146180577f3ad5fdf504beeaee62 upstream.
 
-When handling devm_gpiod_get_optional() errors, free the memory already
-allocated.  This fixes Smatch warnings:
-
-    drivers/i2c/busses/i2c-iop3xx.c:437 iop3xx_i2c_probe() warn: possible memory leak of 'new_adapter'
-    drivers/i2c/busses/i2c-iop3xx.c:442 iop3xx_i2c_probe() warn: possible memory leak of 'new_adapter'
-
-Fixes: fdb7e884ad61 ("i2c: iop: Use GPIO descriptors")
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Fixes: af308b94a2a4a5 ("netfilter: nf_tables: add tunnel support")
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/i2c/busses/i2c-iop3xx.c |   12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ net/netfilter/nft_tunnel.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/i2c/busses/i2c-iop3xx.c
-+++ b/drivers/i2c/busses/i2c-iop3xx.c
-@@ -433,13 +433,17 @@ iop3xx_i2c_probe(struct platform_device
- 	adapter_data->gpio_scl = devm_gpiod_get_optional(&pdev->dev,
- 							 "scl",
- 							 GPIOD_ASIS);
--	if (IS_ERR(adapter_data->gpio_scl))
--		return PTR_ERR(adapter_data->gpio_scl);
-+	if (IS_ERR(adapter_data->gpio_scl)) {
-+		ret = PTR_ERR(adapter_data->gpio_scl);
-+		goto free_both;
-+	}
- 	adapter_data->gpio_sda = devm_gpiod_get_optional(&pdev->dev,
- 							 "sda",
- 							 GPIOD_ASIS);
--	if (IS_ERR(adapter_data->gpio_sda))
--		return PTR_ERR(adapter_data->gpio_sda);
-+	if (IS_ERR(adapter_data->gpio_sda)) {
-+		ret = PTR_ERR(adapter_data->gpio_sda);
-+		goto free_both;
-+	}
+--- a/net/netfilter/nft_tunnel.c
++++ b/net/netfilter/nft_tunnel.c
+@@ -266,6 +266,9 @@ static int nft_tunnel_obj_erspan_init(co
+ 	if (err < 0)
+ 		return err;
  
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	if (!res) {
++	if (!tb[NFTA_TUNNEL_KEY_ERSPAN_VERSION])
++		 return -EINVAL;
++
+ 	version = ntohl(nla_get_be32(tb[NFTA_TUNNEL_KEY_ERSPAN_VERSION]));
+ 	switch (version) {
+ 	case ERSPAN_VERSION:
 
 
