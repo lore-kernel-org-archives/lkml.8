@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B91CC33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A5E1C33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:47:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCA132467B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:47:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53BC72467B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:47:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686433;
-	bh=NN3XaH1oGHRZjvkiDqVdyrqgwihZbowjQ5VmMe5uonE=;
+	s=default; t=1579686436;
+	bh=0Wy9QmnyEf2wGDNA62BLUT9kBGOueblak1F7BeV4wCU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AreJCga3bqHJ/myX2bKmDwoQY5pkNRHv5xw7Z5dihNObp9OVKU2b3pNgmy0wzcM2f
-	 Do3oc1OFGRwKlj0t8nBQL6nUSujqAKh/vQ6djH+D5FEwEQG81DIVpegkw5/kSGKMKh
-	 BAIyHwloTzE7KgC+/fqUcSoe+ZEFteQA/K9L4IIc=
+	b=rnVDnjJPD/UfX0+egHSJPvXQ/ZouUIslYP6nSHeCsANKbh+DCtJLuK3mkldBOBP6N
+	 9rNLov7nU5FEu3yeBJ+TOXy6IGUnVIyA1woruzRpVDG/roLUCjg6ls3CgTteMJi6Dm
+	 OdYU1n8jqKk4IS+H0YWwiKUdHW9Oljt1KLPQdskY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733220AbgAVJmg (ORCPT
+        id S2387456AbgAVJmd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:42:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34308 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:42:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387713AbgAVJm0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:42:26 -0500
+        id S2387707AbgAVJmY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:42:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FDE624684;
-        Wed, 22 Jan 2020 09:42:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D94BE24680;
+        Wed, 22 Jan 2020 09:42:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686145;
-        bh=NN3XaH1oGHRZjvkiDqVdyrqgwihZbowjQ5VmMe5uonE=;
+        s=default; t=1579686143;
+        bh=0Wy9QmnyEf2wGDNA62BLUT9kBGOueblak1F7BeV4wCU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qkx3GdpQh5tGZbvpLsyE5yDCjbh+VENAO3oM5/Iw7Kx2DeO+dULTcjnh2jSIIUv1F
-         lCjeXkYbb6oPZq5mYBrYA4UXAvQIy5nRCQIhWDVnmkfqpeQCBDVFTwtpNe0bJMxb8z
-         mwhL3OI223cQne5FRI2evNKbp/Ka2InVXwOVkuJ4=
+        b=HzkWbOj2XX0WUD4M9bYdCqNCl3REx/GzGmT4WxauE0MFNUYJpzq+HErzGWnoCgtvO
+         kl7jDBhT8gfI2Vc1a5D2D5+dRWQHN+9G+KReSbMbnM70ZoGyDJYBiHdAdDNYwFRgRW
+         wsMyAHKpEs0SrxanFSliodnTMzG3eeTyLlS5joZQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Mavrodiev <stefan@olimex.com>,
-        Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH 4.19 026/103] arm64: dts: allwinner: a64: olinuxino: Fix SDIO supply regulator
-Date:   Wed, 22 Jan 2020 10:28:42 +0100
-Message-Id: <20200122092807.742932532@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 025/103] ALSA: usb-audio: fix sync-ep altsetting sanity check
+Date:   Wed, 22 Jan 2020 10:28:41 +0100
+Message-Id: <20200122092807.578377802@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
 References: <20200122092803.587683021@linuxfoundation.org>
@@ -59,37 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Mavrodiev <stefan@olimex.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit 3d615c2fc2d111b51d2e20516b920138d4ae29a2 upstream.
+commit 5d1b71226dc4d44b4b65766fa9d74492f9d4587b upstream.
 
-A64-OLinuXino uses DCDC1 (VCC-IO) for MMC1 supply. In commit 916b68cfe4b5
-("arm64: dts: a64-olinuxino: Enable RTL8723BS WiFi") ALDO2 is set, which is
-VCC-PL. Since DCDC1 is always present, the boards are working without a
-problem.
+The altsetting sanity check in set_sync_ep_implicit_fb_quirk() was
+checking for there to be at least one altsetting but then went on to
+access the second one, which may not exist.
 
-This patch sets the correct regulator.
+This could lead to random slab data being used to initialise the sync
+endpoint in snd_usb_add_endpoint().
 
-Fixes: 916b68cfe4b5 ("arm64: dts: a64-olinuxino: Enable RTL8723BS WiFi")
-Cc: stable@vger.kernel.org # v4.16+
-Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Fixes: c75a8a7ae565 ("ALSA: snd-usb: add support for implicit feedback")
+Fixes: ca10a7ebdff1 ("ALSA: usb-audio: FT C400 sync playback EP to capture EP")
+Fixes: 5e35dc0338d8 ("ALSA: usb-audio: add implicit fb quirk for Behringer UFX1204")
+Fixes: 17f08b0d9aaf ("ALSA: usb-audio: add implicit fb quirk for Axe-Fx II")
+Fixes: 103e9625647a ("ALSA: usb-audio: simplify set_sync_ep_implicit_fb_quirk")
+Cc: stable <stable@vger.kernel.org>     # 3.5
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20200114083953.1106-1-johan@kernel.org
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts |    2 +-
+ sound/usb/pcm.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-@@ -77,7 +77,7 @@
- &mmc1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc1_pins>;
--	vmmc-supply = <&reg_aldo2>;
-+	vmmc-supply = <&reg_dcdc1>;
- 	vqmmc-supply = <&reg_dldo4>;
- 	mmc-pwrseq = <&wifi_pwrseq>;
- 	bus-width = <4>;
+--- a/sound/usb/pcm.c
++++ b/sound/usb/pcm.c
+@@ -377,7 +377,7 @@ static int set_sync_ep_implicit_fb_quirk
+ add_sync_ep_from_ifnum:
+ 	iface = usb_ifnum_to_if(dev, ifnum);
+ 
+-	if (!iface || iface->num_altsetting == 0)
++	if (!iface || iface->num_altsetting < 2)
+ 		return -EINVAL;
+ 
+ 	alts = &iface->altsetting[1];
 
 
