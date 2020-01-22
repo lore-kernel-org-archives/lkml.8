@@ -2,90 +2,148 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D42E0C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE04FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:56:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E41124683
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:56:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686963;
-	bh=VvSxBTUM2iQ3N+zapYL3JW57CkB2JGsoaIGUI7TyPSA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ECkM1Yns9wjw9ylrS7yeU+koRMihaWB1XPOZRU+/Q44htvmP1ggbseFoM9S1BLfr8
-	 DNLopyP0OY41YNFjnrMigNYDRG7jx1ec9IKcd+xVPW0wf/ss7OqTXzr0Vrftcdava/
-	 r8/IGjKe3Cjm8TsZ2Pb5DNuBLkbG0Cb0i25iGGq8=
+	by mail.kernel.org (Postfix) with ESMTP id B43262465A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:56:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="kH8rknGi";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="C3banMiM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730607AbgAVJ4C (ORCPT
+        id S1730736AbgAVJ4H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 22 Jan 2020 04:56:07 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:36478 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730120AbgAVJ4C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 Jan 2020 04:56:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44940 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729401AbgAVJcP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:32:15 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8039C24698;
-        Wed, 22 Jan 2020 09:32:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685535;
-        bh=VvSxBTUM2iQ3N+zapYL3JW57CkB2JGsoaIGUI7TyPSA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HQQr3RmFt4l3uVlhR+fYgtYR9rj4GQ9m26eYPQKh4XP4pbufik3U6icdBYawV4Cad
-         YkXUS5YGJmn2cRDPAbe71kR6vketFK+MDgJc5/xgwdhyhRdCHnFolm3dpv5h+FEalL
-         LOQ8pFYQJl/FB7UfEeXttPH20kFQFUEMH+kn9yRY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jose Abreu <Jose.Abreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 53/76] net: stmmac: 16KB buffer must be 16 byte aligned
-Date:   Wed, 22 Jan 2020 10:29:09 +0100
-Message-Id: <20200122092758.756403838@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200122092751.587775548@linuxfoundation.org>
-References: <20200122092751.587775548@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 12D84C059F;
+        Wed, 22 Jan 2020 09:55:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1579686960; bh=KLrHdFY/H//p/H0YRmCf3q93qXdYupMA6Ge9xq4oPWA=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=kH8rknGiNhbEO1jd4Mp4Jz+TWPEsseDqMSy2U0F6DW08uZCVGL9ypeFCuHFksvO+O
+         CfmiigFF9PD5Ljvw1FrC1VQj/5bWqjTRmecPbgxx+KVrICdrQiX3VKkLlq1jRPndtO
+         DgOovIGS95S3ww+rEAyypckboXU0k7NKHG4eL41JLeaaBvYfPG9kc0Em96GlDvYN8Q
+         68mtEdYXRpTCWPVBeIFonQiS4g6qx87aB1j+KHL0SQ7AHoWFd9AbnSzQShLwNYKU5B
+         cre6Zk3LlOw6g7ecPwZsMdgdYoo0ioCUja7yaQ0hLso9NuZa9ZliyrTN7r1QMppu6D
+         y6LCyHW4XchSw==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 496D7A0085;
+        Wed, 22 Jan 2020 09:55:55 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 22 Jan 2020 01:55:55 -0800
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Wed, 22 Jan 2020 01:55:55 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jMX/WG8YZJJ6ZXb6ahhliri99/gDzDEc82Fdjwlr1MWURw4u/6tWPw32fmvN7J7bg0v0uUXgiM+IHQA7NCn2hL5ir3spV0ZuF7eIFflPefyMIqSwjNdMfupa6z2AU32cDa6P7rhUCv6iLdSlC4TEuk+tJYgnlN9jKTMD31ir79YcTuf1ZHRPO/7i09apOa+e7C/6vu6TTH3Ag7t0MlZcXXDD98B+RiF6GYpNdVwK4btEgu4kEkbs1qlXrgTsXbtHABJEyxvehQcXPWmHu12jr3T0U92v5XnenqR/VrLpqbpW6/5BBeB6LBT5I7IQaFHE2Lh/whqGkAWXZ8j4MJm0Ag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KLrHdFY/H//p/H0YRmCf3q93qXdYupMA6Ge9xq4oPWA=;
+ b=cBbgdHaVr83Wwk359qxerP0bSc32/eWUFag014FJ3FVJcjPxPUKa39x/l40qIYqryz96qcEdpwHrQro40J1Z+szxpEeJ5bQVxeKQi4y6RBzOacvLPsPx8pPngZoX6QYGruwsrMJt49d3qktRY5k5apg4b1xlGwyezeL7IsGL3Z8fiGAplqbvgUBt77xhmLb3ksyibyX8JBSU89VUU4JAeK9tIyS3yOs8z5gLCLS2h/VtLP2DkXtg16qhk7iMS4Sdh/5RZZe/7a3RE9/+kGTAg06EZhcgIt9fMAtRwH503hAbDp+h0pIPzZpt9jthoYHsd5ezTm3C9yS527zRrKxiiQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KLrHdFY/H//p/H0YRmCf3q93qXdYupMA6Ge9xq4oPWA=;
+ b=C3banMiM068OeE6p89arW5t27hUFlo8UazkmQ0lF3L0cFgx/dWRbKVY6ANwZVXd7LfFXdaLU6Ve0u89zngnr0RgZxKbYZyIrcDbObJaUerpHOpVs8J7920Mf4CiKhGDUqO/LAg0tFUHSo1GNYPe2GprwUMLMNNlFY1mBFSEwHHs=
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.67.145) by
+ BN8PR12MB3026.namprd12.prod.outlook.com (20.178.210.90) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.23; Wed, 22 Jan 2020 09:55:52 +0000
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::c62:b247:6963:9da2]) by BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::c62:b247:6963:9da2%6]) with mapi id 15.20.2644.027; Wed, 22 Jan 2020
+ 09:55:52 +0000
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     Ong Boon Leong <boon.leong.ong@intel.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     Tan Tee Min <tee.min.tan@intel.com>,
+        Voon Weifeng <weifeng.voon@intel.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "Joao Pinto" <Joao.Pinto@synopsys.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Alexandru Ardelean" <alexandru.ardelean@analog.com>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH net v3 1/5] net: stmmac: Fix incorrect location to set
+ real_num_rx|tx_queues
+Thread-Topic: [PATCH net v3 1/5] net: stmmac: Fix incorrect location to set
+ real_num_rx|tx_queues
+Thread-Index: AQHV0QPdI0TP73liMkC6zs86z0tb/af2cgbQ
+Date:   Wed, 22 Jan 2020 09:55:52 +0000
+Message-ID: <BN8PR12MB3266F0534CE20CE906AA3C06D30C0@BN8PR12MB3266.namprd12.prod.outlook.com>
+References: <20200122090936.28555-1-boon.leong.ong@intel.com>
+ <20200122090936.28555-2-boon.leong.ong@intel.com>
+In-Reply-To: <20200122090936.28555-2-boon.leong.ong@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=joabreu@synopsys.com; 
+x-originating-ip: [83.174.63.141]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: cdeb2744-ce37-42ac-6b42-08d79f214453
+x-ms-traffictypediagnostic: BN8PR12MB3026:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN8PR12MB30264F067D7F3DE9C17F7B39D30C0@BN8PR12MB3026.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 029097202E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(189003)(199004)(54906003)(4326008)(110136005)(9686003)(7696005)(55016002)(4744005)(7416002)(8936002)(81166006)(81156014)(64756008)(66556008)(66946007)(66476007)(33656002)(186003)(5660300002)(66446008)(76116006)(2906002)(86362001)(26005)(52536014)(498600001)(71200400001)(6506007)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB3026;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: rekbeK7wh8zJzdbHCDhqmAsEtqjSZx1NvW+2lK9E6fUVkRvNAUSCXos+n9LXx+QI8qr85suO0Dl4aD0Bp2WbyEJnokqFBEn4rALrHSDmu6WqtoBWpDNPXQUUBcXdgzSCzb79jIyNp2CJ6Aon2e/R6sBt4s5jCz63/ib9MdZamH+HdpD/P1ocYKB9KuSgO9zFonjrORkaOhiFOOzLicDyuYKCtQ5ksfiqHo5LLgRJWyON0OGCtACT7LxsDizfM9rPlk/JfMGVYO0asPzXFyJbS5idJOHQcZP0lAhOwM28av77GaY1J6/X2YRIP2tyCzdQJFGs0MvbdbqfDZthB91GoxL1wgTK9TYL3qY5RVEK/mHVug+brq76uvQvtCQkdY9qU0Lhgu/xlDsKnCEgtt+A6tpnDkHlf8szPjt10UV7OXMW7kqg88J0PKvsJsyUVNj3
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-Network-Message-Id: cdeb2744-ce37-42ac-6b42-08d79f214453
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jan 2020 09:55:52.4209
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: uP2DFy6lcOmK8s46VlHTczPM98d+nld6s/eU/KRs/8olEhk24ZKd1xODXR/CD2ia1vcErMQYPFO507PVF9hY5Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3026
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jose Abreu <Jose.Abreu@synopsys.com>
+From: Ong Boon Leong <boon.leong.ong@intel.com>
+Date: Jan/22/2020, 09:09:32 (UTC+00:00)
 
-commit 8605131747e7e1fd8f6c9f97a00287aae2b2c640 upstream.
+> For driver open(), rtnl_lock is acquired by network stack but not in the
+> resume(). Therefore, we introduce lock_acquired boolean to control when
+> to use rtnl_lock|unlock() within stmmac_hw_setup().
 
-The 16KB RX Buffer must also be 16 byte aligned. Fix it.
-
-Fixes: 7ac6653a085b ("stmmac: Move the STMicroelectronics driver")
-Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Why not use rtnl_is_locked() instead of the boolean ?
 
 ---
- drivers/net/ethernet/stmicro/stmmac/common.h |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
---- a/drivers/net/ethernet/stmicro/stmmac/common.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/common.h
-@@ -273,8 +273,8 @@ struct dma_features {
- 	unsigned int enh_desc;
- };
- 
--/* GMAC TX FIFO is 8K, Rx FIFO is 16K */
--#define BUF_SIZE_16KiB 16384
-+/* RX Buffer size must be multiple of 4/8/16 bytes */
-+#define BUF_SIZE_16KiB 16368
- #define BUF_SIZE_8KiB 8192
- #define BUF_SIZE_4KiB 4096
- #define BUF_SIZE_2KiB 2048
-
-
+Thanks,
+Jose Miguel Abreu
