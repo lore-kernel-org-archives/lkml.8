@@ -2,67 +2,96 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C870EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:55:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BDDBC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A332020704
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:55:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CABEF2465A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:55:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579686931;
+	bh=JGMlHbylT8EJA5WRpMqhPRi9WQs9uvPiSiL9iidNKwE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=1C/ptlsrg5WRRk5vkBdbOozQwOaUPtFrP90Ja+pkBNcr5YvjAldKUotnhKwC8Kpzu
+	 WBfa1B30vaIO1xLsDe8MsOjoFlA/11TXh1QZtYkTr8JgXAsHZ7sukOwresDYVNhA6Z
+	 2Emue7OAyHp6oS2qHKHIReB03UVjIgIAYuESN/jI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730917AbgAVJzT (ORCPT
+        id S1730314AbgAVJdA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:55:19 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:46786 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730377AbgAVJdO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:33:14 -0500
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id E3C529708B054E010687;
-        Wed, 22 Jan 2020 17:33:11 +0800 (CST)
-Received: from [127.0.0.1] (10.133.208.128) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Wed, 22 Jan 2020
- 17:33:10 +0800
-To:     <tytso@mit.edu>, <jack@suse.com>, <linux-ext4@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-From:   wangyan <wangyan122@huawei.com>
-Subject: [PATCH] jbd2: delete the duplicated words in the comments
-Message-ID: <12087f77-ab4d-c7ba-53b4-893dbf0026f0@huawei.com>
-Date:   Wed, 22 Jan 2020 17:33:10 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Wed, 22 Jan 2020 04:33:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46260 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729764AbgAVJc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:32:58 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1432C2071E;
+        Wed, 22 Jan 2020 09:32:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579685577;
+        bh=JGMlHbylT8EJA5WRpMqhPRi9WQs9uvPiSiL9iidNKwE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qvwQnZ7sdGZF8CZzIn2nZiCrWSANONJSdaIEfKa6o+SXm5ECcnh5XviXRBQcNVibz
+         vS0xpwAS1yibWHdJNCzpYGqkbcDQzE5V/qDnnuUE6Jsyw8FvkjB27qLBD80jx8tq/t
+         1HKnnkLhmlEdSIhL8kzqgT9VLnaBk2xVFTGQqXYE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        syzbot+e8a797964a4180eb57d5@syzkaller.appspotmail.com,
+        syzbot+34b582cf32c1db008f8e@syzkaller.appspotmail.com,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 4.4 69/76] cfg80211: check for set_wiphy_params
+Date:   Wed, 22 Jan 2020 10:29:25 +0100
+Message-Id: <20200122092801.906203889@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200122092751.587775548@linuxfoundation.org>
+References: <20200122092751.587775548@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.208.128]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Delete the duplicated words "is" in the comments
+From: Johannes Berg <johannes.berg@intel.com>
 
-Signed-off-by: Yan Wang <wangyan122@huawei.com>
+commit 24953de0a5e31dcca7e82c8a3c79abc2dfe8fb6e upstream.
+
+Check if set_wiphy_params is assigned and return an error if not,
+some drivers (e.g. virt_wifi where syzbot reported it) don't have
+it.
+
+Reported-by: syzbot+e8a797964a4180eb57d5@syzkaller.appspotmail.com
+Reported-by: syzbot+34b582cf32c1db008f8e@syzkaller.appspotmail.com
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Link: https://lore.kernel.org/r/20200113125358.ac07f276efff.Ibd85ee1b12e47b9efb00a2adc5cd3fac50da791a@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/jbd2/transaction.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/wireless/rdev-ops.h |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
-index 27b9f9dee434..5c3abbaccb57 100644
---- a/fs/jbd2/transaction.c
-+++ b/fs/jbd2/transaction.c
-@@ -525,7 +525,7 @@ EXPORT_SYMBOL(jbd2__journal_start);
-  * modified buffers in the log.  We block until the log can guarantee
-  * that much space. Additionally, if rsv_blocks > 0, we also create another
-  * handle with rsv_blocks reserved blocks in the journal. This handle is
-- * is stored in h_rsv_handle. It is not attached to any particular transaction
-+ * stored in h_rsv_handle. It is not attached to any particular transaction
-  * and thus doesn't block transaction commit. If the caller uses this reserved
-  * handle, it has to set h_rsv_handle to NULL as otherwise jbd2_journal_stop()
-  * on the parent handle will dispose the reserved one. Reserved handle has to
--- 
-2.19.1
+--- a/net/wireless/rdev-ops.h
++++ b/net/wireless/rdev-ops.h
+@@ -517,6 +517,10 @@ static inline int
+ rdev_set_wiphy_params(struct cfg80211_registered_device *rdev, u32 changed)
+ {
+ 	int ret;
++
++	if (!rdev->ops->set_wiphy_params)
++		return -EOPNOTSUPP;
++
+ 	trace_rdev_set_wiphy_params(&rdev->wiphy, changed);
+ 	ret = rdev->ops->set_wiphy_params(&rdev->wiphy, changed);
+ 	trace_rdev_return_int(&rdev->wiphy, ret);
+
 
