@@ -2,145 +2,148 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E49C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26AA0C33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85C1A20828
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:30:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E16DF24655
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:31:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="lh2oKx9a";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="gU8NPLYy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729236AbgAVKaj (ORCPT
+        id S1729397AbgAVKbw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 05:30:39 -0500
-Received: from honk.sigxcpu.org ([24.134.29.49]:54384 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728931AbgAVKaj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 05:30:39 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 94D68FB03;
-        Wed, 22 Jan 2020 11:30:36 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id T6ubGSDKZvw2; Wed, 22 Jan 2020 11:30:35 +0100 (CET)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 4AA0B404A9; Wed, 22 Jan 2020 11:30:34 +0100 (CET)
-Date:   Wed, 22 Jan 2020 11:30:34 +0100
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Lucas Stach <l.stach@pengutronix.de>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Sam Ravnborg <sam@ravnborg.org>, Rob Herring <robh@kernel.org>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        The etnaviv authors <etnaviv@lists.freedesktop.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
+        Wed, 22 Jan 2020 05:31:52 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:48998 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729260AbgAVKbv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 05:31:51 -0500
+Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id DC1494064D;
+        Wed, 22 Jan 2020 10:31:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1579689111; bh=TpBvhcq0e0QKCHbKp1nIql75IZbIWHuxSSbnqHbX4kM=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=lh2oKx9ajk7oQABBOSuPkzB9JjmRvQiv4OnO8qaxevkuxFqnQBX/U0bqIKLaGmEBa
+         OJjYlUldIK8dUzDUGnnXZ36u9Bkq+jZ3I/ztXxPzkW+ZaaOFWH2iupdu2goz3qa9xp
+         yXEeHzwoCQ0D+V5Mk3GdHmvNSEgrbmPbp6fAccf/J8bU1vsMZqk3dquJFRinm68hRn
+         dfcZezdPNDjd8URlovToJ5TId0qST/KnpKc7cbVqOTZ799NPgm5kH7OuHusljtxPlb
+         iuqsjv3fTaImMYI07/QxvOia6bPAQd4p2oDBF8KCyStlaorSbnwk6qWI+bvycI3ASK
+         XDZBszDgbEzEA==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 13BFAA0083;
+        Wed, 22 Jan 2020 10:31:49 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 22 Jan 2020 02:31:37 -0800
+Received: from NAM04-BN3-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Wed, 22 Jan 2020 02:31:37 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PMvOLMuk+dY8rMG8n+fr/t0XCeFbh82666kFbW5cFJ3UZxu8XBuB0DTqf1mR9O0AB3PTCB6ayVwK0NgNTEUy9VI+H9DxGxQxwdDqZmjPGT1x5em6DaTlKMpBzl/X9nWhcWOWhIHni4FBiV5U8DDDFvD6ibN1KGbsqTPb89vEoMA9B1L8e7Ag/pmOY6N1Rz7RQ2osN5HOGNqtxdZqeXIuoPt4foNz3PkkGrqkErClEsL2OXjc2dIHQPqZBxyAFwAxBjGjNuC1mJ1sOyDeZlHUmYKFT9CP72uwmESXocw5FF7vND+3vk7FWMHWixX85B1Kgu6XAoaxG1tDT8fGhqkuQg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TpBvhcq0e0QKCHbKp1nIql75IZbIWHuxSSbnqHbX4kM=;
+ b=c44Kv4my60hqA9wa2Q8YkHgEPcawTr4SKjVoCm049mxkzo8t98MsmlL/U6XG2EUZfC3RDjv91X8IdV9VDqubY8UlAksEhM1tb4+HYAentzfv+n7M63kCG3oMqMgYbBWE+zu+BiKvhznmLciP9GB01bcKlTcJthkQ02nR4LSZqpj7UakWMLUevlKkHyMPSN2cfp3efck+DiMtNBvb+L9DabSfmZBHSRRch0RBuBZLomNYlhkt4M8z37jJB9wjFyF1xjHUpRpzX+aE5C+XZM5kqYdmagwpltre/tHlv7XJs1D8TZ/Ffhp5akX6c2H0s7KZCq90M7qnCUqRXhCs0Bfz5g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TpBvhcq0e0QKCHbKp1nIql75IZbIWHuxSSbnqHbX4kM=;
+ b=gU8NPLYybKICL2jPOjbhSqJ7GX7NS00dc1LLOuel2squ1EAkwbUzwhYeJSoTrV8pPQ5ZXn+ClzdYow/yz8lApPYrhodrcG0tbWdgT7tPvKm1sN9KmQCgogmswZ8VfdYmwd/MaCBn6JJK24svGTlov8eR354Y9iXJASgULkMJ7zU=
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.67.145) by
+ BN8PR12MB3332.namprd12.prod.outlook.com (20.178.209.138) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.20; Wed, 22 Jan 2020 10:31:36 +0000
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::c62:b247:6963:9da2]) by BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::c62:b247:6963:9da2%6]) with mapi id 15.20.2644.027; Wed, 22 Jan 2020
+ 10:31:35 +0000
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     Ong Boon Leong <boon.leong.ong@intel.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     Tan Tee Min <tee.min.tan@intel.com>,
+        Voon Weifeng <weifeng.voon@intel.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "Joao Pinto" <Joao.Pinto@synopsys.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Alexandru Ardelean" <alexandru.ardelean@analog.com>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/etnaviv: only reject timeouts with tv_nsec >= 2
- seconds
-Message-ID: <20200122103034.GA67385@bogon.m.sigxcpu.org>
-References: <20200121114553.2667556-1-arnd@arndb.de>
- <20200121125546.GA71415@bogon.m.sigxcpu.org>
- <1971902c68ff805ee0b4a66f558afe06e6edf0c5.camel@pengutronix.de>
- <CAK8P3a2E__zHPPEL37JwK=uHb_v-=C+-+zGaL3XoW5PZ+BUN5g@mail.gmail.com>
+Subject: RE: [PATCH net v3 2/5] net: stmmac: fix incorrect GMAC_VLAN_TAG
+ register writting in GMAC4+
+Thread-Topic: [PATCH net v3 2/5] net: stmmac: fix incorrect GMAC_VLAN_TAG
+ register writting in GMAC4+
+Thread-Index: AQHV0QPeIdIQkFuhA0e0QyofmiZPfqf2e+IA
+Date:   Wed, 22 Jan 2020 10:31:35 +0000
+Message-ID: <BN8PR12MB326699D4E4CD49804F2E5097D30C0@BN8PR12MB3266.namprd12.prod.outlook.com>
+References: <20200122090936.28555-1-boon.leong.ong@intel.com>
+ <20200122090936.28555-3-boon.leong.ong@intel.com>
+In-Reply-To: <20200122090936.28555-3-boon.leong.ong@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=joabreu@synopsys.com; 
+x-originating-ip: [83.174.63.141]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: adcf4088-de43-4ba8-97ec-08d79f2641e6
+x-ms-traffictypediagnostic: BN8PR12MB3332:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN8PR12MB3332C4ECB31FA0BECAF5DB08D30C0@BN8PR12MB3332.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 029097202E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(39860400002)(396003)(136003)(366004)(376002)(199004)(189003)(6506007)(8676002)(81166006)(81156014)(7696005)(55016002)(66476007)(71200400001)(66556008)(186003)(86362001)(64756008)(26005)(9686003)(478600001)(4326008)(33656002)(66446008)(7416002)(8936002)(66946007)(76116006)(5660300002)(52536014)(54906003)(110136005)(4744005)(2906002)(316002);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB3332;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: kgu80RqPPncafBNpBGXNnH/9+34arbsEKVMdpvkFqS9QS1RD3VY6WoRL29+BaQnI54xJDtrP+w6Smn4W56/zdfWupgt3FsoIkb7kJKzWW3ZD3btnyM1rzd63YTvrwqbmS5mAhrQDvwCi6bHjOKKZq7mJ55W9VyJaIH5JGFx8OHIZyb9Gz9oX7EhpJSDo/cNCMqOPrI8q5XsVUbbpG+tf6Fgc+1OgSoCcgkiYdvshEsR4UpfDGveA3aQuR8tkHElqx40cdYDJP59qn61nfEwMjAQx9FjLGKCbXe8K8kBPU2NulkeWiMBCOCCS110fHqwj5pzqSXwGUa/f/hWwJW3r1TsA+P1ZEPX6ms5umNgdS2HBGMaUgXKaDa/zBTeFNx6GCLoPE+Oibql+5HMzbMOmuXL5ClUQEl3ntU7w2psAKlrquB9CSgq1xiWTlFj80Vmh
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAK8P3a2E__zHPPEL37JwK=uHb_v-=C+-+zGaL3XoW5PZ+BUN5g@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-CrossTenant-Network-Message-Id: adcf4088-de43-4ba8-97ec-08d79f2641e6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jan 2020 10:31:35.7760
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: SrcGpDgnxDzqFii3kxN/pbL3RyILjBGNy9wzOXuDtczcFu8esfmC6Sk4TPj89DIMiFcgg31cFkZiT3tINBsZRA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3332
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-On Tue, Jan 21, 2020 at 08:05:27PM +0100, Arnd Bergmann wrote:
-> On Tue, Jan 21, 2020 at 5:10 PM Lucas Stach <l.stach@pengutronix.de> wrote:
-> >
-> > Hi Guido,
-> >
-> > On Di, 2020-01-21 at 13:55 +0100, Guido Günther wrote:
-> > > Hi,
-> > > On Tue, Jan 21, 2020 at 12:45:25PM +0100, Arnd Bergmann wrote:
-> > > > As Guido Günther reported, get_abs_timeout() in the etnaviv user space
-> > > > sometimes passes timeouts with nanosecond values larger than 1000000000,
-> > > > which gets rejected after my first patch.
-> > > >
-> > > > To avoid breaking this, while also not allowing completely arbitrary
-> > > > values, set the limit to 1999999999 and use set_normalized_timespec64()
-> > > > to get the correct format before comparing it.
-> > >
-> > > I'm seeing values up to 5 seconds so I need
-> > >
-> > >      if (args->timeout.tv_nsec > (5 * NSEC_PER_SEC))
-> > >
-> > > to unbreak rendering. Which seems to match what mesa's get_abs_timeout()
-> > > does and how it's invoked.
-> >
-> > I have not tested this myself yet, only looked at the code. From the
-> > code I quoted earlier, I don't see how we end up with 5 * NSEC_PER_SEC
-> > in the tv_nsec member, even if the timeout passed to get_abs_timeout()
-> > is 5 seconds.
-> 
-> I can think of two different ways you'd end up with around five seconds here:
-> 
-> a) you have a completely arbitrary 32-bit number through truncation,
->     which is up to 4.2 seconds
-> b) you have the same kind of 32-bit number, but add up to another 999999999
->     nanoseconds, so you get up to 5.2 seconds in the 64-bit field.
+From: Ong Boon Leong <boon.leong.ong@intel.com>
+Date: Jan/22/2020, 09:09:33 (UTC+00:00)
 
-I've dumped out some values tv_nsec values with current mesa git on arm64:
+> It should always do a read of current value of GMAC_VLAN_TAG instead of
+> directly overwriting the register value.
 
-[   33.699652] etnaviv_ioctl_gem_cpu_prep: 4990449401
-[   33.813081] etnaviv_ioctl_gem_cpu_prep: 5103872445
-[   33.822936] etnaviv_ioctl_gem_cpu_prep: 5113731286
-[   33.840963] etnaviv_ioctl_gem_cpu_prep: 5131762726
-[   33.854120] etnaviv_ioctl_gem_cpu_prep: 5144920127
-[   33.861426] etnaviv_ioctl_gem_cpu_prep: 5152227527
-[   33.872666] etnaviv_ioctl_gem_cpu_prep: 5163466968
-[   33.879485] etnaviv_ioctl_gem_cpu_prep: 5170286808
+Thanks for adding patch 4/5 but I meant in previous reply that this patch=20
+should also go for XGMAC cores ...
 
-The problem is that in mesa/libdrm
-
-static inline void get_abs_timeout(struct drm_etnaviv_timespec *tv, uint64_t ns)
-{
-        struct timespec t;
-        uint32_t s = ns / 1000000000;
-        clock_gettime(CLOCK_MONOTONIC, &t);
-        tv->tv_sec = t.tv_sec + s;
-        tv->tv_nsec = t.tv_nsec + ns - (s * 1000000000);
-                                        ^^^^^^^^^^^^^^^
-   this overflows (since `s` is `uint_32t` and hence we substract a way
-   too small value with ns = 5000000000 which mesa uses in
-   etna_bo_cpu_prep.
-}
-
-So with current mesa/libdrm (which needs to be fixed) we'd have a maximum
-
-      t.tv_nsec + ns         - (s_max * 1000000000)
-
-      999999999 + 5000000000 - 705032704            = 5294967295
-
-Does that make sense? If so that'd be the possible upper bound for the
-kernel. Note that this only applies to etnaviv_ioctl_gem_cpu_prep. While
-etnaviv_ioctl_wait_fence and etnaviv_ioctl_gem_wait are affected too
-i've not yet seen user space passing in larger values.
-
-Cheers,
- -- Guido
-
-> 
-> It could of course be something completely different. If this works correctly
-> today, we may need to allow any 64-bit input for the nanoseconds and do
-> an expensive 64-bit div/mod in the kernel for normalization rather than the
-> cheaper set_normalized_timespec64() from my patch.
-> 
->         Arnd
-> 
+---
+Thanks,
+Jose Miguel Abreu
