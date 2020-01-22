@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18208C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 469AAC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:42:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0A5324680
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:42:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1272124684
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:42:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686145;
-	bh=0oF3uSLp7so0kjfvcUBglP4VRwZLRZ+56HRBZYyOKKs=;
+	s=default; t=1579686148;
+	bh=Urpniaqut/q3HUaVtjktcxUFh2wDJZ2zVBJXOCjYXeo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EL8C1KZcV2qEDYC9xHqsNVcKjShRR4b/J6shoCgk4/vCMhz1GHLsM9VwXtJ4akTCh
-	 DBKOVvZ8xVv5ryPiOfAvJ24WgKI1kHwtu0xRea1buK3s9Eqtj/kUdZvTPsT3t6VBy5
-	 X3VpbiT8CLF34a+8XoQ8N7JCeCIhTVWxQccl6EYI=
+	b=AxIUfL31GLVCrosxB1uFnW2QoHTJahWAhiEYaIS3wd8C8Mz9khx4WDZ6m/weEebfr
+	 LVWuLlGkd2IzO3Yr7hBTdyk6kINy6Y/FQB6yg/HU56vZWrUOkareHv2akpWeiQyoPk
+	 WszmV/rw8VjuPCufVyTu7akpAztph99Jnm3MKbi8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387564AbgAVJmY (ORCPT
+        id S1733290AbgAVJm1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:42:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33956 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:42:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387689AbgAVJmO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:42:14 -0500
+        id S2387693AbgAVJmQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:42:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4261624680;
-        Wed, 22 Jan 2020 09:42:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A303224684;
+        Wed, 22 Jan 2020 09:42:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686133;
-        bh=0oF3uSLp7so0kjfvcUBglP4VRwZLRZ+56HRBZYyOKKs=;
+        s=default; t=1579686136;
+        bh=Urpniaqut/q3HUaVtjktcxUFh2wDJZ2zVBJXOCjYXeo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TBvC349hFi/kvZozUrxlCDGwqHGGJPtLw0j50At9nRFf1CiPYwJBOd38QmYf8xDg5
-         CyaM2SDx6sQD2eNHQkNlTfhsLsl/OAFK1SwUq3MdOCtsVDRH1zj1S2pqSrn+0EkaGI
-         aUbbqS1XWBLz1+WEWzrDGD3NrqydsWL8GoDh0rZs=
+        b=b+LX2nJGBDZKGND77xghsI2cCg/lZlDydOXOzfHayEeNTGYFyoHh/caoy1Eo1kAeU
+         6oJBVtJ9rE++ZkmGqnUwrTzfPjy0VYzJONKvKRO5bVyuANjzCO77OLNwHP1L7ajMp9
+         35Nb0/Ui7p9bbvjyo9HuflrQGpkYANnONa6h10XE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Markus Theil <markus.theil@tu-ilmenau.de>,
+        stable@vger.kernel.org, Felix Fietkau <nbd@nbd.name>,
         Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.19 056/103] cfg80211: fix deadlocks in autodisconnect work
-Date:   Wed, 22 Jan 2020 10:29:12 +0100
-Message-Id: <20200122092812.073866895@linuxfoundation.org>
+Subject: [PATCH 4.19 057/103] cfg80211: fix memory leak in cfg80211_cqm_rssi_update
+Date:   Wed, 22 Jan 2020 10:29:13 +0100
+Message-Id: <20200122092812.214296368@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
 References: <20200122092803.587683021@linuxfoundation.org>
@@ -59,42 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Theil <markus.theil@tu-ilmenau.de>
+From: Felix Fietkau <nbd@nbd.name>
 
-commit 5a128a088a2ab0b5190eeb232b5aa0b1017a0317 upstream.
+commit df16737d438f534d0cc9948c7c5158f1986c5c87 upstream.
 
-Use methods which do not try to acquire the wdev lock themselves.
+The per-tid statistics need to be released after the call to rdev_get_station
 
 Cc: stable@vger.kernel.org
-Fixes: 37b1c004685a3 ("cfg80211: Support all iftypes in autodisconnect_wk")
-Signed-off-by: Markus Theil <markus.theil@tu-ilmenau.de>
-Link: https://lore.kernel.org/r/20200108115536.2262-1-markus.theil@tu-ilmenau.de
+Fixes: 8689c051a201 ("cfg80211: dynamically allocate per-tid stats for station info")
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Link: https://lore.kernel.org/r/20200108170630.33680-2-nbd@nbd.name
 Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/wireless/sme.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ net/wireless/nl80211.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/wireless/sme.c
-+++ b/net/wireless/sme.c
-@@ -1281,14 +1281,14 @@ void cfg80211_autodisconnect_wk(struct w
- 	if (wdev->conn_owner_nlportid) {
- 		switch (wdev->iftype) {
- 		case NL80211_IFTYPE_ADHOC:
--			cfg80211_leave_ibss(rdev, wdev->netdev, false);
-+			__cfg80211_leave_ibss(rdev, wdev->netdev, false);
- 			break;
- 		case NL80211_IFTYPE_AP:
- 		case NL80211_IFTYPE_P2P_GO:
--			cfg80211_stop_ap(rdev, wdev->netdev, false);
-+			__cfg80211_stop_ap(rdev, wdev->netdev, false);
- 			break;
- 		case NL80211_IFTYPE_MESH_POINT:
--			cfg80211_leave_mesh(rdev, wdev->netdev);
-+			__cfg80211_leave_mesh(rdev, wdev->netdev);
- 			break;
- 		case NL80211_IFTYPE_STATION:
- 		case NL80211_IFTYPE_P2P_CLIENT:
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -10305,6 +10305,7 @@ static int cfg80211_cqm_rssi_update(stru
+ 		if (err)
+ 			return err;
+ 
++		cfg80211_sinfo_release_content(&sinfo);
+ 		if (sinfo.filled & BIT_ULL(NL80211_STA_INFO_BEACON_SIGNAL_AVG))
+ 			wdev->cqm_config->last_rssi_event_value =
+ 				(s8) sinfo.rx_beacon_signal_avg;
 
 
