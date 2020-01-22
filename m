@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73DDFC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57638C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47FD124687
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BEF724680
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:38:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685923;
-	bh=kkhHPsIUtD/Op93ihqK6Wwi4izPXgNFnmiocKWLEYPI=;
+	s=default; t=1579685932;
+	bh=0W1V3W8CggVjNQyaN/zVeXev/bVrx1JcSlDjkkeRYbQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2GcVBU63mA8PTDUv/XGvZsqb/SKu6DtviD69qyN8Danu/c6hd7iqVT0DNLFshaNP9
-	 /uztkobayRgOPUpAS5TSw7j0GbSKJjgOwg2dLsXZY/VqA8to2pUsolVw9uNFd71CN7
-	 FGTCvShyBt+DyCMQnzUvaiy0zBW+lz4aki+B9zPs=
+	b=RwZtUrLnjHf+hdnp/zEMAAxmdHR/O2ntwz6pYz1EB7tTILhjhhZWcCqY9yjx6g/Sh
+	 P2acHdtkyOKD8Goc3Ufjl2UoVSS+EZLdewCqBH+idqR194YUzdacAXQWITLbdBBESk
+	 vJT83gmkdCY/ASr2lXM2nqN6oEiydeWKVbjb81Xo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733096AbgAVJim (ORCPT
+        id S1733118AbgAVJiv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:38:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55554 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:38:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731745AbgAVJih (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:38:37 -0500
+        id S1733097AbgAVJim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:38:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 333322467F;
-        Wed, 22 Jan 2020 09:38:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 481152467B;
+        Wed, 22 Jan 2020 09:38:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685916;
-        bh=kkhHPsIUtD/Op93ihqK6Wwi4izPXgNFnmiocKWLEYPI=;
+        s=default; t=1579685921;
+        bh=0W1V3W8CggVjNQyaN/zVeXev/bVrx1JcSlDjkkeRYbQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2U3H1xtsUvUazzk4/cMR8nWwDT9t1NY4EpTSQjeyQXGwC+VURC3w8aAKvXMcUeR6n
-         7H0gPn5JTJ/javLXoJTr4gPMlsIJQ+9s2u3j+qv9OYxHVtutDH3DlpsxxvxAWMz9Hz
-         BXeWtWIaMtwcHQkHPxfFFiyPT9v/dEKQ8jLqqgAU=
+        b=zi8q41BuzEWFbAZTJeAf8y42cznEPwIqZDHRGewj+LJJwP+cu77DxMeCpGVd+J7bD
+         euFZvm7ZO9TtG38W+mndCqxvHzTqXuPppzOWi8QtgZ2GIpbU9dpiNJqq2Rk1p4ZnCQ
+         UrC6b2dsDYetfuT+IWdeh2oWq3T1eU3qLg30tICE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.14 27/65] btrfs: fix memory leak in qgroup accounting
-Date:   Wed, 22 Jan 2020 10:29:12 +0100
-Message-Id: <20200122092754.653813842@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+4c3cc6dbe7259dbf9054@syzkaller.appspotmail.com,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 4.14 37/65] netfilter: fix a use-after-free in mtype_destroy()
+Date:   Wed, 22 Jan 2020 10:29:22 +0100
+Message-Id: <20200122092756.195019267@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092750.976732974@linuxfoundation.org>
 References: <20200122092750.976732974@linuxfoundation.org>
@@ -60,80 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-commit 26ef8493e1ab771cb01d27defca2fa1315dc3980 upstream.
+commit c120959387efa51479056fd01dc90adfba7a590c upstream.
 
-When running xfstests on the current btrfs I get the following splat from
-kmemleak:
+map->members is freed by ip_set_free() right before using it in
+mtype_ext_cleanup() again. So we just have to move it down.
 
-unreferenced object 0xffff88821b2404e0 (size 32):
-  comm "kworker/u4:7", pid 26663, jiffies 4295283698 (age 8.776s)
-  hex dump (first 32 bytes):
-    01 00 00 00 00 00 00 00 10 ff fd 26 82 88 ff ff  ...........&....
-    10 ff fd 26 82 88 ff ff 20 ff fd 26 82 88 ff ff  ...&.... ..&....
-  backtrace:
-    [<00000000f94fd43f>] ulist_alloc+0x25/0x60 [btrfs]
-    [<00000000fd023d99>] btrfs_find_all_roots_safe+0x41/0x100 [btrfs]
-    [<000000008f17bd32>] btrfs_find_all_roots+0x52/0x70 [btrfs]
-    [<00000000b7660afb>] btrfs_qgroup_rescan_worker+0x343/0x680 [btrfs]
-    [<0000000058e66778>] btrfs_work_helper+0xac/0x1e0 [btrfs]
-    [<00000000f0188930>] process_one_work+0x1cf/0x350
-    [<00000000af5f2f8e>] worker_thread+0x28/0x3c0
-    [<00000000b55a1add>] kthread+0x109/0x120
-    [<00000000f88cbd17>] ret_from_fork+0x35/0x40
-
-This corresponds to:
-
-  (gdb) l *(btrfs_find_all_roots_safe+0x41)
-  0x8d7e1 is in btrfs_find_all_roots_safe (fs/btrfs/backref.c:1413).
-  1408
-  1409            tmp = ulist_alloc(GFP_NOFS);
-  1410            if (!tmp)
-  1411                    return -ENOMEM;
-  1412            *roots = ulist_alloc(GFP_NOFS);
-  1413            if (!*roots) {
-  1414                    ulist_free(tmp);
-  1415                    return -ENOMEM;
-  1416            }
-  1417
-
-Following the lifetime of the allocated 'roots' ulist, it gets freed
-again in btrfs_qgroup_account_extent().
-
-But this does not happen if the function is called with the
-'BTRFS_FS_QUOTA_ENABLED' flag cleared, then btrfs_qgroup_account_extent()
-does a short leave and directly returns.
-
-Instead of directly returning we should jump to the 'out_free' in order to
-free all resources as expected.
-
-CC: stable@vger.kernel.org # 4.14+
-Reviewed-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-[ add comment ]
-Signed-off-by: David Sterba <dsterba@suse.com>
+Reported-by: syzbot+4c3cc6dbe7259dbf9054@syzkaller.appspotmail.com
+Fixes: 40cd63bf33b2 ("netfilter: ipset: Support extensions which need a per data destroy function")
+Acked-by: Jozsef Kadlecsik <kadlec@netfilter.org>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/qgroup.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ net/netfilter/ipset/ip_set_bitmap_gen.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/btrfs/qgroup.c
-+++ b/fs/btrfs/qgroup.c
-@@ -1928,8 +1928,12 @@ btrfs_qgroup_account_extent(struct btrfs
- 	u64 nr_old_roots = 0;
- 	int ret = 0;
+--- a/net/netfilter/ipset/ip_set_bitmap_gen.h
++++ b/net/netfilter/ipset/ip_set_bitmap_gen.h
+@@ -64,9 +64,9 @@ mtype_destroy(struct ip_set *set)
+ 	if (SET_WITH_TIMEOUT(set))
+ 		del_timer_sync(&map->gc);
  
-+	/*
-+	 * If quotas get disabled meanwhile, the resouces need to be freed and
-+	 * we can't just exit here.
-+	 */
- 	if (!test_bit(BTRFS_FS_QUOTA_ENABLED, &fs_info->flags))
--		return 0;
-+		goto out_free;
+-	ip_set_free(map->members);
+ 	if (set->dsize && set->extensions & IPSET_EXT_DESTROY)
+ 		mtype_ext_cleanup(set);
++	ip_set_free(map->members);
+ 	ip_set_free(map);
  
- 	if (new_roots) {
- 		if (!maybe_fs_roots(new_roots))
+ 	set->data = NULL;
 
 
