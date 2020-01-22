@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD6BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF0BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:32:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE7BA24673
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:32:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 138882467C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:32:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685531;
-	bh=qGi+amHtg4nMFyTreTVC3CjCEdnJ/6cm/CDIADTgEpw=;
+	s=default; t=1579685534;
+	bh=SZZSIre19pX2ghMbCXGVmCBnJhIcEsaSi5aYgH/A/s0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L1URpt1/3pO0YtNwj+h5ODrpboebjwQjq4b858iQFn6ECdjmEOPgABWiLKNqA25fu
-	 h2hJWAqpUA4J8Hws7LBz9ld9dYNQPklk32fVwCmgdgnI4mVMj8Vv8k89meYbyk7Btr
-	 9uo7Skx09o4P2z1cR5RJEv2EKQkR8lma1sSP77aQ=
+	b=DX0EmFlHVATO0CqtfyVpKBEdkC33zXavv6NoKfiw2DYIUMMa2gTudycFnRLSgxkmh
+	 WqDLiZ4YCIEt6hkGpgHM+rkGLL4ZTxd9d+Ay5t1rZSV6nVPo8dj+EJg5lmMQUMcZYX
+	 wFWSqmczAD+fsEBb+eq6/JmkfX/S5Udzs8rOrcqo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729998AbgAVJcK (ORCPT
+        id S1729424AbgAVJcM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:32:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44682 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:32:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729951AbgAVJcI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:32:08 -0500
+        id S1729992AbgAVJcK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:32:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2311A24673;
-        Wed, 22 Jan 2020 09:32:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BC9524672;
+        Wed, 22 Jan 2020 09:32:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685527;
-        bh=qGi+amHtg4nMFyTreTVC3CjCEdnJ/6cm/CDIADTgEpw=;
+        s=default; t=1579685530;
+        bh=SZZSIre19pX2ghMbCXGVmCBnJhIcEsaSi5aYgH/A/s0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uRSAmXxFWBFRu9K6UykZCef6EIATEFuONd8E6DjnHQYlPufmrREa4R16dlc55KlHM
-         dEiacctlRLbXAFjMNT/wRwCsnGUSN6jU7W8AX3uS6CljzzjpHSXgUWxABrcbULU4/x
-         5seYLY9CAo0BwYPLgm+aEs0KKm6ILRmZXeQCVGuY=
+        b=uRv5n9V9XRWBYL3VEGkxYvnPtZGMRJDzka6CwwCoh9PJ0Nks7GKLhld7wDBYxZO8H
+         f1OJJQbQBOt8sm6M1M4ao8IzXsRVWMVE+TrcLcO95H6GNI/T5O8L0wd0bSmS2tHLt2
+         f2s22qLq5q2vV4LPPfGyLtzwdctmRogR6iAQogoM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Keiya Nobuta <nobuta.keiya@fujitsu.com>,
-        Alan Stern <stern@rowland.harvard.edu>
-Subject: [PATCH 4.4 50/76] usb: core: hub: Improved device recognition on remote wakeup
-Date:   Wed, 22 Jan 2020 10:29:06 +0100
-Message-Id: <20200122092758.234882382@linuxfoundation.org>
+        stable@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.4 51/76] x86/efistub: Disable paging at mixed mode entry
+Date:   Wed, 22 Jan 2020 10:29:07 +0100
+Message-Id: <20200122092758.413442383@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092751.587775548@linuxfoundation.org>
 References: <20200122092751.587775548@linuxfoundation.org>
@@ -59,65 +64,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Keiya Nobuta <nobuta.keiya@fujitsu.com>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-commit 9c06ac4c83df6d6fbdbf7488fbad822b4002ba19 upstream.
+commit 4911ee401b7ceff8f38e0ac597cbf503d71e690c upstream.
 
-If hub_activate() is called before D+ has stabilized after remote
-wakeup, the following situation might occur:
+The EFI mixed mode entry code goes through the ordinary startup_32()
+routine before jumping into the kernel's EFI boot code in 64-bit
+mode. The 32-bit startup code must be entered with paging disabled,
+but this is not documented as a requirement for the EFI handover
+protocol, and so we should disable paging explicitly when entering
+the kernel from 32-bit EFI firmware.
 
-         __      ___________________
-        /  \    /
-D+   __/    \__/
-
-Hub  _______________________________
-          |  ^   ^           ^
-          |  |   |           |
-Host _____v__|___|___________|______
-          |  |   |           |
-          |  |   |           \-- Interrupt Transfer (*3)
-          |  |    \-- ClearPortFeature (*2)
-          |   \-- GetPortStatus (*1)
-          \-- Host detects remote wakeup
-
-- D+ goes high, Host starts running by remote wakeup
-- D+ is not stable, goes low
-- Host requests GetPortStatus at (*1) and gets the following hub status:
-  - Current Connect Status bit is 0
-  - Connect Status Change bit is 1
-- D+ stabilizes, goes high
-- Host requests ClearPortFeature and thus Connect Status Change bit is
-  cleared at (*2)
-- After waiting 100 ms, Host starts the Interrupt Transfer at (*3)
-- Since the Connect Status Change bit is 0, Hub returns NAK.
-
-In this case, port_event() is not called in hub_event() and Host cannot
-recognize device. To solve this issue, flag change_bits even if only
-Connect Status Change bit is 1 when got in the first GetPortStatus.
-
-This issue occurs rarely because it only if D+ changes during a very
-short time between GetPortStatus and ClearPortFeature. However, it is
-fatal if it occurs in embedded system.
-
-Signed-off-by: Keiya Nobuta <nobuta.keiya@fujitsu.com>
-Cc: stable <stable@vger.kernel.org>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Link: https://lore.kernel.org/r/20200109051448.28150-1-nobuta.keiya@fujitsu.com
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Cc: <stable@vger.kernel.org>
+Cc: Arvind Sankar <nivedita@alum.mit.edu>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-efi@vger.kernel.org
+Link: https://lkml.kernel.org/r/20191224132909.102540-4-ardb@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/core/hub.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/boot/compressed/head_64.S |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -1146,6 +1146,7 @@ static void hub_activate(struct usb_hub
- 			 * PORT_OVER_CURRENT is not. So check for any of them.
- 			 */
- 			if (udev || (portstatus & USB_PORT_STAT_CONNECTION) ||
-+			    (portchange & USB_PORT_STAT_C_CONNECTION) ||
- 			    (portstatus & USB_PORT_STAT_OVERCURRENT) ||
- 			    (portchange & USB_PORT_STAT_C_OVERCURRENT))
- 				set_bit(port1, hub->change_bits);
+--- a/arch/x86/boot/compressed/head_64.S
++++ b/arch/x86/boot/compressed/head_64.S
+@@ -225,6 +225,11 @@ ENTRY(efi32_stub_entry)
+ 	leal	efi32_config(%ebp), %eax
+ 	movl	%eax, efi_config(%ebp)
+ 
++	/* Disable paging */
++	movl	%cr0, %eax
++	btrl	$X86_CR0_PG_BIT, %eax
++	movl	%eax, %cr0
++
+ 	jmp	startup_32
+ ENDPROC(efi32_stub_entry)
+ #endif
 
 
