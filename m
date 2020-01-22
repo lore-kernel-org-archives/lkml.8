@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E69C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F039FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:40:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99DA624684
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:39:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B98E624684
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:40:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685996;
-	bh=BDehLJWhoQL55qQTebyjYGQ9jAQRFK9vvd6NfnywJ3o=;
+	s=default; t=1579686000;
+	bh=bCq0ctxizNCAwzs1hJaNsvFiiEgdIQRvQWKcWtlFrOw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hxIHPobZPgeEUgmqnRdEOVJ1XnU9BsW8Tq5yaOVLrdqLMt6gdEn+oBHOhRp8m8x50
-	 xRLCXGqxG3Buxw6xYw0nyxxX9ysWEO+xN+dDobjKWc5KYMtE8hYovQ4u8JauVp0Ahz
-	 cc55mudRjD+WaKUchzoXJ6kAN82XTkxj+XxmiQDA=
+	b=xQrvwzMyjTVt9J5u55fpj+WzqBGKD6de7WKACr6GAba0VD3MDL7/QULRISjsMt2uO
+	 yqjDv9Dd/q0rOlzZfvTnF4i6zY5uSVMS/m4eMcJNw0fpzsRjDYxZm3A8MM+/gTdrPE
+	 sok3CxbGtkLe/QoanhQxiXPoxSo9qewbu9zSF5tA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733296AbgAVJjz (ORCPT
+        id S1732209AbgAVJj7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:39:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58224 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:39:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732663AbgAVJjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:39:53 -0500
+        id S1733295AbgAVJjz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:39:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 033482468E;
-        Wed, 22 Jan 2020 09:39:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AD8F24684;
+        Wed, 22 Jan 2020 09:39:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685992;
-        bh=BDehLJWhoQL55qQTebyjYGQ9jAQRFK9vvd6NfnywJ3o=;
+        s=default; t=1579685994;
+        bh=bCq0ctxizNCAwzs1hJaNsvFiiEgdIQRvQWKcWtlFrOw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xavDsH27c449OFAqzr2N38MLRMpfetzhS/6kyAHGYuQp7uTApvltLZSq50nglSq/G
-         J7RWx+V3QXh3y8kyoSnkEHlsX3VXGms2BQUSY1lphoR4Y1m+gJOuZRTPO7+jEkGZCs
-         D7oYwzx8uKj/+DANrAmo6m02Fpz8xTOxI9Ni4RBo=
+        b=A6pf4rb6SpOFBoQAEVk5dmG8f6yFKEyMNXdoD0bht5UT/xEclvMSQHDPwbO1tOu3J
+         hpWnT92kCpO9bV7T1A2mUUg3S7nNoLcWYxLLFR+qqk28129259CmNzd01d+ipnvDVg
+         ey9RIOoIrH77uhLRSb5AOjeVCh1rKPNrk878MyvE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH 4.14 64/65] perf probe: Fix wrong address verification
-Date:   Wed, 22 Jan 2020 10:29:49 +0100
-Message-Id: <20200122092801.248658461@linuxfoundation.org>
+        stable@vger.kernel.org, Jose Abreu <Jose.Abreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 30/65] net: stmmac: Enable 16KB buffer size
+Date:   Wed, 22 Jan 2020 10:29:15 +0100
+Message-Id: <20200122092755.081585763@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092750.976732974@linuxfoundation.org>
 References: <20200122092750.976732974@linuxfoundation.org>
@@ -62,126 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Jose Abreu <Jose.Abreu@synopsys.com>
 
-commit 07d369857808b7e8e471bbbbb0074a6718f89b31 upstream.
+commit b2f3a481c4cd62f78391b836b64c0a6e72b503d2 upstream.
 
-Since there are some DIE which has only ranges instead of the
-combination of entrypc/highpc, address verification must use
-dwarf_haspc() instead of dwarf_entrypc/dwarf_highpc.
+XGMAC supports maximum MTU that can go to 16KB. Lets add this check in
+the calculation of RX buffer size.
 
-Also, the ranges only DIE will have a partial code in different section
-(e.g. unlikely code will be in text.unlikely as "FUNC.cold" symbol). In
-that case, we can not use dwarf_entrypc() or die_entrypc(), because the
-offset from original DIE can be a minus value.
-
-Instead, this simply gets the symbol and offset from symtab.
-
-Without this patch;
-
-  # perf probe -D clear_tasks_mm_cpumask:1
-  Failed to get entry address of clear_tasks_mm_cpumask
-    Error: Failed to add events.
-
-And with this patch:
-
-  # perf probe -D clear_tasks_mm_cpumask:1
-  p:probe/clear_tasks_mm_cpumask clear_tasks_mm_cpumask+0
-  p:probe/clear_tasks_mm_cpumask_1 clear_tasks_mm_cpumask+5
-  p:probe/clear_tasks_mm_cpumask_2 clear_tasks_mm_cpumask+8
-  p:probe/clear_tasks_mm_cpumask_3 clear_tasks_mm_cpumask+16
-  p:probe/clear_tasks_mm_cpumask_4 clear_tasks_mm_cpumask+82
-
-Committer testing:
-
-I managed to reproduce the above:
-
-  [root@quaco ~]# perf probe -D clear_tasks_mm_cpumask:1
-  p:probe/clear_tasks_mm_cpumask _text+919968
-  p:probe/clear_tasks_mm_cpumask_1 _text+919973
-  p:probe/clear_tasks_mm_cpumask_2 _text+919976
-  [root@quaco ~]#
-
-But then when trying to actually put the probe in place, it fails if I
-use :0 as the offset:
-
-  [root@quaco ~]# perf probe -L clear_tasks_mm_cpumask | head -5
-  <clear_tasks_mm_cpumask@/usr/src/debug/kernel-5.2.fc30/linux-5.2.18-200.fc30.x86_64/kernel/cpu.c:0>
-        0  void clear_tasks_mm_cpumask(int cpu)
-        1  {
-        2  	struct task_struct *p;
-
-  [root@quaco ~]# perf probe clear_tasks_mm_cpumask:0
-  Probe point 'clear_tasks_mm_cpumask' not found.
-    Error: Failed to add events.
-  [root@quaco
-
-The next patch is needed to fix this case.
-
-Fixes: 576b523721b7 ("perf probe: Fix probing symbols with optimization suffix")
-Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157199318513.8075.10463906803299647907.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: 7ac6653a085b ("stmmac: Move the STMicroelectronics driver")
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/util/probe-finder.c |   32 ++++++++++----------------------
- 1 file changed, 10 insertions(+), 22 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -615,38 +615,26 @@ static int convert_to_trace_point(Dwarf_
- 				  const char *function,
- 				  struct probe_trace_point *tp)
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -1043,7 +1043,9 @@ static int stmmac_set_bfsize(int mtu, in
  {
--	Dwarf_Addr eaddr, highaddr;
-+	Dwarf_Addr eaddr;
- 	GElf_Sym sym;
- 	const char *symbol;
+ 	int ret = bufsize;
  
- 	/* Verify the address is correct */
--	if (dwarf_entrypc(sp_die, &eaddr) != 0) {
--		pr_warning("Failed to get entry address of %s\n",
--			   dwarf_diename(sp_die));
--		return -ENOENT;
--	}
--	if (dwarf_highpc(sp_die, &highaddr) != 0) {
--		pr_warning("Failed to get end address of %s\n",
--			   dwarf_diename(sp_die));
--		return -ENOENT;
--	}
--	if (paddr > highaddr) {
--		pr_warning("Offset specified is greater than size of %s\n",
-+	if (!dwarf_haspc(sp_die, paddr)) {
-+		pr_warning("Specified offset is out of %s\n",
- 			   dwarf_diename(sp_die));
- 		return -EINVAL;
- 	}
- 
--	symbol = dwarf_diename(sp_die);
-+	/* Try to get actual symbol name from symtab */
-+	symbol = dwfl_module_addrsym(mod, paddr, &sym, NULL);
- 	if (!symbol) {
--		/* Try to get the symbol name from symtab */
--		symbol = dwfl_module_addrsym(mod, paddr, &sym, NULL);
--		if (!symbol) {
--			pr_warning("Failed to find symbol at 0x%lx\n",
--				   (unsigned long)paddr);
--			return -ENOENT;
--		}
--		eaddr = sym.st_value;
-+		pr_warning("Failed to find symbol at 0x%lx\n",
-+			   (unsigned long)paddr);
-+		return -ENOENT;
- 	}
-+	eaddr = sym.st_value;
-+
- 	tp->offset = (unsigned long)(paddr - eaddr);
- 	tp->address = (unsigned long)paddr;
- 	tp->symbol = strdup(symbol);
+-	if (mtu >= BUF_SIZE_4KiB)
++	if (mtu >= BUF_SIZE_8KiB)
++		ret = BUF_SIZE_16KiB;
++	else if (mtu >= BUF_SIZE_4KiB)
+ 		ret = BUF_SIZE_8KiB;
+ 	else if (mtu >= BUF_SIZE_2KiB)
+ 		ret = BUF_SIZE_4KiB;
 
 
