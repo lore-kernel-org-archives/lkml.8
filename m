@@ -2,223 +2,127 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD77C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4727EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:58:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 196C22465A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:58:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lj73d7IP"
+	by mail.kernel.org (Postfix) with ESMTP id 218102465A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:58:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729074AbgAVL6c (ORCPT
+        id S1729232AbgAVL6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 06:58:32 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:33935 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726094AbgAVL6b (ORCPT
+        Wed, 22 Jan 2020 06:58:49 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:44544 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726094AbgAVL6s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 06:58:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579694309;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=su9TSFBSfcBiqaUPe46LPGk0RwjvdHH7lRpjMEgdXY0=;
-        b=Lj73d7IP0FTZC9r5gXkTGQLNn3p2wOJpEK8VIxZDgWV5n1mJ2JkflPvf11QF0RZKTMkHdp
-        u7oYvbuwzXpcImR1QExgtTU8h+wsgaN6A1TXtIWw3YkK2sIj12EXFsAtUkqCCZZ1Fnd1Ra
-        0vbJg2p3IrAFEwWLX8AfDWJfsOu41Dc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-87-Od6CUF9OOGiXDAPqzbno1A-1; Wed, 22 Jan 2020 06:58:25 -0500
-X-MC-Unique: Od6CUF9OOGiXDAPqzbno1A-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1B7741005512;
-        Wed, 22 Jan 2020 11:58:22 +0000 (UTC)
-Received: from [10.36.117.205] (ovpn-117-205.ams2.redhat.com [10.36.117.205])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D3D3D5D9C9;
-        Wed, 22 Jan 2020 11:58:17 +0000 (UTC)
-Subject: Re: [PATCH RFC v1] mm: is_mem_section_removable() overhaul
-From:   David Hildenbrand <david@redhat.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        Wed, 22 Jan 2020 06:58:48 -0500
+Received: by mail-lj1-f195.google.com with SMTP id q8so6436482ljj.11
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 03:58:47 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:reply-to:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=QS4TIj55HNmblTQ1tWnmv9IsfKHy0puHFb3BZB6h8tk=;
+        b=EkcpwKGz8xZiAEDVO+3UvGtXj3epxrDgSn55U2hQeVgTtrHnrvYdLbyuGLud/QgP6l
+         ZAhe9+2oXDwA697jS3+GKpjwN8awxj5w6CPEnHiqIBjWx7Qppl3oJPRmFPAM1TFqspfr
+         QEs/uFcgzCf6cEgV9L/WR7aw2L3FhCiqbMVoCcesaud1tVSauSR+opzoXymsGc4vjkI5
+         hd+/huZGE6l3p3uJDgG3ruBKyzdyjZO6GnbmmhRhmBUbGJH+RbDxSCysjFdR0gF62tcC
+         kaguzc3yNVnqIf7uhPVonrUMIIFlAn2lkNXLKlTWC+KmHRtLqcvJX2iVdaopMMdfY1YR
+         U3ZQ==
+X-Gm-Message-State: APjAAAUHaarbpPiK1FBWon0X4qzlI/SL1aZs9E0hr0K6fOHCktwbCLCM
+        Y8sZPqzw5x7DQA8Uunh68mYwv2h0208=
+X-Google-Smtp-Source: APXvYqwlAcOdKtlImILZRxb6yvLhJUb6hMxRmsq+SCNv2jkH2ti2P51X7W9IUXbHmC1Lf0wS/rx2fA==
+X-Received: by 2002:a2e:9196:: with SMTP id f22mr20262602ljg.18.1579694326810;
+        Wed, 22 Jan 2020 03:58:46 -0800 (PST)
+Received: from [192.168.42.103] ([213.87.155.128])
+        by smtp.gmail.com with ESMTPSA id h7sm20913623lfj.29.2020.01.22.03.58.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jan 2020 03:58:45 -0800 (PST)
+Reply-To: alex.popov@linux.com
+Subject: Re: [PATCH v2 1/1] lkdtm/stackleak: Make the test more verbose
+To:     Kees Cook <keescook@chromium.org>, Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Leonardo Bras <leonardo@linux.ibm.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Allison Randal <allison@lohutok.net>,
-        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        lantianyu1986@gmail.com,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-References: <20200117145233.GB19428@dhcp22.suse.cz>
- <65606e2e-1cf7-de3b-10b1-33653cb41a52@redhat.com>
- <20200117152947.GK19428@dhcp22.suse.cz>
- <CAPcyv4hHHzdPp4SQ0sePzx7XEvD7U_B+vZDT00O6VbFY8kJqjw@mail.gmail.com>
- <25a94f61-46a1-59a6-6b54-8cc6b35790d2@redhat.com>
- <CAPcyv4jvmYRbX9i+1_LvHoTDGABadHbYH3NVkqczKsQ4fsf74g@mail.gmail.com>
- <20200120074816.GG18451@dhcp22.suse.cz>
- <a5f0bd8d-de5e-9f27-5c94-7746a3d20a95@redhat.com>
- <20200121120714.GJ29276@dhcp22.suse.cz>
- <a29b49b9-28ad-44fa-6c0b-90cd43902f29@redhat.com>
- <20200122104230.GU29276@dhcp22.suse.cz>
- <98b6c208-b4dd-9052-43f6-543068c649cc@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <816ddd66-c90b-76f1-f4a0-72fe41263edd@redhat.com>
-Date:   Wed, 22 Jan 2020 12:58:16 +0100
+        linux-kernel@vger.kernel.org
+Cc:     notify@kernel.org
+References: <20200102234907.585508-1-alex.popov@linux.com>
+From:   Alexander Popov <alex.popov@linux.com>
+Autocrypt: addr=alex.popov@linux.com; prefer-encrypt=mutual; keydata=
+ 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
+ j3lCqPk=
+Message-ID: <e8f1b3e9-50ae-2482-3e10-32b21cd7ebb4@linux.com>
+Date:   Wed, 22 Jan 2020 14:58:44 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <98b6c208-b4dd-9052-43f6-543068c649cc@redhat.com>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <20200102234907.585508-1-alex.popov@linux.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22.01.20 11:54, David Hildenbrand wrote:
-> On 22.01.20 11:42, Michal Hocko wrote:
->> On Wed 22-01-20 11:39:08, David Hildenbrand wrote:
->>>>>> Really, the interface is flawed and should have never been merged in the
->>>>>> first place. We cannot simply remove it altogether I am afraid so let's
->>>>>> at least remove the bogus code and pretend that the world is a better
->>>>>> place where everything is removable except the reality sucks...
->>>>>
->>>>> As I expressed already, the interface works as designed/documented and
->>>>> has been used like that for years.
->>>>
->>>> It seems we do differ in the usefulness though. Using a crappy interface
->>>> for years doesn't make it less crappy. I do realize we cannot remove the
->>>> interface but we can remove issues with the implementation and I dare to
->>>> say that most existing users wouldn't really notice.
->>>
->>> Well, at least powerpc-utils (why this interface was introduced) will
->>> notice a) performance wise and b) because more logging output will be
->>> generated (obviously non-offlineable blocks will be tried to offline).
->>
->> I would really appreciate some specific example for a real usecase. I am
->> not familiar with powerpc-utils worklflows myself.
->>
+On 03.01.2020 02:49, Alexander Popov wrote:
+> Make the stack erasing test more verbose about the errors that it
+> can detect.
 > 
-> Not an expert myself:
-> 
-> https://github.com/ibm-power-utilities/powerpc-utils
-> 
-> -> src/drmgr/drslot_chrp_mem.c
-> 
-> On request to remove some memory it will
-> 
-> a) Read "->removable" of all memory blocks ("lmb")
-> b) Check if the request can be fulfilled using the removable blocks
-> c) Try to offline the memory blocks by trying to offline it. If that
-> succeeded, trigger removeal of it using some hypervisor hooks.
-> 
-> Interestingly, with "AMS ballooning", it will already consider the
-> "removable" information useless (most probably, because of
-> non-migratable balloon pages that can be offlined - I assume the powerpc
-> code that I converted to proper balloon compaction just recently). a)
-> and b) is skipped.
-> 
-> Returning "yes" on all blocks will make them handle it just like if "AMS
-> ballooning" is active. So any memory block will be tried. Should work
-> but will be slower if no ballooning is active.
-> 
+> Signed-off-by: Alexander Popov <alex.popov@linux.com>
+> ---
+>  drivers/misc/lkdtm/stackleak.c | 25 +++++++++++++++++--------
+>  1 file changed, 17 insertions(+), 8 deletions(-)
 
-On lsmem:
+Hello!
 
-https://www.ibm.com/support/knowledgecenter/linuxonibm/com.ibm.linux.z.lgdd/lgdd_r_lsmem_cmd.html
+Pinging about this version of the patch.
 
-"
-Removable
-    yes if the memory range can be set offline, no if it cannot be set
-offline. A dash (-) means that the range is already offline. The kernel
-method that identifies removable memory ranges is heuristic and not
-exact. Occasionally, memory ranges are falsely reported as removable or
-falsely reported as not removable.
-"
+Kees, it uses dump_stack() instead of BUG(), as we negotiated.
 
-Usage of lsmem paird with chmem:
-
-https://access.redhat.com/solutions/3937181
-
-
-Especially interesting for IBM z Systems, whereby memory
-onlining/offlining will trigger the actual population of memory in the
-hypervisor. So if an admin wants to offline some memory (to give it back
-to the hypervisor), it would use lsmem to identify such blocks first,
-instead of trying random blocks until one offlining request succeeds.
-
-E.g., documented in
-
-https://books.google.de/books?id=1UEhDQAAQBAJ&pg=PA117&lpg=PA117&dq=lsmem+removable&source=bl&ots=OzMfU6Gbzu&sig=ACfU3U2IfH0eTVJs0qu50FdkysA3iC0elw&hl=de&sa=X&ved=2ahUKEwjQpdXQkpfnAhVOzqQKHTN4BsoQ6AEwBXoECAoQAQ#v=onepage&q=lsmem%20removable&f=false
-
-
-So I still think that the interface is useful and is getting used in
-real life. Users tolerate false positives/negatives.
-
--- 
-Thanks,
-
-David / dhildenb
-
+Thanks!
+Alexander
