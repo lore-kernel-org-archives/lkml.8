@@ -2,272 +2,86 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 116F7C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDCDEC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:24:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3A3F24655
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:23:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8C8F24655
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:24:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sad90dne"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="TyTcoaZr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725970AbgAVIXa (ORCPT
+        id S1729143AbgAVIYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 03:23:30 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39040 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725868AbgAVIX3 (ORCPT
+        Wed, 22 Jan 2020 03:24:01 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:44227 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726077AbgAVIYA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 03:23:29 -0500
-Received: by mail-ot1-f66.google.com with SMTP id 77so5506502oty.6
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 00:23:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=newysj2ZL/VSTfuHShTKoBBsv78QbKLgFXEyPsWB43Q=;
-        b=sad90dnekqlccjQQPFDugkDbhJ08amgSt8lL/wJWNY1SSgdp5GEjDXlD3mkpAqamru
-         Sn7mpch98hT/OWzDxgqgwuRaPVE1Keluw8AxfuAEkQmTSqJHms2vRmAef3Vuex3MtapB
-         zUUeBzCIW9Mg08cXEQnWIN26XqyDZVr4bulTtYjQ2VRlMuWQZS2BfbyTNdcKah5VKKyz
-         L4clA549Rk+yhGpg1igXPIRaKRiVWdjEaMj9vDYdqlQMV2JrdxnelSQME7Woqle8TWxx
-         rRJGQBcuFW1iwfaH0FcERy0YV2T4IZgiRFWt7c6EhJ9lWfY+bW9QJkDlXsyS2LJ1N2sn
-         Qcxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=newysj2ZL/VSTfuHShTKoBBsv78QbKLgFXEyPsWB43Q=;
-        b=mhSNf3cvnM8T0MI7NrliMHhcMineR1JlBfqq0eAwFZx7ao2hhmy/ma5zVUHIV/70YA
-         1qCcsBU5A0WvzlBi+nL69+YHMbh2kBEH2rrwX1OsCgOd+SFc9BN2Yf4uIZVhziES/9ei
-         XADUpA/GCw/cdYij1ptBobIeIrqwfw85YPF5E5gt2j2ulRwlEw92TRNcKkuAsPsYF2tu
-         /QY/bH9jU3mThAuZnP2KTTuIUCXm569NclrHZqUC3hJR4rqfBGGWXUT/NkrPbA45yPZW
-         wDAXBFZZfd/UApjtwvPZratH6Dvtp/7T/I3GSbaoKzHLJbwVr1vJfAN+8qa26egvABJb
-         wBzg==
-X-Gm-Message-State: APjAAAV6U3DNFlqVP6oHk+dY67Ah8e51m+cSjzJRxLJkntwMdQCugR2R
-        QrpnsKBKvpSgY7v3ctS/vuIqe67pj8Dx6EW4+Jw4RA==
-X-Google-Smtp-Source: APXvYqywIYwxTLG6xTrdA7i/IBRjYdry2QDfn0bX6MZDDvI3iaG98yt2MoshvA2vPRiIpwZePTpxDhDTTVqG5M0jnNI=
-X-Received: by 2002:a05:6830:44e:: with SMTP id d14mr6268112otc.228.1579681408192;
- Wed, 22 Jan 2020 00:23:28 -0800 (PST)
-MIME-Version: 1.0
-References: <20200121160312.26545-1-mathieu.desnoyers@efficios.com>
- <CAG48ez2bQdoT9y7HkyU06DTazysUDdPdJe+gyV-NxgQA7JWQVQ@mail.gmail.com>
- <430172781.596271.1579636021412.JavaMail.zimbra@efficios.com>
- <CAG48ez2Z5CesMfandNK+S32Rrgp_QGQHqQ1Fpd5-YTsCWGfHeg@mail.gmail.com> <2049164886.596497.1579641536619.JavaMail.zimbra@efficios.com>
-In-Reply-To: <2049164886.596497.1579641536619.JavaMail.zimbra@efficios.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Wed, 22 Jan 2020 09:23:00 +0100
-Message-ID: <CAG48ez2Zz7gOTir4qm2ZuYEj2ZH4isZipiDbvevzfgor27jHkA@mail.gmail.com>
-Subject: Re: [RFC PATCH v1] pin_on_cpu: Introduce thread CPU pinning system call
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Joel Fernandes <joelaf@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Watson <davejwatson@fb.com>,
-        Will Deacon <will.deacon@arm.com>, shuah <shuah@kernel.org>,
-        Andi Kleen <andi@firstfloor.org>,
-        linux-kselftest <linux-kselftest@vger.kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Chris Lameter <cl@linux.com>,
-        Russell King <linux@arm.linux.org.uk>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Paul <paulmck@linux.vnet.ibm.com>, Paul Turner <pjt@google.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        rostedt <rostedt@goodmis.org>, Ben Maurer <bmaurer@fb.com>,
-        linux-api <linux-api@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 22 Jan 2020 03:24:00 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1579681439; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=BaK9wRIScTnYdLhZWXlD4XXkYiXa7pMzORrY3Jdz4lE=; b=TyTcoaZrvfLa3wWJszDUNo2g8Fw1jTbOfPf6bYqT5K4M7T+M6jbonVnZXwX/S+g21kPw2IFs
+ DhsiDf9D0A1J+WzAGXxkQ3VH2bcXBNpxVjlGD17S1owF7aUyUnqSeCflf0347QCDb+pTIPpj
+ fylB9AWzKCO8Vj4KPBXWm2GRw4U=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e280699.7f6ed848c500-smtp-out-n03;
+ Wed, 22 Jan 2020 08:23:53 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 3EFE8C4479C; Wed, 22 Jan 2020 08:23:52 +0000 (UTC)
+Received: from aneelaka-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: aneela)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9B5FFC43383;
+        Wed, 22 Jan 2020 08:23:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9B5FFC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=aneela@codeaurora.org
+From:   Arun Kumar Neelakantam <aneela@codeaurora.org>
+To:     bjorn.andersson@linaro.org, clew@codeaurora.org
+Cc:     Arun Kumar Neelakantam <aneela@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        linux-arm-msm@vger.kernel.org (open list:ARM/QUALCOMM SUPPORT),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] soc: qcom: aoss: Use wake_up_all() instead of wake_up_interruptible_all()
+Date:   Wed, 22 Jan 2020 13:53:37 +0530
+Message-Id: <1579681417-1155-1-git-send-email-aneela@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 10:18 PM Mathieu Desnoyers
-<mathieu.desnoyers@efficios.com> wrote:
-> ----- On Jan 21, 2020, at 3:35 PM, Jann Horn jannh@google.com wrote:
->
-> > On Tue, Jan 21, 2020 at 8:47 PM Mathieu Desnoyers
-> > <mathieu.desnoyers@efficios.com> wrote:
-> >>
-> >> ----- On Jan 21, 2020, at 12:20 PM, Jann Horn jannh@google.com wrote:
-> >>
-> >> > On Tue, Jan 21, 2020 at 5:13 PM Mathieu Desnoyers
-> >> > <mathieu.desnoyers@efficios.com> wrote:
-> >> >> There is an important use-case which is not possible with the
-> >> >> "rseq" (Restartable Sequences) system call, which was left as
-> >> >> future work.
-> >> >>
-> >> >> That use-case is to modify user-space per-cpu data structures
-> >> >> belonging to specific CPUs which may be brought offline and
-> >> >> online again by CPU hotplug. This can be used by memory
-> >> >> allocators to migrate free memory pools when CPUs are brought
-> >> >> offline, or by ring buffer consumers to target specific per-CPU
-> >> >> buffers, even when CPUs are brought offline.
-> >> >>
-> >> >> A few rather complex prior attempts were made to solve this.
-> >> >> Those were based on in-kernel interpreters (cpu_opv, do_on_cpu).
-> >> >> That complexity was generally frowned upon, even by their author.
-> >> >>
-> >> >> This patch fulfills this use-case in a refreshingly simple way:
-> >> >> it introduces a "pin_on_cpu" system call, which allows user-space
-> >> >> threads to pin themselves on a specific CPU (which needs to be
-> >> >> present in the thread's allowed cpu mask), and then clear this
-> >> >> pinned state.
-> >> > [...]
-> >> >> For instance, this allows implementing this userspace library API
-> >> >> for incrementing a per-cpu counter for a specific cpu number
-> >> >> received as parameter:
-> >> >>
-> >> >> static inline __attribute__((always_inline))
-> >> >> int percpu_addv(intptr_t *v, intptr_t count, int cpu)
-> >> >> {
-> >> >>         int ret;
-> >> >>
-> >> >>         ret =3D rseq_addv(v, count, cpu);
-> >> >> check:
-> >> >>         if (rseq_unlikely(ret)) {
-> >> >>                 pin_on_cpu_set(cpu);
-> >> >>                 ret =3D rseq_addv(v, count, percpu_current_cpu());
-> >> >>                 pin_on_cpu_clear();
-> >> >>                 goto check;
-> >> >>         }
-> >> >>         return 0;
-> >> >> }
-> >> >
-> >> > What does userspace have to do if the set of allowed CPUs switches a=
-ll
-> >> > the time? For example, on Android, if you first open Chrome and then
-> >> > look at its allowed CPUs, Chrome is allowed to use all CPU cores
-> >> > because it's running in the foreground:
-> >> >
-> >> > walleye:/ # ps -AZ | grep 'android.chrome$'
-> >> > u:r:untrusted_app:s0:c145,c256,c512,c768 u0_a145 7845 805 1474472
-> >> > 197868 SyS_epoll_wait f09c0194 S com.android.chrome
-> >> > walleye:/ # grep cpuset /proc/7845/cgroup; grep Cpus_allowed_list
-> >> > /proc/7845/status
-> >> > 3:cpuset:/top-app
-> >> > Cpus_allowed_list: 0-7
-> >> >
-> >> > But if you then switch to the home screen, the application is moved
-> >> > into a different cgroup, and is restricted to two CPU cores:
-> >> >
-> >> > walleye:/ # grep cpuset /proc/7845/cgroup; grep Cpus_allowed_list
-> >> > /proc/7845/status
-> >> > 3:cpuset:/background
-> >> > Cpus_allowed_list: 0-1
-> >>
-> >> Then at that point, pin_on_cpu() would only be allowed to pin on
-> >> CPUs 0 and 1.
-> >
-> > Which means that you can't actually reliably use pin_on_cpu_set() to
-> > manipulate percpu data structures since you have to call it with the
-> > assumption that it might randomly fail at any time, right?
->
-> Only if the cpu affinity of the thread is being changed concurrently
-> by another thread which is a possibility in some applications, indeed.
+During the probe the task is waiting in TASK_UNINTERRUPTIBLE state which
+cannot be woken-up by wake_up_interruptible_all() function.
 
-Not just some applications, but also some environments, right? See the
-Android example - the set of permitted CPUs is changed not by the
-application itself, but by a management process that uses cgroup
-modifications to indirectly change the set of permitted CPUs. I
-wouldn't be surprised if the same could happen in e.g. container
-environments.
+Use wake_up_all() to wake-up both TASK_UNINTERRUPTIBLE and
+TASK_INTERRUPTIBLE state tasks.
 
-> > And then
-> > userspace needs to code a fallback path that somehow halts all the
-> > threads with thread-directed signals or something?
->
-> The example use of pin_on_cpu() did not include handling of the return
-> value in that case (-1, errno=3DEINVAL) for conciseness. But yes, the
-> application would have to handle this.
->
-> It's not so different from error handling which is required when using
-> sched_setaffinity(), which can fail with -1, errno=3DEINVAL in the follow=
-ing
-> scenario:
->
->        EINVAL The  affinity bit mask mask contains no processors that are=
- cur=E2=80=90
->               rently physically on the system  and  permitted  to  the  t=
-hread
->               according  to  any  restrictions  that  may  be  imposed  b=
-y the
->               "cpuset" mechanism described in cpuset(7).
+Signed-off-by: Arun Kumar Neelakantam <aneela@codeaurora.org>
+---
+ drivers/soc/qcom/qcom_aoss.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Except that sched_setaffinity() is normally just a performance
-optimization, right? Whereas pin_to_cpu() is more of a correctness
-thing?
-
-> > Especially if the task trying to use pin_on_cpu_set() isn't allowed to
-> > pin to the target CPU, but all the other tasks using the shared data
-> > structure are allowed to do that. Or if the CPU you want to pin to is
-> > always removed from your affinity mask immediately before
-> > pin_on_cpu_set() and added back immediately afterwards.
->
-> I am tempted to state that using pin_on_cpu() targeting a disallowed cpu
-> should be considered a programming error and handled accordingly by the
-> application.
-
-How can it be a programming error if that situation can be triggered
-by legitimate external modifications to CPU affinity?
-
-[...]
-> >> > I'm wondering whether it might be possible to rework this mechanism
-> >> > such that, instead of moving the current task onto a target CPU, it
-> >> > prevents all *other* threads of the current process from running on
-> >> > that CPU (either entirely or in user mode). That might be the easies=
-t
-> >> > way to take care of issues like CPU hotplugging and changing cpusets
-> >> > all at once? The only potential issue I see with that approach would
-> >> > be that you wouldn't be able to use it for inter-process
-> >> > communication; and I have no idea whether this would be good or bad
-> >> > performance-wise.
-> >>
-> >> Firstly, inter-process communication over shared memory is one of my u=
-se-cases
-> >> (for lttng-ust's ring buffer).
-> >>
-> >> I'm not convinced that applying constraints on all other threads belon=
-ging to
-> >> the current process would be easier or faster than migrating the curre=
-nt thread
-> >> over to the target CPU. I'm unsure how those additional constraints wo=
-uld
-> >> fit with other threads already having their own cpu affinity masks (wh=
-ich
-> >> could generate an empty cpumask by adding an extra constraint).
-> >
-> > Hm - is an empty cpumask a problem here? If one task is in the middle
-> > of a critical section for performing maintenance on a percpu data
-> > structure, isn't it a nice design property to exclude concurrent
-> > access from other tasks to that data structure automatically (by
-> > preventing those tasks by running on that CPU)? That way the
-> > (presumably rarely-executed) update path doesn't have to be
-> > rseq-reentrancy-safe.
->
-> Given we already have rseq, simply using it to protect against other
-> threads trying to touch the same per-cpu data seems rather more lightweig=
-ht
-> than to try to exclude all other threads from that CPU for a possibly
-> unbounded amount of time.
-
-That only works if the cpu-targeted maintenance operation is something
-that can be implemented in rseq, right? I was thinking that it might
-be nice to avoid that limitation - but I don't know much about the
-kinds of data structures that one might want to build on top of rseq,
-so maybe that's a silly idea.
-
-> Allowing a completely empty cpumask could effectively allow those
-> critical sections to prevent execution of possibly higher priority
-> threads on the system, which ends up being the definition of a priority
-> inversion, which I'd like to avoid.
-
-Linux does have the infrastructure for RT futexes, right? Maybe that
-could be useful here.
+diff --git a/drivers/soc/qcom/qcom_aoss.c b/drivers/soc/qcom/qcom_aoss.c
+index 006ac40..fe79661 100644
+--- a/drivers/soc/qcom/qcom_aoss.c
++++ b/drivers/soc/qcom/qcom_aoss.c
+@@ -200,7 +200,7 @@ static irqreturn_t qmp_intr(int irq, void *data)
+ {
+ 	struct qmp *qmp = data;
+ 
+-	wake_up_interruptible_all(&qmp->event);
++	wake_up_all(&qmp->event);
+ 
+ 	return IRQ_HANDLED;
+ }
+-- 
+1.9.1
