@@ -2,89 +2,130 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C81CC32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 03:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD0EC32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 03:20:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA6CE24655
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 03:20:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABB4924673
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 03:20:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729299AbgAVDUG (ORCPT
+        id S1729248AbgAVDUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 22:20:06 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:53928 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729251AbgAVDUC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 22:20:02 -0500
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id B5A0C6220C8716D5A6A5;
-        Wed, 22 Jan 2020 11:20:00 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Wed, 22 Jan 2020
- 11:19:53 +0800
-From:   Sun Ke <sunke32@huawei.com>
-To:     <josef@toxicpanda.com>, <axboe@kernel.dk>, <sunke32@huawei.com>,
-        <mchristi@redhat.com>
-CC:     <linux-block@vger.kernel.org>, <nbd@other.debian.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [v2] nbd: add a flush_workqueue in nbd_start_device
-Date:   Wed, 22 Jan 2020 11:18:57 +0800
-Message-ID: <20200122031857.5859-1-sunke32@huawei.com>
-X-Mailer: git-send-email 2.17.2
+        Tue, 21 Jan 2020 22:20:39 -0500
+Received: from mga05.intel.com ([192.55.52.43]:64748 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729093AbgAVDUi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 22:20:38 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 19:20:38 -0800
+X-IronPort-AV: E=Sophos;i="5.70,347,1574150400"; 
+   d="scan'208";a="229133166"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 19:20:38 -0800
+Subject: [PATCH v4 0/6] Memory Hierarchy: Enable target node lookups for
+ reserved memory
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     tglx@linutronix.de, mingo@redhat.com
+Cc:     David Hildenbrand <david@redhat.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        kbuild test robot <lkp@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        x86@kernel.org
+Date:   Tue, 21 Jan 2020 19:04:35 -0800
+Message-ID: <157966227494.2508551.7206194169374588977.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When kzalloc fail, may cause trying to destroy the
-workqueue from inside the workqueue.
+Changes since v3 [1]:
+- Cleanup numa_map_to_online_node() to remove redundant "if
+  (!node_online(node))" (Aneesh)
 
-If num_connections is m (2 < m), and NO.1 ~ NO.n
-(1 < n < m) kzalloc are successful. The NO.(n + 1)
-failed. Then, nbd_start_device will return ENOMEM
-to nbd_start_device_ioctl, and nbd_start_device_ioctl
-will return immediately without running flush_workqueue.
-However, we still have n recv threads. If nbd_release
-run first, recv threads may have to drop the last
-config_refs and try to destroy the workqueue from
-inside the workqueue.
+[1]: http://lore.kernel.org/r/157954696789.2239526.17707265517154476652.stgit@dwillia2-desk3.amr.corp.intel.com
 
-To fix it, add a flush_workqueue in nbd_start_device.
-
-Fixes: e9e006f5fcf2 ("nbd: fix max number of supported devs")
-Signed-off-by: Sun Ke <sunke32@huawei.com>
 ---
- drivers/block/nbd.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index b4607dd96185..78181908f0df 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -1265,6 +1265,16 @@ static int nbd_start_device(struct nbd_device *nbd)
- 		args = kzalloc(sizeof(*args), GFP_KERNEL);
- 		if (!args) {
- 			sock_shutdown(nbd);
-+			/*
-+			 * If num_connections is m (2 < m),
-+			 * and NO.1 ~ NO.n(1 < n < m) kzallocs are successful.
-+			 * But NO.(n + 1) failed. We still have n recv threads.
-+			 * So, add flush_workqueue here to prevent recv threads
-+			 * dropping the last config_refs and trying to destroy
-+			 * the workqueue from inside the workqueue.
-+			 */
-+			if (i)
-+				flush_workqueue(nbd->recv_workq);
- 			return -ENOMEM;
- 		}
- 		sk_set_memalloc(config->socks[i]->sock->sk);
--- 
-2.17.2
+Merge notes:
 
+x86 folks: This has an ack from Rafael for ACPI, and Michael for Power.
+With an x86 ack I plan to take this through the libnvdimm tree provided
+the x86 touches look ok to you.
+
+---
+
+Cover:
+
+Arrange for platform numa info to be preserved for determining
+'target_node' data. Where a 'target_node' is the node a reserved memory
+range will become when it is onlined.
+
+This new infrastructure is expected to be more valuable over time for
+Memory Tiers / Hierarchy management as more platforms (via the ACPI HMAT
+and EFI Specific Purpose Memory) publish reserved or "soft-reserved"
+ranges to Linux. Linux system administrators will expect to be able to
+interact with those ranges with a unique numa node number when/if that
+memory is onlined via the dax_kmem driver [2].
+
+One configuration that currently fails to properly convey the target
+node for the resulting memory hotplug operation is persistent memory
+defined by the memmap=nn!ss parameter. For example, today if node1 is a
+memory only node, and all the memory from node1 is specified to
+memmap=nn!ss and subsequently onlined, it will end up being onlined as
+node0 memory. As it stands, memory_add_physaddr_to_nid() can only
+identify online nodes and since node1 in this example has no online cpus
+/ memory the target node is initialized node0.
+
+The fix is to preserve rather than discard the numa_meminfo entries that
+are relevant for reserved memory ranges, and to uplevel the node
+distance helper for determining the "local" (closest) node relative to
+an initiator node.
+
+[2]: https://pmem.io/ndctl/daxctl-reconfigure-device.html
+
+---
+
+Dan Williams (6):
+      ACPI: NUMA: Up-level "map to online node" functionality
+      mm/numa: Skip NUMA_NO_NODE and online nodes in numa_map_to_online_node()
+      powerpc/papr_scm: Switch to numa_map_to_online_node()
+      x86/mm: Introduce CONFIG_KEEP_NUMA
+      x86/numa: Provide a range-to-target_node lookup facility
+      libnvdimm/e820: Retrieve and populate correct 'target_node' info
+
+
+ arch/powerpc/platforms/pseries/papr_scm.c |   21 --------
+ arch/x86/Kconfig                          |    1 
+ arch/x86/mm/numa.c                        |   74 +++++++++++++++++++++++------
+ drivers/acpi/numa/srat.c                  |   41 ----------------
+ drivers/nvdimm/e820.c                     |   18 ++-----
+ include/linux/acpi.h                      |   23 +++++++++
+ include/linux/numa.h                      |   23 +++++++++
+ mm/Kconfig                                |    5 ++
+ mm/mempolicy.c                            |   31 ++++++++++++
+ 9 files changed, 145 insertions(+), 92 deletions(-)
