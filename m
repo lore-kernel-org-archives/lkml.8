@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82586C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:54:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71CB7C33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:54:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 545F620704
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:54:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45EC420704
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:54:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686863;
-	bh=kTMshfkHYfRs3dTLhnf994eG5Pob6Ezv13Q9wq1CC/g=;
+	s=default; t=1579686874;
+	bh=EVjgaJW8OE5sV1Q9fTEbc2fZ13z60TLkZJ4lEhs+L4k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vnS4JpkEvL+fduzm4ikmlTk7yn6b00FRMjZbj8e6QQHl6RB9DindHAX+RZd+5kfI1
-	 Eltmil84E6Ug8n6ORn3XXLK1+xSDuPoo0zpc5JV832KKMrHMAewVMev3OdKg8FVblE
-	 TH3saKG6axZf7PAWq9NyRSQ3UNa6vrZO7T+A0uiI=
+	b=dlX4bTgZwW4pPuMTBQBH8YrQ+0+U/PZYkL3+v5l4vY+CvIWvWzM8j8urUfoDlRe4o
+	 H7eclYAeRNqF68AUKWPL/v2XrgoMXengyFdWU3JR2ajJR7vd8MW0EjsXQu/yhBE2iQ
+	 9TcRMuZ3f4xh/oYatf/Jg+xrXK73kIV7R+adF86o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731450AbgAVJyW (ORCPT
+        id S1731317AbgAVJyd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:54:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48616 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:54:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48094 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730782AbgAVJeN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:34:13 -0500
+        id S1730039AbgAVJd7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:33:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABA402071E;
-        Wed, 22 Jan 2020 09:34:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DC3B24673;
+        Wed, 22 Jan 2020 09:33:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685653;
-        bh=kTMshfkHYfRs3dTLhnf994eG5Pob6Ezv13Q9wq1CC/g=;
+        s=default; t=1579685635;
+        bh=EVjgaJW8OE5sV1Q9fTEbc2fZ13z60TLkZJ4lEhs+L4k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MgFSXVJn3JCHDwd6gpkWcKaev+fNc4BLilp4pUqwfnIz5f44S2VknXC1PzKKV2EZ2
-         cVQa2F80ANEX5Ds6auiZ9MAS6Y3TpzrobBYOHSH7oxYl2VIO5QUQmSaQ5DFaVtObO0
-         nhL+hvet3tw6Fldx2+1goohNtDHszsO52mLGqSOI=
+        b=RIWgB/TJ5pAf+dh2yvyBwY3MKr5wpmNYgVFqGWBpRycyo9DHotnY0Dj8obP9uPtFq
+         b1fsu4fL5klORFzhVPDVA7Lxs1DaG41aO/r69FA8tTC5t67Tqb/Vsl7yonY3gt0dIL
+         jcOomAjmX51hxic++pWv7pcIB6DbJL8upFV18f0g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
-        Honggang Li <honli@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 4.9 25/97] RDMA/srpt: Report the SCSI residual to the initiator
-Date:   Wed, 22 Jan 2020 10:28:29 +0100
-Message-Id: <20200122092800.236132302@linuxfoundation.org>
+        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>
+Subject: [PATCH 4.9 07/97] arm64: mm: BUG on unsupported manipulations of live kernel mappings
+Date:   Wed, 22 Jan 2020 10:28:11 +0100
+Message-Id: <20200122092756.943196447@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092755.678349497@linuxfoundation.org>
 References: <20200122092755.678349497@linuxfoundation.org>
@@ -60,70 +60,168 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-commit e88982ad1bb12db699de96fbc07096359ef6176c upstream.
+commit e98216b52176ba2bfa4bdb02f178f4d08832d465 upstream.
 
-The code added by this patch is similar to the code that already exists in
-ibmvscsis_determine_resid(). This patch has been tested by running the
-following command:
+Now that we take care not manipulate the live kernel page tables in a
+way that may lead to TLB conflicts, the case where a table mapping is
+replaced by a block mapping can no longer occur. So remove the handling
+of this at the PUD and PMD levels, and instead, BUG() on any occurrence
+of live kernel page table manipulations that modify anything other than
+the permission bits.
 
-strace sg_raw -r 1k /dev/sdb 12 00 00 00 60 00 -o inquiry.bin |&
-    grep resid=
+Since mark_rodata_ro() is the only caller where the kernel mappings that
+are being manipulated are actually live, drop the various conditional
+flush_tlb_all() invocations, and add a single call to mark_rodata_ro()
+instead.
 
-Link: https://lore.kernel.org/r/20191105214632.183302-1-bvanassche@acm.org
-Fixes: a42d985bd5b2 ("ib_srpt: Initial SRP Target merge for v3.3-rc1")
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Acked-by: Honggang Li <honli@redhat.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/infiniband/ulp/srpt/ib_srpt.c |   24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ arch/arm64/mm/mmu.c |   70 +++++++++++++++++++++++++++++++---------------------
+ 1 file changed, 43 insertions(+), 27 deletions(-)
 
---- a/drivers/infiniband/ulp/srpt/ib_srpt.c
-+++ b/drivers/infiniband/ulp/srpt/ib_srpt.c
-@@ -1234,9 +1234,11 @@ static int srpt_build_cmd_rsp(struct srp
- 			      struct srpt_send_ioctx *ioctx, u64 tag,
- 			      int status)
- {
-+	struct se_cmd *cmd = &ioctx->cmd;
- 	struct srp_rsp *srp_rsp;
- 	const u8 *sense_data;
- 	int sense_data_len, max_sense_len;
-+	u32 resid = cmd->residual_count;
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -28,8 +28,6 @@
+ #include <linux/memblock.h>
+ #include <linux/fs.h>
+ #include <linux/io.h>
+-#include <linux/slab.h>
+-#include <linux/stop_machine.h>
  
- 	/*
- 	 * The lowest bit of all SAM-3 status codes is zero (see also
-@@ -1258,6 +1260,28 @@ static int srpt_build_cmd_rsp(struct srp
- 	srp_rsp->tag = tag;
- 	srp_rsp->status = status;
+ #include <asm/barrier.h>
+ #include <asm/cputype.h>
+@@ -95,6 +93,17 @@ static phys_addr_t __init early_pgtable_
+ 	return phys;
+ }
  
-+	if (cmd->se_cmd_flags & SCF_UNDERFLOW_BIT) {
-+		if (cmd->data_direction == DMA_TO_DEVICE) {
-+			/* residual data from an underflow write */
-+			srp_rsp->flags = SRP_RSP_FLAG_DOUNDER;
-+			srp_rsp->data_out_res_cnt = cpu_to_be32(resid);
-+		} else if (cmd->data_direction == DMA_FROM_DEVICE) {
-+			/* residual data from an underflow read */
-+			srp_rsp->flags = SRP_RSP_FLAG_DIUNDER;
-+			srp_rsp->data_in_res_cnt = cpu_to_be32(resid);
-+		}
-+	} else if (cmd->se_cmd_flags & SCF_OVERFLOW_BIT) {
-+		if (cmd->data_direction == DMA_TO_DEVICE) {
-+			/* residual data from an overflow write */
-+			srp_rsp->flags = SRP_RSP_FLAG_DOOVER;
-+			srp_rsp->data_out_res_cnt = cpu_to_be32(resid);
-+		} else if (cmd->data_direction == DMA_FROM_DEVICE) {
-+			/* residual data from an overflow read */
-+			srp_rsp->flags = SRP_RSP_FLAG_DIOVER;
-+			srp_rsp->data_in_res_cnt = cpu_to_be32(resid);
-+		}
-+	}
++static bool pgattr_change_is_safe(u64 old, u64 new)
++{
++	/*
++	 * The following mapping attributes may be updated in live
++	 * kernel mappings without the need for break-before-make.
++	 */
++	static const pteval_t mask = PTE_PXN | PTE_RDONLY | PTE_WRITE;
 +
- 	if (sense_data_len) {
- 		BUILD_BUG_ON(MIN_MAX_RSP_SIZE <= sizeof(*srp_rsp));
- 		max_sense_len = ch->max_ti_iu_len - sizeof(*srp_rsp);
++	return old  == 0 || new  == 0 || ((old ^ new) & ~mask) == 0;
++}
++
+ static void alloc_init_pte(pmd_t *pmd, unsigned long addr,
+ 				  unsigned long end, unsigned long pfn,
+ 				  pgprot_t prot,
+@@ -115,8 +124,17 @@ static void alloc_init_pte(pmd_t *pmd, u
+ 
+ 	pte = pte_set_fixmap_offset(pmd, addr);
+ 	do {
++		pte_t old_pte = *pte;
++
+ 		set_pte(pte, pfn_pte(pfn, prot));
+ 		pfn++;
++
++		/*
++		 * After the PTE entry has been populated once, we
++		 * only allow updates to the permission attributes.
++		 */
++		BUG_ON(!pgattr_change_is_safe(pte_val(old_pte), pte_val(*pte)));
++
+ 	} while (pte++, addr += PAGE_SIZE, addr != end);
+ 
+ 	pte_clear_fixmap();
+@@ -146,27 +164,27 @@ static void alloc_init_pmd(pud_t *pud, u
+ 
+ 	pmd = pmd_set_fixmap_offset(pud, addr);
+ 	do {
++		pmd_t old_pmd = *pmd;
++
+ 		next = pmd_addr_end(addr, end);
++
+ 		/* try section mapping first */
+ 		if (((addr | next | phys) & ~SECTION_MASK) == 0 &&
+ 		      allow_block_mappings) {
+-			pmd_t old_pmd =*pmd;
+ 			pmd_set_huge(pmd, phys, prot);
++
+ 			/*
+-			 * Check for previous table entries created during
+-			 * boot (__create_page_tables) and flush them.
++			 * After the PMD entry has been populated once, we
++			 * only allow updates to the permission attributes.
+ 			 */
+-			if (!pmd_none(old_pmd)) {
+-				flush_tlb_all();
+-				if (pmd_table(old_pmd)) {
+-					phys_addr_t table = pmd_page_paddr(old_pmd);
+-					if (!WARN_ON_ONCE(slab_is_available()))
+-						memblock_free(table, PAGE_SIZE);
+-				}
+-			}
++			BUG_ON(!pgattr_change_is_safe(pmd_val(old_pmd),
++						      pmd_val(*pmd)));
+ 		} else {
+ 			alloc_init_pte(pmd, addr, next, __phys_to_pfn(phys),
+ 				       prot, pgtable_alloc);
++
++			BUG_ON(pmd_val(old_pmd) != 0 &&
++			       pmd_val(old_pmd) != pmd_val(*pmd));
+ 		}
+ 		phys += next - addr;
+ 	} while (pmd++, addr = next, addr != end);
+@@ -204,33 +222,28 @@ static void alloc_init_pud(pgd_t *pgd, u
+ 
+ 	pud = pud_set_fixmap_offset(pgd, addr);
+ 	do {
++		pud_t old_pud = *pud;
++
+ 		next = pud_addr_end(addr, end);
+ 
+ 		/*
+ 		 * For 4K granule only, attempt to put down a 1GB block
+ 		 */
+ 		if (use_1G_block(addr, next, phys) && allow_block_mappings) {
+-			pud_t old_pud = *pud;
+ 			pud_set_huge(pud, phys, prot);
+ 
+ 			/*
+-			 * If we have an old value for a pud, it will
+-			 * be pointing to a pmd table that we no longer
+-			 * need (from swapper_pg_dir).
+-			 *
+-			 * Look up the old pmd table and free it.
++			 * After the PUD entry has been populated once, we
++			 * only allow updates to the permission attributes.
+ 			 */
+-			if (!pud_none(old_pud)) {
+-				flush_tlb_all();
+-				if (pud_table(old_pud)) {
+-					phys_addr_t table = pud_page_paddr(old_pud);
+-					if (!WARN_ON_ONCE(slab_is_available()))
+-						memblock_free(table, PAGE_SIZE);
+-				}
+-			}
++			BUG_ON(!pgattr_change_is_safe(pud_val(old_pud),
++						      pud_val(*pud)));
+ 		} else {
+ 			alloc_init_pmd(pud, addr, next, phys, prot,
+ 				       pgtable_alloc, allow_block_mappings);
++
++			BUG_ON(pud_val(old_pud) != 0 &&
++			       pud_val(old_pud) != pud_val(*pud));
+ 		}
+ 		phys += next - addr;
+ 	} while (pud++, addr = next, addr != end);
+@@ -396,6 +409,9 @@ void mark_rodata_ro(void)
+ 	section_size = (unsigned long)__init_begin - (unsigned long)__start_rodata;
+ 	create_mapping_late(__pa(__start_rodata), (unsigned long)__start_rodata,
+ 			    section_size, PAGE_KERNEL_RO);
++
++	/* flush the TLBs after updating live kernel mappings */
++	flush_tlb_all();
+ }
+ 
+ static void __init map_kernel_segment(pgd_t *pgd, void *va_start, void *va_end,
 
 
