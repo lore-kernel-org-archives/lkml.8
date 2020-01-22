@@ -2,94 +2,93 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF83FC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 01:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 379B6C33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 01:26:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 922932465A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 01:24:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="alAeVfIR"
+	by mail.kernel.org (Postfix) with ESMTP id 054D32465A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 01:26:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579656392;
+	bh=fBxdLTfAc/qffrrqnCaKyRKLBXHq68D7Pa+/N8aYUHk=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=vt+gEKcAWCGq8V7dGQvF26GX/o6g4fsjKiot9Tueb/xiRno1jOpKahDfBuuVEDm8f
+	 qgTJmjZHrZL8vTk6saVbt5kmYWdvAScbWyokiIsaHRjkFcQFl9dbG2HCd7PFzI7PmG
+	 jrm6PqB5Ull3Oniw9+QcWeX1yDqvgD1taZEzzXS0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728925AbgAVBYg (ORCPT
+        id S1728978AbgAVB0b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 20:24:36 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:33590 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728750AbgAVBYg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 20:24:36 -0500
-Received: by mail-pj1-f66.google.com with SMTP id u63so1455433pjb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 17:24:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=abNVxjFLq6tr9jL4hLpxUGBmSdTjzjRYJG+vJlFoPpQ=;
-        b=alAeVfIRBU7PYqeWe/RvGfcIBBrhtjbMHl3qZL+4lWMvHESegen86rGdJCN9XeGmxm
-         YfMugsxYWq+tF6B213lyUyfcFclYuJ5Y8fQk6A1z05YglVLcOsp+uncTTSw0eKi3Ny/3
-         wf62NCTMhvXsgMxuWwQRKrCgQzCmBnHSin6Vw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=abNVxjFLq6tr9jL4hLpxUGBmSdTjzjRYJG+vJlFoPpQ=;
-        b=sW8JnkTPsGlJxqiLJMiwCiNPofT3R2KMgvD3GRpMMzKvlVsMhm/ZCYVdoKT+6/HSuN
-         iqBGP6Loy2iMPNYquj6st8oNmZE52nN9en4QalFZtmkeVGzfofri4X4LMeNwRyT+Uurh
-         oX/oEg3SNYlhO/5nyF/NrroKKO0Jt7wo62fbQNraGLg1gTmNngN4rpk/juUQi22HknDK
-         izrPBK5vxwLx4QaTyvDNWI+2ddYnEwdyCrCj5nAIG2ExbxKB33k2hj0SGrdp1QktmQ6b
-         Jn7UcOT+FU1ON6j+56/f/QGsZmxST8YKzA6E4LQxAx3TvUByFrtsQcJIR/kGKbVzVgYC
-         4NvQ==
-X-Gm-Message-State: APjAAAWcnlze4B+6CBQ7qq3gxcrRjzIqiaa7Ju2wOZ3/PrKlFpFoPIxs
-        Lg+9NGyGYjWu/v67HAQ5sjdztA==
-X-Google-Smtp-Source: APXvYqwQtXM3T2sZXnP306/4GmNNkoYDnMPJddtHn+ah1g6GQUfd6SlMwsNuIWyy7RXsyB/5KSUHrA==
-X-Received: by 2002:a17:90b:344f:: with SMTP id lj15mr127263pjb.0.1579656275941;
-        Tue, 21 Jan 2020 17:24:35 -0800 (PST)
-Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id a195sm45250723pfa.120.2020.01.21.17.24.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 17:24:35 -0800 (PST)
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/chrome: wilco_ec: Allow wilco to be compiled in COMPILE_TEST
-Date:   Tue, 21 Jan 2020 17:24:34 -0800
-Message-Id: <20200122012434.88274-1-swboyd@chromium.org>
-X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
+        Tue, 21 Jan 2020 20:26:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60208 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728750AbgAVB0a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 20:26:30 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6250F2253D;
+        Wed, 22 Jan 2020 01:26:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579656390;
+        bh=fBxdLTfAc/qffrrqnCaKyRKLBXHq68D7Pa+/N8aYUHk=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=K3LQcewxot5uQ4gn4r1KHLNZqf/Whp1MK5cP1KRAqwZMTTXVl7D4AuZmlL3JFQHCI
+         SoQoYgAqeuT6LI78V3YSmd5h6quOzGKQNSQ/vhcoQxcFn9VoVYI7IDf/zSghKKo9Ai
+         COpFRD8eE87AmWRUkiJ0YEQI/SEgdpQ8RkU57UGU=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 3AC6A3520DC0; Tue, 21 Jan 2020 17:26:30 -0800 (PST)
+Date:   Tue, 21 Jan 2020 17:26:30 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Jules Irenge <jbi.octave@gmail.com>
+Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de
+Subject: Re: [PATCH 0/5] Lock warning clean up
+Message-ID: <20200122012630.GE2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200120223515.51287-1-jbi.octave@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200120223515.51287-1-jbi.octave@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable this Kconfig on COMPILE_TEST enabled configs so we can get more
-build coverage.
+On Mon, Jan 20, 2020 at 10:35:15PM +0000, Jules Irenge wrote:
+> This patch series adds missing annotations to functions that register warnings of context imbalance when built with Sparse tool.
+> The adds fix these warnings and give insight on what the functions are actually doing.
+> In the core kernel,
+> 
+> 1. IRQ and RCU subsystems: exactly patch 1 and 3,  __releases() annotations were added as these functions exit the critical section
+> 2. RCU subsystem again, patch 2 and 4, __acquire() annotations were added as the functions allow entry to the critical section.
+> 3. TIME subsystem, patch 5 where lock is held at entry and exit of the function, an __must_hold() annotation was added.
 
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
----
- drivers/platform/chrome/wilco_ec/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Queued for review and testing, thank you!
 
-diff --git a/drivers/platform/chrome/wilco_ec/Kconfig b/drivers/platform/chrome/wilco_ec/Kconfig
-index 365f30e116ee..49e8530ca0ac 100644
---- a/drivers/platform/chrome/wilco_ec/Kconfig
-+++ b/drivers/platform/chrome/wilco_ec/Kconfig
-@@ -1,7 +1,8 @@
- # SPDX-License-Identifier: GPL-2.0-only
- config WILCO_EC
- 	tristate "ChromeOS Wilco Embedded Controller"
--	depends on ACPI && X86 && CROS_EC_LPC && LEDS_CLASS
-+	depends on X86 || COMPILE_TEST
-+	depends on ACPI && CROS_EC_LPC && LEDS_CLASS
- 	help
- 	  If you say Y here, you get support for talking to the ChromeOS
- 	  Wilco EC over an eSPI bus. This uses a simple byte-level protocol
--- 
-Sent by a computer, using git, on the internet
+I edited the commit logs, so please check to make sure that I did not
+mess something up.
 
+							Thanx, Paul
+
+> Jules Irenge (5):
+>   irq: Add  missing annotation for __irq_put_desc_unlock()
+>   rcu: Add missing annotation for exit_tasks_rcu_start()
+>   rcu: Add missing annotation for exit_tasks_rcu_finish()
+>   rcu: Add missing annotation for rcu_nocb_bypass_lock()
+>   time: Add missing annotation for __run_timer()
+> 
+>  kernel/irq/irqdesc.c     | 1 +
+>  kernel/rcu/tree_plugin.h | 1 +
+>  kernel/rcu/update.c      | 4 ++--
+>  kernel/time/hrtimer.c    | 2 +-
+>  4 files changed, 5 insertions(+), 3 deletions(-)
+> 
+> -- 
+> 2.24.1
+> 
