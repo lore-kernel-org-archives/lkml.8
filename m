@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A5E1C33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D25EAC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53BC72467B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:47:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA71E2468A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:47:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686436;
-	bh=0Wy9QmnyEf2wGDNA62BLUT9kBGOueblak1F7BeV4wCU=;
+	s=default; t=1579686438;
+	bh=vHUg67buj3r9p7/SuoC+0nK7+Jt1NwydcxrhjrQZDqI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rnVDnjJPD/UfX0+egHSJPvXQ/ZouUIslYP6nSHeCsANKbh+DCtJLuK3mkldBOBP6N
-	 9rNLov7nU5FEu3yeBJ+TOXy6IGUnVIyA1woruzRpVDG/roLUCjg6ls3CgTteMJi6Dm
-	 OdYU1n8jqKk4IS+H0YWwiKUdHW9Oljt1KLPQdskY=
+	b=ne6bawdZ+/JPib71S7mpO7lQl0yK+NOqW6FkIuOjbpaFxJZm8xQBMKOlYKurPfpUU
+	 VJHhN/BkKaVBwsMCAWJL/ry5kOjsdgVHQ+/tqljeBvm6f61Ud8MDfQ9DuHIXN2kOpl
+	 hp5IGymAKWqKpYT8U8pcAhP4bqxkaeujRmlylyh0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387456AbgAVJmd (ORCPT
+        id S1733197AbgAVJmc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:42:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34236 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:42:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387707AbgAVJmY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:42:24 -0500
+        id S2387701AbgAVJmV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:42:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D94BE24680;
-        Wed, 22 Jan 2020 09:42:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B43B24689;
+        Wed, 22 Jan 2020 09:42:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686143;
-        bh=0Wy9QmnyEf2wGDNA62BLUT9kBGOueblak1F7BeV4wCU=;
+        s=default; t=1579686140;
+        bh=vHUg67buj3r9p7/SuoC+0nK7+Jt1NwydcxrhjrQZDqI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HzkWbOj2XX0WUD4M9bYdCqNCl3REx/GzGmT4WxauE0MFNUYJpzq+HErzGWnoCgtvO
-         kl7jDBhT8gfI2Vc1a5D2D5+dRWQHN+9G+KReSbMbnM70ZoGyDJYBiHdAdDNYwFRgRW
-         wsMyAHKpEs0SrxanFSliodnTMzG3eeTyLlS5joZQ=
+        b=N40CKS0/J6kQBkAmGgCY8Jcj+mgvoXX0W78tojfM5jcsvZtZd0yirytkkUxS+VmKP
+         aB94L4jcrnQ1v0fAogpAamrHegs/r2KY/PTLwjGQ7TIvB6eF5ocJPGUzKCZrOhZiRr
+         bGmXkqXFTTnhd3U7sC6rGzJYEXlpCa785rTrY4uo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        stable@vger.kernel.org,
+        syzbot+2b2ef983f973e5c40943@syzkaller.appspotmail.com,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 025/103] ALSA: usb-audio: fix sync-ep altsetting sanity check
-Date:   Wed, 22 Jan 2020 10:28:41 +0100
-Message-Id: <20200122092807.578377802@linuxfoundation.org>
+Subject: [PATCH 4.19 024/103] ALSA: seq: Fix racy access for queue timer in proc read
+Date:   Wed, 22 Jan 2020 10:28:40 +0100
+Message-Id: <20200122092807.412847495@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
 References: <20200122092803.587683021@linuxfoundation.org>
@@ -59,42 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 5d1b71226dc4d44b4b65766fa9d74492f9d4587b upstream.
+commit 60adcfde92fa40fcb2dbf7cc52f9b096e0cd109a upstream.
 
-The altsetting sanity check in set_sync_ep_implicit_fb_quirk() was
-checking for there to be at least one altsetting but then went on to
-access the second one, which may not exist.
+snd_seq_info_timer_read() reads the information of the timer assigned
+for each queue, but it's done in a racy way which may lead to UAF as
+spotted by syzkaller.
 
-This could lead to random slab data being used to initialise the sync
-endpoint in snd_usb_add_endpoint().
+This patch applies the missing q->timer_mutex lock while accessing the
+timer object as well as a slight code change to adapt the standard
+coding style.
 
-Fixes: c75a8a7ae565 ("ALSA: snd-usb: add support for implicit feedback")
-Fixes: ca10a7ebdff1 ("ALSA: usb-audio: FT C400 sync playback EP to capture EP")
-Fixes: 5e35dc0338d8 ("ALSA: usb-audio: add implicit fb quirk for Behringer UFX1204")
-Fixes: 17f08b0d9aaf ("ALSA: usb-audio: add implicit fb quirk for Axe-Fx II")
-Fixes: 103e9625647a ("ALSA: usb-audio: simplify set_sync_ep_implicit_fb_quirk")
-Cc: stable <stable@vger.kernel.org>     # 3.5
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20200114083953.1106-1-johan@kernel.org
+Reported-by: syzbot+2b2ef983f973e5c40943@syzkaller.appspotmail.com
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200115203733.26530-1-tiwai@suse.de
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/pcm.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/core/seq/seq_timer.c |   14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
---- a/sound/usb/pcm.c
-+++ b/sound/usb/pcm.c
-@@ -377,7 +377,7 @@ static int set_sync_ep_implicit_fb_quirk
- add_sync_ep_from_ifnum:
- 	iface = usb_ifnum_to_if(dev, ifnum);
- 
--	if (!iface || iface->num_altsetting == 0)
-+	if (!iface || iface->num_altsetting < 2)
- 		return -EINVAL;
- 
- 	alts = &iface->altsetting[1];
+--- a/sound/core/seq/seq_timer.c
++++ b/sound/core/seq/seq_timer.c
+@@ -480,15 +480,19 @@ void snd_seq_info_timer_read(struct snd_
+ 		q = queueptr(idx);
+ 		if (q == NULL)
+ 			continue;
+-		if ((tmr = q->timer) == NULL ||
+-		    (ti = tmr->timeri) == NULL) {
+-			queuefree(q);
+-			continue;
+-		}
++		mutex_lock(&q->timer_mutex);
++		tmr = q->timer;
++		if (!tmr)
++			goto unlock;
++		ti = tmr->timeri;
++		if (!ti)
++			goto unlock;
+ 		snd_iprintf(buffer, "Timer for queue %i : %s\n", q->queue, ti->timer->name);
+ 		resolution = snd_timer_resolution(ti) * tmr->ticks;
+ 		snd_iprintf(buffer, "  Period time : %lu.%09lu\n", resolution / 1000000000, resolution % 1000000000);
+ 		snd_iprintf(buffer, "  Skew : %u / %u\n", tmr->skew, tmr->skew_base);
++unlock:
++		mutex_unlock(&q->timer_mutex);
+ 		queuefree(q);
+  	}
+ }
 
 
