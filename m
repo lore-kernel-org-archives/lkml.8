@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B04C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A24BFC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D736E205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:30:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74C04205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:30:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579699805;
-	bh=CieECoi7YdqBWSVo5QJb+cYgFiEPq497RWDxtyjRnGs=;
+	s=default; t=1579699815;
+	bh=2of5CTXKjjGti1kbcPgJ/LjlfCW/6qH5PUVAquhJEno=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Duzn8YE5nTlzkL946f/gBFsDxcxyptdya/xibdFZGQo4eAHvPv15Mi+8DQgOgMhOt
-	 t/rIB7JdXcAvXx6FyFw0IjfzyNlO4B5s72fyOfIkiFnsJANgZV5Jv8TXEcb8bhtis/
-	 MgoT1azb624hWj7S9mjOLSWXKxhy8EyA+OknHriU=
+	b=M0HwPtVVMspKyzFLOUKOBaClMaXxJzhYDcCLAUxpNH+51h9y1/iT6xpomnZLKzygJ
+	 MTlG1gMGI06kp9ewso9nVs70nTLu/AZ9uC1z3U2QJE5Fn8r7dn0mkvD3sJC5pqloLv
+	 K9SvI9vXJF17ESxEa/fDa31Q6u5R8KAc7vcHpoEg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730639AbgAVNYR (ORCPT
+        id S1729159AbgAVNaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:24:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43018 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 08:30:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729184AbgAVNYN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:24:13 -0500
+        id S1730770AbgAVNXf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:23:35 -0500
 Received: from localhost (unknown [84.241.205.26])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 272B82467B;
-        Wed, 22 Jan 2020 13:24:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC94C205F4;
+        Wed, 22 Jan 2020 13:23:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579699452;
-        bh=CieECoi7YdqBWSVo5QJb+cYgFiEPq497RWDxtyjRnGs=;
+        s=default; t=1579699414;
+        bh=2of5CTXKjjGti1kbcPgJ/LjlfCW/6qH5PUVAquhJEno=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tPB9QzYvrO22zcV/h5o5/xhV4yFvt/RVYJfuDChUjB0DqFAe27JnjH23E3CYHOEAR
-         +nN+jcmI9kqq/yEs15VlVbajvpKn2aySelJsAmqSR5ssPTpycRyXoi1UEqyNLv+dmH
-         dVcBP9SrHWLqSaET2kJZFc2yzt6H4ZWc/Y0WMUc8=
+        b=Y8tXoLbjZbBzowbhyOWMhbK9vI+WlYa8v1d5hgO74hC7QJROxX/sbVl7uMxkHbyos
+         6mvOFp+MHFpUpm8zLdSx6Ke1dph/bKpnfGfbSzpDcNHR+oO7s9TF+YOrHVJZ/izm3B
+         jfsQSXXp0UHMwYBcc8OvPmCX3s1fEcWlMq8toGXk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Fastabend <john.fastabend@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>
-Subject: [PATCH 5.4 114/222] bpf: Sockmap/tls, skmsg can have wrapped skmsg that needs extra chaining
-Date:   Wed, 22 Jan 2020 10:28:20 +0100
-Message-Id: <20200122092841.894240359@linuxfoundation.org>
+        stable@vger.kernel.org, Mohammed Gamal <mgamal@redhat.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 137/222] hv_netvsc: Fix memory leak when removing rndis device
+Date:   Wed, 22 Jan 2020 10:28:43 +0100
+Message-Id: <20200122092843.549078478@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
 References: <20200122092833.339495161@linuxfoundation.org>
@@ -60,50 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Fastabend <john.fastabend@gmail.com>
+From: Mohammed Gamal <mgamal@redhat.com>
 
-commit 9aaaa56845a06aeabdd597cbe19492dc01f281ec upstream.
+[ Upstream commit 536dc5df2808efbefc5acee334d3c4f701790ec0 ]
 
-Its possible through a set of push, pop, apply helper calls to construct
-a skmsg, which is just a ring of scatterlist elements, with the start
-value larger than the end value. For example,
+kmemleak detects the following memory leak when hot removing
+a network device:
 
-      end       start
-  |_0_|_1_| ... |_n_|_n+1_|
+unreferenced object 0xffff888083f63600 (size 256):
+  comm "kworker/0:1", pid 12, jiffies 4294831717 (age 1113.676s)
+  hex dump (first 32 bytes):
+    00 40 c7 33 80 88 ff ff 00 00 00 00 10 00 00 00  .@.3............
+    00 00 00 00 ad 4e ad de ff ff ff ff 00 00 00 00  .....N..........
+  backtrace:
+    [<00000000d4a8f5be>] rndis_filter_device_add+0x117/0x11c0 [hv_netvsc]
+    [<000000009c02d75b>] netvsc_probe+0x5e7/0xbf0 [hv_netvsc]
+    [<00000000ddafce23>] vmbus_probe+0x74/0x170 [hv_vmbus]
+    [<00000000046e64f1>] really_probe+0x22f/0xb50
+    [<000000005cc35eb7>] driver_probe_device+0x25e/0x370
+    [<0000000043c642b2>] bus_for_each_drv+0x11f/0x1b0
+    [<000000005e3d09f0>] __device_attach+0x1c6/0x2f0
+    [<00000000a72c362f>] bus_probe_device+0x1a6/0x260
+    [<0000000008478399>] device_add+0x10a3/0x18e0
+    [<00000000cf07b48c>] vmbus_device_register+0xe7/0x1e0 [hv_vmbus]
+    [<00000000d46cf032>] vmbus_add_channel_work+0x8ab/0x1770 [hv_vmbus]
+    [<000000002c94bb64>] process_one_work+0x919/0x17d0
+    [<0000000096de6781>] worker_thread+0x87/0xb40
+    [<00000000fbe7397e>] kthread+0x333/0x3f0
+    [<000000004f844269>] ret_from_fork+0x3a/0x50
 
-Where end points at 1 and start points and n so that valid elements is
-the set {n, n+1, 0, 1}.
+rndis_filter_device_add() allocates an instance of struct rndis_device
+which never gets deallocated as rndis_filter_device_remove() sets
+net_device->extension which points to the rndis_device struct to NULL,
+leaving the rndis_device dangling.
 
-Currently, because we don't build the correct chain only {n, n+1} will
-be sent. This adds a check and sg_chain call to correctly submit the
-above to the crypto and tls send path.
+Since net_device->extension is eventually freed in free_netvsc_device(),
+we refrain from setting it to NULL inside rndis_filter_device_remove()
 
-Fixes: d3b18ad31f93d ("tls: add bpf support to sk_msg handling")
-Signed-off-by: John Fastabend <john.fastabend@gmail.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Jonathan Lemon <jonathan.lemon@gmail.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/bpf/20200111061206.8028-8-john.fastabend@gmail.com
+Signed-off-by: Mohammed Gamal <mgamal@redhat.com>
+Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- net/tls/tls_sw.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/hyperv/rndis_filter.c |    2 --
+ 1 file changed, 2 deletions(-)
 
---- a/net/tls/tls_sw.c
-+++ b/net/tls/tls_sw.c
-@@ -724,6 +724,12 @@ static int tls_push_record(struct sock *
- 		sg_mark_end(sk_msg_elem(msg_pl, i));
- 	}
+--- a/drivers/net/hyperv/rndis_filter.c
++++ b/drivers/net/hyperv/rndis_filter.c
+@@ -1436,8 +1436,6 @@ void rndis_filter_device_remove(struct h
+ 	/* Halt and release the rndis device */
+ 	rndis_filter_halt_device(net_dev, rndis_dev);
  
-+	if (msg_pl->sg.end < msg_pl->sg.start) {
-+		sg_chain(&msg_pl->sg.data[msg_pl->sg.start],
-+			 MAX_SKB_FRAGS - msg_pl->sg.start + 1,
-+			 msg_pl->sg.data);
-+	}
-+
- 	i = msg_pl->sg.start;
- 	sg_chain(rec->sg_aead_in, 2, &msg_pl->sg.data[i]);
+-	net_dev->extension = NULL;
+-
+ 	netvsc_device_remove(dev);
+ }
  
 
 
