@@ -2,109 +2,68 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E2CC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 23:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 167E7C33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 23:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4323021835
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 23:37:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E593B21835
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 23:37:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbgAVXhl (ORCPT
+        id S1727590AbgAVXhz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 18:37:41 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:38871 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbgAVXhl (ORCPT
+        Wed, 22 Jan 2020 18:37:55 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:51632 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726083AbgAVXhy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 18:37:41 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iuPZ0-0007OT-0Q; Thu, 23 Jan 2020 00:37:34 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 3688610029B; Thu, 23 Jan 2020 00:37:33 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Evan Green <evgreen@chromium.org>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Marc Zyngier <maz@kernel.org>, Christoph Hellwig <hch@lst.de>,
-        Rajat Jain <rajatxjain@gmail.com>
-Subject: Re: [PATCH] PCI/MSI: Avoid torn updates to MSI pairs
-In-Reply-To: <CAE=gft6hvO7G2OrxFGXeSDctz-21ryiu8JSBWT0g2fRFss-pxA@mail.gmail.com>
-References: <20200116133102.1.I9c7e72144ef639cc135ea33ef332852a6b33730f@changeid> <20200122172816.GA139285@google.com> <CAE=gft6hvO7G2OrxFGXeSDctz-21ryiu8JSBWT0g2fRFss-pxA@mail.gmail.com>
-Date:   Thu, 23 Jan 2020 00:37:33 +0100
-Message-ID: <875zh3ukoy.fsf@nanos.tec.linutronix.de>
+        Wed, 22 Jan 2020 18:37:54 -0500
+Received: from [82.43.126.140] (helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iuPZG-0007ZK-Ga; Wed, 22 Jan 2020 23:37:50 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        linux-leds@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] leds: lm3697: fix spelling mistake "To" -> "Too"
+Date:   Wed, 22 Jan 2020 23:37:49 +0000
+Message-Id: <20200122233749.2829246-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Evan Green <evgreen@chromium.org> writes:
-> On Wed, Jan 22, 2020 at 9:28 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->> I suspect this *is* a problem because I think disabling MSI doesn't
->> disable interrupts; it just means the device will interrupt using INTx
->> instead of MSI.  And the driver is probably not prepared to handle
->> INTx.
->>
->> PCIe r5.0, sec 7.7.1.2, seems relevant: "If MSI and MSI-X are both
->> disabled, the Function requests servicing using INTx interrupts (if
->> supported)."
+From: Colin Ian King <colin.king@canonical.com>
 
-Disabling MSI is not an option. Masking yes, but MSI does not have
-mandatory masking. We already attempt masking on migration, which covers
-only MSI-X reliably, but not all MSI incarnations.
+There is a spelling mistake in a dev_err message. Fix it.
 
-So I assume that problem happens on a MSI interrupt, right?
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/leds/leds-lm3697.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->> Maybe the IRQ guys have ideas about how to solve this?
-
-Maybe :)
-
-> But don't we already do this in __pci_restore_msi_state():
->         pci_intx_for_msi(dev, 0);
->         pci_msi_set_enable(dev, 0);
->         arch_restore_msi_irqs(dev);
->
-> I'd think if there were a chance for a line-based interrupt to get in
-> and wedge itself, it would already be happening there.
-
-That's a completely different beast. It's used when resetting a device
-and for other stuff like virt state migration. That's not a model for
-affinity changes of a live device.
-
-> One other way you could avoid torn MSI writes would be to ensure that
-> if you migrate IRQs across cores, you keep the same x86 vector number.
-> That way the address portion would be updated, and data doesn't
-> change, so there's no window. But that may not actually be feasible.
-
-That's not possible simply because the x86 vector space is limited. If
-we would have to guarantee that then we'd end up with a max of ~220
-interrupts per system. Sufficient for your notebook, but the big iron
-people would be not amused.
-
-The real critical path here is the CPU hotplug path.
-
-For regular migration between two online CPUs we use the 'migrate when
-the irq is actually serviced ' mechanism. That might have the same issue
-on misdesigned devices which are firing the next interrupt before the
-one on the flight is serviced, but I haven't seen any reports with that
-symptom yet.
-
-But before I dig deeper into this, please provide the output of
-
-'lscpci -vvv' and 'cat /proc/interrupts'
-
-Thanks,
-
-        tglx
-
+diff --git a/drivers/leds/leds-lm3697.c b/drivers/leds/leds-lm3697.c
+index b71711aff8a3..872d26f9706a 100644
+--- a/drivers/leds/leds-lm3697.c
++++ b/drivers/leds/leds-lm3697.c
+@@ -246,7 +246,7 @@ static int lm3697_probe_dt(struct lm3697 *priv)
+ 
+ 		led->num_leds = fwnode_property_count_u32(child, "led-sources");
+ 		if (led->num_leds > LM3697_MAX_LED_STRINGS) {
+-			dev_err(&priv->client->dev, "To many LED strings defined\n");
++			dev_err(&priv->client->dev, "Too many LED strings defined\n");
+ 			continue;
+ 		}
+ 
+-- 
+2.24.0
 
