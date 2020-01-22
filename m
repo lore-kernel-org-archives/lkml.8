@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA44C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41210C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:52:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1A6F20704
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:52:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 177322468D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:52:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686757;
-	bh=oF1Vd0LhvbDGRClAC3BFqvWOM1Wrvqh27WydgE6GlvU=;
+	s=default; t=1579686759;
+	bh=tBqdpAMMkV29Q/s1tH+suMTJHE0eP4HIV/Cod+Jo7Hk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1lLzov7F1C61BHf07Bf4OAKfUxBlm0zLjpYECObpo5pUtzDMSjcYBGt8Fyx2G2+RR
-	 TsR6XWgBRE8nm5G9fNJvU3vvmUrhMdWbmy31nvF7feKU+H5WF7Mcuuboo/URTT/8sM
-	 R9vXTRptSsQCudAi3UvtX2XbgFJVIkpgEtxhQvZY=
+	b=xKklIhsKGNyG58quSs2HV6d3JK8+Y7pHTh0eH1bXjiSg5Fv7ABW4/qgsjhHuEj1gf
+	 9Bs4ujj5FbRLAqqrp00cChHdaHXnqWQ7Ma0CDDL6puUvkzvnQ+IjfK8gVEWPw7Aq8/
+	 1l3jiErPGr157Y1rSeImc1qTm5tzMcmNrI0fPyso=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732382AbgAVJwf (ORCPT
+        id S1731682AbgAVJgQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:52:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51756 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:36:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731698AbgAVJgS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:36:18 -0500
+        id S1731634AbgAVJgI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:36:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F06A024673;
-        Wed, 22 Jan 2020 09:36:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49CDF2467A;
+        Wed, 22 Jan 2020 09:36:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685777;
-        bh=oF1Vd0LhvbDGRClAC3BFqvWOM1Wrvqh27WydgE6GlvU=;
+        s=default; t=1579685767;
+        bh=tBqdpAMMkV29Q/s1tH+suMTJHE0eP4HIV/Cod+Jo7Hk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pu2zCkQPxoFJknbOV6v32SX19NzvGl586ATwdzWY2orTEftU65Kt048V7sIo4CuHN
-         AvJrVCgeLHwJhw66p4f9Tis/NELXnGSPwf1ybxeCSTU7SOY/TX5ImE/k342qFUAqJB
-         N1TpwZM3mSJ5xV94rIw5rD/O1V0EI6O1u2nzAP+s=
+        b=BMbCjDV2mA7c2MDAYuMGHTYFfzsW157QEf6l9WuDyNY0tP9nTV7+pQ2YxQbFhNFsB
+         P/aohSPnZ5kCXmvS5rsdLfXgdodna4Ngw94nIpzDhqAh+A30fBFgtOz1ZJuLjNPmE0
+         u6f6em7dG/EzFMlRYbuZ1k3IZUNBbBI9MlNVQ/eA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, John Ogness <john.ogness@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Johan Hovold <johan@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 75/97] scsi: fnic: fix invalid stack access
-Date:   Wed, 22 Jan 2020 10:29:19 +0100
-Message-Id: <20200122092808.403724759@linuxfoundation.org>
+Subject: [PATCH 4.9 71/97] USB: serial: io_edgeport: use irqsave() in USBs complete callback
+Date:   Wed, 22 Jan 2020 10:29:15 +0100
+Message-Id: <20200122092807.822542059@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092755.678349497@linuxfoundation.org>
 References: <20200122092755.678349497@linuxfoundation.org>
@@ -60,124 +61,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: John Ogness <john.ogness@linutronix.de>
 
-[ Upstream commit 42ec15ceaea74b5f7a621fc6686cbf69ca66c4cf ]
+[ Upstream commit dd1fae527612543e560e84f2eba4f6ef2006ac55 ]
 
-gcc -O3 warns that some local variables are not properly initialized:
+The USB completion callback does not disable interrupts while acquiring
+the lock. We want to remove the local_irq_disable() invocation from
+__usb_hcd_giveback_urb() and therefore it is required for the callback
+handler to disable the interrupts while acquiring the lock.
+The callback may be invoked either in IRQ or BH context depending on the
+USB host controller.
+Use the _irqsave() variant of the locking primitives.
 
-drivers/scsi/fnic/vnic_dev.c: In function 'fnic_dev_hang_notify':
-drivers/scsi/fnic/vnic_dev.c:511:16: error: 'a0' is used uninitialized in this function [-Werror=uninitialized]
-  vdev->args[0] = *a0;
-  ~~~~~~~~~~~~~~^~~~~
-drivers/scsi/fnic/vnic_dev.c:691:6: note: 'a0' was declared here
-  u64 a0, a1;
-      ^~
-drivers/scsi/fnic/vnic_dev.c:512:16: error: 'a1' is used uninitialized in this function [-Werror=uninitialized]
-  vdev->args[1] = *a1;
-  ~~~~~~~~~~~~~~^~~~~
-drivers/scsi/fnic/vnic_dev.c:691:10: note: 'a1' was declared here
-  u64 a0, a1;
-          ^~
-drivers/scsi/fnic/vnic_dev.c: In function 'fnic_dev_mac_addr':
-drivers/scsi/fnic/vnic_dev.c:512:16: error: 'a1' is used uninitialized in this function [-Werror=uninitialized]
-  vdev->args[1] = *a1;
-  ~~~~~~~~~~~~~~^~~~~
-drivers/scsi/fnic/vnic_dev.c:698:10: note: 'a1' was declared here
-  u64 a0, a1;
-          ^~
-
-Apparently the code relies on the local variables occupying adjacent memory
-locations in the same order, but this is of course not guaranteed.
-
-Use an array of two u64 variables where needed to make it work correctly.
-
-I suspect there is also an endianness bug here, but have not digged in deep
-enough to be sure.
-
-Fixes: 5df6d737dd4b ("[SCSI] fnic: Add new Cisco PCI-Express FCoE HBA")
-Fixes: mmtom ("init/Kconfig: enable -O3 for all arches")
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200107201602.4096790-1-arnd@arndb.de
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: John Ogness <john.ogness@linutronix.de>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/fnic/vnic_dev.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ drivers/usb/serial/io_edgeport.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/scsi/fnic/vnic_dev.c b/drivers/scsi/fnic/vnic_dev.c
-index ba69d6112fa1..c5b89a003d2a 100644
---- a/drivers/scsi/fnic/vnic_dev.c
-+++ b/drivers/scsi/fnic/vnic_dev.c
-@@ -445,26 +445,26 @@ int vnic_dev_soft_reset_done(struct vnic_dev *vdev, int *done)
+diff --git a/drivers/usb/serial/io_edgeport.c b/drivers/usb/serial/io_edgeport.c
+index 61671e277bb4..b9b56ec6ff24 100644
+--- a/drivers/usb/serial/io_edgeport.c
++++ b/drivers/usb/serial/io_edgeport.c
+@@ -572,6 +572,7 @@ static void edge_interrupt_callback(struct urb *urb)
+ 	struct usb_serial_port *port;
+ 	unsigned char *data = urb->transfer_buffer;
+ 	int length = urb->actual_length;
++	unsigned long flags;
+ 	int bytes_avail;
+ 	int position;
+ 	int txCredits;
+@@ -603,7 +604,7 @@ static void edge_interrupt_callback(struct urb *urb)
+ 		if (length > 1) {
+ 			bytes_avail = data[0] | (data[1] << 8);
+ 			if (bytes_avail) {
+-				spin_lock(&edge_serial->es_lock);
++				spin_lock_irqsave(&edge_serial->es_lock, flags);
+ 				edge_serial->rxBytesAvail += bytes_avail;
+ 				dev_dbg(dev,
+ 					"%s - bytes_avail=%d, rxBytesAvail=%d, read_in_progress=%d\n",
+@@ -626,7 +627,8 @@ static void edge_interrupt_callback(struct urb *urb)
+ 						edge_serial->read_in_progress = false;
+ 					}
+ 				}
+-				spin_unlock(&edge_serial->es_lock);
++				spin_unlock_irqrestore(&edge_serial->es_lock,
++						       flags);
+ 			}
+ 		}
+ 		/* grab the txcredits for the ports if available */
+@@ -639,9 +641,11 @@ static void edge_interrupt_callback(struct urb *urb)
+ 				port = edge_serial->serial->port[portNumber];
+ 				edge_port = usb_get_serial_port_data(port);
+ 				if (edge_port->open) {
+-					spin_lock(&edge_port->ep_lock);
++					spin_lock_irqsave(&edge_port->ep_lock,
++							  flags);
+ 					edge_port->txCredits += txCredits;
+-					spin_unlock(&edge_port->ep_lock);
++					spin_unlock_irqrestore(&edge_port->ep_lock,
++							       flags);
+ 					dev_dbg(dev, "%s - txcredits for port%d = %d\n",
+ 						__func__, portNumber,
+ 						edge_port->txCredits);
+@@ -682,6 +686,7 @@ static void edge_bulk_in_callback(struct urb *urb)
+ 	int			retval;
+ 	__u16			raw_data_length;
+ 	int status = urb->status;
++	unsigned long flags;
  
- int vnic_dev_hang_notify(struct vnic_dev *vdev)
- {
--	u64 a0, a1;
-+	u64 a0 = 0, a1 = 0;
- 	int wait = 1000;
- 	return vnic_dev_cmd(vdev, CMD_HANG_NOTIFY, &a0, &a1, wait);
+ 	if (status) {
+ 		dev_dbg(&urb->dev->dev, "%s - nonzero read bulk status received: %d\n",
+@@ -701,7 +706,7 @@ static void edge_bulk_in_callback(struct urb *urb)
+ 
+ 	usb_serial_debug_data(dev, __func__, raw_data_length, data);
+ 
+-	spin_lock(&edge_serial->es_lock);
++	spin_lock_irqsave(&edge_serial->es_lock, flags);
+ 
+ 	/* decrement our rxBytes available by the number that we just got */
+ 	edge_serial->rxBytesAvail -= raw_data_length;
+@@ -725,7 +730,7 @@ static void edge_bulk_in_callback(struct urb *urb)
+ 		edge_serial->read_in_progress = false;
+ 	}
+ 
+-	spin_unlock(&edge_serial->es_lock);
++	spin_unlock_irqrestore(&edge_serial->es_lock, flags);
  }
  
- int vnic_dev_mac_addr(struct vnic_dev *vdev, u8 *mac_addr)
- {
--	u64 a0, a1;
-+	u64 a[2] = {};
- 	int wait = 1000;
- 	int err, i;
  
- 	for (i = 0; i < ETH_ALEN; i++)
- 		mac_addr[i] = 0;
- 
--	err = vnic_dev_cmd(vdev, CMD_MAC_ADDR, &a0, &a1, wait);
-+	err = vnic_dev_cmd(vdev, CMD_MAC_ADDR, &a[0], &a[1], wait);
- 	if (err)
- 		return err;
- 
- 	for (i = 0; i < ETH_ALEN; i++)
--		mac_addr[i] = ((u8 *)&a0)[i];
-+		mac_addr[i] = ((u8 *)&a)[i];
- 
- 	return 0;
- }
-@@ -489,30 +489,30 @@ void vnic_dev_packet_filter(struct vnic_dev *vdev, int directed, int multicast,
- 
- void vnic_dev_add_addr(struct vnic_dev *vdev, u8 *addr)
- {
--	u64 a0 = 0, a1 = 0;
-+	u64 a[2] = {};
- 	int wait = 1000;
- 	int err;
- 	int i;
- 
- 	for (i = 0; i < ETH_ALEN; i++)
--		((u8 *)&a0)[i] = addr[i];
-+		((u8 *)&a)[i] = addr[i];
- 
--	err = vnic_dev_cmd(vdev, CMD_ADDR_ADD, &a0, &a1, wait);
-+	err = vnic_dev_cmd(vdev, CMD_ADDR_ADD, &a[0], &a[1], wait);
- 	if (err)
- 		pr_err("Can't add addr [%pM], %d\n", addr, err);
- }
- 
- void vnic_dev_del_addr(struct vnic_dev *vdev, u8 *addr)
- {
--	u64 a0 = 0, a1 = 0;
-+	u64 a[2] = {};
- 	int wait = 1000;
- 	int err;
- 	int i;
- 
- 	for (i = 0; i < ETH_ALEN; i++)
--		((u8 *)&a0)[i] = addr[i];
-+		((u8 *)&a)[i] = addr[i];
- 
--	err = vnic_dev_cmd(vdev, CMD_ADDR_DEL, &a0, &a1, wait);
-+	err = vnic_dev_cmd(vdev, CMD_ADDR_DEL, &a[0], &a[1], wait);
- 	if (err)
- 		pr_err("Can't del addr [%pM], %d\n", addr, err);
- }
 -- 
 2.20.1
 
