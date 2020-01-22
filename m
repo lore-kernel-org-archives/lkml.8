@@ -2,87 +2,79 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12216C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:23:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 039F5C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:24:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE1E124125
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:23:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579710198;
-	bh=LCZBvvOS0KLjWc9/STGzVEdt5nVKnCe0i6V++IqwJis=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=V/VucRrE/eAXx/G+tnF/WoDSbO04/YWS/24qRgtaS1jp/rM1L9OUC0MJN4Y1KcdOx
-	 KXxP0Rdz5ACPfhFDesy2kEObor1V+Jk6/Onc+8cSkmFwcIlA/kPxm6zSZclo9CWjVu
-	 pNeMKs20KUQb7pS67Iqbj6xFUcovGQCBPeCIYifM=
+	by mail.kernel.org (Postfix) with ESMTP id CAD41217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:24:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728900AbgAVQXR (ORCPT
+        id S1729008AbgAVQYD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 11:23:17 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:46532 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726761AbgAVQXR (ORCPT
+        Wed, 22 Jan 2020 11:24:03 -0500
+Received: from mail-il1-f199.google.com ([209.85.166.199]:52068 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728901AbgAVQYC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 11:23:17 -0500
-Received: by mail-oi1-f196.google.com with SMTP id 13so6559842oij.13;
-        Wed, 22 Jan 2020 08:23:16 -0800 (PST)
+        Wed, 22 Jan 2020 11:24:02 -0500
+Received: by mail-il1-f199.google.com with SMTP id v13so89523ili.18
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 08:24:02 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kl6DkjB86yGpM9juSr7kQ2SQ7zaftAaJ+ye7aw840JU=;
-        b=J9LjScM2ZL5NLgNxUMJZxpKOT/SjwjdEj1dHpXqUlXcqEBFYmf04CkyndIXu/8QICi
-         1zTFc+4Jji5Bgv9o77gYlQDOqVQW/iV4WCmhjz77zr67c718erhHOFG0GOEtNodxLKuI
-         ktbFST2gQrG0tehFowoHS8V0rilaIdA4IL8tNblLR0eYM6JAF49Cxm0jJz3RQ59jnAO4
-         H5GRK/hXo9fcoITJcv5u3/ICtWTza9n55I34f5/DhfUaUJSqeae4UNk9ALMWwV4MLJ0L
-         30P0CG1Pqfg3kxvbsFph7ko+XWwqxN01WhYv9Hq3JH1c3lyUOtjGMQN5RGBQF90luU1C
-         /LSw==
-X-Gm-Message-State: APjAAAWPXSWQLzqaTkERv/Oj6VWIo3J5v8f8JCUALE5TNCdDLZLVL6SF
-        61aVqLh/XnNhH6+gM2sNYQ==
-X-Google-Smtp-Source: APXvYqx+wMlJuRZhN1C81TQvWCFvFCstyCoUvH2JF2ogKYXviYxz5AWDV3kOmMi0oeIt8a8lXFN9ZA==
-X-Received: by 2002:aca:c415:: with SMTP id u21mr7373960oif.49.1579710196135;
-        Wed, 22 Jan 2020 08:23:16 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id p184sm13112789oic.40.2020.01.22.08.23.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jan 2020 08:23:15 -0800 (PST)
-Received: (nullmailer pid 8106 invoked by uid 1000);
-        Wed, 22 Jan 2020 16:23:14 -0000
-Date:   Wed, 22 Jan 2020 10:23:14 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        heiko@sntech.de, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v1 3/3] dt-bindings: spi: spi-rockchip: add
- description for rk3328
-Message-ID: <20200122162314.GA8044@bogus>
-References: <20200118230848.15326-1-jbx6244@gmail.com>
- <20200118230848.15326-3-jbx6244@gmail.com>
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=zJCuXAAGGfmdn3xKT3mw1EQTFOCTjnZ0M4GP0MOAhHQ=;
+        b=MqoyLRcjXNENzpgFvghGJmrqAVPAx1ekC4shiJe1rP1e8kPI4a2wzyBO+ENQAnxuH+
+         +6kFSWjPiDv/RG82Dr9lcN7GNHOLfxjhpTO3AFB8KJJuKmNfl4fMFy8qRJD2TuBZe49P
+         /Ct3g97f5pMg+rRwpJurcDPHRsY92OZzrv0ZeZU4DUicLf+hwY0+GVJhV9K8aBysdh6B
+         uW0n40SL6hM/e2Mr+p/urJSITbx5qMx3gwsUG9LArk8JuIQgpkUP7a4aGwP9xoQccT/N
+         WXybx0XBwFKULY9+m/akpUqZEjMkeDSmLadIa6UXCbGUAwly+9cSpZITqgxtLKegxqgD
+         Sxsg==
+X-Gm-Message-State: APjAAAVYe/09CybiiV2JcQX70MP7743p3DUfKU6XgPtd7/V8rLS19uSl
+        2pj3jOCvVKR85c6AaHgbLbNWAmTw+Ur1zU2KGf4BMbr/m9C9
+X-Google-Smtp-Source: APXvYqyJNUTQllpzChKWI3nNnvCCMcKFDK8FOmsX5mlgK8LQmSBOogF54plRyAyGRd+Lr8Pp2HjGvCwNo5+7ENt5YVZMH92fGi8/
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200118230848.15326-3-jbx6244@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a6b:8e47:: with SMTP id q68mr7385399iod.274.1579710241804;
+ Wed, 22 Jan 2020 08:24:01 -0800 (PST)
+Date:   Wed, 22 Jan 2020 08:24:01 -0800
+In-Reply-To: <000000000000b6da7b059c8110c4@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000cf992f059cbcf362@google.com>
+Subject: Re: general protection fault in nf_flow_table_offload_setup
+From:   syzbot <syzbot+e93c1d9ae19a0236289c@syzkaller.appspotmail.com>
+To:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
+        kadlec@netfilter.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        pablo@netfilter.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 19 Jan 2020 00:08:48 +0100, Johan Jonker wrote:
-> The description below is already in use for rk3328.dtsi,
-> but was somehow never added to a document, so add
-> "rockchip,rk3328-spi", "rockchip,rk3066-spi"
-> for spi nodes on a rk3328 platform to spi-rockchip.yaml.
-> 
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-> ---
->  Documentation/devicetree/bindings/spi/spi-rockchip.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
+syzbot has bisected this bug to:
 
-Acked-by: Rob Herring <robh@kernel.org>
+commit a7965d58ddab0253ddfae58bd5c7d2de46ef0f76
+Author: Pablo Neira Ayuso <pablo@netfilter.org>
+Date:   Mon Jan 13 18:02:22 2020 +0000
+
+    netfilter: flowtable: add nf_flow_table_offload_cmd()
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17ea59c9e00000
+start commit:   4f2c17e0 Merge branch 'master' of git://git.kernel.org/pub..
+git tree:       net-next
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=141a59c9e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=101a59c9e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7f93900a7904130d
+dashboard link: https://syzkaller.appspot.com/bug?extid=e93c1d9ae19a0236289c
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=166fea6ee00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=108d6185e00000
+
+Reported-by: syzbot+e93c1d9ae19a0236289c@syzkaller.appspotmail.com
+Fixes: a7965d58ddab ("netfilter: flowtable: add nf_flow_table_offload_cmd()")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
