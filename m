@@ -2,115 +2,131 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 221B2C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 17:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B786C33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 17:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFEC22465A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 17:28:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73CBF24673
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 17:28:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579714099;
+	bh=v45//aLOIelbSIblxH0H5quiYA4SDipsGzDyo26vKWw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=Xsfv3kNaG/pgrlC+oUleRJRvTJteGIkH0AtqjRV9gVVs1Z2gXn8vapkh9eetfElYl
+	 W0YVzbav2nlE9SilBvV2Dw6wjhCc7Eja+ENpvutG5gQVP2a7He9RWUl+7JaNKydGVi
+	 eftkEEm3yBp3SBpoekj6eoVEKNCIx3fM/z8NrFu0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728831AbgAVR2C (ORCPT
+        id S1729149AbgAVR2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 12:28:02 -0500
-Received: from smtprelay0082.hostedemail.com ([216.40.44.82]:55850 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725883AbgAVR2B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 12:28:01 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 897D6182CED34;
-        Wed, 22 Jan 2020 17:28:00 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: actor69_b97d50fdc604
-X-Filterd-Recvd-Size: 2878
-Received: from XPS-9350.home (unknown [47.151.135.224])
-        (Authenticated sender: joe@perches.com)
-        by omf11.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 22 Jan 2020 17:27:59 +0000 (UTC)
-Message-ID: <e9de2dda118caca92e2cf678cccf76fa097cb734.camel@perches.com>
-Subject: Re: [PATCH V2] checkpatch: fix minor typo and mixed space+tab in
- indentation
-From:   Joe Perches <joe@perches.com>
-To:     Antonio Borneo <borneo.antonio@gmail.com>,
-        Andy Whitcroft <apw@canonical.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org
-Date:   Wed, 22 Jan 2020 09:26:58 -0800
-In-Reply-To: <20200122163852.124417-2-borneo.antonio@gmail.com>
-References: <20190508122721.7513-3-borneo.antonio@gmail.com>
-         <20200122163852.124417-2-borneo.antonio@gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Wed, 22 Jan 2020 12:28:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59514 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725883AbgAVR2S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 12:28:18 -0500
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 518C52465A;
+        Wed, 22 Jan 2020 17:28:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579714097;
+        bh=v45//aLOIelbSIblxH0H5quiYA4SDipsGzDyo26vKWw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=uuEbZODdAfY2orhNAv1udC3ffIXt2OSXDhzucSgEDrIEVsOGW2ar5/mExXmBvtcl9
+         FCJF7HS3xS/Sn4RXa7YOCvDqgFudCy37FqmpT22JikWhkUfQAJn6iBdsqRFj1uUnoI
+         iu+HjBt5BNh2H9K+uhzxkTq76DJmq91hPN7+DJA8=
+Date:   Wed, 22 Jan 2020 11:28:16 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Evan Green <evgreen@chromium.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>, Christoph Hellwig <hch@lst.de>,
+        Rajat Jain <rajatxjain@gmail.com>
+Subject: Re: [PATCH] PCI/MSI: Avoid torn updates to MSI pairs
+Message-ID: <20200122172816.GA139285@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200116133102.1.I9c7e72144ef639cc135ea33ef332852a6b33730f@changeid>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-01-22 at 17:38 +0100, Antonio Borneo wrote:
-> Fix spelling of "concatenation".
-> Don't use tab after space in indentation.
+[+cc Thomas, Marc, Christoph, Rajat]
+
+On Thu, Jan 16, 2020 at 01:31:28PM -0800, Evan Green wrote:
+> __pci_write_msi_msg() updates three registers in the device: address
+> high, address low, and data. On x86 systems, address low contains
+> CPU targeting info, and data contains the vector. The order of writes
+> is address, then data.
 > 
-> Signed-off-by: Antonio Borneo <borneo.antonio@gmail.com>
-
-I've no objection to any of these 3 patches.
-Andrew, might you pick them up please?
-
-https://lore.kernel.org/patchwork/patch/1183806/
-https://lore.kernel.org/patchwork/patch/1183805/
-https://lore.kernel.org/patchwork/patch/1183804/
-
+> This is problematic if an interrupt comes in after address has
+> been written, but before data is updated, and the SMP affinity of
+> the interrupt is changing. In this case, the interrupt targets the
+> wrong vector on the new CPU.
+> 
+> This case is pretty easy to stumble into using xhci and CPU hotplugging.
+> Create a script that targets interrupts at a set of cores and then
+> offlines those cores. Put some stress on USB, and then watch xhci lose
+> an interrupt and die.
+> 
+> Avoid this by disabling MSIs during the update.
+> 
+> Signed-off-by: Evan Green <evgreen@chromium.org>
 > ---
 > 
-> v1 -> v2
-> 	rebased
 > 
-> ---
->  scripts/checkpatch.pl | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> index 30da08d9646a..4c1be774b0ed 100755
-> --- a/scripts/checkpatch.pl
-> +++ b/scripts/checkpatch.pl
-> @@ -4582,7 +4582,7 @@ sub process {
->  					    ($op eq '>' &&
->  					     $ca =~ /<\S+\@\S+$/))
->  					{
-> -					    	$ok = 1;
-> +						$ok = 1;
->  					}
->  
->  					# for asm volatile statements
-> @@ -4917,7 +4917,7 @@ sub process {
->  			# conditional.
->  			substr($s, 0, length($c), '');
->  			$s =~ s/\n.*//g;
-> -			$s =~ s/$;//g; 	# Remove any comments
-> +			$s =~ s/$;//g;	# Remove any comments
->  			if (length($c) && $s !~ /^\s*{?\s*\\*\s*$/ &&
->  			    $c !~ /}\s*while\s*/)
->  			{
-> @@ -4956,7 +4956,7 @@ sub process {
->  # if and else should not have general statements after it
->  		if ($line =~ /^.\s*(?:}\s*)?else\b(.*)/) {
->  			my $s = $1;
-> -			$s =~ s/$;//g; 	# Remove any comments
-> +			$s =~ s/$;//g;	# Remove any comments
->  			if ($s !~ /^\s*(?:\sif|(?:{|)\s*\\?\s*$)/) {
->  				ERROR("TRAILING_STATEMENTS",
->  				      "trailing statements should be on next line\n" . $herecurr);
-> @@ -5132,7 +5132,7 @@ sub process {
->  			{
->  			}
->  
-> -			# Flatten any obvious string concatentation.
-> +			# Flatten any obvious string concatenation.
->  			while ($dstat =~ s/($String)\s*$Ident/$1/ ||
->  			       $dstat =~ s/$Ident\s*($String)/$1/)
->  			{
+> Bjorn,
+> I was unsure whether disabling MSIs temporarily is actually an okay
+> thing to do. I considered using the mask bit, but got the impression
+> that not all devices support the mask bit. Let me know if this going to
+> cause problems or there's a better way. I can include the repro
+> script I used to cause mayhem if needed.
 
+I suspect this *is* a problem because I think disabling MSI doesn't
+disable interrupts; it just means the device will interrupt using INTx
+instead of MSI.  And the driver is probably not prepared to handle
+INTx.
+
+PCIe r5.0, sec 7.7.1.2, seems relevant: "If MSI and MSI-X are both
+disabled, the Function requests servicing using INTx interrupts (if
+supported)."
+
+Maybe the IRQ guys have ideas about how to solve this?
+
+> ---
+>  drivers/pci/msi.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+> index 6b43a5455c7af..97856ef862d68 100644
+> --- a/drivers/pci/msi.c
+> +++ b/drivers/pci/msi.c
+> @@ -328,7 +328,7 @@ void __pci_write_msi_msg(struct msi_desc *entry, struct msi_msg *msg)
+>  		u16 msgctl;
+>  
+>  		pci_read_config_word(dev, pos + PCI_MSI_FLAGS, &msgctl);
+> -		msgctl &= ~PCI_MSI_FLAGS_QSIZE;
+> +		msgctl &= ~(PCI_MSI_FLAGS_QSIZE | PCI_MSI_FLAGS_ENABLE);
+>  		msgctl |= entry->msi_attrib.multiple << 4;
+>  		pci_write_config_word(dev, pos + PCI_MSI_FLAGS, msgctl);
+>  
+> @@ -343,6 +343,9 @@ void __pci_write_msi_msg(struct msi_desc *entry, struct msi_msg *msg)
+>  			pci_write_config_word(dev, pos + PCI_MSI_DATA_32,
+>  					      msg->data);
+>  		}
+> +
+> +		msgctl |= PCI_MSI_FLAGS_ENABLE;
+> +		pci_write_config_word(dev, pos + PCI_MSI_FLAGS, msgctl);
+>  	}
+>  
+>  skip:
+> -- 
+> 2.24.1
+> 
