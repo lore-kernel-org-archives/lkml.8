@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82694C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A09A6C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58EA02071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:32:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 728582467E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:32:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685549;
-	bh=LYGMGxKOVbHmprK+6GDGpGUYa0T76JV+ECBQ2QZR9HQ=;
+	s=default; t=1579685552;
+	bh=Ei0WUn/7hawY4OURlT4CiEtiWn271M8zq9cHlqLxs1A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b7tL9+nOnzVH7AQPAEd6T8V86iZ3rs9ZcEfkve/FWq3bxmMjiRy/GLUtcGnGc6n7K
-	 EprB93Hm2EMLJcGurv+/LVQ/8aAxAFDGxsN3RgVe6BU0s1GApby2R/jaOuUGCp+X/X
-	 HUwrFXaiwvd8SpeHHGEEEtIDqNqHQD775j6s1hEw=
+	b=myme6rMr4y96Gk3hfiDKXt6oXR0KnpHJWvGa+WsxzF3I9KTYIk4VWTI6CEivitl7Z
+	 dW6yTIS0VlFtoGY+iu0KX3ZBZLIqY4/JMsdZocHfHfpYldQRhdLAILi2lb32DSA8nK
+	 zNFYvubiwh90Qh+evC2Qv5UBQsfAOHGdKo9dwnjk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729489AbgAVJc2 (ORCPT
+        id S1730129AbgAVJcb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:32:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45244 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:32:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730090AbgAVJc0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:32:26 -0500
+        id S1730117AbgAVJc2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:32:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D961A24673;
-        Wed, 22 Jan 2020 09:32:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52CC52467A;
+        Wed, 22 Jan 2020 09:32:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685545;
-        bh=LYGMGxKOVbHmprK+6GDGpGUYa0T76JV+ECBQ2QZR9HQ=;
+        s=default; t=1579685547;
+        bh=Ei0WUn/7hawY4OURlT4CiEtiWn271M8zq9cHlqLxs1A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CdAtGk6mc0NZ/JxIhkKZhcdC3akh1RXE/iL45tky64ZCqXmYsjYGWxI+wPFx99c2K
-         vlFjFTBCD8eVtPW/PttBBe89cTflgJSm9PlkuiFahfutsvZaCvl8Dv14t2UxYCs+Ss
-         oETefynJsz4OB6MoO6JfX78z5+PNYs+RKGVDS/eQ=
+        b=n6Jw0FOf767NAUbnnn0SkYJYTRRLwOeU9yeCtpjTv/7h7711MjtFuoRu1LSSUGrXZ
+         bWpjlOcAqCjIddug08um1UjusyBxLKiL+Z0IFvh/qO08wUrA/BHzvR2cSsFc8j8TPN
+         /zuRU3dzlLZOgKkEvHgY7g2t6A+4AK0IWPieGHUM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        stable@vger.kernel.org, Hiral Patel <hiralpat@cisco.com>,
+        Suma Ramars <sramars@cisco.com>,
+        Tom Tucker <tom@opengridcomputing.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Ewan D. Milne" <emilne@redhat.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 57/76] USB: serial: keyspan: handle unbound ports
-Date:   Wed, 22 Jan 2020 10:29:13 +0100
-Message-Id: <20200122092759.574398884@linuxfoundation.org>
+Subject: [PATCH 4.4 58/76] scsi: fnic: use kernels %pM format option to print MAC
+Date:   Wed, 22 Jan 2020 10:29:14 +0100
+Message-Id: <20200122092759.764337340@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092751.587775548@linuxfoundation.org>
 References: <20200122092751.587775548@linuxfoundation.org>
@@ -59,47 +64,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit 3018dd3fa114b13261e9599ddb5656ef97a1fa17 ]
+[ Upstream commit 36fe90b0f0bdc9d030e88ba2153f3c8d6b6a5964 ]
 
-Check for NULL port data in the control URB completion handlers to avoid
-dereferencing a NULL pointer in the unlikely case where a port device
-isn't bound to a driver (e.g. after an allocation failure on port
-probe()).
+Instead of supplying each byte through stack let's use %pM specifier.
 
-Fixes: 0ca1268e109a ("USB Serial Keyspan: add support for USA-49WG & USA-28XG")
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Cc: stable <stable@vger.kernel.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Cc: Hiral Patel <hiralpat@cisco.com>
+Cc: Suma Ramars <sramars@cisco.com>
+Acked-by: Tom Tucker <tom@opengridcomputing.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Ewan D. Milne <emilne@redhat.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/serial/keyspan.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/scsi/fnic/vnic_dev.c | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/usb/serial/keyspan.c b/drivers/usb/serial/keyspan.c
-index 38112be0dbae..a79e9adf4e53 100644
---- a/drivers/usb/serial/keyspan.c
-+++ b/drivers/usb/serial/keyspan.c
-@@ -565,6 +565,8 @@ static void	usa49_glocont_callback(struct urb *urb)
- 	for (i = 0; i < serial->num_ports; ++i) {
- 		port = serial->port[i];
- 		p_priv = usb_get_serial_port_data(port);
-+		if (!p_priv)
-+			continue;
+diff --git a/drivers/scsi/fnic/vnic_dev.c b/drivers/scsi/fnic/vnic_dev.c
+index 9795d6f3e197..ba69d6112fa1 100644
+--- a/drivers/scsi/fnic/vnic_dev.c
++++ b/drivers/scsi/fnic/vnic_dev.c
+@@ -499,10 +499,7 @@ void vnic_dev_add_addr(struct vnic_dev *vdev, u8 *addr)
  
- 		if (p_priv->resend_cont) {
- 			dev_dbg(&port->dev, "%s - sending setup\n", __func__);
-@@ -962,6 +964,8 @@ static void usa67_glocont_callback(struct urb *urb)
- 	for (i = 0; i < serial->num_ports; ++i) {
- 		port = serial->port[i];
- 		p_priv = usb_get_serial_port_data(port);
-+		if (!p_priv)
-+			continue;
+ 	err = vnic_dev_cmd(vdev, CMD_ADDR_ADD, &a0, &a1, wait);
+ 	if (err)
+-		printk(KERN_ERR
+-			"Can't add addr [%02x:%02x:%02x:%02x:%02x:%02x], %d\n",
+-			addr[0], addr[1], addr[2], addr[3], addr[4], addr[5],
+-			err);
++		pr_err("Can't add addr [%pM], %d\n", addr, err);
+ }
  
- 		if (p_priv->resend_cont) {
- 			dev_dbg(&port->dev, "%s - sending setup\n", __func__);
+ void vnic_dev_del_addr(struct vnic_dev *vdev, u8 *addr)
+@@ -517,10 +514,7 @@ void vnic_dev_del_addr(struct vnic_dev *vdev, u8 *addr)
+ 
+ 	err = vnic_dev_cmd(vdev, CMD_ADDR_DEL, &a0, &a1, wait);
+ 	if (err)
+-		printk(KERN_ERR
+-			"Can't del addr [%02x:%02x:%02x:%02x:%02x:%02x], %d\n",
+-			addr[0], addr[1], addr[2], addr[3], addr[4], addr[5],
+-			err);
++		pr_err("Can't del addr [%pM], %d\n", addr, err);
+ }
+ 
+ int vnic_dev_notify_set(struct vnic_dev *vdev, u16 intr)
 -- 
 2.20.1
 
