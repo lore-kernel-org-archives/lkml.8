@@ -2,139 +2,264 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56AD6C33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 03:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B498C33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 03:32:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DA9324655
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 03:30:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="xDunS1Jh"
+	by mail.kernel.org (Postfix) with ESMTP id 622162465B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 03:32:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579663977;
+	bh=qXS5jitYwxJiAHZZsyERDvePAItKzFoI3L5s6Lm75u0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=E5aI4bLi0+LpB/+H2xPo3Yu11zQPR+euGNuDsb8LDc6tvrHI0uSeKhh2u18iSDx/x
+	 ZVIjWUsWj5vBDd3xSZcNxZXbOY2KC6gzbk9kG49zw5sdPWNh34IE/Nv4g5tfKI1tMd
+	 iJVfZqMTzzmDEnqCPl8zo7/ISfgTsqJ1U+uZq7P4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729148AbgAVDaR (ORCPT
+        id S1729151AbgAVDc4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 22:30:17 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:35174 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729074AbgAVDaR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 22:30:17 -0500
-Received: by mail-pf1-f194.google.com with SMTP id i23so2626389pfo.2
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 19:30:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qC1RUoM3/NtlqUaitknsdL/RkF2RqwRcZGXGQrwHHKY=;
-        b=xDunS1JhkaFpBpNmrHHt1HfTnw54J9IC2Y88T+VYta/x5jNWG2RFv/N42ujfWUn24X
-         /+MzbTNjWhtC0f0tXymbdW8Tiy8IjKhTss9krg3EBu4FD4EM0IqAwYTJjR0mNLmGkqXj
-         WQa7SFucJDGaL0UIvLo3ChgkS5GrAfy1DBwJ2BOy6jAoSnlpnhwwJdIpX6av4koGEGKo
-         +hyNmi5GpLT+8Jfm0ao5ySi8TGkD2R16+zImwPMF8vDolNpH0P4KLt+4BrDKNs/yOVgL
-         EnjDEh7dTSvTkMpAptYyhPG5eIKoU/BCYAuIF/vs12hJWJs204Uy7AzMnU1x0/NY2tIM
-         4tnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qC1RUoM3/NtlqUaitknsdL/RkF2RqwRcZGXGQrwHHKY=;
-        b=X3y9wn3W5otApERAPcuHfxdMhB3e1cYxo9TW3Ua5nc4j/fyAs2rNxA+TO1orpuK6gS
-         XxnxLmjb+JWhPSefQy9nnMsh9isInRM+o9um1h7tQgGWJ7eo7tsi4KfbhNNYg6/kdtVn
-         lb0xlvw8Rj/zstWIvE41TjtCO/qSNQEwti/LTbkhanq9D2FFFtyJlwqIkorgQUHHMpOu
-         dAawQT7dtsZq4PHO6YP7Q/rAHIuu5aWJIJUE4wB7ifikgYPOQogAV8X6exjCgDtky2Zx
-         Zt7pF/Zi7eRI+sjgapDMOUv+eS8KVZ0mTp1iC3SrhAzkl6EDoVTfdRn9LrEW7+ihOVl9
-         XycQ==
-X-Gm-Message-State: APjAAAUUO8PVuyRnzhaiSVqY0XF6SU6C17uahWvdUS6Q2bV6nkaSyGmc
-        +UnK3OICr4Ok23aBIXUSk1uZ2DFpVxw=
-X-Google-Smtp-Source: APXvYqxhcegRJt2QgKyEjpG1x8ZZM5y/oOMvXCQBhSqfFo0E7Xf/evJjiOwY0AZ2FWXYlfbRR99Lhg==
-X-Received: by 2002:a62:c541:: with SMTP id j62mr693157pfg.237.1579663816352;
-        Tue, 21 Jan 2020 19:30:16 -0800 (PST)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id k3sm43215290pgc.3.2020.01.21.19.30.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jan 2020 19:30:15 -0800 (PST)
-Subject: Re: [POC RFC 0/3] splice(2) support for io_uring
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>
-References: <cover.1579649589.git.asml.silence@gmail.com>
- <63119dd6-7668-a7bc-ea24-1db4909762bb@kernel.dk>
- <45f0b63b-e3e7-ba71-d037-9af1db7bbd98@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <8316dfa9-9210-3402-a6c3-4889b6bbdb49@kernel.dk>
-Date:   Tue, 21 Jan 2020 20:30:13 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <45f0b63b-e3e7-ba71-d037-9af1db7bbd98@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 21 Jan 2020 22:32:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47016 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728927AbgAVDc4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 22:32:56 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5961207E0;
+        Wed, 22 Jan 2020 03:32:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579663975;
+        bh=qXS5jitYwxJiAHZZsyERDvePAItKzFoI3L5s6Lm75u0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=pn/oq8KgnYx8VtfCCzTvkXTiba2p5/Pm/4ftFRhcUjZJ+XERpzgktjzwEWemMjrcm
+         v7Wb3JsWEgZZbkinYBye4Nxb+YetSW/nkvsmIm6woC2kHmqR/MtYGlAQqqpoWf+9zV
+         9zXNYl3GPl7mWC/1sNp37GRBBC+TKkGFLzOL12CQ=
+Date:   Wed, 22 Jan 2020 12:32:51 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>, stable@vger.kernel.org
+Subject: Re: [for-linus][PATCH 3/5] tracing: trigger: Replace unneeded
+ RCU-list traversals
+Message-Id: <20200122123251.044889aeeb07037d865b19e1@kernel.org>
+In-Reply-To: <20200122022623.20D812465A@mail.kernel.org>
+References: <20200121143956.757178876@goodmis.org>
+        <20200122022623.20D812465A@mail.kernel.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: multipart/mixed;
+ boundary="Multipart=_Wed__22_Jan_2020_12_32_51_+0900_JBYaE+JMzFDKfoOE"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/21/20 8:11 PM, Pavel Begunkov wrote:
-> On 22/01/2020 04:55, Jens Axboe wrote:
->> On 1/21/20 5:05 PM, Pavel Begunkov wrote:
->>> It works well for basic cases, but there is still work to be done. E.g.
->>> it misses @hash_reg_file checks for the second (output) file. Anyway,
->>> there are some questions I want to discuss:
->>>
->>> - why sqe->len is __u32? Splice uses size_t, and I think it's better
->>> to have something wider (e.g. u64) for fututre use. That's the story
->>> behind added sqe->splice_len.
->>
->> IO operations in Linux generally are INT_MAX, so the u32 is plenty big.
->> That's why I chose it. For this specifically, if you look at splice:
->>
->> 	if (unlikely(len > MAX_RW_COUNT))
->> 		len = MAX_RW_COUNT;
->>
->> so anything larger is truncated anyway.
+This is a multi-part message in MIME format.
+
+--Multipart=_Wed__22_Jan_2020_12_32_51_+0900_JBYaE+JMzFDKfoOE
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
+
+On Wed, 22 Jan 2020 02:26:22 +0000
+Sasha Levin <sashal@kernel.org> wrote:
+
+> Hi,
 > 
-> Yeah, I saw this one, but that was rather an argument for the future.
-> It's pretty easy to transfer more than 4GB with sg list, but that
-> would be the case for splice.
-
-I don't see this changing, ever, basically. And probably not a big deal,
-if you want to do more than 2GB worth of IO, you simply splice them over
-multiple commands. At those sizes, the overhead there is negligible.
-
->>> - it requires 2 fds, and it's painful. Currently file managing is done
->>> by common path (e.g. io_req_set_file(), __io_req_aux_free()). I'm
->>> thinking to make each opcode function handle file grabbing/putting
->>> themself with some helpers, as it's done in the patch for splice's
->>> out-file.
->>>     1. Opcode handler knows, whether it have/needs a file, and thus
->>>        doesn't need extra checks done in common path.
->>>     2. It will be more consistent with splice.
->>> Objections? Ideas?
->>
->> Sounds reasonable to me, but always easier to judge in patch form :-)
->>
->>> - do we need offset pointers with fallback to file->f_pos? Or is it
->>> enough to have offset value. Jens, I remember you added the first
->>> option somewhere, could you tell the reasoning?
->>
->> I recently added support for -1/cur position, which splice also uses. So
->> you should be fine with that.
->>
+> [This is an automated email]
 > 
-> I always have been thinking about it as a legacy from old days, and
-> one of the problems of posix. It's not hard to count it in the
-> userspace especially in C++ or high-level languages, and is just
-> another obstacle for having a performant API. So, I'd rather get rid
-> of it here. But is there any reasons against?
+> This commit has been processed because it contains a "Fixes:" tag,
+> fixing commit: 30350d65ac56 ("tracing: Add variable support to hist triggers").
+> 
+> The bot has tested the following trees: v5.4.13, v4.19.97.
+> 
+> v5.4.13: Build OK!
+> v4.19.97: Build failed! Errors:
+>     kernel/trace/trace_events_hist.c:5725:34: error: macro "list_for_each_entry_rcu" passed 4 arguments, but takes just 3
+>     kernel/trace/trace_events_hist.c:5724:2: error: ‘list_for_each_entry_rcu’ undeclared (first use in this function)
+>     kernel/trace/trace_events_hist.c:5724:25: error: expected ‘;’ before ‘{’ token
 
-It's not always trivial to do in libraries, or programming languages
-even. That's why it exists. I would not expect anyone to use it outside
-of that.
+Ah, that depends on commit 28875945ba98 ("rcu: Add support for consolidated-RCU reader checking").
+We need to remove lockdep_is_held() from that list_for_each_entry_rcu().
+(I've attached it)
+
+Thank you,
 
 -- 
-Jens Axboe
+Masami Hiramatsu <mhiramat@kernel.org>
 
+--Multipart=_Wed__22_Jan_2020_12_32_51_+0900_JBYaE+JMzFDKfoOE
+Content-Type: application/octet-stream;
+ name="tracing-trigger-replace"
+Content-Disposition: attachment;
+ filename="tracing-trigger-replace"
+Content-Transfer-Encoding: base64
+
+dHJhY2luZzogdHJpZ2dlcjogUmVwbGFjZSB1bm5lZWRlZCBSQ1UtbGlzdCB0cmF2ZXJzYWxzCgpG
+cm9tOiBNYXNhbWkgSGlyYW1hdHN1IDxtaGlyYW1hdEBrZXJuZWwub3JnPgoKV2l0aCBDT05GSUdf
+UFJPVkVfUkNVX0xJU1QsIEkgaGFkIG1hbnkgc3VzcGljaW91cyBSQ1Ugd2FybmluZ3MKd2hlbiBJ
+IHJhbiBmdHJhY2V0ZXN0IHRyaWdnZXIgdGVzdGNhc2VzLgoKLS0tLS0KICAjIGRtZXNnIC1jID4g
+L2Rldi9udWxsCiAgIyAuL2Z0cmFjZXRlc3QgdGVzdC5kL3RyaWdnZXIKICAuLi4KICAjIGRtZXNn
+IHwgZ3JlcCAiUkNVLWxpc3QgdHJhdmVyc2VkIiB8IGN1dCAtZiAyIC1kIF0gfCBjdXQgLWYgMiAt
+ZCAiICIKICBrZXJuZWwvdHJhY2UvdHJhY2VfZXZlbnRzX2hpc3QuYzo2MDcwCiAga2VybmVsL3Ry
+YWNlL3RyYWNlX2V2ZW50c19oaXN0LmM6MTc2MAogIGtlcm5lbC90cmFjZS90cmFjZV9ldmVudHNf
+aGlzdC5jOjU5MTEKICBrZXJuZWwvdHJhY2UvdHJhY2VfZXZlbnRzX3RyaWdnZXIuYzo1MDQKICBr
+ZXJuZWwvdHJhY2UvdHJhY2VfZXZlbnRzX2hpc3QuYzoxODEwCiAga2VybmVsL3RyYWNlL3RyYWNl
+X2V2ZW50c19oaXN0LmM6MzE1OAogIGtlcm5lbC90cmFjZS90cmFjZV9ldmVudHNfaGlzdC5jOjMx
+MDUKICBrZXJuZWwvdHJhY2UvdHJhY2VfZXZlbnRzX2hpc3QuYzo1NTE4CiAga2VybmVsL3RyYWNl
+L3RyYWNlX2V2ZW50c19oaXN0LmM6NTk5OAogIGtlcm5lbC90cmFjZS90cmFjZV9ldmVudHNfaGlz
+dC5jOjYwMTkKICBrZXJuZWwvdHJhY2UvdHJhY2VfZXZlbnRzX2hpc3QuYzo2MDQ0CiAga2VybmVs
+L3RyYWNlL3RyYWNlX2V2ZW50c190cmlnZ2VyLmM6MTUwMAogIGtlcm5lbC90cmFjZS90cmFjZV9l
+dmVudHNfdHJpZ2dlci5jOjE1NDAKICBrZXJuZWwvdHJhY2UvdHJhY2VfZXZlbnRzX3RyaWdnZXIu
+Yzo1MzkKICBrZXJuZWwvdHJhY2UvdHJhY2VfZXZlbnRzX3RyaWdnZXIuYzo1ODQKLS0tLS0KCkkg
+aW52ZXN0aWdhdGVkIHRob3NlIHdhcm5pbmdzIGFuZCBmb3VuZCB0aGF0IHRoZSBSQ1UtbGlzdAp0
+cmF2ZXJzYWxzIGluIGV2ZW50IHRyaWdnZXIgYW5kIGhpc3QgZGlkbid0IG5lZWQgdG8gdXNlClJD
+VSB2ZXJzaW9uIGJlY2F1c2UgdGhvc2Ugd2VyZSBjYWxsZWQgb25seSB1bmRlciBldmVudF9tdXRl
+eC4KCkkgYWxzbyBjaGVja2VkIG90aGVyIFJDVS1saXN0IHRyYXZlcnNhbHMgcmVsYXRlZCB0byBl
+dmVudAp0cmlnZ2VyIGxpc3QsIGFuZCBmb3VuZCB0aGF0IG1vc3Qgb2YgdGhlbSB3ZXJlIGNhbGxl
+ZCBmcm9tCmV2ZW50X2hpc3RfdHJpZ2dlcl9mdW5jKCkgb3IgaGlzdF91bnJlZ2lzdGVyX3RyaWdn
+ZXIoKSBvcgpyZWdpc3Rlci91bnJlZ2lzdGVyIGZ1bmN0aW9ucyBleGNlcHQgZm9yIGEgZmV3IGNh
+c2VzLgoKUmVwbGFjZSB0aGVzZSB1bm5lZWRlZCBSQ1UtbGlzdCB0cmF2ZXJzYWxzIHdpdGggbm9y
+bWFsIGxpc3QKdHJhdmVyc2FsIG1hY3JvIGFuZCBsb2NrZGVwX2Fzc2VydF9oZWxkKCkgdG8gY2hl
+Y2sgdGhlCmV2ZW50X211dGV4IGlzIGhlbGQuCgpMaW5rOiBodHRwOi8vbGttbC5rZXJuZWwub3Jn
+L3IvMTU3NjgwOTEwMzA1LjExNjg1LjE1MTEwMjM3OTU0Mjc1OTE1NzgyLnN0Z2l0QGRldm5vdGUy
+CgpDYzogc3RhYmxlQHZnZXIua2VybmVsLm9yZwpGaXhlczogMzAzNTBkNjVhYzU2NyAoInRyYWNp
+bmc6IEFkZCB2YXJpYWJsZSBzdXBwb3J0IHRvIGhpc3QgdHJpZ2dlcnMiKQpSZXZpZXdlZC1ieTog
+VG9tIFphbnVzc2kgPHphbnVzc2lAa2VybmVsLm9yZz4KU2lnbmVkLW9mZi1ieTogTWFzYW1pIEhp
+cmFtYXRzdSA8bWhpcmFtYXRAa2VybmVsLm9yZz4KU2lnbmVkLW9mZi1ieTogU3RldmVuIFJvc3Rl
+ZHQgKFZNd2FyZSkgPHJvc3RlZHRAZ29vZG1pcy5vcmc+Ci0tLQoga2VybmVsL3RyYWNlL3RyYWNl
+X2V2ZW50c19oaXN0LmMgICAgfCAgIDM4ICsrKysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0t
+LS0tCiBrZXJuZWwvdHJhY2UvdHJhY2VfZXZlbnRzX3RyaWdnZXIuYyB8ICAgMjAgKysrKysrKysr
+KysrKystLS0tCiAyIGZpbGVzIGNoYW5nZWQsIDQzIGluc2VydGlvbnMoKyksIDE1IGRlbGV0aW9u
+cygtKQoKZGlmZiAtLWdpdCBhL2tlcm5lbC90cmFjZS90cmFjZV9ldmVudHNfaGlzdC5jIGIva2Vy
+bmVsL3RyYWNlL3RyYWNlX2V2ZW50c19oaXN0LmMKaW5kZXggMGZiOTJkMGM3YjIwLi4zNWQ5Y2Vh
+YmI3ZGMgMTAwNjQ0Ci0tLSBhL2tlcm5lbC90cmFjZS90cmFjZV9ldmVudHNfaGlzdC5jCisrKyBi
+L2tlcm5lbC90cmFjZS90cmFjZV9ldmVudHNfaGlzdC5jCkBAIC0xNTExLDExICsxNTExLDEzIEBA
+IHN0YXRpYyBzdHJ1Y3QgaGlzdF9maWVsZCAqZmluZF92YXIoc3RydWN0IGhpc3RfdHJpZ2dlcl9k
+YXRhICpoaXN0X2RhdGEsCiAJc3RydWN0IGV2ZW50X3RyaWdnZXJfZGF0YSAqdGVzdDsKIAlzdHJ1
+Y3QgaGlzdF9maWVsZCAqaGlzdF9maWVsZDsKIAorCWxvY2tkZXBfYXNzZXJ0X2hlbGQoJmV2ZW50
+X211dGV4KTsKKwogCWhpc3RfZmllbGQgPSBmaW5kX3Zhcl9maWVsZChoaXN0X2RhdGEsIHZhcl9u
+YW1lKTsKIAlpZiAoaGlzdF9maWVsZCkKIAkJcmV0dXJuIGhpc3RfZmllbGQ7CiAKLQlsaXN0X2Zv
+cl9lYWNoX2VudHJ5X3JjdSh0ZXN0LCAmZmlsZS0+dHJpZ2dlcnMsIGxpc3QpIHsKKwlsaXN0X2Zv
+cl9lYWNoX2VudHJ5KHRlc3QsICZmaWxlLT50cmlnZ2VycywgbGlzdCkgewogCQlpZiAodGVzdC0+
+Y21kX29wcy0+dHJpZ2dlcl90eXBlID09IEVUVF9FVkVOVF9ISVNUKSB7CiAJCQl0ZXN0X2RhdGEg
+PSB0ZXN0LT5wcml2YXRlX2RhdGE7CiAJCQloaXN0X2ZpZWxkID0gZmluZF92YXJfZmllbGQodGVz
+dF9kYXRhLCB2YXJfbmFtZSk7CkBAIC0xNTY1LDcgKzE1NjcsOSBAQCBzdGF0aWMgc3RydWN0IGhp
+c3RfZmllbGQgKmZpbmRfZmlsZV92YXIoc3RydWN0IHRyYWNlX2V2ZW50X2ZpbGUgKmZpbGUsCiAJ
+c3RydWN0IGV2ZW50X3RyaWdnZXJfZGF0YSAqdGVzdDsKIAlzdHJ1Y3QgaGlzdF9maWVsZCAqaGlz
+dF9maWVsZDsKIAotCWxpc3RfZm9yX2VhY2hfZW50cnlfcmN1KHRlc3QsICZmaWxlLT50cmlnZ2Vy
+cywgbGlzdCkgeworCWxvY2tkZXBfYXNzZXJ0X2hlbGQoJmV2ZW50X211dGV4KTsKKworCWxpc3Rf
+Zm9yX2VhY2hfZW50cnkodGVzdCwgJmZpbGUtPnRyaWdnZXJzLCBsaXN0KSB7CiAJCWlmICh0ZXN0
+LT5jbWRfb3BzLT50cmlnZ2VyX3R5cGUgPT0gRVRUX0VWRU5UX0hJU1QpIHsKIAkJCXRlc3RfZGF0
+YSA9IHRlc3QtPnByaXZhdGVfZGF0YTsKIAkJCWhpc3RfZmllbGQgPSBmaW5kX3Zhcl9maWVsZCh0
+ZXN0X2RhdGEsIHZhcl9uYW1lKTsKQEAgLTI4MjgsNyArMjgzMiw5IEBAIHN0YXRpYyBjaGFyICpm
+aW5kX3RyaWdnZXJfZmlsdGVyKHN0cnVjdCBoaXN0X3RyaWdnZXJfZGF0YSAqaGlzdF9kYXRhLAog
+ewogCXN0cnVjdCBldmVudF90cmlnZ2VyX2RhdGEgKnRlc3Q7CiAKLQlsaXN0X2Zvcl9lYWNoX2Vu
+dHJ5X3JjdSh0ZXN0LCAmZmlsZS0+dHJpZ2dlcnMsIGxpc3QpIHsKKwlsb2NrZGVwX2Fzc2VydF9o
+ZWxkKCZldmVudF9tdXRleCk7CisKKwlsaXN0X2Zvcl9lYWNoX2VudHJ5KHRlc3QsICZmaWxlLT50
+cmlnZ2VycywgbGlzdCkgewogCQlpZiAodGVzdC0+Y21kX29wcy0+dHJpZ2dlcl90eXBlID09IEVU
+VF9FVkVOVF9ISVNUKSB7CiAJCQlpZiAodGVzdC0+cHJpdmF0ZV9kYXRhID09IGhpc3RfZGF0YSkK
+IAkJCQlyZXR1cm4gdGVzdC0+ZmlsdGVyX3N0cjsKQEAgLTI4NzksOSArMjg4NSwxMSBAQCBmaW5k
+X2NvbXBhdGlibGVfaGlzdChzdHJ1Y3QgaGlzdF90cmlnZ2VyX2RhdGEgKnRhcmdldF9oaXN0X2Rh
+dGEsCiAJc3RydWN0IGV2ZW50X3RyaWdnZXJfZGF0YSAqdGVzdDsKIAl1bnNpZ25lZCBpbnQgbl9r
+ZXlzOwogCisJbG9ja2RlcF9hc3NlcnRfaGVsZCgmZXZlbnRfbXV0ZXgpOworCiAJbl9rZXlzID0g
+dGFyZ2V0X2hpc3RfZGF0YS0+bl9maWVsZHMgLSB0YXJnZXRfaGlzdF9kYXRhLT5uX3ZhbHM7CiAK
+LQlsaXN0X2Zvcl9lYWNoX2VudHJ5X3JjdSh0ZXN0LCAmZmlsZS0+dHJpZ2dlcnMsIGxpc3QpIHsK
+KwlsaXN0X2Zvcl9lYWNoX2VudHJ5KHRlc3QsICZmaWxlLT50cmlnZ2VycywgbGlzdCkgewogCQlp
+ZiAodGVzdC0+Y21kX29wcy0+dHJpZ2dlcl90eXBlID09IEVUVF9FVkVOVF9ISVNUKSB7CiAJCQlo
+aXN0X2RhdGEgPSB0ZXN0LT5wcml2YXRlX2RhdGE7CiAKQEAgLTQ5MDUsNyArNDkxMyw3IEBAIHN0
+YXRpYyBpbnQgaGlzdF9zaG93KHN0cnVjdCBzZXFfZmlsZSAqbSwgdm9pZCAqdikKIAkJZ290byBv
+dXRfdW5sb2NrOwogCX0KIAotCWxpc3RfZm9yX2VhY2hfZW50cnlfcmN1KGRhdGEsICZldmVudF9m
+aWxlLT50cmlnZ2VycywgbGlzdCkgeworCWxpc3RfZm9yX2VhY2hfZW50cnkoZGF0YSwgJmV2ZW50
+X2ZpbGUtPnRyaWdnZXJzLCBsaXN0KSB7CiAJCWlmIChkYXRhLT5jbWRfb3BzLT50cmlnZ2VyX3R5
+cGUgPT0gRVRUX0VWRU5UX0hJU1QpCiAJCQloaXN0X3RyaWdnZXJfc2hvdyhtLCBkYXRhLCBuKysp
+OwogCX0KQEAgLTUyOTYsNyArNTMwNCw5IEBAIHN0YXRpYyBpbnQgaGlzdF9yZWdpc3Rlcl90cmln
+Z2VyKGNoYXIgKmdsb2IsIHN0cnVjdCBldmVudF90cmlnZ2VyX29wcyAqb3BzLAogCWlmIChoaXN0
+X2RhdGEtPmF0dHJzLT5uYW1lICYmICFuYW1lZF9kYXRhKQogCQlnb3RvIG5ldzsKIAotCWxpc3Rf
+Zm9yX2VhY2hfZW50cnlfcmN1KHRlc3QsICZmaWxlLT50cmlnZ2VycywgbGlzdCkgeworCWxvY2tk
+ZXBfYXNzZXJ0X2hlbGQoJmV2ZW50X211dGV4KTsKKworCWxpc3RfZm9yX2VhY2hfZW50cnkodGVz
+dCwgJmZpbGUtPnRyaWdnZXJzLCBsaXN0KSB7CiAJCWlmICh0ZXN0LT5jbWRfb3BzLT50cmlnZ2Vy
+X3R5cGUgPT0gRVRUX0VWRU5UX0hJU1QpIHsKIAkJCWlmICghaGlzdF90cmlnZ2VyX21hdGNoKGRh
+dGEsIHRlc3QsIG5hbWVkX2RhdGEsIGZhbHNlKSkKIAkJCQljb250aW51ZTsKQEAgLTUzODAsMTAg
+KzUzOTAsMTIgQEAgc3RhdGljIGJvb2wgaGF2ZV9oaXN0X3RyaWdnZXJfbWF0Y2goc3RydWN0IGV2
+ZW50X3RyaWdnZXJfZGF0YSAqZGF0YSwKIAlzdHJ1Y3QgZXZlbnRfdHJpZ2dlcl9kYXRhICp0ZXN0
+LCAqbmFtZWRfZGF0YSA9IE5VTEw7CiAJYm9vbCBtYXRjaCA9IGZhbHNlOwogCisJbG9ja2RlcF9h
+c3NlcnRfaGVsZCgmZXZlbnRfbXV0ZXgpOworCiAJaWYgKGhpc3RfZGF0YS0+YXR0cnMtPm5hbWUp
+CiAJCW5hbWVkX2RhdGEgPSBmaW5kX25hbWVkX3RyaWdnZXIoaGlzdF9kYXRhLT5hdHRycy0+bmFt
+ZSk7CiAKLQlsaXN0X2Zvcl9lYWNoX2VudHJ5X3JjdSh0ZXN0LCAmZmlsZS0+dHJpZ2dlcnMsIGxp
+c3QpIHsKKwlsaXN0X2Zvcl9lYWNoX2VudHJ5KHRlc3QsICZmaWxlLT50cmlnZ2VycywgbGlzdCkg
+ewogCQlpZiAodGVzdC0+Y21kX29wcy0+dHJpZ2dlcl90eXBlID09IEVUVF9FVkVOVF9ISVNUKSB7
+CiAJCQlpZiAoaGlzdF90cmlnZ2VyX21hdGNoKGRhdGEsIHRlc3QsIG5hbWVkX2RhdGEsIGZhbHNl
+KSkgewogCQkJCW1hdGNoID0gdHJ1ZTsKQEAgLTU0MDEsMTAgKzU0MTMsMTIgQEAgc3RhdGljIGJv
+b2wgaGlzdF90cmlnZ2VyX2NoZWNrX3JlZnMoc3RydWN0IGV2ZW50X3RyaWdnZXJfZGF0YSAqZGF0
+YSwKIAlzdHJ1Y3QgaGlzdF90cmlnZ2VyX2RhdGEgKmhpc3RfZGF0YSA9IGRhdGEtPnByaXZhdGVf
+ZGF0YTsKIAlzdHJ1Y3QgZXZlbnRfdHJpZ2dlcl9kYXRhICp0ZXN0LCAqbmFtZWRfZGF0YSA9IE5V
+TEw7CiAKKwlsb2NrZGVwX2Fzc2VydF9oZWxkKCZldmVudF9tdXRleCk7CisKIAlpZiAoaGlzdF9k
+YXRhLT5hdHRycy0+bmFtZSkKIAkJbmFtZWRfZGF0YSA9IGZpbmRfbmFtZWRfdHJpZ2dlcihoaXN0
+X2RhdGEtPmF0dHJzLT5uYW1lKTsKIAotCWxpc3RfZm9yX2VhY2hfZW50cnlfcmN1KHRlc3QsICZm
+aWxlLT50cmlnZ2VycywgbGlzdCkgeworCWxpc3RfZm9yX2VhY2hfZW50cnkodGVzdCwgJmZpbGUt
+PnRyaWdnZXJzLCBsaXN0KSB7CiAJCWlmICh0ZXN0LT5jbWRfb3BzLT50cmlnZ2VyX3R5cGUgPT0g
+RVRUX0VWRU5UX0hJU1QpIHsKIAkJCWlmICghaGlzdF90cmlnZ2VyX21hdGNoKGRhdGEsIHRlc3Qs
+IG5hbWVkX2RhdGEsIGZhbHNlKSkKIAkJCQljb250aW51ZTsKQEAgLTU0MjYsMTAgKzU0NDAsMTIg
+QEAgc3RhdGljIHZvaWQgaGlzdF91bnJlZ2lzdGVyX3RyaWdnZXIoY2hhciAqZ2xvYiwgc3RydWN0
+IGV2ZW50X3RyaWdnZXJfb3BzICpvcHMsCiAJc3RydWN0IGV2ZW50X3RyaWdnZXJfZGF0YSAqdGVz
+dCwgKm5hbWVkX2RhdGEgPSBOVUxMOwogCWJvb2wgdW5yZWdpc3RlcmVkID0gZmFsc2U7CiAKKwls
+b2NrZGVwX2Fzc2VydF9oZWxkKCZldmVudF9tdXRleCk7CisKIAlpZiAoaGlzdF9kYXRhLT5hdHRy
+cy0+bmFtZSkKIAkJbmFtZWRfZGF0YSA9IGZpbmRfbmFtZWRfdHJpZ2dlcihoaXN0X2RhdGEtPmF0
+dHJzLT5uYW1lKTsKIAotCWxpc3RfZm9yX2VhY2hfZW50cnlfcmN1KHRlc3QsICZmaWxlLT50cmln
+Z2VycywgbGlzdCkgeworCWxpc3RfZm9yX2VhY2hfZW50cnkodGVzdCwgJmZpbGUtPnRyaWdnZXJz
+LCBsaXN0KSB7CiAJCWlmICh0ZXN0LT5jbWRfb3BzLT50cmlnZ2VyX3R5cGUgPT0gRVRUX0VWRU5U
+X0hJU1QpIHsKIAkJCWlmICghaGlzdF90cmlnZ2VyX21hdGNoKGRhdGEsIHRlc3QsIG5hbWVkX2Rh
+dGEsIGZhbHNlKSkKIAkJCQljb250aW51ZTsKQEAgLTU0NTUsNyArNTQ3MSw5IEBAIHN0YXRpYyBi
+b29sIGhpc3RfZmlsZV9jaGVja19yZWZzKHN0cnVjdCB0cmFjZV9ldmVudF9maWxlICpmaWxlKQog
+CXN0cnVjdCBoaXN0X3RyaWdnZXJfZGF0YSAqaGlzdF9kYXRhOwogCXN0cnVjdCBldmVudF90cmln
+Z2VyX2RhdGEgKnRlc3Q7CiAKLQlsaXN0X2Zvcl9lYWNoX2VudHJ5X3JjdSh0ZXN0LCAmZmlsZS0+
+dHJpZ2dlcnMsIGxpc3QpIHsKKwlsb2NrZGVwX2Fzc2VydF9oZWxkKCZldmVudF9tdXRleCk7CisK
+KwlsaXN0X2Zvcl9lYWNoX2VudHJ5KHRlc3QsICZmaWxlLT50cmlnZ2VycywgbGlzdCkgewogCQlp
+ZiAodGVzdC0+Y21kX29wcy0+dHJpZ2dlcl90eXBlID09IEVUVF9FVkVOVF9ISVNUKSB7CiAJCQlo
+aXN0X2RhdGEgPSB0ZXN0LT5wcml2YXRlX2RhdGE7CiAJCQlpZiAoY2hlY2tfdmFyX3JlZnMoaGlz
+dF9kYXRhKSkKZGlmZiAtLWdpdCBhL2tlcm5lbC90cmFjZS90cmFjZV9ldmVudHNfdHJpZ2dlci5j
+IGIva2VybmVsL3RyYWNlL3RyYWNlX2V2ZW50c190cmlnZ2VyLmMKaW5kZXggY2QxMmVjYjY2ZWI5
+Li5iMDVkMWI2YTYyOTEgMTAwNjQ0Ci0tLSBhL2tlcm5lbC90cmFjZS90cmFjZV9ldmVudHNfdHJp
+Z2dlci5jCisrKyBiL2tlcm5lbC90cmFjZS90cmFjZV9ldmVudHNfdHJpZ2dlci5jCkBAIC00OTUs
+NyArNDk1LDkgQEAgdm9pZCB1cGRhdGVfY29uZF9mbGFnKHN0cnVjdCB0cmFjZV9ldmVudF9maWxl
+ICpmaWxlKQogCXN0cnVjdCBldmVudF90cmlnZ2VyX2RhdGEgKmRhdGE7CiAJYm9vbCBzZXRfY29u
+ZCA9IGZhbHNlOwogCi0JbGlzdF9mb3JfZWFjaF9lbnRyeV9yY3UoZGF0YSwgJmZpbGUtPnRyaWdn
+ZXJzLCBsaXN0KSB7CisJbG9ja2RlcF9hc3NlcnRfaGVsZCgmZXZlbnRfbXV0ZXgpOworCisJbGlz
+dF9mb3JfZWFjaF9lbnRyeShkYXRhLCAmZmlsZS0+dHJpZ2dlcnMsIGxpc3QpIHsKIAkJaWYgKGRh
+dGEtPmZpbHRlciB8fCBldmVudF9jb21tYW5kX3Bvc3RfdHJpZ2dlcihkYXRhLT5jbWRfb3BzKSB8
+fAogCQkgICAgZXZlbnRfY29tbWFuZF9uZWVkc19yZWMoZGF0YS0+Y21kX29wcykpIHsKIAkJCXNl
+dF9jb25kID0gdHJ1ZTsKQEAgLTUzMCw3ICs1MzIsOSBAQCBzdGF0aWMgaW50IHJlZ2lzdGVyX3Ry
+aWdnZXIoY2hhciAqZ2xvYiwgc3RydWN0IGV2ZW50X3RyaWdnZXJfb3BzICpvcHMsCiAJc3RydWN0
+IGV2ZW50X3RyaWdnZXJfZGF0YSAqdGVzdDsKIAlpbnQgcmV0ID0gMDsKIAotCWxpc3RfZm9yX2Vh
+Y2hfZW50cnlfcmN1KHRlc3QsICZmaWxlLT50cmlnZ2VycywgbGlzdCkgeworCWxvY2tkZXBfYXNz
+ZXJ0X2hlbGQoJmV2ZW50X211dGV4KTsKKworCWxpc3RfZm9yX2VhY2hfZW50cnkodGVzdCwgJmZp
+bGUtPnRyaWdnZXJzLCBsaXN0KSB7CiAJCWlmICh0ZXN0LT5jbWRfb3BzLT50cmlnZ2VyX3R5cGUg
+PT0gZGF0YS0+Y21kX29wcy0+dHJpZ2dlcl90eXBlKSB7CiAJCQlyZXQgPSAtRUVYSVNUOwogCQkJ
+Z290byBvdXQ7CkBAIC01NzUsNyArNTc5LDkgQEAgc3RhdGljIHZvaWQgdW5yZWdpc3Rlcl90cmln
+Z2VyKGNoYXIgKmdsb2IsIHN0cnVjdCBldmVudF90cmlnZ2VyX29wcyAqb3BzLAogCXN0cnVjdCBl
+dmVudF90cmlnZ2VyX2RhdGEgKmRhdGE7CiAJYm9vbCB1bnJlZ2lzdGVyZWQgPSBmYWxzZTsKIAot
+CWxpc3RfZm9yX2VhY2hfZW50cnlfcmN1KGRhdGEsICZmaWxlLT50cmlnZ2VycywgbGlzdCkgewor
+CWxvY2tkZXBfYXNzZXJ0X2hlbGQoJmV2ZW50X211dGV4KTsKKworCWxpc3RfZm9yX2VhY2hfZW50
+cnkoZGF0YSwgJmZpbGUtPnRyaWdnZXJzLCBsaXN0KSB7CiAJCWlmIChkYXRhLT5jbWRfb3BzLT50
+cmlnZ2VyX3R5cGUgPT0gdGVzdC0+Y21kX29wcy0+dHJpZ2dlcl90eXBlKSB7CiAJCQl1bnJlZ2lz
+dGVyZWQgPSB0cnVlOwogCQkJbGlzdF9kZWxfcmN1KCZkYXRhLT5saXN0KTsKQEAgLTE0OTAsNyAr
+MTQ5Niw5IEBAIGludCBldmVudF9lbmFibGVfcmVnaXN0ZXJfdHJpZ2dlcihjaGFyICpnbG9iLAog
+CXN0cnVjdCBldmVudF90cmlnZ2VyX2RhdGEgKnRlc3Q7CiAJaW50IHJldCA9IDA7CiAKLQlsaXN0
+X2Zvcl9lYWNoX2VudHJ5X3JjdSh0ZXN0LCAmZmlsZS0+dHJpZ2dlcnMsIGxpc3QpIHsKKwlsb2Nr
+ZGVwX2Fzc2VydF9oZWxkKCZldmVudF9tdXRleCk7CisKKwlsaXN0X2Zvcl9lYWNoX2VudHJ5KHRl
+c3QsICZmaWxlLT50cmlnZ2VycywgbGlzdCkgewogCQl0ZXN0X2VuYWJsZV9kYXRhID0gdGVzdC0+
+cHJpdmF0ZV9kYXRhOwogCQlpZiAodGVzdF9lbmFibGVfZGF0YSAmJgogCQkgICAgKHRlc3QtPmNt
+ZF9vcHMtPnRyaWdnZXJfdHlwZSA9PQpAQCAtMTUzMCw3ICsxNTM4LDkgQEAgdm9pZCBldmVudF9l
+bmFibGVfdW5yZWdpc3Rlcl90cmlnZ2VyKGNoYXIgKmdsb2IsCiAJc3RydWN0IGV2ZW50X3RyaWdn
+ZXJfZGF0YSAqZGF0YTsKIAlib29sIHVucmVnaXN0ZXJlZCA9IGZhbHNlOwogCi0JbGlzdF9mb3Jf
+ZWFjaF9lbnRyeV9yY3UoZGF0YSwgJmZpbGUtPnRyaWdnZXJzLCBsaXN0KSB7CisJbG9ja2RlcF9h
+c3NlcnRfaGVsZCgmZXZlbnRfbXV0ZXgpOworCisJbGlzdF9mb3JfZWFjaF9lbnRyeShkYXRhLCAm
+ZmlsZS0+dHJpZ2dlcnMsIGxpc3QpIHsKIAkJZW5hYmxlX2RhdGEgPSBkYXRhLT5wcml2YXRlX2Rh
+dGE7CiAJCWlmIChlbmFibGVfZGF0YSAmJgogCQkgICAgKGRhdGEtPmNtZF9vcHMtPnRyaWdnZXJf
+dHlwZSA9PQo=
+
+--Multipart=_Wed__22_Jan_2020_12_32_51_+0900_JBYaE+JMzFDKfoOE--
