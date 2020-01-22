@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57ED4C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:46:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5501C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:46:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34E8721835
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:46:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5B1D21835
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:46:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729148AbgAVQqt (ORCPT
+        id S1729163AbgAVQqw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 11:46:49 -0500
-Received: from mga17.intel.com ([192.55.52.151]:56371 "EHLO mga17.intel.com"
+        Wed, 22 Jan 2020 11:46:52 -0500
+Received: from mga12.intel.com ([192.55.52.136]:42792 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729066AbgAVQqk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 11:46:40 -0500
+        id S1726234AbgAVQq2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 11:46:28 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jan 2020 08:46:39 -0800
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jan 2020 08:46:28 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,350,1574150400"; 
-   d="scan'208";a="245106264"
+   d="scan'208";a="222087547"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga002.jf.intel.com with ESMTP; 22 Jan 2020 08:46:20 -0800
+  by fmsmga008.fm.intel.com with ESMTP; 22 Jan 2020 08:46:25 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id EAD43202; Wed, 22 Jan 2020 18:46:19 +0200 (EET)
+        id 353A43CF; Wed, 22 Jan 2020 18:46:20 +0200 (EET)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     Andy Shevchenko <andy@infradead.org>,
         Darren Hart <dvhart@infradead.org>
@@ -40,9 +40,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/9] platform/x86: intel_pmc_ipc: Make intel_pmc_ipc_simple_command() static
-Date:   Wed, 22 Jan 2020 19:46:12 +0300
-Message-Id: <20200122164619.73563-3-mika.westerberg@linux.intel.com>
+Subject: [PATCH 8/9] platform/x86: intel_pmc_ipc: Propagate error from kstrtoul()
+Date:   Wed, 22 Jan 2020 19:46:18 +0300
+Message-Id: <20200122164619.73563-9-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200122164619.73563-1-mika.westerberg@linux.intel.com>
 References: <20200122164619.73563-1-mika.westerberg@linux.intel.com>
@@ -53,61 +53,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This function is not called outside of intel_pmc_ipc.c so we can make it
-static instead.
+kstrtoul() already returns negative error if the input was not valid so
+return it directly.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- arch/x86/include/asm/intel_pmc_ipc.h | 6 ------
- drivers/platform/x86/intel_pmc_ipc.c | 3 +--
- 2 files changed, 1 insertion(+), 8 deletions(-)
+ drivers/platform/x86/intel_pmc_ipc.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/intel_pmc_ipc.h b/arch/x86/include/asm/intel_pmc_ipc.h
-index 3b2e8b461520..b4f804877651 100644
---- a/arch/x86/include/asm/intel_pmc_ipc.h
-+++ b/arch/x86/include/asm/intel_pmc_ipc.h
-@@ -31,7 +31,6 @@
- 
- #if IS_ENABLED(CONFIG_INTEL_PMC_IPC)
- 
--int intel_pmc_ipc_simple_command(int cmd, int sub);
- int intel_pmc_ipc_raw_cmd(u32 cmd, u32 sub, u8 *in, u32 inlen,
- 		u32 *out, u32 outlen, u32 dptr, u32 sptr);
- int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
-@@ -43,11 +42,6 @@ int intel_pmc_gcr_write(u32 offset, u32 data);
- 
- #else
- 
--static inline int intel_pmc_ipc_simple_command(int cmd, int sub)
--{
--	return -EINVAL;
--}
--
- static inline int intel_pmc_ipc_raw_cmd(u32 cmd, u32 sub, u8 *in, u32 inlen,
- 		u32 *out, u32 outlen, u32 dptr, u32 sptr)
- {
 diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-index 9229c7a16536..53551f5474a7 100644
+index b87036089a54..7b180ead064a 100644
 --- a/drivers/platform/x86/intel_pmc_ipc.c
 +++ b/drivers/platform/x86/intel_pmc_ipc.c
-@@ -404,7 +404,7 @@ static int intel_pmc_ipc_check_status(void)
-  *
-  * Return:	an IPC error code or 0 on success.
-  */
--int intel_pmc_ipc_simple_command(int cmd, int sub)
-+static int intel_pmc_ipc_simple_command(int cmd, int sub)
- {
+@@ -512,8 +512,9 @@ static ssize_t intel_pmc_ipc_northpeak_store(struct device *dev,
+ 	int subcmd;
  	int ret;
  
-@@ -419,7 +419,6 @@ int intel_pmc_ipc_simple_command(int cmd, int sub)
+-	if (kstrtoul(buf, 0, &val))
+-		return -EINVAL;
++	ret = kstrtoul(buf, 0, &val);
++	if (ret)
++		return ret;
  
- 	return ret;
- }
--EXPORT_SYMBOL_GPL(intel_pmc_ipc_simple_command);
- 
- /**
-  * intel_pmc_ipc_raw_cmd() - IPC command with data and pointers
+ 	if (val)
+ 		subcmd = 1;
 -- 
 2.24.1
 
