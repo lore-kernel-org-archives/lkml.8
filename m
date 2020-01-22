@@ -2,488 +2,290 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E4DCC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 01:58:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 927F5C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 02:02:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 300D82253D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 01:58:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 646A1217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 02:02:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PaNSy6lV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbgAVB6I (ORCPT
+        id S1728809AbgAVCCi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 20:58:08 -0500
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:55146 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726396AbgAVB6I (ORCPT
+        Tue, 21 Jan 2020 21:02:38 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46100 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726780AbgAVCCi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 20:58:08 -0500
-Received: from dread.disaster.area (pa49-181-218-253.pa.nsw.optusnet.com.au [49.181.218.253])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id D8C383A20B2;
-        Wed, 22 Jan 2020 12:57:58 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1iu5HJ-0000e5-JG; Wed, 22 Jan 2020 12:57:57 +1100
-Date:   Wed, 22 Jan 2020 12:57:57 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Damien Le Moal <damien.lemoal@wdc.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Johannes Thumshirn <jth@kernel.org>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Hannes Reinecke <hare@suse.de>
-Subject: Re: [PATCH v8 1/2] fs: New zonefs file system
-Message-ID: <20200122015757.GG9407@dread.disaster.area>
-References: <20200121065846.216538-1-damien.lemoal@wdc.com>
- <20200121065846.216538-2-damien.lemoal@wdc.com>
+        Tue, 21 Jan 2020 21:02:38 -0500
+Received: by mail-pg1-f193.google.com with SMTP id z124so2529575pgb.13
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 18:02:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=RNbLgYCC7xEpZRvuzQgdidtXruGY+CqXI8AlCvarpGs=;
+        b=PaNSy6lVfNp4bzrjkFmT75AsWJgYUTvjCBTF1FVPFdOKVZE6GbHOFX/zv8X2IhWA+u
+         jNz/lf6KR6yiBM6FNggbSnJUU5WaxP6QlNIDSvOj9tX8mpgWbSEuAI6Fy4CkvfAiMCoj
+         JMh2AKnM6uS3BZ/Yp8zeyU4o2PRBcqwpwcC1vlnvN29UhBoVgbxmo55+Uci6b1edG53g
+         fLUf0fKOuIMdQNW7NhwiAaPNGnrZtd3A27TiuKjGBZb05mNpFb1asQH+0RuIdbsaCTTK
+         C+XgQfBQFiYN8QdqYKcFtxtsBu63lmumn4MaiKBnuIKp1IODSmG79Ztj7+XnHNISZ0GV
+         97cQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RNbLgYCC7xEpZRvuzQgdidtXruGY+CqXI8AlCvarpGs=;
+        b=X5WKWo2aUk5T0dNSB/ffxEkoyMNTFfK228uiaV6jorYVmNRJ4Cvm+HW1Grgt2sM3j7
+         ricZlwVxEio+xmEA5R+nFbWb+RjC0VNFUikqhw5MwVJfn/8BEGxGPz6dK+DgaJxX5IF7
+         fHsKc4TbDUdJc3OUIMqdhOnbQZYApmM45aFKyqxPZxLmEXJrjPzV8wPBIIVyRMyalkzn
+         KEuCcBwONhiT0sVd2zOHGVZsDyytfLmHunOP/cXj4622CfJs+45E/KTO4pAdfE97f9DO
+         YZ5Y0ta1ALqcww+7HukwBk3pLkGopz9m5b5lw+dmCbQ6YbTSOHN6evWS2+NKeYx+TD2t
+         mHvA==
+X-Gm-Message-State: APjAAAXH1gWePHhWtbCq613SuOP1aYQy+Jc0iL1Y1BQevAkurtP1STod
+        ewoMQP9P9CvQR5vdvDaNx+TKxQ==
+X-Google-Smtp-Source: APXvYqzR9npjI/ee4Nc5nySUhKi5BqX+9N3Vqpy8VXNMKCXoLixaHproTp9kibCEoCspqOIcjx2BJA==
+X-Received: by 2002:a63:6602:: with SMTP id a2mr8176588pgc.403.1579658557430;
+        Tue, 21 Jan 2020 18:02:37 -0800 (PST)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id d23sm43547803pfo.176.2020.01.21.18.02.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2020 18:02:36 -0800 (PST)
+Date:   Tue, 21 Jan 2020 18:02:34 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Subject: Re: [PATCH v2 2/8] remoteproc: qcom: Introduce driver to store pil
+ info in IMEM
+Message-ID: <20200122020234.GT1511@yoga>
+References: <20191227053215.423811-1-bjorn.andersson@linaro.org>
+ <20191227053215.423811-3-bjorn.andersson@linaro.org>
+ <20200110211846.GA11555@xps15>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200121065846.216538-2-damien.lemoal@wdc.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
-        a=TU0PeEMO9XNyODJ+pEfdLw==:117 a=TU0PeEMO9XNyODJ+pEfdLw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=Jdjhy38mL1oA:10
-        a=7-415B0cAAAA:8 a=uG8Sni3PD9131csrXFQA:9 a=ZAq4knvq0sbCs-1K:21
-        a=1709yZKkk6hjmF5l:21 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <20200110211846.GA11555@xps15>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Damien,
+On Fri 10 Jan 13:18 PST 2020, Mathieu Poirier wrote:
+> On Thu, Dec 26, 2019 at 09:32:09PM -0800, Bjorn Andersson wrote:
+[..]
+> > diff --git a/drivers/remoteproc/qcom_pil_info.c b/drivers/remoteproc/qcom_pil_info.c
+> > new file mode 100644
+> > index 000000000000..b0897ae9eae5
+> > --- /dev/null
+> > +++ b/drivers/remoteproc/qcom_pil_info.c
+> > @@ -0,0 +1,150 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * Copyright (c) 2019 Linaro Ltd.
+> > + */
+> > +#include <linux/module.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/of.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/mutex.h>
+> > +#include <linux/regmap.h>
+> > +#include <linux/mfd/syscon.h>
+> > +#include <linux/slab.h>
+> 
+> These should be in alphabetical order if there is no depencencies
+> between them, something checkpatch complains about.
+> 
 
-I've finally had a chance to recover from LCA, catch up and look at
-this again. Overall, pretty good, but a few comments below....
+Of course.
 
-On Tue, Jan 21, 2020 at 03:58:45PM +0900, Damien Le Moal wrote:
-> zonefs is a very simple file system exposing each zone of a zoned block
-> device as a file. Unlike a regular file system with zoned block device
-> support (e.g. f2fs), zonefs does not hide the sequential write
-> constraint of zoned block devices to the user. Files representing
-> sequential write zones of the device must be written sequentially
-> starting from the end of the file (append only writes).
+> > +
+> > +struct pil_reloc_entry {
+> > +	char name[8];
+> 
+> Please add a #define for the name length and reuse it in qcom_pil_info_store()
+> 
 
-....
+Ok
 
-> --- /dev/null
-> +++ b/fs/zonefs/super.c
-> @@ -0,0 +1,1178 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Simple zone file system for zoned block devices.
-> + *
-> + * Copyright (C) 2019 Western Digital Corporation or its affiliates.
-> + */
-> +#include <linux/module.h>
-> +#include <linux/fs.h>
-> +#include <linux/magic.h>
-> +#include <linux/iomap.h>
-> +#include <linux/init.h>
-> +#include <linux/slab.h>
-> +#include <linux/blkdev.h>
-> +#include <linux/statfs.h>
-> +#include <linux/writeback.h>
-> +#include <linux/quotaops.h>
-> +#include <linux/seq_file.h>
-> +#include <linux/parser.h>
-> +#include <linux/uio.h>
-> +#include <linux/mman.h>
-> +#include <linux/sched/mm.h>
-> +#include <linux/crc32.h>
-> +
-> +#include "zonefs.h"
-> +
-> +static int zonefs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
-> +			      unsigned int flags, struct iomap *iomap,
-> +			      struct iomap *srcmap)
-> +{
-> +	struct zonefs_sb_info *sbi = ZONEFS_SB(inode->i_sb);
-> +	struct zonefs_inode_info *zi = ZONEFS_I(inode);
-> +	loff_t max_isize = zi->i_max_size;
-> +	loff_t isize;
-> +
-> +	/*
-> +	 * For sequential zones, enforce direct IO writes. This is already
-> +	 * checked when writes are issued, so warn about this here if we
-> +	 * get buffered write to a sequential file inode.
-> +	 */
-> +	if (WARN_ON_ONCE(zi->i_ztype == ZONEFS_ZTYPE_SEQ &&
-> +			 (flags & IOMAP_WRITE) && !(flags & IOMAP_DIRECT)))
-> +		return -EIO;
-> +
-> +	/*
-> +	 * For all zones, all blocks are always mapped. For sequential zones,
-> +	 * all blocks after the write pointer (inode size) are always unwritten.
-> +	 */
-> +	mutex_lock(&zi->i_truncate_mutex);
-> +	isize = i_size_read(inode);
-> +	if (offset >= isize) {
-> +		length = min(length, max_isize - offset);
-> +		if (zi->i_ztype == ZONEFS_ZTYPE_CNV)
-> +			iomap->type = IOMAP_MAPPED;
-> +		else
-> +			iomap->type = IOMAP_UNWRITTEN;
-> +	} else {
-> +		length = min(length, isize - offset);
-> +		iomap->type = IOMAP_MAPPED;
-> +	}
+[..]
+> > +void qcom_pil_info_store(const char *image, phys_addr_t base, size_t size)
+> > +{
+> > +	struct pil_reloc_entry *entry;
+> > +	int idx = -1;
+> > +	int i;
+> > +
+> > +	mutex_lock(&reloc_mutex);
+> > +	if (!_reloc)
+> 
+> Since it is available, I would use function qcom_pil_info_available().  Also
+> checkpatch complains about indentation problems related to the 'if' condition
+> but I can't see what makes it angry.
+> 
 
-Something was bugging me about this, and reading the rest of the
-patch it finally triggered. For conventional zones, inode->i_size =
-zi->i_max_size, and so if offset >= isize for a conventional
-zone then this:
+Sure thing, and I'll double check the indentation.
 
-	length = min(length, max_isize - offset);
+> > +		goto unlock;
+> > +
+> > +	for (i = 0; i < PIL_INFO_ENTRIES; i++) {
+> > +		if (!_reloc->entries[i].name[0]) {
+> > +			if (idx == -1)
+> > +				idx = i;
+> > +			continue;
+> > +		}
+> > +
+> > +		if (!strncmp(_reloc->entries[i].name, image, 8)) {
+> > +			idx = i;
+> > +			goto found;
+> > +		}
+> > +	}
+> > +
+> > +	if (idx == -1) {
+> > +		dev_warn(_reloc->dev, "insufficient PIL info slots\n");
+> > +		goto unlock;
+> 
+> Given how this function is used in the next patch I think an error should be
+> reported to the caller.
+> 
 
-is going to result in length <= 0 and we return a negative length
-iomap.
+Just to clarify, certain global errors will cause the entire device to
+be reset and allow memory contents to be extracted for analysis in post
+mortem tools. This patch ensures that this information contains
+(structured) information about where each remote processor is loaded.
+Afaict the purpose of propagating errors from this function would be for
+the caller to abort the launching of a remote processor.
 
-IOWs, this case should only trigger for IO into sequential zones,
-as it appears to be prevented at higher layers for conventional
-zones by explicit checks against i_max_size and/or
-iov_iter_truncate() calls to ensure user IOs are limited to within
-i_max_size.
+I think it's better to take the risk of having insufficient data for the
+post mortem tools than to fail booting a remote processor for a reason
+that won't affect normal operation.
 
-Hence it looks to me that triggering the (offset >= isize) case here
-for conventional zones is a WARN_ON_ONCE() and return -EIO
-situation...
+> > +	}
+> > +
+> > +found:
+> > +	entry = &_reloc->entries[idx];
+> > +	stracpy(entry->name, image);
+> 
+> Function stracpy() isn't around in mainline.
+> 
 
-SO, perhaps:
+Good catch, I'll spin this with a strscpy() to avoid build errors until
+stracpy lands.
 
-	isize = i_size_read(inode);
-	if (offset >= isize) {
-		if (WARN_ON_ONCE(i->i_ztype == ZONEFS_ZTYPE_CNV)) {
-			/* drop locks */
-			return -EIO;
-		}
-		length = min(length, max_isize - offset);
-		iomap->type = IOMAP_UNWRITTEN;
-	} else {
-		length = min(length, isize - offset);
-		iomap->type = IOMAP_MAPPED;
-	}
+> > +	entry->base = base;
+> > +	entry->size = size;
+> > +
+> > +	regmap_bulk_write(_reloc->map, _reloc->offset + idx * sizeof(*entry),
+> > +			  entry, sizeof(*entry) / _reloc->val_bytes);
+> 
+> Same here - the error code should be handled and reported to the caller.  
+> 
 
-This also seems tailored around the call from zonefs_map_blocks()
-which tries to map the entire zone (length = zi->i_max_size) for
-writeback mappings. Hence the length in this case always requires
-clamping to zi->i_max_size - offset. Again, there's an issue here:
+Will undo the "allocation" of _reloc->entries[idx] on failure, let me
+know what you think about my reasoning above regarding propagating this
+error (or in particular acting upon the propagated value).
 
-> +static int zonefs_map_blocks(struct iomap_writepage_ctx *wpc,
-> +			     struct inode *inode, loff_t offset)
-> +{
-> +	if (offset >= wpc->iomap.offset &&
-> +	    offset < wpc->iomap.offset + wpc->iomap.length)
-> +		return 0;
-> +
-> +	memset(&wpc->iomap, 0, sizeof(wpc->iomap));
-> +	return zonefs_iomap_begin(inode, offset, ZONEFS_I(inode)->i_max_size,
-> +				  0, &wpc->iomap, NULL);
+> > +
+> > +unlock:
+> > +	mutex_unlock(&reloc_mutex);
+> > +}
+> > +EXPORT_SYMBOL_GPL(qcom_pil_info_store);
+[..]
+> > +static int pil_reloc_probe(struct platform_device *pdev)
+> > +{
+> > +	struct pil_reloc *reloc;
+> > +
+> > +	reloc = devm_kzalloc(&pdev->dev, sizeof(*reloc), GFP_KERNEL);
+> > +	if (!reloc)
+> > +		return -ENOMEM;
+> > +
+> > +	reloc->dev = &pdev->dev;
+> > +	reloc->map = syscon_node_to_regmap(pdev->dev.parent->of_node);
+> > +	if (IS_ERR(reloc->map))
+> > +		return PTR_ERR(reloc->map);
+> > +
+> > +	if (of_property_read_u32(pdev->dev.of_node, "offset", &reloc->offset))
+> > +		return -EINVAL;
+> > +
+> > +	reloc->val_bytes = regmap_get_val_bytes(reloc->map);
+> > +	if (reloc->val_bytes < 0)
+> > +		return -EINVAL;
+> > +
+> > +	regmap_bulk_write(reloc->map, reloc->offset, reloc->entries,
+> > +			  sizeof(reloc->entries) / reloc->val_bytes);
+> 
+> Error code handling.
+> 
 
-Where we pass flags = 0 into zonefs_iomap_begin(), and so there is
-no checking that this writeback code path is only executing against
-a conventional zone. I.e. the comments and checks in
-zonefs_iomap_begin() relate only to user IO call paths, but don't
-validate or comment on the writeback path callers, and there's no
-comments or checks here that the inode points at a conventional
-zone, either....
+Yes, that makes sense.
 
-> +static vm_fault_t zonefs_filemap_fault(struct vm_fault *vmf)
-> +{
-> +	struct zonefs_inode_info *zi = ZONEFS_I(file_inode(vmf->vma->vm_file));
-> +	vm_fault_t ret;
-> +
-> +	down_read(&zi->i_mmap_sem);
-> +	ret = filemap_fault(vmf);
-> +	up_read(&zi->i_mmap_sem);
-> +
-> +	return ret;
-> +}
-> +
-> +static vm_fault_t zonefs_filemap_page_mkwrite(struct vm_fault *vmf)
-> +{
-> +	struct inode *inode = file_inode(vmf->vma->vm_file);
-> +	struct zonefs_inode_info *zi = ZONEFS_I(inode);
-> +	vm_fault_t ret;
-> +
-> +	sb_start_pagefault(inode->i_sb);
-> +	file_update_time(vmf->vma->vm_file);
-> +
-> +	/* Serialize against truncates */
-> +	down_read(&zi->i_mmap_sem);
-> +	ret = iomap_page_mkwrite(vmf, &zonefs_iomap_ops);
-> +	up_read(&zi->i_mmap_sem);
-> +
-> +	sb_end_pagefault(inode->i_sb);
-> +	return ret;
-> +}
+Thanks for the review Mathieu!
 
-Should there be a WARN_ON_ONCE(zi->zi_type != ZONEFS_ZTYPE_CNV) in
-here?
+Regards,
+Bjorn
 
-> +static ssize_t zonefs_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
-> +{
-> +	struct inode *inode = file_inode(iocb->ki_filp);
-> +	struct zonefs_sb_info *sbi = ZONEFS_SB(inode->i_sb);
-> +	struct zonefs_inode_info *zi = ZONEFS_I(inode);
-> +	loff_t max_pos;
-> +	size_t count;
-> +	ssize_t ret;
-> +
-> +	if (iocb->ki_pos >= zi->i_max_size)
-> +		return 0;
-> +
-> +	if (iocb->ki_flags & IOCB_NOWAIT) {
-> +		if (!inode_trylock_shared(inode))
-> +			return -EAGAIN;
-> +	} else {
-> +		inode_lock_shared(inode);
-> +	}
-
-We should really turn that into a generic helper. This pattern is
-being replicated all over the place. Not in this patchset, though...
-
-> +static int zonefs_report_zones_err_cb(struct blk_zone *zone, unsigned int idx,
-> +				      void *data)
-> +{
-> +	struct inode *inode = data;
-> +	struct zonefs_inode_info *zi = ZONEFS_I(inode);
-> +	loff_t pos;
-> +
-> +	/*
-> +	 * The condition of the zone may have change. Check it and adjust the
-> +	 * inode information as needed, similarly to zonefs_init_file_inode().
-> +	 */
-> +	if (zone->cond == BLK_ZONE_COND_OFFLINE) {
-> +		inode->i_flags |= S_IMMUTABLE;
-> +		inode->i_mode &= ~0777;
-> +		zone->wp = zone->start;
-> +	} else if (zone->cond == BLK_ZONE_COND_READONLY) {
-> +		inode->i_flags |= S_IMMUTABLE;
-> +		inode->i_mode &= ~0222;
-> +	}
-
-This exact code is repeated in zonefs_init_file_inode(). Maybe it
-should be a helper function?
-
-> +
-> +	pos = (zone->wp - zone->start) << SECTOR_SHIFT;
-> +	zi->i_wpoffset = pos;
-> +	if (i_size_read(inode) != pos) {
-> +		zonefs_update_stats(inode, pos);
-> +		i_size_write(inode, pos);
-> +	}
-
-What happens if this decreases the size of the zone? don't we need
-to invalidate the page cache beyond the new EOF in this case (i.e.
-it's a truncate operation)?
-
-> +static int zonefs_seq_file_write_failed(struct inode *inode, int error)
-> +{
-> +	struct zonefs_inode_info *zi = ZONEFS_I(inode);
-> +	struct super_block *sb = inode->i_sb;
-> +	sector_t sector = zi->i_zsector;
-> +	unsigned int nofs_flag;
-> +	int ret;
-> +
-> +	zonefs_warn(sb, "Updating inode zone %llu info\n", sector);
-> +
-> +	/*
-> +	 * blkdev_report_zones() uses GFP_KERNEL by default. Force execution as
-> +	 * if GFP_NOFS was specified so that it will not end up recursing into
-> +	 * the FS on memory allocation.
-> +	 */
-> +	nofs_flag = memalloc_nofs_save();
-> +	ret = blkdev_report_zones(sb->s_bdev, sector, 1,
-> +				  zonefs_report_zones_err_cb, inode);
-> +	memalloc_nofs_restore(nofs_flag);
-
-The comment is kinda redundant - it's explaining exactly what the
-code does rather than why it needs this protection. i.e. the comment
-should explain the recursion vector/deadlock that we are avoiding
-here...
-
-> +static int zonefs_file_dio_write_end(struct kiocb *iocb, ssize_t size, int ret,
-> +				     unsigned int flags)
-> +{
-> +	struct inode *inode = file_inode(iocb->ki_filp);
-> +	struct zonefs_inode_info *zi = ZONEFS_I(inode);
-> +
-> +	if (ret)
-> +		return ret;
-> +
-> +	/*
-> +	 * Conventional zone file size is fixed to the zone size so there
-> +	 * is no need to do anything.
-> +	 */
-> +	if (zi->i_ztype == ZONEFS_ZTYPE_CNV)
-> +		return 0;
-> +
-> +	mutex_lock(&zi->i_truncate_mutex);
-> +
-> +	if (size < 0) {
-> +		ret = zonefs_seq_file_write_failed(inode, size);
-
-Ok, so I see it is being called from IO completion context, whcih
-means we'd want memalloc_noio_save() because the underlying bio
-doesn't get freed until this whole completion runs, right?
-
-> +static ssize_t zonefs_file_dio_write(struct kiocb *iocb, struct iov_iter *from)
-> +{
-> +	struct inode *inode = file_inode(iocb->ki_filp);
-> +	struct zonefs_sb_info *sbi = ZONEFS_SB(inode->i_sb);
-> +	struct zonefs_inode_info *zi = ZONEFS_I(inode);
-> +	size_t count;
-> +	ssize_t ret;
-> +
-> +	if (iocb->ki_flags & IOCB_NOWAIT) {
-> +		if (!inode_trylock(inode))
-> +			return -EAGAIN;
-> +	} else {
-> +		inode_lock(inode);
-> +	}
-> +
-> +	ret = generic_write_checks(iocb, from);
-> +	if (ret <= 0)
-> +		goto out;
-> +
-> +	iov_iter_truncate(from, zi->i_max_size - iocb->ki_pos);
-> +	count = iov_iter_count(from);
-
-So count is initialised to the entire IO length....
-
-> +
-> +	/*
-> +	 * Direct writes must be aligned to the block size, that is, the device
-> +	 * physical sector size, to avoid errors when writing sequential zones
-> +	 * on 512e devices (512B logical sector, 4KB physical sectors).
-> +	 */
-> +	if ((iocb->ki_pos | count) & sbi->s_blocksize_mask) {
-> +		ret = -EINVAL;
-> +		goto out;
-> +	}
-> +
-> +	/*
-> +	 * Enforce sequential writes (append only) in sequential zones.
-> +	 */
-> +	mutex_lock(&zi->i_truncate_mutex);
-> +	if (zi->i_ztype == ZONEFS_ZTYPE_SEQ &&
-> +	    iocb->ki_pos != zi->i_wpoffset) {
-> +		zonefs_err(inode->i_sb,
-> +			   "Unaligned write at %llu + %zu (wp %llu)\n",
-> +			   iocb->ki_pos, count,
-> +			   zi->i_wpoffset);
-> +		mutex_unlock(&zi->i_truncate_mutex);
-> +		ret = -EINVAL;
-> +		goto out;
-> +	}
-> +	mutex_unlock(&zi->i_truncate_mutex);
-> +
-> +	ret = iomap_dio_rw(iocb, from, &zonefs_iomap_ops, &zonefs_dio_ops,
-> +			   is_sync_kiocb(iocb));
-> +	if (zi->i_ztype == ZONEFS_ZTYPE_SEQ &&
-> +	    (ret > 0 || ret == -EIOCBQUEUED)) {
-> +		if (ret > 0)
-> +			count = ret;
-> +		mutex_lock(&zi->i_truncate_mutex);
-> +		zi->i_wpoffset += count;
-> +		mutex_unlock(&zi->i_truncate_mutex);
-
-Hmmmm. This looks problematic w.r.t. AIO. If we get -EIOCBQUEUED it
-means the IO has been queued but not necessarily submitted, but
-we update zi->i_wpoffset as though the entire AIO has laready
-completed. ANd then we drop the inode_lock() and return, allowing
-another AIO+DIO to be started.
-
-Hence another concurrent sequential AIO+DIO write could now be
-submitted and pass the above iocb->ki_pos != zi->i_wpoffset check.
-Now we have two independent IOs in flight - one that is at the
-current hardware write pointer offset, and one that is beyond it.
-
-What happens if the block layer now re-orders these two IOs?
-
-
-> +static struct dentry *zonefs_create_inode(struct dentry *parent,
-> +					const char *name, struct blk_zone *zone)
-> +{
-> +	struct inode *dir = d_inode(parent);
-> +	struct dentry *dentry;
-> +	struct inode *inode;
-> +
-> +	dentry = d_alloc_name(parent, name);
-> +	if (!dentry)
-> +		return NULL;
-> +
-> +	inode = new_inode(parent->d_sb);
-> +	if (!inode)
-> +		goto out;
-> +
-> +	inode->i_ino = get_next_ino();
-
-get_next_ino() doesn't guarantee inode number uniqueness (it's 32
-bit and global across all filesystems so it can overflow). Are
-duplicate inode numbers on this superblock an issue?
-
-> +/*
-> + * Read super block information from the device.
-> + */
-> +static int zonefs_read_super(struct super_block *sb)
-> +{
-> +	struct zonefs_sb_info *sbi = ZONEFS_SB(sb);
-> +	struct zonefs_super *super;
-> +	u32 crc, stored_crc;
-> +	struct page *page;
-> +	struct bio_vec bio_vec;
-> +	struct bio bio;
-> +	int ret;
-> +
-> +	page = alloc_page(GFP_KERNEL);
-> +	if (!page)
-> +		return -ENOMEM;
-> +
-> +	bio_init(&bio, &bio_vec, 1);
-> +	bio.bi_iter.bi_sector = 0;
-> +	bio_set_dev(&bio, sb->s_bdev);
-> +	bio_set_op_attrs(&bio, REQ_OP_READ, 0);
-> +	bio_add_page(&bio, page, PAGE_SIZE, 0);
-> +
-> +	ret = submit_bio_wait(&bio);
-> +	if (ret)
-> +		goto out;
-> +
-> +	super = page_address(page);
-> +
-> +	stored_crc = le32_to_cpu(super->s_crc);
-> +	super->s_crc = 0;
-> +	crc = crc32(~0U, (unsigned char *)super, sizeof(struct zonefs_super));
-> +	if (crc != stored_crc) {
-> +		zonefs_err(sb, "Invalid checksum (Expected 0x%08x, got 0x%08x)",
-> +			   crc, stored_crc);
-> +		ret = -EIO;
-> +		goto out;
-> +	}
-
-Does this mean if mount or the kernel tries to autoprobe the
-filesystem type on a device it will get -EIO and an "Invalid
-checksum" error message rather than just silently returning -EINVAL
-because....
-
-> +	ret = -EINVAL;
-> +	if (le32_to_cpu(super->s_magic) != ZONEFS_MAGIC)
-> +		goto out;
-
-... it isn't actually a zonefs filesystem?
-
-i.e. shouldn't these checks be the other way around?
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+> Thanks,
+> Mathieu
+> 
+> > +
+> > +	mutex_lock(&reloc_mutex);
+> > +	_reloc = reloc;
+> > +	mutex_unlock(&reloc_mutex);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int pil_reloc_remove(struct platform_device *pdev)
+> > +{
+> > +	mutex_lock(&reloc_mutex);
+> > +	_reloc = NULL;
+> > +	mutex_unlock(&reloc_mutex);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static const struct of_device_id pil_reloc_of_match[] = {
+> > +	{ .compatible = "qcom,pil-reloc-info" },
+> > +	{}
+> > +};
+> > +MODULE_DEVICE_TABLE(of, pil_reloc_of_match);
+> > +
+> > +static struct platform_driver pil_reloc_driver = {
+> > +	.probe = pil_reloc_probe,
+> > +	.remove = pil_reloc_remove,
+> > +	.driver = {
+> > +		.name = "qcom-pil-reloc-info",
+> > +		.of_match_table = pil_reloc_of_match,
+> > +	},
+> > +};
+> > +module_platform_driver(pil_reloc_driver);
+> > +
+> > +MODULE_DESCRIPTION("Qualcomm PIL relocation info");
+> > +MODULE_LICENSE("GPL v2");
+> > diff --git a/drivers/remoteproc/qcom_pil_info.h b/drivers/remoteproc/qcom_pil_info.h
+> > new file mode 100644
+> > index 000000000000..0372602fae1d
+> > --- /dev/null
+> > +++ b/drivers/remoteproc/qcom_pil_info.h
+> > @@ -0,0 +1,8 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +#ifndef __QCOM_PIL_INFO_H__
+> > +#define __QCOM_PIL_INFO_H__
+> > +
+> > +void qcom_pil_info_store(const char *image, phys_addr_t base, size_t size);
+> > +bool qcom_pil_info_available(void);
+> > +
+> > +#endif
+> > -- 
+> > 2.24.0
+> > 
