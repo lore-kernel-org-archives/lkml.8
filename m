@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA98C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D1A8C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98E4C24684
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 712ED24680
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:39:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685941;
-	bh=jlwuOc04JQ/mlkGK+K25zV2RTSgLEUG02HcCGOeRKdg=;
+	s=default; t=1579685944;
+	bh=vyuc22PMlxG8UOEBZzuJH+BPgBY4Pz+AfMF/aKlx0OI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R9ed7q2wVsvJtqkMgjDs+gKuSLuBAUWH4VRAvZy25w36/k31OvJ0YABvzaeGxEo00
-	 4l73RdzDdIcKap2fir9oXCmMZZB0jnwdkYGU5NmIjx8yaOl3Aky+yP2AOs045EccF4
-	 jDW6zKYPo7VjK/9di01tV/51/mCWMd5q6lpHX/Ko=
+	b=x1loTiDiJF+127s1/gYr74D8uXroWuq9NA5N9LT0XOf59cJ1QkdpIN9RHHTn9yXk6
+	 5kkBMA0ATmqajyZ0gSLBV1VowvxhdDrqSt0kJDnXZhL5oC+L2ybswBuUoiRCq472vf
+	 /ua4wgkGFMq8wXapFvQHgxsjOg1u0sMNeGvh7Wrg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732785AbgAVJjA (ORCPT
+        id S1732802AbgAVJjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:39:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56130 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:39:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732769AbgAVJi4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:38:56 -0500
+        id S1733129AbgAVJi7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:38:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2C242467E;
-        Wed, 22 Jan 2020 09:38:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F47E2467B;
+        Wed, 22 Jan 2020 09:38:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685936;
-        bh=jlwuOc04JQ/mlkGK+K25zV2RTSgLEUG02HcCGOeRKdg=;
+        s=default; t=1579685938;
+        bh=vyuc22PMlxG8UOEBZzuJH+BPgBY4Pz+AfMF/aKlx0OI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jCuv0VlvHhIASNl8ARt17H5ojjbeNXbWaoPPsafE7PqsCqpUCXd907E2vE7KcDOUw
-         1rf6030EttarspBFD6V5yJxZKe6IlGJ0Q/ZUW/xVcfJFmMTX3cOIlTCSTzZAuLZtHo
-         xVyTCOI0092MBwJuyd0MPbG4HZFruevsbxMIE9Z0=
+        b=hFhlfSp5PYeOhxLDLVnKe7Bv8BI09TtBXhbYoAugc7zV6HZLSvxyXVzhQju0+Ausd
+         YAvYJP/RbXCFtdQZ8Ihkuq6FEuTyMjvmxaiwBeWNqxWjCzjWkTh70St4iWy1K1bqGo
+         DqSWHB2NUjtqCIVKgNaQlHdQNFwwZyG7IK9re3ak=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Alexander Lobakin <alobakin@dlink.ru>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+        stable@vger.kernel.org, Yonglong Liu <liuyonglong@huawei.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 43/65] net: dsa: tag_qca: fix doubled Tx statistics
-Date:   Wed, 22 Jan 2020 10:29:28 +0100
-Message-Id: <20200122092757.188372831@linuxfoundation.org>
+Subject: [PATCH 4.14 44/65] net: hns: fix soft lockup when there is not enough memory
+Date:   Wed, 22 Jan 2020 10:29:29 +0100
+Message-Id: <20200122092757.377249552@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092750.976732974@linuxfoundation.org>
 References: <20200122092750.976732974@linuxfoundation.org>
@@ -61,37 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Lobakin <alobakin@dlink.ru>
+From: Yonglong Liu <liuyonglong@huawei.com>
 
-[ Upstream commit bd5874da57edd001b35cf28ae737779498c16a56 ]
+[ Upstream commit 49edd6a2c456150870ddcef5b7ed11b21d849e13 ]
 
-DSA subsystem takes care of netdev statistics since commit 4ed70ce9f01c
-("net: dsa: Refactor transmit path to eliminate duplication"), so
-any accounting inside tagger callbacks is redundant and can lead to
-messing up the stats.
-This bug is present in Qualcomm tagger since day 0.
+When there is not enough memory and napi_alloc_skb() return NULL,
+the HNS driver will print error message, and than try again, if
+the memory is not enough for a while, huge error message and the
+retry operation will cause soft lockup.
 
-Fixes: cafdc45c949b ("net-next: dsa: add Qualcomm tag RX/TX handler")
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+When napi_alloc_skb() return NULL because of no memory, we can
+get a warn_alloc() call trace, so this patch deletes the error
+message. We already use polling mode to handle irq, but the
+retry operation will render the polling weight inactive, this
+patch just return budget when the rx is not completed to avoid
+dead loop.
+
+Fixes: 36eedfde1a36 ("net: hns: Optimize hns_nic_common_poll for better performance")
+Fixes: b5996f11ea54 ("net: add Hisilicon Network Subsystem basic ethernet support")
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/dsa/tag_qca.c |    3 ---
- 1 file changed, 3 deletions(-)
+ drivers/net/ethernet/hisilicon/hns/hns_enet.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/net/dsa/tag_qca.c
-+++ b/net/dsa/tag_qca.c
-@@ -41,9 +41,6 @@ static struct sk_buff *qca_tag_xmit(stru
- 	struct dsa_slave_priv *p = netdev_priv(dev);
- 	u16 *phdr, hdr;
+--- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+@@ -669,7 +669,6 @@ static int hns_nic_poll_rx_skb(struct hn
+ 	skb = *out_skb = napi_alloc_skb(&ring_data->napi,
+ 					HNS_RX_HEAD_SIZE);
+ 	if (unlikely(!skb)) {
+-		netdev_err(ndev, "alloc rx skb fail\n");
+ 		ring->stats.sw_err_cnt++;
+ 		return -ENOMEM;
+ 	}
+@@ -1180,7 +1179,6 @@ static int hns_nic_common_poll(struct na
+ 		container_of(napi, struct hns_nic_ring_data, napi);
+ 	struct hnae_ring *ring = ring_data->ring;
  
--	dev->stats.tx_packets++;
--	dev->stats.tx_bytes += skb->len;
--
- 	if (skb_cow_head(skb, 0) < 0)
- 		return NULL;
+-try_again:
+ 	clean_complete += ring_data->poll_one(
+ 				ring_data, budget - clean_complete,
+ 				ring_data->ex_process);
+@@ -1190,7 +1188,7 @@ try_again:
+ 			napi_complete(napi);
+ 			ring->q->handle->dev->ops->toggle_ring_irq(ring, 0);
+ 		} else {
+-			goto try_again;
++			return budget;
+ 		}
+ 	}
  
 
 
