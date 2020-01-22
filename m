@@ -2,197 +2,165 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08138C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 14:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 222D3C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 14:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC1C624673
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 14:45:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E69602465B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 14:45:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="fOVdqwxM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727523AbgAVOpe (ORCPT
+        id S1728890AbgAVOpz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 09:45:34 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:38054 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725802AbgAVOpb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 09:45:31 -0500
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iuHFy-0007Es-Ar; Wed, 22 Jan 2020 15:45:22 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 05AB3101F92; Wed, 22 Jan 2020 15:45:21 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     vipul kumar <vipulk0511@gmail.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-kernel@vger.kernel.org, Stable <stable@vger.kernel.org>,
-        Srikanth Krishnakar <Srikanth_Krishnakar@mentor.com>,
-        Cedric Hombourger <Cedric_Hombourger@mentor.com>,
-        x86@kernel.org, Bin Gao <bin.gao@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Len Brown <len.brown@intel.com>,
-        Vipul Kumar <vipul_kumar@mentor.com>
-Subject: Re: [v3] x86/tsc: Unset TSC_KNOWN_FREQ and TSC_RELIABLE flags on Intel Bay Trail SoC
-In-Reply-To: <CADdC98RJpsvu_zWehNGDDN=W11rD11NSPaodg-zuaXsHuOJYTQ@mail.gmail.com>
-References: <1579617717-4098-1-git-send-email-vipulk0511@gmail.com> <87eevs7lfd.fsf@nanos.tec.linutronix.de> <CADdC98RJpsvu_zWehNGDDN=W11rD11NSPaodg-zuaXsHuOJYTQ@mail.gmail.com>
-Date:   Wed, 22 Jan 2020 15:45:21 +0100
-Message-ID: <878slzeeim.fsf@nanos.tec.linutronix.de>
+        Wed, 22 Jan 2020 09:45:55 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:57540 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725802AbgAVOpy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 09:45:54 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 482p9q2lNqz9v1Rw;
+        Wed, 22 Jan 2020 15:45:51 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=fOVdqwxM; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id zYe3Aaqe7DY8; Wed, 22 Jan 2020 15:45:51 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 482p9q1RXbz9v1Rv;
+        Wed, 22 Jan 2020 15:45:51 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1579704351; bh=juzR+YRFTPaCzQ0oEefLpxdaPNZJwaaecMFiD3I2xhk=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=fOVdqwxM7oxUuAUpQHFOrGHQaAQ5Ca3a1l277V7R/3mq6a//tarMYbEQTjxYja17o
+         xPjWsYYL/gISQIP6gKGVyMSrAiif5toC950L6u+fg/NPFd/AI3GGl6R4xb4B7vaSQi
+         xqJzkU+cY0fdTLbL1kOscEFNgf1RX+IniBenHlPQ=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 98E8D8B802;
+        Wed, 22 Jan 2020 15:45:52 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id w8iI4pNtOjos; Wed, 22 Jan 2020 15:45:52 +0100 (CET)
+Received: from [172.25.230.100] (po15451.idsi0.si.c-s.fr [172.25.230.100])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5B5878B7FE;
+        Wed, 22 Jan 2020 15:45:52 +0100 (CET)
+Subject: Re: GCC bug ? Re: [PATCH v2 10/10] powerpc/32s: Implement Kernel
+ Userspace Access Protection
+To:     Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, ruscur@russell.cc,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <cover.1552292207.git.christophe.leroy@c-s.fr>
+ <a2847248a92cb1641b1740fa121c5a30593ae662.1552292207.git.christophe.leroy@c-s.fr>
+ <87ftqfu7j1.fsf@concordia.ellerman.id.au>
+ <a008a182-f1db-073c-7d38-27bfd1fd8676@c-s.fr>
+ <20200121195501.GJ3191@gate.crashing.org>
+ <af9ad296-401c-cb5c-868a-7a6f91d1e8bc@c-s.fr>
+ <20200122133626.GL3191@gate.crashing.org>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <7e470743-b11c-81ae-fbca-c8c9aac67896@c-s.fr>
+Date:   Wed, 22 Jan 2020 15:45:52 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200122133626.GL3191@gate.crashing.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vipul,
 
-vipul kumar <vipulk0511@gmail.com> writes:
-> On Tue, Jan 21, 2020 at 11:15 PM Thomas Gleixner <tglx@linutronix.de> wrote:
 
->    Measurement with the existing code:
->    $ echo -n "SystemTime: " ; TZ=UTC date -Iseconds ; echo -n "RTC Time:
-> " ; TZ=UTC hwclock -r ; echo -n "Uptime: " ; uptime -p
->    SystemTime: 2019-12-05T17:18:37+00:00
->    RTC Time:   2019-12-05 17:18:07.255341+0000
->    Uptime: up 1 day, 7 minutes
->
->    This sample shows a difference of 30 seconds after 1 day.
->
->    Measurement with this patch:
->    SystemTime: 2019-12-11T12:06:19+00:00
->    RTC Time:   2019-12-11 12:06:19.083127+0000
->    Uptime: up 1 day, 3 minutes
->
->    With this patch, no time drift issue is observed. and tsc clocksource
-> get calibration (tsc: Refined TSC clocksource calibration: 1833.333 MHz)
-> which is missing
->    with the existing implementation.
-
-What's the frequency which is determined from the MSR? Something like
-this in dmesg:
-
-       tsc: Detected NNN MHz processor
-or
-       tsc: Detected NNN MHz TSC
-
-Also please apply the debug patch below and provide a _full_ dmesg after
-boot.
-
->> > +config X86_FEATURE_TSC_UNKNOWN_FREQ
->> > +     bool "Support to skip tsc known frequency flag"
->> > +     help
->> > +       Include support to skip X86_FEATURE_TSC_KNOWN_FREQ flag
->> > +
->> > +       X86_FEATURE_TSC_KNOWN_FREQ flag is causing time-drift on
->> Valleyview/
->> > +       Baytrail SoC.
->> > +       By selecting this option, user can skip
->> X86_FEATURE_TSC_KNOWN_FREQ
->> > +       flag to use refine tsc freq calibration.
+Le 22/01/2020 à 14:36, Segher Boessenkool a écrit :
+> On Wed, Jan 22, 2020 at 07:52:02AM +0100, Christophe Leroy wrote:
+>> Le 21/01/2020 à 20:55, Segher Boessenkool a écrit :
+>>> On Tue, Jan 21, 2020 at 05:22:32PM +0000, Christophe Leroy wrote:
+>>>> g1() should return 3, not 5.
+>>>
+>>> What makes you say that?
 >>
->> This is exactly the same problem as before. How does anyone aside of you
->> know whether to enable this or not?
->>
->     Go through the Documentation/kbuild/kconfig-language.rst but didn't
-> find related to make
->     config known to everyone. Could you please point to documentation?
+>> What makes me say that is that NULL is obviously a constant pointer and
+>> I think we are all expecting gcc to see it as a constant during kernel
+>> build, ie at -O2
+> 
+> But apparently at the point where the builtin was checked it did not
+> yet know it is passed a null pointer.
+> 
+> Please make a self-contained test case if we need further investigation?
 
-Right. And there is no proper answer to this, which makes it clear that
-a config option is not the right tool to use.
+The test in my original mail is self-contained:
 
->> And if someone enables this option then _ALL_ platforms which utilize
->> cpu_khz_from_msr() are affected. How is that any different from your
->> previous approach? This works on local kernels where you build for a
->> specific platform and you know exactly what you're doing, but not for
->> general consumption. What should a distro do with this option?
->>
->>
->     TSC frequency is already calculated in cpu_khz_from_msr() function
-> before setting these flags.
 
-Your mail client does some horrible formatting this zig-zag is
-unreadable. I'm reformatting the paragraphs below.
+#define NULL (void*)0
 
-> This patch return the same calculated TSC frequency but skipping
-> those two flags. On the basis of these flags, we decide whether we
-> skip the refined calibration and directly register it as a clocksource
-> or use refine tsc freq calibration in init_tsc_clocksource()
-> function. By default this config is disabled and if user wants to use
-> refine tsc freq calibration() then only user will enable it otherwise
-> it will go with existing implementations. So, I don't think so it will
-> break for other ATOM SoC.
+static inline int f1(void *to)
+{
+     if (__builtin_constant_p(to) && to == NULL)
+         return 3;
+     return 5;
+}
 
-It does. I explained most of the following to you in an earlier mail
-already. Let me try again.
+int g1(void)
+{
+     return f1(NULL);
+}
 
-If X86_FEATURE_TSC_RELIABLE is not set, then the TSC requires a watchdog
-clocksource. But some of those SoCs do not have anything else than TSC,
-so there is no watchdog available. As a consequence the TSC is not
-usable for high resolution timers and NOHZ. That breaks existing systems
-whether you like it or not.
 
-If X86_FEATURE_TSC_KNOWN_FREQUENCY is not set, then this delays the
-usability of the TSC for high res and NOHZ until the refined calibration
-figured out that it can't calibrate. And no, we can't know that it does
-not work upfront when the early TSC init happens. Clearing this flag
-will not break functionality, but it changes the behaviour on boot-time
-optimized systems which can obviously be considered breakage.
+Build the above with -O2 then objdump:
 
-So no, having a config knob which might be turned on and turning working
-systems into trainwrecks is simply not the way to go.
+00000000 <g1>:
+    0:    38 60 00 05     li      r3,5
+    4:    4e 80 00 20     blr
 
-What can be done is to have a command line option which enforces refined
-calibration and that option can turn off X86_FEATURE_TSC_KNOWN_FREQUENCY,
-but nothing else.
+It returns 5 so that shows __builtin_constant_p(to) was evaluated as false.
 
-> Check the cpu_khz_from_msr() function.
 
-I know that code.
+> 
+>>> "A return of 0 does not indicate that the
+>>>   value is _not_ a constant, but merely that GCC cannot prove it is a
+>>>   constant with the specified value of the '-O' option."
+>>>
+>>> (And the rules it uses for this are *not* the same as C "constant
+>>> expressions" or C "integer constant expression" or C "arithmetic
+>>> constant expression" or anything like that -- which should be already
+>>> obvious from that it changes with different -Ox).
+>>>
+>>> You can use builtin_constant_p to have the compiler do something better
+>>> if the compiler feels like it, but not anything more.  Often people
+>>> want stronger guarantees, but when they see how much less often it then
+>>> returns "true", they do not want that either.
+> 
+>> If GCC doesn't see NULL as a constant, then the above doesn't work as
+>> expected.
+> 
+> That's not the question.  Of course GCC sees it as a null pointer
+> constant, because it is one.  But this builtin does its work very
+> early, during preprocessing already.  Its concept of "constant" is
+> very different.
+> 
+> Does it work if you write just "0" instead of "NULL", btw?  "0" is
+> also a null pointer constant eventually (here, that is).
 
-> In cpu_khz_from_msr() function we are setting
-> X86_FEATURE_TSC_KNOWN_FREQ and X86_FEATURE_TSC_RELIABLE for all the
-> SoC's but in native_calibrate_tsc(), we check for vendor == INTEL and
-> CPUID > 0x15 and then at the end of function, will enable
-> X86_FEATURE_TSC_RELIABLE for INTEL_FAM6_ATOM_GOLDMONT SoC.
->
-> Do we need to set the same flag in two different functions as it will be
-> set in cpu_khz_from_msr() for all SoCs ?
+No it doesn't.
 
-cpu_khz_from_msr() does not handle INTEL_FAM6_ATOM_GOLDMONT or can you
-find that in tsc_msr_cpu_ids[]? Making half informed claims is not
-solving anything.
+It works if you change the 'void *to' to 'unsigned long to'
 
-Thanks,
+> 
+> The question is why (and if, it still needs verification after all)
+> builtin_constant_p didn't return true.
 
-        tglx
+I sent a patch to overcome the problem. See 
+https://patchwork.ozlabs.org/patch/1227249/
 
-8<------------------
-
---- a/arch/x86/kernel/tsc_msr.c
-+++ b/arch/x86/kernel/tsc_msr.c
-@@ -94,16 +94,20 @@ unsigned long cpu_khz_from_msr(void)
- 	if (freq_desc->msr_plat) {
- 		rdmsr(MSR_PLATFORM_INFO, lo, hi);
- 		ratio = (lo >> 8) & 0xff;
-+		pr_info("MSR_PINFO: %08x%08x -> %u\n", hi, lo, ratio);
- 	} else {
- 		rdmsr(MSR_IA32_PERF_STATUS, lo, hi);
- 		ratio = (hi >> 8) & 0x1f;
-+		pr_info("MSR_PSTAT: %08x%08x -> %u\n", hi, lo, ratio);
- 	}
- 
- 	/* Get FSB FREQ ID */
- 	rdmsr(MSR_FSB_FREQ, lo, hi);
-+	pr_info("MSR_FSBF: %08x%08x\n", hi, lo);
- 
- 	/* Map CPU reference clock freq ID(0-7) to CPU reference clock freq(KHz) */
- 	freq = freq_desc->freqs[lo & 0x7];
-+	pr_info("REF_CLOCK: %08x\n", freq);
- 
- 	/* TSC frequency = maximum resolved freq * maximum resolved bus ratio */
- 	res = freq * ratio;
+Christophe
