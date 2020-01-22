@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 348A6C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A656BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:47:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 078BC2468C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:46:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 724272468A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:47:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686418;
-	bh=JPO2DeKM6qO8kI6UIuEs/caKlIsPk7xRdMr3G9SLUTs=;
+	s=default; t=1579686424;
+	bh=vaofyrLwmOJJ91LZD0XAQw7z34u1sziwFQ2dIIgGd7o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xdxa40Fax77f4Eu95kHi23ejnn/SQfMTxXdETw12toFv149PYH8sXA8PyCkbitStG
-	 PnRVcZsZsgTAZ/Rs74H6pKF5XNwmk3qBTAQoEwQgXcySNoZqTzaqEcX+mXUN0r3Yjs
-	 bixrwM3o8b7PRXoQWWP+DU6K78HR5pQNVIA7Eyrg=
+	b=BxenKUUSzREM+icrk9+sYo8f93brK3wWyTdYOic1VgV86cVH8xS79b+o0u0NlZTw6
+	 6DEGeoM1DO8M7Gmp5NBh2JJfm9HjOFTgDm0vyMtww4GBOTdEArpQhb08hX2caCruY+
+	 xxHxWI0Af41zQVl+Y3LypDzPgW98N/2k6wZrdWTg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731586AbgAVJq5 (ORCPT
+        id S1731615AbgAVJrD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:46:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34960 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:47:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34702 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733268AbgAVJmx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:42:53 -0500
+        id S2387770AbgAVJmn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:42:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38CC424686;
-        Wed, 22 Jan 2020 09:42:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8704A24689;
+        Wed, 22 Jan 2020 09:42:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686172;
-        bh=JPO2DeKM6qO8kI6UIuEs/caKlIsPk7xRdMr3G9SLUTs=;
+        s=default; t=1579686163;
+        bh=vaofyrLwmOJJ91LZD0XAQw7z34u1sziwFQ2dIIgGd7o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K43UDdL6j9Rnf0PZSmyhBLHpsJ8reVkosZVtnOyBYlNm7ACddnrxzc1Aa62FjoWf/
-         kZbTcwq/dOSCGFt6RfB3HHJDF8/CjwBB2j9RPBrgp5+phe5D8vWC4ZKqEWbwkPez+F
-         5hQzA+WHmMn6l4fGE26uIMPQOADtMgZFpEprO+/0=
+        b=UetGTManXrFFxctSzCY6QYDOtZscZkioOCJEOhjvoX9i91FlWOp+BjN+POj+m/v7B
+         /h7aVRSNhdelGX6/fHDacggZB97G25WSY6TL2oZOti1lmZ1zJoBKbwiC3BtvHZvmSL
+         pxws3sknN8X4smNtuwS8oyFlUECmi96mkaxfDIPE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, hayeswang <hayeswang@realtek.com>,
-        Johan Hovold <johan@kernel.org>,
+        stable@vger.kernel.org, Yonglong Liu <liuyonglong@huawei.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 074/103] r8152: add missing endpoint sanity check
-Date:   Wed, 22 Jan 2020 10:29:30 +0100
-Message-Id: <20200122092814.306814188@linuxfoundation.org>
+Subject: [PATCH 4.19 070/103] net: hns: fix soft lockup when there is not enough memory
+Date:   Wed, 22 Jan 2020 10:29:26 +0100
+Message-Id: <20200122092813.954240644@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
 References: <20200122092803.587683021@linuxfoundation.org>
@@ -60,35 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Yonglong Liu <liuyonglong@huawei.com>
 
-[ Upstream commit 86f3f4cd53707ceeec079b83205c8d3c756eca93 ]
+[ Upstream commit 49edd6a2c456150870ddcef5b7ed11b21d849e13 ]
 
-Add missing endpoint sanity check to probe in order to prevent a
-NULL-pointer dereference (or slab out-of-bounds access) when retrieving
-the interrupt-endpoint bInterval on ndo_open() in case a device lacks
-the expected endpoints.
+When there is not enough memory and napi_alloc_skb() return NULL,
+the HNS driver will print error message, and than try again, if
+the memory is not enough for a while, huge error message and the
+retry operation will cause soft lockup.
 
-Fixes: 40a82917b1d3 ("net/usb/r8152: enable interrupt transfer")
-Cc: hayeswang <hayeswang@realtek.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+When napi_alloc_skb() return NULL because of no memory, we can
+get a warn_alloc() call trace, so this patch deletes the error
+message. We already use polling mode to handle irq, but the
+retry operation will render the polling weight inactive, this
+patch just return budget when the rx is not completed to avoid
+dead loop.
+
+Fixes: 36eedfde1a36 ("net: hns: Optimize hns_nic_common_poll for better performance")
+Fixes: b5996f11ea54 ("net: add Hisilicon Network Subsystem basic ethernet support")
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/usb/r8152.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/hisilicon/hns/hns_enet.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/drivers/net/usb/r8152.c
-+++ b/drivers/net/usb/r8152.c
-@@ -5167,6 +5167,9 @@ static int rtl8152_probe(struct usb_inte
- 		return -ENODEV;
+--- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+@@ -569,7 +569,6 @@ static int hns_nic_poll_rx_skb(struct hn
+ 	skb = *out_skb = napi_alloc_skb(&ring_data->napi,
+ 					HNS_RX_HEAD_SIZE);
+ 	if (unlikely(!skb)) {
+-		netdev_err(ndev, "alloc rx skb fail\n");
+ 		ring->stats.sw_err_cnt++;
+ 		return -ENOMEM;
+ 	}
+@@ -1060,7 +1059,6 @@ static int hns_nic_common_poll(struct na
+ 		container_of(napi, struct hns_nic_ring_data, napi);
+ 	struct hnae_ring *ring = ring_data->ring;
+ 
+-try_again:
+ 	clean_complete += ring_data->poll_one(
+ 				ring_data, budget - clean_complete,
+ 				ring_data->ex_process);
+@@ -1070,7 +1068,7 @@ try_again:
+ 			napi_complete(napi);
+ 			ring->q->handle->dev->ops->toggle_ring_irq(ring, 0);
+ 		} else {
+-			goto try_again;
++			return budget;
+ 		}
  	}
  
-+	if (intf->cur_altsetting->desc.bNumEndpoints < 3)
-+		return -ENODEV;
-+
- 	usb_reset_device(udev);
- 	netdev = alloc_etherdev(sizeof(struct r8152));
- 	if (!netdev) {
 
 
