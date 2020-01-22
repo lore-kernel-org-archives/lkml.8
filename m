@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6689FC33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E41C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32E262468C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:46:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF5182467B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:46:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686385;
-	bh=tUh9PihcYxzFYZBFE2oWj/PpwZ5irhZl9ayz1NK6Wlc=;
+	s=default; t=1579686387;
+	bh=GV0cVfM3rOwlCRUBvizdFqhrMkxgQw+dIKL/KIt5lXI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WCIZUL7OtVXEyDPocaQMsyKX6R8mdRK4kWkHnDOVJ8YEnKVSTz8R9evMQW1mBbyQw
-	 Nt5xlCAti9KJ0ADi4TC276bDe6rEc5aJP9TfeHZKAkYcGRXdSMnavDx2ml/1FOje4F
-	 Jczr5P7ZzWyrf/4u1foPWhc4mZpb+0+svTM3XhaY=
+	b=ALwI31ZIpiAPyM8vZ0KVCkywVX/AFNpS8Zm4eBQTcwRcmvLJvJYQ841dIuF7yrY0e
+	 RJdxnVLpbJaNfk5bF6DjBM9iHbHTxYBxGCMUPk/W2uxIEtHqHTbzJJYJEz0FtjK76k
+	 1dzK114porRQmk65OtL8PN//uxxVJqA+H8clEMwg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387600AbgAVJnm (ORCPT
+        id S2387905AbgAVJnh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:43:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36262 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387898AbgAVJnh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 Jan 2020 04:43:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36084 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387691AbgAVJnc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:43:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24A142468D;
-        Wed, 22 Jan 2020 09:43:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 475D724686;
+        Wed, 22 Jan 2020 09:43:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686216;
-        bh=tUh9PihcYxzFYZBFE2oWj/PpwZ5irhZl9ayz1NK6Wlc=;
+        s=default; t=1579686211;
+        bh=GV0cVfM3rOwlCRUBvizdFqhrMkxgQw+dIKL/KIt5lXI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xGne94NtdD4eVKZzgsSJ+nYy6ei3PQVJVCSaJVuNOAZmIkcv/v9cvYUocmw/FSJRW
-         JsilWjCOltvn/x0VtOk+FETqePclYhTyibf4ldBGu0gSzDP5Cn5VwBxxmyNlwdmjbs
-         +toKHG6cHdUAcDpmSReklxm4m7/TgWRmtYC4fkN8=
+        b=sWgVx+VgHJWWYFc+kv82LAHhf+fhjbvN41WQo9uaYRBU7Du+zigoRIZnZeJPTFGQA
+         DAVB2LIQUv3uGK3mln4aarR9BhrK2qz1KsBI04Kanv3eeyBI9ppbMkC2MgEhWeoJWp
+         E7MGAw4tulvFM3OkYT+WZPe1OW94QAVrwqV1gdds=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon Derrick <jonathan.derrick@intel.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Sushma Kalakota <sushmax.kalakota@intel.com>
-Subject: [PATCH 4.19 090/103] drm/nouveau/bar/gf100: ensure BAR is mapped
-Date:   Wed, 22 Jan 2020 10:29:46 +0100
-Message-Id: <20200122092815.731691833@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Angelo Dureghello <angelo.dureghello@timesys.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 4.19 088/103] mtd: devices: fix mchp23k256 read and write
+Date:   Wed, 22 Jan 2020 10:29:44 +0100
+Message-Id: <20200122092815.524815562@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
 References: <20200122092803.587683021@linuxfoundation.org>
@@ -60,33 +61,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Derrick <jonathan.derrick@intel.com>
+From: Angelo Dureghello <angelo.dureghello@timesys.com>
 
-commit 12e08beb32d64b6070b718630490db83dd321c8c upstream.
+commit 14f89e088155314d311e4d4dd9f2b4ccaeef92b2 upstream.
 
-If the BAR is zero size, it indicates it was never successfully mapped.
-Ensure that the BAR is valid during initialization before attempting to
-use it.
+Due to the use of sizeof(), command size set for the spi transfer
+was wrong. Driver was sending and receiving always 1 byte less
+and especially on write, it was hanging.
 
-Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
-Signed-off-by: Sushma Kalakota <sushmax.kalakota@intel.com>
+echo -n -e "\\x1\\x2\\x3\\x4" > /dev/mtd1
+
+And read part too now works as expected.
+
+hexdump -C -n16 /dev/mtd1
+00000000  01 02 03 04 ab f3 ad c2  ab e3 f4 36 dd 38 04 15
+00000010
+
+Fixes: 4379075a870b ("mtd: mchp23k256: Add support for mchp23lcv1024")
+Signed-off-by: Angelo Dureghello <angelo.dureghello@timesys.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/nouveau/nvkm/subdev/bar/gf100.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/mtd/devices/mchp23k256.c |   20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
 
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/bar/gf100.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/bar/gf100.c
-@@ -94,6 +94,8 @@ gf100_bar_oneinit_bar(struct gf100_bar *
+--- a/drivers/mtd/devices/mchp23k256.c
++++ b/drivers/mtd/devices/mchp23k256.c
+@@ -68,15 +68,17 @@ static int mchp23k256_write(struct mtd_i
+ 	struct spi_transfer transfer[2] = {};
+ 	struct spi_message message;
+ 	unsigned char command[MAX_CMD_SIZE];
+-	int ret;
++	int ret, cmd_len;
+ 
+ 	spi_message_init(&message);
+ 
++	cmd_len = mchp23k256_cmdsz(flash);
++
+ 	command[0] = MCHP23K256_CMD_WRITE;
+ 	mchp23k256_addr2cmd(flash, to, command);
+ 
+ 	transfer[0].tx_buf = command;
+-	transfer[0].len = mchp23k256_cmdsz(flash);
++	transfer[0].len = cmd_len;
+ 	spi_message_add_tail(&transfer[0], &message);
+ 
+ 	transfer[1].tx_buf = buf;
+@@ -92,8 +94,8 @@ static int mchp23k256_write(struct mtd_i
+ 	if (ret)
  		return ret;
  
- 	bar_len = device->func->resource_size(device, bar_nr);
-+	if (!bar_len)
-+		return -ENOMEM;
- 	if (bar_nr == 3 && bar->bar2_halve)
- 		bar_len >>= 1;
+-	if (retlen && message.actual_length > sizeof(command))
+-		*retlen += message.actual_length - sizeof(command);
++	if (retlen && message.actual_length > cmd_len)
++		*retlen += message.actual_length - cmd_len;
  
+ 	return 0;
+ }
+@@ -105,16 +107,18 @@ static int mchp23k256_read(struct mtd_in
+ 	struct spi_transfer transfer[2] = {};
+ 	struct spi_message message;
+ 	unsigned char command[MAX_CMD_SIZE];
+-	int ret;
++	int ret, cmd_len;
+ 
+ 	spi_message_init(&message);
+ 
++	cmd_len = mchp23k256_cmdsz(flash);
++
+ 	memset(&transfer, 0, sizeof(transfer));
+ 	command[0] = MCHP23K256_CMD_READ;
+ 	mchp23k256_addr2cmd(flash, from, command);
+ 
+ 	transfer[0].tx_buf = command;
+-	transfer[0].len = mchp23k256_cmdsz(flash);
++	transfer[0].len = cmd_len;
+ 	spi_message_add_tail(&transfer[0], &message);
+ 
+ 	transfer[1].rx_buf = buf;
+@@ -130,8 +134,8 @@ static int mchp23k256_read(struct mtd_in
+ 	if (ret)
+ 		return ret;
+ 
+-	if (retlen && message.actual_length > sizeof(command))
+-		*retlen += message.actual_length - sizeof(command);
++	if (retlen && message.actual_length > cmd_len)
++		*retlen += message.actual_length - cmd_len;
+ 
+ 	return 0;
+ }
 
 
