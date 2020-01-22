@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D12EDC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:34:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28DE2C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A58524672
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:34:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDEFE2467E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:34:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685666;
-	bh=2WNeRsDryRBzpXQN44EbufOyKvzcVAspZ6zfgL6yVVw=;
+	s=default; t=1579685671;
+	bh=81KNmZ9DMcJBn4j49ZbLc7k8abGhSloqgZBSa4l0Wp8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wGk21ed1CLVrby8cNK8GHE/0R+pJNSlglhwMVE6ewvsU9efV3d2jMEqXJani7lUvR
-	 U5KHfnPZ86y0tdWU4uSsxH48N6wo3POTFbu0gEfJUrjayejpo6T4/Li8/2M4DYGaBu
-	 AqcqIxxLUe6coZpe0nremI/DYzk9nBtHhBJZZvCU=
+	b=Qb7W4enPgdIJXFX9N28i5AoxMdneCfdU11YPUDdZRSG3+ZJd43UV93jrg8izEcjNb
+	 NLKuZLz/VtpgI49+LIw+4YRHDrITV3Th/MnvkyBRpsH9ktWwTxX8r92Ccua8n3YwyK
+	 2F3pf72uyzjmN7bNeGR67W6gyekUBMQDbgIBCZfc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730785AbgAVJeZ (ORCPT
+        id S1730900AbgAVJea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:34:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48680 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:34:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729299AbgAVJeQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:34:16 -0500
+        id S1730217AbgAVJe2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:34:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28C332467F;
-        Wed, 22 Jan 2020 09:34:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7994824672;
+        Wed, 22 Jan 2020 09:34:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685655;
-        bh=2WNeRsDryRBzpXQN44EbufOyKvzcVAspZ6zfgL6yVVw=;
+        s=default; t=1579685667;
+        bh=81KNmZ9DMcJBn4j49ZbLc7k8abGhSloqgZBSa4l0Wp8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SW6dmiQ4mAplkXmxKpXVKyRStrkObEDqxWlJ4OkwhbUwIpliHUHkat08k/6OEkoSz
-         cpZUUTjeApB8ov70HaCG59zZS8dj/Ux2DaEikV0h4lELyQz/tpYRwlD5GmJagnUJsD
-         wXSgBX6C6uUTEwp2IQt5pmsPsirBU26IBhMguqno=
+        b=uXYELX/XxREbOgsAaEMYEgFwoNQXGTZ22txJg+9bEt/h2uXNO+3I+pzCg1wXv8b85
+         5fanbdkVKGVQem5c9ow8Um5EQ9+wAKKZZ8T80Sd8wIVpuF9Pxn9e/SJx/J4BjqzERC
+         LuoZ5NjOtFHA/vAFN+VyapMWlFT+vPRIeZd4igJs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Luo Jiaxing <luojiaxing@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.9 26/97] scsi: enclosure: Fix stale device oops with hot replug
-Date:   Wed, 22 Jan 2020 10:28:30 +0100
-Message-Id: <20200122092800.422150517@linuxfoundation.org>
+        stable@vger.kernel.org, Marian Mihailescu <mihailescu2m@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: [PATCH 4.9 31/97] clk: samsung: exynos5420: Preserve CPU clocks configuration during suspend/resume
+Date:   Wed, 22 Jan 2020 10:28:35 +0100
+Message-Id: <20200122092801.442134657@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092755.678349497@linuxfoundation.org>
 References: <20200122092755.678349497@linuxfoundation.org>
@@ -62,45 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Bottomley <James.Bottomley@HansenPartnership.com>
+From: Marian Mihailescu <mihailescu2m@gmail.com>
 
-commit 529244bd1afc102ab164429d338d310d5d65e60d upstream.
+commit e21be0d1d7bd7f78a77613f6bcb6965e72b22fc1 upstream.
 
-Doing an add/remove/add on a SCSI device in an enclosure leads to an oops
-caused by poisoned values in the enclosure device list pointers.  The
-reason is because we are keeping the enclosure device across the enclosed
-device add/remove/add but the current code is doing a
-device_add/device_del/device_add on it.  This is the wrong thing to do in
-sysfs, so fix it by not doing a device_del on the enclosure device simply
-because of a hot remove of the drive in the slot.
+Save and restore top PLL related configuration registers for big (APLL)
+and LITTLE (KPLL) cores during suspend/resume cycle. So far, CPU clocks
+were reset to default values after suspend/resume cycle and performance
+after system resume was affected when performance governor has been selected.
 
-[mkp: added missing email addresses]
-
-Fixes: 43d8eb9cfd0a ("[SCSI] ses: add support for enclosure component hot removal")
-Link: https://lore.kernel.org/r/1578532892.3852.10.camel@HansenPartnership.com
-Signed-off-by: James Bottomley <James.Bottomley@HansenPartnership.com>
-Reported-by: Luo Jiaxing <luojiaxing@huawei.com>
-Tested-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 773424326b51 ("clk: samsung: exynos5420: add more registers to restore list")
+Signed-off-by: Marian Mihailescu <mihailescu2m@gmail.com>
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/misc/enclosure.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/clk/samsung/clk-exynos5420.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/misc/enclosure.c
-+++ b/drivers/misc/enclosure.c
-@@ -419,10 +419,9 @@ int enclosure_remove_device(struct enclo
- 		cdev = &edev->component[i];
- 		if (cdev->dev == dev) {
- 			enclosure_remove_links(cdev);
--			device_del(&cdev->cdev);
- 			put_device(dev);
- 			cdev->dev = NULL;
--			return device_add(&cdev->cdev);
-+			return 0;
- 		}
- 	}
- 	return -ENODEV;
+--- a/drivers/clk/samsung/clk-exynos5420.c
++++ b/drivers/clk/samsung/clk-exynos5420.c
+@@ -170,6 +170,8 @@ static const unsigned long exynos5x_clk_
+ 	GATE_BUS_CPU,
+ 	GATE_SCLK_CPU,
+ 	CLKOUT_CMU_CPU,
++	APLL_CON0,
++	KPLL_CON0,
+ 	CPLL_CON0,
+ 	DPLL_CON0,
+ 	EPLL_CON0,
 
 
