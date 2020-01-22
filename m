@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80587C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B91CC33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5576E2467B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:47:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCA132467B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:47:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686431;
-	bh=lw0n30HJ5egXyCrAZm3hjuOlIemciB2e6c2wPKuVijM=;
+	s=default; t=1579686433;
+	bh=NN3XaH1oGHRZjvkiDqVdyrqgwihZbowjQ5VmMe5uonE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1n3fyLN4USbxYaR2133+DrZ3d1ODycFVZZZyluSyAWbShnqTJfA4fPeJqI53WpyQv
-	 qF4pHjNQlD7V9xG7FxkYI0FFrWGMWE5ko38xBvfb4HP/yF3sQScnC/AWccFYswkb3G
-	 YbJBqvA9f/sjNYhKpaLt4j+s0SqWDEXniv6Xeosg=
+	b=AreJCga3bqHJ/myX2bKmDwoQY5pkNRHv5xw7Z5dihNObp9OVKU2b3pNgmy0wzcM2f
+	 Do3oc1OFGRwKlj0t8nBQL6nUSujqAKh/vQ6djH+D5FEwEQG81DIVpegkw5/kSGKMKh
+	 BAIyHwloTzE7KgC+/fqUcSoe+ZEFteQA/K9L4IIc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731897AbgAVJrK (ORCPT
+        id S1733220AbgAVJmg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:47:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34574 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:42:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387453AbgAVJmi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:42:38 -0500
+        id S2387713AbgAVJm0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:42:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B63012467B;
-        Wed, 22 Jan 2020 09:42:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FDE624684;
+        Wed, 22 Jan 2020 09:42:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686158;
-        bh=lw0n30HJ5egXyCrAZm3hjuOlIemciB2e6c2wPKuVijM=;
+        s=default; t=1579686145;
+        bh=NN3XaH1oGHRZjvkiDqVdyrqgwihZbowjQ5VmMe5uonE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hlK/cNMQy6iwicxxVnsjksFvl2lpizV1krRoLMjQYOwKdD+F3nfODdTk9s0L7+tkU
-         S4szFo/K94UfebmPhUqttOLg3QGg4H8KCcH7+yIfQcPdCnw08P/yHVeqZ/mpiOpH7i
-         /toIMd+a8XFu4//ntwxdYSVwwMGwvYCbgegeMl88=
+        b=qkx3GdpQh5tGZbvpLsyE5yDCjbh+VENAO3oM5/Iw7Kx2DeO+dULTcjnh2jSIIUv1F
+         lCjeXkYbb6oPZq5mYBrYA4UXAvQIy5nRCQIhWDVnmkfqpeQCBDVFTwtpNe0bJMxb8z
+         mwhL3OI223cQne5FRI2evNKbp/Ka2InVXwOVkuJ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mohammed Gamal <mgamal@redhat.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 068/103] hv_netvsc: Fix memory leak when removing rndis device
-Date:   Wed, 22 Jan 2020 10:29:24 +0100
-Message-Id: <20200122092813.776028007@linuxfoundation.org>
+        stable@vger.kernel.org, Stefan Mavrodiev <stefan@olimex.com>,
+        Maxime Ripard <maxime@cerno.tech>
+Subject: [PATCH 4.19 026/103] arm64: dts: allwinner: a64: olinuxino: Fix SDIO supply regulator
+Date:   Wed, 22 Jan 2020 10:28:42 +0100
+Message-Id: <20200122092807.742932532@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
 References: <20200122092803.587683021@linuxfoundation.org>
@@ -60,61 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mohammed Gamal <mgamal@redhat.com>
+From: Stefan Mavrodiev <stefan@olimex.com>
 
-[ Upstream commit 536dc5df2808efbefc5acee334d3c4f701790ec0 ]
+commit 3d615c2fc2d111b51d2e20516b920138d4ae29a2 upstream.
 
-kmemleak detects the following memory leak when hot removing
-a network device:
+A64-OLinuXino uses DCDC1 (VCC-IO) for MMC1 supply. In commit 916b68cfe4b5
+("arm64: dts: a64-olinuxino: Enable RTL8723BS WiFi") ALDO2 is set, which is
+VCC-PL. Since DCDC1 is always present, the boards are working without a
+problem.
 
-unreferenced object 0xffff888083f63600 (size 256):
-  comm "kworker/0:1", pid 12, jiffies 4294831717 (age 1113.676s)
-  hex dump (first 32 bytes):
-    00 40 c7 33 80 88 ff ff 00 00 00 00 10 00 00 00  .@.3............
-    00 00 00 00 ad 4e ad de ff ff ff ff 00 00 00 00  .....N..........
-  backtrace:
-    [<00000000d4a8f5be>] rndis_filter_device_add+0x117/0x11c0 [hv_netvsc]
-    [<000000009c02d75b>] netvsc_probe+0x5e7/0xbf0 [hv_netvsc]
-    [<00000000ddafce23>] vmbus_probe+0x74/0x170 [hv_vmbus]
-    [<00000000046e64f1>] really_probe+0x22f/0xb50
-    [<000000005cc35eb7>] driver_probe_device+0x25e/0x370
-    [<0000000043c642b2>] bus_for_each_drv+0x11f/0x1b0
-    [<000000005e3d09f0>] __device_attach+0x1c6/0x2f0
-    [<00000000a72c362f>] bus_probe_device+0x1a6/0x260
-    [<0000000008478399>] device_add+0x10a3/0x18e0
-    [<00000000cf07b48c>] vmbus_device_register+0xe7/0x1e0 [hv_vmbus]
-    [<00000000d46cf032>] vmbus_add_channel_work+0x8ab/0x1770 [hv_vmbus]
-    [<000000002c94bb64>] process_one_work+0x919/0x17d0
-    [<0000000096de6781>] worker_thread+0x87/0xb40
-    [<00000000fbe7397e>] kthread+0x333/0x3f0
-    [<000000004f844269>] ret_from_fork+0x3a/0x50
+This patch sets the correct regulator.
 
-rndis_filter_device_add() allocates an instance of struct rndis_device
-which never gets deallocated as rndis_filter_device_remove() sets
-net_device->extension which points to the rndis_device struct to NULL,
-leaving the rndis_device dangling.
-
-Since net_device->extension is eventually freed in free_netvsc_device(),
-we refrain from setting it to NULL inside rndis_filter_device_remove()
-
-Signed-off-by: Mohammed Gamal <mgamal@redhat.com>
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 916b68cfe4b5 ("arm64: dts: a64-olinuxino: Enable RTL8723BS WiFi")
+Cc: stable@vger.kernel.org # v4.16+
+Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/hyperv/rndis_filter.c |    2 --
- 1 file changed, 2 deletions(-)
 
---- a/drivers/net/hyperv/rndis_filter.c
-+++ b/drivers/net/hyperv/rndis_filter.c
-@@ -1375,8 +1375,6 @@ void rndis_filter_device_remove(struct h
- 	/* Halt and release the rndis device */
- 	rndis_filter_halt_device(net_dev, rndis_dev);
- 
--	net_dev->extension = NULL;
--
- 	netvsc_device_remove(dev);
- }
- 
+---
+ arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
+@@ -77,7 +77,7 @@
+ &mmc1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc1_pins>;
+-	vmmc-supply = <&reg_aldo2>;
++	vmmc-supply = <&reg_dcdc1>;
+ 	vqmmc-supply = <&reg_dldo4>;
+ 	mmc-pwrseq = <&wifi_pwrseq>;
+ 	bus-width = <4>;
 
 
