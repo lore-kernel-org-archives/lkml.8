@@ -2,296 +2,182 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69038C33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29102C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D7FD21835
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:57:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cxtogSou"
+	by mail.kernel.org (Postfix) with ESMTP id EBCA521835
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:58:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726170AbgAVW5D (ORCPT
+        id S1726590AbgAVW6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 17:57:03 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:34759 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726049AbgAVW5D (ORCPT
+        Wed, 22 Jan 2020 17:58:09 -0500
+Received: from mail-io1-f72.google.com ([209.85.166.72]:51050 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725943AbgAVW6J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 17:57:03 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1579733822; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=6Q/w18BMl3i2dx6uQiAibJyd6QCMOZQF1sn6sEp4QGs=;
- b=cxtogSouA+JZz3WNL6bYfUEjNBn1QVJNTJ21978lEWtM7/hmECVJsT95+jSm4o7VGyaar5XF
- nMZyUey3TbfdXmPUqrZQkFoJyn25sjoWwaBBoT3etMO4hLLThQiKVkaD+eUEWEjOv73ZMdg6
- pvgj2mY+xKGs2YjrzRgEv6Q4mR0=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e28d33b.7fb4aaa301b8-smtp-out-n01;
- Wed, 22 Jan 2020 22:56:59 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id EDEE5C447A1; Wed, 22 Jan 2020 22:56:57 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: rishabhb)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id EE3ADC433CB;
-        Wed, 22 Jan 2020 22:56:56 +0000 (UTC)
+        Wed, 22 Jan 2020 17:58:09 -0500
+Received: by mail-io1-f72.google.com with SMTP id e13so754415iob.17
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 14:58:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=pmeMxbWQ6wl2cb2vu9yDocNVRieqKicTUlv6dyeXBWY=;
+        b=aT9UdC7s8YgZNF6raGuqb+Rmd468/Xt4WGYg1FjzAMBvOxgK9S6u6/0tmKgQU70EHZ
+         NeONod3Al9kBJHtFC2+l/6AYc0/aoCGhfWYpucDd0YOQ7+njfuXbZ/s1Zct5danfNlpm
+         QdT7BXQ4Tlv2petavBgETHEF3RIMLgrg1ykXi48GI/hHmsNNkxKkyPLCpibn1BtE/ZRP
+         StnQ+o6xus9Itn7dv0bS8N1/a6Ek471lrAiScuExit00Vv4qx2sCo5Wb2vsd/EZ24qzF
+         xbtK+zSv14LhiICkACNNrcfsBmhWcFQ/7hZQXETzTrvFFz2w142/RkcmZ4B1Whwoj+QP
+         qLew==
+X-Gm-Message-State: APjAAAX6wuprCLHxMFJoOLw2hvZCX8gDvyJ9FNww65vjuPBcIKiAVZ21
+        wZS46nz43eDxPI2fdh/IrAgfT6nupo7IgKw1rDw4DlPH767x
+X-Google-Smtp-Source: APXvYqzXLkDDsC6ww6FF8B05eKmDWNktPk3hOkAS2IWHITpAcLcHBMw3boLbGQ/KrDbSqHRQkL+lr3ueogAs2lRHgersDa4X6jGJ
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 22 Jan 2020 14:56:56 -0800
-From:   rishabhb@codeaurora.org
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [PATCH v2 2/8] remoteproc: qcom: Introduce driver to store pil
- info in IMEM
-In-Reply-To: <20191227053215.423811-3-bjorn.andersson@linaro.org>
-References: <20191227053215.423811-1-bjorn.andersson@linaro.org>
- <20191227053215.423811-3-bjorn.andersson@linaro.org>
-Message-ID: <60c10082ba90fbba0f056df8575d205f@codeaurora.org>
-X-Sender: rishabhb@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+X-Received: by 2002:a5d:9514:: with SMTP id d20mr9019317iom.198.1579733888227;
+ Wed, 22 Jan 2020 14:58:08 -0800 (PST)
+Date:   Wed, 22 Jan 2020 14:58:08 -0800
+In-Reply-To: <000000000000de50d7059ba6acd5@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000003f62d6059cc27590@google.com>
+Subject: Re: KASAN: use-after-free Read in v4l2_release (3)
+From:   syzbot <syzbot+75287f75e2fedd69d680@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, bnvandana@gmail.com,
+        hverkuil-cisco@xs4all.nl, laurent.pinchart@ideasonboard.com,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-usb@vger.kernel.org, mchehab@kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-26 21:32, Bjorn Andersson wrote:
-> A region in IMEM is used to communicate load addresses of remoteproc to
-> post mortem debug tools. Implement a driver that can be used to store
-> this information in order to enable these tools to process collected
-> ramdumps.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
-> 
-> Changes since v1:
-> - Added helper to probe defer clients
-> - Fixed logical bug in slot scan
-> - Added SPDX header in header file
-> 
->  drivers/remoteproc/Kconfig         |   3 +
->  drivers/remoteproc/Makefile        |   1 +
->  drivers/remoteproc/qcom_pil_info.c | 150 +++++++++++++++++++++++++++++
->  drivers/remoteproc/qcom_pil_info.h |   8 ++
->  4 files changed, 162 insertions(+)
->  create mode 100644 drivers/remoteproc/qcom_pil_info.c
->  create mode 100644 drivers/remoteproc/qcom_pil_info.h
-> 
-> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
-> index 94afdde4bc9f..0798602e355a 100644
-> --- a/drivers/remoteproc/Kconfig
-> +++ b/drivers/remoteproc/Kconfig
-> @@ -85,6 +85,9 @@ config KEYSTONE_REMOTEPROC
->  	  It's safe to say N here if you're not interested in the Keystone
->  	  DSPs or just want to use a bare minimum kernel.
-> 
-> +config QCOM_PIL_INFO
-> +	tristate
-> +
->  config QCOM_RPROC_COMMON
->  	tristate
-> 
-> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
-> index 00f09e658cb3..c1b46e9033cb 100644
-> --- a/drivers/remoteproc/Makefile
-> +++ b/drivers/remoteproc/Makefile
-> @@ -14,6 +14,7 @@ obj-$(CONFIG_OMAP_REMOTEPROC)		+= omap_remoteproc.o
->  obj-$(CONFIG_WKUP_M3_RPROC)		+= wkup_m3_rproc.o
->  obj-$(CONFIG_DA8XX_REMOTEPROC)		+= da8xx_remoteproc.o
->  obj-$(CONFIG_KEYSTONE_REMOTEPROC)	+= keystone_remoteproc.o
-> +obj-$(CONFIG_QCOM_PIL_INFO)		+= qcom_pil_info.o
->  obj-$(CONFIG_QCOM_RPROC_COMMON)		+= qcom_common.o
->  obj-$(CONFIG_QCOM_Q6V5_COMMON)		+= qcom_q6v5.o
->  obj-$(CONFIG_QCOM_Q6V5_ADSP)		+= qcom_q6v5_adsp.o
-> diff --git a/drivers/remoteproc/qcom_pil_info.c
-> b/drivers/remoteproc/qcom_pil_info.c
-> new file mode 100644
-> index 000000000000..b0897ae9eae5
-> --- /dev/null
-> +++ b/drivers/remoteproc/qcom_pil_info.c
-> @@ -0,0 +1,150 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (c) 2019 Linaro Ltd.
-> + */
-> +#include <linux/module.h>
-> +#include <linux/kernel.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/mutex.h>
-> +#include <linux/regmap.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/slab.h>
-> +
-> +struct pil_reloc_entry {
-> +	char name[8];
-> +	__le64 base;
-> +	__le32 size;
-> +} __packed;
-> +
-> +#define PIL_INFO_SIZE	200
-> +#define PIL_INFO_ENTRIES (PIL_INFO_SIZE / sizeof(struct 
-> pil_reloc_entry))
-> +
-> +struct pil_reloc {
-> +	struct device *dev;
-> +	struct regmap *map;
-> +	u32 offset;
-> +	int val_bytes;
-> +
-> +	struct pil_reloc_entry entries[PIL_INFO_ENTRIES];
-> +};
-> +
-> +static struct pil_reloc *_reloc;
-> +static DEFINE_MUTEX(reloc_mutex);
-> +
-> +/**
-> + * qcom_pil_info_store() - store PIL information of image in IMEM
-> + * @image:	name of the image
-> + * @base:	base address of the loaded image
-> + * @size:	size of the loaded image
-> + */
-> +void qcom_pil_info_store(const char *image, phys_addr_t base, size_t 
-> size)
-> +{
-> +	struct pil_reloc_entry *entry;
-> +	int idx = -1;
-> +	int i;
-> +
-> +	mutex_lock(&reloc_mutex);
-> +	if (!_reloc)
-> +		goto unlock;
-> +
-> +	for (i = 0; i < PIL_INFO_ENTRIES; i++) {
-> +		if (!_reloc->entries[i].name[0]) {
-> +			if (idx == -1)
-> +				idx = i;
-> +			continue;
-> +		}
-> +
-> +		if (!strncmp(_reloc->entries[i].name, image, 8)) {
-> +			idx = i;
-> +			goto found;
-> +		}
-> +	}
-> +
-> +	if (idx == -1) {
-> +		dev_warn(_reloc->dev, "insufficient PIL info slots\n");
-> +		goto unlock;
-> +	}
-> +
-> +found:
-> +	entry = &_reloc->entries[idx];
-> +	stracpy(entry->name, image);
-> +	entry->base = base;
-> +	entry->size = size;
-> +
-> +	regmap_bulk_write(_reloc->map, _reloc->offset + idx * sizeof(*entry),
-> +			  entry, sizeof(*entry) / _reloc->val_bytes);
-> +
-> +unlock:
-> +	mutex_unlock(&reloc_mutex);
-> +}
-> +EXPORT_SYMBOL_GPL(qcom_pil_info_store);
-> +
-> +/**
-> + * qcom_pil_info_available() - query if the pil info is probed
-> + *
-> + * Return: boolean indicating if the pil info device is probed
-> + */
-> +bool qcom_pil_info_available(void)
-> +{
-> +	return !!_reloc;
-> +}
-> +EXPORT_SYMBOL_GPL(qcom_pil_info_available);
-> +
-> +static int pil_reloc_probe(struct platform_device *pdev)
-> +{
-> +	struct pil_reloc *reloc;
-> +
-> +	reloc = devm_kzalloc(&pdev->dev, sizeof(*reloc), GFP_KERNEL);
-> +	if (!reloc)
-> +		return -ENOMEM;
-> +
-> +	reloc->dev = &pdev->dev;
-> +	reloc->map = syscon_node_to_regmap(pdev->dev.parent->of_node);
-If there are multiple entries like "pil-reloc" in the imem node
-mapping the entire imem multiple times may not work. Is there a way
-we can somehow just iomap the required region for pil?
-> +	if (IS_ERR(reloc->map))
-> +		return PTR_ERR(reloc->map);
-> +
-> +	if (of_property_read_u32(pdev->dev.of_node, "offset", 
-> &reloc->offset))
-> +		return -EINVAL;
-> +
-> +	reloc->val_bytes = regmap_get_val_bytes(reloc->map);
-> +	if (reloc->val_bytes < 0)
-> +		return -EINVAL;
-> +
-> +	regmap_bulk_write(reloc->map, reloc->offset, reloc->entries,
-> +			  sizeof(reloc->entries) / reloc->val_bytes);
-> +
-> +	mutex_lock(&reloc_mutex);
-> +	_reloc = reloc;
-> +	mutex_unlock(&reloc_mutex);
-> +
-> +	return 0;
-> +}
-> +
-> +static int pil_reloc_remove(struct platform_device *pdev)
-> +{
-> +	mutex_lock(&reloc_mutex);
-> +	_reloc = NULL;
-> +	mutex_unlock(&reloc_mutex);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id pil_reloc_of_match[] = {
-> +	{ .compatible = "qcom,pil-reloc-info" },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, pil_reloc_of_match);
-> +
-> +static struct platform_driver pil_reloc_driver = {
-> +	.probe = pil_reloc_probe,
-> +	.remove = pil_reloc_remove,
-> +	.driver = {
-> +		.name = "qcom-pil-reloc-info",
-> +		.of_match_table = pil_reloc_of_match,
-> +	},
-> +};
-> +module_platform_driver(pil_reloc_driver);
-> +
-> +MODULE_DESCRIPTION("Qualcomm PIL relocation info");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/remoteproc/qcom_pil_info.h
-> b/drivers/remoteproc/qcom_pil_info.h
-> new file mode 100644
-> index 000000000000..0372602fae1d
-> --- /dev/null
-> +++ b/drivers/remoteproc/qcom_pil_info.h
-> @@ -0,0 +1,8 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef __QCOM_PIL_INFO_H__
-> +#define __QCOM_PIL_INFO_H__
-> +
-> +void qcom_pil_info_store(const char *image, phys_addr_t base, size_t 
-> size);
-> +bool qcom_pil_info_available(void);
-> +
-> +#endif
+syzbot has found a reproducer for the following crash on:
+
+HEAD commit:    4cc301ee usb: gadget: add raw-gadget interface
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=17f5a721e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9ba75825443d54bd
+dashboard link: https://syzkaller.appspot.com/bug?extid=75287f75e2fedd69d680
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16a0b6f1e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1327dd76e00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+75287f75e2fedd69d680@syzkaller.appspotmail.com
+
+usbvision_set_audio: can't write iopin register for audio switching
+usbvision_radio_close: Final disconnect
+==================================================================
+BUG: KASAN: use-after-free in v4l2_release+0x2f1/0x390 drivers/media/v4l2-core/v4l2-dev.c:459
+Read of size 4 at addr ffff8881caba1068 by task v4l_id/1913
+
+CPU: 1 PID: 1913 Comm: v4l_id Not tainted 5.5.0-rc6-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xef/0x16e lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xd3/0x314 mm/kasan/report.c:374
+ __kasan_report.cold+0x37/0x85 mm/kasan/report.c:506
+ kasan_report+0xe/0x20 mm/kasan/common.c:639
+ v4l2_release+0x2f1/0x390 drivers/media/v4l2-core/v4l2-dev.c:459
+ __fput+0x2d7/0x840 fs/file_table.c:280
+ task_work_run+0x13f/0x1c0 kernel/task_work.c:113
+ tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+ exit_to_usermode_loop+0x1d2/0x200 arch/x86/entry/common.c:164
+ prepare_exit_to_usermode arch/x86/entry/common.c:195 [inline]
+ syscall_return_slowpath arch/x86/entry/common.c:278 [inline]
+ do_syscall_64+0x4e0/0x5a0 arch/x86/entry/common.c:304
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x7fbeb0b822b0
+Code: 40 75 0b 31 c0 48 83 c4 08 e9 0c ff ff ff 48 8d 3d c5 32 08 00 e8 c0 07 02 00 83 3d 45 a3 2b 00 00 75 10 b8 03 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 31 c3 48 83 ec 08 e8 ce 8a 01 00 48 89 04 24
+RSP: 002b:00007ffe52d6b158 EFLAGS: 00000246 ORIG_RAX: 0000000000000003
+RAX: 0000000000000000 RBX: 0000000000000003 RCX: 00007fbeb0b822b0
+RDX: 0000000000000013 RSI: 0000000080685600 RDI: 0000000000000003
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000400884
+R13: 00007ffe52d6b2b0 R14: 0000000000000000 R15: 0000000000000000
+
+Allocated by task 94:
+ save_stack+0x1b/0x80 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ __kasan_kmalloc mm/kasan/common.c:513 [inline]
+ __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:486
+ kmalloc include/linux/slab.h:556 [inline]
+ kzalloc include/linux/slab.h:670 [inline]
+ usbvision_alloc drivers/media/usb/usbvision/usbvision-video.c:1315 [inline]
+ usbvision_probe.cold+0x5c5/0x1f21 drivers/media/usb/usbvision/usbvision-video.c:1469
+ usb_probe_interface+0x310/0x800 drivers/usb/core/driver.c:361
+ really_probe+0x290/0xad0 drivers/base/dd.c:548
+ driver_probe_device+0x223/0x350 drivers/base/dd.c:721
+ __device_attach_driver+0x1d1/0x290 drivers/base/dd.c:828
+ bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+ __device_attach+0x217/0x390 drivers/base/dd.c:894
+ bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+ device_add+0x1459/0x1bf0 drivers/base/core.c:2487
+ usb_set_configuration+0xe47/0x17d0 drivers/usb/core/message.c:2023
+ generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+ usb_probe_device+0xaf/0x140 drivers/usb/core/driver.c:266
+ really_probe+0x290/0xad0 drivers/base/dd.c:548
+ driver_probe_device+0x223/0x350 drivers/base/dd.c:721
+ __device_attach_driver+0x1d1/0x290 drivers/base/dd.c:828
+ bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+ __device_attach+0x217/0x390 drivers/base/dd.c:894
+ bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+ device_add+0x1459/0x1bf0 drivers/base/core.c:2487
+ usb_new_device.cold+0x540/0xcd0 drivers/usb/core/hub.c:2537
+ hub_port_connect drivers/usb/core/hub.c:5184 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5324 [inline]
+ port_event drivers/usb/core/hub.c:5470 [inline]
+ hub_event+0x21cb/0x4300 drivers/usb/core/hub.c:5552
+ process_one_work+0x945/0x15c0 kernel/workqueue.c:2264
+ process_scheduled_works kernel/workqueue.c:2326 [inline]
+ worker_thread+0x7ab/0xe20 kernel/workqueue.c:2412
+ kthread+0x318/0x420 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+Freed by task 1913:
+ save_stack+0x1b/0x80 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ kasan_set_free_info mm/kasan/common.c:335 [inline]
+ __kasan_slab_free+0x117/0x160 mm/kasan/common.c:474
+ slab_free_hook mm/slub.c:1425 [inline]
+ slab_free_freelist_hook mm/slub.c:1458 [inline]
+ slab_free mm/slub.c:3005 [inline]
+ kfree+0xd5/0x300 mm/slub.c:3957
+ usbvision_release+0x181/0x1c0 drivers/media/usb/usbvision/usbvision-video.c:1364
+ usbvision_radio_close.cold+0x2b/0x74 drivers/media/usb/usbvision/usbvision-video.c:1130
+ v4l2_release+0x2e7/0x390 drivers/media/v4l2-core/v4l2-dev.c:455
+ __fput+0x2d7/0x840 fs/file_table.c:280
+ task_work_run+0x13f/0x1c0 kernel/task_work.c:113
+ tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+ exit_to_usermode_loop+0x1d2/0x200 arch/x86/entry/common.c:164
+ prepare_exit_to_usermode arch/x86/entry/common.c:195 [inline]
+ syscall_return_slowpath arch/x86/entry/common.c:278 [inline]
+ do_syscall_64+0x4e0/0x5a0 arch/x86/entry/common.c:304
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff8881caba0000
+ which belongs to the cache kmalloc-8k of size 8192
+The buggy address is located 4200 bytes inside of
+ 8192-byte region [ffff8881caba0000, ffff8881caba2000)
+The buggy address belongs to the page:
+page:ffffea00072ae800 refcount:1 mapcount:0 mapping:ffff8881da00c500 index:0x0 compound_mapcount: 0
+raw: 0200000000010200 dead000000000100 dead000000000122 ffff8881da00c500
+raw: 0000000000000000 0000000080020002 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff8881caba0f00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8881caba0f80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff8881caba1000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                                          ^
+ ffff8881caba1080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8881caba1100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
