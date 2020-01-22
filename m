@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5412BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F4047C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:42:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A93B24686
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6D0624686
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:42:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686165;
-	bh=0W1V3W8CggVjNQyaN/zVeXev/bVrx1JcSlDjkkeRYbQ=;
+	s=default; t=1579686166;
+	bh=7B3vAG2RIkwU8Eh5pEf069RrjsX8ed1jhGzTsQLF7V0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KZoj5Yg+D2/d6gXYoBvkTTOY2EnXotNEqQINk9MXncntxrrzdb0SJACcSEZ7KPhC7
-	 v1dbgTtvnQXFtNvxsnkFEGf3ZWuQ8jCbZAMBjRtfkd3vZ+iSATCEfTYtaDqCRklK5z
-	 yqLosW8IKSxteIvz2/jZNVayNUzeHaB4HYT+Gpu8=
+	b=B8+n+y5H2UJhD01L4R2vh0VSfRlTi+7IYMsWo5guAW38wDbcDz8Ywq0KNAIjHkS9F
+	 0W8YRzQ3SodhAr+ULzNjPHOW90VFm5BaceRaqFpb5cRp2viKlFfhmxIzkuBrMgQptI
+	 cBaECcZCgvnSEry4uJP32tzwQvG3DQJONr/naXk4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387775AbgAVJmo (ORCPT
+        id S2387780AbgAVJmq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:42:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34510 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:42:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387748AbgAVJmg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:42:36 -0500
+        id S2387757AbgAVJml (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:42:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 136BD24684;
-        Wed, 22 Jan 2020 09:42:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 222B924687;
+        Wed, 22 Jan 2020 09:42:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686155;
-        bh=0W1V3W8CggVjNQyaN/zVeXev/bVrx1JcSlDjkkeRYbQ=;
+        s=default; t=1579686160;
+        bh=7B3vAG2RIkwU8Eh5pEf069RrjsX8ed1jhGzTsQLF7V0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wXQnNJU7LBnMbSw1S5bAryuXl4DLs7f+3w1oxBTjGyspIMN4B6Mtge4r1VM9Ir/6q
-         /8AYGHUqBZBZIhPBVCyuq3LjJkOG08fpsYZIa7sK7A2/2vHwc+X9avnUQJRmhZSabC
-         k4hBwUClK2U+pTENKtxPC8nU/vV/sbG012iJ0yXs=
+        b=O4U1HGSZhYHY4Ef07smhDjZBH4lQKaveyzCwR6SNhs8RA735u64DwUEl9kpb3Cljx
+         DOsFC3lfUagSljHbNMlW0gfjlEqiou9UfsZtPqZhJ4EFH2+SRpWgVK0xnCjr7+jqrS
+         4X4X0itG6kqhDOvCnkOAB7ZygnOLMJxFBfRxG9I8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+4c3cc6dbe7259dbf9054@syzkaller.appspotmail.com,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 4.19 059/103] netfilter: fix a use-after-free in mtype_destroy()
-Date:   Wed, 22 Jan 2020 10:29:15 +0100
-Message-Id: <20200122092812.841396727@linuxfoundation.org>
+        stable@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Alexander Lobakin <alobakin@dlink.ru>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 069/103] net: dsa: tag_qca: fix doubled Tx statistics
+Date:   Wed, 22 Jan 2020 10:29:25 +0100
+Message-Id: <20200122092813.867796961@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
 References: <20200122092803.587683021@linuxfoundation.org>
@@ -62,36 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Alexander Lobakin <alobakin@dlink.ru>
 
-commit c120959387efa51479056fd01dc90adfba7a590c upstream.
+[ Upstream commit bd5874da57edd001b35cf28ae737779498c16a56 ]
 
-map->members is freed by ip_set_free() right before using it in
-mtype_ext_cleanup() again. So we just have to move it down.
+DSA subsystem takes care of netdev statistics since commit 4ed70ce9f01c
+("net: dsa: Refactor transmit path to eliminate duplication"), so
+any accounting inside tagger callbacks is redundant and can lead to
+messing up the stats.
+This bug is present in Qualcomm tagger since day 0.
 
-Reported-by: syzbot+4c3cc6dbe7259dbf9054@syzkaller.appspotmail.com
-Fixes: 40cd63bf33b2 ("netfilter: ipset: Support extensions which need a per data destroy function")
-Acked-by: Jozsef Kadlecsik <kadlec@netfilter.org>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: cafdc45c949b ("net-next: dsa: add Qualcomm tag RX/TX handler")
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- net/netfilter/ipset/ip_set_bitmap_gen.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/dsa/tag_qca.c |    3 ---
+ 1 file changed, 3 deletions(-)
 
---- a/net/netfilter/ipset/ip_set_bitmap_gen.h
-+++ b/net/netfilter/ipset/ip_set_bitmap_gen.h
-@@ -64,9 +64,9 @@ mtype_destroy(struct ip_set *set)
- 	if (SET_WITH_TIMEOUT(set))
- 		del_timer_sync(&map->gc);
+--- a/net/dsa/tag_qca.c
++++ b/net/dsa/tag_qca.c
+@@ -41,9 +41,6 @@ static struct sk_buff *qca_tag_xmit(stru
+ 	struct dsa_port *dp = dsa_slave_to_port(dev);
+ 	u16 *phdr, hdr;
  
--	ip_set_free(map->members);
- 	if (set->dsize && set->extensions & IPSET_EXT_DESTROY)
- 		mtype_ext_cleanup(set);
-+	ip_set_free(map->members);
- 	ip_set_free(map);
+-	dev->stats.tx_packets++;
+-	dev->stats.tx_bytes += skb->len;
+-
+ 	if (skb_cow_head(skb, 0) < 0)
+ 		return NULL;
  
- 	set->data = NULL;
 
 
