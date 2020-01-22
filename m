@@ -2,124 +2,131 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73898C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC6EC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44AAC21734
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:00:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="Qe300mp5"
+	by mail.kernel.org (Postfix) with ESMTP id BDA2E21734
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:02:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729590AbgAVLAZ (ORCPT
+        id S1729016AbgAVLCs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 06:00:25 -0500
-Received: from mail.dlink.ru ([178.170.168.18]:55596 "EHLO fd.dlink.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726191AbgAVLAZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 06:00:25 -0500
-Received: by fd.dlink.ru (Postfix, from userid 5000)
-        id 677201B217DC; Wed, 22 Jan 2020 14:00:22 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 677201B217DC
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
-        t=1579690822; bh=E2dXwvQfR3it5MyIm/cP9a8wE1o/rgxNa0wXkLbsxxU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=Qe300mp5igW6uIUUeaKKePxa+vVeOPPyZH8Kttfq+oMpe2MW9TUvfWgGUk2XvKWc8
-         zLIZ+zPF9AJVJK1Gmy9VgcO48or5brmys8tWNDX+MnAWXeFGL+/Jo0VgMwIPZSGVvc
-         4zoNnevpUkLuH7WTaclPY23SsM9QIyEhZIBQ1ACg=
-Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
-        by fd.dlink.ru (Postfix) with ESMTP id 044FB1B21777;
-        Wed, 22 Jan 2020 13:59:26 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 044FB1B21777
-Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
-        by mail.rzn.dlink.ru (Postfix) with ESMTP id D7DE01B217EA;
-        Wed, 22 Jan 2020 13:59:24 +0300 (MSK)
-Received: from localhost.localdomain (unknown [196.196.203.126])
-        by mail.rzn.dlink.ru (Postfix) with ESMTPA;
-        Wed, 22 Jan 2020 13:59:24 +0300 (MSK)
-From:   Alexander Lobakin <alobakin@dlink.ru>
-To:     Paul Burton <paulburton@kernel.org>
-Cc:     Ralf Baechle <ralf@linux-mips.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Alexander Lobakin <alobakin@dlink.ru>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Allison Randal <allison@lohutok.net>,
+        Wed, 22 Jan 2020 06:02:48 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40318 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726191AbgAVLCr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 06:02:47 -0500
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00MB2asj123513
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 06:02:46 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2xp95fbnqw-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 06:02:42 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <anju@linux.vnet.ibm.com>;
+        Wed, 22 Jan 2020 11:02:16 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 22 Jan 2020 11:02:07 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00MB26Fi44433748
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Jan 2020 11:02:06 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9A2A74C05A;
+        Wed, 22 Jan 2020 11:02:06 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 849814C044;
+        Wed, 22 Jan 2020 11:02:01 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.124.35.72])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 22 Jan 2020 11:02:01 +0000 (GMT)
+From:   Anju T Sudhakar <anju@linux.vnet.ibm.com>
+Subject: Re: [PATCH v5 07/10] powerpc/perf: open access for CAP_PERFMON
+ privileged process
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
+        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "james.bottomley@hansenpartnership.com" 
+        <james.bottomley@hansenpartnership.com>,
+        Serge Hallyn <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Robert Richter <rric@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        oprofile-list@lists.sf.net,
+        Lionel Landwerlin <lionel.g.landwerlin@intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH mips-next 5/5] Revert "MIPS: Add custom serial.h with BASE_BAUD override for generic kernel"
-Date:   Wed, 22 Jan 2020 13:58:52 +0300
-Message-Id: <20200122105852.8788-6-alobakin@dlink.ru>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200122105852.8788-1-alobakin@dlink.ru>
-References: <20200122105852.8788-1-alobakin@dlink.ru>
+        Jiri Olsa <jolsa@redhat.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <0548c832-7f4b-dc4c-8883-3f2b6d351a08@linux.intel.com>
+ <b74a3983-8e41-aba7-c18d-b16eff6fd5e5@linux.intel.com>
+Date:   Wed, 22 Jan 2020 16:32:00 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <b74a3983-8e41-aba7-c18d-b16eff6fd5e5@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 20012211-0016-0000-0000-000002DFA81F
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20012211-0017-0000-0000-000033425322
+Message-Id: <fc4c8680-2a0c-ff0a-fd60-3ff68370d1cc@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-17_05:2020-01-16,2020-01-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1011
+ mlxscore=0 spamscore=0 malwarescore=0 suspectscore=0 lowpriorityscore=0
+ priorityscore=1501 phishscore=0 impostorscore=0 adultscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001220101
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit c8ec2041f549e7f2dee0c34d25381be6f7805f99.
 
-There's no more need to set BASE_BAUD to 0 to make earlycon work
-properly on DTS-based boards since such cases were handled in commit
-182ead3e418a ("earlycon: Remove hardcoded port->uartclk initialization
-in of_setup_earlycon"). earlycon no longer initializes port->uartclk
-with a value of BASE_BAUD * 16 when starting from FDT/OF.
+On 1/20/20 5:00 PM, Alexey Budankov wrote:
+> Open access to monitoring for CAP_PERFMON privileged processes.
+> For backward compatibility reasons access to the monitoring remains
+> open for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN usage
+> for secure monitoring is discouraged with respect to CAP_PERFMON
+> capability. Providing the access under CAP_PERFMON capability singly,
+> without the rest of CAP_SYS_ADMIN credentials, excludes chances to
+> misuse the credentials and makes the operations more secure.
+>
+> Signed-off-by: Alexey Budankov<alexey.budankov@linux.intel.com>
+> ---
 
-Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
----
- arch/mips/include/asm/Kbuild   |  1 +
- arch/mips/include/asm/serial.h | 18 ------------------
- 2 files changed, 1 insertion(+), 18 deletions(-)
- delete mode 100644 arch/mips/include/asm/serial.h
-
-diff --git a/arch/mips/include/asm/Kbuild b/arch/mips/include/asm/Kbuild
-index 61b0fc2026e6..16d1eb4c8fe6 100644
---- a/arch/mips/include/asm/Kbuild
-+++ b/arch/mips/include/asm/Kbuild
-@@ -19,6 +19,7 @@ generic-y += preempt.h
- generic-y += qrwlock.h
- generic-y += qspinlock.h
- generic-y += sections.h
-+generic-y += serial.h
- generic-y += trace_clock.h
- generic-y += unaligned.h
- generic-y += user.h
-diff --git a/arch/mips/include/asm/serial.h b/arch/mips/include/asm/serial.h
-deleted file mode 100644
-index 2777148dbfc5..000000000000
---- a/arch/mips/include/asm/serial.h
-+++ /dev/null
-@@ -1,18 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-or-later */
--/*
-- * Copyright (C) 2017 MIPS Tech, LLC
-- */
--#ifndef __ASM__SERIAL_H
--#define __ASM__SERIAL_H
--
--#ifdef CONFIG_MIPS_GENERIC
--/*
-- * Generic kernels cannot know a correct value for all platforms at
-- * compile time. Set it to 0 to prevent 8250_early using it
-- */
--#define BASE_BAUD 0
--#else
--#include <asm-generic/serial.h>
--#endif
--
--#endif /* __ASM__SERIAL_H */
--- 
-2.25.0
+Acked-by: Anju T Sudhakar<anju@linux.vnet.ibm.com>
 
