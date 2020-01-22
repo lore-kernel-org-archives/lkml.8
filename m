@@ -2,76 +2,128 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD11C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 07:21:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA20C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 07:23:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C934F2253D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 07:21:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5E6924125
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 07:23:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579677804;
+	bh=bbAh3rhHmfmleomVp4XItkwvBRm3+pggpqJQcYaj0pw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=hUutUUxEDY3d0c7YgLgC36vaJE5TdXFiqjMeEyA63Vwjhr3K7Ai++9fajsslvbU2c
+	 i5qJh7WLU/6aSs3m/rW8jrheDjVBcZW+I8/yu7eqd9f9x6dDwkLEJdHjfUyZ5vJmFt
+	 pldkH6u00PFSKgI2D1s9f9IIhiIDAbtxF14K3LXw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbgAVHVs (ORCPT
+        id S1728733AbgAVHXY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 02:21:48 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:51382 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725884AbgAVHVr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 02:21:47 -0500
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 958936BF22A3041C68A4;
-        Wed, 22 Jan 2020 15:21:45 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 22 Jan 2020 15:21:38 +0800
-From:   Hongbo Yao <yaohongbo@huawei.com>
-To:     <jens.wiklander@linaro.org>, <Rijo-john.Thomas@amd.com>
-CC:     <yaohongbo@huawei.com>, <chenzhou10@huawei.com>,
-        <tee-dev@lists.linaro.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] tee: amdtee: amdtee depends on CRYPTO_DEV_CCP_DD
-Date:   Wed, 22 Jan 2020 15:16:43 +0800
-Message-ID: <20200122071643.8122-1-yaohongbo@huawei.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+        Wed, 22 Jan 2020 02:23:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51794 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725975AbgAVHXX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 02:23:23 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3E8F2253D;
+        Wed, 22 Jan 2020 07:23:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579677802;
+        bh=bbAh3rhHmfmleomVp4XItkwvBRm3+pggpqJQcYaj0pw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Nw68NfTqgmtfdHWRdZhjK8XTTkzkkBbqDAlHJguxpOQHBCZ9k0h8oHLITVrXovekX
+         Jbs/lNg5w1Fhwq+h/+Sj6hWzQT0taikEShjBomAjFAmx8I0ztz8GbX86VAoaHPc8rI
+         8XZgNtFfpn/UKaMgEwOfoMsF67orejhKxLrwHoFI=
+Date:   Wed, 22 Jan 2020 16:23:17 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>, paulmck@kernel.org,
+        joel@joelfernandes.org,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
+Subject: Re: [RFT PATCH 04/13] kprobes: Make optimizer delay to 1 second
+Message-Id: <20200122162317.0299cf722dd618147d97e89c@kernel.org>
+In-Reply-To: <20200121192905.0f001c61@gandalf.local.home>
+References: <157918584866.29301.6941815715391411338.stgit@devnote2>
+        <157918589199.29301.4419459150054220408.stgit@devnote2>
+        <20200121192905.0f001c61@gandalf.local.home>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If CRYPTO_DEV_CCP_DD=m and AMDTEE=y, the following error is seen
-while building call.c or core.c
+On Tue, 21 Jan 2020 19:29:05 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-drivers/tee/amdtee/call.o: In function `handle_unload_ta':
-call.c:(.text+0x35f): undefined reference to `psp_tee_process_cmd'
-drivers/tee/amdtee/core.o: In function `amdtee_driver_init':
-core.c:(.init.text+0xf): undefined reference to `psp_check_tee_status
+> On Thu, 16 Jan 2020 23:44:52 +0900
+> Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> 
+> > Since the 5 jiffies delay for the optimizer is too
+> > short to wait for other probes, make it longer,
+> > like 1 second.
+> 
+> Hi Masami,
+> 
+> Can you explain more *why* 5 jiffies is too short.
 
-Fix the config dependency for AMDTEE here.
+Yes, I had introduced this 5 jiffies delay for multiple probe registration
+and unregistration like systemtap, which will use array-based interface to
+register/unregister. In that case, 5 jiffies will be enough for the delay
+to wait for other kprobe registration/unregsitration.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 757cc3e9ff ("tee: add AMD-TEE driver")
-Signed-off-by: Hongbo Yao <yaohongbo@huawei.com>
----
- drivers/tee/amdtee/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+However, since perf and ftrace register/unregister probes one-by-one with
+RCU synchronization interval, the optimizer will be started before
+finishing to register/unregister all probes.
+And the optimizer locks kprobe_mutex a while -- RCU-tasks synchronization.
+Since the kprobe_mutex is also involved in disabling kprobes, this also
+stops probe-event disabling.
 
-diff --git a/drivers/tee/amdtee/Kconfig b/drivers/tee/amdtee/Kconfig
-index 4e32b6413b41..191f9715fa9a 100644
---- a/drivers/tee/amdtee/Kconfig
-+++ b/drivers/tee/amdtee/Kconfig
-@@ -3,6 +3,6 @@
- config AMDTEE
- 	tristate "AMD-TEE"
- 	default m
--	depends on CRYPTO_DEV_SP_PSP
-+	depends on CRYPTO_DEV_SP_PSP && CRYPTO_DEV_CCP_DD
- 	help
- 	  This implements AMD's Trusted Execution Environment (TEE) driver.
+Maybe 5 jiffies is enough for adding/removing a few probe events, but
+not enough for dozens of probe events.
+
+Thank you,
+
+> 
+> Thanks!
+> 
+> -- Steve
+> 
+> > 
+> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> > ---
+> >  kernel/kprobes.c |    3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> > index 0dacdcecc90f..9c6e230852ad 100644
+> > --- a/kernel/kprobes.c
+> > +++ b/kernel/kprobes.c
+> > @@ -469,7 +469,8 @@ static int kprobe_optimizer_queue_update;
+> >  
+> >  static void kprobe_optimizer(struct work_struct *work);
+> >  static DECLARE_DELAYED_WORK(optimizing_work, kprobe_optimizer);
+> > -#define OPTIMIZE_DELAY 5
+> > +/* Wait 1 second for starting optimization */
+> > +#define OPTIMIZE_DELAY HZ
+> >  
+> >  /*
+> >   * Optimize (replace a breakpoint with a jump) kprobes listed on
+> 
+
+
 -- 
-2.20.1
-
+Masami Hiramatsu <mhiramat@kernel.org>
