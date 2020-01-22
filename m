@@ -2,131 +2,88 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B786C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 17:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF96C33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 17:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73CBF24673
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 17:28:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579714099;
-	bh=v45//aLOIelbSIblxH0H5quiYA4SDipsGzDyo26vKWw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=Xsfv3kNaG/pgrlC+oUleRJRvTJteGIkH0AtqjRV9gVVs1Z2gXn8vapkh9eetfElYl
-	 W0YVzbav2nlE9SilBvV2Dw6wjhCc7Eja+ENpvutG5gQVP2a7He9RWUl+7JaNKydGVi
-	 eftkEEm3yBp3SBpoekj6eoVEKNCIx3fM/z8NrFu0=
+	by mail.kernel.org (Postfix) with ESMTP id 77AAC24676
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 17:31:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="uzh00Ovu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729149AbgAVR2S (ORCPT
+        id S1726191AbgAVRba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 12:28:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59514 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725883AbgAVR2S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 12:28:18 -0500
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 518C52465A;
-        Wed, 22 Jan 2020 17:28:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579714097;
-        bh=v45//aLOIelbSIblxH0H5quiYA4SDipsGzDyo26vKWw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=uuEbZODdAfY2orhNAv1udC3ffIXt2OSXDhzucSgEDrIEVsOGW2ar5/mExXmBvtcl9
-         FCJF7HS3xS/Sn4RXa7YOCvDqgFudCy37FqmpT22JikWhkUfQAJn6iBdsqRFj1uUnoI
-         iu+HjBt5BNh2H9K+uhzxkTq76DJmq91hPN7+DJA8=
-Date:   Wed, 22 Jan 2020 11:28:16 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Evan Green <evgreen@chromium.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>, Christoph Hellwig <hch@lst.de>,
-        Rajat Jain <rajatxjain@gmail.com>
-Subject: Re: [PATCH] PCI/MSI: Avoid torn updates to MSI pairs
-Message-ID: <20200122172816.GA139285@google.com>
+        Wed, 22 Jan 2020 12:31:30 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:35289 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725883AbgAVRba (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 12:31:30 -0500
+Received: by mail-io1-f67.google.com with SMTP id h8so100207iob.2
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 09:31:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=QhmytsAHT+fQWKcDzmw1PiTvOkc+/ne5RpL730u18Rk=;
+        b=uzh00OvunkHvzy7F38nibq3lJZLQdl+pKhWD9CrDrau675hae2smPZOXnvF6pL6DgZ
+         CgW1L1nObjMBGzHlWckZGLL4YZVkU61jGrgndOEH98zcFyjIiWwppXijplKrUadWMHiF
+         RMyYJ8rrsvmRhhU/qCPYK/hIIHt1R278L+0UJeuqXLb8Ju+a2tcFK1M1xjlRYSE6Ovvc
+         3CYCjMYBNKRU9o86b/fWRabZk5x76sjJUca//+gI//1gLEDMoINXAwwT7J7sA15wQXHk
+         6WvnI/7vJNm+HzeLlKH43OhQABCgOiZlEp+63/gtKjObP1kqjCuw+zYzYtJnQHjP/LZc
+         k8pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=QhmytsAHT+fQWKcDzmw1PiTvOkc+/ne5RpL730u18Rk=;
+        b=Lht1JyheTJQ+kwXV/jIroUKKVWcBE61X5R/yZlk8XAOTZ5051XakJ4twQ3FbGdVUuM
+         co8YcWY8GklEmgEYkJaIOKP257TcXVIOEWMNvmXhVGu909HBEuTZy3zpOQqxZojTMcKM
+         0idwljwvVhH++JBR+LcHBKgSROY861qGVDvqkmBeRpcPPXojtpi11pyEJOvpxEj8Nm9M
+         XgpDDD03uEJUXH0D62oq38kvYmjb/58ILkFJPxP5ZSkgRl1XJYSoW0RJQsCqRL6XI/cN
+         +gy8pu9+olyQNhjsYHZb0Wpbp8SQlEM0+44wNcdqRNMPuQ14n31VqVHMBEQvOyc6A+4J
+         zzyg==
+X-Gm-Message-State: APjAAAUpk9mcUaQXBQGp097fZbosZG1WqqOWyD4zltbVLirSuS/kPDj0
+        IeZ5Avxmsb+99HObd7rJWWFvE3ogMzY=
+X-Google-Smtp-Source: APXvYqyYc85e+ep55jcoAbCKz4ESlvKLEz4rjhsH70uEJF6eltTeHdBh2rGUEjG8VIiwrW03GzA5SA==
+X-Received: by 2002:a05:6638:76f:: with SMTP id y15mr8152403jad.5.1579714289314;
+        Wed, 22 Jan 2020 09:31:29 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id f2sm10861732iok.20.2020.01.22.09.31.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jan 2020 09:31:28 -0800 (PST)
+Subject: Re: [PATCH] block/bfq: remove unused bfq_class_rt which never used
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Paolo Valente <paolo.valente@linaro.org>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1579596534-257642-1-git-send-email-alex.shi@linux.alibaba.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <8e4f68d3-28a3-22f6-ae55-814903d990b9@kernel.dk>
+Date:   Wed, 22 Jan 2020 10:31:28 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200116133102.1.I9c7e72144ef639cc135ea33ef332852a6b33730f@changeid>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1579596534-257642-1-git-send-email-alex.shi@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Thomas, Marc, Christoph, Rajat]
+On 1/21/20 1:48 AM, Alex Shi wrote:
+> This macro is never used after introduced from commit aee69d78dec0
+> ("block, bfq: introduce the BFQ-v0 I/O scheduler as an extra scheduler")
+> 
+> Better to remove it.
 
-On Thu, Jan 16, 2020 at 01:31:28PM -0800, Evan Green wrote:
-> __pci_write_msi_msg() updates three registers in the device: address
-> high, address low, and data. On x86 systems, address low contains
-> CPU targeting info, and data contains the vector. The order of writes
-> is address, then data.
-> 
-> This is problematic if an interrupt comes in after address has
-> been written, but before data is updated, and the SMP affinity of
-> the interrupt is changing. In this case, the interrupt targets the
-> wrong vector on the new CPU.
-> 
-> This case is pretty easy to stumble into using xhci and CPU hotplugging.
-> Create a script that targets interrupts at a set of cores and then
-> offlines those cores. Put some stress on USB, and then watch xhci lose
-> an interrupt and die.
-> 
-> Avoid this by disabling MSIs during the update.
-> 
-> Signed-off-by: Evan Green <evgreen@chromium.org>
-> ---
-> 
-> 
-> Bjorn,
-> I was unsure whether disabling MSIs temporarily is actually an okay
-> thing to do. I considered using the mask bit, but got the impression
-> that not all devices support the mask bit. Let me know if this going to
-> cause problems or there's a better way. I can include the repro
-> script I used to cause mayhem if needed.
+Applied, thanks.
 
-I suspect this *is* a problem because I think disabling MSI doesn't
-disable interrupts; it just means the device will interrupt using INTx
-instead of MSI.  And the driver is probably not prepared to handle
-INTx.
+-- 
+Jens Axboe
 
-PCIe r5.0, sec 7.7.1.2, seems relevant: "If MSI and MSI-X are both
-disabled, the Function requests servicing using INTx interrupts (if
-supported)."
-
-Maybe the IRQ guys have ideas about how to solve this?
-
-> ---
->  drivers/pci/msi.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-> index 6b43a5455c7af..97856ef862d68 100644
-> --- a/drivers/pci/msi.c
-> +++ b/drivers/pci/msi.c
-> @@ -328,7 +328,7 @@ void __pci_write_msi_msg(struct msi_desc *entry, struct msi_msg *msg)
->  		u16 msgctl;
->  
->  		pci_read_config_word(dev, pos + PCI_MSI_FLAGS, &msgctl);
-> -		msgctl &= ~PCI_MSI_FLAGS_QSIZE;
-> +		msgctl &= ~(PCI_MSI_FLAGS_QSIZE | PCI_MSI_FLAGS_ENABLE);
->  		msgctl |= entry->msi_attrib.multiple << 4;
->  		pci_write_config_word(dev, pos + PCI_MSI_FLAGS, msgctl);
->  
-> @@ -343,6 +343,9 @@ void __pci_write_msi_msg(struct msi_desc *entry, struct msi_msg *msg)
->  			pci_write_config_word(dev, pos + PCI_MSI_DATA_32,
->  					      msg->data);
->  		}
-> +
-> +		msgctl |= PCI_MSI_FLAGS_ENABLE;
-> +		pci_write_config_word(dev, pos + PCI_MSI_FLAGS, msgctl);
->  	}
->  
->  skip:
-> -- 
-> 2.24.1
-> 
