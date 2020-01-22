@@ -2,143 +2,261 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63956C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7DC8C33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:45:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B8F021734
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:44:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8067921734
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:45:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579718709;
+	bh=zBixQdWwnEOLWNEf69TcVyoov8hDlk81LCFI9hsB9VQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dL16HZaiIUCKmKZvl05kKIwnAh0AXLpgIbque4ionj3i5HYPe4GoR9MJUTJqIU4kX
+	 EJK7cDi4twuxcbXBj+qJ+5gSSqwNJccii6UXyCjr15uAUhji5MwZzHOR5p7Jm3xPcC
+	 D6rMlQUc/658F5Vvctu9oZZJ9pLDNq3qN052JAtM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726205AbgAVSoq (ORCPT
+        id S1728609AbgAVSpI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 13:44:46 -0500
-Received: from mga18.intel.com ([134.134.136.126]:32600 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725924AbgAVSoq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 13:44:46 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jan 2020 10:44:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,350,1574150400"; 
-   d="scan'208";a="284680527"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
-  by fmsmga001.fm.intel.com with SMTP; 22 Jan 2020 10:44:42 -0800
-Received: by stinkbox (sSMTP sendmail emulation); Wed, 22 Jan 2020 20:44:41 +0200
-Date:   Wed, 22 Jan 2020 20:44:41 +0200
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        linux-kernel@vger.kernel.org, Wayne Lin <Wayne.Lin@amd.com>,
-        Sean Paul <sean@poorly.run>
-Subject: Re: [PATCH 2/2] drm/dp_mst: Fix clearing payload state on topology
- disable
-Message-ID: <20200122184441.GE13686@intel.com>
-References: <20200117224749.128994-1-lyude@redhat.com>
- <20200117224749.128994-2-lyude@redhat.com>
+        Wed, 22 Jan 2020 13:45:08 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:34575 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726207AbgAVSpI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 13:45:08 -0500
+Received: by mail-pj1-f66.google.com with SMTP id s94so61030pjc.1;
+        Wed, 22 Jan 2020 10:45:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=dsm/Oty4JsAlyrYpQ43R0pMvhF+5IStLOIhgNWGt2NQ=;
+        b=TslxeKEfsRBGHK9iKMOAV71Y0OnGNH4qEe9JFo/Cg9gbx2L1LV99oP66yFXsMESrDr
+         kOOb5BDJOUK+TIWgj/OUigiRP2qBvUgqS4kY0CsIvu2fdT8pu5oY8qP8ZQiv4Wj9B/T7
+         T3MKYk6LNy2vKAPTA1gOzuBunZ/bQD871GVSEnrN2RPe2rpPrJy8KY0MCd2waw2OKl0v
+         05z+RUrGwEtCxtN3joPMs7n4l4/Xl6H4sw0Qhyu/PMdYruVteifIouXYB5BK4WInhL9n
+         vDWvnSs0zg6tDJ+R46MjJgKX0E/E1EH5Ha0w4WFf/5Wa4HnUzDZ/m0f6tZf0oABtawSq
+         9P9Q==
+X-Gm-Message-State: APjAAAUZ0ycOUYmsn4Cbtw7/HfwJaRMWtaOgTio/dAtfMOYsFL94YMr9
+        mUYbBCEZXbeMg276c/bdVYKoB8/k/D+KeQ==
+X-Google-Smtp-Source: APXvYqy1QGg3TKqN4535QAH7zggmdtb0BdejleoXfAIlvnuKKk4iyY4G20WsTuwIAwtfMSn71ZoTcQ==
+X-Received: by 2002:a17:90b:3115:: with SMTP id gc21mr4442936pjb.54.1579718707388;
+        Wed, 22 Jan 2020 10:45:07 -0800 (PST)
+Received: from localhost (MIPS-TECHNO.ear1.SanJose1.Level3.net. [4.15.122.74])
+        by smtp.gmail.com with ESMTPSA id b8sm48449234pff.114.2020.01.22.10.45.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jan 2020 10:45:06 -0800 (PST)
+Date:   Wed, 22 Jan 2020 10:45:06 -0800
+From:   Paul Burton <paulburton@kernel.org>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, chenhc@lemote.com,
+        paul.burton@mips.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MIPS: Introduce aligned IO memory operations
+Message-ID: <20200122184506.7zbzetn5xturxamj@pburton-laptop>
+References: <20200114122343.163685-1-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200117224749.128994-2-lyude@redhat.com>
-X-Patchwork-Hint: comment
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200114122343.163685-1-jiaxun.yang@flygoat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 05:47:49PM -0500, Lyude Paul wrote:
-> The issues caused by:
-> 
-> 64e62bdf04ab ("drm/dp_mst: Remove VCPI while disabling topology mgr")
-> 
-> Prompted me to take a closer look at how we clear the payload state in
-> general when disabling the topology, and it turns out there's actually
-> two subtle issues here.
-> 
-> The first is that we're not grabbing &mgr.payload_lock when clearing the
-> payloads in drm_dp_mst_topology_mgr_set_mst(). Seeing as the canonical
-> lock order is &mgr.payload_lock -> &mgr.lock (because we always want
-> &mgr.lock to be the inner-most lock so topology validation always
-> works), this makes perfect sense. It also means that -technically- there
-> could be racing between someone calling
-> drm_dp_mst_topology_mgr_set_mst() to disable the topology, along with a
-> modeset occurring that's modifying the payload state at the same time.
-> 
-> The second is the more obvious issue that Wayne Lin discovered, that
-> we're not clearing proposed_payloads when disabling the topology.
-> 
-> I actually can't see any obvious places where the racing caused by the
-> first issue would break something, and it could be that some of our
-> higher-level locks already prevent this by happenstance, but better safe
-> then sorry. So, let's make it so that drm_dp_mst_topology_mgr_set_mst()
-> first grabs &mgr.payload_lock followed by &mgr.lock so that we never
-> race when modifying the payload state. Then, we also clear
-> proposed_payloads to fix the original issue of enabling a new topology
-> with a dirty payload state. This doesn't clear any of the drm_dp_vcpi
-> structures, but those are getting destroyed along with the ports anyway.
-> 
-> Cc: Sean Paul <sean@poorly.run>
-> Cc: Wayne Lin <Wayne.Lin@amd.com>
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
+Hi Jiaxun,
+
+On Tue, Jan 14, 2020 at 08:23:43PM +0800, Jiaxun Yang wrote:
+> Some platforms, such as Loongson64 or QEMU/KVM, don't support unaligned
+> instructions like lwl or lwr in IO memory access. However, our current
+> IO memcpy/memset is wired to the generic implementation, which leads
+> to a fatal result.
+
+Hmm, I wonder if we should just do this unconditionally on all systems.
+I can't think of a reason it'd ever be a good idea to use lwl/lwr on an
+MMIO device. Any thoughts on that?
+
+Thanks,
+    Paul
+
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 > ---
->  drivers/gpu/drm/drm_dp_mst_topology.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
+>  arch/mips/Kconfig          |  4 ++
+>  arch/mips/include/asm/io.h | 10 ++++
+>  arch/mips/kernel/Makefile  |  2 +-
+>  arch/mips/kernel/io.c      | 98 ++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 113 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/mips/kernel/io.c
 > 
-> diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-> index 89c2a7505cbd..58287f4c1baf 100644
-> --- a/drivers/gpu/drm/drm_dp_mst_topology.c
-> +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-> @@ -3483,6 +3483,7 @@ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr, bool ms
->  	int ret = 0;
->  	struct drm_dp_mst_branch *mstb = NULL;
+> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+> index 8b0cd692a43f..15a331aa23a2 100644
+> --- a/arch/mips/Kconfig
+> +++ b/arch/mips/Kconfig
+> @@ -1450,6 +1450,7 @@ config CPU_LOONGSON64
+>  	select CPU_SUPPORTS_HIGHMEM
+>  	select CPU_SUPPORTS_HUGEPAGES
+>  	select CPU_SUPPORTS_MSA
+> +	select CPU_NEEDS_ALIGNED_IO
+>  	select CPU_HAS_LOAD_STORE_LR
+>  	select CPU_DIEI_BROKEN if !LOONGSON3_ENHANCEMENT
+>  	select CPU_MIPSR2_IRQ_VI
+> @@ -2598,6 +2599,9 @@ config CPU_HAS_LOAD_STORE_LR
+>  	  LWL, LWR, SWL, SWR (Load/store word left/right).
+>  	  LDL, LDR, SDL, SDR (Load/store doubleword left/right, for 64bit systems).
 >  
-> +	mutex_lock(&mgr->payload_lock);
->  	mutex_lock(&mgr->lock);
->  	if (mst_state == mgr->mst_state)
->  		goto out_unlock;
-> @@ -3541,7 +3542,10 @@ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr, bool ms
->  		/* this can fail if the device is gone */
->  		drm_dp_dpcd_writeb(mgr->aux, DP_MSTM_CTRL, 0);
->  		ret = 0;
-> -		memset(mgr->payloads, 0, mgr->max_payloads * sizeof(struct drm_dp_payload));
-> +		memset(mgr->payloads, 0,
-> +		       mgr->max_payloads * sizeof(struct drm_dp_payload));
-> +		memset(mgr->proposed_vcpis, 0,
-> +		       mgr->max_payloads * sizeof(void*));
-
-void* is an odd choice.
-
-sizeof(foo[0]) would be more future proof (for both of these).
-
-Also might be a good idea to update the docs to mention
-max_payloads defines the size of these arrays.
-
->  		mgr->payload_mask = 0;
->  		set_bit(0, &mgr->payload_mask);
->  		mgr->vcpi_mask = 0;
-> @@ -3550,6 +3554,7 @@ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr, bool ms
+> +config CPU_NEEDS_ALIGNED_IO
+> +	bool
+> +
+>  #
+>  # Vectored interrupt mode is an R2 feature
+>  #
+> diff --git a/arch/mips/include/asm/io.h b/arch/mips/include/asm/io.h
+> index 3f6ce74335b4..3b0eb4941f23 100644
+> --- a/arch/mips/include/asm/io.h
+> +++ b/arch/mips/include/asm/io.h
+> @@ -577,6 +577,15 @@ BUILDSTRING(l, u32)
+>  BUILDSTRING(q, u64)
+>  #endif
 >  
->  out_unlock:
->  	mutex_unlock(&mgr->lock);
-> +	mutex_unlock(&mgr->payload_lock);
->  	if (mstb)
->  		drm_dp_mst_topology_put_mstb(mstb);
->  	return ret;
+> +#if defined(CONFIG_CPU_NEEDS_ALIGNED_IO)
+> +extern void __memcpy_fromio(void *, const volatile void __iomem *, size_t);
+> +extern void __memcpy_toio(volatile void __iomem *, const void *, size_t);
+> +extern void __memset_io(volatile void __iomem *, int, size_t);
+> +
+> +#define memset_io(c, v, l)	__memset_io((c), (v), (l))
+> +#define memcpy_fromio(a, c, l)	__memcpy_fromio((a), (c), (l))
+> +#define memcpy_toio(c, a, l)	__memcpy_toio((c), (a), (l))
+> +#else
+>  static inline void memset_io(volatile void __iomem *addr, unsigned char val, int count)
+>  {
+>  	memset((void __force *) addr, val, count);
+> @@ -589,6 +598,7 @@ static inline void memcpy_toio(volatile void __iomem *dst, const void *src, int
+>  {
+>  	memcpy((void __force *) dst, src, count);
+>  }
+> +#endif
+>  
+>  /*
+>   * The caches on some architectures aren't dma-coherent and have need to
+> diff --git a/arch/mips/kernel/Makefile b/arch/mips/kernel/Makefile
+> index d6e97df51cfb..b07b97b9385e 100644
+> --- a/arch/mips/kernel/Makefile
+> +++ b/arch/mips/kernel/Makefile
+> @@ -8,7 +8,7 @@ extra-y		:= head.o vmlinux.lds
+>  obj-y		+= cmpxchg.o cpu-probe.o branch.o elf.o entry.o genex.o idle.o irq.o \
+>  		   process.o prom.o ptrace.o reset.o setup.o signal.o \
+>  		   syscall.o time.o topology.o traps.o unaligned.o watch.o \
+> -		   vdso.o cacheinfo.o
+> +		   vdso.o cacheinfo.o io.o
+>  
+>  ifdef CONFIG_FUNCTION_TRACER
+>  CFLAGS_REMOVE_ftrace.o = -pg
+> diff --git a/arch/mips/kernel/io.c b/arch/mips/kernel/io.c
+> new file mode 100644
+> index 000000000000..ca105aa76d4d
+> --- /dev/null
+> +++ b/arch/mips/kernel/io.c
+> @@ -0,0 +1,98 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +
+> +#include <linux/export.h>
+> +#include <linux/types.h>
+> +#include <linux/io.h>
+> +
+> +#if defined(CONFIG_CPU_NEEDS_ALIGNED_IO)
+> +
+> +#if defined(CONFIG_64BIT)
+> +#define IO_LONG_READ	__raw_readq
+> +#define IO_LONG_WRITE	__raw_writeq
+> +#define IO_LONG_SIZE	8
+> +#else
+> +#define IO_LONG_READ	__raw_readl
+> +#define IO_LONG_WRITE	__raw_writel
+> +#define IO_LONG_SIZE	4
+> +#endif
+> +
+> +void __memcpy_fromio(void *to, const volatile void __iomem *from, size_t count)
+> +{
+> +	while (count && !IS_ALIGNED((unsigned long)from, IO_LONG_SIZE) &&
+> +		!IS_ALIGNED((unsigned long)to, IO_LONG_SIZE)) {
+> +		*(u8 *)to = __raw_readb(from);
+> +		from++;
+> +		to++;
+> +		count--;
+> +	}
+> +
+> +	while (count >= IO_LONG_SIZE) {
+> +		*(unsigned long *)to = IO_LONG_READ(from);
+> +		from += IO_LONG_SIZE;
+> +		to += IO_LONG_SIZE;
+> +		count -= IO_LONG_SIZE;
+> +	}
+> +
+> +	while (count) {
+> +		*(u8 *)to = __raw_readb(from);
+> +		from++;
+> +		to++;
+> +		count--;
+> +	}
+> +}
+> +EXPORT_SYMBOL(__memcpy_fromio);
+> +
+> +void __memcpy_toio(volatile void __iomem *to, const void *from, size_t count)
+> +{
+> +	while (count && !IS_ALIGNED((unsigned long)from, IO_LONG_SIZE) &&
+> +		!IS_ALIGNED((unsigned long)to, IO_LONG_SIZE)) {
+> +		__raw_writeb(*(u8 *)from, to);
+> +		from++;
+> +		to++;
+> +		count--;
+> +	}
+> +
+> +	while (count >= IO_LONG_SIZE) {
+> +		IO_LONG_WRITE(*(unsigned long *)from, to);
+> +		from += IO_LONG_SIZE;
+> +		to += IO_LONG_SIZE;
+> +		count -= IO_LONG_SIZE;
+> +	}
+> +
+> +	while (count) {
+> +		__raw_writeb(*(u8 *)from, to);
+> +		from++;
+> +		to++;
+> +		count--;
+> +	}
+> +}
+> +EXPORT_SYMBOL(__memcpy_toio);
+> +
+> +void __memset_io(volatile void __iomem *dst, int c, size_t count)
+> +{
+> +	unsigned long lc = (u8)c;
+> +	int i;
+> +
+> +	for (i = 1; i < IO_LONG_SIZE; i++)
+> +		lc |= (u8)c << (i * BITS_PER_BYTE);
+> +
+> +	while (count && !IS_ALIGNED((unsigned long)dst, IO_LONG_SIZE)) {
+> +		__raw_writeb((u8)c, dst);
+> +		dst++;
+> +		count--;
+> +	}
+> +
+> +	while (count >= IO_LONG_SIZE) {
+> +		IO_LONG_WRITE(lc, dst);
+> +		dst += IO_LONG_SIZE;
+> +		count -= IO_LONG_SIZE;
+> +	}
+> +
+> +	while (count) {
+> +		__raw_writeb(c, dst);
+> +		dst++;
+> +		count--;
+> +	}
+> +}
+> +EXPORT_SYMBOL(__memset_io);
+> +#endif
 > -- 
 > 2.24.1
 > 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-
--- 
-Ville Syrjälä
-Intel
