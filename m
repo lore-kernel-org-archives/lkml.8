@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8378C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:27:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98EA9C33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A14422071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:27:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 651AF2071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:27:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579699647;
-	bh=CVWYUqlclg5fm/jt+Yb59GU6VCCcr/xuHkuCWRqPg9o=;
+	s=default; t=1579699650;
+	bh=Hykt05JHDDNwn8AmVNYmqgX6fuNy99GKqwkDqrQYsPM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UHBreexeBE5iXcATBcAhjqvo4iKS98/25qO5ORGsNCaVmTDMhTXsoABJ9R8dIEbd9
-	 oyWLp+Lb5F/QP+exC6LKfIG1EfmyLhI3TqUgF3EWF6sOE1ZpecraiT/1q3Syd8TkE+
-	 MTXCOsKg3P9xLSMpgAlW8T0eYvd5Nj2Onq97bQxk=
+	b=kcHxQ731jnifdhkJ5Pe6P2lzNHg6spobbxVW+8+udOBNIDumbrQn+PbSDxkW1y8tv
+	 wDkFqgQHoZ5z7lzdjRW5i8Ifg8NV53rNs9gjGjmd6gPE2pxDPIML5bLfXkdPsWHS+1
+	 dGATLeiisniWOXfpNqPYrk2ajrrkAIlKiCmzEOIE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729406AbgAVN11 (ORCPT
+        id S1731508AbgAVN13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:27:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48722 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 08:27:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731165AbgAVN1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:27:23 -0500
+        id S1731379AbgAVN10 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:27:26 -0500
 Received: from localhost (unknown [84.241.205.26])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F5DC20678;
-        Wed, 22 Jan 2020 13:27:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E581205F4;
+        Wed, 22 Jan 2020 13:27:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579699643;
-        bh=CVWYUqlclg5fm/jt+Yb59GU6VCCcr/xuHkuCWRqPg9o=;
+        s=default; t=1579699646;
+        bh=Hykt05JHDDNwn8AmVNYmqgX6fuNy99GKqwkDqrQYsPM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZrT/bjAzn1B2onmB9T1sjuFHYMorafiaUB31ul+/a/uzaRZb6hrVmo6TD6czXtYD8
-         9bvlYm4ijYz5KWB+f8W2DwkGO9zEg7FrDbN7gCOTe3vsvLLisCI+yvKyiVJzBxV3o4
-         Z9TjuD4IeXL++TkOJxopTSpLVEDlmU39tzEGbIu8=
+        b=LFWD6o1fUeP4xXoLBKAmtL4tQ/ROxrK+o1ckfRkbp4pwUtkFPPhZWrI3H2YPPMnD3
+         b3y7G4S/anFTT2RCFiYqiZhv20nyUbugIQKimnbchsGyLdiDzqovocNp1SzqMWvTm3
+         NFs9+ZoihEDncBcjQCkpMOzBqA+05Ur7zctaErcs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiang Chen <chenxiang66@hisilicon.com>,
-        John Garry <john.garry@huawei.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.4 206/222] scsi: hisi_sas: Return directly if init hardware failed
-Date:   Wed, 22 Jan 2020 10:29:52 +0100
-Message-Id: <20200122092848.450149077@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 5.4 189/222] ARM: dts: dra7: fix cpsw mdio fck clock
+Date:   Wed, 22 Jan 2020 10:29:35 +0100
+Message-Id: <20200122092847.214902689@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
 References: <20200122092833.339495161@linuxfoundation.org>
@@ -60,32 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiang Chen <chenxiang66@hisilicon.com>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
 
-commit 547fde8b5a1923050f388caae4f76613b5a620e0 upstream.
+commit 6af0a549c25e0d02366aa95507bfe3cad2f7b68b upstream.
 
-Need to return directly if init hardware failed.
+The DRA7 CPSW MDIO functional clock (gmac_clkctrl DRA7_GMAC_GMAC_CLKCTRL 0)
+is specified incorrectly, which is caused incorrect MDIO bus clock
+configuration MDCLK. The correct CPSW MDIO functional clock is
+gmac_main_clk (125MHz), which is the same as CPSW fck. Hence fix it.
 
-Fixes: 73a4925d154c ("scsi: hisi_sas: Update all the registers after suspend and resume")
-Link: https://lore.kernel.org/r/1573551059-107873-3-git-send-email-john.garry@huawei.com
-Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 1faa415c9c6e ("ARM: dts: Add fck for cpsw mdio for omap variants")
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/hisi_sas/hisi_sas_v3_hw.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/dra7-l4.dtsi |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-@@ -3423,6 +3423,7 @@ static int hisi_sas_v3_resume(struct pci
- 	if (rc) {
- 		scsi_remove_host(shost);
- 		pci_disable_device(pdev);
-+		return rc;
- 	}
- 	hisi_hba->hw->phys_init(hisi_hba);
- 	sas_resume_ha(sha);
+--- a/arch/arm/boot/dts/dra7-l4.dtsi
++++ b/arch/arm/boot/dts/dra7-l4.dtsi
+@@ -3059,7 +3059,7 @@
+ 
+ 				davinci_mdio: mdio@1000 {
+ 					compatible = "ti,cpsw-mdio","ti,davinci_mdio";
+-					clocks = <&gmac_clkctrl DRA7_GMAC_GMAC_CLKCTRL 0>;
++					clocks = <&gmac_main_clk>;
+ 					clock-names = "fck";
+ 					#address-cells = <1>;
+ 					#size-cells = <0>;
 
 
