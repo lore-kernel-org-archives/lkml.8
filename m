@@ -2,100 +2,108 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E223DC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 00:17:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79BE7C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 00:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B58AE21734
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 00:17:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B6nm8z1q"
+	by mail.kernel.org (Postfix) with ESMTP id 4E47E217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 00:25:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728913AbgAVARG (ORCPT
+        id S1728863AbgAVAZX convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 19:17:06 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:54669 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726970AbgAVARG (ORCPT
+        Tue, 21 Jan 2020 19:25:23 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:53548 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726876AbgAVAZX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 19:17:06 -0500
-Received: by mail-pj1-f65.google.com with SMTP id kx11so2193378pjb.4
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 16:17:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mjGh2rwq9I3yBu9wgudpicRsuc9hY6/QsJSVCCsHLPM=;
-        b=B6nm8z1qqVez+oK+7yTJg6sszlYC6O9kGXtD5kpfkQk4qprMXwbCnzzyrMZ8b8VVx3
-         SHIkF9fmKCI0p/graxqyCJRTBihfEu//EO1/xJEcZjUSgKMnTJuQLcW6BZjAMKuUZ+Jp
-         pE5+i3MEJk3lQKsPBbCwM3FJ4eCbwBAClDdfcNMqcnGo9kiuCxzQu9FcJzyVkfcU0z97
-         gDwCHMFjaBf3tvXU4QUSQCklUtXkVlZimYkHOsFKJZNraUM1fcb6jFVOdXbg0fDKE/7A
-         OkBfHAPAH+QLZKROd1JavsL4P8fV9e7QF/OjVY34cciN6Cs6Y9sm1fa1ZCaqzSvW9PRt
-         HYUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mjGh2rwq9I3yBu9wgudpicRsuc9hY6/QsJSVCCsHLPM=;
-        b=eSLAh4DdT9Vo9fcZ7cQNbVW13ieFIrC64QicvzoB4KpJZdyss86exHS+taY6HU3lVE
-         sfu0KachloxsQe7jQfwYs0LN2xNpCUA4+RO+N16ua6obF0Kv6DpYMRQr0gBIM/LiAw+T
-         R5f1uc2EZOCsytXIJijxx0yRE6gFOlBXPQYfzGHXbNzUj/Rjh3gUhkLLLxBuTdYZ9/eS
-         V3T+fyJ6xWLL0GpHpI09j67MtFOWH8LgUWXfauQXW0Dl9DaOhImLclu/NJCzlGaycn0m
-         E/FtJ/uQ07Q6x20KVjAnuNy8ovOw6WcHIoR3tDIRb8aFC3f5ZXDkbBJxiG1a+xuplSlR
-         cgNg==
-X-Gm-Message-State: APjAAAWgQWUQcX1lGeIjWopVVgGPN4xZlBxXP1EIPtmzR9MCKcvDSL7T
-        7iy4z8KiUFXA0c4Ln/tyXLYdcw==
-X-Google-Smtp-Source: APXvYqww213yTfxwe2vax3fLM8dUAmMVmaR3lFSYn8kc8oBNqMcgFYUTNCt8/44plN/68lG27aYtAg==
-X-Received: by 2002:a17:902:9a90:: with SMTP id w16mr7975360plp.93.1579652225779;
-        Tue, 21 Jan 2020 16:17:05 -0800 (PST)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id q8sm43284302pgg.92.2020.01.21.16.17.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 16:17:05 -0800 (PST)
-Date:   Tue, 21 Jan 2020 16:17:03 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Baolin Wang <baolin.wang7@gmail.com>
-Cc:     ohad@wizery.com, baohua@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND 0/3] Some improvements for SIRF hwspinlock
-Message-ID: <20200122001703.GD14744@builder>
-References: <cover.1578453662.git.baolin.wang7@gmail.com>
+        Tue, 21 Jan 2020 19:25:23 -0500
+Received: from localhost (unknown [IPv6:2610:98:8005::647])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: krisman)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id ACEB8292E33;
+        Wed, 22 Jan 2020 00:25:21 +0000 (GMT)
+From:   Gabriel Krisman Bertazi <krisman@collabora.com>
+To:     Pali =?utf-8?Q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Cc:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Namjae Jeon <linkinjeon@gmail.com>
+Subject: Re: vfat: Broken case-insensitive support for UTF-8
+In-Reply-To: <20200120214046.f6uq7rlih7diqahz@pali> ("Pali =?utf-8?Q?Roh?=
+ =?utf-8?Q?=C3=A1r=22's?= message of
+        "Mon, 20 Jan 2020 22:40:46 +0100")
+Organization: Collabora
+References: <20200119221455.bac7dc55g56q2l4r@pali>
+        <87sgkan57p.fsf@mail.parknet.co.jp>
+        <20200120110438.ak7jpyy66clx5v6x@pali>
+        <875zh6pc0f.fsf@mail.parknet.co.jp>
+        <20200120214046.f6uq7rlih7diqahz@pali>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+Date:   Tue, 21 Jan 2020 19:25:18 -0500
+Message-ID: <85wo9knxqp.fsf@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1578453662.git.baolin.wang7@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 07 Jan 19:23 PST 2020, Baolin Wang wrote:
+Pali Rohár <pali.rohar@gmail.com> writes:
 
-> This patch set did some improvements for the SIRF hwspinlock driver,
-> including changing to use devm_xxx APIs and removing some redundant
-> pm runtime functions.
-> 
+> On Monday 20 January 2020 21:07:12 OGAWA Hirofumi wrote:
+>> Pali Rohár <pali.rohar@gmail.com> writes:
+>> 
+>> >> To be perfect, the table would have to emulate what Windows use. It can
+>> >> be unicode standard, or something other.
+>> >
+>> > Windows FAT32 implementation (fastfat.sys) is opensource. So it should
+>> > be possible to inspect code and figure out how it is working.
+>> >
+>> > I will try to look at it.
+>> 
+>> I don't think the conversion library is not in fs driver though,
+>> checking implement itself would be good.
+>
+> Ok, I did some research. It took me it longer as I thought as lot of
+> stuff is undocumented and hard to find all relevant information.
+>
+> So... fastfat.sys is using ntos function RtlUpcaseUnicodeString() which
+> takes UTF-16 string and returns upper case UTF-16 string. There is no
+> mapping table in fastfat.sys driver itself.
+>
+> RtlUpcaseUnicodeString() is a ntos kernel function and after my research
+> it seems that this function is using only conversion table stored in
+> file l_intl.nls (from c:\windows\system32).
+>
+> Project wine describe this file as "unicode casing tables" and seems
+> that it can parse this file format. Even more it distributes its own
+> version of this file which looks like to be generated from official
+> Unicode UnicodeData.txt via Perl script make_unicode (part of wine).
+>
+> So question is... how much is MS changing l_intl.nls file in their
+> released Windows versions?
+>
+> I would try to decode what is format of that file l_intl.nls and try to
+> compare data in it from some Windows versions.
+>
+> Can we reuse upper case mapping table from that file?
 
-Thanks for resending the three series' Baolin! I've applied this as
-well.
+Regarding fs/unicode, we have some infrastructure to parse UCD files,
+handle unicode versioning, and store the data in a more compact
+structure.  See the mkutf8data script.
 
-Regards,
-Bjorn
+Right now, we only store the mapping of the code-point to the NFD + full
+casefold, but it would be possible to extend the parsing script to store
+the un-normalized uppercase version in the data structure.  So, if
+l_intl.nls is generated from UnicodeData.txt, you might consider to
+extend fs/unicode to store it.  We store the code-points in an optimized
+format to decode utf-8, but the infrastructure is half way there
+already.
 
-> Baolin Wang (3):
->   hwspinlock: sirf: Change to use devm_platform_ioremap_resource()
->   hwspinlock: sirf: Remove redundant PM runtime functions
->   hwspinlock: sirf: Use devm_hwspin_lock_register() to register hwlock
->     controller
-> 
->  drivers/hwspinlock/sirf_hwspinlock.c |   46 ++++++----------------------------
->  1 file changed, 7 insertions(+), 39 deletions(-)
-> 
-> -- 
-> 1.7.9.5
-> 
+-- 
+Gabriel Krisman Bertazi
