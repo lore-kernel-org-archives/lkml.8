@@ -5,48 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9641EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:26:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34FABC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:26:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B8B824688
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:26:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0087C2467F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:26:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579699581;
-	bh=MqHk9ws1zC4KJqEe/qedh29q88AsQZjUKviXXMv9T14=;
+	s=default; t=1579699588;
+	bh=Q7t6sfTX9dJl8KPxGs9eW4J5qsuJ70qm/uUg4A9JZ0c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TgYAfVcSxv+nMlMAGwOLyDZea7o9m77MqD+1kYBO8B81tR71bPv9JZmIokvXaiXB6
-	 cF7fQRSlukd+qd0LoGBcVDNdkctW83EJvcgchTE5wopqQb0XS8KwypNweLIqBQJFFD
-	 mJMtbyRA15VSo1ORebSpBR445E2pBFtjB1ey76mI=
+	b=YyY1082QBg9pt3gs+X1gkKwZQhGaYRCdtx64SpnuIMvsnhe11+ws2WNFfKu18jcQJ
+	 nPV90LLisi1rUCdrOD1lLb84CBvugT3cE8LDci/YwHosyamTxeTS8So1dzhB9/8kb2
+	 AKrJfijLt3Z+fXDN6XoLO0NGTekqUEBku4OCl+HI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730400AbgAVN0U (ORCPT
+        id S1731225AbgAVN01 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:26:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46956 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 08:26:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730845AbgAVN0S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:26:18 -0500
+        id S1730845AbgAVN0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:26:21 -0500
 Received: from localhost (unknown [84.241.205.26])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E4812467F;
-        Wed, 22 Jan 2020 13:26:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CAFE2467B;
+        Wed, 22 Jan 2020 13:26:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579699577;
-        bh=MqHk9ws1zC4KJqEe/qedh29q88AsQZjUKviXXMv9T14=;
+        s=default; t=1579699581;
+        bh=Q7t6sfTX9dJl8KPxGs9eW4J5qsuJ70qm/uUg4A9JZ0c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v/RsWG0Dh58dTqRLPeZVF7Bw6FYabVGowEPfhm8D809ioxL3XYk1LnWwVQivQTEOC
-         dGAI2Z4HUCK0z+kpOcN5v8IJC+rXUagm1q1Zztu+JE1RlayhldeZDKryta046DAk8n
-         ebZWBNlIYUxxpEHQlTylV8LzTtoA3RjL2FStFW7I=
+        b=W7C+5VVmq8iVcLc3q7LFCmMeTk7w5twnavw8wmoPkPVb6ERg+CTcklSMPEfAoNX2O
+         cDTnMHsDp9i5R4KQ6pQ3C4A7WArHY2S5tEquyw5xDT1oP0fORW4uFjnmDJbWBKIha6
+         cVGReFpEiwythJ/TPIjmSZIByoYc419cMk3/uZYE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Biju Das <biju.das@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 5.4 184/222] arm64: dts: renesas: r8a774a1: Remove audio port node
-Date:   Wed, 22 Jan 2020 10:29:30 +0100
-Message-Id: <20200122092846.861792313@linuxfoundation.org>
+        stable@vger.kernel.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: [PATCH 5.4 185/222] arm64: dts: imx8mm-evk: Assigned clocks for audio plls
+Date:   Wed, 22 Jan 2020 10:29:31 +0100
+Message-Id: <20200122092846.933959096@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
 References: <20200122092833.339495161@linuxfoundation.org>
@@ -59,91 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Biju Das <biju.das@bp.renesas.com>
+From: S.j. Wang <shengjiu.wang@nxp.com>
 
-commit a381325812691f57aece60aaee76938ac8fc6619 upstream.
+commit e8b395b23643ca26e62a3081130d895e198c6154 upstream.
 
-This patch removes audio port node from SoC device tree and
-fixes the below dtb warning
+Assign clocks and clock-rates for audio plls, that audio
+drivers can utilize them.
 
-    Warning (unit_address_vs_reg): /soc/sound@ec500000/ports/port@0: node has a unit name, but no reg property
+Add dai-tdm-slot-num and dai-tdm-slot-width for sound-wm8524,
+that sai driver can generate correct bit clock.
 
-Fixes: e2f04248fcd4 ("arm64: dts: renesas: r8a774a1: Add audio support")
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Link: https://lore.kernel.org/r/1570200761-884-1-git-send-email-biju.das@bp.renesas.com
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Fixes: 13f3b9fdef6c ("arm64: dts: imx8mm-evk: Enable audio codec wm8524")
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/boot/dts/renesas/hihope-common.dtsi |   22 ++++++++++------------
- arch/arm64/boot/dts/renesas/r8a774a1.dtsi      |   11 -----------
- 2 files changed, 10 insertions(+), 23 deletions(-)
+ arch/arm64/boot/dts/freescale/imx8mm-evk.dts |    2 ++
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi    |    8 ++++++--
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
---- a/arch/arm64/boot/dts/renesas/hihope-common.dtsi
-+++ b/arch/arm64/boot/dts/renesas/hihope-common.dtsi
-@@ -86,7 +86,7 @@
+--- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+@@ -62,6 +62,8 @@
  
- 		label = "rcar-sound";
+ 		cpudai: simple-audio-card,cpu {
+ 			sound-dai = <&sai3>;
++			dai-tdm-slot-num = <2>;
++			dai-tdm-slot-width = <32>;
+ 		};
  
--		dais = <&rsnd_port0>;
-+		dais = <&rsnd_port>;
- 	};
- 
- 	vbus0_usb2: regulator-vbus0-usb2 {
-@@ -191,7 +191,7 @@
- 		port@2 {
- 			reg = <2>;
- 			dw_hdmi0_snd_in: endpoint {
--				remote-endpoint = <&rsnd_endpoint0>;
-+				remote-endpoint = <&rsnd_endpoint>;
+ 		simple-audio-card,codec {
+--- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+@@ -479,14 +479,18 @@
+ 						<&clk IMX8MM_CLK_AUDIO_AHB>,
+ 						<&clk IMX8MM_CLK_IPG_AUDIO_ROOT>,
+ 						<&clk IMX8MM_SYS_PLL3>,
+-						<&clk IMX8MM_VIDEO_PLL1>;
++						<&clk IMX8MM_VIDEO_PLL1>,
++						<&clk IMX8MM_AUDIO_PLL1>,
++						<&clk IMX8MM_AUDIO_PLL2>;
+ 				assigned-clock-parents = <&clk IMX8MM_SYS_PLL3_OUT>,
+ 							 <&clk IMX8MM_SYS_PLL1_800M>;
+ 				assigned-clock-rates = <0>,
+ 							<400000000>,
+ 							<400000000>,
+ 							<750000000>,
+-							<594000000>;
++							<594000000>,
++							<393216000>,
++							<361267200>;
  			};
- 		};
- 	};
-@@ -327,17 +327,15 @@
- 	/* Single DAI */
- 	#sound-dai-cells = <0>;
  
--	ports {
--		rsnd_port0: port@0 {
--			rsnd_endpoint0: endpoint {
--				remote-endpoint = <&dw_hdmi0_snd_in>;
--
--				dai-format = "i2s";
--				bitclock-master = <&rsnd_endpoint0>;
--				frame-master = <&rsnd_endpoint0>;
-+	rsnd_port: port {
-+		rsnd_endpoint: endpoint {
-+			remote-endpoint = <&dw_hdmi0_snd_in>;
-+
-+			dai-format = "i2s";
-+			bitclock-master = <&rsnd_endpoint>;
-+			frame-master = <&rsnd_endpoint>;
- 
--				playback = <&ssi2>;
--			};
-+			playback = <&ssi2>;
- 		};
- 	};
- };
---- a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-@@ -1726,17 +1726,6 @@
- 				      "ssi.1", "ssi.0";
- 			status = "disabled";
- 
--			ports {
--				#address-cells = <1>;
--				#size-cells = <0>;
--				port@0 {
--					reg = <0>;
--				};
--				port@1 {
--					reg = <1>;
--				};
--			};
--
- 			rcar_sound,ctu {
- 				ctu00: ctu-0 { };
- 				ctu01: ctu-1 { };
+ 			src: reset-controller@30390000 {
 
 
