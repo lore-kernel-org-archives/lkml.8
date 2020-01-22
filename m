@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A5DC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD975C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:31:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE6742467B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:31:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79A7424672
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:31:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685467;
-	bh=L4QAyqnjIbE6eR2gdAHHZr8L2R5BTRnTzBoUgeZVtl0=;
+	s=default; t=1579685472;
+	bh=6BnNUWJF6aYZydoM8RpxRCigJKk8/js3efYHnlbHI4A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aOioK4jDaIQhcfj6YUopokY7r4MttbTVsm+LITWINvmNKh+P9JTOjHtkPoFcZbyFC
-	 OjK8Vyz7G0kgpOBpuSaQzedfJklpqBhBHTnG5hzfbuHvJP5pWFLhk71SyGroD3HY+8
-	 SUJ8GpaQDrItlSPECWPAA0QImtZg0gOiVFp7U1Ok=
+	b=tKu+HmAtzNxS9bv6nt3kkX2/Fw8+uQzJEDFQZRxQgL+kKVFTch3AVtWmTviQHaUXv
+	 U6UrGAxQ3Opp0pD4fUb7Kyyk1+TImwmSoPb8tMh8q0On4rhwz9gPvj7GoXkx+tmsHW
+	 2ljxIm0kxMZ3xOhB6kXYbNKAU4Cu+LetK1f41qvw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729532AbgAVJbH (ORCPT
+        id S1729578AbgAVJbL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:31:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42814 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:31:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729473AbgAVJbB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:31:01 -0500
+        id S1729527AbgAVJbH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:31:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB13124672;
-        Wed, 22 Jan 2020 09:31:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADA7E24673;
+        Wed, 22 Jan 2020 09:31:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685461;
-        bh=L4QAyqnjIbE6eR2gdAHHZr8L2R5BTRnTzBoUgeZVtl0=;
+        s=default; t=1579685466;
+        bh=6BnNUWJF6aYZydoM8RpxRCigJKk8/js3efYHnlbHI4A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w2i72pUrQWV5sxrBl9kJYclI7xWfho/dPJqfdjfGgzCMtPPkmtjd8X8cyCUlUFJId
-         /NV6rk+gPsbBpPXp+hcs07fHf3DkQVjN7nidAvxxm6j16XgQpEb1zBS4Afa+gZS4AK
-         NYNnJL1+1GK4nCTmnTRhYMGafioOBlSpvK9oYK94=
+        b=hNtLZ8AVc0XhFHMz2sk4SOHcmofHzPcMsf0JKZkFEaNppa45kkw1beErkem2GmM30
+         Y1JvbDgCK6iWENMVDjahPb1NoYRw+jeqv5OZe8HyKtPYhRxuxuRHO5W9sk0MXVvzBk
+         313gn1pl5YyBodd21czFKnxfUSfY4vPKxgpDndlc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
-        Honggang Li <honli@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 4.4 23/76] RDMA/srpt: Report the SCSI residual to the initiator
-Date:   Wed, 22 Jan 2020 10:28:39 +0100
-Message-Id: <20200122092754.097947390@linuxfoundation.org>
+        stable@vger.kernel.org, Xiang Chen <chenxiang66@hisilicon.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.4 25/76] scsi: sd: Clear sdkp->protection_type if disk is reformatted without PI
+Date:   Wed, 22 Jan 2020 10:28:41 +0100
+Message-Id: <20200122092754.326792715@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092751.587775548@linuxfoundation.org>
 References: <20200122092751.587775548@linuxfoundation.org>
@@ -60,70 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Xiang Chen <chenxiang66@hisilicon.com>
 
-commit e88982ad1bb12db699de96fbc07096359ef6176c upstream.
+commit 465f4edaecc6c37f81349233e84d46246bcac11a upstream.
 
-The code added by this patch is similar to the code that already exists in
-ibmvscsis_determine_resid(). This patch has been tested by running the
-following command:
+If an attached disk with protection information enabled is reformatted
+to Type 0 the revalidation code does not clear the original protection
+type and subsequent accesses will keep setting RDPROTECT/WRPROTECT.
 
-strace sg_raw -r 1k /dev/sdb 12 00 00 00 60 00 -o inquiry.bin |&
-    grep resid=
+Set the protection type to 0 if the disk reports PROT_EN=0 in READ
+CAPACITY(16).
 
-Link: https://lore.kernel.org/r/20191105214632.183302-1-bvanassche@acm.org
-Fixes: a42d985bd5b2 ("ib_srpt: Initial SRP Target merge for v3.3-rc1")
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Acked-by: Honggang Li <honli@redhat.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+[mkp: commit desc]
+
+Fixes: fe542396da73 ("[SCSI] sd: Ensure we correctly disable devices with unknown protection type")
+Link: https://lore.kernel.org/r/1578532344-101668-1-git-send-email-chenxiang66@hisilicon.com
+Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/ulp/srpt/ib_srpt.c |   24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ drivers/scsi/sd.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/infiniband/ulp/srpt/ib_srpt.c
-+++ b/drivers/infiniband/ulp/srpt/ib_srpt.c
-@@ -1513,9 +1513,11 @@ static int srpt_build_cmd_rsp(struct srp
- 			      struct srpt_send_ioctx *ioctx, u64 tag,
- 			      int status)
- {
-+	struct se_cmd *cmd = &ioctx->cmd;
- 	struct srp_rsp *srp_rsp;
- 	const u8 *sense_data;
- 	int sense_data_len, max_sense_len;
-+	u32 resid = cmd->residual_count;
+--- a/drivers/scsi/sd.c
++++ b/drivers/scsi/sd.c
+@@ -1998,8 +1998,10 @@ static int sd_read_protection_type(struc
+ 	u8 type;
+ 	int ret = 0;
  
- 	/*
- 	 * The lowest bit of all SAM-3 status codes is zero (see also
-@@ -1537,6 +1539,28 @@ static int srpt_build_cmd_rsp(struct srp
- 	srp_rsp->tag = tag;
- 	srp_rsp->status = status;
- 
-+	if (cmd->se_cmd_flags & SCF_UNDERFLOW_BIT) {
-+		if (cmd->data_direction == DMA_TO_DEVICE) {
-+			/* residual data from an underflow write */
-+			srp_rsp->flags = SRP_RSP_FLAG_DOUNDER;
-+			srp_rsp->data_out_res_cnt = cpu_to_be32(resid);
-+		} else if (cmd->data_direction == DMA_FROM_DEVICE) {
-+			/* residual data from an underflow read */
-+			srp_rsp->flags = SRP_RSP_FLAG_DIUNDER;
-+			srp_rsp->data_in_res_cnt = cpu_to_be32(resid);
-+		}
-+	} else if (cmd->se_cmd_flags & SCF_OVERFLOW_BIT) {
-+		if (cmd->data_direction == DMA_TO_DEVICE) {
-+			/* residual data from an overflow write */
-+			srp_rsp->flags = SRP_RSP_FLAG_DOOVER;
-+			srp_rsp->data_out_res_cnt = cpu_to_be32(resid);
-+		} else if (cmd->data_direction == DMA_FROM_DEVICE) {
-+			/* residual data from an overflow read */
-+			srp_rsp->flags = SRP_RSP_FLAG_DIOVER;
-+			srp_rsp->data_in_res_cnt = cpu_to_be32(resid);
-+		}
+-	if (scsi_device_protection(sdp) == 0 || (buffer[12] & 1) == 0)
++	if (scsi_device_protection(sdp) == 0 || (buffer[12] & 1) == 0) {
++		sdkp->protection_type = 0;
+ 		return ret;
 +	}
-+
- 	if (sense_data_len) {
- 		BUILD_BUG_ON(MIN_MAX_RSP_SIZE <= sizeof(*srp_rsp));
- 		max_sense_len = ch->max_ti_iu_len - sizeof(*srp_rsp);
+ 
+ 	type = ((buffer[12] >> 1) & 7) + 1; /* P_TYPE 0 = Type 1 */
+ 
 
 
