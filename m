@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B9AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C179C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 958A52468B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:43:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FC8F2467B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:43:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686231;
-	bh=a05LJki7/JjRwAFxjy9uKz+C9AjD8lWYO8aJVVSFOVE=;
+	s=default; t=1579686234;
+	bh=e36sjmPaCPPq1/i9Ltj188SqoWa1clYoefAn7mPbTaA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lYicOu8Puq5eacREkXxLRm6mJWfbEvF8xMoml7zCgCw02SwryJUyArdVc8nzyHCMv
-	 Vvm0ze/6j6O7b4mhgshTD13QLESZ8aSnbVauTkZDh3wZMCRTfNCbBEClBrmFRdDcue
-	 vkmjWQCyU8tMyzbbVKpiGhfFDn5JUFNz2bc2hyXo=
+	b=OO5QwoJ0aUFCB7YOG+/Nu8Iu1M7e70OUCLniq7Tfm/Rt7tOgJfrL92bopnPkL1OeC
+	 oOsEvrj/2iDlIaybqGhh/NOnGd/x3R1vThCnO7/QU0hUdaeO9Hjujp62OmYC7YJwyg
+	 KiqkpPNvD/qCQeVaOBtu45lNipArpFfdGQ7XqJA4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387949AbgAVJnu (ORCPT
+        id S2387957AbgAVJnw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:43:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36480 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:43:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387932AbgAVJnq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:43:46 -0500
+        id S2387943AbgAVJnt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:43:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3E022468C;
-        Wed, 22 Jan 2020 09:43:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 347812468D;
+        Wed, 22 Jan 2020 09:43:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686226;
-        bh=a05LJki7/JjRwAFxjy9uKz+C9AjD8lWYO8aJVVSFOVE=;
+        s=default; t=1579686228;
+        bh=e36sjmPaCPPq1/i9Ltj188SqoWa1clYoefAn7mPbTaA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ngxCaAk4kdUJMGvJXJ67ELmgi89ps+kn7d7CYqllwbO5ahDHo7A7o10pstd23GO+o
-         Zwjz+Ip9sTFZS53TwKxjM/2cZXAYlGrRJ+GyTqULI8/rFtQjxCAt+NbRIuBFmYzHaI
-         Je7u16r+FP5nr8wHTaLMTxjKk/J3k2Uu+G8ADODg=
+        b=zdNblfW+G+n2uRuknoqiowhGGF9rVXfOfDy+gn0Wxm+ph2MwvQcIA1JrJ+t8CqCkJ
+         owPeAsrJ9pjku/yoBFSuq2Mg9dlIzuxuujOT9qoGioCLew4F7L3/odHWQ6lSraLxwi
+         N5phztFtPpy7i8zCdSX4nSgO4pJehDIKkPlbV01U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
-        Manish Rangankar <mrangankar@marvell.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.19 094/103] scsi: qla4xxx: fix double free bug
-Date:   Wed, 22 Jan 2020 10:29:50 +0100
-Message-Id: <20200122092816.077967082@linuxfoundation.org>
+Subject: [PATCH 4.19 095/103] scsi: bnx2i: fix potential use after free
+Date:   Wed, 22 Jan 2020 10:29:51 +0100
+Message-Id: <20200122092816.157457753@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
 References: <20200122092803.587683021@linuxfoundation.org>
@@ -62,34 +61,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Pan Bian <bianpan2016@163.com>
 
-commit 3fe3d2428b62822b7b030577cd612790bdd8c941 upstream.
+commit 29d28f2b8d3736ac61c28ef7e20fda63795b74d9 upstream.
 
-The variable init_fw_cb is released twice, resulting in a double free
-bug. The call to the function dma_free_coherent() before goto is removed to
-get rid of potential double free.
+The member hba->pcidev may be used after its reference is dropped. Move the
+put function to where it is never used to avoid potential use after free
+issues.
 
-Fixes: 2a49a78ed3c8 ("[SCSI] qla4xxx: added IPv6 support.")
-Link: https://lore.kernel.org/r/1572945927-27796-1-git-send-email-bianpan2016@163.com
+Fixes: a77171806515 ("[SCSI] bnx2i: Removed the reference to the netdev->base_addr")
+Link: https://lore.kernel.org/r/1573043541-19126-1-git-send-email-bianpan2016@163.com
 Signed-off-by: Pan Bian <bianpan2016@163.com>
-Acked-by: Manish Rangankar <mrangankar@marvell.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/qla4xxx/ql4_mbx.c |    3 ---
- 1 file changed, 3 deletions(-)
+ drivers/scsi/bnx2i/bnx2i_iscsi.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/scsi/qla4xxx/ql4_mbx.c
-+++ b/drivers/scsi/qla4xxx/ql4_mbx.c
-@@ -640,9 +640,6 @@ int qla4xxx_initialize_fw_cb(struct scsi
+--- a/drivers/scsi/bnx2i/bnx2i_iscsi.c
++++ b/drivers/scsi/bnx2i/bnx2i_iscsi.c
+@@ -915,12 +915,12 @@ void bnx2i_free_hba(struct bnx2i_hba *hb
+ 	INIT_LIST_HEAD(&hba->ep_ofld_list);
+ 	INIT_LIST_HEAD(&hba->ep_active_list);
+ 	INIT_LIST_HEAD(&hba->ep_destroy_list);
+-	pci_dev_put(hba->pcidev);
  
- 	if (qla4xxx_get_ifcb(ha, &mbox_cmd[0], &mbox_sts[0], init_fw_cb_dma) !=
- 	    QLA_SUCCESS) {
--		dma_free_coherent(&ha->pdev->dev,
--				  sizeof(struct addr_ctrl_blk),
--				  init_fw_cb, init_fw_cb_dma);
- 		goto exit_init_fw_cb;
+ 	if (hba->regview) {
+ 		pci_iounmap(hba->pcidev, hba->regview);
+ 		hba->regview = NULL;
  	}
- 
++	pci_dev_put(hba->pcidev);
+ 	bnx2i_free_mp_bdt(hba);
+ 	bnx2i_release_free_cid_que(hba);
+ 	iscsi_host_free(shost);
 
 
