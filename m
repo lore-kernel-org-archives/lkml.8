@@ -2,221 +2,227 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C75C33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 03:11:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72AFBC33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 03:12:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F9A524673
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 03:11:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579662716;
-	bh=168pA64HEbetD9f/z70bdtfpiqV9+iRntEM22Vq2LHE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=xFsskhQ6AoCHg9TESwgbecn4OXv+KP2eTbP1OFQJxosm2fOcQ6BbQO+ziLBUba2B0
-	 OPGHBcv22iLFOWtQvAEWBNcrfUFYBdGyUf4VVPIyjv3gLFHlKNgxkxAAU3LQFqXDdn
-	 W15hs6R1yBiKDSQS/zF75wm9gz7Yy4/dYlkEcnGY=
+	by mail.kernel.org (Postfix) with ESMTP id 3FB5324655
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 03:12:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SIkXC4tK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729137AbgAVDLz (ORCPT
+        id S1729163AbgAVDMM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 22:11:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40688 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728779AbgAVDLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 22:11:55 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F18F24655;
-        Wed, 22 Jan 2020 03:11:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579662714;
-        bh=168pA64HEbetD9f/z70bdtfpiqV9+iRntEM22Vq2LHE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Jrjus4z8Fm4wJhfueCssN1I6PmCkeZqH56yEvPiRotKE7I+NCOQ9L2IOqzTrh8/y5
-         o56ZepsPqazCXlJVLuZuazE2h0Dn53hC+85vzYnoXbhcA4irBqqd9bj4MCCJB2gb64
-         wW9CYN01ctRBEFnHJrnUiuG60+vGqPeRXgMdy5s4=
-Date:   Wed, 22 Jan 2020 12:11:49 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Masami Hiramatsu <mhiramat@redhat.com>,
-        X86 ML <x86@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: linux-next: Tree for Oct 14 (insn_decoder_test)
-Message-Id: <20200122121149.5f0090760c8c51651eca88de@kernel.org>
-In-Reply-To: <aab93029-158a-5554-9976-b20aa48fef1d@infradead.org>
-References: <20191014174707.469f596f@canb.auug.org.au>
-        <2d83682b-6206-4992-63cc-342d61641c0a@infradead.org>
-        <20191023144916.2cbd0ea16363b4cd4574f5ad@kernel.org>
-        <3fe0f2d7-eab6-8224-bc48-ef513c7ce8e3@infradead.org>
-        <aab93029-158a-5554-9976-b20aa48fef1d@infradead.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 21 Jan 2020 22:12:12 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53381 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728779AbgAVDMM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 22:12:12 -0500
+Received: by mail-wm1-f68.google.com with SMTP id m24so5285545wmc.3;
+        Tue, 21 Jan 2020 19:12:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:cc:references:from:autocrypt:subject:message-id:date:user-agent
+         :mime-version:in-reply-to;
+        bh=1BVzpWHJzPeOvi4CZ1Q3Hz4I3KovNebvVdfsMJTDsfU=;
+        b=SIkXC4tKpbEJ3PzQ+OcB9TVuS3WRNt+JqXTKzFmxBiackrEKYZdgCn+S3do1qDVPKy
+         XRFbnEGYkJWGDniD8LtDhTu0lw+1hFJG3D25noF+1PfEVPIhB/V1hee2wjZaqYSRLAgV
+         2XCr3UcxV0wQLyg4hxYBaX02F7DAJYPm4lpdqiHhx/E9qy4yuKXsDkVn9yjzjb4iTmfo
+         futapoJSyD3lbQaO2w580/ck9vktD39qgogT/xmFlAywWEqFCnyxZ16yn5ky7Tkl51lL
+         BdFEftfxIlMaLzlg1V+Lr+OienYW4kJPuKKTUB0Ek98Lu3QnfHXtUlB387cOXKK3n0oO
+         9e5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:references:from:autocrypt:subject
+         :message-id:date:user-agent:mime-version:in-reply-to;
+        bh=1BVzpWHJzPeOvi4CZ1Q3Hz4I3KovNebvVdfsMJTDsfU=;
+        b=uD837xjeHu5r2I7v8D3ROPrCAJJ9JnYmk5ReBBMkJtWH3mhiNber5laO3Y1WFjdm8v
+         zxe3jLZpVWOnqWHJWxi368ewzyJwEOjEUJf+Nn9nPL5a6jjy3yzMqdArkrKVQSi/blw8
+         JiGlrFM7j5DCGJU3d7RRhCaSxYAVpVswKwZ2NQksNA+0ZCuAASxFJiKOmIE3cEf3epfT
+         ARVa2lAF1GXTNq0F83OmTi1lQNG9Ci1gPAexaDyTxaBLeScd+OhZ37FTMXPEBfMHdF9O
+         40h52n/Ng+GJbcb0JPHgX3NDci2K2qH7cWAYcoizveHBpsFA9jmvNK8ScMkN1eq/zMP7
+         0S8A==
+X-Gm-Message-State: APjAAAXlMEDhH6nTCD9EBb628itTL76ejvLHLQwRWhlQ+Wq+lk/JrhLv
+        JkWDfZgQI7HneAheB7tCHm0=
+X-Google-Smtp-Source: APXvYqzvtuXRbVIzXqwp5PVuu7Gnq4U2PWJPmUC3aH5OtxRp1XV+niaX4ENSfTT2mSX8MuKFGd4Nlg==
+X-Received: by 2002:a1c:1d02:: with SMTP id d2mr264695wmd.185.1579662728737;
+        Tue, 21 Jan 2020 19:12:08 -0800 (PST)
+Received: from [192.168.43.234] ([109.126.145.157])
+        by smtp.gmail.com with ESMTPSA id q3sm56270381wrn.33.2020.01.21.19.12.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jan 2020 19:12:08 -0800 (PST)
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>
+References: <cover.1579649589.git.asml.silence@gmail.com>
+ <63119dd6-7668-a7bc-ea24-1db4909762bb@kernel.dk>
+From:   Pavel Begunkov <asml.silence@gmail.com>
+Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
+ 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 bA==
+Subject: Re: [POC RFC 0/3] splice(2) support for io_uring
+Message-ID: <45f0b63b-e3e7-ba71-d037-9af1db7bbd98@gmail.com>
+Date:   Wed, 22 Jan 2020 06:11:27 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
+MIME-Version: 1.0
+In-Reply-To: <63119dd6-7668-a7bc-ea24-1db4909762bb@kernel.dk>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="Ir6uQ8kmMcOcEUhuO6HLX6yuWsMNYgzNE"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 Jan 2020 07:43:16 -0800
-Randy Dunlap <rdunlap@infradead.org> wrote:
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--Ir6uQ8kmMcOcEUhuO6HLX6yuWsMNYgzNE
+Content-Type: multipart/mixed; boundary="x0tm5hLtcuaId6zzrES9YU9sroBKl5WwS";
+ protected-headers="v1"
+From: Pavel Begunkov <asml.silence@gmail.com>
+To: Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Message-ID: <45f0b63b-e3e7-ba71-d037-9af1db7bbd98@gmail.com>
+Subject: Re: [POC RFC 0/3] splice(2) support for io_uring
+References: <cover.1579649589.git.asml.silence@gmail.com>
+ <63119dd6-7668-a7bc-ea24-1db4909762bb@kernel.dk>
+In-Reply-To: <63119dd6-7668-a7bc-ea24-1db4909762bb@kernel.dk>
 
-> [adding x86 people]
-> 
-> I am still seeing this insn_decoder warning in linux-next.
-> 
-> Can we get this patch applied, please?
-> 
-> Masami, you might need to resend it...
+--x0tm5hLtcuaId6zzrES9YU9sroBKl5WwS
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-OK, I'll resend it.
+On 22/01/2020 04:55, Jens Axboe wrote:
+> On 1/21/20 5:05 PM, Pavel Begunkov wrote:
+>> It works well for basic cases, but there is still work to be done. E.g=
+=2E
+>> it misses @hash_reg_file checks for the second (output) file. Anyway,
+>> there are some questions I want to discuss:
+>>
+>> - why sqe->len is __u32? Splice uses size_t, and I think it's better
+>> to have something wider (e.g. u64) for fututre use. That's the story
+>> behind added sqe->splice_len.
+>=20
+> IO operations in Linux generally are INT_MAX, so the u32 is plenty big.=
 
-Thank you for pinging!
+> That's why I chose it. For this specifically, if you look at splice:
+>=20
+> 	if (unlikely(len > MAX_RW_COUNT))
+> 		len =3D MAX_RW_COUNT;
+>=20
+> so anything larger is truncated anyway.
 
-> 
-> thanks.
-> 
-> 
-> On 11/27/19 4:04 PM, Randy Dunlap wrote:
-> > On 10/22/19 10:49 PM, Masami Hiramatsu wrote:
-> >> Hi,
-> >>
-> >> On Mon, 14 Oct 2019 08:30:02 -0700
-> >> Randy Dunlap <rdunlap@infradead.org> wrote:
-> >>
-> >>> On 10/13/19 11:47 PM, Stephen Rothwell wrote:
-> >>>> Hi all,
-> >>>>
-> >>>> Changes since 20191011:
-> >>>>
-> >>>
-> >>> on x86_64:
-> >>>
-> >>>   HOSTCC  arch/x86/tools/insn_decoder_test
-> >>>   HOSTCC  arch/x86/tools/insn_sanity
-> >>>   TEST    posttest
-> >>> arch/x86/tools/insn_decoder_test: warning: Found an x86 instruction decoder bug, please report this.
-> >>> arch/x86/tools/insn_decoder_test: warning: ffffffff81000bf1:	f7 0b 00 01 08 00    	testl  $0x80100,(%rbx)
-> >>> arch/x86/tools/insn_decoder_test: warning: objdump says 6 bytes, but insn_get_length() says 2
-> >>> arch/x86/tools/insn_decoder_test: warning: Decoded and checked 11913894 instructions with 1 failures
-> >>>   TEST    posttest
-> >>> arch/x86/tools/insn_sanity: Success: decoded and checked 1000000 random instructions with 0 errors (seed:0x871ce29c)
-> >>
-> >> Hmm, curious.
-> >>
-> >> x86-opcode-map.txt said,
-> >> f7: Grp3_2 Ev (1A)
-> >>
-> >> and "0x0b" is 00001011b, Group encoding bits are 5,4,3 (reg field),
-> >> so group index is 001.
-> >>
-> >> GrpTable: Grp3_2
-> >> 0: TEST Ev,Iz
-> >> 1:
-> >>
-> >> Hmm, "f7 0b" is not assigned to any instruction... (testl should be f7 03)
-> >>
-> >> I've checked Intel SDM May 2019 version(*), but the Opcode Map (Table A-6. Opecode
-> >> Extensions for One- and Two-byte Opecodes by Group Number) showed the group index
-> >> 001 is still blank. I've also checked that Table B-13 (General Purpose Instruction
-> >>  Formats and Encodings for Non-64-Bit Modes (Note that this has no REX prefix)) but
-> >> I couldn't find "f7 0b".
-> >>
-> >> At last, I found that on AMD64 Architecture Programmer's Manual Volume 3, Appendix A.2
-> >> Table A-6. ModRM.reg Extensions for the Primary Opcode Map(**), which shows that both
-> >> f7 + reg=000 and f7 + reg=001 are same. So only on AMD64, it is officially available
-> >> instruction.
-> >>
-> >> (*) https://software.intel.com/sites/default/files/managed/a4/60/325383-sdm-vol-2abcd.pdf
-> >> (**) https://www.amd.com/system/files/TechDocs/24594.pdf
-> >>
-> >> OK, so this should be fixed with below patch.
-> >>
-> >> ------
-> >> >From b3f45b86df25be59fcf417730ab4c69c6310eaad Mon Sep 17 00:00:00 2001
-> >> From: Masami Hiramatsu <mhiramat@kernel.org>
-> >> Date: Wed, 23 Oct 2019 14:45:35 +0900
-> >> Subject: [PATCH] x86/decoder: Add TEST opcode to Group3-2
-> >>
-> >> Add TEST opcode to Group3-2 reg=001b as same as Group3-1 does.
-> >>
-> >> Commit 12a78d43de76 ("x86/decoder: Add new TEST instruction pattern")
-> >> added a TEST opcode assignment to f6 XX/001/XXX (Group 3-1), but not
-> >> added f7 XX/001/XXX (Group 3-2). Actually these TEST opcode is not
-> >> described in Intel SDM Vol2, but described in AMD64 Architecture
-> >> Programmer's Manual Vol.3, Appendix A.2 Table A-6. ModRM.reg
-> >> Extensions for the Primary Opcode Map.
-> >>
-> >> Without this fix, Randy found a warning by insn_decoder_test related
-> >> to this issue as below.
-> >>
-> >>   HOSTCC  arch/x86/tools/insn_decoder_test
-> >>   HOSTCC  arch/x86/tools/insn_sanity
-> >>   TEST    posttest
-> >> arch/x86/tools/insn_decoder_test: warning: Found an x86 instruction decoder bug, please report this.
-> >> arch/x86/tools/insn_decoder_test: warning: ffffffff81000bf1:	f7 0b 00 01 08 00    	testl  $0x80100,(%rbx)
-> >> arch/x86/tools/insn_decoder_test: warning: objdump says 6 bytes, but insn_get_length() says 2
-> >> arch/x86/tools/insn_decoder_test: warning: Decoded and checked 11913894 instructions with 1 failures
-> >>   TEST    posttest
-> >> arch/x86/tools/insn_sanity: Success: decoded and checked 1000000 random instructions with 0 errors (seed:0x871ce29c)
-> >>
-> >> To fix this error, add TEST opcode according to AMD64 APM Vol.3.
-> >>
-> >> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> >> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> > 
-> > Acked-by: Randy Dunlap <rdunlap@infradead.org>
-> > Tested-by: Randy Dunlap <rdunlap@infradead.org>
-> > 
-> > Thanks.
-> > 
-> >> ---
-> >>  arch/x86/lib/x86-opcode-map.txt       | 2 +-
-> >>  tools/arch/x86/lib/x86-opcode-map.txt | 2 +-
-> >>  2 files changed, 2 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/arch/x86/lib/x86-opcode-map.txt b/arch/x86/lib/x86-opcode-map.txt
-> >> index e0b85930dd77..4635ce298d1d 100644
-> >> --- a/arch/x86/lib/x86-opcode-map.txt
-> >> +++ b/arch/x86/lib/x86-opcode-map.txt
-> >> @@ -907,7 +907,7 @@ EndTable
-> >>  
-> >>  GrpTable: Grp3_2
-> >>  0: TEST Ev,Iz
-> >> -1:
-> >> +1: TEST Ev,Iz
-> >>  2: NOT Ev
-> >>  3: NEG Ev
-> >>  4: MUL rAX,Ev
-> >> diff --git a/tools/arch/x86/lib/x86-opcode-map.txt b/tools/arch/x86/lib/x86-opcode-map.txt
-> >> index e0b85930dd77..4635ce298d1d 100644
-> >> --- a/tools/arch/x86/lib/x86-opcode-map.txt
-> >> +++ b/tools/arch/x86/lib/x86-opcode-map.txt
-> >> @@ -907,7 +907,7 @@ EndTable
-> >>  
-> >>  GrpTable: Grp3_2
-> >>  0: TEST Ev,Iz
-> >> -1:
-> >> +1: TEST Ev,Iz
-> >>  2: NOT Ev
-> >>  3: NEG Ev
-> >>  4: MUL rAX,Ev
-> >>
-> > 
-> > 
-> 
-> 
-> -- 
-> ~Randy
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Yeah, I saw this one, but that was rather an argument for the future. It'=
+s
+pretty easy to transfer more than 4GB with sg list, but that would be the=
+ case
+for splice.
+
+>=20
+>> - it requires 2 fds, and it's painful. Currently file managing is done=
+
+>> by common path (e.g. io_req_set_file(), __io_req_aux_free()). I'm
+>> thinking to make each opcode function handle file grabbing/putting
+>> themself with some helpers, as it's done in the patch for splice's
+>> out-file.
+>>     1. Opcode handler knows, whether it have/needs a file, and thus
+>>        doesn't need extra checks done in common path.
+>>     2. It will be more consistent with splice.
+>> Objections? Ideas?
+>=20
+> Sounds reasonable to me, but always easier to judge in patch form :-)
+>=20
+>> - do we need offset pointers with fallback to file->f_pos? Or is it
+>> enough to have offset value. Jens, I remember you added the first
+>> option somewhere, could you tell the reasoning?
+>=20
+> I recently added support for -1/cur position, which splice also uses. S=
+o
+> you should be fine with that.
+>=20
+
+I always have been thinking about it as a legacy from old days, and one o=
+f the
+problems of posix. It's not hard to count it in the userspace especially =
+in C++
+or high-level languages, and is just another obstacle for having a perfor=
+mant
+API. So, I'd rather get rid of it here. But is there any reasons against?=
 
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+--=20
+Pavel Begunkov
+
+
+--x0tm5hLtcuaId6zzrES9YU9sroBKl5WwS--
+
+--Ir6uQ8kmMcOcEUhuO6HLX6yuWsMNYgzNE
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE+6JuPTjTbx479o3OWt5b1Glr+6UFAl4nvV8ACgkQWt5b1Glr
++6VkCA//aCNZp/ksciDSAOD11wim450Ov9jYZXPNn6fFmerie3+01DMZUUE2Zqs0
+rsS7FDTQbRECrH9TrVzVFikNjOrHR1p8nXaarZHHt27w8OWajke+pHXDpz3WZo3C
+rutnN62fK5+P/zYewibsZwSwwXOzZJPwaEXV8ykcUc2IoR2OU+vgVNvggChOChTV
+QJ8FmsACeZte8CPXjv4wfcJxUc98r4qwCN7rp8//BdUYwQu9QLvCQlbinTeNhO0/
+D1vZEFVpEf0bzCj5jQrYDgL/v69CHMiFKHtvxkhe+jVlTgMrogYALeSbFEWhH64w
+OQZY1iZv1hTACSi8DBAzbN25OgYCLvfvMZck4fQTJfdTbwvPuJ/bPpudyHcNyNvi
+bpm/Sa08NZWpas6qO5u3jv2hBNBfID7bRBWtXH/5a2v4qcmo/qrQbKVqNasoUTqi
+L+ZD5yQfq/y9zfm8DyVTbLZEHR8tBh9252A+4asg/Xt6swofMhHQL0nmhB9IEkAf
+yj3PefJJ5HA46qVoPwl3h0rKo/S/mzMqnwIihHluJjihhX6eMjJXx28zhS1puO12
+/v59PNCvSgaiPTqUBiE9wPX+DkYmGWYE98g2Ubx5gohaAQKdFAyRVZ+jbpd9qLUv
+2LEUfXzwGuFcFZdOi9Fe4V8WpA74tobjrpBHKcS0g/giKylA7A4=
+=VszQ
+-----END PGP SIGNATURE-----
+
+--Ir6uQ8kmMcOcEUhuO6HLX6yuWsMNYgzNE--
