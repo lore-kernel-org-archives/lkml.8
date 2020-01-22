@@ -2,64 +2,176 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D598C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DCE8C33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CAB624695
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:00:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D16E21734
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:00:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="LGG5NVFJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729543AbgAVLAK (ORCPT
+        id S1729550AbgAVLAR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 06:00:10 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:37332 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbgAVLAI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 06:00:08 -0500
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iuDjm-0000vT-0P; Wed, 22 Jan 2020 11:59:54 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 5700C101F92; Wed, 22 Jan 2020 11:59:53 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     John Garry <john.garry@huawei.com>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        chenxiang <chenxiang66@hisilicon.com>
-Subject: Re: About irq_create_affinity_masks() for a platform device driver
-In-Reply-To: <84a9411b-4ae3-1928-3d35-1666f2687ec8@huawei.com>
-References: <84a9411b-4ae3-1928-3d35-1666f2687ec8@huawei.com>
-Date:   Wed, 22 Jan 2020 11:59:53 +0100
-Message-ID: <87o8uveoye.fsf@nanos.tec.linutronix.de>
+        Wed, 22 Jan 2020 06:00:17 -0500
+Received: from fd.dlink.ru ([178.170.168.18]:55464 "EHLO fd.dlink.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726191AbgAVLAQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 06:00:16 -0500
+Received: by fd.dlink.ru (Postfix, from userid 5000)
+        id 3456F1B217DC; Wed, 22 Jan 2020 14:00:12 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 3456F1B217DC
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
+        t=1579690812; bh=qLEPzs8U1PssaEz2uw9E/aiieQ+E7tcvMolWYw7FhMw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=LGG5NVFJu2zzNHMu2yzdNUWGlSsmwHAzaubUKTd5BaiWLp0isOkImYzT5eOCZ+KvD
+         4frjdewKjcwprv54jOyyXlCg/T4DezSTWpwQeyZT8waoc77muAZPWeowW9lD15aAN9
+         Y2gB/7MBXwiUdt/79x/ySk+NOOxCjjozkZ038wFM=
+Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
+        by fd.dlink.ru (Postfix) with ESMTP id E08AB1B21769;
+        Wed, 22 Jan 2020 13:59:24 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru E08AB1B21769
+Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
+        by mail.rzn.dlink.ru (Postfix) with ESMTP id 89A6E1B217C5;
+        Wed, 22 Jan 2020 13:59:23 +0300 (MSK)
+Received: from localhost.localdomain (unknown [196.196.203.126])
+        by mail.rzn.dlink.ru (Postfix) with ESMTPA;
+        Wed, 22 Jan 2020 13:59:23 +0300 (MSK)
+From:   Alexander Lobakin <alobakin@dlink.ru>
+To:     Paul Burton <paulburton@kernel.org>
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Alexander Lobakin <alobakin@dlink.ru>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH mips-next 4/5] MIPS: sort MIPS and MIPS_GENERIC Kconfig selects alphabetically (again)
+Date:   Wed, 22 Jan 2020 13:58:51 +0300
+Message-Id: <20200122105852.8788-5-alobakin@dlink.ru>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200122105852.8788-1-alobakin@dlink.ru>
+References: <20200122105852.8788-1-alobakin@dlink.ru>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-John,
+Cycles "sort selects alphabetically -> add new options at the end or at
+random place -> repeat" go on and on.
+Please double-check when adding new options and make sure that they
+don't break the existing order to prevent dumb commits like this one
+from appearing.
 
-John Garry <john.garry@huawei.com> writes:
-> Would there be any issue with a SCSI platform device driver referencing 
-> this function?
->
-> So I have a multi-queue platform device, and I want to spread interrupts 
-> over all possible CPUs, just like we can do for PCI MSI vectors. This 
-> topic was touched on in [0].
->
-> And, if so it's ok, could we export that same symbol?
+Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
+---
+ arch/mips/Kconfig | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-I think you will need something similar to what we have in the pci/msi
-code, but that shouldn't be in your device driver. So I'd rather create
-platform infrastructure for this and export that.
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index 8ff846ef2345..488ce71cce73 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -5,9 +5,11 @@ config MIPS
+ 	select ARCH_32BIT_OFF_T if !64BIT
+ 	select ARCH_BINFMT_ELF_STATE if MIPS_FP_SUPPORT
+ 	select ARCH_CLOCKSOURCE_DATA
++	select ARCH_HAS_FORTIFY_SOURCE
++	select ARCH_HAS_KCOV
++	select ARCH_HAS_PTE_SPECIAL if !(32BIT && CPU_HAS_RIXI)
+ 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
+ 	select ARCH_HAS_UBSAN_SANITIZE_ALL
+-	select ARCH_HAS_FORTIFY_SOURCE
+ 	select ARCH_SUPPORTS_UPROBES
+ 	select ARCH_USE_BUILTIN_BSWAP
+ 	select ARCH_USE_CMPXCHG_LOCKREF if 64BIT
+@@ -48,7 +50,6 @@ config MIPS
+ 	select HAVE_ARCH_TRANSPARENT_HUGEPAGE if CPU_SUPPORTS_HUGEPAGES
+ 	select HAVE_ASM_MODVERSIONS
+ 	select HAVE_CBPF_JIT if !64BIT && !CPU_MICROMIPS
+-	select HAVE_EBPF_JIT if 64BIT && !CPU_MICROMIPS && TARGET_ISA_REV >= 2
+ 	select HAVE_CONTEXT_TRACKING
+ 	select HAVE_COPY_THREAD_TLS
+ 	select HAVE_C_RECORDMCOUNT
+@@ -56,11 +57,14 @@ config MIPS
+ 	select HAVE_DEBUG_STACKOVERFLOW
+ 	select HAVE_DMA_CONTIGUOUS
+ 	select HAVE_DYNAMIC_FTRACE
++	select HAVE_EBPF_JIT if 64BIT && !CPU_MICROMIPS && TARGET_ISA_REV >= 2
+ 	select HAVE_EXIT_THREAD
+ 	select HAVE_FAST_GUP
+ 	select HAVE_FTRACE_MCOUNT_RECORD
+ 	select HAVE_FUNCTION_GRAPH_TRACER
+ 	select HAVE_FUNCTION_TRACER
++	select HAVE_GCC_PLUGINS
++	select HAVE_GENERIC_VDSO
+ 	select HAVE_IDE
+ 	select HAVE_IOREMAP_PROT
+ 	select HAVE_IRQ_EXIT_ON_IRQ_STACK
+@@ -79,18 +83,14 @@ config MIPS
+ 	select HAVE_STACKPROTECTOR
+ 	select HAVE_SYSCALL_TRACEPOINTS
+ 	select HAVE_VIRT_CPU_ACCOUNTING_GEN if 64BIT || !SMP
+-	select HAVE_GENERIC_VDSO
+ 	select IRQ_FORCED_THREADING
+ 	select ISA if EISA
+-	select MODULES_USE_ELF_RELA if MODULES && 64BIT
+ 	select MODULES_USE_ELF_REL if MODULES
++	select MODULES_USE_ELF_RELA if MODULES && 64BIT
+ 	select PERF_USE_VMALLOC
+ 	select RTC_LIB
+ 	select SYSCTL_EXCEPTION_TRACE
+ 	select VIRT_TO_BUS
+-	select ARCH_HAS_PTE_SPECIAL if !(32BIT && CPU_HAS_RIXI)
+-	select ARCH_HAS_KCOV
+-	select HAVE_GCC_PLUGINS
+ 
+ menu "Machine selection"
+ 
+@@ -105,8 +105,8 @@ config MIPS_GENERIC
+ 	select CEVT_R4K
+ 	select CLKSRC_MIPS_GIC
+ 	select COMMON_CLK
+-	select CPU_MIPSR2_IRQ_VI
+ 	select CPU_MIPSR2_IRQ_EI
++	select CPU_MIPSR2_IRQ_VI
+ 	select CSRC_R4K
+ 	select DMA_PERDEV_COHERENT
+ 	select HAVE_PCI
+@@ -131,11 +131,12 @@ config MIPS_GENERIC
+ 	select SYS_SUPPORTS_HIGHMEM
+ 	select SYS_SUPPORTS_LITTLE_ENDIAN
+ 	select SYS_SUPPORTS_MICROMIPS
+-	select SYS_SUPPORTS_MIPS_CPS
+ 	select SYS_SUPPORTS_MIPS16
++	select SYS_SUPPORTS_MIPS_CPS
+ 	select SYS_SUPPORTS_MULTITHREADING
+ 	select SYS_SUPPORTS_RELOCATABLE
+ 	select SYS_SUPPORTS_SMARTMIPS
++	select UHI_BOOT
+ 	select USB_EHCI_BIG_ENDIAN_DESC if CPU_BIG_ENDIAN
+ 	select USB_EHCI_BIG_ENDIAN_MMIO if CPU_BIG_ENDIAN
+ 	select USB_OHCI_BIG_ENDIAN_DESC if CPU_BIG_ENDIAN
+@@ -143,7 +144,6 @@ config MIPS_GENERIC
+ 	select USB_UHCI_BIG_ENDIAN_DESC if CPU_BIG_ENDIAN
+ 	select USB_UHCI_BIG_ENDIAN_MMIO if CPU_BIG_ENDIAN
+ 	select USE_OF
+-	select UHI_BOOT
+ 	help
+ 	  Select this to build a kernel which aims to support multiple boards,
+ 	  generally using a flattened device tree passed from the bootloader
+-- 
+2.25.0
 
-Thanks,
-
-        tglx
