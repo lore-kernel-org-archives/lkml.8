@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2930AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E21C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:33:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6E2424672
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:33:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC5E92071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:33:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685613;
-	bh=EUJO2tQhfwVYwxxfWTYEF7FQRmqGWHxjoBjnujI3AV4=;
+	s=default; t=1579685614;
+	bh=EwXiR3OAHCKqfa2wQBGY7nZhL1E2myYAN/IcWN8jdxM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ty7nvYanTcXsTs6yuuhyoib+rBvAd9k20B8o32cX6PBWKJf4LypFlGW8/YyEsJpS3
-	 ic9HW1Gy6OwiSYE44QEIkMg/0JL0wn1MwWXM+MbN8OquXqE38BqVphEKbEbgC55mAs
-	 zaVvAyhe/o6C9wO4M0YvKoKkLQw8xH5zbmR0SDXI=
+	b=TQUvbKeBVIAtOvoibSDtVpWvCQMagHz61JGtYP5E+vjYEaEi//j5HaMWSRvGmrE6U
+	 SVCRqvqEoIGKW4rIt3S2zsf56xp5IwI4G6LHEU//lDIbM8rmb5Yu1YIFuAZwwzOlK5
+	 KlfOxC1obAMt2dw1YGL/cnSzKTWoFc1S9rBz5/GE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730597AbgAVJdc (ORCPT
+        id S1730620AbgAVJdd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:33:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47326 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:33:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726083AbgAVJd3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:33:29 -0500
+        id S1729971AbgAVJdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:33:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6753024672;
-        Wed, 22 Jan 2020 09:33:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0F1B2071E;
+        Wed, 22 Jan 2020 09:33:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685608;
-        bh=EUJO2tQhfwVYwxxfWTYEF7FQRmqGWHxjoBjnujI3AV4=;
+        s=default; t=1579685611;
+        bh=EwXiR3OAHCKqfa2wQBGY7nZhL1E2myYAN/IcWN8jdxM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VhCuQPf0cxfVa70z+CLXXOxQ3WF/HIvoTIHmn1mjSNj7AqoZdpTU1BBuxYHblxgu+
-         49kS6gNVB2LAi/ZczA2UzB2qZFKQQZd5FKbvs6+rP0FHJrU7epUS1ieYXQI9ppRIcK
-         QtLdaEMyWbC8/jMXAPT/98HNCzIQwAyKC7sAHBoA=
+        b=YanZYRfZ+eRS/FQhEu4IV/XBMFqDnJ4nfh/UTOBnxro71VSTMdUfdxF+BAghLktoE
+         r5FNuuZr5+PDHY5/Q3q4jezHshOYHDXkkpJlne5Pe96xeNBtjnN4l5Ng8rW/og77Zs
+         Zwk+jVn8RTYp0zjkLjBDDL1EDonJXuJHq1SUFjK0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.4 76/76] regulator: ab8500: Remove SYSCLKREQ from enum ab8505_regulator_id
-Date:   Wed, 22 Jan 2020 10:29:32 +0100
-Message-Id: <20200122092803.189647649@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.4 70/76] scsi: esas2r: unlock on error in esas2r_nvram_read_direct()
+Date:   Wed, 22 Jan 2020 10:29:26 +0100
+Message-Id: <20200122092802.106510918@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092751.587775548@linuxfoundation.org>
 References: <20200122092751.587775548@linuxfoundation.org>
@@ -60,39 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephan Gerhold <stephan@gerhold.net>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 458ea3ad033fc86e291712ce50cbe60c3428cf30 upstream.
+commit 906ca6353ac09696c1bf0892513c8edffff5e0a6 upstream.
 
-Those regulators are not actually supported by the AB8500 regulator
-driver. There is no ab8500_regulator_info for them and no entry in
-ab8505_regulator_match.
+This error path is missing an unlock.
 
-As such, they cannot be registered successfully, and looking them
-up in ab8505_regulator_match causes an out-of-bounds array read.
-
-Fixes: 547f384f33db ("regulator: ab8500: add support for ab8505")
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Link: https://lore.kernel.org/r/20191106173125.14496-2-stephan@gerhold.net
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 26780d9e12ed ("[SCSI] esas2r: ATTO Technology ExpressSAS 6G SAS/SATA RAID Adapter Driver")
+Link: https://lore.kernel.org/r/20191022102324.GA27540@mwanda
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/regulator/ab8500.h |    2 --
- 1 file changed, 2 deletions(-)
+ drivers/scsi/esas2r/esas2r_flash.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/include/linux/regulator/ab8500.h
-+++ b/include/linux/regulator/ab8500.h
-@@ -44,8 +44,6 @@ enum ab8505_regulator_id {
- 	AB8505_LDO_ANAMIC2,
- 	AB8505_LDO_AUX8,
- 	AB8505_LDO_ANA,
--	AB8505_SYSCLKREQ_2,
--	AB8505_SYSCLKREQ_4,
- 	AB8505_NUM_REGULATORS,
- };
+--- a/drivers/scsi/esas2r/esas2r_flash.c
++++ b/drivers/scsi/esas2r/esas2r_flash.c
+@@ -1197,6 +1197,7 @@ bool esas2r_nvram_read_direct(struct esa
+ 	if (!esas2r_read_flash_block(a, a->nvram, FLS_OFFSET_NVR,
+ 				     sizeof(struct esas2r_sas_nvram))) {
+ 		esas2r_hdebug("NVRAM read failed, using defaults");
++		up(&a->nvram_semaphore);
+ 		return false;
+ 	}
  
 
 
