@@ -2,183 +2,127 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47188C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:32:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61888C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:33:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2345920704
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:32:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3084424656
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:33:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YRxBn3Rb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727453AbgAVTca (ORCPT
+        id S1728057AbgAVTdL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 14:32:30 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37090 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725928AbgAVTc3 (ORCPT
+        Wed, 22 Jan 2020 14:33:11 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:41800 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725884AbgAVTdL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 14:32:29 -0500
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00MJS4Tb129364
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 14:32:28 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xp4gjx9p4-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 14:32:28 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Wed, 22 Jan 2020 19:32:26 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 22 Jan 2020 19:32:23 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00MJWMp951970252
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 Jan 2020 19:32:22 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3C43F4C04E;
-        Wed, 22 Jan 2020 19:32:22 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C616E4C050;
-        Wed, 22 Jan 2020 19:32:21 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.145.160.236])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 22 Jan 2020 19:32:21 +0000 (GMT)
-Subject: Re: vhost changes (batched) in linux-next after 12/13 trigger random
- crashes in KVM guests after reboot
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        Halil Pasic <pasic@linux.ibm.com>
-References: <c022e1d6-0d57-ae07-5e6b-8e40d3b01f4b@de.ibm.com>
- <20191218100926-mutt-send-email-mst@kernel.org>
- <2ffdbd95-e375-a627-55a1-6990b0a0e37a@de.ibm.com>
- <20200106054041-mutt-send-email-mst@kernel.org>
- <08ae8d28-3d8c-04e8-bdeb-0117d06c6dc7@de.ibm.com>
- <20200107042401-mutt-send-email-mst@kernel.org>
- <c6795e53-d12c-0709-c2e9-e35d9af1f693@de.ibm.com>
- <20200107065434-mutt-send-email-mst@kernel.org>
- <fe6e7e90-3004-eb7a-9ed8-b53a7667959f@de.ibm.com>
- <20200120012724-mutt-send-email-mst@kernel.org>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Wed, 22 Jan 2020 20:32:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Wed, 22 Jan 2020 14:33:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=kcpRCIsS+8zPHI9N27JqUU0XiwisZ8cI+0KOaDjpraE=; b=YRxBn3Rbvezdzr+TsmjTNiO/Q
+        tGEMNhUpWdydXTRrbh6/NlD7o6FOOKpo7CWlNb4M+OltymMa4moglgAvP96Y7V9BrGKYOhn8WBcg1
+        gDs4V24iN7Hc3LVZs0iv0Cw3O2ZH4SJxX9ewjH17PoYrOXEjZgAU9kAjzimYsfqnxW1vLeTlZGGOq
+        kYyBCUVbrLaxpbrMh5tWzkOIttVg8tGOeAlau2bM7b+o3Zv23e3ZqoIDCIxp166Paz2BwHhFbWeTA
+        FcO4tiMz4gM4HUmd1nVUwjfihan2fy7zx6x5CXGqGoEChKLHyxH97tcEHEhlrAQLgZAHUHZMbQ8Bj
+        C2Y5mitYw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iuLkQ-0003aF-Li; Wed, 22 Jan 2020 19:33:06 +0000
+Date:   Wed, 22 Jan 2020 11:33:06 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC][PATCH] iov_iter: Add ITER_MAPPING
+Message-ID: <20200122193306.GB4675@bombadil.infradead.org>
+References: <3577430.1579705075@warthog.procyon.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20200120012724-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20012219-0008-0000-0000-0000034BCDE0
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20012219-0009-0000-0000-00004A6C37EA
-Message-Id: <2a63b15f-8cf5-5868-550c-42e2cfd92c60@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-22_08:2020-01-22,2020-01-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
- clxscore=1015 impostorscore=0 phishscore=0 mlxscore=0 suspectscore=0
- spamscore=0 malwarescore=0 adultscore=0 lowpriorityscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001220165
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3577430.1579705075@warthog.procyon.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jan 22, 2020 at 02:57:55PM +0000, David Howells wrote:
+> An alternative could be to have an "ITER_ARRAY" that just has the page
+> pointers and not the offset/length info.  This decreases the redundancy and
+> increases the max payload-per-array-page to 2M.
 
+We could also have an ITER_XARRAY which you just pass &mapping->i_pages
+to.  I don't think you use any other part of the mapping, so that would
+be a more generic version that is equally efficient.
 
-On 20.01.20 07:27, Michael S. Tsirkin wrote:
-> On Tue, Jan 07, 2020 at 01:16:50PM +0100, Christian Borntraeger wrote:
->> On 07.01.20 12:55, Michael S. Tsirkin wrote:
->>
->>>
->>> I pushed batched-v3 - same head but bisect should work now.
->>>
->>
->> With 
->> commit 38ced0208491103b50f1056f0d1c8f28e2e13d08 (HEAD)
->> Author:     Michael S. Tsirkin <mst@redhat.com>
->> AuthorDate: Wed Dec 11 12:19:26 2019 -0500
->> Commit:     Michael S. Tsirkin <mst@redhat.com>
->> CommitDate: Tue Jan 7 06:52:42 2020 -0500
->>
->>     vhost: use batched version by default
->>
->>
->> I have exactly one successful ping and then the network inside the guest is broken (no packet
->> anymore).
-> 
-> Does anything appear in host's dmesg when this happens?
+> +	rcu_read_lock();						\
+> +	for (page = xas_load(&xas); page; page = xas_next(&xas)) {	\
+> +		if (xas_retry(&xas, page))				\
+> +			continue;					\
+> +		if (xa_is_value(page))					\
+> +			break;						\
 
-I think there was nothing, but I am not sure. I would need to redo the test if this is important to know.
+Do you also want to check for !page?  That would be a bug in the caller.
 
-> 
-> 
->> So you could consider this commit broken (but in a different way and also without any
->> guest reboot necessary).
->>
->>
->> bisect log:
->> git bisect start
->> # bad: [d2f6175f52062ee51ee69754a6925608213475d2] vhost: use vhost_desc instead of vhost_log
->> git bisect bad d2f6175f52062ee51ee69754a6925608213475d2
->> # good: [d1281e3a562ec6a08f944a876481dd043ba739b9] virtio-blk: remove VIRTIO_BLK_F_SCSI support
->> git bisect good d1281e3a562ec6a08f944a876481dd043ba739b9
->> # good: [fac7c0f46996e32d996f5c46121df24a6b95ec3b] vhost: option to fetch descriptors through an independent struct
->> git bisect good fac7c0f46996e32d996f5c46121df24a6b95ec3b
->> # bad: [539eb9d738f048cd7be61f404e8f9c7d9d2ff3cc] vhost: batching fetches
->> git bisect bad 539eb9d738f048cd7be61f404e8f9c7d9d2ff3cc
-> 
+> +		if (PageCompound(page))					\
+> +			break;						\
+
+It's perfectly legal to have compound pages in the page cache.  Call
+find_subpage(page, xas.xa_index) unconditionally.
+
+> +		if (page_to_pgoff(page) != xas.xa_index)		\
+> +			break;						\
+
+... and you can ditch this if the pages are pinned as find_subpage()
+will bug in this case.
+
+> +		__v.bv_page = page;					\
+> +		offset = (i->mapping_start + skip) & ~PAGE_MASK;	\
+> +		seg = PAGE_SIZE - offset;			\
+> +		__v.bv_offset = offset;				\
+> +		__v.bv_len = min(n, seg);			\
+> +		(void)(STEP);					\
+> +		n -= __v.bv_len;				\
+> +		skip += __v.bv_len;				\
+
+Do we want STEP to be called with PAGE_SIZE chunks, or if they have a
+THP, can we have it called with larger than a PAGE_SIZE chunk?
+
+> +#define iterate_all_kinds(i, n, v, I, B, K, M) {		\
+>  	if (likely(n)) {					\
+>  		size_t skip = i->iov_offset;			\
+>  		if (unlikely(i->type & ITER_BVEC)) {		\
+> @@ -86,6 +119,9 @@
+>  			struct kvec v;				\
+>  			iterate_kvec(i, n, v, kvec, skip, (K))	\
+>  		} else if (unlikely(i->type & ITER_DISCARD)) {	\
+> +		} else if (unlikely(i->type & ITER_MAPPING)) {	\
+> +			struct bio_vec v;			\
+> +			iterate_mapping(i, n, v, skip, (M));	\
+
+bio_vec?
+
+> -#define iterate_and_advance(i, n, v, I, B, K) {			\
+> +#define iterate_and_advance(i, n, v, I, B, K, M) {		\
+>  	if (unlikely(i->count < n))				\
+>  		n = i->count;					\
+>  	if (i->count) {						\
+> @@ -119,6 +155,9 @@
+>  			i->kvec = kvec;				\
+>  		} else if (unlikely(i->type & ITER_DISCARD)) {	\
+>  			skip += n;				\
+> +		} else if (unlikely(i->type & ITER_MAPPING)) {	\
+> +			struct bio_vec v;			\
+> +			iterate_mapping(i, n, v, skip, (M))	\
+
+again?
 
