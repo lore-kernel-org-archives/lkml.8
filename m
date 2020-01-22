@@ -2,221 +2,210 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE5F2C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB48C33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:07:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A62AF2465A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:07:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C6582465A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:07:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wvCnHv8U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbgAVJHO (ORCPT
+        id S1729037AbgAVJHb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:07:14 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:57784 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbgAVJHO (ORCPT
+        Wed, 22 Jan 2020 04:07:31 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36572 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727141AbgAVJHa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:07:14 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id E28B1291458
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Collabora Kernel ML <kernel@collabora.com>, groeck@chromium.org,
-        bleung@chromium.org, dtor@chromium.org, gwendal@chromium.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Evan Green <evgreen@chromium.org>
-Subject: [PATCH v3] platform/chrome: cros_ec: Match implementation with headers
-Date:   Wed, 22 Jan 2020 10:07:01 +0100
-Message-Id: <20200122090701.1958674-1-enric.balletbo@collabora.com>
-X-Mailer: git-send-email 2.24.1
+        Wed, 22 Jan 2020 04:07:30 -0500
+Received: by mail-wm1-f67.google.com with SMTP id p17so6305881wma.1
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 01:07:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=xjivJm+vtcjvY+FQxebUX6xWquR7Et93xpYy1Kzxpc4=;
+        b=wvCnHv8U/q5EEx8u/+S6BSKlG/GwCEU0ss0zlHCWJmpTyXmcu9sSThWIDInuy0tYNB
+         nG0+AeQl8IlzSUEKR/sWM3dfFAw7PTruatycp2znJ4c/i8hKUYZqFZduChRqVDl5+zDe
+         jLkUmdouR4FLbB6aK4kbPSoYNbvAUkxDc1QkUK0krVsE4wjsqaO5BPbonWzt2n+2f8Au
+         4A/ruEgN4bTQV5MH/3iTluzF0+XmhVtb9K9SkZ2MyTBQLj7ZBBE3mWgfaQLlo1tui3i8
+         yI69kaTfL3N4pE5t6wlOohaejKGaTFZUTV1uv1DX+ONF/fD6c8Zo2AHw7tzIPhRVKGTJ
+         77wQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=xjivJm+vtcjvY+FQxebUX6xWquR7Et93xpYy1Kzxpc4=;
+        b=sNGiYIUcN9aHuMTaThTAz2K1WAVaFiuI7gdMxmbbx+0hxAWNhGb6aQadl6kXNmczXA
+         gpHE0mT6MO54qeEHS3Lm6SFXBTLIBfEfjSYgRptT1EN5X822ya6AZEaaHrkCFR0wy45z
+         DVcy0bmu8agPmM9j2RyKAzkKzNMcp2fcxc2hb4IKfrDlX4L3WHWabWiVxRkcC86qNLIS
+         Po1Q9e7pxtkXmL06yyp2rwsgCvLWvQ2BiBFMV7tc77Ibgd940eToPbBcnnLe8HjV8vOc
+         86o9IimImiUo2kOhz3NGl7zdNHj+gjQSxjNuAKcmsN+0iLGzVjGBGDCNJJrm+OK3xSRL
+         11qQ==
+X-Gm-Message-State: APjAAAUcwl1MQF7LkfAWAgkWbl+NaqnjmeZbZjxsgpOSh1p702irOF6+
+        h7n2ZYNQsICjsZJB+ur7Q0ex5UzoKQQ=
+X-Google-Smtp-Source: APXvYqy4ZcPkeQyJkcrdM+gRZ6HpO56ub6wP7r67JoMliKU6H6aVSzFrJzNlVtEH5MGn4Qdlb9wBUQ==
+X-Received: by 2002:a1c:3dc3:: with SMTP id k186mr1893020wma.95.1579684047327;
+        Wed, 22 Jan 2020 01:07:27 -0800 (PST)
+Received: from [10.44.66.8] ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id g7sm55926077wrq.21.2020.01.22.01.07.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 Jan 2020 01:07:26 -0800 (PST)
+Subject: Re: [GIT PULL 00/12] interconnect changes for 5.6
+To:     gregkh@linuxfoundation.org
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200117095816.23575-1-georgi.djakov@linaro.org>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+ KEmKjLDvB0pePJkdTw==
+Message-ID: <ec627a0c-3f84-2b7b-e42b-36cb46ceb594@linaro.org>
+Date:   Wed, 22 Jan 2020 11:07:25 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200117095816.23575-1-georgi.djakov@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 'cros_ec' core driver is the common interface for the cros_ec
-transport drivers to do the shared operations to register, unregister,
-suspend, resume and handle_event. The interface is provided by including
-the header 'include/linux/platform_data/cros_ec_proto.h', however, instead
-of have the implementation of these functions in cros_ec_proto.c, it is in
-'cros_ec.c', which is a different kernel module. Apart from being a bad
-practice, this can induce confusions allowing the users of the cros_ec
-protocol to call these functions.
+Hi Greg,
 
-The register, unregister, suspend, resume and handle_event functions
-*should* only be called by the different transport drivers (i2c, spi, lpc,
-etc.), so make this a bit less confusing by moving these functions from
-the public in-kernel space to a private include in platform/chrome, and
-then, the interface for cros_ec module and for the cros_ec_proto module is
-clean.
+On 1/17/20 11:58, Georgi Djakov wrote:
+> Hi Greg,
+> 
+> Here are the interconnect patches for the 5.6-rc1 merge window.
+> 
+> - New core helper functions for some common functionalities in drivers.
+> - Improvements in the information exposed via debugfs.
+> - Basic tracepoints support.
+> - New interconnect driver for msm8916 platforms.
+> - Misc fixes.
+> 
+> All patches have been for a while in linux-next without reported issues.
+> Please consider queuing them into char-misc-next.
+> 
+> The same is also available via a pull request with a signed tag below.
+> 
+> Thanks,
+> Georgi
 
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
----
+A gentle ping to check whether this email got lost or you require any
+changes?
 
-Changes in v3:
-- Mention that moves cros_ec_handle_event in commit description (Benson L.)
-- Remove the diff for EC_REBOOT_DELAY_MS introduced in v2 (Benson L.)
+Thanks,
+Georgi
 
-Changes in v2:
-- Update copyright to 2020 (Benson L.)
-- Do not move EC_REBOOT_DELAY_MS (Benson L.)
-
- drivers/platform/chrome/cros_ec.c           |  2 ++
- drivers/platform/chrome/cros_ec.h           | 19 +++++++++++++++++++
- drivers/platform/chrome/cros_ec_i2c.c       |  2 ++
- drivers/platform/chrome/cros_ec_ishtp.c     |  2 ++
- drivers/platform/chrome/cros_ec_lpc.c       |  1 +
- drivers/platform/chrome/cros_ec_rpmsg.c     |  2 ++
- drivers/platform/chrome/cros_ec_spi.c       |  2 ++
- include/linux/platform_data/cros_ec_proto.h | 10 ----------
- 8 files changed, 30 insertions(+), 10 deletions(-)
- create mode 100644 drivers/platform/chrome/cros_ec.h
-
-diff --git a/drivers/platform/chrome/cros_ec.c b/drivers/platform/chrome/cros_ec.c
-index 6d6ce86a1408..65c3207d2d90 100644
---- a/drivers/platform/chrome/cros_ec.c
-+++ b/drivers/platform/chrome/cros_ec.c
-@@ -18,6 +18,8 @@
- #include <linux/suspend.h>
- #include <asm/unaligned.h>
- 
-+#include "cros_ec.h"
-+
- #define CROS_EC_DEV_EC_INDEX 0
- #define CROS_EC_DEV_PD_INDEX 1
- 
-diff --git a/drivers/platform/chrome/cros_ec.h b/drivers/platform/chrome/cros_ec.h
-new file mode 100644
-index 000000000000..e69fc1ff68b4
---- /dev/null
-+++ b/drivers/platform/chrome/cros_ec.h
-@@ -0,0 +1,19 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * ChromeOS Embedded Controller core interface.
-+ *
-+ * Copyright (C) 2020 Google LLC
-+ */
-+
-+#ifndef __CROS_EC_H
-+#define __CROS_EC_H
-+
-+int cros_ec_register(struct cros_ec_device *ec_dev);
-+int cros_ec_unregister(struct cros_ec_device *ec_dev);
-+
-+int cros_ec_suspend(struct cros_ec_device *ec_dev);
-+int cros_ec_resume(struct cros_ec_device *ec_dev);
-+
-+bool cros_ec_handle_event(struct cros_ec_device *ec_dev);
-+
-+#endif /* __CROS_EC_H */
-diff --git a/drivers/platform/chrome/cros_ec_i2c.c b/drivers/platform/chrome/cros_ec_i2c.c
-index 9bd97bc8454b..6119eccd8a18 100644
---- a/drivers/platform/chrome/cros_ec_i2c.c
-+++ b/drivers/platform/chrome/cros_ec_i2c.c
-@@ -14,6 +14,8 @@
- #include <linux/platform_device.h>
- #include <linux/slab.h>
- 
-+#include "cros_ec.h"
-+
- /**
-  * Request format for protocol v3
-  * byte 0	0xda (EC_COMMAND_PROTOCOL_3)
-diff --git a/drivers/platform/chrome/cros_ec_ishtp.c b/drivers/platform/chrome/cros_ec_ishtp.c
-index e5996821d08b..e1fdb491a9a7 100644
---- a/drivers/platform/chrome/cros_ec_ishtp.c
-+++ b/drivers/platform/chrome/cros_ec_ishtp.c
-@@ -14,6 +14,8 @@
- #include <linux/platform_data/cros_ec_proto.h>
- #include <linux/intel-ish-client-if.h>
- 
-+#include "cros_ec.h"
-+
- /*
-  * ISH TX/RX ring buffer pool size
-  *
-diff --git a/drivers/platform/chrome/cros_ec_lpc.c b/drivers/platform/chrome/cros_ec_lpc.c
-index dccf479c6625..3e8ddd84bc41 100644
---- a/drivers/platform/chrome/cros_ec_lpc.c
-+++ b/drivers/platform/chrome/cros_ec_lpc.c
-@@ -23,6 +23,7 @@
- #include <linux/printk.h>
- #include <linux/suspend.h>
- 
-+#include "cros_ec.h"
- #include "cros_ec_lpc_mec.h"
- 
- #define DRV_NAME "cros_ec_lpcs"
-diff --git a/drivers/platform/chrome/cros_ec_rpmsg.c b/drivers/platform/chrome/cros_ec_rpmsg.c
-index bd068afe43b5..dbc3f5523b83 100644
---- a/drivers/platform/chrome/cros_ec_rpmsg.c
-+++ b/drivers/platform/chrome/cros_ec_rpmsg.c
-@@ -13,6 +13,8 @@
- #include <linux/rpmsg.h>
- #include <linux/slab.h>
- 
-+#include "cros_ec.h"
-+
- #define EC_MSG_TIMEOUT_MS	200
- #define HOST_COMMAND_MARK	1
- #define HOST_EVENT_MARK		2
-diff --git a/drivers/platform/chrome/cros_ec_spi.c b/drivers/platform/chrome/cros_ec_spi.c
-index a831bd5a5b2f..46786d2d679a 100644
---- a/drivers/platform/chrome/cros_ec_spi.c
-+++ b/drivers/platform/chrome/cros_ec_spi.c
-@@ -14,6 +14,8 @@
- #include <linux/spi/spi.h>
- #include <uapi/linux/sched/types.h>
- 
-+#include "cros_ec.h"
-+
- /* The header byte, which follows the preamble */
- #define EC_MSG_HEADER			0xec
- 
-diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
-index 119b9951c055..ba5914770191 100644
---- a/include/linux/platform_data/cros_ec_proto.h
-+++ b/include/linux/platform_data/cros_ec_proto.h
-@@ -206,10 +206,6 @@ struct cros_ec_dev {
- 
- #define to_cros_ec_dev(dev)  container_of(dev, struct cros_ec_dev, class_dev)
- 
--int cros_ec_suspend(struct cros_ec_device *ec_dev);
--
--int cros_ec_resume(struct cros_ec_device *ec_dev);
--
- int cros_ec_prepare_tx(struct cros_ec_device *ec_dev,
- 		       struct cros_ec_command *msg);
- 
-@@ -222,10 +218,6 @@ int cros_ec_cmd_xfer(struct cros_ec_device *ec_dev,
- int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
- 			    struct cros_ec_command *msg);
- 
--int cros_ec_register(struct cros_ec_device *ec_dev);
--
--int cros_ec_unregister(struct cros_ec_device *ec_dev);
--
- int cros_ec_query_all(struct cros_ec_device *ec_dev);
- 
- int cros_ec_get_next_event(struct cros_ec_device *ec_dev,
-@@ -238,8 +230,6 @@ int cros_ec_check_features(struct cros_ec_dev *ec, int feature);
- 
- int cros_ec_get_sensor_count(struct cros_ec_dev *ec);
- 
--bool cros_ec_handle_event(struct cros_ec_device *ec_dev);
--
- /**
-  * cros_ec_get_time_ns() - Return time in ns.
-  *
--- 
-2.24.1
-
+> 
+> The following changes since commit d1eef1c619749b2a57e514a3fa67d9a516ffa919:
+> 
+>   Linux 5.5-rc2 (2019-12-15 15:16:08 -0800)
+> 
+> are available in the Git repository at:
+> 
+>   https://git.linaro.org/people/georgi.djakov/linux.git tags/icc-5.6-rc1
+> 
+> for you to fetch changes up to 30c8fa3ec61a46da80698e1f8ab95df4d42bf374:
+> 
+>   interconnect: qcom: Add MSM8916 interconnect provider driver (2020-01-07 09:30:09 +0200)
+> 
+> ----------------------------------------------------------------
+> interconnect patches for 5.6
+> 
+> Here are the interconnect patches for the 5.6-rc1 merge window.
+> 
+> - New core helper functions for some common functionalities in drivers.
+> - Improvements in the information exposed via debugfs.
+> - Basic tracepoints support.
+> - New interconnect driver for msm8916 platforms.
+> - Misc fixes.
+> 
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> 
+> ----------------------------------------------------------------
+> Georgi Djakov (11):
+>   interconnect: Add a common helper for removing all nodes
+>   interconnect: qcom: Use the new common helper for node removal
+>   interconnect: Move internal structs into a separate file
+>   interconnect: Add a name to struct icc_path
+>   interconnect: Add basic tracepoints
+>   interconnect: Add a common standard aggregate function
+>   interconnect: qcom: Use the standard aggregate function
+>   interconnect: Print the tag in the debugfs summary
+>   interconnect: Check for valid path in icc_set_bw()
+>   dt-bindings: interconnect: Add Qualcomm MSM8916 DT bindings
+>   interconnect: qcom: Add MSM8916 interconnect provider driver
+> 
+> Leonard Crestez (1):
+>   interconnect: Add interconnect_graph file to debugfs
+> 
+>  .../bindings/interconnect/qcom,msm8916.yaml   |  77 +++
+>  Documentation/driver-api/interconnect.rst     |  22 +
+>  drivers/interconnect/Makefile                 |   1 +
+>  drivers/interconnect/core.c                   | 168 ++++--
+>  drivers/interconnect/internal.h               |  42 ++
+>  drivers/interconnect/qcom/Kconfig             |   9 +
+>  drivers/interconnect/qcom/Makefile            |   2 +
+>  drivers/interconnect/qcom/msm8916.c           | 554 ++++++++++++++++++
+>  drivers/interconnect/qcom/msm8974.c           |  32 +-
+>  drivers/interconnect/qcom/qcs404.c            |  32 +-
+>  drivers/interconnect/qcom/sdm845.c            |  16 +-
+>  drivers/interconnect/trace.h                  |  88 +++
+>  .../dt-bindings/interconnect/qcom,msm8916.h   | 100 ++++
+>  include/linux/interconnect-provider.h         |  14 +
+>  14 files changed, 1057 insertions(+), 100 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,msm8916.yaml
+>  create mode 100644 drivers/interconnect/internal.h
+>  create mode 100644 drivers/interconnect/qcom/msm8916.c
+>  create mode 100644 drivers/interconnect/trace.h
+>  create mode 100644 include/dt-bindings/interconnect/qcom,msm8916.h
+> 
