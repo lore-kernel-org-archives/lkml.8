@@ -2,530 +2,215 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60BF7C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 14:14:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3632C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 14:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 361C124655
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 14:14:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA0AF24655
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 14:14:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jBvTSeMb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726164AbgAVOOZ (ORCPT
+        id S1726605AbgAVOOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 09:14:25 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:33658 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725802AbgAVOOZ (ORCPT
+        Wed, 22 Jan 2020 09:14:46 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:42469 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725805AbgAVOOq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 09:14:25 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: koike)
-        with ESMTPSA id 0B2232927C8
-Subject: Re: [PATCH v2] media: vimc: get pixformat info from v4l2_format_info
-To:     "Carlos E. C. Barbosa" <climacobarbosacee@gmail.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lkcamp@lists.libreplanetbr.org
-References: <20200122084025.628462-1-carlosecb@tutanota.com>
-From:   Helen Koike <helen.koike@collabora.com>
-Autocrypt: addr=helen.koike@collabora.com; keydata=
- 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
-Message-ID: <cae36ff9-6f45-6550-9ec0-24e09ac0ea79@collabora.com>
-Date:   Wed, 22 Jan 2020 11:14:14 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Wed, 22 Jan 2020 09:14:46 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1579702485; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=GI7hdrNAJlyxnB92IBUS6zfqib3jokI2WLz6CZfnlE4=;
+ b=jBvTSeMbnA5D/Bql+eHTYKEVxNl7j5J/9zOsqw//F+011uwOidqz2LmmY9RaKGHNTI+Izdkb
+ l8FtvRS8HaoB0dwEls8LqU7zRL6PgoO491hO1RJtJrC9osFdf2AoQL6GTLHaIoE6GZFvDYxn
+ I5e2gidh+Gm0UEE5l+DFVUbWpg8=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e2858d0.7f228ab94f80-smtp-out-n03;
+ Wed, 22 Jan 2020 14:14:40 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D033EC447A1; Wed, 22 Jan 2020 14:14:39 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id AD7F1C433CB;
+        Wed, 22 Jan 2020 14:14:38 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <20200122084025.628462-1-carlosecb@tutanota.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 22 Jan 2020 19:44:38 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Rob Clark <robdclark@gmail.com>,
+        Douglas Anderson <dianders@chromium.org>
+Cc:     Matthias Kaehlcke <mka@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>, Sean Paul <sean@poorly.run>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [REPOST PATCH] drm/msm: Set dma maximum segment size for mdss
+In-Reply-To: <CAF6AEGtBwcFqe9nfohz8D5mo_V1mfR84bBtEUPmnkO2cjeDrfw@mail.gmail.com>
+References: <20200121111813.REPOST.1.I92c66a35fb13f368095b05287bdabdbe88ca6922@changeid>
+ <CAF6AEGtBwcFqe9nfohz8D5mo_V1mfR84bBtEUPmnkO2cjeDrfw@mail.gmail.com>
+Message-ID: <74a88f1a4d2ce17e25ecb52b8d1ccbc1@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Carlos,
+Hi,
 
-Thanks for the patch, just some small comments below.
-
-On 1/22/20 6:40 AM, Carlos E. C. Barbosa wrote:
-> From: "Carlos E.C. Barbosa" <carlosecb@tutanota.com>
+On 2020-01-22 00:56, Rob Clark wrote:
+> On Tue, Jan 21, 2020 at 11:19 AM Douglas Anderson 
+> <dianders@chromium.org> wrote:
+>> 
+>> From: Sean Paul <seanpaul@chromium.org>
+>> 
+>> Turning on CONFIG_DMA_API_DEBUG_SG results in the following error:
+>> 
+>> [   12.078665] msm ae00000.mdss: DMA-API: mapping sg segment longer 
+>> than device claims to support [len=3526656] [max=65536]
+>> [   12.089870] WARNING: CPU: 6 PID: 334 at 
+>> /mnt/host/source/src/third_party/kernel/v4.19/kernel/dma/debug.c:1301 
+>> debug_dma_map_sg+0x1dc/0x318
+>> [   12.102655] Modules linked in: joydev
+>> [   12.106442] CPU: 6 PID: 334 Comm: frecon Not tainted 4.19.0 #2
+>> [   12.112450] Hardware name: Google Cheza (rev3+) (DT)
+>> [   12.117566] pstate: 60400009 (nZCv daif +PAN -UAO)
+>> [   12.122506] pc : debug_dma_map_sg+0x1dc/0x318
+>> [   12.126995] lr : debug_dma_map_sg+0x1dc/0x318
+>> [   12.131487] sp : ffffff800cc3ba80
+>> [   12.134913] x29: ffffff800cc3ba80 x28: 0000000000000000
+>> [   12.140395] x27: 0000000000000004 x26: 0000000000000004
+>> [   12.145868] x25: ffffff8008e55b18 x24: 0000000000000000
+>> [   12.151337] x23: 00000000ffffffff x22: ffffff800921c000
+>> [   12.156809] x21: ffffffc0fa75b080 x20: ffffffc0f7195090
+>> [   12.162280] x19: ffffffc0f1c53280 x18: 0000000000000000
+>> [   12.167749] x17: 0000000000000000 x16: 0000000000000000
+>> [   12.173218] x15: 0000000000000000 x14: 0720072007200720
+>> [   12.178689] x13: 0720072007200720 x12: 0720072007200720
+>> [   12.184161] x11: 0720072007200720 x10: 0720072007200720
+>> [   12.189641] x9 : ffffffc0f1fc6b60 x8 : 0000000000000000
+>> [   12.195110] x7 : ffffff8008132ce0 x6 : 0000000000000000
+>> [   12.200585] x5 : 0000000000000000 x4 : ffffff8008134734
+>> [   12.206058] x3 : ffffff800cc3b830 x2 : ffffffc0f1fc6240
+>> [   12.211532] x1 : 25045a74f48a7400 x0 : 25045a74f48a7400
+>> [   12.217006] Call trace:
+>> [   12.219535]  debug_dma_map_sg+0x1dc/0x318
+>> [   12.223671]  get_pages+0x19c/0x20c
+>> [   12.227177]  msm_gem_fault+0x64/0xfc
+>> [   12.230874]  __do_fault+0x3c/0x140
+>> [   12.234383]  __handle_mm_fault+0x70c/0xdb8
+>> [   12.238603]  handle_mm_fault+0xac/0xc4
+>> [   12.242473]  do_page_fault+0x1bc/0x3d4
+>> [   12.246342]  do_translation_fault+0x54/0x88
+>> [   12.250652]  do_mem_abort+0x60/0xf0
+>> [   12.254250]  el0_da+0x20/0x24
+>> [   12.257317] irq event stamp: 67260
+>> [   12.260828] hardirqs last  enabled at (67259): [<ffffff8008132d0c>] 
+>> console_unlock+0x214/0x608
+>> [   12.269693] hardirqs last disabled at (67260): [<ffffff8008080e0c>] 
+>> do_debug_exception+0x5c/0x178
+>> [   12.278820] softirqs last  enabled at (67256): [<ffffff8008081664>] 
+>> __do_softirq+0x4d4/0x520
+>> [   12.287510] softirqs last disabled at (67249): [<ffffff80080be574>] 
+>> irq_exit+0xa8/0x100
+>> [   12.295742] ---[ end trace e63cfc40c313ffab ]---
+>> 
+>> The root of the problem is that the default segment size for sgt is
+>> (UINT_MAX & PAGE_MASK), and the default segment size for device dma is
+>> 64K. As such, if you compare the 2, you would deduce that the sg 
+>> segment
+>> will overflow the device's capacity. In reality, the hardware can
+>> accommodate the larger sg segments, it's just not initializing its max
+>> segment properly. This patch initializes the max segment size for the
+>> mdss device, which gets rid of that pesky warning.
+>> 
+>> Reported-by: Stephen Boyd <swboyd@chromium.org>
+>> Signed-off-by: Sean Paul <seanpaul@chromium.org>
+>> Tested-by: Stephen Boyd <swboyd@chromium.org>
+>> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+>> ---
+>> This patch has been floating in the ether for over a year [1].  I know
+>> next to nothing about it, but I'm told it's still useful so I'm
+>> helpfully reposting it.  Please enjoy.
 > 
-> There is overlapping code over two distinct lists. This repurposes one
-> of vimc_pix_map for strictly mapping formats and remaps other calls to
-> the matching v4l2_format_info.
+> This looks like the right thing to do.. sorry I overlooked the patch
+> first time around
 > 
-> Signed-off-by: Carlos E. C. Barbosa <carlosecb@tutanota.com>
-> ---
-> Changes in v2:
-> As advised by Helen Koike and Hans Verkuil, the const qualifiers are not
-> removed, the bayer flag is kept and the unnecessary changes are not
-> made.
+> Reviewed-by: Rob Clark <robdclark@gmail.com>
 > 
-> v4l2-compliance message:
-> https://pastebin.com/1XF45aCA
+> (since I've already sent PR for msm-next, could we pick this up via 
+> drm-misc?)
 > 
-> ---
->  drivers/media/platform/vimc/vimc-capture.c | 19 ++++++++++++------
->  drivers/media/platform/vimc/vimc-common.c  | 23 ----------------------
->  drivers/media/platform/vimc/vimc-common.h  |  2 --
->  drivers/media/platform/vimc/vimc-debayer.c |  7 +++++--
->  drivers/media/platform/vimc/vimc-scaler.c  | 12 +++++++++--
->  drivers/media/platform/vimc/vimc-sensor.c  | 12 ++++++++---
->  6 files changed, 37 insertions(+), 38 deletions(-)
-> 
-> diff --git a/drivers/media/platform/vimc/vimc-capture.c b/drivers/media/platform/vimc/vimc-capture.c
-> index 76c015898cfd..30659e934cfb 100644
-> --- a/drivers/media/platform/vimc/vimc-capture.c
-> +++ b/drivers/media/platform/vimc/vimc-capture.c
-> @@ -86,6 +86,7 @@ static int vimc_cap_try_fmt_vid_cap(struct file *file, void *priv,
->  {
->  	struct v4l2_pix_format *format = &f->fmt.pix;
->  	const struct vimc_pix_map *vpix;
-> +	const struct v4l2_format_info *vinfo;
 
-Could you please declare vinfo before vpix? I was trying to keep bigger lines
-first in the declaration order, but not a big deal.
+This also fixes a similar warning seen on SC7180 during video playback.
 
-Same in other places of this patch.
+Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 
->  
->  	format->width = clamp_t(u32, format->width, VIMC_FRAME_MIN_WIDTH,
->  				VIMC_FRAME_MAX_WIDTH) & ~1;
-> @@ -94,12 +95,13 @@ static int vimc_cap_try_fmt_vid_cap(struct file *file, void *priv,
->  
->  	/* Don't accept a pixelformat that is not on the table */
->  	vpix = vimc_pix_map_by_pixelformat(format->pixelformat);
-> -	if (!vpix) {
-> +	if (!vpix)
->  		format->pixelformat = fmt_default.pixelformat;
-> -		vpix = vimc_pix_map_by_pixelformat(format->pixelformat);
-> -	}
-> +
-> +	vinfo = v4l2_format_info(format->pixelformat);
-> +
->  	/* TODO: Add support for custom bytesperline values */
-> -	format->bytesperline = format->width * vpix->bpp;
-> +	format->bytesperline = format->width * vinfo->bpp[0];
->  	format->sizeimage = format->bytesperline * format->height;
->  
->  	if (format->field == V4L2_FIELD_ANY)
-> @@ -166,6 +168,7 @@ static int vimc_cap_enum_framesizes(struct file *file, void *fh,
->  
->  	/* Only accept code in the pix map table */
->  	vpix = vimc_pix_map_by_code(fsize->pixel_format);
-> +
+Logs for reference,
 
-You don't need to add a new line here, please, remember to review the patch yourself
-before sending it :)
+localhost ~ # [  647.100504] ------------[ cut here ]------------
+[  647.105748] DMA-API: msm ae00000.mdss: mapping sg segment longer than 
+device claims to support [len=524288] [max=65536]
 
->  	if (!vpix)
->  		return -EINVAL;
->  
-> @@ -386,10 +389,11 @@ struct vimc_ent_device *vimc_cap_add(struct vimc_device *vimc,
->  				     const char *vcfg_name)
->  {
->  	struct v4l2_device *v4l2_dev = &vimc->v4l2_dev;
-> -	const struct vimc_pix_map *vpix;
+<...snip...>
 
-No need to change this if you are just adding vinfo.
+[  647.184254] pstate: 60400009 (nZCv daif +PAN -UAO)
+[  647.189211] pc : debug_dma_map_sg+0x1a8/0x2c4
+[  647.193708] lr : debug_dma_map_sg+0x1a8/0x2c4
+[  647.198202] sp : ffffffc010f6ba80
+[  647.201626] x29: ffffffc010f6ba90 x28: 0000000000010000
+[  647.207110] x27: 00000000ffffffff x26: ffffff8174840b80
+[  647.212592] x25: ffffffe9f4fe5000 x24: 0000000000000003
+[  647.218075] x23: ffffff815c223780 x22: ffffff81742d0810
+[  647.223557] x21: 0000000000000003 x20: 0000000000000001
+[  647.229041] x19: 0000000000000001 x18: 0000000000000000
+[  647.234524] x17: 000000000000003c x16: ffffffe9f4444a14
+[  647.240006] x15: 0000000000000006 x14: 0720072007200720
+[  647.245489] x13: 0720072007200720 x12: 0000000000000000
+[  647.250969] x11: 0000000000000000 x10: 0000000000000000
+[  647.256452] x9 : 4be0233cf8ef6200 x8 : 4be0233cf8ef6200
+[  647.261935] x7 : 0720072007200720 x6 : ffffff8175ea0f00
+[  647.267417] x5 : 0000000000000000 x4 : 0000000000000000
+[  647.272898] x3 : 0000000000000000 x2 : ffffff81771d1680
+[  647.278380] x1 : ffffff81771c10c0 x0 : 000000000000006b
+[  647.283863] Call trace:
+[  647.286409]  debug_dma_map_sg+0x1a8/0x2c4
+[  647.290569]  vb2_dma_sg_dmabuf_ops_map+0x138/0x18c [videobuf2_dma_sg]
+[  647.297215]  dma_buf_map_attachment+0x6c/0xb0
+[  647.301724]  drm_gem_prime_import_dev+0xa4/0x134
+[  647.306495]  drm_gem_prime_fd_to_handle+0xc4/0x194
+[  647.311444]  drm_prime_fd_to_handle_ioctl+0x40/0x58
+[  647.316483]  drm_ioctl_kernel+0x94/0x10c
+[  647.320538]  drm_ioctl+0x264/0x3f8
+[  647.324059]  drm_compat_ioctl+0xcc/0xdc
+[  647.328033]  __se_compat_sys_ioctl+0x100/0x2074
+[  647.332715]  __arm64_compat_sys_ioctl+0x20/0x2c
+[  647.337406]  el0_svc_common+0xa4/0x154
+[  647.341279]  el0_svc_compat_handler+0x2c/0x38
+[  647.345781]  el0_svc_compat+0x8/0x10
+[  647.349474] ---[ end trace 2f188eb70b295b6c ]---
+[  648.282197] ------------[ cut here ]------------
 
->  	struct vimc_cap_device *vcap;
->  	struct video_device *vdev;
->  	struct vb2_queue *q;
-> +	const struct vimc_pix_map *vpix;
-> +	const struct v4l2_format_info *vinfo;
->  	int ret;
->  
->  	/* Allocate the vimc_cap_device struct */
-> @@ -434,8 +438,11 @@ struct vimc_ent_device *vimc_cap_add(struct vimc_device *vimc,
->  
->  	/* Set default frame format */
->  	vcap->format = fmt_default;
-> +
->  	vpix = vimc_pix_map_by_pixelformat(vcap->format.pixelformat);
-> -	vcap->format.bytesperline = vcap->format.width * vpix->bpp;
-> +	vinfo = v4l2_format_info(vpix->pixelformat);
-> +
-> +	vcap->format.bytesperline = vcap->format.width * vinfo->bpp[0];
->  	vcap->format.sizeimage = vcap->format.bytesperline *
->  				 vcap->format.height;
->  
-> diff --git a/drivers/media/platform/vimc/vimc-common.c b/drivers/media/platform/vimc/vimc-common.c
-> index 16ce9f3b7c75..8327ada1b461 100644
-> --- a/drivers/media/platform/vimc/vimc-common.c
-> +++ b/drivers/media/platform/vimc/vimc-common.c
-> @@ -21,19 +21,16 @@ static const struct vimc_pix_map vimc_pix_map_list[] = {
->  	{
->  		.code = MEDIA_BUS_FMT_BGR888_1X24,
->  		.pixelformat = V4L2_PIX_FMT_BGR24,
-> -		.bpp = 3,
->  		.bayer = false,
->  	},
->  	{
->  		.code = MEDIA_BUS_FMT_RGB888_1X24,
->  		.pixelformat = V4L2_PIX_FMT_RGB24,
-> -		.bpp = 3,
->  		.bayer = false,
->  	},
->  	{
->  		.code = MEDIA_BUS_FMT_ARGB8888_1X32,
->  		.pixelformat = V4L2_PIX_FMT_ARGB32,
-> -		.bpp = 4,
->  		.bayer = false,
->  	},
->  
-> @@ -41,49 +38,41 @@ static const struct vimc_pix_map vimc_pix_map_list[] = {
->  	{
->  		.code = MEDIA_BUS_FMT_SBGGR8_1X8,
->  		.pixelformat = V4L2_PIX_FMT_SBGGR8,
-> -		.bpp = 1,
->  		.bayer = true,
->  	},
->  	{
->  		.code = MEDIA_BUS_FMT_SGBRG8_1X8,
->  		.pixelformat = V4L2_PIX_FMT_SGBRG8,
-> -		.bpp = 1,
->  		.bayer = true,
->  	},
->  	{
->  		.code = MEDIA_BUS_FMT_SGRBG8_1X8,
->  		.pixelformat = V4L2_PIX_FMT_SGRBG8,
-> -		.bpp = 1,
->  		.bayer = true,
->  	},
->  	{
->  		.code = MEDIA_BUS_FMT_SRGGB8_1X8,
->  		.pixelformat = V4L2_PIX_FMT_SRGGB8,
-> -		.bpp = 1,
->  		.bayer = true,
->  	},
->  	{
->  		.code = MEDIA_BUS_FMT_SBGGR10_1X10,
->  		.pixelformat = V4L2_PIX_FMT_SBGGR10,
-> -		.bpp = 2,
->  		.bayer = true,
->  	},
->  	{
->  		.code = MEDIA_BUS_FMT_SGBRG10_1X10,
->  		.pixelformat = V4L2_PIX_FMT_SGBRG10,
-> -		.bpp = 2,
->  		.bayer = true,
->  	},
->  	{
->  		.code = MEDIA_BUS_FMT_SGRBG10_1X10,
->  		.pixelformat = V4L2_PIX_FMT_SGRBG10,
-> -		.bpp = 2,
->  		.bayer = true,
->  	},
->  	{
->  		.code = MEDIA_BUS_FMT_SRGGB10_1X10,
->  		.pixelformat = V4L2_PIX_FMT_SRGGB10,
-> -		.bpp = 2,
->  		.bayer = true,
->  	},
->  
-> @@ -91,25 +80,21 @@ static const struct vimc_pix_map vimc_pix_map_list[] = {
->  	{
->  		.code = MEDIA_BUS_FMT_SBGGR10_ALAW8_1X8,
->  		.pixelformat = V4L2_PIX_FMT_SBGGR10ALAW8,
-> -		.bpp = 1,
->  		.bayer = true,
->  	},
->  	{
->  		.code = MEDIA_BUS_FMT_SGBRG10_ALAW8_1X8,
->  		.pixelformat = V4L2_PIX_FMT_SGBRG10ALAW8,
-> -		.bpp = 1,
->  		.bayer = true,
->  	},
->  	{
->  		.code = MEDIA_BUS_FMT_SGRBG10_ALAW8_1X8,
->  		.pixelformat = V4L2_PIX_FMT_SGRBG10ALAW8,
-> -		.bpp = 1,
->  		.bayer = true,
->  	},
->  	{
->  		.code = MEDIA_BUS_FMT_SRGGB10_ALAW8_1X8,
->  		.pixelformat = V4L2_PIX_FMT_SRGGB10ALAW8,
-> -		.bpp = 1,
->  		.bayer = true,
->  	},
->  
-> @@ -117,49 +102,41 @@ static const struct vimc_pix_map vimc_pix_map_list[] = {
->  	{
->  		.code = MEDIA_BUS_FMT_SBGGR10_DPCM8_1X8,
->  		.pixelformat = V4L2_PIX_FMT_SBGGR10DPCM8,
-> -		.bpp = 1,
->  		.bayer = true,
->  	},
->  	{
->  		.code = MEDIA_BUS_FMT_SGBRG10_DPCM8_1X8,
->  		.pixelformat = V4L2_PIX_FMT_SGBRG10DPCM8,
-> -		.bpp = 1,
->  		.bayer = true,
->  	},
->  	{
->  		.code = MEDIA_BUS_FMT_SGRBG10_DPCM8_1X8,
->  		.pixelformat = V4L2_PIX_FMT_SGRBG10DPCM8,
-> -		.bpp = 1,
->  		.bayer = true,
->  	},
->  	{
->  		.code = MEDIA_BUS_FMT_SRGGB10_DPCM8_1X8,
->  		.pixelformat = V4L2_PIX_FMT_SRGGB10DPCM8,
-> -		.bpp = 1,
->  		.bayer = true,
->  	},
->  	{
->  		.code = MEDIA_BUS_FMT_SBGGR12_1X12,
->  		.pixelformat = V4L2_PIX_FMT_SBGGR12,
-> -		.bpp = 2,
->  		.bayer = true,
->  	},
->  	{
->  		.code = MEDIA_BUS_FMT_SGBRG12_1X12,
->  		.pixelformat = V4L2_PIX_FMT_SGBRG12,
-> -		.bpp = 2,
->  		.bayer = true,
->  	},
->  	{
->  		.code = MEDIA_BUS_FMT_SGRBG12_1X12,
->  		.pixelformat = V4L2_PIX_FMT_SGRBG12,
-> -		.bpp = 2,
->  		.bayer = true,
->  	},
->  	{
->  		.code = MEDIA_BUS_FMT_SRGGB12_1X12,
->  		.pixelformat = V4L2_PIX_FMT_SRGGB12,
-> -		.bpp = 2,
->  		.bayer = true,
->  	},
->  };
-> diff --git a/drivers/media/platform/vimc/vimc-common.h b/drivers/media/platform/vimc/vimc-common.h
-> index 87eb8259c2a8..dd1c45334705 100644
-> --- a/drivers/media/platform/vimc/vimc-common.h
-> +++ b/drivers/media/platform/vimc/vimc-common.h
-> @@ -62,7 +62,6 @@ do {									\
->   * struct vimc_pix_map - maps media bus code with v4l2 pixel format
->   *
->   * @code:		media bus format code defined by MEDIA_BUS_FMT_* macros
-> - * @bbp:		number of bytes each pixel occupies
->   * @pixelformat:	pixel format devined by V4L2_PIX_FMT_* macros
->   *
->   * Struct which matches the MEDIA_BUS_FMT_* codes with the corresponding
-> @@ -70,7 +69,6 @@ do {									\
->   */
->  struct vimc_pix_map {
->  	unsigned int code;
-> -	unsigned int bpp;
->  	u32 pixelformat;
->  	bool bayer;
->  };
-> diff --git a/drivers/media/platform/vimc/vimc-debayer.c b/drivers/media/platform/vimc/vimc-debayer.c
-> index 5d1b67d684bb..0df44b8bb7d0 100644
-> --- a/drivers/media/platform/vimc/vimc-debayer.c
-> +++ b/drivers/media/platform/vimc/vimc-debayer.c
-> @@ -304,6 +304,7 @@ static int vimc_deb_s_stream(struct v4l2_subdev *sd, int enable)
->  
->  	if (enable) {
->  		const struct vimc_pix_map *vpix;
-> +		const struct v4l2_format_info *vinfo;
->  		unsigned int frame_size;
->  
->  		if (vdeb->src_frame)
-> @@ -311,12 +312,14 @@ static int vimc_deb_s_stream(struct v4l2_subdev *sd, int enable)
->  
->  		/* Calculate the frame size of the source pad */
->  		vpix = vimc_pix_map_by_code(vdeb->src_code);
-> +		vinfo = v4l2_format_info(vpix->pixelformat);
->  		frame_size = vdeb->sink_fmt.width * vdeb->sink_fmt.height *
-> -				vpix->bpp;
-> +				vinfo->bpp[0];
->  
->  		/* Save the bytes per pixel of the sink */
->  		vpix = vimc_pix_map_by_code(vdeb->sink_fmt.code);
-> -		vdeb->sink_bpp = vpix->bpp;
-> +		vinfo = v4l2_format_info(vpix->pixelformat);
-> +		vdeb->sink_bpp = vinfo->bpp[0];
->  
->  		/* Get the corresponding pixel map from the table */
->  		vdeb->sink_pix_map =
-> diff --git a/drivers/media/platform/vimc/vimc-scaler.c b/drivers/media/platform/vimc/vimc-scaler.c
-> index e2e551bc3ded..9fcca5b1f0b7 100644
-> --- a/drivers/media/platform/vimc/vimc-scaler.c
-> +++ b/drivers/media/platform/vimc/vimc-scaler.c
-> @@ -126,6 +126,7 @@ static int vimc_sca_enum_frame_size(struct v4l2_subdev *sd,
->  				    struct v4l2_subdev_frame_size_enum *fse)
->  {
->  	const struct vimc_pix_map *vpix;
-> +	const struct v4l2_format_info *vinfo;
->  
->  	if (fse->index)
->  		return -EINVAL;
-> @@ -134,6 +135,7 @@ static int vimc_sca_enum_frame_size(struct v4l2_subdev *sd,
->  	vpix = vimc_pix_map_by_code(fse->code);
->  	if (!vpix || vpix->bayer)
->  		return -EINVAL;
 
-new line here.
+Thanks,
+Sai
 
-> +	vinfo = v4l2_format_info(vpix->pixelformat);
->  
->  	fse->min_width = VIMC_FRAME_MIN_WIDTH;
->  	fse->min_height = VIMC_FRAME_MIN_HEIGHT;
-> @@ -177,11 +179,15 @@ static int vimc_sca_get_fmt(struct v4l2_subdev *sd,
->  static void vimc_sca_adjust_sink_fmt(struct v4l2_mbus_framefmt *fmt)
->  {
->  	const struct vimc_pix_map *vpix;
-> +	const struct v4l2_format_info *vinfo;
->  
->  	/* Only accept code in the pix map table in non bayer format */
->  	vpix = vimc_pix_map_by_code(fmt->code);
-> -	if (!vpix || vpix->bayer)
-> +	if (!vpix || vpix->bayer) {
->  		fmt->code = sink_fmt_default.code;
-> +		vpix = vimc_pix_map_by_code(fmt->code);
-> +	}
-> +	vinfo = v4l2_format_info(vpix->pixelformat);
->  
->  	fmt->width = clamp_t(u32, fmt->width, VIMC_FRAME_MIN_WIDTH,
->  			     VIMC_FRAME_MAX_WIDTH) & ~1;
-> @@ -332,6 +338,7 @@ static int vimc_sca_s_stream(struct v4l2_subdev *sd, int enable)
->  
->  	if (enable) {
->  		const struct vimc_pix_map *vpix;
-> +		const struct v4l2_format_info *vinfo;
->  		unsigned int frame_size;
->  
->  		if (vsca->src_frame)
-> @@ -339,7 +346,8 @@ static int vimc_sca_s_stream(struct v4l2_subdev *sd, int enable)
->  
->  		/* Save the bytes per pixel of the sink */
->  		vpix = vimc_pix_map_by_code(vsca->sink_fmt.code);
-> -		vsca->bpp = vpix->bpp;
-> +		vinfo = v4l2_format_info(vpix->pixelformat);
-> +		vsca->bpp = vinfo->bpp[0];
->  
->  		/* Calculate the width in bytes of the src frame */
->  		vsca->src_line_size = vsca->crop_rect.width *
-> diff --git a/drivers/media/platform/vimc/vimc-sensor.c b/drivers/media/platform/vimc/vimc-sensor.c
-> index 32380f504591..849658d0bade 100644
-> --- a/drivers/media/platform/vimc/vimc-sensor.c
-> +++ b/drivers/media/platform/vimc/vimc-sensor.c
-> @@ -100,12 +100,16 @@ static int vimc_sen_get_fmt(struct v4l2_subdev *sd,
->  
->  static void vimc_sen_tpg_s_format(struct vimc_sen_device *vsen)
->  {
-> -	const struct vimc_pix_map *vpix =
-> +	const struct vimc_pix_map *vpix	=
->  				vimc_pix_map_by_code(vsen->mbus_format.code);
-> +	const struct v4l2_format_info *vinfo =
-> +				v4l2_format_info(vpix->pixelformat);
-> +
->  
-
-There are two new lines here (I throught checkpatch.pl should complain about this).
-
-Thanks
-Helen
-
->  	tpg_reset_source(&vsen->tpg, vsen->mbus_format.width,
->  			 vsen->mbus_format.height, vsen->mbus_format.field);
-> -	tpg_s_bytesperline(&vsen->tpg, 0, vsen->mbus_format.width * vpix->bpp);
-> +	tpg_s_bytesperline(&vsen->tpg, 0,
-> +			   vsen->mbus_format.width * vinfo->bpp[0]);
->  	tpg_s_buf_height(&vsen->tpg, vsen->mbus_format.height);
->  	tpg_s_fourcc(&vsen->tpg, vpix->pixelformat);
->  	/* TODO: add support for V4L2_FIELD_ALTERNATE */
-> @@ -199,11 +203,13 @@ static int vimc_sen_s_stream(struct v4l2_subdev *sd, int enable)
->  
->  	if (enable) {
->  		const struct vimc_pix_map *vpix;
-> +		const struct v4l2_format_info *vinfo;
->  		unsigned int frame_size;
->  
->  		/* Calculate the frame size */
->  		vpix = vimc_pix_map_by_code(vsen->mbus_format.code);
-> -		frame_size = vsen->mbus_format.width * vpix->bpp *
-> +		vinfo = v4l2_format_info(vpix->pixelformat);
-> +		frame_size = vsen->mbus_format.width * vinfo->bpp[0] *
->  			     vsen->mbus_format.height;
->  
->  		/*
-> 
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
