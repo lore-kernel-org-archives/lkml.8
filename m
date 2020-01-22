@@ -2,101 +2,234 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A3FC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD083C33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7D642465A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:43:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FnlVw13T"
+	by mail.kernel.org (Postfix) with ESMTP id 7E4EA24655
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:44:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579722252;
+	bh=ERAYXnLfEaikjmnspNdobkqN9VU5U20/NnieuVtLYiI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=C21GvLIoC83jzURVtm3M5UNSpCApS2E1um3AKYVpIw3dHvWEZyiCREPr4fIyYOP9q
+	 ykhDK/YEve0S3+FyqVQLEq+jNObVwtV0sOe9/veGi8m9PKDKJLTF0NqFs+6MCnbzo/
+	 VrjgmdfNeBzHKhgcvVH0DewqQWv/xghMlpV9FCzY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729012AbgAVTns (ORCPT
+        id S1729021AbgAVToL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 14:43:48 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31202 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728842AbgAVTnn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 14:43:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579722222;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2H99dtIPzD+2bfpOZRc5f1le1Dolfc3F7B556CU3yGI=;
-        b=FnlVw13T3WGHIZE1UT/lH9SW17gFVt8Ehe6+2VoBOMItRzebnshjoQMjHiqAfN05CZm4Pn
-        mzZZk3NcPCYZheDasRT17yRbS/O3r6BIUkC0wAh9kj9WwAA7S6+jh5us1e7hHP35oUs3u+
-        a06l1eHSHyQNCTENOwCVFl75acwfSl4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-294-NQLconojOpKT2sJLDngfkQ-1; Wed, 22 Jan 2020 14:43:38 -0500
-X-MC-Unique: NQLconojOpKT2sJLDngfkQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 22 Jan 2020 14:44:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41754 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725928AbgAVToK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 14:44:10 -0500
+Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E64BB138191;
-        Wed, 22 Jan 2020 19:43:36 +0000 (UTC)
-Received: from malachite.bss.redhat.com (dhcp-10-20-1-90.bss.redhat.com [10.20.1.90])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 16E9C28D10;
-        Wed, 22 Jan 2020 19:43:36 +0000 (UTC)
-From:   Lyude Paul <lyude@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] drm/dp_mst: Mention max_payloads in proposed_vcpis/payloads docs
-Date:   Wed, 22 Jan 2020 14:43:21 -0500
-Message-Id: <20200122194321.14953-2-lyude@redhat.com>
-In-Reply-To: <20200122194321.14953-1-lyude@redhat.com>
-References: <20200122194321.14953-1-lyude@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id A13C52465B;
+        Wed, 22 Jan 2020 19:44:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579722249;
+        bh=ERAYXnLfEaikjmnspNdobkqN9VU5U20/NnieuVtLYiI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=UKN5UFNsvo1rk35ewzqIHLkweANflqnSB76dxH3G3HwLtsrGzN2wFaJWixcUnN02h
+         Dp9a/QGrOGKRXO6zuy5NjOPH8AHw0Lt+b/TykCTudjIQu95feQ62f8Sju1rf0hByvj
+         NCv6UGMKNhI7BaVwcg2mTpvI9Lrpd9Xl+8RCWC2Y=
+Received: by mail-il1-f174.google.com with SMTP id q15so308894ili.11;
+        Wed, 22 Jan 2020 11:44:09 -0800 (PST)
+X-Gm-Message-State: APjAAAWuT8askCUKEIQK8xRN8RAGb1nyC9yU+xmJlg9mqWtomOhs3THJ
+        oX+c+x8n7cVeG+L4c/OhTUKGTYg1unNhIuCphaU=
+X-Google-Smtp-Source: APXvYqwbugcYCElK+66aehWJICUHbHpOAEyrS9vEkHbUgvstAyzm+vwxWBNtbofhJ+VOdmu9iNh+vRs7H0P2c2SbXk8=
+X-Received: by 2002:a92:cb10:: with SMTP id s16mr10093637ilo.176.1579722249065;
+ Wed, 22 Jan 2020 11:44:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-Content-Transfer-Encoding: quoted-printable
+References: <1579675994-7001-1-git-send-email-light.hsieh@mediatek.com> <1579675994-7001-6-git-send-email-light.hsieh@mediatek.com>
+In-Reply-To: <1579675994-7001-6-git-send-email-light.hsieh@mediatek.com>
+From:   Sean Wang <sean.wang@kernel.org>
+Date:   Wed, 22 Jan 2020 11:43:53 -0800
+X-Gmail-Original-Message-ID: <CAGp9Lzox4EcO+WWEoLMshQDhH14644iTuAWA9XQc82JYfp-pqA@mail.gmail.com>
+Message-ID: <CAGp9Lzox4EcO+WWEoLMshQDhH14644iTuAWA9XQc82JYfp-pqA@mail.gmail.com>
+Subject: Re: [PATCH v8 6/6] pinctrl: mediatek: Add support for pin
+ configuration dump via debugfs.
+To:     Light Hsieh <light.hsieh@mediatek.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, kuohong.wang@mediatek.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mention that the size of these two structs is determined by
-max_payloads. Suggested by Ville Syrj=C3=A4l=C3=A4.
+On Tue, Jan 21, 2020 at 10:53 PM <light.hsieh@mediatek.com> wrote:
+>
+> From: Light Hsieh <light.hsieh@mediatek.com>
+>
+> Add support for pin configuration dump via catting
+> /sys/kernel/debug/pinctrl/$platform_dependent_path/pinconf-pins.
+> pinctrl framework had already support such dump. This patch implement the
+> operation function pointer to fullfill this dump.
+>
+> Signed-off-by: Light Hsieh <light.hsieh@mediatek.com>
 
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Cc: Ville Syrj=C3=A4l=C3=A4 <ville.syrjala@linux.intel.com>
----
- include/drm/drm_dp_mst_helper.h | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Acked-by: Sean Wang <sean.wang@kernel.org>
 
-diff --git a/include/drm/drm_dp_mst_helper.h b/include/drm/drm_dp_mst_hel=
-per.h
-index bcb39da9adb4..5483f888712a 100644
---- a/include/drm/drm_dp_mst_helper.h
-+++ b/include/drm/drm_dp_mst_helper.h
-@@ -635,11 +635,13 @@ struct drm_dp_mst_topology_mgr {
- 	struct mutex payload_lock;
- 	/**
- 	 * @proposed_vcpis: Array of pointers for the new VCPI allocation. The
--	 * VCPI structure itself is &drm_dp_mst_port.vcpi.
-+	 * VCPI structure itself is &drm_dp_mst_port.vcpi, and the size of
-+	 * this array is determined by @max_payloads.
- 	 */
- 	struct drm_dp_vcpi **proposed_vcpis;
- 	/**
--	 * @payloads: Array of payloads.
-+	 * @payloads: Array of payloads. The size of this array is determined
-+	 * by @max_payloads.
- 	 */
- 	struct drm_dp_payload *payloads;
- 	/**
---=20
-2.24.1
-
+> ---
+>  drivers/pinctrl/mediatek/pinctrl-paris.c | 109 +++++++++++++++++++++++++++++++
+>  drivers/pinctrl/mediatek/pinctrl-paris.h |   3 +
+>  2 files changed, 112 insertions(+)
+>
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
+> index 115ebc1..83bf29c 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-paris.c
+> +++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
+> @@ -539,12 +539,120 @@ static int mtk_pctrl_get_group_pins(struct pinctrl_dev *pctldev,
+>         return 0;
+>  }
+>
+> +static int mtk_hw_get_value_wrap(struct mtk_pinctrl *hw, unsigned int gpio, int field)
+> +{
+> +       const struct mtk_pin_desc *desc;
+> +       int value, err;
+> +
+> +       if (gpio > hw->soc->npins)
+> +               return -EINVAL;
+> +
+> +       desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
+> +
+> +       err = mtk_hw_get_value(hw, desc, field, &value);
+> +       if (err)
+> +               return err;
+> +
+> +       return value;
+> +}
+> +
+> +#define mtk_pctrl_get_pinmux(hw, gpio)                 \
+> +       mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_MODE)
+> +
+> +#define mtk_pctrl_get_direction(hw, gpio)              \
+> +       mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_DIR)
+> +
+> +#define mtk_pctrl_get_out(hw, gpio)                    \
+> +       mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_DO)
+> +
+> +#define mtk_pctrl_get_in(hw, gpio)                     \
+> +       mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_DI)
+> +
+> +#define mtk_pctrl_get_smt(hw, gpio)                    \
+> +       mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_SMT)
+> +
+> +#define mtk_pctrl_get_ies(hw, gpio)                    \
+> +       mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_IES)
+> +
+> +#define mtk_pctrl_get_driving(hw, gpio)                        \
+> +       mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_DRV)
+> +
+> +ssize_t mtk_pctrl_show_one_pin(struct mtk_pinctrl *hw,
+> +       unsigned int gpio, char *buf, unsigned int bufLen)
+> +{
+> +       int pinmux, pullup, pullen, len = 0, r1 = -1, r0 = -1;
+> +       const struct mtk_pin_desc *desc;
+> +
+> +       if (gpio > hw->soc->npins)
+> +               return -EINVAL;
+> +
+> +       desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
+> +       pinmux = mtk_pctrl_get_pinmux(hw, gpio);
+> +       if (pinmux >= hw->soc->nfuncs)
+> +               pinmux -= hw->soc->nfuncs;
+> +
+> +       mtk_pinconf_bias_get_combo(hw, desc, &pullup, &pullen);
+> +       if (pullen == MTK_PUPD_SET_R1R0_00) {
+> +               pullen = 0;
+> +               r1 = 0;
+> +               r0 = 0;
+> +       } else if (pullen == MTK_PUPD_SET_R1R0_01) {
+> +               pullen = 1;
+> +               r1 = 0;
+> +               r0 = 1;
+> +       } else if (pullen == MTK_PUPD_SET_R1R0_10) {
+> +               pullen = 1;
+> +               r1 = 1;
+> +               r0 = 0;
+> +       } else if (pullen == MTK_PUPD_SET_R1R0_11) {
+> +               pullen = 1;
+> +               r1 = 1;
+> +               r0 = 1;
+> +       } else if (pullen != MTK_DISABLE && pullen != MTK_ENABLE) {
+> +               pullen = 0;
+> +       }
+> +       len += snprintf(buf + len, bufLen - len,
+> +                       "%03d: %1d%1d%1d%1d%02d%1d%1d%1d%1d",
+> +                       gpio,
+> +                       pinmux,
+> +                       mtk_pctrl_get_direction(hw, gpio),
+> +                       mtk_pctrl_get_out(hw, gpio),
+> +                       mtk_pctrl_get_in(hw, gpio),
+> +                       mtk_pctrl_get_driving(hw, gpio),
+> +                       mtk_pctrl_get_smt(hw, gpio),
+> +                       mtk_pctrl_get_ies(hw, gpio),
+> +                       pullen,
+> +                       pullup);
+> +
+> +       if (r1 != -1) {
+> +               len += snprintf(buf + len, bufLen - len, " (%1d %1d)\n",
+> +                       r1, r0);
+> +       } else {
+> +               len += snprintf(buf + len, bufLen - len, "\n");
+> +       }
+> +
+> +       return len;
+> +}
+> +
+> +#define PIN_DBG_BUF_SZ 96
+> +static void mtk_pctrl_dbg_show(struct pinctrl_dev *pctldev, struct seq_file *s,
+> +                         unsigned int gpio)
+> +{
+> +       struct mtk_pinctrl *hw = pinctrl_dev_get_drvdata(pctldev);
+> +       char buf[PIN_DBG_BUF_SZ];
+> +
+> +       (void)mtk_pctrl_show_one_pin(hw, gpio, buf, PIN_DBG_BUF_SZ);
+> +
+> +       seq_printf(s, "%s", buf);
+> +}
+> +
+>  static const struct pinctrl_ops mtk_pctlops = {
+>         .dt_node_to_map         = mtk_pctrl_dt_node_to_map,
+>         .dt_free_map            = pinctrl_utils_free_map,
+>         .get_groups_count       = mtk_pctrl_get_groups_count,
+>         .get_group_name         = mtk_pctrl_get_group_name,
+>         .get_group_pins         = mtk_pctrl_get_group_pins,
+> +       .pin_dbg_show           = mtk_pctrl_dbg_show,
+>  };
+>
+>  static int mtk_pmx_get_funcs_cnt(struct pinctrl_dev *pctldev)
+> @@ -641,6 +749,7 @@ static int mtk_pconf_group_set(struct pinctrl_dev *pctldev, unsigned group,
+>         .pin_config_get = mtk_pinconf_get,
+>         .pin_config_group_get   = mtk_pconf_group_get,
+>         .pin_config_group_set   = mtk_pconf_group_set,
+> +       .is_generic = true,
+>  };
+>
+>  static struct pinctrl_desc mtk_desc = {
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.h b/drivers/pinctrl/mediatek/pinctrl-paris.h
+> index 3d43771..afb7650 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-paris.h
+> +++ b/drivers/pinctrl/mediatek/pinctrl-paris.h
+> @@ -60,6 +60,9 @@
+>  int mtk_paris_pinctrl_probe(struct platform_device *pdev,
+>                             const struct mtk_pin_soc *soc);
+>
+> +ssize_t mtk_pctrl_show_one_pin(struct mtk_pinctrl *hw,
+> +       unsigned int gpio, char *buf, unsigned int bufLen);
+> +
+>  extern const struct dev_pm_ops mtk_paris_pinctrl_pm_ops;
+>
+>  #endif /* __PINCTRL_PARIS_H */
+> --
+> 1.8.1.1.dirty
