@@ -2,80 +2,124 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 011A3C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB08C33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA27C24676
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:05:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579730749;
-	bh=6PB72xkKLVmFMKgN6If9TxhA4tlM5oqHhI4xKDg0GNk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=kEF6hU//eazQ0fZMcmiVj4KF9/oaFNYuaNDzgPDtiiJGjQZL/DrcSSfJ9SMnWfdSr
-	 4zptfnNdIoyFiQkRK5lLQqpEUMcaHmit9o6NLc8mSiapvslaFBGCtHKIalYqLs2SsQ
-	 4zlEUK9J6zU4AQX38pG52fI2YrP4ZW2sfCFXpKRE=
+	by mail.kernel.org (Postfix) with ESMTP id 355CC21835
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:07:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726227AbgAVWFt (ORCPT
+        id S1726590AbgAVWHT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 17:05:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52216 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726101AbgAVWFs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 17:05:48 -0500
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B4BC2253D;
-        Wed, 22 Jan 2020 22:05:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579730748;
-        bh=6PB72xkKLVmFMKgN6If9TxhA4tlM5oqHhI4xKDg0GNk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=rhbI3JisEWrkHimpeHIrEue57yOQLbRfh8rvhyltY2AV+AUFQsCNv1y6NBg6hmmin
-         repX3JAMnZVSTs1Kzk1kUtqHne4qEfpPAo25zV2YmHgql5ADot2byalOtjouu4N+Zf
-         3SfcAU9BepizgSlugExioTNtKeJtznLfmPDYZ330=
-Date:   Wed, 22 Jan 2020 14:05:47 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     mhocko@suse.com, richardw.yang@linux.intel.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] mm: move_pages: report the number of non-attempted
- pages
-Message-Id: <20200122140547.92940695cc47ccb7b7be7d44@linux-foundation.org>
-In-Reply-To: <1579721990-18672-1-git-send-email-yang.shi@linux.alibaba.com>
-References: <1579721990-18672-1-git-send-email-yang.shi@linux.alibaba.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 22 Jan 2020 17:07:19 -0500
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:58607 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbgAVWHS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 17:07:18 -0500
+X-Originating-IP: 90.65.92.102
+Received: from localhost (lfbn-lyo-1-1913-102.w90-65.abo.wanadoo.fr [90.65.92.102])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 084E2FF806;
+        Wed, 22 Jan 2020 22:07:15 +0000 (UTC)
+Date:   Wed, 22 Jan 2020 23:07:15 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Michael McCormick <michael.mccormick@enatel.net>
+Cc:     a.zummo@towertech.it, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rtc: pcf85063: Add pcf85063 clkout control to common
+ clock framework
+Message-ID: <20200122220715.GB3392@piout.net>
+References: <20190902043727.GA24684@michael-Latitude-5590>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190902043727.GA24684@michael-Latitude-5590>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 Jan 2020 03:39:50 +0800 Yang Shi <yang.shi@linux.alibaba.com> wrote:
+Hi,
 
-> Since commit a49bd4d71637 ("mm, numa: rework do_pages_move"),
-> the semantic of move_pages() was changed to return the number of
-> non-migrated pages (failed to migration) and the call would be aborted
-> immediately if migrate_pages() returns positive value.  But it didn't
-> report the number of pages that we even haven't attempted to migrate.
-> So, fix it by including non-attempted pages in the return value.
-> 
-> Fixes: a49bd4d71637 ("mm, numa: rework do_pages_move")
-> Suggested-by: Michal Hocko <mhocko@suse.com>
-> Cc: Wei Yang <richardw.yang@linux.intel.com>
-> Cc: <stable@vger.kernel.org>    [4.17+]
-> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+I'm sorry for the very late review, please Cc me on RTC patches.
+
+It seems the patch has been mangled and tabs became spaces. Also, a few
+alignments are off.
+
+On 02/09/2019 16:37:27+1200, Michael McCormick wrote:
+> Signed-off-by: Michael McCormick <michael.mccormick@enatel.net>
 > ---
-> The patch is based off Wei Yang's cleanup patchset:
-> https://lore.kernel.org/linux-mm/20200122011647.13636-1-richardw.yang@linux.intel.com/T/#t
+>  drivers/rtc/rtc-pcf85063.c | 153 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 153 insertions(+)
+> 
+> diff --git a/drivers/rtc/rtc-pcf85063.c b/drivers/rtc/rtc-pcf85063.c
+> index 1afa6d9fa9fb..f47d3a6b997d 100644
+> --- a/drivers/rtc/rtc-pcf85063.c
+> +++ b/drivers/rtc/rtc-pcf85063.c
+> @@ -9,6 +9,7 @@
+>   * Copyright (C) 2019 Micro Crystal AG
+>   * Author: Alexandre Belloni <alexandre.belloni@bootlin.com>
+>   */
+> +#include <linux/clk-provider.h>
+>  #include <linux/i2c.h>
+>  #include <linux/bcd.h>
+>  #include <linux/rtc.h>
+> @@ -44,6 +45,16 @@
+>  #define PCF85063_OFFSET_STEP0          4340
+>  #define PCF85063_OFFSET_STEP1          4069
+> 
+> +#define PCF85063_REG_CLKO_F_MASK       0x07 /* frequency mask */
+> +#define PCF85063_REG_CLKO_F_32768HZ    0x00
+> +#define PCF85063_REG_CLKO_F_16384HZ    0x01
+> +#define PCF85063_REG_CLKO_F_8192HZ     0x02
+> +#define PCF85063_REG_CLKO_F_4096HZ     0x03
+> +#define PCF85063_REG_CLKO_F_2048HZ     0x04
+> +#define PCF85063_REG_CLKO_F_1024HZ     0x05
+> +#define PCF85063_REG_CLKO_F_1HZ                0x06
 
-Can you please redo this so it is applicable to current mainline?  That
-will make it more easily backportable and this fix is higher priority
-than a set of cleanups.
+Most of those defines are not used, I don't think they are necessary.
 
+> +static int pcf85063_clkout_control(struct clk_hw *hw, bool enable)
+> +{
+> +       struct pcf85063 *pcf85063 = clkout_hw_to_pcf85063(hw);
+> +       unsigned char buf;
+> +
+> +       if (enable)
+> +               buf = PCF85063_REG_CLKO_F_32768HZ;
+
+This doesn't work properly if the clock was already enabled and had a
+proper rate already set. I think you need to read out the currently set
+rate and update PCF85063_REG_CTRL2 only if PCF85063_REG_CLKO_F_OFF is
+set.
+
+> +       else
+> +               buf = PCF85063_REG_CLKO_F_OFF;
+> +
+> +       return regmap_update_bits(pcf85063->regmap, PCF85063_REG_CTRL2,
+> +                                 PCF85063_REG_CLKO_F_MASK, buf);
+> +}
+> +
+> +static struct clk *pcf85063_clkout_register_clk(struct pcf85063 *pcf85063)
+> +{
+> +       struct clk *clk;
+> +       struct clk_init_data init;
+> +       int ret;
+> +
+> +       /* disable the clkout output */
+> +       ret = regmap_update_bits(pcf85063->regmap, PCF85063_REG_CTRL2,
+> +                                PCF85063_REG_CLKO_F_MASK, PCF85063_REG_CLKO_F_OFF);
+
+This has to be left to the common clock framework to figure that nothing
+is using this clock and disable it. I guess this is the whole point of
+this patch but you can't hardcode it here because this will introduce a
+glitch for all the actual users of the clock.
+
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
