@@ -2,71 +2,81 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC7BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D24C33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:10:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79CF62467F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:09:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A9862467A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:10:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729370AbgAVKJp (ORCPT
+        id S1729420AbgAVKKC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 05:09:45 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2292 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725911AbgAVKJp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 05:09:45 -0500
-Received: from LHREML710-CAH.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 3ECC2269739C716551D0;
-        Wed, 22 Jan 2020 10:09:43 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- LHREML710-CAH.china.huawei.com (10.201.108.33) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 22 Jan 2020 10:09:42 +0000
-Received: from [127.0.0.1] (10.202.226.43) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 22 Jan
- 2020 10:09:42 +0000
-From:   John Garry <john.garry@huawei.com>
-Subject: About irq_create_affinity_masks() for a platform device driver
-To:     Thomas Gleixner <tglx@linutronix.de>
-CC:     Marc Zyngier <maz@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        chenxiang <chenxiang66@hisilicon.com>
-Message-ID: <84a9411b-4ae3-1928-3d35-1666f2687ec8@huawei.com>
-Date:   Wed, 22 Jan 2020 10:09:41 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Wed, 22 Jan 2020 05:10:02 -0500
+Received: from mx2.suse.de ([195.135.220.15]:55116 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725911AbgAVKKC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 05:10:02 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id BB8DCB2C0;
+        Wed, 22 Jan 2020 10:09:59 +0000 (UTC)
+Date:   Wed, 22 Jan 2020 11:09:56 +0100 (CET)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+cc:     Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Jessica Yu <jeyu@kernel.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, live-patching@vger.kernel.org,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
+In-Reply-To: <20200121161045.dhihqibnpyrk2lsu@treble>
+Message-ID: <alpine.LSU.2.21.2001221052331.15957@pobox.suse.cz>
+References: <20191015135634.GK2328@hirez.programming.kicks-ass.net> <alpine.LSU.2.21.1910151611000.13169@pobox.suse.cz> <88bab814-ea24-ece9-2bc0-7a1e10a62f12@redhat.com> <20191015153120.GA21580@linux-8ccs> <7e9c7dd1-809e-f130-26a3-3d3328477437@redhat.com>
+ <20191015182705.1aeec284@gandalf.local.home> <20191016074217.GL2328@hirez.programming.kicks-ass.net> <20191021150549.bitgqifqk2tbd3aj@treble> <20200120165039.6hohicj5o52gdghu@treble> <alpine.LSU.2.21.2001210922060.6036@pobox.suse.cz>
+ <20200121161045.dhihqibnpyrk2lsu@treble>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.43]
-X-ClientProxiedBy: lhreml741-chm.china.huawei.com (10.201.108.191) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
 
-A question about the function in the $subject:
+> > > At this point, I only see downsides of -flive-patching, at least until
+> > > we actually have real upstream code which needs it.
+> > 
+> > Can you explain this? The option makes GCC to avoid optimizations which 
+> > are difficult to detect and would make live patching unsafe. I consider it 
+> > useful as it is, so if you shared the other downsides and what you meant 
+> > by real upstream code, we could discuss it.
+> 
+> Only SLES needs it right?  Why inflict it on other livepatch users?  By
+> "real upstream code" I mean there's no (documented) way to create live
+> patches using the method which relies on this flag.  So I don't see any
+> upstream benefits for having it enabled.
 
-Would there be any issue with a SCSI platform device driver referencing 
-this function?
+I'd put it differently. SLES and upstream need it, RHEL does not need it. 
+Or anyone using kpatch-build. It is perfectly fine to prepare live patches 
+just from the source code using upstream live patching infrastructure. 
+After all, SLES is nothing else than upstream here. We were creating live 
+patches manually for quite a long time and only recently we have been 
+using Nicolai's klp-ccp automation (https://github.com/SUSE/klp-ccp).
 
-So I have a multi-queue platform device, and I want to spread interrupts 
-over all possible CPUs, just like we can do for PCI MSI vectors. This 
-topic was touched on in [0].
+So, everyone using upstream directly relies on the flag, which seems to be 
+a clear benefit to me. Reverting the patch would be a step back.
 
-And, if so it's ok, could we export that same symbol?
+Also I think we're moving in the right direction to make the life of 
+upstream user easier with a proposal of klp-ccp and Petr's patch set to 
+split live patch modules. It is a path from inconvenient to comfortable 
+and not from impossible to possible.
 
-Cheers,
-John
-
-[0] 
-https://lore.kernel.org/lkml/88d64d51-4344-e908-b55b-0583b0137ddf@huawei.com/
+Miroslav
