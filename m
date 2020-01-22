@@ -2,210 +2,159 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB48C33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A441AC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:07:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C6582465A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:07:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6776124655
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:07:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wvCnHv8U"
+	dkim=pass (1024-bit key) header.d=displaylink.com header.i=@displaylink.com header.b="ATwtGgQU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729037AbgAVJHb (ORCPT
+        id S1729076AbgAVJHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:07:31 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36572 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727141AbgAVJHa (ORCPT
+        Wed, 22 Jan 2020 04:07:54 -0500
+Received: from eu-smtp-delivery-167.mimecast.com ([207.82.80.167]:25114 "EHLO
+        eu-smtp-delivery-167.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726167AbgAVJHy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:07:30 -0500
-Received: by mail-wm1-f67.google.com with SMTP id p17so6305881wma.1
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 01:07:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=xjivJm+vtcjvY+FQxebUX6xWquR7Et93xpYy1Kzxpc4=;
-        b=wvCnHv8U/q5EEx8u/+S6BSKlG/GwCEU0ss0zlHCWJmpTyXmcu9sSThWIDInuy0tYNB
-         nG0+AeQl8IlzSUEKR/sWM3dfFAw7PTruatycp2znJ4c/i8hKUYZqFZduChRqVDl5+zDe
-         jLkUmdouR4FLbB6aK4kbPSoYNbvAUkxDc1QkUK0krVsE4wjsqaO5BPbonWzt2n+2f8Au
-         4A/ruEgN4bTQV5MH/3iTluzF0+XmhVtb9K9SkZ2MyTBQLj7ZBBE3mWgfaQLlo1tui3i8
-         yI69kaTfL3N4pE5t6wlOohaejKGaTFZUTV1uv1DX+ONF/fD6c8Zo2AHw7tzIPhRVKGTJ
-         77wQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xjivJm+vtcjvY+FQxebUX6xWquR7Et93xpYy1Kzxpc4=;
-        b=sNGiYIUcN9aHuMTaThTAz2K1WAVaFiuI7gdMxmbbx+0hxAWNhGb6aQadl6kXNmczXA
-         gpHE0mT6MO54qeEHS3Lm6SFXBTLIBfEfjSYgRptT1EN5X822ya6AZEaaHrkCFR0wy45z
-         DVcy0bmu8agPmM9j2RyKAzkKzNMcp2fcxc2hb4IKfrDlX4L3WHWabWiVxRkcC86qNLIS
-         Po1Q9e7pxtkXmL06yyp2rwsgCvLWvQ2BiBFMV7tc77Ibgd940eToPbBcnnLe8HjV8vOc
-         86o9IimImiUo2kOhz3NGl7zdNHj+gjQSxjNuAKcmsN+0iLGzVjGBGDCNJJrm+OK3xSRL
-         11qQ==
-X-Gm-Message-State: APjAAAUcwl1MQF7LkfAWAgkWbl+NaqnjmeZbZjxsgpOSh1p702irOF6+
-        h7n2ZYNQsICjsZJB+ur7Q0ex5UzoKQQ=
-X-Google-Smtp-Source: APXvYqy4ZcPkeQyJkcrdM+gRZ6HpO56ub6wP7r67JoMliKU6H6aVSzFrJzNlVtEH5MGn4Qdlb9wBUQ==
-X-Received: by 2002:a1c:3dc3:: with SMTP id k186mr1893020wma.95.1579684047327;
-        Wed, 22 Jan 2020 01:07:27 -0800 (PST)
-Received: from [10.44.66.8] ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id g7sm55926077wrq.21.2020.01.22.01.07.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 Jan 2020 01:07:26 -0800 (PST)
-Subject: Re: [GIT PULL 00/12] interconnect changes for 5.6
-To:     gregkh@linuxfoundation.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200117095816.23575-1-georgi.djakov@linaro.org>
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
- 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
- KEmKjLDvB0pePJkdTw==
-Message-ID: <ec627a0c-3f84-2b7b-e42b-36cb46ceb594@linaro.org>
-Date:   Wed, 22 Jan 2020 11:07:25 +0200
-MIME-Version: 1.0
-In-Reply-To: <20200117095816.23575-1-georgi.djakov@linaro.org>
-Content-Type: text/plain; charset=utf-8
+        Wed, 22 Jan 2020 04:07:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=displaylink.com;
+        s=mimecast20151025; t=1579684071;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=pYhvcLodsYCv1zZZcC0OL7bCXNNu+SPnBUOlhR+GRuc=;
+        b=ATwtGgQUslyalM1AfzqBrnYUtAZVpppUouayIrpVVo8Dx89gFWFMxdKKCU5WsLMa6EFDiV
+        4PhUCUym2eZ/FvDMqGMTubMMb3FjRTHZ4xBuJHSsji3YAWqylMILSufm66K0KcXxH+RPo8
+        oQLe45JOGJa9MN/C90NodaY3REb3pTI=
+Received: from EUR01-DB5-obe.outbound.protection.outlook.com
+ (mail-db5eur01lp2058.outbound.protection.outlook.com [104.47.2.58]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-136-r5VKoD5sNCe5jt47ZGIw9A-1; Wed, 22 Jan 2020 09:07:49 +0000
+Received: from VI1PR10MB1965.EURPRD10.PROD.OUTLOOK.COM (52.134.27.157) by
+ VI1PR10MB1870.EURPRD10.PROD.OUTLOOK.COM (52.134.21.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.20; Wed, 22 Jan 2020 09:07:48 +0000
+Received: from VI1PR10MB1965.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::7cc2:599e:25ce:49b2]) by VI1PR10MB1965.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::7cc2:599e:25ce:49b2%6]) with mapi id 15.20.2644.027; Wed, 22 Jan 2020
+ 09:07:48 +0000
+Received: from [172.17.183.132] (80.93.235.40) by VI1PR07CA0291.eurprd07.prod.outlook.com (2603:10a6:800:130::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.14 via Frontend Transport; Wed, 22 Jan 2020 09:07:48 +0000
+From:   Vladimir Stankovic <vladimir.stankovic@displaylink.com>
+To:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+CC:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        Petar Kovacevic <petar.kovacevic@displaylink.com>,
+        Nikola Simic <nikola.simic@displaylink.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Marko Miljkovic <marko.miljkovic@displaylink.com>,
+        Stefan Lugonjic <stefan.lugonjic@displaylink.com>
+Subject: Re: [External] Re: staging: Add MA USB Host driver
+Thread-Topic: [External] Re: staging: Add MA USB Host driver
+Thread-Index: AQHVz3K8AIv1fzzvAkakA28tJGe9z6fzRtUggAL+SgCAABtLgP//8WiAgAAHrgCAAAlHgIAABSYA
+Date:   Wed, 22 Jan 2020 09:07:48 +0000
+Message-ID: <2873029f-1259-60a0-4590-24f6a97ba29a@displaylink.com>
+References: <VI1PR10MB19659B32E563620B4D63AF1A91320@VI1PR10MB1965.EURPRD10.PROD.OUTLOOK.COM>
+ <VI1PR10MB1965A077526FE296608D5B1191320@VI1PR10MB1965.EURPRD10.PROD.OUTLOOK.COM>
+ <VI1PR10MB19658F2B6FDAD88FAA05546591320@VI1PR10MB1965.EURPRD10.PROD.OUTLOOK.COM>
+ <20200122070312.GB2068857@kroah.com>
+ <aba22f24-1124-2203-b9f6-4a5e9274a8a8@displaylink.com>
+ <20200122074839.GA2099857@kroah.com>
+ <98df2373-6f19-df36-c78c-e0384ddb8730@displaylink.com>
+ <20200122084921.GA2420736@kroah.com>
+In-Reply-To: <20200122084921.GA2420736@kroah.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VI1PR07CA0291.eurprd07.prod.outlook.com
+ (2603:10a6:800:130::19) To VI1PR10MB1965.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:803:37::29)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [80.93.235.40]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 78850b7a-c867-479a-a3d3-08d79f1a8d17
+x-ms-traffictypediagnostic: VI1PR10MB1870:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR10MB187023C95A395CBDFCA3499C910C0@VI1PR10MB1870.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:628;
+x-forefront-prvs: 029097202E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(136003)(366004)(39840400004)(396003)(189003)(199004)(36756003)(6916009)(52116002)(4326008)(26005)(107886003)(186003)(8676002)(5660300002)(44832011)(66556008)(66446008)(66476007)(16526019)(64756008)(81156014)(8936002)(956004)(71200400001)(31686004)(2616005)(81166006)(66946007)(19625735003)(6486002)(478600001)(966005)(31696002)(16576012)(316002)(54906003)(86362001)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR10MB1870;H:VI1PR10MB1965.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: TWuu6yw+4ShyXvF6Z5JLZ/Hhk1m7w6EQkmllGRI+kyWPFcU8kj1vt2z5gAD3nE/NFlP3svWUS8KvMnRiLYppiTzGKTH2Ht3E+cL8ZfkY/YU7Qp6RZOfDakJdJVp2cJ7Do8KYJEhUXyQ5y0+IXREdJmuC9mFqC428a+HajcEm3z2MrHdHFWgr/+yYAc1XkQ7OsQ/ugNGBpA6AW6mE5KKJjU7eK2o0wWwyrpPnIhtNnOaJA+0h0WELE3yNPArgHhvzvtEt/jE2VBvARArnaNwQLb2W2OJlqmTxavAiF4udBm5XAzeaYJd2BsHPPrcAAXbXt84u0HbOmMw9AXm3fKUruHYWXvzausUVEdOIIs8XGWI0OXdddPmmkWPvvXzOmsOd1izkqDXt5PVk+QFlER8DbT0Khuau2iix5OoMk1sg+v8x9LBetE6qB9WTru4MQwBJOMzjEHiEoW8k7rxafpvAkd3qoCN/jMQXy0f8p6qssns=
+Content-ID: <091E55DA90AE2348BA806342518A99A2@EURPRD10.PROD.OUTLOOK.COM>
+MIME-Version: 1.0
+X-OriginatorOrg: displaylink.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 78850b7a-c867-479a-a3d3-08d79f1a8d17
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jan 2020 09:07:48.2736
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a4bda75a-b444-4312-9c90-44a7c4b2c91a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: JgbOJua5us+kmz8e01/tTBctfyf3eOp3D0fY4ECVhDeOkviZoPhrMqM1vgTJFZaBRU5F1/GvNGdr/q47nMb5tTY3aI43/P8/culcQf9mH7W6ryT3HBfDckouAK8uy5Xv
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB1870
+X-MC-Unique: r5VKoD5sNCe5jt47ZGIw9A-1
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: displaylink.com
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+On 22.1.20. 09:49, gregkh@linuxfoundation.org wrote:
+> A: http://en.wikipedia.org/wiki/Top_post=20
+> <http://en.wikipedia.org/wiki/Top_post>
+> Q: Were do I find info about this thing called top-posting?
+> A: Because it messes up the order in which people normally read text.
+> Q: Why is top-posting such a bad thing?
+> A: Top-posting.
+> Q: What is the most annoying thing in e-mail?
+>=20
+> A: No.
+> Q: Should I include quotations after my reply?
+>=20
+> http://daringfireball.net/2007/07/on_top=20
+> <http://daringfireball.net/2007/07/on_top>
+>=20
+> On Wed, Jan 22, 2020 at 08:16:09AM +0000, Vladimir Stankovic wrote:
+>  > Hi Greg,
+>  >
+>  > It was section 2.5 of the kernel development process, "staging trees".
+>  > In particular, statement "where many sub-directories for drivers or
+>  > filesystems that are on their way to being added to the kernel tree
+>  > live" caught our attention.
+>  >
+>  > Now, by reading it once again, I see that the rest of the section is i=
+n
+>  > line with your comment.
+>  >
+>  > We'll address all comments received so far, and resubmit patch onto
+>  > appropriate repository. With that being said, is USB subsystem tree
+>  > (drivers/usb within usb.git repo) correct one? Please, advise.
+>=20
+> If this is a USB host driver, then yes, drivers/usb/host/ would be the
+> correct location for this.
+>=20
+> Note, at first glance, there is a bunch of work to do on this to get it
+> into "real" mergable shape. Be sure to at the very least get it
+> 'checkpatch.pl clean' before submitting it, that will help out a lot, if
+> it is not already done.
+>=20
+> thanks,
+>=20
+> greg k-h
 
-On 1/17/20 11:58, Georgi Djakov wrote:
-> Hi Greg,
-> 
-> Here are the interconnect patches for the 5.6-rc1 merge window.
-> 
-> - New core helper functions for some common functionalities in drivers.
-> - Improvements in the information exposed via debugfs.
-> - Basic tracepoints support.
-> - New interconnect driver for msm8916 platforms.
-> - Misc fixes.
-> 
-> All patches have been for a while in linux-next without reported issues.
-> Please consider queuing them into char-misc-next.
-> 
-> The same is also available via a pull request with a signed tag below.
-> 
-> Thanks,
-> Georgi
+Failed to set my Thunderbird properly, sorry.
 
-A gentle ping to check whether this email got lost or you require any
-changes?
+Thanks for your feedback. We'll proceed as advised.
 
-Thanks,
-Georgi
+Regards,
+Vladimir.
 
-> 
-> The following changes since commit d1eef1c619749b2a57e514a3fa67d9a516ffa919:
-> 
->   Linux 5.5-rc2 (2019-12-15 15:16:08 -0800)
-> 
-> are available in the Git repository at:
-> 
->   https://git.linaro.org/people/georgi.djakov/linux.git tags/icc-5.6-rc1
-> 
-> for you to fetch changes up to 30c8fa3ec61a46da80698e1f8ab95df4d42bf374:
-> 
->   interconnect: qcom: Add MSM8916 interconnect provider driver (2020-01-07 09:30:09 +0200)
-> 
-> ----------------------------------------------------------------
-> interconnect patches for 5.6
-> 
-> Here are the interconnect patches for the 5.6-rc1 merge window.
-> 
-> - New core helper functions for some common functionalities in drivers.
-> - Improvements in the information exposed via debugfs.
-> - Basic tracepoints support.
-> - New interconnect driver for msm8916 platforms.
-> - Misc fixes.
-> 
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> 
-> ----------------------------------------------------------------
-> Georgi Djakov (11):
->   interconnect: Add a common helper for removing all nodes
->   interconnect: qcom: Use the new common helper for node removal
->   interconnect: Move internal structs into a separate file
->   interconnect: Add a name to struct icc_path
->   interconnect: Add basic tracepoints
->   interconnect: Add a common standard aggregate function
->   interconnect: qcom: Use the standard aggregate function
->   interconnect: Print the tag in the debugfs summary
->   interconnect: Check for valid path in icc_set_bw()
->   dt-bindings: interconnect: Add Qualcomm MSM8916 DT bindings
->   interconnect: qcom: Add MSM8916 interconnect provider driver
-> 
-> Leonard Crestez (1):
->   interconnect: Add interconnect_graph file to debugfs
-> 
->  .../bindings/interconnect/qcom,msm8916.yaml   |  77 +++
->  Documentation/driver-api/interconnect.rst     |  22 +
->  drivers/interconnect/Makefile                 |   1 +
->  drivers/interconnect/core.c                   | 168 ++++--
->  drivers/interconnect/internal.h               |  42 ++
->  drivers/interconnect/qcom/Kconfig             |   9 +
->  drivers/interconnect/qcom/Makefile            |   2 +
->  drivers/interconnect/qcom/msm8916.c           | 554 ++++++++++++++++++
->  drivers/interconnect/qcom/msm8974.c           |  32 +-
->  drivers/interconnect/qcom/qcs404.c            |  32 +-
->  drivers/interconnect/qcom/sdm845.c            |  16 +-
->  drivers/interconnect/trace.h                  |  88 +++
->  .../dt-bindings/interconnect/qcom,msm8916.h   | 100 ++++
->  include/linux/interconnect-provider.h         |  14 +
->  14 files changed, 1057 insertions(+), 100 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,msm8916.yaml
->  create mode 100644 drivers/interconnect/internal.h
->  create mode 100644 drivers/interconnect/qcom/msm8916.c
->  create mode 100644 drivers/interconnect/trace.h
->  create mode 100644 include/dt-bindings/interconnect/qcom,msm8916.h
-> 
