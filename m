@@ -2,51 +2,53 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B9CC33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:50:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 399D2C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01CF32467C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:50:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 113502467B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:50:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686615;
-	bh=DtwRVVqTyZbpxbz99B6ySyjw+czejKuHgMCK2ACEiqE=;
+	s=default; t=1579686616;
+	bh=TPA65KktlMCkj55dMMFCXU0dDGCznac3poGy9SI6+rs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Me3rPjAgGVnmbIlC5+rlHfMpcIwXY8O7DkXSAObdMFIApC5O/scImqwuwOn4YJVVT
-	 JTdvvptoss93VO/XpncBmSrQwMeD6TKvuqm0zOjYsRIT4VbYK2VBW/wb7z+UXtTCcF
-	 D571W4WvQ5iT/E4RbSmIpFaUbvI8HDvELMFYtwGM=
+	b=o1YslNCHob5TJsxtrdTqzy10knUGrVMp7qxQqMKnJXnheSPc1ew89FjsEjU2TNJrC
+	 sAjFlqv/2yoTwjVLReU6BdFTb2L0gHppHvl0Qj5y+dh+xQoOwmwXkN7eOGduXhy4RB
+	 Yc46L1zp+hk7m89D9Db+rkI47qZTuYsLlb3nFGZ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733110AbgAVJit (ORCPT
+        id S1730384AbgAVJiq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:38:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55620 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:38:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731921AbgAVJij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:38:39 -0500
+        id S1730166AbgAVJip (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:38:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94AF424680;
-        Wed, 22 Jan 2020 09:38:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC9752467F;
+        Wed, 22 Jan 2020 09:38:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685919;
-        bh=DtwRVVqTyZbpxbz99B6ySyjw+czejKuHgMCK2ACEiqE=;
+        s=default; t=1579685924;
+        bh=TPA65KktlMCkj55dMMFCXU0dDGCznac3poGy9SI6+rs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K0pvfT1rJDBBGbUKrG5+mk4ohwNvJBjx6FKP6ZPFx5UFUVHM1JWasHCIDtHrndJe2
-         CpS3W50B2yaHpGVtxpioEv0cPhQSm6cTcEY7+h+NoczMOBp9Wn9K3dReqmpQdDL3KI
-         3NDvnewSbvMoxCjCQ2zs0qLjSWgK3HOU1iwFsyoU=
+        b=FoAAiREIV1870DBJTbYLnvIvyUyJvrQCglgS5HNci5M03K68540whA5I82p+5fzyT
+         fePfrWW/r7t7SJ1rqG8omGTAes4lsfbdTf1KxI1QKRWfssOqxSq54ECPpUnCWYeNKy
+         ww43IGGNl7kA8F8NeQLevC931ezq5W4zD7WNGttA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Felix Fietkau <nbd@nbd.name>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.14 36/65] cfg80211: fix page refcount issue in A-MSDU decap
-Date:   Wed, 22 Jan 2020 10:29:21 +0100
-Message-Id: <20200122092756.021562257@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+91bdd8eece0f6629ec8b@syzkaller.appspotmail.com,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 4.14 38/65] netfilter: arp_tables: init netns pointer in xt_tgdtor_param struct
+Date:   Wed, 22 Jan 2020 10:29:23 +0100
+Message-Id: <20200122092756.358278429@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092750.976732974@linuxfoundation.org>
 References: <20200122092750.976732974@linuxfoundation.org>
@@ -59,36 +61,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felix Fietkau <nbd@nbd.name>
+From: Florian Westphal <fw@strlen.de>
 
-commit 81c044fc3bdc5b7be967cd3682528ea94b58c06a upstream.
+commit 212e7f56605ef9688d0846db60c6c6ec06544095 upstream.
 
-The fragments attached to a skb can be part of a compound page. In that case,
-page_ref_inc will increment the refcount for the wrong page. Fix this by
-using get_page instead, which calls page_ref_inc on the compound head and
-also checks for overflow.
+An earlier commit (1b789577f655060d98d20e,
+"netfilter: arp_tables: init netns pointer in xt_tgchk_param struct")
+fixed missing net initialization for arptables, but turns out it was
+incomplete.  We can get a very similar struct net NULL deref during
+error unwinding:
 
-Fixes: 2b67f944f88c ("cfg80211: reuse existing page fragments in A-MSDU rx")
-Cc: stable@vger.kernel.org
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
-Link: https://lore.kernel.org/r/20200113182107.20461-1-nbd@nbd.name
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+RIP: 0010:xt_rateest_put+0xa1/0x440 net/netfilter/xt_RATEEST.c:77
+ xt_rateest_tg_destroy+0x72/0xa0 net/netfilter/xt_RATEEST.c:175
+ cleanup_entry net/ipv4/netfilter/arp_tables.c:509 [inline]
+ translate_table+0x11f4/0x1d80 net/ipv4/netfilter/arp_tables.c:587
+ do_replace net/ipv4/netfilter/arp_tables.c:981 [inline]
+ do_arpt_set_ctl+0x317/0x650 net/ipv4/netfilter/arp_tables.c:1461
+
+Also init the netns pointer in xt_tgdtor_param struct.
+
+Fixes: add67461240c1d ("netfilter: add struct net * to target parameters")
+Reported-by: syzbot+91bdd8eece0f6629ec8b@syzkaller.appspotmail.com
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/wireless/util.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv4/netfilter/arp_tables.c |   19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
---- a/net/wireless/util.c
-+++ b/net/wireless/util.c
-@@ -652,7 +652,7 @@ __frame_add_frag(struct sk_buff *skb, st
- 	struct skb_shared_info *sh = skb_shinfo(skb);
- 	int page_offset;
- 
--	page_ref_inc(page);
-+	get_page(page);
- 	page_offset = ptr - page_address(page);
- 	skb_add_rx_frag(skb, sh->nr_frags, page, page_offset, len, size);
+--- a/net/ipv4/netfilter/arp_tables.c
++++ b/net/ipv4/netfilter/arp_tables.c
+@@ -506,12 +506,13 @@ static inline int check_entry_size_and_h
+ 	return 0;
  }
+ 
+-static inline void cleanup_entry(struct arpt_entry *e)
++static void cleanup_entry(struct arpt_entry *e, struct net *net)
+ {
+ 	struct xt_tgdtor_param par;
+ 	struct xt_entry_target *t;
+ 
+ 	t = arpt_get_target(e);
++	par.net      = net;
+ 	par.target   = t->u.kernel.target;
+ 	par.targinfo = t->data;
+ 	par.family   = NFPROTO_ARP;
+@@ -601,7 +602,7 @@ static int translate_table(struct net *n
+ 		xt_entry_foreach(iter, entry0, newinfo->size) {
+ 			if (i-- == 0)
+ 				break;
+-			cleanup_entry(iter);
++			cleanup_entry(iter, net);
+ 		}
+ 		return ret;
+ 	}
+@@ -926,7 +927,7 @@ static int __do_replace(struct net *net,
+ 	/* Decrease module usage counts and free resource */
+ 	loc_cpu_old_entry = oldinfo->entries;
+ 	xt_entry_foreach(iter, loc_cpu_old_entry, oldinfo->size)
+-		cleanup_entry(iter);
++		cleanup_entry(iter, net);
+ 
+ 	xt_free_table_info(oldinfo);
+ 	if (copy_to_user(counters_ptr, counters,
+@@ -990,7 +991,7 @@ static int do_replace(struct net *net, c
+ 
+  free_newinfo_untrans:
+ 	xt_entry_foreach(iter, loc_cpu_entry, newinfo->size)
+-		cleanup_entry(iter);
++		cleanup_entry(iter, net);
+  free_newinfo:
+ 	xt_free_table_info(newinfo);
+ 	return ret;
+@@ -1287,7 +1288,7 @@ static int compat_do_replace(struct net
+ 
+  free_newinfo_untrans:
+ 	xt_entry_foreach(iter, loc_cpu_entry, newinfo->size)
+-		cleanup_entry(iter);
++		cleanup_entry(iter, net);
+  free_newinfo:
+ 	xt_free_table_info(newinfo);
+ 	return ret;
+@@ -1514,7 +1515,7 @@ static int do_arpt_get_ctl(struct sock *
+ 	return ret;
+ }
+ 
+-static void __arpt_unregister_table(struct xt_table *table)
++static void __arpt_unregister_table(struct net *net, struct xt_table *table)
+ {
+ 	struct xt_table_info *private;
+ 	void *loc_cpu_entry;
+@@ -1526,7 +1527,7 @@ static void __arpt_unregister_table(stru
+ 	/* Decrease module usage counts and free resources */
+ 	loc_cpu_entry = private->entries;
+ 	xt_entry_foreach(iter, loc_cpu_entry, private->size)
+-		cleanup_entry(iter);
++		cleanup_entry(iter, net);
+ 	if (private->number > private->initial_entries)
+ 		module_put(table_owner);
+ 	xt_free_table_info(private);
+@@ -1566,7 +1567,7 @@ int arpt_register_table(struct net *net,
+ 
+ 	ret = nf_register_net_hooks(net, ops, hweight32(table->valid_hooks));
+ 	if (ret != 0) {
+-		__arpt_unregister_table(new_table);
++		__arpt_unregister_table(net, new_table);
+ 		*res = NULL;
+ 	}
+ 
+@@ -1581,7 +1582,7 @@ void arpt_unregister_table(struct net *n
+ 			   const struct nf_hook_ops *ops)
+ {
+ 	nf_unregister_net_hooks(net, ops, hweight32(table->valid_hooks));
+-	__arpt_unregister_table(table);
++	__arpt_unregister_table(net, table);
+ }
+ 
+ /* The built-in targets: standard (NULL) and error. */
 
 
