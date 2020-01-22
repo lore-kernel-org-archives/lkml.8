@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44727C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EDC5C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:45:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 156A824689
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6935F2467B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:45:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686315;
-	bh=2stmh+WkKkvC1k7XKpWJ5AJAIKoKiDdLPZWk2x4k2a4=;
+	s=default; t=1579686317;
+	bh=3jttVuVIpyLVypebi/XVFW10xAl7ANlVHDLRR78vqVg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OUwQE1hSS6NlBR+aEaNHlWINrBFpnSyjOH5B1k4ZD545GQtboe2IezcHACkjjGc82
-	 DPPWd8g/6HR0hZK8Nol7iBcgFtuqmFfcEB1NUadaxqmYyOX2QwdY9zVdgnlvN9u5rW
-	 UaXBpwPa0D9WV6qSxarr0xU0DGTHQvh/lhRGgJbE=
+	b=mVfC8RYF9ikIGmm3a77PkOkzu3y5ZOTcOe6Zl3+cjBvZjeOOZgKsPMBQNZ5FCr2a/
+	 cSPm6q0xJv76Ixi4+ZASvDSPhQ3i7IJbo9KVYHyarvg903XRYUoD9sFbtxMhaVbhYQ
+	 NNzbiXx6EbKu5ZxYgJiu3a9O+zSYHAXSk+h+CG1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387684AbgAVJpN (ORCPT
+        id S2388155AbgAVJpQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:45:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38950 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:45:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388155AbgAVJpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:45:06 -0500
+        id S2387964AbgAVJpJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:45:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8ADAE2467B;
-        Wed, 22 Jan 2020 09:45:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 023922468A;
+        Wed, 22 Jan 2020 09:45:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686306;
-        bh=2stmh+WkKkvC1k7XKpWJ5AJAIKoKiDdLPZWk2x4k2a4=;
+        s=default; t=1579686308;
+        bh=3jttVuVIpyLVypebi/XVFW10xAl7ANlVHDLRR78vqVg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XLMURB6XbNxtB0qx6G9CoRSIG0QCVxsX5wuuxXqZEzTV3t70E9kPIKheeXf1j6lNZ
-         iZzTyMPhnAHNwAKDUce/e+3bLyuadCL3uOoRRoWJNWdcUJQD88Z7dLcdJoqooFMmlU
-         l08VyAzJLENQOJk+HGHPlxQkvJCe7sfyrJoNokA0=
+        b=GMGKooPalKzC/SyVdwF1EwQmIGycgyR3wg7brIj7QWNBZtvm+vq229TLBnYhG8vUW
+         ecoPlQ1cIFacsGFyxKELc0UimLMycrJ02vjk1Y26TErfzU50eLH9T9FpuNzCvfLo3X
+         7fDIeZq+mWv6we1Q2Or0i4iwP3RgGS1/da9WqQmI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+2b2ef983f973e5c40943@syzkaller.appspotmail.com,
+        stable@vger.kernel.org, Scott Bahling <sbahling@suse.com>,
+        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 023/222] ALSA: seq: Fix racy access for queue timer in proc read
-Date:   Wed, 22 Jan 2020 10:26:49 +0100
-Message-Id: <20200122092835.077795996@linuxfoundation.org>
+Subject: [PATCH 5.4 024/222] ALSA: firewire-tascam: fix corruption due to spin lock without restoration in SoftIRQ context
+Date:   Wed, 22 Jan 2020 10:26:50 +0100
+Message-Id: <20200122092835.155860714@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
 References: <20200122092833.339495161@linuxfoundation.org>
@@ -60,54 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-commit 60adcfde92fa40fcb2dbf7cc52f9b096e0cd109a upstream.
+commit 747d1f076de5a60770011f6e512de43298ec64cb upstream.
 
-snd_seq_info_timer_read() reads the information of the timer assigned
-for each queue, but it's done in a racy way which may lead to UAF as
-spotted by syzkaller.
+ALSA firewire-tascam driver can bring corruption due to spin lock without
+restoration of IRQ flag in SoftIRQ context. This commit fixes the bug.
 
-This patch applies the missing q->timer_mutex lock while accessing the
-timer object as well as a slight code change to adapt the standard
-coding style.
-
-Reported-by: syzbot+2b2ef983f973e5c40943@syzkaller.appspotmail.com
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200115203733.26530-1-tiwai@suse.de
+Cc: Scott Bahling <sbahling@suse.com>
+Cc: <stable@vger.kernel.org> # v4.21
+Fixes: d7167422433c ("ALSA: firewire-tascam: queue events for change of control surface")
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Link: https://lore.kernel.org/r/20200113085719.26788-1-o-takashi@sakamocchi.jp
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/seq/seq_timer.c |   14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+ sound/firewire/tascam/amdtp-tascam.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/sound/core/seq/seq_timer.c
-+++ b/sound/core/seq/seq_timer.c
-@@ -465,15 +465,19 @@ void snd_seq_info_timer_read(struct snd_
- 		q = queueptr(idx);
- 		if (q == NULL)
- 			continue;
--		if ((tmr = q->timer) == NULL ||
--		    (ti = tmr->timeri) == NULL) {
--			queuefree(q);
--			continue;
--		}
-+		mutex_lock(&q->timer_mutex);
-+		tmr = q->timer;
-+		if (!tmr)
-+			goto unlock;
-+		ti = tmr->timeri;
-+		if (!ti)
-+			goto unlock;
- 		snd_iprintf(buffer, "Timer for queue %i : %s\n", q->queue, ti->timer->name);
- 		resolution = snd_timer_resolution(ti) * tmr->ticks;
- 		snd_iprintf(buffer, "  Period time : %lu.%09lu\n", resolution / 1000000000, resolution % 1000000000);
- 		snd_iprintf(buffer, "  Skew : %u / %u\n", tmr->skew, tmr->skew_base);
-+unlock:
-+		mutex_unlock(&q->timer_mutex);
- 		queuefree(q);
-  	}
- }
+--- a/sound/firewire/tascam/amdtp-tascam.c
++++ b/sound/firewire/tascam/amdtp-tascam.c
+@@ -157,14 +157,15 @@ static void read_status_messages(struct
+ 			if ((before ^ after) & mask) {
+ 				struct snd_firewire_tascam_change *entry =
+ 						&tscm->queue[tscm->push_pos];
++				unsigned long flag;
+ 
+-				spin_lock_irq(&tscm->lock);
++				spin_lock_irqsave(&tscm->lock, flag);
+ 				entry->index = index;
+ 				entry->before = before;
+ 				entry->after = after;
+ 				if (++tscm->push_pos >= SND_TSCM_QUEUE_COUNT)
+ 					tscm->push_pos = 0;
+-				spin_unlock_irq(&tscm->lock);
++				spin_unlock_irqrestore(&tscm->lock, flag);
+ 
+ 				wake_up(&tscm->hwdep_wait);
+ 			}
 
 
