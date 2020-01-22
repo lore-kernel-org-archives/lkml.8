@@ -2,104 +2,276 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E12F5C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 299DAC33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFF37206A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:13:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579709614;
-	bh=GpFGbLDyDcsYETOekamoCMbKYLs3AiKWzySn/G3zg2k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=y1rmFs0uyAtAejnecE8fG4nhpBI9sTbCP0JcwFWUuWswKAs3L1xyr3PVlVLbCS/LI
-	 8CU6BgaVMO2T7MnS9aPGpFn54kWdvLwxLARrR+EozaBowsC1eC8jGvGd7ItTQ8zdUn
-	 C+30Fe+GCtXcYjbewudCQb6qZ4Bx4ED14CckVuL0=
+	by mail.kernel.org (Postfix) with ESMTP id EEF98206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:17:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="bMOg2ktx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbgAVQNe (ORCPT
+        id S1726219AbgAVQRl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 11:13:34 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:40214 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbgAVQNd (ORCPT
+        Wed, 22 Jan 2020 11:17:41 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:56056 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbgAVQRk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 11:13:33 -0500
-Received: by mail-lj1-f194.google.com with SMTP id n18so2507670ljo.7
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 08:13:32 -0800 (PST)
+        Wed, 22 Jan 2020 11:17:40 -0500
+Received: by mail-wm1-f65.google.com with SMTP id q9so7413672wmj.5
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 08:17:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PxCSo2JcEGlTJhdmVOOHLpuyjFAWieC3FhzbX6ms3Bk=;
-        b=WVzg/4mZaQ3ubctvikpmoB2+8YZnmRK2+VSYiWGQ33nJZL1OeIGMyFE3sBcuqoQVbi
-         rwpNneTfpLB3RAwTWttAZsxz4mdwPNf2Y8+kgY4tYIeLbjPU7jrBtLrLWh4mnN0ddI2k
-         Y06yr95wD8GFqmmXgcgeinrku41v7nODIWRxw=
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FOrOd17IY6UxRCLs7ZuRWcrsAvlH+vzar6yzTjUmF+g=;
+        b=bMOg2ktx2ixHb9xoKebAK8305XoXYSAakZUf1DIM6ZkpHKsNMJZ2HeGKPHbM6NS1oP
+         gSFIdvoAdexX0AwsqXHAnloUPmL4Cf5yxsjyyHrLusR6DGdWA96myHvjgmEvpdq3t37+
+         Ucl5AvDhX1cV1fwOeIRT0nnAbAVS7lWlGTRDSyWFr5j9vtwerZGBvVDSlVP68FUN3f1u
+         7EBWbDhHfaufCYwRQb/6e3nY4tsV82sTVF0lXwfMSMQ0J5JxSG2TBbQYST28sXTuR6Bh
+         kG4GMNCgT+af5dZNeGrTIOUqbHnSkI+TNHT6luZTJJhE0Oz/CpvakoXY5kIoaw9cm+6i
+         LvdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PxCSo2JcEGlTJhdmVOOHLpuyjFAWieC3FhzbX6ms3Bk=;
-        b=S+nrBoHN1ziI3NkYcZGPwy3eGj0+sVjiCTo/KgaIUxXT8hGzfYi2E8HKfWfrHI5UUz
-         /aPzM4k3jiCGUIxhI+LPA+YSfSuWoCDwe4gwy2ROOLs2GzBjs7IRQkV+7oMJdsWNZc+K
-         8yFiF/ZDZYLUqUa52Q7LUxGCLrpjHJ0oRq+gBkwkSAC/6pQHmY+B2jN9fFUgz/wnCoaL
-         R4X7C/9lB4zu1j/QZVM5zFs185GH7xr/8Dki9k/RdSePCAUA4nwMKojdMLq/k7+N3mm0
-         D2cJxHCWmkm3rN0wz+cHZCkhh0WBSzESM03vWUiFlfQCkwZ56gutfla5KSrnx+L5JlUz
-         s3tw==
-X-Gm-Message-State: APjAAAVz09YZis16kkqhVTctfJRTAOMDnmTWeI7P7goG4qw0O846ZHMS
-        u3fu2XiWTccC+pny85BS/UVRNVakE54=
-X-Google-Smtp-Source: APXvYqyJ6vWcaMCOkJ6qEQJxyb35b6LIoqlaJjaVeaiQV0w2dLMopiOri6vmQjBwR/UDWg6x87otQQ==
-X-Received: by 2002:a2e:a37c:: with SMTP id i28mr18955908ljn.118.1579709610232;
-        Wed, 22 Jan 2020 08:13:30 -0800 (PST)
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
-        by smtp.gmail.com with ESMTPSA id w8sm20746978ljd.13.2020.01.22.08.13.28
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=FOrOd17IY6UxRCLs7ZuRWcrsAvlH+vzar6yzTjUmF+g=;
+        b=a/WMYbGIISw/hMyeFXSLGT87PWs4bTEqNZG35oaNUYsnmX7ZzC8rlBjjDzWoRfCfw6
+         l0GRoL7wPonNFoFYW0mBbpNzGtcRKMmFLUO7YY/047KXs0KwyyM3KEUO6kaavfFLIIp/
+         KITyk0kh2MofKUCOco9DW6e9cZyNfnu0im+Vq2W3dNZeuFMnAsw/pQGDgnhD9PxQ1KF/
+         k8PYoj2G/Cto/dIIMESKoaXV2+S+6uoZGcwBw3pca/akNS/22fovK2aa/70ejdsnxrd1
+         3qxXtG3r1/NDhnI+TDbYz59UsGNr9Gi/RR2XBgvozwnwUBuyXxlPlH0R5JBhdO8+CUMB
+         EX7A==
+X-Gm-Message-State: APjAAAXi2AjKuwZrBgQCybBMhWVUbbxhuUC+93tyTT8sAh4/B1GtNEgr
+        xrTeSxpiU9Lxyw5dl1IKA/yNiA==
+X-Google-Smtp-Source: APXvYqwzcSi2Lr7imlGZSmgk5lwITIo8O/yFeeQB2hzIN5uo5LtaT5GOfczCR364Ip0BiZILhfOqkA==
+X-Received: by 2002:a05:600c:21da:: with SMTP id x26mr3774940wmj.4.1579709857523;
+        Wed, 22 Jan 2020 08:17:37 -0800 (PST)
+Received: from [10.1.2.12] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id d14sm62050681wru.9.2020.01.22.08.17.36
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Jan 2020 08:13:29 -0800 (PST)
-Received: by mail-lj1-f170.google.com with SMTP id y6so7486061lji.0
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 08:13:28 -0800 (PST)
-X-Received: by 2002:a2e:9510:: with SMTP id f16mr19943444ljh.249.1579709608444;
- Wed, 22 Jan 2020 08:13:28 -0800 (PST)
+        Wed, 22 Jan 2020 08:17:36 -0800 (PST)
+Subject: Re: [PATCH v24 0/2] drm/bridge: PS8640 MIPI-to-eDP bridge
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Collabora Kernel ML <kernel@collabora.com>, matthias.bgg@gmail.com,
+        drinkcat@chromium.org, hsinyi@chromium.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Ulrich Hecht <uli@fpond.eu>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>,
+        linux-mediatek@lists.infradead.org,
+        David Airlie <airlied@linux.ie>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jitao Shi <jitao.shi@mediatek.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Daniel Vetter <daniel@ffwll.ch>
+References: <20191230090419.137141-1-enric.balletbo@collabora.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <3dc2bb6d-590c-6b0d-1bac-14891899095e@baylibre.com>
+Date:   Wed, 22 Jan 2020 17:17:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <a02d3426f93f7eb04960a4d9140902d278cab0bb.1579697910.git.christophe.leroy@c-s.fr>
-In-Reply-To: <a02d3426f93f7eb04960a4d9140902d278cab0bb.1579697910.git.christophe.leroy@c-s.fr>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 22 Jan 2020 08:13:12 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whTzEu5=sMEVLzuf7uOnoCyUs8wbfw87njes9FyE=mj1w@mail.gmail.com>
-Message-ID: <CAHk-=whTzEu5=sMEVLzuf7uOnoCyUs8wbfw87njes9FyE=mj1w@mail.gmail.com>
-Subject: Re: [PATCH v1 1/6] fs/readdir: Fix filldir() and filldir64() use of user_access_begin()
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191230090419.137141-1-enric.balletbo@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 5:00 AM Christophe Leroy
-<christophe.leroy@c-s.fr> wrote:
->
-> Modify filldir() and filldir64() to request the real area they need
-> to get access to.
+On 30/12/2019 10:04, Enric Balletbo i Serra wrote:
+> Hi all,
+> 
+> This is another version of the driver. Note that the driver changed
+> significally and is a more simply because now is using the panel_bridge
+> helpers. Apart from this, I addressed the comments from Maxime, Laurent
+> and Ezequiel.
+> 
+> This bridge is required to have the embedded display working on an Acer
+> Chromebook R13 ("Elm"). Hopefully we are a bit more close to have this
+> driver merged. If more changes are required, please let me know and I
+> will work on it.
+> 
+> Note: Along these around 20 revisions of this driver I was unable to
+> reconstruct the full changelog history, so I'm skipping this. Sorry
+> about that, I promise I'll maintain the changelog for future revisions.
+> 
+> Thanks,
+>  Enric
+> 
+> Changes in v24:
+> - Fix GPIO polarity as all GPIO descriptors should be handled as active high (Laurent Pinchart)
+> - Make static ps8640_bridge_attach (Ezequiel Garcia)
+> - Use a define for the number of lanes (Ezequiel Garcia)
+> 
+> Changes in v23:
+> - Merge mute/unmute functions into one (Nicolas Boichat)
+> - Use enum for ENABLE/DISABLE instead of bool (Ezequiel Garcia)
+> - Rename mute/unmute to vdo_control and fix error messages (Nicolas Boichat and Enric)
+> - Add space between address and address parameter 'address%02x' (Nicolas Boichat)
+> - Add Tested-by Hsin-Yi
+> - Added me as author after the refactor
+> 
+> Changes in v22:
+> - Migrate to YAML format (Maxime Ripart)
+> - Remove mode-sel property.
+> - Rename sleep-gpios to powerdown-gpios.
+> - Remove sysfs attributes because are not really used (Enric Balletbo)
+> - Use enum for address page offsets (Ezequiel Garcia)
+> - Remove enable tracking (Enric Balletbo)
+> - Use panel_bridge API (Laurent Pinchart)
+> - Do not use kernel-doc format for non kernel-doc formatted commands (Enric Balletbo)
+> - Remove verbose message for PAGE1_VSTART command (Ezequiel Garcia)
+> - Use time_is_after_jiffies idiom (Ezequiel Garcia)
+> - Remove unused macros (Ezequiel Garcia)
+> - Fix weird alignment in dsi->mode_flags (Laurent Pinchart)
+> - Use drm_of_find_panel_or_bridge helper (Laurent Pinchart)
+> - Remove mode-sel-gpios as is not used (Laurent Pinchart)
+> - Remove error messages to get gpios as the core will already report it (Enric Balletbo)
+> - Remove redundant message getting the regulators (Laurent Pinchart)
+> - Rename sleep-gpios to powerdown-gpios (Laurent Pinchart)
+> - Use ARRAY_SIZE(ps_bridge->page) instead of MAX_DEV when possible (Laurent Pinchart)
+> - Fix race with userspace accessing the sysfs attributes (Laurent Pinchart)
+> - Remove id_table as is only used on DR platforms (Laurent Pinchart)
+> - Convert to new i2c device probe() (Laurent Pinchart)
+> - Use i2c_smbus_read/write helpers instead of open coding it (Laurent Pinchart)
+> - Remove unnused global variables (Laurent Pinchart)
+> - Remove unnused fields in ps8640 struct (Laurent Pinchart)
+> - Remove commented-out headers (Laurent Pinchart)
+> 
+> Changes in v21:
+>  - Use devm_i2c_new_dummy_device and fix build issue using deprecated i2c_new_dummy
+>  - Fix build issue due missing drm_bridge.h
+>  - Do not remove in ps8640_remove device managed resources
+> 
+> Changes in v19:
+>  - fixed return value of ps8640_probe() when no panel is found
+> 
+> Changes in v18:
+>  - followed DRM API changes
+>  - use DEVICE_ATTR_RO()
+>  - remove firmware update code
+>  - add SPDX identifier
+> 
+> Changes in v17:
+>  - remove some unused head files.
+>  - add macros for ps8640 pages.
+>  - remove ddc_i2c client
+>  - add mipi_dsi_device_register_full
+>  - remove the manufacturer from the name and i2c_device_id
+> 
+> Changes in v16:
+>  - Disable ps8640 DSI MCS Function.
+>  - Rename gpios name more clearly.
+>  - Tune the ps8640 power on sequence.
+> 
+> Changes in v15:
+>  - Drop drm_connector_(un)register calls from parade ps8640.
+>    The main DRM driver mtk_drm_drv now calls
+>    drm_connector_register_all() after drm_dev_register() in the
+>    mtk_drm_bind() function. That function should iterate over all
+>    connectors and call drm_connector_register() for each of them.
+>    So, remove drm_connector_(un)register calls from parade ps8640.
+> 
+> Changes in v14:
+>  - update copyright info.
+>  - change bridge_to_ps8640 and connector_to_ps8640 to inline function.
+>  - fix some coding style.
+>  - use sizeof as array counter.
+>  - use drm_get_edid when read edid.
+>  - add mutex when firmware updating.
+> 
+> Changes in v13:
+>  - add const on data, ps8640_write_bytes(struct i2c_client *client, const u8 *data, u16 data_len)
+>  - fix PAGE2_SW_REST tyro.
+>  - move the buf[3] init to entrance of the function.
+> 
+> Changes in v12:
+>  - fix hw_chip_id build warning
+> 
+> Changes in v11:
+>  - Remove depends on I2C, add DRM depends
+>  - Reuse ps8640_write_bytes() in ps8640_write_byte()
+>  - Use timer check for polling like the routines in <linux/iopoll.h>
+>  - Fix no drm_connector_unregister/drm_connector_cleanup when ps8640_bridge_attach fail
+>  - Check the ps8640 hardware id in ps8640_validate_firmware
+>  - Remove fw_version check
+>  - Move ps8640_validate_firmware before ps8640_enter_bl
+>  - Add ddc_i2c unregister when probe fail and ps8640_remove
+> 
+> Jitao Shi (2):
+>   Documentation: bridge: Add documentation for ps8640 DT properties
+>   drm/bridge: Add I2C based driver for ps8640 bridge
+> 
+>  .../bindings/display/bridge/ps8640.yaml       | 112 ++++++
+>  drivers/gpu/drm/bridge/Kconfig                |  11 +
+>  drivers/gpu/drm/bridge/Makefile               |   1 +
+>  drivers/gpu/drm/bridge/parade-ps8640.c        | 348 ++++++++++++++++++
+>  4 files changed, 472 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/ps8640.yaml
+>  create mode 100644 drivers/gpu/drm/bridge/parade-ps8640.c
+> 
 
-Not like this.
-
-This makes the situation for architectures like x86 much worse, since
-you now use "put_user()" for the previous dirent filling. Which does
-that expensive user access setup/teardown twice again.
-
-So either you need to cover both the dirent's with one call, or you
-just need to cover the whole (original) user buffer passed in. But not
-this unholy mixing of both unsafe_put_user() and regular put_user().
-
-              Linus
+Applied to drm-misc-next
