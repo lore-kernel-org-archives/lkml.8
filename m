@@ -2,194 +2,112 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61E4EC32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 23:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B3BC33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 23:09:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12C7B24673
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 23:07:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE25F24685
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 23:09:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XqKAjroW"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u0DNfOwo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726584AbgAVXH5 (ORCPT
+        id S1726871AbgAVXJY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 18:07:57 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:42174 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725884AbgAVXH4 (ORCPT
+        Wed, 22 Jan 2020 18:09:24 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:38328 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725884AbgAVXJY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 18:07:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579734475;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=KuaeXpmKLY7fcB4dRtnCX1/pOPSIjn6PbEboWM9ZzOU=;
-        b=XqKAjroW1Ej9kBJPZwt/jrx8Q9eSPU0Xwq8GhFsBaOwT+of0ZQREX3DWwK5GJ2BT1koUnw
-        D3GGo9QPEm4wmEsIwR3ms3MPQkN/q2l0oqThYSAc22u6nJazINq+yQyLESh0fdAJJcvKVP
-        21B3RyMBtz24bn7nfGZEp5x6Icz4dmU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-22-A466OxLIP8CZruX5n3DKQw-1; Wed, 22 Jan 2020 18:07:53 -0500
-X-MC-Unique: A466OxLIP8CZruX5n3DKQw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 216CB8D4260;
-        Wed, 22 Jan 2020 23:07:52 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-12.phx2.redhat.com [10.3.112.12])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6386A85735;
-        Wed, 22 Jan 2020 23:07:45 +0000 (UTC)
-Date:   Wed, 22 Jan 2020 18:07:42 -0500
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, sgrubb@redhat.com,
-        omosnace@redhat.com, nhorman@redhat.com,
-        Eric Paris <eparis@parisplace.org>
-Subject: Re: [PATCH ghak28 V4] audit: log audit netlink multicast bind and
- unbind events
-Message-ID: <20200122230742.7vwtvmhhjerray5f@madcap2.tricolour.ca>
-References: <ca70ee17d85860aa599e0001a75d639d819de7ae.1579292286.git.rgb@redhat.com>
- <CAHC9VhR9p+aOTzv7g-ujuMsMtLvOZKkoKJWsthZnj38rzJe1TA@mail.gmail.com>
+        Wed, 22 Jan 2020 18:09:24 -0500
+Received: by mail-pl1-f194.google.com with SMTP id t6so467052plj.5
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 15:09:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=nKS4ZgdlHHnHLUwY8RgxlpKouMlIJtGCSDCXGaIr8ik=;
+        b=u0DNfOwoANhlQX2iaeD/Rd1l0fTDY4rKp4scoyXbG98q2ezDtpsrnZotpTkejKufHl
+         213geWr0bo/PO/QkXs5pRtXn2ip2IYPuJXb1OlBnJG/6dkuwFvfFcelM/oPNa2rQX9a5
+         6kcnY4VZ9X9Ksld/4jx/0Prah4EUh5Cn5r/LMI5xE7VPe/vFWQrqreNjrRmY+f8uFdp/
+         iwvhHDsL/nuBiSi6QOdcjq7gG01NwHlIYdenXFTDWv5lAS7lFb+NGjoP3XSRn78at3vV
+         a19LK+/DlB2vCPQA99d3CM6LGuAJa1QUyPYJyJw8w2jOEZ25TngUfrOV97VxujoVh8Eb
+         ueDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=nKS4ZgdlHHnHLUwY8RgxlpKouMlIJtGCSDCXGaIr8ik=;
+        b=EP2VFC76M+cFIej5CCwzizj9z0MupvlzzzZYX8fEv0tYHrTquOHpHPIeiQYCcadmOX
+         W3vwGum20jjMT0M6sCuJTy9szku5xNrAg8rFdk/cAQDR3BQ14VYWgAivY9qyb4H56WA/
+         WpEISWPB0bDZCHnjLAjPUVl9VvkVDdPGFEZ+tp+lKGYzSNqVmcXzoeIWwoTIK912BGOw
+         4at0Q+Jj7Egd/2Mnz8BaqfaKGT3nexhs1SGgtm3nnEEpK+zuqzXNXQsTYrdEtKu6bMnT
+         aLXWP/5fhiQlc9UTqoYjyeJCRCkfXwh4bQDqRmQ8fqiXi5UDKssesiN3nfM7s+fHMzll
+         LT6Q==
+X-Gm-Message-State: APjAAAVOk0jTkc8V26n6F0VUSrYT2nyMWY47dq4Gq4IvJguDTItBSdK8
+        qBgZRet/+V6nugLE5VODEBFTZA==
+X-Google-Smtp-Source: APXvYqyBFXtJqp1jOWq2KNpdMpTmjOylVfH3v84i0J511zxYJkbS9tWibL8rKRyReKS3P6Lcs4fWfw==
+X-Received: by 2002:a17:902:704b:: with SMTP id h11mr13773573plt.147.1579734563159;
+        Wed, 22 Jan 2020 15:09:23 -0800 (PST)
+Received: from ripper (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id g18sm14101pfi.80.2020.01.22.15.09.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jan 2020 15:09:22 -0800 (PST)
+Date:   Wed, 22 Jan 2020 15:08:49 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     rishabhb@codeaurora.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        Sibi Sankar <sibis@codeaurora.org>
+Subject: Re: [PATCH v2 2/8] remoteproc: qcom: Introduce driver to store pil
+ info in IMEM
+Message-ID: <20200122230849.GC3261042@ripper>
+References: <20191227053215.423811-1-bjorn.andersson@linaro.org>
+ <20191227053215.423811-3-bjorn.andersson@linaro.org>
+ <60c10082ba90fbba0f056df8575d205f@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHC9VhR9p+aOTzv7g-ujuMsMtLvOZKkoKJWsthZnj38rzJe1TA@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <60c10082ba90fbba0f056df8575d205f@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-22 17:40, Paul Moore wrote:
-> On Fri, Jan 17, 2020 at 3:21 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> >
-> > Log information about programs connecting to and disconnecting from the
-> > audit netlink multicast socket. This is needed so that during
-> > investigations a security officer can tell who or what had access to the
-> > audit trail.  This helps to meet the FAU_SAR.2 requirement for Common
-> > Criteria.  Here is the systemd startup event:
-> >
-> > type=UNKNOWN[1335] msg=audit(2020-01-17 10:30:33.731:6) : pid=1 uid=root auid=unset tty=(none) ses=unset subj=kernel comm=systemd exe=/usr/lib/systemd/systemd nl-mcgrp=1 op=connect res=yes
-> >
-> > And the events from the test suite:
-> >
-> > type=PROCTITLE msg=audit(2020-01-17 10:36:24.050:294) : proctitle=/usr/bin/perl -w amcast_joinpart/test
-> > type=SOCKADDR msg=audit(2020-01-17 10:36:24.050:294) : saddr={ saddr_fam=netlink nlnk-fam=16 nlnk-pid=0 }
-> > type=SYSCALL msg=audit(2020-01-17 10:36:24.050:294) : arch=x86_64 syscall=bind success=yes exit=0 a0=0x7 a1=0x55d65cb79090 a2=0xc a3=0x0 items=0 ppid=671 pid=674 auid=root uid=root gid=root euid=root suid=root fsuid=root egid=root sgid=root fsgid=root tty=ttyS0 ses=3 comm=perl exe=/usr/bin/perl subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 key=(null)
-> > type=UNKNOWN[1335] msg=audit(2020-01-17 10:36:24.050:294) : pid=674 uid=root auid=root tty=ttyS0 ses=3 subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 comm=perl exe=/usr/bin/perl nl-mcgrp=1 op=connect res=yes
-> >
-> > type=UNKNOWN[1335] msg=audit(2020-01-17 10:36:24.051:295) : pid=674 uid=root auid=root tty=ttyS0 ses=3 subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 comm=perl exe=/usr/bin/perl nl-mcgrp=1 op=disconnect res=yes
-> >
-> > Please see the upstream issue tracker:
-> >   https://github.com/linux-audit/audit-kernel/issues/28
-> >   https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Multicast-Socket-Join-Part
-> >   https://github.com/rgbriggs/audit-testsuite/compare/ghak28-mcast-part-join
-> >
-> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> >
-> > ---
-> > Note: msg type 1334 was skipped due to BPF accepted in another tree.
-> > Note: v5 due to previous 2014-10-07, 2015-07-23, 2016-11-30, 2017-10-13
-> > Note: subj attrs included due to missing syscall record for systemd (audit=1)
-> > Note: tried refactor of subj attrs, but this is yet another new order.
-> > ---
-> >  include/uapi/linux/audit.h |  1 +
-> >  kernel/audit.c             | 48 ++++++++++++++++++++++++++++++++++++++++++----
-> >  2 files changed, 45 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/include/uapi/linux/audit.h b/include/uapi/linux/audit.h
-> > index 3ad935527177..67fb24472dc2 100644
-> > --- a/include/uapi/linux/audit.h
-> > +++ b/include/uapi/linux/audit.h
-> > @@ -116,6 +116,7 @@
-> >  #define AUDIT_FANOTIFY         1331    /* Fanotify access decision */
-> >  #define AUDIT_TIME_INJOFFSET   1332    /* Timekeeping offset injected */
-> >  #define AUDIT_TIME_ADJNTPVAL   1333    /* NTP value adjustment */
-> > +#define AUDIT_EVENT_LISTENER   1335    /* Task joined multicast read socket */
-> >
-> >  #define AUDIT_AVC              1400    /* SE Linux avc denial or grant */
-> >  #define AUDIT_SELINUX_ERR      1401    /* Internal SE Linux Errors */
-> > diff --git a/kernel/audit.c b/kernel/audit.c
-> > index 17b0d523afb3..478259f3fa53 100644
-> > --- a/kernel/audit.c
-> > +++ b/kernel/audit.c
-> > @@ -1520,20 +1520,60 @@ static void audit_receive(struct sk_buff  *skb)
-> >         audit_ctl_unlock();
-> >  }
-> >
-> > +/* Log information about who is connecting to the audit multicast socket */
-> > +static void audit_log_multicast_bind(int group, const char *op, int err)
+On Wed 22 Jan 14:56 PST 2020, rishabhb@codeaurora.org wrote:
+> On 2019-12-26 21:32, Bjorn Andersson wrote:
+> > diff --git a/drivers/remoteproc/qcom_pil_info.c
+[..]
+> > +static int pil_reloc_probe(struct platform_device *pdev)
 > > +{
-> > +       const struct cred *cred;
-> > +       struct tty_struct *tty;
-> > +       char comm[sizeof(current->comm)];
-> > +       struct audit_buffer *ab;
+> > +	struct pil_reloc *reloc;
 > > +
-> > +       if (!audit_enabled)
-> > +               return;
+> > +	reloc = devm_kzalloc(&pdev->dev, sizeof(*reloc), GFP_KERNEL);
+> > +	if (!reloc)
+> > +		return -ENOMEM;
 > > +
-> > +       ab = audit_log_start(audit_context(), GFP_KERNEL, AUDIT_EVENT_LISTENER);
-> > +       if (!ab)
-> > +               return;
-> > +
-> > +       cred = current_cred();
-> > +       tty = audit_get_tty();
-> > +       audit_log_format(ab, "pid=%u uid=%u auid=%u tty=%s ses=%u",
-> > +                        task_pid_nr(current),
-> > +                        from_kuid(&init_user_ns, cred->uid),
-> > +                        from_kuid(&init_user_ns, audit_get_loginuid(current)),
-> > +                        tty ? tty_name(tty) : "(none)",
-> > +                        audit_get_sessionid(current));
-> 
-> Don't we already get all of that information as part of the syscall record?
+> > +	reloc->dev = &pdev->dev;
+> > +	reloc->map = syscon_node_to_regmap(pdev->dev.parent->of_node);
+> If there are multiple entries like "pil-reloc" in the imem node
+> mapping the entire imem multiple times may not work. Is there a way
+> we can somehow just iomap the required region for pil?
 
-Yes.  However, the syscall record isn't always present.  One example is
-systemd, shown above.  The other is the disconnect record, shown above,
-which may be asynchronous, or an unmonitored syscall (It could only be
-setsockopt, close, shutdown.).
+With the entire imem being represented as a syscon this will be
+ioremapped once and all callers of syscon_node_to_regmap() (or one of
+the other syscon getters) will get a regmap back that reference this one
+mapping.
 
-> > +       audit_put_tty(tty);
-> > +       audit_log_task_context(ab); /* subj= */
-> 
-> Also part of the syscall record.
-> 
-> > +       audit_log_format(ab, " comm=");
-> > +       audit_log_untrustedstring(ab, get_task_comm(comm, current));
-> 
-> Again.
-> 
-> > +       audit_log_d_path_exe(ab, current->mm); /* exe= */
-> 
-> Again.
-> 
-> > +       audit_log_format(ab, " nl-mcgrp=%d op=%s res=%d", group, op, !err);
-> 
-> This part is new ;)
-> 
-> > +       audit_log_end(ab);
-> > +}
-> 
-> I'm pretty sure these are the same arguments I made when Steve posted
-> a prior version of this patch.
+So doing it this way allow us to "map" sections of imem that is smaller
+than PAGE_SIZE.
 
-You did.  I would really like to have dropped them, but they aren't
-reliably available.
 
-> paul moore
+That said, it means that all imem users/clients should access imem
+through this syscon regmap.
 
-- RGB
-
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
-
+Regards,
+Bjorn
