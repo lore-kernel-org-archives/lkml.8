@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 114CBC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09FB8C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:26:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D177F24685
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:26:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D18C22468A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:26:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579699604;
-	bh=a+oUUi/Eq9wtmJ0uC2kz39yWnHxwcBFNJ1IY5b5Ires=;
+	s=default; t=1579699607;
+	bh=+oCw+/pc4ZhoX6n0TJ3ziiklgPspFnfabr0Y5rbi8OU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ociK7G4vZ1W0XLlQhKaduzcB5QyoHUKlbfE86RGFMRRvKmF3bvt9uB9sqWqbPey7y
-	 HSLwrQlu51Y90Hx8rNEyl4R66lgwqwHRWO6Xm+3OLsoOZOd8AoQrjBJUQql44MPYTW
-	 +v/E2anpFvs5Yk4MHYdvgbzqdKIrfm5Shpk5NalM=
+	b=JmxVvjRyovR+RXy4maSvs5rEZD27H2wWV86CjSF9paucGgclOMvlvB067dYLuXTll
+	 Bpiw8Np47j71xJ4he+iTjdlmCXYvL4tGL1jq0V5BUll0XwcH35Vi0FNntVvMj2m8o9
+	 7NGb0GmHqSpli+I/xVRqEZnEZ4soRhdHBGLWahos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731668AbgAVN0n (ORCPT
+        id S1731688AbgAVN0r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:26:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47602 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 08:26:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729130AbgAVN0l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:26:41 -0500
+        id S1731669AbgAVN0p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:26:45 -0500
 Received: from localhost (unknown [84.241.205.26])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D11212467B;
-        Wed, 22 Jan 2020 13:26:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EED62467F;
+        Wed, 22 Jan 2020 13:26:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579699600;
-        bh=a+oUUi/Eq9wtmJ0uC2kz39yWnHxwcBFNJ1IY5b5Ires=;
+        s=default; t=1579699603;
+        bh=+oCw+/pc4ZhoX6n0TJ3ziiklgPspFnfabr0Y5rbi8OU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wdoCXVTNFVw9gBdf+8GCF0dmV2C6OgUlkwW5802HCDqTH8vLrJDDlNjkhdDQI10BF
-         8PLP9Gj88SGp9QKa68SjYDLnyimEoX5sWCAxxNujaCGnaikxYX0fDM2OAsUwaAdQfv
-         jl8N/OkneTqRYKE7DgWTWe/zA5XKRIKlDQ/fdajE=
+        b=iHQ4guA45vJoeHvG90Zp8m/sK8O9iXO8xVbiZ4hGgP7V9QXJOJiZMpw9d+FIoa8QE
+         poAUxpyvqxgOY9AUTQA5N9hAfE+rP/PB4Sl65E1xxHLLGEEm+x/1/RKtblLEcwuS/Q
+         FnMe0IRB8VFl+RWZfwAtcP4eBcfrbqRdaBh8fg/0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Alexander Lobakin <alobakin@dlink.ru>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Kevin ldir Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 155/222] net: dsa: tag_gswip: fix typo in tagger name
-Date:   Wed, 22 Jan 2020 10:29:01 +0100
-Message-Id: <20200122092844.817186226@linuxfoundation.org>
+Subject: [PATCH 5.4 156/222] net: sched: act_ctinfo: fix memory leak
+Date:   Wed, 22 Jan 2020 10:29:02 +0100
+Message-Id: <20200122092844.887337125@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
 References: <20200122092833.339495161@linuxfoundation.org>
@@ -62,35 +63,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Lobakin <alobakin@dlink.ru>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit ad32205470919c8e04cdd33e0613bdba50c2376d ]
+[ Upstream commit 09d4f10a5e78d76a53e3e584f1e6a701b6d24108 ]
 
-The correct name is GSWIP (Gigabit Switch IP). Typo was introduced in
-875138f81d71a ("dsa: Move tagger name into its ops structure") while
-moving tagger names to their structures.
+Implement a cleanup method to properly free ci->params
 
-Fixes: 875138f81d71a ("dsa: Move tagger name into its ops structure")
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Acked-by: Hauke Mehrtens <hauke@hauke-m.de>
+BUG: memory leak
+unreferenced object 0xffff88811746e2c0 (size 64):
+  comm "syz-executor617", pid 7106, jiffies 4294943055 (age 14.250s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    c0 34 60 84 ff ff ff ff 00 00 00 00 00 00 00 00  .4`.............
+  backtrace:
+    [<0000000015aa236f>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
+    [<0000000015aa236f>] slab_post_alloc_hook mm/slab.h:586 [inline]
+    [<0000000015aa236f>] slab_alloc mm/slab.c:3320 [inline]
+    [<0000000015aa236f>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3549
+    [<000000002c946bd1>] kmalloc include/linux/slab.h:556 [inline]
+    [<000000002c946bd1>] kzalloc include/linux/slab.h:670 [inline]
+    [<000000002c946bd1>] tcf_ctinfo_init+0x21a/0x530 net/sched/act_ctinfo.c:236
+    [<0000000086952cca>] tcf_action_init_1+0x400/0x5b0 net/sched/act_api.c:944
+    [<000000005ab29bf8>] tcf_action_init+0x135/0x1c0 net/sched/act_api.c:1000
+    [<00000000392f56f9>] tcf_action_add+0x9a/0x200 net/sched/act_api.c:1410
+    [<0000000088f3c5dd>] tc_ctl_action+0x14d/0x1bb net/sched/act_api.c:1465
+    [<000000006b39d986>] rtnetlink_rcv_msg+0x178/0x4b0 net/core/rtnetlink.c:5424
+    [<00000000fd6ecace>] netlink_rcv_skb+0x61/0x170 net/netlink/af_netlink.c:2477
+    [<0000000047493d02>] rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5442
+    [<00000000bdcf8286>] netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+    [<00000000bdcf8286>] netlink_unicast+0x223/0x310 net/netlink/af_netlink.c:1328
+    [<00000000fc5b92d9>] netlink_sendmsg+0x2c0/0x570 net/netlink/af_netlink.c:1917
+    [<00000000da84d076>] sock_sendmsg_nosec net/socket.c:639 [inline]
+    [<00000000da84d076>] sock_sendmsg+0x54/0x70 net/socket.c:659
+    [<0000000042fb2eee>] ____sys_sendmsg+0x2d0/0x300 net/socket.c:2330
+    [<000000008f23f67e>] ___sys_sendmsg+0x8a/0xd0 net/socket.c:2384
+    [<00000000d838e4f6>] __sys_sendmsg+0x80/0xf0 net/socket.c:2417
+    [<00000000289a9cb1>] __do_sys_sendmsg net/socket.c:2426 [inline]
+    [<00000000289a9cb1>] __se_sys_sendmsg net/socket.c:2424 [inline]
+    [<00000000289a9cb1>] __x64_sys_sendmsg+0x23/0x30 net/socket.c:2424
+
+Fixes: 24ec483cec98 ("net: sched: Introduce act_ctinfo action")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Cc: Kevin 'ldir' Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>
+Cc: Cong Wang <xiyou.wangcong@gmail.com>
+Cc: Toke Høiland-Jørgensen <toke@redhat.com>
+Acked-by: Kevin 'ldir' Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/dsa/tag_gswip.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/sched/act_ctinfo.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
---- a/net/dsa/tag_gswip.c
-+++ b/net/dsa/tag_gswip.c
-@@ -104,7 +104,7 @@ static struct sk_buff *gswip_tag_rcv(str
+--- a/net/sched/act_ctinfo.c
++++ b/net/sched/act_ctinfo.c
+@@ -360,6 +360,16 @@ static int tcf_ctinfo_search(struct net
+ 	return tcf_idr_search(tn, a, index);
  }
  
- static const struct dsa_device_ops gswip_netdev_ops = {
--	.name = "gwsip",
-+	.name = "gswip",
- 	.proto	= DSA_TAG_PROTO_GSWIP,
- 	.xmit = gswip_tag_xmit,
- 	.rcv = gswip_tag_rcv,
++static void tcf_ctinfo_cleanup(struct tc_action *a)
++{
++	struct tcf_ctinfo *ci = to_ctinfo(a);
++	struct tcf_ctinfo_params *cp;
++
++	cp = rcu_dereference_protected(ci->params, 1);
++	if (cp)
++		kfree_rcu(cp, rcu);
++}
++
+ static struct tc_action_ops act_ctinfo_ops = {
+ 	.kind	= "ctinfo",
+ 	.id	= TCA_ID_CTINFO,
+@@ -367,6 +377,7 @@ static struct tc_action_ops act_ctinfo_o
+ 	.act	= tcf_ctinfo_act,
+ 	.dump	= tcf_ctinfo_dump,
+ 	.init	= tcf_ctinfo_init,
++	.cleanup= tcf_ctinfo_cleanup,
+ 	.walk	= tcf_ctinfo_walker,
+ 	.lookup	= tcf_ctinfo_search,
+ 	.size	= sizeof(struct tcf_ctinfo),
 
 
