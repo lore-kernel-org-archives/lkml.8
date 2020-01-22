@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC65C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B612BC33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57CD42467B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:24:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 837382468D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:24:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579699450;
-	bh=VCKeJPeEMxr6OsWtINChBKZsnu6gFOR3faHdsd6h1Wk=;
+	s=default; t=1579699453;
+	bh=QKDa25hlURHn5kDz4X4uEheo2MeMZoYUHemUpyuIs7Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oss64n8G8yJLnYrU/G3iq/p/z5ki9Al3kIMWZwbq7o/xjIx8Qy18ut9GyD2Ewq0S+
-	 0/OiF1WR1NEVo+jHYBdKBYZOXTGuEQ2NTNHEhaQcnUHBNLbBlIuFpNI+QnblQ6G414
-	 kfUUfBkZJXFDs4YXHW2d2usw7tLFWNMs/dAu0sUc=
+	b=10yMiss6TxP8BGZwT9zus4SEBi+PzkFQ+ldRehm3fBYLDkQbCSLdvBtvkNYBDaDSA
+	 0FXuXjlsuWyJAdq/n+hWEJ7v77nYhmwkb+VsMT78y2O630t66KmE4xOIek6icce/Vn
+	 JqSa8xa50yU7mufODxlGY87T6ANKSrUZ54f5QWvk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730950AbgAVNYJ (ORCPT
+        id S1730874AbgAVNX6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:24:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42852 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 08:23:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729441AbgAVNYH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:24:07 -0500
+        id S1730547AbgAVNXy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:23:54 -0500
 Received: from localhost (unknown [84.241.205.26])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E11FD2467B;
-        Wed, 22 Jan 2020 13:24:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 251FA24688;
+        Wed, 22 Jan 2020 13:23:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579699446;
-        bh=VCKeJPeEMxr6OsWtINChBKZsnu6gFOR3faHdsd6h1Wk=;
+        s=default; t=1579699433;
+        bh=QKDa25hlURHn5kDz4X4uEheo2MeMZoYUHemUpyuIs7Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a43CHnWAdN7ZRMtV8mw0DzTkSNACPniAmYU+BRasJyytHs4Jc6Vf2PzkC3Nv2vC37
-         Tqot6wGiQgS8AwrLdOLb3nN7V7UvUIJqXf8hi8+llBK7ohlp9GoPLeGO/HIrmh9dhH
-         kC/eCgMKrF/GypKjVWcj7/fHOF32l7U0DOTg/1TQ=
+        b=idqSZ/PAKrGsv1BCw5a/Es1Xjf3njgb26BnG+ROPO+RL4q+pA/J9lqKgcAggJnCf1
+         gq9sDdKwh/C6zonS+rKF0virzwmZoxRGkEwtPSm2Q2Kc2IzDzzSa58V21gu1ZarSVH
+         yU/4QJxwGXdzsI9xlt63g2lfP8vs8di+Nj892OWk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Antti Laakso <antti.laakso@intel.com>,
-        Vladis Dronov <vdronov@redhat.com>,
-        Richard Cochran <richardcochran@gmail.com>,
+        stable@vger.kernel.org,
+        Michael Grzeschik <m.grzeschik@pengutronix.de>,
+        Andrew Lunn <andrew@lunn.ch>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 146/222] ptp: free ptp device pin descriptors properly
-Date:   Wed, 22 Jan 2020 10:28:52 +0100
-Message-Id: <20200122092844.183839189@linuxfoundation.org>
+Subject: [PATCH 5.4 142/222] net: phy: dp83867: Set FORCE_LINK_GOOD to default after reset
+Date:   Wed, 22 Jan 2020 10:28:48 +0100
+Message-Id: <20200122092843.900371168@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
 References: <20200122092833.339495161@linuxfoundation.org>
@@ -61,51 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladis Dronov <vdronov@redhat.com>
+From: Michael Grzeschik <m.grzeschik@pengutronix.de>
 
-[ Upstream commit 75718584cb3c64e6269109d4d54f888ac5a5fd15 ]
+[ Upstream commit 86ffe920e669ec73035e84553e18edf17d16317c ]
 
-There is a bug in ptp_clock_unregister(), where ptp_cleanup_pin_groups()
-first frees ptp->pin_{,dev_}attr, but then posix_clock_unregister() needs
-them to destroy a related sysfs device.
+According to the Datasheet this bit should be 0 (Normal operation) in
+default. With the FORCE_LINK_GOOD bit set, it is not possible to get a
+link. This patch sets FORCE_LINK_GOOD to the default value after
+resetting the phy.
 
-These functions can not be just swapped, as posix_clock_unregister() frees
-ptp which is needed in the ptp_cleanup_pin_groups(). Fix this by calling
-ptp_cleanup_pin_groups() in ptp_clock_release(), right before ptp is freed.
-
-This makes this patch fix an UAF bug in a patch which fixes an UAF bug.
-
-Reported-by: Antti Laakso <antti.laakso@intel.com>
-Fixes: a33121e5487b ("ptp: fix the race between the release of ptp_clock and cdev")
-Link: https://lore.kernel.org/netdev/3d2bd09735dbdaf003585ca376b7c1e5b69a19bd.camel@intel.com/
-Signed-off-by: Vladis Dronov <vdronov@redhat.com>
-Acked-by: Richard Cochran <richardcochran@gmail.com>
+Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/ptp/ptp_clock.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/phy/dp83867.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/drivers/ptp/ptp_clock.c
-+++ b/drivers/ptp/ptp_clock.c
-@@ -170,6 +170,7 @@ static void ptp_clock_release(struct dev
- {
- 	struct ptp_clock *ptp = container_of(dev, struct ptp_clock, dev);
+--- a/drivers/net/phy/dp83867.c
++++ b/drivers/net/phy/dp83867.c
+@@ -80,6 +80,7 @@
+ #define DP83867_PHYCR_FIFO_DEPTH_MAX		0x03
+ #define DP83867_PHYCR_FIFO_DEPTH_MASK		GENMASK(15, 14)
+ #define DP83867_PHYCR_RESERVED_MASK		BIT(11)
++#define DP83867_PHYCR_FORCE_LINK_GOOD		BIT(10)
  
-+	ptp_cleanup_pin_groups(ptp);
- 	mutex_destroy(&ptp->tsevq_mux);
- 	mutex_destroy(&ptp->pincfg_mux);
- 	ida_simple_remove(&ptp_clocks_map, ptp->index);
-@@ -302,9 +303,8 @@ int ptp_clock_unregister(struct ptp_cloc
- 	if (ptp->pps_source)
- 		pps_unregister_source(ptp->pps_source);
+ /* RGMIIDCTL bits */
+ #define DP83867_RGMII_TX_CLK_DELAY_MAX		0xf
+@@ -454,7 +455,12 @@ static int dp83867_phy_reset(struct phy_
  
--	ptp_cleanup_pin_groups(ptp);
--
- 	posix_clock_unregister(&ptp->clock);
-+
- 	return 0;
+ 	usleep_range(10, 20);
+ 
+-	return 0;
++	/* After reset FORCE_LINK_GOOD bit is set. Although the
++	 * default value should be unset. Disable FORCE_LINK_GOOD
++	 * for the phy to work properly.
++	 */
++	return phy_modify(phydev, MII_DP83867_PHYCTRL,
++			 DP83867_PHYCR_FORCE_LINK_GOOD, 0);
  }
- EXPORT_SYMBOL(ptp_clock_unregister);
+ 
+ static struct phy_driver dp83867_driver[] = {
 
 
