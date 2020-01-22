@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E649AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7FA9C33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:29:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B294120678
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:29:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9553520678
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:29:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579699779;
-	bh=a05LJki7/JjRwAFxjy9uKz+C9AjD8lWYO8aJVVSFOVE=;
+	s=default; t=1579699782;
+	bh=g0EywqsErMlZhWqCuMVaf+0EEvdJwfS1RpONnYrFQBE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AljL2Qtwtur29SpvwdLh+0BUL9BPjQU0HI3D8Mnf/2nRdWss2jlqYay6+w9i6uuNA
-	 W4GSO3B+PmLFDjVIjYxyAd2ujt9Yi0dRIUJ0TjQrVe8CjCzSh5rA7Gv97b7/7vzVNV
-	 E1XP/YIv3oJE0z4hebRGMIqtF8PFmt0f8Qkz12iM=
+	b=dQ761pkXN9PVxmUUeHx7ePBAXN06VsPL7uGMDy4pQajfFuR6Qn5q/0fgsLARnJ7ey
+	 UXMr/izFmh7RVwUBhtsoyMoom2UWNqNN270jHBrf5ZhFxwELLWEWOSsClepqIENYkO
+	 gFwa1sHt43COWAciF5eCZ2JvBYjMCu0kaIhnnExo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730025AbgAVN3i (ORCPT
+        id S1731595AbgAVN02 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:29:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48382 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 08:26:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728799AbgAVN1K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:27:10 -0500
+        id S1730479AbgAVN0Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:26:24 -0500
 Received: from localhost (unknown [84.241.205.26])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B20C224685;
-        Wed, 22 Jan 2020 13:27:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B6852467F;
+        Wed, 22 Jan 2020 13:26:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579699630;
-        bh=a05LJki7/JjRwAFxjy9uKz+C9AjD8lWYO8aJVVSFOVE=;
+        s=default; t=1579699584;
+        bh=g0EywqsErMlZhWqCuMVaf+0EEvdJwfS1RpONnYrFQBE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZBw+S/QAA2qff7w1gP76Wh4elk2jlsU2KV9O6uwWQCb2CLbrBFLrFgX0uvQamXzPX
-         PXOowFzgs9RXEKw2y7s2y79jzvKTNBrJioPFXN9DNp1xWyYSqu09DJ58zXpK7YFgI7
-         Zk3gR3opasa9A2Zj2ApBThklGzJ6zc0JsQQyhQg8=
+        b=rvcVHtHPWTLjkdDHDCOF/MqM6LTdUJWd6ejs05/a62ZFYojOQnRTXzVvqeiy5oz0G
+         +hcgbCymI7/x88EW8FsG8LXv2sQNs7lwY+5aFCZEOa/pmtAqRct6pb6PyeJOddmQBg
+         s3Xq6DBx5gxpzcjdPG5KBEE1v7knrMLJ3BFcOBuc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
-        Manish Rangankar <mrangankar@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.4 202/222] scsi: qla4xxx: fix double free bug
-Date:   Wed, 22 Jan 2020 10:29:48 +0100
-Message-Id: <20200122092848.168309729@linuxfoundation.org>
+        stable@vger.kernel.org, Rob Clark <robdclark@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Andy Gross <agross@kernel.org>
+Subject: [PATCH 5.4 186/222] arm64: dts: qcom: sdm845-cheza: delete zap-shader
+Date:   Wed, 22 Jan 2020 10:29:32 +0100
+Message-Id: <20200122092847.005621971@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
 References: <20200122092833.339495161@linuxfoundation.org>
@@ -60,36 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pan Bian <bianpan2016@163.com>
+From: Rob Clark <robdclark@chromium.org>
 
-commit 3fe3d2428b62822b7b030577cd612790bdd8c941 upstream.
+commit 43b0a4b482478aa4fe7240230be74a79dee95679 upstream.
 
-The variable init_fw_cb is released twice, resulting in a double free
-bug. The call to the function dma_free_coherent() before goto is removed to
-get rid of potential double free.
+This is unused on cheza.  Delete the node to get ride of the reserved-
+memory section, and to avoid the driver from attempting to load a zap
+shader that doesn't exist every time it powers up the GPU.
 
-Fixes: 2a49a78ed3c8 ("[SCSI] qla4xxx: added IPv6 support.")
-Link: https://lore.kernel.org/r/1572945927-27796-1-git-send-email-bianpan2016@163.com
-Signed-off-by: Pan Bian <bianpan2016@163.com>
-Acked-by: Manish Rangankar <mrangankar@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+This also avoids a massive amount of dmesg spam about missing zap fw:
+  msm ae00000.mdss: [drm:adreno_request_fw] *ERROR* failed to load
+qcom/a630_zap.mdt: -2
+  adreno 5000000.gpu: [drm:adreno_zap_shader_load] *ERROR* Unable to
+load a630_zap.mdt
+
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+Cc: Douglas Anderson <dianders@chromium.org>
+Fixes: 3fdeaee951aa ("arm64: dts: sdm845: Add zap shader region for GPU")
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Tested-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Andy Gross <agross@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/qla4xxx/ql4_mbx.c |    3 ---
- 1 file changed, 3 deletions(-)
+ arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi |    2 ++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi       |    2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/scsi/qla4xxx/ql4_mbx.c
-+++ b/drivers/scsi/qla4xxx/ql4_mbx.c
-@@ -640,9 +640,6 @@ int qla4xxx_initialize_fw_cb(struct scsi
+--- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+@@ -165,6 +165,8 @@
+ /delete-node/ &venus_mem;
+ /delete-node/ &cdsp_mem;
+ /delete-node/ &cdsp_pas;
++/delete-node/ &zap_shader;
++/delete-node/ &gpu_mem;
  
- 	if (qla4xxx_get_ifcb(ha, &mbox_cmd[0], &mbox_sts[0], init_fw_cb_dma) !=
- 	    QLA_SUCCESS) {
--		dma_free_coherent(&ha->pdev->dev,
--				  sizeof(struct addr_ctrl_blk),
--				  init_fw_cb, init_fw_cb_dma);
- 		goto exit_init_fw_cb;
- 	}
+ /* Increase the size from 120 MB to 128 MB */
+ &mpss_region {
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -2824,7 +2824,7 @@
+ 
+ 			qcom,gmu = <&gmu>;
+ 
+-			zap-shader {
++			zap_shader: zap-shader {
+ 				memory-region = <&gpu_mem>;
+ 			};
  
 
 
