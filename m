@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD887C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1FCFC33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:43:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9465F24680
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:43:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E42D2468D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:43:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686211;
-	bh=2tlsQcBQTsqZUcrgW4yjKs3w3iSmEgYakIwCnX2Xn44=;
+	s=default; t=1579686215;
+	bh=Dp6VtfTwcqViQmhEqLkrbqaVJBMMsF+zh6srQidMBpo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kZ4+NfzncoTt7YncOX8KfHQwtJmIsX+k/v99epI1UTuvRPTBFoQVneOFRW71edD7e
-	 uWfBnpA1Dpg9AySehgMQTFoDN4AiYXX26qApMoIaNz9ExFjzIK8yHZIRV2Unj0BF8o
-	 MfzynUF7fz4uSRpYRbt54VGohfSYqTLjlz2tbP1I=
+	b=y3Jq5z0PqNnan3fJw6QoCfZwesT35JBwIJXhG54eoU9pKo786Mj/41HvePX4ficra
+	 fdLwaxQfvfWYvsL+7BpyxW/uL8ou09nVZ+XWkHssXyMzdVhZPSt6i0jWg9xhL6RfJL
+	 BlAbi8+tzZ0lrfkfN74jqdEwEYyYUF+ikLpHQBW0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387726AbgAVJna (ORCPT
+        id S2387734AbgAVJne (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:43:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35974 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:43:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387715AbgAVJn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:43:27 -0500
+        id S2387883AbgAVJn3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:43:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 745D12468C;
-        Wed, 22 Jan 2020 09:43:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D222424680;
+        Wed, 22 Jan 2020 09:43:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686206;
-        bh=2tlsQcBQTsqZUcrgW4yjKs3w3iSmEgYakIwCnX2Xn44=;
+        s=default; t=1579686209;
+        bh=Dp6VtfTwcqViQmhEqLkrbqaVJBMMsF+zh6srQidMBpo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g7M9DRka/lkUHsgAraFrSBGfYZXOk6V2RDwyqRAYmoQI6Qo5WUsp2VpLf6ZumlFML
-         +qm9DzhVbe1yMTosbbL2CcDiQCG9GkQrsxqS1HvvCdKQNo81noX6cR9WFnOa+J7Fse
-         /Y5VEhIOlHnik7emm06PhN/qysKoxDq+DzaUVUvo=
+        b=RNoMlp7+dserQTbGs1DJHAcIKn9+9AQGCwgLltGVDUjlFsVzcgoRrD5aBJDuh6sZc
+         qrWDtxpaa9cljieT6y06ThQTythKzEmoVkRKNH3fO56DNlmZtrfz2UP0KUVYceEF4H
+         dl0pDZWNfJmF3pMb5nwC4VP1sS9g0MRWaAULepkQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH 4.19 087/103] Revert "arm64: dts: juno: add dma-ranges property"
-Date:   Wed, 22 Jan 2020 10:29:43 +0100
-Message-Id: <20200122092815.449037179@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+76d0b80493ac881ff77b@syzkaller.appspotmail.com,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 4.19 061/103] netfilter: nft_tunnel: fix null-attribute check
+Date:   Wed, 22 Jan 2020 10:29:17 +0100
+Message-Id: <20200122092813.029931693@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
 References: <20200122092803.587683021@linuxfoundation.org>
@@ -62,57 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudeep Holla <sudeep.holla@arm.com>
+From: Florian Westphal <fw@strlen.de>
 
-commit 54fb3fe0f211d4729a2551cf9497bd612189af9d upstream.
+commit 1c702bf902bd37349f6d91cd7f4b372b1e46d0ed upstream.
 
-This reverts commit 193d00a2b35ee3353813b4006a18131122087205.
+else we get null deref when one of the attributes is missing, both
+must be non-null.
 
-Commit 951d48855d86 ("of: Make of_dma_get_range() work on bus nodes")
-reworked the logic such that of_dma_get_range() works correctly
-starting from a bus node containing "dma-ranges".
-
-Since on Juno we don't have a SoC level bus node and "dma-ranges" is
-present only in the root node, we get the following error:
-
-OF: translation of DMA address(0) to CPU address failed node(/sram@2e000000)
-OF: translation of DMA address(0) to CPU address failed node(/uart@7ff80000)
-...
-OF: translation of DMA address(0) to CPU address failed node(/mhu@2b1f0000)
-OF: translation of DMA address(0) to CPU address failed node(/iommu@2b600000)
-OF: translation of DMA address(0) to CPU address failed node(/iommu@2b600000)
-OF: translation of DMA address(0) to CPU address failed node(/iommu@2b600000)
-
-So let's fix it by dropping the "dma-ranges" property for now. This
-should be fine since it doesn't represent any kind of device-visible
-restriction; it was only there for completeness, and we've since given
-in to the assumption that missing "dma-ranges" implies a 1:1 mapping
-anyway.
-
-We can add it later with a proper SoC bus node and moving all the
-devices that belong there along with the "dma-ranges" if required.
-
-Fixes: 193d00a2b35e ("arm64: dts: juno: add dma-ranges property")
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Liviu Dudau <liviu.dudau@arm.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Reported-by: syzbot+76d0b80493ac881ff77b@syzkaller.appspotmail.com
+Fixes: aaecfdb5c5dd8ba ("netfilter: nf_tables: match on tunnel metadata")
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/boot/dts/arm/juno-base.dtsi |    1 -
- 1 file changed, 1 deletion(-)
+ net/netfilter/nft_tunnel.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm64/boot/dts/arm/juno-base.dtsi
-+++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
-@@ -6,7 +6,6 @@
- 	/*
- 	 *  Devices shared by all Juno boards
- 	 */
--	dma-ranges = <0 0 0 0 0x100 0>;
+--- a/net/netfilter/nft_tunnel.c
++++ b/net/netfilter/nft_tunnel.c
+@@ -56,7 +56,7 @@ static int nft_tunnel_get_init(const str
+ 	struct nft_tunnel *priv = nft_expr_priv(expr);
+ 	u32 len;
  
- 	memtimer: timer@2a810000 {
- 		compatible = "arm,armv7-timer-mem";
+-	if (!tb[NFTA_TUNNEL_KEY] &&
++	if (!tb[NFTA_TUNNEL_KEY] ||
+ 	    !tb[NFTA_TUNNEL_DREG])
+ 		return -EINVAL;
+ 
 
 
