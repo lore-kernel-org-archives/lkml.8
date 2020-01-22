@@ -2,228 +2,131 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8919C33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 20:22:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE8BC33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 20:22:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9FB124655
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 20:22:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FB6024683
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 20:22:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bCqidwoC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LmLw0Hxd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728205AbgAVUWA (ORCPT
+        id S1729021AbgAVUWF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 15:22:00 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:41167 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbgAVUWA (ORCPT
+        Wed, 22 Jan 2020 15:22:05 -0500
+Received: from mail-wr1-f41.google.com ([209.85.221.41]:35781 "EHLO
+        mail-wr1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725827AbgAVUWE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 15:22:00 -0500
-Received: by mail-lj1-f195.google.com with SMTP id h23so489457ljc.8
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 12:21:58 -0800 (PST)
+        Wed, 22 Jan 2020 15:22:04 -0500
+Received: by mail-wr1-f41.google.com with SMTP id g17so522923wro.2
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 12:22:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=SlE70b9GGvg8Ik4bLAYKDMNh9X9O3cEIpNzQoPhTPYI=;
-        b=bCqidwoCk+OIE0ZI+CE4W2w0NLFTQOV8nbURBEy6IU6TNwZL60tIfObVGJ/dQnYSnt
-         +bsfk4ZN/ECzjHzdhYbVVu1phdqX8VqAR3ZUgPJiazPotTKeSCr2mEg3UkTp918K+mwl
-         4wx8A+HT0ub+/MioSwUoY/eaUSxVlo6UkPViztK3rSUZpsy5sE3mD2c9tZzfdZ9WDRov
-         kPnYquChZRi7Xq+myJsRX9fdS2iDF7SPsCV63yKqNTgDS9NT8dgJRH4cPbN5jGuTwc3C
-         y1yxfgRlq+G0YYQaWVUJFisye4Sk2JJNDpSdr9I9pySxRHBa/uySjI7F0TBb+kHQey5G
-         aTYw==
+         :cc;
+        bh=tVuD5M/MYCtIro+NiHeJqsEtK6AMbnd7kxhI4hTwchA=;
+        b=LmLw0HxdNBFf7ECjrsO5sltd9/xYioUniTzKT1bbDVnXENzkPG3gkkLmeSy4qClr2d
+         e8dT3ZVxttShq2xC9cc1Cb9H5fwFDaRTdS7zwQDVHadroujs4Dv+nNgpwlxkeUCI5frb
+         Vofl2Q+dUCC2bz+5GNm/pxC+YJfpVsVq9x1/KNCknqF0YhdXSqMVWzmWSkYid8F78UrJ
+         RwdP9PO57Y7Ws9hUBvPv6v97LGzGZtH69IFU7ssOR0uaB45Wd7jSd5uvEsQH2s581CrT
+         UFWB/62GGDv5384otm3o+Gr7ZS6NcCZ61ih24zvl4D7v6dMYOsMEPnulIRyl0oEWsyVI
+         qCXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=SlE70b9GGvg8Ik4bLAYKDMNh9X9O3cEIpNzQoPhTPYI=;
-        b=rjy2rNUztDQSpyyib4RMSEXHsclnUHn/oqOiipWiLwwfj7fclxy/dPHyxVq2C45pn/
-         3wYwtWmyykH3asGbrxCJJImf3CPje9OHEmwbS0TbRWIrvPQTjVjxbd9ovlvPxICfdY+I
-         I+id5ZmpNwJdLispLuYCeSLPuoBOIRMaUNIq2CpILPe0DBE2J4P6sj8EpCSNnvq3gPhn
-         geJU9xeoMIj2Qxit2oodarbr9ysNC4a2I5hWHWSy8FpPJjL++tKWlOLzy27k+q2Y6uBn
-         HugHJMUi8atCkm3Mt+Ejaa+BbPr07eV8xP50zV/yf1rvrZqE/y5j9lHrfd2cXkhvSjy7
-         CSdw==
-X-Gm-Message-State: APjAAAVy4xjxabcoRAkplkAjL/fml2feQjD3CgZ/vav8a+KrYNHEx+FL
-        RXz4ntZPPGAUc8WpHZiCVjJNuree03VNWzkh1nxXCQ==
-X-Google-Smtp-Source: APXvYqxAyOGy3TmikKcAXOITTYIlBv8awZbFxrro6cVwaB6Gi0h3uw1y0ZtvzHEEISpymMnzseO8lYsGGSECl4Jxquo=
-X-Received: by 2002:a2e:965a:: with SMTP id z26mr18377280ljh.104.1579724517965;
- Wed, 22 Jan 2020 12:21:57 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=tVuD5M/MYCtIro+NiHeJqsEtK6AMbnd7kxhI4hTwchA=;
+        b=tsNjw56SoQAt1Gz7yqbbPx0Qoi2FYZ8+X8AwHL0Uj/FbsvAr+A1WtUPK76TA5M0gMp
+         JH9Ikbm02/7UyItmUVgu3k4LGoaa26JrxqnUVOeB9ve+1rhqiFd1vhV0UN4R8V6tdiPn
+         QR3NmvR4W+zBEiwsF7clDUWi9dO3o1l3pFq0EccXS6MfDk4zAPRd8/5EJ7s1xQ2sngtv
+         /3gtspaYJoubEUwHbnuzeECgt3AlopjtN6J1f1VQuhgTaCy41WpsCg60YQG8426ay8rO
+         zMsQ8If012Iltt328C2HLKJHl4XLYZb6oHVJt1j4yo/Z04w9zwgmbdiZR9Uy03XujOCx
+         BHFg==
+X-Gm-Message-State: APjAAAV6J8UzGZN053CiKKioKd0EpP7zRPn0P3RpHwg2mZUJVy2BvJqZ
+        YR8XxqZqYBOLUxP6m/KxaDRpAeTvdFnJzQEe3+A=
+X-Google-Smtp-Source: APXvYqyeSw31DSoMsVo1tGcVhk/TW2SRv/VBLC1ScXJUSxOqdCQ+CHeLEYjUrgNXmb35TLEgo95z3NVp92YSiJflkKE=
+X-Received: by 2002:adf:ec4c:: with SMTP id w12mr13693493wrn.124.1579724522583;
+ Wed, 22 Jan 2020 12:22:02 -0800 (PST)
 MIME-Version: 1.0
-References: <20200122092751.587775548@linuxfoundation.org>
-In-Reply-To: <20200122092751.587775548@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Thu, 23 Jan 2020 01:51:46 +0530
-Message-ID: <CA+G9fYt5FzE_ZpPJvRavoowaKTDwH76PhUu8ak4VGkfueiy67A@mail.gmail.com>
-Subject: Re: [PATCH 4.4 00/76] 4.4.211-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
+References: <20200121135540.165798-1-chenzhou10@huawei.com>
+In-Reply-To: <20200121135540.165798-1-chenzhou10@huawei.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Wed, 22 Jan 2020 15:21:48 -0500
+Message-ID: <CADnq5_OeoTqpf5Rhtwac8gJ_8P5rUKYhrhRDC-5BgHt0WUYFnw@mail.gmail.com>
+Subject: Re: [PATCH -next 00/14] drm/amdgpu: remove unnecessary conversion to bool
+To:     Chen Zhou <chenzhou10@huawei.com>
+Cc:     "Deucher, Alexander" <alexander.deucher@amd.com>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Chunming Zhou <David1.Zhou@amd.com>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "Kuehling, Felix" <Felix.Kuehling@amd.com>,
+        Tao Zhou <tao.zhou1@amd.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Hawking Zhang <Hawking.Zhang@amd.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Jan 2020 at 15:01, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+On Tue, Jan 21, 2020 at 11:08 AM Chen Zhou <chenzhou10@huawei.com> wrote:
 >
-> This is the start of the stable review cycle for the 4.4.211 release.
-> There are 76 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> This patch series remove unnecessary conversion to bool in dir
+> drivers/gpu/drm/amd/amdgpu/, which is detected by coccicheck.
+
+Thanks for the patches.  Already applied this patch:
+https://patchwork.freedesktop.org/series/72281/#rev2
+which covers these.
+
+Alex
+
 >
-> Responses should be made by Fri, 24 Jan 2020 09:25:24 +0000.
-> Anything received after that time might be too late.
+> Chen Zhou (14):
+>   drm/amdgpu: remove unnecessary conversion to bool in mmhub_v1_0.c
+>   drm/amdgpu: remove unnecessary conversion to bool in vega10_ih.c
+>   drm/amdgpu: remove unnecessary conversion to bool in navi10_ih.c
+>   drm/amdgpu: remove unnecessary conversion to bool in gfx_v10_0.c
+>   drm/amdgpu: remove unnecessary conversion to bool in sdma_v5_0.c
+>   drm/amdgpu: remove unnecessary conversion to bool in athub_v1_0.c
+>   drm/amdgpu: remove unnecessary conversion to bool in amdgpu_acp.c
+>   drm/amdgpu: remove unnecessary conversion to bool in soc15.c
+>   drm/amdgpu: remove unnecessary conversion to bool in nv.c
+>   drm/amdgpu: remove unnecessary conversion to bool in mmhub_v9_4.c
+>   drm/amdgpu: remove unnecessary conversion to bool in amdgpu_device.c
+>   drm/amdgpu: remove unnecessary conversion to bool in athub_v2_0.c
+>   drm/amdgpu: remove unnecessary conversion to bool in sdma_v4_0.c
+>   drm/amdgpu: remove unnecessary conversion to bool in gfx_v9_0.c
 >
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.4.211-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.4.y
-> and the diffstat can be found below.
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_acp.c    |  2 +-
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_device.c |  8 +++-----
+>  drivers/gpu/drm/amd/amdgpu/athub_v1_0.c    |  4 ++--
+>  drivers/gpu/drm/amd/amdgpu/athub_v2_0.c    |  4 ++--
+>  drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c     |  4 ++--
+>  drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c      |  4 ++--
+>  drivers/gpu/drm/amd/amdgpu/mmhub_v1_0.c    |  4 ++--
+>  drivers/gpu/drm/amd/amdgpu/mmhub_v2_0.c    |  4 ++--
+>  drivers/gpu/drm/amd/amdgpu/mmhub_v9_4.c    |  4 ++--
+>  drivers/gpu/drm/amd/amdgpu/navi10_ih.c     |  2 +-
+>  drivers/gpu/drm/amd/amdgpu/nv.c            |  8 ++++----
+>  drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c     |  6 +++---
+>  drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c     |  4 ++--
+>  drivers/gpu/drm/amd/amdgpu/soc15.c         | 28 ++++++++++++++--------------
+>  drivers/gpu/drm/amd/amdgpu/vega10_ih.c     |  2 +-
+>  15 files changed, 43 insertions(+), 45 deletions(-)
 >
-> thanks,
+> --
+> 2.7.4
 >
-> greg k-h
-
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 4.4.211-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.4.y
-git commit: 14fe1f1189f56887f53ae61e2e3218be16f0c2db
-git describe: v4.4.210-77-g14fe1f1189f5
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.4-oe/bui=
-ld/v4.4.210-77-g14fe1f1189f5
-
-
-No regressions (compared to build v4.4.210)
-
-
-No fixes (compared to build v4.4.210)
-
-Ran 15214 total tests in the following environments and test suites.
-
-Environments
---------------
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* build
-* kselftest
-* libhugetlbfs
-* linux-log-parser
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-open-posix-tests
-* ltp-sched-tests
-* spectre-meltdown-checker-test
-* kvm-unit-tests
-* ltp-cap_bounds-tests
-* ltp-cpuhotplug-tests
-* ltp-fcntl-locktests-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* v4l2-compliance
-* perf
-* install-android-platform-tools-r2600
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 4.4.208-rc1
-git repo: https://git.linaro.org/lkft/arm64-stable-rc.git
-git branch: 4.4.208-rc1-hikey-20200101-645
-git commit: 45aaddb4efb9c8a83ada6caeb9594f7fc5130ec3
-git describe: 4.4.208-rc1-hikey-20200101-645
-Test details: https://qa-reports.linaro.org/lkft/linaro-hikey-stable-rc-4.4=
--oe/build/4.4.208-rc1-hikey-20200101-645
-
-
-No regressions (compared to build 4.4.208-rc1-hikey-20200101-644)
-
-
-No fixes (compared to build 4.4.208-rc1-hikey-20200101-644)
-
-Ran 1568 total tests in the following environments and test suites.
-
-Environments
---------------
-- hi6220-hikey - arm64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
