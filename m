@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEBC1C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A3E0C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:20:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95A4E2467F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43E832467A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:20:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579699204;
-	bh=YOT7O9y2hvrz37MHUK+5Miz2tFrxtBigA3BbYAkZso0=;
+	s=default; t=1579699208;
+	bh=TBSkjwugAdx71V+ek//0N6epTGZxQcR558IFnm4KTI4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m2OG5DkSiv8CNc71KZLhVJY9Tu0lwBUCR1N2TlpQVlvIeydycnS0q6NhwQU6gXATU
-	 AKmBKGuvK371G/eRs4ziBzqC/iJoEWKAakQwb6eFjv0NRA7Q+xPTxunKdCFwszOfdo
-	 qCAXxmTOlGmZtUVHnQ8Ic7zeLZ61+yy8rPbkeDo4=
+	b=DOFsXuIpopl5Wzb84S565WbAg6VxC9h1tauHcrmBHqXjgWr8d9jQEagPrVPfvwGRk
+	 eOZD9F+vVwIBD0rP5ovvGxWGo5CNakH9zk3DBTHp0XfUv9WxiSPmwZdVP/u9OPnCsQ
+	 JB2GSHG+ApysJxd+/uM7xZOLg7nr9vp5GYajF6VU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729874AbgAVNUD (ORCPT
+        id S1726207AbgAVNUH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:20:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36082 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 08:20:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729860AbgAVNUB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:20:01 -0500
+        id S1729860AbgAVNUE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:20:04 -0500
 Received: from localhost (unknown [84.241.205.26])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E55A24685;
-        Wed, 22 Jan 2020 13:19:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 766D82467A;
+        Wed, 22 Jan 2020 13:20:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579699201;
-        bh=YOT7O9y2hvrz37MHUK+5Miz2tFrxtBigA3BbYAkZso0=;
+        s=default; t=1579699204;
+        bh=TBSkjwugAdx71V+ek//0N6epTGZxQcR558IFnm4KTI4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N9vsJhv9zAS4qha+gNCtpRgO2yzA0IWe5C0YiuftBiD1RLWKRQLLZvSFOIng+PJ2I
-         WXwydV2+d7xvf+IVfamyTgyeFmVGpEBQHA6mvHyscx5sK3M8sUtWixzuJD2zrl71of
-         U7U8vqupf9IJqUiIkpYBNnCICj0YlvClm9xaXjUs=
+        b=P11AZxl1SdjaycmVYSz+b2K9ujn6Z5HClZt+x/08baSpaCNSWjT3iCVRFBAFqOVW7
+         XvBmyJf2GsgHDL7O5kGAWS8ADTvgx8uk+/xovNGrBst6GXsRtK6rbi/9mx7LcYMDLw
+         vTxnq0ZV7TvzSyJ5qbUFNdZN1VZCsnySNEHOnZVI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
-        Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 5.4 035/222] ARM: dts: am571x-idk: Fix gpios property to have the correct  gpio number
-Date:   Wed, 22 Jan 2020 10:27:01 +0100
-Message-Id: <20200122092836.007162481@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Sekhar Nori <nsekhar@ti.com>, Olof Johansson <olof@lixom.net>
+Subject: [PATCH 5.4 036/222] ARM: davinci: select CONFIG_RESET_CONTROLLER
+Date:   Wed, 22 Jan 2020 10:27:02 +0100
+Message-Id: <20200122092836.090826916@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
 References: <20200122092833.339495161@linuxfoundation.org>
@@ -59,38 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kishon Vijay Abraham I <kishon@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit 0c4eb2a6b3c6b0facd0a3bccda5db22e7b3b6f96 upstream.
+commit 7afec66e2bf5683d8bfc812cc295313d1b8473bc upstream.
 
-commit d23f3839fe97d8dce03d ("ARM: dts: DRA7: Add pcie1 dt node for
-EP mode") while adding the dt node for EP mode for DRA7 platform,
-added rc node for am571x-idk and populated gpios property with
-"gpio3 23". However the GPIO_PCIE_SWRST line is actually connected
-to "gpio5 18". Fix it here. (The patch adding "gpio3 23" was tested
-with another am57x board in EP mode which doesn't rely on reset from
-host).
+Selecting RESET_CONTROLLER is actually required, otherwise we
+can get a link failure in the clock driver:
 
-Cc: stable <stable@vger.kernel.org> # 4.14+
-Fixes: d23f3839fe97d8dce03d ("ARM: dts: DRA7: Add pcie1 dt node for EP mode")
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+drivers/clk/davinci/psc.o: In function `__davinci_psc_register_clocks':
+psc.c:(.text+0x9a0): undefined reference to `devm_reset_controller_register'
+drivers/clk/davinci/psc-da850.o: In function `da850_psc0_init':
+psc-da850.c:(.text+0x24): undefined reference to `reset_controller_add_lookup'
+
+Link: https://lore.kernel.org/r/20191210195202.622734-1-arnd@arndb.de
+Fixes: f962396ce292 ("ARM: davinci: support multiplatform build for ARM v5")
+Cc: <stable@vger.kernel.org> # v5.4
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Acked-by: Sekhar Nori <nsekhar@ti.com>
+Signed-off-by: Olof Johansson <olof@lixom.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/am571x-idk.dts |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/mach-davinci/Kconfig |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/arm/boot/dts/am571x-idk.dts
-+++ b/arch/arm/boot/dts/am571x-idk.dts
-@@ -167,7 +167,7 @@
+--- a/arch/arm/mach-davinci/Kconfig
++++ b/arch/arm/mach-davinci/Kconfig
+@@ -9,6 +9,7 @@ menuconfig ARCH_DAVINCI
+ 	select PM_GENERIC_DOMAINS if PM
+ 	select PM_GENERIC_DOMAINS_OF if PM && OF
+ 	select REGMAP_MMIO
++	select RESET_CONTROLLER
+ 	select HAVE_IDE
+ 	select PINCTRL_SINGLE
  
- &pcie1_rc {
- 	status = "okay";
--	gpios = <&gpio3 23 GPIO_ACTIVE_HIGH>;
-+	gpios = <&gpio5 18 GPIO_ACTIVE_HIGH>;
- };
- 
- &pcie1_ep {
 
 
