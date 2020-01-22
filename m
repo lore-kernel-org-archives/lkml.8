@@ -2,373 +2,119 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 543DCC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 14:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32EE0C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 14:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1526D2253D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 14:00:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gLPFwEPv"
+	by mail.kernel.org (Postfix) with ESMTP id 0872F24685
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 14:05:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579701919;
+	bh=esBPi1mGxaJZbmOl+/JaOfT4NBrTR5BE3aYw2P5SxaQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KOy9fQfc3q5uU3BL44TQc49C7lWyF6+r0K5KrqPwqr4/0GIugYf+XHvWRjK4/NOWG
+	 694R50zj4iabdtLD/XTWvOMRRzbhy9Vv+RxKftEAnvxZ8MheJ+2CI4Y+lp4Fhnw5px
+	 rqmw6T2Bo68Lc4uv0hpfZfy+9UWZ3glPBLnqWgRs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728984AbgAVOA2 (ORCPT
+        id S1725946AbgAVOFS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 09:00:28 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40401 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbgAVOAW (ORCPT
+        Wed, 22 Jan 2020 09:05:18 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34993 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbgAVOFR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 09:00:22 -0500
-Received: by mail-wr1-f65.google.com with SMTP id c14so7363172wrn.7;
-        Wed, 22 Jan 2020 06:00:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=wT1XptHM1yDaallnAlJ04tzwlvbDznGoQRImKRhMaTQ=;
-        b=gLPFwEPvjLGTR/oZW7yPAo9G3ITKN3RzYTHXTbR3OR2c6io8hgGMotpsBMJQ7UV3Xk
-         tHlBmA8pDmFepQXTO/O8r7GHAK121J20BeIeoTXVMR5RdapoL6H3sUQY/mSrmrH15WUA
-         7sg+ADEzNbUAlJF0bT+KDrUAewDCUfx52WlLRmcQO1sm1P5ai5KHiwTnFohFKGUQuEeA
-         nwI8KXZzjRXykb21Mzuq46AW5UeuObFfbULVkzKMPrxdOVkJOt/bNoXv4UjpxY2728fE
-         wIA74hOvPef7v83kRbHffOHpCWSM1OdO5JlTHtrlpqOy4P20Rl7Oli1whl9ikOICuCqp
-         hSfA==
+        Wed, 22 Jan 2020 09:05:17 -0500
+Received: by mail-wr1-f66.google.com with SMTP id g17so7423166wro.2
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 06:05:16 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=wT1XptHM1yDaallnAlJ04tzwlvbDznGoQRImKRhMaTQ=;
-        b=spWIL8mAxr3u2DGS3P6IutUmUbFxGw9//pTgbmeUPzdvRdZBrHj9K5eHreNIWUfaPR
-         evQcaBRyJUgbKhJD1FCgLaZ7dUqnBgqTogkXEDzDq58W3cl96crSgGgE4pQ672E911jY
-         fz81ZifzmdfxIQL/lsHwtjaCaucNC0hqKdvLV7rYLdnXJbq8Ondm6pDfbIrmB+6BdIT4
-         3WyTY3VSJfnsY/b3LyoRG40LgQODMAKm7bYM7XQ6iDbXA/1QOMcJogU0rsn6A6tXkDTm
-         lXgubaYb0G7q5/zW1RupiX/8aYli0pPR5zUzyidqtiAYCdGyaiEYpPNjeb9Ba11Y7d+e
-         iLLg==
-X-Gm-Message-State: APjAAAX9AGV7Cr1fZM9uZi0HzJSAxcfEqOEFJNoB6Ij6amZCliwQW2Oz
-        CKt0LDtClldaZAg3gwVSJ1MjDJynFq0=
-X-Google-Smtp-Source: APXvYqwno07hndqxJqhnfRnm+ajhc+icicrbEBr0upHPIZ9SXfjMqsDnTpxWKJoAWBs8qksE1CTPRg==
-X-Received: by 2002:adf:e58d:: with SMTP id l13mr11331079wrm.135.1579701619886;
-        Wed, 22 Jan 2020 06:00:19 -0800 (PST)
-Received: from localhost.localdomain (p5DCFF1C1.dip0.t-ipconnect.de. [93.207.241.193])
-        by smtp.gmail.com with ESMTPSA id g2sm57388270wrw.76.2020.01.22.06.00.18
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nTDawKBuPPz3RFrkaA7TRY9Jia2zninb0DeM+/pbQ8U=;
+        b=tTNJEUiVNp5/UYXZRpKKGk5pmUcetJfgebRlMhACXOcx/da29zUBSO3zp0UCohbIQp
+         +sCPpGjGpVXU1xNyPpiUP6vvMlDPJKXs+7JCNYBuEDM1EL8gDR2wLye2KYFuCxB+lDKZ
+         MxzSTiVdHMY19bo9Yoqlarrg9zNwuyXwIG6jHDpsDZZJm1Wg6+iEcirB75WtzwMGzcaw
+         mgKktaJygxjshVnaJMUQYVQlBSk0grcWZeAJ2hmUVSrjb1ZLYED9eklLDiTpIXOiNgxW
+         0/MJZhqJviHbJeIxgcQ3VDK18pfZ9yl1bcbcM8QPTbkW5PfO85PgDyaK+PhdSewMS0ir
+         Iqyg==
+X-Gm-Message-State: APjAAAUl9b0RAXZ5poBM9dyhLib/TGFLnEt8T5cqaKl4iJgSpDUc0e+O
+        +KS4g8Rj3qqk8CprmhV6+is=
+X-Google-Smtp-Source: APXvYqxlAP+/wQo+U5G/hC5nhSUhqcfVX0b3qdlQz+EBZiRxKCsql6s8v1dOdo8DVwgg6iphafdn3g==
+X-Received: by 2002:a05:6000:1241:: with SMTP id j1mr11170497wrx.26.1579701916005;
+        Wed, 22 Jan 2020 06:05:16 -0800 (PST)
+Received: from debian (41.142.6.51.dyn.plus.net. [51.6.142.41])
+        by smtp.gmail.com with ESMTPSA id b137sm4417661wme.26.2020.01.22.06.05.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jan 2020 06:00:19 -0800 (PST)
-From:   Saravanan Sekar <sravanhome@gmail.com>
-To:     sravanhome@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
-        davem@davemloft.net, mchehab+samsung@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] regulator: mp5416: add mp5416 regulator driver
-Date:   Wed, 22 Jan 2020 14:59:57 +0100
-Message-Id: <20200122135958.13663-3-sravanhome@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200122135958.13663-1-sravanhome@gmail.com>
-References: <20200122135958.13663-1-sravanhome@gmail.com>
+        Wed, 22 Jan 2020 06:05:15 -0800 (PST)
+Date:   Wed, 22 Jan 2020 14:05:12 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Sergey Dyasli <sergey.dyasli@citrix.com>
+Cc:     Paul Durrant <pdurrant@gmail.com>, xen-devel@lists.xen.org,
+        kasan-dev@googlegroups.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        George Dunlap <george.dunlap@citrix.com>,
+        Ross Lagerwall <ross.lagerwall@citrix.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Wei Liu <wei.liu@kernel.org>
+Subject: Re: [PATCH v2 4/4] xen/netback: fix grant copy across page boundary
+Message-ID: <20200122140512.zxtld5sanohpmgt2@debian>
+References: <20200117125834.14552-1-sergey.dyasli@citrix.com>
+ <20200117125834.14552-5-sergey.dyasli@citrix.com>
+ <CACCGGhApXXnQwfBN_LioAh+8bk-cAAQ2ciua-MnnQoMBUfap6g@mail.gmail.com>
+ <85b36733-7f54-fdfd-045d-b8e8a92d84c5@citrix.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <85b36733-7f54-fdfd-045d-b8e8a92d84c5@citrix.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding regulator driver for the device mp5416.
-The MP5416 PMIC device contains four DC-DC buck converters and
-five regulators, accessed over I2C.
+On Wed, Jan 22, 2020 at 10:07:35AM +0000, Sergey Dyasli wrote:
+> On 20/01/2020 08:58, Paul Durrant wrote:
+> > On Fri, 17 Jan 2020 at 12:59, Sergey Dyasli <sergey.dyasli@citrix.com> wrote:
+> >>
+> >> From: Ross Lagerwall <ross.lagerwall@citrix.com>
+> >>
+> >> When KASAN (or SLUB_DEBUG) is turned on, there is a higher chance that
+> >> non-power-of-two allocations are not aligned to the next power of 2 of
+> >> the size. Therefore, handle grant copies that cross page boundaries.
+> >>
+> >> Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
+> >> Signed-off-by: Sergey Dyasli <sergey.dyasli@citrix.com>
+> >> ---
+> >> v1 --> v2:
+> >> - Use sizeof_field(struct sk_buff, cb)) instead of magic number 48
+> >> - Slightly update commit message
+> >>
+> >> RFC --> v1:
+> >> - Added BUILD_BUG_ON to the netback patch
+> >> - xenvif_idx_release() now located outside the loop
+> >>
+> >> CC: Wei Liu <wei.liu@kernel.org>
+> >> CC: Paul Durrant <paul@xen.org>
+> >
+> > Acked-by: Paul Durrant <paul@xen.org>
+> 
+> Thanks! I believe this patch can go in independently from the other
+> patches in the series. What else is required for this?
 
-Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
----
- drivers/regulator/Kconfig  |  10 ++
- drivers/regulator/Makefile |   1 +
- drivers/regulator/mp5416.c | 245 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 256 insertions(+)
- create mode 100644 drivers/regulator/mp5416.c
+This patch didn't Cc the network development list so David Miller
+wouldn't be able to pick it up.
 
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index 97bfdd47954f..9925fd152cd6 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -612,6 +612,16 @@ config REGULATOR_MCP16502
- 	  through the regulator interface. In addition it enables
- 	  suspend-to-ram/standby transition.
- 
-+config REGULATOR_MP5416
-+	tristate "Monolithic MP5416 PMIC"
-+	depends on I2C && OF
-+	select REGMAP_I2C
-+	help
-+	  Say y here to support the MP5416 PMIC. This will enable supports
-+	  the software controllable 4 buck and 4 LDO regulators.
-+	  Say M here if you want to include support for the regulator as a
-+	  module.
-+
- config REGULATOR_MP8859
- 	tristate "MPS MP8859 regulator driver"
- 	depends on I2C
-diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
-index 07bc977c52b0..ab7149734c03 100644
---- a/drivers/regulator/Makefile
-+++ b/drivers/regulator/Makefile
-@@ -78,6 +78,7 @@ obj-$(CONFIG_REGULATOR_MC13783) += mc13783-regulator.o
- obj-$(CONFIG_REGULATOR_MC13892) += mc13892-regulator.o
- obj-$(CONFIG_REGULATOR_MC13XXX_CORE) +=  mc13xxx-regulator-core.o
- obj-$(CONFIG_REGULATOR_MCP16502) += mcp16502.o
-+obj-$(CONFIG_REGULATOR_MP5416) += mp5416.o
- obj-$(CONFIG_REGULATOR_MP8859) += mp8859.o
- obj-$(CONFIG_REGULATOR_MPQ7920) += mpq7920.o
- obj-$(CONFIG_REGULATOR_MT6311) += mt6311-regulator.o
-diff --git a/drivers/regulator/mp5416.c b/drivers/regulator/mp5416.c
-new file mode 100644
-index 000000000000..7954ad17249b
---- /dev/null
-+++ b/drivers/regulator/mp5416.c
-@@ -0,0 +1,245 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+//
-+// mp5416.c  - regulator driver for mps mp5416
-+//
-+// Copyright 2020 Monolithic Power Systems, Inc
-+//
-+// Author: Saravanan Sekar <sravanhome@gmail.com>
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/err.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/regulator/driver.h>
-+#include <linux/i2c.h>
-+
-+#define MP5416_REG_CTL0			0x00
-+#define MP5416_REG_CTL1			0x01
-+#define MP5416_REG_CTL2			0x02
-+#define MP5416_REG_ILIM			0x03
-+#define MP5416_REG_BUCK1		0x04
-+#define MP5416_REG_BUCK2		0x05
-+#define MP5416_REG_BUCK3		0x06
-+#define MP5416_REG_BUCK4		0x07
-+#define MP5416_REG_LDO1			0x08
-+#define MP5416_REG_LDO2			0x09
-+#define MP5416_REG_LDO3			0x0a
-+#define MP5416_REG_LDO4			0x0b
-+
-+#define MP5416_REGULATOR_EN		BIT(7)
-+#define MP5416_MASK_VSET		0x7f
-+#define MP5416_MASK_BUCK1_ILIM		0xc0
-+#define MP5416_MASK_BUCK2_ILIM		0x0c
-+#define MP5416_MASK_BUCK3_ILIM		0x30
-+#define MP5416_MASK_BUCK4_ILIM		0x03
-+#define MP5416_MASK_DVS_SLEWRATE	0xc0
-+
-+/* values in uV */
-+#define MP5416_VOLT1_MIN		600000
-+#define MP5416_VOLT1_MAX		2187500
-+#define MP5416_VOLT1_STEP		12500
-+#define MP5416_VOLT2_MIN		800000
-+#define MP5416_VOLT2_MAX		3975000
-+#define MP5416_VOLT2_STEP		25000
-+
-+#define MP5416_VOLT1_RANGE \
-+	((MP5416_VOLT1_MAX - MP5416_VOLT1_MIN)/MP5416_VOLT1_STEP + 1)
-+#define MP5416_VOLT2_RANGE \
-+	((MP5416_VOLT2_MAX - MP5416_VOLT2_MIN)/MP5416_VOLT2_STEP + 1)
-+
-+#define MP5416BUCK(_name, _id, _ilim, _dreg, _dval, _vsel)		\
-+	[MP5416_BUCK ## _id] = {					\
-+		.id = MP5416_BUCK ## _id,				\
-+		.name = _name,						\
-+		.of_match = _name,					\
-+		.regulators_node = "regulators",			\
-+		.ops = &mp5416_buck_ops,				\
-+		.min_uV = MP5416_VOLT ##_vsel## _MIN,			\
-+		.uV_step = MP5416_VOLT ##_vsel## _STEP,			\
-+		.n_voltages = MP5416_VOLT ##_vsel## _RANGE,		\
-+		.curr_table = _ilim,					\
-+		.n_current_limits = ARRAY_SIZE(_ilim),			\
-+		.csel_reg = MP5416_REG_ILIM,				\
-+		.csel_mask = MP5416_MASK_BUCK ## _id ##_ILIM,		\
-+		.vsel_reg = MP5416_REG_BUCK ## _id,			\
-+		.vsel_mask = MP5416_MASK_VSET,				\
-+		.enable_reg = MP5416_REG_BUCK ## _id,			\
-+		.enable_mask = MP5416_REGULATOR_EN,			\
-+		.active_discharge_on	= _dval,			\
-+		.active_discharge_reg	= _dreg,			\
-+		.active_discharge_mask	= _dval,			\
-+		.owner			= THIS_MODULE,			\
-+	}
-+
-+#define MP5416LDO(_name, _id)						\
-+	[MP5416_LDO ## _id] = {						\
-+		.id = MP5416_LDO ## _id,				\
-+		.name = _name,						\
-+		.of_match = _name,					\
-+		.regulators_node = "regulators",			\
-+		.ops = &mp5416_ldo_ops,					\
-+		.min_uV = MP5416_VOLT2_MIN,				\
-+		.uV_step = MP5416_VOLT2_STEP,				\
-+		.n_voltages = MP5416_VOLT2_RANGE,			\
-+		.vsel_reg = MP5416_REG_LDO ##_id,			\
-+		.vsel_mask = MP5416_MASK_VSET,				\
-+		.enable_reg = MP5416_REG_LDO ##_id,			\
-+		.enable_mask = MP5416_REGULATOR_EN,			\
-+		.active_discharge_on	= BIT(_id),			\
-+		.active_discharge_reg	= MP5416_REG_CTL2,		\
-+		.active_discharge_mask	= BIT(_id),			\
-+		.owner			= THIS_MODULE,			\
-+	}
-+
-+enum mp5416_regulators {
-+	MP5416_BUCK1,
-+	MP5416_BUCK2,
-+	MP5416_BUCK3,
-+	MP5416_BUCK4,
-+	MP5416_LDO1,
-+	MP5416_LDO2,
-+	MP5416_LDO3,
-+	MP5416_LDO4,
-+	MP5416_MAX_REGULATORS,
-+};
-+
-+static const struct regmap_config mp5416_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = 0x0d,
-+};
-+
-+/* Current limits array (in uA)
-+ * ILIM1 & ILIM3
-+ */
-+static const unsigned int mp5416_I_limits1[] = {
-+	3800000, 4600000, 5600000, 6800000
-+};
-+
-+/* ILIM2 & ILIM4 */
-+static const unsigned int mp5416_I_limits2[] = {
-+	2200000, 3200000, 4200000, 5200000
-+};
-+
-+static int mp5416_set_ramp_delay(struct regulator_dev *rdev, int ramp_delay);
-+
-+static const struct regulator_ops mp5416_ldo_ops = {
-+	.enable			= regulator_enable_regmap,
-+	.disable		= regulator_disable_regmap,
-+	.is_enabled		= regulator_is_enabled_regmap,
-+	.list_voltage		= regulator_list_voltage_linear,
-+	.map_voltage		= regulator_map_voltage_linear,
-+	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
-+	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
-+	.set_active_discharge	= regulator_set_active_discharge_regmap,
-+};
-+
-+static const struct regulator_ops mp5416_buck_ops = {
-+	.enable			= regulator_enable_regmap,
-+	.disable		= regulator_disable_regmap,
-+	.is_enabled		= regulator_is_enabled_regmap,
-+	.list_voltage		= regulator_list_voltage_linear,
-+	.map_voltage		= regulator_map_voltage_linear,
-+	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
-+	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
-+	.set_active_discharge	= regulator_set_active_discharge_regmap,
-+	.get_current_limit	= regulator_get_current_limit_regmap,
-+	.set_current_limit	= regulator_set_current_limit_regmap,
-+	.set_ramp_delay		= mp5416_set_ramp_delay,
-+};
-+
-+static struct regulator_desc mp5416_regulators_desc[MP5416_MAX_REGULATORS] = {
-+	MP5416BUCK("buck1", 1, mp5416_I_limits1, MP5416_REG_CTL1, BIT(0), 1),
-+	MP5416BUCK("buck2", 2, mp5416_I_limits2, MP5416_REG_CTL1, BIT(1), 2),
-+	MP5416BUCK("buck3", 3, mp5416_I_limits1, MP5416_REG_CTL1, BIT(2), 1),
-+	MP5416BUCK("buck4", 4, mp5416_I_limits2, MP5416_REG_CTL2, BIT(5), 2),
-+	MP5416LDO("ldo1", 1),
-+	MP5416LDO("ldo2", 2),
-+	MP5416LDO("ldo3", 3),
-+	MP5416LDO("ldo4", 4),
-+};
-+
-+/*
-+ * DVS ramp rate BUCK1 to BUCK4
-+ * 00: 32mV/us
-+ * 01: 16mV/us
-+ * 10: 8mV/us
-+ * 11: 4mV/us
-+ */
-+static int mp5416_set_ramp_delay(struct regulator_dev *rdev, int ramp_delay)
-+{
-+	unsigned int ramp_val;
-+
-+	if (ramp_delay > 32000 || ramp_delay < 0)
-+		return -EINVAL;
-+
-+	if (ramp_delay <= 4000)
-+		ramp_val = 3;
-+	else if (ramp_delay <= 8000)
-+		ramp_val = 2;
-+	else if (ramp_delay <= 16000)
-+		ramp_val = 1;
-+	else
-+		ramp_val = 0;
-+
-+	return regmap_update_bits(rdev->regmap, MP5416_REG_CTL2,
-+				  MP5416_MASK_DVS_SLEWRATE, ramp_val << 6);
-+}
-+
-+static int mp5416_i2c_probe(struct i2c_client *client)
-+{
-+	struct device *dev = &client->dev;
-+	struct regulator_config config = { NULL, };
-+	struct regulator_dev *rdev;
-+	struct regmap *regmap;
-+	int i;
-+
-+	regmap = devm_regmap_init_i2c(client, &mp5416_regmap_config);
-+	if (IS_ERR(regmap)) {
-+		dev_err(dev, "Failed to allocate regmap!\n");
-+		return PTR_ERR(regmap);
-+	}
-+
-+	config.dev = dev;
-+	config.regmap = regmap;
-+
-+	for (i = 0; i < MP5416_MAX_REGULATORS; i++) {
-+		rdev = devm_regulator_register(dev,
-+					       &mp5416_regulators_desc[i],
-+					       &config);
-+		if (IS_ERR(rdev)) {
-+			dev_err(dev, "Failed to register regulator!\n");
-+			return PTR_ERR(rdev);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id mp5416_of_match[] = {
-+	{ .compatible = "mps,mp5416" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, mp5416_of_match);
-+
-+static const struct i2c_device_id mp5416_id[] = {
-+	{ "mp5416", },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(i2c, mp5416_id);
-+
-+static struct i2c_driver mp5416_regulator_driver = {
-+	.driver = {
-+		.name = "mp5416",
-+		.of_match_table = of_match_ptr(mp5416_of_match),
-+	},
-+	.probe_new = mp5416_i2c_probe,
-+	.id_table = mp5416_id,
-+};
-+module_i2c_driver(mp5416_regulator_driver);
-+
-+MODULE_AUTHOR("Saravanan Sekar <sravanhome@gmail.com>");
-+MODULE_DESCRIPTION("MP5416 PMIC regulator driver");
-+MODULE_LICENSE("GPL");
--- 
-2.17.1
+Wei.
 
+> 
+> --
+> Sergey
