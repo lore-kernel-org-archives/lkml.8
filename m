@@ -2,182 +2,99 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D7A0C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:12:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86F31C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:15:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B66C24655
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:12:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5929A21835
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:15:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="bAWMjXrP"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="J7d0NSFA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728665AbgAVTMq (ORCPT
+        id S1728809AbgAVTPB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 14:12:46 -0500
-Received: from mga12.intel.com ([192.55.52.136]:55654 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726004AbgAVTMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 14:12:46 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jan 2020 11:12:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,350,1574150400"; 
-   d="scan'208";a="259574457"
-Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
-  by fmsmga002.fm.intel.com with ESMTP; 22 Jan 2020 11:12:45 -0800
-Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
- FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 22 Jan 2020 11:12:45 -0800
-Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 22 Jan 2020 11:12:45 -0800
-Received: from FMSEDG001.ED.cps.intel.com (10.1.192.133) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Wed, 22 Jan 2020 11:12:45 -0800
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.36.56) by
- edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Wed, 22 Jan 2020 11:12:44 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Y0EluqU/vzrnTdPMb1CpXBASYeLd98q3QA63KmdmpdShE+NZuwRdS4tZ1/ZZLscKHxh/fj7599W1FzJRmNP95OTuw4pEIwYI7Y6mqcflxvPnpyL/Gw+iCkAwyJ9tX1nzhDWJmXD5jcbczsLISm6zpa6/OPVybXcPsm8HHaQ1lCUz6xQkUaLPPx/2oup/Xeb3N8HTfsthihoWIsT0ZM5NyRSGKSsSh64doxjmCkFibWMCUklisg3VPFwYQ8TpU9rS4Y4dTklYTfquFjhxmMriVgo6OvyQSZuZ0yGeKsGe8jVckTpl4BydBtFfPZyoZHRRHfHbysSdEYckyUYsgAPPzQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RoR9IU1JUgqc7HwuvKTEAxyN+pShqBgsdJXOPl2W2xY=;
- b=FUU6xQqdKoMznOihRWh72ulEYWuERqO2nMeoSzgSpfsCu8Kv5KLaFNRWix64CKGijXnM9/NpfZJQIjrevK6vevPHlNHxXElKl5HAwLsnj/YQfAqrX5PlzAUnLDzTPIKO6k0S0Hzfs2EZCqtyemzhOawyoXw4UW2HYDAaGNDXXTPf/nB/CHHgJydSpomoKCGgtJOBZj9Z3ZeHU8FnUAfj0CyoW+WiWugShmFYAhZCMaUTlOoZsBj+fN7y2ehvy5dIOVn63pKW7CYLcPjtYixEU795zbY2fA/p6QDiUcoYnsjwU7+I7irpo/gh7eZwSRJPPvrzWWBIQQsHzAmalSTJGA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RoR9IU1JUgqc7HwuvKTEAxyN+pShqBgsdJXOPl2W2xY=;
- b=bAWMjXrP13VJf36Gc+4PvLMxNSa6NI7S+0KhQRWa0gACz7pn1jLgHHjH1fsSsLpu4GqI6kqP8HAwS7jChqUdai0yP1ZMiK9FvwFrdghkd4ufFAOeeO5IDvwQTHH9/jBYgmqf21ig93Vcz6C/QE77UOrRh95c9mlhAFR2m+66rVw=
-Received: from MWHPR11MB1984.namprd11.prod.outlook.com (10.175.54.11) by
- MWHPR11MB1886.namprd11.prod.outlook.com (10.175.54.9) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.19; Wed, 22 Jan 2020 19:12:37 +0000
-Received: from MWHPR11MB1984.namprd11.prod.outlook.com
- ([fe80::f4b7:21f6:b050:5f33]) by MWHPR11MB1984.namprd11.prod.outlook.com
- ([fe80::f4b7:21f6:b050:5f33%8]) with mapi id 15.20.2644.028; Wed, 22 Jan 2020
- 19:12:37 +0000
-From:   "Kaneda, Erik" <erik.kaneda@intel.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Anchal Agarwal <anchalag@amazon.com>,
-        "Moore, Robert" <robert.moore@intel.com>
-CC:     "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
-        "Singh, Balbir" <sblbir@amazon.com>,
-        "fllinden@amazon.com" <fllinden@amazon.com>
-Subject: RE: [RESEND PATCH] ACPICA: Enable sleep button on ACPI legacy wake
-Thread-Topic: [RESEND PATCH] ACPICA: Enable sleep button on ACPI legacy wake
-Thread-Index: AQHVy/txCopz8tiPmEersnUayPWmy6ftCekAgAoLASA=
-Date:   Wed, 22 Jan 2020 19:12:37 +0000
-Message-ID: <MWHPR11MB1984C969C026BC579F773F08F00C0@MWHPR11MB1984.namprd11.prod.outlook.com>
-References: <20200115232629.GA9231@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
- <CAJZ5v0iHVzDzS5zZSTWOdy2CCSkyW74+p2-Et0+EcysOvL2CDg@mail.gmail.com>
-In-Reply-To: <CAJZ5v0iHVzDzS5zZSTWOdy2CCSkyW74+p2-Et0+EcysOvL2CDg@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYjc4YTA0OTMtYWU5MC00ZjU4LTk5ZjItYjk4MGI2ZTI4ZjkwIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiR29xQmxJbmNaWHpOc3JrcnpKOG5yQVNoVmhOOUpDVmJ2N21lK2dxMUFySEVmdXNZek0rTE1Jb0JHSklCN1pyKyJ9
-dlp-version: 11.2.0.6
-dlp-product: dlpe-windows
-x-ctpclassification: CTP_NT
-dlp-reaction: no-action
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=erik.kaneda@intel.com; 
-x-originating-ip: [134.134.136.200]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6bbb5f53-e0fe-45d7-7a14-08d79f6f0b34
-x-ms-traffictypediagnostic: MWHPR11MB1886:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR11MB1886F3F483A5C86B81EF5C39F00C0@MWHPR11MB1886.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 029097202E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(39860400002)(366004)(136003)(396003)(199004)(189003)(6506007)(186003)(316002)(53546011)(54906003)(110136005)(76116006)(71200400001)(66476007)(2906002)(64756008)(66556008)(66446008)(478600001)(66946007)(33656002)(6636002)(5660300002)(8936002)(8676002)(52536014)(86362001)(81166006)(4326008)(81156014)(966005)(7696005)(9686003)(26005)(55016002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR11MB1886;H:MWHPR11MB1984.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: N+feD8AXtv7rhMFhzTdAcie+oWvK10SD5sVnPjoBah9D233fPZOWiwvwRHkXcDzRAN1Nx8+l/WwKxv0xXfQN64nCAZnq3GQAg1yJj+YBFZkBcpjhupy/rEcxSGzMgGRhkPIDEWGLSwq1VwkoXkwz3WgLSj69FSp7x3/TQk30pdXhmAQcLmJIoTxuP83irNUQftQe6D77oXHsuc0Ol3awP1gG1g9Nb1XT8RSZwyJiDVZfMRBwWig1ZXwU4gVEmdRCraqb3LohQqZcCxXyeczTVvSAyQyZsrfdOWiFs8dT6oYzm3xHDzkGrRAWRNsryV+0F54G2BcdxK7PLS4XoJ1D621f6zy5cXrs3zaJk1QGa2dRHCzwV292aizWTOaafMpTZMNyu53mvqIxLIX+fWXl7ib3gBbj5oSFoPJYDFwH/Ce5Cdb/6T48mujhPFlhV76JhzJHEJRwjQufnUNic00ipbVZ3H3D52tOuEJ9dkKGi8U=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 22 Jan 2020 14:15:01 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:36907 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726004AbgAVTPB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 14:15:01 -0500
+Received: by mail-qt1-f193.google.com with SMTP id w47so466160qtk.4
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 11:15:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wcZLBHfSelzBLql9iR2p8F2YLeGA3mb8mja49ZN5f84=;
+        b=J7d0NSFAdOvdf1j3I+XMD9gglB+MgxwDGbKrjQxGqVjK7ZlWBJe3XlQ+UM2YPmX2ey
+         2pC5v5rFRhefoIv1YdWzENhSjJ4RIbI9phPgOlr12qlSaQKqBtrryWzNBK2rFIbd2wZh
+         3MBH72tqFRpSsTashv+5PBH00zJhhzfZkzGxzB8McWgRVSi1ZUl4yGC3TzJXY+QcnYih
+         8ePmwtMbjp4HR8G3S1O/s3FUWD1qpvZ5Z/tBNeWASu8vQz/1uvuMIXRV4r0IGwHaA1tf
+         rGQjJpQe0rAG3jBAskRX6lg8oelt5D3h1DRvD84WAZGB7dtlzRwDQPp0RpMlYPrGxJO5
+         GNJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wcZLBHfSelzBLql9iR2p8F2YLeGA3mb8mja49ZN5f84=;
+        b=GJkOfiI9iESsJDxHpa+DgavbCXkf9vQ3rx1AAaQyz1/SYQNH6Rj7Mt4iGXQavy0k/I
+         V5Uv+tZ2qsDHxBiYktRn3aElC1KvKufLHUcHgmHHJ1QVeIdcAjH4I39RRVcoUIXBK5wv
+         Pb6jVXDU42HXiuoAezeXgyVzx2TmMVZb/PqS16Yj8SWULCThArGKRa6GEkdy8gpasZJl
+         gL6ht5OyHBW4d/qeyhE9kVVzTc5IlRoZGIqSQoPRwFgqgqDsVs3GZNRybxJQtx6PGTMo
+         MFaB3vQr7ZTCaE5XEOkhO9L05S9w8DfFU8GXKH2BxaBWcWgFhwRdqLDVkaqQniv2QtkS
+         Cy8A==
+X-Gm-Message-State: APjAAAWkBpN79q6i/Yk2DNg47pY9PW+m1NwL4NUdOflIt6LCjQF4XX4Q
+        vBo4ug1SmjdZskRzsFEyzeLzdBjbvpekwQ==
+X-Google-Smtp-Source: APXvYqwF1rSoKbNyZjLl+is8u3JtESZR7y/+4GcKotqz8S/YtN8UZsOQ4+qJJ4ecO/nonjUj8cWmvw==
+X-Received: by 2002:ac8:2e4b:: with SMTP id s11mr12035146qta.389.1579720499968;
+        Wed, 22 Jan 2020 11:14:59 -0800 (PST)
+Received: from ovpn-123-97.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id k50sm21675998qtc.90.2020.01.22.11.14.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 Jan 2020 11:14:59 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+To:     mingo@redhat.com
+Cc:     ardb@kernel.org, tglx@linutronix.de, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH -next] efi/libstub/x86: fix an EFI server boot failure
+Date:   Wed, 22 Jan 2020 14:14:30 -0500
+Message-Id: <20200122191430.4888-1-cai@lca.pw>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6bbb5f53-e0fe-45d7-7a14-08d79f6f0b34
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jan 2020 19:12:37.3019
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: d6j934/22o4VQOhu77kTTrRz3UhPxP+Yx73A5sxJX9O8czRWffjq6T9n3voZ6V3rYcmU5a8nCTVwdVKhIH2DrQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1886
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUmFmYWVsIEouIFd5c29j
-a2kgPHJhZmFlbEBrZXJuZWwub3JnPg0KPiBTZW50OiBUaHVyc2RheSwgSmFudWFyeSAxNiwgMjAy
-MCAxOjQwIEFNDQo+IFRvOiBBbmNoYWwgQWdhcndhbCA8YW5jaGFsYWdAYW1hem9uLmNvbT47IEth
-bmVkYSwgRXJpaw0KPiA8ZXJpay5rYW5lZGFAaW50ZWwuY29tPjsgTW9vcmUsIFJvYmVydCA8cm9i
-ZXJ0Lm1vb3JlQGludGVsLmNvbT4NCj4gQ2M6IFd5c29ja2ksIFJhZmFlbCBKIDxyYWZhZWwuai53
-eXNvY2tpQGludGVsLmNvbT47IEFDUEkgRGV2ZWwgTWFsaW5nIExpc3QNCj4gPGxpbnV4LWFjcGlA
-dmdlci5rZXJuZWwub3JnPjsgTGludXggS2VybmVsIE1haWxpbmcgTGlzdCA8bGludXgtDQo+IGtl
-cm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBMZW4gQnJvd24gPGxlbmJAa2VybmVsLm9yZz47IG9wZW4g
-bGlzdDpBQ1BJDQo+IENPTVBPTkVOVCBBUkNISVRFQ1RVUkUgKEFDUElDQSkgPGRldmVsQGFjcGlj
-YS5vcmc+OyBTaW5naCwgQmFsYmlyDQo+IDxzYmxiaXJAYW1hem9uLmNvbT47IGZsbGluZGVuQGFt
-YXpvbi5jb20NCj4gU3ViamVjdDogUmU6IFtSRVNFTkQgUEFUQ0hdIEFDUElDQTogRW5hYmxlIHNs
-ZWVwIGJ1dHRvbiBvbiBBQ1BJIGxlZ2FjeQ0KPiB3YWtlDQo+IA0KPiBPbiBUaHUsIEphbiAxNiwg
-MjAyMCBhdCAxMjoyNiBBTSBBbmNoYWwgQWdhcndhbCA8YW5jaGFsYWdAYW1hem9uLmNvbT4NCj4g
-d3JvdGU6DQo+ID4NCj4gPiBDdXJyZW50bHkgd2UgZG8gbm90IHNlZSBzbGVlcF9lbmFibGUgYml0
-IHNldCBhZnRlciBndWVzdCByZXN1bWVzIGZyb20NCj4gPiBoaWJlcm5hdGlvbi4gSGliZXJuYXRp
-b24gaXMgdHJpZ2dlcmVkIGluIGd1ZXN0IG9uIHJlY2VpdmluZyBhIHNsZWVwDQo+ID4gdHJpZ2dl
-ciBmcm9tIHRoZSBoeXBlcnZpc29yKFM0IHN0YXRlKS4gV2Ugc2VlIHRoYXQgcG93ZXIgYnV0dG9u
-IGlzDQo+ID4gZW5hYmxlZCBvbiB3YWtlIHVwIGZyb20gUzQgc3RhdGUgaG93ZXZlciBzbGVlcCBi
-dXR0b24gaXNuJ3QuIFRoaXMNCj4gPiBjYXVzZXMgc3Vic2VxdWVudCBpbnZvY2F0aW9uIG9mIHNs
-ZWVwIHN0YXRlIHRvIGZhaWwgaW4gdGhlIGd1ZXN0LiBBbnkNCj4gPiBlbnZpcm9ubWVudCAgZ29p
-bmcgdGhyb3VnaCBhY3BpX2h3X2xlZ2FjeV93YWtlKCkgd29uJ3QgaGF2ZSBzbGVlcA0KPiA+IGJ1
-dHRvbiBlbmFibGVkLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQW5jaGFsIEFnYXJ3YWwgPGFu
-Y2hhbGFnQGFtYXpvbi5jb20+DQo+ID4gUmV2aWV3ZWQtYnk6IEJhbGJpciBTaW5naCA8c2JsYmly
-QGFtYXpvbi5jb20+DQo+ID4gUmV2aWV3ZWQtYnk6IEZyYW5rIHZhbiBkZXIgTGluZGVuIDxmbGxp
-bmRlbkBhbWF6b24uY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL2FjcGkvYWNwaWNhL2h3c2xl
-ZXAuYyB8IDExICsrKysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxMSBpbnNlcnRpb25z
-KCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9hY3BpL2FjcGljYS9od3NsZWVwLmMN
-Cj4gPiBiL2RyaXZlcnMvYWNwaS9hY3BpY2EvaHdzbGVlcC5jIGluZGV4IGI2MmRiOGVjNDQ2Zi4u
-YTE3NmM3ODAyNzYwDQo+ID4gMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9hY3BpL2FjcGljYS9o
-d3NsZWVwLmMNCj4gPiArKysgYi9kcml2ZXJzL2FjcGkvYWNwaWNhL2h3c2xlZXAuYw0KPiA+IEBA
-IC0zMDAsNiArMzAwLDE3IEBAIGFjcGlfc3RhdHVzIGFjcGlfaHdfbGVnYWN5X3dha2UodTggc2xl
-ZXBfc3RhdGUpDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgW0FDUElf
-RVZFTlRfUE9XRVJfQlVUVE9OXS4NCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICBzdGF0dXNfcmVnaXN0ZXJfaWQsDQo+ID4gQUNQSV9DTEVBUl9TVEFUVVMpOw0KPiA+DQo+
-ID4gKyAgICAgICAvKiBFbmFibGUgc2xlZXAgYnV0dG9uICovDQo+ID4gKyAgICAgICAodm9pZCkN
-Cj4gPiArICAgICAgICAgICAgIGFjcGlfd3JpdGVfYml0X3JlZ2lzdGVyKGFjcGlfZ2JsX2ZpeGVk
-X2V2ZW50X2luZm8NCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFtB
-Q1BJX0VWRU5UX1NMRUVQX0JVVFRPTl0uDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICBlbmFibGVfcmVnaXN0ZXJfaWQsDQo+ID4gKyBBQ1BJX0VOQUJMRV9FVkVOVCk7
-DQo+ID4gKw0KPiA+ICsgICAgICAgKHZvaWQpDQo+ID4gKyAgICAgICAgICAgICBhY3BpX3dyaXRl
-X2JpdF9yZWdpc3RlcihhY3BpX2dibF9maXhlZF9ldmVudF9pbmZvDQo+ID4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICBbQUNQSV9FVkVOVF9TTEVFUF9CVVRUT05dLg0KPiA+
-ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RhdHVzX3JlZ2lzdGVyX2lk
-LA0KPiA+ICsgQUNQSV9DTEVBUl9TVEFUVVMpOw0KPiA+ICsNCj4gPiAgICAgICAgIGFjcGlfaHdf
-ZXhlY3V0ZV9zbGVlcF9tZXRob2QoTUVUSE9EX1BBVEhOQU1FX19TU1QsDQo+IEFDUElfU1NUX1dP
-UktJTkcpOw0KPiA+ICAgICAgICAgcmV0dXJuX0FDUElfU1RBVFVTKHN0YXR1cyk7DQo+ID4gIH0N
-Cj4gDQo+IEVyaWssIEJvYiwgcGxlYXNlIHBpY2sgdGhpcyB1cCBpZiB5b3UgZG9uJ3QgaGF2ZSBz
-cGVjaWZpYyBvYmplY3Rpb25zIGFnYWluc3QgaXQuDQo+IA0KPiBJJ2xsIHdhaXQgZm9yIGl0IHRv
-IHNob3cgdXAgaW4gYW4gdXBzdHJlYW0gcmVsZWFzZS4NCg0KSSd2ZSBzdWJtaXR0ZWQgYSBwdWxs
-IHJlcXVlc3QgdG8gQUNQSUNBIHVwc3RyZWFtIHdpdGggY2hhbmdlcyB0byB0aGUgY29tbWl0IG1l
-c3NhZ2UgaGVyZToNCmh0dHBzOi8vZ2l0aHViLmNvbS9hY3BpY2EvYWNwaWNhL3B1bGwvNTQ5DQoN
-CkknbGwgc2VuZCBhIExpbnV4LWl6ZWQgdmVyc2lvbiBvZiB0aGlzIHBhdGNoIGFmdGVyIG91ciBu
-ZXh0IEFDUElDQSByZWxlYXNlLg0KDQpUaGFua3MsDQpFcmlrDQo=
+x86_64 EFI systems are unable to boot due to a typo in the recent commit.
+
+EFI config tables not found.
+ -- System halted
+
+Fixes: 796eb8d26a57 ("efi/libstub/x86: Use const attribute for efi_is_64bit()")
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ arch/x86/boot/compressed/eboot.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/boot/compressed/eboot.c b/arch/x86/boot/compressed/eboot.c
+index 82e26d0ff075..287393d725f0 100644
+--- a/arch/x86/boot/compressed/eboot.c
++++ b/arch/x86/boot/compressed/eboot.c
+@@ -32,7 +32,7 @@ __attribute_const__ bool efi_is_64bit(void)
+ {
+ 	if (IS_ENABLED(CONFIG_EFI_MIXED))
+ 		return efi_is64;
+-	return IS_ENABLED(CONFIG_X64_64);
++	return IS_ENABLED(CONFIG_X86_64);
+ }
+ 
+ static efi_status_t
+-- 
+2.21.0 (Apple Git-122.2)
+
