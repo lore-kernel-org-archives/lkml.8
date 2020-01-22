@@ -2,103 +2,130 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB61C33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52CCAC33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:19:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 187D924655
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:17:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579681056;
-	bh=WEgSmO25XvZVaSwpYizz7ESjz6n8OBZyjE2VZ8loav4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xtW+m1fnUqZXnSYZTg1m3iGvZzzZYFNxWSdPLYjs3UDcz7WyIDZaZ0rKAMwiCMUkg
-	 sxDGNinXB+ypnHpETg/9KpcCe5rHJWuZCrXdNYAX+p+3b5fM4RV0qhDGAcBs3p+jvO
-	 2mEaBI3iQ9NbKvskQXxri4KxBiX7eG0+Y7cMGchc=
+	by mail.kernel.org (Postfix) with ESMTP id 260932253D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:19:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="F9sZ0g+1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729095AbgAVIRf (ORCPT
+        id S1728992AbgAVITM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 03:17:35 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:34879 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbgAVIRe (ORCPT
+        Wed, 22 Jan 2020 03:19:12 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35075 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726004AbgAVITL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 03:17:34 -0500
-Received: by mail-wm1-f67.google.com with SMTP id p17so6151475wmb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 00:17:33 -0800 (PST)
+        Wed, 22 Jan 2020 03:19:11 -0500
+Received: by mail-wm1-f68.google.com with SMTP id p17so6156541wmb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 00:19:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=ahqJi39L7hCmLZPOpPTNeDXrK6DDNhPTKiMAbD2ywhE=;
+        b=F9sZ0g+1suMsinawzZ2+380DXDooohvMYhrtAigpsje4enqGS/E3s0VpLBwSqO1j8b
+         Amc4lUyYFP9yeCXzfVLT+K9Judmv/BsI0HVUB9Sy+j7iPmjkQzVS/mTdCnbkEqvXvLf1
+         784XmubZcHuyL7KHcsx8O6+B5bh3MN77272sQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=DvoS9npmCW10OIQIIaIERIR3pA8bTgXp4bivlZpaay0=;
-        b=M5Itq0CcOH+1rgRyFFjeLlcm1fRXLXYNwrecbpzKtKDkq9cPyWhTa0VTqZpHdBSsdX
-         +gbrEhA6KqjueWkvP7KZavp+yoLLKqPGKxW4EXf6pLYSBYJ8UmTbPXIKM16Vjj94W/wX
-         zSP3UhfAYUT9Mcg26vA00nbFZPw4waJvyNvlOyhnOb5q7GVeGg3Y5mDbgYxv33a2TQGr
-         r5lvNRvS4ftZGOGiME8ueSudbejT8n/oMoRtk3OJtI6XvoRZodP9s0m6EVmO2TB0SCUj
-         S5Dp6gPbOhFs/KotQ2wUcvgk72KbjozxOhQYTpl3eFKc5bfPFdqoFy1bSavfTo6d7wIK
-         tRug==
-X-Gm-Message-State: APjAAAUVFv+k214Kq+dWwiIHurk/aKlAUNSt21IIdibYkzXtx2li747t
-        VeHkNSb+W/8DJx6Y3FGY2AA=
-X-Google-Smtp-Source: APXvYqyhOTgJm0qDXfGAFwwiFEyel7L6crkScLs6oinPtmRHKa5OezNsmABO1rObdbGfpFRUN1YoEw==
-X-Received: by 2002:a7b:cbc9:: with SMTP id n9mr1624763wmi.89.1579681052568;
-        Wed, 22 Jan 2020 00:17:32 -0800 (PST)
-Received: from localhost (ip-37-188-245-167.eurotel.cz. [37.188.245.167])
-        by smtp.gmail.com with ESMTPSA id b128sm2750616wmb.25.2020.01.22.00.17.31
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to;
+        bh=ahqJi39L7hCmLZPOpPTNeDXrK6DDNhPTKiMAbD2ywhE=;
+        b=ROBT7xbzmFe4Ui6RB+cfNtSzkgkUN2S6RLFN3g5otGiWRlpnYsTXGXnaJ1iGBGs66h
+         Kvy5SBNPXpIQuw37ygcOCSuZlUaRsFUXOo2udjVOvQ73PcHr2wbUy1cBj2g9idvcYCAd
+         4AbGPiQWk2YYbDyz8Pht5C6I6FztVmWj1s1zjP1LQgFWGANE44toLWVzZNnVzTnTHFyC
+         TQBTtpUPaJm6bHteY07tB1XbGVxP9kjOcWOQqUZtJghLwN6t3BIOO1qxeEHxU/R0VHSi
+         JLl1i7XSBfcgutZRaOotRwz6sBr40KZdEMI4Ga/w6USd8Va9iOqzNH76lU3abjIZqNim
+         7bmg==
+X-Gm-Message-State: APjAAAWr1hG0LAqlLwBp7en2woEx1e5+XPsbb+wKYd4j3g67mbYi7fVJ
+        0LmXtwdnPmwZklAePdG79OmL4KHZCyxEDw==
+X-Google-Smtp-Source: APXvYqwN9OhE8aTeF0own3s/Ooyt3OHRegbX3r4sudjELKIGb7qKe67NW4lGo+Sw1GcVN7BxEniEJA==
+X-Received: by 2002:a05:600c:22d3:: with SMTP id 19mr1670290wmg.92.1579681149325;
+        Wed, 22 Jan 2020 00:19:09 -0800 (PST)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id z11sm58565947wrt.82.2020.01.22.00.19.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jan 2020 00:17:31 -0800 (PST)
-Date:   Wed, 22 Jan 2020 09:17:30 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Wei Yang <richardw.yang@linux.intel.com>
-Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, yang.shi@linux.alibaba.com
-Subject: Re: [PATCH 7/8] mm/migrate.c: move page on next iteration
-Message-ID: <20200122081730.GQ29276@dhcp22.suse.cz>
-References: <20200119030636.11899-1-richardw.yang@linux.intel.com>
- <20200119030636.11899-8-richardw.yang@linux.intel.com>
- <20200120100203.GR18451@dhcp22.suse.cz>
- <20200121012200.GA1567@richard>
- <20200121084352.GE29276@dhcp22.suse.cz>
- <20200122004012.GB11409@richard>
+        Wed, 22 Jan 2020 00:19:08 -0800 (PST)
+Date:   Wed, 22 Jan 2020 09:19:06 +0100
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Bo YU <tsu.yubo@gmail.com>
+Cc:     maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        irlied@linux.ie, daniel@ffwll.ch, airlied@redhat.com,
+        tprevite@gmail.com, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] drm/drm_dp_mst:remove set but not used variable
+ 'origlen'
+Message-ID: <20200122081906.GO43062@phenom.ffwll.local>
+Mail-Followup-To: Bo YU <tsu.yubo@gmail.com>,
+        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        irlied@linux.ie, airlied@redhat.com, tprevite@gmail.com,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20200118080628.mxcx7bfwdas5m7un@kaowomen.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200122004012.GB11409@richard>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200118080628.mxcx7bfwdas5m7un@kaowomen.cn>
+X-Operating-System: Linux phenom 5.3.0-3-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 22-01-20 08:40:12, Wei Yang wrote:
-> On Tue, Jan 21, 2020 at 09:43:52AM +0100, Michal Hocko wrote:
-> >On Tue 21-01-20 09:22:00, Wei Yang wrote:
-> >> On Mon, Jan 20, 2020 at 11:02:03AM +0100, Michal Hocko wrote:
-> >> >On Sun 19-01-20 11:06:35, Wei Yang wrote:
-> >> >> When page is not successfully queued for migration, we would move pages
-> >> >> on pagelist immediately. Actually, this could be done in the next
-> >> >> iteration by telling it we need some help.
-> >> >> 
-> >> >> This patch adds a new variable need_move to be an indication. After
-> >> >> this, we only need to call move_pages_and_store_status() twice.
-> >> >
-> >> >No! Not another iterator. There are two and this makes the function
-> >> >quite hard to follow already. We do not want to add a third one.
-> >> >
-> >> 
-> >> Two iterators here are? I don't get your point.
-> >
-> >i is the main iterator to process the whole imput. start is another one
-> >to control the batch to migrate. We do not need/want more. More clear?
+On Sat, Jan 18, 2020 at 04:06:28PM +0800, Bo YU wrote:
+> Fixes gcc '-Wunused-but-set-variable' warning:
 > 
-> Yes, more clear.
+> drivers/gpu/drm/drm_dp_mst_topology.c:3693:16: warning: variable
+> ‘origlen’ set but not used [-Wunused-but-set-variable]
+>   int replylen, origlen, curreply;
+> 
+> It looks like never use variable origlen after assign value to it.
+> 
+> Fixes: ad7f8a1f9ced7 (drm/helper: add Displayport multi-stream helper (v0.6))
+> Signed-off-by: Bo YU <tsu.yubo@gmail.com>
 
-Great
+Queued in drm-misc-next, thanks for your patch.
+-Daniel
 
-> I hope you are angry with me. Sorry for my poor English.
+> ---
+>  drivers/gpu/drm/drm_dp_mst_topology.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
+> index 4b74193b89ce..4c76e673206b 100644
+> --- a/drivers/gpu/drm/drm_dp_mst_topology.c
+> +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+> @@ -3690,7 +3690,7 @@ static bool drm_dp_get_one_sb_msg(struct drm_dp_mst_topology_mgr *mgr, bool up)
+>  {
+>  	int len;
+>  	u8 replyblock[32];
+> -	int replylen, origlen, curreply;
+> +	int replylen, curreply;
+>  	int ret;
+>  	struct drm_dp_sideband_msg_rx *msg;
+>  	int basereg = up ? DP_SIDEBAND_MSG_UP_REQ_BASE : DP_SIDEBAND_MSG_DOWN_REP_BASE;
+> @@ -3710,7 +3710,6 @@ static bool drm_dp_get_one_sb_msg(struct drm_dp_mst_topology_mgr *mgr, bool up)
+>  	}
+>  	replylen = msg->curchunk_len + msg->curchunk_hdrlen;
+>  
+> -	origlen = replylen;
+>  	replylen -= len;
+>  	curreply = len;
+>  	while (replylen > 0) {
+> -- 
+> 2.11.0
+> 
 
-Heh, not at all.
 -- 
-Michal Hocko
-SUSE Labs
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
