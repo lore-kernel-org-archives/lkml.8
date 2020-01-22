@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64FFDC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F2AC33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:43:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36B6524688
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:43:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B13E24686
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:43:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686183;
-	bh=0yBEYAvFIo8VijnlFADpHvzHKES1YyexXOnN/qBfmI8=;
+	s=default; t=1579686186;
+	bh=Ixa36PYpa1AbS3yhKx0b+2TirIMqqbfR/UNzFCWU5Jw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yV2W11iHAqGWpmbxyBFXqvaLWAVbpDmXKbLltmZpwW+iDcDkAcLkZGSljzSTqiEYL
-	 6piFcUE5/S9b5GDykUJoETWa6fmfLG+hF+wpYYaSvEHhtLnszWonFqpjGx6KwGfkS3
-	 xXFGNrrVbE03GajVAg2DDxMSxDXu1sYew0/2NUI4=
+	b=MWL6f+vpKieSyFIEmax9bNjRwTflwYfgK+9pkGKDt5oT673OxWgXZl61TS0R2Bgd9
+	 0UNvV6G2swrmiFmFfiePE9dgJGtcofQ8ApV+W7Mt+DYqG/rxtWmTzi3QZeTTWnBX4u
+	 hfUJwNcxT4ikqO25Y/UGXrXKqfD02l+u7ncDjmDI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387819AbgAVJnB (ORCPT
+        id S2387827AbgAVJnF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:43:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35112 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:43:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387803AbgAVJm6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:42:58 -0500
+        id S2387810AbgAVJnA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:43:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EF7B24688;
-        Wed, 22 Jan 2020 09:42:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 905232467B;
+        Wed, 22 Jan 2020 09:42:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686177;
-        bh=0yBEYAvFIo8VijnlFADpHvzHKES1YyexXOnN/qBfmI8=;
+        s=default; t=1579686180;
+        bh=Ixa36PYpa1AbS3yhKx0b+2TirIMqqbfR/UNzFCWU5Jw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2qxxzrzxn5/+3QWiKGn3/kHEZ6kH4DiD/OqQQyyTTIsTWXqCLO7qFeEr7MvfWhOAL
-         OGwXpz9BCSNMPQTW71dJ0nXBgqxKEZqoVMAyOtuYWAJpEOVdtAKhIriaC4cR2j3EIi
-         khS4vF/4Ew5M1FQ/DwHLifBRLSV1Y7ZjinIsIJeM=
+        b=yUAghn1RnbE5DO4m6JMcrnWl3OnxpiDsjan8r26KAaePx0HIorykT3WLXtDJIYisI
+         m4nuOKFteBoNjxsg4i/UP0M7y9ri3QIQzHHcPP48RC1pVorymSSElrPs6nmEk9UMKL
+         vGl9cLlEKSNjuFTQBc9JV1WCClduiWBeS8FV9Keg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        stable@vger.kernel.org, Petr Machata <petrm@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 076/103] sh_eth: check sh_eth_cpu_data::dual_port when dumping registers
-Date:   Wed, 22 Jan 2020 10:29:32 +0100
-Message-Id: <20200122092814.474879428@linuxfoundation.org>
+Subject: [PATCH 4.19 077/103] mlxsw: spectrum: Wipe xstats.backlog of down ports
+Date:   Wed, 22 Jan 2020 10:29:33 +0100
+Message-Id: <20200122092814.569278040@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
 References: <20200122092803.587683021@linuxfoundation.org>
@@ -60,70 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+From: Petr Machata <petrm@mellanox.com>
 
-commit 3249b1e442a1be1a6b9f1026785b519d1443f807 upstream.
+commit ca7609ff3680c51d6c29897f3117aa2ad904f92a upstream.
 
-When adding the sh_eth_cpu_data::dual_port flag I forgot to add the flag
-checks to __sh_eth_get_regs(), causing the non-existing TSU registers to
-be dumped by 'ethtool' on the single port Ether controllers having TSU...
+Per-port counter cache used by Qdiscs is updated periodically, unless the
+port is down. The fact that the cache is not updated for down ports is no
+problem for most counters, which are relative in nature. However, backlog
+is absolute in nature, and if there is a non-zero value in the cache around
+the time that the port goes down, that value just stays there. This value
+then leaks to offloaded Qdiscs that report non-zero backlog even if
+there (obviously) is no traffic.
 
-Fixes: a94cf2a614f8 ("sh_eth: fix TSU init on SH7734/R8A7740")
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+The HW does not keep backlog of a downed port, so do likewise: as the port
+goes down, wipe the backlog value from xstats.
+
+Fixes: 075ab8adaf4e ("mlxsw: spectrum: Collect tclass related stats periodically")
+Signed-off-by: Petr Machata <petrm@mellanox.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/renesas/sh_eth.c |   38 ++++++++++++++++++----------------
- 1 file changed, 21 insertions(+), 17 deletions(-)
+ drivers/net/ethernet/mellanox/mlxsw/spectrum.c |   13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
---- a/drivers/net/ethernet/renesas/sh_eth.c
-+++ b/drivers/net/ethernet/renesas/sh_eth.c
-@@ -2184,24 +2184,28 @@ static size_t __sh_eth_get_regs(struct n
- 	if (cd->tsu) {
- 		add_tsu_reg(ARSTR);
- 		add_tsu_reg(TSU_CTRST);
--		add_tsu_reg(TSU_FWEN0);
--		add_tsu_reg(TSU_FWEN1);
--		add_tsu_reg(TSU_FCM);
--		add_tsu_reg(TSU_BSYSL0);
--		add_tsu_reg(TSU_BSYSL1);
--		add_tsu_reg(TSU_PRISL0);
--		add_tsu_reg(TSU_PRISL1);
--		add_tsu_reg(TSU_FWSL0);
--		add_tsu_reg(TSU_FWSL1);
-+		if (cd->dual_port) {
-+			add_tsu_reg(TSU_FWEN0);
-+			add_tsu_reg(TSU_FWEN1);
-+			add_tsu_reg(TSU_FCM);
-+			add_tsu_reg(TSU_BSYSL0);
-+			add_tsu_reg(TSU_BSYSL1);
-+			add_tsu_reg(TSU_PRISL0);
-+			add_tsu_reg(TSU_PRISL1);
-+			add_tsu_reg(TSU_FWSL0);
-+			add_tsu_reg(TSU_FWSL1);
-+		}
- 		add_tsu_reg(TSU_FWSLC);
--		add_tsu_reg(TSU_QTAGM0);
--		add_tsu_reg(TSU_QTAGM1);
--		add_tsu_reg(TSU_FWSR);
--		add_tsu_reg(TSU_FWINMK);
--		add_tsu_reg(TSU_ADQT0);
--		add_tsu_reg(TSU_ADQT1);
--		add_tsu_reg(TSU_VTAG0);
--		add_tsu_reg(TSU_VTAG1);
-+		if (cd->dual_port) {
-+			add_tsu_reg(TSU_QTAGM0);
-+			add_tsu_reg(TSU_QTAGM1);
-+			add_tsu_reg(TSU_FWSR);
-+			add_tsu_reg(TSU_FWINMK);
-+			add_tsu_reg(TSU_ADQT0);
-+			add_tsu_reg(TSU_ADQT1);
-+			add_tsu_reg(TSU_VTAG0);
-+			add_tsu_reg(TSU_VTAG1);
-+		}
- 		add_tsu_reg(TSU_ADSBSY);
- 		add_tsu_reg(TSU_TEN);
- 		add_tsu_reg(TSU_POST1);
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
+@@ -1061,6 +1061,9 @@ static void update_stats_cache(struct wo
+ 			     periodic_hw_stats.update_dw.work);
+ 
+ 	if (!netif_carrier_ok(mlxsw_sp_port->dev))
++		/* Note: mlxsw_sp_port_down_wipe_counters() clears the cache as
++		 * necessary when port goes down.
++		 */
+ 		goto out;
+ 
+ 	mlxsw_sp_port_get_hw_stats(mlxsw_sp_port->dev,
+@@ -3309,6 +3312,15 @@ static int mlxsw_sp_port_unsplit(struct
+ 	return 0;
+ }
+ 
++static void
++mlxsw_sp_port_down_wipe_counters(struct mlxsw_sp_port *mlxsw_sp_port)
++{
++	int i;
++
++	for (i = 0; i < TC_MAX_QUEUE; i++)
++		mlxsw_sp_port->periodic_hw_stats.xstats.backlog[i] = 0;
++}
++
+ static void mlxsw_sp_pude_event_func(const struct mlxsw_reg_info *reg,
+ 				     char *pude_pl, void *priv)
+ {
+@@ -3329,6 +3341,7 @@ static void mlxsw_sp_pude_event_func(con
+ 	} else {
+ 		netdev_info(mlxsw_sp_port->dev, "link down\n");
+ 		netif_carrier_off(mlxsw_sp_port->dev);
++		mlxsw_sp_port_down_wipe_counters(mlxsw_sp_port);
+ 	}
+ }
+ 
 
 
