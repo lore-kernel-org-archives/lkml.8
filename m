@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B8A3C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:34:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75713C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:34:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D31862467E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:34:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4272224684
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:34:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685689;
-	bh=J2Uu6xeW8tRMtlFYFag5dwkPExafMGRmGM8omqTSyzI=;
+	s=default; t=1579685691;
+	bh=+tfowM56d529tSJZCY+qyjff7J3tbKRV2/lY2FRxQyM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vj9YKyodscSmRX+Kn/5TVwiZlzSzbb1e9/hdRgwI8Ojz8zWCljD5LEXGIe0N1l5N7
-	 /FpeUi91BbCWh3Ewe/60+256jzU24WB2xAB+W3QK8M0KzzmDkg/xFqkwJsR6rTbyog
-	 sKRg53mpoCmKBb3r29Dh9MaQn1FqhVq5eTJFp8hA=
+	b=wR6ksyytk2Cg0aKCblwFnWrwR3hWqJ1JM2dBw4d1VgX9fjw4u6yB9YtSCg+ypUrsy
+	 aCo5fCuQu7GJSAN2+SrjKNNnl1pFxuAs1qqaprDTYL5NYbtmatM/5+R3QZfi9XiHQq
+	 OwHSnqQpgNG5OBGbvQ/6uzfsHmdNQcnBJREM26a8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731007AbgAVJet (ORCPT
+        id S1731029AbgAVJeu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:34:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49418 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:34:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730989AbgAVJep (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:34:45 -0500
+        id S1730040AbgAVJes (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:34:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C332024672;
-        Wed, 22 Jan 2020 09:34:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4282E2467B;
+        Wed, 22 Jan 2020 09:34:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685685;
-        bh=J2Uu6xeW8tRMtlFYFag5dwkPExafMGRmGM8omqTSyzI=;
+        s=default; t=1579685687;
+        bh=+tfowM56d529tSJZCY+qyjff7J3tbKRV2/lY2FRxQyM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r54mBELV0iC6zfyIx8MxPYxQJz2SoAh7tR+qN51D1dXWQCIt7lHCLbyjxmQY0QbXm
-         /NayGtrTzUACskvO1yFoiPHpIi/vAbFE++aMsXUHekQaPPwPwfAW4/dnej7pop9lym
-         wwQd7HQGhy+S616ib7unudZ9S4qQmxXw1bshdvrY=
+        b=LIwGQ3M7U34xkJ2H/tauZcXEh9NKACZIolLl/NWLGzggtXlWRbw+Yan7lgAg5Qpi5
+         oD78UTbwB92ibN3EhfgcOq7uh8mFhxuklFnGZ4XteGOalQJUwTVLJQPpnVt/tgY5HQ
+         qMfogaOIvSGFlJV1MKXqNc71/x0hiWeDzR/6iUvQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: [PATCH 4.9 37/97] media: exynos4-is: Fix recursive locking in isp_video_release()
-Date:   Wed, 22 Jan 2020 10:28:41 +0100
-Message-Id: <20200122092802.518015494@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>
+Subject: [PATCH 4.9 38/97] mtd: spi-nor: fix silent truncation in spi_nor_read()
+Date:   Wed, 22 Jan 2020 10:28:42 +0100
+Message-Id: <20200122092802.705653073@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092755.678349497@linuxfoundation.org>
 References: <20200122092755.678349497@linuxfoundation.org>
@@ -61,36 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Seung-Woo Kim <sw0312.kim@samsung.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-commit 704c6c80fb471d1bb0ef0d61a94617d1d55743cd upstream.
+commit a719a75a7761e4139dd099330d9fe3589d844f9b upstream.
 
->From isp_video_release(), &isp->video_lock is held and subsequent
-vb2_fop_release() tries to lock vdev->lock which is same with the
-previous one. Replace vb2_fop_release() with _vb2_fop_release() to
-fix the recursive locking.
+spi_nor_read() assigns the result of 'ssize_t spi_nor_read_data()'
+to the 'int ret' variable, while 'ssize_t' is a 64-bit type and *int*
+is a 32-bit type on the 64-bit machines. This silent truncation isn't
+really valid, so fix up the variable's type.
 
-Fixes: 1380f5754cb0 ("[media] videobuf2: Add missing lock held on vb2_fop_release")
-Signed-off-by: Seung-Woo Kim <sw0312.kim@samsung.com>
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+Fixes: 59451e1233bd ("mtd: spi-nor: change return value of read/write")
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/platform/exynos4-is/fimc-isp-video.c |    2 +-
+ drivers/mtd/spi-nor/spi-nor.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/media/platform/exynos4-is/fimc-isp-video.c
-+++ b/drivers/media/platform/exynos4-is/fimc-isp-video.c
-@@ -316,7 +316,7 @@ static int isp_video_release(struct file
- 		ivc->streaming = 0;
- 	}
+--- a/drivers/mtd/spi-nor/spi-nor.c
++++ b/drivers/mtd/spi-nor/spi-nor.c
+@@ -1046,7 +1046,7 @@ static int spi_nor_read(struct mtd_info
+ 			size_t *retlen, u_char *buf)
+ {
+ 	struct spi_nor *nor = mtd_to_spi_nor(mtd);
+-	int ret;
++	ssize_t ret;
  
--	vb2_fop_release(file);
-+	_vb2_fop_release(file, NULL);
+ 	dev_dbg(nor->dev, "from 0x%08x, len %zd\n", (u32)from, len);
  
- 	if (v4l2_fh_is_singular_file(file)) {
- 		fimc_pipeline_call(&ivc->ve, close);
 
 
