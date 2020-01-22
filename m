@@ -2,85 +2,126 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 318CDC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 17:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C59C9C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 17:09:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01A782253D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 17:08:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9366C24656
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 17:09:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="gYO0beO9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lpFA08sr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727893AbgAVRIu (ORCPT
+        id S1729017AbgAVRJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 12:08:50 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:44304 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725802AbgAVRIt (ORCPT
+        Wed, 22 Jan 2020 12:09:50 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:39942 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725802AbgAVRJu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 12:08:49 -0500
-Received: by mail-qk1-f193.google.com with SMTP id v195so382982qkb.11
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 09:08:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=Ti+XLiigPGJrnCx1UGw3YWjZIkauoRbqzr6I8agOXYg=;
-        b=gYO0beO9qr8Hj+zrQ3WQNAEEYfW6hrtkuOgoZZwbJZa0QMvsQZ9rym+MAb5p5utu4A
-         j8O1iPlr0K5ggWcsfoktkcGNdiFMHgGvfZguKeIYhmHWxwOAUmHyIJ1u8VZcg8pSlg52
-         mW8Awb7ub6LgQ4Z4lbzjzOScxsSmvsihpJF0uenoMMPrWTXDdowQM2O9nfqGUOtWy9mn
-         qaL+QEW82WcLovhCCR71xj2Hd7p1zrWL/y5Hwrj2oWSVCG0K82GQLKC0A2LSO3A/nbnu
-         XysoVNRNNdpen0Q9gO72e+sa2xIJNZb0+Gx/ldnR0128BoKlmOciAIEqy2tsauX0jnq0
-         GzNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=Ti+XLiigPGJrnCx1UGw3YWjZIkauoRbqzr6I8agOXYg=;
-        b=Yoiz+mXc2bZUEuMgATewi35eY+mJXHNxLiAfPtQZz11txUKZkfI782k8E4wIVVTSSN
-         6gWgQ9Ue3EctSjifMflD9irW44PwodJpDgxDv9lX0YdWa3lkuTs8vFn5bUY3onO1CuZS
-         9cn7ogXu0qJFzXVSHClwv7m7XZoB7WD5+SW/YVNh6sO8An8ABXzGirPT9iZYbIT7qGkb
-         LcAzQ053y5L+M10BXoLLSBwSxhZhdKpUH7KZGmgYOnrR7iGURCYSh88Lo9cJvftun40s
-         R7+5lKe+M1Le1JNady+Ty4oMYqOxWwz9u1dQ4aL2oz3voHDoFbZ2SF0ia+4HRE/fIITQ
-         uELA==
-X-Gm-Message-State: APjAAAUltGhGFDPjQCOc4D+usoB/TKr0Djio+7zZ7FbTmnNr+Ez5SiCF
-        rTgMS+2rGXKeiFyBVCTtBCRrsA==
-X-Google-Smtp-Source: APXvYqzND5RoFARXrHSbToItbCBzdJPPWIjcuF0uWwO4L/gSnAUDmKtHepOzn0mEsvpWnNo2JgFIIA==
-X-Received: by 2002:a05:620a:2010:: with SMTP id c16mr10594941qka.386.1579712928569;
-        Wed, 22 Jan 2020 09:08:48 -0800 (PST)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id j15sm2026903qtk.48.2020.01.22.09.08.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Jan 2020 09:08:47 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] locking/osq_lock: fix a data race in osq_wait_next
-Date:   Wed, 22 Jan 2020 12:08:47 -0500
-Message-Id: <A5114711-B8DE-48DA-AFD0-62128AC08270@lca.pw>
-References: <20200122165938.GA16974@willie-the-truck>
-Cc:     mingo@redhat.com, peterz@infradead.org, elver@google.com,
+        Wed, 22 Jan 2020 12:09:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=H41vAC6tCQoCgyqVrd/aoqOng0EACXvJHnhie2BBbxs=; b=lpFA08srx/a08vn7Z2cOK+dBm
+        B4hCoXMx/GECzcK00sFT21MD4rAVwG9MQ9GgrArzAWDlCkj0FqAibxVZxE1ejC0lqa65GIvVDSb69
+        8Rw+bzy7teRrJsv5W4ZqaJIoup5yWeLBo2x8fwrDB/+bIkc4TPgjhca1SNFnSmhiZxX3qI7F8yrK3
+        lqt91rEduGnbLYZ024dgyUicOERWp1S+k29iztYhnX7eqRvhBZElJvLIEy8c0entD16/XuRcZ8+8v
+        2xCDCqCNdO3AyxQPyV4krFYi3oJnZvGIe9I5NLlW1NlVm2LIhqB2t2sVzO2ycUUYRBEzlwjzw5iWU
+        82442y+hQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iuJVi-0005pY-R8; Wed, 22 Jan 2020 17:09:47 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3F84E30067C;
+        Wed, 22 Jan 2020 18:08:05 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E0E192B7249AA; Wed, 22 Jan 2020 18:09:44 +0100 (CET)
+Date:   Wed, 22 Jan 2020 18:09:44 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     mingo@redhat.com, will@kernel.org, elver@google.com,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20200122165938.GA16974@willie-the-truck>
-To:     Will Deacon <will@kernel.org>
-X-Mailer: iPhone Mail (17C54)
+Subject: Re: [PATCH] locking/osq_lock: fix a data race in osq_wait_next
+Message-ID: <20200122170944.GZ14879@hirez.programming.kicks-ass.net>
+References: <20200122163857.4605-1-cai@lca.pw>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200122163857.4605-1-cai@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jan 22, 2020 at 11:38:57AM -0500, Qian Cai wrote:
+> KCSAN complains,
+> 
+>  write (marked) to 0xffff941ca3b3be00 of 8 bytes by task 670 on cpu 6:
+>   osq_lock+0x24c/0x340
+>   __mutex_lock+0x277/0xd20
+>   mutex_lock_nested+0x31/0x40
+>   memcg_create_kmem_cache+0x2e/0x190
+>   memcg_kmem_cache_create_func+0x40/0x80
+>   process_one_work+0x54c/0xbe0
+>   worker_thread+0x80/0x650
+>   kthread+0x1e0/0x200
+>   ret_from_fork+0x27/0x50
+> 
+>  read to 0xffff941ca3b3be00 of 8 bytes by task 703 on cpu 44:
+>   osq_lock+0x18e/0x340
+>   __mutex_lock+0x277/0xd20
+>   mutex_lock_nested+0x31/0x40
+>   memcg_create_kmem_cache+0x2e/0x190
+>   memcg_kmem_cache_create_func+0x40/0x80
+>   process_one_work+0x54c/0xbe0
+>   worker_thread+0x80/0x650
+>   kthread+0x1e0/0x200
+>   ret_from_fork+0x27/0x50
 
+That's useless gibberish, at the very least run it through some decode
+so we get line numbers.
 
-> On Jan 22, 2020, at 11:59 AM, Will Deacon <will@kernel.org> wrote:
->=20
-> I don't understand this; 'next' is a local variable.
->=20
-> Not keen on the onslaught of random "add a READ_ONCE() to shut the
-> sanitiser up" patches we're going to get from kcsan :(
+> which points to those lines in osq_wait_next(),
+> 
+>   next = xchg(&node->next, NULL);
+>   if (next)
+> 	break;
+> 
+> Since only the read is outside of critical sections, fixed it by adding
+> a READ_ONCE().
 
-My fault. I suspect it is node->next. I=E2=80=99ll do a bit more testing to c=
-onfirm.=
+What?!?! Did you actually read what you wrote?
+
+Also, you have to stop calling things fixes unless you can prove (and
+explain) there is an actual problem.
+
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+>  kernel/locking/osq_lock.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/locking/osq_lock.c b/kernel/locking/osq_lock.c
+> index 6ef600aa0f47..8f565165019a 100644
+> --- a/kernel/locking/osq_lock.c
+> +++ b/kernel/locking/osq_lock.c
+> @@ -77,7 +77,7 @@ osq_wait_next(struct optimistic_spin_queue *lock,
+>  		 */
+>  		if (node->next) {
+>  			next = xchg(&node->next, NULL);
+> -			if (next)
+> +			if (READ_ONCE(next))
+>  				break;
+>  		}
+>  
+
+This seems to suggest you ought to maybe brush up on your C skills.
