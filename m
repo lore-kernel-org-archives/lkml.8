@@ -2,115 +2,172 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C23C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 21:41:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E31C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 21:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A95CE2465A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 21:41:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEEAB24676
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 21:42:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Uy+ZTjJf"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Nu8qszLT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728978AbgAVVlG (ORCPT
+        id S1729096AbgAVVmf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 16:41:06 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:40344 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725924AbgAVVlF (ORCPT
+        Wed, 22 Jan 2020 16:42:35 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54700 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725943AbgAVVme (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 16:41:05 -0500
-Received: by mail-ot1-f68.google.com with SMTP id w21so771290otj.7
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 13:41:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qOzfGqLG1EaX/BWFSgUwOINS0Jq9ooncgkzx4R9Fkjs=;
-        b=Uy+ZTjJfUlZLEz9nBqJA+AJ5BgXd3gd9QKk3PWvXePIqFK+wVr304OtF1bJDyP2N7g
-         mS7cLdycg8D73Dp03VE3E7oDA3DYW3pNzAZ1yx241PRvXI3pE3DtGl8nplDnFzl4YUFr
-         LcruTZ1svCVSRyH3T74SE6O2PMp9S3dooiQq5KivdjnFqIctU1uarYLle986EgnqUzb0
-         bc1JZCPNUvlyWEqBlM5Bz4eheeVNabuK8ZAELah3ChGuDRMORFJL3S52sJHiVc+HakJj
-         Y0C4jtiflOEdNn84T0us+pv/W2wsUGxcuq+DH/aNBJaG4MihkgPIMUkexpaEWku4D+OP
-         sPPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qOzfGqLG1EaX/BWFSgUwOINS0Jq9ooncgkzx4R9Fkjs=;
-        b=N3+tQTOHwqPEcEyhn/0ZlPxJ/1pfVLBWaDGhY7RAJwxOt91WLt+Rfa4rW0ohi+ixZl
-         yeuKeKDLWwJhkOEpKlYC4106tvRsUrBviLyj1bjCkdI2gXdmfzbOqrkigeZvlkmO6TM/
-         UhUuebtEvxO79tmALS81AT1yuxiRd0Xni+T7V5w5Je9oFfde7ySgCQhmKN+xu37GWs1x
-         McStbehbusCHOXC3U/Jj//gW0gMzZyDkmw1XXjHhLXhCjm50ayXGi4kRCYv0tCGreP8Z
-         BqgXMI6faSU8V4VHl73VyrY8Ta6msOANpo8TdfnDtwfRIyAb5OIthN+rJuJ7ct/bOmgk
-         GPGg==
-X-Gm-Message-State: APjAAAV4cbzIogqRJwNcTXDzlUBLdsUH2Ru4lMBcgjZ8/dfdcOSGqHo9
-        IU+MnYM/BiFKxvs0IROK8PBo7Y61kqaEr5qvlarMBw==
-X-Google-Smtp-Source: APXvYqwxp52P8zgMm37e71Q9sRyxqMixiN3l7LI9gB48YlOY70kKTaPjXcqibQ1mgc8A1BHkogOu17hYZ4cpUJn8mkc=
-X-Received: by 2002:a9d:518b:: with SMTP id y11mr8491975otg.349.1579729264223;
- Wed, 22 Jan 2020 13:41:04 -0800 (PST)
-MIME-Version: 1.0
-References: <20191217231615.164161-1-almasrymina@google.com>
- <20191217231615.164161-3-almasrymina@google.com> <dec1ccd5-5973-c498-f2fe-390c1c51b2d0@oracle.com>
- <CAHS8izMzXpNMCmFh_SD7n+4+rj3QTqyRfeWQyXAhFo1-qV4iEQ@mail.gmail.com> <0ea993b0-af18-cee8-527e-f6df7e76b0be@oracle.com>
-In-Reply-To: <0ea993b0-af18-cee8-527e-f6df7e76b0be@oracle.com>
-From:   Mina Almasry <almasrymina@google.com>
-Date:   Wed, 22 Jan 2020 13:40:53 -0800
-Message-ID: <CAHS8izOj7s+UnMvGzFAC6ympjfxvxybQk7Z_BVRyjj3Z4a1q+Q@mail.gmail.com>
-Subject: Re: [PATCH v9 3/8] hugetlb_cgroup: add reservation accounting for
- private mappings
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     shuah <shuah@kernel.org>, David Rientjes <rientjes@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Greg Thelen <gthelen@google.com>,
+        Wed, 22 Jan 2020 16:42:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579729350;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9sq0QraWPDpkXsBf/Rma/gL22oexCpF9Izn7HjkCvoE=;
+        b=Nu8qszLTbEOgl/zsGpU/d32La/LFsij8iSx6K27EEpPyrQYFYnvv/XKQrdrVvpOWBPvD6i
+        IydPZ3WeeU30YmwTd6cEWBKEMsVQyhkIG1I7tfvcvPA6wMJv+cQjbk3FGofsNj2oIQX/Qs
+        JAV8H9xEJ6XxgsUESxHnaPf2pWIJDSY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-25-6Rm_4Rr4NsuN0Tp4M90w4g-1; Wed, 22 Jan 2020 16:42:26 -0500
+X-MC-Unique: 6Rm_4Rr4NsuN0Tp4M90w4g-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3694918C8C04;
+        Wed, 22 Jan 2020 21:42:25 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-49.rdu2.redhat.com [10.10.120.49])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8EE9F1001B11;
+        Wed, 22 Jan 2020 21:42:23 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20200122193306.GB4675@bombadil.infradead.org>
+References: <20200122193306.GB4675@bombadil.infradead.org> <3577430.1579705075@warthog.procyon.org.uk>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     dhowells@redhat.com, Alexander Viro <viro@zeniv.linux.org.uk>,
         Andrew Morton <akpm@linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org,
-        Aneesh Kumar <aneesh.kumar@linux.vnet.ibm.com>,
-        =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
-        Hillf Danton <hdanton@sina.com>
-Content-Type: text/plain; charset="UTF-8"
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC][PATCH] iov_iter: Add ITER_MAPPING
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3695538.1579729342.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Wed, 22 Jan 2020 21:42:22 +0000
+Message-ID: <3695539.1579729342@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 2:09 PM Mike Kravetz <mike.kravetz@oracle.com> wrote:
->
-> On 1/14/20 2:52 PM, Mina Almasry wrote:
-> > On Mon, Jan 13, 2020 at 4:55 PM Mike Kravetz <mike.kravetz@oracle.com> wrote:
-> >>> +#ifdef CONFIG_CGROUP_HUGETLB
-> >>> +     /*
-> >>> +      * Since we check for HPAGE_RESV_OWNER above, this must a private
-> >>> +      * mapping, and these values should be none-zero, and should point to
-> >>> +      * the hugetlb_cgroup counter to uncharge for this reservation.
-> >>> +      */
-> >>> +     WARN_ON(!resv->reservation_counter);
-> >>> +     WARN_ON(!resv->pages_per_hpage);
-> >>> +     WARN_ON(!resv->css);
-> >>
-> >> I was once again wondering if these were always non-NULL for private mappings.
-> >> It seems that reservation_counter (h_gc) would be NULL in these cases from
-> >> these early checks in hugetlb_cgroup_charge_cgroup().
-> >>
-> >
-> > You are right. I'm fixing in v10 the code and comments to account for
-> > h_cg potentially being NULL, but I'm having trouble testing. Looking
-> > at the code, I'm a bit confused by the checks. Seems to me
-> > hugetlb_cgroup_disabled() is the same as #ifdef CONFIG_CGROUP_HUGETLB;
-> > I can't find a way to enable the Kconfig but have that return false
-> > unless I hack the code.
->
-> What about the boot options?
->
-> cgroup_disable=
-> cgroup_no_v1=
+Matthew Wilcox <willy@infradead.org> wrote:
 
-Thanks, cgroup_disable=hugetlb does it. I ran the the libhugetlbfs
-tests with patchset v10 and it passed, so it seems the latest version
-of the patch should be fine. Of course my hugetlb cgroup tests fail
-outright when hugetlb cgroups are disabled so those don't say anything
-useful.
+> =
+
+> > +	rcu_read_lock();						\
+> > +	for (page =3D xas_load(&xas); page; page =3D xas_next(&xas)) {	\
+> > +		if (xas_retry(&xas, page))				\
+> > +			continue;					\
+> > +		if (xa_is_value(page))					\
+> > +			break;						\
+> =
+
+> Do you also want to check for !page?  That would be a bug in the caller.
+
+Well, I stated that one of the preconditions for using this was that the
+caller made sure that segment of the mapping was fully populated, so the c=
+heck
+ought to be unnecessary.
+
+> > +		if (PageCompound(page))					\
+> > +			break;						\
+> =
+
+> It's perfectly legal to have compound pages in the page cache.  Call
+> find_subpage(page, xas.xa_index) unconditionally.
+
+Yeah, I'm just not sure how to deal with them.
+
+> > +		if (page_to_pgoff(page) !=3D xas.xa_index)		\
+> > +			break;						\
+> =
+
+> ... and you can ditch this if the pages are pinned as find_subpage()
+> will bug in this case.
+
+Ok.
+
+> > +		__v.bv_page =3D page;					\
+> > +		offset =3D (i->mapping_start + skip) & ~PAGE_MASK;	\
+> > +		seg =3D PAGE_SIZE - offset;			\
+> > +		__v.bv_offset =3D offset;				\
+> > +		__v.bv_len =3D min(n, seg);			\
+> > +		(void)(STEP);					\
+> > +		n -=3D __v.bv_len;				\
+> > +		skip +=3D __v.bv_len;				\
+> =
+
+> Do we want STEP to be called with PAGE_SIZE chunks, or if they have a
+> THP, can we have it called with larger than a PAGE_SIZE chunk?
+
+It would mean that the STEP function would have to handle multiple pages, =
+some
+part(s) of which might need to be ignored and wouldn't be able to simply c=
+all
+memcpy_from/to_page().
+
+> > +#define iterate_all_kinds(i, n, v, I, B, K, M) {		\
+> >  	if (likely(n)) {					\
+> >  		size_t skip =3D i->iov_offset;			\
+> >  		if (unlikely(i->type & ITER_BVEC)) {		\
+> > @@ -86,6 +119,9 @@
+> >  			struct kvec v;				\
+> >  			iterate_kvec(i, n, v, kvec, skip, (K))	\
+> >  		} else if (unlikely(i->type & ITER_DISCARD)) {	\
+> > +		} else if (unlikely(i->type & ITER_MAPPING)) {	\
+> > +			struct bio_vec v;			\
+> > +			iterate_mapping(i, n, v, skip, (M));	\
+> =
+
+> bio_vec?
+
+Yes - as a strictly temporary thing.  I need a struct contains a page poin=
+ter,
+a start and a length, and constructing a struct bio_vec on the fly here al=
+lows
+the caller to potentially share code.  For example:
+
+    size_t _copy_from_iter_nocache(void *addr, size_t bytes, struct iov_it=
+er *i)
+    {
+	char *to =3D addr;
+	if (unlikely(iov_iter_is_pipe(i))) {
+		WARN_ON(1);
+		return 0;
+	}
+	iterate_and_advance(i, bytes, v,
+		__copy_from_user_inatomic_nocache((to +=3D v.iov_len) - v.iov_len,
+					 v.iov_base, v.iov_len),
+		memcpy_from_page((to +=3D v.bv_len) - v.bv_len, v.bv_page,
+				 v.bv_offset, v.bv_len),
+ITER_BVEC ^^^^
+		memcpy((to +=3D v.iov_len) - v.iov_len, v.iov_base, v.iov_len),
+		memcpy_from_page((to +=3D v.bv_len) - v.bv_len, v.bv_page,
+				 v.bv_offset, v.bv_len)
+ITER_MAPPING ^^^^
+	)
+
+	return bytes;
+    }
+
+David
+
