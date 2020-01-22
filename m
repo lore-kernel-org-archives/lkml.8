@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D07C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29E60C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:19:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ADC1205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:19:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F399B2467A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:19:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579699151;
-	bh=sWI9vy28d3cPsQWZHNUBNc/BCrkQ3DbNbsXtE/jxrfA=;
+	s=default; t=1579699154;
+	bh=kgNi9qHfEk/Y5DK1tI9BT79jIxNoVU5JLcti2ui/KPE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CFXtmS2Dp/2cHYj8cZUVUrXtRb9jX9V9aJUIiWnDr3ePDMi3QuxRytvhGDOW5CPg3
-	 cNeW6FM/07XMfmsrVGZV12HjRCtIEX0gaPzjBObtd9BhVeX2/aNC5W1u9vlfY2OMrg
-	 pFpWbW2+LwrH7yWI90Xq/IksaNABmBsk6FwEkorM=
+	b=Zr7tZgZt3hNz8MYFruXAcvmQ3Ev7l1Or2GUWDwL+L5Zp9FaiZ2+kYPXl/bv7hmv9l
+	 cKGyjgD/iweqAOKaCt0uTOjLI3o/vGXrqUpe6SNf6Zd5AebRxRMvuXUNyoV56PL8IS
+	 i4OxjgRvOOW0m0xl2Vp0pabvWnukdEb1snQ9JGsI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729585AbgAVNTL (ORCPT
+        id S1726081AbgAVNTN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:19:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34902 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 08:19:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729236AbgAVNTG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:19:06 -0500
+        id S1729557AbgAVNTK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:19:10 -0500
 Received: from localhost (unknown [84.241.205.26])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1D6C20678;
-        Wed, 22 Jan 2020 13:19:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F2E924125;
+        Wed, 22 Jan 2020 13:19:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579699145;
-        bh=sWI9vy28d3cPsQWZHNUBNc/BCrkQ3DbNbsXtE/jxrfA=;
+        s=default; t=1579699148;
+        bh=kgNi9qHfEk/Y5DK1tI9BT79jIxNoVU5JLcti2ui/KPE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WtgG57ZlhiKZ7oIzAoWnA4Lkc//W+lIMORCQBKgP9CQY0qNKI63n/SVTlvl/7k2pz
-         QZngmZQLsXAsXR+IWF0rD4mC6lFAwvUqMnspWhbf18RfjjUtqXGsLiNpJiz//C4wWe
-         bIUVh97/V8J8eraQn+y7gCyQhaHz9yG4fyxuugSo=
+        b=jGxA3j+iHTpMG6VkC+v5k5QNN8J1ZCO0TMcEPNQWxH/TV+TKgCGb5V+0MbjBE6QEG
+         qVrGAAIqDDLl0G0GutdjQU/uR0YhaarwnK7xWCp7xE/olglodJ1tvuiOc9416bf9Nt
+         obUrAOkr+B+CwLk1bMswXjrEtuEQF9On3uvDsusk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Spencer E. Olson" <olsonse@umich.edu>,
-        Ian Abbott <abbotti@mev.co.uk>
-Subject: [PATCH 5.4 054/222] staging: comedi: ni_routes: allow partial routing information
-Date:   Wed, 22 Jan 2020 10:27:20 +0100
-Message-Id: <20200122092837.502758644@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.4 055/222] scsi: fnic: fix invalid stack access
+Date:   Wed, 22 Jan 2020 10:27:21 +0100
+Message-Id: <20200122092837.588744767@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
 References: <20200122092833.339495161@linuxfoundation.org>
@@ -59,86 +59,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Abbott <abbotti@mev.co.uk>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit 9fea3a40f6b07de977a2783270c8c3bc82544d45 upstream.
+commit 42ec15ceaea74b5f7a621fc6686cbf69ca66c4cf upstream.
 
-This patch fixes a regression on setting up asynchronous commands to use
-external trigger sources when board-specific routing information is
-missing.
+gcc -O3 warns that some local variables are not properly initialized:
 
-`ni_find_device_routes()` (called via `ni_assign_device_routes()`) finds
-the table of register values for the device family and the set of valid
-routes for the specific board.  If both are found,
-`tables->route_values` is set to point to the table of register values
-for the device family and `tables->valid_routes` is set to point to the
-list of valid routes for the specific board.  If either is not found,
-both `tables->route_values` and `tables->valid_routes` are left set at
-their initial null values (initialized by `ni_assign_device_routes()`)
-and the function returns `-ENODATA`.
+drivers/scsi/fnic/vnic_dev.c: In function 'fnic_dev_hang_notify':
+drivers/scsi/fnic/vnic_dev.c:511:16: error: 'a0' is used uninitialized in this function [-Werror=uninitialized]
+  vdev->args[0] = *a0;
+  ~~~~~~~~~~~~~~^~~~~
+drivers/scsi/fnic/vnic_dev.c:691:6: note: 'a0' was declared here
+  u64 a0, a1;
+      ^~
+drivers/scsi/fnic/vnic_dev.c:512:16: error: 'a1' is used uninitialized in this function [-Werror=uninitialized]
+  vdev->args[1] = *a1;
+  ~~~~~~~~~~~~~~^~~~~
+drivers/scsi/fnic/vnic_dev.c:691:10: note: 'a1' was declared here
+  u64 a0, a1;
+          ^~
+drivers/scsi/fnic/vnic_dev.c: In function 'fnic_dev_mac_addr':
+drivers/scsi/fnic/vnic_dev.c:512:16: error: 'a1' is used uninitialized in this function [-Werror=uninitialized]
+  vdev->args[1] = *a1;
+  ~~~~~~~~~~~~~~^~~~~
+drivers/scsi/fnic/vnic_dev.c:698:10: note: 'a1' was declared here
+  u64 a0, a1;
+          ^~
 
-Returning an error results in some routing functionality being disabled.
-Unfortunately, leaving `table->route_values` set to `NULL` also breaks
-the setting up of asynchronous commands that are configured to use
-external trigger sources.  Calls to `ni_check_trigger_arg()` or
-`ni_check_trigger_arg_roffs()` while checking the asynchronous command
-set-up would result in a null pointer dereference if
-`table->route_values` is `NULL`.  The null pointer dereference is fixed
-in another patch, but it now results in failure to set up the
-asynchronous command.  That is a regression from the behavior prior to
-commit 347e244884c3 ("staging: comedi: tio: implement global tio/ctr
-routing") and commit 56d0b826d39f ("staging: comedi: ni_mio_common:
-implement new routing for TRIG_EXT").
+Apparently the code relies on the local variables occupying adjacent memory
+locations in the same order, but this is of course not guaranteed.
 
-Change `ni_find_device_routes()` to set `tables->route_values` and/or
-`tables->valid_routes` to valid information even if the other one can
-only be set to `NULL` due to missing information.  The function will
-still return an error in that case.  This should result in
-`tables->valid_routes` being valid for all currently supported device
-families even if the board-specific routing information is missing.
-That should be enough to fix the regression on setting up asynchronous
-commands to use external triggers for boards with missing routing
-information.
+Use an array of two u64 variables where needed to make it work correctly.
 
-Fixes: 347e244884c3 ("staging: comedi: tio: implement global tio/ctr routing")
-Fixes: 56d0b826d39f ("staging: comedi: ni_mio_common: implement new routing for TRIG_EXT").
-Cc: <stable@vger.kernel.org> # 4.20+
-Cc: Spencer E. Olson <olsonse@umich.edu>
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
-Link: https://lore.kernel.org/r/20200114182532.132058-3-abbotti@mev.co.uk
+I suspect there is also an endianness bug here, but have not digged in deep
+enough to be sure.
+
+Fixes: 5df6d737dd4b ("[SCSI] fnic: Add new Cisco PCI-Express FCoE HBA")
+Fixes: mmtom ("init/Kconfig: enable -O3 for all arches")
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200107201602.4096790-1-arnd@arndb.de
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/comedi/drivers/ni_routes.c |    9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ drivers/scsi/fnic/vnic_dev.c |   20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
---- a/drivers/staging/comedi/drivers/ni_routes.c
-+++ b/drivers/staging/comedi/drivers/ni_routes.c
-@@ -74,9 +74,6 @@ static int ni_find_device_routes(const c
- 		}
- 	}
+--- a/drivers/scsi/fnic/vnic_dev.c
++++ b/drivers/scsi/fnic/vnic_dev.c
+@@ -688,26 +688,26 @@ int vnic_dev_soft_reset_done(struct vnic
  
--	if (!rv)
--		return -ENODATA;
--
- 	/* Second, find the set of routes valid for this device. */
- 	for (i = 0; ni_device_routes_list[i]; ++i) {
- 		if (memcmp(ni_device_routes_list[i]->device, board_name,
-@@ -86,12 +83,12 @@ static int ni_find_device_routes(const c
- 		}
- 	}
- 
--	if (!dr)
--		return -ENODATA;
--
- 	tables->route_values = rv;
- 	tables->valid_routes = dr;
- 
-+	if (!rv || !dr)
-+		return -ENODATA;
-+
- 	return 0;
+ int vnic_dev_hang_notify(struct vnic_dev *vdev)
+ {
+-	u64 a0, a1;
++	u64 a0 = 0, a1 = 0;
+ 	int wait = 1000;
+ 	return vnic_dev_cmd(vdev, CMD_HANG_NOTIFY, &a0, &a1, wait);
  }
  
+ int vnic_dev_mac_addr(struct vnic_dev *vdev, u8 *mac_addr)
+ {
+-	u64 a0, a1;
++	u64 a[2] = {};
+ 	int wait = 1000;
+ 	int err, i;
+ 
+ 	for (i = 0; i < ETH_ALEN; i++)
+ 		mac_addr[i] = 0;
+ 
+-	err = vnic_dev_cmd(vdev, CMD_MAC_ADDR, &a0, &a1, wait);
++	err = vnic_dev_cmd(vdev, CMD_MAC_ADDR, &a[0], &a[1], wait);
+ 	if (err)
+ 		return err;
+ 
+ 	for (i = 0; i < ETH_ALEN; i++)
+-		mac_addr[i] = ((u8 *)&a0)[i];
++		mac_addr[i] = ((u8 *)&a)[i];
+ 
+ 	return 0;
+ }
+@@ -732,30 +732,30 @@ void vnic_dev_packet_filter(struct vnic_
+ 
+ void vnic_dev_add_addr(struct vnic_dev *vdev, u8 *addr)
+ {
+-	u64 a0 = 0, a1 = 0;
++	u64 a[2] = {};
+ 	int wait = 1000;
+ 	int err;
+ 	int i;
+ 
+ 	for (i = 0; i < ETH_ALEN; i++)
+-		((u8 *)&a0)[i] = addr[i];
++		((u8 *)&a)[i] = addr[i];
+ 
+-	err = vnic_dev_cmd(vdev, CMD_ADDR_ADD, &a0, &a1, wait);
++	err = vnic_dev_cmd(vdev, CMD_ADDR_ADD, &a[0], &a[1], wait);
+ 	if (err)
+ 		pr_err("Can't add addr [%pM], %d\n", addr, err);
+ }
+ 
+ void vnic_dev_del_addr(struct vnic_dev *vdev, u8 *addr)
+ {
+-	u64 a0 = 0, a1 = 0;
++	u64 a[2] = {};
+ 	int wait = 1000;
+ 	int err;
+ 	int i;
+ 
+ 	for (i = 0; i < ETH_ALEN; i++)
+-		((u8 *)&a0)[i] = addr[i];
++		((u8 *)&a)[i] = addr[i];
+ 
+-	err = vnic_dev_cmd(vdev, CMD_ADDR_DEL, &a0, &a1, wait);
++	err = vnic_dev_cmd(vdev, CMD_ADDR_DEL, &a[0], &a[1], wait);
+ 	if (err)
+ 		pr_err("Can't del addr [%pM], %d\n", addr, err);
+ }
 
 
