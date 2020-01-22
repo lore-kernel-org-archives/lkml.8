@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29E60C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EEA1C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F399B2467A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:19:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2C7B24685
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:19:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579699154;
-	bh=kgNi9qHfEk/Y5DK1tI9BT79jIxNoVU5JLcti2ui/KPE=;
+	s=default; t=1579699158;
+	bh=GEEa6NR9HSN8e3D3Y87CI9rJvtYWBa01gAhwH1ADv00=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zr7tZgZt3hNz8MYFruXAcvmQ3Ev7l1Or2GUWDwL+L5Zp9FaiZ2+kYPXl/bv7hmv9l
-	 cKGyjgD/iweqAOKaCt0uTOjLI3o/vGXrqUpe6SNf6Zd5AebRxRMvuXUNyoV56PL8IS
-	 i4OxjgRvOOW0m0xl2Vp0pabvWnukdEb1snQ9JGsI=
+	b=r6z9jNjaaKezbhTJ09CtcW1n0MRJqLgHrAk2Z6NhBmCoZ0dx2wa0u7zNEZ0udLOpH
+	 m4VKc6eNZyw3WS0bUB4woayE5gE7w4/05uoN2o75wH0LxjbVYgBw9lDzX+IQgJcSvr
+	 B0tDw0l69R9Wfm5sBzBOiJEY29nIhodmgsbmA4R4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726081AbgAVNTN (ORCPT
+        id S1729629AbgAVNTR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:19:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34978 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 08:19:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729557AbgAVNTK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:19:10 -0500
+        id S1729605AbgAVNTQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:19:16 -0500
 Received: from localhost (unknown [84.241.205.26])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F2E924125;
-        Wed, 22 Jan 2020 13:19:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C28762467E;
+        Wed, 22 Jan 2020 13:19:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579699148;
-        bh=kgNi9qHfEk/Y5DK1tI9BT79jIxNoVU5JLcti2ui/KPE=;
+        s=default; t=1579699155;
+        bh=GEEa6NR9HSN8e3D3Y87CI9rJvtYWBa01gAhwH1ADv00=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jGxA3j+iHTpMG6VkC+v5k5QNN8J1ZCO0TMcEPNQWxH/TV+TKgCGb5V+0MbjBE6QEG
-         qVrGAAIqDDLl0G0GutdjQU/uR0YhaarwnK7xWCp7xE/olglodJ1tvuiOc9416bf9Nt
-         obUrAOkr+B+CwLk1bMswXjrEtuEQF9On3uvDsusk=
+        b=ucJ/yX716nbMbmxMjrv4R9U7///BMFxLVbv2AZkesNC0fg3ZfyEqgAIs6jR5P40Uj
+         yiyULHjNc9RsZ6ShcDxj0R5Suwftl0mC8tnAzHwHTT0B4twY1hegthNUEsbBHN0Aiu
+         P5sTtsxG8im5ayehYRiS+o5it/ZvKhSvhbcwIXRI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.4 055/222] scsi: fnic: fix invalid stack access
-Date:   Wed, 22 Jan 2020 10:27:21 +0100
-Message-Id: <20200122092837.588744767@linuxfoundation.org>
+        stable@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
+        Eric Paris <eparis@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Serge Hallyn <serge@hallyn.com>, Jann Horn <jannh@google.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH 5.4 057/222] ptrace: reintroduce usage of subjective credentials in ptrace_has_cap()
+Date:   Wed, 22 Jan 2020 10:27:23 +0100
+Message-Id: <20200122092837.771519475@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
 References: <20200122092833.339495161@linuxfoundation.org>
@@ -59,122 +62,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Christian Brauner <christian.brauner@ubuntu.com>
 
-commit 42ec15ceaea74b5f7a621fc6686cbf69ca66c4cf upstream.
+commit 6b3ad6649a4c75504edeba242d3fd36b3096a57f upstream.
 
-gcc -O3 warns that some local variables are not properly initialized:
+Commit 69f594a38967 ("ptrace: do not audit capability check when outputing /proc/pid/stat")
+introduced the ability to opt out of audit messages for accesses to various
+proc files since they are not violations of policy.  While doing so it
+somehow switched the check from ns_capable() to
+has_ns_capability{_noaudit}(). That means it switched from checking the
+subjective credentials of the task to using the objective credentials. This
+is wrong since. ptrace_has_cap() is currently only used in
+ptrace_may_access() And is used to check whether the calling task (subject)
+has the CAP_SYS_PTRACE capability in the provided user namespace to operate
+on the target task (object). According to the cred.h comments this would
+mean the subjective credentials of the calling task need to be used.
+This switches ptrace_has_cap() to use security_capable(). Because we only
+call ptrace_has_cap() in ptrace_may_access() and in there we already have a
+stable reference to the calling task's creds under rcu_read_lock() there's
+no need to go through another series of dereferences and rcu locking done
+in ns_capable{_noaudit}().
 
-drivers/scsi/fnic/vnic_dev.c: In function 'fnic_dev_hang_notify':
-drivers/scsi/fnic/vnic_dev.c:511:16: error: 'a0' is used uninitialized in this function [-Werror=uninitialized]
-  vdev->args[0] = *a0;
-  ~~~~~~~~~~~~~~^~~~~
-drivers/scsi/fnic/vnic_dev.c:691:6: note: 'a0' was declared here
-  u64 a0, a1;
-      ^~
-drivers/scsi/fnic/vnic_dev.c:512:16: error: 'a1' is used uninitialized in this function [-Werror=uninitialized]
-  vdev->args[1] = *a1;
-  ~~~~~~~~~~~~~~^~~~~
-drivers/scsi/fnic/vnic_dev.c:691:10: note: 'a1' was declared here
-  u64 a0, a1;
-          ^~
-drivers/scsi/fnic/vnic_dev.c: In function 'fnic_dev_mac_addr':
-drivers/scsi/fnic/vnic_dev.c:512:16: error: 'a1' is used uninitialized in this function [-Werror=uninitialized]
-  vdev->args[1] = *a1;
-  ~~~~~~~~~~~~~~^~~~~
-drivers/scsi/fnic/vnic_dev.c:698:10: note: 'a1' was declared here
-  u64 a0, a1;
-          ^~
+As one example where this might be particularly problematic, Jann pointed
+out that in combination with the upcoming IORING_OP_OPENAT feature, this
+bug might allow unprivileged users to bypass the capability checks while
+asynchronously opening files like /proc/*/mem, because the capability
+checks for this would be performed against kernel credentials.
 
-Apparently the code relies on the local variables occupying adjacent memory
-locations in the same order, but this is of course not guaranteed.
+To illustrate on the former point about this being exploitable: When
+io_uring creates a new context it records the subjective credentials of the
+caller. Later on, when it starts to do work it creates a kernel thread and
+registers a callback. The callback runs with kernel creds for
+ktask->real_cred and ktask->cred. To prevent this from becoming a
+full-blown 0-day io_uring will call override_cred() and override
+ktask->cred with the subjective credentials of the creator of the io_uring
+instance. With ptrace_has_cap() currently looking at ktask->real_cred this
+override will be ineffective and the caller will be able to open arbitray
+proc files as mentioned above.
+Luckily, this is currently not exploitable but will turn into a 0-day once
+IORING_OP_OPENAT{2} land in v5.6. Fix it now!
 
-Use an array of two u64 variables where needed to make it work correctly.
-
-I suspect there is also an endianness bug here, but have not digged in deep
-enough to be sure.
-
-Fixes: 5df6d737dd4b ("[SCSI] fnic: Add new Cisco PCI-Express FCoE HBA")
-Fixes: mmtom ("init/Kconfig: enable -O3 for all arches")
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Eric Paris <eparis@redhat.com>
 Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200107201602.4096790-1-arnd@arndb.de
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Serge Hallyn <serge@hallyn.com>
+Reviewed-by: Jann Horn <jannh@google.com>
+Fixes: 69f594a38967 ("ptrace: do not audit capability check when outputing /proc/pid/stat")
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/fnic/vnic_dev.c |   20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ kernel/ptrace.c |   15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
---- a/drivers/scsi/fnic/vnic_dev.c
-+++ b/drivers/scsi/fnic/vnic_dev.c
-@@ -688,26 +688,26 @@ int vnic_dev_soft_reset_done(struct vnic
- 
- int vnic_dev_hang_notify(struct vnic_dev *vdev)
- {
--	u64 a0, a1;
-+	u64 a0 = 0, a1 = 0;
- 	int wait = 1000;
- 	return vnic_dev_cmd(vdev, CMD_HANG_NOTIFY, &a0, &a1, wait);
+--- a/kernel/ptrace.c
++++ b/kernel/ptrace.c
+@@ -264,12 +264,17 @@ static int ptrace_check_attach(struct ta
+ 	return ret;
  }
  
- int vnic_dev_mac_addr(struct vnic_dev *vdev, u8 *mac_addr)
+-static int ptrace_has_cap(struct user_namespace *ns, unsigned int mode)
++static bool ptrace_has_cap(const struct cred *cred, struct user_namespace *ns,
++			   unsigned int mode)
  {
--	u64 a0, a1;
-+	u64 a[2] = {};
- 	int wait = 1000;
- 	int err, i;
- 
- 	for (i = 0; i < ETH_ALEN; i++)
- 		mac_addr[i] = 0;
- 
--	err = vnic_dev_cmd(vdev, CMD_MAC_ADDR, &a0, &a1, wait);
-+	err = vnic_dev_cmd(vdev, CMD_MAC_ADDR, &a[0], &a[1], wait);
- 	if (err)
- 		return err;
- 
- 	for (i = 0; i < ETH_ALEN; i++)
--		mac_addr[i] = ((u8 *)&a0)[i];
-+		mac_addr[i] = ((u8 *)&a)[i];
- 
- 	return 0;
- }
-@@ -732,30 +732,30 @@ void vnic_dev_packet_filter(struct vnic_
- 
- void vnic_dev_add_addr(struct vnic_dev *vdev, u8 *addr)
- {
--	u64 a0 = 0, a1 = 0;
-+	u64 a[2] = {};
- 	int wait = 1000;
- 	int err;
- 	int i;
- 
- 	for (i = 0; i < ETH_ALEN; i++)
--		((u8 *)&a0)[i] = addr[i];
-+		((u8 *)&a)[i] = addr[i];
- 
--	err = vnic_dev_cmd(vdev, CMD_ADDR_ADD, &a0, &a1, wait);
-+	err = vnic_dev_cmd(vdev, CMD_ADDR_ADD, &a[0], &a[1], wait);
- 	if (err)
- 		pr_err("Can't add addr [%pM], %d\n", addr, err);
++	int ret;
++
+ 	if (mode & PTRACE_MODE_NOAUDIT)
+-		return has_ns_capability_noaudit(current, ns, CAP_SYS_PTRACE);
++		ret = security_capable(cred, ns, CAP_SYS_PTRACE, CAP_OPT_NOAUDIT);
+ 	else
+-		return has_ns_capability(current, ns, CAP_SYS_PTRACE);
++		ret = security_capable(cred, ns, CAP_SYS_PTRACE, CAP_OPT_NONE);
++
++	return ret == 0;
  }
  
- void vnic_dev_del_addr(struct vnic_dev *vdev, u8 *addr)
- {
--	u64 a0 = 0, a1 = 0;
-+	u64 a[2] = {};
- 	int wait = 1000;
- 	int err;
- 	int i;
+ /* Returns 0 on success, -errno on denial. */
+@@ -321,7 +326,7 @@ static int __ptrace_may_access(struct ta
+ 	    gid_eq(caller_gid, tcred->sgid) &&
+ 	    gid_eq(caller_gid, tcred->gid))
+ 		goto ok;
+-	if (ptrace_has_cap(tcred->user_ns, mode))
++	if (ptrace_has_cap(cred, tcred->user_ns, mode))
+ 		goto ok;
+ 	rcu_read_unlock();
+ 	return -EPERM;
+@@ -340,7 +345,7 @@ ok:
+ 	mm = task->mm;
+ 	if (mm &&
+ 	    ((get_dumpable(mm) != SUID_DUMP_USER) &&
+-	     !ptrace_has_cap(mm->user_ns, mode)))
++	     !ptrace_has_cap(cred, mm->user_ns, mode)))
+ 	    return -EPERM;
  
- 	for (i = 0; i < ETH_ALEN; i++)
--		((u8 *)&a0)[i] = addr[i];
-+		((u8 *)&a)[i] = addr[i];
- 
--	err = vnic_dev_cmd(vdev, CMD_ADDR_DEL, &a0, &a1, wait);
-+	err = vnic_dev_cmd(vdev, CMD_ADDR_DEL, &a[0], &a[1], wait);
- 	if (err)
- 		pr_err("Can't del addr [%pM], %d\n", addr, err);
- }
+ 	return security_ptrace_access_check(task, mode);
 
 
