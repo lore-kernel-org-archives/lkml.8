@@ -2,202 +2,267 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 511F9C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 15:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DDFDC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 15:45:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CB0C217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 15:43:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34918217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 15:45:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dHcKhqGj"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="crYe09iw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726005AbgAVPnt (ORCPT
+        id S1726164AbgAVPpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 10:43:49 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:46793 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725802AbgAVPnt (ORCPT
+        Wed, 22 Jan 2020 10:45:00 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23601 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725836AbgAVPo7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 10:43:49 -0500
-Received: by mail-ed1-f66.google.com with SMTP id m8so7030814edi.13;
-        Wed, 22 Jan 2020 07:43:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uY1HPijFTB71ZLonSMQTnZS/3eygEDE8qQNu0W3mgT0=;
-        b=dHcKhqGjwCGBWVJO3bk4C3YGLOdSW8e2Lfw9NpVBR5iU1zBXZJFNjT/wFdDvlYut/Z
-         jXR+GvM6X5HVmlsj3qDD/o63y62bOhyKgl8/ihNx38Wtg2BKxsqKQTgVjOj3k1azxZm5
-         pszhJ82EMQUr3t1uBvfdzBwUbCfVFveJkiT2v4mavEP9IPZNwrr92IUDWlADZqwzWGcC
-         Ludd+DbufuxfqCOjf18Fw6PT74AwcohcsHH/Hwx/rOXGyGVj/E+y4tclGSR1ECxCDJbx
-         XKQhEARb7WuW9uyfnF9I4AaZ+ERRGOvGD40HYYC0CS6nt/440dFDFJUYoy+MkevAxqCc
-         4r7Q==
+        Wed, 22 Jan 2020 10:44:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579707897;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=zv+bCnNOl3qjnstEYa92uxa3f6bv0jFexwgAKSb/Wgw=;
+        b=crYe09iw3f0ZsDcGNGiKRcQoXgbubt3ieRWhv71QnKg2ua5fayT83nE2OBhR3YQEuf5KY0
+        UShW4DppuZjZWaGruROWKPxd5cN1+Okx0VxZ9n53YTd7ynCcgdZbnEuY0cO3ttiJzslysc
+        z5/7ptEYXN2wqbbOttLu8/ZxigzVtjA=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-190-JoF28ss-OPS5ZXXKYCMaSA-1; Wed, 22 Jan 2020 10:44:52 -0500
+X-MC-Unique: JoF28ss-OPS5ZXXKYCMaSA-1
+Received: by mail-wr1-f70.google.com with SMTP id b13so3222947wrx.22
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 07:44:51 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uY1HPijFTB71ZLonSMQTnZS/3eygEDE8qQNu0W3mgT0=;
-        b=ElPqpDMj3xje7yTcz6rm5A6Ufu2ZBIW/rDwFBo0MA/9qhVoR63Z/kpKEz0/WvCecvL
-         8lf7/rLFLJSc8ah0Md0iClUfxl00ADLIdC/KBvgPl8qZjO3DPpnXYcf27Ymtab7PEnGs
-         EZdUAG8Npbpcg9LitVQgOjHih1MRPoPnacCm3/xS4ZA2qCXC62jrJ+kQQ2xbV0NH24CW
-         MK9L4frxj8BweGelv0r295+RBrjgnyisUvlgWNDRa1uSPCtgdbQw4D8yE+ULS+hXcTTz
-         koRadNDvOeKz5M7YwZSl9Im4NRpa7wyhUpX7QJDlZ4qn9exMF9WXIMDJgS9o6SzbKxpK
-         /qdQ==
-X-Gm-Message-State: APjAAAVWzS/5ofbyB1Lnd9W9nR5nKXGi8JMF0JnkvnWxgyLZR222uQDD
-        6s//q2uJk823h88IZPa5q7OseJzYxh5lTRs8sJI=
-X-Google-Smtp-Source: APXvYqwLR5loA6f6kus4Li70+JCEt6DQy9AbTMZ4jNBr2qZkK2UBeHgxfLTymxqzsTezxfh9anm0mBFXDyfkIdS3n8Y=
-X-Received: by 2002:a05:6402:228c:: with SMTP id cw12mr3141430edb.151.1579707825919;
- Wed, 22 Jan 2020 07:43:45 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zv+bCnNOl3qjnstEYa92uxa3f6bv0jFexwgAKSb/Wgw=;
+        b=eVT9z1N7/MCF8YQcw0bqrN87zxRxQC157FC5zZ5N1r3ziLfgRJZL8bPdtsKA9gCeNo
+         bMbJjYJT4vUDpvoglnh3mW3UnEwxdnZO0INvnT+3jqC7nJ5jZmNHc0IV35oqCShsG+1Z
+         U6h8JzFCuCkkHqMB52BtWC2o0gLcfmOH+NBhnE3JsO/CtDuYCR4OC2kzZlzwQDiw1rCp
+         EKcztuFGPym9i1qtFMfwMtrHPTMUj7I5zhDVmshiYG0Ajc4uZ09cVZ/Pj1feRwLs3sTP
+         s571SsglHh7Om+FfhJU6q5B8cTP1TSJmTOUvEykbOANxfm2ULAetDDmCxWEJeVbusL1F
+         OI8w==
+X-Gm-Message-State: APjAAAXvj4X8OlHDPsLewow4Di/tIc7B9iZjN3pv40JJX7j6vcYVwoHx
+        LQe59WZy49nKEPb8zdW2DTOXiTIFzFK4nxXwqmlHN+Ex7nPRdikGfGBprKJOJ2F/xFM+QUKTMqg
+        8gvEVSBfE18ovi2QSUozmAPL0
+X-Received: by 2002:a1c:1f51:: with SMTP id f78mr3608528wmf.60.1579707890544;
+        Wed, 22 Jan 2020 07:44:50 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzf+zGrSWPw3ihUGr7p4vlyzpMTPSct3QELlX5YtRHHUGB/lGQLmBvKenlxYxVN83lyYY0RNQ==
+X-Received: by 2002:a1c:1f51:: with SMTP id f78mr3608506wmf.60.1579707890287;
+        Wed, 22 Jan 2020 07:44:50 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:b8fe:679e:87eb:c059? ([2001:b07:6468:f312:b8fe:679e:87eb:c059])
+        by smtp.gmail.com with ESMTPSA id q3sm4358926wmj.38.2020.01.22.07.44.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jan 2020 07:44:49 -0800 (PST)
+Subject: Re: [PATCH] svm/avic: iommu/amd: Flush IOMMU IRT after update all
+ entries
+To:     "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
+Cc:     "joro@8bytes.org" <joro@8bytes.org>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>
+References: <20190320081432.2606-1-suravee.suthikulpanit@amd.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <d599b411-3f1e-c67e-dd39-ad4ef42764e7@redhat.com>
+Date:   Wed, 22 Jan 2020 16:44:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-References: <20200121111813.REPOST.1.I92c66a35fb13f368095b05287bdabdbe88ca6922@changeid>
- <CAF6AEGtBwcFqe9nfohz8D5mo_V1mfR84bBtEUPmnkO2cjeDrfw@mail.gmail.com> <20200122145134.GG25564@art_vandelay>
-In-Reply-To: <20200122145134.GG25564@art_vandelay>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Wed, 22 Jan 2020 07:43:34 -0800
-Message-ID: <CAF6AEGtZXjjoZt+_khOs=wB-i+Fxe1NSVTHpTr74B2ekA1h56Q@mail.gmail.com>
-Subject: Re: [REPOST PATCH] drm/msm: Set dma maximum segment size for mdss
-To:     Sean Paul <sean@poorly.run>
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        saiprakash.ranjan@codeaurora.org,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        David Airlie <airlied@linux.ie>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Daniel Vetter <daniel@ffwll.ch>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190320081432.2606-1-suravee.suthikulpanit@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 6:51 AM Sean Paul <sean@poorly.run> wrote:
->
-> On Tue, Jan 21, 2020 at 11:26:05AM -0800, Rob Clark wrote:
-> > On Tue, Jan 21, 2020 at 11:19 AM Douglas Anderson <dianders@chromium.org> wrote:
-> > >
-> > > From: Sean Paul <seanpaul@chromium.org>
-> > >
-> > > Turning on CONFIG_DMA_API_DEBUG_SG results in the following error:
-> > >
-> > > [   12.078665] msm ae00000.mdss: DMA-API: mapping sg segment longer than device claims to support [len=3526656] [max=65536]
-> > > [   12.089870] WARNING: CPU: 6 PID: 334 at /mnt/host/source/src/third_party/kernel/v4.19/kernel/dma/debug.c:1301 debug_dma_map_sg+0x1dc/0x318
-> > > [   12.102655] Modules linked in: joydev
-> > > [   12.106442] CPU: 6 PID: 334 Comm: frecon Not tainted 4.19.0 #2
-> > > [   12.112450] Hardware name: Google Cheza (rev3+) (DT)
-> > > [   12.117566] pstate: 60400009 (nZCv daif +PAN -UAO)
-> > > [   12.122506] pc : debug_dma_map_sg+0x1dc/0x318
-> > > [   12.126995] lr : debug_dma_map_sg+0x1dc/0x318
-> > > [   12.131487] sp : ffffff800cc3ba80
-> > > [   12.134913] x29: ffffff800cc3ba80 x28: 0000000000000000
-> > > [   12.140395] x27: 0000000000000004 x26: 0000000000000004
-> > > [   12.145868] x25: ffffff8008e55b18 x24: 0000000000000000
-> > > [   12.151337] x23: 00000000ffffffff x22: ffffff800921c000
-> > > [   12.156809] x21: ffffffc0fa75b080 x20: ffffffc0f7195090
-> > > [   12.162280] x19: ffffffc0f1c53280 x18: 0000000000000000
-> > > [   12.167749] x17: 0000000000000000 x16: 0000000000000000
-> > > [   12.173218] x15: 0000000000000000 x14: 0720072007200720
-> > > [   12.178689] x13: 0720072007200720 x12: 0720072007200720
-> > > [   12.184161] x11: 0720072007200720 x10: 0720072007200720
-> > > [   12.189641] x9 : ffffffc0f1fc6b60 x8 : 0000000000000000
-> > > [   12.195110] x7 : ffffff8008132ce0 x6 : 0000000000000000
-> > > [   12.200585] x5 : 0000000000000000 x4 : ffffff8008134734
-> > > [   12.206058] x3 : ffffff800cc3b830 x2 : ffffffc0f1fc6240
-> > > [   12.211532] x1 : 25045a74f48a7400 x0 : 25045a74f48a7400
-> > > [   12.217006] Call trace:
-> > > [   12.219535]  debug_dma_map_sg+0x1dc/0x318
-> > > [   12.223671]  get_pages+0x19c/0x20c
-> > > [   12.227177]  msm_gem_fault+0x64/0xfc
-> > > [   12.230874]  __do_fault+0x3c/0x140
-> > > [   12.234383]  __handle_mm_fault+0x70c/0xdb8
-> > > [   12.238603]  handle_mm_fault+0xac/0xc4
-> > > [   12.242473]  do_page_fault+0x1bc/0x3d4
-> > > [   12.246342]  do_translation_fault+0x54/0x88
-> > > [   12.250652]  do_mem_abort+0x60/0xf0
-> > > [   12.254250]  el0_da+0x20/0x24
-> > > [   12.257317] irq event stamp: 67260
-> > > [   12.260828] hardirqs last  enabled at (67259): [<ffffff8008132d0c>] console_unlock+0x214/0x608
-> > > [   12.269693] hardirqs last disabled at (67260): [<ffffff8008080e0c>] do_debug_exception+0x5c/0x178
-> > > [   12.278820] softirqs last  enabled at (67256): [<ffffff8008081664>] __do_softirq+0x4d4/0x520
-> > > [   12.287510] softirqs last disabled at (67249): [<ffffff80080be574>] irq_exit+0xa8/0x100
-> > > [   12.295742] ---[ end trace e63cfc40c313ffab ]---
-> > >
-> > > The root of the problem is that the default segment size for sgt is
-> > > (UINT_MAX & PAGE_MASK), and the default segment size for device dma is
-> > > 64K. As such, if you compare the 2, you would deduce that the sg segment
-> > > will overflow the device's capacity. In reality, the hardware can
-> > > accommodate the larger sg segments, it's just not initializing its max
-> > > segment properly. This patch initializes the max segment size for the
-> > > mdss device, which gets rid of that pesky warning.
-> > >
-> > > Reported-by: Stephen Boyd <swboyd@chromium.org>
-> > > Signed-off-by: Sean Paul <seanpaul@chromium.org>
-> > > Tested-by: Stephen Boyd <swboyd@chromium.org>
-> > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > > ---
-> > > This patch has been floating in the ether for over a year [1].  I know
-> > > next to nothing about it, but I'm told it's still useful so I'm
-> > > helpfully reposting it.  Please enjoy.
-> >
-> > This looks like the right thing to do.. sorry I overlooked the patch
-> > first time around
-> >
-> > Reviewed-by: Rob Clark <robdclark@gmail.com>
-> >
-> > (since I've already sent PR for msm-next, could we pick this up via drm-misc?)
->
-> You got it, pushed to drm-misc-next-fixes.
->
+On 20/03/19 09:14, Suthikulpanit, Suravee wrote:
+> When AVIC is enabled and the VM has discrete device assignment,
+> the interrupt remapping table (IRT) is used to keep track of which
+> destination APIC ID the IOMMU will inject the device interrput to.
+> 
+> This means every time a vcpu is blocked or context-switched (i.e.
+> vcpu_blocking/unblocking() and vcpu_load/put()), the information
+> in IRT must be updated and the IOMMU IRT flush command must be
+> issued.
+> 
+> The current implementation flushes IOMMU IRT every time an entry
+> is modified. If the assigned device has large number of interrupts
+> (hence large number of entries), this would add large amount of
+> overhead to vcpu context-switch. Instead, this can be optmized by
+> only flush IRT once per vcpu context-switch per device after all
+> IRT entries are modified.
+> 
+> The function amd_iommu_update_ga() is refactored to only update
+> IRT entry, while the amd_iommu_sync_ga() is introduced to allow
+> IRT flushing to be done separately.
+> 
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Radim Krčmář <rkrcmar@redhat.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+> ---
+>  arch/x86/kvm/svm.c        | 35 ++++++++++++++++++++++++++++++++++-
+>  drivers/iommu/amd_iommu.c | 20 +++++++++++++++++---
+>  include/linux/amd-iommu.h | 13 ++++++++++---
+>  3 files changed, 61 insertions(+), 7 deletions(-)
 
-thx
+I found this patch in my inbox...  I'd rather avoid allocating 8k of RAM
+per vCPU.  Can you make it per-VM?
 
-BR,
--R
+Paolo
 
-> Thanks
->
-> Sean
->
-> >
-> > BR,
-> > -R
-> >
-> >
-> > >
-> > > [1] https://lore.kernel.org/r/20181106213239.52133-1-sean@poorly.run
-> > >
-> > >  drivers/gpu/drm/msm/msm_drv.c | 8 ++++++++
-> > >  1 file changed, 8 insertions(+)
-> > >
-> > > diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-> > > index c26219c7a49f..e4b750b0c2d3 100644
-> > > --- a/drivers/gpu/drm/msm/msm_drv.c
-> > > +++ b/drivers/gpu/drm/msm/msm_drv.c
-> > > @@ -441,6 +441,14 @@ static int msm_drm_init(struct device *dev, struct drm_driver *drv)
-> > >         if (ret)
-> > >                 goto err_msm_uninit;
-> > >
-> > > +       if (!dev->dma_parms) {
-> > > +               dev->dma_parms = devm_kzalloc(dev, sizeof(*dev->dma_parms),
-> > > +                                             GFP_KERNEL);
-> > > +               if (!dev->dma_parms)
-> > > +                       return -ENOMEM;
-> > > +       }
-> > > +       dma_set_max_seg_size(dev, DMA_BIT_MASK(32));
-> > > +
-> > >         msm_gem_shrinker_init(ddev);
-> > >
-> > >         switch (get_mdp_ver(pdev)) {
-> > > --
-> > > 2.25.0.341.g760bfbb309-goog
-> > >
->
-> --
-> Sean Paul, Software Engineer, Google / Chromium OS
+> +	/*
+> +	 * Bitmap used to store PCI devid to sync
+> +	 * AMD IOMMU interrupt remapping table
+> +	 */
+> +	unsigned long *avic_devid_sync_bitmap;
+>  };
+>  
+>  /*
+> @@ -1984,6 +1992,7 @@ static inline int
+>  avic_update_iommu_vcpu_affinity(struct kvm_vcpu *vcpu, int cpu, bool r)
+>  {
+>  	int ret = 0;
+> +	int devid = 0;
+>  	unsigned long flags;
+>  	struct amd_svm_iommu_ir *ir;
+>  	struct vcpu_svm *svm = to_svm(vcpu);
+> @@ -2001,9 +2010,21 @@ avic_update_iommu_vcpu_affinity(struct kvm_vcpu *vcpu, int cpu, bool r)
+>  		goto out;
+>  
+>  	list_for_each_entry(ir, &svm->ir_list, node) {
+> -		ret = amd_iommu_update_ga(cpu, r, ir->data);
+> +		ret = amd_iommu_update_ga(cpu, r, ir->data, &devid);
+>  		if (ret)
+>  			break;
+> +		set_bit(devid, svm->avic_devid_sync_bitmap);
+> +	}
+> +
+> +	/* Sync AMD IOMMU interrupt remapping table changes for each device. */
+> +	devid = find_next_bit(svm->avic_devid_sync_bitmap,
+> +			      AVIC_DEVID_BITMAP_SIZE, 0);
+> +
+> +	while (devid < AVIC_DEVID_BITMAP_SIZE) {
+> +		clear_bit(devid, svm->avic_devid_sync_bitmap);
+> +		ret = amd_iommu_sync_ga(devid);
+> +		devid = find_next_bit(svm->avic_devid_sync_bitmap,
+> +				      AVIC_DEVID_BITMAP_SIZE, devid+1);
+>  	}
+>  out:
+>  	spin_unlock_irqrestore(&svm->ir_list_lock, flags);
+> @@ -2107,6 +2128,13 @@ static int avic_init_vcpu(struct vcpu_svm *svm)
+>  	INIT_LIST_HEAD(&svm->ir_list);
+>  	spin_lock_init(&svm->ir_list_lock);
+>  
+> +	svm->avic_devid_sync_bitmap = (void *)__get_free_pages(
+> +					GFP_KERNEL | __GFP_ZERO,
+> +					get_order(AVIC_DEVID_BITMAP_SIZE/8));
+> +	if (svm->avic_devid_sync_bitmap == NULL)
+> +		ret = -ENOMEM;
+> +	memset(svm->avic_devid_sync_bitmap, 0, AVIC_DEVID_BITMAP_SIZE/8);
+> +
+>  	return ret;
+>  }
+>  
+> @@ -2221,6 +2249,11 @@ static void svm_free_vcpu(struct kvm_vcpu *vcpu)
+>  	__free_pages(virt_to_page(svm->msrpm), MSRPM_ALLOC_ORDER);
+>  	__free_page(virt_to_page(svm->nested.hsave));
+>  	__free_pages(virt_to_page(svm->nested.msrpm), MSRPM_ALLOC_ORDER);
+> +
+> +	free_pages((unsigned long)svm->avic_devid_sync_bitmap,
+> +		   get_order(AVIC_DEVID_BITMAP_SIZE/8));
+> +	svm->avic_devid_sync_bitmap = NULL;
+> +
+>  	kvm_vcpu_uninit(vcpu);
+>  	kmem_cache_free(x86_fpu_cache, svm->vcpu.arch.guest_fpu);
+>  	kmem_cache_free(kvm_vcpu_cache, svm);
+> diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+> index 2a7b78bb98b4..637bcc9192e5 100644
+> --- a/drivers/iommu/amd_iommu.c
+> +++ b/drivers/iommu/amd_iommu.c
+> @@ -4499,7 +4499,20 @@ int amd_iommu_create_irq_domain(struct amd_iommu *iommu)
+>  	return 0;
+>  }
+>  
+> -int amd_iommu_update_ga(int cpu, bool is_run, void *data)
+> +int amd_iommu_sync_ga(int devid)
+> +{
+> +	struct amd_iommu *iommu = amd_iommu_rlookup_table[devid];
+> +
+> +	if (!iommu)
+> +		return -ENODEV;
+> +
+> +	iommu_flush_irt(iommu, devid);
+> +	iommu_completion_wait(iommu);
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(amd_iommu_sync_ga);
+> +
+> +int amd_iommu_update_ga(int cpu, bool is_run, void *data, int *id)
+>  {
+>  	unsigned long flags;
+>  	struct amd_iommu *iommu;
+> @@ -4521,6 +4534,9 @@ int amd_iommu_update_ga(int cpu, bool is_run, void *data)
+>  	if (!table)
+>  		return -ENODEV;
+>  
+> +	if (id)
+> +		*id = devid;
+> +
+>  	raw_spin_lock_irqsave(&table->lock, flags);
+>  
+>  	if (ref->lo.fields_vapic.guest_mode) {
+> @@ -4536,8 +4552,6 @@ int amd_iommu_update_ga(int cpu, bool is_run, void *data)
+>  
+>  	raw_spin_unlock_irqrestore(&table->lock, flags);
+>  
+> -	iommu_flush_irt(iommu, devid);
+> -	iommu_completion_wait(iommu);
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL(amd_iommu_update_ga);
+> diff --git a/include/linux/amd-iommu.h b/include/linux/amd-iommu.h
+> index 09751d349963..b94d4b33dfd7 100644
+> --- a/include/linux/amd-iommu.h
+> +++ b/include/linux/amd-iommu.h
+> @@ -193,8 +193,9 @@ static inline int amd_iommu_detect(void) { return -ENODEV; }
+>  /* IOMMU AVIC Function */
+>  extern int amd_iommu_register_ga_log_notifier(int (*notifier)(u32));
+>  
+> -extern int
+> -amd_iommu_update_ga(int cpu, bool is_run, void *data);
+> +extern int amd_iommu_update_ga(int cpu, bool is_run, void *data, int *devid);
+> +
+> +extern int amd_iommu_sync_ga(int devid);
+>  
+>  #else /* defined(CONFIG_AMD_IOMMU) && defined(CONFIG_IRQ_REMAP) */
+>  
+> @@ -205,7 +206,13 @@ amd_iommu_register_ga_log_notifier(int (*notifier)(u32))
+>  }
+>  
+>  static inline int
+> -amd_iommu_update_ga(int cpu, bool is_run, void *data)
+> +amd_iommu_update_ga(int cpu, bool is_run, void *data, int *devid)
+> +{
+> +	return 0;
+> +}
+> +
+> +static inline int
+> +amd_iommu_sync_ga(int devid)
+>  {
+>  	return 0;
+>  }
+> 
+
