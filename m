@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47BF7C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:33:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2930AC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1275F24673
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:33:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6E2424672
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:33:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685608;
-	bh=OSBgK6FbfPNYbu9QJnO7tUXC7vaVeZGAz/W/4pXIX6A=;
+	s=default; t=1579685613;
+	bh=EUJO2tQhfwVYwxxfWTYEF7FQRmqGWHxjoBjnujI3AV4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S8BDH3JAzGrMNS6tJrC9lOo3WFFkxF2/vqEmAT4hUS1R1xdnw/FLG4mKRCTopb9g5
-	 gGdxzScMOnSjbmlGoRTdGDuqRh/6cNa0gIilDNveSawjf2lPCJIGUDV1BD53S/p9bh
-	 QJwc4k8oPrwqeZivrbFUUbJ1xtvwBmOUpSZasYaQ=
+	b=ty7nvYanTcXsTs6yuuhyoib+rBvAd9k20B8o32cX6PBWKJf4LypFlGW8/YyEsJpS3
+	 ic9HW1Gy6OwiSYE44QEIkMg/0JL0wn1MwWXM+MbN8OquXqE38BqVphEKbEbgC55mAs
+	 zaVvAyhe/o6C9wO4M0YvKoKkLQw8xH5zbmR0SDXI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730542AbgAVJd1 (ORCPT
+        id S1730597AbgAVJdc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:33:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47164 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:33:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730516AbgAVJdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:33:24 -0500
+        id S1726083AbgAVJd3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:33:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9803924673;
-        Wed, 22 Jan 2020 09:33:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6753024672;
+        Wed, 22 Jan 2020 09:33:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685604;
-        bh=OSBgK6FbfPNYbu9QJnO7tUXC7vaVeZGAz/W/4pXIX6A=;
+        s=default; t=1579685608;
+        bh=EUJO2tQhfwVYwxxfWTYEF7FQRmqGWHxjoBjnujI3AV4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wwz3AIlwFgdmQ33vd18/egn8GupCEVmjNMZGeyjrJxYDFMk+Ex3zq0Klc4t1+Iv9w
-         GWZTh45Fn7XoJwSSTMxtS46mq8tVFLfoAbri7PxR/EfBoaXpwHRToatkqe6Pmzn4WM
-         GfagG3Ffdky62llXSuLovyjowY9kY8d5O4SrLxG4=
+        b=VhCuQPf0cxfVa70z+CLXXOxQ3WF/HIvoTIHmn1mjSNj7AqoZdpTU1BBuxYHblxgu+
+         49kS6gNVB2LAi/ZczA2UzB2qZFKQQZd5FKbvs6+rP0FHJrU7epUS1ieYXQI9ppRIcK
+         QtLdaEMyWbC8/jMXAPT/98HNCzIQwAyKC7sAHBoA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Hannes Reinecke <hare@suse.com>,
-        Douglas Gilbert <dgilbert@interlog.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.4 74/76] scsi: core: scsi_trace: Use get_unaligned_be*()
-Date:   Wed, 22 Jan 2020 10:29:30 +0100
-Message-Id: <20200122092802.814920028@linuxfoundation.org>
+        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.4 76/76] regulator: ab8500: Remove SYSCLKREQ from enum ab8505_regulator_id
+Date:   Wed, 22 Jan 2020 10:29:32 +0100
+Message-Id: <20200122092803.189647649@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092751.587775548@linuxfoundation.org>
 References: <20200122092751.587775548@linuxfoundation.org>
@@ -63,210 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-commit b1335f5b0486f61fb66b123b40f8e7a98e49605d upstream.
+commit 458ea3ad033fc86e291712ce50cbe60c3428cf30 upstream.
 
-This patch fixes an unintended sign extension on left shifts. From Colin
-King: "Shifting a u8 left will cause the value to be promoted to an
-integer. If the top bit of the u8 is set then the following conversion to
-an u64 will sign extend the value causing the upper 32 bits to be set in
-the result."
+Those regulators are not actually supported by the AB8500 regulator
+driver. There is no ab8500_regulator_info for them and no entry in
+ab8505_regulator_match.
 
-Fix this by using get_unaligned_be*() instead.
+As such, they cannot be registered successfully, and looking them
+up in ab8505_regulator_match causes an out-of-bounds array read.
 
-Fixes: bf8162354233 ("[SCSI] add scsi trace core functions and put trace points")
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: Douglas Gilbert <dgilbert@interlog.com>
-Link: https://lore.kernel.org/r/20191101211447.187151-1-bvanassche@acm.org
-Reported-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 547f384f33db ("regulator: ab8500: add support for ab8505")
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/20191106173125.14496-2-stephan@gerhold.net
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/scsi_trace.c |  104 ++++++++++++----------------------------------
- 1 file changed, 29 insertions(+), 75 deletions(-)
+ include/linux/regulator/ab8500.h |    2 --
+ 1 file changed, 2 deletions(-)
 
---- a/drivers/scsi/scsi_trace.c
-+++ b/drivers/scsi/scsi_trace.c
-@@ -17,10 +17,11 @@
-  */
- #include <linux/kernel.h>
- #include <linux/trace_seq.h>
-+#include <asm/unaligned.h>
- #include <trace/events/scsi.h>
+--- a/include/linux/regulator/ab8500.h
++++ b/include/linux/regulator/ab8500.h
+@@ -44,8 +44,6 @@ enum ab8505_regulator_id {
+ 	AB8505_LDO_ANAMIC2,
+ 	AB8505_LDO_AUX8,
+ 	AB8505_LDO_ANA,
+-	AB8505_SYSCLKREQ_2,
+-	AB8505_SYSCLKREQ_4,
+ 	AB8505_NUM_REGULATORS,
+ };
  
- #define SERVICE_ACTION16(cdb) (cdb[1] & 0x1f)
--#define SERVICE_ACTION32(cdb) ((cdb[8] << 8) | cdb[9])
-+#define SERVICE_ACTION32(cdb) (get_unaligned_be16(&cdb[8]))
- 
- static const char *
- scsi_trace_misc(struct trace_seq *, unsigned char *, int);
-@@ -50,17 +51,12 @@ static const char *
- scsi_trace_rw10(struct trace_seq *p, unsigned char *cdb, int len)
- {
- 	const char *ret = trace_seq_buffer_ptr(p);
--	sector_t lba = 0, txlen = 0;
-+	u32 lba, txlen;
- 
--	lba |= (cdb[2] << 24);
--	lba |= (cdb[3] << 16);
--	lba |= (cdb[4] << 8);
--	lba |=  cdb[5];
--	txlen |= (cdb[7] << 8);
--	txlen |=  cdb[8];
-+	lba = get_unaligned_be32(&cdb[2]);
-+	txlen = get_unaligned_be16(&cdb[7]);
- 
--	trace_seq_printf(p, "lba=%llu txlen=%llu protect=%u",
--			 (unsigned long long)lba, (unsigned long long)txlen,
-+	trace_seq_printf(p, "lba=%u txlen=%u protect=%u", lba, txlen,
- 			 cdb[1] >> 5);
- 
- 	if (cdb[0] == WRITE_SAME)
-@@ -75,19 +71,12 @@ static const char *
- scsi_trace_rw12(struct trace_seq *p, unsigned char *cdb, int len)
- {
- 	const char *ret = trace_seq_buffer_ptr(p);
--	sector_t lba = 0, txlen = 0;
-+	u32 lba, txlen;
- 
--	lba |= (cdb[2] << 24);
--	lba |= (cdb[3] << 16);
--	lba |= (cdb[4] << 8);
--	lba |=  cdb[5];
--	txlen |= (cdb[6] << 24);
--	txlen |= (cdb[7] << 16);
--	txlen |= (cdb[8] << 8);
--	txlen |=  cdb[9];
-+	lba = get_unaligned_be32(&cdb[2]);
-+	txlen = get_unaligned_be32(&cdb[6]);
- 
--	trace_seq_printf(p, "lba=%llu txlen=%llu protect=%u",
--			 (unsigned long long)lba, (unsigned long long)txlen,
-+	trace_seq_printf(p, "lba=%u txlen=%u protect=%u", lba, txlen,
- 			 cdb[1] >> 5);
- 	trace_seq_putc(p, 0);
- 
-@@ -98,23 +87,13 @@ static const char *
- scsi_trace_rw16(struct trace_seq *p, unsigned char *cdb, int len)
- {
- 	const char *ret = trace_seq_buffer_ptr(p);
--	sector_t lba = 0, txlen = 0;
-+	u64 lba;
-+	u32 txlen;
- 
--	lba |= ((u64)cdb[2] << 56);
--	lba |= ((u64)cdb[3] << 48);
--	lba |= ((u64)cdb[4] << 40);
--	lba |= ((u64)cdb[5] << 32);
--	lba |= (cdb[6] << 24);
--	lba |= (cdb[7] << 16);
--	lba |= (cdb[8] << 8);
--	lba |=  cdb[9];
--	txlen |= (cdb[10] << 24);
--	txlen |= (cdb[11] << 16);
--	txlen |= (cdb[12] << 8);
--	txlen |=  cdb[13];
-+	lba = get_unaligned_be64(&cdb[2]);
-+	txlen = get_unaligned_be32(&cdb[10]);
- 
--	trace_seq_printf(p, "lba=%llu txlen=%llu protect=%u",
--			 (unsigned long long)lba, (unsigned long long)txlen,
-+	trace_seq_printf(p, "lba=%llu txlen=%u protect=%u", lba, txlen,
- 			 cdb[1] >> 5);
- 
- 	if (cdb[0] == WRITE_SAME_16)
-@@ -129,8 +108,8 @@ static const char *
- scsi_trace_rw32(struct trace_seq *p, unsigned char *cdb, int len)
- {
- 	const char *ret = trace_seq_buffer_ptr(p), *cmd;
--	sector_t lba = 0, txlen = 0;
--	u32 ei_lbrt = 0;
-+	u64 lba;
-+	u32 ei_lbrt, txlen;
- 
- 	switch (SERVICE_ACTION32(cdb)) {
- 	case READ_32:
-@@ -150,26 +129,12 @@ scsi_trace_rw32(struct trace_seq *p, uns
- 		goto out;
- 	}
- 
--	lba |= ((u64)cdb[12] << 56);
--	lba |= ((u64)cdb[13] << 48);
--	lba |= ((u64)cdb[14] << 40);
--	lba |= ((u64)cdb[15] << 32);
--	lba |= (cdb[16] << 24);
--	lba |= (cdb[17] << 16);
--	lba |= (cdb[18] << 8);
--	lba |=  cdb[19];
--	ei_lbrt |= (cdb[20] << 24);
--	ei_lbrt |= (cdb[21] << 16);
--	ei_lbrt |= (cdb[22] << 8);
--	ei_lbrt |=  cdb[23];
--	txlen |= (cdb[28] << 24);
--	txlen |= (cdb[29] << 16);
--	txlen |= (cdb[30] << 8);
--	txlen |=  cdb[31];
--
--	trace_seq_printf(p, "%s_32 lba=%llu txlen=%llu protect=%u ei_lbrt=%u",
--			 cmd, (unsigned long long)lba,
--			 (unsigned long long)txlen, cdb[10] >> 5, ei_lbrt);
-+	lba = get_unaligned_be64(&cdb[12]);
-+	ei_lbrt = get_unaligned_be32(&cdb[20]);
-+	txlen = get_unaligned_be32(&cdb[28]);
-+
-+	trace_seq_printf(p, "%s_32 lba=%llu txlen=%u protect=%u ei_lbrt=%u",
-+			 cmd, lba, txlen, cdb[10] >> 5, ei_lbrt);
- 
- 	if (SERVICE_ACTION32(cdb) == WRITE_SAME_32)
- 		trace_seq_printf(p, " unmap=%u", cdb[10] >> 3 & 1);
-@@ -184,7 +149,7 @@ static const char *
- scsi_trace_unmap(struct trace_seq *p, unsigned char *cdb, int len)
- {
- 	const char *ret = trace_seq_buffer_ptr(p);
--	unsigned int regions = cdb[7] << 8 | cdb[8];
-+	unsigned int regions = get_unaligned_be16(&cdb[7]);
- 
- 	trace_seq_printf(p, "regions=%u", (regions - 8) / 16);
- 	trace_seq_putc(p, 0);
-@@ -196,8 +161,8 @@ static const char *
- scsi_trace_service_action_in(struct trace_seq *p, unsigned char *cdb, int len)
- {
- 	const char *ret = trace_seq_buffer_ptr(p), *cmd;
--	sector_t lba = 0;
--	u32 alloc_len = 0;
-+	u64 lba;
-+	u32 alloc_len;
- 
- 	switch (SERVICE_ACTION16(cdb)) {
- 	case SAI_READ_CAPACITY_16:
-@@ -211,21 +176,10 @@ scsi_trace_service_action_in(struct trac
- 		goto out;
- 	}
- 
--	lba |= ((u64)cdb[2] << 56);
--	lba |= ((u64)cdb[3] << 48);
--	lba |= ((u64)cdb[4] << 40);
--	lba |= ((u64)cdb[5] << 32);
--	lba |= (cdb[6] << 24);
--	lba |= (cdb[7] << 16);
--	lba |= (cdb[8] << 8);
--	lba |=  cdb[9];
--	alloc_len |= (cdb[10] << 24);
--	alloc_len |= (cdb[11] << 16);
--	alloc_len |= (cdb[12] << 8);
--	alloc_len |=  cdb[13];
-+	lba = get_unaligned_be64(&cdb[2]);
-+	alloc_len = get_unaligned_be32(&cdb[10]);
- 
--	trace_seq_printf(p, "%s lba=%llu alloc_len=%u", cmd,
--			 (unsigned long long)lba, alloc_len);
-+	trace_seq_printf(p, "%s lba=%llu alloc_len=%u", cmd, lba, alloc_len);
- 
- out:
- 	trace_seq_putc(p, 0);
 
 
