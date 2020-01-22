@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F04CCC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10962C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4D6724684
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:39:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1F4D2468B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:39:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685976;
-	bh=e5CRW54dsq2bYqXNwFy3jRK3OjNNRYCjwFha6ZoH1FY=;
+	s=default; t=1579685979;
+	bh=EwXiR3OAHCKqfa2wQBGY7nZhL1E2myYAN/IcWN8jdxM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yYd+ae6ultp7sii32YbefwRPimz8+XVursmRu4XlAljh8eLZA9AL5YJcPYMf7X0K3
-	 AEZvX7Wp29dlIteEkXqEHcSeBhkl6IEIkluf+6SAjS5c6XAXq6SW1uYuIxdcUe4YZb
-	 9bXxS9W627HxoCDJvWOPFCnz8oi3EyZ5M73vM3r4=
+	b=vheXLdbYZhMlXm6H97BHOU302cxlQrVr/o3b2/sRbDSPfmJyt5EV0PYsFfpkvSt+g
+	 MdTo6wHt24ZOgdYc0JVyocdw44j+uytesJ5LkZV6OdLX1eUNlf+B8QQYpVC4E/xAsk
+	 FAN4ububJDuVNwh4O4kzqvflN/cH0GtHXoMlTRWA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733245AbgAVJjf (ORCPT
+        id S1733254AbgAVJji (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:39:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57586 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:39:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733229AbgAVJjd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:39:33 -0500
+        id S1733246AbgAVJjg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:39:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F22F24685;
-        Wed, 22 Jan 2020 09:39:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0852E2467B;
+        Wed, 22 Jan 2020 09:39:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685972;
-        bh=e5CRW54dsq2bYqXNwFy3jRK3OjNNRYCjwFha6ZoH1FY=;
+        s=default; t=1579685975;
+        bh=EwXiR3OAHCKqfa2wQBGY7nZhL1E2myYAN/IcWN8jdxM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HYdiF3yBx8N0SMvuu3mQE1KFjaIbhdWiljuqJ2dwlHu24BZSViJYfLqxFhvSLjpkb
-         2F6Wq6Ty7lWhnObpmWGUfVNOIggbUeG0QHINjHUniEQRicj6UUMfwGX7FRAQ8FIGm/
-         vYfOQoiG5l7IU+aSq53SPU47IclvapctOvDYcTw0=
+        b=xGGhriVVbRW3Y93r4vJB8suD6Y1Q6FbNk1RwOHOuOptpLdmIa4NzILSQD1SsRwTmr
+         7uFs7NJThF8dwT5J4Xd49VxLx4k8Mz7g7KMPQwy5HO2WWny3U22277bEA4D9AytXhp
+         /K8U5TzRoiWnhK/cPEHNw6Ik08x2o5TY/8fevWPI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Brunnbauer <brunni@netestate.de>,
-        Jeff Mahoney <jeffm@suse.com>, Jan Kara <jack@suse.cz>
-Subject: [PATCH 4.14 56/65] reiserfs: fix handling of -EOPNOTSUPP in reiserfs_for_each_xattr
-Date:   Wed, 22 Jan 2020 10:29:41 +0100
-Message-Id: <20200122092759.623911907@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.14 57/65] scsi: esas2r: unlock on error in esas2r_nvram_read_direct()
+Date:   Wed, 22 Jan 2020 10:29:42 +0100
+Message-Id: <20200122092759.834707992@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092750.976732974@linuxfoundation.org>
 References: <20200122092750.976732974@linuxfoundation.org>
@@ -59,51 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeff Mahoney <jeffm@suse.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 394440d469413fa9b74f88a11f144d76017221f2 upstream.
+commit 906ca6353ac09696c1bf0892513c8edffff5e0a6 upstream.
 
-Commit 60e4cf67a58 (reiserfs: fix extended attributes on the root
-directory) introduced a regression open_xa_root started returning
--EOPNOTSUPP but it was not handled properly in reiserfs_for_each_xattr.
+This error path is missing an unlock.
 
-When the reiserfs module is built without CONFIG_REISERFS_FS_XATTR,
-deleting an inode would result in a warning and chowning an inode
-would also result in a warning and then fail to complete.
-
-With CONFIG_REISERFS_FS_XATTR enabled, the xattr root would always be
-present for read-write operations.
-
-This commit handles -EOPNOSUPP in the same way -ENODATA is handled.
-
-Fixes: 60e4cf67a582 ("reiserfs: fix extended attributes on the root directory")
-CC: stable@vger.kernel.org	# Commit 60e4cf67a58 was picked up by stable
-Link: https://lore.kernel.org/r/20200115180059.6935-1-jeffm@suse.com
-Reported-by: Michael Brunnbauer <brunni@netestate.de>
-Signed-off-by: Jeff Mahoney <jeffm@suse.com>
-Signed-off-by: Jan Kara <jack@suse.cz>
+Fixes: 26780d9e12ed ("[SCSI] esas2r: ATTO Technology ExpressSAS 6G SAS/SATA RAID Adapter Driver")
+Link: https://lore.kernel.org/r/20191022102324.GA27540@mwanda
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/reiserfs/xattr.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/scsi/esas2r/esas2r_flash.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/reiserfs/xattr.c
-+++ b/fs/reiserfs/xattr.c
-@@ -319,8 +319,12 @@ static int reiserfs_for_each_xattr(struc
- out_dir:
- 	dput(dir);
- out:
--	/* -ENODATA isn't an error */
--	if (err == -ENODATA)
-+	/*
-+	 * -ENODATA: this object doesn't have any xattrs
-+	 * -EOPNOTSUPP: this file system doesn't have xattrs enabled on disk.
-+	 * Neither are errors
-+	 */
-+	if (err == -ENODATA || err == -EOPNOTSUPP)
- 		err = 0;
- 	return err;
- }
+--- a/drivers/scsi/esas2r/esas2r_flash.c
++++ b/drivers/scsi/esas2r/esas2r_flash.c
+@@ -1197,6 +1197,7 @@ bool esas2r_nvram_read_direct(struct esa
+ 	if (!esas2r_read_flash_block(a, a->nvram, FLS_OFFSET_NVR,
+ 				     sizeof(struct esas2r_sas_nvram))) {
+ 		esas2r_hdebug("NVRAM read failed, using defaults");
++		up(&a->nvram_semaphore);
+ 		return false;
+ 	}
+ 
 
 
