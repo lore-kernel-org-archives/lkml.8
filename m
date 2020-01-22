@@ -2,102 +2,95 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 915CCC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDC6DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:47:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D5B02467B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:47:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686476;
-	bh=X2+KNYrnWc7xc7JQJmIwQfuTJNrbwS5UPIVPMmDqCPI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RU60wVyTXLSBsBLlhlw0Mpfuf28RhfKjXeb1rUteLdRQ6y/lBEF7aTJyw4DdBZqJd
-	 FzDyjWR6dm2qSfaqfV7Ia4Om4HB5B263wVfKFCMZvq1qjqumst1DkUY2M9VjU0OSdU
-	 g8rZ0kjmsehu8bFI60GyobM83F1GQFt3bqpq2oqg=
+	by mail.kernel.org (Postfix) with ESMTP id 8E27F2467B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:47:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="wC0p0y6l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730720AbgAVJrz (ORCPT
+        id S1733041AbgAVJr6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:47:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33090 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729629AbgAVJlm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:41:42 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 914F924686;
-        Wed, 22 Jan 2020 09:41:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686102;
-        bh=X2+KNYrnWc7xc7JQJmIwQfuTJNrbwS5UPIVPMmDqCPI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V6hkPNyK1kAbdCaXzpWQjbR8U70aBCsy24uTwNRQQTqvQsL8rf6sZ3U0G9qTWCDV2
-         cfzMRzHX+O6lygq4EwitFOJ5GjggCXyc3gHjovv/k9TxS27+OrMKsB9onvRBJL1Bmj
-         HfcloUCk71/3EjDl6Xo+YaMS1f3Ga8h6dbBVaJN8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.19 044/103] btrfs: do not delete mismatched root refs
-Date:   Wed, 22 Jan 2020 10:29:00 +0100
-Message-Id: <20200122092810.489624554@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
-References: <20200122092803.587683021@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 22 Jan 2020 04:47:58 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:42530 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730891AbgAVJr5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:47:57 -0500
+Received: by mail-lj1-f193.google.com with SMTP id y4so6032780ljj.9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 01:47:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UZA8MvhgTjR1Db93Kl8ZE7I1AjnzSwS3ydOzQHANga8=;
+        b=wC0p0y6lCM/wUPS/IfTODzcD7cUkMCgxGcO/Ls1M4lnxeAF25AhC2C4Vq95flX9Cqq
+         xswljYa8WRGoOcWSXm2W6pX2i6tbrYZl/tb8PK/KF9zkamDnl/8pfd8ewgUZPz+/5fUN
+         96AHMmL0Xyt0c2MJApHZI/9syXmJZFx4J7GGEUVjJGKldYUqhWiheRD41HKTG6nv1vZ5
+         Un8WBaJ9FkkGTQC6qxUyq7cuVinhs2Dm1yIk1WWhjGE+FZDGLeYEP5xap+gN/v6mU1v2
+         ErTBn5SK/sVESEgcAgTGOTxhVZ6ZhyvAtPn6ooVjh7EqlhaL+k0gItHCbJzd4la/PwJk
+         2nyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UZA8MvhgTjR1Db93Kl8ZE7I1AjnzSwS3ydOzQHANga8=;
+        b=qtQpWqLTqUTrrumSkJb4qb1vpbV1V4Z0I6hAr/13y8tMPutdjBv3dF+OSZGK8rwzQz
+         iFCl6bP5BQPRzMY7tw68tLFdPPpFB5D7LO8SvtiSIPW8lLI685eXKzrL5jGcmTHl32M2
+         UbVScJ9rq4M7JFmMcNgd5jxoJrJt8H5d3rcBexrWYELNED2v1JNeBBumee1NOkEKJ4oR
+         LMJweugyYjVE3VM/BhlaEqa2gIeL05riYh6HmlBBdZ03I33v/ffh7XVNtOfNq6LfHgg3
+         fx+gvN2IZy4DE2NdUoMW8I7T0t3eEHwwhqdqO3bELCQ0F9MPht78ShXnlV1uaI0eUnJE
+         lR/A==
+X-Gm-Message-State: APjAAAXwM362D3rhqUcxJ66tpULJvOuP9UGwQlM8MxDmRzUv8sYkkKrj
+        9YP8wEPD70DbcuvVa+vzpZGOwA==
+X-Google-Smtp-Source: APXvYqyLk8hqyXbvO8Cs28biGHLs880vO3AoEuMqCtu7rpPoP/AP/GFODe0/mn2xfn4dxkEXiyQ0Mw==
+X-Received: by 2002:a2e:5357:: with SMTP id t23mr19259412ljd.227.1579686475289;
+        Wed, 22 Jan 2020 01:47:55 -0800 (PST)
+Received: from ?IPv6:2a00:1fa0:468a:1e6d:e8e4:fead:7539:293d? ([2a00:1fa0:468a:1e6d:e8e4:fead:7539:293d])
+        by smtp.gmail.com with ESMTPSA id r9sm23922473lfc.72.2020.01.22.01.47.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jan 2020 01:47:54 -0800 (PST)
+Subject: Re: [PATCH net 1/9] r8152: fix runtime resume for linking change
+To:     Hayes Wang <hayeswang@realtek.com>, netdev@vger.kernel.org
+Cc:     nic_swsd@realtek.com, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, pmalani@chromium.org,
+        grundler@chromium.org
+References: <1394712342-15778-338-Taiwan-albertk@realtek.com>
+ <1394712342-15778-339-Taiwan-albertk@realtek.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <62c3af7b-0e94-c069-0d35-4b5f41031a4e@cogentembedded.com>
+Date:   Wed, 22 Jan 2020 12:47:44 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1394712342-15778-339-Taiwan-albertk@realtek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+Hello!
 
-commit 423a716cd7be16fb08690760691befe3be97d3fc upstream.
+On 21.01.2020 15:40, Hayes Wang wrote:
 
-btrfs_del_root_ref() will simply WARN_ON() if the ref doesn't match in
-any way, and then continue to delete the reference.  This shouldn't
-happen, we have these values because there's more to the reference than
-the original root and the sub root.  If any of these checks fail, return
--ENOENT.
+> Fix the runtime resume doesn't work normally for linking change.
 
-CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    s/doesn't work/not working/?
 
----
- fs/btrfs/root-tree.c |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+> 1. Reset the settings and status of runtime suspend.
+> 2. Sync the linking status.
+> 3. Poll the linking change.
+> 
+> Signed-off-by: Hayes Wang <hayeswang@realtek.com>
+[...]
 
---- a/fs/btrfs/root-tree.c
-+++ b/fs/btrfs/root-tree.c
-@@ -370,11 +370,13 @@ again:
- 		leaf = path->nodes[0];
- 		ref = btrfs_item_ptr(leaf, path->slots[0],
- 				     struct btrfs_root_ref);
--
--		WARN_ON(btrfs_root_ref_dirid(leaf, ref) != dirid);
--		WARN_ON(btrfs_root_ref_name_len(leaf, ref) != name_len);
- 		ptr = (unsigned long)(ref + 1);
--		WARN_ON(memcmp_extent_buffer(leaf, name, ptr, name_len));
-+		if ((btrfs_root_ref_dirid(leaf, ref) != dirid) ||
-+		    (btrfs_root_ref_name_len(leaf, ref) != name_len) ||
-+		    memcmp_extent_buffer(leaf, name, ptr, name_len)) {
-+			err = -ENOENT;
-+			goto out;
-+		}
- 		*sequence = btrfs_root_ref_sequence(leaf, ref);
- 
- 		ret = btrfs_del_item(trans, tree_root, path);
-
-
+MBR, Sergei
