@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0657C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:35:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB94C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B81E12467A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:35:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95A722071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:35:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685726;
-	bh=SrODrwLjsbBCvo1hth7eSOv3o1qQTnBUiccMhKqJXW0=;
+	s=default; t=1579685729;
+	bh=JoBAKm2P5KYRaZHWujHHUbJl6+7uf7Ch3XDLnH4jh+4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=as94E29FEtVKWVGmgBHPtJN2LVW5JMiaCn3OZFywDiqojKrVtyWrH5UPEMfoNMd4Z
-	 63xdQPwMGNRNsmfYx3FRGWB89KIOEAvpfwLUyiycs68AQlUjW3bE0hn+7Npfo0YM60
-	 lfOow2OiWS5Oll1NqHIrBVkrkcUOZ3pMjaGdr/M8=
+	b=P04IYFQ/uuDZnpJtpFAE8E2IIhMuo541N1zJILErUyOfK3vMlagcdlqj3/Nhe1ITe
+	 XlRhEGir54XndYl6dmaLUP1dKNSO5X9L9Df0Ab6+n+B2QKmlYJ+UUH+eGHTSCJcsBe
+	 +MKfAttH29Yyj5Vj8a+EvH3hxmOaE7hsVz4L+PSs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731305AbgAVJf0 (ORCPT
+        id S1731350AbgAVJf3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:35:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50330 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:35:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731217AbgAVJfU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:35:20 -0500
+        id S1730198AbgAVJfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:35:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B10D924680;
-        Wed, 22 Jan 2020 09:35:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9949A2071E;
+        Wed, 22 Jan 2020 09:35:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685719;
-        bh=SrODrwLjsbBCvo1hth7eSOv3o1qQTnBUiccMhKqJXW0=;
+        s=default; t=1579685723;
+        bh=JoBAKm2P5KYRaZHWujHHUbJl6+7uf7Ch3XDLnH4jh+4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CbhggdNCUUhbbDLSysTb0IKeua/iA2bBNUIwm0RVdERUVoBFFSP59aHxxAN24qf6K
-         SBY0zBUVFcpY9efwsKSgfkv9GqjegT58XT1WY69pz18fJ2GPo2/lnP/WJQhxsSGQWQ
-         VxtRXc4P8iWrq8o8phOBUSiDqIHkEkaG4IQ7rrws=
+        b=ep7R4/ko/7sCZG9N6B3JFZ9xn1z6V5hm6YEjGJswg+uCtbQgXLFgxgUu4IxU2OcCD
+         gNqltwSXoPRaeboSQHsZx2+PyF4q1rrDPVv67l/E6q0JtGMM01UZ1LVUzm9nwNXU4U
+         iopaclb9bGPobNZIMqtvvqxYIdm3AOq9AAng/+eM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+f584efa0ac7213c226b7@syzkaller.appspotmail.com,
-        Jan Kara <jack@suse.cz>, Barret Rhoden <brho@google.com>,
-        Theodore Tso <tytso@mit.edu>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        YueHaibing <yuehaibing@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 4.9 17/97] ext4: fix use-after-free race with debug_want_extra_isize
-Date:   Wed, 22 Jan 2020 10:28:21 +0100
-Message-Id: <20200122092758.736614924@linuxfoundation.org>
+Subject: [PATCH 4.9 19/97] dccp: Fix memleak in __feat_register_sp
+Date:   Wed, 22 Jan 2020 10:28:23 +0100
+Message-Id: <20200122092759.115559082@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092755.678349497@linuxfoundation.org>
 References: <20200122092755.678349497@linuxfoundation.org>
@@ -62,105 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Barret Rhoden <brho@google.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-commit 7bc04c5c2cc467c5b40f2b03ba08da174a0d5fa7 upstream.
+commit 1d3ff0950e2b40dc861b1739029649d03f591820 upstream.
 
-When remounting with debug_want_extra_isize, we were not performing the
-same checks that we do during a normal mount.  That allowed us to set a
-value for s_want_extra_isize that reached outside the s_inode_size.
+If dccp_feat_push_change fails, we forget free the mem
+which is alloced by kmemdup in dccp_feat_clone_sp_val.
 
-Fixes: e2b911c53584 ("ext4: clean up feature test macros with predicate functions")
-Reported-by: syzbot+f584efa0ac7213c226b7@syzkaller.appspotmail.com
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Barret Rhoden <brho@google.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-[bwh: Backported to 4.9: The debug_want_extra_isize mount option is not
- supported]
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: e8ef967a54f4 ("dccp: Registration routines for changing feature values")
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/ext4/super.c |   56 +++++++++++++++++++++++++++++++++-----------------------
- 1 file changed, 33 insertions(+), 23 deletions(-)
+ net/dccp/feat.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -3342,6 +3342,36 @@ int ext4_calculate_overhead(struct super
- 	return 0;
+--- a/net/dccp/feat.c
++++ b/net/dccp/feat.c
+@@ -738,7 +738,12 @@ static int __feat_register_sp(struct lis
+ 	if (dccp_feat_clone_sp_val(&fval, sp_val, sp_len))
+ 		return -ENOMEM;
+ 
+-	return dccp_feat_push_change(fn, feat, is_local, mandatory, &fval);
++	if (dccp_feat_push_change(fn, feat, is_local, mandatory, &fval)) {
++		kfree(fval.sp.vec);
++		return -ENOMEM;
++	}
++
++	return 0;
  }
  
-+static void ext4_clamp_want_extra_isize(struct super_block *sb)
-+{
-+	struct ext4_sb_info *sbi = EXT4_SB(sb);
-+	struct ext4_super_block *es = sbi->s_es;
-+
-+	/* determine the minimum size of new large inodes, if present */
-+	if (sbi->s_inode_size > EXT4_GOOD_OLD_INODE_SIZE) {
-+		sbi->s_want_extra_isize = sizeof(struct ext4_inode) -
-+						     EXT4_GOOD_OLD_INODE_SIZE;
-+		if (ext4_has_feature_extra_isize(sb)) {
-+			if (sbi->s_want_extra_isize <
-+			    le16_to_cpu(es->s_want_extra_isize))
-+				sbi->s_want_extra_isize =
-+					le16_to_cpu(es->s_want_extra_isize);
-+			if (sbi->s_want_extra_isize <
-+			    le16_to_cpu(es->s_min_extra_isize))
-+				sbi->s_want_extra_isize =
-+					le16_to_cpu(es->s_min_extra_isize);
-+		}
-+	}
-+	/* Check if enough inode space is available */
-+	if (EXT4_GOOD_OLD_INODE_SIZE + sbi->s_want_extra_isize >
-+							sbi->s_inode_size) {
-+		sbi->s_want_extra_isize = sizeof(struct ext4_inode) -
-+						       EXT4_GOOD_OLD_INODE_SIZE;
-+		ext4_msg(sb, KERN_INFO,
-+			 "required extra inode space not available");
-+	}
-+}
-+
- static void ext4_set_resv_clusters(struct super_block *sb)
- {
- 	ext4_fsblk_t resv_clusters;
-@@ -4156,29 +4186,7 @@ no_journal:
- 	if (ext4_setup_super(sb, es, sb->s_flags & MS_RDONLY))
- 		sb->s_flags |= MS_RDONLY;
- 
--	/* determine the minimum size of new large inodes, if present */
--	if (sbi->s_inode_size > EXT4_GOOD_OLD_INODE_SIZE) {
--		sbi->s_want_extra_isize = sizeof(struct ext4_inode) -
--						     EXT4_GOOD_OLD_INODE_SIZE;
--		if (ext4_has_feature_extra_isize(sb)) {
--			if (sbi->s_want_extra_isize <
--			    le16_to_cpu(es->s_want_extra_isize))
--				sbi->s_want_extra_isize =
--					le16_to_cpu(es->s_want_extra_isize);
--			if (sbi->s_want_extra_isize <
--			    le16_to_cpu(es->s_min_extra_isize))
--				sbi->s_want_extra_isize =
--					le16_to_cpu(es->s_min_extra_isize);
--		}
--	}
--	/* Check if enough inode space is available */
--	if (EXT4_GOOD_OLD_INODE_SIZE + sbi->s_want_extra_isize >
--							sbi->s_inode_size) {
--		sbi->s_want_extra_isize = sizeof(struct ext4_inode) -
--						       EXT4_GOOD_OLD_INODE_SIZE;
--		ext4_msg(sb, KERN_INFO, "required extra inode space not"
--			 "available");
--	}
-+	ext4_clamp_want_extra_isize(sb);
- 
- 	ext4_set_resv_clusters(sb);
- 
-@@ -4959,6 +4967,8 @@ static int ext4_remount(struct super_blo
- 		goto restore_opts;
- 	}
- 
-+	ext4_clamp_want_extra_isize(sb);
-+
- 	if ((old_opts.s_mount_opt & EXT4_MOUNT_JOURNAL_CHECKSUM) ^
- 	    test_opt(sb, JOURNAL_CHECKSUM)) {
- 		ext4_msg(sb, KERN_ERR, "changing journal_checksum "
+ /**
 
 
