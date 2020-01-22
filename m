@@ -2,112 +2,160 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B3BC33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 23:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB7DC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 23:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE25F24685
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 23:09:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u0DNfOwo"
+	by mail.kernel.org (Postfix) with ESMTP id 63D3124684
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 23:11:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgAVXJY (ORCPT
+        id S1726207AbgAVXL0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 18:09:24 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:38328 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725884AbgAVXJY (ORCPT
+        Wed, 22 Jan 2020 18:11:26 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:54191 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725884AbgAVXL0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 18:09:24 -0500
-Received: by mail-pl1-f194.google.com with SMTP id t6so467052plj.5
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 15:09:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=nKS4ZgdlHHnHLUwY8RgxlpKouMlIJtGCSDCXGaIr8ik=;
-        b=u0DNfOwoANhlQX2iaeD/Rd1l0fTDY4rKp4scoyXbG98q2ezDtpsrnZotpTkejKufHl
-         213geWr0bo/PO/QkXs5pRtXn2ip2IYPuJXb1OlBnJG/6dkuwFvfFcelM/oPNa2rQX9a5
-         6kcnY4VZ9X9Ksld/4jx/0Prah4EUh5Cn5r/LMI5xE7VPe/vFWQrqreNjrRmY+f8uFdp/
-         iwvhHDsL/nuBiSi6QOdcjq7gG01NwHlIYdenXFTDWv5lAS7lFb+NGjoP3XSRn78at3vV
-         a19LK+/DlB2vCPQA99d3CM6LGuAJa1QUyPYJyJw8w2jOEZ25TngUfrOV97VxujoVh8Eb
-         ueDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=nKS4ZgdlHHnHLUwY8RgxlpKouMlIJtGCSDCXGaIr8ik=;
-        b=EP2VFC76M+cFIej5CCwzizj9z0MupvlzzzZYX8fEv0tYHrTquOHpHPIeiQYCcadmOX
-         W3vwGum20jjMT0M6sCuJTy9szku5xNrAg8rFdk/cAQDR3BQ14VYWgAivY9qyb4H56WA/
-         WpEISWPB0bDZCHnjLAjPUVl9VvkVDdPGFEZ+tp+lKGYzSNqVmcXzoeIWwoTIK912BGOw
-         4at0Q+Jj7Egd/2Mnz8BaqfaKGT3nexhs1SGgtm3nnEEpK+zuqzXNXQsTYrdEtKu6bMnT
-         aLXWP/5fhiQlc9UTqoYjyeJCRCkfXwh4bQDqRmQ8fqiXi5UDKssesiN3nfM7s+fHMzll
-         LT6Q==
-X-Gm-Message-State: APjAAAVOk0jTkc8V26n6F0VUSrYT2nyMWY47dq4Gq4IvJguDTItBSdK8
-        qBgZRet/+V6nugLE5VODEBFTZA==
-X-Google-Smtp-Source: APXvYqyBFXtJqp1jOWq2KNpdMpTmjOylVfH3v84i0J511zxYJkbS9tWibL8rKRyReKS3P6Lcs4fWfw==
-X-Received: by 2002:a17:902:704b:: with SMTP id h11mr13773573plt.147.1579734563159;
-        Wed, 22 Jan 2020 15:09:23 -0800 (PST)
-Received: from ripper (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id g18sm14101pfi.80.2020.01.22.15.09.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jan 2020 15:09:22 -0800 (PST)
-Date:   Wed, 22 Jan 2020 15:08:49 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     rishabhb@codeaurora.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [PATCH v2 2/8] remoteproc: qcom: Introduce driver to store pil
- info in IMEM
-Message-ID: <20200122230849.GC3261042@ripper>
-References: <20191227053215.423811-1-bjorn.andersson@linaro.org>
- <20191227053215.423811-3-bjorn.andersson@linaro.org>
- <60c10082ba90fbba0f056df8575d205f@codeaurora.org>
+        Wed, 22 Jan 2020 18:11:26 -0500
+Received: from 79.184.255.84.ipv4.supernova.orange.pl (79.184.255.84) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
+ id 5c3577da6efc3ff5; Thu, 23 Jan 2020 00:11:24 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux PM <linux-pm@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Chanho Min <chanho.min@lge.com>,
+        Daewoong Kim <daewoong00.kim@lge.com>,
+        Seokjoo Lee <seokjoo.lee@lge.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: [PATCH] PM: core: Fix handling of devices deleted during system-wide resume
+Date:   Thu, 23 Jan 2020 00:11:24 +0100
+Message-ID: <2601275.1tEomSadG4@kreacher>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <60c10082ba90fbba0f056df8575d205f@codeaurora.org>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 22 Jan 14:56 PST 2020, rishabhb@codeaurora.org wrote:
-> On 2019-12-26 21:32, Bjorn Andersson wrote:
-> > diff --git a/drivers/remoteproc/qcom_pil_info.c
-[..]
-> > +static int pil_reloc_probe(struct platform_device *pdev)
-> > +{
-> > +	struct pil_reloc *reloc;
-> > +
-> > +	reloc = devm_kzalloc(&pdev->dev, sizeof(*reloc), GFP_KERNEL);
-> > +	if (!reloc)
-> > +		return -ENOMEM;
-> > +
-> > +	reloc->dev = &pdev->dev;
-> > +	reloc->map = syscon_node_to_regmap(pdev->dev.parent->of_node);
-> If there are multiple entries like "pil-reloc" in the imem node
-> mapping the entire imem multiple times may not work. Is there a way
-> we can somehow just iomap the required region for pil?
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-With the entire imem being represented as a syscon this will be
-ioremapped once and all callers of syscon_node_to_regmap() (or one of
-the other syscon getters) will get a regmap back that reference this one
-mapping.
+If a device is deleted by one of its system-wide resume callbacks
+(for example, because it does not appear to be present or accessible
+any more) along with its children, the resume of the children may
+continue leading to use-after-free errors and other issues
+(potentially).
 
-So doing it this way allow us to "map" sections of imem that is smaller
-than PAGE_SIZE.
+Namely, if the device's children are resumed asynchronously, their
+resume may have been scheduled already before the device's callback
+runs and so the device may be deleted while dpm_wait_for_superior()
+is being executed for them.  The memory taken up by the parent device
+object may be freed then while dpm_wait() is waiting for the parent's
+resume callback to complete, which leads to a use-after-free.
+Moreover, the resume of the children is really not expected to
+continue after they have been unregistered, so it must be terminated
+right away in that case.
+
+To address this problem, modify dpm_wait_for_superior() to check
+if the target device is still there in the system-wide PM list of
+devices and if so, to increment its parent's reference counter, both
+under dpm_list_mtx which prevents device_del() running for the child
+from dropping the parent's reference counter prematurely.
+
+If the device is not present in the system-wide PM list of devices
+any more, the resume of it cannot continue, so check that again after
+dpm_wait() returns, which means that the parent's callback has been
+completed, and pass the result of that check to the caller of
+dpm_wait_for_superior() to allow it to abort the device's resume
+if it is not there any more.
+
+Link: https://lore.kernel.org/linux-pm/1579568452-27253-1-git-send-email-chanho.min@lge.com
+Reported-by: Chanho Min <chanho.min@lge.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/base/power/main.c |   42 +++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 37 insertions(+), 5 deletions(-)
+
+Index: linux-pm/drivers/base/power/main.c
+===================================================================
+--- linux-pm.orig/drivers/base/power/main.c
++++ linux-pm/drivers/base/power/main.c
+@@ -273,10 +273,38 @@ static void dpm_wait_for_suppliers(struc
+ 	device_links_read_unlock(idx);
+ }
+ 
+-static void dpm_wait_for_superior(struct device *dev, bool async)
++static bool dpm_wait_for_superior(struct device *dev, bool async)
+ {
+-	dpm_wait(dev->parent, async);
++	struct device *parent;
++
++	/*
++	 * If the device is resumed asynchronously and the parent's callback
++	 * deletes both the device and the parent itself, the parent object may
++	 * be freed while this function is running, so avoid that by reference
++	 * counting the parent once more unless the device has been deleted
++	 * already (in which case return right away).
++	 */
++	mutex_lock(&dpm_list_mtx);
++
++	if (!device_pm_initialized(dev)) {
++		mutex_unlock(&dpm_list_mtx);
++		return false;
++	}
++
++	parent = get_device(dev->parent);
++
++	mutex_unlock(&dpm_list_mtx);
++
++	dpm_wait(parent, async);
++	put_device(parent);
++
+ 	dpm_wait_for_suppliers(dev, async);
++
++	/*
++	 * If the parent's callback has deleted the device, attempting to resume
++	 * it would be invalid, so avoid doing that then.
++	 */
++	return device_pm_initialized(dev);
+ }
+ 
+ static void dpm_wait_for_consumers(struct device *dev, bool async)
+@@ -621,7 +649,8 @@ static int device_resume_noirq(struct de
+ 	if (!dev->power.is_noirq_suspended)
+ 		goto Out;
+ 
+-	dpm_wait_for_superior(dev, async);
++	if (!dpm_wait_for_superior(dev, async))
++		goto Out;
+ 
+ 	skip_resume = dev_pm_may_skip_resume(dev);
+ 
+@@ -829,7 +858,8 @@ static int device_resume_early(struct de
+ 	if (!dev->power.is_late_suspended)
+ 		goto Out;
+ 
+-	dpm_wait_for_superior(dev, async);
++	if (!dpm_wait_for_superior(dev, async))
++		goto Out;
+ 
+ 	callback = dpm_subsys_resume_early_cb(dev, state, &info);
+ 
+@@ -944,7 +974,9 @@ static int device_resume(struct device *
+ 		goto Complete;
+ 	}
+ 
+-	dpm_wait_for_superior(dev, async);
++	if (!dpm_wait_for_superior(dev, async))
++		goto Complete;
++
+ 	dpm_watchdog_set(&wd, dev);
+ 	device_lock(dev);
+ 
 
 
-That said, it means that all imem users/clients should access imem
-through this syscon regmap.
 
-Regards,
-Bjorn
