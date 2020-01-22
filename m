@@ -2,146 +2,101 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B08C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C28C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:57:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2CF42465B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:57:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA0D12467A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:57:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="EHsTER7Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbgAVG5K (ORCPT
+        id S1729074AbgAVG5S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 01:57:10 -0500
-Received: from mail-io1-f70.google.com ([209.85.166.70]:44525 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726099AbgAVG5J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 01:57:09 -0500
-Received: by mail-io1-f70.google.com with SMTP id t17so3425479ioi.11
-        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 22:57:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=DaAO4OjrKFz8R/CBeO0tJNgxF+hhPU+pNFucr/6aoXM=;
-        b=XsLDX+hMg1QRrC92Hm3L+kHCm+1yWntRDwGxbJL7ma/YzmdecNfFK8xxLXow/4WQdD
-         mvbAunJ7HEul+bVFhzOv2KRXM4I/mS+rXesb1wcuxJtyLFBUJcVfpJg9AUpJX1ASC3sE
-         /C+5HPLNKzgdNxRjUgWjjDWhdMZnhq7WpijJDyOMTA6DbUMf6Y9OPeGOZ1Ia9LW2K/t6
-         M+1y+b4MaH/ZLOLPmUNbLCj68ZvmSy1M3QMVqDPdRi4XUYZW3mmn+93HR777p795A9QL
-         OgmiHjLhpe5X6E/uxrARnrjLVa7H8u85Fd6OW5tsr+z8ZDv2a3DjJdsQDlCRHyS6C1vf
-         D++w==
-X-Gm-Message-State: APjAAAXfpOOv3CsPCDwGTsRNE+8qOop5UsGi3A26rdqReZGpInQbCsPy
-        JiXJPm5SU9gi2YCc9zi+DGhDv7Y55qvJRqA0TrvFvzzjR7Lf
-X-Google-Smtp-Source: APXvYqwBMu6JpRpoxuoWYTHGSxoNuVl3TJEsvhwJ8YNOwZ/e2BBZAW5YXxENYOLMTaOhLpY3iZWCAPpAY6UqfmN3GG/pvEmV/Jpr
+        Wed, 22 Jan 2020 01:57:18 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:30892 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725836AbgAVG5R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 01:57:17 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 482bn71Kscz9v1G1;
+        Wed, 22 Jan 2020 07:57:15 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=EHsTER7Z; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id OVFmCX_L5Lgn; Wed, 22 Jan 2020 07:57:15 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 482bn707RTz9v1G0;
+        Wed, 22 Jan 2020 07:57:15 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1579676235; bh=CBx7iS06BSIP6qNB7l3ahv3OsouitLiZYefJlZ5dcu8=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=EHsTER7Z4Oqsp2+hty+bZTYAq8pwQujk5eElZEjELZauCDitzjjH1brzpv/wO7gNp
+         zjVa610e+LoXEkBmEtVGNxrUCBuQ81/RVZwXAv0nB3xNteJHEf/0PK2i2dpoUNGNsd
+         dZTnPsMHvWIQAB0dbbrapwoR0Q2lLT0ClO+/dDpY=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id C4D468B7EC;
+        Wed, 22 Jan 2020 07:57:15 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id qVDc0MUIikwf; Wed, 22 Jan 2020 07:57:15 +0100 (CET)
+Received: from [172.25.230.100] (po15451.idsi0.si.c-s.fr [172.25.230.100])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9AD258B776;
+        Wed, 22 Jan 2020 07:57:15 +0100 (CET)
+Subject: Re: GCC bug ? Re: [PATCH v2 10/10] powerpc/32s: Implement Kernel
+ Userspace Access Protection
+To:     Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, ruscur@russell.cc,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <cover.1552292207.git.christophe.leroy@c-s.fr>
+ <a2847248a92cb1641b1740fa121c5a30593ae662.1552292207.git.christophe.leroy@c-s.fr>
+ <87ftqfu7j1.fsf@concordia.ellerman.id.au>
+ <a008a182-f1db-073c-7d38-27bfd1fd8676@c-s.fr>
+ <20200121195501.GJ3191@gate.crashing.org>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <8501a33e-6c76-b6bd-9d8e-985313f94579@c-s.fr>
+Date:   Wed, 22 Jan 2020 07:57:15 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:2b7:: with SMTP id d23mr5984287jaq.108.1579676228910;
- Tue, 21 Jan 2020 22:57:08 -0800 (PST)
-Date:   Tue, 21 Jan 2020 22:57:08 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000007c3ba2059cb50843@google.com>
-Subject: WARNING in cbq_destroy
-From:   syzbot <syzbot+63bdb6006961d8c917c6@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200121195501.GJ3191@gate.crashing.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    d96d875e Merge tag 'fixes_for_v5.5-rc8' of git://git.kerne..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=144f7601e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=83c00afca9cf5153
-dashboard link: https://syzkaller.appspot.com/bug?extid=63bdb6006961d8c917c6
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17a1a721e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11a91a95e00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+63bdb6006961d8c917c6@syzkaller.appspotmail.com
-
-netlink: 96 bytes leftover after parsing attributes in process `syz-executor899'.
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 8828 at net/sched/sch_cbq.c:1437 cbq_destroy_class net/sched/sch_cbq.c:1437 [inline]
-WARNING: CPU: 1 PID: 8828 at net/sched/sch_cbq.c:1437 cbq_destroy+0x324/0x400 net/sched/sch_cbq.c:1471
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 8828 Comm: syz-executor899 Not tainted 5.5.0-rc7-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1fb/0x318 lib/dump_stack.c:118
- panic+0x264/0x7a9 kernel/panic.c:221
- __warn+0x209/0x210 kernel/panic.c:582
- report_bug+0x1b6/0x2f0 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:174 [inline]
- do_error_trap+0xda/0x440 arch/x86/kernel/traps.c:267
- do_invalid_op+0x36/0x40 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:cbq_destroy_class net/sched/sch_cbq.c:1437 [inline]
-RIP: 0010:cbq_destroy+0x324/0x400 net/sched/sch_cbq.c:1471
-Code: 32 3d fb eb 06 90 e8 db 85 01 fb 49 8d 5f f8 4d 85 ff 49 0f 44 df 48 85 db 74 4b e8 c6 85 01 fb e9 01 ff ff ff e8 bc 85 01 fb <0f> 0b e9 47 ff ff ff 44 89 e9 80 e1 07 80 c1 03 38 c1 0f 8c 1a ff
-RSP: 0018:ffffc900078472b0 EFLAGS: 00010293
-RAX: ffffffff8674f7c4 RBX: ffff8880a7ef2320 RCX: ffff8880a25a2580
-RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
-RBP: ffffc90007847308 R08: ffffffff8674f704 R09: fffffbfff13cd120
-R10: fffffbfff13cd120 R11: 0000000000000000 R12: ffff8880a7ef22c0
-R13: 0000000000000001 R14: dffffc0000000000 R15: 0000000000000000
- qdisc_destroy+0x147/0x4c0 net/sched/sch_generic.c:958
- qdisc_put+0x83/0xf0 net/sched/sch_generic.c:985
- notify_and_destroy net/sched/sch_api.c:995 [inline]
- qdisc_graft+0xcc8/0x11f0 net/sched/sch_api.c:1076
- tc_modify_qdisc+0xddd/0x1d90 net/sched/sch_api.c:1663
- rtnetlink_rcv_msg+0x889/0xd40 net/core/rtnetlink.c:5424
- netlink_rcv_skb+0x19e/0x3e0 net/netlink/af_netlink.c:2477
- rtnetlink_rcv+0x1c/0x20 net/core/rtnetlink.c:5442
- netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
- netlink_unicast+0x767/0x920 net/netlink/af_netlink.c:1328
- netlink_sendmsg+0xa2c/0xd50 net/netlink/af_netlink.c:1917
- sock_sendmsg_nosec net/socket.c:639 [inline]
- sock_sendmsg net/socket.c:659 [inline]
- kernel_sendmsg+0x109/0x140 net/socket.c:679
- sock_no_sendpage+0x100/0x140 net/core/sock.c:2740
- kernel_sendpage net/socket.c:3776 [inline]
- sock_sendpage+0xd3/0x120 net/socket.c:937
- pipe_to_sendpage+0x238/0x320 fs/splice.c:458
- splice_from_pipe_feed fs/splice.c:512 [inline]
- __splice_from_pipe+0x33d/0x870 fs/splice.c:636
- splice_from_pipe fs/splice.c:671 [inline]
- generic_splice_sendpage+0x114/0x180 fs/splice.c:844
- do_splice_from fs/splice.c:863 [inline]
- do_splice fs/splice.c:1170 [inline]
- __do_sys_splice fs/splice.c:1447 [inline]
- __se_sys_splice+0x719/0x1ac0 fs/splice.c:1427
- __x64_sys_splice+0xe5/0x100 fs/splice.c:1427
- do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x446e79
-Code: e8 5c b3 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 0b 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fa4f9aa3d88 EFLAGS: 00000246 ORIG_RAX: 0000000000000113
-RAX: ffffffffffffffda RBX: 00000000006dcc98 RCX: 0000000000446e79
-RDX: 0000000000000009 RSI: 0000000000000000 RDI: 0000000000000007
-RBP: 00000000006dcc90 R08: 000000000004ffe0 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dcc9c
-R13: 00000000004aed8e R14: 54c6c2ff093a6d32 R15: 0000000000010000
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Le 21/01/2020 à 20:55, Segher Boessenkool a écrit :
+> On Tue, Jan 21, 2020 at 05:22:32PM +0000, Christophe Leroy wrote:
+>> g1() should return 3, not 5.
+> 
+> What makes you say that?
+> 
+> "A return of 0 does not indicate that the
+>   value is _not_ a constant, but merely that GCC cannot prove it is a
+>   constant with the specified value of the '-O' option."
+> 
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+GCC doc also says:
+
+"if you use it in an inlined function and pass an argument of the 
+function as the argument to the built-in, GCC never returns 1 when you 
+call the inline function with a string constant"
+
+Does GCC considers (void*)0 as a string constant ?
+
+Christophe
