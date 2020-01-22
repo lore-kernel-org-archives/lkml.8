@@ -2,54 +2,51 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3ABEC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:47:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEABEC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DFA72468A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:47:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81CB62468F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:47:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686454;
-	bh=ukVkUyF05fhN75MBR5+oeu5iKDPLeh+x2ejrY96sZbU=;
+	s=default; t=1579686459;
+	bh=B8b1iGGmLwxnipVFARy8tiXr20BXrE/G5HMziqKyUX4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xdr5N3ACjpYkXorzK3znefe2LX2e/BLYyyx9mLgMXHQSUL3pylRaFoJnoqz19Wjw0
-	 F9eVZ5Ovd6NJ/KZeAX3eTbVfCsvDpluhg+N3y+GsXjUmrD/dymC7C8Jg/EGJiARhID
-	 /8zbm+a1XTyLCEITbGkwvWAIqRAeqs5IGq0Lpylk=
+	b=opglfMNB7Ana9r90xCFRLzyhh0aZ8nyMOFZDdHeYyB98sRhqq+0QBh+oLoqNOwl4a
+	 szpPGkZ/8FYCEq/7C0voo4iOaYa5+q0QxDDGckz+oYSXMlVnKzE931S2CXFJh3aCnC
+	 pIXRFAklb5crdlXn6vGQQDOxicEt+kYqE0wmhzwQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730614AbgAVJrd (ORCPT
+        id S1732879AbgAVJri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:47:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33704 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:47:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387661AbgAVJmE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:42:04 -0500
+        id S1732678AbgAVJl7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:41:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D05824690;
-        Wed, 22 Jan 2020 09:42:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB4A724680;
+        Wed, 22 Jan 2020 09:41:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686124;
-        bh=ukVkUyF05fhN75MBR5+oeu5iKDPLeh+x2ejrY96sZbU=;
+        s=default; t=1579686119;
+        bh=B8b1iGGmLwxnipVFARy8tiXr20BXrE/G5HMziqKyUX4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rD8jhizHHO8m5WTohmt6GeqLYf95VhdQXYWG1Efn7T8i5v1/5CEVJtjP8QFHQxC6G
-         0P8KDwh0FjdQbbzp7IEm2g9RgIt3M8aEGWREA9fIeEEmNvIjvZaMCvywXJJikNEhqS
-         gFEZBV7z548pV0Eu1tc0yLHgwY/FLLsPoBwXpfpk=
+        b=nPZ+thSEROyHmev0G5zFg4jORfC2qPZ1tjVbgRraVDFphUxw3TNXScNDD3Q682dJF
+         cxfZIAYcTM0Z2XB28s9NTZtDVLPEDku//na0ElB5fFJbgQHf/prO/GfBZo6G9k+6X4
+         PhNcTwye24GDV0QMegXWDsITFW0GPpueCcQrLwp0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bharath Vedartham <linux.bhar@gmail.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 052/103] mm/huge_memory.c: make __thp_get_unmapped_area static
-Date:   Wed, 22 Jan 2020 10:29:08 +0100
-Message-Id: <20200122092811.542790118@linuxfoundation.org>
+        stable@vger.kernel.org, Jose Abreu <Jose.Abreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 050/103] net: stmmac: 16KB buffer must be 16 byte aligned
+Date:   Wed, 22 Jan 2020 10:29:06 +0100
+Message-Id: <20200122092811.289668132@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
 References: <20200122092803.587683021@linuxfoundation.org>
@@ -62,38 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bharath Vedartham <linux.bhar@gmail.com>
+From: Jose Abreu <Jose.Abreu@synopsys.com>
 
-[ Upstream commit b3b07077b01ecbbd98efede778c195567de25b71 ]
+commit 8605131747e7e1fd8f6c9f97a00287aae2b2c640 upstream.
 
-__thp_get_unmapped_area is only used in mm/huge_memory.c.  Make it static.
-Tested by building and booting the kernel.
+The 16KB RX Buffer must also be 16 byte aligned. Fix it.
 
-Link: http://lkml.kernel.org/r/20190504102353.GA22525@bharath12345-Inspiron-5559
-Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 7ac6653a085b ("stmmac: Move the STMicroelectronics driver")
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- mm/huge_memory.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/stmicro/stmmac/common.h |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 5a1771bd5d04..950466876625 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -509,7 +509,7 @@ void prep_transhuge_page(struct page *page)
- 	set_compound_page_dtor(page, TRANSHUGE_PAGE_DTOR);
- }
+--- a/drivers/net/ethernet/stmicro/stmmac/common.h
++++ b/drivers/net/ethernet/stmicro/stmmac/common.h
+@@ -363,9 +363,8 @@ struct dma_features {
+ 	unsigned int frpes;
+ };
  
--unsigned long __thp_get_unmapped_area(struct file *filp, unsigned long len,
-+static unsigned long __thp_get_unmapped_area(struct file *filp, unsigned long len,
- 		loff_t off, unsigned long flags, unsigned long size)
- {
- 	unsigned long addr;
--- 
-2.20.1
-
+-/* GMAC TX FIFO is 8K, Rx FIFO is 16K */
+-#define BUF_SIZE_16KiB 16384
+-/* RX Buffer size must be < 8191 and multiple of 4/8/16 bytes */
++/* RX Buffer size must be multiple of 4/8/16 bytes */
++#define BUF_SIZE_16KiB 16368
+ #define BUF_SIZE_8KiB 8188
+ #define BUF_SIZE_4KiB 4096
+ #define BUF_SIZE_2KiB 2048
 
 
