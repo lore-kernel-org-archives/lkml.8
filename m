@@ -2,175 +2,337 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A14B2C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9C46C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7547624676
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:46:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579711585;
-	bh=R9VPmiTH7oN3Qw7dF/uRSbVnMlkIrajCkSrtt3ActcE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fr3lUSqqpDZUbuBtOu4sUGZTQKwSbipNZNBuOET75r2wMmBn+Gbkxy9v4tmcYybnq
-	 cIl4304YBq2QqYZ7lykmDRpuMjHWW1AtsTRKDgzOJMI5R08whf1ZzGof55K3vhZKwf
-	 Rwy7193dXP6n1SFHTlBXQhVnjMmObtolXhI3gE2Y=
+	by mail.kernel.org (Postfix) with ESMTP id 84D1C24656
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:46:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h2Li+x/Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbgAVQqY (ORCPT
+        id S1727312AbgAVQq0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 11:46:24 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40225 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725802AbgAVQqX (ORCPT
+        Wed, 22 Jan 2020 11:46:26 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:54973 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725836AbgAVQqY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 11:46:23 -0500
-Received: by mail-wm1-f66.google.com with SMTP id t14so7911616wmi.5
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 08:46:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=0SuDAJ7sMXWaJqUYgQXoq4Dj1CRTTQuLtA+Icf+077s=;
-        b=GORcBEjQ+g/4iIwZpkbbLUgMUPt/JVQcs/UJC1SRhk9n3mwtnKSb4BcHAtzf8ctgHh
-         fGY3myA0uZhS5dLAb6i2evhmFW/VWdGlus//NspCf39/hPqSoZS8q3xeCdmkrrxsQhC5
-         4CxGNjLaYx1cbNzRSZf+7pUZNEHqHZgg7QExz5sk1+JQHMPLqehWFujqCZNv6oT3E+Ef
-         HwMAhMXnJkx+gHbLXBJ9B8A0gOjwd+VaXsBafC+QdXeE7MDqWpSe8la+oHrGKT8lq5jD
-         SONUizuO2/IR+pSWoCnSOJebp0WRvSpRehHuwQ25Juwe4DLNbebJn0RcDJiuUFto5hWU
-         AP6w==
-X-Gm-Message-State: APjAAAVbCpBKb1boCEeluY7RtpPi4wciJyVM0hTTijYq2SI66JLC3B0U
-        JEEljIT89EUfi6L6PLR//BJP7yUJ
-X-Google-Smtp-Source: APXvYqwqyZqfBJeXG6FqO0yWFZepKQMabGkNIIhVitsf3Ywq4fg3+sGpKA2WeU1Q+571Z2TyhyqRWA==
-X-Received: by 2002:a1c:770e:: with SMTP id t14mr3825500wmi.101.1579711581018;
-        Wed, 22 Jan 2020 08:46:21 -0800 (PST)
-Received: from localhost (ip-37-188-245-167.eurotel.cz. [37.188.245.167])
-        by smtp.gmail.com with ESMTPSA id b17sm57400161wrp.49.2020.01.22.08.46.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jan 2020 08:46:19 -0800 (PST)
-Date:   Wed, 22 Jan 2020 17:46:18 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Leonardo Bras <leonardo@linux.ibm.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Allison Randal <allison@lohutok.net>,
-        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        lantianyu1986@gmail.com,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH RFC v1] mm: is_mem_section_removable() overhaul
-Message-ID: <20200122164618.GY29276@dhcp22.suse.cz>
-References: <CAPcyv4hHHzdPp4SQ0sePzx7XEvD7U_B+vZDT00O6VbFY8kJqjw@mail.gmail.com>
- <25a94f61-46a1-59a6-6b54-8cc6b35790d2@redhat.com>
- <CAPcyv4jvmYRbX9i+1_LvHoTDGABadHbYH3NVkqczKsQ4fsf74g@mail.gmail.com>
- <20200120074816.GG18451@dhcp22.suse.cz>
- <a5f0bd8d-de5e-9f27-5c94-7746a3d20a95@redhat.com>
- <20200121120714.GJ29276@dhcp22.suse.cz>
- <a29b49b9-28ad-44fa-6c0b-90cd43902f29@redhat.com>
- <20200122104230.GU29276@dhcp22.suse.cz>
- <98b6c208-b4dd-9052-43f6-543068c649cc@redhat.com>
- <816ddd66-c90b-76f1-f4a0-72fe41263edd@redhat.com>
+        Wed, 22 Jan 2020 11:46:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579711582;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=0FabGVuxKiHCbNvVbTG0gCOELRL1g4LHkA7e8I9ZEE0=;
+        b=h2Li+x/QoJc4+DwB0b6E67XiBtKsrpivRdU0kVKfn7C3mOKnJIVPre9BpBG4aLpxpAUqM5
+        lWixlUPe995hfP9QzsmHLk2F8zwnUq7Kjxacxn2eUYiLL+f8j7rWCRAnRGGAOeXClk0lXH
+        pxhGfdR4sadjc8mBqgTSMRkLMbOOI3E=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-240-ZVz3XBbRMDWfk6DxCOJ7eQ-1; Wed, 22 Jan 2020 11:46:18 -0500
+X-MC-Unique: ZVz3XBbRMDWfk6DxCOJ7eQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B013A477;
+        Wed, 22 Jan 2020 16:46:17 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.70])
+        by smtp.corp.redhat.com (Postfix) with SMTP id D7C5110016EB;
+        Wed, 22 Jan 2020 16:46:13 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Wed, 22 Jan 2020 17:46:17 +0100 (CET)
+Date:   Wed, 22 Jan 2020 17:46:12 +0100
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Andrew Fox <afox@redhat.com>,
+        Stephen Johnston <sjohnsto@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        Stanislaw Gruszka <sgruszka@redhat.com>
+Subject: Re: [PATCH] sched/cputime: make scale_stime() more precise
+Message-ID: <20200122164612.GA19818@redhat.com>
+References: <20190718131834.GA22211@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <816ddd66-c90b-76f1-f4a0-72fe41263edd@redhat.com>
+In-Reply-To: <20190718131834.GA22211@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 22-01-20 12:58:16, David Hildenbrand wrote:
-> On 22.01.20 11:54, David Hildenbrand wrote:
-> > On 22.01.20 11:42, Michal Hocko wrote:
-> >> On Wed 22-01-20 11:39:08, David Hildenbrand wrote:
-> >>>>>> Really, the interface is flawed and should have never been merged in the
-> >>>>>> first place. We cannot simply remove it altogether I am afraid so let's
-> >>>>>> at least remove the bogus code and pretend that the world is a better
-> >>>>>> place where everything is removable except the reality sucks...
-> >>>>>
-> >>>>> As I expressed already, the interface works as designed/documented and
-> >>>>> has been used like that for years.
-> >>>>
-> >>>> It seems we do differ in the usefulness though. Using a crappy interface
-> >>>> for years doesn't make it less crappy. I do realize we cannot remove the
-> >>>> interface but we can remove issues with the implementation and I dare to
-> >>>> say that most existing users wouldn't really notice.
-> >>>
-> >>> Well, at least powerpc-utils (why this interface was introduced) will
-> >>> notice a) performance wise and b) because more logging output will be
-> >>> generated (obviously non-offlineable blocks will be tried to offline).
-> >>
-> >> I would really appreciate some specific example for a real usecase. I am
-> >> not familiar with powerpc-utils worklflows myself.
-> >>
-> > 
-> > Not an expert myself:
-> > 
-> > https://github.com/ibm-power-utilities/powerpc-utils
-> > 
-> > -> src/drmgr/drslot_chrp_mem.c
-> > 
-> > On request to remove some memory it will
-> > 
-> > a) Read "->removable" of all memory blocks ("lmb")
-> > b) Check if the request can be fulfilled using the removable blocks
-> > c) Try to offline the memory blocks by trying to offline it. If that
-> > succeeded, trigger removeal of it using some hypervisor hooks.
-> > 
-> > Interestingly, with "AMS ballooning", it will already consider the
-> > "removable" information useless (most probably, because of
-> > non-migratable balloon pages that can be offlined - I assume the powerpc
-> > code that I converted to proper balloon compaction just recently). a)
-> > and b) is skipped.
-> > 
-> > Returning "yes" on all blocks will make them handle it just like if "AMS
-> > ballooning" is active. So any memory block will be tried. Should work
-> > but will be slower if no ballooning is active.
-> > 
-> 
-> On lsmem:
-> 
-> https://www.ibm.com/support/knowledgecenter/linuxonibm/com.ibm.linux.z.lgdd/lgdd_r_lsmem_cmd.html
-> 
-> "
-> Removable
->     yes if the memory range can be set offline, no if it cannot be set
-> offline. A dash (-) means that the range is already offline. The kernel
-> method that identifies removable memory ranges is heuristic and not
-> exact. Occasionally, memory ranges are falsely reported as removable or
-> falsely reported as not removable.
-> "
-> 
-> Usage of lsmem paird with chmem:
-> 
-> https://access.redhat.com/solutions/3937181
-> 
-> 
-> Especially interesting for IBM z Systems, whereby memory
-> onlining/offlining will trigger the actual population of memory in the
-> hypervisor. So if an admin wants to offline some memory (to give it back
-> to the hypervisor), it would use lsmem to identify such blocks first,
-> instead of trying random blocks until one offlining request succeeds.
+Hi Peter, et al.
 
-I am sorry for being dense here but I still do not understand why s390
-and the way how it does the hotremove matters here. Afterall there are
-no arch specific operations done until the memory is offlined. Also
-randomly checking memory blocks and then hoping that the offline will
-succeed is not way much different from just trying the offline the
-block. Both have to crawl through the pfn range and bail out on the
-unmovable memory.
--- 
-Michal Hocko
-SUSE Labs
+On 07/18, Oleg Nesterov wrote:
+>
+> People report that utime and stime from /proc/<pid>/stat become very wrong
+> when the numbers are big enough. In particular, the monitored application
+> can run all the time in user-space but only stime grows.
+
+Let me reanimate this discussion and try again to convince you that
+scale_stime() needs changes and this patch makes sense.
+
+To remind, scale_stime(stime, rtime, total) is not precise, to say at
+least. For example:
+
+	stime = -1ul/33333; total = stime*3; rtime = total*5555555555;
+
+scale_stime() returns 9067034312525142184 while the correct result is
+6148914688753325707.
+
+OK, these random numbers are not realistic, usually the relative error
+is small enough.
+
+However, even if the relative error is small, the absolute error can be
+huge. And this means that if you watch /proc/$pid/status incrementally
+to see how stime/utime grow, you can get the completely wrong numbers.
+
+Say, utime (or stime) can be frozen for unpredictably long time, as if
+the monitored application "hangs" in kernel mode, while the real split
+is 50/50. The test-case from the changelog tries to demonstrate this,
+see https://lore.kernel.org/lkml/20190718131834.GA22211@redhat.com/
+
+Yes, yes, there are no 'real' stime and utime numbers. But still, why we
+can't improve scale_stime()?
+
+-------------------------------------------------------------------------------
+Lets look at simplified (but less accurate) version I mentioned in
+https://lore.kernel.org/lkml/20190718145549.GA22902@redhat.com
+
+	u64 scale_stime(u64 stime, u64 rtime, u64 total)
+	{
+		u64 res = 0, div, rem;
+
+		if (ilog2(stime) + ilog2(rtime) > 62) {
+			div = div64_u64_rem(rtime, total, &rem);
+			res = div * stime;
+			rtime = rem;
+
+			int shift = ilog2(stime) + ilog2(rtime) - 62;
+			if (shift > 0) {
+				rtime >>= shift;
+				total >>= shift;
+				if (!total)
+					return res;
+			}
+		}
+
+		return res + div64_u64(stime * rtime, total);
+	}
+
+It is much more accurate than the current version, in fact I think it
+should be 100% accurate "in practice".
+
+But there is another reason why I think it makes more sense. It is also
+faster on x86-64, much faster when the numbers are big. See the naive
+test code below. For example,
+
+	$ ./test 553407856289849 18446744066259977121 1660223568869547
+	553407856289849 * 18446744066259977121 / 1660223568869547 =
+		(128) 6148914688753325707
+		(asm) 6148914688753325707
+		(new) 6148914691236512239
+		(old) 9067034312525142184
+
+	ticks:
+		asm: 7183908591
+		new: 4891383871
+		old: 23585547775
+
+(I am surprised it works faster than asm mul_u64_u64_div_u64() version
+ on my machine, I don't understand why divq is so slow when rdx != 0).
+
+I am going to send V2, I need to rewrite the changelog and comments.
+But if you still think this doesn't worth fixing, please tell me right
+now.
+
+What do you think?
+
+Oleg.
+
+-------------------------------------------------------------------------------
+#include <stdlib.h>
+#include <stdio.h>
+#include <assert.h>
+
+#define   noinline                      __attribute__((__noinline__))
+
+typedef unsigned __int128 u128;
+typedef unsigned long long u64;
+typedef unsigned int u32;
+
+u64 mul_u64_u64_div_u64(u64 a, u64 b, u64 c)
+{
+	u64 q;
+	asm ("mulq %2; divq %3" : "=a" (q) : "a" (a), "rm" (b), "rm" (c) : "rdx");
+	return q;
+}
+
+static inline u64 div_u64_rem(u64 dividend, u32 divisor, u32 *remainder)
+{
+	*remainder = dividend % divisor;
+	return dividend / divisor;
+}
+static inline u64 div64_u64_rem(u64 dividend, u64 divisor, u64 *remainder)
+{
+	*remainder = dividend % divisor;
+	return dividend / divisor;
+}
+static inline u64 div64_u64(u64 dividend, u64 divisor)
+{
+	return dividend / divisor;
+}
+static inline u64 div_u64(u64 dividend, u32 divisor)
+{
+	u32 remainder;
+	return div_u64_rem(dividend, divisor, &remainder);
+}
+
+static inline int fls64(u64 x)
+{
+	int bitpos = -1;
+	/*
+	 * AMD64 says BSRQ won't clobber the dest reg if x==0; Intel64 says the
+	 * dest reg is undefined if x==0, but their CPU architect says its
+	 * value is written to set it to the same as before.
+	 */
+	asm("bsrq %1,%q0"
+	    : "+r" (bitpos)
+	    : "rm" (x));
+	return bitpos + 1;
+}
+
+static inline int ilog2(u64 n)
+{
+	return fls64(n) - 1;
+}
+
+#define swap(a, b) \
+	do { typeof(a) __tmp = (a); (a) = (b); (b) = __tmp; } while (0)
+
+u64 scale_stime(u64 stime, u64 rtime, u64 total)
+{
+	u64 scaled;
+
+	for (;;) {
+		/* Make sure "rtime" is the bigger of stime/rtime */
+		if (stime > rtime)
+			swap(rtime, stime);
+
+		/* Make sure 'total' fits in 32 bits */
+		if (total >> 32)
+			goto drop_precision;
+
+		/* Does rtime (and thus stime) fit in 32 bits? */
+		if (!(rtime >> 32))
+			break;
+
+		/* Can we just balance rtime/stime rather than dropping bits? */
+		if (stime >> 31)
+			goto drop_precision;
+
+		/* We can grow stime and shrink rtime and try to make them both fit */
+		stime <<= 1;
+		rtime >>= 1;
+		continue;
+
+drop_precision:
+		/* We drop from rtime, it has more bits than stime */
+		rtime >>= 1;
+		total >>= 1;
+	}
+
+	/*
+	 * Make sure gcc understands that this is a 32x32->64 multiply,
+	 * followed by a 64/32->64 divide.
+	 */
+	scaled = div_u64((u64) (u32) stime * (u64) (u32) rtime, (u32)total);
+	return scaled;
+}
+
+u64 new_scale_stime(u64 stime, u64 rtime, u64 total)
+{
+	u64 res = 0, div, rem;
+
+	if (ilog2(stime) + ilog2(rtime) > 62) {
+		div = div64_u64_rem(rtime, total, &rem);
+		res = div * stime;
+		rtime = rem;
+
+		int shift = ilog2(stime) + ilog2(rtime) - 62;
+		if (shift > 0) {
+			rtime >>= shift;
+			total >>= shift;
+			if (!total)
+				return res;
+		}
+	}
+
+	return res + div64_u64(stime * rtime, total);
+}
+
+static inline u64 rdtsc(void)
+{
+	unsigned low, high;
+	asm volatile("rdtsc" : "=a" (low), "=d" (high));
+	return ((low) | ((u64)(high) << 32));
+}
+
+u64 S, R, T;
+
+u64 noinline profile(u64 (*f)(u64,u64,u64))
+{
+//	u64 s = S, r = R, t = T;
+	u64 tsc1, tsc2;
+	int i;
+
+	tsc1 = rdtsc();
+
+	for (i = 0; i < 100*1000*1000; ++i)
+//		f(s++, r++, t++);
+		f(S,R,T);
+
+	tsc2 = rdtsc();
+
+	return tsc2 - tsc1;
+}
+
+
+int main(int argc, char **argv)
+{
+	if (argc != 4) {
+		printf("usage: %s stime rtime total\n", argv[0]);
+		return 1;
+	}
+
+	S = strtoull(argv[1], NULL, 0);
+	R = strtoull(argv[2], NULL, 0);
+	T = strtoull(argv[3], NULL, 0);
+	assert(S < T);
+	assert(T < R);
+
+	if (1) {
+		printf("%llu * %llu / %llu =\n", S,R,T);
+		printf("\t(128) %lld\n", (u64)( ((u128)S)*((u128)R)/((u128)T) ));
+		printf("\t(asm) %lld\n", mul_u64_u64_div_u64(S,R,T));
+		printf("\t(new) %lld\n", new_scale_stime(S,R,T));
+		printf("\t(old) %lld\n", scale_stime(S,R,T));
+		printf("\n");
+	}
+
+	printf("ticks:\n");
+	printf("\tasm: %lld\n", profile(mul_u64_u64_div_u64));
+	printf("\tnew: %lld\n", profile(new_scale_stime));
+	printf("\told: %lld\n", profile(scale_stime));
+
+	return 0;
+}
+
