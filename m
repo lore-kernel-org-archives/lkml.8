@@ -4,57 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CCFC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 545F1C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1E3E24683
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:38:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 218592467F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:38:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685894;
-	bh=aZuKvLHC3BdRY626rF49MIeM1UO18VEnHCa2vPcZQiQ=;
+	s=default; t=1579685897;
+	bh=MP3X2BrlBok4cbtpD4ZKUkbaVbNUyQijtX2E5c4vpBs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bKCgwnO3flT+cOVzF1zLgkENZuwFdpfHxiEcDkokmXcR3YQcumOiu7ufHD/EE5VZT
-	 NOeY/VsZA/acGNrhgJYreooSzKOpOi+IxYic/LCOYqAcxwteTgVQ0bBEWHsucEPoPQ
-	 S5Qoqayo9PGGtNf4rT3kSH1DCIlwlOGFifNUx2iA=
+	b=Ik7ZbuIv8LXsdydeP3rGbP+4LRn3e40mUHyvKTc3/czFC91bp1Tc757+Yowgtelf7
+	 6mDsJ2h0D5iXR4RIkxQS6RsPaVK7wZWXBL57ffAEjIJxvYpA9iBe9rdcj7uPit40SK
+	 5qrNm0gMylPGlw9QFG3Mmr6Y1hfWGtihHAj8SfSI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732887AbgAVJiM (ORCPT
+        id S1732903AbgAVJiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:38:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54598 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:38:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729496AbgAVJiH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:38:07 -0500
+        id S1731590AbgAVJiN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:38:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 821D224684;
-        Wed, 22 Jan 2020 09:38:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B674B2467F;
+        Wed, 22 Jan 2020 09:38:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685887;
-        bh=aZuKvLHC3BdRY626rF49MIeM1UO18VEnHCa2vPcZQiQ=;
+        s=default; t=1579685892;
+        bh=MP3X2BrlBok4cbtpD4ZKUkbaVbNUyQijtX2E5c4vpBs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ND8isEAxjKUJZklRctd3ykpM7RVodtsGrp2ngM+QMuS86AfpkGuPTK6ShcyuGrLko
-         3NSQ586eQFgFgEdqQw54G8Q57AwFAlZ7fv7YRMDj5Yb+f+DT1FcRUVHBP1NWIfLfMx
-         MdokQEK9gqwry+G3bmdActbyyqwE/BKZUlkrUNCs=
+        b=P5h+eCN1qBaen5sJJE3/BCtIH/CKp3dp55rb49m/i+aQcSabvQuzgmXpyuPv/zhv2
+         S9CgxbIeBpZnqBRC8fxwfV6YC/c2iXEigxTZ3lfmP6359wA+NBNJJCRnXnxS4zJ/nz
+         1Ge7VNhjlx7X6law7J+T4Ah01hdymrbm6oWJS5RM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Borislav Petkov <bp@suse.de>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        john.stultz@linaro.org, sboyd@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>, tj@kernel.org,
-        Tony Luck <tony.luck@intel.com>,
-        Vikas Shivappa <vikas.shivappa@linux.intel.com>,
-        x86-ml <x86@kernel.org>
-Subject: [PATCH 4.14 22/65] x86/resctrl: Fix an imbalance in domain_remove_cpu()
-Date:   Wed, 22 Jan 2020 10:29:07 +0100
-Message-Id: <20200122092754.179341279@linuxfoundation.org>
+        stable@vger.kernel.org, Yuya Fujita <fujita.yuya@fujitsu.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 4.14 24/65] perf hists: Fix variable names inconsistency in hists__for_each() macro
+Date:   Wed, 22 Jan 2020 10:29:09 +0100
+Message-Id: <20200122092754.370609927@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092750.976732974@linuxfoundation.org>
 References: <20200122092750.976732974@linuxfoundation.org>
@@ -67,75 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Yuya Fujita <fujita.yuya@fujitsu.com>
 
-commit e278af89f1ba0a9ef20947db6afc2c9afa37e85b upstream.
+commit 55347ec340af401437680fd0e88df6739a967f9f upstream.
 
-A system that supports resource monitoring may have multiple resources
-while not all of these resources are capable of monitoring. Monitoring
-related state is initialized only for resources that are capable of
-monitoring and correspondingly this state should subsequently only be
-removed from these resources that are capable of monitoring.
+Variable names are inconsistent in hists__for_each macro().
 
-domain_add_cpu() calls domain_setup_mon_state() only when r->mon_capable
-is true where it will initialize d->mbm_over. However,
-domain_remove_cpu() calls cancel_delayed_work(&d->mbm_over) without
-checking r->mon_capable resulting in an attempt to cancel d->mbm_over on
-all resources, even those that never initialized d->mbm_over because
-they are not capable of monitoring. Hence, it triggers a debugobjects
-warning when offlining CPUs because those timer debugobjects are never
-initialized:
+Due to this inconsistency, the macro replaces its second argument with
+"fmt" regardless of its original name.
 
-  ODEBUG: assert_init not available (active state 0) object type:
-  timer_list hint: 0x0
-  WARNING: CPU: 143 PID: 789 at lib/debugobjects.c:484
-  debug_print_object
-  Hardware name: HP Synergy 680 Gen9/Synergy 680 Gen9 Compute Module, BIOS I40 05/23/2018
-  RIP: 0010:debug_print_object
-  Call Trace:
-  debug_object_assert_init
-  del_timer
-  try_to_grab_pending
-  cancel_delayed_work
-  resctrl_offline_cpu
-  cpuhp_invoke_callback
-  cpuhp_thread_fun
-  smpboot_thread_fn
-  kthread
-  ret_from_fork
+So far it works because only "fmt" is passed to the second argument.
+However, this behavior is not expected and should be fixed.
 
-Fixes: e33026831bdb ("x86/intel_rdt/mbm: Handle counter overflow")
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Reinette Chatre <reinette.chatre@intel.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: john.stultz@linaro.org
-Cc: sboyd@kernel.org
-Cc: <stable@vger.kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: tj@kernel.org
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Vikas Shivappa <vikas.shivappa@linux.intel.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20191211033042.2188-1-cai@lca.pw
+Fixes: f0786af536bb ("perf hists: Introduce hists__for_each_format macro")
+Fixes: aa6f50af822a ("perf hists: Introduce hists__for_each_sort_list macro")
+Signed-off-by: Yuya Fujita <fujita.yuya@fujitsu.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lore.kernel.org/lkml/OSAPR01MB1588E1C47AC22043175DE1B2E8520@OSAPR01MB1588.jpnprd01.prod.outlook.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/cpu/intel_rdt.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/hist.h |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/x86/kernel/cpu/intel_rdt.c
-+++ b/arch/x86/kernel/cpu/intel_rdt.c
-@@ -526,7 +526,7 @@ static void domain_remove_cpu(int cpu, s
- 		if (static_branch_unlikely(&rdt_mon_enable_key))
- 			rmdir_mondata_subdir_allrdtgrp(r, d->id);
- 		list_del(&d->list);
--		if (is_mbm_enabled())
-+		if (r->mon_capable && is_mbm_enabled())
- 			cancel_delayed_work(&d->mbm_over);
- 		if (is_llc_occupancy_enabled() &&  has_busy_rmid(r, d)) {
- 			/*
+--- a/tools/perf/util/hist.h
++++ b/tools/perf/util/hist.h
+@@ -317,10 +317,10 @@ static inline void perf_hpp__prepend_sor
+ 	list_for_each_entry_safe(format, tmp, &(_list)->sorts, sort_list)
+ 
+ #define hists__for_each_format(hists, format) \
+-	perf_hpp_list__for_each_format((hists)->hpp_list, fmt)
++	perf_hpp_list__for_each_format((hists)->hpp_list, format)
+ 
+ #define hists__for_each_sort_list(hists, format) \
+-	perf_hpp_list__for_each_sort_list((hists)->hpp_list, fmt)
++	perf_hpp_list__for_each_sort_list((hists)->hpp_list, format)
+ 
+ extern struct perf_hpp_fmt perf_hpp__format[];
+ 
 
 
