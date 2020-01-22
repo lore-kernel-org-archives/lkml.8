@@ -2,106 +2,111 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 521A2C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 12:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA15C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 12:43:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25F0F24684
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 12:40:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndmsystems-com.20150623.gappssmtp.com header.i=@ndmsystems-com.20150623.gappssmtp.com header.b="Fb5pQoU1"
+	by mail.kernel.org (Postfix) with ESMTP id C703724684
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 12:43:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729074AbgAVMkC (ORCPT
+        id S1729076AbgAVMnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 07:40:02 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43094 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726204AbgAVMkB (ORCPT
+        Wed, 22 Jan 2020 07:43:10 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:37650 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726204AbgAVMnJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 07:40:01 -0500
-Received: by mail-wr1-f66.google.com with SMTP id d16so7072930wre.10
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 04:39:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndmsystems-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1VxX43mS0iWUpbkE5n95NgX2FTZO3NdGDZP/Z4S/IGE=;
-        b=Fb5pQoU1ctZ9lPR9YUEJPAibeMCFTCP8VrleQodfeto8e/z9pbKmbymipTUPDjyZid
-         l+rWGRxRAAh8RoeDMZIk30KoclIWAZh5UqmBzPiesZmToJp3OJ6dxtkQqkH6Ljb2g7m5
-         1B/5b6FgTRfwK1Bwk6NEBrR2iw78BxWZiLC5V9g+dR+ypODibZSNR7aNvxgu2INGXuGs
-         UNnyT9iRE6M/Tu/k4oASO9I+pPC+2R3j4pK8fiiTlcYYDHFb58cp6tDr97X8H7rOpF05
-         R0I4DpZRpM3s11WHuBss9pb8T/MzuSSp3LMqhMLpVVo5pDhoANDpIYJohQ3QlJS7uIrw
-         F/wQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1VxX43mS0iWUpbkE5n95NgX2FTZO3NdGDZP/Z4S/IGE=;
-        b=MmoOk/f2vmgolwWeqLnmiVjA53zflPr7HPRNVAJ6HJsmForwga3xJN1qqa/sgQHYFg
-         NNmfDVeZcZjx/v/7aoYe1wuvi+czNaav1XHR0KPZOjA3tPwf7CTKn6NXYdtHoXMtazcc
-         zJ8Iq5O2TGFYR7dD9BqLIOuXSuSNwdLGMAROp0WmcI9BTfUSjK1Jk521kCVuXMcW04hq
-         ynjaL6wiH8v4JnENCYr7xsQ3RfyQjfVyvemgv9e6LVUJT6aYK/TtMpLc/VUVKTbGTlQ1
-         p1t1lY+L4wrPy183HiqaQhHzVFNjnVx2JqAlLdIPs2WApMpWsWhVQnuUPm5IHMON1FGy
-         Kf3Q==
-X-Gm-Message-State: APjAAAXV23HeLxD3jBe4qGkMZovv+7i2PCByOOxKbKti6bjhkowKTsza
-        +gmfro5tkurb9awTBjSo7NQneA==
-X-Google-Smtp-Source: APXvYqxEei9vxIzoKTMFvJrKoh4gJ306MA/qsmhlSCdtv2ugncchWijKTkwhZpCwyJxcDFKnKuY0Pg==
-X-Received: by 2002:adf:ec4c:: with SMTP id w12mr11534785wrn.124.1579696799115;
-        Wed, 22 Jan 2020 04:39:59 -0800 (PST)
-Received: from cbox-EPYC.ndm9.net ([2a01:4f8:13b:67::2])
-        by smtp.googlemail.com with ESMTPSA id g25sm4833490wmh.3.2020.01.22.04.39.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jan 2020 04:39:58 -0800 (PST)
-From:   Sergey Korolev <s.korolev@ndmsystems.com>
-To:     linux-mips@vger.kernel.org
-Cc:     s.korolev@ndmsystems.com, Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH] MIPS: sync-r4k: do slave counter synchronization with disabled HW interrupts
-Date:   Wed, 22 Jan 2020 15:39:08 +0300
-Message-Id: <20200122123909.8188-1-s.korolev@ndmsystems.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 22 Jan 2020 07:43:09 -0500
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iuFLM-0003OI-VI; Wed, 22 Jan 2020 13:42:49 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 8960C101F92; Wed, 22 Jan 2020 13:42:48 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     l00520965 <liuchao173@huawei.com>
+Cc:     linfeilong@huawei.com, hushiyuan@huawei.com,
+        LiuChao <liuchao173@huawei.com>, linux-kernel@vger.kernel.org,
+        PJ Waskiewicz <peter.waskiewicz.jr@intel.com>,
+        Neil Horman <nhorman@tuxdriver.com>
+Subject: Re: [RFC] irq: Skip printing irq when desc->action is null even if any_count is not zero
+In-Reply-To: <20200121130959.22589-1-liuchao173@huawei.com>
+References: <20200121130959.22589-1-liuchao173@huawei.com>
+Date:   Wed, 22 Jan 2020 13:42:48 +0100
+Message-ID: <87k15jek6v.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-synchronise_count_slave() called with an enabled in mips_clockevent_init()
-timer interrupt which may decrease synchronization precision.
+Chao,
 
-Signed-off-by: Sergey Korolev <s.korolev@ndmsystems.com>
----
- arch/mips/kernel/sync-r4k.c | 5 +++++
- 1 file changed, 5 insertions(+)
+l00520965 <liuchao173@huawei.com> writes:
 
-diff --git a/arch/mips/kernel/sync-r4k.c b/arch/mips/kernel/sync-r4k.c
-index f2973ce87f53..abdd7aaa3311 100644
---- a/arch/mips/kernel/sync-r4k.c
-+++ b/arch/mips/kernel/sync-r4k.c
-@@ -90,6 +90,9 @@ void synchronise_count_master(int cpu)
- void synchronise_count_slave(int cpu)
- {
- 	int i;
-+	unsigned long flags;
-+
-+	local_irq_save(flags);
- 
- 	/*
- 	 * Not every cpu is online at the time this gets called,
-@@ -113,5 +116,7 @@ void synchronise_count_slave(int cpu)
- 	}
- 	/* Arrange for an interrupt in a short while */
- 	write_c0_compare(read_c0_count() + COUNTON);
-+
-+	local_irq_restore(flags);
- }
- #undef NR_LOOPS
--- 
-2.20.1
+> When desc->action is empty, there is no need to print out the irq and its'
+> count in each cpu. The desc is not alloced in request_irq or freed in
+> free_irq.
 
+request/free_irq() never allocate/free irq descriptors. 
+
+> So some PCI devices, such as rtl8139, uses request_irq and free_irq,
+
+All PCI devices use some variant of request_irq()/free_irq(). The
+interrupt descriptors are allocated by the underlying PCI
+machinery. They are only allocated/freed when the device driver is
+loaded/removed.
+
+And this property exists for _ALL_ interrupts independent of PCI.
+
+> which only modify the action of desc. So /proc/interrupts could be
+> like this:
+
+I think you want to explain:
+
+  If an interrupt is released via free_irq() without removing the
+  underlying irq descriptor, the interrupt count of the irq descriptor
+  is not reset. /proc/interrupt shows such interrupts with an empty
+  action handler name:
+  
+>            CPU0       CPU1
+>  38:         46          0     GICv3  36 Level     ehci_hcd:usb1
+>  39:         66          0     GICv3  37 Level
+
+  irqbalance fails to detect that this interrupt is not longer in use
+  and parses the last word in the line 'Level' as the action handler
+  name.
+
+> Irqbalance gets the list of interrupts according to /proc/interrupts. In
+> this case, irqbalance does not remove the interrupt from the balance list,
+> and the last string in this line,which is Level, is used as irq_name.
+
+Right, this is historic behaviour and I don't know how irqbalance dealt
+with that in the past 20+ years. At least I haven't seen any complaints.
+
+I'm not opposed to suppress the output, but I really want the opinion of
+the irqbalance maintainers on that.
+
+> Or we can clear desc->kstat_irqs in each cpu in free_irq when
+> desc->action is null?
+
+No, we can't. The historic behaviour is that the total interrupt count
+for a device is maintained independent of the number of
+request/free_irq() pairs.
+
+> Signed-off-by: LiuChao <liuchao173@huawei.com>
+> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+
+I really can't remember that I have reviewed this patch already. Please
+don't add tags which claim that some one has reviewed or acked your
+patch unless you really got that Reviewed-by or Acked-by from that
+person.
+
+Thanks,
+
+        tglx
