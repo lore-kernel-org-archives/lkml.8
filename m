@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13FBBC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B49C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:23:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBCA52467B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:23:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9952205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:23:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579699436;
-	bh=htLogQ1exQb6Tbgh6oLLzXYdn/pzCzc2t9ke4pJ0jzs=;
+	s=default; t=1579699439;
+	bh=G+YRBn8Ej/zwu2zE2ThMC8ovK5ke9SkDOdhYkge223w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qUqudUumf0cqjIu4K93NoEAR2lobgJVQ2bXsyUZa4UDulFdmq2OiQsGcT6+0tGIz5
-	 ChojQu4foGvw2yN2fF/iQTA2CVpK+byb0EY78ZDI0HGAPraaRWr5nGbz22ZO1VvYe+
-	 R1Er0zA9Zjg8hsskz8miKfUkKsm6+723430GVs1s=
+	b=gaJObaVo1tB/+VkD/xrKqEH+aBWqns3s4bVWCqYW27HBBCpgnENjLIrErerihoC7F
+	 RIIXm7CH3UBeYvzpeeQbV4Geu8yLW1/Mu1KTiwiu+HXSeYyWN3WRwBDNcWBFQsudYj
+	 xPN+6LhbAG2pHlKhxdpJeGGIPM3jIR6WAyfJaEpg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730842AbgAVNX4 (ORCPT
+        id S1730904AbgAVNX7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:23:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42334 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 08:23:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730009AbgAVNXv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:23:51 -0500
+        id S1730850AbgAVNX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:23:58 -0500
 Received: from localhost (unknown [84.241.205.26])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 056F72467B;
-        Wed, 22 Jan 2020 13:23:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D7A2205F4;
+        Wed, 22 Jan 2020 13:23:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579699430;
-        bh=htLogQ1exQb6Tbgh6oLLzXYdn/pzCzc2t9ke4pJ0jzs=;
+        s=default; t=1579699436;
+        bh=G+YRBn8Ej/zwu2zE2ThMC8ovK5ke9SkDOdhYkge223w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RJ/KP5AYCVfPCTyHmznibJOcveCSzO2OXntBeQ3ihkGsgUZ13ORnpDPXPx01uBKgc
-         BwJCVOr7ujdnW4ziZcQrHgaO+34/s2YgF1p3HVYQZ64vk+1Eg+SUZgxgqbmIPDB2cY
-         x1CFhtDKJdjeCQ7XlGMw8SCoAQF0N41h5FF4hGSg=
+        b=H2BNQZQUtqvZRWB+W5oIfb9q4ohd8NhcKu+TtMTlYeQ/hCvvFbiSq7cV68+LDYOdz
+         s+hVIgsV7cQSedmSavCDbqrwUIfMufonhGnrwA2/ZC+Z0k2+1Mf7sWEiauux49ApGV
+         6Wtxbe78TXKXQX+ObcFoZFNiIa7MOM2i5gy5RwRA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yonglong Liu <liuyonglong@huawei.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Davide Caratti <dcaratti@redhat.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 141/222] net: hns: fix soft lockup when there is not enough memory
-Date:   Wed, 22 Jan 2020 10:28:47 +0100
-Message-Id: <20200122092843.829070021@linuxfoundation.org>
+Subject: [PATCH 5.4 143/222] net/sched: act_ife: initalize ife->metalist earlier
+Date:   Wed, 22 Jan 2020 10:28:49 +0100
+Message-Id: <20200122092843.970302408@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
 References: <20200122092833.339495161@linuxfoundation.org>
@@ -59,57 +62,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yonglong Liu <liuyonglong@huawei.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 49edd6a2c456150870ddcef5b7ed11b21d849e13 ]
+[ Upstream commit 44c23d71599f81a1c7fe8389e0319822dd50c37c ]
 
-When there is not enough memory and napi_alloc_skb() return NULL,
-the HNS driver will print error message, and than try again, if
-the memory is not enough for a while, huge error message and the
-retry operation will cause soft lockup.
+It seems better to init ife->metalist earlier in tcf_ife_init()
+to avoid the following crash :
 
-When napi_alloc_skb() return NULL because of no memory, we can
-get a warn_alloc() call trace, so this patch deletes the error
-message. We already use polling mode to handle irq, but the
-retry operation will render the polling weight inactive, this
-patch just return budget when the rx is not completed to avoid
-dead loop.
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 10483 Comm: syz-executor216 Not tainted 5.5.0-rc5-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:_tcf_ife_cleanup net/sched/act_ife.c:412 [inline]
+RIP: 0010:tcf_ife_cleanup+0x6e/0x400 net/sched/act_ife.c:431
+Code: 48 c1 ea 03 80 3c 02 00 0f 85 94 03 00 00 49 8b bd f8 00 00 00 48 b8 00 00 00 00 00 fc ff df 4c 8d 67 e8 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 5c 03 00 00 48 bb 00 00 00 00 00 fc ff df 48 8b
+RSP: 0018:ffffc90001dc6d00 EFLAGS: 00010246
+RAX: dffffc0000000000 RBX: ffffffff864619c0 RCX: ffffffff815bfa09
+RDX: 0000000000000000 RSI: 0000000000000004 RDI: 0000000000000000
+RBP: ffffc90001dc6d50 R08: 0000000000000004 R09: fffff520003b8d8e
+R10: fffff520003b8d8d R11: 0000000000000003 R12: ffffffffffffffe8
+R13: ffff8880a79fc000 R14: ffff88809aba0e00 R15: 0000000000000000
+FS:  0000000001b51880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000563f52cce140 CR3: 0000000093541000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ tcf_action_cleanup+0x62/0x1b0 net/sched/act_api.c:119
+ __tcf_action_put+0xfa/0x130 net/sched/act_api.c:135
+ __tcf_idr_release net/sched/act_api.c:165 [inline]
+ __tcf_idr_release+0x59/0xf0 net/sched/act_api.c:145
+ tcf_idr_release include/net/act_api.h:171 [inline]
+ tcf_ife_init+0x97c/0x1870 net/sched/act_ife.c:616
+ tcf_action_init_1+0x6b6/0xa40 net/sched/act_api.c:944
+ tcf_action_init+0x21a/0x330 net/sched/act_api.c:1000
+ tcf_action_add+0xf5/0x3b0 net/sched/act_api.c:1410
+ tc_ctl_action+0x390/0x488 net/sched/act_api.c:1465
+ rtnetlink_rcv_msg+0x45e/0xaf0 net/core/rtnetlink.c:5424
+ netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
+ rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5442
+ netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+ netlink_unicast+0x58c/0x7d0 net/netlink/af_netlink.c:1328
+ netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
+ sock_sendmsg_nosec net/socket.c:639 [inline]
+ sock_sendmsg+0xd7/0x130 net/socket.c:659
+ ____sys_sendmsg+0x753/0x880 net/socket.c:2330
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2384
+ __sys_sendmsg+0x105/0x1d0 net/socket.c:2417
+ __do_sys_sendmsg net/socket.c:2426 [inline]
+ __se_sys_sendmsg net/socket.c:2424 [inline]
+ __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2424
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Fixes: 36eedfde1a36 ("net: hns: Optimize hns_nic_common_poll for better performance")
-Fixes: b5996f11ea54 ("net: add Hisilicon Network Subsystem basic ethernet support")
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+Fixes: 11a94d7fd80f ("net/sched: act_ife: validate the control action inside init()")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Cc: Davide Caratti <dcaratti@redhat.com>
+Reviewed-by: Davide Caratti <dcaratti@redhat.com>
+Acked-by: Cong Wang <xiyou.wangcong@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/hisilicon/hns/hns_enet.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ net/sched/act_ife.c |    7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
---- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-@@ -565,7 +565,6 @@ static int hns_nic_poll_rx_skb(struct hn
- 	skb = *out_skb = napi_alloc_skb(&ring_data->napi,
- 					HNS_RX_HEAD_SIZE);
- 	if (unlikely(!skb)) {
--		netdev_err(ndev, "alloc rx skb fail\n");
- 		ring->stats.sw_err_cnt++;
- 		return -ENOMEM;
- 	}
-@@ -1056,7 +1055,6 @@ static int hns_nic_common_poll(struct na
- 		container_of(napi, struct hns_nic_ring_data, napi);
- 	struct hnae_ring *ring = ring_data->ring;
- 
--try_again:
- 	clean_complete += ring_data->poll_one(
- 				ring_data, budget - clean_complete,
- 				ring_data->ex_process);
-@@ -1066,7 +1064,7 @@ try_again:
- 			napi_complete(napi);
- 			ring->q->handle->dev->ops->toggle_ring_irq(ring, 0);
- 		} else {
--			goto try_again;
-+			return budget;
- 		}
+--- a/net/sched/act_ife.c
++++ b/net/sched/act_ife.c
+@@ -536,6 +536,9 @@ static int tcf_ife_init(struct net *net,
  	}
  
+ 	ife = to_ife(*a);
++	if (ret == ACT_P_CREATED)
++		INIT_LIST_HEAD(&ife->metalist);
++
+ 	err = tcf_action_check_ctrlact(parm->action, tp, &goto_ch, extack);
+ 	if (err < 0)
+ 		goto release_idr;
+@@ -565,10 +568,6 @@ static int tcf_ife_init(struct net *net,
+ 		p->eth_type = ife_type;
+ 	}
+ 
+-
+-	if (ret == ACT_P_CREATED)
+-		INIT_LIST_HEAD(&ife->metalist);
+-
+ 	if (tb[TCA_IFE_METALST]) {
+ 		err = nla_parse_nested_deprecated(tb2, IFE_META_MAX,
+ 						  tb[TCA_IFE_METALST], NULL,
 
 
