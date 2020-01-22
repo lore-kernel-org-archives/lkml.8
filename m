@@ -2,137 +2,121 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C282C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B7A7C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24E3F21734
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:00:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3258E21734
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:01:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="QSnkPW9E"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cljBKZe/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726584AbgAVSAz (ORCPT
+        id S1726621AbgAVSBj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 13:00:55 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:16218 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725802AbgAVSAz (ORCPT
+        Wed, 22 Jan 2020 13:01:39 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:43714 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725884AbgAVSBi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 13:00:55 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00MI0I9Z015380;
-        Wed, 22 Jan 2020 19:00:25 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=FD3TOxxOgAtCMT+1BxBtntOt5Z7oR4wttkJhsEbfDwY=;
- b=QSnkPW9EQAL047il27ei1fTP2oMQjoFJPVoppePLs5mUE+D/Wu9jQ4DnvP/0jzwponSP
- LC0GftePNu91R42x9cQpb2ejYdi3DMQM8xt9K13XTXfYlOQxp/6/nU5rU2yPFQvAj7Vk
- QiPV00jZHj5Al3TMe4LTZVmlisryZsmpYdnVHqJCBI+I4mD4RPpKSb4YNEqI6hwrLjP1
- OSae02ppyQdFSAi+V1bueMdhHWx1XVNWaL8zO5Py/8OPlr0ELqD0NKbq+so0FwcAT/da
- s4ub8DhaReZnhA88dESmwvKko8PS3srlJY6LuzwPIoR7kewMNFB91wYhYZxqDZQIYmWX Ug== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xkr1e5wn3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jan 2020 19:00:25 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id AC8CE10002A;
-        Wed, 22 Jan 2020 19:00:19 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 93D422A52DC;
-        Wed, 22 Jan 2020 19:00:19 +0100 (CET)
-Received: from lmecxl0912.lme.st.com (10.75.127.48) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 22 Jan
- 2020 19:00:18 +0100
-Subject: Re: [RFC PATCH 1/3] dtc: Add dtb build information option
-To:     Steve McIntyre <steve.mcintyre@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Frank Rowand <frowand.list@gmail.com>, <ian@freebsd.org>
-CC:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Simon Glass <sjg@chromium.org>, <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Devicetree Compiler <devicetree-compiler@vger.kernel.org>
-References: <20200113181625.3130-1-alexandre.torgue@st.com>
- <20200113181625.3130-2-alexandre.torgue@st.com>
- <20200116005741.GB54439@umbus> <d2594b79-a45d-dcac-3642-90016a1408b8@st.com>
- <20200117090937.GU54439@umbus>
- <CAL_JsqKTsX9efYDMjGahFDxj0cEfzozeNrY1Nq1bECzgOZGqdQ@mail.gmail.com>
- <20200120181708.GN3697@linaro.org>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <9d83a36c-78c5-3452-bb48-209d68c46038@st.com>
-Date:   Wed, 22 Jan 2020 19:00:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 22 Jan 2020 13:01:38 -0500
+Received: by mail-lf1-f65.google.com with SMTP id 9so273084lfq.10
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 10:01:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ve6hAdMotmeqWUy7rZgNLYw8FBj8creK8SvepbZVV/4=;
+        b=cljBKZe/KhdmnH6JgB6QD1OQKOXQmzpc+CIplxIB1wb6JuPEscasAxY1yPfh3nBF+E
+         ei/5n4BhrxodchC7RX+Y9yEo+HlIgvwB8IM/XmSIIelWMBvSoeBKa0+Lb3kydKEZCie6
+         J2orWaCGI/gMymrkpVBPNFKM4eGakuSWSQQVc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ve6hAdMotmeqWUy7rZgNLYw8FBj8creK8SvepbZVV/4=;
+        b=lBvGbHQKzSQXAfECqLtSC5YtFk9teDFrID9z+YDcrvvo1bm3BZNDLWb/o+lcg4mj5A
+         dyEFzROb/cVwPlvp4PYNsdWu3417fz9RNf563SljqQhyMTnEh6yRhtb48sqmCSyrtTss
+         P8k1csEP+CKuXwSHGE59yzrFvKd6s+jtEb6VzzV4lc7vMCcki1fVVqgOLjdXqubICfGR
+         QzWcY3btpmRUrAO9CY0sBnO/FWw1ZFH/Gin7fUvl8s5BSRFp2UptO3Av/0ih6xjHUirg
+         e0BqXUiwWJvsAkQqZH+4uXsx5ynLxdPT2lt642uhw3Ak0W4vxqumLukiu3nRxTmF9n3R
+         zrAQ==
+X-Gm-Message-State: APjAAAW8+KyA40VGTgkzqFyFVTXpXJfPj8GBYZTbiLanf1yBoykwEcQt
+        8gDDbRVTnR/czuLYSeuvptp3l5KQ1tM=
+X-Google-Smtp-Source: APXvYqxIZIcR/jerbVFvDjGpVg8dnbQ494jTMnv4h5IFkphX72WY8xqqGfildOxVXW6T5fUt8jwdpg==
+X-Received: by 2002:a19:f00d:: with SMTP id p13mr2415300lfc.37.1579716096767;
+        Wed, 22 Jan 2020 10:01:36 -0800 (PST)
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com. [209.85.167.45])
+        by smtp.gmail.com with ESMTPSA id r15sm20674954ljh.11.2020.01.22.10.01.36
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jan 2020 10:01:36 -0800 (PST)
+Received: by mail-lf1-f45.google.com with SMTP id z18so309413lfe.2
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 10:01:36 -0800 (PST)
+X-Received: by 2002:a05:6512:2035:: with SMTP id s21mr2211453lfs.99.1579716095165;
+ Wed, 22 Jan 2020 10:01:35 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200120181708.GN3697@linaro.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG4NODE3.st.com (10.75.127.12) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-22_07:2020-01-22,2020-01-22 signatures=0
+References: <20200117162444.v2.1.I9c7e72144ef639cc135ea33ef332852a6b33730f@changeid>
+ <CACK8Z6Ft95qj4e_fsA32r_bcz2SsHOW1xxqZJt3_DBAJw=NMGA@mail.gmail.com>
+In-Reply-To: <CACK8Z6Ft95qj4e_fsA32r_bcz2SsHOW1xxqZJt3_DBAJw=NMGA@mail.gmail.com>
+From:   Evan Green <evgreen@chromium.org>
+Date:   Wed, 22 Jan 2020 10:00:59 -0800
+X-Gmail-Original-Message-ID: <CAE=gft6fKQWExW-=xjZGzXs30XohfpA5SKggvL2WtYXAHmzMew@mail.gmail.com>
+Message-ID: <CAE=gft6fKQWExW-=xjZGzXs30XohfpA5SKggvL2WtYXAHmzMew@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI/MSI: Avoid torn updates to MSI pairs
+To:     Rajat Jain <rajatja@google.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+On Wed, Jan 22, 2020 at 3:26 AM Rajat Jain <rajatja@google.com> wrote:
+>
+> On Fri, Jan 17, 2020 at 4:26 PM Evan Green <evgreen@chromium.org> wrote:
+> >
+> > __pci_write_msi_msg() updates three registers in the device: address
+> > high, address low, and data. On x86 systems, address low contains
+> > CPU targeting info, and data contains the vector. The order of writes
+> > is address, then data.
+> >
+> > This is problematic if an interrupt comes in after address has
+> > been written, but before data is updated, and both the SMP affinity
+> > and target vector are being changed. In this case, the interrupt targets
+> > the wrong vector on the new CPU.
+> >
+> > This case is pretty easy to stumble into using xhci and CPU hotplugging.
+> > Create a script that repeatedly targets interrupts at a set of cores and
+> > then offlines those cores. Put some stress on USB, and then watch xhci
+> > lose an interrupt and die.
+>
+> Do I understand it right, that even with this patch, the driver might
+> still miss the same interrupt (because we are disabling the interrupt
+> for that time) -  the improvement this patch brings is that it will at
+> least not be delivered to the wrong CPU or via a wrong vector?
 
-On 1/20/20 7:17 PM, Steve McIntyre wrote:
-> On Fri, Jan 17, 2020 at 08:43:23AM -0600, Rob Herring wrote:
->> On Fri, Jan 17, 2020 at 6:26 AM David Gibson
->> <david@gibson.dropbear.id.au> wrote:
-> 
-> ...
-> 
->>> What might be better would be to have a dtc option which force appends
->>> an extra .dts to the mail .dts compiled.  You can then put an overlay
->>> template in that file, something like:
->>>
->>> &{/} {
->>>          linux,build-info = /incbin/ "build-info.txt;
->>> }
->>
->> I like this suggestion either as an include another dts file or an
->> overlay. The latter could be useful as a way to maintain current dtb
->> files while splitting the source files into base and overlay dts
->> files.
-> 
-> ACK, that sounds like it could be helpful.
-> 
->> But no, let's not prepend this with 'linux'. It's not a property
->> specific for Linux to consume.
-> 
-> Right. We might be seeing the data coming through from U-Boot (or any
-> other random bootloader) too.
-> 
-> Cheers,
-> 
+In my experiments, the driver no longer misses the interrupt. XHCI is
+particularly sensitive to this, if it misses one interrupt it seems to
+completely wedge the driver.
 
-Thanks for reviews. I gonna prepare a V2 with David proposition (to use 
-overlay format) by keeping in mind not to modify existing dts(i) files.
+I think in my case the device pends the interrupts until MSIs are
+re-enabled, because I don't see anything other than MSI for xhci in
+/proc/interrupts. But I'm not sure if other devices may fall back to
+line-based interrupts for a moment, and if that's a problem.
 
-Remaining questions are:
+Although, I already see we call pci_msi_set_enable(0) whenever we set
+up MSIs, presumably for this same reason of avoiding torn MSIs. So my
+fix is really just doing the same thing for an additional case. And if
+getting stuck in a never-to-be-handled line based interrupt were a
+problem, you'd think it would also be a problem in
+pci_restore_msi_state(), where the same thing is done.
 
-1- "build-info" or "linux,build-info"? IMO, If information is "generic" 
-then first one should be used.
-
-2- Looking at Franck proposition[1] some years ago and objections on it, 
-do you think that this one could accepted ?
-
-regards
-Alex
-
-[1] https://lore.kernel.org/linux-arm-kernel/550A42AC.8060104@gmail.com/
-
-
-
-
+Maybe my fix is at the wrong level, and should be up in
+pci_msi_domain_write_msg() instead? Though I see a lot of callers to
+pci_write_msi_msg() that I worry have the same problem.
+-Evan
