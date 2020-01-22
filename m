@@ -2,53 +2,51 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81244C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A5ECC33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 540562467B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:34:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38E5B2467E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:34:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685696;
-	bh=uxoYdEa1YMvd4QmddYEXwU+ZoyC4hc6YNpLE/Vn6OP4=;
+	s=default; t=1579685698;
+	bh=VqYTQ/EVXNQCQEPMUf5UiPyaW8ywvEElTwnUB3IJ4oU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NKUL+iXHpxEFiuwrzE4YOyE80UP/bpLbB9kL72aGYZgbw42aKO+Kuxe7L2YqG/P9D
-	 mphiCsVMBpxk4tjMhriDJ26fE9aMOLEVuhSstT70vZVanrT7eYW3hsi+nYGou47spn
-	 KH8253LTDxmsO7GLv5RJJo5zzxZ4nWTWXJI7feU4=
+	b=jto9mc2+zuTtx6aCkQyqlitXnMatuT83iJGrjlEo9cLP5qrXNuaw7K+fj+yz7Amp9
+	 3OVBo+E8N+lGV3pOF0HnPw9sQnn+chTiQSehbBi+LGb6s6zYRGDs8pTatzBezLUUbO
+	 FKwpkP7Mn1lI8zuSUqbuSQ2qnMgbF+qchFoJgi0s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731063AbgAVJey (ORCPT
+        id S1731068AbgAVJe5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:34:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49644 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:34:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730486AbgAVJex (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:34:53 -0500
+        id S1729501AbgAVJez (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:34:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E87824686;
-        Wed, 22 Jan 2020 09:34:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 868F624672;
+        Wed, 22 Jan 2020 09:34:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685692;
-        bh=uxoYdEa1YMvd4QmddYEXwU+ZoyC4hc6YNpLE/Vn6OP4=;
+        s=default; t=1579685695;
+        bh=VqYTQ/EVXNQCQEPMUf5UiPyaW8ywvEElTwnUB3IJ4oU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sfiIcaXetScRFNYqVohJfaPyfAdnNld5HYV33J66xls8Z4xMtF4uJZ0KDS341pedf
-         NxN6ttmHMOy6pJ17EBJ3NujRkCGYWtLTh+TpjxPsVz+IdgupsX3akeFtZRtvsA7DZB
-         wMSfM2JyNc8JByhPlKkCo+94I4d5FHnxklfVhzeA=
+        b=2MMO50b/Vvbbnxrjp2lu9G/iSaH5GubBd3LKZs4K8btgrDLqPr8NJZGpoIIcZLK8X
+         /tHIk0grdxpJPQa77WBHm/DbYn1X5fMs0VlcCyee15ZdluVyqOrChsdIgVLIJBvkGQ
+         2/Tvq2l9BLbDL5A/i9Fob7MsHtn9vp5ioTT5v0CA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Ping-Ke Shih <pkshih@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.9 40/97] rtlwifi: Remove unnecessary NULL check in rtl_regd_init
-Date:   Wed, 22 Jan 2020 10:28:44 +0100
-Message-Id: <20200122092803.030380998@linuxfoundation.org>
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>
+Subject: [PATCH 4.9 41/97] f2fs: fix potential overflow
+Date:   Wed, 22 Jan 2020 10:28:45 +0100
+Message-Id: <20200122092803.183124960@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092755.678349497@linuxfoundation.org>
 References: <20200122092755.678349497@linuxfoundation.org>
@@ -61,51 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-commit 091c6e9c083f7ebaff00b37ad13562d51464d175 upstream.
+commit 1f0d5c911b64165c9754139a26c8c2fad352c132 upstream.
 
-When building with Clang + -Wtautological-pointer-compare:
+We expect 64-bit calculation result from below statement, however
+in 32-bit machine, looped left shift operation on pgoff_t type
+variable may cause overflow issue, fix it by forcing type cast.
 
-drivers/net/wireless/realtek/rtlwifi/regd.c:389:33: warning: comparison
-of address of 'rtlpriv->regd' equal to a null pointer is always false
-[-Wtautological-pointer-compare]
-        if (wiphy == NULL || &rtlpriv->regd == NULL)
-                              ~~~~~~~~~^~~~    ~~~~
-1 warning generated.
+page->index << PAGE_SHIFT;
 
-The address of an array member is never NULL unless it is the first
-struct member so remove the unnecessary check. This was addressed in
-the staging version of the driver in commit f986978b32b3 ("Staging:
-rtlwifi: remove unnecessary NULL check").
-
-While we are here, fix the following checkpatch warning:
-
-CHECK: Comparison to NULL could be written "!wiphy"
-35: FILE: drivers/net/wireless/realtek/rtlwifi/regd.c:389:
-+       if (wiphy == NULL)
-
-Fixes: 0c8173385e54 ("rtl8192ce: Add new driver")
-Link:https://github.com/ClangBuiltLinux/linux/issues/750
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Acked-by: Ping-Ke Shih <pkshih@realtek.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: 26de9b117130 ("f2fs: avoid unnecessary updating inode during fsync")
+Fixes: 0a2aa8fbb969 ("f2fs: refactor __exchange_data_block for speed up")
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/realtek/rtlwifi/regd.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/f2fs/data.c |    2 +-
+ fs/f2fs/file.c |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/wireless/realtek/rtlwifi/regd.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/regd.c
-@@ -427,7 +427,7 @@ int rtl_regd_init(struct ieee80211_hw *h
- 	struct wiphy *wiphy = hw->wiphy;
- 	struct country_code_to_enum_rd *country = NULL;
- 
--	if (wiphy == NULL || &rtlpriv->regd == NULL)
-+	if (!wiphy)
- 		return -EINVAL;
- 
- 	/* init country_code from efuse channel plan */
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -1267,7 +1267,7 @@ static int f2fs_write_data_page(struct p
+ 	loff_t i_size = i_size_read(inode);
+ 	const pgoff_t end_index = ((unsigned long long) i_size)
+ 							>> PAGE_SHIFT;
+-	loff_t psize = (page->index + 1) << PAGE_SHIFT;
++	loff_t psize = (loff_t)(page->index + 1) << PAGE_SHIFT;
+ 	unsigned offset = 0;
+ 	bool need_balance_fs = false;
+ 	int err = 0;
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -980,7 +980,7 @@ static int __clone_blkaddrs(struct inode
+ 				}
+ 				dn.ofs_in_node++;
+ 				i++;
+-				new_size = (dst + i) << PAGE_SHIFT;
++				new_size = (loff_t)(dst + i) << PAGE_SHIFT;
+ 				if (dst_inode->i_size < new_size)
+ 					f2fs_i_size_write(dst_inode, new_size);
+ 			} while (--ilen && (do_replace[i] || blkaddr[i] == NULL_ADDR));
 
 
