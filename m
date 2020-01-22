@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5DA0C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A2AC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83B1224683
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:38:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C12D24683
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:38:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685904;
-	bh=kkBMsYslEkYNPYzHKXDUibNKOCy004q3kA+dqlieGVM=;
+	s=default; t=1579685907;
+	bh=0uAs/JgDdMToNLZ1f9xVmDOb3m1ZaiXy12qiW+AgroA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hmbCmaDIhQMiIJ/RkentaiUgKRSoe18vc5Wp+K9i/R7TwrzQ8whBFrjQMrSmSzRPQ
-	 BQoq6YLGwwl9cfv1HhLSGEEabvIQG3XPXCZRYXj0Lw+GkUfDFO+rHsgB/R+D6AWk48
-	 5qOUnfGe5ATDW3Gjr/LWWAMVuiRtnbCuivgZ8LLM=
+	b=ZNOLODSh4ADv116Ha7NSN+ehX1QK8MFN3EYYDiHONolq+1y4iIjPDwLuVlYk50I4f
+	 wY1ZUuX1RTT50ZpAhCUTZ2uVkba+wxEnZeVwihh/ns07RlR5p3p5KXybm99jtMz3kM
+	 +gE1CNlJgiubZ2KfHqaY2AvdzZWnrhvUSOd9yGxU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732971AbgAVJiX (ORCPT
+        id S1732975AbgAVJi0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:38:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55046 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:38:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729148AbgAVJiU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:38:20 -0500
+        id S1732959AbgAVJiX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:38:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D58D2467F;
-        Wed, 22 Jan 2020 09:38:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DD852467E;
+        Wed, 22 Jan 2020 09:38:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685899;
-        bh=kkBMsYslEkYNPYzHKXDUibNKOCy004q3kA+dqlieGVM=;
+        s=default; t=1579685902;
+        bh=0uAs/JgDdMToNLZ1f9xVmDOb3m1ZaiXy12qiW+AgroA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CdJm9x9FqmtlOv962KcpLJf5pfaeL5cjdVUl9xox342Xztd8okNAstNA4Y4u4VHoH
-         DsLhUF+2HrgHkKeZm4+m50jvsCnZdlFJRed/PoDfdclWr4XZ7kEGzKm+F3/uoJnnxN
-         4GIPXZGu46qmd4nwyhkBoljW6oAtpbhHO9bPnY2E=
+        b=2ZIOg/1qzGjp6domUUrVp5bcZZVng7yYEv61/BjGQ4uHM/lkAVZZWVnMOWdik2J4J
+         xLkdWvKOWc8yMmf1xTLhiCfwMyI6ZJGyTWoEDGB47YV88uB7QmUBZrquxetou0zPjS
+         qDSX3jFGO+no0OTxlmzJWt+TcKV8t7fM2I+BZgUc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+2b2ef983f973e5c40943@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.14 04/65] ALSA: seq: Fix racy access for queue timer in proc read
-Date:   Wed, 22 Jan 2020 10:28:49 +0100
-Message-Id: <20200122092752.109061533@linuxfoundation.org>
+        stable@vger.kernel.org, Jari Ruusu <jari.ruusu@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Luis Chamberlain <mcgrof@kernel.org>, stable@kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 05/65] Fix built-in early-load Intel microcode alignment
+Date:   Wed, 22 Jan 2020 10:28:50 +0100
+Message-Id: <20200122092752.187381188@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092750.976732974@linuxfoundation.org>
 References: <20200122092750.976732974@linuxfoundation.org>
@@ -60,54 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Jari Ruusu <jari.ruusu@gmail.com>
 
-commit 60adcfde92fa40fcb2dbf7cc52f9b096e0cd109a upstream.
+commit f5ae2ea6347a308cfe91f53b53682ce635497d0d upstream.
 
-snd_seq_info_timer_read() reads the information of the timer assigned
-for each queue, but it's done in a racy way which may lead to UAF as
-spotted by syzkaller.
+Intel Software Developer's Manual, volume 3, chapter 9.11.6 says:
 
-This patch applies the missing q->timer_mutex lock while accessing the
-timer object as well as a slight code change to adapt the standard
-coding style.
+ "Note that the microcode update must be aligned on a 16-byte boundary
+  and the size of the microcode update must be 1-KByte granular"
 
-Reported-by: syzbot+2b2ef983f973e5c40943@syzkaller.appspotmail.com
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200115203733.26530-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+When early-load Intel microcode is loaded from initramfs, userspace tool
+'iucode_tool' has already 16-byte aligned those microcode bits in that
+initramfs image.  Image that was created something like this:
+
+ iucode_tool --write-earlyfw=FOO.cpio microcode-files...
+
+However, when early-load Intel microcode is loaded from built-in
+firmware BLOB using CONFIG_EXTRA_FIRMWARE= kernel config option, that
+16-byte alignment is not guaranteed.
+
+Fix this by forcing all built-in firmware BLOBs to 16-byte alignment.
+
+[ If we end up having other firmware with much bigger alignment
+  requirements, we might need to introduce some method for the firmware
+  to specify it, this is the minimal "just increase the alignment a bit
+  to account for this one special case" patch    - Linus ]
+
+Signed-off-by: Jari Ruusu <jari.ruusu@gmail.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Cc: stable@kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/seq/seq_timer.c |   14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+ firmware/Makefile |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/core/seq/seq_timer.c
-+++ b/sound/core/seq/seq_timer.c
-@@ -479,15 +479,19 @@ void snd_seq_info_timer_read(struct snd_
- 		q = queueptr(idx);
- 		if (q == NULL)
- 			continue;
--		if ((tmr = q->timer) == NULL ||
--		    (ti = tmr->timeri) == NULL) {
--			queuefree(q);
--			continue;
--		}
-+		mutex_lock(&q->timer_mutex);
-+		tmr = q->timer;
-+		if (!tmr)
-+			goto unlock;
-+		ti = tmr->timeri;
-+		if (!ti)
-+			goto unlock;
- 		snd_iprintf(buffer, "Timer for queue %i : %s\n", q->queue, ti->timer->name);
- 		resolution = snd_timer_resolution(ti) * tmr->ticks;
- 		snd_iprintf(buffer, "  Period time : %lu.%09lu\n", resolution / 1000000000, resolution % 1000000000);
- 		snd_iprintf(buffer, "  Skew : %u / %u\n", tmr->skew, tmr->skew_base);
-+unlock:
-+		mutex_unlock(&q->timer_mutex);
- 		queuefree(q);
-  	}
- }
+--- a/firmware/Makefile
++++ b/firmware/Makefile
+@@ -19,7 +19,7 @@ quiet_cmd_fwbin = MK_FW   $@
+ 		  PROGBITS=$(if $(CONFIG_ARM),%,@)progbits;		     \
+ 		  echo "/* Generated by firmware/Makefile */"		> $@;\
+ 		  echo "    .section .rodata"				>>$@;\
+-		  echo "    .p2align $${ASM_ALIGN}"			>>$@;\
++		  echo "    .p2align 4"					>>$@;\
+ 		  echo "_fw_$${FWSTR}_bin:"				>>$@;\
+ 		  echo "    .incbin \"$(2)\""				>>$@;\
+ 		  echo "_fw_end:"					>>$@;\
 
 
