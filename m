@@ -2,143 +2,154 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC654C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 07:05:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF4E5C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 07:16:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86BCE24655
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 07:05:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F34724125
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 07:16:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cNXbJDFX"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="iHWX8TxA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbgAVHFx (ORCPT
+        id S1726167AbgAVHQQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 02:05:53 -0500
-Received: from ozlabs.org ([203.11.71.1]:60749 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725911AbgAVHFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 02:05:53 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 482bz23Hq4z9sRG;
-        Wed, 22 Jan 2020 18:05:50 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1579676750;
-        bh=yyQczwsAq54YDwgkqgCUdGf+BJvUuuEzPmmA9SnY00A=;
-        h=Date:From:To:Cc:Subject:From;
-        b=cNXbJDFXc5m4E70qodd5Y+9pETIr27W+N2jGE/4xSwfQO3BpRWIEi1uKTybY1Sm/7
-         zwVh8Eexdg0cqSkuk3QO2sYHuvbyMK2GDXADaWdfTjhWI4k8daL1ibrOluQPNRX+O1
-         nSTM5xzgrUKoclbC6trJYzhtnWPLgxYsWE0bh+we9+e1xp/i7fUcQltEkVty7g4cc/
-         7VvaOjFRFXASL/okwY5vSEWh2Qq5iVEXZawvIfFWPDpr9m6zP69G0gkDddSwe6tGle
-         KXtfv+s/bmbiFfZmGsRAqtjsmb89mGnN/55GJ76S7MCYVGxn6wTvNdxC0C56W4I8Ot
-         xWKkfD2X1EKuw==
-Date:   Wed, 22 Jan 2020 18:05:45 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: linux-next: build failure after merge of the akpm tree
-Message-ID: <20200122180545.36222f50@canb.auug.org.au>
+        Wed, 22 Jan 2020 02:16:16 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:5405 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725884AbgAVHQP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 02:16:15 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e27f6b00000>; Tue, 21 Jan 2020 23:16:00 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 21 Jan 2020 23:16:15 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 21 Jan 2020 23:16:15 -0800
+Received: from [10.24.44.92] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 22 Jan
+ 2020 07:16:10 +0000
+CC:     <spujar@nvidia.com>, <devicetree@vger.kernel.org>,
+        <alsa-devel@alsa-project.org>, <atalambedu@nvidia.com>,
+        <linux-kernel@vger.kernel.org>, <lgirdwood@gmail.com>,
+        <jonathanh@nvidia.com>, <viswanathl@nvidia.com>,
+        <sharadg@nvidia.com>, <broonie@kernel.org>,
+        <thierry.reding@gmail.com>, <linux-tegra@vger.kernel.org>,
+        <rlokhande@nvidia.com>, <mkumard@nvidia.com>, <dramesh@nvidia.com>
+Subject: Re: [alsa-devel] [PATCH 4/9] ASoC: tegra: add Tegra210 based I2S
+ driver
+To:     Dmitry Osipenko <digetx@gmail.com>, <perex@perex.cz>,
+        <tiwai@suse.com>, <robh+dt@kernel.org>
+References: <1579530198-13431-1-git-send-email-spujar@nvidia.com>
+ <1579530198-13431-5-git-send-email-spujar@nvidia.com>
+ <a440d105-8db9-ecf1-3718-e58804ce14b8@gmail.com>
+ <0c571858-d72c-97c2-2d6a-ead6fdde06eb@nvidia.com>
+ <444731da-c4cd-8578-a732-c803eef31ef0@gmail.com>
+ <bdc749bc-b62c-a041-c17c-33fd49fe8e2e@nvidia.com>
+ <598fe377-5b95-d30a-eb64-89a645166d42@gmail.com>
+From:   Sameer Pujar <spujar@nvidia.com>
+Message-ID: <3f51939d-cf4b-f69b-728a-7eb99bbae458@nvidia.com>
+Date:   Wed, 22 Jan 2020 12:46:07 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/M8uKf=ek//wp/Y81RFcNz7R";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <598fe377-5b95-d30a-eb64-89a645166d42@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-GB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1579677360; bh=q6Hqy9YMgHF2zriePc5t7xoV1iQAW7z7hSGzyHNQi+A=;
+        h=X-PGP-Universal:CC:Subject:To:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=iHWX8TxAEPWQAHMxnsnEpccgp3pldQW1vu2rjCXTentxBDH+5vQXzXatb6ZHUMKVB
+         ScQTwjXFf0s2Av7ssM4F8cN5YrRpAgqRBnbqLzSF0VJqySersVlTpg7yIwnQJ4I/kp
+         irh8ngIcJ7B55wDSXgclt9SKVz4Dwl16spDaerpg/P78xOJ+8Fz8A0Q5z4G8HJ7YRu
+         QT4MD8axncFxWvVt3iIciiYnAzcvdHpkehLG9lKVEUSkUZCczLBXmGKegLZcX02F7e
+         Hs1sMjaq6xqI1BIPOYrPSibIDTlAg2ZKi0jpN81te8kQQlJz+8BqC1Pn20xpr1dViE
+         SwvO+fZZ3/wBg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/M8uKf=ek//wp/Y81RFcNz7R
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-[Also reported by Randy Dunlap]
+On 1/22/2020 11:53 AM, Dmitry Osipenko wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> 22.01.2020 07:32, Sameer Pujar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> [snip]
+>>>>>> +static int tegra210_i2s_remove(struct platform_device *pdev)
+>>>>>> +{
+>>>>>> +     pm_runtime_disable(&pdev->dev);
+>>>>>> +     if (!pm_runtime_status_suspended(&pdev->dev))
+>>>>>> +             tegra210_i2s_runtime_suspend(&pdev->dev);
+>>>>> This breaks device's RPM refcounting if it was disabled in the active
+>>>>> state. This code should be removed. At most you could warn about the
+>>>>> unxpected RPM state here, but it shouldn't be necessary.
+>>>> I guess this was added for safety and explicit suspend keeps clock
+>>>> disabled.
+>>>> Not sure if ref-counting of the device matters when runtime PM is
+>>>> disabled and device is removed.
+>>>> I see few drivers using this way.
+>>> It should matter (if I'm not missing something) because RPM should be i=
+n
+>>> a wrecked state once you'll try to re-load the driver's module. Likely
+>>> that those few other drivers are wrong.
+>>>
+>>> [snip]
+>> Once the driver is re-loaded and RPM is enabled, I don't think it would =
+use
+>> the same 'dev' and the corresponding ref count. Doesn't it use the new
+>> counters?
+>> If RPM is not working for some reason, most likely it would be the case
+>> for other
+>> devices. What best driver can do is probably do a force suspend during
+>> removal if
+>> already not done. I would prefer to keep, since multiple drivers still
+>> have it,
+>> unless there is a real harm in doing so.
+> I took a closer look and looks like the counter actually should be
+> reset. Still I don't think that it's a good practice to make changes
+> underneath of RPM, it may strike back.
 
-After merging the akpm tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+If RPM is broken, it probably would have been caught during device usage.
+I will remove explicit suspend here if no any concerns from other folks.=20
+Thanks.
+>
+>>>>>> +     int rx_fifo_th;
+>>>>> Could rx_fifo_th be negative?
+>>>> rx_fifo_th itself does not take negative values, explicit
+>>>> typecasting> is avoided in "if" condition by declaring this as "int"
+>>> Explicit typecasting isn't needed for integers.
+>> What I meant was, rx_fifo_th is checked against a 'int' variable in an
+>> "if" condition.
+> What's the problem with comparing of unsigned with signed?
 
-kernel/sched/psi.c: In function 'psi_proc_init':
-kernel/sched/psi.c:1286:37: error: 'NUL' undeclared (first use in this func=
-tion); did you mean 'NULL'?
- 1286 |   proc_create("pressure/memory", 0, NUL, &psi_memory_proc_ops);
-      |                                     ^~~
-      |                                     NULL
-kernel/sched/psi.c:1286:37: note: each undeclared identifier is reported on=
-ly once for each function it appears in
-kernel/sched/psi.c:1287:39: error: invalid operands to binary & (have 'void=
- *' and 'const struct proc_ops')
- 1287 |   proc_create("pressure/cpu", 0, NULL &psi_cpu_proc_ops);
-      |                                       ^
-kernel/sched/psi.c:1287:3: error: too few arguments to function 'proc_creat=
-e'
- 1287 |   proc_create("pressure/cpu", 0, NULL &psi_cpu_proc_ops);
-      |   ^~~~~~~~~~~
-In file included from kernel/sched/psi.c:133:
-include/linux/proc_fs.h:64:24: note: declared here
-   64 | struct proc_dir_entry *proc_create(const char *name, umode_t mode, =
-struct proc_dir_entry *parent, const struct proc_ops *proc_ops);
-      |                        ^~~~~~~~~~~
+consider this example,
+----
+unsigned int x =3D 5;
+int y =3D -1;
 
-Caused by patch
+(x > y) is false.
+----
+Hence should be careful while using signed and unsigned comparisons.
+>
+> Besides, cif_conf.audio_ch > I2S_RX_FIFO_DEPTH can't be ever true, isn't
+> it? I2S_RX_FIFO_DEPTH=3D64, channels_max=3D16
 
-  "proc: convert everything to "struct proc_ops""
+Yes true.
+> Lastly, nothing stops you to make max_th unsigned.
 
-I have applied the following fix patch for today.
+will update.
 
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Wed, 22 Jan 2020 17:59:00 +1100
-Subject: [PATCH] proc-convert-everything-to-struct-proc_ops-fix-2
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- kernel/sched/psi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
-index 19967bceb64d..ac4bd0ca11cc 100644
---- a/kernel/sched/psi.c
-+++ b/kernel/sched/psi.c
-@@ -1283,8 +1283,8 @@ static int __init psi_proc_init(void)
- 	if (psi_enable) {
- 		proc_mkdir("pressure", NULL);
- 		proc_create("pressure/io", 0, NULL, &psi_io_proc_ops);
--		proc_create("pressure/memory", 0, NUL, &psi_memory_proc_ops);
--		proc_create("pressure/cpu", 0, NULL &psi_cpu_proc_ops);
-+		proc_create("pressure/memory", 0, NULL, &psi_memory_proc_ops);
-+		proc_create("pressure/cpu", 0, NULL, &psi_cpu_proc_ops);
- 	}
- 	return 0;
- }
---=20
-2.24.0
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/M8uKf=ek//wp/Y81RFcNz7R
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4n9EkACgkQAVBC80lX
-0GzVtAf/S1mqEoFoYlx4Bc9gOGest/DRuxnTvzzEH9VSfnRyfWhQhJ0fWlv99rQk
-gNu++UVARbfAfavv1n4GQB45DyH8h/HmngmrDjG0OCY9F2VvXy7/+0NuUVHRO4rB
-xAVEiavY/FcVWNNaAXB9sCI/6HYzm2Jlg37I2eCg8AwxXfCxmFeKpDq8g2p6PKA0
-9duy5wEQrLbdrO0hX0s3blBiAK7mo9pin6dUu6Llaeel799be/Wb18jLeEnYXlPp
-qErsnim9Rm47Jg0ViyXmbnEljNtJZsWe57Mky5Ig+2+Wvd2mUW67MhZvDsUv9YwN
-ZU2ITQsWcS6iqCEwewSjr6KcEwoG6g==
-=1qFT
------END PGP SIGNATURE-----
-
---Sig_/M8uKf=ek//wp/Y81RFcNz7R--
