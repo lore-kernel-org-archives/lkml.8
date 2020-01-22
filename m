@@ -2,120 +2,102 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D59A8C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C9EAC33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB9AE2467A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:18:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579699090;
-	bh=mFIdlyVdzWS60cUgX/WY3zhoTOF/ycY5ekNherhcZE8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UVnPg875Tt84IfgyPtNJzwxVyclAFgaQn5sSzgYPBGY07KVgzJeAYDFzqNIoWtZr5
-	 m0xMOaaDPnP5K0l07XwdExkZKYdjIdWGF3pMAzNATQqhsJnTE0mNtFFIMrQr6V1+xl
-	 woQwtIwannY1E4nmcr13GPoWzttLRWxMU+2lnx/Q=
+	by mail.kernel.org (Postfix) with ESMTP id 7C72B2467E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:18:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729112AbgAVNSJ (ORCPT
+        id S1729160AbgAVNSQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:18:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33774 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729083AbgAVNSI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:18:08 -0500
-Received: from localhost (unknown [84.241.205.26])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3298A20678;
-        Wed, 22 Jan 2020 13:18:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579699087;
-        bh=mFIdlyVdzWS60cUgX/WY3zhoTOF/ycY5ekNherhcZE8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U7IfDP7CUtHV1m9xC+sX6ZEYxyXfKub5MwcCbQswpgmiloxa1xcgJAzdb6Oh+PNb0
-         1VWIL8RV+Nfhq/qObTdkYY1WSjw3Ki3OdDiAOlD03bBWvJ6wG1Mt6MB0GQHrgX8jzX
-         2bQDG+cEHXz5odHOP+VkKsSH0zyZIh2KKYPnzMWg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 5.4 009/222] bus: ti-sysc: Fix iterating over clocks
-Date:   Wed, 22 Jan 2020 10:26:35 +0100
-Message-Id: <20200122092834.033352861@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
-References: <20200122092833.339495161@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 22 Jan 2020 08:18:16 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:33688 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729113AbgAVNSP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:18:15 -0500
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00MD1uDQ000326;
+        Wed, 22 Jan 2020 08:18:04 -0500
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2xkytaanr6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Jan 2020 08:18:03 -0500
+Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 00MDI2vv056044
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Wed, 22 Jan 2020 08:18:02 -0500
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Wed, 22 Jan
+ 2020 05:18:00 -0800
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Wed, 22 Jan 2020 08:18:00 -0500
+Received: from saturn.ad.analog.com ([10.48.65.124])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 00MDHqPr026060;
+        Wed, 22 Jan 2020 08:17:57 -0500
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <ekigwana@gmail.com>, <jic23@kernel.org>, <lars@metafoo.de>,
+        <robh+dt@kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH v2 3/3] MAINTAINERS: add entry for ADF4360 PLL driver
+Date:   Wed, 22 Jan 2020 15:20:04 +0200
+Message-ID: <20200122132004.4621-3-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200122132004.4621-1-alexandru.ardelean@analog.com>
+References: <20200122132004.4621-1-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-17_05:2020-01-16,2020-01-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 phishscore=0 mlxlogscore=995 mlxscore=0 suspectscore=0
+ impostorscore=0 spamscore=0 malwarescore=0 adultscore=0 priorityscore=1501
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001220119
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Edward Kigwana <ekigwana@gmail.com>
 
-commit 2c81f0f6d3f52ac222a5dc07a6e5c06e1543e88b upstream.
+Add entry in the MAINTAINERS file for the ADF4360 PLL driver.
 
-Commit d878970f6ce1 ("bus: ti-sysc: Add separate functions for handling
-clocks") separated handling of optional clocks from the main clocks, but
-introduced an issue where we do not necessarily allocate a slot for both
-fck and ick clocks, but still assume fixed slots for enumerating over the
-clocks.
-
-Let's fix the issue by ensuring we always have slots for both fck and ick
-even if we don't use ick, and don't attempt to enumerate optional clocks
-if not allocated.
-
-In the long run we might want to simplify things a bit by only allocating
-space only for the optional clocks as we have only few devices with
-optional clocks.
-
-Fixes: d878970f6ce1 ("bus: ti-sysc: Add separate functions for handling clocks")
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Edward Kigwana <ekigwana@gmail.com>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- drivers/bus/ti-sysc.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ MAINTAINERS | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -343,6 +343,12 @@ static int sysc_get_clocks(struct sysc *
- 		return -EINVAL;
- 	}
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e699fe378e71..d7a404084ad9 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -462,6 +462,14 @@ ADDRESS SPACE LAYOUT RANDOMIZATION (ASLR)
+ M:	Jiri Kosina <jikos@kernel.org>
+ S:	Maintained
  
-+	/* Always add a slot for main clocks fck and ick even if unused */
-+	if (!nr_fck)
-+		ddata->nr_clocks++;
-+	if (!nr_ick)
-+		ddata->nr_clocks++;
++ADF4360 PLL DRIVER
++M:	Edward Kigwana <ekigwana@gmail.com>
++W:	http://ez.analog.com/community/linux-device-drivers
++L:	linux-iio@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/iio/frequency/adi,adf4360.yaml
++F:	drivers/iio/frequency/adf4360.c
 +
- 	ddata->clocks = devm_kcalloc(ddata->dev,
- 				     ddata->nr_clocks, sizeof(*ddata->clocks),
- 				     GFP_KERNEL);
-@@ -421,7 +427,7 @@ static int sysc_enable_opt_clocks(struct
- 	struct clk *clock;
- 	int i, error;
- 
--	if (!ddata->clocks)
-+	if (!ddata->clocks || ddata->nr_clocks < SYSC_OPTFCK0 + 1)
- 		return 0;
- 
- 	for (i = SYSC_OPTFCK0; i < SYSC_MAX_CLOCKS; i++) {
-@@ -455,7 +461,7 @@ static void sysc_disable_opt_clocks(stru
- 	struct clk *clock;
- 	int i;
- 
--	if (!ddata->clocks)
-+	if (!ddata->clocks || ddata->nr_clocks < SYSC_OPTFCK0 + 1)
- 		return;
- 
- 	for (i = SYSC_OPTFCK0; i < SYSC_MAX_CLOCKS; i++) {
-
+ ADF7242 IEEE 802.15.4 RADIO DRIVER
+ M:	Michael Hennerich <michael.hennerich@analog.com>
+ W:	https://wiki.analog.com/ADF7242
+-- 
+2.20.1
 
