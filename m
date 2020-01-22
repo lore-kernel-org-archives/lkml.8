@@ -2,114 +2,128 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF4FC33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A78C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51EA221734
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:04:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="twmymRWj"
+	by mail.kernel.org (Postfix) with ESMTP id C26302467A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:06:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729137AbgAVLEh (ORCPT
+        id S1729019AbgAVLGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 06:04:37 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:55690 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbgAVLEh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 06:04:37 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00MB4OX0001728;
-        Wed, 22 Jan 2020 05:04:24 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579691064;
-        bh=H0tZlxfnrWFRp0J+H9eAMOrfUBLlN+Vz4L+HPhGeAFY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=twmymRWjInelvHECgTHY4Y4QIS90WCj6sbj6yBbj9FdtncvGGRMVGaX1/Gars4aht
-         uheH7NHNsnu5gjOgu9K1sJr1q38th+pgEipZARq8loUw4qgmNnR2lTnqnMgFrH/QKC
-         KoRAY8WTMEzWONHlAgfDiiZIPxKbcsmUh1xK5gMA=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00MB4Oec043482
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 22 Jan 2020 05:04:24 -0600
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 22
- Jan 2020 05:04:23 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 22 Jan 2020 05:04:23 -0600
-Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00MB4KPt028067;
-        Wed, 22 Jan 2020 05:04:21 -0600
-Subject: Re: [PATCH v2 1/9] arm64: dts: ti: k3-am65-main: Correct main NAVSS
- representation
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, <t-kristo@ti.com>,
-        <nm@ti.com>
-CC:     <mark.rutland@arm.com>, <devicetree@vger.kernel.org>,
-        <robh+dt@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200122082621.4974-1-peter.ujfalusi@ti.com>
- <20200122082621.4974-2-peter.ujfalusi@ti.com>
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-Message-ID: <600df214-620b-fa41-82ef-01132d9bdfae@ti.com>
-Date:   Wed, 22 Jan 2020 16:33:30 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200122082621.4974-2-peter.ujfalusi@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Wed, 22 Jan 2020 06:06:32 -0500
+Received: from mail.wangsu.com ([123.103.51.227]:44552 "EHLO wangsu.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725911AbgAVLGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 06:06:31 -0500
+Received: from 137.localdomain (unknown [59.61.78.232])
+        by app2 (Coremail) with SMTP id 4zNnewBnh2uxLChe+KUOAA--.844S2;
+        Wed, 22 Jan 2020 19:06:26 +0800 (CST)
+From:   Pengcheng Yang <yangpc@wangsu.com>
+To:     akpm@linux-foundation.org, gregkh@linuxfoundation.org,
+        jannh@google.com, viro@zeniv.linux.org.uk
+Cc:     linux-kernel@vger.kernel.org, Pengcheng Yang <yangpc@wangsu.com>
+Subject: [PATCH RESEND] kernel/relay.c: fix read_pos error when multiple readers
+Date:   Wed, 22 Jan 2020 19:06:15 +0800
+Message-Id: <1579691175-28949-1-git-send-email-yangpc@wangsu.com>
+X-Mailer: git-send-email 1.8.3.1
+X-CM-TRANSID: 4zNnewBnh2uxLChe+KUOAA--.844S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxZrW3tw15WrWktFy8XF1xAFb_yoW5Xry8pr
+        Z0kayrAr4vqa4fuFyrKF4kXFyfG34fXF40vrW8W3WxZr9rGrs5AFWrGa4YqryUJw1ktw4U
+        Kw4j9wn7tr40yFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUgS1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l8cAvFVAK
+        0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4
+        x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWl84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2
+        z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4
+        xG64xvF2IEw4CE5I8CrVC2j2WlYx0E74AGY7Cv6cx26r48McvjeVCFs4IE7xkEbVWUJVW8
+        JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r4kMx
+        AIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_Gr4l4I8I3I0E4IkC6x0Yz7v_Jr0_
+        Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17
+        CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0
+        I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0x
+        vEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2Kfnx
+        nUUI43ZEXa7VU04CJPUUUUU==
+X-CM-SenderInfo: p1dqw1nf6zt0xjvxhudrp/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+When reading, read_pos should start with bytes_consumed,
+not file->f_pos. Because when there is more than one reader,
+the read_pos corresponding to file->f_pos may have been consumed,
+which will cause the data that has been consumed to be read
+and the bytes_consumed update error.
 
+Signed-off-by: Pengcheng Yang <yangpc@wangsu.com>
+---
+ kernel/relay.c | 17 +++++++----------
+ 1 file changed, 7 insertions(+), 10 deletions(-)
 
-On 22/01/20 1:56 PM, Peter Ujfalusi wrote:
-> NAVSS is a subsystem containing different IPs, it is not really a bus.
-> Change the compatible from "simple-bus" to "simple-mfd" to reflect that.
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
->  arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-> index efb24579922c..e40f7acbec42 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-> @@ -385,8 +385,8 @@ intr_main_gpio: interrupt-controller0 {
->  		ti,sci-rm-range-girq = <0x1>;
->  	};
->  
-> -	cbass_main_navss: interconnect0 {
-> -		compatible = "simple-bus";
-> +	cbass_main_navss: navss@30800000 {
+diff --git a/kernel/relay.c b/kernel/relay.c
+index ade14fb..07ee1a7 100644
+--- a/kernel/relay.c
++++ b/kernel/relay.c
+@@ -991,14 +991,14 @@ static void relay_file_read_consume(struct rchan_buf *buf,
+ /*
+  *	relay_file_read_avail - boolean, are there unconsumed bytes available?
+  */
+-static int relay_file_read_avail(struct rchan_buf *buf, size_t read_pos)
++static int relay_file_read_avail(struct rchan_buf *buf)
+ {
+ 	size_t subbuf_size = buf->chan->subbuf_size;
+ 	size_t n_subbufs = buf->chan->n_subbufs;
+ 	size_t produced = buf->subbufs_produced;
+ 	size_t consumed = buf->subbufs_consumed;
+ 
+-	relay_file_read_consume(buf, read_pos, 0);
++	relay_file_read_consume(buf, 0, 0);
+ 
+ 	consumed = buf->subbufs_consumed;
+ 
+@@ -1059,23 +1059,20 @@ static size_t relay_file_read_subbuf_avail(size_t read_pos,
+ 
+ /**
+  *	relay_file_read_start_pos - find the first available byte to read
+- *	@read_pos: file read position
+  *	@buf: relay channel buffer
+  *
+- *	If the @read_pos is in the middle of padding, return the
++ *	If the read_pos is in the middle of padding, return the
+  *	position of the first actually available byte, otherwise
+  *	return the original value.
+  */
+-static size_t relay_file_read_start_pos(size_t read_pos,
+-					struct rchan_buf *buf)
++static size_t relay_file_read_start_pos(struct rchan_buf *buf)
+ {
+ 	size_t read_subbuf, padding, padding_start, padding_end;
+ 	size_t subbuf_size = buf->chan->subbuf_size;
+ 	size_t n_subbufs = buf->chan->n_subbufs;
+ 	size_t consumed = buf->subbufs_consumed % n_subbufs;
++	size_t read_pos = consumed * subbuf_size + buf->bytes_consumed;
+ 
+-	if (!read_pos)
+-		read_pos = consumed * subbuf_size + buf->bytes_consumed;
+ 	read_subbuf = read_pos / subbuf_size;
+ 	padding = buf->padding[read_subbuf];
+ 	padding_start = (read_subbuf + 1) * subbuf_size - padding;
+@@ -1131,10 +1128,10 @@ static ssize_t relay_file_read(struct file *filp,
+ 	do {
+ 		void *from;
+ 
+-		if (!relay_file_read_avail(buf, *ppos))
++		if (!relay_file_read_avail(buf))
+ 			break;
+ 
+-		read_start = relay_file_read_start_pos(*ppos, buf);
++		read_start = relay_file_read_start_pos(buf);
+ 		avail = relay_file_read_subbuf_avail(read_start, buf);
+ 		if (!avail)
+ 			break;
+-- 
+1.8.3.1
 
-This introduces below dtc warning when built with W=1
-
-arch/arm64/boot/dts/ti/k3-am65-main.dtsi:388.35-530.4: Warning
-(unit_address_vs_reg): /interconnect@100000/navss@30800000: node has a unit
-name, but no reg property
-
-this is representing cbass inside main_navss, just like cbass_main. You can drop
-this patch and the similar mcu version.
-
-Thanks and regards,
-Lokesh
-
-> +		compatible = "simple-mfd";
->  		#address-cells = <2>;
->  		#size-cells = <2>;
->  		ranges;
-> 
