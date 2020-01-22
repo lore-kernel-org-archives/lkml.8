@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D75A5C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50C9CC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:53:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A590424688
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:53:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18E9524688
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:53:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686789;
-	bh=jrTzhGLfGHrWhOq5eRjfEx/4ddps1irVdKdt7mT6ICM=;
+	s=default; t=1579686794;
+	bh=SpcGcygHXVPxn1UnRvEt5r5U7UWMz3jhb1BxPra/2sQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0Cvzh3iF8vo1MA0vnB+9E99Wmvwupd81d0Xj6jSRAzwg1wYesR+pmk/OI05BmNX8E
-	 exAgkXcxpzGODDJb2cTMVU6UssYtWsD+mXlT6ngfOV3xLO57spsUiPXLTAJQdvSc2/
-	 7pDYBA8Au9IzL1ChP/HI/K1dMxJIKxSsnWwNoyjA=
+	b=rjM82w7kpIAV6+sWN/bvpuhIJlJ4V7ROyr5/0XndzTlIAz1Pt3gCOHKqki51G/jl3
+	 62ex0D0ArOtn0vyOW798JGk8eiNjiZIwXD/7CYol8+5OJvM17fvm2v3ideaKOmj69M
+	 h2ruwLpYX/A6R2nfJdZl5Z5BNxkxiIU/UX/ZK8P8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732568AbgAVJxI (ORCPT
+        id S1731390AbgAVJfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:53:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50860 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:35:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730774AbgAVJfm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:35:42 -0500
+        id S1730198AbgAVJf3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:35:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 822FA2071E;
-        Wed, 22 Jan 2020 09:35:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FEF52467B;
+        Wed, 22 Jan 2020 09:35:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685741;
-        bh=jrTzhGLfGHrWhOq5eRjfEx/4ddps1irVdKdt7mT6ICM=;
+        s=default; t=1579685728;
+        bh=SpcGcygHXVPxn1UnRvEt5r5U7UWMz3jhb1BxPra/2sQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AjQ4h10aO1zjW7qlPagQNiwQ6UIgIveme9R/HO8VHSamgkQTz10p6a0SOC/miCmnZ
-         pqpuU6R0IfBky1wS77Ljx2EembYFwtyFNmgw2alxqc1GSc9glACCYZjOuzBBJCnW7K
-         gNuneHjnH19hpeYrIGgJwVvMbq/gT1W12wBiyQtc=
+        b=Tc6jRjp7zPMuZtSyxLzg5N6j7z21E8m9Nxq3+PMDlL/sEnIEF/Fm9GktCZm6S+kO3
+         7qYh7dxPi0UEP7O2vTbQI6pVgsNP4UKynaFu2YZJtWK/xnyuC5AUaXbYRXrHdDDUwY
+         qUT+ggSZ1/tdQwxg0mbSrkwlVOsULt9I7XRqpA6U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.9 61/97] USB: serial: io_edgeport: add missing active-port sanity check
-Date:   Wed, 22 Jan 2020 10:29:05 +0100
-Message-Id: <20200122092806.195184925@linuxfoundation.org>
+        stable@vger.kernel.org, Jon Derrick <jonathan.derrick@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 4.9 21/97] iommu: Remove device link to group on failure
+Date:   Wed, 22 Jan 2020 10:28:25 +0100
+Message-Id: <20200122092759.508263520@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092755.678349497@linuxfoundation.org>
 References: <20200122092755.678349497@linuxfoundation.org>
@@ -58,67 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Jon Derrick <jonathan.derrick@intel.com>
 
-commit 1568c58d11a7c851bd09341aeefd6a1c308ac40d upstream.
+commit 7d4e6ccd1fb09dbfbc49746ca82bd5c25ad4bfe4 upstream.
 
-The driver receives the active port number from the device, but never
-made sure that the port number was valid. This could lead to a
-NULL-pointer dereference or memory corruption in case a device sends
-data for an invalid port.
+This adds the missing teardown step that removes the device link from
+the group when the device addition fails.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Cc: stable <stable@vger.kernel.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+Fixes: 797a8b4d768c5 ("iommu: Handle default domain attach failure")
+Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/io_edgeport.c |   12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ drivers/iommu/iommu.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/usb/serial/io_edgeport.c
-+++ b/drivers/usb/serial/io_edgeport.c
-@@ -1662,7 +1662,8 @@ static void edge_break(struct tty_struct
- static void process_rcvd_data(struct edgeport_serial *edge_serial,
- 				unsigned char *buffer, __u16 bufferLength)
- {
--	struct device *dev = &edge_serial->serial->dev->dev;
-+	struct usb_serial *serial = edge_serial->serial;
-+	struct device *dev = &serial->dev->dev;
- 	struct usb_serial_port *port;
- 	struct edgeport_port *edge_port;
- 	__u16 lastBufferLength;
-@@ -1767,9 +1768,8 @@ static void process_rcvd_data(struct edg
- 
- 			/* spit this data back into the tty driver if this
- 			   port is open */
--			if (rxLen) {
--				port = edge_serial->serial->port[
--							edge_serial->rxPort];
-+			if (rxLen && edge_serial->rxPort < serial->num_ports) {
-+				port = serial->port[edge_serial->rxPort];
- 				edge_port = usb_get_serial_port_data(port);
- 				if (edge_port->open) {
- 					dev_dbg(dev, "%s - Sending %d bytes to TTY for port %d\n",
-@@ -1779,8 +1779,8 @@ static void process_rcvd_data(struct edg
- 							rxLen);
- 					edge_port->port->icount.rx += rxLen;
- 				}
--				buffer += rxLen;
- 			}
-+			buffer += rxLen;
- 			break;
- 
- 		case EXPECT_HDR3:	/* Expect 3rd byte of status header */
-@@ -1815,6 +1815,8 @@ static void process_rcvd_status(struct e
- 	__u8 code = edge_serial->rxStatusCode;
- 
- 	/* switch the port pointer to the one being currently talked about */
-+	if (edge_serial->rxPort >= edge_serial->serial->num_ports)
-+		return;
- 	port = edge_serial->serial->port[edge_serial->rxPort];
- 	edge_port = usb_get_serial_port_data(port);
- 	if (edge_port == NULL) {
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -439,6 +439,7 @@ err_put_group:
+ 	mutex_unlock(&group->mutex);
+ 	dev->iommu_group = NULL;
+ 	kobject_put(group->devices_kobj);
++	sysfs_remove_link(group->devices_kobj, device->name);
+ err_free_name:
+ 	kfree(device->name);
+ err_remove_link:
 
 
