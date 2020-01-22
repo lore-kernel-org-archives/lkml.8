@@ -2,105 +2,109 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDBB4C33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F1CC32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF4AB2467C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DCDE2467E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:04:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qlfk6Cg8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728900AbgAVID6 (ORCPT
+        id S1729464AbgAVIEF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 03:03:58 -0500
-Received: from rtits2.realtek.com ([211.75.126.72]:33440 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729308AbgAVIDe (ORCPT
+        Wed, 22 Jan 2020 03:04:05 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:38326 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726219AbgAVIED (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 03:03:34 -0500
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID 00M83VYi009789, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (smtpsrv.realtek.com[172.21.6.99])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id 00M83VYi009789
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jan 2020 16:03:31 +0800
-Received: from RTEXMB06.realtek.com.tw (172.21.6.99) by
- RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 22 Jan 2020 16:03:31 +0800
-Received: from RTITCASV01.realtek.com.tw (172.21.6.18) by
- RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_0, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.1.1779.2
- via Frontend Transport; Wed, 22 Jan 2020 16:03:31 +0800
-Received: from fc30.localdomain (172.21.177.138) by RTITCASV01.realtek.com.tw
- (172.21.6.18) with Microsoft SMTP Server id 14.3.468.0; Wed, 22 Jan 2020
- 16:03:29 +0800
-From:   Hayes Wang <hayeswang@realtek.com>
-To:     <netdev@vger.kernel.org>
-CC:     <nic_swsd@realtek.com>, <linux-kernel@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <pmalani@chromium.org>,
-        <grundler@chromium.org>, Hayes Wang <hayeswang@realtek.com>
-Subject: [PATCH net v3 7/9] r8152: don't enable U1U2 with USB_SPEED_HIGH for RTL8153B
-Date:   Wed, 22 Jan 2020 16:02:11 +0800
-Message-ID: <1394712342-15778-365-Taiwan-albertk@realtek.com>
-X-Mailer: Microsoft Office Outlook 11
-In-Reply-To: <1394712342-15778-358-Taiwan-albertk@realtek.com>
-References: <1394712342-15778-338-Taiwan-albertk@realtek.com>
- <1394712342-15778-358-Taiwan-albertk@realtek.com>
+        Wed, 22 Jan 2020 03:04:03 -0500
+Received: by mail-oi1-f196.google.com with SMTP id l9so5276309oii.5
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 00:04:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XifBJGa0DN4NJ3rFnW6cBAX9U4Fomg6iECE6EawbVuc=;
+        b=qlfk6Cg85x3FfnZH3rrJzAYuty17g/Agu4Te7iNqg1EtXvQl/RaCTw9yD+vmguFqeF
+         7bsJScU0k8fzEvsiXs0PH6byeKN0+DHLkN1XsJ9vdRtaufTvRA05595FdhoRMqarovaW
+         f13ga3XtvH4YoJEq3qZDR3cYf66DQKV4Ebgi2QMmsy+1FkJTHqAbYsZ1Gx/Q25I5WVqp
+         P3k1+UiE7Xu8j2bVQEfc0HikZOpAxJ/JrRZqnlJe00dYN9KCQOlDXOoLG3fUCPa+kn4V
+         iejVe2azgmwHsNxBrbEfK3+O4zqhQ3apiRuOo2ctLshLNR0SEmLWOFI8kFQDYw5J0NX2
+         SJlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XifBJGa0DN4NJ3rFnW6cBAX9U4Fomg6iECE6EawbVuc=;
+        b=S0Rkv32BCQyNn9Cy7Jk6WwJrbjc8vg5KtDQNZ2W/pMmvUgxBN+FNU1Kc780FM6FRd8
+         m6LI3/vno5JnS2CHMq2aiJwIz+q4UbTaIHXAP2AFuRHQYnbIKmslOKFiPtdhGL7zVo65
+         oQeRt/CMZzkN8/YsArFndNo8DGilMcr5Lk2IDRtHBVZqoEyn5xwPaJHcyKE7lv0gp+sZ
+         C3nCPf9p4xEofoSWjRH4SzxSKv9PEyAkcdUr4W4lL0ETAzBDSo8xXublyj2iaNqK3GpR
+         bpWR/ToQg88I2dsboICaqF3kBBs0ZsS425c4XvxsNoGgBxB3OBBTtV1WruyYtUvPZxet
+         Dz0w==
+X-Gm-Message-State: APjAAAXWQ8P6EcXhsB4qbg+GHFUOIWll5yJBvnIpUEAaCi8ej37j2E6+
+        chqBHaomsHD2M6rhhDlOMyLmaQup1VUfxnQRX5Q2/g==
+X-Google-Smtp-Source: APXvYqwE0Wlw0SYqPyeRLdKBkujnJVIpyqyBtPTa2Ai1wTLUkvsjaLCi8LuHwZW1KG95uKgfZmRCCN4aReE3LN3xpI4=
+X-Received: by 2002:aca:1e11:: with SMTP id m17mr6011716oic.5.1579680242453;
+ Wed, 22 Jan 2020 00:04:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [172.21.177.138]
+References: <20200110122807.49617-1-vincenzo.frascino@arm.com>
+ <8fa0e5b3-6e88-3fa2-9e16-046350cc752b@arm.com> <20200121152031.GA572414@kroah.com>
+ <f4134c26-231f-968a-7fc3-0427af9a886e@arm.com> <20200121171836.GA674326@kroah.com>
+In-Reply-To: <20200121171836.GA674326@kroah.com>
+From:   Jens Wiklander <jens.wiklander@linaro.org>
+Date:   Wed, 22 Jan 2020 09:03:51 +0100
+Message-ID: <CAHUa44F1FU6iPqjkk_9ALS0YHc5AVtSzweEt-0RX919cUbU2eA@mail.gmail.com>
+Subject: Re: [PATCH] drivers: optee: Fix compilation issue.
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For certain platforms, it causes USB reset periodically.
+Hi Vincenzo,
 
-Signed-off-by: Hayes Wang <hayeswang@realtek.com>
----
- drivers/net/usb/r8152.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+On Tue, Jan 21, 2020 at 6:18 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Tue, Jan 21, 2020 at 03:27:47PM +0000, Vincenzo Frascino wrote:
+> > Hi Greg,
+> >
+> > On 21/01/2020 15:20, Greg Kroah-Hartman wrote:
+> > > On Tue, Jan 21, 2020 at 02:23:02PM +0000, Vincenzo Frascino wrote:
+> > >> Hi Greg,
+> > >>
+> > >> I sent the fix below few days ago to the optee maintaners but I did not get any
+> > >> answer. Could you please pick it up?
+> > >
+> > >      $ ./scripts/get_maintainer.pl --file drivers/tee/optee/Kconfig
+> > >     Jens Wiklander <jens.wiklander@linaro.org> (maintainer:OP-TEE DRIVER)
+> > >     tee-dev@lists.linaro.org (open list:OP-TEE DRIVER)
+> > >     linux-kernel@vger.kernel.org (open list)
+> > >
+> > > This should go through Jens, why me?
+> > >
+> >
+> > I added Jens and tee-dev list in copy already but as I was mentioning in my
+> > previous email I did not get any answer. I thought that since it is a small fix
+> > you could help. Sorry if I made a mistake.
+>
+> Give people time to catch up on email, especially for obscure issues
+> like this.
+>
+> thanks,
+>
+> greg k-h
 
-diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-index 7efeddad1fc8..b1a00f29455b 100644
---- a/drivers/net/usb/r8152.c
-+++ b/drivers/net/usb/r8152.c
-@@ -3391,7 +3391,8 @@ static void rtl8153b_runtime_enable(struct r8152 *tp, bool enable)
- 		r8153b_ups_en(tp, false);
- 		r8153_queue_wake(tp, false);
- 		rtl_runtime_suspend_enable(tp, false);
--		r8153b_u1u2en(tp, true);
-+		if (tp->udev->speed != USB_SPEED_HIGH)
-+			r8153b_u1u2en(tp, true);
- 	}
- }
- 
-@@ -5024,7 +5025,9 @@ static void rtl8153b_up(struct r8152 *tp)
- 	ocp_write_word(tp, MCU_TYPE_PLA, PLA_MAC_PWR_CTRL3, ocp_data);
- 
- 	r8153_aldps_en(tp, true);
--	r8153b_u1u2en(tp, true);
-+
-+	if (tp->udev->speed != USB_SPEED_HIGH)
-+		r8153b_u1u2en(tp, true);
- }
- 
- static void rtl8153b_down(struct r8152 *tp)
-@@ -5527,7 +5530,9 @@ static void r8153b_init(struct r8152 *tp)
- 		ocp_data &= ~CUR_LINK_OK;
- 	ocp_data |= POLL_LINK_CHG;
- 	ocp_write_word(tp, MCU_TYPE_PLA, PLA_EXTRA_STATUS, ocp_data);
--	r8153b_u1u2en(tp, true);
-+
-+	if (tp->udev->speed != USB_SPEED_HIGH)
-+		r8153b_u1u2en(tp, true);
- 	usb_enable_lpm(tp->udev);
- 
- 	/* MAC clock speed down */
--- 
-2.21.0
+I'll pick up this patch.
 
+Thanks,
+Jens
