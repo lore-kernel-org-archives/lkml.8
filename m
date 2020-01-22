@@ -4,55 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C95C4C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:52:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 193F6C33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:53:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 988D02468A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:52:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0BE12467B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:52:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686776;
-	bh=sniDWG76cP0p1zzZmg0UOTJ1OyzKMNJHs3a6FuOzDhI=;
+	s=default; t=1579686780;
+	bh=GcuYsBIRvOqz3SRejqbpp/vxZWR/a+gAB/3X20qON8U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BoAR7hZwZUaFEdxQ0IbXW6LiE0m3nfEABo6jIaIFBzPLmrdH4mFYStFDHKI/15bu9
-	 ZiIl2fwGvYvN8GhYVEscGepcvTjfELFJBsoliS/H55JPlxvHc4RcJvJIRQmbhdB5jR
-	 11oN/feb8IlM9w2Il5WH8ptvYDpKF8pBJaaN5YJ8=
+	b=BpxOLiAWR/HgRjAJALGKDmyODAIe/GiBVz4EQl0qP9NrYbHfq0/pT66kAubzEdMr2
+	 FNggoo9i8X9pzQhFR7A9dHyp7ek6T6Kj5Usa2/zVpbYhz6Hd1EqPLCw7v4SgigjtFf
+	 PKpcmbhxIxL5CqFy3pT+hjRNILPT07jDcZHE2FCE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730795AbgAVJwz (ORCPT
+        id S1731515AbgAVJfw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:52:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51240 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:35:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730771AbgAVJf4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:35:56 -0500
+        id S1730716AbgAVJfq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:35:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD70F24683;
-        Wed, 22 Jan 2020 09:35:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 523F420704;
+        Wed, 22 Jan 2020 09:35:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685755;
-        bh=sniDWG76cP0p1zzZmg0UOTJ1OyzKMNJHs3a6FuOzDhI=;
+        s=default; t=1579685745;
+        bh=GcuYsBIRvOqz3SRejqbpp/vxZWR/a+gAB/3X20qON8U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PUecTaS/VUXl+s9nEw7CsCLHwu/pokl+44AFmIjuxDcXDq5krrc86KMDL7E/IWSEt
-         MTf3qaDuM7BVXcVT0Z2WcbaVu7hHbftlpSNLSUb89Rnf+8XPA8DuVEi+C/B2ZMsAzT
-         vBYI6K/f5Teb0kFNFaZ1ZXf+xtYldCuDQDJXgpR0=
+        b=w32H4oVtXEVBek9siuW8Q/FXNOCrwPbXSAM+uJ2d4xg4nnnzZki510wA1OvdwXSe1
+         UiaTUiMO5rbqlinSbfu5rsaibzxsj37INQ3USHDB+og48VsYfar4Rins1RH+BA9EsA
+         RmKq4UPWv+rButvaXV1y+uluKExu7eigUeF27fX0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Feng Tang <feng.tang@intel.com>, Jin Yao <yao.jin@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 4.9 67/97] perf report: Fix incorrectly added dimensions as switch perf data file
-Date:   Wed, 22 Jan 2020 10:29:11 +0100
-Message-Id: <20200122092807.138995506@linuxfoundation.org>
+        stable@vger.kernel.org, Tom Hatskevich <tom2001tom.23@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.9 63/97] scsi: mptfusion: Fix double fetch bug in ioctl
+Date:   Wed, 22 Jan 2020 10:29:07 +0100
+Message-Id: <20200122092806.519672371@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092755.678349497@linuxfoundation.org>
 References: <20200122092755.678349497@linuxfoundation.org>
@@ -65,69 +60,577 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jin Yao <yao.jin@linux.intel.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 0feba17bd7ee3b7e03d141f119049dcc23efa94e upstream.
+commit 28d76df18f0ad5bcf5fa48510b225f0ed262a99b upstream.
 
-We observed an issue that was some extra columns displayed after switching
-perf data file in browser. The steps to reproduce:
+Tom Hatskevich reported that we look up "iocp" then, in the called
+functions we do a second copy_from_user() and look it up again.
+The problem that could cause is:
 
-1. perf record -a -e cycles,instructions -- sleep 3
-2. perf report --group
-3. In browser, we use hotkey 's' to switch to another perf.data
-4. Now in browser, the extra columns 'Self' and 'Children' are displayed.
+drivers/message/fusion/mptctl.c
+   674          /* All of these commands require an interrupt or
+   675           * are unknown/illegal.
+   676           */
+   677          if ((ret = mptctl_syscall_down(iocp, nonblock)) != 0)
+                                               ^^^^
+We take this lock.
 
-The issue is setup_sorting() executed again after repeat path, so dimensions
-are added again.
+   678                  return ret;
+   679
+   680          if (cmd == MPTFWDOWNLOAD)
+   681                  ret = mptctl_fw_download(arg);
+                                                 ^^^
+Then the user memory changes and we look up "iocp" again but a different
+one so now we are holding the incorrect lock and have a race condition.
 
-This patch checks the last key returned from __cmd_report(). If it's
-K_SWITCH_INPUT_DATA, skips the setup_sorting().
+   682          else if (cmd == MPTCOMMAND)
+   683                  ret = mptctl_mpt_command(arg);
 
-Fixes: ad0de0971b7f ("perf report: Enable the runtime switching of perf data file")
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Feng Tang <feng.tang@intel.com>
-Cc: Jin Yao <yao.jin@intel.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20191220013722.20592-1-yao.jin@linux.intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+The security impact of this bug is not as bad as it could have been
+because these operations are all privileged and root already has
+enormous destructive power.  But it's still worth fixing.
+
+This patch passes the "iocp" pointer to the functions to avoid the
+second lookup.  That deletes 100 lines of code from the driver so
+it's a nice clean up as well.
+
+Link: https://lore.kernel.org/r/20200114123414.GA7957@kadam
+Reported-by: Tom Hatskevich <tom2001tom.23@gmail.com>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/builtin-report.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/message/fusion/mptctl.c |  213 +++++++++-------------------------------
+ 1 file changed, 50 insertions(+), 163 deletions(-)
 
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -671,6 +671,7 @@ int cmd_report(int argc, const char **ar
- 	struct stat st;
- 	bool has_br_stack = false;
- 	int branch_mode = -1;
-+	int last_key = 0;
- 	bool branch_call_mode = false;
- 	char callchain_default_opt[] = CALLCHAIN_DEFAULT_OPT;
- 	const char * const report_usage[] = {
-@@ -956,7 +957,8 @@ repeat:
- 	else
- 		use_browser = 0;
+--- a/drivers/message/fusion/mptctl.c
++++ b/drivers/message/fusion/mptctl.c
+@@ -100,19 +100,19 @@ struct buflist {
+  * Function prototypes. Called from OS entry point mptctl_ioctl.
+  * arg contents specific to function.
+  */
+-static int mptctl_fw_download(unsigned long arg);
+-static int mptctl_getiocinfo(unsigned long arg, unsigned int cmd);
+-static int mptctl_gettargetinfo(unsigned long arg);
+-static int mptctl_readtest(unsigned long arg);
+-static int mptctl_mpt_command(unsigned long arg);
+-static int mptctl_eventquery(unsigned long arg);
+-static int mptctl_eventenable(unsigned long arg);
+-static int mptctl_eventreport(unsigned long arg);
+-static int mptctl_replace_fw(unsigned long arg);
+-
+-static int mptctl_do_reset(unsigned long arg);
+-static int mptctl_hp_hostinfo(unsigned long arg, unsigned int cmd);
+-static int mptctl_hp_targetinfo(unsigned long arg);
++static int mptctl_fw_download(MPT_ADAPTER *iocp, unsigned long arg);
++static int mptctl_getiocinfo(MPT_ADAPTER *iocp, unsigned long arg, unsigned int cmd);
++static int mptctl_gettargetinfo(MPT_ADAPTER *iocp, unsigned long arg);
++static int mptctl_readtest(MPT_ADAPTER *iocp, unsigned long arg);
++static int mptctl_mpt_command(MPT_ADAPTER *iocp, unsigned long arg);
++static int mptctl_eventquery(MPT_ADAPTER *iocp, unsigned long arg);
++static int mptctl_eventenable(MPT_ADAPTER *iocp, unsigned long arg);
++static int mptctl_eventreport(MPT_ADAPTER *iocp, unsigned long arg);
++static int mptctl_replace_fw(MPT_ADAPTER *iocp, unsigned long arg);
++
++static int mptctl_do_reset(MPT_ADAPTER *iocp, unsigned long arg);
++static int mptctl_hp_hostinfo(MPT_ADAPTER *iocp, unsigned long arg, unsigned int cmd);
++static int mptctl_hp_targetinfo(MPT_ADAPTER *iocp, unsigned long arg);
  
--	if (setup_sorting(session->evlist) < 0) {
-+	if ((last_key != K_SWITCH_INPUT_DATA) &&
-+	    (setup_sorting(session->evlist) < 0)) {
- 		if (sort_order)
- 			parse_options_usage(report_usage, options, "s", 1);
- 		if (field_order)
-@@ -1011,6 +1013,7 @@ repeat:
- 	ret = __cmd_report(&report);
- 	if (ret == K_SWITCH_INPUT_DATA) {
- 		perf_session__delete(session);
-+		last_key = K_SWITCH_INPUT_DATA;
- 		goto repeat;
- 	} else
- 		ret = 0;
+ static int  mptctl_probe(struct pci_dev *, const struct pci_device_id *);
+ static void mptctl_remove(struct pci_dev *);
+@@ -123,8 +123,8 @@ static long compat_mpctl_ioctl(struct fi
+ /*
+  * Private function calls.
+  */
+-static int mptctl_do_mpt_command(struct mpt_ioctl_command karg, void __user *mfPtr);
+-static int mptctl_do_fw_download(int ioc, char __user *ufwbuf, size_t fwlen);
++static int mptctl_do_mpt_command(MPT_ADAPTER *iocp, struct mpt_ioctl_command karg, void __user *mfPtr);
++static int mptctl_do_fw_download(MPT_ADAPTER *iocp, char __user *ufwbuf, size_t fwlen);
+ static MptSge_t *kbuf_alloc_2_sgl(int bytes, u32 dir, int sge_offset, int *frags,
+ 		struct buflist **blp, dma_addr_t *sglbuf_dma, MPT_ADAPTER *ioc);
+ static void kfree_sgl(MptSge_t *sgl, dma_addr_t sgl_dma,
+@@ -656,19 +656,19 @@ __mptctl_ioctl(struct file *file, unsign
+ 	 * by TM and FW reloads.
+ 	 */
+ 	if ((cmd & ~IOCSIZE_MASK) == (MPTIOCINFO & ~IOCSIZE_MASK)) {
+-		return mptctl_getiocinfo(arg, _IOC_SIZE(cmd));
++		return mptctl_getiocinfo(iocp, arg, _IOC_SIZE(cmd));
+ 	} else if (cmd == MPTTARGETINFO) {
+-		return mptctl_gettargetinfo(arg);
++		return mptctl_gettargetinfo(iocp, arg);
+ 	} else if (cmd == MPTTEST) {
+-		return mptctl_readtest(arg);
++		return mptctl_readtest(iocp, arg);
+ 	} else if (cmd == MPTEVENTQUERY) {
+-		return mptctl_eventquery(arg);
++		return mptctl_eventquery(iocp, arg);
+ 	} else if (cmd == MPTEVENTENABLE) {
+-		return mptctl_eventenable(arg);
++		return mptctl_eventenable(iocp, arg);
+ 	} else if (cmd == MPTEVENTREPORT) {
+-		return mptctl_eventreport(arg);
++		return mptctl_eventreport(iocp, arg);
+ 	} else if (cmd == MPTFWREPLACE) {
+-		return mptctl_replace_fw(arg);
++		return mptctl_replace_fw(iocp, arg);
+ 	}
+ 
+ 	/* All of these commands require an interrupt or
+@@ -678,15 +678,15 @@ __mptctl_ioctl(struct file *file, unsign
+ 		return ret;
+ 
+ 	if (cmd == MPTFWDOWNLOAD)
+-		ret = mptctl_fw_download(arg);
++		ret = mptctl_fw_download(iocp, arg);
+ 	else if (cmd == MPTCOMMAND)
+-		ret = mptctl_mpt_command(arg);
++		ret = mptctl_mpt_command(iocp, arg);
+ 	else if (cmd == MPTHARDRESET)
+-		ret = mptctl_do_reset(arg);
++		ret = mptctl_do_reset(iocp, arg);
+ 	else if ((cmd & ~IOCSIZE_MASK) == (HP_GETHOSTINFO & ~IOCSIZE_MASK))
+-		ret = mptctl_hp_hostinfo(arg, _IOC_SIZE(cmd));
++		ret = mptctl_hp_hostinfo(iocp, arg, _IOC_SIZE(cmd));
+ 	else if (cmd == HP_GETTARGETINFO)
+-		ret = mptctl_hp_targetinfo(arg);
++		ret = mptctl_hp_targetinfo(iocp, arg);
+ 	else
+ 		ret = -EINVAL;
+ 
+@@ -705,11 +705,10 @@ mptctl_ioctl(struct file *file, unsigned
+ 	return ret;
+ }
+ 
+-static int mptctl_do_reset(unsigned long arg)
++static int mptctl_do_reset(MPT_ADAPTER *iocp, unsigned long arg)
+ {
+ 	struct mpt_ioctl_diag_reset __user *urinfo = (void __user *) arg;
+ 	struct mpt_ioctl_diag_reset krinfo;
+-	MPT_ADAPTER		*iocp;
+ 
+ 	if (copy_from_user(&krinfo, urinfo, sizeof(struct mpt_ioctl_diag_reset))) {
+ 		printk(KERN_ERR MYNAM "%s@%d::mptctl_do_reset - "
+@@ -718,12 +717,6 @@ static int mptctl_do_reset(unsigned long
+ 		return -EFAULT;
+ 	}
+ 
+-	if (mpt_verify_adapter(krinfo.hdr.iocnum, &iocp) < 0) {
+-		printk(KERN_DEBUG MYNAM "%s@%d::mptctl_do_reset - ioc%d not found!\n",
+-				__FILE__, __LINE__, krinfo.hdr.iocnum);
+-		return -ENODEV; /* (-6) No such device or address */
+-	}
+-
+ 	dctlprintk(iocp, printk(MYIOC_s_DEBUG_FMT "mptctl_do_reset called.\n",
+ 	    iocp->name));
+ 
+@@ -754,7 +747,7 @@ static int mptctl_do_reset(unsigned long
+  *		-ENOMSG if FW upload returned bad status
+  */
+ static int
+-mptctl_fw_download(unsigned long arg)
++mptctl_fw_download(MPT_ADAPTER *iocp, unsigned long arg)
+ {
+ 	struct mpt_fw_xfer __user *ufwdl = (void __user *) arg;
+ 	struct mpt_fw_xfer	 kfwdl;
+@@ -766,7 +759,7 @@ mptctl_fw_download(unsigned long arg)
+ 		return -EFAULT;
+ 	}
+ 
+-	return mptctl_do_fw_download(kfwdl.iocnum, kfwdl.bufp, kfwdl.fwlen);
++	return mptctl_do_fw_download(iocp, kfwdl.bufp, kfwdl.fwlen);
+ }
+ 
+ /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+@@ -784,11 +777,10 @@ mptctl_fw_download(unsigned long arg)
+  *		-ENOMSG if FW upload returned bad status
+  */
+ static int
+-mptctl_do_fw_download(int ioc, char __user *ufwbuf, size_t fwlen)
++mptctl_do_fw_download(MPT_ADAPTER *iocp, char __user *ufwbuf, size_t fwlen)
+ {
+ 	FWDownload_t		*dlmsg;
+ 	MPT_FRAME_HDR		*mf;
+-	MPT_ADAPTER		*iocp;
+ 	FWDownloadTCSGE_t	*ptsge;
+ 	MptSge_t		*sgl, *sgIn;
+ 	char			*sgOut;
+@@ -808,17 +800,10 @@ mptctl_do_fw_download(int ioc, char __us
+ 	pFWDownloadReply_t	 ReplyMsg = NULL;
+ 	unsigned long		 timeleft;
+ 
+-	if (mpt_verify_adapter(ioc, &iocp) < 0) {
+-		printk(KERN_DEBUG MYNAM "ioctl_fwdl - ioc%d not found!\n",
+-				 ioc);
+-		return -ENODEV; /* (-6) No such device or address */
+-	} else {
+-
+-		/*  Valid device. Get a message frame and construct the FW download message.
+-	 	*/
+-		if ((mf = mpt_get_msg_frame(mptctl_id, iocp)) == NULL)
+-			return -EAGAIN;
+-	}
++	/*  Valid device. Get a message frame and construct the FW download message.
++	*/
++	if ((mf = mpt_get_msg_frame(mptctl_id, iocp)) == NULL)
++		return -EAGAIN;
+ 
+ 	dctlprintk(iocp, printk(MYIOC_s_DEBUG_FMT
+ 	    "mptctl_do_fwdl called. mptctl_id = %xh.\n", iocp->name, mptctl_id));
+@@ -826,8 +811,6 @@ mptctl_do_fw_download(int ioc, char __us
+ 	    iocp->name, ufwbuf));
+ 	dctlprintk(iocp, printk(MYIOC_s_DEBUG_FMT "DbG: kfwdl.fwlen = %d\n",
+ 	    iocp->name, (int)fwlen));
+-	dctlprintk(iocp, printk(MYIOC_s_DEBUG_FMT "DbG: kfwdl.ioc   = %04xh\n",
+-	    iocp->name, ioc));
+ 
+ 	dlmsg = (FWDownload_t*) mf;
+ 	ptsge = (FWDownloadTCSGE_t *) &dlmsg->SGL;
+@@ -1238,13 +1221,11 @@ kfree_sgl(MptSge_t *sgl, dma_addr_t sgl_
+  *		-ENODEV  if no such device/adapter
+  */
+ static int
+-mptctl_getiocinfo (unsigned long arg, unsigned int data_size)
++mptctl_getiocinfo (MPT_ADAPTER *ioc, unsigned long arg, unsigned int data_size)
+ {
+ 	struct mpt_ioctl_iocinfo __user *uarg = (void __user *) arg;
+ 	struct mpt_ioctl_iocinfo *karg;
+-	MPT_ADAPTER		*ioc;
+ 	struct pci_dev		*pdev;
+-	int			iocnum;
+ 	unsigned int		port;
+ 	int			cim_rev;
+ 	struct scsi_device 	*sdev;
+@@ -1272,14 +1253,6 @@ mptctl_getiocinfo (unsigned long arg, un
+ 		return PTR_ERR(karg);
+ 	}
+ 
+-	if (((iocnum = mpt_verify_adapter(karg->hdr.iocnum, &ioc)) < 0) ||
+-	    (ioc == NULL)) {
+-		printk(KERN_DEBUG MYNAM "%s::mptctl_getiocinfo() @%d - ioc%d not found!\n",
+-				__FILE__, __LINE__, iocnum);
+-		kfree(karg);
+-		return -ENODEV;
+-	}
+-
+ 	/* Verify the data transfer size is correct. */
+ 	if (karg->hdr.maxDataSize != data_size) {
+ 		printk(MYIOC_s_ERR_FMT "%s@%d::mptctl_getiocinfo - "
+@@ -1385,15 +1358,13 @@ mptctl_getiocinfo (unsigned long arg, un
+  *		-ENODEV  if no such device/adapter
+  */
+ static int
+-mptctl_gettargetinfo (unsigned long arg)
++mptctl_gettargetinfo (MPT_ADAPTER *ioc, unsigned long arg)
+ {
+ 	struct mpt_ioctl_targetinfo __user *uarg = (void __user *) arg;
+ 	struct mpt_ioctl_targetinfo karg;
+-	MPT_ADAPTER		*ioc;
+ 	VirtDevice		*vdevice;
+ 	char			*pmem;
+ 	int			*pdata;
+-	int			iocnum;
+ 	int			numDevices = 0;
+ 	int			lun;
+ 	int			maxWordsLeft;
+@@ -1408,13 +1379,6 @@ mptctl_gettargetinfo (unsigned long arg)
+ 		return -EFAULT;
+ 	}
+ 
+-	if (((iocnum = mpt_verify_adapter(karg.hdr.iocnum, &ioc)) < 0) ||
+-	    (ioc == NULL)) {
+-		printk(KERN_DEBUG MYNAM "%s::mptctl_gettargetinfo() @%d - ioc%d not found!\n",
+-				__FILE__, __LINE__, iocnum);
+-		return -ENODEV;
+-	}
+-
+ 	dctlprintk(ioc, printk(MYIOC_s_DEBUG_FMT "mptctl_gettargetinfo called.\n",
+ 	    ioc->name));
+ 	/* Get the port number and set the maximum number of bytes
+@@ -1510,12 +1474,10 @@ mptctl_gettargetinfo (unsigned long arg)
+  *		-ENODEV  if no such device/adapter
+  */
+ static int
+-mptctl_readtest (unsigned long arg)
++mptctl_readtest (MPT_ADAPTER *ioc, unsigned long arg)
+ {
+ 	struct mpt_ioctl_test __user *uarg = (void __user *) arg;
+ 	struct mpt_ioctl_test	 karg;
+-	MPT_ADAPTER *ioc;
+-	int iocnum;
+ 
+ 	if (copy_from_user(&karg, uarg, sizeof(struct mpt_ioctl_test))) {
+ 		printk(KERN_ERR MYNAM "%s@%d::mptctl_readtest - "
+@@ -1524,13 +1486,6 @@ mptctl_readtest (unsigned long arg)
+ 		return -EFAULT;
+ 	}
+ 
+-	if (((iocnum = mpt_verify_adapter(karg.hdr.iocnum, &ioc)) < 0) ||
+-	    (ioc == NULL)) {
+-		printk(KERN_DEBUG MYNAM "%s::mptctl_readtest() @%d - ioc%d not found!\n",
+-				__FILE__, __LINE__, iocnum);
+-		return -ENODEV;
+-	}
+-
+ 	dctlprintk(ioc, printk(MYIOC_s_DEBUG_FMT "mptctl_readtest called.\n",
+ 	    ioc->name));
+ 	/* Fill in the data and return the structure to the calling
+@@ -1571,12 +1526,10 @@ mptctl_readtest (unsigned long arg)
+  *		-ENODEV  if no such device/adapter
+  */
+ static int
+-mptctl_eventquery (unsigned long arg)
++mptctl_eventquery (MPT_ADAPTER *ioc, unsigned long arg)
+ {
+ 	struct mpt_ioctl_eventquery __user *uarg = (void __user *) arg;
+ 	struct mpt_ioctl_eventquery	 karg;
+-	MPT_ADAPTER *ioc;
+-	int iocnum;
+ 
+ 	if (copy_from_user(&karg, uarg, sizeof(struct mpt_ioctl_eventquery))) {
+ 		printk(KERN_ERR MYNAM "%s@%d::mptctl_eventquery - "
+@@ -1585,13 +1538,6 @@ mptctl_eventquery (unsigned long arg)
+ 		return -EFAULT;
+ 	}
+ 
+-	if (((iocnum = mpt_verify_adapter(karg.hdr.iocnum, &ioc)) < 0) ||
+-	    (ioc == NULL)) {
+-		printk(KERN_DEBUG MYNAM "%s::mptctl_eventquery() @%d - ioc%d not found!\n",
+-				__FILE__, __LINE__, iocnum);
+-		return -ENODEV;
+-	}
+-
+ 	dctlprintk(ioc, printk(MYIOC_s_DEBUG_FMT "mptctl_eventquery called.\n",
+ 	    ioc->name));
+ 	karg.eventEntries = MPTCTL_EVENT_LOG_SIZE;
+@@ -1610,12 +1556,10 @@ mptctl_eventquery (unsigned long arg)
+ 
+ /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+ static int
+-mptctl_eventenable (unsigned long arg)
++mptctl_eventenable (MPT_ADAPTER *ioc, unsigned long arg)
+ {
+ 	struct mpt_ioctl_eventenable __user *uarg = (void __user *) arg;
+ 	struct mpt_ioctl_eventenable	 karg;
+-	MPT_ADAPTER *ioc;
+-	int iocnum;
+ 
+ 	if (copy_from_user(&karg, uarg, sizeof(struct mpt_ioctl_eventenable))) {
+ 		printk(KERN_ERR MYNAM "%s@%d::mptctl_eventenable - "
+@@ -1624,13 +1568,6 @@ mptctl_eventenable (unsigned long arg)
+ 		return -EFAULT;
+ 	}
+ 
+-	if (((iocnum = mpt_verify_adapter(karg.hdr.iocnum, &ioc)) < 0) ||
+-	    (ioc == NULL)) {
+-		printk(KERN_DEBUG MYNAM "%s::mptctl_eventenable() @%d - ioc%d not found!\n",
+-				__FILE__, __LINE__, iocnum);
+-		return -ENODEV;
+-	}
+-
+ 	dctlprintk(ioc, printk(MYIOC_s_DEBUG_FMT "mptctl_eventenable called.\n",
+ 	    ioc->name));
+ 	if (ioc->events == NULL) {
+@@ -1658,12 +1595,10 @@ mptctl_eventenable (unsigned long arg)
+ 
+ /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+ static int
+-mptctl_eventreport (unsigned long arg)
++mptctl_eventreport (MPT_ADAPTER *ioc, unsigned long arg)
+ {
+ 	struct mpt_ioctl_eventreport __user *uarg = (void __user *) arg;
+ 	struct mpt_ioctl_eventreport	 karg;
+-	MPT_ADAPTER		 *ioc;
+-	int			 iocnum;
+ 	int			 numBytes, maxEvents, max;
+ 
+ 	if (copy_from_user(&karg, uarg, sizeof(struct mpt_ioctl_eventreport))) {
+@@ -1673,12 +1608,6 @@ mptctl_eventreport (unsigned long arg)
+ 		return -EFAULT;
+ 	}
+ 
+-	if (((iocnum = mpt_verify_adapter(karg.hdr.iocnum, &ioc)) < 0) ||
+-	    (ioc == NULL)) {
+-		printk(KERN_DEBUG MYNAM "%s::mptctl_eventreport() @%d - ioc%d not found!\n",
+-				__FILE__, __LINE__, iocnum);
+-		return -ENODEV;
+-	}
+ 	dctlprintk(ioc, printk(MYIOC_s_DEBUG_FMT "mptctl_eventreport called.\n",
+ 	    ioc->name));
+ 
+@@ -1712,12 +1641,10 @@ mptctl_eventreport (unsigned long arg)
+ 
+ /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+ static int
+-mptctl_replace_fw (unsigned long arg)
++mptctl_replace_fw (MPT_ADAPTER *ioc, unsigned long arg)
+ {
+ 	struct mpt_ioctl_replace_fw __user *uarg = (void __user *) arg;
+ 	struct mpt_ioctl_replace_fw	 karg;
+-	MPT_ADAPTER		 *ioc;
+-	int			 iocnum;
+ 	int			 newFwSize;
+ 
+ 	if (copy_from_user(&karg, uarg, sizeof(struct mpt_ioctl_replace_fw))) {
+@@ -1727,13 +1654,6 @@ mptctl_replace_fw (unsigned long arg)
+ 		return -EFAULT;
+ 	}
+ 
+-	if (((iocnum = mpt_verify_adapter(karg.hdr.iocnum, &ioc)) < 0) ||
+-	    (ioc == NULL)) {
+-		printk(KERN_DEBUG MYNAM "%s::mptctl_replace_fw() @%d - ioc%d not found!\n",
+-				__FILE__, __LINE__, iocnum);
+-		return -ENODEV;
+-	}
+-
+ 	dctlprintk(ioc, printk(MYIOC_s_DEBUG_FMT "mptctl_replace_fw called.\n",
+ 	    ioc->name));
+ 	/* If caching FW, Free the old FW image
+@@ -1780,12 +1700,10 @@ mptctl_replace_fw (unsigned long arg)
+  *		-ENOMEM if memory allocation error
+  */
+ static int
+-mptctl_mpt_command (unsigned long arg)
++mptctl_mpt_command (MPT_ADAPTER *ioc, unsigned long arg)
+ {
+ 	struct mpt_ioctl_command __user *uarg = (void __user *) arg;
+ 	struct mpt_ioctl_command  karg;
+-	MPT_ADAPTER	*ioc;
+-	int		iocnum;
+ 	int		rc;
+ 
+ 
+@@ -1796,14 +1714,7 @@ mptctl_mpt_command (unsigned long arg)
+ 		return -EFAULT;
+ 	}
+ 
+-	if (((iocnum = mpt_verify_adapter(karg.hdr.iocnum, &ioc)) < 0) ||
+-	    (ioc == NULL)) {
+-		printk(KERN_DEBUG MYNAM "%s::mptctl_mpt_command() @%d - ioc%d not found!\n",
+-				__FILE__, __LINE__, iocnum);
+-		return -ENODEV;
+-	}
+-
+-	rc = mptctl_do_mpt_command (karg, &uarg->MF);
++	rc = mptctl_do_mpt_command (ioc, karg, &uarg->MF);
+ 
+ 	return rc;
+ }
+@@ -1821,9 +1732,8 @@ mptctl_mpt_command (unsigned long arg)
+  *		-EPERM if SCSI I/O and target is untagged
+  */
+ static int
+-mptctl_do_mpt_command (struct mpt_ioctl_command karg, void __user *mfPtr)
++mptctl_do_mpt_command (MPT_ADAPTER *ioc, struct mpt_ioctl_command karg, void __user *mfPtr)
+ {
+-	MPT_ADAPTER	*ioc;
+ 	MPT_FRAME_HDR	*mf = NULL;
+ 	MPIHeader_t	*hdr;
+ 	char		*psge;
+@@ -1832,7 +1742,7 @@ mptctl_do_mpt_command (struct mpt_ioctl_
+ 	dma_addr_t	dma_addr_in;
+ 	dma_addr_t	dma_addr_out;
+ 	int		sgSize = 0;	/* Num SG elements */
+-	int		iocnum, flagsLength;
++	int		flagsLength;
+ 	int		sz, rc = 0;
+ 	int		msgContext;
+ 	u16		req_idx;
+@@ -1847,13 +1757,6 @@ mptctl_do_mpt_command (struct mpt_ioctl_
+ 	bufIn.kptr = bufOut.kptr = NULL;
+ 	bufIn.len = bufOut.len = 0;
+ 
+-	if (((iocnum = mpt_verify_adapter(karg.hdr.iocnum, &ioc)) < 0) ||
+-	    (ioc == NULL)) {
+-		printk(KERN_DEBUG MYNAM "%s::mptctl_do_mpt_command() @%d - ioc%d not found!\n",
+-				__FILE__, __LINE__, iocnum);
+-		return -ENODEV;
+-	}
+-
+ 	spin_lock_irqsave(&ioc->taskmgmt_lock, flags);
+ 	if (ioc->ioc_reset_in_progress) {
+ 		spin_unlock_irqrestore(&ioc->taskmgmt_lock, flags);
+@@ -2418,17 +2321,15 @@ done_free_mem:
+  *		-ENOMEM if memory allocation error
+  */
+ static int
+-mptctl_hp_hostinfo(unsigned long arg, unsigned int data_size)
++mptctl_hp_hostinfo(MPT_ADAPTER *ioc, unsigned long arg, unsigned int data_size)
+ {
+ 	hp_host_info_t	__user *uarg = (void __user *) arg;
+-	MPT_ADAPTER		*ioc;
+ 	struct pci_dev		*pdev;
+ 	char                    *pbuf=NULL;
+ 	dma_addr_t		buf_dma;
+ 	hp_host_info_t		karg;
+ 	CONFIGPARMS		cfg;
+ 	ConfigPageHeader_t	hdr;
+-	int			iocnum;
+ 	int			rc, cim_rev;
+ 	ToolboxIstwiReadWriteRequest_t	*IstwiRWRequest;
+ 	MPT_FRAME_HDR		*mf = NULL;
+@@ -2452,12 +2353,6 @@ mptctl_hp_hostinfo(unsigned long arg, un
+ 		return -EFAULT;
+ 	}
+ 
+-	if (((iocnum = mpt_verify_adapter(karg.hdr.iocnum, &ioc)) < 0) ||
+-	    (ioc == NULL)) {
+-		printk(KERN_DEBUG MYNAM "%s::mptctl_hp_hostinfo() @%d - ioc%d not found!\n",
+-				__FILE__, __LINE__, iocnum);
+-		return -ENODEV;
+-	}
+ 	dctlprintk(ioc, printk(MYIOC_s_DEBUG_FMT ": mptctl_hp_hostinfo called.\n",
+ 	    ioc->name));
+ 
+@@ -2670,15 +2565,13 @@ retry_wait:
+  *		-ENOMEM if memory allocation error
+  */
+ static int
+-mptctl_hp_targetinfo(unsigned long arg)
++mptctl_hp_targetinfo(MPT_ADAPTER *ioc, unsigned long arg)
+ {
+ 	hp_target_info_t __user *uarg = (void __user *) arg;
+ 	SCSIDevicePage0_t	*pg0_alloc;
+ 	SCSIDevicePage3_t	*pg3_alloc;
+-	MPT_ADAPTER		*ioc;
+ 	MPT_SCSI_HOST 		*hd = NULL;
+ 	hp_target_info_t	karg;
+-	int			iocnum;
+ 	int			data_sz;
+ 	dma_addr_t		page_dma;
+ 	CONFIGPARMS	 	cfg;
+@@ -2692,12 +2585,6 @@ mptctl_hp_targetinfo(unsigned long arg)
+ 		return -EFAULT;
+ 	}
+ 
+-	if (((iocnum = mpt_verify_adapter(karg.hdr.iocnum, &ioc)) < 0) ||
+-		(ioc == NULL)) {
+-		printk(KERN_DEBUG MYNAM "%s::mptctl_hp_targetinfo() @%d - ioc%d not found!\n",
+-				__FILE__, __LINE__, iocnum);
+-		return -ENODEV;
+-	}
+ 	if (karg.hdr.id >= MPT_MAX_FC_DEVICES)
+ 		return -EINVAL;
+ 	dctlprintk(ioc, printk(MYIOC_s_DEBUG_FMT "mptctl_hp_targetinfo called.\n",
+@@ -2865,7 +2752,7 @@ compat_mptfwxfer_ioctl(struct file *filp
+ 	kfw.fwlen = kfw32.fwlen;
+ 	kfw.bufp = compat_ptr(kfw32.bufp);
+ 
+-	ret = mptctl_do_fw_download(kfw.iocnum, kfw.bufp, kfw.fwlen);
++	ret = mptctl_do_fw_download(iocp, kfw.bufp, kfw.fwlen);
+ 
+ 	mutex_unlock(&iocp->ioctl_cmds.mutex);
+ 
+@@ -2919,7 +2806,7 @@ compat_mpt_command(struct file *filp, un
+ 
+ 	/* Pass new structure to do_mpt_command
+ 	 */
+-	ret = mptctl_do_mpt_command (karg, &uarg->MF);
++	ret = mptctl_do_mpt_command (iocp, karg, &uarg->MF);
+ 
+ 	mutex_unlock(&iocp->ioctl_cmds.mutex);
+ 
 
 
