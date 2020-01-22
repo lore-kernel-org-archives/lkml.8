@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 803B2C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE3D0C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:41:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56C9A24686
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:41:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BEB624686
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:41:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686088;
-	bh=1AI0GKeVFPui5D7Xd+X1N/rgXNMOMBvlax163fQ8wHc=;
+	s=default; t=1579686096;
+	bh=q+uwZbHrhnEvPeUulaq1n7jqJ5rCMHn4Q3crXScWbqM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WgP7XzmJ6j0ScINxQ3D/8ojlvYB3ZS02IYGtxUvx2NSZdqQKPNgbrU3I3MJq/81eq
-	 9ZmR3N9Eq8hIm3XzfhyQu60IJ/ByCSPgYTVfpgUzFl4WFJ9iMwoOgZjHPSqAWIHlHi
-	 bUEn3X1tLjzS5i55cxerFAksCklcKXcXF6nl8NUY=
+	b=F5izEaFI0wLEHqkPuIagtgZZ+xyRoNQiEaKFeySd3brWnS0bK1TiF/CN+GYeUUKlp
+	 Hr8NAcxPs4yra+wwHmhngZWux8yYhQd8TX8O4vxtpS2T6FneOb6ekXlGCF7BOenw6z
+	 py7uqXXsfYdBG11ySRiURQOnkcpvMbaUOqkWgH+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387569AbgAVJl1 (ORCPT
+        id S1733208AbgAVJld (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:41:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60614 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:41:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387544AbgAVJlP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:41:15 -0500
+        id S2387557AbgAVJlU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:41:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8ED724680;
-        Wed, 22 Jan 2020 09:41:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBF0224680;
+        Wed, 22 Jan 2020 09:41:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686075;
-        bh=1AI0GKeVFPui5D7Xd+X1N/rgXNMOMBvlax163fQ8wHc=;
+        s=default; t=1579686080;
+        bh=q+uwZbHrhnEvPeUulaq1n7jqJ5rCMHn4Q3crXScWbqM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CSR1EbKtYwjV7+FEsp/zWbLnvadWTnkXdI7IHUf1uKPAHIBDro9GWYjEj7lMSoxLW
-         2BRKNkZFppD2o+yRdqOBxiKZ4m5wK9DuPg6I/tN7EAANjhIF+bgDqlOpbgsnCU7g4Z
-         Nv7haWVxONy8ggZJCSrTN24nkU5Id5Tiy9+ye8v4=
+        b=aJGfDTCU8XAFUQi0Oo0VWHb0obVEBLBMobdk1+cOw7oIXHNfXTtQ+eyMMMLnByP3g
+         WUR7iK0n/2h9FrdxIuUBvOnMqKI025soxNA8gVz1bVxIIDPPNosbM81aMuprdq6yfE
+         Bkuw6NOKd3sACii1enfI5bVpxfYrn6I01YH1P9S8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Lendacky <thomas.lendacky@amd.com>,
-        Borislav Petkov <bp@suse.de>
-Subject: [PATCH 4.19 034/103] x86/CPU/AMD: Ensure clearing of SME/SEV features is maintained
-Date:   Wed, 22 Jan 2020 10:28:50 +0100
-Message-Id: <20200122092808.971627907@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Subject: [PATCH 4.19 036/103] drm/i915: Add missing include file <linux/math64.h>
+Date:   Wed, 22 Jan 2020 10:28:52 +0100
+Message-Id: <20200122092809.312155945@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
 References: <20200122092803.587683021@linuxfoundation.org>
@@ -59,41 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Lendacky <thomas.lendacky@amd.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-commit a006483b2f97af685f0e60f3a547c9ad4c9b9e94 upstream.
+commit ea38aa2ea5b0969776f0a47f174ce928a22be803 upstream.
 
-If the SME and SEV features are present via CPUID, but memory encryption
-support is not enabled (MSR 0xC001_0010[23]), the feature flags are cleared
-using clear_cpu_cap(). However, if get_cpu_cap() is later called, these
-feature flags will be reset back to present, which is not desired.
+Fix build error:
+./drivers/gpu/drm/i915/selftests/i915_random.h: In function i915_prandom_u32_max_state:
+./drivers/gpu/drm/i915/selftests/i915_random.h:48:23: error:
+ implicit declaration of function mul_u32_u32; did you mean mul_u64_u32_div? [-Werror=implicit-function-declaration]
+  return upper_32_bits(mul_u32_u32(prandom_u32_state(state), ep_ro));
 
-Change from using clear_cpu_cap() to setup_clear_cpu_cap() so that the
-clearing of the flags is maintained.
-
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: <stable@vger.kernel.org> # 4.16.x-
-Link: https://lkml.kernel.org/r/226de90a703c3c0be5a49565047905ac4e94e8f3.1579125915.git.thomas.lendacky@amd.com
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 7ce5b6850b47 ("drm/i915/selftests: Use mul_u32_u32() for 32b x 32b -> 64b result")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200107135014.36472-1-yuehaibing@huawei.com
+(cherry picked from commit 62bf5465b26d1f502430b9c654be7d16bf2e242d)
+Signed-off-by: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/cpu/amd.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/i915/selftests/i915_random.h |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -609,9 +609,9 @@ static void early_detect_mem_encrypt(str
- 		return;
+--- a/drivers/gpu/drm/i915/selftests/i915_random.h
++++ b/drivers/gpu/drm/i915/selftests/i915_random.h
+@@ -25,6 +25,7 @@
+ #ifndef __I915_SELFTESTS_RANDOM_H__
+ #define __I915_SELFTESTS_RANDOM_H__
  
- clear_all:
--		clear_cpu_cap(c, X86_FEATURE_SME);
-+		setup_clear_cpu_cap(X86_FEATURE_SME);
- clear_sev:
--		clear_cpu_cap(c, X86_FEATURE_SEV);
-+		setup_clear_cpu_cap(X86_FEATURE_SEV);
- 	}
- }
++#include <linux/math64.h>
+ #include <linux/random.h>
  
+ #include "../i915_selftest.h"
 
 
