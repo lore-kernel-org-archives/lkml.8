@@ -4,63 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37ABCC33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 21:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B87C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 21:05:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A4012467B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 21:05:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 050092467A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 21:05:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579727105;
-	bh=wmFNqsvcvqhGUmM0lVT/YB9hRrRPQNs7ulV0NOy2ZCM=;
+	s=default; t=1579727107;
+	bh=kG72OobOMoKoOM9E0wEFPVR4W6Lb5CW8UUhHMeprrgA=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=TCJU7Wcbyu1BY8E7RrChpEcEdfoPXHi0mFwh1LVK4lxp8MJ5EGZsixiLXs9yIV8NY
-	 mn+SS6QFOt0tH61R0b9Q5rBRcgQ8Cfmi1hUN/8qPMFFbgrlAgUMNekbyQslYNzTVQ2
-	 /AyZE1JcPKlVtUaP0J9AMwIrsDafTIP+4NaeOU90=
+	b=xgxJXSevBmS4rS1hyhtrhZLZxVqm3qDluXcmH+aNqVUaUuLN5qEUjwA3kiHSkN1QH
+	 XZFL4eOt5JPNljZl8zueomgB6kWEU6+Z3aFUwFatBFgk5H4UdKlUEnNWGLtWESCpiU
+	 P6rHuVi2hespUhRUJQgmSDx78X5EJR/yMa8Qkvo4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729112AbgAVVFE (ORCPT
+        id S1729191AbgAVVFG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 16:05:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56448 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 16:05:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725827AbgAVVFD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 16:05:03 -0500
-Subject: Re: [GIT PULL] hwmon fixes for v5.5-rc8
+        id S1727590AbgAVVFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 16:05:04 -0500
+Subject: Re: [GIT PULL] LEDs changes for 5.5-rc8
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1579727103;
-        bh=wmFNqsvcvqhGUmM0lVT/YB9hRrRPQNs7ulV0NOy2ZCM=;
+        bh=kG72OobOMoKoOM9E0wEFPVR4W6Lb5CW8UUhHMeprrgA=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=CU4t4LpIn/qMw1BmoUE1ut5pyhvuzc4SlBwi42HyqvywNfO09tv+Gxl/OupOCg0zS
-         CIjHq7Tk4oQGDdHUEpO3n0eFVPcSBiuVSoa85XFjhJm/80agJ/h8JVLvQM3gFQVei+
-         poaCAitciTYr+Z1wQq02O55Uuk2TQZFFWWqhWGk8=
+        b=Ts9JCQfFfLDN8aG6F1BEd0bwNBhJcp9cHykhlWSI3GIfesqpNJAUaHptNhLBKgJWH
+         FCLlCflmedlrneXDZlTI9P3pevqU9BZq49k3nsccIklDNr/9fw5v/O/CEaRKhLNkgH
+         72AZWb5jV7JoZSvQfWGCAA4RQyn4DAsIjueApzcA=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200122181937.18953-1-linux@roeck-us.net>
-References: <20200122181937.18953-1-linux@roeck-us.net>
+In-Reply-To: <20200122201711.GA29496@amd>
+References: <20200122201711.GA29496@amd>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200122181937.18953-1-linux@roeck-us.net>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git
- hwmon-for-v5.5-rc8
-X-PR-Tracked-Commit-Id: 3bf8bdcf3bada771eb12b57f2a30caee69e8ab8d
+X-PR-Tracked-Message-Id: <20200122201711.GA29496@amd>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git/
+ tags/leds-5.5-rc8
+X-PR-Tracked-Commit-Id: 43108c72cf1d518f3ce62d3b1c8a9ffa38ddc28b
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 1b4e677f86c7f730999223053534973bd0818c3c
-Message-Id: <157972710315.17393.17475365828781547151.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: 131701c697e85d5d0726e6152219359639fae98f
+Message-Id: <157972710363.17393.6526795152010055514.pr-tracker-bot@kernel.org>
 Date:   Wed, 22 Jan 2020 21:05:03 +0000
-To:     Guenter Roeck <linux@roeck-us.net>
+To:     Pavel Machek <pavel@ucw.cz>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+        kernel list <linux-kernel@vger.kernel.org>,
+        jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed, 22 Jan 2020 10:19:37 -0800:
+The pull request you sent on Wed, 22 Jan 2020 21:17:11 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-for-v5.5-rc8
+> git://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git/ tags/leds-5.5-rc8
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/1b4e677f86c7f730999223053534973bd0818c3c
+https://git.kernel.org/torvalds/c/131701c697e85d5d0726e6152219359639fae98f
 
 Thank you!
 
