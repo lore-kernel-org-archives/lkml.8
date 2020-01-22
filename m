@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B208BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:22:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFCECC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:22:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E5D62467B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:22:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9310424693
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:22:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579699349;
-	bh=q+uwZbHrhnEvPeUulaq1n7jqJ5rCMHn4Q3crXScWbqM=;
+	s=default; t=1579699352;
+	bh=AZh0/pB0q2KopdriTAOIAUemGtq0gw/o3+IlVV507gY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sK6ZCN3Q1QhPlA+7SpTJk5VIDitRinKKAUvQKlBS+laT0CyK7abwmWrY//hRxBjHO
-	 h5QVg/mBt2diFten2mNIsTIbCCd1/sjtwtfY9Qo5SQ2hNPTewUkhYust/Z+DNcLg4b
-	 kMjaiIp+uGRoGsdExuNh4Vp2wANNibEiqPprR27U=
+	b=F9wLhD7s7Sjj5ToUhKKwj8nisZbd8TKEILYBjND+lw8qkAAOKnbj08DHO0bwEbLkh
+	 +QPjg8qwSJz+bUC7CxbQ5npACEieYCAXmMjlMnmfjkjzh9jBOTxwCpbS5xRCYIH45A
+	 SmemloWms73aLU4hlmnM7k8PY5Ty8bB14fhymjE0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730583AbgAVNW2 (ORCPT
+        id S1730602AbgAVNWb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:22:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40042 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 08:22:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725827AbgAVNW0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:22:26 -0500
+        id S1725827AbgAVNW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:22:29 -0500
 Received: from localhost (unknown [84.241.205.26])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 038B6205F4;
-        Wed, 22 Jan 2020 13:22:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C4E62468C;
+        Wed, 22 Jan 2020 13:22:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579699345;
-        bh=q+uwZbHrhnEvPeUulaq1n7jqJ5rCMHn4Q3crXScWbqM=;
+        s=default; t=1579699348;
+        bh=AZh0/pB0q2KopdriTAOIAUemGtq0gw/o3+IlVV507gY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T6q3CLbdoJrZ3H959TRxDlCM59Yuct6pVqFA92JXrZQUFxeDSQjlIc5gfYpx0ibLO
-         DNVcldxDbzjsrYClfemKW68IjB4N/P4hSwspPjVt/qH/vg1+65wkl7dLYnC9mhchLQ
-         Vy3K/HTy9CXpH4aSlAgM3sBuxOz5DSH5RKTA8ylo=
+        b=WIh1oDvXENvYrBxG76Ga+z3qHERYu9PXPffYrT03s29qxFaIQkIAK5FIyvJTB1207
+         tlY3p8DFf7e9beD6LF3S8XZq3r9tgMGMwks6voBc3048KAx1vIJn5jOZPtLT8ozQlN
+         0vzjLp3AIIG/WxFHjOQRwALaDxc+g85onBODxtm8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-Subject: [PATCH 5.4 070/222] drm/i915: Add missing include file <linux/math64.h>
-Date:   Wed, 22 Jan 2020 10:27:36 +0100
-Message-Id: <20200122092838.734177378@linuxfoundation.org>
+        stable@vger.kernel.org, John Fastabend <john.fastabend@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>
+Subject: [PATCH 5.4 110/222] bpf: Sockmap/tls, push write_space updates through ulp updates
+Date:   Wed, 22 Jan 2020 10:28:16 +0100
+Message-Id: <20200122092841.611847883@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
 References: <20200122092833.339495161@linuxfoundation.org>
@@ -61,39 +61,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: John Fastabend <john.fastabend@gmail.com>
 
-commit ea38aa2ea5b0969776f0a47f174ce928a22be803 upstream.
+commit 33bfe20dd7117dd81fd896a53f743a233e1ad64f upstream.
 
-Fix build error:
-./drivers/gpu/drm/i915/selftests/i915_random.h: In function i915_prandom_u32_max_state:
-./drivers/gpu/drm/i915/selftests/i915_random.h:48:23: error:
- implicit declaration of function mul_u32_u32; did you mean mul_u64_u32_div? [-Werror=implicit-function-declaration]
-  return upper_32_bits(mul_u32_u32(prandom_u32_state(state), ep_ro));
+When sockmap sock with TLS enabled is removed we cleanup bpf/psock state
+and call tcp_update_ulp() to push updates to TLS ULP on top. However, we
+don't push the write_space callback up and instead simply overwrite the
+op with the psock stored previous op. This may or may not be correct so
+to ensure we don't overwrite the TLS write space hook pass this field to
+the ULP and have it fixup the ctx.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 7ce5b6850b47 ("drm/i915/selftests: Use mul_u32_u32() for 32b x 32b -> 64b result")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200107135014.36472-1-yuehaibing@huawei.com
-(cherry picked from commit 62bf5465b26d1f502430b9c654be7d16bf2e242d)
-Signed-off-by: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+This completes a previous fix that pushed the ops through to the ULP
+but at the time missed doing this for write_space, presumably because
+write_space TLS hook was added around the same time.
+
+Fixes: 95fa145479fbc ("bpf: sockmap/tls, close can race with map free")
+Signed-off-by: John Fastabend <john.fastabend@gmail.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
+Acked-by: Jonathan Lemon <jonathan.lemon@gmail.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/bpf/20200111061206.8028-4-john.fastabend@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/selftests/i915_random.h |    1 +
- 1 file changed, 1 insertion(+)
+ include/linux/skmsg.h |   12 ++++++++----
+ include/net/tcp.h     |    6 ++++--
+ net/ipv4/tcp_ulp.c    |    6 ++++--
+ net/tls/tls_main.c    |   10 +++++++---
+ 4 files changed, 23 insertions(+), 11 deletions(-)
 
---- a/drivers/gpu/drm/i915/selftests/i915_random.h
-+++ b/drivers/gpu/drm/i915/selftests/i915_random.h
-@@ -25,6 +25,7 @@
- #ifndef __I915_SELFTESTS_RANDOM_H__
- #define __I915_SELFTESTS_RANDOM_H__
+--- a/include/linux/skmsg.h
++++ b/include/linux/skmsg.h
+@@ -355,17 +355,21 @@ static inline void sk_psock_restore_prot
+ 					  struct sk_psock *psock)
+ {
+ 	sk->sk_prot->unhash = psock->saved_unhash;
+-	sk->sk_write_space = psock->saved_write_space;
  
-+#include <linux/math64.h>
- #include <linux/random.h>
+ 	if (psock->sk_proto) {
+ 		struct inet_connection_sock *icsk = inet_csk(sk);
+ 		bool has_ulp = !!icsk->icsk_ulp_data;
  
- #include "../i915_selftest.h"
+-		if (has_ulp)
+-			tcp_update_ulp(sk, psock->sk_proto);
+-		else
++		if (has_ulp) {
++			tcp_update_ulp(sk, psock->sk_proto,
++				       psock->saved_write_space);
++		} else {
+ 			sk->sk_prot = psock->sk_proto;
++			sk->sk_write_space = psock->saved_write_space;
++		}
+ 		psock->sk_proto = NULL;
++	} else {
++		sk->sk_write_space = psock->saved_write_space;
+ 	}
+ }
+ 
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -2132,7 +2132,8 @@ struct tcp_ulp_ops {
+ 	/* initialize ulp */
+ 	int (*init)(struct sock *sk);
+ 	/* update ulp */
+-	void (*update)(struct sock *sk, struct proto *p);
++	void (*update)(struct sock *sk, struct proto *p,
++		       void (*write_space)(struct sock *sk));
+ 	/* cleanup ulp */
+ 	void (*release)(struct sock *sk);
+ 	/* diagnostic */
+@@ -2147,7 +2148,8 @@ void tcp_unregister_ulp(struct tcp_ulp_o
+ int tcp_set_ulp(struct sock *sk, const char *name);
+ void tcp_get_available_ulp(char *buf, size_t len);
+ void tcp_cleanup_ulp(struct sock *sk);
+-void tcp_update_ulp(struct sock *sk, struct proto *p);
++void tcp_update_ulp(struct sock *sk, struct proto *p,
++		    void (*write_space)(struct sock *sk));
+ 
+ #define MODULE_ALIAS_TCP_ULP(name)				\
+ 	__MODULE_INFO(alias, alias_userspace, name);		\
+--- a/net/ipv4/tcp_ulp.c
++++ b/net/ipv4/tcp_ulp.c
+@@ -96,17 +96,19 @@ void tcp_get_available_ulp(char *buf, si
+ 	rcu_read_unlock();
+ }
+ 
+-void tcp_update_ulp(struct sock *sk, struct proto *proto)
++void tcp_update_ulp(struct sock *sk, struct proto *proto,
++		    void (*write_space)(struct sock *sk))
+ {
+ 	struct inet_connection_sock *icsk = inet_csk(sk);
+ 
+ 	if (!icsk->icsk_ulp_ops) {
++		sk->sk_write_space = write_space;
+ 		sk->sk_prot = proto;
+ 		return;
+ 	}
+ 
+ 	if (icsk->icsk_ulp_ops->update)
+-		icsk->icsk_ulp_ops->update(sk, proto);
++		icsk->icsk_ulp_ops->update(sk, proto, write_space);
+ }
+ 
+ void tcp_cleanup_ulp(struct sock *sk)
+--- a/net/tls/tls_main.c
++++ b/net/tls/tls_main.c
+@@ -798,15 +798,19 @@ out:
+ 	return rc;
+ }
+ 
+-static void tls_update(struct sock *sk, struct proto *p)
++static void tls_update(struct sock *sk, struct proto *p,
++		       void (*write_space)(struct sock *sk))
+ {
+ 	struct tls_context *ctx;
+ 
+ 	ctx = tls_get_ctx(sk);
+-	if (likely(ctx))
++	if (likely(ctx)) {
++		ctx->sk_write_space = write_space;
+ 		ctx->sk_proto = p;
+-	else
++	} else {
+ 		sk->sk_prot = p;
++		sk->sk_write_space = write_space;
++	}
+ }
+ 
+ static int tls_get_info(const struct sock *sk, struct sk_buff *skb)
 
 
