@@ -2,51 +2,54 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C78C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F5FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:46:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 197B72468A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:46:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49A962467B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:46:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686363;
-	bh=ww7v8HP4bT2dIJ+PNYY4ouiv91+eJiffjJuPz+myJbw=;
+	s=default; t=1579686365;
+	bh=5KCHx0gHUbgErhNGCBYAx5C+ugIkRM20hmqOhRduMs8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jmJlLPQt644Cyk84Y+couEs/Cs7CIFKFMmD3qjqNF4CSwA2BKzwyqcdMFKA4EIOFC
-	 s5oy14jtcg9E11VKVT9hbU8gB66oZSmY963+pDpx2P2mcEG9L+UOIElSKX2eXm4v+s
-	 hcmjAUao13WFeEZoMRVs48D/yVDQB834QTEqKd+U=
+	b=BvekY6FzcRgX8+PVJMru/NR5awsRS6OBcOteQm7u665c+n3nPffkZ9DyqIkjdhUmb
+	 hkc9m8bjNttgINZTmtgiRWxBzxR/5U8lgniEpx0umvQOWiyjdU9bjSKzVclKhdyAKo
+	 mAMmvFZatPmDICbV97hO53EKgIS79QMm7ExyeQyU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387811AbgAVJoH (ORCPT
+        id S2387782AbgAVJqE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:44:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36914 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:46:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387975AbgAVJoB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:44:01 -0500
+        id S2387991AbgAVJoG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:44:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD4CB2468B;
-        Wed, 22 Jan 2020 09:44:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE3A42468A;
+        Wed, 22 Jan 2020 09:44:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686241;
-        bh=ww7v8HP4bT2dIJ+PNYY4ouiv91+eJiffjJuPz+myJbw=;
+        s=default; t=1579686246;
+        bh=5KCHx0gHUbgErhNGCBYAx5C+ugIkRM20hmqOhRduMs8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YmvdfF81D2qLVK/zSs9QpRpWR0mj7g9uDvjmMYT4RossqaTGZagVF9VLPCqJKCthH
-         HRSH1T8Wzqcn0dXHTAC/Z5q9C6H9G8YfTvfbuXVh7x60UHnEtonLOIxmx1QZVW8DxG
-         phfALHAUYSREFXiYrLe6cd6j2ZcPWi0E+6e6TMQ8=
+        b=OHBrI+z6wRxOlQaMRS3+QRW32zJtbx+Ka7tdPA7KkgCbbMPspCcE3mgJIezGdCYSZ
+         +zF9n3QAFTEhu9YJByhaR9AV26//CvTK+TdJm04MJodDmGBLf/SrMB+7qXxhpdVeUE
+         4x/oYydy8aAcVgzx/AhqZnfLCqS9c3zYJiMnrxUc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 4.19 065/103] NFC: pn533: fix bulk-message timeout
-Date:   Wed, 22 Jan 2020 10:29:21 +0100
-Message-Id: <20200122092813.490088519@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Jurgen Van Ham <juvanham@gmail.com>,
+        Matteo Croce <mcroce@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 067/103] macvlan: use skb_reset_mac_header() in macvlan_queue_xmit()
+Date:   Wed, 22 Jan 2020 10:29:23 +0100
+Message-Id: <20200122092813.681936823@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
 References: <20200122092803.587683021@linuxfoundation.org>
@@ -59,38 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Eric Dumazet <edumazet@google.com>
 
-commit a112adafcb47760feff959ee1ecd10b74d2c5467 upstream.
+[ Upstream commit 1712b2fff8c682d145c7889d2290696647d82dab ]
 
-The driver was doing a synchronous uninterruptible bulk-transfer without
-using a timeout. This could lead to the driver hanging on probe due to a
-malfunctioning (or malicious) device until the device is physically
-disconnected. While sleeping in probe the driver prevents other devices
-connected to the same hub from being added to (or removed from) the bus.
+I missed the fact that macvlan_broadcast() can be used both
+in RX and TX.
 
-An arbitrary limit of five seconds should be more than enough.
+skb_eth_hdr() makes only sense in TX paths, so we can not
+use it blindly in macvlan_broadcast()
 
-Fixes: dbafc28955fa ("NFC: pn533: don't send USB data off of the stack")
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 96cc4b69581d ("macvlan: do not assume mac_header is set in macvlan_broadcast()")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: Jurgen Van Ham <juvanham@gmail.com>
+Tested-by: Matteo Croce <mcroce@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nfc/pn533/usb.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/macvlan.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/nfc/pn533/usb.c
-+++ b/drivers/nfc/pn533/usb.c
-@@ -403,7 +403,7 @@ static int pn533_acr122_poweron_rdr(stru
- 		       cmd, sizeof(cmd), false);
+diff --git a/drivers/net/macvlan.c b/drivers/net/macvlan.c
+index 41c0a3b55bfb..277bbff53cff 100644
+--- a/drivers/net/macvlan.c
++++ b/drivers/net/macvlan.c
+@@ -263,7 +263,7 @@ static void macvlan_broadcast(struct sk_buff *skb,
+ 			      struct net_device *src,
+ 			      enum macvlan_mode mode)
+ {
+-	const struct ethhdr *eth = skb_eth_hdr(skb);
++	const struct ethhdr *eth = eth_hdr(skb);
+ 	const struct macvlan_dev *vlan;
+ 	struct sk_buff *nskb;
+ 	unsigned int i;
+@@ -517,10 +517,11 @@ static int macvlan_queue_xmit(struct sk_buff *skb, struct net_device *dev)
+ 	const struct macvlan_dev *dest;
  
- 	rc = usb_bulk_msg(phy->udev, phy->out_urb->pipe, buffer, sizeof(cmd),
--			  &transferred, 0);
-+			  &transferred, 5000);
- 	kfree(buffer);
- 	if (rc || (transferred != sizeof(cmd))) {
- 		nfc_err(&phy->udev->dev,
+ 	if (vlan->mode == MACVLAN_MODE_BRIDGE) {
+-		const struct ethhdr *eth = (void *)skb->data;
++		const struct ethhdr *eth = skb_eth_hdr(skb);
+ 
+ 		/* send to other bridge ports directly */
+ 		if (is_multicast_ether_addr(eth->h_dest)) {
++			skb_reset_mac_header(skb);
+ 			macvlan_broadcast(skb, port, dev, MACVLAN_MODE_BRIDGE);
+ 			goto xmit_world;
+ 		}
+-- 
+2.20.1
+
 
 
