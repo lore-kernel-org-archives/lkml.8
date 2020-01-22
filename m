@@ -2,124 +2,87 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA91BC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:21:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE67C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:23:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EC4824656
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:21:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BC1C20704
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:23:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ucm7i3HD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kw+tIUTb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729138AbgAVJVd (ORCPT
+        id S1729121AbgAVJXA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:21:33 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:27562 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729049AbgAVJVc (ORCPT
+        Wed, 22 Jan 2020 04:23:00 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:37346 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbgAVJXA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:21:32 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00M9E5T0017505;
-        Wed, 22 Jan 2020 10:20:38 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=u/gZg5v5O2lvH7c3i8F88g2U2swQh0X4mBt44nns32Q=;
- b=ucm7i3HDueX2khE20HpGolwzNFjIa0Puk/Wtek/QfMVSRNXuR46O93vA/F7MaMiI6YtR
- MvS9+LEBl3UgQe6UrcIUMWfsWkJT9w7MIg8nhQhsefeADdnJNIFtJmH0Z8W4jxwWx3Qv
- jjWH5313tSr/TywHSg1WyyoqE4wTq1Sn9ffN+gJcrhI+fXag0xJ9llSbvK+PcNZGNTtG
- dipOtYSoCjk2Y9VgTWchVnZiLVQXWRTXE+FIve35owCPS+JJjFc3O5pMOTZD3Nm+2RCT
- ElVOBkgxqBld7vOoWEYVewFfiXLuGJuiexxfSqlQFXaC/BX37SkHOaH/RTI8m9bf4vPn pw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xkr1e3jkm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jan 2020 10:20:38 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 923FE10003E;
-        Wed, 22 Jan 2020 10:20:30 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 36DBC2AB057;
-        Wed, 22 Jan 2020 10:20:30 +0100 (CET)
-Received: from SFHDAG6NODE2.st.com (10.75.127.17) by SFHDAG3NODE3.st.com
- (10.75.127.9) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 22 Jan
- 2020 10:20:29 +0100
-Received: from SFHDAG6NODE2.st.com ([fe80::a56f:c186:bab7:13d6]) by
- SFHDAG6NODE2.st.com ([fe80::a56f:c186:bab7:13d6%20]) with mapi id
- 15.00.1347.000; Wed, 22 Jan 2020 10:20:29 +0100
-From:   Olivier MOYSAN <olivier.moysan@st.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "perex@perex.cz" <perex@perex.cz>,
-        "tiwai@suse.com" <tiwai@suse.com>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] ASoC: dt-bindings: stm32: convert spdfirx to
- json-schema
-Thread-Topic: [PATCH v3] ASoC: dt-bindings: stm32: convert spdfirx to
- json-schema
-Thread-Index: AQHV0KYwQJhZ3lJcYU6nre5Twze71af2WFCA
-Date:   Wed, 22 Jan 2020 09:20:29 +0000
-Message-ID: <6a49bf6c-8851-a65c-5606-563776e07c08@st.com>
-References: <20200117170352.16040-1-olivier.moysan@st.com>
- <20200121220022.GA12737@bogus>
-In-Reply-To: <20200121220022.GA12737@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.45]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C57D8D8E50C2B442847FA8C55AFD97B6@st.com>
-Content-Transfer-Encoding: base64
+        Wed, 22 Jan 2020 04:23:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=7TJ8torUFmtaFtBo15mPSZ4ZwelNEa23cOw5BRX3Vpw=; b=kw+tIUTbU7943YpDBQeDQWrVC
+        tFIhT7H7jmPCo2OYXmI5H1wk/MJm/xaKQXE/R4TQHFksvKPYXfgRzdv+l1qdl5cOnR0/mktS1WXpQ
+        kf2LG9e+BKFtIofJmGDI4YlmhFI3a/fhkDpgNeTJMmRki39754GxF79A3fuidw8OMicohRQQhDPkT
+        f1jtlpOA1Kt781bhn2iEW4nwnTjG1gxmzRkl/8enXcIj0YWhETQ8mGc6UexvWCkki2OiTcIwFjZmO
+        GyybztJNOk/LOfvlSBYzZX4tP+Ycq2e33gsFVGeAPACgT2/ILfg8/gAl9MLFTaGf3PV4Fw+Rhnxrj
+        QTCerUBPQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iuCDj-0004nF-Hg; Wed, 22 Jan 2020 09:22:43 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 78B463011F9;
+        Wed, 22 Jan 2020 10:20:59 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 043BB20983E34; Wed, 22 Jan 2020 10:22:38 +0100 (CET)
+Date:   Wed, 22 Jan 2020 10:22:38 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alex Kogan <alex.kogan@oracle.com>
+Cc:     linux@armlinux.org.uk, mingo@redhat.com, will.deacon@arm.com,
+        arnd@arndb.de, longman@redhat.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        guohanjun@huawei.com, jglauber@marvell.com,
+        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
+        dave.dice@oracle.com, rahul.x.yadav@oracle.com
+Subject: Re: [PATCH v7 3/5] locking/qspinlock: Introduce CNA into the slow
+ path of qspinlock
+Message-ID: <20200122092238.GV14879@hirez.programming.kicks-ass.net>
+References: <20191125210709.10293-1-alex.kogan@oracle.com>
+ <20191125210709.10293-4-alex.kogan@oracle.com>
+ <20200121202919.GM11457@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-17_05:2020-01-16,2020-01-17 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200121202919.GM11457@worktop.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgUm9iLA0KDQpJIGRpZCBub3QgcmVwb3J0IHlvdXIgcmV2aWV3ZWQtYnkgdGFnLCBhcyBJIGhh
-dmUgbWFkZSBhIGV4dHJhIGNoYW5nZSBpbiB2Mi4NClRoaXMgY2hhbmdlIGlzIHJlbGF0ZWQgdG8g
-ZG1hcyBwcm9wZXJ0eSByZXBvcnRlZCBpbiB2MiBjaGFuZ2UgbG9nLg0KU29ycnksIHRoaXMgZXh0
-cmEgY2hhbmdlIHdhcyBpbmRlZWQgbm90IGNsZWFybHkgaGlnaGxpZ2h0ZWQgaW4gbG9nIGNvbW1l
-bnRzLg0KDQpSZWdhcmRzDQpPbGl2aWVyDQoNCk9uIDEvMjEvMjAgMTE6MDAgUE0sIFJvYiBIZXJy
-aW5nIHdyb3RlOg0KPiBPbiBGcmksIDE3IEphbiAyMDIwIDE4OjAzOjUyICswMTAwLCBPbGl2aWVy
-IE1veXNhbiB3cm90ZToNCj4+IENvbnZlcnQgdGhlIFNUTTMyIFNQRElGUlggYmluZGluZ3MgdG8g
-RFQgc2NoZW1hIGZvcm1hdCB1c2luZyBqc29uLXNjaGVtYS4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5
-OiBPbGl2aWVyIE1veXNhbiA8b2xpdmllci5tb3lzYW5Ac3QuY29tPg0KPj4gLS0tDQo+PiBDaGFu
-Z2VzIGluIHYyOg0KPj4gLSBBZGQgImFkZGl0aW9uYWxQcm9wZXJ0aWVzOiBmYWxzZSINCj4+IC0g
-QWxzbyBjaGFuZ2UgbWluSXRlbXMgdG8gMiBmb3IgZG1hcyBwcm9wZXJ0eSwgYXMgYm90aCBETUFz
-IGFyZSByZXF1aXJlZC4NCj4+DQo+PiBDaGFuZ2VzIGluIHYzOg0KPj4gLSBEcm9wIG1pbkl0ZW1z
-L21heEl0ZW1zIGZvciBkbWFzIHByb3BlcnR5LCByZW1vdmUgcmVmIHRvIHN0bTMyLWRtYS50eHQu
-DQo+PiAtLS0NCj4+ICAgLi4uL2JpbmRpbmdzL3NvdW5kL3N0LHN0bTMyLXNwZGlmcngudHh0ICAg
-ICAgIHwgNTYgLS0tLS0tLS0tLS0tLQ0KPj4gICAuLi4vYmluZGluZ3Mvc291bmQvc3Qsc3RtMzIt
-c3BkaWZyeC55YW1sICAgICAgfCA4MCArKysrKysrKysrKysrKysrKysrDQo+PiAgIDIgZmlsZXMg
-Y2hhbmdlZCwgODAgaW5zZXJ0aW9ucygrKSwgNTYgZGVsZXRpb25zKC0pDQo+PiAgIGRlbGV0ZSBt
-b2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQvc3Qsc3Rt
-MzItc3BkaWZyeC50eHQNCj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9zdCxzdG0zMi1zcGRpZnJ4LnlhbWwNCj4+DQo+IFBsZWFz
-ZSBhZGQgQWNrZWQtYnkvUmV2aWV3ZWQtYnkgdGFncyB3aGVuIHBvc3RpbmcgbmV3IHZlcnNpb25z
-LiBIb3dldmVyLA0KPiB0aGVyZSdzIG5vIG5lZWQgdG8gcmVwb3N0IHBhdGNoZXMgKm9ubHkqIHRv
-IGFkZCB0aGUgdGFncy4gVGhlIHVwc3RyZWFtDQo+IG1haW50YWluZXIgd2lsbCBkbyB0aGF0IGZv
-ciBhY2tzIHJlY2VpdmVkIG9uIHRoZSB2ZXJzaW9uIHRoZXkgYXBwbHkuDQo+DQo+IElmIGEgdGFn
-IHdhcyBub3QgYWRkZWQgb24gcHVycG9zZSwgcGxlYXNlIHN0YXRlIHdoeSBhbmQgd2hhdCBjaGFu
-Z2VkLg0K
+On Tue, Jan 21, 2020 at 09:29:19PM +0100, Peter Zijlstra wrote:
+> @@ -92,8 +92,8 @@ static int __init cna_init_nodes(void)
+>  }
+>  early_initcall(cna_init_nodes);
+>  
+> -static inline bool cna_try_change_tail(struct qspinlock *lock, u32 val,
+> -				       struct mcs_spinlock *node)
+> +static inline bool cna_try_clear_tail(struct qspinlock *lock, u32 val,
+> +				      struct mcs_spinlock *node)
+>  {
+>  	struct mcs_spinlock *head_2nd, *tail_2nd;
+>  	u32 new;
+
+Also, that whole function is placed wrong; it should be between
+cna_wait_head_or_lock() and cna_pass_lock(), then it's in the order they
+appear in the slow path, ie. the order they actually run.
