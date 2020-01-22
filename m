@@ -2,52 +2,59 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98728C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA767C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 695B524673
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:33:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2CA42467A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:33:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685588;
-	bh=wbfoAA42oX5l4yauXATlXAMyCq6qjlKLDgmai3tPlJw=;
+	s=default; t=1579685590;
+	bh=p9B0uT2oHpZTVWWgC2Fc08MdyScnRBmnaT96Qf13I7I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hp3AraR7mNPCz6EhOdF/LlCM4iBjv7vO3P0EloEhwdXPfl6uMwpy64Bw9IxBxwtK5
-	 9e4tDdru+LZLBSCa0QfqwoJLir4ZwX8BabTXKDSAPTljFO7tQ+qwiy37fTNYjXM4Ft
-	 8kQxJ7hl8xjMWmLKHJHmvawfDnrE8AUq/fwnYQMg=
+	b=UBL73vdHV+b2yNj0KV+Kr4YffUT8a14o93LtjtOzMBe4tCMyG8ZJ8v+2IufcomxV/
+	 esOCDvVEBw58RrPUQCYybB6e47J55UgKN1R4viCHtVCCsWjx9KiY3p2AzDBiA/4rNm
+	 WBOBrYvsQj7KEuq1YMkH2yEWFEm8DeaMXi9benoo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730366AbgAVJdH (ORCPT
+        id S1730379AbgAVJdK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:33:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46482 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:33:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729496AbgAVJdF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:33:05 -0500
+        id S1730370AbgAVJdH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:33:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B34C24672;
-        Wed, 22 Jan 2020 09:33:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A47AE2071E;
+        Wed, 22 Jan 2020 09:33:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685584;
-        bh=wbfoAA42oX5l4yauXATlXAMyCq6qjlKLDgmai3tPlJw=;
+        s=default; t=1579685587;
+        bh=p9B0uT2oHpZTVWWgC2Fc08MdyScnRBmnaT96Qf13I7I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VhD5J9rgWbvaq57NR9MowP2Dmnpu6PWOhhmJXyFW1cW2iwiPEg6TDWR86ySTd5Fy8
-         3qWTXdqT5zRPtQnR7fNJIhbO4A0DYyZ0nCkIifQmu+EtLweiLQMr71cnu6qYFpTGun
-         SM830QfaSdquU7r27xCkB54tPrmOAUA2YUv8eYlY=
+        b=mNYyWsPB8qzVkG+RLGcp1I1TDU6DIl09q8pUePeim2s513xK1cWijTRQ8L/zsY+oG
+         P3696jen4Arcy15WkXmm04LeVvnPxkiRNFZ4UTEyTTe6tu3bKNpVJpebIGQwS6FlxD
+         /eHTYNZC1MUvj3exMaGZMFWXjZwKbiBNrK2z5RqY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kars de Jong <jongk@linux-m68k.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 4.4 36/76] rtc: msm6242: Fix reading of 10-hour digit
-Date:   Wed, 22 Jan 2020 10:28:52 +0100
-Message-Id: <20200122092755.802958083@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "H . Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 37/76] rseq/selftests: Turn off timeout setting
+Date:   Wed, 22 Jan 2020 10:28:53 +0100
+Message-Id: <20200122092755.961150674@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092751.587775548@linuxfoundation.org>
 References: <20200122092751.587775548@linuxfoundation.org>
@@ -60,40 +67,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kars de Jong <jongk@linux-m68k.org>
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 
-commit e34494c8df0cd96fc432efae121db3212c46ae48 upstream.
+[ Upstream commit af9cb29c5488381083b0b5ccdfb3cd931063384a ]
 
-The driver was reading the wrong register as the 10-hour digit due to
-a misplaced ')'. It was in fact reading the 1-second digit register due
-to this bug.
+As the rseq selftests can run for a long period of time, disable the
+timeout that the general selftests have.
 
-Also remove the use of a magic number for the hour mask and use the define
-for it which was already present.
-
-Fixes: 4f9b9bba1dd1 ("rtc: Add an RTC driver for the Oki MSM6242")
-Tested-by: Kars de Jong <jongk@linux-m68k.org>
-Signed-off-by: Kars de Jong <jongk@linux-m68k.org>
-Link: https://lore.kernel.org/r/20191116110548.8562-1-jongk@linux-m68k.org
-Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Shuah Khan <skhan@linuxfoundation.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>
+Cc: "H . Peter Anvin" <hpa@zytor.com>
+Cc: Paul Turner <pjt@google.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-msm6242.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/testing/selftests/rseq/settings | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 tools/testing/selftests/rseq/settings
 
---- a/drivers/rtc/rtc-msm6242.c
-+++ b/drivers/rtc/rtc-msm6242.c
-@@ -132,7 +132,8 @@ static int msm6242_read_time(struct devi
- 		      msm6242_read(priv, MSM6242_SECOND1);
- 	tm->tm_min  = msm6242_read(priv, MSM6242_MINUTE10) * 10 +
- 		      msm6242_read(priv, MSM6242_MINUTE1);
--	tm->tm_hour = (msm6242_read(priv, MSM6242_HOUR10 & 3)) * 10 +
-+	tm->tm_hour = (msm6242_read(priv, MSM6242_HOUR10) &
-+		       MSM6242_HOUR10_HR_MASK) * 10 +
- 		      msm6242_read(priv, MSM6242_HOUR1);
- 	tm->tm_mday = msm6242_read(priv, MSM6242_DAY10) * 10 +
- 		      msm6242_read(priv, MSM6242_DAY1);
+diff --git a/tools/testing/selftests/rseq/settings b/tools/testing/selftests/rseq/settings
+new file mode 100644
+index 000000000000..e7b9417537fb
+--- /dev/null
++++ b/tools/testing/selftests/rseq/settings
+@@ -0,0 +1 @@
++timeout=0
+-- 
+2.20.1
+
 
 
