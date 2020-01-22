@@ -2,54 +2,51 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93507C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3CD4C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:33:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A0BA24673
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:33:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77BFE24672
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:33:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685624;
-	bh=cm0N/0lJNmZhuDHSPO3+0TrF6RJZN6w5OWe9cQ5tPgk=;
+	s=default; t=1579685628;
+	bh=OQx+HUceJcnoMODpA+j8l5bsP7KYSCFPs+XvV5ngFKE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bOJssTOIZvF8a4nj8fWEClGbXYSou7B5wpVkBuPs0oTYw3QNlq/t1g2sWBiiPtCN9
-	 jtKnGQNXOxB41RcLUm76gseRy/Dns8Ws49LAWf4Z+CD9pTee0dphSqRJpFtZU5H2A7
-	 s83ZsY/A+u30fr0IetqQP+CMHpE7z0BeupNQDz48=
+	b=OVFZscwgoFUSogC1QYiycIsu2X6flVCOgXfBFyZl3enrrUKbPzjJeNjkt9IP922XH
+	 zpqdLMJBizui9oKSScKbmX3dcoanr7oGWArxxGlG9dvyQWgDMoRcm8kyebuPwNX90r
+	 cRx5OxjF1LPBWFDypjGjyPX/SgGyS+3xAfWohTv4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729236AbgAVJdm (ORCPT
+        id S1730665AbgAVJdq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:33:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47600 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:33:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730652AbgAVJdj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:33:39 -0500
+        id S1729691AbgAVJdo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:33:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21F4324673;
-        Wed, 22 Jan 2020 09:33:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 037702071E;
+        Wed, 22 Jan 2020 09:33:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685618;
-        bh=cm0N/0lJNmZhuDHSPO3+0TrF6RJZN6w5OWe9cQ5tPgk=;
+        s=default; t=1579685623;
+        bh=OQx+HUceJcnoMODpA+j8l5bsP7KYSCFPs+XvV5ngFKE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sT/iUdU8hk2v7MUY6ccc2BbcPYmoQ03pEbNu7dcyN17zmERIjclALnulcanPVs9ck
-         VPy4mOBCVVA40rVFAICuVXWdTPg8BI7ErEmgiXnmN0MpCBiML0nBlS3VCKWw/oPKaU
-         unAaWhhsaqy9F3I1rgW+CGoG0L11awIK3uWhzGgc=
+        b=pW+Aymy0DD8j17su+v7LWHJqrsqRJ8yuiJ7JUaVY4g1mnmhZNtlt5tIvjTxDVU+FR
+         bWFRnEc4MvE++Gly1mjJR9W72kwpttb/8Z9fgA8/UdC1DfmMR6vGqRMtD888kML4yp
+         2dreBORfvkeH/BV0EBwJaY7tAYDGA8dHyrsQngbU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Peter Robinson <pbrobinson@gmail.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 4.9 11/97] arm64: Make sure permission updates happen for pmd/pud
-Date:   Wed, 22 Jan 2020 10:28:15 +0100
-Message-Id: <20200122092757.606897333@linuxfoundation.org>
+        stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 02/97] HID: hidraw: Fix returning EPOLLOUT from hidraw_poll
+Date:   Wed, 22 Jan 2020 10:28:06 +0100
+Message-Id: <20200122092756.076054156@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092755.678349497@linuxfoundation.org>
 References: <20200122092755.678349497@linuxfoundation.org>
@@ -62,72 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laura Abbott <labbott@redhat.com>
+From: Marcel Holtmann <marcel@holtmann.org>
 
-commit 82034c23fcbc2389c73d97737f61fa2dd6526413 upstream.
+[ Upstream commit 9f3b61dc1dd7b81e99e7ed23776bb64a35f39e1a ]
 
-Commit 15122ee2c515 ("arm64: Enforce BBM for huge IO/VMAP mappings")
-disallowed block mappings for ioremap since that code does not honor
-break-before-make. The same APIs are also used for permission updating
-though and the extra checks prevent the permission updates from happening,
-even though this should be permitted. This results in read-only permissions
-not being fully applied. Visibly, this can occasionaly be seen as a failure
-on the built in rodata test when the test data ends up in a section or
-as an odd RW gap on the page table dump. Fix this by using
-pgattr_change_is_safe instead of p*d_present for determining if the
-change is permitted.
+When polling a connected /dev/hidrawX device, it is useful to get the
+EPOLLOUT when writing is possible. Since writing is possible as soon as
+the device is connected, always return it.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Tested-by: Peter Robinson <pbrobinson@gmail.com>
-Reported-by: Peter Robinson <pbrobinson@gmail.com>
-Fixes: 15122ee2c515 ("arm64: Enforce BBM for huge IO/VMAP mappings")
-Signed-off-by: Laura Abbott <labbott@redhat.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Right now EPOLLOUT is only returned when there are also input reports
+are available. This works if devices start sending reports when
+connected, but some HID devices might need an output report first before
+sending any input reports. This change will allow using EPOLLOUT here as
+well.
+
+Fixes: 378b80370aa1 ("hidraw: Return EPOLLOUT from hidraw_poll")
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/mm/mmu.c |   16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ drivers/hid/hidraw.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -799,13 +799,15 @@ int pud_set_huge(pud_t *pudp, phys_addr_
- {
- 	pgprot_t sect_prot = __pgprot(PUD_TYPE_SECT |
- 					pgprot_val(mk_sect_prot(prot)));
-+	pud_t new_pud = pfn_pud(__phys_to_pfn(phys), sect_prot);
+diff --git a/drivers/hid/hidraw.c b/drivers/hid/hidraw.c
+index 225456c1a39a..290f7f7817d3 100644
+--- a/drivers/hid/hidraw.c
++++ b/drivers/hid/hidraw.c
+@@ -260,10 +260,10 @@ static unsigned int hidraw_poll(struct file *file, poll_table *wait)
  
--	/* ioremap_page_range doesn't honour BBM */
--	if (pud_present(READ_ONCE(*pudp)))
-+	/* Only allow permission changes for now */
-+	if (!pgattr_change_is_safe(READ_ONCE(pud_val(*pudp)),
-+				   pud_val(new_pud)))
- 		return 0;
- 
- 	BUG_ON(phys & ~PUD_MASK);
--	set_pud(pudp, pfn_pud(__phys_to_pfn(phys), sect_prot));
-+	set_pud(pudp, new_pud);
- 	return 1;
+ 	poll_wait(file, &list->hidraw->wait, wait);
+ 	if (list->head != list->tail)
+-		return POLLIN | POLLRDNORM | POLLOUT;
++		return POLLIN | POLLRDNORM;
+ 	if (!list->hidraw->exist)
+ 		return POLLERR | POLLHUP;
+-	return 0;
++	return POLLOUT | POLLWRNORM;
  }
  
-@@ -813,13 +815,15 @@ int pmd_set_huge(pmd_t *pmdp, phys_addr_
- {
- 	pgprot_t sect_prot = __pgprot(PMD_TYPE_SECT |
- 					pgprot_val(mk_sect_prot(prot)));
-+	pmd_t new_pmd = pfn_pmd(__phys_to_pfn(phys), sect_prot);
- 
--	/* ioremap_page_range doesn't honour BBM */
--	if (pmd_present(READ_ONCE(*pmdp)))
-+	/* Only allow permission changes for now */
-+	if (!pgattr_change_is_safe(READ_ONCE(pmd_val(*pmdp)),
-+				   pmd_val(new_pmd)))
- 		return 0;
- 
- 	BUG_ON(phys & ~PMD_MASK);
--	set_pmd(pmdp, pfn_pmd(__phys_to_pfn(phys), sect_prot));
-+	set_pmd(pmdp, new_pmd);
- 	return 1;
- }
- 
+ static int hidraw_open(struct inode *inode, struct file *file)
+-- 
+2.20.1
+
 
 
