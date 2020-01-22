@@ -2,107 +2,72 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDD7C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 23:58:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61DC6C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 23:58:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EDFD205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 23:58:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="pxSOx/Py"
+	by mail.kernel.org (Postfix) with ESMTP id 37530205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 23:58:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgAVX6S (ORCPT
+        id S1727022AbgAVX6q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 18:58:18 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:33869 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725989AbgAVX6R (ORCPT
+        Wed, 22 Jan 2020 18:58:46 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:51891 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbgAVX6q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 18:58:17 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1579737496; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=OH8pQcd+TxVTrS6N0gsCUveKud21QjiYBYSAEiMRoEM=;
- b=pxSOx/Py9jc/OezHund367lWa7cbdyQL2wFco55I1gJ2fW2DAzWFL5xl/fpiJO+o/zkYbKOc
- joUl+QENhyyX8GtIP+oV5anEEVpwlwpVaWGrMWJKrWXHKO4eQfsDPXQ1FiUGNY6JI7kst+r8
- 2XEFB1+Fx/pqE/eb7OahdkmUJb4=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e28e198.7fdff35e6228-smtp-out-n03;
- Wed, 22 Jan 2020 23:58:16 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id EEECDC433A2; Wed, 22 Jan 2020 23:58:15 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: rishabhb)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5F33BC43383;
-        Wed, 22 Jan 2020 23:58:15 +0000 (UTC)
+        Wed, 22 Jan 2020 18:58:46 -0500
+Received: from [82.43.126.140] (helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iuPtP-00019i-Eu; Wed, 22 Jan 2020 23:58:39 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] iio: ad5755: fix spelling mistake "to" -> "too"
+Date:   Wed, 22 Jan 2020 23:58:39 +0000
+Message-Id: <20200122235839.2830850-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 22 Jan 2020 15:58:15 -0800
-From:   rishabhb@codeaurora.org
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [PATCH v2 2/8] remoteproc: qcom: Introduce driver to store pil
- info in IMEM
-In-Reply-To: <20200122230849.GC3261042@ripper>
-References: <20191227053215.423811-1-bjorn.andersson@linaro.org>
- <20191227053215.423811-3-bjorn.andersson@linaro.org>
- <60c10082ba90fbba0f056df8575d205f@codeaurora.org>
- <20200122230849.GC3261042@ripper>
-Message-ID: <2ffeff6b57e6bb4567f00c09e5b82131@codeaurora.org>
-X-Sender: rishabhb@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-22 15:08, Bjorn Andersson wrote:
-> On Wed 22 Jan 14:56 PST 2020, rishabhb@codeaurora.org wrote:
->> On 2019-12-26 21:32, Bjorn Andersson wrote:
->> > diff --git a/drivers/remoteproc/qcom_pil_info.c
-> [..]
->> > +static int pil_reloc_probe(struct platform_device *pdev)
->> > +{
->> > +	struct pil_reloc *reloc;
->> > +
->> > +	reloc = devm_kzalloc(&pdev->dev, sizeof(*reloc), GFP_KERNEL);
->> > +	if (!reloc)
->> > +		return -ENOMEM;
->> > +
->> > +	reloc->dev = &pdev->dev;
->> > +	reloc->map = syscon_node_to_regmap(pdev->dev.parent->of_node);
->> If there are multiple entries like "pil-reloc" in the imem node
->> mapping the entire imem multiple times may not work. Is there a way
->> we can somehow just iomap the required region for pil?
-> 
-> With the entire imem being represented as a syscon this will be
-> ioremapped once and all callers of syscon_node_to_regmap() (or one of
-> the other syscon getters) will get a regmap back that reference this 
-> one
-> mapping.
-> 
-> So doing it this way allow us to "map" sections of imem that is smaller
-> than PAGE_SIZE.
-> 
-> 
-> That said, it means that all imem users/clients should access imem
-> through this syscon regmap.
-> 
-> Regards,
-> Bjorn
-Yes, the clients are spread around in different drivers currently.
-So accessing same regmap is not possible.
+From: Colin Ian King <colin.king@canonical.com>
+
+There is a spelling mistake in a dev_err message. Fix it.
+
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/iio/dac/ad5755.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/iio/dac/ad5755.c b/drivers/iio/dac/ad5755.c
+index b9175fb4c8ab..dad0b26228a2 100644
+--- a/drivers/iio/dac/ad5755.c
++++ b/drivers/iio/dac/ad5755.c
+@@ -655,7 +655,7 @@ static struct ad5755_platform_data *ad5755_parse_dt(struct device *dev)
+ 	for_each_child_of_node(np, pp) {
+ 		if (devnr >= AD5755_NUM_CHANNELS) {
+ 			dev_err(dev,
+-				"There is to many channels defined in DT\n");
++				"There is too many channels defined in DT\n");
+ 			goto error_out;
+ 		}
+ 
+-- 
+2.24.0
+
