@@ -2,53 +2,51 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 214F4C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C14C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:39:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEB4924685
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:39:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB91224685
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:39:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685960;
-	bh=qoMCuMQpvnOIkcYaIt6WZ54nxWK5b5EAI4RuxSYfFYw=;
+	s=default; t=1579685961;
+	bh=h9wDXmwEsFdoPohpB5Y3eEkycsp8x/x34bOnIPfQ6gw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QlA8o3BEvvU2hKa/hK368Zu1ZPmYGXkCyhPpAEAafV/NPx+tuUiBjFBssFLNWRG9U
-	 q9bVbhpYHheCPxJQA9Gl4yZWvp2WQdwCNPKu+6dqo6SXUFrlHlxRxW21dW5nZhs4S6
-	 CA6qNP7LLJKCBZNrsBzLLHNdmGaRC5W+JR6zVVCc=
+	b=vhykvHVvY17LmmSRAxFCxnnwhj0o/V8p8up2nj3NyAuMv//+Zil7GUBTk6sWU2tv5
+	 wPng9s+bVtkr7ZYukwbmtv/+EagwrMxrvmlbXniMyE6CiVlvaNsAkur2yEhOJpSCp/
+	 xzj2pLQ8RnwbOA3ChB5Vllfupe5H0KT/IrK5ywr0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732913AbgAVJjT (ORCPT
+        id S1733193AbgAVJjU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:39:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56768 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:39:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732372AbgAVJjQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:39:16 -0500
+        id S1733180AbgAVJjS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:39:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CB5824683;
-        Wed, 22 Jan 2020 09:39:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C486D24684;
+        Wed, 22 Jan 2020 09:39:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685955;
-        bh=qoMCuMQpvnOIkcYaIt6WZ54nxWK5b5EAI4RuxSYfFYw=;
+        s=default; t=1579685958;
+        bh=h9wDXmwEsFdoPohpB5Y3eEkycsp8x/x34bOnIPfQ6gw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cTnQJE3gA6uDESWTq+cz2FITCq48N1lCE7ANRJEfz2oddRAmSmc2jXr9pLpxCEXrN
-         EiiFe75VbHzUjTXG4UoWIusHZ6NOpnkFt7ZOMCJuqm0GWotEMpk1svcdaLoI9kYgh1
-         jNjr3ENwwi9o4dMkNPXJ80z9B6NXsnre42wTBj+Y=
+        b=mNbVzZ1FfpYlO0dlSXNqWU0XV3T9eQaJ9XLi6h41h+WSp9ruIxBPpfRpo17uiNULr
+         ylHQiDMCer2Bl9H7nkdeZXuOqCatSWcxOGgKSPUrPeD8wUpMqYkHggxPmSK++rWCbZ
+         w8m7mInZ8iL816wzATFunZHNvsTnSIralWnSod4w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Juergen Gross <jgross@suse.com>,
-        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>
-Subject: [PATCH 4.14 50/65] xen/blkfront: Adjust indentation in xlvbd_alloc_gendisk
-Date:   Wed, 22 Jan 2020 10:29:35 +0100
-Message-Id: <20200122092758.425246199@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.14 51/65] cw1200: Fix a signedness bug in cw1200_load_firmware()
+Date:   Wed, 22 Jan 2020 10:29:36 +0100
+Message-Id: <20200122092758.610144895@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092750.976732974@linuxfoundation.org>
 References: <20200122092750.976732974@linuxfoundation.org>
@@ -61,51 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 589b72894f53124a39d1bb3c0cecaf9dcabac417 upstream.
+commit 4a50d454502f1401171ff061a5424583f91266db upstream.
 
-Clang warns:
+The "priv->hw_type" is an enum and in this context GCC will treat it
+as an unsigned int so the error handling will never trigger.
 
-../drivers/block/xen-blkfront.c:1117:4: warning: misleading indentation;
-statement is not part of the previous 'if' [-Wmisleading-indentation]
-                nr_parts = PARTS_PER_DISK;
-                ^
-../drivers/block/xen-blkfront.c:1115:3: note: previous statement is here
-                if (err)
-                ^
-
-This is because there is a space at the beginning of this line; remove
-it so that the indentation is consistent according to the Linux kernel
-coding style and clang no longer warns.
-
-While we are here, the previous line has some trailing whitespace; clean
-that up as well.
-
-Fixes: c80a420995e7 ("xen-blkfront: handle Xen major numbers other than XENVBD")
-Link: https://github.com/ClangBuiltLinux/linux/issues/791
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Acked-by: Roger Pau Monné <roger.pau@citrix.com>
-Signed-off-by: Juergen Gross <jgross@suse.com>
+Fixes: a910e4a94f69 ("cw1200: add driver for the ST-E CW1100 & CW1200 WLAN chipsets")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/block/xen-blkfront.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/st/cw1200/fwio.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/block/xen-blkfront.c
-+++ b/drivers/block/xen-blkfront.c
-@@ -1115,8 +1115,8 @@ static int xlvbd_alloc_gendisk(blkif_sec
- 	if (!VDEV_IS_EXTENDED(info->vdevice)) {
- 		err = xen_translate_vdev(info->vdevice, &minor, &offset);
- 		if (err)
--			return err;		
-- 		nr_parts = PARTS_PER_DISK;
-+			return err;
-+		nr_parts = PARTS_PER_DISK;
- 	} else {
- 		minor = BLKIF_MINOR_EXT(info->vdevice);
- 		nr_parts = PARTS_PER_EXT_DISK;
+--- a/drivers/net/wireless/st/cw1200/fwio.c
++++ b/drivers/net/wireless/st/cw1200/fwio.c
+@@ -323,12 +323,12 @@ int cw1200_load_firmware(struct cw1200_c
+ 		goto out;
+ 	}
+ 
+-	priv->hw_type = cw1200_get_hw_type(val32, &major_revision);
+-	if (priv->hw_type < 0) {
++	ret = cw1200_get_hw_type(val32, &major_revision);
++	if (ret < 0) {
+ 		pr_err("Can't deduce hardware type.\n");
+-		ret = -ENOTSUPP;
+ 		goto out;
+ 	}
++	priv->hw_type = ret;
+ 
+ 	/* Set DPLL Reg value, and read back to confirm writes work */
+ 	ret = cw1200_reg_write_32(priv, ST90TDS_TSET_GEN_R_W_REG_ID,
 
 
