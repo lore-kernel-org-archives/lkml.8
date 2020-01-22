@@ -2,69 +2,105 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F16DC32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 23:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A026C33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 23:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4730321835
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 23:44:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49ECC21835
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 23:44:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579736699;
+	bh=pa3Xnl6J4qlhiqlzA9EeDZuNgbsrLfdofQed7ygSJ3c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=sIMyZ/qSxvdr9U3X3XJFxlvqu1x7ur7MWszCr81bUoZ5GQOdvF24/313l2b+LnqoJ
+	 SqqkuzTl/xhLAMsUc7T8B5uIiKI0na9CFsXmo80piyH1/us8NhdB8/wDhSfT22u3nx
+	 m38B8uj/VlDTWohgkUZOlUqHPIt4+M11fm71bH1Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbgAVXom (ORCPT
+        id S1728139AbgAVXo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 18:44:42 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:51672 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbgAVXom (ORCPT
+        Wed, 22 Jan 2020 18:44:58 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:34334 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbgAVXo6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 18:44:42 -0500
-Received: from [82.43.126.140] (helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1iuPfp-0007xo-Tk; Wed, 22 Jan 2020 23:44:38 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Pawel Laszczak <pawell@cadence.com>, linux-usb@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] usb: cdns3: fix spelling mistake and rework grammar in text
-Date:   Wed, 22 Jan 2020 23:44:37 +0000
-Message-Id: <20200122234437.2829803-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.24.0
+        Wed, 22 Jan 2020 18:44:58 -0500
+Received: by mail-oi1-f194.google.com with SMTP id l136so1235160oig.1;
+        Wed, 22 Jan 2020 15:44:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ed4zI+jSgC6xCI/xfGInzht5Wa+I4nWsmMe8EzbF7SM=;
+        b=k7Cz+Reuhb23OzsDeP6AIYB/1Evlr7BNJ6rOHvLbBtDnbX+ViPuKtxTVvYUglFqKgT
+         tvjv5SuNoGsl219i+MkjmpFgVPki4KDdxzR8Hr92tYs83osC6w+2gZMsmrkIrPdmaPNe
+         iz5NjvdUQKJ19XrYhn/73JMRgv97l1gbSHDtGFMGKdkoUMLqr/qGpyz02ndVedcF6HUP
+         y+OWR7I++jzGOm4hnXZY3Qlz6KRtvKj3aMbJ3Qnmfzdpa1GYpZZ7DNodSObDdl4smOlc
+         yzBkFUzNYKxmvmRTrJACGE1Q4fbKcQQyhRdtYJxM1xdQNOcvbqLlq2UNdadiggByYhq9
+         6j5A==
+X-Gm-Message-State: APjAAAVJlusopU/hGeETwinswUFw7m/HopkDfIioEtsFPLzHYEW8JDyC
+        Z501aX5j/emVuzoPCUkHNOn62sQZCVVnKTzwXJkWMF6p
+X-Google-Smtp-Source: APXvYqxNgvuZUQA8M1G4TAe27SPJKfXoGK9QcwiGPOzUhAUt/2pusrEPBix6/ucvjY4XDCZhrMOrfhSnJXIkob8iGaI=
+X-Received: by 2002:a05:6808:1c5:: with SMTP id x5mr8823910oic.57.1579736697527;
+ Wed, 22 Jan 2020 15:44:57 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20200121082758.8808-1-benjamin.gaignard@st.com> <4c2b0c6f-c0d7-5866-44cf-e32d84c4261a@infradead.org>
+In-Reply-To: <4c2b0c6f-c0d7-5866-44cf-e32d84c4261a@infradead.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 23 Jan 2020 00:44:46 +0100
+Message-ID: <CAJZ5v0hPNx9iOm+nWcYfs+qPyuFj63xp2ieAWRMKb9AOnrming@mail.gmail.com>
+Subject: Re: [PATCH v2] cpuidle: fix kernel doc warnings
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Tue, Jan 21, 2020 at 4:36 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> On 1/21/20 12:27 AM, Benjamin Gaignard wrote:
+> > Fix cpuidle_find_deepest_state() kernel documentation to avoid warnings when compiling with W=1.
+> >
+> > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+>
+> Acked-by: Randy Dunlap <rdunlap@infradead.org>
 
-The text contains a spelling mistake, "to" should be "too"
-so fix this and re-work the grammar to make it more readable.
+The patch has been queued up as 5.6 material under modified subject
+("cpuidle: fix cpuidle_find_deepest_state() kerneldoc warnings"),
+thanks!
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/usb/cdns3/debug.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/usb/cdns3/debug.h b/drivers/usb/cdns3/debug.h
-index 2c9afbfe988b..a5c6a29e1340 100644
---- a/drivers/usb/cdns3/debug.h
-+++ b/drivers/usb/cdns3/debug.h
-@@ -140,7 +140,7 @@ static inline char *cdns3_dbg_ring(struct cdns3_endpoint *priv_ep,
- 		trb_per_sector = TRBS_PER_SEGMENT;
- 
- 	if (trb_per_sector > TRBS_PER_SEGMENT) {
--		sprintf(str + ret, "\t\tTo big transfer ring %d\n",
-+		sprintf(str + ret, "\t\tTransfer ring %d too big\n",
- 			trb_per_sector);
- 		return str;
- 	}
--- 
-2.24.0
-
+> > ---
+> > CC: rdunlap@infradead.org
+> > version 2:
+> > - fix the comment done by Randy
+> >  drivers/cpuidle/cpuidle.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
+> > index 33d19c8eb027..19c6dee88921 100644
+> > --- a/drivers/cpuidle/cpuidle.c
+> > +++ b/drivers/cpuidle/cpuidle.c
+> > @@ -121,6 +121,9 @@ void cpuidle_use_deepest_state(u64 latency_limit_ns)
+> >   * cpuidle_find_deepest_state - Find the deepest available idle state.
+> >   * @drv: cpuidle driver for the given CPU.
+> >   * @dev: cpuidle device for the given CPU.
+> > + * @latency_limit_ns: Idle state exit latency limit
+> > + *
+> > + * Return: the index of the deepest available idle state.
+> >   */
+> >  int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
+> >                              struct cpuidle_device *dev,
+> >
+>
+>
+> --
+> ~Randy
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
