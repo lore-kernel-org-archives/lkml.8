@@ -2,93 +2,141 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B9BC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 15:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2514EC33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 15:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 074C921734
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 15:04:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05E6924676
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 15:05:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728760AbgAVPEL (ORCPT
+        id S1726811AbgAVPFd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 10:04:11 -0500
-Received: from mga17.intel.com ([192.55.52.151]:47395 "EHLO mga17.intel.com"
+        Wed, 22 Jan 2020 10:05:33 -0500
+Received: from mx2.suse.de ([195.135.220.15]:36980 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725911AbgAVPEK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 10:04:10 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jan 2020 07:04:10 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,350,1574150400"; 
-   d="scan'208";a="284049874"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 22 Jan 2020 07:04:05 -0800
-Received: by lahna (sSMTP sendmail emulation); Wed, 22 Jan 2020 17:04:04 +0200
-Date:   Wed, 22 Jan 2020 17:04:04 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Mark Brown <broonie@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 14/38] platform/x86: intel_scu_ipc: Introduce new SCU
- IPC API
-Message-ID: <20200122150404.GZ2665@lahna.fi.intel.com>
-References: <20200121160114.60007-1-mika.westerberg@linux.intel.com>
- <20200121160114.60007-15-mika.westerberg@linux.intel.com>
- <20200122134359.GE4963@kroah.com>
- <20200122144048.GV2665@lahna.fi.intel.com>
- <20200122144939.GA59473@kroah.com>
+        id S1725836AbgAVPFd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 10:05:33 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 10C3FACD9;
+        Wed, 22 Jan 2020 15:05:29 +0000 (UTC)
+Date:   Wed, 22 Jan 2020 16:05:27 +0100 (CET)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+cc:     Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Jessica Yu <jeyu@kernel.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, live-patching@vger.kernel.org,
+        Randy Dunlap <rdunlap@infradead.org>, mjambor@suse.cz
+Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
+In-Reply-To: <alpine.LSU.2.21.2001221312030.15957@pobox.suse.cz>
+Message-ID: <alpine.LSU.2.21.2001221556160.15957@pobox.suse.cz>
+References: <20191015135634.GK2328@hirez.programming.kicks-ass.net> <alpine.LSU.2.21.1910151611000.13169@pobox.suse.cz> <88bab814-ea24-ece9-2bc0-7a1e10a62f12@redhat.com> <20191015153120.GA21580@linux-8ccs> <7e9c7dd1-809e-f130-26a3-3d3328477437@redhat.com>
+ <20191015182705.1aeec284@gandalf.local.home> <20191016074217.GL2328@hirez.programming.kicks-ass.net> <20191021150549.bitgqifqk2tbd3aj@treble> <20200120165039.6hohicj5o52gdghu@treble> <alpine.LSU.2.21.2001210922060.6036@pobox.suse.cz> <20200121161045.dhihqibnpyrk2lsu@treble>
+ <alpine.LSU.2.21.2001221312030.15957@pobox.suse.cz>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200122144939.GA59473@kroah.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 03:49:39PM +0100, Greg Kroah-Hartman wrote:
-> On Wed, Jan 22, 2020 at 04:40:48PM +0200, Mika Westerberg wrote:
-> > On Wed, Jan 22, 2020 at 02:43:59PM +0100, Greg Kroah-Hartman wrote:
-> > > > +	if (!scu->dev)
-> > > > +		goto err_unlock;
-> > > > +	if (!try_module_get(scu->dev->driver->owner))
-> > > > +		goto err_unlock;
-> > > > +	mutex_unlock(&ipclock);
-> > > > +	return scu;
-> > > 
-> > > NO REFERENCE COUNT INCREMENT???
-> > 
-> > You mean increment the scu->dev reference count? I kind of thought that
-> > the try_module_get() should make sure the thing stays there as long as
-> > the caller has not called _put() but now when I think about it bit more
-> > we would need to do device_get() here as well.
-> 
-> module reference counts handle _code_ while structure reference counts
-> handle _data_.
-> 
-> You should almost never need to worry about module reference counts if
-> your code is structured properly, only handle the reference counts on
-> the pointers you throw around.
-> 
-> The fact that you are even calling try_module_get() is a huge flag that
-> something is wrong here.
+On Wed, 22 Jan 2020, Miroslav Benes wrote:
 
-Thanks for the explanation! I'll keep this in mind and make sure the
-next version has reference counting done accordingly.
+> On Tue, 21 Jan 2020, Josh Poimboeuf wrote:
+> 
+> > On Tue, Jan 21, 2020 at 09:35:28AM +0100, Miroslav Benes wrote:
+> > > On Mon, 20 Jan 2020, Josh Poimboeuf wrote:
+> > > 
+> > > > On Mon, Oct 21, 2019 at 10:05:49AM -0500, Josh Poimboeuf wrote:
+> > > > > On Wed, Oct 16, 2019 at 09:42:17AM +0200, Peter Zijlstra wrote:
+> > > > > > > which are not compatible with livepatching. GCC upstream now has
+> > > > > > > -flive-patching option, which disables all those interfering optimizations.
+> > > > > > 
+> > > > > > Which, IIRC, has a significant performance impact and should thus really
+> > > > > > not be used...
+> > > > > > 
+> > > > > > If distros ship that crap, I'm going to laugh at them the next time they
+> > > > > > want a single digit performance improvement because *important*.
+> > > > > 
+> > > > > I have a crazy plan to try to use objtool to detect function changes at
+> > > > > a binary level, which would hopefully allow us to drop this flag.
+> > > > > 
+> > > > > But regardless, I wonder if we enabled this flag prematurely.  We still
+> > > > > don't have a reasonable way to use it for creating source-based live
+> > > > > patches upstream, and it should really be optional for CONFIG_LIVEPATCH,
+> > > > > since kpatch-build doesn't need it.
+> > > > 
+> > > > I also just discovered that -flive-patching is responsible for all those
+> > > > "unreachable instruction" objtool warnings which Randy has been
+> > > > dutifully bugging me about over the last several months.  For some
+> > > > reason it subtly breaks GCC implicit noreturn detection for local
+> > > > functions.
+> > > 
+> > > Ugh, that is unfortunate. Have you reported it?
+> > 
+> > Not yet (but I plan to).
+> 
+> My findings so far...
+> 
+> I bisected through GCC options which -flive-patching disables and 
+> -fno-ipa-pure-const is the culprit. I got no warnings without the option 
+> with my config.
+> 
+> Then I found out allmodconfig was ok even with -flive-patching. 
+> CONFIG_GCOV is the difference. CONFIG_GCOV=y seems to make the warnings go 
+> away here.
+
+Sorry, that was a red herring. See 867ac9d73709 ("objtool: Fix gcov check 
+for older versions of GCC").
+
+I started looking at some btrfs reports and then found out those were 
+already fixed. 
+https://lore.kernel.org/linux-btrfs/cd4091e4-1c04-a880-f239-00bc053f46a2@infradead.org/
+
+arch/x86/kernel/cpu/mce/core.o: warning: objtool: mce_panic()+0x11b: unreachable instruction
+was next...
+
+Broken code (-fno-ipa-pure-const):
+...
+    1186:       e8 a5 fe ff ff          callq  1030 <wait_for_panic>
+    118b:       e9 23 ff ff ff          jmpq   10b3 <mce_panic+0x43>
+</end of function>
+
+Working code (-fipa-pure-const):
+     753:       e8 88 fe ff ff          callq  5e0 <wait_for_panic>
+     758:       0f 1f 84 00 00 00 00    nopl   0x0(%rax,%rax,1)
+     75f:       00 
+
+mce_panic() has:
+                if (atomic_inc_return(&mce_panicked) > 1)                                                              
+                        wait_for_panic();
+                barrier();
+                
+                bust_spinlocks(1);                                                                                     
+
+jmpq in the broken code goes to bust_spinlocks(1), because GCC does not 
+know that wait_for_panic() is noreturn... because it is not. 
+wait_for_panic() calls panic() unconditionally in the end, which is 
+noreturn.
+
+So the question is why ipa-pure-const optimization knows about panic()'s 
+noreturn. The answer is that it is right one of the things the 
+optimization does. It propagates inner noreturns to its callers. (Martin 
+Jambor CCed).
+
+Marking wait_for_panic() as noreturn (__noreturn), of course, fixes it 
+then. Now I don't know what the right fix should be. Should we mark all 
+these sites as noreturn, or is it ok for the kernel to rely on GCC 
+behaviour in this case? Could we teach objtool to recognize this?
+
+Miroslav
