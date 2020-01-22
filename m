@@ -2,68 +2,76 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52583C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 05:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9789FC32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 05:51:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2961B2465B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 05:51:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AFB624656
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 05:51:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="THv+TzYG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725946AbgAVFvR (ORCPT
+        id S1726170AbgAVFvf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 00:51:17 -0500
-Received: from helcar.hmeau.com ([216.24.177.18]:48298 "EHLO deadmen.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725836AbgAVFvR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 00:51:17 -0500
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1iu8v5-0002Ax-IE; Wed, 22 Jan 2020 13:51:15 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1iu8v1-0002uN-Mr; Wed, 22 Jan 2020 13:51:11 +0800
-Date:   Wed, 22 Jan 2020 13:51:11 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     monstr@monstr.eu
-Cc:     Kalyani Akula <kalyania@xilinx.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        git <git@xilinx.com>, Harsh Jain <harshj@xilinx.com>,
-        Sarat Chand Savitala <saratcha@xilinx.com>,
-        Mohan Marutirao Dhanawade <mohand@xilinx.com>
-Subject: Re: [PATCH V4 0/4] Add Xilinx's ZynqMP AES-GCM driver support
-Message-ID: <20200122055111.azr7zzhredywyusx@gondor.apana.org.au>
-References: <1574235842-7930-1-git-send-email-kalyani.akula@xilinx.com>
- <BN7PR02MB51241CCD25BD1269B4394D9AAF320@BN7PR02MB5124.namprd02.prod.outlook.com>
- <20200120075559.kra4dqdphbbnid5h@gondor.apana.org.au>
- <1abdf222-9517-976e-b3d3-bfc1c92c4663@seznam.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1abdf222-9517-976e-b3d3-bfc1c92c4663@seznam.cz>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Wed, 22 Jan 2020 00:51:35 -0500
+Received: from mail-pf1-f179.google.com ([209.85.210.179]:40116 "EHLO
+        mail-pf1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbgAVFve (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 00:51:34 -0500
+Received: by mail-pf1-f179.google.com with SMTP id q8so2784299pfh.7;
+        Tue, 21 Jan 2020 21:51:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:in-reply-to:references;
+        bh=4/UJ6IfnecXoOAjxwVdDM8sUUls/0gsCWwvcFN3NiHk=;
+        b=THv+TzYG3/RgJV0NYNkmfoci0ffFqKSQSvccPH+DnTECr5yJDdBgp17wI3FL44MrEp
+         UVEUufWfArD+v2H9ZCPi0HhDAmnLLhkWe8DUH9n6vWC+SkJQ6mPoWo/EwJWXnsCAjeoe
+         l/Pkfiii1//l3kXWuzCj1LcaiJvwPZXX0x3SMWkR5THHXNaqsnxT87pCR+URZ4dDeqtL
+         RBR3CB6eU7CQdjiP64P8FR8BcGITaYhiNdvwe4SP518HV6j6mrNzXrw5VcXC6BVNszdO
+         q0cX/1Nkrf7LdOkEAgNkPcFCq7cKtCdk/XRy566XBOgH+spn+vsIC4G0SxWWH7s/Z252
+         bzHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references;
+        bh=4/UJ6IfnecXoOAjxwVdDM8sUUls/0gsCWwvcFN3NiHk=;
+        b=JG43l7C6xM9QYWZUMNzT9xMrlgIaMSmpJ+OoKPLP3Vq5seGyUUKOWaddP7eRQUxDCN
+         A0MlnE6biXcf+VDwo44i7/GbBiu1veZ/yjPHudB1K15eb7kY/NQbLk52cFDKDBqpZmDC
+         nR3wGqyOh2YzXuvLEBy8p3p7Z4TxnQoY6swBMHzYM9cdt6gVWRw7H167fzbAZgh0V5Yl
+         yJID8OdDaO35GVse2XgtUZc5pNZ7OoLx9m8JRYCbQuXe36gApV+i7UkPUBXw1q5dGFfb
+         6gUlakjbaj0uF6/UWiUm8SDpWt2exST1w84qxY6baGSg0rnqCMFtRqAOc/rNKA5C/cwp
+         IA+w==
+X-Gm-Message-State: APjAAAUAsOkJIL6CxdUAFY30oVKQt1HIrcUVn/91aVNzwpT814GsUBcd
+        z0b2iGwPrFIYDg0dZETY7NBj/r1WGrSE
+X-Google-Smtp-Source: APXvYqz+Qba0iEzCzMfA4cTIHH0fyB7ZyXuW0qwsN0zuiVQXC7vXjFpd00o7OQoMgajydKWN5gomSQ==
+X-Received: by 2002:a63:e545:: with SMTP id z5mr9176983pgj.209.1579672293815;
+        Tue, 21 Jan 2020 21:51:33 -0800 (PST)
+Received: from localhost.localdomain ([216.52.21.4])
+        by smtp.gmail.com with ESMTPSA id a195sm45943554pfa.120.2020.01.21.21.51.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 21 Jan 2020 21:51:33 -0800 (PST)
+From:   Praveen Chaudhary <praveen5582@gmail.com>
+X-Google-Original-From: Praveen Chaudhary <pchaudhary@linkedin.com>
+To:     fw@strlen.de, pablo@netfilter.org, davem@davemloft.net,
+        kadlec@netfilter.org, netfilter-devel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: RE: [PATCH v3] [net]: Fix skb->csum update in inet_proto_csum_replace16().
+Date:   Tue, 21 Jan 2020 21:51:32 -0800
+Message-Id: <1579672292-21031-1-git-send-email-pchaudhary@linkedin.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1573080729-3102-1-git-send-email-pchaudhary@linkedin.com>
+References: <1573080729-3102-1-git-send-email-pchaudhary@linkedin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 10:26:07AM +0100, Michal Simek wrote:
->
-> All these drivers which requires firmware interface extension can be
-> added via your tree or I can take them via arm-soc tree with your ack.
-> 
-> It is really up to you. I am happy to just ack patches out of crypto and
-> feel free to take them via your tree.
-> Or please let me know when you are done with review and I will take them.
+Hi Pablo,
 
-Thanks Michal. If you could ack them once they've been resubmitted
-then I can just take them via the cryptodev tree.
+Kindly let me know if you need any update in this patch from my side. Thanks a lot.
 
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
