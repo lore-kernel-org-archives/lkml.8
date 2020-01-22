@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD4E9C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D3BC33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:23:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E0A324680
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:23:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EA1E24680
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:23:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729327AbgAVLXU (ORCPT
+        id S1729353AbgAVLXW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 06:23:20 -0500
-Received: from mga18.intel.com ([134.134.136.126]:59139 "EHLO mga18.intel.com"
+        Wed, 22 Jan 2020 06:23:22 -0500
+Received: from mga12.intel.com ([192.55.52.136]:63642 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726204AbgAVLXP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729208AbgAVLXP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 Jan 2020 06:23:15 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jan 2020 03:23:14 -0800
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jan 2020 03:23:14 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,349,1574150400"; 
-   d="scan'208";a="250586394"
+   d="scan'208";a="227648038"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga004.fm.intel.com with ESMTP; 22 Jan 2020 03:23:11 -0800
+  by orsmga003.jf.intel.com with ESMTP; 22 Jan 2020 03:23:11 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id CBFA4543; Wed, 22 Jan 2020 13:23:07 +0200 (EET)
+        id AF11C4CA; Wed, 22 Jan 2020 13:23:07 +0200 (EET)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
@@ -41,9 +41,9 @@ Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Liam Girdwood <liam.r.girdwood@linux.intel.com>,
         Jie Yang <yang.jie@linux.intel.com>,
         alsa-devel@alsa-project.org
-Subject: [PATCH v3 9/9] ASoC: Intel: Switch DMI table match to a test of variable
-Date:   Wed, 22 Jan 2020 13:23:06 +0200
-Message-Id: <20200122112306.64598-10-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v3 6/9] x86/quirks: Add a DMI quirk for Microsoft Surface 3
+Date:   Wed, 22 Jan 2020 13:23:03 +0200
+Message-Id: <20200122112306.64598-7-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200122112306.64598-1-andriy.shevchenko@linux.intel.com>
 References: <20200122112306.64598-1-andriy.shevchenko@linux.intel.com>
@@ -54,8 +54,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since we have a common x86 quirk that provides an exported variable,
-use it instead of local DMI table match.
+Add a DMI quirk for Microsoft Surface 3 which will be utilized by few drivers.
 
 Cc: Cezary Rojewski <cezary.rojewski@intel.com>
 Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
@@ -64,60 +63,57 @@ Cc: Jie Yang <yang.jie@linux.intel.com>
 Cc: Mark Brown <broonie@kernel.org>
 Cc: alsa-devel@alsa-project.org
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Mark Brown <broonie@kernel.org>
 ---
- .../intel/common/soc-acpi-intel-cht-match.c   | 28 ++-----------------
- 1 file changed, 3 insertions(+), 25 deletions(-)
+ arch/x86/kernel/quirks.c                  | 10 ++++++++++
+ include/linux/platform_data/x86/machine.h |  5 +++++
+ 2 files changed, 15 insertions(+)
 
-diff --git a/sound/soc/intel/common/soc-acpi-intel-cht-match.c b/sound/soc/intel/common/soc-acpi-intel-cht-match.c
-index d0fb43c2b9f6..833d2e130e6e 100644
---- a/sound/soc/intel/common/soc-acpi-intel-cht-match.c
-+++ b/sound/soc/intel/common/soc-acpi-intel-cht-match.c
-@@ -5,31 +5,11 @@
-  * Copyright (c) 2017, Intel Corporation.
-  */
+diff --git a/arch/x86/kernel/quirks.c b/arch/x86/kernel/quirks.c
+index 3867f81baae7..88675844b1ab 100644
+--- a/arch/x86/kernel/quirks.c
++++ b/arch/x86/kernel/quirks.c
+@@ -658,6 +658,9 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x2083, quirk_intel_purley_xeon_ras
+ bool x86_apple_machine;
+ EXPORT_SYMBOL(x86_apple_machine);
  
--#include <linux/dmi.h>
-+#include <linux/platform_data/x86/machine.h>
++bool x86_microsoft_surface_3_machine;
++EXPORT_SYMBOL(x86_microsoft_surface_3_machine);
 +
- #include <sound/soc-acpi.h>
- #include <sound/soc-acpi-intel-match.h>
+ static const struct dmi_system_id x86_machine_table[] __initconst = {
+ 	{
+ 		.ident = "x86 Apple Macintosh",
+@@ -673,6 +676,13 @@ static const struct dmi_system_id x86_machine_table[] __initconst = {
+ 		},
+ 		.driver_data = &x86_apple_machine,
+ 	},
++	{
++		.ident = "Microsoft Surface 3",
++		.matches = {
++			DMI_MATCH(DMI_PRODUCT_NAME, "Surface 3"),
++		},
++		.driver_data = &x86_microsoft_surface_3_machine,
++	},
+ 	{}
+ };
  
--static unsigned long cht_machine_id;
--
--#define CHT_SURFACE_MACH 1
--
--static int cht_surface_quirk_cb(const struct dmi_system_id *id)
--{
--	cht_machine_id = CHT_SURFACE_MACH;
--	return 1;
--}
--
--static const struct dmi_system_id cht_table[] = {
--	{
--		.callback = cht_surface_quirk_cb,
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
--			DMI_MATCH(DMI_PRODUCT_NAME, "Surface 3"),
--		},
--	},
--	{ }
--};
--
- static struct snd_soc_acpi_mach cht_surface_mach = {
- 	.id = "10EC5640",
- 	.drv_name = "cht-bsw-rt5645",
-@@ -43,9 +23,7 @@ static struct snd_soc_acpi_mach *cht_quirk(void *arg)
- {
- 	struct snd_soc_acpi_mach *mach = arg;
+diff --git a/include/linux/platform_data/x86/machine.h b/include/linux/platform_data/x86/machine.h
+index b1e7a560a046..9bdf5a06b490 100644
+--- a/include/linux/platform_data/x86/machine.h
++++ b/include/linux/platform_data/x86/machine.h
+@@ -8,8 +8,13 @@
+  * x86_apple_machine - whether the machine is an x86 Apple Macintosh
+  */
+ extern bool x86_apple_machine;
++/**
++ * x86_microsoft_surface_3_machine - whether the machine is Microsoft Surface 3
++ */
++extern bool x86_microsoft_surface_3_machine;
+ #else
+ #define x86_apple_machine			false
++#define x86_microsoft_surface_3_machine		false
+ #endif
  
--	dmi_check_system(cht_table);
--
--	if (cht_machine_id == CHT_SURFACE_MACH)
-+	if (x86_microsoft_surface_3_machine)
- 		return &cht_surface_mach;
- 	else
- 		return mach;
+ #endif	/* PLATFORM_DATA_X86_MACHINE_H */
 -- 
 2.24.1
 
