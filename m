@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88392C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC881C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5678924673
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:32:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E7972467B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:32:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685566;
-	bh=KihyWKk3SIkPemrHd6GuzvjWjwEY7Z9Koyl5Lj7HXM4=;
+	s=default; t=1579685570;
+	bh=MJ9fE1EUKx/z8Nw9yIwKG7TAB3DTDh8CO5gV/glkYsc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wut3NVoTM9qKkbL5p1eKc1fn38asejBUJamL34MCGDWWtj9XVr1y0VL+wkbwkqdGk
-	 50ttyvLQV9J4K//Oy55UdNdx6Drl+brLZ+POlphos+EOKQCreEFDELrU/gXHh2Iohh
-	 D5TQtzzR8/cXhYaoG9zqG/7JhrPEAOBRSwRQYxII=
+	b=fauC8D391b53P4niLGzxbInhSCunKz/1j2KjF/jMX78kJVV/xjebL98L+SidrBgkf
+	 DyPjegJjskAenT1oaDL1PffRdCdOdV5cHCdtPGVM593OZtD6roZB0BS9PmZftFnK1e
+	 1YEa80GE+OK4XOr02e+AFp/EhYAyNc6rKlFPer4Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730221AbgAVJcp (ORCPT
+        id S1730234AbgAVJct (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:32:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45880 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:32:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729247AbgAVJcp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:32:45 -0500
+        id S1729247AbgAVJcs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:32:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 403E72071E;
-        Wed, 22 Jan 2020 09:32:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE61824672;
+        Wed, 22 Jan 2020 09:32:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685564;
-        bh=KihyWKk3SIkPemrHd6GuzvjWjwEY7Z9Koyl5Lj7HXM4=;
+        s=default; t=1579685567;
+        bh=MJ9fE1EUKx/z8Nw9yIwKG7TAB3DTDh8CO5gV/glkYsc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cc7l4/tS8NDWpwil9zi7Qy4CSIIQZbWXu7Sjr3wZeDHHEUeYWPRqklYzxQAgO6Tdo
-         xcf5kEethMWwFWlGG2zBRYcHpx//n+g9z7Z1qfMhHPrh5ydkI7+dUlwIMVnwtxOlkG
-         3thbvpU8F3z3i46fSL96Gk6vlMs4tGsIZVms8mNg=
+        b=av8Lh31pY9xVjo3xH1tUWhZvge8yur9PIsHA+H+PCLki4HbuoRFNset19Egq9owqr
+         l6/Xb2uJo1DD4wLmVleSGAdGQpeBsiMpaR85xaBcaTcSbSwJxqxRx6VxUPTzoCF5D1
+         xIXCFez4JMGcwSs6e4kk9B4VIx0gOrwvHusxofTY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, hayeswang <hayeswang@realtek.com>,
-        Johan Hovold <johan@kernel.org>,
+        stable@vger.kernel.org, Pengcheng Yang <yangpc@wangsu.com>,
+        Neal Cardwell <ncardwell@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 64/76] r8152: add missing endpoint sanity check
-Date:   Wed, 22 Jan 2020 10:29:20 +0100
-Message-Id: <20200122092801.020020736@linuxfoundation.org>
+Subject: [PATCH 4.4 65/76] tcp: fix marked lost packets not being retransmitted
+Date:   Wed, 22 Jan 2020 10:29:21 +0100
+Message-Id: <20200122092801.225054629@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092751.587775548@linuxfoundation.org>
 References: <20200122092751.587775548@linuxfoundation.org>
@@ -60,35 +60,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Pengcheng Yang <yangpc@wangsu.com>
 
-[ Upstream commit 86f3f4cd53707ceeec079b83205c8d3c756eca93 ]
+[ Upstream commit e176b1ba476cf36f723cfcc7a9e57f3cb47dec70 ]
 
-Add missing endpoint sanity check to probe in order to prevent a
-NULL-pointer dereference (or slab out-of-bounds access) when retrieving
-the interrupt-endpoint bInterval on ndo_open() in case a device lacks
-the expected endpoints.
+When the packet pointed to by retransmit_skb_hint is unlinked by ACK,
+retransmit_skb_hint will be set to NULL in tcp_clean_rtx_queue().
+If packet loss is detected at this time, retransmit_skb_hint will be set
+to point to the current packet loss in tcp_verify_retransmit_hint(),
+then the packets that were previously marked lost but not retransmitted
+due to the restriction of cwnd will be skipped and cannot be
+retransmitted.
 
-Fixes: 40a82917b1d3 ("net/usb/r8152: enable interrupt transfer")
-Cc: hayeswang <hayeswang@realtek.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+To fix this, when retransmit_skb_hint is NULL, retransmit_skb_hint can
+be reset only after all marked lost packets are retransmitted
+(retrans_out >= lost_out), otherwise we need to traverse from
+tcp_rtx_queue_head in tcp_xmit_retransmit_queue().
+
+Packetdrill to demonstrate:
+
+// Disable RACK and set max_reordering to keep things simple
+    0 `sysctl -q net.ipv4.tcp_recovery=0`
+   +0 `sysctl -q net.ipv4.tcp_max_reordering=3`
+
+// Establish a connection
+   +0 socket(..., SOCK_STREAM, IPPROTO_TCP) = 3
+   +0 setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
+   +0 bind(3, ..., ...) = 0
+   +0 listen(3, 1) = 0
+
+  +.1 < S 0:0(0) win 32792 <mss 1000,sackOK,nop,nop,nop,wscale 7>
+   +0 > S. 0:0(0) ack 1 <...>
+ +.01 < . 1:1(0) ack 1 win 257
+   +0 accept(3, ..., ...) = 4
+
+// Send 8 data segments
+   +0 write(4, ..., 8000) = 8000
+   +0 > P. 1:8001(8000) ack 1
+
+// Enter recovery and 1:3001 is marked lost
+ +.01 < . 1:1(0) ack 1 win 257 <sack 3001:4001,nop,nop>
+   +0 < . 1:1(0) ack 1 win 257 <sack 5001:6001 3001:4001,nop,nop>
+   +0 < . 1:1(0) ack 1 win 257 <sack 5001:7001 3001:4001,nop,nop>
+
+// Retransmit 1:1001, now retransmit_skb_hint points to 1001:2001
+   +0 > . 1:1001(1000) ack 1
+
+// 1001:2001 was ACKed causing retransmit_skb_hint to be set to NULL
+ +.01 < . 1:1(0) ack 2001 win 257 <sack 5001:8001 3001:4001,nop,nop>
+// Now retransmit_skb_hint points to 4001:5001 which is now marked lost
+
+// BUG: 2001:3001 was not retransmitted
+   +0 > . 2001:3001(1000) ack 1
+
+Signed-off-by: Pengcheng Yang <yangpc@wangsu.com>
+Acked-by: Neal Cardwell <ncardwell@google.com>
+Tested-by: Neal Cardwell <ncardwell@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/usb/r8152.c |    3 +++
- 1 file changed, 3 insertions(+)
+ net/ipv4/tcp_input.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/drivers/net/usb/r8152.c
-+++ b/drivers/net/usb/r8152.c
-@@ -4243,6 +4243,9 @@ static int rtl8152_probe(struct usb_inte
- 		return -ENODEV;
- 	}
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -895,9 +895,10 @@ static void tcp_update_reordering(struct
+ /* This must be called before lost_out is incremented */
+ static void tcp_verify_retransmit_hint(struct tcp_sock *tp, struct sk_buff *skb)
+ {
+-	if (!tp->retransmit_skb_hint ||
+-	    before(TCP_SKB_CB(skb)->seq,
+-		   TCP_SKB_CB(tp->retransmit_skb_hint)->seq))
++	if ((!tp->retransmit_skb_hint && tp->retrans_out >= tp->lost_out) ||
++	    (tp->retransmit_skb_hint &&
++	     before(TCP_SKB_CB(skb)->seq,
++		    TCP_SKB_CB(tp->retransmit_skb_hint)->seq)))
+ 		tp->retransmit_skb_hint = skb;
  
-+	if (intf->cur_altsetting->desc.bNumEndpoints < 3)
-+		return -ENODEV;
-+
- 	usb_reset_device(udev);
- 	netdev = alloc_etherdev(sizeof(struct r8152));
- 	if (!netdev) {
+ 	if (!tp->lost_out ||
 
 
