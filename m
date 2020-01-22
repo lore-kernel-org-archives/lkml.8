@@ -2,27 +2,27 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8839C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 15:10:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F109DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 15:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8BED24687
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 15:10:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9DCA2467A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 15:10:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726170AbgAVPKc (ORCPT
+        id S1728928AbgAVPKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 10:10:32 -0500
-Received: from mx2.suse.de ([195.135.220.15]:39378 "EHLO mx2.suse.de"
+        Wed, 22 Jan 2020 10:10:37 -0500
+Received: from mx2.suse.de ([195.135.220.15]:39536 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725836AbgAVPKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 10:10:31 -0500
+        id S1725836AbgAVPKd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 10:10:33 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 616B1ACC2;
-        Wed, 22 Jan 2020 15:10:28 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id B490CACD9;
+        Wed, 22 Jan 2020 15:10:31 +0000 (UTC)
 From:   Giovanni Gherdovich <ggherdovich@suse.cz>
 To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -43,145 +43,70 @@ Cc:     x86@kernel.org, linux-pm@vger.kernel.org,
         Doug Smythies <dsmythies@telus.net>,
         Ionela Voinescu <ionela.voinescu@arm.com>,
         Giovanni Gherdovich <ggherdovich@suse.cz>
-Subject: [PATCH v5 0/6] Add support for frequency invariance for (some) x86
-Date:   Wed, 22 Jan 2020 16:16:11 +0100
-Message-Id: <20200122151617.531-1-ggherdovich@suse.cz>
+Subject: [PATCH v5 4/6] x86,sched: Add support for frequency invariance on ATOM_GOLDMONT*
+Date:   Wed, 22 Jan 2020 16:16:15 +0100
+Message-Id: <20200122151617.531-5-ggherdovich@suse.cz>
 X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20200122151617.531-1-ggherdovich@suse.cz>
+References: <20200122151617.531-1-ggherdovich@suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-v4 at https://lore.kernel.org/lkml/20191113124654.18122-1-ggherdovich@suse.cz/
+The scheduler needs the ratio freq_curr/freq_max for frequency-invariant
+accounting. On GOLDMONT (aka Apollo Lake), GOLDMONT_D (aka Denverton) and
+GOLDMONT_PLUS CPUs (aka Gemini Lake) set freq_max to the highest frequency
+reported by the CPU.
 
-Changes wrt v4:
+The encoding of turbo ratios for GOLDMONT* is identical to the one for
+SKYLAKE_X, but we treat the Atom case apart because we want to set freq_max to
+a higher value, thus the ratio freq_curr/freq_max to be lower, leading to more
+conservative frequency selections (favoring power efficiency).
 
-- Removing conditional access in the function arch_scale_freq_capacity()
-  and initialize arch_freq_scale to 1024 to account for when freq
-  invariance isn't enabled (Ionela V.)
-- In case the max frequency can't be read in MSRs, do not enable frequency
-  invariance at all (Ionela V., Peter Z.).
-- Renames: 
-    variables:
-      arch_cpu_freq  -> arch_freq_scale
-      arch_max_freq  -> arch_max_freq_ratio
-      ... and others
-    functions:
-      init_scale_freq  -> init_counter_refs
-      set_cpu_max_freq -> init_freq_invariance
-      {core,skx,knl...}_set_cpu_max_freq  -> {core,skx,knl...}_set_max_freq_ratio
-      ... and others
-- Use the same function for parsing SKX and GLM registers (Peter Z.)
-- Pass a parameter to the function parsing KNL registers (Peter Z.)
-- Fix a bug whereby refs to [am]perf were initialized only on cpu #0
+Signed-off-by: Giovanni Gherdovich <ggherdovich@suse.cz>
+---
+ arch/x86/kernel/smpboot.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Cover Letter from v4:
-
-v3 at https://lore.kernel.org/lkml/20191111180549.12166-1-ggherdovich@suse.cz/
-
-Changes wrt v3:
-
-- Add definition of function set_arch_max_freq if !CONFIG_SMP
-
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Cover Letter from v3:
-
-v2 at https://lore.kernel.org/lkml/20191002122926.385-1-ggherdovich@suse.cz/
-
-Changes wrt v2:
-
-- Removing the tick_disable mechanism. Frequency scale-invariance isn't
-  just about helping schedutil choose better frequencies, but also
-  providing the scheduler load balancer with better metrics. All users of
-  PELT signals benefit from this feature. The tick_disable patch disabled
-  frequency invariant calculation when a specific driver is in use
-  (intel_pstate in active mode).
-
-- static_branch_enable(&arch_scale_freq_key) is now called earlier, right
-  after we learn that X86_FEATURE_APERFMPERF is available. Previously Peter
-  Z. commented "if we can't tell the max_freq we don't want to use the
-  invariant stuff.". I've decided to do it differently: if we can't tell
-  the max_freq, then it's because the CPU encodes max_freq in MSRs in a way
-  this patch doesn't understand, and we assume max_p is the max_freq which
-  seems like a safe bet. As a reminder, max_freq=max_p is encoded by
-  setting arch_max_freq=1024 as default value. I'm open to feedback.
-
-- Refactoring the switch case statement in set_cpu_max_freq() as Rafael
-  W. Now the first patch doesn't hint at what the following patch will
-  bring along.
-
-- Handling the case were turbo is disabled at runtime and a _PPC ACPI
-  notification is issued, as requested by Rafael W. This happens eg. when
-  some laptop model is disconnected from AC. (Patch #6)
-
-- Handling all Intel x86_64 micro-arches.
-
-- A note for Srinivas P., who expressed concern for Atoms: on Atom CPUs the
-  max_freq is set to the highest turbo level, as a power-efficiency
-  oriented measure. In this way the ratio curr_freq/max_freq tends to be
-  lower, PELT signals are consequently lower, and schedutil doesn't push
-  too hard on speed. (Patches #4 and #5).
-
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Cover Letter from v2:
-
-v1 at https://lore.kernel.org/lkml/20190909024216.5942-1-ggherdovich@suse.cz/
-
-Changes wrt v1:
-
-- add x86-specific implementation of arch_scale_freq_invariant() using a
-  static key that checks for the availability of APERF and MPERF
-- refer to GOLDMONT_D instead of GOLDMONT_X, according to recent rename
-- set arch_cpu_freq to 1024 from x86_arch_scale_freq_tick_disable() to prevent
-  PELT from being fed stale data
-
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Cover Letter from v1:
-
-This is a resend with of Peter Zijlstra's patch to support frequency
-scale-invariance on x86 from May 2018 [see 1]. I've added some modifications
-and included performance test results. If Peter doesn't mind, I'm slapping my
-name on it :)
-
-The changes from Peter's original implementation are:
-
-1) normalizing against the 4-cores turbo level instead or 1-core turbo
-2) removing the run-time search for when the above value isn't found in the
-   various Intel MSRs -- the base frequency value is taken in that case.
-
-The section "4. KNOWN LIMITATIONS" in the first patch commit message addresses
-the reason why this approach was dropped back in 2018, and explains that the
-performance gains outweight that issue.
-
-The second patch from Srinivas is taken verbatim from the May 2018 submission
-as it still applies.
-
-I apologies for the length of patch #1 commit message; I've made a table of
-contents with summaries of each section that should make easier to skim
-through the content.
-
-This submission incorporates the feedback and requests for additional tests
-received during the presentation made at OSPM 2019 in Pisa three months ago.
-
-[1] https://lore.kernel.org/lkml/20180516044911.28797-2-srinivas.pandruvada@linux.intel.com/
-
-Giovanni Gherdovich (6):
-  x86,sched: Add support for frequency invariance
-  x86,sched: Add support for frequency invariance on SKYLAKE_X
-  x86,sched: Add support for frequency invariance on XEON_PHI_KNL/KNM
-  x86,sched: Add support for frequency invariance on ATOM_GOLDMONT*
-  x86,sched: Add support for frequency invariance on ATOM
-  x86: intel_pstate: handle runtime turbo disablement/enablement in
-    freq. invariance
-
- arch/x86/include/asm/topology.h |  25 ++++
- arch/x86/kernel/smpboot.c       | 290 +++++++++++++++++++++++++++++++++++++++-
- drivers/cpufreq/intel_pstate.c  |   1 +
- kernel/sched/core.c             |   1 +
- kernel/sched/sched.h            |   7 +
- 5 files changed, 323 insertions(+), 1 deletion(-)
-
+diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+index 8cb3113377a9..3e32d620f1fb 100644
+--- a/arch/x86/kernel/smpboot.c
++++ b/arch/x86/kernel/smpboot.c
+@@ -1795,6 +1795,10 @@ void native_play_dead(void)
+  * which would ignore the entire turbo range (a conspicuous part, making
+  * freq_curr/freq_max always maxed out).
+  *
++ * An exception to the heuristic above is the Atom uarch, where we choose the
++ * highest turbo level for freq_max since Atom's are generally oriented towards
++ * power efficiency.
++ *
+  * Setting freq_max to anything less than the 1C turbo ratio makes the ratio
+  * freq_curr / freq_max to eventually grow >1, in which case we clip it to 1.
+  */
+@@ -1937,18 +1941,18 @@ static bool intel_set_max_freq_ratio(void)
+ 	/*
+ 	 * TODO: add support for:
+ 	 *
+-	 * - Atom Goldmont
+ 	 * - Atom Silvermont
+ 	 */
+ 
+ 	u64 base_freq = 1, turbo_freq = 1;
+ 
+-	if (x86_match_cpu(has_glm_turbo_ratio_limits))
+-		return false;
+-
+ 	if (turbo_disabled())
+ 		goto out;
+ 
++	if (x86_match_cpu(has_glm_turbo_ratio_limits) &&
++	    skx_set_max_freq_ratio(&base_freq, &turbo_freq, 1))
++		goto out;
++
+ 	if (knl_set_max_freq_ratio(&base_freq, &turbo_freq, 1))
+ 		goto out;
+ 
 -- 
 2.16.4
 
