@@ -2,54 +2,52 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96231C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:57:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80785C33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C8DC20704
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:57:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DB4120704
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:57:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579687037;
-	bh=2WNeRsDryRBzpXQN44EbufOyKvzcVAspZ6zfgL6yVVw=;
+	s=default; t=1579687040;
+	bh=lNwvgoE/PBtC0RiZuyLt2rKFKfMXnJYmrTD/qeV7Iio=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U3fpYQBwaUHVPGhqGTSanyK8HMF/YLCk/XTlHbpB3lZhVzC/FXYFbMVRgw9E2lZQP
-	 Pu3X4o3EnJxHbyfpl8rJ1Yq8Bi7AmwqbnPeJReteV6WpRwTglOHSs0khlA7TpNDt7R
-	 kl+m8e4I1LL4Xaewt1BGbXvrEJBdADLa6Teh+eo0=
+	b=HPl0ohGu+6liUtgh/KEpo2aPXOF53Fx4zKfWaTYxf2TvDnY6GhHKXVxA7rndFIMju
+	 VYwCAoqJDpy3ryNVs6SSznrg8AushYa2Ml4GSyxe7LK+iubiqJ+gGXnt4kso3MGOQp
+	 0j+6CqG4b4qiJiFeX7T6z2+TO02oq8PHM/4XMoC0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729548AbgAVJbK (ORCPT
+        id S1729509AbgAVJbF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:31:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42892 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729501AbgAVJbF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 Jan 2020 04:31:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42740 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729459AbgAVJa7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:30:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A11E2467B;
-        Wed, 22 Jan 2020 09:31:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 374A924672;
+        Wed, 22 Jan 2020 09:30:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685463;
-        bh=2WNeRsDryRBzpXQN44EbufOyKvzcVAspZ6zfgL6yVVw=;
+        s=default; t=1579685458;
+        bh=lNwvgoE/PBtC0RiZuyLt2rKFKfMXnJYmrTD/qeV7Iio=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q8S5SJSFGG2TThweozqXqmGBlSBYmC5GjIw1HlorCC4DBEs0czMTvkQP49IPdKmGS
-         Pr/PQCLNcNETEXXUbFv2lJe9shCIqqtlzb+OpGKHfmYnFD0pPLADPEq2toJN9syVvZ
-         CDmjmBiAPp/UyxjyC4gAeNhxKYAgB05Dv6HDNsGo=
+        b=ccZIF3/DGh4t0oro1nr5L4SWGVW+IehbIf0mC4TTk5FptqQFuRPOS/KOAOTz17Bez
+         QQtggVsiaaTR6QhTUq16JIL2/PLWHVnE7pxBEo90tEUuDeQ5z5NdXYxgmWNB4PGJdZ
+         jHgCRJZUlXjEE9igcaQmwf7xG0xZdhL5t24JdPtQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Luo Jiaxing <luojiaxing@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.4 24/76] scsi: enclosure: Fix stale device oops with hot replug
-Date:   Wed, 22 Jan 2020 10:28:40 +0100
-Message-Id: <20200122092754.228577286@linuxfoundation.org>
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Steve French <stfrench@microsoft.com>
+Subject: [PATCH 4.4 22/76] cifs: Adjust indentation in smb2_open_file
+Date:   Wed, 22 Jan 2020 10:28:38 +0100
+Message-Id: <20200122092754.000190250@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092751.587775548@linuxfoundation.org>
 References: <20200122092751.587775548@linuxfoundation.org>
@@ -62,45 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Bottomley <James.Bottomley@HansenPartnership.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-commit 529244bd1afc102ab164429d338d310d5d65e60d upstream.
+commit 7935799e041ae10d380d04ea23868240f082bd11 upstream.
 
-Doing an add/remove/add on a SCSI device in an enclosure leads to an oops
-caused by poisoned values in the enclosure device list pointers.  The
-reason is because we are keeping the enclosure device across the enclosed
-device add/remove/add but the current code is doing a
-device_add/device_del/device_add on it.  This is the wrong thing to do in
-sysfs, so fix it by not doing a device_del on the enclosure device simply
-because of a hot remove of the drive in the slot.
+Clang warns:
 
-[mkp: added missing email addresses]
+../fs/cifs/smb2file.c:70:3: warning: misleading indentation; statement
+is not part of the previous 'if' [-Wmisleading-indentation]
+         if (oparms->tcon->use_resilient) {
+         ^
+../fs/cifs/smb2file.c:66:2: note: previous statement is here
+        if (rc)
+        ^
+1 warning generated.
 
-Fixes: 43d8eb9cfd0a ("[SCSI] ses: add support for enclosure component hot removal")
-Link: https://lore.kernel.org/r/1578532892.3852.10.camel@HansenPartnership.com
-Signed-off-by: James Bottomley <James.Bottomley@HansenPartnership.com>
-Reported-by: Luo Jiaxing <luojiaxing@huawei.com>
-Tested-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+This warning occurs because there is a space after the tab on this line.
+Remove it so that the indentation is consistent with the Linux kernel
+coding style and clang no longer warns.
+
+Fixes: 592fafe644bf ("Add resilienthandles mount parm")
+Link: https://github.com/ClangBuiltLinux/linux/issues/826
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/misc/enclosure.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/cifs/smb2file.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/misc/enclosure.c
-+++ b/drivers/misc/enclosure.c
-@@ -419,10 +419,9 @@ int enclosure_remove_device(struct enclo
- 		cdev = &edev->component[i];
- 		if (cdev->dev == dev) {
- 			enclosure_remove_links(cdev);
--			device_del(&cdev->cdev);
- 			put_device(dev);
- 			cdev->dev = NULL;
--			return device_add(&cdev->cdev);
-+			return 0;
- 		}
- 	}
- 	return -ENODEV;
+--- a/fs/cifs/smb2file.c
++++ b/fs/cifs/smb2file.c
+@@ -69,7 +69,7 @@ smb2_open_file(const unsigned int xid, s
+ 		goto out;
+ 
+ 
+-	 if (oparms->tcon->use_resilient) {
++	if (oparms->tcon->use_resilient) {
+ 		nr_ioctl_req.Timeout = 0; /* use server default (120 seconds) */
+ 		nr_ioctl_req.Reserved = 0;
+ 		rc = SMB2_ioctl(xid, oparms->tcon, fid->persistent_fid,
 
 
