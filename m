@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D80D5C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7911CC33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:54:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A853B2465A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:53:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4629C2467B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:54:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686838;
-	bh=K88eFO0gZvTi7Q0tnhqHBPO9ATbtplrOKROOFSFdn1Y=;
+	s=default; t=1579686845;
+	bh=80qMqilDKb1q7yzrUTzmSO/ts7DiRjQ2oLgmnoGIPT8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Nxhz+V6z0zThlDWXbvi8PGdYP5oqUNxvv71oPfWGR38e9+/CVIR2PsnVPVjUg/32X
-	 GWFcKipeul1rbhIopjL5PXkAZ0HVJyTQ1+vjI6fmJZ1ctQVXQ2AXH+qa40V16UVeVd
-	 JqSLPfNsv3kxRrLBIHiGame65otWvR2ewIvOHiKo=
+	b=QSJcEqHz5iJStS6j3dUEfwdY3LZ24WDYA21V8+lztUKSZeaNg/Q/vwIuXv09Qy2ER
+	 m2XWbI1SKCLGKZzBsYYRbQ+s5azuzL8CPyjh2BHjr3x7yew4wg9V0MaoE1FfXIGICD
+	 eFwe10rvE/qoDLqxwLNk8Buqbo4Nlp3oktZR2xys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731034AbgAVJx6 (ORCPT
+        id S1730874AbgAVJe3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:53:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49204 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:34:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730249AbgAVJei (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:34:38 -0500
+        id S1730819AbgAVJe0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:34:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B92A24672;
-        Wed, 22 Jan 2020 09:34:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1636F24672;
+        Wed, 22 Jan 2020 09:34:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685677;
-        bh=K88eFO0gZvTi7Q0tnhqHBPO9ATbtplrOKROOFSFdn1Y=;
+        s=default; t=1579685665;
+        bh=80qMqilDKb1q7yzrUTzmSO/ts7DiRjQ2oLgmnoGIPT8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EPG4AMzTr4s74GXAGPLgwDtDByQqxX8Puvpn+J6DYbEniyOG7SsVsYX6HnT9jy5d5
-         Awmes0uOMQtG23Zl6JzQEkXlw8lY4yJJz7wIqr2zrUY/WC5o4+gtN7kq0IOqnqzwQr
-         h2pPROALnE6iQzDcefIyvAstAsZqjZsmrKMB/oU8=
+        b=vA3daIlNHtrqL2jjVrPdoYcvBY0Nj4Yr/4V9sGYCvdYtBkft2Nnzj5typJZT5dt0F
+         rOPJcddifMtqqTNesfg04vLGCz58Q4jvYcvx6B0ARs3DLN2ocrn64k8reE1gI00HO1
+         tOHgRdkW6TVvWIx2dkNrR8GbgdbJCTTz9kkONa7w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver OHalloran <oohall@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.9 34/97] powerpc/powernv: Disable native PCIe port management
-Date:   Wed, 22 Jan 2020 10:28:38 +0100
-Message-Id: <20200122092801.991898907@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Usyskin <alexander.usyskin@intel.com>,
+        Tomas Winkler <tomas.winkler@intel.com>
+Subject: [PATCH 4.9 30/97] mei: fix modalias documentation
+Date:   Wed, 22 Jan 2020 10:28:34 +0100
+Message-Id: <20200122092801.235197741@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092755.678349497@linuxfoundation.org>
 References: <20200122092755.678349497@linuxfoundation.org>
@@ -59,76 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver O'Halloran <oohall@gmail.com>
+From: Alexander Usyskin <alexander.usyskin@intel.com>
 
-commit 9d72dcef891030545f39ad386a30cf91df517fb2 upstream.
+commit 73668309215285366c433489de70d31362987be9 upstream.
 
-On PowerNV the PCIe topology is (currently) managed by the powernv platform
-code in Linux in cooperation with the platform firmware. Linux's native
-PCIe port service drivers operate independently of both and this can cause
-problems.
+mei client bus added the client protocol version to the device alias,
+but ABI documentation was not updated.
 
-The main issue is that the portbus driver will conflict with the platform
-specific hotplug driver (pnv_php) over ownership of the MSI used to notify
-the host when a hotplug event occurs. The portbus driver claims this MSI on
-behalf of the individual port services because the same interrupt is used
-for hotplug events, PMEs (on root ports), and link bandwidth change
-notifications. The portbus driver will always claim the interrupt even if
-the individual port service drivers, such as pciehp, are compiled out.
-
-The second, bigger, problem is that the hotplug port service driver
-fundamentally does not work on PowerNV. The platform assumes that all
-PCI devices have a corresponding arch-specific handle derived from the DT
-node for the device (pci_dn) and without one the platform will not allow
-a PCI device to be enabled. This problem is largely due to historical
-baggage, but it can't be resolved without significant re-factoring of the
-platform PCI support.
-
-We can fix these problems in the interim by setting the
-"pcie_ports_disabled" flag during platform initialisation. The flag
-indicates the platform owns the PCIe ports which stops the portbus driver
-from being registered.
-
-This does have the side effect of disabling all port services drivers
-that is: AER, PME, BW notifications, hotplug, and DPC. However, this is
-not a huge disadvantage on PowerNV since these services are either unused
-or handled through other means.
-
-Fixes: 66725152fb9f ("PCI/hotplug: PowerPC PowerNV PCI hotplug driver")
-Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191118065553.30362-1-oohall@gmail.com
+Fixes: b26864cad1c9 (mei: bus: add client protocol version to the device alias)
+Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
+Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+Link: https://lore.kernel.org/r/20191008005735.12707-1-tomas.winkler@intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/platforms/powernv/pci.c |   17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ Documentation/ABI/testing/sysfs-bus-mei |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/powerpc/platforms/powernv/pci.c
-+++ b/arch/powerpc/platforms/powernv/pci.c
-@@ -923,6 +923,23 @@ void __init pnv_pci_init(void)
- 	if (!firmware_has_feature(FW_FEATURE_OPAL))
- 		return;
+--- a/Documentation/ABI/testing/sysfs-bus-mei
++++ b/Documentation/ABI/testing/sysfs-bus-mei
+@@ -4,7 +4,7 @@ KernelVersion:	3.10
+ Contact:	Samuel Ortiz <sameo@linux.intel.com>
+ 		linux-mei@linux.intel.com
+ Description:	Stores the same MODALIAS value emitted by uevent
+-		Format: mei:<mei device name>:<device uuid>:
++		Format: mei:<mei device name>:<device uuid>:<protocol version>
  
-+#ifdef CONFIG_PCIEPORTBUS
-+	/*
-+	 * On PowerNV PCIe devices are (currently) managed in cooperation
-+	 * with firmware. This isn't *strictly* required, but there's enough
-+	 * assumptions baked into both firmware and the platform code that
-+	 * it's unwise to allow the portbus services to be used.
-+	 *
-+	 * We need to fix this eventually, but for now set this flag to disable
-+	 * the portbus driver. The AER service isn't required since that AER
-+	 * events are handled via EEH. The pciehp hotplug driver can't work
-+	 * without kernel changes (and portbus binding breaks pnv_php). The
-+	 * other services also require some thinking about how we're going
-+	 * to integrate them.
-+	 */
-+	pcie_ports_disabled = true;
-+#endif
-+
- 	/* Look for IODA IO-Hubs. */
- 	for_each_compatible_node(np, NULL, "ibm,ioda-hub") {
- 		pnv_pci_init_ioda_hub(np);
+ What:		/sys/bus/mei/devices/.../name
+ Date:		May 2015
 
 
