@@ -2,235 +2,143 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 285C1C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A86C33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:51:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E835521835
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:50:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579711818;
-	bh=wKkTCSJfc3EBgcYQ6LA0PDTD5tQSEQIWUXX2ywb7iW0=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=SWqGUMPNChFG/Xy7NZOB6wy9G4vqDRiKDA3Y0kuES02BOrpm8dBg0q/XMZatOaBTt
-	 K5ty8u+VHDRQ5bNrM7tOwvR/mEZO0FzuWBVebZ7gKbFjjhuO+SlHAYrLa5HOlAS4Fo
-	 C3QQk3wc+jnGEVmMNfelnVQqC1hcxUzuI1//Pbgg=
+	by mail.kernel.org (Postfix) with ESMTP id C8E6B21835
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:51:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbgAVQuR (ORCPT
+        id S1727523AbgAVQvZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 11:50:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34612 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725802AbgAVQuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 11:50:16 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E45C21835;
-        Wed, 22 Jan 2020 16:50:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579711815;
-        bh=wKkTCSJfc3EBgcYQ6LA0PDTD5tQSEQIWUXX2ywb7iW0=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=ojypCElsmvRGkRvdG9du/0RhtSo++62ZNTX7N9POEwJfH/B9TcXyIKdKjrBESWZub
-         3ceSX45owEK5n1ShcR5eXCVTpi2F3rSEouqNQ2lGEfTFM0t0CoGfg602FQbsXMO2C0
-         F1+sKzY1dhWKEPcouYkh6hpvsA+v4YJvwLc4Tfcc=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id E47143520A8E; Wed, 22 Jan 2020 08:50:14 -0800 (PST)
-Date:   Wed, 22 Jan 2020 08:50:14 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     rcu@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: Boot warning at rcu_check_gp_start_stall()
-Message-ID: <20200122165014.GG2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200121141923.GP2935@paulmck-ThinkPad-P72>
- <A230E332-07D0-40A8-A034-33ADB4BFB767@lca.pw>
- <20200121161533.GT2935@paulmck-ThinkPad-P72>
- <6A6B0325-64C4-4470-91B4-37104CF8DA1A@lca.pw>
- <20200121204606.GZ2935@paulmck-ThinkPad-P72>
- <65A22475-C7EA-4A5F-A4EC-F92EF8CC17F8@lca.pw>
- <20200122050728.GF2935@paulmck-ThinkPad-P72>
- <FD18F879-048F-40E9-B04D-3C189C59181B@lca.pw>
+        Wed, 22 Jan 2020 11:51:25 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:39588 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725802AbgAVQvY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 11:51:24 -0500
+Received: by mail-oi1-f194.google.com with SMTP id z2so15091oih.6;
+        Wed, 22 Jan 2020 08:51:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YgHrm/eRDAbATyHCYt7XJCqYc4ngWaOB9tO9AQpkPhI=;
+        b=lb6sgzkcwUpkLL5f3YM0CGVZmIwwEUBgeSN8aEJyMW9UUo4nCBXLQcUpwf5Ct7p37R
+         isp+DPrPNjxp8br6T+HRUwOBlLI9xmXKX3/oJN+EGqenyGaEWNOMPsGNcOjRoijwxiiA
+         zrzxjKt5LMvx/hVSZSVWWPt/DwEDWHCmjI+XRNz47goY0KYetE2IfwMaCoGgHEgJcQId
+         SAtxgwb3dP+0FYkpT5qq6BODOuQT4sN7jT0dV4tfnqPGCUqc4kO0MRpQGqWfId2IKWCX
+         lVkPyhs5yfMxXwx5WJWmdYLLrMmcXRGfAla54eB2K0RY/zfdJjFE5L2v300QCIgG/Atv
+         8AIQ==
+X-Gm-Message-State: APjAAAXBnWi8Wz+YXXYUKLV/33kc/IK0hf+8qNnQ90bEWyD5LuSTS+/Z
+        /BFXqHvtTm1tfF5cwdgpk5qXHvD7X44l/mbvNX4=
+X-Google-Smtp-Source: APXvYqxJlZ2b+/l9ADmdxd7t0ZwxcdQXgEpClQjkpkvGxw4yF4ABAT0wA9LsJp3VbrjpyM8unQlXHu/sz0v0QhQbkNE=
+X-Received: by 2002:aca:1a06:: with SMTP id a6mr7125489oia.148.1579711883817;
+ Wed, 22 Jan 2020 08:51:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <FD18F879-048F-40E9-B04D-3C189C59181B@lca.pw>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200116101447.20374-1-gilad@benyossef.com>
+In-Reply-To: <20200116101447.20374-1-gilad@benyossef.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 22 Jan 2020 17:51:12 +0100
+Message-ID: <CAMuHMdUhR83SZyWX9Du9d3Sp4A48x_msKaOHGsa88EQKStEDQg@mail.gmail.com>
+Subject: Re: [PATCH 00/11] crypto: ccree - fixes and cleanups
+To:     Gilad Ben-Yossef <gilad@benyossef.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Ofir Drang <ofir.drang@arm.com>, Hadar Gat <hadar.gat@arm.com>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 12:20:02AM -0500, Qian Cai wrote:
-> 
-> 
-> > On Jan 22, 2020, at 12:07 AM, Paul E. McKenney <paulmck@kernel.org> wrote:
-> > 
-> > On Tue, Jan 21, 2020 at 11:16:06PM -0500, Qian Cai wrote:
-> >> 
-> >> 
-> >>> On Jan 21, 2020, at 3:46 PM, Paul E. McKenney <paulmck@kernel.org> wrote:
-> >>> 
-> >>> On Tue, Jan 21, 2020 at 02:09:05PM -0500, Qian Cai wrote:
-> >>>>> On Jan 21, 2020, at 11:15 AM, Paul E. McKenney <paulmck@kernel.org> wrote:
-> >>>>> On Tue, Jan 21, 2020 at 09:37:13AM -0500, Qian Cai wrote:
-> >>>>>>> On Jan 21, 2020, at 9:19 AM, Paul E. McKenney <paulmck@kernel.org> wrote:
-> >>>>>>> 
-> >>>>>>> One approach would be to boot with rcupdate.rcu_cpu_stall_timeout=300,
-> >>>>>>> which would allow more time.
-> >>>>>> 
-> >>>>>> It works for me if once that warning triggered,  give a bit information about adjusting the parameter when debugging options are on to suppress the warning due to expected long boot.
-> >>>>> 
-> >>>>> Indeed.  300 seconds as shown above is currently the maximum, but
-> >>>>> please let me know if it needs to be increased.  This module parameter
-> >>>>> is writable after boot via sysfs, so maybe that could be part of the
-> >>>>> workaround.
-> >>>>> 
-> >>>>>>> Longer term, I could suppress this warning during boot when
-> >>>>>>> CONFIG_EFI_PGT_DUMP=y, but that sounds quite specific.  Alternatively,
-> >>>>>>> I could provide a Kconfig option that suppressed this during boot
-> >>>>>>> that was selected by whatever long-running boot-time Kconfig option
-> >>>>>>> needed it.  Yet another approach would be for long-running operations
-> >>>>>>> like efi_dump_pagetable() to suppress stalls on entry and re-enable them
-> >>>>>>> upon exit.
-> >>>>>>> 
-> >>>>>>> Thoughts?
-> >>>>>> 
-> >>>>>> None of the options sounds particularly better for me because there could come up with other options may trigger this, memtest comes in mind, for example. Then, it is a bit of pain to maintain of unknown.
-> >>>>> 
-> >>>>> I was afraid of that.  ;-)
-> >>>>> 
-> >>>>> Could you please send me the full dmesg up to that point?  No promises,
-> >>>>> but it might well be that I can make some broad-spectrum adjustment
-> >>>>> within RCU.  Only one way to find out…
-> >>>> 
-> >>>> https://cailca.github.io/files/dmesg.txt
-> >>> 
-> >>> Interesting.
-> >>> 
-> >>> Does the following (very lightly tested) patch help?
-> >> 
-> >> Yes, it works fine.
-> > 
-> > Very good, thank you!  May I apply your Tested-by?
-> 
-> Just one thing minor,
-> 
-> Applying: Boot warning at rcu_check_gp_start_stall()
-> .git/rebase-apply/patch:66: space before tab in indent.
-> 	    		 READ_ONCE(rnp_root->gp_seq_needed)) ||
-> warning: 1 line adds whitespace errors.
+Hi Gilad,
 
-Good catch, fixed!
+On Thu, Jan 16, 2020 at 11:25 AM Gilad Ben-Yossef <gilad@benyossef.com> wrote:
+> A bunch of fixes and code cleanups for the ccree driver
 
-> Otherwise,
-> 
-> Tested-by: Qian Cai <cai@lca.pw>
+Thank you!
 
-Applied, thank you!
+I wanted to give this a try, but it looks like CCREE is no longer working
+on R-Car H3, both with/without this series.
 
-							Thanx, Paul
+E.g. with renesas-devel[*] and renesas_defconfig +
+CONFIG_CRYPTO_MANAGER_DISABLE_TESTS=n, I get the following crash:
 
-> >>> ------------------------------------------------------------------------
-> >>> 
-> >>> commit fb21277f8f1c5cc40a8d41da2db4b0c499459821
-> >>> Author: Paul E. McKenney <paulmck@kernel.org>
-> >>> Date:   Tue Jan 21 12:30:22 2020 -0800
-> >>> 
-> >>>   rcu: Don't flag non-starting GPs before GP kthread is running
-> >>> 
-> >>>   Currently rcu_check_gp_start_stall() complains if a grace period takes
-> >>>   too long to start, where "too long" is roughly one RCU CPU stall-warning
-> >>>   interval.  This has worked well, but there are some debugging Kconfig
-> >>>   options (such as CONFIG_EFI_PGT_DUMP=y) that can make booting take a
-> >>>   very long time, so much so that the stall-warning interval has expired
-> >>>   before RCU's grace-period kthread has even been spawned.
-> >>> 
-> >>>   This commit therefore resets the rcu_state.gp_req_activity and
-> >>>   rcu_state.gp_activity timestamps just before the grace-period kthread
-> >>>   is spawned, and modifies the checks and adds ordering to ensure that
-> >>>   if rcu_check_gp_start_stall() sees that the grace-period kthread
-> >>>   has been spawned, that it will also see the resets applied to the
-> >>>   rcu_state.gp_req_activity and rcu_state.gp_activity timestamps.
-> >>> 
-> >>>   Reported-by: Qian Cai <cai@lca.pw>
-> >>>   Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> >>> 
-> >>> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> >>> index 04718bc..d9d619d 100644
-> >>> --- a/kernel/rcu/tree.c
-> >>> +++ b/kernel/rcu/tree.c
-> >>> @@ -1209,7 +1209,7 @@ static bool rcu_start_this_gp(struct rcu_node *rnp_start, struct rcu_data *rdp,
-> >>> 	trace_rcu_this_gp(rnp, rdp, gp_seq_req, TPS("Startedroot"));
-> >>> 	WRITE_ONCE(rcu_state.gp_flags, rcu_state.gp_flags | RCU_GP_FLAG_INIT);
-> >>> 	WRITE_ONCE(rcu_state.gp_req_activity, jiffies);
-> >>> -	if (!rcu_state.gp_kthread) {
-> >>> +	if (!READ_ONCE(rcu_state.gp_kthread)) {
-> >>> 		trace_rcu_this_gp(rnp, rdp, gp_seq_req, TPS("NoGPkthread"));
-> >>> 		goto unlock_out;
-> >>> 	}
-> >>> @@ -1259,10 +1259,10 @@ static bool rcu_future_gp_cleanup(struct rcu_node *rnp)
-> >>> */
-> >>> static void rcu_gp_kthread_wake(void)
-> >>> {
-> >>> -	if ((current == rcu_state.gp_kthread &&
-> >>> +	if ((current == READ_ONCE(rcu_state.gp_kthread) &&
-> >>> 	     !in_irq() && !in_serving_softirq()) ||
-> >>> 	    !READ_ONCE(rcu_state.gp_flags) ||
-> >>> -	    !rcu_state.gp_kthread)
-> >>> +	    !READ_ONCE(rcu_state.gp_kthread))
-> >>> 		return;
-> >>> 	WRITE_ONCE(rcu_state.gp_wake_time, jiffies);
-> >>> 	WRITE_ONCE(rcu_state.gp_wake_seq, READ_ONCE(rcu_state.gp_seq));
-> >>> @@ -3619,7 +3619,10 @@ static int __init rcu_spawn_gp_kthread(void)
-> >>> 	}
-> >>> 	rnp = rcu_get_root();
-> >>> 	raw_spin_lock_irqsave_rcu_node(rnp, flags);
-> >>> -	rcu_state.gp_kthread = t;
-> >>> +	WRITE_ONCE(rcu_state.gp_activity, jiffies);
-> >>> +	WRITE_ONCE(rcu_state.gp_req_activity, jiffies);
-> >>> +	// Reset .gp_activity and .gp_req_activity before setting .gp_kthread.
-> >>> +	smp_store_release(&rcu_state.gp_kthread, t);  /* ^^^ */
-> >>> 	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
-> >>> 	wake_up_process(t);
-> >>> 	rcu_spawn_nocb_kthreads();
-> >>> diff --git a/kernel/rcu/tree_stall.h b/kernel/rcu/tree_stall.h
-> >>> index 476458c..75f6e9f 100644
-> >>> --- a/kernel/rcu/tree_stall.h
-> >>> +++ b/kernel/rcu/tree_stall.h
-> >>> @@ -578,6 +578,7 @@ void show_rcu_gp_kthreads(void)
-> >>> 	unsigned long jw;
-> >>> 	struct rcu_data *rdp;
-> >>> 	struct rcu_node *rnp;
-> >>> +	struct task_struct *t = READ_ONCE(rcu_state.gp_kthread);
-> >>> 
-> >>> 	j = jiffies;
-> >>> 	ja = j - READ_ONCE(rcu_state.gp_activity);
-> >>> @@ -585,8 +586,7 @@ void show_rcu_gp_kthreads(void)
-> >>> 	jw = j - READ_ONCE(rcu_state.gp_wake_time);
-> >>> 	pr_info("%s: wait state: %s(%d) ->state: %#lx delta ->gp_activity %lu ->gp_req_activity %lu ->gp_wake_time %lu ->gp_wake_seq %ld ->gp_seq %ld ->gp_seq_needed %ld ->gp_flags %#x\n",
-> >>> 		rcu_state.name, gp_state_getname(rcu_state.gp_state),
-> >>> -		rcu_state.gp_state,
-> >>> -		rcu_state.gp_kthread ? rcu_state.gp_kthread->state : 0x1ffffL,
-> >>> +		rcu_state.gp_state, t ? t->state : 0x1ffffL,
-> >>> 		ja, jr, jw, (long)READ_ONCE(rcu_state.gp_wake_seq),
-> >>> 		(long)READ_ONCE(rcu_state.gp_seq),
-> >>> 		(long)READ_ONCE(rcu_get_root()->gp_seq_needed),
-> >>> @@ -633,7 +633,8 @@ static void rcu_check_gp_start_stall(struct rcu_node *rnp, struct rcu_data *rdp,
-> >>> 
-> >>> 	if (!IS_ENABLED(CONFIG_PROVE_RCU) || rcu_gp_in_progress() ||
-> >>> 	    ULONG_CMP_GE(READ_ONCE(rnp_root->gp_seq),
-> >>> -	    		 READ_ONCE(rnp_root->gp_seq_needed)))
-> >>> +	    		 READ_ONCE(rnp_root->gp_seq_needed)) ||
-> >>> +	    !smp_load_acquire(&rcu_state.gp_kthread))
-> >>> 		return;
-> >>> 	j = jiffies; /* Expensive access, and in common case don't get here. */
-> >>> 	if (time_before(j, READ_ONCE(rcu_state.gp_req_activity) + gpssdelay) ||
-> 
+ccree e6601000.crypto: ARM CryptoCell 630P Driver: HW version
+0xAF400001/0xDCC63000, Driver version 5.0
+alg: No test for authenc(xcbc(aes),cbc(aes)) (authenc-xcbc-aes-cbc-aes-ccree)
+alg: No test for authenc(xcbc(aes),rfc3686(ctr(aes)))
+(authenc-xcbc-aes-rfc3686-ctr-aes-ccree)
+------------[ cut here ]------------
+kernel BUG at kernel/dma/swiotlb.c:497!
+Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
+CPU: 7 PID: 189 Comm: cryptomgr_test Not tainted 5.5.0-rc7-arm64-renesas #463
+Hardware name: Renesas Salvator-X 2nd version board based on r8a77951 (DT)
+pstate: 80000005 (Nzcv daif -PAN -UAO)
+pc : swiotlb_tbl_map_single+0x30c/0x380
+lr : swiotlb_map+0xb0/0x300
+sp : ffff800012313430
+x29: ffff800012313430 x28: 0000000000000000
+x27: 0000000000000000 x26: 0000000738e7e000
+x25: ffff0006fa5f8010 x24: 0000000000000000
+x23: ffff800011aed000 x22: 0000000000000000
+x21: 0000000000000000 x20: 00000000000e8000
+x19: ffff80001105e000 x18: ffffffffffffffff
+x17: 0000000000000007 x16: 0000000000000001
+x15: ffff800010f5f908 x14: ffff800092313cf7
+x13: ffff0006ff0b4000 x12: 0000000000000001
+x11: 0000000000000003 x10: 0000000000200000
+x9 : 0000000000000000 x8 : 0000000000000001
+x7 : ffff800011aed9e0 x6 : 0000000000000000
+x5 : 0000000000000000 x4 : 0000000000000000
+x3 : 0000000000000000 x2 : 0000000000000000
+x1 : 0000000074000000 x0 : 0000000000000000
+Call trace:
+ swiotlb_tbl_map_single+0x30c/0x380
+ swiotlb_map+0xb0/0x300
+ dma_direct_map_page+0xb8/0x140
+ dma_direct_map_sg+0x78/0xe0
+ cc_map_sg+0x10c/0x1a8
+ cc_map_aead_request+0x160/0x990
+ cc_proc_aead+0x140/0xef8
+ cc_aead_encrypt+0x48/0x68
+ crypto_aead_encrypt+0x20/0x30
+ test_aead_vec_cfg+0x20c/0x848
+ test_aead+0xb8/0x140
+ alg_test_aead+0x94/0x178
+ alg_test+0x108/0x3f8
+ cryptomgr_test+0x40/0x48
+ kthread+0x11c/0x120
+ ret_from_fork+0x10/0x18
+Code: f9402fbc 17ffffa0 f9000bb3 f9002fbc (d4210000)
+---[ end trace 272124cd4e3fd6f0 ]---
+note: cryptomgr_test[189] exited with preempt_count 1
+------------[ cut here ]------------
+
+FWIW, the same happens on R-Car H3 ES1.0.
+I haven't tried investigating when it stopped working.
+I stopped running the crypto manager tests when they were broken by
+CONFIG_HARDENED_USERCOPY_PAGESPAN=y.
+
+Do you have a clue?
+Thanks!
+
+[*] https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-devel.git/
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
