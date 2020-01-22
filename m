@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E70C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:31:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 704E5C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:31:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77B4E24672
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:31:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3731A24672
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:31:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685474;
-	bh=uVCNl6SSGH/xdURKbmYyLK7yEWgY0GtaC9ejSr1F9eQ=;
+	s=default; t=1579685479;
+	bh=0ooPQTJdsbuy7mDT8DEDH6XQyhlkOcP1COJtU1twRMc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f1XSNbmbFT6S5I+OQTtgpxobFWnreESpEZjmugL5HTXhjPha9KEszpzM8pIMghfQU
-	 4+LzzIBl3VRkUU44tY64xHIm8Jr6vMIJLU4zJz08cok+BK+VZLRgYTu9o3qZ/8hlUG
-	 KraNai2xivvCqPzVJNRlGsxCTcubt6PVZ4sl80/Y=
+	b=IBYhCgtEBCvS+LA+xZ6UcRUcQOGWcK3RWxJ8+CJ2yWJuyvn2etGi0BaYqz7GXgUpJ
+	 HYoO9n0FtlHOz2wi6rfN6nesqRC/geyvyeyrGrda2w8dJZ1fk1paVl/E29c/Qw75si
+	 pwGV/rOpvuP/IKPmO55viOmzp23xUpPu9JGObhvQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729596AbgAVJbN (ORCPT
+        id S1729636AbgAVJbS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:31:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43040 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:31:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729537AbgAVJbJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:31:09 -0500
+        id S1729605AbgAVJbQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:31:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2784A2467B;
-        Wed, 22 Jan 2020 09:31:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67C0624673;
+        Wed, 22 Jan 2020 09:31:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685468;
-        bh=uVCNl6SSGH/xdURKbmYyLK7yEWgY0GtaC9ejSr1F9eQ=;
+        s=default; t=1579685475;
+        bh=0ooPQTJdsbuy7mDT8DEDH6XQyhlkOcP1COJtU1twRMc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tbikjrwwkvw4z35atT9xFiGLhSSF7vnkEbNKZgHrDKikXllk2Z20+5HZsalHpweVc
-         RAJ2piMKst725Zl4SIhc/w1NCRKnbCoVTuGYoO/vuuFwFwvt/FmgP5HVm0JiXk2XCN
-         /MTUsfx77M/2TlrFgZon3CGEnJjBqT/VvZ28gxHI=
+        b=nJafzGhJTTPJQZ8bZnnbJ7OPDT/YSRePHemhJ4pIVmn+pXRbRmR28jDtRD6UsacJe
+         FpRMDnEx4V++Bf8S0ciwETwbQKUkZGgLYEEd14P76EjFrQLhCd73Ejohqfl4kZrFW5
+         DkhpC2Suj09YlUNcFxyxhVWe+hA6R5c3G+DAW3ZU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jian-Hong Pan <jian-hong@endlessm.com>,
-        Daniel Drake <drake@endlessm.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 4.4 26/76] platform/x86: asus-wmi: Fix keyboard brightness cannot be set to 0
-Date:   Wed, 22 Jan 2020 10:28:42 +0100
-Message-Id: <20200122092754.411204098@linuxfoundation.org>
+        stable@vger.kernel.org, Marian Mihailescu <mihailescu2m@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: [PATCH 4.4 29/76] clk: samsung: exynos5420: Preserve CPU clocks configuration during suspend/resume
+Date:   Wed, 22 Jan 2020 10:28:45 +0100
+Message-Id: <20200122092754.738749967@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092751.587775548@linuxfoundation.org>
 References: <20200122092751.587775548@linuxfoundation.org>
@@ -60,40 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian-Hong Pan <jian-hong@endlessm.com>
+From: Marian Mihailescu <mihailescu2m@gmail.com>
 
-commit 176a7fca81c5090a7240664e3002c106d296bf31 upstream.
+commit e21be0d1d7bd7f78a77613f6bcb6965e72b22fc1 upstream.
 
-Some of ASUS laptops like UX431FL keyboard backlight cannot be set to
-brightness 0. According to ASUS' information, the brightness should be
-0x80 ~ 0x83. This patch fixes it by following the logic.
+Save and restore top PLL related configuration registers for big (APLL)
+and LITTLE (KPLL) cores during suspend/resume cycle. So far, CPU clocks
+were reset to default values after suspend/resume cycle and performance
+after system resume was affected when performance governor has been selected.
 
-Fixes: e9809c0b9670 ("asus-wmi: add keyboard backlight support")
-Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-Reviewed-by: Daniel Drake <drake@endlessm.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Fixes: 773424326b51 ("clk: samsung: exynos5420: add more registers to restore list")
+Signed-off-by: Marian Mihailescu <mihailescu2m@gmail.com>
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/platform/x86/asus-wmi.c |    8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ drivers/clk/samsung/clk-exynos5420.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -452,13 +452,7 @@ static void kbd_led_update(struct work_s
- 
- 	asus = container_of(work, struct asus_wmi, kbd_led_work);
- 
--	/*
--	 * bits 0-2: level
--	 * bit 7: light on/off
--	 */
--	if (asus->kbd_led_wk > 0)
--		ctrl_param = 0x80 | (asus->kbd_led_wk & 0x7F);
--
-+	ctrl_param = 0x80 | (asus->kbd_led_wk & 0x7F);
- 	asus_wmi_set_devstate(ASUS_WMI_DEVID_KBD_BACKLIGHT, ctrl_param, NULL);
- }
- 
+--- a/drivers/clk/samsung/clk-exynos5420.c
++++ b/drivers/clk/samsung/clk-exynos5420.c
+@@ -166,6 +166,8 @@ static unsigned long exynos5x_clk_regs[]
+ 	GATE_BUS_CPU,
+ 	GATE_SCLK_CPU,
+ 	CLKOUT_CMU_CPU,
++	APLL_CON0,
++	KPLL_CON0,
+ 	CPLL_CON0,
+ 	DPLL_CON0,
+ 	EPLL_CON0,
 
 
