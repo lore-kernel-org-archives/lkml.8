@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A5ECC33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F3BC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38E5B2467E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:34:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 878F124680
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:35:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685698;
-	bh=VqYTQ/EVXNQCQEPMUf5UiPyaW8ywvEElTwnUB3IJ4oU=;
+	s=default; t=1579685705;
+	bh=c0gxPAEd/zpRFcwzNNKQm8bhr5vCEg4u8wtCDuz6ZLE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jto9mc2+zuTtx6aCkQyqlitXnMatuT83iJGrjlEo9cLP5qrXNuaw7K+fj+yz7Amp9
-	 3OVBo+E8N+lGV3pOF0HnPw9sQnn+chTiQSehbBi+LGb6s6zYRGDs8pTatzBezLUUbO
-	 FKwpkP7Mn1lI8zuSUqbuSQ2qnMgbF+qchFoJgi0s=
+	b=LI2SjhMzqT9oOvdXmOd479q8K1+RhVm5sKNmKwj3V0ql8rDeAoBE+DuQTS95mDu24
+	 upXQcaYioq0QYzldhphfKzHeE0RiA82hQqCf0I+USrkS5T4rvV0wA7WIFSjeVJLLHG
+	 IK1sMkVHOlM0DTHN9QycHRakPeELWsnrpy6/e598=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731068AbgAVJe5 (ORCPT
+        id S1729678AbgAVJfD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:34:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49716 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:35:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729501AbgAVJez (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:34:55 -0500
+        id S1731077AbgAVJfA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:35:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 868F624672;
-        Wed, 22 Jan 2020 09:34:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D73D2467C;
+        Wed, 22 Jan 2020 09:34:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685695;
-        bh=VqYTQ/EVXNQCQEPMUf5UiPyaW8ywvEElTwnUB3IJ4oU=;
+        s=default; t=1579685699;
+        bh=c0gxPAEd/zpRFcwzNNKQm8bhr5vCEg4u8wtCDuz6ZLE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2MMO50b/Vvbbnxrjp2lu9G/iSaH5GubBd3LKZs4K8btgrDLqPr8NJZGpoIIcZLK8X
-         /tHIk0grdxpJPQa77WBHm/DbYn1X5fMs0VlcCyee15ZdluVyqOrChsdIgVLIJBvkGQ
-         2/Tvq2l9BLbDL5A/i9Fob7MsHtn9vp5ioTT5v0CA=
+        b=nNml7+8plYpwBSm9HCCM4UfLjlqn/VDGkFy6qYLDRgc+V6om7vVc3GEheNTNuIalo
+         XxuT5mzHWsUZZ1IKft0nHEV/SvDak0wXlOXAngKlpm3y7KVOenseE0cL1LN+Wi7HmV
+         869yHvA5zfVnKGY736dtY+qEAotx9MhwRf6nRDW8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>
-Subject: [PATCH 4.9 41/97] f2fs: fix potential overflow
-Date:   Wed, 22 Jan 2020 10:28:45 +0100
-Message-Id: <20200122092803.183124960@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>
+Subject: [PATCH 4.9 16/97] wimax: i2400: Fix memory leak in i2400m_op_rfkill_sw_toggle
+Date:   Wed, 22 Jan 2020 10:28:20 +0100
+Message-Id: <20200122092758.548248948@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092755.678349497@linuxfoundation.org>
 References: <20200122092755.678349497@linuxfoundation.org>
@@ -59,48 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-commit 1f0d5c911b64165c9754139a26c8c2fad352c132 upstream.
+commit 6f3ef5c25cc762687a7341c18cbea5af54461407 upstream.
 
-We expect 64-bit calculation result from below statement, however
-in 32-bit machine, looped left shift operation on pgoff_t type
-variable may cause overflow issue, fix it by forcing type cast.
+In the implementation of i2400m_op_rfkill_sw_toggle() the allocated
+buffer for cmd should be released before returning. The
+documentation for i2400m_msg_to_dev() says when it returns the buffer
+can be reused. Meaning cmd should be released in either case. Move
+kfree(cmd) before return to be reached by all execution paths.
 
-page->index << PAGE_SHIFT;
-
-Fixes: 26de9b117130 ("f2fs: avoid unnecessary updating inode during fsync")
-Fixes: 0a2aa8fbb969 ("f2fs: refactor __exchange_data_block for speed up")
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fixes: 2507e6ab7a9a ("wimax: i2400: fix memory leak")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- fs/f2fs/data.c |    2 +-
- fs/f2fs/file.c |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wimax/i2400m/op-rfkill.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -1267,7 +1267,7 @@ static int f2fs_write_data_page(struct p
- 	loff_t i_size = i_size_read(inode);
- 	const pgoff_t end_index = ((unsigned long long) i_size)
- 							>> PAGE_SHIFT;
--	loff_t psize = (page->index + 1) << PAGE_SHIFT;
-+	loff_t psize = (loff_t)(page->index + 1) << PAGE_SHIFT;
- 	unsigned offset = 0;
- 	bool need_balance_fs = false;
- 	int err = 0;
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -980,7 +980,7 @@ static int __clone_blkaddrs(struct inode
- 				}
- 				dn.ofs_in_node++;
- 				i++;
--				new_size = (dst + i) << PAGE_SHIFT;
-+				new_size = (loff_t)(dst + i) << PAGE_SHIFT;
- 				if (dst_inode->i_size < new_size)
- 					f2fs_i_size_write(dst_inode, new_size);
- 			} while (--ilen && (do_replace[i] || blkaddr[i] == NULL_ADDR));
+--- a/drivers/net/wimax/i2400m/op-rfkill.c
++++ b/drivers/net/wimax/i2400m/op-rfkill.c
+@@ -142,12 +142,12 @@ int i2400m_op_rfkill_sw_toggle(struct wi
+ 			"%d\n", result);
+ 	result = 0;
+ error_cmd:
+-	kfree(cmd);
+ 	kfree_skb(ack_skb);
+ error_msg_to_dev:
+ error_alloc:
+ 	d_fnend(4, dev, "(wimax_dev %p state %d) = %d\n",
+ 		wimax_dev, state, result);
++	kfree(cmd);
+ 	return result;
+ }
+ 
 
 
