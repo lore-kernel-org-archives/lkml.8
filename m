@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56DC2C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1469C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 279C62467B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:50:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A69602467C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:50:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686607;
-	bh=5+aN8LnHZLKcM+Ov72cMOGdccVnhGxIcDkOjPOrNlEM=;
+	s=default; t=1579686608;
+	bh=gOoqDapAgWemltSr8xNI+gVi5z+jdsz65BF+ESTxLRo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=19OTFGGCOGjccYZOpxO3KfbSCi7g15r2HHDau7pvO8orq2bAEwSIedLtNF5gsyDEy
-	 VOIOuDdaZTEv3nbbH+arGlw7rUiQfBIBqmgkSSwBDACnU7aZKd9gviCFfjsWpZJzGu
-	 MK2ym/wDMgjsAKPhqTnleKFlOCH+pl+3KKWK5yqo=
+	b=ayIojQtw9UEEV+CAhaMTxLowBXSQgZB0sLw4JkKSnhFFOOcgLa4wMPOoM93dI/rCY
+	 mqblJVX1nwdIVwJ6AEaHgOjYdwJ4bhoo6+DmPX3M4uVnvNefZq2OG2eLrh4EGhQ9tu
+	 74Dd8I0Ekl8bPfn5mSDvXCkDyK/iharIr35x8fM4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730492AbgAVJuG (ORCPT
+        id S1731404AbgAVJuH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:50:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56060 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:50:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733125AbgAVJiy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:38:54 -0500
+        id S1732216AbgAVJiw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:38:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5757E2467B;
-        Wed, 22 Jan 2020 09:38:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAC682467F;
+        Wed, 22 Jan 2020 09:38:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685933;
-        bh=5+aN8LnHZLKcM+Ov72cMOGdccVnhGxIcDkOjPOrNlEM=;
+        s=default; t=1579685931;
+        bh=gOoqDapAgWemltSr8xNI+gVi5z+jdsz65BF+ESTxLRo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cqZsZ651kqRR2W8MAYzSryhD92xV7uNXKOegNuSmOVcvl7gejLxJvRakgyqxQK7DL
-         UGrBZe2fiN8EHvPqEV+1XmJPVjE4kAGY284DZyC95v12H+1HAP2osuF9HtG36Kt9zx
-         b6RdOdweJ8GAaeKChvyfTrQQ522GgTs7kwbyI83Q=
+        b=j+7MicaACCjkAQO1uSZP3P3QyD+NETLlOuYqLM4bnhAaXENhRd+gOeBboaqP7iOxn
+         GyTabsLLO8+F9uc9EyoHuz1ZYmO5KoCYf/4B5/Cg9ck4Ye9cHQTL90SIxeeBYzZBDq
+         1nNB3ua/Uxk6bEqdMrkF5gYQq58NCFxeWWWOnhBI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mohammed Gamal <mgamal@redhat.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 42/65] hv_netvsc: Fix memory leak when removing rndis device
-Date:   Wed, 22 Jan 2020 10:29:27 +0100
-Message-Id: <20200122092757.036260646@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Jurgen Van Ham <juvanham@gmail.com>,
+        Matteo Croce <mcroce@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 41/65] macvlan: use skb_reset_mac_header() in macvlan_queue_xmit()
+Date:   Wed, 22 Jan 2020 10:29:26 +0100
+Message-Id: <20200122092756.869503775@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092750.976732974@linuxfoundation.org>
 References: <20200122092750.976732974@linuxfoundation.org>
@@ -60,61 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mohammed Gamal <mgamal@redhat.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 536dc5df2808efbefc5acee334d3c4f701790ec0 ]
+[ Upstream commit 1712b2fff8c682d145c7889d2290696647d82dab ]
 
-kmemleak detects the following memory leak when hot removing
-a network device:
+I missed the fact that macvlan_broadcast() can be used both
+in RX and TX.
 
-unreferenced object 0xffff888083f63600 (size 256):
-  comm "kworker/0:1", pid 12, jiffies 4294831717 (age 1113.676s)
-  hex dump (first 32 bytes):
-    00 40 c7 33 80 88 ff ff 00 00 00 00 10 00 00 00  .@.3............
-    00 00 00 00 ad 4e ad de ff ff ff ff 00 00 00 00  .....N..........
-  backtrace:
-    [<00000000d4a8f5be>] rndis_filter_device_add+0x117/0x11c0 [hv_netvsc]
-    [<000000009c02d75b>] netvsc_probe+0x5e7/0xbf0 [hv_netvsc]
-    [<00000000ddafce23>] vmbus_probe+0x74/0x170 [hv_vmbus]
-    [<00000000046e64f1>] really_probe+0x22f/0xb50
-    [<000000005cc35eb7>] driver_probe_device+0x25e/0x370
-    [<0000000043c642b2>] bus_for_each_drv+0x11f/0x1b0
-    [<000000005e3d09f0>] __device_attach+0x1c6/0x2f0
-    [<00000000a72c362f>] bus_probe_device+0x1a6/0x260
-    [<0000000008478399>] device_add+0x10a3/0x18e0
-    [<00000000cf07b48c>] vmbus_device_register+0xe7/0x1e0 [hv_vmbus]
-    [<00000000d46cf032>] vmbus_add_channel_work+0x8ab/0x1770 [hv_vmbus]
-    [<000000002c94bb64>] process_one_work+0x919/0x17d0
-    [<0000000096de6781>] worker_thread+0x87/0xb40
-    [<00000000fbe7397e>] kthread+0x333/0x3f0
-    [<000000004f844269>] ret_from_fork+0x3a/0x50
+skb_eth_hdr() makes only sense in TX paths, so we can not
+use it blindly in macvlan_broadcast()
 
-rndis_filter_device_add() allocates an instance of struct rndis_device
-which never gets deallocated as rndis_filter_device_remove() sets
-net_device->extension which points to the rndis_device struct to NULL,
-leaving the rndis_device dangling.
-
-Since net_device->extension is eventually freed in free_netvsc_device(),
-we refrain from setting it to NULL inside rndis_filter_device_remove()
-
-Signed-off-by: Mohammed Gamal <mgamal@redhat.com>
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+Fixes: 96cc4b69581d ("macvlan: do not assume mac_header is set in macvlan_broadcast()")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: Jurgen Van Ham <juvanham@gmail.com>
+Tested-by: Matteo Croce <mcroce@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/hyperv/rndis_filter.c |    2 --
- 1 file changed, 2 deletions(-)
+ drivers/net/macvlan.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/net/hyperv/rndis_filter.c
-+++ b/drivers/net/hyperv/rndis_filter.c
-@@ -1331,8 +1331,6 @@ void rndis_filter_device_remove(struct h
- 	/* Halt and release the rndis device */
- 	rndis_filter_halt_device(rndis_dev);
+--- a/drivers/net/macvlan.c
++++ b/drivers/net/macvlan.c
+@@ -263,7 +263,7 @@ static void macvlan_broadcast(struct sk_
+ 			      struct net_device *src,
+ 			      enum macvlan_mode mode)
+ {
+-	const struct ethhdr *eth = skb_eth_hdr(skb);
++	const struct ethhdr *eth = eth_hdr(skb);
+ 	const struct macvlan_dev *vlan;
+ 	struct sk_buff *nskb;
+ 	unsigned int i;
+@@ -515,10 +515,11 @@ static int macvlan_queue_xmit(struct sk_
+ 	const struct macvlan_dev *dest;
  
--	net_dev->extension = NULL;
--
- 	netvsc_device_remove(dev);
- }
+ 	if (vlan->mode == MACVLAN_MODE_BRIDGE) {
+-		const struct ethhdr *eth = (void *)skb->data;
++		const struct ethhdr *eth = skb_eth_hdr(skb);
  
+ 		/* send to other bridge ports directly */
+ 		if (is_multicast_ether_addr(eth->h_dest)) {
++			skb_reset_mac_header(skb);
+ 			macvlan_broadcast(skb, port, dev, MACVLAN_MODE_BRIDGE);
+ 			goto xmit_world;
+ 		}
 
 
