@@ -2,113 +2,58 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7A5C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7859AC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8363E2465B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:28:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579681738;
-	bh=4QAZfd2FXQTYB2NVvgK+pdNiCcaxd4rJotDwTIhwMa8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dLUDf4wQ8qVEr5PAfo8AOX29SkpqoXMLAF4/QvkrQfsT/KViAd4D0AkLaU7lXefGW
-	 kSPM/hJIPGgIrtdK0E4JrU8VD3f1KNdf8u9Q5MOhbGfjhhVxIOHsb6j1Hwkt0BtM2Y
-	 TQ8ugHFH6xMvSlh0WzmcjnTMvNekj5YSnr9npszY=
+	by mail.kernel.org (Postfix) with ESMTP id 5295F24655
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:31:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726219AbgAVI26 (ORCPT
+        id S1728733AbgAVIbf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 03:28:58 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40442 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725868AbgAVI25 (ORCPT
+        Wed, 22 Jan 2020 03:31:35 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:37024 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725868AbgAVIbf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 03:28:57 -0500
-Received: by mail-wm1-f66.google.com with SMTP id t14so6170311wmi.5;
-        Wed, 22 Jan 2020 00:28:56 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=OjyMDyxydu3xzK47l5IL4JFwN0Gu9GPTlFI5eNh0tK4=;
-        b=TfVh0mErf4YFTX7d1lW86D2wEgClcnHKnMFC4DKeKi8h3HjiCGY33neJmUJEfAos7/
-         984P+N/EPPeYA5Jy1yQkHWy5bOdpJwpOm66N9XmADAOTWmXcDGVVLWSAf8bLeEUsLaPa
-         uA8oXjNMrDdFLt4WqSi2L0PU8f/I/N0UHKWUwvQkC97FwyVRhScuh3IA/ilNh2q2E8Pw
-         zgnLa4IcXMiu9DI+i4kjYsSEyTobGAoa82Ak/IbHRSw9DxJnUGhrVZWAgOvRpGdkXLVG
-         eypZP1Qg+hkAfZOzoZN31xsjPOvzcl7mQbMSZzvpsYnmro2lZRqG2og1xLZEsDruqmPK
-         7H+A==
-X-Gm-Message-State: APjAAAWmcVML4xKGgzWnc6cCQ2BDCvwoUwS81sKNaZJUoMaYzgJzoSf5
-        iL6NggFbh2h9iG5Qdou7/4w=
-X-Google-Smtp-Source: APXvYqyl9MEI/mLqEYXS87KMyO+cKj6FxWSn6kU7Om0uM+ETRt7A6T7GavirDfhHCLA256MnMRhzOA==
-X-Received: by 2002:a1c:1d02:: with SMTP id d2mr1688797wmd.185.1579681735851;
-        Wed, 22 Jan 2020 00:28:55 -0800 (PST)
-Received: from localhost (ip-37-188-245-167.eurotel.cz. [37.188.245.167])
-        by smtp.gmail.com with ESMTPSA id o16sm3219887wmc.18.2020.01.22.00.28.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jan 2020 00:28:55 -0800 (PST)
-Date:   Wed, 22 Jan 2020 09:28:53 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     sspatil@google.com, kirill@shutemov.name,
-        akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-api@vger.kernel.org,
-        oleksandr@redhat.com, surenb@google.com, timmurray@google.com,
-        dancol@google.com, sonnyrao@google.com, bgeffon@google.com,
-        hannes@cmpxchg.org, shakeelb@google.com, joaodias@google.com,
-        ktkhai@virtuozzo.com, christian.brauner@ubuntu.com,
-        sjpark@amazon.de
-Subject: Re: [PATCH v2 2/5] mm: introduce external memory hinting API
-Message-ID: <20200122082853.GS29276@dhcp22.suse.cz>
-References: <20200116235953.163318-1-minchan@kernel.org>
- <20200116235953.163318-3-minchan@kernel.org>
- <20200117115225.GV19428@dhcp22.suse.cz>
- <20200117155837.bowyjpndfiym6cgs@box>
- <20200117173239.GB140922@google.com>
- <20200117212653.7uftw3lk35oykkmb@box>
- <20200119161431.GA94410@google.com>
- <20200120075825.GH18451@dhcp22.suse.cz>
- <20200121183212.GF140922@google.com>
+        Wed, 22 Jan 2020 03:31:35 -0500
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1iuBQA-0004NX-6D; Wed, 22 Jan 2020 09:31:30 +0100
+Date:   Wed, 22 Jan 2020 09:31:30 +0100
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
+        John Kacur <jkacur@redhat.com>,
+        Julia Cartwright <julia@ni.com>,
+        Daniel Wagner <wagi@monom.org>,
+        Tom Zanussi <zanussi@kernel.org>, Scott Wood <swood@redhat.com>
+Subject: Re: [PATCH RT 24/32] sched: migrate_enable: Use stop_one_cpu_nowait()
+Message-ID: <20200122083130.kuu3yppckhyjrr4u@linutronix.de>
+References: <20200117174111.282847363@goodmis.org>
+ <20200117174131.019724236@goodmis.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200121183212.GF140922@google.com>
+In-Reply-To: <20200117174131.019724236@goodmis.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 21-01-20 10:32:12, Minchan Kim wrote:
-> On Mon, Jan 20, 2020 at 08:58:25AM +0100, Michal Hocko wrote:
-[...]
-> > The interface really has to be robust to future potential usecases.
-> 
-> I do understand your concern but for me, it's chicken and egg problem.
-> We usually do best effort to make something perfect as far as possible
-> but we also don't do over-engineering without real usecase from the
-> beginning.
-> 
-> I already told you how we could synchronize among processes and potential
-> way to be extended Daniel suggested(That's why current API has extra field
-> for the cookie) even though we don't need it right now.
+On 2020-01-17 12:41:35 [-0500], Steven Rostedt wrote:
+> 4.19.94-rt39-rc1 stable review patch.
+> If anyone has any objections, please let me know.
 
-If you can synchronize with the target task then you do not need a
-remote interface. Just use ptrace and you are done with it.
+I don't know how much of this patch and the previous is classified as
+"new feature" vs "bug fix". This patch requires patch 31 (of this series)
+as bug fix.
+I'm not against it, just pointing out.
 
-> If you want to suggest the other way, please explain why your idea is
-> better and why we need it at this moment.
-
-I believe I have explained my concerns and why they matter. All you are
-saying is that you do not care because your particular usecase doesn't
-care. And that is a first signal of a future disaster when we end up
-with a broken and unfixable interface we have to maintain for ever.
-
-I will not go as far as to nack this but you should seriously think
-about other potential usecases and how they would work and what we are
-going to do when a first non-cooperative userspace memory management
-usecase materializes.
--- 
-Michal Hocko
-SUSE Labs
+Sebastian
