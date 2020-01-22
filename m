@@ -2,81 +2,195 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5723FC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:16:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8010BC32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B8E52467A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:16:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579731387;
-	bh=gMznlkKlnEraQs6bi8mMvqUTxahZxYtFxguxpkQyvME=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=w88rpvQjyPD/UbOABlqfvYuyjZp+H6/+w1EvBPUNjQ5DKe4KcGDlUo8sG3uTDYI7B
-	 ZC6frn1YodeWQ4ykaUA/OcI/qDishF0VPpG1zsjBimIwhtSoNcX/1fJ1B6pOYTekh7
-	 OcUD5Y5MndyH2+Z3hVt9vqLEfM2nepYKapI5Kuo0=
+	by mail.kernel.org (Postfix) with ESMTP id 4961D2465A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:24:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726167AbgAVWQ0 (ORCPT
+        id S1728998AbgAVWYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 17:16:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54208 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725884AbgAVWQ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 17:16:26 -0500
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FFFC24673;
-        Wed, 22 Jan 2020 22:16:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579731385;
-        bh=gMznlkKlnEraQs6bi8mMvqUTxahZxYtFxguxpkQyvME=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=x2h5LFBGzqwNyC19r6IFIehFx3ZQHjUiNkA+MOUKFhxmozAO3DH5DTue+2IJ+i14Q
-         6yXcy6MhsJ5u4hkZSyLY0HaWNTU9U79d0kitNpzd1AY4rwzTkxtUNyMAJ4krzXPZlW
-         jRAQHCOSGRM3Mfm28GKPELbGJYirLtB+THd56wec=
-Received: by mail-qk1-f173.google.com with SMTP id d10so1452321qke.1;
-        Wed, 22 Jan 2020 14:16:25 -0800 (PST)
-X-Gm-Message-State: APjAAAVeIU39PaUIgvplwrhoGbfzxKdrtWZ5vI7Wikie78Fn7uzP4fMq
-        OK0YKN5av1s9VKVKjPK5meARHQHdIUnCqXMqpQ==
-X-Google-Smtp-Source: APXvYqzkmuC5aqfg3tJZ3GIJ9N4BfBcSOeRzz/S5dStACI0FD4XIBdfQfwykY16cFmXykRB/+2sC0MDi6Qjmab6Gl60=
-X-Received: by 2002:ae9:f205:: with SMTP id m5mr12816454qkg.152.1579731384778;
- Wed, 22 Jan 2020 14:16:24 -0800 (PST)
-MIME-Version: 1.0
-References: <20200122174005.17257-1-sravanhome@gmail.com>
-In-Reply-To: <20200122174005.17257-1-sravanhome@gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 22 Jan 2020 16:16:13 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLq5XFdVRJa-XuTDbA_s=hpu3P4VGou=XfmSJs5NFAQqQ@mail.gmail.com>
-Message-ID: <CAL_JsqLq5XFdVRJa-XuTDbA_s=hpu3P4VGou=XfmSJs5NFAQqQ@mail.gmail.com>
-Subject: Re: [PATCH v8] dt-bindings: regulator: add document bindings for mpq7920
-To:     Saravanan Sekar <sravanhome@gmail.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 22 Jan 2020 17:24:04 -0500
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:47750 "EHLO
+        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbgAVWYD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 17:24:03 -0500
+Received: by kvm5.telegraphics.com.au (Postfix, from userid 502)
+        id 2974929988; Wed, 22 Jan 2020 17:23:59 -0500 (EST)
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Chris Zankel <chris@zankel.net>,
+        Laurent Vivier <laurent@vivier.eu>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-Id: <0c53b516bac19ca785b0a8e9ada7bcb6970fda5b.1579730846.git.fthain@telegraphics.com.au>
+In-Reply-To: <cover.1579730846.git.fthain@telegraphics.com.au>
+References: <cover.1579730846.git.fthain@telegraphics.com.au>
+From:   Finn Thain <fthain@telegraphics.com.au>
+Subject: [PATCH net v3 01/12] net/sonic: Add mutual exclusion for accessing
+ shared state
+Date:   Thu, 23 Jan 2020 09:07:26 +1100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 11:40 AM Saravanan Sekar <sravanhome@gmail.com> wrote:
->
-> Add device tree binding information for mpq7920 regulator driver.
-> Example bindings for mpq7920 are added.
->
-> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
-> ---
->
-> Notes:
->     Changes on v8 :
->       - fixed error reported by dt_binding_check
+The netif_stop_queue() call in sonic_send_packet() races with the
+netif_wake_queue() call in sonic_interrupt(). This causes issues
+like "NETDEV WATCHDOG: eth0 (macsonic): transmit queue 0 timed out".
+Fix this by disabling interrupts when accessing tx_skb[] and next_tx.
+Update a comment to clarify the synchronization properties.
 
-Still broken. :(
+Fixes: efcce839360f ("[PATCH] macsonic/jazzsonic network drivers update")
+Tested-by: Stan Johnson <userm57@yahoo.com>
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+---
+Changed since v1:
+ - Added spin lock, as requested by Geert.
+Changed since v2:
+ - Added comment to explain the need for an irq lock.
+---
+ drivers/net/ethernet/natsemi/sonic.c | 49 ++++++++++++++++++++--------
+ drivers/net/ethernet/natsemi/sonic.h |  1 +
+ 2 files changed, 36 insertions(+), 14 deletions(-)
 
-Rob
+diff --git a/drivers/net/ethernet/natsemi/sonic.c b/drivers/net/ethernet/natsemi/sonic.c
+index b339125b2f09..8a7cff516281 100644
+--- a/drivers/net/ethernet/natsemi/sonic.c
++++ b/drivers/net/ethernet/natsemi/sonic.c
+@@ -64,6 +64,8 @@ static int sonic_open(struct net_device *dev)
+ 
+ 	netif_dbg(lp, ifup, dev, "%s: initializing sonic driver\n", __func__);
+ 
++	spin_lock_init(&lp->lock);
++
+ 	for (i = 0; i < SONIC_NUM_RRS; i++) {
+ 		struct sk_buff *skb = netdev_alloc_skb(dev, SONIC_RBSIZE + 2);
+ 		if (skb == NULL) {
+@@ -206,8 +208,6 @@ static void sonic_tx_timeout(struct net_device *dev)
+  *   wake the tx queue
+  * Concurrently with all of this, the SONIC is potentially writing to
+  * the status flags of the TDs.
+- * Until some mutual exclusion is added, this code will not work with SMP. However,
+- * MIPS Jazz machines and m68k Macs were all uni-processor machines.
+  */
+ 
+ static int sonic_send_packet(struct sk_buff *skb, struct net_device *dev)
+@@ -215,7 +215,8 @@ static int sonic_send_packet(struct sk_buff *skb, struct net_device *dev)
+ 	struct sonic_local *lp = netdev_priv(dev);
+ 	dma_addr_t laddr;
+ 	int length;
+-	int entry = lp->next_tx;
++	int entry;
++	unsigned long flags;
+ 
+ 	netif_dbg(lp, tx_queued, dev, "%s: skb=%p\n", __func__, skb);
+ 
+@@ -237,6 +238,10 @@ static int sonic_send_packet(struct sk_buff *skb, struct net_device *dev)
+ 		return NETDEV_TX_OK;
+ 	}
+ 
++	spin_lock_irqsave(&lp->lock, flags);
++
++	entry = lp->next_tx;
++
+ 	sonic_tda_put(dev, entry, SONIC_TD_STATUS, 0);       /* clear status */
+ 	sonic_tda_put(dev, entry, SONIC_TD_FRAG_COUNT, 1);   /* single fragment */
+ 	sonic_tda_put(dev, entry, SONIC_TD_PKTSIZE, length); /* length of packet */
+@@ -246,10 +251,6 @@ static int sonic_send_packet(struct sk_buff *skb, struct net_device *dev)
+ 	sonic_tda_put(dev, entry, SONIC_TD_LINK,
+ 		sonic_tda_get(dev, entry, SONIC_TD_LINK) | SONIC_EOL);
+ 
+-	/*
+-	 * Must set tx_skb[entry] only after clearing status, and
+-	 * before clearing EOL and before stopping queue
+-	 */
+ 	wmb();
+ 	lp->tx_len[entry] = length;
+ 	lp->tx_laddr[entry] = laddr;
+@@ -272,6 +273,8 @@ static int sonic_send_packet(struct sk_buff *skb, struct net_device *dev)
+ 
+ 	SONIC_WRITE(SONIC_CMD, SONIC_CR_TXP);
+ 
++	spin_unlock_irqrestore(&lp->lock, flags);
++
+ 	return NETDEV_TX_OK;
+ }
+ 
+@@ -284,9 +287,21 @@ static irqreturn_t sonic_interrupt(int irq, void *dev_id)
+ 	struct net_device *dev = dev_id;
+ 	struct sonic_local *lp = netdev_priv(dev);
+ 	int status;
++	unsigned long flags;
++
++	/* The lock has two purposes. Firstly, it synchronizes sonic_interrupt()
++	 * with sonic_send_packet() so that the two functions can share state.
++	 * Secondly, it makes sonic_interrupt() re-entrant, as that is required
++	 * by macsonic which must use two IRQs with different priority levels.
++	 */
++	spin_lock_irqsave(&lp->lock, flags);
++
++	status = SONIC_READ(SONIC_ISR) & SONIC_IMR_DEFAULT;
++	if (!status) {
++		spin_unlock_irqrestore(&lp->lock, flags);
+ 
+-	if (!(status = SONIC_READ(SONIC_ISR) & SONIC_IMR_DEFAULT))
+ 		return IRQ_NONE;
++	}
+ 
+ 	do {
+ 		if (status & SONIC_INT_PKTRX) {
+@@ -300,11 +315,12 @@ static irqreturn_t sonic_interrupt(int irq, void *dev_id)
+ 			int td_status;
+ 			int freed_some = 0;
+ 
+-			/* At this point, cur_tx is the index of a TD that is one of:
+-			 *   unallocated/freed                          (status set   & tx_skb[entry] clear)
+-			 *   allocated and sent                         (status set   & tx_skb[entry] set  )
+-			 *   allocated and not yet sent                 (status clear & tx_skb[entry] set  )
+-			 *   still being allocated by sonic_send_packet (status clear & tx_skb[entry] clear)
++			/* The state of a Transmit Descriptor may be inferred
++			 * from { tx_skb[entry], td_status } as follows.
++			 * { clear, clear } => the TD has never been used
++			 * { set,   clear } => the TD was handed to SONIC
++			 * { set,   set   } => the TD was handed back
++			 * { clear, set   } => the TD is available for re-use
+ 			 */
+ 
+ 			netif_dbg(lp, intr, dev, "%s: tx done\n", __func__);
+@@ -406,7 +422,12 @@ static irqreturn_t sonic_interrupt(int irq, void *dev_id)
+ 		/* load CAM done */
+ 		if (status & SONIC_INT_LCD)
+ 			SONIC_WRITE(SONIC_ISR, SONIC_INT_LCD); /* clear the interrupt */
+-	} while((status = SONIC_READ(SONIC_ISR) & SONIC_IMR_DEFAULT));
++
++		status = SONIC_READ(SONIC_ISR) & SONIC_IMR_DEFAULT;
++	} while (status);
++
++	spin_unlock_irqrestore(&lp->lock, flags);
++
+ 	return IRQ_HANDLED;
+ }
+ 
+diff --git a/drivers/net/ethernet/natsemi/sonic.h b/drivers/net/ethernet/natsemi/sonic.h
+index 2b27f7049acb..f9506863e9d1 100644
+--- a/drivers/net/ethernet/natsemi/sonic.h
++++ b/drivers/net/ethernet/natsemi/sonic.h
+@@ -322,6 +322,7 @@ struct sonic_local {
+ 	int msg_enable;
+ 	struct device *device;         /* generic device */
+ 	struct net_device_stats stats;
++	spinlock_t lock;
+ };
+ 
+ #define TX_TIMEOUT (3 * HZ)
+-- 
+2.24.1
+
