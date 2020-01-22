@@ -2,53 +2,53 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12259C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD72CC33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:43:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAB7124686
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:43:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4F3F2468C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:43:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686188;
-	bh=S3uee98AlMsi9nXtJdJVdcJ6q6OJiEvSw9r1WsbzTnU=;
+	s=default; t=1579686192;
+	bh=8u5bBSZvcbj5TDvKR7jmKt4eiSeLil8Ogw8aRHcZKuk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XOT6caonC53uQUOTQFZuHYvl0NQPv6rXUudwCdS05p+GaLPFPKPRsn2JM7LvBJ7za
-	 BBu3nQWhfgRhK0N2qQkY++0o6CfM6c/kzU+0PXaoCnG26QuscbmLdf2JbpkDjWlRE7
-	 tUHewXZB0gKNkN9zC+k/WiG2VAy3nX/SRAutOMMI=
+	b=i35X59MUZ6bcjqMEAgs3yCNUcHJ1CP2AHBlvZpnjZFPy02RtdPgombKwpB/ikOLs7
+	 r1EfmMUfA0uSFLtLH8HtjGH2IIvFmgvsWcpJ33e6O/8w8LgzHIRhWeCJMXQeApcADF
+	 JSZZhKScuyPs1E6u7ci0o2A85OIFx32kxbfIR9+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387835AbgAVJnH (ORCPT
+        id S2387841AbgAVJnL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:43:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35244 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:43:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387803AbgAVJnD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:43:03 -0500
+        id S2387825AbgAVJnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:43:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F1C524686;
-        Wed, 22 Jan 2020 09:43:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99AA32467B;
+        Wed, 22 Jan 2020 09:43:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686182;
-        bh=S3uee98AlMsi9nXtJdJVdcJ6q6OJiEvSw9r1WsbzTnU=;
+        s=default; t=1579686185;
+        bh=8u5bBSZvcbj5TDvKR7jmKt4eiSeLil8Ogw8aRHcZKuk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MYBZ0gJc1ECqYiCrAUu1l2c0V9EujvmZJVzdCieR3uh02QR+30DlleD1aT1jSkqm4
-         G1o4aCvc5WWfy/hkqZtRDQQWBSqCgE8EniBwWNFPSXqhTfkh0v901D1vMXz4rnlfQf
-         egbNRedBjHlhTyz9CKW6akoIVHYbTWUqyZAouX+g=
+        b=t0dYCflvnv4wheV0zwV5xlJtiQTIH0RoSoEQRlsIs+6dMN0GW2jFgcFPyYpVG+LKd
+         jJQbpAqjFKbriFzyD47PeQsy5haBWwRf6Gie2nNAAQ4KrTk4ec30uEPda7QnwbCAh5
+         8rLRt8Nd2NoyyhQjRpMIxLGxI7VnSm04zwrybbDY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+91bdd8eece0f6629ec8b@syzkaller.appspotmail.com,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 4.19 060/103] netfilter: arp_tables: init netns pointer in xt_tgdtor_param struct
-Date:   Wed, 22 Jan 2020 10:29:16 +0100
-Message-Id: <20200122092812.951420105@linuxfoundation.org>
+        stable@vger.kernel.org, Petr Machata <petrm@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 078/103] mlxsw: spectrum_qdisc: Include MC TCs in Qdisc counters
+Date:   Wed, 22 Jan 2020 10:29:34 +0100
+Message-Id: <20200122092814.651229415@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
 References: <20200122092803.587683021@linuxfoundation.org>
@@ -61,124 +61,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Petr Machata <petrm@mellanox.com>
 
-commit 212e7f56605ef9688d0846db60c6c6ec06544095 upstream.
+commit 85005b82e59fa7bb7388b12594ab2067bf73d66c upstream.
 
-An earlier commit (1b789577f655060d98d20e,
-"netfilter: arp_tables: init netns pointer in xt_tgchk_param struct")
-fixed missing net initialization for arptables, but turns out it was
-incomplete.  We can get a very similar struct net NULL deref during
-error unwinding:
+mlxsw configures Spectrum in such a way that BUM traffic is passed not
+through its nominal traffic class TC, but through its MC counterpart TC+8.
+However, when collecting statistics, Qdiscs only look at the nominal TC and
+ignore the MC TC.
 
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-RIP: 0010:xt_rateest_put+0xa1/0x440 net/netfilter/xt_RATEEST.c:77
- xt_rateest_tg_destroy+0x72/0xa0 net/netfilter/xt_RATEEST.c:175
- cleanup_entry net/ipv4/netfilter/arp_tables.c:509 [inline]
- translate_table+0x11f4/0x1d80 net/ipv4/netfilter/arp_tables.c:587
- do_replace net/ipv4/netfilter/arp_tables.c:981 [inline]
- do_arpt_set_ctl+0x317/0x650 net/ipv4/netfilter/arp_tables.c:1461
+Add two helpers to compute the value for logical TC from the constituents,
+one for backlog, the other for tail drops. Use them throughout instead of
+going through the xstats pointer directly.
 
-Also init the netns pointer in xt_tgdtor_param struct.
+Counters for TX bytes and packets are deduced from packet priority
+counters, and therefore already include BUM traffic. wred_drop counter is
+irrelevant on MC TCs, because RED is not enabled on them.
 
-Fixes: add67461240c1d ("netfilter: add struct net * to target parameters")
-Reported-by: syzbot+91bdd8eece0f6629ec8b@syzkaller.appspotmail.com
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: 7b8195306694 ("mlxsw: spectrum: Configure MC-aware mode on mlxsw ports")
+Signed-off-by: Petr Machata <petrm@mellanox.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/ipv4/netfilter/arp_tables.c |   19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ drivers/net/ethernet/mellanox/mlxsw/spectrum_qdisc.c |   30 ++++++++++++++-----
+ 1 file changed, 23 insertions(+), 7 deletions(-)
 
---- a/net/ipv4/netfilter/arp_tables.c
-+++ b/net/ipv4/netfilter/arp_tables.c
-@@ -495,12 +495,13 @@ static inline int check_entry_size_and_h
- 	return 0;
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_qdisc.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_qdisc.c
+@@ -195,6 +195,20 @@ mlxsw_sp_qdisc_get_xstats(struct mlxsw_s
+ 	return -EOPNOTSUPP;
  }
  
--static inline void cleanup_entry(struct arpt_entry *e)
-+static void cleanup_entry(struct arpt_entry *e, struct net *net)
- {
- 	struct xt_tgdtor_param par;
- 	struct xt_entry_target *t;
++static u64
++mlxsw_sp_xstats_backlog(struct mlxsw_sp_port_xstats *xstats, int tclass_num)
++{
++	return xstats->backlog[tclass_num] +
++	       xstats->backlog[tclass_num + 8];
++}
++
++static u64
++mlxsw_sp_xstats_tail_drop(struct mlxsw_sp_port_xstats *xstats, int tclass_num)
++{
++	return xstats->tail_drop[tclass_num] +
++	       xstats->tail_drop[tclass_num + 8];
++}
++
+ static void
+ mlxsw_sp_qdisc_bstats_per_priority_get(struct mlxsw_sp_port_xstats *xstats,
+ 				       u8 prio_bitmap, u64 *tx_packets,
+@@ -269,7 +283,7 @@ mlxsw_sp_setup_tc_qdisc_red_clean_stats(
+ 					       &stats_base->tx_bytes);
+ 	red_base->prob_mark = xstats->ecn;
+ 	red_base->prob_drop = xstats->wred_drop[tclass_num];
+-	red_base->pdrop = xstats->tail_drop[tclass_num];
++	red_base->pdrop = mlxsw_sp_xstats_tail_drop(xstats, tclass_num);
  
- 	t = arpt_get_target(e);
-+	par.net      = net;
- 	par.target   = t->u.kernel.target;
- 	par.targinfo = t->data;
- 	par.family   = NFPROTO_ARP;
-@@ -583,7 +584,7 @@ static int translate_table(struct net *n
- 		xt_entry_foreach(iter, entry0, newinfo->size) {
- 			if (i-- == 0)
- 				break;
--			cleanup_entry(iter);
-+			cleanup_entry(iter, net);
- 		}
- 		return ret;
+ 	stats_base->overlimits = red_base->prob_drop + red_base->prob_mark;
+ 	stats_base->drops = red_base->prob_drop + red_base->pdrop;
+@@ -369,7 +383,8 @@ mlxsw_sp_qdisc_get_red_xstats(struct mlx
+ 
+ 	early_drops = xstats->wred_drop[tclass_num] - xstats_base->prob_drop;
+ 	marks = xstats->ecn - xstats_base->prob_mark;
+-	pdrops = xstats->tail_drop[tclass_num] - xstats_base->pdrop;
++	pdrops = mlxsw_sp_xstats_tail_drop(xstats, tclass_num) -
++		 xstats_base->pdrop;
+ 
+ 	res->pdrop += pdrops;
+ 	res->prob_drop += early_drops;
+@@ -402,9 +417,10 @@ mlxsw_sp_qdisc_get_red_stats(struct mlxs
+ 
+ 	overlimits = xstats->wred_drop[tclass_num] + xstats->ecn -
+ 		     stats_base->overlimits;
+-	drops = xstats->wred_drop[tclass_num] + xstats->tail_drop[tclass_num] -
++	drops = xstats->wred_drop[tclass_num] +
++		mlxsw_sp_xstats_tail_drop(xstats, tclass_num) -
+ 		stats_base->drops;
+-	backlog = xstats->backlog[tclass_num];
++	backlog = mlxsw_sp_xstats_backlog(xstats, tclass_num);
+ 
+ 	_bstats_update(stats_ptr->bstats, tx_bytes, tx_packets);
+ 	stats_ptr->qstats->overlimits += overlimits;
+@@ -575,9 +591,9 @@ mlxsw_sp_qdisc_get_prio_stats(struct mlx
+ 	tx_packets = stats->tx_packets - stats_base->tx_packets;
+ 
+ 	for (i = 0; i < IEEE_8021QAZ_MAX_TCS; i++) {
+-		drops += xstats->tail_drop[i];
++		drops += mlxsw_sp_xstats_tail_drop(xstats, i);
+ 		drops += xstats->wred_drop[i];
+-		backlog += xstats->backlog[i];
++		backlog += mlxsw_sp_xstats_backlog(xstats, i);
  	}
-@@ -926,7 +927,7 @@ static int __do_replace(struct net *net,
- 	/* Decrease module usage counts and free resource */
- 	loc_cpu_old_entry = oldinfo->entries;
- 	xt_entry_foreach(iter, loc_cpu_old_entry, oldinfo->size)
--		cleanup_entry(iter);
-+		cleanup_entry(iter, net);
+ 	drops = drops - stats_base->drops;
  
- 	xt_free_table_info(oldinfo);
- 	if (copy_to_user(counters_ptr, counters,
-@@ -989,7 +990,7 @@ static int do_replace(struct net *net, c
+@@ -613,7 +629,7 @@ mlxsw_sp_setup_tc_qdisc_prio_clean_stats
  
-  free_newinfo_untrans:
- 	xt_entry_foreach(iter, loc_cpu_entry, newinfo->size)
--		cleanup_entry(iter);
-+		cleanup_entry(iter, net);
-  free_newinfo:
- 	xt_free_table_info(newinfo);
- 	return ret;
-@@ -1286,7 +1287,7 @@ static int compat_do_replace(struct net
- 
-  free_newinfo_untrans:
- 	xt_entry_foreach(iter, loc_cpu_entry, newinfo->size)
--		cleanup_entry(iter);
-+		cleanup_entry(iter, net);
-  free_newinfo:
- 	xt_free_table_info(newinfo);
- 	return ret;
-@@ -1513,7 +1514,7 @@ static int do_arpt_get_ctl(struct sock *
- 	return ret;
- }
- 
--static void __arpt_unregister_table(struct xt_table *table)
-+static void __arpt_unregister_table(struct net *net, struct xt_table *table)
- {
- 	struct xt_table_info *private;
- 	void *loc_cpu_entry;
-@@ -1525,7 +1526,7 @@ static void __arpt_unregister_table(stru
- 	/* Decrease module usage counts and free resources */
- 	loc_cpu_entry = private->entries;
- 	xt_entry_foreach(iter, loc_cpu_entry, private->size)
--		cleanup_entry(iter);
-+		cleanup_entry(iter, net);
- 	if (private->number > private->initial_entries)
- 		module_put(table_owner);
- 	xt_free_table_info(private);
-@@ -1565,7 +1566,7 @@ int arpt_register_table(struct net *net,
- 
- 	ret = nf_register_net_hooks(net, ops, hweight32(table->valid_hooks));
- 	if (ret != 0) {
--		__arpt_unregister_table(new_table);
-+		__arpt_unregister_table(net, new_table);
- 		*res = NULL;
+ 	stats_base->drops = 0;
+ 	for (i = 0; i < IEEE_8021QAZ_MAX_TCS; i++) {
+-		stats_base->drops += xstats->tail_drop[i];
++		stats_base->drops += mlxsw_sp_xstats_tail_drop(xstats, i);
+ 		stats_base->drops += xstats->wred_drop[i];
  	}
  
-@@ -1580,7 +1581,7 @@ void arpt_unregister_table(struct net *n
- 			   const struct nf_hook_ops *ops)
- {
- 	nf_unregister_net_hooks(net, ops, hweight32(table->valid_hooks));
--	__arpt_unregister_table(table);
-+	__arpt_unregister_table(net, table);
- }
- 
- /* The built-in targets: standard (NULL) and error. */
 
 
