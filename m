@@ -2,132 +2,93 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD1A0C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 17:34:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62897C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 17:34:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6521321835
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 17:34:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="BLxkJdDn";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="CKw+N1XC"
+	by mail.kernel.org (Postfix) with ESMTP id 2F05F21835
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 17:34:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727453AbgAVReb (ORCPT
+        id S1729037AbgAVReh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 12:34:31 -0500
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:19802 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725802AbgAVReb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 12:34:31 -0500
-Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00MHT3Rv024470;
-        Wed, 22 Jan 2020 09:34:23 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=9ikigDQWioGUMN9jy0X/P0bJBgPbp4gwfzlBdNffQL0=;
- b=BLxkJdDnnJiVIXZXKVGSIW2aXQqs9TJT2VetsHLZylpkzX/JR+l7eRwvpjZwuCC7rUr+
- OxptBqKW18CFJeM2hl065xJQ/CuAAaDMQTFB3g5J2S/6ILg1taK7TYHoHVosyzJW/4jg
- QfayCqQkoD6C7ih9TgkhhZDiq7L5UdjUTJY= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 2xp72pcv8d-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Wed, 22 Jan 2020 09:34:23 -0800
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 22 Jan 2020 09:34:22 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bkfu4Sf1AfGel0T8on27nNBIbssF8OEIEDS/eGBWQC+G0oYLcx5b4GcWiJ3D9Re0/xrSu64nVAoTFuBZpdE/5XvHkuLbnBDHeloUUalLKlUtnBCGa8/Uil9aq3fxmW4L2bQFRws+MWfHv4v/4WW96F1P1JfdbsLmSkUodZQiPJrjnZULE9cRCWiiIK8t8k/HV/njFmdru0HgmkOun3B/gqRHSzN8nmhTNkXpVwiFj689wrizEYNCLQZjFrfiDvXtJm4nPhOvJPpFl/sdf+27wlSGisIsQ4Z8uAU1oeRooY+6WW3XJ4H3Wmwp8NFRfkXBuAs6OLsOHY/qcmg8vs2W4Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9ikigDQWioGUMN9jy0X/P0bJBgPbp4gwfzlBdNffQL0=;
- b=gCb1seWpwRgC1kcxMoSdatEd9nBJPH6Iu5DCS5s4KBTdYpicTcHAZunz0hdEVkby+QJ+v256S7r6hOJXQlz2iNpwVlBzAeSfh8B7z3QQCC+iWBvg8rAyoE2EfHEyn8CfYoum+el1OFRsNcT0esdw5tF8tOybO71b1sJdnZ0mWx+vgcpmJ0HhbYg36yx+EZRSyVMX56gXUU17VdDwhXbrTezHtwULeCwPgFokMA8oq5eVndCSUaUOhJEi485sKAYlYcPNaHY2KnjM7cvQKcVJCAlhWAw7QhKnN8GL+2sQesVuk305g6TDIWn4Jx4Ri7fIjzbNkhmhwXXDNtiFBbIjrw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9ikigDQWioGUMN9jy0X/P0bJBgPbp4gwfzlBdNffQL0=;
- b=CKw+N1XC13D21AX0VuSUR2pknNKdFDpg/8c3I1xqriC+OCDcM/Gl+cApMTf4MARHjjsBsWvVhqJTylFD5Te79E4yDH6v0SIkOafAelG8ybHcbFBEqR7yF3390fFOL+kAiWMAeSD1yxlaLX2ed5hH5oCcI+eo0xj76imUEW6v7V4=
-Received: from DM6PR15MB2796.namprd15.prod.outlook.com (20.179.160.22) by
- DM6PR15MB3449.namprd15.prod.outlook.com (20.179.51.210) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.20; Wed, 22 Jan 2020 17:34:21 +0000
-Received: from DM6PR15MB2796.namprd15.prod.outlook.com
- ([fe80::98e8:d7ac:731d:43e]) by DM6PR15MB2796.namprd15.prod.outlook.com
- ([fe80::98e8:d7ac:731d:43e%5]) with mapi id 15.20.2644.028; Wed, 22 Jan 2020
- 17:34:21 +0000
-Received: from [192.168.1.159] (65.144.74.34) by CH2PR19CA0002.namprd19.prod.outlook.com (2603:10b6:610:4d::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.19 via Frontend Transport; Wed, 22 Jan 2020 17:34:20 +0000
-From:   Jens Axboe <axboe@fb.com>
-To:     Wen Yang <wenyang@linux.alibaba.com>,
-        Paolo Valente <paolo.valente@linaro.org>
-CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] block, bfq: improve arithmetic division in bfq_delta()
-Thread-Topic: [PATCH] block, bfq: improve arithmetic division in bfq_delta()
-Thread-Index: AQHVz3kZJxAcCxE2OkKIbzF0Rq3PFaf29WYA
-Date:   Wed, 22 Jan 2020 17:34:21 +0000
-Message-ID: <b5d9c9a6-2678-6256-0e21-ec88dfc115b3@fb.com>
-References: <20200120100443.45563-1-wenyang@linux.alibaba.com>
-In-Reply-To: <20200120100443.45563-1-wenyang@linux.alibaba.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: CH2PR19CA0002.namprd19.prod.outlook.com
- (2603:10b6:610:4d::12) To DM6PR15MB2796.namprd15.prod.outlook.com
- (2603:10b6:5:1a0::22)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [65.144.74.34]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 89cc3572-bc43-4834-818c-08d79f61509a
-x-ms-traffictypediagnostic: DM6PR15MB3449:
-x-microsoft-antispam-prvs: <DM6PR15MB3449FB59EDEF3318F8D63218C00C0@DM6PR15MB3449.namprd15.prod.outlook.com>
-x-fb-source: Internal
-x-ms-oob-tlc-oobclassifiers: OLM:3276;
-x-forefront-prvs: 029097202E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(189003)(199004)(31686004)(8676002)(6486002)(186003)(81156014)(8936002)(81166006)(66556008)(66476007)(66446008)(86362001)(52116002)(64756008)(36756003)(66946007)(31696002)(71200400001)(498600001)(2616005)(4326008)(16526019)(5660300002)(26005)(558084003)(53546011)(956004)(54906003)(2906002)(16576012)(110136005)(25903002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR15MB3449;H:DM6PR15MB2796.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: iwjIbuAlt4Wuhcb9Zh1OrSOXDtdnGlzD1Q0V1HJmuv8k8Ej582uUHFY3KPi5JijoUwdkQS8FeSo4pGtbTksc2cGWUmplWSEpPIQIpKe7sRwMn1IXUbK3Ihsj6DpWdsEi7mNFG/ibTSxyRl66a7b+cWw3V1M7DwBXF9oYdQ8Llip7gkrLKiNEKA8hmzQuAZdjRhMeNfXKRkPjdQ6Zc6+V9mNTJ+ghPQJuA2DiTns3bGTsgUSo4cd8satyyH4hvBhIzhIKz+eNAvKtXbXdTjOwUzvLen5V6HudNnk1zaIUMHqqta+FGBGZRoLtBNJnz3HZJWihFsNDIEwOLIGCQxQtgIbQCX0K5zNnHWjzMraqpL5ZoL9Gq+mND5WoCh+RLa7o01KPUUrdgy77QPFCdHYsRHy8xAA4aV4abLp+exlUConul0LjTyf1NteJmEPLIS5G3EkCGdbk/TTackbm5RFZoZYZZnVrbLCe4YpTKMWbEDzQDUMtaBFwnH3R7RRVCBcd
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <149C30DBD6B5F0478C86BF0A04FBCC8A@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 22 Jan 2020 12:34:37 -0500
+Received: from foss.arm.com ([217.140.110.172]:58924 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727816AbgAVReh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 12:34:37 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C97D21FB;
+        Wed, 22 Jan 2020 09:34:36 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F1D233F6C4;
+        Wed, 22 Jan 2020 09:34:35 -0800 (PST)
+Subject: Re: [Patch v3 2/3] iommu: optimize iova_magazine_free_pfns()
+To:     Cong Wang <xiyou.wangcong@gmail.com>
+Cc:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        John Garry <john.garry@huawei.com>
+References: <20191218043951.10534-1-xiyou.wangcong@gmail.com>
+ <20191218043951.10534-3-xiyou.wangcong@gmail.com>
+ <8ce2f5b6-74e1-9a74-fd80-9ad688beb9b2@arm.com>
+ <CAM_iQpXbjf8MuL17kZhxawXYBJm6t5-ho77F_VWR30L-9FS4Kg@mail.gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <e8789016-858a-b354-aa98-637e1d453fc3@arm.com>
+Date:   Wed, 22 Jan 2020 17:34:31 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 89cc3572-bc43-4834-818c-08d79f61509a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jan 2020 17:34:21.2129
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: BCTVjb2NCGPEx49jpQ7TbgtFGHn5BtFXM4FAsiG8NJ6DnnYhk9jPvFdRqwWWtqNG
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR15MB3449
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-22_07:2020-01-22,2020-01-22 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxscore=0
- mlxlogscore=728 impostorscore=0 adultscore=0 suspectscore=0 bulkscore=0
- spamscore=0 lowpriorityscore=0 malwarescore=0 clxscore=1011 phishscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001220151
-X-FB-Internal: deliver
+In-Reply-To: <CAM_iQpXbjf8MuL17kZhxawXYBJm6t5-ho77F_VWR30L-9FS4Kg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMS8yMC8yMCAzOjA0IEFNLCBXZW4gWWFuZyB3cm90ZToNCj4gZG9fZGl2KCkgZG9lcyBhIDY0
-LWJ5LTMyIGRpdmlzaW9uLiBVc2UgZGl2NjRfdWwoKSBpbnN0ZWFkIG9mIGl0DQo+IGlmIHRoZSBk
-aXZpc29yIGlzIHVuc2lnbmVkIGxvbmcsIHRvIGF2b2lkIHRydW5jYXRpb24gdG8gMzItYml0Lg0K
-PiBBbmQgYXMgYSBuaWNlIHNpZGUgZWZmZWN0IGFsc28gY2xlYW5zIHVwIHRoZSBmdW5jdGlvbiBh
-IGJpdC4NCg0KQXBwbGllZCwgdGhhbmtzLg0KDQotLSANCkplbnMgQXhib2UNCg0K
+On 21/01/2020 5:29 pm, Cong Wang wrote:
+> On Tue, Jan 21, 2020 at 1:52 AM Robin Murphy <robin.murphy@arm.com> wrote:
+>>
+>> On 18/12/2019 4:39 am, Cong Wang wrote:
+>>> If the magazine is empty, iova_magazine_free_pfns() should
+>>> be a nop, however it misses the case of mag->size==0. So we
+>>> should just call iova_magazine_empty().
+>>>
+>>> This should reduce the contention on iovad->iova_rbtree_lock
+>>> a little bit, not much at all.
+>>
+>> Have you measured that in any way? AFAICS the only time this can get
+>> called with a non-full magazine is in the CPU hotplug callback, where
+>> the impact of taking the rbtree lock and immediately releasing it seems
+>> unlikely to be significant on top of everything else involved in that
+>> operation.
+> 
+> This patchset is only tested as a whole, it is not easy to deploy
+> each to production and test it separately.
+> 
+> Is there anything wrong to optimize a CPU hotplug path? :) And,
+> it is called in alloc_iova_fast() too when, for example, over-cached.
+
+And if the IOVA space is consumed to the point that we've fallen back to 
+that desperate last resort, what do you think the chances are that a 
+significant number of percpu magazines will be *empty*? Also bear in 
+mind that in that case we've already walked the rbtree once, so any 
+notion of still being fast is long, long gone.
+
+As for CPU hotplug, it's a comparatively rare event involving all manner 
+of system-wide synchronisation, and the "optimisation" of shaving a few 
+dozen CPU cycles off at one point *if* things happen to line up 
+correctly is taking a cup of water out of a lake. If the domain is busy 
+at the time, then once again chances are the magazines aren't empty and 
+having an extra check redundant with the loop condition simply adds 
+(trivial, but nonzero) overhead to every call. And if the domain isn't 
+busy, then the lock is unlikely to be contended anyway.
+
+Sorry, but without convincing evidence, this change just looks like 
+churn for the sake of it.
+
+Robin.
