@@ -2,134 +2,267 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F264C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D7D6C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:37:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62C2B24680
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:37:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g96lKX2K"
+	by mail.kernel.org (Postfix) with ESMTP id 1782524684
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:37:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579685850;
+	bh=+hd9Udz4Ps2z/wojx+W9QEsplHHxx6M6mA/RYUNdHLs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=E2ccl61puhRRwQTIUXZhktmfR2teFaQT4DNR6kpmfsle68AAwp+PhqEhI1Qg08FX0
+	 1CgOrDhJt2xqj5vmcmA3Fsm3QyJPA/t71jLM1yZO12jy0A4JDRv3G+cJwdMCzUC1Fh
+	 KD+BqUXs7Cm0tVKeTjNowJJyw54wJsQjhZbOgruo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732471AbgAVJhY (ORCPT
+        id S1732558AbgAVJh3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 22 Jan 2020 04:37:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53464 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730612AbgAVJhY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 Jan 2020 04:37:24 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:22784 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731650AbgAVJhV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:37:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579685840;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=W6yEULGDzE/nInvw9JSJB7gTt3H5wvwQ6ls0gr1oQVY=;
-        b=g96lKX2KqcMqcZjB64N3nYR5Tjin/Ib7L8Sc8hQBU46+aqe/XYQMwjpLvEgjKdfvqXTffU
-        Aw3eCb2G/dcFkrTE8k8Tbm2tRk7XWUPyYtFM7WaYIzxsZvIlKLlBVm8nq+ZNg39IbFncpR
-        KC4nhm68AmoXtUcIMdz1DbTLSp10+Rc=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-184-i1bZkeShMji0lNzOVe2ocg-1; Wed, 22 Jan 2020 04:37:19 -0500
-X-MC-Unique: i1bZkeShMji0lNzOVe2ocg-1
-Received: by mail-wr1-f69.google.com with SMTP id o6so2771297wrp.8
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 01:37:19 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=W6yEULGDzE/nInvw9JSJB7gTt3H5wvwQ6ls0gr1oQVY=;
-        b=HlUmHeBe34WBeHCBg7bETLyapmFzF1o/HaMMAPS0etCMIx4IjyFBF7gJnvcO3UM6Ef
-         oDXbwyAFa42Xqzj2OgU/FxstA2/MZqqOrciafgK3k3nM6o1UDwX7pcOlgTskh57rqNzu
-         1/tmhWPB38AEV152ZmBuqKQTpzG3vZqfDaJXKf1wQw+WDwx2l2wl90RnKRn2cZspjUmf
-         hcCBHn1RJlg53fBRVA2ephSyvcwsNDNcC71aA2VS9AQbWl4eDDt86sMu6JqKc5/7lRMF
-         HI+P3UxMFxl5OApqGYv2WX7mGTUCqqLg2a6Yl5DPIB8602XlSt7eYHfhJvv5HxnUEb4s
-         dSBw==
-X-Gm-Message-State: APjAAAX1WGUX9SJ812JUVQYKk1A9jjfgp0fD62DUJlCgBJRkQwQCaX5v
-        rZCAVmOwsC3FvM5ULbyBjlOxy3+E9/1uIR+uU2GYZFqyiRsJYbnHX7VqehquQSYbBhKzMaMCkQb
-        grHqUWNZ5NZu1Oi/ksEo7wsaH
-X-Received: by 2002:adf:d846:: with SMTP id k6mr9578104wrl.337.1579685838124;
-        Wed, 22 Jan 2020 01:37:18 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzqWhY53TzrvajxcRumOsfe7V0LUooFHe3j3uQkZe4Gzh7e9aIgcb7kzXkxzrsSylqS9LEr5Q==
-X-Received: by 2002:adf:d846:: with SMTP id k6mr9578074wrl.337.1579685837856;
-        Wed, 22 Jan 2020 01:37:17 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id b17sm57898390wrx.15.2020.01.22.01.37.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jan 2020 01:37:16 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     kvm@vger.kernel.org, Jim Mattson <jmattson@google.com>,
-        linux-kernel@vger.kernel.org, Liran Alon <liran.alon@oracle.com>,
-        Roman Kagan <rkagan@virtuozzo.com>
-Subject: Re: [PATCH RFC 2/3] x86/kvm/hyper-v: move VMX controls sanitization out of nested_enable_evmcs()
-In-Reply-To: <20200122054724.GD18513@linux.intel.com>
-References: <20200115171014.56405-1-vkuznets@redhat.com> <20200115171014.56405-3-vkuznets@redhat.com> <6c4bdb57-08fb-2c2d-9234-b7efffeb72ed@redhat.com> <20200122054724.GD18513@linux.intel.com>
-Date:   Wed, 22 Jan 2020 10:37:16 +0100
-Message-ID: <87zhefsugj.fsf@vitty.brq.redhat.com>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEBA820704;
+        Wed, 22 Jan 2020 09:37:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579685843;
+        bh=+hd9Udz4Ps2z/wojx+W9QEsplHHxx6M6mA/RYUNdHLs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TAOgyhra1YoiVFQfUK4r8sDGdua84TqN4bteKpf55GfB0OR3ia+b1opUxdnV1m+Xw
+         9Iee3DPBDpvEJoPeeX9V4/LLT2Fu9cV56cMRmzD9MEBa9/t9Is/KiwftsYpXBZcxM4
+         vHoWg7AxHQeWpssMxemwNkVb10DYBAVKJk/mqyOI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Hannes Reinecke <hare@suse.com>,
+        Douglas Gilbert <dgilbert@interlog.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.9 95/97] scsi: core: scsi_trace: Use get_unaligned_be*()
+Date:   Wed, 22 Jan 2020 10:29:39 +0100
+Message-Id: <20200122092811.267312693@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200122092755.678349497@linuxfoundation.org>
+References: <20200122092755.678349497@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
+From: Bart Van Assche <bvanassche@acm.org>
 
-> On Sat, Jan 18, 2020 at 10:42:31PM +0100, Paolo Bonzini wrote:
->> IMHO the features should stay available in case the guest chooses not to
->> use eVMCS.  A guest that uses eVMCS should know which features it cannot
->> use and not enable them.
->
-> Makes sense, wasn't thinking about the scenario where the guest doesn't
-> support eVMCS or doesn't want to use it for whatever reason.
->
-> Rather than update vmx->nested.msrs or filter vmx_get_msr(), what about
-> manually adding eVMCS consistency checks on the disallowed bits and handle
-> SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES as a one-off case by simply
-> clearing it from the eVMCS?
+commit b1335f5b0486f61fb66b123b40f8e7a98e49605d upstream.
 
-Unfortunately, this doesn't work because ... Windows. Not only Hyper-V
-enables SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES, it actually expects it
-to work (somehow) so when I do
+This patch fixes an unintended sign extension on left shifts. From Colin
+King: "Shifting a u8 left will cause the value to be promoted to an
+integer. If the top bit of the u8 is set then the following conversion to
+an u64 will sign extend the value causing the upper 32 bits to be set in
+the result."
 
-diff --git a/arch/x86/kvm/vmx/evmcs.c b/arch/x86/kvm/vmx/evmcs.c
-index 72359709cdc1..e6c30eec2817 100644
---- a/arch/x86/kvm/vmx/evmcs.c
-+++ b/arch/x86/kvm/vmx/evmcs.c
-@@ -361,11 +361,5 @@ int nested_enable_evmcs(struct kvm_vcpu *vcpu,
-        if (evmcs_already_enabled)
-                return 0;
+Fix this by using get_unaligned_be*() instead.
+
+Fixes: bf8162354233 ("[SCSI] add scsi trace core functions and put trace points")
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Douglas Gilbert <dgilbert@interlog.com>
+Link: https://lore.kernel.org/r/20191101211447.187151-1-bvanassche@acm.org
+Reported-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/scsi/scsi_trace.c |  103 ++++++++++++----------------------------------
+ 1 file changed, 28 insertions(+), 75 deletions(-)
+
+--- a/drivers/scsi/scsi_trace.c
++++ b/drivers/scsi/scsi_trace.c
+@@ -21,7 +21,7 @@
+ #include <trace/events/scsi.h>
  
--       vmx->nested.msrs.pinbased_ctls_high &= ~EVMCS1_UNSUPPORTED_PINCTRL;
--       vmx->nested.msrs.entry_ctls_high &= ~EVMCS1_UNSUPPORTED_VMENTRY_CTRL;
--       vmx->nested.msrs.exit_ctls_high &= ~EVMCS1_UNSUPPORTED_VMEXIT_CTRL;
--       vmx->nested.msrs.secondary_ctls_high &= ~EVMCS1_UNSUPPORTED_2NDEXEC;
--       vmx->nested.msrs.vmfunc_controls &= ~EVMCS1_UNSUPPORTED_VMFUNC;
+ #define SERVICE_ACTION16(cdb) (cdb[1] & 0x1f)
+-#define SERVICE_ACTION32(cdb) ((cdb[8] << 8) | cdb[9])
++#define SERVICE_ACTION32(cdb) (get_unaligned_be16(&cdb[8]))
+ 
+ static const char *
+ scsi_trace_misc(struct trace_seq *, unsigned char *, int);
+@@ -51,17 +51,12 @@ static const char *
+ scsi_trace_rw10(struct trace_seq *p, unsigned char *cdb, int len)
+ {
+ 	const char *ret = trace_seq_buffer_ptr(p);
+-	sector_t lba = 0, txlen = 0;
++	u32 lba, txlen;
+ 
+-	lba |= (cdb[2] << 24);
+-	lba |= (cdb[3] << 16);
+-	lba |= (cdb[4] << 8);
+-	lba |=  cdb[5];
+-	txlen |= (cdb[7] << 8);
+-	txlen |=  cdb[8];
++	lba = get_unaligned_be32(&cdb[2]);
++	txlen = get_unaligned_be16(&cdb[7]);
+ 
+-	trace_seq_printf(p, "lba=%llu txlen=%llu protect=%u",
+-			 (unsigned long long)lba, (unsigned long long)txlen,
++	trace_seq_printf(p, "lba=%u txlen=%u protect=%u", lba, txlen,
+ 			 cdb[1] >> 5);
+ 
+ 	if (cdb[0] == WRITE_SAME)
+@@ -76,19 +71,12 @@ static const char *
+ scsi_trace_rw12(struct trace_seq *p, unsigned char *cdb, int len)
+ {
+ 	const char *ret = trace_seq_buffer_ptr(p);
+-	sector_t lba = 0, txlen = 0;
++	u32 lba, txlen;
+ 
+-	lba |= (cdb[2] << 24);
+-	lba |= (cdb[3] << 16);
+-	lba |= (cdb[4] << 8);
+-	lba |=  cdb[5];
+-	txlen |= (cdb[6] << 24);
+-	txlen |= (cdb[7] << 16);
+-	txlen |= (cdb[8] << 8);
+-	txlen |=  cdb[9];
++	lba = get_unaligned_be32(&cdb[2]);
++	txlen = get_unaligned_be32(&cdb[6]);
+ 
+-	trace_seq_printf(p, "lba=%llu txlen=%llu protect=%u",
+-			 (unsigned long long)lba, (unsigned long long)txlen,
++	trace_seq_printf(p, "lba=%u txlen=%u protect=%u", lba, txlen,
+ 			 cdb[1] >> 5);
+ 	trace_seq_putc(p, 0);
+ 
+@@ -99,23 +87,13 @@ static const char *
+ scsi_trace_rw16(struct trace_seq *p, unsigned char *cdb, int len)
+ {
+ 	const char *ret = trace_seq_buffer_ptr(p);
+-	sector_t lba = 0, txlen = 0;
++	u64 lba;
++	u32 txlen;
+ 
+-	lba |= ((u64)cdb[2] << 56);
+-	lba |= ((u64)cdb[3] << 48);
+-	lba |= ((u64)cdb[4] << 40);
+-	lba |= ((u64)cdb[5] << 32);
+-	lba |= (cdb[6] << 24);
+-	lba |= (cdb[7] << 16);
+-	lba |= (cdb[8] << 8);
+-	lba |=  cdb[9];
+-	txlen |= (cdb[10] << 24);
+-	txlen |= (cdb[11] << 16);
+-	txlen |= (cdb[12] << 8);
+-	txlen |=  cdb[13];
++	lba = get_unaligned_be64(&cdb[2]);
++	txlen = get_unaligned_be32(&cdb[10]);
+ 
+-	trace_seq_printf(p, "lba=%llu txlen=%llu protect=%u",
+-			 (unsigned long long)lba, (unsigned long long)txlen,
++	trace_seq_printf(p, "lba=%llu txlen=%u protect=%u", lba, txlen,
+ 			 cdb[1] >> 5);
+ 
+ 	if (cdb[0] == WRITE_SAME_16)
+@@ -130,8 +108,8 @@ static const char *
+ scsi_trace_rw32(struct trace_seq *p, unsigned char *cdb, int len)
+ {
+ 	const char *ret = trace_seq_buffer_ptr(p), *cmd;
+-	sector_t lba = 0, txlen = 0;
+-	u32 ei_lbrt = 0;
++	u64 lba;
++	u32 ei_lbrt, txlen;
+ 
+ 	switch (SERVICE_ACTION32(cdb)) {
+ 	case READ_32:
+@@ -151,26 +129,12 @@ scsi_trace_rw32(struct trace_seq *p, uns
+ 		goto out;
+ 	}
+ 
+-	lba |= ((u64)cdb[12] << 56);
+-	lba |= ((u64)cdb[13] << 48);
+-	lba |= ((u64)cdb[14] << 40);
+-	lba |= ((u64)cdb[15] << 32);
+-	lba |= (cdb[16] << 24);
+-	lba |= (cdb[17] << 16);
+-	lba |= (cdb[18] << 8);
+-	lba |=  cdb[19];
+-	ei_lbrt |= (cdb[20] << 24);
+-	ei_lbrt |= (cdb[21] << 16);
+-	ei_lbrt |= (cdb[22] << 8);
+-	ei_lbrt |=  cdb[23];
+-	txlen |= (cdb[28] << 24);
+-	txlen |= (cdb[29] << 16);
+-	txlen |= (cdb[30] << 8);
+-	txlen |=  cdb[31];
 -
-        return 0;
- }
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index bb8afe0c5e7f..cd1f5a1c884b 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -1590,7 +1590,7 @@ static int copy_enlightened_to_vmcs12(struct vcpu_vmx *vmx)
-                        evmcs->pin_based_vm_exec_control;
-                vmcs12->vm_exit_controls = evmcs->vm_exit_controls;
-                vmcs12->secondary_vm_exec_control =
--                       evmcs->secondary_vm_exec_control;
-+                       evmcs->secondary_vm_exec_control & ~SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES;
-        }
+-	trace_seq_printf(p, "%s_32 lba=%llu txlen=%llu protect=%u ei_lbrt=%u",
+-			 cmd, (unsigned long long)lba,
+-			 (unsigned long long)txlen, cdb[10] >> 5, ei_lbrt);
++	lba = get_unaligned_be64(&cdb[12]);
++	ei_lbrt = get_unaligned_be32(&cdb[20]);
++	txlen = get_unaligned_be32(&cdb[28]);
++
++	trace_seq_printf(p, "%s_32 lba=%llu txlen=%u protect=%u ei_lbrt=%u",
++			 cmd, lba, txlen, cdb[10] >> 5, ei_lbrt);
  
-        if (unlikely(!(evmcs->hv_clean_fields &
+ 	if (SERVICE_ACTION32(cdb) == WRITE_SAME_32)
+ 		trace_seq_printf(p, " unmap=%u", cdb[10] >> 3 & 1);
+@@ -185,7 +149,7 @@ static const char *
+ scsi_trace_unmap(struct trace_seq *p, unsigned char *cdb, int len)
+ {
+ 	const char *ret = trace_seq_buffer_ptr(p);
+-	unsigned int regions = cdb[7] << 8 | cdb[8];
++	unsigned int regions = get_unaligned_be16(&cdb[7]);
+ 
+ 	trace_seq_printf(p, "regions=%u", (regions - 8) / 16);
+ 	trace_seq_putc(p, 0);
+@@ -197,8 +161,8 @@ static const char *
+ scsi_trace_service_action_in(struct trace_seq *p, unsigned char *cdb, int len)
+ {
+ 	const char *ret = trace_seq_buffer_ptr(p), *cmd;
+-	sector_t lba = 0;
+-	u32 alloc_len = 0;
++	u64 lba;
++	u32 alloc_len;
+ 
+ 	switch (SERVICE_ACTION16(cdb)) {
+ 	case SAI_READ_CAPACITY_16:
+@@ -212,21 +176,10 @@ scsi_trace_service_action_in(struct trac
+ 		goto out;
+ 	}
+ 
+-	lba |= ((u64)cdb[2] << 56);
+-	lba |= ((u64)cdb[3] << 48);
+-	lba |= ((u64)cdb[4] << 40);
+-	lba |= ((u64)cdb[5] << 32);
+-	lba |= (cdb[6] << 24);
+-	lba |= (cdb[7] << 16);
+-	lba |= (cdb[8] << 8);
+-	lba |=  cdb[9];
+-	alloc_len |= (cdb[10] << 24);
+-	alloc_len |= (cdb[11] << 16);
+-	alloc_len |= (cdb[12] << 8);
+-	alloc_len |=  cdb[13];
++	lba = get_unaligned_be64(&cdb[2]);
++	alloc_len = get_unaligned_be32(&cdb[10]);
+ 
+-	trace_seq_printf(p, "%s lba=%llu alloc_len=%u", cmd,
+-			 (unsigned long long)lba, alloc_len);
++	trace_seq_printf(p, "%s lba=%llu alloc_len=%u", cmd, lba, alloc_len);
+ 
+ out:
+ 	trace_seq_putc(p, 0);
 
-Hyper-V 2016 with > 1 vCPU fails to boot :-(
-
--- 
-Vitaly
 
