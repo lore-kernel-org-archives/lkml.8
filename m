@@ -2,259 +2,272 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 482F3C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:20:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 116F7C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:23:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 101132253D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:20:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3A3F24655
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:23:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r2bIq1DK"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sad90dne"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729146AbgAVIUE (ORCPT
+        id S1725970AbgAVIXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 03:20:04 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:36775 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729108AbgAVIUD (ORCPT
+        Wed, 22 Jan 2020 03:23:30 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:39040 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725868AbgAVIX3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 03:20:03 -0500
-Received: by mail-wm1-f65.google.com with SMTP id p17so6152639wma.1
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 00:20:01 -0800 (PST)
+        Wed, 22 Jan 2020 03:23:29 -0500
+Received: by mail-ot1-f66.google.com with SMTP id 77so5506502oty.6
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 00:23:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=M+iOlDTH3ew9FlBT8LllWQrwpgclA7C5MSbbYFNG6t0=;
-        b=r2bIq1DKmQiUPmT41X6TDYq4i6tmVUjwmxNm0uuwSbeHCz2ACOktDXUiJG2zZYqJ9y
-         3g3FQRJk8CuD6VceKXeYIavP5D8Wy8NNhuopNYauZsS5DQJ07PMGupr4yuftpf0shcbt
-         RbxhotiKll1zyVtETV4J1ejviHIaLihWA0z0paqojTBy4QnOrskzeSWL4qbT+A+tCcao
-         dS0UK0h2IHji3vkKRQzj1I/QXTfCOTp8pdehCNgmVO1pxWe7vEIYBnhEuiIinqJHMR/a
-         NF137O6cOdxbGKd70wjUBFv3dUvPDyiUvuOq4wOW1UqMIW+Qck2XDr+ZeHeGm6h2BPjl
-         SJfA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=newysj2ZL/VSTfuHShTKoBBsv78QbKLgFXEyPsWB43Q=;
+        b=sad90dnekqlccjQQPFDugkDbhJ08amgSt8lL/wJWNY1SSgdp5GEjDXlD3mkpAqamru
+         Sn7mpch98hT/OWzDxgqgwuRaPVE1Keluw8AxfuAEkQmTSqJHms2vRmAef3Vuex3MtapB
+         zUUeBzCIW9Mg08cXEQnWIN26XqyDZVr4bulTtYjQ2VRlMuWQZS2BfbyTNdcKah5VKKyz
+         L4clA549Rk+yhGpg1igXPIRaKRiVWdjEaMj9vDYdqlQMV2JrdxnelSQME7Woqle8TWxx
+         rRJGQBcuFW1iwfaH0FcERy0YV2T4IZgiRFWt7c6EhJ9lWfY+bW9QJkDlXsyS2LJ1N2sn
+         Qcxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=M+iOlDTH3ew9FlBT8LllWQrwpgclA7C5MSbbYFNG6t0=;
-        b=fKAO0gwSlmtdfNgJaDdsmKh0ZfG+3V8lk/4C3LhJVWuNH+tCpG8+OxbUzpx2gdit3b
-         YSthaLbsFVZLtLZbg7nCAGSCujwrUjflN5D08L1S2685Qoe8vj6qbFrwSpuhM9cJ3kdM
-         ayZn74UPGHr32VkyyMlis0/UbWeScyw9L//hE6g+eElL/nuEFRssBpdA5pac/7msSE5L
-         qLpSHpiXj4DZ06JCxQWxvgfwHjYPn3gyNu5pjoaHyrt8gLDQf1ITDadO4HzwndQPziVh
-         tn3UjTvJKEdpjHnZr36mu3aF910DvmdsbjEyCWEIkXr0YLPkwNpgVH0H5m+zlY3L4qdz
-         iHUg==
-X-Gm-Message-State: APjAAAXkbvSo0QOsqORV2g9ntJrj/rRUMVkakYflQSjZOHy2n45A5CPp
-        lWS8LjNhtCcZhUy1jFRTeMNtCQ==
-X-Google-Smtp-Source: APXvYqxlSKg5k7xwSMOzY0s0isT4HpPGdB0mVsgMKOxhoZAnTU+kWDcfGhKQ2E2qyqHzYOpNchy7cQ==
-X-Received: by 2002:a05:600c:108a:: with SMTP id e10mr1603881wmd.38.1579681201241;
-        Wed, 22 Jan 2020 00:20:01 -0800 (PST)
-Received: from [10.44.66.8] ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id a9sm2739774wmm.15.2020.01.22.00.20.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 Jan 2020 00:20:00 -0800 (PST)
-Subject: Re: [PATCH v4 2/4] interconnect: qcom: Add OSM L3 interconnect
- provider support
-To:     Sibi Sankar <sibis@codeaurora.org>,
-        Evan Green <evgreen@chromium.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        David Dai <daidavid1@codeaurora.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-References: <20200109211215.18930-1-sibis@codeaurora.org>
- <20200109211215.18930-3-sibis@codeaurora.org>
- <CAE=gft7ZUTiGrvsaqfrVv-bH3w75as7G1UJRn3aJs3ECqodpQg@mail.gmail.com>
- <dad8936ba4444c3377d777cbbb879dc3@codeaurora.org>
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
- 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
- KEmKjLDvB0pePJkdTw==
-Message-ID: <03f83755-bdcc-dc39-0eae-08414751be57@linaro.org>
-Date:   Wed, 22 Jan 2020 10:19:58 +0200
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=newysj2ZL/VSTfuHShTKoBBsv78QbKLgFXEyPsWB43Q=;
+        b=mhSNf3cvnM8T0MI7NrliMHhcMineR1JlBfqq0eAwFZx7ao2hhmy/ma5zVUHIV/70YA
+         1qCcsBU5A0WvzlBi+nL69+YHMbh2kBEH2rrwX1OsCgOd+SFc9BN2Yf4uIZVhziES/9ei
+         XADUpA/GCw/cdYij1ptBobIeIrqwfw85YPF5E5gt2j2ulRwlEw92TRNcKkuAsPsYF2tu
+         /QY/bH9jU3mThAuZnP2KTTuIUCXm569NclrHZqUC3hJR4rqfBGGWXUT/NkrPbA45yPZW
+         wDAXBFZZfd/UApjtwvPZratH6Dvtp/7T/I3GSbaoKzHLJbwVr1vJfAN+8qa26egvABJb
+         wBzg==
+X-Gm-Message-State: APjAAAV6U3DNFlqVP6oHk+dY67Ah8e51m+cSjzJRxLJkntwMdQCugR2R
+        QrpnsKBKvpSgY7v3ctS/vuIqe67pj8Dx6EW4+Jw4RA==
+X-Google-Smtp-Source: APXvYqywIYwxTLG6xTrdA7i/IBRjYdry2QDfn0bX6MZDDvI3iaG98yt2MoshvA2vPRiIpwZePTpxDhDTTVqG5M0jnNI=
+X-Received: by 2002:a05:6830:44e:: with SMTP id d14mr6268112otc.228.1579681408192;
+ Wed, 22 Jan 2020 00:23:28 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <dad8936ba4444c3377d777cbbb879dc3@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200121160312.26545-1-mathieu.desnoyers@efficios.com>
+ <CAG48ez2bQdoT9y7HkyU06DTazysUDdPdJe+gyV-NxgQA7JWQVQ@mail.gmail.com>
+ <430172781.596271.1579636021412.JavaMail.zimbra@efficios.com>
+ <CAG48ez2Z5CesMfandNK+S32Rrgp_QGQHqQ1Fpd5-YTsCWGfHeg@mail.gmail.com> <2049164886.596497.1579641536619.JavaMail.zimbra@efficios.com>
+In-Reply-To: <2049164886.596497.1579641536619.JavaMail.zimbra@efficios.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Wed, 22 Jan 2020 09:23:00 +0100
+Message-ID: <CAG48ez2Zz7gOTir4qm2ZuYEj2ZH4isZipiDbvevzfgor27jHkA@mail.gmail.com>
+Subject: Re: [RFC PATCH v1] pin_on_cpu: Introduce thread CPU pinning system call
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Joel Fernandes <joelaf@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Watson <davejwatson@fb.com>,
+        Will Deacon <will.deacon@arm.com>, shuah <shuah@kernel.org>,
+        Andi Kleen <andi@firstfloor.org>,
+        linux-kselftest <linux-kselftest@vger.kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Chris Lameter <cl@linux.com>,
+        Russell King <linux@arm.linux.org.uk>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Paul <paulmck@linux.vnet.ibm.com>, Paul Turner <pjt@google.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        rostedt <rostedt@goodmis.org>, Ben Maurer <bmaurer@fb.com>,
+        linux-api <linux-api@vger.kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/22/20 08:45, Sibi Sankar wrote:
-> Hey Evan,
-> 
-> Thanks for the review!
-> 
-> On 2020-01-22 03:03, Evan Green wrote:
->> On Thu, Jan 9, 2020 at 1:12 PM Sibi Sankar <sibis@codeaurora.org> wrote:
->>>
->>> On some Qualcomm SoCs, Operating State Manager (OSM) controls the
->>> resources of scaling L3 caches. Add a driver to handle bandwidth
->>> requests to OSM L3 from CPU on SDM845 SoCs.
->>>
->>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
->>> ---
->>>  drivers/interconnect/qcom/Kconfig  |   7 +
->>>  drivers/interconnect/qcom/Makefile |   2 +
->>>  drivers/interconnect/qcom/osm-l3.c | 267 +++++++++++++++++++++++++++++
->>>  3 files changed, 276 insertions(+)
->>>  create mode 100644 drivers/interconnect/qcom/osm-l3.c
->>>
->>> diff --git a/drivers/interconnect/qcom/Kconfig
->>> b/drivers/interconnect/qcom/Kconfig
->>> index a9bbbdf7400f9..b94d28e7bf700 100644
->>> --- a/drivers/interconnect/qcom/Kconfig
->>> +++ b/drivers/interconnect/qcom/Kconfig
->>> @@ -14,6 +14,13 @@ config INTERCONNECT_QCOM_MSM8974
->>>          This is a driver for the Qualcomm Network-on-Chip on msm8974-based
->>>          platforms.
->>>
->>> +config INTERCONNECT_QCOM_OSM_L3
->>> +       tristate "Qualcomm OSM L3 interconnect driver"
->>> +       depends on INTERCONNECT_QCOM || COMPILE_TEST
->>> +       help
->>> +         Say y here to support the Operating State Manager (OSM) interconnect
->>> +         driver which controls the scaling of L3 caches on Qualcomm SoCs.
->>> +
->>>  config INTERCONNECT_QCOM_QCS404
->>>         tristate "Qualcomm QCS404 interconnect driver"
->>>         depends on INTERCONNECT_QCOM
->>> diff --git a/drivers/interconnect/qcom/Makefile
->>> b/drivers/interconnect/qcom/Makefile
->>> index 55ec3c5c89dbd..89fecbd1257c7 100644
->>> --- a/drivers/interconnect/qcom/Makefile
->>> +++ b/drivers/interconnect/qcom/Makefile
->>> @@ -1,5 +1,6 @@
->>>  # SPDX-License-Identifier: GPL-2.0
->>>
->>> +icc-osm-l3-objs                                := osm-l3.o
->>>  qnoc-msm8974-objs                      := msm8974.o
->>>  qnoc-qcs404-objs                       := qcs404.o
->>>  qnoc-sc7180-objs                       := sc7180.o
->>> @@ -12,6 +13,7 @@ icc-smd-rpm-objs                      := smd-rpm.o
->>>  obj-$(CONFIG_INTERCONNECT_QCOM_BCM_VOTER) += icc-bcm-voter.o
->>>  obj-$(CONFIG_INTERCONNECT_QCOM_MSM8916) += qnoc-msm8916.o
->>>  obj-$(CONFIG_INTERCONNECT_QCOM_MSM8974) += qnoc-msm8974.o
->>> +obj-$(CONFIG_INTERCONNECT_QCOM_OSM_L3) += icc-osm-l3.o
->>>  obj-$(CONFIG_INTERCONNECT_QCOM_QCS404) += qnoc-qcs404.o
->>>  obj-$(CONFIG_INTERCONNECT_QCOM_RPMH) += icc-rpmh.o
->>>  obj-$(CONFIG_INTERCONNECT_QCOM_SC7180) += qnoc-sc7180.o
->>> diff --git a/drivers/interconnect/qcom/osm-l3.c
->>> b/drivers/interconnect/qcom/osm-l3.c
->>> new file mode 100644
->>> index 0000000000000..7fde53c70081e
->>> --- /dev/null
->>> +++ b/drivers/interconnect/qcom/osm-l3.c
->>> @@ -0,0 +1,267 @@
->>> +// SPDX-License-Identifier: GPL-2.0
->>> +/*
->>> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
->>> + *
->>> + */
->>> +
->>> +#include <dt-bindings/interconnect/qcom,osm-l3.h>
->>> +#include <linux/bitfield.h>
->>> +#include <linux/clk.h>
->>> +#include <linux/interconnect-provider.h>
->>> +#include <linux/io.h>
->>> +#include <linux/kernel.h>
->>> +#include <linux/module.h>
->>> +#include <linux/of_device.h>
->>> +#include <linux/of_platform.h>
->>> +#include <linux/platform_device.h>
->>> +
->>> +#define LUT_MAX_ENTRIES                        40U
->>> +#define LUT_SRC                                GENMASK(31, 30)
->>> +#define LUT_L_VAL                      GENMASK(7, 0)
->>> +#define LUT_ROW_SIZE                   32
->>> +#define CLK_HW_DIV                     2
->>> +
->>> +/* Register offsets */
->>> +#define REG_ENABLE                     0x0
->>> +#define REG_FREQ_LUT                   0x110
->>> +#define REG_PERF_STATE                 0x920
->>> +
->>> +#define OSM_L3_MAX_LINKS               1
->>> +#define SDM845_MAX_RSC_NODES           130
->>
->> I'm nervous this define is going to fall out of date with
->> qcom,sdm845.h. I'm worried someone will end up adding a few more nodes
->> that were always there but previously hidden from Linux. Can we put
->> this define in include/dt-bindings/interconnect/qcom,sdm845.h, so at
->> least when that happens they'll come face to face with this define?
->> The same comment goes for the SC7180 define in patch 4.
-> 
-> Yeah both solution require manual
-> intervention how about we just go
-> with what I proposed below.
-> 
->>
->> On second thought, this trick only works once. Are we sure there
->> aren't going to be other drivers that might want to tag on
->> interconnect nodes as well? How about instead we just add the enum
->> values below in qcom,sdm845.h as defines?
-> 
-> Georgi/Evan,
-> Since qcom,sdm845.h is specific to
-> bindings shouldn't I just create a
-> .h file with all the enums so that
-> it can used across all icc providers
-> on SDM845?
+On Tue, Jan 21, 2020 at 10:18 PM Mathieu Desnoyers
+<mathieu.desnoyers@efficios.com> wrote:
+> ----- On Jan 21, 2020, at 3:35 PM, Jann Horn jannh@google.com wrote:
+>
+> > On Tue, Jan 21, 2020 at 8:47 PM Mathieu Desnoyers
+> > <mathieu.desnoyers@efficios.com> wrote:
+> >>
+> >> ----- On Jan 21, 2020, at 12:20 PM, Jann Horn jannh@google.com wrote:
+> >>
+> >> > On Tue, Jan 21, 2020 at 5:13 PM Mathieu Desnoyers
+> >> > <mathieu.desnoyers@efficios.com> wrote:
+> >> >> There is an important use-case which is not possible with the
+> >> >> "rseq" (Restartable Sequences) system call, which was left as
+> >> >> future work.
+> >> >>
+> >> >> That use-case is to modify user-space per-cpu data structures
+> >> >> belonging to specific CPUs which may be brought offline and
+> >> >> online again by CPU hotplug. This can be used by memory
+> >> >> allocators to migrate free memory pools when CPUs are brought
+> >> >> offline, or by ring buffer consumers to target specific per-CPU
+> >> >> buffers, even when CPUs are brought offline.
+> >> >>
+> >> >> A few rather complex prior attempts were made to solve this.
+> >> >> Those were based on in-kernel interpreters (cpu_opv, do_on_cpu).
+> >> >> That complexity was generally frowned upon, even by their author.
+> >> >>
+> >> >> This patch fulfills this use-case in a refreshingly simple way:
+> >> >> it introduces a "pin_on_cpu" system call, which allows user-space
+> >> >> threads to pin themselves on a specific CPU (which needs to be
+> >> >> present in the thread's allowed cpu mask), and then clear this
+> >> >> pinned state.
+> >> > [...]
+> >> >> For instance, this allows implementing this userspace library API
+> >> >> for incrementing a per-cpu counter for a specific cpu number
+> >> >> received as parameter:
+> >> >>
+> >> >> static inline __attribute__((always_inline))
+> >> >> int percpu_addv(intptr_t *v, intptr_t count, int cpu)
+> >> >> {
+> >> >>         int ret;
+> >> >>
+> >> >>         ret =3D rseq_addv(v, count, cpu);
+> >> >> check:
+> >> >>         if (rseq_unlikely(ret)) {
+> >> >>                 pin_on_cpu_set(cpu);
+> >> >>                 ret =3D rseq_addv(v, count, percpu_current_cpu());
+> >> >>                 pin_on_cpu_clear();
+> >> >>                 goto check;
+> >> >>         }
+> >> >>         return 0;
+> >> >> }
+> >> >
+> >> > What does userspace have to do if the set of allowed CPUs switches a=
+ll
+> >> > the time? For example, on Android, if you first open Chrome and then
+> >> > look at its allowed CPUs, Chrome is allowed to use all CPU cores
+> >> > because it's running in the foreground:
+> >> >
+> >> > walleye:/ # ps -AZ | grep 'android.chrome$'
+> >> > u:r:untrusted_app:s0:c145,c256,c512,c768 u0_a145 7845 805 1474472
+> >> > 197868 SyS_epoll_wait f09c0194 S com.android.chrome
+> >> > walleye:/ # grep cpuset /proc/7845/cgroup; grep Cpus_allowed_list
+> >> > /proc/7845/status
+> >> > 3:cpuset:/top-app
+> >> > Cpus_allowed_list: 0-7
+> >> >
+> >> > But if you then switch to the home screen, the application is moved
+> >> > into a different cgroup, and is restricted to two CPU cores:
+> >> >
+> >> > walleye:/ # grep cpuset /proc/7845/cgroup; grep Cpus_allowed_list
+> >> > /proc/7845/status
+> >> > 3:cpuset:/background
+> >> > Cpus_allowed_list: 0-1
+> >>
+> >> Then at that point, pin_on_cpu() would only be allowed to pin on
+> >> CPUs 0 and 1.
+> >
+> > Which means that you can't actually reliably use pin_on_cpu_set() to
+> > manipulate percpu data structures since you have to call it with the
+> > assumption that it might randomly fail at any time, right?
+>
+> Only if the cpu affinity of the thread is being changed concurrently
+> by another thread which is a possibility in some applications, indeed.
 
-This sounds good to me, unless Evan has any objections.
+Not just some applications, but also some environments, right? See the
+Android example - the set of permitted CPUs is changed not by the
+application itself, but by a management process that uses cgroup
+modifications to indirectly change the set of permitted CPUs. I
+wouldn't be surprised if the same could happen in e.g. container
+environments.
 
-Thanks,
-Georgi
+> > And then
+> > userspace needs to code a fallback path that somehow halts all the
+> > threads with thread-directed signals or something?
+>
+> The example use of pin_on_cpu() did not include handling of the return
+> value in that case (-1, errno=3DEINVAL) for conciseness. But yes, the
+> application would have to handle this.
+>
+> It's not so different from error handling which is required when using
+> sched_setaffinity(), which can fail with -1, errno=3DEINVAL in the follow=
+ing
+> scenario:
+>
+>        EINVAL The  affinity bit mask mask contains no processors that are=
+ cur=E2=80=90
+>               rently physically on the system  and  permitted  to  the  t=
+hread
+>               according  to  any  restrictions  that  may  be  imposed  b=
+y the
+>               "cpuset" mechanism described in cpuset(7).
+
+Except that sched_setaffinity() is normally just a performance
+optimization, right? Whereas pin_to_cpu() is more of a correctness
+thing?
+
+> > Especially if the task trying to use pin_on_cpu_set() isn't allowed to
+> > pin to the target CPU, but all the other tasks using the shared data
+> > structure are allowed to do that. Or if the CPU you want to pin to is
+> > always removed from your affinity mask immediately before
+> > pin_on_cpu_set() and added back immediately afterwards.
+>
+> I am tempted to state that using pin_on_cpu() targeting a disallowed cpu
+> should be considered a programming error and handled accordingly by the
+> application.
+
+How can it be a programming error if that situation can be triggered
+by legitimate external modifications to CPU affinity?
+
+[...]
+> >> > I'm wondering whether it might be possible to rework this mechanism
+> >> > such that, instead of moving the current task onto a target CPU, it
+> >> > prevents all *other* threads of the current process from running on
+> >> > that CPU (either entirely or in user mode). That might be the easies=
+t
+> >> > way to take care of issues like CPU hotplugging and changing cpusets
+> >> > all at once? The only potential issue I see with that approach would
+> >> > be that you wouldn't be able to use it for inter-process
+> >> > communication; and I have no idea whether this would be good or bad
+> >> > performance-wise.
+> >>
+> >> Firstly, inter-process communication over shared memory is one of my u=
+se-cases
+> >> (for lttng-ust's ring buffer).
+> >>
+> >> I'm not convinced that applying constraints on all other threads belon=
+ging to
+> >> the current process would be easier or faster than migrating the curre=
+nt thread
+> >> over to the target CPU. I'm unsure how those additional constraints wo=
+uld
+> >> fit with other threads already having their own cpu affinity masks (wh=
+ich
+> >> could generate an empty cpumask by adding an extra constraint).
+> >
+> > Hm - is an empty cpumask a problem here? If one task is in the middle
+> > of a critical section for performing maintenance on a percpu data
+> > structure, isn't it a nice design property to exclude concurrent
+> > access from other tasks to that data structure automatically (by
+> > preventing those tasks by running on that CPU)? That way the
+> > (presumably rarely-executed) update path doesn't have to be
+> > rseq-reentrancy-safe.
+>
+> Given we already have rseq, simply using it to protect against other
+> threads trying to touch the same per-cpu data seems rather more lightweig=
+ht
+> than to try to exclude all other threads from that CPU for a possibly
+> unbounded amount of time.
+
+That only works if the cpu-targeted maintenance operation is something
+that can be implemented in rseq, right? I was thinking that it might
+be nice to avoid that limitation - but I don't know much about the
+kinds of data structures that one might want to build on top of rseq,
+so maybe that's a silly idea.
+
+> Allowing a completely empty cpumask could effectively allow those
+> critical sections to prevent execution of possibly higher priority
+> threads on the system, which ends up being the definition of a priority
+> inversion, which I'd like to avoid.
+
+Linux does have the infrastructure for RT futexes, right? Maybe that
+could be useful here.
