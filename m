@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1BACC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:23:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B515BC33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C303724688
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:23:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FCE224688
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:23:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579699423;
-	bh=kn1xqeotbC/h612r6WLpR4VyIxOLd3ZFQEoq32Ro7Os=;
+	s=default; t=1579699426;
+	bh=lCuu7sL1e/H2b4/0FmtQ9bkOCclElc5kZCwTiINyETA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BIMWxQvPnb6PwiZtbpuOCJu/ECzWDWzKKUND40XJGQmcro1QQbKj1fXI+qFSnyf6o
-	 FB6La0O0qcYsiIDPqfs8OxBywL2emTgipKuC9dZLf07RKQSjinjVPQVlt7ih3TrWwX
-	 f9nt+ZUTxJHK5FY/+njeFAZZzAv10+9nF2ZdCq1o=
+	b=VnlOOYoBxEUnOejsU0lcW8gZjnuycaFT4JvzZ0TEX+Ze6rzk0+rEqjLk9MbyWSPsW
+	 Ct/DqOVMW10C1jTR4KsjuglSmNBUmyU64rmHE9CLnHCz7D6IRURvP5ocSIEbbMNnLt
+	 rjnfI36CR4UJxvR4li/shOsADE1hlq1udZmIa8j8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730793AbgAVNXl (ORCPT
+        id S1730493AbgAVNXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:23:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41978 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 08:23:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730415AbgAVNXi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:23:38 -0500
+        id S1730782AbgAVNXl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:23:41 -0500
 Received: from localhost (unknown [84.241.205.26])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5CA9205F4;
-        Wed, 22 Jan 2020 13:23:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CC46205F4;
+        Wed, 22 Jan 2020 13:23:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579699417;
-        bh=kn1xqeotbC/h612r6WLpR4VyIxOLd3ZFQEoq32Ro7Os=;
+        s=default; t=1579699420;
+        bh=lCuu7sL1e/H2b4/0FmtQ9bkOCclElc5kZCwTiINyETA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mvjqqwSiTlfuECPaAfzAku2lJiNlV8oCFFIAy0E7oomdVPDFWjOGD8kctoBpzkVRU
-         Dxblq5BJcXOnWgnGFMtvHEdMwLylDok2fKGP5UNpcEBVxBmOY/BdO5WL1pwguzLbqF
-         5dIKAa8zogLQEdSippLbT61AVll/K89COU8W2XLM=
+        b=p4u92QJ31H6LN0R8oUacs+f3ib3n9EkZ7B/65G/u30mYTkporCgJTwGgDLrKlC2Dr
+         Ok824KjtYcfyVUdeBU8gMBGeE8SD2cZnAy1n9XO2pqtOP3qCdBkfs2sYETCwk6xB3S
+         VW240ovV9ZKLkIq/6tPy0UtRcifae4np+D1X4Z0c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+4ec99438ed7450da6272@syzkaller.appspotmail.com,
-        Taehee Yoo <ap420073@gmail.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 138/222] net: avoid updating qdisc_xmit_lock_key in netdev_update_lockdep_key()
-Date:   Wed, 22 Jan 2020 10:28:44 +0100
-Message-Id: <20200122092843.619836106@linuxfoundation.org>
+        stable@vger.kernel.org, John Fastabend <john.fastabend@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>
+Subject: [PATCH 5.4 112/222] bpf: Sockmap/tls, msg_push_data may leave end mark in place
+Date:   Wed, 22 Jan 2020 10:28:18 +0100
+Message-Id: <20200122092841.753381385@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
 References: <20200122092833.339495161@linuxfoundation.org>
@@ -62,65 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: John Fastabend <john.fastabend@gmail.com>
 
-[ Upstream commit 53d374979ef147ab51f5d632dfe20b14aebeccd0 ]
+commit cf21e9ba1eb86c9333ca5b05b2f1cc94021bcaef upstream.
 
-syzbot reported some bogus lockdep warnings, for example bad unlock
-balance in sch_direct_xmit(). They are due to a race condition between
-slow path and fast path, that is qdisc_xmit_lock_key gets re-registered
-in netdev_update_lockdep_key() on slow path, while we could still
-acquire the queue->_xmit_lock on fast path in this small window:
+Leaving an incorrect end mark in place when passing to crypto
+layer will cause crypto layer to stop processing data before
+all data is encrypted. To fix clear the end mark on push
+data instead of expecting users of the helper to clear the
+mark value after the fact.
 
-CPU A						CPU B
-						__netif_tx_lock();
-lockdep_unregister_key(qdisc_xmit_lock_key);
-						__netif_tx_unlock();
-lockdep_register_key(qdisc_xmit_lock_key);
+This happens when we push data into the middle of a skmsg and
+have room for it so we don't do a set of copies that already
+clear the end flag.
 
-In fact, unlike the addr_list_lock which has to be reordered when
-the master/slave device relationship changes, queue->_xmit_lock is
-only acquired on fast path and only when NETIF_F_LLTX is not set,
-so there is likely no nested locking for it.
-
-Therefore, we can just get rid of re-registration of
-qdisc_xmit_lock_key.
-
-Reported-by: syzbot+4ec99438ed7450da6272@syzkaller.appspotmail.com
-Fixes: ab92d68fc22f ("net: core: add generic lockdep keys")
-Cc: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Acked-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 6fff607e2f14b ("bpf: sk_msg program helper bpf_msg_push_data")
+Signed-off-by: John Fastabend <john.fastabend@gmail.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Song Liu <songliubraving@fb.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/bpf/20200111061206.8028-6-john.fastabend@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/core/dev.c |   12 ------------
- 1 file changed, 12 deletions(-)
 
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -8953,22 +8953,10 @@ static void netdev_unregister_lockdep_ke
+---
+ net/core/filter.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -2415,6 +2415,7 @@ BPF_CALL_4(bpf_msg_push_data, struct sk_
  
- void netdev_update_lockdep_key(struct net_device *dev)
- {
--	struct netdev_queue *queue;
--	int i;
--
--	lockdep_unregister_key(&dev->qdisc_xmit_lock_key);
- 	lockdep_unregister_key(&dev->addr_list_lock_key);
--
--	lockdep_register_key(&dev->qdisc_xmit_lock_key);
- 	lockdep_register_key(&dev->addr_list_lock_key);
- 
- 	lockdep_set_class(&dev->addr_list_lock, &dev->addr_list_lock_key);
--	for (i = 0; i < dev->num_tx_queues; i++) {
--		queue = netdev_get_tx_queue(dev, i);
--
--		lockdep_set_class(&queue->_xmit_lock,
--				  &dev->qdisc_xmit_lock_key);
--	}
- }
- EXPORT_SYMBOL(netdev_update_lockdep_key);
+ 		sk_msg_iter_var_next(i);
+ 		sg_unmark_end(psge);
++		sg_unmark_end(&rsge);
+ 		sk_msg_iter_next(msg, end);
+ 	}
  
 
 
