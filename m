@@ -2,121 +2,163 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39050C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21AB9C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1950A24689
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:33:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBFF124655
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:36:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Jv2YkmeB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729465AbgAVKdn (ORCPT
+        id S1729325AbgAVKgY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 05:33:43 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:37255 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728931AbgAVKdn (ORCPT
+        Wed, 22 Jan 2020 05:36:24 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:37994 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729110AbgAVKgX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 05:33:43 -0500
-Received: from localhost ([127.0.0.1] helo=vostro.local)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1iuDJy-00005h-JH; Wed, 22 Jan 2020 11:33:14 +0100
-From:   John Ogness <john.ogness@linutronix.de>
-To:     Eugeniu Rosca <erosca@de.adit-jv.com>
-Cc:     <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        Sanjeev Chugh <sanjeev_chugh@mentor.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Daniel Wang <wonderfly@google.com>,
-        Dean Jenkins <dean_jenkins@mentor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dirk Behme <dirk.behme@de.bosch.com>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Jiri Slaby <jslaby@suse.com>,
-        Peter Feiner <pfeiner@google.com>,
-        <linux-serial@vger.kernel.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: [RFC PATCH v1 00/25] printk: new implementation
-References: <20190212143003.48446-1-john.ogness@linutronix.de>
-        <20200120230522.GA23636@lxhi-065.adit-jv.com>
-        <87v9p4mkhr.fsf@linutronix.de>
-        <20200122023422.GA926@lxhi-065.adit-jv.com>
-Date:   Wed, 22 Jan 2020 11:33:12 +0100
-In-Reply-To: <20200122023422.GA926@lxhi-065.adit-jv.com> (Eugeniu Rosca's
-        message of "Wed, 22 Jan 2020 03:34:22 +0100")
-Message-ID: <87zhefu6fr.fsf@linutronix.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
+        Wed, 22 Jan 2020 05:36:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=qV0nPj5tEVoFXSxisYrwpsdGo4tcFtq0OnTwiKfamQ0=; b=Jv2YkmeB9uF1EaComQ4haMGNK
+        e8aqhElhaSEvbl/SpMYwdeF81r3tuwpyZBiSL5Zr2VV9gUB6me6afaJs7SyDSJNxDUxXNs553q2WE
+        f+qrqarjg49fIIFAPJ1XO1of1VdOvlq+QfbqP4mqgcm+JrOcJoqd1hutQ3Ev0npvuVP5eHhQXrRk9
+        LJU/k6FU7mWBxJFLzFg455xzOFjE9Cbr4b0eDm9jD/LrTltZ6TlS0LLlQ+/51rMIurF8XHNhy5oeH
+        ztr1i7j0NOHjHI7NEk/l3C7sYhkUaKIeYTKf2hnK1llgI4uxGlrgOavs5COWjWqkx0xKPh6t0W2ud
+        B8ELuE/zQ==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:37606)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iuDMc-0002KF-MP; Wed, 22 Jan 2020 10:35:58 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iuDMX-0004l8-9Y; Wed, 22 Jan 2020 10:35:53 +0000
+Date:   Wed, 22 Jan 2020 10:35:53 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Sam Ravnborg <sam@ravnborg.org>, Rob Herring <robh@kernel.org>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        The etnaviv authors <etnaviv@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/etnaviv: only reject timeouts with tv_nsec >= 2
+ seconds
+Message-ID: <20200122103553.GN25745@shell.armlinux.org.uk>
+References: <20200121114553.2667556-1-arnd@arndb.de>
+ <20200121125546.GA71415@bogon.m.sigxcpu.org>
+ <1971902c68ff805ee0b4a66f558afe06e6edf0c5.camel@pengutronix.de>
+ <CAK8P3a2E__zHPPEL37JwK=uHb_v-=C+-+zGaL3XoW5PZ+BUN5g@mail.gmail.com>
+ <20200122103034.GA67385@bogon.m.sigxcpu.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200122103034.GA67385@bogon.m.sigxcpu.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-22, Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
-> So, what's specific to R-Car3, based on my testing, is that the issue
-> can only be reproduced if the printk storm originates on CPU0 (it does
-> not matter if from interrupt or task context, both have been
-> tested). If the printk storm is initiated on any other CPU (there are
-> 7 secondary ones on R-Car H3), there is no regression in the audio
-> quality/latency.
->
-> I cannot fully explain this empirical observation, but it directs my
-> mind to the following workaround, for which I have a PoC:
->  - employ vprintk_safe() any time CPU0 is the owner/caller of printk
->  - tie CPU0-private printk internal IRQ workers to another CPU
->
-> The above makes sure nothing is printed to the serial console on
-> behalf of CPU0. I don't even hope this to be accepted by community,
-> but can you please share your opinion the idea itself is sane?
+On Wed, Jan 22, 2020 at 11:30:34AM +0100, Guido Günther wrote:
+> Hi,
+> On Tue, Jan 21, 2020 at 08:05:27PM +0100, Arnd Bergmann wrote:
+> > On Tue, Jan 21, 2020 at 5:10 PM Lucas Stach <l.stach@pengutronix.de> wrote:
+> > >
+> > > Hi Guido,
+> > >
+> > > On Di, 2020-01-21 at 13:55 +0100, Guido Günther wrote:
+> > > > Hi,
+> > > > On Tue, Jan 21, 2020 at 12:45:25PM +0100, Arnd Bergmann wrote:
+> > > > > As Guido Günther reported, get_abs_timeout() in the etnaviv user space
+> > > > > sometimes passes timeouts with nanosecond values larger than 1000000000,
+> > > > > which gets rejected after my first patch.
+> > > > >
+> > > > > To avoid breaking this, while also not allowing completely arbitrary
+> > > > > values, set the limit to 1999999999 and use set_normalized_timespec64()
+> > > > > to get the correct format before comparing it.
+> > > >
+> > > > I'm seeing values up to 5 seconds so I need
+> > > >
+> > > >      if (args->timeout.tv_nsec > (5 * NSEC_PER_SEC))
+> > > >
+> > > > to unbreak rendering. Which seems to match what mesa's get_abs_timeout()
+> > > > does and how it's invoked.
+> > >
+> > > I have not tested this myself yet, only looked at the code. From the
+> > > code I quoted earlier, I don't see how we end up with 5 * NSEC_PER_SEC
+> > > in the tv_nsec member, even if the timeout passed to get_abs_timeout()
+> > > is 5 seconds.
+> > 
+> > I can think of two different ways you'd end up with around five seconds here:
+> > 
+> > a) you have a completely arbitrary 32-bit number through truncation,
+> >     which is up to 4.2 seconds
+> > b) you have the same kind of 32-bit number, but add up to another 999999999
+> >     nanoseconds, so you get up to 5.2 seconds in the 64-bit field.
+> 
+> I've dumped out some values tv_nsec values with current mesa git on arm64:
+> 
+> [   33.699652] etnaviv_ioctl_gem_cpu_prep: 4990449401
+> [   33.813081] etnaviv_ioctl_gem_cpu_prep: 5103872445
+> [   33.822936] etnaviv_ioctl_gem_cpu_prep: 5113731286
+> [   33.840963] etnaviv_ioctl_gem_cpu_prep: 5131762726
+> [   33.854120] etnaviv_ioctl_gem_cpu_prep: 5144920127
+> [   33.861426] etnaviv_ioctl_gem_cpu_prep: 5152227527
+> [   33.872666] etnaviv_ioctl_gem_cpu_prep: 5163466968
+> [   33.879485] etnaviv_ioctl_gem_cpu_prep: 5170286808
+> 
+> The problem is that in mesa/libdrm
+> 
+> static inline void get_abs_timeout(struct drm_etnaviv_timespec *tv, uint64_t ns)
+> {
+>         struct timespec t;
+>         uint32_t s = ns / 1000000000;
+>         clock_gettime(CLOCK_MONOTONIC, &t);
+>         tv->tv_sec = t.tv_sec + s;
+>         tv->tv_nsec = t.tv_nsec + ns - (s * 1000000000);
+>                                         ^^^^^^^^^^^^^^^
+>    this overflows (since `s` is `uint_32t` and hence we substract a way
+>    too small value with ns = 5000000000 which mesa uses in
+>    etna_bo_cpu_prep.
+> }
+> 
+> So with current mesa/libdrm (which needs to be fixed) we'd have a maximum
+> 
+>       t.tv_nsec + ns         - (s_max * 1000000000)
+> 
+>       999999999 + 5000000000 - 705032704            = 5294967295
+> 
+> Does that make sense? If so that'd be the possible upper bound for the
+> kernel. Note that this only applies to etnaviv_ioctl_gem_cpu_prep. While
+> etnaviv_ioctl_wait_fence and etnaviv_ioctl_gem_wait are affected too
+> i've not yet seen user space passing in larger values.
 
-It is a problem-specific hack. You will need to be certain that CPU1-7
-will never have problems with console printing storms.
+Except the fact that the calculation being done above is buggy.
+Not only do we end up with tv_sec incremented by 5 seconds, but
+we also end up with tv_nsec containing around 5 seconds in
+nanoseconds, which means we end up with about a 10 second timeout.
 
-Be aware that vprintk_safe() is not particularly reliable in many crash
-scenarios. If seeing oops output on the console is important, this can
-be a risky hack.
+I think it would probably be better for the kernel to print a
+warning once when noticing over-large nsec values, suggesting a
+userspace upgrade is in order, but continue the existing behaviour.
 
-Also, be aware that it has its own config option for the safe buffer
-size: PRINTK_SAFE_LOG_BUF_SHIFT
-
->> The printk rework focusses on making printk non-interfering by
->> decoupling console printing from printk() callers. However, the
->> console printing itself will still do just as much interrupt
->> disabling as before. That is driver-related, not printk-related.
->
-> I didn't dive into the internals of this series, but decoupling the
-> execution context of the serial driver from the execution context of
-> the printk callers sounds very good to me (this is what i try to
-> achieve via vanilla vprintk_safe). I wonder if it's easier to remove
-> CPU0 from equation with this series applied.
-
-Yes, it would be quite easy. The console printers run as dedicated
-kthreads. It is only a matter of setting the CPU affinity for the
-related kthread.
-
->> The linux-rt patches (which include this printk rework) *are* being
->> ported to mainline now. My recommendation is to continue using the
->> linux-rt patches (with PREEMPT_RT=y) until PREEMPT_RT is available
->> mainline.
->
-> If there is any roadmap publicly available, I would appreciate a
-> reference.
-
-I am only aware of the quilt "series" file [0] that is roughly
-documenting the status of the effort.
-
-John Ogness
-
-[0] https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git/tree/patches/series?h=linux-5.4.y-rt-patches
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
