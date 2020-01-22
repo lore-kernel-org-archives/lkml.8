@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F089DC33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:28:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84451C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6A3D2071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:28:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DF2C2071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:28:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579699716;
-	bh=bRPI4NEzsYbWl9R1aXwUkxxw/RBMVoVzvkO0RHLavmA=;
+	s=default; t=1579699723;
+	bh=Ts68ShsdzOG9Fa9chgZq5ppLdpZ2ie9mY1mXFf7rshs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PznQPc/1XlBVKHXIa/r4UaS4IRyBhMVboTT0gYoG9jHH/eXfqPXmx5qg3Pmt7+5x2
-	 WGOZqYMOH/SkT28FOcpV8NUHiZ6FQ1OPNp9Sgco+z0fLyWzm+IJgY9k82RTzRZ/hzh
-	 FT5C8RSPgnE92rBxIy/93QN7iokifDOg/dxZMIl8=
+	b=BRP6PFG9AOYIi6gbxwvFFwkxzh+jUha2UMhPAnOE7dEL75Ocj5zXxpK4mmSYUwp+/
+	 f7arm9mtWrbXZ4XxVFyNY4goMo6UPvHxMjd4ai1+o9PbZ1fg9NyYFL6sE2bTHGxB8p
+	 3/KBXtr8hmB0voT6PIL+mUbi4JNd9R+vbqkC8xEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729863AbgAVN2f (ORCPT
+        id S1728913AbgAVN2m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:28:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50814 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 08:28:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730876AbgAVN2b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:28:31 -0500
+        id S1729106AbgAVN2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:28:33 -0500
 Received: from localhost (unknown [84.241.205.26])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76AAA24125;
-        Wed, 22 Jan 2020 13:28:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5D2F2467A;
+        Wed, 22 Jan 2020 13:28:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579699710;
-        bh=bRPI4NEzsYbWl9R1aXwUkxxw/RBMVoVzvkO0RHLavmA=;
+        s=default; t=1579699713;
+        bh=Ts68ShsdzOG9Fa9chgZq5ppLdpZ2ie9mY1mXFf7rshs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IX6AWrybZdey/g6O+uGUAZg3F1rCJEhmuQzl2h+EOnYJNh9OSw999toSA9mkHx96l
-         4EK9B4fprgMF02QMt9qucBvTB05e0pKNnsFAr05wyU2LVm3ytXjH2mjaivFbR3CUuk
-         KtkkTKai/4dvlIzE/R3GEk1BT9p4sM3jKKBbBPpU=
+        b=RadIwp17JNhM8cx9IS+tEeP/q1+JVFSO7KqELEuUxpDhKfrgUYLUFcsyYVQm3mGOJ
+         9TIdgysz97l/jjiByDoU8wW4J8sKTZAJxfkUqBzW2c8qmBI0CdeArjMrXMHcjekmXa
+         NOSBJIqktrrY6zd3MUxHwu4Adjd1rHfSv5qxpAbI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Angelo Dureghello <angelo.dureghello@timesys.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 5.4 193/222] mtd: devices: fix mchp23k256 read and write
-Date:   Wed, 22 Jan 2020 10:29:39 +0100
-Message-Id: <20200122092847.495536388@linuxfoundation.org>
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Subject: [PATCH 5.4 194/222] mtd: cfi_cmdset_0002: only check errors when ready in cfi_check_err_status()
+Date:   Wed, 22 Jan 2020 10:29:40 +0100
+Message-Id: <20200122092847.592021002@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
 References: <20200122092833.339495161@linuxfoundation.org>
@@ -61,96 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Angelo Dureghello <angelo.dureghello@timesys.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-commit 14f89e088155314d311e4d4dd9f2b4ccaeef92b2 upstream.
+commit 72914a8cff7e1d910c58e125e15a0da409e3135f upstream.
 
-Due to the use of sizeof(), command size set for the spi transfer
-was wrong. Driver was sending and receiving always 1 byte less
-and especially on write, it was hanging.
+Cypress S26K{L|S}P{128|256|512}S datasheet says that the error bits in
+the status register are only valid when the "device ready" bit 7 is set.
+Add the check for the device ready bit in cfi_check_err_status() as that
+function isn't always called with this bit set.
 
-echo -n -e "\\x1\\x2\\x3\\x4" > /dev/mtd1
-
-And read part too now works as expected.
-
-hexdump -C -n16 /dev/mtd1
-00000000  01 02 03 04 ab f3 ad c2  ab e3 f4 36 dd 38 04 15
-00000010
-
-Fixes: 4379075a870b ("mtd: mchp23k256: Add support for mchp23lcv1024")
-Signed-off-by: Angelo Dureghello <angelo.dureghello@timesys.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Fixes: 4844ef80305d ("mtd: cfi_cmdset_0002: Add support for polling status register")
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mtd/devices/mchp23k256.c |   20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
+ drivers/mtd/chips/cfi_cmdset_0002.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/mtd/devices/mchp23k256.c
-+++ b/drivers/mtd/devices/mchp23k256.c
-@@ -64,15 +64,17 @@ static int mchp23k256_write(struct mtd_i
- 	struct spi_transfer transfer[2] = {};
- 	struct spi_message message;
- 	unsigned char command[MAX_CMD_SIZE];
--	int ret;
-+	int ret, cmd_len;
+--- a/drivers/mtd/chips/cfi_cmdset_0002.c
++++ b/drivers/mtd/chips/cfi_cmdset_0002.c
+@@ -136,6 +136,10 @@ static void cfi_check_err_status(struct
+ 			 cfi->device_type, NULL);
+ 	status = map_read(map, adr);
  
- 	spi_message_init(&message);
- 
-+	cmd_len = mchp23k256_cmdsz(flash);
++	/* The error bits are invalid while the chip's busy */
++	if (!map_word_bitsset(map, status, CMD(CFI_SR_DRB)))
++		return;
 +
- 	command[0] = MCHP23K256_CMD_WRITE;
- 	mchp23k256_addr2cmd(flash, to, command);
+ 	if (map_word_bitsset(map, status, CMD(0x3a))) {
+ 		unsigned long chipstatus = MERGESTATUS(status);
  
- 	transfer[0].tx_buf = command;
--	transfer[0].len = mchp23k256_cmdsz(flash);
-+	transfer[0].len = cmd_len;
- 	spi_message_add_tail(&transfer[0], &message);
- 
- 	transfer[1].tx_buf = buf;
-@@ -88,8 +90,8 @@ static int mchp23k256_write(struct mtd_i
- 	if (ret)
- 		return ret;
- 
--	if (retlen && message.actual_length > sizeof(command))
--		*retlen += message.actual_length - sizeof(command);
-+	if (retlen && message.actual_length > cmd_len)
-+		*retlen += message.actual_length - cmd_len;
- 
- 	return 0;
- }
-@@ -101,16 +103,18 @@ static int mchp23k256_read(struct mtd_in
- 	struct spi_transfer transfer[2] = {};
- 	struct spi_message message;
- 	unsigned char command[MAX_CMD_SIZE];
--	int ret;
-+	int ret, cmd_len;
- 
- 	spi_message_init(&message);
- 
-+	cmd_len = mchp23k256_cmdsz(flash);
-+
- 	memset(&transfer, 0, sizeof(transfer));
- 	command[0] = MCHP23K256_CMD_READ;
- 	mchp23k256_addr2cmd(flash, from, command);
- 
- 	transfer[0].tx_buf = command;
--	transfer[0].len = mchp23k256_cmdsz(flash);
-+	transfer[0].len = cmd_len;
- 	spi_message_add_tail(&transfer[0], &message);
- 
- 	transfer[1].rx_buf = buf;
-@@ -126,8 +130,8 @@ static int mchp23k256_read(struct mtd_in
- 	if (ret)
- 		return ret;
- 
--	if (retlen && message.actual_length > sizeof(command))
--		*retlen += message.actual_length - sizeof(command);
-+	if (retlen && message.actual_length > cmd_len)
-+		*retlen += message.actual_length - cmd_len;
- 
- 	return 0;
- }
 
 
