@@ -2,176 +2,93 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D9D5C33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54CBBC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:56:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4502224688
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:56:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579687017;
-	bh=62CaeQJ0JUcbdrdg2jERlWMrIGsf4S0C9dn2NIYUVJw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1YE8nis1pKkML2RgyuW3A0CXuNSaXKEfAarATfIoJEj0Ytby5b0Rien38Fg6/q/LC
-	 UGKYwI/2ryMil+Pisadw82d6GblCHvBrXdc1ZG/HoZKaBjlBwTB2j1pnhpC0LFbrYz
-	 ClQ86SHFsS5RSwWNRpegUvL1EwwnoD/O67JsYJlo=
+	by mail.kernel.org (Postfix) with ESMTP id 284612465A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:56:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HsXlNynE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729858AbgAVJbs (ORCPT
+        id S1731185AbgAVJ4q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:31:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44122 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729098AbgAVJbq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:31:46 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        Wed, 22 Jan 2020 04:56:46 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:52700 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730479AbgAVJ4l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:56:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=mn6+IrA1OMHHWbypsNWVR2N6HpOhrjkcIFslmxed/eo=; b=HsXlNynEa7rAEPUuseLjSSMDy
+        Q2ZIa+JF/SWMm8NTGS8kjTYTm7k0lmwRA2N26GdpaTOKT7x6Rl74bbquaC31sEv1UEuVdTeoACjpE
+        haJLzgbT37Mo4QRNy5zwDjdV2PVjIiJD8NA5dTQzxG9CxVJjPsTgT85KxGpC3f1ErrKC+g93uNeCb
+        fMuc+IqdAHHLniSmW61yM4llntPLgFo+BhqrJ2PXXNxJVoEUBE4qmEH5qhabFL0skPb+Q4VfLPqiW
+        uvadfmJBWkox6SFdYK2MSEmSql0HHYH9azJA1+tZSF5HROGmtQK6z/OpK1WAz7jom9SSmk3lhOCzq
+        6UpyNdydA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iuCkL-00026Y-Ic; Wed, 22 Jan 2020 09:56:26 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F052C24673;
-        Wed, 22 Jan 2020 09:31:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685505;
-        bh=62CaeQJ0JUcbdrdg2jERlWMrIGsf4S0C9dn2NIYUVJw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0eYIDu0772dN7XVE0gDLRAay8Dyoe+39FDf2b6M50aPTqIZDZDAKko8TWw6G5KHX5
-         LygkX3DS8GvF/1m14rwxSjt5yHarWv3+wLOO4fSSpxhkZFSo0X2ZJfQyE6I8GrQ6z/
-         pfgXncyGE7E2JCddWCO20ba0eHguI9hF7ub3MdZ0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.4 42/76] block: fix an integer overflow in logical block size
-Date:   Wed, 22 Jan 2020 10:28:58 +0100
-Message-Id: <20200122092756.771105594@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200122092751.587775548@linuxfoundation.org>
-References: <20200122092751.587775548@linuxfoundation.org>
-User-Agent: quilt/0.66
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6C2543060D3;
+        Wed, 22 Jan 2020 10:54:43 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id EE68D20983E31; Wed, 22 Jan 2020 10:56:22 +0100 (CET)
+Date:   Wed, 22 Jan 2020 10:56:22 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alex Kogan <alex.kogan@oracle.com>
+Cc:     linux@armlinux.org.uk, mingo@redhat.com, will.deacon@arm.com,
+        arnd@arndb.de, longman@redhat.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        guohanjun@huawei.com, jglauber@marvell.com,
+        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
+        dave.dice@oracle.com
+Subject: Re: [PATCH v8 5/5] locking/qspinlock: Introduce the shuffle
+ reduction optimization into CNA
+Message-ID: <20200122095622.GS14914@hirez.programming.kicks-ass.net>
+References: <20191230194042.67789-1-alex.kogan@oracle.com>
+ <20191230194042.67789-6-alex.kogan@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191230194042.67789-6-alex.kogan@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+On Mon, Dec 30, 2019 at 02:40:42PM -0500, Alex Kogan wrote:
+> @@ -251,8 +281,11 @@ __always_inline u32 cna_pre_scan(struct qspinlock *lock,
+>  	struct cna_node *cn = (struct cna_node *)node;
+>  
+>  	cn->pre_scan_result =
+> -		cn->intra_count == intra_node_handoff_threshold ?
+> -			FLUSH_SECONDARY_QUEUE : cna_scan_main_queue(node, node);
+> +		(node->locked <= 1 && probably(SHUFFLE_REDUCTION_PROB_ARG)) ?
+> +			PASS_LOCK_IMMEDIATELY :
+> +			cn->intra_count == intra_node_handoff_threshold ?
+> +				FLUSH_SECONDARY_QUEUE :
+> +				cna_scan_main_queue(node, node);
+>  
+>  	return 0;
+>  }
 
-commit ad6bf88a6c19a39fb3b0045d78ea880325dfcf15 upstream.
+Let me just, once again, remind people that the Linux Kernel is not part
+of the Obfuscated C code contest.
 
-Logical block size has type unsigned short. That means that it can be at
-most 32768. However, there are architectures that can run with 64k pages
-(for example arm64) and on these architectures, it may be possible to
-create block devices with 64k block size.
+> Reviewed-by: Steve Sistare <steven.sistare@oracle.com>
 
-For exmaple (run this on an architecture with 64k pages):
-
-Mount will fail with this error because it tries to read the superblock using 2-sector
-access:
-  device-mapper: writecache: I/O is not aligned, sector 2, size 1024, block size 65536
-  EXT4-fs (dm-0): unable to read superblock
-
-This patch changes the logical block size from unsigned short to unsigned
-int to avoid the overflow.
-
-Cc: stable@vger.kernel.org
-Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- block/blk-settings.c            |    2 +-
- drivers/md/dm-snap-persistent.c |    2 +-
- drivers/md/raid0.c              |    2 +-
- include/linux/blkdev.h          |    8 ++++----
- 4 files changed, 7 insertions(+), 7 deletions(-)
-
---- a/block/blk-settings.c
-+++ b/block/blk-settings.c
-@@ -349,7 +349,7 @@ EXPORT_SYMBOL(blk_queue_max_segment_size
-  *   storage device can address.  The default of 512 covers most
-  *   hardware.
-  **/
--void blk_queue_logical_block_size(struct request_queue *q, unsigned short size)
-+void blk_queue_logical_block_size(struct request_queue *q, unsigned int size)
- {
- 	q->limits.logical_block_size = size;
- 
---- a/drivers/md/dm-snap-persistent.c
-+++ b/drivers/md/dm-snap-persistent.c
-@@ -17,7 +17,7 @@
- #include "dm-bufio.h"
- 
- #define DM_MSG_PREFIX "persistent snapshot"
--#define DM_CHUNK_SIZE_DEFAULT_SECTORS 32	/* 16KB */
-+#define DM_CHUNK_SIZE_DEFAULT_SECTORS 32U	/* 16KB */
- 
- #define DM_PREFETCH_CHUNKS		12
- 
---- a/drivers/md/raid0.c
-+++ b/drivers/md/raid0.c
-@@ -83,7 +83,7 @@ static int create_strip_zones(struct mdd
- 	char b[BDEVNAME_SIZE];
- 	char b2[BDEVNAME_SIZE];
- 	struct r0conf *conf = kzalloc(sizeof(*conf), GFP_KERNEL);
--	unsigned short blksize = 512;
-+	unsigned blksize = 512;
- 
- 	if (!conf)
- 		return -ENOMEM;
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -264,6 +264,7 @@ struct queue_limits {
- 	unsigned int		max_sectors;
- 	unsigned int		max_segment_size;
- 	unsigned int		physical_block_size;
-+	unsigned int		logical_block_size;
- 	unsigned int		alignment_offset;
- 	unsigned int		io_min;
- 	unsigned int		io_opt;
-@@ -273,7 +274,6 @@ struct queue_limits {
- 	unsigned int		discard_granularity;
- 	unsigned int		discard_alignment;
- 
--	unsigned short		logical_block_size;
- 	unsigned short		max_segments;
- 	unsigned short		max_integrity_segments;
- 
-@@ -975,7 +975,7 @@ extern void blk_queue_max_discard_sector
- 		unsigned int max_discard_sectors);
- extern void blk_queue_max_write_same_sectors(struct request_queue *q,
- 		unsigned int max_write_same_sectors);
--extern void blk_queue_logical_block_size(struct request_queue *, unsigned short);
-+extern void blk_queue_logical_block_size(struct request_queue *, unsigned int);
- extern void blk_queue_physical_block_size(struct request_queue *, unsigned int);
- extern void blk_queue_alignment_offset(struct request_queue *q,
- 				       unsigned int alignment);
-@@ -1193,7 +1193,7 @@ static inline unsigned int queue_max_seg
- 	return q->limits.max_segment_size;
- }
- 
--static inline unsigned short queue_logical_block_size(struct request_queue *q)
-+static inline unsigned queue_logical_block_size(struct request_queue *q)
- {
- 	int retval = 512;
- 
-@@ -1203,7 +1203,7 @@ static inline unsigned short queue_logic
- 	return retval;
- }
- 
--static inline unsigned short bdev_logical_block_size(struct block_device *bdev)
-+static inline unsigned int bdev_logical_block_size(struct block_device *bdev)
- {
- 	return queue_logical_block_size(bdev_get_queue(bdev));
- }
-
-
+Seriously, in what universe is that actually readable code? Steve quick,
+say what it does.
