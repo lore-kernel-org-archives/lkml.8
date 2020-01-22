@@ -2,79 +2,194 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03FADC33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 117EAC47409
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE5792253D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E15C224673
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:54:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726191AbgAVIxm (ORCPT
+        id S1727453AbgAVIyc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 03:53:42 -0500
-Received: from mga03.intel.com ([134.134.136.65]:1625 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725862AbgAVIxm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 03:53:42 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jan 2020 00:53:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,348,1574150400"; 
-   d="scan'208";a="282907476"
-Received: from rscales-mobl2.ger.corp.intel.com (HELO localhost) ([10.251.84.164])
-  by fmsmga001.fm.intel.com with ESMTP; 22 Jan 2020 00:53:37 -0800
-Date:   Wed, 22 Jan 2020 10:53:35 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        jmorris@namei.org, jsnitsel@redhat.com
-Subject: [GIT PULL] tpmdd updates for Linux v5.6
-Message-ID: <20200122085335.GA9383@linux.intel.com>
+        Wed, 22 Jan 2020 03:54:32 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:18648 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725862AbgAVIyc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 03:54:32 -0500
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00M8j9l1010854;
+        Wed, 22 Jan 2020 03:54:29 -0500
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2xkvrbj8hw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Jan 2020 03:54:29 -0500
+Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 00M8sS6P017807
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Wed, 22 Jan 2020 03:54:28 -0500
+Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Wed, 22 Jan
+ 2020 03:54:27 -0500
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Wed, 22 Jan 2020 00:54:27 -0800
+Received: from tachici-Precision-5530.ad.analog.com ([10.48.65.175])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 00M8sPUP021932;
+        Wed, 22 Jan 2020 03:54:25 -0500
+From:   Alexandru Tachici <alexandru.tachici@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>,
+        Alexandru Tachici <alexandru.tachici@analog.com>
+Subject: [PATCH] iio: adc: ad7124: add 3db filter
+Date:   Wed, 22 Jan 2020 10:54:14 +0200
+Message-ID: <20200122085414.16950-1-alexandru.tachici@analog.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-17_05:2020-01-16,2020-01-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ lowpriorityscore=0 suspectscore=0 mlxscore=0 malwarescore=0
+ impostorscore=0 adultscore=0 phishscore=0 bulkscore=0 clxscore=1015
+ priorityscore=1501 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1910280000 definitions=main-2001220079
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This patch adds the LOW_PASS_FILTER_3DB_FREQUENCY attribute
+in iio_chan_spec for each channel. The used filters are sinc3
+or sinc4. The filter type with the highest output data rate
+is used when setting a low pass frequency in the channel's sysfs.
 
-This update adds a new sysfs file for querying TPM major version,
-which can be used by the user space the TPM protocol used to
-communicate with the chip.
+Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
+---
+ drivers/iio/adc/ad7124.c | 69 +++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 68 insertions(+), 1 deletion(-)
 
-/Jarkko
+diff --git a/drivers/iio/adc/ad7124.c b/drivers/iio/adc/ad7124.c
+index 52f45b13da4a..8f48c0581f02 100644
+--- a/drivers/iio/adc/ad7124.c
++++ b/drivers/iio/adc/ad7124.c
+@@ -70,6 +70,11 @@
+ /* AD7124_FILTER_X */
+ #define AD7124_FILTER_FS_MSK		GENMASK(10, 0)
+ #define AD7124_FILTER_FS(x)		FIELD_PREP(AD7124_FILTER_FS_MSK, x)
++#define AD7124_FILTER_TYPE_MSK		GENMASK(23, 21)
++#define AD7124_FILTER_TYPE_SEL(x)	FIELD_PREP(AD7124_FILTER_TYPE_MSK, x)
++
++#define AD7124_SINC3_FILTER 2
++#define AD7124_SINC4_FILTER 0
+ 
+ enum ad7124_ids {
+ 	ID_AD7124_4,
+@@ -119,6 +124,7 @@ struct ad7124_channel_config {
+ 	unsigned int vref_mv;
+ 	unsigned int pga_bits;
+ 	unsigned int odr;
++	unsigned int filter_type;
+ };
+ 
+ struct ad7124_state {
+@@ -138,7 +144,8 @@ static const struct iio_chan_spec ad7124_channel_template = {
+ 	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
+ 		BIT(IIO_CHAN_INFO_SCALE) |
+ 		BIT(IIO_CHAN_INFO_OFFSET) |
+-		BIT(IIO_CHAN_INFO_SAMP_FREQ),
++		BIT(IIO_CHAN_INFO_SAMP_FREQ) |
++		BIT(IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY),
+ 	.scan_type = {
+ 		.sign = 'u',
+ 		.realbits = 24,
+@@ -281,6 +288,58 @@ static int ad7124_set_channel_gain(struct ad7124_state *st,
+ 	return 0;
+ }
+ 
++static int ad7124_get_3db_filter_freq(struct ad7124_state *st,
++				      unsigned int channel)
++{
++	unsigned int fadc;
++
++	fadc = st->channel_config[channel].odr;
++
++	switch (st->channel_config[channel].filter_type) {
++	case AD7124_SINC3_FILTER:
++		return DIV_ROUND_CLOSEST(fadc * 230, 1000);
++	case AD7124_SINC4_FILTER:
++		return DIV_ROUND_CLOSEST(fadc * 262, 1000);
++	default:
++		return -EINVAL;
++	}
++}
++
++static int ad7124_set_3db_filter_freq(struct ad7124_state *st,
++				      unsigned int channel,
++				      unsigned int freq)
++{
++	unsigned int sinc4_3db_odr;
++	unsigned int sinc3_3db_odr;
++	unsigned int new_filter;
++	unsigned int new_odr;
++
++	sinc4_3db_odr = DIV_ROUND_CLOSEST(freq * 1000, 230);
++	sinc3_3db_odr = DIV_ROUND_CLOSEST(freq * 1000, 262);
++
++	if (sinc4_3db_odr > sinc3_3db_odr) {
++		new_filter = AD7124_SINC3_FILTER;
++		new_odr = sinc4_3db_odr;
++	} else {
++		new_filter = AD7124_SINC4_FILTER;
++		new_odr = sinc3_3db_odr;
++	}
++
++	if (st->channel_config[channel].filter_type != new_filter) {
++		int ret;
++
++		st->channel_config[channel].filter_type = new_filter;
++		ret = ad7124_spi_write_mask(st, AD7124_FILTER(channel),
++					    AD7124_FILTER_TYPE_MSK,
++					    AD7124_FILTER_TYPE_SEL(new_filter),
++					    3);
++		if (ret < 0)
++			return ret;
++	}
++
++	return ad7124_set_channel_odr(st, channel, new_odr);
++}
++
+ static int ad7124_read_raw(struct iio_dev *indio_dev,
+ 			   struct iio_chan_spec const *chan,
+ 			   int *val, int *val2, long info)
+@@ -322,6 +381,9 @@ static int ad7124_read_raw(struct iio_dev *indio_dev,
+ 	case IIO_CHAN_INFO_SAMP_FREQ:
+ 		*val = st->channel_config[chan->address].odr;
+ 
++		return IIO_VAL_INT;
++	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
++		*val = ad7124_get_3db_filter_freq(st, chan->scan_index);
+ 		return IIO_VAL_INT;
+ 	default:
+ 		return -EINVAL;
+@@ -355,6 +417,11 @@ static int ad7124_write_raw(struct iio_dev *indio_dev,
+ 		gain = DIV_ROUND_CLOSEST(res, val2);
+ 
+ 		return ad7124_set_channel_gain(st, chan->address, gain);
++	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
++		if (val2 != 0)
++			return -EINVAL;
++
++		return ad7124_set_3db_filter_freq(st, chan->address, val);
+ 	default:
+ 		return -EINVAL;
+ 	}
+-- 
+2.20.1
 
-The following changes since commit d96d875ef5dd372f533059a44f98e92de9cf0d42:
-
-  Merge tag 'fixes_for_v5.5-rc8' of git://git.kernel.org/pub/scm/linux/kernel/git/jack/linux-fs (2020-01-20 11:24:13 -0800)
-
-are available in the Git repository at:
-
-  git://git.infradead.org/users/jjs/linux-tpmdd.git tags/tpmdd-next-20200122
-
-for you to fetch changes up to 7084eddf6be94e73f8298c1a28078b91536f2975:
-
-  tpm: Add tpm_version_major sysfs file (2020-01-22 10:46:51 +0200)
-
-----------------------------------------------------------------
-tpmdd updates for Linux v5.6
-
-----------------------------------------------------------------
-Jerry Snitselaar (2):
-      tpm: Update mailing list contact information in sysfs-class-tpm
-      tpm: Add tpm_version_major sysfs file
-
- Documentation/ABI/stable/sysfs-class-tpm | 33 ++++++++++++++++++++-----------
- drivers/char/tpm/tpm-sysfs.c             | 34 +++++++++++++++++++++++++-------
- 2 files changed, 49 insertions(+), 18 deletions(-)
