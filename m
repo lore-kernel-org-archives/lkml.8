@@ -4,55 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D5E1C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D1CC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:44:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75AE724690
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:44:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16B6B24693
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:44:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686275;
-	bh=Cug0z3RmEwOajik43RCt+J88axKfzDQMKeBDhYVqr4E=;
+	s=default; t=1579686278;
+	bh=VucpYl5rrM73xaq3i+UuX4QGtAhN8OnPEruv0uN/cXI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CNvjILx1DGE+vJAbm57BJzefSRjKPGY4JR2wtdC58SjCFl8GcZjF34SaY+iBIQxYT
-	 wE4SPthCa2ayM5L1Em3Zzhs677dY3ldwPtHqaR+aAIIKZc/tzr2AdOwIIv2W+X1pBC
-	 iaEiSnbYC8ujSHQUdVpcm7Hw1POWEQQsc0ymmRic=
+	b=VsFPL4m+SWtIgQaUGsMWSnWL2eqYJZq0cK4/2nwnsIUF+hpGlKQG3Ke+DzzvgvYJX
+	 UA3X33Sn8DbxPd4kXKw8YdKkEFXWlr0a0Wh57FvLNezeHPYBzgFz3/syL2RrTsI2it
+	 8NGA16gct4ZETOTR6i6QTiW+SBWnMAMlFM0tpArA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388059AbgAVJoe (ORCPT
+        id S2387821AbgAVJoh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:44:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37554 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:44:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387848AbgAVJo0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:44:26 -0500
+        id S2387869AbgAVJob (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:44:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C69024689;
-        Wed, 22 Jan 2020 09:44:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59B172467B;
+        Wed, 22 Jan 2020 09:44:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686266;
-        bh=Cug0z3RmEwOajik43RCt+J88axKfzDQMKeBDhYVqr4E=;
+        s=default; t=1579686270;
+        bh=VucpYl5rrM73xaq3i+UuX4QGtAhN8OnPEruv0uN/cXI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JrFamKofme5MVK/NjBsnBjU6IlN5UVYubc202WcmPalcvfRE2AJs8ZYSg0Zuc2AEZ
-         A6+2Ktkonq5XGOdVlqaK2G5S2MidS11ocyNSj1cw6EMZ/UhlcyXir80XbfMawX++5V
-         Ba+oqm33N28SS+nHbBD301Crg5x7B342SP4InTuA=
+        b=udGfdD/TNDKbsw8BgHV/E0PD7N77T6fqZx07QiqgwwTvUBpONTr7nYAnltlSy12tA
+         EQQ0HdExof7jrDwbYbyduckhdtbbURMuonmuJdDZlZIPWHipxNtoUcAp51U1CZa56C
+         UfOTlsnTL2oLN1YrMPS9qpcpERbe0zu7ArmiHALk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Michael Hernandez <michael.hernandez@cavium.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.19 097/103] scsi: qla2xxx: Fix qla2x00_request_irqs() for MSI
-Date:   Wed, 22 Jan 2020 10:29:53 +0100
-Message-Id: <20200122092816.364184440@linuxfoundation.org>
+        stable@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Stephen Boyd <sboyd@kernel.org>
+Subject: [PATCH 5.4 010/222] clk: Dont try to enable critical clocks if prepare failed
+Date:   Wed, 22 Jan 2020 10:26:36 +0100
+Message-Id: <20200122092834.104910280@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
-References: <20200122092803.587683021@linuxfoundation.org>
+In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
+References: <20200122092833.339495161@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,56 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huacai Chen <chenhc@lemote.com>
+From: Guenter Roeck <linux@roeck-us.net>
 
-commit 45dc8f2d9c94ed74a5e31e63e9136a19a7e16081 upstream.
+commit 12ead77432f2ce32dea797742316d15c5800cb32 upstream.
 
-Commit 4fa183455988 ("scsi: qla2xxx: Utilize pci_alloc_irq_vectors/
-pci_free_irq_vectors calls.") use pci_alloc_irq_vectors() to replace
-pci_enable_msi() but it didn't handle the return value correctly. This bug
-make qla2x00 always fail to setup MSI if MSI-X fail, so fix it.
+The following traceback is seen if a critical clock fails to prepare.
 
-BTW, improve the log message of return value in qla2x00_request_irqs() to
-avoid confusion.
+bcm2835-clk 3f101000.cprman: plld: couldn't lock PLL
+------------[ cut here ]------------
+Enabling unprepared plld_per
+WARNING: CPU: 1 PID: 1 at drivers/clk/clk.c:1014 clk_core_enable+0xcc/0x2c0
+...
+Call trace:
+ clk_core_enable+0xcc/0x2c0
+ __clk_register+0x5c4/0x788
+ devm_clk_hw_register+0x4c/0xb0
+ bcm2835_register_pll_divider+0xc0/0x150
+ bcm2835_clk_probe+0x134/0x1e8
+ platform_drv_probe+0x50/0xa0
+ really_probe+0xd4/0x308
+ driver_probe_device+0x54/0xe8
+ device_driver_attach+0x6c/0x78
+ __driver_attach+0x54/0xd8
+...
 
-Fixes: 4fa183455988 ("scsi: qla2xxx: Utilize pci_alloc_irq_vectors/pci_free_irq_vectors calls.")
-Cc: Michael Hernandez <michael.hernandez@cavium.com>
-Link: https://lore.kernel.org/r/1574314847-14280-1-git-send-email-chenhc@lemote.com
-Signed-off-by: Huacai Chen <chenhc@lemote.com>
-Acked-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Check return values from clk_core_prepare() and clk_core_enable() and
+bail out if any of those functions returns an error.
+
+Cc: Jerome Brunet <jbrunet@baylibre.com>
+Fixes: 99652a469df1 ("clk: migrate the count of orphaned clocks at init")
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Link: https://lkml.kernel.org/r/20191225163429.29694-1-linux@roeck-us.net
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/qla2xxx/qla_isr.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/clk/clk.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/drivers/scsi/qla2xxx/qla_isr.c
-+++ b/drivers/scsi/qla2xxx/qla_isr.c
-@@ -3573,7 +3573,7 @@ qla2x00_request_irqs(struct qla_hw_data
- skip_msix:
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -3408,11 +3408,17 @@ static int __clk_core_init(struct clk_co
+ 	if (core->flags & CLK_IS_CRITICAL) {
+ 		unsigned long flags;
  
- 	ql_log(ql_log_info, vha, 0x0037,
--	    "Falling back-to MSI mode -%d.\n", ret);
-+	    "Falling back-to MSI mode -- ret=%d.\n", ret);
+-		clk_core_prepare(core);
++		ret = clk_core_prepare(core);
++		if (ret)
++			goto out;
  
- 	if (!IS_QLA24XX(ha) && !IS_QLA2532(ha) && !IS_QLA8432(ha) &&
- 	    !IS_QLA8001(ha) && !IS_P3P_TYPE(ha) && !IS_QLAFX00(ha) &&
-@@ -3581,13 +3581,13 @@ skip_msix:
- 		goto skip_msi;
+ 		flags = clk_enable_lock();
+-		clk_core_enable(core);
++		ret = clk_core_enable(core);
+ 		clk_enable_unlock(flags);
++		if (ret) {
++			clk_core_unprepare(core);
++			goto out;
++		}
+ 	}
  
- 	ret = pci_alloc_irq_vectors(ha->pdev, 1, 1, PCI_IRQ_MSI);
--	if (!ret) {
-+	if (ret > 0) {
- 		ql_dbg(ql_dbg_init, vha, 0x0038,
- 		    "MSI: Enabled.\n");
- 		ha->flags.msi_enabled = 1;
- 	} else
- 		ql_log(ql_log_warn, vha, 0x0039,
--		    "Falling back-to INTa mode -- %d.\n", ret);
-+		    "Falling back-to INTa mode -- ret=%d.\n", ret);
- skip_msi:
- 
- 	/* Skip INTx on ISP82xx. */
+ 	clk_core_reparent_orphans_nolock();
 
 
