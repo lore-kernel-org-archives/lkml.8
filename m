@@ -4,35 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BA8C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:23:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D512DC33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:25:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A11D32467C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:23:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B54962467C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:25:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729203AbgAVKXQ (ORCPT
+        id S1729222AbgAVKZg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 05:23:16 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10128 "EHLO huawei.com"
+        Wed, 22 Jan 2020 05:25:36 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:57018 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727847AbgAVKXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 05:23:16 -0500
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id DA74A6B2DAB1D3C604B3;
-        Wed, 22 Jan 2020 18:23:13 +0800 (CST)
+        id S1728931AbgAVKZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 05:25:36 -0500
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 3F12412C5CBA7696B902;
+        Wed, 22 Jan 2020 18:25:33 +0800 (CST)
 Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 22 Jan 2020 18:23:07 +0800
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.439.0; Wed, 22 Jan 2020 18:25:25 +0800
 From:   Chen Zhou <chenzhou10@huawei.com>
-To:     <hmadhani@marvell.com>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>
-CC:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <chenzhou10@huawei.com>
-Subject: [PATCH -next] scsi: qla2xxx: use PTR_ERR_OR_ZERO() to simplify code
-Date:   Wed, 22 Jan 2020 18:18:12 +0800
-Message-ID: <20200122101812.94816-1-chenzhou10@huawei.com>
+To:     <sfrench@samba.org>
+CC:     <linux-cifs@vger.kernel.org>, <samba-technical@lists.samba.org>,
+        <linux-kernel@vger.kernel.org>, <chenzhou10@huawei.com>
+Subject: [PATCH -next] cifs: use PTR_ERR_OR_ZERO() to simplify code
+Date:   Wed, 22 Jan 2020 18:20:30 +0800
+Message-ID: <20200122102030.95853-1-chenzhou10@huawei.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
@@ -44,30 +43,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PTR_ERR_OR_ZERO contains if(IS_ERR(...)) + PTR_ERR, just use 
+PTR_ERR_OR_ZERO contains if(IS_ERR(...)) + PTR_ERR, just use
 PTR_ERR_OR_ZERO directly.
 
 Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
 ---
- drivers/scsi/qla2xxx/tcm_qla2xxx.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ fs/cifs/dfs_cache.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/qla2xxx/tcm_qla2xxx.c b/drivers/scsi/qla2xxx/tcm_qla2xxx.c
-index abe7f79..719d53d 100644
---- a/drivers/scsi/qla2xxx/tcm_qla2xxx.c
-+++ b/drivers/scsi/qla2xxx/tcm_qla2xxx.c
-@@ -1462,10 +1462,8 @@ static int tcm_qla2xxx_check_initiator_node_acl(
- 				       sizeof(struct qla_tgt_cmd),
- 				       TARGET_PROT_ALL, port_name,
- 				       qlat_sess, tcm_qla2xxx_session_cb);
--	if (IS_ERR(se_sess))
--		return PTR_ERR(se_sess);
+diff --git a/fs/cifs/dfs_cache.c b/fs/cifs/dfs_cache.c
+index 751c2fc..43c1b43 100644
+--- a/fs/cifs/dfs_cache.c
++++ b/fs/cifs/dfs_cache.c
+@@ -662,7 +662,7 @@ static int __dfs_cache_find(const unsigned int xid, struct cifs_ses *ses,
+ 	 */
+ 	if (noreq) {
+ 		up_read(&htable_rw_lock);
+-		return IS_ERR(ce) ? PTR_ERR(ce) : 0;
++		return PTR_ERR_OR_ZERO(ce);
+ 	}
  
--	return 0;
-+	return PTR_ERR_OR_ZERO(se_sess);
- }
- 
- static void tcm_qla2xxx_update_sess(struct fc_port *sess, port_id_t s_id,
+ 	if (!IS_ERR(ce)) {
 -- 
 2.7.4
 
