@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A35C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC56C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 860BF2468A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:47:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE4C82467C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:47:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686441;
-	bh=29OjniStbKL9NpsfLJ8lSC2pv5L4DmGmImaeT/VOcWI=;
+	s=default; t=1579686444;
+	bh=mVsDAopeiFdOOAJlD7vY5WAS4z+/vv+buahmyoiVCKE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MwxlciG3607oUEUuPXgBOrNUgXRhpOPs6ybV5sBqlNeJCqeytxKS5myHKAoPqX5lE
-	 s9hIq3Ec3DFvX9mwIzyYGwcyNJGEtQhrfWG7qopyDf840UZLUFP6EKppy2beYXf35a
-	 KyJWnM+VZj7/Y7HzprPK8Hvij5ryI/nHnenqbzug=
+	b=Vr5A1agSv+SL13Rdh7hO/4bp+bfNU6+RaG6tHugGund77eh7no/h6I6HCDyK3+mMr
+	 KbBHNvTXCv/7AEeT4fqe4+3fTligc/qlnIAzqmn9JoZavvSJUGGFZ4PMha7wywIULP
+	 qdmJr9mokbApX6s7Ho157cSkbxvcw9VpjNxlq4Gk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732490AbgAVJrU (ORCPT
+        id S2387462AbgAVJm3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:47:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34422 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:42:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387729AbgAVJmb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:42:31 -0500
+        id S1733172AbgAVJmS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:42:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1702724684;
-        Wed, 22 Jan 2020 09:42:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B37424680;
+        Wed, 22 Jan 2020 09:42:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686150;
-        bh=29OjniStbKL9NpsfLJ8lSC2pv5L4DmGmImaeT/VOcWI=;
+        s=default; t=1579686138;
+        bh=mVsDAopeiFdOOAJlD7vY5WAS4z+/vv+buahmyoiVCKE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kev92afff7pgz+LkCabJlJ1OsNilDtq9tYDCVkOFcIKAziziu0fdpGZYES8B6ns95
-         jCqQVsLnVUcZE2pgPLchn3HOgnpRsryJy0OkoegpStbP2M2ymwXZRmzwSks23xzEDM
-         p1aljD1kUeiavQVHeSFjsE3DahKbuX+LgFSoHKO4=
+        b=gNadaqNH4womxjxwd4wUEE87CGyi/CNgJtTd9P3fe3saUtCX1lGh8Q/HCwYnmgZq6
+         5DZMm6oXQ47bsQa02ZplXeRnlKvPquuDe+hGVfO3rkmMijUrS0z7silEbZbApky5Ea
+         2Af/kQD3gyBUp2lDo823a224Trn16UcR6PCQDAnI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.19 028/103] block: fix an integer overflow in logical block size
-Date:   Wed, 22 Jan 2020 10:28:44 +0100
-Message-Id: <20200122092808.067998762@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 023/103] ALSA: dice: fix fallback from protocol extension into limited functionality
+Date:   Wed, 22 Jan 2020 10:28:39 +0100
+Message-Id: <20200122092807.241889346@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
 References: <20200122092803.587683021@linuxfoundation.org>
@@ -62,116 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-commit ad6bf88a6c19a39fb3b0045d78ea880325dfcf15 upstream.
+commit 3e2dc6bdb56893bc28257e482e1dbe5d39f313df upstream.
 
-Logical block size has type unsigned short. That means that it can be at
-most 32768. However, there are architectures that can run with 64k pages
-(for example arm64) and on these architectures, it may be possible to
-create block devices with 64k block size.
+At failure of attempt to detect protocol extension, ALSA dice driver
+should be fallback to limited functionality. However it's not.
 
-For exmaple (run this on an architecture with 64k pages):
+This commit fixes it.
 
-Mount will fail with this error because it tries to read the superblock using 2-sector
-access:
-  device-mapper: writecache: I/O is not aligned, sector 2, size 1024, block size 65536
-  EXT4-fs (dm-0): unable to read superblock
-
-This patch changes the logical block size from unsigned short to unsigned
-int to avoid the overflow.
-
-Cc: stable@vger.kernel.org
-Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Cc: <stable@vger.kernel.org> # v4.18+
+Fixes: 58579c056c1c9 ("ALSA: dice: use extended protocol to detect available stream formats")
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Link: https://lore.kernel.org/r/20200113084630.14305-2-o-takashi@sakamocchi.jp
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- block/blk-settings.c            |    2 +-
- drivers/md/dm-snap-persistent.c |    2 +-
- drivers/md/raid0.c              |    2 +-
- include/linux/blkdev.h          |    8 ++++----
- 4 files changed, 7 insertions(+), 7 deletions(-)
+ sound/firewire/dice/dice-extension.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/block/blk-settings.c
-+++ b/block/blk-settings.c
-@@ -379,7 +379,7 @@ EXPORT_SYMBOL(blk_queue_max_segment_size
-  *   storage device can address.  The default of 512 covers most
-  *   hardware.
-  **/
--void blk_queue_logical_block_size(struct request_queue *q, unsigned short size)
-+void blk_queue_logical_block_size(struct request_queue *q, unsigned int size)
- {
- 	q->limits.logical_block_size = size;
+--- a/sound/firewire/dice/dice-extension.c
++++ b/sound/firewire/dice/dice-extension.c
+@@ -159,8 +159,11 @@ int snd_dice_detect_extension_formats(st
+ 		int j;
  
---- a/drivers/md/dm-snap-persistent.c
-+++ b/drivers/md/dm-snap-persistent.c
-@@ -17,7 +17,7 @@
- #include <linux/dm-bufio.h>
+ 		for (j = i + 1; j < 9; ++j) {
+-			if (pointers[i * 2] == pointers[j * 2])
++			if (pointers[i * 2] == pointers[j * 2]) {
++				// Fallback to limited functionality.
++				err = -ENXIO;
+ 				goto end;
++			}
+ 		}
+ 	}
  
- #define DM_MSG_PREFIX "persistent snapshot"
--#define DM_CHUNK_SIZE_DEFAULT_SECTORS 32	/* 16KB */
-+#define DM_CHUNK_SIZE_DEFAULT_SECTORS 32U	/* 16KB */
- 
- #define DM_PREFETCH_CHUNKS		12
- 
---- a/drivers/md/raid0.c
-+++ b/drivers/md/raid0.c
-@@ -94,7 +94,7 @@ static int create_strip_zones(struct mdd
- 	char b[BDEVNAME_SIZE];
- 	char b2[BDEVNAME_SIZE];
- 	struct r0conf *conf = kzalloc(sizeof(*conf), GFP_KERNEL);
--	unsigned short blksize = 512;
-+	unsigned blksize = 512;
- 
- 	*private_conf = ERR_PTR(-ENOMEM);
- 	if (!conf)
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -372,6 +372,7 @@ struct queue_limits {
- 	unsigned int		max_sectors;
- 	unsigned int		max_segment_size;
- 	unsigned int		physical_block_size;
-+	unsigned int		logical_block_size;
- 	unsigned int		alignment_offset;
- 	unsigned int		io_min;
- 	unsigned int		io_opt;
-@@ -382,7 +383,6 @@ struct queue_limits {
- 	unsigned int		discard_granularity;
- 	unsigned int		discard_alignment;
- 
--	unsigned short		logical_block_size;
- 	unsigned short		max_segments;
- 	unsigned short		max_integrity_segments;
- 	unsigned short		max_discard_segments;
-@@ -1212,7 +1212,7 @@ extern void blk_queue_max_write_same_sec
- 		unsigned int max_write_same_sectors);
- extern void blk_queue_max_write_zeroes_sectors(struct request_queue *q,
- 		unsigned int max_write_same_sectors);
--extern void blk_queue_logical_block_size(struct request_queue *, unsigned short);
-+extern void blk_queue_logical_block_size(struct request_queue *, unsigned int);
- extern void blk_queue_physical_block_size(struct request_queue *, unsigned int);
- extern void blk_queue_alignment_offset(struct request_queue *q,
- 				       unsigned int alignment);
-@@ -1473,7 +1473,7 @@ static inline unsigned int queue_max_seg
- 	return q->limits.max_segment_size;
- }
- 
--static inline unsigned short queue_logical_block_size(struct request_queue *q)
-+static inline unsigned queue_logical_block_size(struct request_queue *q)
- {
- 	int retval = 512;
- 
-@@ -1483,7 +1483,7 @@ static inline unsigned short queue_logic
- 	return retval;
- }
- 
--static inline unsigned short bdev_logical_block_size(struct block_device *bdev)
-+static inline unsigned int bdev_logical_block_size(struct block_device *bdev)
- {
- 	return queue_logical_block_size(bdev_get_queue(bdev));
- }
 
 
