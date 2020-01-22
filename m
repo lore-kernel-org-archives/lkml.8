@@ -2,222 +2,149 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E7BCC33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:13:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B478CC33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1679324655
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:13:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YyTGJm0C"
+	by mail.kernel.org (Postfix) with ESMTP id 88FB124655
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:14:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579680851;
+	bh=k7U2RfDoLgi/Ii8Mf+AvcQTzFLs6bamBnHLoYWY56pk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=W4WBfBZdsx9DnezKKTUdjbpfNx5me7RXL5lUZmxh7k5Dt2vqR9Sxssksa920ecesf
+	 bCp0JokuI0CwBJhJ7uD14KrU4E72HB3/NaaPtOwmf4oBf4cyBg/HAFw36t1xboUQW/
+	 sljRcQzW4ouAMeFyS9NHB4eCbKnLP+YrqxA8Xl4o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729012AbgAVINe (ORCPT
+        id S1729074AbgAVIOK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 03:13:34 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:40544 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbgAVINd (ORCPT
+        Wed, 22 Jan 2020 03:14:10 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45719 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725900AbgAVIOK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 03:13:33 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00M8Cxqb099296;
-        Wed, 22 Jan 2020 02:12:59 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579680779;
-        bh=DhZNPVYtbrpKrZkAkg13qDd9TroZfhPQ/2aqImA4XLQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=YyTGJm0CliogdcFd9gnifEAk8QmkOT+QCVGoH27ocDzrZPB7avzwnza5mzPX+UheB
-         WfIed/40LSUiLyMMRn74ExRwIwhhSSv1UJr7souRbL0Yr2UkTH1rE9itP9it9eg9Og
-         aM+RXxLq2QWw9UixnNzaKOvthN/78MMYypz3cRkI=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00M8CwGh095984
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 22 Jan 2020 02:12:58 -0600
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 22
- Jan 2020 02:12:58 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 22 Jan 2020 02:12:58 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00M8Co0Y069651;
-        Wed, 22 Jan 2020 02:12:51 -0600
-Subject: Re: [v3 4/6] dt-bindings: PCI: rcar: Add bindings for R-Car PCIe
- endpoint controller
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pci <linux-pci@vger.kernel.org>
-CC:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Simon Horman <horms@verge.net.au>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20200108162211.22358-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200108162211.22358-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CA+V-a8s1Jx8uZiSr0uiryS492EbFRoFg9QTwkosZsuyfRYp-3g@mail.gmail.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <9c65eb7a-539b-1fa3-f988-40c32aa8dfe3@ti.com>
-Date:   Wed, 22 Jan 2020 13:45:53 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Wed, 22 Jan 2020 03:14:10 -0500
+Received: by mail-wr1-f66.google.com with SMTP id j42so6161378wrj.12;
+        Wed, 22 Jan 2020 00:14:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Xc1OE301adpCBNtCcujnxgV30fLuT/0jt7wsYeyWTiw=;
+        b=G10Z8+4btQ/WyBIsGexaLb0r5r+YK1C8ovJF/namQRx8XXX4yp8MrLC78ctuFuZfKG
+         WUifP8WKFKmiTg/sJ0fUtH8fJF8UlmfLxYwg5UI2ig3Rofkkl472bsGSOFLtcqfySB33
+         OuzFJJoU0Km1n+60GoVAzsFAlT7otMooQPAuOUcUEFn0PTUqqrasmbLo6f4jev0Q4hey
+         qcOr9neNn9tGhvv/bOiM2xPG1aKn+pQyETQm+ZBAynLIvab88EkpFXdbuBUW7pAu7mKK
+         khyZqPhiZrGuNLPUmHhnm/lMRjdyE9NLgamGgYPZa6En7GYL+vSz1HMXWB2daMcL5MuF
+         Dz3g==
+X-Gm-Message-State: APjAAAUMpwjvjt8/P5keMMQrNR+K4whrVgPvpnqnvRg+YWRv6gO8yHPg
+        knSN49+UeCqwmxt53+1R3bk=
+X-Google-Smtp-Source: APXvYqyOheT4FKJM36xAAG9yMCEXeHGMeg+EQx4a7xD4e+fUU9QX1mOCKWXFyYyYhjo0+Jhd7Q+x3g==
+X-Received: by 2002:a05:6000:1187:: with SMTP id g7mr9774091wrx.109.1579680848513;
+        Wed, 22 Jan 2020 00:14:08 -0800 (PST)
+Received: from localhost (ip-37-188-245-167.eurotel.cz. [37.188.245.167])
+        by smtp.gmail.com with ESMTPSA id t25sm2838897wmj.19.2020.01.22.00.14.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jan 2020 00:14:07 -0800 (PST)
+Date:   Wed, 22 Jan 2020 09:14:06 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Rientjes <rientjes@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Wei Yang <richardw.yang@linux.intel.com>, hannes@cmpxchg.org,
+        vdavydov.dev@gmail.com, ktkhai@virtuozzo.com,
+        kirill.shutemov@linux.intel.com, yang.shi@linux.alibaba.com,
+        cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, alexander.duyck@gmail.com,
+        stable@vger.kernel.org
+Subject: Re: [Patch v4] mm: thp: remove the defer list related code since
+ this will not happen
+Message-ID: <20200122081406.GO29276@dhcp22.suse.cz>
+References: <20200117233836.3434-1-richardw.yang@linux.intel.com>
+ <20200118145421.0ab96d5d9bea21a3339d52fe@linux-foundation.org>
+ <alpine.DEB.2.21.2001181525250.27051@chino.kir.corp.google.com>
+ <20200120072237.GA18451@dhcp22.suse.cz>
+ <alpine.DEB.2.21.2001201307520.259466@chino.kir.corp.google.com>
+ <20200120212726.GB29276@dhcp22.suse.cz>
+ <alpine.DEB.2.21.2001211500250.157547@chino.kir.corp.google.com>
 MIME-Version: 1.0
-In-Reply-To: <CA+V-a8s1Jx8uZiSr0uiryS492EbFRoFg9QTwkosZsuyfRYp-3g@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.2001211500250.157547@chino.kir.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
-
-On 21/01/20 11:27 PM, Lad, Prabhakar wrote:
-> Hi Rob/Kishon,
+On Tue 21-01-20 15:08:39, David Rientjes wrote:
+> On Mon, 20 Jan 2020, Michal Hocko wrote:
 > 
-> On Wed, Jan 8, 2020 at 4:22 PM Lad Prabhakar <prabhakar.csengg@gmail.com> wrote:
->>
->> This patch adds the bindings for the R-Car PCIe endpoint driver.
->>
->> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->> ---
->>  .../devicetree/bindings/pci/rcar-pci-ep.yaml  | 76 +++++++++++++++++++
->>  1 file changed, 76 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml b/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
->> new file mode 100644
->> index 000000000000..99c2a1174463
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
->> @@ -0,0 +1,76 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +# Copyright (C) 2020 Renesas Electronics Europe GmbH - https://www.renesas.com/eu/en/
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/pci/rcar-pcie-ep.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Renesas R-Car PCIe Endpoint
->> +
->> +maintainers:
->> +  - Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->> +
->> +properties:
->> +  compatible:
->> +    items:
->> +      - const: renesas,r8a774c0-pcie-ep
->> +      - const: renesas,rcar-gen3-pcie-ep
->> +
->> +  reg:
->> +    maxItems: 5
->> +
->> +  reg-names:
->> +    items:
->> +      - const: apb-base
->> +      - const: memory0
->> +      - const: memory1
->> +      - const: memory2
->> +      - const: memory3
-
-As I had mentioned in the other patch, I'd prefer if we can create
-standard binding for representing the memory regions. IMHO we should
-create subnode for memory regions Each sub-node itself may or may not
-have more than one memory region.
-
-In your platform, since there can be only one allocation in a memory
-region, there should be 4 sub-nodes for each of the memory region and
-each node should have page_size (or some equivalent property) property
-to indicate page_size (= region_size).
-
-For a platform that doesn't have the restriction, there can be a single
-sub-node containing all the memory region.
-
-Let's wait for Rob's comment though.
-
-Thanks
-Kishon
->> +
->> +  power-domains:
->> +    maxItems: 1
->> +
->> +  resets:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    maxItems: 1
->> +
->> +  clock-names:
->> +    items:
->> +      - const: pcie
->> +
->> +  max-functions:
->> +    minimum: 1
->> +    maximum: 6
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - reg-names
->> +  - resets
->> +  - power-domains
->> +  - clocks
->> +  - clock-names
->> +  - max-functions
->> +
-> apart from dt_binding_check error are we OK with dt bindings ?
+> > > > > When migrating memcg charges of thp memory, there are two possibilities:
+> > > > > 
+> > > > >  (1) The underlying compound page is mapped by a pmd and thus does is not 
+> > > > >      on a deferred split queue (it's mapped), or
+> > > > > 
+> > > > >  (2) The compound page is not mapped by a pmd and is awaiting split on a
+> > > > >      deferred split queue.
+> > > > > 
+> > > > > The current charge migration implementation does *not* migrate charges for 
+> > > > > thp memory on the deferred split queue, it only migrates charges for pages 
+> > > > > that are mapped by a pmd.
+> > > > > 
+> > > > > Thus, to migrate charges, the underlying compound page cannot be on a 
+> > > > > deferred split queue; no list manipulation needs to be done in 
+> > > > > mem_cgroup_move_account().
+> > > > > 
+> > > > > With the current code, the underlying compound page is moved to the 
+> > > > > deferred split queue of the memcg its memory is not charged to, so 
+> > > > > susbequent reclaim will consider these pages for the wrong memcg.  Remove 
+> > > > > the deferred split queue handling in mem_cgroup_move_account() entirely.
+> > > > 
+> > > > I believe this still doesn't describe the underlying problem to the full
+> > > > extent. What happens with the page on the deferred list when it
+> > > > shouldn't be there in fact? Unless I am missing something deferred_split_scan
+> > > > will simply split that huge page. Which is a bit unfortunate but nothing
+> > > > really critical. This should be mentioned in the changelog.
+> > > > 
+> > > 
+> > > Are you referring to a compound page on the deferred split queue before a 
+> > > task is moved?  I'm not sure this is within the scope of Wei's patch.. 
+> > > this is simply preventing a page from being moved to the deferred split
+> > > queue of a memcg that it is not charged to.  Is there a concern about why 
+> > > this code can be removed or a suggestion on something else it should be 
+> > > doing instead?
+> > 
+> > No, I do not have any concern about the patch itslef. It is that the
+> > changelog doesn't decribe the user visible effect. All I am saying is
+> > that the current code splits THPs of moved pages under memory pressure
+> > even if that is not needed. And that is a clear bug.
 > 
-> Cheers,
-> --Prabhakar
-> 
->> +examples:
->> +  - |
->> +    #include <dt-bindings/clock/r8a774c0-cpg-mssr.h>
->> +    #include <dt-bindings/power/r8a774c0-sysc.h>
->> +
->> +     pcie0_ep: pcie-ep@fe000000 {
->> +            compatible = "renesas,r8a774c0-pcie-ep",
->> +                         "renesas,rcar-gen3-pcie-ep";
->> +            reg = <0 0xfe000000 0 0x80000>,
->> +                  <0x0 0xfe100000 0 0x100000>,
->> +                  <0x0 0xfe200000 0 0x200000>,
->> +                  <0x0 0x30000000 0 0x8000000>,
->> +                  <0x0 0x38000000 0 0x8000000>;
->> +            reg-names = "apb-base", "memory0", "memory1", "memory2", "memory3";
->> +            resets = <&cpg 319>;
->> +            power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
->> +            clocks = <&cpg CPG_MOD 319>;
->> +            clock-names = "pcie";
->> +            max-functions = /bits/ 8 <1>;
->> +    };
->> --
->> 2.20.1
->>
+> Ah, gotcha.  I tried to do this in the final paragraph of my amedment to 
+> Wei's patch and why it's important that this is marked as stable.
+
+I considered "susbequent reclaim will consider these pages for the wrong
+memcg." quite unclear TBH.
+ 
+> The current code in 5.4 from commit 87eaceb3faa59 places any migrated 
+> compound page onto the deferred split queue of the destination memcg 
+> regardless of whether it has a mapping pmd 
+> (list_empty(page_deferred_list()) was already false) or it does not have a 
+> mapping pmd (but is now on the wrong queue).  For the latter, 
+> can_split_huge_page() can help for the actual split but not for the 
+> removal of the page that is now erroneously on the queue.
+
+Does that mean that those fully mapped THPs are not going to be split?
+
+> For the former, 
+> memcg reclaim would not see the pages that it should split under memcg 
+> pressure so we'll see the same memcg oom conditions we saw before the 
+> deferred split shrinker became SHRINKER_MEMCG_AWARE: unnecessary ooms.
+
+OK, this is yet another user visibile effect and it would be better to
+mention it explicitly in the changelog. 
+
+-- 
+Michal Hocko
+SUSE Labs
