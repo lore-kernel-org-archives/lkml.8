@@ -2,91 +2,128 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6906FC33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 15:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A62C33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 15:38:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FBAC2465B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 15:37:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B16B2467C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 15:38:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iTr76a5s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726026AbgAVPhu (ORCPT
+        id S1726234AbgAVPiM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 10:37:50 -0500
-Received: from sauhun.de ([88.99.104.3]:43786 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725802AbgAVPhu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 10:37:50 -0500
-Received: from localhost (p54B33378.dip0.t-ipconnect.de [84.179.51.120])
-        by pokefinder.org (Postfix) with ESMTPSA id CC5B52C0713;
-        Wed, 22 Jan 2020 16:37:47 +0100 (CET)
-Date:   Wed, 22 Jan 2020 16:37:47 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Jean Delvare <jdelvare@suse.de>
-Cc:     Luca Ceresoli <luca@lucaceresoli.net>, linux-doc@vger.kernel.org,
-        linux-i2c@vger.kernel.org, Peter Rosin <peda@axentia.se>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 15/26] docs: i2c: smbus-protocol: enable kernel-doc
- function syntax
-Message-ID: <20200122153747.GA21343@ninjato>
-References: <20200105224006.10321-1-luca@lucaceresoli.net>
- <20200105225012.11701-1-luca@lucaceresoli.net>
- <20200105225012.11701-15-luca@lucaceresoli.net>
- <20200120154444.7c1d3863@endymion>
- <211da679-154f-15e3-52d3-a24d50c526cf@lucaceresoli.net>
- <20200122152608.40f7c90c@endymion>
+        Wed, 22 Jan 2020 10:38:12 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:56344 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726083AbgAVPiM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 10:38:12 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00MFc6tR077651;
+        Wed, 22 Jan 2020 09:38:06 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579707486;
+        bh=kob/UwlpiIAVRmzihXWH6e8kyXhag43yFDizmSZHPjI=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=iTr76a5sWaVHRjDaaRoVYUV2SFCQNgSFlLNz2pKoTE2OBgMMdNiqw+ChnfyHfsHu7
+         hlyPKGgVx3lP+twLBYVQza8cZO5N+e9Bk2YCWTf2oKO2PtdQPs5hpCueYqpP/orjfh
+         ZfoZADPIsNMwiNksp55/CMdNCVYr53gU/O7wX9Hc=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00MFc6IE049569
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 22 Jan 2020 09:38:06 -0600
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 22
+ Jan 2020 09:38:06 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 22 Jan 2020 09:38:06 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00MFc5da114332;
+        Wed, 22 Jan 2020 09:38:05 -0600
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <bunk@kernel.org>
+CC:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH net-next 1/2] phy: dp83826: Add phy IDs for DP83826N and 826NC
+Date:   Wed, 22 Jan 2020 09:34:54 -0600
+Message-ID: <20200122153455.8777-2-dmurphy@ti.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200122153455.8777-1-dmurphy@ti.com>
+References: <20200122153455.8777-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="wRRV7LY7NUeQGEoC"
-Content-Disposition: inline
-In-Reply-To: <20200122152608.40f7c90c@endymion>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add phy IDs to the DP83822 phy driver for the DP83826N
+and the DP83826NC devices.  The register map and features
+are the same for basic enablement.
 
---wRRV7LY7NUeQGEoC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ drivers/net/phy/Kconfig   | 4 ++--
+ drivers/net/phy/dp83822.c | 6 ++++++
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
-On Wed, Jan 22, 2020 at 03:26:08PM +0100, Jean Delvare wrote:
-> On Tue, 21 Jan 2020 18:31:23 +0100, Luca Ceresoli wrote:
-> > Good point. For v2 I added a new patch to use "Implemented by" also in
-> > i2c-protocol.rst.
->=20
-> BTW... I don't know how Wolfram feels about it, but I don't think
-> documentation changes need to be split to such fine-grained patches.
+diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+index 6b5ee26795a2..cc677ddd2719 100644
+--- a/drivers/net/phy/Kconfig
++++ b/drivers/net/phy/Kconfig
+@@ -346,9 +346,9 @@ config DAVICOM_PHY
+ 	  Currently supports dm9161e and dm9131
+ 
+ config DP83822_PHY
+-	tristate "Texas Instruments DP83822/825 PHYs"
++	tristate "Texas Instruments DP83822/825/826 PHYs"
+ 	---help---
+-	  Supports the DP83822 and DP83825I PHYs.
++	  Supports the DP83822, DP83825I, DP83826C and DP83826NC PHYs.
+ 
+ config DP83TC811_PHY
+ 	tristate "Texas Instruments DP83TC811 PHY"
+diff --git a/drivers/net/phy/dp83822.c b/drivers/net/phy/dp83822.c
+index 8a4b1d167ce2..5159b28baa0f 100644
+--- a/drivers/net/phy/dp83822.c
++++ b/drivers/net/phy/dp83822.c
+@@ -16,6 +16,8 @@
+ 
+ #define DP83822_PHY_ID	        0x2000a240
+ #define DP83825I_PHY_ID		0x2000a150
++#define DP83826C_PHY_ID		0x2000a130
++#define DP83826NC_PHY_ID	0x2000a110
+ 
+ #define DP83822_DEVADDR		0x1f
+ 
+@@ -319,12 +321,16 @@ static int dp83822_resume(struct phy_device *phydev)
+ static struct phy_driver dp83822_driver[] = {
+ 	DP83822_PHY_DRIVER(DP83822_PHY_ID, "TI DP83822"),
+ 	DP83822_PHY_DRIVER(DP83825I_PHY_ID, "TI DP83825I"),
++	DP83822_PHY_DRIVER(DP83826C_PHY_ID, "TI DP83826C"),
++	DP83822_PHY_DRIVER(DP83826NC_PHY_ID, "TI DP83826NC"),
+ };
+ module_phy_driver(dp83822_driver);
+ 
+ static struct mdio_device_id __maybe_unused dp83822_tbl[] = {
+ 	{ DP83822_PHY_ID, 0xfffffff0 },
+ 	{ DP83825I_PHY_ID, 0xfffffff0 },
++	{ DP83826C_PHY_ID, 0xfffffff0 },
++	{ DP83826NC_PHY_ID, 0xfffffff0 },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(mdio, dp83822_tbl);
+-- 
+2.25.0
 
-I don't mind too much. I think for a first version, fine grained can
-make review more easy. Maybe the second version could be less patches.
-Yet for me, since patchwork can handle series of patches, the amount
-doesn't matter too much. I am super happy that Luca did the work and you
-did the review!
-
-
---wRRV7LY7NUeQGEoC
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl4obEcACgkQFA3kzBSg
-KbZgnhAAobbez1AQk3ARJKpDVlYmSo8NsQHWUwQONM/7EffLjD8urWlZiCmTVhCI
-ca6MeCXcItFaoEzhlisYPA+G4sbkOhAjuXD1nmyAoEV5oTh3kPZvOQ5rUyrpBsIn
-5iK79er5tXUSjIBJUMUfEKiX4Ry95jvXZRv50ynnJdupFGbY4egbUElcDIjh4KYe
-0oJtDlat0ClqmcybeIEASfY1zebscTaJE2hbzIO1OZfyAxWrlwGp4FczDIFUUL0D
-FuGUVDz/nPy7EpHCfZQnVkl+MLVWzGX0pnhKCHZQIYsw79spwl4E77KR/N8y+PFo
-y7MZsOQkwbymQH9WjgNoqIR4GvQ7VS3AkiAjXHdw/Pf48JcGeEJ61rbjSWWEI1QB
-6BMu5G0vstmjT5uA7CGEj2YCU7KGZFSem5fcp9aU/iM/lAqp5mVIsbACNFbyO99H
-IubbvmIDg7stVVY20iJYS9L/vRRTs+o2g0aTZyFMr+tzLARQ8gRc1DhfJl09enCJ
-uqyyWXp9g+zidR41kDMd4kTB4Amq5xEHHJxYD0KIi8o/scSTWH7TNvz/okV3k4F8
-b84l5G641Xi2wL1Icme8xWncGfCs8vEHYyIdiPDCTPKSNhyl10QxRvtr/Q9Z1ess
-Ry8vKii/K276wptiVWJgf00qdl5w9CBfAYI3jY304job+8tdiiA=
-=gqj9
------END PGP SIGNATURE-----
-
---wRRV7LY7NUeQGEoC--
