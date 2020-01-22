@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16EA3C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 01:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D5C7C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 01:17:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E81D124656
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 01:17:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B6DA24673
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 01:17:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729148AbgAVBRU (ORCPT
+        id S1729117AbgAVBRQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 20:17:20 -0500
+        Tue, 21 Jan 2020 20:17:16 -0500
 Received: from mga06.intel.com ([134.134.136.31]:24737 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729113AbgAVBRQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 20:17:16 -0500
+        id S1728900AbgAVBRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 20:17:13 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 17:17:16 -0800
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 17:17:13 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,347,1574150400"; 
-   d="scan'208";a="244885539"
+   d="scan'208";a="244885521"
 Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by orsmga002.jf.intel.com with ESMTP; 21 Jan 2020 17:17:14 -0800
+  by orsmga002.jf.intel.com with ESMTP; 21 Jan 2020 17:17:12 -0800
 From:   Wei Yang <richardw.yang@linux.intel.com>
 To:     akpm@linux-foundation.org
 Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org, mhocko@suse.com,
         yang.shi@linux.alibaba.com, rientjes@google.com,
         Wei Yang <richardw.yang@linux.intel.com>
-Subject: [Patch v2 4/4] mm/migrate.c: handle same node and add failure in the same way
-Date:   Wed, 22 Jan 2020 09:16:47 +0800
-Message-Id: <20200122011647.13636-5-richardw.yang@linux.intel.com>
+Subject: [Patch v2 3/4] mm/migrate.c: check pagelist in move_pages_and_store_status()
+Date:   Wed, 22 Jan 2020 09:16:46 +0800
+Message-Id: <20200122011647.13636-4-richardw.yang@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200122011647.13636-1-richardw.yang@linux.intel.com>
 References: <20200122011647.13636-1-richardw.yang@linux.intel.com>
@@ -44,65 +44,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When page is not queued for migration, there are two possible cases:
-
-  * page already on the target node
-  * failed to add to migration queue
-
-Current code handle them differently, this leads to a behavior
-inconsistency.
-
-Usually for each page's status, we just do store for once. While for the
-page already on the target node, we might store the node information for
-twice:
-
-  * once when we found the page is on the target node
-  * second when moving the pages to target node successfully after above
-    action
-
-The reason is even we don't add the page to pagelist, but store_status()
-does store in a range which still contains the page.
-
-This patch handles these two cases in the same way to reduce this
-inconsistency and also make the code a little easier to read.
+When pagelist is empty, it is not necessary to do the move and store.
+Also it consolidate the empty list check in one place.
 
 Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
 Acked-by: Michal Hocko <mhocko@suse.com>
 ---
- mm/migrate.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ mm/migrate.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
 diff --git a/mm/migrate.c b/mm/migrate.c
-index 80d2bba57265..591f2e5caed6 100644
+index a4d3bd6475e1..80d2bba57265 100644
 --- a/mm/migrate.c
 +++ b/mm/migrate.c
-@@ -1654,18 +1654,18 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
- 		err = add_page_for_migration(mm, addr, current_node,
- 				&pagelist, flags & MPOL_MF_MOVE_ALL);
+@@ -1499,9 +1499,6 @@ static int do_move_pages_to_node(struct mm_struct *mm,
+ {
+ 	int err;
  
--		if (!err) {
--			/* The page is already on the target node */
--			err = store_status(status, i, current_node, 1);
--			if (err)
--				goto out_flush;
--			continue;
--		} else if (err > 0) {
-+		if (err > 0) {
- 			/* The page is successfully queued for migration */
- 			continue;
- 		}
+-	if (list_empty(pagelist))
+-		return 0;
+-
+ 	err = migrate_pages(pagelist, alloc_new_node_page, NULL, node,
+ 			MIGRATE_SYNC, MR_SYSCALL);
+ 	if (err)
+@@ -1589,6 +1586,9 @@ static int move_pages_and_store_status(struct mm_struct *mm, int node,
+ {
+ 	int err;
  
--		err = store_status(status, i, err, 1);
-+		/*
-+		 * Two possible cases for err here:
-+		 * == 0: page is already on the target node, then store
-+		 *       current_node to status
-+		 * <  0: failed to add page to list, then store err to status
-+		 */
-+		err = store_status(status, i, err ? : current_node, 1);
- 		if (err)
- 			goto out_flush;
- 
++	if (list_empty(pagelist))
++		return 0;
++
+ 	err = do_move_pages_to_node(mm, pagelist, node);
+ 	if (err)
+ 		return err;
+@@ -1676,9 +1676,6 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
+ 		current_node = NUMA_NO_NODE;
+ 	}
+ out_flush:
+-	if (list_empty(&pagelist))
+-		return err;
+-
+ 	/* Make sure we do not overwrite the existing error */
+ 	err1 = move_pages_and_store_status(mm, current_node, &pagelist,
+ 				status, start, i - start);
 -- 
 2.17.1
 
