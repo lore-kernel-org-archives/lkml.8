@@ -2,267 +2,182 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DDFDC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 15:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72549C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 15:51:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34918217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 15:45:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="crYe09iw"
+	by mail.kernel.org (Postfix) with ESMTP id 45DCB217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 15:51:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726164AbgAVPpA (ORCPT
+        id S1726004AbgAVPvJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 10:45:00 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23601 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725836AbgAVPo7 (ORCPT
+        Wed, 22 Jan 2020 10:51:09 -0500
+Received: from mail-io1-f72.google.com ([209.85.166.72]:55004 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725802AbgAVPvI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 10:44:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579707897;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zv+bCnNOl3qjnstEYa92uxa3f6bv0jFexwgAKSb/Wgw=;
-        b=crYe09iw3f0ZsDcGNGiKRcQoXgbubt3ieRWhv71QnKg2ua5fayT83nE2OBhR3YQEuf5KY0
-        UShW4DppuZjZWaGruROWKPxd5cN1+Okx0VxZ9n53YTd7ynCcgdZbnEuY0cO3ttiJzslysc
-        z5/7ptEYXN2wqbbOttLu8/ZxigzVtjA=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-190-JoF28ss-OPS5ZXXKYCMaSA-1; Wed, 22 Jan 2020 10:44:52 -0500
-X-MC-Unique: JoF28ss-OPS5ZXXKYCMaSA-1
-Received: by mail-wr1-f70.google.com with SMTP id b13so3222947wrx.22
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 07:44:51 -0800 (PST)
+        Wed, 22 Jan 2020 10:51:08 -0500
+Received: by mail-io1-f72.google.com with SMTP id k25so2105550ios.21
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 07:51:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zv+bCnNOl3qjnstEYa92uxa3f6bv0jFexwgAKSb/Wgw=;
-        b=eVT9z1N7/MCF8YQcw0bqrN87zxRxQC157FC5zZ5N1r3ziLfgRJZL8bPdtsKA9gCeNo
-         bMbJjYJT4vUDpvoglnh3mW3UnEwxdnZO0INvnT+3jqC7nJ5jZmNHc0IV35oqCShsG+1Z
-         U6h8JzFCuCkkHqMB52BtWC2o0gLcfmOH+NBhnE3JsO/CtDuYCR4OC2kzZlzwQDiw1rCp
-         EKcztuFGPym9i1qtFMfwMtrHPTMUj7I5zhDVmshiYG0Ajc4uZ09cVZ/Pj1feRwLs3sTP
-         s571SsglHh7Om+FfhJU6q5B8cTP1TSJmTOUvEykbOANxfm2ULAetDDmCxWEJeVbusL1F
-         OI8w==
-X-Gm-Message-State: APjAAAXvj4X8OlHDPsLewow4Di/tIc7B9iZjN3pv40JJX7j6vcYVwoHx
-        LQe59WZy49nKEPb8zdW2DTOXiTIFzFK4nxXwqmlHN+Ex7nPRdikGfGBprKJOJ2F/xFM+QUKTMqg
-        8gvEVSBfE18ovi2QSUozmAPL0
-X-Received: by 2002:a1c:1f51:: with SMTP id f78mr3608528wmf.60.1579707890544;
-        Wed, 22 Jan 2020 07:44:50 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzf+zGrSWPw3ihUGr7p4vlyzpMTPSct3QELlX5YtRHHUGB/lGQLmBvKenlxYxVN83lyYY0RNQ==
-X-Received: by 2002:a1c:1f51:: with SMTP id f78mr3608506wmf.60.1579707890287;
-        Wed, 22 Jan 2020 07:44:50 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:b8fe:679e:87eb:c059? ([2001:b07:6468:f312:b8fe:679e:87eb:c059])
-        by smtp.gmail.com with ESMTPSA id q3sm4358926wmj.38.2020.01.22.07.44.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Jan 2020 07:44:49 -0800 (PST)
-Subject: Re: [PATCH] svm/avic: iommu/amd: Flush IOMMU IRT after update all
- entries
-To:     "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
-Cc:     "joro@8bytes.org" <joro@8bytes.org>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>
-References: <20190320081432.2606-1-suravee.suthikulpanit@amd.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <d599b411-3f1e-c67e-dd39-ad4ef42764e7@redhat.com>
-Date:   Wed, 22 Jan 2020 16:44:45 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=oz0aXsHCjOMbmBxnBtJQMdHjycwqcbJ4fyUnOhk08pU=;
+        b=XJKMnIeH5/lO97l3kdZqqVeH9q4CocyLVyklRW/MmF9VYe/tH4jKJeVsTjK7uUpEHi
+         qj9CcE6NsVhGLfIjidLw7c86uPOE7k2kFF+U7BmycKtk9kneeYAIJWFoGUr++V9Wr3DM
+         zG/M2EzE4YoljD9rNtYNyMxnyOkVOQRuOKugCv5TV7tGjf+OZDNawqMssfyk5PA29prM
+         hEJ30xrFWioWNHRIOq0s8Hldw//KIGvOPI/dpSTTtth3QhVm+UbKqLBtwhEO72Dsq2u3
+         3JdcpLIJ9u+TN8ljwf75u1QOaHd+dreX6iVgacoqZI7DV0M/jbJjoDo2BO2J8iSwJBht
+         JB8g==
+X-Gm-Message-State: APjAAAVohZXI7Jlf89c04pu6SBHKtfFh0OKrwouHNXKbOSQbE6egK522
+        9C6VFjMI23+9TjIX8hN3UDt6VOYyzr6mbr3i2qqmU8rvE7x2
+X-Google-Smtp-Source: APXvYqwdMy7d9a8ubm5HisAzrL47OSq5SbRP4K6fvnj7jb3vxthnOBm3uYooNMcMWTi9WQKkSoPu+uDGsxTaC1RVB/dDH/yrtrnB
 MIME-Version: 1.0
-In-Reply-To: <20190320081432.2606-1-suravee.suthikulpanit@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a92:b744:: with SMTP id c4mr8082698ilm.34.1579708268100;
+ Wed, 22 Jan 2020 07:51:08 -0800 (PST)
+Date:   Wed, 22 Jan 2020 07:51:08 -0800
+In-Reply-To: <00000000000044bcb8059a0a577e@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000002b41f0059cbc7e2b@google.com>
+Subject: Re: KASAN: slab-out-of-bounds Read in vc_do_resize
+From:   syzbot <syzbot+c37a14770d51a085a520@syzkaller.appspotmail.com>
+To:     b.zolnierkie@samsung.com, daniel.vetter@ffwll.ch,
+        ghalat@redhat.com, gregkh@linuxfoundation.org, jslaby@suse.com,
+        linux-kernel@vger.kernel.org, nico@fluxnic.net,
+        okash.khawaja@gmail.com, oleksandr@redhat.com, sam@ravnborg.org,
+        syzkaller-bugs@googlegroups.com, textshell@uchuujin.de
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/03/19 09:14, Suthikulpanit, Suravee wrote:
-> When AVIC is enabled and the VM has discrete device assignment,
-> the interrupt remapping table (IRT) is used to keep track of which
-> destination APIC ID the IOMMU will inject the device interrput to.
-> 
-> This means every time a vcpu is blocked or context-switched (i.e.
-> vcpu_blocking/unblocking() and vcpu_load/put()), the information
-> in IRT must be updated and the IOMMU IRT flush command must be
-> issued.
-> 
-> The current implementation flushes IOMMU IRT every time an entry
-> is modified. If the assigned device has large number of interrupts
-> (hence large number of entries), this would add large amount of
-> overhead to vcpu context-switch. Instead, this can be optmized by
-> only flush IRT once per vcpu context-switch per device after all
-> IRT entries are modified.
-> 
-> The function amd_iommu_update_ga() is refactored to only update
-> IRT entry, while the amd_iommu_sync_ga() is introduced to allow
-> IRT flushing to be done separately.
-> 
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Radim Krčmář <rkrcmar@redhat.com>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-> ---
->  arch/x86/kvm/svm.c        | 35 ++++++++++++++++++++++++++++++++++-
->  drivers/iommu/amd_iommu.c | 20 +++++++++++++++++---
->  include/linux/amd-iommu.h | 13 ++++++++++---
->  3 files changed, 61 insertions(+), 7 deletions(-)
+syzbot has found a reproducer for the following crash on:
 
-I found this patch in my inbox...  I'd rather avoid allocating 8k of RAM
-per vCPU.  Can you make it per-VM?
+HEAD commit:    d96d875e Merge tag 'fixes_for_v5.5-rc8' of git://git.kerne..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=11554d85e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=83c00afca9cf5153
+dashboard link: https://syzkaller.appspot.com/bug?extid=c37a14770d51a085a520
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1659a721e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16aa59c9e00000
 
-Paolo
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+c37a14770d51a085a520@syzkaller.appspotmail.com
 
-> +	/*
-> +	 * Bitmap used to store PCI devid to sync
-> +	 * AMD IOMMU interrupt remapping table
-> +	 */
-> +	unsigned long *avic_devid_sync_bitmap;
->  };
->  
->  /*
-> @@ -1984,6 +1992,7 @@ static inline int
->  avic_update_iommu_vcpu_affinity(struct kvm_vcpu *vcpu, int cpu, bool r)
->  {
->  	int ret = 0;
-> +	int devid = 0;
->  	unsigned long flags;
->  	struct amd_svm_iommu_ir *ir;
->  	struct vcpu_svm *svm = to_svm(vcpu);
-> @@ -2001,9 +2010,21 @@ avic_update_iommu_vcpu_affinity(struct kvm_vcpu *vcpu, int cpu, bool r)
->  		goto out;
->  
->  	list_for_each_entry(ir, &svm->ir_list, node) {
-> -		ret = amd_iommu_update_ga(cpu, r, ir->data);
-> +		ret = amd_iommu_update_ga(cpu, r, ir->data, &devid);
->  		if (ret)
->  			break;
-> +		set_bit(devid, svm->avic_devid_sync_bitmap);
-> +	}
-> +
-> +	/* Sync AMD IOMMU interrupt remapping table changes for each device. */
-> +	devid = find_next_bit(svm->avic_devid_sync_bitmap,
-> +			      AVIC_DEVID_BITMAP_SIZE, 0);
-> +
-> +	while (devid < AVIC_DEVID_BITMAP_SIZE) {
-> +		clear_bit(devid, svm->avic_devid_sync_bitmap);
-> +		ret = amd_iommu_sync_ga(devid);
-> +		devid = find_next_bit(svm->avic_devid_sync_bitmap,
-> +				      AVIC_DEVID_BITMAP_SIZE, devid+1);
->  	}
->  out:
->  	spin_unlock_irqrestore(&svm->ir_list_lock, flags);
-> @@ -2107,6 +2128,13 @@ static int avic_init_vcpu(struct vcpu_svm *svm)
->  	INIT_LIST_HEAD(&svm->ir_list);
->  	spin_lock_init(&svm->ir_list_lock);
->  
-> +	svm->avic_devid_sync_bitmap = (void *)__get_free_pages(
-> +					GFP_KERNEL | __GFP_ZERO,
-> +					get_order(AVIC_DEVID_BITMAP_SIZE/8));
-> +	if (svm->avic_devid_sync_bitmap == NULL)
-> +		ret = -ENOMEM;
-> +	memset(svm->avic_devid_sync_bitmap, 0, AVIC_DEVID_BITMAP_SIZE/8);
-> +
->  	return ret;
->  }
->  
-> @@ -2221,6 +2249,11 @@ static void svm_free_vcpu(struct kvm_vcpu *vcpu)
->  	__free_pages(virt_to_page(svm->msrpm), MSRPM_ALLOC_ORDER);
->  	__free_page(virt_to_page(svm->nested.hsave));
->  	__free_pages(virt_to_page(svm->nested.msrpm), MSRPM_ALLOC_ORDER);
-> +
-> +	free_pages((unsigned long)svm->avic_devid_sync_bitmap,
-> +		   get_order(AVIC_DEVID_BITMAP_SIZE/8));
-> +	svm->avic_devid_sync_bitmap = NULL;
-> +
->  	kvm_vcpu_uninit(vcpu);
->  	kmem_cache_free(x86_fpu_cache, svm->vcpu.arch.guest_fpu);
->  	kmem_cache_free(kvm_vcpu_cache, svm);
-> diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-> index 2a7b78bb98b4..637bcc9192e5 100644
-> --- a/drivers/iommu/amd_iommu.c
-> +++ b/drivers/iommu/amd_iommu.c
-> @@ -4499,7 +4499,20 @@ int amd_iommu_create_irq_domain(struct amd_iommu *iommu)
->  	return 0;
->  }
->  
-> -int amd_iommu_update_ga(int cpu, bool is_run, void *data)
-> +int amd_iommu_sync_ga(int devid)
-> +{
-> +	struct amd_iommu *iommu = amd_iommu_rlookup_table[devid];
-> +
-> +	if (!iommu)
-> +		return -ENODEV;
-> +
-> +	iommu_flush_irt(iommu, devid);
-> +	iommu_completion_wait(iommu);
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(amd_iommu_sync_ga);
-> +
-> +int amd_iommu_update_ga(int cpu, bool is_run, void *data, int *id)
->  {
->  	unsigned long flags;
->  	struct amd_iommu *iommu;
-> @@ -4521,6 +4534,9 @@ int amd_iommu_update_ga(int cpu, bool is_run, void *data)
->  	if (!table)
->  		return -ENODEV;
->  
-> +	if (id)
-> +		*id = devid;
-> +
->  	raw_spin_lock_irqsave(&table->lock, flags);
->  
->  	if (ref->lo.fields_vapic.guest_mode) {
-> @@ -4536,8 +4552,6 @@ int amd_iommu_update_ga(int cpu, bool is_run, void *data)
->  
->  	raw_spin_unlock_irqrestore(&table->lock, flags);
->  
-> -	iommu_flush_irt(iommu, devid);
-> -	iommu_completion_wait(iommu);
->  	return 0;
->  }
->  EXPORT_SYMBOL(amd_iommu_update_ga);
-> diff --git a/include/linux/amd-iommu.h b/include/linux/amd-iommu.h
-> index 09751d349963..b94d4b33dfd7 100644
-> --- a/include/linux/amd-iommu.h
-> +++ b/include/linux/amd-iommu.h
-> @@ -193,8 +193,9 @@ static inline int amd_iommu_detect(void) { return -ENODEV; }
->  /* IOMMU AVIC Function */
->  extern int amd_iommu_register_ga_log_notifier(int (*notifier)(u32));
->  
-> -extern int
-> -amd_iommu_update_ga(int cpu, bool is_run, void *data);
-> +extern int amd_iommu_update_ga(int cpu, bool is_run, void *data, int *devid);
-> +
-> +extern int amd_iommu_sync_ga(int devid);
->  
->  #else /* defined(CONFIG_AMD_IOMMU) && defined(CONFIG_IRQ_REMAP) */
->  
-> @@ -205,7 +206,13 @@ amd_iommu_register_ga_log_notifier(int (*notifier)(u32))
->  }
->  
->  static inline int
-> -amd_iommu_update_ga(int cpu, bool is_run, void *data)
-> +amd_iommu_update_ga(int cpu, bool is_run, void *data, int *devid)
-> +{
-> +	return 0;
-> +}
-> +
-> +static inline int
-> +amd_iommu_sync_ga(int devid)
->  {
->  	return 0;
->  }
-> 
+==================================================================
+BUG: KASAN: slab-out-of-bounds in scr_memcpyw include/linux/vt_buffer.h:49 [inline]
+BUG: KASAN: slab-out-of-bounds in vc_do_resize+0xb5e/0x1af0 drivers/tty/vt/vt.c:1250
+Read of size 192 at addr ffff888095d34540 by task syz-executor536/9034
+
+CPU: 1 PID: 9034 Comm: syz-executor536 Not tainted 5.5.0-rc7-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1fb/0x318 lib/dump_stack.c:118
+ print_address_description+0x74/0x5c0 mm/kasan/report.c:374
+ __kasan_report+0x149/0x1c0 mm/kasan/report.c:506
+ kasan_report+0x26/0x50 mm/kasan/common.c:639
+ check_memory_region_inline mm/kasan/generic.c:182 [inline]
+ check_memory_region+0x2b6/0x2f0 mm/kasan/generic.c:192
+ memcpy+0x28/0x60 mm/kasan/common.c:125
+ scr_memcpyw include/linux/vt_buffer.h:49 [inline]
+ vc_do_resize+0xb5e/0x1af0 drivers/tty/vt/vt.c:1250
+ vc_resize+0x4f/0x60 drivers/tty/vt/vt.c:1304
+ fbcon_modechanged+0x701/0xdf0 drivers/video/fbdev/core/fbcon.c:2980
+ fbcon_update_vcs+0x31/0x40 drivers/video/fbdev/core/fbcon.c:3038
+ fb_set_var+0x8f5/0xdc0 drivers/video/fbdev/core/fbmem.c:1051
+ do_fb_ioctl+0x55e/0x780 drivers/video/fbdev/core/fbmem.c:1104
+ fb_ioctl+0xb9/0xf0 drivers/video/fbdev/core/fbmem.c:1180
+ do_vfs_ioctl+0x6e2/0x19b0 fs/ioctl.c:47
+ ksys_ioctl fs/ioctl.c:749 [inline]
+ __do_sys_ioctl fs/ioctl.c:756 [inline]
+ __se_sys_ioctl fs/ioctl.c:754 [inline]
+ __x64_sys_ioctl+0xe3/0x120 fs/ioctl.c:754
+ do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x446d49
+Code: e8 0c e8 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 5b 07 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fc010171db8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00000000006dbc48 RCX: 0000000000446d49
+RDX: 0000000020000000 RSI: 0000000000004601 RDI: 0000000000000004
+RBP: 00000000006dbc40 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc4c
+R13: 00007ffc8ab7313f R14: 00007fc0101729c0 R15: 0000000000000001
+
+Allocated by task 9034:
+ save_stack mm/kasan/common.c:72 [inline]
+ set_track mm/kasan/common.c:80 [inline]
+ __kasan_kmalloc+0x118/0x1c0 mm/kasan/common.c:513
+ kasan_kmalloc+0x9/0x10 mm/kasan/common.c:527
+ __do_kmalloc mm/slab.c:3656 [inline]
+ __kmalloc+0x254/0x340 mm/slab.c:3665
+ kmalloc include/linux/slab.h:561 [inline]
+ kzalloc+0x21/0x40 include/linux/slab.h:670
+ vc_do_resize+0x2af/0x1af0 drivers/tty/vt/vt.c:1187
+ vc_resize+0x4f/0x60 drivers/tty/vt/vt.c:1304
+ fbcon_modechanged+0x701/0xdf0 drivers/video/fbdev/core/fbcon.c:2980
+ fbcon_update_vcs+0x31/0x40 drivers/video/fbdev/core/fbcon.c:3038
+ fb_set_var+0x8f5/0xdc0 drivers/video/fbdev/core/fbmem.c:1051
+ fbcon_resize+0x819/0x11f0 drivers/video/fbdev/core/fbcon.c:2222
+ resize_screen drivers/tty/vt/vt.c:1126 [inline]
+ vc_do_resize+0x478/0x1af0 drivers/tty/vt/vt.c:1205
+ vc_resize+0x4f/0x60 drivers/tty/vt/vt.c:1304
+ fbcon_modechanged+0x701/0xdf0 drivers/video/fbdev/core/fbcon.c:2980
+ fbcon_update_vcs+0x31/0x40 drivers/video/fbdev/core/fbcon.c:3038
+ fb_set_var+0x8f5/0xdc0 drivers/video/fbdev/core/fbmem.c:1051
+ do_fb_ioctl+0x55e/0x780 drivers/video/fbdev/core/fbmem.c:1104
+ fb_ioctl+0xb9/0xf0 drivers/video/fbdev/core/fbmem.c:1180
+ do_vfs_ioctl+0x6e2/0x19b0 fs/ioctl.c:47
+ ksys_ioctl fs/ioctl.c:749 [inline]
+ __do_sys_ioctl fs/ioctl.c:756 [inline]
+ __se_sys_ioctl fs/ioctl.c:754 [inline]
+ __x64_sys_ioctl+0xe3/0x120 fs/ioctl.c:754
+ do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 8579:
+ save_stack mm/kasan/common.c:72 [inline]
+ set_track mm/kasan/common.c:80 [inline]
+ kasan_set_free_info mm/kasan/common.c:335 [inline]
+ __kasan_slab_free+0x12e/0x1e0 mm/kasan/common.c:474
+ kasan_slab_free+0xe/0x10 mm/kasan/common.c:483
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x10d/0x220 mm/slab.c:3757
+ load_elf_binary+0x2c82/0x36d0 fs/binfmt_elf.c:1085
+ search_binary_handler+0x190/0x5e0 fs/exec.c:1658
+ exec_binprm fs/exec.c:1701 [inline]
+ __do_execve_file+0x1565/0x1cc0 fs/exec.c:1821
+ do_execveat_common fs/exec.c:1867 [inline]
+ do_execve fs/exec.c:1884 [inline]
+ __do_sys_execve fs/exec.c:1960 [inline]
+ __se_sys_execve fs/exec.c:1955 [inline]
+ __x64_sys_execve+0x94/0xb0 fs/exec.c:1955
+ do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff888095d34400
+ which belongs to the cache kmalloc-512 of size 512
+The buggy address is located 320 bytes inside of
+ 512-byte region [ffff888095d34400, ffff888095d34600)
+The buggy address belongs to the page:
+page:ffffea0002574d00 refcount:1 mapcount:0 mapping:ffff8880aa800a80 index:0x0
+raw: 00fffe0000000200 ffffea0002741f88 ffffea0002846a48 ffff8880aa800a80
+raw: 0000000000000000 ffff888095d34000 0000000100000004 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff888095d34480: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ ffff888095d34500: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>ffff888095d34580: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+                   ^
+ ffff888095d34600: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff888095d34680: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+==================================================================
 
