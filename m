@@ -2,68 +2,125 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F82CC32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 23:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88192C33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 23:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 057F82465B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 23:39:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54F632465B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 23:42:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579736567;
+	bh=Sd965qx4rNYovA2Bescha2cMJBCnvrEicXuY2crMbgY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=EQrS0oePL3tcZzTMB2albYu7C85TyiYAWxUEr0kmpuWbHNlmTt5uRcdZRjxPwJxEO
+	 0Zg/TvR+ppoJegPaHFc35qPF17HIWehFDm6x3xqBpgOmkC3vPl04w5lSkt4CUDsXeM
+	 aSPTdDdzUfMBfXeULOBBFC7C5SuaY2p3tew4PBy4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbgAVXj6 (ORCPT
+        id S1726207AbgAVXmq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 18:39:58 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:51643 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbgAVXj5 (ORCPT
+        Wed, 22 Jan 2020 18:42:46 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:45088 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbgAVXmq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 18:39:57 -0500
-Received: from [82.43.126.140] (helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1iuPbH-0007hb-GW; Wed, 22 Jan 2020 23:39:55 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Johan Hovold <johan@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] USB: serial: cyberjack: fix spelling mistake "To" -> "Too"
-Date:   Wed, 22 Jan 2020 23:39:55 +0000
-Message-Id: <20200122233955.2829493-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.24.0
+        Wed, 22 Jan 2020 18:42:46 -0500
+Received: by mail-oi1-f196.google.com with SMTP id n16so1160786oie.12;
+        Wed, 22 Jan 2020 15:42:45 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lg4jSAKM7gmdLrtuj+ZTDRE7RMikkrcGhdjxjXqcPwY=;
+        b=dfVGJVG/vuXTN1b0YMtBAD83xwYyzisB07fuJgYJS6vZGlzt+ZtPqkernahswhqWwt
+         zp8bAi0RQYOvY8t8jQN8TV0NKB0hB7hjIOfleA3Q38m0/ZqPOgLU4n3tlsgtH6wwvvUX
+         lfyfQSER88grTurrDioIT0fjAS7WyNjTw4+BSsbH3oWpEIkyRzkZGCwBPqNrS+gWOTs5
+         dhz9XlcYmV7aEF9Aj2qWCv9g1aV+fI/WG35YmOLR1/TebiMOmo055w3e8xKdWOU9lmN1
+         MvBNPNxKLnZ29rN+daMtc+2wadeDzHD70WF3t/eUkwitwNKYI8PkcXA33OlJvZN1kHbY
+         cVGQ==
+X-Gm-Message-State: APjAAAX29bHwKzBaHkmVNR4su3a19LGMfMPKsERys9QtgcetJtcBNL1V
+        GPdfdm0/nPLF6u65uhIE6f0+MduhMgRDYsCUsnk=
+X-Google-Smtp-Source: APXvYqx0KUdPviphjZXMv7xv8oGPvXkntdpn0I4YSxlFArilKhN1hREAynd6/g1m8hUwNe1Qr5fYsDivPupMDr+4EEE=
+X-Received: by 2002:a54:488d:: with SMTP id r13mr8401732oic.115.1579736565557;
+ Wed, 22 Jan 2020 15:42:45 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20200120132408.20734-1-benjamin.gaignard@st.com>
+In-Reply-To: <20200120132408.20734-1-benjamin.gaignard@st.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 23 Jan 2020 00:42:34 +0100
+Message-ID: <CAJZ5v0jUiazEKB6keMXYLOgPQrRBMxhrLk2rVVwPsVg7O-iJ0A@mail.gmail.com>
+Subject: Re: [PATCH] cpuidle: coupled: fix warning when compiling with W=1
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Mon, Jan 20, 2020 at 2:24 PM Benjamin Gaignard
+<benjamin.gaignard@st.com> wrote:
+>
+> Fix the warning that show up when compiling with W=1
+>
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> ---
+>  drivers/cpuidle/coupled.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/cpuidle/coupled.c b/drivers/cpuidle/coupled.c
+> index b607278df25b..04003b90dc49 100644
+> --- a/drivers/cpuidle/coupled.c
+> +++ b/drivers/cpuidle/coupled.c
+> @@ -89,6 +89,7 @@
+>   * @coupled_cpus: mask of cpus that are part of the coupled set
+>   * @requested_state: array of requested states for cpus in the coupled set
+>   * @ready_waiting_counts: combined count of cpus  in ready or waiting loops
+> + * @abort_barrier: synchronisation point for abort cases
+>   * @online_count: count of cpus that are online
+>   * @refcnt: reference count of cpuidle devices that are using this struct
+>   * @prevent: flag to prevent coupled idle while a cpu is hotplugging
+> @@ -338,7 +339,7 @@ static void cpuidle_coupled_poke(int cpu)
+>
+>  /**
+>   * cpuidle_coupled_poke_others - wake up all other cpus that may be waiting
+> - * @dev: struct cpuidle_device for this cpu
+> + * @this_cpu: target cpu
+>   * @coupled: the struct coupled that contains the current cpu
+>   *
+>   * Calls cpuidle_coupled_poke on all other online cpus.
+> @@ -355,7 +356,7 @@ static void cpuidle_coupled_poke_others(int this_cpu,
+>
+>  /**
+>   * cpuidle_coupled_set_waiting - mark this cpu as in the wait loop
+> - * @dev: struct cpuidle_device for this cpu
+> + * @cpu: target cpu
+>   * @coupled: the struct coupled that contains the current cpu
+>   * @next_state: the index in drv->states of the requested state for this cpu
+>   *
+> @@ -376,7 +377,7 @@ static int cpuidle_coupled_set_waiting(int cpu,
+>
+>  /**
+>   * cpuidle_coupled_set_not_waiting - mark this cpu as leaving the wait loop
+> - * @dev: struct cpuidle_device for this cpu
+> + * @cpu: target cpu
+>   * @coupled: the struct coupled that contains the current cpu
+>   *
+>   * Removes the requested idle state for the specified cpuidle device.
+> @@ -412,7 +413,7 @@ static void cpuidle_coupled_set_done(int cpu, struct cpuidle_coupled *coupled)
+>
+>  /**
+>   * cpuidle_coupled_clear_pokes - spin until the poke interrupt is processed
+> - * @cpu - this cpu
+> + * @cpu: this cpu
+>   *
+>   * Turns on interrupts and spins until any outstanding poke interrupts have
+>   * been processed and the poke bit has been cleared.
+> --
 
-There is a spelling mistake in a dev_dbg message. Fix it.
-
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/usb/serial/cyberjack.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/usb/serial/cyberjack.c b/drivers/usb/serial/cyberjack.c
-index ebd76ab07b72..821970609695 100644
---- a/drivers/usb/serial/cyberjack.c
-+++ b/drivers/usb/serial/cyberjack.c
-@@ -276,7 +276,7 @@ static void cyberjack_read_int_callback(struct urb *urb)
- 		old_rdtodo = priv->rdtodo;
- 
- 		if (old_rdtodo > SHRT_MAX - size) {
--			dev_dbg(dev, "To many bulk_in urbs to do.\n");
-+			dev_dbg(dev, "Too many bulk_in urbs to do.\n");
- 			spin_unlock_irqrestore(&priv->lock, flags);
- 			goto resubmit;
- 		}
--- 
-2.24.0
-
+Queued up as 5.6 material, thanks!
