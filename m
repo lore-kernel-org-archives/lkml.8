@@ -2,115 +2,107 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA2DC33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E25DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D63421835
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:19:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23F1924656
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:20:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bVj+S+nY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Py6sZFPW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726584AbgAVSTl (ORCPT
+        id S1727453AbgAVSUP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 13:19:41 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:46252 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726026AbgAVSTl (ORCPT
+        Wed, 22 Jan 2020 13:20:15 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:42978 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725883AbgAVSUO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 13:19:41 -0500
-Received: by mail-pg1-f194.google.com with SMTP id z124so3910427pgb.13;
-        Wed, 22 Jan 2020 10:19:40 -0800 (PST)
+        Wed, 22 Jan 2020 13:20:14 -0500
+Received: by mail-lj1-f196.google.com with SMTP id y4so65283ljj.9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 10:20:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=vz27NAypvKnOYVfML3aV6UsXgqBBJ3TOPhh75RFKQdQ=;
-        b=bVj+S+nY/LX+PIQVXpxLKKPrDo7UbEY7K+tg2qNTxnr327+HjEbfhvngtXqwlZN1fq
-         xPTuLHEcoA02B2jFxpeZuUtUyWiSQ2cDhBAELBSyc70Ei+JsVRUx2ghAWhLGMHfgVEer
-         IYKX1t5mVbZe+K7n/+b3aZvlZd1fn8lJSjEbf8Fs+Xauo2tiZS9WgY6oZTli3PdbgJTH
-         ayQ/rslhcxmb36n+izipsc7U6AQI6bu3kN/zRnaypJS4jQGN0qZluU9MWWdbXQVOniZX
-         2eW2qD6pzDGkjzJFQgAQZg2NhC/Uno53n1Ec6rTFFDj+ZkbDPqUcdGJHJXNa5XEKnIsC
-         NmSg==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=vIx4lscja28Uh7U0W4QY+DTsixl+e93XKF+xyAQNdMk=;
+        b=Py6sZFPW2rMeWUelSibRbBmW0O9lCok0imy0xJPQxD6E5wUAmwUvG7228z23p6JjM2
+         UjNDlKBFDWAHAWBNLSzZJGpyPzmo+t1ZWX7pWot2/Keh7r9YC4/BusdkIjsRhOhzUb1u
+         ZMdT5WzgP9usGVMRUrOU0FEmzrDSNQd/jZ+JlLzeLF0gCML6gsJlFNpbQ7rBtJUcF3+x
+         HigiKuS8ujAFanPzShz6dbqHtKy01a4TsAoL+PPC3PMc5uGmDJH0eR+fWEYGNfesUTyV
+         K2ztLTZ1DnW4Srpx5HUes9jnw3SIWWPncUiMF6JJkwSBf1OsOBFxnNpx6FLQjF6sem9j
+         RUZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=vz27NAypvKnOYVfML3aV6UsXgqBBJ3TOPhh75RFKQdQ=;
-        b=V5bWG9/HG01agPSQr7n6CAmbgVw8E0GGJiwGo/37ST2OVf51D7seqs83yFuZVor1U6
-         M2ZmIuJLI01k+pdP8D2xJqHm+hT3dJcl5ESFbr+FDcAGKh1iCQqrQjli/vtcLU6p5ScE
-         5FhnvlTABu82dFD4zC4R4s32m3F8/3ozO0T95WS+HkmhofBVNpShPjan5j7TKUf894Vn
-         9JvNndOsea46Ro3qVbZTYjzQItEDYv7VAH0SV8TCfdzfIFhmVuALIQ/pM9zSUECIqPxc
-         j4wmcwqQlKye9f4ts65jj9zcIQrxkB7J/qpcLRfz86oja6fY0KeXvaZxy6Q/Q2Nh3AZ3
-         q6NQ==
-X-Gm-Message-State: APjAAAVsmeqjOB/myJkARbWGfn48yvGjiYn06itCi8nlrK5ls9ly1SEm
-        zV9t9Va904MoFESbjiiD/U77c52M
-X-Google-Smtp-Source: APXvYqwZFVAKAWPmMCZ9N4wtUls1yUSIpp2Qp48tPT6YFwShAP8YS9Pi8UuG4qffnKlEYDc1iSgsPw==
-X-Received: by 2002:a63:184d:: with SMTP id 13mr12304172pgy.132.1579717180514;
-        Wed, 22 Jan 2020 10:19:40 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id hg11sm4239183pjb.14.2020.01.22.10.19.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 22 Jan 2020 10:19:39 -0800 (PST)
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] hwmon fixes for v5.5-rc8
-Date:   Wed, 22 Jan 2020 10:19:37 -0800
-Message-Id: <20200122181937.18953-1-linux@roeck-us.net>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=vIx4lscja28Uh7U0W4QY+DTsixl+e93XKF+xyAQNdMk=;
+        b=jzcgFmrFQfeBviLCfLFbWmR4wwWaGOGivl2ljKGV6lxixpIE+3eOrgXHUcExTrfkKs
+         av6cxYokmNgsA09k9+ndoNJACiai7rM6AkHrAMNg62VqRnsN/twiMddt3TNvTKP9GK9N
+         yzq2tUIGQZcriDEFYSclvrsH+XQcXHW7S63vc892R8AamkUCmHuG87LGdNJnhVIRQO3Z
+         G7sfwg/J5cJhKuP0diKn9ka2OhwQxPXQqOv0AhvSAaDSf/hEINq2HDAWugEqfu84RflG
+         TAQav6pbhV+Wzc8B5YdCsyyKYy2R6EZw79HMBDcmscpi0hf3jOjhES3z1nWZEnb7NtAQ
+         0lZQ==
+X-Gm-Message-State: APjAAAXers4EUz+9pjqYXBxaBj93N2grzcHCNxclFd+xts+ewEPEMYvw
+        +vCmy7IO+tUfzh97GHfEZe8oblfIWvKmxxWexDBg1Q==
+X-Google-Smtp-Source: APXvYqxNDXbU8ueVFwAk29RRDB6v2Wy5WnK2yvmYNk28ZFeNKo4WqmbHLF/xp/FllzS+5GSJAZZR2B/JpGKIWq2MKuk=
+X-Received: by 2002:a2e:880a:: with SMTP id x10mr20107250ljh.211.1579717212687;
+ Wed, 22 Jan 2020 10:20:12 -0800 (PST)
+MIME-Version: 1.0
+References: <CAN5uoS_YyPXiqZnNfM32cxeAsK+xuPX9QRK94-DJ6oMQFrZPXQ@mail.gmail.com>
+In-Reply-To: <CAN5uoS_YyPXiqZnNfM32cxeAsK+xuPX9QRK94-DJ6oMQFrZPXQ@mail.gmail.com>
+From:   Etienne Carriere <etienne.carriere@linaro.org>
+Date:   Wed, 22 Jan 2020 19:20:01 +0100
+Message-ID: <CAN5uoS-9yUfAT4=a9ys4d_2wxh9nW_RgXd_-3T-zF2r-k-PtOw@mail.gmail.com>
+Subject: Re: [PATCH v11 2/2] mailbox: introduce ARM SMC based mailbox
+To:     Peng Fan <peng.fan@nxp.com>, f.fainelli@gmail.com,
+        andre.przywara@arm.com, linux-kernel@vger.kernel.org,
+        etienne carriere <etienne.carriere@st.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Hello Peng and all,
 
-Please pull hwmon fixes for Linux v5.5-rc8 from signed tag:
 
-    git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-for-v5.5-rc8
+> From: Peng Fan <peng.fan@nxp.com>
+>
+> This mailbox driver implements a mailbox which signals transmitted data
+> via an ARM smc (secure monitor call) instruction. The mailbox receiver
+> is implemented in firmware and can synchronously return data when it
+> returns execution to the non-secure world again.
+> An asynchronous receive path is not implemented.
+> This allows the usage of a mailbox to trigger firmware actions on SoCs
+> which either don't have a separate management processor or on which such
+> a core is not available. A user of this mailbox could be the SCP
+> interface.
+>
+> Modified from Andre Przywara's v2 patch
+> https://lore.kernel.org/patchwork/patch/812999/
+>
+> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 
-Thanks,
-Guenter
-------
+I've successfully tested your change on my board. It is a stm32mp1
+with TZ secure hardening and I run an OP-TEE firmware (possibly a TF-A
+sp_min) with a SCMI server for clock and reset. Upstream in progress.
+The platform uses 2 instances of your SMC based mailbox device driver
+(2 mailboxes). Works nice with your change.
 
-The following changes since commit b3a987b0264d3ddbb24293ebff10eddfc472f653:
+You can add my T-b tag: Tested-by: Etienne Carriere
+<etienne.carriere@linaro.org>
 
-  Linux 5.5-rc6 (2020-01-12 16:55:08 -0800)
+FYI, I'll (hopefully soon) post a change proposal in U-Boot ML for an
+equvalent 'SMC based mailbox' driver and SCMI agent protocol/device
+drivers for clock and reset controllers.
+I'm also working on getting this SCMI server upstream in TF-A and
+OP-TEE. Your SMC based mailbox driver is a valuable notification
+scheme for our SCMI services support in Arm TZ secure world.
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git tags/hwmon-for-v5.5-rc8
-
-for you to fetch changes up to 3bf8bdcf3bada771eb12b57f2a30caee69e8ab8d:
-
-  hwmon: (core) Do not use device managed functions for memory allocations (2020-01-17 07:57:16 -0800)
-
-----------------------------------------------------------------
-hwmon fixes for v5.5-final
-
-In hwmon core, do not use the hwmon parent device for device managed
-memory allocations, since parent device lifetime may not match hwmon
-device lifetime.
-
-Fix discrepancy between read and write values in adt7475 driver.
-
-Fix alarms and voltage limits in nct7802 driver.
-
-----------------------------------------------------------------
-Gilles Buloz (2):
-      hwmon: (nct7802) Fix voltage limits to wrong registers
-      hwmon: (nct7802) Fix non-working alarm on voltages
-
-Guenter Roeck (1):
-      hwmon: (core) Do not use device managed functions for memory allocations
-
-Luuk Paulussen (1):
-      hwmon: (adt7475) Make volt2reg return same reg as reg2volt input
-
- drivers/hwmon/adt7475.c |  5 ++--
- drivers/hwmon/hwmon.c   | 68 ++++++++++++++++++++++++++------------------
- drivers/hwmon/nct7802.c | 75 +++++++++++++++++++++++++++++++++++++++++++++----
- 3 files changed, 113 insertions(+), 35 deletions(-)
+Regards,
+Etienne
