@@ -2,83 +2,71 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5574C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B90C33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:13:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B3C620678
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:13:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6AAF20678
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:13:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729199AbgAVNNX (ORCPT
+        id S1729240AbgAVNNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:13:23 -0500
-Received: from sauhun.de ([88.99.104.3]:40682 "EHLO pokefinder.org"
+        Wed, 22 Jan 2020 08:13:49 -0500
+Received: from mx2.suse.de ([195.135.220.15]:34520 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726204AbgAVNNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:13:23 -0500
-Received: from localhost (p54B33378.dip0.t-ipconnect.de [84.179.51.120])
-        by pokefinder.org (Postfix) with ESMTPSA id B256B2C0713;
-        Wed, 22 Jan 2020 14:13:20 +0100 (CET)
-Date:   Wed, 22 Jan 2020 14:13:20 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Rishi Gupta <gupt21@gmail.com>
-Cc:     jikos@kernel.org, benjamin.tissoires@redhat.com,
-        wsa+renesas@sang-engineering.com, gregkh@linuxfoundation.org,
-        linux-i2c@vger.kernel.org, linux-input@vger.kernel.org,
+        id S1726204AbgAVNNs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:13:48 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id CEC1AB066;
+        Wed, 22 Jan 2020 13:13:46 +0000 (UTC)
+From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
+To:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] HID: mcp2221: add usb to i2c-smbus host bridge driver
-Message-ID: <20200122131320.GA20984@ninjato>
-References: <1579581860-29560-1-git-send-email-gupt21@gmail.com>
+Subject: [PATCH] MIPS: SGI-IP30: Check for valid pointer before using it
+Date:   Wed, 22 Jan 2020 14:13:34 +0100
+Message-Id: <20200122131334.21970-1-tbogendoerfer@suse.de>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="3MwIy2ne0vdjdPXF"
-Content-Disposition: inline
-In-Reply-To: <1579581860-29560-1-git-send-email-gupt21@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Fix issue detected by Smatch:
 
---3MwIy2ne0vdjdPXF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+    ./arch/mips/sgi-ip30/ip30-irq.c:236 heart_domain_free()
+     warn: variable dereferenced before check 'irqd' (see line 235)
 
-On Tue, Jan 21, 2020 at 10:14:20AM +0530, Rishi Gupta wrote:
-> MCP2221 is a USB HID to I2C/SMbus host bridge device. This
-> commit implements i2c and smbus host adapter support. 7-bit
-> address and i2c multi-message transaction is also supported.
->=20
-> Signed-off-by: Rishi Gupta <gupt21@gmail.com>
+Fixes: 7505576d1c1a ("MIPS: add support for SGI Octane (IP30)")
+Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+---
+ arch/mips/sgi-ip30/ip30-irq.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-My main concern is there are quite some limitations in mcp_i2c_xfer().
-Looking at them, I think we should just drop it. This seems to be an
-SMBus controller, not I2C. Or?
+diff --git a/arch/mips/sgi-ip30/ip30-irq.c b/arch/mips/sgi-ip30/ip30-irq.c
+index d45865c7644c..11cd2a888de5 100644
+--- a/arch/mips/sgi-ip30/ip30-irq.c
++++ b/arch/mips/sgi-ip30/ip30-irq.c
+@@ -245,9 +245,10 @@ static void heart_domain_free(struct irq_domain *domain,
+ 		return;
+ 
+ 	irqd = irq_domain_get_irq_data(domain, virq);
+-	clear_bit(irqd->hwirq, heart_irq_map);
+-	if (irqd && irqd->chip_data)
++	if (irqd) {
++		clear_bit(irqd->hwirq, heart_irq_map);
+ 		kfree(irqd->chip_data);
++	}
+ }
+ 
+ static const struct irq_domain_ops heart_domain_ops = {
+-- 
+2.24.1
 
-
---3MwIy2ne0vdjdPXF
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl4oSmwACgkQFA3kzBSg
-KbYUUQ//QRTq13acJjQ3rK7tv03qoLYBTDze3sLkt3dr/yc6ZTQAlXxHGEWdCAzE
-zGI4hOu0rpLt+Rm1KQsQo/FDgU7fy4BXSi9oe5zr5TPRctWVAV3MpcqRq0CIRDwP
-TcQ7QsXawtCRtwhlOOVzYMqK8DOkeXQncs0qT3ilqpruBA5gbmJanMyVpNU9hQMG
-i9fYTdYNBgnydG7TqvCA5Vn2hOQuwIJjt/vNFhDu5dum9koKe+K3P1Ns7TtqeCcA
-xB4YL0eQydWNrS0U0nKQoT8L7cwWOwQEa6Nk6zKLIsKRLFbYdQu0KpEBi+KEmzCC
-jXHL9B221rG6fvgDp0VaPCRrQzdexgu2tIAH2TQHVReK9+wZOFVIvz135Y3lj3sR
-TcORLIPjziA62yQwTWA839liZEYlAAyEcwOUL0U7w7TYMu49SJ0o79nj+Skw3kUt
-SwSqq9LLlWO7UJ09omKhikj3zgfBGz7e9V4dCUqZLcSntGEK3yDZBFqXwKGqT3sd
-GiAEZu6zocdiZxX5CdUQhJQmUMJHNqD/xYTS6PqKwIu/Kg9jffUgwylV+j4Pmbv5
-m/cetIceeRk3DXZ2RUCt0KZBg0UrwueiuBYetiETINRkgDlzNI9FjHYJROFN61ph
-ux8Dp4L2SaGrwScrrH+2fiQdpl3RBDNYG7L1ssJCLjXN6pW6jvI=
-=hhi+
------END PGP SIGNATURE-----
-
---3MwIy2ne0vdjdPXF--
