@@ -2,113 +2,89 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 562C9C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:38:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 862CBC32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 290282465B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:38:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DbgiU9Uj"
+	by mail.kernel.org (Postfix) with ESMTP id 5806E2465B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:41:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728733AbgAVGiR (ORCPT
+        id S1726061AbgAVGlk convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 01:38:17 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:35882 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726026AbgAVGiQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 01:38:16 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1579675096; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=BTMKD1kC1hneaJuLFHdKQBVHUfBZ4mFs37EkrltHpA8=;
- b=DbgiU9UjrV5d3f7N+DkeQ0gJGxxU7I+C6WGhIy83Pw/qw8s53yGYofMXC3SlkNi7g9K193QV
- 34iD4wf5qn38xw+VTHaZ1xiket+h2X/AsM5O+HduB0aC1uchECxcMvQPepk/BpAYhivZeSx/
- o8zZYDAxxhrEqzpKN8/6f4DpgyM=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e27edd7.7f0d7ee9f810-smtp-out-n02;
- Wed, 22 Jan 2020 06:38:15 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 896FBC447A1; Wed, 22 Jan 2020 06:38:14 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E8A42C433CB;
-        Wed, 22 Jan 2020 06:38:13 +0000 (UTC)
+        Wed, 22 Jan 2020 01:41:40 -0500
+Received: from szxga01-in.huawei.com ([45.249.212.187]:2932 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725883AbgAVGlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 01:41:40 -0500
+Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.55])
+        by Forcepoint Email with ESMTP id 5DC50164CDFF9D86DBC1;
+        Wed, 22 Jan 2020 14:41:37 +0800 (CST)
+Received: from dggeme766-chm.china.huawei.com (10.3.19.112) by
+ DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 22 Jan 2020 14:41:36 +0800
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ dggeme766-chm.china.huawei.com (10.3.19.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Wed, 22 Jan 2020 14:41:36 +0800
+Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
+ dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1713.004;
+ Wed, 22 Jan 2020 14:41:36 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+CC:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCH] KVM: X86: Add 'else' to unify fastop and execute call
+ path
+Thread-Topic: [PATCH] KVM: X86: Add 'else' to unify fastop and execute call
+ path
+Thread-Index: AdXQ7h4phXDfYzF8TkGgPxWB+LvmzQ==
+Date:   Wed, 22 Jan 2020 06:41:36 +0000
+Message-ID: <2b928100e8354aa8a2bf2bba845e8bee@huawei.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.173.221.158]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 22 Jan 2020 12:08:13 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Evan Green <evgreen@chromium.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Ohad Ben Cohen <ohad@wizery.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-remoteproc@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        linux-remoteproc-owner@vger.kernel.org
-Subject: Re: [PATCH 2/4] remoteproc: qcom: q6v5-mss: Improve readability
- across clk handling
-In-Reply-To: <CAE=gft4Erwjgvj18DuiJaTEUz=1DwzSBtiCTU0QuoGO1+kzsNg@mail.gmail.com>
-References: <20200117135130.3605-1-sibis@codeaurora.org>
- <20200117135130.3605-3-sibis@codeaurora.org>
- <CAE=gft4Erwjgvj18DuiJaTEUz=1DwzSBtiCTU0QuoGO1+kzsNg@mail.gmail.com>
-Message-ID: <4663ec41c6e8dec0a2504aa1ddcf838d@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Evan,
-
-Thanks for the review!
-
-On 2020-01-22 00:52, Evan Green wrote:
-> On Fri, Jan 17, 2020 at 5:51 AM Sibi Sankar <sibis@codeaurora.org> 
-> wrote:
+Hi:
+Sean Christopherson <sean.j.christopherson@intel.com> wrote:
+> On Wed, Jan 22, 2020 at 11:21:44AM +0800, linmiaohe wrote:
+>> From: Miaohe Lin <linmiaohe@huawei.com>
 >> 
->> Define CLKEN and CLKOFF for improving readability of Q6SS clock
->> handling.
->> 
->> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> 
-> It took me awhile to wrap my head around how this new define,
-> Q6SS_CBCR_TIMEOUT_US, sometimes replaces HALT_CHECK_MAX_LOOPS and
-> sometimes replaces SLEEP_CHECK_MAX_LOOPS. I guess they're conceptually
-> different but set to the same value for now? And you've fixed up a
-> place where the wrong one was used? If you thought the distinction was
-> meaningless I'd also be fine merging these two defines into one.
+>> It also helps eliminate some duplicated code.
+>
+> Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
 
-They really aren't that different
-both are Clks with the same timeout
-the previous naming was just plain
-bad.
+Thanks for your review.
 
-SLEEP_CHECK_MAX_LOOPS was used
-probably because it was referring
-to QDSP6SS_SLEEP CBCRs timeout.
-HALT_CHECK_MAX_LOOOPS seems to
-taken directly from CAF code. So
-we should be fine with merging
-the two defines into one.
+>
+>>  		if (ctxt->d & Fastop) {
+>>  			void (*fop)(struct fastop *) = (void *)ctxt->execute;
+>
+>The brackets can also be removed with a bit more cleanup, e.g. using a typedef to handling casting ctxt->execute.  I'll send a patch that can be applied on top and/or squashed with this one.
 
-> Either way, assuming the above is intentional, this looks ok to me.
-> Thanks for renaming that define.
-> 
-> Reviewed-by: Evan Green <evgreen@chromium.org>
+Thanks for doing this. :)
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+>
+>>  			rc = fastop(ctxt, fop);
