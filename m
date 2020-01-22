@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D1DC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:57:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 925DEC33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AD732465A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:57:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 588E824688
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:57:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579687051;
-	bh=c0gxPAEd/zpRFcwzNNKQm8bhr5vCEg4u8wtCDuz6ZLE=;
+	s=default; t=1579687056;
+	bh=Oogjn1641qqnsLaIbsL6+IzoJpqGsW+vBvF7sxRiUBY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CjCMWKz2icSeJNz6mHsUFTRrr10x1WmlpC2VvcCYAaJ70HSe/kOmbsFvSh/9+mQq/
-	 YUQo77rSgwkq/XOrnAytSTpgIuMWYw8D1oRs9M/8NiqdSySZJpPIP4pfdfRbNU9hjF
-	 20hrX6gJVx/Rpp3ZiHz+8uWRBjRHScRrKTLxrnMs=
+	b=EftQfay/AprpJaRHA4KAsOjjl/DnDISQchADPzZSjDvyqPlJQZyX/ZO6TMUpkxrn5
+	 V6mz5fPSCPa5loTbNz/481E2sEWn9mzFUmeCCuIXrNlrFkKybWfScAt5WcrGNnFoUe
+	 KWHCrwqp2dB+oXFjPVTq6XKGbfe9kaNJx3qhttc4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729287AbgAVJak (ORCPT
+        id S1729030AbgAVJa1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:30:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42142 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:30:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729236AbgAVJag (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:30:36 -0500
+        id S1726077AbgAVJa1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:30:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E15932465B;
-        Wed, 22 Jan 2020 09:30:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 341EE24672;
+        Wed, 22 Jan 2020 09:30:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685436;
-        bh=c0gxPAEd/zpRFcwzNNKQm8bhr5vCEg4u8wtCDuz6ZLE=;
+        s=default; t=1579685426;
+        bh=Oogjn1641qqnsLaIbsL6+IzoJpqGsW+vBvF7sxRiUBY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UD9GqsROSy9E1F4HVaP5Avijuy+d8TOmGCuN6Pd2NFtmtV9DqLAoEA5Ttf/KRx4ag
-         aypXzLwamft5aFVHK3E/M+m2f6wOo2ZcCw39xawx+qx3X48G5XLyXMoo11L7xg7rl8
-         SQqRV5te7w1cqvYx09l8qsEl9vIi1118QLdxEcPc=
+        b=lPk81BVSjkRyoyXsVRz8maMfckaPsA7DzfZuD7cNlFNuEQwJxMXCsAB3efUGinmuD
+         Th2Cqof37kwbuwjJzg6u1smxu5f3W/94uekhNZMI14Dbz9V6AaHWsDz+fiB3ok3SZX
+         Oq/0xw0UQlHIJ2k9yozi3FriaDYMcf5YrhfP/b2M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
         Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 4.4 14/76] wimax: i2400: Fix memory leak in i2400m_op_rfkill_sw_toggle
-Date:   Wed, 22 Jan 2020 10:28:30 +0100
-Message-Id: <20200122092753.014344276@linuxfoundation.org>
+Subject: [PATCH 4.4 10/76] ALSA: line6: Fix memory leak at line6_init_pcm() error path
+Date:   Wed, 22 Jan 2020 10:28:26 +0100
+Message-Id: <20200122092752.571103099@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092751.587775548@linuxfoundation.org>
 References: <20200122092751.587775548@linuxfoundation.org>
@@ -61,40 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 6f3ef5c25cc762687a7341c18cbea5af54461407 upstream.
+commit 1bc8d18c75fef3b478dbdfef722aae09e2a9fde7 upstream.
 
-In the implementation of i2400m_op_rfkill_sw_toggle() the allocated
-buffer for cmd should be released before returning. The
-documentation for i2400m_msg_to_dev() says when it returns the buffer
-can be reused. Meaning cmd should be released in either case. Move
-kfree(cmd) before return to be reached by all execution paths.
+I forgot to release the allocated object at the early error path in
+line6_init_pcm().  For addressing it, slightly shuffle the code so
+that the PCM destructor (pcm->private_free) is assigned properly
+before all error paths.
 
-Fixes: 2507e6ab7a9a ("wimax: i2400: fix memory leak")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 3450121997ce ("ALSA: line6: Fix write on zero-sized buffer")
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+[bwh: Backported to 4.4: adjust context]
 Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/wimax/i2400m/op-rfkill.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/usb/line6/pcm.c |   18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
---- a/drivers/net/wimax/i2400m/op-rfkill.c
-+++ b/drivers/net/wimax/i2400m/op-rfkill.c
-@@ -142,12 +142,12 @@ int i2400m_op_rfkill_sw_toggle(struct wi
- 			"%d\n", result);
- 	result = 0;
- error_cmd:
--	kfree(cmd);
- 	kfree_skb(ack_skb);
- error_msg_to_dev:
- error_alloc:
- 	d_fnend(4, dev, "(wimax_dev %p state %d) = %d\n",
- 		wimax_dev, state, result);
-+	kfree(cmd);
- 	return result;
- }
+--- a/sound/usb/line6/pcm.c
++++ b/sound/usb/line6/pcm.c
+@@ -523,6 +523,15 @@ int line6_init_pcm(struct usb_line6 *lin
+ 	line6pcm->volume_monitor = 255;
+ 	line6pcm->line6 = line6;
  
++	spin_lock_init(&line6pcm->out.lock);
++	spin_lock_init(&line6pcm->in.lock);
++	line6pcm->impulse_period = LINE6_IMPULSE_DEFAULT_PERIOD;
++
++	line6->line6pcm = line6pcm;
++
++	pcm->private_data = line6pcm;
++	pcm->private_free = line6_cleanup_pcm;
++
+ 	/* Read and write buffers are sized identically, so choose minimum */
+ 	line6pcm->max_packet_size = min(
+ 			usb_maxpacket(line6->usbdev,
+@@ -535,15 +544,6 @@ int line6_init_pcm(struct usb_line6 *lin
+ 		return -EINVAL;
+ 	}
+ 
+-	spin_lock_init(&line6pcm->out.lock);
+-	spin_lock_init(&line6pcm->in.lock);
+-	line6pcm->impulse_period = LINE6_IMPULSE_DEFAULT_PERIOD;
+-
+-	line6->line6pcm = line6pcm;
+-
+-	pcm->private_data = line6pcm;
+-	pcm->private_free = line6_cleanup_pcm;
+-
+ 	err = line6_create_audio_out_urbs(line6pcm);
+ 	if (err < 0)
+ 		return err;
 
 
