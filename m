@@ -2,52 +2,53 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F74DC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E2FAC33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:42:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A17024684
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:42:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEE8C24680
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:42:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686140;
-	bh=P4BITB953pc9Zi4u61h9J8Co5S+Xeh3jJJKspwO/i+U=;
+	s=default; t=1579686142;
+	bh=jHBprxp/1PeGMzUlc4PrMliV22qHZ1Am/qBXQKmINT4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QaCZJu8UT7VNs+AgoBo2fvbrU+scxPQIBdWsiMIWoSJ7CoFwpOJds4Zj6AvBdvekw
-	 5LDJiyKkAEx0GrmnKixbSX2b11yONSK3Ax6/V41Lz4JgPelXYWm/Chg8C2AAneZGdI
-	 aV4+XqiwJGeESilhOC448DHZJMjBCqW5YP8W/AMM=
+	b=R6PFuA+eh6swm2IvaOdUDKSyhf7SnOLAsgMp5C2guhctAcxvw/UmLidp2upLEh+nP
+	 CnYw50ylYIxwznKqLlxa893n4wa/utQzKiiNaIdytcj7ps8zQlbc7KJf4M+AU7YPd0
+	 4QQi9+zec4+oFFfRpzMVWeBUAO3os9ZEAQ1d5c9o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387695AbgAVJmR (ORCPT
+        id S2387703AbgAVJmV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:42:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33828 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:42:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733219AbgAVJmJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:42:09 -0500
+        id S2387427AbgAVJmM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:42:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 354CE24686;
-        Wed, 22 Jan 2020 09:42:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF3DC2468C;
+        Wed, 22 Jan 2020 09:42:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686128;
-        bh=P4BITB953pc9Zi4u61h9J8Co5S+Xeh3jJJKspwO/i+U=;
+        s=default; t=1579686131;
+        bh=jHBprxp/1PeGMzUlc4PrMliV22qHZ1Am/qBXQKmINT4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xPo6vNbFs5389M56EJHE5zDaqoMAc31y0vqXPRoCA3Qrz9DUDEp/skreap2UaqQX/
-         GYwogkeavyfWy23XyWkSYc/7Kx6XQDdjtGSIQdpbQg4+pNxJrUbw+5MM5buQ5PETPj
-         29ZfACamotB4Ha1poxaQowRdIIP4n7yaQLiVBiQY=
+        b=AP6xMEia/Gt16nvI77ECLTimujG1AWK8ffeW7cHfBFrVrmGPmfVVFThQy+WLtS56g
+         EbBW/kBv15l2Q98fxyvgo0Z1RHF5hGv5ATRb/N4RUkJe9uNS+bx+m/a1vgBNd3qXRl
+         q0gDjNW8fAS/bA+SYLhevAyTmdu0BPBONXhAJaCg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Meng Li <Meng.Li@windriver.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 054/103] arm64: dts: agilex/stratix10: fix pmu interrupt numbers
-Date:   Wed, 22 Jan 2020 10:29:10 +0100
-Message-Id: <20200122092811.810664924@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Anatoly Trosinenko <anatoly.trosinenko@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Yonghong Song <yhs@fb.com>, Alexei Starovoitov <ast@kernel.org>
+Subject: [PATCH 4.19 055/103] bpf: Fix incorrect verifier simulation of ARSH under ALU32
+Date:   Wed, 22 Jan 2020 10:29:11 +0100
+Message-Id: <20200122092811.937013164@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
 References: <20200122092803.587683021@linuxfoundation.org>
@@ -60,43 +61,188 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dinh Nguyen <dinguyen@kernel.org>
+From: Daniel Borkmann <daniel@iogearbox.net>
 
-[ Upstream commit 210de0e996aee8e360ccc9e173fe7f0a7ed2f695 ]
+commit 0af2ffc93a4b50948f9dad2786b7f1bd253bf0b9 upstream.
 
-Fix up the correct interrupt numbers for the PMU unit on Agilex
-and Stratix10.
+Anatoly has been fuzzing with kBdysch harness and reported a hang in one
+of the outcomes:
 
-Fixes: 78cd6a9d8e15 ("arm64: dts: Add base stratix 10 dtsi")
-Cc: linux-stable <stable@vger.kernel.org>
-Reported-by: Meng Li <Meng.Li@windriver.com>
-Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  0: R1=ctx(id=0,off=0,imm=0) R10=fp0
+  0: (85) call bpf_get_socket_cookie#46
+  1: R0_w=invP(id=0) R10=fp0
+  1: (57) r0 &= 808464432
+  2: R0_w=invP(id=0,umax_value=808464432,var_off=(0x0; 0x30303030)) R10=fp0
+  2: (14) w0 -= 810299440
+  3: R0_w=invP(id=0,umax_value=4294967295,var_off=(0xcf800000; 0x3077fff0)) R10=fp0
+  3: (c4) w0 s>>= 1
+  4: R0_w=invP(id=0,umin_value=1740636160,umax_value=2147221496,var_off=(0x67c00000; 0x183bfff8)) R10=fp0
+  4: (76) if w0 s>= 0x30303030 goto pc+216
+  221: R0_w=invP(id=0,umin_value=1740636160,umax_value=2147221496,var_off=(0x67c00000; 0x183bfff8)) R10=fp0
+  221: (95) exit
+  processed 6 insns (limit 1000000) [...]
+
+Taking a closer look, the program was xlated as follows:
+
+  # ./bpftool p d x i 12
+  0: (85) call bpf_get_socket_cookie#7800896
+  1: (bf) r6 = r0
+  2: (57) r6 &= 808464432
+  3: (14) w6 -= 810299440
+  4: (c4) w6 s>>= 1
+  5: (76) if w6 s>= 0x30303030 goto pc+216
+  6: (05) goto pc-1
+  7: (05) goto pc-1
+  8: (05) goto pc-1
+  [...]
+  220: (05) goto pc-1
+  221: (05) goto pc-1
+  222: (95) exit
+
+Meaning, the visible effect is very similar to f54c7898ed1c ("bpf: Fix
+precision tracking for unbounded scalars"), that is, the fall-through
+branch in the instruction 5 is considered to be never taken given the
+conclusion from the min/max bounds tracking in w6, and therefore the
+dead-code sanitation rewrites it as goto pc-1. However, real-life input
+disagrees with verification analysis since a soft-lockup was observed.
+
+The bug sits in the analysis of the ARSH. The definition is that we shift
+the target register value right by K bits through shifting in copies of
+its sign bit. In adjust_scalar_min_max_vals(), we do first coerce the
+register into 32 bit mode, same happens after simulating the operation.
+However, for the case of simulating the actual ARSH, we don't take the
+mode into account and act as if it's always 64 bit, but location of sign
+bit is different:
+
+  dst_reg->smin_value >>= umin_val;
+  dst_reg->smax_value >>= umin_val;
+  dst_reg->var_off = tnum_arshift(dst_reg->var_off, umin_val);
+
+Consider an unknown R0 where bpf_get_socket_cookie() (or others) would
+for example return 0xffff. With the above ARSH simulation, we'd see the
+following results:
+
+  [...]
+  1: R1=ctx(id=0,off=0,imm=0) R2_w=invP65535 R10=fp0
+  1: (85) call bpf_get_socket_cookie#46
+  2: R0_w=invP(id=0) R10=fp0
+  2: (57) r0 &= 808464432
+    -> R0_runtime = 0x3030
+  3: R0_w=invP(id=0,umax_value=808464432,var_off=(0x0; 0x30303030)) R10=fp0
+  3: (14) w0 -= 810299440
+    -> R0_runtime = 0xcfb40000
+  4: R0_w=invP(id=0,umax_value=4294967295,var_off=(0xcf800000; 0x3077fff0)) R10=fp0
+                              (0xffffffff)
+  4: (c4) w0 s>>= 1
+    -> R0_runtime = 0xe7da0000
+  5: R0_w=invP(id=0,umin_value=1740636160,umax_value=2147221496,var_off=(0x67c00000; 0x183bfff8)) R10=fp0
+                              (0x67c00000)           (0x7ffbfff8)
+  [...]
+
+In insn 3, we have a runtime value of 0xcfb40000, which is '1100 1111 1011
+0100 0000 0000 0000 0000', the result after the shift has 0xe7da0000 that
+is '1110 0111 1101 1010 0000 0000 0000 0000', where the sign bit is correctly
+retained in 32 bit mode. In insn4, the umax was 0xffffffff, and changed into
+0x7ffbfff8 after the shift, that is, '0111 1111 1111 1011 1111 1111 1111 1000'
+and means here that the simulation didn't retain the sign bit. With above
+logic, the updates happen on the 64 bit min/max bounds and given we coerced
+the register, the sign bits of the bounds are cleared as well, meaning, we
+need to force the simulation into s32 space for 32 bit alu mode.
+
+Verification after the fix below. We're first analyzing the fall-through branch
+on 32 bit signed >= test eventually leading to rejection of the program in this
+specific case:
+
+  0: R1=ctx(id=0,off=0,imm=0) R10=fp0
+  0: (b7) r2 = 808464432
+  1: R1=ctx(id=0,off=0,imm=0) R2_w=invP808464432 R10=fp0
+  1: (85) call bpf_get_socket_cookie#46
+  2: R0_w=invP(id=0) R10=fp0
+  2: (bf) r6 = r0
+  3: R0_w=invP(id=0) R6_w=invP(id=0) R10=fp0
+  3: (57) r6 &= 808464432
+  4: R0_w=invP(id=0) R6_w=invP(id=0,umax_value=808464432,var_off=(0x0; 0x30303030)) R10=fp0
+  4: (14) w6 -= 810299440
+  5: R0_w=invP(id=0) R6_w=invP(id=0,umax_value=4294967295,var_off=(0xcf800000; 0x3077fff0)) R10=fp0
+  5: (c4) w6 s>>= 1
+  6: R0_w=invP(id=0) R6_w=invP(id=0,umin_value=3888119808,umax_value=4294705144,var_off=(0xe7c00000; 0x183bfff8)) R10=fp0
+                                              (0x67c00000)          (0xfffbfff8)
+  6: (76) if w6 s>= 0x30303030 goto pc+216
+  7: R0_w=invP(id=0) R6_w=invP(id=0,umin_value=3888119808,umax_value=4294705144,var_off=(0xe7c00000; 0x183bfff8)) R10=fp0
+  7: (30) r0 = *(u8 *)skb[808464432]
+  BPF_LD_[ABS|IND] uses reserved fields
+  processed 8 insns (limit 1000000) [...]
+
+Fixes: 9cbe1f5a32dc ("bpf/verifier: improve register value range tracking with ARSH")
+Reported-by: Anatoly Trosinenko <anatoly.trosinenko@gmail.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Yonghong Song <yhs@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Link: https://lore.kernel.org/bpf/20200115204733.16648-1-daniel@iogearbox.net
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ include/linux/tnum.h  |    2 +-
+ kernel/bpf/tnum.c     |    9 +++++++--
+ kernel/bpf/verifier.c |   13 ++++++++++---
+ 3 files changed, 18 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-index 9a1ea8a46405..85fffe03b96b 100644
---- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-+++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-@@ -59,10 +59,10 @@
+--- a/include/linux/tnum.h
++++ b/include/linux/tnum.h
+@@ -26,7 +26,7 @@ struct tnum tnum_lshift(struct tnum a, u
+ /* Shift (rsh) a tnum right (by a fixed shift) */
+ struct tnum tnum_rshift(struct tnum a, u8 shift);
+ /* Shift (arsh) a tnum right (by a fixed min_shift) */
+-struct tnum tnum_arshift(struct tnum a, u8 min_shift);
++struct tnum tnum_arshift(struct tnum a, u8 min_shift, u8 insn_bitness);
+ /* Add two tnums, return @a + @b */
+ struct tnum tnum_add(struct tnum a, struct tnum b);
+ /* Subtract two tnums, return @a - @b */
+--- a/kernel/bpf/tnum.c
++++ b/kernel/bpf/tnum.c
+@@ -43,14 +43,19 @@ struct tnum tnum_rshift(struct tnum a, u
+ 	return TNUM(a.value >> shift, a.mask >> shift);
+ }
  
- 	pmu {
- 		compatible = "arm,armv8-pmuv3";
--		interrupts = <0 120 8>,
--			     <0 121 8>,
--			     <0 122 8>,
--			     <0 123 8>;
-+		interrupts = <0 170 4>,
-+			     <0 171 4>,
-+			     <0 172 4>,
-+			     <0 173 4>;
- 		interrupt-affinity = <&cpu0>,
- 				     <&cpu1>,
- 				     <&cpu2>,
--- 
-2.20.1
-
+-struct tnum tnum_arshift(struct tnum a, u8 min_shift)
++struct tnum tnum_arshift(struct tnum a, u8 min_shift, u8 insn_bitness)
+ {
+ 	/* if a.value is negative, arithmetic shifting by minimum shift
+ 	 * will have larger negative offset compared to more shifting.
+ 	 * If a.value is nonnegative, arithmetic shifting by minimum shift
+ 	 * will have larger positive offset compare to more shifting.
+ 	 */
+-	return TNUM((s64)a.value >> min_shift, (s64)a.mask >> min_shift);
++	if (insn_bitness == 32)
++		return TNUM((u32)(((s32)a.value) >> min_shift),
++			    (u32)(((s32)a.mask)  >> min_shift));
++	else
++		return TNUM((s64)a.value >> min_shift,
++			    (s64)a.mask  >> min_shift);
+ }
+ 
+ struct tnum tnum_add(struct tnum a, struct tnum b)
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -3309,9 +3309,16 @@ static int adjust_scalar_min_max_vals(st
+ 		/* Upon reaching here, src_known is true and
+ 		 * umax_val is equal to umin_val.
+ 		 */
+-		dst_reg->smin_value >>= umin_val;
+-		dst_reg->smax_value >>= umin_val;
+-		dst_reg->var_off = tnum_arshift(dst_reg->var_off, umin_val);
++		if (insn_bitness == 32) {
++			dst_reg->smin_value = (u32)(((s32)dst_reg->smin_value) >> umin_val);
++			dst_reg->smax_value = (u32)(((s32)dst_reg->smax_value) >> umin_val);
++		} else {
++			dst_reg->smin_value >>= umin_val;
++			dst_reg->smax_value >>= umin_val;
++		}
++
++		dst_reg->var_off = tnum_arshift(dst_reg->var_off, umin_val,
++						insn_bitness);
+ 
+ 		/* blow away the dst_reg umin_value/umax_value and rely on
+ 		 * dst_reg var_off to refine the result.
 
 
