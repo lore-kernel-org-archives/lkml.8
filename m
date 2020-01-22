@@ -2,352 +2,106 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D298AC33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:07:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A6DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:09:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A82B321835
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:07:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 944C521835
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 18:09:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kGPOl54o"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DXn9jhr4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726207AbgAVSHo (ORCPT
+        id S1726590AbgAVSJP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 13:07:44 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:39778 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725802AbgAVSHo (ORCPT
+        Wed, 22 Jan 2020 13:09:15 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:44790 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725802AbgAVSJP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 13:07:44 -0500
-Received: by mail-pj1-f66.google.com with SMTP id e11so252452pjt.4;
-        Wed, 22 Jan 2020 10:07:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xnYwfJLFCQxsjI1sT9QdJcHNTqeM4du5eFaTToGMU+8=;
-        b=kGPOl54oA2TuU75A3iKGE9rcyaChNzibQL/64g/2z2vY9ieEWaeed5ahEXX830Yy5T
-         JNeeBEEcoBseL7c9bj3BV+fXiwXCZMmOiicqsr+0vtiI0ClwdGmU7Sd1P8Ol2fjjbj9X
-         qw0D73RLHVUgRkakOOcaol/QFM0jxM9pKrHUPZc22jNEmpY2jffnJEKfwql37lxi+s2X
-         40JZdfMKmCgpSSWXegBMXF6m6xlQ3xpPjI/DT25HyX4i7vzUoOqWgexb9sBOQBjn6i6m
-         dNO/0h9nDQieSZPpeGCHH90zTWrc7Bb8LOEMBvFNdDBShuKkyGNGLiFLTdYB4Vhaa+BW
-         UH1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xnYwfJLFCQxsjI1sT9QdJcHNTqeM4du5eFaTToGMU+8=;
-        b=A8aPk0rLFgALxslTL6LDXIhVcKrqjWgrDhKT1IkytyAeK97oqptffM+dyMdpNqOwJu
-         zI4o5pqOeah/bplyiHh8OdG9OTOfol2t7sM1dM0CA+2lyg8d/tMqnP/UTbFrSR4I+Z6b
-         IWiFxHJnLNTHio2j0Cgn8yY66st4mdSzwo0TNnroUrLCrx2YKvLPuhhRa9UwIsvNNmNx
-         9GXi/6DCiXP6/gQf2O4THArTRhtn7caV9h4phgmlra92OALzg3tZPVxwbVi1+IwIijpu
-         aCM2vcVYE7/pPomWQJns1yJ2XSAkarsX86fLRCmTWDLcTT70DOCnKcPiwbi2bvbaNpw7
-         mTnw==
-X-Gm-Message-State: APjAAAWdi9q4hwrrueM0IRe3KLJmaG3v2We0WsQ3JbRJu3AFeqoQU22g
-        waN07U8dqbW8/T7RBGq51ao=
-X-Google-Smtp-Source: APXvYqw0BypvPkRJD1EPiNCHWXS+Pr47S3XTG3EQZREVbjIePmSLII34dzU/0qUhHko64ynouc6bpQ==
-X-Received: by 2002:a17:90a:1b66:: with SMTP id q93mr4528301pjq.102.1579716463489;
-        Wed, 22 Jan 2020 10:07:43 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id v4sm49728956pgo.63.2020.01.22.10.07.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jan 2020 10:07:43 -0800 (PST)
-Date:   Wed, 22 Jan 2020 10:07:41 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: Re: [PATCH v2] Input: add IOC3 serio driver
-Message-ID: <20200122180741.GA184237@dtor-ws>
-References: <20200122135220.22354-1-tbogendoerfer@suse.de>
+        Wed, 22 Jan 2020 13:09:15 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00MI9CLo120991;
+        Wed, 22 Jan 2020 12:09:12 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579716552;
+        bh=hudcEPFRSIGSIHw+jPyyUY7WSm950jM9wfPNiqe6x00=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=DXn9jhr4TeNjWgztoDvGranJ3NSoQfcy0zE9JKu3BUj9qFtpRQO3LxTYo67+YdaIP
+         E/XoJM/rOTt6U2vzDhnMgRhVSQKV9Zz/FbSYTvbjZ7hHafLs9PMerMFRMft7BS0lyj
+         S1lGEQQ70xeTAratzByyoG0wOMKqQQ458PnI7XVo=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00MI9CMt072058
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 22 Jan 2020 12:09:12 -0600
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 22
+ Jan 2020 12:09:11 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 22 Jan 2020 12:09:11 -0600
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00MI9BUW069155;
+        Wed, 22 Jan 2020 12:09:11 -0600
+Subject: Re: [PATCH] ARM: OMAP2+: Fix undefined reference to omap_secure_init
+To:     "Andrew F. Davis" <afd@ti.com>, Tony Lindgren <tony@atomide.com>
+CC:     <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200122172017.4791-1-afd@ti.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <f183f31e-32ae-3e9e-96b4-a6f40984cd6e@ti.com>
+Date:   Wed, 22 Jan 2020 12:06:04 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200122135220.22354-1-tbogendoerfer@suse.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200122172017.4791-1-afd@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 02:52:20PM +0100, Thomas Bogendoerfer wrote:
-> This patch adds a platform driver for supporting keyboard and mouse
-> interface of SGI IOC3 chips.
-> 
-> Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Andrew
 
-Applied, thank you.
-
+On 1/22/20 11:20 AM, Andrew F. Davis wrote:
+> omap_secure_init() is now called from all OMAP2+ platforms during their
+> init_early() call. This function is in omap-secure.o so include that
+> in the build for these platforms.
+>
+> Fixes: db711893eac8 ("ARM: OMAP2+: Add omap_secure_init callback hook for secure initialization")
+> Reported-by: Dan Murphy <dmurphy@ti.com>
+> Signed-off-by: Andrew F. Davis <afd@ti.com>
 > ---
-> Changes in v2:
->  - track that serio is started before pushing data to it
-> 
->  drivers/input/serio/Kconfig   |  10 ++
->  drivers/input/serio/Makefile  |   1 +
->  drivers/input/serio/ioc3kbd.c | 214 ++++++++++++++++++++++++++++++++++
->  3 files changed, 225 insertions(+)
->  create mode 100644 drivers/input/serio/ioc3kbd.c
-> 
-> diff --git a/drivers/input/serio/Kconfig b/drivers/input/serio/Kconfig
-> index f3e18f8ef9ca..373a1646019e 100644
-> --- a/drivers/input/serio/Kconfig
-> +++ b/drivers/input/serio/Kconfig
-> @@ -165,6 +165,16 @@ config SERIO_MACEPS2
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called maceps2.
->  
-> +config SERIO_SGI_IOC3
-> +	tristate "SGI IOC3 PS/2 controller"
-> +	depends on SGI_MFD_IOC3
-> +	help
-> +	  Say Y here if you have an SGI Onyx2, SGI Octane or IOC3 PCI card
-> +	  and you want to attach and use a keyboard, mouse, or both.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called ioc3kbd.
-> +
->  config SERIO_LIBPS2
->  	tristate "PS/2 driver library"
->  	depends on SERIO_I8042 || SERIO_I8042=n
-> diff --git a/drivers/input/serio/Makefile b/drivers/input/serio/Makefile
-> index 67950a5ccb3f..6d97bad7b844 100644
-> --- a/drivers/input/serio/Makefile
-> +++ b/drivers/input/serio/Makefile
-> @@ -20,6 +20,7 @@ obj-$(CONFIG_HIL_MLC)		+= hp_sdc_mlc.o hil_mlc.o
->  obj-$(CONFIG_SERIO_PCIPS2)	+= pcips2.o
->  obj-$(CONFIG_SERIO_PS2MULT)	+= ps2mult.o
->  obj-$(CONFIG_SERIO_MACEPS2)	+= maceps2.o
-> +obj-$(CONFIG_SERIO_SGI_IOC3)	+= ioc3kbd.o
->  obj-$(CONFIG_SERIO_LIBPS2)	+= libps2.o
->  obj-$(CONFIG_SERIO_RAW)		+= serio_raw.o
->  obj-$(CONFIG_SERIO_AMS_DELTA)	+= ams_delta_serio.o
-> diff --git a/drivers/input/serio/ioc3kbd.c b/drivers/input/serio/ioc3kbd.c
-> new file mode 100644
-> index 000000000000..3decbaff40cc
-> --- /dev/null
-> +++ b/drivers/input/serio/ioc3kbd.c
-> @@ -0,0 +1,214 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * SGI IOC3 PS/2 controller driver for linux
-> + *
-> + * Copyright (C) 2019 Thomas Bogendoerfer <tbogendoerfer@suse.de>
-> + *
-> + * Based on code Copyright (C) 2005 Stanislaw Skowronek <skylark@unaligned.org>
-> + *               Copyright (C) 2009 Johannes Dickgreber <tanzy@gmx.de>
-> + */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/init.h>
-> +#include <linux/io.h>
-> +#include <linux/serio.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +
-> +#include <asm/sn/ioc3.h>
-> +
-> +struct ioc3kbd_data {
-> +	struct ioc3_serioregs __iomem *regs;
-> +	struct serio *kbd, *aux;
-> +	bool kbd_exists, aux_exists;
-> +	int irq;
-> +};
-> +
-> +static int ioc3kbd_wait(struct ioc3_serioregs __iomem *regs, u32 mask)
-> +{
-> +	unsigned long timeout = 0;
-> +
-> +	while ((readl(&regs->km_csr) & mask) && (timeout < 250)) {
-> +		udelay(50);
-> +		timeout++;
-> +	}
-> +	return (timeout >= 250) ? -ETIMEDOUT : 0;
-> +}
-> +
-> +static int ioc3kbd_write(struct serio *dev, u8 val)
-> +{
-> +	struct ioc3kbd_data *d = dev->port_data;
-> +	int ret;
-> +
-> +	ret = ioc3kbd_wait(d->regs, KM_CSR_K_WRT_PEND);
-> +	if (ret)
-> +		return ret;
-> +
-> +	writel(val, &d->regs->k_wd);
-> +
-> +	return 0;
-> +}
-> +
-> +static int ioc3kbd_start(struct serio *dev)
-> +{
-> +	struct ioc3kbd_data *d = dev->port_data;
-> +
-> +	d->kbd_exists = true;
-> +	return 0;
-> +}
-> +
-> +static void ioc3kbd_stop(struct serio *dev)
-> +{
-> +	struct ioc3kbd_data *d = dev->port_data;
-> +
-> +	d->kbd_exists = false;
-> +}
-> +
-> +static int ioc3aux_write(struct serio *dev, u8 val)
-> +{
-> +	struct ioc3kbd_data *d = dev->port_data;
-> +	int ret;
-> +
-> +	ret = ioc3kbd_wait(d->regs, KM_CSR_M_WRT_PEND);
-> +	if (ret)
-> +		return ret;
-> +
-> +	writel(val, &d->regs->m_wd);
-> +
-> +	return 0;
-> +}
-> +
-> +static int ioc3aux_start(struct serio *dev)
-> +{
-> +	struct ioc3kbd_data *d = dev->port_data;
-> +
-> +	d->aux_exists = true;
-> +	return 0;
-> +}
-> +
-> +static void ioc3aux_stop(struct serio *dev)
-> +{
-> +	struct ioc3kbd_data *d = dev->port_data;
-> +
-> +	d->aux_exists = false;
-> +}
-> +
-> +static void ioc3kbd_process_data(struct serio *dev, u32 data)
-> +{
-> +	if (data & KM_RD_VALID_0)
-> +		serio_interrupt(dev, (data >> KM_RD_DATA_0_SHIFT) & 0xff, 0);
-> +	if (data & KM_RD_VALID_1)
-> +		serio_interrupt(dev, (data >> KM_RD_DATA_1_SHIFT) & 0xff, 0);
-> +	if (data & KM_RD_VALID_2)
-> +		serio_interrupt(dev, (data >> KM_RD_DATA_2_SHIFT) & 0xff, 0);
-> +}
-> +
-> +static irqreturn_t ioc3kbd_intr(int itq, void *dev_id)
-> +{
-> +	struct ioc3kbd_data *d = dev_id;
-> +	u32 data_k, data_m;
-> +
-> +	data_k = readl(&d->regs->k_rd);
-> +	if (d->kbd_exists)
-> +		ioc3kbd_process_data(d->kbd, data_k);
-> +
-> +	data_m = readl(&d->regs->m_rd);
-> +	if (d->aux_exists)
-> +		ioc3kbd_process_data(d->aux, data_m);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int ioc3kbd_probe(struct platform_device *pdev)
-> +{
-> +	struct ioc3_serioregs __iomem *regs;
-> +	struct device *dev = &pdev->dev;
-> +	struct ioc3kbd_data *d;
-> +	struct serio *sk, *sa;
-> +	int irq, ret;
-> +
-> +	regs = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(regs))
-> +		return PTR_ERR(regs);
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0)
-> +		return -ENXIO;
-> +
-> +	d = devm_kzalloc(dev, sizeof(*d), GFP_KERNEL);
-> +	if (!d)
-> +		return -ENOMEM;
-> +
-> +	sk = kzalloc(sizeof(*sk), GFP_KERNEL);
-> +	if (!sk)
-> +		return -ENOMEM;
-> +
-> +	sa = kzalloc(sizeof(*sa), GFP_KERNEL);
-> +	if (!sa) {
-> +		kfree(sk);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	sk->id.type = SERIO_8042;
-> +	sk->write = ioc3kbd_write;
-> +	sk->start = ioc3kbd_start;
-> +	sk->stop = ioc3kbd_stop;
-> +	snprintf(sk->name, sizeof(sk->name), "IOC3 keyboard %d", pdev->id);
-> +	snprintf(sk->phys, sizeof(sk->phys), "ioc3/serio%dkbd", pdev->id);
-> +	sk->port_data = d;
-> +	sk->dev.parent = dev;
-> +
-> +	sa->id.type = SERIO_8042;
-> +	sa->write = ioc3aux_write;
-> +	sa->start = ioc3aux_start;
-> +	sa->stop = ioc3aux_stop;
-> +	snprintf(sa->name, sizeof(sa->name), "IOC3 auxiliary %d", pdev->id);
-> +	snprintf(sa->phys, sizeof(sa->phys), "ioc3/serio%daux", pdev->id);
-> +	sa->port_data = d;
-> +	sa->dev.parent = dev;
-> +
-> +	d->regs = regs;
-> +	d->kbd = sk;
-> +	d->aux = sa;
-> +	d->irq = irq;
-> +
-> +	platform_set_drvdata(pdev, d);
-> +	serio_register_port(d->kbd);
-> +	serio_register_port(d->aux);
-> +
-> +	ret = request_irq(irq, ioc3kbd_intr, IRQF_SHARED, "ioc3-kbd", d);
-> +	if (ret) {
-> +		dev_err(dev, "could not request IRQ %d\n", irq);
-> +		serio_unregister_port(d->kbd);
-> +		serio_unregister_port(d->aux);
-> +		return ret;
-> +	}
-> +
-> +	/* enable ports */
-> +	writel(KM_CSR_K_CLAMP_3 | KM_CSR_M_CLAMP_3, &regs->km_csr);
-> +
-> +	return 0;
-> +}
-> +
-> +static int ioc3kbd_remove(struct platform_device *pdev)
-> +{
-> +	struct ioc3kbd_data *d = platform_get_drvdata(pdev);
-> +
-> +	free_irq(d->irq, d);
-> +	serio_unregister_port(d->kbd);
-> +	serio_unregister_port(d->aux);
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver ioc3kbd_driver = {
-> +	.probe          = ioc3kbd_probe,
-> +	.remove         = ioc3kbd_remove,
-> +	.driver = {
-> +		.name = "ioc3-kbd",
-> +	},
-> +};
-> +module_platform_driver(ioc3kbd_driver);
-> +
-> +MODULE_AUTHOR("Thomas Bogendoerfer <tbogendoerfer@suse.de>");
-> +MODULE_DESCRIPTION("SGI IOC3 serio driver");
-> +MODULE_LICENSE("GPL");
-> -- 
-> 2.24.1
-> 
+>   arch/arm/mach-omap2/Makefile | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/arm/mach-omap2/Makefile b/arch/arm/mach-omap2/Makefile
+> index f07cfda85156..e1135b9d67c6 100644
+> --- a/arch/arm/mach-omap2/Makefile
+> +++ b/arch/arm/mach-omap2/Makefile
+> @@ -16,11 +16,11 @@ hwmod-common				= omap_hwmod.o omap_hwmod_reset.o \
+>   clock-common				= clock.o
+>   secure-common				= omap-smc.o omap-secure.o
+>   
+> -obj-$(CONFIG_ARCH_OMAP2) += $(omap-2-3-common) $(hwmod-common)
+> +obj-$(CONFIG_ARCH_OMAP2) += $(omap-2-3-common) $(hwmod-common) $(secure-common)
+>   obj-$(CONFIG_ARCH_OMAP3) += $(omap-2-3-common) $(hwmod-common) $(secure-common)
+>   obj-$(CONFIG_ARCH_OMAP4) += $(hwmod-common) $(secure-common)
+> -obj-$(CONFIG_SOC_AM33XX) += $(hwmod-common)
+> -obj-$(CONFIG_SOC_OMAP5)	 += $(hwmod-common) $(secure-common)
+> +obj-$(CONFIG_SOC_AM33XX) += $(hwmod-common) $(secure-common)
+> +obj-$(CONFIG_SOC_OMAP5)  += $(hwmod-common) $(secure-common)
+>   obj-$(CONFIG_SOC_AM43XX) += $(hwmod-common) $(secure-common)
+>   obj-$(CONFIG_SOC_DRA7XX) += $(hwmod-common) $(secure-common)
+>   
 
--- 
-Dmitry
+
+Tested-by: Dan Murphy <dmurphy@ti.com>
+
