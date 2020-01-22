@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A10C33CB8
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:31:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16430C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F096524673
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:31:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD88124685
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:31:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685491;
-	bh=Xhb31yo7QquruxshJy8J/2Lz4MTb/iTgEo7w7vN7zqs=;
+	s=default; t=1579685495;
+	bh=VtOjWHNIbJEPXkZmYYWEI19T89XfIChXLpIph3WiL90=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WsqLjUQ5Mfn2dSZjl7loE9vHzQvGCJG0Ba0aFSGFGVpU51Kybmg5EGNoQdrPYCp7/
-	 dvKzZjUSZg8VFpcKGT/t54ST5UIjX0Vx274u3os0yGHnUyKChXPoYdSmpbwrLCIthf
-	 8YnnhE2jUvkAZtUIjR5XoJTF1/aoXzojohmJEAVw=
+	b=0hv066yAFKC2JE5JmuF4X0i2pVZnWOBAMWTmD9t5FOIC8MUZ7sZXFCI2Vju0dApE6
+	 /GOHNrWYBnC5WKeCg74rFUHhy35lzKtQCZEHQhOTKy5vUSlq4Eax/kCWKwaCM7Q6h6
+	 5/vM6oeWkj6mo00hz7BZQ4hWg0ST3ntxA7wbzxA4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729740AbgAVJba (ORCPT
+        id S1729777AbgAVJbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:31:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43486 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:31:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729692AbgAVJb1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:31:27 -0500
+        id S1729721AbgAVJb3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:31:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CCCE24687;
-        Wed, 22 Jan 2020 09:31:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1943724684;
+        Wed, 22 Jan 2020 09:31:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685486;
-        bh=Xhb31yo7QquruxshJy8J/2Lz4MTb/iTgEo7w7vN7zqs=;
+        s=default; t=1579685488;
+        bh=VtOjWHNIbJEPXkZmYYWEI19T89XfIChXLpIph3WiL90=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1+3kLwMYN9ZTGAMNoxE33n9vak/fD8hP9ylnkSlzYLrGmyLuv+4Mb53T3nSnlzcS4
-         aPQfv36LCDSxsMAYGGb1bVvMxctaws/S06shxe4h/R+QYzzwzorNos3eFv1IfJDc70
-         2mpypZ6M188U707L/khAD3AIrbPAcsG2s8YOy1mE=
+        b=j03y6iQoeUhYJMATohZoOLOF4ENEO1/wfhCGDSRflNobZovqbW75hTG0IWYvLP7rc
+         1msxFgzJJ1rqZm/8O/jlEMxDgT3TUJlebgcG8uf6UuLrfVrqew3D0qoG+UYtNaBI2T
+         eOYLKymBX12FHb2f+KZG+Drjuih2bNbjQfyIY2S0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jouni Malinen <jouni@codeaurora.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        syzbot+66010012fd4c531a1a96@syzkaller.appspotmail.com,
+        Vandana BN <bnvandana@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 4.4 06/76] mac80211: Do not send Layer 2 Update frame before authorization
-Date:   Wed, 22 Jan 2020 10:28:22 +0100
-Message-Id: <20200122092752.276949072@linuxfoundation.org>
+Subject: [PATCH 4.4 07/76] media: usb:zr364xx:Fix KASAN:null-ptr-deref Read in zr364xx_vidioc_querycap
+Date:   Wed, 22 Jan 2020 10:28:23 +0100
+Message-Id: <20200122092752.364554176@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092751.587775548@linuxfoundation.org>
 References: <20200122092751.587775548@linuxfoundation.org>
@@ -61,98 +63,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jouni Malinen <jouni@codeaurora.org>
+From: Vandana BN <bnvandana@gmail.com>
 
-commit 3e493173b7841259a08c5c8e5cbe90adb349da7e upstream.
+commit 5d2e73a5f80a5b5aff3caf1ec6d39b5b3f54b26e upstream.
 
-The Layer 2 Update frame is used to update bridges when a station roams
-to another AP even if that STA does not transmit any frames after the
-reassociation. This behavior was described in IEEE Std 802.11F-2003 as
-something that would happen based on MLME-ASSOCIATE.indication, i.e.,
-before completing 4-way handshake. However, this IEEE trial-use
-recommended practice document was published before RSN (IEEE Std
-802.11i-2004) and as such, did not consider RSN use cases. Furthermore,
-IEEE Std 802.11F-2003 was withdrawn in 2006 and as such, has not been
-maintained amd should not be used anymore.
+SyzKaller hit the null pointer deref while reading from uninitialized
+udev->product in zr364xx_vidioc_querycap().
 
-Sending out the Layer 2 Update frame immediately after association is
-fine for open networks (and also when using SAE, FT protocol, or FILS
-authentication when the station is actually authenticated by the time
-association completes). However, it is not appropriate for cases where
-RSN is used with PSK or EAP authentication since the station is actually
-fully authenticated only once the 4-way handshake completes after
-authentication and attackers might be able to use the unauthenticated
-triggering of Layer 2 Update frame transmission to disrupt bridge
-behavior.
+==================================================================
+BUG: KASAN: null-ptr-deref in read_word_at_a_time+0xe/0x20
+include/linux/compiler.h:274
+Read of size 1 at addr 0000000000000000 by task v4l_id/5287
 
-Fix this by postponing transmission of the Layer 2 Update frame from
-station entry addition to the point when the station entry is marked
-authorized. Similarly, send out the VLAN binding update only if the STA
-entry has already been authorized.
+CPU: 1 PID: 5287 Comm: v4l_id Not tainted 5.1.0-rc3-319004-g43151d6 #6
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xe8/0x16e lib/dump_stack.c:113
+  kasan_report.cold+0x5/0x3c mm/kasan/report.c:321
+  read_word_at_a_time+0xe/0x20 include/linux/compiler.h:274
+  strscpy+0x8a/0x280 lib/string.c:207
+  zr364xx_vidioc_querycap+0xb5/0x210 drivers/media/usb/zr364xx/zr364xx.c:706
+  v4l_querycap+0x12b/0x340 drivers/media/v4l2-core/v4l2-ioctl.c:1062
+  __video_do_ioctl+0x5bb/0xb40 drivers/media/v4l2-core/v4l2-ioctl.c:2874
+  video_usercopy+0x44e/0xf00 drivers/media/v4l2-core/v4l2-ioctl.c:3056
+  v4l2_ioctl+0x14e/0x1a0 drivers/media/v4l2-core/v4l2-dev.c:364
+  vfs_ioctl fs/ioctl.c:46 [inline]
+  file_ioctl fs/ioctl.c:509 [inline]
+  do_vfs_ioctl+0xced/0x12f0 fs/ioctl.c:696
+  ksys_ioctl+0xa0/0xc0 fs/ioctl.c:713
+  __do_sys_ioctl fs/ioctl.c:720 [inline]
+  __se_sys_ioctl fs/ioctl.c:718 [inline]
+  __x64_sys_ioctl+0x74/0xb0 fs/ioctl.c:718
+  do_syscall_64+0xcf/0x4f0 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x7f3b56d8b347
+Code: 90 90 90 48 8b 05 f1 fa 2a 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff ff
+ff c3 90 90 90 90 90 90 90 90 90 90 b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff
+ff 73 01 c3 48 8b 0d c1 fa 2a 00 31 d2 48 29 c2 64
+RSP: 002b:00007ffe005d5d68 EFLAGS: 00000202 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f3b56d8b347
+RDX: 00007ffe005d5d70 RSI: 0000000080685600 RDI: 0000000000000003
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000400884
+R13: 00007ffe005d5ec0 R14: 0000000000000000 R15: 0000000000000000
+==================================================================
 
-Signed-off-by: Jouni Malinen <jouni@codeaurora.org>
-Reviewed-by: Johannes Berg <johannes@sipsolutions.net>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-[bwh: Backported to 4.4: adjust context]
+For this device udev->product is not initialized and accessing it causes a NULL pointer deref.
+
+The fix is to check for NULL before strscpy() and copy empty string, if
+product is NULL
+
+Reported-by: syzbot+66010012fd4c531a1a96@syzkaller.appspotmail.com
+Signed-off-by: Vandana BN <bnvandana@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+[bwh: Backported to 4.4: This function uses strlcpy() instead of strscpy()]
 Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/mac80211/cfg.c      |   11 +++--------
- net/mac80211/sta_info.c |    4 ++++
- 2 files changed, 7 insertions(+), 8 deletions(-)
+ drivers/media/usb/zr364xx/zr364xx.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/mac80211/cfg.c
-+++ b/net/mac80211/cfg.c
-@@ -1150,7 +1150,6 @@ static int ieee80211_add_station(struct
- 	struct sta_info *sta;
- 	struct ieee80211_sub_if_data *sdata;
- 	int err;
--	int layer2_update;
+--- a/drivers/media/usb/zr364xx/zr364xx.c
++++ b/drivers/media/usb/zr364xx/zr364xx.c
+@@ -711,7 +711,8 @@ static int zr364xx_vidioc_querycap(struc
+ 	struct zr364xx_camera *cam = video_drvdata(file);
  
- 	if (params->vlan) {
- 		sdata = IEEE80211_DEV_TO_SUB_IF(params->vlan);
-@@ -1204,18 +1203,12 @@ static int ieee80211_add_station(struct
- 	    test_sta_flag(sta, WLAN_STA_ASSOC))
- 		rate_control_rate_init(sta);
- 
--	layer2_update = sdata->vif.type == NL80211_IFTYPE_AP_VLAN ||
--		sdata->vif.type == NL80211_IFTYPE_AP;
--
- 	err = sta_info_insert_rcu(sta);
- 	if (err) {
- 		rcu_read_unlock();
- 		return err;
- 	}
- 
--	if (layer2_update)
--		cfg80211_send_layer2_update(sta->sdata->dev, sta->sta.addr);
--
- 	rcu_read_unlock();
- 
- 	return 0;
-@@ -1323,7 +1316,9 @@ static int ieee80211_change_station(stru
- 				atomic_inc(&sta->sdata->bss->num_mcast_sta);
- 		}
- 
--		cfg80211_send_layer2_update(sta->sdata->dev, sta->sta.addr);
-+		if (sta->sta_state == IEEE80211_STA_AUTHORIZED)
-+			cfg80211_send_layer2_update(sta->sdata->dev,
-+						    sta->sta.addr);
- 	}
- 
- 	err = sta_apply_parameters(local, sta, params);
---- a/net/mac80211/sta_info.c
-+++ b/net/mac80211/sta_info.c
-@@ -1775,6 +1775,10 @@ int sta_info_move_state(struct sta_info
- 			set_bit(WLAN_STA_AUTHORIZED, &sta->_flags);
- 			ieee80211_check_fast_xmit(sta);
- 		}
-+		if (sta->sdata->vif.type == NL80211_IFTYPE_AP_VLAN ||
-+		    sta->sdata->vif.type == NL80211_IFTYPE_AP)
-+			cfg80211_send_layer2_update(sta->sdata->dev,
-+						    sta->sta.addr);
- 		break;
- 	default:
- 		break;
+ 	strlcpy(cap->driver, DRIVER_DESC, sizeof(cap->driver));
+-	strlcpy(cap->card, cam->udev->product, sizeof(cap->card));
++	if (cam->udev->product)
++		strlcpy(cap->card, cam->udev->product, sizeof(cap->card));
+ 	strlcpy(cap->bus_info, dev_name(&cam->udev->dev),
+ 		sizeof(cap->bus_info));
+ 	cap->device_caps = V4L2_CAP_VIDEO_CAPTURE |
 
 
