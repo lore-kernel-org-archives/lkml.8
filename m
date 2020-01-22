@@ -2,94 +2,145 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A1AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E49C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:30:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A357424683
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:28:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VDO8HEep"
+	by mail.kernel.org (Postfix) with ESMTP id 85C1A20828
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 10:30:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729366AbgAVK2H (ORCPT
+        id S1729236AbgAVKaj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 05:28:07 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:54865 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728939AbgAVK2H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 05:28:07 -0500
-Received: by mail-wm1-f68.google.com with SMTP id b19so6221496wmj.4;
-        Wed, 22 Jan 2020 02:28:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Jb1rK1ijAKWlddeRTvmYvVI3ANewkHpq5mDohKCcHqo=;
-        b=VDO8HEepQjI98oagAg2ZZ6v4zU4/OQRBSxkAX79mTodcCGPoMLvTcRqYpwIhOuCdou
-         JGCjLsoTFZVLasXsk+Llt7X3E5v88SlQZJb3mISB5sOzeIZPdENqxRplRaXnk2nBgpr/
-         rajHv7LpG3uEXQNvrB8H1iuVJ4zE31rwO9BIUaIcHaCNHycprGpfWrx/E9kbc7NW3Smq
-         59ClloJdA37F02swbgFJxqw5ByuL5aEEqcOGxsWdQ+awxp7OZun9u/0JB6KtJNUfA3vm
-         au6s/fSmq9mPk5idvFHkOotPpzR19yOn0ZVPVrHmxs6q1/B7oorpJdt1+v1HwvcZooTv
-         AKVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Jb1rK1ijAKWlddeRTvmYvVI3ANewkHpq5mDohKCcHqo=;
-        b=RsRsASK8W9dee7A9/rQVWsqIjTuUXqyJgKoK7K6JCSaMcx4InIlXWD4DN5SwKtJMLM
-         9J10cKzYe9hoClq530HcsBs8BL10P+8chV73ddAr7PzbV5HDySF1EoBnf1//PLcoCIZE
-         vTtl8CBAH34f0RVS3rNRxgk2yzKBmd7uJ4DL8TJuQyEOz7CzhFRNPIvUY6i0LA6nETe6
-         Y1cw15Pcflg2K0Tu5nnRe1Gjp2HpXe6T0ymgMnzv+iM7frgOf2PctzR3mSeGk/QlxYVP
-         xGQCZgkblASQyUiAi1LH5stkhYwlME6TeT4+wcLAJgPlaTrzpvkR1ZLV3Y8ZnNHlMFNq
-         DoQw==
-X-Gm-Message-State: APjAAAXeErISsAx5Bu1/6M2P15E2UKdySYNKExtzv9vu32p6EhzCiL67
-        rLYD+K0rCX1m51btj0fhqgs=
-X-Google-Smtp-Source: APXvYqwggLqehct3HtKdHf3zlyd9maoMrhlz1jXWSWT55ZJMouZk2ERZQtJ1Vgk+N+QouHMq4/Dhjw==
-X-Received: by 2002:a7b:c8cd:: with SMTP id f13mr2207324wml.18.1579688885998;
-        Wed, 22 Jan 2020 02:28:05 -0800 (PST)
-Received: from ubuntu-G3.micron.com ([165.225.86.138])
-        by smtp.gmail.com with ESMTPSA id c9sm3430107wmc.47.2020.01.22.02.28.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jan 2020 02:28:05 -0800 (PST)
-From:   Bean Huo <huobean@gmail.com>
-X-Google-Original-From: Bean Huo <beanhuo@micron.com>
-To:     alim.akhtar@samsung.com, avri.altman@wdc.com,
-        asutoshd@codeaurora.org, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, stanley.chu@mediatek.com,
-        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
-        cang@codeaurora.org
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] MAINTAINERS: scsi: ufs: remove pedrom.sousa@synopsys.com
-Date:   Wed, 22 Jan 2020 11:27:51 +0100
-Message-Id: <20200122102751.3490-1-beanhuo@micron.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 22 Jan 2020 05:30:39 -0500
+Received: from honk.sigxcpu.org ([24.134.29.49]:54384 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728931AbgAVKaj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 05:30:39 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 94D68FB03;
+        Wed, 22 Jan 2020 11:30:36 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id T6ubGSDKZvw2; Wed, 22 Jan 2020 11:30:35 +0100 (CET)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 4AA0B404A9; Wed, 22 Jan 2020 11:30:34 +0100 (CET)
+Date:   Wed, 22 Jan 2020 11:30:34 +0100
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Lucas Stach <l.stach@pengutronix.de>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Sam Ravnborg <sam@ravnborg.org>, Rob Herring <robh@kernel.org>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        The etnaviv authors <etnaviv@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/etnaviv: only reject timeouts with tv_nsec >= 2
+ seconds
+Message-ID: <20200122103034.GA67385@bogon.m.sigxcpu.org>
+References: <20200121114553.2667556-1-arnd@arndb.de>
+ <20200121125546.GA71415@bogon.m.sigxcpu.org>
+ <1971902c68ff805ee0b4a66f558afe06e6edf0c5.camel@pengutronix.de>
+ <CAK8P3a2E__zHPPEL37JwK=uHb_v-=C+-+zGaL3XoW5PZ+BUN5g@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK8P3a2E__zHPPEL37JwK=uHb_v-=C+-+zGaL3XoW5PZ+BUN5g@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since Pedrom has left Synopsys and his email address doesn't work now.
-Everytime after sending email, I will receive his undeliverable email.
-Hence delete his email address.
----
- MAINTAINERS | 1 -
- 1 file changed, 1 deletion(-)
+Hi,
+On Tue, Jan 21, 2020 at 08:05:27PM +0100, Arnd Bergmann wrote:
+> On Tue, Jan 21, 2020 at 5:10 PM Lucas Stach <l.stach@pengutronix.de> wrote:
+> >
+> > Hi Guido,
+> >
+> > On Di, 2020-01-21 at 13:55 +0100, Guido Günther wrote:
+> > > Hi,
+> > > On Tue, Jan 21, 2020 at 12:45:25PM +0100, Arnd Bergmann wrote:
+> > > > As Guido Günther reported, get_abs_timeout() in the etnaviv user space
+> > > > sometimes passes timeouts with nanosecond values larger than 1000000000,
+> > > > which gets rejected after my first patch.
+> > > >
+> > > > To avoid breaking this, while also not allowing completely arbitrary
+> > > > values, set the limit to 1999999999 and use set_normalized_timespec64()
+> > > > to get the correct format before comparing it.
+> > >
+> > > I'm seeing values up to 5 seconds so I need
+> > >
+> > >      if (args->timeout.tv_nsec > (5 * NSEC_PER_SEC))
+> > >
+> > > to unbreak rendering. Which seems to match what mesa's get_abs_timeout()
+> > > does and how it's invoked.
+> >
+> > I have not tested this myself yet, only looked at the code. From the
+> > code I quoted earlier, I don't see how we end up with 5 * NSEC_PER_SEC
+> > in the tv_nsec member, even if the timeout passed to get_abs_timeout()
+> > is 5 seconds.
+> 
+> I can think of two different ways you'd end up with around five seconds here:
+> 
+> a) you have a completely arbitrary 32-bit number through truncation,
+>     which is up to 4.2 seconds
+> b) you have the same kind of 32-bit number, but add up to another 999999999
+>     nanoseconds, so you get up to 5.2 seconds in the 64-bit field.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e09bd92a1e44..8c8956ab248c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -16957,7 +16957,6 @@ F:	drivers/staging/unisys/
- UNIVERSAL FLASH STORAGE HOST CONTROLLER DRIVER
- R:	Alim Akhtar <alim.akhtar@samsung.com>
- R:	Avri Altman <avri.altman@wdc.com>
--R:	Pedro Sousa <pedrom.sousa@synopsys.com>
- L:	linux-scsi@vger.kernel.org
- S:	Supported
- F:	Documentation/scsi/ufs.txt
--- 
-2.17.1
+I've dumped out some values tv_nsec values with current mesa git on arm64:
 
+[   33.699652] etnaviv_ioctl_gem_cpu_prep: 4990449401
+[   33.813081] etnaviv_ioctl_gem_cpu_prep: 5103872445
+[   33.822936] etnaviv_ioctl_gem_cpu_prep: 5113731286
+[   33.840963] etnaviv_ioctl_gem_cpu_prep: 5131762726
+[   33.854120] etnaviv_ioctl_gem_cpu_prep: 5144920127
+[   33.861426] etnaviv_ioctl_gem_cpu_prep: 5152227527
+[   33.872666] etnaviv_ioctl_gem_cpu_prep: 5163466968
+[   33.879485] etnaviv_ioctl_gem_cpu_prep: 5170286808
+
+The problem is that in mesa/libdrm
+
+static inline void get_abs_timeout(struct drm_etnaviv_timespec *tv, uint64_t ns)
+{
+        struct timespec t;
+        uint32_t s = ns / 1000000000;
+        clock_gettime(CLOCK_MONOTONIC, &t);
+        tv->tv_sec = t.tv_sec + s;
+        tv->tv_nsec = t.tv_nsec + ns - (s * 1000000000);
+                                        ^^^^^^^^^^^^^^^
+   this overflows (since `s` is `uint_32t` and hence we substract a way
+   too small value with ns = 5000000000 which mesa uses in
+   etna_bo_cpu_prep.
+}
+
+So with current mesa/libdrm (which needs to be fixed) we'd have a maximum
+
+      t.tv_nsec + ns         - (s_max * 1000000000)
+
+      999999999 + 5000000000 - 705032704            = 5294967295
+
+Does that make sense? If so that'd be the possible upper bound for the
+kernel. Note that this only applies to etnaviv_ioctl_gem_cpu_prep. While
+etnaviv_ioctl_wait_fence and etnaviv_ioctl_gem_wait are affected too
+i've not yet seen user space passing in larger values.
+
+Cheers,
+ -- Guido
+
+> 
+> It could of course be something completely different. If this works correctly
+> today, we may need to allow any 64-bit input for the nanoseconds and do
+> an expensive 64-bit div/mod in the kernel for normalization rather than the
+> cheaper set_normalized_timespec64() from my patch.
+> 
+>         Arnd
+> 
