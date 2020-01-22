@@ -2,140 +2,296 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B0BDC33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:23:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CBDDC33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E3E021835
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:23:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13FC62465A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 06:24:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K2/S4unh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P69E66XP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726026AbgAVGXf (ORCPT
+        id S1726081AbgAVGY6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 01:23:35 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45749 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbgAVGXf (ORCPT
+        Wed, 22 Jan 2020 01:24:58 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:40084 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725836AbgAVGY5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 01:23:35 -0500
-Received: by mail-wr1-f66.google.com with SMTP id j42so5897291wrj.12;
-        Tue, 21 Jan 2020 22:23:33 -0800 (PST)
+        Wed, 22 Jan 2020 01:24:57 -0500
+Received: by mail-pl1-f196.google.com with SMTP id s21so2501992plr.7;
+        Tue, 21 Jan 2020 22:24:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Yjvd1axR1PqdZTIc08mAWLXgtWgaoB8nmRFDHlqUans=;
-        b=K2/S4unhlBehk1R8CImxKUVzTj990lKFx5dXDMkTvyEXr4UKrzrzaJWtzTJK4oAVny
-         /XjEoKXgkRFpLdunILsdbOB7Et62ma1dPT+77evlk85kGROQyYzEjeqITh0kcJjEOV84
-         TG4vliwoXpPeJ/aCpyUQnyynCOmZqeBut0z67FnDACKkXPqwiOSFokDTHybWPToOwf1u
-         1ldo2LER1/QRDhDA9m/r5mBKuXfQxg42gG8T73pVTPCsi/jyvbDgHjM6TqubwBJrtjOx
-         YBUorN29LqnOwdjYjBoT9/WDOcZXAgwS0JAVzypCHaHt1osWC0F/yqUh4kC5Q8olNcJR
-         oykQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zEQqVslVn1OMa/Lg91ZHwHuwRAUMaJJsC/qhf0szJTg=;
+        b=P69E66XP7cN7UeiSLEvaCqhQBimfCrsEE8gtQ4svrB+Z0Ez99G0Rz3lFqr1NwtVeRe
+         EM3TUCLrnj7pvHk/GMRqWp6/s4JVo+TD3T+AKTACkYSUfV8rShRILsGqdbEASZX6B6+U
+         pattyGM0AljHgNwHIMS/Sh/njnptYBweZHmW06MQghMAJglmzNs84qwsXeilqWbJnx09
+         vzKbExBYS1GGnsU7BYCRHhhLx3T62/DdbPCh5bodrKmuqnHfamRl6+e+ozdfQHxHKtPw
+         EyUUfOsM0rLzx11Ni3cC7G/RQ9N1F4jeJQpYDU/q9rW0/sDuUix5C8EWWgSUPD9XJDNP
+         IEiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Yjvd1axR1PqdZTIc08mAWLXgtWgaoB8nmRFDHlqUans=;
-        b=QZaRALdW71FxIm009wZG5ElWG0hYDSFfdy7BXWZvbuFKVg9ulpYNsGvzMhr21P/ZeJ
-         hrEQDnHWuaABwGlBhWvS0Al2UOa40OBQqPoKTY5Rd33fTyrloQrHoI2Ky27ifty7kXoI
-         DHgAjfoWQT0Y5twSpuBx2Q9EzAwl23ohHKzCZa7Qt9eJGxc02peNzS9OsRSlLp9ekGXK
-         gPtLNxTLrKZzGRyNEJucsH610Mt6OlcBXF+s5V1W3BOXCn8ZkgNLWmTowP/1QoD+U61F
-         o98X5zgs9mRiTEmsmpBjX+D4P6f/ljbXClBCsJltuUodI94e1mb6qX45n4nt0f4S8ybm
-         0mHg==
-X-Gm-Message-State: APjAAAWSqmPiSVpcyECMRD9xflcH1CwMHfbDLKd/alvFg5gGAXvESgc4
-        OJKDviRt1tt+yQO+4/rlS1A=
-X-Google-Smtp-Source: APXvYqwCc0NSmc1uA3xXZfLgQ5hogHHHXFIsuV5k40DFrrvLSeqTJgiNuYig6ngVcci+7DDK6HQwzQ==
-X-Received: by 2002:adf:e74f:: with SMTP id c15mr9019793wrn.274.1579674213025;
-        Tue, 21 Jan 2020 22:23:33 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id f1sm56691885wrp.93.2020.01.21.22.23.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jan 2020 22:23:31 -0800 (PST)
-Subject: Re: [alsa-devel] [PATCH 4/9] ASoC: tegra: add Tegra210 based I2S
- driver
-To:     Sameer Pujar <spujar@nvidia.com>, perex@perex.cz, tiwai@suse.com,
-        robh+dt@kernel.org
-Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        atalambedu@nvidia.com, linux-kernel@vger.kernel.org,
-        lgirdwood@gmail.com, jonathanh@nvidia.com, viswanathl@nvidia.com,
-        sharadg@nvidia.com, broonie@kernel.org, thierry.reding@gmail.com,
-        linux-tegra@vger.kernel.org, rlokhande@nvidia.com,
-        mkumard@nvidia.com, dramesh@nvidia.com
-References: <1579530198-13431-1-git-send-email-spujar@nvidia.com>
- <1579530198-13431-5-git-send-email-spujar@nvidia.com>
- <a440d105-8db9-ecf1-3718-e58804ce14b8@gmail.com>
- <0c571858-d72c-97c2-2d6a-ead6fdde06eb@nvidia.com>
- <444731da-c4cd-8578-a732-c803eef31ef0@gmail.com>
- <bdc749bc-b62c-a041-c17c-33fd49fe8e2e@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <598fe377-5b95-d30a-eb64-89a645166d42@gmail.com>
-Date:   Wed, 22 Jan 2020 09:23:29 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zEQqVslVn1OMa/Lg91ZHwHuwRAUMaJJsC/qhf0szJTg=;
+        b=n4GB8aQNpuiI3/Y9cbCLU4onkjaXxXkHJuwiG+XSy4PCQas1OfVPRpSq4QQWEXY++2
+         GMC07EoDFDiyqdIyR+emkxrwMqVEHw4q0ijIem2Kt20GuI2H+zp9yACCPp6KC/sVGfYi
+         MqSj2wfCTfx/AT8QVQn6ZmhmmaJgsm30GwOa8068Zd09NaYJ9JFxq037rJGSUs2HxCpu
+         uJAW28hrWCAawVL1fmOnW6TJU8a0TKFDP7xTc04rzRsUCDBURxjMT19Jc12y1rQMvMBR
+         DquIl8x5h5N3UY5lP2OYuTvLkkNf8l6W8Ix/NWWNWy2Hh50uLxlUf2V87erkTQUNLhhF
+         yTag==
+X-Gm-Message-State: APjAAAWpOwk7TI4qjyi3+d7jcOUOT7dBZBgIAG/tySTzIeBF1a6/YIGi
+        jn24hjW+PYtp0WkZ7f6tstU=
+X-Google-Smtp-Source: APXvYqxBxEOXQSKw4s1crZj4C/Zj53F/nGuUaj7bfVA+oXiYR/WYhbJn+r4pVFdXaGd8zmfoz/j2lw==
+X-Received: by 2002:a17:90a:3643:: with SMTP id s61mr1294594pjb.44.1579674296993;
+        Tue, 21 Jan 2020 22:24:56 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id z26sm42737423pgu.80.2020.01.21.22.24.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2020 22:24:56 -0800 (PST)
+Date:   Tue, 21 Jan 2020 22:24:54 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     "fengping.yu" <fengping.yu@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3 2/2] drivers: input: keyboard: add mtk keypad driver
+Message-ID: <20200122062454.GF110084@dtor-ws>
+References: <20200114122738.103344-1-fengping.yu@mediatek.com>
+ <20200114122738.103344-3-fengping.yu@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <bdc749bc-b62c-a041-c17c-33fd49fe8e2e@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200114122738.103344-3-fengping.yu@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-22.01.2020 07:32, Sameer Pujar пишет:
-[snip]
->>>>> +static int tegra210_i2s_remove(struct platform_device *pdev)
->>>>> +{
->>>>> +     pm_runtime_disable(&pdev->dev);
->>>>> +     if (!pm_runtime_status_suspended(&pdev->dev))
->>>>> +             tegra210_i2s_runtime_suspend(&pdev->dev);
->>>> This breaks device's RPM refcounting if it was disabled in the active
->>>> state. This code should be removed. At most you could warn about the
->>>> unxpected RPM state here, but it shouldn't be necessary.
->>> I guess this was added for safety and explicit suspend keeps clock
->>> disabled.
->>> Not sure if ref-counting of the device matters when runtime PM is
->>> disabled and device is removed.
->>> I see few drivers using this way.
->> It should matter (if I'm not missing something) because RPM should be in
->> a wrecked state once you'll try to re-load the driver's module. Likely
->> that those few other drivers are wrong.
->>
->> [snip]
+Hi Fendping,
+
+On Tue, Jan 14, 2020 at 08:27:41PM +0800, fengping.yu wrote:
+> Signed-off-by: fengping.yu <fengping.yu@mediatek.com>
 > 
-> Once the driver is re-loaded and RPM is enabled, I don't think it would use
-> the same 'dev' and the corresponding ref count. Doesn't it use the new
-> counters?
-> If RPM is not working for some reason, most likely it would be the case
-> for other
-> devices. What best driver can do is probably do a force suspend during
-> removal if
-> already not done. I would prefer to keep, since multiple drivers still
-> have it,
-> unless there is a real harm in doing so.
-
-I took a closer look and looks like the counter actually should be
-reset. Still I don't think that it's a good practice to make changes
-underneath of RPM, it may strike back.
-
->>>>> +     int rx_fifo_th;
->>>> Could rx_fifo_th be negative?
->>> rx_fifo_th itself does not take negative values, explicit
->>> typecasting> is avoided in "if" condition by declaring this as "int"
->> Explicit typecasting isn't needed for integers.
+> Add matrix keypad driver for MTK SoC.
 > 
-> What I meant was, rx_fifo_th is checked against a 'int' variable in an
-> "if" condition.
+> ---
+>  arch/arm64/configs/defconfig     |   1 +
+>  drivers/input/keyboard/Kconfig   |   8 +
+>  drivers/input/keyboard/Makefile  |   1 +
+>  drivers/input/keyboard/mtk-kpd.c | 280 +++++++++++++++++++++++++++++++
+>  4 files changed, 290 insertions(+)
+>  create mode 100644 drivers/input/keyboard/mtk-kpd.c
+> 
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index 8e05c39eab08..62bed77ec127 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -315,6 +315,7 @@ CONFIG_KEYBOARD_ADC=m
+>  CONFIG_KEYBOARD_GPIO=y
+>  CONFIG_KEYBOARD_SNVS_PWRKEY=m
+>  CONFIG_KEYBOARD_CROS_EC=y
+> +CONFIG_KEYBOARD_MTK=y
+>  CONFIG_INPUT_TOUCHSCREEN=y
+>  CONFIG_TOUCHSCREEN_ATMEL_MXT=m
+>  CONFIG_INPUT_MISC=y
+> diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
+> index 8911bc2ec42a..01747a97536b 100644
+> --- a/drivers/input/keyboard/Kconfig
+> +++ b/drivers/input/keyboard/Kconfig
+> @@ -775,4 +775,12 @@ config KEYBOARD_MTK_PMIC
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called pmic-keys.
+>  
+> +config KEYBOARD_MTK
+> +	tristate "MediaTek Keypad Support"
+> +	help
+> +	  Say Y here if you want to use the keypad.
+> +	  If unuse, say N.
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called mtk-kpd.
+> +
+>  endif
+> diff --git a/drivers/input/keyboard/Makefile b/drivers/input/keyboard/Makefile
+> index 9510325c0c5d..daa654bcce6e 100644
+> --- a/drivers/input/keyboard/Makefile
+> +++ b/drivers/input/keyboard/Makefile
+> @@ -41,6 +41,7 @@ obj-$(CONFIG_KEYBOARD_MATRIX)		+= matrix_keypad.o
+>  obj-$(CONFIG_KEYBOARD_MAX7359)		+= max7359_keypad.o
+>  obj-$(CONFIG_KEYBOARD_MCS)		+= mcs_touchkey.o
+>  obj-$(CONFIG_KEYBOARD_MPR121)		+= mpr121_touchkey.o
+> +obj-$(CONFIG_KEYBOARD_MTK) 		+= mtk-kpd.o
+>  obj-$(CONFIG_KEYBOARD_MTK_PMIC) 	+= mtk-pmic-keys.o
+>  obj-$(CONFIG_KEYBOARD_NEWTON)		+= newtonkbd.o
+>  obj-$(CONFIG_KEYBOARD_NOMADIK)		+= nomadik-ske-keypad.o
+> diff --git a/drivers/input/keyboard/mtk-kpd.c b/drivers/input/keyboard/mtk-kpd.c
+> new file mode 100644
+> index 000000000000..e36461c9dd89
+> --- /dev/null
+> +++ b/drivers/input/keyboard/mtk-kpd.c
+> @@ -0,0 +1,280 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2019 MediaTek Inc.
+> + * Author Terry Chang <terry.chang@mediatek.com>
+> + */
+> +#include <linux/clk.h>
+> +#include <linux/fs.h>
+> +#include <linux/gpio.h>
+> +#include <linux/init.h>
+> +#include <linux/input/matrix_keypad.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/pinctrl/consumer.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +
+> +#define KPD_NAME	"mtk-kpd"
+> +
+> +#define KP_STA				0x0000
+> +#define KP_MEM1				0x0004
+> +#define KP_MEM2				0x0008
+> +#define KP_MEM3				0x000c
+> +#define KP_MEM4				0x0010
+> +#define KP_MEM5				0x0014
+> +#define KP_DEBOUNCE			0x0018
+> +#define KP_SEL				0x0020
+> +#define KP_EN				0x0024
+> +
+> +#define KP_COL0_SEL		BIT(10)
+> +#define KP_COL1_SEL		BIT(11)
+> +#define KP_COL2_SEL		BIT(12)
+> +
+> +#define KPD_DEBOUNCE_MASK	GENMASK_ULL(13, 0)
+> +
+> +#define KPD_NUM_MEMS	5
+> +#define KPD_MEM5_BITS	8
+> +#define KPD_NUM_KEYS	72	/* 4 * 16 + KPD_MEM5_BITS */
+> +
+> +struct mtk_keypad {
+> +	struct input_dev *input_dev;
+> +	struct clk *clk;
+> +	void __iomem *base;
+> +	unsigned int irqnr;
+> +	bool wakeup;
+> +	u32 key_debounce;
+> +	u32 n_rows;
+> +	u32 n_cols;
+> +	u32 keymap_state[KPD_NUM_MEMS];
 
-What's the problem with comparing of unsigned with signed?
+	DECLARE_BITMAP(keymap_state, KPD_NUM_KEYS);
 
-Besides, cif_conf.audio_ch > I2S_RX_FIFO_DEPTH can't be ever true, isn't
-it? I2S_RX_FIFO_DEPTH=64, channels_max=16
+> +};
+> +
+> +static void kpd_get_keymap_state(void __iomem *kp_base, u32 state[])
+> +{
+> +	memset_io(state, 0xff, KPD_NUM_MEMS);
+> +	memcpy_fromio(state, kp_base, KPD_NUM_MEMS);
+> +}
+> +
+> +static irqreturn_t kpd_irq_handler(int irq, void *dev_id)
+> +{
+> +	/* use _nosync to avoid deadlock */
+> +	struct mtk_keypad *keypad = dev_id;
+> +	unsigned short *keycode = keypad->input_dev->keycode;
+> +	u32 new_state[KPD_NUM_MEMS], mask;
+	DECLARE_BITMAP(new_state, KPD_NUM_KEYS);
+	DECLARE_BITMAP(changed_state, KPD_NUM_KEYS);
+> +	unsigned long change = 0;
+> +	int bit_nr;
+> +	int pressed;
+> +	u32 row_shift = get_count_order(keypad->n_cols);
+> +	unsigned short code;
+> +	int i;
+> +
+> +	disable_irq_nosync(keypad->irqnr);
 
-Lastly, nothing stops you to make max_th unsigned.
+Not needed.
+
+
+> +
+> +	kpd_get_keymap_state(keypad->base, new_state);
+
+	bitmap_xor(changed_state, keypad->keymap_state, new_state,
+		   KPD_NUM_KEYS);
+
+	for_each_set_bit(bit_nr, changed_state, KPD_NUM_KEYS) {
+		pressed = test_bit(new_state, bit_nr);
+
+		...
+	}
+
+> +
+> +	for (i = 0; i < KPD_NUM_MEMS; i++) {
+> +		change = new_state[i] ^ keypad->keymap_state[i];
+> +		if (!change)
+> +			continue;
+> +
+> +		for_each_set_bit(bit_nr, &change, 32) {
+> +			mask = 1 << bit_nr;
+> +			pressed = (new_state[i] & mask) == 0U;
+> +			dev_dbg(&keypad->input_dev->dev,
+> +				"%s", pressed ? "pressed" : "released");
+> +
+> +			code = keycode[MATRIX_SCAN_CODE(i, bit_nr, row_shift)];
+> +
+> +			input_report_key(keypad->input_dev, code, pressed);
+> +			input_sync(keypad->input_dev);
+> +
+> +			dev_dbg(&keypad->input_dev->dev,
+> +				"report Linux keycode = %d\n", code);
+> +		}
+> +	}
+> +
+> +	memcpy(keypad->keymap_state, new_state, sizeof(new_state));
+
+	bitmap_copy(keypad->keymap_state, new_state, KPD_NUM_KEYS);
+
+> +
+> +	enable_irq(keypad->irqnr);
+
+Not needed.
+
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int kpd_get_dts_info(struct mtk_keypad *keypad)
+> +{
+> +	int ret;
+> +	struct device *dev = keypad->input_dev->dev.parent;
+> +	struct device_node *node = dev->of_node;
+> +
+> +	ret = matrix_keypad_parse_properties(dev, &keypad->n_rows,
+> +					     &keypad->n_cols);
+> +
+> +	if (ret) {
+> +		dev_err(dev, "failed to parse keypad params.\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = of_property_read_u32(node, "mediatek,debounce-us",
+> +				   &keypad->key_debounce);
+
+Please use device_property_read_*() APIs instead of of_ ones.
+
+Thanks.
+
+-- 
+Dmitry
