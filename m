@@ -2,98 +2,89 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E96C33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 00:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62680C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 00:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 981CD24655
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 00:30:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579653018;
-	bh=H/qN5wQT4EZ5hYKWGp7yIkcoOLzjrk0gNanXBpiBRnI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=R6ao6qzdSR94eKB82h4cElhY384sOtJGrDcgmG4slIPzqWNOOswYhIKE9uuNCqjIn
-	 3rfw6k28qZuFBdcyzUhr0cQe2fIunYTKWQUUtNLVcybD8pGRhNUUpGjeKntye/TIhY
-	 xIvGjqbyqaZcsYYFbe3pfEKN1OKzRqw5JaM43ZPk=
+	by mail.kernel.org (Postfix) with ESMTP id 2AEC924655
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 00:34:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="aONuVGeM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728916AbgAVAaS (ORCPT
+        id S1728890AbgAVAeI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 19:30:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41452 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726876AbgAVAaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 19:30:17 -0500
-Received: from gmail.com (unknown [104.132.1.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D435217F4;
-        Wed, 22 Jan 2020 00:30:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579653016;
-        bh=H/qN5wQT4EZ5hYKWGp7yIkcoOLzjrk0gNanXBpiBRnI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qUmyGZfkQoEjSKG30mFMzVYmysM/ifNtNxjkA1RSMGQ7a09pMTLRQ51CbJ/WSqYbJ
-         3X6LIerTmDJS8K4r629U6pRTw5tK+OB60JON9E76MkrGSspGCJVKneBB0fF2UOY/z7
-         5i6O013odo5e0N2RxkVk+0bwfG0RbjP7IfDQNb50=
-Date:   Tue, 21 Jan 2020 16:30:15 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Richard Weinberger <richard@nod.at>
-Cc:     Daniel Rosenberg <drosen@google.com>,
-        Gabriel Krisman Bertazi <krisman@collabora.com>,
-        linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-mtd@lists.infradead.org, linux-fscrypt@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        kernel-team@android.com
-Subject: Re: [PATCH v5 4/6] ubifs: don't trigger assertion on invalid no-key
- filename
-Message-ID: <20200122003014.GA180824@gmail.com>
-References: <20200120223201.241390-1-ebiggers@kernel.org>
- <20200120223201.241390-5-ebiggers@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200120223201.241390-5-ebiggers@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 21 Jan 2020 19:34:08 -0500
+Received: from mail-qk1-f182.google.com ([209.85.222.182]:37002 "EHLO
+        mail-qk1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726876AbgAVAeI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 19:34:08 -0500
+Received: by mail-qk1-f182.google.com with SMTP id 21so4776951qky.4
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 16:34:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=MZXkoAafU5iZQTDaAYrDQk16B2pUQbMjULNwikPL/ow=;
+        b=aONuVGeMINjLXyWat8lmCId+oFVaq1+hWp99kPXJWJd/ocEc5Bsb6/SCDvGnigsZc2
+         wD7Tmw5dRHc4kTaV6qdsbfvMK7MPpluX50pH9FL3tnNQntHl+7AR6Ou+tm4S7ZL4t6sP
+         S+ArZbSbdbE0VPlpvx35oOPc5Fo4v1xAbjVU4nI6SOmcO+5Qlq3PN6II7kuX4jhY6vvp
+         9YmMHN3kJR42RCjdcXDKEgNIlRvdF1S/+R6ye6Lwl1+Yq0AXaRh6VqHRSeShJGXtQtyS
+         xxFB2MNAkk6XX9NIq7MGrIyKq5lzOn2r/O8pI69PsGojTL+ol80PiiieNLDn8fD0XkzK
+         wbVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=MZXkoAafU5iZQTDaAYrDQk16B2pUQbMjULNwikPL/ow=;
+        b=TYUf6mAafbxfz9pcSgCYsmR7SioSIOigoznVTzY97MSaTzYDwwSpOVg2UsKJYKkX/d
+         KbqkGnQR0+nLmfi3LnbVL4LeIlKNeIh0HodQhx1uWXFLtUy6FStoEJE2fMqijNU8gSd7
+         MKCCivFTsNdsh+N6qbLizD/ul54IMSGZMtnwDqnEGj0lgBHjfyfZ4sPhQjsj7kKgtQ2W
+         0t6YPo9xeLXQXT4d8QYUkAiwvBNMDkEIPbRiCMSt4M4BqcAoNtow6vFIu3H83GPGvRG0
+         HZ+hLsTlhB+gzaqjPIpWUYWIpQfO/c40afPdhYLYqmc7f/v75IDq1CdWlxjx6N3obpWx
+         UyKQ==
+X-Gm-Message-State: APjAAAXvS7N+yLPs730Jqhpv8yhqPjJv9HlYhd6cLJupOpiMNblLqF15
+        oj0SieJhCAWdtAHDcj7Kr2znXio2eA0sJw==
+X-Google-Smtp-Source: APXvYqynKjBRrSDRWHVuKPbV7GPn8A6vIego0zpwqyo352s+otfGg92EbvIt7IfZWoFH75xHK128Ug==
+X-Received: by 2002:a05:620a:101b:: with SMTP id z27mr7032552qkj.241.1579653245534;
+        Tue, 21 Jan 2020 16:34:05 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id l184sm18248573qkc.107.2020.01.21.16.34.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jan 2020 16:34:04 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH -next] x86/mm/pat: silence a data race in cpa_4k_install
+Date:   Tue, 21 Jan 2020 19:34:03 -0500
+Message-Id: <D88FC26A-562F-42BD-8615-FFA8B0A3D4F7@lca.pw>
+References: <20200121221814.GQ7808@zn.tnic>
+Cc:     Marco Elver <elver@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200121221814.GQ7808@zn.tnic>
+To:     Borislav Petkov <bp@alien8.de>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 02:31:59PM -0800, Eric Biggers wrote:
-> From: Eric Biggers <ebiggers@google.com>
-> 
-> If userspace provides an invalid fscrypt no-key filename which encodes a
-> hash value with any of the UBIFS node type bits set (i.e. the high 3
-> bits), gracefully report ENOENT rather than triggering ubifs_assert().
-> 
-> Test case with kvm-xfstests shell:
-> 
->     . fs/ubifs/config
->     . ~/xfstests/common/encrypt
->     dev=$(__blkdev_to_ubi_volume /dev/vdc)
->     ubiupdatevol $dev -t
->     mount $dev /mnt -t ubifs
->     mkdir /mnt/edir
->     xfs_io -c set_encpolicy /mnt/edir
->     rm /mnt/edir/_,,,,,DAAAAAAAAAAAAAAAAAAAAAAAAAA
-> 
-> With the bug, the following assertion fails on the 'rm' command:
-> 
->     [   19.066048] UBIFS error (ubi0:0 pid 379): ubifs_assert_failed: UBIFS assert failed: !(hash & ~UBIFS_S_KEY_HASH_MASK), in fs/ubifs/key.h:170
-> 
-> Fixes: f4f61d2cc6d8 ("ubifs: Implement encrypted filenames")
-> Cc: <stable@vger.kernel.org> # v4.10+
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
 
-Richard, can you review the two UBIFS patches in this series, and if you're okay
-with them, provide Acked-by's so that we can take them through the fscrypt tree?
-They don't conflict with anything currently in the UBIFS tree.
 
-Thanks!
+> On Jan 21, 2020, at 5:18 PM, Borislav Petkov <bp@alien8.de> wrote:
+>=20
+> Btw, looking at the other "inc" CPA statistics functions there, does it
+> mean that for KCSAN they all need to be annotated now too?
 
-- Eric
+I don=E2=80=99t know. KCSAN never trigger any warnings for other CPA places y=
+et.=
