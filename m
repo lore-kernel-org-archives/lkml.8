@@ -5,48 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA3AC33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B5F0C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41905205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:28:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 252FF24125
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:28:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579699687;
-	bh=26Ag4a84Mxj1MhMUUa7Ze9eS9NWvIpZnvhk2RsY/vXI=;
+	s=default; t=1579699692;
+	bh=dHJkzUZ4U78Tm0wYqG+V6Z0tZxmWxXOg08Ge9skjxNU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a0uII2640B7AMOXtnVETnwlbgyOnyBC+cGtC1dk1tE82q5tVa0PBY2DzMjgL6EVvm
-	 923mMo6m2n/aTuNIV11xt9YpCB+yKPrOR0nIyvo5VR1NPqlM+rEv4eAUo+hZanU4uV
-	 1bnAcHycAAmGrwSIaAWKnqInnUcL/mspBIjK7PEg=
+	b=lD1+IKBLQOBICd3iy0NI11MJtX6Z4B6xxbjRw2yBAwfWL1JfMhMxrilyibK3Fjhwz
+	 tWPdh8S2sTXyqrDs+uLHWLgnaOiygv7JMy1NOphp9ig9jMistMulW25BlTuVORLZe0
+	 yw5f96Mm4rzlAldtsK24hhjmeU98aIUrjwDxFc1g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732125AbgAVN2G (ORCPT
+        id S1731673AbgAVN2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:28:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50012 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 08:28:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726061AbgAVN2F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:28:05 -0500
+        id S1728779AbgAVN2I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:28:08 -0500
 Received: from localhost (unknown [84.241.205.26])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C2A0205F4;
-        Wed, 22 Jan 2020 13:28:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51BC12467C;
+        Wed, 22 Jan 2020 13:28:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579699684;
-        bh=26Ag4a84Mxj1MhMUUa7Ze9eS9NWvIpZnvhk2RsY/vXI=;
+        s=default; t=1579699688;
+        bh=dHJkzUZ4U78Tm0wYqG+V6Z0tZxmWxXOg08Ge9skjxNU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y/YdqlYaOpPZ2yX77ez8VnX7xeSA9NmgPgj8GCzV2Ose9MpQquacKkn+nIBvbqAsT
-         6epKaISnqHBKqSs0sRVVI+oL6jX3jrQ8dF/Oig+x3FkGKJ4Xd84pdMOOglgFpbDHEn
-         sYN4FdRfzQkD0TsNOVkpfwD3b4eXenPr8gDmSf+k=
+        b=x9hg4/8KtgjWSmiMr21I6pG7LDYEDy6nbMvNZxmtgHOFRmFqpyIyw3glU4EeVvlp2
+         8jAmSAkVS9NkTk6R59VdXT9RPcSDVNn/+wEd9l/dP8pvwU4N+xf1tz2hTHpVpyxkcu
+         nPSigK/1Ij59/CzqNtgYzhpo9/Qqw+EjwHhh3Gj0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Baolin Wang <baolin.wang@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>
-Subject: [PATCH 5.4 217/222] clk: sprd: Use IS_ERR() to validate the return value of syscon_regmap_lookup_by_phandle()
-Date:   Wed, 22 Jan 2020 10:30:03 +0100
-Message-Id: <20200122092849.228738922@linuxfoundation.org>
+        stable@vger.kernel.org, Anson Huang <Anson.Huang@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: [PATCH 5.4 218/222] clk: imx7ulp: Correct system clock source option #7
+Date:   Wed, 22 Jan 2020 10:30:04 +0100
+Message-Id: <20200122092849.299408794@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
 References: <20200122092833.339495161@linuxfoundation.org>
@@ -59,33 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Baolin Wang <baolin.wang@linaro.org>
+From: Anson Huang <Anson.Huang@nxp.com>
 
-commit 9629dbdabd1983ef53f125336e1d62d77b1620f9 upstream.
+commit 96ac93a7c4bea4eb4186425795c00937d2dd6085 upstream.
 
-The syscon_regmap_lookup_by_phandle() will never return NULL, thus use
-IS_ERR() to validate the return value instead of IS_ERR_OR_NULL().
+In the latest reference manual Rev.0,06/2019, the SCS's option #7
+is no longer from upll, it is reserved, update clock driver accordingly.
 
-Fixes: d41f59fd92f2 ("clk: sprd: Add common infrastructure")
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-Link: https://lkml.kernel.org/r/1995139bee5248ff3e9d46dc715968f212cfc4cc.1570520268.git.baolin.wang@linaro.org
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Fixes: b1260067ac3d ("clk: imx: add imx7ulp clk driver")
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/clk/sprd/common.c |    2 +-
+ drivers/clk/imx/clk-imx7ulp.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/clk/sprd/common.c
-+++ b/drivers/clk/sprd/common.c
-@@ -46,7 +46,7 @@ int sprd_clk_regmap_init(struct platform
- 
- 	if (of_find_property(node, "sprd,syscon", NULL)) {
- 		regmap = syscon_regmap_lookup_by_phandle(node, "sprd,syscon");
--		if (IS_ERR_OR_NULL(regmap)) {
-+		if (IS_ERR(regmap)) {
- 			pr_err("%s: failed to get syscon regmap\n", __func__);
- 			return PTR_ERR(regmap);
- 		}
+--- a/drivers/clk/imx/clk-imx7ulp.c
++++ b/drivers/clk/imx/clk-imx7ulp.c
+@@ -24,7 +24,7 @@ static const char * const spll_pfd_sels[
+ static const char * const spll_sels[]		= { "spll", "spll_pfd_sel", };
+ static const char * const apll_pfd_sels[]	= { "apll_pfd0", "apll_pfd1", "apll_pfd2", "apll_pfd3", };
+ static const char * const apll_sels[]		= { "apll", "apll_pfd_sel", };
+-static const char * const scs_sels[]		= { "dummy", "sosc", "sirc", "firc", "dummy", "apll_sel", "spll_sel", "upll", };
++static const char * const scs_sels[]		= { "dummy", "sosc", "sirc", "firc", "dummy", "apll_sel", "spll_sel", "dummy", };
+ static const char * const ddr_sels[]		= { "apll_pfd_sel", "upll", };
+ static const char * const nic_sels[]		= { "firc", "ddr_clk", };
+ static const char * const periph_plat_sels[]	= { "dummy", "nic1_bus_clk", "nic1_clk", "ddr_clk", "apll_pfd2", "apll_pfd1", "apll_pfd0", "upll", };
 
 
