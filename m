@@ -2,163 +2,95 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61DFCC33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A4DC33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36BBD24656
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:56:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MuF7EqjB"
+	by mail.kernel.org (Postfix) with ESMTP id 9F04524656
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 19:57:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728842AbgAVT4A (ORCPT
+        id S1726796AbgAVT5d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 14:56:00 -0500
-Received: from mail-wr1-f47.google.com ([209.85.221.47]:36691 "EHLO
-        mail-wr1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbgAVT4A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 14:56:00 -0500
-Received: by mail-wr1-f47.google.com with SMTP id z3so435810wru.3;
-        Wed, 22 Jan 2020 11:55:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=ATXQxVfQbWJIgQw3/oEtTSU+qU+D47YRLOoi//94py4=;
-        b=MuF7EqjBMQ0XogfEQUpg7R3avQdsPvV2ZWUxljYl1l2VyOrXumex84/84DQCajzMHM
-         8TFimuACiPqBNgB6eQYmxW6beTcJ37ane7Y9AgQmMsJAzt9ulNK3Mb8pqAzAETNG8Bgp
-         og1aFAvxCkx1XnxZlf7jRN91kNSEAyHZOKUIRq9TdxY3u59w1X2NCMGMuNksLktgdYnK
-         e0ZOwmAXOq+Ql9juIcYCkfKsoDeK1y5NZP4q0tvtu41HhN3CCltI+ydcLdqDVRO3yqyp
-         jSkdlibmsSkSZtI8CcLMUfpdGdDT+QO5R6DgCrsQfKlOHVy5wy9FU9mq+mLXuvYrSwbL
-         tPfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=ATXQxVfQbWJIgQw3/oEtTSU+qU+D47YRLOoi//94py4=;
-        b=rlYIdkzGDRvQiwjoBHN5mI2NKpOEXk43+eVW2wWDPWF6WD7KUkWivV9eABHgZMXJIN
-         jrMjA9HfUQ8xd92KM4xACbFWK56m9Y5mKCTMy6LWvlS5m3d4rA41aYjVRdNp0Cn1gdQA
-         vimRIIDtuxNAXQq5QeTHvdJfO9N9N6aO4i1o5c/Yv8DgmSh2PpTkjjDDGzL8xlO+1ir4
-         gSj6ByYtQ0nsuH8ZE1DoPi0IwbK6FbK+8owPLJhffmRF5N4plS/giVRhyycZpPuM5lqV
-         qKMA2RihH5N/9R+fsY2ptuilFnY48J3q/YUKKjfZCWSIjqnTcI5w5OEkgGvrWa6ZPbSG
-         q9Lg==
-X-Gm-Message-State: APjAAAUJQ/cghhyG42GTasUA0j443aveiobbfaIWVBK8TKZmUDUnkNPl
-        d4eAWovf8a58cde/LMyfHGel13Rk2Dz8bw==
-X-Google-Smtp-Source: APXvYqxOlEeOMaZIf+53PwNJXSTonqAVv0oP6QDxngI0ciaN9F/jg66fFmjTQrXdX1Oi0ToeOy2KQA==
-X-Received: by 2002:a5d:6ac2:: with SMTP id u2mr12317905wrw.233.1579722958365;
-        Wed, 22 Jan 2020 11:55:58 -0800 (PST)
-Received: from WINDOWSSS5SP16 ([82.31.89.128])
-        by smtp.gmail.com with ESMTPSA id q3sm5226956wmj.38.2020.01.22.11.55.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 Jan 2020 11:55:57 -0800 (PST)
-From:   "Robert Milkowski" <rmilkowski@gmail.com>
-To:     "'Schumaker, Anna'" <Anna.Schumaker@netapp.com>,
-        <chuck.lever@oracle.com>, <trondmy@hammerspace.com>
-Cc:     <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <trond.myklebust@hammerspace.com>
-References: <025801d5bf24$aa242100$fe6c6300$@gmail.com>  <D82A1590-FAA3-47C5-B198-937ED88EF71C@oracle.com>       <084f01d5cfba$bc5c4d10$3514e730$@gmail.com> <49e7b99bd1451a0dbb301915f655c73b3d9354df.camel@netapp.com>
-In-Reply-To: <49e7b99bd1451a0dbb301915f655c73b3d9354df.camel@netapp.com>
-Subject: RE: [PATCH v3] NFSv4.0: nfs4_do_fsinfo() should not do implicit lease renewals
-Date:   Wed, 22 Jan 2020 19:55:57 -0000
-Message-ID: <075401d5d15d$f6d0cb20$e4726160$@gmail.com>
+        Wed, 22 Jan 2020 14:57:33 -0500
+Received: from mga01.intel.com ([192.55.52.88]:45239 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725827AbgAVT5d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 14:57:33 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jan 2020 11:57:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,350,1574150400"; 
+   d="scan'208";a="275707040"
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by FMSMGA003.fm.intel.com with SMTP; 22 Jan 2020 11:57:29 -0800
+Received: by stinkbox (sSMTP sendmail emulation); Wed, 22 Jan 2020 21:57:29 +0200
+Date:   Wed, 22 Jan 2020 21:57:29 +0200
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Lyude Paul <lyude@redhat.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] drm/dp_mst: Mention max_payloads in
+ proposed_vcpis/payloads docs
+Message-ID: <20200122195729.GI13686@intel.com>
+References: <20200122194321.14953-1-lyude@redhat.com>
+ <20200122194321.14953-2-lyude@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: en-gb
-Thread-Index: AQFSV8btGYpaKSSrODVQVe6EyfKpewKNWQiWAfB5jHQAou/4BajVBKRQ
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200122194321.14953-2-lyude@redhat.com>
+X-Patchwork-Hint: comment
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Schumaker, Anna <Anna.Schumaker@netapp.com>
-> Sent: 22 January 2020 19:11
-> To: rmilkowski@gmail.com; chuck.lever@oracle.com; trondmy@hammerspace.com
-> Cc: linux-nfs@vger.kernel.org; linux-kernel@vger.kernel.org;
-> trond.myklebust@hammerspace.com
-> Subject: Re: [PATCH v3] NFSv4.0: nfs4_do_fsinfo() should not do implicit
-> lease renewals
+On Wed, Jan 22, 2020 at 02:43:21PM -0500, Lyude Paul wrote:
+> Mention that the size of these two structs is determined by
+> max_payloads. Suggested by Ville Syrjälä.
 > 
-> Hi Robert,
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
+> Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
+> ---
+>  include/drm/drm_dp_mst_helper.h | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
 > 
-> On Mon, 2020-01-20 at 17:55 +0000, Robert Milkowski wrote:
-> > > -----Original Message-----
-> > > From: Chuck Lever <chuck.lever@oracle.com>
-> > > Sent: 30 December 2019 15:37
-> > > To: Robert Milkowski <rmilkowski@gmail.com>
-> > > Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>; Trond
-> > > Myklebust <trond.myklebust@hammerspace.com>; Anna Schumaker
-> > > <anna.schumaker@netapp.com>; linux-kernel@vger.kernel.org
-> > > Subject: Re: [PATCH v3] NFSv4.0: nfs4_do_fsinfo() should not do
-> > > implicit lease renewals
-> > >
-> > >
-> > >
-> > > > On Dec 30, 2019, at 10:20 AM, Robert Milkowski
-> > > > <rmilkowski@gmail.com>
-> > > wrote:
-> > > > From: Robert Milkowski <rmilkowski@gmail.com>
-> > > >
-> > > > Currently, each time nfs4_do_fsinfo() is called it will do an
-> > > > implicit
-> > > > NFS4 lease renewal, which is not compliant with the NFS4
-> > > specification.
-> > > > This can result in a lease being expired by an NFS server.
-> > > >
-> > > > Commit 83ca7f5ab31f ("NFS: Avoid PUTROOTFH when managing leases")
-> > > > introduced implicit client lease renewal in nfs4_do_fsinfo(),
-> > > > which can result in the NFSv4.0 lease to expire on a server side,
-> > > > and servers returning NFS4ERR_EXPIRED or NFS4ERR_STALE_CLIENTID.
-> > > >
-> > > > This can easily be reproduced by frequently unmounting a
-> > > > sub-mount, then stat'ing it to get it mounted again, which will
-> > > > delay or even completely prevent client from sending RENEW
-> > > > operations if no other NFS operations are issued. Eventually nfs
-> > > > server will expire client's lease and return an error on file access
-> or next RENEW.
-> > > >
-> > > > This can also happen when a sub-mount is automatically unmounted
-> > > > due to inactivity (after nfs_mountpoint_expiry_timeout), then it
-> > > > is mounted again via stat(). This can result in a short window
-> > > > during which client's lease will expire on a server but not on a
-> client.
-> > > > This specific case was observed on production systems.
-> > > >
-> > > > This patch makes an explicit lease renewal instead of an implicit
-> > > > one, by adding RENEW to a compound operation issued by
-> > > > nfs4_do_fsinfo(), similarly to NFSv4.1 which adds SEQUENCE
-> operation.
-> > > >
-> > > > Fixes: 83ca7f5ab31f ("NFS: Avoid PUTROOTFH when managing leases")
-> > > > Signed-off-by: Robert Milkowski <rmilkowski@gmail.com>
-> > >
-> > > Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
-> > >
-> > >
-> >
-> > How do we progress it further?
-> 
-> Thanks for following up! I have the patch included in my linux-next branch
-> for the next merge window.
-> 
-> Anna
+> diff --git a/include/drm/drm_dp_mst_helper.h b/include/drm/drm_dp_mst_helper.h
+> index bcb39da9adb4..5483f888712a 100644
+> --- a/include/drm/drm_dp_mst_helper.h
+> +++ b/include/drm/drm_dp_mst_helper.h
+> @@ -635,11 +635,13 @@ struct drm_dp_mst_topology_mgr {
+>  	struct mutex payload_lock;
+>  	/**
+>  	 * @proposed_vcpis: Array of pointers for the new VCPI allocation. The
+> -	 * VCPI structure itself is &drm_dp_mst_port.vcpi.
+> +	 * VCPI structure itself is &drm_dp_mst_port.vcpi, and the size of
+> +	 * this array is determined by @max_payloads.
+>  	 */
+>  	struct drm_dp_vcpi **proposed_vcpis;
+>  	/**
+> -	 * @payloads: Array of payloads.
+> +	 * @payloads: Array of payloads. The size of this array is determined
+> +	 * by @max_payloads.
+>  	 */
 
-Nice. Thanks!
+Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
 
+>  	struct drm_dp_payload *payloads;
+>  	/**
+> -- 
+> 2.24.1
 
 -- 
-Robert Milkowski
-
-
+Ville Syrjälä
+Intel
