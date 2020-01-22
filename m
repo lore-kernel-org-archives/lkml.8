@@ -2,77 +2,117 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44000C33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2300C33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AC1E20704
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C864720704
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:39:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="taziyYJQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726231AbgAVNix (ORCPT
+        id S1729126AbgAVNjU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:38:53 -0500
-Received: from mga14.intel.com ([192.55.52.115]:43560 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725802AbgAVNix (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:38:53 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jan 2020 05:38:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,350,1574150400"; 
-   d="scan'208";a="220315883"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 22 Jan 2020 05:38:49 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1iuGDa-0005Gp-FL; Wed, 22 Jan 2020 15:38:50 +0200
-Date:   Wed, 22 Jan 2020 15:38:50 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     "Guilherme G. Piccoli" <gpiccoli@canonical.com>
-Cc:     linux-rtc@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/8] rtc: cmos: Use shared IRQ only for Microsoft
- Surface 3
-Message-ID: <20200122133850.GK32742@smile.fi.intel.com>
-References: <20200117175626.56358-1-andriy.shevchenko@linux.intel.com>
- <a4a30d2e-b7eb-0f2e-933d-97f5bb006428@canonical.com>
+        Wed, 22 Jan 2020 08:39:20 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:46584 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725790AbgAVNjU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:39:20 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00MDd0cM057467;
+        Wed, 22 Jan 2020 07:39:00 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579700340;
+        bh=co1m/tnZ+ImTwD3yuXyZxVaG3wlifWau9XX6MEe8Chg=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=taziyYJQlSzT2GyfKCypQhi5IB6lZr9GRxURow+X6+pPSQokO3HMZ5n1Ktm1eOZV+
+         QOsv5YUsmbCQO9rciykyNX8OSaR8Ff8g2cuKfD4CCH/IloXOHZA9/Fm6d1FFzbQAcT
+         LwBwM8c5O1wWlnzNP20hbrcxQGLBFFveLKn91q14=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00MDd05r065172
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 22 Jan 2020 07:39:00 -0600
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 22
+ Jan 2020 07:38:59 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 22 Jan 2020 07:38:59 -0600
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00MDcxqI104110;
+        Wed, 22 Jan 2020 07:38:59 -0600
+Subject: Re: [PATCH 1/3] dt-bindings: net: can: m_can: Add Documentation for
+ stb-gpios
+To:     Faiz Abbas <faiz_abbas@ti.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-can@vger.kernel.org>
+CC:     <catalin.marinas@arm.com>, <mark.rutland@arm.com>,
+        <robh+dt@kernel.org>, <davem@davemloft.net>, <mkl@pengutronix.de>,
+        <wg@grandegger.com>, <sriram.dash@samsung.com>, <nm@ti.com>,
+        <t-kristo@ti.com>
+References: <20200122080310.24653-1-faiz_abbas@ti.com>
+ <20200122080310.24653-2-faiz_abbas@ti.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <c3b0eeb8-bd78-aa96-4783-62dc93f03bfe@ti.com>
+Date:   Wed, 22 Jan 2020 07:35:52 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a4a30d2e-b7eb-0f2e-933d-97f5bb006428@canonical.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200122080310.24653-2-faiz_abbas@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 10:27:18AM -0300, Guilherme G. Piccoli wrote:
-> On 17/01/2020 14:56, Andy Shevchenko wrote:
+Faiz
 
-> Andy, thanks for the great patch! It works for me, I've tested it on top
-> of 5.5-rc7, no more RTC lost interrupts while using the "irqpoll"
-> parameter. So, feel free to add my:
-> 
-> Tested-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
+On 1/22/20 2:03 AM, Faiz Abbas wrote:
+> The CAN transceiver on some boards has an STB pin which is
+> used to control its standby mode. Add an optional property
+> stb-gpios to toggle the same.
+>
+> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+> ---
+>   Documentation/devicetree/bindings/net/can/m_can.txt | 2 ++
+>   1 file changed, 2 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/net/can/m_can.txt b/Documentation/devicetree/bindings/net/can/m_can.txt
+> index ed614383af9c..cc8ba3f7a2aa 100644
+> --- a/Documentation/devicetree/bindings/net/can/m_can.txt
+> +++ b/Documentation/devicetree/bindings/net/can/m_can.txt
+> @@ -48,6 +48,8 @@ Optional Subnode:
+>   			  that can be used for CAN/CAN-FD modes. See
+>   			  Documentation/devicetree/bindings/net/can/can-transceiver.txt
+>   			  for details.
+> +stb-gpios		: gpio node to toggle the STB (standby) signal on the transceiver
+> +
 
-Thank you for testing!
+The m_can.txt is for the m_can framework.  If this is specific to the 
+platform then it really does not belong here.
 
-(Un)fortunately I dug a bit into the history of the patches and into the ACPI
-tables of MS Surface 3. I have another (better) solution which I will send
-separately from this series.
+If the platform has specific nodes then maybe we need a 
+m_can_platform.txt binding for specific platform nodes.  But I leave 
+that decision to Rob.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Also I prefer you spell out standby like the gpios are spelled out in 
+the tcan binding.
+
+Dan
 
 
+>   Example:
+>   SoC dtsi:
+>   m_can1: can@20e8000 {
