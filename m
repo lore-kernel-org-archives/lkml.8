@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97370C33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EEA1C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 655312468C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:23:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4071E2468C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:23:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579699391;
-	bh=Ty9RH+RLqMXgUyZ5xZoWxctM3JahlJeZFqmLUuI2JFQ=;
+	s=default; t=1579699395;
+	bh=3WDM5bF8zuIRfVx0BpJ2iBhF3cBl5nL3PHzCgeCXHfU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WGYUZHpiHUJ1qmFEUF/kyeJyuEulki3y7T6Z+aRpsd6qFfooUh6gZ2VSy88JyhPRW
-	 8vC7MszI6DDJLv+cbQib2UhWD7D4d4atQkqRaO63IrYYY8qtubunXiqzDS5HgwoRqC
-	 h0B9kOQRepqu9JpRHwD7soyUdX2elYIo7iTZFYdI=
+	b=iP88o2o2Ij9s0njWkaLYSVmUa5kI4LSLQPi97QAbSe1KdeAAXv80FNOzN06yhYaRr
+	 xeeOGy1+wBYWOFmO6kCCs7DPYGVhBYm3WuyFgK2HKPZ8P5poTStArRGUF0Rvc9SQ48
+	 NJ3qeK3zsRd7lsaaV6GtM/4/Qu+cfp+LFOnXt+WU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730710AbgAVNXK (ORCPT
+        id S1730305AbgAVNXO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:23:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41146 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 08:23:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730693AbgAVNXH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:23:07 -0500
+        id S1730702AbgAVNXK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:23:10 -0500
 Received: from localhost (unknown [84.241.205.26])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA472205F4;
-        Wed, 22 Jan 2020 13:23:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E90032468A;
+        Wed, 22 Jan 2020 13:23:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579699386;
-        bh=Ty9RH+RLqMXgUyZ5xZoWxctM3JahlJeZFqmLUuI2JFQ=;
+        s=default; t=1579699389;
+        bh=3WDM5bF8zuIRfVx0BpJ2iBhF3cBl5nL3PHzCgeCXHfU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g2vcqi8P2uaK3X3G+Rw/mqI3GXfrHZrLKPROK/dHL+r27VDTUhJCaH/XLjcvBTAio
-         QQs9FhHMP/9+SAsrG4QDy1pVchcRPWwaVDsnvpWoETZrmvsZvTjvCZuzhaJuCq1Ymk
-         DHHe7vBMf7S1fUSFKDDhYkVts6oYN7ILWFxr0a2o=
+        b=BpLSDMEx32Pg8kLRhAEyNiny3idVT1Qvmz8dzcLCZ1w1b4A+yOVrZKfHadnKhfIjw
+         IiTTdCBiqNOjLoK+vlkgbhqMT9+1JXOTndKOj/fqU7VFyyZSe6NAuq3WxQOVNGIgtj
+         hWp14kn6xrE4tgOfkd5kWMWX8jrQPnA5DS5byWkg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Fastabend <john.fastabend@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>
-Subject: [PATCH 5.4 111/222] bpf: Sockmap, skmsg helper overestimates push, pull, and pop bounds
-Date:   Wed, 22 Jan 2020 10:28:17 +0100
-Message-Id: <20200122092841.682573648@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+0e63ae76d117ae1c3a01@syzkaller.appspotmail.com,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 5.4 129/222] netfilter: nf_tables: remove WARN and add NLA_STRING upper limits
+Date:   Wed, 22 Jan 2020 10:28:35 +0100
+Message-Id: <20200122092842.985072809@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
 References: <20200122092833.339495161@linuxfoundation.org>
@@ -60,99 +61,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Fastabend <john.fastabend@gmail.com>
+From: Florian Westphal <fw@strlen.de>
 
-commit 6562e29cf6f0ddd368657d97a8d484ffc30df5ef upstream.
+commit 9332d27d7918182add34e8043f6a754530fdd022 upstream.
 
-In the push, pull, and pop helpers operating on skmsg objects to make
-data writable or insert/remove data we use this bounds check to ensure
-specified data is valid,
+This WARN can trigger because some of the names fed to the module
+autoload function can be of arbitrary length.
 
- /* Bounds checks: start and pop must be inside message */
- if (start >= offset + l || last >= msg->sg.size)
-     return -EINVAL;
+Remove the WARN and add limits for all NLA_STRING attributes.
 
-The problem here is offset has already included the length of the
-current element the 'l' above. So start could be past the end of
-the scatterlist element in the case where start also points into an
-offset on the last skmsg element.
-
-To fix do the accounting slightly different by adding the length of
-the previous entry to offset at the start of the iteration. And
-ensure its initialized to zero so that the first iteration does
-nothing.
-
-Fixes: 604326b41a6fb ("bpf, sockmap: convert to generic sk_msg interface")
-Fixes: 6fff607e2f14b ("bpf: sk_msg program helper bpf_msg_push_data")
-Fixes: 7246d8ed4dcce ("bpf: helper to pop data from messages")
-Signed-off-by: John Fastabend <john.fastabend@gmail.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Song Liu <songliubraving@fb.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/bpf/20200111061206.8028-5-john.fastabend@gmail.com
+Reported-by: syzbot+0e63ae76d117ae1c3a01@syzkaller.appspotmail.com
+Fixes: 452238e8d5ffd8 ("netfilter: nf_tables: add and use helper for module autoload")
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/core/filter.c |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ net/netfilter/nf_tables_api.c |   13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -2231,10 +2231,10 @@ BPF_CALL_4(bpf_msg_pull_data, struct sk_
- 	/* First find the starting scatterlist element */
- 	i = msg->sg.start;
- 	do {
-+		offset += len;
- 		len = sk_msg_elem(msg, i)->length;
- 		if (start < offset + len)
- 			break;
--		offset += len;
- 		sk_msg_iter_var_next(i);
- 	} while (i != msg->sg.end);
+--- a/net/netfilter/nf_tables_api.c
++++ b/net/netfilter/nf_tables_api.c
+@@ -22,6 +22,8 @@
+ #include <net/net_namespace.h>
+ #include <net/sock.h>
  
-@@ -2346,7 +2346,7 @@ BPF_CALL_4(bpf_msg_push_data, struct sk_
- 	   u32, len, u64, flags)
- {
- 	struct scatterlist sge, nsge, nnsge, rsge = {0}, *psge;
--	u32 new, i = 0, l, space, copy = 0, offset = 0;
-+	u32 new, i = 0, l = 0, space, copy = 0, offset = 0;
- 	u8 *raw, *to, *from;
- 	struct page *page;
++#define NFT_MODULE_AUTOLOAD_LIMIT (MODULE_NAME_LEN - sizeof("nft-expr-255-"))
++
+ static LIST_HEAD(nf_tables_expressions);
+ static LIST_HEAD(nf_tables_objects);
+ static LIST_HEAD(nf_tables_flowtables);
+@@ -521,7 +523,7 @@ static void nft_request_module(struct ne
+ 	va_start(args, fmt);
+ 	ret = vsnprintf(module_name, MODULE_NAME_LEN, fmt, args);
+ 	va_end(args);
+-	if (WARN(ret >= MODULE_NAME_LEN, "truncated: '%s' (len %d)", module_name, ret))
++	if (ret >= MODULE_NAME_LEN)
+ 		return;
  
-@@ -2356,11 +2356,11 @@ BPF_CALL_4(bpf_msg_push_data, struct sk_
- 	/* First find the starting scatterlist element */
- 	i = msg->sg.start;
- 	do {
-+		offset += l;
- 		l = sk_msg_elem(msg, i)->length;
+ 	mutex_unlock(&net->nft.commit_mutex);
+@@ -1174,7 +1176,8 @@ static const struct nla_policy nft_chain
+ 				    .len = NFT_CHAIN_MAXNAMELEN - 1 },
+ 	[NFTA_CHAIN_HOOK]	= { .type = NLA_NESTED },
+ 	[NFTA_CHAIN_POLICY]	= { .type = NLA_U32 },
+-	[NFTA_CHAIN_TYPE]	= { .type = NLA_STRING },
++	[NFTA_CHAIN_TYPE]	= { .type = NLA_STRING,
++				    .len = NFT_MODULE_AUTOLOAD_LIMIT },
+ 	[NFTA_CHAIN_COUNTERS]	= { .type = NLA_NESTED },
+ 	[NFTA_CHAIN_FLAGS]	= { .type = NLA_U32 },
+ };
+@@ -2088,7 +2091,8 @@ static const struct nft_expr_type *nft_e
+ }
  
- 		if (start < offset + l)
- 			break;
--		offset += l;
- 		sk_msg_iter_var_next(i);
- 	} while (i != msg->sg.end);
+ static const struct nla_policy nft_expr_policy[NFTA_EXPR_MAX + 1] = {
+-	[NFTA_EXPR_NAME]	= { .type = NLA_STRING },
++	[NFTA_EXPR_NAME]	= { .type = NLA_STRING,
++				    .len = NFT_MODULE_AUTOLOAD_LIMIT },
+ 	[NFTA_EXPR_DATA]	= { .type = NLA_NESTED },
+ };
  
-@@ -2506,7 +2506,7 @@ static void sk_msg_shift_right(struct sk
- BPF_CALL_4(bpf_msg_pop_data, struct sk_msg *, msg, u32, start,
- 	   u32, len, u64, flags)
- {
--	u32 i = 0, l, space, offset = 0;
-+	u32 i = 0, l = 0, space, offset = 0;
- 	u64 last = start + len;
- 	int pop;
+@@ -3931,7 +3935,8 @@ static const struct nla_policy nft_set_e
+ 	[NFTA_SET_ELEM_USERDATA]	= { .type = NLA_BINARY,
+ 					    .len = NFT_USERDATA_MAXLEN },
+ 	[NFTA_SET_ELEM_EXPR]		= { .type = NLA_NESTED },
+-	[NFTA_SET_ELEM_OBJREF]		= { .type = NLA_STRING },
++	[NFTA_SET_ELEM_OBJREF]		= { .type = NLA_STRING,
++					    .len = NFT_OBJ_MAXNAMELEN - 1 },
+ };
  
-@@ -2516,11 +2516,11 @@ BPF_CALL_4(bpf_msg_pop_data, struct sk_m
- 	/* First find the starting scatterlist element */
- 	i = msg->sg.start;
- 	do {
-+		offset += l;
- 		l = sk_msg_elem(msg, i)->length;
- 
- 		if (start < offset + l)
- 			break;
--		offset += l;
- 		sk_msg_iter_var_next(i);
- 	} while (i != msg->sg.end);
- 
+ static const struct nla_policy nft_set_elem_list_policy[NFTA_SET_ELEM_LIST_MAX + 1] = {
 
 
