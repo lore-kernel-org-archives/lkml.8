@@ -2,94 +2,242 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 043F4C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 21:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66535C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B75912465A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 21:43:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2904E24676
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:04:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IDYVCYAu"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BWPPxgkp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726049AbgAVVns (ORCPT
+        id S1726099AbgAVWEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 16:43:48 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:60576 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbgAVVns (ORCPT
+        Wed, 22 Jan 2020 17:04:09 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:59356 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725911AbgAVWEJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 16:43:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=P6YIyQ6H1J0k+Mrn2boNE7EpN97Sppw4ebAkqT27uNM=; b=IDYVCYAur0v9GQiVU1k2QC4+/
-        60NNV/9+0ms9oWTt3Ipheguyza66RVtsYZdx+8r+lZ3392jy/yGAEUVS/7lqy3+K6fYsjBOOjzSbO
-        n4obXzw99QKagw8C5iTj4CH8Bad+At9QYnQ0mVrcNu3fgKmAHQmqqbfzcduZtHqTVZhsecjE6y4hA
-        ujq9qIzusK9xiodEnOOQ64Eh7mh5HFfWMQyJzLKBsmp09FJyJODw6qfyXCkeLZgzWcen3V8IsAc4b
-        HiGBzDcmrVEMFnPB8ir7Yq1p/Gr909/Au6aUSAe38rbZK1tgM07qRG7qjnyq+4EjetSpa8OBrwH54
-        jAmo+Q0wA==;
-Received: from [2601:1c0:6280:3f0::ed68]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iuNmt-0000Ns-7r; Wed, 22 Jan 2020 21:43:47 +0000
-Subject: Re: [PATCH v3] dynamic_debug: allow to work if debugfs is disabled
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jason Baron <jbaron@akamai.com>
-Cc:     Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
-        kernel-team@android.com
-References: <20200122074343.GA2099098@kroah.com>
- <20200122080352.GA15354@willie-the-truck>
- <20200122081205.GA2227985@kroah.com> <20200122135352.GA9458@kroah.com>
- <8d68b75c-05b8-b403-0a10-d17b94a73ba7@akamai.com>
- <20200122192940.GA88549@kroah.com> <20200122193118.GA88722@kroah.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <ef1172ac-ea78-146e-575e-93e2d65b4606@infradead.org>
-Date:   Wed, 22 Jan 2020 13:43:46 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Wed, 22 Jan 2020 17:04:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579730648;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=V/l0W6VcVP5f9MQYDiVbhWAvpRYGH1EkaiyyRHrf+nM=;
+        b=BWPPxgkpilWNAG03KcagvneJ0K0NCVs+3FoU/3Ou8PT0NKxC9mxKB/C2lmAiVrBfWsZLgm
+        lk6UAP54S1O/3AfVUYyfV0hLPWRt2Q1tfkPvEsbMwDwQ+tyo2/3Rc9lsDZjhp/0OFoIp+g
+        w1EBLxLyEUukLabSePVUmM0c6M4K+fY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-61-vbSaiXmfMbG0UdybIAUWaQ-1; Wed, 22 Jan 2020 17:04:03 -0500
+X-MC-Unique: vbSaiXmfMbG0UdybIAUWaQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D73561882CCC;
+        Wed, 22 Jan 2020 22:04:00 +0000 (UTC)
+Received: from treble (ovpn-122-154.rdu2.redhat.com [10.10.122.154])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D797786450;
+        Wed, 22 Jan 2020 22:03:52 +0000 (UTC)
+Date:   Wed, 22 Jan 2020 16:03:50 -0600
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Jessica Yu <jeyu@kernel.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, live-patching@vger.kernel.org,
+        Randy Dunlap <rdunlap@infradead.org>, mjambor@suse.cz
+Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
+Message-ID: <20200122220350.zvwyrkip5mvv6j7g@treble>
+References: <20191015153120.GA21580@linux-8ccs>
+ <7e9c7dd1-809e-f130-26a3-3d3328477437@redhat.com>
+ <20191015182705.1aeec284@gandalf.local.home>
+ <20191016074217.GL2328@hirez.programming.kicks-ass.net>
+ <20191021150549.bitgqifqk2tbd3aj@treble>
+ <20200120165039.6hohicj5o52gdghu@treble>
+ <alpine.LSU.2.21.2001210922060.6036@pobox.suse.cz>
+ <20200121161045.dhihqibnpyrk2lsu@treble>
+ <alpine.LSU.2.21.2001221312030.15957@pobox.suse.cz>
+ <alpine.LSU.2.21.2001221556160.15957@pobox.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <20200122193118.GA88722@kroah.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <alpine.LSU.2.21.2001221556160.15957@pobox.suse.cz>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+On Wed, Jan 22, 2020 at 04:05:27PM +0100, Miroslav Benes wrote:
+> I started looking at some btrfs reports and then found out those were 
+> already fixed. 
+> https://lore.kernel.org/linux-btrfs/cd4091e4-1c04-a880-f239-00bc053f46a2@infradead.org/
+> 
+> arch/x86/kernel/cpu/mce/core.o: warning: objtool: mce_panic()+0x11b: unreachable instruction
+> was next...
+> 
+> Broken code (-fno-ipa-pure-const):
+> ...
+>     1186:       e8 a5 fe ff ff          callq  1030 <wait_for_panic>
+>     118b:       e9 23 ff ff ff          jmpq   10b3 <mce_panic+0x43>
+> </end of function>
+> 
+> Working code (-fipa-pure-const):
+>      753:       e8 88 fe ff ff          callq  5e0 <wait_for_panic>
+>      758:       0f 1f 84 00 00 00 00    nopl   0x0(%rax,%rax,1)
+>      75f:       00 
+> 
+> mce_panic() has:
+>                 if (atomic_inc_return(&mce_panicked) > 1)                                                              
+>                         wait_for_panic();
+>                 barrier();
+>                 
+>                 bust_spinlocks(1);                                                                                     
+> 
+> jmpq in the broken code goes to bust_spinlocks(1), because GCC does not 
+> know that wait_for_panic() is noreturn... because it is not. 
+> wait_for_panic() calls panic() unconditionally in the end, which is 
+> noreturn.
+> 
+> So the question is why ipa-pure-const optimization knows about panic()'s 
+> noreturn. The answer is that it is right one of the things the 
+> optimization does. It propagates inner noreturns to its callers. (Martin 
+> Jambor CCed).
+> 
+> Marking wait_for_panic() as noreturn (__noreturn), of course, fixes it 
+> then. Now I don't know what the right fix should be. Should we mark all 
+> these sites as noreturn, or is it ok for the kernel to rely on GCC 
+> behaviour in this case? Could we teach objtool to recognize this?
 
-If you make any more changes:
+Thanks for looking at it.  I cam to a similar conclusion and I already
+had the manual noreturns added (see patch below) before I realized that
+-flive-patching was the culprit.
 
-On 1/22/20 11:31 AM, Greg Kroah-Hartman wrote:
-> diff --git a/Documentation/admin-guide/dynamic-debug-howto.rst b/Documentation/admin-guide/dynamic-debug-howto.rst
-> index 252e5ef324e5..41f43a373a6a 100644
-> --- a/Documentation/admin-guide/dynamic-debug-howto.rst
-> +++ b/Documentation/admin-guide/dynamic-debug-howto.rst
-> @@ -54,6 +54,9 @@ If you make a mistake with the syntax, the write will fail thus::
->  				<debugfs>/dynamic_debug/control
->    -bash: echo: write error: Invalid argument
->  
-> +Note, for systems without 'debugfs' enabled, the control file can be
-> +also found in ``/proc/dynamic_debug/control``.
+The patch works, but the problem is that more warnings will pop up in
+the future and it'll be my job to fix them...
 
-Mostly drop the "also".  How about:
-
-> +Note, for systems without 'debugfs' enabled, the control file is located
-> +in ``/proc/dynamic_debug/control``.
+Global noreturns are already a pain today.  There's no way for objtool
+to know whether GCC considered a function to be noreturn, we have
+already have to keep a hard-coded list of global noreturns in objtool.
+It's been a constant source of annoyance and this will add to that.
 
 
-> +
->  Viewing Dynamic Debug Behaviour
->  ===============================
->  
-
-
--- 
-~Randy
+diff --git a/drivers/gpu/drm/ttm/ttm_bo.c b/drivers/gpu/drm/ttm/ttm_bo.c
+index 8d91b0428af1..8a8696b32120 100644
+--- a/drivers/gpu/drm/ttm/ttm_bo.c
++++ b/drivers/gpu/drm/ttm/ttm_bo.c
+@@ -192,7 +192,7 @@ static void ttm_bo_add_mem_to_lru(struct ttm_buffer_object *bo,
+ 	}
+ }
+ 
+-static void ttm_bo_ref_bug(struct kref *list_kref)
++static void __noreturn ttm_bo_ref_bug(struct kref *list_kref)
+ {
+ 	BUG();
+ }
+diff --git a/drivers/message/fusion/mptbase.h b/drivers/message/fusion/mptbase.h
+index 813d46311f6a..2932ecef4dcf 100644
+--- a/drivers/message/fusion/mptbase.h
++++ b/drivers/message/fusion/mptbase.h
+@@ -945,7 +945,7 @@ extern int	mpt_raid_phys_disk_get_num_paths(MPT_ADAPTER *ioc,
+ 		u8 phys_disk_num);
+ extern int	 mpt_set_taskmgmt_in_progress_flag(MPT_ADAPTER *ioc);
+ extern void	 mpt_clear_taskmgmt_in_progress_flag(MPT_ADAPTER *ioc);
+-extern void     mpt_halt_firmware(MPT_ADAPTER *ioc);
++extern void     mpt_halt_firmware(MPT_ADAPTER *ioc) __noreturn;
+ 
+ 
+ /*
+diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+index eb8bd0258360..4db39fef3b56 100644
+--- a/fs/btrfs/extent_io.c
++++ b/fs/btrfs/extent_io.c
+@@ -655,7 +655,7 @@ alloc_extent_state_atomic(struct extent_state *prealloc)
+ 	return prealloc;
+ }
+ 
+-static void extent_io_tree_panic(struct extent_io_tree *tree, int err)
++static void __noreturn extent_io_tree_panic(struct extent_io_tree *tree, int err)
+ {
+ 	struct inode *inode = tree->private_data;
+ 
+diff --git a/fs/btrfs/relocation.c b/fs/btrfs/relocation.c
+index d897a8e5e430..b7a94b1739ae 100644
+--- a/fs/btrfs/relocation.c
++++ b/fs/btrfs/relocation.c
+@@ -321,7 +321,7 @@ static struct rb_node *tree_search(struct rb_root *root, u64 bytenr)
+ 	return NULL;
+ }
+ 
+-static void backref_tree_panic(struct rb_node *rb_node, int errno, u64 bytenr)
++static void __noreturn backref_tree_panic(struct rb_node *rb_node, int errno, u64 bytenr)
+ {
+ 
+ 	struct btrfs_fs_info *fs_info = NULL;
+diff --git a/include/linux/cred.h b/include/linux/cred.h
+index 18639c069263..3ee230a3dee2 100644
+--- a/include/linux/cred.h
++++ b/include/linux/cred.h
+@@ -175,7 +175,7 @@ extern void __init cred_init(void);
+  * check for validity of credentials
+  */
+ #ifdef CONFIG_DEBUG_CREDENTIALS
+-extern void __invalid_creds(const struct cred *, const char *, unsigned);
++extern void __noreturn __invalid_creds(const struct cred *, const char *, unsigned);
+ extern void __validate_process_creds(struct task_struct *,
+ 				     const char *, unsigned);
+ 
+diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
+index f1879884238e..44ca6000b5f1 100644
+--- a/include/linux/sched/task.h
++++ b/include/linux/sched/task.h
+@@ -86,7 +86,7 @@ static inline void exit_thread(struct task_struct *tsk)
+ {
+ }
+ #endif
+-extern void do_group_exit(int);
++extern void __noreturn do_group_exit(int);
+ 
+ extern void exit_files(struct task_struct *);
+ extern void exit_itimers(struct signal_struct *);
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index 973a71f4bc89..29024c578997 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -98,8 +98,8 @@ EXPORT_SYMBOL(sysctl_max_skb_frags);
+  *	Keep out of line to prevent kernel bloat.
+  *	__builtin_return_address is not used because it is not always reliable.
+  */
+-static void skb_panic(struct sk_buff *skb, unsigned int sz, void *addr,
+-		      const char msg[])
++static void __noreturn
++skb_panic(struct sk_buff *skb, unsigned int sz, void *addr, const char msg[])
+ {
+ 	pr_emerg("%s: text:%p len:%d put:%d head:%p data:%p tail:%#lx end:%#lx dev:%s\n",
+ 		 msg, addr, skb->len, sz, skb->head, skb->data,
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index b6da413bcbd6..ac8807732b10 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -145,6 +145,9 @@ static bool __dead_end_function(struct objtool_file *file, struct symbol *func,
+ 		"machine_real_restart",
+ 		"rewind_stack_do_exit",
+ 		"kunit_try_catch_throw",
++		"__invalid_creds",
++		"do_group_exit",
++		"mpt_halt_firmware",
+ 	};
+ 
+ 	if (!func)
 
