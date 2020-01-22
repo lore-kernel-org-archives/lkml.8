@@ -2,285 +2,102 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A27C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 23:17:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB247C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 23:24:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BF2424673
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 23:17:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579735068;
-	bh=n/dsn3gDSL+x/Hcoz8ENnerQqfvkZJr8KkYmos+/oW4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=tIpf0f3EYUavhz67GP4MKwG5i9/8Ww0xczh+YoA/f/WIxqL2ciUfYSE/lXGv5BKir
-	 vSUfufqF5iygINgLUnwFLy4ZnCtu9Su4M762WLiJrXQ5m1sTyoXNbL35K/x6j4n1oE
-	 /wfqSoV9+tB0EsOyMm2GbubMFkQNevrd6hgwW6dA=
+	by mail.kernel.org (Postfix) with ESMTP id 8A5F12253D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 23:24:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726590AbgAVXRr (ORCPT
+        id S1726170AbgAVXYg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 18:17:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47422 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 18:24:36 -0500
+Received: from mga17.intel.com ([192.55.52.151]:23094 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725884AbgAVXRr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 18:17:47 -0500
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70A0324655;
-        Wed, 22 Jan 2020 23:17:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579735065;
-        bh=n/dsn3gDSL+x/Hcoz8ENnerQqfvkZJr8KkYmos+/oW4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Wlu1tKUlaALizPOIxvFgH+ZFgQUk9U8riu0nn58xk0HQMkZR37jFCg0meizjf1+Wp
-         1e3fY/WklWdniZKbRD77Wl0N2IRhe1d4/aP5kGmvJMTtSnie3XlfQj1HV38vWoqEU8
-         aZL66t/uC2JyKwZJx8kgGE2YvcvhsPIw28fZrwJk=
-Date:   Wed, 22 Jan 2020 17:17:43 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     sathyanarayanan.kuppuswamy@linux.intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, Keith Busch <keith.busch@intel.com>
-Subject: Re: [PATCH v13 2/8] PCI/DPC: Allow dpc_probe() even if firmware
- first mode is enabled
-Message-ID: <20200122231743.GA28442@google.com>
+        id S1725943AbgAVXYg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 18:24:36 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jan 2020 15:24:36 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,351,1574150400"; 
+   d="scan'208";a="375062915"
+Received: from orsmsx102.amr.corp.intel.com ([10.22.225.129])
+  by orsmga004.jf.intel.com with ESMTP; 22 Jan 2020 15:24:35 -0800
+Received: from orsmsx157.amr.corp.intel.com (10.22.240.23) by
+ ORSMSX102.amr.corp.intel.com (10.22.225.129) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 22 Jan 2020 15:24:35 -0800
+Received: from orsmsx114.amr.corp.intel.com ([169.254.8.4]) by
+ ORSMSX157.amr.corp.intel.com ([169.254.9.76]) with mapi id 14.03.0439.000;
+ Wed, 22 Jan 2020 15:24:35 -0800
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        "Ingo Molnar" <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: RE: [PATCH v12] x86/split_lock: Enable split lock detection by
+ kernel
+Thread-Topic: [PATCH v12] x86/split_lock: Enable split lock detection by
+ kernel
+Thread-Index: AQHV0VV7/XPb/EW8oEGwDJr5iFh+Caf3zf+A//+EAFA=
+Date:   Wed, 22 Jan 2020 23:24:34 +0000
+Message-ID: <3908561D78D1C84285E8C5FCA982C28F7F54887A@ORSMSX114.amr.corp.intel.com>
+References: <20191122105141.GY4114@hirez.programming.kicks-ass.net>
+ <20191122152715.GA1909@hirez.programming.kicks-ass.net>
+ <20191123003056.GA28761@agluck-desk2.amr.corp.intel.com>
+ <20191125161348.GA12178@linux.intel.com>
+ <20191212085948.GS2827@hirez.programming.kicks-ass.net>
+ <20200110192409.GA23315@agluck-desk2.amr.corp.intel.com>
+ <20200114055521.GI14928@linux.intel.com>
+ <20200115222754.GA13804@agluck-desk2.amr.corp.intel.com>
+ <20200115225724.GA18268@linux.intel.com>
+ <20200122185514.GA16010@agluck-desk2.amr.corp.intel.com>
+ <20200122224245.GA2331824@rani.riverdale.lan>
+In-Reply-To: <20200122224245.GA2331824@rani.riverdale.lan>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.140]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <85876c50033440ec147719a1c3f6b22d691645be.1579406227.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 18, 2020 at 08:00:31PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> 
-> As per ACPI specification v6.3, sec 5.6.6, Error Disconnect Recover
-> (EDR) notification used by firmware to let OS know about the DPC event
-> and permit OS to perform error recovery when processing the EDR
-> notification. 
-
-I want to clear up some of this description because this is a very
-confusing area and we should follow the spec carefully so we all
-understand each other.
-
-> Also, as per PCI firmware specification r3.2 Downstream
-> Port Containment Related Enhancements ECN, sec 4.5.1, table 4-6, if DPC
-> is controlled by firmware (firmware first mode), it's responsible for
-> initializing Downstream Port Containment Extended Capability Structures
-> per firmware policy. 
-
-The above is actually not what the ECN says.  What it does say is
-this:
-
-  If control of this feature [DPC configuration] was requested and
-  denied, firmware is responsible for initializing Downstream Port
-  Containment Extended Capability Structures per firmware policy.
-
-Neither the PCI Firmware Spec (r3.2) nor the ECN contains any
-reference to "firmware first".  As far as I can tell, "Firmware First"
-is defined by the ACPI spec, and the FIRMWARE_FIRST bit in various
-HEST entries (sec 18.3.2) is what tells us when a device is in
-firmware-first mode.
-
-That's a really long way of saying that from a spec point of view, DPC
-being controlled by firmware does NOT imply anything about
-firmware-first mode.
-
-> And, OS is permitted to read or write DPC Control
-> and Status registers of a port while processing an Error Disconnect
-> Recover (EDR) notification from firmware on that port.
-> 
-> Currently, if firmware controls DPC (firmware first mode), OS will not
-> create/enumerate DPC PCIe port services. But, if OS supports EDR
-> feature, then as mentioned in above spec references, it should permit
-> enumeration of DPC driver and also support handling ACPI EDR
-> notification. So as first step, allow dpc_probe() to continue even if
-> firmware first mode is enabled. Also add appropriate checks to ensure
-> device registers are not modified outside EDR notification window in
-> firmware first mode. This is a preparatory patch for adding EDR support.
-> 
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> Acked-by: Keith Busch <keith.busch@intel.com>
-> ---
->  drivers/pci/pcie/dpc.c | 74 ++++++++++++++++++++++++++++++++++--------
->  1 file changed, 61 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> index e06f42f58d3d..c583a90fa90d 100644
-> --- a/drivers/pci/pcie/dpc.c
-> +++ b/drivers/pci/pcie/dpc.c
-> @@ -22,6 +22,7 @@ struct dpc_dev {
->  	u16			cap_pos;
->  	bool			rp_extensions;
->  	u8			rp_log_size;
-> +	bool			edr_enabled; /* EDR mode is supported */
-
-This needs a better name, or perhaps it should be removed completely.
-EDR is not a mode that can be enabled or disabled.  The _OSC "EDR
-supported" bit tells the firmware whether the OS supports EDR
-notification, but there's no corresponding bit that tells the OS
-whether firmware will actually *send* those notifications.
-
-Also, EDR is an ACPI concept, and dpc.c is a generic driver not
-specific to ACPI, so we should try to avoid polluting it with
-ACPI-isms.
-
->  };
->  
->  static const char * const rp_pio_error_string[] = {
-> @@ -69,6 +70,14 @@ void pci_save_dpc_state(struct pci_dev *dev)
->  	if (!dpc)
->  		return;
->  
-> +	/*
-> +	 * If DPC is controlled by firmware then save/restore tasks are also
-> +	 * controlled by firmware. So skip rest of the function if DPC is
-> +	 * controlled by firmware.
-> +	 */
-> +	if (dpc->edr_enabled)
-> +		return;
-
-I think this should be something like:
-
-  if (!host->native_dpc)
-    return;
-
-That's what the spec says: if firmware does not grant control of DPC
-to the OS via _OSC, the OS may not read/write the DPC capability.
-
-The usual situation would be that if firmware doesn't grant the OS
-permission to use DPC, we wouldn't use the dpc.c driver at all.
-
-But IIUC, the point of this EDR stuff is that we're adding a case
-where the OS doesn't have permission to use DPC, but we *do* want to
-use parts of dpc.c in limited cases while handling EDR notifications.
-
-I think you should probably take the DPC-related _OSC stuff from the
-last patch ("PCI/ACPI: Enable EDR support") and move it before this
-patch, so it *only* negotiates DPC ownership, per the ECN.  That would
-probably result in dpc.c being used only if _OSC grants DPC ownership
-to the OS.
-
-Then subsequent patches like this one would relax that slightly and
-allow dpc.c to be used even without DPC ownership, but it would only
-touch the DPC capability in limited cases.
-
->  	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_DPC);
->  	if (!save_state)
->  		return;
-> @@ -90,6 +99,14 @@ void pci_restore_dpc_state(struct pci_dev *dev)
->  	if (!dpc)
->  		return;
->  
-> +	/*
-> +	 * If DPC is controlled by firmware then save/restore tasks are also
-> +	 * controlled by firmware. So skip rest of the function if DPC is
-> +	 * controlled by firmware.
-> +	 */
-> +	if (dpc->edr_enabled)
-> +		return;
-> +
->  	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_DPC);
->  	if (!save_state)
->  		return;
-> @@ -291,24 +308,48 @@ static int dpc_probe(struct pcie_device *dev)
->  	int status;
->  	u16 ctl, cap;
->  
-> -	if (pcie_aer_get_firmware_first(pdev) && !pcie_ports_dpc_native)
-> -		return -ENOTSUPP;
-> -
->  	dpc = devm_kzalloc(device, sizeof(*dpc), GFP_KERNEL);
->  	if (!dpc)
->  		return -ENOMEM;
->  
->  	dpc->cap_pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_DPC);
->  	dpc->dev = dev;
-> +
-> +	/*
-> +	 * As per PCIe r5.0, sec 6.2.10, implementation note titled
-> +	 * "Determination of DPC Control", to avoid conflicts over whether
-> +	 * platform firmware or the operating system have control of DPC,
-> +	 * it is recommended that platform firmware and operating systems
-> +	 * always link the control of DPC to the control of Advanced Error
-> +	 * Reporting.
-> +	 *
-> +	 * So use AER FF mode check API pcie_aer_get_firmware_first() to decide
-> +	 * whether DPC is controlled by software or firmware. 
-
-AFAICT, this is not what the spec says.  Firmware-first is not what
-tells us whether DPC is controlled by firmware or the OS.  For ACPI
-systems, _OSC tells us whether the OS is allowed control of DPC.
-
-> +	 * And EDR support
-> +	 * can only be enabled if DPC is controlled by firmware.
-> +	 */
-> +
-> +	if (pcie_aer_get_firmware_first(pdev) && !pcie_ports_dpc_native)
-> +		dpc->edr_enabled = 1;
-
-> +	/*
-> +	 * If DPC is handled in firmware and ACPI support is not enabled
-> +	 * in OS, skip probe and return error.
-> +	 */
-> +	if (dpc->edr_enabled && !IS_ENABLED(CONFIG_ACPI))
-> +		return -ENODEV;
-> +
->  	set_service_data(dev, dpc);
->  
-> -	status = devm_request_threaded_irq(device, dev->irq, dpc_irq,
-> -					   dpc_handler, IRQF_SHARED,
-> -					   "pcie-dpc", dpc);
-> -	if (status) {
-> -		pci_warn(pdev, "request IRQ%d failed: %d\n", dev->irq,
-> -			 status);
-> -		return status;
-> +	/* Register interrupt handler only if OS controls DPC */
-> +	if (!dpc->edr_enabled) {
-> +		status = devm_request_threaded_irq(device, dev->irq, dpc_irq,
-> +						   dpc_handler, IRQF_SHARED,
-> +						   "pcie-dpc", dpc);
-> +		if (status) {
-> +			pci_warn(pdev, "request IRQ%d failed: %d\n", dev->irq,
-> +				 status);
-> +			return status;
-> +		}
->  	}
->  
->  	pci_read_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CAP, &cap);
-> @@ -323,9 +364,12 @@ static int dpc_probe(struct pcie_device *dev)
->  			dpc->rp_log_size = 0;
->  		}
->  	}
-> -
-> -	ctl = (ctl & 0xfff4) | PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
-> -	pci_write_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL, ctl);
-> +	if (!dpc->edr_enabled) {
-> +		ctl = (ctl & 0xfff4) |
-> +			(PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN);
-> +		pci_write_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL,
-> +				      ctl);
-> +	}
->  
->  	pci_info(pdev, "error containment capabilities: Int Msg #%d, RPExt%c PoisonedTLP%c SwTrigger%c RP PIO Log %d, DL_ActiveErr%c\n",
->  		 cap & PCI_EXP_DPC_IRQ, FLAG(cap, PCI_EXP_DPC_CAP_RP_EXT),
-> @@ -343,6 +387,10 @@ static void dpc_remove(struct pcie_device *dev)
->  	struct pci_dev *pdev = dev->port;
->  	u16 ctl;
->  
-> +	/* Skip updating DPC registers if DPC is controlled by firmware */
-> +	if (dpc->edr_enabled)
-> +		return;
-> +
->  	pci_read_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL, &ctl);
->  	ctl &= ~(PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN);
->  	pci_write_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL, ctl);
-> -- 
-> 2.21.0
-> 
+Pj4gK3N0YXRpYyBlbnVtIHNwbGl0X2xvY2tfZGV0ZWN0X3N0YXRlIHNsZF9zdGF0ZSA9IHNsZF93
+YXJuOw0KPj4gKw0KPg0KPiBUaGlzIHNldHMgc2xkX3N0YXRlIHRvIHNsZF93YXJuIGV2ZW4gb24g
+Q1BVcyB0aGF0IGRvbid0IHN1cHBvcnQNCj4gc3BsaXQtbG9jayBkZXRlY3Rpb24uIHNwbGl0X2xv
+Y2tfaW5pdCB3aWxsIHRoZW4gdHJ5IHRvIHJlYWQvd3JpdGUgdGhlDQo+IE1TUiB0byB0dXJuIGl0
+IG9uLiBXb3VsZCBpdCBiZSBiZXR0ZXIgdG8gaW5pdGlhbGl6ZSBpdCB0byBzbGRfb2ZmIGFuZA0K
+PiBzZXQgaXQgdG8gc2xkX3dhcm4gaW4gc3BsaXRfbG9ja19zZXR1cCBpbnN0ZWFkLCB3aGljaCBp
+cyBvbmx5IGNhbGxlZCBpZg0KPiB0aGUgQ1BVIHN1cHBvcnRzIHRoZSBmZWF0dXJlPw0KDQpJJ3Zl
+IGxvc3Qgc29tZSBiaXRzIG9mIHRoaXMgcGF0Y2ggc2VyaWVzIHNvbWV3aGVyZSBhbG9uZyB0aGUg
+d2F5IDotKCAgVGhlcmUNCndhcyBvbmNlIGNvZGUgdG8gZGVjaWRlIHdoZXRoZXIgdGhlIGZlYXR1
+cmUgd2FzIHN1cHBvcnRlZCAoZWl0aGVyIHdpdGgNCng4Nl9tYXRjaF9jcHUoKSBmb3IgYSBjb3Vw
+bGUgb2YgbW9kZWxzLCBvciB1c2luZyB0aGUgYXJjaGl0ZWN0dXJhbCB0ZXN0DQpiYXNlZCBvbiBz
+b21lIE1TUiBiaXRzLiAgSSBuZWVkIHRvIGRpZyB0aGF0IG91dCBhbmQgcHV0IGl0IGJhY2sgaW4u
+IFRoZW4NCnN0dWZmIGNhbiBjaGVjayBYODZfRkVBVFVSRV9TUExJVF9MT0NLIGJlZm9yZSB3YW5k
+ZXJpbmcgaW50byBjb2RlDQp0aGF0IG1lc3NlcyB3aXRoIE1TUnMNCg0KPj4gKwlpZiAoIXNwbGl0
+X2xvY2tfZGV0ZWN0X2VuYWJsZWQoKSkNCj4+ICsJCXJldHVybjsNCj4NCj4gVGhpcyBtaXNzZXMg
+b25lIGNvbW1lbnQgZnJvbSBTZWFuIFsxXSB0aGF0IHRoaXMgY2hlY2sgc2hvdWxkIGJlIGRyb3Bw
+ZWQsDQo+IG90aGVyd2lzZSB1c2VyLXNwYWNlIGFsaWdubWVudCBjaGVjayB2aWEgRUZMQUdTLkFD
+IHdpbGwgZ2V0IGlnbm9yZWQgd2hlbg0KPiBzcGxpdCBsb2NrIGRldGVjdGlvbiBpcyBkaXNhYmxl
+ZC4NCg0KQWggeWVzLiBHb29kIGNhdGNoLiAgV2lsbCBmaXguDQoNClRoYW5rcyBmb3IgdGhlIHJl
+dmlldy4NCg0KLVRvbnkNCg==
