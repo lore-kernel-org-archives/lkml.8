@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C02C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA98C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BCBA24680
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:38:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98E4C24684
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:39:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685937;
-	bh=VDbWkC6uBBEeg/HWkCoBcE5qjljz8RrZQ0zWHQnLLnE=;
+	s=default; t=1579685941;
+	bh=jlwuOc04JQ/mlkGK+K25zV2RTSgLEUG02HcCGOeRKdg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bytprxbma2Jilt7vEDcCef7/cHZIPFZSNw8Y3sldVEdkqOMx17Uy07vAughBSpQ48
-	 BbAOsfVAZGh7cR4BRLgKklJv3NLdZ74pf6Z86X0xf6NJO6hsxU+X9XBolEBskZv4X4
-	 bshf2rschMPxu27Em/MQxViE+SlkrKv5yQOdtX8M=
+	b=R9ed7q2wVsvJtqkMgjDs+gKuSLuBAUWH4VRAvZy25w36/k31OvJ0YABvzaeGxEo00
+	 4l73RdzDdIcKap2fir9oXCmMZZB0jnwdkYGU5NmIjx8yaOl3Aky+yP2AOs045EccF4
+	 jDW6zKYPo7VjK/9di01tV/51/mCWMd5q6lpHX/Ko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731934AbgAVJi4 (ORCPT
+        id S1732785AbgAVJjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:38:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55918 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:39:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733111AbgAVJit (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:38:49 -0500
+        id S1732769AbgAVJi4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:38:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 839EC2467B;
-        Wed, 22 Jan 2020 09:38:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2C242467E;
+        Wed, 22 Jan 2020 09:38:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685929;
-        bh=VDbWkC6uBBEeg/HWkCoBcE5qjljz8RrZQ0zWHQnLLnE=;
+        s=default; t=1579685936;
+        bh=jlwuOc04JQ/mlkGK+K25zV2RTSgLEUG02HcCGOeRKdg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=labauBqJBY8iP350DZdxpD0GGwGZArQ9ppCc++eR1gH/Q/za0wrH4Tp1eS2Cb/414
-         d1hjngQsY03SAOxMn/LiKlz4Pcpg8S5d3b6ADEV3uIXf3FUyXa0suEy/N9NXIl67rF
-         u59PIuhxiXURXpKlePG3OFfU64P1GuwZhH0FImeQ=
+        b=jCuv0VlvHhIASNl8ARt17H5ojjbeNXbWaoPPsafE7PqsCqpUCXd907E2vE7KcDOUw
+         1rf6030EttarspBFD6V5yJxZKe6IlGJ0Q/ZUW/xVcfJFmMTX3cOIlTCSTzZAuLZtHo
+         xVyTCOI0092MBwJuyd0MPbG4HZFruevsbxMIE9Z0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>
-Subject: [PATCH 4.14 40/65] batman-adv: Fix DAT candidate selection on little endian systems
-Date:   Wed, 22 Jan 2020 10:29:25 +0100
-Message-Id: <20200122092756.698323689@linuxfoundation.org>
+        stable@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Alexander Lobakin <alobakin@dlink.ru>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 43/65] net: dsa: tag_qca: fix doubled Tx statistics
+Date:   Wed, 22 Jan 2020 10:29:28 +0100
+Message-Id: <20200122092757.188372831@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092750.976732974@linuxfoundation.org>
 References: <20200122092750.976732974@linuxfoundation.org>
@@ -59,49 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Eckelmann <sven@narfation.org>
+From: Alexander Lobakin <alobakin@dlink.ru>
 
-commit 4cc4a1708903f404d2ca0dfde30e71e052c6cbc9 upstream.
+[ Upstream commit bd5874da57edd001b35cf28ae737779498c16a56 ]
 
-The distributed arp table is using a DHT to store and retrieve MAC address
-information for an IP address. This is done using unicast messages to
-selected peers. The potential peers are looked up using the IP address and
-the VID.
+DSA subsystem takes care of netdev statistics since commit 4ed70ce9f01c
+("net: dsa: Refactor transmit path to eliminate duplication"), so
+any accounting inside tagger callbacks is redundant and can lead to
+messing up the stats.
+This bug is present in Qualcomm tagger since day 0.
 
-While the IP address is always stored in big endian byte order, this is not
-the case of the VID. It can (depending on the host system) either be big
-endian or little endian. The host must therefore always convert it to big
-endian to ensure that all devices calculate the same peers for the same
-lookup data.
-
-Fixes: be1db4f6615b ("batman-adv: make the Distributed ARP Table vlan aware")
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Fixes: cafdc45c949b ("net-next: dsa: add Qualcomm tag RX/TX handler")
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- net/batman-adv/distributed-arp-table.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/dsa/tag_qca.c |    3 ---
+ 1 file changed, 3 deletions(-)
 
---- a/net/batman-adv/distributed-arp-table.c
-+++ b/net/batman-adv/distributed-arp-table.c
-@@ -243,6 +243,7 @@ static u32 batadv_hash_dat(const void *d
- 	u32 hash = 0;
- 	const struct batadv_dat_entry *dat = data;
- 	const unsigned char *key;
-+	__be16 vid;
- 	u32 i;
+--- a/net/dsa/tag_qca.c
++++ b/net/dsa/tag_qca.c
+@@ -41,9 +41,6 @@ static struct sk_buff *qca_tag_xmit(stru
+ 	struct dsa_slave_priv *p = netdev_priv(dev);
+ 	u16 *phdr, hdr;
  
- 	key = (const unsigned char *)&dat->ip;
-@@ -252,7 +253,8 @@ static u32 batadv_hash_dat(const void *d
- 		hash ^= (hash >> 6);
- 	}
+-	dev->stats.tx_packets++;
+-	dev->stats.tx_bytes += skb->len;
+-
+ 	if (skb_cow_head(skb, 0) < 0)
+ 		return NULL;
  
--	key = (const unsigned char *)&dat->vid;
-+	vid = htons(dat->vid);
-+	key = (__force const unsigned char *)&vid;
- 	for (i = 0; i < sizeof(dat->vid); i++) {
- 		hash += key[i];
- 		hash += (hash << 10);
 
 
