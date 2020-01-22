@@ -2,154 +2,161 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8551C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0962EC33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:15:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BB2024655
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:15:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D546F24655
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:15:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sLmtYG0z"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uBtieWXw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729099AbgAVJPX (ORCPT
+        id S1729158AbgAVJPp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:15:23 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35735 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726083AbgAVJPX (ORCPT
+        Wed, 22 Jan 2020 04:15:45 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:42224 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbgAVJPo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:15:23 -0500
-Received: by mail-wm1-f66.google.com with SMTP id p17so6336696wmb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 01:15:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=MtAxVDIFvvyihRVixTQiC8r4kLneR6vfxUmvLHhCL5I=;
-        b=sLmtYG0zpyJeNHaOSjZGWQ6mtLVP1VGmyWgfn8SCysGDSxSVDtepU7aQLzH6/LjTFx
-         sagQmaEaiyfEdXFeMRlXDWqh5XD7YaUZvF9hsc3SmmPXHJZT3f9YalLnFtW0Vd2o6G3q
-         iHAbYb5XH0CbifqSbqg4ckgHq9hz3hQPuUXpsTuqqYxaGrk/EJqyo0aVE6/WmmTXref4
-         3YHyOwA1Y82IvGEgw58/+/YdHbdSLtRUD4SfwIDGG+gSkOdJhdTyAcOcE0jZdb/a/ybz
-         tB7UXEVhemSrkf0nyTjp+dFnkWIPuxr7rfZjr4OXUi5nuIF3ZqrCsGM5+n/wdvSLijoO
-         ulCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MtAxVDIFvvyihRVixTQiC8r4kLneR6vfxUmvLHhCL5I=;
-        b=ZD7nYnjulWrzup3DdDR22s+0Nvrk60U5J/u3cuadRSAvlXjfoxDwFwB1vJQFiVeerB
-         9msLWVcinxxTqcGOkjTWR61FmJWHbZjNdNK+8z0bM7TJuaRmuwpGqx/040ER7SECUlhJ
-         SoYlgyQYfaLmE1yTuWMnAfNYIUdT7CkDzrDJJIxE1LIFFNGcF+li7kBKqR8GY3SaX2y/
-         hRbwm4UHWoFa47mOjGu77GrwrPcFUy3BjYyfmKqyGf/hRa0VL2yWoZJajc+kZpQTfijK
-         /YPDFYyybAvWUc5kgOQvhV3zXEaaJ/C87zhG/uWzRZ8vxPw2u+gWaH5quGY2H+85XOVS
-         oXuw==
-X-Gm-Message-State: APjAAAWhmoEvCeUbWYq7zEEOrVjgYsMG1Wjrcp9OHUZcifcgnjixQ3RN
-        Yh/b0AFwgKSC16anctuedqQRzZVZAIk=
-X-Google-Smtp-Source: APXvYqybJyZZtNLiR7ygGpGJn8BaX3PeiNcJokU+VY70l2t4/jyQwxNtnsvoIjPghifI/i3tz2SYHQ==
-X-Received: by 2002:a1c:a952:: with SMTP id s79mr1947884wme.83.1579684520454;
-        Wed, 22 Jan 2020 01:15:20 -0800 (PST)
-Received: from [10.44.66.8] ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id g25sm4097652wmh.3.2020.01.22.01.15.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 Jan 2020 01:15:19 -0800 (PST)
-Subject: Re: [GIT PULL 00/12] interconnect changes for 5.6
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200117095816.23575-1-georgi.djakov@linaro.org>
- <20200122090556.GA2613910@kroah.com>
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
- 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
- KEmKjLDvB0pePJkdTw==
-Message-ID: <179d487b-aa77-ee70-2433-e3ee498040ea@linaro.org>
-Date:   Wed, 22 Jan 2020 11:15:19 +0200
+        Wed, 22 Jan 2020 04:15:44 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00M9FMLM122955;
+        Wed, 22 Jan 2020 03:15:22 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579684522;
+        bh=p6TXy9D8Jj5ZMAsUl92rse85KpLnXYI0D7il7xeObjo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=uBtieWXwbpXSnRK/R3juokz75ZF07c3mFcuNzH5xfgGKpgBJPYDmetcojC/2gI9gN
+         0VOEXTfL2++aG1uTJbYPyywW3QlkZZVZYsgZZaJUD4mknt6vWvHEYL0OY/TgmX2SW2
+         Ngi7YqDlsI0/rO0y0n5xfRIm29JqCAdjoS1cC6wk=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00M9FM9x030906;
+        Wed, 22 Jan 2020 03:15:22 -0600
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 22
+ Jan 2020 03:15:22 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 22 Jan 2020 03:15:22 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00M9FJa9046831;
+        Wed, 22 Jan 2020 03:15:19 -0600
+Subject: Re: [PATCH 2/2] drm/bridge: Add tc358768 driver
+To:     Andrzej Hajda <a.hajda@samsung.com>, <airlied@linux.ie>,
+        <daniel@ffwll.ch>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <narmstrong@baylibre.com>
+CC:     <tomi.valkeinen@ti.com>, <dri-devel@lists.freedesktop.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <Laurent.pinchart@ideasonboard.com>, <jonas@kwiboo.se>,
+        <jernej.skrabec@siol.net>
+References: <20191217101506.18910-1-peter.ujfalusi@ti.com>
+ <CGME20191217101520epcas1p4a2bdee0cab0c11670b74fbe9e9397835@epcas1p4.samsung.com>
+ <20191217101506.18910-3-peter.ujfalusi@ti.com>
+ <35d664fe-8091-2744-abf2-69828ebf1148@samsung.com>
+ <14306079-500d-09ca-df94-4cf72c43f858@ti.com>
+ <cdc941c5-681f-962b-7f99-ebfda6aaaa91@samsung.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <e8774c16-c34c-adf8-fee5-17323dcd95bf@ti.com>
+Date:   Wed, 22 Jan 2020 11:16:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200122090556.GA2613910@kroah.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <cdc941c5-681f-962b-7f99-ebfda6aaaa91@samsung.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/22/20 11:05, Greg KH wrote:
-> On Fri, Jan 17, 2020 at 11:58:04AM +0200, Georgi Djakov wrote:
->> Hi Greg,
->>
->> Here are the interconnect patches for the 5.6-rc1 merge window.
->>
->> - New core helper functions for some common functionalities in drivers.
->> - Improvements in the information exposed via debugfs.
->> - Basic tracepoints support.
->> - New interconnect driver for msm8916 platforms.
->> - Misc fixes.
->>
->> All patches have been for a while in linux-next without reported issues.
->> Please consider queuing them into char-misc-next.
->>
->> The same is also available via a pull request with a signed tag below.
->>
->> Thanks,
->> Georgi
->>
->> The following changes since commit d1eef1c619749b2a57e514a3fa67d9a516ffa919:
->>
->>   Linux 5.5-rc2 (2019-12-15 15:16:08 -0800)
->>
->> are available in the Git repository at:
->>
->>   https://git.linaro.org/people/georgi.djakov/linux.git tags/icc-5.6-rc1
-> 
-> Pulled and pushed out, thanks.
-> 
+Hi Andrzej,
 
-Thanks! Just sent you a ping email a few minutes ago. Please ignore it.
-Georgi
+On 22/01/2020 10.46, Andrzej Hajda wrote:
+>>>> +struct tc358768_priv {
+>>>> +	struct device *dev;
+>>>> +	struct regmap *regmap;
+>>>> +	struct gpio_desc *reset_gpio;
+>>>> +	struct regulator_bulk_data supplies[ARRAY_SIZE(tc358768_supplies)];
+>>>> +	struct clk *refclk;
+>>>> +
+>>>> +	struct mipi_dsi_host dsi_host;
+>>>> +	struct drm_bridge bridge;
+>>>> +	struct tc358768_dsi_output output;
+>>>
+>>> Since tc358768_dsi_output is used only here, you can define it here as
+>>> well, up to you.
+>> I think I have done it like this to avoid thinking about prefixes for
+>> what is under the tc358768_dsi_output.
+>> I'll take a look if it will look better unpacked here.
+> 
+> I though rather about in-place anonymous struct definition:
+> 
+> +    struct tc358768_dsi_output {
+> +        struct mipi_dsi_device *dev;
+> +        struct drm_panel *panel;
+> +        struct drm_bridge *bridge;
+> +    } output;
+> 
+> But, as I said - up to you.
 
+I see. I think I will keep how it was. They are in proximity, so easy to
+check.
+
+>>>> +
+>>>> +	refclk = clk_get_rate(priv->refclk);
+>>>> +
+>>>> +	best_diff = UINT_MAX;
+>>>> +	best_pll = 0;
+>>>> +	best_prd = 0;
+>>>> +	best_fbd = 0;
+>>>> +
+>>>> +	for (prd = 0; prd < 16; ++prd) {
+>>>> +		u32 divisor = (prd + 1) * (1 << frs);
+>>>> +		u32 fbd;
+>>>> +
+>>>> +		for (fbd = 0; fbd < 512; ++fbd) {
+>>>> +			u32 pll, diff;
+>>>> +
+>>>> +			pll = (u32)div_u64((u64)refclk * (fbd + 1), divisor);
+>>>> +
+>>>> +			if (pll >= max_pll || pll < min_pll)
+>>>> +				continue;
+>>>> +
+>>>> +			diff = max(pll, target_pll) - min(pll, target_pll);
+>>>> +
+>>>> +			if (diff < best_diff) {
+>>>> +				best_diff = diff;
+>>>> +				best_pll = pll;
+>>>> +				best_prd = prd;
+>>>> +				best_fbd = fbd;
+>>>> +			}
+>>>> +
+>>>> +			if (best_diff == 0)
+>>>> +				break;
+>>>> +		}
+>>>> +
+>>>> +		if (best_diff == 0)
+>>>> +			break;
+>>> why another check here?
+>> To break out from the top for() loop also in case exact match has been
+>> found.
+> 
+> 
+> Ahh, OK. So maybe you should put "if (diff == 0) goto found" inside "if
+> (diff < best_diff)" block, in such case goto is not considered harmful
+> :), and is more readable.
+
+Exactly my thoughts ;)
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
