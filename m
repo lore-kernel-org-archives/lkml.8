@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D74B0C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:17:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A785AC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FEC720678
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:17:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ADEC205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:17:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579699066;
-	bh=FWd7oeVOdPHJWI+flJGUGq8dp/t9StvJT23VskqObt4=;
+	s=default; t=1579699071;
+	bh=0V+DafB8vkVK5NW5N6JXIXubfitas6m9nyq/e465Nfw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jT9IA8QPBxgR3kItL0/wDHMejLDPv1UM5BGTur0U8toAnZObY8tPXR0Xva6ZD0jEe
-	 BBdWOAuFxI0UJQwQNA90+b1OSlKegERg9BZ8iYqBX5azO1UpLzFLZeFtseNItpHfww
-	 zoadSwejDAR6/Ju8ya/G6wq1jY+kv7Rn2h4spLuU=
+	b=xJcWF3O07j91iG6eTWOaCHgUA2d50zOdDMYZtQuycRSOwZAzkjYOI0iCDW+GNYSDV
+	 zng68o5qovomkHUaN4nsltrE91w1jqCAWfg6ZSLLzmUyWi1yZ/WK5KoN+XUy3H8asg
+	 HnT7wrUqe40IOb/AMIkCKIC8UirX6uRJRXGHWZs8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728767AbgAVNRp (ORCPT
+        id S1728842AbgAVNRu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:17:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33246 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 08:17:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725790AbgAVNRp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:17:45 -0500
+        id S1725790AbgAVNRt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:17:49 -0500
 Received: from localhost (unknown [84.241.205.26])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15142205F4;
-        Wed, 22 Jan 2020 13:17:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F696205F4;
+        Wed, 22 Jan 2020 13:17:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579699064;
-        bh=FWd7oeVOdPHJWI+flJGUGq8dp/t9StvJT23VskqObt4=;
+        s=default; t=1579699069;
+        bh=0V+DafB8vkVK5NW5N6JXIXubfitas6m9nyq/e465Nfw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1ftPX4mk1fmB2KMZdImDdDH52ISWgmbIBaQTs631KSgXTbx9oeuCy2FbeWjhhqjti
-         iVQt4h25nGkkFJeIFwRaEgEqN+9Egxd1FTpiX4cUtnHmZamnlxyWAwLmmwzDyRGKR7
-         6Yd+Qxk+7+tauh8vI1NlmhtxUYcM3nGZm1u565KM=
+        b=0pKlc4jLcv+thIjZFnOu+4TcJrKH/3+a3SS4g/zHxRd7QjEhIQgJwloWljpaJQZRY
+         hk4hsj/cDbGAEy9AXQ0Ci5K+Hk3hod0QY+GQIpxMJjWWR1g744d/E7rMFi18AyGPV5
+         X2YTL52Do0Ey/D3wXM7+MsdBECs/IIFurvp/Glic=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, stable@kernel.org,
-        Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH 5.4 030/222] clk: sunxi-ng: r40: Allow setting parent rate for external clock outputs
-Date:   Wed, 22 Jan 2020 10:26:56 +0100
-Message-Id: <20200122092835.626065575@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: [PATCH 5.4 004/222] soc: amlogic: meson-ee-pwrc: propagate errors from pm_genpd_init()
+Date:   Wed, 22 Jan 2020 10:26:30 +0100
+Message-Id: <20200122092833.660823033@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
 References: <20200122092833.339495161@linuxfoundation.org>
@@ -59,50 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-commit c7b305267eb77fe47498676e9337324c9653494c upstream.
+commit c67aafd60d7e323fe74bf45fab60148f84cf9b95 upstream.
 
-One of the uses of the external clock outputs is to provide a stable
-32768 Hz clock signal to WiFi and Bluetooth chips. On the R40, the RTC
-has an internal RC oscillator that is muxed with the external crystal.
+pm_genpd_init() can return an error. Propagate the error code to prevent
+the driver from indicating that it successfully probed while there were
+errors during pm_genpd_init().
 
-Allow setting the parent rate for the external clock outputs so that
-requests for 32768 Hz get passed to the RTC's clock driver to mux in
-the external crystal if it isn't already muxed correctly.
-
-Fixes: cd030a78f7aa ("clk: sunxi-ng: support R40 SoC")
-Fixes: 01a7ea763fc4 ("clk: sunxi-ng: r40: Force LOSC parent to RTC LOSC output")
-Cc: <stable@kernel.org>
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Fixes: eef3c2ba0a42a6 ("soc: amlogic: Add support for Everything-Else power domains controller")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/clk/sunxi-ng/ccu-sun8i-r40.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/soc/amlogic/meson-ee-pwrc.c |   20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
---- a/drivers/clk/sunxi-ng/ccu-sun8i-r40.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun8i-r40.c
-@@ -761,7 +761,8 @@ static struct ccu_mp outa_clk = {
- 		.reg		= 0x1f0,
- 		.features	= CCU_FEATURE_FIXED_PREDIV,
- 		.hw.init	= CLK_HW_INIT_PARENTS("outa", out_parents,
--						      &ccu_mp_ops, 0),
-+						      &ccu_mp_ops,
-+						      CLK_SET_RATE_PARENT),
- 	}
- };
+--- a/drivers/soc/amlogic/meson-ee-pwrc.c
++++ b/drivers/soc/amlogic/meson-ee-pwrc.c
+@@ -323,6 +323,8 @@ static int meson_ee_pwrc_init_domain(str
+ 				     struct meson_ee_pwrc *pwrc,
+ 				     struct meson_ee_pwrc_domain *dom)
+ {
++	int ret;
++
+ 	dom->pwrc = pwrc;
+ 	dom->num_rstc = dom->desc.reset_names_count;
+ 	dom->num_clks = dom->desc.clk_names_count;
+@@ -368,15 +370,21 @@ static int meson_ee_pwrc_init_domain(str
+          * prepare/enable counters won't be in sync.
+          */
+ 	if (dom->num_clks && dom->desc.get_power && !dom->desc.get_power(dom)) {
+-		int ret = clk_bulk_prepare_enable(dom->num_clks, dom->clks);
++		ret = clk_bulk_prepare_enable(dom->num_clks, dom->clks);
+ 		if (ret)
+ 			return ret;
  
-@@ -779,7 +780,8 @@ static struct ccu_mp outb_clk = {
- 		.reg		= 0x1f4,
- 		.features	= CCU_FEATURE_FIXED_PREDIV,
- 		.hw.init	= CLK_HW_INIT_PARENTS("outb", out_parents,
--						      &ccu_mp_ops, 0),
-+						      &ccu_mp_ops,
-+						      CLK_SET_RATE_PARENT),
- 	}
- };
+-		pm_genpd_init(&dom->base, &pm_domain_always_on_gov, false);
+-	} else
+-		pm_genpd_init(&dom->base, NULL,
+-			      (dom->desc.get_power ?
+-			       dom->desc.get_power(dom) : true));
++		ret = pm_genpd_init(&dom->base, &pm_domain_always_on_gov,
++				    false);
++		if (ret)
++			return ret;
++	} else {
++		ret = pm_genpd_init(&dom->base, NULL,
++				    (dom->desc.get_power ?
++				     dom->desc.get_power(dom) : true));
++		if (ret)
++			return ret;
++	}
  
+ 	return 0;
+ }
 
 
