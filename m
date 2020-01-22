@@ -2,251 +2,205 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F8BCC32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 03:21:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A48CC33CA1
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 03:23:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2301424691
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 03:21:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26A2D217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 03:23:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="WqqDeek7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729409AbgAVDVL (ORCPT
+        id S1729260AbgAVDXD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 Jan 2020 22:21:11 -0500
-Received: from mga06.intel.com ([134.134.136.31]:31511 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729093AbgAVDVK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 Jan 2020 22:21:10 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 19:21:10 -0800
-X-IronPort-AV: E=Sophos;i="5.70,347,1574150400"; 
-   d="scan'208";a="221910061"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Jan 2020 19:21:09 -0800
-Subject: [PATCH v4 6/6] libnvdimm/e820: Retrieve and populate correct
- 'target_node' info
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     tglx@linutronix.de, mingo@redhat.com
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, x86@kernel.org
-Date:   Tue, 21 Jan 2020 19:05:06 -0800
-Message-ID: <157966230618.2508551.14800751520837218984.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <157966227494.2508551.7206194169374588977.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <157966227494.2508551.7206194169374588977.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
+        Tue, 21 Jan 2020 22:23:03 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:44238 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729093AbgAVDXD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 Jan 2020 22:23:03 -0500
+Received: by mail-pl1-f195.google.com with SMTP id d9so2290086plo.11
+        for <linux-kernel@vger.kernel.org>; Tue, 21 Jan 2020 19:23:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WzWlqSAwBUYEHp474vY25WNq5cVSn3o2GyR5izuQQ6I=;
+        b=WqqDeek7IOETWuK4uyhivNNdGgPsGTJ+LQ4rSmigeF5wvVloRRnW12aj64MLBWr6jj
+         /ESnNSbAnL/NKNkcNYKOUoj4VKBb/N2QWdU/ZQIHt89BWLB7lLagV1EMWo00XgtcP+Rm
+         0obLYR61L1gI1UB9v0WOJgixa+wrnRME/jorMM3AtfVfL1xLSVWLr5WUv4sbYuHwzKI0
+         5WOBxlpUzIWV2u26LJoUn/7WsbyEyY9HMt80MIOfexO/ibceakxxAGnNAoksNRFvmleF
+         ndamVdEYFdkDsEoPm26uKMK8EC+AvcwbvKiuI3PfcsgEeHM7dxRWrk7K05HgZ5y18Nn0
+         CBWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WzWlqSAwBUYEHp474vY25WNq5cVSn3o2GyR5izuQQ6I=;
+        b=QGSn/ffWmU/pkpvMWkoVIbQdwh6CKBt13h1wA8Wr/Xu6Auq3qafQDyC60TD9uOgS4J
+         Ext0+NwoVkYZPY0BYKYaaiLiU0xdShnNffpLEC3F1WyM4/9080hqr2sHloU2wKe/TE5D
+         KKMyV0EF1RbJ1/AqLjO6Tm3qovLxkp7wWvACSlIpOLFfvUDbYLNuMuUWTuT60+yAarCI
+         SJFOpvfKtJN37dOPXnpF0iYtqGGWzHSJA7x6YwG2tS50Qa1lrT3wxNviEHqf8uq9D1y4
+         UUTU3m9P1xnvwzVn4x7+mFUWXppvc8mdcIbUb+IP60P0qLaNGyqtTiz4BOlBHKi2Yibk
+         7D/g==
+X-Gm-Message-State: APjAAAXfTnsCm4Db5MPXGgtSuNDrEZR3Em8vp7ymevQAQ4PUASD4PcVB
+        eOzmBOMl4hktAnq78eZ4RGToHw==
+X-Google-Smtp-Source: APXvYqx45UJwpaZsGhTx3w8CdAdqEztpeY705Gedj+Y8kUrFvfcZfV4c4AtGUUhl24em2ZBh1jkXUw==
+X-Received: by 2002:a17:90b:8b:: with SMTP id bb11mr567939pjb.27.1579663381129;
+        Tue, 21 Jan 2020 19:23:01 -0800 (PST)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id w4sm830441pjt.23.2020.01.21.19.23.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jan 2020 19:23:00 -0800 (PST)
+Subject: Re: [PATCH 3/3] io_uring: add splice(2) support
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>
+References: <cover.1579649589.git.asml.silence@gmail.com>
+ <8bfd9a57bf42cfc10ee7195969058d6da277deed.1579649589.git.asml.silence@gmail.com>
+ <6d43b9d7-209a-2bbf-e2c2-e125e84b46ab@kernel.dk>
+ <14499431-0409-5d57-9b08-aff95b9d2160@gmail.com>
+ <b20d33eb-fd88-418c-57b6-32feb84d2373@kernel.dk>
+ <578003e9-1af2-4df6-d9e1-cdbbbb701bf7@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <60459de4-3497-0226-127a-e748486852c6@kernel.dk>
+Date:   Tue, 21 Jan 2020 20:22:58 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <578003e9-1af2-4df6-d9e1-cdbbbb701bf7@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the new phys_to_target_node() and numa_map_to_online_node() helpers
-to retrieve the correct id for the 'numa_node' ("local" / online
-initiator node) and 'target_node' (offline target memory node) sysfs
-attributes.
+On 1/21/20 8:16 PM, Pavel Begunkov wrote:
+> On 22/01/2020 05:47, Jens Axboe wrote:
+>> On 1/21/20 7:40 PM, Pavel Begunkov wrote:
+>>>>> @@ -719,6 +730,11 @@ static const struct io_op_def io_op_defs[] = {
+>>>>>  		.needs_file		= 1,
+>>>>>  		.fd_non_neg		= 1,
+>>>>>  	},
+>>>>> +	[IORING_OP_SPLICE] = {
+>>>>> +		.needs_file		= 1,
+>>>>> +		.hash_reg_file		= 1,
+>>>>> +		.unbound_nonreg_file	= 1,
+>>>>> +	}
+>>>>>  };
+>>>>>  
+>>>>>  static void io_wq_submit_work(struct io_wq_work **workptr);
+>>>>
+>>>> I probably want to queue up a reservation for the EPOLL_CTL that I
+>>>> haven't included yet, but which has been tested. But that's easily
+>>>> manageable, so no biggy on my end.
+>>>
+>>> I didn't quite get it. Do you mean collision of opcode numbers?
+>>
+>> Yeah that's all I meant, sorry wasn't too clear. But you can disregard,
+>> I'll just pop a reservation in front if/when this is ready to go in if
+>> it's before EPOLL_CTL op.
+>>
+>>>>> diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
+>>>>> index 57d05cc5e271..f234b13e7ed3 100644
+>>>>> --- a/include/uapi/linux/io_uring.h
+>>>>> +++ b/include/uapi/linux/io_uring.h
+>>>>> @@ -23,8 +23,14 @@ struct io_uring_sqe {
+>>>>>  		__u64	off;	/* offset into file */
+>>>>>  		__u64	addr2;
+>>>>>  	};
+>>>>> -	__u64	addr;		/* pointer to buffer or iovecs */
+>>>>> -	__u32	len;		/* buffer size or number of iovecs */
+>>>>> +	union {
+>>>>> +		__u64	addr;		/* pointer to buffer or iovecs */
+>>>>> +		__u64	off_out;
+>>>>> +	};
+>>>>> +	union {
+>>>>> +		__u32	len;	/* buffer size or number of iovecs */
+>>>>> +		__s32	fd_out;
+>>>>> +	};
+>>>>>  	union {
+>>>>>  		__kernel_rwf_t	rw_flags;
+>>>>>  		__u32		fsync_flags;
+>>>>> @@ -37,10 +43,12 @@ struct io_uring_sqe {
+>>>>>  		__u32		open_flags;
+>>>>>  		__u32		statx_flags;
+>>>>>  		__u32		fadvise_advice;
+>>>>> +		__u32		splice_flags;
+>>>>>  	};
+>>>>>  	__u64	user_data;	/* data to be passed back at completion time */
+>>>>>  	union {
+>>>>>  		__u16	buf_index;	/* index into fixed buffers, if used */
+>>>>> +		__u64	splice_len;
+>>>>>  		__u64	__pad2[3];
+>>>>>  	};
+>>>>>  };
+>>>>
+>>>> Not a huge fan of this, also mean splice can't ever used fixed buffers.
+>>>> Hmm...
+>>>
+>>> But it's not like splice() ever uses user buffers. Isn't it? vmsplice
+>>> does, but that's another opcode.
+>>
+>> I guess that's true, I had vmsplice on my mind for this as well. But
+>> won't be a problem there, since it doesn't take 6 arguments like splice
+>> does.
+>>
+>> Another option is to do an indirect for splice, stuff the arguments in a
+>> struct that's passed in as a pointer in ->addr. A bit slower, but
+>> probably not a huge deal.
+>>
+>>>>> @@ -67,6 +75,9 @@ enum {
+>>>>>  /* always go async */
+>>>>>  #define IOSQE_ASYNC		(1U << IOSQE_ASYNC_BIT)
+>>>>>  
+>>>>> +/* op custom flags */
+>>>>> +#define IOSQE_SPLICE_FIXED_OUT	(1U << 16)
+>>>>> +
+>>>>
+>>>> I don't think it's unreasonable to say that if you specify
+>>>> IOSQE_FIXED_FILE, then both are fixed. If not, then none of them are.
+>>>> What do you think?
+>>>>
+>>>
+>>> It's plausible to register only one end for splicing, e.g. splice from
+>>> short-lived sockets to pre-registered buffers-pipes. And it's clearer
+>>> do it now.
+>>
+>> You're probably right, though it's a bit nasty to add an unrelated flag
+>> in the splice flag space... We should probably reserve it in splice
+>> instead, and just not have it available from the regular system call.
+>>
+> Agree, it looks bad. I don't want to add it into sqe->splice_flags to
+> not clash with splice(2) in the future, but could have a separate
+> field in @sqe...  or can leave in in sqe->flags, as it's done in the
+> patch, but that's like a portion of bits would be opcode specific and
+> we would need to set rules for their use.
 
-Below is an example from a 4 numa node system where all the memory on
-node2 is pmem / reserved. It should be noted that with the arrival of
-the ACPI HMAT table and EFI Specific Purpose Memory the kernel will
-start to see more platforms with reserved / performance differentiated
-memory in its own numa node. Hence all the stakeholders on the Cc for
-what is ostensibly a libnvdimm local patch.
+It won't clash with splice(2), just make that flag illegal if done
+through splice(2) directly. Honestly I think that's (by FAR) the best
+way to do it, having a private io_uring flag that acts as a splice flag
+is really confusing and prone to breakage. Not that it's a huge issue
+with splice as the flags have been stable for years, so don't really see
+a high risk of collision. But we should still do it right, which means
+adding SPLICE_F_OUT_FIXED or whatever you want to call it. Do that as a
+prep patch, make do_splice() into __do_splice(), and have io_uring call
+__do_splice(). Currently splice(2) is permissive in terms of flags, so
+maybe just mask it in do_splice() to be on the safe side. Then we know
+only internal users will set SPLICE_F_OUT_FIXED, and we'll never run
+into the risk of having a collision as it's part of the flag space
+anyway.
 
-=== Before ===
+The sqe->flags space is very tight, so adding a splice specific opcode
+there would be bad.
 
-/* Notice no online memory on node2 at start */
-
-# numactl --hardware
-available: 3 nodes (0-1,3)
-node 0 cpus: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
-node 0 size: 3958 MB
-node 0 free: 3708 MB
-node 1 cpus: 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39
-node 1 size: 4027 MB
-node 1 free: 3871 MB
-node 3 cpus:
-node 3 size: 3994 MB
-node 3 free: 3971 MB
-node distances:
-node   0   1   3
-  0:  10  21  21
-  1:  21  10  21
-  3:  21  21  10
-
-/*
- * Put the pmem namespace into devdax mode so it can be assigned to the
- * kmem driver
- */
-
-# ndctl create-namespace -e namespace0.0 -m devdax -f
-{
-  "dev":"namespace0.0",
-  "mode":"devdax",
-  "map":"dev",
-  "size":"3.94 GiB (4.23 GB)",
-  "uuid":"1650af9b-9ba3-4704-acd6-10178399d9a3",
-  [..]
-}
-
-/* Online Persistent Memory as System RAM */
-
-# daxctl reconfigure-device --mode=system-ram dax0.0
-libdaxctl: memblock_in_dev: dax0.0: memory0: Unable to determine phys_index: Success
-libdaxctl: memblock_in_dev: dax0.0: memory0: Unable to determine phys_index: Success
-libdaxctl: memblock_in_dev: dax0.0: memory0: Unable to determine phys_index: Success
-libdaxctl: memblock_in_dev: dax0.0: memory0: Unable to determine phys_index: Success
-[
-  {
-    "chardev":"dax0.0",
-    "size":4225761280,
-    "target_node":0,
-    "mode":"system-ram"
-  }
-]
-reconfigured 1 device
-
-/* Note that the memory is onlined by default to the wrong node, node0 */
-
-# numactl --hardware
-available: 3 nodes (0-1,3)
-node 0 cpus: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
-node 0 size: 7926 MB
-node 0 free: 7655 MB
-node 1 cpus: 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39
-node 1 size: 4027 MB
-node 1 free: 3871 MB
-node 3 cpus:
-node 3 size: 3994 MB
-node 3 free: 3971 MB
-node distances:
-node   0   1   3
-  0:  10  21  21
-  1:  21  10  21
-  3:  21  21  10
-
-
-=== After ===
-
-/* Notice that the "phys_index" error messages are gone */
-
-# daxctl reconfigure-device --mode=system-ram dax0.0
-[
-  {
-    "chardev":"dax0.0",
-    "size":4225761280,
-    "target_node":2,
-    "mode":"system-ram"
-  }
-]
-reconfigured 1 device
-
-/* Notice that node2 is now correctly populated */
-
-# numactl --hardware
-available: 4 nodes (0-3)
-node 0 cpus: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
-node 0 size: 3958 MB
-node 0 free: 3793 MB
-node 1 cpus: 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39
-node 1 size: 4027 MB
-node 1 free: 3851 MB
-node 2 cpus:
-node 2 size: 3968 MB
-node 2 free: 3968 MB
-node 3 cpus:
-node 3 size: 3994 MB
-node 3 free: 3908 MB
-node distances:
-node   0   1   2   3
-  0:  10  21  21  21
-  1:  21  10  21  21
-  2:  21  21  10  21
-  3:  21  21  21  10
-
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- arch/x86/Kconfig      |    1 +
- drivers/nvdimm/e820.c |   18 ++++--------------
- 2 files changed, 5 insertions(+), 14 deletions(-)
-
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 5e8949953660..3a827fe7afd6 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -1660,6 +1660,7 @@ config X86_PMEM_LEGACY
- 	depends on PHYS_ADDR_T_64BIT
- 	depends on BLK_DEV
- 	select X86_PMEM_LEGACY_DEVICE
-+	select KEEP_NUMA if NUMA
- 	select LIBNVDIMM
- 	help
- 	  Treat memory marked using the non-standard e820 type of 12 as used
-diff --git a/drivers/nvdimm/e820.c b/drivers/nvdimm/e820.c
-index e02f60ad6c99..4cd18be9d0e9 100644
---- a/drivers/nvdimm/e820.c
-+++ b/drivers/nvdimm/e820.c
-@@ -7,6 +7,7 @@
- #include <linux/memory_hotplug.h>
- #include <linux/libnvdimm.h>
- #include <linux/module.h>
-+#include <linux/numa.h>
- 
- static int e820_pmem_remove(struct platform_device *pdev)
- {
-@@ -16,27 +17,16 @@ static int e820_pmem_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--#ifdef CONFIG_MEMORY_HOTPLUG
--static int e820_range_to_nid(resource_size_t addr)
--{
--	return memory_add_physaddr_to_nid(addr);
--}
--#else
--static int e820_range_to_nid(resource_size_t addr)
--{
--	return NUMA_NO_NODE;
--}
--#endif
--
- static int e820_register_one(struct resource *res, void *data)
- {
- 	struct nd_region_desc ndr_desc;
- 	struct nvdimm_bus *nvdimm_bus = data;
-+	int nid = phys_to_target_node(res->start);
- 
- 	memset(&ndr_desc, 0, sizeof(ndr_desc));
- 	ndr_desc.res = res;
--	ndr_desc.numa_node = e820_range_to_nid(res->start);
--	ndr_desc.target_node = ndr_desc.numa_node;
-+	ndr_desc.numa_node = numa_map_to_online_node(nid);
-+	ndr_desc.target_node = nid;
- 	set_bit(ND_REGION_PAGEMAP, &ndr_desc.flags);
- 	if (!nvdimm_pmem_region_create(nvdimm_bus, &ndr_desc))
- 		return -ENXIO;
+-- 
+Jens Axboe
 
