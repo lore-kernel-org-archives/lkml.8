@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79CEBC33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75389C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 448A524672
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4964E24684
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:33:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685600;
-	bh=TDgMXZlJS+WrS/uN1NtUtQX7qncL4h0PuZMIy7Bx+V8=;
+	s=default; t=1579685602;
+	bh=qXgDHxOXuDZD5R4tdepu4dG3IdI8o0vQJkklPvnJ3Aw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bDm3ITSqVuW0x6qwujT/9McL2XuT8fF7T8bQRrnLaD+mROrJlF8mpk+K/iPpBCV/5
-	 gdn5XX8g1r7CQJ/0KdncLBCut5cc01wUACsmlqgUJgSaSwXp81FoFhkI5q8JZ1p6fv
-	 A2tHvSy3e7o8wM4Zx+Y363R6B5rLLOOCPF+K4g9I=
+	b=SkOf2OJfZqAUv215uHUdoj0lyiuGAxsXU0fuDM1VW9JwNoeykYMpV56BOUKkQTq24
+	 6YKfnR/muih46QDMDWTcaWcM+T5D/1SIKuUo0P2/jdVnF9m5H3YcAZ0lRSWMPfOlhv
+	 MW0qQQ+wfqD4vpgunNCU2v5LkTOZFInMCuF4Ip5k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730470AbgAVJdT (ORCPT
+        id S1730493AbgAVJdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:33:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46844 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:33:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730410AbgAVJdO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:33:14 -0500
+        id S1730461AbgAVJdQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:33:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E0272467A;
-        Wed, 22 Jan 2020 09:33:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12D612467F;
+        Wed, 22 Jan 2020 09:33:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685594;
-        bh=TDgMXZlJS+WrS/uN1NtUtQX7qncL4h0PuZMIy7Bx+V8=;
+        s=default; t=1579685596;
+        bh=qXgDHxOXuDZD5R4tdepu4dG3IdI8o0vQJkklPvnJ3Aw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bi1U8rI7+iIAxblAv/gu9OzPlQxe+JKaSgZ2fODKNajfT0p6+d1UvqQs51E2xlK7j
-         2LRV+E4MUk3ZF2I36ezMXEuHrh3wFt5qX950ZOntozK2arpiCR49JazHJtR/ie2ujO
-         BC8s8GHPYf9ZfjopIL6HwDYABwxBW8jizzvaIt00=
+        b=U+B5+erEcc4dTwBHBcbUGso0JYkn7S2D/GWrUWq0g4a1w8pqg3Mjh/aNNlCfq87hG
+         mYuVfnISegE45WfgCvugCMRe1hSx73iCp1UBt2XR8q3uDv6LV5kVeF8Oi1Tuy/7g6D
+         nEvlOAPGeZQzMUMZaoU0J5vooqkY8TKJYnK3HHWU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 4.4 30/76] compat_ioctl: handle SIOCOUTQNSD
-Date:   Wed, 22 Jan 2020 10:28:46 +0100
-Message-Id: <20200122092754.893872456@linuxfoundation.org>
+        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
+        Manish Rangankar <mrangankar@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.4 71/76] scsi: qla4xxx: fix double free bug
+Date:   Wed, 22 Jan 2020 10:29:27 +0100
+Message-Id: <20200122092802.277115167@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092751.587775548@linuxfoundation.org>
 References: <20200122092751.587775548@linuxfoundation.org>
@@ -60,34 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Pan Bian <bianpan2016@163.com>
 
-commit 9d7bf41fafa5b5ddd4c13eb39446b0045f0a8167 upstream.
+commit 3fe3d2428b62822b7b030577cd612790bdd8c941 upstream.
 
-Unlike the normal SIOCOUTQ, SIOCOUTQNSD was never handled in compat
-mode. Add it to the common socket compat handler along with similar
-ones.
+The variable init_fw_cb is released twice, resulting in a double free
+bug. The call to the function dma_free_coherent() before goto is removed to
+get rid of potential double free.
 
-Fixes: 2f4e1b397097 ("tcp: ioctl type SIOCOUTQNSD returns amount of data not sent")
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: netdev@vger.kernel.org
-Cc: "David S. Miller" <davem@davemloft.net>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Fixes: 2a49a78ed3c8 ("[SCSI] qla4xxx: added IPv6 support.")
+Link: https://lore.kernel.org/r/1572945927-27796-1-git-send-email-bianpan2016@163.com
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+Acked-by: Manish Rangankar <mrangankar@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/socket.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/qla4xxx/ql4_mbx.c |    3 ---
+ 1 file changed, 3 deletions(-)
 
---- a/net/socket.c
-+++ b/net/socket.c
-@@ -3143,6 +3143,7 @@ static int compat_sock_ioctl_trans(struc
- 	case SIOCSARP:
- 	case SIOCGARP:
- 	case SIOCDARP:
-+	case SIOCOUTQNSD:
- 	case SIOCATMARK:
- 		return sock_do_ioctl(net, sock, cmd, arg);
+--- a/drivers/scsi/qla4xxx/ql4_mbx.c
++++ b/drivers/scsi/qla4xxx/ql4_mbx.c
+@@ -641,9 +641,6 @@ int qla4xxx_initialize_fw_cb(struct scsi
+ 
+ 	if (qla4xxx_get_ifcb(ha, &mbox_cmd[0], &mbox_sts[0], init_fw_cb_dma) !=
+ 	    QLA_SUCCESS) {
+-		dma_free_coherent(&ha->pdev->dev,
+-				  sizeof(struct addr_ctrl_blk),
+-				  init_fw_cb, init_fw_cb_dma);
+ 		goto exit_init_fw_cb;
  	}
+ 
 
 
