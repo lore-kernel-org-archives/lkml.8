@@ -2,108 +2,131 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A066C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B62C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:35:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 446CF24685
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:35:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685750;
-	bh=54W6OgmCDqeTuJsLiKooVfT40af7XsuLNWDViJLgAhU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DwWvAozO//hwtst7EGHPz0dTKMgdzcmEfTdXIUhw+v8ib/fYBJYCCKiN5wAaWVAP8
-	 7tEItQ9uVpiof33npen54wPz4iy0A6y1YewGvZerzWEw2p5hqZwsZ52ECmXPZ7w63H
-	 hR0X419XCcwsYeGXxZWzjWGlpV5nmYDNLcrbSI00=
+	by mail.kernel.org (Postfix) with ESMTP id 45B1C20704
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:35:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729714AbgAVJft (ORCPT
+        id S1729927AbgAVJf4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:35:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50942 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:35:56 -0500
+Received: from foss.arm.com ([217.140.110.172]:53370 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731455AbgAVJfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:35:43 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E179124672;
-        Wed, 22 Jan 2020 09:35:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685743;
-        bh=54W6OgmCDqeTuJsLiKooVfT40af7XsuLNWDViJLgAhU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MPPKv8ycwGGg8g33GKvc4Xpj+Ktgdx/mgD/P0jLx7932JNXrlCXPlXtKl9wPHCZiU
-         l9jrlSFBHik2w/YV8BpleFNLTjOOxrq4g7aJK+dBFOvrSLFuhA/aIqFHjJk7ZgmE+A
-         iS+Oru96fJlQ/txfti1uiAM5erG0XD/mahV2130I=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.9 62/97] USB: serial: quatech2: handle unbound ports
-Date:   Wed, 22 Jan 2020 10:29:06 +0100
-Message-Id: <20200122092806.372918821@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200122092755.678349497@linuxfoundation.org>
-References: <20200122092755.678349497@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1730480AbgAVJfw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:35:52 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1ADEE1FB;
+        Wed, 22 Jan 2020 01:35:51 -0800 (PST)
+Received: from [10.37.12.190] (unknown [10.37.12.190])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 19A903F68E;
+        Wed, 22 Jan 2020 01:35:38 -0800 (PST)
+Subject: Re: [PATCH 3/4] thermal: devfreq_cooling: Refactor code and switch to
+ use Energy Model
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-imx@nxp.com, Morten.Rasmussen@arm.com,
+        Dietmar.Eggemann@arm.com, Chris.Redpath@arm.com,
+        ionela.voinescu@arm.com, javi.merino@arm.com,
+        cw00.choi@samsung.com, b.zolnierkie@samsung.com, rjw@rjwysocki.net,
+        sudeep.holla@arm.com, viresh.kumar@linaro.org, nm@ti.com,
+        sboyd@kernel.org, rui.zhang@intel.com, amit.kucheria@verdurent.com,
+        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        qperret@google.com, bsegall@google.com, mgorman@suse.de,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
+        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh@kernel.org,
+        matthias.bgg@gmail.com, steven.price@arm.com,
+        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
+        airlied@linux.ie, daniel@ffwll.ch, patrick.bellasi@matbug.net
+References: <20200116152032.11301-1-lukasz.luba@arm.com>
+ <20200116152032.11301-4-lukasz.luba@arm.com>
+ <20200121121124.1a1f3175@gandalf.local.home>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <6c4c5ac6-2d80-694e-866b-21fe5ef1853f@arm.com>
+Date:   Wed, 22 Jan 2020 09:35:36 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200121121124.1a1f3175@gandalf.local.home>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
-
-commit 9715a43eea77e42678a1002623f2d9a78f5b81a1 upstream.
-
-Check for NULL port data in the modem- and line-status handlers to avoid
-dereferencing a NULL pointer in the unlikely case where a port device
-isn't bound to a driver (e.g. after an allocation failure on port
-probe).
-
-Note that the other (stubbed) event handlers qt2_process_xmit_empty()
-and qt2_process_flush() would need similar sanity checks in case they
-are ever implemented.
-
-Fixes: f7a33e608d9a ("USB: serial: add quatech2 usb to serial driver")
-Cc: stable <stable@vger.kernel.org>     # 3.5
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/usb/serial/quatech2.c |    6 ++++++
- 1 file changed, 6 insertions(+)
-
---- a/drivers/usb/serial/quatech2.c
-+++ b/drivers/usb/serial/quatech2.c
-@@ -872,7 +872,10 @@ static void qt2_update_msr(struct usb_se
- 	u8 newMSR = (u8) *ch;
- 	unsigned long flags;
- 
-+	/* May be called from qt2_process_read_urb() for an unbound port. */
- 	port_priv = usb_get_serial_port_data(port);
-+	if (!port_priv)
-+		return;
- 
- 	spin_lock_irqsave(&port_priv->lock, flags);
- 	port_priv->shadowMSR = newMSR;
-@@ -900,7 +903,10 @@ static void qt2_update_lsr(struct usb_se
- 	unsigned long flags;
- 	u8 newLSR = (u8) *ch;
- 
-+	/* May be called from qt2_process_read_urb() for an unbound port. */
- 	port_priv = usb_get_serial_port_data(port);
-+	if (!port_priv)
-+		return;
- 
- 	if (newLSR & UART_LSR_BI)
- 		newLSR &= (u8) (UART_LSR_OE | UART_LSR_BI);
 
 
+On 1/21/20 5:11 PM, Steven Rostedt wrote:
+> On Thu, 16 Jan 2020 15:20:31 +0000
+> lukasz.luba@arm.com wrote:
+> 
+>> diff --git a/include/trace/events/thermal.h b/include/trace/events/thermal.h
+>> index 135e5421f003..8a5f04888abd 100644
+>> --- a/include/trace/events/thermal.h
+>> +++ b/include/trace/events/thermal.h
+>> @@ -153,31 +153,30 @@ TRACE_EVENT(thermal_power_cpu_limit,
+>>   TRACE_EVENT(thermal_power_devfreq_get_power,
+>>   	TP_PROTO(struct thermal_cooling_device *cdev,
+>>   		 struct devfreq_dev_status *status, unsigned long freq,
+>> -		u32 dynamic_power, u32 static_power, u32 power),
+>> +		u32 power),
+>>   
+>> -	TP_ARGS(cdev, status,  freq, dynamic_power, static_power, power),
+>> +	TP_ARGS(cdev, status,  freq, power),
+>>   
+>>   	TP_STRUCT__entry(
+>>   		__string(type,         cdev->type    )
+>>   		__field(unsigned long, freq          )
+>> -		__field(u32,           load          )
+>> -		__field(u32,           dynamic_power )
+>> -		__field(u32,           static_power  )
+>> +		__field(u32,           busy_time)
+>> +		__field(u32,           total_time)
+>>   		__field(u32,           power)
+>>   	),
+>>   
+>>   	TP_fast_assign(
+>>   		__assign_str(type, cdev->type);
+>>   		__entry->freq = freq;
+>> -		__entry->load = (100 * status->busy_time) / status->total_time;
+>> -		__entry->dynamic_power = dynamic_power;
+>> -		__entry->static_power = static_power;
+>> +		__entry->busy_time = status->busy_time;
+>> +		__entry->total_time = status->total_time;
+>>   		__entry->power = power;
+>>   	),
+>>   
+>> -	TP_printk("type=%s freq=%lu load=%u dynamic_power=%u static_power=%u power=%u",
+>> +	TP_printk("type=%s freq=%lu load=%u power=%u",
+>>   		__get_str(type), __entry->freq,
+>> -		__entry->load, __entry->dynamic_power, __entry->static_power,
+>> +		__entry->total_time == 0 ? 0 :
+>> +			(100 * __entry->busy_time) / __entry->total_time,
+>>   		__entry->power)
+>>   );
+>>   
+> 
+> Tracing updates look fine to me. Having the division on the output
+> makes more sense.
+> 
+> Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org> # for tracing code
+> 
+> -- Steve
+> 
+
+Thank you Steven, I will include it in the next version with a proper
+label.
+
+Regards,
+Lukasz
