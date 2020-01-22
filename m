@@ -6,22 +6,22 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C220C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC01AC32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:24:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C18E24673
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:24:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8443124673
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:24:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729225AbgAVWYm (ORCPT
+        id S1729207AbgAVWYl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 17:24:42 -0500
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:47818 "EHLO
+        Wed, 22 Jan 2020 17:24:41 -0500
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:47910 "EHLO
         kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726099AbgAVWYD (ORCPT
+        with ESMTP id S1727817AbgAVWYD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 Jan 2020 17:24:03 -0500
 Received: by kvm5.telegraphics.com.au (Postfix, from userid 502)
-        id 6806C299A9; Wed, 22 Jan 2020 17:23:59 -0500 (EST)
+        id E6E0B299BE; Wed, 22 Jan 2020 17:23:59 -0500 (EST)
 To:     "David S. Miller" <davem@davemloft.net>
 Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Chris Zankel <chris@zankel.net>,
@@ -30,116 +30,95 @@ Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Eric Dumazet <eric.dumazet@gmail.com>,
         Stephen Hemminger <stephen@networkplumber.org>,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-Id: <b66904d185d9f23d7fc6ebccafa9e42adcef1b96.1579730846.git.fthain@telegraphics.com.au>
+Message-Id: <071a456ba88517a7d02b1eab29469efde6e55849.1579730846.git.fthain@telegraphics.com.au>
 In-Reply-To: <cover.1579730846.git.fthain@telegraphics.com.au>
 References: <cover.1579730846.git.fthain@telegraphics.com.au>
 From:   Finn Thain <fthain@telegraphics.com.au>
-Subject: [PATCH net v3 04/12] net/sonic: Fix interface error stats collection
+Subject: [PATCH net v3 10/12] net/sonic: Fix command register usage
 Date:   Thu, 23 Jan 2020 09:07:26 +1100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The tx_aborted_errors statistic should count packets flagged with EXD,
-EXC, FU, or BCM bits because those bits denote an aborted transmission.
-That corresponds to the bitmask 0x0446, not 0x0642. Use macros for these
-constants to avoid mistakes. Better to leave out FIFO Underruns (FU) as
-there's a separate counter for that purpose.
+There are several issues relating to command register usage during
+chip initialization.
 
-Don't lump all these errors in with the general tx_errors counter as
-that's used for tx timeout events.
+Firstly, the SONIC sometimes comes out of software reset with the
+Start Timer bit set. This gets logged as,
 
-On the rx side, don't count RDE and RBAE interrupts as dropped packets.
-These interrupts don't indicate a lost packet, just a lack of resources.
-When a lack of resources results in a lost packet, this gets reported
-in the rx_missed_errors counter (along with RFO events).
+    macsonic macsonic eth0: sonic_init: status=24, i=101
 
-Don't double-count rx_frame_errors and rx_crc_errors.
+Avoid this by giving the Stop Timer command earlier than later.
 
-Don't use the general rx_errors counter for events that already have
-special counters.
+Secondly, the loop that waits for the Read RRA command to complete has
+the break condition inverted. That's why the for loop iterates until
+its termination condition. Call the helper for this instead.
+
+Finally, give the Receiver Enable command after clearing interrupts,
+not before, to avoid the possibility of losing an interrupt.
 
 Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
 Tested-by: Stan Johnson <userm57@yahoo.com>
 Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
 ---
- drivers/net/ethernet/natsemi/sonic.c | 21 +++++++--------------
- drivers/net/ethernet/natsemi/sonic.h |  1 +
- 2 files changed, 8 insertions(+), 14 deletions(-)
+ drivers/net/ethernet/natsemi/sonic.c | 18 +++---------------
+ 1 file changed, 3 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/net/ethernet/natsemi/sonic.c b/drivers/net/ethernet/natsemi/sonic.c
-index 1109070a5154..b31c7af32dfa 100644
+index 42a6b87d8886..914cec2ccc28 100644
 --- a/drivers/net/ethernet/natsemi/sonic.c
 +++ b/drivers/net/ethernet/natsemi/sonic.c
-@@ -330,18 +330,19 @@ static irqreturn_t sonic_interrupt(int irq, void *dev_id)
- 				if ((td_status = sonic_tda_get(dev, entry, SONIC_TD_STATUS)) == 0)
- 					break;
+@@ -664,7 +664,6 @@ static void sonic_multicast_list(struct net_device *dev)
+  */
+ static int sonic_init(struct net_device *dev)
+ {
+-	unsigned int cmd;
+ 	struct sonic_local *lp = netdev_priv(dev);
+ 	int i;
  
--				if (td_status & 0x0001) {
-+				if (td_status & SONIC_TCR_PTX) {
- 					lp->stats.tx_packets++;
- 					lp->stats.tx_bytes += sonic_tda_get(dev, entry, SONIC_TD_PKTSIZE);
- 				} else {
--					lp->stats.tx_errors++;
--					if (td_status & 0x0642)
-+					if (td_status & (SONIC_TCR_EXD |
-+					    SONIC_TCR_EXC | SONIC_TCR_BCM))
- 						lp->stats.tx_aborted_errors++;
--					if (td_status & 0x0180)
-+					if (td_status &
-+					    (SONIC_TCR_NCRS | SONIC_TCR_CRLS))
- 						lp->stats.tx_carrier_errors++;
--					if (td_status & 0x0020)
-+					if (td_status & SONIC_TCR_OWC)
- 						lp->stats.tx_window_errors++;
--					if (td_status & 0x0004)
-+					if (td_status & SONIC_TCR_FU)
- 						lp->stats.tx_fifo_errors++;
- 				}
+@@ -681,7 +680,7 @@ static int sonic_init(struct net_device *dev)
+ 	 * enable interrupts, then completely initialize the SONIC
+ 	 */
+ 	SONIC_WRITE(SONIC_CMD, 0);
+-	SONIC_WRITE(SONIC_CMD, SONIC_CR_RXDIS);
++	SONIC_WRITE(SONIC_CMD, SONIC_CR_RXDIS | SONIC_CR_STP);
+ 	sonic_quiesce(dev, SONIC_CR_ALL);
  
-@@ -371,17 +372,14 @@ static irqreturn_t sonic_interrupt(int irq, void *dev_id)
- 		if (status & SONIC_INT_RFO) {
- 			netif_dbg(lp, rx_err, dev, "%s: rx fifo overrun\n",
- 				  __func__);
--			lp->stats.rx_fifo_errors++;
- 		}
- 		if (status & SONIC_INT_RDE) {
- 			netif_dbg(lp, rx_err, dev, "%s: rx descriptors exhausted\n",
- 				  __func__);
--			lp->stats.rx_dropped++;
- 		}
- 		if (status & SONIC_INT_RBAE) {
- 			netif_dbg(lp, rx_err, dev, "%s: rx buffer area exceeded\n",
- 				  __func__);
--			lp->stats.rx_dropped++;
- 		}
+ 	/*
+@@ -711,14 +710,7 @@ static int sonic_init(struct net_device *dev)
+ 	netif_dbg(lp, ifup, dev, "%s: issuing RRRA command\n", __func__);
  
- 		/* counter overruns; all counters are 16bit wide */
-@@ -473,11 +471,6 @@ static void sonic_rx(struct net_device *dev)
- 			sonic_rra_put(dev, entry, SONIC_RR_BUFADR_H, bufadr_h);
- 		} else {
- 			/* This should only happen, if we enable accepting broken packets. */
--			lp->stats.rx_errors++;
--			if (status & SONIC_RCR_FAER)
--				lp->stats.rx_frame_errors++;
--			if (status & SONIC_RCR_CRCR)
--				lp->stats.rx_crc_errors++;
- 		}
- 		if (status & SONIC_RCR_LPKT) {
- 			/*
-diff --git a/drivers/net/ethernet/natsemi/sonic.h b/drivers/net/ethernet/natsemi/sonic.h
-index fb160dfdf4ca..9e4ff8dd032d 100644
---- a/drivers/net/ethernet/natsemi/sonic.h
-+++ b/drivers/net/ethernet/natsemi/sonic.h
-@@ -175,6 +175,7 @@
- #define SONIC_TCR_NCRS          0x0100
- #define SONIC_TCR_CRLS          0x0080
- #define SONIC_TCR_EXC           0x0040
-+#define SONIC_TCR_OWC           0x0020
- #define SONIC_TCR_PMB           0x0008
- #define SONIC_TCR_FU            0x0004
- #define SONIC_TCR_BCM           0x0002
+ 	SONIC_WRITE(SONIC_CMD, SONIC_CR_RRRA);
+-	i = 0;
+-	while (i++ < 100) {
+-		if (SONIC_READ(SONIC_CMD) & SONIC_CR_RRRA)
+-			break;
+-	}
+-
+-	netif_dbg(lp, ifup, dev, "%s: status=%x, i=%d\n", __func__,
+-		  SONIC_READ(SONIC_CMD), i);
++	sonic_quiesce(dev, SONIC_CR_RRRA);
+ 
+ 	/*
+ 	 * Initialize the receive descriptors so that they
+@@ -806,15 +798,11 @@ static int sonic_init(struct net_device *dev)
+ 	 * enable receiver, disable loopback
+ 	 * and enable all interrupts
+ 	 */
+-	SONIC_WRITE(SONIC_CMD, SONIC_CR_RXEN | SONIC_CR_STP);
+ 	SONIC_WRITE(SONIC_RCR, SONIC_RCR_DEFAULT);
+ 	SONIC_WRITE(SONIC_TCR, SONIC_TCR_DEFAULT);
+ 	SONIC_WRITE(SONIC_ISR, 0x7fff);
+ 	SONIC_WRITE(SONIC_IMR, SONIC_IMR_DEFAULT);
+-
+-	cmd = SONIC_READ(SONIC_CMD);
+-	if ((cmd & SONIC_CR_RXEN) == 0 || (cmd & SONIC_CR_STP) == 0)
+-		printk(KERN_ERR "sonic_init: failed, status=%x\n", cmd);
++	SONIC_WRITE(SONIC_CMD, SONIC_CR_RXEN);
+ 
+ 	netif_dbg(lp, ifup, dev, "%s: new status=%x\n", __func__,
+ 		  SONIC_READ(SONIC_CMD));
 -- 
 2.24.1
 
