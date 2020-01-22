@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB569C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:35:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B803CC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4E5424672
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:35:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DC1F24673
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:35:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685738;
-	bh=A9XTKbZ/DBvTwFtI/ME9c00+wnuEU9MhfX68pfhkB9w=;
+	s=default; t=1579685741;
+	bh=o5ENOhAOLvVXmvZAAxOD8ynA2Hhx+mzchRgQvihpNNg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rx97zFd0J47aI+f7CAjAIi0N4cf3FMLBIbwl3q6nP7WrhATR2expFJeEbNRPsmVK0
-	 wBUDfIyvIl0szLAE9K9coCymgH+eelBYYoqMZcZq8JD+WNrmoV+8PlTfsIRhQeSJAf
-	 TIIQz30YwmV6bxQqHr0nxQLAj917OLgmvtFUVjg4=
+	b=HiZO5wokxV+toWrHG1onEZNU8tRUTfXnoNlI9g1CYYtoZrGiEp1QTSx1533bxgLil
+	 qmrkxQmReEYCFJomh64SMKGvhJsUfSMB8C7jnL0FXBWF59iww58oJlnvmkuYn4+gZZ
+	 n8RYeyUrOQUvRPOpTxAsaLPBO73wpK/fTM+R3u7Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729486AbgAVJfh (ORCPT
+        id S1731448AbgAVJfj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:35:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50648 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:35:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731359AbgAVJfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:35:31 -0500
+        id S1730073AbgAVJfg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:35:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B526A2071E;
-        Wed, 22 Jan 2020 09:35:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8B052071E;
+        Wed, 22 Jan 2020 09:35:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685731;
-        bh=A9XTKbZ/DBvTwFtI/ME9c00+wnuEU9MhfX68pfhkB9w=;
+        s=default; t=1579685736;
+        bh=o5ENOhAOLvVXmvZAAxOD8ynA2Hhx+mzchRgQvihpNNg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=01p+mXnxXO1nY0+5DpCu+UmtIhKS6oImTisc3hHvL2UUCSY1UqhdAhEaeaYR7JhBM
-         nzcqqcxo2cwPcH0/PKHa6XvUZMAdsrxcsEpkufSQnzg+OqJnMc8ycRt1vmXo0YuJB3
-         mQey2aNsw1UJxTA/QsaTESVG9iPZusqt+pYpFPqA=
+        b=CgGZkcLiFlMssMIhDRhV0mx/iTIUhQ91wI+d0+8ZsyGgU2tJ9CjxQRuQZwVFdTreT
+         YL+mLGDp++VHmNMZD9YOGN2OeWaXYDPtzMckpXjytu3DhU/Yj41vRtC2Nf0ZZYq8hG
+         wwIOxVRWczncJYClVVOSui5gSojyB7vDWnsUqQz0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 4.9 22/97] gpio: Fix error message on out-of-range GPIO in lookup table
-Date:   Wed, 22 Jan 2020 10:28:26 +0100
-Message-Id: <20200122092759.704387610@linuxfoundation.org>
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: [PATCH 4.9 51/97] dt-bindings: reset: meson8b: fix duplicate reset IDs
+Date:   Wed, 22 Jan 2020 10:28:55 +0100
+Message-Id: <20200122092804.728189898@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092755.678349497@linuxfoundation.org>
 References: <20200122092755.678349497@linuxfoundation.org>
@@ -60,46 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-commit d935bd50dd14a7714cbdba9a76435dbb56edb1ae upstream.
+commit 4881873f4cc1460f63d85fa81363d56be328ccdc upstream.
 
-When a GPIO offset in a lookup table is out-of-range, the printed error
-message (1) does not include the actual out-of-range value, and (2)
-contains an off-by-one error in the upper bound.
+According to the public S805 datasheet the RESET2 register uses the
+following bits for the PIC_DC, PSC and NAND reset lines:
+- PIC_DC is at bit 3 (meaning: RESET_VD_RMEM + 3)
+- PSC is at bit 4 (meaning: RESET_VD_RMEM + 4)
+- NAND is at bit 5 (meaning: RESET_VD_RMEM + 4)
 
-Avoid user confusion by also printing the actual GPIO offset, and
-correcting the upper bound of the range.
-While at it, use "%u" for unsigned int.
+Update the reset IDs of these three reset lines so they don't conflict
+with PIC_DC and map to the actual hardware reset lines.
 
-Sample impact:
-
-    -requested GPIO 0 is out of range [0..32] for chip e6052000.gpio
-    +requested GPIO 0 (45) is out of range [0..31] for chip e6052000.gpio
-
-Fixes: 2a3cf6a3599e9015 ("gpiolib: return -ENOENT if no GPIO mapping exists")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20191127095919.4214-1-geert+renesas@glider.be
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: 79795e20a184eb ("dt-bindings: reset: Add bindings for the Meson SoC Reset Controller")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpio/gpiolib.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ include/dt-bindings/reset/amlogic,meson8b-reset.h |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -3049,8 +3049,9 @@ static struct gpio_desc *gpiod_find(stru
- 
- 		if (chip->ngpio <= p->chip_hwnum) {
- 			dev_err(dev,
--				"requested GPIO %d is out of range [0..%d] for chip %s\n",
--				idx, chip->ngpio, chip->label);
-+				"requested GPIO %u (%u) is out of range [0..%u] for chip %s\n",
-+				idx, p->chip_hwnum, chip->ngpio - 1,
-+				chip->label);
- 			return ERR_PTR(-EINVAL);
- 		}
- 
+--- a/include/dt-bindings/reset/amlogic,meson8b-reset.h
++++ b/include/dt-bindings/reset/amlogic,meson8b-reset.h
+@@ -95,9 +95,9 @@
+ #define RESET_VD_RMEM			64
+ #define RESET_AUDIN			65
+ #define RESET_DBLK			66
+-#define RESET_PIC_DC			66
+-#define RESET_PSC			66
+-#define RESET_NAND			66
++#define RESET_PIC_DC			67
++#define RESET_PSC			68
++#define RESET_NAND			69
+ #define RESET_GE2D			70
+ #define RESET_PARSER_REG		71
+ #define RESET_PARSER_FETCH		72
 
 
