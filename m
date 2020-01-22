@@ -2,287 +2,101 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C810C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:46:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACCCAC32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F82A2253D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:46:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 752EB21835
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 22:52:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZXC5CPLb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CJr8Td39"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbgAVWqO (ORCPT
+        id S1726118AbgAVWwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 17:46:14 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36061 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725884AbgAVWqH (ORCPT
+        Wed, 22 Jan 2020 17:52:34 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:46371 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725943AbgAVWwe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 17:46:07 -0500
-Received: by mail-wr1-f65.google.com with SMTP id z3so953155wru.3;
-        Wed, 22 Jan 2020 14:46:05 -0800 (PST)
+        Wed, 22 Jan 2020 17:52:34 -0500
+Received: by mail-qt1-f194.google.com with SMTP id e25so946298qtr.13
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 14:52:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=MCqGyviW/tmvDr3828HB9zRo2d0D7zhBetq/RRoppAo=;
-        b=ZXC5CPLbVoyjDhfM3wRKk1g+2/bMBj2KsWlUKfarnVA4JqgC08hYf+ClX/0j/NxYdR
-         gnLnzUdLNoMkixrSqmkvKmtJ2bxOlwaf2NiFDJ4AKCFXj/5T364/K2XSJPHqeUp9qULh
-         d4I2U4wJvB79CRaCZvEmmclcG+feE4iBi2nqBEXFhSAYU5+QXjPg+vqjWcz//VK5+hFw
-         YBCVrA14pdI1LeCyYxKCgtE4/jI/sOr8KbDawML4fB2aYK+GrN5ICTzpmq42xzlcnkYl
-         ppDSwa/FWubVo+1wdJvIiHdyB3a/bjFnhghtRbYkMn5JEptRrMxj0gkCSY4kwkdslF68
-         TixA==
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TlzFuMN5WGqxTwmnmnvw8wSSnVNjq0KtrS8uU4t4Cyw=;
+        b=CJr8Td396b552XC8GS+pTDnJzuUX+RE2nvYHEPgTShH30TM5zB4C0k0TYkP8U+W4i9
+         IGvtpVPvJC46R/tRFjXhEx6X0N0zFNM62bGflWwHuF3uXYE5r8uPcVgz4RuCvXp8ICrH
+         nvJqtNcoqjjvTlkd6ZjKDC43QEp1gaxEA/f66SjGSOSFGTviT+fbmLRhjEfMzFuBzmjw
+         PGCq2+HGcz0pttVFJ+A4vz1abSsf8M/YnxRv98Z4GpkUgusz1SVwqomEBunRVlgICmT9
+         nbOzB4zoP5d1IB6+7AymC5LWPE3xpG0m/XZTIbHEOj9J/V1Ti7rJreNPSbIxjy8Y5rzk
+         2mNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=MCqGyviW/tmvDr3828HB9zRo2d0D7zhBetq/RRoppAo=;
-        b=sBJUiQ1COWg0gagJD+QrchyWIVC5adr8GDMuiBeqlQuaMfp4aBAZL7qp11hM6iw7eR
-         1X4PugxCE700BKxlPKwBKcZYX2Nst0GpBV2R6NhsF9NogQS9gJWnAbBh6c86jJRP1mkJ
-         MaS3hmbXMjEg235SXNlhqmbaRaCgO4y9k+dEYsmxj7Kk2rZ0roHrsFKqwnO3qGVrkjg4
-         +GMuUVvC4LntIt4vTrhvQ6QjPMhcNoE2hJoEDyEXes/NFdAMtrndSCWj1lkxfqJ0/LP7
-         wPVGwYovdBalXdatqTUtmrlI5kqyF26QL0hAGW5nA9Or8sj5u2S8kQbcVJmmm4OpqtTD
-         0u/w==
-X-Gm-Message-State: APjAAAVliX/eYDt3AvfaRPfNTV/lFwdnHu9RevfmYfheUpaLOp5pF6K2
-        g9aCBAFjZute+3uHKoxUoho=
-X-Google-Smtp-Source: APXvYqzZG10AEF2jozV7H1kRJvn6uvUc923vmhPqyktJYEdzkrlSkBoI/Rhqz2Y1khzX5/Y80wTKFA==
-X-Received: by 2002:a05:6000:12:: with SMTP id h18mr13071078wrx.87.1579733164580;
-        Wed, 22 Jan 2020 14:46:04 -0800 (PST)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id f1sm342559wro.85.2020.01.22.14.46.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 Jan 2020 14:46:03 -0800 (PST)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     broonie@kernel.org
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/3] dt-bindings: spi: convert rockchip spi bindings to yaml
-Date:   Wed, 22 Jan 2020 23:45:53 +0100
-Message-Id: <20200122224555.6845-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TlzFuMN5WGqxTwmnmnvw8wSSnVNjq0KtrS8uU4t4Cyw=;
+        b=YHFcmeDOToy3PeLS8Lc38HcT2PR22dj/PdlvkQfUfM367mySdq18FZjYV/jbH6kXnj
+         ZU15gsqHl4J4uF8nb2IBL6Wn7Bsz8/+8Pbj1uaB5ycMSxoW5PW5ZAIL9Mio8LEULI8Jl
+         QLCcJg/f6AgYTNzO4k/u+Jtd7ueW8wzEvGsGocTeg5BlOPc4gXoGNm/f4HVoLO3eGaCK
+         NzKK0AhMKkE98TI7SCa3uQEZYwyNeXLOgeG8ved2AIEww5eG5enPqLIJxLo3LS3enZaW
+         Gz5wZE+6C/TJnjFjhA0Um8tIQ2Pba3Rr1qZy0F38GS3sKsf9iWShiAE6M97pDbziZc2y
+         Wv7w==
+X-Gm-Message-State: APjAAAWrbfykLpG9uCnRsB7dnwn1dUAf9yYf0n+YD8t+nL6YW1XJCE54
+        2jYT6h3wjBdhHLg80Iawxjs=
+X-Google-Smtp-Source: APXvYqyDelrmrc5zRUa7Mbumt+Tl4k73BLnMhcmcyoWFRuMoisfwVVLOZD03O+Cdxe4Yv4ca9aVLUw==
+X-Received: by 2002:aed:2150:: with SMTP id 74mr12975461qtc.323.1579733552983;
+        Wed, 22 Jan 2020 14:52:32 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id p19sm41164qte.81.2020.01.22.14.52.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jan 2020 14:52:32 -0800 (PST)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Wed, 22 Jan 2020 17:52:30 -0500
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     "Luck, Tony" <tony.luck@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: Re: [PATCH v12] x86/split_lock: Enable split lock detection by kernel
+Message-ID: <20200122225230.GB2331824@rani.riverdale.lan>
+References: <20191122152715.GA1909@hirez.programming.kicks-ass.net>
+ <20191123003056.GA28761@agluck-desk2.amr.corp.intel.com>
+ <20191125161348.GA12178@linux.intel.com>
+ <20191212085948.GS2827@hirez.programming.kicks-ass.net>
+ <20200110192409.GA23315@agluck-desk2.amr.corp.intel.com>
+ <20200114055521.GI14928@linux.intel.com>
+ <20200115222754.GA13804@agluck-desk2.amr.corp.intel.com>
+ <20200115225724.GA18268@linux.intel.com>
+ <20200122185514.GA16010@agluck-desk2.amr.corp.intel.com>
+ <20200122224245.GA2331824@rani.riverdale.lan>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200122224245.GA2331824@rani.riverdale.lan>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current dts files with 'spi' nodes are manually verified.
-In order to automate this process spi-rockchip.txt
-has to be converted to yaml. In the new setup
-spi-rockchip.yaml will inherit properties from
-spi-controller.yaml.
+On Wed, Jan 22, 2020 at 05:42:51PM -0500, Arvind Sankar wrote:
+> 
+> Peter [2] called this a possible DOS vector. If userspace is malicious
+> rather than buggy, couldn't it simply ignore SIGBUS?
+> 
+> [2] https://lore.kernel.org/lkml/20191121131522.GX5671@hirez.programming.kicks-ass.net/
 
-Add document to MAINTAINERS.
-
-Also rk3188.dtsi, rk3288.dtsi, rk3368.dtsi and rk3399.dtsi
-use an extra fallback string, so change this in the documentation.
-
-Changed:
-"rockchip,rk3188-spi", "rockchip,rk3066-spi"
-"rockchip,rk3288-spi", "rockchip,rk3066-spi"
-"rockchip,rk3368-spi", "rockchip,rk3066-spi"
-"rockchip,rk3399-spi", "rockchip,rk3066-spi"
-
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- .../devicetree/bindings/spi/spi-rockchip.txt       |  58 ------------
- .../devicetree/bindings/spi/spi-rockchip.yaml      | 105 +++++++++++++++++++++
- MAINTAINERS                                        |   1 +
- 3 files changed, 106 insertions(+), 58 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/spi/spi-rockchip.txt
- create mode 100644 Documentation/devicetree/bindings/spi/spi-rockchip.yaml
-
-diff --git a/Documentation/devicetree/bindings/spi/spi-rockchip.txt b/Documentation/devicetree/bindings/spi/spi-rockchip.txt
-deleted file mode 100644
-index a0edac12d..000000000
---- a/Documentation/devicetree/bindings/spi/spi-rockchip.txt
-+++ /dev/null
-@@ -1,58 +0,0 @@
--* Rockchip SPI Controller
--
--The Rockchip SPI controller is used to interface with various devices such as flash
--and display controllers using the SPI communication interface.
--
--Required Properties:
--
--- compatible: should be one of the following.
--    "rockchip,rv1108-spi" for rv1108 SoCs.
--    "rockchip,px30-spi", "rockchip,rk3066-spi" for px30 SoCs.
--    "rockchip,rk3036-spi" for rk3036 SoCS.
--    "rockchip,rk3066-spi" for rk3066 SoCs.
--    "rockchip,rk3188-spi" for rk3188 SoCs.
--    "rockchip,rk3228-spi" for rk3228 SoCS.
--    "rockchip,rk3288-spi" for rk3288 SoCs.
--    "rockchip,rk3368-spi" for rk3368 SoCs.
--    "rockchip,rk3399-spi" for rk3399 SoCs.
--- reg: physical base address of the controller and length of memory mapped
--       region.
--- interrupts: The interrupt number to the cpu. The interrupt specifier format
--              depends on the interrupt controller.
--- clocks: Must contain an entry for each entry in clock-names.
--- clock-names: Shall be "spiclk" for the transfer-clock, and "apb_pclk" for
--			   the peripheral clock.
--- #address-cells: should be 1.
--- #size-cells: should be 0.
--
--Optional Properties:
--
--- dmas: DMA specifiers for tx and rx dma. See the DMA client binding,
--		Documentation/devicetree/bindings/dma/dma.txt
--- dma-names: DMA request names should include "tx" and "rx" if present.
--- rx-sample-delay-ns: nanoseconds to delay after the SCLK edge before sampling
--		Rx data (may need to be fine tuned for high capacitance lines).
--		No delay (0) by default.
--- pinctrl-names: Names for the pin configuration(s); may be "default" or
--		"sleep", where the "sleep" configuration may describe the state
--		the pins should be in during system suspend. See also
--		pinctrl/pinctrl-bindings.txt.
--
--
--Example:
--
--	spi0: spi@ff110000 {
--		compatible = "rockchip,rk3066-spi";
--		reg = <0xff110000 0x1000>;
--		dmas = <&pdma1 11>, <&pdma1 12>;
--		dma-names = "tx", "rx";
--		rx-sample-delay-ns = <10>;
--		#address-cells = <1>;
--		#size-cells = <0>;
--		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&cru SCLK_SPI0>, <&cru PCLK_SPI0>;
--		clock-names = "spiclk", "apb_pclk";
--		pinctrl-0 = <&spi1_pins>;
--		pinctrl-1 = <&spi1_sleep>;
--		pinctrl-names = "default", "sleep";
--	};
-diff --git a/Documentation/devicetree/bindings/spi/spi-rockchip.yaml b/Documentation/devicetree/bindings/spi/spi-rockchip.yaml
-new file mode 100644
-index 000000000..bca8c6142
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/spi-rockchip.yaml
-@@ -0,0 +1,105 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/spi/spi-rockchip.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Rockchip SPI Controller
-+
-+description:
-+  The Rockchip SPI controller is used to interface with various devices such
-+  as flash and display controllers using the SPI communication interface.
-+
-+allOf:
-+  - $ref: "spi-controller.yaml#"
-+
-+maintainers:
-+  - Heiko Stuebner <heiko@sntech.de>
-+
-+# Everything else is described in the common file
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: rockchip,rk3036-spi #for rk3036 SoCS.
-+      - const: rockchip,rk3066-spi #for rk3066 SoCs.
-+      - const: rockchip,rk3228-spi #for rk3228 SoCS.
-+      - const: rockchip,rv1108-spi #for rv1108 SoCs.
-+      - items:
-+          - enum:
-+            - rockchip,px30-spi    #for px30 SoCs.
-+            - rockchip,rk3188-spi  #for rk3188 SoCs.
-+            - rockchip,rk3288-spi  #for rk3288 SoCs.
-+            - rockchip,rk3368-spi  #for rk3368 SoCs.
-+            - rockchip,rk3399-spi  #for rk3399 SoCs.
-+          - const: rockchip,rk3066-spi
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: transfer-clock
-+      - description: peripheral clock
-+
-+  clock-names:
-+    items:
-+      - const: spiclk
-+      - const: apb_pclk
-+
-+  dmas:
-+    items:
-+      - description: TX DMA Channel
-+      - description: RX DMA Channel
-+
-+  dma-names:
-+    items:
-+      - const: tx
-+      - const: rx
-+
-+  rx-sample-delay-ns:
-+    default: 0
-+    description:
-+      Nano seconds to delay after the SCLK edge before sampling Rx data
-+      (may need to be fine tuned for high capacitance lines).
-+      If not specified 0 will be used.
-+
-+  pinctrl-names:
-+    minItems: 1
-+    items:
-+      - const: default
-+      - const: sleep
-+    description:
-+      Names for the pin configuration(s); may be "default" or "sleep",
-+      where the "sleep" configuration may describe the state
-+      the pins should be in during system suspend.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/rk3188-cru-common.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    spi0: spi@ff110000 {
-+      compatible = "rockchip,rk3066-spi";
-+      reg = <0xff110000 0x1000>;
-+      interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
-+      clocks = <&cru SCLK_SPI0>, <&cru PCLK_SPI0>;
-+      clock-names = "spiclk", "apb_pclk";
-+      dmas = <&pdma1 11>, <&pdma1 12>;
-+      dma-names = "tx", "rx";
-+      pinctrl-0 = <&spi1_pins>;
-+      pinctrl-1 = <&spi1_sleep>;
-+      pinctrl-names = "default", "sleep";
-+      rx-sample-delay-ns = <10>;
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d6ad01d71..096c324f9 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2240,6 +2240,7 @@ L:	linux-rockchip@lists.infradead.org
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git
- S:	Maintained
- F:	Documentation/devicetree/bindings/i2c/i2c-rk3x.txt
-+F:	Documentation/devicetree/bindings/spi/spi-rockchip.yaml
- F:	arch/arm/boot/dts/rk3*
- F:	arch/arm/boot/dts/rv1108*
- F:	arch/arm/mach-rockchip/
--- 
-2.11.0
-
+Ignore this last bit, wasn't thinking right.
