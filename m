@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C59C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:20:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A00C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA9EE24686
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:20:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82BD62468B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:20:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579699247;
-	bh=i00MMTH6MNa35g4XCiL+6Tw0DJKIbDfNKONbh/FSUdk=;
+	s=default; t=1579699253;
+	bh=DvpWguXOaO9qZ5/G7dCXQkTSGzgL7lHWKUKhKMkLb9M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VKf9Oo3ne1fwzrsE4oxYLBaIXugPC7ZyYocuQLYzFnNUnhZIYpolxqV1gcuTS8rk0
-	 ebHtGO0xTpU147cfs3eEv9RYM+brglQo2r52VGNuvGBiysWD+ygmZoAEzOzycU1PvE
-	 O/QdCxhirATXUMqVQmtrG9f7xEASqAIF/jSGRUwI=
+	b=WzY6jkaYil3h7lJwmnOAYnsgoioJTMxojuAAvVuLKLZFX8UfaT/0BxbnIeLP83zuR
+	 xj3i//Etycbq19LG8vdgHapWDmw3Bn53aj8aJfoWa7lQacgO6hOZ7p/lUg98FNY/vz
+	 f8EYnpy72vdF73VqZHvBWnLJeNMJUEduWb4EQobo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730039AbgAVNUp (ORCPT
+        id S1730073AbgAVNUw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:20:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37082 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 08:20:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729527AbgAVNUm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:20:42 -0500
+        id S1729130AbgAVNUt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:20:49 -0500
 Received: from localhost (unknown [84.241.205.26])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3D4720678;
-        Wed, 22 Jan 2020 13:20:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 206C420704;
+        Wed, 22 Jan 2020 13:20:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579699242;
-        bh=i00MMTH6MNa35g4XCiL+6Tw0DJKIbDfNKONbh/FSUdk=;
+        s=default; t=1579699248;
+        bh=DvpWguXOaO9qZ5/G7dCXQkTSGzgL7lHWKUKhKMkLb9M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yQGbUa0pwLjnEp9/S2sW/wLPXPqxc6tzkNCGuAHUqGmj559EAHJOejRmopokuawCD
-         BviBiOxXr22Q58iFpHDSIwtwLPhjOoE9TRjgo+CijJQsR6Midf2UgYFmUpPosOkmJG
-         MARnVtV7mEuimy21xwCwDPpgwoiv0M+s7HiDKoVg=
+        b=JePgdlN8rU7w5698IThxmnURvFox9n8EFpASFkmCUx6rARwVxzFhw2ChNCZf2qbqW
+         i+j99532Jf676b3lv2IPq1wei5Sy8N96SNGKx4NQJwOA2vv6JMHwTtg0PXLTz800ZB
+         kfMHtKV+dlpWzfWAqNGNb+G/UX0/XC9eDzCG+Hyw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.4 085/222] btrfs: do not delete mismatched root refs
-Date:   Wed, 22 Jan 2020 10:27:51 +0100
-Message-Id: <20200122092839.796601078@linuxfoundation.org>
+Subject: [PATCH 5.4 087/222] btrfs: fix memory leak in qgroup accounting
+Date:   Wed, 22 Jan 2020 10:27:53 +0100
+Message-Id: <20200122092839.946009315@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
 References: <20200122092833.339495161@linuxfoundation.org>
@@ -59,45 +60,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
 
-commit 423a716cd7be16fb08690760691befe3be97d3fc upstream.
+commit 26ef8493e1ab771cb01d27defca2fa1315dc3980 upstream.
 
-btrfs_del_root_ref() will simply WARN_ON() if the ref doesn't match in
-any way, and then continue to delete the reference.  This shouldn't
-happen, we have these values because there's more to the reference than
-the original root and the sub root.  If any of these checks fail, return
--ENOENT.
+When running xfstests on the current btrfs I get the following splat from
+kmemleak:
 
-CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
+unreferenced object 0xffff88821b2404e0 (size 32):
+  comm "kworker/u4:7", pid 26663, jiffies 4295283698 (age 8.776s)
+  hex dump (first 32 bytes):
+    01 00 00 00 00 00 00 00 10 ff fd 26 82 88 ff ff  ...........&....
+    10 ff fd 26 82 88 ff ff 20 ff fd 26 82 88 ff ff  ...&.... ..&....
+  backtrace:
+    [<00000000f94fd43f>] ulist_alloc+0x25/0x60 [btrfs]
+    [<00000000fd023d99>] btrfs_find_all_roots_safe+0x41/0x100 [btrfs]
+    [<000000008f17bd32>] btrfs_find_all_roots+0x52/0x70 [btrfs]
+    [<00000000b7660afb>] btrfs_qgroup_rescan_worker+0x343/0x680 [btrfs]
+    [<0000000058e66778>] btrfs_work_helper+0xac/0x1e0 [btrfs]
+    [<00000000f0188930>] process_one_work+0x1cf/0x350
+    [<00000000af5f2f8e>] worker_thread+0x28/0x3c0
+    [<00000000b55a1add>] kthread+0x109/0x120
+    [<00000000f88cbd17>] ret_from_fork+0x35/0x40
+
+This corresponds to:
+
+  (gdb) l *(btrfs_find_all_roots_safe+0x41)
+  0x8d7e1 is in btrfs_find_all_roots_safe (fs/btrfs/backref.c:1413).
+  1408
+  1409            tmp = ulist_alloc(GFP_NOFS);
+  1410            if (!tmp)
+  1411                    return -ENOMEM;
+  1412            *roots = ulist_alloc(GFP_NOFS);
+  1413            if (!*roots) {
+  1414                    ulist_free(tmp);
+  1415                    return -ENOMEM;
+  1416            }
+  1417
+
+Following the lifetime of the allocated 'roots' ulist, it gets freed
+again in btrfs_qgroup_account_extent().
+
+But this does not happen if the function is called with the
+'BTRFS_FS_QUOTA_ENABLED' flag cleared, then btrfs_qgroup_account_extent()
+does a short leave and directly returns.
+
+Instead of directly returning we should jump to the 'out_free' in order to
+free all resources as expected.
+
+CC: stable@vger.kernel.org # 4.14+
+Reviewed-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+[ add comment ]
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/root-tree.c |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ fs/btrfs/qgroup.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/fs/btrfs/root-tree.c
-+++ b/fs/btrfs/root-tree.c
-@@ -376,11 +376,13 @@ again:
- 		leaf = path->nodes[0];
- 		ref = btrfs_item_ptr(leaf, path->slots[0],
- 				     struct btrfs_root_ref);
--
--		WARN_ON(btrfs_root_ref_dirid(leaf, ref) != dirid);
--		WARN_ON(btrfs_root_ref_name_len(leaf, ref) != name_len);
- 		ptr = (unsigned long)(ref + 1);
--		WARN_ON(memcmp_extent_buffer(leaf, name, ptr, name_len));
-+		if ((btrfs_root_ref_dirid(leaf, ref) != dirid) ||
-+		    (btrfs_root_ref_name_len(leaf, ref) != name_len) ||
-+		    memcmp_extent_buffer(leaf, name, ptr, name_len)) {
-+			err = -ENOENT;
-+			goto out;
-+		}
- 		*sequence = btrfs_root_ref_sequence(leaf, ref);
+--- a/fs/btrfs/qgroup.c
++++ b/fs/btrfs/qgroup.c
+@@ -2423,8 +2423,12 @@ int btrfs_qgroup_account_extent(struct b
+ 	u64 nr_old_roots = 0;
+ 	int ret = 0;
  
- 		ret = btrfs_del_item(trans, tree_root, path);
++	/*
++	 * If quotas get disabled meanwhile, the resouces need to be freed and
++	 * we can't just exit here.
++	 */
+ 	if (!test_bit(BTRFS_FS_QUOTA_ENABLED, &fs_info->flags))
+-		return 0;
++		goto out_free;
+ 
+ 	if (new_roots) {
+ 		if (!maybe_fs_roots(new_roots))
 
 
