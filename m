@@ -7,88 +7,115 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3572C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2480C33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EA782071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:10:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76D66206A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 16:13:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579709412;
-	bh=QCC5rwQVeJws+7ipSdxfGsVIlrbmKL3wMRFugklLNqQ=;
+	s=default; t=1579709599;
+	bh=xexVkCwRPjr6rK/de4qaY6T3FRmqn+WVdOxMj0bVMpo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NY+MohPe3RqD4l9wgxzrXhFWiZ2C81B4CLudyrLBhwTE3HTfZJUJ7hSNd+F5MfqXd
-	 ODCcdzkt725oBElQ3ZNEy/ikqdhbG/9aGOrfiUtlciWV7SvelfXCq74kLtdBdNG94z
-	 vNafuFviimY8lsS15eF41MAUJoCxe9HFHChgL/rw=
+	b=ZzBYdOMci2204xNUklq4PoS887HZ/ofzDqOE4VsS5z+2BEqu37OdlOeAr3TjPCTKI
+	 JO0fIRe8yGS3WAvmKZxnLpMi8gGSgfUa0XxCZBoDxOQ6QN04qeTfvhKaYbIQfKqF65
+	 EfazciKM3ptVw37ULcbOGcWW+QnXJbJiFSa4G4XA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728913AbgAVQKM (ORCPT
+        id S1726054AbgAVQNS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 11:10:12 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:33317 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726780AbgAVQKL (ORCPT
+        Wed, 22 Jan 2020 11:13:18 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:37052 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725827AbgAVQNS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 11:10:11 -0500
-Received: by mail-ot1-f67.google.com with SMTP id b18so6774718otp.0;
-        Wed, 22 Jan 2020 08:10:11 -0800 (PST)
+        Wed, 22 Jan 2020 11:13:18 -0500
+Received: by mail-ot1-f68.google.com with SMTP id k14so6754809otn.4;
+        Wed, 22 Jan 2020 08:13:17 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TgzJ9ZutlYtvfAqgtYkqR4r+agw8THf+icQvm+26OKo=;
-        b=p/WSlOHZYu1J04rw2VLiAHrNeWDfljkJ0AD88iAR7BE9m9aJYrSiUGt8xmOrrfpCnV
-         ak81RU0yZ59Q8OS465x+e5q51ROOCpuFj2d0LlwgK7ItseEoneJ7cIkyVFvmABKJV2UR
-         cEXDQ2Yw4hxX2ZY8LAWLlAhx3ULq/EQr7aAklVx4iS44gt3wLUMuR61D5q+hIdr85Xyx
-         xR+6ZKdRdgr/jk5DEks6TCAbYWRblv5jtWsTMzzLUqKqTEqLpojJTwxL6IxOKS1/bkQO
-         UM+ekHlXHsOuF6NYN0X9k95JnBbPpbMCiz9Jwh8vdXGorwWEM0jXqBzmWraVA0yVMzzx
-         6GFg==
-X-Gm-Message-State: APjAAAUoS96wt9YlJFZUBJSTmsQ3wA269XIovwyLLFjgemfgg/BTpIi1
-        K5BhWtXFDxzejSCcf6eHOQ==
-X-Google-Smtp-Source: APXvYqyOIAOrAEHzXYhJhhnCgRLpP7u3uvTd0SqsZnLeBC8DI/vNn4PSdtAK3tvJcEPEa+32hJ8dFA==
-X-Received: by 2002:a05:6830:11d2:: with SMTP id v18mr8306701otq.151.1579709410683;
-        Wed, 22 Jan 2020 08:10:10 -0800 (PST)
+        bh=GOOLLN3pWqF44g0LrBYSSN02QHJR2vx0pTwlOGVzsYA=;
+        b=uY2Q9BizotywcwmcYCQEuyq93aV+jRZAyw13R+1gKHb2I0/oU7kg/AJCPhs+of2L4/
+         NH8nhuM0q+Tpof8ysqaDm02a2K3mcbujeVKcHtu8YHzIqiB+WQ/Kel1+3SyOIYgsS034
+         ZHG6opnGW/f4qN+uVYVaWhZv1LeaY4niKmmk4kXdVJHc2Qc6nqluUzYeeZa/C3Hos7XE
+         YK/ib1npApVBBnIdnm4l7p8HGMq34t8aOdMxfkPsNp3/we0FkX/pEgQKt8lmsPssxT7p
+         xwa1wjx3GxQtvFAF54McxVond5tAeLm0T64DgihXLPC8R2J3Z9+1DTCh6Kc5N0g0Dz7h
+         jO0g==
+X-Gm-Message-State: APjAAAUAK4nTTa8ehPALFsYkFhNLqhgtzhLCqkmcDQ7ZobYkIT6zk4gm
+        EhbAJOV1Fm4l8WW2gADECw==
+X-Google-Smtp-Source: APXvYqwmYzoKLn86Ynkcc7J9y/0tsMyrxzTXAULNTlvpYI9DbPKZBh7QKOk1PALsTI0JgjdMXfP/ig==
+X-Received: by 2002:a9d:754a:: with SMTP id b10mr8107214otl.273.1579709597319;
+        Wed, 22 Jan 2020 08:13:17 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e65sm14911359otb.62.2020.01.22.08.10.09
+        by smtp.gmail.com with ESMTPSA id z17sm13145536oib.3.2020.01.22.08.13.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jan 2020 08:10:10 -0800 (PST)
-Received: (nullmailer pid 18272 invoked by uid 1000);
-        Wed, 22 Jan 2020 16:10:08 -0000
-Date:   Wed, 22 Jan 2020 10:10:08 -0600
+        Wed, 22 Jan 2020 08:13:16 -0800 (PST)
+Received: (nullmailer pid 23907 invoked by uid 1000);
+        Wed, 22 Jan 2020 16:13:15 -0000
+Date:   Wed, 22 Jan 2020 10:13:15 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, vinod.koul@linaro.org,
-        psodagud@codeaurora.org, tsoni@codeaurora.org,
-        jshriram@codeaurora.org, tdas@codeaurora.org,
-        vnkgutta@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/7] dt-bindings: clock: Add SM8250 GCC clock bindings
-Message-ID: <20200122161008.GA18205@bogus>
-References: <1579217994-22219-1-git-send-email-vnkgutta@codeaurora.org>
- <1579217994-22219-6-git-send-email-vnkgutta@codeaurora.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>, mka@chromium.org,
+        Andy Gross <agross@kernel.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>, swboyd@chromium.org,
+        Douglas Anderson <dianders@chromium.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v3] dt-bindings: timer: Use non-empty ranges in example
+Message-ID: <20200122161315.GA23684@bogus>
+References: <20200117155303.v3.1.I7dbd712cfe0bdf7b53d9ef9791072b7e9c6d3c33@changeid>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1579217994-22219-6-git-send-email-vnkgutta@codeaurora.org>
+In-Reply-To: <20200117155303.v3.1.I7dbd712cfe0bdf7b53d9ef9791072b7e9c6d3c33@changeid>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Jan 2020 15:39:52 -0800, Venkata Narendra Kumar Gutta wrote:
-> From: Taniya Das <tdas@codeaurora.org>
+On Fri, 17 Jan 2020 15:53:26 -0800, Douglas Anderson wrote:
+> On many arm64 qcom device trees, running `make dtbs_check` yells:
 > 
-> Add device tree bindings for global clock controller on SM8250 SoCs.
+>   timer@17c20000: #size-cells:0:0: 1 was expected
 > 
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+> It appears that someone was trying to assert the fact that sub-nodes
+> describing frames would never have a size that's more than 32-bits
+> big.  That does indeed appear to be true for all cases I could find.
+> 
+> Currently many arm64 qcom device tree files have a #address-cells and
+> about in commit bede7d2dc8f3 ("arm64: dts: qcom: sdm845: Increase
+> address and size cells for soc").  That means the only way we can
+> shrink them down is to use a non-empty ranges.
+> 
+> Since forever it has said in "writing-bindings.txt" to "DO use
+> non-empty 'ranges' to limit the size of child buses/devices".  I guess
+> we should start listening to it.
+> 
+> I believe (but am not certain) that this also means that we should use
+> "ranges" to simplify the "reg" of our sub devices by specifying an
+> offset.  Let's update the example in the bindings to make this
+> obvious.
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 > ---
->  .../devicetree/bindings/clock/qcom,gcc.yaml        |   1 +
->  include/dt-bindings/clock/qcom,gcc-sm8250.h        | 271 +++++++++++++++++++++
->  2 files changed, 272 insertions(+)
->  create mode 100644 include/dt-bindings/clock/qcom,gcc-sm8250.h
+> See:
+>   https://lore.kernel.org/r/20191212113540.7.Ia9bd3fca24ad34a5faaf1c3e58095c74b38abca1@changeid
+> 
+> ...for the patch that sparked this change.
+> 
+> Changes in v3:
+> - Fixed my typo frame@f0003000 => frame@2000
+> 
+> Changes in v2:
+> - Fixed my typo 0xf0000000 => 0xf0001000
+> 
+>  .../bindings/timer/arm,arch_timer_mmio.yaml          | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Applied, thanks.
+
+Rob
