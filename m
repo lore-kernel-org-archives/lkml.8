@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F4047C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:42:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A3C9C33CAF
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:42:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6D0624686
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:42:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51FC624686
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:42:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686166;
-	bh=7B3vAG2RIkwU8Eh5pEf069RrjsX8ed1jhGzTsQLF7V0=;
+	s=default; t=1579686170;
+	bh=qQTligRoMn1rcwW1M0BXrXltC+2WE7lvseXzLYSYWGU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B8+n+y5H2UJhD01L4R2vh0VSfRlTi+7IYMsWo5guAW38wDbcDz8Ywq0KNAIjHkS9F
-	 0W8YRzQ3SodhAr+ULzNjPHOW90VFm5BaceRaqFpb5cRp2viKlFfhmxIzkuBrMgQptI
-	 cBaECcZCgvnSEry4uJP32tzwQvG3DQJONr/naXk4=
+	b=luswjgqMICzN+OKRJ599jyiJU2b4QL3QrGGJeEejrkUpUhdwZMCfnUa1G1aYo/Wsq
+	 Vbxw1jUp6zL8k9SnA3I8FMJOvZN3A6fgKUK5omh+k8D0MG56Gd7z8FmPIwCr4GRmlz
+	 gtSRcmkuXw9edu5hzt7jXrRq380pjbLkwr44Q5G4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387780AbgAVJmq (ORCPT
+        id S2387790AbgAVJmt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:42:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34648 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:42:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387757AbgAVJml (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:42:41 -0500
+        id S2387777AbgAVJmp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:42:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 222B924687;
-        Wed, 22 Jan 2020 09:42:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA2ED2467B;
+        Wed, 22 Jan 2020 09:42:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686160;
-        bh=7B3vAG2RIkwU8Eh5pEf069RrjsX8ed1jhGzTsQLF7V0=;
+        s=default; t=1579686165;
+        bh=qQTligRoMn1rcwW1M0BXrXltC+2WE7lvseXzLYSYWGU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O4U1HGSZhYHY4Ef07smhDjZBH4lQKaveyzCwR6SNhs8RA735u64DwUEl9kpb3Cljx
-         DOsFC3lfUagSljHbNMlW0gfjlEqiou9UfsZtPqZhJ4EFH2+SRpWgVK0xnCjr7+jqrS
-         4X4X0itG6kqhDOvCnkOAB7ZygnOLMJxFBfRxG9I8=
+        b=wn+NkSyv7c+6vfJhsyokSJThThUqlmG/SEerQAhM/60INh07jBg8j9O1aI6cWFgBR
+         /f5Q7i2ZRUWQnYHFVnxSk9o+z9T5EAlkj2RaHvOH/xhGTXtm1106h4WjgeuBZN18K5
+         xuW3J3qAGYctoMHI7Y0MdiZ3sODRFTvSe/1RAKps=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Alexander Lobakin <alobakin@dlink.ru>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        RENARD Pierre-Francois <pfrenard@gmail.com>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Woojung Huh <woojung.huh@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 069/103] net: dsa: tag_qca: fix doubled Tx statistics
-Date:   Wed, 22 Jan 2020 10:29:25 +0100
-Message-Id: <20200122092813.867796961@linuxfoundation.org>
+Subject: [PATCH 4.19 071/103] net: usb: lan78xx: limit size of local TSO packets
+Date:   Wed, 22 Jan 2020 10:29:27 +0100
+Message-Id: <20200122092814.032899084@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
 References: <20200122092803.587683021@linuxfoundation.org>
@@ -61,37 +63,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Lobakin <alobakin@dlink.ru>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit bd5874da57edd001b35cf28ae737779498c16a56 ]
+[ Upstream commit f8d7408a4d7f60f8b2df0f81decdc882dd9c20dc ]
 
-DSA subsystem takes care of netdev statistics since commit 4ed70ce9f01c
-("net: dsa: Refactor transmit path to eliminate duplication"), so
-any accounting inside tagger callbacks is redundant and can lead to
-messing up the stats.
-This bug is present in Qualcomm tagger since day 0.
+lan78xx_tx_bh() makes sure to not exceed MAX_SINGLE_PACKET_SIZE
+bytes in the aggregated packets it builds, but does
+nothing to prevent large GSO packets being submitted.
 
-Fixes: cafdc45c949b ("net-next: dsa: add Qualcomm tag RX/TX handler")
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Pierre-Francois reported various hangs when/if TSO is enabled.
+
+For localy generated packets, we can use netif_set_gso_max_size()
+to limit the size of TSO packets.
+
+Note that forwarded packets could still hit the issue,
+so a complete fix might require implementing .ndo_features_check
+for this driver, forcing a software segmentation if the size
+of the TSO packet exceeds MAX_SINGLE_PACKET_SIZE.
+
+Fixes: 55d7de9de6c3 ("Microchip's LAN7800 family USB 2/3 to 10/100/1000 Ethernet device driver")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: RENARD Pierre-Francois <pfrenard@gmail.com>
+Tested-by: RENARD Pierre-Francois <pfrenard@gmail.com>
+Cc: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Woojung Huh <woojung.huh@microchip.com>
+Cc: Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/dsa/tag_qca.c |    3 ---
- 1 file changed, 3 deletions(-)
+ drivers/net/usb/lan78xx.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/dsa/tag_qca.c
-+++ b/net/dsa/tag_qca.c
-@@ -41,9 +41,6 @@ static struct sk_buff *qca_tag_xmit(stru
- 	struct dsa_port *dp = dsa_slave_to_port(dev);
- 	u16 *phdr, hdr;
+--- a/drivers/net/usb/lan78xx.c
++++ b/drivers/net/usb/lan78xx.c
+@@ -3769,6 +3769,7 @@ static int lan78xx_probe(struct usb_inte
  
--	dev->stats.tx_packets++;
--	dev->stats.tx_bytes += skb->len;
--
- 	if (skb_cow_head(skb, 0) < 0)
- 		return NULL;
+ 	/* MTU range: 68 - 9000 */
+ 	netdev->max_mtu = MAX_SINGLE_PACKET_SIZE;
++	netif_set_gso_max_size(netdev, MAX_SINGLE_PACKET_SIZE - MAX_HEADER);
  
+ 	dev->ep_blkin = (intf->cur_altsetting)->endpoint + 0;
+ 	dev->ep_blkout = (intf->cur_altsetting)->endpoint + 1;
 
 
