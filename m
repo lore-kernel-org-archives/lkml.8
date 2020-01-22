@@ -2,135 +2,97 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81079C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:51:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9522C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:51:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 524FC20704
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:51:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="uRp6jW4J"
+	by mail.kernel.org (Postfix) with ESMTP id 77D1B2467B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:51:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579686705;
+	bh=VduW93Y0Qt9OjW9JLQTSDDgaDytptO9GJJ+sjcxCw08=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=gmF/d7+6ZtrZwIvOS6mLLYJIBD1QcQYQLZxWMO4eP5/mfa6jl/IvoOVeDUn/vtMIZ
+	 3pKF5gOdw6ib7Dfocr/5ve4X/XvRyV9WukO1dMYQO2XfowhZWq31NUkxzN/VEEoXJK
+	 leYMcaKpS4LinmjBGjAYWNexH2g/Stj+MtxTjWrY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732891AbgAVJvl (ORCPT
+        id S1732814AbgAVJvo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:51:41 -0500
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:10183 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729809AbgAVJhH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:37:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1579685828; x=1611221828;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   mime-version;
-  bh=K9Kz0EYeQrURGwTjiRNoD6do9zmd0lXIO7vywrJCJO8=;
-  b=uRp6jW4JGtw9vMYS5hPKvfYGsFkEcaruIt126ZG1o9X5RVoBqVguBtnE
-   1TKWRcNJtLVSoog3HSFjAVTs40TJB4RmCnMlBCgnm7x2aTObplckddkKS
-   8mx9sabNgPXaGiJXhXxBoFCS1cCrNymVQH9sa77bMnnv+mkT9vRY8JD3Y
-   k=;
-IronPort-SDR: +ZLstp77iXAZO+vQ5DM0SWDzWs9fWxGYhsX8L1GfAcFYl7ljZWGWoubEp3F+ZLyxkgUzMc616p
- ILsZ+kD1SJBg==
-X-IronPort-AV: E=Sophos;i="5.70,349,1574121600"; 
-   d="scan'208";a="11919547"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-17c49630.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 22 Jan 2020 09:36:56 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-17c49630.us-east-1.amazon.com (Postfix) with ESMTPS id 2D141A1780;
-        Wed, 22 Jan 2020 09:36:48 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1236.3; Wed, 22 Jan 2020 09:36:48 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.224) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 22 Jan 2020 09:36:40 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     Michal Hocko <mhocko@kernel.org>
-CC:     Minchan Kim <minchan@kernel.org>, <sspatil@google.com>,
-        <kirill@shutemov.name>, <akpm@linux-foundation.org>,
-        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-api@vger.kernel.org>, <oleksandr@redhat.com>,
-        <surenb@google.com>, <timmurray@google.com>, <dancol@google.com>,
-        <sonnyrao@google.com>, <bgeffon@google.com>, <hannes@cmpxchg.org>,
-        <shakeelb@google.com>, <joaodias@google.com>,
-        <ktkhai@virtuozzo.com>, <christian.brauner@ubuntu.com>,
-        <sjpark@amazon.de>
-Subject: Re: Re: [PATCH v2 2/5] mm: introduce external memory hinting API
-Date:   Wed, 22 Jan 2020 10:36:24 +0100
-Message-ID: <20200122093624.14799-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200122082853.GS29276@dhcp22.suse.cz> (raw)
+        Wed, 22 Jan 2020 04:51:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52970 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732387AbgAVJhG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:37:06 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A46052467E;
+        Wed, 22 Jan 2020 09:37:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579685826;
+        bh=VduW93Y0Qt9OjW9JLQTSDDgaDytptO9GJJ+sjcxCw08=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=2JTWW9wEv2YediYJURlmiN+Of+57kcB0nIi/uvy8zZvfIJA55I7GABMh9vM5EiO+p
+         uWuCGnCBRM+UERqt+4pNzelUixONhP9iBHrTMhm3uTNxkk7+Y6BwFWLsrBjLaiQxIX
+         COVugq82lNx/dXD7GlV3eL+BxV3P1YVBc6IiJHVc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.9 59/97] USB: serial: suppress driver bind attributes
+Date:   Wed, 22 Jan 2020 10:29:03 +0100
+Message-Id: <20200122092805.915683644@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200122092755.678349497@linuxfoundation.org>
+References: <20200122092755.678349497@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.162.224]
-X-ClientProxiedBy: EX13d09UWA004.ant.amazon.com (10.43.160.158) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Jan 2020 09:28:53 +0100 Michal Hocko <mhocko@kernel.org> wrote:
+From: Johan Hovold <johan@kernel.org>
 
-> On Tue 21-01-20 10:32:12, Minchan Kim wrote:
-> > On Mon, Jan 20, 2020 at 08:58:25AM +0100, Michal Hocko wrote:
-> [...]
-> > > The interface really has to be robust to future potential usecases.
-> > 
-> > I do understand your concern but for me, it's chicken and egg problem.
-> > We usually do best effort to make something perfect as far as possible
-> > but we also don't do over-engineering without real usecase from the
-> > beginning.
-> > 
-> > I already told you how we could synchronize among processes and potential
-> > way to be extended Daniel suggested(That's why current API has extra field
-> > for the cookie) even though we don't need it right now.
-> 
-> If you can synchronize with the target task then you do not need a
-> remote interface. Just use ptrace and you are done with it.
-> 
-> > If you want to suggest the other way, please explain why your idea is
-> > better and why we need it at this moment.
-> 
-> I believe I have explained my concerns and why they matter. All you are
-> saying is that you do not care because your particular usecase doesn't
-> care. And that is a first signal of a future disaster when we end up
-> with a broken and unfixable interface we have to maintain for ever.
-> 
-> I will not go as far as to nack this but you should seriously think
-> about other potential usecases and how they would work and what we are
-> going to do when a first non-cooperative userspace memory management
-> usecase materializes.
+commit fdb838efa31e1ed9a13ae6ad0b64e30fdbd00570 upstream.
 
-Beside of the specific environment of Android, I think there are many ways to
-know the address space layout and access patterns of other processes.  The
-idle_page_tracking might be an example that widelay available.
+USB-serial drivers must not be unbound from their ports before the
+corresponding USB driver is unbound from the parent interface so
+suppress the bind and unbind attributes.
 
-Of course, the information might not strictly correct due to the timing issue,
-but could be still worth to be used under some extreme situations, such as
-memory pressure or fragmentation.  For the same reason, ptrace() would not be
-sufficient, as we have no perfect control, but only some level of control that
-would be useful under specific situations.
+Unbinding a serial driver while it's port is open is a sure way to
+trigger a crash as any driver state is released on unbind while port
+hangup is handled on the parent USB interface level. Drivers for
+multiport devices where ports share a resource such as an interrupt
+endpoint also generally cannot handle individual ports going away.
 
-I assume the users of this systemcall would understand the tradeoff and make
-decisions.  Also, as the users already have the right to do the tradeoff, I
-think it's fair.  In other words, I think the caller has both the power and the
-responsibility to deal with the time-to-check-time-to-react problem.
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Cc: stable <stable@vger.kernel.org>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Nonetheless, I also agree this is important concern and the patch would be
-better if it adds more detailed documentation regarding this issue.
+---
+ drivers/usb/serial/usb-serial.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-If I'm missing some points or you have different opinions, please let me know.
+--- a/drivers/usb/serial/usb-serial.c
++++ b/drivers/usb/serial/usb-serial.c
+@@ -1351,6 +1351,9 @@ static int usb_serial_register(struct us
+ 		return -EINVAL;
+ 	}
+ 
++	/* Prevent individual ports from being unbound. */
++	driver->driver.suppress_bind_attrs = true;
++
+ 	usb_serial_operations_init(driver);
+ 
+ 	/* Add this device to our list of devices */
 
 
-Thanks,
-SeongJae Park
-
-> -- 
-> Michal Hocko
-> SUSE Labs
-> 
