@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A3F0C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D65C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:41:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 512582468F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF2EB24688
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:41:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579686061;
-	bh=ZCnEzZhJ7nlvkoKgrnMehcQ3yyr2Z1rIaTtaIKPtOk8=;
+	s=default; t=1579686064;
+	bh=8tE/D4mz4jFGF0L2PYaXFgqEex6xw+gmIOcsNkew/uQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WFduQJQUPxYDZnJarheaht/s88QzOuP2ruo3qdMx2hTtXXibwfIM9fAfLwFFPmS4S
-	 Gh1R8FCmWZCLal6LZ5Fl239+DnS0Gd13bnNcXUmxAE09TAf408L+xJXq3/2xY1h07j
-	 swk2huUjQCItMGsBE/zoiKGCmRSdL//hNVLYUk0k=
+	b=uQbmu87wg5kNU/r87PtosNHfC7P0PA05I0WztsHA1rNcQfUYVYBOQbQfVzXjaW9h0
+	 ggtWJruIeCj0XJEvM6bSKlLtpt2gb4LHRyKFfzWEjtmh5jqjP6TuwV6DTqyGSIK2TO
+	 8pjH37Iil1G+01fffsYZ+tfRjBPKdUGsELErOJY8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387501AbgAVJk7 (ORCPT
+        id S2387504AbgAVJlD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:40:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59832 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:41:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387478AbgAVJkq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:40:46 -0500
+        id S1733260AbgAVJkt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:40:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B02482467B;
-        Wed, 22 Jan 2020 09:40:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 196A424684;
+        Wed, 22 Jan 2020 09:40:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579686046;
-        bh=ZCnEzZhJ7nlvkoKgrnMehcQ3yyr2Z1rIaTtaIKPtOk8=;
+        s=default; t=1579686048;
+        bh=8tE/D4mz4jFGF0L2PYaXFgqEex6xw+gmIOcsNkew/uQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K42En/bz+vgsW7SA4WbMppledqBx2vgx633MU0KsIKmll5FH3uWTgfyHM9/m5bO+u
-         B/fMV2/u0u+W946FUbCTocHZ7wILXNqXTdoQ4MWTvqlRLfkrZtiYhwAUKNyHGxBwRD
-         FWpIb8kuDvy3sG13/OMfL0WrDHfQJYzXGtoUEc4Y=
+        b=tdGLb7/q5eRCY3O3E//uXfl6tjDVDqtyinvoYMg2aMtkScbwja/gxFqBMzMb0jMiF
+         MPCPbinPWJ3JbjMnlmnnLXsGY8iElfGn19nK/Hc3ImAYujirwSqO3qqcRYcs88u55Z
+         7NlqR5dzI32S/clT3KJOgmt2Jbj0sEp4JHxKoJMM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Stephen Boyd <sboyd@kernel.org>
-Subject: [PATCH 4.19 005/103] clk: Dont try to enable critical clocks if prepare failed
-Date:   Wed, 22 Jan 2020 10:28:21 +0100
-Message-Id: <20200122092804.481646800@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.19 006/103] ASoC: msm8916-wcd-digital: Reset RX interpolation path after use
+Date:   Wed, 22 Jan 2020 10:28:22 +0100
+Message-Id: <20200122092804.628145113@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092803.587683021@linuxfoundation.org>
 References: <20200122092803.587683021@linuxfoundation.org>
@@ -60,65 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-commit 12ead77432f2ce32dea797742316d15c5800cb32 upstream.
+commit 85578bbd642f65065039b1765ebe1a867d5435b0 upstream.
 
-The following traceback is seen if a critical clock fails to prepare.
+For some reason, attempting to route audio through QDSP6 on MSM8916
+causes the RX interpolation path to get "stuck" after playing audio
+a few times. In this situation, the analog codec part is still working,
+but the RX path in the digital codec stops working, so you only hear
+the analog parts powering up. After a reboot everything works again.
 
-bcm2835-clk 3f101000.cprman: plld: couldn't lock PLL
-------------[ cut here ]------------
-Enabling unprepared plld_per
-WARNING: CPU: 1 PID: 1 at drivers/clk/clk.c:1014 clk_core_enable+0xcc/0x2c0
-...
-Call trace:
- clk_core_enable+0xcc/0x2c0
- __clk_register+0x5c4/0x788
- devm_clk_hw_register+0x4c/0xb0
- bcm2835_register_pll_divider+0xc0/0x150
- bcm2835_clk_probe+0x134/0x1e8
- platform_drv_probe+0x50/0xa0
- really_probe+0xd4/0x308
- driver_probe_device+0x54/0xe8
- device_driver_attach+0x6c/0x78
- __driver_attach+0x54/0xd8
-...
+So far I was not able to reproduce the problem when using lpass-cpu.
 
-Check return values from clk_core_prepare() and clk_core_enable() and
-bail out if any of those functions returns an error.
+The downstream kernel driver avoids this by resetting the RX
+interpolation path after use. In mainline we do something similar
+for the TX decimator (LPASS_CDC_CLK_TX_RESET_B1_CTL), but the
+interpolator reset (LPASS_CDC_CLK_RX_RESET_CTL) got lost when the
+msm8916-wcd driver was split into analog and digital.
 
-Cc: Jerome Brunet <jbrunet@baylibre.com>
-Fixes: 99652a469df1 ("clk: migrate the count of orphaned clocks at init")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lkml.kernel.org/r/20191225163429.29694-1-linux@roeck-us.net
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Fix this problem by adding the reset to
+msm8916_wcd_digital_enable_interpolator().
+
+Fixes: 150db8c5afa1 ("ASoC: codecs: Add msm8916-wcd digital codec")
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Link: https://lore.kernel.org/r/20200105102753.83108-1-stephan@gerhold.net
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/clk/clk.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ sound/soc/codecs/msm8916-wcd-digital.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -3066,11 +3066,17 @@ static int __clk_core_init(struct clk_co
- 	if (core->flags & CLK_IS_CRITICAL) {
- 		unsigned long flags;
- 
--		clk_core_prepare(core);
-+		ret = clk_core_prepare(core);
-+		if (ret)
-+			goto out;
- 
- 		flags = clk_enable_lock();
--		clk_core_enable(core);
-+		ret = clk_core_enable(core);
- 		clk_enable_unlock(flags);
-+		if (ret) {
-+			clk_core_unprepare(core);
-+			goto out;
-+		}
+--- a/sound/soc/codecs/msm8916-wcd-digital.c
++++ b/sound/soc/codecs/msm8916-wcd-digital.c
+@@ -357,6 +357,12 @@ static int msm8916_wcd_digital_enable_in
+ 		snd_soc_component_write(component, rx_gain_reg[w->shift],
+ 			      snd_soc_component_read32(component, rx_gain_reg[w->shift]));
+ 		break;
++	case SND_SOC_DAPM_POST_PMD:
++		snd_soc_component_update_bits(component, LPASS_CDC_CLK_RX_RESET_CTL,
++					      1 << w->shift, 1 << w->shift);
++		snd_soc_component_update_bits(component, LPASS_CDC_CLK_RX_RESET_CTL,
++					      1 << w->shift, 0x0);
++		break;
  	}
- 
- 	/*
+ 	return 0;
+ }
 
 
