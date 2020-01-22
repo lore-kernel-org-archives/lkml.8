@@ -2,131 +2,116 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE8BC33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 20:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F33C33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 20:23:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FB6024683
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 20:22:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EF1E2465A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 20:23:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LmLw0Hxd"
+	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="K3ZCUuGU";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="E3TupMbr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729021AbgAVUWF (ORCPT
+        id S1729050AbgAVUXQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 15:22:05 -0500
-Received: from mail-wr1-f41.google.com ([209.85.221.41]:35781 "EHLO
-        mail-wr1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbgAVUWE (ORCPT
+        Wed, 22 Jan 2020 15:23:16 -0500
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:52223 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725827AbgAVUXQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 15:22:04 -0500
-Received: by mail-wr1-f41.google.com with SMTP id g17so522923wro.2
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 12:22:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tVuD5M/MYCtIro+NiHeJqsEtK6AMbnd7kxhI4hTwchA=;
-        b=LmLw0HxdNBFf7ECjrsO5sltd9/xYioUniTzKT1bbDVnXENzkPG3gkkLmeSy4qClr2d
-         e8dT3ZVxttShq2xC9cc1Cb9H5fwFDaRTdS7zwQDVHadroujs4Dv+nNgpwlxkeUCI5frb
-         Vofl2Q+dUCC2bz+5GNm/pxC+YJfpVsVq9x1/KNCknqF0YhdXSqMVWzmWSkYid8F78UrJ
-         RwdP9PO57Y7Ws9hUBvPv6v97LGzGZtH69IFU7ssOR0uaB45Wd7jSd5uvEsQH2s581CrT
-         UFWB/62GGDv5384otm3o+Gr7ZS6NcCZ61ih24zvl4D7v6dMYOsMEPnulIRyl0oEWsyVI
-         qCXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tVuD5M/MYCtIro+NiHeJqsEtK6AMbnd7kxhI4hTwchA=;
-        b=tsNjw56SoQAt1Gz7yqbbPx0Qoi2FYZ8+X8AwHL0Uj/FbsvAr+A1WtUPK76TA5M0gMp
-         JH9Ikbm02/7UyItmUVgu3k4LGoaa26JrxqnUVOeB9ve+1rhqiFd1vhV0UN4R8V6tdiPn
-         QR3NmvR4W+zBEiwsF7clDUWi9dO3o1l3pFq0EccXS6MfDk4zAPRd8/5EJ7s1xQ2sngtv
-         /3gtspaYJoubEUwHbnuzeECgt3AlopjtN6J1f1VQuhgTaCy41WpsCg60YQG8426ay8rO
-         zMsQ8If012Iltt328C2HLKJHl4XLYZb6oHVJt1j4yo/Z04w9zwgmbdiZR9Uy03XujOCx
-         BHFg==
-X-Gm-Message-State: APjAAAV6J8UzGZN053CiKKioKd0EpP7zRPn0P3RpHwg2mZUJVy2BvJqZ
-        YR8XxqZqYBOLUxP6m/KxaDRpAeTvdFnJzQEe3+A=
-X-Google-Smtp-Source: APXvYqyeSw31DSoMsVo1tGcVhk/TW2SRv/VBLC1ScXJUSxOqdCQ+CHeLEYjUrgNXmb35TLEgo95z3NVp92YSiJflkKE=
-X-Received: by 2002:adf:ec4c:: with SMTP id w12mr13693493wrn.124.1579724522583;
- Wed, 22 Jan 2020 12:22:02 -0800 (PST)
+        Wed, 22 Jan 2020 15:23:16 -0500
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 6D2504C98;
+        Wed, 22 Jan 2020 15:23:15 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 22 Jan 2020 15:23:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm2; bh=iCREW/fk9MXtBc1CDyt5PE2Xmf
+        HKzF0QFcyt+33Jfi0=; b=K3ZCUuGUgkv4kADpbYe++o4F4yI3RRljGusBAunDNK
+        EtU51fWdraKt8OxNFwTCtlcePwjEQkolxJGLkbFNWB8lq8akPDaJIZsV7pYmD60o
+        opGwHXMdDik5DSEU4nKrbLR++ULGPv1Ar3CXXi/K4+oH6Ru85dn3Fkl9qu+eADHN
+        uBJJfWzC7HXGVK4Kz5+Ug3nhgx0IFv2ixyGQGPbGfr9pCeNaR67CCFpSKS9SIc0c
+        whx53WDKga9SuNGfAjgG79oHEcfU6lwi0ramZ7TT5Zkis+wpqsQjMV823n7siTjJ
+        UebwIdADO6Yekpq2Yqu3oCsq6NrwJq4zNqX5R7THTY7Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=iCREW/fk9MXtBc1CD
+        yt5PE2XmfHKzF0QFcyt+33Jfi0=; b=E3TupMbrSibGT67HZDcrBQ3mU9qZZvjn0
+        c7HZj2TIh4+WDQDYcm/gNGzjBfxEkdK6eLbjSZJkK7PUoy1ebMpf+MALQvFmPiLN
+        azJKJAr1i7GtdB6dEvTr7W/i+lP85xPT5038pmioT8c9kI5atVln7dz6EBpL+xRv
+        5/ZJ7+sJHTGDE/SWl8Mi4eJYfDK1yorAReY7YweOvbbNJ7QviosYBXjeU9lErayn
+        +kdPPmNPInEtN1HCWqB9km6Aptu9C9wn/mExAbmj0yEiyxjHtUcp1pn7oog4HeLB
+        E6aRxaD7MuX2URW/PmgoB/O80Ea29xRhuZx/acqBGSAoKf2BpcLBg==
+X-ME-Sender: <xms:M68oXjSmvR7hNg523R54-Ov_6anjVYjvqIPoMFRmFD-PTvNoIL9x4w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrvddtgddufeduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucgfrhhlucfvnfffucdljedtmdenucfjughrpefhvf
+    fufffkofgggfestdekredtredttdenucfhrhhomhepffgrnhhivghlucgiuhcuoegugihu
+    segugihuuhhurdighiiiqeenucfkphepudelledrvddtuddrieegrddvnecuvehluhhsth
+    gvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepugiguhesugiguhhuuhdr
+    giihii
+X-ME-Proxy: <xmx:M68oXmrk8Cytp3i1k989SxTLuDt8zeXPcJ0Nu33koRHANeqt6pbtHQ>
+    <xmx:M68oXte5QBggHn8VHoFvoqFpbjsUO1uj7vcHOUML8IVdfCGblWZoxA>
+    <xmx:M68oXhiTI9L31a0SkR_Ikv9D5Tp3s6nWU1JZMzZ7JJFImEVrXbxq8A>
+    <xmx:M68oXh_z46NSfhyNrt-gBKPn0oR-BkBjXp6jkLG0gwqlNNs95bJjPQ>
+Received: from dlxu-fedora-R90QNFJV.thefacebook.com (unknown [199.201.64.2])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 602363280064;
+        Wed, 22 Jan 2020 15:23:12 -0500 (EST)
+From:   Daniel Xu <dxu@dxuuu.xyz>
+To:     bpf@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
+        songliubraving@fb.com, yhs@fb.com, andriin@fb.com
+Cc:     Daniel Xu <dxu@dxuuu.xyz>, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, peterz@infradead.org, mingo@redhat.com,
+        acme@kernel.org
+Subject: [PATCH v2 bpf-next 0/3] Add bpf_perf_prog_read_branches() helper
+Date:   Wed, 22 Jan 2020 12:22:17 -0800
+Message-Id: <20200122202220.21335-1-dxu@dxuuu.xyz>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-References: <20200121135540.165798-1-chenzhou10@huawei.com>
-In-Reply-To: <20200121135540.165798-1-chenzhou10@huawei.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Wed, 22 Jan 2020 15:21:48 -0500
-Message-ID: <CADnq5_OeoTqpf5Rhtwac8gJ_8P5rUKYhrhRDC-5BgHt0WUYFnw@mail.gmail.com>
-Subject: Re: [PATCH -next 00/14] drm/amdgpu: remove unnecessary conversion to bool
-To:     Chen Zhou <chenzhou10@huawei.com>
-Cc:     "Deucher, Alexander" <alexander.deucher@amd.com>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Chunming Zhou <David1.Zhou@amd.com>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "Kuehling, Felix" <Felix.Kuehling@amd.com>,
-        Tao Zhou <tao.zhou1@amd.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Hawking Zhang <Hawking.Zhang@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 11:08 AM Chen Zhou <chenzhou10@huawei.com> wrote:
->
-> This patch series remove unnecessary conversion to bool in dir
-> drivers/gpu/drm/amd/amdgpu/, which is detected by coccicheck.
+Branch records are a CPU feature that can be configured to record
+certain branches that are taken during code execution. This data is
+particularly interesting for profile guided optimizations. perf has had
+branch record support for a while but the data collection can be a bit
+coarse grained.
 
-Thanks for the patches.  Already applied this patch:
-https://patchwork.freedesktop.org/series/72281/#rev2
-which covers these.
+We (Facebook) have seen in experiments that associating metadata with
+branch records can improve results (after postprocessing). We generally
+use bpf_probe_read_*() to get metadata out of userspace. That's why bpf
+support for branch records is useful.
 
-Alex
+Aside from this particular use case, having branch data available to bpf
+progs can be useful to get stack traces out of userspace applications
+that omit frame pointers.
 
->
-> Chen Zhou (14):
->   drm/amdgpu: remove unnecessary conversion to bool in mmhub_v1_0.c
->   drm/amdgpu: remove unnecessary conversion to bool in vega10_ih.c
->   drm/amdgpu: remove unnecessary conversion to bool in navi10_ih.c
->   drm/amdgpu: remove unnecessary conversion to bool in gfx_v10_0.c
->   drm/amdgpu: remove unnecessary conversion to bool in sdma_v5_0.c
->   drm/amdgpu: remove unnecessary conversion to bool in athub_v1_0.c
->   drm/amdgpu: remove unnecessary conversion to bool in amdgpu_acp.c
->   drm/amdgpu: remove unnecessary conversion to bool in soc15.c
->   drm/amdgpu: remove unnecessary conversion to bool in nv.c
->   drm/amdgpu: remove unnecessary conversion to bool in mmhub_v9_4.c
->   drm/amdgpu: remove unnecessary conversion to bool in amdgpu_device.c
->   drm/amdgpu: remove unnecessary conversion to bool in athub_v2_0.c
->   drm/amdgpu: remove unnecessary conversion to bool in sdma_v4_0.c
->   drm/amdgpu: remove unnecessary conversion to bool in gfx_v9_0.c
->
->  drivers/gpu/drm/amd/amdgpu/amdgpu_acp.c    |  2 +-
->  drivers/gpu/drm/amd/amdgpu/amdgpu_device.c |  8 +++-----
->  drivers/gpu/drm/amd/amdgpu/athub_v1_0.c    |  4 ++--
->  drivers/gpu/drm/amd/amdgpu/athub_v2_0.c    |  4 ++--
->  drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c     |  4 ++--
->  drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c      |  4 ++--
->  drivers/gpu/drm/amd/amdgpu/mmhub_v1_0.c    |  4 ++--
->  drivers/gpu/drm/amd/amdgpu/mmhub_v2_0.c    |  4 ++--
->  drivers/gpu/drm/amd/amdgpu/mmhub_v9_4.c    |  4 ++--
->  drivers/gpu/drm/amd/amdgpu/navi10_ih.c     |  2 +-
->  drivers/gpu/drm/amd/amdgpu/nv.c            |  8 ++++----
->  drivers/gpu/drm/amd/amdgpu/sdma_v4_0.c     |  6 +++---
->  drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c     |  4 ++--
->  drivers/gpu/drm/amd/amdgpu/soc15.c         | 28 ++++++++++++++--------------
->  drivers/gpu/drm/amd/amdgpu/vega10_ih.c     |  2 +-
->  15 files changed, 43 insertions(+), 45 deletions(-)
->
-> --
-> 2.7.4
->
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+Changes in v2:
+- Change to a bpf helper instead of context access
+- Avoid mentioning Intel specific things
+
+Daniel Xu (3):
+  bpf: Add bpf_perf_prog_read_branches() helper
+  tools/bpf: Sync uapi header bpf.h
+  selftests/bpf: add bpf_perf_prog_read_branches() selftest
+
+ include/uapi/linux/bpf.h                      |  13 ++-
+ kernel/trace/bpf_trace.c                      |  31 +++++
+ tools/include/uapi/linux/bpf.h                |  13 ++-
+ .../selftests/bpf/prog_tests/perf_branches.c  | 106 ++++++++++++++++++
+ .../selftests/bpf/progs/test_perf_branches.c  |  39 +++++++
+ 5 files changed, 200 insertions(+), 2 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/perf_branches.c
+ create mode 100644 tools/testing/selftests/bpf/progs/test_perf_branches.c
+
+-- 
+2.21.1
+
