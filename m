@@ -2,379 +2,223 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63479C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD77C33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E49324680
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:55:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 196C22465A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:58:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lj73d7IP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729030AbgAVLzV (ORCPT
+        id S1729074AbgAVL6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 06:55:21 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:60634 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726094AbgAVLzU (ORCPT
+        Wed, 22 Jan 2020 06:58:32 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:33935 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726094AbgAVL6b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 06:55:20 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: aragua)
-        with ESMTPSA id C6214293996
-Message-ID: <65bff5ebbc7c463003896f6f931e87ae3d8c83ae.camel@collabora.com>
-Subject: Re: [PATCH] mfd / platform: cros_ec: Query EC protocol version if
- EC transitions between RO/RW
-From:   Fabien Lahoudere <fabien.lahoudere@collabora.com>
-To:     Yicheng Li <yichengli@google.com>
-Cc:     Yicheng Li <yichengli@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Date:   Wed, 22 Jan 2020 12:55:12 +0100
-In-Reply-To: <CAB8_tbHgZDTUjRzzEcaZCcorHDYrnbJV5+PHZmDz4ymXQ8_QTA@mail.gmail.com>
-References: <20191118200000.35484-1-yichengli@chromium.org>
-         <b5149024683189b78224f4c6639818e9d833e126.camel@collabora.com>
-         <CAB8_tbG8NSQyLZBizhiKFcfOszOhfi1FFoRAi9SLcFFRTuJDzw@mail.gmail.com>
-         <ed7667b85c9aa9465f1b4bb97b672aa1099572ee.camel@collabora.com>
-         <CAB8_tbHgZDTUjRzzEcaZCcorHDYrnbJV5+PHZmDz4ymXQ8_QTA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
+        Wed, 22 Jan 2020 06:58:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579694309;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=su9TSFBSfcBiqaUPe46LPGk0RwjvdHH7lRpjMEgdXY0=;
+        b=Lj73d7IP0FTZC9r5gXkTGQLNn3p2wOJpEK8VIxZDgWV5n1mJ2JkflPvf11QF0RZKTMkHdp
+        u7oYvbuwzXpcImR1QExgtTU8h+wsgaN6A1TXtIWw3YkK2sIj12EXFsAtUkqCCZZ1Fnd1Ra
+        0vbJg2p3IrAFEwWLX8AfDWJfsOu41Dc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-87-Od6CUF9OOGiXDAPqzbno1A-1; Wed, 22 Jan 2020 06:58:25 -0500
+X-MC-Unique: Od6CUF9OOGiXDAPqzbno1A-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1B7741005512;
+        Wed, 22 Jan 2020 11:58:22 +0000 (UTC)
+Received: from [10.36.117.205] (ovpn-117-205.ams2.redhat.com [10.36.117.205])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D3D3D5D9C9;
+        Wed, 22 Jan 2020 11:58:17 +0000 (UTC)
+Subject: Re: [PATCH RFC v1] mm: is_mem_section_removable() overhaul
+From:   David Hildenbrand <david@redhat.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Leonardo Bras <leonardo@linux.ibm.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Allison Randal <allison@lohutok.net>,
+        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        lantianyu1986@gmail.com,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+References: <20200117145233.GB19428@dhcp22.suse.cz>
+ <65606e2e-1cf7-de3b-10b1-33653cb41a52@redhat.com>
+ <20200117152947.GK19428@dhcp22.suse.cz>
+ <CAPcyv4hHHzdPp4SQ0sePzx7XEvD7U_B+vZDT00O6VbFY8kJqjw@mail.gmail.com>
+ <25a94f61-46a1-59a6-6b54-8cc6b35790d2@redhat.com>
+ <CAPcyv4jvmYRbX9i+1_LvHoTDGABadHbYH3NVkqczKsQ4fsf74g@mail.gmail.com>
+ <20200120074816.GG18451@dhcp22.suse.cz>
+ <a5f0bd8d-de5e-9f27-5c94-7746a3d20a95@redhat.com>
+ <20200121120714.GJ29276@dhcp22.suse.cz>
+ <a29b49b9-28ad-44fa-6c0b-90cd43902f29@redhat.com>
+ <20200122104230.GU29276@dhcp22.suse.cz>
+ <98b6c208-b4dd-9052-43f6-543068c649cc@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <816ddd66-c90b-76f1-f4a0-72fe41263edd@redhat.com>
+Date:   Wed, 22 Jan 2020 12:58:16 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <98b6c208-b4dd-9052-43f6-543068c649cc@redhat.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-With the patch applied,
-
-   root@debian:/src/ec# ./build/bds/util/ectool --name=cros_fp
-   reboot_ec                         
-   ioctl -1, errno 110 (Connection timed out), EC result 255
-   (<unknown>)
-   root@debian:/src/ec# ./build/bds/util/ectool --name=cros_fp version
-   RO version:    nocturne_fp_v2.2.64-58cf5974e
-   RW version:    nocturne_fp_v2.2.191-1d529566e
-   Firmware copy: RW
-   Build info:    nocturne_fp_v2.2.191-1d529566e 2019-11-01 20:30:58
-   @chromeos-ci-legacy-us-central1-b-x32-72-dltd
-   Tool version:  v2.0.3074-a5052d4e7 2020-01-16 10:23:05 debian@debian
-
-in that case we see that the firmware copy is RW after the reboot.
-
-Without the patch :
-
-   root@debian:/src/ec# ./build/bds/util/ectool --name=cros_fp
-   reboot_ec
-   ioctl -1, errno 110 (Connection timed out), EC result 255
-   (<unknown>)
-   root@debian:/src/ec# ./build/bds/util/ectool --name=cros_fp version
-   RO version:    nocturne_fp_v2.2.64-58cf5974e
-   RW version:    nocturne_fp_v2.2.191-1d529566e
-   Firmware copy: RO
-   Build info:    nocturne_fp_v2.2.64-58cf5974e 2018-10-01 19:11:56
-   @cros-beefy532-c2
-   Tool version:  v2.0.3074-a5052d4e7 2020-01-16 10:23:05 debian@debian
-root@debian:/src/ec#
-
-The firmware copy stays RO
-
-For me the patch works fine
-
-Tested-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
-
-Thanks
-
-Le mardi 21 janvier 2020 à 10:13 -0800, Yicheng Li a écrit :
-> Hi Fabien,
+On 22.01.20 11:54, David Hildenbrand wrote:
+> On 22.01.20 11:42, Michal Hocko wrote:
+>> On Wed 22-01-20 11:39:08, David Hildenbrand wrote:
+>>>>>> Really, the interface is flawed and should have never been merged in the
+>>>>>> first place. We cannot simply remove it altogether I am afraid so let's
+>>>>>> at least remove the bogus code and pretend that the world is a better
+>>>>>> place where everything is removable except the reality sucks...
+>>>>>
+>>>>> As I expressed already, the interface works as designed/documented and
+>>>>> has been used like that for years.
+>>>>
+>>>> It seems we do differ in the usefulness though. Using a crappy interface
+>>>> for years doesn't make it less crappy. I do realize we cannot remove the
+>>>> interface but we can remove issues with the implementation and I dare to
+>>>> say that most existing users wouldn't really notice.
+>>>
+>>> Well, at least powerpc-utils (why this interface was introduced) will
+>>> notice a) performance wise and b) because more logging output will be
+>>> generated (obviously non-offlineable blocks will be tried to offline).
+>>
+>> I would really appreciate some specific example for a real usecase. I am
+>> not familiar with powerpc-utils worklflows myself.
+>>
 > 
-> error 4 is EC_RES_ACCESS_DENIED. I think it's because you are trying
-> to directly reboot to RO, which issues the command EC_CMD_REBOOT_EC
-> (0xD2)
-> https://chromium.git.corp.google.com/chromiumos/platform/ec/+/15edeaabe90c554d83faa4ff0c9143c66248e0e4/common/system.c#1495
-> and is ultimately disallowed since system_is_locked() is true: 
-> https://chromium.git.corp.google.com/chromiumos/platform/ec/+/15edeaabe90c554d83faa4ff0c9143c66248e0e4/common/system.c#551
+> Not an expert myself:
 > 
-> The way I test it is to run "ectool --name=cros_fp reboot_ec" without
-> the "RO" argument. This issues EC_CMD_REBOOT 
-> https://chromium.git.corp.google.com/chromiumos/platform/ec/+/15edeaabe90c554d83faa4ff0c9143c66248e0e4/util/ectool.c#1055
->  which is 0xD1. (Sorry I didn't notice the RO argument in the first
-> pass...)
+> https://github.com/ibm-power-utilities/powerpc-utils
 > 
-> With "ectool --name=cros_fp reboot_ec", we are telling cros_fp to do
-> an immediate reboot (to RW), however because of the issue outlined in
-> the commit description, it would hang in RO without this patch.
+> -> src/drmgr/drslot_chrp_mem.c
 > 
-> Thanks,
-> Yicheng
+> On request to remove some memory it will
 > 
+> a) Read "->removable" of all memory blocks ("lmb")
+> b) Check if the request can be fulfilled using the removable blocks
+> c) Try to offline the memory blocks by trying to offline it. If that
+> succeeded, trigger removeal of it using some hypervisor hooks.
 > 
+> Interestingly, with "AMS ballooning", it will already consider the
+> "removable" information useless (most probably, because of
+> non-migratable balloon pages that can be offlined - I assume the powerpc
+> code that I converted to proper balloon compaction just recently). a)
+> and b) is skipped.
 > 
-> On Mon, Jan 20, 2020 at 3:16 AM Fabien Lahoudere <
-> fabien.lahoudere@collabora.com> wrote:
-> > Hi Yicheng,
-> > 
-> > Thanks for your quick answer.
-> > 
-> > I updated the firmware after my first email on friday.
-> > Now the version is correct:
-> > 
-> >    # ectool version --name=cros_fp
-> >    RO version:    nocturne_fp_v2.2.64-58cf5974e
-> >    RW version:    nocturne_fp_v2.2.191-1d529566e
-> >    Firmware copy: RW
-> >    Build info:    nocturne_fp_v2.2.191-1d529566e 2019-11-01
-> > 20:30:58
-> >    @chromeos-ci-legacy-us-central1-b-x32-72-dltd
-> >    Tool version:  v2.0.3031-9e0f24fad 2020-01-13 06:11:02
-> > @chromeos-ci-
-> >    legacy-us-east1-d-x32-89-i09h
-> > 
-> > The result does not change. This is the console output after I sent
-> > the
-> > reboot command.
-> > 
-> >    $ ectool name=cros_fp output
-> >    ...
-> >    [250664.176204 HC 0xa9]
-> >    [250664.176287 HC 0xa9 err 1]
-> >    [250664.177413 HC 0x67]
-> >    [250664.177489 HC 0x67 err 9]
-> >    [250664.178434 HC 0x02]
-> >    [250664.180308 HC Suppressed: 0x97=127 0x98=138 0x115=0]
-> >    [250664.477987 HC 0x01]
-> >    [250892.898421 HC 0x02]
-> >    [250892.900447 HC 0x07]
-> >    [250892.901286 HC 0x0b]
-> >    [250902.139053 HC 0x02]
-> >    [250902.141059 HC 0x07]
-> >    [250902.141847 HC 0x0b]
-> >    [250902.142988 HC 0xd2]
-> >    [250902.143072 Executing host reboot command 1]
-> >    [250902.143176 HC 0xd2 err 4]
-> >    [250908.838254 HC 0x02]
-> >    [250908.840474 HC 0x07]
-> >    [250908.841391 HC 0x0b]
-> > 
-> > it seems we have an error when executing the 0zd2 command.
-> > 
-> > Any idea what is error 4?
-> > 
-> > Thanks
-> > 
-> > Fabien
-> > 
-> > Le jeudi 16 janvier 2020 à 05:04 -0800, Yicheng Li a écrit :
-> > > Hi Fabien,
-> > > 
-> > > First, you need the new firmware which has RW 2.2.191 instead of
-> > > 2.2.110. It's available in release M80. The old firmware you were
-> > > using does not have the RO/RW protocol incompatibility problem
-> > > because RW 2.2.110 still only support versions 0 and 1 of
-> > > EC_CMD_GET_NEXT_EVENT, same as RO 2.2.64. RW 2.2.191 has version
-> > 2 of
-> > > EC_CMD_GET_NEXT_ EVENT, hence the issue described in the commit
-> > > message.
-> > > 
-> > > With RW 2.2.191, if the kernal does not have this patch,
-> > rebooting
-> > > cros_fp will leave you in an infinite loop in RO, as described in
-> > the
-> > > commit message. This patch solves the problem and you should be
-> > in RW
-> > > after the reboot. You can see more details on the commands sent
-> > to
-> > > cros_fp during RO if you have cros_fp.log 
-> > > 
-> > > Let me know if you have other questions. Thanks!
-> > > 
-> > > Best,
-> > > Yicheng
-> > > 
-> > > 
-> > > On Thu, Jan 16, 2020, 4:27 AM Fabien Lahoudere <
-> > > fabien.lahoudere@collabora.com> wrote:
-> > > > Hi,
-> > > > 
-> > > > I tried to test that patch but I cannot switch to RO firmware.
-> > > > I do the following steps:
-> > > > 
-> > > > root@debian:/sys/class/chromeos/cros_fp# cat version 
-> > > > RO version:    nocturne_fp_v2.2.64-58cf5974e
-> > > > RW version:    nocturne_fp_v2.2.110-b936c0a3c
-> > > > Firmware copy: RW
-> > > > Build info:    nocturne_fp_v2.2.110-b936c0a3c 2018-11-02
-> > 14:16:46
-> > > > @swarm-cros-461
-> > > > Chip vendor:   stm
-> > > > Chip name:     stm32h7x3
-> > > > Chip revision: 
-> > > > Board version: EC error 1
-> > > > root@debian:/sys/class/chromeos/cros_fp# echo ro > reboot
-> > > > root@debian:/sys/class/chromeos/cros_fp# cat version 
-> > > > RO version:    nocturne_fp_v2.2.64-58cf5974e
-> > > > RW version:    nocturne_fp_v2.2.110-b936c0a3c
-> > > > Firmware copy: RW
-> > > > Build info:    nocturne_fp_v2.2.110-b936c0a3c 2018-11-02
-> > 14:16:46
-> > > > @swarm-cros-461
-> > > > Chip vendor:   stm
-> > > > Chip name:     stm32h7x3
-> > > > Chip revision: 
-> > > > Board version: EC error 1
-> > > > root@debian:/sys/class/chromeos/cros_fp#
-> > > > 
-> > > > We see here that cros_fp is still RW.
-> > > > 
-> > > > I also tried with:
-> > > > 
-> > > > debian@debian:/src/ec$ sudo build/bds/util/ectool --
-> > name=cros_fp
-> > > > reboot_ec RO
-> > > > debian@debian:/src/ec$ sudo build/bds/util/ectool --
-> > name=cros_fp
-> > > > version     
-> > > > RO version:    nocturne_fp_v2.2.64-58cf5974e
-> > > > RW version:    nocturne_fp_v2.2.110-b936c0a3c
-> > > > Firmware copy: RW
-> > > > Build info:    nocturne_fp_v2.2.110-b936c0a3c 2018-11-02
-> > 14:16:46
-> > > > @swarm-cros-461
-> > > > Tool version:  v2.0.3074-a5052d4e7 2020-01-16 10:23:05 
-> > > > debian@debian
-> > > > debian@debian:/src/ec$
-> > > > 
-> > > > with the same result.
-> > > > 
-> > > > Can you decribe us steps you follow to test that patch?
-> > > > 
-> > > > Thanks
-> > > > 
-> > > > Fabien
-> > > > 
-> > > > Le lundi 18 novembre 2019 à 12:00 -0800, Yicheng Li a écrit :
-> > > > > RO and RW of EC may have different EC protocol version. If EC
-> > > > > transitions
-> > > > > between RO and RW, but AP does not reboot (this is true for
-> > > > > fingerprint
-> > > > > microcontroller / cros_fp, but not true for main ec /
-> > cros_ec),
-> > > > the
-> > > > > AP
-> > > > > still uses the protocol version queried before transition,
-> > which
-> > > > can
-> > > > > cause problems. In the case of fingerprint microcontroller,
-> > this
-> > > > > causes
-> > > > > AP to send the wrong version of EC_CMD_GET_NEXT_EVENT to RO
-> > in
-> > > > the
-> > > > > interrupt handler, which in turn prevents RO to clear the
-> > > > interrupt
-> > > > > line to AP, in an infinite loop.
-> > > > > 
-> > > > > Once an EC_HOST_EVENT_INTERFACE_READY is received, we know
-> > that
-> > > > there
-> > > > > might have been a transition between RO and RW, so re-query
-> > the
-> > > > > protocol.
-> > > > > 
-> > > > > Signed-off-by: Yicheng Li <yichengli@chromium.org>
-> > > > > 
-> > > > > Change-Id: Ib58032ff4a8e113bdbd07212e8aff42807afff38
-> > > > > Series-to: LKML <linux-kernel@vger.kernel.org>
-> > > > > Series-cc: Benson Leung <bleung@chromium.org>, Enric Balletbo
-> > i
-> > > > Serra
-> > > > > <enric.balletbo@collabora.com>, Gwendal Grignou <
-> > > > gwendal@chromium.org
-> > > > > >
-> > > > > ---
-> > > > >  drivers/platform/chrome/cros_ec.c           | 24
-> > > > > +++++++++++++++++++++
-> > > > >  include/linux/platform_data/cros_ec_proto.h |  1 +
-> > > > >  2 files changed, 25 insertions(+)
-> > > > > 
-> > > > > diff --git a/drivers/platform/chrome/cros_ec.c
-> > > > > b/drivers/platform/chrome/cros_ec.c
-> > > > > index 9b2d07422e17..0c910846d99d 100644
-> > > > > --- a/drivers/platform/chrome/cros_ec.c
-> > > > > +++ b/drivers/platform/chrome/cros_ec.c
-> > > > > @@ -104,6 +104,23 @@ static int cros_ec_sleep_event(struct
-> > > > > cros_ec_device *ec_dev, u8 sleep_event)
-> > > > >       return ret;
-> > > > >  }
-> > > > >  
-> > > > > +static int cros_ec_ready_event(struct notifier_block *nb,
-> > > > > +     unsigned long queued_during_suspend, void *_notify)
-> > > > > +{
-> > > > > +     struct cros_ec_device *ec_dev = container_of(nb, struct
-> > > > > cros_ec_device,
-> > > > > +                                                 
-> > > > notifier_ready);
-> > > > > +     u32 host_event = cros_ec_get_host_event(ec_dev);
-> > > > > +
-> > > > > +     if (host_event &
-> > > > > EC_HOST_EVENT_MASK(EC_HOST_EVENT_INTERFACE_READY)) {
-> > > > > +             mutex_lock(&ec_dev->lock);
-> > > > > +             cros_ec_query_all(ec_dev);
-> > > > > +             mutex_unlock(&ec_dev->lock);
-> > > > > +             return NOTIFY_OK;
-> > > > > +     } else {
-> > > > > +             return NOTIFY_DONE;
-> > > > > +     }
-> > > > > +}
-> > > > > +
-> > > > >  /**
-> > > > >   * cros_ec_register() - Register a new ChromeOS EC, using
-> > the
-> > > > > provided info.
-> > > > >   * @ec_dev: Device to register.
-> > > > > @@ -201,6 +218,13 @@ int cros_ec_register(struct
-> > cros_ec_device
-> > > > > *ec_dev)
-> > > > >               dev_dbg(ec_dev->dev, "Error %d clearing sleep
-> > event
-> > > > to
-> > > > > ec",
-> > > > >                       err);
-> > > > >  
-> > > > > +     /* Register the notifier for
-> > EC_HOST_EVENT_INTERFACE_READY
-> > > > > event. */
-> > > > > +     ec_dev->notifier_ready.notifier_call =
-> > cros_ec_ready_event;
-> > > > > +     err = blocking_notifier_chain_register(&ec_dev-
-> > > > >event_notifier,
-> > > > > +                                            &ec_dev-
-> > > > > >notifier_ready);
-> > > > > +     if (err < 0)
-> > > > > +             dev_warn(ec_dev->dev, "Failed to register
-> > > > notifier\n");
-> > > > > +
-> > > > >       dev_info(dev, "Chrome EC device registered\n");
-> > > > >  
-> > > > >       return 0;
-> > > > > diff --git a/include/linux/platform_data/cros_ec_proto.h
-> > > > > b/include/linux/platform_data/cros_ec_proto.h
-> > > > > index 0d4e4aaed37a..9840408c0b01 100644
-> > > > > --- a/include/linux/platform_data/cros_ec_proto.h
-> > > > > +++ b/include/linux/platform_data/cros_ec_proto.h
-> > > > > @@ -161,6 +161,7 @@ struct cros_ec_device {
-> > > > >       int event_size;
-> > > > >       u32 host_event_wake_mask;
-> > > > >       u32 last_resume_result;
-> > > > > +     struct notifier_block notifier_ready;
-> > > > >  
-> > > > >       /* The platform devices used by the mfd driver */
-> > > > >       struct platform_device *ec;
-> > > > 
-> > 
+> Returning "yes" on all blocks will make them handle it just like if "AMS
+> ballooning" is active. So any memory block will be tried. Should work
+> but will be slower if no ballooning is active.
+> 
+
+On lsmem:
+
+https://www.ibm.com/support/knowledgecenter/linuxonibm/com.ibm.linux.z.lgdd/lgdd_r_lsmem_cmd.html
+
+"
+Removable
+    yes if the memory range can be set offline, no if it cannot be set
+offline. A dash (-) means that the range is already offline. The kernel
+method that identifies removable memory ranges is heuristic and not
+exact. Occasionally, memory ranges are falsely reported as removable or
+falsely reported as not removable.
+"
+
+Usage of lsmem paird with chmem:
+
+https://access.redhat.com/solutions/3937181
+
+
+Especially interesting for IBM z Systems, whereby memory
+onlining/offlining will trigger the actual population of memory in the
+hypervisor. So if an admin wants to offline some memory (to give it back
+to the hypervisor), it would use lsmem to identify such blocks first,
+instead of trying random blocks until one offlining request succeeds.
+
+E.g., documented in
+
+https://books.google.de/books?id=1UEhDQAAQBAJ&pg=PA117&lpg=PA117&dq=lsmem+removable&source=bl&ots=OzMfU6Gbzu&sig=ACfU3U2IfH0eTVJs0qu50FdkysA3iC0elw&hl=de&sa=X&ved=2ahUKEwjQpdXQkpfnAhVOzqQKHTN4BsoQ6AEwBXoECAoQAQ#v=onepage&q=lsmem%20removable&f=false
+
+
+So I still think that the interface is useful and is getting used in
+real life. Users tolerate false positives/negatives.
+
+-- 
+Thanks,
+
+David / dhildenb
 
