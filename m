@@ -2,208 +2,240 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34FC5C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 090C5C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:45:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F230920678
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:45:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SUl/bopx"
+	by mail.kernel.org (Postfix) with ESMTP id D35FE20678
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:45:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729281AbgAVLpp (ORCPT
+        id S1729351AbgAVLps (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 06:45:45 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:37807 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726094AbgAVLpo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 06:45:48 -0500
+Received: from foss.arm.com ([217.140.110.172]:55452 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729151AbgAVLpo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 Jan 2020 06:45:44 -0500
-Received: by mail-lj1-f193.google.com with SMTP id o13so6438822ljg.4
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 03:45:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Y5u9m/mXXv3qGtttJOr+ZQn1NxnHC+oWL5hWs/7rdpQ=;
-        b=SUl/bopx2bJT7lmPLWd3o6amTlItaE15S5QUQfpwhG6UqVhYZ2Jg2lvsdxAxz/6qC9
-         Ich5ivJBKveIjiwnfrUDkpXtD/imTj/icyVWY8pSc1Rwvly1XEFvO++i/UqDXwN+babS
-         9RCM/fSTAK0LsLdHswNo3m4uFnjF9XLoLLIsbSAzdhZUylVamYpnfBh3vdMOyB70VR8Z
-         Amw8oBRcU/K9bIdyzw97J0CAuwdFIA4Jzz1wejySdc+kLIhuwDoU04KPhg7MAdLmSvf2
-         AFX8yOIOTYA3NR+XYKUSWizt04FzuJcoi1ZJeJwmg9i7GnHqYozyO3DA7e4xvN8DWcKB
-         pvYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Y5u9m/mXXv3qGtttJOr+ZQn1NxnHC+oWL5hWs/7rdpQ=;
-        b=CLPNNxoxBhXJwGeAs113FLuf76GtbXX07LAn2ou6NfoTb2AAxts6qU3wNuTk7zg56R
-         gKRC9YKKnf9tFE4t2GHMjbo2aL0J62ExXmp0UPy2kwVGVuJwvByMhjrrBK7LC+mRHm7O
-         I4aJdNE1TFBtvDXmZvw1eEPrgrSfSLnedee+e0i58kOeLDp3pZRqubz/j8e1lO0K/7T/
-         qgjT4DJvMrTIVZjhSRQnv70cau/A3fie75fv8ndmX3T90Cou0b86p6Pe1F99RZwCbbvu
-         pBFpOtKIjelAh2k7Pbmz8KLWe4yOH2B7dqnsJnjxhW4h1zE9UDTvnUV/vlTl4EV5nIJd
-         tQ7w==
-X-Gm-Message-State: APjAAAVUPI1YdPjAT6Tks4aJD7OJF9w4oCXGlY84DoO+HBiSxnXbN5ls
-        WjqU3izlgfR03aiCvA7bBU60VOj4YbSMXJv6DWTXlg==
-X-Google-Smtp-Source: APXvYqxepdt1nLuP0XWlvF18+vx5QEljXf8IakWWWuD2ONWwD2IDzKv7dxNfcNDOYiBfRJoQtOTepLrUdy4OOP5K0r0=
-X-Received: by 2002:a2e:8698:: with SMTP id l24mr18861072lji.94.1579693541815;
- Wed, 22 Jan 2020 03:45:41 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 545001FB;
+        Wed, 22 Jan 2020 03:45:44 -0800 (PST)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3F0CF3F52E;
+        Wed, 22 Jan 2020 03:45:42 -0800 (PST)
+Date:   Wed, 22 Jan 2020 11:45:39 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Patrick Bellasi <patrick.bellasi@matbug.net>
+Cc:     Valentin Schneider <valentin.schneider@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        qperret@google.com, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH] sched/rt: Add a new sysctl to control uclamp_util_min
+Message-ID: <20200122114539.jbk6txpbezva2swv@e107158-lin.cambridge.arm.com>
+References: <20191220164838.31619-1-qais.yousef@arm.com>
+ <20200108185650.GA9635@darkstar>
+ <026e46e4-5d09-6260-0fa7-e365b0795c9a@arm.com>
+ <20200109092137.GA2811@darkstar>
+ <20200114213403.cur6gydan6kmplqb@e107158-lin.cambridge.arm.com>
+ <20200122101944.GA12533@darkstar>
 MIME-Version: 1.0
-References: <20200115035920.54451-1-alex.kogan@oracle.com>
-In-Reply-To: <20200115035920.54451-1-alex.kogan@oracle.com>
-From:   Lihao Liang <lihaoliang@google.com>
-Date:   Wed, 22 Jan 2020 11:45:30 +0000
-Message-ID: <CAC4j=Y8rCeTX9oKKbh+dCdTP8Ud4hW1ybu+iE7t_nxMSYBOR5w@mail.gmail.com>
-Subject: Re: [PATCH v9 0/5] Add NUMA-awareness to qspinlock
-To:     Alex Kogan <alex.kogan@oracle.com>
-Cc:     linux@armlinux.org.uk, peterz@infradead.org, mingo@redhat.com,
-        will.deacon@arm.com, arnd@arndb.de, longman@redhat.com,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
-        hpa@zytor.com, x86@kernel.org, guohanjun@huawei.com,
-        jglauber@marvell.com, dave.dice@oracle.com,
-        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
-        Will Deacon <will@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200122101944.GA12533@darkstar>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
+On 01/22/20 11:19, Patrick Bellasi wrote:
+> On 14-Jan 21:34, Qais Yousef wrote:
+> > On 01/09/20 10:21, Patrick Bellasi wrote:
+> > > That's not entirely true. In that patch we introduce cgroup support
+> > > but, if you look at the code before that patch, for CFS tasks there is
+> > > only:
+> > >  - CFS task-specific values (min,max)=(0,1024) by default
+> > >  - CFS system-wide tunables (min,max)=(1024,1024) by default
+> > > and a change on the system-wide tunable allows for example to enforce
+> > > a uclamp_max=200 on all tasks.
+> > > 
+> > > A similar solution can be implemented for RT tasks, where we have:
+> > >  - RT task-specific values (min,max)=(1024,1024) by default
+> > >  - RT system-wide tunables (min,max)=(1024,1024) by default
+> > >  and a change on the system-wide tunable allows for example to enforce
+> > >  a uclamp_min=200 on all tasks.
+> > 
+> > I feel I'm already getting lost in the complexity of the interaction here. Do
+> > we really need to go that path?
+> > 
+> > So we will end up with a default system wide for all tasks + a CFS system wide
+> > default + an RT system wide default?
+> > 
+> > As I understand it, we have a single system wide default now.
+> 
+> Right now we have one system wide default and that's both for all
+> CFS/RT tasks, when cgroups are not in use, or for root group and
+> autogroup CFS/RT tasks, when cgroups are in use.
+> 
+> What I'm proposing is to limit the usage of the current system wide
+> default to CFS tasks only, while we add a similar new one specifically
+> for RT tasks.
 
-On Wed, Jan 22, 2020 at 10:28 AM Alex Kogan <alex.kogan@oracle.com> wrote:
->
-> Summary
-> -------
->
-> Lock throughput can be increased by handing a lock to a waiter on the
-> same NUMA node as the lock holder, provided care is taken to avoid
-> starvation of waiters on other NUMA nodes. This patch introduces CNA
-> (compact NUMA-aware lock) as the slow path for qspinlock. It is
-> enabled through a configuration option (NUMA_AWARE_SPINLOCKS).
->
+This change of behavior will be user-visible. I doubt anyone depends on it yet,
+so if we want to change it now is the time.
 
-Thanks for your patches. The experimental results look promising!
+The main issue I see here is that the system wide are *always* enforced. They
+guarantee a global restriction. Which you're proposing to split into CFS and RT
+system wide global restrictions.
 
-I understand that the new CNA qspinlock uses randomization to achieve
-long-term fairness, and provides the numa_spinlock_threshold parameter
-for users to tune. As Linux runs extremely diverse workloads, it is not
-clear how randomization affects its fairness, and how users with
-different requirements are supposed to tune this parameter.
+But what I am proposing here is setting the *default* fork value of RT uclamp
+min. Which is currently hardcoded to uclamp_none(UCLAMP_MAX) = 1024.
 
-To this end, Will and I consider it beneficial to be able to answer the
-following question:
+I think the 2 concepts are different to a system wide RT control. Or I am still
+confused about your vision of how this should really work. I don't see how what
+you propose could solve my problem.
 
-With different values of numa_spinlock_threshold and
-SHUFFLE_REDUCTION_PROB_ARG, how long do threads running on different
-sockets have to wait to acquire the lock? This is particularly relevant
-in high contention situations when new threads keep arriving on the same
-socket as the lock holder.
+For example:
 
-In this email, I try to provide some formal analysis to address this
-question. Let's assume the probability for the lock to stay on the
-same socket is *at least* p, which corresponds to the probability for
-the function probably(unsigned int num_bits) in the patch to return *false*,
-where SHUFFLE_REDUCTION_PROB_ARG is passed as the value of num_bits to the
-function.
+	sysctl_sched_uclamp_util_min = 1024
 
-I noticed that the default value of p in the patch is 1/2^7 = 0.01, which is
-somewhat counter-intuitive to me. If we switch sockets 99 times out of 100,
-then fairness should be obvious. What I expected is a (much) higher value of
-p, which would likely result in better performance, while having some degree
-of fairness guarantee. Have you run some experiments by setting a lower
-SHUFFLE_REDUCTION_PROB_ARG instead of the default value 7? It would be very
-helpful to know the performance numbers.
+means that tasks can set their uclamp_min to [0:1024], but
 
-Now let's do some analysis:
+	sysctl_sched_uclamp_util_min = 800
 
-1. What is the probability P for the first thread on a different socket to
-acquire the lock after *at most* N consecutive local lock handovers?
+means that tasks can set their uclamp_min to [0:800]
 
-Note: N corresponds to the variable intra_node_handoff_threshold in the
-patch, which is set to value 1 << numa_spinlock_threshold. Default value
-is 1 << 16 = 64K.
+Which when splitting this to CFS and RT controls, they'd still mean control
+the possible range the tasks can use.
 
-Assuming mutual independence [1], we have P is equal to 1 - p^N, where p^N is
-the probability of N consecutive threads running on the socket where the lock
-was most recently acquired.
+But what I want here is that
 
-If p is 0.99, the probabilities of switching to a different socket after
-N local lock handovers are as follows:
+	sysctl_sched_rt_default_uclamp_util_min = 800
 
-63.4% (N = 100)
-86.6% (N = 200)
-99.3% (N = 500)
-99.996% (N = 1000)
-99.99999999999933% (N =  64K)
+Will set p->uclamp_min = 800 when a new RT task is forked and will stay like
+this until the user modifies it. And update all current RT tasks that are still
+using the default value to the new one when ever this changes.
 
-2. We can ask the same question as above for the k-th thread on a different
-socket from the lock holder. That is, what is the probability P for the k-th
-thread on a different socket to acquire the lock after *at most* N
-consecutive local lock handovers, assuming all these k threads in the queue
-are running on different sockets (the worst case scenario). The analysis is
-as follows (the case when k = 1 reduces to Question 1 above):
+If this value is outside the system wide allowed range; it'll be clamped
+correctly by uclamp_eff_get().
 
-The total probability P is the sum of Pi for i = 0, 1, ..., N, where Pi is
-the probability of having i *total* local lock handovers before the k-th
-thread on a different socket can acquire the lock.
+Note that the default fork values for CFS are (0, 1024) and we don't have a way
+to change this at the moment. Can be easily done if someone comes up with a use
+case for it.
 
-Pi can be calculated using formula Pi =  B_i_k * (p^i) * (1 - p)^k, where
+> 
+> At the end we will have two system wide defaults, not three.
+> 
+> > > > (Would we need CONFIG_RT_GROUP_SCHED for this? IIRC there's a few pain points
+> > > > when turning it on, but I think we don't have to if we just want things like
+> > > > uclamp value propagation?)
+> > > 
+> > > No, the current design for CFS tasks works also on !CONFIG_CFS_GROUP_SCHED.
+> > > That's because in this case:
+> > >   - uclamp_tg_restrict() returns just the task requested value
+> > >   - uclamp_eff_get() _always_ restricts the requested value considering
+> > >     the system defaults
+> > >  
+> > > > It's quite more work than the simple thing Qais is introducing (and on both
+> > > > user and kernel side).
+> > > 
+> > > But if in the future we will want to extend CGroups support to RT then
+> > > we will feel the pains because we do the effective computation in two
+> > > different places.
+> > 
+> > Hmm what you're suggesting here is that we want to have
+> > cpu.rt.uclamp.{min,max}? I'm not sure I can agree this is a good idea.
+> 
+> That's exactly what we already do for other controllers. For example,
+> if you look at the bandwidth controller, we have separate knobs for
+> CFS and RT tasks.
+> 
+> > It makes more sense to create a special group for all rt tasks rather than
+> > treat rt tasks in a cgroup differently.
+> 
+> Don't see why that should make more sense. This can work of course but
+> it would enforce a more strict configuration and usage of cgroups to
+> userspace.
 
--- B_i_k is the number of ways to put i balls into k buckets, representing
-all possible ways the i local handovers occurred in k different sockets.
-B_i_k is a multiset number and equal to (i + k - 1)! / (i! * (k-1)!) [2]
+It makes sense to me because cgroups offer a logical separation, and if tasks
+within the same group need to be treated differently then they're logically
+separated and need to be grouped differently consequently.
 
--- p^i is the probability of i local lock handovers
+The uclamp values are not RT only properties.
 
--- (1 - p)^k is the probability of k socket switchings
+I can see the convenience of doing it the way you propose though. Not sure
+I agree about the added complexity worth it.
 
-I've written a simple Python script to calculate the value of P.
-Let's look at some concrete examples and numbers.
+> 
+> I also have some doubths about this approach matching the delegation
+> model principles.
 
-When p = 0.99, k = 3 (e.g. a 4-socket system), P is equal to:
+I don't know about that TBH.
 
-8.5%   (N = 100)
-33.2% (N = 200)
-87.9% (N = 500)
-99.7% (N = 1000)
-99.99999999999937% (N = 64K)
+> 
+> > > Do note that a proper CGroup support requires that the system default
+> > > values defines the values for the root group and are consistently
+> > > propagated down the hierarchy. Thus we need to add a dedicated pair of
+> > > cgroup attributes, e.g. cpu.util.rt.{min.max}.
+> > > 
+> > > To recap, we don't need CGROUP support right now but just to add a new
+> > > default tracking similar to what we do for CFS.
+> > >
+> > > We already proposed such a support in one of the initial versions of
+> > > the uclamp series:
+> > >    Message-ID: <20190115101513.2822-10-patrick.bellasi@arm.com>
+> > >    https://lore.kernel.org/lkml/20190115101513.2822-10-patrick.bellasi@arm.com/
+> > 
+> > IIUC what you're suggesting is:
+> > 
+> > 	1. Use the sysctl to specify the default_rt_uclamp_min
+> > 	2. Enforce this value in uclamp_eff_get() rather than my sync logic
+> > 	3. Remove the current hack to always set
+> > 	   rt_task->uclamp_min = uclamp_none(UCLAMP_MAX)
+> 
+> Right, that's the essence...
+> 
+> > If I got it correctly I'd be happy to experiment with it if this is what
+> > you're suggesting. Otherwise I'm afraid I'm failing to see the crust of the
+> > problem you're trying to highlight.
+> 
+> ... from what your write above I think you got it right.
+> 
+> In my previous posting:
+> 
+>    Message-ID: <20200109092137.GA2811@darkstar>
+>    https://lore.kernel.org/lkml/20200109092137.GA2811@darkstar/
+> 
+> there is also the code snippet which should be good enough to extend
+> uclamp_eff_get(). Apart from that, what remains is:
 
-When p = 0.99, k = 7 (e.g. an 8-socket system), the values of P are:
+I still have my doubts this will achieve what I want, but hopefully will have
+time to experiment with this today. My worry is that this function enforces
+restrictions, but what I want to do is set a default. I still can't see how
+they are the same; which your answers hints they are.
 
-0.01% (N = 100)
-0.52% (N = 200)
-24.7% (N = 500)
-87.5% (N = 1000)
-99.3% (N = 1500)
-99.99999999999871% (N = 64K)
+> - to add the two new sysfs knobs for sysctl_sched_uclamp_util_{min,max}_rt
 
-I think this mathematical analysis would help users better understand the
-fairness property of the CNA qspinlock. One can use it to plot a graph with
-different values of p and N to tune the qspinlock for different platforms
-and workloads.
+See my answer above.
 
-Based on the analysis above, it may be useful to have
-SHUFFLE_REDUCTION_PROB_ARG as a tunable parameter as well. Setting
-SHUFFLE_REDUCTION_PROB_ARG to a lower value results in a higher value of p,
-which would likely increase the performance. Then we can set
-intra_node_handoff_threshold to have a bounded degree of fairness.
-For instance, a user may want P to be around 90% for N = 100 on a 8-core
-system. So they can set p = 0.9 and intra_node_handoff_threshold = ~150,
-based on our analysis that P =  91.9% for N = 100, and 99.99% for N = 200,
-when k = 7.
+> - make a call about how rt tasks in cgroups are clamped, a simple
+>   proposal is in the second snippet of my message above.
 
-I hope this helps and please let me know if you have any comments or
-if you spot any mistakes in our analysis.
+I'm not keen on changing how this works and it is outside of the scope of this
+patch anyway. Or at least I don't see how they are related yet.
 
-Best,
-Lihao.
+Thanks!
 
-References:
-[1] https://en.wikipedia.org/wiki/Independence_(probability_theory)#More_than_two_events
-[2] Theorem 2, https://en.wikipedia.org/wiki/Stars_and_bars_(combinatorics)
+--
+Qais Yousef
