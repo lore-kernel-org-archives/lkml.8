@@ -2,182 +2,92 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB78DC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 14:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67496C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 14:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7443F2465B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 14:54:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="U4RQaPc5"
+	by mail.kernel.org (Postfix) with ESMTP id 397132465B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 14:54:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726083AbgAVOyF (ORCPT
+        id S1726780AbgAVOyz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 09:54:05 -0500
-Received: from mailout3.samsung.com ([203.254.224.33]:39302 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbgAVOyF (ORCPT
+        Wed, 22 Jan 2020 09:54:55 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:38074 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725836AbgAVOyz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 09:54:05 -0500
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200122145402epoutp037368fb4f4d7d778e8e40bf44a0f21515~sPS9ZqLmB2123021230epoutp03N
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 14:54:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200122145402epoutp037368fb4f4d7d778e8e40bf44a0f21515~sPS9ZqLmB2123021230epoutp03N
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1579704842;
-        bh=4itLcJd9TovgkIJA4En20KBiCbGG4bMhv7WMq/yt9qs=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=U4RQaPc5GK99iRyuoOoQ86PvMPg6xZONm++S2v9H3QDPcr2RXbd/Q62zgzehQXVKv
-         75c40NYvV743+KMyPhHjyUb/GMCMl/g/FmWUcfUsAjC2No9A2q3tCSL2XGxCwFtfe0
-         FpVa3SyEHQr2Gw1x4KtsmxiCFRzokrFopo9RJN54=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-        20200122145402epcas5p4502ef8824947d257531b08ebb14484e1~sPS8506Za1067910679epcas5p4v;
-        Wed, 22 Jan 2020 14:54:02 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        05.FC.19629.A02682E5; Wed, 22 Jan 2020 23:54:02 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200122145401epcas5p28907c5b3800ca5410955a856bcd82c8e~sPS72sQu91038710387epcas5p2m;
-        Wed, 22 Jan 2020 14:54:01 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200122145401epsmtrp22cfbc217f006f370bdfa6a2d304687c8~sPS710jVu1347513475epsmtrp2V;
-        Wed, 22 Jan 2020 14:54:01 +0000 (GMT)
-X-AuditID: b6c32a4b-345ff70000014cad-2f-5e28620acae9
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        60.A8.10238.902682E5; Wed, 22 Jan 2020 23:54:01 +0900 (KST)
-Received: from sriramdash03 (unknown [107.111.85.29]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200122145358epsmtip174221b741edcd5e2af6c3e4345ad2752~sPS5vIs6s2722127221epsmtip1L;
-        Wed, 22 Jan 2020 14:53:58 +0000 (GMT)
-From:   "Sriram Dash" <sriram.dash@samsung.com>
-To:     "'Faiz Abbas'" <faiz_abbas@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-can@vger.kernel.org>
-Cc:     <catalin.marinas@arm.com>, <mark.rutland@arm.com>,
-        <robh+dt@kernel.org>, <davem@davemloft.net>, <mkl@pengutronix.de>,
-        <wg@grandegger.com>, <dmurphy@ti.com>, <nm@ti.com>,
-        <t-kristo@ti.com>
-In-Reply-To: <20200122080310.24653-3-faiz_abbas@ti.com>
-Subject: RE: [PATCH 2/3] can: m_can: m_can_platform: Add support for
- enabling transceiver through the STB line
-Date:   Wed, 22 Jan 2020 20:23:57 +0530
-Message-ID: <002101d5d133$c8352100$589f6300$@samsung.com>
+        Wed, 22 Jan 2020 09:54:55 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iuHP9-0007Pr-Vz; Wed, 22 Jan 2020 15:54:52 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 9BF441C1A46;
+        Wed, 22 Jan 2020 15:54:51 +0100 (CET)
+Date:   Wed, 22 Jan 2020 14:54:51 -0000
+From:   "tip-bot2 for Jules Irenge" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/core] hrtimer: Add missing sparse annotation for __run_timer()
+Cc:     Jules Irenge <jbi.octave@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200120224347.51843-1-jbi.octave@gmail.com>
+References: <20200120224347.51843-1-jbi.octave@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQL34jRp8ckpa4Ru5doAY/bQkCNITwHmOWfLAkdTAPClkTT7kA==
-Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrIKsWRmVeSWpSXmKPExsWy7bCmui5Xkkacwet3/Bbvl/UwWsw538Ji
-        Mf/IOVaL7tNbWC2+LG1mttj0+BqrxarvU5ktLu+aw2ax9PpFJov1i6awWBxbIGbx5sdZJovW
-        vUfYLZY87QBK3tvJ6sDvsWbeGkaPLStvMnl8vHSb0WPTqk42j81L6j36/xp4HL+xncnj8ya5
-        AI4oLpuU1JzMstQifbsErozmi43sBe/5Kt7vOc/cwNjF08XIySEhYCLxpvMYK4gtJLCbUaLv
-        uEYXIxeQ/YlR4v7EKewQzjdGiQ97ZzLCdCxY+p0FIrGXUaJpzX0o5xWjxMMTd8BmsQnoSpy9
-        0cQGkhAROMko8ejaSVYQh1ngMNCSjuVgVZwC5hJHf59kArGFBQok3n25wg5iswioSpz79Bxo
-        HwcHr4ClxKIuGZAwr4CgxMmZT1hAbGYBeYntb+cwQ5ykIPHz6TKwkSICThL9p3ewQdSISxz9
-        2cMMsldC4Bi7xMfnn9ggGlwkenshLpUQEJZ4dXwLO4QtJfH53V6ommyJy33PoRaUSMx4tZAF
-        wraXOHBlDgvIbcwCmhLrd+lD7OKT6P39hAkkLCHAK9HRJgRRrSrx6vZmqOnSEgfWnmaCsD0k
-        XvxawDyBUXEWks9mIflsFpIPZiEsW8DIsopRMrWgODc9tdi0wDgvtVyvODG3uDQvXS85P3cT
-        IzjhaXnvYNx0zucQowAHoxIPr4OlRpwQa2JZcWXuIUYJDmYlEd4FTapxQrwpiZVVqUX58UWl
-        OanFhxilOViUxHknsV6NERJITyxJzU5NLUgtgskycXBKNTC6Lf9kvLTv9UYliV8O3j3SNxr1
-        eop/CHy8bP3o0IPI37/Cghk+bNFLCH732cK6KurW38Rtpntabyy++71GsVRIs/Cv0vIz6of5
-        Jmocz/0xcVvphj0TrvIVqoYphcx3mdu0V0iSp8oz8O+PvS/d75+Zdk306woNjosTnv1VXDj5
-        27EER81iDbn3SizFGYmGWsxFxYkAnY/IZXQDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrEIsWRmVeSWpSXmKPExsWy7bCSnC5nkkacQccVVov3y3oYLeacb2Gx
-        mH/kHKtF9+ktrBZfljYzW2x6fI3VYtX3qcwWl3fNYbNYev0ik8X6RVNYLI4tELN48+Msk0Xr
-        3iPsFkuedgAl7+1kdeD3WDNvDaPHlpU3mTw+XrrN6LFpVSebx+Yl9R79fw08jt/YzuTxeZNc
-        AEcUl01Kak5mWWqRvl0CV0bzxUb2gvd8Fe/3nGduYOzi6WLk5JAQMJFYsPQ7SxcjF4eQwG5G
-        iQ9v17F3MXIAJaQlft7VhagRllj57zk7iC0k8IJR4s5SVRCbTUBX4uyNJjaQXhGBs4wSG24s
-        YgdxmAXOM0pMm/qLEWLqZkaJ3V9XMYG0cAqYSxz9fRLMFhbIk9i+qocVxGYRUJU49+k5I8hm
-        XgFLiUVdMiBhXgFBiZMzn7CAhJkF9CTaNjKChJkF5CW2v53DDHGcgsTPp8vApogIOEn0n97B
-        BlEjLnH0Zw/zBEbhWUgmzUKYNAvJpFlIOhYwsqxilEwtKM5Nzy02LDDMSy3XK07MLS7NS9dL
-        zs/dxAiOWS3NHYyXl8QfYhTgYFTi4XWw1IgTYk0sK67MPcQowcGsJMK7oEk1Tog3JbGyKrUo
-        P76oNCe1+BCjNAeLkjjv07xjkUIC6YklqdmpqQWpRTBZJg5OqQbGSfO0Px0N+dYZ4L7+2OSb
-        S56JTxDd9fk2j/kihvlGPkJHj7ruD0/YuFxg3cb62dbz1BY+Vb9vbP+y7Uj8jMq0Lx2vlEqN
-        zKs+GGx0vMT669AeGV2pU5mx7i+1d2gXC824kbHiKUfNo+DiW5zOsw9MFF3h84Hp7IRll2ZL
-        VT7eGP5nV7ldxpKcHUosxRmJhlrMRcWJAMWcZMnVAgAA
-X-CMS-MailID: 20200122145401epcas5p28907c5b3800ca5410955a856bcd82c8e
-X-Msg-Generator: CA
+Message-ID: <157970489138.396.2731472419371278003.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200122080213epcas5p46e361ac6fa299521c1bab3ab20862b46
-References: <20200122080310.24653-1-faiz_abbas@ti.com>
-        <CGME20200122080213epcas5p46e361ac6fa299521c1bab3ab20862b46@epcas5p4.samsung.com>
-        <20200122080310.24653-3-faiz_abbas@ti.com>
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: linux-can-owner@vger.kernel.org <linux-can-owner@vger.kernel.org> On
-> Behalf Of Faiz Abbas
-> Subject: [PATCH 2/3] can: m_can: m_can_platform: Add support for enabling
-> transceiver through the STB line
-> 
-> CAN transceivers on some boards have an STB (standby) line which can be
-> toggled to enable/disable the transceiver. Add support for enabling the
-> transceiver using a GPIO connected to the STB line.
-> 
+The following commit has been merged into the timers/core branch of tip:
 
-Looks good to me. 
-Other than Dan's concern on stb  as standby,
-Acked-by: Sriram Dash <sriram.dash@samsung.com>
+Commit-ID:     eb5a4d0a9ee976008d1add75e3d64545399e80a3
+Gitweb:        https://git.kernel.org/tip/eb5a4d0a9ee976008d1add75e3d64545399e80a3
+Author:        Jules Irenge <jbi.octave@gmail.com>
+AuthorDate:    Mon, 20 Jan 2020 22:43:47 
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Wed, 22 Jan 2020 15:50:11 +01:00
 
-> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-> ---
->  drivers/net/can/m_can/m_can_platform.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/drivers/net/can/m_can/m_can_platform.c
-> b/drivers/net/can/m_can/m_can_platform.c
-> index 38ea5e600fb8..b4e1423bd5d8 100644
-> --- a/drivers/net/can/m_can/m_can_platform.c
-> +++ b/drivers/net/can/m_can/m_can_platform.c
-> @@ -6,6 +6,7 @@
->  // Copyright (C) 2018-19 Texas Instruments Incorporated -
-http://www.ti.com/
-> 
->  #include <linux/platform_device.h>
-> +#include <linux/gpio/consumer.h>
-> 
->  #include "m_can.h"
-> 
-> @@ -57,6 +58,7 @@ static int m_can_plat_probe(struct platform_device
-*pdev)
-> {
->  	struct m_can_classdev *mcan_class;
->  	struct m_can_plat_priv *priv;
-> +	struct gpio_desc *stb;
->  	struct resource *res;
->  	void __iomem *addr;
->  	void __iomem *mram_addr;
-> @@ -111,6 +113,16 @@ static int m_can_plat_probe(struct platform_device
-> *pdev)
-> 
->  	m_can_init_ram(mcan_class);
-> 
-> +	stb = devm_gpiod_get_optional(&pdev->dev, "stb", GPIOD_OUT_HIGH);
-> +	if (IS_ERR(stb)) {
-> +		ret = PTR_ERR(stb);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(&pdev->dev,
-> +				"gpio request failed, ret %d\n", ret);
-> +
-> +		goto failed_ret;
-> +	}
-> +
->  	ret = m_can_class_register(mcan_class);
-> 
->  failed_ret:
-> --
-> 2.19.2
+hrtimer: Add missing sparse annotation for __run_timer()
 
+Sparse reports a warning at __run_hrtimer()
+|warning: context imbalance in __run_hrtimer() - unexpected unlock
 
+Add the missing must_hold() annotation.
+
+Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/20200120224347.51843-1-jbi.octave@gmail.com
+
+---
+ kernel/time/hrtimer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+index d8b62f9..3a609e7 100644
+--- a/kernel/time/hrtimer.c
++++ b/kernel/time/hrtimer.c
+@@ -1477,7 +1477,7 @@ EXPORT_SYMBOL_GPL(hrtimer_active);
+ static void __run_hrtimer(struct hrtimer_cpu_base *cpu_base,
+ 			  struct hrtimer_clock_base *base,
+ 			  struct hrtimer *timer, ktime_t *now,
+-			  unsigned long flags)
++			  unsigned long flags) __must_hold(&cpu_base->lock)
+ {
+ 	enum hrtimer_restart (*fn)(struct hrtimer *);
+ 	int restart;
