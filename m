@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D3EC33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A87E6C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 996222071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:17:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AB4A2071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 13:17:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579699057;
-	bh=9Ky4eerI2vkPmPs1MyU18huTmAOmuD+kfTOFo0H5Fi8=;
+	s=default; t=1579699062;
+	bh=WQaJF2syDMlQj8XPY5gV2vYZsl8ylFPtqD3oy2TLVdU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UQoyMX9Un99h/Jv27t+oF2PPNysLrDdV5dBgmlSDuiJxz9ES11xHZkK5uAS0mLBw1
-	 kWhCyDw+TQ5zg0nGLckdA3IAjAN603qO052HpSEt9hBMwezhXWruUAvfsnGWvJ3wBa
-	 ncmq/l0OH4Z0xeCkM78oOdT+MjXqKzKvCyMB7Lpw=
+	b=uxE0DHBo6ws/DVrICwM+uKvZ16/7PRSU5vuNXwVjy+YqS16ORXTqETR65+Vf22YFD
+	 iRZFDgP4cHihP12CxVtbjwYxGy0VMbJ3jWBuA9Hv6eqXU1nrR54Sou3Pi4r/H8FxYn
+	 acJNNqQSpC62OwHZZWkRKn4HXB6Llt2zQhucoRO4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbgAVNRg (ORCPT
+        id S1728057AbgAVNRl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 08:17:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33018 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 08:17:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725790AbgAVNRg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 08:17:36 -0500
+        id S1725790AbgAVNRl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 08:17:41 -0500
 Received: from localhost (unknown [84.241.205.26])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13B3E205F4;
-        Wed, 22 Jan 2020 13:17:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEC94205F4;
+        Wed, 22 Jan 2020 13:17:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579699055;
-        bh=9Ky4eerI2vkPmPs1MyU18huTmAOmuD+kfTOFo0H5Fi8=;
+        s=default; t=1579699060;
+        bh=WQaJF2syDMlQj8XPY5gV2vYZsl8ylFPtqD3oy2TLVdU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xr8lUN4P2O14F9A+6zr9SKqkORoJtggOouSM/7U3lhpajc9aRJulNgtT7s4T0M6Ex
-         a3VlFUu78mytqry1d58ZA88orlqnB5jpYa+dtR3NfAZ6/U/YQ2BfwUohTJhkWHH03j
-         h7CHgeC+nXRaLC/B0M87RtD8Sw+JRIeXLk6upNf8=
+        b=qWcMORU0zbsjXcAdxnGtO+Cu3cvkk+tnQCNdL1MQbZHP0g+XsK3xISPkGMHG/Cj10
+         o+FqMf5LcLkliSdCWKS6yONqhDtnVB/ECkdP4CnwAHkkqB2IdgvLT/9eKvdylvLIYb
+         GxlesCZG1Ql+OWBZyQJuM3TWXJc9e1ysbgaLvxfk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jari Ruusu <jari.ruusu@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Luis Chamberlain <mcgrof@kernel.org>, stable@kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 029/222] Fix built-in early-load Intel microcode alignment
-Date:   Wed, 22 Jan 2020 10:26:55 +0100
-Message-Id: <20200122092835.547224718@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: [PATCH 5.4 003/222] soc: amlogic: meson-ee-pwrc: propagate PD provider registration errors
+Date:   Wed, 22 Jan 2020 10:26:29 +0100
+Message-Id: <20200122092833.584400329@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092833.339495161@linuxfoundation.org>
 References: <20200122092833.339495161@linuxfoundation.org>
@@ -62,54 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jari Ruusu <jari.ruusu@gmail.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-commit f5ae2ea6347a308cfe91f53b53682ce635497d0d upstream.
+commit 0766d65e6afaea8b80205a468207de9f18cd7ec8 upstream.
 
-Intel Software Developer's Manual, volume 3, chapter 9.11.6 says:
+of_genpd_add_provider_onecell() can return an error. Propagate the error
+so the driver registration fails when of_genpd_add_provider_onecell()
+did not work.
 
- "Note that the microcode update must be aligned on a 16-byte boundary
-  and the size of the microcode update must be 1-KByte granular"
-
-When early-load Intel microcode is loaded from initramfs, userspace tool
-'iucode_tool' has already 16-byte aligned those microcode bits in that
-initramfs image.  Image that was created something like this:
-
- iucode_tool --write-earlyfw=FOO.cpio microcode-files...
-
-However, when early-load Intel microcode is loaded from built-in
-firmware BLOB using CONFIG_EXTRA_FIRMWARE= kernel config option, that
-16-byte alignment is not guaranteed.
-
-Fix this by forcing all built-in firmware BLOBs to 16-byte alignment.
-
-[ If we end up having other firmware with much bigger alignment
-  requirements, we might need to introduce some method for the firmware
-  to specify it, this is the minimal "just increase the alignment a bit
-  to account for this one special case" patch    - Linus ]
-
-Signed-off-by: Jari Ruusu <jari.ruusu@gmail.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: stable@kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: eef3c2ba0a42a6 ("soc: amlogic: Add support for Everything-Else power domains controller")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/base/firmware_loader/builtin/Makefile |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/soc/amlogic/meson-ee-pwrc.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/drivers/base/firmware_loader/builtin/Makefile
-+++ b/drivers/base/firmware_loader/builtin/Makefile
-@@ -17,7 +17,7 @@ PROGBITS  = $(if $(CONFIG_ARM),%,@)progb
- filechk_fwbin = \
- 	echo "/* Generated by $(src)/Makefile */"		;\
- 	echo "    .section .rodata"				;\
--	echo "    .p2align $(ASM_ALIGN)"			;\
-+	echo "    .p2align 4"					;\
- 	echo "_fw_$(FWSTR)_bin:"				;\
- 	echo "    .incbin \"$(fwdir)/$(FWNAME)\""		;\
- 	echo "_fw_end:"						;\
+--- a/drivers/soc/amlogic/meson-ee-pwrc.c
++++ b/drivers/soc/amlogic/meson-ee-pwrc.c
+@@ -441,9 +441,7 @@ static int meson_ee_pwrc_probe(struct pl
+ 		pwrc->xlate.domains[i] = &dom->base;
+ 	}
+ 
+-	of_genpd_add_provider_onecell(pdev->dev.of_node, &pwrc->xlate);
+-
+-	return 0;
++	return of_genpd_add_provider_onecell(pdev->dev.of_node, &pwrc->xlate);
+ }
+ 
+ static void meson_ee_pwrc_shutdown(struct platform_device *pdev)
 
 
