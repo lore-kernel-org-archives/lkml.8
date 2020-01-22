@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9162C33CAF
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27456C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DAD52467B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:31:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFBD82467A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:31:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685511;
-	bh=U01ImcXiMVQ+6F1rV4sEe5fLN+vVgVK5/h8301HQ7L4=;
+	s=default; t=1579685515;
+	bh=DN5vqh6v+nIiSQbA8kK8Jk4vhjmMEXzuqJFLeL/FgA4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nI0PdhKrBnW15spTxSojL8dcB9pFMtqN3qvQEEeaFp8EEEZvUpARgYxtrUAeSF4st
-	 HyThck8FQKX64TPn0MUl9Uls4a3ImJZVoz2fQNVMvOvIEcOdoSbDHD0oqKYZqYu3o+
-	 M/4aLMPRihMxFSdmkKFYxR3axsKOqh1lIeBKSI5A=
+	b=HsnO4p2MrdiLVtJI6n/j8ZBmZJnPns3xWjn6Xnyxlg3LhQulNCkjXdQfx9RXxfxdN
+	 IWiE8EFhBTw3eOmltu3+BESiRaH6t5VVGITW+WFAhjMNg3G7fpruDNZL9K2r6wXtXs
+	 C+TYqYpKDKLgOOyLBUwWquKr7y+388KZnEqdANT0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729878AbgAVJbu (ORCPT
+        id S1729890AbgAVJby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:31:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44022 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:31:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729841AbgAVJbn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:31:43 -0500
+        id S1729143AbgAVJbl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:31:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 908BB24672;
-        Wed, 22 Jan 2020 09:31:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B36024673;
+        Wed, 22 Jan 2020 09:31:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685503;
-        bh=U01ImcXiMVQ+6F1rV4sEe5fLN+vVgVK5/h8301HQ7L4=;
+        s=default; t=1579685500;
+        bh=DN5vqh6v+nIiSQbA8kK8Jk4vhjmMEXzuqJFLeL/FgA4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GoKksb91vVETzBWBXOHf7B+9lknMuPITfAhCHRie3gdhQxUsMCHTGB/gBbpVpdcMc
-         WiGmxovtskcLU1kLggY7gcU2X+gFPLPi4vbVcQB0yq/bLojelTug41Vy3FIX5rDnTX
-         WMpA1VXf5RMxXpkiI2KwHJWyzXKMbQZz8plbghOM=
+        b=ilctjNVf53QXlXAcW8jPb3Aj9XyCgN9pwpjTFcEr7wAKn7G2/G+MNcxhBqX++edcN
+         +3Fp7Nz/3teaz1oi6mf943BrC+YFcjqkFxmwN3qisDVi3UxVgvN+MF0mlCGaIA5elr
+         lu6hogVb8pTgZSnXVudL8E0NAJSQdJS+gdNew7eM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jari Ruusu <jari.ruusu@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Luis Chamberlain <mcgrof@kernel.org>, stable@kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.4 41/76] Fix built-in early-load Intel microcode alignment
-Date:   Wed, 22 Jan 2020 10:28:57 +0100
-Message-Id: <20200122092756.599155530@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+2b2ef983f973e5c40943@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.4 40/76] ALSA: seq: Fix racy access for queue timer in proc read
+Date:   Wed, 22 Jan 2020 10:28:56 +0100
+Message-Id: <20200122092756.471783768@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092751.587775548@linuxfoundation.org>
 References: <20200122092751.587775548@linuxfoundation.org>
@@ -62,54 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jari Ruusu <jari.ruusu@gmail.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit f5ae2ea6347a308cfe91f53b53682ce635497d0d upstream.
+commit 60adcfde92fa40fcb2dbf7cc52f9b096e0cd109a upstream.
 
-Intel Software Developer's Manual, volume 3, chapter 9.11.6 says:
+snd_seq_info_timer_read() reads the information of the timer assigned
+for each queue, but it's done in a racy way which may lead to UAF as
+spotted by syzkaller.
 
- "Note that the microcode update must be aligned on a 16-byte boundary
-  and the size of the microcode update must be 1-KByte granular"
+This patch applies the missing q->timer_mutex lock while accessing the
+timer object as well as a slight code change to adapt the standard
+coding style.
 
-When early-load Intel microcode is loaded from initramfs, userspace tool
-'iucode_tool' has already 16-byte aligned those microcode bits in that
-initramfs image.  Image that was created something like this:
-
- iucode_tool --write-earlyfw=FOO.cpio microcode-files...
-
-However, when early-load Intel microcode is loaded from built-in
-firmware BLOB using CONFIG_EXTRA_FIRMWARE= kernel config option, that
-16-byte alignment is not guaranteed.
-
-Fix this by forcing all built-in firmware BLOBs to 16-byte alignment.
-
-[ If we end up having other firmware with much bigger alignment
-  requirements, we might need to introduce some method for the firmware
-  to specify it, this is the minimal "just increase the alignment a bit
-  to account for this one special case" patch    - Linus ]
-
-Signed-off-by: Jari Ruusu <jari.ruusu@gmail.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: stable@kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-by: syzbot+2b2ef983f973e5c40943@syzkaller.appspotmail.com
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200115203733.26530-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- firmware/Makefile |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/core/seq/seq_timer.c |   14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
---- a/firmware/Makefile
-+++ b/firmware/Makefile
-@@ -156,7 +156,7 @@ quiet_cmd_fwbin = MK_FW   $@
- 		  PROGBITS=$(if $(CONFIG_ARM),%,@)progbits;		     \
- 		  echo "/* Generated by firmware/Makefile */"		> $@;\
- 		  echo "    .section .rodata"				>>$@;\
--		  echo "    .p2align $${ASM_ALIGN}"			>>$@;\
-+		  echo "    .p2align 4"					>>$@;\
- 		  echo "_fw_$${FWSTR}_bin:"				>>$@;\
- 		  echo "    .incbin \"$(2)\""				>>$@;\
- 		  echo "_fw_end:"					>>$@;\
+--- a/sound/core/seq/seq_timer.c
++++ b/sound/core/seq/seq_timer.c
+@@ -484,15 +484,19 @@ void snd_seq_info_timer_read(struct snd_
+ 		q = queueptr(idx);
+ 		if (q == NULL)
+ 			continue;
+-		if ((tmr = q->timer) == NULL ||
+-		    (ti = tmr->timeri) == NULL) {
+-			queuefree(q);
+-			continue;
+-		}
++		mutex_lock(&q->timer_mutex);
++		tmr = q->timer;
++		if (!tmr)
++			goto unlock;
++		ti = tmr->timeri;
++		if (!ti)
++			goto unlock;
+ 		snd_iprintf(buffer, "Timer for queue %i : %s\n", q->queue, ti->timer->name);
+ 		resolution = snd_timer_resolution(ti) * tmr->ticks;
+ 		snd_iprintf(buffer, "  Period time : %lu.%09lu\n", resolution / 1000000000, resolution % 1000000000);
+ 		snd_iprintf(buffer, "  Skew : %u / %u\n", tmr->skew, tmr->skew_base);
++unlock:
++		mutex_unlock(&q->timer_mutex);
+ 		queuefree(q);
+  	}
+ }
 
 
