@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39646C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 17:36:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A0D8C33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 17:36:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EAFD2465B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 17:36:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F44C21835
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 17:36:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729207AbgAVRgP (ORCPT
+        id S1729238AbgAVRgS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 12:36:15 -0500
-Received: from foss.arm.com ([217.140.110.172]:59002 "EHLO foss.arm.com"
+        Wed, 22 Jan 2020 12:36:18 -0500
+Received: from foss.arm.com ([217.140.110.172]:59034 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725802AbgAVRgO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 12:36:14 -0500
+        id S1726004AbgAVRgR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 12:36:17 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DE8B8106F;
-        Wed, 22 Jan 2020 09:36:13 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ED08A11D4;
+        Wed, 22 Jan 2020 09:36:16 -0800 (PST)
 Received: from e107049-lin.arm.com (e107049-lin.cambridge.arm.com [10.1.195.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8FAE43F6C4;
-        Wed, 22 Jan 2020 09:36:12 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9E3BC3F6C4;
+        Wed, 22 Jan 2020 09:36:15 -0800 (PST)
 From:   Douglas RAILLARD <douglas.raillard@arm.com>
 To:     linux-kernel@vger.kernel.org, rjw@rjwysocki.net,
         viresh.kumar@linaro.org, peterz@infradead.org,
         juri.lelli@redhat.com, vincent.guittot@linaro.org
 Cc:     douglas.raillard@arm.com, dietmar.eggemann@arm.com,
         qperret@google.com, linux-pm@vger.kernel.org
-Subject: [RFC PATCH v4 2/6] sched/cpufreq: Attach perf domain to sugov policy
-Date:   Wed, 22 Jan 2020 17:35:34 +0000
-Message-Id: <20200122173538.1142069-3-douglas.raillard@arm.com>
+Subject: [RFC PATCH v4 4/6] sched/cpufreq: Introduce sugov_cpu_ramp_boost
+Date:   Wed, 22 Jan 2020 17:35:36 +0000
+Message-Id: <20200122173538.1142069-5-douglas.raillard@arm.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200122173538.1142069-1-douglas.raillard@arm.com>
 References: <20200122173538.1142069-1-douglas.raillard@arm.com>
@@ -44,79 +44,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Attach an Energy Model perf_domain to each sugov_policy to prepare the
-ground for energy-aware schedutil.
+Use the utilization signals dynamic to detect when the utilization of a
+set of tasks starts increasing because of a change in tasks' behavior.
+This allows detecting when spending extra power for faster frequency
+ramp up response would be beneficial to the reactivity of the system.
+
+This ramp boost is computed as the difference between util_avg and
+util_est_enqueued. This number somehow represents a lower bound of how
+much extra utilization this tasks is actually using, compared to our
+best current stable knowledge of it (which is util_est_enqueued).
+
+When the set of runnable tasks changes, the boost is disabled as the
+impact of blocked utilization on util_avg will make the delta with
+util_est_enqueued not very informative.
 
 Signed-off-by: Douglas RAILLARD <douglas.raillard@arm.com>
 ---
- kernel/sched/cpufreq_schedutil.c | 41 ++++++++++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
+ kernel/sched/cpufreq_schedutil.c | 43 ++++++++++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
 diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-index 9b8916fd00a2..09e284dc918a 100644
+index 608963da4916..25a410a1ff6a 100644
 --- a/kernel/sched/cpufreq_schedutil.c
 +++ b/kernel/sched/cpufreq_schedutil.c
-@@ -42,6 +42,10 @@ struct sugov_policy {
+@@ -61,6 +61,10 @@ struct sugov_cpu {
+ 	unsigned long		bw_dl;
+ 	unsigned long		max;
  
- 	bool			limits_changed;
- 	bool			need_freq_update;
++	unsigned long		ramp_boost;
++	unsigned long		util_est_enqueued;
++	unsigned long		util_avg;
 +
-+#ifdef CONFIG_ENERGY_MODEL
-+	struct em_perf_domain *pd;
-+#endif
- };
- 
- struct sugov_cpu {
-@@ -66,6 +70,40 @@ static DEFINE_PER_CPU(struct sugov_cpu, sugov_cpu);
- 
- /************************ Governor internals ***********************/
- 
-+#ifdef CONFIG_ENERGY_MODEL
-+static void sugov_policy_attach_pd(struct sugov_policy *sg_policy)
-+{
-+	struct cpufreq_policy *policy = sg_policy->policy;
-+	struct em_perf_domain *pd;
-+
-+	sg_policy->pd = NULL;
-+	pd = em_cpu_get(policy->cpu);
-+	if (!pd)
-+		return;
-+
-+	if (cpumask_equal(policy->related_cpus, to_cpumask(pd->cpus))) {
-+		sg_policy->pd = pd;
-+	} else {
-+		pr_warn("%s: Not all CPUs in schedutil policy %u share the same perf domain, no perf domain for that policy will be registered\n",
-+			__func__, policy->cpu);
-+	}
-+}
-+
-+static struct em_perf_domain *
-+sugov_policy_get_pd(struct sugov_policy *sg_policy)
-+{
-+	return sg_policy->pd;
-+}
-+#else /* CONFIG_ENERGY_MODEL */
-+static void sugov_policy_attach_pd(struct sugov_policy *sg_policy) {}
-+
-+static struct em_perf_domain *
-+sugov_policy_get_pd(struct sugov_policy *sg_policy)
-+{
-+	return NULL;
-+}
-+#endif /* CONFIG_ENERGY_MODEL */
-+
- static bool sugov_should_update_freq(struct sugov_policy *sg_policy, u64 time)
- {
- 	s64 delta_ns;
-@@ -859,6 +897,9 @@ static int sugov_start(struct cpufreq_policy *policy)
- 							sugov_update_shared :
- 							sugov_update_single);
+ 	/* The field below is for single-CPU policies only: */
+ #ifdef CONFIG_NO_HZ_COMMON
+ 	unsigned long		saved_idle_calls;
+@@ -183,6 +187,42 @@ static void sugov_deferred_update(struct sugov_policy *sg_policy, u64 time,
  	}
-+
-+	sugov_policy_attach_pd(sg_policy);
-+
- 	return 0;
  }
+ 
++static unsigned long sugov_cpu_ramp_boost(struct sugov_cpu *sg_cpu)
++{
++	return READ_ONCE(sg_cpu->ramp_boost);
++}
++
++static unsigned long sugov_cpu_ramp_boost_update(struct sugov_cpu *sg_cpu)
++{
++	struct rq *rq = cpu_rq(sg_cpu->cpu);
++	unsigned long util_est_enqueued;
++	unsigned long util_avg;
++	unsigned long boost = 0;
++
++	util_est_enqueued = READ_ONCE(rq->cfs.avg.util_est.enqueued);
++	util_avg = READ_ONCE(rq->cfs.avg.util_avg);
++
++	/*
++	 * Boost when util_avg becomes higher than the previous stable
++	 * knowledge of the enqueued tasks' set util, which is CPU's
++	 * util_est_enqueued.
++	 *
++	 * We try to spot changes in the workload itself, so we want to
++	 * avoid the noise of tasks being enqueued/dequeued. To do that,
++	 * we only trigger boosting when the "amount of work" enqueued
++	 * is stable.
++	 */
++	if (util_est_enqueued == sg_cpu->util_est_enqueued &&
++	    util_avg >= sg_cpu->util_avg &&
++	    util_avg > util_est_enqueued)
++		boost = util_avg - util_est_enqueued;
++
++	sg_cpu->util_est_enqueued = util_est_enqueued;
++	sg_cpu->util_avg = util_avg;
++	WRITE_ONCE(sg_cpu->ramp_boost, boost);
++	return boost;
++}
++
+ /**
+  * get_next_freq - Compute a new frequency for a given cpufreq policy.
+  * @sg_policy: schedutil policy object to compute the new frequency for.
+@@ -514,6 +554,7 @@ static void sugov_update_single(struct update_util_data *hook, u64 time,
+ 	busy = !sg_policy->need_freq_update && sugov_cpu_is_busy(sg_cpu);
+ 
+ 	util = sugov_get_util(sg_cpu);
++	sugov_cpu_ramp_boost_update(sg_cpu);
+ 	max = sg_cpu->max;
+ 	util = sugov_iowait_apply(sg_cpu, time, util, max);
+ 	next_f = get_next_freq(sg_policy, util, max);
+@@ -554,6 +595,8 @@ static unsigned int sugov_next_freq_shared(struct sugov_cpu *sg_cpu, u64 time)
+ 		unsigned long j_util, j_max;
+ 
+ 		j_util = sugov_get_util(j_sg_cpu);
++		if (j_sg_cpu == sg_cpu)
++			sugov_cpu_ramp_boost_update(sg_cpu);
+ 		j_max = j_sg_cpu->max;
+ 		j_util = sugov_iowait_apply(j_sg_cpu, time, j_util, j_max);
  
 -- 
 2.24.1
