@@ -2,171 +2,134 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B698AC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:26:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC46C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83BA924680
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:26:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p5oGBTAx"
+	by mail.kernel.org (Postfix) with ESMTP id CE1E524680
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 11:27:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729093AbgAVL0c (ORCPT
+        id S1729133AbgAVL1Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 06:26:32 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:39044 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726094AbgAVL0c (ORCPT
+        Wed, 22 Jan 2020 06:27:24 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:37395 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbgAVL1X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 06:26:32 -0500
-Received: by mail-lf1-f66.google.com with SMTP id y1so5029456lfb.6
-        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 03:26:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=V+lAqSz5wTyi+61b7EReWzxQYkZJK8Gs3cUoV5MfV44=;
-        b=p5oGBTAxQmLBtccQRaQ2oVSkL+RzSCXT0Z/JjFVX+bcLFhxw/vs7l8BqOhA27CPDOL
-         4BDZGjlG2gbs1OptsnX4TE0WE0VD/CZdvL5pgKMMNDEqGBoGElXbbJHIMhpszrNi9cPK
-         jm2NfHFPDpIc5+laM2OAi3ZnBoD4JK9pETBgWXe1IjWxzkwHSGTtjSFn3tpdD1ugOqm0
-         dIa7b3guZNdE7sDHXj+g5DjodZ7J0jJoyuVp1Q/ZTyoPdUCx8fkj3ceUZ8KWdmIArn1Q
-         cnJjn5IOLHABrpRmtoaBtt+xqaFH34OuNhjvYNMAYgNBkm8yToZOuxEc+4RmYIpBY0zx
-         YXOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V+lAqSz5wTyi+61b7EReWzxQYkZJK8Gs3cUoV5MfV44=;
-        b=fwTcNug18oocVNdbhD5yjEoG76T0P2NNkU1VmLAjZxk1aXZ5TsAG1pi0aIR05lTgi1
-         A9Tc0sdV3D/zNlCC3b9p4802ixiIPcXktXRyrJHTQ1HuTB6wogS5V2IY73n8MaDFUFA6
-         riuya9s0+VJPkc4cL5eMNqsMXP2EGU6fCFVXaTLoSy+J+ONNcMoakStzr5FILKDpAxti
-         gWKX/R/Yd44kamxdiRWM1a+7qrDN9bWy64dRPKg8uXDfWbqRseoO8+q8/CmGROEPkoMr
-         pEdBtWtelYlfYvU+h5wXqP/NAqaPAL3cY+kjAfYAlaIa1WFShIgy4e/n+P7lftrxX8tK
-         auRg==
-X-Gm-Message-State: APjAAAU7YSVLPaR3gLhg900OXJ92Ki56qtFuKCNxbXJ/2XLPVmWcMmm5
-        qVXHGbJbPIxfLhGu0JpZcTmfKGqMNJzr7fbOk+A9iw==
-X-Google-Smtp-Source: APXvYqzV86bG+SaA5gWIm2t8JcBLYOOxi23mSwF9M9j2CTJmmh1L/ilDcaE8/ZC6b6VRNmfBAQroQMCw7DBh8wpbKrs=
-X-Received: by 2002:ac2:5f74:: with SMTP id c20mr1549303lfc.15.1579692390036;
- Wed, 22 Jan 2020 03:26:30 -0800 (PST)
+        Wed, 22 Jan 2020 06:27:23 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iuEAI-0001aX-LX; Wed, 22 Jan 2020 12:27:18 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 3DE1E1C1A3B;
+        Wed, 22 Jan 2020 12:27:18 +0100 (CET)
+Date:   Wed, 22 Jan 2020 11:27:18 -0000
+From:   "tip-bot2 for Masami Hiramatsu" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/misc] x86/decoder: Add TEST opcode to Group3-2
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Borislav Petkov <bp@suse.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <157966631413.9580.10311036595431878351.stgit@devnote2>
+References: <157966631413.9580.10311036595431878351.stgit@devnote2>
 MIME-Version: 1.0
-References: <20200117162444.v2.1.I9c7e72144ef639cc135ea33ef332852a6b33730f@changeid>
-In-Reply-To: <20200117162444.v2.1.I9c7e72144ef639cc135ea33ef332852a6b33730f@changeid>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Wed, 22 Jan 2020 03:25:52 -0800
-Message-ID: <CACK8Z6Ft95qj4e_fsA32r_bcz2SsHOW1xxqZJt3_DBAJw=NMGA@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI/MSI: Avoid torn updates to MSI pairs
-To:     Evan Green <evgreen@chromium.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <157969243800.396.2663775329967340720.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 4:26 PM Evan Green <evgreen@chromium.org> wrote:
->
-> __pci_write_msi_msg() updates three registers in the device: address
-> high, address low, and data. On x86 systems, address low contains
-> CPU targeting info, and data contains the vector. The order of writes
-> is address, then data.
->
-> This is problematic if an interrupt comes in after address has
-> been written, but before data is updated, and both the SMP affinity
-> and target vector are being changed. In this case, the interrupt targets
-> the wrong vector on the new CPU.
->
-> This case is pretty easy to stumble into using xhci and CPU hotplugging.
-> Create a script that repeatedly targets interrupts at a set of cores and
-> then offlines those cores. Put some stress on USB, and then watch xhci
-> lose an interrupt and die.
+The following commit has been merged into the x86/misc branch of tip:
 
-Do I understand it right, that even with this patch, the driver might
-still miss the same interrupt (because we are disabling the interrupt
-for that time) -  the improvement this patch brings is that it will at
-least not be delivered to the wrong CPU or via a wrong vector?
+Commit-ID:     8b7e20a7ba54836076ff35a28349dabea4cec48f
+Gitweb:        https://git.kernel.org/tip/8b7e20a7ba54836076ff35a28349dabea4cec48f
+Author:        Masami Hiramatsu <mhiramat@kernel.org>
+AuthorDate:    Wed, 22 Jan 2020 13:11:54 +09:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Wed, 22 Jan 2020 12:17:32 +01:00
 
-Thanks,
-Rajat
+x86/decoder: Add TEST opcode to Group3-2
 
->
-> Avoid this by disabling MSIs during the update.
->
-> Signed-off-by: Evan Green <evgreen@chromium.org>
-> ---
->
-> Changes in v2:
-> - Also mask msi-x interrupts during the update
-> - Restore the enable/mask bit to its previous value, rather than
-> unconditionally enabling interrupts
->
->
-> Bjorn,
-> I was unsure whether disabling MSIs temporarily is actually an okay
-> thing to do. I considered using the mask bit, but got the impression
-> that not all devices support the mask bit. Let me know if this going to
-> cause problems or there's a better way. I can include the repro
-> script I used to cause mayhem if needed.
->
-> ---
->  drivers/pci/msi.c | 18 ++++++++++++++++--
->  1 file changed, 16 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-> index 6b43a5455c7af..bb21a7739fa2c 100644
-> --- a/drivers/pci/msi.c
-> +++ b/drivers/pci/msi.c
-> @@ -311,6 +311,7 @@ void __pci_read_msi_msg(struct msi_desc *entry, struct msi_msg *msg)
->  void __pci_write_msi_msg(struct msi_desc *entry, struct msi_msg *msg)
->  {
->         struct pci_dev *dev = msi_desc_to_pci_dev(entry);
-> +       u16 msgctl;
->
->         if (dev->current_state != PCI_D0 || pci_dev_is_disconnected(dev)) {
->                 /* Don't touch the hardware now */
-> @@ -320,15 +321,25 @@ void __pci_write_msi_msg(struct msi_desc *entry, struct msi_msg *msg)
->                 if (!base)
->                         goto skip;
->
-> +               pci_read_config_word(dev, dev->msix_cap + PCI_MSIX_FLAGS,
-> +                                    &msgctl);
-> +
-> +               pci_write_config_word(dev, dev->msix_cap + PCI_MSIX_FLAGS,
-> +                                     msgctl | PCI_MSIX_FLAGS_MASKALL);
-> +
->                 writel(msg->address_lo, base + PCI_MSIX_ENTRY_LOWER_ADDR);
->                 writel(msg->address_hi, base + PCI_MSIX_ENTRY_UPPER_ADDR);
->                 writel(msg->data, base + PCI_MSIX_ENTRY_DATA);
-> +               pci_write_config_word(dev, dev->msix_cap + PCI_MSIX_FLAGS,
-> +                                     msgctl);
-> +
->         } else {
->                 int pos = dev->msi_cap;
-> -               u16 msgctl;
-> +               u16 enabled;
->
->                 pci_read_config_word(dev, pos + PCI_MSI_FLAGS, &msgctl);
-> -               msgctl &= ~PCI_MSI_FLAGS_QSIZE;
-> +               enabled = msgctl & PCI_MSI_FLAGS_ENABLE;
-> +               msgctl &= ~(PCI_MSI_FLAGS_QSIZE | PCI_MSI_FLAGS_ENABLE);
->                 msgctl |= entry->msi_attrib.multiple << 4;
->                 pci_write_config_word(dev, pos + PCI_MSI_FLAGS, msgctl);
->
-> @@ -343,6 +354,9 @@ void __pci_write_msi_msg(struct msi_desc *entry, struct msi_msg *msg)
->                         pci_write_config_word(dev, pos + PCI_MSI_DATA_32,
->                                               msg->data);
->                 }
-> +
-> +               msgctl |= enabled;
-> +               pci_write_config_word(dev, pos + PCI_MSI_FLAGS, msgctl);
->         }
->
->  skip:
-> --
-> 2.24.1
->
+Add TEST opcode to Group3-2 reg=001b as same as Group3-1 does.
+
+Commit
+
+  12a78d43de76 ("x86/decoder: Add new TEST instruction pattern")
+
+added a TEST opcode assignment to f6 XX/001/XXX (Group 3-1), but did
+not add f7 XX/001/XXX (Group 3-2).
+
+Actually, this TEST opcode variant (ModRM.reg /1) is not described in
+the Intel SDM Vol2 but in AMD64 Architecture Programmer's Manual Vol.3,
+Appendix A.2 Table A-6. ModRM.reg Extensions for the Primary Opcode Map.
+
+Without this fix, Randy found a warning by insn_decoder_test related
+to this issue as below.
+
+    HOSTCC  arch/x86/tools/insn_decoder_test
+    HOSTCC  arch/x86/tools/insn_sanity
+    TEST    posttest
+  arch/x86/tools/insn_decoder_test: warning: Found an x86 instruction decoder bug, please report this.
+  arch/x86/tools/insn_decoder_test: warning: ffffffff81000bf1:	f7 0b 00 01 08 00    	testl  $0x80100,(%rbx)
+  arch/x86/tools/insn_decoder_test: warning: objdump says 6 bytes, but insn_get_length() says 2
+  arch/x86/tools/insn_decoder_test: warning: Decoded and checked 11913894 instructions with 1 failures
+    TEST    posttest
+  arch/x86/tools/insn_sanity: Success: decoded and checked 1000000 random instructions with 0 errors (seed:0x871ce29c)
+
+To fix this error, add the TEST opcode according to AMD64 APM Vol.3.
+
+ [ bp: Massage commit message. ]
+
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
+Link: https://lkml.kernel.org/r/157966631413.9580.10311036595431878351.stgit@devnote2
+---
+ arch/x86/lib/x86-opcode-map.txt       | 2 +-
+ tools/arch/x86/lib/x86-opcode-map.txt | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/lib/x86-opcode-map.txt b/arch/x86/lib/x86-opcode-map.txt
+index 8908c58..53adc17 100644
+--- a/arch/x86/lib/x86-opcode-map.txt
++++ b/arch/x86/lib/x86-opcode-map.txt
+@@ -929,7 +929,7 @@ EndTable
+ 
+ GrpTable: Grp3_2
+ 0: TEST Ev,Iz
+-1:
++1: TEST Ev,Iz
+ 2: NOT Ev
+ 3: NEG Ev
+ 4: MUL rAX,Ev
+diff --git a/tools/arch/x86/lib/x86-opcode-map.txt b/tools/arch/x86/lib/x86-opcode-map.txt
+index 8908c58..53adc17 100644
+--- a/tools/arch/x86/lib/x86-opcode-map.txt
++++ b/tools/arch/x86/lib/x86-opcode-map.txt
+@@ -929,7 +929,7 @@ EndTable
+ 
+ GrpTable: Grp3_2
+ 0: TEST Ev,Iz
+-1:
++1: TEST Ev,Iz
+ 2: NOT Ev
+ 3: NEG Ev
+ 4: MUL rAX,Ev
