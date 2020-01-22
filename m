@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD975C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E70C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79A7424672
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:31:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77B4E24672
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 09:31:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579685472;
-	bh=6BnNUWJF6aYZydoM8RpxRCigJKk8/js3efYHnlbHI4A=;
+	s=default; t=1579685474;
+	bh=uVCNl6SSGH/xdURKbmYyLK7yEWgY0GtaC9ejSr1F9eQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tKu+HmAtzNxS9bv6nt3kkX2/Fw8+uQzJEDFQZRxQgL+kKVFTch3AVtWmTviQHaUXv
-	 U6UrGAxQ3Opp0pD4fUb7Kyyk1+TImwmSoPb8tMh8q0On4rhwz9gPvj7GoXkx+tmsHW
-	 2ljxIm0kxMZ3xOhB6kXYbNKAU4Cu+LetK1f41qvw=
+	b=f1XSNbmbFT6S5I+OQTtgpxobFWnreESpEZjmugL5HTXhjPha9KEszpzM8pIMghfQU
+	 4+LzzIBl3VRkUU44tY64xHIm8Jr6vMIJLU4zJz08cok+BK+VZLRgYTu9o3qZ/8hlUG
+	 KraNai2xivvCqPzVJNRlGsxCTcubt6PVZ4sl80/Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729578AbgAVJbL (ORCPT
+        id S1729596AbgAVJbN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 04:31:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42950 "EHLO mail.kernel.org"
+        Wed, 22 Jan 2020 04:31:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729527AbgAVJbH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 04:31:07 -0500
+        id S1729537AbgAVJbJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 04:31:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADA7E24673;
-        Wed, 22 Jan 2020 09:31:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2784A2467B;
+        Wed, 22 Jan 2020 09:31:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579685466;
-        bh=6BnNUWJF6aYZydoM8RpxRCigJKk8/js3efYHnlbHI4A=;
+        s=default; t=1579685468;
+        bh=uVCNl6SSGH/xdURKbmYyLK7yEWgY0GtaC9ejSr1F9eQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hNtLZ8AVc0XhFHMz2sk4SOHcmofHzPcMsf0JKZkFEaNppa45kkw1beErkem2GmM30
-         Y1JvbDgCK6iWENMVDjahPb1NoYRw+jeqv5OZe8HyKtPYhRxuxuRHO5W9sk0MXVvzBk
-         313gn1pl5YyBodd21czFKnxfUSfY4vPKxgpDndlc=
+        b=tbikjrwwkvw4z35atT9xFiGLhSSF7vnkEbNKZgHrDKikXllk2Z20+5HZsalHpweVc
+         RAJ2piMKst725Zl4SIhc/w1NCRKnbCoVTuGYoO/vuuFwFwvt/FmgP5HVm0JiXk2XCN
+         /MTUsfx77M/2TlrFgZon3CGEnJjBqT/VvZ28gxHI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiang Chen <chenxiang66@hisilicon.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.4 25/76] scsi: sd: Clear sdkp->protection_type if disk is reformatted without PI
-Date:   Wed, 22 Jan 2020 10:28:41 +0100
-Message-Id: <20200122092754.326792715@linuxfoundation.org>
+        stable@vger.kernel.org, Jian-Hong Pan <jian-hong@endlessm.com>,
+        Daniel Drake <drake@endlessm.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 4.4 26/76] platform/x86: asus-wmi: Fix keyboard brightness cannot be set to 0
+Date:   Wed, 22 Jan 2020 10:28:42 +0100
+Message-Id: <20200122092754.411204098@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200122092751.587775548@linuxfoundation.org>
 References: <20200122092751.587775548@linuxfoundation.org>
@@ -59,42 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiang Chen <chenxiang66@hisilicon.com>
+From: Jian-Hong Pan <jian-hong@endlessm.com>
 
-commit 465f4edaecc6c37f81349233e84d46246bcac11a upstream.
+commit 176a7fca81c5090a7240664e3002c106d296bf31 upstream.
 
-If an attached disk with protection information enabled is reformatted
-to Type 0 the revalidation code does not clear the original protection
-type and subsequent accesses will keep setting RDPROTECT/WRPROTECT.
+Some of ASUS laptops like UX431FL keyboard backlight cannot be set to
+brightness 0. According to ASUS' information, the brightness should be
+0x80 ~ 0x83. This patch fixes it by following the logic.
 
-Set the protection type to 0 if the disk reports PROT_EN=0 in READ
-CAPACITY(16).
-
-[mkp: commit desc]
-
-Fixes: fe542396da73 ("[SCSI] sd: Ensure we correctly disable devices with unknown protection type")
-Link: https://lore.kernel.org/r/1578532344-101668-1-git-send-email-chenxiang66@hisilicon.com
-Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: e9809c0b9670 ("asus-wmi: add keyboard backlight support")
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+Reviewed-by: Daniel Drake <drake@endlessm.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/sd.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/platform/x86/asus-wmi.c |    8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
---- a/drivers/scsi/sd.c
-+++ b/drivers/scsi/sd.c
-@@ -1998,8 +1998,10 @@ static int sd_read_protection_type(struc
- 	u8 type;
- 	int ret = 0;
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -452,13 +452,7 @@ static void kbd_led_update(struct work_s
  
--	if (scsi_device_protection(sdp) == 0 || (buffer[12] & 1) == 0)
-+	if (scsi_device_protection(sdp) == 0 || (buffer[12] & 1) == 0) {
-+		sdkp->protection_type = 0;
- 		return ret;
-+	}
+ 	asus = container_of(work, struct asus_wmi, kbd_led_work);
  
- 	type = ((buffer[12] >> 1) & 7) + 1; /* P_TYPE 0 = Type 1 */
+-	/*
+-	 * bits 0-2: level
+-	 * bit 7: light on/off
+-	 */
+-	if (asus->kbd_led_wk > 0)
+-		ctrl_param = 0x80 | (asus->kbd_led_wk & 0x7F);
+-
++	ctrl_param = 0x80 | (asus->kbd_led_wk & 0x7F);
+ 	asus_wmi_set_devstate(ASUS_WMI_DEVID_KBD_BACKLIGHT, ctrl_param, NULL);
+ }
  
 
 
