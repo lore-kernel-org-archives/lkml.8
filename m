@@ -2,96 +2,85 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C282AC33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B28BC32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:03:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 905832467B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:02:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="H8JS9PL6"
+	by mail.kernel.org (Postfix) with ESMTP id D28892465B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 08:03:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729174AbgAVICS (ORCPT
+        id S1729212AbgAVIDW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 03:02:18 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:39232 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726077AbgAVICP (ORCPT
+        Wed, 22 Jan 2020 03:03:22 -0500
+Received: from rtits2.realtek.com ([211.75.126.72]:33408 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbgAVIDV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 03:02:15 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00M8216g096402;
-        Wed, 22 Jan 2020 02:02:01 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579680121;
-        bh=L5WORfa0XWhVNa/Scr/I2SAMSorVTSS3dl2PznqchpI=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=H8JS9PL6gMPY+fTx+VqgqFwqovJSeQX5q0Pmqy9hU7Y6bbOm5S3g8aljL9yyaLG4s
-         M76aqGADTnD/DhmUIIbqWH8T+3HiuvbokXjGzkT8mCiA1vV6+u6g/UoNmi6XBGACeU
-         AI9pNZRF9TGPkGS/g4U6eMb9vhStCE0mQwfFvpRE=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00M821Ro096714
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 22 Jan 2020 02:02:01 -0600
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 22
- Jan 2020 02:01:58 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 22 Jan 2020 02:01:58 -0600
-Received: from a0230074-OptiPlex-7010.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00M81ctp007984;
-        Wed, 22 Jan 2020 02:01:54 -0600
-From:   Faiz Abbas <faiz_abbas@ti.com>
-To:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-can@vger.kernel.org>
-CC:     <catalin.marinas@arm.com>, <mark.rutland@arm.com>,
-        <robh+dt@kernel.org>, <davem@davemloft.net>, <mkl@pengutronix.de>,
-        <wg@grandegger.com>, <sriram.dash@samsung.com>, <dmurphy@ti.com>,
-        <faiz_abbas@ti.com>, <nm@ti.com>, <t-kristo@ti.com>
-Subject: [PATCH 3/3] arm64: defconfig: Add Support for Bosch M_CAN controllers
-Date:   Wed, 22 Jan 2020 13:33:10 +0530
-Message-ID: <20200122080310.24653-4-faiz_abbas@ti.com>
-X-Mailer: git-send-email 2.19.2
-In-Reply-To: <20200122080310.24653-1-faiz_abbas@ti.com>
-References: <20200122080310.24653-1-faiz_abbas@ti.com>
+        Wed, 22 Jan 2020 03:03:21 -0500
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID 00M83ICB009267, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTEXMB06.realtek.com.tw[172.21.6.99])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id 00M83ICB009267
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Jan 2020 16:03:18 +0800
+Received: from RTEXMB06.realtek.com.tw (172.21.6.99) by
+ RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Wed, 22 Jan 2020 16:03:18 +0800
+Received: from RTITCASV01.realtek.com.tw (172.21.6.18) by
+ RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
+ (version=TLS1_0, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.1.1779.2
+ via Frontend Transport; Wed, 22 Jan 2020 16:03:18 +0800
+Received: from fc30.localdomain (172.21.177.138) by RTITCASV01.realtek.com.tw
+ (172.21.6.18) with Microsoft SMTP Server id 14.3.468.0; Wed, 22 Jan 2020
+ 16:03:16 +0800
+From:   Hayes Wang <hayeswang@realtek.com>
+To:     <netdev@vger.kernel.org>
+CC:     <nic_swsd@realtek.com>, <linux-kernel@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <pmalani@chromium.org>,
+        <grundler@chromium.org>, Hayes Wang <hayeswang@realtek.com>
+Subject: [PATCH net v3 0/9] r8152: serial fixes
+Date:   Wed, 22 Jan 2020 16:02:04 +0800
+Message-ID: <1394712342-15778-358-Taiwan-albertk@realtek.com>
+X-Mailer: Microsoft Office Outlook 11
+In-Reply-To: <1394712342-15778-338-Taiwan-albertk@realtek.com>
+References: <1394712342-15778-338-Taiwan-albertk@realtek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [172.21.177.138]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable configs for supporting Bosch M_CAN controllers.
+v3:
+1. Fix the typos for patch #5 and #6.
+2. Modify the commit message of patch #9.
 
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
----
- arch/arm64/configs/defconfig | 3 +++
- 1 file changed, 3 insertions(+)
+v2:
+For patch #2, move declaring the variable "ocp_data".
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 458bddeba89c..9d2ea46cc4ae 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -159,6 +159,9 @@ CONFIG_QRTR=m
- CONFIG_QRTR_SMD=m
- CONFIG_QRTR_TUN=m
- CONFIG_BPF_JIT=y
-+CONFIG_CAN=m
-+CONFIG_CAN_M_CAN=m
-+CONFIG_CAN_M_CAN_PLATFORM=m
- CONFIG_BT=m
- CONFIG_BT_HIDP=m
- # CONFIG_BT_HS is not set
+v1:
+These patches are used to fix some issues for RTL8153.
+
+Hayes Wang (9):
+  r8152: fix runtime resume for linking change
+  r8152: reset flow control patch when linking on for RTL8153B
+  r8152: get default setting of WOL before initializing
+  r8152: disable U2P3 for RTL8153B
+  r8152: Disable PLA MCU clock speed down
+  r8152: disable test IO for RTL8153B
+  r8152: don't enable U1U2 with USB_SPEED_HIGH for RTL8153B
+  r8152: avoid the MCU to clear the lanwake
+  r8152: disable DelayPhyPwrChg
+
+ drivers/net/usb/r8152.c | 124 ++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 113 insertions(+), 11 deletions(-)
+
 -- 
-2.19.2
+2.21.0
 
