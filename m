@@ -2,86 +2,113 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A5F7C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 20:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6296DC33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 20:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23B6024676
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 20:53:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579726415;
-	bh=rKLtHT8h5JDqC6ZYUnmVyuld6JG6lU5zosUdYC3Vuig=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=wl4nAJGOrc1YCgEWZeF73+Vjz6zTsiZYOSwoGM7OInFyIiMsnOeGh8cz2d004xhJD
-	 XUN/EuNpanHanvC5g4ob8D05ODnXj7bT9EqgBEbxBVHHodus9aGfBtG/B6i2vbngo6
-	 4j3jR8uWpEJ/hg4mkIoBS4PK3PzPRQKXv8s9PbTE=
+	by mail.kernel.org (Postfix) with ESMTP id 3DC182087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 20:55:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729222AbgAVUxe (ORCPT
+        id S1729164AbgAVUzI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 15:53:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54868 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725827AbgAVUxe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 15:53:34 -0500
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 605EA2087E;
-        Wed, 22 Jan 2020 20:53:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579726413;
-        bh=rKLtHT8h5JDqC6ZYUnmVyuld6JG6lU5zosUdYC3Vuig=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=adG6B7LlrmtkWvzEWO4JukouKSm4bkBM9ZYrpGZVHaWw2M45fMEJ/a9xQ/3lmqi3y
-         pyI+/a3jrn5wrc6LeBI4rvkFSUcdU/YkuQPTZqJ4vFwSlU6/5ToYq0Cb/ZwTqBeXQc
-         5CGKr0fPqtKkRaRiWGTD5D0rn6ExlEN/NXb8DDD8=
-Subject: Re: [PATCH 4.14 00/65] 4.14.167-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20200122092750.976732974@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <ef8ca639-e0ae-359d-eca9-70a8034115bd@kernel.org>
-Date:   Wed, 22 Jan 2020 13:53:32 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200122092750.976732974@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 22 Jan 2020 15:55:08 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41484 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727590AbgAVUzI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 15:55:08 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00MKqM6g113647
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 15:55:06 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xp4gk0dsn-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 22 Jan 2020 15:55:06 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Wed, 22 Jan 2020 20:55:04 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 22 Jan 2020 20:55:01 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00MKt0cN56295660
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Jan 2020 20:55:00 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1E25011C052;
+        Wed, 22 Jan 2020 20:55:00 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5250111C050;
+        Wed, 22 Jan 2020 20:54:59 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.143.97])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 22 Jan 2020 20:54:59 +0000 (GMT)
+Subject: Re: [PATCH] IMA: Turn IMA_MEASURE_ASYMMETRIC_KEYS off by default
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        linux-integrity@vger.kernel.org
+Cc:     sashal@kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 22 Jan 2020 15:54:58 -0500
+In-Reply-To: <fa7ec770-6552-7538-7393-c23410b3a1ba@linux.microsoft.com>
+References: <20200121171302.4935-1-nramas@linux.microsoft.com>
+         <1579628090.3390.28.camel@HansenPartnership.com>
+         <1579634035.5125.311.camel@linux.ibm.com>
+         <1579636351.3390.35.camel@HansenPartnership.com>
+         <ac6c559e-2d68-afcb-d316-6ac49a570831@linux.microsoft.com>
+         <1579723379.5182.130.camel@linux.ibm.com>
+         <fa7ec770-6552-7538-7393-c23410b3a1ba@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20012220-0020-0000-0000-000003A31B8E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20012220-0021-0000-0000-000021FAB225
+Message-Id: <1579726498.4644.4.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-22_08:2020-01-22,2020-01-22 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
+ clxscore=1015 impostorscore=0 phishscore=0 mlxscore=0 suspectscore=0
+ spamscore=0 malwarescore=0 adultscore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001220178
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/22/20 2:28 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.14.167 release.
-> There are 65 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Wed, 2020-01-22 at 12:05 -0800, Lakshmi Ramasubramanian wrote:
+> On 1/22/20 12:02 PM, Mimi Zohar wrote:
 > 
-> Responses should be made by Fri, 24 Jan 2020 09:25:24 +0000.
-> Anything received after that time might be too late.
+> > 
+> > Thanks, Lakshmi.  This requires moving the code around.  Instead of
+> > doing this on the current code base, I suggest posting a v9 version of
+> > the entire "IMA: Deferred measurement of keys".
+> > 
+> > I suggest making the switch from spinlock to mutex, as you had it
+> > originally, before posting v9.  The commit history will then be a lot
+> > cleaner.
+> > 
+> > thanks,
+> > 
+> > Mimi
+> > 
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.167-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
-Compiled and booted on my test system. No dmesg regressions.
+> Sure Mimi - I'll post an update to the patch set shortly.
+
+I just pushed out the next-integrity-testing branch without the
+"Deferred measurement of keys" patches.  I've kept the "IMA: pre-
+allocate buffer to hold keyrings string" patch, though it probably
+isn't required.
 
 thanks,
--- Shuah
+
+Mimi
+
