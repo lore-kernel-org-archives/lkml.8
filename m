@@ -2,148 +2,96 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A9CAC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 12:15:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1548C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 12:15:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 475642467F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 12:15:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B133224699
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 12:15:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729256AbgAVMPx (ORCPT
+        id S1729339AbgAVMP4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 22 Jan 2020 07:15:56 -0500
+Received: from mx2.suse.de ([195.135.220.15]:33218 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729299AbgAVMPx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 Jan 2020 07:15:53 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:39556 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729188AbgAVMPv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 07:15:51 -0500
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00MCFUSE012424;
-        Wed, 22 Jan 2020 07:15:30 -0500
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2xkvrbjpyk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jan 2020 07:15:29 -0500
-Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 00MCFSpL041152
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Wed, 22 Jan 2020 07:15:28 -0500
-Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Wed, 22 Jan
- 2020 07:15:28 -0500
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Wed, 22 Jan 2020 04:15:27 -0800
-Received: from ben-Latitude-E6540.ad.analog.com ([10.48.65.231])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 00MCF512031122;
-        Wed, 22 Jan 2020 07:15:19 -0500
-From:   Beniamin Bia <beniamin.bia@analog.com>
-To:     <jic23@kernel.org>
-CC:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
-        <pmeerw@pmeerw.net>, <linux-iio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <biabeniamin@outlook.com>,
-        <knaack.h@gmx.de>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Beniamin Bia <beniamin.bia@analog.com>
-Subject: [PATCH v2 2/3] dt-bindings: iio: amplifiers: Add docs for HMC425A Step Attenuator
-Date:   Wed, 22 Jan 2020 14:17:01 +0200
-Message-ID: <20200122121702.30494-2-beniamin.bia@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200122121702.30494-1-beniamin.bia@analog.com>
-References: <20200122121702.30494-1-beniamin.bia@analog.com>
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 550A8B259;
+        Wed, 22 Jan 2020 12:15:51 +0000 (UTC)
+Date:   Wed, 22 Jan 2020 13:15:49 +0100 (CET)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+cc:     Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Jessica Yu <jeyu@kernel.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, live-patching@vger.kernel.org,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v3 5/6] x86/ftrace: Use text_poke()
+In-Reply-To: <20200121161045.dhihqibnpyrk2lsu@treble>
+Message-ID: <alpine.LSU.2.21.2001221312030.15957@pobox.suse.cz>
+References: <20191015135634.GK2328@hirez.programming.kicks-ass.net> <alpine.LSU.2.21.1910151611000.13169@pobox.suse.cz> <88bab814-ea24-ece9-2bc0-7a1e10a62f12@redhat.com> <20191015153120.GA21580@linux-8ccs> <7e9c7dd1-809e-f130-26a3-3d3328477437@redhat.com>
+ <20191015182705.1aeec284@gandalf.local.home> <20191016074217.GL2328@hirez.programming.kicks-ass.net> <20191021150549.bitgqifqk2tbd3aj@treble> <20200120165039.6hohicj5o52gdghu@treble> <alpine.LSU.2.21.2001210922060.6036@pobox.suse.cz>
+ <20200121161045.dhihqibnpyrk2lsu@treble>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-17_05:2020-01-16,2020-01-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- lowpriorityscore=0 suspectscore=0 mlxscore=0 malwarescore=0
- impostorscore=0 adultscore=0 phishscore=0 bulkscore=0 clxscore=1015
- priorityscore=1501 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1910280000 definitions=main-2001220112
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Hennerich <michael.hennerich@analog.com>
+On Tue, 21 Jan 2020, Josh Poimboeuf wrote:
 
-Document support for Analog Devices MC425A Step Attenuator.
+> On Tue, Jan 21, 2020 at 09:35:28AM +0100, Miroslav Benes wrote:
+> > On Mon, 20 Jan 2020, Josh Poimboeuf wrote:
+> > 
+> > > On Mon, Oct 21, 2019 at 10:05:49AM -0500, Josh Poimboeuf wrote:
+> > > > On Wed, Oct 16, 2019 at 09:42:17AM +0200, Peter Zijlstra wrote:
+> > > > > > which are not compatible with livepatching. GCC upstream now has
+> > > > > > -flive-patching option, which disables all those interfering optimizations.
+> > > > > 
+> > > > > Which, IIRC, has a significant performance impact and should thus really
+> > > > > not be used...
+> > > > > 
+> > > > > If distros ship that crap, I'm going to laugh at them the next time they
+> > > > > want a single digit performance improvement because *important*.
+> > > > 
+> > > > I have a crazy plan to try to use objtool to detect function changes at
+> > > > a binary level, which would hopefully allow us to drop this flag.
+> > > > 
+> > > > But regardless, I wonder if we enabled this flag prematurely.  We still
+> > > > don't have a reasonable way to use it for creating source-based live
+> > > > patches upstream, and it should really be optional for CONFIG_LIVEPATCH,
+> > > > since kpatch-build doesn't need it.
+> > > 
+> > > I also just discovered that -flive-patching is responsible for all those
+> > > "unreachable instruction" objtool warnings which Randy has been
+> > > dutifully bugging me about over the last several months.  For some
+> > > reason it subtly breaks GCC implicit noreturn detection for local
+> > > functions.
+> > 
+> > Ugh, that is unfortunate. Have you reported it?
+> 
+> Not yet (but I plan to).
 
-Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
-Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
----
- .../bindings/iio/amplifiers/adi,hmc425a.yaml  | 56 +++++++++++++++++++
- 1 file changed, 56 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
+My findings so far...
 
-diff --git a/Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml b/Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
-new file mode 100644
-index 000000000000..a0afa661f4ac
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
-@@ -0,0 +1,56 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/amplifiers/adi,hmc425a.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: HMC425A 6-bit Digital Step Attenuator
-+
-+maintainers:
-+- Michael Hennerich <michael.hennerich@analog.com>
-+- Beniamin Bia <beniamin.bia@analog.com>
-+
-+description: |
-+  Digital Step Attenuator IIO device with gpio interface.
-+  HMC425A 0.5 dB LSB GaAs MMIC 6-BIT DIGITAL POSITIVE CONTROL ATTENUATOR, 2.2 - 8.0 GHz
-+  https://www.analog.com/media/en/technical-documentation/data-sheets/hmc425A.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - adi,hmc425a
-+
-+  vcc-supply:
-+    description:
-+      Digital voltage regulator (see regulator/regulator.txt)
-+    maxItems: 1
-+
-+  ctrl-gpios:
-+    description:
-+      Must contain an array of 6 GPIO specifiers, referring to the GPIO pins
-+      connected to the control pins V1-V6.
-+    maxItems: 6
-+
-+required:
-+  - compatible
-+  - ctrl-gpios
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    gpio {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      gpio_hmc425a: hmc425a {
-+        compatible = "adi,hmc425a";
-+        ctrl-gpios = <&gpio 40 GPIO_ACTIVE_HIGH>,
-+          <&gpio 39 GPIO_ACTIVE_HIGH>,
-+          <&gpio 38 GPIO_ACTIVE_HIGH>,
-+          <&gpio 37 GPIO_ACTIVE_HIGH>,
-+          <&gpio 36 GPIO_ACTIVE_HIGH>,
-+          <&gpio 35 GPIO_ACTIVE_HIGH>;
-+
-+        vcc-supply = <&foo>;
-+      };
-+    };
-+...
--- 
-2.17.1
+I bisected through GCC options which -flive-patching disables and 
+-fno-ipa-pure-const is the culprit. I got no warnings without the option 
+with my config.
 
+Then I found out allmodconfig was ok even with -flive-patching. 
+CONFIG_GCOV is the difference. CONFIG_GCOV=y seems to make the warnings go 
+away here.
+
+/me goes staring
