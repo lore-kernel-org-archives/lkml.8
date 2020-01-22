@@ -2,82 +2,102 @@ Return-Path: <SRS0=9JlO=3L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AAA1C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 12:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4AA4C33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 12:15:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1870E2467F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 12:15:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 842CB2467F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 Jan 2020 12:15:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729158AbgAVMPr (ORCPT
+        id S1729235AbgAVMPu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 Jan 2020 07:15:47 -0500
-Received: from foss.arm.com ([217.140.110.172]:55698 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726204AbgAVMPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 Jan 2020 07:15:46 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 67B90328;
-        Wed, 22 Jan 2020 04:15:46 -0800 (PST)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 324543F52E;
-        Wed, 22 Jan 2020 04:15:45 -0800 (PST)
-Date:   Wed, 22 Jan 2020 12:15:38 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     arnd@arndb.de, jassisinghbrar@gmail.com, cristian.marussi@arm.com,
-        peng.fan@nxp.com, peter.hilber@opensynergy.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH V4] firmware: arm_scmi: Make scmi core independent of the
- transport type
-Message-ID: <20200122121538.GA31240@bogus>
-References: <20200121183818.GA11522@bogus>
- <a9ec58818b5e0c982810e74efe3f5f22b930ae40.1579660436.git.viresh.kumar@linaro.org>
+        Wed, 22 Jan 2020 07:15:50 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:38542 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726204AbgAVMPt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 Jan 2020 07:15:49 -0500
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00MCF74Z012293;
+        Wed, 22 Jan 2020 07:15:29 -0500
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2xkvrbjpyj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Jan 2020 07:15:29 -0500
+Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 00MCFS0R041149
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Wed, 22 Jan 2020 07:15:28 -0500
+Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Wed, 22 Jan
+ 2020 07:15:27 -0500
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Wed, 22 Jan 2020 04:15:26 -0800
+Received: from ben-Latitude-E6540.ad.analog.com ([10.48.65.231])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 00MCF513031122;
+        Wed, 22 Jan 2020 07:15:23 -0500
+From:   Beniamin Bia <beniamin.bia@analog.com>
+To:     <jic23@kernel.org>
+CC:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
+        <pmeerw@pmeerw.net>, <linux-iio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <biabeniamin@outlook.com>,
+        <knaack.h@gmx.de>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>,
+        Beniamin Bia <beniamin.bia@analog.com>
+Subject: [PATCH v2 3/3] MAINTAINERS: add entry for hmc425a driver.
+Date:   Wed, 22 Jan 2020 14:17:02 +0200
+Message-ID: <20200122121702.30494-3-beniamin.bia@analog.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200122121702.30494-1-beniamin.bia@analog.com>
+References: <20200122121702.30494-1-beniamin.bia@analog.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a9ec58818b5e0c982810e74efe3f5f22b930ae40.1579660436.git.viresh.kumar@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-17_05:2020-01-16,2020-01-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ lowpriorityscore=0 suspectscore=1 mlxscore=0 malwarescore=0
+ impostorscore=0 adultscore=0 phishscore=0 bulkscore=0 clxscore=1015
+ priorityscore=1501 mlxlogscore=853 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1910280000 definitions=main-2001220112
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 08:06:23AM +0530, Viresh Kumar wrote:
-> The SCMI specification is fairly independent of the transport protocol,
-> which can be a simple mailbox (already implemented) or anything else.
-> The current Linux implementation however is very much dependent on the
-> mailbox transport layer.
->
-> This patch makes the SCMI core code (driver.c) independent of the
-> mailbox transport layer and moves all mailbox related code to a new
-> file: mailbox.c.
->
-> We can now implement more transport protocols to transport SCMI
-> messages.
->
-> The transport protocols just need to provide struct scmi_transport_ops,
-> with its version of the callbacks to enable exchange of SCMI messages.
->
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
-> @Sudeep: It was my mistake that I didn't check if there is something
-> already queued for next release and you never told me as well earlier :)
->
+Add Beniamin Bia and Michael Hennerich as maintainers for HMC425A
+attenuator.
 
-No I didn't want to distract the discussion with that silly thing.
+Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
+---
+ MAINTAINERS | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-> Can you please help me getting this tested, now that I have rebased it
-> as well :) ?
->
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ec05a06d7ddb..9ae436d67edf 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1057,6 +1057,15 @@ F:	drivers/iio/adc/ltc249*
+ X:	drivers/iio/*/adjd*
+ F:	drivers/staging/iio/*/ad*
+ 
++ANALOG DEVICES INC HMC425A DRIVER
++M:	Beniamin Bia <beniamin.bia@analog.com>
++M:	Michael Hennerich <michael.hennerich@analog.com>
++L:	linux-iio@vger.kernel.org
++W:	http://ez.analog.com/community/linux-device-drivers
++S:	Supported
++F:	drivers/iio/amplifiers/hmc425a.c
++F:	Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
++
+ ANALOGBITS PLL LIBRARIES
+ M:	Paul Walmsley <paul.walmsley@sifive.com>
+ S:	Supported
+-- 
+2.17.1
 
-Sure, I will give it a go on my Juno. Thanks for the rebase, makes it
-simpler.
-
---
-Regards,
-Sudeep
